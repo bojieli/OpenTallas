@@ -182,7 +182,7 @@ def directed_tree(rows, regions):
 
 
 def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edge_pad=None, start_skew=(0.0, 0.0),
-         skew_clean=False, _pad_pass=False):
+         skew_clean=False, _pad_pass=False, tree_parent=None):
     """edge_pad {tree port or child region: PAD}: per-start-tree-edge PAD overriding the default `pad` (MESO-RECONCILE-1,
     COORD 10-27).  An edge PAD p_e >= pad delays the child's origin by p_e - pad counts and HOLDS the tree crossing's RTL K
     at its default-PAD value, so that crossing's lag (and latency) grow by (p_e - pad) T; every other crossing's K is
@@ -193,14 +193,17 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
     skewed sampled phase [lo - s_hi - sap, hi - s_lo + sap], its tree crossing keeps the plan sync window and needs both
     ring margins >= 100 + max|skew| (die_sta_related ambiguous start row: margin - 100 >= |skew|).  The high side is
     met by the DEPTH choice; the low side, where short, by PAD + 1 on that edge (OWNER 12.15b; +1 cycle on the tree
-    crossing, a parameter of the proven ot_dp_landing_origin, no new RTL form).  Default False: unchanged."""
+    crossing, a parameter of the proven ot_dp_landing_origin, no new RTL form).  Default False: unchanged.
+    tree_parent {child region: port} (MESO-START-2, COORD 03:4x, opt-in): re-parent the child (with its subtree) onto
+    the given crossing (src -> child) after the min-ambiguity tree is built, so a region pair that has no bound crossing
+    gets its crossing as the start edge itself (no path ambiguity); refused if the src lies in the child's subtree."""
     smax = max(abs(float(start_skew[0])), abs(float(start_skew[1])))
     if skew_clean and not _pad_pass:
         if not smax:
             raise ValueError("skew_clean needs a nonzero start_skew (--start-skew LO,HI)")
         need = 100.0 + smax
         args = (T, ap, wander_frac, sync_ap, pad)
-        s0, out0, regs0 = plan([dict(r) for r in rows], *args, edge_pad, start_skew, True, True)
+        s0, out0, regs0 = plan([dict(r) for r in rows], *args, edge_pad, start_skew, True, True, tree_parent)
         byp = {o["port"]: o for o in out0}
         ep = dict(edge_pad or {})
         add = {}
@@ -212,8 +215,8 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
             if o.get("depth") and o["margin_lo_ps"] < need:
                 ep.pop(e["port"], None)
                 ep[g["region"]] = add[g["region"]] = int(e["rtl"]["PAD"]) + 1
-        summ, out, regs = plan(rows, *args, ep, start_skew, True, True)
-        sn, outn, _ = plan([dict(r) for r in rows], *args, edge_pad, start_skew)
+        summ, out, regs = plan(rows, *args, ep, start_skew, True, True, tree_parent)
+        sn, outn, _ = plan([dict(r) for r in rows], *args, edge_pad, start_skew, tree_parent=tree_parent)
 
         def lat(xs):
             return sum(o["lat_cycles"] for o in xs if o.get("lat_cycles") is not None)
@@ -240,6 +243,16 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
         r["_w"] = wander_frac * max(r.get("unshared_a_ps", 0.0), r.get("unshared_b_ps", 0.0))
     regions = sorted({r["src"] for r in rows} | {r["dst"] for r in rows})
     root, par = directed_tree(rows, regions)
+    for x, port in (tree_parent or {}).items():
+        r = next((q for q in rows if q["port"] == port), None)
+        if r is None or r["dst"] != x or r["src"] == x or x not in par or r["src"] not in par:
+            raise ValueError(f"tree_parent {x}={port}: not a crossing into region {x} from another reached region")
+        y = r["src"]
+        while y is not None:
+            if y == x:
+                raise ValueError(f"tree_parent {x}={port}: src {r['src']} is in {x}'s subtree (would close a loop)")
+            y = par[y][0] if par[y] else None
+        par[x] = (r["src"], r)
     if skew_clean:
         # the tree is the unchanged min-ambiguity tree; a CLEAN tree edge whose static sync distance misses
         # sync aperture + max|skew| is re-read as AMBIGUOUS (window, J deviation, start row, PAD)
@@ -485,14 +498,14 @@ def parse_skew(text):
     return lo, hi
 
 
-def parse_edge_pad(items):
-    """['PORT_OR_REGION=N', ...] -> {key: N}"""
+def parse_edge_pad(items, typ=int):
+    """['PORT_OR_REGION=N', ...] -> {key: N}  (typ=str: ['REGION=PORT', ...] for --tree-parent)"""
     out = {}
     for it in items or []:
         k, _, v = it.rpartition("=")
         if not k:
             raise ValueError(f"--edge-pad {it!r}: want PORT=N or REGION=N")
-        out[k] = int(v)
+        out[k] = typ(v)
     return out
 
 
@@ -519,6 +532,9 @@ def main(argv=None):
                     help="MESO-START-2 (opt-in, needs --start-skew): a start edge is CLEAN only if it clears sync "
                          "aperture + max|skew|, else AMBIGUOUS with PAD + 1 where its tree-crossing low margin < 100 + "
                          "max|skew|; the MC samples the skewed phase")
+    ap.add_argument("--tree-parent", action="append", metavar="REGION=PORT",
+                    help="MESO-START-2 (opt-in): start-tree edge override, the region (and its subtree) takes PORT "
+                         "(a crossing into it) as its start edge")
     ap.add_argument("--sta-proof", metavar="DIR", help="DIE-HEAD-5 one interval model: die clock proof (tap_arrivals_<C>"
                     ".json) of die_sta_related; each crossing's interval becomes its hull with the STA d interval "
                     "(die_sta_related.count_align_d_intervals) on the --corner corners; needs --sta-plan")
@@ -546,7 +562,9 @@ def main(argv=None):
     if a.start_skew_clean and not any(a.start_skew):
         ap.error("--start-skew-clean needs --start-skew LO,HI")
     summ, out, regs = plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad, parse_edge_pad(a.edge_pad),
-                           a.start_skew, a.start_skew_clean)
+                           a.start_skew, a.start_skew_clean, tree_parent=parse_edge_pad(a.tree_parent, str) or None)
+    if a.tree_parent:
+        summ["tree_parent"] = parse_edge_pad(a.tree_parent, str)
     if any(a.start_skew):
         summ["start_skew_ps"] = list(a.start_skew)
     if sta_info:

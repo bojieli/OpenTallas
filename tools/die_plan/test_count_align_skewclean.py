@@ -105,3 +105,20 @@ def test_mc_samples_skew_and_flag_needs_skew():
     assert CAP.mc_check(rs0, out0, regs0, T, 600, SAP, start_skew=SKEW)[1] > 0
     with pytest.raises(ValueError):
         CAP.plan([dict(r) for r in rows_at(113.0)], T, AP, 0.0, SAP, 0, None, (0.0, 0.0), skew_clean=True)
+
+
+def test_tree_parent_override_and_loop_refusal():
+    """COORD 03:4x: a region pair with no bound crossing gets its crossing as the start edge (--tree-parent)"""
+    rs = [row("ab", "a", "b", 200.0, 300.0), row("ac", "a", "c", 200.0, 300.0), row("bc", "b", "c", 210.0, 320.0),
+          row("cb", "c", "b", -320.0, -210.0)]
+    s, out, regs = CAP.plan([dict(r) for r in rs], T, AP, 0.0, SAP, 0, None, SKEW)
+    assert {g["region"]: (g["start_from"] or {}).get("port") for g in regs}["c"] == "ac"
+    s, out, regs = CAP.plan([dict(r) for r in rs], T, AP, 0.0, SAP, 0, None, SKEW, tree_parent={"c": "bc"})
+    par = {g["region"]: (g["start_from"] or {}).get("port") for g in regs}
+    assert par == {"a": None, "b": "ab", "c": "bc"} and s["fail"] == 0
+    assert next(o for o in out if o["port"] == "bc")["kind"] == "tree"
+    CB.bind(CB.plan_doc(dict(s, period_ps=T, aperture_ps=AP, sync_aperture_ps=SAP, pad=0), out, regs))
+    with pytest.raises(ValueError, match="subtree"):
+        CAP.plan([dict(r) for r in rs], T, AP, 0.0, SAP, 0, None, SKEW, tree_parent={"b": "cb", "c": "bc"})
+    with pytest.raises(ValueError, match="not a crossing"):
+        CAP.plan([dict(r) for r in rs], T, AP, 0.0, SAP, 0, None, SKEW, tree_parent={"c": "ab"})

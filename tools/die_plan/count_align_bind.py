@@ -568,6 +568,8 @@ def main(argv=None):
                     help="count_align_plan.py --start-skew (with --from-ocv)")
     ap.add_argument("--start-skew-clean", action="store_true",
                     help="count_align_plan.py --start-skew-clean (with --from-ocv); the start-up sim then samples d - skew")
+    ap.add_argument("--tree-parent", action="append", metavar="REGION=PORT",
+                    help="count_align_plan.py --tree-parent (with --from-ocv)")
     ap.add_argument("--sta-proof", metavar="DIR", help="count_align_plan.py --sta-proof (with --from-ocv)")
     ap.add_argument("--sta-plan", help="count_align_plan.py --sta-plan (with --from-ocv)")
     ap.add_argument("--sta-clock-cal", choices=("none", "spice"), default="spice")
@@ -598,7 +600,8 @@ def main(argv=None):
         if a.start_skew_clean and not any(a.start_skew):
             ap.error("--start-skew-clean needs --start-skew LO,HI")
         s, out, regs = CAP.plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad,
-                                CAP.parse_edge_pad(a.edge_pad), a.start_skew, a.start_skew_clean)
+                                CAP.parse_edge_pad(a.edge_pad), a.start_skew, a.start_skew_clean,
+                                tree_parent=CAP.parse_edge_pad(a.tree_parent, str) or None)
         if any(a.start_skew):
             s["start_skew_ps"] = list(a.start_skew)
         s.update(period_ps=a.period, aperture_ps=a.aperture, sync_aperture_ps=a.sync_aperture, pad=a.pad, scale=a.scale,
