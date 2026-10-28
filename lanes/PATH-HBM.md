@@ -866,3 +866,15 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
   - c20f die tree: GRT running on intel2, oth-ubuntu-1426587, since 02:00.
   - t63 / c20h_tree: watchers on localhost launch GRT on intel1 when their kit inputs exist.
   - Kits: ring_ag 4dc6100ca123 is in AUTO-GEOM CHECK. tkm idpin d25 dabf2206bd6b / d30 7b97a340aa07 are in detail placement (3_5_place_dp); the autopilot picks them up at 3_place. q2 reduce e2ba1ba7dd28 is ROUTING (the autopilot pickup gap is closed).
+- 2026-10-28 02:07 PDT [DIE-HBM-5] PROBE RESULTS, 2 of 4 (C20f plan 5959e8fecd8b, core abstracts, -congestion_iterations 50, -critical_nets_percentage 0, die clock tree as M8/M9 2W2S+shield obstructions; all CHECKED from grt.log):
+  - probe_v1c5 (epyc2): GRT0, final total overflow 0 on every layer M4-M9.
+    - It needed extra iterations: the initial route had overflow, cleared at extra iteration 1/50.
+    - Usage %: M4 3.07, M5 6.27, M6 6.67, M7 6.79, M8 0.83, M9 0.81. 312,777 nets, WL 475.4 m.
+  - probe_t63 (intel1): GRT0 with no extra iterations needed (0 overflow at the initial route).
+    - Usage %: M4 3.07, M5 6.27, M6 6.66, M7 6.78, M8 0.83, M9 0.82.
+  - Neither probe wrote congestion.rpt (no gcell over capacity), so cong_map.py has no per-layer, per-region or per-partition overflow and no top-20 to map. Every overflow class is 0: core-M6/M7 0, street 0.
+  - c20f die tree (intel2) and c20h_tree (intel1): GRT is running.
+  - => Task 2 reading: congestion does not drive the region map or the street widths. Streets stay as planned. No M5 cap is needed beyond the existing obs_max (no area cost to price).
+  - => Per COORD 01:55 (2): v1c5 shows GRT0 at the 50-it budget, so the v1c5 + hub W/E split region build STARTS NOW.
+    - Die-local wrapper kit_hs.py: die_trial kit --region-trees with hub taps assigned W/E by the planned cut x (NW 9097.92 / NE 18973.44); 36 clock regions.
+    - It runs first on C20h (dry_c20h_hs, intel1) while sub-lane C20I finishes the lattice/qid plan. Then on C20i.
