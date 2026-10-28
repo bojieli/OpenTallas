@@ -456,7 +456,7 @@ PG_CUT_SPACE_UM = 0.072                      # y: M6 min spacing (pin -> strap) 
 PG_CUT_EDGE_UM = 2.0                         # an "interior" pin is at least this far from every core edge
 
 
-def _orient_rect(r, w, h, o):
+def _orient_rect_r(r, w, h, o):
     x0, y0, x1, y1 = r
     xs = {"R0": (x0, x1), "MX": (x0, x1), "MY": (w - x1, w - x0), "R180": (w - x1, w - x0)}[o]
     ys = {"R0": (y0, y1), "MY": (y0, y1), "MX": (h - y1, h - y0), "R180": (h - y1, h - y0)}[o]
@@ -496,7 +496,7 @@ def pg_island_cuts(P, tn, root=None):
     for inst, _mod, lef, _lib, ox, oy, o in type_macros(P, tn):
         pins, (w, h) = lef_interior_pins(C.resolve(lef, root))
         for pin, r in pins:
-            x0, y0, x1, y1 = _orient_rect(r, w, h, o)
+            x0, y0, x1, y1 = _orient_rect_r(r, w, h, o)
             cuts.append((inst, pin, (round(x0 + ox - PG_CUT_MARGIN_UM, 4), round(y0 + oy - PG_CUT_SPACE_UM, 4),
                                      round(x1 + ox + PG_CUT_MARGIN_UM, 4), round(y1 + oy + PG_CUT_SPACE_UM, 4))))
     return cuts

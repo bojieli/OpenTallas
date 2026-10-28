@@ -71,12 +71,14 @@ def test_lef_interior_pins_only_interior_signal_m5():
     assert pins == [("rst_n", (5.0, 3.0, 5.192, 3.192)), ("clk", (12.0, 6.0, 12.192, 6.192))]
 
 
-def test_orient_rect():
+def test_orient_rect_r():
     r = (5.0, 3.0, 5.192, 3.192)
-    assert gen_phys._orient_rect(r, 20, 10, "R0") == r
-    assert gen_phys._orient_rect(r, 20, 10, "MX") == (5.0, 10 - 3.192, 5.192, 7.0)
-    assert gen_phys._orient_rect(r, 20, 10, "MY") == (20 - 5.192, 3.0, 15.0, 3.192)
-    assert gen_phys._orient_rect(r, 20, 10, "R180") == (20 - 5.192, 10 - 3.192, 15.0, 7.0)
+    assert gen_phys._orient_rect_r(r, 20, 10, "R0") == r
+    assert gen_phys._orient_rect_r(r, 20, 10, "MX") == (5.0, 10 - 3.192, 5.192, 7.0)
+    assert gen_phys._orient_rect_r(r, 20, 10, "MY") == (20 - 5.192, 3.0, 15.0, 3.192)
+    assert gen_phys._orient_rect_r(r, 20, 10, "R180") == (20 - 5.192, 10 - 3.192, 15.0, 7.0)
+    for o in ("R0", "MX", "MY", "R180"):                                   # RM91: agrees with bump-pin helper
+        assert gen_phys._orient_rect_r(r, 20, 10, o) == gen_phys._orient_rect(o, 20, 10, *r)
 
 
 def test_cut_windows_placed_and_opt_in():
