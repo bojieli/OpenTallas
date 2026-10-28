@@ -1130,3 +1130,13 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
   - Core taps stay at 250/202.5; apply_early_ps.py is the hook for the HBM-CORE-LAT-2 table.
   - PHY_N/SM are not covered until real internal-tree numbers exist.
   - The tkm tile needs a re-kit with the __po pins. Root-side reach is UNCHECKED.
+- 2026-10-28 03:42 PDT [DIE-HBM-6] START (successor of DIE-HBM-5, branch claude/die-hbm-5-1028@f4b8d9a166, plan c20i_po 16f454f05cbf). Order: asbuilt binding -> hub (B) estimate -> early taps -> S-face reset relay -> built-arrival CA -> G0C-20. Work dir intel1:/srv/opentallas-scratch2/claude/die-hbm-6.
+- 2026-10-28 03:42 PDT [DIE-HBM-6] ESTIMATE (B) hub station banks = template-replica relay hard cores (no build). Script intel1 die-hbm-6/bank_est.py on c20i_po. Station data CHECKED (plan); F=1.3 and pin-density sizing UNCHECKED.
+  - Input: per hub 3,024 stations, 301.6 kb, 2.23 M bit-regs on 10,686 distinct 8.64-um reg sites (bits/site median 36, p90 527, max 8,224).
+  - Chosen form: sites binned at 34.56 um, sites >=128 b become banks, widths {256, 1024} = **2 new bank types** (pure D->Q flop banks, pin = flop, reset-less data).
+  - NW hub: 6,611 banks (1,095 x 1024 + 5,516 x 256), 2.15 M bits banked; W/E halves **174k / 244k** cells. NE hub: 6,740 banks (1,151 + 5,589), halves **174k / 223k**. Both under 360k; 2 types <= 8, so (B) passes COORD's criteria, no fallback to (A).
+  - Pins per bank: 1024 b -> 2,049 (D, Q, clk); 256 b -> 513. At 6 pins/um per face, banks are pin-bound strips: in on one long side, out on the other, 171 x ~5 um (1024) and 43 x ~5 um (256). They fit 17-um streets. Capacity use 82 % (padding).
+  - Range scanned: 2-4 types, threshold 64-256 b, bins 8.64/34.56. Threshold 256 b on 8.64 bins gives halves 385-412k = FAIL, so the 34.56-um bin matters.
+  - Costs and risks:
+    - ~13.4k new hard-core instances die-wide (today 1,063 placements). Each is a clock sink with an early tap from the bank's signed view; plan-fixed placement only, no macro placer.
+    - bind.py emits stations as ot_dp_st cells. Emitting them as bank instances is a bind change (shared tool -> ROOT-MERGE) or a die-local post-bind rewrite. Lane default: die-local post-bind rewrite.
