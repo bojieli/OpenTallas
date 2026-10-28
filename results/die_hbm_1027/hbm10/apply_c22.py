@@ -66,7 +66,7 @@ for tn in ORDER:
                 h = copy.deepcopy(h); h["origin_um"] = [r4(x), r4(y)]
                 h["note"] = h.get("note", "").split(" | C22")[0] + f" | C22 (a): corridor-free home in {tn} (C21 site hit ft lane stations)"
                 t["hard_cores"].append(h); occ.append(r); added.append(h["inst"]); k += 1
-                x += W + HALO; continue
+                x = math.ceil((x + W + HALO) / G - 1e-9) * G; continue   # stay on the 8.64-um origin lattice
             x += G
         y += G
     if added:
@@ -80,7 +80,7 @@ for y in np.arange(17.28, t["outline_um"][1] - gh - 17.28, G):
     for x in np.arange(17.28, t["outline_um"][0] - gw - 17.28, G):
         r = (x, y, x + gw, y + gh)
         if not ohit(occ, r, HALO) and not mhit(C, r):
-            g["origin_um"] = [r4(x), r4(y)]; done = True; break
+            g["origin_um"] = [r4(x), r4(y)]; done = True; break  # x, y from 17.28 + k*8.64: on lattice
     if done: break
 assert done
 rep["idx_homes"]["glue_origin_um"] = g["origin_um"]
