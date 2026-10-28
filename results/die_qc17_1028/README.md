@@ -60,4 +60,19 @@ Plan-model variant tables: */bipart_variants_b0.txt. Winner type/count/x (nl), t
   vs 35.6 for the (infeasible) in-region 547 form (ESTIMATE, UNCHECKED).
 - Seam hc1/hc2 balance + shared feed node: not done this slice.
 
-## Task 4: FG2 canary (AP 3597c704ea32): see the lane file (collected after this README if finished).
+## Task 4: FLOW-GEN-2 canary collected (AP 3597c704ea32, node a0k3, core_tree.post_place_rebind=exact_count)
+fg2canary/tools/cmp.py, baseline AP 0a4950716786 signoff.json (09:52) vs canary signoff.json (13:15), both NOT SIGNED
+(CHECKED, read from the two signoff.json files):
+
+| check | baseline 0a4950716786 | canary 3597c704ea32 | |
+|---|---|---|---|
+| pair skew TT max/min | 131.1 / 152.5 | 47.0 / 52.2 | clock FAIL -> PASS |
+| pair skew FF max/min | 127.6 / 151.2 | 45.3 / 46.5 | |
+| hold FF WNS / TNS / ep | -37.89 / -6075.6 / 1014 | -21.1 / -3258.9 / 666 | better |
+| DRV slew TT / FF | 455 / 230 | 324 / 154 | better (TT still > 320) |
+| setup TT WNS / TNS / ep | -221.66 / -4406.1 / 59 | **-246.8 / -5447.7 / 89** | **REGRESSION** |
+| DRC / antenna / face_guard / PG | 0 / 0 / 2565 ok / 0 open | same | |
+| cells | 158,788 | 160,777 | +1.3 % |
+
+Verdict: REGRESSION on setup TT (WNS -25 ps, TNS +24 %, +30 endpoints); clock, hold and DRV improve. Smaller than
+the FG2 hand trial (TNS -9039) but still a regression, so by 12.14f it blocks the exact_count default for this kit.
