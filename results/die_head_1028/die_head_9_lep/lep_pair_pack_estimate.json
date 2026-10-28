@@ -1,0 +1,38 @@
+{
+ "child": {
+  "outline_um": [
+   388.8,
+   432.0
+  ],
+  "area_um2": 167961.6,
+  "macros": 55,
+  "macro_um2": 62002.4,
+  "std_um2": 16543.8,
+  "std_cells": 109242,
+  "std_util_of_free": 0.156,
+  "ports": {
+   "k_in": 556,
+   "k_out": 558,
+   "coll_in": 514,
+   "coll_out": 512
+  },
+  "k_face_pins_per_um": 2.58,
+  "coll_face_pins_per_um": 2.38
+ },
+ "parent": {
+  "outline_um": [
+   1442.88,
+   1226.88
+  ],
+  "area_um2": 1770240.6144000003,
+  "macros": 45,
+  "macro_um2": 138278.6,
+  "std_um2": 26998.5,
+  "std_cells": 183691,
+  "children_um2": 671846.4,
+  "std_util_of_free": 0.028
+ },
+ "placed_total": 265,
+ "errors": [],
+ "status": "UNCHECKED estimate: packing + area only; no placement/route of the child yet"
+}
