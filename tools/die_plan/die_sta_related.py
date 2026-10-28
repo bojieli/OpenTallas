@@ -855,6 +855,21 @@ HB4_ABUTTED = dict(HB4, ff_early_ps=37.41, tt_late_ps=67.67,
 _DATA_PIN_SKIP = re.compile(r"(^|_)(clk|ck|rst_n|rst|strap_[a-z]+)(\[|$)|__clk|__rst_n")
 
 
+def _pin_names(doc):
+    """pin names of a core pins file in either form: {"pins": [{name, ...}]} (core view) or the run pins.json list
+    [{bus, bit, layer, x, y, face}] (FLOW-GEN-1 10-28: DIE-QC-10 K2b --hold-buffers HB4 crashed on .get of the list)."""
+    rows = doc if isinstance(doc, list) else (doc.get("pins", []) if isinstance(doc, dict) else [])
+    out = []
+    for q in rows:
+        if isinstance(q, str):
+            out.append(q)
+        elif isinstance(q, dict):
+            n = q.get("name") or (f"{q['bus']}[{q['bit']}]" if q.get("bus") is not None and q.get("bit") is not None
+                                  else q.get("bus"))
+            out.append(str(n or ""))
+    return out
+
+
 def intra_bits(plan_path):
     """{partition: data pins of all its hard cores} (clock/reset/strap pins excluded), the INTRA HB4 cell-count basis:
     every core pin is registered (pin registers) and its other end is a register of the same partition under the
@@ -870,8 +885,8 @@ def intra_bits(plan_path):
             pf = h.get("pins_file")
             if pf not in cache:
                 f = root / pf if pf else None
-                pins = json.loads(f.read_text()).get("pins", []) if f and f.exists() else []
-                cache[pf] = sum(1 for q in pins if not _DATA_PIN_SKIP.search(str(q.get("name", ""))))
+                pins = _pin_names(json.loads(f.read_text())) if f and f.exists() else []
+                cache[pf] = sum(1 for q in pins if not _DATA_PIN_SKIP.search(q))
             tot += cache[pf]
         out[n] = tot
     return out

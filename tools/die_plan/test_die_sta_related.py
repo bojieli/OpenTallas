@@ -650,3 +650,23 @@ def test_clock_cal_spice_scales_node_arrivals_so_ocv_branch_matches_prescaled():
     # branch below h0 scales by f (pre-scaled export), not by f plus (f - 1) x node insertion
     br = t["a"]["late_ps"] - m["node_late_ps"]["h0"]
     assert abs(br - (3500.0 - 3000.0) * f) < 1e-9
+
+
+def test_intra_bits_reads_both_pins_file_forms(tmp_path, monkeypatch):
+    """FLOW-GEN-1 10-28 (DIE-QC-10 K2b): --hold-buffers HB4 crashed in intra_bits on a run pins.json (a list of
+    {bus, bit, ...}); both that form and the core-view {"pins": [{name}]} form count data pins, clock/reset skipped."""
+    import json
+    import types
+    import schema as S
+    (tmp_path / "view.json").write_text(json.dumps({"pins": [{"name": "d[0]"}, {"name": "d[1]"}, {"name": "clk"}]}))
+    (tmp_path / "run.json").write_text(json.dumps([dict(bus="q", bit=0, layer="M4", x=0, y=1, face="W"),
+                                                   dict(bus="q", bit=1, layer="M4", x=0, y=2, face="W"),
+                                                   dict(bus="rst_n", bit=None, layer="M4", x=0, y=3, face="W")]))
+    plan = tmp_path / "plan.json"
+    plan.write_text("{}")
+    P = types.SimpleNamespace(parts={"p0": {"type": "t"}}, types={"t": {"hard_cores": [
+        {"inst": "a", "pins_file": "view.json"}, {"inst": "b", "pins_file": "run.json"}, {"inst": "c"}]}})
+    monkeypatch.setattr(S, "load", lambda path: {})
+    monkeypatch.setattr(S, "Plan", lambda raw: P)
+    assert R._pin_names(json.loads((tmp_path / "run.json").read_text())) == ["q[0]", "q[1]", "rst_n"]
+    assert R.intra_bits(plan) == {"p0": 4}
