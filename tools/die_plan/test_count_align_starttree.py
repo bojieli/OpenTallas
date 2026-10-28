@@ -196,9 +196,10 @@ def test_die_sta_rechecks_start_ports_on_arrivals():
         DSR.CPPR_LCA = old
 
 
-def ctx_deep(depth=6, seg=130.0, feed=120.0, ocv_frac=0.15):
+def ctx_deep(depth=6, seg=130.0, feed=120.0, ocv_frac=0.15, fall=0.0):
     """region A (root h0, below the die root by a short feed) and region B fed THROUGH A's root (B root h02); each region
-    has two taps `depth` levels of `seg` ps below its root (big-partition in-region insertion)."""
+    has two taps `depth` levels of `seg` ps below its root (big-partition in-region insertion).
+    fall (FLOW-ONEMODEL-1, as ctx_chain): MEASURED fall arrival = rise + fall ps at every tap and node; None = rise only."""
     nl, ne, ns, nxy = {}, {}, {}, {}
     taps = {}
 
@@ -218,6 +219,11 @@ def ctx_deep(depth=6, seg=130.0, feed=120.0, ocv_frac=0.15):
             taps[k] = dict(port=k, part=part, cppr_node=part, tree_path=p, late_ps=nl[p] + 3.0 * j,
                            early_ps=ne[p] + 3.0 * j, stages_from_root=ns[p], xy_um=nxy[p])
     meta = dict(node_late_ps=nl, node_early_ps=ne, node_stages=ns, node_xy_um=nxy, cppr_node_range_ps={})
+    if fall is not None:
+        meta["node_fall_late_ps"] = {p: v + fall for p, v in nl.items()}
+        meta["node_fall_early_ps"] = {p: v + fall for p, v in ne.items()}
+        for t in taps.values():
+            t["fall_late_ps"], t["fall_early_ps"] = t["late_ps"] + fall, t["early_ps"] + fall
 
     def ocv(a, b, check):
         A, B = taps[a], taps[b]
@@ -242,6 +248,7 @@ def test_retime_up_climbs_launch_region_to_fork():
     up = [e for e in e1 if e["retime"] and e["launch"] == "t_A_0"]
     assert len(up) == 1 and up[0]["dst"].startswith("st:")
     assert la.startswith(up[0]["dst"][3:]) and len(up[0]["dst"][3:]) < len(la)   # climbs to an ancestor of the A leaf
+    assert all(e.get("fall_lo") is not None for e in e1)          # every stage judged on the MEASURED fall too
     assert 1 <= i1["retime_nodes"] <= 8
     # same answer as default when nothing needs to climb (phase rule on the chain fixture)
     rows2 = chain_rows()
@@ -255,3 +262,32 @@ def test_retime_up_cli_needs_clock_tree(tmp_path):
     f.write_text(json.dumps(dict(corners={"TT_x": dict(all=chain_rows())})))
     with pytest.raises(SystemExit):
         cap.main([str(f), "--corner", "TT_x", "--start-retime-up"])
+
+
+def test_retime_up_fails_closed_without_measured_fall():
+    """FLOW-ONEMODEL-1 composition: retime_up judges each candidate stage with the gate's pair function
+    (die_sta_related.ca_pair_interval, rise AND measured fall, as sta_port_intervals); a rise-only proof leaves no
+    width-clean stage, so the port stays unclean (fail closed), never rise + T/2."""
+    rows = [row("ab", "A", "B", 0.0, 100.0, 100.0), row("ba", "B", "A", 0.0, 100.0, 100.0)]
+    r, e, _ = cap.clock_start_edges(rows, ctx_deep(fall=None), clean_by="width", retime_up=True)
+    s, _, _ = cap.plan(copy.deepcopy(rows), T, AP, 0.05, start_edges=e, start_root=r)
+    assert s["start_tree"]["start_fail"] >= 1
+
+
+def test_retime_up_stage_interval_equals_gate_pair_interval():
+    """plan == gate: the retime_up stage's rise and fall intervals are die_sta_related.ca_pair_interval on its taps"""
+    import die_sta_related as DSR
+    rows = [row("ab", "A", "B", 0.0, 100.0, 100.0), row("ba", "B", "A", 0.0, 100.0, 100.0)]
+    c = ctx_deep(fall=7.0)
+    _, e1, _ = cap.clock_start_edges(rows, c, clean_by="width", retime_up=True)
+    up = [x for x in e1 if x["retime"] and x["launch"] == "t_A_0"][0]
+    tp = c["TT"]["taps"]
+    old, DSR.CPPR_LCA = DSR.CPPR_LCA, True
+    try:
+        r = DSR.ca_pair_interval(tp[up["launch"]], tp[up["capture"]], up["launch"], up["capture"], {}, c["TT"]["ocv"])
+        f = DSR.ca_pair_interval(tp[up["launch"]], tp[up["capture"]], up["launch"], up["capture"], {}, c["TT"]["ocv"],
+                                 "fall")
+    finally:
+        DSR.CPPR_LCA = old
+    assert abs((up["d_ps"] - up["p_dn_ps"]) - r[0]) < 1e-6 and abs((up["d_ps"] + up["p_up_ps"]) - r[1]) < 1e-6
+    assert abs(up["fall_lo"] - f[0]) < 1e-6 and abs(up["fall_hi"] - f[1]) < 1e-6
