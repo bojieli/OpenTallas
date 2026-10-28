@@ -99,3 +99,41 @@ proc get_property {lp prop} { if {$prop eq "is_clock"} {return 1}; return [expr 
         result=subprocess.run(['tclsh'],input=script,text=True,capture_output=True)
         assert result.returncode == (7 if missing else 0), result.stdout+result.stderr
         assert ('missing exact input' if missing else 'BOTH_ACTUAL_BITS_CONNECTED') in result.stdout
+
+
+# HBM-STREETS-3 (COORD 10-27 19:12 ruling 1): no native view -> PENDING-VIEW (never PASS), audit covers every core.
+def test_no_view_is_pending_view_not_pass(tmp_path):
+    p, tap = fixture(tmp_path)
+    core = p.types['p']['hard_cores'][0]
+    core.pop('lef'); core.pop('lib')
+    with pytest.raises(M.PendingView):
+        M.pins(p, 'p', tap, 'u_h')
+    pend = []
+    rows = G.core_tap_rows(p, 'p', pending=pend)
+    assert [r[2] for r in rows] == tap['merged_clock_ports']      # tap stays at the plan clock pins
+    assert len(pend) == 1 and 'PENDING-VIEW' in pend[0]['msg']
+    assert [r['status'] for r in M.audit(p)] == ['PENDING-VIEW']
+
+
+def test_pending_view_still_enforces_plan_pin_geometry(tmp_path):
+    p, tap = fixture(tmp_path)
+    core = p.types['p']['hard_cores'][0]
+    core.pop('lef'); core.pop('lib')
+    f = tmp_path/'pins.json'; rows = json.loads(f.read_text()); rows.pop(); f.write_text(json.dumps(rows))
+    with pytest.raises(ValueError) as e:
+        G.core_tap_rows(p, 'p', pending=[])
+    assert not isinstance(e.value, M.PendingView)
+
+
+def test_audit_continues_through_every_core(tmp_path):
+    import copy
+    p, tap = fixture(tmp_path)
+    good = p.types['p']['hard_cores'][0]
+    noview = dict(good, inst='u_n'); noview.pop('lef'); noview.pop('lib')
+    (tmp_path/'bad.lib').write_text((tmp_path/'core.lib').read_text().replace('clock : true;', 'clock : false;', 1))
+    bad = dict(good, inst='u_b', lib=str(tmp_path/'bad.lib'))
+    t = p.types['p']
+    t['hard_cores'] = [bad, noview, good]
+    t['clock']['taps'] = [dict(copy.deepcopy(tap), name=i + '.clk_pair') for i in ('u_b', 'u_n', 'u_h')]
+    st = {r['inst']: r['status'] for r in M.audit(p)}
+    assert st == {'u_b': 'FAIL', 'u_n': 'PENDING-VIEW', 'u_h': 'PASS'}
