@@ -125,3 +125,23 @@ def test_slice_rows_reservation_overrides_column_and_spine_row():
     assert {r["column_x_um"] for r in info["regions"].values()} == {250.0, 650.0}
     L = D.path_lengths(nodes)
     assert len({round(L[i], 3) for i, n in nodes.items() if n["taps"]}) == 1
+
+
+def test_round_legal_keeps_a_halo_edge_point_outside_the_halo():
+    # DIE-QC 10-27: QC b3485/b5553/b8655 sat on x = 10620.72 vs halo edge 10620.720000000001 after round(q, 3)
+    x0 = 10262.160000000002
+    edge = x0 + 358.56
+    site = FakeSite(30000.0, 30000.0, [(x0, 10832.4, edge, 11095.92)])
+    q = (edge + 1e-9, 11080.8)
+    if site.legal((round(q[0], 3), q[1])):       # float repr made the plain rounding legal: nothing to prove here
+        q = (10620.720000000001 + 1e-12, 11080.8)
+        site = FakeSite(30000.0, 30000.0, [(x0, 10832.4, 10620.720000000001, 11095.92)])
+    assert site.legal(q) and not site.legal((round(q[0], 3), round(q[1], 3)))
+    r = D.round_legal(site, q)
+    assert site.legal(r) and abs(r[0] - q[0]) <= 1.1e-3 and r[1] == 11080.8
+
+
+def test_round_legal_is_plain_rounding_when_already_legal_or_hopeless():
+    site = FakeSite(100.0, 100.0, [(40.0, 40.0, 60.0, 60.0)])
+    assert D.round_legal(site, (10.00049, 20.0)) == (10.0, 20.0)
+    assert D.round_legal(site, (50.00049, 50.0)) == (50.0, 50.0)

@@ -648,6 +648,22 @@ def _man(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 
+def round_legal(site, q, nd=3):
+    """q rounded to the nd-decimal output grid, staying legal (DIE-QC 10-27): balanced_site's refine walk stops ON
+    a halo edge, and rounding 10620.7200000001 -> 10620.72 put 3 QC node buffers 1e-12 um inside a core halo
+    (strict-inside test).  Try the 9 neighbours on the 10^-nd grid (nearest first); keep the plain rounding if the
+    unrounded point was illegal too (that case is reported by site_legal, not hidden here)."""
+    r = (round(q[0], nd), round(q[1], nd))
+    if site.legal(r) or not site.legal(q):
+        return r
+    u = 10.0 ** -nd
+    for dx, dy in sorted(((i, j) for i in (-1, 0, 1) for j in (-1, 0, 1)), key=lambda d: abs(d[0]) + abs(d[1])):
+        c = (round(r[0] + dx * u, nd), round(r[1] + dy * u, nd))
+        if site.legal(c):
+            return c
+    return r
+
+
 def balanced_site(site, p, parent, kids, split=None, reach=1300.0, step=2.16, fine=0.54):
     """legal site for an illegal tree node that keeps root->descendant lengths as equal as possible (QC-SLICECLK-3).
     Candidates: the first legal point on each of the 4 axis rays from p (coarse walk, refined back toward p) + the
@@ -784,7 +800,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 q, c = site.nearest((nd["x"], nd["y"])), None
             moves.append(dict(node=i, fixed=bool(nd.get("fixed")), um=round(_man(q, (nd["x"], nd["y"])), 3),
                               imbalance_um=c))
-            nd["x"], nd["y"] = round(q[0], 3), round(q[1], 3)
+            nd["x"], nd["y"] = round_legal(site, q)
         L = path_lengths(nodes)
         reg_len = defaultdict(list)
         for i, nd in nodes.items():
