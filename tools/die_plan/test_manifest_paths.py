@@ -127,3 +127,23 @@ def test_bind_writes_provenance(tmp_path):
     bind._write_provenance(a, "bind")
     rec = json.loads((tmp_path / "out" / "provenance_bind.json").read_text())
     assert rec["provenance"]["step"] == "bind" and "commit" in rec["provenance"]
+
+
+def test_bind_override_relative_map_validated_before_resolution(tmp_path, monkeypatch):
+    import bind
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    monkeypatch.setattr(bind.E, "REPO", repo)
+    plan = _write(repo, "plan.json", {})
+    manifest = _write(repo, "bind/asbuilt.json", {"map_file": "map.json"})
+    mapping = _write(repo, "bind/map.json", {"leaf": "part"})
+    monkeypatch.setitem(bind._AB_OVERRIDE, "path", str(manifest))
+    monkeypatch.setitem(bind._AB_OVERRIDE, "allow_external_paths", False)
+    ab = bind.load_plan(plan)["asbuilt"]
+    assert Path(ab["map_file"]) == mapping
+    assert json.loads(Path(ab["map_file"]).read_text()) == {"leaf": "part"}
+    assert ab["base"] == str(repo)
+    # Even an in-repository absolute input remains invalid at the front door.
+    manifest.write_text(json.dumps({"map_file": str(mapping)}))
+    with pytest.raises(bind.BindError, match="map_file: absolute"):
+        bind.load_plan(plan)
