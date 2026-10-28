@@ -5,6 +5,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+import pytest
+
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import check  # noqa: E402
@@ -183,6 +185,13 @@ def test_gen_latency_and_render():
         tab, sv, js = gen.write_latency(p, d)
         assert "localparam int LAT_X = 8;" in sv.read_text()
         assert json.loads(js.read_text())["lanes"]["r"]["cycles"] == 9
+
+
+def test_render_png():
+    # render.py draws with matplotlib; the fleet pytest venv has none (FLOW-GEN-2: the only cause of the main failure
+    # of test_gen_latency_and_render there), so only the PNG half is skipped without it, as in test_streets.py
+    pytest.importorskip("matplotlib")
+    with tempfile.TemporaryDirectory() as d:
         R, summ = check.run(copy.deepcopy(EX), png=Path(d) / "p.png")
         assert (Path(d) / "p.png").stat().st_size > 10000
 

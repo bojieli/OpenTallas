@@ -1696,7 +1696,8 @@
             ]
           ]
         }
-      ]
+      ],
+      "core_pg_connect": true
     },
     "hd_turn_a": {
       "module": "ot_s81hd_turn_a",
@@ -5740,11 +5741,11 @@
             276.48
           ],
           [
-            276.48,
+            401.76,
             311.04
           ],
           [
-            276.48,
+            401.76,
             915.84
           ],
           [
@@ -5752,12 +5753,12 @@
             604.8
           ],
           [
-            760.32,
+            600.48,
             1002.24
           ],
           [
             725.76,
-            190.08
+            168.48
           ],
           [
             933.12,
@@ -5780,7 +5781,7 @@
             86.4
           ],
           [
-            1399.68,
+            1421.28,
             570.24
           ],
           [
@@ -5789,18 +5790,18 @@
           ],
           [
             743.04,
-            1209.6
+            1222.56
           ],
           [
             725.76,
-            794.88
+            781.92
           ],
           [
             743.04,
-            51.84
+            17.28
           ],
           [
-            17.28,
+            4.32,
             984.96
           ],
           [
@@ -5820,7 +5821,7 @@
             293.76
           ],
           [
-            380.16,
+            401.76,
             1002.24
           ],
           [
@@ -5829,7 +5830,7 @@
           ],
           [
             86.4,
-            708.48
+            635.04
           ],
           [
             207.36,
@@ -5847,13 +5848,779 @@
           "module": "ot_s81hd_lep0N_noidx_core",
           "status": "new",
           "params": {
-            "CH_B": "4'b1111"
+            "CH_B": "4'b1111",
+            "PAIR": 1
           },
           "bind": {
             "ck": "clk",
             "rst_n": "rst_n"
           },
           "note": "Head-specific IDX_EN0; omitted H4 inputs structurally unread; actual MU landing notification lw_o"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[0].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            453.6,
+            21.6
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[1].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            453.6,
+            59.4
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[2].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            453.6,
+            97.2
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[3].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            453.6,
+            135.0
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[4].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            453.6,
+            172.8
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[0].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            453.6,
+            210.6
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[1].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            453.6,
+            248.4
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[2].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            453.6,
+            286.2
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[3].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            453.6,
+            324.0
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            453.6,
+            361.8
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[0].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            644.76,
+            21.6
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[1].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            644.76,
+            59.4
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[2].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            644.76,
+            97.2
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[3].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            644.76,
+            135.0
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[4].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            644.76,
+            172.8
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[0].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            644.76,
+            210.6
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[1].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            644.76,
+            248.4
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[2].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            644.76,
+            286.2
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[3].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            644.76,
+            324.0
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[4].u_m",
+          "module": "ot_sram_1r1w_512x128_m4_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            644.76,
+            361.8
+          ],
+          "outline_um": [
+            169.368,
+            29.16
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            838.08,
+            21.6
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            838.08,
+            50.76
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            838.08,
+            79.92
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            838.08,
+            109.08
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            838.08,
+            138.24
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            838.08,
+            167.4
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            838.08,
+            196.56
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            838.08,
+            225.72
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            838.08,
+            254.88
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            838.08,
+            284.04
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            911.52,
+            21.6
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            911.52,
+            50.76
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            911.52,
+            79.92
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            911.52,
+            109.08
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            911.52,
+            138.24
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            911.52,
+            167.4
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            911.52,
+            196.56
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            911.52,
+            225.72
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            911.52,
+            254.88
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+          "module": "ot_sram_1r1w_32x128_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            911.52,
+            284.04
+          ],
+          "outline_um": [
+            51.432,
+            20.808
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_land.g_sram.g_t[0].g_128.u_m",
+          "module": "ot_sram_1r1w_128x256_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            453.6,
+            421.2
+          ],
+          "outline_um": [
+            91.8,
+            39.432
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r0c0/ot_sram_1r1w_128x256_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r0c0/ot_sram_1r1w_128x256_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_land.g_sram.g_t[1].g_128.u_m",
+          "module": "ot_sram_1r1w_128x256_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            453.6,
+            469.8
+          ],
+          "outline_um": [
+            91.8,
+            39.432
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r0c0/ot_sram_1r1w_128x256_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r0c0/ot_sram_1r1w_128x256_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_land.g_sram.g_t[2].g_128.u_m",
+          "module": "ot_sram_1r1w_128x256_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            453.6,
+            518.4
+          ],
+          "outline_um": [
+            91.8,
+            39.432
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r0c0/ot_sram_1r1w_128x256_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r0c0/ot_sram_1r1w_128x256_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_land.g_sram.g_t[3].g_128.u_m",
+          "module": "ot_sram_1r1w_128x256_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            453.6,
+            567.0
+          ],
+          "outline_um": [
+            91.8,
+            39.432
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r0c0/ot_sram_1r1w_128x256_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r0c0/ot_sram_1r1w_128x256_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
+        },
+        {
+          "inst": "u_core.u.u_land.g_sram.g_t[4].g_128.u_m",
+          "module": "ot_sram_1r1w_128x256_m1_r0c0",
+          "status": "reuse",
+          "origin_um": [
+            453.6,
+            615.6
+          ],
+          "outline_um": [
+            91.8,
+            39.432
+          ],
+          "orient": "R0",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r0c0/ot_sram_1r1w_128x256_m1_r0c0.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r0c0/ot_sram_1r1w_128x256_m1_r0c0_tt.lib",
+          "note": "DIE-HEAD-10 LEP-C0: parent SRAM"
         }
       ],
       "note": "stage-circuit endpoint: pair A (WN0/1) TX to the next head group / token return, pair B (WN2/3) RX",
@@ -6140,7 +6907,86 @@
         "rtl/lib/ot_sram_showahead_1r1w.sv",
         "rtl/lib/ot_sram_showahead_b64.sv",
         "rtl/link/ot_link_crc32.sv"
-      ]
+      ],
+      "hard_cores": [
+        {
+          "inst": "u_core.u.g_pp[0].u_pair",
+          "module": "ot_s81hd_lep_pair",
+          "origin_um": [
+            604.8,
+            786.24
+          ],
+          "track_offset_um": [
+            0.0,
+            0.0
+          ],
+          "outline_um": [
+            388.8,
+            432.0
+          ],
+          "orient": "R0",
+          "note": "DIE-HEAD-10 LEP-C0: coll window N x160-587 entirely west of the W face (x604.8): parent L-fan carry (DIE-HEAD-10 LEP-C0) (no view yet: child kit pending)",
+          "pins_file": "cores/lep_pair_pins.json"
+        },
+        {
+          "inst": "u_core.u.g_pp[1].u_pair",
+          "module": "ot_s81hd_lep_pair",
+          "origin_um": [
+            8.64,
+            639.36
+          ],
+          "track_offset_um": [
+            0.0,
+            0.0
+          ],
+          "outline_um": [
+            388.8,
+            432.0
+          ],
+          "orient": "R0",
+          "note": "DIE-HEAD-10 LEP-C0: coll window W y640-1067 (no view yet: child kit pending)",
+          "pins_file": "cores/lep_pair_pins.json"
+        },
+        {
+          "inst": "u_core.u.g_pp[2].u_pair",
+          "module": "ot_s81hd_lep_pair",
+          "origin_um": [
+            8.64,
+            120.96
+          ],
+          "track_offset_um": [
+            0.0,
+            0.0
+          ],
+          "outline_um": [
+            388.8,
+            432.0
+          ],
+          "orient": "R0",
+          "note": "DIE-HEAD-10 LEP-C0: coll window W y120-547 (face y120.96-552.96: 0.96-um jog) (no view yet: child kit pending)",
+          "pins_file": "cores/lep_pair_pins.json"
+        },
+        {
+          "inst": "u_core.u.g_pp[3].u_pair",
+          "module": "ot_s81hd_lep_pair",
+          "origin_um": [
+            1028.16,
+            328.32
+          ],
+          "track_offset_um": [
+            0.0,
+            0.0
+          ],
+          "outline_um": [
+            388.8,
+            432.0
+          ],
+          "orient": "MY",
+          "note": "DIE-HEAD-10 LEP-C0: coll window E y521-760 inside the E face y328-760; 21.6-um E channel keeps E ctl/fault/lw (y769-1124) and lepk (y10-511) reachable (DIE-HEAD-10 LEP-C0: moved south from y521.28) (no view yet: child kit pending)",
+          "pins_file": "cores/lep_pair_pins.json"
+        }
+      ],
+      "core_pg_connect": true
     },
     "hd_ctl": {
       "module": "ot_s81hd_ctl",

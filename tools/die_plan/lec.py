@@ -2501,6 +2501,31 @@ def proved_state_constant(L, side, key, seen=None):
     return None
 
 
+def unobservable_keys(L):
+    """{'ff:<key>'} gold registers no compare point observes: outside the bit-level backward cone (through register
+    next states, to a fixpoint) of every wrapper output capture (po:) and black-box input (bb:) in the gold AIG.  Such
+    a register drives nothing, so dead-logic removal (ORFS eliminate_dead_logic) may delete it; that is not a merge
+    (QC-A0-KITS-4 10-28, romleaf: 32 of 1206 kept bits xa_m[8k+7] only reach a shift that drops them; FLOW-GEN-1)."""
+    g = L.gold
+    I, NL, ands, latches = g["I"], g["L"], g["ands"], g["latches"]
+    seen, stack = set(), [lit >> 1 for k, lit in L.gc.items() if k[:3] in ("po:", "bb:")]
+    if not stack:                                       # no compare point: nothing can be judged dead (fail closed)
+        return set()
+    while stack:
+        v = stack.pop()
+        if v == 0 or v in seen:
+            continue
+        seen.add(v)
+        if v <= I:
+            continue
+        if v <= I + NL:
+            stack.append(latches[v - I - 1] >> 1)
+        else:
+            k = v - I - NL - 1
+            stack += (ands[2 * k] >> 1, ands[2 * k + 1] >> 1)
+    return {k for k, lit in L.gp.items() if k.startswith("ff:") and (lit >> 1) not in seen}
+
+
 def kept_wire_alias_copies(L, declared, aliases_file):
     """Recognize RTL Q-wire aliases while requiring one distinct gate FF per kept bit.
 
@@ -2644,6 +2669,11 @@ def kept_registers(L, keep_file):
             continue
         if k not in alias_copies and k not in reset_copies:
             missing.append(k)
+    # FLOW-GEN-1 10-28: a kept bit no observable point reads drives nothing; removing it is not a merge.  Reported
+    # (L.kept_unobservable), not failed.  A kept bit that is read stays fail-closed.
+    dead = unobservable_keys(L) if missing else set()
+    L.kept_unobservable = sorted(k for k in missing if k in dead or inv_alias.get(k, k) in dead)
+    missing = [k for k in missing if k not in L.kept_unobservable]
     return sorted(declared), missing, const
 
 
@@ -2910,7 +2940,25 @@ def trace_constant_closure(L, log, tried):
 RESET_PORT = re.compile(r"^(?:\w+_)?h?(?:rst|reset|rn|rstn|nrst|arst|srst)(?:_?n|_ni|_b|_l)?(?:_pin)?$", re.I)
 
 
-def reset_vars(d, pis, asserted=None, levels=None):
+def kit_reset_ports(kit):
+    """reset port names the kit declares (FLOW-GEN-1 10-28): core.json boundary_role {port: 'reset'} (the typed
+    boundary map every core-kit generator writes) and the constraint.sdc '# reset <ports>: ...' line.  None when the
+    kit declares nothing (the name pattern alone then decides, as before)."""
+    kit, out = Path(kit), set()
+    try:
+        roles = json.loads((kit / "core.json").read_text()).get("boundary_role") or {}
+        out |= {str(k) for k, v in roles.items() if v == "reset"}
+    except (OSError, ValueError, AttributeError):
+        pass
+    try:
+        for m in re.finditer(r"^# reset ([^:\n]+):", (kit / "constraint.sdc").read_text(), re.M):
+            out |= set(m.group(1).split())
+    except OSError:
+        pass
+    return sorted(out) or None
+
+
+def reset_vars(d, pis, asserted=None, levels=None, declared=None):
     """{var: asserted value} of the reset ports of one side (pi keys; OT_LEC_RESET_PORTS=a,b overrides the name
     pattern).  Active low when the name ends in n / _ni / _b / _l (rst_n, rn, core_rst_n) -- unless the structure
     says otherwise (LEC-FPREG-7 10-27, S81 dsdv_bksel_c: port 'rst' is the ACTIVE-LOW async reset of every register,
@@ -2920,14 +2968,16 @@ def reset_vars(d, pis, asserted=None, levels=None):
     level); when the opposite level of the name rule forces more than twice as many registers that the name level does
     not force, it is the asserted level (registers constant at both levels do not count: S81 RXsf gold has ~2,070).  OT_LEC_RESET_POLARITY=name keeps the name rule only.  asserted: {pi key: logical asserted value} decided
     on the gold side, applied unchanged to the gate (one port, one polarity); levels: dict filled with {pi key: asserted
-    value} -> R = {var: asserted literal value}."""
+    value} -> R = {var: asserted literal value}.  declared: the kit's declared reset ports (kit_reset_ports), reset
+    ports in addition to the name pattern, so a declared reset needs no name rule (KV hrst_n)."""
     names = [n for n in os.environ.get("OT_LEC_RESET_PORTS", "").split(",") if n]
+    declared = set(declared or ())
     R, key_of, lv = {}, {}, {}
     for k, lit in pis.items():
         if not k.startswith("pi:"):
             continue
         base = re.sub(r"\[\d+\]$", "", k[3:]).split(".")[-1]
-        if not (base in names if names else RESET_PORT.match(base)):
+        if not (base in names if names else (base in declared or RESET_PORT.match(base))):
             continue
         stem = re.sub(r"_pin$", "", base, flags=re.I)
         low = bool(re.search(r"(n|_ni|_b|_l)$", stem, re.I))
@@ -2988,7 +3038,7 @@ def noreset_classify(L):
     pol = None
     for side, d, p in (("gold", L.gold, L.gp), ("gate", L.gate, L.tp)):
         lv = {}
-        R = reset_vars(d, p, pol, lv)
+        R = reset_vars(d, p, pol, lv, getattr(L, "kit_reset_ports", None))
         pol = lv if pol is None else pol
         L.__dict__.setdefault("rst_asserted", {})[side] = lv
         L.rst_ports[side] = sorted(k for k, lit in p.items() if (lit >> 1) in R and k.startswith("pi:"))
@@ -4930,6 +4980,7 @@ def ft_parallel_normalise(kit, top, netlist, out, rec):
 
 
 RESET_DEFAULT = 4
+DEBUG_ENV = ("OT_LEC_RAW_BASE_STEPS",)
 
 
 def reset_contract_gate(kit, top, environ=None):
@@ -4944,7 +4995,10 @@ def reset_contract_gate(kit, top, environ=None):
     environ = os.environ if environ is None else environ
     req = environ.get("OT_LEC_RESET_CYCLES")
     path = environ.get("OT_LEC_RESET_CONTRACT") or str(Path(kit) / "reset_contract.json")
-    rep = dict(default=RESET_DEFAULT, requested=int(req) if req else None, contract=None, used=RESET_DEFAULT)
+    # OT_LEC_RAW_BASE_STEPS is a DEBUG override only (COORD REBAL-7 ruling 10-28): the release reset window is the
+    # declared contract above; any debug override in effect is recorded beside it in lec.json
+    rep = dict(default=RESET_DEFAULT, requested=int(req) if req else None, contract=None, used=RESET_DEFAULT,
+               debug_overrides={k: environ[k] for k in DEBUG_ENV if k in environ})
 
     def refuse(why):
         rep["refused"] = why
@@ -5069,6 +5123,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         t1 = time.time()
         L = Lec(read_aig(out / "gold.aig"), read_map(out / "gold.map"),
                 read_aig(out / "gate.aig"), read_map(out / "gate.map"), port_map)
+        L.kit_reset_ports = kit_reset_ports(kit)
+        rec["kit_reset_ports"] = L.kit_reset_ports
         correspond(L, out, conflicts, log)
         hf = Path(hints) if hints else Path(kit) / "lec_hints.json"
         if hf.is_file():
@@ -5127,8 +5183,12 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         kf = Path(str(out / "gold") + ".keep")
         if kf.is_file():
             kdecl, kmiss, kconst = kept_registers(L, kf)
-            rec["kept_registers"] = dict(declared=len(kdecl), in_netlist=len(kdecl) - len(kmiss) - len(kconst),
-                                         constant_proved=lst(kconst), missing=lst(kmiss))
+            kdead = getattr(L, "kept_unobservable", [])
+            rec["kept_registers"] = dict(declared=len(kdecl), in_netlist=len(kdecl) - len(kmiss) - len(kconst) - len(kdead),
+                                         constant_proved=lst(kconst), missing=lst(kmiss),
+                                         unobservable_removed=lst(kdead),
+                                         unobservable_reason="no compare point (output / black-box input) observes "
+                                                             "it in the gold AIG: dead logic, removal is not a merge" if kdead else None)
         else:
             kmiss = None
             rec["kept_registers"] = "not checked (no gold.keep: AIGs reused from an older lec.py)"

@@ -65,7 +65,7 @@ def J(d, T, off):
     return -math.floor((d - off) / T)
 
 
-def sync_choice(r, T, ap, start_skew=(0.0, 0.0), sync_ap=26.5):
+def sync_choice_iv(r, T, ap, start_skew=(0.0, 0.0), sync_ap=26.5):
     """(n_values, edge, off, dist): best sample edge for the start sync across crossing r.
     start_skew (lo, hi) ps (DIE-HEAD-4b, COORD NC-HEAD-PART): start arrival at the child's first sync flop minus the
     forwarded clock (clk->Q of the parent origin register + start wire - fclk wire; die_sta_related start row).  The
@@ -75,14 +75,28 @@ def sync_choice(r, T, ap, start_skew=(0.0, 0.0), sync_ap=26.5):
     from the boundary off + kT and static distance - sync aperture >= max|skew|.  Soft: the skewed interval >= ap
     (T/8 >= 100 ps) from the boundary.  Order: fewest values, smaller hard shortfall, smaller soft shortfall, larger
     static distance (an edge that clears both keeps the static order).  dist stays the STATIC
-    distance (start_skew_limit = dist - sync aperture, as die_sta_related reads it).  Default (0, 0): unchanged."""
-    lo, hi = r["lo"], r["hi"]
+    distance (start_skew_limit = dist - sync aperture, as die_sta_related reads it).  Default (0, 0): unchanged.
+    FLOW-ONEMODEL-1 (measured fall): when r carries 'fall_lo'/'fall_hi' (the interval on the capture pins' MEASURED
+    fall arrival, die_sta_related.ca_pair_interval edge 'fall'), the fall candidate is judged on THAT interval and only
+    if it is clean (one value); fall_lo None (no measured fall arrival) = rise only (fail closed, never rise + T/2).
+    Without the keys (rows with no proof taps) the legacy T/2 form is kept.  Returns (n, edge, off, dist, (lo, hi, d))
+    with the sampled interval and its nominal."""
+    lo0, hi0 = r["lo"], r["hi"]
+    measured = "fall_lo" in r
     s_lo, s_hi = float(start_skew[0]), float(start_skew[1])
     skewed = bool(s_lo or s_hi)
     smax = max(abs(s_lo), abs(s_hi))
     best = None
     for edge, off in (("rise", 0.0), ("fall", T / 2)):
+        lo, hi, dn = lo0, hi0, r.get("d_ps", 0.5 * (lo0 + hi0))
+        if edge == "fall" and measured:
+            if r["fall_lo"] is None:
+                continue
+            lo, hi = r["fall_lo"], r["fall_hi"]
+            dn = 0.5 * (lo + hi)
         n = interval_boundaries(lo - ap, hi + ap, T, off) + 1
+        if edge == "fall" and measured and n > 1:
+            continue
         dist = boundary_dist(lo, hi, T, off)
         hard = soft = 0.0
         if skewed:
@@ -91,8 +105,13 @@ def sync_choice(r, T, ap, start_skew=(0.0, 0.0), sync_ap=26.5):
             soft = max(0.0, ap - sd)
         key = (n, hard, soft, -dist)
         if best is None or key < best[0]:
-            best = (key, (n, edge, off, dist))
+            best = (key, (n, edge, off, dist, (lo, hi, dn)))
     return best[1]
+
+
+def sync_choice(r, T, ap, start_skew=(0.0, 0.0), sync_ap=26.5):
+    """(n_values, edge, off, dist): sync_choice_iv without the sampled interval"""
+    return sync_choice_iv(r, T, ap, start_skew, sync_ap)[:4]
 
 
 # union-find kept for tools/die_plan/locality.py (connected components before planning)
@@ -257,14 +276,14 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
         return summ, out, regs
     for r in rows:
         r["lo"], r["hi"] = r["d_ps"] - r["p_dn_ps"], r["d_ps"] + r["p_up_ps"]
-        r["_nv"], r["_edge"], r["_off"], r["_dist"] = sync_choice(r, T, ap, start_skew, sync_ap)
+        r["_nv"], r["_edge"], r["_off"], r["_dist"], r["_s"] = sync_choice_iv(r, T, ap, start_skew, sync_ap)
         r["_w"] = wander_frac * max(r.get("unshared_a_ps", 0.0), r.get("unshared_b_ps", 0.0))
     data_regions = sorted({r["src"] for r in rows} | {r["dst"] for r in rows})
     regions = data_regions
     if start_edges is not None:
         for r in start_edges:
             r["lo"], r["hi"] = r["d_ps"] - r["p_dn_ps"], r["d_ps"] + r["p_up_ps"]
-            r["_nv"], r["_edge"], r["_off"], r["_dist"] = sync_choice(r, T, ap, start_skew, sync_ap)
+            r["_nv"], r["_edge"], r["_off"], r["_dist"], r["_s"] = sync_choice_iv(r, T, ap, start_skew, sync_ap)
             r["_w"] = 0.0
         root, par = start_root, {start_root: None}
         for r in start_edges:
@@ -325,15 +344,17 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
     a0, dev, jn = {root: 0}, {}, {}
     for x in order[1:]:
         p, r = par[x]
-        jn[x] = J(r["d_ps"], T, r["_off"])
+        # the SAMPLED phase (FLOW-ONEMODEL-1: the measured fall interval for a fall sample; else d's own interval)
+        s_lo_, s_hi_, s_d_ = r["_s"]
+        jn[x] = J(s_d_, T, r["_off"])
         a0[x] = a0[p] + pe(x) + 2 + jn[x]
         # J deviation range over the derated interval +- ap (J decreases with d)
-        dev[x] = (J(r["hi"] + ap, T, r["_off"]) - jn[x], J(r["lo"] - ap, T, r["_off"]) - jn[x])
+        dev[x] = (J(s_hi_ + ap, T, r["_off"]) - jn[x], J(s_lo_ - ap, T, r["_off"]) - jn[x])
         if skew_clean:
             # the sync samples d - skew: cover the skewed phase (+- the sync aperture) too
             s_lo, s_hi = float(start_skew[0]), float(start_skew[1])
-            dev[x] = (min(dev[x][0], J(r["hi"] - s_lo + sync_ap, T, r["_off"]) - jn[x]),
-                      max(dev[x][1], J(r["lo"] - s_hi - sync_ap, T, r["_off"]) - jn[x]))
+            dev[x] = (min(dev[x][0], J(s_hi_ - s_lo + sync_ap, T, r["_off"]) - jn[x]),
+                      max(dev[x][1], J(s_lo_ - s_hi - sync_ap, T, r["_off"]) - jn[x]))
 
     def path_amb(u, v):
         """whole-cycle deviation range of (a_v - a_u) from nominal"""
@@ -383,6 +404,10 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
         nh = max(ap, 100.0 + smax) if (skew_clean and kind == "tree_ambiguous") else ap
         dep = next((dd for dd in (4, 8, 16) if dd <= max_depth and L_hi <= (dd - 0.5) * T - nh + 1e-9), None)
         old_vals = interval_boundaries(r["lo"], r["hi"], T, T / 2) + 1
+        if r.get("src_part") is not None and r.get("dst_part") is not None and r.get("_named"):
+            out_parts = dict(src_part=r["src_part"], dst_part=r["dst_part"])
+        else:
+            out_parts = {}
         out.append(dict(port=r["port"], src=u, dst=v, kind=kind, d_ps=r["d_ps"], p_up_ps=r["p_up_ps"],
                         p_dn_ps=r["p_dn_ps"], wander_ps=round(w, 1), path_ambiguous_cycles=amb[1] - amb[0],
                         n0=n0, K_eff=k_eff, K=k_eff - n0, L_lo_ps=round(L_lo, 1), L_hi_ps=round(L_hi, 1),
@@ -393,7 +418,7 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
                         rtl=dict(module="ot_dp_clk_landing_ca", DEPTH=dep, K=k_eff - n0, GUARD_LO=0, GUARD_HI=dep)
                         if dep else None,
                         old_ring_lat_values=old_vals, old_ring_margin_ps=r.get("margin_ps"),
-                        old_ring_ok=(r.get("margin_ps", 0) >= 0)))
+                        old_ring_ok=(r.get("margin_ps", 0) >= 0), **out_parts))
         if start_edges is not None:
             out[-1]["start_hops"] = hops(u, v)
     regs = []
@@ -419,6 +444,11 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
                      offset_from_parent=pe(x) + 2 + jn[x], pad_override=x in epad,
                      start_skew_limit_ps=None if lim is None else round(lim, 1), start_skew_basis=basis,
                      rtl=dict(module="ot_dp_landing_origin", PAD=pe(x), EDGE_FALL=int(r["_edge"] == "fall")))
+            if "fall_lo" in r:
+                # FLOW-ONEMODEL-1: the sampled interval (rise: d's own; fall: the MEASURED fall arrival interval)
+                e["sample_d_ps"] = r["_s"][2]
+                e["sample_interval_ps"] = [round(r["_s"][0], 1), round(r["_s"][1], 1)]
+                e["fall_measured"] = r["fall_lo"] is not None
             if start_edges is not None:
                 e.update({k: r[k] for k in START_EDGE_KEYS if k in r})
                 e["start_interval_ps"] = [round(r["lo"], 1), round(r["hi"], 1)]
@@ -481,6 +511,24 @@ START_EDGE_KEYS = ("launch", "capture", "launch_part", "capture_part", "retime",
                    "fork_node", "clean_ok")
 
 
+def width_robust(r, T, ap, skew_range=0.0):
+    """FLOW-ONEMODEL-1 --start-clean width on MEASURED edges.  r: lo/hi (rise-sampled interval) and fall_lo/fall_hi (the
+    measured fall-sampled interval, None = not measured).  Shift both by a common s (the port's arrivals move after
+    build): rise is unclean on arcs of length A = w_r + sr + 2 ap (circle of length T), fall on arcs of length
+    B = w_f + sr + 2 ap whose centres sit D = (T/2 + c_r - c_f) mod T away.  One edge is clean for EVERY s iff the
+    two families of unclean arcs never overlap: min(D, T - D) >= (A + B) / 2.  With fall = rise + T/2 (c_f = c_r, w_f = w_r) this is the
+    original width + skew range <= T/2 - 2 ap; with a measured duty distortion D moves off T/2.  No measured fall:
+    False.  Without fall keys at all (legacy rows): the original rule."""
+    w = r["hi"] - r["lo"]
+    if "fall_lo" not in r:
+        return w + skew_range <= T / 2 - 2 * ap + 1e-9
+    if r["fall_lo"] is None:
+        return False
+    wf = r["fall_hi"] - r["fall_lo"]
+    D = (T / 2 + 0.5 * (r["lo"] + r["hi"]) - 0.5 * (r["fall_lo"] + r["fall_hi"])) % T
+    return min(D, T - D) + 1e-9 >= 0.5 * ((w + skew_range + 2 * ap) + (wf + skew_range + 2 * ap))
+
+
 def _lcp(a, b):
     n = 0
     while n < min(len(a), len(b)) and a[n] == b[n]:
@@ -518,7 +566,7 @@ def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="tabl
 
 
 def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew=(0.0, 0.0), skew_clean=False,
-                      retime_max=8, clean_by="phase"):
+                      retime_max=8, clean_by="phase", retime_up=False):
     """START TREE = CLOCK TREE (START-TREE-1).  ctx = clock_contexts() ({corner: meta/taps/ocv/rng}, first = nominal).
     Nodes: every data region at its clock root (longest common tree_path prefix of its taps) and every branch node of
     the clock subtree spanning those roots (virtual 'st:<path>', a retime flop on that tree node).  Each node's start
@@ -534,6 +582,10 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     per edge), so every start port is CLEAN where the tree allows;
     a port that stays unclean is kept (its J range enters path ambiguity as before) and FAILs the plan (12.16b(iv)).
     A branch node is contracted (no stage of its own) when all its children take a clean port straight from its parent.
+    retime_up (opt-in, DIE-S81-13): when no capture-side node gives a clean segment from the launch (the launch is a
+    region leaf deep below the fork: its in-region insertion alone makes every segment too wide), the start first climbs
+    the LAUNCH side of the clock tree: a retime flop on the shallowest clean ancestor of the launch tap, down to the
+    fork node itself (sync on the spine tap at the fork), then continues down the capture path as above.
     Virtual taps: node arrival + the proof's median tap leg (late / early / stages from the tap's driving tree node).
     Returns (root, edges, info)."""
     import die_sta_related as DSR
@@ -552,6 +604,7 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     if miss:
         raise ValueError(f"--start-tree clock: {len(miss)} regions without proof taps (e.g. {miss[:5]})")
     leg = {c: DSR.tap_leg(k["meta"], k["taps"]) for c, k in ctx.items()}
+    fleg = {c: DSR.tap_leg_fall(k["meta"], k["taps"]) for c, k in ctx.items()}
     rootp = {}
     for x in regions:
         ps = [c0["taps"][k]["tree_path"] for k in rtaps[x]]
@@ -579,7 +632,7 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     root = node_of[min(allp, key=lambda q: (len(q), q))]
 
     def vtap(c, p):
-        return DSR.virtual_tap(ctx[c]["meta"], ctx[c]["taps"], p, leg[c])
+        return DSR.virtual_tap(ctx[c]["meta"], ctx[c]["taps"], p, leg[c], fleg[c])
 
     def capture_of(y):
         if y.startswith("st:"):
@@ -601,14 +654,23 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     def interval(a, b):
         old, DSR.CPPR_LCA = DSR.CPPR_LCA, True
         try:
-            lo = hi = None
+            lo = hi = flo = fhi = None
+            fall_ok = True
             for c in cs:
                 for k in (a, b):
                     if k.startswith("__st__"):
                         vtap(c, k[6:])
-                iv = DSR.count_align_d_intervals([(a, b, "s")], ctx[c]["taps"], ctx[c]["rng"], ocv=ctx[c]["ocv"])["s"]
+                tp = ctx[c]["taps"]
+                # FLOW-ONEMODEL-1: the gate's own pair function (die_sta_related.count_align_start_ports calls it too)
+                iv = DSR.ca_pair_interval(tp[a], tp[b], a, b, ctx[c]["rng"], ctx[c]["ocv"])
                 lo = iv[0] if lo is None else min(lo, iv[0])
                 hi = iv[1] if hi is None else max(hi, iv[1])
+                try:
+                    fv = DSR.ca_pair_interval(tp[a], tp[b], a, b, ctx[c]["rng"], ctx[c]["ocv"], "fall")
+                    flo = fv[0] if flo is None else min(flo, fv[0])
+                    fhi = fv[1] if fhi is None else max(fhi, fv[1])
+                except DSR.FallArrivalMissing:
+                    fall_ok = False
         finally:
             DSR.CPPR_LCA = old
         A, B = c0["taps"][a], c0["taps"][b]
@@ -617,6 +679,7 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
         d = 0.5 * (float(B["late_ps"]) + float(B["early_ps"])) - 0.5 * (float(A["late_ps"]) + float(A["early_ps"]))
         d = min(max(d, lo), hi)
         return dict(d_ps=d, p_dn_ps=d - lo, p_up_ps=hi - d, fork_node=node,
+                    fall_lo=flo if fall_ok else None, fall_hi=fhi if fall_ok else None,
                     unshared_a_ps=float(A["late_ps"]) - float(nl[node]), unshared_b_ps=float(B["late_ps"]) - float(nl[node]))
 
     smax = max(abs(float(start_skew[0])), abs(float(start_skew[1])))
@@ -626,9 +689,11 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
         n, _, _, dist = sync_choice(q, T, ap, start_skew, sync_ap)
         ok = n == 1 and (not skew_clean or dist - sync_ap >= smax)
         if clean_by == "width":
-            # SAFE BY DESIGN: the port is narrow enough that one of rise / fall is clean wherever d lands
-            # (width + skew range <= T/2 - 2 ap), not only by the luck of its phase
-            ok = ok and (q["hi"] - q["lo"]) + (float(start_skew[1]) - float(start_skew[0])) <= T / 2 - 2 * ap + 1e-9
+            # SAFE BY DESIGN: the port is narrow enough that one of rise / fall is clean wherever d lands, not only by
+            # the luck of its phase.  FLOW-ONEMODEL-1: on the MEASURED edges (width_robust): a common shift of the
+            # port's arrivals must always leave one edge clean; without a measured fall arrival there is one edge
+            # only, so no port is width-clean (fail closed)
+            ok = ok and width_robust(q, T, ap, float(start_skew[1]) - float(start_skew[0]))
         return ok
 
     def part(k):
@@ -666,6 +731,7 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
             del par_of[v], kids_of[v]
             contracted += 1
     pairs = [(x, y) for x in sorted(kids_of) for y in kids_of[x]]
+    up_made = {}
     for x, y in pairs:
         cap = capture_of(y)
         cpath = c0["taps"][cap]["tree_path"]
@@ -686,25 +752,70 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
                 if clean(rm):
                     best = (mp, rm)
                     break
+            up = False
+            if best is None and retime_up:
+                lp = c0["taps"][lau]["tree_path"] if lau in c0["taps"] else path_of.get(src, "")
+                nlp = c0["meta"]["node_late_ps"]
+                for n in range(len(f), len(lp)):
+                    mp = lp[:n]
+                    if mp not in nlp:
+                        continue
+                    rm = interval(lau, vtap(cs[0], mp))
+                    if clean(rm):
+                        best, up = (mp, rm), True
+                        break
             if best is None:
                 break
             mp, rm = best
-            mid = f"st:{mp}"
+            # DIE-S81-13 / DIE-QC-13: an up stage sits on the LAUNCH side, where a branch node st:<mp> of the start tree
+            # (or another child's up stage) may already exist; it is its own flop, named by its launch tap (or by its
+            # start parent when that is itself a retime node), and a second
+            # child of the same region that climbs from the same launch tap to the same node REUSES it (one edge)
+            mid = f"st:{mp}@{src if lau.startswith('__st__') else lau}" if up else f"st:{mp}"
             path_of[mid] = mp
-            edges.append(dict(port=f"start:{src}->{mid}", src=src, dst=mid, launch=lau, capture=vtap(cs[0], mp),
-                              launch_part=part(lau), capture_part=None, retime=True, clean_ok=True, **rm))
+            if not (up and mid in up_made):
+                edges.append(dict(port=f"start:{src}->{mid}", src=src, dst=mid, launch=lau, capture=vtap(cs[0], mp),
+                                  launch_part=part(lau), capture_part=None, retime=True, clean_ok=True, **rm))
+                if up:
+                    up_made[mid] = src
+            elif up_made[mid] != src:
+                raise ValueError(f"--start-retime-up: up stage {mid} reached from {up_made[mid]} and {src}")
             chain.append(mid)
             src, lau = mid, vtap(cs[0], mp)
         edges.append(dict(port=f"start:{src}->{y}", src=src, dst=y, launch=lau, capture=cap, launch_part=part(lau),
                           capture_part=part(cap), retime=False, clean_ok=clean(r), **r))
     for e in edges:
         e["lo"], e["hi"] = e["d_ps"] - e["p_dn_ps"], e["d_ps"] + e["p_up_ps"]
-    width_ok = T / 2 - 2 * ap
-    info = dict(clean_by=clean_by, clean_by_width=sum(1 for e in edges if e["p_up_ps"] + e["p_dn_ps"] <= width_ok + 1e-9),
+    start_tree_check(root, edges)
+    info = dict(clean_by=clean_by, clean_by_width=sum(1 for e in edges if width_robust(e, T, ap)),
+                fall_measured=sum(1 for e in edges if e.get("fall_lo") is not None),
                 root=root, root_path=path_of[root], leg_ps={c: list(v) for c, v in leg.items()},
                 regions=len(regions), branch_nodes=sum(1 for p in allp if not at.get(p)), branch_nodes_contracted=contracted,
                 retime_nodes=sum(1 for e in edges if e["retime"]))
     return root, edges, info
+
+
+def start_tree_check(root, edges):
+    """fail closed unless the start edges form ONE tree from root: every node has exactly one incoming edge (the root
+    none) and every node is reached from the root (DIE-QC-13: duplicate retime nodes made '753 nodes not reached')"""
+    inc = defaultdict(list)
+    kids = defaultdict(list)
+    for e in edges:
+        inc[e["dst"]].append(e["src"])
+        kids[e["src"]].append(e["dst"])
+    dup = {v: u for v, u in inc.items() if len(u) > 1}
+    if root in inc:
+        dup[root] = inc[root]
+    seen, st = {root}, [root]
+    while st:
+        for k in kids[st.pop()]:
+            if k not in seen:
+                seen.add(k)
+                st.append(k)
+    lost = sorted((set(inc) | set(kids)) - seen)
+    if dup or lost:
+        raise ValueError(f"start tree is not a tree from {root}: {len(dup)} nodes with !=1 parent "
+                         f"(e.g. {list(dup.items())[:3]}), {len(lost)} not reached (e.g. {lost[:3]})")
 
 
 def mc_check(rows, out, regs, T=833.0, chips=2000, sync_ap=26.5, seed=1, start_skew=None):
@@ -731,6 +842,10 @@ def mc_check(rows, out, regs, T=833.0, chips=2000, sync_ap=26.5, seed=1, start_s
                 continue
             off = 0.0 if e["edge"] == "rise" else T / 2
             x = d[e["port"]]
+            r = byp[e["port"]]
+            if e["edge"] == "fall" and r.get("fall_lo") is not None:
+                # FLOW-ONEMODEL-1: the fall sample lands in the MEASURED fall interval
+                x = rnd.uniform(r["fall_lo"], r["fall_hi"]) if mode == 0 else (r["fall_lo"], r["fall_hi"])[rnd.random() < 0.5]
             if start_skew is not None:
                 x -= rnd.uniform(*start_skew) if mode == 0 else start_skew[rnd.random() < 0.5]
             j = J(x, T, off)
@@ -772,16 +887,61 @@ def load_rows(ocv_json, corners, scale=1.0):
     return rows
 
 
+class _Ident(dict):
+    def __missing__(self, k):
+        return k
+
+
+def row_ports(rows):
+    """FLOW-ONEMODEL-1: the plan rows as count_align_port_intervals ports + their {partition: region} map (the same
+    map count_align_bind --parts ocv writes into bind parts, so the gate's --count-align-key region sees the same)"""
+    ports = {r["port"]: dict(src=r["src"], dst=r["dst"], src_part=r.get("src_part"), dst_part=r.get("dst_part"))
+             for r in rows}
+    pr = _Ident()
+    for r in rows:
+        for k, x in (("src_part", "src"), ("dst_part", "dst")):
+            if r.get(k) is not None:
+                pr[r[k]] = r[x]
+    return ports, pr
+
+
+def sta_rows_hull(rows, a):
+    """FLOW-ONEMODEL-1: hull every row with die_sta_related.sta_port_intervals (THE gate interval, per port, plus the
+    measured-fall interval for start samples); returns the sta_hull summary"""
+    import die_sta_related as DSR
+    cs = sorted({c.split("_")[0] for c in a.corner.split(",")})
+    ports, pr = row_ports(rows)
+    sta = DSR.sta_port_intervals(a.sta_proof, a.sta_plan, cs, ports, pr, a.sta_clock_cal, a.sta_cppr_lca, fall=True,
+                                 **sta_ocv_kw(a))
+    return sta_hull(rows, sta)
+
+
 def sta_hull(rows, sta):
     """DIE-HEAD-5 (COORD 00:22): ONE interval model.  sta = {corner: {'srcpart->dstpart': (lo, hi)}} from
-    die_sta_related.sta_d_intervals (the interval die_sta_related --count-align gates on).  Each row's derated interval
+    die_sta_related.sta_d_intervals (legacy), or FLOW-ONEMODEL-1 {corner: {rise: {port: (lo, hi)}, fall: {port:
+    (lo, hi) | None}, unbound: [...]}} from die_sta_related.sta_port_intervals = the per-port interval die_sta_related
+    --count-align gates on (count_align_port_intervals).  Each row's derated interval
     [d - p_dn, d + p_up] (landed_phase_ocv AOCV + droop, kept: 12.14a crossing margin after OCV + droop) becomes its hull
-    with the STA interval of its partition pair on every corner, so every plan margin (lag, sync edge clearance incl.
-    start skew) is a lower bound of the same margin on the gate numbers.  d (nominal) is unchanged.  Returns a summary."""
+    with the STA interval of its port on every corner, so every plan margin (lag, sync edge clearance incl.
+    start skew) is a lower bound of the same margin on the gate numbers.  d (nominal) is unchanged.  With the port form
+    each row also gets fall_lo / fall_hi: the union over corners of its MEASURED fall interval, or None if a corner has
+    none (then the planner never samples it on the fall edge).  Returns a summary."""
     widened, missing, worst = 0, [], (0.0, None)
+    port_form = all(isinstance(c, dict) and "rise" in c for c in sta.values()) and bool(sta)
+    nofall = 0
     for r in rows:
-        tag = f"{r.get('src_part', r['src'])}->{r.get('dst_part', r['dst'])}"
-        iv = [c[tag] for c in sta.values() if tag in c]
+        if port_form:
+            iv = [c["rise"][r["port"]] for c in sta.values() if c["rise"].get(r["port"]) is not None]
+            fv = [c.get("fall", {}).get(r["port"]) for c in sta.values()]
+            if any(x is None for x in fv):
+                r["fall_lo"] = r["fall_hi"] = None
+                nofall += 1
+            else:
+                r["fall_lo"], r["fall_hi"] = min(x[0] for x in fv), max(x[1] for x in fv)
+            r["_named"] = True
+        else:
+            tag = f"{r.get('src_part', r['src'])}->{r.get('dst_part', r['dst'])}"
+            iv = [c[tag] for c in sta.values() if tag in c]
         if not iv:
             missing.append(r["port"])
             continue
@@ -794,8 +954,13 @@ def sta_hull(rows, sta):
             if w > worst[0]:
                 worst = (w, r["port"])
         r["p_dn_ps"], r["p_up_ps"] = r["d_ps"] - lo, hi - r["d_ps"]
-    return dict(corners=sorted(sta), rows=len(rows), widened=widened, max_widen_ps=round(worst[0], 1),
-                max_widen_port=worst[1], missing=len(missing), missing_ports=missing[:20])
+    out = dict(corners=sorted(sta), rows=len(rows), widened=widened, max_widen_ps=round(worst[0], 1),
+               max_widen_port=worst[1], missing=len(missing), missing_ports=missing[:20])
+    if port_form:
+        unb = sorted({t for c in sta.values() for t in c.get("unbound", [])})
+        out.update(interval="port (die_sta_related.count_align_port_intervals)", rows_without_measured_fall=nofall,
+                   unbound=len(unb), unbound_tags=unb[:20])
+    return out
 
 
 def add_sta_ocv_args(ap):
@@ -821,6 +986,10 @@ def add_start_tree_args(ap):
                          "retime flops on tree nodes where a port would be unclean), each port checked as a crossing "
                          "with the --sta-clock-ocv model; needs --sta-proof/--sta-plan and --sta-clock-ocv table")
     ap.add_argument("--start-retime-max", type=int, default=8, help="max retime flops per clock-tree start edge")
+    ap.add_argument("--start-retime-up", action="store_true",
+                    help="--start-tree clock (opt-in): allow retime flops on ANCESTOR nodes of the launch tap (climb the "
+                         "launch region tree to the fork node, sync on the spine tap) when no capture-side node is clean; "
+                         "default off = byte-identical")
     ap.add_argument("--start-clean", choices=("phase", "width"), default="phase",
                     help="--start-tree clock: 'phase' (default) = the CA rule: the port's derated interval (shared model, "
                          "OCV + droop) keeps >= T/8 from every sampling boundary of the chosen edge; 'width' (stricter) = "
@@ -840,6 +1009,8 @@ def check_start_tree_args(a, err):
 
 def start_tree_from_args(a, rows, err):
     """(start_edges, start_root, info) for --start-tree clock, else (None, None, None)"""
+    if getattr(a, "start_retime_up", False) and a.start_tree != "clock":
+        err("--start-retime-up needs --start-tree clock")
     if a.start_tree != "clock":
         return None, None, None
     check_start_tree_args(a, err)
@@ -848,7 +1019,8 @@ def start_tree_from_args(a, rows, err):
     ctx = clock_contexts(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_clock_ocv, a.sta_clock_droop,
                          a.sta_droop_regions, a.sta_core_latency_ff)
     root, edges, info = clock_start_edges(rows, ctx, a.period, a.aperture, a.sync_aperture, a.start_skew,
-                                          a.start_skew_clean, a.start_retime_max, a.start_clean)
+                                          a.start_skew_clean, a.start_retime_max, a.start_clean,
+                                          getattr(a, "start_retime_up", False))
     return edges, root, info
 
 
@@ -918,13 +1090,10 @@ def main(argv=None):
     if a.sta_proof:
         if not a.sta_plan:
             ap.error("--sta-proof needs --sta-plan")
-        import die_sta_related as DSR
-        cs = sorted({c.split("_")[0] for c in a.corner.split(",")})
-        sta_info = sta_hull(rows, DSR.sta_d_intervals(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_cppr_lca,
-                                                      **sta_ocv_kw(a)))
+        sta_info = sta_rows_hull(rows, a)
         sta_info.update(proof=a.sta_proof, plan=a.sta_plan, clock_cal=a.sta_clock_cal, cppr_lca=a.sta_cppr_lca,
                         clock_ocv=a.sta_clock_ocv,
-                        model="hull(landed_phase_ocv derated, die_sta_related.count_align_d_intervals)")
+                        model="hull(landed_phase_ocv derated, die_sta_related.count_align_port_intervals)")
         if sta_info["missing"]:
             print(f"WARNING --sta-proof: {sta_info['missing']} crossings without STA tap pairs keep the OCV interval "
                   "(die_sta_related fails them closed: no taps)", file=sys.stderr)

@@ -1065,7 +1065,7 @@ def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_
 
 
 def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None, route_um=480.0, only=None, early=None,
-                      snake=None):
+                      snake=None, early_mode="hang"):
     """DIE-QC-3 opt-in (--tree-form link_htree --region-dme): hang one legal-site DME tree (dme_region_tree) under every
     LEGALIZED feed-end node that carries region_root; legs that cross a core take the L corner through the channels
     (same rule as the slice-spine form).  Runs after the site pass, so nothing it places slides afterwards."""
@@ -1079,7 +1079,8 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
             continue
         sn = bool(snake) and (snake == "all" or rn in snake)    # DIE-QC-9 --region-dme-snake: listed regions (or all)
         dn, droot, dst = dme_region_tree(site, rt[rn], rep_um=rep_um, delay_rep_um=delay_rep_um, early=early,
-                                         **({"snake": True} if sn else {}))
+                                         **({"snake": True} if sn else {}),
+                                         **({"early_mode": early_mode} if early_mode != "hang" else {}))
 
         def attach(j, parent, snake_pts=None):
             d = dn[j]
@@ -1364,7 +1365,7 @@ SNAKE_TOL_PS = 1.0      # DIE-QC-9 --region-dme-snake: a delay-mode merge imbala
 
 
 def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MODES, rep_um=None, delay_rep_um=None,
-                    early=None, snake=False):
+                    early=None, snake=False, early_mode="hang"):
     """DIE-QC-3 opt-in (--region-dme): a region clock tree built ON legal sites, so nothing slides after balancing.
     Embedding: bottom-up DME with Manhattan length as the delay proxy (repeated 1x line: delay ~ linear in length);
     every merge point is the legal zero-skew point from merge_point() (no slide, no snake; an elongated merge point is
@@ -1375,12 +1376,20 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
     'gap' cuts over the partition roots.  Geometry only: no timing value.
     -> (tree nodes [dict(x, y, kids, taps, S, Smin, part_root)], root index, stats)"""
     out = []
+    if early_mode not in ("hang", "merge"):
+        raise ValueError(f"early_mode {early_mode!r}: hang | merge")
+    # DIE-S81-14 opt-in early_mode='merge': an early core tap is an ordinary DME sink whose declared early (model ps) is a
+    # sink delay, so the bottom-up zero-skew merges deliver it early by construction (binary merges, no upper-node hang
+    # legs / star nodes; a pair with no zero-skew point is joined lower down or snaked like any other).  'hang' = DIE-QC-8.
+    sink_early = early if (early and delay_rep_um and early_mode == "merge") else None
 
     def leaf(t):
         q = (t[2], t[3]) if site.legal((t[2], t[3])) else site.nearest((t[2], t[3]))
         q = round_legal(site, q)
         d = _man(q, (t[2], t[3]))
         sd = tap_wire_ps(d) if snake and delay_rep_um else d
+        if sink_early:      # DIE-S81-14 --region-dme-early-mode merge: declared early = DME sink delay (zero-skew merge)
+            sd += float(sink_early.get((t[0], t[1]), 0.0))
         out.append(dict(x=q[0], y=q[1], kids=[], taps=[t], S=sd, Smin=sd, W=d))
         return len(out) - 1
 
@@ -1461,7 +1470,7 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
     byp = defaultdict(list)
     late = []           # DIE-QC-8 opt-in --region-dme-early: early core taps hang from an upper node (below)
     for t in taps:
-        if early and delay_rep_um and early.get((t[0], t[1]), 0.0) > 0.0:
+        if early and delay_rep_um and early_mode == "hang" and early.get((t[0], t[1]), 0.0) > 0.0:
             late.append(t)
         else:
             byp[t[0]].append(t)
@@ -1542,6 +1551,9 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
     st = dict(merges=0, imbalanced=0, worst_imbalance_um=0.0, extra_wire_um=0.0, topology=dict(pick))
     if snake:
         st.update(snakes=0, snake_wire_um=0.0, snake_buffers=0)
+    if sink_early:
+        early_rows = [dict(part=t[0], port=t[1], early_model_ps=round(float(sink_early[(t[0], t[1])]), 2), mode="merge")
+                      for t in taps if float(sink_early.get((t[0], t[1]), 0.0)) > 0.0]
     if early_rows:
         st["early_taps"] = early_rows
     stack = [root]
@@ -1635,7 +1647,7 @@ def path_lengths(nodes):
 
 
 def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", leaf_um=200.0, full=0.0, dme_only=None,
-                        dme_feed_centroid=0.0):
+                        dme_feed_centroid=0.0, region_stub=0.0):
     """DIE-KV-2 (opt-in --tree-form link_fishbone --region-trees MAP --feed FEED, METHODOLOGY 12.13 clock follows data):
     the die clock is fed ALONG THE REGION LINKS, not by a die-wide balanced tree.
       (1) FEED: the region feed tree of tools/die_plan/locality.py (feed 'fish': max-bit spanning tree of the region
@@ -1658,7 +1670,13 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
     region ends at the CENTROID of that region's taps instead of its partition bbox centre (the DME root hangs from the
     feed end; a region whose bbox is stretched by one far partition, e.g. QC c_W5_bf_01 + io_serdes_2, otherwise feeds
     ~0.7 mm past its cores and back).  Non-DME regions keep the bbox centre (their H-tree bisects the bbox).  Default 0:
-    unchanged."""
+    unchanged.
+    region_stub=1 (DIE-QC-13 opt-in, --tree-opt region_stub=1; 12.16b(iv) reset release follows the clock): the feed end
+    of every region that FEEDS other regions becomes a SHARED FEED NODE: the region's own tree (H-tree / DME / fishbone)
+    hangs from a stub node at the same point (zero-length leg, one even inverter pair in inv2) instead of from the feed
+    end itself.  The shared node then carries no region taps, so a reset-release start port leaves it as a retime flop
+    on the clock fork (virtual st: node) instead of from a parent-region leaf ~440 ps below the fork (QC trial10: 60/871
+    width start fails, all on slice-head parents).  Regions without feed children are unchanged.  Default 0: unchanged."""
     par = feed["parent"]
     tapxy = {tuple(k.split("->")): v for k, v in feed["tap"].items()}
     rt = defaultdict(list)
@@ -1712,6 +1730,14 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
             nodes[a]["region_root"] = c
             rr[c] = a
             order.append(c)
+    if region_stub:            # DIE-QC-13 opt-in: shared feed node; the region's own tree hangs from a stub below it
+        for r in list(order):
+            if kids.get(r):
+                a = rr[r]
+                nodes[a].pop("region_root", None)
+                nodes[a]["shared_feed"] = r
+                rr[r] = mk(nodes[a]["x"], nodes[a]["y"], a, nodes[a]["level"] + 1, box[r], region_root=r,
+                           region_stub=True)
     if local == "none":        # DIE-QC-3 opt-in (link_htree + --region-dme): feed only; region trees attached later
         nodes[0]["link_feed"] = dict(root=root, regions=len(box), local="dme",
                                      feed_edges=sum(1 for v in par.values() if v is not None))
@@ -1947,10 +1973,70 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
     return "\n".join(v) + "\n", place, tap_ports, node_buf, parent_of
 
 
+EDGES_HDR = "# OT_EDGES v1"   # FLOW-ONEMODEL-2: both-edge clock arrival readout (see clock_edge_readout)
+
+
+def clock_parity(verilog):
+    """{instance: inverter-count parity (0/1) at its Y}, {tap port: parity} of a clock tree netlist (ctree.v form: one
+    '.A(net), .Y(net)' cell per line, 'assign tap = net', source port 'root')"""
+    drv = {}
+    for m in re.finditer(r"^\s+(\S+) (\S+) \(\.A\((\S+)\), \.Y\((\S+)\)\);", verilog, re.M):
+        drv[m.group(4)] = (m.group(1), m.group(2), m.group(3))
+    par = {"root": 0}
+
+    def parity(net):
+        st = []
+        while net not in par:
+            st.append(net)
+            net = drv[net][2]
+        v = par[net]
+        for n in reversed(st):
+            v = (v + ("INV" in drv[n][0])) % 2
+            par[n] = v
+        return v
+    cells = {drv[n][1]: parity(n) for n in drv}
+    taps = {m.group(1): parity(m.group(2)) for m in re.finditer(r"assign (\S+) = (\S+);", verilog)}
+    return cells, taps
+
+
+def clock_edge_readout(verilog, path, period="833.333", cells="b*", tap_slew=False, prefix=""):
+    """FLOW-ONEMODEL-2 (COORD 10-28): Tcl lines writing the clock arrivals of BOTH source edges at every tap AND every
+    clock cell, so every die proof carries measured fall arrivals by construction (no rise + T/2 anywhere).
+    PATH gets: header EDGES_HDR; 'T port late early [slew]' = source RISING edge at the tap (period - slack_max_rise,
+    slack_min_rise: output delay 0, the root is a data input at 0, so both transitions launch at t=0); 'F port late
+    early [slew]' = source FALLING edge at the tap (sampling instant T/2 + F); 'N cell late early' / 'M cell late
+    early' = source rise / fall edge at the cell output, POLARITY-RESOLVED: at an odd-inverter-parity output the
+    source rise is the Y fall (clock_parity), so N and M stay true source edges in buf, inv and inv2 trees.  Taps must
+    be true polarity (die_trial adds the parity inverter); an odd tap raises.  prefix: instance prefix in the routed
+    design (combo/clock-only GRT 'ck_'; printed names drop it).  cells: the get_cells glob(s) of the readout."""
+    cp, tp = clock_parity(verilog)
+    odd_t = sorted(t for t, v in tp.items() if v)
+    if odd_t:
+        raise ValueError(f"clock_edge_readout: {len(odd_t)} tap(s) of inverted polarity, e.g. {odd_t[:3]}")
+    odd = sorted(prefix + c for c, v in cp.items() if v)
+    nm = f"[string range [get_full_name $i] {len(prefix)} end]" if prefix else "[get_full_name $i]"
+    sl = " [get_property $p slew_max_{e}]" if tap_slew else ""
+    return ["set ot_odd [dict create" + "".join(f" {c} 1" for c in odd) + "]",
+            f"set fh [open {path} w]",
+            f"puts $fh \"{EDGES_HDR} T/N=source rise F/M=source fall (late early), polarity-resolved\"",
+            # arrival at a port = period - slack (output delay 0); at a cell output pin = its arrival property
+            "foreach p [get_ports t_*] { set n [get_full_name $p]; "
+            "set smx [get_property $p slack_max_rise]; set smn [get_property $p slack_min_rise]; "
+            f"puts $fh \"T $n [expr {{{period} - $smx}}] [expr {{$smn}}]" + sl.format(e="rise") + "\" }",
+            "foreach p [get_ports t_*] { "
+            f"puts $fh \"F [get_full_name $p] [expr {{{period} - [get_property $p slack_max_fall]}}] "
+            "[get_property $p slack_min_fall]" + sl.format(e="fall") + "\" }",
+            f"foreach i [get_cells {cells}] {{ set q [get_pins [get_full_name $i]/Y]; "
+            "if {[dict exists $ot_odd [get_full_name $i]]} { set e fall; set g rise } else { set e rise; set g fall }; "
+            f"puts $fh \"N {nm} [get_property $q arrival_max_$e] [get_property $q arrival_min_$e]\"; "
+            f"puts $fh \"M {nm} [get_property $q arrival_max_$g] [get_property $q arrival_min_$g]\" }}",
+            "close $fh"]
+
+
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
               slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
-              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf"):
+              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang"):
     global EVEN_LEGS
     EVEN_LEGS = clock_cell == "inv2"
     out = Path(out)
@@ -1958,6 +2044,10 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         raise ValueError("--region-dme-early needs --region-dme delay")
     if region_dme_early_ff and not region_dme_early:
         raise ValueError("--region-dme-early-ff needs --region-dme-early")
+    if region_dme_early_mode not in ("hang", "merge"):
+        raise ValueError("--region-dme-early-mode: hang | merge")
+    if region_dme_early_mode != "hang" and not region_dme_early:
+        raise ValueError("--region-dme-early-mode merge needs --region-dme-early")
     if region_dme_snake and not (region_dme == "delay" and tree_form == "link_htree" and site_slide and not slice_spine):
         raise ValueError("--region-dme-snake needs --region-dme delay with --tree-form link_htree --tree-site-slide")
     if region_dme_only and not (region_dme and tree_form == "link_htree" and site_slide and not slice_spine):
@@ -2065,13 +2155,17 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                                                        rep_um=rep_um if region_dme == "priced" else None,
                                                        delay_rep_um=rep_um if region_dme == "delay" else None,
                                                        only=set(region_dme_only), early=dme_early,
-                                                       **({"snake": region_dme_snake} if region_dme_snake else {}))
+                                                       **({"snake": region_dme_snake} if region_dme_snake else {}),
+                                                       **({"early_mode": region_dme_early_mode}
+                                                          if region_dme_early_mode != "hang" else {}))
         elif tree_form == "link_htree" and region_dme:   # DIE-QC-3 opt-in: legal-site DME region trees, no re-slide
             balanced = dict(region_dme=attach_region_dme(nodes, site, taps, regions,
                                                          rep_um=rep_um if region_dme == "priced" else None,
                                                          delay_rep_um=rep_um if region_dme == "delay" else None,
                                                          early=dme_early,
-                                                         **({"snake": region_dme_snake} if region_dme_snake else {})))
+                                                         **({"snake": region_dme_snake} if region_dme_snake else {}),
+                                                         **({"early_mode": region_dme_early_mode}
+                                                            if region_dme_early_mode != "hang" else {})))
         elif tree_form == "link_htree":
             balanced = balance_legalize(nodes, site)
     elif site_legal and not slice_spine:          # opt-in: every buffer/repeater on a legal channel site; a one-entry leaf drives AT its entry
@@ -2148,17 +2242,10 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             "set_input_delay 0 -clock vclk [get_ports root]",
             f"set_load {TAP_LOAD_FF} [all_outputs]",
             "set_output_delay 0 -clock vclk [all_outputs]",
-            "set fh [open /work/clock/arr_$::env(CORNER).txt w]",
-            # arrival at a port = period - slack (output delay 0); at a buffer output pin = its arrival property
-            "foreach p [get_ports t_*] { set n [get_full_name $p]; "
-            "set smx [get_property $p slack_max_rise]; set smn [get_property $p slack_min_rise]; "
-            "puts $fh \"T $n [expr {833.333 - $smx}] [expr {$smn}]" + (" [get_property $p slew_max_rise]"
-                         if any(int(v) > 0 for v in (tap_pad or {}).values()) else "") + "\" }",
-            ("foreach i [get_cells {b* r* p*}] { set q [get_pins [get_full_name $i]/Y]; "
-             if any(int(v) > 0 for v in (tap_pad or {}).values()) else
-             "foreach i [get_cells b*] { set q [get_pins [get_full_name $i]/Y]; ")
-            + "puts $fh \"N [get_full_name $i] [get_property $q arrival_max_rise] [get_property $q arrival_min_rise]\" }",
-            "close $fh",
+            # FLOW-ONEMODEL-2: both source edges at every tap and clock cell (polarity-resolved, clock_edge_readout)
+            *clock_edge_readout(v, "/work/clock/arr_$::env(CORNER).txt", period="833.333",
+                                cells="{b* r* p*}" if any(int(x) > 0 for x in (tap_pad or {}).values()) else "b*",
+                                tap_slew=any(int(x) > 0 for x in (tap_pad or {}).values())),
             "report_checks -path_delay max -group_path_count 1 -format full -fields {cap slew fanout}",
             "puts OT_DONE"]
     (out / "ctree.tcl").write_text("\n".join(tcl) + "\n")
@@ -3166,7 +3253,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
               clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
-              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf"):
+              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang"):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -3240,7 +3327,9 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                            clock_rc=clock_rc, slice_balance=slice_balance, region_dme=region_dme,
                                            region_dme_only=region_dme_only, region_dme_early=region_dme_early,
                                            region_dme_early_ff=region_dme_early_ff, region_dme_snake=region_dme_snake,
-                                           **({"clock_cell": clock_cell} if clock_cell != "buf" else {}))
+                                           **({"clock_cell": clock_cell} if clock_cell != "buf" else {}),
+                                           **({"region_dme_early_mode": region_dme_early_mode}
+                                              if region_dme_early_mode != "hang" else {}))
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -3855,6 +3944,10 @@ def main(argv=None):
     k.add_argument("--region-dme-early-ff", type=float, default=None, metavar="RATIO_FF",
                    help="DIE-QC-9 opt-in (with --region-dme-early): corner-averaged early hang target = mean of "
                         "early_TT/RATIO and early_FF/RATIO_FF (model ps), e.g. 1.293 from QC trial6 FF")
+    k.add_argument("--region-dme-early-mode", choices=("hang", "merge"), default="hang",
+                   help="DIE-S81-14 opt-in (with --region-dme-early): 'merge' = the declared early (model ps) is a DME "
+                        "sink delay, so bottom-up zero-skew merges deliver the core tap early (binary, no upper-node hang "
+                        "legs / star nodes); default 'hang' = DIE-QC-8 hang from an upper node")
     k.add_argument("--region-dme-snake", default=None, metavar="REGIONS",
                    help="DIE-QC-9 opt-in (with --region-dme delay, link_htree; COORD 10-28: standard zero-skew DME wire "
                         "elongation, plan-computed, part of the tree, not a residual ECO): comma list of DME regions "
@@ -3894,7 +3987,20 @@ def main(argv=None):
     j.add_argument("--out", required=True)
     j.add_argument("--no-clock-contract", action="store_true", help="legacy: face flops load the tap port directly")
     j.add_argument("--top", help="also write the matching die_top.v (shared-module types re-pointed to their stand-ins)")
+    e = sub.add_parser("readout", help="FLOW-ONEMODEL-2: print the both-edge clock arrival readout Tcl (T/F per tap, "
+                                         "N/M per clock cell, polarity-resolved) for a ctree.v, to source in any clock-only "
+                                         "or combo GRT script (writes the shared arr_<C>.txt format)")
+    e.add_argument("ctree_v")
+    e.add_argument("--path", default="/out/arr_$::env(CORNER).txt")
+    e.add_argument("--period", default="833.333")
+    e.add_argument("--cells", default="b*", help="get_cells glob, e.g. 'ck_*' or '{b* r* p*}'")
+    e.add_argument("--prefix", default="", help="instance prefix in the routed design (e.g. ck_)")
+    e.add_argument("--tap-slew", action="store_true")
     a = ap.parse_args(argv)
+    if a.cmd == "readout":
+        print("\n".join(clock_edge_readout(Path(a.ctree_v).read_text(), a.path, a.period, a.cells, a.tap_slew,
+                                           a.prefix)))
+        return 0
     if a.cmd == "standins":
         P = S.Plan(S.load(a.plan), Path(a.plan))
         smod = standin_module_names(P)
@@ -3946,6 +4052,7 @@ def main(argv=None):
                       region_dme_only=[r for r in a.region_dme_only.split(",") if r] if a.region_dme_only else None,
                       region_dme_early=a.region_dme_early, region_dme_early_ff=a.region_dme_early_ff,
                       **({"clock_cell": a.clock_cell} if a.clock_cell != "buf" else {}),
+                      **({"region_dme_early_mode": a.region_dme_early_mode} if a.region_dme_early_mode != "hang" else {}),
                       region_dme_snake=(a.region_dme_snake if a.region_dme_snake == "all" else
                                         set(r for r in a.region_dme_snake.split(",") if r)) if a.region_dme_snake else None)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",

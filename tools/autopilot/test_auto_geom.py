@@ -246,6 +246,32 @@ class TestRules(unittest.TestCase):
         R, v = G.judge(m, None, [200, 200])
         self.assertEqual([r["status"] for r in R if r["rule"] == "clock_tap_empty"], ["FAIL"])
 
+    def test_clock_leaf_reach_is_own_driver_distance_info_only(self):
+        # GEOM-REVIEW-46: sinks at x=190 driven by a leaf at x=20; the gated reach (nearest entry) is unchanged, the
+        # own-driver and root-port distances are reported as INFO
+        flops = [(i, 190, 10 + i) for i in range(1, 41)]
+        p = dump(self.d / "lr.tsv", flops=flops, comb=fill_cells(1000, 3600),
+                 nets=[("CLOCK", "p0", ["i500"]), ("CLOCK", "i500", [f"i{i}c" for i in range(1, 41)])],
+                 pins=[(0, "clk", "INPUT", 0, 20, "CLOCK")])
+        p.write_text(p.read_text() + "C\t500\tK\tCKBUFx4_ASAP7_75t_R\t20\t5\t21\t6\tcb\n")
+        m = G.metrics(str(p), odb="4_cts.odb")
+        sx, sy = m["clock_leaf_reach_far"]
+        self.assertEqual(m["clock_leaf_reach_driver"], [20.5, 5.5] if isinstance(m["clock_leaf_reach_driver"], list)
+                         else (20.5, 5.5))
+        self.assertAlmostEqual(m["clock_leaf_reach_max"], abs(sx - 20.5) + abs(sy - 5.5), places=1)
+        self.assertGreater(m["clock_leaf_reach_max"], 170)
+        self.assertGreater(m["clock_entry_sink_max"], m["clock_leaf_reach_max"])
+        self.assertAlmostEqual(m["clock_entry_sink_max"], m["clock_reach_max"], places=1)   # no FIRM cell: port only
+        R, _ = G.judge(m, None, [200, 200])
+        st = {r["rule"]: r["status"] for r in R}
+        self.assertEqual(st["clock_leaf_reach"], "INFO")
+        self.assertEqual(st["clock_entry_sink"], "INFO")
+        base = dict(m)
+        for k in ("clock_leaf_reach_max", "clock_leaf_reach_far", "clock_leaf_reach_driver", "clock_entry_sink_max",
+                  "clock_entry_sink_far"):
+            base.pop(k)
+        self.assertEqual(G.judge(base, None, [200, 200])[1], G.judge(m, None, [200, 200])[1])   # verdict unchanged
+
     def test_cts_tree_shape_vs_template(self):
         def tree(name, leaf_x):
             flops = [(i, leaf_x, 10 + i) for i in range(1, 41)]

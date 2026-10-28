@@ -189,6 +189,9 @@ class LandingError(ValueError):
 # count-aligned intra-region start relay: tx flop (origin partition) + rx flop (relay partition); must equal
 # count_align_bind.RELAY_STAGES, which shifts the K of the relay partition's crossings by the same counts
 RELAY_STAGES = 2
+# Strap inputs the strap-form origin declares SCALAR (`input wire strap_ca_efall`, no [0:0]); every other strap is a
+# vector.  gen_phys.strap_pin_sites names these pins without a bit index (FLOW-GEN-1 10-28, DIE-HEAD-9 bug 1).
+SCALAR_STRAPS = frozenset({"strap_ca_efall", "strap_ca_root"})
 
 
 def ca_cycles(ca, pid):
@@ -903,7 +906,7 @@ class Landings:
             if b not in ca_raw:
                 raise LandingError(f"{tn}: start-tree bus {b} is not a landed input of this type")
         extra.append(f"    input wire [{padw-1}:0] strap_ca_pad")
-        extra.append("    input wire strap_ca_efall")
+        extra.append("    input wire strap_ca_efall")   # SCALAR_STRAPS
         logic = []
         if len(tbs) > 1:
             tsw = (len(tbs) - 1).bit_length()
@@ -920,7 +923,7 @@ class Landings:
             p_start, raw = pin(tbs[0]), ca_raw[tbs[0]]
         start = "cland_start"
         if root:
-            extra.append("    input wire strap_ca_root")
+            extra.append("    input wire strap_ca_root")   # SCALAR_STRAPS
             rraw = local_raw("root count origin")
             logic += ["    wire cland_start_child, cland_start_root;",
                       f"    wire cland_raw_sel = strap_ca_root ? {rraw} : {raw};",

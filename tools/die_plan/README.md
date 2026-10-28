@@ -477,3 +477,15 @@ recorded calibration and does not qualify a replacement clock tree. Review the
 actual bit geometry, independently check reported numbers, and complete the
 real-clock die STA/GRT gates before freeze. New production routes still require
 matching per-die canary coverage for the source bytes they use.
+
+## Parent-tile local clock trunk (`parent_trunk_dme.py`, `parent_trunk_insert.tcl`; OPT-IN, DIE-QC-15)
+Upstream of the DIE-QC-14 lane planner (results/die_qc14_1028/a0trunk/trunk2.py; COORD 11:16: no release kit from a
+lane-local planner). Plans ONE trunk from a parent tile entry (ICG site) to every glue-cluster root and hard-child clock
+pin: greedy zero-skew DME of CKINVDCx16 stages, even parity by construction, balance by WIRE LENGTH (bridge
+elongation, repeaters at the corners, stages only in parity pairs, no pad stacks), legs priced on legalised geometry with
+the measured stage table `parent_trunk_stage_table_ckinvdcx16.json`, child pins at the 12.3 contract (`--child-ins`).
+`corr` re-balances the SAME topology from measured (routed) arrivals (plan iteration, not an ECO). `tcl` writes the
+ICG/TI/TS lists that `parent_trunk_insert.tcl` inserts + legalises on the placed parent db. Child pin offsets
+(`--pin-offset MODULE=dx,dy`) need an orientation (geometry `orient` or `--orient-rule X`), else the plan fails closed.
+Nothing calls these by default; every other tool is unchanged. Output is byte-identical to trunk2.py for the same inputs
+(A0 nk q0 -> q4 chain CHECKED; `test_parent_trunk_dme.py`).

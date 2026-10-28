@@ -72,7 +72,13 @@ def main(argv=None):
                         textcoords="offset points")
     if m.get("clock_reach_far"):
         fx, fy = m["clock_reach_far"]
-        ax.scatter([fx], [fy], s=40, marker="x", c="m", zorder=5, label=f"farthest clock sink {m.get('clock_reach_max')} um")
+        ax.scatter([fx], [fy], s=40, marker="x", c="m", zorder=5,
+                   label=f"sink farthest from its nearest clock entry/cell {m.get('clock_reach_max')} um")
+    if m.get("clock_leaf_reach_far") and m.get("clock_leaf_reach_driver"):
+        (fx, fy), (dx, dy) = m["clock_leaf_reach_far"], m["clock_leaf_reach_driver"]
+        ax.plot([fx, dx, dx], [fy, fy, dy], c="crimson", lw=0.8, zorder=5)
+        ax.scatter([fx], [fy], s=40, marker="+", c="crimson", zorder=5,
+                   label=f"sink farthest from its own clock driver {m.get('clock_leaf_reach_max')} um")
     for key, d in (("channel_h_at", "H"), ("channel_v_at", "V")):
         at = m.get(key)
         if at:

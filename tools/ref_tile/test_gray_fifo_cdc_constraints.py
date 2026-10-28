@@ -31,7 +31,8 @@ module gf_fix #(parameter integer MUT = 0, parameter integer SYNC = 2) (
   // host -> core: combinational FWFT head, popped and captured while !rempty
   wire empty; wire [3:0] rdata;
   wire pop = !empty;
-  ot_link_afifo #(.W(4), .AW(2), .SYNC(SYNC)) u_hc (
+  // MUT 6: the one-clock SAMECLK form (binary pointers, no synchroniser) across two clock families
+  ot_link_afifo #(.W(4), .AW(2), .SYNC(SYNC), .SAMECLK((MUT == 6) ? 1 : 0)) u_hc (
     .wclk(ck_host), .wrst_n(rst_host_n), .wr(h_wr), .wdata(h_wd), .wfull(h_full), .wfreed(), .ovf(),
     .rclk(ck_core), .rrst_n(rst_core_n), .rd(pop), .rempty(empty), .rdata(rdata), .rcount());
   always @(posedge ck_core or negedge rst_core_n) if (!rst_core_n) c_v <= 1'b0; else c_v <= pop ^ stray;
@@ -142,7 +143,8 @@ class Lint(Fixture):
                         (dict(mut=2), 'unapproved crossing hreg \\(host\\) -> s_out \\(ingest\\)'),
                         (dict(mut=3), 'consumer c_q.* loads FIFO u_hc storage .* read-valid is false'),
                         (dict(mut=4), 'consumer c_q.* loads FIFO u_hc storage'),
-                        (dict(mut=5), 'cross-family asynchronous control rst_host_n \\(host\\) -> stray \\(core\\)')]:
+                        (dict(mut=5), 'cross-family asynchronous control rst_host_n \\(host\\) -> stray \\(core\\)'),
+                        (dict(mut=6), 'u_hc \\(ot_link_afifo\\) lost its wgray publication register')]:
             with self.subTest(kw=kw), self.assertRaisesRegex(G.GrayFifoError, why):
                 G.lint(spec(**kw), self.root)
 
@@ -150,7 +152,8 @@ class Lint(Fixture):
         path = self.root / 'rtl/link/ot_link_afifo.sv'
         original = path.read_text()
         for old, new in [('wgray_s[0] <= wgray_seam;', 'wgray_s[0] <= wbin;'),          # binary pointer published
-                         ('wgray_s[i] <= wgray_s[i-1];', 'wgray_s[i] <= wgray_seam;')]:  # second stage bypassed
+                         ('wgray_s[j] <= wgray_s[j-1];', 'wgray_s[j] <= wgray_seam;'),   # second stage bypassed
+                         ('rgray_s[i] <= rgray_s[i-1];', 'rgray_s[i] <= rgray_seam;')]:  # (write side) bypassed
             with self.subTest(old=old):
                 self.assertEqual(original.count(old), 1)
                 path.write_text(original.replace(old, new))

@@ -59,6 +59,16 @@ REAL VIEWS (CLOCK-KV-R16, opt-in; without them the output is unchanged):
   timed over all endpoint-model combinations; the class keeps the worst over all, and 'real_view' reports the worst
   over the combinations that use at least one real model, plus real/total pair and instance counts.
 
+EARLY CORE TAPS (FLOW-ONEMODEL-3, COORD 10-28; plans with clock.core_taps 'early'; others byte-unchanged): an early
+  core tap t_<part>__clk_c<k> feeds only its core's clock pin(s) and is delivered core_tap_early_ps before the plain
+  taps on purpose, so its endpoint carries the core's OWN insertion instead of the common latency.  --core-insertion
+  view (gate default): the signed --core-view model of its core (pin-matched as above; the core is not also mapped to
+  the nearest tap); a core tap with no matching view keeps the common latency, is listed missing and the intra/seam
+  verdicts FAIL (closed).  --core-insertion declared (PLANNING ONLY): no-view taps use the plan's per-tap insertion
+  (insertion_ps / insertion_ff_ps) on the declared register, labelled 'declared'; a passing result reads 'DECLARED',
+  never PASS.  Plain taps then carry the common latency explicitly (TT clock.insertion_ps, FF insertion_ff_ps).  The
+  kit contract measures each core tap at arrival + its kit-SDC earliness (-source -early_ps), so a planned early tap is
+  damage-free and a LATE core pin is charged.
 DROOP REGION (CLOCK-KV-R17, COORD RULING CLOCK-KV-R16 (2), METHODOLOGY 12.4a b1): with --clock-droop shared the clock
   is charged droop only between taps in DIFFERENT mesh/PDN regions.  --droop-region mesh (default) = the region is the
   mesh/PDN region: every tap of the proof's mesh.json (one continuous die mesh) is in ONE region unless --droop-regions
@@ -228,7 +238,7 @@ def count_align_ss_info(landed, taps, bind, period, reg=None, scale=1.27, need_p
     clock buffers/wires assumed to scale alike, UNCHECKED) and the same rows (lag, slot->read, guard, start skew) are
     evaluated against the fixed TT/FF-planned K/DEPTH/origins at the same 833 ps period.  A die with real
     tap_arrivals_SS.json runs --corner SS instead (then the SS row is real)."""
-    keys = ("late_ps", "early_ps", "abs_late_ps", "abs_early_ps")
+    keys = TAP_TIME_KEYS
     st = {k: dict(v, **{f: float(v[f]) * scale for f in keys if f in v}) for k, v in taps.items()}
     rg = None if reg is None else dict(reg, clkq_max_wire_ps=float(reg["clkq_max_wire_ps"]) * scale,
                                        clkq_min_nowire_ps=float(reg["clkq_min_nowire_ps"]) * scale)
@@ -244,10 +254,11 @@ def count_align_ss_info(landed, taps, bind, period, reg=None, scale=1.27, need_p
 # factor (ASAP7 BUFx24 spice calibration: x1.0485 TT, x1.0552 FF); data-path derates unchanged.  Opt-in --clock-cal spice.
 # Source: OSS-CLOCK-2 data/asap7_bufx24_spice_cal.json "spice_scale" (opentools/mscts/data/, claude/oss-clock-2-1027@285ba72636).
 SPICE_CLOCK_CAL = {"TT": 1.0485, "FF": 1.0552}
-TAP_TIME_KEYS = ("late_ps", "early_ps", "abs_late_ps", "abs_early_ps")
+TAP_TIME_KEYS = ("late_ps", "early_ps", "abs_late_ps", "abs_early_ps", "fall_late_ps", "fall_early_ps", "abs_fall_late_ps",
+                 "abs_fall_early_ps")
 
 
-NODE_TIME_KEYS = ("node_late_ps", "node_early_ps")
+NODE_TIME_KEYS = ("node_late_ps", "node_early_ps", "node_fall_late_ps", "node_fall_early_ps")
 
 
 def scale_clock(meta, taps, f):
@@ -274,7 +285,55 @@ def credit(rng, node, la, ea, lc, ec):
     return min(max(0.0, rng.get(c, 0.0)), max(0.0, la - ea), max(0.0, lc - ec))
 
 
-def count_align_d_intervals(landed, taps, cppr_range=None, part_region=None, ocv=None, stats=None):
+class FallArrivalMissing(ValueError):
+    """FLOW-ONEMODEL-1: a falling-edge sample needs the MEASURED fall arrival of its capture clock pin (tap
+    fall_late_ps / fall_early_ps, tap_fall_merge.py); fall = rise + T/2 is never assumed (duty distortion on BUF
+    trees is 148-1149 ps, QC-11 / S81-12 / HEAD-11 / KV-11)."""
+
+
+def _capture_arr(B, node, edge):
+    """capture late/early of tap B for a rise- or fall-sampling flop.  fall: the measured fall arrival (relative to
+    the source's falling edge, so the sampling instant is T/2 + fall arrival); raises FallArrivalMissing without it"""
+    if edge == "rise":
+        return None
+    if edge != "fall":
+        raise ValueError(f"edge {edge!r}: rise or fall")
+    if node == "m" or "fall_late_ps" not in B or "fall_early_ps" not in B:
+        raise FallArrivalMissing(f"tap {B.get('port')}: no measured fall arrival (fall_late_ps/fall_early_ps)")
+    return float(B.get("abs_fall_late_ps", B["fall_late_ps"])), float(B.get("abs_fall_early_ps", B["fall_early_ps"]))
+
+
+def ca_pair_interval(A, B, a, b, cppr_range=None, ocv=None, edge="rise"):
+    """THE count-aligned phase interval of ONE launch -> capture tap pair (FLOW-ONEMODEL-1: the single function the
+    planner, the binder and the gate all call).  d = capture clock - launch clock at the pair's last common node,
+    lo = capture early - launch late (+ CPPR credit), hi = capture late - launch early (- credit), then exactly one
+    clock variation term (ocv setup on lo, hold on hi).  The launch is a rising-edge register; edge = the capture
+    flop's sampling edge: 'fall' takes the capture tap's MEASURED fall arrival (FallArrivalMissing if absent).
+    CPPR on BOTH edges (one model, COORD 10-28 DIE-KV-13): the common path's late-early pessimism is removed for a
+    rise-launch / fall-capture pair as for rise/rise, with the industry opposite-edge rule (PrimeTime CRPR: the smaller
+    of the rise and fall common-pin ranges): credit = min(rise range at the last common node, its fall range if the
+    proof has one (meta-free: cppr_range key '<node>@fall'), launch late-early, capture FALL late-early).  Without a
+    measured node fall range the rise range stands for it (the late/early spread is the liberty pin-cap range,
+    transition-independent in the exports, CLOCK-MESH-2; UNCHECKED on spice).  Returns (lo, hi, ocv_setup, ocv_hold)."""
+    node = pair_node(A, B)
+    la, ea, lc, ec = arr4(A, B, node)
+    f = _capture_arr(B, node, edge)
+    if f is not None:
+        lc, ec = f
+    cr = credit(cppr_range, node, la, ea, lc, ec) if cppr_range else 0.0
+    if f is not None and cppr_range:
+        fr = {k[:-5]: v for k, v in cppr_range.items() if k.endswith("@fall")}
+        if fr:
+            cr = min(cr, credit(fr, node, la, ea, lc, ec))
+    lo, hi = ec - la + cr, lc - ea - cr
+    os_ = oh = 0.0
+    if ocv is not None:
+        os_, oh = float(ocv(a, b, "setup")), float(ocv(a, b, "hold"))
+        lo, hi = lo - os_, hi + oh
+    return lo, hi, os_, oh
+
+
+def count_align_d_intervals(landed, taps, cppr_range=None, part_region=None, ocv=None, stats=None, edge="rise"):
     """THE count-aligned crossing phase interval (DIE-HEAD-5, COORD 00:22 follow-up: ONE interval model for planner and
     STA): {'srcpart->dstpart': (d_lo, d_hi)} over EVERY landed tap pair of the partition pair, d = capture clock - launch
     clock, d_lo = min(capture early - launch late), d_hi = max(capture late - launch early) (arr4 at the pair's last
@@ -291,25 +350,75 @@ def count_align_d_intervals(landed, taps, cppr_range=None, part_region=None, ocv
     d_lo -= ocv(a, b, 'setup') (launch late, capture early), d_hi += ocv(a, b, 'hold') (capture late, launch early).
     The OpenSTA late/early tap arrivals carry no derate/AOCV (no set_timing_derate in the exports; the late-early spread
     is the liberty pin-capacitance range, CLOCK-MESH-2), so this is not a double count.  None = no variation term
-    (pre-CA-OCV-1 interval; the record labels it).  stats: optional dict, filled {tag: [max ocv setup, max ocv hold]}."""
+    (pre-CA-OCV-1 interval; the record labels it).  stats: optional dict, filled {tag: [max ocv setup, max ocv hold]}.
+    edge (FLOW-ONEMODEL-1): the capture flop's sampling edge, see ca_pair_interval (fall: measured fall arrival)."""
     dsta = {}
     for a, b, tag in landed:
         A, B = taps[a], taps[b]
         if part_region is not None:
             tag = f"{part_region[A['part']]}->{part_region[B['part']]}"
-        node = pair_node(A, B)
-        la, ea, lc, ec = arr4(A, B, node)
-        cr = credit(cppr_range, node, la, ea, lc, ec) if cppr_range else 0.0
-        lo, hi = ec - la + cr, lc - ea - cr
-        if ocv is not None:
-            os_, oh = float(ocv(a, b, "setup")), float(ocv(a, b, "hold"))
-            lo, hi = lo - os_, hi + oh
-            if stats is not None:
-                m = stats.setdefault(tag, [0.0, 0.0])
-                m[0], m[1] = max(m[0], os_), max(m[1], oh)
+        lo, hi, os_, oh = ca_pair_interval(A, B, a, b, cppr_range, ocv, edge)
+        if ocv is not None and stats is not None:
+            m = stats.setdefault(tag, [0.0, 0.0])
+            m[0], m[1] = max(m[0], os_), max(m[1], oh)
         o = dsta.get(tag)
         dsta[tag] = (lo, hi) if o is None else (min(o[0], lo), max(o[1], hi))
     return dsta
+
+
+def _port_owners(ports, part_region):
+    reg = (lambda p: p) if part_region is None else (lambda p: part_region[p])
+    named, byreg = defaultdict(list), defaultdict(list)
+    for pid, c in ports.items():
+        if c.get("src_part") is not None and c.get("dst_part") is not None:
+            named[(c["src_part"], c["dst_part"])].append(pid)
+        byreg[(c["src"], c["dst"])].append(pid)
+
+    def owners(A, B):
+        sp, dp = A["part"], B["part"]
+        rk = (reg(sp), reg(dp))
+        return named.get((sp, dp)) or byreg.get(rk), f"{rk[0]}->{rk[1]}"
+    return owners
+
+
+def count_align_port_intervals(ports, landed, taps, cppr_range=None, part_region=None, ocv=None, stats=None,
+                               edge="rise"):
+    """FLOW-ONEMODEL-1: THE per-crossing interval the planner (count_align_plan --sta-proof) and the gate
+    (die_sta_related --count-align) both use.  ports = {port: {src, dst[, src_part, dst_part]}}; part_region =
+    {partition: region} (None: src/dst are partitions, the default 'part' key).
+    Each landed tap pair belongs to the crossing(s) that carry it:
+      * the ports that NAME its partition pair (src_part -> dst_part), else
+      * every port of its REGION pair (a region-level crossing carries all partition pairs nobody names).
+    A port's interval is the union over its tap pairs (ca_pair_interval), so a crossing is timed on its own
+    clock pins and never on another crossing's (DIE-KV-11: a region-key union put the 12 pc_WN_3->pc_WN_2 ports'
+    early bound on the phy_WN_3->phy_WN_2 ring, 61.8 ps below the plan).  Landed pairs of a region pair with no port
+    are returned as unbound (fail closed by the caller).  Returns ({port: (lo, hi)}, unbound_tags, {port: n_pairs});
+    stats (optional) gets {port: [max ocv setup, max ocv hold]}.
+    edge 'fall' (FLOW-ONEMODEL-1): capture on the MEASURED fall arrival (ca_pair_interval); a port with any capture
+    tap lacking it maps to None (the caller fails it closed / never plans a fall sample on it)."""
+    own = _port_owners(ports, part_region)
+    iv, npairs, unbound, nofall = {}, defaultdict(int), set(), set()
+    for a, b, _ in landed:
+        A, B = taps[a], taps[b]
+        owners, rt = own(A, B)
+        if not owners:
+            unbound.add(rt)
+            continue
+        try:
+            lo, hi, os_, oh = ca_pair_interval(A, B, a, b, cppr_range, ocv, edge)
+        except FallArrivalMissing:
+            nofall.update(owners)
+            continue
+        for pid in owners:
+            o = iv.get(pid)
+            iv[pid] = (lo, hi) if o is None else (min(o[0], lo), max(o[1], hi))
+            npairs[pid] += 1
+            if ocv is not None and stats is not None:
+                m = stats.setdefault(pid, [0.0, 0.0])
+                m[0], m[1] = max(m[0], os_), max(m[1], oh)
+    for pid in nofall:
+        iv[pid] = None
+    return iv, sorted(unbound), dict(npairs)
 
 
 def ca_ocv(proof, meta, taps, corner, lat, clock_ocv="none", clock_droop=None, droop_region="mesh",
@@ -350,6 +459,36 @@ def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lc
         CPPR_LCA = old
 
 
+def sta_port_intervals(proof, plan, corners, ports, part_region=None, clock_cal="none", cppr_lca=False,
+                       clock_ocv="none", clock_droop=None, droop_regions_file=None, core_latency_ff=None, aocv_table=None,
+                       fall=False):
+    """FLOW-ONEMODEL-1: {corner: dict(rise={port: (lo, hi)}, fall={port: (lo, hi) | None} (fall=True), unbound=[...])}
+    = count_align_port_intervals on the proof exactly as main() feeds count_align_landed (same tap arrivals, spice
+    scale, build_pairs, CPPR node, clock variation term).  The planner hulls on THIS; the gate times on THIS."""
+    global CPPR_LCA
+    plan = plan if isinstance(plan, dict) else json.loads(Path(plan).read_text())
+    old, CPPR_LCA = CPPR_LCA, bool(cppr_lca)
+    try:
+        out = {}
+        for c in corners:
+            meta, taps = load_taps(Path(proof), c)
+            if clock_cal == "spice":
+                meta, taps = scale_clock(meta, taps, SPICE_CLOCK_CAL.get(c, SPICE_CLOCK_CAL["TT"]))
+            pairs, _ = build_pairs(plan, taps)
+            lt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
+            lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
+            ocv = ca_ocv(Path(proof), meta, taps, c, lat, clock_ocv, clock_droop, "mesh", droop_regions_file, aocv_table)
+            rng = meta.get("cppr_node_range_ps")
+            iv, unb, _ = count_align_port_intervals(ports, pairs["landed"], taps, rng, part_region, ocv)
+            out[c] = dict(rise=iv, unbound=unb)
+            if fall:
+                out[c]["fall"] = count_align_port_intervals(ports, pairs["landed"], taps, rng, part_region, ocv,
+                                                            edge="fall")[0]
+        return out
+    finally:
+        CPPR_LCA = old
+
+
 def tap_leg(meta, taps):
     """START-TREE-1: median (late, early, stages) of the leg from a tap's driving tree node (tree_path minus its last
     level) to the tap pin, over the proof's taps: the clock leg of a retime flop placed on a tree node"""
@@ -360,15 +499,36 @@ def tap_leg(meta, taps):
     return ls[len(ls) // 2], es[len(es) // 2], ss[len(ss) // 2]
 
 
-def virtual_tap(meta, taps, path, leg):
+def tap_leg_fall(meta, taps):
+    """FLOW-ONEMODEL-1: median (fall late, fall early) leg from the driving tree node's MEASURED fall arrival
+    (meta node_fall_late_ps / node_fall_early_ps) to the tap's fall arrival; None if the proof has no node falls"""
+    nfl, nfe = meta.get("node_fall_late_ps"), meta.get("node_fall_early_ps")
+    if not isinstance(nfl, dict) or not isinstance(nfe, dict):
+        return None
+    lt = [t for t in taps.values() if len(t.get("tree_path", "")) > 1 and t.get("part") is not None
+          and "fall_late_ps" in t and nfl.get(t["tree_path"][:-1]) is not None]
+    if not lt:
+        return None
+    ls = sorted(float(t["fall_late_ps"]) - float(nfl[t["tree_path"][:-1]]) for t in lt)
+    es = sorted(float(t["fall_early_ps"]) - float(nfe[t["tree_path"][:-1]]) for t in lt)
+    return ls[len(ls) // 2], es[len(es) // 2]
+
+
+def virtual_tap(meta, taps, path, leg, fleg=None):
     """START-TREE-1: the clock pin of a start retime flop on tree node `path` ('__st__<path>', added to taps): node
-    arrival + leg, stages + leg stages, node xy; cppr_node 'h' (own droop region: the shared-droop term applies)"""
+    arrival + leg, stages + leg stages, node xy; cppr_node 'h' (own droop region: the shared-droop term applies).
+    FLOW-ONEMODEL-1: fall arrival = measured node fall arrival + fall leg (tap_leg_fall) when the proof has both,
+    else none (a fall sample on that flop then fails closed)."""
     k = f"__st__{path}"
     if k not in taps:
         taps[k] = dict(port=k, part=None, cppr_node="h", tree_path=path,
                        late_ps=float(meta["node_late_ps"][path]) + leg[0],
                        early_ps=float(meta["node_early_ps"][path]) + leg[1],
                        stages_from_root=int(meta["node_stages"][path]) + leg[2], xy_um=meta["node_xy_um"][path])
+        nfl, nfe = meta.get("node_fall_late_ps") or {}, meta.get("node_fall_early_ps") or {}
+        if fleg is not None and nfl.get(path) is not None and nfe.get(path) is not None:
+            taps[k]["fall_late_ps"] = float(nfl[path]) + fleg[0]
+            taps[k]["fall_early_ps"] = float(nfe[path]) + fleg[1]
     return k
 
 
@@ -378,7 +538,7 @@ def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None,
     on its launch -> capture tap pair, CPPR at the last common node, the same ocv callable).  PASS iff the plan's
     sample edge is clean on the STA interval shifted by the start skew (clk->Q range; distance >= sync aperture) and the
     plan marked it clean (sync_values 1); a missing tap fails closed."""
-    leg = None
+    leg = fleg = None
     rows = []
     reg = bind.get("regions", {})
     added = [k for c in bind.get("start_ports", {}).values() for k in (c["launch"], c["capture"])
@@ -387,8 +547,10 @@ def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None,
         ends = []
         for k in (c["launch"], c["capture"]):
             if k and k.startswith("__st__") and meta is not None and k[6:] in meta.get("node_late_ps", {}):
-                leg = leg or tap_leg(meta, {q: t for q, t in taps.items() if not q.startswith("__st__")})
-                virtual_tap(meta, taps, k[6:], leg)
+                if leg is None:
+                    real = {q: t for q, t in taps.items() if not q.startswith("__st__")}
+                    leg, fleg = tap_leg(meta, real), tap_leg_fall(meta, real)
+                virtual_tap(meta, taps, k[6:], leg, fleg)
             ends.append(k if k in taps else None)
         r = reg.get(c["dst"], {})
         row = dict(port=pid, region=c["dst"], edge="fall" if r.get("edge_fall") else "rise",
@@ -398,7 +560,13 @@ def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None,
             row.update(ok=False, reason="no taps")
             rows.append(row)
             continue
-        iv = count_align_d_intervals([(ends[0], ends[1], "s")], taps, cppr_range, ocv=ocv)["s"]
+        try:
+            # FLOW-ONEMODEL-1: a fall-edge sync samples on the capture pin's MEASURED fall arrival (no T/2 assumption)
+            iv = ca_pair_interval(taps[ends[0]], taps[ends[1]], ends[0], ends[1], cppr_range, ocv, row["edge"])[:2]
+        except FallArrivalMissing:
+            row.update(ok=False, reason="fall edge without a measured fall arrival (fail closed)")
+            rows.append(row)
+            continue
         off = period / 2 if row["edge"] == "fall" else 0.0
         elo, ehi = iv[0] - clkq[1], iv[1] - clkq[0]
         k = math.floor((elo - off) / period)
@@ -455,18 +623,25 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
     elif key != "part":
         raise SystemExit(f"--count-align-key: unknown key {key!r}")
     ost = {}
-    dsta = count_align_d_intervals(landed, taps, cppr_range, part_region=pr, ocv=ocv, stats=ost)
+    # FLOW-ONEMODEL-1: per-port intervals (count_align_port_intervals), the SAME function count_align_plan --sta-proof
+    # hulls on: a port is timed over the tap pairs it carries (its named partition pair, else its region pair)
+    dsta, unbound, _ = count_align_port_intervals(bind["ports"], landed, taps, cppr_range, part_region=pr, ocv=ocv,
+                                                  stats=ost)
     tree_reg = {r["tree_port"]: (x, r) for x, r in bind.get("regions", {}).items() if r.get("tree_port")}
+    dfall = None
+    if any(r.get("edge_fall") for _, r in tree_reg.values()):
+        dfall = count_align_port_intervals({p: bind["ports"][p] for p in tree_reg if p in bind["ports"]}, landed, taps,
+                                           cppr_range, part_region=pr, ocv=ocv, edge="fall")[0]
     rows, miss, srows = [], [], []
     for pid, b in sorted(bind["ports"].items()):
         tag = f"{b['src']}->{b['dst']}"
         D = int(b["depth"])
         tr = tree_reg.get(pid)
         amb_tree = bool(tr) and int(tr[1].get("sync_values", 1)) > 1
-        if tag not in dsta or "d_lo_ps" not in b:
+        if dsta.get(pid) is None or "d_lo_ps" not in b:
             miss.append(pid)
             continue
-        dl, dh = dsta[tag]
+        dl, dh = dsta[pid]
         if amb_tree:
             lo, hi, src = b["L_lo_ps"], b["L_hi_ps"], "plan-sync"
         else:
@@ -477,8 +652,12 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
                    slot_read_ps=round(lo - 0.5 * period, 1), guard_budget_ps=round(ap, 1),
                    guard_hi_slack_ps=round(mh - ap, 1))
         if ocv is not None and src == "sta":
-            row["ocv_lo_ps"], row["ocv_hi_ps"] = (round(x, 1) for x in ost.get(tag, (0.0, 0.0)))
+            row["ocv_lo_ps"], row["ocv_hi_ps"] = (round(x, 1) for x in ost.get(pid, (0.0, 0.0)))
         row["lag_ok"] = min(ml, mh) >= need_ps
+        if amb_tree and tr[1].get("edge_fall"):
+            # FLOW-ONEMODEL-1: an ambiguous tree crossing's lag window is the plan sync window, which places the fall
+            # sample at rise + T/2; with measured duty distortion that is not a bound -> fail closed
+            row.update(lag_ok=False, reason="ambiguous fall-edge tree crossing (sync window assumes fall = rise + T/2)")
         row["slot_read_ok"] = row["slot_read_ps"] >= 0
         row["guard_ok"] = row["guard_hi_slack_ps"] >= 0
         rows.append(row)
@@ -495,7 +674,16 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
             if s["sync_values"] == 1:
                 # J chip-invariant on the STA's own d: the effective sampled phase d - skew keeps >= sap from off + kT
                 off = period / 2 if s["edge"] == "fall" else 0.0
-                elo, ehi = dl - sk_hi, dh - sk_lo
+                sl, sh = dl, dh
+                if s["edge"] == "fall":
+                    # FLOW-ONEMODEL-1: the fall sample is timed on the MEASURED fall arrival, never rise + T/2
+                    fv = (dfall or {}).get(pid)
+                    if fv is None:
+                        s.update(ok=False, reason="fall edge without a measured fall arrival (fail closed)")
+                        srows.append(s)
+                        continue
+                    sl, sh = fv
+                elo, ehi = sl - sk_hi, sh - sk_lo
                 k = math.floor((elo - off) / period)
                 dist = min(elo - (off + k * period), off + (k + 1) * period - ehi)
                 s["sta_sync_dist_ps"] = round(dist, 1)
@@ -511,14 +699,16 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
     gfail = sum(1 for r in rows if not r["guard_ok"])
     wl = min(rows, key=lambda r: r["margin_lo_ps"]) if rows else None
     wh = min(rows, key=lambda r: r["margin_hi_ps"]) if rows else None
-    btags = {f"{b['src']}->{b['dst']}" for b in bind["ports"].values()}
-    unbound = sorted(t for t in dsta if t not in btags) if key == "region" else []
+    ltags = {f"{(pr or {}).get(taps[a_]['part'], taps[a_]['part'])}->{(pr or {}).get(taps[b_]['part'], taps[b_]['part'])}"
+             for a_, b_, _ in landed}
+    unbound = unbound if key == "region" else []
     ok = rows and not (nfail or sfail or rfail or gfail or miss or unbound)
     return dict(clock_variation=(ocv_label or "callable") if ocv is not None else "none",
                 ocv_max_lo_ps=round(max((v[0] for v in ost.values()), default=0.0), 1) if ocv is not None else None,
                 ocv_max_hi_ps=round(max((v[1] for v in ost.values()), default=0.0), 1) if ocv is not None else None,
                 below_need=sum(1 for r in rows if min(r["margin_lo_ps"], r["margin_hi_ps"]) < need_ps),
-                key=key, landed_tags=len(dsta), unbound=len(unbound), unbound_tags=unbound[:20], crossings=len(rows), sta_timed=sum(r["source"] == "sta" for r in rows),
+                key=key, interval="port (FLOW-ONEMODEL-1 count_align_port_intervals)", landed_tags=len(ltags),
+                unbound=len(unbound), unbound_tags=unbound[:20], crossings=len(rows), sta_timed=sum(r["source"] == "sta" for r in rows),
                 tree_plan=sum(r["source"] == "plan-sync" for r in rows), no_taps=len(miss), no_taps_ports=miss[:20],
                 need_ps=need_ps, aperture_ps=round(ap, 3), fail=nfail, worst_lo=wl, worst_hi=wh,
                 slot_read=dict(fail=rfail, worst_ps=min((r["slot_read_ps"] for r in rows), default=None),
@@ -622,13 +812,16 @@ def endpoint_slacks(A, B, la, ea, lc, ec, cr, period, unc_s, unc_h, models_a, mo
 
 
 def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=False, window=None, hold_window=None,
-               ocv=None, views=None, rec=None, dd=None):
+               ocv=None, views=None, rec=None, dd=None, kit_offset=None):
     """ocv: optional callable (a_port, b_port, check) -> clock OCV pessimism ps on the non-common clock (CLK-AOCV,
     opt-in --clock-ocv); None = unchanged (no clock derate in this gate).
     views: optional {port: [endpoint models]} (REAL VIEWS, opt-in); None = the declared register on every tap.
     rec: optional dict, filled {(a, b, tag): (gate setup, gate hold, has real endpoint, both real)} (HB4, opt-in).
     dd: optional data droop fractions {'logic', 'wire'} (12.4a b2, data_droop.fracs): late data derate on SETUP only;
-    None = unchanged (no data droop term)."""
+    None = unchanged (no data droop term).
+    kit_offset: optional {port: ps} (FLOW-ONEMODEL-3): the kit SDC source latency of an early core tap is -early
+    (gen_phys core_tap_rows), so the kit contract measures each tap's arrival + its declared earliness: a core tap
+    delivered as planned is damage-free, a LATE core tap (not early enough) is charged.  None = unchanged."""
     ws, wh, sk, rows = None, None, 0.0, []
     rv = dict(pairs=0, ws=None, wh=None, nneg_s=0, nneg_h=0, both=0, bs=None, bh=None, bneg_s=0, bneg_h=0,
               dmg=[]) if views is not None else None
@@ -740,7 +933,8 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
             node = pair_node(A, B)
             la, ea, lc, ec = arr4(A, B, node)
             cr = credit(rng, node, la, ea, lc, ec)
-            hd.append((lc - ea - cr, a, b, tag))
+            ko = (kit_offset.get(b, 0.0) - kit_offset.get(a, 0.0)) if kit_offset else 0.0
+            hd.append((lc - ea - cr + ko, a, b, tag))
         hd.sort(reverse=True)
         w = float(hold_window["ps"])
         out["kit_contract_hold"] = dict(
@@ -749,6 +943,10 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
             worst=dict(launch=hd[0][1], capture=hd[0][2], where=hd[0][3], damage_ps=round(hd[0][0], 2)),
             damage_pctl_ps={q: round(hd[min(len(hd) - 1, int(len(hd) * (1 - q / 100.0)))][0], 2) for q in (50, 99, 99.9)},
             verdict="PASS" if hd[0][0] <= w else "FAIL")
+        if kit_offset:
+            out["kit_contract_hold"]["core_tap_offset"] = dict(
+                taps=len(kit_offset), basis="kit SDC set_clock_latency -source -early_ps on each early core tap "
+                "(gen_phys core_tap_rows): arrival + declared earliness")
         if ocv is not None:
             # INFRA-FIRST-QC-R18 (additive, gate unchanged): the kit contract only holds if the die delivers the tap
             # pair INSIDE the window including the clock OCV (pair MC mesh skew + AOCV below the mesh) that the
@@ -1354,12 +1552,15 @@ def pins_match(view_meta, pins, plan_dir, outline_um=None, extra=()):
     return pins_relation(view_meta, pins, plan_dir, outline_um, extra)[1]
 
 
-def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_delay_ps, match_pins=False, plan_dir=None):
+def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_delay_ps, match_pins=False, plan_dir=None,
+                exclude=()):
     """{port: [models]} + coverage record.  core_views {module: dir}; kits {part_or_type: spec}.
     match_pins (CLOCK-KV-R21; gate default ON since CLOCK-KV-R22; CONTENT match since CLOCK-KV-R24): a core view
     applies only to instances whose plan pins_file (resolved under plan_dir) has the sha256 the view was signed on
     (provenance kit.pins_sha256); other pin views of the module (an orientation re-pin, an added strap pin) are a
-    different physical core and stay budget (listed in pin_view_mismatch, by reason in pin_view_mismatch_reason)."""
+    different physical core and stay budget (listed in pin_view_mismatch, by reason in pin_view_mismatch_reason).
+    exclude: {(part, inst)} cores clocked by their own early core tap (FLOW-ONEMODEL-3, core_tap_views): never mapped
+    to the nearest tap (their clock pin is not there); counted under early_core_tap_instances."""
     budget = budget_model(reg, lat)
     views = {p: [budget] for p in taps}
     cmodels = {m: core_view_model(m, d, corner, load_ff, part_delay_ps) for m, d in core_views.items()}
@@ -1369,7 +1570,11 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
     why = defaultdict(int)
     how = defaultdict(int)
     olines, plan_pins = core_outlines(plan), sorted({v[3] for v in cmap.values() if v[3]})
+    n_excl = 0
     for (n, inst), (mod, port, dist, pins) in cmap.items():
+        if (n, inst) in exclude:
+            n_excl += 1
+            continue
         if match_pins and mod in cmodels:
             hw, r = pins_relation(cmodels[mod]["meta"], pins, plan_dir, olines.get((n, inst)), plan_pins)
             if hw:
@@ -1400,6 +1605,8 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
                core_models={m: dict(c["etm"], meta=c["meta"], part_delay_ps=part_delay_ps) for m, c in cmodels.items()},
                map_distance_max_um=max([v[2] for v in cmap.values() if v[2] is not None] or [0.0]),
                map_distance_real_um=sorted(v[2] for v in cmap.values() if v[0] in cmodels and v[2] is not None)[::32])
+    if exclude:
+        cov["early_core_tap_instances"] = n_excl
     if match_pins:
         cov["pin_view_mismatch"] = dict(mism)
         cov["pin_view_mismatch_reason"] = dict(why)
@@ -1407,6 +1614,111 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
         cov["pin_view_match"] = ("canonical content (name, direction, layer, x, y, size, clock-entry flag + core "
                                  "outline; free text ignored) or an exact MX/MY/R180 image of the signed pin set")
     return views, cov
+
+
+# FLOW-ONEMODEL-3 (COORD 10-28 11:54, S81-14 + QC-15): a plan EARLY core tap (clock.core_taps 'early', port clk_c<k>)
+# feeds only its core's clock pin(s), and the spine delivers it core_tap_early_ps before the plain taps on purpose
+# (METHODOLOGY v5.0 insertion balancing).  The declared-budget model put the same common latency on both sides of
+# every pair, so that designed earliness was charged as skew.  Each early core tap's endpoint now carries the core's
+# OWN insertion: the freeze gate takes it from the signed core view (--core-view ETM: clk->out / setup / hold already
+# hold the core's insertion, referenced to tap + --core-part-delay-ps) and FAILS CLOSED for a core tap whose core has
+# no matching view; --core-insertion declared (PLANNING ONLY) uses the plan's declared per-tap insertion
+# (tap insertion_ps / insertion_ff_ps) on the declared register, labelled 'declared', never a gate PASS.
+CORE_INSERTION_MODES = ("view", "declared")
+
+
+def early_core_map(plan, taps):
+    """{proof port: [dict(part, inst, module, pin, ins_ps{TT,FF}, early_ps{TT,FF}, pins_file, outline_um)]} for every
+    plan early core tap present in the proof (port t_<part>__clk_c<k>, gen_phys.core_tap_rows).  {} for a plan
+    without early core taps (read from the raw plan types, no schema parse: minimal plans stay valid)."""
+    pt = plan.get("partition_types") or {}
+    if not any(((t or {}).get("clock") or {}).get("core_taps") == "early"
+               for t in (pt.values() if isinstance(pt, dict) else pt)):
+        return {}
+    import schema as S
+    import gen_phys as G
+    P = S.Plan(plan)
+    byname = defaultdict(dict)
+    for p, r in taps.items():
+        if "__" in p:
+            byname[r.get("part")][p.rsplit("__", 1)[1]] = p
+    out = defaultdict(list)
+    for n, prt in P.parts.items():
+        tn = prt["type"]
+        if (P.types[tn].get("clock", {}) or {}).get("core_taps") != "early":
+            continue
+        hc = {h["inst"]: h for h in P.types[tn].get("hard_cores", []) or []}
+        rows = {c: G.core_tap_rows(P, tn, c, pending=[]) for c in ("TT", "FF")}
+        for (pn, inst, pin, e_tt, i_tt), (_, _, _, e_ff, i_ff) in zip(rows["TT"], rows["FF"]):
+            port = byname.get(n, {}).get(pn)
+            if port is None:
+                continue
+            h = hc.get(inst, {})
+            out[port].append(dict(part=n, inst=inst, module=h.get("module"), pin=pin, ins_ps=dict(TT=i_tt, FF=i_ff),
+                                  early_ps=dict(TT=e_tt, FF=e_ff), pins_file=h.get("pins_file"),
+                                  outline_um=h.get("outline_um")))
+    return dict(out)
+
+
+def declared_core_model(reg, module, ins):
+    """PLANNING-ONLY endpoint of an early core tap: the declared register arcs at the plan's declared core insertion."""
+    return dict(name=f"declared:{module}", real=False, declared=True, lat_late=ins, lat_early=ins,
+                clkq_max=reg["clkq_max_wire_ps"], clkq_min=reg["clkq_min_nowire_ps"], setup=reg["setup_ps"],
+                hold=reg["hold_ps"])
+
+
+def core_tap_views(views, ecm, corner, reg, cmodels, mode="view", match_pins=False, plan_dir=None, plan_pins=()):
+    """replace the endpoint models of every early core tap (ecm = early_core_map) with its core's own: the signed
+    view model (cmodels {module: core_view_model}, pin-matched like build_views when match_pins), else (mode
+    'declared') the declared-insertion model, else the common-latency budget is KEPT and the tap is listed missing
+    (fail closed).  Returns (views, record)."""
+    if mode not in CORE_INSERTION_MODES:
+        raise ValueError(f"--core-insertion {mode!r}: one of {CORE_INSERTION_MODES}")
+    n = dict(view=0, declared=0, missing=0)
+    missing, dec = [], []
+    for port, mem in sorted(ecm.items()):
+        ms, src = [], set()
+        for m in mem:
+            cm = cmodels.get(m["module"])
+            if cm is not None and match_pins and pins_relation(cm["meta"], m["pins_file"], plan_dir, m["outline_um"],
+                                                                plan_pins)[1]:
+                cm = None
+            if cm is not None:
+                if cm not in ms:
+                    ms.append(cm)
+                src.add("view")
+            elif mode == "declared" and m["ins_ps"][corner] > 0:
+                dm = declared_core_model(reg, m["module"], m["ins_ps"][corner])
+                if dm not in ms:
+                    ms.append(dm)
+                src.add("declared")
+            else:
+                src.add("missing")
+        k = "missing" if "missing" in src else "declared" if "declared" in src else "view"
+        n[k] += 1
+        if k == "missing":
+            missing.append(port)
+        else:
+            if k == "declared":
+                dec.append(port)
+            views[port] = ms
+    rec = dict(mode=mode, early_core_taps=len(ecm), source=n, missing_taps=missing[:20], declared_taps=dec[:20],
+               rule="FLOW-ONEMODEL-3: early core tap endpoint = the core's own insertion (signed view); 'declared' = "
+                    "plan per-tap insertion, PLANNING ONLY, never a gate PASS; missing view -> FAIL CLOSED "
+                    "(timed at the common latency, labelled)")
+    return views, rec
+
+
+def core_insertion_verdict(verdict, recs):
+    """gate verdict after the early-core-tap insertion source: any missing view -> FAIL (closed); any declared
+    insertion -> 'DECLARED' (a planning estimate, not a gate PASS); otherwise unchanged."""
+    if not recs:
+        return verdict
+    if any(r["source"]["missing"] for r in recs):
+        return "FAIL"
+    if any(r["source"]["declared"] for r in recs):
+        return "DECLARED" if verdict == "PASS" else verdict
+    return verdict
 
 
 def kit_windows(pc, intra_override=None):
@@ -1477,6 +1789,11 @@ def main(argv=None):
                          "--no-core-view-match-pins = the pre-R22 module-only match (diagnostic)")
     ap.add_argument("--core-part-delay-ps", type=float, default=0.0,
                     help="partition tap -> core clock pin delay (unbuilt partition = budget; default 0)")
+    ap.add_argument("--core-insertion", choices=CORE_INSERTION_MODES, default="view",
+                    help="FLOW-ONEMODEL-3: insertion of a plan EARLY core tap's endpoint. view (gate, default) = the "
+                         "signed --core-view of its core, FAIL CLOSED where none matches; declared = the plan's per-tap "
+                         "insertion_ps / insertion_ff_ps where no view matches (PLANNING ONLY: verdict 'DECLARED', "
+                         "never a gate PASS)")
     ap.add_argument("--clock-ocv", choices=("none", "flat", "table"), default="none",
                     help="CLK-AOCV opt-in (12.4a b1 DRAFT, not a gate until OWNER review): clock OCV on the non-common "
                          "branches; default none = unchanged output")
@@ -1566,6 +1883,7 @@ def main(argv=None):
         res["block_model"]["core_part_delay_ps"] = a.core_part_delay_ps
     cov = None
     hbrec, hbbits = {}, None
+    ecm, ci_recs = None, []
     for c in corners:
         meta, taps = load_taps(d, c)
         if a.clock_cal == "spice":
@@ -1575,12 +1893,30 @@ def main(argv=None):
         reg = characterise(out, c, slew, a.seam_wire_um * a.wire_ff_per_um)
         pairs, cov = build_pairs(plan, taps)
         views = None
-        if real:
+        if ecm is None:
+            ecm = early_core_map(plan, taps)
+        kit_off = {p: m[0]["early_ps"][c] for p, m in ecm.items()} or None
+        if real or ecm:
             import schema as S_
-            views, rcov = build_views(plan, taps, c, reg, S_.common_latency_ps(S_.Plan(plan), c), core_views, kits,
+            clat = S_.common_latency_ps(S_.Plan(plan), c)
+        if real:
+            views, rcov = build_views(plan, taps, c, reg, clat, core_views, kits,
                                       a.seam_wire_um * a.wire_ff_per_um, a.core_part_delay_ps,
-                                      match_pins=a.core_view_match_pins, plan_dir=Path(a.plan).resolve().parent)
+                                      match_pins=a.core_view_match_pins, plan_dir=Path(a.plan).resolve().parent,
+                                      exclude={(m["part"], m["inst"]) for ms in ecm.values() for m in ms})
             cr_real = rcov
+        elif ecm:
+            bm = budget_model(reg, clat)
+            views = {p: [bm] for p in taps}
+        if ecm:
+            cmods = {m: core_view_model(m, vd, c, a.seam_wire_um * a.wire_ff_per_um, a.core_part_delay_ps)
+                     for m, vd in core_views.items()}
+            views, ci = core_tap_views(views, ecm, c, reg, cmods, a.core_insertion, match_pins=a.core_view_match_pins,
+                                       plan_dir=Path(a.plan).resolve().parent,
+                                       plan_pins=sorted({m["pins_file"] for ms in ecm.values() for m in ms
+                                                         if m["pins_file"]}))
+            ci["common_latency_ps"] = clat
+            ci_recs.append(ci)
         pairs.update(nearest_pairs(d, a.plan, a.clock_tool, taps))
         if a.hold_buffers != "none" and hbbits is None:
             hbbits = seam_bits(d, a.plan, a.clock_tool, taps)
@@ -1593,6 +1929,8 @@ def main(argv=None):
         dd = DD.fracs(ddm, a.data_droop, c) if a.data_droop != "none" else None
         if real:
             cr["real_view_coverage"] = cr_real
+        if ecm:
+            cr["core_insertion"] = ci
         ocv = None
         if a.pair_unc:
             if a.clock_ocv != "none" or a.mesh_signoff:
@@ -1659,8 +1997,10 @@ def main(argv=None):
             cr["classes"][k] = time_class(pl, taps, rng, reg, a.core_tol_ps, period, UNC_SETUP_PS, UNC_HOLD_PS,
                                           landed=k.startswith("landed"), window=window,
                                           hold_window=hwin.get(k) if c == "FF" else None, ocv=ocv, views=views,
-                                          rec=hrec, dd=dd)
+                                          rec=hrec, dd=dd, kit_offset=kit_off)
             cr["classes"][k]["label"] = ("real-view+budget" if real else "declared-budget") + (
+                f" + core-tap insertion {ci['mode']} (view {ci['source']['view']} / declared {ci['source']['declared']}"
+                f" / missing {ci['source']['missing']})" if ecm else "") + (
                 " / INFO subset" if k.endswith("INFO") else "")
         if unc is not None:
             # PD11 ruling 3: die-wide bound + per-pair percentiles of the signed-mesh U over the timed mesh pairs
@@ -1684,6 +2024,15 @@ def main(argv=None):
             gate[k]["kit_contract_window_ps"] = kc["window_ps"]
             gate[k]["kit_contract_window_needed_ps"] = kc["window_needed_ps"]
             gate[k]["kit_contract_verdict"] = kc["verdict"]
+    if ci_recs:
+        # FLOW-ONEMODEL-3: missing signed view -> FAIL CLOSED; declared insertion -> 'DECLARED', never a gate PASS
+        for k in ("intra", "seam"):
+            gate[k]["verdict"] = core_insertion_verdict(gate[k]["verdict"], ci_recs)
+        gate["core_insertion"] = dict(mode=a.core_insertion, early_core_taps=ci_recs[0]["early_core_taps"],
+                                      source={c: r["source"] for c, r in zip(corners, ci_recs)},
+                                      verdict=core_insertion_verdict("PASS", ci_recs),
+                                      note="FAIL = early core taps without a signed core view (fail closed); DECLARED "
+                                           "= planning estimate on plan per-tap insertion, not a gate pass")
     gate["landed"] = landed_gate(res["corners"])
     if a.count_align:
         cas = res.get("count_aligned", {})

@@ -162,8 +162,14 @@ def sdc(per, ins, tol, clks, rsts, tag, common=None):
          f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n"
          f"set_output_delay -min 0.0000 -clock vclk [all_outputs]\n")
     if rsts:
-        s += (f"# reset: async assert, released by the partition's reset synchroniser one cycle ahead (recovery at 1 T)\n"
-              f"set_input_delay -max {0.5 * per:.4f} -clock vclk [get_ports {{{' '.join(sorted(set(re.sub(r'\[\d+\]$', '', c) for c in rsts)))}}}]\n")
+        # HBM-CORES-REBAL-8 (COORD 10-28, REBAL-7 ruling (a)): a core reset pin is driven by the die reset tree's last
+        # relay flop (tools/die_plan/reset_tree.py; DIE-HBM-10 reset contract: synchronised die reset held >= 64 edges
+        # with clocks running), so it is a SYNCHRONOUS input timed under the kit IO budget like every data pin (= the
+        # shared gen_phys arst_n floor IO_BUDGET * per).  The old extra 0.5 T input delay (416.5 ps at 833) modelled an
+        # unregistered half-cycle source that the contract does not have.  The reset ports stay in $non_clk_in.
+        rnames = " ".join(sorted(set(re.sub(r"\[\d+\]$", "", c) for c in rsts)))
+        s += (f"# reset ({rnames}): synchronous input from the die reset tree's last relay (reset contract); "
+              f"IO budget {io:.4f} as every data input, recovery/removal timed\n")
     return s + (f"set_load {IO_LOAD_FF:g} [all_outputs]\n"
                 "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
@@ -1048,14 +1054,19 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         cfg += [f"export RTLMP_FENCE_LX = {lx:g}", f"export RTLMP_FENCE_LY = {ly:g}",
                 f"export RTLMP_FENCE_UX = {ux:g}", f"export RTLMP_FENCE_UY = {uy:g}"]
     if rec.get("macro_placement"):
-        lines = []
+        # HBM-CORES-REBAL-4: one foreach {inst master x y orient} table = the static-site form that
+        # kit_contract.macro_boxes already parses (master + LEF SIZE per row), so macro_channels / clock_entry_clear
+        # are checkable without plan contents; the loop body is the same place_macro -exact per instance as before.
+        rows = []
         for placement in rec["macro_placement"]:
             x, y = placement["xy_um"]
             # ODB keeps the flat Yosys name with escaped brackets (g_read\[0\]); an unescaped path finds no
             # macro (MPL-0020). Escape every bracket the caller's --macro-inst-fmt did not already escape.
             inst = re.sub(r"(?<!\\)([\[\]])", r"\\\1", placement["inst"])
             orient = placement.get("orient", "R0")
-            lines.append(f"place_macro -macro_name {{{inst}}} -location {{{x:g} {y:g}}} -orientation {orient} -exact")
+            rows.append(f"  {{{inst}}} {placement['macro']} {x:g} {y:g} {orient}")
+        lines = (["foreach {inst master x y orient} {"] + rows +
+                 ["} {", "  place_macro -macro_name $inst -location [list $x $y] -orientation $orient -exact", "}"])
         (kd / "macro_placement.tcl").write_text("\n".join(lines) + "\n")
         cfg.append("export MACRO_PLACEMENT_TCL = /work/macro_placement.tcl")
     if rec.get("synth_memory_max_bits"):

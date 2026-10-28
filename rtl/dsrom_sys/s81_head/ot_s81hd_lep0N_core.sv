@@ -10,7 +10,7 @@
 // fault_o0 is LIVE and needs a return lane to ctl in the head plan batch.
 // No pin/physical/timing or whole-head binding claim is made by this source.
 module ot_s81hd_lep0N_core #(
- parameter [3:0] CH_B=4'b1111, parameter integer IDX_EN=1
+ parameter [3:0] CH_B=4'b1111, parameter integer IDX_EN=1, parameter integer PAIR=0
 )(
  input wire ck,rst_n,
  input wire[513:0]coll_i0,coll_i1,coll_i2,coll_i3,
@@ -53,7 +53,16 @@ module ot_s81hd_lep0N_core #(
   .clk(ck),.rst_n(rst_n),.wv(mwv),.wd(mwd),.rc(unit_i0[10:0]),
   .rv(mrv),.rd(mrd),.fault(mf));
  genvar i;
- generate for(i=0;i<4;i=i+1)begin:g_lane
+ // PAIR=1 (DIE-HEAD-9, opt-in): each g_lane body sits in one ot_s81hd_lep_pair
+ // child g_pp[k].u_pair (same instances/params/nets, 0 cycles).  PAIR=0 default
+ // keeps the original g_lane[k] loop and instance paths unchanged.
+ generate for(i=0;i<(PAIR?4:0);i=i+1)begin:g_pp
+  ot_s81hd_lep_pair #(.CHB(CH_B[i]))u_pair(.clk(ck),.rst_n(rst_n),
+   .k_lo_v(kv[i]),.k_lo_r(kr[i]),.k_lo_d(kd[i]),
+   .k_li_v(kiv[i]),.k_li_r(kir[i]),.k_li_d(kid[i]),
+   .k_rxv(krx[i]),.k_flt(kf[i]),.coll_i(coll_i[i]),.coll_o(coll_o[i]));
+ end endgenerate
+ generate for(i=0;i<(PAIR?0:4);i=i+1)begin:g_lane
   ot_s81_mu72_lnland_nst #(.MUT(0))u_land(
    .ck_k(ck),.ck_n(ck),.rs_k(rst_n),.rs_n(rst_n),
    .k_lo_v(kv[i]),.k_lo_r(kr[i]),.k_lo_d(kd[i]),
@@ -72,7 +81,7 @@ endmodule
 // Head-specific no-index provider. IDX_EN=0 structurally omits g_itx/g_irx in
 // generated/ot_s81hd_lep_nr.sv, so tl is parameter-proven unread and ca/cb are
 // parameter-proven constant dead outputs. The generic provider default stays1.
-module ot_s81hd_lep0N_noidx_core #(parameter[3:0]CH_B=4'b1111)(
+module ot_s81hd_lep0N_noidx_core #(parameter[3:0]CH_B=4'b1111,parameter integer PAIR=0)(
  input wire ck,rst_n,
  input wire[513:0]coll_i0,coll_i1,coll_i2,coll_i3,
  output wire[511:0]coll_o0,coll_o1,coll_o2,coll_o3,
@@ -80,7 +89,7 @@ module ot_s81hd_lep0N_noidx_core #(parameter[3:0]CH_B=4'b1111)(
  input wire lepf_i0,input wire[44:0]unit_i0,
  output wire[31:0]ctrl_o0,output wire fault_o0,output wire[10:0]lw_o
 );
- ot_s81hd_lep0N_core #(.CH_B(CH_B),.IDX_EN(0))u(
+ ot_s81hd_lep0N_core #(.CH_B(CH_B),.IDX_EN(0),.PAIR(PAIR))u(
  .ck(ck),.rst_n(rst_n),.coll_i0(coll_i0),.coll_i1(coll_i1),.coll_i2(coll_i2),.coll_i3(coll_i3),
  .coll_o0(coll_o0),.coll_o1(coll_o1),.coll_o2(coll_o2),.coll_o3(coll_o3),
  .lepk_i0(lepk_i0),.lepk_o0(lepk_o0),.lepf_i0(lepf_i0),.unit_i0(unit_i0),

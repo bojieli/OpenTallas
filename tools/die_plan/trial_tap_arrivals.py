@@ -4,6 +4,15 @@
 Usage: trial_tap_arrivals.py TREE_JSON ARR_TXT CORNER OUT_JSON
 Legacy trees retain geometric paths. Padded trees use physical cell parents,
 including repeaters and pads; CPPR grouping remains the declared region.
+FLOW-ONEMODEL-2: MEASURED falling-edge arrivals by construction.  F rows (tap) and
+M rows (clock cell) of the arrivals file (die_trial.clock_edge_readout, header
+'# OT_EDGES v1': 'F port late early', 'M cell late early', source FALL edge,
+polarity-resolved) become fall_late_ps/fall_early_ps per tap and
+node_fall_late_ps/node_fall_early_ps per tree node key, the fields
+die_sta_related and count_align_plan time fall-edge samples on.  Legacy rows
+without the header: 'F port late early' (FLOW-GEN-1 / DIE-KV-13 form) as is;
+'F port fall rise slew' (DIE-QC-11 mk_clkfirst form) as the fall-minus-rise
+delta on the T row.  No F/M rows = unchanged output.
 """
 import argparse
 import json
@@ -12,18 +21,42 @@ from pathlib import Path
 CH = "0123456789abcdefghijklmnopqrstuvwxyz"
 
 
+EDGES_HDR = "# OT_EDGES v1"
+
+
+def read_arr(arr):
+    """(T {port: (late, early, slew...)}, N {cell: (late, early)}, F {port: (late, early)}, M {cell: (late, early)})"""
+    lines = Path(arr).read_text().splitlines()
+    hdr = any(ln.startswith(EDGES_HDR) for ln in lines[:5])
+    A, N, Fr, M = {}, {}, {}, {}
+    for ln in lines:
+        f = ln.split()
+        if not f or f[0] not in ("T", "N", "F", "M"):
+            continue
+        v = tuple(map(float, f[2:]))
+        if f[0] == "T":
+            A[f[1]] = v[:3]
+        elif f[0] == "N":
+            N[f[1]] = v[:2]
+        elif f[0] == "M":
+            M[f[1]] = v[:2]
+        else:
+            Fr[f[1]] = v
+    F = {}
+    for p, v in Fr.items():
+        if hdr or len(v) == 2:
+            F[p] = v[:2]
+        elif p in A:      # DIE-QC-11 legacy 'F port fall_late rise_late slew': fall - rise delta on the T row
+            F[p] = (v[0], A[p][1] + v[0] - v[1])
+    return A, N, F, M
+
+
 def export(tree, arr, corner):
     T = json.loads(Path(tree).read_text())
     nodes = {int(k): v for k, v in T["nodes"].items()}
     buf = {int(k): v for k, v in T["node_buf"].items()}
     po = T["parent_of"]
-    A, N = {}, {}
-    for ln in Path(arr).read_text().splitlines():
-        f = ln.split()
-        if f and f[0] == "T":
-            A[f[1]] = tuple(map(float, f[2:5]))
-        elif f and f[0] == "N":
-            N[f[1]] = tuple(map(float, f[2:4]))
+    A, N, F, M = read_arr(arr)
     root = next(i for i, n in nodes.items() if n["parent"] is None)
 
     def stages(cell):
@@ -59,6 +92,8 @@ def export(tree, arr, corner):
         meta["node_stages"][key] = stages(cell)
         meta["node_xy_um"][key] = xy
         meta["cppr_node_range_ps"][key] = round(la - ea, 4)
+        if cell in M:
+            meta.setdefault("node_fall_late_ps", {})[key], meta.setdefault("node_fall_early_ps", {})[key] = M[cell]
 
     physical = any("driver" in t for t in T["taps"])
     cell_paths = {}
@@ -108,7 +143,13 @@ def export(tree, arr, corner):
         driver = t.get("driver", buf[t["node"]])
         taps.append(dict(port=t["port"], part=t["part"], late_ps=la, early_ps=ea, slew_ps=sl,
                          cppr_node=reg, tree_path=cell_paths[driver] if physical else path[t["node"]],
-                         stages_from_root=stages(driver) + 1, xy_um=t["xy"], node=t["node"]))
+                         stages_from_root=stages(driver) + 1, xy_um=t["xy"], node=t["node"],
+                         **(dict(fall_late_ps=F[t["port"]][0], fall_early_ps=F[t["port"]][1]) if t["port"] in F else {})))
+    if F or M:
+        meta["fall_arrivals"] = dict(source="FLOW-ONEMODEL-2 trial_tap_arrivals F/M rows",
+                                     taps_with_fall=sum(1 for x in taps if "fall_late_ps" in x), taps=len(taps),
+                                     nodes_with_fall=len(meta.get("node_fall_late_ps", {})),
+                                     nodes=len(meta["node_late_ps"]))
     return dict(meta, taps=taps, regions=len(regions)), miss
 
 
@@ -119,7 +160,8 @@ def main():
     result, missing = export(a.tree, a.arr, a.corner)
     Path(a.out).write_text(json.dumps(result))
     print(a.corner, "taps", len(result["taps"]), "missing", missing, "regions", result["regions"],
-          "nodes", len(result["node_late_ps"]))
+          "nodes", len(result["node_late_ps"]), "fall taps", sum(1 for x in result["taps"] if "fall_late_ps" in x),
+          "fall nodes", len(result.get("node_fall_late_ps", {})))
 
 
 if __name__ == "__main__":
