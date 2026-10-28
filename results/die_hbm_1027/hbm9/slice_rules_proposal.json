@@ -296,5 +296,26 @@
    "partition": "root",
    "place": "soft, between the two hub u_mu_fused_n4 slots on the centre column"
   }
+ },
+ "idx_history_1028": {
+  "finding": "plan q_b100..b103 x {NW,NE} = 128 hcol pieces = one native quarter per hub; canonical top has 4 native quarters (NW,NE,SW,SE) needing 256 hcols (e15f211e9b SCORER_CARDINALITY, UNBOUND)",
+  "rules": [
+   [
+    "^hb_idx__s_(NW|NE)\\.scorer\\.ge\\[(\\d)\\]\\.gc\\[(\\d)\\]\\.leaf\\.",
+    "b10x holding piece r\\2c\\3 (per-piece map from plan hard_cores r?c?_k?h?)"
+   ],
+   [
+    "^hb_idx__s_(NW|NE)\\.scorer\\.",
+    "q_b100 (scorer endpoint: tails/fault/meta/delay glue)"
+   ],
+   [
+    "^hb_idx__s_(NW|NE)\\.keybuf",
+    "hub (beside u_mu_keybuf_*)"
+   ],
+   [
+    "^hb_idx__s_(SW|SE)\\.",
+    "UNPLANNED: cardinality owner decision"
+   ]
+  ]
  }
 }
