@@ -514,3 +514,9 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      (about 1700-1770 tok/s priced). Never trade safe clocking or routing (in-region spread <=150 ps incl. OCV+droop, CA margin
      >=100 ps, GRT0 incl. clock) for throughput. Latency hiding is optional and only where it costs no closure risk. The same applies
      to all dies: added crossing latency is accepted, and the static schedule absorbs it.
+  d. (OWNER 2026-10-27 ~23:5x "yes to both") QC SMALLER REGIONS IN PARALLEL. QC tries smaller regions, each with a plain balanced
+     CTS tree, at the same time as the clock-builder bug fixes. Whichever first reaches in-region spread <=150 ps (incl. OCV+droop,
+     x1.05 clock) wins. Added crossing latency is accepted under (c). The clock mesh (12.8e) is now third choice.
+  e. DETAILED-ROUTE TRIAL PER DIE (estimate run, not a gate). Once a die's region map is stable, route one representative region
+     with real core views through detailed route (DRT), plus global route with clock. Report DRC count, overflow and pin access.
+     Limit 400k cells per run. The results feed the freeze gate early; they never block a row on their own.
