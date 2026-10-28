@@ -397,6 +397,12 @@ def annotate_table(table, b, root_settle_cycles=64, strap_form=False):
                                        for k, v in b["regions"].items()})
     if strap_form:
         t["count_aligned"]["strap_form"] = True
+    if b.get("start_ports"):
+        # START-TREE compose slice: the start ports (dedicated start pins / die-level stages) travel with the table
+        t["count_aligned"]["start_tree"] = b.get("start_tree", "clock")
+        t["count_aligned"]["start_ports"] = {pid: {k: c.get(k) for k in ("src", "dst", "launch_part", "capture_part",
+                                                                          "src_part", "dst_part")}
+                                             for pid, c in sorted(b["start_ports"].items())}
     if "parts" in b:
         t["count_aligned"]["parts"] = {q: {x: v[x] for x in ("region", "role", "src", "stages")}
                                        for q, v in b["parts"].items()}
@@ -424,6 +430,22 @@ def strap_kw(depth):
 def strap_bits(value, width):
     """K (any integer) -> its width-bit two's-complement pattern as an int (K mod 2^width)"""
     return int(value) % (1 << int(width))
+
+
+# START-TREE compose slice (DIE-HEAD-11, opt-in by a bind with start_tree="clock"): a child region's start no longer rides
+# a landed data crossing; it arrives on ONE dedicated start pin of its origin partition (cland_tstart_in), launched
+# from the parent origin partition's cland_tstart_out (= its cland_start, one pin per partition, fanned out at the die
+# top) or from a die-level start stage (tools/die_plan/start_stage_emit.py nets rs_<region> / pst_<region>).
+START_PIN_IN = "cland_tstart_in"
+START_PIN_OUT = "cland_tstart_out"
+
+
+def start_port_end(ca, tree_port):
+    """START-TREE start port -> (capture partition, the start pin) or None for a landed data crossing tree port"""
+    sp = (ca.get("start_ports") or {}).get(tree_port)
+    if sp is None:
+        return None
+    return sp.get("dst_part") or sp.get("capture_part"), START_PIN_IN
 
 
 def strap_ties(ca, plan):
@@ -457,7 +479,8 @@ def strap_ties(ca, plan):
             kind = "origin"
             if reg_name is None:   # one partition per region (MESO-INTEG-1): the tree port's receiver / root sender
                 reg_name = next((x for x, r in ca["regions"].items() if r["tree_port"]
-                                 and ports[r["tree_port"]]["dst"]["part"] == q), None)
+                                 and (start_port_end(ca, r["tree_port"]) or (ports[r["tree_port"]]["dst"]["part"],))[0]
+                                 == q), None)
                 if reg_name is None:
                     reg_name = ca["root"]
         tx = cparts is not None and kind == "origin" and any(v["role"] == "relay" and v["src"] == q
@@ -469,11 +492,14 @@ def strap_ties(ca, plan):
         if r["parent"] is None:
             role[q] = dict(kind="root", tx=tx)
         else:
-            tp = ports[r["tree_port"]]
-            if tp["dst"]["part"] != q:
+            se = start_port_end(ca, r["tree_port"])
+            if se is None:
+                tp = ports[r["tree_port"]]
+                se = (tp["dst"]["part"], tp["dst"]["bus"])
+            if se[0] != q:
                 raise BindError(f"strap ties: region {reg_name} tree port {r['tree_port']} lands on "
-                                f"{tp['dst']['part']}, not its origin {q}")
-            role[q] = dict(kind="child", tx=tx, tree_bus=tp["dst"]["bus"], pad=int(r["pad"]),
+                                f"{se[0]}, not its origin {q}")
+            role[q] = dict(kind="child", tx=tx, tree_bus=se[1], pad=int(r["pad"]),
                            edge_fall=bool(r["edge_fall"]))
     by_type = defaultdict(list)
     for q in landed:
