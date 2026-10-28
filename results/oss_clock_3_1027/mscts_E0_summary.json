@@ -1,0 +1,339 @@
+{
+ "run": "intel2:/srv/opentallas-scratch2/claude/oss-clock-3-1027/E0_street_fix (balance_at=tree, street routing)",
+ "summary": {
+  "sinks": 584,
+  "insertion_TT_ps": 3595.7,
+  "tap_spread_TT_ps": 231.1,
+  "skew_TT_ps": 0.98,
+  "latency_TT_ps": [
+   3844.7,
+   3845.7
+  ],
+  "snakes": [
+   {
+    "edge": [
+     "L3_1642",
+     "L4_0"
+    ],
+    "um": 347.5
+   },
+   {
+    "edge": [
+     "L3_4925",
+     "L4_2"
+    ],
+    "um": 300.6
+   },
+   {
+    "edge": [
+     "L2_3283",
+     "L3_4925"
+    ],
+    "um": 31.1
+   },
+   {
+    "edge": [
+     "L3_8208",
+     "L4_5"
+    ],
+    "um": 156.3
+   },
+   {
+    "edge": [
+     "L3_11491",
+     "L4_7"
+    ],
+    "um": 375.0
+   },
+   {
+    "edge": [
+     "L2_9850",
+     "L3_8208"
+    ],
+    "um": 219.1
+   },
+   {
+    "edge": [
+     "L1_6566",
+     "L2_9850"
+    ],
+    "um": 215.6
+   },
+   {
+    "edge": [
+     "L3_14774",
+     "L4_8"
+    ],
+    "um": 758.4
+   },
+   {
+    "edge": [
+     "L3_18058",
+     "L4_10"
+    ],
+    "um": 156.3
+   },
+   {
+    "edge": [
+     "L2_16416",
+     "L3_18058"
+    ],
+    "um": 703.7
+   },
+   {
+    "edge": [
+     "L3_21341",
+     "L4_13"
+    ],
+    "um": 502.1
+   },
+   {
+    "edge": [
+     "L3_24624",
+     "L4_15"
+    ],
+    "um": 347.5
+   },
+   {
+    "edge": [
+     "L2_22982",
+     "L3_21341"
+    ],
+    "um": 29.0
+   },
+   {
+    "edge": [
+     "L1_19699",
+     "L2_22982"
+    ],
+    "um": 212.1
+   },
+   {
+    "edge": [
+     "L0",
+     "L1_6566"
+    ],
+    "um": 267.4
+   },
+   {
+    "edge": [
+     "L3_1642",
+     "L4_1"
+    ],
+    "um": 1.5
+   },
+   {
+    "edge": [
+     "L3_4925",
+     "L4_3"
+    ],
+    "um": 2.6
+   },
+   {
+    "edge": [
+     "L3_8208",
+     "L4_4"
+    ],
+    "um": 6.3
+   },
+   {
+    "edge": [
+     "L3_11491",
+     "L4_6"
+    ],
+    "um": 0.9
+   },
+   {
+    "edge": [
+     "L2_9850",
+     "L3_11491"
+    ],
+    "um": 3.0
+   },
+   {
+    "edge": [
+     "L3_14774",
+     "L4_9"
+    ],
+    "um": 1.1
+   },
+   {
+    "edge": [
+     "L3_18058",
+     "L4_11"
+    ],
+    "um": 6.3
+   },
+   {
+    "edge": [
+     "L2_16416",
+     "L3_14774"
+    ],
+    "um": 1.6
+   },
+   {
+    "edge": [
+     "L3_24624",
+     "L4_14"
+    ],
+    "um": 1.5
+   },
+   {
+    "edge": [
+     "L0",
+     "L1_19699"
+    ],
+    "um": 0.6
+   }
+  ],
+  "snake_um": 16627.2,
+  "crossings": 78,
+  "moved_merges": 0,
+  "TT": {
+   "max_unshared_ps": 3573.4,
+   "mean_unshared_ps": 406.8,
+   "worst_margin_ps": 233.1,
+   "under_min": 0
+  },
+  "FF": {
+   "max_unshared_ps": 3026.5,
+   "mean_unshared_ps": 344.7,
+   "worst_margin_ps": 251.4,
+   "under_min": 0
+  },
+  "tap_arrival_TT_ps": [
+   3364.6,
+   3595.7
+  ],
+  "latency_FF_ps": [
+   3232.9,
+   3253.7
+  ],
+  "skew_FF_ps": 20.77,
+  "tap_arrival_FF_ps": [
+   2846.6,
+   3051.2
+  ],
+  "legal": {
+   "repeaters_moved": 0,
+   "max_stage_um": 463.3,
+   "stages_over_leg_max": 0,
+   "leg_max_um": 480.0,
+   "stages": 1522,
+   "stages_over_rep": 62,
+   "rep_um": 450.0,
+   "street": true,
+   "rebalance_snake_um": 1325.0,
+   "illegal_merge_buffers": 0,
+   "moved_merges": 0,
+   "moved_merge_um_max": 0.0,
+   "detour_merges": 9,
+   "detour_um": 1340.2
+  }
+ },
+ "wirelength_um": 333421.3,
+ "detours": [
+  {
+   "at": [
+    16832.81250863115,
+    3847.01
+   ],
+   "um": 143.9
+  },
+  {
+   "at": [
+    18429.080981197236,
+    3989.47
+   ],
+   "um": 129.2
+  },
+  {
+   "at": [
+    16817.241867150256,
+    9074.21
+   ],
+   "um": 229.6
+  },
+  {
+   "at": [
+    18428.071241330937,
+    9074.21
+   ],
+   "um": 111.9
+  },
+  {
+   "at": [
+    16881.897313827252,
+    10378.849999999999
+   ],
+   "um": 95.4
+  },
+  {
+   "at": [
+    16817.241867150267,
+    17191.39
+   ],
+   "um": 229.6
+  },
+  {
+   "at": [
+    18428.071241330937,
+    17191.39
+   ],
+   "um": 111.9
+  },
+  {
+   "at": [
+    16782.163135102863,
+    22276.13
+   ],
+   "um": 159.5
+  },
+  {
+   "at": [
+    18429.080981197236,
+    22276.13
+   ],
+   "um": 129.2
+  }
+ ],
+ "node_kinds": {
+  "root": 1,
+  "merge": 615,
+  "rep": 331,
+  "sink": 584
+ },
+ "opensta": {
+  "dir": "E0_street_fix",
+  "TT": {
+   "sinks": 584,
+   "model_over_sta": 1.0366,
+   "model_minus_sta_ps": [
+    106.5,
+    146.0
+   ],
+   "sta_tap_arrival_ps": [
+    3243.6,
+    3489.1
+   ],
+   "sta_latency_skew_ps": 39.3,
+   "model_latency_skew_ps": 1.0,
+   "crossing_d_model_vs_sta_max_ps": 6.8
+  },
+  "FF": {
+   "sinks": 584,
+   "model_over_sta": 1.0475,
+   "model_minus_sta_ps": [
+    127.7,
+    148.1
+   ],
+   "sta_tap_arrival_ps": [
+    2712.5,
+    2911.1
+   ],
+   "sta_latency_skew_ps": 21.6,
+   "model_latency_skew_ps": 20.8,
+   "crossing_d_model_vs_sta_max_ps": 2.2
+  }
+ }
+}

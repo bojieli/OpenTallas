@@ -38,12 +38,23 @@ def _lpoint(a, b, s):
 
 
 class RegionTree:
-    def __init__(self, model, corner="TT", legal=None):
+    def __init__(self, model, corner="TT", legal=None, street=True):
         self.M, self.c = model, corner
         self.nodes = []            # dict(id, xy, kind sink|merge|root, kids[(node, L_um, snake_um)], t_ps, sink?)
         self.snakes = []
         self.legal = legal         # mscts.legal.Legality (buffer sites) or None
         self.moved = []            # merge points moved off an illegal site
+        # street-aware routing (mscts.street, OSS-CLOCK-3): with a Legality, wires follow legal streets and merge
+        # buffers take a legal point of their merging segment; exact stage lengths per edge in pre_segs
+        self.router = None
+        if legal is not None and street:
+            from .street import Router
+            self.router = Router(legal, model["rep_um"])
+            self._xe = sorted({v for r in legal.k for v in (r[0] - 0.05, r[2] + 0.05)})
+            self._ye = sorted({v for r in legal.k for v in (r[1] - 0.05, r[3] + 0.05)})
+        self.routes = {}           # (parent, kid) -> polyline parent .. kid (street mode)
+        self.pre_segs = {}         # (parent, kid) -> exact stage lengths chosen at build time (street mode)
+        self.detours = []          # balanced off-box merge points (street mode): extra route wire, both sides
 
     def branch_ps(self, L, two_loads=False):
         return self.M.wire_ps(L, self.c)
@@ -66,12 +77,17 @@ class RegionTree:
         return (first + k2 * la * la + (na - 1) * self.M.seg_ps(la, c) + (0.0 if sink_a else ks * la),
                 first + k2 * lb * lb + (nb - 1) * self.M.seg_ps(lb, c) + (0.0 if sink_b else ks * lb))
 
+    def merge_street(self, i, j):
+        return _merge_street(self, i, j)
+
     def add(self, **kw):
         kw["id"] = len(self.nodes)
         self.nodes.append(kw)
         return kw["id"]
 
     def merge(self, i, j):
+        if self.router is not None:
+            return self.merge_street(i, j)
         a, b = self.nodes[i], self.nodes[j]
         D = _man(a["xy"], b["xy"])
         ta, tb = a["t_ps"], b["t_ps"]
@@ -126,11 +142,310 @@ class RegionTree:
                         t_ps=t)
 
 
-def build(sinks, model, entry_xy, crossings=(), objective="late_split", bonus_um=None, corner="TT", legal=None):
+def _street_side(R, p, q, L=None):
+    """route p -> q on the streets, stage lengths for total wire L (default the route length)."""
+    from .street import place, plen
+    pts, iv, _ = R.router.route(p, q)
+    D = plen(pts)
+    return pts, place(D, D if L is None else max(L, D), iv, R.M["rep_um"])
+
+
+def _model_split(R, A, B, ta, tb, sa, sb):
+    """zero-skew split x (um from A) of the equal-stage model, clamped to [0, D]."""
+    D = _man(A, B)
+
+    def fm(t):
+        da, db = R.pair_ps(t, D - t, sink_a=sa, sink_b=sb)
+        return (da + ta) - (db + tb)
+    if fm(0.0) >= 0:
+        return 0.0, fm
+    if fm(D) <= 0:
+        return D, fm
+    lo, hi = 0.0, D
+    for _ in range(50):
+        mid = (lo + hi) / 2
+        if fm(mid) < 0:
+            lo = mid
+        else:
+            hi = mid
+    return (lo + hi) / 2, fm
+
+
+def _seg_us(R, A, B, x):
+    """candidate positions u (x-offset from A) on the merging segment at split x: its ends + keepout-edge crossings."""
+    dx, dy = B[0] - A[0], B[1] - A[1]
+    sx, sy = (1.0 if dx >= 0 else -1.0), (1.0 if dy >= 0 else -1.0)
+    lo, hi = max(0.0, x - abs(dy)), min(x, abs(dx))
+    us = {lo, hi}
+    us.update((X - A[0]) * sx for X in R._xe if lo < (X - A[0]) * sx < hi)
+    us.update(x - (Y - A[1]) * sy for Y in R._ye if lo < x - (Y - A[1]) * sy < hi)
+    return [(u, (A[0] + sx * u, A[1] + sy * (x - u))) for u in sorted(us, key=lambda u: abs(u - hi))], hi
+
+
+def _detour_pts(R, A, B, x, hmax):
+    """legal points OFF the bounding box that still balance split x: |p - A| = x + h, |p - B| = D - x + h (both
+    routes grow by the same detour h, classic DME around an obstacle).  Candidates on keepout edge lines just outside
+    the box, -> [(h, p)] sorted by h, h <= hmax."""
+    x0b, x1b = min(A[0], B[0]), max(A[0], B[0])
+    y0b, y1b = min(A[1], B[1]), max(A[1], B[1])
+    out = []
+    for Y in R._ye:
+        if Y > y1b:
+            h, r = Y - y1b, x - (y1b - A[1])
+        elif Y < y0b:
+            h, r = y0b - Y, x - (A[1] - y0b)
+        else:
+            continue
+        if h > hmax or r < -1e-9:
+            continue
+        sx = 1.0 if B[0] >= A[0] else -1.0
+        px = A[0] + sx * r
+        if x0b - 1e-6 <= px <= x1b + 1e-6:
+            out.append((h, (px, Y)))
+    for X in R._xe:
+        if X > x1b:
+            h, r = X - x1b, x - (x1b - A[0])
+        elif X < x0b:
+            h, r = x0b - X, x - (A[0] - x0b)
+        else:
+            continue
+        if h > hmax or r < -1e-9:
+            continue
+        sy = 1.0 if B[1] >= A[1] else -1.0
+        py = A[1] + sy * r
+        if y0b - 1e-6 <= py <= y1b + 1e-6:
+            out.append((h, (X, py)))
+    return sorted(((h, p) for h, p in out if R.legal.ok(p)), key=lambda v: v[0])
+
+
+def _split_cands(R, A, B, x0):
+    """split positions to try when the merging segment at x0 has no legal point: keepout-edge crossings of the two L
+    paths A -> B, nearest to x0 first."""
+    D = _man(A, B)
+    out = set()
+    for pts in ([A, (B[0], A[1]), B], [A, (A[0], B[1]), B]):
+        for a, b in R.router.blocked(pts, R.router.kos(A, B)):
+            out.update((a - 0.05, b + 0.05))
+    return sorted((v for v in out if 0.0 <= v <= D), key=lambda v: abs(v - x0))
+
+
+def _blocked_penalty(R, i, j):
+    """merge-order cost term (street mode): estimated snake (um) when the zero-skew point of i, j has no legal
+    merge site = 2 x distance to the nearest legal split (0 when legal)."""
+    a, b = R.nodes[i], R.nodes[j]
+    A, B = a["xy"], b["xy"]
+    x0, _ = _model_split(R, A, B, a["t_ps"], b["t_ps"], a["kind"] == "sink", b["kind"] == "sink")
+    if any(R.legal.ok(p) for _, p in _seg_us(R, A, B, x0)[0]):
+        return 0.0
+    pen = 2.0 * _man(A, B)
+    for x in _split_cands(R, A, B, x0):
+        if any(R.legal.ok(p) for _, p in _seg_us(R, A, B, x)[0]):
+            pen = 2.0 * abs(x - x0)
+            break
+    dt = _detour_pts(R, A, B, x0, pen / 2.0)
+    return min(pen, 2.0 * dt[0][0]) if dt else pen
+
+
+def _merge_street(R, i, j):
+    """street-mode zero-skew merge: split x along the Manhattan distance solved on EXACT stage lengths of the street
+    routes (secant + bisection); the merge buffer at the legal point of the merging segment with the best routes;
+    a residual (no balancing split inside [0, D], or a placement step) -> snake on the faster side (ledgered)."""
+    from .street import edge_delay, place, plen
+    a, b = R.nodes[i], R.nodes[j]
+    A, B = a["xy"], b["xy"]
+    D = _man(A, B)
+    ta, tb = a["t_ps"], b["t_ps"]
+    sa, sb = a["kind"] == "sink", b["kind"] == "sink"
+    M, c, rep = R.M, R.c, R.M["rep_um"]
+    dx, dy = B[0] - A[0], B[1] - A[1]
+    sx, sy = (1.0 if dx >= 0 else -1.0), (1.0 if dy >= 0 else -1.0)
+    ax, ay = abs(dx), abs(dy)
+
+    def pick(x):
+        cands, hi = _seg_us(R, A, B, x)
+        best = None
+        for u, p in cands[:16]:
+            if not R.legal.ok(p):
+                continue
+            ra, ia, ka = R.router.route(p, A)
+            rb, ib, kb = R.router.route(p, B)
+            key = (max(ka[0], kb[0]), max(ka[2], kb[2]), ka[1] + kb[1], abs(u - hi))
+            if best is None or key < best[0]:
+                best = (key, p, (ra, ia), (rb, ib))
+        if best is None and det[0]:
+            # no legal point on the merging segment: a balanced detour point (both sides + h) if it costs less wire
+            # than shifting the split to the nearest legal site (snake ~ 2 x shift)
+            sn = next((2.0 * abs(xx - x) for xx in _split_cands(R, A, B, x)
+                       if any(R.legal.ok(q) for _, q in _seg_us(R, A, B, xx)[0])), 2.0 * D)
+            for h, p in _detour_pts(R, A, B, x, sn / 2.0)[:4]:
+                ra, ia, ka = R.router.route(p, A)
+                rb, ib, kb = R.router.route(p, B)
+                key = (max(ka[0], kb[0]), h, max(ka[2], kb[2]), ka[1] + kb[1])
+                if best is None or key < best[0]:
+                    best = (key, p, (ra, ia), (rb, ib))
+        return best
+
+    det = [True]
+    combo = [(0, 0)]
+
+    def _rp(L, ex):
+        # spacing with ex EXTRA repeaters: the stage-count step of a repeated wire is a delay jump (up to ~20 ps at a
+        # 2-load node); one extra repeater on one side makes the balance reachable across that jump
+        if ex <= 0 or L <= 0:
+            return rep
+        return min(rep, L / (max(1, math.ceil(L / rep - 1e-6)) + ex) + 1e-9)
+
+    def ev(x):
+        pk = pick(x)
+        if pk is None:
+            return None
+        _, p, (ra, ia), (rb, ib) = pk
+        xa, xb = combo[0]
+        Pa, Pb = plen(ra), plen(rb)              # = x, D - x on the merging segment; + h each on a detour point (+ jogs)
+        la, lb = place(Pa, Pa, ia, _rp(Pa, xa)), place(Pb, Pb, ib, _rp(Pb, xb))
+        da, db = edge_delay(M, c, la, lb, sa), edge_delay(M, c, lb, la, sb)
+        return (da + ta) - (db + tb), p, ra, rb, la, lb, ia, ib, x
+    # model split (equal stages) as the starting point
+    def fm(t):
+        da, db = R.pair_ps(t, D - t, sink_a=sa, sink_b=sb)
+        return (da + ta) - (db + tb)
+    if fm(0.0) >= 0:
+        x0 = 0.0
+    elif fm(D) <= 0:
+        x0 = D
+    else:
+        lo, hi = 0.0, D
+        for _ in range(60):
+            mid = (lo + hi) / 2
+            if fm(mid) < 0:
+                lo = mid
+            else:
+                hi = mid
+        x0 = (lo + hi) / 2
+    best = None
+    tried = {}
+
+    def run(x):
+        x = min(max(x, 0.0), D)
+        k = (combo[0], round(x, 4))
+        if k not in tried:
+            tried[k] = ev(x)
+        return tried[k]
+    x_model = x0
+    for combo_ in ((0, 0), (1, 0), (0, 1)):
+        combo[0] = combo_
+        x0 = x_model
+        e0 = run(x0)
+        if e0 is None:                           # model split point has no legal merging-segment point: nearest legal split
+            for xx in _split_cands(R, A, B, x0):
+                if run(xx) is not None:
+                    x0, e0 = xx, run(xx)
+                    break
+        pts = [(x0, e0)]
+        if e0 is not None and abs(e0[0]) > 0.3 and 0.0 < x0 < D:
+            # bracket and bisect on the exact delays (piecewise continuous in x)
+            slope = max(1e-3, (fm(min(D, x0 + 1.0)) - fm(max(0.0, x0 - 1.0))) / (min(D, x0 + 1.0) - max(0.0, x0 - 1.0)))
+            x1 = x0 - e0[0] / slope
+            e1 = run(x1)
+            lo = hi = None
+            for x, e in ((x0, e0), (min(max(x1, 0.0), D), e1)):
+                if e is None:
+                    continue
+                if e[0] < 0 and (lo is None or x > lo[0]):
+                    lo = (x, e)
+                if e[0] >= 0 and (hi is None or x < hi[0]):
+                    hi = (x, e)
+            step = abs(x1 - x0) + 5.0
+            k = 0
+            while (lo is None or hi is None) and k < 12:
+                k += 1
+                x = (hi[0] - step) if lo is None else (lo[0] + step)
+                x = min(max(x, 0.0), D)
+                e = run(x)
+                if e is not None:
+                    if e[0] < 0:
+                        lo = (x, e)
+                    else:
+                        hi = (x, e)
+                if x in (0.0, D):
+                    break
+                step *= 2
+            if lo is not None and hi is not None:
+                for _ in range(30):
+                    if abs(lo[1][0]) < 0.3 or abs(hi[1][0]) < 0.3 or hi[0] - lo[0] < 0.01:
+                        break
+                    xm = (lo[0] + hi[0]) / 2
+                    e = run(xm)
+                    if e is None:
+                        break
+                    if e[0] < 0:
+                        lo = (xm, e)
+                    else:
+                        hi = (xm, e)
+                pts += [lo, hi]
+            else:
+                pts += [v for v in (lo, hi) if v]
+        if min((abs(v[0]) for v in tried.values() if v is not None), default=1e9) <= 0.3:
+            break
+    cand = [(e[-1], e) for e in tried.values() if e is not None]
+    if not cand:
+        # no legal point on any tried merging segment: legacy L-path move + snake
+        router, R.router = R.router, None
+        try:
+            return R.merge(i, j)
+        finally:
+            R.router = router
+    x, e = min(cand, key=lambda xe_: abs(xe_[1][0]))
+    g, p, ra, rb, la, lb, ia, ib, _ = e
+    snake, side = 0.0, None
+    if abs(g) > 0.3:                        # residual: snake on the faster side, exact stages
+        f_side = j if g > 0 else i
+        Dside = plen(rb) if f_side == j else plen(ra)
+        ivs = ib if f_side == j else ia
+        other = la if f_side == j else lb
+        tf, to = (tb, ta) if f_side == j else (ta, tb)
+        sk_f, sk_o = (sb, sa) if f_side == j else (sa, sb)
+        target = edge_delay(M, c, other, None, False)  # placeholder, recomputed below
+
+        def dlt(ext):
+            sl = place(Dside, Dside + ext, ivs, rep)
+            return edge_delay(M, c, sl, other, sk_f) + tf - (edge_delay(M, c, other, sl, sk_o) + to), sl
+        lo_, hi_ = 0.0, 20000.0
+        for _ in range(50):
+            mid = (lo_ + hi_) / 2
+            if dlt(mid)[0] < 0:
+                lo_ = mid
+            else:
+                hi_ = mid
+        snake = min((lo_, hi_), key=lambda v: abs(dlt(v)[0]))
+        sl = dlt(snake)[1]
+        if f_side == j:
+            lb = sl
+        else:
+            la = sl
+        side = f_side
+        del target
+    La, Lb = sum(la), sum(lb)
+    da, db = edge_delay(M, c, la, lb, sa), edge_delay(M, c, lb, la, sb)
+    t = max(da + ta, db + tb)
+    if snake > 1e-6:
+        R.snakes.append(dict(at=list(p), side=R.nodes[side].get("name", side), um=round(snake, 1)))
+    dtr = plen(ra) + plen(rb) - D
+    if dtr > 1e-6:
+        R.detours.append(dict(at=list(p), um=round(dtr, 1)))
+    m = R.add(xy=tuple(p), kind="merge", kids=[(i, La, snake if side == i else 0.0), (j, Lb, snake if side == j else 0.0)],
+              t_ps=t)
+    R.routes[(m, i)], R.routes[(m, j)] = ra, rb
+    R.pre_segs[(m, i)], R.pre_segs[(m, j)] = la, lb
+    return m
+
+
+def build(sinks, model, entry_xy, crossings=(), objective="late_split", bonus_um=None, corner="TT", legal=None,
+          street=True):
     """sinks = [dict(name, xy, insertion_ps{TT,FF}?)], crossings = [(a, b)] sink names.  -> RegionTree with .root
     A sink's insertion_ps (its own internal clock insertion, e.g. a hard core's signed view) is balanced: the tree
     targets equal LATENCY (tree arrival + insertion), early taps for late cores (METHODOLOGY v5.0)."""
-    R = RegionTree(model, corner, legal)
+    R = RegionTree(model, corner, legal, street=street)
     bonus = bonus_um if bonus_um is not None else 4.0 * model["rep_um"]
     act = {}
     member = {}
@@ -147,10 +462,16 @@ def build(sinks, model, entry_xy, crossings=(), objective="late_split", bonus_um
     unit = model["rep_um"] * 0.5 / max(1e-9, model.wire_ps(model["rep_um"], corner))
 
     def cost(i, j):
-        c = _man(R.nodes[i]["xy"], R.nodes[j]["xy"]) + abs(R.nodes[i]["t_ps"] - R.nodes[j]["t_ps"]) * unit
+        D_ = _man(R.nodes[i]["xy"], R.nodes[j]["xy"])
+        dt_ = abs(R.nodes[i]["t_ps"] - R.nodes[j]["t_ps"]) * unit
+        # street mode: merge cost = the wire the merge needs incl. its balancing snake (max(D, 2 unit dt)) + the
+        # blocked-site penalty; legacy: D + unit dt
+        c = max(D_, 2.0 * dt_) if R.router is not None else D_ + dt_
         if objective == "late_split" and partners:
             si, sj = (act[i], act[j]) if len(act[i]) <= len(act[j]) else (act[j], act[i])
             c -= bonus * sum(len(partners.get(x, set()) & sj) for x in si)
+        if R.router is not None:
+            c += _blocked_penalty(R, i, j)
         return c
     C = {}
     ids = list(act)
@@ -168,6 +489,11 @@ def build(sinks, model, entry_xy, crossings=(), objective="late_split", bonus_um
     top = next(iter(act))
     L = _man(entry_xy, R.nodes[top]["xy"])
     R.root = R.add(xy=tuple(entry_xy), kind="root", kids=[(top, L, 0.0)], t_ps=R.branch_ps(L, False) + R.nodes[top]["t_ps"])
+    if R.router is not None:
+        from .street import edge_delay
+        pts, sl = _street_side(R, tuple(entry_xy), R.nodes[top]["xy"])
+        R.routes[(R.root, top)], R.pre_segs[(R.root, top)] = pts, sl
+        R.nodes[R.root]["t_ps"] = edge_delay(R.M, corner, sl) + R.nodes[top]["t_ps"]
     return R
 
 
@@ -198,8 +524,10 @@ def segments(R):
     """explicit buffered netlist graph: [(drv_buf, load_buf, wire_um)] + buffer list [(name, xy, kind)].
     Every tree node is a buffer (sink nodes = the leaf buffer at the sink); a kid edge of length L gets
     n = ceil(L / rep_um) - 1 repeaters at equal spacing on the L path."""
+    from .street import at as _at, sub as _sub
     bufs = {}
     edges = []
+    pts = {}
     rep = R.M["rep_um"]
 
     def bname(n):
@@ -215,15 +543,19 @@ def segments(R):
                 sg = [L / n] * n
             prev = bname(nd["id"])
             a, b = nd["xy"], R.nodes[k]["xy"]
+            route = (getattr(R, "routes", None) or {}).get((nd["id"], k)) or [a, (b[0], a[1]), b]
             D = _man(a, b)
             s = 0.0
             for r, ln in enumerate(sg[:-1], 1):
-                s += ln
+                s0, s = s, s + ln
                 nm = f"r{nd['id']}_{k}_{r}"
-                bufs[nm] = (_lpoint(a, b, min(s, D)), "rep")
+                bufs[nm] = (_at(route, min(s, D)), "rep")
                 edges.append((prev, nm, ln))
+                pts[(prev, nm)] = _sub(route, min(s0, D), min(s, D))
                 prev = nm
             edges.append((prev, bname(k), sg[-1]))
+            pts[(prev, bname(k))] = _sub(route, min(s, D), D)
+    R.edge_pts = pts
     return bufs, edges
 
 

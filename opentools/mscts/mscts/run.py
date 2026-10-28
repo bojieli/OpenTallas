@@ -32,9 +32,10 @@ def build(a):
     L = LG.Legality(spec["keepouts"]) if spec.get("keepouts") else None
     info = {}
     if spec.get("trunk"):
-        R, info = TK.compose(spec, M, objective=a.objective, legal=L)
+        R, info = TK.compose(spec, M, objective=a.objective, legal=L, street=not a.no_street, balance_at=a.balance_at)
     else:
-        R = RG.build(spec["sinks"], M, tuple(spec["entry"]), xs, objective=a.objective, corner="TT", legal=L)
+        R = RG.build(spec["sinks"], M, tuple(spec["entry"]), xs, objective=a.objective, corner="TT", legal=L,
+                     street=not a.no_street)
     if L is not None:
         R.segs, info["legal"] = LG.legalize_repeaters(R, L)
         info["legal"]["rebalance_snake_um"] = LG.rebalance(R, "TT")
@@ -42,6 +43,8 @@ def build(a):
         info["legal"]["illegal_merge_buffers"] = len(bad)
         info["legal"]["moved_merges"] = len(R.moved)
         info["legal"]["moved_merge_um_max"] = max((m["um"] for m in R.moved), default=0.0)
+        info["legal"]["detour_merges"] = len(getattr(R, "detours", []))
+        info["legal"]["detour_um"] = round(sum(d["um"] for d in getattr(R, "detours", [])), 1)
     rep, rows = RG.report(R, xs, spec.get("period_ps", 833.0) / 2.0)
     for c in ("TT", "FF"):
         arr_c, _ = RG.arrivals(R, c)
@@ -64,7 +67,9 @@ def build(a):
                 wires=[dict(drv=d, load=l, um=round(w, 2)) for d, l, w in edges],
                 wirelength_um=round(sum(w for _, _, w in edges), 1), snakes=R.snakes,
                 model_arrival_ps={c: {f"s_{n}": round(arr[c][i], 2) for n, i in sink_ids.items()} for c in arr},
-                crossings=rows, root=root)
+                crossings=rows, root=root, detours=getattr(R, "detours", []),
+                wire_pts={f"{d}>{l}": [[round(v, 2) for v in q] for q in pts] for (d, l), pts in
+                          (getattr(R, "edge_pts", None) or {}).items()})
     (out / "tree.json").write_text(json.dumps(tree, indent=1) + "\n")
     names = list(bufs)
     (out / "region_tree.v").write_text(NL.verilog(names, edges, root, sinks))
@@ -140,6 +145,10 @@ def main(argv=None):
     b.add_argument("--out", required=True)
     b.add_argument("--objective", default="late_split", choices=["late_split", "nearest"])
     b.add_argument("--model")
+    b.add_argument("--no-street", action="store_true", help="legacy legality: x-first L paths, merges moved along "
+                   "them, repeaters slid (OSS-CLOCK-2); default = street-aware routing (mscts.street)")
+    b.add_argument("--balance-at", default="leaf", choices=["leaf", "tree"], help="trunk spec: leaf = snake on each "
+                   "leaf entry leg; tree = at each 2-child trunk branch point (fewer, on trunk tracks)")
     b.add_argument("--libdir", default="/w/lib")
     b.add_argument("--osdi", default="/w/osdi/bsimcmg23.osdi")
     c = sp.add_parser("compare")

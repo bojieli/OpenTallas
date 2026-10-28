@@ -79,11 +79,11 @@ def _toy4():
 
 
 def test_legal_merge_moves_off_keepout_and_rebalances():
-    """a keepout over the natural merge point: the merge buffer moves to a legal site on its L path, the pair is
-    re-balanced (snake ledger), every merge buffer is legal and the model skew stays ~0."""
+    """LEGACY (street=False): a keepout over the natural merge point: the merge buffer moves to a legal site on its L
+    path, the pair is re-balanced (snake ledger), every merge buffer is legal and the model skew stays ~0."""
     ss = [dict(name="a", xy=(0, 0)), dict(name="b", xy=(2000, 0))]
     L = LG.Legality([[700, -50, 1300, 50]])
-    R = RG.build(ss, M, (1000, 800), [], objective="nearest", legal=L)
+    R = RG.build(ss, M, (1000, 800), [], objective="nearest", legal=L, street=False)
     assert len(R.moved) == 1 and all(L.ok(nd["xy"]) for nd in R.nodes if nd["kind"] == "merge")
     rep, _ = RG.report(R, [], 416.5)
     assert rep["skew_TT_ps"] < 0.5 and rep["snakes"] == 1
@@ -105,7 +105,7 @@ def test_trunk_compose_balances_leaves_and_keeps_trunk_shared():
                 trunk=dict(entry=[1000, 750], nodes=[dict(id="t", xy=[1000, 750], parent=None),
                                                      dict(id="lo", xy=[1000, 0], parent="t", rect=[-1, -1, 3000, 700]),
                                                      dict(id="hi", xy=[1000, 1500], parent="t", rect=[-1, 701, 3000, 2000])]))
-    G, info = TK.compose(spec, M, objective="late_split")
+    G, info = TK.compose(spec, M, objective="late_split", street=False)
     rep, rows = RG.report(G, [tuple(x) for x in spec["crossings"]], 416.5)
     assert rep["sinks"] == 5 and rep["skew_TT_ps"] < 5.0           # balanced up to one repeater-count step of the snake
     assert set(info["leaves"]) == {"lo", "hi"} and len(info["snakes"]) == 1 and info["snakes"][0]["leaf"] == "lo"
@@ -120,3 +120,74 @@ def test_spice_scale_model_file():
     F = MD.load(str(ROOT / "data" / "asap7_bufx24_sta_fit.json"))
     for c, s in (("TT", 1.0485), ("FF", 1.0552)):
         assert abs(S.wire_ps(2000, c) / F.wire_ps(2000, c) - s) < 1e-9
+
+
+# ------------------------------------------------------------------ OSS-CLOCK-3: street-aware routing (mscts.street)
+from mscts import street as SR  # noqa: E402
+
+
+def test_street_merge_takes_balanced_detour_point_not_snake():
+    """same keepout as the legacy test: the merging segment of a same-row pair is one point, inside the keepout ->
+    street mode takes the balanced point just outside it (both routes + h), no snake, no moved merge, skew ~0."""
+    ss = [dict(name="a", xy=(0, 0)), dict(name="b", xy=(2000, 0))]
+    L = LG.Legality([[700, -50, 1300, 50]])
+    R = RG.build(ss, M, (1000, 800), [], objective="nearest", legal=L)
+    m = next(nd for nd in R.nodes if nd["kind"] == "merge")
+    assert L.ok(m["xy"]) and abs(m["xy"][0] - 1000) < 1.0 and abs(abs(m["xy"][1]) - 50.05) < 1e-6
+    assert not R.snakes and not R.moved and len(R.detours) == 1 and abs(R.detours[0]["um"] - 100.1) < 0.2
+    R.segs, led = LG.legalize_repeaters(R, L)
+    rep, _ = RG.report(R, [], 416.5)
+    assert rep["skew_TT_ps"] < 0.5 and led["street"] and led["stages_over_rep"] == 0
+
+
+def test_router_runs_vertical_wire_in_the_street_column():
+    """two tall keepouts (1200 um) with a 50-um street column between them on the path: the router runs the vertical
+    wire in the street (Z route, Manhattan length) so every repeater stage is legal and <= reach (an x-first or y-first
+    L path has a ~1200 um unrepeatable span over a keepout)."""
+    L = LG.Legality([[-100, 200, 100, 1400], [150, 200, 600, 1400]])
+    Rt = SR.Router(L, 450.0)
+    pts, iv, sc = Rt.route((0, 0), (300, 1600))
+    assert sc[0] == 0 and max((b - a for a, b in iv), default=0.0) <= 450.0
+    assert abs(SR.plen(pts) - 1900) < 1e-6                              # monotone: no extra wire
+    assert any(abs(p[0] - q[0]) < 1e-9 and 100 < p[0] < 150 for p, q in zip(pts, pts[1:]))
+    st = SR.place(SR.plen(pts), SR.plen(pts), iv, 450.0)
+    assert max(st) <= 450.0 + 1e-6 and all(L.ok(SR.at(pts, s)) for s in __import__("itertools").accumulate(st[:-1]))
+
+
+def test_place_balanced_stages_no_stub():
+    """repeater placement: n = ceil(L / reach) equal stages, a site inside a keepout snaps to the nearer edge without
+    a stage over reach and without zero / stub stages; a wire exactly at reach stays one stage."""
+    assert SR.place(450.0, 450.0 + 1e-9, [], 450.0) == [450.0 + 1e-9]
+    st = SR.place(1000.0, 1000.0, [[300.0, 360.0]], 450.0)
+    assert len(st) == 3 and max(st) <= 450.0 and min(st) > 250.0
+    st = SR.place(1000.0, 1200.0, [[300.0, 360.0]], 450.0)       # 200 um snake at the child end
+    assert abs(sum(st) - 1200.0) < 1e-6 and max(st) <= 450.0
+
+
+def test_street_trunk_compose_exact_stages_tree_balance():
+    """trunk + local trees in street mode: exact stage lengths from build time (no post-hoc rebalance needed), all
+    buffers legal, branch-point balancing ('tree') uses no more meander than per-leaf balancing."""
+    spec = dict(sinks=_toy4() + [dict(name="s4", xy=(2100, 1600), insertion_ps={"TT": 100.0, "FF": 81.0})],
+                crossings=[["s0", "s1"], ["s2", "s3"]],
+                trunk=dict(entry=[1000, 750], nodes=[dict(id="t", xy=[1000, 750], parent=None),
+                                                     dict(id="lo", xy=[1000, 0], parent="t", rect=[-1, -1, 3000, 700]),
+                                                     dict(id="hi", xy=[1000, 1500], parent="t", rect=[-1, 701, 3000, 2000])]))
+    L = LG.Legality([[450, -60, 870, 60], [1200, 1440, 1620, 1560]])
+    out = {}
+    for at in ("leaf", "tree"):
+        G, info = TK.compose(spec, M, objective="late_split", legal=L, balance_at=at)
+        G.segs, led = LG.legalize_repeaters(G, L)
+        reb = LG.rebalance(G, "TT")
+        rep, _ = RG.report(G, [tuple(x) for x in spec["crossings"]], 416.5)
+        bufs, _ = RG.segments(G)
+        assert all(L.ok(xy) for xy, k in bufs.values() if k in ("rep", "merge"))
+        assert rep["skew_TT_ps"] < 1.0 and reb < 5.0 and led["max_stage_um"] <= 450.0 + 1e-6
+        out[at] = rep["snake_um"]
+    assert out["tree"] <= out["leaf"] + 1e-6
+
+
+def test_place_child_inside_keepout_keeps_repeater_out_of_it():
+    """a sink pin inside its own keepout with a snake tail (L > D): the repeater is not put on the pin (route end),
+    it snaps back to the keepout edge; every stage stays <= reach."""
+    st = SR.place(235.0, 450.5, [[47.0, 235.0]], 450.0)
+    assert len(st) == 2 and max(st) <= 450.0 + 1e-6 and st[0] <= 47.0

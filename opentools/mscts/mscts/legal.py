@@ -71,14 +71,32 @@ class Legality:
 
 
 def legalize_repeaters(R, L):
-    """-> (segs {(node, kid): [stage lengths]}, ledger dict).  Ideal repeater positions at L/n spacing; one inside a
-    keepout slides to the nearest legal arc position (back first, then forward) between its neighbours."""
+    """-> (segs {(node, kid): [stage lengths]}, ledger dict).
+    Street mode (R.router, mscts.street): an edge keeps the exact stages chosen when it was merged (R.pre_segs) if its
+    length is unchanged; any other edge (trunk legs, balanced leaf legs) is routed on the streets and repeated there.
+    Legacy mode: ideal repeater positions at L/n spacing on the x-first L path; one inside a keepout slides to the
+    nearest legal arc position (back first, then forward) between its neighbours."""
     rep, leg_max = R.M["rep_um"], R.M["leg_max_um"]
+    router = getattr(R, "router", None)
+    pre = getattr(R, "pre_segs", None) or {}
     segs, moved, worst = {}, 0, 0.0
     for nd in R.nodes:
         for k, Lk, sn in nd["kids"]:
             a, b = nd["xy"], R.nodes[k]["xy"]
             D = _man(a, b)
+            if router is not None:
+                ps = pre.get((nd["id"], k))
+                if ps is not None and abs(sum(ps) - Lk) < 1e-6:
+                    st = list(ps)
+                else:
+                    from .street import place, plen
+                    pts, iv, _ = router.route(a, b)
+                    R.routes[(nd["id"], k)] = pts
+                    D = plen(pts)                        # > Manhattan only on a jog route
+                    st = place(D, max(Lk, D), iv, rep)
+                segs[(nd["id"], k)] = st
+                worst = max(worst, max(st))
+                continue
             n = max(1, math.ceil(Lk / rep - 1e-9))
             pos = []
             prev = 0.0
@@ -95,8 +113,11 @@ def legalize_repeaters(R, L):
             st = [y - x for x, y in zip([0.0] + pos, pos + [Lk])]
             segs[(nd["id"], k)] = st
             worst = max(worst, max(st))
-    over = sum(1 for v in segs.values() for x in v if x > leg_max + 1e-6)
-    return segs, dict(repeaters_moved=moved, max_stage_um=round(worst, 1), stages_over_leg_max=over, leg_max_um=leg_max)
+    allst = [x for v in segs.values() for x in v]
+    over = sum(1 for x in allst if x > leg_max + 1e-6)
+    return segs, dict(repeaters_moved=moved, max_stage_um=round(worst, 1), stages_over_leg_max=over, leg_max_um=leg_max,
+                      stages=len(allst), stages_over_rep=sum(1 for x in allst if x > rep + 1e-6), rep_um=rep,
+                      street=router is not None)
 
 
 def arrivals_seg(R, segs, corner):
