@@ -27,13 +27,20 @@ class Options:
     channel_um: float = 4.0          # top-level channel between partitions
     macro_halo_um: float = 4.0       # macro halo (fit check and partition MACRO_PLACE_HALO)
     die_margin_um: float = 5.0       # top core margin (IO ring, top PDN ring)
-    grid_um: float = 1.08            # snap region corners (ASAP7: 4 x 0.27 rows, 20 x 0.054 sites)
+    # snap region corners.  ASAP7: 2.16 = lcm(1.08 = 4 rows x 0.27 / 20 sites x 0.054, 0.048 = M4/M5 pin
+    # track pitch).  With 1.08 a slot at x=5.4 put every M5 partition pin 0.024 um off the top's M5
+    # tracks (DRT-0418 'no pins on routing grid' -> DRT-0255 on the clock pin, OSS-HIER-1 demo).
+    grid_um: float = 2.16
+    wire_ff_per_um: float = 0.20     # top crossing wire cap for the partition output load context
+    default_drive_cell: str = "BUFx2_ASAP7_75t_R"   # input drive when the real driver is a macro/chip IO
+    default_drive_pin: str = "Y"
     pin_pitch_um: float = 0.192
     pin_margin_um: float = 1.2
     ps_per_um: float = 1.0           # repeated-wire delay estimate
     setup_margin_ps: float = 0.0
     max_aspect: float = 3.0          # slot aspect limit while growing the core
     block_margin_um: float = 1.08    # partition core margin inside its outline (macro fit check)
+    context: bool = True             # write set_driving_cell / set_load from the top context
 
 
 def _snap_dn(v, g):
@@ -195,6 +202,12 @@ def build_plan(nl, libcells, lef_macros, o: Options, design=None, region_map=Non
                              o.setup_margin_ps)
     for b in budgets:
         b["port"] = port_names[b["net"]]
+    # top-level drive/load context of every crossing (12.14g budgets): the receiving partitions see
+    # the real driver cell on their input port, the driving partition sees the real far-side pin load
+    # plus the top wire on its output port, so ETM arcs are characterised at real slews/loads.
+    ctx = crossing_context(nl, libcells, leaf_part, crossings, driver, pin_xy, port_names, o)
+    for b in budgets:
+        b.update(ctx.get(b["net"], {}))
 
     plan = S.new_plan(design or nl.top)
     plan["die"] = {"bbox_um": list(die), "core_margin_um": m}
@@ -227,6 +240,45 @@ def build_plan(nl, libcells, lef_macros, o: Options, design=None, region_map=Non
     return plan, leaf_part, part_ports
 
 
+def crossing_context(nl, libcells, leaf_part, crossings, driver, pin_xy, port_names, o: Options):
+    """{net: {drive_cell, drive_pin, load_ff, sink_ff}} for every crossing net."""
+    want = set(crossings)
+    sink_ff = {}
+    drv_pin = {}
+    for li, lf in enumerate(nl.leaves):
+        dirs = nl.pin_dirs.get(lf.type, {})
+        c = libcells.get(lf.type)
+        for port, bits in lf.conns.items():
+            d = dirs.get(port, "input")
+            for b in bits:
+                if b not in want:
+                    continue
+                if d == "output":
+                    drv_pin[b] = port
+                elif leaf_part[li] != crossings[b][0]:
+                    cap = c.pin_caps.get(port, 0.0) if c else 0.0
+                    sink_ff[b] = sink_ff.get(b, 0.0) + cap
+    out = {}
+    for net, (src, dsts) in crossings.items():
+        li = driver.get(net)
+        c = libcells.get(nl.leaves[li].type) if li is not None else None
+        if c and not c.is_macro and drv_pin.get(net):
+            cell, pin = c.name, drv_pin[net]
+        else:
+            cell, pin = o.default_drive_cell, o.default_drive_pin
+        nm = port_names[net]
+        a = pin_xy.get((src, nm))
+        wl = 0.0
+        for q in dsts:
+            bq = pin_xy.get((q, nm))
+            if a and bq:
+                wl += abs(a[0] - bq[0]) + abs(a[1] - bq[1])
+        s = sink_ff.get(net, 0.0)
+        out[net] = {"drive_cell": cell, "drive_pin": pin, "sink_ff": round(s, 4),
+                    "load_ff": round(s + wl * o.wire_ff_per_um, 4)}
+    return out
+
+
 def partition_sdcs(plan, part_ports, o: Options):
     """Return {rid: sdc text} from the plan budgets."""
     by_net = {b["net"]: b for b in plan["budgets"]}
@@ -243,5 +295,6 @@ def partition_sdcs(plan, part_ports, o: Options):
             b = by_net.get(net)
             bp[nm] = ("in" if d == "input" else "out", b)
         out[rid] = B.partition_sdc(rid, clock_port or "clk", o.period_ps, o.latency_ps, bp,
-                                   o.io_budget_ps)
+                                   o.io_budget_ps, context=o.context,
+                                   default_drive=(o.default_drive_cell, o.default_drive_pin))
     return out

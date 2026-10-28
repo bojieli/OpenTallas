@@ -6,7 +6,7 @@ set -uo pipefail
 D=$1; shift
 IMG=${ORFS_IMAGE:-openroad/orfs:asap7lock}
 mounts=(-v "$D:$D"); for m in "$@"; do mounts+=(-v "$m:$m"); done
-for v in flat stitched etm; do
+for v in ${VIEWS:-flat stitched etm}; do
   [ -f "$D/$v.tcl" ] || continue
   docker run --rm --memory "${DOCKER_MEM:-16g}" --user "$(id -u):$(id -g)" "${mounts[@]}" "$IMG" \
     /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/sta -no_init -no_splash -exit "$D/$v.tcl" > "$D/$v.log" 2>&1
