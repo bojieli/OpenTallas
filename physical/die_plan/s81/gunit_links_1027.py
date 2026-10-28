@@ -30,7 +30,10 @@ for inst, c in cores.items():
     t = json.load(open(B + "/inputs/core_pins/%s.json" % c["module"]))["pins"]
     for p in t:
         m = re.match(r"^(\w+)(?:\[(\d+)\])?$", p["name"])
-        pins[(inst, m.group(1), m.group(2))] = (o[0] + p["x"], o[1] + p["y"])
+        w_, h_ = c["outline_um"]   # S81-CORES-R25 10-27: honour the plan orient (MX / MY / R180)
+        x_, y_ = {"R0": (p["x"], p["y"]), "MX": (p["x"], h_ - p["y"]), "MY": (w_ - p["x"], p["y"]),
+                  "R180": (w_ - p["x"], h_ - p["y"])}[c.get("orient", "R0")]
+        pins[(inst, m.group(1), m.group(2))] = (o[0] + x_, o[1] + y_)
 res = collections.defaultdict(list)
 for net, ends in conn.items():
     if len(ends) != 2:
@@ -56,12 +59,16 @@ BUS = {"vi_s": ("xtier_i0", None, 432.819), "vo_s": ("xtier_o0", [1508.16, 1568.
        "cw_d": ("unit_i0", [1449.024, 1506.972], None), "cw_a": ("unit_i0", [1449.024, 1506.972], None),
        "cw_v": ("unit_i0", [1449.024, 1506.972], None)}
 owner = {"vi_s": "u_l3", "vo_s": "u_l3", "vi_n": "u_l5", "vo_n": "u_l5", "cw_d": "u_l2", "cw_a": "u_l2", "cw_v": "u_l2"}
+ST = {e["conn"][4:]: e["regs_um"][-1 if e.get("launch", "").startswith("face") else 0]
+      for e in pt.get("internal_stations", []) if e.get("conn", "").startswith("bus:")}
 bl = collections.defaultdict(list)
 for (inst, port, bit), (x, y) in pins.items():
     if owner.get(port) != inst:
         continue
     bus, win, st = BUS[port]
-    if st is not None:
+    if bus in ST:   # S81-CORES-R25 10-27: pin -> its plan FIRM station (internal_stations), not the stale 432.819
+        l = abs(x - ST[bus][0]) + abs(y - ST[bus][1])
+    elif st is not None:
         l = abs(x - st) + y
     else:
         l = max(0.0, win[0] - x, x - win[1]) + y
