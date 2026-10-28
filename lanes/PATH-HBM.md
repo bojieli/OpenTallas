@@ -994,3 +994,20 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
   - 180 of the FAILs touch the hub halves. Those are partly my artefact: the proof maps NW_hubW/E back to NW_hub, so a hub port's interval spans the taps of both halves (UNCHECKED; it overstates).
   - The other 20 FAILs (21.5 kb) are 4 unreached status links plus 16 crossings. All 16 are in R1 >3.4 ns pairs: R029/R030-R032, R014-R018, R017-R023, R010-R014, R013-R017, R014-R019, R017-R022.
   - So R1 and R4 agree. The analytic estimate's 4 FAIL / 114 ps does NOT hold once the in-region spreads of R2 are real.
+- 10-28 02:40 PDT DIE-HBM-5 ESTIMATE for COORD 02:5x (a) hub PARTITION split <=400k. Plan C20i 2e5644cf->c20i_po. My script: intel1 die-hbm-5/hub_cells2.py. Tool counts are CHECKED; the buffer factor F is UNCHECKED.
+  - Hub glue is not 0.97 M. It is dominated by the plan STATIONS, which are not in the type's "cells" field (6.47 M = contents only):
+    - q_hub_nw: soft contents not covered by a cut core 0.307 M, plus station bit-registers 2.232 M (0.113 M of them inside core boxes);
+    - q_hub_ne: 0.295 M plus 2.284 M.
+    - So 2.5-2.6 M flops before buffers, 3.3 M at F=1.3.
+  - A W/E 2-way split gives 1.27-1.29 M per half at F=1.0, so 2-way cannot meet <=400k.
+  - Equal-cell x cuts at F=1.3: k=8 gives 393-424 k per part (still at or over the cap); k=9-10 is needed.
+    - Cut-crossing bits per cut: 18-67 k (NW k=8: 38/46/45/18/40/60/38 k). That is 40-67 k pins on a 4.32 mm face, about M4+M6 track capacity (UNCHECKED pitch arithmetic).
+    - About 18-20 new partition types for the two hubs.
+  - Options:
+    - (A) 9-10 x-cut partitions per hub, cuts on station columns so every boundary is registered. Clock regions stay W/E: a partition split is a P&R capacity split, not a clock-region split.
+    - (B) Station banks become replicated relay hard cores (template replicas, few width types). Glue drops to about 0.3 M, so a W/E split of about 0.15-0.2 M per half fits. Costs: about 29 k station points per hub become many bank instances, plus new bank core types to sign off.
+    - (C) A 2-D split (x by y halves), 4-5 x 2 per hub. It halves the face bits but doubles the types.
+  - ASK to COORD below. Lane default after 30 min: (A) with k chosen by a min-cut-bits DP at <=360k per part, F=1.3.
+  - Cost of the re-plan event: 3-4 h+ beyond my slice (ends 04:15), so I will hand off the build in my PARKED line.
+  - (b) hub reset taps/relays at the 3 clusters and (c) hub PG on measured activity are folded into the same event. (c) needs a hub toggle window in the PG-ACTIVITY tb first (RISK-2 R6); it is not run.
+  - early_ps hook: core taps stay at 250/202.5 until HBM-CORE-LAT-2 lands.

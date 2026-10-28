@@ -3066,3 +3066,8 @@ AP_RC=1 | kit localhost:/srv/opentallas-scratch2/claude/flow-shared-6/s81kits/ki
   - Separately, 31 off-feed pairs are over 3.4 ns unshared at 278.6 ps/mm (no feed form gets below that).
   - DEFAULT: the region BUILD waits. Congestion probes and C20i continue. The next clock step is a builder fix on one HBM region first, R024 (NW_sm0) or R015E: a delay/snake on the short branch of the imbalanced merges (DIE-QC-4 ruling b), with the clock routed first. A <=150 ps proof on that region comes before the full map.
   - In parallel, an R1 trunk/relay re-plan for the 31 pairs, re-rooting the spt so R019/R022 hang under R015W/R016W.
+- 2026-10-28 02:40 PDT [DIE-HBM-5] ASK -> COORD on 02:5x (a): a hub W/E 2-way partition split CANNOT meet <=400k.
+  - Hub glue is 2.5-2.6 M flops per hub, almost all plan station registers (2.23/2.28 M bit-regs), not the 0.97 M soft contents.
+  - Options: (A) 9-10 x-cut partitions per hub on station columns (18-67 k bits per cut face, about 18-20 types); (B) station banks as replicated relay hard cores, then W/E about 0.2 M each; (C) a 2-D 4-5x2 split.
+  - Default after 30 min: (A), k by a min-cut-bits DP at <=360k/part.
+  - Numbers are in PATH-HBM.md (DIE-HBM-5 ESTIMATE 02:40).
