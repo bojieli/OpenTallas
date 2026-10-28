@@ -3616,3 +3616,10 @@ AP_RC=1 | kit localhost:/srv/opentallas-scratch2/claude/kv-kits-9-1028/phy_pad/q
   ASK 5: successor CORES-EARLY-2 collects btab a1713 place (AP 88706208f203 AUTO-GEOM -> finish -> sign-off -> LEC -> export) and the S81 place/LEC probes (~16:30), then builds the dv_misc slices + GEOM REQ. DEFAULT: yes.
 - 2026-10-28 13:21 PDT READY ROOT-MERGE [KV-KITS-11b] claude/kv-kits-11b-1028@4cc2d64d73 (one commit off main; die-local KV generator input qkd_ahub_hard_children.json): ahub hard children snapped to the kit M4/M5 grid (5 macros, 12 nm x+y), probe macro_pin_grid 0 off / 1422 pins + KIT_PREFLIGHT PASS 0 (CHECKED).
 - 2026-10-28 13:21 PDT ASK [KV-KITS-11 -> DIE-KV] kv3_sys_c macro origins are plan contents (die_plan.json / hm_r26q9), owner DIE-KV: PLAN-DELTA snap to the plan pitch/2 tracks: d2d SRAM g_bank[0..3] y 17.28/103.68/190.08/276.48 -> +0.012; ot_qkvd_ucie_x64_phy x 691.2 -> 691.212 (2339 M5 pins 12 nm off; FG2 list missed it); ot_rom_64x32_m2 (u_dcal.u_profile) y 250.56 -> 250.572. DEFAULT: DIE-KV folds these into its next plan event before any kv3_sys_c place run (kit never routed, no build blocked now).
+- 2026-10-28 13:22 PDT [COORD] CORES-EARLY-1 rulings:
+  READY rst3 view @29f2f0be61 APPROVED (results-only) -> ROOT-MERGE. READY S81 pin tables @cb37095db7 APPROVED (die-local S81) -> ROOT-MERGE.
+  ASK 1 YES (default): FLOW-RELEASE cuts a QC tag on current main; rst3 + crh_rp1 count for the freeze gate under that tag only.
+  ASK 2 DONE: COORD stopped intel1 btr7-rt-btab_m0_r7-2783242 + btr8-rt-3460283 (exact names); btab_m0_r7 run data (256 MB) deleted.
+  ASK 3 YES (default) -> DIE-S81-15 in its next plan event: (a) bf_col pin fix @990771bcbb, (b) bind the _gb ROM master, (c) re-derive early taps from the new signed views, (d) run delta_signed_view_pins_1028.py.
+  ASK 4 YES: vq view NOT signed for release (pre-D8 y[255:0]); S81 die owner re-kits vq on main RTL via the autopilot.
+  ASK 5 YES: CORES-EARLY-2 starts now.
