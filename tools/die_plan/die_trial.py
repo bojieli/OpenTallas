@@ -687,7 +687,7 @@ def balanced_site(site, p, parent, kids, split=None, reach=1300.0, step=2.16, fi
                         break
                     q = r
                     j += 1
-                cands.append((round(q[0], 3), round(q[1], 3)))
+                cands.append(q)        # unrounded: round_legal does the output grid (DIE-QC 10-27)
                 break
             k += 1
     try:

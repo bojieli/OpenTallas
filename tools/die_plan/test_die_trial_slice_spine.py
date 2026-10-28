@@ -145,3 +145,13 @@ def test_round_legal_is_plain_rounding_when_already_legal_or_hopeless():
     site = FakeSite(100.0, 100.0, [(40.0, 40.0, 60.0, 60.0)])
     assert D.round_legal(site, (10.00049, 20.0)) == (10.0, 20.0)
     assert D.round_legal(site, (50.00049, 50.0)) == (50.0, 50.0)
+
+
+def test_balanced_site_then_round_legal_never_lands_inside_a_halo():
+    # the QC b3485 sequence: coarse walk from 10521.36 in 2.16 steps stops at 10620.720000000001 = the halo edge
+    x0 = 10262.160000000002
+    site = FakeSite(30000.0, 30000.0, [(x0, 10832.4, 10620.720000000001, 11095.92)])
+    p = (10521.36, 11080.8)
+    q, _ = D.balanced_site(site, p, (10521.36, 12000.0), [(10521.36, 10900.0), (10521.36, 11200.0)], "y")
+    r = D.round_legal(site, q)
+    assert site.legal(r) and r == (round(r[0], 3), round(r[1], 3))
