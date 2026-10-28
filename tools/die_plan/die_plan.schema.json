@@ -1034,6 +1034,9 @@
        }
       }
      },
+     "pg_island_cut": {
+      "type": "boolean"
+     },
      "id_straps": {
       "type": "array",
       "items": {
@@ -1054,6 +1057,20 @@
         },
         "note": {
          "type": "string"
+        },
+        "layer": {
+         "type": "string"
+        },
+        "sites_um": {
+         "type": "array",
+         "items": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+         }
         }
        }
       }
@@ -1772,6 +1789,9 @@
         ]
        }
       }
+     },
+     "core_pg_connect": {
+      "type": "boolean"
      },
      "hard_cores": {
       "type": "array",

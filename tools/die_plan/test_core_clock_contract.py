@@ -91,3 +91,45 @@ def test_optin_export_keeps_corner_and_source_basis(tmp_path,monkeypatch):
     assert 'signoff.json' in r['signoff_source']
     (tmp_path/'signoff.json').unlink()
     with pytest.raises(CC.ContractError,match='SIGNED'):G.core_latency_files(p,'tile',out,mean_contract=True)
+
+
+def test_parent_budget_trial_exports_means_release_refuses(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    import gen_phys as G
+    c = core(tmp_path)
+    b = CC.from_budget(c['lib'], dict(clk=dict(tt=390., ff=312.)), 'parent_budget A0 centre entry')
+    (tmp_path/'clock_contract.json').write_text(json.dumps(b))
+    p = SimpleNamespace(types={'tile': dict(hard_cores=[c], clock=dict(core_taps='early', taps=[
+        dict(name='u_node.clk', kind='core', insertion_ps=390., insertion_ff_ps=312.,
+             budget_owner='parent_budget A0 centre entry')]))}, clock=dict(insertion_ps=250.))
+    monkeypatch.setattr(G, 'core_tap_rows', lambda *_, **__: [('clk_c0', 'u_node', 'clk', 140., 390.)])
+    out = tmp_path/'out'; out.mkdir()
+    G.core_latency_files(p, 'tile', out, **G.core_mean_contract_options(p, 'tile', trial=True))
+    assert 'u_node clk 390' in (out/'core_latency.txt').read_text()
+    assert 'u_node clk 312' in (out/'core_latency_ff.txt').read_text()
+    row = json.loads((out/'core_latency.json').read_text())['rows'][0]
+    assert not row['signed'] and row['basis'] == 'parent_budget'
+    with pytest.raises(CC.ContractError, match='non-release'):
+        G.core_mean_contract_options(p, 'tile', trial=False)
+    # The export retains the selected-view and TT tap consistency controls.
+    b['view_lib_sha256'] = 'wrong'
+    (tmp_path/'clock_contract.json').write_text(json.dumps(b))
+    with pytest.raises(CC.ContractError, match='liberty'):
+        G.core_latency_files(p, 'tile', out, **G.core_mean_contract_options(p, 'tile', trial=True))
+
+
+def test_mean_selector_default_signed_and_incomplete_budget_controls():
+    from types import SimpleNamespace
+    import gen_phys as G
+    p = SimpleNamespace(types={'tile': dict(hard_cores=[dict(inst='u')])})
+    assert G.core_mean_contract_options(p, 'tile', trial=True) == dict(mean_contract=False, require_signed=True)
+    p.types['tile']['clock'] = dict(core_taps='early', taps=[
+        dict(kind='core', insertion_ff_ps=199.6, budget_owner='SIGNED selected view')])
+    assert G.core_mean_contract_options(p, 'tile', trial=False) == dict(mean_contract=True, require_signed=True)
+    p.types['tile']['clock']['taps'].append(
+        dict(kind='core', insertion_ff_ps=312., budget_owner='parent_budget A0'))
+    assert G.core_mean_contract_options(p, 'tile', trial=True) == dict(mean_contract=True, require_signed=False)
+    with pytest.raises(CC.ContractError, match='release'):
+        G.core_mean_contract_options(p, 'tile')
+    del p.types['tile']['clock']['taps'][1]['insertion_ff_ps']
+    assert G.core_mean_contract_options(p, 'tile', trial=True) == dict(mean_contract=False, require_signed=True)
