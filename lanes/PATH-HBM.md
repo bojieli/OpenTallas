@@ -1267,3 +1267,13 @@ All HBM plan/streets/locality/clock/crossing/core/native boot+token/PG aliases c
   - Opt-in --half-local 0|1 --native-xread-lx N: Placement half mode keeps k%8; far-half groups are owner-issued crossing reads at fill_commit + LX. The calendar assert refuses a record with a late group or an unpriced far read (the tied pins).
   - CHECKED: default byte-identical (DS L2 fixture run, 366 files vs main); 5 new + 9 existing tests PASS. DS L2 with half 0/1: 9 emitted, 0 mismatched words, 866/881 crossing reads, 0 late, 0 unpriced, replay end +0/+10 cycles.
   - UNCHECKED: the RTL slice replay (tok_func_hbm.sh). No slice binary exists on the fleet to reuse.
+- RESULT DIE-HBM-10 2026-10-28 11:43 PDT: C23 face census, ESTIMATE at plan time, no build (claude/die-hbm-10-1028@ad2bc2476e, results/die_hbm_1027/hbm10/phy_split/).
+  - The 8/16/8 split is NOT safely buildable. With no cut crossing, L22/L22m rdata must leave PHY_NC through the vsN4..6 column. The column then carries 9360 b, a 0.994 window fill of 1684.8 um at the plan's achieved 5.59 b/um.
+  - 2-way variants:
+    - all on the mcb paths: spu0/spt0 reach 1.17 of face_pins_per_um. FAIL.
+    - column into the W half: T057~T060W fails direct; hop chains cost 6/10 cycles. Rejected.
+  - Re-balanced **C23q W PC0-9 / C PC10-21 / E PC22-31** (whole channels):
+    - face fill: worst W-path 0.82 (today 0.89), column 0.69 (window 0.75);
+    - CA: 0 fail, 0 below 100; PHY links D4 at >=206.9 ps; die worst is still T047~T052 at 109.6;
+    - rc_slice widths 2661.12 / 3188.16 / 2661.12 um.
+  - CA is UNCHECKED-model until the build re-plans on the CLK-INV-CAL-1 model.
