@@ -489,3 +489,11 @@ ICG/TI/TS lists that `parent_trunk_insert.tcl` inserts + legalises on the placed
 (`--pin-offset MODULE=dx,dy`) need an orientation (geometry `orient` or `--orient-rule X`), else the plan fails closed.
 Nothing calls these by default; every other tool is unchanged. Output is byte-identical to trunk2.py for the same inputs
 (A0 nk q0 -> q4 chain CHECKED; `test_parent_trunk_dme.py`).
+OPT-IN (DIE-QC-17) `plan --topology bipart`: balanced top-down bipartition topology in place of greedy nearest-pair
+merging (which can leave a far singleton for the root merge; A0 nl a0cl1 carried 1051 of 2043 um elongation). Variants
+(root split children|glue vs geometric, cut by count or by estimated latency balance, first-cut axis, root-merge pull
+toward the entry `--bipart-pull`) are embedded with the same wire-length merges; the one with the smallest plan-model
+OCV-INCLUSIVE spread (approved clock AOCV table `--aocv-table`, hold convention, CPPR at the pair's LCA) wins and the
+whole variant table is recorded in the plan summary. `ocv PLAN ARR_TT ARR_FF` gives the same OCV-inclusive spread on
+measured (routed) arrivals, the trunk acceptance number (<= 60, ROUTED + OCV). `--topology greedy` stays the default
+and is byte-identical (A0 nl q0 cmp CHECKED).

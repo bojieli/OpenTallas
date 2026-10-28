@@ -185,3 +185,107 @@ def test_byte_identical_to_lane_planner(tmp_path):
                     "--entry", "160,250", "--pin-offset", "ot_qwen_tile_romleaf=10,5", "--orient-rule", "200",
                     "--child-ins", ci], cwd=tmp_path, check=True, capture_output=True)
     assert (tmp_path / "lane.json").read_bytes() == (tmp_path / "shared.json").read_bytes()
+
+
+# ---------------------------------------------------------------- DIE-QC-17: opt-in balanced top-down bipartition
+def test_default_topology_is_greedy(tmp_path):
+    """--topology greedy (the default) is the DIE-QC-15 planner: same bytes with or without the flag, no new keys"""
+    P0, _, o0 = _plan(tmp_path)
+    b0 = o0.read_bytes()
+    P1, _, o1 = _plan(tmp_path, ["--topology", "greedy"])
+    assert o1.read_bytes() == b0
+    assert "topology" not in P1["summary"] and "plan_ocv" not in P1["summary"]
+
+
+def _far_singleton(tmp, regs=False):
+    """A0 nl failure shape: a dense glue field + a 1-register cluster far at the N edge + children in two columns"""
+    macros = [[40.0, 60.0, 140.0, 160.0], [300.0, 60.0, 400.0, 160.0]]
+    kids = [dict(inst="k0", module="mod_n", pin=[90.0, 110.0]), dict(inst="k1", module="mod_n", pin=[350.0, 110.0])]
+    roots = [[180.0 + 30 * (i % 4), 220.0 + 30 * (i // 4)] for i in range(8)] + [[220.0, 760.0]]
+    clusters = [dict(name="c%d" % i, n=10, root=r, box=[], regs=(["r_c%d_%d" % (i, j) for j in range(3)] if regs else []))
+                for i, r in enumerate(roots)]
+    G = dict(W=440.0, H=800.0, macros=macros, kids=kids, clusters=clusters)
+    ins = {c["name"]: dict(TT=dict(mean=70.0 + 4 * (i % 3)), FF=dict(mean=55.0 + 3 * (i % 3))) for i, c in enumerate(clusters)}
+    ins["c8"] = dict(TT=dict(mean=24.0), FF=dict(mean=21.0))
+    g = tmp / "fs_geom.json"; g.write_text(json.dumps(G)); c = tmp / "fs_ins.json"; c.write_text(json.dumps(ins))
+    return g, c, G
+
+
+def _fs_plan(tmp, extra=(), regs=False):
+    g, c, G = _far_singleton(tmp, regs)
+    out = tmp / ("fs_%s.json" % ("_".join(x.strip("-").replace("/", "-") for x in extra) or "greedy"))
+    PT.main(["plan", str(g), str(c), str(out), "--entry", "220,300", "--child-ins", "mod_n=150/120"] + list(extra))
+    return json.loads(out.read_text()), G, out
+
+
+def _plan_ocv(P):
+    T = PT._load_aocv(PT.HERE / "clk_aocv_table_g021.json")
+    rng = {C: {k: (x[C.lower()], x[C.lower()]) for k, x in P["arrival_plan"].items()} for C in ("TT", "FF")}
+    o = PT.ocv_spread(T, P["tree"], rng)
+    return max(o["TT"]["ocv_inclusive_spread"], o["FF"]["ocv_inclusive_spread"])
+
+
+@pytest.fixture(scope="module")
+def fs_pair(tmp_path_factory):
+    tmp = tmp_path_factory.mktemp("fs")
+    return _fs_plan(tmp), _fs_plan(tmp, ["--topology", "bipart"]), tmp
+
+
+def test_bipart_structure(fs_pair):
+    (Pg, G, _), (Pb, _, _), _ = fs_pair
+    s = Pb["summary"]
+    assert s["topology"] == "bipart" and s["odd_parity_sinks"] == []
+    assert sorted(k["name"] for k in Pb["sinks"]) == sorted(k["name"] for k in Pg["sinks"])
+    for i in Pb["insts"]:
+        x, y = i["p"]
+        assert not any(m[0] - 1 < x < m[2] + 1 and m[1] - 1 < y < m[3] + 1 for m in G["macros"]), i
+    # the winner is the argmin of the stated objective over the evaluated variants
+    obj = [max(r["ocv_tt"], r["ocv_ff"]) for r in s["bipart_table"]]
+    assert len(obj) >= 2 and max(s["plan_ocv"]["TT"]["ocv_inclusive_spread"],
+                                 s["plan_ocv"]["FF"]["ocv_inclusive_spread"]) == pytest.approx(min(obj), abs=0.05)
+    # plan_ocv is the plan-model OCV spread of the emitted tree (recomputed independently from the json)
+    assert _plan_ocv(Pb) == pytest.approx(min(obj), abs=0.05)
+
+
+def test_bipart_beats_greedy_on_objective(fs_pair):
+    """on the far-singleton shape the bipartition objective (OCV-inclusive spread) is no worse than greedy's"""
+    (Pg, _, _), (Pb, _, _), _ = fs_pair
+    assert _plan_ocv(Pb) <= _plan_ocv(Pg) + 0.05
+
+
+def test_bipart_variant_select_and_fail_closed(tmp_path):
+    P, _, _ = _fs_plan(tmp_path, ["--topology", "bipart", "--bipart-variants", "geo/count/auto", "--bipart-pull", "0"])
+    assert [r["variant"] for r in P["summary"]["bipart_table"]] == ["geo/count/auto/p0"]
+    with pytest.raises(ValueError, match="selects none"):
+        _fs_plan(tmp_path, ["--topology", "bipart", "--bipart-variants", "nope/x/y"])
+
+
+def _arr_corner(P, tmp, C, ci):
+    lines = []
+    for k in P["sinks"]:
+        a = P["arrival_plan"][k["name"]][C.lower()]
+        if k["kind"] == "cluster":
+            for j in range(3):
+                lines.append("S r_%s_%d/CLK DFFHQNx1_ASAP7_75t_R clknet_%s %.3f %.3f %.3f" % (k["name"], j, k["name"], a, a + 416.5, a))
+        else:
+            lines.append("S %s/clk mod_n %s %.3f %.3f %.3f" % (k["name"], k["net"], a - (150.0, 120.0)[ci], a, a))
+    f = tmp / ("arr_%s.txt" % C); f.write_text("\n".join(lines) + "\n")
+    return f
+
+
+def test_ocv_mode_and_corr_on_bipart(tmp_path):
+    """ocv mode on arrivals equal to the plan reproduces the plan-model OCV spread; corr runs on a bipart tree"""
+    P, G, out = _fs_plan(tmp_path, ["--topology", "bipart"], regs=True)
+    fT, fF = _arr_corner(P, tmp_path, "TT", 0), _arr_corner(P, tmp_path, "FF", 1)
+    o = tmp_path / "ocv.json"
+    PT.main(["ocv", str(out), str(fT), str(fF), str(o)])
+    oc = json.loads(o.read_text())
+    for C in ("TT", "FF"):
+        assert oc[C]["ocv_inclusive_spread"] == pytest.approx(P["summary"]["plan_ocv"][C]["ocv_inclusive_spread"], abs=0.2)
+    # fail closed: a plan sink without measured arrivals
+    fT.write_text("\n".join(l for l in fT.read_text().splitlines() if "r_c3_" not in l) + "\n")
+    with pytest.raises(ValueError, match="miss 1 plan sinks"):
+        PT.main(["ocv", str(out), str(fT), str(fF)])
+    PT.main(["corr", str(out), str(_arr_corner(P, tmp_path, "TT", 0)), str(tmp_path / "c1.json")])
+    C1 = json.loads((tmp_path / "c1.json").read_text())
+    assert C1["summary"]["iteration"] == 1 and C1["summary"]["odd_parity_sinks"] == []
