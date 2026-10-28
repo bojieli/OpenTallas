@@ -1696,7 +1696,8 @@
             ]
           ]
         }
-      ]
+      ],
+      "core_pg_connect": true
     },
     "hd_turn_a": {
       "module": "ot_s81hd_turn_a",
@@ -6924,7 +6925,8 @@
             432.0
           ],
           "orient": "R0",
-          "note": "DIE-HEAD-10 LEP-C0: coll window N x160-587 entirely west of the W face (x604.8): parent L-fan carry (DIE-HEAD-10 LEP-C0) (no view yet: child kit pending)"
+          "note": "DIE-HEAD-10 LEP-C0: coll window N x160-587 entirely west of the W face (x604.8): parent L-fan carry (DIE-HEAD-10 LEP-C0) (no view yet: child kit pending)",
+          "pins_file": "cores/lep_pair_pins.json"
         },
         {
           "inst": "u_core.u.g_pp[1].u_pair",
@@ -6942,7 +6944,8 @@
             432.0
           ],
           "orient": "R0",
-          "note": "DIE-HEAD-10 LEP-C0: coll window W y640-1067 (no view yet: child kit pending)"
+          "note": "DIE-HEAD-10 LEP-C0: coll window W y640-1067 (no view yet: child kit pending)",
+          "pins_file": "cores/lep_pair_pins.json"
         },
         {
           "inst": "u_core.u.g_pp[2].u_pair",
@@ -6960,7 +6963,8 @@
             432.0
           ],
           "orient": "R0",
-          "note": "DIE-HEAD-10 LEP-C0: coll window W y120-547 (face y120.96-552.96: 0.96-um jog) (no view yet: child kit pending)"
+          "note": "DIE-HEAD-10 LEP-C0: coll window W y120-547 (face y120.96-552.96: 0.96-um jog) (no view yet: child kit pending)",
+          "pins_file": "cores/lep_pair_pins.json"
         },
         {
           "inst": "u_core.u.g_pp[3].u_pair",
@@ -6978,9 +6982,11 @@
             432.0
           ],
           "orient": "MY",
-          "note": "DIE-HEAD-10 LEP-C0: coll window E y521-760 inside the E face y328-760; 21.6-um E channel keeps E ctl/fault/lw (y769-1124) and lepk (y10-511) reachable (DIE-HEAD-10 LEP-C0: moved south from y521.28) (no view yet: child kit pending)"
+          "note": "DIE-HEAD-10 LEP-C0: coll window E y521-760 inside the E face y328-760; 21.6-um E channel keeps E ctl/fault/lw (y769-1124) and lepk (y10-511) reachable (DIE-HEAD-10 LEP-C0: moved south from y521.28) (no view yet: child kit pending)",
+          "pins_file": "cores/lep_pair_pins.json"
         }
-      ]
+      ],
+      "core_pg_connect": true
     },
     "hd_ctl": {
       "module": "ot_s81hd_ctl",
