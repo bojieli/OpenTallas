@@ -4,10 +4,10 @@
   "lef_contract": "results/qc_a0_kits_1027/rawleaf/rawleaf_contract.lef",
   "plan_type": "a0_rawleaf",
   "ref_tile": "results/qc_a0_kits_1027/rawleaf",
-  "suffix": "a0k",
-  "insertion_ps": 201.0,
-  "insertion_ff_ps": 161.5,
-  "insertion_basis": "QC-CORES-2 R3 B_child 201 TT / 161.5 FF (child-only mean, UNCHECKED-model)",
+  "suffix": "a0k3",
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": "12.3 common core latency 250 TT / 202.5 FF kit frame (QC-A0-KITS-3 10-28, preflight corner_modes/ff_binding); parent A0 early tap absorbs the centre-entry trunk (QC-A0-KITS-2 est, UNCHECKED)",
   "util": 0.6,
   "insertion_balance": true
  }

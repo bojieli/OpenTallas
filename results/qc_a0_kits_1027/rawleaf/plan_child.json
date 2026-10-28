@@ -1,13 +1,13 @@
 {
  "schema": "opentallas.qc_a0_child_plan.v0",
- "note": "QC-A0-KITS child contract (R3 B_child), NOT the die plan",
+ "note": "QC-A0-KITS child contract, kit frame 12.3 250/202.5 (QC-A0-KITS-3 10-28; was R3 B_child 201/161.5), NOT the die plan",
  "die": {
   "name": "qwen_compute",
   "period_ps": 833.0
  },
  "clock": {
-  "insertion_ps": 201.0,
-  "insertion_ff_ps": 161.5,
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
   "insertion_tol_ps": 20.0
  },
  "master_plan": {

@@ -42,5 +42,11 @@
  "entry_pins": [],
  "hard_cores": [],
  "gates": {},
- "note": "QC-CORES-2 A0 R2/R3 child centre entry (12.8a); trial slice: A0 plan event not frozen"
+ "note": "QC-CORES-2 A0 R2/R3 child centre entry (12.8a); trial slice: A0 plan event not frozen",
+ "latency": {
+  "common_clock_latency_ps": {
+   "tt": 250.0,
+   "ff": 202.5
+  }
+ }
 }
