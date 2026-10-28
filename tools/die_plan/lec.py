@@ -1287,6 +1287,8 @@ class Lec:
         # unreachable since rk <= 17; RTL-vs-netlist co-simulation 0 mismatches)
         self.unwritten = sorted(k for k in self.gonly if k.startswith("ff:") and self.gc.get(k) == self.gp[k])
         unwritten = set(self.unwritten)
+        self.fill_live = fill_live(self.hyp)      # pipeline-fill hints whose ghost chain reaches its constant root
+        self.fill_in = {}                         # gold key -> ghost 'filled' input literal
         for side, keys, p, lmap in (("gold", self.gonly, self.gp, lg), ("gate", self.tonly, self.tp, lt)):
             for k in keys:
                 h = self.hyp.get((side, k))
@@ -1295,6 +1297,18 @@ class Lec:
                     kind[v >> 1] = ("gold_x", k)
                     bind(lmap, p[k], v)
                     lgx[p[k] & ~1] = 1
+                elif h and h[0] == "fill" and side == "gold" and k in self.fill_live:
+                    # Q = filled ? c : X.  'filled' is a tool-owned ghost bit (not RTL state): filled' = filled(pred),
+                    # the root's filled' = 1, so every ghost is 1 a chain-length of edges after the reset state and
+                    # X is never held as a constant: an unfilled register is X (its RTL power-up value) and a compare
+                    # point reading it is a don't care only while the register really is X in the RTL.
+                    f = m.add_input(f"fill:{k}")
+                    kind[f >> 1] = ("fill", k)
+                    v = m.add_input(f"gold:{k}")
+                    kind[v >> 1] = ("gold_x", k)
+                    self.fill_in[k] = f
+                    bind(lmap, p[k], m.AND(m.AND(f, h[1]) ^ 1, m.AND(f ^ 1, v) ^ 1) ^ 1)
+                    lgx[p[k] & ~1] = f ^ 1
                 elif h and h[0] == "const":
                     bind(lmap, p[k], h[1])
                 elif h and h[0] in ("eq", "cube"):
@@ -1430,6 +1444,20 @@ class Lec:
                     m.outs.append(m.AND(gx, bad))
                     m.onames.append(f"hyp:{side}:{k}")
                     continue
+                if h[0] == "fill":
+                    # filled' (the root: always; else the predecessor's ghost) -> D(k) == c and not X, and
+                    # not filled' -> D(k) is X (tight: the ghost is 0 only while the RTL register really is X, so no
+                    # read of a known RTL value becomes a don't care).  A hint whose ghost chain is broken (a
+                    # predecessor dropped) is not bound (free) and fails here, so it drops.
+                    if k not in self.fill_live:
+                        m.outs.append(1)
+                    else:
+                        fn = 1 if h[2] is None else self.fill_in[h[2]]
+                        dx = self.dxlit.get(k, 0)
+                        bad = m.AND((d ^ h[1]) ^ 1, dx ^ 1) ^ 1
+                        m.outs.append(m.AND(m.AND(fn, bad) ^ 1, m.AND(fn ^ 1, dx ^ 1) ^ 1) ^ 1)
+                    m.onames.append(f"hyp:{side}:{k}")
+                    continue
                 if h[0] == "const":
                     m.outs.append(m.AND(d ^ h[1], nx(k)) if side == "gold" else d ^ h[1])
                 else:
@@ -1475,6 +1503,22 @@ def guard_lit(m, guard, lit):
             c = m.AND(c, lit(key) ^ (val ^ 1))
         g = m.AND(g ^ 1, c ^ 1) ^ 1
     return g
+
+
+def fill_live(hyp):
+    """gold keys of 'fill' hypotheses whose predecessor chain ends at a root (pred None) through fill hypotheses only,
+    with no cycle: only those ghosts are guaranteed to become 1 (a broken chain would keep its register X forever)."""
+    fills = {k: h[2] for (sd, k), h in hyp.items() if sd == "gold" and h and h[0] == "fill"}
+    live = {}
+    for k in fills:
+        path, x = [], k
+        while x in fills and x not in live and x not in path:
+            path.append(x)
+            x = fills[x]
+        ok = live.get(x, False) if x in live else (x is None)
+        for y in path:
+            live[y] = ok
+    return {k for k, ok in live.items() if ok}
 
 
 def loaded_base(L, guard):
@@ -4447,7 +4491,59 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40):
     loaded = {e[1] for e in hints if isinstance(e, (list, tuple)) and len(e) == 3 and e[0] == "gold"
               and isinstance(e[2], (list, tuple)) and e[2] and e[2][0] == "loaded"}
     rec["loaded"], rec["loaded_refused"] = [], []
+    # Pipeline fill (LEC-FPREG-6 10-27): ['gold', key, ['fill', c, pred]] for an RTL register with no reset on an
+    # every-cycle pipeline whose source is the constant c (exp_s x = {1'b1, x[30:0]}: xc5/6/7[31]); synthesis folded
+    # it.  It holds X until the constant has ridden down to it.  Bound to (filled ? c : X) with a tool-owned ghost
+    # 'filled' bit (filled' = filled(pred); pred None = the chain root, filled' = 1), never to c unconditionally.
+    # Proved with the other hypotheses (filled' -> D == c and not X).  Base: the register is not the other constant
+    # in the reset state (ghost = 1 where it already is c, else 0 = X, which is its RTL value there).  A read while
+    # unfilled is an RTL X (don't care, the tool's X rule); a read after filling is compared against c.
+    fills = {}
     for e in hints:
+        if isinstance(e, (list, tuple)) and len(e) == 3 and isinstance(e[2], (list, tuple)) and e[2] \
+                and e[2][0] == "fill":
+            fills[e[1] if isinstance(e[1], str) else repr(e[1])] = e
+    rec["fill"], rec["fill_refused"] = [], []
+    for e in hints:
+        if isinstance(e, (list, tuple)) and len(e) == 3 and isinstance(e[2], (list, tuple)) and e[2] \
+                and e[2][0] == "fill":
+            try:
+                sd, k, (_, c, pred) = e
+                ok = (sd == "gold" and k in L.gonly and gk(k) and c in (0, 1) and k not in getattr(L, "unwritten", ())
+                      and (pred is None or (pred in fills and pred != k)))
+            except (TypeError, ValueError):
+                ok = False
+            if not ok:
+                rec["skipped"].append(e)
+                continue
+            if not hasattr(L, "rst_val"):
+                noreset_classify(L)
+            rv = L.rst_val.get(("gold", k), (None, None))[0]
+            if rv == 1 - c:
+                rec["fill_refused"].append(dict(register=k, why=f"reset-state value {rv} is the other constant"))
+                continue
+            L.hyp[(sd, k)] = ("fill", c, pred)
+            rec["applied"] += 1
+            continue
+    for e in hints:
+        if isinstance(e, (list, tuple)) and len(e) == 3 and isinstance(e[2], (list, tuple)) and e[2] \
+                and e[2][0] == "fill":
+            continue
+        refs = []                                  # other hint forms must not read a fill register (X while unfilled)
+        try:
+            if e[0] == "cons":
+                refs = list(e[2])
+            elif e[2][0] == "loaded":
+                refs = [x for cube in e[2][2] for x, _ in cube]
+            elif e[2][0] == "cube":
+                refs = list(e[2][2])
+            elif e[2][0] == "eq":
+                refs = [e[2][2]]
+        except (IndexError, TypeError, KeyError):
+            refs = []
+        if any(isinstance(x, str) and x in fills for x in refs):
+            rec["skipped"].append(e)
+            continue
         if isinstance(e, (list, tuple)) and e and e[0] == "cons":
             try:
                 _, csd, ck, allowed = e
@@ -4543,6 +4639,9 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40):
             rec["kept"] = len(L.hyp)
             rec["loaded"] = [dict(register=k, value=h[1], guard=[[list(x) for x in c] for c in h[2]], base="reset")
                              for (sd, k), h in sorted(L.hyp.items()) if h[0] == "loaded"]
+            rec["fill"] = [dict(register=k, value=h[1], pred=h[2],
+                                base_filled=L.rst_val.get(("gold", k), (None, None))[0] == h[1])
+                           for (sd, k), h in sorted(L.hyp.items()) if h[0] == "fill"]
             return rec
         drop_failed(L, [n for n in bad if n.startswith("cons:")])
         rec["dropped"] += [n for n in bad if n.startswith("cons:")]
