@@ -3059,3 +3059,9 @@ AP_RC=1 | kit localhost:/srv/opentallas-scratch2/claude/flow-shared-6/s81kits/ki
   - (1) The hub reset leaf would FAIL: 657/670 um, about 170 regs > 405 per hub. DEFAULT: fold sink-anchored taps / reset relays into the hub W/E re-plan event (NEXT 3) and rerun the leaf check before any hub kit.
   - (2) The hub partition is about 0.97-1.27 M glue cells, over the 400k cap. DEFAULT: the hub W/E split becomes a partition split in that same event, with a cell count per half before build.
   - (3) 30 deep core types (381 placements) get an est. FF hold < -100 ps under the 250 zero-early taps. DEFAULT: no plan change now; the die STA must use the real core latencies; the rebuild/early-tap list is r3_rows.json.
+- [2026-10-28 02:36 PDT] ASK [HBM-RISK-1] -> DIE-HBM-5 (build plan; the 30-min default applies). Measured on the candidate, clock-only builder plus placement STA at spice cal (lanes/PATH-HBM.md R2/R4):
+  - main die_trial --region-dme delay gives an in-region spread median of 566 ps; 30 of 36 regions are over 150; worst 1036 TT. balance_legalize is no better.
+  - The CA plan on those built arrivals has 200 FAIL / 333 crossings, against 4 in the analytic estimate.
+  - Separately, 31 off-feed pairs are over 3.4 ns unshared at 278.6 ps/mm (no feed form gets below that).
+  - DEFAULT: the region BUILD waits. Congestion probes and C20i continue. The next clock step is a builder fix on one HBM region first, R024 (NW_sm0) or R015E: a delay/snake on the short branch of the imbalanced merges (DIE-QC-4 ruling b), with the clock routed first. A <=150 ps proof on that region comes before the full map.
+  - In parallel, an R1 trunk/relay re-plan for the 31 pairs, re-rooting the spt so R019/R022 hang under R015W/R016W.

@@ -969,3 +969,28 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
 | 4 | gen phys kit gen stalls on the hub | >15 min in schema.tap_clear (231 taps x 159 cores) | n/a | vectorise tap_clear (shared tool, ROOT-MERGE) | 1 |
 | 5 | No real views -> PHY_N 172 / SM 159 spreads and most core latencies unproven | real lef/lib 129 / 733; PHY_N 0 taps / no lib; SM 0/32 | real-view die STA | SM half views + PHY lib clock arc | as per core lanes |
 | 6 | Hub PG on unmeasured activity | 23.4 mV above-M7 at 1.27 W/mm2 upper (Codex U6d) | 35 mV | hub toggle window in the PG-ACTIVITY tb | 1.5 |
+- 2026-10-28 02:36 PDT [HBM-RISK-1] ESTIMATE R2 IN-REGION BALANCE next to macros/PHY: **FAIL, measured**.
+  - Method: clock-only builder estimate. die_trial clock_kit only, from claude/die-qc3b-1027@2de66bb213: --tree-form link_htree --tree-site-slide --region-dme delay --clock-rc 1x, leaf 200 / rep 250, then the placement OpenSTA of ctree.tcl at TT and FF with spice x1.0485 / x1.0552.
+  - Inputs: C20h plan, the hub-split map, and the spt feed from R1. The hub W/E split is clock-only, so the hub taps are relabelled by x against the cut.
+  - All runs are my own, CHECKED. There is no NUMBER-CHECK.
+  - Data: epyc2:/srv/opentallas-scratch2/claude/hbm-risk-1/r2/{k1 = region-dme delay, k_off = balance_legalize}/r2_post.json, plus the clock/ dirs.
+  - Scope: 26 of 36 regions contain hard cores. 10 touch a VDDPHY domain: R000 R001 R002 R003 R005 R006 R010 R013 R014 R017. So every region is in scope for R2.
+  - Tree: 3294 taps, 12,708 cells. Cells inside a core+halo or PHY rect: **0 / 0** (target met).
+  - Taps inside PHY domains: 5. Taps inside core rects: 1063. These 1063 are the native core clock pins and early core taps, so they are by design.
+  - Spread TT nominal (k1, region-dme delay): only 6/36 regions are <= 150 ps; median 566 ps.
+    - Worst: R024 = NW_sm0 1036 ps, R002 = NW_sm3 1000, R027 963, R015E (NW hub E) 964, R016E 877, R016W 876, R015W 810.
+    - With grid taps only (no early core taps), the median is still 544 and the max is 806 (R002).
+    - FF worst is 877 ps.
+  - Incl. OCV+droop (unshared in-region U x (5.11 % + 2 x 3 % + 0.21 %/mm diag), the r3 spread.py terms on the built tree, UNCHECKED model): worst 1485 TT / 1259 FF. Only R028/R031/R032/R033 are <= 155 ps.
+  - k_off (balance_legalize instead of region-dme) is no better: 4/36 <= 150, hubs 1080-1392 ps. Taking the best of the two per region still leaves the hubs at about 880-960 and most hard regions at 400-800 ps.
+  - CAUSE (measured on tree.json):
+    - Root-to-tap path length within a region differs by 1.0-2.0 mm, e.g. R024 25,178-26,225 um, R015E 7,227-9,217 um.
+    - Stage count differs by 14-17, e.g. R024 110-127, R002 68-84, R015E 36-50.
+    - The region-dme reports 23-96 imbalanced merges per big region, and its own model spread already reaches 310 ps (R016E).
+    - So the DME on legal sites cannot balance HBM's core-dense regions: the merge points fall on cores, which is the QC su_c pattern, but over most regions. The gap opens at PLACEMENT, not at GRT.
+- 2026-10-28 02:36 PDT [HBM-RISK-1] ESTIMATE R4 part 2: the CA planner with the STA interval of the BUILT R2 tree. Main count_align_plan --sta-proof (tap_arrivals from the k1 placement STA) --sta-clock-cal spice --sta-cppr-lca, unioned with the locality OCV interval. Own run, CHECKED. Data intel2:/srv/opentallas-scratch2/claude/hbm-risk-1/r4/sta_k1_*.json.
+  - **FAIL 200 / 333 crossings (187 kb) at 278.6**, D4 49 / D8 84. 202 FAIL at 219.2. Worst margin of the passing crossings is 108.1 ps.
+  - The STA interval widened 329 rows, by up to 3.46 ns (L113_0).
+  - 180 of the FAILs touch the hub halves. Those are partly my artefact: the proof maps NW_hubW/E back to NW_hub, so a hub port's interval spans the taps of both halves (UNCHECKED; it overstates).
+  - The other 20 FAILs (21.5 kb) are 4 unreached status links plus 16 crossings. All 16 are in R1 >3.4 ns pairs: R029/R030-R032, R014-R018, R017-R023, R010-R014, R013-R017, R014-R019, R017-R022.
+  - So R1 and R4 agree. The analytic estimate's 4 FAIL / 114 ps does NOT hold once the in-region spreads of R2 are real.
