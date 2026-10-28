@@ -54,7 +54,8 @@ data intel1:/srv/opentallas-scratch2/claude/die-kv-2-1027 (smoke_q9 = tree35 S35
 | tree35 merged (S35M) | 37 | 1624 | 1363/203/**58** | 104.1/116.6 | 5 |
 | **land128 (L128)** | 128 | 3595 | 3505/90/**0** | **104.1/138.7** | 1 |
   The estimate's tree35 0-FAIL did not hold on measured rows (path ambiguity 4-6 cycles on 8.9 ns unshared loops);
-  land128 PASSES the CA gate (>=100 both sides). LOCALITY-SCORE-3 (main 808791c932) also scores land128/fish as its only 0-FAIL KV map.
+  land128 PASSES the CA gate on the HIGH side (hi >= 138.7); the LOW side 104.1 is the aperture pinned by the plan tool on
+  tree crossings (NUMBER-CHECK 20:48 ruling: not a margin) -> re-run ca_measured after MESO-COUNT-2 K fix / MESO-INTEG-1 convention. LOCALITY-SCORE-3 (main 808791c932) also scores land128/fish as its only 0-FAIL KV map.
 - Die STA related pairs (main die_sta_related, cppr-lca, clock-ocv table, shared droop + droop regions, HB4), MODELLED clock:
 | map | intra TT setup / FF hold / skew | intra HB4 cells -> TT | seam TT / FF hold | seam HB4 cells -> TT/FF |
 |---|---|---|---|---|
@@ -65,3 +66,7 @@ data intel1:/srv/opentallas-scratch2/claude/die-kv-2-1027 (smoke_q9 = tree35 S35
   intra-region skew: fishbone trunks are not balanced (no regional mesh / H-tree inside the region). Seam (crossing) pairs on
   L128 close with 14k HB4. Next structural step: region-internal balanced tree or regional mesh (METHODOLOGY v4.6 MSCTS form)
   under the link feed, NOT trims.
+- Slid-root rerun (tools = this branch incl f3f619b72d, kit_l128s): legs 159/2925 detoured (669.6/681.6 um); die GRT TT+FF
+  overflow 0 M1-M9, max-slew violators 2 -> 0 (report_check_types, CHECKED-own). CA/STA not re-run on l128s (only 2 legs change).
+- Renders VIEWED: L128_clock_tree.png (feed spine through region centres, fishbone ribs per region on the 11x27 mm die; arrival
+  gradient top->bottom along the feed is visible = the intra/feed skew the STA reports), S35_clock_tree.png.
