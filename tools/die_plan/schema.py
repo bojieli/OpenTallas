@@ -510,6 +510,9 @@ SCHEMA = {
                                            "insertion_tol_ps": _nonneg, "budget_owner": {"type": "string"},
                                            "merged_clock_ports": {"type": "array", "minItems": 2, "uniqueItems": True, "items": _name},
                                            "from_root_um": _nonneg, "parent": _name, "note": {"type": "string"}}}}}},
+                    # PG-CORECONN-1 10-28 (opt-in): pdngen macro grids land every placed non-PHY macro's LEF PG pins
+                    # on the tile strap layer above them (gen_phys.core_pg_grids); off = kit PDN unchanged
+                    "core_pg_connect": {"type": "boolean"},
                     # hard cores built on PLATFORM tracks (macros inside): a per-core placement offset puts their
                     # boundary pins on the plan tracks (COORD 10-23 08:36; A0: y +0.012)
                     "hard_cores": {"type": "array", "items": {
