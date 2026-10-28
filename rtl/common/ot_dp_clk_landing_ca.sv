@@ -1,0 +1,287 @@
+// COUNT-ALIGNED landed (mesochronous) crossing.  MESO-COUNT-1 study (OWNER-approved 10-27), opt-in, default-off:
+// nothing instantiates it yet.  ot_dp_clk_landing / ot_meso_ring are unchanged.
+//
+// Why.  ot_meso_ring places its read pointer at start-up from the MEASURED PHASE (half-period resolution), so the
+// whole-cycle latency of a crossing is a function of (phase mod T).  Two chips whose phases differ by exactly T
+// measure the same thing but need pointers one apart, so NO phase-measured placement can give a chip-invariant
+// latency once a crossing's derated phase spread reaches T (HEAD 950 ps, KV 1091 ps > 833 ps).
+//
+// Mechanism.  Both sides count cycles from a chip-invariant COUNT ORIGIN (their start/reset release at a design-time
+// known cycle a_x, a_y; see results/meso_count_1027/README.md for how the origin is delivered).
+//   * Writer (fclk = the sender's forwarded clock): tc is reset by t_rst_n, the sender's start forwarded beside the
+//     bus (source-synchronous with fclk).  Sender word n is written into slot n mod DEPTH with lap bit n[AW] and a
+//     written-since-start bit; slot n is rewritten by word n + DEPTH.
+//   * Reader (clk): rp is reset by rst_n to -K (mod 2*DEPTH) and increments every cycle, so at receiver count m it
+//     consumes the slot of sender word m - K.  NO phase sample, NO Gray synchroniser, NO placement decision.
+//   * The lag of every word is then L = (K + a_y - a_x) T + d, d = the static receiver-minus-sender clock phase
+//     (+ drift).  The word is captured correctly iff (GUARD_LO + 0.5) T <= L <= (GUARD_HI - 0.5) T: the same
+//     opposite-edge lap guards as ot_meso_ring (copied, unchanged) watch exactly that window, fail closed (sticky).
+//   * Latency is K + RDREG receiver cycles after the sender cycle, for EVERY static phase in the window: chip-to-chip
+//     whole-cycle variation is absorbed by the ring depth, window width (GUARD_HI - GUARD_LO - 1) T (3 T at the
+//     default DEPTH 4 / guards 0,4), instead of the old one-period placement window.
+//
+// Ports as ot_dp_clk_landing plus t_rst_n.  Receiver count c = rclk edges since rst_n release (c = 0 at the first edge
+// that samples rst_n high).  Right after edge c, q holds sender word c - K (captured at that edge, RDREG); the
+// receiver's own boundary flop takes it at c + 1: crossing latency K + 1 counts, for every lag in the window.
+// Start-up: a region's count origin (its rst_n release) comes from ot_dp_landing_origin on ONE tree crossing per
+// region (start wavefront over a spanning tree of these rings); every other crossing's K is set at bind time.
+// Model, conditions on K / DEPTH / guards and loop consistency: results/meso_count_1027/README.md.
+// OT_MESO_CA_FV (formal only): fv_recent / fv_now / fv_any make the reads of a slot written within the STA bound
+// (recent) or at the sampling instant (now) arbitrary, i.e. metastable / unbounded data, so the proof covers them.
+(* keep_hierarchy *)
+module ot_dp_clk_landing_ca #(
+    parameter integer W        = 1,
+    parameter integer DEPTH    = 4,   // power of two >= 4
+    parameter integer K        = 2,   // read offset in counts (binder: K' - (a_y - a_x)); any integer
+    parameter integer GUARD_LO = 0,
+    parameter integer GUARD_HI = 4,   // <= DEPTH
+    parameter integer ARM      = 2 * DEPTH + 4  // receiver cycles after the first valid word before guards are trusted
+) (
+    input  wire         fclk,
+    input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
+    input  wire         clk,
+    input  wire         rst_n,       // receiver start (count origin), synchronous to clk
+    input  wire [W-1:0] d,
+    output wire [W-1:0] q,
+    output reg          ready,
+    output wire         fault
+`ifdef OT_MESO_CA_FV
+   ,input  wire [DEPTH-1:0] fv_recent, fv_now,
+    input  wire [W+3:0]     fv_any
+`endif
+);
+    localparam integer RW = ((W + 63) / 64) * 64;
+    localparam integer AW = $clog2(DEPTH);
+    localparam integer CW = $clog2(ARM + 1);
+    wire rv, lap_ok, glo_ok, ghi_ok;
+    wire [RW-1:0] ring_q;
+    assign q = ring_q[W-1:0];
+    reg seen;                       // first valid word consumed
+    reg [CW-1:0] arm_cnt;
+    wire armed = seen && (arm_cnt == CW'(ARM));
+    reg fault_state;
+    wire trip = armed && (!rv || !lap_ok || !glo_ok || !ghi_ok);
+    wire fault_next = fault_state || trip;
+    ot_dp_landing_fault_port u_fault_port (.clk(clk), .rst_n(rst_n), .d(fault_next), .q(fault));
+    always @(posedge clk) begin
+        if (!rst_n) begin
+            seen <= 0; arm_cnt <= 0; ready <= 0; fault_state <= 0;
+        end else begin
+            if (rv) seen <= 1;
+            if (seen && arm_cnt != CW'(ARM)) arm_cnt <= arm_cnt + 1'b1;
+            ready <= armed && !fault_next;
+            fault_state <= fault_next;
+        end
+    end
+    ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .K(K), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI)) u_ring (
+        .tclk(fclk), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n),
+        .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
+`ifdef OT_MESO_CA_FV
+       ,.fv_recent(fv_recent), .fv_now(fv_now), .fv_any(fv_any)
+`endif
+    );
+`ifndef SYNTHESIS
+    initial begin
+        if (W < 1) $fatal(1, "count-aligned landing requires a nonempty bundle");
+        if (DEPTH < 4 || (DEPTH & (DEPTH - 1)) != 0) $fatal(1, "DEPTH must be a power of two >= 4");
+        if (GUARD_LO < 0 || GUARD_HI > DEPTH || GUARD_HI < GUARD_LO + 2) $fatal(1, "need 0 <= GUARD_LO, GUARD_LO+2 <= GUARD_HI <= DEPTH");
+    end
+`endif
+endmodule
+
+// One direction: DEPTH-slot ring, writer slot = sender count, reader slot = receiver count - K.
+module ot_meso_ring_ca #(
+    parameter int W        = 64,
+    parameter int DEPTH    = 4,
+    parameter int K        = 2,
+    parameter int GUARD_LO = 0,
+    parameter int GUARD_HI = 4,
+    parameter int LAPX     = 3      // extra lap-tag bits per slot: a consumed word from the wrong lap is caught for
+                                    // origin errors up to 2^(AW+1+LAPX) counts (the 1-bit lap aliases every 2*DEPTH)
+) (
+    input  logic         tclk,
+    input  logic         t_rst_n,
+    input  logic [W-1:0] t_d,
+    input  logic         rclk,
+    input  logic         r_rst_n,
+    output logic [W-1:0] r_d,        // RDREG: word captured at the consuming edge, presented one period later
+    output logic         r_v,        // consumed slot written since the sender start, in the expected lap
+    output logic         r_lap_ok,
+    output logic         r_glo_ok,
+    output logic         r_ghi_ok
+`ifdef OT_MESO_CA_FV
+   ,input  logic [DEPTH-1:0] fv_recent, fv_now,
+    input  logic [W+3:0]     fv_any
+`endif
+);
+    localparam int AW = $clog2(DEPTH);
+    localparam int PW = AW + 1;
+    localparam int NS = 2 * DEPTH;
+    localparam int TW = PW + LAPX;                       // count bits kept: {ext tag, lap, slot}
+    localparam int NT = 1 << TW;
+    // reader reset value: count of sender word (0 - K) modulo 2^TW
+    localparam int KM = ((K % NT) + NT) % NT;
+`ifdef OT_MESO_CA_MUTANT_K
+    localparam logic [TW-1:0] RP0T = TW'((NT - KM + 1) % NT);   // MUTANT: one count late
+`else
+    localparam logic [TW-1:0] RP0T = TW'((NT - KM) % NT);
+`endif
+    localparam logic [PW-1:0] RP0 = RP0T[PW-1:0];
+
+    // ---------------- transmit (tclk): slot = sender count ----------------
+    logic [TW-1:0] tc;
+    logic [W-1:0]  s_d   [DEPTH];
+    logic [DEPTH-1:0] s_w, s_lap;
+    always_ff @(posedge tclk) begin
+`ifdef OT_MESO_CA_MUTANT_FREERUN
+        tc <= tc + 1'b1;                                // MUTANT: old free-running writer (no count origin)
+        if (!t_rst_n) s_w <= '0; else s_w[tc[AW-1:0]] <= 1'b1;
+`else
+        if (!t_rst_n) begin tc <= '0; s_w <= '0; end
+        else begin tc <= tc + 1'b1; s_w[tc[AW-1:0]] <= 1'b1; end
+`endif
+        if (t_rst_n) begin s_lap[tc[AW-1:0]] <= tc[AW]; s_d[tc[AW-1:0]] <= t_d; end
+    end
+
+    // ---------------- receive (rclk): rp = receiver count - K ----------------
+    logic [TW-1:0] rp;
+    logic [NS-1:0] oh;
+    always_ff @(posedge rclk) begin
+        if (!r_rst_n) begin rp <= RP0T; oh <= NS'(1) << RP0; end
+        else begin rp <= rp + 1'b1; oh <= {oh[NS-2:0], oh[NS-1]}; end
+    end
+    wire [NS-1:0] pos_v   = {s_w & s_lap, s_w & ~s_lap};
+    wire [NS-1:0] pos_lap = {s_lap, ~s_lap} | {~s_w, ~s_w};   // not yet written since start: no lap verdict
+    function automatic logic [NS-1:0] rot(input logic [NS-1:0] x, input int k);
+        for (int j = 0; j < NS; j++) rot[j] = x[(j - k + 2 * NS) % NS];
+    endfunction
+    // data: per-64-bit chunk registered one-hot select (ot_meso_dsel, REG=1), placed at reset, rotating every cycle
+    localparam int NCH = (W % 64 == 0) ? W / 64 : 1;
+    localparam int WCH = W / NCH;
+    logic [W-1:0] rd_q;
+    for (genvar c = 0; c < NCH; c++) begin : dch
+        logic [DEPTH*WCH-1:0] sd_c;
+        for (genvar i = 0; i < DEPTH; i++) begin : sl
+            assign sd_c[i*WCH +: WCH] = s_d[i][c*WCH +: WCH];
+        end
+        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(1), .SPLIT(0)) u_dsel (.clk(rclk), .align(!r_rst_n), .on(r_rst_n),
+            .place(RP0[AW-1:0]), .sd(sd_c), .y(rd_q[c*WCH +: WCH]));
+    end
+    logic r_v_c, r_lap_c, r_lap1_c;
+    ot_meso_ohor #(.N(NS)) u_v   (.sel(oh), .x(pos_v),   .y(r_v_c));
+    ot_meso_ohor #(.N(NS)) u_lap (.sel(oh), .x(pos_lap), .y(r_lap1_c));
+    if (LAPX > 0) begin : g_tag
+        // extended lap tag of every slot (written with the word); the consumed slot's tag must equal rp's upper bits
+        logic [LAPX-1:0] s_tag [DEPTH];
+        always_ff @(posedge tclk) if (t_rst_n) s_tag[tc[AW-1:0]] <= tc[TW-1:PW];
+        logic [LAPX-1:0] tag_c; logic w_c;
+        always_comb begin
+            tag_c = '0; w_c = 1'b0;
+            for (int i = 0; i < DEPTH; i++) if (oh[i] || oh[i + DEPTH]) begin tag_c = tag_c | s_tag[i]; w_c = w_c | s_w[i]; end
+        end
+`ifdef OT_MESO_CA_MUTANT_NO_TAG
+        assign r_lap_c = r_lap1_c;                                       // MUTANT: extended tag ignored
+`else
+        assign r_lap_c = r_lap1_c && (!w_c || tag_c == rp[TW-1:PW]);
+`endif
+    end else begin : g_notag
+        assign r_lap_c = r_lap1_c;
+    end
+    logic r_v_q, r_lap_q;
+`ifdef OT_MESO_CA_FV
+    // the slot consumed at this edge; if it was written within the STA bound the captured word/flags are arbitrary
+    logic [AW-1:0] fv_rs; always_comb begin fv_rs = '0; for (int j = 0; j < NS; j++) if (oh[j]) fv_rs = AW'(j % DEPTH); end
+    wire fv_dx = fv_recent[fv_rs];
+    logic fv_dx_q; logic [W-1:0] fv_any_q;
+    always_ff @(posedge rclk) begin
+        r_v_q   <= (fv_dx ? fv_any[0] : r_v_c) && r_rst_n;
+        r_lap_q <= (fv_dx ? fv_any[1] : r_lap_c) || !r_rst_n;
+    end
+    assign r_d = fv_dx_q ? fv_any_q : rd_q;
+    always_ff @(posedge rclk) begin fv_dx_q <= fv_dx; fv_any_q <= W'(fv_any >> 4); end
+`else
+    always_ff @(posedge rclk) begin
+        r_v_q   <= r_v_c && r_rst_n;
+        r_lap_q <= r_lap_c || !r_rst_n;
+    end
+    assign r_d = rd_q;
+`endif
+    assign r_v = r_v_q; assign r_lap_ok = r_lap_q;
+
+    // guards (as ot_meso_ring): falling read edge, then 3 rising flops
+    wire [NS-1:0] oh_lo = rot(oh, GUARD_LO);
+    wire [NS-1:0] oh_hi = rot(oh, GUARD_HI - 1);
+    wire glo_c = |(oh_lo & {s_lap, ~s_lap} & {s_w, s_w});   // written since start, in this lap
+    wire ghi_c = ~|(oh_hi & {s_lap, ~s_lap} & {s_w, s_w});  // not yet written in this lap
+    (* async_reg = "true" *) logic glo0, ghi0;
+    (* async_reg = "true" *) logic glo1, glo2, ghi1, ghi2;
+    logic glo3, ghi3;
+`ifdef OT_MESO_CA_FV
+    logic [AW-1:0] fv_lo_s, fv_hi_s;
+    always_comb begin
+        fv_lo_s = '0; fv_hi_s = '0;
+        for (int j = 0; j < NS; j++) begin if (oh_lo[j]) fv_lo_s = AW'(j % DEPTH); if (oh_hi[j]) fv_hi_s = AW'(j % DEPTH); end
+    end
+    always_ff @(negedge rclk) begin
+        glo0 <= fv_now[fv_lo_s] ? fv_any[2] : glo_c;
+        ghi0 <= fv_now[fv_hi_s] ? fv_any[3] : ghi_c;
+    end
+`else
+    always_ff @(negedge rclk) begin
+        glo0 <= glo_c;
+        ghi0 <= ghi_c;
+    end
+`endif
+    always_ff @(posedge rclk) begin
+        glo1 <= glo0; glo2 <= glo1; glo3 <= glo2;
+        ghi1 <= ghi0; ghi2 <= ghi1; ghi3 <= ghi2;
+    end
+`ifdef OT_MESO_CA_MUTANT_NO_GUARD
+    assign r_glo_ok = 1'b1;
+    assign r_ghi_ok = 1'b1;
+`else
+    assign r_glo_ok = glo3;
+    assign r_ghi_ok = ghi3;
+`endif
+endmodule
+
+// Count origin of a region from its parent's start, forwarded beside a tree crossing (start wavefront).
+// p_start: the parent's start flop, forwarded with fclk (as t_rst_n of the ring); it rises once and stays high.
+// The child's start = 3 synchroniser flops (the first optionally on the falling edge, EDGE_FALL, chosen at bind time
+// so the sampling boundary lies away from the crossing's derated phase interval) + PAD plain flops.  Whole cycles
+// added: PAD + 3 + j, j in {0, 1} set by the static phase; j is chip-invariant when the derated phase interval avoids
+// the sampling boundary, otherwise both values occur across chips and the binder widens the lag window of every
+// crossing whose tree path includes this edge by one period (tools/die_plan/count_align_plan.py).  The tree crossing
+// itself always lands in its window: its lag lies in [c, c + T) by construction.  Cleared only by the raw reset.
+(* keep_hierarchy *)
+module ot_dp_landing_origin #(
+    parameter integer PAD = 0,
+    parameter bit EDGE_FALL = 0
+) (
+    input  wire clk,
+    input  wire rst_raw_n,   // raw region reset (power-on / die reset), synchronous to clk
+    input  wire p_start,     // parent's forwarded start (asynchronous to clk, monotonic 0 -> 1)
+    output wire start        // region count origin: the ring readers' rst_n and the region's own start
+);
+    (* async_reg = "true" *) reg s0, s1;
+    reg s2;
+    wire s_in;
+    if (EDGE_FALL) begin : g_fall
+        (* async_reg = "true" *) reg sf;
+        always @(negedge clk) sf <= p_start;
+        assign s_in = sf;
+    end else begin : g_rise
+        assign s_in = p_start;
+    end
+    always @(posedge clk) begin
+        if (!rst_raw_n) begin s0 <= 0; s1 <= 0; s2 <= 0; end
+        else begin s0 <= s_in; s1 <= s0; s2 <= s1; end
+    end
+    if (PAD > 0) begin : g_pad
+        reg [PAD-1:0] pd;
+        always @(posedge clk) if (!rst_raw_n) pd <= 0; else pd <= PAD'({pd, s2});
+        assign start = pd[PAD-1];
+    end else begin : g_nopad
+        assign start = s2;
+    end
+endmodule

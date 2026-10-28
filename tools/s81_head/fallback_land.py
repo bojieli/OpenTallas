@@ -53,6 +53,13 @@ def region_of(plan, gran):
     one region, every spine node / band partition its own region (comparison only: inter-tile pairs stay related)."""
     if gran == "part":
         return {p["name"]: p["name"] for p in plan["partitions"]}
+    if gran.startswith("map:"):     # DIE-HEAD 10-27 (12.13a): any {part: region} map (locality / feed-following), opt-in
+        m = load(gran[4:])
+        m = m.get("part_region", m)
+        miss = [p["name"] for p in plan["partitions"] if p["name"] not in m]
+        if miss:
+            raise SystemExit(f"region map misses {len(miss)} partitions: {miss[:5]}")
+        return {p["name"]: m[p["name"]] for p in plan["partitions"]}
     reg = {}
     for p in plan["partitions"]:
         n = p["name"]
@@ -143,6 +150,8 @@ def cmd_plan(a):
     res = {}
     for g in a.granularity:
         tab = table(plan, g)
+        if g.startswith("map:"):
+            g = tab["granularity"] = "map"
         (out / f"regions_{g}.json").write_text(json.dumps(tab, indent=1) + "\n")
         s = summary(plan, tab)
         (out / f"summary_{g}.json").write_text(json.dumps(s, indent=1) + "\n")
@@ -270,7 +279,7 @@ def main(argv=None):
     p = sub.add_parser("plan")
     p.add_argument("plan")
     p.add_argument("--out", required=True)
-    p.add_argument("--granularity", action="append", choices=["part", "rowpair"])
+    p.add_argument("--granularity", action="append", help="part | rowpair | map:REGION_MAP.json ({part: region} or part_region; DIE-HEAD opt-in)")
     c = sub.add_parser("compose")
     c.add_argument("plan")
     c.add_argument("--table", required=True)

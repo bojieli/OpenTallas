@@ -306,6 +306,11 @@ def compare(base, cur):
             r = dict(ctx="stage", metric=s, base=b, cur=c, verdict="REGRESSED", how="flow stage PASSed in the baseline run")
             rows.append(r)
             bad.append(r)
+    if (cur.get("stages") or {}).get("hold_step") == "FAIL":     # FLOW-SHARED-9: never judged as the plain route
+        r = dict(ctx="stage", metric="hold_step", base=(base.get("stages") or {}).get("hold_step"), cur="FAIL",
+                 verdict="REGRESSED", how="post-route hold step FAILED (KIT/hold_step.json); the plain route is not its result")
+        rows.append(r)
+        bad.append(r)
     if not compared and not bad and not lec_known:   # a known-class LEC stop reaches no metric by construction
         has_base = any((base.get("contexts") or {}).get(x) for x in ("grt", "signoff"))
         if has_base:

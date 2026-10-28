@@ -37,7 +37,7 @@ module ot_qwen_tp8_pv16_slice(
  generate for(m=0;m<4;m=m+1)begin:g_mem
   ot_sram_1r1w_32x128_m1 u_mem(.clk(clk),
    .r_ce_in(take||read_leaf),.r_addr_in(5'(read_leaf?leaf_c:c)),.rd_out(rd[128*m+:128]),
-   .w_ce_in(init_zero||commit),.w_addr_in(5'(init_zero?init_c:commit_c)),.wd_in(init_zero?128'b0:sum[128*m+:128]),.w_mask_in({128{1'b1}}));
+   .w_ce_in(init_zero||commit),.w_addr_in({1'b0,4'(init_zero?init_c:commit_c)}),.wd_in(init_zero?128'b0:sum[128*m+:128]),.w_mask_in({128{1'b1}}));
  end
  for(l=0;l<16;l=l+1)begin:g_lane
   assign bad_add[l]=av[l] && (|ae[2*l+:2]);

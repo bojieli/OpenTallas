@@ -500,7 +500,14 @@ def check_run(run, spec=None, die_plan_dir=None):
                 continue
             errs.append(f"{Path(l).name}: {m.group(0)[:120]}")
     res["tcl_errors"] = st(not errs, "; ".join(errs[:6]) or "none", n=len(errs))
+    # FLOW-SHARED-9: a post-route hold step (KIT/hold_step.json from eco/hold_step.sh) that FAILED is a flow failure,
+    # never silently replaced by the plain-route sign-off
+    hs = jload(kit / "hold_step.json")
+    if hs:
+        res["hold_step"] = st(hs.get("status") != "FAILED", f"{hs.get('status')} rc {hs.get('rc')} {hs.get('error', '')}"[:300])
     failing = [k for k in req if res.get(k, {}).get("verdict") != "PASS"]
+    if res.get("hold_step", {}).get("verdict") == "FAIL" and "hold_step" not in failing:
+        failing.append("hold_step")
     out = dict(schema="opentallas.flow_canary.v1", die=spec.get("die"), item=spec.get("item"), run=str(run),
                kit=str(kit), src=meta.get("src_commit"), generated=time.strftime("%Y-%m-%dT%H:%M:%S%z"),
                verdict="PASS" if not failing else "FAIL", failing=failing, stages=res,
@@ -565,6 +572,12 @@ def cmd_submit(a):
     specs, _ = load_spec(a.spec)
     dies = a.die or list(specs)
     src = Path(a.src).resolve()
+    # FLOW-SHARED-9 (COORD 10-27 19:36 (3)): canaries run from immutable commit snapshots only (the trigger's
+    # flow-canary/sources/<sha>, A/B under flow-canary/ab/sources/<sha>); a lane worktree keeps moving under the run.
+    if (not getattr(a, "dry", False) and "/flow-canary/sources/" not in str(src) + "/"
+            and "/flow-canary/ab/sources/" not in str(src) + "/" and os.environ.get("OT_CANARY_ANY_SOURCE") != "1"):
+        print(f"CANARY REFUSED: --src {src} is not a flow-canary/sources/<sha> commit snapshot (mutable worktree?)")
+        return 2
     sha = git_head(src)
     stamp = time.strftime("%m%d_%H%M%S") + f"_{time.time_ns() % 1000000:06d}"
     for die in dies:
