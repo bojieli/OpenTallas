@@ -18,3 +18,6 @@ Claude reset order: safe park, no new jobs. Sources/jobs/results/failures/OWNER?
 
 ## CODEX notes 2026-10-25 21:48 PDT
 CODEX remaining-lanes takeover: Methodology branch integrated via dec17 batch. Jobs: None. Next: Current plan lanes obey405um/M7/wavefront; no duplicate old branch merge. Failure disposition: Original conflicts were integration history.
+
+## CODEX notes 2026-10-26 20:14 PDT
+Methodology batch integrated; canonicalv5.1 rules used, no old merge replay.

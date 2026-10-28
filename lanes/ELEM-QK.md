@@ -280,3 +280,6 @@ Collected old kvr2 successor job signoffs (none SIGNED): intel1 elem-qk/kvr2/io_
 
 ## CODEX notes 2026-10-25 22:10 PDT takeover
 No legacy r2/g3h jobs revived: their finalclock/reach/congestion failures remain superseded by current PATH-QC/PATH-KV. Current KV IOFT regenerate/trial ownedPATH-KV-IOFT/sharedflow; current sys_c actualPHY shoreline failure has concrete SYS3structural candidate (PATH-KV), not another oversized IOwindow or holdmargin. Current QC spare failure census46attempts alltriaged (19RTLlint/9missingmacroviews/6FIRMreplay/6FWdeadfault/6SClive); defaultOFF/aliasBBsource fixes gated, STmacro PLANvsBOUND placement gaps explicitly underplanproposal.
+
+## CODEX notes 2026-10-26 20:14 PDT
+Current Qwen core rebuilds owned QC/KV paths; pending infra plan holds broad type routes. No old wave duplicate.

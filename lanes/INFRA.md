@@ -157,3 +157,6 @@ Installed usermatplotlib3.11.2 on epyc2/epyc3/intel1/intel2, all4importPASS, CLO
 
 ## CODEX notes 2026-10-26 02:09 PDT
 Auxiliary takeover collected current operational state; details codex-aux-infra-1026.md. Four-host launcher/timers healthy, epyc3 retired. DIE-CI remains live on retired d4g q_sfuc after37.6h (intel2 OpenROAD162242), not dead lock; no cancellation or duplicate old CI. New jobs use bounded --stage to avoid hub-only memory wait.
+
+## CODEX notes 2026-10-26 20:14 PDT
+Current fleet4hosts healthy under ot-run; epyc3 retired. No additional destructive cleanup requested.

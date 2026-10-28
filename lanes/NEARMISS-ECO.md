@@ -71,3 +71,6 @@ No run was rebuilt: rebuilds wait for GEOM PASS (GEOM REQ 2026-10-25 04:35 PDT).
 
 ## CODEX notes 2026-10-25 21:48 PDT
 CODEX remaining-lanes takeover: Structural review DONE; physical owners adopted findings. Jobs: No own jobs. Next: S81 physical handles vn_b/vsw/rxsf/head; HBM physical argmax; shared flow per-corner basis. Failure disposition: Seven original misses remain FAIL; no blind ECO sweep.
+
+## CODEX notes 2026-10-26 20:14 PDT
+Structural diagnoses adopted by S81/HBMphysical owners; original misses retained. No blind ECO sweep.

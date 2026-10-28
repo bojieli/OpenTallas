@@ -80,3 +80,6 @@ R9 own codex/qc-r9-2000@09db4023fa: mainb25fdf5231 merged manually keepingR9 MY/
 
 ## CODEX PARKED 2026-10-26 21:02 PDT
 R9 READY c540e671da: tree5 DRC0/all852boxes,267RCnets connected, graph0opens; finalTT/FFspreads21.697/18.542ps, AOCVfields exported. Fullmesh/dieSTA open. Packet handoff/codex-qc-20261026-2102.md.
+
+## CODEX PARKED 2026-10-26 21:03 PDT — explicit USER RESET
+No newjobs afterRESET. All ownedjobs complete. Packet: /home/ubuntu/coord/handoff/codex-kv-clock-park-20261026-2103.md. Thinfixes a4f4fa011/fca1d5945/84d8a185b/a8055fcc3 pushed; WIP codex/kv-clock-1026 clean/pushed. Final319.68headmirror candidate actualfullmodule-sitecensus0fails/2Doverlap0/schema0, notadopted/routed; origin/subgrid normalization andpin/station/slice regeneration remain. OwnerquestionsNONE.

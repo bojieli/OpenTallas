@@ -485,3 +485,6 @@ CODEX23:21 / legacy_cores: legacygeneratorF4leafaffinity/F6macroIF/VSfaceband+sc
 
 ## CODEX notes 2026-10-26 20:12 PDT takeover
 Legacy result wave superseded reach405/reset/masterplanbatch; HCPOST oldSIGNED retained, no blanketreroute. Current geometry and physical cores ownedPATH/S81-CORE-LAT.
+
+## CODEX notes 2026-10-26 20:14 PDT
+Current S81 core structure owned S81 path; existing geometrical failures stay route-held until revised.
