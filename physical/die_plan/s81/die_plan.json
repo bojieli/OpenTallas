@@ -6352,7 +6352,11 @@
     "layer": "M9"
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "tap_um": [
+     4320.0,
+     1226.88
+    ]
    },
    "contents": [
     {"inst":"u_phy_hbm","module":"ot_hbm3e_phy_v41x_aw30_e8p5","status":"reuse","note":"hard HBM3E PHY 8500 x 1177 in a 6-cell S-edge slot (bump field at the die edge)"}
