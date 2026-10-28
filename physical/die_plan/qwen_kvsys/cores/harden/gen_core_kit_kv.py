@@ -600,6 +600,69 @@ def core_clocks_resets(cj):
     return clks, rsts
 
 
+def _module_body(text, mod):
+    """Body of `module mod` after its header (ANSI port list) up to endmodule, comments stripped."""
+    text = re.sub(r"/\*.*?\*/", " ", text, flags=re.S)
+    text = re.sub(r"//[^\n]*", "", text)
+    m = re.search(r"\bmodule\s+" + re.escape(mod) + r"\b", text)
+    if not m:
+        return None
+    i, depth = m.end(), 0
+    while i < len(text):
+        c = text[i]
+        if c == "(":
+            depth += 1
+        elif c == ")":
+            depth -= 1
+        elif c == ";" and depth == 0:
+            break
+        i += 1
+    end = text.find("endmodule", i)
+    return text[i + 1:end if end >= 0 else len(text)]
+
+
+def rtl_clock_binding(top_text, mod, cj):
+    """QK-CORES-9 (pv_pair R8/R9 root cause): the kit's SDC clock, face_flops skip and boundary roles come from the core
+    json pin classes, but the RTL the kit ships is what synthesis clocks.  kv3_pv_pair core json named s0__clk 'clk' and
+    s1__clk 'clk_unused' while its RTL feeds s1__clk to both members (s0__clk unused): create_clock went on an unloaded
+    port, 29724 FF had no clock arrival and face_flops bound a data flop to the s1__clk pin.  Check every clock-class port
+    against the shipped top RTL:
+      - classes agree with the RTL (every 'clk' port used, no 'clk_unused' port used): unchanged, returns None;
+      - every 'clk' port unused and one or more 'clk_unused' ports used: the core json binding is stale -> rebind the
+        classes to the RTL (used -> clk, unused -> clk_unused), update report.clock_nets/clk_unused, return a note;
+      - anything else (a 'clk_unused' port used beside a used 'clk' port, or no clock-class port used): SystemExit."""
+    body = _module_body(top_text, mod)
+    if body is None:
+        raise SystemExit(f"{mod}: clock binding check: module {mod} not found in the kit top RTL")
+    bits = {}
+    for n, c in cj["pin_class"].items():
+        if c in ("clk", "clk_unused"):
+            bits.setdefault(split_name(n)[0], []).append((n, c))
+    used = {b for b in bits if re.search(r"(?<![\w$])" + re.escape(b) + r"(?![\w$])", body)}
+    decl = {b for b, v in bits.items() if any(c == "clk" for _, c in v)}
+    unused_cls = {b for b, v in bits.items() if any(c == "clk_unused" for _, c in v)} - decl
+    if decl and decl <= used and not (used & unused_cls):
+        return None
+    if not used:
+        raise SystemExit(f"{mod}: clock binding check: no clock-class port ({sorted(bits)}) is used in the kit top RTL")
+    if decl & used:
+        raise SystemExit(f"{mod}: clock binding check: clk_unused port(s) {sorted(used & unused_cls)} drive logic "
+                         f"beside the clk port(s) {sorted(decl & used)}: two clock roots, one SDC clock -- fix the core RTL/json")
+    for b, v in bits.items():
+        for n, _ in v:
+            cj["pin_class"][n] = "clk" if b in used else "clk_unused"
+    rep = cj.setdefault("report", {})
+    old = dict(rep.get("clock_nets") or {})
+    new_clk = sorted(n for n, c in cj["pin_class"].items() if c == "clk")
+    rep["clock_nets"] = {k: (new_clk[0] if len(new_clk) == 1 else ",".join(new_clk)) for k in (old or {"clk": None})}
+    rep["clk_unused"] = sorted(n for n, c in cj["pin_class"].items() if c == "clk_unused")
+    if "boundary_role" in cj:
+        for b in bits:
+            cj["boundary_role"][b] = "clk" if b in used else "clk_unused"
+    return dict(rule="QK-CORES-9 kit clock binding = shipped top RTL", core_json_clk=sorted(decl),
+                rtl_clk=sorted(used), clock_nets_was=old, clock_nets=rep["clock_nets"])
+
+
 def write_core_contract(kd, cj, clks, rsts):
     """KIT/core.json (typed boundary roles + hard-core latency contract) and KIT/boundary_guard_context.json.
     Also used by retrofit_contract.py on kits generated before befed6a747 (same content, no timing change)."""
@@ -1183,6 +1246,13 @@ def main():
                                                         why=cj["report"]["added"], straps=cj["report"]["straps"],
                                                         gap_bits=cj["report"].get("gap_bits", [])), indent=1) + "\n")
     mod = cj["module"]  # ASTK strap master after original corner pin placement
+    tops = [f for f in sorted((kd / "rtl").iterdir()) if f.suffix in (".sv", ".v")
+            and re.search(r"\bmodule\s+" + re.escape(mod) + r"\b", f.read_text(errors="replace"))]
+    if len(tops) != 1:
+        raise SystemExit(f"{tid}: clock binding check: {len(tops)} kit RTL files define module {mod}")
+    clock_rebind = rtl_clock_binding(tops[0].read_text(errors="replace"), mod, cj)
+    if clock_rebind:
+        print(f"{tid}: CLOCK_REBIND {json.dumps(clock_rebind)}")
     clk_bits = [n for n, c in cj["pin_class"].items() if c == "clk"]
     if not clk_bits:
         raise SystemExit(f"{tid}: no clock pin")
@@ -1402,7 +1472,7 @@ def main():
     fz = dict(schema="opentallas.kv.core_freeze.v1", type=tid, module=mod, outline_um=[w, h],
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),
               core_json_sha256=sha(a.core_json), pins=len(allp), plan_pins=len(pins), added_pins=len(added),
-              clocks=clks, clock_nets=cj["report"].get("clock_nets"), resets=rsts, recipe=rec, sdc_lint="PASS (gen)", period_ps=per, insertion_budget_ps=ins, macros=macros,
+              clocks=clks, clock_nets=cj["report"].get("clock_nets"), clock_rebind=clock_rebind, resets=rsts, recipe=rec, sdc_lint="PASS (gen)", period_ps=per, insertion_budget_ps=ins, macros=macros,
               signal_max=rec.get("sigmax", a.sigmax),
               flow_basis=("stock" if a.stock_flow else "FLOW-1025: rcx-rc + leaf-affinity + fanout24/slew-cap-margin20" + (" + mcmm tc/bc" if mcmm else " (no FF macro lib: TC only)")),
               head_lane_taps=bool(a.head_lane_taps), head_strap_master=bool(a.head_strap_master),

@@ -227,9 +227,10 @@ def core_tap_pins(P, tn):
     return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y, _ in S.core_taps(P, tn)]
 
 
-def core_tap_rows(P, tn, corner="TT"):
+def core_tap_rows(P, tn, corner="TT", pending=None):
     """[(port, core inst, clock pin or '*', early_ps, insertion_ps)] of the type's early core taps: a tap named
-    `<inst>` takes every clock pin of that core, `<inst>.<pin>` one pin."""
+    `<inst>` takes every clock pin of that core, `<inst>.<pin>` one pin.  A merged tap on a core with no native view
+    (HBM-STREETS-3, COORD 10-27 19:12 ruling 1) keeps its plan clock pins and is appended to `pending` (PENDING-VIEW)."""
     insts = [c["inst"] for c in P.types[tn].get("hard_cores", []) or []]
     out = []
     for n, _, _, tp in S.core_taps(P, tn):
@@ -250,7 +251,7 @@ def core_tap_rows(P, tn, corner="TT"):
             raise ValueError(f"type {tn}: core tap {nm} names no hard_cores[] inst")
         if tp.get("merged_clock_ports"):
             import merged_core_clocks as MC
-            for pin in MC.pins(P, tn, tp, hit[0]):
+            for pin in MC.pins_or_pending(P, tn, tp, hit[0], pending):
                 out.append((n, hit[0], pin, S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)))
         else:
             out.append((n, hit[0], hit[1], S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)))
@@ -1308,7 +1309,12 @@ def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed
             rows = C.latency_table(P, tn, root)
             for row in rows:
                 row.update(basis="legacy_etm_max_bound", signed=False, release_qualified=False)
-    taps = core_tap_rows(P, tn)
+    pending_view = []
+    taps = core_tap_rows(P, tn, pending=pending_view)
+    if pending_view:   # HBM-STREETS-3: PENDING-VIEW cores are reported, never PASS; retap when the signed view lands
+        (kd / "merged_clock_pending_view.json").write_text(json.dumps(dict(
+            type=tn, status="PENDING-VIEW", rule="COORD 10-27 19:12 HBM-STREETS-2 ruling 1", rows=pending_view),
+            indent=1) + "\n")
     if mean_contract:
         for _port, inst, pin, _early, insertion in taps:
             matching = [r for r in rows if r["inst"] == inst and (pin == "*" or r["pin"] == pin)]

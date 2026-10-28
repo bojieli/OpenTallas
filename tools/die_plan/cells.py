@@ -17,6 +17,11 @@ an estimate in a side file.  This module reads them, best source first, and retu
                   hard_cores[].module (a hard core's module counted once per core) - basis says how many of the
                   contents were found ("modules 37/40"; a partial sum is a LOWER bound)
   A type found in no source has no estimate (G0 WARNs with the list).
+  6. "landing"    clock-landing composer outputs (clock_landing_plan.compose; QC-SLICECLK-2, same G0C artefact as
+                  LAND-KV-1, 10-27): a cohort type (type.landing_base_type = <base>, named <base>__cl<hash>) takes
+                  the base type's estimate; every type with clock.landing_contract.bands whose estimate is NOT plan
+                  type.cells adds its rings, ring_cells(W) = 4*(W+1+3)+124 flops + 612 cells per 64-bit chunk
+                  (W+1 incl. valid; LAND-KV-1 yosys of ot_dp_clk_landing W=1/15/64). type.cells is taken as complete.
 
 Sources: every path given with --evidence / evidence=..., plus these files when they sit in the plan directory:
   cells_est.json, plan_notes.json, l1_cores_v31.json, l1_cores_v3.json, cells_evidence.json, inputs/cells_evidence.json,
@@ -113,15 +118,52 @@ def discover(plan_dir):
     return fs
 
 
+def ring_cells(width):
+    """std cells of one ot_dp_clk_landing ring with `width` data bits (LAND-KV-1 measured; +1 valid bit)."""
+    wl = int(width) + 1
+    return 4 * (wl + 3) + 124 + 612 * -(-wl // 64)
+
+
+def landing_rings(t):
+    """cells of all landing rings a type carries (clock.landing_contract.bands[*].width)."""
+    bands = ((t.get("clock") or {}).get("landing_contract") or {}).get("bands") or {}
+    return sum(ring_cells(b["width"]) for b in bands.values() if isinstance(b, dict) and b.get("width"))
+
+
+def _add_landing(types, out, by_type=None):
+    """rule 6: cohort types inherit their base estimate (the base type's own estimate, or its by_type row when the
+    base type left the plan); landing rings are added unless type.cells is set."""
+    base_est = {k: (c, f"by_type {Path(f).name}") for k, (c, f) in (by_type or {}).items()}
+    base_est.update(out)
+    for tn, t in types.items():
+        if t.get("hard"):
+            continue
+        rings = landing_rings(t)
+        if tn in out:
+            c, basis = out[tn]
+            if basis != "plan" and rings:
+                out[tn] = (c + rings, f"{basis} + landing rings {rings}")
+            continue
+        base = t.get("landing_base_type")
+        if base and base in base_est:
+            c, basis = base_est[base]
+            out[tn] = (c + rings, f"landing cohort of {base}: {basis}" + (f" + landing rings {rings}" if rings else ""))
+
+
 def estimate(raw, plan_dir=None, evidence=(), auto=True):
     """raw plan dict -> ({type: (cells, basis)}, [sources used])."""
     types = raw["partition_types"]
     parts = {p["name"]: p["type"] for p in raw["partitions"]}
     files = list(evidence) + (discover(plan_dir) if auto else [])
     srcs = []
+    # landing cohorts (rule 6): the base type may no longer be a plan type once every instance moved to a cohort
+    known = dict(types)
+    for t in types.values():
+        if t.get("landing_base_type"):
+            known.setdefault(t["landing_base_type"], {})
     for f in files:
         try:
-            for kind, tab in load_source(f, types, parts):
+            for kind, tab in load_source(f, known, parts):
                 if tab:
                     srcs.append((kind, tab, str(f)))
         except (OSError, ValueError) as e:
@@ -173,6 +215,7 @@ def estimate(raw, plan_dir=None, evidence=(), auto=True):
                     tot += int(c)
             if found:
                 out[tn] = (tot, f"modules {found}/{n}" + ("" if found == n else " (lower bound)"))
+    _add_landing(types, out, by_type)
     return out, [f for _, _, f in srcs]
 
 

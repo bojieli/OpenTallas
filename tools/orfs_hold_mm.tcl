@@ -437,10 +437,98 @@ proc ot_hold_stop {rt_args} {
   catch { lassign [ot_hold_stats] w t v; puts [format "OT_HOLD_STOP stage=%s done: hold ws %.2f tns %.1f viol %d" $stage $w $t $v] }
   return 1
 }
+# FLOW-SHARED-5 2026-10-27 (COORD S81-R24 ruling): PLANNED input-hold demand is counted apart from real structural
+# failures.  An FF hold failure whose startpoint is a primary INPUT port is the pin-register input path timed against
+# the declared input-hold budget (set_input_delay -min, e.g. vclk in_min -40): one delay chain per input bit, which
+# repair_timing -hold closes by design (S81 hrow: 1909 of 2096 failing endpoints).  Rule:
+#   internal (reg->reg / anything not starting at an input port): ws >= -100 ps AND endpoints <= 2000  (unchanged);
+#   planned input:  ws >= -100 ps AND endpoints <= input-port bits (one pin register per bit; more = not a planned
+#                   pin-register path, i.e. structural).
+# Worst slack keeps the -100 ps limit for BOTH classes.  OT_HOLD_PLANNED_INPUT=0 restores the single combined count.
+proc ot_hold_input_ports {} {
+  set s [dict create]
+  if {[catch {set ports [get_ports -quiet *]}]} { return $s }
+  foreach p $ports {
+    if {[catch {get_property $p direction} d] || $d ne "input"} continue
+    dict set s [get_full_name $p] 1
+  }
+  return $s
+}
+proc ot_hold_split {} {
+  # -> {worst_internal n_internal worst_input n_input n_input_ports} over true failures (slack < 0) in the FF scene
+  set in [ot_hold_input_ports]
+  set wi 1e6; set ni 0; set wp 1e6; set np 0
+  foreach p [ot_hold_paths] {
+    set s [get_property $p slack]
+    if {$s eq "INF" || $s >= 0} continue
+    set sp ""; catch { set sp [get_full_name [get_property $p startpoint]] }
+    if {$sp ne "" && [dict exists $in $sp]} { incr np; if {$s < $wp} { set wp $s } } else { incr ni; if {$s < $wi} { set wi $s } }
+  }
+  return [list $wi $ni $wp $np [dict size $in]]
+}
 # Owner 2026-10-25: structural FF hold failures must stop BEFORE repair_timing. Its
 # -max_iterations bounds inner passes, not the endpoint sweep, so the stall guard
 # cannot interrupt a single call that adds hundreds of thousands of buffers.
 # Count true negative-slack endpoints (ot_hold_stats), never the repair margin.
+# IO-HOLD-PAD (S81-CORES-R24, COORD ruling 10-27 (d); OWNER: data hold buffers OK; METHODOLOGY 12.8 plan-computed sizing).
+# Opt-in OT_IO_HOLD_PAD=1 (default OFF: no change for any kit).  The kit IO-hold contract (set_input_delay -min vs vclk,
+# e.g. legacy -insertion_tol = -40 ps) is PLANNED hold demand on every zero-logic input-port -> pin-register path, not a
+# structural failure.  Before the CTS structural hold gate counts endpoints, pad exactly those paths with HB4xp67 data
+# hold buffers sized per bit from the synchronized FF (BC) hold slack: n = ceil((-slack + OT_IO_HOLD_PAD_MARGIN_PS) /
+# OT_IO_HOLD_PAD_HB4_PS), placed at the register.  Only paths whose startpoint is a non-clock INPUT PORT and whose
+# endpoint is a register DATA pin (async pins excluded) are touched; register-to-register and output paths are left to
+# the gate (they stay structural).  Clock network, constraints, margins and corners unchanged.  Fail closed: a bit
+# needing more than OT_IO_HOLD_PAD_MAX_CELLS (4) cells, or any insert error, stops the stage.  Runs once per process.
+proc ot_io_hold_pad {} {
+  if {![info exists ::env(OT_IO_HOLD_PAD)] || $::env(OT_IO_HOLD_PAD) ne "1"} { return }
+  if {[info exists ::ot_io_hold_pad_done]} { return }
+  set ::ot_io_hold_pad_done 1
+  if {[ot_hold_stage] ne "cts"} { puts "OT_IO_HOLD_PAD skip: stage [ot_hold_stage] (CTS only)"; return }
+  set hb_ps [ot_env_num OT_IO_HOLD_PAD_HB4_PS 37.0]
+  set mg [ot_env_num OT_IO_HOLD_PAD_MARGIN_PS 5.0]
+  set maxc [expr {int([ot_env_num OT_IO_HOLD_PAD_MAX_CELLS 4])}]
+  set cells [get_lib_cells -quiet */HB4xp67_ASAP7_75t_R]
+  if {![llength $cells]} { error "OT_IO_HOLD_PAD: HB4xp67_ASAP7_75t_R not in the libraries" }
+  set ck {}
+  foreach c [all_clocks] { foreach s [get_property $c sources] { dict set ck [get_full_name $s] 1 } }
+  set async {}
+  foreach p [all_registers -async_pins] { dict set async [get_full_name $p] 1 }
+  set data {}
+  foreach p [all_registers -data_pins] { set n [get_full_name $p]; if {![dict exists $async $n]} { dict set data $n 1 } }
+  set plan {}
+  foreach p [ot_hold_paths 200000] {
+    set s [get_property $p slack]; if {$s eq "INF" || $s >= 0} { continue }
+    set sp [get_full_name [get_property $p startpoint]]; set ep [get_full_name [get_property $p endpoint]]
+    if {[ot_pin_class $sp] ne "port" || [dict exists $ck $sp]} { continue }
+    if {![dict exists $data $ep]} { continue }
+    set n [expr {int(ceil((-$s + $mg) / $hb_ps))}]
+    if {$n > $maxc} { error "OT_IO_HOLD_PAD: $sp -> $ep slack [format %.1f $s] ps needs $n HB4 > $maxc (not contract demand; revise plan/boundary)" }
+    dict set plan $ep [list $n [get_property $p endpoint]]
+  }
+  if {![dict size $plan]} { puts "OT_IO_HOLD_PAD: no input-port -> pin-register hold demand"; return }
+  unset_dont_use $cells
+  set block [ord::get_db_block]; set tot 0; set k 0
+  set rc [catch {
+    dict for {ep v} $plan {
+      lassign $v n pin
+      set dbi [sta::sta_to_db_inst [$pin instance]]
+      if {$dbi eq "" || $dbi eq "NULL"} { error "no db instance for $ep" }
+      set loc [$dbi getLocation]
+      set xy [list [ord::dbu_to_microns [lindex $loc 0]] [ord::dbu_to_microns [lindex $loc 1]]]
+      for {set j 0} {$j < $n} {incr j} {
+        insert_buffer -buffer_cell HB4xp67_ASAP7_75t_R -load_pins [list $pin] -location $xy -buffer_name ot_iohp_${k}_$j
+        incr tot
+      }
+      incr k
+    }
+  } msg]
+  set_dont_use $cells
+  if {$rc} { error "OT_IO_HOLD_PAD: insert failed after $tot cells: $msg" }
+  log_cmd detailed_placement
+  log_cmd check_placement -verbose
+  catch {estimate_parasitics -placement}
+  puts [format "OT_IO_HOLD_PAD bits %d HB4 %d (hb4 %.1f ps, margin %.1f ps, max %d/bit)" [dict size $plan] $tot $hb_ps $mg $maxc]
+}
 proc ot_hold_structural_gate {} {
   # ot_mm_sync creates/times the real FF BC scene with its own FF boundary SDC.
   # A primary-corner min path is not evidence of FF hold: fail closed without it.
@@ -448,10 +536,25 @@ proc ot_hold_structural_gate {} {
       ![info exists ::ot_mm_synced] || !$::ot_mm_synced} {
     return -code error -errorcode {OPENTALLAS HOLD_FF_UNAVAILABLE} "OT_HOLD_STRUCTURAL: synchronized FF scene BC unavailable; enable multi-mode FF timing before hold repair"
   }
+  ot_io_hold_pad
   lassign [ot_hold_stats] w t n
   if {$w >= -100.0 && $n <= 2000} { return }
   set stage [ot_hold_stage]
-  set msg [format "OT_HOLD_STRUCTURAL stage=%s: FF hold ws %.2f ps, %d true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair" $stage $w $n]
+  set planned [expr {![info exists ::env(OT_HOLD_PLANNED_INPUT)] || $::env(OT_HOLD_PLANNED_INPUT) ne "0"}]
+  if {$planned && $w >= -100.0} {
+    # only the endpoint count tripped: split planned input-hold demand from internal failures
+    lassign [ot_hold_split] wi ni wp np nports
+    set swi -; set swp -
+    if {$ni} { set swi [format %.2f $wi] }; if {$np} { set swp [format %.2f $wp] }
+    set line [format "internal %d endpoints (ws %s), planned input %d endpoints (ws %s) of %d input-port bits" $ni $swi $np $swp $nports]
+    if {$ni <= 2000 && $np <= $nports} {
+      puts "OT_HOLD_PLANNED_INPUT stage=$stage: $line; total $n > 2000 is planned input-hold demand -> repair proceeds"
+      return
+    }
+    set msg [format "OT_HOLD_STRUCTURAL stage=%s: FF hold ws %.2f ps, %d true failing endpoints: %s (limits: ws >= -100 ps, internal endpoints <= 2000, planned input endpoints <= input-port bits); revise plan/RTL/boundary before repair" $stage $w $n $line]
+  } else {
+    set msg [format "OT_HOLD_STRUCTURAL stage=%s: FF hold ws %.2f ps, %d true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair" $stage $w $n]
+  }
   puts $msg
   catch {
     set f [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hold_structural_${stage}.rpt" : "ot_hold_structural_${stage}.rpt"}]

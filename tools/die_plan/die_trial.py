@@ -868,6 +868,38 @@ def pg_stripes(P):
     return out
 
 
+FT_LAYER_CLASS = {"M4": 0, "M5": 0, "M6": 1, "M7": 1}
+
+
+def ft_layer_audit(P):
+    """F1 (COORD 10-27 19:12, KV-PLAN-DELTA-8): one pin layer per FT bit end to end.  For every type ft slot, compare the
+    layer class (M4/M5 lower, M6/M7 upper) of each bit's input-face pin with its output-face pin.  The die abstract
+    writes the plan face pins unchanged (they are the hardened pins), so a class switch inside a partition is a plan
+    property; this reports it (ft_station_probe derives station layers from the input face).  Returns
+    dict(slot_bits, class_switch_bits, by_type{type: switches})."""
+    tot = sw = 0
+    by = {}
+    for tn, t in sorted(P.types.items()):
+        if not t.get("ft_slots"):
+            continue
+        if not any(p["type"] == tn for p in P.parts.values()):
+            continue
+        pins = defaultdict(dict)
+        for bus, bit, ln, *_ in gen_phys.type_pins(P, tn):
+            pins[bus][bit] = ln
+        n = 0
+        for sl in t["ft_slots"]:
+            i, o = pins.get(sl["name"] + "_i", {}), pins.get(sl["name"] + "_o", {})
+            for b in sorted(set(i) & set(o)):
+                tot += 1
+                if FT_LAYER_CLASS.get(i[b], -1) != FT_LAYER_CLASS.get(o[b], -2):
+                    n += 1
+        if n:
+            by[tn] = n
+        sw += n
+    return dict(slot_bits=tot, class_switch_bits=sw, by_type=by)
+
+
 def ft_nets(P):
     """[(inst, slot, nbits_connected, in_bits, out_bits)] and the die route netlist connections per instance."""
     rows = []
@@ -1799,6 +1831,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     meta["grt"] = dict(ft_bits=nft, ft_slot_instances=len(ft_nets(P)), reset_taps=len(P.parts),
                        adjust=dict(adjust), coarse_m123_um=coarse, clock_reserve_rects=len(reserve),
                        pg_stripes=len(pg_stripes(P)))
+    meta["grt"]["ft_layer_f1"] = ft_layer_audit(P)
     bl, br = band_region_adjust(P, dict(adjust).get("M4", 0.75))
     meta["grt"]["die_ft_bands"] = dict(layers=bl, band_rects=len(ft_band_rects(P)), share_strips=len(br),
                                        share_obstructions=len(band_share_obs(P, br)),

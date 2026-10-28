@@ -148,3 +148,158 @@ def test_cli_writes_estimate(tmp_path):
     assert "baseline" in md and "proposed_s2" in md and "PAD" in md
     j = json.loads((tmp_path / "o" / "tiny_baseline_fwd.json").read_text())
     assert j["summary"]["crossing_ports"] == 2 and j["plan"]["sha256"] and len(j["crossings_worst100"]) == 2
+
+
+# ------------------------------------------------------------------------------------------- LOCALITY-SCORE-2 (v2)
+def _grid4(widths=(100, 100, 100, 10)):
+    """2 x 2 grid of 1 mm partitions with a port cycle p00-p10-p11-p01-p00 (the last edge carries widths[3])."""
+    types = {"t": {"outline_um": [1000.0, 1000.0]}}
+    xy = {"p00": (0, 0), "p10": (1000, 0), "p11": (1000, 1000), "p01": (0, 1000)}
+    parts = [dict(name=n, type="t", origin_um=list(map(float, o)), orient="R0") for n, o in xy.items()]
+    cyc = [("p00", "p10"), ("p10", "p11"), ("p11", "p01"), ("p01", "p00")]
+    ports = [dict(id=f"q{i}", src=dict(part=a), dst=dict(part=b), width=widths[i], kind="data")
+             for i, (a, b) in enumerate(cyc)]
+    return dict(die=dict(outline_um=[2000, 2000], period_ps=833), partition_types=types, partitions=parts,
+                ports=ports, budgets=dict(face_pins_per_um=6))
+
+
+def test_spine_feed_parent_child_unshared():
+    """spine: the child root is a spine segment (parent centre -> tap -> child centre) away, no parent insertion;
+    the paths part at the parent centre: unshared(parent) = I_p, unshared(child) = segment + I_c."""
+    D = LO.load_plan(_plan(4, widths=[100, 5, 100]))
+    reg = {"p0": "A", "p1": "A", "p2": "B", "p3": "B"}
+    v = 340.0
+    S = LO.score(D, reg, v, "spine", Ttab=T)
+    x = S["crossings"][0]
+    I = v * 1.5  # 2 x 1 mm
+    seg = v * 2.0  # (1000,500) -> (2000,500) -> (3000,500)
+    assert abs(x["unshared_tt"] - (seg + I)) < 0.2
+    assert abs(abs(x["d_tt"]) - seg) < 0.2  # nominal d = the spine segment (unbalanced)
+    assert x["on_feed"] and x["tree_hops"] == 1
+
+
+def test_dme_spine_zero_skew_and_ca_reading():
+    D = LO.load_plan(_plan(6, widths=[100, 5, 100, 5, 100]))
+    reg = {"p0": "A", "p1": "A", "p2": "B", "p3": "B", "p4": "C", "p5": "C"}
+    S = LO.score(D, reg, 340.0, "dme", Ttab=T)
+    for r in S["crossings"]:
+        assert abs(r["d_tt"]) < 0.05  # zero skew
+        assert abs(r["ca_tt"] - (416.5 - r["p_tt"])) < 0.15 and r["raw_tt"] <= r["ca_tt"] + 0.1
+    # root = B (centre): h(B) = seg 2 mm + I 1.5 mm = 3.5 mm x 340
+    assert abs(S["crossings"][0]["unshared_tt"] - 340.0 * 3.5) < 0.5
+
+
+def test_fish_shared_and_leaf_delay():
+    g = dict(w=4000.0, h=1000.0, cen=(2000.0, 500.0), bbox=(0, 0, 4000, 1000))
+    assert LO.fish_shared_um(g, (3000, 900), (3500, 100)) == 1000.0  # same side: up to the nearer rib
+    assert LO.fish_shared_um(g, (1000, 900), (3500, 100)) == 0.0  # opposite sides of the spine centre
+    assert LO.fish_shared_um(g, (3000, 900), (3010, 700)) == 1000.0 + 200.0  # same rib, same side
+    assert abs(LO.leaf_delay(g, (3000, 900), 340.0, "fish") - 340.0 * 1.4) < 1e-9
+    assert abs(LO.leaf_delay(g, (3000, 900), 340.0, "spine") - 340.0 * 2.5) < 1e-9
+
+
+def test_propose_tree_closes_the_loop():
+    D = LO.load_plan(_grid4())
+    M, padj = LO.traffic(D), LO.part_adjacency(D)
+    reg0 = LO.propose(D, 0.9, M, padj)
+    lb0, lp0, _, _ = LO.loop_stats(reg0, M, padj)
+    assert len(set(reg0.values())) == 4 and lp0 == 1 and lb0 == 10
+    reg, log = LO.propose_tree(D, 0.9, 2.0, M, padj)
+    lb, lp, _, _ = LO.loop_stats(reg, M, padj)
+    assert lb == 0 and lp == 0 and log[-1][1] == 0
+    reg1, _ = LO.propose_tree(D, 0.9, 0.9, M, padj)  # no room: the loop stays and is counted
+    assert LO.loop_stats(reg1, M, padj)[1] == 1
+
+
+def test_hop_reading_retimes_off_feed_along_the_tree():
+    D = LO.load_plan(_grid4())
+    reg = {"p00": "A", "p10": "B", "p11": "C", "p01": "D"}
+    S = LO.score(D, reg, 340.0, "spine", Ttab=T)
+    s = S["summary"]
+    assert s["off_feed_ports"] == 1 and s["hop_chains"] == 1 and s["hop_max_hops"] == 3
+    assert s["hop_extra_bit_hops"] == 10 * 2
+    assert all(r["on_feed"] for r in S["crossings_hop"])
+    assert s["hop_ca_worst_tt"] >= s["ca_worst_tt"]
+
+
+def test_cli_v2(tmp_path):
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(_grid4()))
+    LO.main(["v2", "--plan", str(pf), "--die", "g", "--v-ps-mm", "340", "--map", "part=part", "--tree", "0.9:2",
+             "--span-mm", "0.9", "--out", str(tmp_path / "o"), "--no-png"])
+    md = (tmp_path / "o" / "g_v2_ESTIMATE.md").read_text()
+    assert "COUNT-ALIGNED" in md and "tree_s0.9c2" in md and "ca+hop" in md
+    j = json.loads((tmp_path / "o" / "g_v2.json").read_text())
+    assert set(j["best"]) == {"ring", "ca", "ring+hop", "ca+hop", "static", "static+hop"}
+
+
+# ------------------------------------------------------------------------------------------- LOCALITY-SCORE-3 (v3)
+HEAD3 = HERE / "testdata" / "land_head3_sfbR_ocv_ttff.json.gz"
+
+
+def test_cap_reproduces_meso_count_head3():
+    """the adopted CA ring through locality's entry on the LAND-HEAD-3 routed rows = MESO-COUNT-1's HEAD result:
+    427/427 DEPTH4, 0 FAIL, latency 2 x 349 / 3 x 78, worst margin 104.1 ps on the low side (the aperture T/8)."""
+    import gzip
+    d = json.load(gzip.open(HEAD3, "rt"))
+    cr = {c[:2]: d["corners"][c]["all"] for c in ("TT_droop-regions_corelat250", "FF_droop-regions_corelat202.5")}
+    s, res = LO.cap_plan_corners(cr, 833.0)
+    assert s["crossings"] == 427 and s["depth4"] == 427 and s["depth8"] == 0 and s["fail"] == 0
+    assert s["components"] == 1 and s["tree_edges_clean"] == s["tree_edges"] == 325
+    assert s["lat_hist"] == {"2": 349, "3": 78}
+    assert s["worst_margin_lo_ps"] == 104.1 and s["worst_margin_hi_ps"] >= 100.0
+    w = res["coll_EN1_u__0"]  # the 20:26 ruling's worst crossing: L in [1065, 1432], latency 3 at DEPTH 4
+    assert w["depth"] == 4 and w["lat_cycles"] == 3 and round(w["L_lo_ps"]) == 1065 and round(w["L_hi_ps"]) == 1432
+
+
+def test_cap_reading_on_modelled_crossings():
+    D = LO.load_plan(_plan(6, widths=[100, 5, 100, 5, 100]))
+    reg = {"p0": "A", "p1": "A", "p2": "B", "p3": "B", "p4": "C", "p5": "C"}
+    S = LO.score(D, reg, 340.0, "fish", Ttab=T)
+    s = LO.cap_reading(S["crossings"], 833.0)
+    assert s["crossings"] == 2 and s["fail"] == 0 and s["depth4"] == 2 and s["components"] == 1
+    for r in S["crossings"]:
+        assert r["depth"] == 4 and r["lat"] >= 1 and r["m_lo"] >= 100 and r["m_hi"] >= 100
+        assert r["pu_tt"] >= 0 and r["pd_ff"] >= 0 and r["ua_tt"] + r["ub_tt"] > 0
+
+
+def test_cap_components_planned_separately():
+    """two disconnected crossing graphs: count_align_plan needs one start tree each."""
+    rows = {c: [dict(port=p, src=a, dst=b, d_ps=50.0, p_up_ps=20.0, p_dn_ps=20.0, unshared_a_ps=300.0,
+                     unshared_b_ps=300.0, margin_ps=300.0) for p, a, b in (("x", "A", "B"), ("y", "C", "D"),
+                                                                           ("z", "D", "E"))] for c in ("TT", "FF")}
+    s, res = LO.cap_plan_corners(rows, 833.0)
+    assert s["components"] == 2 and s["fail"] == 0 and set(res) == {"x", "y", "z"}
+
+
+def test_cap_hop_only_for_depth8_fails():
+    D = LO.load_plan(_grid4())
+    reg = {"p00": "A", "p10": "B", "p11": "C", "p01": "D"}
+    S = LO.score(D, reg, 340.0, "spine", Ttab=T)
+    R = S["crossings"]
+    off = [r for r in R if not r["on_feed"]]
+    assert len(off) == 1
+    off[0]["pu_tt"] = off[0]["pu_ff"] = 9000.0  # no DEPTH fits this one
+    s = LO.cap_reading(R, 833.0)
+    assert s["fail"] == 1 and s["depth4"] + s["depth8"] == 3
+    Tr, _ = LO.arrivals(S["G"], S["F"], 340.0)
+    X = LO.crossings(D, reg, S["G"], LO.part_adjacency(D))
+    h = LO.cap_hop(S["G"], S["F"], Tr, 340.0, X, R, T, 833.0)
+    hs = h["summary"]
+    assert hs["hop_chains"] == 1 and hs["hop_max_hops"] == 3 and hs["fail"] == 0 and hs["crossings"] == 3
+    assert h["chains"][0]["lat"] == sum(r["lat"] for r in h["rows"])  # one landing per feed edge
+    R2 = LO.score(D, reg, 340.0, "spine", Ttab=T)["crossings"]
+    LO.cap_reading(R2, 833.0)
+    assert LO.cap_hop(S["G"], S["F"], Tr, 340.0, X, R2, T, 833.0) is None  # nothing fails: no chains
+
+
+def test_cli_v3(tmp_path):
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(_grid4()))
+    LO.main(["v3", "--plan", str(pf), "--die", "g", "--v-ps-mm", "340", "--map", "part=part", "--tree", "0.9:0.9",
+             "--span-mm", "0.9", "--out", str(tmp_path / "o"), "--no-png", "--v-note", "test"])
+    md = (tmp_path / "o" / "g_v3_ESTIMATE.md").read_text()
+    assert "adopted count-aligned ring" in md and "DEPTH4" in md
+    j = json.loads((tmp_path / "o" / "g_v3.json").read_text())
+    assert j["best"]["summary"]["fail"] == 0 and j["crossings"]
+    assert (tmp_path / "o" / "g_v3_crossings.tsv").read_text().count("\n") == len(j["crossings"]) + 1

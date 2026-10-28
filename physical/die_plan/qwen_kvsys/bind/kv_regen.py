@@ -5,7 +5,7 @@ tools/die_plan/bind.py; same mechanism as the QC collective coll_regen.py).
 Rules (tools/qwen_kv_die/kv_static_die.py KVR-DERIVE / ahub_ages; D = register stages on the die path):
   ECTL  qkd_ectl3_kiss_st (one per hg frame)   RESPONSE_LAT = 8 + D(krq) + D(krs)   (absolute: 8 = landing seg)
         krq = ectl.req_* -> slg.kreq landed depth, krs = slg.krsp -> ectl.rsp_* landed depth; one value per frame
-        QK_ISSUE_AGE = RESPONSE_LAT + 11   (kv_static_ages.QK_WRITE_BEFORE_READ)
+        QK_ISSUE_AGE = max(34, RESPONSE_LAT + 11)   (kv_static_ages.QK_WRITE_BEFORE_READ; floor QK_CONSUME_FLOOR 34, as the b3 bind)
         all frames must agree (the hardened children carry one value): unequal -> error, never a per-frame guess.
   AHUB  qkd_ahub_static_dw                      AP_OFS_s = 2 + L_s + D(ap_s) - D(ks_ahs)
         FR_OFS = D(ks_pvfst) - PV_LEAD - D(ks_ahfr) - D(ks_ahs) - 1
@@ -22,7 +22,13 @@ from collections import defaultdict
 
 STACKS = ["WS", "WN", "ES", "EN"]
 QK_WRITE_BEFORE_READ = 11
+QK_CONSUME_FLOOR = 34   # attention calendar QK_CONSUME floor (KV owner choice KV-P6 18:09; regen_constants max(34, RL + 11))
 LANDING_SEG = 8
+
+
+def qk_issue_age(response_lat):
+    """ECTL QK_ISSUE_AGE for a bound RESPONSE_LAT: write-before-read age, floored at the QK_CONSUME calendar slot"""
+    return max(QK_CONSUME_FLOOR, response_lat + QK_WRITE_BEFORE_READ)
 
 
 def _legs(ctx):
@@ -97,9 +103,9 @@ def regen(ctx):
                              f"RESPONSE_LAT): equalise krq/krs in the plan or the r8 table")
         rt = vals.pop()
         for p in rts:
-            params[p] = dict(RESPONSE_LAT=rt, QK_ISSUE_AGE=rt + QK_WRITE_BEFORE_READ)
-        rec["ectl"] = dict(rule="RESPONSE_LAT = 8 + krq + krs; QK_ISSUE_AGE = RESPONSE_LAT + 11", frames=len(rts),
-                           RESPONSE_LAT=rt, QK_ISSUE_AGE=rt + QK_WRITE_BEFORE_READ,
+            params[p] = dict(RESPONSE_LAT=rt, QK_ISSUE_AGE=qk_issue_age(rt))
+        rec["ectl"] = dict(rule="RESPONSE_LAT = 8 + krq + krs; QK_ISSUE_AGE = max(34, RESPONSE_LAT + 11)", frames=len(rts),
+                           RESPONSE_LAT=rt, QK_ISSUE_AGE=qk_issue_age(rt),
                            krq=sorted({v["krq"] for v in rts.values()}), krs=sorted({v["krs"] for v in rts.values()}))
     # ---- AHUB offsets (delta form)
     for ci, c in enumerate(F.cells):

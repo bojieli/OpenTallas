@@ -405,6 +405,29 @@ class TestAutopilotAutoGeom(TickBase):
         self.assertEqual(j["status"], "WAIT-GEOM")
         self.assertEqual(self.f.launched, [])
 
+    def test_templates_keyed_by_die_other_die_row_never_sees_them(self):
+        # FLOW-SHARED-9 (COORD 10-27 19:36 (2)): the S81 t46 template was revoked "for" KV row 8dc03c466023 -- templates
+        # (match AND the revocation scan) are keyed by die, so a KV row neither matches nor revokes an S81 template.
+        os.environ["AP_AUTO_GEOM_ALL"] = "1"
+        self.row[0] = "qwen_kvsys"
+        self.row[5] = ""
+        co = Path(self.tmp.name) / "coord" / "lanes" / "GEOM-REVIEW.md"
+        co.write_text("2099-01-01 00:00 PDT GEOM-REVIEW: REPLY [S81/KITS t4] slice_station__t4 FAIL STRUCTURAL\n")
+        self.queue(self.row)
+        self.tick()
+        lp = Path(self.tmp.name) / "log.txt"
+        self.assertNotIn("tS revoked", lp.read_text() if lp.exists() else "")
+        st = json.loads((Path(self.tmp.name) / "state.json").read_text())
+        (a,) = st["auto_geom"].values()
+        self.assertEqual(a.get("template"), "measured-kit")  # the identical S81 signature is not a KV replica
+        self.assertNotIn("revoked_note", a)
+        reg = AG.parse_registry((Path(self.tmp.name) / "coord" / "autopilot" / "geom_templates.tsv").read_text())
+        self.assertEqual(list(AG.templates_for_die(reg, "s81")), ["tS"])
+        self.assertEqual(AG.templates_for_die(reg, "qwen_kvsys"), {})
+        t, why = AG.match(reg, self.SIG, "qwen_kvsys", "tS")
+        self.assertIsNone(t)
+        self.assertIn("s81 template", why)
+
     def test_all_kits_explicit_template_mismatch_still_waits(self):
         os.environ["AP_AUTO_GEOM_ALL"] = "1"
         self.sig["rtl_sha"] = "wrong-template"

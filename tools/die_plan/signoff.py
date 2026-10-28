@@ -1208,12 +1208,15 @@ def run_face_guard(disc, clock_ports=()):
         ft1 = face_guard.read_ft1(ft_file) if ft_file and ft_file.is_file() else set()
         # OWNER 10-25 option B: declared ID straps (kit straps.json / core.json id_strap) need no pin register
         sl = face_guard.kit_strap_list(disc["kit"]) if disc.get("kit") else []
+        # QK-CORES-5 10-27: declared proven-dead inputs (kit dead_inputs.json + proof receipt), verified unloaded
+        dl = face_guard.kit_dead_list(disc["kit"]) if disc.get("kit") else []
         r = face_guard.guard(Path(disc["synth"]).read_text(errors="replace"), pins=pins, skip_re=skip_re, ft1=ft1,
-                             straps=sl)
+                             straps=sl, dead=dl)
     except Exception as e:
         return dict(verdict="NOT RUN", reason=f"face_guard error: {e}", netlist=disc["synth"])
     return dict(verdict=r["verdict"], top=r.get("top"), checked=r.get("checked"), ok=r.get("ok"),
                 fail_counts=r.get("fail_counts"), fails={k: v[:5] for k, v in (r.get("fails") or {}).items()},
+                dead_declared=r.get("dead_declared", []),
                 netlist=disc["synth"], pins=disc.get("pins"), boundary_context=context,
                 one_station_ft_slots=sorted(ft1))
 

@@ -132,12 +132,21 @@ def revoked_by_review(tmpl, geom_text, LG):
     return None
 
 
+def templates_for_die(reg, die):
+    """FLOW-SHARED-9 (COORD 10-27 19:36): templates are keyed by die -- a row only ever sees (matches, revokes, logs)
+    the templates registered for its own die (S81 slice_station__t46 was being 'revoked for' KV row 8dc03c466023)"""
+    return {tid: t for tid, t in reg.items() if t.get("die") == die}
+
+
 def match(reg, sig, die, want_tid=""):
     """(template row, why-not) for a kit signature"""
     if sig.get("error"):
         return None, f"kit signature: {sig['error']}"
     if not sig.get("rtl_sha"):
         return None, f"RTL not hashable (missing {sig.get('rtl_missing')})"
+    if want_tid and want_tid in reg and reg[want_tid]["die"] != die:
+        return None, f"template {want_tid} is a {reg[want_tid]['die']} template, row die {die}"
+    reg = templates_for_die(reg, die)
     cands = [reg[want_tid]] if want_tid and want_tid in reg else ([] if want_tid else list(reg.values()))
     if want_tid and not cands:
         return None, f"template {want_tid} not registered (or revoked)"
@@ -223,7 +232,7 @@ def step(ap, st, r, geom_text):
         return poll(ap, st, r, a)
     if a.get("state") in ("NOT-REPLICA", "NO-CHECKPOINT") and time.time() - a.get("t", 0) < 3600:
         return a["why"]
-    reg = parse_registry(ap.read_coord(REG_PATH))
+    reg = templates_for_die(parse_registry(ap.read_coord(REG_PATH)), r["die"])
     revoked = {}
     for tid, t in list(reg.items()):
         why = revoked_by_review(t, geom_text, ap.LG)

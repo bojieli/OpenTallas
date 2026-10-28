@@ -81,7 +81,7 @@ def test_optin_export_keeps_corner_and_source_basis(tmp_path,monkeypatch):
     c=core(tmp_path)
     (tmp_path/'signoff.json').write_text(json.dumps(signed()))
     p=SimpleNamespace(types={'tile':dict(hard_cores=[c])},clock=dict(insertion_ps=250.))
-    monkeypatch.setattr(G,'core_tap_rows',lambda *_:[])
+    monkeypatch.setattr(G,'core_tap_rows',lambda *_, **__: [])
     out=tmp_path/'out';out.mkdir()
     G.core_latency_files(p,'tile',out,mean_contract=True)
     assert 'u_node clk 245.9 grid' in (out/'core_latency.txt').read_text()

@@ -2,38 +2,6 @@
  "owner": "S81-CORES-R26",
  "rule": "COORD 10-27 18:21 (S81-CORES-R25 ruling 1): the gunit plan event 117e37566c merges the pin-to-pin core-bundle check ON; the 8 G0C errors it newly exposed are listed here. The list may only shrink and must be empty before the S81 freeze. Fix in flight: claude/s81-cores-r26-g0c-1027@b37d1c52c6 (8 -> 0, RM83).",
  "added": "ROOT-MERGE-82 2026-10-27",
- "errors": [
-  {
-   "check": "complete",
-   "msg": "[internal_station] type ot_s81sl_leaf__t34: internal core bundle u_lf.u_vn.u_b.n_pre -> core:u_lf.u_vp.u_b1 >= 407 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)"
-  },
-  {
-   "check": "complete",
-   "msg": "[internal_station] type ot_s81sl_leaf__t39: internal core bundle u_lf.u_vn.u_b.n_go -> core:u_lf.u_vp.u_b0 >= 406 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)"
-  },
-  {
-   "check": "complete",
-   "msg": "[internal_station] type ot_s81sl_leaf__t39: internal core bundle u_lf.u_vn.u_b.n_pre -> core:u_lf.u_vp.u_b1 >= 407 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)"
-  },
-  {
-   "check": "complete",
-   "msg": "[internal_station] type ot_s81sl_leaf__t39: internal core bundle u_lf.u_vn.u_b.wl_d -> core:u_lf.u_vp.u_b0 >= 406 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)"
-  },
-  {
-   "check": "complete",
-   "msg": "[internal_station] type ot_s81sl_leaf__t58: internal core bundle u_lf.u_vn.u_b.n_go -> core:u_lf.u_vp.u_b1 >= 406 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)"
-  },
-  {
-   "check": "complete",
-   "msg": "[internal_station] type ot_s81sl_leaf__t58: internal core bundle u_lf.u_vn.u_b.n_pre -> core:u_lf.u_vp.u_b0 >= 407 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)"
-  },
-  {
-   "check": "complete",
-   "msg": "[internal_station] type ot_s81sl_leaf__t58: internal core bundle u_lf.u_vn.u_b.wl_d -> core:u_lf.u_vp.u_b1 >= 406 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)"
-  },
-  {
-   "check": "complete",
-   "msg": "[internal_station] type eng__t1: internal core bundle u_eng.u_e.vi_s -> bus:xtier_i0 >= 416 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)"
-  }
- ]
+ "errors": [],
+ "shrunk": "ROOT-MERGE-83 2026-10-27: all 8 cleared by claude/s81-cores-r26-g0c-1027@b37d1c52c6 (list empty)"
 }

@@ -3758,6 +3758,44 @@
    "date": "2026-10-13",
    "status": "proposed",
    "note": "structural design first (next fetch overlapped under the drain: period 1.0143x <= 1.10; dispatch two edges after the final release on the measured write-before-read lead 6-9 edges); what remains is +29/30 edges start-to-dispatch a record (worst record 169 / 139 = 1.2158x), of which 16 = the closed root composition's measured accept -> release latency (results/rtl/vm8_service_root_1013/root_latency_closed_1013.json: WR +4 / RD +12, hash MATCH) and 13/14 the tracker tail; charged as 30 fixed cycles on every SM.MATVEC record of the S2 schedule (DS 1,095 records, Qwen 5); without the root 0.87 % / 0.16 %, a full 27-edge drain would be 3.79 %"
+  },
+  {
+   "design": "qwen_rom",
+   "unit": "QC.SLICECLK_LAND (QC per-slice clock variant, METHODOLOGY 12.10b: 12 slice domains + HUB, 264 landed ot_dp_clk_landing crossings at sl_fe/sl_fw slice faces + HUB<->W5, K=3)",
+   "group": "QC.SLICECLK_LAND",
+   "measured": 1944.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 0.652,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "nativev7 composer (FALLBACK-LAND qc harness: reprice_actual + rederive_edges_ext + compose_edges/toksim_compose), +3 per inter-slice port on its lane",
+     "base_cycles": 296341,
+     "cycles": 298285,
+     "added_cycles": 1944,
+     "tok_s_before": 4051.0,
+     "tok_s_after": 4024.6,
+     "e2e_loss_pct": 0.652,
+     "k2": {
+      "cycles": 297637,
+      "tok_s": 4033.4,
+      "e2e_loss_pct": 0.435
+     },
+     "chained_layer": [
+      8129,
+      8183
+     ]
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/qc_sliceclk_1027/README.md results/qc_sliceclk_1027/price/q_slice_k3_land.json results/qc_sliceclk_1027/price/req_slice_k3.json",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-27",
+   "status": "proposed",
+   "note": "QC-SLICECLK-1: priced variant, NOT adopted; adopted only if the per-slice form passes the freeze gate first (12.10b). 269 inter-domain ports / 64,367 bits on 264 lanes; CB16 unchanged; cost = 11 serial slice hops x3 + l9 3 = +54/layer x 36. Numbers CHECKED by independent NUMBER-CHECK agent (own classifier + own requirements, lane-identical). Base = v7 QCE composer 296,341.",
+   "share_basis": "modelled"
   }
  ],
  "totals": {

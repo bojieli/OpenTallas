@@ -206,13 +206,24 @@ def _grid_scan(w,h,obstacles,margin,px,py,area,depth,length,g=2.16,reach=405-2.1
     return out
 
 
+BAND_RESERVE="padded"   # "padded" (default) | "live" (LAND-KV-1, opt-in via compose(band_reserve="live"))
+
+
 def _storage_band(t,bus,width,used,*,has_epoch=True):
     b=_bus_geom(t,bus);w,h=t["outline_um"];lo,hi=b["window_um"]
     length=max(hi-lo,8.64);rw=64*math.ceil((width+int(has_epoch))/64)
     spanlo=(lo+hi-length)/2;spanhi=spanlo+length
     # Conservative physical reserve includes padded ring slots/readout, control,
     # selectors and local clock buffering, at40% fill and actualASAP7 FF area.
-    area=(5*rw*.2916 + 4*rw*.0729 + 160*.2916)/.40
+    # LAND-KV-1 10-27 (opt-in BAND_RESERVE="live"): ot_dp_clk_landing pads the ring to 64-bit chunks with constant-0
+    # inputs and unused outputs, which synthesis removes. Measured (yosys synth -flatten, origin/main 133d979e4 RTL):
+    # W=1/15/64 -> 140/196/392 flops = 4*(W+3)+124, plus 612 non-flop cells per 64-bit chunk. The live reserve uses
+    # that measured count at the same 40 % fill; W=64 gives 397 um2 (padded formula 396). Default "padded" keeps
+    # every existing compose byte-identical.
+    if BAND_RESERVE=="padded":area=(5*rw*.2916 + 4*rw*.0729 + 160*.2916)/.40
+    else:
+        wl=width+int(has_epoch)
+        area=((4*(wl+3)+124)*.2916 + 612*math.ceil(wl/64)*.0729)/.40
     depth=math.ceil(max(8.64,area/length)/2.16)*2.16
     obstacles=RT.blockages(t)+used
     # Existing face registers and fixed FT banks remain in place. The new ring
@@ -496,13 +507,17 @@ def _split_by_landed_mask(raw,plan_path,ins,outs):
                 if p["name"] in names:p["type"]=name
 
 
-def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset"):
-    """observer: {module, instance_suffix, fault_port, ready_port} of the real
+def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded"):
+    """band_reserve="live" (opt-in): storage bands reserve the live ring (width+epoch) instead of the 64-bit padded ring.
+    observer: {module, instance_suffix, fault_port, ready_port} of the real
     one-bit fault/ready inputs gated in observer_part (reset mode default QC_OBSERVER).
     monitor="dataflow" (opt-in, FALLBACK-HEAD): observer None stays OPEN (fails closed at bind).
     monitor="region" (opt-in, DIE-HEAD-2): dataflow monitor whose observer walk also follows same-region links
     (multi-partition clock regions); types split once by their landed mask (exact uniform hardware)."""
     if monitor not in ("reset","dataflow","region"):raise ValueError(f"unknown monitor mode {monitor}")
+    if band_reserve not in ("padded","live"):raise ValueError(f"unknown band_reserve {band_reserve}")
+    global BAND_RESERVE
+    BAND_RESERVE=band_reserve
     if observer is not None or monitor=="reset":
         observer=dict(QC_OBSERVER if observer is None else observer)
         missing=[k for k in ("module","instance_suffix","fault_port","ready_port") if not observer.get(k)]

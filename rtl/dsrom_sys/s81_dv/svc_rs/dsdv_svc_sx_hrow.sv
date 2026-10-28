@@ -229,11 +229,16 @@ module dsdv_svc_sx_hrow #(
     wire [W-1:0] snl;   // {sn_tag, sn}
     generate for (j = 0; j < NGN; j = j + 1) begin : g_sn
         localparam integer LO = j * GN, NB = (LO + GN > W) ? W - LO : GN;
-        (* keep *) reg [4:0] q;
-        always @(posedge ck or negedge rn) if (!rn) q <= '0; else q <= oh_ss;
-        assign snl[LO +: NB] = ({NB{q[0]}} & snf[0][LO +: NB]) | ({NB{q[1]}} & snf[1][LO +: NB]) |
-                               ({NB{q[2]}} & snf[2][LO +: NB]) | ({NB{q[3]}} & snf[3][LO +: NB]) |
-                               ({NB{q[4]}} & sna[LO +: NB]);
+        // groups wholly inside bits NS*SL .. 2*NS*SL-1 see constant-0 scatter-face data (snf upper slots), so only the
+        // adder select q[4] has a load there: declare (and keep) only that bit, so no kept register is dead logic
+        // (S81-CORES-R26: the routed LEC KEEP check lost g_sn[6..10].q[0..3] to ORFS eliminate_dead_logic)
+        localparam integer QL = (LO >= NS*SL && LO + NB <= 2*NS*SL) ? 4 : 0;
+        (* keep *) reg [4:QL] q;
+        wire [4:0] qe = 5'(q) << QL;
+        always @(posedge ck or negedge rn) if (!rn) q <= '0; else q <= oh_ss[4:QL];
+        assign snl[LO +: NB] = ({NB{qe[0]}} & snf[0][LO +: NB]) | ({NB{qe[1]}} & snf[1][LO +: NB]) |
+                               ({NB{qe[2]}} & snf[2][LO +: NB]) | ({NB{qe[3]}} & snf[3][LO +: NB]) |
+                               ({NB{qe[4]}} & sna[LO +: NB]);
     end endgenerate
     reg [4:0] ssv;      // the valid's selects: faces 3..0, and (r_ss == 7 && r_rt) for the adder
     always @(posedge ck or negedge rn)
