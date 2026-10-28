@@ -47,6 +47,21 @@ class BootstrapBindTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'complete exact namespace'):
                 attach(fixture(),225,path,lambda *a:None,output)
 
+    def test_disabled_low_targets_rejected_even_with_complete_audit(self):
+        for target in (8,15):
+            with self.subTest(target=target), tempfile.TemporaryDirectory() as tmp:
+                path=Path(tmp)/'audit.json'
+                path.write_text(json.dumps(dict(candidate=target,verdict='NO_EXISTING_ALLOCATION_OR_DECODE_ALIAS_FOUND',unresolved=[])))
+                with self.assertRaisesRegex(ValueError,'16..255'):
+                    attach(fixture(),target,path,lambda *a:None,output)
+
+    def test_lowest_enabled_native_target_is_accepted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'audit.json'
+            path.write_text(json.dumps(dict(candidate=16,verdict='NO_EXISTING_ALLOCATION_OR_DECODE_ALIAS_FOUND',unresolved=[])))
+            report=attach(fixture(),16,path,lambda n,p,w,r:inp('required_reset',w),output)
+        self.assertEqual(report['target'],16)
+
     def test_existing_allocation_mutant_is_rejected(self):
         instances=fixture()
         instances['host_status']['params']=".NT(5), .NF(5), .TGTS(40'h0504e10201)"

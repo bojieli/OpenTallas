@@ -33,8 +33,8 @@ def attach(instances, target, audit_path, required, output):
     audit = json.loads(audit_path.read_text())
     if audit.get('candidate') != target or audit.get('verdict') != 'NO_EXISTING_ALLOCATION_OR_DECODE_ALIAS_FOUND' or audit.get('unresolved'):
         raise ValueError('target lacks a complete exact namespace review')
-    if not 0 < target < 256:
-        raise ValueError('target0 remains disabled; target must fit the actual byte interface')
+    if not 16 <= target <= 255:
+        raise ValueError('native host bootstrap target must be16..255; lower targets are disabled by the host ABI')
     root_name, programme_name, leaf_name = 'u_mu_fused_root', 'u_mu_fused_programme', 'hleaf_NW'
     root, leaf, status, ingress = [instances[name] for name in (root_name,leaf_name,'host_status','host_cp_ingress')]
     if leaf['master'] != 'ot_hbm_host_cfg_leaf2' or status['master'] != 'ot_hbm_status_join_fa' or ingress['master'] != 'ot_hbm_host_static_ingress_obs':
