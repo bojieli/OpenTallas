@@ -238,7 +238,8 @@ module ot_meso_ring_ca #(
 
     // ---------------- transmit (tclk): slot = sender count ----------------
     logic [TW-1:0] tc;
-    logic [W-1:0]  s_d   [DEPTH];
+    // The CA crossing is the declared flop ring, including widths above the RAM guard.
+    (* mem2reg *) logic [W-1:0]  s_d   [DEPTH];
     logic [DEPTH-1:0] s_w, s_lap;
     always_ff @(posedge tclk) begin
 `ifdef OT_MESO_CA_MUTANT_FREERUN
@@ -280,7 +281,7 @@ module ot_meso_ring_ca #(
     ot_meso_ohor #(.N(NS)) u_lap (.sel(oh), .x(pos_lap), .y(r_lap1_c));
     if (LAPX > 0) begin : g_tag
         // extended lap tag of every slot (written with the word); the consumed slot's tag must equal rp's upper bits
-        logic [LAPX-1:0] s_tag [DEPTH];
+        (* mem2reg *) logic [LAPX-1:0] s_tag [DEPTH];
         always_ff @(posedge tclk) if (t_rst_n) s_tag[tc[AW-1:0]] <= tc[TW-1:PW];
         logic [LAPX-1:0] tag_c; logic w_c;
         always_comb begin
