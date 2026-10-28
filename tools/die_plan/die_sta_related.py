@@ -298,16 +298,23 @@ def ca_pair_interval(A, B, a, b, cppr_range=None, ocv=None, edge="rise"):
     planner, the binder and the gate all call).  d = capture clock - launch clock at the pair's last common node,
     lo = capture early - launch late (+ CPPR credit), hi = capture late - launch early (- credit), then exactly one
     clock variation term (ocv setup on lo, hold on hi).  The launch is a rising-edge register; edge = the capture
-    flop's sampling edge: 'fall' takes the capture tap's MEASURED fall arrival (FallArrivalMissing if absent) and
-    no CPPR credit (rise launch / fall capture share no common transition).  Returns (lo, hi, ocv_setup, ocv_hold)."""
+    flop's sampling edge: 'fall' takes the capture tap's MEASURED fall arrival (FallArrivalMissing if absent).
+    CPPR on BOTH edges (one model, COORD 10-28 DIE-KV-13): the common path's late-early pessimism is removed for a
+    rise-launch / fall-capture pair as for rise/rise, with the industry opposite-edge rule (PrimeTime CRPR: the smaller
+    of the rise and fall common-pin ranges): credit = min(rise range at the last common node, its fall range if the
+    proof has one (meta-free: cppr_range key '<node>@fall'), launch late-early, capture FALL late-early).  Without a
+    measured node fall range the rise range stands for it (the late/early spread is the liberty pin-cap range,
+    transition-independent in the exports, CLOCK-MESH-2; UNCHECKED on spice).  Returns (lo, hi, ocv_setup, ocv_hold)."""
     node = pair_node(A, B)
     la, ea, lc, ec = arr4(A, B, node)
     f = _capture_arr(B, node, edge)
     if f is not None:
         lc, ec = f
-        cr = 0.0
-    else:
-        cr = credit(cppr_range, node, la, ea, lc, ec) if cppr_range else 0.0
+    cr = credit(cppr_range, node, la, ea, lc, ec) if cppr_range else 0.0
+    if f is not None and cppr_range:
+        fr = {k[:-5]: v for k, v in cppr_range.items() if k.endswith("@fall")}
+        if fr:
+            cr = min(cr, credit(fr, node, la, ea, lc, ec))
     lo, hi = ec - la + cr, lc - ea - cr
     os_ = oh = 0.0
     if ocv is not None:

@@ -218,7 +218,7 @@ def test_width_rule_reduces_to_the_original_at_50pct_duty_and_moves_with_distort
     assert not CAP.width_robust(dict(lo=100.0, hi=150.0, fall_lo=None, fall_hi=None), T, AP)
 
 
-def test_fall_interval_uses_measured_fall_and_no_cppr_credit():
+def test_fall_interval_uses_measured_fall_and_cppr_on_both_edges():
     A = dict(port="a", part="x", late_ps=100.0, early_ps=90.0, cppr_node="h", tree_path="hA0")
     B = dict(port="b", part="y", late_ps=300.0, early_ps=280.0, fall_late_ps=520.0, fall_early_ps=500.0,
              cppr_node="h", tree_path="hA1")
@@ -226,7 +226,12 @@ def test_fall_interval_uses_measured_fall_and_no_cppr_credit():
     try:
         rng = {"hA": 5.0}
         assert D.ca_pair_interval(A, B, "a", "b", rng)[:2] == (185.0, 205.0)          # rise: CPPR credit 5
-        assert D.ca_pair_interval(A, B, "a", "b", rng, edge="fall")[:2] == (400.0, 430.0)
+        # fall capture: measured fall arrival AND the same CPPR credit (DIE-KV-13: no credit = 116 false FAILs)
+        assert D.ca_pair_interval(A, B, "a", "b", rng, edge="fall")[:2] == (405.0, 425.0)
+        # opposite-edge rule: a measured node fall range below the rise range limits the credit
+        assert D.ca_pair_interval(A, B, "a", "b", dict(rng, **{"hA@fall": 2.0}), edge="fall")[:2] == (402.0, 428.0)
+        # mutant (pre-fix: no credit on fall) differs, so the test catches it
+        assert D.ca_pair_interval(A, B, "a", "b", {}, edge="fall")[:2] == (400.0, 430.0)
         try:
             D.ca_pair_interval(B, A, "b", "a", rng, edge="fall")
             raise AssertionError("rise-only capture must fail closed on a fall sample")
