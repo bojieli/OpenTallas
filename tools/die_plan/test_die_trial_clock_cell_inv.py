@@ -56,3 +56,33 @@ def test_flag_is_opt_in():
     assert inspect.signature(D.clock_kit).parameters["clock_cell"].default == "buf"
     assert inspect.signature(D.write_kit).parameters["clock_cell"].default == "buf"
     assert "--clock-cell" in inspect.getsource(D.main)
+
+
+def test_inv2_even_legs_true_polarity_without_tap_inverters():
+    old = D.EVEN_LEGS
+    try:
+        D.EVEN_LEGS = True
+        n = _tree()
+        v, place, _, _, _ = D.tree_netlist(n, TAPS, rep_um=250.0, clock_cell="inv2")
+    finally:
+        D.EVEN_LEGS = old
+    assert D.BUF not in v and " q" not in v                  # no tap parity inverters needed
+    par = _parity_per_tap(v)
+    assert all(p == 0 for p, _ in par.values()), par
+    assert all(s % 2 == 0 for _, s in par.values())          # even stage count on every root->tap path
+    assert all(d.get("inv_parity") == 0 for d in n.values())  # true polarity at every node
+
+
+def test_even_legs_priced_in_leg_ps():
+    old = D.EVEN_LEGS
+    try:
+        D.EVEN_LEGS = False
+        one = D.leg_ps(100.0, 250.0)
+        D.EVEN_LEGS = True
+        two = D.leg_ps(100.0, 250.0)
+        three_even = D.leg_ps(600.0, 250.0)                  # ceil(600/250) = 3 -> 4 stages
+    finally:
+        D.EVEN_LEGS = old
+    d0 = D.STAGE_1X_TT[0]
+    assert abs(two - one - d0) < 1e-6 + D.STAGE_1X_TT[2] * 100.0 * 100.0
+    assert three_even > D.leg_ps(600.0, 250.0)

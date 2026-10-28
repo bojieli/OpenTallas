@@ -65,6 +65,9 @@ BUF = "BUFx24_ASAP7_75t_R"
 # inverter tree cancels the rise/fall delay asymmetry stage by stage (measured on QC trial8 BUF-only: fall-rise 3.8 ps
 # per stage TT, 652 ps at 165 stages = duty 1.28 -> the low phase vanishes)
 CLK_INV = "CKINVDCx16_ASAP7_75t_R"
+# --clock-cell inv2 (DIE-QC-11): every leg has an EVEN number of inverter stages (priced in leg_ps / snake chains), plus a
+# 2-stage root, so every node and tap has true polarity by construction (no tap parity inverters, no parity skew)
+EVEN_LEGS = False
 FLOP = "DFFHQNx1_ASAP7_75t_R"
 NDR_TRACKS = 5                       # clock wire 2W2S + a shield each side (hbm_arch clock_htree.py)
 TAP_LOAD_FF = 3.0                    # partition tap buffer input (ASSUMED: BUFx24 A ~ 2-3 fF)
@@ -1230,6 +1233,8 @@ def leg_ps(L, rep_um):
     """delay of a buffered leg of length L (um): n = ceil(L / rep_um) equal stages (n - 1 repeaters + the child node
     buffer), as tree_netlist places them"""
     n = max(1, int(math.ceil(L / rep_um - 1e-9)))
+    if EVEN_LEGS and n % 2:
+        n += 1
     d0, k1, k2 = STAGE_1X_TT
     return n * d0 + k1 * L + k2 * L * L / n
 
@@ -1312,6 +1317,8 @@ def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08):
                     snap += _man(x, y)
                     pts.append(y)
                 pts.append(q)
+                if EVEN_LEGS and (len(pts) - 1) % 2:
+                    continue            # inv2: odd stage count would flip polarity
                 ps = chain_ps(pts)
                 wire = sum(_man(a, b) for a, b in zip(pts, pts[1:]))
                 key = (round(abs(ps - target_ps), 1), round(snap, 1), wire)
@@ -1796,8 +1803,11 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
     true clock polarity by construction.  nodes[i]['inv_parity'] = inverter count parity at the node output.
     Default 'buf': byte-identical netlist.
     -> (verilog, placements [(inst, x, y)], tap ports [(port, x, y)], node_buf {node id: inst}, path {tap port: [inst]})"""
-    if clock_cell not in ("buf", "inv"):
-        raise ValueError(f"clock_cell {clock_cell!r}: buf or inv")
+    if clock_cell not in ("buf", "inv", "inv2"):
+        raise ValueError(f"clock_cell {clock_cell!r}: buf, inv or inv2")
+    even = clock_cell == "inv2"
+    if even:
+        clock_cell = "inv"
     CELL = CLK_INV if clock_cell == "inv" else BUF
     par_in = {}
     cells, place, wires = [], [], []
@@ -1813,6 +1823,14 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
         nrep = 0
         if nd["parent"] is None:
             src = "root"
+            if even:            # inv2: 2-stage root (true polarity at the root node)
+                cells.append(f"  {CLK_INV} b{i}_r (.A(root), .Y(nr{i}));")
+                wires.append(f"nr{i}")
+                q0 = (nd["x"] + 1.62, nd["y"])
+                if site is not None and not site.legal(q0):
+                    q0 = site.nearest(q0)
+                place.append((f"b{i}_r", q0[0], q0[1]))
+                src = f"nr{i}"
         else:
             p = nodes[nd["parent"]]
             L = abs(p["x"] - nd["x"]) + abs(p["y"] - nd["y"])
@@ -1842,6 +1860,12 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
                     pts, _ = polyline_points(poly, [(j + 1) / (nrep + 1) for j in range(nrep)])
                     nd["detour"] = [[round(a, 3), round(b, 3)] for a, b in poly]
                     nd["detour_um"] = round(Ld - L, 1)
+            if even and (nrep + 1) % 2 and not nd.get("snake"):
+                nrep += 1
+                if poly is not None:
+                    pts, _ = polyline_points(poly, [(j + 1) / (nrep + 1) for j in range(nrep)])
+            if even and nd.get("snake") and (nrep + 1) % 2:
+                raise ValueError(f"inv2: snake leg of node {i} has an odd stage count")
             src = f"{net(nd['parent'])}"
             prev_inst = node_buf[nd["parent"]]
             for j in range(nrep):
@@ -1864,8 +1888,10 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
                 src = o
             parent_of[node_buf[i]] = prev_inst
         if clock_cell == "inv":
-            pp = 0 if nd["parent"] is None else nodes[nd["parent"]]["inv_parity"]
+            pp = (1 if even else 0) if nd["parent"] is None else nodes[nd["parent"]]["inv_parity"]
             nd["inv_parity"] = (pp + (nrep if nd["parent"] is not None else 0) + 1) % 2
+            if even and nd["inv_parity"]:
+                raise ValueError(f"inv2: node {i} odd polarity (even legs violated)")
         cells.append(f"  {CELL} {node_buf[i]} (.A({src}), .Y({net(i)}));")
         wires.append(net(i))
         place.append((node_buf[i], nd["x"], nd["y"]))
@@ -1925,6 +1951,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
               slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
               region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf"):
+    global EVEN_LEGS
+    EVEN_LEGS = clock_cell == "inv2"
     out = Path(out)
     if region_dme_early and region_dme != "delay":
         raise ValueError("--region-dme-early needs --region-dme delay")
@@ -3833,9 +3861,11 @@ def main(argv=None):
                         "(or 'all') where a merge with no zero-skew legal point elongates the fast kid's leg as a "
                         "hairpin of legal buffer sites, and an over-early hung core tap gets its hang leg elongated. "
                         "Default: no elongation")
-    k.add_argument("--clock-cell", choices=("buf", "inv"), default="buf",
+    k.add_argument("--clock-cell", choices=("buf", "inv", "inv2"), default="buf",
                    help="DIE-QC-11 opt-in: 'inv' builds the die clock tree from CKINVDCx16 (BUFx24 footprint) so rise/fall "
-                        "asymmetry cancels stage by stage (duty), with one parity inverter at odd-parity taps. Default buf")
+                        "asymmetry cancels stage by stage (duty), with one parity inverter at odd-parity taps; 'inv2' = even inverter "
+                        "stages per leg (priced in the DME delay model) + 2-stage root: true polarity everywhere by "
+                        "construction, no tap parity inverters. Default buf")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
