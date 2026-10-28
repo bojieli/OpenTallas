@@ -3,6 +3,8 @@
 Owner question: "can variation be reduced by locality of the clock tree? 5-7 ns of unshared clock is almost certainly caused by a
 non-local clock tree." Release form per 12.16e (coord 6f4412474): LOCAL. This file feeds each die owner's plan event.
 
+Branch: claude/clk-local-est-1-1028@ff58db4baa (results/clk_local_est_1028: per-die feed + crossings TSVs, scripts).
+
 ## Method (shared by all dies)
 - CURRENT = each die's CA-OCV-1 gate inputs: same proof/plan/bind and the same die_sta_related model (claude/ca-ocv-1-1028@07833e2f9:
   spice x1.0485/x1.0552, region key, cppr-lca, clock_variation table g021 0.21 %/mm, shared droop, core lat 250/202.5).
