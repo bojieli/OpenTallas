@@ -2635,3 +2635,4 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   - claude/tok16-head-1027@104f3b9818: HEAD rank-merge bench + evidence, 419 cyc.
   - claude/tok16-dsl0-1027@009454b745: lower_gu.py measured latency constants + lower_svc --die-src + gu/vs replay evidence. ASK: compiler-constant change; the S81 slice owner should confirm the gu constants.
   - All three are hub only.
+- 10-27 17:46 [COORD] APPROVED -> ROOT-MERGE-81: (1, urgent) flow-shared-6-canary 2d10f8087e (design-stop = NOT REACHED; trigger/gate ignore A/B) + HBM hold_ff_ep 0->2 rebaseline (ledgered; HBM-R16 fixes the late clock); (2) flow-shared-6-qc ae10ca25c6 (clk_geom_cover; QC warm hold signed off TT +117.86 / FF +5.22, LEC EQ 5342/5342; canaries after the merge); (3) tok16-gb 8606da96fe + tok16-head 104f3b9818 (HEAD 9,282 cycles/token, window 10,357); tok16-dsl0 009454b745 HELD until S81-CORES-R25 confirms the gu constants. FLOW-SHARED-7 and TOK-ALL-17 (fresh) succeed the finished lanes.
