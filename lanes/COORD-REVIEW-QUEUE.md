@@ -3702,3 +3702,4 @@ FAILED [AUTOPILOT 8552f2f36223] 2026-10-28 14:12:39 PDT AUTOPILOT -> KV-CORES: F
   - 5f0bae9bc0 -> e2a11e6512: die_trial --cell-paths + test_die_trial_cell_paths.py.
   - d04bc5ca95 -> 4a97601a45: results/die_s81_15_1028.
   No clk-inv-cal-1 / onemodel-3 merges; diff vs main touches 9 files, none of them die_sta_related.py. test_die_trial*.py + test_die_sta_core_insertion.py: 90 passed (docker py3.12). Supersedes the held 5f0bae9bc0/d04bc5ca95 READY.
+- 2026-10-28 15:40 PDT [COORD] APPROVED claude/die-s81-16-cellpaths-1028@4a97601a45 -> ROOT-MERGE (rebased --cell-paths tool e2a11e6512 + S81-15 results, only 2 commits on main 2bd232b802; opt-in, default byte-identical; 90 tests). Replaces the held 5f0bae9bc0/d04bc5ca95.
