@@ -4211,6 +4211,36 @@ def mesh_via_findings(M, d=None):
     A build with no strap crossings has no mesh and no findings.  The transient (cmd_mesh) and the mesh MC model
     every crossing as a shorted node, so a build without these vias does not match its own sign-off model."""
     out = []
+    if M.get("explicit_mesh"):
+        # HEAD-R24: an explicit multi-driver mesh (explicit_clock_mesh.conductor_graph) has no xs/ys straps, so the
+        # crossing count below is 0 and nothing would be checked.  Fail closed on its own graph instead: every edge
+        # endpoint reachable from one node (one connected net incl. the VIA89 edges) and a VIA89 edge at every
+        # recorded strap crossing; given the run dir with the encoder receipt, the routed DB emitted that many vias.
+        G = M["explicit_mesh"]
+        adj = defaultdict(set)
+        nv = 0
+        for a_, b_ in G.get("edges", []):
+            ka, kb = tuple(a_), tuple(b_)
+            adj[ka].add(kb)
+            adj[kb].add(ka)
+            nv += a_[0] != b_[0]
+        seen, todo = set(), [next(iter(adj))] if adj else []
+        while todo:
+            n_ = todo.pop()
+            if n_ not in seen:
+                seen.add(n_)
+                todo.extend(adj[n_] - seen)
+        if not adj or len(seen) != len(adj):
+            out.append(f"explicit mesh: {len(adj) - len(seen)} of {len(adj)} graph nodes not connected to the rest")
+        need = int(G.get("strap_crossings") or 0)
+        if nv < need:
+            out.append(f"explicit mesh: {nv} VIA89 graph edges < {need} strap crossings")
+        if d is not None and (Path(d) / "encoder_receipt.json").exists():
+            er = json.loads((Path(d) / "encoder_receipt.json").read_text())
+            em = [x for x in er.get("explicit_mesh", [])]
+            if not em or sum(int(x.get("vias", 0)) for x in em) < nv:
+                out.append(f"explicit mesh: encoder emitted {sum(int(x.get('vias', 0)) for x in em)} vias < {nv} graph VIA89")
+        return out
     vias = (M.get("meta") or {}).get("mesh_vias")
     logs_db, logs = routed_mesh_vias(d) if d is not None else ({}, [])
     for g in mesh_regions(M):
