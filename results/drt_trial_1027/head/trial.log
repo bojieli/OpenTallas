@@ -1,0 +1,55 @@
+START Tue Oct 27 23:36:58 PDT 2026 kit hd_tile plan part_trial_nl (from part_fb1 eb24c5bbc3f9) code 20dc2e91f1 signed views
+ot-run: localhost      admits   697 GB (avail 882, reserve 0, fresh 79.4, peak 41.3, headroom 0, waiters 0/0 GB) load 30/112 running 13 disk 732 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3522671-1793169419 after 1 s
+KIT_PREFLIGHT PASS issues 0
+1_synth                   .sdc                             c8d3d8da66a952b64c29
+DONT_USE_CHECK PASS 1_2_yosys.v: no DONT_USE cell (*x1p*_ASAP7* *xp*_ASAP7* SDF* ICG*)
+SELRANGE PASS top=ot_s81hd_tile_p files=13 unwaived=0 waived=0
+PORT_BIND FAIL {"bad_straps": [], "extra": 18, "extra_examples": ["strap_row0[0]", "strap_row0[10]", "strap_row0[11]", "strap_row0[12]", "strap_row0[13]", "strap_row0[14]", "strap_row0[15]", "strap_row0[16]", "strap_row0[1]", "strap_row0[2]", "strap_row0[3]", "strap_row0[4]", "strap_row0[5]", "strap_row0[6]", "strap_row0[7]", "strap_row0[8]"], "missing": 0, "missing_examples": [], "netlist_bits": 1161, "plan_bits": 1143, "straps": [], "top": "ot_s81hd_tile_p", "verdict": "FAIL"}
+FAIL_PREFLOOR port_bind
+ot-run: RAN on localhost (unit oth-ubuntu-3522671-1793169419): exit 1
+RESTART Tue Oct 27 23:38:51 PDT 2026 after trial-local strap pins (18 M7) + straps.json
+ot-run: localhost      admits   773 GB (avail 878, reserve 0, fresh 0, peak 41.3, headroom 0, waiters 0/0 GB) load 29/112 running 12 disk 724 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3558355-1793169532 after 0 s
+bash: /srv/opentallas-scratch2/claude/drt-trial-1/head/kits/hd_tile/run_kit.sh: No such file or directory
+ot-run: RAN on localhost (unit oth-ubuntu-3558355-1793169532): exit 127
+RESTART2 Tue Oct 27 23:39:33 PDT 2026 (path fix)
+ot-run: localhost      admits   767 GB (avail 873, reserve 0, fresh 0, peak 41.3, headroom 0, waiters 0/0 GB) load 36/112 running 12 disk 724 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3578119-1793169574 after 1 s
+KIT_PREFLIGHT PASS issues 0
+OT_RESET_TREE LEAF 55 sinks (single terminal 0), max hop 646.488 um, limit 405 um: FAIL
+Error: cts.tcl, 6 OT_RESET_LEAF unreachable control sinks: {u_bin_i/eq$_DFF_PN0_/RESETN:646.488um} {u_bout_o/u_ep/eq$_DFF_PN0_/D:642.762um} {u_bout_o/u_ep/eq$_DFF_PN0_/RESETN:642.762um} {u_core.o_rv$_DFF_PN0_/RESETN:613.602um} {u_core.rv_q\[1\]$_DFF_PN0_/RESETN:621.000um}
+Elapsed time: 0:04.76[h:]min:sec. CPU time: user 4.42 sys 0.34 (99%). Peak memory: 455460KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/dp_hd_tile/base/4_1_cts.odb] Error 2
+ot-run: RAN on localhost (unit oth-ubuntu-3578119-1793169574): exit 2
+RESTART3 Tue Oct 27 23:49:59 PDT 2026 reset leaf reach 800 (trial-local)
+ot-run: localhost      admits   125 GB (avail 814, reserve 0, fresh 583.1, peak 41.8, headroom 0, waiters 0/0 GB) load 36/112 running 18 disk 719 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3733956-1793170200 after 0 s
+KIT_PREFLIGHT PASS issues 0
+cp /work/run/results/asap7/dp_hd_tile/base/4_1_cts.odb /work/run/results/asap7/dp_hd_tile/base/4_cts.odb
+OT_HOLD_GATE contract in_min -40.0000 out_min 0.0000
+OT_HOLD_GATE FAIL FF wns_ps -875.41 endpoints 2606 (true negative slack)
+Error: hold_gate.tcl, 53 structural FF hold failure: revise plan/RTL/boundary before repair
+FAIL_POSTCTS FF structural hold gate (or NOT RUN)
+ot-run: RAN on localhost (unit oth-ubuntu-3733956-1793170200): exit 4
+RESTART4 Tue Oct 27 23:55:54 PDT 2026 hold gate non-blocking + SKIP_INCREMENTAL_REPAIR (trial-local)
+ot-run: localhost      admits   707 GB (avail 883, reserve 0, fresh 71.5, peak 40.4, headroom 0, waiters 0/0 GB) load 33/112 running 15 disk 761 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3830999-1793170555 after 0 s
+KIT_PREFLIGHT PASS issues 0
+make: Nothing to be done for 'cts'.
+OT_HOLD_GATE FAIL FF wns_ps -875.41 endpoints 2606 (true negative slack)
+DRT-TRIAL-1: hold gate FAIL recorded, trial continues (estimate run)
+Error: hold_gate.tcl, 53 invoked "return" outside of a proc.
+FAIL_POSTCTS FF structural hold gate (or NOT RUN)
+ot-run: RAN on localhost (unit oth-ubuntu-3830999-1793170555): exit 4
+RESTART5 Tue Oct 27 23:58:16 PDT 2026 hold gate exit 0
+ot-run: localhost      admits   706 GB (avail 884, reserve 0, fresh 71.3, peak 42.1, headroom 0, waiters 0/0 GB) load 37/112 running 15 disk 761 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3867300-1793170697 after 1 s
+KIT_PREFLIGHT PASS issues 0

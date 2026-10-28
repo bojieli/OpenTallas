@@ -1,0 +1,78 @@
+OT_CLOCK_TAPS single tap: nothing to split
+OT_RESET_TAPS role mission
+OT_RESET_TREE LEAF 55 sinks (single terminal 0), max hop 646.488 um, limit 800 um: PASS
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "clk".
+[INFO CTS-0011]  Clock net "clk" for macros has 5 sinks.
+[INFO CTS-0011]  Clock net "clk_regs" for registers has 25051 sinks.
+[INFO CTS-0008] TritonCTS found 2 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 5.
+[INFO CTS-0029]  Macro  sinks will be clustered in groups of up to 4 and with maximum cluster diameter of 639.4 um.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(177132, 168516), (531396, 880572)].
+[INFO CTS-0024]  Normalized sink region: [(131.209, 124.827), (393.627, 652.276)].
+[INFO CTS-0025]     Width:  262.4178.
+[INFO CTS-0026]     Height: 527.4489.
+[INFO CTS-0034]     Segment length (rounded): 132.
+[INFO CTS-0034]     Segment length (rounded): 66.
+[INFO CTS-0034]     Segment length (rounded): 66.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 5.
+[INFO CTS-0027] Generating H-Tree topology for net clk_regs.
+[INFO CTS-0028]  Total number of sinks: 25051.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0019]  Total number of sinks after clustering: 1259.
+[INFO CTS-0024]  Normalized sink region: [(3.95912, 3.44), (520.266, 728.633)].
+[INFO CTS-0025]     Width:  516.3066.
+[INFO CTS-0026]     Height: 725.1933.
+[INFO CTS-0034]     Segment length (rounded): 182.
+[INFO CTS-0034]     Segment length (rounded): 130.
+[INFO CTS-0034]     Segment length (rounded): 90.
+[INFO CTS-0034]     Segment length (rounded): 64.
+[INFO CTS-0034]     Segment length (rounded): 46.
+[INFO CTS-0034]     Segment length (rounded): 32.
+[INFO CTS-0034]     Segment length (rounded): 22.
+[INFO CTS-0034]     Segment length (rounded): 16.
+[INFO CTS-0034]     Segment length (rounded): 12.
+[INFO CTS-0034]     Segment length (rounded): 8.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 1259.
+[INFO CTS-0018]     Created 27 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 9.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 9.
+[INFO CTS-0015]     Created 27 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:5..
+[INFO CTS-0017]     Max level of the clock tree: 3.
+[INFO CTS-0018]     Created 2937 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 22.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 22.
+[INFO CTS-0015]     Created 2937 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:569, 2:229, 3:62, 4:18, 5:8, 6:3, 7:6, 8:10, 9:16, 10:21, 11:19, 12:34, 13:40, 14:44, 15:48, 16:69, 17:70, 18:66, 19:73, 20:83, 21:97, 22:89, 23:110, 24:88, 25:74, 26:51, 27:58, 28:36, 29:19, 30:9, 31:7, 32:2..
+[INFO CTS-0017]     Max level of the clock tree: 10.
+[INFO CTS-0098] Clock net "clk"
+[INFO CTS-0099]  Sinks 5
+[INFO CTS-0098] Clock net "clk_regs"
+[INFO CTS-0099]  Sinks 25610
+[INFO CTS-0033] Balancing latency for clock clk
+[INFO CTS-0036]  inserted 6 delay buffers
+[INFO CTS-0037] Total number of delay buffers: 6
+OT_TAP_BALANCE it0 target 250: clk=794(713-1232,25051)
+OT_TAP_CORE u_core.u_b.g_cv.u_eA0/clk tap clk pin 527 + internal 416 = effective 942 ps (target 250, window 20) WARN internal latency 416 ps leaves no room on a grid tap: needs an early core tap (clock.taps kind core, clock.core_taps early; pair.py --core-taps)
+OT_TAP_CORE u_core.u_b.g_cv.u_eA1/clk tap clk pin 527 + internal 416 = effective 943 ps (target 250, window 20) WARN internal latency 416 ps leaves no room on a grid tap: needs an early core tap (clock.taps kind core, clock.core_taps early; pair.py --core-taps)
+OT_TAP_CORE u_core.u_b.g_cv.u_eA3/clk tap clk pin 525 + internal 416 = effective 940 ps (target 250, window 20) WARN internal latency 416 ps leaves no room on a grid tap: needs an early core tap (clock.taps kind core, clock.core_taps early; pair.py --core-taps)
+OT_TAP_CORE u_core.u_b.g_cv.u_eA2/clk tap clk pin 521 + internal 416 = effective 936 ps (target 250, window 20) WARN internal latency 416 ps leaves no room on a grid tap: needs an early core tap (clock.taps kind core, clock.core_taps early; pair.py --core-taps)
+OT_TAP_CORE u_core.u_b.g_cvb.u_eB/clk tap clk pin 486 + internal 379 = effective 865 ps (target 250, window 20) WARN internal latency 379 ps leaves no room on a grid tap: needs an early core tap (clock.taps kind core, clock.core_taps early; pair.py --core-taps)
+OT_TAP_CORE 5 core clock pins, 5 outside target +/- 20 ps
+OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 794..794 ps (spread 0, target 250); empty taps 0 
+OT_TAP_CHECK WARN trees over 270 ps: clk=1232; re-pitch taps to <= 34008 um (partition clock.tap_pitch_um)
+OT_LEAF_AFF pairs 23534 groups 1275 cross_leaf_before 19517 cross_leaf_after 19036 groups_moved 479 sinks_moved 480 same_leaf_already 49 skip_big 387 skip_far 356 skip_cap 4 skip_driver 0 skip_clock 0 leaf_cap 36 radius_um 30.0 report_only 0
+OT_PG_CONNECT cts_post rules=2 protected_rebound=0
+OT_PG_BOUND cts_post pg_terms=191654 open=0

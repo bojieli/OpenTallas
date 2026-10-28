@@ -1,0 +1,3208 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_VCLK_BIND corner ff clock vclk source_latency 202.5
+OT_HOLD_GATE contract in_min -40 out_min 0
+Startpoint: u_rrl_7/q$_DFF_P_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_core.u_b.pk_done[0]$_DFF_PN0_
+          (removal check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: min
+
+Fanout   Delay    Time   Description
+---------------------------------------------------------------
+          0.00    0.00   clock clk (rise edge)
+          0.00    0.00   clock source latency
+     1    0.00    0.00 ^ clk (in)
+     2   28.65   28.65 ^ wire16140/Y (BUFx10_ASAP7_75t_R)
+     1   32.54   61.19 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+     2   19.64   80.83 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   19.53  100.36 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   16.57  116.93 ^ clkbuf_1_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   18.14  135.07 ^ clkbuf_1_0_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   62.73  197.79 ^ clkbuf_1_0_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   34.24  232.03 ^ wire16145/Y (BUFx6f_ASAP7_75t_R)
+     1   32.49  264.52 ^ clkbuf_1_0_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   30.59  295.11 ^ wire16146/Y (BUFx12f_ASAP7_75t_R)
+     1   68.58  363.69 ^ clkbuf_2_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.43  388.12 ^ clkbuf_2_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.52  411.64 ^ clkbuf_2_0_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.45  435.09 ^ clkbuf_2_0_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   22.75  457.84 ^ clkbuf_2_0_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.39  481.22 ^ clkbuf_3_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.46  504.69 ^ clkbuf_3_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   22.56  527.25 ^ clkbuf_3_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   22.27  549.52 ^ clkbuf_4_3_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.40  572.92 ^ clkbuf_4_3_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   25.75  598.68 ^ clkbuf_5_6_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   20.55  619.23 ^ clkbuf_6_12_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     4   22.68  641.91 ^ clkbuf_7_25_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.95  665.86 ^ clkbuf_9_102_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   19.28  685.14 ^ clkbuf_10_204__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+    17   19.78  704.92 ^ clkbuf_leaf_1166_clk_regs/Y (BUFx24_ASAP7_75t_R)
+          1.01  705.93 ^ u_rrl_7/q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   40.16  746.09 v u_rrl_7/q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1   15.26  761.35 ^ u_rrl_7/_2_/Y (INVx4_ASAP7_75t_R)
+     5   48.46  809.80 ^ place10274/Y (BUFx6f_ASAP7_75t_R)
+         12.35  822.16 ^ u_core.u_b.pk_done[0]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                822.16   data arrival time
+
+          0.00    0.00   clock clk (rise edge)
+          0.00    0.00   clock source latency
+     1    0.00    0.00 ^ clk (in)
+     2   29.48   29.48 ^ wire16140/Y (BUFx10_ASAP7_75t_R)
+     1   34.29   63.77 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+     2   20.27   84.04 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   20.26  104.30 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   16.79  121.09 ^ clkbuf_1_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   18.26  139.34 ^ clkbuf_1_0_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   64.75  204.10 ^ clkbuf_1_0_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   34.95  239.05 ^ wire16145/Y (BUFx6f_ASAP7_75t_R)
+     1   33.76  272.81 ^ clkbuf_1_0_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   31.78  304.60 ^ wire16146/Y (BUFx12f_ASAP7_75t_R)
+     1   72.38  376.98 ^ clkbuf_2_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   25.38  402.36 ^ clkbuf_2_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.37  426.73 ^ clkbuf_2_0_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.31  451.04 ^ clkbuf_2_0_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.56  474.60 ^ clkbuf_2_0_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.28  498.88 ^ clkbuf_3_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.33  523.20 ^ clkbuf_3_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.37  546.57 ^ clkbuf_3_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.07  569.64 ^ clkbuf_4_3_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   24.26  593.90 ^ clkbuf_4_3_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   27.25  621.15 ^ clkbuf_5_7_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   26.82  647.97 ^ clkbuf_6_14_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     4   26.92  674.89 ^ clkbuf_7_29_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   30.35  705.24 ^ clkbuf_9_116_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   17.50  722.74 ^ clkbuf_10_233__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+    18   19.31  742.05 ^ clkbuf_leaf_1202_clk_regs/Y (BUFx24_ASAP7_75t_R)
+          1.04  743.09 ^ u_core.u_b.pk_done[0]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+         25.00  768.09   clock uncertainty
+        -20.97  747.12   clock reconvergence pessimism
+         23.82  770.94   library removal time
+                770.94   data required time
+---------------------------------------------------------------
+                770.94   data required time
+               -822.16   data arrival time
+---------------------------------------------------------------
+                 51.22   slack (MET)
+
+
+Startpoint: u_rrl_7/q$_DFF_P_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_core.u_b.pk_done[1]$_DFF_PN0_
+          (removal check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: min
+
+Fanout   Delay    Time   Description
+---------------------------------------------------------------
+          0.00    0.00   clock clk (rise edge)
+          0.00    0.00   clock source latency
+     1    0.00    0.00 ^ clk (in)
+     2   28.65   28.65 ^ wire16140/Y (BUFx10_ASAP7_75t_R)
+     1   32.54   61.19 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+     2   19.64   80.83 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   19.53  100.36 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   16.57  116.93 ^ clkbuf_1_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   18.14  135.07 ^ clkbuf_1_0_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   62.73  197.79 ^ clkbuf_1_0_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   34.24  232.03 ^ wire16145/Y (BUFx6f_ASAP7_75t_R)
+     1   32.49  264.52 ^ clkbuf_1_0_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   30.59  295.11 ^ wire16146/Y (BUFx12f_ASAP7_75t_R)
+     1   68.58  363.69 ^ clkbuf_2_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.43  388.12 ^ clkbuf_2_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.52  411.64 ^ clkbuf_2_0_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.45  435.09 ^ clkbuf_2_0_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   22.75  457.84 ^ clkbuf_2_0_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.39  481.22 ^ clkbuf_3_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.46  504.69 ^ clkbuf_3_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   22.56  527.25 ^ clkbuf_3_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   22.27  549.52 ^ clkbuf_4_3_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.40  572.92 ^ clkbuf_4_3_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   25.75  598.68 ^ clkbuf_5_6_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   20.55  619.23 ^ clkbuf_6_12_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     4   22.68  641.91 ^ clkbuf_7_25_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.95  665.86 ^ clkbuf_9_102_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   19.28  685.14 ^ clkbuf_10_204__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+    17   19.78  704.92 ^ clkbuf_leaf_1166_clk_regs/Y (BUFx24_ASAP7_75t_R)
+          1.01  705.93 ^ u_rrl_7/q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   40.16  746.09 v u_rrl_7/q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1   15.26  761.35 ^ u_rrl_7/_2_/Y (INVx4_ASAP7_75t_R)
+     5   48.46  809.80 ^ place10274/Y (BUFx6f_ASAP7_75t_R)
+         18.74  828.54 ^ u_core.u_b.pk_done[1]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                828.54   data arrival time
+
+          0.00    0.00   clock clk (rise edge)
+          0.00    0.00   clock source latency
+     1    0.00    0.00 ^ clk (in)
+     2   29.48   29.48 ^ wire16140/Y (BUFx10_ASAP7_75t_R)
+     1   34.29   63.77 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+     2   20.27   84.04 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   22.38  106.42 ^ clkbuf_1_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.41  130.83 ^ clkbuf_1_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.25  155.08 ^ clkbuf_1_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.37  179.45 ^ clkbuf_1_1_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   24.44  203.88 ^ clkbuf_1_1_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.34  227.23 ^ clkbuf_2_2_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.30  251.53 ^ clkbuf_2_2_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.35  275.88 ^ clkbuf_2_2_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.48  300.36 ^ clkbuf_2_2_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   25.08  325.43 ^ clkbuf_2_2_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   21.56  346.99 ^ clkbuf_3_4_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.35  371.35 ^ clkbuf_3_4_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   24.89  396.24 ^ clkbuf_3_4_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.46  419.69 ^ clkbuf_4_9_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   24.53  444.22 ^ clkbuf_4_9_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   26.26  470.48 ^ clkbuf_5_18_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   25.46  495.94 ^ clkbuf_6_37_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     4   26.37  522.32 ^ clkbuf_7_74_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   20.62  542.93 ^ clkbuf_9_297_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   19.57  562.50 ^ clkbuf_10_594__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+    21   19.15  581.65 ^ clkbuf_leaf_1199_clk_regs/Y (BUFx24_ASAP7_75t_R)
+          0.68  582.33 ^ u_core.u_b.pk_done[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+         25.00  607.33   clock uncertainty
+         -3.21  604.13   clock reconvergence pessimism
+         26.33  630.46   library removal time
+                630.46   data required time
+---------------------------------------------------------------
+                630.46   data required time
+               -828.54   data arrival time
+---------------------------------------------------------------
+                198.08   slack (MET)
+
+
+Startpoint: u_rrl_7/q$_DFF_P_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_core.u_b.u_go.genblk1.g_line.line[0]$_DFF_PN0_
+          (removal check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: min
+
+Fanout   Delay    Time   Description
+---------------------------------------------------------------
+          0.00    0.00   clock clk (rise edge)
+          0.00    0.00   clock source latency
+     1    0.00    0.00 ^ clk (in)
+     2   28.65   28.65 ^ wire16140/Y (BUFx10_ASAP7_75t_R)
+     1   32.54   61.19 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+     2   19.64   80.83 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   19.53  100.36 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   16.57  116.93 ^ clkbuf_1_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   18.14  135.07 ^ clkbuf_1_0_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   62.73  197.79 ^ clkbuf_1_0_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   34.24  232.03 ^ wire16145/Y (BUFx6f_ASAP7_75t_R)
+     1   32.49  264.52 ^ clkbuf_1_0_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   30.59  295.11 ^ wire16146/Y (BUFx12f_ASAP7_75t_R)
+     1   68.58  363.69 ^ clkbuf_2_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.43  388.12 ^ clkbuf_2_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.52  411.64 ^ clkbuf_2_0_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.45  435.09 ^ clkbuf_2_0_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   22.75  457.84 ^ clkbuf_2_0_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.39  481.22 ^ clkbuf_3_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.46  504.69 ^ clkbuf_3_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   22.56  527.25 ^ clkbuf_3_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   22.27  549.52 ^ clkbuf_4_3_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.40  572.92 ^ clkbuf_4_3_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   25.75  598.68 ^ clkbuf_5_6_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   20.55  619.23 ^ clkbuf_6_12_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     4   22.68  641.91 ^ clkbuf_7_25_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.95  665.86 ^ clkbuf_9_102_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   19.28  685.14 ^ clkbuf_10_204__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+    17   19.78  704.92 ^ clkbuf_leaf_1166_clk_regs/Y (BUFx24_ASAP7_75t_R)
+          1.01  705.93 ^ u_rrl_7/q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   40.16  746.09 v u_rrl_7/q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1   15.26  761.35 ^ u_rrl_7/_2_/Y (INVx4_ASAP7_75t_R)
+     5   48.46  809.80 ^ place10274/Y (BUFx6f_ASAP7_75t_R)
+    11   76.53  886.33 ^ place10273/Y (BUFx6f_ASAP7_75t_R)
+          2.18  888.52 ^ u_core.u_b.u_go.genblk1.g_line.line[0]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                888.52   data arrival time
+
+          0.00    0.00   clock clk (rise edge)
+          0.00    0.00   clock source latency
+     1    0.00    0.00 ^ clk (in)
+     2   29.48   29.48 ^ wire16140/Y (BUFx10_ASAP7_75t_R)
+     1   34.29   63.77 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+     2   20.27   84.04 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   22.38  106.42 ^ clkbuf_1_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.41  130.83 ^ clkbuf_1_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.25  155.08 ^ clkbuf_1_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.37  179.45 ^ clkbuf_1_1_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   24.44  203.88 ^ clkbuf_1_1_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.34  227.23 ^ clkbuf_2_2_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.30  251.53 ^ clkbuf_2_2_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.35  275.88 ^ clkbuf_2_2_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.48  300.36 ^ clkbuf_2_2_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   25.08  325.43 ^ clkbuf_2_2_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   21.56  346.99 ^ clkbuf_3_4_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.35  371.35 ^ clkbuf_3_4_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   24.89  396.24 ^ clkbuf_3_4_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.46  419.69 ^ clkbuf_4_9_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   24.53  444.22 ^ clkbuf_4_9_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   26.68  470.91 ^ clkbuf_5_19_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   25.52  496.42 ^ clkbuf_6_38_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     4   27.88  524.31 ^ clkbuf_7_76_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   24.04  548.35 ^ clkbuf_9_304_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   19.15  567.49 ^ clkbuf_10_609__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+    22   19.62  587.11 ^ clkbuf_leaf_294_clk_regs/Y (BUFx24_ASAP7_75t_R)
+          1.59  588.70 ^ u_core.u_b.u_go.genblk1.g_line.line[0]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+         25.00  613.70   clock uncertainty
+         -3.21  610.49   clock reconvergence pessimism
+         23.35  633.84   library removal time
+                633.84   data required time
+---------------------------------------------------------------
+                633.84   data required time
+               -888.52   data arrival time
+---------------------------------------------------------------
+                254.67   slack (MET)
+
+
+Startpoint: arst_n (input port clocked by vclk)
+Endpoint: u_rst_in/q$_DFF_P_ (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout   Delay    Time   Description
+---------------------------------------------------------------
+          0.00    0.00   clock vclk (rise edge)
+        202.50  202.50   clock network delay (ideal)
+        -40.00  162.50 v input external delay
+     1    0.49  162.99 v arst_n (in)
+     1   12.59  175.58 v input55/Y (BUFx2_ASAP7_75t_R)
+          0.02  175.61 v u_rst_in/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                175.61   data arrival time
+
+          0.00    0.00   clock clk (rise edge)
+          0.00    0.00   clock source latency
+     1    0.00    0.00 ^ clk (in)
+     2   29.48   29.48 ^ wire16140/Y (BUFx10_ASAP7_75t_R)
+     1   34.29   63.77 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+     2   20.27   84.04 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   20.26  104.30 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   16.79  121.09 ^ clkbuf_1_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   18.26  139.34 ^ clkbuf_1_0_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   64.75  204.10 ^ clkbuf_1_0_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   34.95  239.05 ^ wire16145/Y (BUFx6f_ASAP7_75t_R)
+     1   33.76  272.81 ^ clkbuf_1_0_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   31.78  304.60 ^ wire16146/Y (BUFx12f_ASAP7_75t_R)
+     1   72.68  377.28 ^ clkbuf_2_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.88  402.15 ^ clkbuf_2_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.15  426.30 ^ clkbuf_2_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.68  449.99 ^ clkbuf_2_1_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.90  473.89 ^ clkbuf_2_1_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   26.32  500.21 ^ clkbuf_3_2_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.31  524.52 ^ clkbuf_3_2_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.31  547.82 ^ clkbuf_3_2_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.34  571.16 ^ clkbuf_4_4_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.93  595.09 ^ clkbuf_4_4_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   25.54  620.62 ^ clkbuf_5_8_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.61  644.23 ^ clkbuf_6_16_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     4   28.14  672.36 ^ clkbuf_7_32_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   19.26  691.62 ^ clkbuf_9_128_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   17.27  708.89 ^ clkbuf_10_256__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   20.48  729.37 ^ wire16165/Y (BUFx10_ASAP7_75t_R)
+     2  150.84  880.21 ^ wire16164/Y (BUFx24_ASAP7_75t_R)
+     9  144.38 1024.59 ^ clkbuf_leaf_1129_clk_regs/Y (BUFx24_ASAP7_75t_R)
+          0.83 1025.42 ^ u_rst_in/q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+         12.50 1037.92   inter-clock uncertainty
+          0.00 1037.92   clock reconvergence pessimism
+         13.10 1051.02   library hold time
+               1051.02   data required time
+---------------------------------------------------------------
+               1051.02   data required time
+               -175.61   data arrival time
+---------------------------------------------------------------
+               -875.41   slack (VIOLATED)
+
+
+Startpoint: start_i (input port clocked by vclk)
+Endpoint: u_run_in/q$_DFF_P_ (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout   Delay    Time   Description
+---------------------------------------------------------------
+          0.00    0.00   clock vclk (rise edge)
+        202.50  202.50   clock network delay (ideal)
+        -40.00  162.50 v input external delay
+     1    0.81  163.31 v start_i (in)
+     1   12.69  176.00 v input622/Y (BUFx2_ASAP7_75t_R)
+          0.02  176.02 v u_run_in/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                176.02   data arrival time
+
+          0.00    0.00   clock clk (rise edge)
+          0.00    0.00   clock source latency
+     1    0.00    0.00 ^ clk (in)
+     2   29.48   29.48 ^ wire16140/Y (BUFx10_ASAP7_75t_R)
+     1   34.29   63.77 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+     2   20.27   84.04 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   20.26  104.30 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   16.79  121.09 ^ clkbuf_1_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   18.26  139.34 ^ clkbuf_1_0_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   64.75  204.10 ^ clkbuf_1_0_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   34.95  239.05 ^ wire16145/Y (BUFx6f_ASAP7_75t_R)
+     1   33.76  272.81 ^ clkbuf_1_0_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   31.78  304.60 ^ wire16146/Y (BUFx12f_ASAP7_75t_R)
+     1   72.68  377.28 ^ clkbuf_2_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.88  402.15 ^ clkbuf_2_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.15  426.30 ^ clkbuf_2_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.68  449.99 ^ clkbuf_2_1_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.90  473.89 ^ clkbuf_2_1_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   26.32  500.21 ^ clkbuf_3_2_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.31  524.52 ^ clkbuf_3_2_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.31  547.82 ^ clkbuf_3_2_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.34  571.16 ^ clkbuf_4_4_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.93  595.09 ^ clkbuf_4_4_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   25.54  620.62 ^ clkbuf_5_8_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.61  644.23 ^ clkbuf_6_16_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     4   28.14  672.36 ^ clkbuf_7_32_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   19.26  691.62 ^ clkbuf_9_128_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   17.27  708.89 ^ clkbuf_10_256__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   20.48  729.37 ^ wire16165/Y (BUFx10_ASAP7_75t_R)
+     2  150.84  880.21 ^ wire16164/Y (BUFx24_ASAP7_75t_R)
+     9  144.38 1024.59 ^ clkbuf_leaf_1129_clk_regs/Y (BUFx24_ASAP7_75t_R)
+          0.81 1025.40 ^ u_run_in/q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+         12.50 1037.90   inter-clock uncertainty
+          0.00 1037.90   clock reconvergence pessimism
+         13.10 1051.00   library hold time
+               1051.00   data required time
+---------------------------------------------------------------
+               1051.00   data required time
+               -176.02   data arrival time
+---------------------------------------------------------------
+               -874.98   slack (VIOLATED)
+
+
+Startpoint: i[386] (input port clocked by vclk)
+Endpoint: u_bin_i/q[386]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout   Delay    Time   Description
+---------------------------------------------------------------
+          0.00    0.00   clock vclk (rise edge)
+        202.50  202.50   clock network delay (ideal)
+        -40.00  162.50 v input external delay
+     1    1.10  163.60 v i[386] (in)
+     1   12.90  176.50 v input373/Y (BUFx2_ASAP7_75t_R)
+          0.03  176.53 v u_bin_i/q[386]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                176.53   data arrival time
+
+          0.00    0.00   clock clk (rise edge)
+          0.00    0.00   clock source latency
+     1    0.00    0.00 ^ clk (in)
+     2   29.48   29.48 ^ wire16140/Y (BUFx10_ASAP7_75t_R)
+     1   34.29   63.77 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+     2   20.27   84.04 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   22.38  106.42 ^ clkbuf_1_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.41  130.83 ^ clkbuf_1_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.25  155.08 ^ clkbuf_1_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.37  179.45 ^ clkbuf_1_1_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   24.44  203.88 ^ clkbuf_1_1_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.34  227.23 ^ clkbuf_2_2_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.30  251.53 ^ clkbuf_2_2_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.35  275.88 ^ clkbuf_2_2_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.48  300.36 ^ clkbuf_2_2_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   25.08  325.43 ^ clkbuf_2_2_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   21.56  346.99 ^ clkbuf_3_4_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.35  371.35 ^ clkbuf_3_4_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   24.89  396.24 ^ clkbuf_3_4_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   24.72  420.96 ^ clkbuf_4_8_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   25.27  446.22 ^ clkbuf_4_8_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   24.37  470.59 ^ clkbuf_5_17_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   22.05  492.64 ^ clkbuf_6_34_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     4   23.46  516.10 ^ clkbuf_7_69_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   26.96  543.07 ^ clkbuf_9_278_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   31.73  574.80 ^ clkbuf_10_557__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   20.29  595.09 ^ wire16197/Y (BUFx6f_ASAP7_75t_R)
+     1  144.91  740.00 ^ wire16196/Y (BUFx12f_ASAP7_75t_R)
+    23  145.70  885.69 ^ clkbuf_leaf_83_clk_regs/Y (BUFx24_ASAP7_75t_R)
+          1.29  886.98 ^ u_bin_i/q[386]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+         12.50  899.48   inter-clock uncertainty
+          0.00  899.48   clock reconvergence pessimism
+         13.63  913.11   library hold time
+                913.11   data required time
+---------------------------------------------------------------
+                913.11   data required time
+               -176.53   data arrival time
+---------------------------------------------------------------
+               -736.58   slack (VIOLATED)
+
+
+Startpoint: u_bout_o/q[564]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: o[564] (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+Fanout   Delay    Time   Description
+---------------------------------------------------------------
+          0.00    0.00   clock clk (rise edge)
+          0.00    0.00   clock source latency
+     1    0.00    0.00 ^ clk (in)
+     2   28.65   28.65 ^ wire16140/Y (BUFx10_ASAP7_75t_R)
+     1   32.54   61.19 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+     2   19.64   80.83 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   21.47  102.30 ^ clkbuf_1_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.56  125.85 ^ clkbuf_1_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.41  149.26 ^ clkbuf_1_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.51  172.77 ^ clkbuf_1_1_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.54  196.32 ^ clkbuf_1_1_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   22.56  218.88 ^ clkbuf_2_3_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.09  241.97 ^ clkbuf_2_3_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.09  265.06 ^ clkbuf_2_3_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.04  288.10 ^ clkbuf_2_3_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.56  311.66 ^ clkbuf_2_3_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   25.63  337.29 ^ clkbuf_3_6_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.03  360.32 ^ clkbuf_3_6_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.14  383.45 ^ clkbuf_3_6_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   22.56  406.02 ^ clkbuf_4_13_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.57  429.59 ^ clkbuf_4_13_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   22.70  452.28 ^ clkbuf_5_27_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   24.69  476.98 ^ clkbuf_6_55_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     4   21.05  498.02 ^ clkbuf_7_111_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   22.20  520.22 ^ clkbuf_9_446_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   17.59  537.81 ^ clkbuf_10_893__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+    28   19.12  556.93 ^ clkbuf_leaf_735_clk_regs/Y (BUFx24_ASAP7_75t_R)
+          1.07  558.00 ^ u_bout_o/q[564]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   34.06  592.06 v u_bout_o/q[564]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    6.24  598.30 ^ u_bout_o/_0565_/Y (INVx1_ASAP7_75t_R)
+     1   15.29  613.59 ^ output1156/Y (BUFx2_ASAP7_75t_R)
+          0.44  614.02 ^ o[564] (out)
+                614.02   data arrival time
+
+          0.00    0.00   clock vclk (rise edge)
+        202.50  202.50   clock network delay (ideal)
+         12.50  215.00   inter-clock uncertainty
+          0.00  215.00   clock reconvergence pessimism
+          0.00  215.00   output external delay
+                215.00   data required time
+---------------------------------------------------------------
+                215.00   data required time
+               -614.02   data arrival time
+---------------------------------------------------------------
+                399.02   slack (MET)
+
+
+Startpoint: u_bout_o/q[563]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: o[563] (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+Fanout   Delay    Time   Description
+---------------------------------------------------------------
+          0.00    0.00   clock clk (rise edge)
+          0.00    0.00   clock source latency
+     1    0.00    0.00 ^ clk (in)
+     2   28.65   28.65 ^ wire16140/Y (BUFx10_ASAP7_75t_R)
+     1   32.54   61.19 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+     2   19.64   80.83 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   21.47  102.30 ^ clkbuf_1_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.56  125.85 ^ clkbuf_1_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.41  149.26 ^ clkbuf_1_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.51  172.77 ^ clkbuf_1_1_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.54  196.32 ^ clkbuf_1_1_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   22.56  218.88 ^ clkbuf_2_3_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.09  241.97 ^ clkbuf_2_3_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.09  265.06 ^ clkbuf_2_3_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.04  288.10 ^ clkbuf_2_3_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.56  311.66 ^ clkbuf_2_3_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   25.63  337.29 ^ clkbuf_3_6_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.03  360.32 ^ clkbuf_3_6_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.14  383.45 ^ clkbuf_3_6_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   22.56  406.02 ^ clkbuf_4_13_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.57  429.59 ^ clkbuf_4_13_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   22.70  452.28 ^ clkbuf_5_27_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   24.69  476.98 ^ clkbuf_6_55_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     4   21.05  498.02 ^ clkbuf_7_111_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   22.20  520.22 ^ clkbuf_9_446_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   17.59  537.81 ^ clkbuf_10_893__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+    28   19.12  556.93 ^ clkbuf_leaf_735_clk_regs/Y (BUFx24_ASAP7_75t_R)
+          1.21  558.14 ^ u_bout_o/q[563]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   34.05  592.19 v u_bout_o/q[563]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    6.23  598.43 ^ u_bout_o/_0567_/Y (INVx1_ASAP7_75t_R)
+     1   15.28  613.71 ^ output1155/Y (BUFx2_ASAP7_75t_R)
+          0.44  614.15 ^ o[563] (out)
+                614.15   data arrival time
+
+          0.00    0.00   clock vclk (rise edge)
+        202.50  202.50   clock network delay (ideal)
+         12.50  215.00   inter-clock uncertainty
+          0.00  215.00   clock reconvergence pessimism
+          0.00  215.00   output external delay
+                215.00   data required time
+---------------------------------------------------------------
+                215.00   data required time
+               -614.15   data arrival time
+---------------------------------------------------------------
+                399.15   slack (MET)
+
+
+Startpoint: u_bout_o/q[562]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: o[562] (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+Fanout   Delay    Time   Description
+---------------------------------------------------------------
+          0.00    0.00   clock clk (rise edge)
+          0.00    0.00   clock source latency
+     1    0.00    0.00 ^ clk (in)
+     2   28.65   28.65 ^ wire16140/Y (BUFx10_ASAP7_75t_R)
+     1   32.54   61.19 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+     2   19.64   80.83 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   21.47  102.30 ^ clkbuf_1_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.56  125.85 ^ clkbuf_1_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.41  149.26 ^ clkbuf_1_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.51  172.77 ^ clkbuf_1_1_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.54  196.32 ^ clkbuf_1_1_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   22.56  218.88 ^ clkbuf_2_3_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.09  241.97 ^ clkbuf_2_3_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.09  265.06 ^ clkbuf_2_3_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.04  288.10 ^ clkbuf_2_3_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.56  311.66 ^ clkbuf_2_3_4_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   25.63  337.29 ^ clkbuf_3_6_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   23.03  360.32 ^ clkbuf_3_6_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.14  383.45 ^ clkbuf_3_6_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     1   22.56  406.02 ^ clkbuf_4_13_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   23.57  429.59 ^ clkbuf_4_13_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   22.70  452.28 ^ clkbuf_5_27_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   24.69  476.98 ^ clkbuf_6_55_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     4   21.05  498.02 ^ clkbuf_7_111_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   22.20  520.22 ^ clkbuf_9_446_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+     2   17.59  537.81 ^ clkbuf_10_893__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+    28   19.12  556.93 ^ clkbuf_leaf_735_clk_regs/Y (BUFx24_ASAP7_75t_R)
+          1.21  558.15 ^ u_bout_o/q[562]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   34.23  592.38 v u_bout_o/q[562]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    6.30  598.68 ^ u_bout_o/_0566_/Y (INVx1_ASAP7_75t_R)
+     1   15.27  613.95 ^ output1154/Y (BUFx2_ASAP7_75t_R)
+          0.42  614.37 ^ o[562] (out)
+                614.37   data arrival time
+
+          0.00    0.00   clock vclk (rise edge)
+        202.50  202.50   clock network delay (ideal)
+         12.50  215.00   inter-clock uncertainty
+          0.00  215.00   clock reconvergence pessimism
+          0.00  215.00   output external delay
+                215.00   data required time
+---------------------------------------------------------------
+                215.00   data required time
+               -614.37   data arrival time
+---------------------------------------------------------------
+                399.37   slack (MET)
+
+
+Group                                  Slack
+--------------------------------------------
+clk                                  -875.41
+clk                                  -874.98
+clk                                  -736.58
+clk                                  -736.58
+clk                                  -736.53
+clk                                  -736.47
+clk                                  -736.46
+clk                                  -736.45
+clk                                  -736.43
+clk                                  -736.42
+clk                                  -736.36
+clk                                  -736.35
+clk                                  -736.34
+clk                                  -736.32
+clk                                  -736.29
+clk                                  -736.28
+clk                                  -736.27
+clk                                  -736.23
+clk                                  -736.17
+clk                                  -736.07
+clk                                  -735.86
+clk                                  -735.84
+clk                                  -735.81
+clk                                  -734.51
+clk                                  -734.51
+clk                                  -715.30
+clk                                  -715.29
+clk                                  -715.23
+clk                                  -715.21
+clk                                  -715.15
+clk                                  -715.12
+clk                                  -715.05
+clk                                  -715.03
+clk                                  -715.02
+clk                                  -714.98
+clk                                  -714.95
+clk                                  -714.82
+clk                                  -714.81
+clk                                  -713.69
+clk                                  -713.66
+clk                                  -713.55
+clk                                  -713.46
+clk                                  -713.36
+clk                                  -713.23
+clk                                  -704.51
+clk                                  -704.47
+clk                                  -704.41
+clk                                  -704.36
+clk                                  -704.35
+clk                                  -704.29
+clk                                  -704.20
+clk                                  -704.11
+clk                                  -704.10
+clk                                  -704.03
+clk                                  -704.03
+clk                                  -704.00
+clk                                  -704.00
+clk                                  -703.96
+clk                                  -703.94
+clk                                  -703.80
+clk                                  -703.77
+clk                                  -703.74
+clk                                  -703.74
+clk                                  -702.53
+clk                                  -702.43
+clk                                  -702.38
+clk                                  -699.07
+clk                                  -698.88
+clk                                  -698.85
+clk                                  -698.82
+clk                                  -698.77
+clk                                  -698.70
+clk                                  -698.70
+clk                                  -698.69
+clk                                  -698.65
+clk                                  -698.64
+clk                                  -698.64
+clk                                  -698.61
+clk                                  -698.57
+clk                                  -698.51
+clk                                  -698.47
+clk                                  -698.41
+clk                                  -698.36
+clk                                  -698.30
+clk                                  -698.18
+clk                                  -697.69
+clk                                  -697.67
+clk                                  -697.61
+clk                                  -697.61
+clk                                  -697.50
+clk                                  -697.47
+clk                                  -697.42
+clk                                  -697.41
+clk                                  -697.36
+clk                                  -697.35
+clk                                  -697.34
+clk                                  -697.33
+clk                                  -697.27
+clk                                  -697.20
+clk                                  -697.17
+clk                                  -697.11
+clk                                  -697.10
+clk                                  -697.06
+clk                                  -697.01
+clk                                  -696.99
+clk                                  -696.96
+clk                                  -696.92
+clk                                  -696.86
+clk                                  -696.78
+clk                                  -696.76
+clk                                  -696.71
+clk                                  -696.71
+clk                                  -696.62
+clk                                  -696.61
+clk                                  -696.60
+clk                                  -696.58
+clk                                  -696.55
+clk                                  -696.55
+clk                                  -696.54
+clk                                  -696.48
+clk                                  -696.47
+clk                                  -696.47
+clk                                  -696.45
+clk                                  -696.43
+clk                                  -696.30
+clk                                  -696.25
+clk                                  -696.25
+clk                                  -696.22
+clk                                  -696.14
+clk                                  -696.11
+clk                                  -694.01
+clk                                  -693.96
+clk                                  -693.89
+clk                                  -693.88
+clk                                  -693.81
+clk                                  -693.72
+clk                                  -693.72
+clk                                  -693.68
+clk                                  -693.67
+clk                                  -693.63
+clk                                  -693.58
+clk                                  -681.78
+clk                                  -681.77
+clk                                  -681.75
+clk                                  -681.72
+clk                                  -681.70
+clk                                  -681.69
+clk                                  -681.69
+clk                                  -681.68
+clk                                  -681.68
+clk                                  -681.64
+clk                                  -681.55
+clk                                  -681.50
+clk                                  -681.47
+clk                                  -681.46
+clk                                  -681.45
+clk                                  -681.35
+clk                                  -681.30
+clk                                  -681.28
+clk                                  -681.27
+clk                                  -681.25
+clk                                  -681.22
+clk                                  -681.18
+clk                                  -680.97
+clk                                  -680.26
+clk                                  -680.13
+clk                                  -680.04
+clk                                  -680.03
+clk                                  -679.93
+clk                                  -679.93
+clk                                  -679.91
+clk                                  -679.91
+clk                                  -679.89
+clk                                  -679.88
+clk                                  -679.79
+clk                                  -679.66
+clk                                  -678.27
+clk                                  -665.14
+clk                                  -665.12
+clk                                  -665.09
+clk                                  -665.07
+clk                                  -665.07
+clk                                  -665.07
+clk                                  -665.06
+clk                                  -665.01
+clk                                  -664.99
+clk                                  -664.90
+clk                                  -664.87
+clk                                  -664.85
+clk                                  -664.82
+clk                                  -664.75
+clk                                  -664.73
+clk                                  -664.69
+clk                                  -664.65
+clk                                  -664.62
+clk                                  -664.62
+clk                                  -664.50
+clk                                  -664.43
+clk                                  -664.34
+clk                                  -633.70
+clk                                  -633.68
+clk                                  -633.66
+clk                                  -633.55
+clk                                  -633.46
+clk                                  -633.46
+clk                                  -633.40
+clk                                  -633.31
+clk                                  -633.15
+clk                                  -633.08
+clk                                  -633.06
+clk                                  -633.04
+clk                                  -633.02
+clk                                  -632.91
+clk                                  -632.91
+clk                                  -632.88
+clk                                  -632.83
+clk                                  -632.82
+clk                                  -632.79
+clk                                  -632.75
+clk                                  -632.69
+clk                                  -632.64
+clk                                  -632.63
+clk                                  -632.49
+clk                                  -632.44
+clk                                  -631.76
+clk                                  -631.74
+clk                                  -631.74
+clk                                  -631.66
+clk                                  -631.65
+clk                                  -631.62
+clk                                  -631.44
+clk                                  -631.44
+clk                                  -631.44
+clk                                  -631.39
+clk                                  -631.29
+clk                                  -631.13
+clk                                  -622.08
+clk                                  -617.12
+clk                                  -617.10
+clk                                  -617.07
+clk                                  -617.06
+clk                                  -617.04
+clk                                  -617.02
+clk                                  -616.95
+clk                                  -616.92
+clk                                  -616.91
+clk                                  -616.88
+clk                                  -616.86
+clk                                  -616.82
+clk                                  -616.81
+clk                                  -616.65
+clk                                  -616.62
+clk                                  -616.53
+clk                                  -612.91
+clk                                  -612.88
+clk                                  -612.86
+clk                                  -612.83
+clk                                  -612.83
+clk                                  -612.82
+clk                                  -612.79
+clk                                  -612.78
+clk                                  -612.75
+clk                                  -612.74
+clk                                  -612.72
+clk                                  -612.71
+clk                                  -612.60
+clk                                  -612.56
+clk                                  -612.55
+clk                                  -612.52
+clk                                  -612.40
+clk                                  -612.37
+clk                                  -612.25
+clk                                  -612.18
+clk                                  -612.12
+clk                                  -606.47
+clk                                  -606.36
+clk                                  -606.35
+clk                                  -606.31
+clk                                  -606.24
+clk                                  -606.23
+clk                                  -606.18
+clk                                  -606.15
+clk                                  -605.12
+clk                                  -605.05
+clk                                  -605.00
+clk                                  -605.00
+clk                                  -604.93
+clk                                  -604.88
+clk                                  -604.85
+clk                                  -604.82
+clk                                  -604.82
+clk                                  -604.79
+clk                                  -604.78
+clk                                  -604.73
+clk                                  -604.66
+clk                                  -604.60
+clk                                  -604.58
+clk                                  -604.50
+clk                                  -604.48
+clk                                  -604.37
+clk                                  -602.77
+clk                                  -602.60
+clk                                  -602.55
+clk                                  -602.55
+clk                                  -602.51
+clk                                  -602.43
+clk                                  -602.39
+clk                                  -602.36
+clk                                  -602.36
+clk                                  -602.32
+clk                                  -602.26
+clk                                  -602.24
+clk                                  -602.23
+clk                                  -602.20
+clk                                  -602.19
+clk                                  -602.09
+clk                                  -602.00
+clk                                  -601.94
+clk                                  -601.93
+clk                                  -601.92
+clk                                  -601.55
+clk                                  -601.50
+clk                                  -601.22
+clk                                  -601.15
+clk                                  -600.88
+clk                                  -600.56
+clk                                  -600.44
+clk                                  -599.16
+clk                                  -598.22
+clk                                  -598.14
+clk                                  -598.12
+clk                                  -598.09
+clk                                  -598.05
+clk                                  -598.04
+clk                                  -597.95
+clk                                  -597.92
+clk                                  -597.91
+clk                                  -597.89
+clk                                  -597.77
+clk                                  -597.72
+clk                                  -597.66
+clk                                  -597.65
+clk                                  -597.61
+clk                                  -597.56
+clk                                  -597.14
+clk                                  -596.15
+clk                                  -595.97
+clk                                  -595.95
+clk                                  -595.91
+clk                                  -595.86
+clk                                  -595.84
+clk                                  -595.83
+clk                                  -595.82
+clk                                  -595.79
+clk                                  -595.77
+clk                                  -595.74
+clk                                  -595.72
+clk                                  -595.69
+clk                                  -595.67
+clk                                  -595.66
+clk                                  -595.64
+clk                                  -595.64
+clk                                  -595.63
+clk                                  -595.60
+clk                                  -595.57
+clk                                  -595.55
+clk                                  -595.54
+clk                                  -595.52
+clk                                  -595.51
+clk                                  -595.51
+clk                                  -595.51
+clk                                  -595.49
+clk                                  -595.48
+clk                                  -595.48
+clk                                  -595.46
+clk                                  -595.46
+clk                                  -595.45
+clk                                  -595.45
+clk                                  -595.41
+clk                                  -595.40
+clk                                  -595.39
+clk                                  -595.38
+clk                                  -595.38
+clk                                  -595.38
+clk                                  -595.37
+clk                                  -595.36
+clk                                  -595.35
+clk                                  -595.34
+clk                                  -595.34
+clk                                  -595.33
+clk                                  -595.29
+clk                                  -595.29
+clk                                  -595.26
+clk                                  -595.23
+clk                                  -595.21
+clk                                  -595.17
+clk                                  -595.14
+clk                                  -595.13
+clk                                  -595.11
+clk                                  -595.08
+clk                                  -595.00
+clk                                  -594.98
+clk                                  -594.96
+clk                                  -594.93
+clk                                  -594.88
+clk                                  -594.84
+clk                                  -594.83
+clk                                  -594.80
+clk                                  -594.80
+clk                                  -594.80
+clk                                  -594.79
+clk                                  -594.79
+clk                                  -594.78
+clk                                  -594.75
+clk                                  -594.75
+clk                                  -594.71
+clk                                  -594.70
+clk                                  -594.65
+clk                                  -594.63
+clk                                  -594.59
+clk                                  -594.58
+clk                                  -594.54
+clk                                  -594.54
+clk                                  -594.52
+clk                                  -594.47
+clk                                  -594.36
+clk                                  -594.32
+clk                                  -594.23
+clk                                  -594.20
+clk                                  -593.31
+clk                                  -591.79
+clk                                  -591.77
+clk                                  -591.73
+clk                                  -591.67
+clk                                  -591.59
+clk                                  -591.58
+clk                                  -591.51
+clk                                  -591.51
+clk                                  -591.42
+clk                                  -591.42
+clk                                  -591.38
+clk                                  -591.34
+clk                                  -591.33
+clk                                  -591.32
+clk                                  -591.31
+clk                                  -591.30
+clk                                  -591.26
+clk                                  -591.22
+clk                                  -591.19
+clk                                  -591.17
+clk                                  -591.10
+clk                                  -591.10
+clk                                  -591.03
+clk                                  -590.97
+clk                                  -590.96
+clk                                  -590.96
+clk                                  -590.96
+clk                                  -590.95
+clk                                  -590.92
+clk                                  -590.87
+clk                                  -590.87
+clk                                  -590.54
+clk                                  -590.52
+clk                                  -590.48
+clk                                  -590.43
+clk                                  -590.40
+clk                                  -590.40
+clk                                  -590.35
+clk                                  -590.25
+clk                                  -590.22
+clk                                  -590.18
+clk                                  -590.14
+clk                                  -590.10
+clk                                  -590.10
+clk                                  -590.06
+clk                                  -590.03
+clk                                  -589.98
+clk                                  -589.94
+clk                                  -589.89
+clk                                  -589.86
+clk                                  -589.80
+clk                                  -589.78
+clk                                  -589.74
+clk                                  -589.68
+clk                                  -589.68
+clk                                  -589.58
+clk                                  -589.52
+clk                                  -589.48
+clk                                  -589.42
+clk                                  -589.41
+clk                                  -589.39
+clk                                  -589.13
+clk                                  -589.05
+clk                                  -589.03
+clk                                  -589.03
+clk                                  -588.20
+clk                                  -588.18
+clk                                  -588.17
+clk                                  -588.10
+clk                                  -588.10
+clk                                  -588.08
+clk                                  -588.06
+clk                                  -588.05
+clk                                  -588.02
+clk                                  -588.01
+clk                                  -587.97
+clk                                  -587.92
+clk                                  -587.84
+clk                                  -587.84
+clk                                  -587.81
+clk                                  -587.81
+clk                                  -587.70
+clk                                  -587.68
+clk                                  -587.65
+clk                                  -587.53
+clk                                  -587.50
+clk                                  -587.48
+clk                                  -587.48
+clk                                  -587.44
+clk                                  -587.36
+clk                                  -587.29
+clk                                  -587.27
+clk                                  -587.25
+clk                                  -587.25
+clk                                  -587.20
+clk                                  -587.19
+clk                                  -587.18
+clk                                  -587.12
+clk                                  -587.12
+clk                                  -587.08
+clk                                  -587.03
+clk                                  -586.97
+clk                                  -586.90
+clk                                  -586.85
+clk                                  -586.82
+clk                                  -586.79
+clk                                  -516.16
+clk                                  -515.86
+clk                                  -515.52
+clk                                  -515.04
+clk                                  -514.90
+clk                                  -514.87
+clk                                  -514.83
+clk                                  -514.82
+clk                                  -514.81
+clk                                  -514.80
+clk                                  -514.70
+clk                                  -514.65
+clk                                  -514.64
+clk                                  -514.57
+clk                                  -514.45
+clk                                  -514.23
+clk                                  -514.18
+clk                                  -514.14
+clk                                  -514.13
+clk                                  -514.09
+clk                                  -513.97
+clk                                  -513.97
+clk                                  -513.93
+clk                                  -513.90
+clk                                  -513.90
+clk                                  -513.84
+clk                                  -513.79
+clk                                  -513.75
+clk                                  -513.71
+clk                                  -513.66
+clk                                  -513.59
+clk                                  -513.24
+clk                                  -176.84
+clk                                  -174.51
+clk                                  -173.46
+clk                                  -171.77
+clk                                  -171.77
+clk                                  -169.27
+clk                                  -167.96
+clk                                  -167.40
+clk                                  -166.79
+clk                                  -166.19
+clk                                  -166.06
+clk                                  -165.99
+clk                                  -165.43
+clk                                  -164.41
+clk                                  -161.96
+clk                                  -159.87
+clk                                  -158.11
+clk                                  -157.91
+clk                                  -157.79
+clk                                  -156.60
+clk                                  -155.92
+clk                                  -153.55
+clk                                  -152.23
+clk                                  -151.64
+clk                                  -151.64
+clk                                  -150.06
+clk                                  -148.74
+clk                                  -148.10
+clk                                  -148.08
+clk                                  -147.92
+clk                                  -147.48
+clk                                  -147.40
+clk                                  -147.34
+clk                                  -147.30
+clk                                  -147.16
+clk                                  -145.42
+clk                                  -145.15
+clk                                  -142.52
+clk                                  -140.53
+clk                                  -139.67
+clk                                  -134.24
+clk                                   -68.16
+clk                                   -68.15
+clk                                   -61.84
+clk                                   -55.74
+clk                                   -54.00
+clk                                   -53.48
+clk                                   -52.15
+clk                                   -51.81
+clk                                   -51.75
+clk                                   -51.37
+clk                                   -50.42
+clk                                   -50.20
+clk                                   -50.19
+clk                                   -49.73
+clk                                   -49.20
+clk                                   -49.07
+clk                                   -48.97
+clk                                   -48.59
+clk                                   -48.50
+clk                                   -48.36
+clk                                   -47.97
+clk                                   -47.97
+clk                                   -47.97
+clk                                   -47.89
+clk                                   -47.44
+clk                                   -47.18
+clk                                   -46.87
+clk                                   -46.78
+clk                                   -46.69
+clk                                   -46.58
+clk                                   -46.55
+clk                                   -46.53
+clk                                   -46.47
+clk                                   -46.44
+clk                                   -46.37
+clk                                   -45.99
+clk                                   -45.86
+clk                                   -45.68
+clk                                   -45.40
+clk                                   -45.19
+clk                                   -44.38
+clk                                   -43.10
+clk                                   -43.09
+clk                                   -42.78
+clk                                   -42.64
+clk                                   -42.40
+clk                                   -42.20
+clk                                   -41.99
+clk                                   -41.82
+clk                                   -41.76
+clk                                   -41.66
+clk                                   -41.57
+clk                                   -41.43
+clk                                   -41.27
+clk                                   -41.02
+clk                                   -40.59
+clk                                   -40.49
+clk                                   -40.37
+clk                                   -40.29
+clk                                   -39.42
+clk                                   -39.36
+clk                                   -39.15
+clk                                   -39.10
+clk                                   -39.01
+clk                                   -38.96
+clk                                   -38.91
+clk                                   -38.80
+clk                                   -38.71
+clk                                   -37.72
+clk                                   -37.30
+clk                                   -37.14
+clk                                   -37.05
+clk                                   -36.92
+clk                                   -36.86
+clk                                   -36.25
+clk                                   -36.17
+clk                                   -35.88
+clk                                   -35.47
+clk                                   -35.45
+clk                                   -35.38
+clk                                   -35.28
+clk                                   -34.11
+clk                                   -33.70
+clk                                   -33.60
+clk                                   -33.60
+clk                                   -32.47
+clk                                   -32.47
+clk                                   -31.61
+clk                                   -29.92
+clk                                   -29.87
+clk                                   -28.83
+clk                                   -28.77
+clk                                   -28.52
+clk                                   -28.36
+clk                                   -28.13
+clk                                   -27.99
+clk                                   -27.92
+clk                                   -27.29
+clk                                   -27.12
+clk                                   -27.04
+clk                                   -26.97
+clk                                   -26.91
+clk                                   -26.88
+clk                                   -26.88
+clk                                   -26.86
+clk                                   -26.53
+clk                                   -26.48
+clk                                   -26.45
+clk                                   -26.39
+clk                                   -26.37
+clk                                   -26.30
+clk                                   -26.08
+clk                                   -26.04
+clk                                   -25.98
+clk                                   -25.80
+clk                                   -25.76
+clk                                   -25.68
+clk                                   -25.67
+clk                                   -25.65
+clk                                   -25.56
+clk                                   -25.48
+clk                                   -25.47
+clk                                   -25.39
+clk                                   -25.36
+clk                                   -25.35
+clk                                   -25.31
+clk                                   -25.29
+clk                                   -25.22
+clk                                   -25.07
+clk                                   -24.99
+clk                                   -24.90
+clk                                   -24.89
+clk                                   -24.79
+clk                                   -24.70
+clk                                   -24.67
+clk                                   -24.52
+clk                                   -24.49
+clk                                   -24.40
+clk                                   -24.32
+clk                                   -24.25
+clk                                   -24.18
+clk                                   -24.18
+clk                                   -24.11
+clk                                   -24.09
+clk                                   -24.02
+clk                                   -23.91
+clk                                   -23.82
+clk                                   -23.82
+clk                                   -23.74
+clk                                   -23.63
+clk                                   -23.61
+clk                                   -23.60
+clk                                   -23.48
+clk                                   -23.45
+clk                                   -23.43
+clk                                   -23.35
+clk                                   -23.31
+clk                                   -23.23
+clk                                   -23.19
+clk                                   -23.19
+clk                                   -23.16
+clk                                   -23.09
+clk                                   -23.09
+clk                                   -23.09
+clk                                   -23.07
+clk                                   -23.04
+clk                                   -22.97
+clk                                   -22.96
+clk                                   -22.93
+clk                                   -22.89
+clk                                   -22.68
+clk                                   -22.55
+clk                                   -22.49
+clk                                   -22.37
+clk                                   -22.18
+clk                                   -22.01
+clk                                   -21.99
+clk                                   -21.99
+clk                                   -21.95
+clk                                   -21.94
+clk                                   -21.94
+clk                                   -21.83
+clk                                   -21.82
+clk                                   -21.74
+clk                                   -21.70
+clk                                   -21.61
+clk                                   -21.49
+clk                                   -21.48
+clk                                   -21.39
+clk                                   -21.32
+clk                                   -21.30
+clk                                   -21.26
+clk                                   -21.24
+clk                                   -21.23
+clk                                   -21.19
+clk                                   -21.12
+clk                                   -21.03
+clk                                   -20.90
+clk                                   -20.86
+clk                                   -20.83
+clk                                   -20.82
+clk                                   -20.81
+clk                                   -20.77
+clk                                   -20.68
+clk                                   -20.68
+clk                                   -20.66
+clk                                   -20.53
+clk                                   -20.41
+clk                                   -20.36
+clk                                   -20.25
+clk                                   -20.12
+clk                                   -20.06
+clk                                   -19.99
+clk                                   -19.99
+clk                                   -19.98
+clk                                   -19.97
+clk                                   -19.82
+clk                                   -19.59
+clk                                   -19.57
+clk                                   -19.40
+clk                                   -19.22
+clk                                   -19.21
+clk                                   -19.16
+clk                                   -19.16
+clk                                   -19.13
+clk                                   -19.09
+clk                                   -18.94
+clk                                   -18.84
+clk                                   -18.71
+clk                                   -18.60
+clk                                   -18.48
+clk                                   -18.40
+clk                                   -18.37
+clk                                   -18.33
+clk                                   -18.17
+clk                                   -18.14
+clk                                   -18.02
+clk                                   -17.99
+clk                                   -17.95
+clk                                   -17.90
+clk                                   -17.84
+clk                                   -17.82
+clk                                   -17.80
+clk                                   -17.76
+clk                                   -17.71
+clk                                   -17.67
+clk                                   -17.63
+clk                                   -17.60
+clk                                   -17.41
+clk                                   -17.22
+clk                                   -17.19
+clk                                   -17.04
+clk                                   -17.03
+clk                                   -17.00
+clk                                   -16.90
+clk                                   -16.86
+clk                                   -16.81
+clk                                   -16.77
+clk                                   -16.75
+clk                                   -16.72
+clk                                   -16.71
+clk                                   -16.55
+clk                                   -16.47
+clk                                   -16.46
+clk                                   -16.45
+clk                                   -16.42
+clk                                   -16.18
+clk                                   -16.01
+clk                                   -15.86
+clk                                   -15.82
+clk                                   -15.76
+clk                                   -15.75
+clk                                   -15.65
+clk                                   -15.59
+clk                                   -15.50
+clk                                   -15.31
+clk                                   -15.17
+clk                                   -15.16
+clk                                   -15.00
+clk                                   -14.96
+clk                                   -14.78
+clk                                   -14.78
+clk                                   -14.77
+clk                                   -14.77
+clk                                   -14.73
+clk                                   -14.69
+clk                                   -14.68
+clk                                   -14.68
+clk                                   -14.67
+clk                                   -14.58
+clk                                   -14.57
+clk                                   -14.51
+clk                                   -14.48
+clk                                   -14.45
+clk                                   -14.45
+clk                                   -14.43
+clk                                   -14.32
+clk                                   -14.30
+clk                                   -14.23
+clk                                   -14.23
+clk                                   -14.10
+clk                                   -14.07
+clk                                   -13.91
+clk                                   -13.81
+clk                                   -13.78
+clk                                   -13.77
+clk                                   -13.75
+clk                                   -13.70
+clk                                   -13.68
+clk                                   -13.66
+clk                                   -13.61
+clk                                   -13.61
+clk                                   -13.57
+clk                                   -13.56
+clk                                   -13.52
+clk                                   -13.46
+clk                                   -13.43
+clk                                   -13.40
+clk                                   -13.39
+clk                                   -13.38
+clk                                   -13.36
+clk                                   -13.35
+clk                                   -13.33
+clk                                   -13.29
+clk                                   -13.24
+clk                                   -13.21
+clk                                   -13.19
+clk                                   -13.18
+clk                                   -13.18
+clk                                   -13.08
+clk                                   -12.99
+clk                                   -12.97
+clk                                   -12.95
+clk                                   -12.91
+clk                                   -12.89
+clk                                   -12.88
+clk                                   -12.88
+clk                                   -12.81
+clk                                   -12.78
+clk                                   -12.77
+clk                                   -12.69
+clk                                   -12.65
+clk                                   -12.64
+clk                                   -12.50
+clk                                   -12.44
+clk                                   -12.38
+clk                                   -12.32
+clk                                   -12.31
+clk                                   -12.31
+clk                                   -12.28
+clk                                   -12.25
+clk                                   -12.21
+clk                                   -12.19
+clk                                   -12.12
+clk                                   -12.12
+clk                                   -12.07
+clk                                   -12.07
+clk                                   -12.05
+clk                                   -12.01
+clk                                   -11.97
+clk                                   -11.96
+clk                                   -11.91
+clk                                   -11.88
+clk                                   -11.85
+clk                                   -11.80
+clk                                   -11.76
+clk                                   -11.73
+clk                                   -11.72
+clk                                   -11.71
+clk                                   -11.69
+clk                                   -11.58
+clk                                   -11.55
+clk                                   -11.55
+clk                                   -11.51
+clk                                   -11.48
+clk                                   -11.47
+clk                                   -11.47
+clk                                   -11.46
+clk                                   -11.46
+clk                                   -11.44
+clk                                   -11.41
+clk                                   -11.40
+clk                                   -11.37
+clk                                   -11.35
+clk                                   -11.34
+clk                                   -11.33
+clk                                   -11.32
+clk                                   -11.31
+clk                                   -11.31
+clk                                   -11.30
+clk                                   -11.27
+clk                                   -11.23
+clk                                   -11.20
+clk                                   -11.13
+clk                                   -11.07
+clk                                   -11.04
+clk                                   -11.03
+clk                                   -11.01
+clk                                   -11.00
+clk                                   -11.00
+clk                                   -10.97
+clk                                   -10.87
+clk                                   -10.82
+clk                                   -10.82
+clk                                   -10.81
+clk                                   -10.81
+clk                                   -10.80
+clk                                   -10.79
+clk                                   -10.76
+clk                                   -10.75
+clk                                   -10.75
+clk                                   -10.73
+clk                                   -10.70
+clk                                   -10.69
+clk                                   -10.68
+clk                                   -10.68
+clk                                   -10.66
+clk                                   -10.65
+clk                                   -10.63
+clk                                   -10.63
+clk                                   -10.60
+clk                                   -10.58
+clk                                   -10.58
+clk                                   -10.55
+clk                                   -10.53
+clk                                   -10.52
+clk                                   -10.52
+clk                                   -10.50
+clk                                   -10.49
+clk                                   -10.49
+clk                                   -10.47
+clk                                   -10.47
+clk                                   -10.46
+clk                                   -10.43
+clk                                   -10.30
+clk                                   -10.28
+clk                                   -10.23
+clk                                   -10.22
+clk                                   -10.19
+clk                                   -10.15
+clk                                   -10.14
+clk                                   -10.12
+clk                                   -10.12
+clk                                   -10.12
+clk                                   -10.08
+clk                                   -10.07
+clk                                   -10.05
+clk                                   -10.03
+clk                                   -10.03
+clk                                    -9.98
+clk                                    -9.97
+clk                                    -9.97
+clk                                    -9.95
+clk                                    -9.91
+clk                                    -9.90
+clk                                    -9.89
+clk                                    -9.88
+clk                                    -9.88
+clk                                    -9.87
+clk                                    -9.85
+clk                                    -9.84
+clk                                    -9.82
+clk                                    -9.82
+clk                                    -9.79
+clk                                    -9.78
+clk                                    -9.77
+clk                                    -9.72
+clk                                    -9.72
+clk                                    -9.71
+clk                                    -9.71
+clk                                    -9.70
+clk                                    -9.68
+clk                                    -9.68
+clk                                    -9.68
+clk                                    -9.65
+clk                                    -9.62
+clk                                    -9.62
+clk                                    -9.61
+clk                                    -9.59
+clk                                    -9.56
+clk                                    -9.54
+clk                                    -9.50
+clk                                    -9.50
+clk                                    -9.49
+clk                                    -9.49
+clk                                    -9.48
+clk                                    -9.47
+clk                                    -9.47
+clk                                    -9.46
+clk                                    -9.44
+clk                                    -9.43
+clk                                    -9.40
+clk                                    -9.38
+clk                                    -9.34
+clk                                    -9.33
+clk                                    -9.32
+clk                                    -9.31
+clk                                    -9.31
+clk                                    -9.28
+clk                                    -9.26
+clk                                    -9.24
+clk                                    -9.23
+clk                                    -9.20
+clk                                    -9.20
+clk                                    -9.20
+clk                                    -9.19
+clk                                    -9.18
+clk                                    -9.16
+clk                                    -9.15
+clk                                    -9.14
+clk                                    -9.13
+clk                                    -9.12
+clk                                    -9.04
+clk                                    -9.03
+clk                                    -9.01
+clk                                    -8.99
+clk                                    -8.99
+clk                                    -8.99
+clk                                    -8.98
+clk                                    -8.98
+clk                                    -8.98
+clk                                    -8.97
+clk                                    -8.96
+clk                                    -8.96
+clk                                    -8.94
+clk                                    -8.94
+clk                                    -8.93
+clk                                    -8.91
+clk                                    -8.89
+clk                                    -8.86
+clk                                    -8.85
+clk                                    -8.83
+clk                                    -8.82
+clk                                    -8.81
+clk                                    -8.80
+clk                                    -8.77
+clk                                    -8.77
+clk                                    -8.77
+clk                                    -8.75
+clk                                    -8.75
+clk                                    -8.74
+clk                                    -8.71
+clk                                    -8.71
+clk                                    -8.67
+clk                                    -8.64
+clk                                    -8.61
+clk                                    -8.57
+clk                                    -8.57
+clk                                    -8.57
+clk                                    -8.57
+clk                                    -8.55
+clk                                    -8.55
+clk                                    -8.55
+clk                                    -8.50
+clk                                    -8.43
+clk                                    -8.42
+clk                                    -8.41
+clk                                    -8.41
+clk                                    -8.39
+clk                                    -8.36
+clk                                    -8.34
+clk                                    -8.33
+clk                                    -8.33
+clk                                    -8.33
+clk                                    -8.32
+clk                                    -8.32
+clk                                    -8.31
+clk                                    -8.27
+clk                                    -8.26
+clk                                    -8.26
+clk                                    -8.24
+clk                                    -8.20
+clk                                    -8.19
+clk                                    -8.18
+clk                                    -8.15
+clk                                    -8.15
+clk                                    -8.15
+clk                                    -8.14
+clk                                    -8.10
+clk                                    -8.09
+clk                                    -8.08
+clk                                    -8.07
+clk                                    -8.05
+clk                                    -8.04
+clk                                    -8.03
+clk                                    -8.03
+clk                                    -8.02
+clk                                    -8.01
+clk                                    -7.98
+clk                                    -7.94
+clk                                    -7.93
+clk                                    -7.93
+clk                                    -7.93
+clk                                    -7.90
+clk                                    -7.89
+clk                                    -7.89
+clk                                    -7.89
+clk                                    -7.89
+clk                                    -7.88
+clk                                    -7.88
+clk                                    -7.85
+clk                                    -7.85
+clk                                    -7.83
+clk                                    -7.83
+clk                                    -7.83
+clk                                    -7.82
+clk                                    -7.82
+clk                                    -7.77
+clk                                    -7.75
+clk                                    -7.75
+clk                                    -7.72
+clk                                    -7.71
+clk                                    -7.69
+clk                                    -7.69
+clk                                    -7.68
+clk                                    -7.65
+clk                                    -7.65
+clk                                    -7.64
+clk                                    -7.63
+clk                                    -7.62
+clk                                    -7.61
+clk                                    -7.59
+clk                                    -7.59
+clk                                    -7.58
+clk                                    -7.54
+clk                                    -7.53
+clk                                    -7.51
+clk                                    -7.51
+clk                                    -7.50
+clk                                    -7.49
+clk                                    -7.47
+clk                                    -7.46
+clk                                    -7.43
+clk                                    -7.42
+clk                                    -7.42
+clk                                    -7.41
+clk                                    -7.40
+clk                                    -7.40
+clk                                    -7.36
+clk                                    -7.35
+clk                                    -7.35
+clk                                    -7.33
+clk                                    -7.33
+clk                                    -7.31
+clk                                    -7.31
+clk                                    -7.30
+clk                                    -7.29
+clk                                    -7.28
+clk                                    -7.27
+clk                                    -7.25
+clk                                    -7.25
+clk                                    -7.24
+clk                                    -7.24
+clk                                    -7.23
+clk                                    -7.23
+clk                                    -7.23
+clk                                    -7.22
+clk                                    -7.22
+clk                                    -7.21
+clk                                    -7.19
+clk                                    -7.19
+clk                                    -7.17
+clk                                    -7.17
+clk                                    -7.16
+clk                                    -7.14
+clk                                    -7.11
+clk                                    -7.10
+clk                                    -7.07
+clk                                    -7.06
+clk                                    -6.99
+clk                                    -6.99
+clk                                    -6.99
+clk                                    -6.99
+clk                                    -6.99
+clk                                    -6.97
+clk                                    -6.96
+clk                                    -6.93
+clk                                    -6.93
+clk                                    -6.93
+clk                                    -6.93
+clk                                    -6.91
+clk                                    -6.89
+clk                                    -6.89
+clk                                    -6.87
+clk                                    -6.87
+clk                                    -6.84
+clk                                    -6.84
+clk                                    -6.83
+clk                                    -6.81
+clk                                    -6.80
+clk                                    -6.79
+clk                                    -6.79
+clk                                    -6.79
+clk                                    -6.77
+clk                                    -6.77
+clk                                    -6.75
+clk                                    -6.74
+clk                                    -6.74
+clk                                    -6.73
+clk                                    -6.73
+clk                                    -6.72
+clk                                    -6.72
+clk                                    -6.70
+clk                                    -6.68
+clk                                    -6.68
+clk                                    -6.68
+clk                                    -6.62
+clk                                    -6.61
+clk                                    -6.60
+clk                                    -6.58
+clk                                    -6.57
+clk                                    -6.53
+clk                                    -6.51
+clk                                    -6.49
+clk                                    -6.49
+clk                                    -6.48
+clk                                    -6.47
+clk                                    -6.45
+clk                                    -6.43
+clk                                    -6.41
+clk                                    -6.41
+clk                                    -6.40
+clk                                    -6.40
+clk                                    -6.39
+clk                                    -6.39
+clk                                    -6.39
+clk                                    -6.38
+clk                                    -6.37
+clk                                    -6.36
+clk                                    -6.35
+clk                                    -6.35
+clk                                    -6.35
+clk                                    -6.33
+clk                                    -6.33
+clk                                    -6.32
+clk                                    -6.32
+clk                                    -6.31
+clk                                    -6.31
+clk                                    -6.30
+clk                                    -6.29
+clk                                    -6.24
+clk                                    -6.23
+clk                                    -6.21
+clk                                    -6.21
+clk                                    -6.20
+clk                                    -6.20
+clk                                    -6.20
+clk                                    -6.20
+clk                                    -6.19
+clk                                    -6.18
+clk                                    -6.17
+clk                                    -6.17
+clk                                    -6.16
+clk                                    -6.16
+clk                                    -6.16
+clk                                    -6.14
+clk                                    -6.11
+clk                                    -6.10
+clk                                    -6.09
+clk                                    -6.06
+clk                                    -6.06
+clk                                    -6.06
+clk                                    -6.05
+clk                                    -6.05
+clk                                    -6.04
+clk                                    -6.02
+clk                                    -6.02
+clk                                    -5.99
+clk                                    -5.99
+clk                                    -5.99
+clk                                    -5.93
+clk                                    -5.93
+clk                                    -5.93
+clk                                    -5.90
+clk                                    -5.89
+clk                                    -5.88
+clk                                    -5.88
+clk                                    -5.87
+clk                                    -5.86
+clk                                    -5.83
+clk                                    -5.82
+clk                                    -5.80
+clk                                    -5.78
+clk                                    -5.76
+clk                                    -5.74
+clk                                    -5.73
+clk                                    -5.71
+clk                                    -5.71
+clk                                    -5.71
+clk                                    -5.70
+clk                                    -5.70
+clk                                    -5.70
+clk                                    -5.69
+clk                                    -5.68
+clk                                    -5.68
+clk                                    -5.66
+clk                                    -5.65
+clk                                    -5.64
+clk                                    -5.63
+clk                                    -5.62
+clk                                    -5.60
+clk                                    -5.58
+clk                                    -5.56
+clk                                    -5.56
+clk                                    -5.55
+clk                                    -5.54
+clk                                    -5.54
+clk                                    -5.53
+clk                                    -5.53
+clk                                    -5.51
+clk                                    -5.51
+clk                                    -5.50
+clk                                    -5.50
+clk                                    -5.48
+clk                                    -5.48
+clk                                    -5.47
+clk                                    -5.46
+clk                                    -5.44
+clk                                    -5.44
+clk                                    -5.43
+clk                                    -5.42
+clk                                    -5.42
+clk                                    -5.42
+clk                                    -5.42
+clk                                    -5.40
+clk                                    -5.40
+clk                                    -5.39
+clk                                    -5.39
+clk                                    -5.38
+clk                                    -5.38
+clk                                    -5.38
+clk                                    -5.37
+clk                                    -5.37
+clk                                    -5.36
+clk                                    -5.36
+clk                                    -5.36
+clk                                    -5.35
+clk                                    -5.35
+clk                                    -5.34
+clk                                    -5.30
+clk                                    -5.30
+clk                                    -5.29
+clk                                    -5.28
+clk                                    -5.26
+clk                                    -5.25
+clk                                    -5.25
+clk                                    -5.24
+clk                                    -5.22
+clk                                    -5.20
+clk                                    -5.20
+clk                                    -5.20
+clk                                    -5.18
+clk                                    -5.18
+clk                                    -5.17
+clk                                    -5.15
+clk                                    -5.11
+clk                                    -5.10
+clk                                    -5.10
+clk                                    -5.09
+clk                                    -5.08
+clk                                    -5.07
+clk                                    -5.05
+clk                                    -5.04
+clk                                    -5.03
+clk                                    -5.03
+clk                                    -5.02
+clk                                    -5.02
+clk                                    -5.01
+clk                                    -5.01
+clk                                    -5.01
+clk                                    -5.00
+clk                                    -4.99
+clk                                    -4.99
+clk                                    -4.98
+clk                                    -4.98
+clk                                    -4.97
+clk                                    -4.97
+clk                                    -4.95
+clk                                    -4.95
+clk                                    -4.94
+clk                                    -4.94
+clk                                    -4.94
+clk                                    -4.93
+clk                                    -4.93
+clk                                    -4.93
+clk                                    -4.92
+clk                                    -4.92
+clk                                    -4.91
+clk                                    -4.91
+clk                                    -4.91
+clk                                    -4.91
+clk                                    -4.90
+clk                                    -4.88
+clk                                    -4.88
+clk                                    -4.88
+clk                                    -4.87
+clk                                    -4.86
+clk                                    -4.84
+clk                                    -4.83
+clk                                    -4.82
+clk                                    -4.81
+clk                                    -4.80
+clk                                    -4.80
+clk                                    -4.79
+clk                                    -4.76
+clk                                    -4.76
+clk                                    -4.76
+clk                                    -4.75
+clk                                    -4.75
+clk                                    -4.74
+clk                                    -4.74
+clk                                    -4.74
+clk                                    -4.74
+clk                                    -4.74
+clk                                    -4.73
+clk                                    -4.71
+clk                                    -4.70
+clk                                    -4.69
+clk                                    -4.69
+clk                                    -4.68
+clk                                    -4.68
+clk                                    -4.68
+clk                                    -4.68
+clk                                    -4.67
+clk                                    -4.67
+clk                                    -4.66
+clk                                    -4.66
+clk                                    -4.64
+clk                                    -4.64
+clk                                    -4.63
+clk                                    -4.63
+clk                                    -4.63
+clk                                    -4.63
+clk                                    -4.62
+clk                                    -4.61
+clk                                    -4.61
+clk                                    -4.61
+clk                                    -4.60
+clk                                    -4.60
+clk                                    -4.60
+clk                                    -4.59
+clk                                    -4.59
+clk                                    -4.56
+clk                                    -4.56
+clk                                    -4.55
+clk                                    -4.55
+clk                                    -4.54
+clk                                    -4.54
+clk                                    -4.53
+clk                                    -4.53
+clk                                    -4.52
+clk                                    -4.51
+clk                                    -4.51
+clk                                    -4.51
+clk                                    -4.50
+clk                                    -4.49
+clk                                    -4.49
+clk                                    -4.48
+clk                                    -4.48
+clk                                    -4.47
+clk                                    -4.46
+clk                                    -4.45
+clk                                    -4.44
+clk                                    -4.44
+clk                                    -4.43
+clk                                    -4.42
+clk                                    -4.41
+clk                                    -4.38
+clk                                    -4.38
+clk                                    -4.37
+clk                                    -4.37
+clk                                    -4.35
+clk                                    -4.34
+clk                                    -4.34
+clk                                    -4.33
+clk                                    -4.32
+clk                                    -4.32
+clk                                    -4.32
+clk                                    -4.32
+clk                                    -4.31
+clk                                    -4.31
+clk                                    -4.31
+clk                                    -4.29
+clk                                    -4.28
+clk                                    -4.28
+clk                                    -4.27
+clk                                    -4.26
+clk                                    -4.26
+clk                                    -4.25
+clk                                    -4.25
+clk                                    -4.24
+clk                                    -4.24
+clk                                    -4.23
+clk                                    -4.22
+clk                                    -4.21
+clk                                    -4.21
+clk                                    -4.20
+clk                                    -4.18
+clk                                    -4.18
+clk                                    -4.18
+clk                                    -4.17
+clk                                    -4.17
+clk                                    -4.16
+clk                                    -4.15
+clk                                    -4.14
+clk                                    -4.12
+clk                                    -4.08
+clk                                    -4.08
+clk                                    -4.08
+clk                                    -4.07
+clk                                    -4.05
+clk                                    -4.05
+clk                                    -4.04
+clk                                    -4.04
+clk                                    -4.03
+clk                                    -4.03
+clk                                    -4.01
+clk                                    -4.01
+clk                                    -4.00
+clk                                    -4.00
+clk                                    -3.98
+clk                                    -3.97
+clk                                    -3.97
+clk                                    -3.96
+clk                                    -3.94
+clk                                    -3.93
+clk                                    -3.92
+clk                                    -3.92
+clk                                    -3.91
+clk                                    -3.91
+clk                                    -3.89
+clk                                    -3.89
+clk                                    -3.89
+clk                                    -3.89
+clk                                    -3.89
+clk                                    -3.89
+clk                                    -3.88
+clk                                    -3.88
+clk                                    -3.87
+clk                                    -3.87
+clk                                    -3.86
+clk                                    -3.85
+clk                                    -3.85
+clk                                    -3.84
+clk                                    -3.84
+clk                                    -3.82
+clk                                    -3.82
+clk                                    -3.82
+clk                                    -3.80
+clk                                    -3.78
+clk                                    -3.77
+clk                                    -3.77
+clk                                    -3.77
+clk                                    -3.77
+clk                                    -3.76
+clk                                    -3.75
+clk                                    -3.74
+clk                                    -3.74
+clk                                    -3.73
+clk                                    -3.72
+clk                                    -3.72
+clk                                    -3.72
+clk                                    -3.72
+clk                                    -3.71
+clk                                    -3.70
+clk                                    -3.69
+clk                                    -3.68
+clk                                    -3.68
+clk                                    -3.68
+clk                                    -3.67
+clk                                    -3.66
+clk                                    -3.66
+clk                                    -3.65
+clk                                    -3.64
+clk                                    -3.63
+clk                                    -3.63
+clk                                    -3.63
+clk                                    -3.63
+clk                                    -3.61
+clk                                    -3.60
+clk                                    -3.59
+clk                                    -3.59
+clk                                    -3.58
+clk                                    -3.57
+clk                                    -3.57
+clk                                    -3.56
+clk                                    -3.56
+clk                                    -3.55
+clk                                    -3.55
+clk                                    -3.52
+clk                                    -3.52
+clk                                    -3.52
+clk                                    -3.52
+clk                                    -3.51
+clk                                    -3.51
+clk                                    -3.51
+clk                                    -3.49
+clk                                    -3.49
+clk                                    -3.49
+clk                                    -3.49
+clk                                    -3.48
+clk                                    -3.48
+clk                                    -3.48
+clk                                    -3.48
+clk                                    -3.48
+clk                                    -3.47
+clk                                    -3.47
+clk                                    -3.46
+clk                                    -3.41
+clk                                    -3.41
+clk                                    -3.41
+clk                                    -3.41
+clk                                    -3.40
+clk                                    -3.40
+clk                                    -3.39
+clk                                    -3.38
+clk                                    -3.37
+clk                                    -3.37
+clk                                    -3.35
+clk                                    -3.34
+clk                                    -3.34
+clk                                    -3.32
+clk                                    -3.32
+clk                                    -3.32
+clk                                    -3.31
+clk                                    -3.31
+clk                                    -3.31
+clk                                    -3.30
+clk                                    -3.30
+clk                                    -3.30
+clk                                    -3.29
+clk                                    -3.29
+clk                                    -3.28
+clk                                    -3.26
+clk                                    -3.26
+clk                                    -3.26
+clk                                    -3.25
+clk                                    -3.25
+clk                                    -3.25
+clk                                    -3.25
+clk                                    -3.24
+clk                                    -3.24
+clk                                    -3.24
+clk                                    -3.23
+clk                                    -3.22
+clk                                    -3.22
+clk                                    -3.22
+clk                                    -3.22
+clk                                    -3.21
+clk                                    -3.21
+clk                                    -3.21
+clk                                    -3.20
+clk                                    -3.19
+clk                                    -3.19
+clk                                    -3.19
+clk                                    -3.19
+clk                                    -3.17
+clk                                    -3.17
+clk                                    -3.16
+clk                                    -3.14
+clk                                    -3.14
+clk                                    -3.14
+clk                                    -3.14
+clk                                    -3.14
+clk                                    -3.12
+clk                                    -3.11
+clk                                    -3.11
+clk                                    -3.11
+clk                                    -3.10
+clk                                    -3.10
+clk                                    -3.09
+clk                                    -3.08
+clk                                    -3.07
+clk                                    -3.07
+clk                                    -3.06
+clk                                    -3.05
+clk                                    -3.05
+clk                                    -3.05
+clk                                    -3.04
+clk                                    -3.04
+clk                                    -3.03
+clk                                    -3.02
+clk                                    -3.02
+clk                                    -3.02
+clk                                    -3.02
+clk                                    -3.01
+clk                                    -3.01
+clk                                    -3.01
+clk                                    -3.00
+clk                                    -3.00
+clk                                    -2.99
+clk                                    -2.99
+clk                                    -2.98
+clk                                    -2.97
+clk                                    -2.97
+clk                                    -2.96
+clk                                    -2.96
+clk                                    -2.95
+clk                                    -2.95
+clk                                    -2.95
+clk                                    -2.94
+clk                                    -2.94
+clk                                    -2.94
+clk                                    -2.94
+clk                                    -2.93
+clk                                    -2.92
+clk                                    -2.92
+clk                                    -2.92
+clk                                    -2.91
+clk                                    -2.91
+clk                                    -2.91
+clk                                    -2.90
+clk                                    -2.90
+clk                                    -2.89
+clk                                    -2.88
+clk                                    -2.88
+clk                                    -2.88
+clk                                    -2.88
+clk                                    -2.87
+clk                                    -2.87
+clk                                    -2.86
+clk                                    -2.86
+clk                                    -2.86
+clk                                    -2.85
+clk                                    -2.84
+clk                                    -2.83
+clk                                    -2.82
+clk                                    -2.82
+clk                                    -2.82
+clk                                    -2.81
+clk                                    -2.81
+clk                                    -2.81
+clk                                    -2.80
+clk                                    -2.80
+clk                                    -2.80
+clk                                    -2.79
+clk                                    -2.78
+clk                                    -2.77
+clk                                    -2.77
+clk                                    -2.77
+clk                                    -2.77
+clk                                    -2.76
+clk                                    -2.76
+clk                                    -2.76
+clk                                    -2.76
+clk                                    -2.75
+clk                                    -2.75
+clk                                    -2.75
+clk                                    -2.74
+clk                                    -2.74
+clk                                    -2.73
+clk                                    -2.73
+clk                                    -2.72
+clk                                    -2.71
+clk                                    -2.70
+clk                                    -2.70
+clk                                    -2.70
+clk                                    -2.70
+clk                                    -2.69
+clk                                    -2.69
+clk                                    -2.69
+clk                                    -2.68
+clk                                    -2.68
+clk                                    -2.67
+clk                                    -2.67
+clk                                    -2.67
+clk                                    -2.67
+clk                                    -2.66
+clk                                    -2.66
+clk                                    -2.66
+clk                                    -2.64
+clk                                    -2.64
+clk                                    -2.63
+clk                                    -2.63
+clk                                    -2.63
+clk                                    -2.62
+clk                                    -2.62
+clk                                    -2.61
+clk                                    -2.60
+clk                                    -2.60
+clk                                    -2.60
+clk                                    -2.60
+clk                                    -2.59
+clk                                    -2.59
+clk                                    -2.58
+clk                                    -2.58
+clk                                    -2.57
+clk                                    -2.55
+clk                                    -2.54
+clk                                    -2.54
+clk                                    -2.52
+clk                                    -2.52
+clk                                    -2.51
+clk                                    -2.51
+clk                                    -2.50
+clk                                    -2.48
+clk                                    -2.47
+clk                                    -2.47
+clk                                    -2.46
+clk                                    -2.46
+clk                                    -2.45
+clk                                    -2.44
+clk                                    -2.44
+clk                                    -2.44
+clk                                    -2.43
+clk                                    -2.43
+clk                                    -2.43
+clk                                    -2.42
+clk                                    -2.41
+clk                                    -2.40
+clk                                    -2.40
+clk                                    -2.39
+clk                                    -2.37
+clk                                    -2.37
+clk                                    -2.37
+clk                                    -2.37
+clk                                    -2.37
+clk                                    -2.37
+clk                                    -2.36
+clk                                    -2.36
+clk                                    -2.35
+clk                                    -2.35
+clk                                    -2.35
+clk                                    -2.34
+clk                                    -2.33
+clk                                    -2.32
+clk                                    -2.32
+clk                                    -2.30
+clk                                    -2.30
+clk                                    -2.30
+clk                                    -2.30
+clk                                    -2.30
+clk                                    -2.29
+clk                                    -2.29
+clk                                    -2.28
+clk                                    -2.28
+clk                                    -2.27
+clk                                    -2.27
+clk                                    -2.27
+clk                                    -2.26
+clk                                    -2.26
+clk                                    -2.25
+clk                                    -2.25
+clk                                    -2.24
+clk                                    -2.24
+clk                                    -2.23
+clk                                    -2.23
+clk                                    -2.23
+clk                                    -2.23
+clk                                    -2.23
+clk                                    -2.22
+clk                                    -2.22
+clk                                    -2.22
+clk                                    -2.21
+clk                                    -2.21
+clk                                    -2.21
+clk                                    -2.20
+clk                                    -2.20
+clk                                    -2.19
+clk                                    -2.19
+clk                                    -2.18
+clk                                    -2.16
+clk                                    -2.15
+clk                                    -2.15
+clk                                    -2.14
+clk                                    -2.14
+clk                                    -2.14
+clk                                    -2.13
+clk                                    -2.13
+clk                                    -2.13
+clk                                    -2.13
+clk                                    -2.12
+clk                                    -2.12
+clk                                    -2.12
+clk                                    -2.11
+clk                                    -2.11
+clk                                    -2.10
+clk                                    -2.10
+clk                                    -2.10
+clk                                    -2.09
+clk                                    -2.08
+clk                                    -2.07
+clk                                    -2.07
+clk                                    -2.07
+clk                                    -2.07
+clk                                    -2.07
+clk                                    -2.06
+clk                                    -2.06
+clk                                    -2.05
+clk                                    -2.05
+clk                                    -2.05
+clk                                    -2.05
+clk                                    -2.04
+clk                                    -2.04
+clk                                    -2.03
+clk                                    -2.03
+clk                                    -2.02
+clk                                    -2.01
+clk                                    -2.01
+clk                                    -2.01
+clk                                    -2.01
+clk                                    -2.00
+clk                                    -2.00
+clk                                    -1.99
+clk                                    -1.99
+clk                                    -1.98
+clk                                    -1.98
+clk                                    -1.97
+clk                                    -1.97
+clk                                    -1.97
+clk                                    -1.97
+clk                                    -1.96
+clk                                    -1.96
+clk                                    -1.96
+clk                                    -1.95
+clk                                    -1.95
+clk                                    -1.94
+clk                                    -1.94
+clk                                    -1.93
+clk                                    -1.93
+clk                                    -1.93
+clk                                    -1.92
+clk                                    -1.92
+clk                                    -1.92
+clk                                    -1.91
+clk                                    -1.90
+clk                                    -1.90
+clk                                    -1.90
+clk                                    -1.90
+clk                                    -1.89
+clk                                    -1.88
+clk                                    -1.88
+clk                                    -1.88
+clk                                    -1.88
+clk                                    -1.87
+clk                                    -1.86
+clk                                    -1.86
+clk                                    -1.85
+clk                                    -1.84
+clk                                    -1.83
+clk                                    -1.83
+clk                                    -1.83
+clk                                    -1.83
+clk                                    -1.83
+clk                                    -1.83
+clk                                    -1.82
+clk                                    -1.82
+clk                                    -1.82
+clk                                    -1.81
+clk                                    -1.81
+clk                                    -1.81
+clk                                    -1.81
+clk                                    -1.80
+clk                                    -1.79
+clk                                    -1.79
+clk                                    -1.79
+clk                                    -1.78
+clk                                    -1.78
+clk                                    -1.78
+clk                                    -1.78
+clk                                    -1.77
+clk                                    -1.76
+clk                                    -1.76
+clk                                    -1.75
+clk                                    -1.75
+clk                                    -1.75
+clk                                    -1.74
+clk                                    -1.74
+clk                                    -1.74
+clk                                    -1.73
+clk                                    -1.73
+clk                                    -1.73
+clk                                    -1.72
+clk                                    -1.72
+clk                                    -1.71
+clk                                    -1.70
+clk                                    -1.70
+clk                                    -1.70
+clk                                    -1.69
+clk                                    -1.69
+clk                                    -1.68
+clk                                    -1.68
+clk                                    -1.68
+clk                                    -1.68
+clk                                    -1.66
+clk                                    -1.66
+clk                                    -1.66
+clk                                    -1.64
+clk                                    -1.63
+clk                                    -1.63
+clk                                    -1.63
+clk                                    -1.63
+clk                                    -1.63
+clk                                    -1.62
+clk                                    -1.62
+clk                                    -1.62
+clk                                    -1.62
+clk                                    -1.60
+clk                                    -1.60
+clk                                    -1.59
+clk                                    -1.59
+clk                                    -1.58
+clk                                    -1.58
+clk                                    -1.58
+clk                                    -1.57
+clk                                    -1.57
+clk                                    -1.57
+clk                                    -1.55
+clk                                    -1.55
+clk                                    -1.55
+clk                                    -1.54
+clk                                    -1.53
+clk                                    -1.53
+clk                                    -1.53
+clk                                    -1.53
+clk                                    -1.50
+clk                                    -1.50
+clk                                    -1.49
+clk                                    -1.49
+clk                                    -1.48
+clk                                    -1.48
+clk                                    -1.48
+clk                                    -1.47
+clk                                    -1.47
+clk                                    -1.46
+clk                                    -1.45
+clk                                    -1.45
+clk                                    -1.45
+clk                                    -1.44
+clk                                    -1.44
+clk                                    -1.44
+clk                                    -1.44
+clk                                    -1.43
+clk                                    -1.43
+clk                                    -1.42
+clk                                    -1.42
+clk                                    -1.42
+clk                                    -1.42
+clk                                    -1.42
+clk                                    -1.41
+clk                                    -1.41
+clk                                    -1.41
+clk                                    -1.40
+clk                                    -1.40
+clk                                    -1.39
+clk                                    -1.39
+clk                                    -1.39
+clk                                    -1.38
+clk                                    -1.37
+clk                                    -1.37
+clk                                    -1.37
+clk                                    -1.36
+clk                                    -1.36
+clk                                    -1.36
+clk                                    -1.36
+clk                                    -1.35
+clk                                    -1.34
+clk                                    -1.34
+clk                                    -1.33
+clk                                    -1.33
+clk                                    -1.33
+clk                                    -1.32
+clk                                    -1.31
+clk                                    -1.31
+clk                                    -1.31
+clk                                    -1.30
+clk                                    -1.30
+clk                                    -1.29
+clk                                    -1.29
+clk                                    -1.28
+clk                                    -1.28
+clk                                    -1.27
+clk                                    -1.27
+clk                                    -1.27
+clk                                    -1.26
+clk                                    -1.26
+clk                                    -1.25
+clk                                    -1.25
+clk                                    -1.24
+clk                                    -1.24
+clk                                    -1.24
+clk                                    -1.23
+clk                                    -1.23
+clk                                    -1.23
+clk                                    -1.22
+clk                                    -1.22
+clk                                    -1.22
+clk                                    -1.22
+clk                                    -1.22
+clk                                    -1.21
+clk                                    -1.21
+clk                                    -1.21
+clk                                    -1.20
+clk                                    -1.20
+clk                                    -1.20
+clk                                    -1.20
+clk                                    -1.19
+clk                                    -1.18
+clk                                    -1.18
+clk                                    -1.17
+clk                                    -1.17
+clk                                    -1.16
+clk                                    -1.16
+clk                                    -1.16
+clk                                    -1.15
+clk                                    -1.15
+clk                                    -1.15
+clk                                    -1.14
+clk                                    -1.14
+clk                                    -1.14
+clk                                    -1.14
+clk                                    -1.14
+clk                                    -1.13
+clk                                    -1.13
+clk                                    -1.13
+clk                                    -1.12
+clk                                    -1.12
+clk                                    -1.12
+clk                                    -1.12
+clk                                    -1.12
+clk                                    -1.11
+clk                                    -1.11
+clk                                    -1.11
+clk                                    -1.11
+clk                                    -1.11
+clk                                    -1.10
+clk                                    -1.10
+clk                                    -1.10
+clk                                    -1.09
+clk                                    -1.09
+clk                                    -1.08
+clk                                    -1.08
+clk                                    -1.08
+clk                                    -1.07
+clk                                    -1.07
+clk                                    -1.06
+clk                                    -1.06
+clk                                    -1.06
+clk                                    -1.06
+clk                                    -1.06
+clk                                    -1.05
+clk                                    -1.05
+clk                                    -1.05
+clk                                    -1.05
+clk                                    -1.05
+clk                                    -1.05
+clk                                    -1.04
+clk                                    -1.04
+clk                                    -1.03
+clk                                    -1.03
+clk                                    -1.03
+clk                                    -1.03
+clk                                    -1.02
+clk                                    -1.02
+clk                                    -1.02
+clk                                    -1.02
+clk                                    -1.01
+clk                                    -1.01
+clk                                    -1.00
+clk                                    -1.00
+clk                                    -0.99
+clk                                    -0.98
+clk                                    -0.98
+clk                                    -0.98
+clk                                    -0.97
+clk                                    -0.96
+clk                                    -0.96
+clk                                    -0.96
+clk                                    -0.95
+clk                                    -0.94
+clk                                    -0.94
+clk                                    -0.94
+clk                                    -0.94
+clk                                    -0.94
+clk                                    -0.93
+clk                                    -0.93
+clk                                    -0.93
+clk                                    -0.93
+clk                                    -0.92
+clk                                    -0.92
+clk                                    -0.92
+clk                                    -0.92
+clk                                    -0.92
+clk                                    -0.91
+clk                                    -0.91
+clk                                    -0.91
+clk                                    -0.91
+clk                                    -0.91
+clk                                    -0.91
+clk                                    -0.91
+clk                                    -0.90
+clk                                    -0.90
+clk                                    -0.90
+clk                                    -0.90
+clk                                    -0.90
+clk                                    -0.89
+clk                                    -0.89
+clk                                    -0.89
+clk                                    -0.89
+clk                                    -0.89
+clk                                    -0.89
+clk                                    -0.89
+clk                                    -0.89
+clk                                    -0.88
+clk                                    -0.88
+clk                                    -0.88
+clk                                    -0.88
+clk                                    -0.88
+clk                                    -0.88
+clk                                    -0.87
+clk                                    -0.87
+clk                                    -0.87
+clk                                    -0.87
+clk                                    -0.87
+clk                                    -0.86
+clk                                    -0.86
+clk                                    -0.85
+clk                                    -0.85
+clk                                    -0.85
+clk                                    -0.84
+clk                                    -0.84
+clk                                    -0.84
+clk                                    -0.83
+clk                                    -0.83
+clk                                    -0.83
+clk                                    -0.82
+clk                                    -0.82
+clk                                    -0.82
+clk                                    -0.82
+clk                                    -0.81
+clk                                    -0.81
+clk                                    -0.81
+clk                                    -0.81
+clk                                    -0.81
+clk                                    -0.81
+clk                                    -0.80
+clk                                    -0.79
+clk                                    -0.79
+clk                                    -0.79
+clk                                    -0.79
+clk                                    -0.78
+clk                                    -0.78
+clk                                    -0.77
+clk                                    -0.77
+clk                                    -0.76
+clk                                    -0.76
+clk                                    -0.76
+clk                                    -0.76
+clk                                    -0.75
+clk                                    -0.75
+clk                                    -0.75
+clk                                    -0.75
+clk                                    -0.75
+clk                                    -0.74
+clk                                    -0.73
+clk                                    -0.73
+clk                                    -0.73
+clk                                    -0.73
+clk                                    -0.73
+clk                                    -0.72
+clk                                    -0.72
+clk                                    -0.72
+clk                                    -0.72
+clk                                    -0.72
+clk                                    -0.72
+clk                                    -0.71
+clk                                    -0.71
+clk                                    -0.71
+clk                                    -0.71
+clk                                    -0.70
+clk                                    -0.70
+clk                                    -0.70
+clk                                    -0.70
+clk                                    -0.70
+clk                                    -0.69
+clk                                    -0.69
+clk                                    -0.67
+clk                                    -0.67
+clk                                    -0.67
+clk                                    -0.67
+clk                                    -0.66
+clk                                    -0.65
+clk                                    -0.65
+clk                                    -0.65
+clk                                    -0.65
+clk                                    -0.65
+clk                                    -0.65
+clk                                    -0.64
+clk                                    -0.64
+clk                                    -0.64
+clk                                    -0.64
+clk                                    -0.64
+clk                                    -0.64
+clk                                    -0.64
+clk                                    -0.64
+clk                                    -0.64
+clk                                    -0.63
+clk                                    -0.63
+clk                                    -0.63
+clk                                    -0.62
+clk                                    -0.61
+clk                                    -0.61
+clk                                    -0.61
+clk                                    -0.60
+clk                                    -0.60
+clk                                    -0.60
+clk                                    -0.59
+clk                                    -0.59
+clk                                    -0.59
+clk                                    -0.59
+clk                                    -0.58
+clk                                    -0.58
+clk                                    -0.57
+clk                                    -0.57
+clk                                    -0.57
+clk                                    -0.57
+clk                                    -0.56
+clk                                    -0.56
+clk                                    -0.56
+clk                                    -0.56
+clk                                    -0.56
+clk                                    -0.56
+clk                                    -0.56
+clk                                    -0.55
+clk                                    -0.55
+clk                                    -0.54
+clk                                    -0.54
+clk                                    -0.54
+clk                                    -0.54
+clk                                    -0.54
+clk                                    -0.53
+clk                                    -0.53
+clk                                    -0.53
+clk                                    -0.52
+clk                                    -0.52
+clk                                    -0.52
+clk                                    -0.52
+clk                                    -0.51
+clk                                    -0.50
+clk                                    -0.50
+clk                                    -0.50
+clk                                    -0.50
+clk                                    -0.50
+clk                                    -0.49
+clk                                    -0.49
+clk                                    -0.49
+clk                                    -0.49
+clk                                    -0.48
+clk                                    -0.48
+clk                                    -0.47
+clk                                    -0.47
+clk                                    -0.46
+clk                                    -0.46
+clk                                    -0.46
+clk                                    -0.46
+clk                                    -0.45
+clk                                    -0.45
+clk                                    -0.45
+clk                                    -0.45
+clk                                    -0.44
+clk                                    -0.44
+clk                                    -0.44
+clk                                    -0.44
+clk                                    -0.43
+clk                                    -0.43
+clk                                    -0.43
+clk                                    -0.43
+clk                                    -0.43
+clk                                    -0.43
+clk                                    -0.42
+clk                                    -0.42
+clk                                    -0.42
+clk                                    -0.42
+clk                                    -0.42
+clk                                    -0.42
+clk                                    -0.42
+clk                                    -0.41
+clk                                    -0.41
+clk                                    -0.41
+clk                                    -0.41
+clk                                    -0.40
+clk                                    -0.40
+clk                                    -0.40
+clk                                    -0.40
+clk                                    -0.39
+clk                                    -0.39
+clk                                    -0.39
+clk                                    -0.38
+clk                                    -0.37
+clk                                    -0.36
+clk                                    -0.36
+clk                                    -0.35
+clk                                    -0.33
+clk                                    -0.33
+clk                                    -0.33
+clk                                    -0.32
+clk                                    -0.32
+clk                                    -0.32
+clk                                    -0.32
+clk                                    -0.32
+clk                                    -0.31
+clk                                    -0.31
+clk                                    -0.31
+clk                                    -0.31
+clk                                    -0.30
+clk                                    -0.30
+clk                                    -0.29
+clk                                    -0.29
+clk                                    -0.28
+clk                                    -0.28
+clk                                    -0.27
+clk                                    -0.27
+clk                                    -0.27
+clk                                    -0.26
+clk                                    -0.26
+clk                                    -0.26
+clk                                    -0.26
+clk                                    -0.25
+clk                                    -0.24
+clk                                    -0.24
+clk                                    -0.23
+clk                                    -0.23
+clk                                    -0.23
+clk                                    -0.22
+clk                                    -0.22
+clk                                    -0.22
+clk                                    -0.22
+clk                                    -0.21
+clk                                    -0.20
+clk                                    -0.20
+clk                                    -0.19
+clk                                    -0.19
+clk                                    -0.19
+clk                                    -0.19
+clk                                    -0.18
+clk                                    -0.18
+clk                                    -0.18
+clk                                    -0.16
+clk                                    -0.16
+clk                                    -0.16
+clk                                    -0.16
+clk                                    -0.15
+clk                                    -0.15
+clk                                    -0.15
+clk                                    -0.15
+clk                                    -0.15
+clk                                    -0.15
+clk                                    -0.14
+clk                                    -0.13
+clk                                    -0.13
+clk                                    -0.13
+clk                                    -0.12
+clk                                    -0.12
+clk                                    -0.12
+clk                                    -0.12
+clk                                    -0.11
+clk                                    -0.10
+clk                                    -0.10
+clk                                    -0.10
+clk                                    -0.10
+clk                                    -0.10
+clk                                    -0.10
+clk                                    -0.10
+clk                                    -0.10
+clk                                    -0.09
+clk                                    -0.09
+clk                                    -0.08
+clk                                    -0.08
+clk                                    -0.08
+clk                                    -0.08
+clk                                    -0.07
+clk                                    -0.07
+clk                                    -0.07
+clk                                    -0.07
+clk                                    -0.06
+clk                                    -0.05
+clk                                    -0.05
+clk                                    -0.05
+clk                                    -0.05
+clk                                    -0.05
+clk                                    -0.04
+clk                                    -0.04
+clk                                    -0.04
+clk                                    -0.03
+clk                                    -0.03
+clk                                    -0.03
+clk                                    -0.02
+clk                                    -0.02
+clk                                    -0.02
+clk                                    -0.02
+clk                                    -0.02
+clk                                    -0.02
+clk                                    -0.02
+clk                                    -0.01
+clk                                    -0.01
+clk                                    -0.01
+clk                                     0.00
+
+OT_HOLD_GATE PASS FF wns_ps -875.41 endpoints 2606 (true negative slack)
