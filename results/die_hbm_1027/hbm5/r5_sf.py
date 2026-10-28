@@ -31,13 +31,34 @@ Lc.margins = margins
 _x = Lc.crossings
 SF = []
 def crossings(D, reg, G, padj):
+    """fixpoint (DIE-HBM-5 03:3x): an SF wire must start in a region the start tree REACHES, so chains of source-only
+    regions (spb0 -> spb1 -> spb2) get one SF per frontier region, re-evaluated until every region is reached.
+    The tree root is taken as the region whose directed reach is largest (ties: name)."""
     out = _x(D, reg, G, padj)
-    ins = {x["rb"] for x in out}
-    for r in sorted({x["ra"] for x in out} - ins):
-        w = max((x for x in out if x["ra"] == r), key=lambda x: (x["width"], x["id"]))
-        sf = dict(id=f"SF:{w['rb']}>{r}", src=w["dst"], dst=w["src"], ra=w["rb"], rb=r, width=1, xy=w["xy"],
-                  far=w["far"], start_forward=True, for_ports=sorted(x["id"] for x in out if x["ra"] == r))
-        out.append(sf); SF.append(sf)
+    regs = sorted({x["ra"] for x in out} | {x["rb"] for x in out})
+    def reach(src):
+        adj = {}
+        for x in out: adj.setdefault(x["ra"], set()).add(x["rb"])
+        seen = {src}; st = [src]
+        while st:
+            for b in adj.get(st.pop(), ()):
+                if b not in seen: seen.add(b); st.append(b)
+        return seen
+    root = max(regs, key=lambda r: (len(reach(r)), r))
+    while True:
+        got = reach(root); miss = [r for r in regs if r not in got]
+        if not miss: break
+        cand = [x for x in out if x["ra"] in miss and x["rb"] in got and not x.get("start_forward")]
+        if not cand: break
+        added = False
+        for r in miss:
+            c = [x for x in cand if x["ra"] == r]
+            if not c: continue
+            w = max(c, key=lambda x: (x["width"], x["id"]))
+            sf = dict(id=f"SF:{w['rb']}>{r}", src=w["dst"], dst=w["src"], ra=w["rb"], rb=r, width=1, xy=w["xy"],
+                      far=w["far"], start_forward=True, for_ports=sorted(x["id"] for x in out if x["ra"] == r))
+            out.append(sf); SF.append(sf); added = True
+        if not added: break
     return out
 Lc.crossings = crossings
 R3.cmd_tsv(SRC, *sys.argv[2:7])
