@@ -105,7 +105,8 @@ def _run(tmp_path, monkeypatch, plan, *extra, core_view_model=None):
     proof.mkdir(exist_ok=True)
     for c in ("TT", "FF"):
         (proof / f"tap_arrivals_{c}.json").write_text(json.dumps(dict(taps=list(_taps(c).values()),
-                                                                      cppr_node_range_ps={"h0": 10.0, "h": 10.0})))
+                                                                      cppr_node_range_ps={"h0": 10.0, "h": 10.0},
+                                                                      clock_cell="buf")))
     out = tmp_path / ("o" + "_".join(x.strip("-") for x in extra))
     assert R.main([str(proof), "--plan", str(pf), "--out", str(out), "--corner", "TT", "--corner", "FF",
                    "--data-droop", "none", *extra]) == 0
