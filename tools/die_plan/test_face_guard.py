@@ -516,3 +516,36 @@ def test_land_spec_and_kit_file(tmp_path):
     (tmp_path / "constraint.sdc").write_text("create_clock -name fclk -period 833 [get_ports fclk]\n")
     (tmp_path / "land_slots.json").write_text(json.dumps({"buses": MUX4}))
     assert face_guard.main([str(tmp_path / "net.v"), "--pins", str(tmp_path / "pins.json")]) == 0
+
+
+# ---- forwarded clock output contract (DIE-HEAD-9 FACE (c)): create_generated_clock -source S -divide_by 1 T
+def _exp_net(body):
+    data = (f" DFFHQNx1{_X} f1 (.CLK(clk), .D(a), .QN(q)); DFFHQNx1{_X} f2 (.CLK(clk), .D(q), .QN(n2));"
+            f" INVx1{_X} io (.A(n2), .Y(o));\n")
+    return ("module top(clk, clk_t3, a, o, fclk_out_o);\n input clk; input clk_t3; input a; output o; "
+            "output fclk_out_o;\n" + data + body + "\nendmodule\n")
+
+
+def test_sdc_clock_exports_parse():
+    sdc = ("create_generated_clock -name fclk_out_o -master_clock clk -source [get_ports clk_t3] -divide_by 1 "
+           "[get_ports fclk_out_o]\ncreate_generated_clock -name g2 -source [get_ports clk] -divide_by 2 [get_ports h]\n")
+    assert face_guard.sdc_clock_exports(sdc) == [("fclk_out_o", "clk_t3")]
+
+
+@pytest.mark.parametrize("body,exports,ok", [
+    (f" BUFx2{_X} b (.A(clk_t3), .Y(fclk_out_o));", [("fclk_out_o", "clk_t3")], True),
+    (f" INVx2{_X} i0 (.A(clk_t3), .Y(n)); INVx2{_X} i1 (.A(n), .Y(fclk_out_o));", [("fclk_out_o", "clk_t3")], True),
+    (f" BUFx2{_X} b (.A(clk_t3), .Y(fclk_out_o));", (), False),                       # undeclared: feedthrough
+    (f" BUFx2{_X} b (.A(clk), .Y(fclk_out_o));", [("fclk_out_o", "clk_t3")], False),   # wrong source (old RTL)
+    (f" INVx2{_X} i0 (.A(clk_t3), .Y(fclk_out_o));", [("fclk_out_o", "clk_t3")], False),  # inverted
+    (f" BUFx2{_X} b (.A(clk_t3), .Y(n)); BUFx2{_X} c (.A(n), .Y(fclk_out_o)); BUFx2{_X} l (.A(n), .Y(z));",
+     [("fclk_out_o", "clk_t3")], False),                                                # chain net shared
+    (f" AND2x2{_X} a (.A(clk_t3), .B(clk), .Y(fclk_out_o));", [("fclk_out_o", "clk_t3")], False),  # logic
+])
+def test_clock_export_contract(body, exports, ok):
+    r = face_guard.guard(_exp_net(body), "top", exports=exports)
+    assert (r["verdict"] == "PASS") == ok, r["fails"]
+    if ok:
+        assert r["clock_exports"] == {"fclk_out_o": "clk_t3"}
+    elif exports:
+        assert "clock_export" in r["fail_counts"], r["fails"]

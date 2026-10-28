@@ -469,7 +469,21 @@ def sdc_clock_ports(text):
     return out
 
 
-def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=()):
+def sdc_clock_exports(text):
+    """[(output port, source port)] of every `create_generated_clock ... -source [get_ports S] ... [get_ports T]`
+    with -divide_by 1 (a forwarded clock output, landing_contract.sdc)."""
+    out = []
+    for m in re.finditer(r"^\s*create_generated_clock\b([^\n]*)$", text, re.M):
+        ln = m.group(1)
+        src = re.search(r"-source\s+\[get_ports\s+\{?([A-Za-z_][A-Za-z0-9_]*)\}?\s*\]", ln)
+        tgt = re.search(r"\[get_ports\s+\{?([A-Za-z_][A-Za-z0-9_]*)\}?\s*\]\s*$", ln)
+        if src and tgt and re.search(r"-divide_by\s+1\b", ln) and (tgt.group(1), src.group(1)) not in out:
+            out.append((tgt.group(1), src.group(1)))
+    return out
+
+
+def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=(),
+          exports=()):
     """straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
     parent need no pin register -> exempt (recorded in the result); any other name is refused (ValueError).
     bumps: declared hard-IP line-side ports [(port, dir, width)] (plan bump_ports, KV-KITS-4 10-27): the bump IS the
@@ -488,6 +502,10 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     its write condition W holds and to its own state otherwise (own-Q hold, never written -> FAIL), W uses no landing
     bit and no undriven/macro leaf, and the D write conditions are pairwise mutually exclusive.  Each slot flop is that
     bit's face register (two bits on one slot flop -> merged).
+    exports: declared forwarded clock outputs [(T, S)] (kit SDC create_generated_clock -source [get_ports S] -divide_by 1
+    [get_ports T], DIE-HEAD-9 FACE (c)): T is an output port wired from clock port S through single-driver,
+    single-load buffers / an even number of inverters only, the T net and every chain net carry nothing else; then T
+    is a clock role (recorded in clock_exports), not face data.  Anything else fails class "clock_export".
     dead: declared proven-dead input bits (kit dead_inputs.json, dead_input_list): each must be an input port bit
     whose net has NO load and no driver in the netlist -- then it is recorded (dead_declared), not a face register;
     a declared bit that is not an input port bit, or that still loads anything, fails class "dead"."""
@@ -764,11 +782,49 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             return f"slot ICGs gated from {len(roots)} clock nets (want one forwarded clock)"
         return None
 
+    res["clock_exports"] = {}
+    exp_names = set()
+    for t_, s_ in (exports or ()):               # a declared forwarded clock output: buffers only from its source port
+        exp_names.add(t_)
+        if T.dirs.get(t_) != "output" or len(_bits_of(T, t_)) != 1 or T.dirs.get(s_) != "input" or \
+                not re.match(skip_re, s_) or len(_bits_of(T, s_)) != 1:
+            fail("clock_export", t_, f"export {t_} ({T.dirs.get(t_)}) from {s_} ({T.dirs.get(s_)}): want a 1-bit output "
+                                     f"from a 1-bit clock input port")
+            continue
+        cur, inv, why, seen = port_root[_bits_of(T, t_)[0]], 0, None, set()
+        src_r = port_root[_bits_of(T, s_)[0]]
+        first = True
+        while cur != src_r:
+            if not first and cur in roots_ports:
+                why = f"wired from port {roots_ports[cur][0]}, contract source {s_}"
+                break
+            if cur in seen or len(drv[cur]) != 1 or len(loads[cur]) != (0 if first else 1) or \
+                    len(roots_ports.get(cur, [])) != (1 if first else 0):
+                why = f"net {cur}: {len(drv[cur])} driver(s), {len(loads[cur])} load(s), ports {roots_ports.get(cur, [])[:3]}"
+                break
+            seen.add(cur)
+            first = False
+            ci, _ = drv[cur][0]
+            m, path, pp = F.cells[ci]
+            ins = [v for k, (dd, v) in pp.items() if dd == "in"]
+            if not is_buf(m) or len(ins) != 1 or len(ins[0]) != 1:
+                why = f"driven by {m} {path} (want buffers/inverters only)"
+                break
+            inv += m.upper().startswith(("INV", "$_NOT_"))
+            cur = F.find(ins[0][0])
+        if why is None and first:
+            why = f"{t_} is the same net as {s_} (no driver)"
+        if why is None and inv % 2:
+            why = f"odd inversion count {inv}"
+        if why:
+            fail("clock_export", t_, why)
+        else:
+            res["clock_exports"][t_] = s_
     for x in (straps or ()):                     # an exempt strap must be an input port of this block (rule 1)
         if T.dirs.get(x) != "input":
             fail("strap", x, f"declared ID strap is not an input port ({T.dirs.get(x)})")
     for p in T.ports:
-        if re.match(skip_re, p):
+        if re.match(skip_re, p) or p in exp_names:
             continue
         d = T.dirs.get(p)
         for b in _bits_of(T, p):
@@ -978,10 +1034,11 @@ def main(argv=None):
     bl = kit_bump_list(bd) if bd else []
     sdc = a.sdc or (str(Path(a.pins).with_name("constraint.sdc")) if a.pins else None)
     ck = sdc_clock_ports(Path(sdc).read_text()) if sdc and Path(sdc).exists() else []
+    ex = sdc_clock_exports(Path(sdc).read_text()) if sdc and Path(sdc).exists() else []
     lf = a.land or (str(Path(a.pins).with_name("land_slots.json")) if a.pins else None)
     land = kit_land(lf) if lf and Path(lf).exists() else None
     dl = kit_dead_list(Path(a.pins).parent) if a.pins else []
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl)
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex)
     r["netlist"] = a.netlist
     if a.out:
         Path(a.out).write_text(json.dumps(r, indent=1) + "\n")
