@@ -46,6 +46,14 @@ def test_hbm_harden():
     _check(_load("physical/die_plan/hbm/cores/harden/gen_core_kit.py").sdc(PER, 250.0, ["clk"], RSTS, "t"))
 
 
+def test_hbm_arch_cores():
+    m = _load("physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py")
+    text = m.sdc(PER, 250.0, 40.0, ["clk"], ["rst_n", "u_a__rst_n[0]", "u_a__rst_n[1]"], "t")
+    _check(text, ["rst_n", "u_a__rst_n"])
+    assert text.count("# reset ") == 1
+    assert "0.5 * per" not in (ROOT / "physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py").read_text()
+
+
 def test_kv_harden():
     _check(_load("physical/die_plan/qwen_kvsys/cores/harden/gen_core_kit_kv.py").sdc(PER, 250.0, 40.0, ["clk"], RSTS, "t"))
 
@@ -81,5 +89,4 @@ def test_no_generator_keeps_a_reset_copy():
     """sweep: no core-kit generator under physical/die_plan still writes the 0.5 T reset input delay."""
     hits = [str(p.relative_to(ROOT)) for p in (ROOT / "physical/die_plan").rglob("*.py")
             if "recovery at 1 T" in p.read_text(errors="replace")]
-    # hbm_arch_cores/gen_core_kit_hbm.py is fixed on claude/hbm-cores-rebal-8-1028 (approved, ROOT-MERGE pending)
-    assert set(hits) <= {"physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py"}, hits
+    assert hits == [], hits
