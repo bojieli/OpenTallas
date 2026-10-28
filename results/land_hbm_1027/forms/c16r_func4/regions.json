@@ -1,0 +1,535 @@
+{
+ "form": "func4",
+ "partition_region": {
+  "NW_b000": "NW_bank",
+  "NW_b001": "NW_bank",
+  "NW_b002": "NW_bank",
+  "NW_b003": "NW_bank",
+  "NW_b010": "NW_bank",
+  "NW_b011": "NW_bank",
+  "NW_b012": "NW_bank",
+  "NW_b013": "NW_bank",
+  "NW_b100": "NW_srow",
+  "NW_b101": "NW_srow",
+  "NW_b102": "NW_srow",
+  "NW_b103": "NW_srow",
+  "NW_b110": "NW_srow",
+  "NW_b111": "NW_srow",
+  "NW_b112": "NW_nrow",
+  "NW_b113": "NW_nrow",
+  "NW_hub": "NW_hub",
+  "NW_io": "NW_bank",
+  "NW_mca": "TOP",
+  "NW_mcb": "TOP",
+  "NW_sm0": "NW_sm0",
+  "NW_sm1": "NW_sm1",
+  "NW_sm2": "NW_sm2",
+  "NW_sm3": "NW_sm3",
+  "NW_spb0": "NW_spb",
+  "NW_spb1": "NW_spb",
+  "NW_spb2": "NW_spb",
+  "NW_spt0": "NW_spt",
+  "NW_spt1": "NW_spt",
+  "NW_spt2": "NW_spt",
+  "NW_spu0": "NW_nrow",
+  "NW_spu1": "NW_srow",
+  "NW_su00": "NW_nrow",
+  "NW_su01": "NW_nrow",
+  "NW_su10": "NW_nrow",
+  "NW_su11": "NW_nrow",
+  "NW_su20": "NW_srow",
+  "NW_su21": "NW_srow",
+  "NW_su30": "NW_srow",
+  "NW_su31": "NW_srow",
+  "PHY_N": "TOP",
+  "root": "ROOT",
+  "vsN0": "ROOT",
+  "vsN1": "ROOT",
+  "vsN2": "ROOT",
+  "vsN4": "ROOT",
+  "vsN5": "ROOT",
+  "vsN6": "ROOT",
+  "NE_b000": "NE_bank",
+  "NE_b001": "NE_bank",
+  "NE_b002": "NE_bank",
+  "NE_b003": "NE_bank",
+  "NE_b010": "NE_bank",
+  "NE_b011": "NE_bank",
+  "NE_b012": "NE_bank",
+  "NE_b013": "NE_bank",
+  "NE_b100": "NE_srow",
+  "NE_b101": "NE_srow",
+  "NE_b102": "NE_srow",
+  "NE_b103": "NE_srow",
+  "NE_b110": "NE_srow",
+  "NE_b111": "NE_srow",
+  "NE_b112": "NE_nrow",
+  "NE_b113": "NE_nrow",
+  "NE_hub": "NE_hub",
+  "NE_io": "NE_bank",
+  "NE_mca": "TOP",
+  "NE_mcb": "TOP",
+  "NE_sm0": "NE_sm0",
+  "NE_sm1": "NE_sm1",
+  "NE_sm2": "NE_sm2",
+  "NE_sm3": "NE_sm3",
+  "NE_spb0": "NE_spb",
+  "NE_spb1": "NE_spb",
+  "NE_spb2": "NE_spb",
+  "NE_spt0": "NE_spt",
+  "NE_spt1": "NE_spt",
+  "NE_spt2": "NE_spt",
+  "NE_spu0": "NE_nrow",
+  "NE_spu1": "NE_srow",
+  "NE_su00": "NE_nrow",
+  "NE_su01": "NE_nrow",
+  "NE_su10": "NE_nrow",
+  "NE_su11": "NE_nrow",
+  "NE_su20": "NE_srow",
+  "NE_su21": "NE_srow",
+  "NE_su30": "NE_srow",
+  "NE_su31": "NE_srow"
+ },
+ "regions": {
+  "NW_bank": {
+   "parts": [
+    "NW_b000",
+    "NW_b001",
+    "NW_b002",
+    "NW_b003",
+    "NW_b010",
+    "NW_b011",
+    "NW_b012",
+    "NW_b013",
+    "NW_io"
+   ],
+   "hard_cores": 67,
+   "bbox_um": [
+    0.0,
+    6065.28,
+    5140.8,
+    10385.279999999999
+   ],
+   "area_mm2": 22.208,
+   "bbox_mm": [
+    5.14,
+    4.32
+   ]
+  },
+  "NW_srow": {
+   "parts": [
+    "NW_b100",
+    "NW_b101",
+    "NW_b102",
+    "NW_b103",
+    "NW_b110",
+    "NW_b111",
+    "NW_spu1",
+    "NW_su20",
+    "NW_su21",
+    "NW_su30",
+    "NW_su31"
+   ],
+   "hard_cores": 93,
+   "bbox_um": [
+    0.0,
+    4510.08,
+    13357.44,
+    6065.28
+   ],
+   "area_mm2": 20.773,
+   "bbox_mm": [
+    13.36,
+    1.56
+   ]
+  },
+  "NW_nrow": {
+   "parts": [
+    "NW_b112",
+    "NW_b113",
+    "NW_spu0",
+    "NW_su00",
+    "NW_su01",
+    "NW_su10",
+    "NW_su11"
+   ],
+   "hard_cores": 56,
+   "bbox_um": [
+    0.0,
+    10385.28,
+    13357.44,
+    11957.76
+   ],
+   "area_mm2": 21.004,
+   "bbox_mm": [
+    13.36,
+    1.57
+   ]
+  },
+  "NW_hub": {
+   "parts": [
+    "NW_hub"
+   ],
+   "hard_cores": 159,
+   "bbox_um": [
+    5140.8,
+    6065.28,
+    13357.439999999999,
+    10385.279999999999
+   ],
+   "area_mm2": 35.496,
+   "bbox_mm": [
+    8.22,
+    4.32
+   ]
+  },
+  "TOP": {
+   "parts": [
+    "NW_mca",
+    "NW_mcb",
+    "PHY_N",
+    "NE_mca",
+    "NE_mcb"
+   ],
+   "hard_cores": 0,
+   "bbox_um": [
+    0.0,
+    16467.84,
+    28399.68,
+    18541.44
+   ],
+   "area_mm2": 58.89,
+   "bbox_mm": [
+    28.4,
+    2.07
+   ]
+  },
+  "NW_sm0": {
+   "parts": [
+    "NW_sm0"
+   ],
+   "hard_cores": 32,
+   "bbox_um": [
+    0.0,
+    11957.76,
+    5771.52,
+    16467.84
+   ],
+   "area_mm2": 26.03,
+   "bbox_mm": [
+    5.77,
+    4.51
+   ]
+  },
+  "NW_sm1": {
+   "parts": [
+    "NW_sm1"
+   ],
+   "hard_cores": 32,
+   "bbox_um": [
+    7585.92,
+    11957.76,
+    13357.44,
+    16467.84
+   ],
+   "area_mm2": 26.03,
+   "bbox_mm": [
+    5.77,
+    4.51
+   ]
+  },
+  "NW_sm2": {
+   "parts": [
+    "NW_sm2"
+   ],
+   "hard_cores": 32,
+   "bbox_um": [
+    0.0,
+    0.0,
+    5771.52,
+    4510.08
+   ],
+   "area_mm2": 26.03,
+   "bbox_mm": [
+    5.77,
+    4.51
+   ]
+  },
+  "NW_sm3": {
+   "parts": [
+    "NW_sm3"
+   ],
+   "hard_cores": 32,
+   "bbox_um": [
+    7585.92,
+    0.0,
+    13357.44,
+    4510.08
+   ],
+   "area_mm2": 26.03,
+   "bbox_mm": [
+    5.77,
+    4.51
+   ]
+  },
+  "NW_spb": {
+   "parts": [
+    "NW_spb0",
+    "NW_spb1",
+    "NW_spb2"
+   ],
+   "hard_cores": 4,
+   "bbox_um": [
+    5771.52,
+    0.0,
+    7585.92,
+    4510.08
+   ],
+   "area_mm2": 8.183,
+   "bbox_mm": [
+    1.81,
+    4.51
+   ]
+  },
+  "NW_spt": {
+   "parts": [
+    "NW_spt0",
+    "NW_spt1",
+    "NW_spt2"
+   ],
+   "hard_cores": 2,
+   "bbox_um": [
+    5771.52,
+    11957.76,
+    7585.92,
+    16467.84
+   ],
+   "area_mm2": 8.183,
+   "bbox_mm": [
+    1.81,
+    4.51
+   ]
+  },
+  "ROOT": {
+   "parts": [
+    "root",
+    "vsN0",
+    "vsN1",
+    "vsN2",
+    "vsN4",
+    "vsN5",
+    "vsN6"
+   ],
+   "hard_cores": 48,
+   "bbox_um": [
+    13357.44,
+    0.0,
+    15042.24,
+    16467.84
+   ],
+   "area_mm2": 27.745,
+   "bbox_mm": [
+    1.68,
+    16.47
+   ]
+  },
+  "NE_bank": {
+   "parts": [
+    "NE_b000",
+    "NE_b001",
+    "NE_b002",
+    "NE_b003",
+    "NE_b010",
+    "NE_b011",
+    "NE_b012",
+    "NE_b013",
+    "NE_io"
+   ],
+   "hard_cores": 66,
+   "bbox_um": [
+    23258.88,
+    6065.28,
+    28399.68,
+    10385.279999999999
+   ],
+   "area_mm2": 22.208,
+   "bbox_mm": [
+    5.14,
+    4.32
+   ]
+  },
+  "NE_srow": {
+   "parts": [
+    "NE_b100",
+    "NE_b101",
+    "NE_b102",
+    "NE_b103",
+    "NE_b110",
+    "NE_b111",
+    "NE_spu1",
+    "NE_su20",
+    "NE_su21",
+    "NE_su30",
+    "NE_su31"
+   ],
+   "hard_cores": 93,
+   "bbox_um": [
+    15042.24,
+    4510.08,
+    28399.68,
+    6065.28
+   ],
+   "area_mm2": 20.773,
+   "bbox_mm": [
+    13.36,
+    1.56
+   ]
+  },
+  "NE_nrow": {
+   "parts": [
+    "NE_b112",
+    "NE_b113",
+    "NE_spu0",
+    "NE_su00",
+    "NE_su01",
+    "NE_su10",
+    "NE_su11"
+   ],
+   "hard_cores": 56,
+   "bbox_um": [
+    15042.24,
+    10385.28,
+    28399.68,
+    11957.76
+   ],
+   "area_mm2": 21.004,
+   "bbox_mm": [
+    13.36,
+    1.57
+   ]
+  },
+  "NE_hub": {
+   "parts": [
+    "NE_hub"
+   ],
+   "hard_cores": 157,
+   "bbox_um": [
+    15042.24,
+    6065.28,
+    23258.879999999997,
+    10385.279999999999
+   ],
+   "area_mm2": 35.496,
+   "bbox_mm": [
+    8.22,
+    4.32
+   ]
+  },
+  "NE_sm0": {
+   "parts": [
+    "NE_sm0"
+   ],
+   "hard_cores": 32,
+   "bbox_um": [
+    22628.16,
+    11957.76,
+    28399.68,
+    16467.84
+   ],
+   "area_mm2": 26.03,
+   "bbox_mm": [
+    5.77,
+    4.51
+   ]
+  },
+  "NE_sm1": {
+   "parts": [
+    "NE_sm1"
+   ],
+   "hard_cores": 32,
+   "bbox_um": [
+    15042.24,
+    11957.76,
+    20813.760000000002,
+    16467.84
+   ],
+   "area_mm2": 26.03,
+   "bbox_mm": [
+    5.77,
+    4.51
+   ]
+  },
+  "NE_sm2": {
+   "parts": [
+    "NE_sm2"
+   ],
+   "hard_cores": 32,
+   "bbox_um": [
+    22628.16,
+    0.0,
+    28399.68,
+    4510.08
+   ],
+   "area_mm2": 26.03,
+   "bbox_mm": [
+    5.77,
+    4.51
+   ]
+  },
+  "NE_sm3": {
+   "parts": [
+    "NE_sm3"
+   ],
+   "hard_cores": 32,
+   "bbox_um": [
+    15042.24,
+    0.0,
+    20813.760000000002,
+    4510.08
+   ],
+   "area_mm2": 26.03,
+   "bbox_mm": [
+    5.77,
+    4.51
+   ]
+  },
+  "NE_spb": {
+   "parts": [
+    "NE_spb0",
+    "NE_spb1",
+    "NE_spb2"
+   ],
+   "hard_cores": 4,
+   "bbox_um": [
+    20813.76,
+    0.0,
+    22628.16,
+    4510.08
+   ],
+   "area_mm2": 8.183,
+   "bbox_mm": [
+    1.81,
+    4.51
+   ]
+  },
+  "NE_spt": {
+   "parts": [
+    "NE_spt0",
+    "NE_spt1",
+    "NE_spt2"
+   ],
+   "hard_cores": 2,
+   "bbox_um": [
+    20813.76,
+    11957.76,
+    22628.16,
+    16467.84
+   ],
+   "area_mm2": 8.183,
+   "bbox_mm": [
+    1.81,
+    4.51
+   ]
+  }
+ }
+}

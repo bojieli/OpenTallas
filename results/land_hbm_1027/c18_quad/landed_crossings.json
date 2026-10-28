@@ -1,0 +1,602 @@
+[
+ {
+  "id": "L12_0",
+  "src": "root",
+  "dst": "NW_b101",
+  "src_region": "ROOT",
+  "dst_region": "NW",
+  "width": 2996,
+  "face": "W",
+  "kind": "data"
+ },
+ {
+  "id": "L12m_0",
+  "src": "root",
+  "dst": "NE_b101",
+  "src_region": "ROOT",
+  "dst_region": "NE",
+  "width": 2996,
+  "face": "E",
+  "kind": "data"
+ },
+ {
+  "id": "L13_0",
+  "src": "root",
+  "dst": "NW_hub",
+  "src_region": "ROOT",
+  "dst_region": "NW",
+  "width": 2628,
+  "face": "W",
+  "kind": "data"
+ },
+ {
+  "id": "L4_0",
+  "src": "NW_hub",
+  "dst": "root",
+  "src_region": "NW",
+  "dst_region": "ROOT",
+  "width": 2816,
+  "face": "E",
+  "kind": "data"
+ },
+ {
+  "id": "L4_1",
+  "src": "root",
+  "dst": "NE_hub",
+  "src_region": "ROOT",
+  "dst_region": "NE",
+  "width": 2816,
+  "face": "E",
+  "kind": "data"
+ },
+ {
+  "id": "L4m_0",
+  "src": "NE_hub",
+  "dst": "root",
+  "src_region": "NE",
+  "dst_region": "ROOT",
+  "width": 2816,
+  "face": "W",
+  "kind": "data"
+ },
+ {
+  "id": "L4m_1",
+  "src": "root",
+  "dst": "NW_hub",
+  "src_region": "ROOT",
+  "dst_region": "NW",
+  "width": 2816,
+  "face": "W",
+  "kind": "data"
+ },
+ {
+  "id": "L8_4",
+  "src": "NW_spt2",
+  "dst": "NW_mcb",
+  "src_region": "NW",
+  "dst_region": "TOP",
+  "width": 2456,
+  "face": null,
+  "kind": "data"
+ },
+ {
+  "id": "L8m_4",
+  "src": "NE_spt2",
+  "dst": "NE_mcb",
+  "src_region": "NE",
+  "dst_region": "TOP",
+  "width": 2456,
+  "face": null,
+  "kind": "data"
+ },
+ {
+  "id": "L9_0",
+  "src": "NW_hub",
+  "dst": "root",
+  "src_region": "NW",
+  "dst_region": "ROOT",
+  "width": 2456,
+  "face": "E",
+  "kind": "data"
+ },
+ {
+  "id": "L9_3",
+  "src": "vsN5",
+  "dst": "vsN6",
+  "src_region": "ROOT",
+  "dst_region": "TOP",
+  "width": 2456,
+  "face": "N",
+  "kind": "data"
+ },
+ {
+  "id": "L9m_0",
+  "src": "NE_hub",
+  "dst": "root",
+  "src_region": "NE",
+  "dst_region": "ROOT",
+  "width": 2456,
+  "face": "W",
+  "kind": "data"
+ },
+ {
+  "id": "L9m_3",
+  "src": "vsN5",
+  "dst": "vsN6",
+  "src_region": "ROOT",
+  "dst_region": "TOP",
+  "width": 2456,
+  "face": "N",
+  "kind": "data"
+ },
+ {
+  "id": "L21_1",
+  "src": "NW_mcb",
+  "dst": "NW_spt2",
+  "src_region": "TOP",
+  "dst_region": "NW",
+  "width": 2048,
+  "face": null,
+  "kind": "data"
+ },
+ {
+  "id": "L21m_1",
+  "src": "NE_mcb",
+  "dst": "NE_spt2",
+  "src_region": "TOP",
+  "dst_region": "NE",
+  "width": 2048,
+  "face": null,
+  "kind": "data"
+ },
+ {
+  "id": "L22_1",
+  "src": "NW_mcb",
+  "dst": "NW_spt2",
+  "src_region": "TOP",
+  "dst_region": "NW",
+  "width": 2048,
+  "face": null,
+  "kind": "data"
+ },
+ {
+  "id": "L22m_1",
+  "src": "NE_mcb",
+  "dst": "NE_spt2",
+  "src_region": "TOP",
+  "dst_region": "NE",
+  "width": 2048,
+  "face": null,
+  "kind": "data"
+ },
+ {
+  "id": "L74_0",
+  "src": "NW_hub",
+  "dst": "root",
+  "src_region": "NW",
+  "dst_region": "ROOT",
+  "width": 1171,
+  "face": "E",
+  "kind": "data"
+ },
+ {
+  "id": "L74m_1",
+  "src": "NE_b101",
+  "dst": "root",
+  "src_region": "NE",
+  "dst_region": "ROOT",
+  "width": 279,
+  "face": "W",
+  "kind": "data"
+ },
+ {
+  "id": "L48_11",
+  "src": "NW_b101",
+  "dst": "root",
+  "src_region": "NW",
+  "dst_region": "ROOT",
+  "width": 634,
+  "face": "E",
+  "kind": "data"
+ },
+ {
+  "id": "L48m_11",
+  "src": "NE_b101",
+  "dst": "root",
+  "src_region": "NE",
+  "dst_region": "ROOT",
+  "width": 634,
+  "face": "W",
+  "kind": "data"
+ },
+ {
+  "id": "L53_0",
+  "src": "root",
+  "dst": "NW_b101",
+  "src_region": "ROOT",
+  "dst_region": "NW",
+  "width": 612,
+  "face": "W",
+  "kind": "data"
+ },
+ {
+  "id": "L53m_0",
+  "src": "root",
+  "dst": "NE_b101",
+  "src_region": "ROOT",
+  "dst_region": "NE",
+  "width": 612,
+  "face": "E",
+  "kind": "data"
+ },
+ {
+  "id": "L62_0",
+  "src": "root",
+  "dst": "NW_hub",
+  "src_region": "ROOT",
+  "dst_region": "NW",
+  "width": 324,
+  "face": "W",
+  "kind": "ctl"
+ },
+ {
+  "id": "L62m_0",
+  "src": "root",
+  "dst": "NE_hub",
+  "src_region": "ROOT",
+  "dst_region": "NE",
+  "width": 330,
+  "face": "E",
+  "kind": "ctl"
+ },
+ {
+  "id": "L63_0",
+  "src": "NW_hub",
+  "dst": "root",
+  "src_region": "NW",
+  "dst_region": "ROOT",
+  "width": 336,
+  "face": "E",
+  "kind": "ctl"
+ },
+ {
+  "id": "L63_3",
+  "src": "vsN5",
+  "dst": "vsN6",
+  "src_region": "ROOT",
+  "dst_region": "TOP",
+  "width": 336,
+  "face": "N",
+  "kind": "ctl"
+ },
+ {
+  "id": "L63m_0",
+  "src": "NE_hub",
+  "dst": "root",
+  "src_region": "NE",
+  "dst_region": "ROOT",
+  "width": 336,
+  "face": "W",
+  "kind": "ctl"
+ },
+ {
+  "id": "L63m_3",
+  "src": "vsN5",
+  "dst": "vsN6",
+  "src_region": "ROOT",
+  "dst_region": "TOP",
+  "width": 336,
+  "face": "N",
+  "kind": "ctl"
+ },
+ {
+  "id": "L64_0",
+  "src": "NW_b101",
+  "dst": "root",
+  "src_region": "NW",
+  "dst_region": "ROOT",
+  "width": 297,
+  "face": "E",
+  "kind": "data"
+ },
+ {
+  "id": "L64m_0",
+  "src": "NE_b101",
+  "dst": "root",
+  "src_region": "NE",
+  "dst_region": "ROOT",
+  "width": 297,
+  "face": "W",
+  "kind": "data"
+ },
+ {
+  "id": "L66_4",
+  "src": "NW_spt2",
+  "dst": "NW_mcb",
+  "src_region": "NW",
+  "dst_region": "TOP",
+  "width": 268,
+  "face": null,
+  "kind": "data"
+ },
+ {
+  "id": "L66m_4",
+  "src": "NE_spt2",
+  "dst": "NE_mcb",
+  "src_region": "NE",
+  "dst_region": "TOP",
+  "width": 268,
+  "face": null,
+  "kind": "data"
+ },
+ {
+  "id": "L79_4",
+  "src": "NW_spt2",
+  "dst": "NW_mcb",
+  "src_region": "NW",
+  "dst_region": "TOP",
+  "width": 172,
+  "face": null,
+  "kind": "ctl"
+ },
+ {
+  "id": "L79m_4",
+  "src": "NE_spt2",
+  "dst": "NE_mcb",
+  "src_region": "NE",
+  "dst_region": "TOP",
+  "width": 172,
+  "face": null,
+  "kind": "ctl"
+ },
+ {
+  "id": "L80_0",
+  "src": "root",
+  "dst": "NW_b101",
+  "src_region": "ROOT",
+  "dst_region": "NW",
+  "width": 171,
+  "face": "W",
+  "kind": "data"
+ },
+ {
+  "id": "L80m_0",
+  "src": "root",
+  "dst": "NE_b101",
+  "src_region": "ROOT",
+  "dst_region": "NE",
+  "width": 171,
+  "face": "E",
+  "kind": "data"
+ },
+ {
+  "id": "L82_0",
+  "src": "NW_mcb",
+  "dst": "NW_spt2",
+  "src_region": "TOP",
+  "dst_region": "NW",
+  "width": 140,
+  "face": null,
+  "kind": "ctl"
+ },
+ {
+  "id": "L82m_0",
+  "src": "NE_mcb",
+  "dst": "NE_spt2",
+  "src_region": "TOP",
+  "dst_region": "NE",
+  "width": 140,
+  "face": null,
+  "kind": "ctl"
+ },
+ {
+  "id": "L89_0",
+  "src": "NW_hub",
+  "dst": "root",
+  "src_region": "NW",
+  "dst_region": "ROOT",
+  "width": 2,
+  "face": "E",
+  "kind": "ctl"
+ },
+ {
+  "id": "L89m_0",
+  "src": "NE_hub",
+  "dst": "root",
+  "src_region": "NE",
+  "dst_region": "ROOT",
+  "width": 1,
+  "face": "W",
+  "kind": "ctl"
+ },
+ {
+  "id": "L96_0",
+  "src": "NW_hub",
+  "dst": "root",
+  "src_region": "NW",
+  "dst_region": "ROOT",
+  "width": 22,
+  "face": "E",
+  "kind": "ctl"
+ },
+ {
+  "id": "L96_1",
+  "src": "root",
+  "dst": "NE_hub",
+  "src_region": "ROOT",
+  "dst_region": "NE",
+  "width": 22,
+  "face": "E",
+  "kind": "ctl"
+ },
+ {
+  "id": "L96m_0",
+  "src": "NE_hub",
+  "dst": "root",
+  "src_region": "NE",
+  "dst_region": "ROOT",
+  "width": 22,
+  "face": "W",
+  "kind": "ctl"
+ },
+ {
+  "id": "L96m_1",
+  "src": "root",
+  "dst": "NW_hub",
+  "src_region": "ROOT",
+  "dst_region": "NW",
+  "width": 22,
+  "face": "W",
+  "kind": "ctl"
+ },
+ {
+  "id": "L106_0",
+  "src": "root",
+  "dst": "NW_b112",
+  "src_region": "ROOT",
+  "dst_region": "NW",
+  "width": 20,
+  "face": null,
+  "kind": "ctl"
+ },
+ {
+  "id": "L106m_0",
+  "src": "root",
+  "dst": "NE_b112",
+  "src_region": "ROOT",
+  "dst_region": "NE",
+  "width": 20,
+  "face": null,
+  "kind": "ctl"
+ },
+ {
+  "id": "L114_1",
+  "src": "vsN6",
+  "dst": "vsN5",
+  "src_region": "TOP",
+  "dst_region": "ROOT",
+  "width": 16,
+  "face": "S",
+  "kind": "ctl"
+ },
+ {
+  "id": "L114_4",
+  "src": "root",
+  "dst": "NW_b112",
+  "src_region": "ROOT",
+  "dst_region": "NW",
+  "width": 16,
+  "face": null,
+  "kind": "ctl"
+ },
+ {
+  "id": "L114m_1",
+  "src": "vsN6",
+  "dst": "vsN5",
+  "src_region": "TOP",
+  "dst_region": "ROOT",
+  "width": 16,
+  "face": "S",
+  "kind": "ctl"
+ },
+ {
+  "id": "L114m_4",
+  "src": "root",
+  "dst": "NE_b112",
+  "src_region": "ROOT",
+  "dst_region": "NE",
+  "width": 16,
+  "face": null,
+  "kind": "ctl"
+ },
+ {
+  "id": "L117_8",
+  "src": "NW_b101",
+  "dst": "root",
+  "src_region": "NW",
+  "dst_region": "ROOT",
+  "width": 11,
+  "face": "E",
+  "kind": "data"
+ },
+ {
+  "id": "L117m_8",
+  "src": "NE_b101",
+  "dst": "root",
+  "src_region": "NE",
+  "dst_region": "ROOT",
+  "width": 11,
+  "face": "W",
+  "kind": "data"
+ },
+ {
+  "id": "L124_0",
+  "src": "root",
+  "dst": "NW_b101",
+  "src_region": "ROOT",
+  "dst_region": "NW",
+  "width": 9,
+  "face": "W",
+  "kind": "ctl"
+ },
+ {
+  "id": "L124m_0",
+  "src": "root",
+  "dst": "NE_b101",
+  "src_region": "ROOT",
+  "dst_region": "NE",
+  "width": 9,
+  "face": "E",
+  "kind": "ctl"
+ },
+ {
+  "id": "L125_7",
+  "src": "NW_b112",
+  "dst": "root",
+  "src_region": "NW",
+  "dst_region": "ROOT",
+  "width": 7,
+  "face": null,
+  "kind": "ctl"
+ },
+ {
+  "id": "L125m_7",
+  "src": "NE_b112",
+  "dst": "root",
+  "src_region": "NE",
+  "dst_region": "ROOT",
+  "width": 7,
+  "face": null,
+  "kind": "ctl"
+ },
+ {
+  "id": "L138_8",
+  "src": "NW_b101",
+  "dst": "root",
+  "src_region": "NW",
+  "dst_region": "ROOT",
+  "width": 2,
+  "face": "E",
+  "kind": "ctl"
+ },
+ {
+  "id": "L138m_8",
+  "src": "NE_b101",
+  "dst": "root",
+  "src_region": "NE",
+  "dst_region": "ROOT",
+  "width": 2,
+  "face": "W",
+  "kind": "ctl"
+ },
+ {
+  "id": "L156_0",
+  "src": "NW_hub",
+  "dst": "root",
+  "src_region": "NW",
+  "dst_region": "ROOT",
+  "width": 2740,
+  "face": "E",
+  "kind": "data"
+ }
+]

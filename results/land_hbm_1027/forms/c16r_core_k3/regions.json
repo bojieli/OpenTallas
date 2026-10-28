@@ -1,0 +1,311 @@
+{
+ "form": "core",
+ "partition_region": {
+  "NW_b000": "NW_core",
+  "NW_b001": "NW_core",
+  "NW_b002": "NW_core",
+  "NW_b003": "NW_core",
+  "NW_b010": "NW_core",
+  "NW_b011": "NW_core",
+  "NW_b012": "NW_core",
+  "NW_b013": "NW_core",
+  "NW_b100": "NW_core",
+  "NW_b101": "NW_core",
+  "NW_b102": "NW_core",
+  "NW_b103": "NW_core",
+  "NW_b110": "NW_core",
+  "NW_b111": "NW_core",
+  "NW_b112": "NW_core",
+  "NW_b113": "NW_core",
+  "NW_hub": "NW_core",
+  "NW_io": "NW_core",
+  "NW_mca": "TOP",
+  "NW_mcb": "TOP",
+  "NW_sm0": "NW_smN",
+  "NW_sm1": "NW_smN",
+  "NW_sm2": "NW_smS",
+  "NW_sm3": "NW_smS",
+  "NW_spb0": "NW_smS",
+  "NW_spb1": "NW_smS",
+  "NW_spb2": "NW_smS",
+  "NW_spt0": "NW_smN",
+  "NW_spt1": "NW_smN",
+  "NW_spt2": "NW_smN",
+  "NW_spu0": "NW_core",
+  "NW_spu1": "NW_core",
+  "NW_su00": "NW_core",
+  "NW_su01": "NW_core",
+  "NW_su10": "NW_core",
+  "NW_su11": "NW_core",
+  "NW_su20": "NW_core",
+  "NW_su21": "NW_core",
+  "NW_su30": "NW_core",
+  "NW_su31": "NW_core",
+  "PHY_N": "TOP",
+  "root": "ROOT",
+  "vsN0": "ROOT",
+  "vsN1": "ROOT",
+  "vsN2": "ROOT",
+  "vsN4": "ROOT",
+  "vsN5": "ROOT",
+  "vsN6": "TOP",
+  "NE_b000": "NE_core",
+  "NE_b001": "NE_core",
+  "NE_b002": "NE_core",
+  "NE_b003": "NE_core",
+  "NE_b010": "NE_core",
+  "NE_b011": "NE_core",
+  "NE_b012": "NE_core",
+  "NE_b013": "NE_core",
+  "NE_b100": "NE_core",
+  "NE_b101": "NE_core",
+  "NE_b102": "NE_core",
+  "NE_b103": "NE_core",
+  "NE_b110": "NE_core",
+  "NE_b111": "NE_core",
+  "NE_b112": "NE_core",
+  "NE_b113": "NE_core",
+  "NE_hub": "NE_core",
+  "NE_io": "NE_core",
+  "NE_mca": "TOP",
+  "NE_mcb": "TOP",
+  "NE_sm0": "NE_smN",
+  "NE_sm1": "NE_smN",
+  "NE_sm2": "NE_smS",
+  "NE_sm3": "NE_smS",
+  "NE_spb0": "NE_smS",
+  "NE_spb1": "NE_smS",
+  "NE_spb2": "NE_smS",
+  "NE_spt0": "NE_smN",
+  "NE_spt1": "NE_smN",
+  "NE_spt2": "NE_smN",
+  "NE_spu0": "NE_core",
+  "NE_spu1": "NE_core",
+  "NE_su00": "NE_core",
+  "NE_su01": "NE_core",
+  "NE_su10": "NE_core",
+  "NE_su11": "NE_core",
+  "NE_su20": "NE_core",
+  "NE_su21": "NE_core",
+  "NE_su30": "NE_core",
+  "NE_su31": "NE_core"
+ },
+ "regions": {
+  "NW_core": {
+   "parts": [
+    "NW_b000",
+    "NW_b001",
+    "NW_b002",
+    "NW_b003",
+    "NW_b010",
+    "NW_b011",
+    "NW_b012",
+    "NW_b013",
+    "NW_b100",
+    "NW_b101",
+    "NW_b102",
+    "NW_b103",
+    "NW_b110",
+    "NW_b111",
+    "NW_b112",
+    "NW_b113",
+    "NW_hub",
+    "NW_io",
+    "NW_spu0",
+    "NW_spu1",
+    "NW_su00",
+    "NW_su01",
+    "NW_su10",
+    "NW_su11",
+    "NW_su20",
+    "NW_su21",
+    "NW_su30",
+    "NW_su31"
+   ],
+   "hard_cores": 375,
+   "bbox_um": [
+    0.0,
+    4510.08,
+    13357.44,
+    11957.76
+   ],
+   "area_mm2": 99.482,
+   "bbox_mm": [
+    13.36,
+    7.45
+   ]
+  },
+  "TOP": {
+   "parts": [
+    "NW_mca",
+    "NW_mcb",
+    "PHY_N",
+    "vsN6",
+    "NE_mca",
+    "NE_mcb"
+   ],
+   "hard_cores": 0,
+   "bbox_um": [
+    0.0,
+    14964.48,
+    28399.68,
+    18541.44
+   ],
+   "area_mm2": 61.422,
+   "bbox_mm": [
+    28.4,
+    3.58
+   ]
+  },
+  "NW_smN": {
+   "parts": [
+    "NW_sm0",
+    "NW_sm1",
+    "NW_spt0",
+    "NW_spt1",
+    "NW_spt2"
+   ],
+   "hard_cores": 66,
+   "bbox_um": [
+    0.0,
+    11957.76,
+    13357.44,
+    16467.84
+   ],
+   "area_mm2": 60.243,
+   "bbox_mm": [
+    13.36,
+    4.51
+   ]
+  },
+  "NW_smS": {
+   "parts": [
+    "NW_sm2",
+    "NW_sm3",
+    "NW_spb0",
+    "NW_spb1",
+    "NW_spb2"
+   ],
+   "hard_cores": 68,
+   "bbox_um": [
+    0.0,
+    0.0,
+    13357.44,
+    4510.08
+   ],
+   "area_mm2": 60.243,
+   "bbox_mm": [
+    13.36,
+    4.51
+   ]
+  },
+  "ROOT": {
+   "parts": [
+    "root",
+    "vsN0",
+    "vsN1",
+    "vsN2",
+    "vsN4",
+    "vsN5"
+   ],
+   "hard_cores": 48,
+   "bbox_um": [
+    13357.44,
+    0.0,
+    15042.24,
+    14964.480000000001
+   ],
+   "area_mm2": 25.212,
+   "bbox_mm": [
+    1.68,
+    14.96
+   ]
+  },
+  "NE_core": {
+   "parts": [
+    "NE_b000",
+    "NE_b001",
+    "NE_b002",
+    "NE_b003",
+    "NE_b010",
+    "NE_b011",
+    "NE_b012",
+    "NE_b013",
+    "NE_b100",
+    "NE_b101",
+    "NE_b102",
+    "NE_b103",
+    "NE_b110",
+    "NE_b111",
+    "NE_b112",
+    "NE_b113",
+    "NE_hub",
+    "NE_io",
+    "NE_spu0",
+    "NE_spu1",
+    "NE_su00",
+    "NE_su01",
+    "NE_su10",
+    "NE_su11",
+    "NE_su20",
+    "NE_su21",
+    "NE_su30",
+    "NE_su31"
+   ],
+   "hard_cores": 372,
+   "bbox_um": [
+    15042.24,
+    4510.08,
+    28399.68,
+    11957.76
+   ],
+   "area_mm2": 99.482,
+   "bbox_mm": [
+    13.36,
+    7.45
+   ]
+  },
+  "NE_smN": {
+   "parts": [
+    "NE_sm0",
+    "NE_sm1",
+    "NE_spt0",
+    "NE_spt1",
+    "NE_spt2"
+   ],
+   "hard_cores": 66,
+   "bbox_um": [
+    15042.24,
+    11957.76,
+    28399.68,
+    16467.84
+   ],
+   "area_mm2": 60.243,
+   "bbox_mm": [
+    13.36,
+    4.51
+   ]
+  },
+  "NE_smS": {
+   "parts": [
+    "NE_sm2",
+    "NE_sm3",
+    "NE_spb0",
+    "NE_spb1",
+    "NE_spb2"
+   ],
+   "hard_cores": 68,
+   "bbox_um": [
+    15042.24,
+    0.0,
+    28399.68,
+    4510.08
+   ],
+   "area_mm2": 60.243,
+   "bbox_mm": [
+    13.36,
+    4.51
+   ]
+  }
+ }
+}

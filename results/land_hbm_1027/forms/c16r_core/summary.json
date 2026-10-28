@@ -1,0 +1,29 @@
+{
+ "form": "core",
+ "k": 3,
+ "plan": "c16r",
+ "regions": 8,
+ "landed_ports": 132,
+ "landed_bits": 103759,
+ "ring_area_mm2_unmapped": 0.484,
+ "die_area_mm2": 526.571,
+ "lanes_landed": 106,
+ "lane_added_face": 396,
+ "lane_added_fwd": 318,
+ "region_pairs_bits": {
+  "NW_core<->ROOT": 20108,
+  "NW_core<->NW_smN": 16039,
+  "NE_core<->NE_smN": 16039,
+  "NE_core<->ROOT": 13853,
+  "NW_core<->NW_smS": 8920,
+  "NE_core<->NE_smS": 8920,
+  "NW_smN<->TOP": 7132,
+  "NE_smN<->TOP": 7132,
+  "ROOT<->TOP": 5616
+ },
+ "largest_region_bbox_mm": [
+  13.36,
+  7.45
+ ],
+ "ring_area_pct": 0.092
+}
