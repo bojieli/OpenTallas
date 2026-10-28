@@ -288,3 +288,25 @@ def test_parallel_island_drivers_never_overlap(cell, n, pitch):
         assert b["xy_um"][0] - a["xy_um"][0] >= w + CI.SITE_UM - 1e-9 or pitch == CI.PARALLEL_PITCH_UM
         assert b["xy_um"][0] - a["xy_um"][0] > w
     assert sum(c["xy_um"][0] for c in ck) / n == pytest.approx(432)
+
+
+def test_driver_rect_places_drivers_in_channel_pins_unchanged():
+    """HBM-CORES-REBAL-5: island driver_rect_um (master_plan.pushdown_island driver_rect) -> the ck/rst drivers are
+    centred in that rect (their OT_CORE_INFRA_PLANNED_OVERLAP footprint is the channel, not the SRAM under the island),
+    the ft ports, arcs and pin coordinates are unchanged; a rect outside the core is refused."""
+    base = CI.compile_slice(sample())
+    s = sample()
+    s["pushdown"]["islands"][0]["driver_rect_um"] = [450.0, 427.68, 458.64, 436.32]
+    p = CI.compile_slice(s)
+    assert p["ports"] == base["ports"] and p["arcs"] == base["arcs"]
+    for c in p["cells"]:
+        assert 450.0 <= c["xy_um"][0] <= 458.64 and 427.68 <= c["xy_um"][1] <= 436.32
+        assert c["rect_um"] == [450.0, 427.68, 458.64, 436.32]
+    assert sorted(c["xy_um"][0] for c in p["cells"]) == [454.32, 454.32]
+    assert [c["xy_um"][1] - b["xy_um"][1] for c, b in zip(p["cells"], base["cells"])] == [0, 0]
+    s["pushdown"]["islands"][0]["driver_rect_um"] = [860.0, 427.68, 868.64, 436.32]
+    with pytest.raises(CI.InfraError, match="outside"):
+        CI.compile_slice(s)
+    s["pushdown"]["islands"][0]["driver_rect_um"] = [458.64, 427.68, 450.0, 436.32]
+    with pytest.raises(CI.InfraError, match="driver_rect_um"):
+        CI.compile_slice(s)
