@@ -56,6 +56,10 @@ class Model:
             k1 = (cell - d0) / L
             k2 = wire / (L * L)
             self.k[c] = (d0, k1, k2)
+        self.ks = {c: 0.0 for c in m["stage_ps"]}
+        for c, f in (m.get("seg_fit") or {}).items():      # STA/SPICE-fitted stage (opentools.mscts.calib)
+            self.k[c] = (f["d0"], f["k1"], f["k2"])
+            self.ks[c] = f.get("ks", 0.0)
         self.T = json.loads((DATA / m["aocv_table"]).read_text()) if m.get("aocv_table") else None
         if self.T is not None:
             self.T = self.T.get("clock_aocv", self.T)
@@ -66,7 +70,7 @@ class Model:
     def seg_ps(self, L, corner="TT"):
         """one driven segment (buffer + wire of length L um)."""
         d0, k1, k2 = self.k[corner]
-        return d0 + k1 * L + k2 * L * L
+        return d0 + k1 * L + k2 * L * L + self.ks[corner] * L
 
     def seg_cell_ps(self, L, corner="TT"):
         d0, k1, _ = self.k[corner]
