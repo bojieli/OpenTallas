@@ -21,7 +21,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 ## DIE qwen_compute · Qwen compute · rev UNFROZEN 54a1aeb5 · PROTOTYPE of infra-first
 - [ ] QC.PATH CRITICAL PATH end to end (12.9b): 12.7b plan gates -> core rebuilds (12.8) -> die clock (12.8) -> GRT0 -> skew gate -> die STA · INFRA-FIRST · RUNNING · dated ETA checklist in lanes/INFRA-FIRST.md
 - [ ] QC.INFRA One QC plan event: infra-first PG/clock/reset + batch 2 (STM ROMs, SRAM, DEAD-FAULT) + D-QC-FE-REACH stations (all FE variants) + COLLFTM-CTL + CB ID straps + SCROOT + vmr_s6kc · INFRA-FIRST + PATH-QC · RUNNING · PENDING-DELTA D-INFRA-FIRST-QC holds all 68 type routes
-- [ ] QC.CLK Clock 12.8 (gate = related-pair STA) · INFRA-FIRST-QC-R33 · RUNNING · export window3/tol30 accepted (dry16 682 no_clock_track); R33 separate island columns -> dry17 0 -> GRT0 -> STA (10-29 12:00); 41 non-slot FT pins per-bit
+- [ ] QC.CLK Clock 12.8 (gate = related-pair STA) · INFRA-FIRST-QC-R34 · RUNNING · R33 failed (769-976 vs 682); R34 census fixes (vertical top leaf, band rows off top lanes, no escapes on 16w trunks) -> layer-separate if >0 -> dry18 -> GRT0 -> STA (10-29 12:00)
 - [ ] QC.SU 4 SU core types · QC-SU-F4G · DONE-RP1 · F4G RP1 ADOPTED (TT +236.87/FF +5.92/LEC 3703, window 23.2/20.3 CHECKED); F4F = fallback; F4G VMR live (epyc2 unit 714733)
 - [ ] QC.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · → QC.INFRA
 - [ ] QC.BIND Strict bind on the QC plan event (wavefront reset/START, CB16 phase classes) · PATH-QC · WAITS · → QC.INFRA
@@ -30,7 +30,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 
 ## DIE s81_head · S81 head die · rev UNFROZEN d7b8d1eb · after QC
 - [ ] HEAD.INFRA Infra-first plan event (+ HEAD8 batch 187b63494b if approved) · INFRA-FIRST-HEAD-1 · RUNNING (started 01:5x, parallel to QC) · PENDING-DELTA D-INFRA-FIRST-HEAD holds all 16 type routes → IF.TOOL
-- [ ] HEAD.CLK elemA/elemB · HEAD-R22 · RUNNING · both cores signed off (tags a/b); elemB capsule packaging; VSS shield ties -> die GRT0 -> related-pair STA (10-29 12:00)
+- [ ] HEAD.CLK elemA/elemB · HEAD-R24 · RUNNING · R23 die GRT0 PASS, 0 shorts, VSS tied (CHECKED); shared mesh-timing adapter (34,649 nodes) -> related-pair STA (10-29 12:00)
 - [ ] HEAD.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · old d7b8d1eb signal GRT0 no longer counts → HEAD.INFRA
 - [ ] HEAD.BIND Whole-head as-built bind · CODEX / PATH-S81 · WAITS · contract DRAFT ASKed (host N3@276, mesh64 2-beat, head_row_map; head-core-r13@148ff6a840); gaps: ROW0/TEN straps, hd_serdes u_phy open pins → next HEAD PLAN-DELTA
 - [ ] HEAD.STA Die STA on real views · DIE-PROTO · WAITS · → HEAD.CLK, → HEAD.TILES
@@ -38,7 +38,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 
 ## DIE qwen_kvsys · Qwen KV · rev batch claude/path-kv-batch-0115@650841e1ef (rebase 5665cd3386 + FT reserve + D-KV-CLKMESH)
 - [ ] KV.BIND Strict bind of the batch · PATH-KV · RUNNING · B31 a8c24031c strict PASS 160 parts/51 types + R8 0 unequal + full verify 2553368/2553368; final batch (8-region landings, q2 rename, B32 PV) needs one re-bind
-- [ ] KV.CLK Clock under 12.8 (gate = related-pair STA) · KV-PLAN-DELTA-5 · RUNNING · one KV event: c39 grid + edge-fit bumps (IR 31.44 mV PASS), FT seam windows + v8 re-site, x6 MODELED-PHY, q5c pins; 7 KV kits in autopilot post LEC EQ
+- [ ] KV.CLK Clock under 12.8 (gate = related-pair STA) · KV-PLAN-DELTA-6 + QK-CORES-8 · RUNNING · GRT0 + STA pass only with MODELLED HB4 and 0 real views; real seam HB4 + FT move ~3,280 bits; heads/pv_join re-sign on 546 pins; IR 30.87 mV PASS
 - [ ] KV.INFRA PG from IR + pre-routed PG/clock/reset via shared tool · PATH-KV · RUNNING · die_infra reset 287 nets max hop 377um PASS; signal GRT50 M4-M9 w/ clock reservation ovf0; PG needs KV power figure (0.15 W/mm2 fallback) → IF.TOOL
 - [ ] KV.GRT GRT0 incl. clock at >=50 it · KV-PLAN-DELTA-5 · RUNNING · stall fixed (crit 0, merged RM79), q5c TT/FF overflow 0 CHECKED; FT hub_Wi seam windows in KV event
 - [ ] KV.STA Die STA on real views · CLOCK-KV-R18 · FAIL (hold) · R17 signed mesh + 0.21 table: TT +161.4 0 neg; FF -242 (leaf-fed band) / both-real +24.7 PASS; 31% inst real (UNCHECKED, NUMBER-CHECK running); R18 = mesh-fed band + HB4 model + slice entries
@@ -49,7 +49,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 - [ ] S81.B2 One plan event D-S81-B2: A25 + stations v4 + PHY pins + leaf pins + eng SRAM r0c0 + FT alignment/corridors + D-S81-PHY + infra-first · PATH-S81 · RUNNING · gate: lateral jog <5M bit-um → GRT0 → skew
 - [ ] S81.GRT Die GRT0 incl clock · PATH-S81-PD6 · GRT0 DONE on PD5 6d6e8b34f9 (TT+FF overflow 0, CHECKED); 13 B5 cut errors -> measured-usage waiver; 17 storage bands fixing · ETA freeze est 10-28..29
 - [ ] S81.PHY 14 SerDes windows · PATH-S81 · RUNNING · zero-area fit 14/14; gunit R180 re-plan PASS-COND (GEOM-17); bk_sel option B re-cut 864x483.84 APPROVED (rebuild quarter tile) → S81.B2
-- [ ] S81.CLK Clock under 12.8 · PATH-S81-PD8 + S81-CORE-LAT-R14 · RUNNING · one continuous die mesh (PD8); cores via family slices (2/23 slices pass, gunit_l0/l1c building; CTS hook port to 6 generators) → IF.CLK128
+- [ ] S81.CLK Clock under 12.8 · S81-CORES-R26 · RUNNING · gunit re-layout worst 371.5 um pin-to-pin (CHECKED, -> RM82); L2/L3 kits rebuild; 8 known G0C bundle errors; hrow keep failure; graded mesh skew/EM sim
 - [ ] S81.BIND Strict bind on main · TOK-DS · PASS on 877cfdeb2 (0 tied, 10,352 straps) → re-run after S81.B2
 - [ ] S81.STA Die STA on real views · PATH-S81-PD6 · RUNNING · related-pair STA on PD5 kit (real where signed + budget)
   - [ ] S81.TILES Tile sign-offs · PATH-S81 / CORES-KITS · RUNNING · 4/171 types, 16/52 hard cores signed
