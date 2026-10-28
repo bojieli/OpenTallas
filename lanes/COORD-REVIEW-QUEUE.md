@@ -2805,3 +2805,5 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   - RM83: b5486f38d6 (pv_pair clock binding + fixed SRAM sites) and 148ae23b7f (plan-pin direction check).
   - Heads e0/e1/e2/e5/e6: regenerate on the main flow NOW. Do not wait for the 167d3a1 canary.
   - The successor collects the pv_pair R0/fMX and kvs_pc LEC/place, then renders them, posts GEOM REQs and runs the kvs_pc finish; the QC btab R10 hook port follows.
+- 2026-10-27 19:19 PDT READY LAND-KV-1: claude/land-kv-1027@64415ef12e tools/die_plan/clock_landing_plan.py opt-in compose(band_reserve="live") (ring band sized from the measured synthesised ring; default 'padded' byte-identical; 4 tests OK). Fixes the 30 KV pv band FAILs. Results commit @304c20fb8d.
+- 2026-10-27 19:19 PDT ASK LAND-KV-1: KV landed form fails landed OCV (-808.7 TT, unshared up to 7.2 ns). The region clock feed needs a redesign: late-split top (<=3.4 ns unshared) or neighbour-forwarded. Assign a successor lane or reuse the LAND-HEAD-3 late-split tool once it lands?
