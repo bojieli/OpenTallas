@@ -470,3 +470,27 @@ def test_gate_pins2_layer_change_rejected(tmp_path):
     mxl[1]["layer"] = "M6"
     q = _gp2_core(tmp_path, "s_pins_fMX.json", mxl)
     assert R.pins_relation(_gp2_signed(tmp_path, s), q, tmp_path, (10.0, 8.0), [s, q])[0] is None
+
+
+def test_landed_gate_empty_class_is_na():
+    corners = {"TT": {"classes": {"landed": dict(pairs=0)}}, "FF": {"classes": {"landed": dict(pairs=0)}}}
+    g = R.landed_gate(corners)
+    assert g["verdict"] == "N/A" and g["pairs"] == 0
+    assert g["tt_setup_margin_ps"] is None and g["ff_hold_margin_ps"] is None
+    assert R.landed_gate({"TT": {"classes": {}}, "FF": {"classes": {}}})["verdict"] == "N/A"
+
+
+def test_landed_gate_pairs_with_pass_landing():
+    pl = dict(setup_margin_ps=12.5, hold_margin_ps=7.25, verdict="PASS")
+    corners = {c: {"classes": {"landed": dict(pairs=4, plan_landing=pl)}} for c in ("TT", "FF")}
+    g = R.landed_gate(corners)
+    assert g == dict(tt_setup_margin_ps=12.5, ff_hold_margin_ps=7.25, verdict="PASS")
+
+
+def test_landed_gate_pairs_without_landing_fails_closed():
+    pl = dict(setup_margin_ps=12.5, hold_margin_ps=7.25, verdict="PASS")
+    corners = {"TT": {"classes": {"landed": dict(pairs=4, plan_landing=pl)}},
+               "FF": {"classes": {"landed": dict(pairs=4)}}}
+    assert R.landed_gate(corners)["verdict"] == "FAIL"
+    corners = {"TT": {"classes": {"landed": dict(pairs=0)}}, "FF": {"classes": {"landed": dict(pairs=3)}}}
+    assert R.landed_gate(corners)["verdict"] == "FAIL"
