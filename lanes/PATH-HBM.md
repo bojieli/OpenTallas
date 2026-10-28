@@ -960,3 +960,12 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
   - (c) gen.py phys --trial --types q_hub_nw (die-hbm-1027@1d784227c1) did not write the kit in 15 min (rc 124). Profile: schema.tap_clear inside _grid_taps, i.e. 231 grid taps x 159 cores with a candidate product per tap. That is a shared-tool performance gap (ROOT-MERGE scope, not fixed here).
   - Rerun without a limit is LIVE: epyc2 pid 1292431 (started 02:31), out epyc2:/srv/opentallas-scratch2/claude/hbm-risk-2/kits_hub, log phys_hub.log. Collect whether a kit appears + kit_preflight. Do not route it (it is over the cap).
   - DEFAULT next: DRT preview on a <=400k hub sub-partition once (1) the probes name the hot gcells and (2) the hub W/E split becomes a partition split with real views.
+- 2026-10-28 02:36 PDT [HBM-RISK-2] RISK TABLE for R3/R5/R6. R1/R2/R4 are HBM-RISK-1's. Results: claude/hbm-risk-2-1028@9656989896 (results/hbm_risk_2_1028).
+| # | risk | measured | gate | fix | cost h |
+|---|---|---|---|---|---|
+| 1 | Deep cores vs 250-ps zero-early core taps -> HEAD-style FF hold at core boundaries | 30 types / 381 placements est. FF hold < -100 ps; worst programme_store_r10 -751, vms_glue -557, rootctl_am -510, SM halves -426/-364 (UNCHECKED model; 22 types from real lib ETM max) | FF hold >= 0 (12.4a) | rebuild to 250+-20 (12.3) or plan early taps from the core's real mean (12.3 v5.0; DIE-HEAD-5 opt-in signed_mean_core_taps once cores are signed); 18 types / 376 placements have no data -> measure first | 2 (plan early-tap delta) to many (rebuilds) |
+| 2 | Hub reset final hop > 405 um | 657 / 670 um, 171 / 162 station regs > 405 (UNCHECKED re-impl of tap_clear) | 405 um leaf | sink-anchored taps or plan reset relays at 3 clusters (cf. HEAD reset.local_taps) | 1 |
+| 3 | Hub partition over the 400k-cell cap | glue 0.97 M (+0.31 M parent-of-cut) vs 400k | <=400k/run | make the hub W/E clock split a partition split, or more cuts | 3-4 (re-plan event) |
+| 4 | gen phys kit gen stalls on the hub | >15 min in schema.tap_clear (231 taps x 159 cores) | n/a | vectorise tap_clear (shared tool, ROOT-MERGE) | 1 |
+| 5 | No real views -> PHY_N 172 / SM 159 spreads and most core latencies unproven | real lef/lib 129 / 733; PHY_N 0 taps / no lib; SM 0/32 | real-view die STA | SM half views + PHY lib clock arc | as per core lanes |
+| 6 | Hub PG on unmeasured activity | 23.4 mV above-M7 at 1.27 W/mm2 upper (Codex U6d) | 35 mV | hub toggle window in the PG-ACTIVITY tb | 1.5 |
