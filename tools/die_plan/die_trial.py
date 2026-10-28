@@ -2022,7 +2022,8 @@ def clock_edge_readout(verilog, path, period="833.333", cells="b*", tap_slew=Fal
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
               slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
-              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang"):
+              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
+              cell_paths=False):
     global EVEN_LEGS
     EVEN_LEGS = clock_cell == "inv2"
     out = Path(out)
@@ -2281,7 +2282,9 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                                   for i, n in nodes.items()},
                 taps=[dict(port=tp, part=part, tap=port, xy=[x, y], node=i) for tp, x, y, part, port, i in tap_ports],
                 node_buf=node_buf, parent_of=parent_of, sites={inst: [round(x, 3), round(y, 3)] for inst, x, y in place})
-    if any(int(v) > 0 for v in (tap_pad or {}).values()):
+    if cell_paths or any(int(v) > 0 for v in (tap_pad or {}).values()):
+        # DIE-S81-15 --cell-paths (opt-in): the same physical paths without pads, so every leg repeater is a tree-path
+        # node in trial_tap_arrivals (start-tree retime candidates at the EXISTING repeaters; netlist unchanged).
         # Physical paths include every repeater and final pad. The geometric
         # node id is retained for region membership, never substituted for the
         # actual padded tap driver during CPPR / depth accounting.
@@ -3239,7 +3242,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
               clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
-              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang"):
+              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
+              cell_paths=False):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -3315,7 +3319,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                            region_dme_early_ff=region_dme_early_ff, region_dme_snake=region_dme_snake,
                                            **({"clock_cell": clock_cell} if clock_cell != "buf" else {}),
                                            **({"region_dme_early_mode": region_dme_early_mode}
-                                              if region_dme_early_mode != "hang" else {}))
+                                              if region_dme_early_mode != "hang" else {}),
+                                           **({"cell_paths": True} if cell_paths else {}))
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -3930,6 +3935,11 @@ def main(argv=None):
     k.add_argument("--region-dme-early-ff", type=float, default=None, metavar="RATIO_FF",
                    help="DIE-QC-9 opt-in (with --region-dme-early): corner-averaged early hang target = mean of "
                         "early_TT/RATIO and early_FF/RATIO_FF (model ps), e.g. 1.293 from QC trial6 FF")
+    k.add_argument("--cell-paths", action="store_true",
+                   help="DIE-S81-15 opt-in: tree.json taps carry physical cell paths (driver/path/stages, as with "
+                        "--tap-pad) so trial_tap_arrivals exports every leg repeater as a tree-path node; the start "
+                        "tree (count_align_plan --start-retime-up) can then retime at the existing repeaters. "
+                        "Netlist, placement and timing unchanged; default off = byte-identical tree.json")
     k.add_argument("--region-dme-early-mode", choices=("hang", "merge"), default="hang",
                    help="DIE-S81-14 opt-in (with --region-dme-early): 'merge' = the declared early (model ps) is a DME "
                         "sink delay, so bottom-up zero-skew merges deliver the core tap early (binary, no upper-node hang "
@@ -4039,6 +4049,7 @@ def main(argv=None):
                       region_dme_early=a.region_dme_early, region_dme_early_ff=a.region_dme_early_ff,
                       **({"clock_cell": a.clock_cell} if a.clock_cell != "buf" else {}),
                       **({"region_dme_early_mode": a.region_dme_early_mode} if a.region_dme_early_mode != "hang" else {}),
+                      **({"cell_paths": True} if a.cell_paths else {}),
                       region_dme_snake=(a.region_dme_snake if a.region_dme_snake == "all" else
                                         set(r for r in a.region_dme_snake.split(",") if r)) if a.region_dme_snake else None)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
