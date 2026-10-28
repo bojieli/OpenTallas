@@ -239,7 +239,8 @@ c.d.r/D                    900.0  910.5  -10.5
     bp = H.parse_bpins("u_x/a 12.5 3.0\nu_x/b INF -1e+30\n")
     assert bp == {"u_x/a": (12.5, 3.0), "u_x/b": (None, None)}
     assert H.norm("u_top_RRF/r_q_reg/D", ["u_top_RRF"]) == "r_q_reg.D"
-    assert "get_property $p slack_max" in H.tcl_etm(["a.lib"], ["e.lib"], "t.v", "t", "t.spef", ["u_a"], "d.sdc", "/o")
+    assert len(H.parse_end("u_a/r/D (DFF) 100.0 50.0 50.0 (MET)\nu_a/s/D (DFF) 100.0 150.0 -50.0 (VIOLATED)\n")) == 2
+    assert "find_timing_paths -through $p" in H.tcl_etm(["a.lib"], ["e.lib"], "t.v", "t", "t.spef", ["u_a"], "d.sdc", "/o")
 
 
 def test_shared_schema_roundtrip():
@@ -331,6 +332,7 @@ ETM = """library (blk) {
     pin("d_0_") { direction : input;
       timing() { related_pin : "clk"; timing_type : setup_rising; rise_constraint(scalar) { values("10"); } } }
     pin("d_1_") { direction : input; }
+    pin("VSS") { direction : inout; }
     pin("q") { direction : output;
       timing() { related_pin : "clk"; timing_type : rising_edge; cell_rise(scalar) { values("80"); } } }
   }

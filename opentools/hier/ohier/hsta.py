@@ -40,7 +40,12 @@ report_checks -path_delay max -through $ohier_bp_data -digits 1 > {out}/{mode}_b
 report_checks -path_delay min -through $ohier_bp_data -digits 1 > {out}/{mode}_boundary_min.txt
 set ohier_fh [open {out}/{mode}_bpins.txt w]
 foreach p $ohier_bp_data {{
-  puts $ohier_fh "[get_full_name $p] [get_property $p slack_max] [get_property $p slack_min]"
+  set sl {{}}
+  foreach k {{max min}} {{
+    set pe [find_timing_paths -through $p -path_delay $k -group_path_count 1]
+    if {{[llength $pe]}} {{ lappend sl [get_property [lindex $pe 0] slack] }} else {{ lappend sl INF }}
+  }}
+  puts $ohier_fh "[get_full_name $p] [lindex $sl 0] [lindex $sl 1]"
 }}
 close $ohier_fh
 """
@@ -81,6 +86,8 @@ def parse_end(text):
     out = {}
     for line in text.splitlines():
         t = line.split()
+        if t and t[-1] in ("(MET)", "(VIOLATED)"):
+            t = t[:-1]
         if len(t) >= 4 and _NUM.match(t[-1]) and _NUM.match(t[-2]) and _NUM.match(t[-3]):
             out[t[0]] = float(t[-1])
     return out

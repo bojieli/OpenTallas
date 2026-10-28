@@ -87,7 +87,11 @@ def cmd_plan(a):
         with open(a.sdc) as fh:
             E.write(os.path.join(out, "design.sdc"), fh.read())
     E.write(os.path.join(out, "config.mk"),
-            E.top_config(a.platform, a.nick, nl.top, root, modules, (die[2], die[3]), m, sdc_root))
+            # top core one grid step larger than the slot margin: a slot that touches the
+            # margin must still be strictly inside the core (measured: rtl_macro_placer
+            # MPL-0006 on an 89.64-um slot in an 89.64-um core)
+            E.top_config(a.platform, a.nick, nl.top, root, modules, (die[2], die[3]),
+                         max(0.0, m - o.grid_um), sdc_root))
     # flat baseline on the identical leaf netlist and die
     E.write(os.path.join(out, "flat", f"{nl.top}.v"), E.flat_verilog(nl))
     flat_cfg = [
@@ -211,9 +215,11 @@ def cmd_sta_scripts(a):
     sdc = os.path.join(a.gen, "design.sdc")
     os.makedirs(a.out, exist_ok=True)
     fr = res(f"{a.nick}_flat") if not a.flat_work else os.path.join(a.flat_work, "results", a.platform, f"{a.nick}_flat", "base")
-    E.write(os.path.join(a.out, "flat.tcl"),
-            H.tcl_flat(libs, f"{fr}/6_final.v", top, f"{fr}/6_final.spef", sdc, a.out))
+    fv, fs = a.flat_v or f"{fr}/6_final.v", a.flat_spef or f"{fr}/6_final.spef"
+    if os.path.exists(fv) and os.path.exists(fs):
+        E.write(os.path.join(a.out, "flat.tcl"), H.tcl_flat(libs, fv, top, fs, sdc, a.out))
     tr = res(a.nick)
+    tv, ts = a.top_v or f"{tr}/6_final.v", a.top_spef or f"{tr}/6_final.spef"
     blocks, etms, insts = [], [], []
     for r in plan["regions"]:
         br = res(f"{a.nick}_{r['module']}")
@@ -222,9 +228,9 @@ def cmd_sta_scripts(a):
         etms.append(f"{br}/{r['module']}_typ.lib")
         insts.append(inst)
     E.write(os.path.join(a.out, "stitched.tcl"),
-            H.tcl_stitched(libs, f"{tr}/6_final.v", top, f"{tr}/6_final.spef", blocks, sdc, a.out))
+            H.tcl_stitched(libs, tv, top, ts, blocks, sdc, a.out))
     E.write(os.path.join(a.out, "etm.tcl"),
-            H.tcl_etm(libs, etms, f"{tr}/6_final.v", top, f"{tr}/6_final.spef", insts, sdc, a.out))
+            H.tcl_etm(libs, etms, tv, top, ts, insts, sdc, a.out))
     print(a.out)
     return 0
 
@@ -284,6 +290,10 @@ def main(argv=None):
     t.add_argument("--top")
     t.add_argument("--platform", default="asap7")
     t.add_argument("--lib", action="append", required=True)
+    t.add_argument("--top-v", help="top netlist (default WORK top 6_final.v)")
+    t.add_argument("--top-spef", help="top SPEF (default 6_final.spef; scripts/grt_spef.sh for a GRT estimate)")
+    t.add_argument("--flat-v")
+    t.add_argument("--flat-spef")
     t.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     if a.cmd == "plan" and not a.clock_port:

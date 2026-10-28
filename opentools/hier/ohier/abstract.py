@@ -18,6 +18,9 @@ from __future__ import annotations
 import re
 
 
+POWER = {"VDD", "VSS", "VPWR", "VGND", "VDDPE", "VDDCE"}   # supply pins (LEF PIN / macro ETM pg pins)
+
+
 def parse_etm(text):
     """-> dict(cell, pins{name: dir}, clock_tree{min, max} (ps, max of rise/fall), arcs{pin: [types]})"""
     cell = re.search(r'cell\s*\(\s*"?([^")\s]+)"?\s*\)', text)
@@ -69,7 +72,7 @@ def check(region, lef_text, etm_text, ports, tol_um=0.01, clock="clk"):
     if L["name"] != region["module"] or T["cell"] != region["module"]:
         probs.append(f"names LEF {L['name']} / ETM {T['cell']} != {region['module']}")
     want = _port_bits(ports)
-    lp, ep = set(L["pins"]) - {"VDD", "VSS"}, set(T["pins"])
+    lp, ep = set(L["pins"]) - POWER, set(T["pins"]) - POWER
     if lp != want:
         probs.append(f"LEF pins differ from plan ports: missing {sorted(want - lp)[:5]} extra {sorted(lp - want)[:5]}")
     if ep != want:

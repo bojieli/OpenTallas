@@ -228,7 +228,15 @@ def top_config(platform, nick, top, root, blocks, die_wh, margin, sdc, extra=Non
         "export MAX_ROUTING_LAYER = M9",
         "export ROUTING_LAYER_ADJUSTMENT = 0.3",
         "export PLACE_DENSITY = 0.30",
-        "export MACRO_PLACE_HALO = 1 1",
+        # partitions are fixed at their plan slots; a slot may touch the core edge, and ORFS
+        # still runs rtl_macro_placer on fixed macros, which rejects any halo past the core
+        # (measured: MPL-0006 on a core-wide slot with halo 1)
+        "export MACRO_PLACE_HALO = 0 0",
+        # keep std-cell rows in the top channels for top repeaters / clock buffers (platform
+        # default 2 um cut every row of a 4.3-um channel: PDN-0190 "no rows"; 0.54 left
+        # 0.54-um slivers in the 1.08-um core margin: PDN-0179 channel repair)
+        "export MACRO_ROWS_HALO_X = 1.08",
+        "export MACRO_ROWS_HALO_Y = 1.08",
         "export TNS_END_PERCENT = 100",
         "export GND_NETS_VOLTAGES =",
         "export PWR_NETS_VOLTAGES =",
