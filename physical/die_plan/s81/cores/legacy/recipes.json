@@ -248,6 +248,17 @@
   "suffix": "r1t",
   "_why": "S81-CORES-R1 10-27: eng H0 on the canonical legacy generator (the 10-23 eng/gen_core_kit.py has no lint/face/LEC/modern-flow gates; its 10-25 FLOW rebuild 651a84ceaabc crashed in cts_post Tcl, la_d unset). Same RTL/defines/util as cores_eng.json h0; in_w = half-cycle hop from E negedge win_n."
  },
+ "ot_s81sl_cap_tr": {
+  "child_of": "ot_s81sl_capc5r",
+  "ref_tile": "physical/ref_tile/s81sl_cap_tr",
+  "lef_contract": "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr/ot_s81sl_cap_tr.lef",
+  "multi_master": true,
+  "suffix": "r1t",
+  "why": "S81-CORES-R1 10-27 (recipe from 9af7633ff): one of the 4 hard-child masters (5 instances) of ot_s81sl_capc5r; the parent kit is refused until its children are SIGNED, so each master gets its own current-flow kit; contract = the closed child view LEF, RTL from the child spec unchanged.",
+  "lec_hints": "results/s81_lec_fpreg4_1027/ot_s81sl_cap_tr.lec_hints.json",
+  "lec_env": {"OT_LEC_RAW_BASE_STEPS": 6},
+  "lec_why": "S81-CORES-R25 10-27 (LEC-FPREG-4 ask b): 44 untrusted cap_rf hints + 6-step finite-prefix bases -> EQUIVALENT 12270/12270, const-flip mutant NOT EQ 265 (results/s81_lec_fpreg4_1027/ot_s81sl_cap_tr.lec_receipt.json)"
+ },
  "dsfd_su_t_rxsf": {
   "ref_tile": "physical/ref_tile/s81su_rxsf_ref",
   "suffix": "r1t",
