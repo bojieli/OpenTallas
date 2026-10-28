@@ -886,3 +886,22 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
   - Data intel2:/srv/opentallas-scratch2/claude/hbm-risk-1/r4/est_*.json.
   - Part 2 is RUNNING: the same planner with --sta-proof (count_align_d_intervals hull, --sta-clock-cal spice, --sta-cppr-lca) on the BUILT tree arrivals from R2.
 - 2026-10-28 02:12 PDT [DIE-HBM-4-KITS] tkm tile_core idpin strap step (a) FAILS (own geom_check.sh, CHECKED): PLACE_DENSITY 0.25 r2r 542.81 / 400 >405 (empty .166), 0.30 r2r 526.45 / 357 (empty .298), vs 0.5 baseline 470.45 / 158. Spreading fixes empty but makes lateral worse: gpl does not place p_bg bit columns under their S-face pins (worst u_bin_tile_ins_b[78] -> p_bg[8][78]; PNG viewed, uniform spread). Rows dabf2206bd6b/7b97a340aa07 WITHDRAWN. Next (owner of step b, PATH-HBM): per-bit column regions or a plan pin-order delta for tile_ins_b/tile_up_in. Since the vertical leg is ~324 um, lateral must be <=~80 um (UNCHECKED). Keep PLACE_DENSITY 0.5 until then. Branch claude/die-hbm-kits-2-1027 results/die_hbm_kits_1027/c20e_k2_geom.json.
+- 2026-10-28 02:17 PDT [HBM-RISK-2] R3 ESTIMATE, core vs tile clock latency hold, on C20h (plan 2e5644cf5f65). Data: intel2:/srv/opentallas-scratch2/claude/hbm-risk-2/r3_rows.json (r3.py).
+  - Every HBM core tap is 250 TT / 202.5 FF with 0 early offset. This holds for all 77 core module types (1063 placements) (CHECKED). So a core with internal insertion L > 250 captures late by L-250 at its boundary.
+  - Where L comes from: lib ETM max_clock_tree_path for 22 types (130 placements), an upper bound from real libs; the b2l measured natural CTS mean for 8 types (34), from old views; the r4 centre-entry model for 29 types (523), UNCHECKED; nothing for 18 types (376), incl. idx_score_hcol h0/h1 (128), pgslice lanes canon (104), fused_lane/tnode/keybuf (94) and vms_bank (32).
+  - FF hold at the core input boundary, estimated as +25 - (L_ff - 202.5) - 5 % L_ff (UNCHECKED model): 44 types (496 placements) are < 0 ps, and 30 types (381) are < -100 ps.
+  - Worst types:
+    - programme_store_r10: -751 (measured 1150 TT).
+    - vms_glue: -557 (model 935).
+    - idx_rootctl_am: -510 (ETM 873).
+    - SM halves rp3lp3h_n -426 and _s -364 (model 778 / 705, 256 placements).
+    - pslice_c5: -377.
+    - q3_body: -352.
+    - pdie_serdes: -306 (IP, 627).
+    - pc_ctrl_leaf x32: -252 (ETM 557).
+  - This is the HEAD hd_tile -875 mechanism. The partition kits take the core latency on the legacy path: core_latency.txt from ETM max, mean_contract off. A mean contract needs SIGNED cores, and the HBM die has 0 signed cores (signed.tsv, CHECKED).
+  - So it is safe only if each of the 30 types is rebuilt to 250+-20 (12.3) or tapped early by its real L (12.3 v5.0). No C20e core kit has reached CTS yet (kits/c20e: 0 with 4_cts, CHECKED).
+  - COORD condition (1), coverage of the in-core spreads:
+    - PHY_N 171.7 ps is NOT COVERED. PHY_N is a placeholder hard type (ot_hbm3e_phy_rc_e8p5, cells 1000, 0 hard_cores, 0 clock taps, no lef/lib), so there is no core STA with an internal tree.
+    - SM 158.7 ps is NOT COVERED. q_sm* has 32 hnx_rp3lp3h halves, 0/32 with lef/lib, and b2l status is NO KIT. Only the r4 model (705-778 ps internal) exists.
+    - Both spreads stay die-level spreads until real views exist (CHECKED plan + b2l).
