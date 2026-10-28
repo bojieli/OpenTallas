@@ -57,6 +57,10 @@ def _runs(root, die, item=None):
             meta = json.loads(p.read_text())
             if meta['spec']['die'] != die:
                 continue
+            # FLOW-SHARED-6 2026-10-27: candidate-branch A/B runs (source under flow-canary/ab/) are not reference
+            # canaries of any main flow: HBM kits were held by the f9d9190f1 A/B run as 'newest completed reference'.
+            if '/flow-canary/ab/' in str(meta.get('src', '')):
+                continue
             if item and meta['spec'].get('item', item) != item:
                 continue
             mtime = p.stat().st_mtime_ns

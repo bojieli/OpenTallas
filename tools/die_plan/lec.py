@@ -618,11 +618,31 @@ def latch_to_wire(src, dst, side):
             raise Unproven(f"latch {side}: {cn}.{p} is not a single bit")
         return b[0]
 
+    def const_mux(cn):                    # $_MUX_ / $_NMUX_ with constant data pins = a BUF / NOT of S, else None
+        c = cells[cn]
+        if c["type"] not in ("$_MUX_", "$_NMUX_"):
+            return None
+        a, b = c["connections"].get("A", [None])[0], c["connections"].get("B", [None])[0]
+        if (a, b) not in (("0", "1"), ("1", "0")):
+            return None
+        return (a == "1") ^ (c["type"] == "$_NMUX_")      # Y = S ? B : A: inverted when A = 1 (MUX) / A = 0 (NMUX)
+
     def through(b, inv=False):            # through $_BUF_ (and $_NOT_ when inv): -> (bit, inverted)
+        # also through a constant-data $_MUX_ / $_NMUX_: the RTL frontend's unoptimised "!clk" (S ? 1'b0 : 1'b1) on
+        # an always_latch enable (S81 R21b u_view c_lk, LEC-FPREG-4 10-27)
         neg = False
-        while isinstance(b, int) and b in drv and cells[drv[b][0]]["type"] in (("$_BUF_", "$_NOT_") if inv else ("$_BUF_",)):
-            neg ^= cells[drv[b][0]]["type"] == "$_NOT_"
-            b = cells[drv[b][0]]["connections"]["A"][0]
+        while isinstance(b, int) and b in drv:
+            cn = drv[b][0]
+            t = cells[cn]["type"]
+            if t in (("$_BUF_", "$_NOT_") if inv else ("$_BUF_",)):
+                neg ^= t == "$_NOT_"
+                b = cells[cn]["connections"]["A"][0]
+                continue
+            cm = const_mux(cn)
+            if cm is None or (cm and not inv):
+                break
+            neg ^= cm
+            b = cells[cn]["connections"]["S"][0]
         return b, neg
 
     stub = re.compile(r"(^|\.)lec_(bbo|bbi|po)_")
@@ -646,13 +666,32 @@ def latch_to_wire(src, dst, side):
     for cn in lats:
         clock_bits.add(through(one(cn, "E"), True)[0])
 
+    # The RTL frontend writes always_latch if (!clk) q = d as D = $_MUX_(S = clk, A = d, B = x / q): a latch only
+    # reads D while transparent, so the branch S selects in the transparent phase IS the latch data (S81 R21b
+    # u_view c_lk, LEC-FPREG-4 10-27).  Only a $_MUX_ driving D directly whose select is this latch's own enable
+    # clock (through BUF / NOT) is resolved; any other select stays in the data cone (a clock read -> Unproven).
+    dsel = {}                            # latch -> its transparent-phase data bit (phase mux resolved)
+    for cn in lats:
+        d_in = one(cn, "D")
+        if isinstance(d_in, int) and d_in in drv and cells[drv[d_in][0]]["type"] == "$_MUX_":
+            mc = cells[drv[d_in][0]]["connections"]
+            sb, sneg = through(mc["S"][0], True)
+            if sb == through(one(cn, "E"), True)[0]:   # transparent while E's clock = 0: S = sneg -> B (1) / A (0)
+                dsel[cn] = mc["B" if sneg else "A"][0]
+    # Latch chains (S81 R21b: io_clk go lockup latch -> core logic -> ck seam lockup latch, LEC-FPREG-4 10-27): every
+    # latch here is transparent-low on a primary-input clock (each is checked in its own iteration, and any failure
+    # refuses the whole netlist), so in the low phase of one cycle the data of a rising-edge flop passes the whole
+    # chain and the rising-edge readers sample it: the chain is a wire like one latch.  The data cone therefore
+    # passes through another latch to its (phase-resolved) D, the Q fan-out through another latch's D to its Q; a
+    # chain that returns to the latch itself is a combinational loop after the abstraction -> Unproven.
     for cn in sorted(lats):
         c = cells[cn]
         t = c["type"]
         e, neg = through(one(cn, "E"), True)
         if t not in ("$_DLATCH_N_", "$_DLATCH_P_") or e not in pis or e not in ff_clocks or (t == "$_DLATCH_P_") != neg:
             raise Unproven(f"latch {side}: {t} {cn} is not a transparent-low latch on a primary-input clock")
-        seen, todo, srcs = set(), [one(cn, "D")], 0
+        d_in = dsel.get(cn, one(cn, "D"))
+        seen, todo, srcs = set(), [d_in], 0
         while todo:                        # data cone
             b = todo.pop()
             if not isinstance(b, int) or b in seen:
@@ -664,6 +703,11 @@ def latch_to_wire(src, dst, side):
                 srcs += 1
                 continue
             dn, dp = drv[b]
+            if dn in lats:                 # chained latch: its own transparent-phase data
+                if dn == cn:
+                    raise Unproven(f"latch {side}: {cn} data reaches its own Q (latch loop)")
+                todo.append(dsel.get(dn, one(dn, "D")))
+                continue
             if FF_TYPE.match(cells[dn]["type"]):
                 if not rise_ff(dn):
                     raise Unproven(f"latch {side}: {cn} data reads {cells[dn]['type']} {dn} (not a rising-edge flop "
@@ -686,6 +730,11 @@ def latch_to_wire(src, dst, side):
                 raise Unproven(f"latch {side}: {cn} Q reaches module output {name_of.get(b, b)}")
             for ln, lp, li in loads.get(b, ()):
                 lt = cells[ln]["type"]
+                if ln in lats and lp == "D":   # chained latch: continue from its Q
+                    if ln == cn:
+                        raise Unproven(f"latch {side}: {cn} Q reaches its own D (latch loop)")
+                    todo.append(one(ln, "Q"))
+                    continue
                 f = FF_TYPE.match(lt)
                 if f:
                     ok = rise_ff(ln) and (lp in ("D", "E") or (lp == "R" and f[1].startswith("SDFF")))
@@ -701,12 +750,14 @@ def latch_to_wire(src, dst, side):
                          if cells[ln].get("port_directions", {}).get(p) == "output" for x in bits]
         if q in clock_bits:
             raise Unproven(f"latch {side}: {cn} Q is a clock net")
-        st["per_latch"][cn] = dict(type=t, clk=name_of.get(e, str(e)), data_sources=srcs, sinks=sinks)
+        st["per_latch"][cn] = dict(type=t, clk=name_of.get(e, str(e)), data_sources=srcs, sinks=sinks,
+                                   phase_mux=cn in dsel)
+    st["phase_mux"] = len(dsel)
     for cn in sorted(lats):               # all checked first: then each latch -> $_BUF_ D -> Q
         c = cells[cn]
         cells[cn] = {"hide_name": c.get("hide_name", 1), "type": "$_BUF_", "parameters": {}, "attributes": {},
                      "port_directions": {"A": "input", "Y": "output"},
-                     "connections": {"A": [one(cn, "D")], "Y": [one(cn, "Q")]}}
+                     "connections": {"A": [dsel.get(cn, one(cn, "D"))], "Y": [one(cn, "Q")]}}
         st["to_wire"] += 1
     Path(dst).write_text(json.dumps(d))
     return st
@@ -1872,6 +1923,9 @@ def cone_sim(m, lits, fixed, words, seed):
     return [val[l >> 1] ^ (mask if l & 1 else 0) for l in lits], mask
 
 
+ZH = -2                                  # fsm_proposals: the zero-hot (all gate bits 0) state
+
+
 def fsm_proposals(L, log, words=2, max_bits=4):
     """FSM state recoding (yosys fsm: a binary RTL state vector B[n-1:0] becomes one-hot gate flops B#t[i]).
     For each such vector the code -> one-hot-bit map is found by simulating both next-state functions from every
@@ -1908,38 +1962,58 @@ def fsm_proposals(L, log, words=2, max_bits=4):
             continue
         dl = [L.dlit[("gold", k)] for k in gk] + [L.dlit[("gate", k)] for k in tk]
         R = {}
+        zh = nt + 1 <= (1 << n)            # room for a zero-hot state (all gate bits 0, LEC-FPREG-4 L3 u_rw.st)
         for c in range(1 << n):
-            for j in range(nt):
+            for j in list(range(nt)) + ([ZH] if zh else []):
                 ones = (1 << (64 * words)) - 1
                 fixed = {var[("gold", k)]: (ones if (c >> b) & 1 else 0) for b, k in enumerate(gk)}
                 fixed.update({var[("gate", k)]: (ones if i == j else 0) for i, k in enumerate(tk)})
-                vals, mask = cone_sim(m, dl, fixed, words, seed=c * 64 + j)
+                vals, mask = cone_sim(m, dl, fixed, words, seed=c * 64 + (j if j >= 0 else 63))
                 obs = collections.Counter()
                 for lane in range(64 * words):
                     gn = sum(((vals[b] >> lane) & 1) << b for b in range(n))
                     tn = [(vals[n + i] >> lane) & 1 for i in range(nt)]
-                    obs[(gn, tn.index(1) if sum(tn) == 1 else -1)] += 1
+                    obs[(gn, tn.index(1) if sum(tn) == 1 else (ZH if sum(tn) == 0 else -1))] += 1
                 R[(c, j)] = obs
         # the next states also depend on registers not yet paired (a renamed alias of a state flag is a free input
         # on each side), so a transition agrees only where those agree: pick the map with the most agreeing
         # transitions (unique best, a majority of all lanes); the induction proof decides
         import itertools
         lanes = 64 * words
-        best, second, pi = -1, -1, None
-        for codes in itertools.combinations(range(1 << n), nt):
-            for perm in itertools.permutations(range(nt)):
-                cand = dict(zip(codes, perm))
-                sc = sum(cnt for c, j in cand.items() for (gn, ti), cnt in R[(c, j)].items()
-                         if ti >= 0 and cand.get(gn) == ti)
-                if sc > best:
-                    best, second, pi = sc, best, cand
-                elif sc > second:
-                    second = sc
-        if pi is None or best == second or 2 * best <= nt * lanes:
+        def search(zero_hot):
+            # zero_hot: one more code is the all-zero gate state (yosys fsm one-hot recoding of a reset/idle state
+            # as no bit set); its transitions are scored like the one-hot ones
+            best, second, pi = -1, -1, None
+            for codes in itertools.combinations(range(1 << n), nt):
+                for perm in itertools.permutations(range(nt)):
+                    base_ = dict(zip(codes, perm))
+                    for z in ([c for c in range(1 << n) if c not in base_] if zero_hot else [None]):
+                        cand = dict(base_)
+                        if z is not None:
+                            cand[z] = ZH
+                        sc = sum(cnt for c, j in cand.items() for (gn, ti), cnt in R[(c, j)].items()
+                                 if ti != -1 and cand.get(gn) == ti)
+                        if sc > best:
+                            best, second, pi = sc, best, cand
+                        elif sc > second:
+                            second = sc
+            ok = pi is not None and best != second and 2 * best > len(pi) * lanes
+            return ok, best, second, pi
+        ok, best, second, pi = search(False)
+        if not ok and zh:                  # only when no one-hot map is unique: earlier verdicts are unchanged
+            if math.comb(1 << n, nt) * math.factorial(nt) * ((1 << n) - nt) > 200000:
+                log.append(f"fsm: {base} ({n} gold / {nt} gate bits): zero-hot encoding search too large")
+            else:
+                okz, bz, sz, pz = search(True)
+                if okz:
+                    ok, best, second, pi = okz, bz, sz, pz
+        if not ok:
             log.append(f"fsm: {base} ({n} gold / {nt} gate bits): no unique encoding (best {best}, next {second} of "
                        f"{nt * lanes} transitions), none proposed")
             continue
         for c, j in sorted(pi.items()):
+            if j == ZH:                    # zero-hot: implied by the other cubes (every gate bit 0), no flop of its own
+                continue
             L.hyp[("gate", tk[j])] = ("cube", "gold", list(gk), [(c >> b) & 1 for b in range(n)])
             n_new += 1
         # a later round can re-propose the same state vector (its cube hypotheses were dropped and its gate bits are
@@ -1947,7 +2021,8 @@ def fsm_proposals(L, log, words=2, max_bits=4):
         # a second one with the same proof-output name (cons:gold:<first key>, rejected by build() as a duplicate)
         L.cons = [c for c in L.cons if not (c[0] == "gold" and list(c[1]) == list(gk))]
         L.cons.append(("gold", list(gk), [[(c >> b) & 1 for b in range(n)] for c in sorted(pi)]))
-        log.append(f"fsm: {base} recoded one-hot: " + ", ".join(f"{c}->{tk[j]}" for c, j in sorted(pi.items())))
+        log.append(f"fsm: {base} recoded one-hot: " + ", ".join(f"{c}->{tk[j] if j != ZH else 'zero-hot'}"
+                                                                for c, j in sorted(pi.items())))
     return n_new
 
 

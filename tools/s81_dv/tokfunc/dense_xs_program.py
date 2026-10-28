@@ -24,10 +24,19 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument('--vectors', type=Path, required=True)
     p.add_argument('--capture-map', type=Path, required=True)
+    # TOK-ALL-15 GB successor: the selected die frame master (die_b178.v) and the XS calendar Q issue form.
+    p.add_argument('--die-master', default='col_h9_l4_lp')
+    p.add_argument('--land-e', type=int, default=2)
+    p.add_argument('--q-calendar', choices=('env', 'native_advance1', 'old'), default='env',
+                   help='native_advance1 = OT_XS_Q_CPR=1 (Q launch row one edge early, CFG/stream/BF/return dates kept); '
+                        'old = legacy Q launch (control)')
     a = p.parse_args()
     v = a.vectors
     m = json.loads((v / 'meta.json').read_text())
-    assert m['die_master'] == 'col_h9_l4_lp' and m['land_e'] == 2
+    assert m['die_master'] == a.die_master and m['land_e'] == a.land_e, (m['die_master'], m['land_e'])
+    if a.q_calendar != 'env':
+        import os
+        os.environ['OT_XS_Q_CPR'] = '1' if a.q_calendar == 'native_advance1' else '0'
     assert m['K'] == 5120 and m['phase']['index'] == 0 and not m['phase']['bf']
     cap = next(c for c in json.loads(a.capture_map.read_text())['halves']['B']['captures']
                if c['slice'] == m['slice'])
@@ -66,6 +75,8 @@ def main():
                off=XC.OFF, xs_tag=0, frame_operation_tag=tag, gather_parity=0,
                cycles=max(2905,c['end_iter']), calibrated_common_shift_model=c['D'],
                calendar_compiler_sha256=hashlib.sha256(Path(XC.__file__).read_bytes()).hexdigest(),
+               q_issue_advance_edges=c['go_command_lead_edges'], die_master=m['die_master'], die_frame=m['die_frame'],
+               gb_provider_under_test=bool(m.get('gb_provider_under_test')),
                stream_stall_edges=c['stall_edges'],
                input_boundary='golden-quantised actual checkpoint x at XS gather pins',
                meta_sha256=hashlib.sha256((v/'meta.json').read_bytes()).hexdigest(),
