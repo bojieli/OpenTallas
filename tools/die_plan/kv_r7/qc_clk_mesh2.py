@@ -747,8 +747,10 @@ def cmd_parse(a):
 
 
 # ------------------------------------------------------------------------------------------------ linear solve
-def solve_netlist(N, corner, thev, dt=0.5, t_extra=500.0):
-    """backward-Euler transient of the linear mesh; drivers = ramp (50 % at arr + d_int, 0-100 % in tr) behind R_th."""
+def solve_netlist(N, corner, thev, dt=0.5, t_extra=500.0, slew=False):
+    """backward-Euler transient of the linear mesh; drivers = ramp (50 % at arr + d_int, 0-100 % in tr) behind R_th.
+    slew=True (HEAD-R24 explicit_mesh_signoff, opt-in): also returns {key: 10-90 % rise time ps} per measured node as a
+    third value; the 50 % crossings and the default two-value return are unchanged."""
     import numpy as np
     import scipy.sparse as sp
     import scipy.sparse.linalg as spl
@@ -792,6 +794,8 @@ def solve_netlist(N, corner, thev, dt=0.5, t_extra=500.0):
     mi = np.array([meas[k] for k in mk])
     v = np.zeros(n)
     cross = np.full(len(mk), np.nan)
+    if slew:
+        c10, c90 = np.full(len(mk), np.nan), np.full(len(mk), np.nan)
     t = 0.0
     prev = np.zeros(len(mk))
     while t < T:
@@ -805,10 +809,18 @@ def solve_netlist(N, corner, thev, dt=0.5, t_extra=500.0):
         if hit.any():
             f = (vdd / 2 - prev[hit]) / np.maximum(cur[hit] - prev[hit], 1e-12)
             cross[hit] = t - dt + f * dt
+        if slew:
+            for cr_, lv in ((c10, 0.1 * vdd), (c90, 0.9 * vdd)):
+                h_ = np.isnan(cr_) & (cur >= lv) & (prev < lv)
+                if h_.any():
+                    f = (lv - prev[h_]) / np.maximum(cur[h_] - prev[h_], 1e-12)
+                    cr_[h_] = t - dt + f * dt
         prev = cur
-        if not np.isnan(cross).any():
+        if not np.isnan(cross).any() and not (slew and np.isnan(c90).any()):
             break
     res = {k: float(c) for k, c in zip(mk, cross)}
+    if slew:
+        return res, t0, {k: float(b - a) for k, a, b in zip(mk, c10, c90)}
     return res, t0
 
 
