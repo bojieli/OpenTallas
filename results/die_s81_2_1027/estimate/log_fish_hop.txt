@@ -1,0 +1,81 @@
+{
+ "regions": 98,
+ "tree_components": 1,
+ "tree_edges": 97,
+ "tree_root": "std_b3_7_0",
+ "tree_edges_clean": 93,
+ "crossings": 789,
+ "depth4": 776,
+ "depth8": 13,
+ "fail": 0,
+ "max_path_ambiguous_cycles": 1,
+ "max_L_width_ps": 1985.2,
+ "lat_hist": {
+  "-1": 3,
+  "1": 262,
+  "2": 9,
+  "3": 146,
+  "4": 134,
+  "5": 141,
+  "6": 1,
+  "7": 3,
+  "8": 4
+ },
+ "lat_total_vs_old3": -352,
+ "old_ring_not_cycle_fixed": 133,
+ "old_ring_fail_margin": 789,
+ "loc_summary": {
+  "feed": "fish",
+  "v_ps_per_mm": 335.0,
+  "regions": 98,
+  "crossing_ports": 981,
+  "crossing_pairs": 260,
+  "frac_bits_inside": 0.6006,
+  "frac_bitmm_inside": 0.5775,
+  "off_feed_ports": 192,
+  "loop_pairs": 66,
+  "max_span_mm": 11.543040000000001,
+  "max_ins_ps": 2549.9664,
+  "worst_unshared_tt": 16265.9,
+  "worst_unshared_on_feed_tt": 4266.3,
+  "worst_unshared_off_feed_tt": 16265.9,
+  "max_tree_hops": 20,
+  "raw_worst_tt": -14288.52,
+  "raw_worst_ff": -12114.65,
+  "ca_worst_tt": -838.8,
+  "ca_worst_ff": -603.2,
+  "tracks_over_1": 2,
+  "tracks_worst_ratio": 1.078,
+  "hop_chains": 192,
+  "hop_max_hops": 20,
+  "hop_extra_bit_hops": 290877,
+  "hop_synthetic_edges": 0
+ },
+ "worst_margin_lo_ps": 104.1,
+ "worst_margin_hi_ps": 304.5,
+ "under100": 0,
+ "offfeed_depth8": 0,
+ "plan": "in/die_plan.json",
+ "map": "in/loc_spt_321.json",
+ "aperture_ps": 104.125,
+ "phy_region": [
+  {
+   "region": "hard_phy_hbm",
+   "parts": 9,
+   "w_mm": 11.54,
+   "h_mm": 3.68,
+   "ins_ps": 2550.0,
+   "hard": true
+  }
+ ]
+}
+rt_W0_in_0__0 std_b2_0_0 std_b3_1_0 tree 4 0 520.6 1636.6 104.1 1278.9 1789 True
+rt_W0_in_2__0 std_b1_0_0 std_b2_0_0 tree 4 0 520.6 1636.6 104.1 1278.9 1789 True
+rt_W0_out_1__0 std_b0_0_0 std_b1_0_0 tree 4 0 520.6 1636.6 104.1 1278.9 1789 True
+rt_W1_in_0__0 std_b2_2_0 std_b3_3_0 tree 4 0 520.6 1636.6 104.1 1278.9 1789 True
+rt_W1_in_2__0 std_b1_2_0 std_b2_2_0 tree 4 0 520.6 1636.6 104.1 1278.9 1789 True
+rt_W1_out_1__0 std_b0_2_0 std_b1_2_0 tree 4 0 520.6 1636.6 104.1 1278.9 1789 True
+rt_W2_in_0__0 std_b2_3_1 std_b3_4_0 tree 4 0 520.6 1636.6 104.1 1278.9 1789 True
+rt_W2_in_0__2 std_b3_4_0 std_b4_4_0 tree 4 0 520.6 1576.8 104.1 1338.7 1190 True
+rt_W2_in_2__0 std_b1_3_1 std_b2_3_1 tree 4 0 520.6 1636.6 104.1 1278.9 1789 True
+rt_W2_out_1__0 std_b0_3_1 std_b1_3_1 tree 4 0 520.6 1636.6 104.1 1278.9 1789 True

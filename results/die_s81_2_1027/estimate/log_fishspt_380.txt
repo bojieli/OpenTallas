@@ -1,0 +1,81 @@
+{
+ "regions": 98,
+ "tree_components": 1,
+ "tree_edges": 97,
+ "tree_root": "std_b5_4_0",
+ "tree_edges_clean": 31,
+ "crossings": 981,
+ "depth4": 759,
+ "depth8": 183,
+ "fail": 39,
+ "max_path_ambiguous_cycles": 6,
+ "max_L_width_ps": 6025.2,
+ "lat_hist": {
+  "1": 153,
+  "2": 126,
+  "3": 131,
+  "4": 205,
+  "5": 150,
+  "6": 103,
+  "7": 10
+ },
+ "lat_total_vs_old3": 113,
+ "old_ring_not_cycle_fixed": 615,
+ "old_ring_fail_margin": 972,
+ "loc_summary": {
+  "feed": "fishspt",
+  "v_ps_per_mm": 380.0,
+  "regions": 98,
+  "crossing_ports": 981,
+  "crossing_pairs": 260,
+  "frac_bits_inside": 0.6006,
+  "frac_bitmm_inside": 0.5775,
+  "off_feed_ports": 414,
+  "loop_pairs": 114,
+  "max_span_mm": 11.543040000000001,
+  "max_ins_ps": 2892.4992,
+  "worst_unshared_tt": 11409.8,
+  "worst_unshared_on_feed_tt": 2769.4,
+  "worst_unshared_off_feed_tt": 11409.8,
+  "max_tree_hops": 13,
+  "raw_worst_tt": -2388.84,
+  "raw_worst_ff": -1947.45,
+  "ca_worst_tt": -547.1,
+  "ca_worst_ff": -371.9,
+  "tracks_over_1": 2,
+  "tracks_worst_ratio": 1.078,
+  "hop_chains": 414,
+  "hop_max_hops": 13,
+  "hop_extra_bit_hops": 697677,
+  "hop_synthetic_edges": 24,
+  "hop_failed_direct": null,
+  "hop_chain_bits": null
+ },
+ "worst_margin_lo_ps": 104.1,
+ "worst_margin_hi_ps": 113.2,
+ "under100": 39,
+ "offfeed_depth8": 167,
+ "plan": "in/die_plan.json",
+ "map": "in/loc_spt_321.json",
+ "aperture_ps": 104.125,
+ "phy_region": [
+  {
+   "region": "hard_phy_hbm",
+   "parts": 9,
+   "w_mm": 11.54,
+   "h_mm": 3.68,
+   "ins_ps": 2892.5,
+   "hard": true
+  }
+ ]
+}
+unit__seqhost__s_0N_LP__12 std_b3_6_0 std_b3_7_0 nontree None 6 1331.9 7350.7 915.4 -1103.2 4632 False
+tp__s_0S_LP__s_0N_LP__5 std_b3_6_0 std_b3_7_0 nontree None 6 1331.9 7350.7 915.4 -1103.2 4632 False
+qc__iqf__s_0N_LP__13 std_b3_6_0 std_b3_7_0 nontree None 6 1331.9 7350.7 915.4 -1103.2 4632 False
+up_s_0N_L2__1 std_b3_6_0 std_b3_7_0 nontree None 6 1333.9 7348.0 917.4 -1100.5 4632 False
+up_s_0N_L0__0 std_b3_6_0 std_b3_7_0 nontree None 6 1333.9 7348.0 917.4 -1100.5 4632 False
+xtier__s_0S_C__s_0N_C__5 std_b3_6_0 std_b3_7_0 nontree None 6 1333.9 7348.0 917.4 -1100.5 4632 False
+sid_s_0S_C__s_0N_C__5 std_b3_6_0 std_b3_7_0 nontree None 6 1333.9 7348.0 917.4 -1100.5 4632 False
+ctrl__s_0N_LP__seqhost__0 std_b3_7_0 std_b3_6_0 nontree None 6 979.3 6998.1 562.8 -750.6 4632 False
+ql__s_0N_LP__iqf__0 std_b3_7_0 std_b3_6_0 nontree None 6 979.3 6998.1 562.8 -750.6 4632 False
+dn_s_0N_L2__0 std_b3_7_0 std_b3_6_0 nontree None 6 982.0 6996.1 565.5 -748.6 4632 False

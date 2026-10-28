@@ -1,0 +1,88 @@
+{
+ "regions": 98,
+ "tree_components": 1,
+ "tree_edges": 97,
+ "tree_root": "std_b3_7_0",
+ "tree_edges_clean": 25,
+ "crossings": 981,
+ "depth4": 817,
+ "depth8": 122,
+ "fail": 42,
+ "max_path_ambiguous_cycles": 11,
+ "max_L_width_ps": 13573.2,
+ "lat_hist": {
+  "-12": 4,
+  "-6": 4,
+  "-5": 5,
+  "-3": 8,
+  "-2": 26,
+  "-1": 10,
+  "1": 237,
+  "2": 38,
+  "3": 13,
+  "4": 150,
+  "5": 168,
+  "6": 123,
+  "7": 2,
+  "8": 11,
+  "9": 18,
+  "10": 5,
+  "11": 10,
+  "12": 5,
+  "14": 5,
+  "22": 5
+ },
+ "lat_total_vs_old3": 68,
+ "old_ring_not_cycle_fixed": 729,
+ "old_ring_fail_margin": 981,
+ "loc_summary": {
+  "feed": "fwd",
+  "v_ps_per_mm": 335.0,
+  "regions": 98,
+  "crossing_ports": 981,
+  "crossing_pairs": 260,
+  "frac_bits_inside": 0.6006,
+  "frac_bitmm_inside": 0.5775,
+  "off_feed_ports": 192,
+  "loop_pairs": 66,
+  "max_span_mm": 11.543040000000001,
+  "max_ins_ps": 2549.9664,
+  "worst_unshared_tt": 22340.4,
+  "worst_unshared_on_feed_tt": 4804.0,
+  "worst_unshared_off_feed_tt": 22340.4,
+  "max_tree_hops": 20,
+  "raw_worst_tt": -19878.29,
+  "raw_worst_ff": -16881.12,
+  "ca_worst_tt": -1202.4,
+  "ca_worst_ff": -898.7,
+  "tracks_over_1": 2,
+  "tracks_worst_ratio": 1.078
+ },
+ "worst_margin_lo_ps": 104.1,
+ "worst_margin_hi_ps": 124.3,
+ "under100": 42,
+ "offfeed_depth8": 109,
+ "plan": "in/die_plan.json",
+ "map": "in/loc_spt_321.json",
+ "aperture_ps": 104.125,
+ "phy_region": [
+  {
+   "region": "hard_phy_hbm",
+   "parts": 9,
+   "w_mm": 11.54,
+   "h_mm": 3.68,
+   "ins_ps": 2550.0,
+   "hard": true
+  }
+ ]
+}
+xtier__bk_sel__s_4S_C__7 std_b5_6_1 std_b5_5_1 nontree None 11 833.0 14406.2 416.5 -8158.7 21673 False
+xtier__s_4S_C__bk_sel__3 std_b5_5_1 std_b5_6_1 nontree None 11 587.8 14161.0 171.3 -7913.5 21673 False
+xtier__bk_sel__seqhost__7 std_b5_6_1 std_b6_5_1 nontree None 10 1293.9 13710.0 877.4 -7462.5 20223 False
+xtier__s_5N_C__s_5S_C__2 std_b5_6_1 std_b6_5_0 nontree None 10 1293.9 13710.0 877.4 -7462.5 20223 False
+idx__svc_14__bk_sel__9 std_b6_5_1 std_b5_6_1 nontree None 10 1284.0 13700.1 867.5 -7452.6 20223 False
+xtier__seqhost__bk_sel__9 std_b6_5_1 std_b5_6_1 nontree None 10 1284.0 13700.1 867.5 -7452.6 20223 False
+xtier__eng__s_6N_C__10 std_b6_5_1 std_b5_6_1 nontree None 10 1284.0 13700.1 867.5 -7452.6 20223 False
+xtier__s_5S_C__s_5N_C__3 std_b6_5_0 std_b5_6_1 nontree None 10 1284.0 13700.1 867.5 -7452.6 20223 False
+xtier__seqhost__s_4N_C__6 std_b5_5_0 std_b4_6_0 nontree None 9 1277.8 13439.4 861.3 -7191.9 21673 False
+unit__seqhost__gunit__6 std_b5_5_0 std_b4_6_0 nontree None 9 1277.8 13439.4 861.3 -7191.9 21673 False

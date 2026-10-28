@@ -1,0 +1,74 @@
+{
+ "regions": 98,
+ "tree_components": 1,
+ "tree_edges": 97,
+ "tree_root": "std_b3_7_0",
+ "tree_edges_clean": 31,
+ "crossings": 981,
+ "depth4": 218,
+ "depth8": 567,
+ "fail": 196,
+ "max_path_ambiguous_cycles": 39,
+ "max_L_width_ps": 36074.9,
+ "lat_hist": {
+  "2": 109,
+  "3": 268,
+  "4": 272,
+  "5": 112,
+  "6": 15,
+  "7": 9
+ },
+ "lat_total_vs_old3": -120,
+ "old_ring_not_cycle_fixed": 730,
+ "old_ring_fail_margin": 730,
+ "loc_summary": {
+  "feed": "dme",
+  "v_ps_per_mm": 335.0,
+  "regions": 98,
+  "crossing_ports": 981,
+  "crossing_pairs": 260,
+  "frac_bits_inside": 0.6006,
+  "frac_bitmm_inside": 0.5775,
+  "off_feed_ports": 192,
+  "loop_pairs": 66,
+  "max_span_mm": 11.543040000000001,
+  "max_ins_ps": 2549.9664,
+  "worst_unshared_tt": 18967.5,
+  "worst_unshared_on_feed_tt": 18967.5,
+  "worst_unshared_off_feed_tt": 18967.5,
+  "max_tree_hops": 20,
+  "raw_worst_tt": -1273.34,
+  "raw_worst_ff": -968.24,
+  "ca_worst_tt": -1273.3,
+  "ca_worst_ff": -968.2,
+  "tracks_over_1": 2,
+  "tracks_worst_ratio": 1.078
+ },
+ "worst_margin_lo_ps": 104.1,
+ "worst_margin_hi_ps": 132.2,
+ "under100": 196,
+ "offfeed_depth8": 73,
+ "plan": "in/die_plan.json",
+ "map": "in/loc_spt_321.json",
+ "aperture_ps": 104.125,
+ "phy_region": [
+  {
+   "region": "hard_phy_hbm",
+   "parts": 9,
+   "w_mm": 11.54,
+   "h_mm": 3.68,
+   "ins_ps": 2550.0,
+   "hard": true
+  }
+ ]
+}
+unit__s_7N_LP__seqhost__4 std_b7_5_1 std_b7_4_0 nontree None 39 705.0 36780.0 288.5 -30532.5 18968 False
+unit__seqhost__s_7N_LP__9 std_b7_4_0 std_b7_5_1 nontree None 39 705.0 36780.0 288.5 -30532.5 18968 False
+tp__bk_sel__s_7S_LP__11 std_b7_5_1 std_b7_4_0 nontree None 39 705.0 36780.0 288.5 -30532.5 18968 False
+xtier__s_6N_C__eng__3 std_b7_6_0 std_b7_5_0 nontree None 39 714.5 36770.5 298.0 -30523.0 18968 False
+xtier__s_7N_C__s_7S_C__2 std_b7_6_0 std_b7_5_0 nontree None 39 714.5 36770.5 298.0 -30523.0 18968 False
+xtier__s_7S_C__s_7N_C__3 std_b7_5_0 std_b7_6_0 nontree None 39 714.5 36770.5 298.0 -30523.0 18968 False
+sid_s_7N_C__seqhost__2 std_b7_6_0 std_b7_5_0 nontree None 39 714.5 36770.5 298.0 -30523.0 18968 False
+xtier__s_4S_C__bk_sel__3 std_b5_5_1 std_b5_6_1 nontree None 35 714.5 33438.5 298.0 -27191.0 18968 False
+xtier__bk_sel__s_4S_C__7 std_b5_6_1 std_b5_5_1 nontree None 35 714.5 33438.5 298.0 -27191.0 18968 False
+idx__svc_14__bk_sel__9 std_b6_5_1 std_b5_6_1 nontree None 35 714.5 33438.5 298.0 -27191.0 18968 False

@@ -1,0 +1,82 @@
+/home/ubuntu/.local/lib/python3.10/site-packages/matplotlib/projections/__init__.py:63: UserWarning: Unable to import Axes3D. This may be due to multiple versions of Matplotlib being installed (e.g. as a system package and as a pip package). As a result, the 3D projection is not available.
+  warnings.warn("Unable to import Axes3D. This may be due to multiple versions of "
+{
+ "regions": 98,
+ "tree_components": 1,
+ "tree_edges": 97,
+ "tree_root": "std_b5_4_0",
+ "tree_edges_clean": 81,
+ "crossings": 981,
+ "depth4": 883,
+ "depth8": 98,
+ "fail": 0,
+ "max_path_ambiguous_cycles": 2,
+ "max_L_width_ps": 3638.9,
+ "lat_hist": {
+  "1": 186,
+  "2": 117,
+  "3": 238,
+  "4": 247,
+  "5": 118,
+  "6": 13
+ },
+ "lat_total_vs_old3": -153,
+ "old_ring_not_cycle_fixed": 393,
+ "old_ring_fail_margin": 957,
+ "loc_summary": {
+  "feed": "fishspt",
+  "v_ps_per_mm": 335.0,
+  "regions": 98,
+  "crossing_ports": 981,
+  "crossing_pairs": 260,
+  "frac_bits_inside": 0.6006,
+  "frac_bitmm_inside": 0.5775,
+  "off_feed_ports": 416,
+  "loop_pairs": 114,
+  "max_span_mm": 11.543040000000001,
+  "max_ins_ps": 2549.9664,
+  "worst_unshared_tt": 10058.6,
+  "worst_unshared_on_feed_tt": 2441.4,
+  "worst_unshared_off_feed_tt": 10058.6,
+  "max_tree_hops": 13,
+  "raw_worst_tt": -2066.8,
+  "raw_worst_ff": -1675.29,
+  "ca_worst_tt": -443.2,
+  "ca_worst_ff": -286.3,
+  "tracks_over_1": 2,
+  "tracks_worst_ratio": 1.078,
+  "hop_chains": 416,
+  "hop_max_hops": 13,
+  "hop_extra_bit_hops": 698741,
+  "hop_synthetic_edges": 24,
+  "hop_failed_direct": null,
+  "hop_chain_bits": null
+ },
+ "worst_margin_lo_ps": 104.1,
+ "worst_margin_hi_ps": 122.6,
+ "under100": 0,
+ "offfeed_depth8": 98,
+ "plan": "in/die_plan.json",
+ "map": "in/loc_spt_321.json",
+ "aperture_ps": 104.125,
+ "phy_region": [
+  {
+   "region": "hard_phy_hbm",
+   "parts": 9,
+   "w_mm": 11.54,
+   "h_mm": 3.68,
+   "ins_ps": 2550.0,
+   "hard": true
+  }
+ ]
+}
+rt_W0_in_0__0 std_b2_0_0 std_b3_1_0 tree 4 0 520.6 2122.4 104.1 793.1 6646 False
+rt_W0_in_0__1 std_b3_1_0 std_b3_2_1 tree 4 0 520.6 1598.1 104.1 1317.4 1404 True
+rt_W0_in_2__0 std_b1_0_0 std_b2_0_0 tree 4 0 520.6 1636.6 104.1 1278.9 1789 True
+rt_W0_out_1__0 std_b0_0_0 std_b1_0_0 tree 4 0 520.6 2463.6 104.1 451.9 10059 False
+rt_W1_in_0__0 std_b2_2_0 std_b3_3_0 tree 4 0 520.6 1636.6 104.1 1278.9 1789 True
+rt_W1_in_2__0 std_b1_2_0 std_b2_2_0 tree 4 0 520.6 1636.6 104.1 1278.9 1789 True
+rt_W1_out_1__0 std_b0_2_0 std_b1_2_0 tree 4 0 520.6 1636.6 104.1 1278.9 1789 True
+rt_W2_in_0__0 std_b2_3_1 std_b3_4_0 tree 4 0 520.6 1636.6 104.1 1278.9 1789 True
+rt_W2_in_0__2 std_b3_4_0 std_b4_4_0 tree 4 0 520.6 1576.8 104.1 1338.7 1190 True
+rt_W2_in_2__0 std_b1_3_1 std_b2_3_1 tree 4 0 520.6 1636.6 104.1 1278.9 1789 True
