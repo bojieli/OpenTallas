@@ -220,8 +220,20 @@ class Landings:
                 self.region[part] = region
             if db in self.ins[dp]:
                 raise LandingError(f"two clock landings drive {dp}.{db}")
+            # The ring form is a per-row choice (MESO-COUNT-1 may swap in a count-aligned variant): a sidecar row may name
+            # ring_module + ring_params (+ ring_ports for extra receiver pins); the default is today's ring.
+            rmod = r.get("ring_module", "ot_dp_clk_landing")
+            if not re.fullmatch(r"ot_dp_clk_landing\w*", rmod):
+                raise LandingError(f"clock landing {pid}: ring_module {rmod} is not an ot_dp_clk_landing variant")
+            rpar, rports = dict(r.get("ring_params", {})), dict(r.get("ring_ports", {}))
+            for k, v in list(rpar.items()) + list(rports.items()):
+                if not re.fullmatch(r"[A-Za-z_]\w*", str(k)) or not re.fullmatch(r"[\w'\[\]:]+", str(v)):
+                    raise LandingError(f"clock landing {pid}: bad ring_params/ring_ports entry {k}={v}")
+            if {"W", "fclk", "clk", "rst_n", "d", "q", "ready", "fault"} & (set(rpar) | set(rports)):
+                raise LandingError(f"clock landing {pid}: ring_params/ring_ports may not override the bound ring pins or W")
             row = dict(r, src_bus=sb, dst_bus=db, added_cycles=3,
-                       module="ot_dp_clk_landing", ring_depth=4, ring_offset=2,
+                       module=rmod, ring_params=rpar, ring_ports=rports,
+                       ring_depth=int(rpar.get("DEPTH", 4)), ring_offset=int(rpar.get("K", 2)),
                        ring_read_registered=True)
             self.rows.append(row)
             self.ins[dp][db] = row
@@ -230,7 +242,9 @@ class Landings:
         # split rather than changing only the first bound replica's wrapper.
         masks = defaultdict(dict)
         for pn, p in self.parts.items():
-            mask = (tuple(sorted(self.ins[pn])), tuple(sorted(self.outs[pn])))
+            form = tuple((b, r["module"], tuple(sorted(r["ring_params"].items())), tuple(sorted(r["ring_ports"].items())))
+                         for b, r in sorted(self.ins[pn].items()))
+            mask = (tuple(sorted(self.ins[pn])), tuple(sorted(self.outs[pn])), form)
             masks[p["type"]].setdefault(mask, []).append(pn)
         bad = {tn: list(ms.values()) for tn, ms in masks.items() if len(ms) > 1}
         if bad:
@@ -416,6 +430,8 @@ class Landings:
             else:
                 extra += [f"    output wire landing_ready_{b}",f"    output wire landing_fault_{b}"]
             landed = f"cland_{b}"
+            rpar = "".join(f", .{k}({v})" for k, v in sorted(r.get("ring_params", {}).items()))
+            rpin = "".join(f", .{k}({v})" for k, v in sorted(r.get("ring_ports", {}).items()))
             # Rename the local NET only: a `.name(` port reference on a child instance is the child's port, never
             # this wrapper's bus (gen_rtl wrappers bind leaves by name: `.lep_fault_i(lep_fault_i_q)`).
             body = re.sub(r"(?<![.\w])" + re.escape(b) + r"\b", landed, body)
@@ -425,15 +441,15 @@ class Landings:
                 ring = f"cland_ring_{b}"
                 logic += [f"    wire [{w+1}:0] {ring};", f"    wire [{w-1}:0] {landed};",
                           f"    assign {landed} = {ring}[{w-1}:0];",
-                          f"    ot_dp_clk_landing #(.W({w+2})) u_cland_{b} (",
-                          f"        .fclk(fclk_in_{b}), .clk(clk), .rst_n({reset}), .d({{cland_dn_fault_{b}, cland_dn_ready_{b}, {b}}}), .q({ring}),",
+                          f"    {r['module']} #(.W({w+2}){rpar}) u_cland_{b} (",
+                          f"        .fclk(fclk_in_{b}), .clk(clk), .rst_n({reset}){rpin}, .d({{cland_dn_fault_{b}, cland_dn_ready_{b}, {b}}}), .q({ring}),",
                           f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));",
                           f"    wire cland_ok_{b} = {ring}[{w}] && landing_ready_{b} && !landing_fault_{b};",
                           f"    wire cland_bad_{b} = landing_fault_{b} || (landing_ready_{b} && {ring}[{w+1}]);"]
                 continue
             logic += [f"    wire [{w-1}:0] {landed};",
-                      f"    ot_dp_clk_landing #(.W({w})) u_cland_{b} (",
-                      f"        .fclk(fclk_in_{b}), .clk(clk), .rst_n({reset}), .d({b}), .q({landed}),",
+                      f"    {r['module']} #(.W({w}){rpar}) u_cland_{b} (",
+                      f"        .fclk(fclk_in_{b}), .clk(clk), .rst_n({reset}){rpin}, .d({b}), .q({landed}),",
                       f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));"]
         if self.dataflow:
             body = self._dataflow_monitor(tn, key, mask, collector_info, extra, logic, body)

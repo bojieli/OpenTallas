@@ -446,6 +446,16 @@ def wrapper(P, tn, epochs, rtl_root=None):
         sig["start"] = f"start_t{rtree['start_tap']}"     # bootstrap type: local registered START (reset AND run)
     for ip in infra:
         sig[f"infra:{ip['name']}"] = ip["name"]
+    # LAND-HEAD-BIND-1 (opt-in, type ft_spare_outputs): a hard core's pass-through FT OUTPUT that the partition does
+    # not consume (landed form: no die mesh crosses the core island) lands on a declared, owned, unread wire --
+    # never a tie, never an implicit open pin.  Each entry must bind exactly one leaf OUTPUT port (checked below).
+    spares = t.get("ft_spare_outputs", [])
+    for fs in spares:
+        if not fs.get("owner") or not fs.get("reason"):
+            raise GenError(f"type {tn}: ft_spare_outputs {fs.get('port')} needs an owner and a reason")
+        nm = "ftspare_" + sv_id(fs["port"])
+        decl.append(f"    wire {nm};  // declared unread core FT output (owner {fs['owner']}): {fs['reason']}")
+        sig[f"ftspare:{fs['port']}"] = nm
     # leaf bindings: contents[].bind plus bus.leaf
     binds = {c["inst"]: dict(c.get("bind", {})) for c in t.get("contents", [])}
     for inst in (rtree or {}).get('bootstrap_contents', []):
@@ -484,6 +494,10 @@ def wrapper(P, tn, epochs, rtl_root=None):
         k = f"pad:{pd['name']}"
         if not use.get(k) or (pd["dir"] == "out" and len(use[k]) != 1):
             raise GenError(f"type {tn}: pad {pd['name']} must bind {'exactly one leaf port' if pd['dir'] == 'out' else 'a leaf port'}: {use.get(k)}")
+    for fs in spares:
+        if len(use.get(f"ftspare:{fs['port']}", [])) != 1:
+            raise GenError(f"type {tn}: ft spare output {fs['port']} must bind exactly one leaf port: "
+                           f"{use.get('ftspare:' + fs['port'])}")
     for nt in t.get("nets", []):
         if len(use.get(f"net:{nt['name']}", [])) < 2:
             raise GenError(f"type {tn}: net {nt['name']} has {len(use.get('net:' + nt['name'], []))} leaf ports")
@@ -502,6 +516,9 @@ def wrapper(P, tn, epochs, rtl_root=None):
                 raise GenError(f"type {tn}: {c['inst']} ({c['module']}) unbound ports {miss} (no tie-offs: bind them)")
             if extra:
                 raise GenError(f"type {tn}: {c['inst']} binds ports {extra} that {c['module']} does not have")
+            bad = sorted(p for p, k in bd.items() if k.startswith("ftspare:") and lp[p][0] != "output")
+            if bad:
+                raise GenError(f"type {tn}: {c['inst']} ft spare binds non-output ports {bad}")
         par = c.get("params", {})
         ps = (" #(" + ", ".join(f".{k}({v})" for k, v in par.items()) + ")") if par else ""
         conns = ",\n".join(f"        .{p}({sig[k]})" for p, k in sorted(bd.items()))
