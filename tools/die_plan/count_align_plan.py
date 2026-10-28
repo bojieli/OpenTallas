@@ -277,7 +277,10 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
     for r in rows:
         r["lo"], r["hi"] = r["d_ps"] - r["p_dn_ps"], r["d_ps"] + r["p_up_ps"]
         r["_nv"], r["_edge"], r["_off"], r["_dist"], r["_s"] = sync_choice_iv(r, T, ap, start_skew, sync_ap)
-        r["_w"] = wander_frac * max(r.get("unshared_a_ps", 0.0), r.get("unshared_b_ps", 0.0))
+        # CLK-INV-CAL-1 / COORD 10-28: wander over the crossing's OWN tap pairs (unshared_sta_ps = max
+        # die_sta_related.ca_pair_unshared, the gate's function), never below the landed_phase_ocv row's own figure
+        r["_w"] = wander_frac * max(r.get("unshared_a_ps", 0.0), r.get("unshared_b_ps", 0.0),
+                                    r.get("unshared_sta_ps", 0.0))
     data_regions = sorted({r["src"] for r in rows} | {r["dst"] for r in rows})
     regions = data_regions
     if start_edges is not None:
@@ -891,6 +894,9 @@ def sta_hull(rows, sta):
             else:
                 r["fall_lo"], r["fall_hi"] = min(x[0] for x in fv), max(x[1] for x in fv)
             r["_named"] = True
+            us = [c["unshared"][r["port"]] for c in sta.values() if r["port"] in (c.get("unshared") or {})]
+            if us:
+                r["unshared_sta_ps"] = max(us)
         else:
             tag = f"{r.get('src_part', r['src'])}->{r.get('dst_part', r['dst'])}"
             iv = [c[tag] for c in sta.values() if tag in c]

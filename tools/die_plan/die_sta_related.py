@@ -381,6 +381,19 @@ def ca_pair_interval(A, B, a, b, cppr_range=None, ocv=None, edge="rise"):
     return lo, hi, os_, oh
 
 
+def ca_pair_unshared(A, B, node_late):
+    """CLK-INV-CAL-1 / COORD 10-28 wander rule: the unshared clock of ONE launch -> capture tap pair = max(launch late,
+    capture late) - the late arrival of their last common node (pair_node, the node ca_pair_interval uses).  A crossing's
+    post-start wander is bounded by wander_frac x the worst of this over the crossing's OWN tap pairs (planner and gate
+    both call this; never a global max over all crossings).  A node without a late arrival counts from 0 (the whole
+    insertion: fail-safe large)."""
+    node = pair_node(A, B)
+    la, _, lc, _ = arr4(A, B, node)
+    n = (node_late or {}).get(node)
+    n = 0.0 if n is None else float(n)
+    return max(la - n, lc - n)
+
+
 def count_align_d_intervals(landed, taps, cppr_range=None, part_region=None, ocv=None, stats=None, edge="rise"):
     """THE count-aligned crossing phase interval (DIE-HEAD-5, COORD 00:22 follow-up: ONE interval model for planner and
     STA): {'srcpart->dstpart': (d_lo, d_hi)} over EVERY landed tap pair of the partition pair, d = capture clock - launch
@@ -469,6 +482,23 @@ def count_align_port_intervals(ports, landed, taps, cppr_range=None, part_region
     return iv, sorted(unbound), dict(npairs)
 
 
+def count_align_port_unshared(ports, landed, taps, part_region=None, node_late=None):
+    """CLK-INV-CAL-1 wander rule: {port: max ca_pair_unshared over the tap pairs the port carries} with the same
+    ownership as count_align_port_intervals (named partition pair, else its region pair); planner
+    (sta_port_intervals) and gate (count_align_landed) both use it."""
+    own = _port_owners(ports, part_region)
+    out = {}
+    for a, b, _ in landed:
+        A, B = taps[a], taps[b]
+        owners, _ = own(A, B)
+        if not owners:
+            continue
+        u = ca_pair_unshared(A, B, node_late)
+        for pid in owners:
+            out[pid] = max(out.get(pid, u), u)
+    return out
+
+
 def ca_ocv(proof, meta, taps, corner, lat, clock_ocv="none", clock_droop=None, droop_region="mesh",
            droop_regions_file=None, aocv_table=None, cell_share=None, clock_cell="buf"):
     """CA-OCV-1: the clock variation callable main() hands the related-pair classes and the count-aligned row
@@ -535,7 +565,8 @@ def sta_port_intervals(proof, plan, corners, ports, part_region=None, clock_cal=
                          clock_cell=cc)
             rng = meta.get("cppr_node_range_ps")
             iv, unb, _ = count_align_port_intervals(ports, pairs["landed"], taps, rng, part_region, ocv)
-            out[c] = dict(rise=iv, unbound=unb)
+            ush = count_align_port_unshared(ports, pairs["landed"], taps, part_region, meta.get("node_late_ps"))
+            out[c] = dict(rise=iv, unbound=unb, unshared=ush)
             if fall:
                 out[c]["fall"] = count_align_port_intervals(ports, pairs["landed"], taps, rng, part_region, ocv,
                                                             edge="fall")[0]
@@ -680,8 +711,15 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
     ost = {}
     # FLOW-ONEMODEL-1: per-port intervals (count_align_port_intervals), the SAME function count_align_plan --sta-proof
     # hulls on: a port is timed over the tap pairs it carries (its named partition pair, else its region pair)
+    nl = (meta or {}).get("node_late_ps")
+    ush = {} if isinstance(nl, dict) else None
     dsta, unbound, _ = count_align_port_intervals(bind["ports"], landed, taps, cppr_range, part_region=pr, ocv=ocv,
                                                   stats=ost)
+    if ush is not None:
+        ush = count_align_port_unshared(bind["ports"], landed, taps, pr, nl)
+    # CLK-INV-CAL-1 / COORD 10-28: post-start wander = wander_frac x the worst unshared clock over the crossing's OWN
+    # tap pairs (ca_pair_unshared, as the planner); a bind planned with less wander is widened by the difference
+    wfrac = float(bind.get("wander_frac", (bind.get("summary") or {}).get("wander_frac", 0.05)))
     tree_reg = {r["tree_port"]: (x, r) for x, r in bind.get("regions", {}).items() if r.get("tree_port")}
     dfall = None
     if any(r.get("edge_fall") for _, r in tree_reg.values()):
@@ -701,11 +739,18 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
             lo, hi, src = b["L_lo_ps"], b["L_hi_ps"], "plan-sync"
         else:
             lo, hi, src = b["L_lo_ps"] + (dl - b["d_lo_ps"]), b["L_hi_ps"] + (dh - b["d_hi_ps"]), "sta"
+        dw = 0.0
+        if ush is not None and pid in ush:
+            dw = max(0.0, wfrac * ush[pid] - float(b.get("wander_ps", 0.0)))
+            lo, hi = lo - dw, hi + dw
         ml, mh = lo - 0.5 * period, (D - 0.5) * period - hi
         row = dict(port=pid, tag=tag, depth=D, tree=bool(tr), L_lo_ps=round(lo, 1), L_hi_ps=round(hi, 1),
                    margin_lo_ps=round(ml, 1), margin_hi_ps=round(mh, 1), source=src,
                    slot_read_ps=round(lo - 0.5 * period, 1), guard_budget_ps=round(ap, 1),
                    guard_hi_slack_ps=round(mh - ap, 1))
+        if ush is not None and pid in ush:
+            row["wander_ps"] = round(float(b.get("wander_ps", 0.0)) + dw, 1)
+            row["wander_widen_ps"] = round(dw, 1)
         if ocv is not None and src == "sta":
             row["ocv_lo_ps"], row["ocv_hi_ps"] = (round(x, 1) for x in ost.get(pid, (0.0, 0.0)))
         row["lag_ok"] = min(ml, mh) >= need_ps
