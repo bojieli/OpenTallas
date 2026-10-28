@@ -60,3 +60,32 @@ PER-REGION (per_region.json), sta_view, RENDER ctree15.png (view it), CA width/p
 ## 6. vq
 Not started. vq is KIT-STALE (signed y[255:0] 830 pins vs plan 702). It needs a re-kit from ot_s81sl_vq_tpl.json on main
 RTL through tools/autopilot/enqueue.py.
+
+## 7. FF hold cause classification on go13 (COORD 15:2x, ESTIMATE, nothing fixed per 12.16)
+Script: scripts/hold_classify.py. It runs main die_sta_related.py unchanged with the go13 cp13 proof, plan_s10, the same
+STA flags and --core-insertion declared, and reproduces FF intra -724.05 with 171391/178894 pairs negative. It recomputes
+each pair's min-hold endpoint combo:
+`hold = data_min - unc_h - ocv_h - (tree skew ec-ea + endpoint latency skew) - uncredited spread (lc-ec-cppr credit)`.
+Output: hold13/classify_go13_FF_worst200.json.
+
+| term (ps, mean) | worst 200 (mean h -363.7) | all 171391 negative (mean h -77.5) |
+|---|---|---|
+| data_min = clkq_min - hold (declared zero-logic register) | +25.5 | +25.5 |
+| unc_h | -25.0 | -25.0 |
+| AOCV + shared droop (clock-ocv table) | -46.7 | -29.0 |
+| tree skew, early-early (ec - ea) | -307.9 | -6.6 |
+| declared core insertion offset (latB - latA) | +106.6 | +2.9 |
+| uncredited late/early spread below the LCA | -116.2 | -45.3 |
+
+- Dominant term: worst 200 = clock skew 117 / uncredited spread 83. All negative pairs = uncredited spread 127250 /
+  unc 19998 / skew 16427 / ocv 7716.
+- Model floor: zero data delay gives 25.5 - 25 = +0.5 ps margin, so any spread or OCV term > 0.5 ps fails. That is why
+  397/397 regions are negative. Negative-pair quantiles: p50 -69.8, p95 -18.4, p1 -209.5. Count with h >= -50: 53119;
+  with h >= -100: 124826.
+- What-ifs (counts still negative): no uncredited spread 145808; no OCV 156170; neither 87896.
+- Late/early spread: 13-17 % of arrival at every depth (stage 1: 43.1/35.6 TT), 5.2-5.6 ps/stage. The proof STA has no
+  timing_derate and a single NLDM lib, so the source is UNCHECKED (min/max slew propagation?). The AOCV table is charged
+  on top of it. Possible double count with ONE SHARED MODEL "one variation model per segment".
+- Worst tail (bk_sel 140/200, svc_12/13/8/9): early core tap t_bk_sel__clk_c3 (dsdv_bksel_q) is hung 3 stages below the
+  LCA vs 17-21 for the registers. It is realised 868 ps early, but the declared core insertion offsets only 325 ps:
+  over-early by ~540 ps (hang-mode quantisation). Worst pair without a core tap: -359.8 (112254 such negative pairs).
