@@ -84,7 +84,13 @@ RESET_SYNC = ('ot_reset_sync', 'rtl/lib/ot_reset_sync.sv',
 REVIEWED = {
     'ot_link_afifo': dict(
         path='rtl/link/ot_link_afifo.sv',
-        sha256=('fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68',),
+        # FLOW-GEN-1 review 2026-10-28 of 4f9c3955 (591ac8cae SAMECLK + 8a68d4088 read-domain loop variable j): the
+        # SAMECLK = 0 default is Yosys-equivalent to fd295cdf (equiv_induct, W=64 / W=4 AW=2 SYNC=2 / W=16 AW=3 SYNC=3
+        # RCOPY=4, 0 unproven; SAMECLK=1 control 11 unproven).  SAMECLK != 0 (one shared clock) publishes binary
+        # rbin_q/wbin_q with no synchroniser: under two clock families that is an unapproved crossing and is refused
+        # (test MUT 6), so the reviewed Gray chains stay the only admitted form.
+        sha256=('fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68',
+                '4f9c395577c94e477ef77a4cda39a752daa2e644f4a670b0b535bfbc1c51ea89'),
         chains=(('wptr', 'wgray', 'wgray_s[{k}]', 'w2r'), ('rptr', 'rgray', 'rgray_s[{k}]', 'r2w')),
         valid='link', read_stage=None),
     'ot_qwen_async_fifo_w': dict(
@@ -98,7 +104,10 @@ REVIEWED = {
         read_stage=re.compile(r'g_rs\[\d+\]\.(?:genblk\d+\.)?g_s2\.rs_q\[\d+\](?:\[\d+\])?')),
     'ot_async_fifo': dict(
         path='rtl/lib/ot_async_fifo.sv',
-        sha256=('22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc',),
+        # FLOW-GEN-1 review 2026-10-28 of 7a3df9c5 (e1ce93172): simulation-only `ifndef SYNTHESIS Gray-history arming;
+        # synthesized logic Yosys-equivalent to 22c5e15f (equiv_induct, 0 unproven)
+        sha256=('22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc',
+                '7a3df9c5491bddcdef321105b931c4d0e2f5c973b3ea01c3ba50ff350bc784da'),
         chains=(('wptr', 'wr_gray', ('wr_gray_r1', 'wr_gray_r2'), 'w2r'),
                 ('rptr', 'rd_gray', ('rd_gray_w1', 'rd_gray_w2'), 'r2w'),
                 ('wonl', 'wr_online', ('wr_online_r1', 'wr_online_r2'), 'w2r'),
