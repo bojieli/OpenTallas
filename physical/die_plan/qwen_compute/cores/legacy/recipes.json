@@ -148,7 +148,9 @@
   "insertion_ps": 250.0,
   "insertion_ff_ps": 202.5,
   "insertion_basis": "12.3 common core latency 250 TT / 202.5 FF kit frame (preflight corner_modes/ff_binding); parent A0 early tap absorbs the centre-entry trunk (QC-A0-KITS-2 est, UNCHECKED)",
-  "suffix": "a0k3",
-  "_why": "QC-A0-KITS-3 10-28: romleaf re-kit on current main, frame 250/202.5, clock entry (86.412,98.4) M5 in the top band off the ROM (COORD 06:37 ruling (a)). QC-A0-KITS 10-27: romleaf re-kit on the current flow with the 12.8a centre clock entry (86.4,55.08) from the A0 R3b slice (was clk W edge 0,21.756); OBS <= M5 (LEF unchanged M1-M5); outline 172.8 x 110.16 unchanged."
+  "suffix": "a0k5",
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 1.0",
+  "cts_args_why": "QC-A0-KITS-5 10-28 ROMLEAF plan fix: the ROM clock pin is a CTS sink balanced with its LIB insertion delay (OpenROAD TritonCTS default: macro insertion from max/min_clock_tree_path arcs; -no_insertion_delay NOT set). ot_rom_4096x266_m8 LIB/rom_gen declares no clock_tree_path arc (internal control latency is inside clk->q; setup/hold are referenced at the pin) -> insertion 0, the ROM pin balances to the register tree. -delay_buffer_derate 1.0 = full macro/register latency balance (was the generator default 0.5 = half, ROM 80-115 ps early in a0k3).",
+  "_why": "QC-A0-KITS-5 10-28: clock entry to the logic corner (21.612,15.12) (slice note) + full ROM latency balance (cts_args). QC-A0-KITS-3 10-28: romleaf re-kit on current main, frame 250/202.5, clock entry (86.412,98.4) M5 in the top band off the ROM (COORD 06:37 ruling (a)). QC-A0-KITS 10-27: romleaf re-kit on the current flow with the 12.8a centre clock entry (86.4,55.08) from the A0 R3b slice (was clk W edge 0,21.756); OBS <= M5 (LEF unchanged M1-M5); outline 172.8 x 110.16 unchanged."
  }
 }
