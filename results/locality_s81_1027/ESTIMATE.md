@@ -28,6 +28,11 @@ Script: `scripts/s81_locality.py` (traffic matrix, locality score, link-followin
 - **Hop-chaining the failing links along the tree is too expensive.** At 321 ps/mm it costs +114 crossings and +1.29 M bit-mm (+80 % of all bit-mm). At 176 ps/mm it costs +21 crossings and +0.13 M bit-mm.
 - **Band FAILs.** The regrouped map removes 2 of the 20 ring storage-band FAILs (svc_hi t2 attn_i2 and col_h10_r1 frame_int_i1). 18 remain, so the svc13/PD7f band-room delta is still needed.
 
+## Can a better tree or a coarser grouping close it? (tried, @321 ps/mm, SPT)
+- **Feed-tree local search** (`--improve 60`, greedy re-parenting along links): on the 98 map, failures drop from 28 to **20** (worst -278 ps).
+- **Merging the two regions of each failing crossing** (`--fix-span-mm` 6/7/8): gives 91/87/80 regions with **21/24/28 fail**. At 349 ps/mm it is 24/26/38. Merging moves the cycles of the planar link graph; it does not remove them, and bigger regions add insertion.
+- **Floor.** About 20 crossings stay below 100 ps for ANY single-source tree feed at the measured wire speed. This is the S81 version of the KV geometry bound (COORD 19:36). It is a crossing-design question, so it goes to MESO-COUNT-1 and is not a region-map question.
+
 ## Verdict
 **At the measured routed wire speed the estimate does NOT pass (28/157 fail, worst -205 ps), so no build.** It would pass with 3 hop-chains (+21 crossings) only if the region-feed links ran at <= ~180-200 ps/mm.
 

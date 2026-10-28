@@ -24,6 +24,8 @@ ap.add_argument("--ps-mm", type=float, default=321.0)
 ap.add_argument("--core-lat", type=float, default=250.0)
 ap.add_argument("--derate", type=float, default=0.095)
 ap.add_argument("--tree", default="maxbits", choices=["maxbits", "spt"])
+ap.add_argument("--fix-span-mm", type=float, default=0.0, help="merge regions of failing crossings up to this span")
+ap.add_argument("--improve", type=int, default=0, help="local-search re-parenting passes on the feed tree")
 ap.add_argument("--hop-ps", type=float, default=60.0, help="fixed per forwarding hop (re-buffer at region root)")
 a = ap.parse_args()
 P = json.load(open(a.plan)); R0 = json.load(open(a.regions))["part_region"]
@@ -96,6 +98,58 @@ def estimate(reg, mode):
             if r not in par:
                 q = min(par, key=lambda x: man(root[x], root[r])); par[r] = q
                 dep[r] = dep[q] + k * man(root[q], root[r]) + a.hop_ps
+
+    def depth_of(par):
+        dep = {}
+        def dd(r):
+            if r in dep:
+                return dep[r]
+            p = par.get(r)
+            dep[r] = (k * man(dc, root[r]) if mode == "dietree" else 0.0) if p is None else dd(p) + k * man(root[p], root[r]) + a.hop_ps
+            return dep[r]
+        for r in root:
+            dd(r)
+        return dep
+
+    def cost(par):
+        dep = depth_of(par); bad = 0; neg = 0.0
+        for (s, d), b in M.items():
+            ra, rb = reg[s], reg[d]
+            if ra == rb:
+                continue
+            A = [ra]
+            while par.get(A[-1]) is not None: A.append(par[A[-1]])
+            Bc = [rb]
+            while par.get(Bc[-1]) is not None: Bc.append(par[Bc[-1]])
+            sb = set(Bc); l = next(x for x in A if x in sb)
+            U = max(dep[ra] - dep[l] + k * man(root[ra], cen[s]), dep[rb] - dep[l] + k * man(root[rb], cen[d])) + a.core_lat
+            m = half - a.derate * U
+            if m < 100:
+                bad += 1; neg += 100 - m
+        return (bad, neg)
+
+    if mode != "dietree" and a.improve:
+        import sys as _s; _s.setrecursionlimit(10000)
+        cur_c = cost(par)
+        for it in range(a.improve):
+            best = None
+            for (u, v) in xb:
+                for (c, p) in ((u, v), (v, u)):
+                    if par.get(c) == p:
+                        continue
+                    x = p; cyc = False
+                    while x is not None:
+                        if x == c: cyc = True; break
+                        x = par.get(x)
+                    if cyc:
+                        continue
+                    old = par[c]; par[c] = p; cc = cost(par); par[c] = old
+                    if cc < cur_c and (best is None or cc < best[0]):
+                        best = (cc, c, p)
+            if best is None:
+                break
+            cur_c, c, p = best; par[c] = p
+        dep = depth_of(par)
 
     def anc(r):
         out = [r]
@@ -170,6 +224,26 @@ out["current_179"] = score(cur)[0]
 out["current_179_dietree"] = estimate(cur, "dietree")[0]
 out["current_179_linkfeed"] = estimate(cur, "link")[0]
 new = propose(cur)
+if a.fix_span_mm:
+    merges = 0
+    while True:
+        e, rows = estimate(new, "link"); B = rbox(new)
+        bad = sorted([r for r in rows if r["margin_ps"] < 100], key=lambda r: r["margin_ps"])
+        done = False
+        for r in bad:
+            u, v = r["ra"], r["rb"]
+            if u.startswith("hard") or v.startswith("hard"):
+                continue
+            bu, bv = B[u], B[v]; mb = (min(bu[0], bv[0]), min(bu[1], bv[1]), max(bu[2], bv[2]), max(bu[3], bv[3]))
+            if max(mb[2] - mb[0], mb[3] - mb[1]) > a.fix_span_mm * 1000:
+                continue
+            for p in new:
+                if new[p] == v:
+                    new[p] = u
+            merges += 1; done = True; break
+        if not done:
+            break
+    out["fix_merges"] = merges
 out["proposed"] = score(new)[0]
 e, rows = estimate(new, "link"); out["proposed_linkfeed"] = e
 out["proposed_dietree"] = estimate(new, "dietree")[0]
