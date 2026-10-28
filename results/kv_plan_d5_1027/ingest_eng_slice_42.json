@@ -1,0 +1,147 @@
+{
+ "module": "qkd_hr_ingest_eng",
+ "delta_id": "D-KV-INGEST-42 (KV-PLAN-DELTA-5; QK-CORES-6 ASK 17:29, COORD 17:3x)",
+ "outline_um": [
+  362.88,
+  362.88
+ ],
+ "entry": {
+  "xy_um": [
+   181.44,
+   181.44
+  ],
+  "island_um": [
+   177.12,
+   177.12,
+   185.76,
+   185.76
+  ]
+ },
+ "core_tree": {
+  "form": "internal H-tree from the entry (12.8b), balanced binary (core_infra_htree --hb-axes)",
+  "grid": [
+   4,
+   2
+  ],
+  "leaf_reach_limit_um": 150.0,
+  "leaf_reach_um": 136.08,
+  "islands": [
+   {
+    "centre_um": [
+     43.2,
+     90.72
+    ],
+    "rect_um": [
+     38.88,
+     86.4,
+     47.52,
+     95.04
+    ]
+   },
+   {
+    "centre_um": [
+     43.2,
+     272.16
+    ],
+    "rect_um": [
+     38.88,
+     267.84,
+     47.52,
+     276.48
+    ]
+   },
+   {
+    "centre_um": [
+     133.92,
+     90.72
+    ],
+    "rect_um": [
+     129.6,
+     86.4,
+     138.24,
+     95.04
+    ]
+   },
+   {
+    "centre_um": [
+     133.92,
+     272.16
+    ],
+    "rect_um": [
+     129.6,
+     267.84,
+     138.24,
+     276.48
+    ]
+   },
+   {
+    "centre_um": [
+     224.64,
+     90.72
+    ],
+    "rect_um": [
+     220.32,
+     86.4,
+     228.96,
+     95.04
+    ]
+   },
+   {
+    "centre_um": [
+     224.64,
+     272.16
+    ],
+    "rect_um": [
+     220.32,
+     267.84,
+     228.96,
+     276.48
+    ]
+   },
+   {
+    "centre_um": [
+     315.36,
+     90.72
+    ],
+    "rect_um": [
+     311.04,
+     86.4,
+     319.68,
+     95.04
+    ]
+   },
+   {
+    "centre_um": [
+     315.36,
+     272.16
+    ],
+    "rect_um": [
+     311.04,
+     267.84,
+     319.68,
+     276.48
+    ]
+   }
+  ],
+  "trunk_um": [
+   228.96,
+   228.96,
+   138.24,
+   138.24,
+   133.92,
+   133.92,
+   224.64,
+   224.64
+  ],
+  "pred_TT_ps": 242.3,
+  "pred_note": "plan model kv_core_slice (0.20 ps/um trunk = ~2.5x optimistic per COORD; PLAN MODEL, UNCHECKED)"
+ },
+ "replaces": {
+  "grid": [
+   2,
+   2
+  ],
+  "pred_TT_ps": 269.3,
+  "source": "results/kv_cores_r3/slice_heads/kv_core_slice.json"
+ }
+}

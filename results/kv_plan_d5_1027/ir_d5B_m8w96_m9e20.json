@@ -1,0 +1,60 @@
+{
+ "kit": "/srv/opentallas-scratch2/claude/kv-plan-d5-1027/ir/d5B_m8w96_m9e20",
+ "grid": [
+  {
+   "layer": "M8",
+   "width_um": 0.96,
+   "pitch_um": 4.32,
+   "offset_um": 1.08,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  },
+  {
+   "layer": "M9",
+   "width_um": 7.48,
+   "pitch_um": 19.98,
+   "offset_um": 18.765,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  }
+ ],
+ "window_um": [
+  6453.54,
+  6453.54,
+  9430.56,
+  9430.56
+ ],
+ "power_w": 9.3072,
+ "bumps": 380,
+ "matched_loads": 4761,
+ "co_located_worst": {
+  "instance": "u_b0_0",
+  "vdd_drop_mv": 6.943,
+  "vss_bounce_mv": 15.043,
+  "sum_mv": 21.986,
+  "local_xy_um": [
+   21.408,
+   21.572
+  ]
+ },
+ "above_m7_mv": 21.986,
+ "below_m7_mv": 6.05,
+ "total_mv": 28.036,
+ "budget_mv": 35.0,
+ "verdict": "PASS",
+ "worst_by_row_mv": {
+  "0": 21.99,
+  "1": 21.15,
+  "2": 20.08,
+  "3": 19.53,
+  "4": 18.62,
+  "5": 17.78
+ },
+ "vdd_separate_worst_mv": 13.784,
+ "vss_separate_worst_mv": 15.043,
+ "review": "UNCHECKED: own evaluator; NUMBER-CHECK required"
+}

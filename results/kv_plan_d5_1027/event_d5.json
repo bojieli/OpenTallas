@@ -1,0 +1,170 @@
+{
+ "lane": "KV-PLAN-DELTA-5",
+ "event": "D-KV-D5 (single KV plan event)",
+ "base": {
+  "plan": "hm_r26q5c.json",
+  "sha256": "7a03069bbea058aa3bdcf815e0a4cf6321434c5a16d182ca036d4d438f8d8f3b",
+  "source": "QK-CORES-5 (COORD-approved), pv_join M3 centre-form pins"
+ },
+ "plan": {
+  "file": "hm_r26q5c39.json",
+  "sha256": "4190246956824a7a86fd0866ad8a3bf4db983bad123f767ac6a9e0e9eccce782",
+  "dir": "intel1+intel2:/srv/opentallas-scratch2/claude/kv-plan-d5-1027/q5c_pd"
+ },
+ "deltas": [
+  {
+   "id": "D-KV-PG-C39",
+   "what": "die.pg.grid M8 0.48@4.32 off2.16 + M9 12.96@39.96 off13.77; bump map = PG-ACTIVITY-3 edge-fit (lattice margin 60 um, pitch 150.09x150.41)",
+   "evidence": "claude/pg-act3-1027@149e7645d results/pg_act3_1027/results.json: 31.44 mV worst corner above M7 (CHECKED by PG-ACTIVITY-3)",
+   "in_plan_json": "grid yes; bump map = PSM deck input (not a plan field)"
+  },
+  {
+   "id": "D-KV-INGEST-42",
+   "what": "qkd_hr_ingest_eng core_tree [4,2] in-core islands (12.8b), replaces slice [2,2]",
+   "file": "ingest_eng_slice_42.json",
+   "in_plan_json": "slice record (kv_core_slice form); core lane applies with core_infra_htree --hb-axes"
+  },
+  {
+   "id": "D-KV-X6-MODELED",
+   "what": "sys_SW/sys_SE SerDes x6 = MODELED-PHY Codex 9b66de546 ot_qfd_serdes_112g_x6_phy_w521/w522 1866.24x972 in the 1900.8x1036.8 sys_SD lot",
+   "assumptions": [
+    "area halved from the ASSUMED x12 TP8 frame (2320.056x1563.57), re-aspected",
+    "no per-lane geometry",
+    "pins per face as declared",
+    "power 4.37 W proxy, VDDPHY domains per pg_domains_candidate.json"
+   ],
+   "in_plan_json": "no change: sys_SD partition outline unchanged; PHY is a separate artefact (results/kv_serdes_pg_event27)"
+  }
+ ],
+ "not_included": {
+  "FT": "hub_Wi + hgi_WN_7 (v8) tile FT coupons FAIL (capacity, see lane line); die GRT0 holds with die-level FT crossings",
+  "ectlk_q0q2_outline": "ASK pending",
+  "pv_pair_split_trees": "ASK pending",
+  "q6_pv_tap_mapping": "not taken (q6 plan family)"
+ },
+ "die_grt": {
+  "dir": "clk/q5c39",
+  "TT": "overflow 0 M4-M9",
+  "FF": "overflow 0 M4-M9",
+  "cap": "-congestion_iterations 50 -critical_nets_percentage 0 (main 1907eb530)",
+  "mesh": "continuous ck_mesh 2048 VIA89, 0 PG shorts, 0 unplaced, shield ties 34062/34062"
+ },
+ "die_sta": {
+  "tool": "origin/main 1907eb530 die_sta_related.py sha 7958a99b145ec35f",
+  "abutted": {
+   "intra": {
+    "tt_setup_ps": 504.13,
+    "ff_hold_ps": -145.54,
+    "verdict": "FAIL",
+    "ff_hold_kit_contract_ps": 42.09,
+    "kit_contract_window_ps": 80.0,
+    "kit_contract_window_needed_ps": 37.91,
+    "kit_contract_verdict": "PASS",
+    "hb4": {
+     "cells": 5809136,
+     "delay_model": "abutted",
+     "tt_setup_ps": 233.45,
+     "ff_hold_ps": 0.0,
+     "real_tt_setup_ps": null,
+     "real_ff_hold_ps": null,
+     "setup_neg_pairs": 0,
+     "pairs_needing_hb": 28958
+    },
+    "real_view": {
+     "pairs": "0/28970",
+     "tt_setup_ps": null,
+     "ff_hold_ps": null
+    }
+   },
+   "seam": {
+    "tt_setup_ps": 467.12,
+    "ff_hold_ps": -173.83,
+    "verdict": "FAIL",
+    "ff_hold_kit_contract_ps": 29.74,
+    "kit_contract_window_ps": 80.0,
+    "kit_contract_window_needed_ps": 50.26,
+    "kit_contract_verdict": "PASS",
+    "hb4": {
+     "cells": 854562,
+     "delay_model": "abutted",
+     "tt_setup_ps": 175.1,
+     "ff_hold_ps": 0.0,
+     "real_tt_setup_ps": null,
+     "real_ff_hold_ps": null,
+     "setup_neg_pairs": 0,
+     "pairs_needing_hb": 104343
+    },
+    "real_view": {
+     "pairs": "0/104384",
+     "tt_setup_ps": null,
+     "ff_hold_ps": null
+    }
+   },
+   "landed": {
+    "tt_setup_margin_ps": null,
+    "ff_hold_margin_ps": null,
+    "verdict": "FAIL"
+   },
+   "status": "UNCHECKED (NUMBER-CHECK pending)",
+   "label": "real-view (2 core views, 0 kits) + declared-budget rest"
+  },
+  "plan_delay": {
+   "intra": {
+    "tt_setup_ps": 504.13,
+    "ff_hold_ps": -145.54,
+    "verdict": "FAIL",
+    "ff_hold_kit_contract_ps": 42.09,
+    "kit_contract_window_ps": 80.0,
+    "kit_contract_window_needed_ps": 37.91,
+    "kit_contract_verdict": "PASS",
+    "hb4": {
+     "cells": 5458534,
+     "delay_model": "plan",
+     "tt_setup_ps": 177.52,
+     "ff_hold_ps": 0.0,
+     "real_tt_setup_ps": null,
+     "real_ff_hold_ps": null,
+     "setup_neg_pairs": 0,
+     "pairs_needing_hb": 28958
+    },
+    "real_view": {
+     "pairs": "0/28970",
+     "tt_setup_ps": null,
+     "ff_hold_ps": null
+    }
+   },
+   "seam": {
+    "tt_setup_ps": 467.12,
+    "ff_hold_ps": -173.83,
+    "verdict": "FAIL",
+    "ff_hold_kit_contract_ps": 29.74,
+    "kit_contract_window_ps": 80.0,
+    "kit_contract_window_needed_ps": 50.26,
+    "kit_contract_verdict": "PASS",
+    "hb4": {
+     "cells": 769443,
+     "delay_model": "plan",
+     "tt_setup_ps": 163.33,
+     "ff_hold_ps": 0.0,
+     "real_tt_setup_ps": null,
+     "real_ff_hold_ps": null,
+     "setup_neg_pairs": 0,
+     "pairs_needing_hb": 104343
+    },
+    "real_view": {
+     "pairs": "0/104384",
+     "tt_setup_ps": null,
+     "ff_hold_ps": null
+    }
+   },
+   "landed": {
+    "tt_setup_margin_ps": null,
+    "ff_hold_margin_ps": null,
+    "verdict": "FAIL"
+   },
+   "status": "UNCHECKED (NUMBER-CHECK pending)",
+   "label": "real-view (2 core views, 0 kits) + declared-budget rest"
+  }
+ },
+ "status": "UNCHECKED (own runs; NUMBER-CHECK pending)"
+}
