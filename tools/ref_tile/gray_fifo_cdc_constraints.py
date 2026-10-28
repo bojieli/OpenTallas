@@ -70,7 +70,9 @@ POLICY = 'reviewed_gray_fifos'
 RELATIONSHIP_KIND = 'independent_clock_families'
 CORE_PERIOD_PS = 833.333
 FAMILIES = {'core': 833.333, 'host': 1000.0, 'ingest': 1666.667, 'phy': 1043.0,
-            'hbm': 1024.0}    # HBM PHY CK/2 (RBH-STK 2026-10-18; cdc_sync_constraints ASYNC_RELATIONSHIP hbm_period_ps)
+            'hbm': 1024.0,    # HBM PHY CK/2 (RBH-STK 2026-10-18; cdc_sync_constraints ASYNC_RELATIONSHIP hbm_period_ps)
+            'serdes': 833.333}  # S81/HEAD SerDes recovered word clock pma_rck: KP4 word rate = core word rate, but
+                                # plesiochronous (far die's PLL), so its own asynchronous family (DIE-HEAD-9 2026-10-28)
 SETUP_UNCERTAINTY_PS = 60.0
 RESET_SYNC = ('ot_reset_sync', 'rtl/lib/ot_reset_sync.sv',
               ('489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd',
@@ -130,6 +132,20 @@ REVIEWED = {
                 ('wonl', 'wr_online', ('wr_online_r1', 'wr_online_r2'), 'w2r'),
                 ('ronl', 'rd_online', ('rd_online_w1', 'rd_online_w2'), 'r2w')),
         valid='conditioned_neq', read_stage=None, rd_rst_wire='rd_reset', rd_rst_conditioner='u_rd_reset'),
+    # DIE-HEAD-9 review 2026-10-28 (COORD 06:09 PMA clock ruling): ot_s81_rate_match, the S81/HEAD SerDes recovered-clock
+    # -> core crossing in rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv (the file also holds ot_pdie_serdes/ucie/pma_bm; only
+    # this module is bound). 8 deep, binary wp/rp + Gray wp_g/rp_g registered from the next binary value on the
+    # pointer's own edge (one bit changes per edge); 2-flop synchronisers wp_g -> wp_g1 -> wp_g2 (reader rclk) and
+    # rp_g -> rp_g1 -> rp_g2 (writer wclk); storage mem[wp[2:0]] written on push on the same edge as the Gray update;
+    # the sticky overflow flag flt -> f1 -> f2 (reader) is a 1-bit level publication. r_d is the reader's registered read
+    # stage: r_d <= mem[rp] only while !empty, empty = (g2b(wp_g2) == rp) -- BINARY reader pointer against the decoded
+    # synchronised Gray pointer: read-valid 'gray_bin' = OR_i (rp[i] ^ XOR_{j>=i} wp_g2[j]).
+    'ot_s81_rate_match': dict(
+        path='rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv',
+        sha256=('467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41',),
+        chains=(('wptr', 'wp_g', ('wp_g1', 'wp_g2'), 'w2r'), ('rptr', 'rp_g', ('rp_g1', 'rp_g2'), 'r2w'),
+                ('flt', 'flt', ('f1', 'f2'), 'w2r')),
+        valid='gray_bin', bin_reg='rp', read_stage=None, min_ptr_bits=1),
 }
 # HOST-SRAM opt-in: exact reviewed source, unchanged Gray/publication/rendezvous semantics.
 REVIEWED['ot_host_async_fifo_sram'] = dict(REVIEWED['ot_qwen_async_fifo_w'], path='rtl/physical/ot_host_async_fifo_sram.sv',
@@ -897,6 +913,12 @@ def _valid_lit(net, aig, fifo, memo):
     if kind == 'and_neq':   # AND(terms[0]) & OR_i(a_i ^ b_i)
         neq = _valid_lit(net, aig, dict(valid=('neq', terms[1])), memo)
         return aig.and_(_valid_lit(net, aig, dict(valid=('and', terms[0])), memo), neq)
+    if kind == 'gbneq':     # OR_i (bin[i] ^ XOR_{j>=i} gray[j]): binary pointer != decoded Gray pointer
+        valid, x = 0, 0
+        for i in reversed(range(len(terms[0]))):
+            x = aig.xor(x, _aig_of(net, aig, terms[1][i], None, memo))
+            valid = aig.or_(valid, aig.xor(_aig_of(net, aig, terms[0][i], None, memo), x))
+        return valid
     if kind == 'neq':
         valid = 0
         for a, b in terms:
@@ -1153,6 +1175,11 @@ def _lint(spec, root):
             valid = ('false', ())
         elif r['valid'] == 'link':
             valid = ('neq', tuple(zip(stage['rptr'][4], stage['wptr'][5][-1])))
+        elif r['valid'] == 'gray_bin':
+            rb, wg = bits_of(scope, r['bin_reg']), stage['wptr'][5][-1]
+            if not rb or len(rb) != len(wg) or any(net.domain(b) != reader for b in rb):
+                raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} lost its read-valid registers')
+            valid = ('gbneq', (tuple(rb), tuple(wg)))
         else:
             empty = bits_of(scope, 'rd_empty') if r['valid'] == 'conditioned' else [None]
             # rd_domain_rst_n: the reviewed source's own wire; if synthesis dropped the name, the reviewed
@@ -1308,6 +1335,13 @@ def _lint(spec, root):
         kind, terms = fifo['valid']
         if kind == 'false':
             v = 0
+        elif kind == 'gbneq':
+            v, x = 0, 0
+            for i in reversed(range(len(terms[0]))):
+                y = _bdd_of(net, bdd, terms[1][i], level, cache)
+                x = bdd.ite(x, bdd.neg(y), y)
+                a = _bdd_of(net, bdd, terms[0][i], level, cache)
+                v = bdd.ite(v, 1, bdd.ite(a, bdd.neg(x), x))
         elif kind in ('neq', 'and_neq'):
             v = 0
             for a, b in (terms[1] if kind == 'and_neq' else terms):
@@ -1341,6 +1375,8 @@ def _lint(spec, root):
                   periods_ps=period)
     for q, r in role.items():
         for k in net.names.get(q, []):
+            if '$func$' in k:     # Yosys function-result alias of the flop bit (e.g. g2b(wp_g2)[3]); never a cell name
+                continue
             record['roles'][k] = list(r)
         cell = net.flops[q]['cell'].lstrip('\\')
         if not cell.startswith('$'):
