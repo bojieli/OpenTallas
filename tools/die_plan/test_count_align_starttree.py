@@ -194,3 +194,64 @@ def test_die_sta_rechecks_start_ports_on_arrivals():
         assert miss[e["port"]]["ok"] is False and miss[e["port"]]["reason"] == "no taps"
     finally:
         DSR.CPPR_LCA = old
+
+
+def ctx_deep(depth=6, seg=130.0, feed=120.0, ocv_frac=0.15):
+    """region A (root h0, below the die root by a short feed) and region B fed THROUGH A's root (B root h02); each region
+    has two taps `depth` levels of `seg` ps below its root (big-partition in-region insertion)."""
+    nl, ne, ns, nxy = {}, {}, {}, {}
+    taps = {}
+
+    def node(p, t, st):
+        nl[p], ne[p], ns[p], nxy[p] = t, t - 2.0, st, [50.0 * len(p), 0.0]
+    node("h", 0.0, 0)
+    node("h0", feed, 1)                       # A root
+    node("h02", 2 * feed, 2)                  # B root, fed through A's root
+    for rp, part in (("h0", "A"), ("h02", "B")):
+        for j in range(2):
+            p = rp + str(j)
+            node(p, nl[rp] + seg, ns[rp] + 1)
+            for i in range(1, depth):
+                p = p + "0"
+                node(p, nl[rp] + seg * (i + 1), ns[rp] + i + 1)
+            k = f"t_{part}_{j}"
+            taps[k] = dict(port=k, part=part, cppr_node=part, tree_path=p, late_ps=nl[p] + 3.0 * j,
+                           early_ps=ne[p] + 3.0 * j, stages_from_root=ns[p], xy_um=nxy[p])
+    meta = dict(node_late_ps=nl, node_early_ps=ne, node_stages=ns, node_xy_um=nxy, cppr_node_range_ps={})
+
+    def ocv(a, b, check):
+        A, B = taps[a], taps[b]
+        f = cap._lcp(A["tree_path"], B["tree_path"])
+        return ocv_frac * max(A["late_ps"] - nl[f], B["late_ps"] - nl[f])
+    return {"TT": dict(meta=meta, taps=taps, ocv=ocv, rng={})}
+
+
+def test_retime_up_climbs_launch_region_to_fork():
+    """DIE-S81-13: the launch is a leaf deep in its own region (in-region insertion alone makes every capture-side
+    segment too wide); --start-retime-up puts retime flops on ANCESTORS of the launch tap (up to the fork), then down the
+    capture path; every port width-clean.  Default (off) leaves the port unclean (unchanged behaviour)."""
+    rows = [row("ab", "A", "B", 0.0, 100.0, 100.0), row("ba", "B", "A", 0.0, 100.0, 100.0)]
+    r0, e0, i0 = cap.clock_start_edges(rows, ctx_deep(), clean_by="width")
+    s0, _, _ = cap.plan(copy.deepcopy(rows), T, AP, 0.05, start_edges=e0, start_root=r0)
+    assert s0["start_tree"]["start_fail"] >= 1                     # default: the deep launch leaf stays unclean
+    r1, e1, i1 = cap.clock_start_edges(rows, ctx_deep(), clean_by="width", retime_up=True)
+    s1, _, _ = cap.plan(copy.deepcopy(rows), T, AP, 0.05, start_edges=e1, start_root=r1)
+    assert s1["start_tree"]["start_fail"] == 0 and s1["max_path_ambiguous_cycles"] == 0
+    assert all(e["p_up_ps"] + e["p_dn_ps"] <= T / 2 - 2 * AP + 1e-9 for e in e1)
+    la = ctx_deep()["TT"]["taps"]["t_A_0"]["tree_path"]             # A's launch leaf path
+    up = [e for e in e1 if e["retime"] and e["launch"] == "t_A_0"]
+    assert len(up) == 1 and up[0]["dst"].startswith("st:")
+    assert la.startswith(up[0]["dst"][3:]) and len(up[0]["dst"][3:]) < len(la)   # climbs to an ancestor of the A leaf
+    assert 1 <= i1["retime_nodes"] <= 8
+    # same answer as default when nothing needs to climb (phase rule on the chain fixture)
+    rows2 = chain_rows()
+    a = cap.clock_start_edges(rows2, ctx_chain())
+    b = cap.clock_start_edges(rows2, ctx_chain(), retime_up=True)
+    assert json.dumps(a, sort_keys=True, default=str) == json.dumps(b, sort_keys=True, default=str)
+
+
+def test_retime_up_cli_needs_clock_tree(tmp_path):
+    f = tmp_path / "x.json"
+    f.write_text(json.dumps(dict(corners={"TT_x": dict(all=chain_rows())})))
+    with pytest.raises(SystemExit):
+        cap.main([str(f), "--corner", "TT_x", "--start-retime-up"])
