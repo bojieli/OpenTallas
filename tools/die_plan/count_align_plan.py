@@ -99,13 +99,56 @@ def plan(rows, T=833.0, ap=25.0, wander_frac=0.05):
         adj[a].append((b, r))
         adj[b].append((a, r))
     root = max(regions, key=lambda x: len(adj[x])) if regions else None
-    par, depth, order = {root: None}, {root: 0}, [root]
-    for x in order:
-        for y, r in adj[x]:
-            if y not in par:
-                par[y] = (x, r)
-                depth[y] = depth[x] + 1
-                order.append(y)
+    # MESO-INTEG-1 orientation: a child's origin syncs the start that its PARENT forwards beside a crossing's bus, so
+    # every tree port must run parent -> child.  When the graph allows it, the tree is grown as a DIRECTED arborescence
+    # (greedy, best key first: fewest sync values, smallest spread) from the root, trying roots in order of undirected
+    # tree degree; otherwise the undirected Kruskal tree is kept and its reversed edges are flagged (a start-only wire
+    # would be needed; count_align_bind refuses them).
+    import heapq
+    out_e = defaultdict(list)
+    for r in rows:
+        if r["src"] != r["dst"]:
+            out_e[r["src"]].append(r)
+
+    def grow(rt):
+        par_, depth_, order_ = {rt: None}, {rt: 0}, [rt]
+        h = [((r["_nv"], r["_s"], r["port"]), r) for r in out_e[rt]]
+        heapq.heapify(h)
+        while h:
+            _, r = heapq.heappop(h)
+            y = r["dst"]
+            if y in par_:
+                continue
+            par_[y] = (r["src"], r)
+            depth_[y] = depth_[r["src"]] + 1
+            order_.append(y)
+            for q in out_e[y]:
+                if q["dst"] not in par_:
+                    heapq.heappush(h, ((q["_nv"], q["_s"], q["port"]), q))
+        return par_, depth_, order_
+    directed = None
+    if len(comps) == 1:
+        for rt in sorted(regions, key=lambda x: -len(adj[x]))[:16]:
+            g = grow(rt)
+            if len(g[2]) == len(regions):
+                directed = (rt, g)
+                break
+    if directed:
+        root, (par, depth, order) = directed[0], directed[1]
+        # BFS order by depth so parents precede children
+        order = sorted(order, key=lambda x: depth[x])
+        tree = {tuple(sorted((x, par[x][0]))): par[x][1] for x in order[1:]}
+    else:
+        par, depth, order = {root: None}, {root: 0}, [root]
+        for x in order:
+            for y, r in adj[x]:
+                if y not in par:
+                    par[y] = (x, r)
+                    depth[y] = depth[x] + 1
+                    order.append(y)
+        for x in order[1:]:
+            if par[x][1]["src"] != par[x][0]:
+                par[x][1]["_reversed"] = True
     # nominal origin (in whole cycles, PAD omitted: it is common to every tree edge and cancels in K choice through
     # n0 only as a constant the binder adds) and ambiguity counts along root paths
     a0, amb = {root: 0}, {root: 0}
@@ -163,21 +206,31 @@ def plan(rows, T=833.0, ap=25.0, wander_frac=0.05):
             width = L_hi_rel - L_lo_rel
         # choose the lag offset (K + n0) T so the low end sits at >= lo_win
         if kind == "tree":
-            # the start sync puts the tree crossing's lag in [c, c + T) at start (c = lo_win + w), then it wanders +-w;
-            # the nominal lag is the point of that window congruent to d, and the logical latency follows from it
-            c = lo_win + w
-            L_nom = c + ((r["d_ps"] - c) % T)
-            L_lo, L_hi = lo_win, c + T + w + ap
+            # MESO-INTEG-1: the start sync puts the tree crossing's lag in [s, s + T) at start, s = T for a rising first
+            # sample edge, 1.5 T for a falling one (ot_dp_landing_origin with the binder's K_tree = -1 - PAD for the registered forwarded start; bench
+            # tb_ca_tree: [1.000, 1.999] T / [1.501, 2.499] T), then it wanders +-w.  The nominal lag is the point of
+            # that window congruent to d (the tree port runs parent -> child: the
+            # origin syncs the SENDER's forwarded start at the RECEIVER, so a tree port runs parent -> child, see the
+            # orientation step above; a reversed tree edge is flagged and refused by count_align_bind).  Before
+            # MESO-INTEG-1 the window was modelled as [c, c + T),
+            # c = lo_win + w, which under-stated the latency by one cycle whenever d mod T fell in [c, s).
+            s0 = T if r["_edge"] == "rise" else 1.5 * T
+            # tree_shift q: K_tree = -1 - PAD + q moves the window up by q periods when post-start wander (+ the sync
+            # aperture) would take the low end under the window edge
+            q = max(0, math.ceil((lo_win - (s0 - w - ap)) / T))
+            L_nom = s0 + ((r["d_ps"] - s0) % T) + q * T
+            L_lo, L_hi = s0 + q * T - w - ap, s0 + (q + 1) * T + w + ap
             lat = round((L_nom - r["d_ps"]) / T)
         else:
             kt = math.ceil((lo_win - L_lo_rel) / T)
             L_lo, L_hi = kt * T + L_lo_rel, kt * T + L_hi_rel
             lat = kt
+            q = None
         depth_ = 4 if L_hi <= 3.5 * T - ap + 1e-9 else (8 if L_hi <= 7.5 * T - ap + 1e-9 else None)
         old_ok = r["margin_ps"] >= 0  # old ring: derated |d| inside the one-period placement window
         old_vals = interval_boundaries(r["d_ps"] - r["p_dn_ps"], r["d_ps"] + r["p_up_ps"], T, T / 2) + 1
         out.append(dict(port=r["port"], src=u, dst=v, kind=kind, d_ps=r["d_ps"], p_up_ps=r["p_up_ps"], p_dn_ps=r["p_dn_ps"],
-                        wander_ps=round(w, 1), path_ambiguous_cycles=amb_n, L_lo_ps=round(L_lo, 1), L_hi_ps=round(L_hi, 1),
+                        wander_ps=round(w, 1), path_ambiguous_cycles=amb_n, tree_shift=q, L_lo_ps=round(L_lo, 1), L_hi_ps=round(L_hi, 1),
                         L_width_ps=round(L_hi - L_lo, 1), depth=depth_, lat_cycles=lat + 1 if depth_ else None,
                         old_ring_lat_values=old_vals, old_ring_margin_ps=r["margin_ps"], old_ring_ok=old_ok))
     summ = dict(regions=len(regions), tree_components=len(comps), tree_edges=len(tree), tree_root=root,
@@ -193,7 +246,26 @@ def plan(rows, T=833.0, ap=25.0, wander_frac=0.05):
                 lat_total_vs_old3=sum((o["lat_cycles"] or 0) - 3 for o in out),
                 old_ring_not_cycle_fixed=sum(1 for o in out if o["old_ring_lat_values"] > 1),
                 old_ring_fail_margin=sum(1 for o in out if not o["old_ring_ok"]))
+    summ["tree_edges_reversed"] = sorted(r["port"] for r in tree.values() if r.get("_reversed"))
+    summ["_tree"] = dict(root=root, order=order, parent={x: (par[x][0], par[x][1]["port"]) for x in order[1:]},
+                         edge={x: par[x][1]["_edge"] for x in order[1:]}, a0=a0, depth=depth, amb=amb)
     return summ, out
+
+
+def joint_rows(d, cs):
+    """per-crossing rows whose derated phase interval is the UNION over the corners (d = the first corner's nominal)"""
+    rows = [dict(r) for r in d["corners"][cs[0]]["all"]]
+    for c in cs[1:]:
+        other = {r["port"]: r for r in d["corners"][c]["all"]}
+        for r in rows:
+            o = other[r["port"]]
+            lo = min(r["d_ps"] - r["p_dn_ps"], o["d_ps"] - o["p_dn_ps"])
+            hi = max(r["d_ps"] + r["p_up_ps"], o["d_ps"] + o["p_up_ps"])
+            r["p_dn_ps"], r["p_up_ps"] = r["d_ps"] - lo, hi - r["d_ps"]
+            r["margin_ps"] = min(r["margin_ps"], o["margin_ps"])
+            for k in ("unshared_a_ps", "unshared_b_ps"):
+                r[k] = max(r.get(k, 0.0), o.get(k, 0.0))
+    return rows
 
 
 def main(argv=None):
@@ -210,20 +282,10 @@ def main(argv=None):
     ap.add_argument("--cases", help="TSV for the Verilator bench: port K_lat DEPTH L_ps (lo / mid / hi per crossing)")
     a = ap.parse_args(argv)
     d = json.load(open(a.ocv_json))
-    cs = a.corner.split(",")
-    rows = [dict(r) for r in d["corners"][cs[0]]["all"]]
-    for c in cs[1:]:
-        other = {r["port"]: r for r in d["corners"][c]["all"]}
-        for r in rows:
-            o = other[r["port"]]
-            lo = min(r["d_ps"] - r["p_dn_ps"], o["d_ps"] - o["p_dn_ps"])
-            hi = max(r["d_ps"] + r["p_up_ps"], o["d_ps"] + o["p_up_ps"])
-            r["p_dn_ps"], r["p_up_ps"] = r["d_ps"] - lo, hi - r["d_ps"]
-            r["margin_ps"] = min(r["margin_ps"], o["margin_ps"])
-            for k in ("unshared_a_ps", "unshared_b_ps"):
-                r[k] = max(r.get(k, 0.0), o.get(k, 0.0))
+    rows = joint_rows(d, a.corner.split(","))
     summ, out = plan(rows, a.period, a.aperture, a.wander_frac)
     summ.update(corner=a.corner, period_ps=a.period, aperture_ps=a.aperture, wander_frac=a.wander_frac, source=a.ocv_json)
+    tree = summ.pop("_tree")
     print(json.dumps(summ, indent=1))
     if a.out:
         json.dump(dict(summary=summ, crossings=out), open(a.out, "w"), indent=0)

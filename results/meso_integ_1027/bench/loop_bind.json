@@ -1,0 +1,211 @@
+{
+ "bind": {
+  "schema": "opentallas.count_align_bind.v1",
+  "form": "count_aligned",
+  "period_ps": 833.0,
+  "pad": 0,
+  "k_tree": -1,
+  "root": "a",
+  "ports": {
+   "ra": {
+    "src": "r",
+    "dst": "a",
+    "K": 6,
+    "depth": 4,
+    "sched_lat": 2,
+    "tree": false,
+    "L_lo_ps": 978.9,
+    "L_hi_ps": 1307.1,
+    "d_lo_ps": 250.0,
+    "d_hi_ps": 370.0,
+    "wander_ps": 20.0
+   },
+   "ab": {
+    "src": "a",
+    "dst": "b",
+    "K": -1,
+    "depth": 4,
+    "sched_lat": 3,
+    "tree": true,
+    "L_lo_ps": 708.9,
+    "L_hi_ps": 1790.1,
+    "d_lo_ps": -650.0,
+    "d_hi_ps": -530.0,
+    "wander_ps": 20.0
+   },
+   "bc": {
+    "src": "b",
+    "dst": "c",
+    "K": 1,
+    "depth": 4,
+    "sched_lat": 1,
+    "tree": false,
+    "L_lo_ps": 635.9,
+    "L_hi_ps": 964.1,
+    "d_lo_ps": 740.0,
+    "d_hi_ps": 860.0,
+    "wander_ps": 20.0
+   },
+   "cr": {
+    "src": "c",
+    "dst": "r",
+    "K": -1,
+    "depth": 4,
+    "sched_lat": 3,
+    "tree": true,
+    "L_lo_ps": 708.9,
+    "L_hi_ps": 1790.1,
+    "d_lo_ps": -580.0,
+    "d_hi_ps": -460.0,
+    "wander_ps": 20.0
+   },
+   "rb": {
+    "src": "r",
+    "dst": "b",
+    "K": 4,
+    "depth": 4,
+    "sched_lat": 3,
+    "tree": false,
+    "L_lo_ps": 1221.9,
+    "L_hi_ps": 1550.1,
+    "d_lo_ps": -340.0,
+    "d_hi_ps": -220.0,
+    "wander_ps": 20.0
+   },
+   "ac": {
+    "src": "a",
+    "dst": "c",
+    "K": -1,
+    "depth": 4,
+    "sched_lat": 2,
+    "tree": true,
+    "L_lo_ps": 708.9,
+    "L_hi_ps": 1790.1,
+    "d_lo_ps": 150.0,
+    "d_hi_ps": 270.0,
+    "wander_ps": 20.0
+   },
+   "ca": {
+    "src": "c",
+    "dst": "a",
+    "K": 4,
+    "depth": 4,
+    "sched_lat": 3,
+    "tree": false,
+    "L_lo_ps": 1291.9,
+    "L_hi_ps": 1620.1,
+    "d_lo_ps": -270.0,
+    "d_hi_ps": -150.0,
+    "wander_ps": 20.0
+   },
+   "be": {
+    "src": "b",
+    "dst": "e",
+    "K": 1,
+    "depth": 4,
+    "sched_lat": 2,
+    "tree": false,
+    "L_lo_ps": 1088.9,
+    "L_hi_ps": 1417.1,
+    "d_lo_ps": 360.0,
+    "d_hi_ps": 480.0,
+    "wander_ps": 20.0
+   },
+   "er": {
+    "src": "e",
+    "dst": "r",
+    "K": -1,
+    "depth": 4,
+    "sched_lat": 2,
+    "tree": false,
+    "L_lo_ps": 528.9,
+    "L_hi_ps": 857.1,
+    "d_lo_ps": -200.0,
+    "d_hi_ps": -80.0,
+    "wander_ps": 20.0
+   },
+   "ae": {
+    "src": "a",
+    "dst": "e",
+    "K": -1,
+    "depth": 4,
+    "sched_lat": 3,
+    "tree": true,
+    "L_lo_ps": 708.9,
+    "L_hi_ps": 1790.1,
+    "d_lo_ps": -230.0,
+    "d_hi_ps": -110.0,
+    "wander_ps": 20.0
+   },
+   "ec": {
+    "src": "e",
+    "dst": "c",
+    "K": 2,
+    "depth": 4,
+    "sched_lat": 2,
+    "tree": false,
+    "L_lo_ps": 1048.9,
+    "L_hi_ps": 1377.1,
+    "d_lo_ps": 320.0,
+    "d_hi_ps": 440.0,
+    "wander_ps": 20.0
+   }
+  },
+  "regions": {
+   "a": {
+    "parent": null,
+    "tree_port": null,
+    "edge_fall": false,
+    "pad": 0,
+    "n_nominal": 0,
+    "depth": 0
+   },
+   "b": {
+    "parent": "a",
+    "tree_port": "ab",
+    "edge_fall": false,
+    "pad": 0,
+    "n_nominal": 3,
+    "depth": 1
+   },
+   "c": {
+    "parent": "a",
+    "tree_port": "ac",
+    "edge_fall": false,
+    "pad": 0,
+    "n_nominal": 2,
+    "depth": 1
+   },
+   "e": {
+    "parent": "a",
+    "tree_port": "ae",
+    "edge_fall": false,
+    "pad": 0,
+    "n_nominal": 3,
+    "depth": 1
+   },
+   "r": {
+    "parent": "c",
+    "tree_port": "cr",
+    "edge_fall": false,
+    "pad": 0,
+    "n_nominal": 5,
+    "depth": 2
+   }
+  },
+  "latency_frame": "receiver counts; sched_lat = K + 1 + n_dst - n_src (nominal) = plan lat_cycles"
+ },
+ "verify": {
+  "identity_and_loop_errors": [],
+  "fundamental_cycles": 7,
+  "samples": 500,
+  "sim_window_violations": 0,
+  "sim_min_margin_low_ps": 113.0,
+  "sim_min_margin_high_ps": 1242.1,
+  "sim_worst_ports": {
+   "lo": "er",
+   "hi": "ae"
+  },
+  "note": "margins are to the ring window edges that already keep ap = T/8 inside; the COORD 20:35 definition adds ap to the margin: gate margin = sim margin + ap"
+ }
+}

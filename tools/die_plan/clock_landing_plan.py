@@ -389,12 +389,14 @@ def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,obser
             b=_scalar(t,"fclk_in_"+bus,"in",point,"clock");t.setdefault("buses",[]).append(b)
             t.setdefault("clock",{}).setdefault("edge_clocks",[]).append(dict(port=b["name"],tap_um=point,period_mult=1,
                 note="source-forwarded ring write clock (data + 2 monitor bits); actual source-export/window STA required"))
+            if table.get("count_aligned"):t["buses"].append(_scalar(t,"cland_fstart_in_"+bus,"in",point,"ctl",shift=2.16*4))
             for j,kind in enumerate(("ready","fault")):
                 t["buses"].append(_scalar(t,f"cland_dn_{kind}_{bus}","in",point,"ctl",shift=2.16*(j+2)))
             info["children"].append(dict(bus=bus,ready=f"cland_dn_ready_{bus}",fault=f"cland_dn_fault_{bus}",xy_um=point,seam=True))
         for bus in sorted(outs[pn]):
             point=_bus_xy(t,bus)
             t.setdefault("buses",[]).append(_scalar(t,"fclk_out_"+bus,"out",point,"clock"))
+            if table.get("count_aligned"):t["buses"].append(_scalar(t,"cland_fstart_out_"+bus,"out",point,"ctl",shift=2.16*4))
             for j,kind in enumerate(("ready","fault")):
                 t["buses"].append(_scalar(t,f"cland_up_{kind}_{bus}","out",point,"ctl",shift=2.16*(j+2)))
             info["up_buses"].append(dict(bus=bus,carries="aggregate" if bus==tree_bus[tn] else "local"))
@@ -407,6 +409,11 @@ def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,obser
         pr=pports[r["port"]]
         raw["ports"].append(dict(id="cland_clk__"+r["port"],src=dict(part=r["src"],bus="fclk_out_"+pr["src"]["bus"]),
             dst=dict(part=r["dst"],bus="fclk_in_"+pr["dst"]["bus"]),width=1,kind="clock",epoch=False))
+        if table.get("count_aligned"):
+            # count-aligned form (MESO-INTEG-1): the sender's start rides beside the bus (ring write-count reset and,
+            # on a start-tree port, the receiver's origin sync input); registered both ends, boot only
+            raw["ports"].append(dict(id="cland_start__"+r["port"],src=dict(part=r["src"],bus="cland_fstart_out_"+pr["src"]["bus"]),
+                dst=dict(part=r["dst"],bus="cland_fstart_in_"+pr["dst"]["bus"]),width=1,kind="ctl",epoch=False))
         for kind in ("ready","fault"):
             raw["ports"].append(dict(id=f"cland_mon_{kind}__{r['port']}",src=dict(part=r["src"],bus=f"cland_up_{kind}_{pr['src']['bus']}"),
                 dst=dict(part=r["dst"],bus=f"cland_dn_{kind}_{pr['dst']['bus']}"),width=1,kind="ctl",epoch=False))
@@ -423,7 +430,7 @@ def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,obser
         for e in monitor_edges:
             if e["dst"]==pn:arr.append((agg[e["src"]] if e["carries"]=="aggregate" else loc[e["src"]])+3)
         agg[pn]=max(arr)+d
-    side=copy.deepcopy(table);side["added_cycles_per_crossing"]=3
+    side=copy.deepcopy(table);side["added_cycles_per_crossing"]="count_aligned" if table.get("count_aligned") else 3
     side["collector"]=dict(root=observer_part,monitor="dataflow",observer=dict(part=observer_part,**({k:observer[k] for k in ("module","instance_suffix","fault_port","ready_port")}
             if observer else dict(module="OPEN",instance_suffix="OPEN",fault_port="OPEN",ready_port="OPEN"))),
         parts={pn:dict(type=P.parts[pn]["type"],parent=parent[pn],active=True,potential=dist[pn]) for pn in P.parts},
@@ -557,7 +564,10 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
             b=_scalar(t,"fclk_in_"+bus,"in",point,"clock");t.setdefault("buses",[]).append(b)
             t.setdefault("clock",{}).setdefault("edge_clocks",[]).append(dict(port=b["name"],tap_um=point,period_mult=1,
                 note="source-forwarded ring write clock; actual source-export/window STA required"))
-        for bus in sorted(outs[pn]):t.setdefault("buses",[]).append(_scalar(t,"fclk_out_"+bus,"out",_bus_xy(t,bus),"clock"))
+            if table.get("count_aligned"):t["buses"].append(_scalar(t,"cland_fstart_in_"+bus,"in",point,"ctl",shift=2.16*4))
+        for bus in sorted(outs[pn]):
+            t.setdefault("buses",[]).append(_scalar(t,"fclk_out_"+bus,"out",_bus_xy(t,bus),"clock"))
+            if table.get("count_aligned"):t["buses"].append(_scalar(t,"cland_fstart_out_"+bus,"out",_bus_xy(t,bus),"ctl",shift=2.16*4))
         if pn in active:
             if monitor_parent[pn] is None and hard:raise ValueError(f"hard partition {pn} cannot be the monitor root")
             if monitor_parent[pn] is None:
@@ -592,6 +602,11 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
         pr=pports[r["port"]]
         raw["ports"].append(dict(id="cland_clk__"+r["port"],src=dict(part=r["src"],bus="fclk_out_"+pr["src"]["bus"]),
             dst=dict(part=r["dst"],bus="fclk_in_"+pr["dst"]["bus"]),width=1,kind="clock",epoch=False))
+        if table.get("count_aligned"):
+            # count-aligned form (MESO-INTEG-1): the sender's start rides beside the bus (ring write-count reset and,
+            # on a start-tree port, the receiver's origin sync input); registered both ends, boot only
+            raw["ports"].append(dict(id="cland_start__"+r["port"],src=dict(part=r["src"],bus="cland_fstart_out_"+pr["src"]["bus"]),
+                dst=dict(part=r["dst"],bus="cland_fstart_in_"+pr["dst"]["bus"]),width=1,kind="ctl",epoch=False))
     for pn in sorted(active):
         par=monitor_parent[pn]
         if par is None:continue
@@ -607,7 +622,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
         monitor_edges.append(dict(src=pn,dst=par,dst_index=i,seam=seam,hop_um=abs(a[0]-b[0])+abs(a[1]-b[1]),
             data_cycles_added=0,boot_transport_extra_cycles=3 if seam else 0))
     root=observer_part
-    side=copy.deepcopy(table);side["added_cycles_per_crossing"]=3
+    side=copy.deepcopy(table);side["added_cycles_per_crossing"]="count_aligned" if table.get("count_aligned") else 3
     side["collector"]=dict(root=root,observer=dict(part=root,**{k:observer[k] for k in ("module","instance_suffix","fault_port","ready_port")}),
         parts={pn:dict(type=P.parts[pn]["type"],parent=monitor_parent[pn],active=pn in active)
         for pn in P.parts},types=bytype,edges=monitor_edges,base_type_by_part=base_type,
@@ -683,7 +698,10 @@ def _finish(raw,P,bytype,pports,side):
         infra_edges.append(dict(id=pr["id"],src=pr["src"],dst=pr["dst"],kind=pr["kind"],width=1,
             epoch=False,max_hop_um=405,source_registered=pr["kind"]=="ctl",capture_registered=pr["kind"]=="ctl"))
     raw["ports"]=[pr for pr in raw["ports"] if pr["id"] in pports]
+    ca=side.get("count_aligned")
     raw["clock"]["landing_network"]=dict(edges=infra_edges,root_observer=side["collector"]["observer"],
-        data_cycles_per_crossing=3,physical_qualified=False)
+        data_cycles_per_crossing="count_aligned" if ca else 3,physical_qualified=False,
+        **({"count_aligned_cycles":{p:int(c["sched_lat"]) for p,c in ca["ports"].items()},
+            "count_aligned_bind":{k:ca[k] for k in ("schema","root","pad","root_settle_cycles")}} if ca else {}))
     for t in raw["partition_types"].values():t.pop("_cland_geom",None)
     return raw,side

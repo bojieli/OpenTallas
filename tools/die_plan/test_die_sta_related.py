@@ -494,3 +494,38 @@ def test_landed_gate_pairs_without_landing_fails_closed():
     assert R.landed_gate(corners)["verdict"] == "FAIL"
     corners = {"TT": {"classes": {"landed": dict(pairs=0)}}, "FF": {"classes": {"landed": dict(pairs=3)}}}
     assert R.landed_gate(corners)["verdict"] == "FAIL"
+
+
+def _ca_tap(part, late, early):
+    return dict(part=part, cppr_node=part, late_ps=late, early_ps=early)
+
+
+def test_count_align_landed_window_from_sta_arrivals():
+    """MESO-INTEG-1: non-tree L shifts with the STA's own d interval; tree crossing keeps the plan sync window;
+    COORD rule >= 100 ps inside [T/2 + T/8, (DEPTH - 1/2)T - T/8]; a crossing without taps fails the gate."""
+    T = 833.0
+    ap = T / 8
+    taps = {"a0": _ca_tap("A", 300.0, 280.0), "b0": _ca_tap("B", 520.0, 500.0)}
+    landed = [("a0", "b0", "A->B")]
+    # plan d = 210 +-? ; STA d_lo = 500 - 300 = 200, d_hi = 520 - 280 = 240
+    bind = {"ports": {
+        "x": dict(src="A", dst="B", K=1, depth=4, sched_lat=2, tree=False, L_lo_ps=1100.0 - ap, L_hi_ps=1150.0 + ap,
+                  d_lo_ps=200.0, d_hi_ps=250.0, wander_ps=0.0),
+        "t": dict(src="B", dst="A", K=-2, depth=4, sched_lat=2, tree=True, L_lo_ps=T - ap - 10, L_hi_ps=2 * T + ap + 10,
+                  d_lo_ps=0.0, d_hi_ps=0.0, wander_ps=10.0)}}
+    r = R.count_align_landed(landed, taps, bind, T)
+    x = {o["port"]: o for o in r["rows"]}
+    assert x["x"]["source"] == "sta" and x["x"]["L_lo_ps"] == 1100.0 and x["x"]["L_hi_ps"] == 1140.0
+    assert x["x"]["margin_lo_ps"] == round(1100.0 - 0.5 * T - ap, 1)
+    assert x["x"]["margin_hi_ps"] == round(3.5 * T - ap - 1140.0, 1)
+    assert x["t"]["source"] == "plan-sync" and x["t"]["margin_lo_ps"] == round(T - 10 - 0.5 * T - ap, 1)
+    assert r["verdict"] == "PASS" and r["fail"] == 0
+    # STA d_lo 600 ps lower than the plan (late launch) -> low margin < 100 -> FAIL
+    taps["a0"]["late_ps"] = 900.0
+    r = R.count_align_landed(landed, taps, bind, T)
+    assert r["verdict"] == "FAIL" and r["worst_lo"]["port"] == "x"
+    # a crossing whose partition pair has no landed taps is not timed -> FAIL (no silent pass)
+    taps["a0"]["late_ps"] = 300.0
+    bind["ports"]["y"] = dict(bind["ports"]["x"], src="C", dst="B")
+    r = R.count_align_landed(landed, taps, bind, T)
+    assert r["no_taps"] == 1 and r["verdict"] == "FAIL"
