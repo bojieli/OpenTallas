@@ -47,7 +47,9 @@ def cmd_plan(a):
     o = PL.Options(block_margin_um=a.block_margin_um, k=a.k, cap_cells=a.cap_cells, unit_max_cells=a.unit_max_cells,
                    period_ps=a.period_ps, latency_ps=a.latency_ps, io_budget_ps=a.io_budget_ps,
                    util=a.util, channel_um=a.channel_um, macro_halo_um=a.macro_halo_um, clock_ports=tuple(a.clock_port),
-                   ps_per_um=a.ps_per_um, balance_eps=a.balance_eps)
+                   ps_per_um=a.ps_per_um, balance_eps=a.balance_eps, grid_um=a.grid_um,
+                   wire_ff_per_um=a.wire_ff_per_um, context=not a.no_context,
+                   default_drive_cell=a.drive_cell, default_drive_pin=a.drive_pin)
     plan, leaf_part, part_ports = PL.build_plan(nl, cells, macros, o, a.design, region_map=rmap,
                                                  die_wh=die_wh)
     errs = S.validate(plan)
@@ -259,6 +261,11 @@ def main(argv=None):
     p.add_argument("--channel-um", type=float, default=4.0)
     p.add_argument("--macro-halo-um", type=float, default=4.0)
     p.add_argument("--ps-per-um", type=float, default=1.0)
+    p.add_argument("--grid-um", type=float, default=2.16, help="region corner grid: lcm(row/site grid, pin track pitch)")
+    p.add_argument("--wire-ff-per-um", type=float, default=0.20)
+    p.add_argument("--drive-cell", default="BUFx2_ASAP7_75t_R")
+    p.add_argument("--drive-pin", default="Y")
+    p.add_argument("--no-context", action="store_true", help="no set_driving_cell/set_load in partition SDCs")
     p.add_argument("--clock-port", action="append", default=None)
     p.add_argument("--platform", default="asap7")
     p.add_argument("--nick", default="ohier")
