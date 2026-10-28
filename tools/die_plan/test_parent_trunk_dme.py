@@ -289,3 +289,89 @@ def test_ocv_mode_and_corr_on_bipart(tmp_path):
     PT.main(["corr", str(out), str(_arr_corner(P, tmp_path, "TT", 0)), str(tmp_path / "c1.json")])
     C1 = json.loads((tmp_path / "c1.json").read_text())
     assert C1["summary"]["iteration"] == 1 and C1["summary"]["odd_parity_sinks"] == []
+
+
+# ---------------------------------------------------------------- DIE-QC-18: eco (rebuild only the changed legs)
+def _eco_netlist(built, eco_tcl):
+    """apply the eco tcl (parsed) to the netlist of the as-built plan; returns ({inst: (in, out)}, {sink: net})"""
+    import re
+    insts = {i["name"]: (i["in_net"], i["out_net"]) for i in built["insts"]}
+    sinks = {s["name"]: s["net"] for s in built["sinks"]}
+    merge_in = {}
+    lines = eco_tcl.read_text().splitlines()
+    pend = None
+    for l in lines:
+        m = re.match(r"set i \[\$blk findInst \{(.+?)\}\]; .*dbInst_destroy", l)
+        if m:
+            insts.pop(m.group(1)); continue
+        m = re.match(r"set m .*dbInst_create \$blk \$m (\S+?)\]; .*econet (\S+)\].*econet (\S+)\]$", l)
+        if m:
+            insts[m.group(1)] = (m.group(2), m.group(3)); continue
+        m = re.match(r"set it \[\[\$blk findInst (?:\{(.+?)\}|\[string cat \{(.+?)\} \$RS\])\] findITerm (\S+)\]$", l)
+        if m:
+            pend = (m.group(1) or m.group(2), m.group(3)); continue
+        m = re.match(r"\$it disconnect; \$it connect \[econet (\S+)\]$", l)
+        if m:
+            name, pin = pend
+            if pin == "A" and name in insts:
+                insts[name] = (m.group(1), insts[name][1])
+            else:
+                sinks[name] = m.group(1)
+            pend = None
+    return insts, sinks
+
+
+def test_eco_identity_and_partial_rebuild(planned, tmp_path):
+    P, G, out = planned
+    # identity: nothing to rebuild, as-built == plan
+    PT.main(["eco", str(out), str(out), str(tmp_path / "e0.tcl"), str(tmp_path / "b0.json")])
+    B0 = json.loads((tmp_path / "b0.json").read_text())
+    assert B0["insts"] == P["insts"] and B0["sinks"] == P["sinks"]
+    assert B0["summary"]["eco"]["legs_rebuilt"] == 0 and "dbInst_destroy" not in (tmp_path / "e0.tcl").read_text()
+    # corr changes some legs: only those are rebuilt, every other cell keeps its name and nets
+    f = _arrivals(P, tmp_path, bump=("cl0", -40.0))
+    PT.main(["corr", str(out), str(f), str(tmp_path / "c1.json")])
+    C1 = json.loads((tmp_path / "c1.json").read_text())
+    PT.main(["eco", str(out), str(tmp_path / "c1.json"), str(tmp_path / "e1.tcl"), str(tmp_path / "b1.json")])
+    B1 = json.loads((tmp_path / "b1.json").read_text()); e = B1["summary"]["eco"]
+    assert 1 <= e["legs_rebuilt"] < e["legs_kept"]
+    assert e["cells_added"] == sum(1 for i in B1["insts"] if "_e1_r" in i["name"])
+    old = {i["name"] for i in P["insts"]}
+    assert len([i for i in B1["insts"] if i["name"] in old]) == len(P["insts"]) - e["cells_removed"]
+    # the as-built plan is the planned geometry (same cells / positions as the corr plan, emit order kept)
+    assert [(i["cell"], i["p"]) for i in B1["insts"]] == [(i["cell"], i["p"]) for i in C1["insts"]]
+    assert B1["summary"]["n_inv"] == C1["summary"]["n_inv"] and len(B1["insts"]) == len(C1["insts"])
+    # applying the eco tcl to the built netlist gives exactly the as-built netlist
+    ins, snk = _eco_netlist(P, tmp_path / "e1.tcl")
+    assert ins == {i["name"]: (i["in_net"], i["out_net"]) for i in B1["insts"]}
+    assert snk == {s["name"]: s["net"] for s in B1["sinks"]}
+    # the chain continues: corr + eco on the as-built plan
+    PT.main(["corr", str(tmp_path / "b1.json"), str(_arrivals(B1, tmp_path, bump=("cl2", 25.0))), str(tmp_path / "c2.json")])
+    PT.main(["eco", str(tmp_path / "b1.json"), str(tmp_path / "c2.json"), str(tmp_path / "e2.tcl"), str(tmp_path / "b2.json")])
+    B2 = json.loads((tmp_path / "b2.json").read_text())
+    ins, snk = _eco_netlist(B1, tmp_path / "e2.tcl")
+    assert ins == {i["name"]: (i["in_net"], i["out_net"]) for i in B2["insts"]}
+    assert snk == {s["name"]: s["net"] for s in B2["sinks"]}
+
+
+def test_eco_fail_closed(planned, tmp_path):
+    P, G, out = planned
+    g, c, _ = _fixture(tmp_path)
+    o2 = tmp_path / "other.json"
+    PT.main(["plan", str(g), str(c), str(o2), "--entry", "160,250", "--child-ins", CI, "--pin-offset", "mod_rl=10,5",
+             "--orient-rule", "150", "--topology", "bipart"])
+    if json.loads(o2.read_text())["tree"] != P["tree"]:
+        with pytest.raises(ValueError, match="eco: (topology|node) differs"):
+            PT.main(["eco", str(out), str(o2), str(tmp_path / "x.tcl"), str(tmp_path / "x.json")])
+    bad = dict(P); bad["insts"] = P["insts"][:-1]
+    (tmp_path / "bad.json").write_text(json.dumps(bad))
+    with pytest.raises(ValueError, match="plan insts"):
+        PT.main(["eco", str(tmp_path / "bad.json"), str(out), str(tmp_path / "x.tcl"), str(tmp_path / "x.json")])
+
+
+def test_grt_tcl_inc_loads_routes_first():
+    s = (HERE / "parent_trunk_grt.tcl").read_text()
+    i = s.index('$MODE eq "inc"')
+    blk = s[i:s.index("global_route -end_incremental", i)]
+    assert blk.index("estimate_parasitics -global_routing") < blk.index("global_route -start_incremental") < \
+        blk.index("source $::env(ECO)")
