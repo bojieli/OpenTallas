@@ -3496,6 +3496,14 @@ def render_all(d, P, plan_path):
     return out
 
 
+def load_tap_pad(path):
+    """Retain explicit sibling sites from the existing {pad: counts} CLI file."""
+    raw = json.loads(Path(path).read_text())
+    if "pad" in raw:
+        return dict(raw["pad"], **({"sites": raw["sites"]} if "sites" in raw else {}))
+    return raw
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -3622,7 +3630,7 @@ def main(argv=None):
                       tree_opts={**{k: float(v) for k, v in (o.split("=") for o in a.tree_opt)},
                                  **({"feed": a.feed} if a.tree_form in ("link_fishbone", "link_htree") else {})},
                       slice_spine=a.slice_spine, spine_top_leaf_um=a.spine_top_leaf_um, slice_rows=a.slice_rows,
-                      tap_pad=json.loads(Path(a.tap_pad).read_text())["pad"] if a.tap_pad else None,
+                      tap_pad=load_tap_pad(a.tap_pad) if a.tap_pad else None,
                       clock_rc=a.clock_rc, slice_balance=a.slice_balance, region_dme=a.region_dme,
                       region_dme_only=[r for r in a.region_dme_only.split(",") if r] if a.region_dme_only else None)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
