@@ -394,6 +394,14 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
         raise SystemExit(f"--count-align-key: unknown key {key!r}")
     ost = {}
     dsta = count_align_d_intervals(landed, taps, cppr_range, part_region=pr, ocv=ocv, stats=ost)
+    # FLOW-GEN-1 10-28 (DIE-KV-11, ONE SHARED DIE TIMING MODEL): a region-keyed bind port that names its partition pair
+    # (src_part / dst_part, the --parts form) is one ring between THOSE partitions, and the planner (sta_hull) sized its
+    # K / d on that partition pair's interval.  Pooling every partition pair of the region pair charged it another
+    # pair's phase (KV phy_WN_5->phy_WN_4 L678_3: pc_WN_5->pc_WN_4 d_lo 592.6 instead of its own 631.9, gate 44.5 ps
+    # vs plan 105).  Such a port is timed on its own partition pair; a port without one keeps the region interval.
+    pst, dpart = {}, None
+    if pr is not None and any(b.get("src_part") and b.get("dst_part") for b in bind["ports"].values()):
+        dpart = count_align_d_intervals(landed, taps, cppr_range, ocv=ocv, stats=pst)
     tree_reg = {r["tree_port"]: (x, r) for x, r in bind.get("regions", {}).items() if r.get("tree_port")}
     rows, miss, srows = [], [], []
     for pid, b in sorted(bind["ports"].items()):
@@ -401,10 +409,15 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
         D = int(b["depth"])
         tr = tree_reg.get(pid)
         amb_tree = bool(tr) and int(tr[1].get("sync_values", 1)) > 1
-        if tag not in dsta or "d_lo_ps" not in b:
+        ptag = f"{b['src_part']}->{b['dst_part']}" if dpart is not None and b.get("src_part") and b.get("dst_part") \
+            else None
+        if ptag is not None and ptag in dpart and "d_lo_ps" in b:
+            (dl, dh), ivk, otag, ostat = dpart[ptag], "part", ptag, pst
+        elif tag not in dsta or "d_lo_ps" not in b:
             miss.append(pid)
             continue
-        dl, dh = dsta[tag]
+        else:
+            (dl, dh), ivk, otag, ostat = dsta[tag], key, tag, ost
         if amb_tree:
             lo, hi, src = b["L_lo_ps"], b["L_hi_ps"], "plan-sync"
         else:
@@ -414,8 +427,10 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
                    margin_lo_ps=round(ml, 1), margin_hi_ps=round(mh, 1), source=src,
                    slot_read_ps=round(lo - 0.5 * period, 1), guard_budget_ps=round(ap, 1),
                    guard_hi_slack_ps=round(mh - ap, 1))
+        if ivk != key:
+            row["interval_key"] = ivk
         if ocv is not None and src == "sta":
-            row["ocv_lo_ps"], row["ocv_hi_ps"] = (round(x, 1) for x in ost.get(tag, (0.0, 0.0)))
+            row["ocv_lo_ps"], row["ocv_hi_ps"] = (round(x, 1) for x in ostat.get(otag, (0.0, 0.0)))
         row["lag_ok"] = min(ml, mh) >= need_ps
         row["slot_read_ok"] = row["slot_read_ps"] >= 0
         row["guard_ok"] = row["guard_hi_slack_ps"] >= 0
@@ -448,6 +463,13 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
     wh = min(rows, key=lambda r: r["margin_hi_ps"]) if rows else None
     btags = {f"{b['src']}->{b['dst']}" for b in bind["ports"].values()}
     unbound = sorted(t for t in dsta if t not in btags) if key == "region" else []
+    if dpart is not None:
+        # a landed partition pair is timed by a port naming it, or (pooled) by a port of its region pair that names no
+        # partition pair; any other landed partition pair is untimed and fails closed (FLOW-GEN-1 10-28)
+        named = {f"{b['src_part']}->{b['dst_part']}" for b in bind["ports"].values() if b.get("src_part") and b.get("dst_part")}
+        pooled = {f"{b['src']}->{b['dst']}" for b in bind["ports"].values() if not (b.get("src_part") and b.get("dst_part"))}
+        rt = lambda t: "->".join(pr[x] for x in t.split("->"))
+        unbound += sorted(t for t in dpart if t not in named and rt(t) not in pooled and rt(t) in btags)
     ok = rows and not (nfail or sfail or rfail or gfail or miss or unbound)
     return dict(clock_variation=(ocv_label or "callable") if ocv is not None else "none",
                 ocv_max_lo_ps=round(max((v[0] for v in ost.values()), default=0.0), 1) if ocv is not None else None,
