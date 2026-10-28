@@ -1,0 +1,18 @@
+{
+ "scope": "DIAGNOSTIC ONLY: old sysc_dcal AIG lacks KEEP-aware elaboration; no release verdict",
+ "prior": {
+  "compare": 71129,
+  "proved": 71087,
+  "residual": 42
+ },
+ "cause": "8 missing predecessor aliases for u_dcal.u_seq.cfg_data[0..7], uniquely derived from gold/gate D-support",
+ "base": "16/16 pairs definite0 after4 reset edges",
+ "joint16": "16/16 D relations proved under diagnostic candidate context",
+ "wrong_predecessor": "16/16 SAT differences on rotated source bit",
+ "compare42": "42/42 original residual comparisons proved",
+ "units": [
+  "1001698-1793190006",
+  "1035478-1793190126"
+ ],
+ "next": "Regenerate exact hints on actual current SYS_C gate names and run fresh KEEP-aware source/netlist proof plus mutant after current source bind"
+}
