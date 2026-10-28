@@ -1108,3 +1108,25 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
     - Authoring the asbuilt section is step 0 of the C20i/partition event. run_bind_c20i.sh is ready to run after it.
   - Deleted: c20i_out (v1, superseded) and dry_c20h_hs (36-region map, superseded by region = partition).
   - Branch: claude/die-hbm-5-1028@36e18a54bd (results/die_hbm_1027/hbm5).
+- 10-28 03:34 PDT DIE-HBM-5: the start-forward (SF) wire is now a fixpoint.
+  - Each SF starts in a region the start tree reaches, so the spb0->spb1->spb2 chains get SF spb2>spb1 + spb1>spb0, NW and NE.
+  - Partition map (90 regions, spt): 639 crossings, D4 575 / D8 64, **0 FAIL**, worst margin 110.0/130.3 ps @278.6 and 132.2 @219.2, max_lat 6. Tool run CHECKED; analytic model UNCHECKED; not built arrivals.
+  - claude/die-hbm-5-1028@f4b8d9a166.
+- 10-28 03:34 PDT DIE-HBM-5 PARKED (slice end).
+  - State:
+    - C20i v2 f4bdd65c953d plus the tkm pin-order delta = c20i_po 16f454f05cbf on intel1 die-hbm-5. G0 PASS; G0C FAIL 20 (carried over, not new).
+    - All 4 congestion probes have GRT overflow 0.
+    - Price: hso 1836.5 tok/s with hiding.
+    - Estimates posted: hub partition split; region = partition.
+    - ASK open: hub split option (A/B/C). Default (A) applies at 03:10+30 min.
+  - NEXT, in order (C20i / partition event):
+    0. Author the HBM `asbuilt` binding, then run run_bind_c20i.sh (bind all + kit-rtl per type).
+    1. Hub partition split, k by a DP at <=360k/part with F=1.3 (hub_cells2.py).
+    2. S-face reset relays for the hub bottom-face regs, which local taps cannot reach (reset_local.py).
+    3. Hub PG on measured activity, once the PG-ACTIVITY hub window exists.
+    4. Built-arrival CA on the partition map: spt feed + clock_kit with --region-dme delay --region-dme-only on the macro partitions (rm91b tools) + ctree STA at spice + count_align --sta-proof.
+    5. Close the G0C 20: vmb faces 12, u_xq eg views 4.
+    6. Then die GRT0 incl clock, >=50 it.
+  - Core taps stay at 250/202.5; apply_early_ps.py is the hook for the HBM-CORE-LAT-2 table.
+  - PHY_N/SM are not covered until real internal-tree numbers exist.
+  - The tkm tile needs a re-kit with the __po pins. Root-side reach is UNCHECKED.
