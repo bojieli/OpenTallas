@@ -51,7 +51,9 @@ def _strip_src(text):
     text = re.sub(r"/\*.*?\*/", " ", text, flags=re.S)
     text = re.sub(r"//[^\n]*", "", text)
     text = re.sub(r'"(?:\\.|[^"\\\n])*"', '""', text)
-    return re.sub(r"\(\*.*?\*\)", " ", text, flags=re.S)
+    # QC-A0-KITS-3 10-28: an attribute is (* ... *); the event control @(*) is NOT one (the old pattern matched its
+    # "(*" and ate the text up to the next "*)", dropping every module in between from the closure census).
+    return re.sub(r"\(\*(?!\s*\)).*?\*\)", " ", text, flags=re.S)
 
 
 def _cond_before(text, i):
