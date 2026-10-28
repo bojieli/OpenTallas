@@ -96,6 +96,7 @@ import argparse
 import itertools
 import hashlib
 import json
+import math
 import os
 import re
 import shutil
@@ -221,18 +222,30 @@ def credit(rng, node, la, ea, lc, ec):
     return min(max(0.0, rng.get(c, 0.0)), max(0.0, la - ea), max(0.0, lc - ec))
 
 
-def count_align_landed(landed, taps, bind, period, ap=None, need_ps=100.0):
-    """MESO-INTEG-1 (opt-in --count-align BIND.json): the count-aligned landing ring (ot_dp_clk_landing_ca) replaces the
-    +-T/2 placement window by a write->read lag window per crossing.  COORD margin rule: the lag L must sit inside
-    [0.5T + ap, (DEPTH - 0.5)T - ap], >= need_ps clear on both sides (ap = T/8 sync aperture).
-    Non-tree crossing: the binder fixed L = L_plan - d_plan + d, d = capture-region clock - launch-region clock; this
-    model re-derives the d interval from ITS OWN derated arrivals over every landed tap pair of the partition pair
-    (d_lo = min(capture early - launch late), d_hi = max(capture late - launch early)) and shifts the plan window by
-    the difference.  Tree (start) crossing: L is set at start by the sync, so its window is the plan one (the start
-    edge is sampled on the real clocks; only post-start wander moves it, carried by the binder).
-    Slot->read path: L_lo >= T/2 + ap means the read register samples a slot written >= T/2 + ap earlier, so the
-    existing landing_contract slot->RDREG half-period SDC holds; reported as slot_to_read_ps = L_lo - T/2."""
-    ap = period / 8 if ap is None else ap
+def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, start_wire=None):
+    """MESO-INTEG-1 / MESO-RECONCILE-1 (opt-in --count-align BIND.json, count_align_bind.py v2): the count-aligned ring
+    (ot_dp_clk_landing_ca) replaces the +-T/2 placement window by a write->read lag window per crossing.  Bind L_lo/L_hi
+    are the plan's TRUE derated lag bounds (wander included, no aperture); d = capture-region clock - launch-region clock.
+    This model re-derives d from ITS OWN derated arrivals over every landed tap pair of the partition pair
+    (d_lo = min(capture early - launch late), d_hi = max(capture late - launch early)) and shifts the plan lag by the
+    difference: L = (K + a_dst - a_src) T + d.  Ambiguous tree (start) crossings keep the plan sync window.
+    Rows (each must PASS; a crossing without taps fails closed):
+      lag      : margins to the ring guards 0.5T / (DEPTH - 0.5)T >= need_ps (COORD 20:35/20:48; the plan keeps ap = T/8)
+      slot_read: slot -> dsel -> RDREG/r_v_q/r_lap_q.  The read edge samples a slot written >= L_lo earlier; the formal
+                 proof (fv_ca2) treats reads < T/2 after the write as arbitrary, so the ring SDC max_delay T/2 - setup on
+                 that path is sufficient iff L_lo - T/2 >= 0 (slot_read_ps)
+      guard    : s_w/s_lap -> glo0/ghi0 (falling read edge).  The high guard is late by up to that path (ring SDC
+                 max_delay T/8 = guard_budget_ps), so the high-side margin must cover it: margin_hi >= T/8
+      start    : tree crossings.  skew = start arrival at the child's first sync flop - forwarded clock (word) timing
+                 = clk->Q of the parent origin register + start wire - fclk wire; |skew| <= the plan's per-edge
+                 start_skew_limit_ps (clean: sync_dist - sync aperture, e.g. HEAD 116 / KV 79 ps; ambiguous: tree
+                 crossing margin - 100).  Wire mismatch from start_wire {port: [lo, hi]} (routed die), else 0 (the
+                 start pin sits at the bus point, clock_landing_plan; source 'model-coroute').  A clean edge must also
+                 keep its STA d interval (+ skew) >= the sync aperture from the sampling boundary (J chip-invariant)."""
+    ap = period / 8
+    sap = float(bind.get("sync_aperture_ps", 26.5))
+    cq_max = float(reg["clkq_max_wire_ps"]) if reg else 0.0
+    cq_min = float(reg["clkq_min_nowire_ps"]) if reg else 0.0
     dsta = {}
     for a, b, tag in landed:
         A, B = taps[a], taps[b]
@@ -240,31 +253,71 @@ def count_align_landed(landed, taps, bind, period, ap=None, need_ps=100.0):
         lo, hi = ec - la, lc - ea
         o = dsta.get(tag)
         dsta[tag] = (lo, hi) if o is None else (min(o[0], lo), max(o[1], hi))
-    rows, miss = [], []
+    tree_reg = {r["tree_port"]: (x, r) for x, r in bind.get("regions", {}).items() if r.get("tree_port")}
+    rows, miss, srows = [], [], []
     for pid, b in sorted(bind["ports"].items()):
         tag = f"{b['src']}->{b['dst']}"
         D = int(b["depth"])
-        if b.get("tree"):
-            lo, hi, src = b["L_lo_ps"] + ap, b["L_hi_ps"] - ap, "plan-sync"
-        elif tag in dsta and "d_lo_ps" in b:
-            dl, dh = dsta[tag]
-            # plan L_lo/L_hi include the aperture (L_lo = .. + d_lo - ap): strip it to get the true lag
-            lo, hi, src = b["L_lo_ps"] + ap + (dl - b["d_lo_ps"]), b["L_hi_ps"] - ap + (dh - b["d_hi_ps"]), "sta"
-        else:
+        tr = tree_reg.get(pid)
+        amb_tree = bool(tr) and int(tr[1].get("sync_values", 1)) > 1
+        if tag not in dsta or "d_lo_ps" not in b:
             miss.append(pid)
             continue
-        ml, mh = lo - (0.5 * period + ap), (D - 0.5) * period - ap - hi
-        rows.append(dict(port=pid, tag=tag, depth=D, tree=bool(b.get("tree")), L_lo_ps=round(lo, 1), L_hi_ps=round(hi, 1),
-                         margin_lo_ps=round(ml, 1), margin_hi_ps=round(mh, 1), slot_to_read_ps=round(lo - 0.5 * period, 1),
-                         source=src))
+        dl, dh = dsta[tag]
+        if amb_tree:
+            lo, hi, src = b["L_lo_ps"], b["L_hi_ps"], "plan-sync"
+        else:
+            lo, hi, src = b["L_lo_ps"] + (dl - b["d_lo_ps"]), b["L_hi_ps"] + (dh - b["d_hi_ps"]), "sta"
+        ml, mh = lo - 0.5 * period, (D - 0.5) * period - hi
+        row = dict(port=pid, tag=tag, depth=D, tree=bool(tr), L_lo_ps=round(lo, 1), L_hi_ps=round(hi, 1),
+                   margin_lo_ps=round(ml, 1), margin_hi_ps=round(mh, 1), source=src,
+                   slot_read_ps=round(lo - 0.5 * period, 1), guard_budget_ps=round(ap, 1),
+                   guard_hi_slack_ps=round(mh - ap, 1))
+        row["lag_ok"] = min(ml, mh) >= need_ps
+        row["slot_read_ok"] = row["slot_read_ps"] >= 0
+        row["guard_ok"] = row["guard_hi_slack_ps"] >= 0
+        rows.append(row)
+        if tr:
+            x, rg = tr
+            w = (start_wire or {}).get(pid)
+            wl, wh = (float(w[0]), float(w[1])) if w else (0.0, 0.0)
+            sk_lo, sk_hi = cq_min + wl, cq_max + wh
+            lim = rg.get("start_skew_limit_ps")
+            s = dict(port=pid, region=x, edge="fall" if rg.get("edge_fall") else "rise",
+                     sync_values=int(rg.get("sync_values", 1)), skew_lo_ps=round(sk_lo, 1), skew_hi_ps=round(sk_hi, 1),
+                     limit_ps=lim, source="routed" if w else "model-coroute")
+            ok = lim is not None and max(abs(sk_lo), abs(sk_hi)) <= lim
+            if s["sync_values"] == 1:
+                # J chip-invariant on the STA's own d: the effective sampled phase d - skew keeps >= sap from off + kT
+                off = period / 2 if s["edge"] == "fall" else 0.0
+                elo, ehi = dl - sk_hi, dh - sk_lo
+                k = math.floor((elo - off) / period)
+                dist = min(elo - (off + k * period), off + (k + 1) * period - ehi)
+                s["sta_sync_dist_ps"] = round(dist, 1)
+                ok = ok and dist >= sap
+            s["ok"] = ok
+            srows.append(s)
+    nfail = sum(1 for r in rows if not r["lag_ok"])
+    sfail = sum(1 for s in srows if not s["ok"])
+    rfail = sum(1 for r in rows if not r["slot_read_ok"])
+    gfail = sum(1 for r in rows if not r["guard_ok"])
     wl = min(rows, key=lambda r: r["margin_lo_ps"]) if rows else None
     wh = min(rows, key=lambda r: r["margin_hi_ps"]) if rows else None
-    nfail = sum(1 for r in rows if min(r["margin_lo_ps"], r["margin_hi_ps"]) < need_ps)
+    ok = rows and not (nfail or sfail or rfail or gfail or miss)
     return dict(crossings=len(rows), sta_timed=sum(r["source"] == "sta" for r in rows),
-                tree_plan=sum(r["tree"] for r in rows), no_taps=len(miss), no_taps_ports=miss[:20],
-                need_ps=need_ps, aperture_ps=round(ap, 3), fail=nfail,
-                worst_lo=wl, worst_hi=wh, verdict="PASS" if rows and not nfail and not miss else "FAIL",
-                rows=rows)
+                tree_plan=sum(r["source"] == "plan-sync" for r in rows), no_taps=len(miss), no_taps_ports=miss[:20],
+                need_ps=need_ps, aperture_ps=round(ap, 3), fail=nfail, worst_lo=wl, worst_hi=wh,
+                slot_read=dict(fail=rfail, worst_ps=min((r["slot_read_ps"] for r in rows), default=None),
+                               sdc="ring slot->RDREG/r_v_q/r_lap_q max_delay T/2 - setup"),
+                guard=dict(fail=gfail, budget_ps=round(ap, 1),
+                           worst_hi_slack_ps=min((r["guard_hi_slack_ps"] for r in rows), default=None),
+                           sdc="ring s_w/s_lap -> glo0/ghi0 max_delay T/8"),
+                start_skew=dict(tree_ports=len(srows), fail=sfail,
+                                clkq_ps=[round(cq_min, 1), round(cq_max, 1)],
+                                worst=min(srows, key=lambda s: (s["limit_ps"] if s["limit_ps"] is not None else -1e9)
+                                          - max(abs(s["skew_lo_ps"]), abs(s["skew_hi_ps"]))) if srows else None,
+                                rows=srows),
+                verdict="PASS" if ok else "FAIL", rows=rows)
 
 
 def build_pairs(plan, taps):
@@ -1163,7 +1216,11 @@ def main(argv=None):
     ap.add_argument("--landing-window-ps", type=float)
     ap.add_argument("--count-align", metavar="BIND.json",
                     help="MESO-INTEG-1 opt-in: landed pairs use the count-aligned ring lag window of this count_align_bind "
-                         "file (COORD rule: >= 100 ps inside [T/2 + T/8, (DEPTH - 1/2)T - T/8]) instead of +-T/2")
+                         "file (count_align_bind.py v2; rows: lag >= 100 ps to the guards, slot->read, guard T/8, "
+                         "start skew per tree edge) instead of +-T/2")
+    ap.add_argument("--count-align-start-wire", metavar="JSON",
+                    help="routed start-wire minus fclk-wire delay per tree port {port: [lo_ps, hi_ps]} (default: "
+                         "co-routed model, mismatch 0)")
     ap.add_argument("--intra-window-ps", type=float,
                     help="WHAT-IF override of the intra-partition kit window (default: the plan's clock.tap_window."
                          "window_ps, else 0 = the one-ideal-clock kit SDC)")
@@ -1276,11 +1333,15 @@ def main(argv=None):
         reg = characterise(out, c, slew, a.seam_wire_um * a.wire_ff_per_um)
         pairs, cov = build_pairs(plan, taps)
         if a.count_align:
-            ca = count_align_landed(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period)
+            ca = count_align_landed(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,
+                                    start_wire=json.loads(Path(a.count_align_start_wire).read_text())
+                                    if a.count_align_start_wire else None)
             res.setdefault("count_aligned", {})[c] = ca
             print(f"COUNT-ALIGN {c} crossings {ca['crossings']} (sta {ca['sta_timed']}, tree {ca['tree_plan']}, no taps "
                   f"{ca['no_taps']}) worst lo {ca['worst_lo'] and ca['worst_lo']['margin_lo_ps']} hi "
-                  f"{ca['worst_hi'] and ca['worst_hi']['margin_hi_ps']} fail {ca['fail']} {ca['verdict']}")
+                  f"{ca['worst_hi'] and ca['worst_hi']['margin_hi_ps']} fail {ca['fail']} slot_read fail {ca['slot_read']['fail']} "
+                  f"guard fail {ca['guard']['fail']} start-skew fail {ca['start_skew']['fail']}/{ca['start_skew']['tree_ports']} "
+                  f"{ca['verdict']}")
         views = None
         if real:
             import schema as S_

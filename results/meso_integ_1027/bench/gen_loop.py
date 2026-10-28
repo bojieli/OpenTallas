@@ -1,4 +1,4 @@
-"""MESO-INTEG-1 loop bench generator: plan + bind a small region graph with loop-closing crossings, emit a Verilator
+"""MESO-INTEG-1 / MESO-RECONCILE-1 loop bench generator: plan + bind a small region graph with loop-closing crossings, emit a Verilator
 bench wired the way clock_landings.py emits a die (root ot_dp_landing_root, child ot_dp_landing_origin syncing the
 parent's forwarded start, every crossing an ot_dp_clk_landing_ca with t_rst_n = sender start, rst_n = receiver start,
 K/DEPTH/EDGE_FALL/PAD from count_align_bind).  The C++ driver draws region clock phases inside each crossing's derated
@@ -21,9 +21,27 @@ EDGES = [("r", "a"), ("a", "b"), ("b", "c"), ("c", "r"), ("r", "b"), ("a", "c"),
 SPREAD = 60.0
 rows = [dict(port=f"{u}{v}", src=u, dst=v, d_ps=PH[v] - PH[u], p_up_ps=SPREAD, p_dn_ps=SPREAD, unshared_a_ps=400.0,
              unshared_b_ps=400.0, margin_ps=0.0) for u, v in EDGES]
-summ, o = CAP.plan([dict(r) for r in rows], T, T / 8, 0.05)
-b = CB.bind(summ, o, T, 0)
-v = CB.verify(b, {r["port"]: r for r in rows}, 500, T / 8, 0.05)
+# MESO-RECONCILE-1: ONE convention -- the plan (count_align_plan.py) emits K/DEPTH/origins/edges, the binder takes them.
+# VARIANT=integ re-runs the same wiring with MESO-INTEG-1's fixed tree K (-1 - PAD + q, lag in [s, s + T) + qT): same
+# origins, tree crossings one count later where the plan's K is lower -> both must pass (same physics).
+import math, os  # noqa: E401,E402
+PAD = int(os.environ.get("PAD", "0"))
+s_, o_, g_ = CAP.plan([dict(r) for r in rows], T, T / 8, 0.05, 26.5, PAD)
+s_.update(period_ps=T, aperture_ps=T / 8, sync_aperture_ps=26.5, pad=PAD)
+b = CB.bind(CB.plan_doc(s_, o_, g_))
+if os.environ.get("VARIANT") == "integ":
+    byp = {r["port"]: r for r in rows}
+    for x, r in b["regions"].items():
+        if r["parent"] is None:
+            continue
+        c, rw = b["ports"][r["tree_port"]], byp[r["tree_port"]]
+        s0 = T if not r["edge_fall"] else 1.5 * T
+        w = 0.05 * max(rw["unshared_a_ps"], rw["unshared_b_ps"])
+        q = max(0, math.ceil((T / 2 + T / 8 - (s0 - w - T / 8)) / T))
+        k_integ = -1 - r["pad"] + q
+        c["sched_lat"] += k_integ - c["K"]
+        c["K"] = k_integ
+v = CB.verify(b, 500)
 assert not v["identity_and_loop_errors"] and v["sim_window_violations"] == 0, v
 regs = sorted(PH)
 SETTLE = 16
@@ -55,5 +73,5 @@ h += ["  X(%s, %d, %d, %d) \\" % (p, regs.index(c["src"]), regs.index(c["dst"]),
 h.append("")
 (out / "loop_params.h").write_text("\n".join(h) + "\n")
 (out / "loop_bind.json").write_text(json.dumps(dict(bind=b, verify=v), indent=1) + "\n")
-print(json.dumps(dict(regions=regs, root=b["root"], ports={p: [c["src"], c["dst"], c["K"], c["depth"], c["sched_lat"],
+print(json.dumps(dict(variant=os.environ.get("VARIANT", "plan"), pad=PAD, fall_edges=sorted(x for x, r in b["regions"].items() if r["edge_fall"]), regions=regs, root=b["root"], ports={p: [c["src"], c["dst"], c["K"], c["depth"], c["sched_lat"],
                       c["tree"]] for p, c in sorted(b["ports"].items())}, loops=v["fundamental_cycles"]), indent=None))
