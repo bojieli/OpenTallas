@@ -53,6 +53,10 @@ class NativeTiming:
     # TOK-HBM-SU 2026-10-26: the die's su_<q><g> PIN_REG (pin-registered lanes: lane writes / first output +4 edges,
     # requests +2).  None = the leaf_split_latency environment default (old behaviour); a die contract passes its own.
     pin_reg: object = None
+    # HBM-CORES-REBAL-9 (opt-in): the die's lane build.  mlat None = the as-built MLAT 4; wcopy 1 = the pinned bank's
+    # per-column write copy: every bank write commits one edge later (write-port pins unchanged).
+    mlat: object = None
+    wcopy: int = 0
 
     def __post_init__(self):
         if (type(self.read_return) is not int or type(self.write_return) is not int
@@ -60,6 +64,8 @@ class NativeTiming:
             raise ValueError("native multirate contract requires integer RR>=10 and 7<=WR<=RR")
         if self.pin_reg not in (None, 0, 1):
             raise ValueError("native PIN_REG must be 0 or 1")
+        if self.mlat not in (None, 4, 5) or self.wcopy not in (0, 1):
+            raise ValueError("native lane build: MLAT 4 or 5, WCOPY 0 or 1")
 
     @staticmethod
     def serial_return(stream_return):
@@ -69,15 +75,22 @@ class NativeTiming:
     @property
     def fill_commit(self):
         # pgslice fd/fr publication followed by pinned-bank input and write.
-        return self.serial_return(self.read_return) + 3
+        return self.serial_return(self.read_return) + 3 + self.wcopy
 
     @property
     def drain_done(self):
         # pgslice drain group selection presents the bridge write at E+4.
         return 4 + self.serial_return(self.write_return)
 
+    @property
+    def lane_mlat(self):
+        return 4 if self.mlat is None else self.mlat
+
     def as_dict(self):
-        return dict(asdict(self), fill_commit=self.fill_commit,
+        d = asdict(self)
+        if self.mlat is None and self.wcopy == 0:      # as built: the record stays byte-identical
+            d.pop("mlat"); d.pop("wcopy")
+        return dict(d, fill_commit=self.fill_commit,
                     drain_done=self.drain_done, multirate=True,
                     topology_qualified=False,
                     source="ot_hbm_su_static_pgslice + ot_hbm_su_multirate_bridge")
