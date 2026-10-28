@@ -81,3 +81,29 @@ This proves the initial COPY native contents and40ports. Later c41625cb88 five e
   - Bench-only admission flag OT_XS_GB_PROVIDER_UNDER_TEST=1; the default guard is unchanged.
 - (3) HHP guard -> KV boot calendar hook: NOT started (time). No KV-CORES line claims it. It needs codex/kv-cores-1351 gen_core_kit_kv.py or a main KV calendar emitter.
 - NEXT: (a) trace cfg7_seq class-valid/ef in the GB bench (intel1 tok15-gb run2 obj has probes), then measured GB cycles. (b) Per COORD: RTL replay of DS L0. (c) Simulate rank merge (mesh_ep + best64 + ctl final) on the generated top: the mesh lanes are already in this die bench.
+
+## CLAUDE TOK-ALL-16 2026-10-27 17:44 PDT
+- (1) GB composition: POSITIVE PASS. Branch claude/tok16-gb-1027@8606da96fe (hub only; evidence results/token_pass/gb_composition_tok16_1027).
+  - Root cause (CHECKED). The image generator and the calendar were both correct. The physical kit strips #() from hard children, and Codex 1450 restored only INSTANCE. So the functional copy elaborated the 16 ot_s81_cfg7_seq and 6 _bfp calls at their defaults, PQ0/LAYOUT0/PINREG0, instead of the hardened PQ1/LAYOUT1/PINREG1 (kit hard_params json == canonical vg). The il7 image holds class-valid in word 8 (bank1 row1, 0x401). A LAYOUT0 read is linear on macro 0, so it never sees it: act=0, go_e never rose.
+  - Fix: new tools/s81_dv/gb_hard_params.py restores the kit-recorded set. Each value must match both the hard_params record and canonical; ports and other parameters stay byte-identical; 0 cycles. Tests: 1 positive + 3 fail-closed controls. New manifest asbuilt_b178_gb_image_candidate_tok16.json. Fresh extraction 4/4 PASS, schedules == tok15.
+  - MEASURED (CHECKED, intel1 unit oth-ubuntu-2788117-1793145276), u_f_0L01 L0 a_proj, uniform clock phase:
+    - cfg@390, GO@452; sequencer go_e 464..491, element go +2 after it.
+    - 14/14 returns 732..772; shift 322 == pinned 322.
+    - 4/4 CAP == checkpoint at 823..855.
+    - GO->last capture 403 cyc, cfg->last capture 465.
+  - Controls: input corruption CAUGHT; wrong loaded image CAUGHT; parameter-stripped source (tok15 run2) CAUGHT (0 returns).
+  - Old-Q calendar = EQUIVALENT mutant at this scope: go 453 instead of 452 gives identical returns and captures, because the frame is paced by the stream. Q advance1 is therefore not observable in a one-frame composition.
+  - Not simulated: the 39-station return relay, dvland_70, the other frames and regional phase. Native provider not qualified (bench-only admission flag).
+- (2) DS L0 RTL replay on tree_b178 (sub-lane): claude/tok16-dsl0-1027@009454b745 (hub; results/token_pass/tok16_dsl0_1027). L0 compile on current main 24 LOWERED / 41 PARTIAL / 0 GAP, priced span 13,450.5. The 4 frame calendars were re-extracted (dsfd_bf_front_roots.sv hash changed).
+  - gu family PASS, bit-exact: 30/30 ctl rows, 50/50 roots, 2/2 rsqrt. It passes only after the compiler constants were re-measured: HC->coef 759/757 -> 1018/1016 (+259); router->ids 68/66 -> 50/48; ids->weights 121 -> 101; cw link age 28 (was 25), set in lower_gu.py. Mutants which/late caught. L0 span effect expected 0 (consumers at 7,157/13,386), UNCHECKED, DAG not re-solved.
+  - vs family PASS on slices 0S and 5N, 0 errors, measured vs compiled window: q_rope 57/96.6, z_quant 19/79, softplus_sqrt 147/185.6, bias 25/84.6, SW_wr 196/199.9, shared SW 192/213.6. Mutants lim0/biaslate/wlate caught. swearly (40 edges early) ESCAPES, not counted.
+  - svc NOT COLLECTED: the build OOMed at 24 and 96 GB. LIVE at --mem 240 on intel1. Collect /srv/opentallas-scratch2/claude/tok16-dsl0/svc_run.log + svc/out_closing/run_*.log: base seeds 1/2 must PASS, slot/pio_early/allq_off must FAIL.
+  - No whole-L0 measured span: 41 PARTIAL. By owner: S81 slice 8+4; TOK-DS frames/GB 8; TOK-DS compiler 4+3+2+2+1+1+1; SUKV 4; svc/SO 3. The compiler's die-gap scan still reads bind9 die.v, not b178.
+- (3) HEAD rank merge SIMULATED (sub-lane, CHECKED from sim logs, single author): claude/tok16-head-1027@104f3b9818 (hub, on main 47ce1af8b; results/token_pass/head_rank_merge_1027).
+  - Real parts on the TOK-15 generated top: real mesh_ep_core (mesh0S/7S/7N), real serdes_link (KP4 + rate matcher; analog behavioural), real best64 tx, mesh64 rx and rank_merge_hsf0. Ring by loopback with the golden peer argmaxes; D = 251 (79 measured serdes + 172 channel).
+  - b_i -> final 4-rank argmax = 419 cyc on both positions; result 21946/4173a558 = golden.
+  - The model's 361 and the TOK-15 re-derived 373 are both low: ~+39/hop of mesh_ep/codec internals + 7-edge merge.
+  - Controls: diag peer silent CAUGHT; boosted east peer under the golden expectation CAUGHT; peer-wins PASS east/west at 419.
+  - HEAD per token = 162 + 8,691 + 419 + 6 + 4 = 9,282 cyc (7.735 us); window 10,357, slack 1,075. xb_ingress/MTP/out still composed; rank merge = 168 + D (if D already includes the endpoint cycles, this double counts); no die-to-die clock offset.
+- (4) HHP guard -> KV boot calendar hook: NOT started, not claimed (no KV-CORES line written).
+- NEXT: collect the svc run; GB multi-frame (the other 6 a_proj frames + return relay/dvland); re-solve the L0 DAG with the measured gu/vs constants.

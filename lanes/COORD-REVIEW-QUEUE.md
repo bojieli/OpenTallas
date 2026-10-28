@@ -2630,3 +2630,8 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
 - 2026-10-27 17:44 PDT READY claude/flow-shared-6-qc-1027@ae10ca25c6: QC warm hold one-session (af458813e2 + 56150af4bb picks) + clock check on 5_2_route + clk_geom_cover + route record to signoff. hold_p6 SIGNED TT +117.86/FF +5.22, clock diff+cover PASS, routed LEC EQ 5342/5342 (CHECKED).
 - 2026-10-27 17:44 PDT PENDING READY f9d9190f11/qk5-deadin 59dc4092b6 and claude/hold-planned-input-rb-1027@15c4459bb3: waiting on LIVE s81 + qwen_kvsys_core (+hbm/s81_head for 15c4) canaries; paths in lanes/FLOW-CLKFREEZE.md.
 - 10-27 17:44 [COORD] RULING HEAD-R22: capsules d6ad8c60f9 -> ROOT-MERGE-81. Die GRT0 PASS (CHECKED in the log). STA is blocked by 5983 clock-jog shorts to the PG grid, plus no mesh timing export. APPROVED: (a) attach routes jogs around PG (M8 at pin y); (b) plan delta moves the 2220 grid taps into M8 stripe gaps (y=1.08 mod 2.16); (c) mesh timing reuses the shared --mesh-signoff path first, no HEAD fork. HEAD-R23 (fresh) owns it, then GRT0 -> related-pair STA before 10-29 12:00.
+- 2026-10-27 17:44 PDT READY TOK-ALL-16:
+  - claude/tok16-gb-1027@8606da96fe: gb_hard_params.py + tok16 candidate manifest + GB composition PASS evidence. Tool/results only; default guard unchanged.
+  - claude/tok16-head-1027@104f3b9818: HEAD rank-merge bench + evidence, 419 cyc.
+  - claude/tok16-dsl0-1027@009454b745: lower_gu.py measured latency constants + lower_svc --die-src + gu/vs replay evidence. ASK: compiler-constant change; the S81 slice owner should confirm the gu constants.
+  - All three are hub only.
