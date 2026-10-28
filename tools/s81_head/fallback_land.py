@@ -286,7 +286,7 @@ def main(argv=None):
     c.add_argument("--out", required=True)
     c.add_argument("--observer", default="ctl")
     c.add_argument("--observer-spec", help="JSON actual {module,instance_suffix,fault_port,ready_port}; binding is checked by clock_landings, default stays OPEN")
-    c.add_argument("--monitor", default="reset", choices=["reset", "dataflow"], help="monitor network: reset-wavefront cohorts (default) or uniform dataflow (no type split)")
+    c.add_argument("--monitor", default="reset", choices=["reset", "dataflow", "region"], help="monitor network: reset-wavefront cohorts (default), uniform dataflow (no type split) or region (dataflow walk incl. same-region links; landed-mask type split)")
     v = sub.add_parser("variant")
     v.add_argument("plan")
     v.add_argument("--out", required=True)
