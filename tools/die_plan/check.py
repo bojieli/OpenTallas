@@ -558,16 +558,18 @@ def check_faces(P, R, face_pins):
                     P.type_face(pt, df), [])) for pt, df in ends):
                 R.err("faces", f"port {pid}: {len(pr['layers'])} pin layers > {B['face_pin_layers']} "
                       "(more only on a face_layers face listed by both ends)", port=pid)
-        lo, hi = sorted(pr["window_um"])
         nl = len(pr["layers"])
-        for li, ln in enumerate(pr["layers"]):
-            if ln not in P.layers:
-                continue
-            nb = len(range(li, S.port_pins_count(pr), nl))
-            tr = max(1, S.usable_tracks(P.layers[ln], ln, lo, hi))     # tracks off the PG stripes (M5-M8)
-            if nb / tr > B["pin_track_max"] + EPS:
-                R.err("faces", f"port {pid}: {nb} pins on {tr} {ln} tracks = {nb / tr:.2f} > {B['pin_track_max']}",
-                      port=pid)
+        # per window: a multi-window hop (KV-PLAN-DELTA-9 `segments`) is judged on each of its segment windows
+        for b0, b1, swin in S.port_segments(pr):
+            lo, hi = sorted(swin)
+            for li, ln in enumerate(pr["layers"]):
+                if ln not in P.layers:
+                    continue
+                nb = sum(1 for k in range(b0, b1) if k % nl == li)
+                tr = max(1, S.usable_tracks(P.layers[ln], ln, lo, hi))     # tracks off the PG stripes (M5-M8)
+                if nb / tr > B["pin_track_max"] + EPS:
+                    R.err("faces", f"port {pid}: {nb} pins on {tr} {ln} tracks = {nb / tr:.2f} > "
+                          f"{B['pin_track_max']}", port=pid)
     worst.sort(reverse=True)
     return [dict(part=p, face=f, pins_per_um=round(v, 3)) for v, p, f in worst[:10]]
 

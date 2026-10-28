@@ -639,6 +639,15 @@ SCHEMA = {
                            "layers": {"type": "array", "items": _layer, "minItems": 1, "maxItems": 3},
                            "window_um": {"type": "array", "items": _num, "minItems": 2, "maxItems": 2},
                            "order": {"enum": ["lsb_low", "lsb_high"]}, "epoch": {"type": "boolean"},
+                           # KV-PLAN-DELTA-9 (COORD 10-27 20:04 ruling (ii)): a MULTI-WINDOW hop.  One port (one
+                           # bus, one lane hop, unchanged latency) whose pins are split over several windows on the
+                           # SAME face, in pin order: segment k carries the next `pins` pin indices (bit 0 first,
+                           # epoch pin last).  window_um must then be the envelope [min lo, max hi].
+                           "segments": {"type": "array", "minItems": 2, "items": {
+                               "type": "object", "required": ["pins", "window_um"], "additionalProperties": False,
+                               "properties": {"pins": {"type": "integer", "minimum": 1},
+                                              "window_um": {"type": "array", "items": _num, "minItems": 2,
+                                                            "maxItems": 2}}}},
                            "note": {"type": "string"}}}},
         "lanes": {"type": "array", "items": {
             "type": "object", "required": ["id", "ports"], "additionalProperties": False,
@@ -1218,6 +1227,7 @@ class Plan:
         part = pr[side]["part"]
         tf, win, lays, order = self._type_geom(part, pr[side]["bus"])
         tp = dict(pr, face=tf, window_um=win, layers=lays, order=order)
+        tp.pop("segments", None)          # type-declared geometry is one window (segments are die-frame port data)
         p = self.parts[part]
         w, h = self.types[p["type"]]["outline_um"]
         o = p.get("orient", "R0")
@@ -1707,16 +1717,46 @@ def pin_positions(port, layers):
     [lo, hi] at an integer multiple of that layer's track pitch, snapped to offset + k * pitch.  Both partitions of a
     face use this same function, so their pins coincide by construction.  Raises ValueError if the window cannot hold
     the bits on whole tracks."""
-    lo, hi = sorted(port["window_um"])
-    names = port["layers"]
     w = port_pins_count(port)
+    segs = port_segments(port)
+    if len(segs) > 1:
+        # KV-PLAN-DELTA-9 multi-window hop: each segment is placed as its own window; a bit keeps its global layer
+        # (bit i -> layers[i % n]) so the layer parity of a lane is the same with or without the split
+        out = []
+        for b0, b1, win in segs:
+            out += _window_pins(port, layers, win, list(range(b0, b1)))
+        out.sort()
+        return out
+    return _window_pins(port, layers, port["window_um"], list(range(w)))
+
+
+def port_segments(port):
+    """[(first pin, end pin, window)] of a port: one entry for a plain port, one per `segments` entry otherwise
+    (pin order, bit 0 first, epoch pin last).  Raises ValueError when the segments do not cover the port's pins."""
+    w = port_pins_count(port)
+    sg = port.get("segments")
+    if not sg:
+        return [(0, w, port["window_um"])]
+    out, b = [], 0
+    for s in sg:
+        out.append((b, b + int(s["pins"]), s["window_um"]))
+        b += int(s["pins"])
+    if b != w:
+        raise ValueError(f"port {port['id']}: segments carry {b} pins, the port has {w}")
+    return out
+
+
+def _window_pins(port, layers, window, pins):
+    """pins (global pin indices) of `port` spread on `window`: per layer evenly, on whole off-PG tracks."""
+    lo, hi = sorted(window)
+    names = port["layers"]
     nl = len(names)
     rev = port.get("order", "lsb_low") == "lsb_high"
     out = []
     for li, ln in enumerate(names):
         L = layers[ln]
         p, off = L["pitch_um"], L["offset_um"]
-        bits = list(range(li, w, nl))
+        bits = [b for b in pins if b % nl == li]
         n = len(bits)
         if n == 0:
             continue
@@ -1867,6 +1907,22 @@ def validate(raw):
             want_dir = "H" if pr["face"] in "EW" else "V"
             if P.layers[ln]["dir"] != want_dir:
                 errs.append(f"port {pid}: layer {ln} is {P.layers[ln]['dir']}, a {pr['face']} face needs {want_dir}")
+    # KV-PLAN-DELTA-9 multi-window hops: segments cover the pins, sit inside the envelope window, do not overlap
+    for pr in raw["ports"]:
+        if not pr.get("segments"):
+            continue
+        try:
+            sg = port_segments(pr)
+        except ValueError as e:
+            errs.append(str(e))
+            continue
+        env = sorted(pr.get("window_um", [0, 0]))
+        ws = sorted(sorted(w) for _, _, w in sg)
+        if abs(ws[0][0] - env[0]) > 1e-6 or abs(max(w[1] for w in ws) - env[1]) > 1e-6:
+            errs.append(f"port {pr['id']}: window_um {env} is not the envelope of its segments {ws}")
+        for (a0, a1), (b0, b1) in zip(ws, ws[1:]):
+            if b0 < a1 - 1e-6:
+                errs.append(f"port {pr['id']}: segments [{a0:g},{a1:g}] and [{b0:g},{b1:g}] overlap")
     # every bus endpoint used exactly once (no open / unbound / multiply-driven bus)
     use = {}
     for pr in raw["ports"]:
