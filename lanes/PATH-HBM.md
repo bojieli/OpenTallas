@@ -1220,3 +1220,16 @@ All HBM plan/streets/locality/clock/crossing/core/native boot+token/PG aliases c
   - (8) idx history: plan b100..b103 x NW/NE = 128 hcol pieces = 1 native quarter per hub. The canonical top has 4 native quarters (256 hcols); e15f211e9b SCORER_CARDINALITY UNBOUND. SW/SE have no plan home. Rules proposed for NW/NE.
   - (9) Duty sweep: HBM deepest tap ~220 stages. BUF form ~840 ps fall-rise TT = FAIL. Inverter form TT 0.465..0.535 PASS, FF ~0.42 (outside 45-55 %) at the deepest taps. MPW PASS (~300 ps margin). Hub clock planned as an inverter tree.
 - 2026-10-28 08:50 PDT [DIE-HBM-9] PARKED: face-window/column assignment estimate (>=3 seeds); T059/T060 die re-tree bound; manifest full-RTL prefer + re-bind; first HBM clock-only GRT fall/rise readout.
+- 2026-10-28 09:29 PDT [DIE-HBM-9] RESULT plan event C21 claude/die-hbm-9-1028@ef75f31bb6 results/die_hbm_1027/hbm9/README.md (10)-(12); plan intel2:/srv/opentallas-scratch2/claude/die-hbm-9/c21 (die_plan.json + c21_side.json for non-schema data):
+  - (a) idx SW/SE homes: 66 pieces (64 hcol + 2 tails) per side in q_b010 (40, fill 0.61) + q_b001 (26, fill 0.47). 0 new types; b000/b010 faces <=0.74 (est). Lanes listed, not yet die ports.
+  - (b) VM crossing link planned: 2x4096 b stations per hub (Q1<->Q5, Lx 4). RTL port + dead-by-schedule ties owed, so no bisection relief until RTL.
+  - (c) REBAL-6 arrays + driver_rects; (d) inverter local clock form; (e) hnx_lane_x view.
+  - T059/T060 ESTIMATE: split PHY_N region W/C/E by connectivity + centre column from root (T054<-T010, T057<-T054). Die worst unshared 18.3 -> 8.9 ns, T059<->T060W tree edge 1.52 ns. Needs a 3-way PHY_N partition split (owed).
+  - Quarter cuts: face-align gives v0/v2 0.57-1.18; worst face 0.95-1.43, within SA noise. Next: a constructive hub placement.
+- 2026-10-28 09:29 PDT [DIE-HBM-9] COLLECT (jobs >30 min, started 09:04-09:09, all direct probes with memory caps, owner DIE-HBM-9; successor collects):
+  - (1) G0/G0C on C21: c21/gates_g0{,c}.{log,exit}, pids 3265578/3265579.
+  - (2) Baseline G0C with the same tools on C20j: c20j_base/gates_g0c.log, pid 3235069. Diff errors vs C21.
+  - (3) First HBM clock-only GRT, inverter tree (QC-11 patch_inv.py applied pre-READY to the private copy invroot/tools), C21 + c21_feed.json:
+    - trial1/chain.sh, status in trial1/chain.status (kit pid 3309279, then bays, overlay, docker GRT TT/FF);
+    - duty/MPW readout: trial1/duty_trial1.json.
+- 2026-10-28 09:29 PDT [DIE-HBM-9] PARKED: PHY_N W/C/E partition split + idx lane ports (next event pass); START-TREE-1 HBM start-stage homes + node-arrival proof; constructive hub placement on the face-aligned net; manifest full-RTL prefer + re-bind.
