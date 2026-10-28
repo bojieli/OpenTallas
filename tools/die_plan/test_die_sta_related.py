@@ -548,6 +548,39 @@ def test_count_align_landed_rows_lag_slot_guard_start():
     assert r["slot_read"]["fail"] >= 1 and r["fail"] >= 1 and r["verdict"] == "FAIL"
 
 
+def test_count_align_key_region_times_every_partition_of_the_region_pair_and_fails_unbound():
+    """DIE-QC-5 opt-in --count-align-key region: the bind keys crossings by REGION (bind parts[p].region; QC grp map:
+    sl_E0_hc0 sits in region sl_E0_st_a).  Default 'part' leaves the A2->B tap pairs untimed and the region bind port
+    without taps (QC K2: 631 no-taps ports, 231 untimed partition pairs); 'region' times all of them, and a landed
+    region pair no bind crossing covers fails closed."""
+    T = 833.0
+    taps = {"a0": dict(_ca_tap("A", 300.0, 280.0), cppr_node="A"), "a2": dict(_ca_tap("A2", 320.0, 290.0), cppr_node="A"),
+            "b0": _ca_tap("B", 520.0, 500.0)}
+    landed = [("a0", "b0", "A->B"), ("a2", "b0", "A2->B"), ("b0", "a0", "B->A"), ("b0", "a2", "B->A2")]
+    bind = _ca_bind(T)
+    bind["parts"] = {"A": dict(region="A"), "A2": dict(region="A"), "B": dict(region="B")}
+    old = R.count_align_landed(landed, taps, bind, T, CA_REG)
+    assert old["key"] == "part" and old["unbound"] == 0 and old["landed_tags"] == 4      # A2 pairs silently untimed
+    r = R.count_align_landed(landed, taps, bind, T, CA_REG, key="region")
+    x = {o["port"]: o for o in r["rows"]}
+    # region d A->B over a0 AND a2: [500 - 320, 520 - 280] = [180, 240] (part key: [200, 240])
+    assert r["landed_tags"] == 2 and r["unbound"] == 0 and x["x"]["L_lo_ps"] == round(T + 180, 1)
+    assert {o["port"]: o for o in old["rows"]}["x"]["L_lo_ps"] == round(T + 200, 1)
+    assert r["verdict"] == "PASS"
+    # a landed region pair without a bind crossing -> unbound, fail closed (default key never reports it)
+    taps["c0"] = _ca_tap("C", 400.0, 380.0)
+    bind["parts"]["C"] = dict(region="C")
+    r = R.count_align_landed(landed + [("c0", "b0", "C->B")], taps, bind, T, CA_REG, key="region")
+    assert r["unbound"] == 1 and r["unbound_tags"] == ["C->B"] and r["verdict"] == "FAIL"
+    # a landed partition missing from the bind map refuses
+    del bind["parts"]["C"]
+    try:
+        R.count_align_landed(landed + [("c0", "b0", "C->B")], taps, bind, T, CA_REG, key="region")
+        raise AssertionError("expected SystemExit")
+    except SystemExit as e:
+        assert "lacks a region" in str(e)
+
+
 def test_count_align_landed_ambiguous_tree_keeps_plan_window_and_no_taps_fails():
     T = 833.0
     taps = {"a0": _ca_tap("A", 300.0, 280.0), "b0": _ca_tap("B", 520.0, 500.0)}
@@ -588,3 +621,18 @@ def test_clock_cal_spice_scales_taps_and_ranges():
     assert abs(m["cppr_node_range_ps"]["h"] - 10.485) < 1e-9 and taps["a0"]["late_ps"] == 300.0
     assert R.SPICE_CLOCK_CAL == {"TT": 1.0485, "FF": 1.0552}
     assert R.scale_clock(meta, taps, 1.0) == (meta, taps)
+
+
+def test_clock_cal_spice_scales_node_arrivals_so_ocv_branch_matches_prescaled():
+    """DIE-QC-5: tree node arrivals scale with the taps, so clock_ocv_fn branches (tap - node) of an in-STA
+    --clock-cal spice run equal those of a proof scaled before export; inputs untouched."""
+    f = R.SPICE_CLOCK_CAL["FF"]
+    meta = dict(cppr_node_range_ps={"h": 2.0, "h0": 5.0}, node_late_ps={"h": 20.0, "h0": 3000.0, "m": None},
+                node_early_ps={"h": 19.0, "h0": 2950.0, "m": None})
+    taps = {"a": dict(_ca_tap("A", 3500.0, 3440.0)), "b": dict(_ca_tap("A", 3520.0, 3460.0))}
+    m, t = R.scale_clock(meta, taps, f)
+    assert abs(m["node_late_ps"]["h0"] - 3000.0 * f) < 1e-9 and abs(m["node_early_ps"]["h0"] - 2950.0 * f) < 1e-9
+    assert m["node_late_ps"]["m"] is None and meta["node_late_ps"]["h0"] == 3000.0
+    # branch below h0 scales by f (pre-scaled export), not by f plus (f - 1) x node insertion
+    br = t["a"]["late_ps"] - m["node_late_ps"]["h0"]
+    assert abs(br - (3500.0 - 3000.0) * f) < 1e-9
