@@ -112,3 +112,18 @@ def test_in_core_tap_leg_priced_in_ps():
     dn, root, st = D.dme_region_tree(site, taps, delay_rep_um=250.0, snake=True)
     a = _arrivals(dn, root, 250.0)
     assert _spread(a) <= 12.0, a
+
+
+def test_early_deeper_than_the_tree_gets_a_deeper_root():
+    """an early larger than the whole region tree: a new top node with an elongated leg to the old root, never a late tap"""
+    site, taps = _su_like()
+    t = taps[0]
+    base, br, _ = D.dme_region_tree(site, taps, delay_rep_um=250.0, snake=True)
+    e = base[br]["S"] + 80.0
+    dn, root, st = D.dme_region_tree(site, taps, delay_rep_um=250.0, early={(t[0], t[1]): e}, snake=True)
+    row = st["early_taps"][0]
+    assert abs(row["miss_ps"]) <= 5.0, row
+    a = _arrivals(dn, root, 250.0)
+    rest = [v for k, v in a.items() if k != t[1]]
+    assert abs(sum(rest) / len(rest) - a[t[1]] - e) <= 15.0
+    assert max(rest) - min(rest) <= 15.0

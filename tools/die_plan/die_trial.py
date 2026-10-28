@@ -1477,7 +1477,7 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
             i = stack.pop()
             kept.append(i)
             stack += out[i]["kids"]
-        for t in sorted(late, key=lambda t: (t[0], t[1])):
+        for t in sorted(late, key=lambda t: ((-early[(t[0], t[1])],) if snake else ()) + (t[0], t[1])):
             e = float(early[(t[0], t[1])])
             q = (t[2], t[3]) if site.legal((t[2], t[3])) else site.nearest((t[2], t[3]))
             q = round_legal(site, q)
@@ -1489,6 +1489,24 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
             def miss(j):
                 return out[j]["S"] - e - leg_ps(_man((out[j]["x"], out[j]["y"]), q), delay_rep_um) - d
             cand = [j for j in kept if out[j]["kids"]]
+            if snake and cand and max(miss(j) for j in cand) < -SNAKE_TOL_PS:
+                # DIE-QC-9: no node is deep enough for this early -> a new top node at the old root's site; the leg
+                # down to the old root is elongated (in place: a dogleg out and back on legal sites) so the new
+                # root is exactly deep enough; the early tap then hangs from it like any other
+                rq = (out[root]["x"], out[root]["y"])
+                need = e + leg_ps(_man(rq, q), delay_rep_um) + d - out[root]["S"]
+                r = snake_leg(site, rq, rq, max(need, leg_ps(0.0, delay_rep_um)), delay_rep_um)
+                if r is None:   # no elongated chain beats one plain stage (stage quantum): take the plain stage
+                    r = ([], leg_ps(0.0, delay_rep_um), 0.0)
+                if r is not None:
+                    pts, ps, sw = r
+                    out.append(dict(x=rq[0], y=rq[1], kids=[root], taps=[], S=out[root]["S"] + ps,
+                                    Smin=out[root]["Smin"] + ps, W=out[root]["W"] + sw, imb=0.0, ex=0.0,
+                                    snakes={root: [list(x) for x in pts]}, snake_um=sw,
+                                    **({"part_root": out[root]["part_root"]} if out[root].get("part_root") else {})))
+                    root = len(out) - 1
+                    kept.append(root)
+                    cand.append(root)
             if snake and any(miss(j) >= 0 for j in cand):
                 # DIE-QC-9 --region-dme-snake: hang where the tap would be early by MORE than e, then elongate the
                 # hang leg by the miss (a too-shallow node cannot be fixed by wire, so it is chosen only if nothing else)
