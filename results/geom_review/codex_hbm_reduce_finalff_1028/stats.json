@@ -1,0 +1,113 @@
+{
+ "view": "ot_hfd_coll_q2_hard_v8g__reduce@d5760c6fb862",
+ "outline_um": [
+  233.28000000000003,
+  233.27999999999997
+ ],
+ "pins": 1143,
+ "faces": {
+  "N": {
+   "pins": 5,
+   "span_um": 233.28000000000003,
+   "avg_per_um": 0.021,
+   "max_per_um_10": 0.1,
+   "max_per_track": {
+    "M5": 0.005
+   },
+   "layers": {
+    "M5": 5
+   }
+  },
+  "S": {
+   "pins": 45,
+   "span_um": 233.28000000000003,
+   "avg_per_um": 0.193,
+   "max_per_um_10": 0.4,
+   "max_per_track": {
+    "M5": 0.019
+   },
+   "layers": {
+    "M5": 45
+   }
+  },
+  "E": {
+   "pins": 547,
+   "span_um": 233.27999999999997,
+   "avg_per_um": 2.345,
+   "max_per_um_10": 2.4,
+   "max_per_track": {
+    "M4": 0.115
+   },
+   "layers": {
+    "M4": 547
+   }
+  },
+  "W": {
+   "pins": 546,
+   "span_um": 233.27999999999997,
+   "avg_per_um": 2.341,
+   "max_per_um_10": 2.4,
+   "max_per_track": {
+    "M4": 0.115
+   },
+   "layers": {
+    "M4": 546
+   }
+  }
+ },
+ "face_budget_violations": [],
+ "partition": "q_hub_nw",
+ "inst": "u_hb_coll_Q_reduce__q0",
+ "connected_buses": 5,
+ "buses": 20,
+ "connected_bits": 40,
+ "bits_facing_away": 0,
+ "bits_beyond_local_reach": 40,
+ "partner_checks": [
+  {
+   "bus": "u_reduce_load_tag",
+   "partner": "core:u_hb_coll_Q_body_core__q0",
+   "endpoints": 1,
+   "bits": 4,
+   "face": "S",
+   "cos": 0.698,
+   "dist_um": 1155.4
+  },
+  {
+   "bus": "u_reduce_pub_tag_a",
+   "partner": "core:u_hb_coll_Q_body_core__q0",
+   "endpoints": 1,
+   "bits": 4,
+   "face": "S",
+   "cos": 0.705,
+   "dist_um": 1143.5
+  },
+  {
+   "bus": "u_reduce_pub_tag_b",
+   "partner": "core:u_hb_coll_Q_body_core__q0",
+   "endpoints": 1,
+   "bits": 4,
+   "face": "S",
+   "cos": 0.713,
+   "dist_um": 1131.4
+  },
+  {
+   "bus": "u_reduce_read_tag",
+   "partner": "core:u_hb_coll_Q_body_core__q0",
+   "endpoints": 1,
+   "bits": 4,
+   "face": "S",
+   "cos": 0.72,
+   "dist_um": 1119.3
+  },
+  {
+   "bus": "u_reduce_pub_meta",
+   "partner": "core:u_hb_coll_Q_body_core__q0",
+   "endpoints": 1,
+   "bits": 24,
+   "face": "S",
+   "cos": 0.748,
+   "dist_um": 1077.2
+  }
+ ]
+}
