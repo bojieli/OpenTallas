@@ -22,10 +22,13 @@ usage:
   parent_trunk_dme.py corr PREV.json ARRIVALS_TT.txt OUT.json [opts]
   parent_trunk_dme.py tcl PLAN.json OUT.tcl          (ICG/TI/TS lists for parent_trunk_insert.tcl)
   parent_trunk_dme.py ocv PLAN.json ARRIVALS_TT.txt ARRIVALS_FF.txt [OUT.json]   (OCV-inclusive spread, measured)
+  parent_trunk_dme.py eco BUILT.json NEW.json ECO.tcl NEW_BUILT.json   (rebuild only the changed legs)
 
 OPT-IN (DIE-QC-17): `plan --topology bipart` = balanced top-down bipartition topology (several deterministic split
 variants, the one with the smallest plan-model OCV-inclusive spread wins), embedded with the same wire-length merges.
 The default `--topology greedy` is the DIE-QC-15 planner, byte-identical.
+OPT-IN (DIE-QC-18): `eco` = incremental build of a corr step: only legs whose geometry changed are rebuilt on the
+as-built db (parent_trunk_grt.tcl MODE=inc keeps every other clock route), so corr iterates on deterministic arrivals.
 
 GEOM.json: {W, H, macros: [[x0,y0,x1,y1]...], clusters: [{name, root:[x,y], ...}], kids: [{inst, module, pin:[x,y]}]}
 CLUSTER_INS.json: {cluster: {TT: {mean}, FF: {mean}}} (measured cluster-root -> register insertion)
@@ -733,6 +736,157 @@ def do_corr(a):
                        added_delay_ps=round(moved[1], 1), predicted_after=meas_before), CI, Pv["cl"])
 
 
+# ------------------------------------------------------------ opt-in incremental build (DIE-QC-18)
+def _legs(d, prefix):
+    """the plan's legs in emit order: (key, pts, repeater inst dicts, source net, kid node); kid input nets resolved.
+    Works on a fresh plan (sequential names) and on an as-built plan written by `eco` (insts kept in emit order)."""
+    it = iter(d["insts"]); legs = []; byname = {}
+
+    def take(n):
+        out = []
+        for _ in range(n):
+            x = next(it, None)
+            if x is None:
+                raise ValueError("plan insts shorter than its tree")
+            out.append(x)
+        return out
+
+    rl = d["root_leg"]; rr = take(len(rl) - 2)
+    root = dict(key="R", pts=rl, reps=rr, src=None, kid=d["tree"]); legs.append(root)
+
+    def node(nd, key):
+        if nd["kind"] != "merge":
+            return
+        m = take(1)[0]
+        if m["name"] != nd.get("inst"):
+            raise ValueError("plan insts out of emit order at %s (%s)" % (key, m["name"]))
+        byname[m["name"]] = m
+        for i, (kid, lg) in enumerate(zip(nd["kids"], nd["legs"])):
+            k = "%s.%d" % (key, i)
+            legs.append(dict(key=k, pts=lg["pts"], reps=take(len(lg["pts"]) - 2), src=m["out_net"], kid=kid))
+            node(kid, k)
+    node(d["tree"], "T")
+    if next(it, None) is not None:
+        raise ValueError("plan insts longer than its tree")
+    top = d["tree"]
+    root["src"] = rr[0]["in_net"] if rr else (byname[top["inst"]]["in_net"] if top["kind"] == "merge" else top["net"])
+    for lg in legs:
+        k = lg["kid"]
+        lg["kid_in"] = byname[k["inst"]]["in_net"] if k["kind"] == "merge" else k["net"]
+    return legs
+
+
+def _same_pts(p, q):
+    return len(p) == len(q) and all(abs(u[0] - v[0]) < 5e-4 and abs(u[1] - v[1]) < 5e-4 for u, v in zip(p, q))
+
+
+def do_eco(a):
+    """eco BUILT.json NEW.json ECO.tcl NEW_BUILT.json: ECO from the as-built trunk to a corr plan on the SAME topology.
+    Only legs whose realised geometry changed are rebuilt (their repeaters removed, new ones created, the kid input
+    re-attached); every other leg keeps its cells, names and nets, so an incremental clock GRT keeps their routes and
+    the measured arrivals of unchanged legs are reproduced (corr then converges on deterministic arrivals).
+    NEW_BUILT.json = NEW with the as-built names (the next corr/eco input)."""
+    B = json.load(open(a.a1)); N = json.load(open(a.a2)); pre = a.prefix
+    lb, ln = _legs(B, pre), _legs(N, pre)
+    if [x["key"] for x in lb] != [x["key"] for x in ln]:
+        raise ValueError("eco: topology differs (leg keys)")
+    for x, y in zip(lb, ln):
+        kx, ky = x["kid"], y["kid"]
+        if kx["kind"] != ky["kind"] or (kx["kind"] != "merge" and kx["name"] != ky["name"]) or \
+                not _same_pts([kx["p"]], [ky["p"]]):
+            raise ValueError("eco: node differs at leg %s (corr keeps merge points and sinks)" % x["key"])
+    tag = a.eco_tag or "e%d" % N["summary"].get("iteration", 0)
+    used = {i["name"] for i in B["insts"]}
+    cell = a.inv_cell
+    kill, mk, attach, dead_nets = [], [], [], []
+    kid_in = {}; n_new = 0; kept = changed = 0
+    for x, y in zip(lb, ln):
+        if _same_pts(x["pts"], y["pts"]):
+            kept += 1
+            y["as_reps"] = x["reps"]; kid_in[x["key"]] = x["kid_in"]
+            continue
+        changed += 1
+        kill.extend(r["name"] for r in x["reps"])
+        dead_nets.extend(r["out_net"] for r in x["reps"])
+        net = x["src"]; reps = []
+        for pt in y["pts"][1:-1]:
+            nm = "%s_%s_r%d" % (pre, tag, n_new); n_new += 1
+            if nm in used:
+                raise ValueError("eco: new name %s already in the built trunk (use --eco-tag)" % nm)
+            reps.append(dict(name=nm, cell=cell, p=list(pt), in_net=net, out_net=nm + "_o")); net = nm + "_o"
+        mk.extend(reps); y["as_reps"] = reps; kid_in[x["key"]] = net
+        k = x["kid"]
+        if k["kind"] == "merge":
+            attach.append(("merge", k["inst"], net))
+        else:
+            attach.append((k["kind"], k["name"], net))
+    # as-built NEW: walk NEW's tree in emit order with the kept / new names
+    bmerge = {}
+    for x in lb:
+        if x["kid"]["kind"] == "merge":
+            bmerge[x["key"]] = x["kid"]["inst"]
+    old = {i["name"]: i for i in B["insts"]}
+    insts = []; sinks = []
+    for x, y in zip(lb, ln):
+        insts.extend(y["as_reps"])
+        k = y["kid"]
+        if k["kind"] == "merge":
+            o = old[bmerge[x["key"]]]
+            k["inst"] = o["name"]
+            insts.append(dict(name=o["name"], cell=o["cell"], p=list(k["p"]), in_net=kid_in[x["key"]],
+                              out_net=o["out_net"]))
+        else:
+            k["net"] = kid_in[x["key"]]
+            sinks.append(dict(kind=k["kind"], name=k["name"], net=k["net"], p=k["p"]))
+    # insts must be in emit order: re-walk to order them (merge inst precedes its legs' repeaters)
+    order = []
+    byn = {i["name"]: i for i in insts}
+    rl = ln[0]
+    order.extend(rl["as_reps"])
+
+    def walk(nd, key):
+        if nd["kind"] != "merge":
+            return
+        order.append(byn[nd["inst"]])
+        for i in range(2):
+            k = "%s.%d" % (key, i)
+            order.extend(next(y for y in ln if y["key"] == k)["as_reps"])
+            walk(nd["kids"][i], k)
+    walk(N["tree"], "T")
+    sink_order = {s["name"]: s for s in sinks}
+    N["insts"] = order
+    N["sinks"] = [sink_order[s["name"]] for s in N["sinks"]]
+    eco = dict(built=a.a1, plan=a.a2, tag=tag, legs_kept=kept, legs_rebuilt=changed, cells_removed=len(kill),
+               cells_added=len(mk), nets_removed=len(dead_nets))
+    N["summary"]["eco"] = eco
+    json.dump(N, open(a.out, "w"), indent=0)
+    with open(a.a3, "w") as f:
+        f.write("# parent_trunk_dme.py eco %s -> %s: %d legs kept, %d rebuilt\n" % (a.a1, a.a2, kept, changed))
+        f.write("proc ptenv {k d} { if {[info exists ::env($k)] && $::env($k) ne \"\"} { return $::env($k) } ; return $d }\n"
+                "set RS [ptenv ROOT_SUFFIX _root]; set RP [ptenv ROOT_PIN A]; set CP [ptenv CHILD_PIN clk]\n"
+                "set blk [ord::get_db_block]; set db [ord::get_db]\n"
+                "proc econet {n} { set b [ord::get_db_block]; set x [$b findNet $n]; if {$x eq \"NULL\"} { set x [odb::dbNet_create $b $n]; $x setSigType CLOCK }; return $x }\n")
+        for n in kill:
+            f.write("set i [$blk findInst {%s}]; if {$i eq \"NULL\"} { error \"eco: %s not found\" }; odb::dbInst_destroy $i\n" % (n, n))
+        for r in mk:
+            f.write("set m [$db findMaster %s]; set i [odb::dbInst_create $blk $m %s]; $i setLocation %d %d; "
+                    "$i setPlacementStatus PLACED; [$i findITerm A] connect [econet %s]; [$i findITerm Y] connect [econet %s]\n"
+                    % (r["cell"], r["name"], int(r["p"][0] * 1000), int(r["p"][1] * 1000), r["in_net"], r["out_net"]))
+        for kind, name, net in attach:
+            if kind == "merge":
+                f.write("set it [[$blk findInst {%s}] findITerm A]\n" % name)
+            elif kind == "cluster":
+                f.write("set it [[$blk findInst [string cat {%s} $RS]] findITerm $RP]\n" % name)
+            else:
+                f.write("set it [[$blk findInst {%s}] findITerm $CP]\n" % name)
+            f.write("$it disconnect; $it connect [econet %s]\n" % net)
+        for n in dead_nets:
+            f.write("set x [$blk findNet %s]; if {$x ne \"NULL\"} { if {[llength [$x getITerms]]} { error \"eco: net %s still connected\" }; odb::dbNet_destroy $x }\n" % (n, n))
+        f.write("puts \"parent_trunk eco %s: %d legs kept, %d rebuilt, -%d/+%d cells\"\n" % (tag, kept, changed, len(kill), len(mk)))
+    print(json.dumps(eco))
+    return eco
+
+
 def do_tcl(plan, out):
     d = json.load(open(plan)); s = d["summary"]
     with open(out, "w") as f:
@@ -746,7 +900,7 @@ def do_tcl(plan, out):
 
 def build_parser():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("mode", choices=["plan", "corr", "tcl", "ocv"])
+    ap.add_argument("mode", choices=["plan", "corr", "tcl", "ocv", "eco"])
     ap.add_argument("a1"); ap.add_argument("a2"); ap.add_argument("a3", nargs="?"); ap.add_argument("out", nargs="?")
     ap.add_argument("--stage-table", default=str(DEFAULT_TABLE), help="measured stage delay vs segment length")
     ap.add_argument("--sp", type=float, default=110.0, help="max segment length um")
@@ -773,6 +927,7 @@ def build_parser():
                     help="bipart: merge-point pull toward the tile entry, ps/um (each value is one more variant)")
     ap.add_argument("--aocv-table", default=str(HERE / "clk_aocv_table_g021.json"),
                     help="bipart objective / ocv mode: approved clock AOCV table (12.4a b1, g 0.21 %%/mm)")
+    ap.add_argument("--eco-tag", default=None, help="eco: name tag of the new repeaters (default e<iteration>)")
     return ap
 
 
@@ -785,6 +940,11 @@ def main(argv=None):
         if a.a3 is None:
             raise SystemExit("ocv needs PLAN ARRIVALS_TT ARRIVALS_FF [OUT]")
         do_ocv(a)
+        return 0
+    if a.mode == "eco":
+        if a.a3 is None or a.out is None:
+            raise SystemExit("eco needs BUILT NEW ECO.tcl NEW_BUILT.json")
+        do_eco(a)
         return 0
     if a.mode == "plan":
         if a.entry is None or a.a3 is None:
