@@ -436,3 +436,24 @@ def test_core_clock_entry_signed_face_entry_band(tmp_path):
         MP.core_clock_entry_check(P, h, [dict(tap, signed_face_entry=nosha)], [10.0, 10.0])["issues"]
     off = MP.core_clock_entry_check(P, h, [dict(tap, xy=[400, 400], signed_face_entry=sfe)], [10.0, 10.0])
     assert "plan clock tap differs from native clock pin" in off["issues"]
+
+
+def test_pushdown_driver_rect_moves_drivers_not_pins():
+    """HBM-CORES-REBAL-5 (COORD 10-28 07:23 (1)): an island whose centre lies over a core SRAM array keeps its ft pins
+    and M9->M5 drop at the centre (no die tap moves); the driver cells go to the planned macro-channel site and the
+    detour is sized.  driver_rect=None stays byte-identical."""
+    import master_plan as M
+    rect, c = [103.68, 211.68, 112.32, 220.32], [108.0, 216.0]
+    old = M.pushdown_island(2, rect, c, "tree_leaf", 172.8, 0, pin_dx_um=1.08)
+    assert old == M.pushdown_island(2, rect, c, "tree_leaf", 172.8, 0, pin_dx_um=1.08, driver_rect=None)
+    assert "driver_rect_um" not in old
+    dr = [115.56, 211.68, 124.2, 220.32]                   # 10.8-um channel east of the SRAM column
+    new = M.pushdown_island(2, rect, c, "tree_leaf", 172.8, 0, pin_dx_um=1.08, driver_rect=dr)
+    assert new["ft_ports"] == old["ft_ports"] and new["rect_um"] == old["rect_um"]
+    assert new["centre_um"] == old["centre_um"]
+    assert new["driver_rect_um"] == dr and abs(new["driver_detour_um"] - 23.76) < 1e-9
+    assert "172.8" in old["driver"]["basis"] and "196.6" in new["driver"]["basis"]
+    assert new["driver"]["load_ff"] > old["driver"]["load_ff"]
+    import pytest
+    with pytest.raises(ValueError, match="driver_rect"):
+        M.pushdown_island(2, rect, c, "tree_leaf", 172.8, 0, driver_rect=[1, 2, 0, 3])

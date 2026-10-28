@@ -96,3 +96,83 @@ Proposal: u_lane0 at (0, H-320), u_lane1 at (0, H-640) in the W column, u_lane2 
 1037); 53-um centre channel for the parent face-select and gather glue, operand face on top. UNCHECKED against the
 legal3 SRAM placements of the hnx parents (REBAL-4): the next REBAL lane renders and checks the macro + halo clearance
 before the child kit.
+
+## (6) ds S2 tok/s for half-local VM banks (COORD 08:2x; ESTIMATE, model UNCHECKED)
+Script: `rep/vm_halflocal_cost.py` -> `rep/vm_halflocal_cost.json`. Basis: ds S2 (accepted_cost g25 rank0, 4,120 records),
+cost fn unchanged, plus a per-record crossing-read term. Each tensor has ONE owner half (the producer's); the other half
+reads it with a fixed-latency crossing read (no double writes). Far share f = 0.5 of a record's VM input bits.
+Crossing latency Lx = 4/8 cycles, link width Wx = 2048/4096 b/cycle.
+- Realistic scope (SM matvec inputs far, 1,095 records, 73 Mbit; SU reductions pay Lx once):
+  - streaming overlaps the op: **+0.36..0.72 %**;
+  - serial read: +1.85..5.0 % (Wx 4096: 1.85..2.52 %).
+- Blanket bound (every record's VM inputs half far, 3,638 records, 198 Mbit):
+  - overlapped: +1.6..3.2 %;
+  - serial: +6.6..14.6 %.
+- Verdict: <=5 % on the realistic scope, so this stays below the owner bar. Only the blanket serial bound is >5 %.
+- Condition: the crossing read must stream under the op (Wx >= 4096 b/cycle, read issued with the record), not be
+  serialised in front of it.
+
+## (7) What closes the quarter cuts v0/v2 (ESTIMATE, 3 seeds)
+- Tried: column-level bank affinity (`hub_replica_est_q.py --affine-col`, runs `qaff_*`). No effect, because every
+  vmb/vmdel bank sits in grid columns 1 and 3.
+- Tried: bank-spread (12 even-k banks moved 1 column out) + column affinity (runs `qspr_*`; repointed bits 11.8k -> 36.8k):
+  - worst face NW 1.10..1.38, NE 1.18..1.35;
+  - v0/v2 0.60..1.22;
+  - so, within seed noise: **bank affinity does not close the quarter cuts**.
+- Breakdown of v0/v2 (all 6 runs):
+  - Face-entry traffic: 4.3..13.8k bits per cut (face:SM / face:COLL / face:VM: hub-face buses that enter in one column
+    and serve a client in another).
+  - Hard cores straddling the cut line: net capacity 18.2..24.4k vs 25.9k full.
+- What closes them (arithmetic on the class breakdowns, UNCHECKED):
+  - (a) face windows over the client's column (or the client placed under its window), plus a constructive placement
+    that keeps hard cores off the v0/v2 lines;
+  - with (a): v0/v2 <= ~0.65 (worst s2 NW v0 (22.3k - 5.5k) / 25.9k);
+  - face alignment alone: 0.40..0.92;
+  - full capacity alone: 0.56..1.02.
+  - A taller hub needs about +38 % height (4320 -> ~5960 um), so it is not proposed.
+- Next estimate: a face-window/column assignment in `hub_replica_est`, >= 3 seeds.
+
+## (8) idx quarter partitions: git and plan history (CHECKED from git/plan)
+- Plan q_b100..b103 (NW and NE, 8 partitions):
+  - each holds "as-built hb_idx__s_NW (1/4 slice)": 15-17 hard pieces `r?c?_k?h?` (ot_hbm_idx_score_hcol_h0/h1, ~190k
+    cells each);
+  - origin: the HBM-P4-SPLIT twin ot_hbm_idx_score_quarter_static_h (bcc0334cd0, 837c608795), where leaf = chunk_rt_h with
+    4 key cols x 2 half-cols;
+  - 128 hcol pieces in total.
+- Canonical four-role top (bf95306929 / ce19d80797):
+  - 4 native quarters hb_idx__s_{NW,NE,SW,SE} = ot_hnx_idxn_quarter_with_keybuf;
+  - each is keybuf + scorer (_h), containing 2 tails ge[0..1], fault, 2 meta, delay glue;
+  - the hcols are hard cores.
+- e15f211e9b (results/hbm_keybuf_binding_1027/source_plan_split_contract.json) already reports this, status UNBOUND:
+  - SCORER_CARDINALITY: 4 native quarters x 64 hcols = 256 required vs 128 planned;
+  - QUERY_PROXY_KEY_PORTS: 32.
+- So: the 4 plan quarters per hub are the hcol pieces of one native quarter per hub. The SW/SE native quarters (their 128
+  hcols and 4 tails) have no plan home. This is the RTL/plan owner's cardinality question, not a bind-rule detail.
+- Per-child rules (proposal, added to slice_rules_proposal.json idx block):
+  - hb_idx__s_X.scorer.ge[e].gc[c].leaf.* -> the b10x partition that holds piece r(e)c(c);
+  - tails / fault / meta / delay -> b100 (scorer endpoint);
+  - keybuf -> hub (beside the u_mu_keybuf_* already placed);
+  - X in {SW, SE}: UNPLANNED until the cardinality is decided.
+
+## (9) Duty-cycle risk sweep for the hub clock (COORD 08:4x, from DIE-QC-11; ESTIMATE)
+- Basis: QC measured fall-rise on the forwarded clock (CHECKED there):
+  - trial8 BUF-only, <=170 stages: 3.8 ps/stage median TT, ~3.1 FF;
+  - trial9 `--clock-cell inv`: duty TT 0.473..0.524, FF 0.4375..0.512; residual <= 22 ps TT / 52 ps FF at ~170 stages.
+- HBM stage count:
+  - die feed 11 hops / 10.8 ns + region insertion 2.29 ns = ~13.1 ns;
+  - at ~17 stages/ns (QC 170 / KV 165 at ~10 ns) that is **~220 stages to the deepest tap**;
+  - hub comb in-hub depth: spine eccentricity 2.03 ns = ~35 stages.
+- BUF form: fall-rise ~840 ps TT at the deepest tap, so the low phase vanishes and MPW FAILs (same as QC trial8). The
+  in-hub spread across comb taps alone is 0..133 ps TT. **Not usable.**
+- Inverter form (`die_trial --clock-cell inv`, plan INV at each odd-parity tap, priced in DME), residual scaled linearly
+  x220/170:
+  - deepest tap TT <= 29 ps (duty 0.465..0.535) **PASS**;
+  - deepest tap FF <= 67 ps (duty ~0.42) **outside 45-55 %**;
+  - in-hub spread across comb taps: FF <= 11 ps, TT <= 5 ps.
+- MPW (lib ~42 ps), both edges, inverter form: worst phase ~350 ps FF, so PASS with ~300 ps margin.
+- Risk 1: the deepest HBM taps (T059/T060 top row, far regions) may miss 45-55 % at FF. The fix is a shorter feed (the
+  accepted comb and spine-tap feed cut the hub chain 5 -> 3 hops); re-measure with the QC fall/rise readout on the first
+  HBM clock-only GRT.
+- Risk 2: start syncs on the spine tap use the rising edge, so they are not affected. Any EDGE_FALL start edge or half-cycle
+  path must budget the fall-edge error, +-67 ps FF.
+- Plan: the hub clock is planned as an inverter tree (`--clock-cell inv`).
