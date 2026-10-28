@@ -6,6 +6,8 @@ This is a static gate; RTL elaboration, netlist LEC/face/fanout, PG and routed
 corner checks remain mandatory later stages, and are not reported as passed here.
 """
 import argparse
+import bisect
+import functools
 import json
 from pathlib import Path
 import sys
@@ -52,27 +54,43 @@ def _strip_src(text):
     return re.sub(r"\(\*.*?\*\)", " ", text, flags=re.S)
 
 
-def _guarded(text, pos):
-    """True when `pos` sits under a generate if/else/case branch (a guarded instance elaborates only when its branch
-    is live, e.g. the closed-view refusal instances; rtl_lint's hierarchy -check still covers the live ones)."""
-    def cond_before(i):
-        j = len(text[:i].rstrip())
-        if j and text[j - 1] == ')':
-            depth, k = 0, j - 1
-            while k >= 0:
-                depth += {')': 1, '(': -1}.get(text[k], 0)
-                if depth == 0:
-                    break
-                k -= 1
-            return re.search(r"\bif\s*$", text[:k]) is not None
-        return re.search(r"(\belse|:)\s*$", text[:j]) is not None and not re.search(r"\bbegin\s*:\s*$", text[:j])
-    stack = []
-    for m in _BLOCK.finditer(text, 0, pos):
+def _cond_before(text, i):
+    """True when the `begin` at i opens a generate if/else/case branch body."""
+    j = len(text[:i].rstrip())
+    if j and text[j - 1] == ')':
+        depth, k = 0, j - 1
+        while k >= 0:
+            depth += {')': 1, '(': -1}.get(text[k], 0)
+            if depth == 0:
+                break
+            k -= 1
+        return re.search(r"\bif\s*$", text[:k]) is not None
+    return re.search(r"(\belse|:)\s*$", text[:j]) is not None and not re.search(r"\bbegin\s*:\s*$", text[:j])
+
+
+@functools.lru_cache(maxsize=8)
+def _block_state(text):
+    """(end offsets of the begin/end tokens, any-guarded-branch-open after each token) for one module body, computed
+    ONCE per body (QC-A0-KITS-3 10-28: the per-instance rescan was O(body) per instance -- the 15.6 MB mapped rawleaf
+    netlist spent ~0.09 s per instance in preflight, about 1.5-2 h in total)."""
+    ends, state, stack = [], [], []
+    for m in _BLOCK.finditer(text):
         if m.group(1) == 'begin':
-            stack.append(cond_before(m.start()))
+            stack.append(_cond_before(text, m.start()))
         elif stack:
             stack.pop()
-    return any(stack)
+        ends.append(m.end())
+        state.append(any(stack))
+    return ends, state
+
+
+def _guarded(text, pos):
+    """True when `pos` sits under a generate if/else/case branch (a guarded instance elaborates only when its branch
+    is live, e.g. the closed-view refusal instances; rtl_lint's hierarchy -check still covers the live ones).
+    Same answer as replaying every begin/end token wholly before `pos` (finditer(text, 0, pos))."""
+    ends, state = _block_state(text)
+    k = bisect.bisect_right(ends, pos)
+    return state[k - 1] if k else False
 
 
 _PP = re.compile(r"`(ifdef|ifndef|elsif|else|endif|define|undef)\b[ \t]*([A-Za-z_]\w*)?")
