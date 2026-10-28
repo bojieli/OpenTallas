@@ -404,89 +404,6 @@ class SiteMap:
         return None
 
 
-def build_htree(P, taps, leaf_um=600.0, full_depth=False, regions=None):
-    """explicit H-tree: nodes {id: dict(x, y, parent, level, kids, taps)} rooted at the spine root.  Region bisection
-    along the longer axis at the region midpoint; the child node sits at the child region centre (the leg runs along
-    the split axis, so every node-to-node leg is a straight M8 (H) or M9 (V) run).  The first leg goes from the spine
-    root to the first child centre (root need not be the centre).  Regions without taps are pruned.
-    full_depth (opt-in, FALLBACK-HEAD 10-26): keep bisecting a single-tap region down to leaf_um, so every leaf sits at
-    the same depth (equal-length H-tree by construction) and the leaf->tap leg is <= ~leaf_um (default unchanged)."""
-    W, H = P.W, P.H
-    root = P.clock.get("spine", {}).get("root_um") or [W / 2, H / 2]
-    nodes = {}
-    fd_now = [full_depth]
-
-    def mk(x, y, parent, level, region):
-        i = len(nodes)
-        nodes[i] = dict(id=i, x=round(x, 3), y=round(y, 3), parent=parent, level=level, kids=[], taps=[],
-                        region=[round(v, 3) for v in region])
-        if parent is not None:
-            nodes[parent]["kids"].append(i)
-        return i
-
-    def rec(nid, region, tlist):
-        x0, y0, x1, y1 = region
-        if max(x1 - x0, y1 - y0) <= leaf_um or (len(tlist) <= 1 and not fd_now[0]):
-            nodes[nid]["taps"] = tlist
-            return
-        if x1 - x0 >= y1 - y0:
-            xm = (x0 + x1) / 2
-            halves = [((x0, y0, xm, y1), [t for t in tlist if t[2] < xm]), ((xm, y0, x1, y1), [t for t in tlist if t[2] >= xm])]
-        else:
-            ym = (y0 + y1) / 2
-            halves = [((x0, y0, x1, ym), [t for t in tlist if t[3] < ym]), ((x0, ym, x1, y1), [t for t in tlist if t[3] >= ym])]
-        for reg, tl in halves:
-            if not tl:
-                continue
-            cx, cy = (reg[0] + reg[2]) / 2, (reg[1] + reg[3]) / 2
-            px, py = nodes[nid]["x"], nodes[nid]["y"]
-            # keep legs straight: move along the split axis only (the other coordinate is shared by construction,
-            # except below the off-centre spine root, where an L-leg via a corner node is used)
-            if abs(px - cx) > 1e-6 and abs(py - cy) > 1e-6:
-                mid = mk(cx, py, nid, nodes[nid]["level"] + 1, reg)
-                nodes[mid]["corner"] = True
-                c = mk(cx, cy, mid, nodes[nid]["level"] + 1, reg)
-            else:
-                c = mk(cx, cy, nid, nodes[nid]["level"] + 1, reg)
-            rec(c, reg, tl)
-    r = mk(root[0], root[1], None, 0, (0, 0, W, H))
-    if not regions:
-        rec(r, (0.0, 0.0, W, H), list(taps))
-        return nodes
-    # FALLBACK-S81-2 10-26 (opt-in --region-trees): landed-region fallback clock.  A die reference tree (same
-    # bisection) reaches one ROOT per clock region (region bbox centre); below it an equal-depth local tree
-    # (full-depth bisection of the region bbox, leaf_um) feeds that region's partition entries.  Same-region pairs share
-    # the region root; every cross-region port is a landed crossing (|d| <= P/2 window), so the reference tree needs no
-    # balance.  No pads, trims or post-measurement values.
-    rt = defaultdict(list)
-    for t in taps:
-        rt[regions[t[0]]].append(t)
-    box = {}
-    for rn, tl in rt.items():
-        rs = [(P.parts[n]["origin_um"][0], P.parts[n]["origin_um"][1],
-               P.parts[n]["origin_um"][0] + P.types[P.parts[n]["type"]]["outline_um"][0],
-               P.parts[n]["origin_um"][1] + P.types[P.parts[n]["type"]]["outline_um"][1]) for n in {t[0] for t in tl}]
-        box[rn] = (min(a[0] for a in rs), min(a[1] for a in rs), max(a[2] for a in rs), max(a[3] for a in rs))
-    pseudo = [(rn, "__region_root__", (b[0] + b[2]) / 2, (b[1] + b[3]) / 2) for rn, b in sorted(box.items())]
-    rec(r, (0.0, 0.0, W, H), pseudo)
-    for nid in [i for i, nd in nodes.items() if nd["taps"] and nd["taps"][0][1] == "__region_root__"]:
-        ps, nodes[nid]["taps"] = nodes[nid]["taps"], []
-        for rn, _, cx, cy in ps:
-            px, py = nodes[nid]["x"], nodes[nid]["y"]
-            lv = nodes[nid]["level"] + 1
-            if abs(px - cx) > 1e-6 and abs(py - cy) > 1e-6:
-                mid = mk(cx, py, nid, lv, box[rn])
-                nodes[mid]["corner"] = True
-                c = mk(cx, cy, mid, lv, box[rn])
-            else:
-                c = mk(cx, cy, nid, lv, box[rn])
-            nodes[c]["region_root"] = rn
-            fd_now[0] = True
-            rec(c, box[rn], rt[rn])
-            fd_now[0] = full_depth
-    return nodes
-
-
 # DIE-KV-2 10-27 (slid-root leg fix): a site-slid node can end up on the far side of a hard core from its kid (the slide
 # keeps every root->node length, so it is chosen even when the kid leg then crosses the core).  On such a leg the straight
 # repeaters snap to the core edges and leave a span of the core's length (KV G2 r3715: 800 um, 764 ps slew).  A leg whose
@@ -599,6 +516,89 @@ def straight_leg_span(site, p, nd, nrep):
                                               p["y"] + (nd["y"] - p["y"]) * (j + 1) / (nrep + 1)), ax)
                                 for j in range(nrep)] + [(nd["x"], nd["y"])]
     return max(abs(b[0] - a[0]) + abs(b[1] - a[1]) for a, b in zip(pts, pts[1:]))
+
+
+def build_htree(P, taps, leaf_um=600.0, full_depth=False, regions=None):
+    """explicit H-tree: nodes {id: dict(x, y, parent, level, kids, taps)} rooted at the spine root.  Region bisection
+    along the longer axis at the region midpoint; the child node sits at the child region centre (the leg runs along
+    the split axis, so every node-to-node leg is a straight M8 (H) or M9 (V) run).  The first leg goes from the spine
+    root to the first child centre (root need not be the centre).  Regions without taps are pruned.
+    full_depth (opt-in, FALLBACK-HEAD 10-26): keep bisecting a single-tap region down to leaf_um, so every leaf sits at
+    the same depth (equal-length H-tree by construction) and the leaf->tap leg is <= ~leaf_um (default unchanged)."""
+    W, H = P.W, P.H
+    root = P.clock.get("spine", {}).get("root_um") or [W / 2, H / 2]
+    nodes = {}
+    fd_now = [full_depth]
+
+    def mk(x, y, parent, level, region):
+        i = len(nodes)
+        nodes[i] = dict(id=i, x=round(x, 3), y=round(y, 3), parent=parent, level=level, kids=[], taps=[],
+                        region=[round(v, 3) for v in region])
+        if parent is not None:
+            nodes[parent]["kids"].append(i)
+        return i
+
+    def rec(nid, region, tlist):
+        x0, y0, x1, y1 = region
+        if max(x1 - x0, y1 - y0) <= leaf_um or (len(tlist) <= 1 and not fd_now[0]):
+            nodes[nid]["taps"] = tlist
+            return
+        if x1 - x0 >= y1 - y0:
+            xm = (x0 + x1) / 2
+            halves = [((x0, y0, xm, y1), [t for t in tlist if t[2] < xm]), ((xm, y0, x1, y1), [t for t in tlist if t[2] >= xm])]
+        else:
+            ym = (y0 + y1) / 2
+            halves = [((x0, y0, x1, ym), [t for t in tlist if t[3] < ym]), ((x0, ym, x1, y1), [t for t in tlist if t[3] >= ym])]
+        for reg, tl in halves:
+            if not tl:
+                continue
+            cx, cy = (reg[0] + reg[2]) / 2, (reg[1] + reg[3]) / 2
+            px, py = nodes[nid]["x"], nodes[nid]["y"]
+            # keep legs straight: move along the split axis only (the other coordinate is shared by construction,
+            # except below the off-centre spine root, where an L-leg via a corner node is used)
+            if abs(px - cx) > 1e-6 and abs(py - cy) > 1e-6:
+                mid = mk(cx, py, nid, nodes[nid]["level"] + 1, reg)
+                nodes[mid]["corner"] = True
+                c = mk(cx, cy, mid, nodes[nid]["level"] + 1, reg)
+            else:
+                c = mk(cx, cy, nid, nodes[nid]["level"] + 1, reg)
+            rec(c, reg, tl)
+    r = mk(root[0], root[1], None, 0, (0, 0, W, H))
+    if not regions:
+        rec(r, (0.0, 0.0, W, H), list(taps))
+        return nodes
+    # FALLBACK-S81-2 10-26 (opt-in --region-trees): landed-region fallback clock.  A die reference tree (same
+    # bisection) reaches one ROOT per clock region (region bbox centre); below it an equal-depth local tree
+    # (full-depth bisection of the region bbox, leaf_um) feeds that region's partition entries.  Same-region pairs share
+    # the region root; every cross-region port is a landed crossing (|d| <= P/2 window), so the reference tree needs no
+    # balance.  No pads, trims or post-measurement values.
+    rt = defaultdict(list)
+    for t in taps:
+        rt[regions[t[0]]].append(t)
+    box = {}
+    for rn, tl in rt.items():
+        rs = [(P.parts[n]["origin_um"][0], P.parts[n]["origin_um"][1],
+               P.parts[n]["origin_um"][0] + P.types[P.parts[n]["type"]]["outline_um"][0],
+               P.parts[n]["origin_um"][1] + P.types[P.parts[n]["type"]]["outline_um"][1]) for n in {t[0] for t in tl}]
+        box[rn] = (min(a[0] for a in rs), min(a[1] for a in rs), max(a[2] for a in rs), max(a[3] for a in rs))
+    pseudo = [(rn, "__region_root__", (b[0] + b[2]) / 2, (b[1] + b[3]) / 2) for rn, b in sorted(box.items())]
+    rec(r, (0.0, 0.0, W, H), pseudo)
+    for nid in [i for i, nd in nodes.items() if nd["taps"] and nd["taps"][0][1] == "__region_root__"]:
+        ps, nodes[nid]["taps"] = nodes[nid]["taps"], []
+        for rn, _, cx, cy in ps:
+            px, py = nodes[nid]["x"], nodes[nid]["y"]
+            lv = nodes[nid]["level"] + 1
+            if abs(px - cx) > 1e-6 and abs(py - cy) > 1e-6:
+                mid = mk(cx, py, nid, lv, box[rn])
+                nodes[mid]["corner"] = True
+                c = mk(cx, cy, mid, lv, box[rn])
+            else:
+                c = mk(cx, cy, nid, lv, box[rn])
+            nodes[c]["region_root"] = rn
+            fd_now[0] = True
+            rec(c, box[rn], rt[rn])
+            fd_now[0] = full_depth
+    return nodes
 
 
 def tree_netlist(nodes, taps, rep_um=450.0, site=None, detour_span_x=2.0):
