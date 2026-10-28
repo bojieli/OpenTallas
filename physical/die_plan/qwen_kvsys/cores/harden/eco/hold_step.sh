@@ -9,11 +9,11 @@
 # FLOW-SHARED-9 2026-10-27: KIT/hold_step.json records the step (NOT_NEEDED / SKIP / PASS / FAILED + rc + first ERROR);
 # a FAILED step removes any older KIT/signoff_hold, prints HOLD_STEP FAILED and is a canary stage FAIL (never silently
 # judged as the plain route).
-# FLOW-SHARED-10 2026-10-27 (COORD 20:53 DRT-1231 ruling): OT_HOLD_FORM=pre_drt (opt-in) = the same b<MARGIN> hold
+# FLOW-SHARED-10 2026-10-27 (COORD 20:53 DRT-1231 ruling): OT_HOLD_FORM=pre_drt (DEFAULT) = the same b<MARGIN> hold
 # repair on the routed RC, applied to the kit's PRE-DRT 5_1_grt.odb (mk_eco OT_ECO_FROM=grt), then ONE detailed route
 # (no re-route of a routed DB); post_route = the old warm ECO on 5_2_route.odb.  The ECO sign-off stays the verdict.
 set -uo pipefail
-FORM=${OT_HOLD_FORM:-post_route}
+FORM=${OT_HOLD_FORM:-pre_drt}
 case $FORM in pre_drt) ECO_FROM=grt ;; post_route) ECO_FROM=route ;; *) echo "HOLD_STEP FAILED: OT_HOLD_FORM=$FORM (want pre_drt|post_route)"; exit 2 ;; esac
 K=$(cd "$1" && pwd); SO=$(cd "$2" && pwd); CPUS=${3:-8}; MEM=${4:-32}; HM=${5:-3}
 HERE=$(cd "$(dirname "$0")" && pwd)

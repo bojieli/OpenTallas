@@ -126,3 +126,12 @@ def test_mk_eco_grt_start_copies_the_pre_drt_db_and_records_it(tmp_path):
     r = subprocess.run(["bash", str(ECO / "mk_eco.sh"), str(kit), str(tmp_path / "eco_x"), "b3", str(ROOT)], text=True,
                        capture_output=True, env=dict(os.environ, OT_ECO_FROM="grt"))
     assert r.returncode == 2 and "lacks 5_1_grt.odb" in r.stdout
+
+
+def test_hold_step_default_form_is_pre_drt(tmp_path):
+    eco, kit = _stage(tmp_path, 'mkdir -p "$1/signoff"; echo "{}" > "$1/signoff/signoff.json"; exit 0\n')
+    e = {k: v for k, v in os.environ.items() if k != "OT_HOLD_FORM"}
+    r = subprocess.run(["bash", str(eco / "hold_step.sh"), str(kit), str(tmp_path)], text=True, capture_output=True, env=e)
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert (Path(str(kit) + "_holdeco") / "eco_from").read_text().strip() == "grt"
+    assert json.loads((kit / "hold_step.json").read_text())["form"] == "pre_drt"
