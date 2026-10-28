@@ -2751,3 +2751,10 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
 - 10-27 19:04 [COORD] OWNER: (1) open-tool lanes OSS-MESO-1 (mesochronous crossing generator + phase-window check) and OSS-CLKPLAN-1 (clock-first planner + minute-level predictor) START, off the release critical path, generic and tested on public designs; publishing needs an owner OK. (2) METHODOLOGY 12.12: the droop 0.665 V INFO rerun now covers every signed core <70 ps TT slack -> DROOP-RECHECK-1.
 - 2026-10-27 19:04 PDT READY (info) QC-SLICECLK-1 claude/qc-sliceclk-1027@88bc183c7c: QC per-slice clock form priced -0.65 % tok/s K=3 (CHECKED); landed plan G0/G0C 0E. Stock region-tree build FAILs structurally (1.6 ns in-slice spread on 26-mm slices).
   ASK: R35 to share the M8 clock-row reservation with a per-slice spine/mesh, so the next QC-SLICECLK builds on it. Merge only the ledger row if wanted (proposed, not adopted).
+- 10-27 19:06 [COORD] QC-SLICECLK-1 rulings:
+  - Domains accepted: 12 slices + HUB; 269 crossings / 64,367 bits. Price K=3 -0.65% CHECKED (ledger row QC.SLICECLK_LAND stays PROPOSED until the gate passes).
+  - Next = a BALANCED per-slice distribution on the shared M8 clock-row reservation (R35): an equal-length spine/fishbone or H-tree per slice, predicted analytically first. The stock --region-trees spread of 1,634 ps TT is not acceptable.
+    - If one slice (26.3 mm tall) can't hold intra-slice related pairs, split each slice vertically into 2-3 domains, priced first with the same composer. Keep the serial slice chain cost in view.
+  - Add the cell-estimate file for the 24 new cohort types (the tool artefact; the same fix serves LAND-KV).
+  - Then die GRT incl the routed clock, then die STA (main die_sta_related.py, class droop).
+  - QC-SLICECLK-2 (fresh) owns all of the above.
