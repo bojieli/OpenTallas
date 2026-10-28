@@ -215,7 +215,8 @@ def arr4(A, B, node):
     return A["late_ps"], A["early_ps"], B["late_ps"], B["early_ps"]
 
 
-def count_align_ss_info(landed, taps, bind, period, reg=None, scale=1.27, need_ps=100.0, start_wire=None, cppr_range=None):
+def count_align_ss_info(landed, taps, bind, period, reg=None, scale=1.27, need_ps=100.0, start_wire=None, cppr_range=None,
+                        key="part"):
     """MESO-RECONCILE (COORD 22:31 HEAD (3)): SS corner row of the count-aligned crossings, INFORMATION ONLY (AGENTS.md /
     METHODOLOGY 6.1: SS never gates).  No die clock proof carries SS tap arrivals, so the TT taps (and the pin-register
     clk->Q) are scaled by the SS/TT delay ratio `scale` (default 1.27 = ASAP7 logic SS/TT derate used by uarch_model;
@@ -227,7 +228,8 @@ def count_align_ss_info(landed, taps, bind, period, reg=None, scale=1.27, need_p
     rg = None if reg is None else dict(reg, clkq_max_wire_ps=float(reg["clkq_max_wire_ps"]) * scale,
                                        clkq_min_nowire_ps=float(reg["clkq_min_nowire_ps"]) * scale)
     r = count_align_landed(landed, st, bind, period, rg, need_ps, start_wire,
-                           None if cppr_range is None else {k: float(v) * scale for k, v in cppr_range.items()})
+                           None if cppr_range is None else {k: float(v) * scale for k, v in cppr_range.items()},
+                           key=key)
     r.update(info_only=True, ss_scale=scale, basis="TT taps x SS/TT scale (no SS clock proof)", gates=False)
     return r
 
@@ -239,13 +241,23 @@ SPICE_CLOCK_CAL = {"TT": 1.0485, "FF": 1.0552}
 TAP_TIME_KEYS = ("late_ps", "early_ps", "abs_late_ps", "abs_early_ps")
 
 
+NODE_TIME_KEYS = ("node_late_ps", "node_early_ps")
+
+
 def scale_clock(meta, taps, f):
-    """clock arrivals x f (tap late/early incl. mesh-absolute, and the CPPR node ranges); returns new (meta, taps)"""
+    """clock arrivals x f (tap late/early incl. mesh-absolute, the CPPR node ranges and the tree NODE arrivals);
+    returns new (meta, taps).  DIE-QC-5: node_late_ps / node_early_ps are clock-network arrivals too.  The clock OCV
+    branch is tap - node arrival (clock_ocv_fn), so scaling the taps but not the nodes put f-1 of the whole upstream
+    insertion into every branch (QC K2: FF intra OCV pessimism 77.45 vs 56.20 ps on a pre-scaled proof); a proof whose
+    arr files were scaled before export (scale_arr.py) must give the same answer as --clock-cal spice."""
     if f == 1.0:
         return meta, taps
     t = {k: dict(v, **{x: float(v[x]) * f for x in TAP_TIME_KEYS if x in v}) for k, v in taps.items()}
     m = dict(meta, cppr_node_range_ps={k: float(v) * f for k, v in (meta.get("cppr_node_range_ps") or {}).items()},
              clock_cal_factor=f)
+    for nk in NODE_TIME_KEYS:
+        if isinstance(meta.get(nk), dict):
+            m[nk] = {k: (None if v is None else float(v) * f) for k, v in meta[nk].items()}
     return m, t
 
 
@@ -256,17 +268,22 @@ def credit(rng, node, la, ea, lc, ec):
     return min(max(0.0, rng.get(c, 0.0)), max(0.0, la - ea), max(0.0, lc - ec))
 
 
-def count_align_d_intervals(landed, taps, cppr_range=None):
+def count_align_d_intervals(landed, taps, cppr_range=None, part_region=None):
     """THE count-aligned crossing phase interval (DIE-HEAD-5, COORD 00:22 follow-up: ONE interval model for planner and
     STA): {'srcpart->dstpart': (d_lo, d_hi)} over EVERY landed tap pair of the partition pair, d = capture clock - launch
     clock, d_lo = min(capture early - launch late), d_hi = max(capture late - launch early) (arr4 at the pair's last
     common node).  CPPR (12.4b, as every related-pair class): with cppr_range (meta cppr_node_range_ps) the common-path
     credit min(range at the last common node, launch late-early, capture late-early) narrows both ends; without
     --cppr-lca + tap tree_path that node is the die root 'h' (credit ~0).  count_align_landed gates on it;
-    count_align_plan --sta-proof plans on it (sta_d_intervals)."""
+    count_align_plan --sta-proof plans on it (sta_d_intervals).
+    part_region (DIE-QC-5, opt-in --count-align-key region): {partition: clock region}; the interval is then keyed
+    'srcregion->dstregion' over every landed tap pair of the REGION pair, as the bind keys its crossings when a region
+    holds several partitions (QC grp maps).  A partition missing from it raises (fail closed)."""
     dsta = {}
     for a, b, tag in landed:
         A, B = taps[a], taps[b]
+        if part_region is not None:
+            tag = f"{part_region[A['part']]}->{part_region[B['part']]}"
         node = pair_node(A, B)
         la, ea, lc, ec = arr4(A, B, node)
         cr = credit(cppr_range, node, la, ea, lc, ec) if cppr_range else 0.0
@@ -295,7 +312,8 @@ def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lc
         CPPR_LCA = old
 
 
-def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, start_wire=None, cppr_range=None):
+def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, start_wire=None, cppr_range=None,
+                       key="part"):
     """MESO-INTEG-1 / MESO-RECONCILE-1 (opt-in --count-align BIND.json, count_align_bind.py v2): the count-aligned ring
     (ot_dp_clk_landing_ca) replaces the +-T/2 placement window by a write->read lag window per crossing.  Bind L_lo/L_hi
     are the plan's TRUE derated lag bounds (wander included, no aperture); d = capture-region clock - launch-region clock.
@@ -314,12 +332,26 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
                  start_skew_limit_ps (clean: sync_dist - sync aperture, e.g. HEAD 116 / KV 79 ps; ambiguous: tree
                  crossing margin - 100).  Wire mismatch from start_wire {port: [lo, hi]} (routed die), else 0 (the
                  start pin sits at the bus point, clock_landing_plan; source 'model-coroute').  A clean edge must also
-                 keep its STA d interval (+ skew) >= the sync aperture from the sampling boundary (J chip-invariant)."""
+                 keep its STA d interval (+ skew) >= the sync aperture from the sampling boundary (J chip-invariant).
+    key (DIE-QC-5, opt-in --count-align-key): 'part' (default, unchanged) matches bind src/dst to the landed pair's
+    PARTITIONS; 'region' maps each landed partition through bind['parts'][p]['region'] first (the bind's own map), so a
+    bind whose crossings are region pairs is timed over every landed tap pair of the region pair, and every landed
+    region pair without a bind crossing is listed in 'unbound' and fails closed (a landed crossing with no count-align
+    ring is not timed by the half-period window in --count-align mode, so it must not pass silently)."""
     ap = period / 8
     sap = float(bind.get("sync_aperture_ps", 26.5))
     cq_max = float(reg["clkq_max_wire_ps"]) if reg else 0.0
     cq_min = float(reg["clkq_min_nowire_ps"]) if reg else 0.0
-    dsta = count_align_d_intervals(landed, taps, cppr_range)
+    pr = None
+    if key == "region":
+        pr = {p: v["region"] for p, v in (bind.get("parts") or {}).items() if isinstance(v, dict) and v.get("region")}
+        lost = sorted({taps[x]["part"] for a_, b_, _ in landed for x in (a_, b_)} - set(pr))
+        if lost:
+            raise SystemExit(f"--count-align-key region: bind parts lacks a region for {len(lost)} landed partitions "
+                             f"(e.g. {lost[:5]})")
+    elif key != "part":
+        raise SystemExit(f"--count-align-key: unknown key {key!r}")
+    dsta = count_align_d_intervals(landed, taps, cppr_range, part_region=pr)
     tree_reg = {r["tree_port"]: (x, r) for x, r in bind.get("regions", {}).items() if r.get("tree_port")}
     rows, miss, srows = [], [], []
     for pid, b in sorted(bind["ports"].items()):
@@ -370,8 +402,10 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
     gfail = sum(1 for r in rows if not r["guard_ok"])
     wl = min(rows, key=lambda r: r["margin_lo_ps"]) if rows else None
     wh = min(rows, key=lambda r: r["margin_hi_ps"]) if rows else None
-    ok = rows and not (nfail or sfail or rfail or gfail or miss)
-    return dict(crossings=len(rows), sta_timed=sum(r["source"] == "sta" for r in rows),
+    btags = {f"{b['src']}->{b['dst']}" for b in bind["ports"].values()}
+    unbound = sorted(t for t in dsta if t not in btags) if key == "region" else []
+    ok = rows and not (nfail or sfail or rfail or gfail or miss or unbound)
+    return dict(key=key, landed_tags=len(dsta), unbound=len(unbound), unbound_tags=unbound[:20], crossings=len(rows), sta_timed=sum(r["source"] == "sta" for r in rows),
                 tree_plan=sum(r["source"] == "plan-sync" for r in rows), no_taps=len(miss), no_taps_ports=miss[:20],
                 need_ps=need_ps, aperture_ps=round(ap, 3), fail=nfail, worst_lo=wl, worst_hi=wh,
                 slot_read=dict(fail=rfail, worst_ps=min((r["slot_read_ps"] for r in rows), default=None),
@@ -1410,20 +1444,21 @@ def main(argv=None):
         if a.count_align:
             ca = count_align_landed(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,
                                     start_wire=json.loads(Path(a.count_align_start_wire).read_text())
-                                    if a.count_align_start_wire else None, cppr_range=rng)
+                                    if a.count_align_start_wire else None, cppr_range=rng, key=a.count_align_key)
             res.setdefault("count_aligned", {})[c] = ca
             if c == "TT" and a.count_align_ss_scale > 0 and "SS" not in corners:
                 ss = count_align_ss_info(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,
                                          a.count_align_ss_scale,
                                          start_wire=json.loads(Path(a.count_align_start_wire).read_text())
-                                         if a.count_align_start_wire else None, cppr_range=rng)
+                                         if a.count_align_start_wire else None, cppr_range=rng,
+                                         key=a.count_align_key)
                 res.setdefault("count_aligned_info", {})["SS"] = ss
                 print(f"COUNT-ALIGN SS-INFO (TT x {a.count_align_ss_scale}) worst lo "
                       f"{ss['worst_lo'] and ss['worst_lo']['margin_lo_ps']} hi {ss['worst_hi'] and ss['worst_hi']['margin_hi_ps']} "
                       f"fail {ss['fail']} slot_read fail {ss['slot_read']['fail']} guard fail {ss['guard']['fail']} start-skew "
                       f"fail {ss['start_skew']['fail']}/{ss['start_skew']['tree_ports']} {ss['verdict']} (INFO, never gates)")
             print(f"COUNT-ALIGN {c} crossings {ca['crossings']} (sta {ca['sta_timed']}, tree {ca['tree_plan']}, no taps "
-                  f"{ca['no_taps']}) worst lo {ca['worst_lo'] and ca['worst_lo']['margin_lo_ps']} hi "
+                  f"{ca['no_taps']}, key {ca['key']} unbound {ca['unbound']}) worst lo {ca['worst_lo'] and ca['worst_lo']['margin_lo_ps']} hi "
                   f"{ca['worst_hi'] and ca['worst_hi']['margin_hi_ps']} fail {ca['fail']} slot_read fail {ca['slot_read']['fail']} "
                   f"guard fail {ca['guard']['fail']} start-skew fail {ca['start_skew']['fail']}/{ca['start_skew']['tree_ports']} "
                   f"{ca['verdict']}")
