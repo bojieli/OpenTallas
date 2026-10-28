@@ -829,3 +829,24 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
   - NEXT (2): C20i = C20h + the kits sub-lane apply_q2_qid_mid.py (the c20h pin file is identical to c20e's) + the hard_cores lattice fix. Then G0/G0C on epyc2/intel1, not on intel2.
   - NEXT (3): the hub W/E split re-plan event (12.13e), only if the congestion probe agrees: hub sub-region trees, HX count-aligned rings in the hub bay streets, spt feed, start-forward wire for the 4 unreached status links. Then GRT0 incl clock.
   - Not done: the latency-hiding area/flop cost (dropped per 12.15c); no type-split for K (12.15a strap).
+- 2026-10-28 01:55 PDT [DIE-HBM-5] took over from DIE-HBM-4. PROBE STATUS (COORD 01:55 ask). All 4 probes are still in the die_trial KIT stage. No GRT has started, so there are 0 iterations and no overflow numbers yet (CHECKED by ls of kit/grt + ps):
+  - c20f_probe (intel2 oth-ubuntu-3668760): PENDING. Kit 2h10 so far; abstracts done 01:00, still building. intel2 load ~97.
+  - probe_v1c5 (epyc2 oth-ubuntu-212460): PENDING. Kit grt.tcl/obs.tcl written 01:36; writing the STA parts. GRT (50 it) should start within minutes.
+  - probe_t63 (intel1 oth-ubuntu-1640891): PENDING. Kit grt files written; GRT not started.
+  - probe_c20h_tree (intel1 oth-ubuntu-1853579): PENDING. Kit started 01:31.
+  - Per COORD: the region build starts when v1c5 shows GRT overflow 0 at >=50 it. If v1c5 fails, switch to t63+split.
+  - In parallel: sub-lane C20I is building the C20i lattice (57 hard cores off the 8.64 lattice in root/q_hub_nw/q_hub_ne; hc_check reproduces the 85 C20h G0C hard_cores errors, CHECKED) + q2 qid fold on intel1.
+  - Start-forward wire re-time is running on intel1 (die-hbm-5/r5). The 4 FAILs are the regions R001 = NW_spb0/1 and R005 = NE_spb0/1. They only send, so the directed start tree never reaches them; the fix is a 1-bit SF crossing R007->R001 and R008->R005.
+- 2026-10-28 01:56 PDT [DIE-HBM-5] START-FORWARD WIRE closes the 4 status-link FAILs; no window widened (COORD cond. 2).
+  - Tool: r5_sf.py = r4_tok.py (MESO-RECONCILE-2, spice x1.0485/x1.0552) plus one 1-bit registered SF crossing into each source-only region. Each SF comes from the region that the region's widest outgoing link lands in, at the same boundary point. SF wires:
+    - R007->R001 (NW_spb0/1, for L117_1/L138_1).
+    - R008->R005 (NE_spb0/1, for L117m_1/L138m_1).
+    - R009->R003 (also source-only; it was the old tree root). That is 3 wires, 3 bits.
+  - Results, D4/D8/FAIL and worst lo/hi margin (tool runs CHECKED, ring model UNCHECKED):
+    - hub-split spt @278.6: 165/171/0, 114.2/124.9.
+    - hub-split spt @219.2: 298/38/0, 107.2/262.3.
+    - hub-split fish @278.6: 240/96/0, 110.2/119.9. The 22 earlier fish FAILs are also gone.
+    - t63 spt @278.6: 313/211/0, 104.8/105.7.
+    - t63 spt @219.2: 444/80/0, 132.0/140.4.
+  - Every crossing is >= 100 ps.
+  - Data: intel1:/srv/opentallas-scratch2/claude/die-hbm-5/r5/region3/r5/*.log
