@@ -10,3 +10,12 @@ Inputs: lanes/FALLBACK-LAND.md FALLBACK-KV + FALLBACK-PLAN-PREP-2; claude/fallba
   - => A low-insertion top CANNOT reach <= 3.4 ns on KV. Only a neighbour-forwarded form can, and its hops of ~1.4-1.7 mm carry a nominal d of ~450-550 ps, over P/2. That needs a fixed-latency (whole-cycle-padded) forwarded-hop contract: a COORD/§12 decision, not a lane change.
   - Not started a re-GEN that would be thrown away. Waiting on the ASK.
 - 2026-10-27 20:03 PDT [KV-PLAN-DELTA-8 -> LAND-KV] No KV plan event from D8 (move blocked, ASK in queue); keep hm_r26q5c39. The next delta (D9) will be one source for both forms.
+- 2026-10-27 20:24 PDT LAND-KV-2 RESULT (claude/land-kv-2-1027@759260abf0, results/land_kv_2_1027/README.md; work dir intel1:/srv/opentallas-scratch2/claude/land-kv-1027; main 9dc6da3a13 tools incl. droop; all UNCHECKED own runs). No KV-PLAN-DELTA-8 or locality.py posted, so neither is folded in.
+  (1) Rep spacing via shared die_trial --rep-um: 300 still leaves 69 nets at 333-341 ps (fan-out-2 branch legs). 250 brings 74 -> 1 net over 320 ps. The last one is 684 ps: the sys_c slid-root leg, where 800 um of repeaters stack at both ends of a hard core. That is a site-slide issue, not spacing. GRT0 incl clock TT+FF.
+  (2) R25 (128 groups, rep 250) LPO: worst TT -808.7 -> -709.2, FF -649.1 -> -543.0. TT fail<0 598 -> 558 (nominal 93 -> 92, OCV-only 505 -> 466). Root-LCA 189, all failing.
+      Main die STA with droop class: intra +441.5 TT / -170.5 FF; HB4 +311.7 / 0; landed window -555.1 / -433.9.
+  (3) Connectivity regroup (convex, 3.5 mm cap): 128 -> 51 regions, crossings 3595 -> 1901, bits 519k -> 263k, bit-mm inside 9% -> 55%. G0C PASS, 77 types.
+      Under the die tree it is WORSE: LPO TT -934.1 / FF -717.4, root-LCA 294, intra skew 548 (HB4 TT +16). Kept as a map only.
+      Best single top cut: 145 crossings at y = 11.6 mm (vs 189 at the middle).
+  (4) Link-following feed (ANALYTIC): unpadded forwarded hops fail nominal on every tree edge. Whole-cycle-padded hops still leave non-tree neighbours 3-13 tree hops apart, so 185-313 crossings are under 0 (worst -184 to -521).
+  => No tree feed reaches >=100 ps with the current ring on KV. This needs the MESO-COUNT-1 verdict. Renders viewed (clock_tree L vs G2).
