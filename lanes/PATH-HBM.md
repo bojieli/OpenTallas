@@ -1301,3 +1301,7 @@ All HBM plan/streets/locality/clock/crossing/core/native boot+token/PG aliases c
   - UNCHECKED-model: CA, 0 fail. PHY links 208.3 / 283.1 / 205.5 ps; die worst 109.6. The inverter model waits on CLK-INV-CAL-1, which is not on main.
   - Also in it: the 4 stale xq_pegress views were dropped (PENDING-VIEW).
   - Next: re-plan CA on CLK-INV-CAL-1 when it merges; trial clock GRT on C23q after trial2b.
+- DIE-HBM-10 2026-10-28 15:35 PDT: the reset contract is on main (7eee78a61e, merged in main a11c4cf8f).
+  - The hbm_ckgen_rel4 rebuild job hbm_ckgen_rel4-one1-a11c4cf8f is in the closure-loop drop dir, on branch claude/die-hbm-10-ckgen-1028@71343e565b.
+  - hbm_ckgen_cl goes next, after rel4 closes, because its kit reads the rel4 views.
+  - REBAL: rerun the side_* LEC with physical/die_plan/hbm/reset_contract.json (64 edges), as COORD ruled.
