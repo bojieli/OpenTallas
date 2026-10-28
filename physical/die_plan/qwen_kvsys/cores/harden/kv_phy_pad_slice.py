@@ -60,7 +60,7 @@ def main(kit, plan, out):
     # -> both nets inside the conservative band 1.9..2.6 mod 4.32 declared below), so every edge has a legal L.
     pos = [(gx - 1.08, gy - 2.16), (gx + 1.08, gy - 2.16), (gx + 1.08, gy + 2.16), (gx - 1.08, gy + 2.16)]
     assert n <= len(pos), n
-    nodes, par = [], "port:ck"
+    nodes, par = [], "port:ck[0]"
     for i in range(n):
         x, y = (round(v, 3) for v in pos[i])
         nodes.append(dict(name=f"mp_pad_ck_tr{i}", master="BUFx4_ASAP7_75t_R", xy_um=[x, y], island_rect_um=isl,
@@ -82,13 +82,13 @@ def main(kit, plan, out):
                      "via_stack": ["M9", "M5"], "clock_pin": {"layer": "M5", "xy_um": [cx, cy]},
                      "note": "12.8a centre entry = the q9 plan ck pin (unchanged)"}],
         "latency": {"common_clock_latency_ps": TARGET, "tol_ps": 20, "early_taps": False},
-        "core_clock_port": "ck",
+        "core_clock_port": "ck[0]",
         "pg_obstructions_um": {"M5": m5, "M4": [],
                                "note": "M5 = conservative band 1.9..2.6 mod 4.32 around the kit pdn.tcl strap pair (both nets, "
                                        "either offset origin); M4 [] as the GEOM-passed pv_pair slice"},
         "pushdown": {"islands": []},
         "core_tree": {
-            "clock_port": "ck",
+            "clock_port": "ck[0]",   # netlist BTerm = the bus bit (pv_pair s1__clk[0] form; place 4185915 stopped on OT_CORE_INFRA_CLOCK_ENTRY_PORT ck)
             "form": f"entry -> {n} x BUFx4 fixed trunk (12.8c, FIRM in the entry island) -> one CTS-open leaf",
             "trunk_layers": ["M4", "M5"],
             "nodes": nodes,

@@ -57,7 +57,7 @@
   "tol_ps": 20,
   "early_taps": false
  },
- "core_clock_port": "ck",
+ "core_clock_port": "ck[0]",
  "pg_obstructions_um": {
   "M5": [
    [
@@ -188,7 +188,7 @@
   "islands": []
  },
  "core_tree": {
-  "clock_port": "ck",
+  "clock_port": "ck[0]",
   "form": "entry -> 4 x BUFx4 fixed trunk (12.8c, FIRM in the entry island) -> one CTS-open leaf",
   "trunk_layers": [
    "M4",
@@ -208,7 +208,7 @@
      47.52,
      51.84
     ],
-    "parent": "port:ck"
+    "parent": "port:ck[0]"
    },
    {
     "name": "mp_pad_ck_tr1",
