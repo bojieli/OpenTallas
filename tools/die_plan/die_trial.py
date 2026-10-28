@@ -408,7 +408,7 @@ class SiteMap:
         return None
 
 
-def balance_legalize(nodes, site, radius_um=800.0, step=1.08, tol_um=2.0, select=None, extra_wire_w=0.1):
+def balance_legalize(nodes, site, radius_um=800.0, step=1.08, tol_um=2.0, select=None, extra_wire_w=0.1, skip_regions=None):
     """DIE-KV-3 (link_htree + --tree-site-slide/--tree-site-legal): legal sites for the region H-tree buffers that KEEP the
     tree balanced.  The feed-leg slide (sliding a branch node back along its incoming leg) lengthens one child leg and
     shortens the other when the split axis is collinear with that leg (KV sys_c: +800 um / 490 ps), so region H-tree nodes
@@ -424,6 +424,8 @@ def balance_legalize(nodes, site, radius_um=800.0, step=1.08, tol_um=2.0, select
     imbalance_um + extra_wire_w x added wire (a locus point 600 um away behind a core is not worth 20 um of imbalance)."""
     if select is None:
         H = sorted((i for i, n in nodes.items() if n.get("rib") is not None or n.get("region_root") is not None), reverse=True)
+        if skip_regions:    # DIE-QC-4 --region-dme-only: those region roots carry a DME tree instead (attach_region_dme)
+            H = [i for i in H if nodes[i].get("region_root") not in skip_regions]
     else:
         H = sorted(select, reverse=True)
     Hs = set(H)
@@ -1055,7 +1057,7 @@ def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_
     return nodes, info
 
 
-def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None, route_um=480.0):
+def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None, route_um=480.0, only=None):
     """DIE-QC-3 opt-in (--tree-form link_htree --region-dme): hang one legal-site DME tree (dme_region_tree) under every
     LEGALIZED feed-end node that carries region_root; legs that cross a core take the L corner through the channels
     (same rule as the slice-spine form).  Runs after the site pass, so nothing it places slides afterwards."""
@@ -1065,7 +1067,7 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
     st = {}
     for e in [i for i, nd in list(nodes.items()) if nd.get("region_root") is not None]:
         rn = nodes[e]["region_root"]
-        if not rt.get(rn):
+        if not rt.get(rn) or (only is not None and rn not in only):   # DIE-QC-4 --region-dme-only: listed regions only
             continue
         dn, droot, dst = dme_region_tree(site, rt[rn], rep_um=rep_um, delay_rep_um=delay_rep_um)
 
@@ -1429,7 +1431,7 @@ def path_lengths(nodes):
     return L
 
 
-def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", leaf_um=200.0, full=0.0):
+def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", leaf_um=200.0, full=0.0, dme_only=None):
     """DIE-KV-2 (opt-in --tree-form link_fishbone --region-trees MAP --feed FEED, METHODOLOGY 12.13 clock follows data):
     the die clock is fed ALONG THE REGION LINKS, not by a die-wide balanced tree.
       (1) FEED: the region feed tree of tools/die_plan/locality.py (feed 'fish': max-bit spanning tree of the region
@@ -1520,8 +1522,12 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
                     c = leg(nid, (rg[0] + rg[2]) / 2, (rg[1] + rg[3]) / 2, rg, rib=r)   # node drives 2 equal legs
                     bisect(c, rg, sub)
         for r, tl in rt.items():
+            if dme_only and r in dme_only:   # DIE-QC-4 --region-dme-only: DME region tree attached after the site pass
+                nodes[rr[r]]["region_box"] = list(box[r])
+                continue
             bisect(rr[r], box[r], tl)
         nodes[0]["link_feed"] = dict(root=root, regions=len(box), local="htree", leaf_um=leaf_um,
+                                     **({"dme_regions": sorted(dme_only)} if dme_only else {}),
                                      **({"full": True, "tapless_leaves": sum(1 for d in nodes.values() if d.get("rib") is not None
                                                                               and not d["kids"] and not d["taps"])}
                                         if full else {}),
@@ -1664,8 +1670,10 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None):
 
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
-              slice_balance=False, region_dme=False):
+              slice_balance=False, region_dme=False, region_dme_only=None):
     out = Path(out)
+    if region_dme_only and not (region_dme and tree_form == "link_htree" and site_slide and not slice_spine):
+        raise ValueError("--region-dme-only needs --region-dme with --tree-form link_htree --tree-site-slide")
     wire_r, wire_c = WIRE_RC_1X if clock_rc == "1x" else (WIRE_R, WIRE_C)
     if region_dme and not slice_spine and not (tree_form == "link_htree" and site_slide):
         raise ValueError("--region-dme needs --slice-spine or --tree-form link_htree --tree-site-slide")
@@ -1720,7 +1728,9 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
     elif tree_form in ("link_fishbone", "link_htree"):
         to = dict(tree_opts or {})
         if tree_form == "link_htree":
-            to.update(local="none" if region_dme else "htree", leaf_um=leaf_um)
+            to.update(local="none" if region_dme and not region_dme_only else "htree", leaf_um=leaf_um)
+            if region_dme_only:
+                to["dme_only"] = set(region_dme_only)
         nodes = build_link_fishbone(P, taps, regions, json.loads(Path(to.pop("feed")).read_text()), **to)
     else:
         nodes = (build_spine_fishbone(P, taps, **(tree_opts or {})) if tree_form == "spine_fishbone" else
@@ -1730,7 +1740,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         for nd in nodes.values():
             nd["req_xy"] = [nd["x"], nd["y"]]
         for nd in nodes.values():
-            if tree_form == "link_htree" and not region_dme and (nd.get("rib") is not None or nd.get("region_root") is not None):
+            if tree_form == "link_htree" and (nd.get("rib") is not None or (nd.get("region_root") is not None and (
+                    not region_dme or (region_dme_only and nd["region_root"] not in region_dme_only)))):
                 continue        # region H-tree nodes: balance_legalize below
             if nd["parent"] is None:
                 q = site.nearest((nd["x"], nd["y"]))
@@ -1749,7 +1760,13 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                     slid_fallback += 1
                     q = site.nearest(tuple(nd["req_xy"]))
             nd["x"], nd["y"] = round(q[0], 3), round(q[1], 3)
-        if tree_form == "link_htree" and region_dme:   # DIE-QC-3 opt-in: legal-site DME region trees, no re-slide
+        if tree_form == "link_htree" and region_dme_only:   # DIE-QC-4 opt-in: H-tree regions balanced, listed regions DME
+            balanced = balance_legalize(nodes, site, skip_regions=set(region_dme_only))
+            balanced["region_dme"] = attach_region_dme(nodes, site, taps, regions,
+                                                       rep_um=rep_um if region_dme == "priced" else None,
+                                                       delay_rep_um=rep_um if region_dme == "delay" else None,
+                                                       only=set(region_dme_only))
+        elif tree_form == "link_htree" and region_dme:   # DIE-QC-3 opt-in: legal-site DME region trees, no re-slide
             balanced = dict(region_dme=attach_region_dme(nodes, site, taps, regions,
                                                          rep_um=rep_um if region_dme == "priced" else None,
                                                          delay_rep_um=rep_um if region_dme == "delay" else None))
@@ -2806,7 +2823,7 @@ exit $rc
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
-              clock_rc="ndr", slice_balance=False, region_dme=False):
+              clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -2877,7 +2894,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                            json.loads(Path(regions).read_text())["part_region"] if regions else None,
                                            tree_form=tree_form, tree_opts=tree_opts, slice_spine=slice_spine,
                                            spine_top_leaf_um=spine_top_leaf_um, slice_rows=slice_rows, tap_pad=tap_pad,
-                                           clock_rc=clock_rc, slice_balance=slice_balance, region_dme=region_dme)
+                                           clock_rc=clock_rc, slice_balance=slice_balance, region_dme=region_dme,
+                                           region_dme_only=region_dme_only)
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -3472,6 +3490,9 @@ def main(argv=None):
                         "entry; every merge point is chosen legal and zero-skew, so the site pass moves nothing; '--region-dme "
                         "priced' also prices the netlist's legal detours of legs over cores (merge_point_routed); '--region-dme delay' balances "
                         "stage-priced leg delay (leg_ps: a short leg still costs a stage) instead of length")
+    k.add_argument("--region-dme-only", help="DIE-QC-4 opt-in (with --tree-form link_htree --tree-site-slide --region-dme): "
+                   "comma list of regions that get the legal-site DME tree; every other region keeps the balanced "
+                   "link_htree (balance_legalize).  Per-region fallback: DME only where the H-tree is worse")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
@@ -3548,7 +3569,8 @@ def main(argv=None):
                                  **({"feed": a.feed} if a.tree_form in ("link_fishbone", "link_htree") else {})},
                       slice_spine=a.slice_spine, spine_top_leaf_um=a.spine_top_leaf_um, slice_rows=a.slice_rows,
                       tap_pad=json.loads(Path(a.tap_pad).read_text())["pad"] if a.tap_pad else None,
-                      clock_rc=a.clock_rc, slice_balance=a.slice_balance, region_dme=a.region_dme)
+                      clock_rc=a.clock_rc, slice_balance=a.slice_balance, region_dme=a.region_dme,
+                      region_dme_only=[r for r in a.region_dme_only.split(",") if r] if a.region_dme_only else None)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":

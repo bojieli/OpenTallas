@@ -167,3 +167,28 @@ def test_attach_region_dme_hangs_legal_zero_skew_tree_under_a_link_feed_end():
     assert sorted(map(tuple, got)) == sorted(map(tuple, taps))
     assert all(site.legal((nd["x"], nd["y"])) for i, nd in nodes.items() if i)
     assert len(nodes[0]["kids"]) == 1 and nodes[nodes[0]["kids"][0]]["parent"] == 0
+
+
+def test_region_dme_only_attaches_listed_regions_only():
+    """DIE-QC-4 --region-dme-only: a feed end of an unlisted region gets nothing (it keeps its balanced H-tree)"""
+    site, taps = _c_partition()
+    site.hits = lambda q: site.why(q) == "core"
+    e = site.nearest((600.0, 1300.0))
+    nodes = {0: dict(id=0, x=e[0], y=e[1], parent=None, level=0, kids=[], taps=[], region=[0, 0, 1, 1], region_root="R")}
+    st = D.attach_region_dme(nodes, site, taps, {t[0]: "R" for t in taps}, delay_rep_um=250.0, only={"S"})
+    assert st == {} and len(nodes) == 1
+    st = D.attach_region_dme(nodes, site, taps, {t[0]: "R" for t in taps}, delay_rep_um=250.0, only={"R"})
+    assert st["R"]["merges"] == len(taps) - 1
+
+
+def test_region_dme_only_is_opt_in_and_needs_region_dme():
+    assert inspect.signature(D.clock_kit).parameters["region_dme_only"].default is None
+    assert inspect.signature(D.balance_legalize).parameters["skip_regions"].default is None
+    assert "--region-dme-only" in inspect.getsource(D.main)
+    try:
+        D.clock_kit(None, "/nonexistent_qc4", 200.0, 250.0, tree_form="link_htree", site_slide=True,
+                    region_dme_only=["R"])
+    except ValueError as ex:
+        assert "--region-dme-only" in str(ex)
+    else:
+        raise AssertionError("no ValueError")
