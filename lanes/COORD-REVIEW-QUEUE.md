@@ -2828,3 +2828,11 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   (c) reuse whatever LAND-HEAD-3 lands, if it targets forwarding.
   Details in lanes/LAND-KV.md.
 - 2026-10-27 19:35 PDT [FLOW-SHARED-8] READY ROOT-MERGE f9d9190f11 (qk5-deadin) and 15c4459bb3 (hold-planned-input-rb): canary sets 7/7 complete, every die NO-REG or identical to main 47ce (qwen_kvsys_core: same TT +12.02 / FF -1.90 ps 2 ep + same hold-ECO crash as main) (CHECKED). ASK: KV heads/pv_join (7 rows) are held by the main qwen_kvsys_core canary REGRESSION whose cause is the standard hold_step.sh ECO crashing (DRT-1231 RESETN pin access on a $_DFF_PN0_ after hold-buffer legalisation; eco_route.tcl already has OT_PAD_MASTERS for this class) -> proposed FLOW-SHARED-9: pad the async-reset DFF master in hold_step ECO (tests first), rerun kvsys_core canary on main; until then gate holds correctly. abbbffac9b canaries LIVE all 7 dies.
+2026-10-27 19:36 PDT [COORD] LAND-KV-1 rulings (304c20fb8d; tool 64415ef12e band_reserve="live" -> RM83):
+  - KV landed is the best form so far: G0C 0, die GRT0 incl clock TT+FF, intra/seam setup +437/+435, hold closed by the HB4 plan (UNCHECKED). It goes to NUMBER-CHECK.
+  - The phase failure is proven structural: ~321 ps/mm x 11x27 mm gives >=5.66 ns unshared at the root split for ANY single-source top. So (c) is rejected.
+  - (a)/(b) are crossing-design decisions. They are folded into MESO-COUNT-1, which gets KV's 3915 crossings as its second test case. (b) DEPTH6 is valid only if its latency stays cycle-fixed across the OCV spread, which MESO-COUNT-1 must prove. Decision after its verdict.
+  - LAND-KV-2 starts NOW on the parts every option needs:
+    - clock repeater spacing to meet the 320 ps slew (~300 um on routed RC; 74 nets);
+    - balance the region roots (93 nominal-skew failures at 6.08-7.08 ns);
+    - re-GEN + GRT + landed_phase_ocv + die STA with the droop derate if it is merged.
