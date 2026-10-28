@@ -3,6 +3,8 @@
 # GEOM-reviewed pass1 entry reservation (kvr2_reserve.tcl, KV-CORES-R2/R6 pass1_reserve output, carried byte-identical)
 # and the pass2 approved single-BUFx4 entry trunk (codex/pv-pass2-0830@826ff576d6 build_pv_trunk.py; census from the
 # reviewed placed netlist = same RTL/pins/io/config). usage: build_kits.sh WT PLAN OUTDIR
+# KV-KITS-7 10-28: pass2/{r0,fr180}/pv_clock_census.json sinks re-derived by pass2/census_from_synth.py from the kit's own fresh
+# synthesized netlist (QK-CORES-10 DRST0 renamed err[0] $_SDFF_PN0_ -> $_DFF_P_; carried names crashed CTS in 123ab8799e77/f4fe40e9cd9b).
 set -euo pipefail
 W=$1; PLAN=$2; O=$3; D=results/kv_kits_7_pvj_1027
 cd $W
