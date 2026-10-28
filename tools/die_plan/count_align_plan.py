@@ -181,17 +181,71 @@ def directed_tree(rows, regions):
     return best[1], best[2]
 
 
-def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edge_pad=None, start_skew=(0.0, 0.0)):
+def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edge_pad=None, start_skew=(0.0, 0.0),
+         skew_clean=False, _pad_pass=False):
     """edge_pad {tree port or child region: PAD}: per-start-tree-edge PAD overriding the default `pad` (MESO-RECONCILE-1,
     COORD 10-27).  An edge PAD p_e >= pad delays the child's origin by p_e - pad counts and HOLDS the tree crossing's RTL K
     at its default-PAD value, so that crossing's lag (and latency) grow by (p_e - pad) T; every other crossing's K is
-    re-chosen against the new origins (its latency is unchanged)."""
+    re-chosen against the new origins (its latency is unchanged).
+    skew_clean (MESO-START-2, COORD 03:0x, opt-in, needs start_skew): on the unchanged start tree, a tree edge is CLEAN
+    only if its static sync distance >= sync_ap + max|skew| (QC 26.5 + 87.5 = 114 ps: die_sta_related's clean start
+    row); every other tree edge is AMBIGUOUS: its J deviation range covers the
+    skewed sampled phase [lo - s_hi - sap, hi - s_lo + sap], its tree crossing keeps the plan sync window and needs both
+    ring margins >= 100 + max|skew| (die_sta_related ambiguous start row: margin - 100 >= |skew|).  The high side is
+    met by the DEPTH choice; the low side, where short, by PAD + 1 on that edge (OWNER 12.15b; +1 cycle on the tree
+    crossing, a parameter of the proven ot_dp_landing_origin, no new RTL form).  Default False: unchanged."""
+    smax = max(abs(float(start_skew[0])), abs(float(start_skew[1])))
+    if skew_clean and not _pad_pass:
+        if not smax:
+            raise ValueError("skew_clean needs a nonzero start_skew (--start-skew LO,HI)")
+        need = 100.0 + smax
+        args = (T, ap, wander_frac, sync_ap, pad)
+        s0, out0, regs0 = plan([dict(r) for r in rows], *args, edge_pad, start_skew, True, True)
+        byp = {o["port"]: o for o in out0}
+        ep = dict(edge_pad or {})
+        add = {}
+        for g in regs0:
+            e = g["start_from"]
+            if not e or e["sync_values"] == 1:
+                continue
+            o = byp[e["port"]]
+            if o.get("depth") and o["margin_lo_ps"] < need:
+                ep.pop(e["port"], None)
+                ep[g["region"]] = add[g["region"]] = int(e["rtl"]["PAD"]) + 1
+        summ, out, regs = plan(rows, *args, ep, start_skew, True, True)
+        sn, outn, _ = plan([dict(r) for r in rows], *args, edge_pad, start_skew)
+
+        def lat(xs):
+            return sum(o["lat_cycles"] for o in xs if o.get("lat_cycles") is not None)
+        both = {o["port"] for o in outn if o.get("lat_cycles") is not None} & \
+            {o["port"] for o in out if o.get("lat_cycles") is not None}
+        amb = [g for g in regs if g["start_from"] and g["start_from"]["sync_values"] > 1]
+        summ["start_skew_clean"] = dict(
+            need_clean_dist_ps=round(sync_ap + smax, 1), need_amb_margin_ps=round(need, 1),
+            tree_edges_amb_by_skew=sum(1 for g in amb if g["start_from"]["sync_dist_ps"] > ap),
+            tree_edges_amb_by_skew_J_free=sum(1 for g in amb if g["start_from"]["sync_dist_ps"] > ap
+                                              and g["start_from"]["J_dev"] != [0, 0]),
+            padded_edges=len(add), pad_plus1={x: add[x] for x in sorted(add)},
+            added_latency_cycles_pad=lat(out) - lat(out0),
+            added_latency_cycles_vs_noflag=lat(o for o in out if o["port"] in both)
+            - lat(o for o in outn if o["port"] in both),
+            crossings_lat_changed_vs_noflag=sum(1 for a, b in zip(outn, out) if a.get("lat_cycles") != b.get("lat_cycles")),
+            fail_noflag=sn["fail"],
+            note="added latency (12.15c cost, record only): _pad = sum lat_cycles vs the same tree at the input PAD; "
+                 "_vs_noflag = vs the plan without --start-skew-clean, over crossings that pass in both")
+        return summ, out, regs
     for r in rows:
         r["lo"], r["hi"] = r["d_ps"] - r["p_dn_ps"], r["d_ps"] + r["p_up_ps"]
         r["_nv"], r["_edge"], r["_off"], r["_dist"] = sync_choice(r, T, ap, start_skew, sync_ap)
         r["_w"] = wander_frac * max(r.get("unshared_a_ps", 0.0), r.get("unshared_b_ps", 0.0))
     regions = sorted({r["src"] for r in rows} | {r["dst"] for r in rows})
     root, par = directed_tree(rows, regions)
+    if skew_clean:
+        # the tree is the unchanged min-ambiguity tree; a CLEAN tree edge whose static sync distance misses
+        # sync aperture + max|skew| is re-read as AMBIGUOUS (window, J deviation, start row, PAD)
+        for x, v in par.items():
+            if v and v[1]["_nv"] == 1 and v[1]["_dist"] - sync_ap < smax:
+                v[1]["_nv"] = 2
     # BFS order down the tree
     kids = defaultdict(list)
     for x, v in par.items():
@@ -222,6 +276,11 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
         a0[x] = a0[p] + pe(x) + 2 + jn[x]
         # J deviation range over the derated interval +- ap (J decreases with d)
         dev[x] = (J(r["hi"] + ap, T, r["_off"]) - jn[x], J(r["lo"] - ap, T, r["_off"]) - jn[x])
+        if skew_clean:
+            # the sync samples d - skew: cover the skewed phase (+- the sync aperture) too
+            s_lo, s_hi = float(start_skew[0]), float(start_skew[1])
+            dev[x] = (min(dev[x][0], J(r["hi"] - s_lo + sync_ap, T, r["_off"]) - jn[x]),
+                      max(dev[x][1], J(r["lo"] - s_hi - sync_ap, T, r["_off"]) - jn[x]))
 
     def path_amb(u, v):
         """whole-cycle deviation range of (a_v - a_u) from nominal"""
@@ -258,7 +317,8 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
         rel_lo, rel_hi = rel_lo - w, rel_hi + w
         k_eff = math.ceil((lo_win - rel_lo) / T - 1e-12) + (pe(child) - pad if child is not None else 0)
         L_lo, L_hi = k_eff * T + rel_lo, k_eff * T + rel_hi
-        dep = 4 if L_hi <= 3.5 * T - ap + 1e-9 else (8 if L_hi <= 7.5 * T - ap + 1e-9 else None)
+        nh = max(ap, 100.0 + smax) if (skew_clean and kind == "tree_ambiguous") else ap
+        dep = 4 if L_hi <= 3.5 * T - nh + 1e-9 else (8 if L_hi <= 7.5 * T - nh + 1e-9 else None)
         old_vals = interval_boundaries(r["lo"], r["hi"], T, T / 2) + 1
         out.append(dict(port=r["port"], src=u, dst=v, kind=kind, d_ps=r["d_ps"], p_up_ps=r["p_up_ps"],
                         p_dn_ps=r["p_dn_ps"], wander_ps=round(w, 1), path_ambiguous_cycles=amb[1] - amb[0],
@@ -326,9 +386,10 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
     return summ, out, regs
 
 
-def mc_check(rows, out, regs, T=833.0, chips=2000, sync_ap=26.5, seed=1):
+def mc_check(rows, out, regs, T=833.0, chips=2000, sync_ap=26.5, seed=1, start_skew=None):
     """Monte-Carlo chips against the EMITTED RTL K / DEPTH / PAD / EDGE_FALL: returns (#chips, #violations, worst lo,
-    worst hi) with margins measured to the guard edges 0.5 T / (DEPTH - 0.5) T (no ap)."""
+    worst hi) with margins measured to the guard edges 0.5 T / (DEPTH - 0.5) T (no ap).  start_skew (lo, hi), opt-in
+    (MESO-START-2 --start-skew-clean): each tree edge's sync samples d - skew, skew uniform / an endpoint per chip."""
     rnd = random.Random(seed)
     byp = {r["port"]: r for r in rows}
     pl = {o["port"]: o for o in out if o.get("depth")}
@@ -349,6 +410,8 @@ def mc_check(rows, out, regs, T=833.0, chips=2000, sync_ap=26.5, seed=1):
                 continue
             off = 0.0 if e["edge"] == "rise" else T / 2
             x = d[e["port"]]
+            if start_skew is not None:
+                x -= rnd.uniform(*start_skew) if mode == 0 else start_skew[rnd.random() < 0.5]
             j = J(x, T, off)
             ph = (x - off) % T
             if ph < sync_ap and rnd.random() < 0.5:
@@ -452,6 +515,10 @@ def main(argv=None):
     ap.add_argument("--start-skew", type=parse_skew, default=(0.0, 0.0), metavar="LO,HI",
                     help="start skew ps at the child's first sync flop (parent origin clk->Q + start wire - fclk wire; "
                          "die_sta_related start row clkq_ps); the sample edge keeps ap from either boundary with it")
+    ap.add_argument("--start-skew-clean", action="store_true",
+                    help="MESO-START-2 (opt-in, needs --start-skew): a start edge is CLEAN only if it clears sync "
+                         "aperture + max|skew|, else AMBIGUOUS with PAD + 1 where its tree-crossing low margin < 100 + "
+                         "max|skew|; the MC samples the skewed phase")
     ap.add_argument("--sta-proof", metavar="DIR", help="DIE-HEAD-5 one interval model: die clock proof (tap_arrivals_<C>"
                     ".json) of die_sta_related; each crossing's interval becomes its hull with the STA d interval "
                     "(die_sta_related.count_align_d_intervals) on the --corner corners; needs --sta-plan")
@@ -476,8 +543,10 @@ def main(argv=None):
         if sta_info["missing"]:
             print(f"WARNING --sta-proof: {sta_info['missing']} crossings without STA tap pairs keep the OCV interval "
                   "(die_sta_related fails them closed: no taps)", file=sys.stderr)
+    if a.start_skew_clean and not any(a.start_skew):
+        ap.error("--start-skew-clean needs --start-skew LO,HI")
     summ, out, regs = plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad, parse_edge_pad(a.edge_pad),
-                           a.start_skew)
+                           a.start_skew, a.start_skew_clean)
     if any(a.start_skew):
         summ["start_skew_ps"] = list(a.start_skew)
     if sta_info:
@@ -485,7 +554,8 @@ def main(argv=None):
     summ.update(corner=a.corner, period_ps=a.period, aperture_ps=a.aperture, sync_aperture_ps=a.sync_aperture,
                 wander_frac=a.wander_frac, pad=a.pad, scale=a.scale, source=a.ocv_json)
     if a.mc_chips:
-        n, bad, wl, wh = mc_check(rows, out, regs, a.period, a.mc_chips, a.sync_aperture)
+        n, bad, wl, wh = mc_check(rows, out, regs, a.period, a.mc_chips, a.sync_aperture,
+                                  start_skew=a.start_skew if a.start_skew_clean else None)
         summ["mc"] = dict(chips=n, violations=bad, worst_lo_to_guard_ps=wl, worst_hi_to_guard_ps=wh)
     print(json.dumps({k: v for k, v in summ.items() if k != "tree_edges_ambiguous"}, indent=1))
     if a.out:
