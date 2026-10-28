@@ -1,0 +1,581 @@
+{
+ "plan": "hm_r26q5c39.json",
+ "plan_sha256": "4190246956824a7a86fd0866ad8a3bf4db983bad123f767ac6a9e0e9eccce782",
+ "files": [
+  {
+   "module": "kv3_astk",
+   "pins_file": "cores/kv3_astk_pins_r26q4.json",
+   "instances": 4,
+   "types": [
+    "kv3_hub_Eo",
+    "kv3_hub_Wo"
+   ],
+   "sha256": "eb7887be1aa8d099100ba2cfcf491cad30fb27924d46eb13822c903655ad86eb",
+   "bytes": 176181,
+   "n_pins": 1692
+  },
+  {
+   "module": "kv3_head_eighth_e0",
+   "pins_file": "cores/kv3_head_eighth_e0_pins_fMX_r25_r26q4.json",
+   "instances": 88,
+   "types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v3",
+    "kv3_hgi",
+    "kv3_hgi_v1",
+    "kv3_hgi_v2",
+    "kv3_hgi_v3",
+    "kv3_hgi_v4",
+    "kv3_hgi_v5",
+    "kv3_hgi_v6",
+    "kv3_hgi_v7",
+    "kv3_hgi_v8"
+   ],
+   "sha256": "bd911eea70cabe8bb87210529e69d2932a3b79be1caec203c29f68066eb915e2",
+   "bytes": 178964,
+   "n_pins": 1802
+  },
+  {
+   "module": "kv3_head_eighth_e0",
+   "pins_file": "cores/kv3_head_eighth_e0_pins_r25_r26q4.json",
+   "instances": 40,
+   "types": [
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6"
+   ],
+   "sha256": "9299af5ee4b66a8e158222de06353db62c4f2e180aeb47577dccf7d426bf7164",
+   "bytes": 181504,
+   "n_pins": 1802
+  },
+  {
+   "module": "kv3_head_eighth_e1",
+   "pins_file": "cores/kv3_head_eighth_e1_pins_r26q3.json",
+   "instances": 256,
+   "types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hg_v3",
+    "kv3_hgi",
+    "kv3_hgi_v1",
+    "kv3_hgi_v2",
+    "kv3_hgi_v3",
+    "kv3_hgi_v4",
+    "kv3_hgi_v5",
+    "kv3_hgi_v6",
+    "kv3_hgi_v7",
+    "kv3_hgi_v8"
+   ],
+   "sha256": "c0ed5ab3b2492a2ed3a0f2dbc34e38244880efcc3c6df411c12c4e847edd5b26",
+   "bytes": 52473,
+   "n_pins": 546
+  },
+  {
+   "module": "kv3_head_eighth_e2",
+   "pins_file": "cores/kv3_head_eighth_e2_pins_r26q4.json",
+   "instances": 128,
+   "types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hg_v3",
+    "kv3_hgi",
+    "kv3_hgi_v1",
+    "kv3_hgi_v2",
+    "kv3_hgi_v3",
+    "kv3_hgi_v4",
+    "kv3_hgi_v5",
+    "kv3_hgi_v6",
+    "kv3_hgi_v7",
+    "kv3_hgi_v8"
+   ],
+   "sha256": "022fbf6758625a78b25f73a1b272ba83da29867f3954a7c533dc2a93a60f4d52",
+   "bytes": 140585,
+   "n_pins": 1358
+  },
+  {
+   "module": "kv3_head_eighth_e5",
+   "pins_file": "cores/kv3_head_eighth_e5_pins_r26q3.json",
+   "instances": 256,
+   "types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hg_v3",
+    "kv3_hgi",
+    "kv3_hgi_v1",
+    "kv3_hgi_v2",
+    "kv3_hgi_v3",
+    "kv3_hgi_v4",
+    "kv3_hgi_v5",
+    "kv3_hgi_v6",
+    "kv3_hgi_v7",
+    "kv3_hgi_v8"
+   ],
+   "sha256": "ddf2518e759340f73757c3df2002f68c10e83770e6df94fad09d2f5b6af7dbdd",
+   "bytes": 53263,
+   "n_pins": 546
+  },
+  {
+   "module": "kv3_head_eighth_e6",
+   "pins_file": "cores/kv3_head_eighth_e6_pins_fMX_r25_r26q4.json",
+   "instances": 88,
+   "types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v3",
+    "kv3_hgi",
+    "kv3_hgi_v1",
+    "kv3_hgi_v2",
+    "kv3_hgi_v3",
+    "kv3_hgi_v4",
+    "kv3_hgi_v5",
+    "kv3_hgi_v6",
+    "kv3_hgi_v7",
+    "kv3_hgi_v8"
+   ],
+   "sha256": "1076255d66125562ee752bae381ca4626e5dc6684e6532be84874f5f3f2b8304",
+   "bytes": 141954,
+   "n_pins": 1358
+  },
+  {
+   "module": "kv3_head_eighth_e6",
+   "pins_file": "cores/kv3_head_eighth_e6_pins_r25_r26q4.json",
+   "instances": 168,
+   "types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hg_v3",
+    "kv3_hgi",
+    "kv3_hgi_v1",
+    "kv3_hgi_v2",
+    "kv3_hgi_v3",
+    "kv3_hgi_v4",
+    "kv3_hgi_v5",
+    "kv3_hgi_v6",
+    "kv3_hgi_v7",
+    "kv3_hgi_v8"
+   ],
+   "sha256": "b37b6a8bb478da2799200eab4a8189a84f6fd6f9bf624c9a2dd456e5f0a2f4de",
+   "bytes": 140217,
+   "n_pins": 1358
+  },
+  {
+   "module": "kv3_pv_pair",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "instances": 80,
+   "types": [
+    "kv3_pv",
+    "kv3_pv_v1",
+    "kv3_pv_v12",
+    "kv3_pv_v2",
+    "kv3_pv_v3",
+    "kv3_pv_v4",
+    "kv3_pv_v5",
+    "kv3_pv_v6",
+    "kv3_pv_v7",
+    "kv3_pv_v8"
+   ],
+   "sha256": "574659ac8771cfd88eab6b8376ecf684754f5cd3192f79c4e5c1b67e20dd9ea0",
+   "bytes": 140278,
+   "n_pins": 1656
+  },
+  {
+   "module": "kv3_pv_pair",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "instances": 176,
+   "types": [
+    "kv3_pv",
+    "kv3_pv_v1",
+    "kv3_pv_v12",
+    "kv3_pv_v1n",
+    "kv3_pv_v2",
+    "kv3_pv_v2n",
+    "kv3_pv_v3",
+    "kv3_pv_v3n",
+    "kv3_pv_v4",
+    "kv3_pv_v4n",
+    "kv3_pv_v5",
+    "kv3_pv_v5n",
+    "kv3_pv_v6",
+    "kv3_pv_v6n",
+    "kv3_pv_v7",
+    "kv3_pv_v8"
+   ],
+   "sha256": "9a43d4b0f9be5d3e49a7aaacbdb21cfe80e9bef011b8a440687db8f8af61bb81",
+   "bytes": 143489,
+   "n_pins": 1656
+  },
+  {
+   "module": "qkd_kvs_ctl",
+   "pins_file": "cores/kvs_ctl_pins.json",
+   "instances": 1,
+   "types": [
+    "kv3_hub_C"
+   ],
+   "sha256": "7ad3e28c28db0237fd9e26a6be9d863b5570cceec85b93a6d1cacd6b8f766397",
+   "bytes": 600687,
+   "n_pins": 6795
+  },
+  {
+   "module": "ot_qwen_tp8_pv_join_t",
+   "pins_file": "cores/pv_join_pins_fMX_r26q5c.json",
+   "instances": 20,
+   "types": [
+    "kv3_pv",
+    "kv3_pv_v1",
+    "kv3_pv_v12",
+    "kv3_pv_v2",
+    "kv3_pv_v3",
+    "kv3_pv_v4",
+    "kv3_pv_v5",
+    "kv3_pv_v6",
+    "kv3_pv_v7",
+    "kv3_pv_v8"
+   ],
+   "sha256": "9d707d92955090b7e5e53dcf2619fb93ac928bf659292a227db7ad3ef8e41fb3",
+   "bytes": 375102,
+   "n_pins": 4621
+  },
+  {
+   "module": "ot_qwen_tp8_pv_join_t",
+   "pins_file": "cores/pv_join_pins_fR180_r26q5c.json",
+   "instances": 20,
+   "types": [
+    "kv3_pv",
+    "kv3_pv_v1",
+    "kv3_pv_v12",
+    "kv3_pv_v2",
+    "kv3_pv_v3",
+    "kv3_pv_v4",
+    "kv3_pv_v5",
+    "kv3_pv_v6",
+    "kv3_pv_v7",
+    "kv3_pv_v8"
+   ],
+   "sha256": "5ebb1b850396674a30f209573071613aed5fd5083b8c65598f254f9adcc6ea7f",
+   "bytes": 374097,
+   "n_pins": 4621
+  },
+  {
+   "module": "ot_qwen_tp8_pv_join_t",
+   "pins_file": "cores/pv_join_pins_r26q5c.json",
+   "instances": 24,
+   "types": [
+    "kv3_pv_v1n",
+    "kv3_pv_v2n",
+    "kv3_pv_v3n",
+    "kv3_pv_v4n",
+    "kv3_pv_v5n",
+    "kv3_pv_v6n"
+   ],
+   "sha256": "de688492fadfa0009cd9343073749369a2ecd22f3ca8bdcdcd3ec1248f3a00fe",
+   "bytes": 374969,
+   "n_pins": 4621
+  },
+  {
+   "module": "qkd_ahub",
+   "pins_file": "cores/qkd_ahub_pins_r26q5.json",
+   "instances": 1,
+   "types": [
+    "kv3_hub_C"
+   ],
+   "sha256": "94443de5ee45ce7d371af29a269ffb2357911c4e03a7a3fbb6b15eb486710164",
+   "bytes": 52641,
+   "n_pins": 627
+  },
+  {
+   "module": "qkd_ectlk_q0",
+   "pins_file": "cores/qkd_ectlk_q0_pins_r25.json",
+   "instances": 32,
+   "types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hg_v3"
+   ],
+   "sha256": "4cc0cb61c5a91857e5cd11f3971be789e152e4117dd47c2a9ea53fbed42e93ca",
+   "bytes": 121635,
+   "n_pins": 1478
+  },
+  {
+   "module": "qkd_ectlk_q1",
+   "pins_file": "cores/qkd_ectlk_q1_pins.json",
+   "instances": 32,
+   "types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hg_v3"
+   ],
+   "sha256": "9eedfbfd538b59b8ce3588d95c5b6b164a0fdfb322e018cdb53ac4af314571e0",
+   "bytes": 161608,
+   "n_pins": 1968
+  },
+  {
+   "module": "qkd_ectlk_q2",
+   "pins_file": "cores/qkd_ectlk_q2_pins_r26q2.json",
+   "instances": 32,
+   "types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hg_v3"
+   ],
+   "sha256": "c50fef25b7d4b0e7261182fb3f4d38c2eca91c537809b9aae0b71b8376007d64",
+   "bytes": 162501,
+   "n_pins": 1957
+  },
+  {
+   "module": "qkd_ectlk_q3",
+   "pins_file": "cores/qkd_ectlk_q3_pins.json",
+   "instances": 32,
+   "types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hg_v3"
+   ],
+   "sha256": "38a73f518d6b6146d8feaf6655bf2c24488c670ddf37317fcf28fbacc731cd93",
+   "bytes": 162332,
+   "n_pins": 1990
+  },
+  {
+   "module": "qkd_hr_cdc_ch",
+   "pins_file": "cores/qkd_hr_cdc_ch_pins_r26q5.json",
+   "instances": 1,
+   "types": [
+    "kv3_hub_Wi"
+   ],
+   "sha256": "705a9485a52fa32d857fb0dc4a86fb00316cdf9676c914fda2e0e83aad529706",
+   "bytes": 107545,
+   "n_pins": 1205
+  },
+  {
+   "module": "qkd_hr_cdc_ci",
+   "pins_file": "cores/qkd_hr_cdc_ci_pins_r26q5.json",
+   "instances": 1,
+   "types": [
+    "kv3_hub_Wi"
+   ],
+   "sha256": "9b572a05fe8bebf7a7b09f974991678b2bb01bfa53e25bbb6d04d6e5385e3c16",
+   "bytes": 98024,
+   "n_pins": 1103
+  },
+  {
+   "module": "qkd_hr_cdc_hi",
+   "pins_file": "cores/qkd_hr_cdc_hi_pins_r26q5.json",
+   "instances": 1,
+   "types": [
+    "kv3_hub_Wi"
+   ],
+   "sha256": "184ea308528ba0f74c7fff6ec2e77b14849a6ce7d0dbdd3fd0a436235abe2846",
+   "bytes": 104642,
+   "n_pins": 1174
+  },
+  {
+   "module": "qkd_hr_cdc_pc",
+   "pins_file": "cores/qkd_hr_cdc_pc_pins_r26q5.json",
+   "instances": 1,
+   "types": [
+    "kv3_hub_Wi"
+   ],
+   "sha256": "e248f4f814adf579a7ccf77ff471bc4e6d9a1fb06e256bbcbb092d9e5c102cc3",
+   "bytes": 190007,
+   "n_pins": 2166
+  },
+  {
+   "module": "qkd_hr_core_guard",
+   "pins_file": "cores/qkd_hr_core_guard_pins_r26q5.json",
+   "instances": 1,
+   "types": [
+    "kv3_hub_Wi"
+   ],
+   "sha256": "981577ba98eed8b7740570aaef1fa0cbec1f5c3fc1f27f8bf038ac987ef32985",
+   "bytes": 115732,
+   "n_pins": 1175
+  },
+  {
+   "module": "qkd_hr_core_order",
+   "pins_file": "cores/qkd_hr_core_order_pins_r26q5.json",
+   "instances": 1,
+   "types": [
+    "kv3_hub_Wi"
+   ],
+   "sha256": "c20c2d34af6130d0356d9792f4a54cabdf1e5db7e8cb7dff379f54ff74086932",
+   "bytes": 216163,
+   "n_pins": 2282
+  },
+  {
+   "module": "qkd_hr_core_peer",
+   "pins_file": "cores/qkd_hr_core_peer_pins_r26q5.json",
+   "instances": 1,
+   "types": [
+    "kv3_hub_Wi"
+   ],
+   "sha256": "5eee9add2f9c55f0861316b772eaccd4c698a6e2fe9a2ab708c52d21beef00f1",
+   "bytes": 382871,
+   "n_pins": 3844
+  },
+  {
+   "module": "qkd_hr_core_prompt",
+   "pins_file": "cores/qkd_hr_core_prompt_pins_r26q5.json",
+   "instances": 1,
+   "types": [
+    "kv3_hub_Wi"
+   ],
+   "sha256": "917c9f203548de6dea74f757d65ca35496caf5e139df60533f50524e6ee88c05",
+   "bytes": 501252,
+   "n_pins": 5124
+  },
+  {
+   "module": "qkd_hr_core_queue",
+   "pins_file": "cores/qkd_hr_core_queue_pins_r26q5.json",
+   "instances": 1,
+   "types": [
+    "kv3_hub_Wi"
+   ],
+   "sha256": "00c494b257a0f225f4fb25caea79850fac9c3f5f1f19a75bc427248b737620bd",
+   "bytes": 140049,
+   "n_pins": 1470
+  },
+  {
+   "module": "qkd_hr_core_rx",
+   "pins_file": "cores/qkd_hr_core_rx_pins_r26q5.json",
+   "instances": 1,
+   "types": [
+    "kv3_hub_Wi"
+   ],
+   "sha256": "b3c83a23fcbe7749c1589bce4fbe14d59a2a316da525cc41bbcedc3c54f7b9ef",
+   "bytes": 179746,
+   "n_pins": 2137
+  },
+  {
+   "module": "qkd_hr_core_tx",
+   "pins_file": "cores/qkd_hr_core_tx_pins_r26q5.json",
+   "instances": 1,
+   "types": [
+    "kv3_hub_Wi"
+   ],
+   "sha256": "01d282afee152abb2fe8070ad3ff34f7a199c24cc6a0a28131f1014b4a0ca3ec",
+   "bytes": 341350,
+   "n_pins": 3770
+  },
+  {
+   "module": "qkd_hr_host_qm",
+   "pins_file": "cores/qkd_hr_host_qm_pins_r26q5.json",
+   "instances": 1,
+   "types": [
+    "kv3_hub_Wi"
+   ],
+   "sha256": "944523a38f4b60284b3113959bfba7288ba0f87800d6e92e1a07333ef67c306c",
+   "bytes": 1941,
+   "n_pins": 10
+  },
+  {
+   "module": "qkd_hr_ingest_eng",
+   "pins_file": "cores/qkd_hr_ingest_eng_pins_r26q5.json",
+   "instances": 1,
+   "types": [
+    "kv3_hub_Wi"
+   ],
+   "sha256": "ab30544e8f2d293bd9d0dda620048bebaccee94e87708d1be1ca002b48a31fdb",
+   "bytes": 118462,
+   "n_pins": 1396
+  },
+  {
+   "module": "qkd_hr_phy_adp",
+   "pins_file": "cores/qkd_hr_phy_adp_pins_r26q5.json",
+   "instances": 8,
+   "types": [
+    "kv3_hub_Wi"
+   ],
+   "sha256": "158b0ae269960130bdb32c2c76be40a51ba49bd6f4ab20d06b1adeaeb828183d",
+   "bytes": 46752,
+   "n_pins": 560
+  },
+  {
+   "module": "qkd_hr_phy_pad",
+   "pins_file": "cores/qkd_hr_phy_pad_pins_r26q5.json",
+   "instances": 1,
+   "types": [
+    "kv3_hub_Wi"
+   ],
+   "sha256": "a81ffbfd54f0d310667321c62af6bc0873ce443196d1102979b73e2d24dcb2ad",
+   "bytes": 130471,
+   "n_pins": 1577
+  },
+  {
+   "module": "qkd_kvs_pc_h_head_p",
+   "pins_file": "cores/qkd_kvs_pc_h_head_p_pins_fMY_r25.json",
+   "instances": 4,
+   "types": [
+    "kv3_pc"
+   ],
+   "sha256": "38858e504f6955b58de1fa399a311a3cec3b018295dbf247a6cedc5ddb1aaec4",
+   "bytes": 254520,
+   "n_pins": 2991
+  },
+  {
+   "module": "qkd_kvs_pc",
+   "pins_file": "cores/qkd_kvs_pc_pins_fMX_r25.json",
+   "instances": 24,
+   "types": [
+    "kv3_pc_v1"
+   ],
+   "sha256": "cdf1581876e9c743ac5e6a2b61d10cddd5ce9b3498e7c19ba4889ae20b0f9ceb",
+   "bytes": 350761,
+   "n_pins": 4133
+  },
+  {
+   "module": "qkd_kvs_pc",
+   "pins_file": "cores/qkd_kvs_pc_pins_r25.json",
+   "instances": 100,
+   "types": [
+    "kv3_pc",
+    "kv3_pc_v1",
+    "kv3_pc_v3"
+   ],
+   "sha256": "1331ffaa781f9bcac57cf8f5a329816c026bc19bcf15dbc3334e5499c9eda4cc",
+   "bytes": 349607,
+   "n_pins": 4133
+  }
+ ]
+}
