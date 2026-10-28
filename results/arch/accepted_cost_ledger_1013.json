@@ -3758,6 +3758,44 @@
    "date": "2026-10-13",
    "status": "proposed",
    "note": "structural design first (next fetch overlapped under the drain: period 1.0143x <= 1.10; dispatch two edges after the final release on the measured write-before-read lead 6-9 edges); what remains is +29/30 edges start-to-dispatch a record (worst record 169 / 139 = 1.2158x), of which 16 = the closed root composition's measured accept -> release latency (results/rtl/vm8_service_root_1013/root_latency_closed_1013.json: WR +4 / RD +12, hash MATCH) and 13/14 the tracker tail; charged as 30 fixed cycles on every SM.MATVEC record of the S2 schedule (DS 1,095 records, Qwen 5); without the root 0.87 % / 0.16 %, a full 27-edge drain would be 3.79 %"
+  },
+  {
+   "design": "s81",
+   "unit": "S81.LANDED_REGIONS_G2 (METHODOLOGY 12.11 landed/partitioned clock = main path: 179 class G=2 regions on the current S81 plan + gunit re-layout 117e37566c; 1,173 landed ports / 568,498 bits on 587 lanes, ot_dp_clk_landing +3 cycles per landed face, face FT reading, +3,519 summed lane cycles)",
+   "group": "S81.LANDED_REGIONS_G2",
+   "measured": 34152.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 2.185,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "compose_tok_ds + dv_mu_calendar_phys REL241 single user on the 241-stage map; lat_face.json (fallback_regions --block 2 --mode class --core tap) vs physical/die_plan/s81/lat/s81_latency.json",
+     "base_cycles": 1528917.6,
+     "cycles": 1563069.6,
+     "added_cycles": 34152.0,
+     "tok_s_before": 784.9,
+     "tok_s_after": 767.7,
+     "e2e_loss_pct": 2.185
+    },
+    "mtp": {
+     "model": "same, MTP causal six-position pipeline law of record (owner decision 15)",
+     "base_cycles": 1815279.6,
+     "cycles": 1852716.6,
+     "added_cycles": 37437.0,
+     "tok_s_before": 2749.3,
+     "tok_s_after": 2693.8,
+     "e2e_loss_pct": 2.021
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/land_s81_1027/price/{base,face,fwd}/compose_1u.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-27",
+   "status": "proposed",
+   "note": "LAND-S81-1 (claude/land-s81-1027). Plan-level lane latency cost, analytic composition (MODEL), not a die run; UNCHECKED until NUMBER-CHECK. Lower bound: measured field records keep their embedded wires. The fwd FT reading (ft stations on the lane's forwarded clock, needs ft-slot tooling) prices AR 773.9 / MTP 2,714.1. Lat table excludes the gunit event stations (xtier_o0 +1, unit_i0 +1; TOK-16). Owner 12.11c: cost goes in the ledger, 5 %/15 % targets are guidance.",
+   "share_basis": "modelled"
   }
  ],
  "totals": {
