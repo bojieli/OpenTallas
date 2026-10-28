@@ -42,3 +42,13 @@ def test_landing_placement_avoid_is_opt_in():
     from pathlib import Path
     t = Path(GP.__file__).with_name("landing_placement.tcl").read_text()
     assert "if {[info exists ::cland_avoid_rects]}" in t
+
+
+def test_bank_release_finds_blockages_in_the_odb_not_a_tcl_variable():
+    # DIE-HEAD-14: GPL (3_3) and DPL (3_5) are separate OpenROAD processes; ::rs_bank does not survive between them
+    _, _, rel = GP.reserved_sites_tcl(plan([dict(rect_um=[10, 20, 30, 25], kind="landing_ring_bank"),
+                                           dict(rect_um=[40, 20, 60, 25.5], kind="landing_ring_bank")]), "T")
+    assert "::rs_bank" not in rel and "getBlockages" in rel
+    assert "[list [expr {round(10*$rs_u)}] [expr {round(20*$rs_u)}] [expr {round(30*$rs_u)}] [expr {round(25*$rs_u)}]]" in rel
+    assert "[expr {round(25.5*$rs_u)}]]" in rel
+    assert "if {$rs_n != 2}" in rel and "of 2 ring-bank blockages" in rel
