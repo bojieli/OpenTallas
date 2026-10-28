@@ -124,6 +124,20 @@ def rename(text, mod, new):
     return text.replace(f"endmodule : {mod}", f"endmodule : {new}")
 
 
+def root_keypoint(ref, info, vals):
+    """DIE-HEAD-11 (hd_spn v0 UNDECIDED): in a root+child strap type the master keeps the root counter as u_cland_root
+    (strap_ca_root selects it), while the parameter reference of a ROOT copy names the same ot_dp_landing_root
+    u_cland_origin.  equiv_make pairs registers by name, so the SETTLE counter had no key point and equiv_induct had to
+    prove the unmatched counter state by induction (hd_spn v0 > 6000 s).  Name the reference's root counter u_cland_root
+    for those variants: a key-point (register correspondence) mapping, the logic is unchanged."""
+    if not (info.get("origin", {}).get("root") and int(vals.get("strap_ca_root", 0)) == 1):
+        return ref
+    out, n = re.subn(r"(\bot_dp_landing_root\b(?:\s*#\([^;]*?\))?\s+)u_cland_origin\b", r"\1u_cland_root", ref)
+    if n != 1:
+        raise SystemExit(f"strap_lec: root variant reference has {n} ot_dp_landing_root u_cland_origin (expected 1)")
+    return out
+
+
 def variants(st, tn):
     """[(values, [instances])] per distinct tie-value set of type tn (count_align_bind.strap_ties instances)"""
     g = {}
@@ -190,11 +204,16 @@ def lec_type(Ls, Lp, tn, mod, base, libs, common, out, seq=1, image="openroad/or
         vs = vs[:max_variants]
     jobs_in = []
     for i, (vals, qs) in enumerate(vs):
-        ref = rename(ref_timeout(Lp.type_rtl(tn, base, inst=qs[0], depth=depth)), mod, f"{mod}__ref")
+        ref = root_keypoint(rename(ref_timeout(Lp.type_rtl(tn, base, inst=qs[0], depth=depth)), mod, f"{mod}__ref"),
+                            info, vals)
         cases = [("eq", vals)]
         if mutant and i == 0:
             # one flipped tie bit (lowest bit of the first strap) on the first variant: must NOT be equivalent
             k0 = sorted(vals)[0]
+            if int(vals.get("strap_ca_root", 0)) == 1:
+                # a ROOT copy never reads the child-origin straps (pad / efall / tsel): flip a live K bit instead,
+                # else the mutant is equivalent by design and decides nothing (hd_spn v0 flipped efall)
+                k0 = next((k for k in sorted(vals) if k.startswith("strap_ca_k_")), k0)
             cases.append(("mutant", dict(vals, **{k0: int(vals[k0]) ^ 1})))
         for kind, vv in cases:
             w = Path(out) / f"{tn}__v{i}_{kind}"
