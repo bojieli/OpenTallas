@@ -2847,6 +2847,16 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   (a) ACCEPT unsplit slices + the shared sl-band spine + spine-column slice trees. The rule is a derated margin ≥100 ps; 3.4 ns is only the guidance derived from it. The predicted margin is +102 TT / +142 FF (UNCHECKED), so adoption needs MEASURED landed_phase_ocv ≥100 ps after GRT. The vertical split is not adopted. HB4 hold buffers are OK.
   (b) INFRA-FIRST-QC-R35 reserves M8 rows for the sl-band spine + per-slice spine column, in the same reservation shared by both QC forms.
   QC-SLICECLK-3 starts now on the die_trial opt-in (spine-column slice trees + top spine; an opt-in so other dies are unchanged), and builds once the R35 rows are published.
+FAILED [AUTOPILOT 49dbbdfd75eb] 2026-10-27 19:42:32 PDT AUTOPILOT -> S81-CORES: FAILED 49dbbdfd75eb s81/ot_s81_cfg7_seq_bfp (STRUCTURAL/preflight): KIT_PREFLIGHT FAIL issues 1
+  - pins_canonical: slice kit: plan pin file (freeze pins_file) not reachable -- cannot judge slice-placed pins
+KIT_PREFLIGHT FAIL: autopilot stopped before physical runner
+ot-run: RAN on localhost (unit oth-ubuntu-2486037-1793154767): exit 1
+AP_RC=1 | kit localhost:/srv/opentallas-scratch2/claude/flow-shared-6/s81kits/kits/ot_s81_cfg7_seq_bfp_r21p src main@47ce1af8bc | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+FAILED [AUTOPILOT e80a98421626] 2026-10-27 19:42:34 PDT AUTOPILOT -> S81-CORES: FAILED e80a98421626 s81/dsdv_eng_rr_h0 (STRUCTURAL/preflight): KIT_PREFLIGHT FAIL issues 1
+  - pins_canonical: slice kit: plan pin file (freeze pins_file) not reachable -- cannot judge slice-placed pins
+KIT_PREFLIGHT FAIL: autopilot stopped before physical runner
+ot-run: RAN on localhost (unit oth-ubuntu-2486828-1793154768): exit 1
+AP_RC=1 | kit localhost:/srv/opentallas-scratch2/claude/flow-shared-6/s81kits/kits/dsdv_eng_rr_h0_r21p src main@47ce1af8bc | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 2026-10-27 19:44 PDT [COORD] OWNER 12.13 LOCALITY FIRST (coord 1a411ba4c) applies to all 5 dies (none has passed freeze).
   New lanes: LOCALITY-SCORE-1 (shared locality.py: traffic matrix, score, proposer, baseline for all dies), LOCALITY-S81-1, LOCALITY-HBM-1.
   Re-briefed: LAND-HEAD-3 (feed along links, not a die trunk), LAND-KV-2 (regroup + link-following feed), QC-SLICECLK-3 (already fits), OSS-CLKPLAN-1 (align schema).
