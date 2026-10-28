@@ -40,7 +40,7 @@ def test_check_pass_mismatch_bound():
     s2['vport']['vport_ES_2']['RT'] = 18                             # a post-station stage moved one V port
     ids = {f['id'] for f in KB.check_image(img, s2, TILE)}
     assert ids == {'BOOT_AGE_MISMATCH'}
-    s3 = sched(rt=64)                                                # beyond the 63-edge return bound
+    s3 = sched(rt=96)                                                # beyond the 95-edge return bound (DIE-KV-12)
     img3 = KB.image_ages(s3, TILE)
     assert img3['words'] is None and 'VPORT_RT' in img3['error']
     assert 'BOOT_AGE_BOUND' in {f['id'] for f in KB.check_image(img3, s3, TILE)}
@@ -56,7 +56,10 @@ def test_current_reach405_boot_age_bounds():
         image = KB.image_ages(schedule, TILE)
         assert image['error'] is None, image
         assert KB.check_image(image, schedule, TILE) == []
-    assert KB.BOUNDS['VPORT_RT'] == 63
+    assert KB.BOUNDS['VPORT_RT'] == 95
+    for rt in (64, 74, 95):                                          # RT20 local-form bind needs 66..74
+        schedule = sched(rt=rt, fia=255)
+        assert KB.image_ages(schedule, TILE)['error'] is None
     assert KB.BOUNDS['PV_FIRST_INPUT_AGE'] == 255
 
 

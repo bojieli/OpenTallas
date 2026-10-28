@@ -459,7 +459,14 @@ endmodule
 // correctly rounded quotient is unique, so the result is the same bit for bit.
 // Stages: 1 decode, 1 (3 mb), 14 recurrence, 3 finish.
 // ---------------------------------------------------------------------------
-module ot_hdc_v41x_fdiv (
+// ZERO_RST (HBM-CORES-REBAL-6 10-28; default 0 = the qualified form, unchanged): the 18-stage zero-flag pipeline
+// (d_zero .. f2_zero) gets an asynchronous reset to 0.  With a constant nonzero dividend (side_rest / side u_div,
+// a = 1.0) that flag is constant 0 through 18 unreset stages; synthesis removes it (legal), and LEC can give an
+// unreset constant a base case only inside its reset window (4 + 8 edges), so y/fault became NOT EQUIVALENT.
+// Reset to its constant value, the flag is constant from the reset state: safe by construction, 18 reset flops.
+module ot_hdc_v41x_fdiv #(
+    parameter integer ZERO_RST = 0
+) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -499,7 +506,6 @@ module ot_hdc_v41x_fdiv (
     reg signed [10:0] d_e;
     always @(posedge clk) begin
         d_sign <= a[31] ^ b[31];
-        d_zero <= (a[30:0] == 31'd0);
         d_bad  <= (a[30:23] == 8'hFF) || (b[30:23] == 8'hFF) || (b[30:0] == 31'd0);
         d_ma   <= na[33:10];
         d_mb   <= nb[33:10];
@@ -512,7 +518,7 @@ module ot_hdc_v41x_fdiv (
     reg [25:0] e_mb3;
     reg signed [10:0] e_e;
     always @(posedge clk) begin
-        e_sign <= d_sign; e_zero <= d_zero; e_bad <= d_bad; e_e <= d_e;
+        e_sign <= d_sign; e_bad <= d_bad; e_e <= d_e;
         e_ma <= d_ma; e_mb <= d_mb; e_mb3 <= {2'b0, d_mb} + {1'b0, d_mb, 1'b0};
     end
 
@@ -546,9 +552,23 @@ module ot_hdc_v41x_fdiv (
                 r_mb[j]   <= mb;
                 r_mb3[j]  <= mb3;
                 r_sign[j] <= (j == 0) ? e_sign : r_sign[j-1];
-                r_zero[j] <= (j == 0) ? e_zero : r_zero[j-1];
                 r_bad[j]  <= (j == 0) ? e_bad  : r_bad[j-1];
                 r_e[j]    <= (j == 0) ? e_e    : r_e[j-1];
+            end
+            if (ZERO_RST != 0) begin : g_zr
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) r_zero[j] <= 1'b0; else r_zero[j] <= (j == 0) ? e_zero : r_zero[j-1];
+            end else begin : g_z
+                always @(posedge clk) r_zero[j] <= (j == 0) ? e_zero : r_zero[j-1];
+            end
+        end
+        if (ZERO_RST != 0) begin : g_zr
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin d_zero <= 1'b0; e_zero <= 1'b0; f1_zero <= 1'b0; f2_zero <= 1'b0; end
+                else begin d_zero <= (a[30:0] == 31'd0); e_zero <= d_zero; f1_zero <= r_zero[NS-1]; f2_zero <= f1_zero; end
+        end else begin : g_z
+            always @(posedge clk) begin
+                d_zero <= (a[30:0] == 31'd0); e_zero <= d_zero; f1_zero <= r_zero[NS-1]; f2_zero <= f1_zero;
             end
         end
     endgenerate
@@ -560,7 +580,6 @@ module ot_hdc_v41x_fdiv (
     reg signed [10:0] f1_be;
     always @(posedge clk) begin
         f1_sign <= r_sign[NS-1];
-        f1_zero <= r_zero[NS-1];
         f1_bad  <= r_bad[NS-1];
         if (q[26]) begin
             f1_sig <= q[26:3]; f1_g <= q[2]; f1_st <= (|q[1:0]) || (|r_rem[NS-1]);
@@ -583,7 +602,6 @@ module ot_hdc_v41x_fdiv (
     reg [7:0]  f2_field;
     always @(posedge clk) begin
         f2_sign <= f1_sign;
-        f2_zero <= f1_zero;
         f2_bad  <= f1_bad;
         f2_ovf  <= (f1_be > 11'sd254);
         if (f1_sub) begin
