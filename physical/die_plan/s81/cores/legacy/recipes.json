@@ -17,7 +17,9 @@
  },
  "dsdv_gunit_l2": {
   "ref_tile": "physical/ref_tile/dsdv_gunit_l2",
-  "rtl_dirs": true
+  "rtl_dirs": true,
+  "util": 0.7,
+  "_why_util": "S81-CORES-R26 10-27: 345.6x34.56 outline (R24) with 3142 FIRM face pin registers on both long faces leaves a thin movable band; GPL diverged (GPL-0305) at the default 0.5 and at 0.35, placed at 0.7 (synth LEC EQUIVALENT); family slice PASS on that placement."
  },
  "dsdv_gunit_l3": {
   "ref_tile": "physical/ref_tile/dsdv_gunit_l3"
