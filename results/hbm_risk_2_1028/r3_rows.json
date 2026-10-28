@@ -1,0 +1,2288 @@
+[
+ {
+  "module": "hnx_rp3lp3h_s",
+  "inst": 128,
+  "types": [
+   "q_sm0",
+   "q_sm1",
+   "q_sm2",
+   "q_sm3"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 704.6,
+  "L_ff": 563.6,
+  "lib_lat": {},
+  "b2l_status": "NO KIT",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 704.6,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 361.1,
+  "hold_ff_est": -364.3
+ },
+ {
+  "module": "hnx_rp3lp3h_n",
+  "inst": 128,
+  "types": [
+   "q_sm0",
+   "q_sm1",
+   "q_sm2",
+   "q_sm3"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 777.6,
+  "L_ff": 622.0,
+  "lib_lat": {},
+  "b2l_status": "NO KIT",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 777.6,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 419.5,
+  "hold_ff_est": -425.6
+ },
+ {
+  "module": "ot_hbm_hc_bank128_pair_core",
+  "inst": 112,
+  "types": [
+   "q_b001",
+   "q_b002",
+   "q_b003",
+   "q_b010",
+   "q_b011",
+   "q_b012",
+   "q_b013"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 219.1,
+  "L_ff": 175.2,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+  "r4_tt": 219.1,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": -27.3,
+  "hold_ff_est": 43.5
+ },
+ {
+  "module": "ot_hbm_idx_score_hcol_h0",
+  "inst": 64,
+  "types": [
+   "q_b100",
+   "q_b101",
+   "q_b101_nw",
+   "q_b102",
+   "q_b103"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [],
+  "tap_ff": [],
+  "early": [],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_hbm_idx_score_hcol_h1",
+  "inst": 64,
+  "types": [
+   "q_b100",
+   "q_b101",
+   "q_b101_nw",
+   "q_b102",
+   "q_b103"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [],
+  "tap_ff": [],
+  "early": [],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+  "inst": 60,
+  "types": [
+   "q_su00",
+   "q_su01",
+   "q_su10",
+   "q_su11"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [],
+  "tap_ff": [],
+  "early": [],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_hgi_sfu_split3_lane_core__idpin",
+  "inst": 32,
+  "types": [
+   "q_b110",
+   "q_b111",
+   "q_b112",
+   "q_b113"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 310.3,
+  "L_ff": 248.2,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 310.3,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 45.7,
+  "hold_ff_est": -33.1
+ },
+ {
+  "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+  "inst": 32,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 556.9,
+  "L_ff": 456.7,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 556.9,
+    "min_clock_tree_path": 431.6
+   },
+   "ff": {
+    "max_clock_tree_path": 456.7,
+    "min_clock_tree_path": 321.6
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "CENTRE_ENTRY_STRUCTURED_TREE",
+  "r4_tt": 153.3,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 254.2,
+  "hold_ff_est": -252.0
+ },
+ {
+  "module": "hnx_fused_lane",
+  "inst": 32,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_hnx_idxn_keybuf_slice",
+  "inst": 32,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+  "inst": 31,
+  "types": [
+   "root"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 281.1,
+  "L_ff": 224.8,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 281.1,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 22.3,
+  "hold_ff_est": -8.5
+ },
+ {
+  "module": "ot_hnx_fused_tnode",
+  "inst": 30,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+  "inst": 28,
+  "types": [
+   "q_su20",
+   "q_su21",
+   "q_su30",
+   "q_su31"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [],
+  "tap_ff": [],
+  "early": [],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_hbm_hc_bank128_pair_first_core",
+  "inst": 16,
+  "types": [
+   "q_b000"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 219.1,
+  "L_ff": 175.2,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+  "r4_tt": 219.1,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": -27.3,
+  "hold_ff_est": 43.5
+ },
+ {
+  "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+  "inst": 16,
+  "types": [
+   "q_su00",
+   "q_su01",
+   "q_su10",
+   "q_su11"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [],
+  "tap_ff": [],
+  "early": [],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "hnx_vms_bank_q0_faces__vecd4ae",
+  "inst": 16,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [],
+  "tap_ff": [],
+  "early": [],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_hgi_sm_xload_cl2_bfqg",
+  "inst": 16,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 242.9,
+  "L_ff": 197.4,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 242.9,
+    "min_clock_tree_path": 206.9
+   },
+   "ff": {
+    "max_clock_tree_path": 197.4,
+    "min_clock_tree_path": 164.0
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+  "r4_tt": 255.6,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": -5.1,
+  "hold_ff_est": 20.2
+ },
+ {
+  "module": "ot_hbm_svc_vmdel_lane_n",
+  "inst": 16,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 353.1,
+  "L_ff": 298.3,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 353.1,
+    "min_clock_tree_path": 238.5
+   },
+   "ff": {
+    "max_clock_tree_path": 298.3,
+    "min_clock_tree_path": 182.7
+   }
+  },
+  "b2l_status": "NO KIT",
+  "b2l_keys": [],
+  "r4_cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+  "r4_tt": 157.0,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 95.8,
+  "hold_ff_est": -85.7
+ },
+ {
+  "module": "hnx_vms_bank_q0_faces__vec6293",
+  "inst": 16,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_hbm_svc_sm_xcal_rel_t",
+  "inst": 8,
+  "types": [
+   "q_spb2",
+   "q_spt0"
+  ],
+  "lib": false,
+  "basis": "b2l_measured_natural",
+  "L_tt": 520,
+  "L_ff": 421.2,
+  "lib_lat": {},
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+  "r4_tt": 211.8,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 218.7,
+  "hold_ff_est": -214.8
+ },
+ {
+  "module": "ot_hbm_su_static_pgslice_lg__pretree",
+  "inst": 8,
+  "types": [
+   "q_su00",
+   "q_su10",
+   "q_su20",
+   "q_su30"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 262.9,
+  "L_ff": 210.2,
+  "lib_lat": {},
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+  "r4_tt": 262.9,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 7.7,
+  "hold_ff_est": 6.8
+ },
+ {
+  "module": "ot_hbm_svc_sm_group_rel_id",
+  "inst": 8,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 602.4,
+  "L_ff": 481.8,
+  "lib_lat": {},
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 602.4,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 279.3,
+  "hold_ff_est": -278.4
+ },
+ {
+  "module": "ot_hbm_hc_subtree32_core",
+  "inst": 8,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 189.8,
+  "L_ff": 151.8,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+  "r4_tt": 189.8,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": -50.7,
+  "hold_ff_est": 68.1
+ },
+ {
+  "module": "hfd_ep_static",
+  "inst": 6,
+  "types": [
+   "NE_io",
+   "NW_io",
+   "q_spb0",
+   "vsN0"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 475.2,
+  "L_ff": 383.8,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 475.2,
+    "min_clock_tree_path": 381.1
+   },
+   "ff": {
+    "max_clock_tree_path": 383.8,
+    "min_clock_tree_path": 296.6
+   }
+  },
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+  "r4_tt": 266.5,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 181.3,
+  "hold_ff_est": -175.5
+ },
+ {
+  "module": "ot_hbm_svc_vm_kshare_splitstrap__v700685",
+  "inst": 6,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [],
+  "tap_ff": [],
+  "early": [],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_pdie_serdes",
+  "inst": 5,
+  "types": [
+   "NE_io",
+   "NW_io",
+   "q_spb0",
+   "vsN0"
+  ],
+  "lib": false,
+  "basis": "b2l_measured_natural",
+  "L_tt": 627,
+  "L_ff": 507.9,
+  "lib_lat": {},
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "IP_DECLARED",
+  "r4_tt": 510.8,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 305.4,
+  "hold_ff_est": -305.8
+ },
+ {
+  "module": "ot_hbm_su_static_pgslice_lg__lane_exp0",
+  "inst": 4,
+  "types": [
+   "q_su00",
+   "q_su10"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 273.8,
+  "L_ff": 219.0,
+  "lib_lat": {},
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 273.8,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 16.5,
+  "hold_ff_est": -2.5
+ },
+ {
+  "module": "ot_hbm_su_static_pgslice_lg__side_softplus",
+  "inst": 4,
+  "types": [
+   "q_su00",
+   "q_su10"
+  ],
+  "lib": false,
+  "basis": "b2l_measured_natural",
+  "L_tt": 572,
+  "L_ff": 463.3,
+  "lib_lat": {},
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 379.7,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 260.8,
+  "hold_ff_est": -259.0
+ },
+ {
+  "module": "ot_hbm_su_static_pgslice_lg__side_rest",
+  "inst": 4,
+  "types": [
+   "q_su01",
+   "q_su11"
+  ],
+  "lib": false,
+  "basis": "b2l_measured_natural",
+  "L_tt": 515,
+  "L_ff": 417.2,
+  "lib_lat": {},
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 379.7,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 214.7,
+  "hold_ff_est": -210.6
+ },
+ {
+  "module": "ot_hbm_su_static_pgslice_lg__lanes8_11",
+  "inst": 4,
+  "types": [
+   "q_su20",
+   "q_su30"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 628.0,
+  "L_ff": 502.2,
+  "lib_lat": {},
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 628.0,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 299.7,
+  "hold_ff_est": -299.8
+ },
+ {
+  "module": "ot_hgi_sm_xload_xq_pegress",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 265.4,
+  "L_ff": 218.2,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 265.4,
+    "min_clock_tree_path": 202.9
+   },
+   "ff": {
+    "max_clock_tree_path": 218.2,
+    "min_clock_tree_path": 159.4
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 314.0,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 15.7,
+  "hold_ff_est": -1.6
+ },
+ {
+  "module": "ot_hgi_sm_xload_cl2_bdring",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 273.7,
+  "L_ff": 220.3,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 273.7,
+    "min_clock_tree_path": 233.8
+   },
+   "ff": {
+    "max_clock_tree_path": 220.3,
+    "min_clock_tree_path": 183.1
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "OK_OR_CENTRE",
+  "r4_tt": 164.3,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 17.8,
+  "hold_ff_est": -3.8
+ },
+ {
+  "module": "ot_hbm_xp_aq_tree13_fmt",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 257.0,
+  "L_ff": 210.2,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 257.0,
+    "min_clock_tree_path": 218.1
+   },
+   "ff": {
+    "max_clock_tree_path": 210.2,
+    "min_clock_tree_path": 173.2
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "OK_OR_CENTRE",
+  "r4_tt": 126.0,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 7.7,
+  "hold_ff_est": 6.8
+ },
+ {
+  "module": "hfd_hgi_vm_calendar_f20",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 280.8,
+  "L_ff": 246.8,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 280.8,
+    "min_clock_tree_path": 184.2
+   },
+   "ff": {
+    "max_clock_tree_path": 246.8,
+    "min_clock_tree_path": 152.1
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "OK_OR_CENTRE",
+  "r4_tt": 153.3,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 44.3,
+  "hold_ff_est": -31.6
+ },
+ {
+  "module": "hfd_hgi_vms_glue_nw_t",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 934.6,
+  "L_ff": 747.5,
+  "lib_lat": {},
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 934.6,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 545.0,
+  "hold_ff_est": -557.4
+ },
+ {
+  "module": "ot_hbm_idx_qctl_static",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 136.2,
+  "L_ff": 107.9,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 136.2,
+    "min_clock_tree_path": 112.5
+   },
+   "ff": {
+    "max_clock_tree_path": 107.9,
+    "min_clock_tree_path": 84.4
+   }
+  },
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+  "r4_tt": 167.9,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": -94.6,
+  "hold_ff_est": 114.2
+ },
+ {
+  "module": "ot_hbm_idx_query_static",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 370.8,
+  "L_ff": 313.5,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 370.8,
+    "min_clock_tree_path": 235.6
+   },
+   "ff": {
+    "max_clock_tree_path": 313.5,
+    "min_clock_tree_path": 183.3
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "OK_OR_CENTRE",
+  "r4_tt": 142.4,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 111.0,
+  "hold_ff_est": -101.7
+ },
+ {
+  "module": "ot_hbm_idx_vm_query_static_n12",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 258.6,
+  "L_ff": 211.1,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 258.6,
+    "min_clock_tree_path": 186.0
+   },
+   "ff": {
+    "max_clock_tree_path": 211.1,
+    "min_clock_tree_path": 142.7
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "OK_OR_CENTRE",
+  "r4_tt": 138.7,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 8.6,
+  "hold_ff_est": 5.8
+ },
+ {
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 240.6,
+  "L_ff": 202.2,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 240.6,
+    "min_clock_tree_path": 184.3
+   },
+   "ff": {
+    "max_clock_tree_path": 202.2,
+    "min_clock_tree_path": 149.5
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+  "r4_tt": 226.4,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": -0.3,
+  "hold_ff_est": 15.2
+ },
+ {
+  "module": "ot_hbm_su_programme_pslice_c5",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 719.2,
+  "L_ff": 575.3,
+  "lib_lat": {},
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 719.2,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 372.8,
+  "hold_ff_est": -376.6
+ },
+ {
+  "module": "ot_hbm_su_static_cxport_ij_q",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 347.5,
+  "L_ff": 285.8,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 347.5,
+    "min_clock_tree_path": 294.1
+   },
+   "ff": {
+    "max_clock_tree_path": 285.8,
+    "min_clock_tree_path": 235.5
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 295.7,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 83.3,
+  "hold_ff_est": -72.6
+ },
+ {
+  "module": "ot_hbm_su_static_qcore_r13",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 411.0,
+  "L_ff": 334.6,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 411.0,
+    "min_clock_tree_path": 339.8
+   },
+   "ff": {
+    "max_clock_tree_path": 334.6,
+    "min_clock_tree_path": 262.9
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+  "r4_tt": 248.3,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 132.1,
+  "hold_ff_est": -123.8
+ },
+ {
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 464.0,
+  "L_ff": 376.9,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 464.0,
+    "min_clock_tree_path": 319.4
+   },
+   "ff": {
+    "max_clock_tree_path": 376.9,
+    "min_clock_tree_path": 252.6
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 281.1,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 174.4,
+  "hold_ff_est": -168.2
+ },
+ {
+  "module": "ot_hbm_svc_wb_kport_q",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 401.6,
+  "L_ff": 321.2,
+  "lib_lat": {},
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 401.6,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 118.7,
+  "hold_ff_est": -109.8
+ },
+ {
+  "module": "ot_hfd_coll_q2_hard_v8g__reduce",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 197.1,
+  "L_ff": 157.7,
+  "lib_lat": {},
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+  "r4_tt": 197.1,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": -44.8,
+  "hold_ff_est": 61.9
+ },
+ {
+  "module": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 197.1,
+  "L_ff": 157.7,
+  "lib_lat": {},
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+  "r4_tt": 197.1,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": -44.8,
+  "hold_ff_est": 61.9
+ },
+ {
+  "module": "ot_hgi_coll_gq_issue",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "b2l_measured_natural",
+  "L_tt": 343,
+  "L_ff": 277.8,
+  "lib_lat": {},
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+  "r4_tt": 204.5,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 75.3,
+  "hold_ff_est": -64.2
+ },
+ {
+  "module": "ot_hgi_coll_gq_land",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 387.8,
+  "L_ff": 324.7,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 387.8,
+    "min_clock_tree_path": 299.5
+   },
+   "ff": {
+    "max_clock_tree_path": 324.7,
+    "min_clock_tree_path": 241.0
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "CENTRE_ENTRY_STRUCTURED_TREE",
+  "r4_tt": 149.7,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 122.2,
+  "hold_ff_est": -113.4
+ },
+ {
+  "module": "ot_hgi_coll_inj_idx_join_rg",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 285.2,
+  "L_ff": 233.8,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 285.2,
+    "min_clock_tree_path": 226.0
+   },
+   "ff": {
+    "max_clock_tree_path": 233.8,
+    "min_clock_tree_path": 177.4
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+  "r4_tt": 226.4,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 31.3,
+  "hold_ff_est": -18.0
+ },
+ {
+  "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 204.5,
+  "L_ff": 163.5,
+  "lib_lat": {},
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+  "r4_tt": 204.5,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": -39.0,
+  "hold_ff_est": 55.8
+ },
+ {
+  "module": "ot_hgi_qw_dec",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "b2l_measured_natural",
+  "L_tt": 368,
+  "L_ff": 298.1,
+  "lib_lat": {},
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+  "r4_tt": 220.4,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 95.6,
+  "hold_ff_est": -85.5
+ },
+ {
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "b2l_measured_natural",
+  "L_tt": 1150,
+  "L_ff": 931.5,
+  "lib_lat": {},
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 558.6,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 729.0,
+  "hold_ff_est": -750.6
+ },
+ {
+  "module": "ot_hgi_sm_xload_cl2_ctlx",
+  "inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 521.3,
+  "L_ff": 425.3,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 521.3,
+    "min_clock_tree_path": 420.8
+   },
+   "ff": {
+    "max_clock_tree_path": 425.3,
+    "min_clock_tree_path": 330.5
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 328.6,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 222.8,
+  "hold_ff_est": -219.1
+ },
+ {
+  "module": "ot_hbm_idx_score_quarter_static__tailx__v3fcb6a",
+  "inst": 2,
+  "types": [
+   "q_b103"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [],
+  "tap_ff": [],
+  "early": [],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_hbm_idx_score_quarter_static__tailx__v36d446",
+  "inst": 2,
+  "types": [
+   "q_b103"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [],
+  "tap_ff": [],
+  "early": [],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_hgi_sfu_core_split3__opstore_a",
+  "inst": 2,
+  "types": [
+   "q_b113"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 310.3,
+  "L_ff": 248.2,
+  "lib_lat": {},
+  "b2l_status": "NO KIT",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 310.3,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 45.7,
+  "hold_ff_est": -33.1
+ },
+ {
+  "module": "ot_hgi_sfu_core_split3__opstore_b",
+  "inst": 2,
+  "types": [
+   "q_b113"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 613.4,
+  "L_ff": 490.6,
+  "lib_lat": {},
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 613.4,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 288.1,
+  "hold_ff_est": -287.6
+ },
+ {
+  "module": "ot_hgi_sfu_core_split3__ctl",
+  "inst": 2,
+  "types": [
+   "q_b113"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 551.3,
+  "L_ff": 440.9,
+  "lib_lat": {},
+  "b2l_status": "NO KIT",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 551.3,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 238.4,
+  "hold_ff_est": -235.4
+ },
+ {
+  "module": "ot_hbm_hc_root_static__tailx_sk_step0",
+  "inst": 2,
+  "types": [
+   "root"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_hbm_hc_root_static__tailx_sk_steady",
+  "inst": 2,
+  "types": [
+   "root"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_hbm_svc_vm_kshare_splitstrap__v8e478a",
+  "inst": 2,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [],
+  "tap_ff": [],
+  "early": [],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_hfd_coll_q3_body_core",
+  "inst": 2,
+  "types": [
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 690.0,
+  "L_ff": 551.9,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 690.0,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 349.4,
+  "hold_ff_est": -352.0
+ },
+ {
+  "module": "ot_hfd_coll_q3_edge_core",
+  "inst": 2,
+  "types": [
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 525.7,
+  "L_ff": 420.5,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 525.7,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 218.0,
+  "hold_ff_est": -214.0
+ },
+ {
+  "module": "ot_hfd_coll_q3_vm_core",
+  "inst": 2,
+  "types": [
+   "q_hub_nw"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 441.8,
+  "L_ff": 353.3,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 441.8,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 150.8,
+  "hold_ff_est": -143.5
+ },
+ {
+  "module": "ot_hfd_coll_q2n2_body_core",
+  "inst": 2,
+  "types": [
+   "q_hub_ne"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 646.2,
+  "L_ff": 516.8,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 646.2,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 314.3,
+  "hold_ff_est": -315.1
+ },
+ {
+  "module": "ot_hfd_coll_q2n2_vm_core",
+  "inst": 2,
+  "types": [
+   "q_hub_ne"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 606.1,
+  "L_ff": 484.7,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 606.1,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 282.2,
+  "hold_ff_est": -281.4
+ },
+ {
+  "module": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
+  "inst": 1,
+  "types": [
+   "root"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 281.1,
+  "L_ff": 224.8,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 281.1,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 22.3,
+  "hold_ff_est": -8.5
+ },
+ {
+  "module": "ot_hgi_coll_tkm_m_tp192__root",
+  "inst": 1,
+  "types": [
+   "root"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 281.1,
+  "L_ff": 224.8,
+  "lib_lat": {},
+  "b2l_status": "NO KIT",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 281.1,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 22.3,
+  "hold_ff_est": -8.5
+ },
+ {
+  "module": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2",
+  "inst": 1,
+  "types": [
+   "root"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [],
+  "tap_ff": [],
+  "early": [],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_hbm_hc_root_static__tailx_rest__v4f4566",
+  "inst": 1,
+  "types": [
+   "root"
+  ],
+  "lib": false,
+  "basis": "none",
+  "L_tt": null,
+  "L_ff": null,
+  "lib_lat": {},
+  "b2l_status": null,
+  "b2l_keys": [],
+  "r4_cls": null,
+  "r4_tt": null,
+  "tap_tt": [],
+  "tap_ff": [],
+  "early": [],
+  "d_ff": null,
+  "hold_ff_est": null
+ },
+ {
+  "module": "ot_hbm_hc_root_static__hcp_sys1",
+  "inst": 1,
+  "types": [
+   "root"
+  ],
+  "lib": false,
+  "basis": "b2l_measured_natural",
+  "L_tt": 251,
+  "L_ff": 203.3,
+  "lib_lat": {},
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "OK_OR_CENTRE",
+  "r4_tt": 138.7,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 0.8,
+  "hold_ff_est": 14.0
+ },
+ {
+  "module": "ot_hbm_idx_topk_link_static",
+  "inst": 1,
+  "types": [
+   "root"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 487.4,
+  "L_ff": 389.8,
+  "lib_lat": {},
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 487.4,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 187.3,
+  "hold_ff_est": -181.8
+ },
+ {
+  "module": "ot_hbm_idx_selector_static_sel",
+  "inst": 1,
+  "types": [
+   "root"
+  ],
+  "lib": false,
+  "basis": "r4_model_centre",
+  "L_tt": 446.0,
+  "L_ff": 356.7,
+  "lib_lat": {},
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 446.0,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 154.2,
+  "hold_ff_est": -147.0
+ },
+ {
+  "module": "ot_hbm_host_cp_rxs",
+  "inst": 1,
+  "types": [
+   "root"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 563.7,
+  "L_ff": 450.6,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 563.7,
+    "min_clock_tree_path": 471.9
+   },
+   "ff": {
+    "max_clock_tree_path": 450.6,
+    "min_clock_tree_path": 359.8
+   }
+  },
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 367.5,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 248.1,
+  "hold_ff_est": -245.6
+ },
+ {
+  "module": "ot_hbm_idx_rootctl_static_am",
+  "inst": 1,
+  "types": [
+   "root"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 873.3,
+  "L_ff": 702.1,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 873.3,
+    "min_clock_tree_path": 757.9
+   },
+   "ff": {
+    "max_clock_tree_path": 702.1,
+    "min_clock_tree_path": 607.6
+   }
+  },
+  "b2l_status": "NOT MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "INTERNAL_HTREE_ISLANDS",
+  "r4_tt": 310.3,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": 499.6,
+  "hold_ff_est": -509.7
+ },
+ {
+  "module": "ot_hbm_argmax_static_sw_vm_r2",
+  "inst": 1,
+  "types": [
+   "root"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 191.1,
+  "L_ff": 153.5,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 191.1,
+    "min_clock_tree_path": 154.7
+   },
+   "ff": {
+    "max_clock_tree_path": 153.5,
+    "min_clock_tree_path": 119.4
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+  "r4_tt": 102.2,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": -49.0,
+  "hold_ff_est": 66.3
+ },
+ {
+  "module": "ot_hbm_static_cfg_collar_idx256r",
+  "inst": 1,
+  "types": [
+   "root"
+  ],
+  "lib": true,
+  "basis": "lib_etm_max",
+  "L_tt": 205.9,
+  "L_ff": 167.9,
+  "lib_lat": {
+   "tt": {
+    "max_clock_tree_path": 205.9,
+    "min_clock_tree_path": 160.6
+   },
+   "ff": {
+    "max_clock_tree_path": 167.9,
+    "min_clock_tree_path": 125.5
+   }
+  },
+  "b2l_status": "MEASURED",
+  "b2l_keys": [],
+  "r4_cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+  "r4_tt": 94.9,
+  "tap_tt": [
+   250.0
+  ],
+  "tap_ff": [
+   202.5
+  ],
+  "early": [
+   0
+  ],
+  "d_ff": -34.6,
+  "hold_ff_est": 51.2
+ }
+]

@@ -1,0 +1,6 @@
+q_hub_nw: 8216.64x4320.0 grid 21x11=231 taps, moved 154 (max shift 294.1 um); station regs 28993: max hop 656.6 um, >405 171, on-core 1512; channel-point bound 440.6 um; free frac 0.386
+    >lim clusters (500-um bins): [((2000, 4000), 43), ((5000, 2500), 33), ((1500, 0), 24), ((2000, 0), 13), ((2000, 1000), 11), ((7000, 1000), 9), ((4000, 0), 8), ((7500, 2000), 6)]
+    oncore sample: [(3171, 3542, 'u_hb_coll_Q_ring_ag.ra_add_rhs'), (3072, 3542, 'u_hb_coll_Q_ring_ag.ra_add_rhs'), (2873, 3542, 'u_hb_coll_Q_ring_ag.ra_add_rhs')]
+q_hub_ne: 8216.64x4320.0 grid 21x11=231 taps, moved 154 (max shift 323.4 um); station regs 29740: max hop 669.6 um, >405 162, on-core 1511; channel-point bound 436.3 um; free frac 0.388
+    >lim clusters (500-um bins): [((1500, 0), 46), ((5000, 2500), 32), ((2000, 0), 29), ((2000, 1000), 11), ((7000, 1000), 9), ((8000, 3000), 8), ((7500, 2000), 7), ((4000, 0), 7)]
+    oncore sample: [(5871, 1102, 'u_pgp_Q.command|u_sucore_Q'), (5473, 1102, 'u_pgp_Q.command|u_sucore_Q'), (5072, 1102, 'u_pgp_Q.command|u_sucore_Q')]
