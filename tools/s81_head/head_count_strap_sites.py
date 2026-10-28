@@ -27,7 +27,8 @@ def apply(raw, plan_path, repo):
             if not m:raise ValueError(f'{tn}: no actual LEF size {lef}')
             mw,mh=map(float,m.groups())
             if orient in ('R90','R270','E','W','FE','FW','MXR90','MYR90'):mw,mh=mh,mw
-            blocked.append([x-4.32,y-4.32,x+mw+4.32,y+mh+4.32])
+            # Keep the whole 1.92um-tall M5 pin beyond the 4.32um macro halo.
+            blocked.append([x-5.4,y-5.4,x+mw+5.4,y+mh+5.4])
         for r in t.get('clock',{}).get('reserved_sites_um',[]):
             x0,y0,x1,y1=r['rect_um'];blocked.append([x0-1.08,y0-1.08,x1+1.08,y1+1.08])
         records=G.plan_pin_records(P,tn,G.type_pins(P,tn))
@@ -52,7 +53,7 @@ def apply(raw, plan_path, repo):
         cursor=0
         for s in straps:
             s['layer']='M5';s['sites_um']=sites[cursor:cursor+s['width']];cursor+=s['width']
-        report[tn]=dict(pins=needed,layer='M5',macro_halo_um=4.32,pitch_um=4.32,
+        report[tn]=dict(pins=needed,layer='M5',macro_halo_um=4.32,pin_extent_margin_um=1.08,pitch_um=4.32,
                         anchor_um=[ax,ay],max_anchor_hop_um=max(abs(x-ax)+abs(y-ay) for x,y in sites))
     return raw,report
 
