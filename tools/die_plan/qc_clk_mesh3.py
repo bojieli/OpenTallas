@@ -948,6 +948,24 @@ def band_trees(B, st, a):
     if not a.no_spine:
         raise SystemExit("band_trees: --a0-mesh needs --no-spine (the band tree anchors on top-tree nodes)")
     out, res = [], []
+    # R32 (opt-in --a0-band-window N; COORD ruling INFRA-FIRST-QC-R31 (2)): the anchor cell's island pin window carries one
+    # shielded M8 piece per HORIZONTAL edge at that cell (top-tree kid legs, the L/straight parent leg landing there, band
+    # feeds, any direction: a vertical feed still needs an M8 driver jog in the window).  dry15c: every top x-tree node
+    # with 2 horizontal 16w legs + 1 horizontal 8w band feed failed (271/271), with an M9 band feed 96/189; anchors with
+    # vertical top legs 0 failures.  A feed whose best anchor would exceed N pieces moves to the best other anchor level
+    # (same equal-levels rule) when that matches within --a0-band-window-tol ps; never more cells or stages.
+    wcap = getattr(a, "a0_band_window", None)
+    wload = defaultdict(int)
+    if wcap is not None:
+        tn = {n["tag"]: n for n in B["top_nodes"]}
+        hz = lambda p, q: abs(q[0] - p[0]) > 1e-6 and abs(q[0] - p[0]) >= abs(q[1] - p[1])
+        for n in B["top_nodes"]:
+            for k in n["kids"]:
+                if k in tn and hz(n["xy"], tn[k]["xy"]):
+                    wload[n["tag"]] += 1
+            if n.get("parent") in tn and hz(tn[n["parent"]]["xy"], n["xy"]):
+                wload[n["tag"]] += 1
+    wstat = defaultdict(int)
     for key, ks in sorted(by.items(), key=lambda kv: (ct_of[kv[0][0]]["g"], ct_of[kv[0][0]]["c"], ct_of[kv[0][0]]["tap"], str(kv[0][1]))):
         ct = ct_of[key[0]]
         croot = [n for n in ct["nodes"] if n["tag"] == ct["root"]][0]
@@ -955,9 +973,15 @@ def band_trees(B, st, a):
         leaves = [(F["drivers"][k]["x"], F["drivers"][k]["y"]) for k in ks]
         wedge = all(F["drivers"][k]["kind"] == "wedge" for k in ks)
         xc = F["drivers"][ks[0]]["x"] if wedge else cols[ct["c"]]
+        # R32 (opt-in --a0-band-col-dx): the band y-tree column off the column-tree column.  dry16: the band y-tree,
+        # the column tree and the top-tree leaf leg all converge on the feed column (x = col + 750 in every period), so
+        # their M8 driver jogs / escape jogs share the same island row windows at the same x.
+        if not wedge and getattr(a, "a0_band_col_dx", None):
+            xc = xc + float(a.a0_band_col_dx)
         feed_bands = sorted({d["y"] for d in F["drivers"] if d["kind"] == "band"},
                             key=lambda y:min(abs(y-q[1]) for q in leaves))[:4] if wedge else ()
         best = None
+        cands = []
         for j in range(0, min(a.a0_band_up, len(ch)) + 1):
             anc = tuple(ct["tap"]) if j == 0 else tuple(tby[ch[j - 1]["parent"]]["xy"])
             Sc = croot["S"] + sum(e["nseg"] for e in ch[:j])
@@ -977,12 +1001,35 @@ def band_trees(B, st, a):
                 imb = max([abs(n.get("imbalance_TT", 0.0)) for n in nodes] + [0.0])
                 worst = max(abs(d), abs(dff))       # TT setup and FF hold both see the band tree: match both corners
                 ok10 = worst <= 10.0
+                atag = tleaf[(r3(ct["tap"][0]), r3(ct["tap"][1]))] if j == 0 else ch[j - 1]["parent"]
+                k0 = [n for n in nodes if n.get("parent") == r["tag"]]
+                fh = int(bool(k0) and abs(k0[0]["xy"][0] - r["xy"][0]) > 1e-6 and
+                         abs(k0[0]["xy"][0] - r["xy"][0]) >= abs(k0[0]["xy"][1] - r["xy"][1]))
+                over = wcap is not None and wload[atag] + 1 > wcap
                 sc = (not ok10, j if ok10 else 0, round(worst, 1), round(imb, 1), BAND_ETS.index((w, mm)))
+                cands.append((sc, et, nodes, r, d, j, Sc, Tc, atag, fh, over, worst))
                 if best is None or sc < best[0]:
-                    best = (sc, et, nodes, r, d, j, Sc, Tc)
+                    best = cands[-1]
+        if best is not None and wcap is not None and best[10]:
+            # R32: the best-matching anchor's pin window is full -> the best anchor with window room, if its match is
+            # within --a0-band-window-tol ps of the best (TT and FF); else keep the best (counted as over_cap)
+            free_ = [c for c in cands if not c[10]]
+            alt = min(free_, key=lambda c: c[0]) if free_ else None
+            tol = float(getattr(a, "a0_band_window_tol", 10.0))
+            if alt is not None and alt[11] <= best[11] + tol:
+                wstat["moved"] += 1
+                wstat["moved_dworst_max_ps"] = max(wstat["moved_dworst_max_ps"], round(alt[11] - best[11], 1))
+                best = alt
+            else:
+                wstat["kept_no_alt" if alt is None else "kept_over_tol"] += 1
         if best is None:
             raise SystemExit(f"band_trees: no anchor/EdgeType reaches equal levels for column tree {ct['g']},{ct['c']}")
-        _, et, nodes, r, d, j, Sc, Tc = best
+        _, et, nodes, r, d, j, Sc, Tc, atag, fh, over, _w = best
+        if wcap is not None:
+            wload[atag] += 1
+            wstat["band_feeds_H"] += fh
+            wstat["band_feeds_V"] += 1 - fh
+            wstat["over_cap"] += int(over)
         for n in nodes:
             n.setdefault("et", et)
         out.append(dict(ct=ct, nodes=nodes, root=r["tag"], leaves=ks, et=(et.w, et.m), S=r["S"], S_col=Sc, anchor_up=j,
@@ -1008,6 +1055,9 @@ def band_trees(B, st, a):
                 resid_TT_ps=dict(med=r3(rr[len(rr) // 2]), p90=r3(rr[int(0.9 * (len(rr) - 1))]), max=r3(rr[-1])),
                 resid_FF_ps=dict(min=r3(min(bt["resid_FF"] for bt in out)), max=r3(max(bt["resid_FF"] for bt in out))),
                 nodes=sum(len(bt["nodes"]) for bt in out), nodes_within_ISL_of_core=oncore,
+                **(dict(anchor_window=dict(cap_h_pieces=wcap, **wstat,
+                                           anchors_over_cap=sum(1 for v in wload.values() if v > wcap),
+                                           max_h_pieces=max(wload.values(), default=0))) if wcap is not None else {}),
                 rule="12.8 c/d1: equal stage count to the column tree + plan-chosen (w, m) per tree; residual kept (no trim)")
     return out, leafk, summ
 
@@ -3097,6 +3147,12 @@ def add_common(p):
                    help="planned band repeater reach before physical slot snapping; final pin-to-pin census must remain <=450um")
     p.add_argument("--a0-band-width", choices=["4w", "8w", "16w", "2x16w"], default=None,
                    help="constrain every band tree to a physically supported common NDR; absent searches measured widths")
+    p.add_argument("--a0-band-window", type=int, default=None,
+                   help="R32 opt-in: band feeds prefer anchors whose island pin window keeps <= N horizontal pieces")
+    p.add_argument("--a0-band-window-tol", type=float, default=10.0,
+                   help="R32: max worst-corner match loss (ps) accepted to move a band feed to an anchor with window room")
+    p.add_argument("--a0-band-col-dx", type=float, default=None,
+                   help="R32 opt-in: band y-tree column = feed column + DX um (off the column-tree column)")
     p.add_argument("--a0-band-up", type=int, default=4,
                    help="R26: max top-tree levels above the column tap a band tree may anchor on (equal levels incl. the skipped edges)")
     p.add_argument("--a0-tap-jog", type=float, default=0.0,

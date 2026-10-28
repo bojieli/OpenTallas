@@ -447,6 +447,8 @@ def main(argv=None):
         return 2
     spec,mesh=export(B)
     spec['summary']['planner_legalization']=stats
+    if B.get('a0') and (getattr(a,'a0_band_window',None) is not None or getattr(a,'a0_band_col_dx',None)):
+        spec['summary']['band_trees']=B['a0']['band_trees']   # R32 opt-ins only (default output unchanged)
     spec['summary']['tool_sha256']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     spec['summary']['planner_tool_sha256']=hashlib.sha256(Path(M.__file__).read_bytes()).hexdigest()
     out=Path(a.out); out.mkdir(parents=True,exist_ok=True)
