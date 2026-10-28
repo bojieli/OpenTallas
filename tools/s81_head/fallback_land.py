@@ -194,7 +194,7 @@ def cmd_compose(a):
         observer = {k: observer[k] for k in required}
     try:
         raw, side = CLP.compose(plan, tab, a.plan, observer_part=a.observer,
-                               observer=observer, monitor=a.monitor)
+                               observer=observer, monitor=a.monitor, band_reserve=a.band_reserve)
     except Exception as e:  # report the exact first blocker; do not invent geometry
         rep["compose"] = dict(status="FAIL", error=f"{type(e).__name__}: {e}")
         (out / "compose_report.json").write_text(json.dumps(rep, indent=1) + "\n")
@@ -296,6 +296,8 @@ def main(argv=None):
     c.add_argument("--out", required=True)
     c.add_argument("--observer", default="ctl")
     c.add_argument("--observer-spec", help="JSON actual {module,instance_suffix,fault_port,ready_port}; binding is checked by clock_landings, default stays OPEN")
+    c.add_argument("--band-reserve", default="padded", choices=["padded", "live", "ring_ff"],
+                   help="storage band size: padded (default), live, ring_ff (DIE-HEAD-11: ring flop count x mapped footprint)")
     c.add_argument("--monitor", default="reset", choices=["reset", "dataflow", "region"], help="monitor network: reset-wavefront cohorts (default), uniform dataflow (no type split) or region (dataflow walk incl. same-region links; landed-mask type split)")
     v = sub.add_parser("variant")
     v.add_argument("plan")
