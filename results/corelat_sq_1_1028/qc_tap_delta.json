@@ -1,0 +1,3590 @@
+{
+ "table": "results/corelat_sq_1_1028/qc_core_taps.json",
+ "plan": "/srv/opentallas-scratch2/claude/corelat-sq-1/in/qc_grpP_event.json",
+ "plan_sha": "40b05f16d753",
+ "types": {
+  "cbf_q01": {
+   "count": 23,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_t02",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t02.ck",
+     "placements": 23,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t02.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       212.38
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t12",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t12.ck",
+     "placements": 23,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t12.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       212.38
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t03",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t03.ck",
+     "placements": 23,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t03.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t13",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t13.ck",
+     "placements": 23,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t13.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "cbf_q11": {
+   "count": 24,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_t22",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t22.ck",
+     "placements": 24,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t22.ck",
+      "kind": "core",
+      "xy": [
+       191.888,
+       212.38
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t32",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t32.ck",
+     "placements": 24,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t32.ck",
+      "kind": "core",
+      "xy": [
+       1043.632,
+       212.38
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t23",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t23.ck",
+     "placements": 24,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t23.ck",
+      "kind": "core",
+      "xy": [
+       191.888,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t33",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t33.ck",
+     "placements": 24,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t33.ck",
+      "kind": "core",
+      "xy": [
+       1043.632,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "sle_su_c": {
+   "count": 6,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_suvm_u_vm8q_u_va",
+     "module": "qfd_dv_s8x_vmr",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_va.ck",
+     "placements": 6,
+     "current": {
+      "insertion_ps": 386,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit: MEASURED TT insertion 386 ps (vmr_s6h); early core tap, the spine delivers it 136 ps ea"
+     },
+     "source": "SIGNED vmr f4kfinal 77013e5059 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit/signoff_f4k/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "within_band_tt_ps": 5.1,
+     "action": "DROP early tap -> common"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_vb",
+     "module": "qfd_dv_s8x_vmr",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_vb.ck",
+     "placements": 6,
+     "current": {
+      "insertion_ps": 386,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit: MEASURED TT insertion 386 ps (vmr_s6h); early core tap, the spine delivers it 136 ps ea"
+     },
+     "source": "SIGNED vmr f4kfinal 77013e5059 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit/signoff_f4k/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "within_band_tt_ps": 5.1,
+     "action": "DROP early tap -> common"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_vc",
+     "module": "qfd_dv_s8x_vmr",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_vc.ck",
+     "placements": 6,
+     "current": {
+      "insertion_ps": 386,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit: MEASURED TT insertion 386 ps (vmr_s6h); early core tap, the spine delivers it 136 ps ea"
+     },
+     "source": "SIGNED vmr f4kfinal 77013e5059 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit/signoff_f4k/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "within_band_tt_ps": 5.1,
+     "action": "DROP early tap -> common"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_cl",
+     "module": "qfd_dv_s8x_crh",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_cl.ck",
+     "placements": 6,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "SIGNED s8x_crh qc/closed (QC-CORES signed re-verify VALID, LEC EQ 3697) /srv/opentallas-scratch2/claude/qc/closed/qfd_dv_s8x_crh/kit/signoff/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_suvm_u_vm8q_u_cl.ck",
+      "kind": "core",
+      "xy": [
+       1071.36,
+       190.08
+      ],
+      "insertion_ps": 292.49,
+      "insertion_ff_ps": 240.62,
+      "budget_owner": "SIGNED s8x_crh qc/closed (QC-CORES signed re-verify VALID, LEC EQ 3697) /srv/opentallas-scratch2/claude/qc/closed/qfd_dv_s8x_crh/kit/signoff/signoff.json insertion_pinflops",
+      "early_tt_ps": 42.5,
+      "early_ff_ps": 38.1,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_pg",
+     "module": "qfd_dv_s8x_prog",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_pg.ck",
+     "placements": 6,
+     "current": {
+      "insertion_ps": 481,
+      "insertion_ff_ps": null,
+      "budget_owner": "UNQUALIFIED new-aspect planning budget only; fresh native child insertion contract required before a"
+     },
+     "source": "SIGNED prog s8b 6aa7f1fc4d (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_prog__s8b__6aa7f1fc4d/kit/signoff/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "action": "EARLY TAP (re-tap)",
+     "new": {
+      "name": "u_suvm_u_vm8q_u_pg.ck",
+      "kind": "core",
+      "xy": [
+       194.424,
+       380.214
+      ],
+      "insertion_ps": 472.71,
+      "insertion_ff_ps": 363.28,
+      "budget_owner": "SIGNED prog s8b 6aa7f1fc4d (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_prog__s8b__6aa7f1fc4d/kit/signoff/signoff.json insertion_pinflops",
+      "early_tt_ps": 222.7,
+      "early_ff_ps": 160.8,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_ch",
+     "module": "qfd_dv_s8x_crh",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_ch.ck",
+     "placements": 6,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "SIGNED s8x_crh qc/closed (QC-CORES signed re-verify VALID, LEC EQ 3697) /srv/opentallas-scratch2/claude/qc/closed/qfd_dv_s8x_crh/kit/signoff/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_suvm_u_vm8q_u_ch.ck",
+      "kind": "core",
+      "xy": [
+       518.4,
+       518.4
+      ],
+      "insertion_ps": 292.49,
+      "insertion_ff_ps": 240.62,
+      "budget_owner": "SIGNED s8x_crh qc/closed (QC-CORES signed re-verify VALID, LEC EQ 3697) /srv/opentallas-scratch2/claude/qc/closed/qfd_dv_s8x_crh/kit/signoff/signoff.json insertion_pinflops",
+      "early_tt_ps": 42.5,
+      "early_ff_ps": 38.1,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_bt",
+     "module": "qfd_dv_s8x_btab",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_bt.ck",
+     "placements": 6,
+     "current": {
+      "insertion_ps": 445,
+      "insertion_ff_ps": null,
+      "budget_owner": "UNQUALIFIED new-aspect planning budget only; fresh native child insertion contract required before a"
+     },
+     "source": "parent_budget pin_register_mean physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab/insertion.json (routed SPEF ref view xbtab_86288faea; VIEW NOT FINAL: btab r8/r10 still open)",
+     "label": "CHECKED read; view NOT FINAL",
+     "action": "EARLY TAP (re-tap)",
+     "new": {
+      "name": "u_suvm_u_vm8q_u_bt.ck",
+      "kind": "core",
+      "xy": [
+       842.424,
+       380.214
+      ],
+      "insertion_ps": 352.8,
+      "insertion_ff_ps": 295.2,
+      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab/insertion.json (routed SPEF ref view xbtab_86288faea; VIEW NOT FINAL: btab r8/r10 still open)",
+      "early_tt_ps": 102.8,
+      "early_ff_ps": 92.7,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_suvm_u_su8",
+     "module": "qfd_dv_s5_su8_rst3",
+     "pin": "ck",
+     "name": "u_suvm_u_su8.ck",
+     "placements": 6,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "SIGNED rst3 K0 hold_b (intel1 qccores1-1027/rst3_k0, adopted 10-27 06:15, routed LEC EQ) /srv/opentallas-scratch2/claude/corelat-sq-1/in/rst3_k0_hold_b/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "action": "no tap (common)"
+    }
+   ]
+  },
+  "cbf_q01_s2": {
+   "count": 1,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_t02",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t02.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t02.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       212.38
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t12",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t12.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t12.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       212.38
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t03",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t03.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t03.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t13",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t13.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t13.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "cbf_q00_s2": {
+   "count": 1,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_t00",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t00.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t00.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       221.02
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t10",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t10.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t10.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       221.02
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t01",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t01.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t01.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t11",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t11.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t11.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "cbx_q10__cl94a12200": {
+   "count": 28,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_t20",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t20.ck",
+     "placements": 28,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t20.ck",
+      "kind": "core",
+      "xy": [
+       191.888,
+       221.02
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t30",
+     "module": "qfd_tile_nl_a0c",
+     "pin": "ck",
+     "name": "u_t30.ck",
+     "placements": 28,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nl_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t30.ck",
+      "kind": "core",
+      "xy": [
+       1043.632,
+       221.02
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t21",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t21.ck",
+     "placements": 28,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t21.ck",
+      "kind": "core",
+      "xy": [
+       191.888,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t31",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t31.ck",
+     "placements": 28,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t31.ck",
+      "kind": "core",
+      "xy": [
+       1043.632,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "cbx_q10__cl89936551": {
+   "count": 20,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_t20",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t20.ck",
+     "placements": 20,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t20.ck",
+      "kind": "core",
+      "xy": [
+       191.888,
+       221.02
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t30",
+     "module": "qfd_tile_nl_a0c",
+     "pin": "ck",
+     "name": "u_t30.ck",
+     "placements": 20,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nl_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t30.ck",
+      "kind": "core",
+      "xy": [
+       1043.632,
+       221.02
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t21",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t21.ck",
+     "placements": 20,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t21.ck",
+      "kind": "core",
+      "xy": [
+       191.888,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t31",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t31.ck",
+     "placements": 20,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t31.ck",
+      "kind": "core",
+      "xy": [
+       1043.632,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "cbn_q00__cld7bf7197": {
+   "count": 1,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_t00",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t00.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t00.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       221.02
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t10",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t10.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t10.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       221.02
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t01",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t01.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t01.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t11",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t11.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t11.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "cbn_q00__cl622f65d2": {
+   "count": 13,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_t00",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t00.ck",
+     "placements": 13,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t00.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       221.02
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t10",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t10.ck",
+     "placements": 13,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t10.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       221.02
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t01",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t01.ck",
+     "placements": 13,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t01.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t11",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t11.ck",
+     "placements": 13,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t11.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "cbn_q00__cldbcda913": {
+   "count": 10,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_t00",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t00.ck",
+     "placements": 10,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t00.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       221.02
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t10",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t10.ck",
+     "placements": 10,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t10.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       221.02
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t01",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t01.ck",
+     "placements": 10,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t01.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t11",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t11.ck",
+     "placements": 10,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t11.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "cbn_q01__cldd6ea846": {
+   "count": 1,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_t02",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t02.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t02.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       212.38
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t12",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t12.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t12.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       212.38
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t03",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t03.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t03.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t13",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t13.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t13.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "cbn_q01__clab6e67f2": {
+   "count": 13,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_t02",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t02.ck",
+     "placements": 13,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t02.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       212.38
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t12",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t12.ck",
+     "placements": 13,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t12.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       212.38
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t03",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t03.ck",
+     "placements": 13,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t03.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t13",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t13.ck",
+     "placements": 13,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t13.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "cbn_q01__cld9ff4c40": {
+   "count": 10,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_t02",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t02.ck",
+     "placements": 10,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t02.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       212.38
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t12",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t12.ck",
+     "placements": 10,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t12.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       212.38
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t03",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t03.ck",
+     "placements": 10,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t03.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t13",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t13.ck",
+     "placements": 10,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t13.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "cbn_q11__cl5cc92dfe": {
+   "count": 14,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_t22",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t22.ck",
+     "placements": 14,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t22.ck",
+      "kind": "core",
+      "xy": [
+       191.888,
+       212.38
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t32",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t32.ck",
+     "placements": 14,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t32.ck",
+      "kind": "core",
+      "xy": [
+       1043.632,
+       212.38
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t23",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t23.ck",
+     "placements": 14,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t23.ck",
+      "kind": "core",
+      "xy": [
+       191.888,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t33",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t33.ck",
+     "placements": 14,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t33.ck",
+      "kind": "core",
+      "xy": [
+       1043.632,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "cbn_q11__cl49ae4555": {
+   "count": 10,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_t22",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t22.ck",
+     "placements": 10,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t22.ck",
+      "kind": "core",
+      "xy": [
+       191.888,
+       212.38
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t32",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t32.ck",
+     "placements": 10,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t32.ck",
+      "kind": "core",
+      "xy": [
+       1043.632,
+       212.38
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t23",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t23.ck",
+     "placements": 10,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t23.ck",
+      "kind": "core",
+      "xy": [
+       191.888,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t33",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t33.ck",
+     "placements": 10,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t33.ck",
+      "kind": "core",
+      "xy": [
+       1043.632,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "cbf_q00__cl1b5a6458": {
+   "count": 13,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_t00",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t00.ck",
+     "placements": 13,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t00.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       221.02
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t10",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t10.ck",
+     "placements": 13,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t10.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       221.02
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t01",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t01.ck",
+     "placements": 13,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t01.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t11",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t11.ck",
+     "placements": 13,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t11.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "cbf_q00__cl870de686": {
+   "count": 10,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_t00",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t00.ck",
+     "placements": 10,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t00.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       221.02
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t10",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t10.ck",
+     "placements": 10,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t10.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       221.02
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t01",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t01.ck",
+     "placements": 10,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t01.ck",
+      "kind": "core",
+      "xy": [
+       200.528,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_t11",
+     "module": "qfd_tile_nk_a0c",
+     "pin": "ck",
+     "name": "u_t11.ck",
+     "placements": 10,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "physical/ref_tile/qfd_tile_nk_a0cv8 post-CTS OT_TAP_CHECK (slowest sink <= 290 ps TT)"
+     },
+     "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+     "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_t11.ck",
+      "kind": "core",
+      "xy": [
+       1034.992,
+       1525.66
+      ],
+      "insertion_ps": 390.0,
+      "insertion_ff_ps": 312.0,
+      "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+      "early_tt_ps": 140.0,
+      "early_ff_ps": 109.5,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "slw_su_l1__clcc9d0155": {
+   "count": 1,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_lane4",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane4.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane4.ck",
+      "kind": "core",
+      "xy": [
+       224.64,
+       164.16
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane5",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane5.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane5.ck",
+      "kind": "core",
+      "xy": [
+       224.64,
+       483.84
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane6",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane6.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane6.ck",
+      "kind": "core",
+      "xy": [
+       224.64,
+       855.36
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane7",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane7.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane7.ck",
+      "kind": "core",
+      "xy": [
+       224.64,
+       1175.04
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "slw_su_l1__cla2a78701": {
+   "count": 5,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_lane4",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane4.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane4.ck",
+      "kind": "core",
+      "xy": [
+       224.64,
+       164.16
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane5",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane5.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane5.ck",
+      "kind": "core",
+      "xy": [
+       224.64,
+       483.84
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane6",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane6.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane6.ck",
+      "kind": "core",
+      "xy": [
+       224.64,
+       855.36
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane7",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane7.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane7.ck",
+      "kind": "core",
+      "xy": [
+       224.64,
+       1175.04
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "slw_su_c__cl92142dac": {
+   "count": 5,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_suvm_u_vm8q_u_va",
+     "module": "qfd_dv_s8x_vmr",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_va.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 386,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit: MEASURED TT insertion 386 ps (vmr_s6h); early core tap, the spine delivers it 136 ps ea"
+     },
+     "source": "SIGNED vmr f4kfinal 77013e5059 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit/signoff_f4k/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "within_band_tt_ps": 5.1,
+     "action": "DROP early tap -> common"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_vb",
+     "module": "qfd_dv_s8x_vmr",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_vb.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 386,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit: MEASURED TT insertion 386 ps (vmr_s6h); early core tap, the spine delivers it 136 ps ea"
+     },
+     "source": "SIGNED vmr f4kfinal 77013e5059 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit/signoff_f4k/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "within_band_tt_ps": 5.1,
+     "action": "DROP early tap -> common"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_vc",
+     "module": "qfd_dv_s8x_vmr",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_vc.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 386,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit: MEASURED TT insertion 386 ps (vmr_s6h); early core tap, the spine delivers it 136 ps ea"
+     },
+     "source": "SIGNED vmr f4kfinal 77013e5059 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit/signoff_f4k/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "within_band_tt_ps": 5.1,
+     "action": "DROP early tap -> common"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_cl",
+     "module": "qfd_dv_s8_crh_rp1",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_cl.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 349,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit: MEASURED TT insertion 349 ps (rp1 f58); early core tap, the spine delivers it 99 ps ear"
+     },
+     "source": "SIGNED crh_rp1 f4g 5ed4500430 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8_crh_rp1__f4g__5ed4500430/kit/signoff_main/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "action": "DROP early tap -> common"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_pg",
+     "module": "qfd_dv_s8x_prog",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_pg.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 481,
+      "insertion_ff_ps": null,
+      "budget_owner": "UNQUALIFIED new-aspect planning budget only; fresh native child insertion contract required before a"
+     },
+     "source": "SIGNED prog s8b 6aa7f1fc4d (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_prog__s8b__6aa7f1fc4d/kit/signoff/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "action": "EARLY TAP (re-tap)",
+     "new": {
+      "name": "u_suvm_u_vm8q_u_pg.ck",
+      "kind": "core",
+      "xy": [
+       194.424,
+       380.214
+      ],
+      "insertion_ps": 472.71,
+      "insertion_ff_ps": 363.28,
+      "budget_owner": "SIGNED prog s8b 6aa7f1fc4d (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_prog__s8b__6aa7f1fc4d/kit/signoff/signoff.json insertion_pinflops",
+      "early_tt_ps": 222.7,
+      "early_ff_ps": 160.8,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_ch",
+     "module": "qfd_dv_s8_crh_rp1",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_ch.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 349,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit: MEASURED TT insertion 349 ps (rp1 f58); early core tap, the spine delivers it 99 ps ear"
+     },
+     "source": "SIGNED crh_rp1 f4g 5ed4500430 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8_crh_rp1__f4g__5ed4500430/kit/signoff_main/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "action": "DROP early tap -> common"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_bt",
+     "module": "qfd_dv_s8x_btab",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_bt.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 445,
+      "insertion_ff_ps": null,
+      "budget_owner": "UNQUALIFIED new-aspect planning budget only; fresh native child insertion contract required before a"
+     },
+     "source": "parent_budget pin_register_mean physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab/insertion.json (routed SPEF ref view xbtab_86288faea; VIEW NOT FINAL: btab r8/r10 still open)",
+     "label": "CHECKED read; view NOT FINAL",
+     "action": "EARLY TAP (re-tap)",
+     "new": {
+      "name": "u_suvm_u_vm8q_u_bt.ck",
+      "kind": "core",
+      "xy": [
+       842.424,
+       380.214
+      ],
+      "insertion_ps": 352.8,
+      "insertion_ff_ps": 295.2,
+      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab/insertion.json (routed SPEF ref view xbtab_86288faea; VIEW NOT FINAL: btab r8/r10 still open)",
+      "early_tt_ps": 102.8,
+      "early_ff_ps": 92.7,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_suvm_u_su8",
+     "module": "qfd_dv_s5_su8_rst3",
+     "pin": "ck",
+     "name": "u_suvm_u_su8.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "SIGNED rst3 K0 hold_b (intel1 qccores1-1027/rst3_k0, adopted 10-27 06:15, routed LEC EQ) /srv/opentallas-scratch2/claude/corelat-sq-1/in/rst3_k0_hold_b/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "action": "no tap (common)"
+    }
+   ]
+  },
+  "slw_su_c__cl19bb38ef": {
+   "count": 1,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_suvm_u_vm8q_u_va",
+     "module": "qfd_dv_s8x_vmr",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_va.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 386,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit: MEASURED TT insertion 386 ps (vmr_s6h); early core tap, the spine delivers it 136 ps ea"
+     },
+     "source": "SIGNED vmr f4kfinal 77013e5059 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit/signoff_f4k/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "within_band_tt_ps": 5.1,
+     "action": "DROP early tap -> common"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_vb",
+     "module": "qfd_dv_s8x_vmr",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_vb.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 386,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit: MEASURED TT insertion 386 ps (vmr_s6h); early core tap, the spine delivers it 136 ps ea"
+     },
+     "source": "SIGNED vmr f4kfinal 77013e5059 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit/signoff_f4k/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "within_band_tt_ps": 5.1,
+     "action": "DROP early tap -> common"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_vc",
+     "module": "qfd_dv_s8x_vmr",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_vc.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 386,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit: MEASURED TT insertion 386 ps (vmr_s6h); early core tap, the spine delivers it 136 ps ea"
+     },
+     "source": "SIGNED vmr f4kfinal 77013e5059 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit/signoff_f4k/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "within_band_tt_ps": 5.1,
+     "action": "DROP early tap -> common"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_cl",
+     "module": "qfd_dv_s8_crh_rp1",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_cl.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 349,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit: MEASURED TT insertion 349 ps (rp1 f58); early core tap, the spine delivers it 99 ps ear"
+     },
+     "source": "SIGNED crh_rp1 f4g 5ed4500430 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8_crh_rp1__f4g__5ed4500430/kit/signoff_main/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "action": "DROP early tap -> common"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_pg",
+     "module": "qfd_dv_s8x_prog",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_pg.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 481,
+      "insertion_ff_ps": null,
+      "budget_owner": "UNQUALIFIED new-aspect planning budget only; fresh native child insertion contract required before a"
+     },
+     "source": "SIGNED prog s8b 6aa7f1fc4d (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_prog__s8b__6aa7f1fc4d/kit/signoff/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "action": "EARLY TAP (re-tap)",
+     "new": {
+      "name": "u_suvm_u_vm8q_u_pg.ck",
+      "kind": "core",
+      "xy": [
+       194.424,
+       380.214
+      ],
+      "insertion_ps": 472.71,
+      "insertion_ff_ps": 363.28,
+      "budget_owner": "SIGNED prog s8b 6aa7f1fc4d (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_prog__s8b__6aa7f1fc4d/kit/signoff/signoff.json insertion_pinflops",
+      "early_tt_ps": 222.7,
+      "early_ff_ps": 160.8,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_ch",
+     "module": "qfd_dv_s8_crh_rp1",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_ch.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 349,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit: MEASURED TT insertion 349 ps (rp1 f58); early core tap, the spine delivers it 99 ps ear"
+     },
+     "source": "SIGNED crh_rp1 f4g 5ed4500430 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8_crh_rp1__f4g__5ed4500430/kit/signoff_main/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "action": "DROP early tap -> common"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_bt",
+     "module": "qfd_dv_s8x_btab",
+     "pin": "ck",
+     "name": "u_suvm_u_vm8q_u_bt.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 445,
+      "insertion_ff_ps": null,
+      "budget_owner": "UNQUALIFIED new-aspect planning budget only; fresh native child insertion contract required before a"
+     },
+     "source": "parent_budget pin_register_mean physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab/insertion.json (routed SPEF ref view xbtab_86288faea; VIEW NOT FINAL: btab r8/r10 still open)",
+     "label": "CHECKED read; view NOT FINAL",
+     "action": "EARLY TAP (re-tap)",
+     "new": {
+      "name": "u_suvm_u_vm8q_u_bt.ck",
+      "kind": "core",
+      "xy": [
+       842.424,
+       380.214
+      ],
+      "insertion_ps": 352.8,
+      "insertion_ff_ps": 295.2,
+      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab/insertion.json (routed SPEF ref view xbtab_86288faea; VIEW NOT FINAL: btab r8/r10 still open)",
+      "early_tt_ps": 102.8,
+      "early_ff_ps": 92.7,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_suvm_u_su8",
+     "module": "qfd_dv_s5_su8_rst3",
+     "pin": "ck",
+     "name": "u_suvm_u_su8.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "SIGNED rst3 K0 hold_b (intel1 qccores1-1027/rst3_k0, adopted 10-27 06:15, routed LEC EQ) /srv/opentallas-scratch2/claude/corelat-sq-1/in/rst3_k0_hold_b/signoff.json insertion_pinflops",
+     "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+     "action": "no tap (common)"
+    }
+   ]
+  },
+  "slw_su_l0__cl76fb247e": {
+   "count": 3,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_lane0",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane0.ck",
+     "placements": 3,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane0.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       164.16
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane1",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane1.ck",
+     "placements": 3,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane1.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       483.84
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane2",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane2.ck",
+     "placements": 3,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane2.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       855.36
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane3",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane3.ck",
+     "placements": 3,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane3.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       1175.04
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "slw_su_l0__cl1e5219ea": {
+   "count": 2,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_lane0",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane0.ck",
+     "placements": 2,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane0.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       164.16
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane1",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane1.ck",
+     "placements": 2,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane1.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       483.84
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane2",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane2.ck",
+     "placements": 2,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane2.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       855.36
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane3",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane3.ck",
+     "placements": 2,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane3.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       1175.04
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "slw_su_l0__cl1a1c1f8f": {
+   "count": 1,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_lane0",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane0.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane0.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       164.16
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane1",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane1.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane1.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       483.84
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane2",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane2.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane2.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       855.36
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane3",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane3.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane3.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       1175.04
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "sle_su_l1__cl5ea486db": {
+   "count": 1,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_lane4",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane4.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane4.ck",
+      "kind": "core",
+      "xy": [
+       224.64,
+       164.16
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane5",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane5.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane5.ck",
+      "kind": "core",
+      "xy": [
+       224.64,
+       483.84
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane6",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane6.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane6.ck",
+      "kind": "core",
+      "xy": [
+       224.64,
+       855.36
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane7",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane7.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane7.ck",
+      "kind": "core",
+      "xy": [
+       224.64,
+       1175.04
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "sle_su_l1__clc6d66f5b": {
+   "count": 5,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_lane4",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane4.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane4.ck",
+      "kind": "core",
+      "xy": [
+       224.64,
+       164.16
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane5",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane5.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane5.ck",
+      "kind": "core",
+      "xy": [
+       224.64,
+       483.84
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane6",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane6.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane6.ck",
+      "kind": "core",
+      "xy": [
+       224.64,
+       855.36
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane7",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane7.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane7.ck",
+      "kind": "core",
+      "xy": [
+       224.64,
+       1175.04
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "sle_su_l0__cl7a55c676": {
+   "count": 5,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_lane0",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane0.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane0.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       164.16
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane1",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane1.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane1.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       483.84
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane2",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane2.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane2.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       855.36
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane3",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane3.ck",
+     "placements": 5,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane3.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       1175.04
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  },
+  "sle_su_l0__cl086d85ba": {
+   "count": 1,
+   "core_taps_early": true,
+   "all_signed": false,
+   "rows": [
+    {
+     "inst": "u_lane0",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane0.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane0.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       164.16
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane1",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane1.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane1.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       483.84
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane2",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane2.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane2.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       855.36
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    },
+    {
+     "inst": "u_lane3",
+     "module": "qfd_qc_su_lane_w",
+     "pin": "ck",
+     "name": "u_lane3.ck",
+     "placements": 1,
+     "current": {
+      "insertion_ps": 250,
+      "insertion_ff_ps": null,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+     "label": "UNCHECKED model",
+     "action": "EARLY TAP (new)",
+     "new": {
+      "name": "u_lane3.ck",
+      "kind": "core",
+      "xy": [
+       397.44,
+       1175.04
+      ],
+      "insertion_ps": 288.4,
+      "insertion_ff_ps": 230.7,
+      "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+      "early_tt_ps": 38.4,
+      "early_ff_ps": 28.2,
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+     }
+    }
+   ]
+  }
+ },
+ "summary": {
+  "early_parent_budget": 876,
+  "drop": 48,
+  "early_signed": 24,
+  "common": 12
+ }
+}

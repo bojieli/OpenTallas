@@ -1,0 +1,90 @@
+{
+ "dsdv_idx_tx_n32": {
+  "label": "lib_etm_range physical/s81_die_views/closed_import/dsdv_idx_tx_n32 (ETM min/max_clock_tree_path only; mean = midpoint, NOT a register census)",
+  "tt": {
+   "mean": 829.1,
+   "min": 727.6,
+   "max": 930.6
+  },
+  "ff": {
+   "mean": 665.2,
+   "min": 582.2,
+   "max": 748.1
+  },
+  "checked": "UNCHECKED (ETM range, no routed census)"
+ },
+ "ot_rom_4096x72_m8": {
+  "label": "parent_budget memory macro (asap7_memory_macros_v2 lib: no internal clock tree, CK pin = register; insertion 0)",
+  "tt": {
+   "mean": 0.0
+  },
+  "ff": {
+   "mean": 0.0
+  },
+  "checked": "CHECKED read (lib has no max_clock_tree_path)"
+ },
+ "ot_sram_1r1w_512x128_m4_r0c0": {
+  "label": "parent_budget memory macro (asap7_memory_macros_v2 lib: no internal clock tree, CK pin = register; insertion 0)",
+  "tt": {
+   "mean": 0.0
+  },
+  "ff": {
+   "mean": 0.0
+  },
+  "checked": "CHECKED read (lib has no max_clock_tree_path)"
+ },
+ "ot_s81c_attn_hcore": {
+  "label": "parent_budget pin_register_mean OpenSTA on routed intel2 cores-kits/hv/hcore/kit_ctsA_d75 6_final.odb+spef (10-26, NOT SIGNED: TT -4.62 / FF hold -28.13; outline == plan LEF); boundary regs n=1213",
+  "tt": {
+   "mean": 252.4,
+   "min": 244.0,
+   "max": 261.9
+  },
+  "ff": {
+   "mean": 208.0,
+   "min": 200.5,
+   "max": 216.8
+  },
+  "checked": "CHECKED read (routed SPEF measure, sub-lane); view NOT SIGNED"
+ },
+ "ot_s81sl_ve_m": {
+  "label": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/ve_m",
+  "tt": {
+   "mean": 365.0
+  },
+  "ff": {
+   "mean": 292.0
+  },
+  "checked": "UNCHECKED model (CTS pending)"
+ },
+ "ot_s81sl_ve_s": {
+  "label": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/ve_s",
+  "tt": {
+   "mean": 284.7
+  },
+  "ff": {
+   "mean": 227.8
+  },
+  "checked": "UNCHECKED model (CTS pending)"
+ },
+ "ot_s81sl_vn_a": {
+  "label": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/vn_a",
+  "tt": {
+   "mean": 370.5
+  },
+  "ff": {
+   "mean": 296.4
+  },
+  "checked": "UNCHECKED model (CTS pending)"
+ },
+ "ot_s81sl_vn_b": {
+  "label": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/vn_b",
+  "tt": {
+   "mean": 374.2
+  },
+  "ff": {
+   "mean": 299.4
+  },
+  "checked": "UNCHECKED model (CTS pending)"
+ }
+}

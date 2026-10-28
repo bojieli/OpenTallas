@@ -1,0 +1,867 @@
+{
+ "plan": "/srv/opentallas-scratch2/claude/corelat-sq-1/in/qc_grpP_event.json",
+ "plan_sha": "40b05f16d753",
+ "common_tt": 250.0,
+ "common_ff": 202.5,
+ "rows": [
+  {
+   "module": "qfd_tile_nk_a0c",
+   "placements": 720,
+   "types": 16,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+    "tt": {
+     "mean": 390.0,
+     "min": 368.0,
+     "max": 420.0
+    },
+    "ff": {
+     "mean": 312.0,
+     "min": 294.0,
+     "max": 336.0
+    },
+    "checked": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)"
+   },
+   "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+   "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+   "tt": {
+    "mean": 390.0,
+    "min": 368.0,
+    "max": 420.0
+   },
+   "ff": {
+    "mean": 312.0,
+    "min": 294.0,
+    "max": 336.0
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 390.0,
+    "insertion_ff_ps": 312.0,
+    "early_tt_ps": 140.0,
+    "early_ff_ps": 109.5,
+    "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view"
+   },
+   "hold_est": {
+    "comp_ff": 312.0,
+    "late": 24.0,
+    "early": 18.0,
+    "hold_in": -15.8,
+    "hold_out": -7.7,
+    "hold_in_u60": -50.8,
+    "hold_out_u60": -42.7,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "qfd_qc_su_lane_w",
+   "placements": 96,
+   "types": 9,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+    "tt": {
+     "mean": 288.4
+    },
+    "ff": {
+     "mean": 230.7
+    },
+    "checked": "UNCHECKED model"
+   },
+   "source": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+   "label": "UNCHECKED model",
+   "tt": {
+    "mean": 288.4
+   },
+   "ff": {
+    "mean": 230.7
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 288.4,
+    "insertion_ff_ps": 230.7,
+    "early_tt_ps": 38.4,
+    "early_ff_ps": 28.2,
+    "budget_owner": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "qfd_tile_nl_a0c",
+   "placements": 48,
+   "types": 2,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+    "tt": {
+     "mean": 390.0,
+     "min": 368.0,
+     "max": 420.0
+    },
+    "ff": {
+     "mean": 312.0,
+     "min": 294.0,
+     "max": 336.0
+    },
+    "checked": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)"
+   },
+   "source": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+   "label": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)",
+   "tt": {
+    "mean": 390.0,
+    "min": 368.0,
+    "max": 420.0
+   },
+   "ff": {
+    "mean": 312.0,
+    "min": 294.0,
+    "max": 336.0
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 390.0,
+    "insertion_ff_ps": 312.0,
+    "early_tt_ps": 140.0,
+    "early_ff_ps": 109.5,
+    "budget_owner": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view"
+   },
+   "hold_est": {
+    "comp_ff": 312.0,
+    "late": 24.0,
+    "early": 18.0,
+    "hold_in": -15.8,
+    "hold_out": -7.7,
+    "hold_in_u60": -50.8,
+    "hold_out_u60": -42.7,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "qfd_dv_s8x_vmr",
+   "placements": 36,
+   "types": 3,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/qfd_dv_s5_vmr/views/qfd_dv_s8x_vmr/qfd_dv_s8x_vmr.lef",
+     "sig": {
+      "size": [
+       259.2,
+       276.48
+      ],
+      "npins": 1509,
+      "pins_sha": "3154921c86"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 263.8,
+      "ff": 215.5
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [
+    {
+     "label": "vmr f4kfinal 77013e5059 (autopilot closed)",
+     "signoff": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit/signoff_f4k/signoff.json",
+     "verdict": "SIGNED",
+     "tt": {
+      "n": 1509,
+      "mean": 255.12,
+      "min": 239.83,
+      "max": 278.15,
+      "design": "qfd_dv_s8x_vmr",
+      "parasitics": "spef",
+      "clock_ports": [
+       "ck"
+      ]
+     },
+     "ff": {
+      "n": 1509,
+      "mean": 203.18,
+      "min": 189.49,
+      "max": 225.5,
+      "design": "qfd_dv_s8x_vmr",
+      "parasitics": "spef",
+      "clock_ports": [
+       "ck"
+      ]
+     },
+     "lef": null,
+     "lef_sig": null,
+     "lef_match_placed": null
+    }
+   ],
+   "source": "SIGNED vmr f4kfinal 77013e5059 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit/signoff_f4k/signoff.json insertion_pinflops",
+   "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+   "tt": {
+    "n": 1509,
+    "mean": 255.12,
+    "min": 239.83,
+    "max": 278.15,
+    "design": "qfd_dv_s8x_vmr",
+    "parasitics": "spef",
+    "clock_ports": [
+     "ck"
+    ]
+   },
+   "ff": {
+    "n": 1509,
+    "mean": 203.18,
+    "min": 189.49,
+    "max": 225.5,
+    "design": "qfd_dv_s8x_vmr",
+    "parasitics": "spef",
+    "clock_ports": [
+     "ck"
+    ]
+   },
+   "tap": {
+    "early": false,
+    "within_band": true,
+    "insertion_ps": 255.12,
+    "insertion_ff_ps": 203.18,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "SIGNED vmr f4kfinal 77013e5059 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit/signoff_f4k/signoff.json insertion_pinflops"
+   },
+   "hold_est": {
+    "comp_ff": 202.5,
+    "late": 23.0,
+    "early": 13.0,
+    "hold_in": -9.3,
+    "hold_out": 2.5,
+    "hold_in_u60": -44.3,
+    "hold_out_u60": -32.5,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "qfd_dv_s8x_crh",
+   "placements": 12,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/qfd_dv_s5_crh/views/qfd_dv_s8x_crh/qfd_dv_s8x_crh.lef",
+     "sig": {
+      "size": [
+       259.2,
+       276.48
+      ],
+      "npins": 998,
+      "pins_sha": "d4421e5939"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 303.0,
+      "ff": 257.9
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [
+    {
+     "label": "s8x_crh qc/closed (QC-CORES signed re-verify VALID, LEC EQ 3697)",
+     "signoff": "/srv/opentallas-scratch2/claude/qc/closed/qfd_dv_s8x_crh/kit/signoff/signoff.json",
+     "verdict": "SIGNED",
+     "tt": {
+      "n": 998,
+      "mean": 292.49,
+      "min": 274.88,
+      "max": 317.63,
+      "design": "qfd_dv_s8x_crh",
+      "parasitics": "spef",
+      "clock_ports": [
+       "ck"
+      ]
+     },
+     "ff": {
+      "n": 998,
+      "mean": 240.62,
+      "min": 223.61,
+      "max": 264.64,
+      "design": "qfd_dv_s8x_crh",
+      "parasitics": "spef",
+      "clock_ports": [
+       "ck"
+      ]
+     },
+     "lef": null,
+     "lef_sig": null,
+     "lef_match_placed": null
+    }
+   ],
+   "source": "SIGNED s8x_crh qc/closed (QC-CORES signed re-verify VALID, LEC EQ 3697) /srv/opentallas-scratch2/claude/qc/closed/qfd_dv_s8x_crh/kit/signoff/signoff.json insertion_pinflops",
+   "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+   "tt": {
+    "n": 998,
+    "mean": 292.49,
+    "min": 274.88,
+    "max": 317.63,
+    "design": "qfd_dv_s8x_crh",
+    "parasitics": "spef",
+    "clock_ports": [
+     "ck"
+    ]
+   },
+   "ff": {
+    "n": 998,
+    "mean": 240.62,
+    "min": 223.61,
+    "max": 264.64,
+    "design": "qfd_dv_s8x_crh",
+    "parasitics": "spef",
+    "clock_ports": [
+     "ck"
+    ]
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 292.49,
+    "insertion_ff_ps": 240.62,
+    "early_tt_ps": 42.5,
+    "early_ff_ps": 38.1,
+    "budget_owner": "SIGNED s8x_crh qc/closed (QC-CORES signed re-verify VALID, LEC EQ 3697) /srv/opentallas-scratch2/claude/qc/closed/qfd_dv_s8x_crh/kit/signoff/signoff.json insertion_pinflops"
+   },
+   "hold_est": {
+    "comp_ff": 240.6,
+    "late": 24.0,
+    "early": 17.0,
+    "hold_in": -12.3,
+    "hold_out": -3.2,
+    "hold_in_u60": -47.3,
+    "hold_out_u60": -38.2,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "qfd_dv_s8x_prog",
+   "placements": 12,
+   "types": 3,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/qfd_dv_s5_prog/views/qfd_dv_s8x_prog/qfd_dv_s8x_prog.lef",
+     "sig": {
+      "size": [
+       259.2,
+       354.24
+      ],
+      "npins": 1393,
+      "pins_sha": "07247aa8ff"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 364.3,
+      "ff": 301.1
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [
+    {
+     "label": "prog s8b 6aa7f1fc4d (autopilot closed)",
+     "signoff": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_prog__s8b__6aa7f1fc4d/kit/signoff/signoff.json",
+     "verdict": "SIGNED",
+     "tt": {
+      "n": 1392,
+      "mean": 472.71,
+      "min": 462.34,
+      "max": 506.5,
+      "design": "qfd_dv_s8x_prog",
+      "parasitics": "spef",
+      "clock_ports": [
+       "ck"
+      ]
+     },
+     "ff": {
+      "n": 1392,
+      "mean": 363.28,
+      "min": 350.5,
+      "max": 398.22,
+      "design": "qfd_dv_s8x_prog",
+      "parasitics": "spef",
+      "clock_ports": [
+       "ck"
+      ]
+     },
+     "lef": null,
+     "lef_sig": null,
+     "lef_match_placed": null
+    }
+   ],
+   "source": "SIGNED prog s8b 6aa7f1fc4d (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_prog__s8b__6aa7f1fc4d/kit/signoff/signoff.json insertion_pinflops",
+   "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+   "tt": {
+    "n": 1392,
+    "mean": 472.71,
+    "min": 462.34,
+    "max": 506.5,
+    "design": "qfd_dv_s8x_prog",
+    "parasitics": "spef",
+    "clock_ports": [
+     "ck"
+    ]
+   },
+   "ff": {
+    "n": 1392,
+    "mean": 363.28,
+    "min": 350.5,
+    "max": 398.22,
+    "design": "qfd_dv_s8x_prog",
+    "parasitics": "spef",
+    "clock_ports": [
+     "ck"
+    ]
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 472.71,
+    "insertion_ff_ps": 363.28,
+    "early_tt_ps": 222.7,
+    "early_ff_ps": 160.8,
+    "budget_owner": "SIGNED prog s8b 6aa7f1fc4d (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_prog__s8b__6aa7f1fc4d/kit/signoff/signoff.json insertion_pinflops"
+   },
+   "hold_est": {
+    "comp_ff": 363.3,
+    "late": 34.9,
+    "early": 12.8,
+    "hold_in": -29.9,
+    "hold_out": -5.3,
+    "hold_in_u60": -64.9,
+    "hold_out_u60": -40.3,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "qfd_dv_s8x_btab",
+   "placements": 12,
+   "types": 3,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab/qfd_dv_s8x_btab.lef",
+     "sig": {
+      "size": [
+       259.2,
+       354.24
+      ],
+      "npins": 1318,
+      "pins_sha": "9b3fb0f068"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 352.8,
+      "ff": 295.2
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget pin_register_mean physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab/insertion.json (routed SPEF ref view xbtab_86288faea; VIEW NOT FINAL: btab r8/r10 still open)",
+    "tt": {
+     "mean": 352.8,
+     "min": 328.5,
+     "max": 371.2
+    },
+    "ff": {
+     "mean": 295.2,
+     "min": 270.8,
+     "max": 313.6
+    },
+    "checked": "CHECKED read; view NOT FINAL"
+   },
+   "source": "parent_budget pin_register_mean physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab/insertion.json (routed SPEF ref view xbtab_86288faea; VIEW NOT FINAL: btab r8/r10 still open)",
+   "label": "CHECKED read; view NOT FINAL",
+   "tt": {
+    "mean": 352.8,
+    "min": 328.5,
+    "max": 371.2
+   },
+   "ff": {
+    "mean": 295.2,
+    "min": 270.8,
+    "max": 313.6
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 352.8,
+    "insertion_ff_ps": 295.2,
+    "early_tt_ps": 102.8,
+    "early_ff_ps": 92.7,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab/insertion.json (routed SPEF ref view xbtab_86288faea; VIEW NOT FINAL: btab r8/r10 still open)"
+   },
+   "hold_est": {
+    "comp_ff": 295.2,
+    "late": 18.4,
+    "early": 24.4,
+    "hold_in": -9.1,
+    "hold_out": -12.9,
+    "hold_in_u60": -44.1,
+    "hold_out_u60": -47.9,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "qfd_dv_s5_su8_rst3",
+   "placements": 12,
+   "types": 3,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/qfd_dv_s5_su8/views/qfd_dv_s5_su8_rst3/qfd_dv_s5_su8_rst3.lef",
+     "sig": {
+      "size": [
+       172.8,
+       129.6
+      ],
+      "npins": 1547,
+      "pins_sha": "371b5bd1b2"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 187.5,
+      "ff": 155.1
+     }
+    },
+    {
+     "lef": "physical/ref_tile/qfd_dv_s5_su8b/views/qfd_dv_s5_su8_rst3/qfd_dv_s5_su8_rst3.lef",
+     "sig": {
+      "size": [
+       216.0,
+       108.0
+      ],
+      "npins": 1547,
+      "pins_sha": "371b5bd1b2"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 203.5,
+      "ff": 165.9
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [
+    {
+     "label": "rst3 K0 hold_b (intel1 qccores1-1027/rst3_k0, adopted 10-27 06:15, routed LEC EQ)",
+     "signoff": "/srv/opentallas-scratch2/claude/corelat-sq-1/in/rst3_k0_hold_b/signoff.json",
+     "verdict": "SIGNED",
+     "tt": {
+      "n": 1547,
+      "mean": 242.12,
+      "min": 231.26,
+      "max": 257.08,
+      "design": "qfd_dv_s5_su8_rst3",
+      "parasitics": "spef",
+      "clock_ports": [
+       "ck"
+      ]
+     },
+     "ff": {
+      "n": 1547,
+      "mean": 193.52,
+      "min": 182.78,
+      "max": 208.37,
+      "design": "qfd_dv_s5_su8_rst3",
+      "parasitics": "spef",
+      "clock_ports": [
+       "ck"
+      ]
+     },
+     "lef": null,
+     "lef_sig": null,
+     "lef_match_placed": null
+    }
+   ],
+   "source": "SIGNED rst3 K0 hold_b (intel1 qccores1-1027/rst3_k0, adopted 10-27 06:15, routed LEC EQ) /srv/opentallas-scratch2/claude/corelat-sq-1/in/rst3_k0_hold_b/signoff.json insertion_pinflops",
+   "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+   "tt": {
+    "n": 1547,
+    "mean": 242.12,
+    "min": 231.26,
+    "max": 257.08,
+    "design": "qfd_dv_s5_su8_rst3",
+    "parasitics": "spef",
+    "clock_ports": [
+     "ck"
+    ]
+   },
+   "ff": {
+    "n": 1547,
+    "mean": 193.52,
+    "min": 182.78,
+    "max": 208.37,
+    "design": "qfd_dv_s5_su8_rst3",
+    "parasitics": "spef",
+    "clock_ports": [
+     "ck"
+    ]
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 242.12,
+    "insertion_ff_ps": 193.52,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "SIGNED rst3 K0 hold_b (intel1 qccores1-1027/rst3_k0, adopted 10-27 06:15, routed LEC EQ) /srv/opentallas-scratch2/claude/corelat-sq-1/in/rst3_k0_hold_b/signoff.json insertion_pinflops"
+   },
+   "hold_est": {
+    "comp_ff": 193.5,
+    "late": 14.8,
+    "early": 10.7,
+    "hold_in": -0.3,
+    "hold_out": 5.1,
+    "hold_in_u60": -35.3,
+    "hold_out_u60": -29.9,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "qfd_dv_s8_crh_rp1",
+   "placements": 12,
+   "types": 2,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/qfd_dv_s8_crh_rp1/views/qfd_dv_s8_crh_rp1/qfd_dv_s8_crh_rp1.lef",
+     "sig": {
+      "size": [
+       259.2,
+       276.48
+      ],
+      "npins": 998,
+      "pins_sha": "d4421e5939"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 288.8,
+      "ff": 237.2
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [
+    {
+     "label": "crh_rp1 f4g 5ed4500430 (autopilot closed)",
+     "signoff": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8_crh_rp1__f4g__5ed4500430/kit/signoff_main/signoff.json",
+     "verdict": "SIGNED",
+     "tt": {
+      "n": 998,
+      "mean": 244.32,
+      "min": 228.66,
+      "max": 271.91,
+      "design": "qfd_dv_s8_crh_rp1",
+      "parasitics": "spef",
+      "clock_ports": [
+       "ck"
+      ]
+     },
+     "ff": {
+      "n": 998,
+      "mean": 193.3,
+      "min": 179.26,
+      "max": 222.1,
+      "design": "qfd_dv_s8_crh_rp1",
+      "parasitics": "spef",
+      "clock_ports": [
+       "ck"
+      ]
+     },
+     "lef": null,
+     "lef_sig": null,
+     "lef_match_placed": null
+    },
+    {
+     "label": "crh_rp1 f62 d965a9aada (autopilot closed, OLD cache view)",
+     "signoff": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8_crh_rp1__f62__d965a9aada/kit/signoff/signoff.json",
+     "verdict": "SIGNED",
+     "tt": {
+      "n": 998,
+      "mean": 316.51,
+      "min": 294.89,
+      "max": 334.0,
+      "design": "qfd_dv_s8_crh_rp1",
+      "parasitics": "spef",
+      "clock_ports": [
+       "ck"
+      ]
+     },
+     "ff": {
+      "n": 998,
+      "mean": 256.97,
+      "min": 243.33,
+      "max": 276.66,
+      "design": "qfd_dv_s8_crh_rp1",
+      "parasitics": "spef",
+      "clock_ports": [
+       "ck"
+      ]
+     },
+     "lef": null,
+     "lef_sig": null,
+     "lef_match_placed": null
+    }
+   ],
+   "source": "SIGNED crh_rp1 f4g 5ed4500430 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8_crh_rp1__f4g__5ed4500430/kit/signoff_main/signoff.json insertion_pinflops",
+   "label": "CHECKED read (SIGNED record; plan binds no view -> this is the view to BIND)",
+   "tt": {
+    "n": 998,
+    "mean": 244.32,
+    "min": 228.66,
+    "max": 271.91,
+    "design": "qfd_dv_s8_crh_rp1",
+    "parasitics": "spef",
+    "clock_ports": [
+     "ck"
+    ]
+   },
+   "ff": {
+    "n": 998,
+    "mean": 193.3,
+    "min": 179.26,
+    "max": 222.1,
+    "design": "qfd_dv_s8_crh_rp1",
+    "parasitics": "spef",
+    "clock_ports": [
+     "ck"
+    ]
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 244.32,
+    "insertion_ff_ps": 193.3,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "SIGNED crh_rp1 f4g 5ed4500430 (autopilot closed) /srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8_crh_rp1__f4g__5ed4500430/kit/signoff_main/signoff.json insertion_pinflops"
+   },
+   "hold_est": {
+    "comp_ff": 193.3,
+    "late": 28.8,
+    "early": 14.0,
+    "hold_in": -14.9,
+    "hold_out": 2.0,
+    "hold_in_u60": -49.9,
+    "hold_out_u60": -33.0,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  }
+ ]
+}

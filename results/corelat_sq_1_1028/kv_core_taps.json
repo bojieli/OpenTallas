@@ -1,0 +1,1502 @@
+{
+ "plan": "/srv/opentallas-scratch2/claude/corelat-sq-1/in/hm_r26q9b.json",
+ "plan_sha": "dae191169d57",
+ "common_tt": 250.0,
+ "common_ff": 202.5,
+ "rows": [
+  {
+   "module": "kv3_head_eighth_e1",
+   "placements": 256,
+   "types": 17,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/kv3_head_eighth_e1/views/kv3_head_eighth_e1/kv3_head_eighth_e1.lef",
+     "sig": {
+      "size": [
+       216.0,
+       216.0
+      ],
+      "npins": 544,
+      "pins_sha": "caefa3ea78"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": null,
+      "ff": null,
+      "note": "direct insertion.json; ad_eighth_e1_tt.lib: pin-register mean measurement missing (no ETM-max fallback)"
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget register census physical/ref_tile/kv3_head_eighth_e1/views/kv3_head_eighth_e1/kv3_head_eighth_e1.core.json clock_latency_measured (routed; all registers, n=534)",
+    "tt": {
+     "mean": 289.4,
+     "min": 281.19,
+     "max": 297.02
+    },
+    "ff": {
+     "mean": 233.21,
+     "min": 225.74,
+     "max": 240.86
+    },
+    "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+   },
+   "source": "parent_budget register census physical/ref_tile/kv3_head_eighth_e1/views/kv3_head_eighth_e1/kv3_head_eighth_e1.core.json clock_latency_measured (routed; all registers, n=534)",
+   "label": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)",
+   "tt": {
+    "mean": 289.4,
+    "min": 281.19,
+    "max": 297.02
+   },
+   "ff": {
+    "mean": 233.21,
+    "min": 225.74,
+    "max": 240.86
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 289.4,
+    "insertion_ff_ps": 233.21,
+    "early_tt_ps": 39.4,
+    "early_ff_ps": 30.7,
+    "budget_owner": "parent_budget register census physical/ref_tile/kv3_head_eighth_e1/views/kv3_head_eighth_e1/kv3_head_eighth_e1.core.json clock_latency_measured (routed; all registers, n=534)"
+   },
+   "hold_est": {
+    "comp_ff": 233.2,
+    "late": 7.7,
+    "early": 7.5,
+    "hold_in": 5.3,
+    "hold_out": 6.2,
+    "hold_in_u60": -29.7,
+    "hold_out_u60": -28.8,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "kv3_head_eighth_e6",
+   "placements": 256,
+   "types": 17,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/kv3_head_eighth_e6/views/kv3_head_eighth_e6/kv3_head_eighth_e6.lef",
+     "sig": {
+      "size": [
+       216.0,
+       216.0
+      ],
+      "npins": 1356,
+      "pins_sha": "9a8f6f098c"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": null,
+      "ff": null,
+      "note": "direct insertion.json; ad_eighth_e6_tt.lib: pin-register mean measurement missing (no ETM-max fallback)"
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget register census physical/ref_tile/kv3_head_eighth_e6/views/kv3_head_eighth_e6/kv3_head_eighth_e6.core.json clock_latency_measured (routed; all registers, n=1303)",
+    "tt": {
+     "mean": 291.08,
+     "min": 276.63,
+     "max": 303.07
+    },
+    "ff": {
+     "mean": 234.28,
+     "min": 221.68,
+     "max": 245.55
+    },
+    "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+   },
+   "source": "parent_budget register census physical/ref_tile/kv3_head_eighth_e6/views/kv3_head_eighth_e6/kv3_head_eighth_e6.core.json clock_latency_measured (routed; all registers, n=1303)",
+   "label": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)",
+   "tt": {
+    "mean": 291.08,
+    "min": 276.63,
+    "max": 303.07
+   },
+   "ff": {
+    "mean": 234.28,
+    "min": 221.68,
+    "max": 245.55
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 291.08,
+    "insertion_ff_ps": 234.28,
+    "early_tt_ps": 41.1,
+    "early_ff_ps": 31.8,
+    "budget_owner": "parent_budget register census physical/ref_tile/kv3_head_eighth_e6/views/kv3_head_eighth_e6/kv3_head_eighth_e6.core.json clock_latency_measured (routed; all registers, n=1303)"
+   },
+   "hold_est": {
+    "comp_ff": 234.3,
+    "late": 11.3,
+    "early": 12.6,
+    "hold_in": 1.5,
+    "hold_out": 1.3,
+    "hold_in_u60": -33.5,
+    "hold_out_u60": -33.7,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "kv3_head_eighth_e5",
+   "placements": 256,
+   "types": 17,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/kv3_head_eighth_e5/views/kv3_head_eighth_e5/kv3_head_eighth_e5.lef",
+     "sig": {
+      "size": [
+       216.0,
+       216.0
+      ],
+      "npins": 544,
+      "pins_sha": "edf58740a7"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": null,
+      "ff": null,
+      "note": "direct insertion.json; ad_eighth_e5_tt.lib: pin-register mean measurement missing (no ETM-max fallback)"
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget register census physical/ref_tile/kv3_head_eighth_e5/views/kv3_head_eighth_e5/kv3_head_eighth_e5.core.json clock_latency_measured (routed; all registers, n=534)",
+    "tt": {
+     "mean": 291.53,
+     "min": 286.03,
+     "max": 298.85
+    },
+    "ff": {
+     "mean": 234.98,
+     "min": 229.96,
+     "max": 241.21
+    },
+    "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+   },
+   "source": "parent_budget register census physical/ref_tile/kv3_head_eighth_e5/views/kv3_head_eighth_e5/kv3_head_eighth_e5.core.json clock_latency_measured (routed; all registers, n=534)",
+   "label": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)",
+   "tt": {
+    "mean": 291.53,
+    "min": 286.03,
+    "max": 298.85
+   },
+   "ff": {
+    "mean": 234.98,
+    "min": 229.96,
+    "max": 241.21
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 291.53,
+    "insertion_ff_ps": 234.98,
+    "early_tt_ps": 41.5,
+    "early_ff_ps": 32.5,
+    "budget_owner": "parent_budget register census physical/ref_tile/kv3_head_eighth_e5/views/kv3_head_eighth_e5/kv3_head_eighth_e5.core.json clock_latency_measured (routed; all registers, n=534)"
+   },
+   "hold_est": {
+    "comp_ff": 235.0,
+    "late": 6.2,
+    "early": 5.0,
+    "hold_in": 6.7,
+    "hold_out": 8.5,
+    "hold_in_u60": -28.3,
+    "hold_out_u60": -26.5,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "kv3_pv_pair",
+   "placements": 256,
+   "types": 16,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/kv3_pv_pair/views/kv3_pv_pair/kv3_pv_pair.lef",
+     "sig": {
+      "size": [
+       380.16,
+       190.08
+      ],
+      "npins": 1652,
+      "pins_sha": "74092d19ef"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": null,
+      "ff": null,
+      "note": "direct insertion.json; /kv3_pv_pair_tt.lib: pin-register mean measurement missing (no ETM-max fallback)"
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget lib_etm_range physical/ref_tile/kv3_pv_pair/views/kv3_pv_pair (ETM min..max clock_tree_path, mean = midpoint; NOT a register census)",
+    "tt": {
+     "mean": 352.7,
+     "min": 307.0,
+     "max": 398.5
+    },
+    "ff": {
+     "mean": 280.8,
+     "min": 245.9,
+     "max": 315.8
+    },
+    "checked": "UNCHECKED (ETM range; view identity by module name)"
+   },
+   "source": "parent_budget lib_etm_range physical/ref_tile/kv3_pv_pair/views/kv3_pv_pair (ETM min..max clock_tree_path, mean = midpoint; NOT a register census)",
+   "label": "UNCHECKED (ETM range; view identity by module name)",
+   "tt": {
+    "mean": 352.7,
+    "min": 307.0,
+    "max": 398.5
+   },
+   "ff": {
+    "mean": 280.8,
+    "min": 245.9,
+    "max": 315.8
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 352.7,
+    "insertion_ff_ps": 280.8,
+    "early_tt_ps": 102.7,
+    "early_ff_ps": 78.3,
+    "budget_owner": "parent_budget lib_etm_range physical/ref_tile/kv3_pv_pair/views/kv3_pv_pair (ETM min..max clock_tree_path, mean = midpoint; NOT a register census)"
+   },
+   "hold_est": {
+    "comp_ff": 280.8,
+    "late": 35.0,
+    "early": 34.9,
+    "hold_in": -25.8,
+    "hold_out": -22.2,
+    "hold_in_u60": -60.8,
+    "hold_out_u60": -57.2,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "kv3_head_eighth_e0",
+   "placements": 128,
+   "types": 17,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/kv3_head_eighth_e0/views/kv3_head_eighth_e0/kv3_head_eighth_e0.lef",
+     "sig": {
+      "size": [
+       216.0,
+       216.0
+      ],
+      "npins": 1800,
+      "pins_sha": "1020157bcc"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": null,
+      "ff": null,
+      "note": "direct insertion.json; ad_eighth_e0_tt.lib: pin-register mean measurement missing (no ETM-max fallback)"
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget register census physical/ref_tile/kv3_head_eighth_e0/views/kv3_head_eighth_e0/kv3_head_eighth_e0.core.json clock_latency_measured (routed; all registers, n=1731)",
+    "tt": {
+     "mean": 294.15,
+     "min": 286.32,
+     "max": 304.88
+    },
+    "ff": {
+     "mean": 237.11,
+     "min": 229.35,
+     "max": 246.99
+    },
+    "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+   },
+   "source": "parent_budget register census physical/ref_tile/kv3_head_eighth_e0/views/kv3_head_eighth_e0/kv3_head_eighth_e0.core.json clock_latency_measured (routed; all registers, n=1731)",
+   "label": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)",
+   "tt": {
+    "mean": 294.15,
+    "min": 286.32,
+    "max": 304.88
+   },
+   "ff": {
+    "mean": 237.11,
+    "min": 229.35,
+    "max": 246.99
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 294.15,
+    "insertion_ff_ps": 237.11,
+    "early_tt_ps": 44.1,
+    "early_ff_ps": 34.6,
+    "budget_owner": "parent_budget register census physical/ref_tile/kv3_head_eighth_e0/views/kv3_head_eighth_e0/kv3_head_eighth_e0.core.json clock_latency_measured (routed; all registers, n=1731)"
+   },
+   "hold_est": {
+    "comp_ff": 237.1,
+    "late": 9.9,
+    "early": 7.8,
+    "hold_in": 2.8,
+    "hold_out": 5.8,
+    "hold_in_u60": -32.2,
+    "hold_out_u60": -29.2,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "kv3_head_eighth_e2",
+   "placements": 128,
+   "types": 17,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/kv3_head_eighth_e2/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "sig": {
+      "size": [
+       216.0,
+       216.0
+      ],
+      "npins": 1356,
+      "pins_sha": "15d3930328"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": null,
+      "ff": null,
+      "note": "direct insertion.json; ad_eighth_e2_tt.lib: pin-register mean measurement missing (no ETM-max fallback)"
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget register census physical/ref_tile/kv3_head_eighth_e2/views/kv3_head_eighth_e2/kv3_head_eighth_e2.core.json clock_latency_measured (routed; all registers, n=1303)",
+    "tt": {
+     "mean": 293.69,
+     "min": 284.68,
+     "max": 310.74
+    },
+    "ff": {
+     "mean": 236.66,
+     "min": 228.19,
+     "max": 253.0
+    },
+    "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+   },
+   "source": "parent_budget register census physical/ref_tile/kv3_head_eighth_e2/views/kv3_head_eighth_e2/kv3_head_eighth_e2.core.json clock_latency_measured (routed; all registers, n=1303)",
+   "label": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)",
+   "tt": {
+    "mean": 293.69,
+    "min": 284.68,
+    "max": 310.74
+   },
+   "ff": {
+    "mean": 236.66,
+    "min": 228.19,
+    "max": 253.0
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 293.69,
+    "insertion_ff_ps": 236.66,
+    "early_tt_ps": 43.7,
+    "early_ff_ps": 34.2,
+    "budget_owner": "parent_budget register census physical/ref_tile/kv3_head_eighth_e2/views/kv3_head_eighth_e2/kv3_head_eighth_e2.core.json clock_latency_measured (routed; all registers, n=1303)"
+   },
+   "hold_est": {
+    "comp_ff": 236.7,
+    "late": 16.3,
+    "early": 8.5,
+    "hold_in": -4.0,
+    "hold_out": 5.1,
+    "hold_in_u60": -39.0,
+    "hold_out_u60": -29.9,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "qkd_kvs_pc",
+   "placements": 124,
+   "types": 3,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "ot_qwen_tp8_pv_join_t",
+   "placements": 64,
+   "types": 16,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/qkd_pv_join/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "sig": {
+      "size": [
+       172.8,
+       172.8
+      ],
+      "npins": 4621,
+      "pins_sha": "c8a116a512"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 230.1,
+      "ff": 188.2
+     }
+    },
+    {
+     "lef": "physical/ref_tile/qkd_pv_join_rstpin_r5/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "sig": {
+      "size": [
+       172.8,
+       172.8
+      ],
+      "npins": 4621,
+      "pins_sha": "c8a116a512"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 232.5,
+      "ff": 190.2
+     }
+    },
+    {
+     "lef": "physical/ref_tile/qkd_pv_join_sfe_r6/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "sig": {
+      "size": [
+       172.8,
+       172.8
+      ],
+      "npins": 4621,
+      "pins_sha": "c8a116a512"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 235.9,
+      "ff": 193.4
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget pin_register_mean physical/ref_tile/qkd_pv_join/views/ot_qwen_tp8_pv_join_t/insertion.json boundary (routed spef)",
+    "tt": {
+     "mean": 230.1,
+     "min": 210.3,
+     "max": 260.5
+    },
+    "ff": {
+     "mean": 188.2,
+     "min": 169.5,
+     "max": 219.3
+    },
+    "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+   },
+   "source": "parent_budget pin_register_mean physical/ref_tile/qkd_pv_join/views/ot_qwen_tp8_pv_join_t/insertion.json boundary (routed spef)",
+   "label": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)",
+   "tt": {
+    "mean": 230.1,
+    "min": 210.3,
+    "max": 260.5
+   },
+   "ff": {
+    "mean": 188.2,
+    "min": 169.5,
+    "max": 219.3
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 230.1,
+    "insertion_ff_ps": 188.2,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/qkd_pv_join/views/ot_qwen_tp8_pv_join_t/insertion.json boundary (routed spef)"
+   },
+   "hold_est": {
+    "comp_ff": 188.2,
+    "late": 31.1,
+    "early": 18.7,
+    "hold_in": -17.1,
+    "hold_out": -2.2,
+    "hold_in_u60": -52.1,
+    "hold_out_u60": -37.2,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "qkd_ectlk_q0",
+   "placements": 32,
+   "types": 8,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "qkd_ectlk_q1",
+   "placements": 32,
+   "types": 8,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "qkd_ectlk_q2",
+   "placements": 32,
+   "types": 8,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "qkd_ectlk_q3",
+   "placements": 32,
+   "types": 8,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "qkd_hr_phy_adp",
+   "placements": 8,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "kv3_astk",
+   "placements": 4,
+   "types": 2,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "qkd_kvs_pc_h_head_p",
+   "placements": 4,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "qkd_ahub",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "qkd_kvs_ctl",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/qkd_kvs_ctl/views/qkd_kvs_ctl/qkd_kvs_ctl.lef",
+     "sig": {
+      "size": [
+       475.2,
+       475.2
+      ],
+      "npins": 6795,
+      "pins_sha": "63d223f22f"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 513.6,
+      "ff": 421.5
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget pin_register_mean physical/ref_tile/qkd_kvs_ctl/views/qkd_kvs_ctl/insertion.json boundary (routed spef)",
+    "tt": {
+     "mean": 513.6,
+     "min": 481.4,
+     "max": 603.2
+    },
+    "ff": {
+     "mean": 421.5,
+     "min": 390.9,
+     "max": 500.2
+    },
+    "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+   },
+   "source": "parent_budget pin_register_mean physical/ref_tile/qkd_kvs_ctl/views/qkd_kvs_ctl/insertion.json boundary (routed spef)",
+   "label": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)",
+   "tt": {
+    "mean": 513.6,
+    "min": 481.4,
+    "max": 603.2
+   },
+   "ff": {
+    "mean": 421.5,
+    "min": 390.9,
+    "max": 500.2
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 513.6,
+    "insertion_ff_ps": 421.5,
+    "early_tt_ps": 263.6,
+    "early_ff_ps": 219.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/qkd_kvs_ctl/views/qkd_kvs_ctl/insertion.json boundary (routed spef)"
+   },
+   "hold_est": {
+    "comp_ff": 421.5,
+    "late": 78.7,
+    "early": 30.6,
+    "hold_in": -78.7,
+    "hold_out": -25.1,
+    "hold_in_u60": -113.7,
+    "hold_out_u60": -60.1,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "qkd_hr_ingest_eng",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "qkd_hr_core_order",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/qkd_hr_core_order/views/qkd_hr_core_order/qkd_hr_core_order.lef",
+     "sig": {
+      "size": [
+       172.8,
+       172.8
+      ],
+      "npins": 2280,
+      "pins_sha": "2d2097762d"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 264.1,
+      "ff": 216.0
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_core_order/views/qkd_hr_core_order/insertion.json boundary (routed spef)",
+    "tt": {
+     "mean": 264.1,
+     "min": 247.4,
+     "max": 273.7
+    },
+    "ff": {
+     "mean": 216.0,
+     "min": 200.8,
+     "max": 225.4
+    },
+    "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+   },
+   "source": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_core_order/views/qkd_hr_core_order/insertion.json boundary (routed spef)",
+   "label": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)",
+   "tt": {
+    "mean": 264.1,
+    "min": 247.4,
+    "max": 273.7
+   },
+   "ff": {
+    "mean": 216.0,
+    "min": 200.8,
+    "max": 225.4
+   },
+   "tap": {
+    "early": false,
+    "within_band": true,
+    "insertion_ps": 264.1,
+    "insertion_ff_ps": 216.0,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_core_order/views/qkd_hr_core_order/insertion.json boundary (routed spef)"
+   },
+   "hold_est": {
+    "comp_ff": 202.5,
+    "late": 22.9,
+    "early": 1.7,
+    "hold_in": -9.2,
+    "hold_out": 13.3,
+    "hold_in_u60": -44.2,
+    "hold_out_u60": -21.7,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "qkd_hr_cdc_ch",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "qkd_hr_cdc_pc",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/qkd_hr_cdc_pc/views/qkd_hr_cdc_pc/qkd_hr_cdc_pc.lef",
+     "sig": {
+      "size": [
+       151.2,
+       151.2
+      ],
+      "npins": 2163,
+      "pins_sha": "556ef26c50"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 237.0,
+      "ff": 195.0
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_cdc_pc/views/qkd_hr_cdc_pc/insertion.json boundary (routed spef)",
+    "tt": {
+     "mean": 237.0,
+     "min": 226.8,
+     "max": 252.4
+    },
+    "ff": {
+     "mean": 195.0,
+     "min": 184.7,
+     "max": 210.9
+    },
+    "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+   },
+   "source": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_cdc_pc/views/qkd_hr_cdc_pc/insertion.json boundary (routed spef)",
+   "label": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)",
+   "tt": {
+    "mean": 237.0,
+    "min": 226.8,
+    "max": 252.4
+   },
+   "ff": {
+    "mean": 195.0,
+    "min": 184.7,
+    "max": 210.9
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 237.0,
+    "insertion_ff_ps": 195.0,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_cdc_pc/views/qkd_hr_cdc_pc/insertion.json boundary (routed spef)"
+   },
+   "hold_est": {
+    "comp_ff": 195.0,
+    "late": 15.9,
+    "early": 10.3,
+    "hold_in": -1.4,
+    "hold_out": 5.5,
+    "hold_in_u60": -36.4,
+    "hold_out_u60": -29.5,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "qkd_hr_core_peer",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "qkd_hr_core_tx",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/qkd_hr_core_tx/views/qkd_hr_core_tx/qkd_hr_core_tx.lef",
+     "sig": {
+      "size": [
+       108.0,
+       108.0
+      ],
+      "npins": 1676,
+      "pins_sha": "dd6329b910"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 187.5,
+      "ff": 154.2
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_core_tx/views/qkd_hr_core_tx/insertion.json boundary (routed spef)",
+    "tt": {
+     "mean": 187.5,
+     "min": 173.0,
+     "max": 203.6
+    },
+    "ff": {
+     "mean": 154.2,
+     "min": 141.2,
+     "max": 169.9
+    },
+    "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+   },
+   "source": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_core_tx/views/qkd_hr_core_tx/insertion.json boundary (routed spef)",
+   "label": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)",
+   "tt": {
+    "mean": 187.5,
+    "min": 173.0,
+    "max": 203.6
+   },
+   "ff": {
+    "mean": 154.2,
+    "min": 141.2,
+    "max": 169.9
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 187.5,
+    "insertion_ff_ps": 154.2,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_core_tx/views/qkd_hr_core_tx/insertion.json boundary (routed spef)"
+   },
+   "hold_est": {
+    "comp_ff": 154.2,
+    "late": 15.7,
+    "early": 13.0,
+    "hold_in": 0.8,
+    "hold_out": 4.9,
+    "hold_in_u60": -34.2,
+    "hold_out_u60": -30.1,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "qkd_hr_core_rx",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "qkd_hr_core_guard",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/qkd_hr_core_guard/views/qkd_hr_core_guard/qkd_hr_core_guard.lef",
+     "sig": {
+      "size": [
+       108.0,
+       140.4
+      ],
+      "npins": 1311,
+      "pins_sha": "c2e9ccd0d9"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 212.3,
+      "ff": 173.9
+     }
+    },
+    {
+     "lef": "physical/ref_tile/qkd_hr_core_guard_frc/views/qkd_hr_core_guard/qkd_hr_core_guard.lef",
+     "sig": {
+      "size": [
+       108.0,
+       140.4
+      ],
+      "npins": 1311,
+      "pins_sha": "c2e9ccd0d9"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 210.3,
+      "ff": 172.7
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_core_guard/views/qkd_hr_core_guard/insertion.json boundary (routed spef)",
+    "tt": {
+     "mean": 212.3,
+     "min": 199.1,
+     "max": 235.2
+    },
+    "ff": {
+     "mean": 173.9,
+     "min": 161.6,
+     "max": 196.9
+    },
+    "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+   },
+   "source": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_core_guard/views/qkd_hr_core_guard/insertion.json boundary (routed spef)",
+   "label": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)",
+   "tt": {
+    "mean": 212.3,
+    "min": 199.1,
+    "max": 235.2
+   },
+   "ff": {
+    "mean": 173.9,
+    "min": 161.6,
+    "max": 196.9
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 212.3,
+    "insertion_ff_ps": 173.9,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_core_guard/views/qkd_hr_core_guard/insertion.json boundary (routed spef)"
+   },
+   "hold_est": {
+    "comp_ff": 173.9,
+    "late": 23.0,
+    "early": 12.3,
+    "hold_in": -7.8,
+    "hold_out": 4.6,
+    "hold_in_u60": -42.8,
+    "hold_out_u60": -30.4,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "qkd_hr_core_queue",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/qkd_hr_core_queue/views/qkd_hr_core_queue/qkd_hr_core_queue.lef",
+     "sig": {
+      "size": [
+       129.6,
+       129.6
+      ],
+      "npins": 1388,
+      "pins_sha": "f8752a7285"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 202.4,
+      "ff": 167.9
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_core_queue/views/qkd_hr_core_queue/insertion.json boundary (routed spef)",
+    "tt": {
+     "mean": 202.4,
+     "min": 190.0,
+     "max": 219.3
+    },
+    "ff": {
+     "mean": 167.9,
+     "min": 155.3,
+     "max": 185.4
+    },
+    "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+   },
+   "source": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_core_queue/views/qkd_hr_core_queue/insertion.json boundary (routed spef)",
+   "label": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)",
+   "tt": {
+    "mean": 202.4,
+    "min": 190.0,
+    "max": 219.3
+   },
+   "ff": {
+    "mean": 167.9,
+    "min": 155.3,
+    "max": 185.4
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 202.4,
+    "insertion_ff_ps": 167.9,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_core_queue/views/qkd_hr_core_queue/insertion.json boundary (routed spef)"
+   },
+   "hold_est": {
+    "comp_ff": 167.9,
+    "late": 17.5,
+    "early": 12.6,
+    "hold_in": -1.8,
+    "hold_out": 4.6,
+    "hold_in_u60": -36.8,
+    "hold_out_u60": -30.4,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "qkd_hr_core_prompt",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "qkd_hr_cdc_hi",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "qkd_hr_cdc_ci",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "qkd_hr_phy_pad",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "None"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": null,
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  }
+ ]
+}

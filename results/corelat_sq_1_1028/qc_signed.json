@@ -1,0 +1,36 @@
+{
+ "qfd_dv_s8x_vmr": [
+  {
+   "label": "vmr f4kfinal 77013e5059 (autopilot closed)",
+   "signoff": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit/signoff_f4k/signoff.json"
+  }
+ ],
+ "qfd_dv_s8_crh_rp1": [
+  {
+   "label": "crh_rp1 f4g 5ed4500430 (autopilot closed)",
+   "signoff": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8_crh_rp1__f4g__5ed4500430/kit/signoff_main/signoff.json"
+  },
+  {
+   "label": "crh_rp1 f62 d965a9aada (autopilot closed, OLD cache view)",
+   "signoff": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8_crh_rp1__f62__d965a9aada/kit/signoff/signoff.json"
+  }
+ ],
+ "qfd_dv_s8x_prog": [
+  {
+   "label": "prog s8b 6aa7f1fc4d (autopilot closed)",
+   "signoff": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_prog__s8b__6aa7f1fc4d/kit/signoff/signoff.json"
+  }
+ ],
+ "qfd_dv_s8x_crh": [
+  {
+   "label": "s8x_crh qc/closed (QC-CORES signed re-verify VALID, LEC EQ 3697)",
+   "signoff": "/srv/opentallas-scratch2/claude/qc/closed/qfd_dv_s8x_crh/kit/signoff/signoff.json"
+  }
+ ],
+ "qfd_dv_s5_su8_rst3": [
+  {
+   "label": "rst3 K0 hold_b (intel1 qccores1-1027/rst3_k0, adopted 10-27 06:15, routed LEC EQ)",
+   "signoff": "/srv/opentallas-scratch2/claude/corelat-sq-1/in/rst3_k0_hold_b/signoff.json"
+  }
+ ]
+}
