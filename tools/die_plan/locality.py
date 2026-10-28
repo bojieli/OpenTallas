@@ -231,7 +231,7 @@ def feed_tree(G, E, xings, v, kind="fwd"):
 
     def fwd_delay(p, c):
         t = taps.get((p, c)) or xing_point(G[p]["bbox"], G[c]["bbox"])
-        return ins(G[p], v) + v * manh(t, G[c]["cen"]) / 1000.0
+        return hop_delay(G, p, c, t, v, kind)
 
     def build_spt(root):
         T, parent = {root: 0.0}, {root: None}
@@ -261,7 +261,7 @@ def feed_tree(G, E, xings, v, kind="fwd"):
                 if c not in parent:
                     parent[c] = p
                     t = taps.get((p, c)) or xing_point(G[p]["bbox"], G[c]["bbox"])
-                    T[c] = T[p] + ins(G[p], v) + v * manh(t, G[c]["cen"]) / 1000.0
+                    T[c] = T[p] + hop_delay(G, p, c, t, v, kind)
                     order.append(c)
         return parent, order, T
     best = None
@@ -269,6 +269,8 @@ def feed_tree(G, E, xings, v, kind="fwd"):
     for r in cand:
         parent, order, T = build(r)
         ecc = max(T[n] + ins(G[n], v) for n in nodes)
+        if kind in SPINE_FEEDS:  # spine: minimise the longest spine path and the off-tree crossing paths together
+            ecc = max(T.values())
         if best is None or ecc < best[0]:
             best = (ecc, r, parent, order)
     _, root, parent, order = best
@@ -276,7 +278,44 @@ def feed_tree(G, E, xings, v, kind="fwd"):
     for c, p in parent.items():
         if p is not None:
             tp[(p, c)] = taps.get((p, c)) or xing_point(G[p]["bbox"], G[c]["bbox"])
-    return dict(root=root, parent=parent, order=order, tap=tp, joined=joined)
+    return dict(root=root, parent=parent, order=order, tap=tp, joined=joined, kind=kind)
+
+
+SPINE_FEEDS = ("spine", "fish", "dme")
+
+
+def hop_delay(G, p, c, t, v, kind):
+    """feed delay parent root -> child root.  fwd/spt: from a LEAF of the parent tree (I_p) to the tap, then to the
+    child centre.  spine/fish: the spine runs through the parent centre to the tap and on to the child centre (the
+    region trees hang off the spine at their centres; no parent insertion on the path)."""
+    if kind in SPINE_FEEDS:
+        return v * (manh(G[p]["cen"], t) + manh(t, G[c]["cen"])) / 1000.0
+    return ins(G[p], v) + v * manh(t, G[c]["cen"]) / 1000.0
+
+
+def leaf_delay(g, xy, v, kind):
+    """region root -> entry at xy.  H-tree region tree: equal length I; fishbone region tree (feed 'fish'): spine
+    along the long axis through the centre + perpendicular rib = Manhattan distance (nominal d follows position)."""
+    if kind == "fish" and not g.get("virtual"):
+        return v * manh(xy, g["cen"]) / 1000.0
+    return ins(g, v)
+
+
+def fish_shared_um(g, p, q):
+    """fishbone region tree (spine on the long axis through the centre, ribs perpendicular): the length from the
+    centre that the paths to p and q share (same side of the spine centre: up to the nearer rib; same rib: + the
+    shorter rib part on the same side)."""
+    ax = 0 if g["w"] >= g["h"] else 1
+    c = g["cen"]
+    ap, aq = p[ax] - c[ax], q[ax] - c[ax]
+    if ap * aq <= 0:
+        return 0.0
+    s = min(abs(ap), abs(aq))
+    if abs(ap - aq) <= LEAF_UM:
+        rp, rq = p[1 - ax] - c[1 - ax], q[1 - ax] - c[1 - ax]
+        if rp * rq > 0:
+            s += min(abs(rp), abs(rq))
+    return s
 
 
 def tap_points(G, xings):
@@ -306,16 +345,34 @@ def ins(g, v):
     return v * (g["w"] + g["h"]) / 2.0 / 1000.0
 
 
+def dme_heights(G, F, v):
+    """zero-skew (DME) spine on the feed tree: h(r) = delay from r's spine node to every leaf below it (its own
+    region tree padded up to h(r)); h(r) = max(I_r, max_c spine(r, c) + h(c))."""
+    h = {}
+    for r in reversed(F["order"]):
+        kids = [c for c in F["order"] if F["parent"][c] == r]
+        h[r] = max([ins(G[r], v)] + [hop_delay(G, r, c, F["tap"][(r, c)], v, "spine") + h[c] for c in kids])
+    return h
+
+
 def arrivals(G, F, v, period=None):
-    """root arrival per region (TT ps); with period, whole-cycle pads so each child's leaves sit on its parent's grid."""
+    """root arrival per region (TT ps); with period, whole-cycle pads so each child's leaves sit on its parent's grid.
+    dme: spine-node arrivals of the zero-skew spine (every leaf at h(root), nominal d = 0)."""
     T, pad = {}, {}
+    if F.get("kind") == "dme":
+        h = F.setdefault("h", dme_heights(G, F, v))
+        for r in F["order"]:
+            p = F["parent"][r]
+            T[r] = 0.0 if p is None else T[p] + h[p] - h[r]
+            pad[r] = 0.0 if p is None else h[p] - h[r] - hop_delay(G, p, r, F["tap"][(p, r)], v, "spine")
+        return T, pad
     imax = max((ins(g, v) for g in G.values() if not g.get("virtual")), default=0.0)
     for r in F["order"]:
         p = F["parent"][r]
         if p is None:
             T[r], pad[r] = 0.0, 0.0
             continue
-        base = T[p] + ins(G[p], v) + v * manh(F["tap"][(p, r)], G[r]["cen"]) / 1000.0
+        base = T[p] + hop_delay(G, p, r, F["tap"][(p, r)], v, F.get("kind", "fwd"))
         pad[r] = 0.0
         if G[p].get("virtual"):  # the balanced die tree: every region's leaves at the same arrival (delay = unshared)
             base += imax - ins(G[r], v)
@@ -364,13 +421,23 @@ def branches(G, F, T, v, x):
     L = next(r for r in la if r in sb)
     pA = x["xy"] if A == L else F["tap"][(L, la[la.index(L) - 1])]
     pB = x["xy"] if B == L else F["tap"][(L, lb[lb.index(L) - 1])]
+    kind = F.get("kind", "fwd")
     IL = ins(G[L], v)
-    div = T[L] + IL - min(IL, v * htree_rem_um(G[L]["bbox"], pA, pB) / 1000.0)
-    ua = T[A] + ins(G[A], v) - div
-    ub = T[B] + ins(G[B], v) - div
+    if kind in ("spine", "dme"):  # H-tree region trees hang off the spine at the centre: every path parts there
+        div = T[L]
+    elif kind == "fish" and not G[L].get("virtual"):
+        div = T[L] + v * fish_shared_um(G[L], pA, pB) / 1000.0
+    else:
+        div = T[L] + IL - min(IL, v * htree_rem_um(G[L]["bbox"], pA, pB) / 1000.0)
+    if kind == "dme":
+        aa, ab = T[A] + F["h"][A], T[B] + F["h"][B]
+    else:
+        aa = T[A] + leaf_delay(G[A], x["xy"], v, kind)
+        ab = T[B] + leaf_delay(G[B], x["xy"], v, kind)
+    ua, ub = aa - div, ab - div
     pts = [x["xy"], pA, pB] + [G[r]["cen"] for r in la[:la.index(L)] + lb[:lb.index(L)]]
-    return dict(lca=L, ua=ua, ub=ub, div=div, arr_a=T[A] + ins(G[A], v), arr_b=T[B] + ins(G[B], v),
-                pts=pts, far=x.get("far", False))
+    return dict(lca=L, ua=ua, ub=ub, div=div, arr_a=aa, arr_b=ab, pts=pts, far=x.get("far", False),
+                tree_hops=la.index(L) + lb.index(L))
 
 
 # ------------------------------------------------------------------------------------------------------------- margin
@@ -418,6 +485,8 @@ def margins(br_rows, Ttab, period, budget=None, ff_scale=None):
                         p_tt=round(max(t["p_up_ps"], t["p_dn_ps"]), 1), p_ff=round(max(f["p_up_ps"], f["p_dn_ps"]), 1),
                         raw_tt=t["margin_ps"], raw_ff=f["margin_ps"],
                         fold_tt=m(t, t["d_ps"] - k * period), fold_ff=m(f, f["d_ps"] - k * period),
+                        ca_tt=round(budget - max(t["p_up_ps"], t["p_dn_ps"]), 1),
+                        ca_ff=round(budget - max(f["p_up_ps"], f["p_dn_ps"]), 1),
                         dist_um=t["dist_um"]))
     return res
 
@@ -506,7 +575,7 @@ def score(D, reg, v, feed="fwd", padj=None, M=None, Ttab=None):
     readings = {}
     per = None
     for mode in ("nopad", "pad"):
-        if mode == "pad" and feed == "top":
+        if mode == "pad" and (feed == "top" or feed in SPINE_FEEDS):
             continue
         Tr, pad = arrivals(G, F, v, D["period"] if mode == "pad" else None)
         BR = [branches(G, F, Tr, v, x) for x in X]
@@ -514,16 +583,18 @@ def score(D, reg, v, feed="fwd", padj=None, M=None, Ttab=None):
         for x, b, r in zip(X, BR, R):
             on = F["parent"].get(x["ra"]) == x["rb"] or F["parent"].get(x["rb"]) == x["ra"]
             r.update(id=x["id"], ra=x["ra"], rb=x["rb"], width=x["width"], xy=[round(c, 1) for c in x["xy"]],
-                     lca=b["lca"], far=x["far"], on_feed=on)
+                     lca=b["lca"], far=x["far"], on_feed=on, tree_hops=b["tree_hops"])
         readings[mode] = (R, pad)
         if mode == "nopad":
             per = R
+            if feed != "top":
+                hop = hop_rows(G, F, Tr, v, X, R, Ttab, D["period"])
     real = {r: g for r, g in G.items() if not g.get("virtual")}
     regs = [dict(region=r, parts=len(g["parts"]), w_mm=round(g["w"] / 1000, 2), h_mm=round(g["h"] / 1000, 2),
                  ins_ps=round(ins(g, v), 1), hard=g["hard"]) for r, g in sorted(real.items())]
 
-    def worst(R, key):
-        return min((r[key] for r in R), default=None)
+    def worst(R, key):  # no crossing at all: nothing to violate -> the full budget P/2
+        return min((r[key] for r in R), default=round(D["period"] / 2, 1))
 
     def under(R, key, t):
         return sum(1 for r in R if r[key] < t)
@@ -540,11 +611,21 @@ def score(D, reg, v, feed="fwd", padj=None, M=None, Ttab=None):
                 worst_unshared_tt=max((r["unshared_tt"] for r in per), default=0),
                 off_feed_ports=sum(1 for r in per if not r["on_feed"]),
                 off_feed_bits=sum(r["width"] for r in per if not r["on_feed"]),
-                worst_unshared_on_feed_tt=max((r["unshared_tt"] for r in per if r["on_feed"]), default=0))
+                worst_unshared_on_feed_tt=max((r["unshared_tt"] for r in per if r["on_feed"]), default=0),
+                worst_unshared_off_feed_tt=max((r["unshared_tt"] for r in per if not r["on_feed"]), default=0),
+                loop_pairs=len({(r["ra"], r["rb"]) for r in per if not r["on_feed"]}),
+                max_tree_hops=max((r["tree_hops"] for r in per), default=0))
+    if feed != "top":
+        HR, hst = hop
+        summ.update(hst)
+        for kname in ("raw", "ca", "fold"):
+            for c in ("tt", "ff"):
+                summ[f"hop_{kname}_worst_{c}"] = min((r[f"{kname}_{c}"] for r in HR), default=round(D["period"] / 2, 1))
+                summ[f"hop_{kname}_under100_{c}"] = sum(1 for r in HR if r[f"{kname}_{c}"] < 100)
     for mode, (R, pad) in readings.items():
-        keys = (("raw", "fold") if mode == "nopad" else ("pad",))
+        keys = (("raw", "fold", "ca") if mode == "nopad" else ("pad",))
         for kname in keys:
-            src = "fold" if kname == "pad" else kname
+            src = "fold" if kname == "pad" else kname  # (PAD rows carry the padded d in fold_*)
             for c in ("tt", "ff"):
                 summ[f"{kname}_worst_{c}"] = worst(R, f"{src}_{c}")
                 summ[f"{kname}_under100_{c}"] = under(R, f"{src}_{c}", 100)
@@ -557,7 +638,44 @@ def score(D, reg, v, feed="fwd", padj=None, M=None, Ttab=None):
     return dict(summary=summ, regions=regs, feed=dict(root=F["root"], parent=F["parent"], joined=F["joined"],
                                                       tap={f"{a}->{b}": [round(c, 1) for c in t]
                                                            for (a, b), t in F["tap"].items()}),
-                crossings=per, crossings_pad=readings.get("pad", ([], {}))[0], tracks=trk, G=G, F=F)
+                crossings=per, crossings_pad=readings.get("pad", ([], {}))[0], tracks=trk, G=G, F=F,
+                crossings_hop=hop[0] if feed != "top" else [])
+
+
+def hop_rows(G, F, Tr, v, X, R, Ttab, period):
+    """12.13c HOP reading: every off-feed (loop-closing or far) crossing is re-timed as a hop chain along the feed-tree
+    path between its regions (one fixed-latency landing per tree edge), so only feed parent<->child crossings remain:
+    the direct on-feed rows + one synthetic crossing at the tap of every feed edge that carries hop bits without a
+    direct crossing.  Cost = latency: hops - 1 extra landings per chain (reported as bit-hops / max hops)."""
+    on = [r for r in R if r["on_feed"]]
+    direct = {tuple(sorted((r["ra"], r["rb"]))) for r in on}
+    load = collections.Counter()
+    extra_bh, max_h, n_off = 0, 0, 0
+    for x, r in zip(X, R):
+        if r["on_feed"]:
+            continue
+        n_off += 1
+        la, lb = lineage(F, x["ra"]), lineage(F, x["rb"])
+        sb = set(lb)
+        L = next(q for q in la if q in sb)
+        path = la[:la.index(L)] + lb[:lb.index(L)]  # each region below L = one tree edge to its parent
+        for c in path:
+            load[(F["parent"][c], c)] += x["width"]
+        max_h = max(max_h, len(path))
+        extra_bh += x["width"] * (len(path) - 1)
+    syn = []
+    for (p, c), bits in sorted(load.items()):
+        if tuple(sorted((p, c))) in direct:
+            continue
+        syn.append(dict(id=f"hop:{p}>{c}", src=p, dst=c, ra=p, rb=c, width=bits, xy=F["tap"][(p, c)], far=False))
+    rows = list(on)
+    if syn:
+        BR = [branches(G, F, Tr, v, x) for x in syn]
+        for x, b, m in zip(syn, BR, margins(BR, Ttab, period)):
+            m.update(id=x["id"], ra=x["ra"], rb=x["rb"], width=x["width"], xy=[round(c, 1) for c in x["xy"]],
+                     lca=b["lca"], far=False, on_feed=True, tree_hops=b["tree_hops"], synthetic=True)
+            rows.append(m)
+    return rows, dict(hop_chains=n_off, hop_max_hops=max_h, hop_extra_bit_hops=extra_bh, hop_synthetic_edges=len(syn))
 
 
 # ------------------------------------------------------------------------------------------------------------ propose
@@ -628,8 +746,180 @@ def propose(D, span_mm=3.5, M=None, padj=None):
     return {n: names[of[n]] for n in parts}
 
 
+def loop_stats(of, M, padj):
+    """crossing graph of a partition -> cluster map: the feed tree is the maximum-bit spanning forest of the cluster
+    ADJACENCY graph (weight = crossing bits); every crossing cluster pair that is not a tree edge closes a loop
+    (off-feed).  Returns (loop bits, loop pairs, tree edge set, pair bits)."""
+    cw = collections.Counter()
+    for (a, b), m in M.items():
+        ca, cb = of[a], of[b]
+        if ca != cb:
+            cw[(ca, cb) if ca < cb else (cb, ca)] += m["bits"]
+    adjc = set()
+    for (a, b) in padj:
+        ca, cb = of[a], of[b]
+        if ca != cb:
+            adjc.add((ca, cb) if ca < cb else (cb, ca))
+    par = {}
+
+    def find(a):
+        par.setdefault(a, a)
+        while par[a] != a:
+            par[a] = par[par[a]]
+            a = par[a]
+        return a
+    tree = set()
+    for e in sorted(adjc, key=lambda e: (-cw.get(e, 0), e)):
+        ra, rb = find(e[0]), find(e[1])
+        if ra != rb:
+            par[ra] = rb
+            tree.add(e)
+    loop = {e: w for e, w in cw.items() if e not in tree}
+    return sum(loop.values()), len(loop), tree, cw
+
+
+def propose_tree(D, span_mm=2.0, cap_mm=3.5, M=None, padj=None, max_iter=400):
+    """proposer v2 (12.13 b/c): start from the connectivity map (propose, span_mm) and make the region CROSSING GRAPH
+    a tree (or near-tree: chain / fishbone along the dataflow) so that every crossing joins a feed parent and child.
+    (1) MERGE: for each loop-closing cluster pair (heaviest first) merge the two clusters -- or, failing that, the
+        whole fundamental cycle (the pair + the feed-tree path between them: the loop closes inside one region) --
+        absorbing every cluster that lies wholly inside the merged box, when the box side stays <= cap_mm and no
+        foreign partition centre is inside; kept only if the loop-closing bits drop.
+    (2) RE-CUT: move one end partition of a loop-closing pair into the other cluster (same box rules), kept only if the
+        loop-closing bits drop.
+    The remaining loop-closing crossings are counted and reported (off-feed)."""
+    M = traffic(D) if M is None else M
+    padj = part_adjacency(D) if padj is None else padj
+    parts = D["parts"]
+    cap = cap_mm * 1000.0
+    of = dict(propose(D, span_mm, M, padj))
+    cl = collections.defaultdict(set)
+    for n, r in of.items():
+        cl[r].add(n)
+
+    def box_of(ns):
+        return bbox([parts[n]["rect"] for n in ns])
+
+    def legal(ns):
+        b = box_of(ns)
+        if max(b[2] - b[0], b[3] - b[1]) > cap + 1e-6:
+            return False
+        for n, p in parts.items():
+            if n not in ns and b[0] < p["cen"][0] < b[2] and b[1] < p["cen"][1] < b[3]:
+                return False
+        return True
+
+    def absorb(ns):
+        """grow ns by every cluster wholly inside its box (to a fixpoint); None if a partly-inside cluster blocks."""
+        ns = set(ns)
+        while True:
+            b = box_of(ns)
+            if max(b[2] - b[0], b[3] - b[1]) > cap + 1e-6:
+                return None
+            inside = {n for n, p in parts.items() if n not in ns and b[0] < p["cen"][0] < b[2]
+                      and b[1] < p["cen"][1] < b[3]}
+            if not inside:
+                return ns
+            for r in {of[n] for n in inside}:
+                if not cl[r] <= (inside | ns):
+                    return None
+                ns |= cl[r]
+    best, npairs, _, _ = loop_stats(of, M, padj)
+    log = [("start", best, npairs, len(cl))]
+    it = 0
+    improved = True
+    while improved and it < max_iter:
+        improved = False
+        _, _, tree, cw = loop_stats(of, M, padj)
+        loops = sorted(((w, e) for e, w in cw.items() if e not in tree), reverse=True)
+        tadj = collections.defaultdict(set)
+        for x, y in tree:
+            tadj[x].add(y)
+            tadj[y].add(x)
+
+        def tree_path(a, b):
+            prev, q = {a: None}, [a]
+            for u in q:
+                if u == b:
+                    break
+                for w2 in tadj[u]:
+                    if w2 not in prev:
+                        prev[w2] = u
+                        q.append(w2)
+            if b not in prev:
+                return [a, b]
+            out = [b]
+            while prev[out[-1]] is not None:
+                out.append(prev[out[-1]])
+            return out
+        for w, (a, b) in loops:
+            it += 1
+            ok = None
+            for group in ([a, b], tree_path(a, b)):
+                ns = absorb(set().union(*(cl[r] for r in group)))
+                if ns is None or not legal(ns):
+                    continue
+                trial = dict(of)
+                for n in ns:
+                    trial[n] = a
+                lb, lp, _, _ = loop_stats(trial, M, padj)
+                if lb < best:
+                    ok = (trial, lb, lp, ns)
+                    break
+            if ok:
+                trial, lb, lp, ns = ok
+                for r in {of[n] for n in ns} - {a}:
+                    del cl[r]
+                cl[a] = set(ns)
+                of, best, npairs = trial, lb, lp
+                improved = True
+                log.append(("merge", best, npairs, len(cl)))
+                break
+        if improved:
+            continue
+        # re-cut: move one end partition of a loop pair to the other side
+        pp = collections.defaultdict(list)
+        for (x, y), m in M.items():
+            e = tuple(sorted((of[x], of[y])))
+            if e[0] != e[1]:
+                pp[e].append((m["bits"], x, y))
+        for w, e in loops:
+            for _, x, y in sorted(pp.get(e, []), reverse=True)[:4]:
+                for mv, dst in ((x, of[y]), (y, of[x])):
+                    src = of[mv]
+                    if len(cl[src]) == 1 or not legal(cl[dst] | {mv}):
+                        continue
+                    trial = dict(of)
+                    trial[mv] = dst
+                    lb, lp, _, _ = loop_stats(trial, M, padj)
+                    if lb < best:
+                        cl[src].discard(mv)
+                        cl[dst].add(mv)
+                        of, best, npairs = trial, lb, lp
+                        improved = True
+                        log.append(("recut", best, npairs, len(cl)))
+                        break
+                if improved:
+                    break
+            if improved:
+                break
+    names = {}
+    for k in sorted((k for k in cl if cl[k]), key=lambda k: (round(box_of(cl[k])[1], -2), box_of(cl[k])[0])):
+        names[k] = f"T{len(names):03d}"
+    return {n: names[of[n]] for n in parts}, log
+
+
 # ------------------------------------------------------------------------------------------------------------- render
-def render(D, S, path, title):
+def key_rows(S, key):
+    """rows and per-row key of a v2 reading: hop_* readings use the hop-chain rows (on-feed + synthetic edges)."""
+    if key.startswith("hop_"):
+        S["_hop"] = True
+        return S["crossings_hop"], key[4:]
+    S["_hop"] = False
+    return S["crossings"], key
+
+
+def render(D, S, path, title, key=None):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -655,9 +945,11 @@ def render(D, S, path, title):
     rc = G[F["root"]]["cen"]
     ax.plot([rc[0]], [rc[1]], marker="*", color="#1f4fd1", ms=14)
     rows = S["crossings_pad"] or S["crossings"]
+    if key:
+        rows, key = key_rows(S, key)
     agg = {}
     for r in rows:
-        m = min(r["fold_tt"], r["fold_ff"])
+        m = min(r[f"{key or 'fold'}_tt"], r[f"{key or 'fold'}_ff"])
         k = (r["ra"], r["rb"])
         a = agg.setdefault(k, [r["xy"], m, 0, r["far"]])
         a[1] = min(a[1], m)
@@ -670,7 +962,8 @@ def render(D, S, path, title):
     ax.set_ylim(0, H)
     ax.set_aspect("equal")
     s = S["summary"]
-    rd = "PAD" if S["crossings_pad"] else "FOLD"
+    rd = ({"ca": "COUNT-ALIGNED", "raw": "CURRENT RING", "fold": "STATIC COUNT"}.get(key, "")
+          + (" + HOP CHAINS" if S.get("_hop") else "")) or ("PAD" if S["crossings_pad"] else "FOLD")
     ax.set_title(f"{title}\n{s['regions']} regions, bit-mm inside {100 * (s['frac_bitmm_inside'] or 0):.1f} %, "
                  f"{s['crossing_ports']} crossing ports ({s['far_ports']} far), feed {s['feed']}; "
                  f"dots = crossings by min({rd} TT,FF) margin: green >=100, orange <100, red <0; x = far",
@@ -737,6 +1030,140 @@ def estimate_md(die, v, runs, D):
     return "\n".join(L) + "\n"
 
 
+# ------------------------------------------------------------------------------------------------------------- v2 run
+MODES = (("ring", "raw", "current ring: phase-dependent, the nominal d counts"),
+         ("ca", "ca", "count-aligned: nominal d absorbed by the ring count, only the derated variation counts"),
+         ("ring+hop", "hop_raw", "current ring, off-feed crossings re-timed as hop chains along the feed tree (12.13c)"),
+         ("ca+hop", "hop_ca", "count-aligned, off-feed crossings re-timed as hop chains along the feed tree (12.13c)"),
+         ("static", "fold", "static count: one whole-cycle k per crossing for TT and FF (no reset-time training)"),
+         ("static+hop", "hop_fold", "static count + hop chains"))
+
+
+def run_v2(plan, die, v, out, maps_in=(), tree_cfgs=((2.0, 3.5), (3.5, 5.0)), span=3.5,
+           feeds=("fwd", "spine", "fish", "dme", "top"), render_png=True, calib=None):
+    """LOCALITY-SCORE-2: every map (given + v1 proposed + tree proposer v2) x feed, margins in both ring modes; per
+    die the best map/feed per mode; ESTIMATE page + renders (best per mode)."""
+    import hashlib
+    D = load_plan(plan)
+    D["_plan"] = str(plan)
+    D["_sha"] = hashlib.sha256(Path(plan).read_bytes()).hexdigest()
+    padj = part_adjacency(D)
+    M = traffic(D)
+    Ttab = CA.load(TABLE)
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    maps = [(tag, load_regions(spec, D)) for tag, spec in maps_in]
+    maps.append((f"v1_s{span:g}", propose(D, span, M, padj)))
+    tlog = {}
+    for s0, cap in tree_cfgs:
+        reg, log = propose_tree(D, s0, cap, M, padj)
+        tlog[f"tree_s{s0:g}c{cap:g}"] = log
+        maps.append((f"tree_s{s0:g}c{cap:g}", reg))
+    rows, keep = [], {}
+    for name, reg in maps:
+        (out / f"{die}_{name}_regions.json").write_text(json.dumps(dict(part_region=reg), indent=0, sort_keys=True))
+        for feed in feeds:
+            S = score(D, reg, v, feed, padj, M, Ttab)
+            S["_reg"] = reg
+            s = S["summary"]
+            s["map"] = name
+            rows.append(s)
+            keep[(name, feed)] = S
+            with gzip.open(out / f"{die}_{name}_{feed}_v2_crossings.json.gz", "wt") as fh:
+                json.dump(S["crossings"], fh)
+            print(die, name, feed, {k: s.get(k) for k in ("regions", "crossing_ports", "off_feed_ports",
+                                                          "raw_worst_tt", "raw_worst_ff", "ca_worst_tt", "ca_worst_ff")},
+                  flush=True)
+    best = {}
+    for mode, key, _ in MODES:
+        cand = [r for r in rows if r.get(f"{key}_worst_tt") is not None]
+        def rank(r):  # passing forms first, then (hop modes) the fewest extra landing cycles, else the best margin
+            m = min(r[f"{key}_worst_tt"], r[f"{key}_worst_ff"])
+            cost = r.get("hop_extra_bit_hops", 0) if key.startswith("hop_") else 0
+            return (m >= 100.0, -cost if m >= 100.0 else m, m, -(r[f"{key}_under100_tt"] + r[f"{key}_under100_ff"]))
+        b = max(cand, key=rank)
+        S = keep[(b["map"], b["feed"])]
+        png = f"{die}_v2_best_{mode}.png"
+        if render_png:
+            render(D, S, out / png, f"{die} best {mode}: map {b['map']} feed {b['feed']}", key)
+        best[mode] = dict(map=b["map"], feed=b["feed"], tt=b[f"{key}_worst_tt"], ff=b[f"{key}_worst_ff"],
+                          under100_tt=b[f"{key}_under100_tt"], under100_ff=b[f"{key}_under100_ff"],
+                          passes=min(b[f"{key}_worst_tt"], b[f"{key}_worst_ff"]) >= 100.0, png=png,
+                          worst=sorted(key_rows(S, key)[0], key=lambda r: min(r[f"{key_rows(S, key)[1]}_tt"],
+                                                                         r[f"{key_rows(S, key)[1]}_ff"]))[:8],
+                          rk=key_rows(S, key)[1], hop=dict(chains=b.get("hop_chains"), max_hops=b.get("hop_max_hops"),
+                                                           extra_bit_hops=b.get("hop_extra_bit_hops")))
+    res = dict(die=die, plan=dict(path=str(plan), sha256=D["_sha"]), v_ps_per_mm=v, rows=rows, best=best,
+               tree_log={k: lg[:1] + lg[-1:] for k, lg in tlog.items()}, calib=calib)
+    (out / f"{die}_v2.json").write_text(json.dumps(res, indent=0, default=str))
+    (out / f"{die}_v2_ESTIMATE.md").write_text(estimate_md_v2(die, v, rows, best, D, res["tree_log"], calib))
+    return res
+
+
+def estimate_md_v2(die, v, rows, best, D, tlog, calib=None):
+    L = [f"# 12.14b ESTIMATE v2: {die} region map / clock feed / crossings (LOCALITY-SCORE-2, analytic, UNCHECKED)", "",
+         f"Inputs: plan {D['_plan']} (sha256 {D['_sha'][:12]}), {len(D['parts'])} partitions, {len(D['ports'])} ports; "
+         f"v = {v:g} ps/mm TT; P = {D['period']:g} ps, budget P/2 = {D['period'] / 2:g} ps.",
+         "Feeds: fwd = neighbour-forwarded from a parent LEAF (H-tree regions); spine = one spine along the max-bit "
+         "spanning tree of the region adjacency (through every region centre; H-tree region trees hang off it); "
+         "fish = the same spine + fishbone region trees (long-axis spine + ribs, leaf delay = Manhattan distance); "
+         "dme = the spine made zero-skew (DME pads at the spine nodes: nominal d = 0, unshared = height of the last common "
+         "spine node; LAND-HEAD-3's balanced spine form); top = one balanced die H-tree. Maps: given, v1 = connectivity greedy (span cap), tree_sXcY = proposer v2 "
+         "(start span X mm, crossing graph made a tree by merge/re-cut up to cap Y mm).",
+         "Modes: CURRENT RING = landed_phase_ocv margin with the nominal d (phase-dependent); COUNT-ALIGNED = budget - "
+         "max(p_up, p_dn), nominal d absorbed by the ring count (ASSUMED definition = LAND-HEAD-3's reading, pending the "
+         "MESO-COUNT-1 window verdict; it re-centres d per corner, i.e. it ASSUMES the ring count is trained at reset at "
+         "the operating PVT); STATIC COUNT = one whole-cycle k per crossing for TT and FF (= FOLD: the corner-to-corner "
+         "shift of d stays in the window). Derate: clk_aocv g021 + droop regions + core latency class B (shared model).",
+         ""]
+    if calib:
+        L += ["Calibration: " + calib, ""]
+    L += ["| mode | best map | feed | worst TT / FF ps | <100 TT / FF | >=100 TT and FF |", "|---|---|---|---|---|---|"]
+    L[-2:-2] = ["Hop modes (12.13c): every off-feed crossing (loop-closing or far) is re-timed as a hop chain along the "
+                "feed-tree path, one fixed-latency landing per tree edge; only feed parent<->child crossings remain. "
+                "Cost = extra landing cycles (bit-hops), reported per map.", ""]
+    for mode, key, desc in MODES:
+        b = best[mode]
+        L.append(f"| {mode} | {b['map']} | {b['feed']} | {b['tt']:.0f} / {b['ff']:.0f} | {b['under100_tt']} / "
+                 f"{b['under100_ff']} | {'YES' if b['passes'] else 'no'} |")
+    L += ["", "| map | feed | regions | max span mm | bit-mm inside | crossing ports | off-feed (loop) ports / pairs | "
+          "worst unshared ns (on / off feed) | max tree hops | CURRENT RING TT/FF (<100) | COUNT-ALIGNED TT/FF (<100) | "
+          "hop chains: n / max hops / extra bit-hops | RING+HOP TT/FF (<100) | CA+HOP TT/FF (<100) |",
+          "|" + "---|" * 14]
+    for s in rows:
+        L.append(f"| {s['map']} | {s['feed']} | {s['regions']} | {s['max_span_mm']:.2f} | "
+                 f"{100 * (s['frac_bitmm_inside'] or 0):.1f} % | {s['crossing_ports']} | {s['off_feed_ports']} / "
+                 f"{s['loop_pairs']} | {s['worst_unshared_on_feed_tt'] / 1000:.2f} / "
+                 f"{s['worst_unshared_off_feed_tt'] / 1000:.2f} | {s['max_tree_hops']} | "
+                 f"{s['raw_worst_tt']:.0f} / {s['raw_worst_ff']:.0f} ({s['raw_under100_tt']}/{s['raw_under100_ff']}) | "
+                 f"{s['ca_worst_tt']:.0f} / {s['ca_worst_ff']:.0f} ({s['ca_under100_tt']}/{s['ca_under100_ff']}) | "
+                 + ("- | - | - |" if s.get("hop_ca_worst_tt") is None else
+                    f"{s['hop_chains']} / {s['hop_max_hops']} / {s['hop_extra_bit_hops']} | "
+                    f"{s['hop_raw_worst_tt']:.0f} / {s['hop_raw_worst_ff']:.0f} "
+                    f"({s['hop_raw_under100_tt']}/{s['hop_raw_under100_ff']}) | "
+                    f"{s['hop_ca_worst_tt']:.0f} / {s['hop_ca_worst_ff']:.0f} "
+                    f"({s['hop_ca_under100_tt']}/{s['hop_ca_under100_ff']}) |"))
+    L.append("")
+    for mode, key, desc in MODES:
+        b = best[mode]
+        L.append(f"Worst crossings, best {mode} ({b['map']} / {b['feed']}, {desc}): " + "; ".join(
+            f"{r['ra']}->{r['rb']} {r['width']} b {'on' if r['on_feed'] else 'OFF'}-feed hops {r['tree_hops']}, "
+            f"unshared {r['unshared_tt'] / 1000:.2f} ns, d {r['d_tt']:.0f}, p {r['p_tt']:.0f}/{r['p_ff']:.0f}, "
+            f"margin {r[b['rk'] + '_tt']:.0f}/{r[b['rk'] + '_ff']:.0f}" for r in b["worst"][:5]))
+        if key.startswith("hop_"):
+            L.append(f"  Hop cost: {b['hop']['chains']} off-feed crossings become chains, max {b['hop']['max_hops']} "
+                     f"tree hops, {b['hop']['extra_bit_hops']} extra bit-hops (each extra hop = one more landing "
+                     f"cycle on that path; price it in the die's token model)")
+        L.append(f"  Render: {b['png']}")
+    L += ["", "Tree proposer log (start -> end: loop-closing bits, loop pairs, regions): " + "; ".join(
+        f"{k}: {lg[0][1]} b/{lg[0][2]} p/{lg[0][3]} r -> {lg[-1][1]} b/{lg[-1][2]} p/{lg[-1][3]} r"
+        for k, lg in tlog.items()), "",
+        "Verdict rule (12.14b): build only a map/feed whose estimated margin is >= 100 ps TT and FF on every crossing in "
+        "the ring mode that will be built. Every number here is an ESTIMATE (UNCHECKED) until a GRT + landed_phase_ocv "
+        "run."]
+    return "\n".join(L) + "\n"
+
+
 # --------------------------------------------------------------------------------------------------------------- CLI
 def run(plan, regions, die, v, out, tag, feeds=("fwd", "spt", "top"), propose_span=None, render_png=True):
     import hashlib
@@ -780,7 +1207,7 @@ def run(plan, regions, die, v, out, tag, feeds=("fwd", "spt", "top"), propose_sp
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=("score", "propose", "both"))
+    ap.add_argument("cmd", choices=("score", "propose", "both", "v2"))
     ap.add_argument("--plan", required=True)
     ap.add_argument("--regions", help="region map JSON or 'part'")
     ap.add_argument("--tag", default="baseline")
@@ -790,7 +1217,16 @@ def main(argv=None):
     ap.add_argument("--feed", default="fwd,spt,top")
     ap.add_argument("--out", required=True)
     ap.add_argument("--no-png", action="store_true")
+    ap.add_argument("--map", action="append", default=[], help="v2: TAG=MAP (repeatable; MAP = JSON or 'part')")
+    ap.add_argument("--tree", default="2:3.5,3.5:5", help="v2: tree proposer start-span:cap list (mm)")
+    ap.add_argument("--calib", default=None, help="v2: calibration note for the ESTIMATE page")
     a = ap.parse_args(argv)
+    if a.cmd == "v2":
+        cfg = tuple(tuple(float(t) for t in c.split(":")) for c in a.tree.split(",") if c)
+        feeds = tuple(a.feed.split(",")) if a.feed != "fwd,spt,top" else ("fwd", "spine", "fish", "dme", "top")
+        run_v2(a.plan, a.die, a.v_ps_mm, a.out, [tuple(m.split("=", 1)) for m in a.map], cfg, a.span_mm, feeds,
+               not a.no_png, a.calib)
+        return 0
     regions = a.regions if a.cmd in ("score", "both") else None
     span = a.span_mm if a.cmd in ("propose", "both") else None
     run(a.plan, regions, a.die, a.v_ps_mm, a.out, a.tag, tuple(a.feed.split(",")), span, not a.no_png)
