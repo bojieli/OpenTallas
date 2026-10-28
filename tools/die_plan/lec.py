@@ -4930,6 +4930,7 @@ def ft_parallel_normalise(kit, top, netlist, out, rec):
 
 
 RESET_DEFAULT = 4
+DEBUG_ENV = ("OT_LEC_RAW_BASE_STEPS",)
 
 
 def reset_contract_gate(kit, top, environ=None):
@@ -4944,7 +4945,10 @@ def reset_contract_gate(kit, top, environ=None):
     environ = os.environ if environ is None else environ
     req = environ.get("OT_LEC_RESET_CYCLES")
     path = environ.get("OT_LEC_RESET_CONTRACT") or str(Path(kit) / "reset_contract.json")
-    rep = dict(default=RESET_DEFAULT, requested=int(req) if req else None, contract=None, used=RESET_DEFAULT)
+    # OT_LEC_RAW_BASE_STEPS is a DEBUG override only (COORD REBAL-7 ruling 10-28): the release reset window is the
+    # declared contract above; any debug override in effect is recorded beside it in lec.json
+    rep = dict(default=RESET_DEFAULT, requested=int(req) if req else None, contract=None, used=RESET_DEFAULT,
+               debug_overrides={k: environ[k] for k in DEBUG_ENV if k in environ})
 
     def refuse(why):
         rep["refused"] = why
