@@ -1,0 +1,328 @@
+{
+ "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json": {
+  "users": 16,
+  "ports": 30,
+  "before": [
+   12,
+   12
+  ],
+  "after": [
+   12,
+   12
+  ],
+  "orient_changes": {},
+  "face_moves": {}
+ },
+ "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon.json": {
+  "users": 16,
+  "ports": 30,
+  "before": [
+   43,
+   45
+  ],
+  "after": [
+   19,
+   50
+  ],
+  "orient_changes": {
+   "q_hub_ne.u_vmb_Q0": "MX->R0",
+   "q_hub_ne.u_vmb_Q2": "MX->R0",
+   "q_hub_ne.u_vmb_Q4": "MX->R0",
+   "q_hub_ne.u_vmb_Q6": "MX->R180",
+   "q_hub_ne.u_vmb_Q7": "R0->MY"
+  },
+  "face_moves": {
+   "rq0": "W->E",
+   "rq2": "S->E",
+   "rr0": "W->E",
+   "rr2": "S->E",
+   "rr4": "E->S",
+   "rslot": "W->S",
+   "rslot_v": "W->S",
+   "wslot": "W->S",
+   "wslot_v": "W->S"
+  }
+ },
+ "cores/ot_hbm_idx_qctl_static__194.832x82.08__canon.json": {
+  "users": 4,
+  "ports": 19,
+  "before": [
+   4,
+   8
+  ],
+  "after": [
+   0,
+   0
+  ],
+  "orient_changes": {
+   "q_hub_nw.u_hb_idx__qctl_Q__q0": "MY->R180",
+   "q_hub_ne.u_hb_idx__qctl_Q__q0": "MY->R180"
+  },
+  "face_moves": {
+   "frame_start": "W->N",
+   "qf": "W->N",
+   "query_emit": "W->N",
+   "query_emit_head": "W->N",
+   "query_index": "W->N",
+   "query_slot": "W->N",
+   "vf": "W->N",
+   "weight_slot": "W->N"
+  }
+ },
+ "cores/ot_hbm_idx_query_static__170.64x164.16__canon.json": {
+  "users": 4,
+  "ports": 14,
+  "before": [
+   6,
+   18
+  ],
+  "after": [
+   0,
+   4
+  ],
+  "orient_changes": {
+   "q_hub_nw.u_hb_idx__q_Q__q0": "R0->MY",
+   "q_hub_nw.u_hb_idx__q_Q__q1": "R0->MX",
+   "q_hub_ne.u_hb_idx__q_Q__q0": "R0->R180",
+   "q_hub_ne.u_hb_idx__q_Q__q1": "R0->MX"
+  },
+  "face_moves": {
+   "ql_codes": "S->W",
+   "ql_head": "S->W",
+   "ql_sc": "S->W",
+   "ql_v": "S->W",
+   "ql_w": "S->W"
+  }
+ },
+ "cores/ot_hbm_idx_vm_query_static_n12__216x138.24__content_trial.json": {
+  "users": 4,
+  "ports": 13,
+  "before": [
+   4,
+   4
+  ],
+  "after": [
+   0,
+   0
+  ],
+  "orient_changes": {
+   "q_hub_nw.u_hb_idx__op_Q__q0": "R0->MX"
+  },
+  "face_moves": {}
+ },
+ "cores/ot_hbm_su_static_qcore_r13__224.64x207.36__canon.json": {
+  "users": 4,
+  "ports": 20,
+  "before": [
+   3,
+   18
+  ],
+  "after": [
+   0,
+   0
+  ],
+  "orient_changes": {
+   "q_hub_nw.u_sucore_Q__q0": "R0->R180",
+   "q_hub_ne.u_sucore_Q__q0": "R0->R180"
+  },
+  "face_moves": {
+   "fault": "S->W",
+   "red_cmd": "S->N",
+   "red_sv": "E->S",
+   "rf_drain_cmd": "S->N",
+   "rf_rd_cmd": "S->N",
+   "rr_wa": "E->S",
+   "rr_wd": "E->S",
+   "rr_wv": "E->S",
+   "sfu_x": "E->S"
+  }
+ },
+ "cores/ot_hfd_coll_q2_hard_v8g__reduce__233.28x233.28__q_hub_u_hb_coll_Q_reduce__oneclk.json": {
+  "users": 4,
+  "ports": 5,
+  "before": [
+   5,
+   5
+  ],
+  "after": [
+   0,
+   0
+  ],
+  "orient_changes": {
+   "q_hub_nw.u_hb_coll_Q_reduce__q1": "R0->MX"
+  },
+  "face_moves": {}
+ },
+ "cores/ot_hfd_coll_q3_body_core__578.88x1054.08__canon.json": {
+  "users": 2,
+  "ports": 86,
+  "before": [
+   25,
+   25
+  ],
+  "after": [
+   0,
+   0
+  ],
+  "orient_changes": {
+   "q_hub_nw.u_hb_coll_Q_body_core__q0": "R0->MX",
+   "q_hub_nw.u_hb_coll_Q_body_core__q1": "R180->R0"
+  },
+  "face_moves": {
+   "cfg_addr": "N->S",
+   "cfg_data": "N->S",
+   "cfg_target": "N->S",
+   "cfg_v": "N->S",
+   "desc_base": "N->S",
+   "desc_limit": "N->S",
+   "desc_loops": "N->S",
+   "desc_v": "N->S",
+   "done": "N->S",
+   "fault": "N->S",
+   "fault_cause": "N->S",
+   "hgi_busy": "N->S",
+   "hgi_inj_addr": "E->S",
+   "inj_d": "E->S",
+   "inj_idx": "N->S",
+   "inj_rd": "E->S",
+   "launch_v": "N->S",
+   "program_configured": "N->S",
+   "program_fault": "N->S",
+   "program_init_busy": "N->S",
+   "rc_tag": "E->S",
+   "rc_v": "E->S",
+   "stat_cycles": "N->S",
+   "u_body_arg_fault": "N->S",
+   "u_body_g_ariter_t_idx": "N->S",
+   "u_body_g_ariter_t_load": "N->S",
+   "u_body_g_ariter_t_pa": "N->S",
+   "u_body_g_ariter_t_pb": "N->S",
+   "u_body_g_ariter_t_read": "N->S",
+   "u_body_g_q3_n_u_fj_u_fj_u_link_abort": "N->S",
+   "u_body_g_q3_n_u_fj_u_fj_u_reduce_fault": "N->S",
+   "u_body_g_qcap_10_u_cap_src_v": "N->S",
+   "u_body_g_qcap_2_u_cap_src_v": "N->S",
+   "u_body_g_qcap_9_u_cap_src_d": "E->S",
+   "u_body_g_qcap_9_u_cap_src_v": "N->S",
+   "u_body_u_upipe_SL_15_u_d3": "N->S",
+   "u_body_u_upipe_SL_3_u_d3": "N->S",
+   "u_body_u_upipe_SL_4_u_d3": "N->S",
+   "u_body_u_upipe_SL_7_u_d3": "N->S",
+   "vm_rq": "N->S",
+   "vm_rq_": "N->S",
+   "vm_rr": "N->S"
+  }
+ },
+ "cores/ot_hfd_coll_q3_vm_core__328.32x717.12__canon.json": {
+  "users": 2,
+  "ports": 25,
+  "before": [
+   2,
+   2
+  ],
+  "after": [
+   2,
+   2
+  ],
+  "orient_changes": {},
+  "face_moves": {}
+ },
+ "cores/ot_hgi_coll_gq_issue__237.6x237.6__canon.json": {
+  "users": 4,
+  "ports": 69,
+  "before": [
+   20,
+   84
+  ],
+  "after": [
+   5,
+   5
+  ],
+  "orient_changes": {
+   "q_hub_nw.u_hcollgi_Q__q0": "R180->MY",
+   "q_hub_nw.u_hcollgi_Q__q1": "R180->R0",
+   "q_hub_ne.u_hcollgi_Q__q0": "R180->MY",
+   "q_hub_ne.u_hcollgi_Q__q1": "R180->R0"
+  },
+  "face_moves": {
+   "active": "W->S",
+   "cfg_addr": "W->S",
+   "cfg_data": "W->S",
+   "cfg_target": "W->S",
+   "cfg_v": "W->S",
+   "configured": "W->S",
+   "desc_base": "W->S",
+   "desc_limit": "W->S",
+   "desc_loops": "W->S",
+   "desc_v": "W->S",
+   "done": "E->S",
+   "fault": "W->S",
+   "launch_v": "W->S",
+   "ld_desc": "N->W",
+   "ld_ev_k": "N->W",
+   "ld_ev_v": "N->W",
+   "ld_fire": "N->W",
+   "ld_p_v": "N->W",
+   "ra_lp_data": "S->E",
+   "rb_lp_data": "N->S",
+   "rb_lp_tag": "N->S",
+   "rb_lp_we": "N->S",
+   "rb_rx_kind": "N->S",
+   "rb_rx_slot": "N->S",
+   "rb_rx_src": "N->S",
+   "rb_rx_tag": "N->S",
+   "rb_state_read_tx": "N->S",
+   "rb_state_tx_tag": "N->S",
+   "rb_tx_forward": "N->S",
+   "rb_tx_inject": "N->S",
+   "rb_tx_tag": "N->S",
+   "rb_tx_ttl": "N->S",
+   "tgt_fault": "W->S",
+   "vm_rq_hi": "N->S",
+   "vm_rq_lo": "N->S"
+  }
+ },
+ "cores/ot_hgi_coll_gq_land__142.56x207.36__canon.json": {
+  "users": 4,
+  "ports": 17,
+  "before": [
+   9,
+   11
+  ],
+  "after": [
+   7,
+   8
+  ],
+  "orient_changes": {
+   "q_hub_nw.u_hcollgl_Q__q0": "MX->MY",
+   "q_hub_nw.u_hcollgl_Q__q1": "MX->R0",
+   "q_hub_ne.u_hcollgl_Q__q0": "MX->MY"
+  },
+  "face_moves": {
+   "fault": "E->S",
+   "ld_desc": "N->S",
+   "ld_ev_k": "N->S",
+   "ld_ev_v": "N->S",
+   "ld_fire": "N->S",
+   "ld_p_v": "N->S",
+   "pb_d": "E->S",
+   "pb_src": "N->S",
+   "pb_tag": "N->S",
+   "pb_v": "N->S"
+  }
+ },
+ "cores/ot_hgi_sm_xload_cl2_bdring__86.4x302.4__canon.json": {
+  "users": 4,
+  "ports": 10,
+  "before": [
+   2,
+   2
+  ],
+  "after": [
+   2,
+   2
+  ],
+  "orient_changes": {},
+  "face_moves": {}
+ }
+}

@@ -1,0 +1,3281 @@
+{
+ "cores/hfd_hgi_vms_glue_nw_t__869.832x1334.88__canon.json": {
+  "module": "hfd_hgi_vms_glue_nw_t__869.832x1334.88__canon.json",
+  "instances": 4,
+  "outline": [
+   869.832,
+   1334.88
+  ],
+  "faces": {
+   "E": {
+    "pins": 8897,
+    "L": 1317.6,
+    "dens": 6.75,
+    "after_respread": 8897,
+    "dens_after": 6.75,
+    "grow_um": 302.4,
+    "lots": {
+     "q_hub_nw.u_hb_vms_Q__q0": [
+      [
+       1,
+       "overlaps u_vmdel_Q0,u_vmdel_Q1,u_vmdel_Q2"
+      ],
+      [
+       -1,
+       "overlaps u_calendar_Q__q0,u_xl_Q_ctl__q0"
+      ]
+     ],
+     "q_hub_nw.u_hb_vms_Q__q1": [
+      [
+       1,
+       "overlaps u_vmdel_Q4,u_vmdel_Q5,u_vmdel_Q6"
+      ],
+      [
+       -1,
+       "overlaps u_calendar_Q__q1,u_xl_Q_ctl__q1"
+      ]
+     ],
+     "q_hub_ne.u_hb_vms_Q__q0": [
+      [
+       1,
+       "overlaps u_vmdel_Q0,u_vmdel_Q1,u_vmdel_Q2"
+      ],
+      [
+       -1,
+       "overlaps u_calendar_Q__q0,u_xl_Q_ctl__q0"
+      ]
+     ],
+     "q_hub_ne.u_hb_vms_Q__q1": [
+      [
+       1,
+       "overlaps u_vmdel_Q4,u_vmdel_Q5,u_vmdel_Q6"
+      ],
+      [
+       -1,
+       "overlaps u_calendar_Q__q1,u_xl_Q_ctl__q1"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json": {
+  "module": "hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+  "instances": 16,
+  "outline": [
+   270.0,
+   403.92
+  ],
+  "faces": {
+   "S": {
+    "pins": 2802,
+    "L": 252.72,
+    "dens": 11.09,
+    "after_respread": 2802,
+    "dens_after": 11.09,
+    "grow_um": 259.2,
+    "lots": {
+     "q_hub_nw.u_vmb_Q0_mu1": [
+      [
+       1,
+       "overlaps u_hb_vms_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_1"
+      ]
+     ],
+     "q_hub_nw.u_vmb_Q1_mu1": [
+      [
+       1,
+       "overlaps u_vmdel_Q0,u_vmdel_Q2"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_3"
+      ]
+     ],
+     "q_hub_nw.u_vmb_Q2_mu1": [
+      [
+       1,
+       "overlaps u_mu_fused_5"
+      ],
+      [
+       -1,
+       "overlaps u_hb_vms_Q__q0"
+      ]
+     ],
+     "q_hub_nw.u_vmb_Q3_mu1": [
+      [
+       1,
+       "overlaps u_mu_fused_7"
+      ],
+      [
+       -1,
+       "overlaps u_mu_keybuf_0_s6__q0"
+      ]
+     ],
+     "q_hub_nw.u_vmb_Q4_mu1": [
+      [
+       1,
+       "overlaps u_hb_vms_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_9"
+      ]
+     ],
+     "q_hub_nw.u_vmb_Q5_mu1": [
+      [
+       1,
+       "overlaps u_vmdel_Q6"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_11"
+      ]
+     ],
+     "q_hub_nw.u_vmb_Q6_mu1": [
+      [
+       1,
+       "overlaps u_mu_fused_13"
+      ],
+      [
+       -1,
+       "overlaps u_hb_vms_Q__q1"
+      ]
+     ],
+     "q_hub_nw.u_vmb_Q7_mu1": [
+      [
+       1,
+       "overlaps u_mu_fused_15"
+      ],
+      [
+       -1,
+       "overlaps u_vmdel_Q5"
+      ]
+     ],
+     "q_hub_ne.u_vmb_Q0_mu1": [
+      [
+       1,
+       "overlaps u_hb_vms_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_1"
+      ]
+     ],
+     "q_hub_ne.u_vmb_Q1_mu1": [
+      [
+       1,
+       "overlaps u_vmdel_Q0,u_vmdel_Q2,u_mu_keybuf_0_s4__q0"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_3"
+      ]
+     ],
+     "q_hub_ne.u_vmb_Q2_mu1": [
+      [
+       1,
+       "overlaps u_mu_fused_5"
+      ],
+      [
+       -1,
+       "overlaps u_hb_vms_Q__q0"
+      ]
+     ],
+     "q_hub_ne.u_vmb_Q3_mu1": [
+      [
+       1,
+       "overlaps u_mu_fused_7"
+      ],
+      [
+       -1,
+       "overlaps u_mu_keybuf_0_s2__q0"
+      ]
+     ],
+     "q_hub_ne.u_vmb_Q4_mu1": [
+      [
+       1,
+       "overlaps u_hb_vms_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_9"
+      ]
+     ],
+     "q_hub_ne.u_vmb_Q5_mu1": [
+      [
+       1,
+       "overlaps u_vmdel_Q6"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_11"
+      ]
+     ],
+     "q_hub_ne.u_vmb_Q6_mu1": [
+      [
+       1,
+       "overlaps u_mu_fused_13"
+      ],
+      [
+       -1,
+       "overlaps u_hb_vms_Q__q1"
+      ]
+     ],
+     "q_hub_ne.u_vmb_Q7_mu1": [
+      [
+       1,
+       "overlaps u_mu_fused_15"
+      ],
+      [
+       -1,
+       "overlaps u_vmdel_Q5"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_hc_root_static__tail0_rest__155.52x172.8__root_u_hc_eng_tail0_rest.json": {
+  "module": "ot_hbm_hc_root_static__tail0_rest__155.52x172.8__root_u_hc_eng_tail0_rest.json",
+  "instances": 1,
+  "outline": [
+   155.52,
+   172.8
+  ],
+  "faces": {
+   "N": {
+    "pins": 906,
+    "L": 138.24,
+    "dens": 6.55,
+    "after_respread": 906,
+    "dens_after": 6.55,
+    "grow_um": 30.24,
+    "lots": {
+     "root.u_hc_eng_tail0_rest": [
+      [
+       1,
+       "overlaps u_hc_eng_tail0_sk_step0"
+      ],
+      [
+       -1,
+       "overlaps u_tkm_SW_root"
+      ]
+     ]
+    }
+   },
+   "S": {
+    "pins": 905,
+    "L": 138.24,
+    "dens": 6.55,
+    "after_respread": 905,
+    "dens_after": 6.55,
+    "grow_um": 30.24,
+    "lots": {
+     "root.u_hc_eng_tail0_rest": [
+      [
+       1,
+       "overlaps u_hc_eng_tail0_sk_step0"
+      ],
+      [
+       -1,
+       "overlaps u_tkm_SW_root"
+      ]
+     ]
+    }
+   },
+   "E": {
+    "pins": 1009,
+    "L": 155.52,
+    "dens": 6.49,
+    "after_respread": 1009,
+    "dens_after": 6.49,
+    "grow_um": 30.24,
+    "lots": {
+     "root.u_hc_eng_tail0_rest": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_hc_root_static__tail1_rest__155.52x172.8__root_u_hc_eng_tail1_rest.json": {
+  "module": "ot_hbm_hc_root_static__tail1_rest__155.52x172.8__root_u_hc_eng_tail1_rest.json",
+  "instances": 1,
+  "outline": [
+   155.52,
+   172.8
+  ],
+  "faces": {
+   "N": {
+    "pins": 906,
+    "L": 138.24,
+    "dens": 6.55,
+    "after_respread": 906,
+    "dens_after": 6.55,
+    "grow_um": 30.24,
+    "lots": {
+     "root.u_hc_eng_tail1_rest": [
+      [
+       1,
+       "overlaps u_hc_eng_tail1_sk_step0"
+      ],
+      [
+       -1,
+       "overlaps u_hc_eng_tail0_sk_steady"
+      ]
+     ]
+    }
+   },
+   "S": {
+    "pins": 904,
+    "L": 138.24,
+    "dens": 6.54,
+    "after_respread": 904,
+    "dens_after": 6.54,
+    "grow_um": 30.24,
+    "lots": {
+     "root.u_hc_eng_tail1_rest": [
+      [
+       1,
+       "overlaps u_hc_eng_tail1_sk_step0"
+      ],
+      [
+       -1,
+       "overlaps u_hc_eng_tail0_sk_steady"
+      ]
+     ]
+    }
+   },
+   "E": {
+    "pins": 1009,
+    "L": 155.52,
+    "dens": 6.49,
+    "after_respread": 1009,
+    "dens_after": 6.49,
+    "grow_um": 30.24,
+    "lots": {
+     "root.u_hc_eng_tail1_rest": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_idx_query_static__170.64x164.16__canon.json": {
+  "module": "ot_hbm_idx_query_static__170.64x164.16__canon.json",
+  "instances": 4,
+  "outline": [
+   170.64,
+   164.16
+  ],
+  "faces": {
+   "E": {
+    "pins": 1032,
+    "L": 146.88,
+    "dens": 7.03,
+    "after_respread": 1032,
+    "dens_after": 7.03,
+    "grow_um": 43.2,
+    "lots": {
+     "q_hub_nw.u_hb_idx__q_Q__q0": [
+      [
+       1,
+       "overlaps u_mu_keybuf_0_s1__q0"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_hb_idx__q_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_mu_keybuf_0_s0__q1"
+      ]
+     ],
+     "q_hub_ne.u_hb_idx__q_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hb_idx__q_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_idx_score_hcol_h0__218.592x187.488__canon.json": {
+  "module": "ot_hbm_idx_score_hcol_h0__218.592x187.488__canon.json",
+  "instances": 41,
+  "outline": [
+   218.592,
+   187.488
+  ],
+  "faces": {
+   "N": {
+    "pins": 1181,
+    "L": 201.31,
+    "dens": 5.87,
+    "after_respread": 1181,
+    "dens_after": 5.87,
+    "grow_um": 17.28,
+    "lots": {
+     "q_b100.u_hb_idx__s_Q_r0c0_k0h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c0_k1h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c0_k2h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c0_k3h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c1_k0h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c1_k1h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c1_k2h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c1_k3h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c2_k0h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c2_k1h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c2_k2h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c2_k3h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c3_k0h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c3_k1h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c3_k2h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c3_k3h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r1c0_k0h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c0_k1h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c0_k2h0,u_hb_idx__s_Q_r1c0_k2h1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c0_k2h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c0_k3h0,u_hb_idx__s_Q_r1c0_k3h1"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c0_k0h1,u_hb_idx__s_Q_r1c0_k1h0"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c0_k3h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c0_k2h0"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c1_k0h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c0_k2h1,u_hb_idx__s_Q_r1c1_k1h0"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c1_k1h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c1_k0h0,u_hb_idx__s_Q_r1c1_k0h1"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c0_k1h1,u_hb_idx__s_Q_r1c1_k2h0"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c1_k2h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c1_k1h0,u_hb_idx__s_Q_r1c1_k2h1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c1_k3h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c1_k2h1,u_hb_idx__s_Q_r1c2_k0h0"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c2_k0h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c1_k1h1,u_hb_idx__s_Q_r1c1_k3h1"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c1_k3h0"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c2_k1h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c2_k2h0"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c2_k2h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c2_k3h1"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c2_k1h0"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c2_k3h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c3_k0h1"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c2_k0h1"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c3_k0h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c2_k2h1"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c3_k1h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c3_k1h1"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c3_k2h0"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c3_k2h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c3_k1h0"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c3_k3h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c3_k2h1"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c2_k0h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c2_k1h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c2_k2h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c2_k3h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c3_k0h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c3_k1h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c3_k2h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c3_k3h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r1c0_k0h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_idx_score_hcol_h1__218.592x187.488__canon.json": {
+  "module": "ot_hbm_idx_score_hcol_h1__218.592x187.488__canon.json",
+  "instances": 40,
+  "outline": [
+   218.592,
+   187.488
+  ],
+  "faces": {
+   "N": {
+    "pins": 1181,
+    "L": 201.31,
+    "dens": 5.87,
+    "after_respread": 1181,
+    "dens_after": 5.87,
+    "grow_um": 17.28,
+    "lots": {
+     "q_b100.u_hb_idx__s_Q_r0c0_k0h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c0_k1h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c0_k2h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c0_k3h1": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c1_k0h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c1_k1h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c1_k2h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c1_k3h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c2_k0h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c2_k1h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c2_k2h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c2_k3h1": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c3_k0h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c3_k1h1": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c3_k2h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c3_k3h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c0_k0h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c0_k2h0"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c0_k1h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c0_k2h1,u_hb_idx__s_Q_r1c1_k1h0"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c0_k2h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c0_k3h1,u_hb_idx__s_Q_r1c1_k0h0"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c0_k1h0,u_hb_idx__s_Q_r1c0_k1h1"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c0_k3h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c0_k2h0,u_hb_idx__s_Q_r1c0_k2h1"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c1_k0h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c1_k1h0,u_hb_idx__s_Q_r1c1_k2h1"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c1_k1h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c1_k2h1,u_hb_idx__s_Q_r1c2_k0h0"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c1_k2h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c1_k0h1,u_hb_idx__s_Q_r1c1_k1h1"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c1_k2h0,u_hb_idx__s_Q_r1c1_k3h0"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c1_k3h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c2_k0h0"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c2_k0h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c2_k3h0"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c2_k1h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c2_k2h1"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c2_k2h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c3_k0h0"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c2_k1h1"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c2_k3h1": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c2_k2h0"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c3_k0h1": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c2_k3h0"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c3_k1h1": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c3_k1h0"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c3_k2h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c3_k3h0"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c3_k3h1"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c3_k3h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c3_k2h1"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c2_k0h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c2_k1h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c2_k2h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c2_k3h1": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c3_k0h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c3_k1h1": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c3_k2h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c3_k3h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_idx_vm_query_static_n12__216x138.24__content_trial.json": {
+  "module": "ot_hbm_idx_vm_query_static_n12__216x138.24__content_trial.json",
+  "instances": 4,
+  "outline": [
+   216.0,
+   138.24
+  ],
+  "faces": {
+   "N": {
+    "pins": 2056,
+    "L": 198.72,
+    "dens": 10.35,
+    "after_respread": 2056,
+    "dens_after": 10.35,
+    "grow_um": 177.12,
+    "lots": {
+     "q_hub_nw.u_hb_idx__op_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_mu_keybuf_0_s3__q0"
+      ]
+     ],
+     "q_hub_nw.u_hb_idx__op_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hb_idx__op_Q__q0": [
+      [
+       1,
+       "overlaps u_pgp_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_hb_coll_Q_body_n2__q0"
+      ]
+     ],
+     "q_hub_ne.u_hb_idx__op_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "E": {
+    "pins": 1048,
+    "L": 120.96,
+    "dens": 8.66,
+    "after_respread": 1048,
+    "dens_after": 8.66,
+    "grow_um": 73.44,
+    "lots": {
+     "q_hub_nw.u_hb_idx__op_Q__q0": [
+      [
+       1,
+       "overlaps u_hb_idx__qctl_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_mu_keybuf_0_s2__q0"
+      ]
+     ],
+     "q_hub_nw.u_hb_idx__op_Q__q1": [
+      [
+       1,
+       "overlaps u_vmb_Q6"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hb_idx__op_Q__q0": [
+      [
+       1,
+       "overlaps u_hb_coll_Q_reduce__q0"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hb_idx__op_Q__q1": [
+      [
+       1,
+       "overlaps u_vmb_Q6"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json": {
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json",
+  "instances": 4,
+  "outline": [
+   142.56,
+   216.0
+  ],
+  "faces": {
+   "N": {
+    "pins": 833,
+    "L": 125.28,
+    "dens": 6.65,
+    "after_respread": 833,
+    "dens_after": 6.65,
+    "grow_um": 30.24,
+    "lots": {
+     "q_hub_nw.u_smw_Q__q0": [
+      [
+       1,
+       "overlaps u_calendar_Q__q0,u_hb_dbk_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_xl_Q_ctl__q0"
+      ]
+     ],
+     "q_hub_nw.u_smw_Q__q1": [
+      [
+       1,
+       "overlaps u_calendar_Q__q1,u_hb_dbk_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_xl_Q_ctl__q1"
+      ]
+     ],
+     "q_hub_ne.u_smw_Q__q0": [
+      [
+       1,
+       "overlaps u_calendar_Q__q0,u_hb_dbk_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_xl_Q_ctl__q0"
+      ]
+     ],
+     "q_hub_ne.u_smw_Q__q1": [
+      [
+       1,
+       "overlaps u_calendar_Q__q1,u_hb_dbk_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_xl_Q_ctl__q1"
+      ]
+     ]
+    }
+   },
+   "S": {
+    "pins": 1156,
+    "L": 125.28,
+    "dens": 9.23,
+    "after_respread": 1156,
+    "dens_after": 9.23,
+    "grow_um": 86.4,
+    "lots": {
+     "q_hub_nw.u_smw_Q__q0": [
+      [
+       1,
+       "overlaps u_calendar_Q__q0,u_hb_dbk_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_xl_Q_ctl__q0"
+      ]
+     ],
+     "q_hub_nw.u_smw_Q__q1": [
+      [
+       1,
+       "overlaps u_calendar_Q__q1,u_hb_dbk_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_xl_Q_ctl__q1"
+      ]
+     ],
+     "q_hub_ne.u_smw_Q__q0": [
+      [
+       1,
+       "overlaps u_calendar_Q__q0,u_hb_dbk_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_xl_Q_ctl__q0"
+      ]
+     ],
+     "q_hub_ne.u_smw_Q__q1": [
+      [
+       1,
+       "overlaps u_calendar_Q__q1,u_hb_dbk_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_xl_Q_ctl__q1"
+      ]
+     ]
+    }
+   },
+   "E": {
+    "pins": 1118,
+    "L": 198.72,
+    "dens": 5.63,
+    "after_respread": 1118,
+    "dens_after": 5.63,
+    "grow_um": 8.64,
+    "lots": {
+     "q_hub_nw.u_smw_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_smw_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_smw_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_smw_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_static_cfg_collar_idx256r__86.4x86.4__r5.json": {
+  "module": "ot_hbm_static_cfg_collar_idx256r__86.4x86.4__r5.json",
+  "instances": 1,
+  "outline": [
+   86.4,
+   86.4
+  ],
+  "faces": {
+   "N": {
+    "pins": 389,
+    "L": 69.12,
+    "dens": 5.63,
+    "after_respread": 389,
+    "dens_after": 5.63,
+    "grow_um": 4.32,
+    "lots": {
+     "root.u_col_idx": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "S": {
+    "pins": 392,
+    "L": 69.12,
+    "dens": 5.67,
+    "after_respread": 392,
+    "dens_after": 5.67,
+    "grow_um": 4.32,
+    "lots": {
+     "root.u_col_idx": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "E": {
+    "pins": 390,
+    "L": 69.12,
+    "dens": 5.64,
+    "after_respread": 390,
+    "dens_after": 5.64,
+    "grow_um": 4.32,
+    "lots": {
+     "root.u_col_idx": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "W": {
+    "pins": 389,
+    "L": 69.12,
+    "dens": 5.63,
+    "after_respread": 389,
+    "dens_after": 5.63,
+    "grow_um": 4.32,
+    "lots": {
+     "root.u_col_idx": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_su_static_cxport_ij_q__250.56x449.28__canon.json": {
+  "module": "ot_hbm_su_static_cxport_ij_q__250.56x449.28__canon.json",
+  "instances": 4,
+  "outline": [
+   250.56,
+   449.28
+  ],
+  "faces": {
+   "S": {
+    "pins": 2115,
+    "L": 233.28,
+    "dens": 9.07,
+    "after_respread": 2115,
+    "dens_after": 9.07,
+    "grow_um": 155.52,
+    "lots": {
+     "q_hub_nw.u_cxij_Q_q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_hub_nw.u_cxij_Q_q__q1": [
+      [
+       1,
+       "overlaps u_ctl_Q_p13,u_ctl_Q_p15"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_7"
+      ]
+     ],
+     "q_hub_ne.u_cxij_Q_q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_hub_ne.u_cxij_Q_q__q1": [
+      [
+       1,
+       "overlaps u_ctl_Q_p13,u_hcollgi_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_6,u_mu_fused_7"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json": {
+  "module": "ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json",
+  "instances": 2,
+  "outline": [
+   354.24,
+   453.6
+  ],
+  "faces": {
+   "N": {
+    "pins": 2355,
+    "L": 336.96,
+    "dens": 6.99,
+    "after_respread": 2355,
+    "dens_after": 6.99,
+    "grow_um": 95.04,
+    "lots": {
+     "q_hub_nw.u_vmks_Q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_vmks_Q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "W": {
+    "pins": 2686,
+    "L": 436.32,
+    "dens": 6.16,
+    "after_respread": 2686,
+    "dens_after": 6.16,
+    "grow_um": 56.16,
+    "lots": {
+     "q_hub_nw.u_vmks_Q1": [
+      [
+       1,
+       "overlaps u_ctl_Q_p05"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_vmks_Q1": [
+      [
+       1,
+       "overlaps u_ctl_Q_p05"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__canon.json": {
+  "module": "ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__canon.json",
+  "instances": 6,
+  "outline": [
+   354.24,
+   453.6
+  ],
+  "faces": {
+   "S": {
+    "pins": 3724,
+    "L": 336.96,
+    "dens": 11.05,
+    "after_respread": 3724,
+    "dens_after": 11.05,
+    "grow_um": 341.28,
+    "lots": {
+     "q_hub_nw.u_vmks_Q0": [
+      [
+       1,
+       "overlaps u_xq_Q_p0_eg"
+      ],
+      [
+       -1,
+       "overlaps u_ctl_Q_p10,u_ctl_Q_p11,u_wbk_Q__q0"
+      ]
+     ],
+     "q_hub_nw.u_vmks_Q2": [
+      [
+       1,
+       "overlaps u_xq_Q_p1_bd"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_hub_nw.u_vmks_Q3": [
+      [
+       1,
+       "overlaps u_ctl_Q_p12,u_xl_Q_aqhi,u_hc_Q.u_cen.ot_hbm_hc_subtree32_0"
+      ],
+      [
+       -1,
+       "overlaps u_ctl_Q_p13,u_ctl_Q_p15,u_cxij_Q_q__q1"
+      ]
+     ],
+     "q_hub_ne.u_vmks_Q0": [
+      [
+       1,
+       "overlaps u_xq_Q_p0_bd,u_vmks_Q3"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_7"
+      ]
+     ],
+     "q_hub_ne.u_vmks_Q2": [
+      [
+       1,
+       "overlaps u_xq_Q_p1_bd"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_hub_ne.u_vmks_Q3": [
+      [
+       1,
+       "overlaps u_ctl_Q_p12,u_xl_Q_aqhi"
+      ],
+      [
+       -1,
+       "overlaps u_xq_Q_p0_bd,u_ctl_Q_p13,u_vmks_Q0"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_svc_wb_kport_q__475.2x475.2__canon.json": {
+  "module": "ot_hbm_svc_wb_kport_q__475.2x475.2__canon.json",
+  "instances": 4,
+  "outline": [
+   475.2,
+   475.2
+  ],
+  "faces": {
+   "W": {
+    "pins": 4107,
+    "L": 457.92,
+    "dens": 8.97,
+    "after_respread": 4107,
+    "dens_after": 8.97,
+    "grow_um": 289.44,
+    "lots": {
+     "q_hub_nw.u_wbk_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hcollgl_Q__q0"
+      ]
+     ],
+     "q_hub_nw.u_wbk_Q__q1": [
+      [
+       1,
+       "overlaps u_xq_Q_p0_bfq0,u_xq_Q_p0_bfq3"
+      ],
+      [
+       -1,
+       "overlaps u_xq_Q_p0_bfq2,u_xq_Q_p1_bfq0"
+      ]
+     ],
+     "q_hub_ne.u_wbk_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hcollgl_Q__q0,u_mu_keybuf_0_s6__q0"
+      ]
+     ],
+     "q_hub_ne.u_wbk_Q__q1": [
+      [
+       1,
+       "overlaps u_xq_Q_p0_bfq3"
+      ],
+      [
+       -1,
+       "overlaps u_xq_Q_p0_bfq2,u_xq_Q_p1_bfq0"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_xp_aq_tree13_fmt__183.6x108__canon.json": {
+  "module": "ot_hbm_xp_aq_tree13_fmt__183.6x108__canon.json",
+  "instances": 4,
+  "outline": [
+   183.6,
+   108.0
+  ],
+  "faces": {
+   "E": {
+    "pins": 1027,
+    "L": 90.72,
+    "dens": 11.32,
+    "after_respread": 1027,
+    "dens_after": 11.32,
+    "grow_um": 99.36,
+    "lots": {
+     "q_hub_nw.u_xl_Q_aqhi": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_xl_Q_aqlo": [
+      [
+       1,
+       "overlaps u_hb_coll_Q_ring_ag__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xl_Q_aqhi": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xl_Q_aqlo": [
+      [
+       1,
+       "overlaps u_hb_coll_Q_ring_ag__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "W": {
+    "pins": 778,
+    "L": 90.72,
+    "dens": 8.58,
+    "after_respread": 778,
+    "dens_after": 8.58,
+    "grow_um": 51.84,
+    "lots": {
+     "q_hub_nw.u_xl_Q_aqhi": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_xl_Q_aqlo": [
+      [
+       1,
+       "overlaps u_hb_coll_Q_ring_ag__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xl_Q_aqhi": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xl_Q_aqlo": [
+      [
+       1,
+       "overlaps u_hb_coll_Q_ring_ag__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hfd_coll_q2n2_vm_core__924.48x509.76__canon.json": {
+  "module": "ot_hfd_coll_q2n2_vm_core__924.48x509.76__canon.json",
+  "instances": 2,
+  "outline": [
+   924.48,
+   509.76
+  ],
+  "faces": {
+   "N": {
+    "pins": 5953,
+    "L": 907.2,
+    "dens": 6.56,
+    "after_respread": 5953,
+    "dens_after": 6.56,
+    "grow_um": 177.12,
+    "lots": {
+     "q_hub_ne.u_hb_coll_Q_vm__q0": [
+      [
+       1,
+       "overlaps u_sfus_Q__q0,u_mu_keybuf_0_s0__q0"
+      ],
+      [
+       -1,
+       "overlaps u_pgp_Q__q0"
+      ]
+     ],
+     "q_hub_ne.u_hb_coll_Q_vm__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_cij_Q__q1"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hfd_coll_q3_body_core__578.88x1054.08__canon.json": {
+  "module": "ot_hfd_coll_q3_body_core__578.88x1054.08__canon.json",
+  "instances": 2,
+  "outline": [
+   578.88,
+   1054.08
+  ],
+  "faces": {
+   "N": {
+    "pins": 5792,
+    "L": 561.6,
+    "dens": 10.31,
+    "after_respread": 5792,
+    "dens_after": 10.31,
+    "grow_um": 492.48,
+    "lots": {
+     "q_hub_nw.u_hb_coll_Q_body_core__q0": [
+      [
+       1,
+       "overlaps u_sucore_Q__q0,u_hb_coll_Q_vm__q0,u_mu_keybuf_0_s5__q0"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_hub_nw.u_hb_coll_Q_body_core__q1": [
+      [
+       1,
+       "overlaps u_pgp_Q__q1,u_mu_keybuf_0_s3__q1,u_mu_keybuf_0_s5__q1"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_4,u_mu_fused_5,u_sucore_Q__q1"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hfd_coll_q3_vm_core__328.32x717.12__canon.json": {
+  "module": "ot_hfd_coll_q3_vm_core__328.32x717.12__canon.json",
+  "instances": 2,
+  "outline": [
+   328.32,
+   717.12
+  ],
+  "faces": {
+   "N": {
+    "pins": 3734,
+    "L": 311.04,
+    "dens": 12.0,
+    "after_respread": 3734,
+    "dens_after": 12.0,
+    "grow_um": 371.52,
+    "lots": {
+     "q_hub_nw.u_hb_coll_Q_vm__q0": [
+      [
+       1,
+       "overlaps u_pgp_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_hb_coll_Q_body_core__q0"
+      ]
+     ],
+     "q_hub_nw.u_hb_coll_Q_vm__q1": [
+      [
+       1,
+       "overlaps u_hb_idx__q_Q__q1,u_sfus_Q__q1,u_mu_keybuf_0_s0__q1"
+      ],
+      [
+       -1,
+       "overlaps u_hc_Q.u_cen.ot_hbm_hc_subtree32_1,u_hc_Q.u_cen.ot_hbm_hc_subtree32_2,u_cij_Q__q1"
+      ]
+     ]
+    }
+   },
+   "W": {
+    "pins": 4334,
+    "L": 699.84,
+    "dens": 6.19,
+    "after_respread": 4334,
+    "dens_after": 6.19,
+    "grow_um": 90.72,
+    "lots": {
+     "q_hub_nw.u_hb_coll_Q_vm__q0": [
+      [
+       1,
+       "overlaps u_sucore_Q__q0,u_mu_keybuf_0_s5__q0"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_hub_nw.u_hb_coll_Q_vm__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hgi_coll_gq_issue__237.6x237.6__canon.json": {
+  "module": "ot_hgi_coll_gq_issue__237.6x237.6__canon.json",
+  "instances": 4,
+  "outline": [
+   237.6,
+   237.6
+  ],
+  "faces": {
+   "N": {
+    "pins": 1540,
+    "L": 220.32,
+    "dens": 6.99,
+    "after_respread": 1540,
+    "dens_after": 6.99,
+    "grow_um": 60.48,
+    "lots": {
+     "q_hub_nw.u_hcollgi_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hc_Q.u_cen.ot_hbm_hc_subtree32_3"
+      ]
+     ],
+     "q_hub_nw.u_hcollgi_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_quant_Q__u_dec__q1"
+      ]
+     ],
+     "q_hub_ne.u_hcollgi_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hc_Q.u_cen.ot_hbm_hc_subtree32_3"
+      ]
+     ],
+     "q_hub_ne.u_hcollgi_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_cxij_Q_q__q1,u_hb_quant_Q__u_dec__q1"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hgi_coll_gq_land__142.56x207.36__canon.json": {
+  "module": "ot_hgi_coll_gq_land__142.56x207.36__canon.json",
+  "instances": 4,
+  "outline": [
+   142.56,
+   207.36
+  ],
+  "faces": {
+   "N": {
+    "pins": 1124,
+    "L": 125.28,
+    "dens": 8.97,
+    "after_respread": 1124,
+    "dens_after": 8.97,
+    "grow_um": 82.08,
+    "lots": {
+     "q_hub_nw.u_hcollgl_Q__q0": [
+      [
+       1,
+       "overlaps u_mu_fused_2"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_hcollgl_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hcollgl_Q__q0": [
+      [
+       1,
+       "overlaps u_mu_fused_2"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hcollgl_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "W": {
+    "pins": 1128,
+    "L": 190.08,
+    "dens": 5.93,
+    "after_respread": 1128,
+    "dens_after": 5.93,
+    "grow_um": 17.28,
+    "lots": {
+     "q_hub_nw.u_hcollgl_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_hcollgl_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hcollgl_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hcollgl_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hgi_coll_inj_idx_join_rg__211.68x207.36__content_trial.json": {
+  "module": "ot_hgi_coll_inj_idx_join_rg__211.68x207.36__content_trial.json",
+  "instances": 4,
+  "outline": [
+   211.68,
+   207.36
+  ],
+  "faces": {
+   "S": {
+    "pins": 1413,
+    "L": 194.4,
+    "dens": 7.27,
+    "after_respread": 1413,
+    "dens_after": 7.27,
+    "grow_um": 64.8,
+    "lots": {
+     "q_hub_nw.u_cij_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_cij_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_coll_Q_edge__q1"
+      ]
+     ],
+     "q_hub_ne.u_cij_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_cij_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hc_Q.u_cen.ot_hbm_hc_subtree32_2"
+      ]
+     ]
+    }
+   },
+   "E": {
+    "pins": 1289,
+    "L": 190.08,
+    "dens": 6.78,
+    "after_respread": 1289,
+    "dens_after": 6.78,
+    "grow_um": 47.52,
+    "lots": {
+     "q_hub_nw.u_cij_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_cij_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_cij_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_cij_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hgi_coll_tkm_m_tp192__root__chain.json": {
+  "module": "ot_hgi_coll_tkm_m_tp192__root__chain.json",
+  "instances": 1,
+  "outline": [
+   319.68,
+   345.6
+  ],
+  "faces": {
+   "W": {
+    "pins": 2048,
+    "L": 328.32,
+    "dens": 6.24,
+    "after_respread": 2048,
+    "dens_after": 6.24,
+    "grow_um": 47.52,
+    "lots": {
+     "root.u_tkm_SW_root": [
+      [
+       1,
+       "overlaps u_tkm_SW_tile0"
+      ],
+      [
+       -1,
+       "overlaps u_host_cp_rxs"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x240.84__canon.json": {
+  "module": "ot_hgi_dma_back_static_vp4_banks_cp__239.976x240.84__canon.json",
+  "instances": 4,
+  "outline": [
+   239.976,
+   240.84
+  ],
+  "faces": {
+   "N": {
+    "pins": 2420,
+    "L": 222.7,
+    "dens": 10.87,
+    "after_respread": 2420,
+    "dens_after": 10.87,
+    "grow_um": 220.32,
+    "lots": {
+     "q_hub_nw.u_hb_dbk_Q__q0": [
+      [
+       1,
+       "overlaps u_vmb_Q2"
+      ],
+      [
+       -1,
+       "overlaps u_smw_Q__q0,u_xl_Q_ctl__q0"
+      ]
+     ],
+     "q_hub_nw.u_hb_dbk_Q__q1": [
+      [
+       1,
+       "overlaps u_vmb_Q6"
+      ],
+      [
+       -1,
+       "overlaps u_smw_Q__q1,u_xl_Q_ctl__q1"
+      ]
+     ],
+     "q_hub_ne.u_hb_dbk_Q__q0": [
+      [
+       1,
+       "overlaps u_vmb_Q2"
+      ],
+      [
+       -1,
+       "overlaps u_smw_Q__q0,u_xl_Q_ctl__q0"
+      ]
+     ],
+     "q_hub_ne.u_hb_dbk_Q__q1": [
+      [
+       1,
+       "overlaps u_vmb_Q6"
+      ],
+      [
+       -1,
+       "overlaps u_smw_Q__q1,u_xl_Q_ctl__q1"
+      ]
+     ]
+    }
+   },
+   "W": {
+    "pins": 2192,
+    "L": 223.56,
+    "dens": 9.8,
+    "after_respread": 2192,
+    "dens_after": 9.8,
+    "grow_um": 177.12,
+    "lots": {
+     "q_hub_nw.u_hb_dbk_Q__q0": [
+      [
+       1,
+       "overlaps u_calendar_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_mu_keybuf_0_s3__q0"
+      ]
+     ],
+     "q_hub_nw.u_hb_dbk_Q__q1": [
+      [
+       1,
+       "overlaps u_calendar_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_xq_Q_p1_bfq3"
+      ]
+     ],
+     "q_hub_ne.u_hb_dbk_Q__q0": [
+      [
+       1,
+       "overlaps u_calendar_Q__q0"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hb_dbk_Q__q1": [
+      [
+       1,
+       "overlaps u_calendar_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_xq_Q_p1_bfq3"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hgi_sfu_core_split3__ctl__669.6x626.4__canon.json": {
+  "module": "ot_hgi_sfu_core_split3__ctl__669.6x626.4__canon.json",
+  "instances": 1,
+  "outline": [
+   669.6,
+   626.4
+  ],
+  "faces": {
+   "W": {
+    "pins": 3819,
+    "L": 609.12,
+    "dens": 6.27,
+    "after_respread": 3819,
+    "dens_after": 6.27,
+    "grow_um": 86.4,
+    "lots": {
+     "q_b113.u_sfucore_Q_ctl": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "overlaps u_sfucore_Q_opstore_b"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hgi_sfu_core_split3__opstore_a__388.8x345.6__canon.json": {
+  "module": "ot_hgi_sfu_core_split3__opstore_a__388.8x345.6__canon.json",
+  "instances": 1,
+  "outline": [
+   388.8,
+   345.6
+  ],
+  "faces": {
+   "S": {
+    "pins": 2052,
+    "L": 371.52,
+    "dens": 5.52,
+    "after_respread": 2052,
+    "dens_after": 5.52,
+    "grow_um": 4.32,
+    "lots": {
+     "q_b113.u_sfucore_Q_opstore_a": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "W": {
+    "pins": 2300,
+    "L": 328.32,
+    "dens": 7.01,
+    "after_respread": 2300,
+    "dens_after": 7.01,
+    "grow_um": 90.72,
+    "lots": {
+     "q_b113.u_sfucore_Q_opstore_a": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_sfucore_Q_lane15"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hgi_sm_xload_cl2_bdring__86.4x302.4__canon.json": {
+  "module": "ot_hgi_sm_xload_cl2_bdring__86.4x302.4__canon.json",
+  "instances": 4,
+  "outline": [
+   86.4,
+   302.4
+  ],
+  "faces": {
+   "W": {
+    "pins": 2048,
+    "L": 285.12,
+    "dens": 7.18,
+    "after_respread": 2048,
+    "dens_after": 7.18,
+    "grow_um": 90.72,
+    "lots": {
+     "q_hub_nw.u_xq_Q_p0_bd": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_xq_Q_p1_bd": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xq_Q_p0_bd": [
+      [
+       1,
+       "overlaps u_sfup_Q__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xq_Q_p1_bd": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hgi_sm_xload_cl2_ctlx__388.8x388.8__canon.json": {
+  "module": "ot_hgi_sm_xload_cl2_ctlx__388.8x388.8__canon.json",
+  "instances": 4,
+  "outline": [
+   388.8,
+   388.8
+  ],
+  "faces": {
+   "N": {
+    "pins": 2054,
+    "L": 371.52,
+    "dens": 5.53,
+    "after_respread": 2054,
+    "dens_after": 5.53,
+    "grow_um": 4.32,
+    "lots": {
+     "q_hub_nw.u_xl_Q_ctl__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_xl_Q_ctl__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xl_Q_ctl__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xl_Q_ctl__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "E": {
+    "pins": 2192,
+    "L": 371.52,
+    "dens": 5.9,
+    "after_respread": 2192,
+    "dens_after": 5.9,
+    "grow_um": 30.24,
+    "lots": {
+     "q_hub_nw.u_xl_Q_ctl__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_xl_Q_ctl__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xl_Q_ctl__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xl_Q_ctl__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hgi_sm_xload_xq_pegress__362.88x276.48__pin6_trial.json": {
+  "module": "ot_hgi_sm_xload_xq_pegress__362.88x276.48__pin6_trial.json",
+  "instances": 4,
+  "outline": [
+   362.88,
+   276.48
+  ],
+  "faces": {
+   "N": {
+    "pins": 2053,
+    "L": 345.6,
+    "dens": 5.94,
+    "after_respread": 2053,
+    "dens_after": 5.94,
+    "grow_um": 30.24,
+    "lots": {
+     "q_hub_nw.u_xq_Q_p0_eg": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_vmks_Q0"
+      ]
+     ],
+     "q_hub_nw.u_xq_Q_p1_eg": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xq_Q_p0_eg": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xq_Q_p1_eg": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hnx_idxn_keybuf_slice__241.92x293.76__canon.json": {
+  "module": "ot_hnx_idxn_keybuf_slice__241.92x293.76__canon.json",
+  "instances": 32,
+  "outline": [
+   241.92,
+   293.76
+  ],
+  "faces": {
+   "W": {
+    "pins": 2232,
+    "L": 276.48,
+    "dens": 8.07,
+    "after_respread": 2232,
+    "dens_after": 8.07,
+    "grow_um": 129.6,
+    "lots": {
+     "q_hub_nw.u_mu_keybuf_0_s0__q0": [
+      [
+       1,
+       "overlaps u_mu_keybuf_0_s1__q0"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s1__q0": [
+      [
+       1,
+       "overlaps u_mu_fused_4"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__q_Q__q0,u_mu_keybuf_0_s0__q0"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s2__q0": [
+      [
+       1,
+       "overlaps u_hb_idx__op_Q__q0"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s3__q0": [
+      [
+       1,
+       "overlaps u_hb_dbk_Q__q0"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s4__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_sfus_Q__q0"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s5__q0": [
+      [
+       1,
+       "overlaps u_svg_Q2"
+      ],
+      [
+       -1,
+       "overlaps u_hb_coll_Q_vm__q0"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s6__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s7__q0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "overlaps u_ctl_Q_p04"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s0__q1": [
+      [
+       1,
+       "overlaps u_hb_idx__q_Q__q1,u_mu_keybuf_0_s1__q1"
+      ],
+      [
+       -1,
+       "overlaps u_sfus_Q__q1"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s1__q1": [
+      [
+       1,
+       "overlaps u_pgp_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_svg_Q3,u_mu_keybuf_0_s0__q1"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s2__q1": [
+      [
+       1,
+       "overlaps u_hb_coll_Q_body_core__q1"
+      ],
+      [
+       -1,
+       "overlaps u_mu_keybuf_0_s4__q1"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s3__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_pgp_Q__q1"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s4__q1": [
+      [
+       1,
+       "overlaps u_mu_keybuf_0_s2__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s5__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_pgp_Q__q1"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s6__q1": [
+      [
+       1,
+       "overlaps u_xl_Q_ctl__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s7__q1": [
+      [
+       1,
+       "overlaps u_xl_Q_aqlo"
+      ],
+      [
+       -1,
+       "overlaps u_pgp_Q__q1"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s0__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_sfus_Q__q0"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s1__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s2__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s3__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s4__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_vmdel_Q2"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s5__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s6__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hc_Q.u_cen.ot_hbm_hc_subtree32_3,u_hcollgi_Q__q0"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s7__q0": [
+      [
+       1,
+       "overlaps u_ctl_Q_p09"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s0__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_coll_Q_vm__q1"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s1__q1": [
+      [
+       1,
+       "overlaps u_hb_coll_Q_reduce__q1"
+      ],
+      [
+       -1,
+       "overlaps u_hb_coll_Q_vm__q1"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s2__q1": [
+      [
+       1,
+       "overlaps u_xl_Q_ctl__q1"
+      ],
+      [
+       -1,
+       "overlaps u_mu_keybuf_0_s4__q1"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s3__q1": [
+      [
+       1,
+       "overlaps u_xl_Q_aqlo"
+      ],
+      [
+       -1,
+       "overlaps u_pgp_Q__q1"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s4__q1": [
+      [
+       1,
+       "overlaps u_mu_keybuf_0_s2__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s5__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_pgp_Q__q1"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s6__q1": [
+      [
+       1,
+       "overlaps u_sucore_Q__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s7__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_pgp_Q__q1"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ }
+}

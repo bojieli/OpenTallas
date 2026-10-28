@@ -1,0 +1,71 @@
+# C17g pin6 face capacity (<= 5.5 pins/um over L-2*8.64) after (a) re-pin/orient + (b-i) re-spread. CHECKED: tools/respread.py on c17g
+# module | instances | face | pins | usable L um | pins/um | (ii) grow side by um (4.32 grid) | lot check (grown rect vs type outline + other cores, either growth direction)
+hfd_hgi_vms_glue_nw_t__869.832x1334.88__canon.json | 4 | E | 8897 | 1317.6 | 6.75 | +302.4 | lot ok 0/4 u_hb_vms_Q__q0: overlaps u_vmdel_Q0,u_vmdel_Q1,u_vmdel_Q / overlaps u_calendar_Q__q0,u_xl_Q_ctl__q0; u_hb_vms_Q__q1: overlaps u_vmdel_Q4,u_vmdel_Q5,u_vmdel_Q / overlaps u_calendar_Q__q1,u_xl_Q_ctl__q1
+hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json | 16 | S | 2802 | 252.72 | 11.09 | +259.2 | lot ok 0/16 u_vmb_Q0_mu1: overlaps u_hb_vms_Q__q0 / overlaps u_mu_fused_1; u_vmb_Q1_mu1: overlaps u_vmdel_Q0,u_vmdel_Q2 / overlaps u_mu_fused_3
+ot_hbm_hc_root_static__tail0_rest__155.52x172.8__root_u_hc_eng | 1 | N | 906 | 138.24 | 6.55 | +30.24 | lot ok 0/1 u_hc_eng_tail0_rest: overlaps u_hc_eng_tail0_sk_step0 / overlaps u_tkm_SW_root
+ot_hbm_hc_root_static__tail0_rest__155.52x172.8__root_u_hc_eng | 1 | S | 905 | 138.24 | 6.55 | +30.24 | lot ok 0/1 u_hc_eng_tail0_rest: overlaps u_hc_eng_tail0_sk_step0 / overlaps u_tkm_SW_root
+ot_hbm_hc_root_static__tail0_rest__155.52x172.8__root_u_hc_eng | 1 | E | 1009 | 155.52 | 6.49 | +30.24 | lot ok 1/1 
+ot_hbm_hc_root_static__tail1_rest__155.52x172.8__root_u_hc_eng | 1 | N | 906 | 138.24 | 6.55 | +30.24 | lot ok 0/1 u_hc_eng_tail1_rest: overlaps u_hc_eng_tail1_sk_step0 / overlaps u_hc_eng_tail0_sk_steady
+ot_hbm_hc_root_static__tail1_rest__155.52x172.8__root_u_hc_eng | 1 | S | 904 | 138.24 | 6.54 | +30.24 | lot ok 0/1 u_hc_eng_tail1_rest: overlaps u_hc_eng_tail1_sk_step0 / overlaps u_hc_eng_tail0_sk_steady
+ot_hbm_hc_root_static__tail1_rest__155.52x172.8__root_u_hc_eng | 1 | E | 1009 | 155.52 | 6.49 | +30.24 | lot ok 1/1 
+ot_hbm_idx_query_static__170.64x164.16__canon.json | 4 | E | 1032 | 146.88 | 7.03 | +43.2 | lot ok 4/4 
+ot_hbm_idx_score_hcol_h0__218.592x187.488__canon.json | 41 | N | 1181 | 201.31 | 5.87 | +17.28 | lot ok 31/41 u_hb_idx__s_Q_r1c0_k2h0: overlaps u_hb_idx__s_Q_r1c0_k3h0,u_hb_id / overlaps u_hb_idx__s_Q_r1c0_k0h1,u_hb_id; u_hb_idx__s_Q_r1c1_k1h0: overlaps u_hb_idx__s_Q_r1c1_k0h0,u_hb_id / overlaps u_hb_idx__s_Q_r1c0_k1h1,u_hb_id
+ot_hbm_idx_score_hcol_h1__218.592x187.488__canon.json | 40 | N | 1181 | 201.31 | 5.87 | +17.28 | lot ok 30/40 u_hb_idx__s_Q_r1c0_k2h1: overlaps u_hb_idx__s_Q_r1c0_k3h1,u_hb_id / overlaps u_hb_idx__s_Q_r1c0_k1h0,u_hb_id; u_hb_idx__s_Q_r1c1_k2h1: overlaps u_hb_idx__s_Q_r1c1_k0h1,u_hb_id / overlaps u_hb_idx__s_Q_r1c1_k2h0,u_hb_id
+ot_hbm_idx_vm_query_static_n12__216x138.24__content_trial.json | 4 | N | 2056 | 198.72 | 10.35 | +177.12 | lot ok 3/4 u_hb_idx__op_Q__q0: overlaps u_pgp_Q__q0 / overlaps u_hb_coll_Q_body_n2__q0
+ot_hbm_idx_vm_query_static_n12__216x138.24__content_trial.json | 4 | E | 1048 | 120.96 | 8.66 | +73.44 | lot ok 3/4 u_hb_idx__op_Q__q0: overlaps u_hb_idx__qctl_Q__q0 / overlaps u_mu_keybuf_0_s2__q0
+ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json | 4 | N | 833 | 125.28 | 6.65 | +30.24 | lot ok 0/4 u_smw_Q__q0: overlaps u_calendar_Q__q0,u_hb_dbk_Q__q0 / overlaps u_xl_Q_ctl__q0; u_smw_Q__q1: overlaps u_calendar_Q__q1,u_hb_dbk_Q__q1 / overlaps u_xl_Q_ctl__q1
+ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json | 4 | S | 1156 | 125.28 | 9.23 | +86.4 | lot ok 0/4 u_smw_Q__q0: overlaps u_calendar_Q__q0,u_hb_dbk_Q__q0 / overlaps u_xl_Q_ctl__q0; u_smw_Q__q1: overlaps u_calendar_Q__q1,u_hb_dbk_Q__q1 / overlaps u_xl_Q_ctl__q1
+ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json | 4 | E | 1118 | 198.72 | 5.63 | +8.64 | lot ok 4/4 
+ot_hbm_static_cfg_collar_idx256r__86.4x86.4__r5.json | 1 | N | 389 | 69.12 | 5.63 | +4.32 | lot ok 1/1 
+ot_hbm_static_cfg_collar_idx256r__86.4x86.4__r5.json | 1 | S | 392 | 69.12 | 5.67 | +4.32 | lot ok 1/1 
+ot_hbm_static_cfg_collar_idx256r__86.4x86.4__r5.json | 1 | E | 390 | 69.12 | 5.64 | +4.32 | lot ok 1/1 
+ot_hbm_static_cfg_collar_idx256r__86.4x86.4__r5.json | 1 | W | 389 | 69.12 | 5.63 | +4.32 | lot ok 1/1 
+ot_hbm_su_static_cxport_ij_q__250.56x449.28__canon.json | 4 | S | 2115 | 233.28 | 9.07 | +155.52 | lot ok 2/4 u_cxij_Q_q__q1: overlaps u_ctl_Q_p13,u_ctl_Q_p15 / overlaps u_mu_fused_7; u_cxij_Q_q__q1: overlaps u_ctl_Q_p13,u_hcollgi_Q__q1 / overlaps u_mu_fused_6,u_mu_fused_7
+ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1 | 2 | N | 2355 | 336.96 | 6.99 | +95.04 | lot ok 2/2 
+ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1 | 2 | W | 2686 | 436.32 | 6.16 | +56.16 | lot ok 2/2 
+ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__canon. | 6 | S | 3724 | 336.96 | 11.05 | +341.28 | lot ok 0/6 u_vmks_Q0: overlaps u_xq_Q_p0_eg / overlaps u_ctl_Q_p10,u_ctl_Q_p11,u_wbk_Q; u_vmks_Q2: overlaps u_xq_Q_p1_bd / outside type
+ot_hbm_svc_wb_kport_q__475.2x475.2__canon.json | 4 | W | 4107 | 457.92 | 8.97 | +289.44 | lot ok 2/4 u_wbk_Q__q1: overlaps u_xq_Q_p0_bfq0,u_xq_Q_p0_bfq3 / overlaps u_xq_Q_p0_bfq2,u_xq_Q_p1_bfq0; u_wbk_Q__q1: overlaps u_xq_Q_p0_bfq3 / overlaps u_xq_Q_p0_bfq2,u_xq_Q_p1_bfq0
+ot_hbm_xp_aq_tree13_fmt__183.6x108__canon.json | 4 | E | 1027 | 90.72 | 11.32 | +99.36 | lot ok 4/4 
+ot_hbm_xp_aq_tree13_fmt__183.6x108__canon.json | 4 | W | 778 | 90.72 | 8.58 | +51.84 | lot ok 4/4 
+ot_hfd_coll_q2n2_vm_core__924.48x509.76__canon.json | 2 | N | 5953 | 907.2 | 6.56 | +177.12 | lot ok 1/2 u_hb_coll_Q_vm__q0: overlaps u_sfus_Q__q0,u_mu_keybuf_0_s0__ / overlaps u_pgp_Q__q0
+ot_hfd_coll_q3_body_core__578.88x1054.08__canon.json | 2 | N | 5792 | 561.6 | 10.31 | +492.48 | lot ok 0/2 u_hb_coll_Q_body_core__q0: overlaps u_sucore_Q__q0,u_hb_coll_Q_vm__ / outside type; u_hb_coll_Q_body_core__q1: overlaps u_pgp_Q__q1,u_mu_keybuf_0_s3__q / overlaps u_mu_fused_4,u_mu_fused_5,u_suc
+ot_hfd_coll_q3_vm_core__328.32x717.12__canon.json | 2 | N | 3734 | 311.04 | 12.0 | +371.52 | lot ok 0/2 u_hb_coll_Q_vm__q0: overlaps u_pgp_Q__q0 / overlaps u_hb_coll_Q_body_core__q0; u_hb_coll_Q_vm__q1: overlaps u_hb_idx__q_Q__q1,u_sfus_Q__q1, / overlaps u_hc_Q.u_cen.ot_hbm_hc_subtree3
+ot_hfd_coll_q3_vm_core__328.32x717.12__canon.json | 2 | W | 4334 | 699.84 | 6.19 | +90.72 | lot ok 1/2 u_hb_coll_Q_vm__q0: overlaps u_sucore_Q__q0,u_mu_keybuf_0_s5 / outside type
+ot_hgi_coll_gq_issue__237.6x237.6__canon.json | 4 | N | 1540 | 220.32 | 6.99 | +60.48 | lot ok 4/4 
+ot_hgi_coll_gq_land__142.56x207.36__canon.json | 4 | N | 1124 | 125.28 | 8.97 | +82.08 | lot ok 4/4 
+ot_hgi_coll_gq_land__142.56x207.36__canon.json | 4 | W | 1128 | 190.08 | 5.93 | +17.28 | lot ok 4/4 
+ot_hgi_coll_inj_idx_join_rg__211.68x207.36__content_trial.json | 4 | S | 1413 | 194.4 | 7.27 | +64.8 | lot ok 4/4 
+ot_hgi_coll_inj_idx_join_rg__211.68x207.36__content_trial.json | 4 | E | 1289 | 190.08 | 6.78 | +47.52 | lot ok 4/4 
+ot_hgi_coll_tkm_m_tp192__root__chain.json | 1 | W | 2048 | 328.32 | 6.24 | +47.52 | lot ok 0/1 u_tkm_SW_root: overlaps u_tkm_SW_tile0 / overlaps u_host_cp_rxs
+ot_hgi_dma_back_static_vp4_banks_cp__239.976x240.84__canon.jso | 4 | N | 2420 | 222.7 | 10.87 | +220.32 | lot ok 0/4 u_hb_dbk_Q__q0: overlaps u_vmb_Q2 / overlaps u_smw_Q__q0,u_xl_Q_ctl__q0; u_hb_dbk_Q__q1: overlaps u_vmb_Q6 / overlaps u_smw_Q__q1,u_xl_Q_ctl__q1
+ot_hgi_dma_back_static_vp4_banks_cp__239.976x240.84__canon.jso | 4 | W | 2192 | 223.56 | 9.8 | +177.12 | lot ok 1/4 u_hb_dbk_Q__q0: overlaps u_calendar_Q__q0 / overlaps u_mu_keybuf_0_s3__q0; u_hb_dbk_Q__q1: overlaps u_calendar_Q__q1 / overlaps u_xq_Q_p1_bfq3
+ot_hgi_sfu_core_split3__ctl__669.6x626.4__canon.json | 1 | W | 3819 | 609.12 | 6.27 | +86.4 | lot ok 0/1 u_sfucore_Q_ctl: outside type / overlaps u_sfucore_Q_opstore_b
+ot_hgi_sfu_core_split3__opstore_a__388.8x345.6__canon.json | 1 | S | 2052 | 371.52 | 5.52 | +4.32 | lot ok 1/1 
+ot_hgi_sfu_core_split3__opstore_a__388.8x345.6__canon.json | 1 | W | 2300 | 328.32 | 7.01 | +90.72 | lot ok 1/1 
+ot_hgi_sm_xload_cl2_bdring__86.4x302.4__canon.json | 4 | W | 2048 | 285.12 | 7.18 | +90.72 | lot ok 4/4 
+ot_hgi_sm_xload_cl2_ctlx__388.8x388.8__canon.json | 4 | N | 2054 | 371.52 | 5.53 | +4.32 | lot ok 4/4 
+ot_hgi_sm_xload_cl2_ctlx__388.8x388.8__canon.json | 4 | E | 2192 | 371.52 | 5.9 | +30.24 | lot ok 4/4 
+ot_hgi_sm_xload_xq_pegress__362.88x276.48__pin6_trial.json | 4 | N | 2053 | 345.6 | 5.94 | +30.24 | lot ok 4/4 
+ot_hnx_idxn_keybuf_slice__241.92x293.76__canon.json | 32 | W | 2232 | 276.48 | 8.07 | +129.6 | lot ok 20/32 u_mu_keybuf_0_s0__q0: overlaps u_mu_keybuf_0_s1__q0 / outside type; u_mu_keybuf_0_s1__q0: overlaps u_mu_fused_4 / overlaps u_hb_idx__q_Q__q0,u_mu_keybuf_0
+# 29 tables / 47 faces still over cap
+
+# (b-i) re-spread APPLIED in c17g (whole groups moved to a face with cos > 0 for EVERY instance; destination <= cap):
+hfd_hgi_vms_glue_nw_t__869.832x1334.88__canon.json {'E': (8.89, 6.75)} groups 17 pins 2817
+ot_hbm_hc_root_static__tail1_rest__155.52x172.8__root_u_hc_eng {'N': (6.55, 6.55), 'S': (6.55, 6.54), 'E': (6.49, 6.49)} groups 1 pins 1
+ot_hbm_idx_topk_link_static__650.16x500.04__root_u_hb_idx__lin {'N': (6.12, 2.38)} groups 1 pins 2368
+ot_hbm_idx_vm_query_static_n12__216x138.24__content_trial.json {'N': (11.19, 10.35), 'E': (8.66, 8.66)} groups 3 pins 168
+ot_hbm_su_static_sfustore_hw__336.96x328.32__canon.json {'S': (5.72, 5.42)} groups 3 pins 96
+ot_hbm_svc_sm_group_rel_id__776.304x646.92__canon.json {'E': (5.7, 3.95)} groups 1 pins 1099
+ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1 {'N': (7.54, 6.99), 'W': (6.18, 6.16)} groups 13 pins 194
+ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__canon. {'S': (11.05, 11.05), 'E': (8.29, 5.37)} groups 3 pins 1272
+ot_hbm_svc_vmdel_lane_n__142.56x108__canon.json {'W': (6.53, 0.88)} groups 1 pins 512
+ot_hbm_svc_wb_kport_q__475.2x475.2__canon.json {'W': (10.12, 8.97)} groups 4 pins 528
+ot_hfd_coll_q2n2_body_core__786.24x743.04__canon.json {'N': (7.03, 5.49), 'E': (5.8, 5.45)} groups 6 pins 1696
+ot_hfd_coll_q2n2_vm_core__924.48x509.76__canon.json {'N': (8.27, 6.56)} groups 7 pins 1552
+ot_hfd_coll_q3_body_core__578.88x1054.08__canon.json {'N': (11.25, 10.31)} groups 2 pins 528
+ot_hgi_coll_inj_idx_join_rg__211.68x207.36__content_trial.json {'S': (7.27, 7.27), 'E': (12.21, 6.78)} groups 3 pins 1032
+ot_hgi_coll_tkm_m_tp192__root__chain.json {'W': (7.97, 6.24)} groups 4 pins 569
+ot_hgi_qw_dec__260x260__canon.json {'E': (6.87, 2.65)} groups 1 pins 1024
+ot_hgi_sfu_core_split3__ctl__669.6x626.4__canon.json {'N': (6.81, 3.37), 'W': (6.75, 6.27)} groups 11 pins 2543
+ot_hgi_sfu_core_split3__opstore_a__388.8x345.6__canon.json {'S': (5.52, 5.52), 'W': (10.74, 7.01)} groups 12 pins 1227
+ot_hgi_sm_xload_cl2_ctlx__388.8x388.8__canon.json {'N': (8.65, 5.53), 'E': (5.9, 5.9)} groups 12 pins 1160

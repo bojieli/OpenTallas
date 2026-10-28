@@ -1,0 +1,4077 @@
+{
+ "cores/hfd_hgi_vms_glue_nw_t__869.832x1334.88__canon.json": {
+  "module": "hfd_hgi_vms_glue_nw_t__869.832x1334.88__canon.json",
+  "instances": 4,
+  "outline": [
+   869.832,
+   1334.88
+  ],
+  "faces": {
+   "E": {
+    "pins": 11714,
+    "L": 1317.6,
+    "dens": 8.89,
+    "after_respread": 8897,
+    "dens_after": 6.75,
+    "grow_um": 302.4,
+    "lots": {
+     "q_hub_nw.u_hb_vms_Q__q0": [
+      [
+       1,
+       "overlaps u_vmdel_Q0,u_vmdel_Q1,u_vmdel_Q2"
+      ],
+      [
+       -1,
+       "overlaps u_calendar_Q__q0,u_xl_Q_ctl__q0"
+      ]
+     ],
+     "q_hub_nw.u_hb_vms_Q__q1": [
+      [
+       1,
+       "overlaps u_vmdel_Q4,u_vmdel_Q5,u_vmdel_Q6"
+      ],
+      [
+       -1,
+       "overlaps u_calendar_Q__q1,u_xl_Q_ctl__q1"
+      ]
+     ],
+     "q_hub_ne.u_hb_vms_Q__q0": [
+      [
+       1,
+       "overlaps u_vmdel_Q0,u_vmdel_Q1,u_vmdel_Q2"
+      ],
+      [
+       -1,
+       "overlaps u_calendar_Q__q0,u_xl_Q_ctl__q0"
+      ]
+     ],
+     "q_hub_ne.u_hb_vms_Q__q1": [
+      [
+       1,
+       "overlaps u_vmdel_Q4,u_vmdel_Q5,u_vmdel_Q6"
+      ],
+      [
+       -1,
+       "overlaps u_calendar_Q__q1,u_xl_Q_ctl__q1"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": [
+   {
+    "group": "b7_pq",
+    "frm": "E",
+    "to": "N",
+    "pins": 285
+   },
+   {
+    "group": "b6_pq",
+    "frm": "E",
+    "to": "S",
+    "pins": 285
+   },
+   {
+    "group": "b7_xq2",
+    "frm": "E",
+    "to": "N",
+    "pins": 276
+   },
+   {
+    "group": "b7_xq",
+    "frm": "E",
+    "to": "N",
+    "pins": 276
+   },
+   {
+    "group": "b7_eg",
+    "frm": "E",
+    "to": "N",
+    "pins": 276
+   },
+   {
+    "group": "b6_xq2",
+    "frm": "E",
+    "to": "S",
+    "pins": 276
+   },
+   {
+    "group": "b6_xq",
+    "frm": "E",
+    "to": "S",
+    "pins": 276
+   },
+   {
+    "group": "b6_eg",
+    "frm": "E",
+    "to": "S",
+    "pins": 276
+   },
+   {
+    "group": "b7_pr",
+    "frm": "E",
+    "to": "N",
+    "pins": 266
+   },
+   {
+    "group": "b6_pr",
+    "frm": "E",
+    "to": "S",
+    "pins": 266
+   },
+   {
+    "group": "vmstat",
+    "frm": "E",
+    "to": "S",
+    "pins": 19
+   },
+   {
+    "group": "b7_status",
+    "frm": "E",
+    "to": "N",
+    "pins": 18
+   },
+   {
+    "group": "b6_status",
+    "frm": "E",
+    "to": "S",
+    "pins": 18
+   },
+   {
+    "group": "b7_xq_done",
+    "frm": "E",
+    "to": "N",
+    "pins": 1
+   },
+   {
+    "group": "b7_xq2_done",
+    "frm": "E",
+    "to": "N",
+    "pins": 1
+   },
+   {
+    "group": "b6_xq_done",
+    "frm": "E",
+    "to": "S",
+    "pins": 1
+   },
+   {
+    "group": "b6_xq2_done",
+    "frm": "E",
+    "to": "S",
+    "pins": 1
+   }
+  ]
+ },
+ "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json": {
+  "module": "hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+  "instances": 16,
+  "outline": [
+   270.0,
+   403.92
+  ],
+  "faces": {
+   "S": {
+    "pins": 2802,
+    "L": 252.72,
+    "dens": 11.09,
+    "after_respread": 2802,
+    "dens_after": 11.09,
+    "grow_um": 259.2,
+    "lots": {
+     "q_hub_nw.u_vmb_Q0_mu1": [
+      [
+       1,
+       "overlaps u_hb_vms_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_1"
+      ]
+     ],
+     "q_hub_nw.u_vmb_Q1_mu1": [
+      [
+       1,
+       "overlaps u_vmdel_Q0,u_vmdel_Q2"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_3"
+      ]
+     ],
+     "q_hub_nw.u_vmb_Q2_mu1": [
+      [
+       1,
+       "overlaps u_mu_fused_5"
+      ],
+      [
+       -1,
+       "overlaps u_hb_vms_Q__q0"
+      ]
+     ],
+     "q_hub_nw.u_vmb_Q3_mu1": [
+      [
+       1,
+       "overlaps u_mu_fused_7"
+      ],
+      [
+       -1,
+       "overlaps u_mu_keybuf_0_s6__q0"
+      ]
+     ],
+     "q_hub_nw.u_vmb_Q4_mu1": [
+      [
+       1,
+       "overlaps u_hb_vms_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_9"
+      ]
+     ],
+     "q_hub_nw.u_vmb_Q5_mu1": [
+      [
+       1,
+       "overlaps u_vmdel_Q6"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_11"
+      ]
+     ],
+     "q_hub_nw.u_vmb_Q6_mu1": [
+      [
+       1,
+       "overlaps u_mu_fused_13"
+      ],
+      [
+       -1,
+       "overlaps u_hb_vms_Q__q1"
+      ]
+     ],
+     "q_hub_nw.u_vmb_Q7_mu1": [
+      [
+       1,
+       "overlaps u_mu_fused_15"
+      ],
+      [
+       -1,
+       "overlaps u_vmdel_Q5"
+      ]
+     ],
+     "q_hub_ne.u_vmb_Q0_mu1": [
+      [
+       1,
+       "overlaps u_hb_vms_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_1"
+      ]
+     ],
+     "q_hub_ne.u_vmb_Q1_mu1": [
+      [
+       1,
+       "overlaps u_vmdel_Q0,u_vmdel_Q2,u_mu_keybuf_0_s4__q0"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_3"
+      ]
+     ],
+     "q_hub_ne.u_vmb_Q2_mu1": [
+      [
+       1,
+       "overlaps u_mu_fused_5"
+      ],
+      [
+       -1,
+       "overlaps u_hb_vms_Q__q0"
+      ]
+     ],
+     "q_hub_ne.u_vmb_Q3_mu1": [
+      [
+       1,
+       "overlaps u_mu_fused_7"
+      ],
+      [
+       -1,
+       "overlaps u_mu_keybuf_0_s2__q0"
+      ]
+     ],
+     "q_hub_ne.u_vmb_Q4_mu1": [
+      [
+       1,
+       "overlaps u_hb_vms_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_9"
+      ]
+     ],
+     "q_hub_ne.u_vmb_Q5_mu1": [
+      [
+       1,
+       "overlaps u_vmdel_Q6"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_11"
+      ]
+     ],
+     "q_hub_ne.u_vmb_Q6_mu1": [
+      [
+       1,
+       "overlaps u_mu_fused_13"
+      ],
+      [
+       -1,
+       "overlaps u_hb_vms_Q__q1"
+      ]
+     ],
+     "q_hub_ne.u_vmb_Q7_mu1": [
+      [
+       1,
+       "overlaps u_mu_fused_15"
+      ],
+      [
+       -1,
+       "overlaps u_vmdel_Q5"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_hc_root_static__tail0_rest__155.52x172.8__root_u_hc_eng_tail0_rest.json": {
+  "module": "ot_hbm_hc_root_static__tail0_rest__155.52x172.8__root_u_hc_eng_tail0_rest.json",
+  "instances": 1,
+  "outline": [
+   155.52,
+   172.8
+  ],
+  "faces": {
+   "N": {
+    "pins": 906,
+    "L": 138.24,
+    "dens": 6.55,
+    "after_respread": 906,
+    "dens_after": 6.55,
+    "grow_um": 30.24,
+    "lots": {
+     "root.u_hc_eng_tail0_rest": [
+      [
+       1,
+       "overlaps u_hc_eng_tail0_sk_step0"
+      ],
+      [
+       -1,
+       "overlaps u_tkm_SW_root"
+      ]
+     ]
+    }
+   },
+   "S": {
+    "pins": 905,
+    "L": 138.24,
+    "dens": 6.55,
+    "after_respread": 905,
+    "dens_after": 6.55,
+    "grow_um": 30.24,
+    "lots": {
+     "root.u_hc_eng_tail0_rest": [
+      [
+       1,
+       "overlaps u_hc_eng_tail0_sk_step0"
+      ],
+      [
+       -1,
+       "overlaps u_tkm_SW_root"
+      ]
+     ]
+    }
+   },
+   "E": {
+    "pins": 1009,
+    "L": 155.52,
+    "dens": 6.49,
+    "after_respread": 1009,
+    "dens_after": 6.49,
+    "grow_um": 30.24,
+    "lots": {
+     "root.u_hc_eng_tail0_rest": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_hc_root_static__tail1_rest__155.52x172.8__root_u_hc_eng_tail1_rest.json": {
+  "module": "ot_hbm_hc_root_static__tail1_rest__155.52x172.8__root_u_hc_eng_tail1_rest.json",
+  "instances": 1,
+  "outline": [
+   155.52,
+   172.8
+  ],
+  "faces": {
+   "N": {
+    "pins": 906,
+    "L": 138.24,
+    "dens": 6.55,
+    "after_respread": 906,
+    "dens_after": 6.55,
+    "grow_um": 30.24,
+    "lots": {
+     "root.u_hc_eng_tail1_rest": [
+      [
+       1,
+       "overlaps u_hc_eng_tail1_sk_step0"
+      ],
+      [
+       -1,
+       "overlaps u_hc_eng_tail0_sk_steady"
+      ]
+     ]
+    }
+   },
+   "S": {
+    "pins": 905,
+    "L": 138.24,
+    "dens": 6.55,
+    "after_respread": 904,
+    "dens_after": 6.54,
+    "grow_um": 30.24,
+    "lots": {
+     "root.u_hc_eng_tail1_rest": [
+      [
+       1,
+       "overlaps u_hc_eng_tail1_sk_step0"
+      ],
+      [
+       -1,
+       "overlaps u_hc_eng_tail0_sk_steady"
+      ]
+     ]
+    }
+   },
+   "E": {
+    "pins": 1009,
+    "L": 155.52,
+    "dens": 6.49,
+    "after_respread": 1009,
+    "dens_after": 6.49,
+    "grow_um": 30.24,
+    "lots": {
+     "root.u_hc_eng_tail1_rest": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": [
+   {
+    "group": "glue",
+    "frm": "S",
+    "to": "W",
+    "pins": 1
+   }
+  ]
+ },
+ "cores/ot_hbm_idx_query_static__170.64x164.16__canon.json": {
+  "module": "ot_hbm_idx_query_static__170.64x164.16__canon.json",
+  "instances": 4,
+  "outline": [
+   170.64,
+   164.16
+  ],
+  "faces": {
+   "E": {
+    "pins": 1032,
+    "L": 146.88,
+    "dens": 7.03,
+    "after_respread": 1032,
+    "dens_after": 7.03,
+    "grow_um": 43.2,
+    "lots": {
+     "q_hub_nw.u_hb_idx__q_Q__q0": [
+      [
+       1,
+       "overlaps u_mu_keybuf_0_s1__q0"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_hb_idx__q_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_mu_keybuf_0_s0__q1"
+      ]
+     ],
+     "q_hub_ne.u_hb_idx__q_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hb_idx__q_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_idx_score_hcol_h0__218.592x187.488__canon.json": {
+  "module": "ot_hbm_idx_score_hcol_h0__218.592x187.488__canon.json",
+  "instances": 41,
+  "outline": [
+   218.592,
+   187.488
+  ],
+  "faces": {
+   "N": {
+    "pins": 1181,
+    "L": 201.31,
+    "dens": 5.87,
+    "after_respread": 1181,
+    "dens_after": 5.87,
+    "grow_um": 17.28,
+    "lots": {
+     "q_b100.u_hb_idx__s_Q_r0c0_k0h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c0_k1h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c0_k2h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c0_k3h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c1_k0h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c1_k1h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c1_k2h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c1_k3h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c2_k0h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c2_k1h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c2_k2h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c2_k3h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c3_k0h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c3_k1h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c3_k2h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c3_k3h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r1c0_k0h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c0_k1h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c0_k2h0,u_hb_idx__s_Q_r1c0_k2h1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c0_k2h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c0_k3h0,u_hb_idx__s_Q_r1c0_k3h1"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c0_k0h1,u_hb_idx__s_Q_r1c0_k1h0"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c0_k3h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c0_k2h0"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c1_k0h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c0_k2h1,u_hb_idx__s_Q_r1c1_k1h0"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c1_k1h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c1_k0h0,u_hb_idx__s_Q_r1c1_k0h1"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c0_k1h1,u_hb_idx__s_Q_r1c1_k2h0"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c1_k2h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c1_k1h0,u_hb_idx__s_Q_r1c1_k2h1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c1_k3h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c1_k2h1,u_hb_idx__s_Q_r1c2_k0h0"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c2_k0h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c1_k1h1,u_hb_idx__s_Q_r1c1_k3h1"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c1_k3h0"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c2_k1h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c2_k2h0"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c2_k2h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c2_k3h1"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c2_k1h0"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c2_k3h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c3_k0h1"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c2_k0h1"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c3_k0h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c2_k2h1"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c3_k1h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c3_k1h1"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c3_k2h0"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c3_k2h0": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c3_k1h0"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c3_k3h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c3_k2h1"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c2_k0h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c2_k1h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c2_k2h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c2_k3h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c3_k0h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c3_k1h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c3_k2h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c3_k3h0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r1c0_k0h0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_idx_score_hcol_h1__218.592x187.488__canon.json": {
+  "module": "ot_hbm_idx_score_hcol_h1__218.592x187.488__canon.json",
+  "instances": 40,
+  "outline": [
+   218.592,
+   187.488
+  ],
+  "faces": {
+   "N": {
+    "pins": 1181,
+    "L": 201.31,
+    "dens": 5.87,
+    "after_respread": 1181,
+    "dens_after": 5.87,
+    "grow_um": 17.28,
+    "lots": {
+     "q_b100.u_hb_idx__s_Q_r0c0_k0h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c0_k1h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c0_k2h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c0_k3h1": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c1_k0h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c1_k1h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c1_k2h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b100.u_hb_idx__s_Q_r0c1_k3h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c2_k0h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c2_k1h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c2_k2h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c2_k3h1": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c3_k0h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c3_k1h1": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c3_k2h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101.u_hb_idx__s_Q_r0c3_k3h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c0_k0h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c0_k2h0"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c0_k1h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c0_k2h1,u_hb_idx__s_Q_r1c1_k1h0"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c0_k2h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c0_k3h1,u_hb_idx__s_Q_r1c1_k0h0"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c0_k1h0,u_hb_idx__s_Q_r1c0_k1h1"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c0_k3h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c0_k2h0,u_hb_idx__s_Q_r1c0_k2h1"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c1_k0h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c1_k1h0,u_hb_idx__s_Q_r1c1_k2h1"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c1_k1h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c1_k2h1,u_hb_idx__s_Q_r1c2_k0h0"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c1_k2h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c1_k0h1,u_hb_idx__s_Q_r1c1_k1h1"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c1_k2h0,u_hb_idx__s_Q_r1c1_k3h0"
+      ]
+     ],
+     "q_b102.u_hb_idx__s_Q_r1c1_k3h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c2_k0h0"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c2_k0h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c2_k3h0"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c2_k1h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c2_k2h1"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c2_k2h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c3_k0h0"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c2_k1h1"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c2_k3h1": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c2_k2h0"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c3_k0h1": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c2_k3h0"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c3_k1h1": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c3_k1h0"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c3_k2h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c3_k3h0"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__s_Q_r1c3_k3h1"
+      ]
+     ],
+     "q_b103.u_hb_idx__s_Q_r1c3_k3h1": [
+      [
+       1,
+       "overlaps u_hb_idx__s_Q_r1c3_k2h1"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c2_k0h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c2_k1h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c2_k2h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c2_k3h1": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c3_k0h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c3_k1h1": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c3_k2h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_b101_nw.u_hb_idx__s_Q_r0c3_k3h1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_idx_topk_link_static__650.16x500.04__root_u_hb_idx__link.json": {
+  "module": "ot_hbm_idx_topk_link_static__650.16x500.04__root_u_hb_idx__link.json",
+  "instances": 1,
+  "outline": [
+   650.16,
+   500.04
+  ],
+  "faces": {
+   "N": {
+    "pins": 3874,
+    "L": 632.88,
+    "dens": 6.12,
+    "after_respread": 1506,
+    "dens_after": 2.38,
+    "grow_um": 0.0,
+    "lots": {}
+   }
+  },
+  "moves": [
+   {
+    "group": "selected_line",
+    "frm": "N",
+    "to": "S",
+    "pins": 2368
+   }
+  ]
+ },
+ "cores/ot_hbm_idx_vm_query_static_n12__216x138.24__content_trial.json": {
+  "module": "ot_hbm_idx_vm_query_static_n12__216x138.24__content_trial.json",
+  "instances": 4,
+  "outline": [
+   216.0,
+   138.24
+  ],
+  "faces": {
+   "N": {
+    "pins": 2224,
+    "L": 198.72,
+    "dens": 11.19,
+    "after_respread": 2056,
+    "dens_after": 10.35,
+    "grow_um": 177.12,
+    "lots": {
+     "q_hub_nw.u_hb_idx__op_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_mu_keybuf_0_s3__q0"
+      ]
+     ],
+     "q_hub_nw.u_hb_idx__op_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hb_idx__op_Q__q0": [
+      [
+       1,
+       "overlaps u_pgp_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_hb_coll_Q_body_n2__q0"
+      ]
+     ],
+     "q_hub_ne.u_hb_idx__op_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "E": {
+    "pins": 1048,
+    "L": 120.96,
+    "dens": 8.66,
+    "after_respread": 1048,
+    "dens_after": 8.66,
+    "grow_um": 73.44,
+    "lots": {
+     "q_hub_nw.u_hb_idx__op_Q__q0": [
+      [
+       1,
+       "overlaps u_hb_idx__qctl_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_mu_keybuf_0_s2__q0"
+      ]
+     ],
+     "q_hub_nw.u_hb_idx__op_Q__q1": [
+      [
+       1,
+       "overlaps u_vmb_Q6"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hb_idx__op_Q__q0": [
+      [
+       1,
+       "overlaps u_hb_coll_Q_reduce__q0"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hb_idx__op_Q__q1": [
+      [
+       1,
+       "overlaps u_vmb_Q6"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": [
+   {
+    "group": "vm_rq",
+    "frm": "N",
+    "to": "S",
+    "pins": 136
+   },
+   {
+    "group": "weight_sector",
+    "frm": "N",
+    "to": "S",
+    "pins": 16
+   },
+   {
+    "group": "query_sector",
+    "frm": "N",
+    "to": "S",
+    "pins": 16
+   }
+  ]
+ },
+ "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json": {
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json",
+  "instances": 4,
+  "outline": [
+   142.56,
+   216.0
+  ],
+  "faces": {
+   "N": {
+    "pins": 833,
+    "L": 125.28,
+    "dens": 6.65,
+    "after_respread": 833,
+    "dens_after": 6.65,
+    "grow_um": 30.24,
+    "lots": {
+     "q_hub_nw.u_smw_Q__q0": [
+      [
+       1,
+       "overlaps u_calendar_Q__q0,u_hb_dbk_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_xl_Q_ctl__q0"
+      ]
+     ],
+     "q_hub_nw.u_smw_Q__q1": [
+      [
+       1,
+       "overlaps u_calendar_Q__q1,u_hb_dbk_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_xl_Q_ctl__q1"
+      ]
+     ],
+     "q_hub_ne.u_smw_Q__q0": [
+      [
+       1,
+       "overlaps u_calendar_Q__q0,u_hb_dbk_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_xl_Q_ctl__q0"
+      ]
+     ],
+     "q_hub_ne.u_smw_Q__q1": [
+      [
+       1,
+       "overlaps u_calendar_Q__q1,u_hb_dbk_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_xl_Q_ctl__q1"
+      ]
+     ]
+    }
+   },
+   "S": {
+    "pins": 1156,
+    "L": 125.28,
+    "dens": 9.23,
+    "after_respread": 1156,
+    "dens_after": 9.23,
+    "grow_um": 86.4,
+    "lots": {
+     "q_hub_nw.u_smw_Q__q0": [
+      [
+       1,
+       "overlaps u_calendar_Q__q0,u_hb_dbk_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_xl_Q_ctl__q0"
+      ]
+     ],
+     "q_hub_nw.u_smw_Q__q1": [
+      [
+       1,
+       "overlaps u_calendar_Q__q1,u_hb_dbk_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_xl_Q_ctl__q1"
+      ]
+     ],
+     "q_hub_ne.u_smw_Q__q0": [
+      [
+       1,
+       "overlaps u_calendar_Q__q0,u_hb_dbk_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_xl_Q_ctl__q0"
+      ]
+     ],
+     "q_hub_ne.u_smw_Q__q1": [
+      [
+       1,
+       "overlaps u_calendar_Q__q1,u_hb_dbk_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_xl_Q_ctl__q1"
+      ]
+     ]
+    }
+   },
+   "E": {
+    "pins": 1118,
+    "L": 198.72,
+    "dens": 5.63,
+    "after_respread": 1118,
+    "dens_after": 5.63,
+    "grow_um": 8.64,
+    "lots": {
+     "q_hub_nw.u_smw_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_smw_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_smw_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_smw_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_static_cfg_collar_idx256r__86.4x86.4__r5.json": {
+  "module": "ot_hbm_static_cfg_collar_idx256r__86.4x86.4__r5.json",
+  "instances": 1,
+  "outline": [
+   86.4,
+   86.4
+  ],
+  "faces": {
+   "N": {
+    "pins": 389,
+    "L": 69.12,
+    "dens": 5.63,
+    "after_respread": 389,
+    "dens_after": 5.63,
+    "grow_um": 4.32,
+    "lots": {
+     "root.u_col_idx": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "S": {
+    "pins": 392,
+    "L": 69.12,
+    "dens": 5.67,
+    "after_respread": 392,
+    "dens_after": 5.67,
+    "grow_um": 4.32,
+    "lots": {
+     "root.u_col_idx": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "E": {
+    "pins": 390,
+    "L": 69.12,
+    "dens": 5.64,
+    "after_respread": 390,
+    "dens_after": 5.64,
+    "grow_um": 4.32,
+    "lots": {
+     "root.u_col_idx": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "W": {
+    "pins": 389,
+    "L": 69.12,
+    "dens": 5.63,
+    "after_respread": 389,
+    "dens_after": 5.63,
+    "grow_um": 4.32,
+    "lots": {
+     "root.u_col_idx": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_su_static_cxport_ij_q__250.56x449.28__canon.json": {
+  "module": "ot_hbm_su_static_cxport_ij_q__250.56x449.28__canon.json",
+  "instances": 4,
+  "outline": [
+   250.56,
+   449.28
+  ],
+  "faces": {
+   "S": {
+    "pins": 2115,
+    "L": 233.28,
+    "dens": 9.07,
+    "after_respread": 2115,
+    "dens_after": 9.07,
+    "grow_um": 155.52,
+    "lots": {
+     "q_hub_nw.u_cxij_Q_q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_hub_nw.u_cxij_Q_q__q1": [
+      [
+       1,
+       "overlaps u_ctl_Q_p13,u_ctl_Q_p15"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_7"
+      ]
+     ],
+     "q_hub_ne.u_cxij_Q_q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_hub_ne.u_cxij_Q_q__q1": [
+      [
+       1,
+       "overlaps u_ctl_Q_p13,u_hcollgi_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_6,u_mu_fused_7"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hbm_su_static_sfustore_hw__336.96x328.32__canon.json": {
+  "module": "ot_hbm_su_static_sfustore_hw__336.96x328.32__canon.json",
+  "instances": 4,
+  "outline": [
+   336.96,
+   328.32
+  ],
+  "faces": {
+   "S": {
+    "pins": 1828,
+    "L": 319.68,
+    "dens": 5.72,
+    "after_respread": 1732,
+    "dens_after": 5.42,
+    "grow_um": 0.0,
+    "lots": {}
+   }
+  },
+  "moves": [
+   {
+    "group": "l15_vi_q",
+    "frm": "S",
+    "to": "E",
+    "pins": 32
+   },
+   {
+    "group": "l15_kv_wdata",
+    "frm": "S",
+    "to": "E",
+    "pins": 32
+   },
+   {
+    "group": "l14_vi_q",
+    "frm": "S",
+    "to": "E",
+    "pins": 32
+   }
+  ]
+ },
+ "cores/ot_hbm_svc_sm_group_rel_id__776.304x646.92__canon.json": {
+  "module": "ot_hbm_svc_sm_group_rel_id__776.304x646.92__canon.json",
+  "instances": 8,
+  "outline": [
+   776.304,
+   646.92
+  ],
+  "faces": {
+   "E": {
+    "pins": 3587,
+    "L": 629.64,
+    "dens": 5.7,
+    "after_respread": 2488,
+    "dens_after": 3.95,
+    "grow_um": 0.0,
+    "lots": {}
+   }
+  },
+  "moves": [
+   {
+    "group": "sm_packet",
+    "frm": "E",
+    "to": "S",
+    "pins": 1099
+   }
+  ]
+ },
+ "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json": {
+  "module": "ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json",
+  "instances": 2,
+  "outline": [
+   354.24,
+   453.6
+  ],
+  "faces": {
+   "N": {
+    "pins": 2539,
+    "L": 336.96,
+    "dens": 7.54,
+    "after_respread": 2355,
+    "dens_after": 6.99,
+    "grow_um": 95.04,
+    "lots": {
+     "q_hub_nw.u_vmks_Q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_vmks_Q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "W": {
+    "pins": 2696,
+    "L": 436.32,
+    "dens": 6.18,
+    "after_respread": 2686,
+    "dens_after": 6.16,
+    "grow_um": 56.16,
+    "lots": {
+     "q_hub_nw.u_vmks_Q1": [
+      [
+       1,
+       "overlaps u_ctl_Q_p05"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_vmks_Q1": [
+      [
+       1,
+       "overlaps u_ctl_Q_p05"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": [
+   {
+    "group": "c_k_wstrb",
+    "frm": "N",
+    "to": "S",
+    "pins": 128
+   },
+   {
+    "group": "c_kr_beat",
+    "frm": "N",
+    "to": "S",
+    "pins": 16
+   },
+   {
+    "group": "c_k_len",
+    "frm": "N",
+    "to": "S",
+    "pins": 16
+   },
+   {
+    "group": "c_kr_v",
+    "frm": "N",
+    "to": "S",
+    "pins": 4
+   },
+   {
+    "group": "c_kr_rdy",
+    "frm": "N",
+    "to": "S",
+    "pins": 4
+   },
+   {
+    "group": "c_k_wr_done",
+    "frm": "N",
+    "to": "S",
+    "pins": 4
+   },
+   {
+    "group": "c_k_we",
+    "frm": "N",
+    "to": "S",
+    "pins": 4
+   },
+   {
+    "group": "c_k_v",
+    "frm": "N",
+    "to": "S",
+    "pins": 4
+   },
+   {
+    "group": "c_k_rdy",
+    "frm": "N",
+    "to": "S",
+    "pins": 4
+   },
+   {
+    "group": "w_k_wr_done",
+    "frm": "W",
+    "to": "S",
+    "pins": 4
+   },
+   {
+    "group": "w_k_v",
+    "frm": "W",
+    "to": "S",
+    "pins": 4
+   },
+   {
+    "group": "wbw_v",
+    "frm": "W",
+    "to": "S",
+    "pins": 1
+   },
+   {
+    "group": "vm_v",
+    "frm": "W",
+    "to": "S",
+    "pins": 1
+   }
+  ]
+ },
+ "cores/ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__canon.json": {
+  "module": "ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__canon.json",
+  "instances": 6,
+  "outline": [
+   354.24,
+   453.6
+  ],
+  "faces": {
+   "S": {
+    "pins": 3724,
+    "L": 336.96,
+    "dens": 11.05,
+    "after_respread": 3724,
+    "dens_after": 11.05,
+    "grow_um": 341.28,
+    "lots": {
+     "q_hub_nw.u_vmks_Q0": [
+      [
+       1,
+       "overlaps u_xq_Q_p0_eg"
+      ],
+      [
+       -1,
+       "overlaps u_ctl_Q_p10,u_ctl_Q_p11,u_wbk_Q__q0"
+      ]
+     ],
+     "q_hub_nw.u_vmks_Q2": [
+      [
+       1,
+       "overlaps u_xq_Q_p1_bd"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_hub_nw.u_vmks_Q3": [
+      [
+       1,
+       "overlaps u_ctl_Q_p12,u_xl_Q_aqhi,u_hc_Q.u_cen.ot_hbm_hc_subtree32_0"
+      ],
+      [
+       -1,
+       "overlaps u_ctl_Q_p13,u_ctl_Q_p15,u_cxij_Q_q__q1"
+      ]
+     ],
+     "q_hub_ne.u_vmks_Q0": [
+      [
+       1,
+       "overlaps u_xq_Q_p0_bd,u_vmks_Q3"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_7"
+      ]
+     ],
+     "q_hub_ne.u_vmks_Q2": [
+      [
+       1,
+       "overlaps u_xq_Q_p1_bd"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_hub_ne.u_vmks_Q3": [
+      [
+       1,
+       "overlaps u_ctl_Q_p12,u_xl_Q_aqhi"
+      ],
+      [
+       -1,
+       "overlaps u_xq_Q_p0_bd,u_ctl_Q_p13,u_vmks_Q0"
+      ]
+     ]
+    }
+   },
+   "E": {
+    "pins": 3617,
+    "L": 436.32,
+    "dens": 8.29,
+    "after_respread": 2345,
+    "dens_after": 5.37,
+    "grow_um": 0.0,
+    "lots": {}
+   }
+  },
+  "moves": [
+   {
+    "group": "c_kr_data",
+    "frm": "E",
+    "to": "N",
+    "pins": 1024
+   },
+   {
+    "group": "c_k_wstrb",
+    "frm": "E",
+    "to": "N",
+    "pins": 128
+   },
+   {
+    "group": "c_k_addr",
+    "frm": "E",
+    "to": "N",
+    "pins": 120
+   }
+  ]
+ },
+ "cores/ot_hbm_svc_vmdel_lane_n__142.56x108__canon.json": {
+  "module": "ot_hbm_svc_vmdel_lane_n__142.56x108__canon.json",
+  "instances": 16,
+  "outline": [
+   142.56,
+   108.0
+  ],
+  "faces": {
+   "W": {
+    "pins": 592,
+    "L": 90.72,
+    "dens": 6.53,
+    "after_respread": 80,
+    "dens_after": 0.88,
+    "grow_um": 0.0,
+    "lots": {}
+   }
+  },
+  "moves": [
+   {
+    "group": "fill_data_i",
+    "frm": "W",
+    "to": "N",
+    "pins": 512
+   }
+  ]
+ },
+ "cores/ot_hbm_svc_wb_kport_q__475.2x475.2__canon.json": {
+  "module": "ot_hbm_svc_wb_kport_q__475.2x475.2__canon.json",
+  "instances": 4,
+  "outline": [
+   475.2,
+   475.2
+  ],
+  "faces": {
+   "W": {
+    "pins": 4635,
+    "L": 457.92,
+    "dens": 10.12,
+    "after_respread": 4107,
+    "dens_after": 8.97,
+    "grow_um": 289.44,
+    "lots": {
+     "q_hub_nw.u_wbk_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hcollgl_Q__q0"
+      ]
+     ],
+     "q_hub_nw.u_wbk_Q__q1": [
+      [
+       1,
+       "overlaps u_xq_Q_p0_bfq0,u_xq_Q_p0_bfq3"
+      ],
+      [
+       -1,
+       "overlaps u_xq_Q_p0_bfq2,u_xq_Q_p1_bfq0"
+      ]
+     ],
+     "q_hub_ne.u_wbk_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hcollgl_Q__q0,u_mu_keybuf_0_s6__q0"
+      ]
+     ],
+     "q_hub_ne.u_wbk_Q__q1": [
+      [
+       1,
+       "overlaps u_xq_Q_p0_bfq3"
+      ],
+      [
+       -1,
+       "overlaps u_xq_Q_p0_bfq2,u_xq_Q_p1_bfq0"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": [
+   {
+    "group": "w_k_addr",
+    "frm": "W",
+    "to": "N",
+    "pins": 480
+   },
+   {
+    "group": "w_k_wr_done",
+    "frm": "W",
+    "to": "N",
+    "pins": 16
+   },
+   {
+    "group": "w_k_v",
+    "frm": "W",
+    "to": "N",
+    "pins": 16
+   },
+   {
+    "group": "w_k_rdy",
+    "frm": "W",
+    "to": "N",
+    "pins": 16
+   }
+  ]
+ },
+ "cores/ot_hbm_xp_aq_tree13_fmt__183.6x108__canon.json": {
+  "module": "ot_hbm_xp_aq_tree13_fmt__183.6x108__canon.json",
+  "instances": 4,
+  "outline": [
+   183.6,
+   108.0
+  ],
+  "faces": {
+   "E": {
+    "pins": 1027,
+    "L": 90.72,
+    "dens": 11.32,
+    "after_respread": 1027,
+    "dens_after": 11.32,
+    "grow_um": 99.36,
+    "lots": {
+     "q_hub_nw.u_xl_Q_aqhi": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_xl_Q_aqlo": [
+      [
+       1,
+       "overlaps u_hb_coll_Q_ring_ag__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xl_Q_aqhi": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xl_Q_aqlo": [
+      [
+       1,
+       "overlaps u_hb_coll_Q_ring_ag__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "W": {
+    "pins": 778,
+    "L": 90.72,
+    "dens": 8.58,
+    "after_respread": 778,
+    "dens_after": 8.58,
+    "grow_um": 51.84,
+    "lots": {
+     "q_hub_nw.u_xl_Q_aqhi": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_xl_Q_aqlo": [
+      [
+       1,
+       "overlaps u_hb_coll_Q_ring_ag__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xl_Q_aqhi": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xl_Q_aqlo": [
+      [
+       1,
+       "overlaps u_hb_coll_Q_ring_ag__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hfd_coll_q2n2_body_core__786.24x743.04__canon.json": {
+  "module": "ot_hfd_coll_q2n2_body_core__786.24x743.04__canon.json",
+  "instances": 2,
+  "outline": [
+   786.24,
+   743.04
+  ],
+  "faces": {
+   "N": {
+    "pins": 5407,
+    "L": 768.96,
+    "dens": 7.03,
+    "after_respread": 4223,
+    "dens_after": 5.49,
+    "grow_um": 0.0,
+    "lots": {}
+   },
+   "E": {
+    "pins": 4212,
+    "L": 725.76,
+    "dens": 5.8,
+    "after_respread": 3956,
+    "dens_after": 5.45,
+    "grow_um": 0.0,
+    "lots": {}
+   }
+  },
+  "moves": [
+   {
+    "group": "u_body_g_qout_9_g2_w_o_u_out_u_dst_d",
+    "frm": "N",
+    "to": "S",
+    "pins": 288
+   },
+   {
+    "group": "u_body_g_qout_8_g2_w_o_u_out_u_dst_d",
+    "frm": "N",
+    "to": "S",
+    "pins": 288
+   },
+   {
+    "group": "u_body_g_qout_7_g2_w_o_u_out_u_dst_d",
+    "frm": "N",
+    "to": "S",
+    "pins": 288
+   },
+   {
+    "group": "u_body_g_qout_6_g2_w_o_u_out_u_dst_d",
+    "frm": "N",
+    "to": "S",
+    "pins": 288
+   },
+   {
+    "group": "u_body_g_qout_5_g2_w_o_u_out_u_dst_d",
+    "frm": "N",
+    "to": "S",
+    "pins": 288
+   },
+   {
+    "group": "cfg_data",
+    "frm": "E",
+    "to": "N",
+    "pins": 256
+   }
+  ]
+ },
+ "cores/ot_hfd_coll_q2n2_vm_core__924.48x509.76__canon.json": {
+  "module": "ot_hfd_coll_q2n2_vm_core__924.48x509.76__canon.json",
+  "instances": 2,
+  "outline": [
+   924.48,
+   509.76
+  ],
+  "faces": {
+   "N": {
+    "pins": 7505,
+    "L": 907.2,
+    "dens": 8.27,
+    "after_respread": 5953,
+    "dens_after": 6.56,
+    "grow_um": 177.12,
+    "lots": {
+     "q_hub_ne.u_hb_coll_Q_vm__q0": [
+      [
+       1,
+       "overlaps u_sfus_Q__q0,u_mu_keybuf_0_s0__q0"
+      ],
+      [
+       -1,
+       "overlaps u_pgp_Q__q0"
+      ]
+     ],
+     "q_hub_ne.u_hb_coll_Q_vm__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_cij_Q__q1"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": [
+   {
+    "group": "writer_rgx_data3",
+    "frm": "N",
+    "to": "W",
+    "pins": 512
+   },
+   {
+    "group": "writer_rgx_data2",
+    "frm": "N",
+    "to": "W",
+    "pins": 512
+   },
+   {
+    "group": "writer_rgx_data1",
+    "frm": "N",
+    "to": "W",
+    "pins": 512
+   },
+   {
+    "group": "writer_slot_valid",
+    "frm": "N",
+    "to": "W",
+    "pins": 8
+   },
+   {
+    "group": "writer_ingress_slot",
+    "frm": "N",
+    "to": "W",
+    "pins": 5
+   },
+   {
+    "group": "writer_sid",
+    "frm": "N",
+    "to": "W",
+    "pins": 2
+   },
+   {
+    "group": "writer_rgx_vm",
+    "frm": "N",
+    "to": "W",
+    "pins": 1
+   }
+  ]
+ },
+ "cores/ot_hfd_coll_q3_body_core__578.88x1054.08__canon.json": {
+  "module": "ot_hfd_coll_q3_body_core__578.88x1054.08__canon.json",
+  "instances": 2,
+  "outline": [
+   578.88,
+   1054.08
+  ],
+  "faces": {
+   "N": {
+    "pins": 6320,
+    "L": 561.6,
+    "dens": 11.25,
+    "after_respread": 5792,
+    "dens_after": 10.31,
+    "grow_um": 492.48,
+    "lots": {
+     "q_hub_nw.u_hb_coll_Q_body_core__q0": [
+      [
+       1,
+       "overlaps u_sucore_Q__q0,u_hb_coll_Q_vm__q0,u_mu_keybuf_0_s5__q0"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_hub_nw.u_hb_coll_Q_body_core__q1": [
+      [
+       1,
+       "overlaps u_pgp_Q__q1,u_mu_keybuf_0_s3__q1,u_mu_keybuf_0_s5__q1"
+      ],
+      [
+       -1,
+       "overlaps u_mu_fused_4,u_mu_fused_5,u_sucore_Q__q1"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": [
+   {
+    "group": "u_body_g_qout_9_g3_w_o_u_out_u_dst_d",
+    "frm": "N",
+    "to": "S",
+    "pins": 512
+   },
+   {
+    "group": "u_body_g_qout_0_g3_w_o_u_out_u_dst_v",
+    "frm": "N",
+    "to": "S",
+    "pins": 16
+   }
+  ]
+ },
+ "cores/ot_hfd_coll_q3_vm_core__328.32x717.12__canon.json": {
+  "module": "ot_hfd_coll_q3_vm_core__328.32x717.12__canon.json",
+  "instances": 2,
+  "outline": [
+   328.32,
+   717.12
+  ],
+  "faces": {
+   "N": {
+    "pins": 3734,
+    "L": 311.04,
+    "dens": 12.0,
+    "after_respread": 3734,
+    "dens_after": 12.0,
+    "grow_um": 371.52,
+    "lots": {
+     "q_hub_nw.u_hb_coll_Q_vm__q0": [
+      [
+       1,
+       "overlaps u_pgp_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_hb_coll_Q_body_core__q0"
+      ]
+     ],
+     "q_hub_nw.u_hb_coll_Q_vm__q1": [
+      [
+       1,
+       "overlaps u_hb_idx__q_Q__q1,u_sfus_Q__q1,u_mu_keybuf_0_s0__q1"
+      ],
+      [
+       -1,
+       "overlaps u_hc_Q.u_cen.ot_hbm_hc_subtree32_1,u_hc_Q.u_cen.ot_hbm_hc_subtree32_2,u_cij_Q__q1"
+      ]
+     ]
+    }
+   },
+   "W": {
+    "pins": 4334,
+    "L": 699.84,
+    "dens": 6.19,
+    "after_respread": 4334,
+    "dens_after": 6.19,
+    "grow_um": 90.72,
+    "lots": {
+     "q_hub_nw.u_hb_coll_Q_vm__q0": [
+      [
+       1,
+       "overlaps u_sucore_Q__q0,u_mu_keybuf_0_s5__q0"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_hub_nw.u_hb_coll_Q_vm__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hgi_coll_gq_issue__237.6x237.6__canon.json": {
+  "module": "ot_hgi_coll_gq_issue__237.6x237.6__canon.json",
+  "instances": 4,
+  "outline": [
+   237.6,
+   237.6
+  ],
+  "faces": {
+   "N": {
+    "pins": 1540,
+    "L": 220.32,
+    "dens": 6.99,
+    "after_respread": 1540,
+    "dens_after": 6.99,
+    "grow_um": 60.48,
+    "lots": {
+     "q_hub_nw.u_hcollgi_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hc_Q.u_cen.ot_hbm_hc_subtree32_3"
+      ]
+     ],
+     "q_hub_nw.u_hcollgi_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_quant_Q__u_dec__q1"
+      ]
+     ],
+     "q_hub_ne.u_hcollgi_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hc_Q.u_cen.ot_hbm_hc_subtree32_3"
+      ]
+     ],
+     "q_hub_ne.u_hcollgi_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_cxij_Q_q__q1,u_hb_quant_Q__u_dec__q1"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hgi_coll_gq_land__142.56x207.36__canon.json": {
+  "module": "ot_hgi_coll_gq_land__142.56x207.36__canon.json",
+  "instances": 4,
+  "outline": [
+   142.56,
+   207.36
+  ],
+  "faces": {
+   "N": {
+    "pins": 1124,
+    "L": 125.28,
+    "dens": 8.97,
+    "after_respread": 1124,
+    "dens_after": 8.97,
+    "grow_um": 82.08,
+    "lots": {
+     "q_hub_nw.u_hcollgl_Q__q0": [
+      [
+       1,
+       "overlaps u_mu_fused_2"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_hcollgl_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hcollgl_Q__q0": [
+      [
+       1,
+       "overlaps u_mu_fused_2"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hcollgl_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "W": {
+    "pins": 1128,
+    "L": 190.08,
+    "dens": 5.93,
+    "after_respread": 1128,
+    "dens_after": 5.93,
+    "grow_um": 17.28,
+    "lots": {
+     "q_hub_nw.u_hcollgl_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_hcollgl_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hcollgl_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hcollgl_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hgi_coll_inj_idx_join_rg__211.68x207.36__content_trial.json": {
+  "module": "ot_hgi_coll_inj_idx_join_rg__211.68x207.36__content_trial.json",
+  "instances": 4,
+  "outline": [
+   211.68,
+   207.36
+  ],
+  "faces": {
+   "S": {
+    "pins": 1413,
+    "L": 194.4,
+    "dens": 7.27,
+    "after_respread": 1413,
+    "dens_after": 7.27,
+    "grow_um": 64.8,
+    "lots": {
+     "q_hub_nw.u_cij_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_cij_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_coll_Q_edge__q1"
+      ]
+     ],
+     "q_hub_ne.u_cij_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_cij_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hc_Q.u_cen.ot_hbm_hc_subtree32_2"
+      ]
+     ]
+    }
+   },
+   "E": {
+    "pins": 2321,
+    "L": 190.08,
+    "dens": 12.21,
+    "after_respread": 1289,
+    "dens_after": 6.78,
+    "grow_um": 47.52,
+    "lots": {
+     "q_hub_nw.u_cij_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_cij_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_cij_Q__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_cij_Q__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": [
+   {
+    "group": "idx_tx_r1",
+    "frm": "E",
+    "to": "N",
+    "pins": 1024
+   },
+   {
+    "group": "idx_tx_v_r1",
+    "frm": "E",
+    "to": "N",
+    "pins": 4
+   },
+   {
+    "group": "idx_tx_v",
+    "frm": "E",
+    "to": "N",
+    "pins": 4
+   }
+  ]
+ },
+ "cores/ot_hgi_coll_tkm_m_tp192__root__chain.json": {
+  "module": "ot_hgi_coll_tkm_m_tp192__root__chain.json",
+  "instances": 1,
+  "outline": [
+   319.68,
+   345.6
+  ],
+  "faces": {
+   "W": {
+    "pins": 2617,
+    "L": 328.32,
+    "dens": 7.97,
+    "after_respread": 2048,
+    "dens_after": 6.24,
+    "grow_um": 47.52,
+    "lots": {
+     "root.u_tkm_SW_root": [
+      [
+       1,
+       "overlaps u_tkm_SW_tile0"
+      ],
+      [
+       -1,
+       "overlaps u_host_cp_rxs"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": [
+   {
+    "group": "w_data",
+    "frm": "W",
+    "to": "N",
+    "pins": 512
+   },
+   {
+    "group": "w_addr",
+    "frm": "W",
+    "to": "N",
+    "pins": 40
+   },
+   {
+    "group": "w_mask",
+    "frm": "W",
+    "to": "N",
+    "pins": 16
+   },
+   {
+    "group": "w_v",
+    "frm": "W",
+    "to": "N",
+    "pins": 1
+   }
+  ]
+ },
+ "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x240.84__canon.json": {
+  "module": "ot_hgi_dma_back_static_vp4_banks_cp__239.976x240.84__canon.json",
+  "instances": 4,
+  "outline": [
+   239.976,
+   240.84
+  ],
+  "faces": {
+   "N": {
+    "pins": 2420,
+    "L": 222.7,
+    "dens": 10.87,
+    "after_respread": 2420,
+    "dens_after": 10.87,
+    "grow_um": 220.32,
+    "lots": {
+     "q_hub_nw.u_hb_dbk_Q__q0": [
+      [
+       1,
+       "overlaps u_vmb_Q2"
+      ],
+      [
+       -1,
+       "overlaps u_smw_Q__q0,u_xl_Q_ctl__q0"
+      ]
+     ],
+     "q_hub_nw.u_hb_dbk_Q__q1": [
+      [
+       1,
+       "overlaps u_vmb_Q6"
+      ],
+      [
+       -1,
+       "overlaps u_smw_Q__q1,u_xl_Q_ctl__q1"
+      ]
+     ],
+     "q_hub_ne.u_hb_dbk_Q__q0": [
+      [
+       1,
+       "overlaps u_vmb_Q2"
+      ],
+      [
+       -1,
+       "overlaps u_smw_Q__q0,u_xl_Q_ctl__q0"
+      ]
+     ],
+     "q_hub_ne.u_hb_dbk_Q__q1": [
+      [
+       1,
+       "overlaps u_vmb_Q6"
+      ],
+      [
+       -1,
+       "overlaps u_smw_Q__q1,u_xl_Q_ctl__q1"
+      ]
+     ]
+    }
+   },
+   "W": {
+    "pins": 2192,
+    "L": 223.56,
+    "dens": 9.8,
+    "after_respread": 2192,
+    "dens_after": 9.8,
+    "grow_um": 177.12,
+    "lots": {
+     "q_hub_nw.u_hb_dbk_Q__q0": [
+      [
+       1,
+       "overlaps u_calendar_Q__q0"
+      ],
+      [
+       -1,
+       "overlaps u_mu_keybuf_0_s3__q0"
+      ]
+     ],
+     "q_hub_nw.u_hb_dbk_Q__q1": [
+      [
+       1,
+       "overlaps u_calendar_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_xq_Q_p1_bfq3"
+      ]
+     ],
+     "q_hub_ne.u_hb_dbk_Q__q0": [
+      [
+       1,
+       "overlaps u_calendar_Q__q0"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_hb_dbk_Q__q1": [
+      [
+       1,
+       "overlaps u_calendar_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_xq_Q_p1_bfq3"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hgi_qw_dec__260x260__canon.json": {
+  "module": "ot_hgi_qw_dec__260x260__canon.json",
+  "instances": 4,
+  "outline": [
+   260.0,
+   260.0
+  ],
+  "faces": {
+   "E": {
+    "pins": 1668,
+    "L": 242.72,
+    "dens": 6.87,
+    "after_respread": 644,
+    "dens_after": 2.65,
+    "grow_um": 0.0,
+    "lots": {}
+   }
+  },
+  "moves": [
+   {
+    "group": "x",
+    "frm": "E",
+    "to": "S",
+    "pins": 1024
+   }
+  ]
+ },
+ "cores/ot_hgi_sfu_core_split3__ctl__669.6x626.4__canon.json": {
+  "module": "ot_hgi_sfu_core_split3__ctl__669.6x626.4__canon.json",
+  "instances": 1,
+  "outline": [
+   669.6,
+   626.4
+  ],
+  "faces": {
+   "N": {
+    "pins": 4440,
+    "L": 652.32,
+    "dens": 6.81,
+    "after_respread": 2200,
+    "dens_after": 3.37,
+    "grow_um": 0.0,
+    "lots": {}
+   },
+   "W": {
+    "pins": 4114,
+    "L": 609.12,
+    "dens": 6.75,
+    "after_respread": 3819,
+    "dens_after": 6.27,
+    "grow_um": 86.4,
+    "lots": {
+     "q_b113.u_sfucore_Q_ctl": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "overlaps u_sfucore_Q_opstore_b"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": [
+   {
+    "group": "local_wq",
+    "frm": "N",
+    "to": "E",
+    "pins": 2248
+   },
+   {
+    "group": "u_core_u_vm_scalar_data",
+    "frm": "W",
+    "to": "S",
+    "pins": 128
+   },
+   {
+    "group": "u_core_u_vm_scalar_load_addr",
+    "frm": "W",
+    "to": "S",
+    "pins": 96
+   },
+   {
+    "group": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x",
+    "frm": "W",
+    "to": "S",
+    "pins": 32
+   },
+   {
+    "group": "u_core_u_vm_stage_group",
+    "frm": "W",
+    "to": "S",
+    "pins": 16
+   },
+   {
+    "group": "u_core_u_vm_stage_v",
+    "frm": "W",
+    "to": "S",
+    "pins": 8
+   },
+   {
+    "group": "local_w_done",
+    "frm": "W",
+    "to": "N",
+    "pins": 8
+   },
+   {
+    "group": "u_core_u_vm_scalar_load",
+    "frm": "W",
+    "to": "S",
+    "pins": 4
+   },
+   {
+    "group": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v",
+    "frm": "W",
+    "to": "S",
+    "pins": 1
+   },
+   {
+    "group": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault",
+    "frm": "W",
+    "to": "S",
+    "pins": 1
+   },
+   {
+    "group": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll",
+    "frm": "W",
+    "to": "S",
+    "pins": 1
+   }
+  ]
+ },
+ "cores/ot_hgi_sfu_core_split3__opstore_a__388.8x345.6__canon.json": {
+  "module": "ot_hgi_sfu_core_split3__opstore_a__388.8x345.6__canon.json",
+  "instances": 1,
+  "outline": [
+   388.8,
+   345.6
+  ],
+  "faces": {
+   "S": {
+    "pins": 2052,
+    "L": 371.52,
+    "dens": 5.52,
+    "after_respread": 2052,
+    "dens_after": 5.52,
+    "grow_um": 4.32,
+    "lots": {
+     "q_b113.u_sfucore_Q_opstore_a": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "W": {
+    "pins": 3527,
+    "L": 328.32,
+    "dens": 10.74,
+    "after_respread": 2300,
+    "dens_after": 7.01,
+    "grow_um": 90.72,
+    "lots": {
+     "q_b113.u_sfucore_Q_opstore_a": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_sfucore_Q_lane15"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": [
+   {
+    "group": "x_u_core_u_engine_u_memory_g_operand_3_u_group_rd",
+    "frm": "W",
+    "to": "N",
+    "pins": 512
+   },
+   {
+    "group": "x_u_core_u_engine_u_memory_g_operand_2_u_group_rd",
+    "frm": "W",
+    "to": "N",
+    "pins": 512
+   },
+   {
+    "group": "x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_addr",
+    "frm": "W",
+    "to": "N",
+    "pins": 120
+   },
+   {
+    "group": "x_u_core_u_engine_u_memory_u_output_sr_addr",
+    "frm": "W",
+    "to": "N",
+    "pins": 30
+   },
+   {
+    "group": "x_u_core_u_engine_u_memory_g_operand_3_u_group_rq",
+    "frm": "W",
+    "to": "N",
+    "pins": 16
+   },
+   {
+    "group": "x_u_core_u_engine_u_memory_g_operand_2_u_group_rq",
+    "frm": "W",
+    "to": "N",
+    "pins": 16
+   },
+   {
+    "group": "x_u_core_u_engine_u_memory_g_operand_3_u_group_sw_v",
+    "frm": "W",
+    "to": "N",
+    "pins": 8
+   },
+   {
+    "group": "x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_v",
+    "frm": "W",
+    "to": "N",
+    "pins": 8
+   },
+   {
+    "group": "x_u_core_u_engine_u_memory_u_output_sr_v",
+    "frm": "W",
+    "to": "N",
+    "pins": 2
+   },
+   {
+    "group": "x_u_core_u_engine_u_memory_u_output_flt",
+    "frm": "W",
+    "to": "N",
+    "pins": 1
+   },
+   {
+    "group": "x_u_core_u_engine_u_memory_g_operand_3_u_group_flt",
+    "frm": "W",
+    "to": "N",
+    "pins": 1
+   },
+   {
+    "group": "x_u_core_u_engine_u_memory_g_operand_2_u_group_flt",
+    "frm": "W",
+    "to": "N",
+    "pins": 1
+   }
+  ]
+ },
+ "cores/ot_hgi_sm_xload_cl2_bdring__86.4x302.4__canon.json": {
+  "module": "ot_hgi_sm_xload_cl2_bdring__86.4x302.4__canon.json",
+  "instances": 4,
+  "outline": [
+   86.4,
+   302.4
+  ],
+  "faces": {
+   "W": {
+    "pins": 2048,
+    "L": 285.12,
+    "dens": 7.18,
+    "after_respread": 2048,
+    "dens_after": 7.18,
+    "grow_um": 90.72,
+    "lots": {
+     "q_hub_nw.u_xq_Q_p0_bd": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_xq_Q_p1_bd": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xq_Q_p0_bd": [
+      [
+       1,
+       "overlaps u_sfup_Q__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xq_Q_p1_bd": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hgi_sm_xload_cl2_ctlx__388.8x388.8__canon.json": {
+  "module": "ot_hgi_sm_xload_cl2_ctlx__388.8x388.8__canon.json",
+  "instances": 4,
+  "outline": [
+   388.8,
+   388.8
+  ],
+  "faces": {
+   "N": {
+    "pins": 3214,
+    "L": 371.52,
+    "dens": 8.65,
+    "after_respread": 2054,
+    "dens_after": 5.53,
+    "grow_um": 4.32,
+    "lots": {
+     "q_hub_nw.u_xl_Q_ctl__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_xl_Q_ctl__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xl_Q_ctl__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xl_Q_ctl__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   },
+   "E": {
+    "pins": 2192,
+    "L": 371.52,
+    "dens": 5.9,
+    "after_respread": 2192,
+    "dens_after": 5.9,
+    "grow_um": 30.24,
+    "lots": {
+     "q_hub_nw.u_xl_Q_ctl__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_xl_Q_ctl__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xl_Q_ctl__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xl_Q_ctl__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": [
+   {
+    "group": "c_d",
+    "frm": "N",
+    "to": "S",
+    "pins": 1024
+   },
+   {
+    "group": "lane_en",
+    "frm": "N",
+    "to": "W",
+    "pins": 64
+   },
+   {
+    "group": "bsel",
+    "frm": "N",
+    "to": "W",
+    "pins": 26
+   },
+   {
+    "group": "r_wsel",
+    "frm": "N",
+    "to": "W",
+    "pins": 16
+   },
+   {
+    "group": "r_ce",
+    "frm": "N",
+    "to": "S",
+    "pins": 8
+   },
+   {
+    "group": "r_a",
+    "frm": "N",
+    "to": "S",
+    "pins": 7
+   },
+   {
+    "group": "c_wa",
+    "frm": "N",
+    "to": "S",
+    "pins": 7
+   },
+   {
+    "group": "c_wce",
+    "frm": "N",
+    "to": "S",
+    "pins": 4
+   },
+   {
+    "group": "zlo",
+    "frm": "N",
+    "to": "W",
+    "pins": 1
+   },
+   {
+    "group": "zhi",
+    "frm": "N",
+    "to": "W",
+    "pins": 1
+   },
+   {
+    "group": "c_mlo",
+    "frm": "N",
+    "to": "S",
+    "pins": 1
+   },
+   {
+    "group": "c_mhi",
+    "frm": "N",
+    "to": "S",
+    "pins": 1
+   }
+  ]
+ },
+ "cores/ot_hgi_sm_xload_xq_pegress__362.88x276.48__pin6_trial.json": {
+  "module": "ot_hgi_sm_xload_xq_pegress__362.88x276.48__pin6_trial.json",
+  "instances": 4,
+  "outline": [
+   362.88,
+   276.48
+  ],
+  "faces": {
+   "N": {
+    "pins": 2053,
+    "L": 345.6,
+    "dens": 5.94,
+    "after_respread": 2053,
+    "dens_after": 5.94,
+    "grow_um": 30.24,
+    "lots": {
+     "q_hub_nw.u_xq_Q_p0_eg": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_vmks_Q0"
+      ]
+     ],
+     "q_hub_nw.u_xq_Q_p1_eg": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xq_Q_p0_eg": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_xq_Q_p1_eg": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ },
+ "cores/ot_hnx_idxn_keybuf_slice__241.92x293.76__canon.json": {
+  "module": "ot_hnx_idxn_keybuf_slice__241.92x293.76__canon.json",
+  "instances": 32,
+  "outline": [
+   241.92,
+   293.76
+  ],
+  "faces": {
+   "W": {
+    "pins": 2232,
+    "L": 276.48,
+    "dens": 8.07,
+    "after_respread": 2232,
+    "dens_after": 8.07,
+    "grow_um": 129.6,
+    "lots": {
+     "q_hub_nw.u_mu_keybuf_0_s0__q0": [
+      [
+       1,
+       "overlaps u_mu_keybuf_0_s1__q0"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s1__q0": [
+      [
+       1,
+       "overlaps u_mu_fused_4"
+      ],
+      [
+       -1,
+       "overlaps u_hb_idx__q_Q__q0,u_mu_keybuf_0_s0__q0"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s2__q0": [
+      [
+       1,
+       "overlaps u_hb_idx__op_Q__q0"
+      ],
+      [
+       -1,
+       "outside type"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s3__q0": [
+      [
+       1,
+       "overlaps u_hb_dbk_Q__q0"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s4__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_sfus_Q__q0"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s5__q0": [
+      [
+       1,
+       "overlaps u_svg_Q2"
+      ],
+      [
+       -1,
+       "overlaps u_hb_coll_Q_vm__q0"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s6__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s7__q0": [
+      [
+       1,
+       "outside type"
+      ],
+      [
+       -1,
+       "overlaps u_ctl_Q_p04"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s0__q1": [
+      [
+       1,
+       "overlaps u_hb_idx__q_Q__q1,u_mu_keybuf_0_s1__q1"
+      ],
+      [
+       -1,
+       "overlaps u_sfus_Q__q1"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s1__q1": [
+      [
+       1,
+       "overlaps u_pgp_Q__q1"
+      ],
+      [
+       -1,
+       "overlaps u_svg_Q3,u_mu_keybuf_0_s0__q1"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s2__q1": [
+      [
+       1,
+       "overlaps u_hb_coll_Q_body_core__q1"
+      ],
+      [
+       -1,
+       "overlaps u_mu_keybuf_0_s4__q1"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s3__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_pgp_Q__q1"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s4__q1": [
+      [
+       1,
+       "overlaps u_mu_keybuf_0_s2__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s5__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_pgp_Q__q1"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s6__q1": [
+      [
+       1,
+       "overlaps u_xl_Q_ctl__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_nw.u_mu_keybuf_0_s7__q1": [
+      [
+       1,
+       "overlaps u_xl_Q_aqlo"
+      ],
+      [
+       -1,
+       "overlaps u_pgp_Q__q1"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s0__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_sfus_Q__q0"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s1__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s2__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s3__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s4__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_vmdel_Q2"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s5__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s6__q0": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hc_Q.u_cen.ot_hbm_hc_subtree32_3,u_hcollgi_Q__q0"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s7__q0": [
+      [
+       1,
+       "overlaps u_ctl_Q_p09"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s0__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_hb_coll_Q_vm__q1"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s1__q1": [
+      [
+       1,
+       "overlaps u_hb_coll_Q_reduce__q1"
+      ],
+      [
+       -1,
+       "overlaps u_hb_coll_Q_vm__q1"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s2__q1": [
+      [
+       1,
+       "overlaps u_xl_Q_ctl__q1"
+      ],
+      [
+       -1,
+       "overlaps u_mu_keybuf_0_s4__q1"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s3__q1": [
+      [
+       1,
+       "overlaps u_xl_Q_aqlo"
+      ],
+      [
+       -1,
+       "overlaps u_pgp_Q__q1"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s4__q1": [
+      [
+       1,
+       "overlaps u_mu_keybuf_0_s2__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s5__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_pgp_Q__q1"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s6__q1": [
+      [
+       1,
+       "overlaps u_sucore_Q__q1"
+      ],
+      [
+       -1,
+       "ok"
+      ]
+     ],
+     "q_hub_ne.u_mu_keybuf_0_s7__q1": [
+      [
+       1,
+       "ok"
+      ],
+      [
+       -1,
+       "overlaps u_pgp_Q__q1"
+      ]
+     ]
+    }
+   }
+  },
+  "moves": []
+ }
+}
