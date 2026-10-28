@@ -75,7 +75,7 @@ def test_segment_density_le_8_per_um():
 
 def test_mirror_segments_match_type_table():
     """an E/W-mirrored N/S instance (lsb_high + mirrored windows) puts every bit at the mirrored coordinate."""
-    W = 1000.0
+    W = 864.0                     # die lattice multiple (8.64): tracks are mirror-symmetric
     segs = [dict(pins=300, window_um=[100.0, 140.0]), dict(pins=259, window_um=[400.0, 440.0])]
     a = _port(face="S", layers=["M5", "M7"], width=558, segments=segs, window_um=[100.0, 440.0])
     msegs = [dict(pins=s["pins"], window_um=[W - s["window_um"][1], W - s["window_um"][0]]) for s in segs]
