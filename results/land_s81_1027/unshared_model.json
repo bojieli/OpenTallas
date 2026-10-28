@@ -1,0 +1,119 @@
+{
+ "padded": {
+  "crossings": 1173,
+  "unshared_max": 7818.1,
+  "unshared_p50": 3460.7,
+  "over_3400": 612,
+  "over_2000": 1173,
+  "hist_ns": {
+   "2": 308,
+   "3": 435,
+   "4": 260,
+   "5": 10,
+   "6": 52,
+   "7": 108
+  },
+  "max_abs_d_nom": 551.4,
+  "worst5": [
+   {
+    "port": "ca__s_0N_LP__bk_sel__9",
+    "src": "s_4N_x06",
+    "dst": "bk_sel",
+    "lca": "b0",
+    "unshared_ps": 7818.1,
+    "d_nom_ps": 270.1
+   },
+   {
+    "port": "cb__s_0N_LP__bk_sel__9",
+    "src": "s_4N_x06",
+    "dst": "bk_sel",
+    "lca": "b0",
+    "unshared_ps": 7818.1,
+    "d_nom_ps": 270.1
+   },
+   {
+    "port": "flt__bk_sel__gunit__0",
+    "src": "bk_sel",
+    "dst": "gunit",
+    "lca": "b0",
+    "unshared_ps": 7818.1,
+    "d_nom_ps": -269.9
+   },
+   {
+    "port": "tl__bk_sel__s_0N_LP__0",
+    "src": "bk_sel",
+    "dst": "s_4N_x06",
+    "lca": "b0",
+    "unshared_ps": 7818.1,
+    "d_nom_ps": -270.1
+   },
+   {
+    "port": "xtier__bk_sel__s_4S_C__0",
+    "src": "bk_sel",
+    "dst": "s_4N_x06",
+    "lca": "b0",
+    "unshared_ps": 7818.1,
+    "d_nom_ps": -270.1
+   }
+  ]
+ },
+ "unpadded": {
+  "crossings": 1173,
+  "unshared_max": 7592.4,
+  "unshared_p50": 2407.0,
+  "over_3400": 320,
+  "over_2000": 797,
+  "hist_ns": {
+   "1": 376,
+   "2": 332,
+   "3": 295,
+   "4": 56,
+   "5": 6,
+   "6": 83,
+   "7": 25
+  },
+  "max_abs_d_nom": 1246.0,
+  "worst5": [
+   {
+    "port": "dfi__svc_0__phy_hbm__0",
+    "src": "svc_0",
+    "dst": "iqf",
+    "lca": "b0",
+    "unshared_ps": 7592.4,
+    "d_nom_ps": 905.6
+   },
+   {
+    "port": "flt__iqf__svc_0__0",
+    "src": "iqf",
+    "dst": "svc_0",
+    "lca": "b0",
+    "unshared_ps": 7592.4,
+    "d_nom_ps": -905.6
+   },
+   {
+    "port": "hbmrd__phy_hbm__svc_0__1",
+    "src": "iqf",
+    "dst": "svc_0",
+    "lca": "b0",
+    "unshared_ps": 7592.4,
+    "d_nom_ps": -905.6
+   },
+   {
+    "port": "idx__iqf__svc_0__0",
+    "src": "iqf",
+    "dst": "svc_0",
+    "lca": "b0",
+    "unshared_ps": 7592.4,
+    "d_nom_ps": -905.6
+   },
+   {
+    "port": "idx__s_3S_C__iqf__8",
+    "src": "svc_0",
+    "dst": "iqf",
+    "lca": "b0",
+    "unshared_ps": 7592.4,
+    "d_nom_ps": 905.6
+   }
+  ]
+ }
+}
