@@ -58,6 +58,29 @@ for a, b, tag in C["pairs"]:
                      dist=abs(A["xy_um"][0] - B["xy_um"][0]) + abs(A["xy_um"][1] - B["xy_um"][1]),
                      lca_depth=len(node)))
 rows.sort(key=lambda r: r["h"])
+# kit contract (main time_class formula): damage = lc - ea - cr + (kit_offset[b] - kit_offset[a]) vs plan window W
+KO, W = C.get("kit_offset") or {}, float((C.get("hold_window") or {}).get("ps", 0.0))
+for r in rows:
+    r["ko"] = KO.get(r["b"], 0.0) - KO.get(r["a"], 0.0)
+    r["kit_dmg"] = r["tree_skew"] + r["spread"] - r["credit"] + r["ko"]
+    r["kit_dmg_ocv"] = r["kit_dmg"] + r["ocv"]
+kneg = [r for r in rows if r["kit_dmg"] > W]
+koneg = [r for r in rows if r["kit_dmg_ocv"] > W]
+def ksum(rs):
+    if not rs:
+        return None
+    return dict(n=len(rs), worst_dmg=round(max(r["kit_dmg"] for r in rs), 1),
+                core_tap_pairs=sum(1 for r in rs if r["a_core"] or r["b_core"]),
+                mean=dict(tree_skew=round(sum(r["tree_skew"] for r in rs) / len(rs), 1),
+                          kit_offset=round(sum(r["ko"] for r in rs) / len(rs), 1),
+                          unc_spread=round(sum(r["unc_spread"] for r in rs) / len(rs), 1),
+                          ocv=round(sum(r["ocv"] for r in rs) / len(rs), 1)),
+                regions=collections.Counter(r["tag"] for r in rs).most_common(10),
+                need_W_without_core_tap_pairs=round(max([r["kit_dmg"] for r in rs if not (r["a_core"] or r["b_core"])] or [0]), 1),
+                core_tap_ports=collections.Counter(r["a"] if r["a_core"] else r["b"] for r in rs if r["a_core"] or r["b_core"]).most_common(8))
+KIT = dict(window_ps=W, nominal=ksum(kneg), with_ocv=ksum(koneg),
+           need_W_all=round(max(r["kit_dmg"] for r in rows), 1), need_W_ocv_all=round(max(r["kit_dmg_ocv"] for r in rows), 1),
+           need_W_ocv_no_core_tap=round(max([r["kit_dmg_ocv"] for r in rows if not (r["a_core"] or r["b_core"])] or [0]), 1))
 ws = rows[:N]
 neg = [r for r in rows if r["h"] < 0]
 
@@ -75,7 +98,7 @@ def dominant(r):
     return max(t, key=t.get)
 
 
-res = dict(pairs=len(rows), hold_neg=len(neg), worst=round(rows[0]["h"], 2), N=N, worst_N=agg(ws), all_neg=agg(neg) if neg else None,
+res = dict(kit_contract=KIT, pairs=len(rows), hold_neg=len(neg), worst=round(rows[0]["h"], 2), N=N, worst_N=agg(ws), all_neg=agg(neg) if neg else None,
            dominant_worst_N=collections.Counter(dominant(r) for r in ws),
            dominant_all_neg=collections.Counter(dominant(r) for r in neg),
            core_tap_involved_worst_N=dict(launch=sum(r["a_core"] for r in ws), capture=sum(r["b_core"] for r in ws)),

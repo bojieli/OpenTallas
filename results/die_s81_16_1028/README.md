@@ -89,3 +89,22 @@ Output: hold13/classify_go13_FF_worst200.json.
 - Worst tail (bk_sel 140/200, svc_12/13/8/9): early core tap t_bk_sel__clk_c3 (dsdv_bksel_q) is hung 3 stages below the
   LCA vs 17-21 for the registers. It is realised 868 ps early, but the declared core insertion offsets only 325 ps:
   over-early by ~540 ps (hang-mode quantisation). Worst pair without a core tap: -359.8 (112254 such negative pairs).
+
+## 8. Check of the DIE-S81-9 kit-tap-window explanation on go13 (COORD 15:4x)
+Main state: gen_phys lifted the 12.8d early-tap ban (DIE-S81-10), and plan_s10 carries clock.tap_window 180 ps.
+Main die_sta_related kit_contract_hold, reproduced exactly by hold_classify.py (CHECKED):
+
+| | zero-logic hold | kit contract W=180, nominal | kit contract + clock OCV |
+|---|---|---|---|
+| negative pairs | 171391 | 1279 | 5255 |
+| W needed | n/a | 682.1 | 724.5 |
+| W needed, pairs without an early core tap | n/a | 301.7 | 360.3 |
+
+- The window explains the bulk: the 397/397 zero-logic negatives are the zero-data floor, and the kit repairs them inside W.
+- It does NOT explain go13's -502 kit / -724 zero-logic. DIE-S81-9 on packed G needed W = 159.8 with OCV; go13 needs 724.5.
+- Residual 1 (465/1279 nominal, 1789/5255 with OCV): early core tap pairs. bk_sel c0-c6 (c3 682) and fW*/fE* c0-c5 are
+  over-early vs their kit offset (mean kit_offset -78 ps against tree skew +204 ps).
+- Residual 2: register-only pairs with tree skew up to 302 nominal / 360 with OCV (> T/4 = 208). This is go13's region
+  tree skew, worse than packed G. Regions: bk_sel 265, svc_12 59, svc_13 54, fW2_p1_b1 52, svc_8 37, lk_EN2 35.
+- So the fix path is the tree (merge mode go15 + plan_s11 early taps), then the kit window, not die hold buffers.
+  go15 gives the measured answer. ESTIMATE only, nothing changed.
