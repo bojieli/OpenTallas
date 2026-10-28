@@ -1947,6 +1947,66 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
     return "\n".join(v) + "\n", place, tap_ports, node_buf, parent_of
 
 
+EDGES_HDR = "# OT_EDGES v1"   # FLOW-ONEMODEL-2: both-edge clock arrival readout (see clock_edge_readout)
+
+
+def clock_parity(verilog):
+    """{instance: inverter-count parity (0/1) at its Y}, {tap port: parity} of a clock tree netlist (ctree.v form: one
+    '.A(net), .Y(net)' cell per line, 'assign tap = net', source port 'root')"""
+    drv = {}
+    for m in re.finditer(r"^\s+(\S+) (\S+) \(\.A\((\S+)\), \.Y\((\S+)\)\);", verilog, re.M):
+        drv[m.group(4)] = (m.group(1), m.group(2), m.group(3))
+    par = {"root": 0}
+
+    def parity(net):
+        st = []
+        while net not in par:
+            st.append(net)
+            net = drv[net][2]
+        v = par[net]
+        for n in reversed(st):
+            v = (v + ("INV" in drv[n][0])) % 2
+            par[n] = v
+        return v
+    cells = {drv[n][1]: parity(n) for n in drv}
+    taps = {m.group(1): parity(m.group(2)) for m in re.finditer(r"assign (\S+) = (\S+);", verilog)}
+    return cells, taps
+
+
+def clock_edge_readout(verilog, path, period="833.333", cells="b*", tap_slew=False, prefix=""):
+    """FLOW-ONEMODEL-2 (COORD 10-28): Tcl lines writing the clock arrivals of BOTH source edges at every tap AND every
+    clock cell, so every die proof carries measured fall arrivals by construction (no rise + T/2 anywhere).
+    PATH gets: header EDGES_HDR; 'T port late early [slew]' = source RISING edge at the tap (period - slack_max_rise,
+    slack_min_rise: output delay 0, the root is a data input at 0, so both transitions launch at t=0); 'F port late
+    early [slew]' = source FALLING edge at the tap (sampling instant T/2 + F); 'N cell late early' / 'M cell late
+    early' = source rise / fall edge at the cell output, POLARITY-RESOLVED: at an odd-inverter-parity output the
+    source rise is the Y fall (clock_parity), so N and M stay true source edges in buf, inv and inv2 trees.  Taps must
+    be true polarity (die_trial adds the parity inverter); an odd tap raises.  prefix: instance prefix in the routed
+    design (combo/clock-only GRT 'ck_'; printed names drop it).  cells: the get_cells glob(s) of the readout."""
+    cp, tp = clock_parity(verilog)
+    odd_t = sorted(t for t, v in tp.items() if v)
+    if odd_t:
+        raise ValueError(f"clock_edge_readout: {len(odd_t)} tap(s) of inverted polarity, e.g. {odd_t[:3]}")
+    odd = sorted(prefix + c for c, v in cp.items() if v)
+    nm = f"[string range [get_full_name $i] {len(prefix)} end]" if prefix else "[get_full_name $i]"
+    sl = " [get_property $p slew_max_{e}]" if tap_slew else ""
+    return ["set ot_odd [dict create" + "".join(f" {c} 1" for c in odd) + "]",
+            f"set fh [open {path} w]",
+            f"puts $fh \"{EDGES_HDR} T/N=source rise F/M=source fall (late early), polarity-resolved\"",
+            # arrival at a port = period - slack (output delay 0); at a cell output pin = its arrival property
+            "foreach p [get_ports t_*] { set n [get_full_name $p]; "
+            "set smx [get_property $p slack_max_rise]; set smn [get_property $p slack_min_rise]; "
+            f"puts $fh \"T $n [expr {{{period} - $smx}}] [expr {{$smn}}]" + sl.format(e="rise") + "\" }",
+            "foreach p [get_ports t_*] { "
+            f"puts $fh \"F [get_full_name $p] [expr {{{period} - [get_property $p slack_max_fall]}}] "
+            "[get_property $p slack_min_fall]" + sl.format(e="fall") + "\" }",
+            f"foreach i [get_cells {cells}] {{ set q [get_pins [get_full_name $i]/Y]; "
+            "if {[dict exists $ot_odd [get_full_name $i]]} { set e fall; set g rise } else { set e rise; set g fall }; "
+            f"puts $fh \"N {nm} [get_property $q arrival_max_$e] [get_property $q arrival_min_$e]\"; "
+            f"puts $fh \"M {nm} [get_property $q arrival_max_$g] [get_property $q arrival_min_$g]\" }}",
+            "close $fh"]
+
+
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
               slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
@@ -2148,17 +2208,10 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             "set_input_delay 0 -clock vclk [get_ports root]",
             f"set_load {TAP_LOAD_FF} [all_outputs]",
             "set_output_delay 0 -clock vclk [all_outputs]",
-            "set fh [open /work/clock/arr_$::env(CORNER).txt w]",
-            # arrival at a port = period - slack (output delay 0); at a buffer output pin = its arrival property
-            "foreach p [get_ports t_*] { set n [get_full_name $p]; "
-            "set smx [get_property $p slack_max_rise]; set smn [get_property $p slack_min_rise]; "
-            "puts $fh \"T $n [expr {833.333 - $smx}] [expr {$smn}]" + (" [get_property $p slew_max_rise]"
-                         if any(int(v) > 0 for v in (tap_pad or {}).values()) else "") + "\" }",
-            ("foreach i [get_cells {b* r* p*}] { set q [get_pins [get_full_name $i]/Y]; "
-             if any(int(v) > 0 for v in (tap_pad or {}).values()) else
-             "foreach i [get_cells b*] { set q [get_pins [get_full_name $i]/Y]; ")
-            + "puts $fh \"N [get_full_name $i] [get_property $q arrival_max_rise] [get_property $q arrival_min_rise]\" }",
-            "close $fh",
+            # FLOW-ONEMODEL-2: both source edges at every tap and clock cell (polarity-resolved, clock_edge_readout)
+            *clock_edge_readout(v, "/work/clock/arr_$::env(CORNER).txt", period="833.333",
+                                cells="{b* r* p*}" if any(int(x) > 0 for x in (tap_pad or {}).values()) else "b*",
+                                tap_slew=any(int(x) > 0 for x in (tap_pad or {}).values())),
             "report_checks -path_delay max -group_path_count 1 -format full -fields {cap slew fanout}",
             "puts OT_DONE"]
     (out / "ctree.tcl").write_text("\n".join(tcl) + "\n")
@@ -3894,7 +3947,20 @@ def main(argv=None):
     j.add_argument("--out", required=True)
     j.add_argument("--no-clock-contract", action="store_true", help="legacy: face flops load the tap port directly")
     j.add_argument("--top", help="also write the matching die_top.v (shared-module types re-pointed to their stand-ins)")
+    e = sub.add_parser("readout", help="FLOW-ONEMODEL-2: print the both-edge clock arrival readout Tcl (T/F per tap, "
+                                         "N/M per clock cell, polarity-resolved) for a ctree.v, to source in any clock-only "
+                                         "or combo GRT script (writes the shared arr_<C>.txt format)")
+    e.add_argument("ctree_v")
+    e.add_argument("--path", default="/out/arr_$::env(CORNER).txt")
+    e.add_argument("--period", default="833.333")
+    e.add_argument("--cells", default="b*", help="get_cells glob, e.g. 'ck_*' or '{b* r* p*}'")
+    e.add_argument("--prefix", default="", help="instance prefix in the routed design (e.g. ck_)")
+    e.add_argument("--tap-slew", action="store_true")
     a = ap.parse_args(argv)
+    if a.cmd == "readout":
+        print("\n".join(clock_edge_readout(Path(a.ctree_v).read_text(), a.path, a.period, a.cells, a.tap_slew,
+                                           a.prefix)))
+        return 0
     if a.cmd == "standins":
         P = S.Plan(S.load(a.plan), Path(a.plan))
         smod = standin_module_names(P)
