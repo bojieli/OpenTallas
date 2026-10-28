@@ -39,6 +39,9 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               ONE connected net: an M8-M9 VIA89 at every strap crossing, emitted (mesh.json meta.mesh_vias) and in the
               routed DB (OT_MESH_VIAS of combo_<corner>.log); ERROR in G0 and G0C (die_clock_mesh.mesh_via_findings)
   clock_entry_macro (G0C) plan clock entry / island (clock_entries.json) over a hard-core macro of core_macros.json
+  merged_clock_view (G0C, HBM-STREETS-3, COORD 10-27 19:12 ruling 1) every merged core tap (merged_clock_ports) checked on
+              its own vs the native LEF+Liberty (merged_core_clocks.audit): mismatch = ERROR; a core with no native view is
+              a PENDING-VIEW item (never PASS: verdict PENDING-VIEW, exit 3 when it is the only finding class)
   streets     (G0C, METHODOLOGY 12.10c street rule, streets.py) street_reach: every hard-core point <= 400 um from the
               street network (free area >= die.streets.width_um wide, largest connected component); street_width: width >=
               (clock + hold + FT repeater widths) / 0.6; street_clock_leg: no die-clock H-tree leg / driver of a
@@ -77,7 +80,7 @@ G0C_CHECKS = ("hard_cores", "core_faces", "complete",
               # PLAN-TOOL5 (COORD die-plan visual review 10-23, cross-die items (a)-(e)): die_io.py / xdie.py
               "die_io_plan", "cut_lines", "reach", "face_tracks", "ft_budget",
               # HBM-MU-QUAD-6/CLK (COORD 10-27): a core clock entry (12.8a) / its island never sits over a hard-core macro
-              "clock_entry_macro",
+              "clock_entry_macro", "merged_clock_view",
               # HBM-STREETS-1 (OWNER 10-27 ~18:4x, METHODOLOGY 12.10c): street rule (streets.py)
               "street_reach", "street_width", "street_clock_leg", "street_die_leg")
 
@@ -100,6 +103,29 @@ class Report:
 
     def errors(self):
         return [i for i in self.items if i["level"] == "ERROR"]
+
+    def pending(self, check, msg, **kw):
+        """PENDING-VIEW item (HBM-STREETS-3): never an ERROR, never a PASS."""
+        self.items.append(dict(level="PENDING-VIEW", check=check, msg=msg, g0c=True, **kw))
+
+    def pendings(self):
+        return [i for i in self.items if i["level"] == "PENDING-VIEW"]
+
+
+def check_merged_clock_view(P, R):
+    """merged_clock_view: merged_core_clocks.audit over every merged core tap (no stop at the first core)."""
+    import merged_core_clocks as MC
+    rows = MC.audit(P)
+    for r in rows:
+        if r["status"] == "FAIL":
+            R.err("merged_clock_view", r["msg"], type=r["type"])
+        elif r["status"] == "PENDING-VIEW" and R.completeness:
+            R.pending("merged_clock_view", r["msg"], type=r["type"])
+    by = defaultdict(int)
+    for r in rows:
+        by[r["status"]] += 1
+    mods = sorted({r["module"] for r in rows if r["status"] == "PENDING-VIEW"})
+    return dict(taps=len(rows), by_status=dict(by), pending_view_modules=mods)
 
 
 def on_grid(v, g):
@@ -1996,6 +2022,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["g0c"] = g0c_summary(P, R)
     summ["geometry"] = check_geometry(P, R)
     summ["clock_entry_macro"] = check_clock_entry_macro(P, R, plan_dir, core_macros)
+    summ["merged_clock_view"] = check_merged_clock_view(P, R)
     import landing_islands as LI
     li_errs = LI.check(raw)
     for e in li_errs:
@@ -2088,9 +2115,11 @@ def main(argv=None):
                   completeness=a.completeness, clock_builds=a.clock_build,
                   core_macros=a.core_macros)
     ne = len(R.errors())
-    nw = len(R.items) - ne
+    npv = len(R.pendings())
+    nw = len(R.items) - ne - npv
     ok = ne == 0 and not (a.strict and nw)
-    rep = dict(schema="opentallas.die_plan.g0.v1", plan=str(Path(a.plan).resolve()), verdict="PASS" if ok else "FAIL",
+    verdict = ("PENDING-VIEW" if npv else "PASS") if ok else "FAIL"   # PENDING-VIEW is never PASS
+    rep = dict(schema="opentallas.die_plan.g0.v1", plan=str(Path(a.plan).resolve()), verdict=verdict, pending_view=npv,
                mode="G0C" if a.completeness else "G0",
                errors=ne, warnings=nw, summary=summ, findings=R.items)
     (out / "g0_report.json").write_text(json.dumps(rep, indent=1) + "\n")
@@ -2104,10 +2133,10 @@ def main(argv=None):
     g = summ.get("g0c", {})
     print(f"G0C per type: {g.get('clean')}/{g.get('types')} types clean (G3-eligible: {len(g.get('g3_eligible', []))}); "
           f"die-level {g.get('die_level')}; {'ERRORs' if a.completeness else 'reported as WARN (run --completeness)'}")
-    print(f"{rep['mode']} {rep['verdict']}: {ne} errors, {nw} warnings; {ty.get('types')} types / {ty.get('partitions')} "
+    print(f"{rep['mode']} {rep['verdict']}: {ne} errors, {npv} pending-view, {nw} warnings; {ty.get('types')} types / {ty.get('partitions')} "
           f"partitions ({ty.get('near_duplicate_types')} in near-duplicate groups); worst cut {c.get('worst_full')}, worst partition "
           f"segment {c.get('worst_partition_segment')}; report {out / 'g0_report.json'}")
-    return 0 if ok else 1
+    return (3 if npv else 0) if ok else 1
 
 
 if __name__ == "__main__":
