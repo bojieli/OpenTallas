@@ -22,3 +22,7 @@ up_stub30_width.json start 950 clean 950 fail 0 retime 461 virt 638 width med/ma
   fail types []
    violations None 0
    worst_lo_to_guard_ps None 109.4
+est/t10i_width.json start 848 clean 845 fail 3 retime 428 virt 536 width med/max {'median': 183.00000000000003, 'max': 313.0} xing 2537 D Counter({4: 2533, 8: 4}) min lo 104.3
+  fail types [('st_a->st:h10', 2), ('st_a->st:h00', 1)]
+   violations None 0
+   worst_lo_to_guard_ps None 105.0
