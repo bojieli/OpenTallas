@@ -1,0 +1,8 @@
+read_verilog -sv -D SYNTHESIS /work/ring.sv /work/lockstep.sv
+chparam -set MUT 0 ring_lockstep
+hierarchy -top ring_lockstep
+proc
+memory_map
+flatten
+opt_clean
+sat -seq 7 -set-def-inputs -set-init-def -prove mismatch 0 -prove-skip 6 -show mismatch -dump_json /work/lock6.cex.json

@@ -1,0 +1,326 @@
+
+-- Executing script file `/work/base7.ys' --
+
+1. Executing Verilog-2005 frontend: /work/ring.sv
+Parsing SystemVerilog input from `/work/ring.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81sl_ve_ring'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /work/top.sv
+Parsing SystemVerilog input from `/work/top.sv' to AST representation.
+Generating RTLIL representation for module `\ring_base'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \ring_base
+Used module:     \ot_s81sl_ve_ring
+Parameter \W = 32
+Parameter \D = 5
+
+3.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_ve_ring'.
+Parameter \W = 32
+Parameter \D = 5
+Generating RTLIL representation for module `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring'.
+
+3.3. Analyzing design hierarchy..
+Top module:  \ring_base
+Used module:     $paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring
+
+3.4. Analyzing design hierarchy..
+Top module:  \ring_base
+Used module:     $paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring
+Removing unused module `\ot_s81sl_ve_ring'.
+Removed 1 unused modules.
+Mapping positional arguments of cell ring_base.u ($paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring).
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 34 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~12 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ring_base.$proc$/work/top.sv:3$42'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:39$109'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:38$108'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:37$104'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$102'.
+     1/1: $0\g_s[3].g_r[2].row[7:0]
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$100'.
+     1/1: $0\g_s[3].g_r[1].row[7:0]
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$98'.
+     1/1: $0\g_s[3].g_r[0].row[7:0]
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:27$97'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:24$96'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:39$95'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:38$94'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:37$90'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$88'.
+     1/1: $0\g_s[2].g_r[2].row[7:0]
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$86'.
+     1/1: $0\g_s[2].g_r[1].row[7:0]
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$84'.
+     1/1: $0\g_s[2].g_r[0].row[7:0]
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:27$83'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:24$82'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:39$81'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:38$80'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:37$76'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$74'.
+     1/1: $0\g_s[1].g_r[2].row[7:0]
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$72'.
+     1/1: $0\g_s[1].g_r[1].row[7:0]
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$70'.
+     1/1: $0\g_s[1].g_r[0].row[7:0]
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:27$69'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:24$68'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:39$67'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:38$66'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:37$62'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$60'.
+     1/1: $0\g_s[0].g_r[2].row[7:0]
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$58'.
+     1/1: $0\g_s[0].g_r[1].row[7:0]
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$56'.
+     1/1: $0\g_s[0].g_r[0].row[7:0]
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:27$55'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:24$54'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:18$53'.
+Creating decoders for process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:14$46'.
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[3].rd' from process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:37$104'.
+No latch inferred for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[3].j' from process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:37$104'.
+No latch inferred for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[2].rd' from process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:37$90'.
+No latch inferred for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[2].j' from process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:37$90'.
+No latch inferred for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[1].rd' from process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:37$76'.
+No latch inferred for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[1].j' from process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:37$76'.
+No latch inferred for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[0].rd' from process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:37$62'.
+No latch inferred for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[0].j' from process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:37$62'.
+No latch inferred for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\oh_d' from process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:14$46'.
+No latch inferred for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\oh_late' from process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:14$46'.
+No latch inferred for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\r' from process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:14$46'.
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ring_base.\hr' using process `\ring_base.$proc$/work/top.sv:3$42'.
+  created $dff cell `$procdff$134' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\dout2 [31:24]' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:39$109'.
+  created $dff cell `$procdff$135' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\dout [31:24]' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:38$108'.
+  created $dff cell `$procdff$136' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[3].g_r[2].row' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$102'.
+  created $dff cell `$procdff$137' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[3].g_r[1].row' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$100'.
+  created $dff cell `$procdff$138' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[3].g_r[0].row' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$98'.
+  created $dff cell `$procdff$139' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[3].ohr' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:27$97'.
+  created $dff cell `$procdff$140' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[3].oh' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:24$96'.
+  created $dff cell `$procdff$141' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\dout2 [23:16]' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:39$95'.
+  created $dff cell `$procdff$142' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\dout [23:16]' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:38$94'.
+  created $dff cell `$procdff$143' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[2].g_r[2].row' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$88'.
+  created $dff cell `$procdff$144' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[2].g_r[1].row' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$86'.
+  created $dff cell `$procdff$145' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[2].g_r[0].row' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$84'.
+  created $dff cell `$procdff$146' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[2].ohr' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:27$83'.
+  created $dff cell `$procdff$147' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[2].oh' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:24$82'.
+  created $dff cell `$procdff$148' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\dout2 [15:8]' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:39$81'.
+  created $dff cell `$procdff$149' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\dout [15:8]' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:38$80'.
+  created $dff cell `$procdff$150' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[1].g_r[2].row' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$74'.
+  created $dff cell `$procdff$151' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[1].g_r[1].row' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$72'.
+  created $dff cell `$procdff$152' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[1].g_r[0].row' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$70'.
+  created $dff cell `$procdff$153' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[1].ohr' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:27$69'.
+  created $dff cell `$procdff$154' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[1].oh' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:24$68'.
+  created $dff cell `$procdff$155' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\dout2 [7:0]' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:39$67'.
+  created $dff cell `$procdff$156' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\dout [7:0]' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:38$66'.
+  created $dff cell `$procdff$157' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[0].g_r[2].row' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$60'.
+  created $dff cell `$procdff$158' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[0].g_r[1].row' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$58'.
+  created $dff cell `$procdff$159' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[0].g_r[0].row' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$56'.
+  created $dff cell `$procdff$160' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[0].ohr' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:27$55'.
+  created $dff cell `$procdff$161' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\g_s[0].oh' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:24$54'.
+  created $dff cell `$procdff$162' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\din' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:18$53'.
+  created $dff cell `$procdff$163' with positive edge clock.
+Creating register for signal `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.\wptr' using process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:18$53'.
+  created $dff cell `$procdff$164' with positive edge clock.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ring_base.$proc$/work/top.sv:3$42'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:39$109'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:38$108'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:37$104'.
+Found and cleaned up 1 empty switch in `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$102'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$102'.
+Found and cleaned up 1 empty switch in `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$100'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$100'.
+Found and cleaned up 1 empty switch in `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$98'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$98'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:27$97'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:24$96'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:39$95'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:38$94'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:37$90'.
+Found and cleaned up 1 empty switch in `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$88'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$88'.
+Found and cleaned up 1 empty switch in `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$86'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$86'.
+Found and cleaned up 1 empty switch in `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$84'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$84'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:27$83'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:24$82'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:39$81'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:38$80'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:37$76'.
+Found and cleaned up 1 empty switch in `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$74'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$74'.
+Found and cleaned up 1 empty switch in `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$72'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$72'.
+Found and cleaned up 1 empty switch in `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$70'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$70'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:27$69'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:24$68'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:39$67'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:38$66'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:37$62'.
+Found and cleaned up 1 empty switch in `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$60'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$60'.
+Found and cleaned up 1 empty switch in `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$58'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$58'.
+Found and cleaned up 1 empty switch in `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$56'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:32$56'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:27$55'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:24$54'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:18$53'.
+Removing empty process `$paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.$proc$/work/ring.sv:14$46'.
+Cleaned up 12 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ring_base.
+Optimizing module $paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.
+<suppressed ~6 debug messages>
+
+5. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+6. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$c327769f03e5c95263d0c414995128b170f9ac66\ot_s81sl_ve_ring.
+<suppressed ~1 debug messages>
+
+7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ring_base..
+Removed 7 unused cells and 86 unused wires.
+<suppressed ~13 debug messages>
+
+8. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \d
+Imported 66 cells to SAT database.
+No constraints for initial state found.
+
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \d
+Imported 66 cells to SAT database.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \d
+Imported 66 cells to SAT database.
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \d
+Imported 66 cells to SAT database.
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \d
+Imported 66 cells to SAT database.
+
+Setting up time step 6:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \d
+Imported 66 cells to SAT database.
+
+Setting up time step 7:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \d
+Imported 66 cells to SAT database.
+
+Setting up time step 8:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \d
+Imported 66 cells to SAT database.
+Import proof-constraint: \q = 2'00
+Final proof equation: \q = 2'00
+Import show expression: \q
+Import show expression: \u.wptr
+Import show expression: \u.din
+Import show expression: \u.dout
+
+Solving problem with 67902 variables and 179236 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 1475323bc8, time: 0.42s, user: 0.42s, system: 0.06s, MEM: 73.04 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 93% 1x sat (0 sec), 2% 1x hierarchy (0 sec), ...

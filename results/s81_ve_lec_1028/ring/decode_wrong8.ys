@@ -1,0 +1,8 @@
+read_verilog -sv -D SYNTHESIS /work/ring.sv /work/decode_top.sv
+chparam -set WRONG 1 decode_base
+hierarchy -top decode_base
+proc
+memory_map
+flatten
+opt_clean
+sat -seq 9 -set-def-inputs -set-init-def -prove q 0 -prove-skip 8 -show q -dump_json /work/decode_wrong8.cex.json
