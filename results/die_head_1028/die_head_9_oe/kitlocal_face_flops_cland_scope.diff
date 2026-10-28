@@ -1,0 +1,4 @@
+306c306
+< source /work/landing_placement.tcl
+---
+> uplevel #0 {source /work/landing_placement.tcl} ;# DIE-HEAD-9 DIAGNOSTIC kit-local: ff_blk/ff_dbu are globals (face block runs at uplevel #0)

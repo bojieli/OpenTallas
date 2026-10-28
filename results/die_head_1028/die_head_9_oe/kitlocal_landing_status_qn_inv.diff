@@ -1,0 +1,10 @@
+64a65
+>  if {[string match status:* $tag]} { puts "OT_CLAND DIAGNOSTIC WARNING no legal site for $name ($tag): left to GPL (DIE-HEAD-9 kit-local)"; return }
+74a76,82
+>  # DIE-HEAD-9 DIAGNOSTIC kit-local: ASAP7 maps the status FF as DFFHQN + INV; follow one inverter to the QN flop
+>  if {[llength $drivers]==1 && [string match "INV*" [[[lindex $drivers 0] getMaster] getName]]} {
+>   set inv [lindex $drivers 0]; set qd {}
+>   foreach it [$inv getITerms] { if {[[$it getMTerm] getIoType] eq "INPUT" && [$it getNet] ne "NULL"} {
+>    foreach jt [[$it getNet] getITerms] { if {[[$jt getMTerm] getIoType] eq "OUTPUT"} { lappend qd [$jt getInst] } } } }
+>   if {[llength $qd]==1 && [string match "*DFF*" [[[lindex $qd 0] getMaster] getName]]} { set drivers $qd }
+>  }

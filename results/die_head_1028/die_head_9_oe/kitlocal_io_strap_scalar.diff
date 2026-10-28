@@ -1,0 +1,4 @@
+1163c1163
+< place_pin -pin_name {strap_ca_efall[0]} -layer M5 -location {138.2400 358.5600} -pin_size {0.0240 0.7680}   ;# interior: ID strap (tied at die top)
+---
+> place_pin -pin_name {strap_ca_efall} -layer M5 -location {138.2400 358.5600} -pin_size {0.0240 0.7680}   ;# interior: ID strap (tied at die top)

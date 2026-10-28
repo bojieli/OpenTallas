@@ -1,0 +1,27 @@
+DIE-HEAD-9 item (3) one-entry hd_tile CTS-only DIAGNOSTIC (2026-10-28 07:21 PDT). NOT a sign-off run; no closure claim.
+Base: codex/head-die-1028-0405@2309df2935 (clock.core_taps=internal, NOT yet on origin/main) + Codex untracked helper
+tools/s81_head/head_regional_one_entry.py (copied, unchanged) at --tt-ps 450 --ff-ps 380 on
+codex O/plan_rs_countsites_fullpin.json -> run dir intel2:/srv/opentallas-scratch2/claude/die-head-9/one_entry.
+Kit: kits/hd_tile (gen rtl all types with --clock-landing O/compose/landed_sidecar.json; tile wrapper has ONE clock input clk,
+0 clk_t*/clk_c* ports; core_latency.txt = SIGNED A 255.24 TT/208.27 FF x4, B 230.71/189.31; OT_TAP_TARGET_PS 450, OT_VCLK 450/380).
+Gate status (CHECKED, run_cts.log): KIT_PREFLIGHT PASS, PORT_BIND/SELRANGE/DONT_USE/REG_FANOUT PASS,
+FACE_GUARD FAIL shared 570 + feedthrough 1 (same as Codex 05:24) -> recorded in DIAGNOSTIC_GATES by run_diag.sh, continued.
+Generator bugs met before CTS (all fixed KIT-LOCAL only, diffs here; shared fixes belong to FLOW/ROOT-MERGE):
+ 1 io.tcl places count strap strap_ca_efall[0] but gen rtl --clock-landing declares scalar input wire strap_ca_efall -> PPL-0061
+   (gen_phys.strap_pin_sites names width-1 straps [0]; same on origin/main 4d4c968ee0).
+ 2 pg_island_cut.tcl (POST_PDN) top-level set pgc_u runs inside the ORFS proc; proc uses global -> "cant read pgc_u.
+ 3 face_flops.tcl sources landing_placement.tcl OUTSIDE its uplevel #0 block -> OT_CLAND missing face placement context
+   (this is the CTS-C failure in the Codex handoff).
+ 4 landing_placement status check requires a DFF driver on cland_up_{ready,fault}_o; ASAP7 maps DFFHQN+INV -> fails.
+ 5 status sites x=706.336 on a 708.48 outline: no legal site in the +-2.16 window (made non-fatal, left to GPL).
+CTS: launched 07:10 (ot-run localhost=intel2, 24 GB, 8 thr, container dpkit-hd_tile-*); at 07:20 still in 3_3_place_gp
+(landing placement Tcl, single thread). CTS NOT reached within the lane budget: no clock numbers yet.
+COLLECT: kits/hd_tile/run_cts.log, run/logs/asap7/dp_hd_tile/base/4_1_cts.log (OT_TAP_RC / OT_TAP_BALANCE lines = core pass
+pads added in front of core pins; TritonCTS balancing proven only if the core pass adds ~0 cells), then
+meas.tcl per corner: LIBS=<TT libs + macros/*_tt.lib | BC libs + *_ff.lib> ODB=4_cts.odb SDC=4_cts.sdc RCF=setRC_rcx.tcl
+CORE_LAT=core_latency{,_ff}.txt CORNER=tt|ff OUT=meas_<c>.txt openroad -exit meas.tcl  -> core pin + SIGNED mean vs flop CK
+(target 450 TT / 380 FF), and pair_skew.tcl (OT_PS_OUT) for related pairs.
+CA-OCV rerun (COORD 07:2x): needs die-level one-entry arrivals (a die clock GRT on the one-entry plan), not this tile kit.
+Command form (claude/ca-ocv-1-1028@07833e2f9, not on main): count_align_plan.py <rows.json> --corner TT --sta-proof <proofdir>
+--sta-plan plan_one_entry_450.json --sta-clock-ocv table --sta-clock-droop shared --sta-droop-regions <dr.json>
+--sta-core-latency-ff 380 --out ca_one_entry.json ; baseline sp5 with OCV: 4 TT < 100 ps, worst 78.6 TT / 112.4 FF.

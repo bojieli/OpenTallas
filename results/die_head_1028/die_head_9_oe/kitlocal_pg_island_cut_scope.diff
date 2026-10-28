@@ -1,0 +1,5 @@
+0a1,2
+> # DIE-HEAD-9 DIAGNOSTIC kit-local: run at global scope (POST_PDN_TCL is sourced inside a proc; pgc_u global unset)
+> uplevel #0 {
+94a97
+> }
