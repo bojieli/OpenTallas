@@ -878,3 +878,10 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
   - => Per COORD 01:55 (2): v1c5 shows GRT0 at the 50-it budget, so the v1c5 + hub W/E split region build STARTS NOW.
     - Die-local wrapper kit_hs.py: die_trial kit --region-trees with hub taps assigned W/E by the planned cut x (NW 9097.92 / NE 18973.44); 36 clock regions.
     - It runs first on C20h (dry_c20h_hs, intel1) while sub-lane C20I finishes the lattice/qid plan. Then on C20i.
+- 2026-10-28 02:09 PDT [HBM-RISK-1] ESTIMATE R4 (part 1, analytic arrivals): CROSSINGS AT SPICE CAL on the candidate (hub-split map, spt feed, v x1.0485 TT / x1.0552 FF, MAIN count_align_plan @bdf38a8b4 = the DIE-HEAD-5 one-interval planner). These are independent re-runs of DIE-HBM-4's mr/hs_spt numbers, CHECKED: they reproduce them exactly.
+  - @219.2: 333 crossings, D4 291 / D8 38 / FAIL 4. Worst margin lo/hi 111.9 / 262.3 ps. 0 crossings under 100 ps.
+  - @278.6: D4 162 / D8 167 / FAIL 4. Worst margin 114.2 / 124.9. 0 under 100.
+  - The 4 FAILs are the unreached status links L117_1/L117m_1/L138_1/L138m_1 (R001->R007, R005->R008, 26 bits). They need the start-forward wire (DIE-HBM-5 r5 owns it).
+  - Lowest margins: L78/L98 R019->R025 114.2 ps (3.73 ns unshared) and L70/L123 R002-R011 111.9 ps.
+  - Data intel2:/srv/opentallas-scratch2/claude/hbm-risk-1/r4/est_*.json.
+  - Part 2 is RUNNING: the same planner with --sta-proof (count_align_d_intervals hull, --sta-clock-cal spice, --sta-cppr-lca) on the BUILT tree arrivals from R2.
