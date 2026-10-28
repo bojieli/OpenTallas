@@ -36,6 +36,9 @@ module tb_hbm_su_native_multirate_top;
   .fault(stream_fault),.edge_index(stream_edge),.command(stream_command));
  reg [9687:0] line;reg[63:0]cal_line;
  bit mut_data,mut_addr,mut_rf,mut_red,mut_cal,mut_epoch;
+ // +MUT_ADDR_EDGE=N (HBM-CORES-REBAL-9, opt-in, default 1040 = the MLAT4/WCOPY0 first live serial line): a lane build
+ // that shifts the programme must aim the ADDR mutant at its own first live line, else it lands on an idle (all-zero) line.
+ int mut_addr_edge=1040;
  // +BRIDGE_LEAF (H-NETLIST 10-15): bridge_rst_n from the die leaf ot_hbm_su_bridge_release (prog_busy = the serial
  // programme busy) instead of the ideal half-tick E0-1 release below; the leaf must not fault.
  bit bridge_leaf; wire leaf_bridge_rst_n,leaf_bridge_fault;
@@ -44,7 +47,7 @@ module tb_hbm_su_native_multirate_top;
  wire dut_bridge_rst_n=bridge_leaf?leaf_bridge_rst_n:bridge_rst_n;
  always_comb begin
   line=serial_valid?serial_command:'0;cal_line=stream_valid?stream_command:'0;
-  if(mut_addr&&serial_edge==1040)line[QW+680+(1742-2-1200)+:24]=24'd3;
+  if(mut_addr&&serial_edge==mut_addr_edge)line[QW+680+(1742-2-1200)+:24]=24'd3;
   if(mut_rf&&line[74+9+8])line[74+9+:8]=8'd3;
   if(mut_red&&serial_edge>=1040+176+FO&&serial_edge<1040+176+FO+2)line[0+:74]='0;
   // First read is reserved at stream edge3; remove its bank0 reservation.
@@ -164,7 +167,7 @@ module tb_hbm_su_native_multirate_top;
  initial begin
   string dir;reg[255:0]data;reg[15:0]sec;
   if(!$value$plusargs("DIR=%s",dir))$fatal(1,"DIR missing");
-  mut_data=$test$plusargs("MUT_DATA");mut_addr=$test$plusargs("MUT_ADDR");mut_rf=$test$plusargs("MUT_RF");
+  mut_data=$test$plusargs("MUT_DATA");mut_addr=$test$plusargs("MUT_ADDR");void'($value$plusargs("MUT_ADDR_EDGE=%d",mut_addr_edge));mut_rf=$test$plusargs("MUT_RF");
   mut_red=$test$plusargs("MUT_RED");mut_cal=$test$plusargs("MUT_CAL");mut_epoch=$test$plusargs("MUT_EPOCH");bridge_leaf=$test$plusargs("BRIDGE_LEAF");
   for(integer t=0;t<32;t=t+1)for(integer b=0;b<32;b=b+1)begin pend_v[t][b]=0;pend_w[t][b]=0;end
   $readmemh({dir,"/serial/config.mem"},serial_config);$readmemh({dir,"/stream/config.mem"},stream_config);
