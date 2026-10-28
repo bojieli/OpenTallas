@@ -160,3 +160,4 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
 2026-10-27 17:32:35 PDT AUTOPILOT -> KV-CORES: FAILED f7034883a577 qwen_kvsys/kv3_head_eighth_e6 (CRASH/flow-error): sh[3], ff:u_dut.u_g_t_12_u_l8.g_d[0].u_p.s2_sh[4], ff:u_dut.u_g_t_12_u_l8.g_d[1].u_p.s2_normal); RTL registers removed by synthesis although not constant: ff:u_dut.u_g_t_12_u_l8.g_d[0].u_p.s1_e[9], ff:u_dut.u_g_t_13_u_l8.g_d[0].u_p.s1_e[9] (2549.2 s)
 LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
  | kit localhost:/srv/opentallas-scratch2/claude/qk-cores-5/kits_heads/kv3_head_eighth_e6__216x216 src claude/qk-cores-5-1027@588401f850424faf3c69ac84506753f6314afd0b | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-10-27 17:47 PDT CLAUDE TOK-ALL-17 claims HHP guard -> KV boot calendar hook (tools/qwen_kv_die/hhp_phase_guard.py from claude/tok14-hhp-1027@73127eda0; branch claude/tok17-hhp-1027).
