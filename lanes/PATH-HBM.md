@@ -1281,3 +1281,10 @@ All HBM plan/streets/locality/clock/crossing/core/native boot+token/PG aliases c
   - What runs: tok_func_hbm.sh with an opt-in HALF_ARGS hook. The DS layers are emitted with --half-local 0 and with --half-local 1 --native-xread-lx 15, with the VMX link in the die.
   - What decides: the measured h0-vs-h1 replay cycles. If the combined cost is over 5%, it goes to the OWNER before adoption.
   - VMX stays unmerged until that run PASSES.
+- RESULT DIE-HBM-10 2026-10-28 12:38 PDT: trial2 (main die_trial, inv2, C22) FAILED in the kit after 2.5 h. CHECKED.
+  - Error: ValueError q_hub_ne/u_xq_Q_p0_eg/clk "actual LEF input clock required" (main merged_core_clocks.pins).
+  - Cause: the HBM plan has cited a stale 10-17 view, physical/ref_tile/hgi_sm_xq_pegress, since c20j. That view is 369.36x369.36 with clocks USE SIGNAL. The plan core is a 362.88x276.48 TRIAL outline. No view at that outline exists on the fleet.
+  - Audit over all merged core taps: 81 PENDING-VIEW + 4 FAIL, all 4 being xq_pegress x {NW,NE} x {p0,p1}.
+  - Separate finding: 95 of the 129 cited core LEFs have a SIZE different from the plan outline. The kit uses pins_files, so this is only a staleness note for now.
+  - Fix, die-local plan data, no rule change: c22v = C22 with lef/lib dropped on those 4 cores, making them PENDING-VIEW, which retaps when their own view is signed off. Audit: 85 PENDING-VIEW, 0 FAIL.
+  - trial2b (the same chain on c22v) started 12:35 on intel2, ~2.5 h. trial1 was left running by design: stop_trial1 kills it only on a clean trial2. The same 4-core drop goes into the C23q event.
