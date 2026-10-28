@@ -120,3 +120,43 @@ the pinned body files are byte-identical.
   - The ICG is not yet in the kit or the trunk.
 
 ## Task 5: BLOCKED (main 9644a2fed lacks the RM165 CLK-INV-CAL-1 rework and region_stub).
+
+## Added task (COORD 12:2x): nl trunk elongation (3431 um / 39 legs, 2.2x nk) + OCV-inclusive spread
+Scripts are in nlent/: nl_why.py, nl_ocv.py, and the entry sweep. The shared parent_trunk_dme.py at abb5f93ce7
+reproduces nl q0 byte-identically (cmp, CHECKED).
+
+- **Why nl needs it.** It is not the entry position and not the spread of child pins.
+  - nl and nk have the same distances from the entry. Children: nl 76/389/642 um (min/med/max), nk 76/423/642.
+    Clusters: nl 25/291/664, nk 34/270/660.
+  - Entry sweep: 21 entries, x 200/229/260 by y 400-760. The plan elongation is 2041.9 um at EVERY entry (CHECKED).
+    The entry only shifts the root leg.
+  - The cause is the MERGE ORDER. The greedy DME leaves one far singleton sink to the end, a0cl1: a 1-register
+    cluster (t_out[504]) at the N edge (153,1138). It is then merged at the ROOT against the whole tree.
+    - In the q0 plan its root leg carries 1051 um of the 2043-um excess (51 %).
+    - After the routed corr iterations it is a 1700-um, 14-stage snake (d_tt 731), the long leg in the render.
+    - The nk root merge also has a 722-um leg, but it pairs two subtrees.
+- **Tried, plan level:**
+  - Better entry: no effect (above).
+  - Absorbing the two 1-register clusters (a0cl1 -> a0cl41, a0cl0 -> a0cl7): elongation 2042 -> 1847 only. The next
+    outlier (a0cl4) takes the root, with a 1043-um excess and the root imbalance growing 11 -> 73 ps. So clustering
+    does not fix it.
+  - Fix: top-down balanced bipartition (geometric halves merged at the root) in place of greedy bottom-up pairing,
+    as an opt-in mode of the shared parent_trunk_dme.py. A shared tool change -> READY ROOT-MERGE. Estimated saving:
+    about the root-leg excess, ~1050 um (UNCHECKED). NOT BUILT this slice.
+- **OCV-inclusive spread** (nl_ocv.py, ESTIMATE, UNCHECKED-independent):
+  - Method: routed q3/q6 arrivals per sink (cluster regs min..max; child = pin + 250/202.5). For every ordered pair
+    (capture late, launch early), add the approved AOCV table pessimism (g 0.21 %/mm, class A cell share, flat
+    +-3 % nets, same region so no droop) on the planned branches below the pair's LCA. The children's own
+    insertion is not charged.
+  - The nominal spreads reproduce evr: nl 35.9/36.3, nk 39.1/40.0.
+
+| trunk | nominal TT / FF | OCV-inclusive TT / FF | worst pair (nominal + OCV) |
+|---|---|---|---|
+| nl q3 | 35.9 / 36.3 | **73.6 / 75.4** | a0cl27-a0cl48 33.8 + 39.8 (TT); a0cl43-a0cl1 35.5 + 39.9 (FF) |
+| nk q6 | 39.1 / 40.0 | **74.2 / 68.5** | a0cl42-a0cl47 37.1 + 37.2 |
+
+  - Both trunks FAIL the <= 60 acceptance once OCV is included. The worst pairs split at the root or a top merge,
+    with ~500-700 ps of unshared trunk, so they carry ~35-40 ps of OCV.
+  - To close, the nominal must fall to <= ~20 on root-split pairs, or the split must move deeper.
+  - So the nl (and nk) trunk is NOT accepted yet. It also feeds task 1: a shorter, balanced A0 trunk lowers both the
+    elongation OCV and the A0 insertion (target <= ~547 TT).
