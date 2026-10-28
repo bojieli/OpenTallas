@@ -12,7 +12,12 @@ B=$(ls -d "$D"/run/results/asap7/*/base 2>/dev/null | head -1)
 test -n "$B" || { echo "CLK_GEOM_DIFF FAIL: no results dir in $D"; exit 2; }
 for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py; do test -f "$D/$f" || { echo "CLK_GEOM_DIFF FAIL: $D/$f not staged"; exit 2; }; done
 test -s "$B/clk_freeze_pre.tsv" || { echo "CLK_GEOM_DIFF FAIL: $B/clk_freeze_pre.tsv missing (ot_clk_freeze never ran in the ECO)"; exit 2; }
-DB=; for f in 6_final.odb 5_route.odb 5_2_route.odb; do test -s "$B/$f" && { DB=$f; break; }; done
+# OT_CLK_CHECK_DB=<basename> (FLOW-SHARED-6): diff that DB instead (fail closed when missing).  A chain whose ECO input
+# was NOT yet RCX-extracted (QC warm hold from the pre-fill 5_2_route.odb) checks its own pre-RCX 5_2_route.odb here,
+# because extract_parasitics re-encodes dbWire path segmentation without moving metal; that chain then proves the RCX'd
+# 6_final carries the same clock metal with clk_geom_cover.py (covered-region equality).
+if [ -n "${OT_CLK_CHECK_DB:-}" ]; then DB=$OT_CLK_CHECK_DB; test -s "$B/$DB" || { echo "CLK_GEOM_DIFF FAIL: OT_CLK_CHECK_DB $B/$DB missing"; exit 2; }
+else DB=; for f in 6_final.odb 5_route.odb 5_2_route.odb; do test -s "$B/$f" && { DB=$f; break; }; done; fi
 test -n "$DB" || { echo "CLK_GEOM_DIFF FAIL: no routed DB in $B"; exit 2; }
 R=${B#$D/}
 # Retain prior attempts for diagnosis, but never let a failed dump reuse them.

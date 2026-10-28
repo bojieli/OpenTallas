@@ -56,6 +56,14 @@ on-chip-variation + jitter margin (user decision 2026-09-30) and changing it nee
 each corner also reports the worst slack under a flat +-5 % OCV derate (late 1.05 / early 0.95, cell + net, data +
 clock) as `ocv5_*` (information only, never a reason).  One SPEF (the flow's RCX, single ASAP7 rules file) serves all
 three corners.
+
+DROOP CHECK (METHODOLOGY 12.4a b2, OWNER 10-27; INFORMATION ONLY, never a reason, the verdict is unchanged): with
+`run --droop-check` the TT session re-times setup at the 0.665 V (35 mV) droop with the shared data droop model
+(tools/die_plan/data_droop.py, die_ci_margins.json data_droop): a LATE data cell derate, logic class +10 %, wire class
+(repeater master driving >= 40 fF of SPEF net cap) +5 %; no clock derate (shared droop inside one core), no early /
+hold term, the 60 ps uncertainty kept.  Recorded as corners.tt.droop665_wns_max and record info_droop665 (with the
+nominal std_wns_max of the same session).  Rule: cores with TT setup slack < 25 ps get this rerun at their next
+re-sign (information + fix if it fails).
 """
 import argparse
 import concurrent.futures as cf
@@ -215,7 +223,7 @@ def macro_libs(kit, corner):
 
 
 SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
-                  "kit_modes.py")
+                  "kit_modes.py", "data_droop.py")
 
 
 def signoff_bundle_sources(source=HERE):
@@ -237,7 +245,7 @@ def require_signoff_bundle():
 # their missing shared helpers are shipped by the same bundle as the sign-off tool.
 KIT_TOOL_DEPENDENCIES = {
     "kit_preflight.py": ("sdc_lint.py", "rtl_lint.py", "master_slice.py", "core_infra.py", "core_infra.tcl", "ft_ports.py",
-                         "kit_contract.py", "die_sta_related.py"),
+                         "kit_contract.py", "die_sta_related.py", "data_droop.py"),
     "postcts_gate.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
     "pinreg_pad.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
     "tap_balance.tcl": ("clock_family.tcl",),
@@ -668,7 +676,7 @@ set_timing_derate -early 0.95
 so OCV5_WNS_MAX [so_ps [sta::worst_slack_cmd max]]
 so OCV5_WNS_MIN [so_ps [sta::worst_slack_cmd min]]
 unset_timing_derate
-# ---- related flop-pair skew with CPPR (owner gate, BRIEFING decision 5) ----
+@DROOP665@# ---- related flop-pair skew with CPPR (owner gate, BRIEFING decision 5) ----
 # Measured on the golden SDC exactly as loaded (source latencies, propagated clocks, derate removed), BEFORE the
 # insertion diagnostic below zeroes clock source latency; only the clock uncertainty is zeroed (clk_skew must not
 # carry it) and nothing after this block reads slack.
@@ -777,13 +785,14 @@ def ft_fill_model(decl, model, corners):
 
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
                 ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False, hold_out_min_ports=None,
-                ft_decl=None, tap_window=None):
+                ft_decl=None, tap_window=None, droop=None):
     """tap_window: the plan's per-tap latency window (sdc_lint.json tap_window_ps, gen_phys.tap_window_ps): the
     golden SDC times every clock port W early, so the overlay's min output delay is the contract + W (exact IO shift);
     None = no window.  hold_in_min / hold_out_min: the kit's seam hold contract (sdc_lint.json hold_in_min_ps / hold_out_min_ps,
     CLOCK-RESET IO-HOLD 10-25); None = legacy overlay (min input -ins_tol, min output 0).  hold_in_min_ports
     {input port: ps}: IO-HOLD option A per-port min input delays (sdc_lint.json hold_in_min_ports_ps) applied after
-    the uniform one; None / {} = no per-port lines (session byte-identical)."""
+    the uniform one; None / {} = no per-port lines (session byte-identical).  droop: data_droop.derate_tcl text
+    (12.4a b2 0.665 V re-time, INFO, --droop-check); None = no droop block (session byte-identical)."""
     hin = -float(ins_tol) if hold_in_min is None else float(hold_in_min)
     hout = 0.0 if hold_out_min is None else float(hold_out_min)
     if hout > 0:
@@ -820,6 +829,11 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                           "so FT_DIE_TIMED in $so_ft_in out $so_ft_out\n")
         t = t.replace(b_, "  if {[llength $so_dout]} { set_output_delay -min @OUT_MIN@ -clock [lindex $so_vclk 0] $so_dout }\n")
         t = t.replace("so DONE 1\n", ft_char_tcl(ft_decl) + "so DONE 1\n")
+    t = t.replace("@DROOP665@", "" if not droop else (
+        "# ---- 12.4a b2 0.665 V data droop re-time (INFORMATION only, never a reason) ----\n" + droop +
+        "so DROOP665_WNS_MAX [so_ps [sta::worst_slack_cmd max]]\n"
+        "puts \"SO_PATH_BEGIN DROOP665\"\nreport_checks -path_delay max -format full_clock_expanded -digits 2\n"
+        "puts \"SO_PATH_END\"\nunset_timing_derate\n"))
     for k, v in (("@ODB@", odb), ("@PLAT@", PLAT), ("@C@", corner.upper()), ("@PARASITICS@", par), ("@PARSRC@", src),
                  ("@TIMING_LIBRARIES@", EXACT_TIMING_LIBRARIES_TCL),
                  ("@CORE_TAPS_FF@", "read_sdc /sdc/core_taps_ff.sdc" if corner == "ff" and core_taps_ff else ""),
@@ -983,6 +997,8 @@ def corner_result(parsed):
     out["clock_endpoint_mapping_errors"] = _f(kv.get("CLOCK_ENDPOINT_MAPPING_ERRORS"))
     out["ocv5_wns_max"] = _f(kv.get("OCV5_WNS_MAX"))
     out["ocv5_wns_min"] = _f(kv.get("OCV5_WNS_MIN"))
+    if "DROOP665_WNS_MAX" in kv:                    # 12.4a b2 --droop-check only (key absent otherwise)
+        out["droop665_wns_max"] = _f(kv.get("DROOP665_WNS_MAX"))
     return out
 
 
@@ -1013,7 +1029,7 @@ def pair_skew_result(kv):
                 tsv="pair_skew.tsv")
 
 
-def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, ff_vclk="sdc"):
+def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, ff_vclk="sdc", droop=None):
     od = Path(out) / corner
     od.mkdir(parents=True, exist_ok=True)
     mlibs, mmiss = macro_libs(disc["kit"], corner)
@@ -1036,7 +1052,8 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 hold_out_min=lctx.get("hold_out_min_ps"),
                                                 hold_in_min_ports=lctx.get("hold_in_min_ports_ps"), core_taps_ff=core_overlay,
                                                 hold_out_min_ports=lctx.get("hold_out_min_ports_ps"),
-                                                tap_window=lctx.get("tap_window_ps")))
+                                                tap_window=lctx.get("tap_window_ps"),
+                                                droop=droop if corner == "tt" else None))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")
@@ -1586,9 +1603,19 @@ def cmd_run(a):
                            corner_rule="setup TT / hold FF / 60-25 ps / related pair skew CPPR <= 80 TT+FF; spread INFO; SS information only "
                                        "(owner 2026-10-24, AGENTS.md c7ce2ed69a)"),
                tool_commit=_git_head())
+    droop, dinfo = None, None
+    if getattr(a, "droop_check", False):
+        droop, dinfo = droop_check_tcl(disc)
     with cf.ThreadPoolExecutor(len(corners)) as ex:
-        futs = {c: ex.submit(run_corner, c, disc, out, a.image, a.docker, a.dry, a.ff_vclk) for c in corners}
+        futs = {c: ex.submit(run_corner, c, disc, out, a.image, a.docker, a.dry, a.ff_vclk, droop) for c in corners}
         rec["corners"] = {c: f.result() for c, f in futs.items()}
+    if dinfo is not None and "tt" in rec["corners"]:
+        tt = rec["corners"]["tt"]
+        dinfo.update(nominal_tt_setup_wns_ps=tt.get("std_wns_max"), droop665_tt_setup_wns_ps=tt.get("droop665_wns_max"))
+        if tt.get("std_wns_max") is not None and tt.get("droop665_wns_max") is not None:
+            dinfo["delta_ps"] = round(tt["droop665_wns_max"] - tt["std_wns_max"], 2)
+            dinfo["info_verdict"] = "PASS" if tt["droop665_wns_max"] >= 0 else "FAIL (info: fix at next re-sign)"
+        rec["info_droop665"] = dinfo
     if a.dry:
         print(json.dumps(rec["corners"], indent=1))
         return 0
@@ -1619,6 +1646,20 @@ def cmd_run(a):
     for r in rec["reasons"]:
         print(f"  - {r}")
     return 0 if rec["verdict"] == "SIGNED" else 1
+
+
+def droop_check_tcl(disc, margins_path=None):
+    """(Tcl derate text, info dict) of the 12.4a b2 0.665 V re-time: TT class fractions of the shared data droop
+    model, wire class from the routed 6_final.v + SPEF (all logic when either is missing: the pessimistic class)."""
+    import data_droop as DD
+    m = DD.margins(margins_path)
+    fr = DD.fracs(m, "class", "TT")
+    cls = DD.classify(disc["final_v"], disc["spef"], m) if disc.get("final_v") and disc.get("spef") else None
+    info = dict(rule="METHODOLOGY 12.4a b2: INFORMATION only, never a reason; data late derate at 0.665 V, no clock "
+                     "derate (shared droop), no hold term, 60 ps uncertainty kept",
+                fractions=fr, wire_class=None if cls is None else {k: v for k, v in cls.items() if k != "wire"},
+                wire_instances_sample=None if cls is None else cls["wire"][:20])
+    return DD.derate_tcl(fr, cls["wire"] if cls else ()), info
 
 
 def _git_head():
@@ -1663,6 +1704,9 @@ def main(argv=None):
                    help="bound-ff: declared FF IO insertion (ps) for an already-routed core kit whose sdc_lint ctx has no "
                         "insertion_ff_ps; requires --ff-vclk bound-ff and --ff-vclk-contract naming its source")
     r.add_argument("--dry", action="store_true")
+    r.add_argument("--droop-check", action="store_true",
+                   help="12.4a b2 INFO: also re-time TT setup at the 0.665 V droop (data_droop.py class derate); "
+                        "recorded as info_droop665, never a reason (cores with TT setup slack < 25 ps)")
     v = sub.add_parser("verdict")
     v.add_argument("record")
     v.add_argument("--insertion-target", type=float)

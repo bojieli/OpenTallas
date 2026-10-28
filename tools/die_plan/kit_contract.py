@@ -552,6 +552,9 @@ def slice_expected(kd, recs):
     return out
 
 
+_NETLIST_PIN_KEYS = ("dir", "direction")
+
+
 def pins_canonical(kd, plan_dir=None):
     """GATE-PINS-2: freeze.json pins_canon_sha256 recorded; the kit's placed pin set (io.tcl centres, plan form) has
     that canonical sha; a reachable plan pin file (whole-file sha = freeze pins_sha256) has it too."""
@@ -576,9 +579,7 @@ def pins_canonical(kd, plan_dir=None):
         err.append("freeze.json has no pins_canon_sha256 (GATE-PINS-2 canonical pin hash not recorded)")
     elif sliced:
         pass        # 12.7c: kit pins = recorded plan pins + slice placements, judged against the plan file below
-    elif kit_c != want:
-        err.append(f"kit placed pins (io.tcl) canonical sha {kit_c[:12]} != freeze pins_canon_sha256 {want[:12]} "
-                   "(kit pin set is not the plan pin file)")
+    recorded_miss = bool(want) and not sliced and kit_c != want
     pf = F.get("pins_file")
     cands = []
     if pf:
@@ -595,9 +596,14 @@ def pins_canonical(kd, plan_dir=None):
             doc = json.loads(b)
             pc = _canon(doc, outline)
             info.update(plan_file=str(c), plan_canon=pc)
-            ref = pc
+            # io.tcl carries placement only (name, layer, centre): netlist direction keys of a plan pin table
+            # (opentallas.core_pins.v1 "dir") are judged by the port gate, never by the placed-pin comparison
+            rows = [{k: v for k, v in r.items() if k not in _NETLIST_PIN_KEYS}
+                    for r in _kit_pins(doc.get("pins", []) if isinstance(doc, dict) else doc)]
+            ref = _canon(rows, outline)
+            info.update(plan_place_canon=ref)
             if sliced:
-                ref = _canon(slice_expected(kd, doc.get("pins", []) if isinstance(doc, dict) else doc), outline)
+                ref = _canon(slice_expected(kd, rows), outline)
                 info.update(plan_slice_canon=ref)
             if ref != kit_c:
                 err.append(f"kit placed pins canonical sha {kit_c[:12]} != plan pin file {c.name}"
@@ -607,6 +613,12 @@ def pins_canonical(kd, plan_dir=None):
             break
     if sliced and info["plan_file"] is None:
         err.append("slice kit: plan pin file (freeze pins_file) not reachable -- cannot judge slice-placed pins")
+    # recorded hash = the declared plan table (it may carry netlist dir keys); the kit matches it when its placement
+    # equals the reachable declared table's placement form
+    if recorded_miss and not (info["plan_file"] and info["plan_canon"] == want
+                              and info.get("plan_place_canon") == kit_c):
+        err.insert(0, f"kit placed pins (io.tcl) canonical sha {kit_c[:12]} != freeze pins_canon_sha256 {want[:12]} "
+                      "(kit pin set is not the plan pin file)")
     return err, info
 
 
