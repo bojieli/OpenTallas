@@ -60,6 +60,10 @@ YS
 set +e; $Y -q -l $O/eq_$V.log $O/eq_$V.ys > /dev/null 2>&1; echo "$V rc=$?" >> $O/eq_rc.txt; set -e
 done
 # round trip: the emitted kit RTL itself vs pre
+# KV-KITS-5 10-28: write_verilog emits multi-bit flops (e.g. a 2-stage reset synchroniser) as reg _NNN_ + 
+# assign {sync_rst_n, pipe[0]} = _NNN_; read back, readers of _NNN_[1] are not merged by equiv_make, so equiv_induct
+# sees a free gate-side reset (14 false unproven regs on cdc_pc/cdc_ch). rename -hide + opt_clean makes the named
+# alias canonical; ports and named state are unchanged, so the proof is not weakened.
 BB=$(python3 -c "import json;print(' '.join(f for f in json.load(open('$CJ'))['files'] if f.endswith('_bb.v')))")
 BBF=""; [ -n "$BB" ] && BBF="read_verilog -sv -DSYNTHESIS $BB"
 cat > $O/eq_v.ys <<YS
@@ -75,6 +79,8 @@ proc
 memory_collect
 memory_share
 memory_map
+rename -hide w:_*_
+opt_clean
 rename $MOD gate
 design -copy-from g -as gold gold
 equiv_make gold gate eq
