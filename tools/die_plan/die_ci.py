@@ -266,6 +266,14 @@ DEFAULT_MARGINS = {
                "replaces vdd_drop_frac.",
         "pdnsim": None
     },
+    "data_droop": {
+        "mode": "class", "budget_mv": 35.0,
+        "late_frac": {"logic": {"TT": 0.10, "FF": 0.08}, "wire": {"TT": 0.05, "FF": 0.04}},
+        "setup_only": True, "wire_class": {"cells_re": "^(BUF|INV|HB)", "min_wire_cap_ff": 40.0},
+        "why": "METHODOLOGY 12.4a b2 (OWNER 10-27): per-class LATE data derate at 35 mV (RVT logic + clk->Q +10 %, "
+               "wire/repeater segments +5 %; FF +8 / +4 %), replacing the flat +5.1 % ir data term; setup only, "
+               "never credited to hold; clock keeps the shared-droop rule. See tools/die_plan/data_droop.py."
+    },
     "xtalk": {
         "c_per_um_ff": 0.178475, "cc_frac": 0.7, "mcf_setup": 2.0, "mcf_hold": 0.0, "seam_len_um_default": 60.0,
         "why": "OpenSTA has no SI delay. Per-seam margin = |MCF - 1| x R_eff x Cc, Cc = cc_frac x c_per_um x L_seam: "
@@ -305,6 +313,9 @@ def check_margins(m):
         bad.append("ocv early derate > 1")
     if ir.get("vdd_drop_frac", 0) < 0 or (ir.get("pdnsim") or {}).get("worst_drop_mv", 0) < 0:
         bad.append("negative IR drop")
+    dd = m.get("data_droop") or {}
+    if any(float(v) < 0 for cl in (dd.get("late_frac") or {}).values() for v in cl.values()):
+        bad.append("negative data droop derate")
     if x["mcf_setup"] < 1 or x["mcf_hold"] > 1 or x["cc_frac"] < 0 or x["c_per_um_ff"] < 0:
         bad.append("crosstalk factors that reduce delay push")
     for k in ("period_ps", "unc_setup_ps", "unc_hold_ps"):
@@ -327,10 +338,18 @@ def ir_factor(m):
 
 
 def derates(m):
+    """cell_late = OCV x IR (clock, and data when no data_droop block); with a 12.4a b2 data_droop block in mode
+    'class' data_cell_late / data_wire_late = OCV x (1 + class fraction at TT, the setup corner)."""
     irf, _, _ = ir_factor(m)
     o = m["ocv"]
-    return dict(cell_late=round(o["cell_late"] * irf, 4), cell_early=o["cell_early"], net_late=o["net_late"],
-                net_early=o["net_early"], ir_factor=irf)
+    d = dict(cell_late=round(o["cell_late"] * irf, 4), cell_early=o["cell_early"], net_late=o["net_late"],
+             net_early=o["net_early"], ir_factor=irf)
+    dd = m.get("data_droop")
+    if dd and dd.get("mode", "class") == "class":
+        lf = dd["late_frac"]
+        d.update(data_cell_late=round(o["cell_late"] * (1.0 + float(lf["logic"]["TT"])), 4),
+                 data_wire_late=round(o["cell_late"] * (1.0 + float(lf["wire"]["TT"])), 4))
+    return d
 
 
 def xtalk_ps(m, pin_reg_p90_um=None):
@@ -342,8 +361,20 @@ def xtalk_ps(m, pin_reg_p90_um=None):
     return dict(setup_ps=round(s, 2), hold_ps=round(h, 2), seam_len_um=L, cc_ff=round(cc, 3))
 
 
-def derate_tcl(m):
+def derate_tcl(m, wire_insts=()):
+    """wire_insts: data_droop.classify wire-class instances (12.4a b2); without them every data cell is logic class
+    (the more pessimistic class)."""
     d = derates(m)
+    if "data_cell_late" in d:
+        import data_droop as DD
+        fr = {k: d[f"data_{c}_late"] / m["ocv"]["cell_late"] - 1.0 for k, c in (("logic", "cell"), ("wire", "wire"))}
+        return ("# DIE-CI margins (tools/die_plan/die_ci_margins.json): clock OCV x IR, data OCV x 12.4a b2 class "
+                "droop (late only), on top of the AGENTS.md uncertainty\n"
+                f"set_timing_derate -late -clock -cell_delay {d['cell_late']:.4f}\n"
+                + DD.derate_tcl(fr, wire_insts, base_late=m["ocv"]["cell_late"]) +
+                f"set_timing_derate -early -cell_delay {d['cell_early']:.4f}\n"
+                f"set_timing_derate -late -net_delay {d['net_late']:.4f}\n"
+                f"set_timing_derate -early -net_delay {d['net_early']:.4f}\n")
     return ("# DIE-CI margins (tools/die_plan/die_ci_margins.json): OCV x IR, on top of the AGENTS.md uncertainty\n"
             f"set_timing_derate -late -cell_delay {d['cell_late']:.4f}\n"
             f"set_timing_derate -early -cell_delay {d['cell_early']:.4f}\n"
@@ -408,7 +439,7 @@ def standin(seam_cls, P, m, kb):
     d = derates(m)
     clk_setup = ins * (d["cell_late"] - d["cell_early"])          # launch tree late, capture tree early
     clk_hold = ins * (d["cell_late"] - d["cell_early"])           # capture tree late (incl. IR), launch tree early
-    m_setup = xt["setup_ps"] + clk_setup + (d["cell_late"] - 1.0) * ss["clk_q_max_ps"]
+    m_setup = xt["setup_ps"] + clk_setup + (d.get("data_cell_late", d["cell_late"]) - 1.0) * ss["clk_q_max_ps"]
     m_hold = xt["hold_ps"] + clk_hold + (1.0 - d["cell_early"]) * ff["clk_q_min_ps"]
     if comp >= 0:
         setup, basis = comp, "contract (kit I_max + O_max >= T)"

@@ -1,6 +1,7 @@
 """FLOW-CLKFREEZE 2026-10-27 tests: clk_geom_diff.py verdicts + every post-route ECO chain locks the clock network
 before its first incremental GRT and blocks sign-off on any clock-net geometry change."""
 import json
+import os
 import re
 import subprocess
 import sys
@@ -155,12 +156,30 @@ def test_lock_uses_fixed_wire_and_locked_placement():
 
 
 def test_qc_hold_chain_runs_its_hook_on_routed_kits():
-    # QC kits 'override export' both GRT hooks; the warm ECO must override them too (else neither ECO nor lock runs) and
-    # survive ORFS's pre-POST 'estimate_parasitics -global_routing' on a fully routed DB (EST-0005 canary 10-27 11:53)
+    # FLOW-SHARED-4/5/6 2026-10-27: the QC warm hold ECO is ONE OpenROAD session (hold_1s.tcl) started from the route's
+    # PRE-FILL routed DB; the two-process ORFS hook chain (hold_route.tcl as POST_GLOBAL_ROUTE_TCL) could not hand the GRT
+    # route map to DRT on a routed kit.  The clock lock runs before any repair, is asserted after GRT, and is checked
+    # blocking after the session: opcode diff on the pre-RCX 5_2_route.odb + covered-geometry equality of 6_final.
     lg = ROOT / "physical/die_plan/qwen_compute/cores/legacy"
     t = (lg / "mk_hold_qc.sh").read_text()
-    assert "override export POST_GLOBAL_ROUTE_TCL = /work/hold_route.tcl" in t
-    assert "override export PRE_GLOBAL_ROUTE_TCL = /work/eco_pre_grt.tcl" in t and "OT_KIT_PRE_GRT = $KPRE" in t
-    assert "override export PRE_DETAIL_ROUTE_TCL =\n" in t and "override export POST_DETAIL_ROUTE_TCL =\n" in t
-    p = (lg / "eco_pre_grt.tcl").read_text()
-    assert "![grt::have_routes]" in p and "read_spef $s" in p and "source $::env(OT_KIT_PRE_GRT)" in p
+    assert "cp $HERE/hold_1s.tcl $O/" in t and "OT_KIT_PRE_GRT=$KPRE" in t
+    assert "clk_freeze_check.sh clk_geom_cover.py" in t
+    h = (lg / "hold_1s.tcl").read_text()
+    assert h.index("\not_clk_freeze\n") < h.index("\nrepair_timing {*}$args") < h.index("\not_clk_freeze_assert post_grt\n")
+    assert "remove_fillers" in h and "setPlacementStatus FIRM" in h and "read_guides $g" in h
+    assert h.index("\nwrite_db $R/5_2_route.odb\n") < h.index("\nextract_parasitics ")
+    r = (lg / "run_hold.sh").read_text()
+    assert "OT_CLK_CHECK_DB=5_2_route.odb bash $D/clk_freeze_check.sh" in r and "clk_geom_cover.py" in r
+
+
+def test_check_db_override_fails_closed(tmp_path):
+    d = tmp_path / "eco"
+    b = d / "run/results/asap7/x/base"
+    b.mkdir(parents=True)
+    for f in ("clk_freeze.tcl", "clk_dump_db.tcl", "clk_geom_diff.py"):
+        (d / f).write_text("")
+    (b / "clk_freeze_pre.tsv").write_text("x\n")
+    (b / "6_final.odb").write_text("x")
+    env = dict(os.environ, OT_CLK_CHECK_DB="5_2_route.odb")
+    p = subprocess.run(["bash", str(DP / "clk_freeze_check.sh"), str(d)], capture_output=True, text=True, env=env)
+    assert p.returncode == 2 and "OT_CLK_CHECK_DB" in p.stdout and "5_2_route.odb missing" in p.stdout

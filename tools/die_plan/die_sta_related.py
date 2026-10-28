@@ -81,6 +81,15 @@ SIGNED MESH = COMMON POINT (CLOCK-KV-R17, opt-in, METHODOLOGY 12.4a b exception 
   (same per-sample tree offsets as the drivers above them) -> 'm' too (INFO / ruling needed).
   Pair classes (intra / seam / landed) are always built on the tree cppr nodes, before the re-reference.
 
+DATA DROOP (METHODOLOGY 12.4a b2, OWNER 10-27 ~18:1x; tools/die_plan/data_droop.py): --data-droop class (DEFAULT)
+  charges every pair's SETUP a late data derate at the 35 mV budget: logic class (flop clk->Q, core ETM clk->out minus
+  the core's own clock insertion, core ETM input path) +10 % TT / +8 % FF, wire class (repeated M8/M9 stages a
+  model declares as wire_max_ps / wire_in_ps) +5 % / +4 %; planned HB4 hold-buffer cells (data cells) get the logic
+  fraction on their TT setup charge.  HOLD IS NEVER CREDITED (no early data term).  The clock keeps the shared-droop
+  rule above.  --data-droop flat = the old stated +5.1 % (die_ci ir) on every data cell (control); --data-droop none
+  = no data term (byte-identical pre-b2 output).  The record carries summary.data_droop {mode, fractions, worst TT
+  setup penalty}.
+
 Output OUT/die_sta_related.json (+ worst pairs per class); prints one line per class and corner.
 """
 import argparse
@@ -94,6 +103,9 @@ import subprocess
 import sys
 from collections import defaultdict
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import data_droop as DD  # noqa: E402
 
 # CLOCK-KV-R18: default clock AOCV table = the OWNER-approved 0.21 %/mm gate table (METHODOLOGY 12.4a b1, 10-26 18:4x).
 # clk_aocv_table.json keeps the 0.42 %/mm DRAFT (global-variation bound); R16 gate numbers used it by mistake.
@@ -279,32 +291,40 @@ def seam_bits(d, plan_path, tool, taps):
     return dict(out)
 
 
-def endpoint_slacks(A, B, la, ea, lc, ec, cr, period, unc_s, unc_h, models_a, models_b):
+def endpoint_slacks(A, B, la, ea, lc, ec, cr, period, unc_s, unc_h, models_a, models_b, dd=None):
     """[(setup, hold, real, ma, mb)] over every launch model x capture model (REAL VIEWS).  Model: name, real,
-    lat_late, lat_early (clock pin latency below the tap), clkq_max/min (launch arcs), setup/hold (capture arcs)."""
+    lat_late, lat_early (clock pin latency below the tap), clkq_max/min (launch arcs), setup/hold (capture arcs).
+    dd: data droop fractions {'logic', 'wire'} (12.4a b2): setup only, never hold."""
     out = []
     for ma in models_a:
         al = la + ma["lat_late"] + ma["clkq_max"]
         ae = ea + ma["lat_early"] + ma["clkq_min"]
         for mb in models_b:
             s = (ec + mb["lat_early"] + period - mb["setup"]) - al - unc_s + cr
+            if dd is not None:
+                s -= DD.model_late_ps(ma, mb, dd)
             h = ae - (lc + mb["lat_late"] + mb["hold"]) - unc_h + cr
             out.append((s, h, ma["real"] or mb["real"], ma["name"], mb["name"], ma["real"] and mb["real"]))
     return out
 
 
 def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=False, window=None, hold_window=None,
-               ocv=None, views=None, rec=None):
+               ocv=None, views=None, rec=None, dd=None):
     """ocv: optional callable (a_port, b_port, check) -> clock OCV pessimism ps on the non-common clock (CLK-AOCV,
     opt-in --clock-ocv); None = unchanged (no clock derate in this gate).
     views: optional {port: [endpoint models]} (REAL VIEWS, opt-in); None = the declared register on every tap.
-    rec: optional dict, filled {(a, b, tag): (gate setup, gate hold, has real endpoint, both real)} (HB4, opt-in)."""
+    rec: optional dict, filled {(a, b, tag): (gate setup, gate hold, has real endpoint, both real)} (HB4, opt-in).
+    dd: optional data droop fractions {'logic', 'wire'} (12.4a b2, data_droop.fracs): late data derate on SETUP only;
+    None = unchanged (no data droop term)."""
     ws, wh, sk, rows = None, None, 0.0, []
     rv = dict(pairs=0, ws=None, wh=None, nneg_s=0, nneg_h=0, both=0, bs=None, bh=None, bneg_s=0, bneg_h=0,
               dmg=[]) if views is not None else None
     ocv_max = {"setup": 0.0, "hold": 0.0}
     nneg_s = nneg_h = 0
     mds = mdh = float('-inf')
+    dd_reg = DD.model_late_ps(dict(clkq_max=reg["clkq_max_wire_ps"]), dict(name="budget", setup=reg["setup_ps"]), dd) \
+        if dd is not None else 0.0
+    dd_max = 0.0
     for a, b, tag in pairs:
         A, B = taps[a], taps[b]
         node = pair_node(A, B)
@@ -312,11 +332,14 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
         cr = credit(rng, node, la, ea, lc, ec)
         dmg_s, dmg_h = la - ec - cr, lc - ea - cr
         if views is None:
-            s = period - unc_s - (la + reg["clkq_max_wire_ps"]) + (ec - reg["setup_ps"]) + cr
+            s = period - unc_s - (la + reg["clkq_max_wire_ps"]) + (ec - reg["setup_ps"]) + cr - dd_reg
             h = (ea + reg["clkq_min_nowire_ps"]) - (lc + reg["hold_ps"]) - unc_h + cr
+            dd_max = max(dd_max, dd_reg)
         else:
             ma, mb = views[a], views[b]
-            combos = endpoint_slacks(A, B, la, ea, lc, ec, cr, period, unc_s, unc_h, ma, mb)
+            combos = endpoint_slacks(A, B, la, ea, lc, ec, cr, period, unc_s, unc_h, ma, mb, dd=dd)
+            if dd is not None:
+                dd_max = max(dd_max, max(DD.model_late_ps(x, y, dd) for x in ma for y in mb))
             s, h = min(c[0] for c in combos), min(c[1] for c in combos)
             rc = [c for c in combos if c[2]]
             if rc:
@@ -395,6 +418,8 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                 worst_setup=dict(zip(k_, rv["bs"][1:])), worst_hold=dict(zip(k_, rv["bh"][1:])))
     if ocv is not None:
         out["clock_ocv_pessimism_max_ps"] = {k: round(v, 2) for k, v in ocv_max.items()}
+    if dd is not None:
+        out["data_droop_setup_max_ps"] = round(dd_max, 2)
     if hold_window is not None:
         hd = []
         for a, b, tag in pairs:
@@ -434,6 +459,19 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                                    note="plan-defined landed/forwarded hop: region-to-region clock damage vs landing "
                                         "window; single-cycle slacks above are INFO for landed pairs")
     return out
+
+
+def landed_gate(corners):
+    """Summary gate for the landed class from {corner: {"classes": {...}}}.  A die with one clock region has 0 landed
+    pairs in both TT and FF (time_class returns pairs=0, no plan_landing): an empty class -> verdict N/A, not FAIL.
+    Fail closed: landed pairs in either corner with plan_landing missing (or not PASS) in either corner -> FAIL."""
+    cl = {c: (corners.get(c) or {}).get("classes", {}).get("landed") or {} for c in ("TT", "FF")}
+    if not any(cl[c].get("pairs") for c in cl):
+        return dict(tt_setup_margin_ps=None, ff_hold_margin_ps=None, pairs=0, verdict="N/A",
+                    note="no landed pairs (single clock region)")
+    lt, lf = cl["TT"].get("plan_landing") or {}, cl["FF"].get("plan_landing") or {}
+    return dict(tt_setup_margin_ps=lt.get("setup_margin_ps"), ff_hold_margin_ps=lf.get("hold_margin_ps"),
+                verdict="PASS" if lt.get("verdict") == "PASS" and lf.get("verdict") == "PASS" else "FAIL")
 
 
 def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_path=None, cell_share=None, region=None):
@@ -1113,6 +1151,12 @@ def main(argv=None):
                     "+ per-pair sim uncertainty (opt-in, CLOCK-KV-R17)")
     ap.add_argument("--mesh-band", choices=("tree", "sim"), default="tree",
                     help="leaf-fed band taps: tree = strict CPPR at h (default); sim = sign-off pseudo loads (INFO)")
+    ap.add_argument("--data-droop", choices=DD.MODES, default="class",
+                    help="12.4a b2 data droop (setup only, never hold): class = OWNER per-class late derate (DEFAULT; "
+                         "logic +10/+8 %%, wire +5/+4 %% TT/FF); flat = old stated +5.1 %% on every data cell; none = "
+                         "no data term (pre-b2 output)")
+    ap.add_argument("--data-droop-margins", help="margins JSON with the data_droop block (default tools/die_plan/"
+                    "die_ci_margins.json)")
     a = ap.parse_args(argv)
     if a.pair_unc and (a.clock_ocv != "none" or a.mesh_signoff):   # ROOT-MERGE-29: fail fast, before any work
         raise SystemExit("--pair-unc is exclusive with --clock-ocv and --mesh-signoff (all price the non-common clock)")
@@ -1158,6 +1202,10 @@ def main(argv=None):
                                 seam_wire=dict(um=a.seam_wire_um, ff_per_um=a.wire_ff_per_um, applied="setup only"),
                                 kits_found=len(kits), core_views_found=len(core_views)),
                corners={})
+    ddm = DD.margins(a.data_droop_margins)
+    if a.data_droop != "none":                      # 'none': record byte-identical to pre-b2
+        res["data_droop"] = dict(mode=a.data_droop, rule="METHODOLOGY 12.4a b2 (setup only, never hold)",
+                                 fractions={c: DD.fracs(ddm, a.data_droop, c) for c in corners})
     if real:
         import schema as S_
         res["block_model"]["label"] = "real-view (%d core views, %d kits) + declared-budget rest" % (len(core_views), len(kits))
@@ -1187,6 +1235,7 @@ def main(argv=None):
             unc, mrec = mesh_signoff(d, taps, meta, c, so[c], a.mesh_band)
             rng = meta["cppr_node_range_ps"]
         cr = dict(basis=meta.get("basis"), tap_slew_max_ps=round(slew, 2), register=reg, classes={})
+        dd = DD.fracs(ddm, a.data_droop, c) if a.data_droop != "none" else None
         if real:
             cr["real_view_coverage"] = cr_real
         ocv = None
@@ -1225,7 +1274,7 @@ def main(argv=None):
             cr["classes"][k] = time_class(pl, taps, rng, reg, a.core_tol_ps, period, UNC_SETUP_PS, UNC_HOLD_PS,
                                           landed=k.startswith("landed"), window=window,
                                           hold_window=hwin.get(k) if c == "FF" else None, ocv=ocv, views=views,
-                                          rec=hrec)
+                                          rec=hrec, dd=dd)
             cr["classes"][k]["label"] = ("real-view+budget" if real else "declared-budget") + (
                 " / INFO subset" if k.endswith("INFO") else "")
         if unc is not None:
@@ -1250,13 +1299,13 @@ def main(argv=None):
             gate[k]["kit_contract_window_ps"] = kc["window_ps"]
             gate[k]["kit_contract_window_needed_ps"] = kc["window_needed_ps"]
             gate[k]["kit_contract_verdict"] = kc["verdict"]
-    lt = res["corners"].get("TT", {}).get("classes", {}).get("landed", {}).get("plan_landing", {})
-    lf = res["corners"].get("FF", {}).get("classes", {}).get("landed", {}).get("plan_landing", {})
-    gate["landed"] = dict(tt_setup_margin_ps=lt.get("setup_margin_ps"), ff_hold_margin_ps=lf.get("hold_margin_ps"),
-                          verdict="PASS" if lt.get("verdict") == "PASS" and lf.get("verdict") == "PASS" else "FAIL")
+    gate["landed"] = landed_gate(res["corners"])
     if a.hold_buffers != "none" and "TT" in hbrec and "FF" in hbrec:
         hb = {}
         HBM = HB4_ABUTTED if a.hb4_delay == "abutted" else HB4
+        if a.data_droop != "none":
+            # 12.4a b2: inserted hold buffers are data cells -> logic-class late droop on their TT setup charge
+            HBM = dict(HBM, tt_late_ps=round(HBM["tt_late_ps"] * (1.0 + DD.fracs(ddm, a.data_droop, "TT")["logic"]), 3))
         ibits = intra_bits(a.plan)
         for k in ("intra", "seam", "seam_nearest_INFO"):
             if k in hbrec["TT"] and k in hbrec["FF"]:
@@ -1275,6 +1324,10 @@ def main(argv=None):
         res["hb4"] = hb
     res["summary"] = dict(gate, status="UNCHECKED (NUMBER-CHECK pending)",
                           label=res["block_model"]["label"] if real else "declared-budget (no QC kit)")
+    if a.data_droop != "none":
+        res["summary"]["data_droop"] = dict(
+            mode=a.data_droop, tt_setup_penalty_max_ps={k: v.get("data_droop_setup_max_ps") for k, v in
+                                                        res["corners"].get("TT", {}).get("classes", {}).items()})
     if real:
         for k in ("intra", "seam"):
             rs = res["corners"].get("TT", {}).get("classes", {}).get(k, {}).get("real_view", {})
