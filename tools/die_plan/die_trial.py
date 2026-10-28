@@ -69,6 +69,9 @@ CORNER_LIB = {"SS": "SS", "TT": "TT", "FF": "FF"}
 # M8 / M9 setRC (ASAP7 platform setRC.tcl, kohm / fF per um); clock NDR 2W2S: R / 2, C x 1.1 (ASSUMED)
 WIRE_R = (8.44765e-3 + 8.89556e-3) / 2 / 2
 WIRE_C = (1.03962e-1 + 9.28446e-2) / 2 * 1.1
+# DIE-QC-3 opt-in --clock-rc 1x: the die clock is routed at 1x width (no NDR; HEAD/KV/QC recipe), so the model RC is the
+# plain ASAP7 platform setRC M8/M9 mean (DIE-QC-2 measured routed ~334 ps/mm vs 199 ps/mm with the NDR model above)
+WIRE_RC_1X = ((8.44765e-3 + 8.89556e-3) / 2, (1.03962e-1 + 9.28446e-2) / 2)
 
 
 def sv(s):
@@ -405,7 +408,7 @@ class SiteMap:
         return None
 
 
-def balance_legalize(nodes, site, radius_um=800.0, step=1.08, tol_um=2.0):
+def balance_legalize(nodes, site, radius_um=800.0, step=1.08, tol_um=2.0, select=None, extra_wire_w=0.1):
     """DIE-KV-3 (link_htree + --tree-site-slide/--tree-site-legal): legal sites for the region H-tree buffers that KEEP the
     tree balanced.  The feed-leg slide (sliding a branch node back along its incoming leg) lengthens one child leg and
     shortens the other when the split axis is collinear with that leg (KV sys_c: +800 um / 490 ps), so region H-tree nodes
@@ -413,8 +416,16 @@ def balance_legalize(nodes, site, radius_um=800.0, step=1.08, tol_um=2.0):
     on the legal site nearest its ideal point; a node's subtree wire S = leg + S(kid) (leaf: mean last-mile to its taps);
     a two-kid node takes the legal point nearest its ideal point on the locus |P-C1| + S1 = |P-C2| + S2 (scanned on
     rows/columns through the ideal point within radius_um).  Geometry only, no timing value, no pads/trims/detours.
-    Returns stats (moved, merge points off-balance > tol_um and their worst imbalance)."""
-    H = sorted((i for i, n in nodes.items() if n.get("rib") is not None or n.get("region_root") is not None), reverse=True)
+    Returns stats (moved, merge points off-balance > tol_um and their worst imbalance).
+    select (DIE-QC-3 opt-in, --slice-balance): node ids to process instead of the link_htree rib/region-root set; then
+    every selected kid counts (also region roots), a non-merge node keeps its current legal site, and a fixed node on a
+    plan spine column (spine == 'column') only moves ALONG its column, between its two kids (the column is legal); a merge
+    point is the legal candidate (locus points + first legal point on each axis ray + current site) with the least
+    imbalance_um + extra_wire_w x added wire (a locus point 600 um away behind a core is not worth 20 um of imbalance)."""
+    if select is None:
+        H = sorted((i for i, n in nodes.items() if n.get("rib") is not None or n.get("region_root") is not None), reverse=True)
+    else:
+        H = sorted(select, reverse=True)
     Hs = set(H)
     S = {}
     st = dict(nodes=len(H), moved=0, unbalanced=0, worst_imbalance_um=0.0)
@@ -422,13 +433,26 @@ def balance_legalize(nodes, site, radius_um=800.0, step=1.08, tol_um=2.0):
     for i in H:
         nd = nodes[i]
         ideal = tuple(nd["req_xy"])
-        kids = [k for k in nd["kids"] if k in Hs and nodes[k].get("region_root") is None]
+        kids = [k for k in nd["kids"] if k in Hs and (select is not None or nodes[k].get("region_root") is None)]
+        colnode = (select is not None and nd.get("spine") == "column" and len(kids) == 2
+                   and abs(nodes[kids[0]]["x"] - nd["x"]) < 1e-6 and abs(nodes[kids[1]]["x"] - nd["x"]) < 1e-6)
+        if select is not None and nd.get("fixed") and not colnode:
+            best = (nd["x"], nd["y"])
+            S[i] = max([md(best, (nodes[k]["x"], nodes[k]["y"])) + S[k] for k in kids], default=0.0)
+            continue
         if len(kids) == 2:
             (c1, c2) = [(nodes[k]["x"], nodes[k]["y"]) for k in kids]
             s1, s2 = S[kids[0]], S[kids[1]]
             dl = s2 - s1
             best = None
-            if site.legal(ideal) and abs(md(ideal, c1) - md(ideal, c2) - dl) <= tol_um:
+            if colnode:             # along the column only: y with |y-y1| + S1 = |y-y2| + S2 (clamped between the kids)
+                ya, yb = c1[1], c2[1]
+                y = (ya + yb + dl) / 2 if ya < yb else (ya + yb - dl) / 2
+                y = min(max(y, min(ya, yb)), max(ya, yb))
+                best = (nd["x"], y)
+                if not site.legal(best):
+                    best = (nd["x"], nd["y"])
+            elif site.legal(ideal) and abs(md(ideal, c1) - md(ideal, c2) - dl) <= tol_um:
                 best = ideal
             else:
                 cand = []
@@ -446,12 +470,28 @@ def balance_legalize(nodes, site, radius_um=800.0, step=1.08, tol_um=2.0):
                         if min(a, b) - 1e-9 <= v <= max(a, b) + 1e-9:
                             q[ax] = v
                             cand.append((md(q, ideal), round(q[0], 3), round(q[1], 3)))
-                for _, x, y in sorted(cand):
-                    if 0 <= x <= site.W and 0 <= y <= site.H and site.legal((x, y)):
-                        best = (x, y)
-                        break
+                if select is None:
+                    for _, x, y in sorted(cand):
+                        if 0 <= x <= site.W and 0 <= y <= site.H and site.legal((x, y)):
+                            best = (x, y)
+                            break
+                else:       # select mode: a far locus point costs wire (insertion, OCV); trade it against imbalance
+                    pool = [(x, y) for _, x, y in sorted(cand)[:400]] + [(nd["x"], nd["y"])]
+                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):      # first legal point on each axis ray
+                        for j in range(1, int(radius_um / step) + 1):
+                            q = (round(ideal[0] + dx * j * step, 3), round(ideal[1] + dy * j * step, 3))
+                            if site.legal(q):
+                                pool.append(q)
+                                break
+                    span = md(c1, c2)
+
+                    def cost(q):
+                        return (abs(md(q, c1) + s1 - md(q, c2) - s2) + extra_wire_w * (md(q, c1) + md(q, c2) - span)
+                                + 0.01 * md(q, ideal))
+                    ok = [q for q in pool if 0 <= q[0] <= site.W and 0 <= q[1] <= site.H and site.legal(q)]
+                    best = min(ok, key=cost) if ok else None
             if best is None:
-                best = site.nearest(ideal)
+                best = site.nearest(ideal) if select is None else (nd["x"], nd["y"])
             imb = abs(md(best, c1) + s1 - md(best, c2) - s2)
             if imb > tol_um:
                 st["unbalanced"] += 1
@@ -459,7 +499,7 @@ def balance_legalize(nodes, site, radius_um=800.0, step=1.08, tol_um=2.0):
             nd["balance_imbalance_um"] = round(imb, 1)
             S[i] = max(md(best, c1) + s1, md(best, c2) + s2)
         else:
-            best = site.nearest(ideal)
+            best = site.nearest(ideal) if select is None else (nd["x"], nd["y"])
             if kids:
                 S[i] = md(best, (nodes[kids[0]]["x"], nodes[kids[0]]["y"])) + S[kids[0]]
             else:
@@ -467,7 +507,7 @@ def balance_legalize(nodes, site, radius_um=800.0, step=1.08, tol_um=2.0):
                 S[i] = sum(md(best, t[2:4]) for t in tl) / len(tl) if tl else 0.0
         if md(best, ideal) > 1e-6:
             st["moved"] += 1
-        nd["x"], nd["y"] = round(best[0], 3), round(best[1], 3)
+        nd["x"], nd["y"] = round_legal(site, best) if select is not None else (round(best[0], 3), round(best[1], 3))
     return st
 
 
@@ -863,7 +903,8 @@ def find_spine_row(site, xa, xb, y_want, dx=10.0, step=1.08, reach=3000.0):
     return None
 
 
-def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_um=50.0, rows=None):
+def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_um=50.0, rows=None, region_dme=False,
+                           dme_rep_um=None):
     """QC-SLICECLK-3 opt-in (--slice-spine, needs --region-trees): clock follows the slice band (METHODOLOGY 12.13b).
     - top: ONE shared horizontal spine at the legal row y_s nearest the common region centre; a 1-D equal-length
       bisection along it (full depth to top_leaf_um) reaches every region's spine column x_r at (x_r, y_s);
@@ -974,6 +1015,24 @@ def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_
         rn = nodes[e]["region_entry"]
         b = box[rn]
         xc, yc = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
+        if region_dme:             # DIE-QC-3 opt-in: legal-site DME region tree, fed straight from the spine entry
+            dn, droot, dst = dme_region_tree(site, rt[rn], rep_um=dme_rep_um)
+            ids = {}
+
+            def attach(j, parent, lv):
+                d = dn[j]
+                kw = dict(region_root=rn, dme_root=True) if j == droot else {}
+                if d.get("part_root"):
+                    kw["part_root"] = d["part_root"]
+                i = mk(d["x"], d["y"], parent, lv, b, **kw)
+                ids[j] = i
+                nodes[i]["taps"] = list(d["taps"])
+                for k in d["kids"]:
+                    attach(k, i, lv + 1)
+            attach(droot, e, nodes[e]["level"] + 1)
+            info["regions"][rn] = dict(mode="dme", box=[round(v, 3) for v in b], dme=dst,
+                                       dme_root_um=[dn[droot]["x"], dn[droot]["y"]], dme_S_um=round(dn[droot]["S"], 1))
+            continue
         if col[rn] is None:        # fallback: stock local tree from the bbox centre
             c = link(e, xc, yc, b, region_root=rn)
             local(c, b, rt[rn])
@@ -989,6 +1048,215 @@ def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_
 
 def _man(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+# ------------------------------------------------------------------ DIE-QC-3 opt-in: legal-site DME region trees (bug ii)
+def _split_cut(pts, mode="gap"):
+    """binary cut of a point list -> (left idx, right idx).  mode 'gap': the cut at any coordinate gap (either axis,
+    >= 1/4 of the points each side) with the least sum of the two bboxes' half-perimeters; 'median': equal halves on
+    the axis with the least half-perimeter sum."""
+    n = len(pts)
+    best = None
+    for ax in (0, 1):
+        order = sorted(range(n), key=lambda i: (pts[i][ax], pts[i][1 - ax]))
+        if mode == "median":
+            ks = [(n + 1) // 2]
+        else:
+            lo_n = max(1, n // 4)
+            ks = [k for k in range(lo_n, n - lo_n + 1) if 0 < k < n and pts[order[k - 1]][ax] != pts[order[k]][ax]]
+        for k in ks:
+            a, b = [pts[i] for i in order[:k]], [pts[i] for i in order[k:]]
+            hp = sum(max(p[0] for p in g) - min(p[0] for p in g) + max(p[1] for p in g) - min(p[1] for p in g)
+                     for g in (a, b))
+            if best is None or hp < best[0] - 1e-9:
+                best = (hp, order[:k], order[k:])
+    if best is None:            # all points equal: split by count
+        order = list(range(n))
+        return order[:n // 2], order[n // 2:]
+    return best[1], best[2]
+
+
+def _leg_detours(site, a, b, rep_um):
+    """True if tree_netlist would re-route the leg a -> b on a legal detour (its straight placement leaves a span >
+    DETOUR_SPAN_X x rep_um and runs > rep_um through forbidden rects): the detour adds wire DME did not price."""
+    L = _man(a, b)
+    if L <= 2 * rep_um or not hasattr(site, "hits"):
+        return False
+    if leg_blocked_run(site, a, b) <= rep_um:
+        return False
+    nrep = max(0, int(math.ceil(L / rep_um)) - 1)
+    return straight_leg_span(site, dict(x=a[0], y=a[1]), dict(x=b[0], y=b[1]), nrep) > DETOUR_SPAN_X * rep_um
+
+
+def merge_point(site, c1, s1, c2, s2, radius_um=800.0, step=1.08, extra_wire_w=0.1, pool_n=400, rep_um=None):
+    """DME merge on legal sites: the legal point q minimising |(|q-c1| + s1) - (|q-c2| + s2)| + extra_wire_w x (added
+    wire over |c1-c2|) + 0.01 x |q - ideal|.  Candidates: the zero-skew locus scanned on rows/columns through the ideal
+    point within radius_um (points outside the kids' bbox = elongated merge, standard DME detour wiring) + the first
+    legal point on each axis ray from the ideal point.  ideal = the zero-skew point on the kids' shortest path (or the
+    later kid when |s1 - s2| > |c1 - c2|).  -> (q, imbalance_um, extra_wire_um)"""
+    md = _man
+    D_ = md(c1, c2)
+    dl = s2 - s1
+    # ideal: on the shortest path c1 -> c2 at distance t from c1 with t + s1 = D - t + s2
+    t = min(max((D_ + dl) / 2, 0.0), D_)
+    dx, dy = c2[0] - c1[0], c2[1] - c1[1]
+    if D_ > 0:
+        fx = min(t, abs(dx))          # x first, then y (any monotone path: pick the L through the bbox centre side)
+        ideal = (c1[0] + math.copysign(fx, dx), c1[1] + math.copysign(t - fx, dy))
+    else:
+        ideal = c1
+    cand = []
+    nst = int(radius_um / step)
+    for k in range(-nst, nst + 1):
+        for ax in (0, 1):
+            o = 1 - ax
+            q = [0.0, 0.0]
+            q[o] = ideal[o] + k * step
+            h = dl - (abs(q[o] - c1[o]) - abs(q[o] - c2[o]))
+            a, b = c1[ax], c2[ax]
+            if abs(a - b) < 1e-9:
+                continue
+            v = (h + a + b) / 2 if a < b else (a + b - h) / 2
+            if min(a, b) - 1e-9 <= v <= max(a, b) + 1e-9:
+                q[ax] = v
+                cand.append((md(q, ideal), round(q[0], 3), round(q[1], 3)))
+    pool = [(x, y) for _, x, y in sorted(cand)[:pool_n]] + [ideal, c1, c2]
+    for ddx, ddy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+        for j in range(1, nst + 1):
+            q = (round(ideal[0] + ddx * j * step, 3), round(ideal[1] + ddy * j * step, 3))
+            if 0 <= q[0] <= site.W and 0 <= q[1] <= site.H and site.legal(q):
+                pool.append(q)
+                break
+
+    def cost(q):
+        return (abs(md(q, c1) + s1 - md(q, c2) - s2) + extra_wire_w * (md(q, c1) + md(q, c2) - D_)
+                + 0.01 * md(q, ideal))
+    ok = [q for q in pool if 0 <= q[0] <= site.W and 0 <= q[1] <= site.H and site.legal(q)]
+    if not ok:
+        ok = [site.nearest(ideal)]
+    q = min(ok, key=cost)
+    return q, abs(md(q, c1) + s1 - md(q, c2) - s2), md(q, c1) + md(q, c2) - D_
+
+
+def leg_len(site, a, b, rep_um):
+    """routed length of the tree leg a -> b as tree_netlist builds it: Manhattan, or the legal-detour polyline when
+    the straight placement would leave an unrepeatable span over a core (_leg_detours)."""
+    if rep_um and _leg_detours(site, a, b, rep_um):
+        poly = legal_detour(site, a, b)
+        if poly is not None:
+            return polyline_points(poly, [])[1]
+    return _man(a, b)
+
+
+def merge_point_routed(site, c1, s1, c2, s2, radius_um=800.0, step=1.08, extra_wire_w=0.1, rep_um=None, iters=3):
+    """merge_point with the netlist's legal detours priced: a leg that tree_netlist will detour adds its extra length
+    to that kid's depth and the zero-skew point is solved again (<= iters times).  -> (q, imbalance, extra, la, lb)"""
+    e1 = e2 = 0.0
+    for _ in range(iters):
+        q, _, _ = merge_point(site, c1, s1 + e1, c2, s2 + e2, radius_um, step, extra_wire_w)
+        la, lb = leg_len(site, q, c1, rep_um), leg_len(site, q, c2, rep_um)
+        n1, n2 = la - _man(q, c1), lb - _man(q, c2)
+        if abs(n1 - e1) < 1.0 and abs(n2 - e2) < 1.0:
+            break
+        e1, e2 = n1, n2
+    return q, abs(la + s1 - lb - s2), la + lb - _man(c1, c2), la, lb
+
+
+DME_MODES = ("gap", "median", "greedy")
+
+
+def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MODES, rep_um=None):
+    """DIE-QC-3 opt-in (--region-dme): a region clock tree built ON legal sites, so nothing slides after balancing.
+    Embedding: bottom-up DME with Manhattan length as the delay proxy (repeated 1x line: delay ~ linear in length);
+    every merge point is the legal zero-skew point from merge_point() (no slide, no snake; an elongated merge point is
+    reported as extra wire); a pair too unequal in depth for a snake-free merge is joined by join() lower down.  A leaf is one tap: its driver sits at the tap (nearest legal point).
+    Topology: per partition, each of `modes` is embedded and the one with the least root->tap length spread (then
+    wire) is kept: 'gap' / 'median' = recursive _split_cut of the taps, 'greedy' = Edahiro-style matching (merge the
+    pair with the least max(|c1-c2|, |S1-S2|), the wire a snake-free zero-skew merge needs).  Above the partitions:
+    'gap' cuts over the partition roots.  Geometry only: no timing value.
+    -> (tree nodes [dict(x, y, kids, taps, S, Smin, part_root)], root index, stats)"""
+    out = []
+
+    def leaf(t):
+        q = (t[2], t[3]) if site.legal((t[2], t[3])) else site.nearest((t[2], t[3]))
+        q = round_legal(site, q)
+        d = _man(q, (t[2], t[3]))
+        out.append(dict(x=q[0], y=q[1], kids=[], taps=[t], S=d, Smin=d, W=d))
+        return len(out) - 1
+
+    def merge(a, b):
+        A, B = out[a], out[b]
+        rad = min(max(radius_um, _man((A["x"], A["y"]), (B["x"], B["y"])) / 2), 4000.0)
+        q, imb, ex, da, db = merge_point_routed(site, (A["x"], A["y"]), A["S"], (B["x"], B["y"]), B["S"], rad, 1.08,
+                                                extra_wire_w, rep_um=rep_um)
+        q2 = round_legal(site, q)
+        if q2 != q:
+            q = q2
+            da, db = leg_len(site, q, (A["x"], A["y"]), rep_um), leg_len(site, q, (B["x"], B["y"]), rep_um)
+        out.append(dict(x=q[0], y=q[1], kids=[a, b], taps=[], S=max(da + A["S"], db + B["S"]),
+                        Smin=min(da + A["Smin"], db + B["Smin"]), W=da + db + A["W"] + B["W"], imb=imb, ex=ex))
+        return len(out) - 1
+
+    def join(a, b, depth=0):
+        """merge a and b; when no snake-free zero-skew point exists (|S_a - S_b| > |a - b|), the shallow subtree is
+        merged DOWN into the deep one instead (with the deep root's kid nearest to it, recursively), and the deep
+        root is re-embedded over the result and its other kid: the depths meet where they match."""
+        A, B = out[a], out[b]
+        if abs(A["S"] - B["S"]) <= _man((A["x"], A["y"]), (B["x"], B["y"])) + 1e-6 or depth > 24:
+            return merge(a, b)
+        if A["S"] > B["S"]:
+            a, b, A, B = b, a, B, A
+        if not B["kids"]:
+            return merge(a, b)
+        k = min(B["kids"], key=lambda c: _man((A["x"], A["y"]), (out[c]["x"], out[c]["y"])))
+        o = [c for c in B["kids"] if c != k][0]
+        return join(join(a, k, depth + 1), o, depth + 1)
+
+    def build(items, pos, mk_leaf, mode):
+        if mode != "greedy":
+            if len(items) == 1:
+                return mk_leaf(items[0])
+            l, r = _split_cut([pos(it) for it in items], mode)
+            return join(build([items[i] for i in l], pos, mk_leaf, mode), build([items[i] for i in r], pos, mk_leaf, mode))
+        live = [mk_leaf(it) for it in items]
+        while len(live) > 1:
+            best = None
+            for a in range(len(live)):
+                A = out[live[a]]
+                for b in range(a + 1, len(live)):
+                    B = out[live[b]]
+                    c = max(_man((A["x"], A["y"]), (B["x"], B["y"])), abs(A["S"] - B["S"]))
+                    if best is None or c < best[0] - 1e-9:
+                        best = (c, a, b)
+            _, a, b = best
+            m = join(live[a], live[b])
+            live = [x for k, x in enumerate(live) if k not in (a, b)] + [m]
+        return live[0]
+    byp = defaultdict(list)
+    for t in taps:
+        byp[t[0]].append(t)
+    proots, pick = [], defaultdict(int)
+    for pn in sorted(byp):
+        tl = sorted(byp[pn], key=lambda t: (t[2], t[3], t[1]))
+        tries = [build(tl, lambda t: (t[2], t[3]), leaf, m) for m in modes]
+        k = min(range(len(tries)), key=lambda j: (round(out[tries[j]]["S"] - out[tries[j]]["Smin"], 1), out[tries[j]]["W"]))
+        pick[modes[k]] += 1
+        out[tries[k]]["part_root"] = pn
+        proots.append(tries[k])
+    root = build(proots, lambda i: (out[i]["x"], out[i]["y"]), lambda i: i, "gap")
+    st = dict(merges=0, imbalanced=0, worst_imbalance_um=0.0, extra_wire_um=0.0, topology=dict(pick))
+    stack = [root]
+    while stack:                       # stats of the kept tree only
+        d = out[stack.pop()]
+        stack += d["kids"]
+        if d["kids"]:
+            st["merges"] += 1
+            st["extra_wire_um"] += d["ex"]
+            if d["imb"] > 2.0:
+                st["imbalanced"] += 1
+                st["worst_imbalance_um"] = max(st["worst_imbalance_um"], round(d["imb"], 1))
+    st["extra_wire_um"] = round(st["extra_wire_um"], 1)
+    st["spread_um"] = round(out[root]["S"] - out[root]["Smin"], 1)
+    return out, root, st
 
 
 def round_legal(site, q, nd=3):
@@ -1269,8 +1537,14 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
 
 
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
-              tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None):
+              tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, clock_rc="ndr",
+              slice_balance=False, region_dme=False):
     out = Path(out)
+    wire_r, wire_c = WIRE_RC_1X if clock_rc == "1x" else (WIRE_R, WIRE_C)
+    if region_dme and not slice_spine:
+        raise ValueError("--region-dme needs --slice-spine")
+    if slice_balance and not slice_spine:
+        raise ValueError("--slice-balance needs --slice-spine")
     out.mkdir(parents=True, exist_ok=True)
     taps = clock_taps(P)
     if slice_spine and tree_form != "htree":
@@ -1284,7 +1558,9 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             raise ValueError("--slice-spine needs --region-trees")
         site = SiteMap(P)
         nodes, spine_info = build_slice_spine_tree(P, taps, regions, leaf_um, site, spine_top_leaf_um,
-                                                    json.loads(Path(slice_rows).read_text()) if slice_rows else None)
+                                                    json.loads(Path(slice_rows).read_text()) if slice_rows else None,
+                                                    region_dme=region_dme,
+                                                    dme_rep_um=rep_um if region_dme == "priced" else None)
         moves = []
         for i, nd in sorted(nodes.items()):
             nd["req_xy"] = [nd["x"], nd["y"]]
@@ -1299,6 +1575,9 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             moves.append(dict(node=i, fixed=bool(nd.get("fixed")), um=round(_man(q, (nd["x"], nd["y"])), 3),
                               imbalance_um=c))
             nd["x"], nd["y"] = round_legal(site, q)
+        if slice_balance:   # DIE-QC-3 opt-in: re-balance the legalized region trees (DME merge on legal sites, bug ii)
+            balanced = balance_legalize(nodes, site, select=[i for i, nd in nodes.items()
+                                                             if nd["parent"] is not None and nd.get("spine") != "top"])
         L = path_lengths(nodes)
         reg_len = defaultdict(list)
         for i, nd in nodes.items():
@@ -1386,8 +1665,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         tcl.append(f"place_pin -pin_name {tp} -layer M9 -location {{{x:.3f} {y:.3f}}} -pin_size {sz9}")
     for inst, x, y in place:
         tcl.append(f"place_inst -name {inst} -location {{{max(0.0, x):.3f} {max(0.0, y):.3f}}} -status PLACED")
-    tcl += [f"set_wire_rc -signal -resistance {WIRE_R:.6e} -capacitance {WIRE_C:.6e}",
-            f"set_wire_rc -clock -resistance {WIRE_R:.6e} -capacitance {WIRE_C:.6e}",
+    tcl += [f"set_wire_rc -signal -resistance {wire_r:.6e} -capacitance {wire_c:.6e}",
+            f"set_wire_rc -clock -resistance {wire_r:.6e} -capacitance {wire_c:.6e}",
             "estimate_parasitics -placement",
             "create_clock -name vclk -period 833.333",
             f"set_driving_cell -lib_cell {BUF} -pin Y [get_ports root]",
@@ -1409,7 +1688,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 **({"tree_form": tree_form, "spine_dme": nodes[0].get("spine_dme"),
                     **({"link_feed": nodes[0]["link_feed"]} if "link_feed" in nodes[0] else {})}
                    if tree_form != "htree" else {}),
-                **({"region_trees": len({n.get("region_root") for n in nodes.values()} - {None})} if regions else {}), buffer=BUF, wire_r_kohm_um=WIRE_R, wire_c_ff_um=WIRE_C,
+                **({"region_trees": len({n.get("region_root") for n in nodes.values()} - {None})} if regions else {}), buffer=BUF, wire_r_kohm_um=wire_r, wire_c_ff_um=wire_c,
+                **({"clock_rc": clock_rc} if clock_rc != "ndr" else {}),
                 tap_load_ff=TAP_LOAD_FF, nodes=len(nodes), leaves=sum(1 for n in nodes.values() if n["taps"]),
                 repeaters=sum(1 for i, *_ in place if i.startswith("r")), taps=len(tap_ports),
                 wire_um=round(sum(abs(a - c) + abs(b - d) for a, b, c, d, _ in segs) +
@@ -2387,7 +2667,8 @@ exit $rc
 
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
-              tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None):
+              tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None,
+              clock_rc="ndr", slice_balance=False, region_dme=False):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -2457,7 +2738,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um, full_depth, site_legal, site_slide,
                                            json.loads(Path(regions).read_text())["part_region"] if regions else None,
                                            tree_form=tree_form, tree_opts=tree_opts, slice_spine=slice_spine,
-                                           spine_top_leaf_um=spine_top_leaf_um, slice_rows=slice_rows)
+                                           spine_top_leaf_um=spine_top_leaf_um, slice_rows=slice_rows,
+                                           clock_rc=clock_rc, slice_balance=slice_balance, region_dme=region_dme)
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -3039,6 +3321,18 @@ def main(argv=None):
                    help="top-spine 1-D bisection leaf (um): nominal top imbalance <= half of it")
     k.add_argument("--slice-rows", help="with --slice-spine: qc_slice_clock_rows/1 reservation (INFRA-FIRST-QC-R35): "
                    "column x and top spine row come from the plan reservation")
+    k.add_argument("--clock-rc", default="ndr", choices=["ndr", "1x"],
+                   help="die clock model wire RC: ndr = 2W2S assumption (R/2, Cx1.1; legacy default); 1x = ASAP7 M8/M9 "
+                        "setRC as the die clock is routed (no NDR) (DIE-QC-3 opt-in)")
+    k.add_argument("--slice-balance", action="store_true",
+                   help="DIE-QC-3 opt-in (with --slice-spine): after the site pass, re-place the region-tree nodes as "
+                        "zero-skew (Manhattan) merge points on legal sites (balance_legalize), column nodes along their column")
+    k.add_argument("--region-dme", nargs="?", const=True, default=False, choices=[True, "priced"],
+                   type=lambda v: "priced" if v == "priced" else v,
+                   help="DIE-QC-3 opt-in (with --slice-spine): each region tree is a legal-site DME tree (per partition: "
+                        "binary cuts of its taps; above: cuts of the partition roots), fed from the region's spine "
+                        "entry; every merge point is chosen legal and zero-skew, so the site pass moves nothing; '--region-dme "
+                        "priced' also prices the netlist's legal detours of legs over cores (merge_point_routed)")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
@@ -3111,7 +3405,8 @@ def main(argv=None):
                       tree_form=a.tree_form,
                       tree_opts={**{k: float(v) for k, v in (o.split("=") for o in a.tree_opt)},
                                  **({"feed": a.feed} if a.tree_form in ("link_fishbone", "link_htree") else {})},
-                      slice_spine=a.slice_spine, spine_top_leaf_um=a.spine_top_leaf_um, slice_rows=a.slice_rows)
+                      slice_spine=a.slice_spine, spine_top_leaf_um=a.spine_top_leaf_um, slice_rows=a.slice_rows,
+                      clock_rc=a.clock_rc, slice_balance=a.slice_balance, region_dme=a.region_dme)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":
