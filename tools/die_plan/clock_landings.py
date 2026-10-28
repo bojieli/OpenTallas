@@ -220,8 +220,20 @@ class Landings:
                 self.region[part] = region
             if db in self.ins[dp]:
                 raise LandingError(f"two clock landings drive {dp}.{db}")
+            # The ring form is a per-row choice (MESO-COUNT-1 may swap in a count-aligned variant): a sidecar row may name
+            # ring_module + ring_params (+ ring_ports for extra receiver pins); the default is today's ring.
+            rmod = r.get("ring_module", "ot_dp_clk_landing")
+            if not re.fullmatch(r"ot_dp_clk_landing\w*", rmod):
+                raise LandingError(f"clock landing {pid}: ring_module {rmod} is not an ot_dp_clk_landing variant")
+            rpar, rports = dict(r.get("ring_params", {})), dict(r.get("ring_ports", {}))
+            for k, v in list(rpar.items()) + list(rports.items()):
+                if not re.fullmatch(r"[A-Za-z_]\w*", str(k)) or not re.fullmatch(r"[\w'\[\]:]+", str(v)):
+                    raise LandingError(f"clock landing {pid}: bad ring_params/ring_ports entry {k}={v}")
+            if {"W", "fclk", "clk", "rst_n", "d", "q", "ready", "fault"} & (set(rpar) | set(rports)):
+                raise LandingError(f"clock landing {pid}: ring_params/ring_ports may not override the bound ring pins or W")
             row = dict(r, src_bus=sb, dst_bus=db, added_cycles=3,
-                       module="ot_dp_clk_landing", ring_depth=4, ring_offset=2,
+                       module=rmod, ring_params=rpar, ring_ports=rports,
+                       ring_depth=int(rpar.get("DEPTH", 4)), ring_offset=int(rpar.get("K", 2)),
                        ring_read_registered=True)
             self.rows.append(row)
             self.ins[dp][db] = row
@@ -230,7 +242,9 @@ class Landings:
         # split rather than changing only the first bound replica's wrapper.
         masks = defaultdict(dict)
         for pn, p in self.parts.items():
-            mask = (tuple(sorted(self.ins[pn])), tuple(sorted(self.outs[pn])))
+            form = tuple((b, r["module"], tuple(sorted(r["ring_params"].items())), tuple(sorted(r["ring_ports"].items())))
+                         for b, r in sorted(self.ins[pn].items()))
+            mask = (tuple(sorted(self.ins[pn])), tuple(sorted(self.outs[pn])), form)
             masks[p["type"]].setdefault(mask, []).append(pn)
         bad = {tn: list(ms.values()) for tn, ms in masks.items() if len(ms) > 1}
         if bad:
@@ -298,6 +312,30 @@ class Landings:
                 raise LandingError(f"clock landing observer {cell.path}.{port}: actual one-bit input required")
         self.observer_source=dict(path=cell.path,emitted_instance=spec["instance_suffix"],module=cell.module,ports=[spec["fault_port"],spec["ready_port"]],
                                   added_data_cycles=0,added_external_ports=0)
+
+    def validate_observer_native(self, leaf_text, parse_ports):
+        """gen_rtl (native, generated top) form of validate_observer: the observer module must be a declared leaf of
+        the observer partition's type and expose the two named ports as ONE-BIT INPUTS in its actual header.  The
+        unique instance / single existing connection is then enforced by gate_observer on the emitted body."""
+        if not self.collector or not self.collector.get("observer"):return
+        spec=self.collector["observer"];pn=spec["part"]
+        if "OPEN" in (spec.get("module"),spec.get("instance_suffix"),spec.get("fault_port"),spec.get("ready_port")):
+            raise LandingError(f"clock landing observer on {pn}: RTL module/instance/ports still OPEN in the sidecar")
+        if pn not in self.parts:raise LandingError(f"clock landing observer partition {pn} missing")
+        tn=self.parts[pn]["type"]
+        if sum(p["type"]==tn for p in self.parts.values())!=1:
+            raise LandingError(f"clock landing observer type {tn} is replicated")
+        leaves=[c for c in self.types[tn].get("contents",[]) if c.get("module")==spec["module"]]
+        if len(leaves)!=1:raise LandingError(f"clock landing observer: expected one {spec['module']} leaf in {tn}, found {len(leaves)}")
+        ports=parse_ports(leaf_text(tn),spec["module"])
+        if ports is None:raise LandingError(f"clock landing observer: module {spec['module']} not found in {tn} sources")
+        for port in (spec["fault_port"],spec["ready_port"]):
+            d,w=ports.get(port,(None,None))
+            if d!="input" or w.replace(" ","") not in ("","[0:0]"):
+                raise LandingError(f"clock landing observer {spec['module']}.{port}: actual one-bit input required (found {d} {w})")
+        self.observer_source=dict(part=pn,type=tn,module=spec["module"],emitted_instance=spec["instance_suffix"],
+                                  ports=dict(ready=spec["ready_port"],fault=spec["fault_port"]),gating="ready AND, fault OR",
+                                  added_data_cycles=0,added_external_ports=0,check="native leaf header (gen_rtl)")
 
     def type_rtl(self, tn, text, base=None):
         """Emit actual landing hardware before each incoming boundary/station.
@@ -392,22 +430,26 @@ class Landings:
             else:
                 extra += [f"    output wire landing_ready_{b}",f"    output wire landing_fault_{b}"]
             landed = f"cland_{b}"
-            body = re.sub(r"\b" + re.escape(b) + r"\b", landed, body)
+            rpar = "".join(f", .{k}({v})" for k, v in sorted(r.get("ring_params", {}).items()))
+            rpin = "".join(f", .{k}({v})" for k, v in sorted(r.get("ring_ports", {}).items()))
+            # Rename the local NET only: a `.name(` port reference on a child instance is the child's port, never
+            # this wrapper's bus (gen_rtl wrappers bind leaves by name: `.lep_fault_i(lep_fault_i_q)`).
+            body = re.sub(r"(?<![.\w])" + re.escape(b) + r"\b", landed, body)
             if self.dataflow:
                 # ring W+2: {fault, ready} of the sender's status ride the spare padded ring bits under the same
                 # forwarded write clock; no extra data cycle, no die-top status wire beside the bus.
                 ring = f"cland_ring_{b}"
                 logic += [f"    wire [{w+1}:0] {ring};", f"    wire [{w-1}:0] {landed};",
                           f"    assign {landed} = {ring}[{w-1}:0];",
-                          f"    ot_dp_clk_landing #(.W({w+2})) u_cland_{b} (",
-                          f"        .fclk(fclk_in_{b}), .clk(clk), .rst_n({reset}), .d({{cland_dn_fault_{b}, cland_dn_ready_{b}, {b}}}), .q({ring}),",
+                          f"    {r['module']} #(.W({w+2}){rpar}) u_cland_{b} (",
+                          f"        .fclk(fclk_in_{b}), .clk(clk), .rst_n({reset}){rpin}, .d({{cland_dn_fault_{b}, cland_dn_ready_{b}, {b}}}), .q({ring}),",
                           f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));",
                           f"    wire cland_ok_{b} = {ring}[{w}] && landing_ready_{b} && !landing_fault_{b};",
                           f"    wire cland_bad_{b} = landing_fault_{b} || (landing_ready_{b} && {ring}[{w+1}]);"]
                 continue
             logic += [f"    wire [{w-1}:0] {landed};",
-                      f"    ot_dp_clk_landing #(.W({w})) u_cland_{b} (",
-                      f"        .fclk(fclk_in_{b}), .clk(clk), .rst_n({reset}), .d({b}), .q({landed}),",
+                      f"    {r['module']} #(.W({w}){rpar}) u_cland_{b} (",
+                      f"        .fclk(fclk_in_{b}), .clk(clk), .rst_n({reset}){rpin}, .d({b}), .q({landed}),",
                       f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));"]
         if self.dataflow:
             body = self._dataflow_monitor(tn, key, mask, collector_info, extra, logic, body)
@@ -528,9 +570,22 @@ class Landings:
         match = re.search(r"(?m)^module (\w+) \(([^;]*)\);", text)
         if not match:
             raise LandingError("clock landing: binder non-ANSI die header not found")
-        header = f"module {match.group(1)} ({match.group(2)}, " + ", ".join(names) + ");"
+        # gen_rtl (native generated top, LAND-HEAD-BIND-1) emits an ANSI header whose only clock is the die `clk`
+        # feeding every partition clock pin (.clk / spine taps .clk_t<i>).  In the landed form each partition's
+        # pins are its REGION clock; the die `clk` port is then unread and removed (the die clock emission supplies
+        # the region clocks).  The binder's non-ANSI path below is unchanged.
+        ansi = re.search(r"\b(input|output)\b", match.group(2)) is not None
+        if ansi:
+            if not local_observer:
+                raise LandingError("clock landing: native (ANSI) top requires a local observer (dataflow monitor)")
+            ports = match.group(2).rstrip()
+            ports = re.sub(r"\n    input  wire clk,(?=\n)", "", ports, count=1)
+            header = (f"module {match.group(1)} (" + ports + "".join(f",\n    input  wire clk_region_{ident(r)}" for r in clocks)
+                      + "\n);")
+        else:
+            header = f"module {match.group(1)} ({match.group(2)}, " + ", ".join(names) + ");"
         text = text[:match.start()] + header + text[match.end():]
-        decl = [f"    input wire clk_region_{ident(r)};" for r in clocks]
+        decl = [] if ansi else [f"    input wire clk_region_{ident(r)};" for r in clocks]
         if not local_observer:
             decl += (["    output wire clock_landing_ready;","    output wire clock_landing_fault;"] if self.collector else
                      [f"    output wire [{n-1}:0] clock_landing_ready;",f"    output wire [{n-1}:0] clock_landing_fault;"])
@@ -560,8 +615,13 @@ class Landings:
             if len(matches) != 1:
                 raise LandingError(f"clock landing: expected exactly one bound instance {pn}")
             m = matches[0]
-            body, count = re.subn(r"\.clk\(clk_\w+\)", f".clk(clk_region_{ident(self.region[pn])})", m.group(2), count=1)
-            if count != 1:
+            if ansi:
+                body, count = re.subn(r"\.(clk(?:_t\d+)?)\(clk\)", lambda mm: f".{mm.group(1)}(clk_region_{ident(self.region[pn])})", m.group(2))
+                if not re.search(r"\.clk\(clk_region_", body):
+                    raise LandingError(f"clock landing: default clock connection not found on {pn}")
+            else:
+                body, count = re.subn(r"\.clk\(clk_\w+\)", f".clk(clk_region_{ident(self.region[pn])})", m.group(2), count=1)
+            if count < 1:
                 raise LandingError(f"clock landing: default clock connection not found on {pn}")
             conn = [f"        .fclk_out_{b}({fwd[(pn,b)]})" for b in sorted(self.outs[pn])]
             if self.dataflow:
@@ -590,6 +650,8 @@ class Landings:
                     if e["seam"]:conn.append(f"        .fclk_in_cland_dn_{i}(cland_clock_{child})")
             body = ",\n".join(conn + [body])
             text = text[:m.start()] + m.group(1) + body + m.group(3) + text[m.end():]
+        if ansi and re.search(r"\(clk\)", text):
+            raise LandingError("clock landing: native top still drives a partition pin from the die clk")
         self.emitted_top = True
         return text
 

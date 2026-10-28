@@ -317,6 +317,16 @@ SCHEMA = {
                     "module": _name,                 # generated wrapper module name
                     "infra_ports": {"type": "array", "items": _infra_port},
                     "infra_arcs": {"type": "array", "items": _infra_arc},
+                    # HEAD native views: physical (synthesis black-box) source -> simulation model source
+                    "simulation_substitutions": {"type": "object",
+                                                 "additionalProperties": {"type": "string", "minLength": 1}},
+                    # LAND-HEAD-BIND-1: hard-core pass-through FT outputs declared unread (bind key ftspare:<port>)
+                    "ft_spare_outputs": {"type": "array", "items": {
+                        "type": "object", "additionalProperties": False, "required": ["port", "owner", "reason"],
+                        "properties": {"port": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+                                       "core": {"type": "string"}, "core_port": {"type": "string"},
+                                       "owner": {"type": "string", "minLength": 1},
+                                       "reason": {"type": "string", "minLength": 1}}}},
                     "dead_inputs": {"type": "array", "items": {
                         "type": "object", "additionalProperties": False,
                         "required": ["module", "parameters", "ports", "proof", "source", "module_sha256"],

@@ -446,6 +446,16 @@ def wrapper(P, tn, epochs, rtl_root=None):
         sig["start"] = f"start_t{rtree['start_tap']}"     # bootstrap type: local registered START (reset AND run)
     for ip in infra:
         sig[f"infra:{ip['name']}"] = ip["name"]
+    # LAND-HEAD-BIND-1 (opt-in, type ft_spare_outputs): a hard core's pass-through FT OUTPUT that the partition does
+    # not consume (landed form: no die mesh crosses the core island) lands on a declared, owned, unread wire --
+    # never a tie, never an implicit open pin.  Each entry must bind exactly one leaf OUTPUT port (checked below).
+    spares = t.get("ft_spare_outputs", [])
+    for fs in spares:
+        if not fs.get("owner") or not fs.get("reason"):
+            raise GenError(f"type {tn}: ft_spare_outputs {fs.get('port')} needs an owner and a reason")
+        nm = "ftspare_" + sv_id(fs["port"])
+        decl.append(f"    wire {nm};  // declared unread core FT output (owner {fs['owner']}): {fs['reason']}")
+        sig[f"ftspare:{fs['port']}"] = nm
     # leaf bindings: contents[].bind plus bus.leaf
     binds = {c["inst"]: dict(c.get("bind", {})) for c in t.get("contents", [])}
     for inst in (rtree or {}).get('bootstrap_contents', []):
@@ -484,6 +494,10 @@ def wrapper(P, tn, epochs, rtl_root=None):
         k = f"pad:{pd['name']}"
         if not use.get(k) or (pd["dir"] == "out" and len(use[k]) != 1):
             raise GenError(f"type {tn}: pad {pd['name']} must bind {'exactly one leaf port' if pd['dir'] == 'out' else 'a leaf port'}: {use.get(k)}")
+    for fs in spares:
+        if len(use.get(f"ftspare:{fs['port']}", [])) != 1:
+            raise GenError(f"type {tn}: ft spare output {fs['port']} must bind exactly one leaf port: "
+                           f"{use.get('ftspare:' + fs['port'])}")
     for nt in t.get("nets", []):
         if len(use.get(f"net:{nt['name']}", [])) < 2:
             raise GenError(f"type {tn}: net {nt['name']} has {len(use.get('net:' + nt['name'], []))} leaf ports")
@@ -502,6 +516,9 @@ def wrapper(P, tn, epochs, rtl_root=None):
                 raise GenError(f"type {tn}: {c['inst']} ({c['module']}) unbound ports {miss} (no tie-offs: bind them)")
             if extra:
                 raise GenError(f"type {tn}: {c['inst']} binds ports {extra} that {c['module']} does not have")
+            bad = sorted(p for p, k in bd.items() if k.startswith("ftspare:") and lp[p][0] != "output")
+            if bad:
+                raise GenError(f"type {tn}: {c['inst']} ft spare binds non-output ports {bad}")
         par = c.get("params", {})
         ps = (" #(" + ", ".join(f".{k}({v})" for k, v in par.items()) + ")") if par else ""
         conns = ",\n".join(f"        .{p}({sig[k]})" for p, k in sorted(bd.items()))
@@ -603,7 +620,11 @@ def die_top(P, epochs, dropped=None, rtl_root=None):
             + "\n".join(wires + rlines) + "\n" + "\n".join(insts) + f"\nendmodule : {mod}\n`default_nettype wire\n")
 
 
-def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None):
+def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None):
+    """landing (opt-in, LAND-HEAD-BIND-1): the clock_landing_plan sidecar of a landed plan.  The SAME emitter the
+    as-built binder uses (clock_landings.Landings.type_rtl / top_rtl) is applied to every generated wrapper and to the
+    generated die top, so the landed form is one complete source-bound netlist; the declared observer is checked
+    against its actual leaf header (one-bit inputs) before any ring is emitted."""
     errs = S.validate(raw)
     if errs:
         raise GenError("plan invalid:\n  " + "\n  ".join(errs[:20]))
@@ -611,16 +632,50 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     ep = bus_epochs(P)
+    L = None
+    if landing is not None:
+        import clock_landings as CL
+        if not raw.get("clock", {}).get("landing_network"):
+            raise GenError("clock landing: the plan has no clock.landing_network (not a composed landed plan)")
+        if types is not None:
+            raise GenError("clock landing: --types is not allowed; every type must carry its landing hardware")
+        try:
+            L = CL.Landings(raw, landing)
+            if landing.get("collector", {}).get("observer") != raw["clock"]["landing_network"].get("root_observer"):
+                raise CL.LandingError("sidecar observer differs from the plan's landing_network.root_observer")
+            if rtl_root is not None:
+                L.validate_observer_native(lambda tn: leaf_headers(P.types[tn], rtl_root), parse_leaf_ports)
+        except CL.LandingError as e:
+            raise GenError(f"clock landing: {e}") from e
     (out / "ot_dp_cells.sv").write_text(CELLS)
     files = [out / "ot_dp_cells.sv"]
     for tn, t in sorted(P.types.items()):
         if t.get("hard") or (types is not None and tn not in types):
             continue
         f = out / f"{t['module']}.sv"
-        f.write_text(wrapper(P, tn, ep, rtl_root))
+        text = wrapper(P, tn, ep, rtl_root)
+        if L is not None:
+            try:
+                text = L.type_rtl(tn, text)
+            except CL.LandingError as e:
+                raise GenError(f"clock landing: {e}") from e
+        f.write_text(text)
         files.append(f)
     f = out / f"{sv_id(P.name)}_top.sv"
-    f.write_text(die_top(P, ep, rtl_root=rtl_root))
+    text = die_top(P, ep, rtl_root=rtl_root)
+    if L is not None:
+        try:
+            text = L.top_rtl(text, {tn: t["module"] for tn, t in P.types.items()})
+        except CL.LandingError as e:
+            raise GenError(f"clock landing: {e}") from e
+        man = L.manifest()
+        if not man["implemented"]:
+            raise GenError("clock landing: not every type/top was emitted")
+        import json
+        mf = out / "gen_clock_landings.json"
+        mf.write_text(json.dumps(man, indent=1) + "\n")
+        files.append(mf)
+    f.write_text(text)
     files.append(f)
     man = parent_id_manifest(P)
     if man["types"]:
