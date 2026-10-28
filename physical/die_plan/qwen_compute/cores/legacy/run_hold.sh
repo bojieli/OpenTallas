@@ -44,8 +44,21 @@ if [ $rc = 0 ]; then
   fi
 fi
 if [ $rc = 0 ]; then
+  # FLOW-SHARED-6: the one-session 'make run' writes no ORFS 5_2_route.json metrics, so sign-off reported antenna NOT RUN
+  # (and DRC only from the .rpt).  Record this session's own final DRT violation count and check_antennas net count
+  # (fail closed: a missing count stays out of the record -> NOT RUN).
+  python3 -I - "$D/run_hold.log" "$D/route_record.json" <<'PYREC'
+import json, re, sys
+t = open(sys.argv[1], errors="replace").read(); r = {"source": sys.argv[1]}
+v = re.findall(r"DRT-0199\]\s+Number of violations = (\d+)", t)
+a = re.findall(r"ANT-0002\] Found (\d+) net violations", t)
+if v: r["drc"] = int(v[-1])
+if a: r["antenna_nets"] = int(a[-1])
+json.dump(r, open(sys.argv[2], "w"), indent=1)
+print("ROUTE_RECORD", r)
+PYREC
   SIGNOFF_DOCKER="$DK" python3 -I $D/so/tools/die_plan/signoff.py run --run-dir $D/run --kit $D --out $D/signoff \
-    --corners tt,ff --image "$IMAGE" > $D/signoff.log 2>&1
+    --corners tt,ff --image "$IMAGE" --record $D/route_record.json > $D/signoff.log 2>&1
   echo "signoff_rc=$?" >> $D/rc.txt
   grep -E '^SIGNOFF|^  - ' $D/signoff.log | head -12
 fi
