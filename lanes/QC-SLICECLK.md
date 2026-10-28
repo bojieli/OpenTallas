@@ -292,3 +292,4 @@ A0 parent remainsprimaryphysicalcriticalpath. Importanthandoffcorrection: romlea
   - (2) c_* re-plan with root at A0 entry: NOT started this slice. (3) CA/die STA inv2: still BLOCKED (CLK-INV-CAL-1 rework RM165 not on origin/main).
   - FLOW-GEN-2 a0k3 setup: pin-plan estimate posted 13:3x; COORD YES -> sub-lane DIE-QC-18-PINILV running (opt-in per-adder pin file + new suffix, autopilot re-kit, parent track check).
   - Live: nl2 corr chain (re-clustered nl, s0 62.2/92.2 TT, s1..s3 running, chain_nl2.out); PINILV sub-agent.
+- 10-28 14:12 DIE-QC-18 RESULT nl2 (QC-17 re-clustered nl, bipart, corr damp 0.6, re-route changed legs only) CHECKED routed+OCV: s0 92.2/101.1, s1 85.9/77.9, s2 83.1/76.8, s3 77.7/79.4, s4 74.8/68.7 (TT/FF ps). Not <=60: NOT accepted; same corr-model floor. Best trunks stay nk t5 62.3/62.0, nl b5 60.8/58.9. Data intel2:/srv/opentallas-scratch2/claude/die-qc18-1028/nl2.
