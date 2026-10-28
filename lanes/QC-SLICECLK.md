@@ -51,3 +51,8 @@
     - INFO bind with those 6 dropped: lag lo 121.7 TT / 116.8 FF, 0 slot or guard fails.
     - START-SKEW fails on 31/260 tree ports TT and 21/260 FF (e.g. c_E4_bn_00__a22__0 has limit 21.9 against clk-q 55-87 ps).
   - FREEZE GATE NOT REACHED. The only blocker is the count-align START TREE (ambiguous edges plus start-skew). The clock and GRT parts pass.
+- 2026-10-28 02:41 PDT DIE-QC-4 NOTE + PARKED (OWN/UNCHECKED). For the 6 CA plan FAIL ports (c_W0_tf_11 / c_E4_tf_11 / c_W0_bf_11, a00 and b12, nontree, d about -230 ps), ca_spice reports old_ring_ok=True: a single latency value with margin 92-94 ps on the plan's existing landing ring.
+  - Cheapest QC-local route for those 6: keep the old ring and leave them out of count-align. That would need a count_align_bind option, which is shared code (MESO).
+  - The start-skew fails (31/260 TT) remain with the start-tree planner.
+  - PARKED at claude/die-qc4-1028@72e85692c5.
+  - NEXT: once MESO rules on the start tree, re-run runCA.sh K2 (scripts in results/die_qc4_1028), then die STA, then the freeze gate. The K2 kit, clock-first routes and STA are reusable as they are.
