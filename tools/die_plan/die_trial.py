@@ -355,7 +355,18 @@ class SiteMap:
                 if self.forb[k][0] < q[0] < self.forb[k][2] and self.forb[k][1] < q[1] < self.forb[k][3]]
 
     def in_part(self, q, m=0.5):
-        return any(r[0] + m <= q[0] <= r[2] - m and r[1] + m <= q[1] <= r[3] - m for r in self.parts)
+        # DIE-S81-16: bucket index of the partition rects (built on first use; a rect that contains q lies in q's bucket),
+        # same boolean as the linear scan over every partition, which was ~70 % of the merge-mode DME runtime (snake_leg)
+        pi = self.__dict__.get("_pidx")
+        if pi is None or self.__dict__.get("_pidx_n") != len(self.parts):
+            pi = {}
+            for r in self.parts:
+                for i in range(int(r[0] // self.b), int(r[2] // self.b) + 1):
+                    for j in range(int(r[1] // self.b), int(r[3] // self.b) + 1):
+                        pi.setdefault((i, j), []).append(r)
+            self._pidx, self._pidx_n = pi, len(self.parts)
+        return any(r[0] + m <= q[0] <= r[2] - m and r[1] + m <= q[1] <= r[3] - m
+                   for r in pi.get((int(q[0] // self.b), int(q[1] // self.b)), ()))
 
     def why(self, q):
         h = self.hits(q)

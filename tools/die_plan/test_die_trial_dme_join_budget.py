@@ -80,3 +80,21 @@ def test_join_mono_never_reenters_built_nodes(monkeypatch):
 
 def test_budget_default():
     assert D.DME_JOIN_BUDGET == 4096
+
+
+def test_sitemap_in_part_index_equals_linear_scan():
+    """DIE-S81-16 SiteMap.in_part bucket index: same answer as the linear scan over every partition rect"""
+    random.seed(7)
+    sm = D.SiteMap.__new__(D.SiteMap)
+    sm.W, sm.H, sm.b, sm.forb, sm.idx = 3000.0, 3000.0, 250.0, [], {}
+    sm.parts = []
+    for _ in range(60):
+        x, y = random.uniform(-50, 2800), random.uniform(-50, 2800)
+        sm.parts.append((x, y, x + random.uniform(0.5, 700), y + random.uniform(0.5, 700)))
+    pts = [(random.uniform(-100, 3100), random.uniform(-100, 3100)) for _ in range(20000)]
+    pts += [(r[0] + 0.5, r[1] + 0.5) for r in sm.parts] + [(r[2] - 0.5, r[3] - 0.5) for r in sm.parts]   # margin edges
+    pts += [(250.0 * i, 250.0 * j) for i in range(-1, 13) for j in range(-1, 13)]                          # bucket edges
+    for m in (0.5, 0.0, 1.0):
+        for q in pts:
+            lin = any(r[0] + m <= q[0] <= r[2] - m and r[1] + m <= q[1] <= r[3] - m for r in sm.parts)
+            assert sm.in_part(q, m) == lin, (q, m)
