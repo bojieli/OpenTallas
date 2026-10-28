@@ -693,8 +693,16 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     for p_, d in port_win.items():
         if not tw:
             err.append(f"clocks: source -early/-late window on port {p_} without a plan clock.tap_window")
+        elif p_ in want:      # DIE-S81-10: early core tap keeps its own latency as late, early end -(early + W)
+            if set(d) != {"early"} or abs(d["early"] - (want[p_] - tw)) > EPS:
+                err.append(f"clocks: core tap {p_} window {d} ps, plan early {want[p_] - tw:g} (own {want[p_]:g} - W "
+                           f"{tw:g}), no -late line")
         elif p_ not in wports:
             err.append(f"clocks: tap window on {p_}, which is not a window clock port")
+    if tw:
+        for p_ in want:
+            if p_ not in port_win:
+                err.append(f"clocks: plan early core tap {p_} has no clock.tap_window early line")
     if tw:
         for p_ in wports:
             d = port_win.get(p_, {})
