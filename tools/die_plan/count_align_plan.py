@@ -4,6 +4,11 @@
     count_align_plan.py OCV_JSON [--corner TT_droop-regions_corelat250,FF_droop-regions_corelat202.5] [--period 833]
                         [--aperture 104.125 (T/8)] [--sync-aperture 26.5] [--wander-frac 0.05] [--pad 0]
                         [--mc-chips 2000] [--out JSON] [--cases TSV]
+                        [--sta-proof PROOF_DIR --sta-plan die_plan.json [--sta-clock-cal spice] [--sta-cppr-lca]]
+
+--sta-proof (DIE-HEAD-5, ONE interval model): every row's derated interval becomes its hull with the d interval
+die_sta_related --count-align gates on (die_sta_related.count_align_d_intervals via sta_d_intervals, same proof / clock
+cal / CPPR node), so plan margins and sample-edge clearances are lower bounds of the gate numbers.
 
 Input: the per-crossing rows of tools/s81_head/landed_phase_ocv.py: d = arr_dst - arr_src (nominal), p_up / p_dn =
 derated growth / shrink of d (shared AOCV + droop model, no double count).  K / DEPTH hold on the UNION of the corners.
@@ -383,6 +388,32 @@ def load_rows(ocv_json, corners, scale=1.0):
     return rows
 
 
+def sta_hull(rows, sta):
+    """DIE-HEAD-5 (COORD 00:22): ONE interval model.  sta = {corner: {'srcpart->dstpart': (lo, hi)}} from
+    die_sta_related.sta_d_intervals (the interval die_sta_related --count-align gates on).  Each row's derated interval
+    [d - p_dn, d + p_up] (landed_phase_ocv AOCV + droop, kept: 12.14a crossing margin after OCV + droop) becomes its hull
+    with the STA interval of its partition pair on every corner, so every plan margin (lag, sync edge clearance incl.
+    start skew) is a lower bound of the same margin on the gate numbers.  d (nominal) is unchanged.  Returns a summary."""
+    widened, missing, worst = 0, [], (0.0, None)
+    for r in rows:
+        tag = f"{r.get('src_part', r['src'])}->{r.get('dst_part', r['dst'])}"
+        iv = [c[tag] for c in sta.values() if tag in c]
+        if not iv:
+            missing.append(r["port"])
+            continue
+        lo0, hi0 = r["d_ps"] - r["p_dn_ps"], r["d_ps"] + r["p_up_ps"]
+        lo, hi = min([lo0] + [x[0] for x in iv]), max([hi0] + [x[1] for x in iv])
+        r["sta_d_ps"] = [round(min(x[0] for x in iv), 1), round(max(x[1] for x in iv), 1)]
+        if lo < lo0 or hi > hi0:
+            widened += 1
+            w = (lo0 - lo) + (hi - hi0)
+            if w > worst[0]:
+                worst = (w, r["port"])
+        r["p_dn_ps"], r["p_up_ps"] = r["d_ps"] - lo, hi - r["d_ps"]
+    return dict(corners=sorted(sta), rows=len(rows), widened=widened, max_widen_ps=round(worst[0], 1),
+                max_widen_port=worst[1], missing=len(missing), missing_ports=missing[:20])
+
+
 def parse_skew(text):
     """'LO,HI' ps -> (lo, hi) with lo <= hi"""
     lo, hi = (float(x) for x in text.split(","))
@@ -421,15 +452,36 @@ def main(argv=None):
     ap.add_argument("--start-skew", type=parse_skew, default=(0.0, 0.0), metavar="LO,HI",
                     help="start skew ps at the child's first sync flop (parent origin clk->Q + start wire - fclk wire; "
                          "die_sta_related start row clkq_ps); the sample edge keeps ap from either boundary with it")
+    ap.add_argument("--sta-proof", metavar="DIR", help="DIE-HEAD-5 one interval model: die clock proof (tap_arrivals_<C>"
+                    ".json) of die_sta_related; each crossing's interval becomes its hull with the STA d interval "
+                    "(die_sta_related.count_align_d_intervals) on the --corner corners; needs --sta-plan")
+    ap.add_argument("--sta-plan", help="die plan JSON die_sta_related --plan reads (partition pairs of the ports)")
+    ap.add_argument("--sta-clock-cal", choices=("none", "spice"), default="spice",
+                    help="as die_sta_related --clock-cal (12.15b gate: spice)")
+    ap.add_argument("--sta-cppr-lca", action="store_true", help="as die_sta_related --cppr-lca")
     ap.add_argument("--mc-chips", type=int, default=0)
     ap.add_argument("--out")
     ap.add_argument("--cases", help="TSV for the Verilator bench: port DEPTH L_ps (lo / mid / hi per crossing)")
     a = ap.parse_args(argv)
     rows = load_rows(a.ocv_json, a.corner, a.scale)
+    sta_info = None
+    if a.sta_proof:
+        if not a.sta_plan:
+            ap.error("--sta-proof needs --sta-plan")
+        import die_sta_related as DSR
+        cs = sorted({c.split("_")[0] for c in a.corner.split(",")})
+        sta_info = sta_hull(rows, DSR.sta_d_intervals(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_cppr_lca))
+        sta_info.update(proof=a.sta_proof, plan=a.sta_plan, clock_cal=a.sta_clock_cal, cppr_lca=a.sta_cppr_lca,
+                        model="hull(landed_phase_ocv derated, die_sta_related.count_align_d_intervals)")
+        if sta_info["missing"]:
+            print(f"WARNING --sta-proof: {sta_info['missing']} crossings without STA tap pairs keep the OCV interval "
+                  "(die_sta_related fails them closed: no taps)", file=sys.stderr)
     summ, out, regs = plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad, parse_edge_pad(a.edge_pad),
                            a.start_skew)
     if any(a.start_skew):
         summ["start_skew_ps"] = list(a.start_skew)
+    if sta_info:
+        summ["sta_interval"] = sta_info
     summ.update(corner=a.corner, period_ps=a.period, aperture_ps=a.aperture, sync_aperture_ps=a.sync_aperture,
                 wander_frac=a.wander_frac, pad=a.pad, scale=a.scale, source=a.ocv_json)
     if a.mc_chips:
