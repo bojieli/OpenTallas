@@ -905,3 +905,15 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
     - PHY_N 171.7 ps is NOT COVERED. PHY_N is a placeholder hard type (ot_hbm3e_phy_rc_e8p5, cells 1000, 0 hard_cores, 0 clock taps, no lef/lib), so there is no core STA with an internal tree.
     - SM 158.7 ps is NOT COVERED. q_sm* has 32 hnx_rp3lp3h halves, 0/32 with lef/lib, and b2l status is NO KIT. Only the r4 model (705-778 ps internal) exists.
     - Both spreads stay die-level spreads until real views exist (CHECKED plan + b2l).
+- 2026-10-28 02:19 PDT [DIE-HBM-5] PROBE 3 of 4: c20f die tree (intel2) GRT0, total overflow 0 with no extra iterations needed (CHECKED grt.log). Usage %: M4 3.07, M5 6.28, M6 6.66, M7 6.78, M8 0.83, M9 0.82. No congestion.rpt; every overflow class 0. c20h_tree is still in its kit (abstracts 21/~27).
+- 2026-10-28 02:19 PDT [DIE-HBM-5] ESTIMATE FIX: the REGION4 NE hub cut was mirrored. hubsplit.py scans in type-local x and adds the origin, but NE_hub is MY.
+  - The 9454-bit NE cut is at die x 19327.68, not 18973.44. The W/E port sides were mirrored too. CHECKED: the local cut at 3931.2 gives 9454 bits; die 18973.44 would give 22228.
+  - Re-run with orient-aware hubsplit_o.py (mirrors the MY hub type into the die frame, then the unchanged hubsplit.py):
+    - NW unchanged: cut 9097.92, 9920 bits.
+    - NE: cut 19327.68, 2883 W->E + 6571 E->W = 9454 bits; halves 4.30/3.95 mm; spread 132.8/127.5 @278.6 (UNCHECKED model).
+  - Corrected split + SF wires, spt feed (tool runs CHECKED, ring model UNCHECKED):
+    - @219.2: 298/38/0 FAIL, worst lo/hi 107.2/282.3.
+    - @278.6: 222/114/0, 114.2/124.9.
+  - That is fewer D8 than the mirrored map (171). fish @278.6 has 3 FAIL, so spt stays the feed.
+  - The in-hub HX crossings are D4: phys 2 on the heavy direction (NW W->E 6855 b, NE E->W 6571 b) and 4 on the light one.
+  - The region build kit uses the corrected cut: dry_c20h_hs on intel1 (C20h + kit_hs.py, 36 regions), then C20i.
