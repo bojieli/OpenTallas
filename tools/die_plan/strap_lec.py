@@ -217,9 +217,14 @@ def run_jobs(all_jobs, jobs=1):
         r = run_lec(w, [str(w / "cells.sv")] + list(common) + [str(w / "ref.sv"), str(w / "tied.sv")],
                     [str(w / "leaf_stubs.sv")], f"{mod}__ref", f"{mod}__tied", seq, image, timeout, leaves)
         r.update(type=tn, variant=i, kind=kind, values=vv, copies=len(qs), representative=qs[0])
-        r["pass"] = r["equivalent"] if kind == "eq" else not r["equivalent"]
+        # a mutant is CAUGHT only on a decided difference (equiv_status reports unproven cells); a TIMEOUT or any other
+        # error decides nothing and is UNDECIDED, never a pass (DIE-KV-7: 6 KV mutant timeouts had been counted caught)
+        r["timeout"] = r["rc"] == 124
+        caught = (not r["equivalent"]) and not r["timeout"] and bool(r["unproven"])
+        r["pass"] = r["equivalent"] if kind == "eq" else caught
+        r["undecided"] = r["timeout"] or (kind == "mutant" and not r["equivalent"] and not caught)
         print(f"{tn} v{i} {kind} copies={len(qs)} rep={qs[0]} equivalent={r['equivalent']} "
-              f"pass={r['pass']} {r['error'] or ''}", flush=True)
+              f"pass={r['pass']}{' UNDECIDED' if r['undecided'] else ''} {r['error'] or ''}", flush=True)
         return r
     from concurrent.futures import ThreadPoolExecutor
     with ThreadPoolExecutor(max(1, jobs)) as ex:

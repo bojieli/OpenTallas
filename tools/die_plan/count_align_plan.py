@@ -182,7 +182,7 @@ def directed_tree(rows, regions):
 
 
 def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edge_pad=None, start_skew=(0.0, 0.0),
-         skew_clean=False, _pad_pass=False, tree_parent=None):
+         skew_clean=False, _pad_pass=False, tree_parent=None, max_depth=8):
     """edge_pad {tree port or child region: PAD}: per-start-tree-edge PAD overriding the default `pad` (MESO-RECONCILE-1,
     COORD 10-27).  An edge PAD p_e >= pad delays the child's origin by p_e - pad counts and HOLDS the tree crossing's RTL K
     at its default-PAD value, so that crossing's lag (and latency) grow by (p_e - pad) T; every other crossing's K is
@@ -196,14 +196,19 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
     crossing, a parameter of the proven ot_dp_landing_origin, no new RTL form).  Default False: unchanged.
     tree_parent {child region: port} (MESO-START-2, COORD 03:4x, opt-in): re-parent the child (with its subtree) onto
     the given crossing (src -> child) after the min-ambiguity tree is built, so a region pair that has no bound crossing
-    gets its crossing as the start edge itself (no path ambiguity); refused if the src lies in the child's subtree."""
+    gets its crossing as the start edge itself (no path ambiguity); refused if the src lies in the child's subtree.
+    max_depth (DIE-S81-11, METHODOLOGY 12.16 b(iii), opt-in): largest standard ring DEPTH, 8 (default, unchanged) or 16
+    (RTL proof: results/die_s81_11_1028/D16.md, ot_dp_clk_landing_ca lag sweep [0.5, 15.5] T, mutants caught); a
+    crossing takes the smallest of 4 / 8 / 16 whose window holds L_hi with ap (16 only when max_depth = 16)."""
+    if max_depth not in (8, 16):
+        raise ValueError(f"max_depth {max_depth}: standard ring depths are 8 or 16")
     smax = max(abs(float(start_skew[0])), abs(float(start_skew[1])))
     if skew_clean and not _pad_pass:
         if not smax:
             raise ValueError("skew_clean needs a nonzero start_skew (--start-skew LO,HI)")
         need = 100.0 + smax
         args = (T, ap, wander_frac, sync_ap, pad)
-        s0, out0, regs0 = plan([dict(r) for r in rows], *args, edge_pad, start_skew, True, True, tree_parent)
+        s0, out0, regs0 = plan([dict(r) for r in rows], *args, edge_pad, start_skew, True, True, tree_parent, max_depth)
         byp = {o["port"]: o for o in out0}
         ep = dict(edge_pad or {})
         add = {}
@@ -215,8 +220,9 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
             if o.get("depth") and o["margin_lo_ps"] < need:
                 ep.pop(e["port"], None)
                 ep[g["region"]] = add[g["region"]] = int(e["rtl"]["PAD"]) + 1
-        summ, out, regs = plan(rows, *args, ep, start_skew, True, True, tree_parent)
-        sn, outn, _ = plan([dict(r) for r in rows], *args, edge_pad, start_skew, tree_parent=tree_parent)
+        summ, out, regs = plan(rows, *args, ep, start_skew, True, True, tree_parent, max_depth)
+        sn, outn, _ = plan([dict(r) for r in rows], *args, edge_pad, start_skew, tree_parent=tree_parent,
+                           max_depth=max_depth)
 
         def lat(xs):
             return sum(o["lat_cycles"] for o in xs if o.get("lat_cycles") is not None)
@@ -331,7 +337,7 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
         k_eff = math.ceil((lo_win - rel_lo) / T - 1e-12) + (pe(child) - pad if child is not None else 0)
         L_lo, L_hi = k_eff * T + rel_lo, k_eff * T + rel_hi
         nh = max(ap, 100.0 + smax) if (skew_clean and kind == "tree_ambiguous") else ap
-        dep = 4 if L_hi <= 3.5 * T - nh + 1e-9 else (8 if L_hi <= 7.5 * T - nh + 1e-9 else None)
+        dep = next((dd for dd in (4, 8, 16) if dd <= max_depth and L_hi <= (dd - 0.5) * T - nh + 1e-9), None)
         old_vals = interval_boundaries(r["lo"], r["hi"], T, T / 2) + 1
         out.append(dict(port=r["port"], src=u, dst=v, kind=kind, d_ps=r["d_ps"], p_up_ps=r["p_up_ps"],
                         p_dn_ps=r["p_dn_ps"], wander_ps=round(w, 1), path_ambiguous_cycles=amb[1] - amb[0],
@@ -384,7 +390,8 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
                     (g["start_from"]["sync_dist_ps"] for g in regs if g["start_from"] and g["start_from"]["sync_values"] == 1),
                     default=None),
                 crossings=len(out), depth4=sum(1 for o in ok if o["depth"] == 4),
-                depth8=sum(1 for o in ok if o["depth"] == 8), fail=len(out) - len(ok),
+                depth8=sum(1 for o in ok if o["depth"] == 8), depth16=sum(1 for o in ok if o["depth"] == 16),
+                max_depth=max_depth, fail=len(out) - len(ok),
                 max_path_ambiguous_cycles=max((o.get("path_ambiguous_cycles", 0) for o in out), default=0),
                 worst_margin_lo_ps=min((o["margin_lo_ps"] for o in ok), default=None),
                 worst_margin_lo_port=min(ok, key=lambda o: o["margin_lo_ps"])["port"] if ok else None,
@@ -490,6 +497,21 @@ def sta_hull(rows, sta):
                 max_widen_port=worst[1], missing=len(missing), missing_ports=missing[:20])
 
 
+def add_sta_ocv_args(ap):
+    """CA-OCV-1: the --sta-proof hull takes the same clock variation term die_sta_related --count-align adds
+    (--clock-ocv / --clock-droop / --droop-regions / --core-latency-ff); default none = unchanged hull."""
+    ap.add_argument("--sta-clock-ocv", choices=("none", "flat", "table"), default="none",
+                    help="as die_sta_related --clock-ocv (CA-OCV-1: the gate's CA interval carries it; table = gate form)")
+    ap.add_argument("--sta-clock-droop", choices=("stated", "shared"), help="as die_sta_related --clock-droop")
+    ap.add_argument("--sta-droop-regions", help="as die_sta_related --droop-regions")
+    ap.add_argument("--sta-core-latency-ff", type=float, help="as die_sta_related --core-latency-ff")
+
+
+def sta_ocv_kw(a):
+    return dict(clock_ocv=a.sta_clock_ocv, clock_droop=a.sta_clock_droop, droop_regions_file=a.sta_droop_regions,
+                core_latency_ff=a.sta_core_latency_ff)
+
+
 def parse_skew(text):
     """'LO,HI' ps -> (lo, hi) with lo <= hi"""
     lo, hi = (float(x) for x in text.split(","))
@@ -542,6 +564,9 @@ def main(argv=None):
     ap.add_argument("--sta-clock-cal", choices=("none", "spice"), default="spice",
                     help="as die_sta_related --clock-cal (12.15b gate: spice)")
     ap.add_argument("--sta-cppr-lca", action="store_true", help="as die_sta_related --cppr-lca")
+    add_sta_ocv_args(ap)
+    ap.add_argument("--max-depth", type=int, choices=(8, 16), default=8,
+                    help="DIE-S81-11 / 12.16 b(iii) opt-in: largest standard ring DEPTH (16 needs its RTL proof; default 8)")
     ap.add_argument("--mc-chips", type=int, default=0)
     ap.add_argument("--out")
     ap.add_argument("--cases", help="TSV for the Verilator bench: port DEPTH L_ps (lo / mid / hi per crossing)")
@@ -553,8 +578,10 @@ def main(argv=None):
             ap.error("--sta-proof needs --sta-plan")
         import die_sta_related as DSR
         cs = sorted({c.split("_")[0] for c in a.corner.split(",")})
-        sta_info = sta_hull(rows, DSR.sta_d_intervals(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_cppr_lca))
+        sta_info = sta_hull(rows, DSR.sta_d_intervals(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_cppr_lca,
+                                                      **sta_ocv_kw(a)))
         sta_info.update(proof=a.sta_proof, plan=a.sta_plan, clock_cal=a.sta_clock_cal, cppr_lca=a.sta_cppr_lca,
+                        clock_ocv=a.sta_clock_ocv,
                         model="hull(landed_phase_ocv derated, die_sta_related.count_align_d_intervals)")
         if sta_info["missing"]:
             print(f"WARNING --sta-proof: {sta_info['missing']} crossings without STA tap pairs keep the OCV interval "
@@ -562,7 +589,8 @@ def main(argv=None):
     if a.start_skew_clean and not any(a.start_skew):
         ap.error("--start-skew-clean needs --start-skew LO,HI")
     summ, out, regs = plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad, parse_edge_pad(a.edge_pad),
-                           a.start_skew, a.start_skew_clean, tree_parent=parse_edge_pad(a.tree_parent, str) or None)
+                           a.start_skew, a.start_skew_clean, tree_parent=parse_edge_pad(a.tree_parent, str) or None,
+                           max_depth=a.max_depth)
     if a.tree_parent:
         summ["tree_parent"] = parse_edge_pad(a.tree_parent, str)
     if any(a.start_skew):

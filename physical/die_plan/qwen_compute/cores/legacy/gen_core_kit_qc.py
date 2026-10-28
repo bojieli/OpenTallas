@@ -1073,6 +1073,19 @@ def main():
         shutil.copyfile(ppf, kd / "plan_pins.json")
         fz["pins_canon_sha256"] = kit_contract._canon(json.loads(ppf.read_text()), [w, h])
         fz["pins_placed_canon_sha256"] = kit_contract._canon(kit_contract.placed_pins(kd), [w, h])
+    else:
+        # QC-A0-KITS-3 10-28 (GATE-PINS-2 for LEF-contract kits, gen_phys plan_pins.json form): the declared pin contract
+        # is the closed view LEF; its pin centres (lef_contract) are written beside the kit as plan_pins.json, which
+        # becomes the kit-relative pins_file (sha = pins_sha256); the LEF stays recorded as pins_contract_lef + sha.
+        import kit_contract
+        body = json.dumps(dict(schema="opentallas.core_pins.v1", module=mod, outline_um=[w, h],
+                               source=hc["pins_file"], source_sha256=sha(REPO / hc["pins_file"]),
+                               pins=hc["pins"]), indent=1) + "\n"
+        (kd / "plan_pins.json").write_text(body)
+        fz.update(pins_contract_lef=hc["pins_file"], pins_contract_lef_sha256=sha(REPO / hc["pins_file"]),
+                  pins_file="plan_pins.json", pins_sha256=hashlib.sha256(body.encode()).hexdigest(),
+                  pins_canon_sha256=kit_contract._canon(dict(pins=hc["pins"]), [w, h]),
+                  pins_placed_canon_sha256=kit_contract._canon(kit_contract.placed_pins(kd), [w, h]))
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=rsts, ins=len(buses_in),
                           outs=len(buses_out), macros=sum(len(v) for v in mplace.values()), kit_hash=fz["kit_hash"])))

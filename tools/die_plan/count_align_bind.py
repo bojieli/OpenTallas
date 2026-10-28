@@ -545,7 +545,7 @@ def report(b, v):
                 sched_lat_total=sum(c["sched_lat"] for c in b["ports"].values()),
                 tree_sched_lat_total=sum(c["sched_lat"] for c in tree),
                 old_ring_total=3 * len(b["ports"]),
-                depth_hist={str(k): sum(1 for c in b["ports"].values() if c["depth"] == k) for k in (4, 8)},
+                depth_hist={str(k): sum(1 for c in b["ports"].values() if c["depth"] == k) for k in (4, 8, 16)},
                 K_range=[min(c["K"] for c in b["ports"].values()), max(c["K"] for c in b["ports"].values())],
                 start_tree_depth=max(r["depth"] for r in b["regions"].values()),
                 tree_edges_fall=sum(1 for r in b["regions"].values() if r["edge_fall"]),
@@ -574,6 +574,7 @@ def main(argv=None):
     ap.add_argument("--sta-plan", help="count_align_plan.py --sta-plan (with --from-ocv)")
     ap.add_argument("--sta-clock-cal", choices=("none", "spice"), default="spice")
     ap.add_argument("--sta-cppr-lca", action="store_true")
+    CAP.add_sta_ocv_args(ap)
     ap.add_argument("--samples", type=int, default=2000)
     ap.add_argument("--table")
     ap.add_argument("--table-out")
@@ -596,7 +597,8 @@ def main(argv=None):
                 ap.error("--sta-proof needs --sta-plan")
             import die_sta_related as DSR
             cs = sorted({c.split("_")[0] for c in a.corner.split(",")})
-            CAP.sta_hull(rows, DSR.sta_d_intervals(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_cppr_lca))
+            CAP.sta_hull(rows, DSR.sta_d_intervals(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_cppr_lca,
+                                                   **CAP.sta_ocv_kw(a)))
         if a.start_skew_clean and not any(a.start_skew):
             ap.error("--start-skew-clean needs --start-skew LO,HI")
         s, out, regs = CAP.plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad,

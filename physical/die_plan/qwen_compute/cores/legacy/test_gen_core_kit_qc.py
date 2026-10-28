@@ -40,6 +40,21 @@ class GeneratedKit(unittest.TestCase):
     def tearDownClass(cls):
         cls.tmp.cleanup()
 
+    def test_lef_contract_records_gate_pins_2(self):
+        """QC-A0-KITS-3 10-28: a LEF-contract kit stages plan_pins.json (the LEF pin centres) as its kit-relative
+        pins_file, records pins_canon_sha256 and passes kit_contract.pins_canonical."""
+        import hashlib
+        sys.path.insert(0, str(HERE.parents[4] / "tools/die_plan"))
+        import kit_contract
+        fz = json.loads((self.kd / "freeze.json").read_text())
+        self.assertEqual(fz["pins_file"], "plan_pins.json")
+        self.assertTrue(fz["pins_contract_lef"].endswith(".lef"))
+        self.assertEqual(fz["pins_sha256"], hashlib.sha256((self.kd / "plan_pins.json").read_bytes()).hexdigest())
+        self.assertTrue(fz["pins_canon_sha256"])
+        err, info = kit_contract.pins_canonical(self.kd)
+        self.assertEqual(err, [])
+        self.assertTrue(info["plan_file"].endswith("plan_pins.json"))
+
     def test_face_flops_anchors_patched(self):
         ff = (self.kd / "face_flops.tcl").read_text()
         skip = (self.kd / "face_guard_skip.txt").read_text().strip()
