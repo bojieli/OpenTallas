@@ -677,6 +677,13 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None)
         files.append(mf)
     f.write_text(text)
     files.append(f)
+    # DIE-HEAD-4b: the type-uniform wavefront relay outs (rst_o_<k> / start_o_<k>) an instance leaves open are declared
+    # spare outputs in the strict port-bind's default pad file <top>.sv.pads.json (same writer as bind.py).
+    import reset_tree as RT
+    try:
+        RT.write_wf_open_pads(P, f, text, sv_id, fresh=True)   # not returned: callers compile the returned files
+    except ValueError as e:
+        raise GenError(str(e)) from e
     man = parent_id_manifest(P)
     if man["types"]:
         import json
