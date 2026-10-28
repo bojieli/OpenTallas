@@ -904,7 +904,7 @@ def find_spine_row(site, xa, xb, y_want, dx=10.0, step=1.08, reach=3000.0):
 
 
 def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_um=50.0, rows=None, region_dme=False,
-                           dme_rep_um=None):
+                           dme_rep_um=None, dme_route_um=480.0, dme_delay_rep_um=None):
     """QC-SLICECLK-3 opt-in (--slice-spine, needs --region-trees): clock follows the slice band (METHODOLOGY 12.13b).
     - top: ONE shared horizontal spine at the legal row y_s nearest the common region centre; a 1-D equal-length
       bisection along it (full depth to top_leaf_um) reaches every region's spine column x_r at (x_r, y_s);
@@ -1016,7 +1016,7 @@ def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_
         b = box[rn]
         xc, yc = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
         if region_dme:             # DIE-QC-3 opt-in: legal-site DME region tree, fed straight from the spine entry
-            dn, droot, dst = dme_region_tree(site, rt[rn], rep_um=dme_rep_um)
+            dn, droot, dst = dme_region_tree(site, rt[rn], rep_um=dme_rep_um, delay_rep_um=dme_delay_rep_um)
             ids = {}
 
             def attach(j, parent, lv):
@@ -1026,6 +1026,15 @@ def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_
                     kw["part_root"] = d["part_root"]
                 i = mk(d["x"], d["y"], parent, lv, b, **kw)
                 ids[j] = i
+                pa, q = (nodes[parent]["x"], nodes[parent]["y"]), (d["x"], d["y"])
+                if abs(pa[0] - q[0]) > 1e-6 and abs(pa[1] - q[1]) > 1e-6:     # L route through the channels
+                    best = None
+                    for cn in ((q[0], pa[1]), (pa[0], q[1])):
+                        r = max(leg_blocked_run(site, pa, cn), leg_blocked_run(site, cn, q))
+                        if best is None or r < best[0]:
+                            best = (r, cn)
+                    if best[0] <= dme_route_um and best[0] < leg_blocked_run(site, pa, q):
+                        nodes[i]["route"] = [list(pa), list(best[1]), list(q)]
                 nodes[i]["taps"] = list(d["taps"])
                 for k in d["kids"]:
                     attach(k, i, lv + 1)
@@ -1162,9 +1171,50 @@ def merge_point_routed(site, c1, s1, c2, s2, radius_um=800.0, step=1.08, extra_w
 
 
 DME_MODES = ("gap", "median", "greedy")
+# BUFx24 stage on a 1x M8/M9 leg, d = d0 + k1 L + k2 L^2 (ps, um): OpenSTA fit on 1x ladders (DIE-QC-3 cal1x, resid <= 4 ps)
+STAGE_1X_TT = (20.8281, 0.013984, 0.00033554)
 
 
-def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MODES, rep_um=None):
+def leg_ps(L, rep_um):
+    """delay of a buffered leg of length L (um): n = ceil(L / rep_um) equal stages (n - 1 repeaters + the child node
+    buffer), as tree_netlist places them"""
+    n = max(1, int(math.ceil(L / rep_um - 1e-9)))
+    d0, k1, k2 = STAGE_1X_TT
+    return n * d0 + k1 * L + k2 * L * L / n
+
+
+def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, extra_ps_um=0.03):
+    """delay-aware DME merge (opt-in --region-dme delay): s1/s2 are subtree delays (ps); candidates = the length-locus
+    pool of merge_point (depths converted at the repeated-line ps/um) + every legal point on the kids' shortest L path;
+    the legal point with the least |leg_ps(L1) + s1 - leg_ps(L2) - s2| + extra_ps_um x added wire wins (stage counts
+    priced: a short leg still costs a whole stage).  -> (q, imbalance_ps, extra_um)"""
+    md = _man
+    a = leg_ps(rep_um, rep_um) / rep_um
+    pool = []
+    q0, _, _ = merge_point(site, c1, s1 / a, c2, s2 / a, radius_um, step, 0.1)
+    pool.append(q0)
+    D_ = md(c1, c2)
+    for path in ([c1, (c2[0], c1[1]), c2], [c1, (c1[0], c2[1]), c2]):
+        n = int(D_ / (4 * step)) + 1
+        for j in range(n + 1):
+            pt, _ = polyline_points(path, [j / n]) if D_ > 0 else ([c1], 0)
+            q = (round(pt[0][0], 3), round(pt[0][1], 3))
+            if 0 <= q[0] <= site.W and 0 <= q[1] <= site.H and site.legal(q):
+                pool.append(q)
+    for dx in (-2, -1, 1, 2):          # around the length solution
+        for dy in (-2, -1, 1, 2):
+            q = (round(q0[0] + dx * 4 * step, 3), round(q0[1] + dy * 4 * step, 3))
+            if 0 <= q[0] <= site.W and 0 <= q[1] <= site.H and site.legal(q):
+                pool.append(q)
+
+    def cost(q):
+        return (abs(leg_ps(md(q, c1), rep_um) + s1 - leg_ps(md(q, c2), rep_um) - s2)
+                + extra_ps_um * (md(q, c1) + md(q, c2) - D_))
+    q = min(pool, key=cost)
+    return q, abs(leg_ps(md(q, c1), rep_um) + s1 - leg_ps(md(q, c2), rep_um) - s2), md(q, c1) + md(q, c2) - D_
+
+
+def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MODES, rep_um=None, delay_rep_um=None):
     """DIE-QC-3 opt-in (--region-dme): a region clock tree built ON legal sites, so nothing slides after balancing.
     Embedding: bottom-up DME with Manhattan length as the delay proxy (repeated 1x line: delay ~ linear in length);
     every merge point is the legal zero-skew point from merge_point() (no slide, no snake; an elongated merge point is
@@ -1186,6 +1236,14 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
     def merge(a, b):
         A, B = out[a], out[b]
         rad = min(max(radius_um, _man((A["x"], A["y"]), (B["x"], B["y"])) / 2), 4000.0)
+        if delay_rep_um:        # delay-aware: S / Smin are ps, legs priced by leg_ps (stage counts included)
+            q, imb, ex = merge_point_delay(site, (A["x"], A["y"]), A["S"], (B["x"], B["y"]), B["S"], delay_rep_um, rad)
+            q = round_legal(site, q)
+            la, lb = _man(q, (A["x"], A["y"])), _man(q, (B["x"], B["y"]))
+            da, db = leg_ps(la, delay_rep_um), leg_ps(lb, delay_rep_um)
+            out.append(dict(x=q[0], y=q[1], kids=[a, b], taps=[], S=max(da + A["S"], db + B["S"]),
+                            Smin=min(da + A["Smin"], db + B["Smin"]), W=la + lb + A["W"] + B["W"], imb=imb, ex=ex))
+            return len(out) - 1
         q, imb, ex, da, db = merge_point_routed(site, (A["x"], A["y"]), A["S"], (B["x"], B["y"]), B["S"], rad, 1.08,
                                                 extra_wire_w, rep_um=rep_um)
         q2 = round_legal(site, q)
@@ -1201,7 +1259,10 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
         merged DOWN into the deep one instead (with the deep root's kid nearest to it, recursively), and the deep
         root is re-embedded over the result and its other kid: the depths meet where they match."""
         A, B = out[a], out[b]
-        if abs(A["S"] - B["S"]) <= _man((A["x"], A["y"]), (B["x"], B["y"])) + 1e-6 or depth > 24:
+        reach = _man((A["x"], A["y"]), (B["x"], B["y"]))
+        if delay_rep_um:
+            reach = leg_ps(reach, delay_rep_um) - leg_ps(0.0, delay_rep_um)
+        if abs(A["S"] - B["S"]) <= reach + 1e-6 or depth > 24:
             return merge(a, b)
         if A["S"] > B["S"]:
             a, b, A, B = b, a, B, A
@@ -1224,7 +1285,7 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
                 A = out[live[a]]
                 for b in range(a + 1, len(live)):
                     B = out[live[b]]
-                    c = max(_man((A["x"], A["y"]), (B["x"], B["y"])), abs(A["S"] - B["S"]))
+                    c = max(_man((A["x"], A["y"]), (B["x"], B["y"])) * (0.33 if delay_rep_um else 1.0), abs(A["S"] - B["S"]))
                     if best is None or c < best[0] - 1e-9:
                         best = (c, a, b)
             _, a, b = best
@@ -1488,7 +1549,15 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
             L = abs(p["x"] - nd["x"]) + abs(p["y"] - nd["y"])
             nrep = max(0, int(math.ceil(L / rep_um)) - 1)
             poly = None
-            if site is not None and L > 2 * rep_um and leg_blocked_run(site, (p["x"], p["y"]), (nd["x"], nd["y"])) > rep_um \
+            if nd.get("route") and site is not None and _man(nd["route"][0], (p["x"], p["y"])) < 1e-3 \
+                    and _man(nd["route"][-1], (nd["x"], nd["y"])) < 1e-3:    # DIE-QC-3 --region-dme: the leg's L route
+                poly = [tuple(q) for q in nd["route"]]
+                _, Ld = polyline_points(poly, [])
+                nrep = max(0, int(math.ceil(Ld / rep_um)) - 1)
+                pts, _ = polyline_points(poly, [(j + 1) / (nrep + 1) for j in range(nrep)])
+                nd["detour"] = [[round(a, 3), round(b, 3)] for a, b in poly]
+                nd["detour_um"] = round(Ld - L, 1)
+            elif site is not None and L > 2 * rep_um and leg_blocked_run(site, (p["x"], p["y"]), (nd["x"], nd["y"])) > rep_um \
                     and straight_leg_span(site, p, nd, nrep) > DETOUR_SPAN_X * rep_um:
                 poly = legal_detour(site, (p["x"], p["y"]), (nd["x"], nd["y"]))
                 if poly is not None:       # slid-root fix: repeaters evenly along the legal detour path
@@ -1560,7 +1629,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         nodes, spine_info = build_slice_spine_tree(P, taps, regions, leaf_um, site, spine_top_leaf_um,
                                                     json.loads(Path(slice_rows).read_text()) if slice_rows else None,
                                                     region_dme=region_dme,
-                                                    dme_rep_um=rep_um if region_dme == "priced" else None)
+                                                    dme_rep_um=rep_um if region_dme == "priced" else None,
+                                                    dme_delay_rep_um=rep_um if region_dme == "delay" else None)
         moves = []
         for i, nd in sorted(nodes.items()):
             nd["req_xy"] = [nd["x"], nd["y"]]
@@ -3327,12 +3397,13 @@ def main(argv=None):
     k.add_argument("--slice-balance", action="store_true",
                    help="DIE-QC-3 opt-in (with --slice-spine): after the site pass, re-place the region-tree nodes as "
                         "zero-skew (Manhattan) merge points on legal sites (balance_legalize), column nodes along their column")
-    k.add_argument("--region-dme", nargs="?", const=True, default=False, choices=[True, "priced"],
-                   type=lambda v: "priced" if v == "priced" else v,
+    k.add_argument("--region-dme", nargs="?", const=True, default=False, choices=[True, "priced", "delay"],
+                   type=lambda v: v if v in ("priced", "delay") else v,
                    help="DIE-QC-3 opt-in (with --slice-spine): each region tree is a legal-site DME tree (per partition: "
                         "binary cuts of its taps; above: cuts of the partition roots), fed from the region's spine "
                         "entry; every merge point is chosen legal and zero-skew, so the site pass moves nothing; '--region-dme "
-                        "priced' also prices the netlist's legal detours of legs over cores (merge_point_routed)")
+                        "priced' also prices the netlist's legal detours of legs over cores (merge_point_routed); '--region-dme delay' balances "
+                        "stage-priced leg delay (leg_ps: a short leg still costs a stage) instead of length")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "

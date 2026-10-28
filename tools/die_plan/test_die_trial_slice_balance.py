@@ -135,3 +135,20 @@ def test_region_dme_flag_is_opt_in():
     assert inspect.signature(D.build_slice_spine_tree).parameters["region_dme"].default is False
     assert inspect.signature(D.clock_kit).parameters["region_dme"].default is False
     assert "--region-dme" in inspect.getsource(D.main)
+
+
+def test_leg_ps_prices_a_stage_per_leg():
+    assert D.leg_ps(10.0, 250.0) > D.STAGE_1X_TT[0]                # a short leg still costs a whole stage
+    assert abs(D.leg_ps(500.0, 250.0) - 2 * D.leg_ps(250.0, 250.0)) < 1e-9
+    assert D.leg_ps(251.0, 250.0) > D.leg_ps(250.0, 250.0) + 10.0     # one more stage, shorter stages
+
+
+def test_region_dme_delay_mode_balances_stage_priced_delay():
+    site, taps = _c_partition()
+    dn, root, st = D.dme_region_tree(site, taps, delay_rep_um=250.0)
+    assert st["spread_um"] <= 25.0, st                               # ps in delay mode (S / Smin are leg_ps sums)
+    st_ = [root]
+    while st_:
+        d = dn[st_.pop()]
+        st_ += d["kids"]
+        assert site.legal((d["x"], d["y"]))
