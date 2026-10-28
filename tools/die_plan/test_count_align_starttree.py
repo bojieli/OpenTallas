@@ -19,9 +19,11 @@ AP = T / 8
 SEG = 90.0      # ps per spine tree level
 
 
-def ctx_chain(n=6, seg=SEG, ocv_frac=0.10):
+def ctx_chain(n=6, seg=SEG, ocv_frac=0.10, fall=0.0):
     """clock spine h -> h0 -> h00 ... ; region Ri hangs off spine node i at 'h'+'0'*i+'1' with two taps (leaf legs
-    40 / 60 ps).  ocv = ocv_frac x unshared (late branch) per side, a stand-in for clock_ocv_fn."""
+    40 / 60 ps).  ocv = ocv_frac x unshared (late branch) per side, a stand-in for clock_ocv_fn.
+    fall (FLOW-ONEMODEL-1): MEASURED fall arrival = rise arrival + fall ps at every tap and node (0 = 50 % duty);
+    a callable fall(level) gives a per-level distortion; None = the proof has rise arrivals only."""
     nl, ne, ns, nxy = {}, {}, {}, {}
     taps = {}
 
@@ -40,6 +42,13 @@ def ctx_chain(n=6, seg=SEG, ocv_frac=0.10):
             taps[k] = dict(port=k, part=f"R{i}", cppr_node=f"R{i}", tree_path=tp, late_ps=nl[tp], early_ps=ne[tp],
                            stages_from_root=i + 2, xy_um=nxy[tp])
     meta = dict(node_late_ps=nl, node_early_ps=ne, node_stages=ns, node_xy_um=nxy, cppr_node_range_ps={})
+    if fall is not None:
+        fd = fall if callable(fall) else (lambda lev, f=fall: f)
+        meta["node_fall_late_ps"] = {p: v + fd(len(p)) for p, v in nl.items()}
+        meta["node_fall_early_ps"] = {p: v + fd(len(p)) for p, v in ne.items()}
+        for t in taps.values():
+            t["fall_late_ps"] = t["late_ps"] + fd(len(t["tree_path"]))
+            t["fall_early_ps"] = t["early_ps"] + fd(len(t["tree_path"]))
 
     def ocv(a, b, check):
         A, B = taps[a], taps[b]

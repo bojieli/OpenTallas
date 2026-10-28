@@ -82,7 +82,10 @@ def test_mutant_without_variation_passes_a_crossing_the_fixed_gate_fails(monkeyp
     b["ports"]["x"]["L_hi_ps"] += shift
     good = R.count_align_landed(L, _taps(), b, T, REG, ocv=_ocv, ocv_label="table")
     assert good["fail"] == 1 and good["below_need"] == 1 and good["verdict"] == "FAIL"
-    monkeypatch.setattr(R, "count_align_d_intervals", _pre_fix_interval)
+    fixed_pair = R.ca_pair_interval
+    # MUTANT (pre CA-OCV-1) on the one pair function every interval goes through (FLOW-ONEMODEL-1)
+    monkeypatch.setattr(R, "ca_pair_interval", lambda A, B, a, b, rng=None, ocv=None, edge="rise":
+                        fixed_pair(A, B, a, b, rng, None, edge))
     mut = R.count_align_landed(L, _taps(), b, T, REG, ocv=_ocv, ocv_label="table")
     assert mut["fail"] == 0 and mut["verdict"] == "PASS"            # the mutant hides it: this test catches the mutant
 
@@ -170,15 +173,15 @@ def test_main_count_align_row_carries_the_class_ocv(tmp_path, monkeypatch):
     assert abs(r1["corners"]["TT"]["classes"]["landed"]["clock_ocv_pessimism_max_ps"]["setup"] - ps) < 0.011
 
 
-def test_planner_cli_flags_reach_sta_d_intervals(tmp_path, monkeypatch):
+def test_planner_cli_flags_reach_sta_port_intervals(tmp_path, monkeypatch):
     import count_align_plan as CAP
     seen = {}
 
-    def fake(proof, plan, cs, cal, lca, **kw):
+    def fake(proof, plan, cs, ports, pr, cal, lca, fall=False, **kw):
         seen.update(kw)
-        return {"TT": {}}
+        return {"TT": dict(rise={}, fall={}, unbound=[])}
     import die_sta_related as DSR
-    monkeypatch.setattr(DSR, "sta_d_intervals", fake)
+    monkeypatch.setattr(DSR, "sta_port_intervals", fake)
     rows = dict(corners={"TT_x": dict(all=[dict(port="p", src="a", dst="b", d_ps=100.0, p_up_ps=1.0, p_dn_ps=1.0,
                                                 unshared_a_ps=0.0, unshared_b_ps=0.0, margin_ps=0.0)])})
     (tmp_path / "r.json").write_text(json.dumps(rows))
