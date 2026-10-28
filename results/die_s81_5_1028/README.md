@@ -51,7 +51,10 @@ x1.00 28 / x1.0485 17 / x1.0552 17 FAIL (same nontree crossings).
 ## 5 Kit F (COORD 01:4x/01:5x): E on DIE-QC-3 --clock-rc 1x --region-dme delay, GRT with clock 2W2S NDR
 go_grt.sh CKNDR=1: create_ndr CK2W2S (M8/M9 width 0.08, spacing 0.08 = 2x LEF) + assign_ndr -all_clocks.  The combo
 GRT already keeps clock M8-M9 and signals M4-M7 disjoint, so a separate clock-first frozen pass is not built here.
-Results: see the lane line (filled at PARKED).
+Kit F clock (CHECKED kit_F/clock/tree.json): 398 region trees, 17,272 nodes, 7,252 repeaters, 3.99 m wire (A/E 6.11 m),
+132 levels, worst straight span 400 um.  The kit's remaining steps, GRT F (CKNDR=1) and post F run unattended as
+scripts/chain_F.sh (intel2 data dir: chain_F.log, grt_F.log, post_F.log); not read before PARK.  go_grt.sh prints the
+main worktree sha in its START line; the F kit code is 2de66bb213 (kit_F.log START).
 
 ## Open / next
 1. Feed depth (17 CA FAILs): relay split along the spine feed costs 4 / 11 / 43 hops per pair (+2094 port-hops) ->
