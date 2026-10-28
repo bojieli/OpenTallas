@@ -43,9 +43,12 @@ python3 "$D/r8/r8_fault_exempt.py" "$O/r8/bg_kv44.json" "$O/r8/bg_fx.json"
 python3 "$D/r8/r8_invariant_split.py" "$O/die_plan.json" "$O/r8/bg_fx.json" "$O/r8/bg_split.json"
 python3 "$D/r8/r8_row_publish.py" "$O/die_plan.json" "$O/r8/bg_split.json" "$O/r8/bg_pub.json" --family "$FAMILY"
 python3 "$D/r8/r8_rebase.py" "$O/die_plan.json" "$O/r8/bg_pub.json" "$D/r8/kv44_bind_latency.json.gz" "$O/r8/bus_groups.json"
+# DIE-KV-13 10-28 (COORD TOK-ALL-13r): one write group (en+addr+data, r8/write_groups.json) = one as-built source event
+python3 "$D/r8/r8_write_groups.py" prep "$O/r8/bus_groups.json" "$O/r8/bus_groups.json"
 rm "$O/r8/bg_kv44.json" "$O/r8/bg_fx.json" "$O/r8/bg_split.json" "$O/r8/bg_pub.json"
 python3 "$T/gen.py" latency "$O/die_plan.json" --inplace --out "$O/lat" --groups "$O/r8/bus_groups.json" --bus leaf --replica type --fold-r8
 cp "$O/lat/qwen_kvsys_r8_landing.json" "$O/r8/"
+python3 "$D/r8/r8_write_groups.py" check "$O/r8/qwen_kvsys_r8_landing.json"   # every write group lands on ONE edge
 python3 "$D/lat_delta_v39.py" "$IN/die_plan.json" "$O/die_plan.json" "$O/lat_delta_v39f.json" "$O/lat/qwen_kvsys_latency.json"
 python3 "$D/g3/row_latency_v39f.py" "$IN/r8/qwen_kvsys_r8_landing.json" "$O/r8/qwen_kvsys_r8_landing.json" "$O/die_plan.json" \
   --out "$O/lat_v39f/row_latency.json"

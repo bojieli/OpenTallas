@@ -1700,7 +1700,7 @@ def path_lengths(nodes):
 
 
 def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", leaf_um=200.0, full=0.0, dme_only=None,
-                        dme_feed_centroid=0.0):
+                        dme_feed_centroid=0.0, region_stub=0.0):
     """DIE-KV-2 (opt-in --tree-form link_fishbone --region-trees MAP --feed FEED, METHODOLOGY 12.13 clock follows data):
     the die clock is fed ALONG THE REGION LINKS, not by a die-wide balanced tree.
       (1) FEED: the region feed tree of tools/die_plan/locality.py (feed 'fish': max-bit spanning tree of the region
@@ -1723,7 +1723,13 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
     region ends at the CENTROID of that region's taps instead of its partition bbox centre (the DME root hangs from the
     feed end; a region whose bbox is stretched by one far partition, e.g. QC c_W5_bf_01 + io_serdes_2, otherwise feeds
     ~0.7 mm past its cores and back).  Non-DME regions keep the bbox centre (their H-tree bisects the bbox).  Default 0:
-    unchanged."""
+    unchanged.
+    region_stub=1 (DIE-QC-13 opt-in, --tree-opt region_stub=1; 12.16b(iv) reset release follows the clock): the feed end
+    of every region that FEEDS other regions becomes a SHARED FEED NODE: the region's own tree (H-tree / DME / fishbone)
+    hangs from a stub node at the same point (zero-length leg, one even inverter pair in inv2) instead of from the feed
+    end itself.  The shared node then carries no region taps, so a reset-release start port leaves it as a retime flop
+    on the clock fork (virtual st: node) instead of from a parent-region leaf ~440 ps below the fork (QC trial10: 60/871
+    width start fails, all on slice-head parents).  Regions without feed children are unchanged.  Default 0: unchanged."""
     par = feed["parent"]
     tapxy = {tuple(k.split("->")): v for k, v in feed["tap"].items()}
     rt = defaultdict(list)
@@ -1777,6 +1783,14 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
             nodes[a]["region_root"] = c
             rr[c] = a
             order.append(c)
+    if region_stub:            # DIE-QC-13 opt-in: shared feed node; the region's own tree hangs from a stub below it
+        for r in list(order):
+            if kids.get(r):
+                a = rr[r]
+                nodes[a].pop("region_root", None)
+                nodes[a]["shared_feed"] = r
+                rr[r] = mk(nodes[a]["x"], nodes[a]["y"], a, nodes[a]["level"] + 1, box[r], region_root=r,
+                           region_stub=True)
     if local == "none":        # DIE-QC-3 opt-in (link_htree + --region-dme): feed only; region trees attached later
         nodes[0]["link_feed"] = dict(root=root, regions=len(box), local="dme",
                                      feed_edges=sum(1 for v in par.values() if v is not None))

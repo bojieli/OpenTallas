@@ -17485,7 +17485,9 @@
 "asbuilt_stages": 6,
 "bound_stages": 55,
 "landed_stages": 32,
-"lane": "L1431"
+"lane": "L1431",
+"asbuilt_lane_stages": 6,
+"write_group": "dcal_bcfg"
 },
 {
 "sink_port": "bcfg_data",
@@ -17505,7 +17507,9 @@
 "asbuilt_stages": 6,
 "bound_stages": 56,
 "landed_stages": 32,
-"lane": "L1432"
+"lane": "L1432",
+"asbuilt_lane_stages": 6,
+"write_group": "dcal_bcfg"
 },
 {
 "sink_port": "bcfg_rx_we",
@@ -17522,10 +17526,12 @@
 0
 ]
 ],
-"asbuilt_stages": 5,
+"asbuilt_stages": 6,
 "bound_stages": 53,
 "landed_stages": 31,
-"lane": "L1433"
+"lane": "L1433",
+"asbuilt_lane_stages": 5,
+"write_group": "dcal_bcfg"
 },
 {
 "sink_port": "bcfg_tx_we",
@@ -17542,10 +17548,12 @@
 0
 ]
 ],
-"asbuilt_stages": 5,
+"asbuilt_stages": 6,
 "bound_stages": 53,
 "landed_stages": 31,
-"lane": "L1434"
+"lane": "L1434",
+"asbuilt_lane_stages": 5,
+"write_group": "dcal_bcfg"
 }
 ]
 },

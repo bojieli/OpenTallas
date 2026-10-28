@@ -11,7 +11,7 @@
 "stage_cycles": 0.5,
 "over_margin": "keep"
 },
-"bus_groups_digest": "840b8e7d9100bf98",
+"bus_groups_digest": "c08e5ee080fcf2ac",
 "note": "R8 landing pads (tools/die_plan/r8.py): pad = cycles added at the sink landing (after the sink partition's in boundary flop, on the bits that leaf consumes) so every bus group and replica set lands at ONE added delay; landed = bound + pad is the depth the compiler schedules",
 "summary": {
 "members": 5537,
@@ -19,7 +19,7 @@
 "replica_links": 9,
 "padded_members": 320,
 "padded_bits": 8653,
-"pad_flops": 34397,
+"pad_flops": 34399,
 "max_pad": 16,
 "max_depth_before": 68,
 "max_depth_after": 68,
@@ -6848,6 +6848,7 @@
 "asbuilt": 6,
 "bound": 55,
 "pad": 1,
+"asbuilt_lane": 6,
 "landed": 56,
 "lane": "L1431"
 },
@@ -6867,6 +6868,7 @@
 "asbuilt": 6,
 "bound": 56,
 "pad": 0,
+"asbuilt_lane": 6,
 "landed": 56,
 "lane": "L1432"
 },
@@ -6883,10 +6885,11 @@
 ]
 ],
 "source": "kvs_ctl.boot__link_cfg_rx_we",
-"asbuilt": 5,
+"asbuilt": 6,
 "bound": 53,
-"pad": 2,
-"landed": 55,
+"pad": 3,
+"asbuilt_lane": 5,
+"landed": 56,
 "lane": "L1433"
 },
 {
@@ -6902,10 +6905,11 @@
 ]
 ],
 "source": "kvs_ctl.boot__link_cfg_tx_we",
-"asbuilt": 5,
+"asbuilt": 6,
 "bound": 53,
-"pad": 2,
-"landed": 55,
+"pad": 3,
+"asbuilt_lane": 5,
+"landed": 56,
 "lane": "L1434"
 },
 {

@@ -62,6 +62,63 @@ def network_lane_cycles(plan):
     return dict(out)
 
 
+START_PIN_IN = "cland_tstart_in"     # == count_align_bind.START_PIN_IN
+START_PIN_OUT = "cland_tstart_out"   # == count_align_bind.START_PIN_OUT
+
+
+def start_net_name(x):
+    """die-level start-stage net name part of a region (== start_stage_emit.sv_name)"""
+    return re.sub(r"\W", "_", x)
+
+
+def start_pins(plan, ca):
+    """START-TREE compose slice (DIE-HEAD-11): the dedicated start pins of a count-aligned table with start_ports.
+    -> dict(ports={pid: dict(src, dst, src_part, dst_part)}, type_pins={type: {pin: dir}}, plan_ports=[real -> real],
+            die_inputs=[real -> stage: top output rs_<region>], die_outputs=[stage -> real: top input pst_<region>]).
+    A start port's real ends are its launch partition (src region origin) and capture partition (dst region origin); a
+    virtual region ('st:' / regions[].virtual) is a die-level stage (start_stage_emit.py), never a partition."""
+    parts = {p["name"]: p for p in plan["partitions"]}
+    reg = ca["regions"]
+
+    def real(x):
+        if x not in reg:
+            raise LandingError(f"start port end {x}: not a start-tree region")
+        return not str(x).startswith("st:")
+    ports, tp = {}, defaultdict(dict)
+    plan_ports, die_in, die_out = [], [], []
+    for pid, c in sorted(ca["start_ports"].items()):
+        s_real, d_real = real(c["src"]), real(c["dst"])
+        sp = (c.get("src_part") or c.get("launch_part")) if s_real else None
+        dp = (c.get("dst_part") or c.get("capture_part")) if d_real else None
+        for what, x, q in (("launch", c["src"], sp), ("capture", c["dst"], dp)):
+            if q is not None and q not in parts:
+                raise LandingError(f"start port {pid}: {what} partition {q} is not a plan partition")
+            if (x == c["src"] and s_real or x == c["dst"] and d_real) and q is None:
+                raise LandingError(f"start port {pid}: real region {x} has no {what} partition")
+            org = reg[x].get("origin_part")
+            if q is not None and org is not None and q != org:
+                raise LandingError(f"start port {pid}: {what} partition {q} is not the origin {org} of {x}")
+        ports[pid] = dict(src=c["src"], dst=c["dst"], src_part=sp, dst_part=dp)
+        if sp:
+            tp[parts[sp]["type"]][START_PIN_OUT] = "out"
+        if dp:
+            tp[parts[dp]["type"]][START_PIN_IN] = "in"
+        if sp and dp:
+            plan_ports.append(dict(port=pid, src_part=sp, dst_part=dp))
+        elif sp:
+            die_in.append(dict(port=pid, src_part=sp, net=f"rs_{start_net_name(c['src'])}", stage_region=c["dst"]))
+        elif dp:
+            die_out.append(dict(port=pid, dst_part=dp, net=f"pst_{start_net_name(c['dst'])}", stage_region=c["src"]))
+    # a die-level stage reads one rs_<region> net per real parent region (fan-out inside the stage module)
+    seen = {}
+    for e in die_in:
+        if seen.setdefault(e["net"], e["src_part"]) != e["src_part"]:
+            raise LandingError(f"start net {e['net']}: two launch partitions")
+    return dict(ports=ports, type_pins={k: dict(v) for k, v in sorted(tp.items())}, plan_ports=plan_ports,
+                die_inputs=die_in, die_outputs=die_out, die_input_nets=sorted(seen),
+                pins=dict(input=START_PIN_IN, output=START_PIN_OUT))
+
+
 def requirements(plan, table):
     """Publish concrete type-mask/pin/latency work before changing a plan.
 
@@ -234,6 +291,8 @@ class Landings:
         if self.ca and self.ca.get("strap_form"):
             import count_align_bind as CAB
             self.strap = CAB.strap_ties(self.ca, plan)
+        # START-TREE compose slice (opt-in: count_aligned.start_ports): dedicated start pins, see _start_pins()
+        self.tstart = self._start_pins(plan) if self.ca and self.ca.get("start_ports") else None
         seen = set()
         for r in table["ports"]:
             pid = r["port"]
@@ -319,6 +378,8 @@ class Landings:
                 required.update({f"cland_fstart_out_{b}": "out" for b in mask[1]})
                 required.update({f"cland_fstart_in_{b}": "in" for b in mask[0]})
                 cat = self.ca_type.get(tn)
+                if self.tstart:
+                    required.update({pin: d for pin, d in self.tstart["type_pins"].get(tn, {}).items()})
                 if cat and cat["relay_tx"]:
                     required["cland_rstart_out"] = "out"
                 if cat and cat["role"][0] == "relay":
@@ -477,6 +538,12 @@ class Landings:
                     role = ("relay", org, RELAY_STAGES)
                 elif rg["parent"] is None:
                     role = ("root", int(ca.get("root_settle_cycles", 64)))
+                elif self.tstart and rg["tree_port"] in self.tstart["ports"]:
+                    sp = self.tstart["ports"][rg["tree_port"]]
+                    if sp["dst_part"] != pn or sp["src"] != rg["parent"]:
+                        raise LandingError(f"count-aligned landing: start port {rg['tree_port']} does not start "
+                                           f"{rg['parent']} -> {pn}")
+                    role = ("child", START_PIN_IN, bool(rg["edge_fall"]), int(rg["pad"]))
                 else:
                     r = ports.get(rg["tree_port"])
                     if r is None or r["dst"] != pn or r["src_region"] != rg["parent"]:
@@ -512,6 +579,9 @@ class Landings:
                 out[tn] = dict(rings={b: dict(K=None, depth=v["depth"], kw=v["kw"]) for b, v in st["buses"].items()},
                                role=role, relay_tx=out[tn]["relay_tx"], straps=dict(st["straps"]))
         return out
+
+    def _start_pins(self, plan):
+        return start_pins(plan, self.ca)
 
     def validate_observer(self,binder):
         if not self.collector or not self.collector.get("observer"):return
@@ -719,6 +789,10 @@ class Landings:
                       f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));"]
         if cat:
             logic += self._origin_rtl(tn, cat, ca_raw, body, extra)
+            if self.tstart and self.tstart["type_pins"].get(key, {}).get(START_PIN_OUT):
+                # START-TREE: the region start leaves on ONE dedicated pin (fanned out at the die top / to a stage)
+                extra.append(f"    output wire {START_PIN_OUT}")
+                logic.append(f"    assign {START_PIN_OUT} = cland_start;")
         if self.dataflow:
             body = self._dataflow_monitor(tn, key, mask, collector_info, extra, logic, body)
         elif active_collector:
@@ -791,13 +865,18 @@ class Landings:
             logic, raw = self._origin_strap_rtl(tn, role, ca_raw, extra, local_raw)
         elif role[0] == "child":
             b = role[1]
-            raw = ca_raw.get(b)
+            if b == START_PIN_IN:
+                # START-TREE: the parent's start on the dedicated start pin; raw reset = a local timed relay
+                raw, p_start = local_raw("start-tree origin"), START_PIN_IN
+                extra.append(f"    input wire {START_PIN_IN}")
+            else:
+                raw, p_start = ca_raw.get(b), f"cland_fstart_in_{b}"
             if raw is None:
                 raise LandingError(f"{tn}: start-tree bus {b} is not a landed input of this type")
             self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="child", tree_bus=b, raw_reset=raw,
                                                                          edge_fall=role[2], pad=role[3])
             logic = [f"    ot_dp_landing_origin #(.PAD({role[3]}), .EDGE_FALL({int(role[2])})) u_cland_origin (",
-                     f"        .clk(clk), .rst_raw_n({raw}), .p_start(cland_fstart_in_{b}), .start(cland_start));"]
+                     f"        .clk(clk), .rst_raw_n({raw}), .p_start({p_start}), .start(cland_start));"]
         else:
             raw = local_raw("root count origin")
             self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="root", raw_reset=raw, settle=role[1])
@@ -815,6 +894,14 @@ class Landings:
         first synchroniser; out-of-range values take the last bus), optional root counter chosen by strap_ca_root.  The
         raw reset of each choice is exactly the parameter form's (child: the tree bus's timed relay; root: local_raw)."""
         _, tbs, padw, settle, root = role
+        ca_raw = dict(ca_raw)
+        if START_PIN_IN in tbs:
+            # START-TREE: the dedicated start pin is one of the choices; its raw reset is a local timed relay
+            ca_raw[START_PIN_IN] = local_raw("start-tree origin")
+            extra.append(f"    input wire {START_PIN_IN}")
+
+        def pin(b):
+            return START_PIN_IN if b == START_PIN_IN else f"cland_fstart_in_{b}"
         for b in tbs:
             if b not in ca_raw:
                 raise LandingError(f"{tn}: start-tree bus {b} is not a landed input of this type")
@@ -830,10 +917,10 @@ class Landings:
                     e = f"(strap_ca_tsel == {tsw}'d{i}) ? {names[i]} : {e}"
                 return e
             p_start, raw = "cland_pstart", "cland_oraw"
-            logic += [f"    wire cland_pstart = {sel([f'cland_fstart_in_{b}' for b in tbs])};",
+            logic += [f"    wire cland_pstart = {sel([pin(b) for b in tbs])};",
                       f"    wire cland_oraw = {sel([ca_raw[b] for b in tbs])};"]
         else:
-            p_start, raw = f"cland_fstart_in_{tbs[0]}", ca_raw[tbs[0]]
+            p_start, raw = pin(tbs[0]), ca_raw[tbs[0]]
         start = "cland_start"
         if root:
             extra.append("    input wire strap_ca_root")   # SCALAR_STRAPS
@@ -938,6 +1025,14 @@ class Landings:
             self.emitted_top = True
             return text
         names = [f"clk_region_{ident(r)}" for r in clocks]
+        # START-TREE: die-level start-stage nets are die-top ports like the region clocks (the die clock emission /
+        # start_stage_emit.py ot_die_start_stages drives pst_<region> and reads rs_<region>)
+        ts = self.tstart
+        ts_in = sorted({e["net"] for e in ts["die_outputs"]}) if ts else []
+        ts_out = ts["die_input_nets"] if ts else []
+        ts_ports = [(f"input  wire {n}", f"    input wire {n};") for n in ts_in] + \
+                   [(f"output wire {n}", f"    output wire {n};") for n in ts_out]
+        names += ts_in + ts_out
         local_observer=self.collector and self.collector.get("observer")
         if not local_observer:names += ["clock_landing_ready", "clock_landing_fault"]
         match = re.search(r"(?m)^module (\w+) \(([^;]*)\);", text)
@@ -954,11 +1049,11 @@ class Landings:
             ports = match.group(2).rstrip()
             ports = re.sub(r"\n    input  wire clk,(?=\n)", "", ports, count=1)
             header = (f"module {match.group(1)} (" + ports + "".join(f",\n    input  wire clk_region_{ident(r)}" for r in clocks)
-                      + "\n);")
+                      + "".join(f",\n    {a}" for a, _ in ts_ports) + "\n);")
         else:
             header = f"module {match.group(1)} ({match.group(2)}, " + ", ".join(names) + ");"
         text = text[:match.start()] + header + text[match.end():]
-        decl = [] if ansi else [f"    input wire clk_region_{ident(r)};" for r in clocks]
+        decl = [] if ansi else [f"    input wire clk_region_{ident(r)};" for r in clocks] + [d for _, d in ts_ports]
         if not local_observer:
             decl += (["    output wire clock_landing_ready;","    output wire clock_landing_fault;"] if self.collector else
                      [f"    output wire [{n-1}:0] clock_landing_ready;",f"    output wire [{n-1}:0] clock_landing_fault;"])
@@ -967,6 +1062,15 @@ class Landings:
         decl += [f"    wire {w};" for w in sorted(set(fwd.values()))]
         fst = {k: v.replace("clock_landing_fwd_", "clock_landing_start_", 1) for k, v in fwd.items()} if self.ca else {}
         decl += [f"    wire {w};" for w in sorted(set(fst.values()))]
+        tsw, tsi = {}, {}
+        if ts:
+            # one start wire per launch partition (its single cland_tstart_out, fanned out here)
+            tsw = {e["src_part"]: f"clock_landing_tstart_{ident(e['src_part'])}" for e in ts["plan_ports"] + ts["die_inputs"]}
+            decl += [f"    wire {w};" for w in sorted(set(tsw.values()))]
+            tsi = {e["dst_part"]: tsw[e["src_part"]] for e in ts["plan_ports"]}
+            tsi.update({e["dst_part"]: e["net"] for e in ts["die_outputs"]})
+            decl += [f"    assign {e['net']} = {tsw[e['src_part']]};"
+                     for e in sorted({e["net"]: e for e in ts["die_inputs"]}.values(), key=lambda e: e["net"])]
         rpr = getattr(self, "ca_part_role", {}) if self.ca else {}
         rst = {r["origin"]: f"clock_landing_rstart_{ident(r['origin'])}" for r in rpr.values() if r["role"] == "relay"}
         decl += [f"    wire {w};" for w in sorted(set(rst.values()))]
@@ -1005,6 +1109,19 @@ class Landings:
                 raise LandingError(f"clock landing: default clock connection not found on {pn}")
             conn = [f"        .fclk_out_{b}({fwd[(pn,b)]})" for b in sorted(self.outs[pn])]
             conn += [f"        .cland_fstart_out_{b}({fst[(pn,b)]})" for b in sorted(self.outs[pn]) if self.ca]
+            if ts:
+                tpins = ts["type_pins"].get(p["type"], {})
+                if START_PIN_OUT in tpins:
+                    conn.append(f"        .{START_PIN_OUT}({tsw.get(pn, '')})")
+                if START_PIN_IN in tpins:
+                    if pn in tsi:
+                        conn.append(f"        .{START_PIN_IN}({tsi[pn]})")
+                    elif rpr.get(pn, {}).get("role") == "root" and self.strap:
+                        # strap root copy of a root+child type: strap_ca_root selects the root counter, p_start unread
+                        conn.append(f"        .{START_PIN_IN}(1'b0)")
+                    else:
+                        raise LandingError(f"clock landing {pn}: type {p['type']} has {START_PIN_IN} but no start "
+                                           "port lands on this copy")
             if pn in rpr and rpr[pn]["relay_tx"]:
                 conn.append(f"        .cland_rstart_out({rst[pn]})")
             if pn in rpr and rpr[pn]["role"] == "relay":

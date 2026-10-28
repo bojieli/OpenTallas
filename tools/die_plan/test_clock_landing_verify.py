@@ -76,7 +76,20 @@ def vehicle(mutant=None):
         table['regions'][0].update(parts=2 if mutant=='bad_region_count' else 1,box_um=[0,0,10,10])
         table['regions'][1].update(parts=1,box_um=[10,0,20,10])
     if mutant=='unknown_region_schema':table['regions'][0]['parts']='1'
-    F=N(cells=cells);G=N(drv=drv,top_in={aclk:('clk_region_h0',0),bclk:('clk_region_h1',0),rst:('rst_n',0)})
+    if mutant and mutant.startswith('cast'):
+        # DIE-HEAD-11 START-TREE compose slice: h1's start arrives on a start port (dedicated pin), not on crossing p
+        ca=table['count_aligned'];ca['ports']['p']['tree']=False
+        oc=next(c for c in cells if c.path=='b.u_cland_origin')
+        src='st:h' if mutant.startswith('cast_stage') else 'h0'
+        ca['regions']['h1'].update(parent=src,tree_port=f'start:{src}->h1')
+        ca['start_ports']={f'start:{src}->h1':dict(src=src,dst='h1',src_part=None if src=='st:h' else 'a',dst_part='b')}
+        if mutant in ('cast_stage','cast_stage_wrong'):
+            ca['regions']['st:h']=dict(parent='h0',tree_port='start:h0->st:h',edge_fall=False,pad=0)
+            ca['start_ports']['start:h0->st:h']=dict(src='h0',dst='st:h',src_part='a',dst_part=None)
+            oc.ports['p_start']=[77]        # die-top start-stage port pst_h1
+        if mutant=='cast_pstart':oc.ports['p_start']=[bt]
+        if mutant=='cast_stage_wrong':oc.ports['p_start']=[ao]
+    F=N(cells=cells);G=N(drv=drv,top_in={aclk:('clk_region_h0',0),bclk:('clk_region_h1',0),rst:('rst_n',0),77:('pst_h1',0)})
     live=None
     if mutant in ('spare_capacity','epoch_truncated','spare_epoch_truncated'):
         live={'p':1}
@@ -151,3 +164,12 @@ def test_count_aligned_relay_mutants_fail():
                    ('car_no_parts','one landed partition required')):
         errs=vehicle(m)['errors']
         assert any(frag in e for e in errs),(m,errs)
+
+
+def test_start_tree_start_port_origin_verified():
+    assert vehicle('cast')['errors']==[] and vehicle('cast_stage')['errors']==[]
+
+
+def test_start_tree_start_port_mutants_fail():
+    assert any('p_start' in e for e in vehicle('cast_pstart')['errors'])
+    assert any('p_start' in e for e in vehicle('cast_stage_wrong')['errors'])   # stage parent: pst port only
