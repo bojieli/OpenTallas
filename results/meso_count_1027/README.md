@@ -52,6 +52,30 @@ even balanced)? Also: is LAND-KV-1's alternative (DEPTH6 on root-split crossings
   * This ambiguity is what pushes some crossings to latency 4–5 and DEPTH 8.
   * A tree with fewer ambiguous edges, or chip-measured origins, would remove it (next step).
 
+## LAND-HEAD-3 clock (spine_fishbone, ec4f9b4ac2) and the COORD 20:26 ruling
+
+COORD's NUMBER-CHECK of LAND-HEAD-3 found that whole-cycle count alignment fails: worst −91.3 ps, 60 crossings
+below 0. It ruled that MESO-COUNT-1 must evaluate count alignment with half-cycle placement. That check assumes a
+**one-period** window, i.e. a fixed design-time slot offset on the old ring. The ring here has no placement step:
+
+* The read slot is taken from the receiver count, and the data stays in the slot for DEPTH−1 periods.
+* So the residual r = d − K·T only has to lie inside the (DEPTH−1)T window, which is 3T at DEPTH 4.
+* One K per crossing holds at both TT and FF, because the plan works on the union of the two corners.
+
+Results on the same rows (`intel2:/srv/opentallas-scratch2/claude/land-head-3/sfbR/landed_ocv.json`, joint TT+FF):
+
+* **All 427 crossings fit at DEPTH 4, 0 FAIL**, with fixed latency 2 (349 crossings) or 3 (78 crossings).
+* All 325 tree edges are clean, so path ambiguity is 0.
+* The bench runs 1281 lag cases (low/mid/high per crossing) with 1281 PASS and 0 FAIL.
+* The ruling's worst crossing, coll_EN1_u__0 (d_TT −437 ps), gets L in [1065, 1432] ps and latency 3 at DEPTH 4.
+  On the old ring the same crossing has two latencies across chips.
+* Worst margin to the guard edge is 104.1 ps on the low side (the aperture, more than 4× the 26.5 ps
+  DFFHQNx1 setup+hold) and 902 ps on the high side.
+
+Half-cycle placement is therefore not needed for this ring. It would only matter for a one-period ring with a fixed
+offset. UNCHECKED: the slot→mux→RDREG path needs set_max_delay/min_delay constraints in die STA, with the window
+edges as the bound. That is not done here.
+
 ## Proof (rtl/test/meso/formal_ca, SymbiYosys + abc in openroad/orfs:asap7lock; no SMT solver)
 
 * The harness `fv_ca.sv` uses two clocks at T = 8 steps. The phase is static and arbitrary, with lag L from 5 to 27
@@ -103,6 +127,6 @@ even balanced)? Also: is LAND-KV-1's alternative (DEPTH6 on root-split crossings
 
 ## Files
 
-* `head_ocv_ca.json` and `kv_lpo_ca.json`: the per-crossing plans.
+* `head_ocv_ca.json` (LAND-HEAD-2 rows), `head3_ocv_ca.json` (LAND-HEAD-3 rows) and `kv_lpo_ca.json`: the per-crossing plans.
 * `*_cases.tsv`: the bench inputs.
 * `bench.log` and `formal.log`: the run logs.
