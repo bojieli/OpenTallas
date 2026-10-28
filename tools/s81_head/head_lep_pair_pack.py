@@ -70,13 +70,21 @@ def child_pack(insts):
 # ---- parent: LEP 1442.88 x 1226.88 -----------------------------------------------------------------------------------
 LEP = (1442.88, 1226.88)
 # child origins (lower-left of the placed outline) and orient; coll face W for R0, E for MY
+# DIE-HEAD-10 plan event LEP-C0 (2026-10-28): child 0's coll face (W, vertical, M4/M6 pins) cannot face the N window, and
+# a legal orientation never turns a std-cell child by 90 deg.  The old origin (432.0, 790.56) put the window's x432-587 part
+# over the child itself (4.32 um above its top edge: no carry path).  Child 0 moves east so the whole N window lies WEST of its
+# W face (x 604.8): the carry is a monotone L-fan through the free NW corner (x 393-605 between g_pp[1] and child 0, and above
+# g_pp[1]); child 3 moves south (y 328.32) so child 0's E (K) face has the open NE quadrant and child 3's coll face still
+# covers the E coll3 window (y 521-760).  All 4 origins on the G0C 8.64-um hard-core lattice.  Die plan pins / windows unchanged.
+WINDOWS = {0: ("N", 160.0, 587.2), 1: ("W", 640.0, 1067.2), 2: ("W", 120.0, 547.2), 3: ("E", 521.19, 759.64)}
 PAIRS = [
-    ("u_core.u.g_pp[0].u_pair", (432.0, 790.56), "R0",
-     "coll window N x160-587: parent jog from the N edge into the child W face (open: plan window move)"),
-    ("u_core.u.g_pp[1].u_pair", (4.32, 637.2), "R0", "coll window W y640-1067"),
-    ("u_core.u.g_pp[2].u_pair", (4.32, 116.64), "R0", "coll window W y120-547"),
-    ("u_core.u.g_pp[3].u_pair", (1032.48, 521.28), "MY",
-     "coll window E y521-760; 21.6-um E channel keeps the E ctl/fault/lw pins (y769-1124) reachable"),
+    ("u_core.u.g_pp[0].u_pair", (604.8, 786.24), "R0",
+     "coll window N x160-587 entirely west of the W face (x604.8): parent L-fan carry (DIE-HEAD-10 LEP-C0)"),
+    ("u_core.u.g_pp[1].u_pair", (8.64, 639.36), "R0", "coll window W y640-1067"),
+    ("u_core.u.g_pp[2].u_pair", (8.64, 120.96), "R0", "coll window W y120-547 (face y120.96-552.96: 0.96-um jog)"),
+    ("u_core.u.g_pp[3].u_pair", (1028.16, 328.32), "MY",
+     "coll window E y521-760 inside the E face y328-760; 21.6-um E channel keeps E ctl/fault/lw (y769-1124) and lepk "
+     "(y10-511) reachable (DIE-HEAD-10 LEP-C0: moved south from y521.28)"),
 ]
 
 
@@ -100,6 +108,56 @@ def parent_pack(insts):
     assert len(d) == 5
     for k, (inst, mod) in enumerate(d):
         out.append((inst, mod, snap(453.6), snap(421.2 + k * 48.6), "R0"))
+    return out
+
+
+def carry_estimate(crs, errs):
+    """Parent carry from each plan coll window to its child's coll face (W for R0, E for MY), monotone (order-keeping)
+    fan: window end a <-> face end a.  Window must not project over the child itself (a carry would cross the child),
+    and the free channel beside the face must hold the bits that turn there (vertical tracks M5+M7, 0.048/0.064 um ASAP7
+    pitch, <= 50 % use).  UNCHECKED estimate: no route."""
+    out = {}
+    for k, (n, r) in enumerate(crs):
+        face, lo, hi = WINDOWS[k]
+        ori = PAIRS[k][2]
+        fx = r[0] if ori == "R0" else r[2]
+        bits = 1026
+        if face == "N":
+            over = max(0.0, min(hi, r[2]) - max(lo, r[0]))
+            if over > 0:
+                errs.append(f"carry: child {k} coll window N x{lo}-{hi} lies {over:.1f} um over the child (no path)")
+            # rightmost window pin -> top face pin; leftmost -> bottom
+            worst = max(abs(fx - lo) + (LEP[1] - r[1]), abs(fx - hi) + (LEP[1] - r[3]))
+            # bits that turn into the face below the neighbour's top run down the channel west of the face
+            nb = [c for j, (_, c) in enumerate(crs) if j != k and c[2] <= fx + 1e-6 and c[3] > r[1]]
+            ch_x0 = max([c[2] for c in nb], default=0.0)
+            ch_w = fx - ch_x0
+            low = min([c[3] for c in nb], default=r[1])
+            n_ch = bits * max(0.0, min(low, r[3]) - r[1]) / (r[3] - r[1])
+            supply = 0.5 * (ch_w / 0.048 + ch_w / 0.064)
+            if n_ch > supply:
+                errs.append(f"carry: child {k} channel {ch_w:.1f} um holds {supply:.0f} < {n_ch:.0f} bits")
+            # window pins west of the channel cross OVER no child: they run east in the band above the neighbour(s)
+            # (horizontal M4+M6, <= 50 %) before turning down the channel
+            band_h = LEP[1] - max([c[3] for c in nb], default=r[1])
+            n_band = bits * max(0.0, min(hi, ch_x0) - lo) / (hi - lo)
+            band_supply = 0.5 * (band_h / 0.048 + band_h / 0.064)
+            if n_band > band_supply:
+                errs.append(f"carry: child {k} band {band_h:.1f} um above the neighbour holds {band_supply:.0f} < {n_band:.0f}")
+            out[k] = dict(window=[face, lo, hi], face_x=fx, worst_manhattan_um=round(worst, 1), channel_um=round(ch_w, 1),
+                          channel_x0_um=round(ch_x0, 2), channel_bits=round(n_ch), channel_supply_50pct=round(supply),
+                          band_um=round(band_h, 2), band_bits=round(n_band), band_supply_50pct=round(band_supply),
+                          over_child_um=round(over, 1))
+        else:
+            # DIE-HEAD-10: hard-core origins on the G0C 8.64-um lattice; a window end may sit < one lattice step
+            # outside the face (a parent jog of that length)
+            jog = max(0.0, r[1] - lo, hi - r[3])
+            inside = jog <= 8.64 - 1e-6
+            edge = 0.0 if face == "W" else LEP[0]
+            worst = abs(fx - edge) + max(0.0, r[1] - lo, hi - r[3])
+            if not inside:
+                errs.append(f"carry: child {k} coll window {face} y{lo}-{hi} not inside its face y{r[1]}-{r[3]}")
+            out[k] = dict(window=[face, lo, hi], face_x=fx, worst_manhattan_um=round(worst, 1), window_inside_face=inside, jog_um=round(jog, 2))
     return out
 
 
@@ -163,6 +221,7 @@ def main():
         for p in parent:
             if overlaps(crs[i][1], rect(p[1], p[2], p[3]), 5.4):
                 errs.append(f"parent: {p[0]} inside child {crs[i][0]}")
+    carry = carry_estimate(crs, errs)
     expanded = Counter()
     for k in range(4):
         for p in child:
@@ -190,13 +249,15 @@ def main():
         "parent": {"outline_um": list(LEP), "area_um2": la, "macros": len(parent), "macro_um2": round(mac_par, 1),
                    "std_um2": round(PAR_STD_UM2, 1), "std_cells": 183691, "children_um2": 4 * ca,
                    "std_util_of_free": round(PAR_STD_UM2 / (la - 4 * ca - mac_par), 3)},
+        "coll_carry": carry,
         "placed_total": sum(expanded.values()), "errors": errs,
         "status": "UNCHECKED estimate: packing + area only; no placement/route of the child yet",
     }
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     delta = {
-        "note": "DIE-HEAD-9 LEP split plan delta (proposal; not applied to die_plan.json until the child kit is built)",
+        "note": "DIE-HEAD-9 LEP split plan delta + DIE-HEAD-10 plan event LEP-C0 (child 0 east of the N coll window, child 3 "
+                "south); applied to die_plan.json by head_lep_pair_apply.py",
         "child_type": {"name": "hd_lep_pair", "module": "ot_s81hd_lep_pair", "params": {"CHB": "1'b1"},
                        "outline_um": list(CHILD), "hard": True, "cells": 109242,
                        "contents": [ent(p, "child SRAM (u_lane coll FIFO)") for p in child]},
@@ -250,6 +311,17 @@ def render(out, child, parent):
         w, h = SIZE[p[1]]
         ax.add_patch(Rectangle((p[2], p[3]), w, h, color=col[p[1]], alpha=.9))
     # plan bus windows
+    # DIE-HEAD-10: child 0 carry fan (window ends -> W face ends)
+    (o0, ), = [(o,) for n, o, _, _ in PAIRS[:1]]
+    nb_top, ch_x = PAIRS[1][1][1] + CHILD[1], PAIRS[1][1][0] + CHILD[0]      # g_pp[1] top edge / E edge: band above it, channel east of it
+    for wx, fy in ((WINDOWS[0][1], o0[1]), (WINDOWS[0][2], o0[1] + CHILD[1])):
+        if wx < ch_x:
+            yb = nb_top + 0.5 * (LEP[1] - nb_top)
+            xc = ch_x + 0.5 * (o0[0] - ch_x)
+            ax.plot([wx, wx, xc, xc, o0[0]], [LEP[1], yb, yb, fy, fy], lw=1.2, ls="--", color="#59a14f")
+        else:
+            ax.plot([wx, wx, o0[0]], [LEP[1], fy, fy], lw=1.2, ls="--", color="#59a14f")
+    ax.text(ch_x + 4, o0[1] + 6, "coll0 carry", fontsize=7, color="#59a14f")
     for face, lo, hi, lab in [("N", 160, 587.2, "coll0"), ("W", 640, 1067.2, "coll1"), ("W", 120, 547.2, "coll2"),
                               ("E", 521.19, 759.64, "coll3"), ("E", 10, 511.19, "lepk"), ("E", 769.6, 1124.7, "ctl")]:
         if face == "N":

@@ -1,5 +1,5 @@
 {
- "note": "DIE-HEAD-9 LEP split plan delta (proposal; not applied to die_plan.json until the child kit is built)",
+ "note": "DIE-HEAD-9 LEP split plan delta + DIE-HEAD-10 plan event LEP-C0 (child 0 east of the N coll window, child 3 south); applied to die_plan.json by head_lep_pair_apply.py",
  "child_type": {
   "name": "hd_lep_pair",
   "module": "ot_s81hd_lep_pair",
@@ -796,23 +796,23 @@
     "inst": "u_core.u.g_pp[0].u_pair",
     "module": "ot_s81hd_lep_pair",
     "origin_um": [
-     432.0,
-     790.56
+     604.8,
+     786.24
     ],
     "outline_um": [
      388.8,
      432.0
     ],
     "orient": "R0",
-    "note": "coll window N x160-587: parent jog from the N edge into the child W face (open: plan window move)",
+    "note": "coll window N x160-587 entirely west of the W face (x604.8): parent L-fan carry (DIE-HEAD-10 LEP-C0)",
     "lef": null
    },
    {
     "inst": "u_core.u.g_pp[1].u_pair",
     "module": "ot_s81hd_lep_pair",
     "origin_um": [
-     4.32,
-     637.2
+     8.64,
+     639.36
     ],
     "outline_um": [
      388.8,
@@ -826,30 +826,30 @@
     "inst": "u_core.u.g_pp[2].u_pair",
     "module": "ot_s81hd_lep_pair",
     "origin_um": [
-     4.32,
-     116.64
+     8.64,
+     120.96
     ],
     "outline_um": [
      388.8,
      432.0
     ],
     "orient": "R0",
-    "note": "coll window W y120-547",
+    "note": "coll window W y120-547 (face y120.96-552.96: 0.96-um jog)",
     "lef": null
    },
    {
     "inst": "u_core.u.g_pp[3].u_pair",
     "module": "ot_s81hd_lep_pair",
     "origin_um": [
-     1032.48,
-     521.28
+     1028.16,
+     328.32
     ],
     "outline_um": [
      388.8,
      432.0
     ],
     "orient": "MY",
-    "note": "coll window E y521-760; 21.6-um E channel keeps the E ctl/fault/lw pins (y769-1124) reachable",
+    "note": "coll window E y521-760 inside the E face y328-760; 21.6-um E channel keeps E ctl/fault/lw (y769-1124) and lepk (y10-511) reachable (DIE-HEAD-10 LEP-C0: moved south from y521.28)",
     "lef": null
    }
   ],
