@@ -1,0 +1,118 @@
+{
+ "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap": {
+  "method": "HBM-R16/ISL isl_plan.py (core_infra_htree equal-structure tree; islands = level-1 node sites, equal-count groups)",
+  "k": 2,
+  "max_entry_um": 126.9,
+  "entry_um": [
+   159.84,
+   172.8
+  ],
+  "sinks": 13726,
+  "islands": [
+   {
+    "centre_um": [
+     146.88,
+     77.76
+    ],
+    "rect_um": [
+     142.56,
+     73.44,
+     151.2,
+     82.08
+    ],
+    "load_frac": 0.5,
+    "entry_maze_um": 108.0,
+    "reach_um": {
+     "mean": 87.3,
+     "p95": 158.8,
+     "max": 211.7
+    }
+   },
+   {
+    "centre_um": [
+     142.56,
+     285.12
+    ],
+    "rect_um": [
+     138.24,
+     280.8,
+     146.88,
+     289.44
+    ],
+    "load_frac": 0.5,
+    "entry_maze_um": 126.9,
+    "reach_um": {
+     "mean": 83.1,
+     "p95": 151.2,
+     "max": 193.9
+    }
+   }
+  ],
+  "entry_maze_um": {
+   "min": 108.0,
+   "max": 126.9
+  },
+  "leaf_reach_um": 158.8,
+  "equal_path_um": 349.38,
+  "floor_entry_to_sink_maze_um": 320.8,
+  "verdict": "PASS"
+ },
+ "hfd_hgi_vm_calendar_f20": {
+  "method": "HBM-R16/ISL isl_plan.py (core_infra_htree equal-structure tree; islands = level-1 node sites, equal-count groups)",
+  "k": 2,
+  "max_entry_um": 82.08,
+  "entry_um": [
+   120.936,
+   95.04
+  ],
+  "sinks": 3233,
+  "islands": [
+   {
+    "centre_um": [
+     43.2,
+     95.04
+    ],
+    "rect_um": [
+     38.88,
+     90.72,
+     47.52,
+     99.36
+    ],
+    "load_frac": 0.4998,
+    "entry_maze_um": 82.08,
+    "reach_um": {
+     "mean": 49.6,
+     "p95": 105.8,
+     "max": 159.3
+    }
+   },
+   {
+    "centre_um": [
+     181.44,
+     95.04
+    ],
+    "rect_um": [
+     177.12,
+     90.72,
+     185.76,
+     99.36
+    ],
+    "load_frac": 0.5002,
+    "entry_maze_um": 66.96,
+    "reach_um": {
+     "mean": 45.4,
+     "p95": 108.5,
+     "max": 150.7
+    }
+   }
+  ],
+  "entry_maze_um": {
+   "min": 66.96,
+   "max": 82.08
+  },
+  "leaf_reach_um": 108.5,
+  "equal_path_um": 232.2,
+  "floor_entry_to_sink_maze_um": 200.3,
+  "verdict": "PASS"
+ }
+}

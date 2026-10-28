@@ -1,0 +1,513 @@
+{
+ "schema": "hbm_r16_isl_delta/1",
+ "lane": "HBM-R16/ISL",
+ "types": {
+  "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap": {
+   "name": "tkm",
+   "core_um": [
+    0.0,
+    0.0,
+    319.68,
+    345.6
+   ],
+   "entry_um": [
+    159.84,
+    172.8
+   ],
+   "entry_island_um": [
+    155.52,
+    168.48,
+    164.16,
+    177.12
+   ],
+   "macros": [],
+   "set_entry": false,
+   "in_core_islands": {
+    "source": "HBM-R16/ISL isl_plan.py (core_infra_htree equal-structure tree; islands = level-1 node sites, equal-count groups)",
+    "islands": [
+     {
+      "name": "T0",
+      "centre_um": [
+       146.88,
+       77.76
+      ],
+      "rect_um": [
+       142.56,
+       73.44,
+       151.2,
+       82.08
+      ],
+      "load": 6863,
+      "load_frac": 0.5,
+      "entry_maze_um": 108.0,
+      "reach_um": {
+       "mean": 87.3,
+       "p95": 158.8,
+       "max": 211.7
+      },
+      "clear_of_macros": true,
+      "island_rooted_pred": {
+       "TT": {
+        "raw_mean": 246.86,
+        "grt_basis_mean": 234.06,
+        "window": 18.22,
+        "sink_max": 260.79
+       },
+       "FF": {
+        "raw_mean": 197.75,
+        "grt_basis_mean": 173.25,
+        "window": 19.23,
+        "sink_max": 212.18
+       }
+      }
+     },
+     {
+      "name": "T1",
+      "centre_um": [
+       142.56,
+       285.12
+      ],
+      "rect_um": [
+       138.24,
+       280.8,
+       146.88,
+       289.44
+      ],
+      "load": 6863,
+      "load_frac": 0.5,
+      "entry_maze_um": 126.9,
+      "reach_um": {
+       "mean": 83.1,
+       "p95": 151.2,
+       "max": 193.9
+      },
+      "clear_of_macros": true,
+      "island_rooted_pred": {
+       "TT": {
+        "raw_mean": 248.44,
+        "grt_basis_mean": 235.64,
+        "window": 22.9,
+        "sink_max": 267.29
+       },
+       "FF": {
+        "raw_mean": 199.25,
+        "grt_basis_mean": 174.75,
+        "window": 23.02,
+        "sink_max": 218.38
+       }
+      }
+     }
+    ],
+    "leaf_reach_um": 158.8,
+    "entry_maze_um": {
+     "min": 108.0,
+     "max": 126.9
+    }
+   },
+   "core_tree": {
+    "rule": "12.8a-c centre entry + structured tree; 12.8d1 plan-computed sizing; 12.2a1 pushdown islands",
+    "splits": [
+     2,
+     2,
+     4,
+     4,
+     4
+    ],
+    "leaves": 256,
+    "leaf_load": [
+     53,
+     54
+    ],
+    "level_len_um": [
+     126.9,
+     48.6,
+     87.48,
+     54.54,
+     31.86
+    ],
+    "repeaters_per_edge": [
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "stages_per_path": [
+     9
+    ],
+    "path_wire_um": 349.38,
+    "leaf_radius_um": {
+     "max": 72.5,
+     "mean": 13.9
+    },
+    "trunk": {
+     "cell": "BUFx4_ASAP7_75t_R",
+     "n": 0,
+     "site": "entry island",
+     "dont_touch": true,
+     "rule": "12.8c fixed trunk, same chain per type"
+    },
+    "drivers": {
+     "branch": "BUFx24_ASAP7_75t_R",
+     "repeater": "BUFx16f_ASAP7_75t_R",
+     "leaf": "BUFx24_ASAP7_75t_R",
+     "count": 617
+    },
+    "pred_entry_rooted": {
+     "TT": {
+      "trunk_ps": 0.0,
+      "raw_mean": 302.87,
+      "grt_basis_mean": 290.07,
+      "window": 25.61,
+      "sink_min": 291.06,
+      "sink_max": 319.15
+     },
+     "FF": {
+      "trunk_ps": 0.0,
+      "raw_mean": 246.74,
+      "grt_basis_mean": 222.24,
+      "window": 25.53,
+      "sink_min": 234.96,
+      "sink_max": 263.26
+     }
+    },
+    "pred_island_rooted": {
+     "_summary_TT": {
+      "mean_min": 234.06,
+      "mean_max": 235.64,
+      "spread": 1.58,
+      "window_max": 22.9
+     },
+     "_summary_FF": {
+      "mean_min": 173.25,
+      "mean_max": 174.75,
+      "spread": 1.5,
+      "window_max": 23.02
+     }
+    },
+    "in_band": {
+     "TT": false,
+     "FF": true
+    },
+    "label": "PLAN MODEL, UNCHECKED",
+    "plan_json": "tkm_plan.json"
+   },
+   "core_islands_record": {
+    "method": "HBM-R16/ISL isl_plan.py (core_infra_htree equal-structure tree; islands = level-1 node sites, equal-count groups)",
+    "k": 2,
+    "max_entry_um": 126.9,
+    "entry_um": [
+     159.84,
+     172.8
+    ],
+    "sinks": 13726,
+    "islands": [
+     {
+      "centre_um": [
+       146.88,
+       77.76
+      ],
+      "rect_um": [
+       142.56,
+       73.44,
+       151.2,
+       82.08
+      ],
+      "load_frac": 0.5,
+      "entry_maze_um": 108.0,
+      "reach_um": {
+       "mean": 87.3,
+       "p95": 158.8,
+       "max": 211.7
+      }
+     },
+     {
+      "centre_um": [
+       142.56,
+       285.12
+      ],
+      "rect_um": [
+       138.24,
+       280.8,
+       146.88,
+       289.44
+      ],
+      "load_frac": 0.5,
+      "entry_maze_um": 126.9,
+      "reach_um": {
+       "mean": 83.1,
+       "p95": 151.2,
+       "max": 193.9
+      }
+     }
+    ],
+    "entry_maze_um": {
+     "min": 108.0,
+     "max": 126.9
+    },
+    "leaf_reach_um": 158.8,
+    "equal_path_um": 349.38,
+    "floor_entry_to_sink_maze_um": 320.8,
+    "verdict": "PASS"
+   },
+   "kit_note": "",
+   "source_note": "in-core islands/structured tree tkm (plan model UNCHECKED)"
+  },
+  "hfd_hgi_vm_calendar_f20": {
+   "name": "cal",
+   "core_um": [
+    0.0,
+    0.0,
+    241.92,
+    116.64
+   ],
+   "entry_um": [
+    120.936,
+    95.04
+   ],
+   "entry_island_um": [
+    116.64,
+    90.72,
+    125.28,
+    99.36
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.u_calendar.u_programme.u_program",
+     "rect_um": [
+      21.6,
+      17.34,
+      196.344,
+      87.828
+     ]
+    }
+   ],
+   "set_entry": false,
+   "in_core_islands": {
+    "source": "HBM-R16/ISL isl_plan.py (core_infra_htree equal-structure tree; islands = level-1 node sites, equal-count groups)",
+    "islands": [
+     {
+      "name": "T0",
+      "centre_um": [
+       43.2,
+       95.04
+      ],
+      "rect_um": [
+       38.88,
+       90.72,
+       47.52,
+       99.36
+      ],
+      "load": 1616,
+      "load_frac": 0.4998,
+      "entry_maze_um": 82.08,
+      "reach_um": {
+       "mean": 49.6,
+       "p95": 105.8,
+       "max": 159.3
+      },
+      "clear_of_macros": true,
+      "island_rooted_pred": {
+       "TT": {
+        "raw_mean": 174.62,
+        "grt_basis_mean": 161.82,
+        "window": 40.32,
+        "sink_max": 199.43
+       },
+       "FF": {
+        "raw_mean": 142.48,
+        "grt_basis_mean": 117.98,
+        "window": 38.81,
+        "sink_max": 166.18
+       }
+      }
+     },
+     {
+      "name": "T1",
+      "centre_um": [
+       181.44,
+       95.04
+      ],
+      "rect_um": [
+       177.12,
+       90.72,
+       185.76,
+       99.36
+      ],
+      "load": 1617,
+      "load_frac": 0.5002,
+      "entry_maze_um": 66.96,
+      "reach_um": {
+       "mean": 45.4,
+       "p95": 108.5,
+       "max": 150.7
+      },
+      "clear_of_macros": true,
+      "island_rooted_pred": {
+       "TT": {
+        "raw_mean": 179.55,
+        "grt_basis_mean": 166.75,
+        "window": 55.8,
+        "sink_max": 231.99
+       },
+       "FF": {
+        "raw_mean": 147.52,
+        "grt_basis_mean": 123.02,
+        "window": 56.27,
+        "sink_max": 201.58
+       }
+      }
+     }
+    ],
+    "leaf_reach_um": 108.5,
+    "entry_maze_um": {
+     "min": 66.96,
+     "max": 82.08
+    }
+   },
+   "core_tree": {
+    "rule": "12.8a-c centre entry + structured tree; 12.8d1 plan-computed sizing; 12.2a1 pushdown islands",
+    "splits": [
+     2,
+     4,
+     8
+    ],
+    "leaves": 64,
+    "leaf_load": [
+     50,
+     51
+    ],
+    "level_len_um": [
+     82.08,
+     70.2,
+     79.92
+    ],
+    "repeaters_per_edge": [
+     1,
+     1,
+     1
+    ],
+    "stages_per_path": [
+     8
+    ],
+    "path_wire_um": 232.2,
+    "leaf_radius_um": {
+     "max": 109.7,
+     "mean": 17.0
+    },
+    "trunk": {
+     "cell": "BUFx4_ASAP7_75t_R",
+     "n": 0,
+     "site": "entry island",
+     "dont_touch": true,
+     "rule": "12.8c fixed trunk, same chain per type"
+    },
+    "drivers": {
+     "branch": "BUFx24_ASAP7_75t_R",
+     "repeater": "BUFx16f_ASAP7_75t_R",
+     "leaf": "BUFx24_ASAP7_75t_R",
+     "count": 213
+    },
+    "pred_entry_rooted": {
+     "TT": {
+      "trunk_ps": 0.0,
+      "raw_mean": 258.07,
+      "grt_basis_mean": 245.27,
+      "window": 22.62,
+      "sink_min": 253.6,
+      "sink_max": 280.82
+     },
+     "FF": {
+      "trunk_ps": 0.0,
+      "raw_mean": 209.09,
+      "grt_basis_mean": 184.59,
+      "window": 22.2,
+      "sink_min": 204.67,
+      "sink_max": 232.15
+     }
+    },
+    "pred_island_rooted": {
+     "_summary_TT": {
+      "mean_min": 161.82,
+      "mean_max": 166.75,
+      "spread": 4.93,
+      "window_max": 55.8
+     },
+     "_summary_FF": {
+      "mean_min": 117.98,
+      "mean_max": 123.02,
+      "spread": 5.04,
+      "window_max": 56.27
+     }
+    },
+    "in_band": {
+     "TT": true,
+     "FF": true
+    },
+    "label": "PLAN MODEL, UNCHECKED",
+    "plan_json": "cal_d_plan.json"
+   },
+   "core_islands_record": {
+    "method": "HBM-R16/ISL isl_plan.py (core_infra_htree equal-structure tree; islands = level-1 node sites, equal-count groups)",
+    "k": 2,
+    "max_entry_um": 82.08,
+    "entry_um": [
+     120.936,
+     95.04
+    ],
+    "sinks": 3233,
+    "islands": [
+     {
+      "centre_um": [
+       43.2,
+       95.04
+      ],
+      "rect_um": [
+       38.88,
+       90.72,
+       47.52,
+       99.36
+      ],
+      "load_frac": 0.4998,
+      "entry_maze_um": 82.08,
+      "reach_um": {
+       "mean": 49.6,
+       "p95": 105.8,
+       "max": 159.3
+      }
+     },
+     {
+      "centre_um": [
+       181.44,
+       95.04
+      ],
+      "rect_um": [
+       177.12,
+       90.72,
+       185.76,
+       99.36
+      ],
+      "load_frac": 0.5002,
+      "entry_maze_um": 66.96,
+      "reach_um": {
+       "mean": 45.4,
+       "p95": 108.5,
+       "max": 150.7
+      }
+     }
+    ],
+    "entry_maze_um": {
+     "min": 66.96,
+     "max": 82.08
+    },
+    "leaf_reach_um": 108.5,
+    "equal_path_um": 232.2,
+    "floor_entry_to_sink_maze_um": 200.3,
+    "verdict": "PASS"
+   },
+   "kit_note": "",
+   "source_note": "in-core islands/structured tree cal (plan model UNCHECKED)"
+  }
+ },
+ "apply": "apply_isl_delta.py isl_delta.json PLAN_DIR (writes clock_entries.json in_core_islands/core_tree + core_islands.json)"
+}

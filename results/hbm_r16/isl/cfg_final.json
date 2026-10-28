@@ -1,0 +1,101 @@
+{
+ "tkm": {
+  "geo": "/srv/opentallas-scratch2/claude/hbm-r16-isl-work/tkm_geo.txt",
+  "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+  "splits": [
+   2,
+   2,
+   4,
+   4,
+   4
+  ],
+  "isl_level": 1,
+  "transpose": true,
+  "entry_um": [
+   159.84,
+   172.8
+  ]
+ },
+ "split3": {
+  "geo": "/srv/opentallas-scratch2/claude/hbm-r16-isl-work/split3_geo.txt",
+  "module": "ot_hgi_sfu_split3_lane_core__idpin",
+  "splits": [
+   2,
+   2,
+   4,
+   4,
+   4,
+   4
+  ],
+  "isl_level": 2,
+  "entry_um": [
+   194.4,
+   172.8
+  ]
+ },
+ "cal_d": {
+  "geo": "/srv/opentallas-scratch2/claude/hbm-r16-isl-work/cal7_geo.txt",
+  "module": "hfd_hgi_vm_calendar_f20",
+  "isl_level": 1,
+  "vpass": true,
+  "entry_um": [
+   120.936,
+   95.04
+  ],
+  "splits": [
+   2,
+   4,
+   8
+  ]
+ },
+ "cal_e": {
+  "geo": "/srv/opentallas-scratch2/claude/hbm-r16-isl-work/cal7_geo.txt",
+  "module": "hfd_hgi_vm_calendar_f20",
+  "isl_level": 1,
+  "vpass": true,
+  "entry_um": [
+   120.936,
+   95.04
+  ],
+  "splits": [
+   2,
+   4,
+   4,
+   2
+  ]
+ },
+ "cal_h": {
+  "geo": "/srv/opentallas-scratch2/claude/hbm-r16-isl-work/cal7_geo.txt",
+  "module": "hfd_hgi_vm_calendar_f20",
+  "isl_level": 1,
+  "vpass": true,
+  "entry_um": [
+   120.936,
+   95.04
+  ],
+  "splits": [
+   2,
+   2,
+   4,
+   4,
+   2
+  ]
+ },
+ "tkm_term": {
+  "geo": "/srv/opentallas-scratch2/claude/hbm-r16-isl-work/tkmT_geo.txt",
+  "module": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
+  "splits": [
+   2,
+   2,
+   4,
+   4,
+   4
+  ],
+  "isl_level": 1,
+  "transpose": true,
+  "entry_um": [
+   159.84,
+   172.8
+  ]
+ }
+}
