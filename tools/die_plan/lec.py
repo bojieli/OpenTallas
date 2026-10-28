@@ -2905,7 +2905,9 @@ def trace_constant_closure(L, log, tried):
 
 
 # ------------------------------------------------------------------------------------------------ no-reset constants
-RESET_PORT = re.compile(r"^(?:\w+_)?(?:rst|reset|rn|rstn|nrst|arst|srst)(?:_?n|_ni|_b|_l)?(?:_pin)?$", re.I)
+# KV-KITS-9 10-28: the KV HBM-domain reset hrst_n / hrst (h prefix, no underscore) is a reset port too; unnamed, the
+# kvs_pc HBM-domain reset constants (u_front.sc, bs, u_calendar.active_row behind hr <= hrst) had no reset base case.
+RESET_PORT = re.compile(r"^(?:\w+_)?h?(?:rst|reset|rn|rstn|nrst|arst|srst)(?:_?n|_ni|_b|_l)?(?:_pin)?$", re.I)
 
 
 def reset_vars(d, pis, asserted=None, levels=None):

@@ -137,6 +137,16 @@ def compile_slice(sl, kd=None):
             if not isinstance(count, int) or isinstance(count, bool) or count < 1:
                 raise InfraError(f"{name}: parallel must be a positive integer")
             cx, cy = xy(island["centre_um"], name, outline)
+            drect = island.get("driver_rect_um")
+            if drect is not None:
+                # HBM-CORES-REBAL-5 (master_plan.pushdown_island driver_rect): the drivers sit in the planned
+                # macro-channel site; the ft pins stay at the island centre
+                if len(drect) != 4 or not (drect[2] > drect[0] and drect[3] > drect[1]):
+                    raise InfraError(f"{name}: driver_rect_um must be [x0, y0, x1, y1]")
+                xy([drect[0], drect[1]], f"{name} driver_rect", outline)
+                xy([drect[2], drect[3]], f"{name} driver_rect", outline)
+                rect = [float(v) for v in drect]
+                cx, cy = (rect[0] + rect[2]) / 2, (rect[1] + rect[3]) / 2
             for kind, master, yy, nbuf in (("ck", driver["cell"], cy + .54, count),
                                            ("rst", "BUFx4_ASAP7_75t_R", cy - .54, 1)):
                 ip = [p for p in plist if p["name"].endswith(f"_{kind}_i")]

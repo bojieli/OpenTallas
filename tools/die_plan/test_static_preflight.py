@@ -1,5 +1,6 @@
 """Exercise actual generated kit contracts and known failure classes without P&R."""
 import json
+import re
 from pathlib import Path
 import sys
 import pytest
@@ -15,9 +16,12 @@ def kit(tmp_path):
     kd = gen_phys.write_type_kit(schema.Plan(raw), 'src', tmp_path, [])
     # The generated source filelist normally comes from write_phys; supply the
     # actual minimal boundary-register module for this direct write_type fixture.
-    (kd/'rtl/top.sv').parent.mkdir(exist_ok=True)
-    (kd/'rtl/top.sv').write_text('module top(input clk, a, output reg y); always @(posedge clk) y<=a; endmodule\n')
+    # The module is named after the kit DESIGN_NAME: kit_preflight module_closure requires the top to be defined by a
+    # VERILOG_FILES source (the old fixed name "top" failed that existing check; HBM-CORES-REBAL-5 10-28).
     cfg=kd/'config.mk'
+    top=re.search(r"^export DESIGN_NAME\s*=\s*(\S+)", cfg.read_text(), re.M).group(1)
+    (kd/'rtl/top.sv').parent.mkdir(exist_ok=True)
+    (kd/'rtl/top.sv').write_text(f'module {top}(input clk, a, output reg y); always @(posedge clk) y<=a; endmodule\n')
     cfg.write_text(cfg.read_text()+'\nexport VERILOG_FILES = /work/rtl/top.sv\n')
     return kd
 
