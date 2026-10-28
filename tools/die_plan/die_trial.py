@@ -61,6 +61,10 @@ TECH_LEF = f"{PLAT}/lef/asap7_tech_1x_201209.lef"
 SC_LEF = f"{PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef"
 ROOT = HERE.parent.parent
 BUF = "BUFx24_ASAP7_75t_R"
+# DIE-QC-11 opt-in --clock-cell inv: clock inverter with the BUFx24 footprint (1.62 x 0.27 um, same legal sites), so an
+# inverter tree cancels the rise/fall delay asymmetry stage by stage (measured on QC trial8 BUF-only: fall-rise 3.8 ps
+# per stage TT, 652 ps at 165 stages = duty 1.28 -> the low phase vanishes)
+CLK_INV = "CKINVDCx16_ASAP7_75t_R"
 FLOP = "DFFHQNx1_ASAP7_75t_R"
 NDR_TRACKS = 5                       # clock wire 2W2S + a shield each side (hbm_arch clock_htree.py)
 TAP_LOAD_FF = 3.0                    # partition tap buffer input (ASSUMED: BUFx24 A ~ 2-3 fF)
@@ -1623,7 +1627,8 @@ def path_lengths(nodes):
     return L
 
 
-def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", leaf_um=200.0, full=0.0, dme_only=None):
+def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", leaf_um=200.0, full=0.0, dme_only=None,
+                        dme_feed_centroid=0.0):
     """DIE-KV-2 (opt-in --tree-form link_fishbone --region-trees MAP --feed FEED, METHODOLOGY 12.13 clock follows data):
     the die clock is fed ALONG THE REGION LINKS, not by a die-wide balanced tree.
       (1) FEED: the region feed tree of tools/die_plan/locality.py (feed 'fish': max-bit spanning tree of the region
@@ -1641,7 +1646,12 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
     node at the child box centre, so every root->leaf path has the same leg lengths and repeater count by construction;
     empty halves pruned); taps hang from their leaf (leaf->tap last-mile leg <= leaf_um).  No trims, pads or detours.
     full=1 (opt-in): empty halves are NOT pruned (tapless leaves), so every branch node drives two equal legs and a sparse
-    half loads its parent like a dense one (KV H200B: a 1-tap phy half ran 70-150 ps early against its 12-tap pc half)."""
+    half loads its parent like a dense one (KV H200B: a 1-tap phy half ran 70-150 ps early against its 12-tap pc half).
+    dme_feed_centroid=1 (DIE-QC-11 opt-in, --tree-opt dme_feed_centroid=1, with --region-dme-only): the feed of a DME
+    region ends at the CENTROID of that region's taps instead of its partition bbox centre (the DME root hangs from the
+    feed end; a region whose bbox is stretched by one far partition, e.g. QC c_W5_bf_01 + io_serdes_2, otherwise feeds
+    ~0.7 mm past its cores and back).  Non-DME regions keep the bbox centre (their H-tree bisects the bbox).  Default 0:
+    unchanged."""
     par = feed["parent"]
     tapxy = {tuple(k.split("->")): v for k, v in feed["tap"].items()}
     rt = defaultdict(list)
@@ -1677,6 +1687,10 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
             a = mk(x, y, a, nodes[a]["level"] + 1, reg, **kw)
         return a
     cen = {r: ((b[0] + b[2]) / 2, (b[1] + b[3]) / 2) for r, b in box.items()}
+    if dme_feed_centroid and dme_only:
+        for r in sorted(dme_only):
+            if rt.get(r) and r in cen and r != feed["root"]:
+                cen[r] = (sum(t[2] for t in rt[r]) / len(rt[r]), sum(t[3] for t in rt[r]) / len(rt[r]))
     root = feed["root"]
     rr = {root: mk(cen[root][0], cen[root][1], None, 0, box[root], region_root=root, feed=True)}
     order, kids = [root], defaultdict(list)
@@ -1771,12 +1785,21 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
     return nodes
 
 
-def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sites=None):
+def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sites=None, clock_cell="buf"):
     """buffered tree: a BUF at every node (branch / leaf driver), repeaters every rep_um along each leg.
     tap_pad (DIE-KV-5 opt-in --tap-pad, METHODOLOGY 12.8 plan-computed per-tap sizing): {tap port: n} puts n BUF cells in
     series between the tap's leaf net and the tap (insertion-delay balancing of a light, pruned branch); default None =
     byte-identical netlist.
+    clock_cell='inv' (DIE-QC-11 opt-in --clock-cell inv): every node driver and leg repeater is CLK_INV (same footprint and
+    sites), so the rise/fall asymmetry alternates sign stage by stage instead of accumulating; a tap whose root->tap
+    inverter count is odd gets ONE CLK_INV at the tap (instance q<node>_<tap>, placed like a tap pad), so every tap sees the
+    true clock polarity by construction.  nodes[i]['inv_parity'] = inverter count parity at the node output.
+    Default 'buf': byte-identical netlist.
     -> (verilog, placements [(inst, x, y)], tap ports [(port, x, y)], node_buf {node id: inst}, path {tap port: [inst]})"""
+    if clock_cell not in ("buf", "inv"):
+        raise ValueError(f"clock_cell {clock_cell!r}: buf or inv")
+    CELL = CLK_INV if clock_cell == "inv" else BUF
+    par_in = {}
     cells, place, wires = [], [], []
     node_buf, parent_of = {}, {}
     k = 0
@@ -1787,6 +1810,7 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
     for i, nd in nodes.items():
         node_buf[i] = f"b{i}"
     for i, nd in sorted(nodes.items()):
+        nrep = 0
         if nd["parent"] is None:
             src = "root"
         else:
@@ -1832,14 +1856,17 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
                 elif site is not None:
                     x, y = site.nearest((x, y), "x" if abs(nd["x"] - p["x"]) >= abs(nd["y"] - p["y"]) else "y")
                 o = f"rn{i}_{j}"
-                cells.append(f"  {BUF} {inst} (.A({src}), .Y({o}));")
+                cells.append(f"  {CELL} {inst} (.A({src}), .Y({o}));")
                 wires.append(o)
                 place.append((inst, x, y))
                 parent_of[inst] = prev_inst
                 prev_inst = inst
                 src = o
             parent_of[node_buf[i]] = prev_inst
-        cells.append(f"  {BUF} {node_buf[i]} (.A({src}), .Y({net(i)}));")
+        if clock_cell == "inv":
+            pp = 0 if nd["parent"] is None else nodes[nd["parent"]]["inv_parity"]
+            nd["inv_parity"] = (pp + (nrep if nd["parent"] is not None else 0) + 1) % 2
+        cells.append(f"  {CELL} {node_buf[i]} (.A({src}), .Y({net(i)}));")
         wires.append(net(i))
         place.append((node_buf[i], nd["x"], nd["y"]))
     tap_ports = []
@@ -1872,6 +1899,18 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
                 parent_of[inst] = prev_inst
                 prev_inst = inst
                 src = o
+            if clock_cell == "inv" and nd["inv_parity"]:
+                inst, o = f"q{i}_{tp}", f"qn{i}_{tp}"
+                cells.append(f"  {CLK_INV} {inst} (.A({src}), .Y({o}));")
+                wires.append(o)
+                npad = int((tap_pad or {}).get(tp, 0))
+                q = (nd["x"] + 0.54 * (npad + 1), nd["y"])
+                if site is not None and not site.legal(q):
+                    q = site.nearest(q)
+                place.append((inst, q[0], q[1]))
+                parent_of[inst] = prev_inst
+                prev_inst = inst
+                src = o
             cells.append(f"  assign {tp} = {src};")
     v = ["module ctree (root, " + ", ".join(t[0] for t in tap_ports) + ");", "  input root;"]
     v += [f"  output {t[0]};" for t in tap_ports]
@@ -1885,7 +1924,7 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
               slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
-              region_dme_early_ff=None, region_dme_snake=None):
+              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf"):
     out = Path(out)
     if region_dme_early and region_dme != "delay":
         raise ValueError("--region-dme-early needs --region-dme delay")
@@ -2033,7 +2072,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 raise ValueError(f"--tap-pad sites {port}: count does not match pad buffers")
     elif tap_pad and "sites" in tap_pad:
         tap_pad = {k: v for k, v in tap_pad.items() if k != "sites"}
-    v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site, tap_pad, pad_sites)
+    v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site, tap_pad, pad_sites,
+                                                            **({"clock_cell": clock_cell} if clock_cell != "buf" else {}))
     if tap_pad:
         unknown = sorted(set(tap_pad) - {t[0] for t in tap_ports})
         if unknown:
@@ -3098,7 +3138,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
               clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
-              region_dme_early_ff=None, region_dme_snake=None):
+              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf"):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -3171,7 +3211,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                            spine_top_leaf_um=spine_top_leaf_um, slice_rows=slice_rows, tap_pad=tap_pad,
                                            clock_rc=clock_rc, slice_balance=slice_balance, region_dme=region_dme,
                                            region_dme_only=region_dme_only, region_dme_early=region_dme_early,
-                                           region_dme_early_ff=region_dme_early_ff, region_dme_snake=region_dme_snake)
+                                           region_dme_early_ff=region_dme_early_ff, region_dme_snake=region_dme_snake,
+                                           **({"clock_cell": clock_cell} if clock_cell != "buf" else {}))
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -3792,6 +3833,9 @@ def main(argv=None):
                         "(or 'all') where a merge with no zero-skew legal point elongates the fast kid's leg as a "
                         "hairpin of legal buffer sites, and an over-early hung core tap gets its hang leg elongated. "
                         "Default: no elongation")
+    k.add_argument("--clock-cell", choices=("buf", "inv"), default="buf",
+                   help="DIE-QC-11 opt-in: 'inv' builds the die clock tree from CKINVDCx16 (BUFx24 footprint) so rise/fall "
+                        "asymmetry cancels stage by stage (duty), with one parity inverter at odd-parity taps. Default buf")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
@@ -3871,6 +3915,7 @@ def main(argv=None):
                       clock_rc=a.clock_rc, slice_balance=a.slice_balance, region_dme=a.region_dme,
                       region_dme_only=[r for r in a.region_dme_only.split(",") if r] if a.region_dme_only else None,
                       region_dme_early=a.region_dme_early, region_dme_early_ff=a.region_dme_early_ff,
+                      **({"clock_cell": a.clock_cell} if a.clock_cell != "buf" else {}),
                       region_dme_snake=(a.region_dme_snake if a.region_dme_snake == "all" else
                                         set(r for r in a.region_dme_snake.split(",") if r)) if a.region_dme_snake else None)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
