@@ -264,6 +264,20 @@ def test_pair_unc_exclusive_flags(tmp_path):
         assert "exclusive" in str(e.value)
 
 
+def test_count_align_key_cli_flag_parses(tmp_path):
+    """DIE-QC-5: --count-align-key {part,region} reaches main (parse passes; the run then stops on the exclusive-flag
+    check, before any file is read); an unknown key is an argparse error."""
+    import pytest
+    base = [str(tmp_path), "--plan", "p.json", "--out", str(tmp_path / "o"), "--pair-unc", "x.json", "--clock-ocv", "table"]
+    for k in ("part", "region"):
+        with pytest.raises(SystemExit) as e:
+            R.main(base + ["--count-align-key", k])
+        assert "exclusive" in str(e.value)
+    with pytest.raises(SystemExit) as e:
+        R.main(base + ["--count-align-key", "bogus"])
+    assert e.value.code == 2
+
+
 def test_cppr_lca_signed_mesh_pair():
     """PATH-S81-PD7: two signed-mesh taps keep node m (re-referenced arrivals) even with --cppr-lca; any other node
     uses the absolute arrivals."""

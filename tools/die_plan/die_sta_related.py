@@ -1325,6 +1325,11 @@ def main(argv=None):
     ap.add_argument("--count-align-ss-scale", type=float, default=1.27,
                     help="--count-align SS INFO row (never gates): TT taps x this SS/TT delay ratio when the proof has no "
                          "tap_arrivals_SS.json; 0 = off")
+    ap.add_argument("--count-align-key", choices=("part", "region"), default="part",
+                    help="DIE-QC-5 opt-in: how landed pairs meet the bind crossings. part (default, unchanged) = bind "
+                         "src/dst are partitions; region = map partitions through bind parts[p].region (bind crossings "
+                         "are region pairs, e.g. QC grp maps), time every landed tap pair of the region pair, and fail "
+                         "closed on landed region pairs that no bind crossing covers")
     ap.add_argument("--count-align-start-wire", metavar="JSON",
                     help="routed start-wire minus fclk-wire delay per tree port {port: [lo_ps, hi_ps]} (default: "
                          "co-routed model, mismatch 0)")
