@@ -12,3 +12,4 @@
   - OSS-MSCTS-1: REGION MODE FIRST. Build and verify one landed region (a QC slice) end to end before any die-wide demo, verified with ngspice vs STA and a skew report.
   - OSS-MESO-1: a FORMAL proof of deterministic start-up latency (ring pointer init under reset/start broadcast, every allowed phase |d|<P/2) is a REQUIRED deliverable, not optional; simulation alone is not enough.
   - Guidance for OSS-HIER-1 / OSS-CLKPLAN-1: aim for 1 clock region == 1 hierarchical partition in the shared schema.
+2026-10-27 19:15 PDT OSS-CLKPLAN-1 START (Claude). Branch claude/oss-clkplan-1027 (from main abbbffac9), dirs opentools/common/ (shared plan schema 'opentools.plan/1', owned here; first push soon, other OSS lanes read it) + opentools/clkplan/. Run data intel2:/srv/opentallas-scratch2/claude/oss-clkplan. Public demo input: ORFS asap7 swerv_wrapper floorplan (ot-run on intel2, running).
