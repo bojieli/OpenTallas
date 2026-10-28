@@ -66,3 +66,17 @@ def test_mutant_timeout_is_undecided_not_caught(tmp_path, monkeypatch):
     rows = SL.run_jobs([j("mutant"), j("mutant"), j("mutant"), j("eq")])
     assert [r["pass"] for r in rows] == [False, True, False, False]
     assert [r["undecided"] for r in rows] == [True, False, True, True]
+
+
+def test_root_variant_reference_root_counter_is_a_keypoint():
+    """DIE-HEAD-11 hd_spn v0: a ROOT copy reference names its ot_dp_landing_root u_cland_origin, the strap master keeps it
+    as u_cland_root; the reference is renamed so equiv_make pairs the counter registers (v0 eq 1592 s, was > 6000 s)"""
+    ref = ("module m__ref (input clk);\n    ot_dp_landing_root #(.SETTLE(64)) u_cland_origin (.clk(clk), "
+           ".rst_raw_n(r), .start(cland_start));\nendmodule\n")
+    out = SL.root_keypoint(ref, {"origin": {"root": True}}, {"strap_ca_root": 1})
+    assert "ot_dp_landing_root #(.SETTLE(64)) u_cland_root (.clk(clk)" in out and "u_cland_origin" not in out
+    assert SL.root_keypoint(ref, {"origin": {"root": True}}, {"strap_ca_root": 0}) == ref
+    assert SL.root_keypoint(ref, {"origin": {}}, {"strap_ca_root": 1}) == ref
+    with pytest.raises(SystemExit):
+        SL.root_keypoint(ref.replace("ot_dp_landing_root", "ot_dp_landing_origin"), {"origin": {"root": True}},
+                         {"strap_ca_root": 1})
