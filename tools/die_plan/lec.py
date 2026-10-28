@@ -2915,8 +2915,8 @@ def reset_vars(d, pis, asserted=None, levels=None):
     'always @(posedge ck or negedge rst[0])'; the name rule asserted rst = 1 = released, so the 'reset state' reset
     nothing and 6,382 points differed).  The asserted level of a reset is by definition the level that forces the
     registers: from an all-unknown state, one edge with the port at each level (the other reset ports at their
-    level); when the opposite level of the name rule forces more than twice as many registers, it is the asserted
-    level.  OT_LEC_RESET_POLARITY=name keeps the name rule only.  asserted: {pi key: logical asserted value} decided
+    level); when the opposite level of the name rule forces more than twice as many registers that the name level does
+    not force, it is the asserted level (registers constant at both levels do not count: S81 RXsf gold has ~2,070).  OT_LEC_RESET_POLARITY=name keeps the name rule only.  asserted: {pi key: logical asserted value} decided
     on the gold side, applied unchanged to the gate (one port, one polarity); levels: dict filled with {pi key: asserted
     value} -> R = {var: asserted literal value}."""
     names = [n for n in os.environ.get("OT_LEC_RESET_PORTS", "").split(",") if n]
@@ -2934,7 +2934,8 @@ def reset_vars(d, pis, asserted=None, levels=None):
         key_of[lit >> 1] = k
     if asserted is None and R and "I" in d and os.environ.get("OT_LEC_RESET_POLARITY", "struct") != "name":
         for v in sorted(R):
-            n = {b: len(reset_state(d, {**R, v: b}, 1)[0]) for b in (0, 1)}
+            S = {b: set(reset_state(d, {**R, v: b}, 1)[0]) for b in (0, 1)}
+            n = {b: len(S[b] - S[1 - b]) for b in (0, 1)}      # forced ONLY at that level: constant registers excluded
             if n[1 - R[v]] > 2 * max(1, n[R[v]]):
                 R[v] = 1 - R[v]
                 lv[key_of[v]] ^= 1

@@ -49,3 +49,19 @@ def test_name_rule_override_reproduces_the_old_wrong_state(tmp_path, monkeypatch
     lec.noreset_classify(L)
     assert L.rst_asserted["gold"] == {"pi:rst[0]": 1}
     assert all(L.rst_val[("gold", f"ff:u_dut.{q}")][0] is None for q in REGS)
+
+
+def test_constant_registers_do_not_mask_the_reset_level(tmp_path):
+    # S81 RXsf shape: gold keeps many constant-driven registers (known at either level), so the raw count of known
+    # registers is close at both levels; only the registers forced by ONE level decide the polarity.
+    consts = [f"k{i}" for i in range(12)]
+    def nxt(m, l):
+        r = {q: m.AND(l["rst"], l["a"] if i == 0 else l[REGS[i - 1]]) for i, q in enumerate(REGS)}
+        r.update({k: 0 for k in consts})
+        return r
+    g, gm = _seq(tmp_path, "gold", ["rst", "a"], REGS + consts, nxt)
+    t, tm = _seq(tmp_path, "gate", ["rst", "a"], REGS, lambda m, l: {q: nxt(m, l)[q] for q in REGS})
+    L = lec.Lec(g, gm, t, tm)
+    lec.noreset_classify(L)
+    assert L.rst_asserted["gold"] == {"pi:rst[0]": 0}
+    assert all(L.rst_val[("gate", f"ff:u_dut.{q}")][0] == 0 for q in REGS)
