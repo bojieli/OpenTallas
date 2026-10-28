@@ -2691,3 +2691,4 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   - Seam-shell lane for real seam HB4: ON HOLD pending the OWNER answer on starting the landed KV build now (asked ~18:3x). Landing would remove the seam hold problem.
   - dsr-landed-na 53dd5883c APPROVED -> ROOT-MERGE-82.
   - ectlk/pv_pair 90552baa6d -> QK-CORES-8 for core re-P&R after GEOM.
+- 10-27 18:32 [COORD] OWNER DECISION ("yes, start now"): METHODOLOGY 12.10 -- KV landed form built NOW in parallel (LAND-KV-1); QC per-slice clock variant planned+built in parallel (QC-SLICECLK-1); HBM street rule = hard G0C plan check (HBM-STREETS-1). First form to pass the freeze gate wins. KV seam-shell held. S81/HEAD unchanged (10-29 check).

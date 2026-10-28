@@ -438,3 +438,12 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      canary is pending keeps the previous tag.
   f. INDEPENDENT NUMBER CHECK: every gate number reported to the owner as PASS/FAIL (skew, GRT overflow, IR, STA WNS, sign-off counts) is
      recomputed from run artifacts by the NUMBER-CHECK reviewer before it is reported; unchecked numbers are labelled UNCHECKED.
+- 12.10 SAFE-FORM PARALLEL BUILDS (OWNER 2026-10-27 ~18:4x, "yes, start now"). Replaces the 10-29 12:00 "no fallback builds" hold.
+  a. KV: the LANDED form (per-group clocks + landed crossings, lanes/FALLBACK-LAND.md FALLBACK-PLAN-PREP-2, claude/fallback-plans-1027@1b7d068ad8)
+     is BUILT NOW in parallel with the top-down form. First form to pass the freeze gate (die GRT0 incl clock + die STA on real views) wins.
+     KV seam-shell / real seam HB4 work is held while the landed build runs.
+  b. QC: a PER-SLICE clock variant (one clock domain per slice, landed crossings only between slices, related pairs inside a slice) is
+     planned and built now in parallel with INFRA-FIRST-QC. It is priced by the TOK tools before adoption; first to pass the gate wins.
+  c. HBM: STREET RULE is a hard plan check (G0C). Hard cores sit on a channel grid with every core <= ~400 um from a channel; channels
+     are sized for clock repeaters, hold buffers and FT; no clock or die-level leg crosses a hard core. The plan generator obeys it.
+  d. S81/HEAD stay top-down; their landed plans stay ready (10-29 12:00 check still decides them).
