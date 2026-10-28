@@ -26,7 +26,7 @@
    "identity": "plan_lib",
    "view_lib_sha": "37a56b32f239",
    "view_measure": {
-    "error": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib: pin-register mean measurement missing (no ETM-max fallback)"
+    "error": "/home/ubuntu/OpenTallas/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib: pin-register mean measurement missing (no ETM-max fallback)"
    },
    "signed_records": [],
    "extra": {
@@ -413,7 +413,7 @@
    "identity": "plan_lib",
    "view_lib_sha": "35b9ec451f66",
    "view_measure": {
-    "error": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/insertion.json: explicit clock-pin mapping required for clk",
+    "error": "/home/ubuntu/OpenTallas/physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/insertion.json: explicit clock-pin mapping required for clk",
     "tt_mean": 510.3,
     "ff_mean": 402.1,
     "basis": "pin_register_mean(direct insertion.json boundary; main CC.load refused: explicit clock-pin mapping required for clk)",
@@ -1205,7 +1205,7 @@
    "identity": "plan_lib",
    "view_lib_sha": "3deeca065fda",
    "view_measure": {
-    "error": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/insertion.json: explicit clock-pin mapping required for clk",
+    "error": "/home/ubuntu/OpenTallas/physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/insertion.json: explicit clock-pin mapping required for clk",
     "tt_mean": 544.0,
     "ff_mean": 435.2,
     "basis": "pin_register_mean(direct insertion.json boundary; main CC.load refused: explicit clock-pin mapping required for clk)",
@@ -1775,7 +1775,7 @@
    "identity": "plan_lef_view_dir",
    "view_lib_sha": "4ec33f16d7db",
    "view_measure": {
-    "error": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib: pin-register mean measurement missing (no ETM-max fallback)"
+    "error": "/home/ubuntu/OpenTallas/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib: pin-register mean measurement missing (no ETM-max fallback)"
    },
    "signed_records": [],
    "extra": {
@@ -1878,31 +1878,50 @@
    "view_measure": null,
    "signed_records": [],
    "extra": {
-    "label": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/ve_m",
+    "label": "parent_budget pin_register_mean OpenSTA placement-RC on CTS probe intel2 corelat-sq-1/cts/ve_m 4_cts.odb (NOT SIGNED, not extracted); boundary regs n=1271; DIE-S81-8 collector guard 833 ps (CORELAT 400-ps cap removed)",
+    "checked": "CHECKED (ve_m/ve_s/vn_a equal Codex all-clock exporter results/s81_clock_body_1028_0359/core_means_diagnostic.json to 0.1 ps; vn_b one method)",
     "tt": {
-     "mean": 365.0
+     "mean": 308.4,
+     "min": 299.5,
+     "max": 312.6
     },
     "ff": {
-     "mean": 292.0
-    },
-    "checked": "UNCHECKED model (CTS pending)"
+     "mean": 252.8,
+     "min": 244.6,
+     "max": 257.1
+    }
    },
-   "source": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/ve_m",
-   "label": "UNCHECKED model (CTS pending)",
+   "source": "parent_budget pin_register_mean OpenSTA placement-RC on CTS probe intel2 corelat-sq-1/cts/ve_m 4_cts.odb (NOT SIGNED, not extracted); boundary regs n=1271; DIE-S81-8 collector guard 833 ps (CORELAT 400-ps cap removed)",
+   "label": "CHECKED (ve_m/ve_s/vn_a equal Codex all-clock exporter results/s81_clock_body_1028_0359/core_means_diagnostic.json to 0.1 ps; vn_b one method)",
    "tt": {
-    "mean": 365.0
+    "mean": 308.4,
+    "min": 299.5,
+    "max": 312.6
    },
    "ff": {
-    "mean": 292.0
+    "mean": 252.8,
+    "min": 244.6,
+    "max": 257.1
    },
    "tap": {
     "early": true,
     "within_band": false,
-    "insertion_ps": 365.0,
-    "insertion_ff_ps": 292.0,
-    "early_tt_ps": 115.0,
-    "early_ff_ps": 89.5,
-    "budget_owner": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/ve_m"
+    "insertion_ps": 308.4,
+    "insertion_ff_ps": 252.8,
+    "early_tt_ps": 58.4,
+    "early_ff_ps": 50.3,
+    "budget_owner": "parent_budget pin_register_mean OpenSTA placement-RC on CTS probe intel2 corelat-sq-1/cts/ve_m 4_cts.odb (NOT SIGNED, not extracted); boundary regs n=1271; DIE-S81-8 collector guard 833 ps (CORELAT 400-ps cap removed)"
+   },
+   "hold_est": {
+    "comp_ff": 252.8,
+    "late": 4.3,
+    "early": 8.2,
+    "hold_in": 7.8,
+    "hold_out": 4.6,
+    "hold_in_u60": -27.2,
+    "hold_out_u60": -30.4,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
    },
    "spread_tt_all": null
   },
@@ -1931,31 +1950,50 @@
    "view_measure": null,
    "signed_records": [],
    "extra": {
-    "label": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/ve_s",
+    "label": "parent_budget pin_register_mean OpenSTA placement-RC on CTS probe intel2 corelat-sq-1/cts/ve_s 4_cts.odb (NOT SIGNED, not extracted); boundary regs n=498; DIE-S81-8 collector guard 833 ps (CORELAT 400-ps cap removed)",
+    "checked": "CHECKED (ve_m/ve_s/vn_a equal Codex all-clock exporter results/s81_clock_body_1028_0359/core_means_diagnostic.json to 0.1 ps; vn_b one method)",
     "tt": {
-     "mean": 284.7
+     "mean": 261.9,
+     "min": 254.8,
+     "max": 269.6
     },
     "ff": {
-     "mean": 227.8
-    },
-    "checked": "UNCHECKED model (CTS pending)"
+     "mean": 211.0,
+     "min": 204.0,
+     "max": 219.0
+    }
    },
-   "source": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/ve_s",
-   "label": "UNCHECKED model (CTS pending)",
+   "source": "parent_budget pin_register_mean OpenSTA placement-RC on CTS probe intel2 corelat-sq-1/cts/ve_s 4_cts.odb (NOT SIGNED, not extracted); boundary regs n=498; DIE-S81-8 collector guard 833 ps (CORELAT 400-ps cap removed)",
+   "label": "CHECKED (ve_m/ve_s/vn_a equal Codex all-clock exporter results/s81_clock_body_1028_0359/core_means_diagnostic.json to 0.1 ps; vn_b one method)",
    "tt": {
-    "mean": 284.7
+    "mean": 261.9,
+    "min": 254.8,
+    "max": 269.6
    },
    "ff": {
-    "mean": 227.8
+    "mean": 211.0,
+    "min": 204.0,
+    "max": 219.0
    },
    "tap": {
-    "early": true,
-    "within_band": false,
-    "insertion_ps": 284.7,
-    "insertion_ff_ps": 227.8,
-    "early_tt_ps": 34.7,
-    "early_ff_ps": 25.3,
-    "budget_owner": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/ve_s"
+    "early": false,
+    "within_band": true,
+    "insertion_ps": 261.9,
+    "insertion_ff_ps": 211.0,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean OpenSTA placement-RC on CTS probe intel2 corelat-sq-1/cts/ve_s 4_cts.odb (NOT SIGNED, not extracted); boundary regs n=498; DIE-S81-8 collector guard 833 ps (CORELAT 400-ps cap removed)"
+   },
+   "hold_est": {
+    "comp_ff": 202.5,
+    "late": 16.5,
+    "early": -1.5,
+    "hold_in": -2.5,
+    "hold_out": 14.8,
+    "hold_in_u60": -37.5,
+    "hold_out_u60": -20.2,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
    },
    "spread_tt_all": null
   },
@@ -2071,31 +2109,50 @@
    "view_measure": null,
    "signed_records": [],
    "extra": {
-    "label": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/vn_b",
+    "label": "parent_budget pin_register_mean OpenSTA placement-RC on CTS probe intel2 corelat-sq-1/cts/vn_b 4_cts.odb (NOT SIGNED, not extracted); boundary regs n=957; DIE-S81-8 collector guard 833 ps (CORELAT 400-ps cap removed)",
+    "checked": "CHECKED (ve_m/ve_s/vn_a equal Codex all-clock exporter results/s81_clock_body_1028_0359/core_means_diagnostic.json to 0.1 ps; vn_b one method)",
     "tt": {
-     "mean": 374.2
+     "mean": 387.0,
+     "min": 321.8,
+     "max": 450.3
     },
     "ff": {
-     "mean": 299.4
-    },
-    "checked": "UNCHECKED model (CTS pending)"
+     "mean": 324.3,
+     "min": 262.4,
+     "max": 383.6
+    }
    },
-   "source": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/vn_b",
-   "label": "UNCHECKED model (CTS pending)",
+   "source": "parent_budget pin_register_mean OpenSTA placement-RC on CTS probe intel2 corelat-sq-1/cts/vn_b 4_cts.odb (NOT SIGNED, not extracted); boundary regs n=957; DIE-S81-8 collector guard 833 ps (CORELAT 400-ps cap removed)",
+   "label": "CHECKED (ve_m/ve_s/vn_a equal Codex all-clock exporter results/s81_clock_body_1028_0359/core_means_diagnostic.json to 0.1 ps; vn_b one method)",
    "tt": {
-    "mean": 374.2
+    "mean": 387.0,
+    "min": 321.8,
+    "max": 450.3
    },
    "ff": {
-    "mean": 299.4
+    "mean": 324.3,
+    "min": 262.4,
+    "max": 383.6
    },
    "tap": {
     "early": true,
     "within_band": false,
-    "insertion_ps": 374.2,
-    "insertion_ff_ps": 299.4,
-    "early_tt_ps": 124.2,
-    "early_ff_ps": 96.9,
-    "budget_owner": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/vn_b"
+    "insertion_ps": 387.0,
+    "insertion_ff_ps": 324.3,
+    "early_tt_ps": 137.0,
+    "early_ff_ps": 121.8,
+    "budget_owner": "parent_budget pin_register_mean OpenSTA placement-RC on CTS probe intel2 corelat-sq-1/cts/vn_b 4_cts.odb (NOT SIGNED, not extracted); boundary regs n=957; DIE-S81-8 collector guard 833 ps (CORELAT 400-ps cap removed)"
+   },
+   "hold_est": {
+    "comp_ff": 324.3,
+    "late": 59.3,
+    "early": 61.9,
+    "hold_in": -53.5,
+    "hold_out": -50.0,
+    "hold_in_u60": -88.5,
+    "hold_out_u60": -85.0,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
    },
    "spread_tt_all": null
   },
@@ -2186,31 +2243,50 @@
    "view_measure": null,
    "signed_records": [],
    "extra": {
-    "label": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/vn_a",
+    "label": "parent_budget pin_register_mean OpenSTA placement-RC on CTS probe intel2 corelat-sq-1/cts/vn_a 4_cts.odb (NOT SIGNED, not extracted); boundary regs n=919; DIE-S81-8 collector guard 833 ps (CORELAT 400-ps cap removed)",
+    "checked": "CHECKED (ve_m/ve_s/vn_a equal Codex all-clock exporter results/s81_clock_body_1028_0359/core_means_diagnostic.json to 0.1 ps; vn_b one method)",
     "tt": {
-     "mean": 370.5
+     "mean": 386.0,
+     "min": 320.7,
+     "max": 427.8
     },
     "ff": {
-     "mean": 296.4
-    },
-    "checked": "UNCHECKED model (CTS pending)"
+     "mean": 323.4,
+     "min": 260.3,
+     "max": 360.1
+    }
    },
-   "source": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/vn_a",
-   "label": "UNCHECKED model (CTS pending)",
+   "source": "parent_budget pin_register_mean OpenSTA placement-RC on CTS probe intel2 corelat-sq-1/cts/vn_a 4_cts.odb (NOT SIGNED, not extracted); boundary regs n=919; DIE-S81-8 collector guard 833 ps (CORELAT 400-ps cap removed)",
+   "label": "CHECKED (ve_m/ve_s/vn_a equal Codex all-clock exporter results/s81_clock_body_1028_0359/core_means_diagnostic.json to 0.1 ps; vn_b one method)",
    "tt": {
-    "mean": 370.5
+    "mean": 386.0,
+    "min": 320.7,
+    "max": 427.8
    },
    "ff": {
-    "mean": 296.4
+    "mean": 323.4,
+    "min": 260.3,
+    "max": 360.1
    },
    "tap": {
     "early": true,
     "within_band": false,
-    "insertion_ps": 370.5,
-    "insertion_ff_ps": 296.4,
-    "early_tt_ps": 120.5,
-    "early_ff_ps": 93.9,
-    "budget_owner": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/vn_a"
+    "insertion_ps": 386.0,
+    "insertion_ff_ps": 323.4,
+    "early_tt_ps": 136.0,
+    "early_ff_ps": 120.9,
+    "budget_owner": "parent_budget pin_register_mean OpenSTA placement-RC on CTS probe intel2 corelat-sq-1/cts/vn_a 4_cts.odb (NOT SIGNED, not extracted); boundary regs n=919; DIE-S81-8 collector guard 833 ps (CORELAT 400-ps cap removed)"
+   },
+   "hold_est": {
+    "comp_ff": 323.4,
+    "late": 36.7,
+    "early": 63.1,
+    "hold_in": -29.7,
+    "hold_out": -51.1,
+    "hold_in_u60": -64.7,
+    "hold_out_u60": -86.1,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
    },
    "spread_tt_all": null
   },
@@ -2236,7 +2312,7 @@
    "identity": "plan_lef_view_dir",
    "view_lib_sha": "ffe5528724e7",
    "view_measure": {
-    "error": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/insertion.json: explicit clock-pin mapping required for ck",
+    "error": "/home/ubuntu/OpenTallas/physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/insertion.json: explicit clock-pin mapping required for ck",
     "tt_mean": 257.85,
     "ff_mean": 205.22,
     "basis": "pin_register_mean(direct insertion.json boundary; main CC.load refused: explicit clock-pin mapping required for ck)",
@@ -4461,7 +4537,7 @@
    "identity": "plan_lef_view_dir",
    "view_lib_sha": "8eec0a670c9b",
    "view_measure": {
-    "error": "physical/s81_die_views/closed_import/dsdv_idx_tx_n32/dsdv_idx_tx_n32_tt.lib: pin-register mean measurement missing (no ETM-max fallback)"
+    "error": "/home/ubuntu/OpenTallas/physical/s81_die_views/closed_import/dsdv_idx_tx_n32/dsdv_idx_tx_n32_tt.lib: pin-register mean measurement missing (no ETM-max fallback)"
    },
    "signed_records": [],
    "extra": {

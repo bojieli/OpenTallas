@@ -1,0 +1,70 @@
+{
+ "intra": {
+  "tt_setup_ps": 480.63,
+  "ff_hold_ps": -162.5,
+  "verdict": "FAIL",
+  "ff_hold_kit_contract_ps": -109.68,
+  "kit_contract_window_ps": 0.0,
+  "kit_contract_window_needed_ps": 109.68,
+  "kit_contract_verdict": "FAIL",
+  "hb4": {
+   "cells": 0,
+   "delay_model": "plan",
+   "tt_setup_ps": 275.03,
+   "ff_hold_ps": 0.0,
+   "real_tt_setup_ps": null,
+   "real_ff_hold_ps": null,
+   "setup_neg_pairs": 0,
+   "pairs_needing_hb": 161138
+  }
+ },
+ "seam": {
+  "tt_setup_ps": null,
+  "ff_hold_ps": null,
+  "verdict": "FAIL",
+  "hb4": {
+   "cells": 0,
+   "delay_model": "plan",
+   "tt_setup_ps": null,
+   "ff_hold_ps": null,
+   "real_tt_setup_ps": null,
+   "real_ff_hold_ps": null,
+   "setup_neg_pairs": null,
+   "pairs_needing_hb": 0
+  }
+ },
+ "landed": {
+  "form": "count_aligned",
+  "bind": "/srv/opentallas-scratch2/claude/die-s81-8/gate_sspice/bind.json",
+  "worst_margin_lo_ps": {
+   "TT": 164.3,
+   "FF": 122.9
+  },
+  "worst_margin_hi_ps": {
+   "TT": 350.7,
+   "FF": 400.6
+  },
+  "half_period_INFO": {
+   "tt_setup_margin_ps": -8304.68,
+   "ff_hold_margin_ps": -6902.65,
+   "verdict": "FAIL"
+  },
+  "ss_INFO": {
+   "SS": "FAIL"
+  },
+  "verdict": "PASS"
+ },
+ "status": "UNCHECKED (NUMBER-CHECK pending)",
+ "label": "declared-budget (no QC kit)",
+ "data_droop": {
+  "mode": "class",
+  "tt_setup_penalty_max_ps": {
+   "intra": 7.94,
+   "intra_cross_region": null,
+   "seam": null,
+   "landed": 7.94,
+   "seam_nearest_INFO": null,
+   "landed_nearest_INFO": 7.94
+  }
+ }
+}

@@ -1,0 +1,17 @@
+type	inst	n_cores	n_opaque	opaque_area%	min_V_ch	min_H_ch	edge_free	ns_soft	ew_soft	ist_segs	ist_x_str	ist_x_bothL	bus_bits	bus_over_opq	opaque_modules
+hd_ctl	1	0	0	0.0	None	None	{}	1443	1227	0	0	0	4365	0	
+hd_host	1	0	0	0.0	None	None	{}	1443	1227	0	0	0	2605	0	
+hd_lep0N	1	0	0	0.0	None	None	{}	1443	1227	0	0	0	6402	0	
+hd_mesh	3	0	0	0.0	None	None	{}	1443	1227	0	0	0	2180	0	
+hd_serdes	12	0	0	0.0	None	None	{}	2886	1227	0	0	0	1026	0	
+hd_spn	5	0	0	0.0	None	None	{}	1383	2074	36	0	0	4520	0	
+hd_spn_end	1	0	0	0.0	None	None	{}	1383	2074	22	0	0	3390	0	
+hd_st_k5	1	0	0	0.0	None	None	{}	1443	1227	0	0	0	0	0	
+hd_st_m	3	0	0	0.0	None	None	{}	1443	1227	0	0	0	0	0	
+hd_st_n3	1	0	0	0.0	None	None	{}	1443	1227	0	0	0	0	0	
+hd_st_n4	1	0	0	0.0	None	None	{}	1443	1227	0	0	0	0	0	
+hd_st_str	4	0	0	0.0	None	None	{}	1443	1227	0	0	0	0	0	
+hd_st_turn	4	0	0	0.0	None	None	{}	1443	1227	0	0	0	0	0	
+hd_tile	264	5	0	0.0	None	None	{}	709	1037	0	0	0	1130	0	
+hd_turn_a	12	0	0	0.0	None	None	{}	173	1037	0	0	0	0	0	
+hd_turn_b	12	0	0	0.0	None	None	{}	173	1037	0	0	0	0	0	

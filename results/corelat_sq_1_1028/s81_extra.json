@@ -48,43 +48,59 @@
   "checked": "CHECKED read (routed SPEF measure, sub-lane); view NOT SIGNED"
  },
  "ot_s81sl_ve_m": {
-  "label": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/ve_m",
+  "label": "parent_budget pin_register_mean OpenSTA placement-RC on CTS probe intel2 corelat-sq-1/cts/ve_m 4_cts.odb (NOT SIGNED, not extracted); boundary regs n=1271; DIE-S81-8 collector guard 833 ps (CORELAT 400-ps cap removed)",
+  "checked": "CHECKED (ve_m/ve_s/vn_a equal Codex all-clock exporter results/s81_clock_body_1028_0359/core_means_diagnostic.json to 0.1 ps; vn_b one method)",
   "tt": {
-   "mean": 365.0
+   "mean": 308.4,
+   "min": 299.5,
+   "max": 312.6
   },
   "ff": {
-   "mean": 292.0
-  },
-  "checked": "UNCHECKED model (CTS pending)"
+   "mean": 252.8,
+   "min": 244.6,
+   "max": 257.1
+  }
  },
  "ot_s81sl_ve_s": {
-  "label": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/ve_s",
+  "label": "parent_budget pin_register_mean OpenSTA placement-RC on CTS probe intel2 corelat-sq-1/cts/ve_s 4_cts.odb (NOT SIGNED, not extracted); boundary regs n=498; DIE-S81-8 collector guard 833 ps (CORELAT 400-ps cap removed)",
+  "checked": "CHECKED (ve_m/ve_s/vn_a equal Codex all-clock exporter results/s81_clock_body_1028_0359/core_means_diagnostic.json to 0.1 ps; vn_b one method)",
   "tt": {
-   "mean": 284.7
+   "mean": 261.9,
+   "min": 254.8,
+   "max": 269.6
   },
   "ff": {
-   "mean": 227.8
-  },
-  "checked": "UNCHECKED model (CTS pending)"
+   "mean": 211.0,
+   "min": 204.0,
+   "max": 219.0
+  }
  },
  "ot_s81sl_vn_a": {
-  "label": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/vn_a",
+  "label": "parent_budget pin_register_mean OpenSTA placement-RC on CTS probe intel2 corelat-sq-1/cts/vn_a 4_cts.odb (NOT SIGNED, not extracted); boundary regs n=919; DIE-S81-8 collector guard 833 ps (CORELAT 400-ps cap removed)",
+  "checked": "CHECKED (ve_m/ve_s/vn_a equal Codex all-clock exporter results/s81_clock_body_1028_0359/core_means_diagnostic.json to 0.1 ps; vn_b one method)",
   "tt": {
-   "mean": 370.5
+   "mean": 386.0,
+   "min": 320.7,
+   "max": 427.8
   },
   "ff": {
-   "mean": 296.4
-  },
-  "checked": "UNCHECKED model (CTS pending)"
+   "mean": 323.4,
+   "min": 260.3,
+   "max": 360.1
+  }
  },
  "ot_s81sl_vn_b": {
-  "label": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/vn_b",
+  "label": "parent_budget pin_register_mean OpenSTA placement-RC on CTS probe intel2 corelat-sq-1/cts/vn_b 4_cts.odb (NOT SIGNED, not extracted); boundary regs n=957; DIE-S81-8 collector guard 833 ps (CORELAT 400-ps cap removed)",
+  "checked": "CHECKED (ve_m/ve_s/vn_a equal Codex all-clock exporter results/s81_clock_body_1028_0359/core_means_diagnostic.json to 0.1 ps; vn_b one method)",
   "tt": {
-   "mean": 374.2
+   "mean": 387.0,
+   "min": 321.8,
+   "max": 450.3
   },
   "ff": {
-   "mean": 299.4
-  },
-  "checked": "UNCHECKED model (CTS pending)"
+   "mean": 324.3,
+   "min": 262.4,
+   "max": 383.6
+  }
  }
 }
