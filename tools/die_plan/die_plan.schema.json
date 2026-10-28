@@ -742,6 +742,10 @@
       "type": "string",
       "minLength": 1
      },
+     "phy_pg_offmodel": {
+      "type": "string",
+      "minLength": 1
+     },
      "infra_ports": {
       "type": "array",
       "items": {

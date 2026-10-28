@@ -473,3 +473,16 @@ def test_plan_relay_pins_and_registered_ctl_ports():
     p, t = ca_relay_vehicle(parts=False)
     raw = dict(ports=[]); CP._ca_relay_ports(raw, t)
     assert raw["ports"] == [] and CP._ca_relay(t, "b") is None        # no bind roles: nothing added (old form)
+
+
+def test_receiver_uses_collector_geometry_when_bus_is_declaration_only():
+    p, t, a, b = dataflow_vehicle()
+    reference = Landings(p, t).type_rtl("B", b)
+    pin = next(v for v in p["partition_types"]["B"]["buses"] if v["name"] == "y")
+    saved = dict(pin)
+    pin.pop("face"); pin.pop("window_um")
+    t["collector"]["types"]["B"]["bus_geometry"] = {"y": saved}
+    assert Landings(p, t).type_rtl("B", b) == reference
+    del t["collector"]["types"]["B"]["bus_geometry"]
+    with pytest.raises(LandingError, match="receiver face geometry not found"):
+        Landings(p, t).type_rtl("B", b)

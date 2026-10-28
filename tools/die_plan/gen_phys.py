@@ -1213,7 +1213,10 @@ def type_macros(P, tn):
 def phy_pg_domains(P, tn):
     """PATH-KV-SYSC 10-25 (OWNER decision 7, PHY PG hook): the die.pg.domains that fall inside partition type tn, as
     [(name, power_net, ground_net, rect_type_um, [macro inst fully inside])].  Identical for every instance (a hardened
-    type cannot carry per-instance supply variants); empty for every type without a PHY domain (kits unchanged)."""
+    type cannot carry per-instance supply variants); empty for every type without a PHY domain (kits unchanged).
+    DIE-HEAD-5 opt-in: a type with "phy_pg_offmodel" (a non-empty note: the PHY body is not part of the partition view,
+    e.g. the s81_head analog PMA behind the type pads) may hold a domain with no macro; the region then gets its VDDPHY
+    straps/pins and the hard placement blockage only (no macro grid).  Default (key absent) unchanged: fail closed."""
     doms = P.die.get("pg", {}).get("domains", []) or []
     if not doms:
         return []
@@ -1226,7 +1229,7 @@ def phy_pg_domains(P, tn):
         for d in doms:
             b = d["rect_um"]
             r = [max(a[0], b[0]), max(a[1], b[1]), min(a[2], b[2]), min(a[3], b[3])]
-            if r[0] >= r[2] or r[1] >= r[3]:
+            if r[0] >= r[2] - 1e-6 or r[1] >= r[3] - 1e-6:   # DIE-HEAD-5: abutting neighbour domain (float sliver)
                 continue
             u, v = P.to_type(inst, r[:2]), P.to_type(inst, r[2:])
             rt = [round(min(u[0], v[0]), 4), round(min(u[1], v[1]), 4), round(max(u[0], v[0]), 4),
@@ -1246,11 +1249,12 @@ def phy_pg_domains(P, tn):
                 if not (box[0] >= rt[0] and box[1] >= rt[1] and box[2] <= rt[2] and box[3] <= rt[3]):
                     raise ValueError(f"type {tn}: macro {c['inst']} straddles PG domain {d['name']} {rt}")
                 mac.append(c["inst"])
-            if not mac:
+            if not mac and not t.get("phy_pg_offmodel"):
                 raise ValueError(f"type {tn}: PG domain {d['name']} holds no macro (a PHY domain powers its PHY macro)")
             got.append((d["name"], d["nets"][0], d["nets"][1], rt, sorted(mac)))
         per.append(got)
-    if any(json.dumps(g) != json.dumps(per[0]) for g in per):
+    # DIE-HEAD-5: compare supply/geometry/macros, not the per-instance domain name (die.pg.domains names one per window)
+    if any(json.dumps([x[1:] for x in g]) != json.dumps([x[1:] for x in per[0]]) for g in per):
         raise ValueError(f"type {tn}: per-instance PHY PG domains differ; cannot harden one type for them")
     return per[0]
 
@@ -1467,8 +1471,11 @@ def phy_pg_pdn(P, tn, doms, macros, root=None, core_grids=False):
     for net in sorted({d[1] for d in doms} - {"VDD"}):
         t += [f"set n [$b findNet {net}]", f'if {{$n eq "NULL"}} {{ set n [odb::dbNet_create $b {net}] }}',
               "$n setSigType POWER; $n setSpecial"]
-    t += [f"add_global_connection -net {{VDD}} -inst_pattern {{^(?!({excl})$).*}} -pin_pattern {{^VDD$}} -power"]
+    t += [f"add_global_connection -net {{VDD}} -inst_pattern {{^(?!({excl})$).*}} -pin_pattern {{^VDD$}} -power"
+          if phy_insts else "add_global_connection -net {VDD} -inst_pattern {.*} -pin_pattern {^VDD$} -power"]
     for name, pw, gd, r, mac in doms:
+        if not mac:
+            continue
         t += [f"add_global_connection -net {{{pw}}} -inst_pattern {{^({'|'.join(_tcl_re(i) for i in mac)})$}} "
               f"-pin_pattern {{^VDD$}} -power"]
     t += ["add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSS$} -ground", "global_connect",
@@ -1481,15 +1488,16 @@ def phy_pg_pdn(P, tn, doms, macros, root=None, core_grids=False):
     t += [ln for ln in PDN.splitlines()[5:] if ln.strip()]       # the CORE grid of PDN (after its global connects)
     for k, (name, pw, gd, r, mac) in enumerate(doms):
         rn = f"ot_phy_pg_{k}"
-        if len({phy_layers[i] for i in mac}) != 1:
+        if mac and len({phy_layers[i] for i in mac}) != 1:
             raise ValueError(f"PG domain {name}: mixed PHY PG interfaces require separate grids")
         t += [f"# PHY supply region {name}: {pw}/{gd} over {' '.join(mac)} (die.pg.domains, OWNER decision 7)",
               f"define_pdn_grid -name {{{rn}}} -voltage_domains {{{rn}}} -pins {{M7}}",
               f"add_pdn_stripe -grid {{{rn}}} -layer {{M6}} -width {{0.288}} -spacing {{0.096}} -pitch {{4.32}} -offset {{1.968}}",
               f"add_pdn_stripe -grid {{{rn}}} -layer {{M7}} -width {{0.288}} -spacing {{0.096}} -pitch {{8.64}} -offset {{4.128}}",
               f"add_pdn_connect -grid {{{rn}}} -layers {{M6 M7}}",
-              f"define_pdn_grid -macro -name {{{rn}_macro}} -instances {{{_pdn_inst_patterns(mac)}}} -voltage_domains {{{rn}}} -halo {{0}}",
-              f"add_pdn_connect -grid {{{rn}_macro}} -layers {{{phy_layers[mac[0]]}}}",
+              *([f"define_pdn_grid -macro -name {{{rn}_macro}} -instances {{{_pdn_inst_patterns(mac)}}} -voltage_domains {{{rn}}} -halo {{0}}",
+                 f"add_pdn_connect -grid {{{rn}_macro}} -layers {{{phy_layers[mac[0]]}}}"] if mac else
+                [f"# off-model PHY body (type phy_pg_offmodel): no macro in {name}, region straps + blockage only"]),
               f"odb::dbBlockage_create $b " + " ".join(f"[expr {{round({v:g}*$dbu)}}]" for v in r),
               "ot_clear_keepout_physical $b [list [list " + " ".join(f"[expr {{round({v:g}*$dbu)}}]" for v in r) + "]] phy_supply_region"]
     if core_grids:      # core_pg_connect: per-LEF-layer CORE macro grids (core_pg_grids) replace the M4-only grid
