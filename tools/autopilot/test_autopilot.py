@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """tests for tools/autopilot (no ssh, no ot-run, no systemd: the host / unit layer is faked)"""
 import importlib
+import datetime
 import json
 import os
 import re
@@ -33,6 +34,7 @@ class Base(unittest.TestCase):
         os.environ["AP_QUEUE_FILE"] = str(Path(self.tmp.name) / "queue.tsv")
         os.environ["AP_COORD_FILES"] = str(Path(self.tmp.name) / "coord")
         os.environ["AP_RELEASE_CACHE"] = str(Path(self.tmp.name) / "release_cache.json")
+        os.environ["AP_OT_RUN_SIGNALS"] = str(Path(self.tmp.name) / "no_signals.log")   # never the host's real log
         (Path(self.tmp.name) / "coord" / "lanes").mkdir(parents=True)
         import autopilot
         self.ap = importlib.reload(autopilot)
@@ -43,7 +45,7 @@ class Base(unittest.TestCase):
 
     def tearDown(self):
         self.tmp.cleanup()
-        for k in ("AP_DIR", "AP_QUEUE_FILE", "AP_COORD_FILES", "AP_RELEASE_CACHE", "AP_REPO_FILES"):
+        for k in ("AP_DIR", "AP_QUEUE_FILE", "AP_COORD_FILES", "AP_RELEASE_CACHE", "AP_REPO_FILES", "AP_OT_RUN_SIGNALS"):
             os.environ.pop(k, None)
 
     def queue(self, *rows):
@@ -577,6 +579,50 @@ class TestTick(TickBase):
         self.assertEqual(len(self.f.launched), 2)        # once only
         self.assertEqual(list(jobs.values())[0]["status"], "DONE-CRASH")
         self.assertIn("CRASH/infra-oom", (Path(self.tmp.name) / "structural.tsv").read_text())
+
+    CANCEL = ("ot-run: interrupted (signal 15 from pid 111446 (python3 /home/ubuntu/.local/bin/ot-run --cancel "
+              "s81/kits/slice_station__t5; parent 111442 (bash))); the command is STILL RUNNING on localhost "
+              "(unit oth-ubuntu-1-2): NOT COMPLETED\nAP_RC=143\n")
+
+    def _cancel_case(self, client_text, signals=None):
+        self.queue(ROW)
+        self.tick()
+        path = "/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
+        self.f.kits[path] = {"classify": {}, "mtime": 9e9}
+        if signals is not None:
+            sl = Path(self.tmp.name) / "signals.log"
+            sl.write_text(signals(path))
+            self.ap.OT_RUN_SIGNALS = sl
+        self.finish_client(self.f.launched[0][0], client_text)
+        return self.tick()
+
+    def test_explicit_cancel_in_client_log_is_cancelled_not_resubmitted(self):
+        # FLOW-GEN-1 10-28: AP 5474a1c7a4cf was cancelled 07:44 and resubmitted at 48 GB as "infra-oom" (exit 143)
+        jobs = self._cancel_case(self.CANCEL)
+        (j,) = jobs.values()
+        self.assertEqual((j["status"], j["kind"]), ("CANCELLED", "cancelled"))
+        self.assertEqual(len(self.f.launched), 1)
+        jobs = self.tick()                                   # stays cancelled on later ticks
+        self.assertEqual((list(jobs.values())[0]["status"], len(self.f.launched)), ("CANCELLED", 1))
+
+    def test_cancel_recorded_only_in_signals_log_is_cancelled(self):
+        now = datetime.datetime.now().astimezone().strftime("%Y-%m-%dT%H:%M:%S%z")
+        sig = lambda path: (f"{now} --cancel 'slice_station__t5' by pid 9 parent 8 (bash): [7]\n"
+                            f"{now} signal 15 from pid 9 (python3 ot-run --cancel slice_station__t5; parent 8 (bash)) "
+                            f"-> ot-run pid 7 host localhost tag t STARTED unit u dir {path}: bash run.sh\n")
+        (j,) = self._cancel_case("ot-run: RAN on localhost (unit u): exit 143\nAP_RC=143\n", sig).values()
+        self.assertEqual(j["status"], "CANCELLED")
+        self.assertEqual(len(self.f.launched), 1)
+
+    def test_old_or_other_dir_cancel_does_not_hide_an_oom(self):
+        old = "2026-01-01T00:00:00-0800"
+        sig = lambda path: (f"{old} signal 15 from pid 9 (python3 ot-run --cancel x; parent 8 (bash)) -> ot-run pid 7 "
+                            f"host h tag t STARTED unit u dir {path}: bash\n"
+                            f"{datetime.datetime.now().astimezone().strftime('%Y-%m-%dT%H:%M:%S%z')} signal 15 from pid 9 "
+                            f"(python3 ot-run --cancel y; parent 8 (bash)) -> ot-run pid 7 host h tag t STARTED unit u "
+                            f"dir {path}_other: bash\n")
+        self._cancel_case("ot-run: RAN on epyc2: exit 143\nAP_RC=143\n", sig)
+        self.assertEqual(len(self.f.launched), 2)            # exit 143 without a matching cancel: infra-oom resubmit
 
     def test_signoff_bundle_gap_rejected_before_route(self):
         self.f.kits["/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"] = {"signoff_missing": ["pair_skew.tcl"]}

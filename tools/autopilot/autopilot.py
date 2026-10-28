@@ -70,6 +70,9 @@ REPO_FILES = os.environ.get("AP_REPO_FILES")          # tests / manual: a dir mi
 RELEASE_CACHE = Path(os.environ.get("AP_RELEASE_CACHE",
                                     str(HOME / ".local/state/fleet-viz/release_tree_plan_cache.json")))
 OT_RUN = os.environ.get("AP_OT_RUN", str(HOME / ".local/bin/ot-run"))
+# ot-run's signal log (tools/fleet/ot-run log_signal): an explicit `ot-run --cancel` SIGTERMs the client, which then
+# exits 143 like an OOM kill; this log tells the two apart (FLOW-GEN-1 10-28, AP 5474a1c7a4cf resubmitted at 48 GB)
+OT_RUN_SIGNALS = Path(os.environ.get("AP_OT_RUN_SIGNALS", str(HOME / ".local/state/ot-run/signals.log")))
 IMAGE = os.environ.get("AP_IMAGE", "openroad/orfs:asap7lock")
 ARCHIVE_ROOT = "/srv/opentallas-scratch2/claude/autopilot/closed"
 REVIEW_ROOT = "/srv/opentallas-scratch2/claude/autopilot/review"
@@ -731,6 +734,9 @@ print("AP_JSON " + json.dumps(out))
 
 # ------------------------------------------------------------------------------------------------ classification
 def classify(c, client):
+    if client.get("cancelled"):
+        # an explicit ot-run --cancel (exit 143 = SIGTERM): an operator decision, never an infra crash or a resubmit
+        return "CANCELLED", "cancelled", client["cancelled"]
     """pure function: (classify-probe result, client outcome) -> (class, kind, reasons)
     class: SIGNED | NEAR-MISS | STRUCTURAL | CRASH ; kind refines it (infra / tool / ...)"""
     if client.get("admission_tools_fail"):
@@ -824,7 +830,31 @@ def parse_client_log(text):
     if m:
         o["ap_rc"] = int(m[-1])
         o.setdefault("exit", o["ap_rc"])
+    m = [l for l in text.splitlines() if l.startswith("ot-run: interrupted (signal ") and "ot-run --cancel" in l]
+    if m:
+        o["cancelled"] = m[-1][:300]
     return o
+
+
+def signals_cancel(j):
+    """the ot-run signals.log line recording an explicit `ot-run --cancel` of this job's client (signal from an
+    `ot-run --cancel` sender to the ot-run whose --dir is the job's kit, at or after this attempt started), or None"""
+    try:
+        lines = OT_RUN_SIGNALS.read_text(errors="replace").splitlines()
+    except OSError:
+        return None
+    since = j.get("started", 0) - 60
+    for line in reversed(lines):
+        if "ot-run --cancel" not in line or not re.search(r" signal \d+ from ", line) \
+                or f" dir {j['path']}: " not in line:
+            continue
+        try:
+            t = datetime.datetime.strptime(line.split(" ", 1)[0], "%Y-%m-%dT%H:%M:%S%z").timestamp()
+        except ValueError:
+            continue
+        if t >= since:
+            return line[:300]
+    return None
 
 
 # ------------------------------------------------------------------------------------------------ units
@@ -1604,6 +1634,16 @@ def poll_running(st):
         client = parse_client_log(text)
         if client.get("ran_on"):
             j["ran_on"] = client["ran_on"]
+        if not client.get("cancelled"):
+            sig = signals_cancel(j)
+            if sig:
+                client["cancelled"] = sig
+        if client.get("cancelled"):
+            j.update(cls="CANCELLED", kind="cancelled", reasons=client["cancelled"][:600], finished=time.time())
+            log(f"CLASSIFY {j['id']} {j['die']}/{j['type']} -> CANCELLED (explicit ot-run --cancel; not resubmitted): "
+                f"{client['cancelled'][:240]}")
+            set_status(st, j, "CANCELLED", f"cancelled: {client['cancelled'][:200]}")
+            continue
         if "ap_rc" not in client and not client.get("not_completed"):
             # client gone without a result (hub reboot / unit killed): the remote job may still run
             c = probe_job(j)
