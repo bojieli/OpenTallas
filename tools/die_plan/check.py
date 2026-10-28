@@ -39,6 +39,10 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               ONE connected net: an M8-M9 VIA89 at every strap crossing, emitted (mesh.json meta.mesh_vias) and in the
               routed DB (OT_MESH_VIAS of combo_<corner>.log); ERROR in G0 and G0C (die_clock_mesh.mesh_via_findings)
   clock_entry_macro (G0C) plan clock entry / island (clock_entries.json) over a hard-core macro of core_macros.json
+  streets     (G0C, METHODOLOGY 12.10c street rule, streets.py) street_reach: every hard-core point <= 400 um from the
+              street network (free area >= die.streets.width_um wide, largest connected component); street_width: width >=
+              (clock + hold + FT repeater widths) / 0.6; street_clock_leg: no die-clock H-tree leg / driver of a
+              --clock-build across a hard core, unplaced build rows = ERROR; street_die_leg: no lane station inside a core
   G0C (--completeness): hard_cores, core_faces, complete, clock_entry_macro; PLAN-TOOL5 cross-die rules die_io_plan (die_io.py),
               cut_lines / reach / face_tracks / ft_budget (xdie.py, per-layer reach table reach.py)
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
@@ -73,7 +77,9 @@ G0C_CHECKS = ("hard_cores", "core_faces", "complete",
               # PLAN-TOOL5 (COORD die-plan visual review 10-23, cross-die items (a)-(e)): die_io.py / xdie.py
               "die_io_plan", "cut_lines", "reach", "face_tracks", "ft_budget",
               # HBM-MU-QUAD-6/CLK (COORD 10-27): a core clock entry (12.8a) / its island never sits over a hard-core macro
-              "clock_entry_macro")
+              "clock_entry_macro",
+              # HBM-STREETS-1 (OWNER 10-27 ~18:4x, METHODOLOGY 12.10c): street rule (streets.py)
+              "street_reach", "street_width", "street_clock_leg", "street_die_leg")
 
 
 class Report:
@@ -223,6 +229,77 @@ def check_clock_entry_macro(P, R, plan_dir=None, macros_file=None, entries_file=
                           "region at the core's clock centroid (12.8a)", type=tn)
     out["unknown_macros"] = len(unknown)
     return out
+
+
+def channel_flows(P):
+    """declared partition channels that state a bit count ("N bits" in channel.reason): a flow along the channel's
+    long axis through its centre (die frame), for the per-street demand."""
+    import re as _re
+    out = []
+    for n, p in P.parts.items():
+        for k, ch in enumerate(P.types[p["type"]].get("channels", []) or []):
+            m = _re.search(r"(\d+)\s*bits", str(ch.get("reason", "")))
+            if not m or not ch.get("rect_um"):
+                continue
+            x, y, w, h = ch["rect_um"]
+            a, b = ((x, y + h / 2), (x + w, y + h / 2)) if w >= h else ((x + w / 2, y), (x + w / 2, y + h))
+            a, b = P.to_die(n, a), P.to_die(n, b)
+            if abs(a[0] - b[0]) < 1e-6 or abs(a[1] - b[1]) < 1e-6:
+                out.append((f"{n}/channel{k}", int(m.group(1)), [tuple(a), tuple(b)]))
+    return out
+
+
+def check_streets(P, R, plan_dir=None, clock_builds=(), geo=None, max_msgs=40, png=None, keep=None):
+    """METHODOLOGY 12.10c STREET RULE (G0C, streets.py): hard cores on a street grid, every core point <= reach_um
+    (400) from the street network, street width >= repeater + hold + FT budget / fill, no clock leg (clock builds:
+    htree legs, driver sites, unplaced rows) across a hard core, every die lane station off the hard cores."""
+    import die_clock as DC
+    import streets as ST
+    ko = DC.keepouts(P)
+    cfg = ST.config(P.die.get("streets"))
+    legs, pts, unpl = [], [], []
+    for b in clock_builds or ():
+        lg, pt, up = ST.clock_build_legs(b)
+        legs += lg
+        pts += pt
+        unpl += up
+    flows = []
+    for lid, (lpts, regs, _xs) in (geo or {}).items():
+        pts += [(f"{lid}#{k}", tuple(p), "lane_station") for k, p in enumerate(regs[1:-1], 1)]
+        try:
+            bits = int(P.ports[P.lanes[lid]["ports"][0]]["width"])
+        except (KeyError, IndexError, TypeError, ValueError):
+            bits = 0
+        flows.append((lid, bits, [tuple(q) for q in lpts]))
+    flows += channel_flows(P)
+    # HBM-STREETS-2 (COORD 10-27 18:52): per-street demand replaces the flat 34.56-um width; a plan may still pin the
+    # legacy flat width with die.streets.mode = "flat"
+    if str((P.die.get("streets") or {}).get("mode", "demand")) == "flat":
+        flows = None
+    A = ST.analyze(float(P.W), float(P.H), ko, cfg, legs, pts, unpl, flows=flows)
+    if png:
+        ST.render(A, ko, png, float(P.W), float(P.H), P.name)
+    if keep is not None:
+        keep.append((A, ko))      # ROOT-MERGE-82: run() renders streets.png AFTER the G1 render (see run)
+    # severity (COORD 10-27 18:52): ERROR on hbm (12.10c); REPORT-ONLY (WARN) on the other dies until their own ruling;
+    # die.streets.enforce overrides
+    enforce = (P.die.get("streets") or {}).get("enforce")
+    if enforce is None:
+        enforce = str(getattr(P, "name", "")).lower().startswith("hbm")
+    emit = R.err if enforce else R.warn
+    n = {}
+    for chk, core, msg in A["errors"]:
+        n[chk] = n.get(chk, 0) + 1
+        if n[chk] <= max_msgs:
+            emit(chk, msg)
+    for chk, c in n.items():
+        if c > max_msgs:
+            emit(chk, f"... {c - max_msgs} more {chk} findings (g0_report summary.streets)")
+    over = [c for c in A["cores"] if c["street_dist_um"] is None or c["street_dist_um"] > cfg["reach_um"] + 1e-6]
+    return dict(enforce=bool(enforce), cfg={k: v for k, v in cfg.items()}, clock_builds=len(clock_builds or ()), streets=A["streets"], cores=len(A["cores"]), cores_over_reach=len(over),
+                worst_cores=A["worst_cores"], clock_legs=len(legs), clock_legs_over_core=len(A["legs_over_core"]),
+                legs_over_core=A["legs_over_core"][:50], points_in_core=len(A["points_in_core"]),
+                points_in_core_rows=A["points_in_core"][:50], unplaced=len(unpl), counts=n)
 
 
 def check_geometry(P, R):
@@ -1227,6 +1304,32 @@ def _core_face(o, x, y, cw, ch):
     return f
 
 
+def _bus_bit_targets(P, tn):
+    """{bus: {bit: (x, y)}} type-frame pin of every bit of the type's planned partition ports (schema port_pins of the
+    first instance that carries the bus, die -> type frame); a bus whose pins cannot be placed is left out."""
+    insts = {n for n, p_ in P.parts.items() if p_["type"] == tn}
+    out = {}
+    for pid, pr in P.ports.items():
+        if "face" not in pr or "window_um" not in pr:
+            continue
+        for side in ("src", "dst"):
+            e = pr[side]
+            if e["part"] not in insts or e["bus"] in out:
+                continue
+            df = pr["face"] if side == "src" or pr["src"]["part"] == DIE_PART else OPP[pr["face"]]
+            x0, y0, x1, y1 = P.rect(e["part"])
+            try:
+                pins = P.port_pins(pid)
+            except (ValueError, KeyError):
+                continue
+            pts = {}
+            for b, _ln, c in pins:
+                dpt = dict(N=(c, y1), S=(c, y0), E=(x1, c), W=(x0, c))[df]
+                pts[str(b)] = P.to_type(e["part"], dpt)
+            out[e["bus"]] = pts
+    return out
+
+
 def _bus_targets(P, tn):
     """{bus: (x, y) type-frame point on the partition face that carries it}: the type's bus face/window when
     declared, else the first planned port of an instance of the type (die window -> type frame)."""
@@ -1436,7 +1539,7 @@ def _hops_ok(a, regs, b, smax):
     return max(abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(pts, pts[1:])) <= smax + EPS
 
 
-def check_completeness(P, R, no_cells=(), max_msgs=5, side=None):
+def check_completeness(P, R, no_cells=(), max_msgs=5, side=None, plan_dir=None):
     """PLAN COMPLETENESS (COORD 10-23 ~20:00): G0 is a completeness check; a missing field is an ERROR.
     Per partition type (hard IP types: cells / clock / reset / face flops not required):
       cells            a cell estimate (type.cells, contents[].cells or cells.py evidence)
@@ -1454,6 +1557,16 @@ def check_completeness(P, R, no_cells=(), max_msgs=5, side=None):
                        internal_stations[] hops, and every declared core port bundle -- bus window -> core box, core box
                        -> partner core box (lower bounds) -- longer than it needs an entry (conn "bus:<bus>" with capture
                        "<core>.<port>", or conn "core:<core>.<port>|core:<partner>" either way round)
+                       S81-CORES-R25 10-27 (COORD ruling: pin-to-pin, not box-to-box): where the core has plan pins
+                       (pins[] / pins_file) the length is measured from its PINS (origin + track_offset + orient), per
+                       bit: bus window point -> each pin of the port; core -> partner "core:<inst>.<port>" = per-bit pin
+                       -> partner pin Manhattan (max over common bits); a partner named without a port = pin -> partner
+                       box.  The box distance stays the floor, so a pin-aware length is never shorter than the old one.
+                       A bus target is measured per bit (the bus's planned partition pin, schema port_pins -> core
+                       port bit of the same index) when the port covers all bus bits but at most max(2, width/32)
+                       side bits (valid, tag); a port that is a slice of a wider bus has no known bit map -> pin ->
+                       window centre.
+                       An entry covers a core -> bus bundle with conn "bus:<bus>" and capture OR launch "<core>.<port>".
     Die: clock.common_latency_ps (R4 owner rule)."""
     miss = {f: 0 for f in COMPLETE_FIELDS}
     smax0 = smax = station_max(P)
@@ -1521,6 +1634,31 @@ def check_completeness(P, R, no_cells=(), max_msgs=5, side=None):
             if not _hops_ok(e["from_um"], e["regs_um"], e["to_um"], smax):
                 bad("internal_station", tn, f"internal_stations {e.get('conn', e['from_um'])}: a hop > {smax:g} um")
         conns = {e.get("conn") for e in ist if e.get("conn")}
+        hcs = {hc["inst"]: hc for hc in t.get("hard_cores", [])}
+        cpin = {}
+
+        def port_pins(ci, lp):
+            """{bit: (x, y)} of core ci's port lp in the type frame; None when the core has no plan pins."""
+            if ci not in cpin:
+                hc = hcs.get(ci)
+                tab = None
+                if hc is not None and (hc.get("pins") or hc.get("pins_file")):
+                    try:
+                        raw = core_pins(hc, plan_dir)
+                    except (OSError, ValueError, KeyError):
+                        raw = []
+                    if raw:
+                        tab = defaultdict(dict)
+                        cw_, ch_ = hc["outline_um"]
+                        o_ = hc.get("orient", "R0")
+                        dx_, dy_ = hc.get("track_offset_um", [0.0, 0.0])
+                        for nm_, _ln, x_, y_ in raw:
+                            pn, _, bit = nm_.partition("[")
+                            tx, ty = _orient_pt(o_, cw_, ch_, x_, y_)
+                            tab[pn][bit.rstrip("]")] = (hc["origin_um"][0] + dx_ + tx, hc["origin_um"][1] + dy_ + ty)
+                cpin[ci] = tab
+            tab = cpin[ci]
+            return None if tab is None or lp not in tab else tab[lp]
 
         def covered(key, a, b_box):
             if key in conns:
@@ -1557,7 +1695,8 @@ def check_completeness(P, R, no_cells=(), max_msgs=5, side=None):
                     if d > smax and f"{x}|{y}" not in conns and f"{y}|{x}" not in conns:
                         todo.append((f"net {nm} ({x} <-> {y})", d))
         if creach and tn in cside:
-            ents = {(e.get("conn"), e.get("capture")) for e in ist}
+            ents = {(e.get("conn"), e.get("capture")) for e in ist} | {(e.get("conn"), e.get("launch")) for e in ist}
+            bbt = None
             for ci, ports in cside[tn].items():
                 if ci not in boxes:
                     continue
@@ -1570,10 +1709,32 @@ def check_completeness(P, R, no_cells=(), max_msgs=5, side=None):
                             if nm not in bt:
                                 continue
                             d = _box_dist(bt[nm][1], boxes[ci])
+                            pp = port_pins(ci, lp)
+                            if pp:
+                                if bbt is None:
+                                    bbt = _bus_bit_targets(P, tn)
+                                bq = bbt.get(nm) or {}
+                                if bq and set(pp) <= set(bq) and len(bq) - len(pp) <= max(2, len(pp) // 32):
+                                    d = max(d, max(abs(v[0] - bq[k][0]) + abs(v[1] - bq[k][1]) for k, v in pp.items()))
+                                else:
+                                    q = bt[nm][1]
+                                    d = max(d, max(abs(v[0] - q[0]) + abs(v[1] - q[1]) for v in pp.values()))
                             ok = (f"bus:{nm}", f"{ci}.{lp}") in ents
-                        elif kd == "core" and nm in boxes and nm != ci:
+                        elif kd == "core" and (nm in boxes or nm.rpartition(".")[0] in boxes) and nm != ci:
+                            np_ = None
+                            if nm not in boxes:
+                                nm, _, np_ = nm.rpartition(".")
+                            if nm == ci:
+                                continue
                             bx, by = boxes[ci], boxes[nm]
                             d = max(bx[0] - by[2], by[0] - bx[2], 0) + max(bx[1] - by[3], by[1] - bx[3], 0)
+                            pa = port_pins(ci, lp)
+                            pb = port_pins(nm, np_) if np_ else None
+                            common = set(pa) & set(pb) if pa and pb else set()
+                            if common:
+                                d = max(d, max(abs(pa[k][0] - pb[k][0]) + abs(pa[k][1] - pb[k][1]) for k in common))
+                            elif pa:
+                                d = max(d, max(_box_dist(v, by) for v in pa.values()))
                             ok = any(c_ == f"core:{ci}.{lp}|core:{nm}" or
                                      (str(c_).startswith(f"core:{nm}.") and str(c_).endswith(f"|core:{ci}")
                                       and cap == f"{ci}.{lp}") for c_, cap in ents)
@@ -1752,6 +1913,39 @@ def check_clock_mesh(R, builds):
     return out
 
 
+KNOWN_ERRORS_FILE = "g0c_known_errors.json"
+
+
+def apply_known_errors(R, plan_dir, completeness):
+    """NAMED KNOWN-ERROR LIST (COORD 10-27 18:21, S81 gunit plan event): PLANDIR/g0c_known_errors.json
+    {"owner": lane, "rule": ..., "errors": [{"check": c, "msg": exact finding text}, ...]} lists G0C ERRORs that a
+    reviewed plan event newly exposed and that a named owner fixes.  Under --completeness each listed ERROR is reported
+    as WARN "[KNOWN-ERROR <owner>] ..." (counted in summary.known_errors), so the check stays ON for every other
+    finding.  The list may only shrink: an entry that no longer matches an ERROR is itself an ERROR (remove it), and
+    the list must be empty before the die freeze.  No file = no effect."""
+    f = Path(plan_dir) / KNOWN_ERRORS_FILE if plan_dir else None
+    if not completeness or f is None or not f.is_file():
+        return None
+    K = json.loads(f.read_text())
+    owner = K.get("owner")
+    want = {(e["check"], e["msg"]) for e in K.get("errors", [])}
+    hit = set()
+    for i in R.items:
+        key = (i["check"], i["msg"])
+        if i["level"] == "ERROR" and key in want:
+            i["level"] = "WARN"
+            i["msg"] = f"[KNOWN-ERROR {owner}] " + i["msg"]
+            i["known_error"] = True
+            hit.add(key)
+    stale = sorted(want - hit)
+    for c, m in stale:
+        R.err("known_errors", f"{KNOWN_ERRORS_FILE}: entry no longer matches an ERROR ({c}: {m[:160]}); remove it "
+                              f"(the list may only shrink)")
+    if want and not owner:
+        R.err("known_errors", f"{KNOWN_ERRORS_FILE}: no owner named")
+    return dict(file=str(f), owner=owner, listed=len(want), matched=len(hit), stale=len(stale))
+
+
 def g0c_summary(P, R):
     """per partition type: G0C findings by check; types with none are G3-eligible (as far as the plan goes)."""
     by = {tn: defaultdict(int) for tn in P.types}
@@ -1797,7 +1991,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     _views = _pin_views(P, plan_dir)
     summ["core_pin_form"] = check_core_pin_forms(P, R, plan_dir, _views)
     summ["island_ft_rows"] = check_island_ft_rows(P, R, plan_dir, _views)
-    summ["complete"] = check_completeness(P, R, summ["taps_cores"].get("no_cells", ()),
+    summ["complete"] = check_completeness(P, R, summ["taps_cores"].get("no_cells", ()), plan_dir=plan_dir,
                                           side=load_core_conns(plan_dir, core_conns))
     summ["g0c"] = g0c_summary(P, R)
     summ["geometry"] = check_geometry(P, R)
@@ -1843,16 +2037,25 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["reach"] = xdie.check_reach(P, R, geo)
     summ["face_tracks"] = xdie.check_face_tracks(P, R, fp)
     summ["ft_budget"] = xdie.check_ft_budget(P, R, fp)
+    _st = []
+    summ["streets"] = check_streets(P, R, plan_dir, clock_builds, geo, keep=_st)
     summ["g0c"] = g0c_summary(P, R)
     summ["xdie_counts"] = {c: sum(1 for i in R.items if i["check"] == c and i.get("g0c")) for c in G0C_CHECKS}
     import census_cov
     summ["census"] = census_cov.coverage(P, plan_dir or ".", R)
     if clock_builds:
         summ["clock_mesh"] = check_clock_mesh(R, clock_builds)
+    summ["known_errors"] = apply_known_errors(R, plan_dir, completeness)
     if png:
         import render
         render.render(P, geo, R, png)
         summ["png"] = str(png)
+        # ROOT-MERGE-82 (COORD 18:52): the street map renders after the G1 render, so a render failure (e.g. no
+        # matplotlib) surfaces from the existing die_plan.png render first, as before the street rule
+        import streets as ST
+        A_, ko_ = _st[0]
+        ST.render(A_, ko_, Path(png).with_name("streets.png"), float(P.W), float(P.H), P.name)
+        summ["streets_png"] = str(Path(png).with_name("streets.png"))
     return R, summ
 
 

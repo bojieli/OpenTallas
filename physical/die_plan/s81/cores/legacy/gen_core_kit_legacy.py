@@ -943,14 +943,21 @@ def main():
             json.load(open(REPO / prec["ref_tile"] / "spec.json"))
         views = sorted({c["view"] for c in pspec.get("children", [])})
         want = str(Path(rec["lef_contract"]).parent)
-        if views != [want]:
+        if rec.get("multi_master"):
+            # S81-CORES-R1 10-27 (9af7633ff, ported by S81-CORES-R25): a parent binding SEVERAL distinct child masters
+            # (ot_s81sl_capc5r: cap_rt/tr/ed/ld) gets one kit per master; this recipe's view must be one of them,
+            # child_count = its instances only.
+            if want not in views:
+                raise SystemExit(f"{a.module}: parent {par} children views {views} do not include {want}")
+        elif views != [want]:
             raise SystemExit(f"{a.module}: parent {par} children views {views} != [{want}] (one master required)")
         ptype, _ = plan_core(plan, par)
         outline, lpins = lef_contract(REPO / rec["lef_contract"], a.module)
         if rec.get("pin_expand"):
             lpins = pin_expand(lpins, rec["pin_expand"], *outline)
         hc = dict(module=a.module, outline_um=outline, lef=rec["lef_contract"], pins=lpins,
-                  pins_file=rec["lef_contract"], child_of=par, child_count=len(pspec["children"]))
+                  pins_file=rec["lef_contract"], child_of=par,
+                  child_count=sum(c["view"] == want for c in pspec["children"]))
     elif rec.get("lef_contract"):          # partition CONTENTS core: the closed view LEF is the pin contract
         ptype = rec["plan_type"]
         assert any(c.get("module") == a.module for c in plan["partition_types"][ptype].get("contents", [])), ptype
@@ -1169,6 +1176,18 @@ def main():
     for f in ("face_flops_release.tcl",) \
             + (("reg_fanout_gate.py", "lec.py", "legacy_gate.py", "postcts_gate.tcl", "pinreg_measure.tcl") if modern else ()):
         shutil.copyfile(TOOL / f, kd / f)
+    # S81-CORES-R25 10-27 (LEC-FPREG-4 ask b): recipe lec_hints (repo path) -> KIT/lec_hints.json (untrusted register
+    # correspondences; lec.py proves each, a wrong hint is dropped) and lec_env -> config.mk (legacy_gate.py allowlist)
+    if rec.get("lec_hints"):
+        if not modern:
+            raise SystemExit(f"{mod}: lec_hints needs the modern kit (lec.py + legacy_gate.py)")
+        json.loads((REPO / rec["lec_hints"]).read_text())
+        shutil.copyfile(REPO / rec["lec_hints"], kd / "lec_hints.json")
+    lec_env_cfg = []
+    for k, v in sorted(rec.get("lec_env", {}).items()):
+        if k not in ("OT_LEC_RAW_BASE_STEPS",) or not modern:
+            raise SystemExit(f"{mod}: recipe lec_env {k} not allowed (legacy_gate.py LEC_ENV_KEYS, modern kits only)")
+        lec_env_cfg.append(f"export {k} = {int(v)}")
     # Keep the standalone runtime complete, including sender-min qualification and clock helpers.
     subprocess.run([sys.executable, "-I", str(TOOL / "signoff.py"), "bundle", str(kd)], check=True)
     # Keep face-capture flops until placement, then allow CTS to reconnect CK.
@@ -1397,6 +1416,7 @@ def main():
            # legacy closures used the default Yosys frontend (it keeps 1-bit [0:0] buses: plan pins ck[0], fo[0])
            *(["export SYNTH_HDL_FRONTEND = slang"] if rec.get("slang") else []),
            *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()],
+           *lec_env_cfg,
            # F5 regional taps (recipe regional_taps / --regional-taps), after the recipe vars so its hooks win
            *(regional_taps_cfg(kd, rt, ckb) + (["export OT_RT_NO_REPAIR = 0", "export OT_RT_SETUP_ONLY = 1"] if modern else [])
              if rt else []),
