@@ -68,14 +68,30 @@ def io_tcl(P,tn):
     return "\n".join(out)+("\n" if out else "")
 
 
+def data_output_selectors(P,tn):
+    """Actual non-clock output ports, including landed status/start wires.
+
+    Explicit collections work in OpenSTA; Synopsys collection operators do not.
+    """
+    import gen_phys
+    import gen_rtl
+    t=P.types[tn]
+    out=[gen_rtl.sv_id(b['name'])+'[*]' for b in t.get('buses',[]) if b['dir']=='out']
+    out += [gen_rtl.sv_id(sl['name']+'_o')+'[*]' for sl in t.get('ft_slots',[])]
+    out += [name for name,_x,_y in gen_phys.reset_out_pins(P,tn)]
+    out += [p['name'] for p in t.get('clock',{}).get('landing_contract',{}).get('pins',[])
+            if p['dir']=='out' and p['kind']!='clock']
+    return list(dict.fromkeys(out))
+
+
 def sdc(P,tn,text):
     c=P.types[tn].get("clock",{}).get("landing_contract",{})
     if not c:return text
     exports=[p for p in c["pins"] if p["kind"]=="clock" and p["dir"]=="out"]
     if exports:
-        names=" ".join(p["name"] for p in exports)
+        selectors=" ".join(data_output_selectors(P,tn))
         text=text.replace("[all_outputs]","$cland_data_outputs")
-        text=f"set cland_data_outputs [remove_from_collection [all_outputs] [get_ports {{{names}}}]]\n"+text
+        text=f"set cland_data_outputs [get_ports {{{selectors}}}]\n"+text
         for p in exports:
             text+=f"create_generated_clock -name {p['name']} -master_clock clk -source [get_ports {p['source_clock_port']}] -divide_by 1 [get_ports {p['name']}]\n"
     # Same existing meso ring phase-window law, at exactly833ps. No clock
