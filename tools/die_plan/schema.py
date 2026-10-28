@@ -384,7 +384,9 @@ SCHEMA = {
                     "count_straps": {"type": "array", "items": {
                         "type": "object", "required": ["name", "width"], "additionalProperties": False,
                         "properties": {"name": {"type": "string", "pattern": "^strap_ca_[A-Za-z0-9_]+$"},
-                                       "width": {"type": "integer", "minimum": 1}, "note": {"type": "string"}}}},
+                                       "width": {"type": "integer", "minimum": 1}, "note": {"type": "string"},
+                                       "layer": {"type": "string"},
+                                       "sites_um": {"type": "array", "items": _xy}}}},
 
                     # HEAD-BIND-4 10-27: off-die PHY pad ports (PMA side of a PHY leaf): NO boundary flop (their
                     # timing belongs to the PHY's own clocks), bound to the leaf as "pad:<name>", carried to the die

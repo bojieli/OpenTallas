@@ -67,16 +67,16 @@ def type_pins(P, tn):
 
 
 def strap_pin_sites(P, tn):
-    """[(pin, layer, x, y)] interior pin centres of the type's declared ID straps (plan id_straps[].sites_um, one
-    [x, y] per bit, on id_straps[].layer), or [] when the plan declares no sites (opt-in, DIE-HEAD-5 TILEIO 10-28:
+    """[(pin, layer, x, y)] interior pin centres of declared ID/count straps (plan straps[].sites_um, one
+    [x, y] per bit, on each strap's layer), or [] when the plan declares no sites (opt-in, DIE-HEAD-5 TILEIO 10-28:
     without sites the strap ports had no pin, port_bind counted them as extra).  Tied per instance at the die top."""
     out = []
-    for sp in P.types[tn].get("id_straps", []) or []:
+    for sp in (P.types[tn].get("id_straps", []) or []) + (P.types[tn].get("count_straps", []) or []):
         xy = sp.get("sites_um")
         if not xy:
             continue
         if len(xy) != sp["width"] or not sp.get("layer"):
-            raise ValueError(f"type {tn}: id_straps {sp['name']} needs layer and exactly {sp['width']} sites_um")
+            raise ValueError(f"type {tn}: strap {sp['name']} needs layer and exactly {sp['width']} sites_um")
         out += [(f"{sp['name']}[{i}]", sp["layer"], float(x), float(y)) for i, (x, y) in enumerate(xy)]
     return out
 
@@ -113,6 +113,22 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
     for name, ln, x, y in strap_pin_sites(P, tn):
         add(name, ln, x, y)
     return list(recs.values())
+
+
+def port_bind_pin_records(P, tn, pins, bump_ports=None):
+    """Exact top-level inventory, including physically declared landing and constant pins."""
+    t = P.types[tn]
+    port_pins = [dict(bus=b, bit=i) for b, i, _l, _x, _y, _f in pins]
+    port_pins += [dict(bus=n, bit=None) for n, _x, _y in tap_pins(P, tn) + reset_out_pins(P, tn)]
+    port_pins += [dict(bus=b["port"], bit=i) for b in (bump_ports or []) for i in range(b["width"])]
+    import infra_rtl as IR
+    port_pins += [dict(bus=p["name"], bit=None) for p in IR.type_ports(t)]
+    port_pins += [dict(bus=p["name"], bit=None)
+                  for p in t.get("clock", {}).get("landing_contract", {}).get("pins", [])]
+    port_pins += [dict(bus=n.split("[")[0], bit=int(n.split("[")[1][:-1]))
+                  for n, _l, _x, _y in strap_pin_sites(P, tn)]
+    # Forwarded input clocks may also be listed in edge_clocks: same real pin.
+    return list({(p["bus"], p["bit"]): p for p in port_pins}.values())
 
 
 def write_partition_freeze(P, tn, kd, recs):
@@ -2129,21 +2145,14 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("partition_ir.py"), kd / "partition_ir.py")
     (kd / "pins.json").write_text(json.dumps([dict(bus=b, bit=i, layer=l, x=x, y=y, face=f)
                                               for b, i, l, x, y, f in pins]) + "\n")
-    # pins.json is the data-face contract; include timed control/clock interior
-    # pins explicitly for exact top-level port binding (including wavefront outs).
-    port_pins = [dict(bus=b, bit=i) for b, i, _l, _x, _y, _f in pins]
-    port_pins += [dict(bus=n, bit=None) for n, _x, _y in tap_pins(P, tn) + reset_out_pins(P, tn)]
-    # declared hard-IP line side (bump_ports): exact bound bits, never a wildcard waiver of extras
-    port_pins += [dict(bus=b["port"], bit=i) for b in (bump_ports or []) for i in range(b["width"])]
-    import infra_rtl as IR
-    infra = IR.type_ports(t)
-    port_pins += [dict(bus=p["name"], bit=None) for p in infra]
+    port_pins = port_bind_pin_records(P, tn, pins, bump_ports)
     sps = strap_pin_sites(P, tn)
-    port_pins += [dict(bus=n.split("[")[0], bit=int(n.split("[")[1][:-1])) for n, _l, _x, _y in sps]
     (kd / "port_bind_pins.json").write_text(json.dumps(port_pins, indent=1) + "\n")
     if sps:
         # declared ID straps of this kit for port_bind_gate / straps.py (OWNER 10-25 option B)
         (kd / "straps.json").write_text(json.dumps(dict(straps=sorted({n.split("[")[0] for n, *_ in sps})), indent=1) + "\n")
+    import infra_rtl as IR
+    infra = IR.type_ports(t)
     if infra:
         import ft_ports as FT
         decl = FT.declaration(t.get("infra_arcs", []), f"die plan {P.name} type {tn}: explicit native hard-core interfaces")
