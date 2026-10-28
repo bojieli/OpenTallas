@@ -88,3 +88,31 @@ def test_modern_runner_order_and_legacy_bytes():
     assert modern.index('/work/legacy_gate.py /work lec') < modern.index('/work/reg_fanout_gate.py')
     assert modern.index('OT_VCLK_CORNER=ff') < modern.index('/work/legacy_gate.py /work grt') < modern.index('then \\$M $GOAL;')
     assert subprocess.run(['bash','-n'],input=modern,text=True).returncode==0
+
+
+def test_lec_env_passes_allowlisted_raw_base_steps(tmp_path):
+    # S81-CORES-R25: recipe lec_env reaches lec.py through config.mk; other keys never do
+    k = kit(tmp_path)
+    (k/'config.mk').write_text((k/'config.mk').read_text() + 'export OT_LEC_RAW_BASE_STEPS = 6\nexport OT_LEC_RESET_CYCLES = 16\n')
+    seen = {}
+    def execute(args, **kwargs):
+        seen.update(kwargs['env'])
+        (k/'lec/lec.json').write_text('{"verdict":"EQUIVALENT"}')
+        return SimpleNamespace(returncode=0)
+    assert gate.run(k, 'lec', k/'netlist.v', execute) == 0
+    assert seen['OT_LEC_RAW_BASE_STEPS'] == '6'
+    assert seen.get('OT_LEC_RESET_CYCLES') != '16'
+
+
+@pytest.mark.parametrize('bad', ['export OT_LEC_RAW_BASE_STEPS = 99\n', 'export OT_LEC_RAW_BASE_STEPS = x\n',
+                                 'export OT_LEC_RAW_BASE_STEPS = 6\nexport OT_LEC_RAW_BASE_STEPS = 2\n'])
+def test_lec_env_bad_value_fails_closed(tmp_path, bad):
+    k = kit(tmp_path)
+    (k/'config.mk').write_text((k/'config.mk').read_text() + bad)
+    ran = []
+    def execute(args, **kwargs):
+        ran.append(1)
+        (k/'lec/lec.json').write_text('{"verdict":"EQUIVALENT"}')
+        return SimpleNamespace(returncode=0)
+    assert gate.run(k, 'lec', k/'netlist.v', execute) == 5
+    assert not ran

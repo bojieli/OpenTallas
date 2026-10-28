@@ -34,10 +34,11 @@ module ot_s81c_attn_hcore #(
 `else
     parameter integer WPRE = 0
 `endif
-`ifdef OT_S81C_HCORE_BZ0
-    , parameter integer BZ0 = 1       // LEC-FPREG-3 10-27: hgrp_s BZ0 (bf16 LSB a wire, not a 24-deep unreset constant)
+`ifdef OT_S81C_HCORE_NO_BZ0
+    , parameter integer BZ0 = 0       // opt-out: the pre-10-27 form (b[0] rides the 24-deep unreset skew line)
 `else
-    , parameter integer BZ0 = 0
+    , parameter integer BZ0 = 1       // LEC-FPREG-3 10-27, default since S81-CORES-R25 (LEC-FPREG-4 ask a): hgrp_s BZ0
+                                      // (bf16 LSB a wire, not a 24-deep unreset constant); -DOT_S81C_HCORE_BZ0 kept as a no-op
 `endif
 ) (
     input  wire              clk,
