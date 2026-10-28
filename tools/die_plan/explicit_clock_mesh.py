@@ -68,7 +68,28 @@ def conductor_graph(mesh):
         drivers.append(dict(d, anchor=list(at), jog_um=dist))
     taps = []
     tap_jogs = []
+    def attach_m9(x, y, limit):
+        # HEAD-R23 (COORD-approved PG-aware jog): the M8 jog runs on the caller's PG-gap track y to
+        # the nearest M9 strap that spans y; no M9 jog and no M8-strap attachment for such a tap.
+        x, y = round(float(x), 4), round(float(y), 4)
+        for i in hy.get(y, ()):
+            if hs[i][1]-1e-6 <= x <= hs[i][2]+1e-6:   # the track IS an M8 strap: port on the strap
+                hp[i].add(x); return point('M8', x, y), 0.
+        cand = [(abs(xx-x), j, xx) for j, (xx, y0, y1) in enumerate(vs)
+                if y0-1e-6 <= y <= y1+1e-6 and abs(xx-x) <= limit+1e-6]
+        if not cand: raise ValueError(f'mesh tap jog track {(x, y)}: no M9 strap within {limit}')
+        d, j, xx = min(cand)
+        vp[j].add(y)
+        return point('M9', xx, y), d
     for t in mesh.get('taps', []):
+        if t.get('jog_y') is not None:
+            at, dist = attach_m9(t['xy'][0], t['jog_y'], float(mesh.get('tap_jog_um', 0.)))
+            port_at = point('M8', t['xy'][0], t['jog_y'])
+            if at != port_at:
+                joint = point('M8', at[1], at[2]); tap_jogs.extend([(at, joint), (joint, port_at)])
+            taps.append(dict(t, anchor=list(at), port_node=list(port_at), jog_um=dist,
+                             stub_um=round(abs(float(t['xy'][1])-float(t['jog_y'])), 4)))
+            continue
         at, dist = attach(*t['xy'], limit=float(mesh.get('tap_jog_um', 0.)))
         port_at = at
         if dist > 1e-6:
