@@ -1,0 +1,63 @@
+# HBM explicit reset handoff — 2026-10-28
+
+PARKED on explicit user/root reset. No new implementation edits or jobs after reset; running support route left intact. Exclusive die owner was /root/hbm. Old Oct27 children were not revived (usage-limit error reported once). One support /root/hbm_core_closure remains responsible for safely parking its notes; no job kill.
+
+## Workspace and source packets
+
+Own sparse intel2 WT `/srv/opentallas-scratch2/claude/wt/codex-hbm-die-1028`, branch `codex/hbm-die-1028`, HEAD a5f2f63b2a. Runtime `/srv/opentallas-scratch2/claude/codex-hbm-die-1028`. Do not modify paused die-hbm-5/6 workers. Main received the exact restoration packets as57e3aa2efca (RM114); bank ancestry excluded.
+
+- 0bf12bd931: nine missing diagnostic B2 native sources isolated under physical/die_plan/hbm/bind/rtl/b2_native plusC20source snapshot/manifest. Merged main104649f8da4. Exact donor inverse-namespace identity9/9. Actual diagnostic B2 elaboration110modules,4full/91lib,undefined0/ambiguity0; stale r18h5 owned-native preference missing DELIVERED_RESET corrected to current released source. This two-stop/two-quarter source is DIAGNOSTIC, not authority to delete canonical hardware.
+- b9bf253aa5 and554aa22163: map_file repo-relative attempt then exact map inline workaround. Shared frontdoor bug (resolved absolute before manifest gate) fixed by merger MAIN80b9576966. Earlier own strict baseline had12known-unmapped split parents; it was deliberately stopped as superseded invalid input (owned PID235988/unit235938), not a timeout. owner_stop.json/log retained. No strict PASS claimed.
+- eb97d1569c: recovered canonical four-role emitter, bootstrap binder and7 focused controls plus concrete source/receipts. Mainbf95306929. Actual source356instances,FOUR quarter wrappers/FOUR original VMS roles, declared68packed SRAM contract and888nativeFUSED link bits. Actual expanded canonical hierarchy143modules/13full/108lib,undefined0/ambiguity0; recursive actual source census256HCOL+8tails. No old global transport-history realization imported.187explicit boundary ports=126missing providers+13real inputs+48control obligations. No source/slot, whole-token, mapped ABI or physical qualification.
+- 6cc3759241: three qualified job217 bootstrap/provider RTL files plus2emitters and inherited component evidence. Maina7129911f8. Byte-identical1b90666eff; defaultTARGET0disabled; actual ingress/leaf/provider/root1332/0@833ps, DATA/HIGHcontrols caught; actual2-edge status deadline PASS, old1-edge mutant caught. Matching current4role calendar/START/reset remains MISSING, no executable ROM.
+- a5f2f63b2a: bootstrap explicit target range narrowed16..255 to match RTL hit/emitter. Main45fab24b0b. Fresh complete-audit targets8/15 rejected,16 accepted;9focusedcontrolsPASS. This fixes a real silent-disabled-target interface mismatch found by merger.
+
+## Canonical target225 and uncommitted current work
+
+Actual target225 attachment succeeded at runtime `canonical225/`:357instances,183boundary ports=126missing providers+13inputs+44control obligations. NW host leafNT19→20/NF31→32; globalstatusNT43→44/NF75→76; target inserted at ready bit22; ingressmask225 enabled; job217/WSC8/PK5/PB5 androotDONE/FAULT/BUSY genuinely connected. Original namespace decoder bodies match current14/14. The pinned original SHA8992c492af0d2337c9371b6c932fbd5d947f6fe2540373aa11fe00770b440cad hashes the gzip artifact; a decompressed-input attempt failed the hash guard, diagnosed and corrected by using actual originalgzip, no waiver.
+
+Compiler dependency snapshot is recovered but UNCOMMITTED at `results/die_hbm_codex_1028/bootstrap_source/compiler_front_snapshot.tar.gz`, SHA256f6a9ff60c80a5753590c6b24231fcf871d230598f0ece8a2cdf20a942aa3c40c; donor1b90666eff:results/hbm_fused_provider_1027/compiler_front_snapshot.tar.gz. Contains tools/hbm_next/{isa_rows,fused_phase_check}.py plus hbm_generic_iface/records. `compiler_front_dependency.json` pins it. Source emitters require this external frontend and current native calendar; do not describe packet as self-contained compiler or emit a fake calendar.
+
+Current UNCOMMITTED source changes (preserve; do not discard): `tools/hbm_b2/current_native_top.py` and `test_current_native_top.py` add opt-in `--restore-storage-providers`. Imports exact original four calendars,32VMbanks/eight write mergers, replaces old two-role scaffold variants, and makes storage reset authority explicit. Defaults unchanged. Actual runtime `canonical_storage/`:375instances,189boundary ports=88missing providers+13inputs+88control obligations. Missing upstream families now exact hleaf_SW/SE,smw_SW/SE,SU_SW/SE plus8svg_SW sm_packet etc; no extra SM/SU core imported or port alias invented. Actual source elaboration `bind_canonical_storage/` unit1553003 TERMINALexit0:144modules/13full/109lib,undefined0/ambiguity0. Ten focused helper controlsPASS (unit1537821), including refusal of missing real storage providers. This is source-only, NOT a physical/current-calendar qualification.
+
+Other uncommitted artifacts under ownWT:
+- results/die_hbm_codex_1028/bind/{asbuilt_c20_idxcut.json,asbuilt_c20_structural.json,idxcut_contract.json,idxcut_source_members.json,su_native_parameter_census.json}
+- results/die_hbm_codex_1028/canonical_storage/ (source top andasbuilt)
+- bootstrap_source/{namespace225_original.json,compiler_front_dependency.json,compiler_front_snapshot.tar.gz}
+- bank/narrow_link_alternative.json.
+
+Expanded diagnostic source resolves132/132 exact IDX members (64HCOL+2tails per old quarter). Source SU parameters are NWQID2/NEQID3; G0/1 each16KIND1+16KIND0, G2/3 each32KIND0, no g_side_pipe. C20 side/FULL-slot andNEcopied-content mismatches must be reconciled AGAINST CANONICAL restoration, not deleted using diagnostic B2. Canonical source/slot event still needs the additional128HCOL+4tails and truthful four-role masters.
+
+## Leading missing integration artifact
+
+OWNER? lines already in CODEX-LOG: current8SM→approvedfour-quarter/four-VMS-role producer/folded-client bit-level wiring/cadence contract; matching current4role programme/calendar/header; eight new-native delivered reset/START epoch bindings. Original16SM source exists but is not authority to add extra SM/SU cores or alias their producers onto current8SM. Keep required ports explicit and preserve canonical slots. No blocking dialog or answer wait was used. Root reported this as leading HBM risk to owner.
+
+## Bank/rate and physical status
+
+53fe78e506 and403e085d0c remain diagnostic own-branch packets, NOT mainadoption. Payload-only256/1024flop banks preserve exact data edge; epoch/reset remains separate.1080/0@833ps;3samebinarycontrols caught (routing,payload reset,epoch). First point-packing proposal failed actual bodies/localcapacity; no bankkit/P&R launched. Actual C20reach405um, not generic450. Tightened safe subset retains3801NW/3770NE banks,1.000M/0.971Mbitregs; worst source-aware hops404.112/404.184um. Residual soft1.908M/2.002McellsF1.3 requires≥6subparts/hub@360k. Straight cuts36.6–62.9k/39.6–52.7kpins intersect30–96hard bodies and exceed25.9kfull-face density bound. Rejected, not unsafeA revival. One-page source packet `results/die_hbm_codex_1028/bank/partial_banks_subpartition_estimate.md`.
+
+One further rate sensitivity estimate UNCOMMITTED:4x static period forstreams>=256bits gives2.232→0.899M /2.284→0.947Mstationbits, original-geometry cuts12.6–20.1k/15.8–18.5k, but source hold/buffering/rate unproven. Completion+3/6/9cycles(oldK1/2/3), selectedwordrate¼; historicalmodel1836.5/(1+3f) only sensitivity, not nativeprice. OWNER? logged. Root explicitly says NO IMPLEMENTATION on unproven producer assumptions; source/slot reconciliation first.
+
+C20i_po16f454f05cbf inherited plan plusc20j earlytaps are candidates. G0C20 remains (vmbfaces12,xqmergedclockviews4,streetreach4 exception).90regional639crossing analytic0FAIL was NOT built arrivals; old built trees30/36>150ps and200CAfail remain owned. No new die clock/release job. Shared body rule: actualBUFx24is1.62×.27, not pointlegal; Qwenpacker6ff7130eb2 available, root merging. PG-ACT5 measured data retained; new kit must consume current main core_pg_connect true/actualPGshapes, no0.15W/mm2 substitution.
+
+OldAQ APa036cb2f6232 collected TERMINALKIT_PREFLIGHTFAIL6 at unit427426 beforeP&R (missing lint/slice/RC/pins). Exact-row append-only withdrawal pushed coord; stale old GEOM pass did not override actualdensityW8.7/E11.4>6/currentness failure. Logs/state preserved, no foreign kill/retry waiver.
+
+## Focused core support and live job
+
+/root/hbm_core_closure was told PARK on explicit reset; existing collq2route MUST CONTINUE. Live intel1 unitoth-ubuntu-2791390-1793189206 (32GB/8threads), runtime `/srv/opentallas-scratch2/claude/codex-hbm-core-closure-0359`, kit `kits/ot_hfd_coll_q2_hard_v8g__reduce_d5760c6fb862-finalff3`, run_route.log. Fresh finalFF repair/recheck helper main9fa16f73 staged. Source/outline/pinsC20j unchanged; core-onlyG1recorda91a9597a1;preflightPASS0. SynthLEC23701/23701,0diff/undecided;face1108/1108. Last update active GRT; end-GRT baseline reproduces old TTsetup+27.43/FFhold−61.77 beforeholdrepair. Old terminal actual−0.34postrepair remains NOTSIGNED. TT+186.03 was earlier MISLABELED FFsetupINFO; correctTTold+27.43. FinalFFhelper preserves TT>=0/FF>=0/clockdiff; no margin/clock waiver. Freshkit lacks core.json; ordinary auto signoff could select mean rebind. Support prepared explicit normal signoff `--ff-vclk bound-ff --ff-bound-ps202.5 --ff-vclk-contract <source kit sdc_lint.json>` retainingTT250; auto receipt kept separately. RoutedLEC launcher exists and only runs after actual routed netlist; no receipt overwrite.
+
+Parent reduce5tag/meta buses are PLANNED registered paths, not bare1.1mm wires: q0three stages allfive, q1four stages allfive;serialK2,within-replica equalage,worst289.4um/101.3um. Actual materialization/calendar stillOPEN.
+
+Programme_store proposal/body packet: local `/home/ubuntu/coord/handoff/codex_hbm_core_closure_0359/programme_proposal/`, remote same lane `programme_proposal/`.44actualSRAMs (11stripeleaves×4pages), NOT4macros; actual96.552×69.660 bodies. Outer574.56×738.72, usableinset565.92×730.08.5×9minusrootslot,24.32umA-face spines,8.64row gaps,17.24east corridor. Rootfixed;16FTmoves explicit. Existinglegalize_slice onactual2704native rows/LEFs+44obstacles:35infracells,0overlaps,maxshift.162um; rootparallelBUFx24twins separateadjacentrows, fixesold1.08pitchcollision. Picture personally viewed by support ANDdieowner. Geometry-onlyPASS-COND; inherited536psspread NOTclosed. Missing actualsink/role attachments/current parenttree-wire-cellmodel explicitly named; no furtherplacement/CTS authorized. No programme newphysicaltrial.
+
+VMS inventory: same localhandoff `vms_inventory/{REPORT.md,inventory.json}` andremote lane `vms_inventory`. CanonicalSW NC2,SID0;NW NC0+8bankfaultinputs,SID2;SE/NE NC0withoutbankfault,SID1/3. RG/WGparams dead after bankhoist, do NOTinfergatedelta fromthem. CurrentC20all4slotsNWwrapper777.6×1635.552 cannotbind4roles. ExistingE oneclockhelperisNC1,cq338/cr274, unusable. Preserve4releasedfixed-SIDmasters; minimum3familiesonlyafterrealreviewedE SID-strapinterface. Oldstrapsmap specializesconstants,not reusableIDports. Source PHYSICAL_RING1 matchesSW0→SE1→NE3→NW2.93bus/source/recipe inventory complete, noVMSsourceedit/trial.
+
+## Next steps for resumed owner
+
+1. Preserve uncommitted opt-in storage/source artifacts; review before landing. Current canonical source is four-role target, diagnosticB2never slot-deletion authority.
+2. Complete truthful source/slot/per-bit producer and clock/reset mapping; recover current8SM folded-native contract/4rolecalendar when available, keepmissingportsfailclosed. No extraSM/SUor geometry alias.
+3. Generate one coherent die event from actual256HCOL/8tails,4VMSroles/32banks and per-QID source, then recompute traffic/stations/bank/cut/clock/PG estimates. Do not reuse diagnosed straight-strip or rate assumptions.
+4. Collect live collq2fulltrial/explicitframe signoff/routedLEC and everyterminalfailure. Programme descriptor canjoin event onlyafter actual parentclock model/reprice. VMSgenuinevariants need source-bound recipes and measured cellcaps.
+5. BuiltregionalDME/bodylegal/SPICETTFF/CA>=100 andinregion<=150,corePG/reach/G0C20 then image review before any new P&R/STA. No new jobs on this reset turn.
+
+Final support park update: `/home/ubuntu/coord/handoff/codex_hbm_core_20261028_reset.md` has exact commands. Collq2 current GRT hold repair746EP, iteration60/118buffers, FF−52.371 improving; finalhook/routedLEC/exact-frame signoff stillpending. Supportsourcebranchpusheda91a9597a1; helpermainRM109. Support PARKED, no extra jobs.
