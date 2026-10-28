@@ -697,6 +697,10 @@ def mesh_signoff(proof_dir, taps, meta, corner, so_path, band_mode="tree"):
     m0 = m0[len(m0) // 2]
     arr_stub = [r["stages_from_root"] for p, r in taps.items() if p in load and not p.startswith("~")
                 and load[p].startswith("ckm_s_")] if all("stages_from_root" in r for r in taps.values()) else []
+    # HEAD-R24 (explicit mesh, explicit_mesh_signoff.py): a tap whose load IS its own port has no stage below the mesh
+    # load point, so the mesh node sits at the tap's own stage count (ckm_s_ stub taps: one stub buffer below, -1).
+    # Strap-mesh proofs never name a port as its own load -> unchanged.
+    arr_port = [r["stages_from_root"] for p, r in taps.items() if load.get(p) == p and "stages_from_root" in r]
     for p, l in load.items():
         r = taps[p]
         r["abs_late_ps"], r["abs_early_ps"] = r["late_ps"], r["early_ps"]
@@ -705,7 +709,7 @@ def mesh_signoff(proof_dir, taps, meta, corner, so_path, band_mode="tree"):
         r["cppr_node_tree"], r["cppr_node"], r["mesh_load"] = r["cppr_node"], "m", l
     meta.setdefault("cppr_node_range_ps", {})["m"] = 0.0
     if "node_stages" in meta:
-        meta["node_stages"]["m"] = (min(arr_stub) - 1) if arr_stub else 0
+        meta["node_stages"]["m"] = min([v - 1 for v in arr_stub] + arr_port) if (arr_stub or arr_port) else 0
         meta["node_xy_um"]["m"] = None
         meta["node_late_ps"]["m"] = m0
         meta["node_early_ps"]["m"] = m0
@@ -907,6 +911,9 @@ def _pin_outline(doc):
 def canon_pins(doc, outline_um=None):
     """{'outline': (W, H) nm | None, 'pins': {name: (x_nm, y_nm, (key, value)...)}} -- canonical physical content."""
     pins = {}
+    if isinstance(doc, list):                            # run pins.json form: [{bus, bit, layer, x, y, face}, ...]
+        doc = dict(pins=[dict(p, name=p.get("name") or ("%s[%s]" % (p["bus"], p["bit"]) if p.get("bit") is not None
+                                                          else p.get("bus"))) for p in doc])
     for p in doc.get("pins", []):
         rest = tuple((k, _nm(p[k]) if isinstance(p[k], (int, float)) and not isinstance(p[k], bool) else p[k])
                      for k in PIN_KEYS if k in p)

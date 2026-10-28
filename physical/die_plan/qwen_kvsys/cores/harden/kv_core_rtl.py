@@ -1078,8 +1078,9 @@ def main_hr_plan(a, plan, pdir, t):
     import core_pins_hr as CH
     host = CH.Host(a.hr_elab)
     hr = json.load(open(CH.HR_PLAN))
-    part = (pdir / HR_PART).read_text()
-    hck = dict(re.findall(r'\.(ck_\w+)\(\{?(clk\w*)', part[part.index(CH.TOP):]))
+    part_sv = Path(a.hr_part) if a.hr_part else pdir / HR_PART
+    part = part_sv.read_text()
+    hck = dict(re.findall(r'\.(ck_\w+)\(\{?(clk\w*)', part[part.index(CH.leaf_module(part_sv)[0]):]))
     hcs = [h for h in t['hard_cores'] if h['module'].startswith('qkd_hr_')]
     core_mem = {}
     for h in hcs:
@@ -1272,6 +1273,8 @@ def main():
     ap.add_argument('--hr-filelist', help='with --hr-wrappers: member sources for the lint')
     ap.add_argument('--hr-elab', help='KV-CORE-RTL/HR: elaborated u_host JSON (core_pins_hr.py host_elab.json); builds the 15 PLAN qkd_hr_* cores (16a clock face)')
     ap.add_argument('--hr-kit-f', help='with --hr-elab: kit filelist (kit_rtl.f of kv3_hub_Wi) for the member sources')
+    ap.add_argument('--hr-part', help='with --hr-elab: bound kv3_hub_Wi partition .sv (default <plan dir>/' + HR_PART +
+                    '); KV-HOST-REGEN-1: the bind of record (recipe_kv_2350 b3) is NOT bound_r8')
     ap.add_argument('--hr-no-lint', action='store_true')
     ap.add_argument('--hr-keep-families', action='store_true', help='with --hr-wrappers: no 16a clock collapse')
     a = ap.parse_args()
