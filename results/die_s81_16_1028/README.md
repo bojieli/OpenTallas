@@ -108,3 +108,21 @@ Main die_sta_related kit_contract_hold, reproduced exactly by hold_classify.py (
   tree skew, worse than packed G. Regions: bk_sel 265, svc_12 59, svc_13 54, fW2_p1_b1 52, svc_8 37, lk_EN2 35.
 - So the fix path is the tree (merge mode go15 + plan_s11 early taps), then the kit window, not die hold buffers.
   go15 gives the measured answer. ESTIMATE only, nothing changed.
+
+## 9. Gate-mode STA on main 013a9a854 (CLK-INV-CAL-1 + cell-paths), dry run on go13; go15 runs the same script
+Script: scripts/sta_gate.sh MAIN_WT PROOF PLAN OUT. It runs main die_sta_related with every signed S81 view that has
+_tt/_ff libs (12 views) as --core-view, in gate mode (--core-insertion view) and declared mode, plus a labelled
+DIAGNOSTIC run with --no-core-view-match-pins. Data: intel2:/srv/opentallas-scratch2/claude/die-s81-16/gate13.
+
+| go13 (plan_s10), main 013a9a854 | TT setup | FF hold | kit contract (W=180) | early core taps |
+|---|---|---|---|---|
+| GATE (view) | -508.57 | -1049.05 | -502.09 (need 682.09; +OCV 724.52) | 1696 missing -> FAIL closed |
+| declared | -106.97 | -724.05 | same | 1696 declared |
+| DIAGNOSTIC declared, no pin match | -106.97 | -724.05 | same | real views on 4057 instances / 2181 taps |
+
+- Gate mode: real-view pairs 0/178894. All 12 signed S81 views load, but none passes the default pin-provenance match.
+  No S81 view directory has a provenance.json (kit.pins_file), and none of the 1696 early core taps (rom_elem_q, bf_col,
+  bk_sel, ...) has a signed view yet. The gate stays FAIL closed until the CORES-EARLY views land with provenance.
+- Main declared numbers are identical to the pre-CLK-INV-CAL-1 run: S81 already used --clock-cell inv2.
+- Diagnostic real-view pairs (58408): TT setup +86.16 (0 neg); FF hold -204.05 (25242 neg; worst svc_12 dsdv_svc_sx_hrow
+  -> budget, damage 224); both-real worst -96.6 (273 neg). This is the same tree-skew tail as section 8.

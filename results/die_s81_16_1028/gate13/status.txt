@@ -1,0 +1,20 @@
+START Wed Oct 28 16:21:24 PDT 2026 main 013a9a8543 proof /srv/opentallas-scratch2/claude/die-s81-15/cp13/proof plan 5f014a8d3554 views 12
+view rc 0
+proof TT intra              pairs  178894 setup  -508.57 (neg 97) hold -1160.12 (neg 148129) skew 1121.58
+proof TT landed             pairs  420251 setup -6396.34 (neg 122389) hold -7047.89 (neg 233484) skew 6658.63 landing {'window_ps': 416.67, 'setup_margin_ps': -6241.97, 'hold_margin_ps': -6241.97, 'damage_max_ps': 6658.63, 'verdict': 'FAIL', 'note': 'plan-defi
+proof TT landed_nearest_INFO pairs    3177 setup -6199.57 (neg 763) hold -6851.12 (neg 1761) skew 6476.47 landing {'window_ps': 416.67, 'setup_margin_ps': -6059.8, 'hold_margin_ps': -6059.8, 'damage_max_ps': 6476.47, 'verdict': 'FAIL', 'note': 'plan-defined la
+proof FF intra              pairs  178894 setup  -351.09 (neg 53) hold -1049.05 (neg 149402) skew 1007.09 kit-contract hold -502.09 (W 180, need 682.09, neg 1279)
+proof FF landed             pairs  420251 setup -5584.87 (neg 85940) hold -6282.82 (neg 234786) skew 5945.25 landing {'window_ps': 416.67, 'setup_margin_ps': -5528.59, 'hold_margin_ps': -5528.59, 'damage_max_ps': 5945.25, 'verdict': 'FAIL', 'note': 'plan-defin
+proof FF landed_nearest_INFO pairs    3177 setup -5440.02 (neg 544) hold -6137.97 (neg 1767) skew 5811.51 landing {'window_ps': 416.67, 'setup_margin_ps': -5394.85, 'hold_margin_ps': -5394.85, 'damage_max_ps': 5811.51, 'verdict': 'FAIL', 'note': 'plan-defined 
+SUMMARY {"intra": {"tt_setup_ps": -508.57, "ff_hold_ps": -1049.05, "verdict": "FAIL", "ff_hold_kit_contract_ps": -502.09, "kit_contract_window_ps": 180.0, "kit_contract_window_needed_ps": 682.09, "kit_contract_verdict": "FAIL", "real_view": {"pairs": "0/178894
+declared rc 0
+proof TT intra              pairs  178894 setup  -106.97 (neg 22) hold  -758.52 (neg 170893) skew 1121.58
+proof TT landed             pairs  420251 setup -6251.21 (neg 116672) hold -6902.77 (neg 223527) skew 6658.63 landing {'window_ps': 416.67, 'setup_margin_ps': -6241.97, 'hold_margin_ps': -6241.97, 'damage_max_ps': 6658.63, 'verdict': 'FAIL', 'note': 'plan-defi
+proof TT landed_nearest_INFO pairs    3177 setup -6199.57 (neg 784) hold -6851.12 (neg 1710) skew 6476.47 landing {'window_ps': 416.67, 'setup_margin_ps': -6059.8, 'hold_margin_ps': -6059.8, 'damage_max_ps': 6476.47, 'verdict': 'FAIL', 'note': 'plan-defined la
+proof FF intra              pairs  178894 setup   -26.09 (neg 3) hold  -724.05 (neg 171391) skew 1007.09 kit-contract hold -502.09 (W 180, need 682.09, neg 1279)
+proof FF landed             pairs  420251 setup -5485.70 (neg 75101) hold -6183.66 (neg 225525) skew 5945.25 landing {'window_ps': 416.67, 'setup_margin_ps': -5528.59, 'hold_margin_ps': -5528.59, 'damage_max_ps': 5945.25, 'verdict': 'FAIL', 'note': 'plan-defin
+proof FF landed_nearest_INFO pairs    3177 setup -5440.02 (neg 535) hold -6137.97 (neg 1723) skew 5811.51 landing {'window_ps': 416.67, 'setup_margin_ps': -5394.85, 'hold_margin_ps': -5394.85, 'damage_max_ps': 5811.51, 'verdict': 'FAIL', 'note': 'plan-defined 
+SUMMARY {"intra": {"tt_setup_ps": -106.97, "ff_hold_ps": -724.05, "verdict": "FAIL", "ff_hold_kit_contract_ps": -502.09, "kit_contract_window_ps": 180.0, "kit_contract_window_needed_ps": 682.09, "kit_contract_verdict": "FAIL", "real_view": {"pairs": "0/178894"
+SUMMARY view: TT setup -508.57 FF hold -1049.05 verdict FAIL kit-contract -502.09 (W need 682.09) kit+OCV need 724.52 neg 5255 | early core taps 1696 source {'view': 0, 'declared': 0, 'missing': 1696} | real-view pairs 0 hold None
+SUMMARY declared: TT setup -106.97 FF hold -724.05 verdict FAIL kit-contract -502.09 (W need 682.09) kit+OCV need 724.52 neg 5255 | early core taps 1696 source {'view': 0, 'declared': 1696, 'missing': 0} | real-view pairs 0 hold None
+DONE Wed Oct 28 16:27:24 PDT 2026
