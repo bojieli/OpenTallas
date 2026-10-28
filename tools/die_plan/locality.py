@@ -4,6 +4,9 @@
 
     locality.py score   --plan PLAN --regions MAP --die NAME --v-ps-mm V --out DIR [--tag T] [--feed fwd|top]
     locality.py propose --plan PLAN --die NAME --v-ps-mm V --out DIR [--span-mm 3.5] [--regions BASE_MAP]
+    locality.py v3 --plan PLAN --die NAME --v-ps-mm V --map TAG=MAP --out DIR [--v-note TXT]   (LOCALITY-SCORE-3: the
+          ADOPTED count-aligned ring via count_align_plan.py: per crossing K / DEPTH 4|8 / latency / margins, best map +
+          feed with no hop chains, hop chains only for crossings that fail at DEPTH 8; see results/locality_1027/v3)
     MAP = a JSON file with {"part_region": {part: region}} (fallback_regions / hbm_land_regions format) or a flat
           {part: region} dict, or the word 'part' (every partition its own region).
 
@@ -64,6 +67,7 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(ROOT / "tools" / "s81_head"))
 import clk_aocv as CA  # noqa: E402
 import landed_phase_ocv as LP  # noqa: E402
+import count_align_plan as CAP  # noqa: E402  (MESO-COUNT-1 adopted ring math, reused, not forked)
 
 TABLE = HERE / "clk_aocv_table_g021.json"
 CORE_LAT = {"TT": 250.0, "FF": 202.5}
@@ -487,7 +491,10 @@ def margins(br_rows, Ttab, period, budget=None, ff_scale=None):
                         fold_tt=m(t, t["d_ps"] - k * period), fold_ff=m(f, f["d_ps"] - k * period),
                         ca_tt=round(budget - max(t["p_up_ps"], t["p_dn_ps"]), 1),
                         ca_ff=round(budget - max(f["p_up_ps"], f["p_dn_ps"]), 1),
-                        dist_um=t["dist_um"]))
+                        dist_um=t["dist_um"],
+                        # per corner signed growth / shrink + per side unshared (count_align_plan input, v3)
+                        pu_tt=t["p_up_ps"], pd_tt=t["p_dn_ps"], pu_ff=f["p_up_ps"], pd_ff=f["p_dn_ps"],
+                        ua_tt=round(b["ua"], 1), ub_tt=round(b["ub"], 1)))
     return res
 
 
@@ -948,8 +955,11 @@ def render(D, S, path, title, key=None):
     if key:
         rows, key = key_rows(S, key)
     agg = {}
+    if key == "cap":  # v3: adopted count-aligned ring, colour by DEPTH (D4 green, D8 orange, FAIL at D8 red)
+        rows, key = S["crossings_cap"], "cap"
     for r in rows:
-        m = min(r[f"{key or 'fold'}_tt"], r[f"{key or 'fold'}_ff"])
+        m = ({4: 200.0, 8: 50.0}.get(r.get("depth"), -1.0) if key == "cap"
+             else min(r[f"{key or 'fold'}_tt"], r[f"{key or 'fold'}_ff"]))
         k = (r["ra"], r["rb"])
         a = agg.setdefault(k, [r["xy"], m, 0, r["far"]])
         a[1] = min(a[1], m)
@@ -962,11 +972,14 @@ def render(D, S, path, title, key=None):
     ax.set_ylim(0, H)
     ax.set_aspect("equal")
     s = S["summary"]
-    rd = ({"ca": "COUNT-ALIGNED", "raw": "CURRENT RING", "fold": "STATIC COUNT"}.get(key, "")
+    rd = ({"ca": "COUNT-ALIGNED", "raw": "CURRENT RING", "fold": "STATIC COUNT",
+           "cap": "ADOPTED CA RING: green D4, orange D8, red FAIL at D8 -"}.get(key, "")
           + (" + HOP CHAINS" if S.get("_hop") else "")) or ("PAD" if S["crossings_pad"] else "FOLD")
     ax.set_title(f"{title}\n{s['regions']} regions, bit-mm inside {100 * (s['frac_bitmm_inside'] or 0):.1f} %, "
                  f"{s['crossing_ports']} crossing ports ({s['far_ports']} far), feed {s['feed']}; "
-                 f"dots = crossings by min({rd} TT,FF) margin: green >=100, orange <100, red <0; x = far",
+                 + ("dots = region-pair crossings, adopted CA ring (joint TT+FF): green all DEPTH4, orange some "
+                    "DEPTH8, red some FAIL at DEPTH8; x = far" if key == "cap" else
+                    f"dots = crossings by min({rd} TT,FF) margin: green >=100, orange <100, red <0; x = far"),
                  fontsize=8)
     ax.tick_params(labelsize=6)
     fig.tight_layout()
@@ -1164,6 +1177,308 @@ def estimate_md_v2(die, v, rows, best, D, tlog, calib=None):
     return "\n".join(L) + "\n"
 
 
+# ------------------------------------------------------------------------- v3: the ADOPTED count-aligned ring (CAP)
+# LOCALITY-SCORE-3.  COORD 20:35 / 20:40 rulings: the crossing form for all dies is MESO-COUNT-1's count-aligned ring
+# (rtl/common/ot_dp_clk_landing_ca.sv): it reads by count, K and DEPTH (4 or 8) are fixed per crossing at design time
+# for TT and FF jointly (no per-chip training), the window is (DEPTH-1)T, and the derated lag L must lie inside
+# [(0.5T + ap), (DEPTH-0.5)T - ap], >= 100 ps both sides.  All of that math is tools/die_plan/count_align_plan.py,
+# called through its own CLI entry (joint-corner union + plan) on a landed_phase_ocv-format file: nothing re-derived.
+# v2's 'ca' column (P/2 - max p, i.e. reset-time training) is superseded by this 'cap' reading.
+CAP_CORNERS = ("TT", "FF")
+
+
+def cap_corner_rows(R):
+    """locality margin rows -> landed_phase_ocv-format rows per corner (count_align_plan input)."""
+    out = {c: [] for c in CAP_CORNERS}
+    for r in R:
+        for c in CAP_CORNERS:
+            k = c.lower()
+            out[c].append(dict(port=str(r["id"]), src=r["ra"], dst=r["rb"], d_ps=r[f"d_{k}"], p_up_ps=r[f"pu_{k}"],
+                               p_dn_ps=r[f"pd_{k}"], unshared_a_ps=r["ua_tt"], unshared_b_ps=r["ub_tt"],
+                               margin_ps=r[f"raw_{k}"]))
+    return out
+
+
+def cap_plan_corners(corner_rows, period=833.0, ap=None, wander_frac=0.05):
+    """count_align_plan (main: joint-corner union + plan) per connected component of the crossing graph (its start tree
+    needs a connected graph).  corner_rows = {corner: [landed_phase_ocv rows]}; the first corner gives the nominal d.
+    Returns (summary, {port: plan row + margin_lo_ps / margin_hi_ps})."""
+    import contextlib
+    import io
+    import tempfile
+    ap = period / 8 if ap is None else ap
+    cs = list(corner_rows)
+    rows0 = corner_rows[cs[0]]
+    ds = CAP.DSU()
+    for r in rows0:
+        ds.u(r["src"], r["dst"])
+    comp = collections.defaultdict(set)
+    for r in rows0:
+        comp[ds.f(r["src"])].add(r["port"])
+    res, summ = {}, dict(components=0, crossings=0, depth4=0, depth8=0, fail=0, tree_edges=0, tree_edges_clean=0,
+                         max_path_ambiguous_cycles=0)
+    with tempfile.TemporaryDirectory() as td:
+        for i, ports in enumerate(sorted(comp.values(), key=lambda p: -len(p))):
+            src = dict(corners={c: dict(all=[r for r in corner_rows[c] if r["port"] in ports]) for c in cs})
+            fi, fo = Path(td) / f"in{i}.json", Path(td) / f"out{i}.json"
+            fi.write_text(json.dumps(src))
+            with contextlib.redirect_stdout(io.StringIO()):
+                CAP.main([str(fi), "--corner", ",".join(cs), "--period", str(period), "--aperture", str(ap),
+                          "--wander-frac", str(wander_frac), "--out", str(fo)])
+            o = json.loads(fo.read_text())
+            s = o["summary"]
+            summ["components"] += 1
+            for k in ("crossings", "depth4", "depth8", "fail", "tree_edges", "tree_edges_clean"):
+                summ[k] += s[k]
+            summ["max_path_ambiguous_cycles"] = max(summ["max_path_ambiguous_cycles"], s["max_path_ambiguous_cycles"])
+            for x in o["crossings"]:
+                dep = x["depth"]
+                x["margin_lo_ps"] = round(x["L_lo_ps"] - 0.5 * period, 1)
+                x["margin_hi_ps"] = round((dep or 8) * period - 0.5 * period - x["L_hi_ps"], 1)
+                res[x["port"]] = x
+    ok = [x for x in res.values() if x["depth"]]
+    summ.update(period_ps=period, aperture_ps=round(ap, 3), wander_frac=wander_frac,
+                worst_margin_lo_ps=min((x["margin_lo_ps"] for x in ok), default=None),
+                worst_margin_hi_ps=min((x["margin_hi_ps"] for x in ok), default=None),
+                lat_hist={str(k): sum(1 for x in ok if x["lat_cycles"] == k)
+                          for k in sorted({x["lat_cycles"] for x in ok})})
+    return summ, res
+
+
+def cap_reading(R, period, ap=None, wander_frac=0.05):
+    """the adopted CA ring on locality crossing rows: adds cap_* fields to every row, returns the summary."""
+    if not R:
+        return dict(crossings=0, depth4=0, depth8=0, fail=0, lat_hist={}, worst_margin_lo_ps=None,
+                    worst_margin_hi_ps=None, components=0, bit_lat_hist={}, bits=0, max_lat=0, bit_cycles=0,
+                    d8_bits=0, fail_bits=0, tree_edges=0, tree_edges_clean=0, max_path_ambiguous_cycles=0,
+                    phys_hist={}, max_phys=0, bit_phys_cycles=0, min_lat=0)
+    summ, res = cap_plan_corners(cap_corner_rows(R), period, ap, wander_frac)
+    for r in R:
+        x = res[str(r["id"])]
+        r.update(depth=x["depth"], lat=x["lat_cycles"], K_kind=x["kind"], amb=x["path_ambiguous_cycles"],
+                 L_lo=x["L_lo_ps"], L_hi=x["L_hi_ps"], m_lo=x["margin_lo_ps"], m_hi=x["margin_hi_ps"])
+    blh = collections.Counter()
+    for r in R:
+        if r["depth"]:
+            blh[r["lat"]] += r["width"]
+    # physical cycles write -> read incl. RDREG = L_nominal / T + 1 = lat + d_TT / T: skew-free (the clock-arrival
+    # offset d cancels around every closed dataflow loop, so loop / token cost = sum of these), integer = ceil.
+    for r in R:
+        r["phys"] = math.ceil(r["lat"] + r["d_tt"] / period - 1e-9) if r["depth"] else None
+    ph = collections.Counter(r["phys"] for r in R if r["depth"])
+    summ.update(phys_hist={str(k): ph[k] for k in sorted(ph)},
+                max_phys=max((r["phys"] for r in R if r["depth"]), default=0),
+                bit_phys_cycles=round(sum(r["width"] * (r["lat"] + r["d_tt"] / period) for r in R if r["depth"])),
+                min_lat=min((r["lat"] for r in R if r["depth"]), default=0))
+    summ.update(bit_lat_hist={str(k): blh[k] for k in sorted(blh)}, bits=sum(r["width"] for r in R),
+                max_lat=max((r["lat"] for r in R if r["depth"]), default=0),
+                bit_cycles=sum(r["width"] * r["lat"] for r in R if r["depth"]),
+                d8_bits=sum(r["width"] for r in R if r["depth"] == 8),
+                fail_bits=sum(r["width"] for r in R if not r["depth"]))
+    return summ
+
+
+def cap_hop(G, F, Tr, v, X, R, Ttab, period, ap=None, wander_frac=0.05):
+    """12.13c hop chains ONLY for the crossings that fail the adopted ring even at DEPTH 8: each is re-timed along the
+    feed-tree path between its regions (one CA landing per tree edge); every other crossing stays direct.  Feed edges
+    that carry hop bits without a direct crossing get a synthetic crossing at the feed tap; then the CA plan is redone
+    on the new crossing set.  Chain latency = sum of the CA landing latencies of its path edges (worst crossing per
+    edge; register transit inside intermediate regions NOT counted)."""
+    fails = [(x, r) for x, r in zip(X, R) if not r["depth"]]
+    if not fails:
+        return None
+    keep = [r for r in R if r["depth"]]
+    load, paths, hard = collections.Counter(), {}, []
+    for x, r in fails:
+        la, lb = lineage(F, x["ra"]), lineage(F, x["rb"])
+        sb = set(lb)
+        L = next(q for q in la if q in sb)
+        path = la[:la.index(L)] + lb[:lb.index(L)]
+        if len(path) <= 1:  # already a feed parent<->child crossing: a chain cannot shorten it
+            hard.append(r)
+            keep.append(r)
+            continue
+        paths[r["id"]] = (x["width"], [(F["parent"][c], c) for c in path])
+        for c in path:
+            load[(F["parent"][c], c)] += x["width"]
+    direct = {tuple(sorted((r["ra"], r["rb"]))) for r in keep}
+    syn = [dict(id=f"hop:{p}>{c}", src=p, dst=c, ra=p, rb=c, width=bits, xy=F["tap"][(p, c)], far=False)
+           for (p, c), bits in sorted(load.items()) if tuple(sorted((p, c))) not in direct]
+    rows = [dict(r) for r in keep]
+    if syn:
+        BR = [branches(G, F, Tr, v, x) for x in syn]
+        for x, b, m in zip(syn, BR, margins(BR, Ttab, period)):
+            m.update(id=x["id"], ra=x["ra"], rb=x["rb"], width=x["width"], xy=[round(c, 1) for c in x["xy"]],
+                     lca=b["lca"], far=False, on_feed=True, tree_hops=b["tree_hops"], synthetic=True)
+            rows.append(m)
+    s = cap_reading(rows, period, ap, wander_frac)
+    edge_lat = collections.defaultdict(int)
+    for r in rows:
+        k = tuple(sorted((r["ra"], r["rb"])))
+        edge_lat[k] = max(edge_lat[k], 99 if r["lat"] is None else r["lat"])
+    chains = []
+    for rid, (w, pe) in paths.items():
+        chains.append(dict(id=rid, width=w, hops=len(pe), lat=sum(edge_lat[tuple(sorted(e))] for e in pe)))
+    s.update(hop_chains=len(chains), hop_hard=len(hard), hop_max_hops=max((c["hops"] for c in chains), default=0),
+             hop_extra_bit_hops=sum(c["width"] * (c["hops"] - 1) for c in chains),
+             hop_chain_lat_hist={str(k): sum(1 for c in chains if c["lat"] == k) for k in sorted({c["lat"] for c in chains})},
+             hop_synthetic_edges=len(syn))
+    return dict(summary=s, rows=rows, chains=chains)
+
+
+def cap_rank(s):
+    """best map / feed: METHODOLOGY 12.13 first (no die-wide 'top' release clock; region span within the cap =
+    max(5 mm tree-proposer cap, the die's largest partition side)), then the fewest crossings failing at DEPTH 8 (they
+    need hop chains), then the lowest max PHYSICAL crossing latency, then the fewest physical bit-cycles, then the
+    fewest DEPTH8 crossings."""
+    return (s["feed"] == "top", not s.get("span_ok", True), s["fail"], s["max_phys"], s.get("bit_phys_cycles", 0),
+            s["depth8"])
+
+
+def run_v3(plan, die, v, out, maps_in=(), tree_cfgs=((2.0, 3.5), (3.5, 5.0)), span=3.5,
+           feeds=("fwd", "spine", "fish", "dme", "top"), render_png=True, calib=None, v_note=""):
+    """LOCALITY-SCORE-3: every map (given + v1 + tree proposer) x feed scored with the adopted CA ring (no hop chains);
+    the best map/feed per die; hop chains only for its crossings that fail at DEPTH 8; ESTIMATE page + render."""
+    import hashlib
+    D = load_plan(plan)
+    D["_plan"] = str(plan)
+    D["_sha"] = hashlib.sha256(Path(plan).read_bytes()).hexdigest()
+    padj = part_adjacency(D)
+    M = traffic(D)
+    Ttab = CA.load(TABLE)
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    P = D["period"]
+    maps = [(tag, load_regions(spec, D)) for tag, spec in maps_in]
+    maps.append((f"v1_s{span:g}", propose(D, span, M, padj)))
+    for s0, cap in tree_cfgs:
+        maps.append((f"tree_s{s0:g}c{cap:g}", propose_tree(D, s0, cap, M, padj)[0]))
+    rows, keep = [], {}
+    span_cap = max(5.0, max(max(p["rect"][2] - p["rect"][0], p["rect"][3] - p["rect"][1]) for p in D["parts"].values())
+                   / 1000.0)
+    for name, reg in maps:
+        (out / f"{die}_{name}_regions.json").write_text(json.dumps(dict(part_region=reg), indent=0, sort_keys=True))
+        for feed in feeds:
+            S = score(D, reg, v, feed, padj, M, Ttab)
+            S["_reg"] = reg
+            s = S["summary"]
+            cs = cap_reading(S["crossings"], P)
+            row = dict(map=name, feed=feed, regions=s["regions"], max_span_mm=s["max_span_mm"],
+                       frac_bitmm_inside=s["frac_bitmm_inside"], crossing_ports=s["crossing_ports"],
+                       off_feed_ports=s["off_feed_ports"], worst_unshared_tt=s["worst_unshared_tt"],
+                       ring_worst_tt=s["raw_worst_tt"], ring_worst_ff=s["raw_worst_ff"],
+                       span_ok=s["max_span_mm"] <= span_cap + 1e-6, **cs)
+            rows.append(row)
+            S["crossings_cap"] = S["crossings"]
+            keep[(name, feed)] = S
+            print(die, name, feed, {k: row[k] for k in ("regions", "crossings", "depth4", "depth8", "fail", "max_phys",
+                                                         "worst_margin_lo_ps", "worst_margin_hi_ps")}, flush=True)
+    b = min(rows, key=cap_rank)
+    S = keep[(b["map"], b["feed"])]
+    hop = None
+    if b["fail"]:
+        Tr, _ = arrivals(S["G"], S["F"], v)
+        X = crossings(D, S["_reg"], S["G"], padj)
+        hop = cap_hop(S["G"], S["F"], Tr, v, X, S["crossings"], Ttab, P)
+    pngs = []
+    if render_png:
+        png = f"{die}_v3_best_cap.png"
+        render(D, S, out / png, f"{die} v3 best (adopted CA ring, no hop chains): map {b['map']} feed {b['feed']} "
+               f"@ {v:g} ps/mm", "cap")
+        pngs.append(png)
+        if hop:
+            S2 = dict(S, crossings_cap=hop["rows"])
+            png = f"{die}_v3_best_cap_hop.png"
+            render(D, S2, out / png, f"{die} v3 best + hop chains for the {hop['summary']['hop_chains']} D8-fails: "
+                   f"map {b['map']} feed {b['feed']}", "cap")
+            pngs.append(png)
+    xs = sorted(S["crossings"], key=lambda r: (r["depth"] is not None, -(r["L_hi"] or 0)))
+    per = [dict(id=r["id"], ra=r["ra"], rb=r["rb"], width=r["width"], on_feed=r["on_feed"], tree_hops=r["tree_hops"],
+                unshared_tt=r["unshared_tt"], d_tt=r["d_tt"], d_ff=r["d_ff"], kind=r["K_kind"], amb=r["amb"],
+                L_lo=r["L_lo"], L_hi=r["L_hi"], depth=r["depth"], lat=r["lat"], phys=r["phys"], m_lo=r["m_lo"],
+                m_hi=r["m_hi"]) for r in xs]
+    res = dict(die=die, plan=dict(path=str(plan), sha256=D["_sha"]), v_ps_per_mm=v, v_note=v_note, period_ps=P,
+               span_cap_mm=round(span_cap, 2),
+               rows=rows, best=dict(map=b["map"], feed=b["feed"], summary=b, pngs=pngs, span_cap_mm=round(span_cap, 2),
+                                    hop=None if not hop else dict(summary=hop["summary"], chains=hop["chains"])),
+               crossings=per, calib=calib)
+    (out / f"{die}_v3.json").write_text(json.dumps(res, indent=0, default=str))
+    with open(out / f"{die}_v3_crossings.tsv", "w") as fh:
+        fh.write("id\tsrc_region\tdst_region\twidth\ton_feed\tkind\tL_lo_ps\tL_hi_ps\tdepth\tlat_cycles\tmargin_lo_ps"
+                 "\tmargin_hi_ps\tphys_cycles\n")
+        for r in per:
+            fh.write(f"{r['id']}\t{r['ra']}\t{r['rb']}\t{r['width']}\t{int(r['on_feed'])}\t{r['kind']}\t{r['L_lo']}\t"
+                     f"{r['L_hi']}\t{r['depth'] or 'FAIL'}\t{'-' if r['lat'] is None else r['lat']}\t{r['m_lo']}\t{r['m_hi']}\t"
+                     f"{'-' if r['phys'] is None else r['phys']}\n")
+    (out / f"{die}_v3_ESTIMATE.md").write_text(estimate_md_v3(die, v, v_note, rows, res["best"], per, D, calib))
+    return res
+
+
+def estimate_md_v3(die, v, v_note, rows, best, per, D, calib=None):
+    b = best["summary"]
+    P = D["period"]
+    L = [f"# 12.14b ESTIMATE v3: {die}, adopted count-aligned ring (LOCALITY-SCORE-3, analytic, UNCHECKED)", "",
+         f"Inputs: plan {D['_plan']} (sha256 {D['_sha'][:12]}), {len(D['parts'])} partitions, {len(D['ports'])} ports; "
+         f"clock wire v = {v:g} ps/mm TT ({v_note}); T = {P:g} ps.",
+         "Crossing form = MESO-COUNT-1 count-aligned ring (ot_dp_clk_landing_ca, COORD 20:35 adopted): reads by count; "
+         "K and DEPTH (4 or 8) fixed per crossing at design time, jointly for TT+FF (no per-chip training); window "
+         "(DEPTH-1)T; derated lag L inside [(0.5T+ap), (DEPTH-0.5)T-ap], ap = T/8, >= 100 ps both sides.  Math = "
+         "tools/die_plan/count_align_plan.py unchanged (Kruskal start tree on clean edges, path ambiguity on loop "
+         "crossings), fed with this tool's modelled d / p_up / p_dn (shared derate: clk_aocv g021 + droop regions + "
+         "core latency class B).  Latency = logical crossing latency in cycles (K + 1 + nominal origin difference).", ""]
+    if calib:
+        L += ["Calibration: " + calib, ""]
+    L += [f"## Best (no hop chains): map {best['map']}, feed {best['feed']}", "",
+          f"* {b['regions']} regions, max span {b['max_span_mm']:.2f} mm, bit-mm inside "
+          f"{100 * (b['frac_bitmm_inside'] or 0):.1f} %, {b['crossings']} crossings ({b['bits']} bits), "
+          f"{b['components']} connected component(s), start-tree edges clean {b['tree_edges_clean']}/{b['tree_edges']}, "
+          f"max path ambiguity {b['max_path_ambiguous_cycles']} cycles.",
+          f"* **DEPTH4 {b['depth4']}, DEPTH8 {b['depth8']} ({b['d8_bits']} bits), FAIL even at DEPTH8 {b['fail']} "
+          f"({b['fail_bits']} bits)**; worst margin low {b['worst_margin_lo_ps']} ps / high {b['worst_margin_hi_ps']} ps "
+          f"(passing crossings; gate >= 100).",
+          f"* **Physical latency per crossing** (write -> read incl. RDREG, ceil(L/T + 1) = ceil(lat + d/T); skew-free, "
+          f"sums around any closed dataflow loop = the loop's cost -> use for TOK pricing; cycles: crossings): "
+          f"{b['phys_hist']}; max {b['max_phys']}; bit-weighted mean {b['bit_phys_cycles'] / max(1, b['bits']):.2f}.",
+          f"* Schedule constant per crossing (logical latency in the die-wide count, K + 1 + origin difference; carries "
+          f"the clock-arrival offset d/T, so it can be < 1 or negative; cycles: crossings): {b['lat_hist']}; "
+          f"bit-weighted: {b['bit_lat_hist']}.", f"* Render: {', '.join(best['pngs'])} (VIEWED).", ""]
+    h = best.get("hop")
+    if h:
+        s = h["summary"]
+        L += [f"Hop chains (12.13c) ONLY for the {b['fail']} D8-fail crossings: {s['hop_chains']} chains "
+              f"({s['hop_hard']} already on-feed, cannot be chained), max {s['hop_max_hops']} hops, "
+              f"{s['hop_extra_bit_hops']} extra bit-hops, {s['hop_synthetic_edges']} synthetic feed-edge crossings; "
+              f"after re-timing: D4 {s['depth4']}, D8 {s['depth8']}, FAIL {s['fail']}; chain latency (cycles: chains) "
+              f"{s['hop_chain_lat_hist']} (landing cycles only, intra-region transit not counted).", ""]
+    else:
+        L += ["Hop chains: none needed (0 crossings fail at DEPTH 8).", ""]
+    L += ["## All maps x feeds (adopted CA ring, no hop chains), best first", "",
+          "Ranking: 12.13 first (feed 'top' = die-wide release clock, listed for reference only; max region span <= "
+          f"{best.get('span_cap_mm', 5.0)} mm = max(5 mm, largest partition side), else '*' after the span), then FAIL@D8, "
+          "max physical latency, physical bit-cycles, D8 count.", "",
+          "| map | feed | regions | max span mm | bit-mm in | crossings | D4 | D8 | FAIL@D8 | worst lo / hi ps | "
+          "max phys lat | phys latency hist | old ring worst TT/FF |", "|" + "---|" * 13]
+    for s in sorted(rows, key=cap_rank):
+        L.append(f"| {s['map']} | {s['feed']} | {s['regions']} | {s['max_span_mm']:.2f}{'' if s['span_ok'] else '*'} | "
+                 f"{100 * (s['frac_bitmm_inside'] or 0):.1f} % | {s['crossings']} | {s['depth4']} | {s['depth8']} | "
+                 f"{s['fail']} | {s['worst_margin_lo_ps']} / {s['worst_margin_hi_ps']} | {s['max_phys']} | "
+                 f"{s['phys_hist']} | {s['ring_worst_tt']:.0f} / {s['ring_worst_ff']:.0f} |")
+    L += ["", "## Worst crossings of the best form (FAIL first, then highest L_hi)", "",
+          "| crossing | src -> dst region | bits | on feed | kind | L lo..hi ps | DEPTH | lat (sched / phys) | "
+          "margin lo / hi |",
+          "|---|---|---|---|---|---|---|---|---|"]
+    for r in per[:15]:
+        L.append(f"| {r['id']} | {r['ra']} -> {r['rb']} | {r['width']} | {'on' if r['on_feed'] else 'OFF'} | "
+                 f"{r['kind']} (amb {r['amb']}) | {r['L_lo']:.0f}..{r['L_hi']:.0f} | {r['depth'] or 'FAIL'} | "
+                 f"{'-' if r['lat'] is None else r['lat']} / {'-' if r['phys'] is None else r['phys']} | "
+                 f"{r['m_lo']} / {r['m_hi']} |")
+    L += ["", f"Per-crossing K/DEPTH/latency/margins: {die}_v3_crossings.tsv (all {len(per)}).", "",
+          "Verdict rule (12.14b): build only a form whose every crossing fits (DEPTH 4/8, >= 100 ps both sides); "
+          "estimate only (UNCHECKED) until GRT + landed_phase_ocv rows + count_align_plan on the real rows.  Not "
+          "scored here: intra-region related pairs (large regions) -> die STA."]
+    return "\n".join(L) + "\n"
+
+
 # --------------------------------------------------------------------------------------------------------------- CLI
 def run(plan, regions, die, v, out, tag, feeds=("fwd", "spt", "top"), propose_span=None, render_png=True):
     import hashlib
@@ -1207,7 +1522,7 @@ def run(plan, regions, die, v, out, tag, feeds=("fwd", "spt", "top"), propose_sp
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=("score", "propose", "both", "v2"))
+    ap.add_argument("cmd", choices=("score", "propose", "both", "v2", "v3"))
     ap.add_argument("--plan", required=True)
     ap.add_argument("--regions", help="region map JSON or 'part'")
     ap.add_argument("--tag", default="baseline")
@@ -1220,7 +1535,14 @@ def main(argv=None):
     ap.add_argument("--map", action="append", default=[], help="v2: TAG=MAP (repeatable; MAP = JSON or 'part')")
     ap.add_argument("--tree", default="2:3.5,3.5:5", help="v2: tree proposer start-span:cap list (mm)")
     ap.add_argument("--calib", default=None, help="v2: calibration note for the ESTIMATE page")
+    ap.add_argument("--v-note", default="", help="v3: where the clock wire speed comes from")
     a = ap.parse_args(argv)
+    if a.cmd == "v3":
+        cfg = tuple(tuple(float(t) for t in c.split(":")) for c in a.tree.split(",") if c)
+        feeds = tuple(a.feed.split(",")) if a.feed != "fwd,spt,top" else ("fwd", "spine", "fish", "dme", "top")
+        run_v3(a.plan, a.die, a.v_ps_mm, a.out, [tuple(m.split("=", 1)) for m in a.map], cfg, a.span_mm, feeds,
+               not a.no_png, a.calib, a.v_note)
+        return 0
     if a.cmd == "v2":
         cfg = tuple(tuple(float(t) for t in c.split(":")) for c in a.tree.split(",") if c)
         feeds = tuple(a.feed.split(",")) if a.feed != "fwd,spt,top" else ("fwd", "spine", "fish", "dme", "top")

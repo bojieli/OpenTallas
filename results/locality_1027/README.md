@@ -91,3 +91,38 @@ Findings:
 5. Not scored here: intra-region related pairs. Big regions (QC 26 mm slices) carry their own root-split pessimism
    (QC-SLICECLK-2: 183 TT), and that goes to die STA. HBM region boxes can overlap where a region is L-shaped. The box rule
    checks only partition centres.
+
+## v3 (LOCALITY-SCORE-3, 2026-10-27): the ADOPTED count-aligned ring at measured clock wire speeds
+
+`python3 tools/die_plan/locality.py v3 ...` / `results/locality_1027/run_all_v3.sh` -> `v3/` (nominal v) and
+`v3/vs115/` (v x 1.15, the measured LAND-HEAD-3 rib-hop pessimism).  Per die: `<die>_v3_ESTIMATE.md` (one page),
+`<die>_v3.json`, `<die>_v3_crossings.tsv` (per crossing K-kind, L lo/hi, DEPTH, latency, margins), render
+`<die>_v3_best_cap.png` (VIEWED; green = DEPTH4, orange = some DEPTH8, red = FAIL at DEPTH8).
+
+Crossing form = MESO-COUNT-1 `ot_dp_clk_landing_ca` (COORD 20:35): reads by count, K and DEPTH 4/8 fixed per crossing
+at design time for TT+FF jointly (no per-chip training), window (DEPTH-1)T, derated lag inside
+[(0.5T+ap), (DEPTH-0.5)T-ap], ap = T/8.  The math is `tools/die_plan/count_align_plan.py` called unchanged through its
+CLI entry (joint-corner union, Kruskal start tree, path ambiguity), per connected component; this tool only supplies the
+modelled d / p_up / p_dn / unshared per crossing.  The v2 `ca` column (P/2 - max p) is SUPERSEDED.
+Test: `test_cap_reproduces_meso_count_head3` = MESO-COUNT-1 HEAD result on the LAND-HEAD-3 rows
+(`tools/die_plan/testdata/land_head3_sfbR_ocv_ttff.json.gz`): 427/427 DEPTH4, 0 FAIL, latency {2: 349, 3: 78},
+worst 104.1 ps low side, coll_EN1_u__0 L [1065, 1432] lat 3.
+Calibration: the modelled HEAD partition map with spine / fish feed also gives 427/427 DEPTH4 (built form measured
+427/427 DEPTH4).
+
+Latency: `phys` = ceil(lat + d_TT/T) = physical write->read cycles incl. RDREG, skew-free (sums around any closed
+dataflow loop to the loop cost) -> the TOK pricing number.  `lat` = the schedule constant in the die-wide count
+(K + 1 + origin difference); it carries d/T, so it can be <= 0 on one direction of a skewed pair.
+Best = 12.13 first (no die-wide `top` feed; max region span <= max(5 mm, largest partition side)), then FAIL@D8,
+max phys latency, phys bit-cycles, D8 count.
+
+| die | v ps/mm | best map / feed | regions | crossings | DEPTH4 | DEPTH8 | FAIL@D8 (hop chains) | worst lo / hi ps | phys latency (cycles: crossings) | v x1.15 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| HEAD | 349 | v1_s3.5 / fish | 85 | 162 | 162 | 0 | 0 | 104.1 / 1117 | {2: 37, 3: 125} | v1_s3.5/dme: 93 D4, 69 D8, 0 FAIL |
+| QC | 199 | tree_s3.5c5 / fish | 136 | 1354 | 1354 | 0 | 0 | 104.1 / 1125 | {2: 52, 3: 1302} | 0 FAIL, 0 D8 |
+| KV | 321 | land128 / fish | 128 | 3619 | 3357 | 262 | 0 | 104.1 / 189 | {2: 11, 3: 3510, 4: 44, 5: 54} | same form: 262 D8, 0 FAIL (hi 138) |
+| HBM | 349 (not measured: highest measured die) | tree_s3.5c5 / fish | 63 | 519 | 499 | 20 | 0 | 104.1 / 134 | {2: 46, 3: 410, 4: 60, 5: 3} | v1_s3.5/fish: 55 D8, 0 FAIL (hi 121) |
+| S81 | 335 | v1_s3.5 / fish | 210 | 1336 | 1297 | 39 | 0 | 104.1 / 188 | {2: 292, 3: 955, 4: 77, 5: 12} | no form with 0 FAIL: best 4 FAIL -> chains of 31 hops (impractical; re-cut instead) |
+
+All numbers ESTIMATE (UNCHECKED) until GRT + landed_phase_ocv rows + count_align_plan on the real rows.  Not scored:
+intra-region related pairs (die STA); HBM tree map region boxes overlap (box rule checks centres only).

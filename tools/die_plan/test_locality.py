@@ -231,3 +231,75 @@ def test_cli_v2(tmp_path):
     assert "COUNT-ALIGNED" in md and "tree_s0.9c2" in md and "ca+hop" in md
     j = json.loads((tmp_path / "o" / "g_v2.json").read_text())
     assert set(j["best"]) == {"ring", "ca", "ring+hop", "ca+hop", "static", "static+hop"}
+
+
+# ------------------------------------------------------------------------------------------- LOCALITY-SCORE-3 (v3)
+HEAD3 = HERE / "testdata" / "land_head3_sfbR_ocv_ttff.json.gz"
+
+
+def test_cap_reproduces_meso_count_head3():
+    """the adopted CA ring through locality's entry on the LAND-HEAD-3 routed rows = MESO-COUNT-1's HEAD result:
+    427/427 DEPTH4, 0 FAIL, latency 2 x 349 / 3 x 78, worst margin 104.1 ps on the low side (the aperture T/8)."""
+    import gzip
+    d = json.load(gzip.open(HEAD3, "rt"))
+    cr = {c[:2]: d["corners"][c]["all"] for c in ("TT_droop-regions_corelat250", "FF_droop-regions_corelat202.5")}
+    s, res = LO.cap_plan_corners(cr, 833.0)
+    assert s["crossings"] == 427 and s["depth4"] == 427 and s["depth8"] == 0 and s["fail"] == 0
+    assert s["components"] == 1 and s["tree_edges_clean"] == s["tree_edges"] == 325
+    assert s["lat_hist"] == {"2": 349, "3": 78}
+    assert s["worst_margin_lo_ps"] == 104.1 and s["worst_margin_hi_ps"] >= 100.0
+    w = res["coll_EN1_u__0"]  # the 20:26 ruling's worst crossing: L in [1065, 1432], latency 3 at DEPTH 4
+    assert w["depth"] == 4 and w["lat_cycles"] == 3 and round(w["L_lo_ps"]) == 1065 and round(w["L_hi_ps"]) == 1432
+
+
+def test_cap_reading_on_modelled_crossings():
+    D = LO.load_plan(_plan(6, widths=[100, 5, 100, 5, 100]))
+    reg = {"p0": "A", "p1": "A", "p2": "B", "p3": "B", "p4": "C", "p5": "C"}
+    S = LO.score(D, reg, 340.0, "fish", Ttab=T)
+    s = LO.cap_reading(S["crossings"], 833.0)
+    assert s["crossings"] == 2 and s["fail"] == 0 and s["depth4"] == 2 and s["components"] == 1
+    for r in S["crossings"]:
+        assert r["depth"] == 4 and r["lat"] >= 1 and r["m_lo"] >= 100 and r["m_hi"] >= 100
+        assert r["pu_tt"] >= 0 and r["pd_ff"] >= 0 and r["ua_tt"] + r["ub_tt"] > 0
+
+
+def test_cap_components_planned_separately():
+    """two disconnected crossing graphs: count_align_plan needs one start tree each."""
+    rows = {c: [dict(port=p, src=a, dst=b, d_ps=50.0, p_up_ps=20.0, p_dn_ps=20.0, unshared_a_ps=300.0,
+                     unshared_b_ps=300.0, margin_ps=300.0) for p, a, b in (("x", "A", "B"), ("y", "C", "D"),
+                                                                           ("z", "D", "E"))] for c in ("TT", "FF")}
+    s, res = LO.cap_plan_corners(rows, 833.0)
+    assert s["components"] == 2 and s["fail"] == 0 and set(res) == {"x", "y", "z"}
+
+
+def test_cap_hop_only_for_depth8_fails():
+    D = LO.load_plan(_grid4())
+    reg = {"p00": "A", "p10": "B", "p11": "C", "p01": "D"}
+    S = LO.score(D, reg, 340.0, "spine", Ttab=T)
+    R = S["crossings"]
+    off = [r for r in R if not r["on_feed"]]
+    assert len(off) == 1
+    off[0]["pu_tt"] = off[0]["pu_ff"] = 9000.0  # no DEPTH fits this one
+    s = LO.cap_reading(R, 833.0)
+    assert s["fail"] == 1 and s["depth4"] + s["depth8"] == 3
+    Tr, _ = LO.arrivals(S["G"], S["F"], 340.0)
+    X = LO.crossings(D, reg, S["G"], LO.part_adjacency(D))
+    h = LO.cap_hop(S["G"], S["F"], Tr, 340.0, X, R, T, 833.0)
+    hs = h["summary"]
+    assert hs["hop_chains"] == 1 and hs["hop_max_hops"] == 3 and hs["fail"] == 0 and hs["crossings"] == 3
+    assert h["chains"][0]["lat"] == sum(r["lat"] for r in h["rows"])  # one landing per feed edge
+    R2 = LO.score(D, reg, 340.0, "spine", Ttab=T)["crossings"]
+    LO.cap_reading(R2, 833.0)
+    assert LO.cap_hop(S["G"], S["F"], Tr, 340.0, X, R2, T, 833.0) is None  # nothing fails: no chains
+
+
+def test_cli_v3(tmp_path):
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(_grid4()))
+    LO.main(["v3", "--plan", str(pf), "--die", "g", "--v-ps-mm", "340", "--map", "part=part", "--tree", "0.9:0.9",
+             "--span-mm", "0.9", "--out", str(tmp_path / "o"), "--no-png", "--v-note", "test"])
+    md = (tmp_path / "o" / "g_v3_ESTIMATE.md").read_text()
+    assert "adopted count-aligned ring" in md and "DEPTH4" in md
+    j = json.loads((tmp_path / "o" / "g_v3.json").read_text())
+    assert j["best"]["summary"]["fail"] == 0 and j["crossings"]
+    assert (tmp_path / "o" / "g_v3_crossings.tsv").read_text().count("\n") == len(j["crossings"]) + 1
