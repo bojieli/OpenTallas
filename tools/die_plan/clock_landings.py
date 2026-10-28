@@ -609,7 +609,8 @@ class Landings:
             # Copy the nearest tap's raw reset relay at the SAME parent/depth.
             # This is a timed local data relay, never another synchronizer.
             t = self.types[key]
-            geom = next((x for x in t.get("buses", []) if x["name"] == b), None)
+            # A bus declaration without face/window is not physical geometry.
+            geom = next((x for x in t.get("buses", []) if x["name"] == b and "face" in x and "window_um" in x), None)
             if geom is None and collector_info:
                 geom=collector_info.get("bus_geometry",{}).get(b)
             if geom is None:
