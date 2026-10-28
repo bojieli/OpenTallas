@@ -76,3 +76,29 @@
 | 4 | s8x_crh late (no early tap) | ref view 303 TT -> -63 | FF hold >= 0 | early tap from its signed mean (find record) | 0.5 |
 | 5 | PG IR 37-51 mV | PG-ACTIVITY-5 | 35 mV | QC-PG-MAP | owned |
 | 6 | HB4 7.91M cells may push region kits > 400k | per-region split unknown | <=400k | count per region before kits | 0.5 |
+- 2026-10-28 03:09 PDT DIE-QC-5 NUMBER-CHECK + FIXES (claude/die-qc5-1028@8f50ee83e5 on hub; runs epyc2:/srv/opentallas-scratch2/claude/die-qc5-1028).
+  - NUMBER-CHECK of the K2 headline numbers (own reruns with main 387e0d0112, the event plan 40b05f16d753 and an independent per-region spread script):
+    - In-region skew 135.39 TT / 117.43 FF: CHECKED. Nominal x spice region max is 121.9 / 105.6 (c_W2_tf_00 / c_W2_tn_00), 0 of 313 regions >150.
+    - GRT: CHECKED from the logs. Stage 1 clock alone: 46,647 nets, 50 iterations, overflow 0, 0.32 % (M8 0.52 / M9 0.68). Stage 2 signal: 485,898 nets, overflow 0, 2.89 %.
+      - Caveat: the frozen-clock obstructions keep only long M8/M9 guide runs (single-gcell boxes are dropped). The M8 resource drop is 0.72M against 2.65M of clock demand. That is irrelevant at <=1.1 % usage.
+    - TT setup +475.43 and FF hold -162.18 (pre-scaled proof): CHECKED.
+    - MISMATCH: the gate form (unscaled proof + --clock-cal spice) gave TT +457.35 / FF -180.36. The cause is a main bug: scale_clock scaled the taps but not node_late/early_ps, so the clock OCV branch (tap - node) carried 5 % of the full insertion (FF OCV 77.45 vs 56.20).
+      - FIXED in die_sta_related (default). In-STA spice now equals the pre-scaled proof exactly (+475.43 / -162.18).
+  - HB4 "7.91M cells": the unit is HB4 cells, but the number is main's intra BOUND, not a per-path count. It is 2.07M hard-core data pins x the partition's worst k (4 everywhere).
+    - Per capture tap worst k gives 5.59M.
+    - The die is ~160M cells (768 A0/NL cores x 188k est + rest), so 3.5-5 %. That is >2 %, so it is structural.
+    - Cause: NOT in-region skew. FF intra hold = 0.95 - damage - clock OCV. Region classes, median (worst):
+      - c_*: damage 11.6 (117.4), OCV 45.4 (45.7), hold -53.8 (-162.2).
+      - sl_*: damage 6.1, OCV 30.5, hold -35.3 (-77.0).
+      - su_c: damage 6.1, OCV 34.9, hold -38.1 (-136.0).
+      - 72,846 failing c_* paths have damage <20 ps.
+      - k histogram (c_*): 0:11,962 1:48,048 2:53,104 3:29,025 4:3,013.
+      - Seam: 7,004 paths, median damage 9.0, OCV 36.7.
+    - The driver is the declared-budget data model: 0 core views, data min = clk->Q 39.7 only, no wire, no in-core pin->reg delay. Against it sit 25 ps hold uncertainty and 30-55 ps table clock OCV on below-LCA branches.
+    - Structural next step: a real-view hold (signed A0/NL ETM views via --core-view, crediting pin-register paths and the inter-core wire), not more buffers. Main has no QC ETM views yet.
+  - LANDED artefact, real cause: under --count-align main already demotes the half-period window to INFO. But the bind keys crossings by REGION (bind parts[p].region) while STA keyed landed pairs by PARTITION.
+    - Result: 631/2531 bind ports had no taps (fail closed), and 231/881 landed partition pairs (26,384 tap pairs) went untimed (fail-open).
+    - New opt-in --count-align-key region (default unchanged, 3 tests).
+    - K2 gate form: 2531/2531 crossings timed, lag lo 121.7 TT / 116.8 FF, hi 179.9/182.4, slot 0, guard 0 fail. 3 unbound region pairs = exactly the 3 CA-FAIL pairs.
+    - start-skew FAIL 34/312 TT, 21/312 FF (more tree ports are timed now).
+  - NOW: COORD 04:0x merge of the 3 pairs (c_E4_tf_11->c_E4_tf_01, c_W0_bf_11->c_W0_bf_01, c_W0_tf_11->c_W0_tf_01; 310 regions). Plan, G0C, kit, clock-first GRT, CA and STA are running.

@@ -3115,3 +3115,7 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   - (3) Cell cap. kv3_pv_v2/v4/v6(n) and pc_v1/pc_v3 are at 382-388k glue (v3.1 basis) before the CA ring. With an ASSUMED 8 cells/bit they reach 409-439k.
     - DEFAULT: the first ring/strap kit of pv_v4 and pc_v1 reports its synth count before the wave. Over the cap -> ring banks become hard cores (the S81 22:24 ruling).
   - (4) KV DRT preview: blocked, because there is no q9b kit-rtl.
+- [DIE-QC-5 2026-10-28 03:09 PDT] READY for ROOT-MERGE: claude/die-qc5-1028@8f50ee83e5 (hub). Shared tools/die_plan/die_sta_related.py; 166 related tests PASS.
+  - (a) BUG FIX, default on: scale_clock now also scales the tree node arrivals. --clock-cal spice was over-pricing clock OCV (QC K2 FF intra -180.36 vs -162.18 on the same routes). It changes the gate numbers of every die that uses --clock-cal spice with --clock-ocv; they get less pessimistic and become equal to a pre-scaled proof.
+  - (b) Opt-in --count-align-key region: landed pairs are keyed by the bind's region pairs, and an unbound region pair fails closed. It fixes the fail-open on multi-partition regions (231 untimed partition pairs on QC).
+  - ASK: is (a) OK as a default change? DEFAULT if no reply in 30 min: merge as is.
