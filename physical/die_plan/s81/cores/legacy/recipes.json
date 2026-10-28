@@ -16,7 +16,8 @@
   "io_hold": "sender_min"
  },
  "dsdv_gunit_l2": {
-  "ref_tile": "physical/ref_tile/dsdv_gunit_l2"
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l2",
+  "rtl_dirs": true
  },
  "dsdv_gunit_l3": {
   "ref_tile": "physical/ref_tile/dsdv_gunit_l3"
