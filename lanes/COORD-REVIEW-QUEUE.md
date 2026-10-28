@@ -2836,3 +2836,8 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
     - clock repeater spacing to meet the 320 ps slew (~300 um on routed RC; 74 nets);
     - balance the region roots (93 nominal-skew failures at 6.08-7.08 ns);
     - re-GEN + GRT + landed_phase_ocv + die STA with the droop derate if it is merged.
+2026-10-27 19:36 PDT [COORD] FLOW-SHARED-8 rulings: APPROVED. FLOW-SHARED-9 starts now.
+  (1) Hold-ECO DRT-1231 (RESETN access lost after hold buffers): pad the async-reset DFF master via OT_PAD_MASTERS. Tests first, then rerun the kvsys_core canary on main, which releases the 7 KV rows once it is NO-REG.
+  (2) Autopilot cross-die template match (S81 t46 revoked on KV row 8dc03c466023): templates must be keyed by die. Fix + test.
+  (3) The reference canary from the mutable worktree wt/qk-cores-6: canaries run from immutable commits only. Replace it with a main-commit canary and retire it (its lane is dead; FLOW owns canaries).
+  (4) Collect the abbb canaries, then one canary set for RM82.
