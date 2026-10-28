@@ -850,3 +850,19 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
     - t63 spt @219.2: 444/80/0, 132.0/140.4.
   - Every crossing is >= 100 ps.
   - Data: intel1:/srv/opentallas-scratch2/claude/die-hbm-5/r5/region3/r5/*.log
+- 2026-10-28 02:02 PDT [HBM-RISK-1] ESTIMATE R1 CLOCK FEED LENGTH on the candidate (hub W/E split map r4/hs/map_hubsplit.json + plan_hubsplit.json, feed spt; locality.score + r4_tok patches, own run CHECKED; the model is UNCHECKED, no NUMBER-CHECK). Data intel2:/srv/opentallas-scratch2/claude/hbm-risk-1/r1/hs_*.json (per region hops/path/arrival, per pair worst unshared).
+  - Feed root R009, 36 regions. Feed depth is SHORT: max 3 hops (S81 had 43). But each spt hop taps a LEAF of the parent tree, so it carries the parent insertion. Max root arrival 5.43 / 6.90 ns, max leaf (insertion) 6.19 / 7.87 ns at 219.2 / 278.6 ps/mm (R031/R033).
+  - FLAG: pairs over 3.4 ns unshared TT. At 219.2: 19 of 59 crossing pairs (114.7 kb, 133 ports). At 278.6: 31 pairs (161.6 kb, 189 ports). At 366.4: 40 pairs. All of them are OFF-FEED. 28 of the 31 have their last common point at the die root R009.
+  - Worst pairs at 278.6: R014-R019 and R017-R022 6.85 ns; R000-R007 and R006-R008 6.46 ns; R010-R014 and R013-R017 6.30 ns. The heavy ones are R015W-R019 18.2 kb 4.81 ns, R016W-R022 17.9 kb 4.79 ns, and R007-R015W and R008-R016W 12.0 kb 4.73 ns.
+  - This is the S81 pattern (DIE-S81-5: all 17 spice CA FAILs were off-feed pairs > 3.4 ns). The r4 count-aligned estimate still passes them (DEPTH 8, worst margin 114 ps), but only because a DEPTH 8 ring absorbs a 2.1-3.6 ns wide window.
+  - Other feed forms do not fix it (what-ifs @278.6): trunk = spt topology with dedicated root-to-root trunks, no parent insertion: 29 pairs, worst 6.67 ns. top (die H-tree) 46, 7.39 ns. spine 24, 10.5 ns. fwd 23, 12.8 ns. dme 50, 12.2 ns.
+  - Root cause is die size. Every pair that parts at the die centre already carries more than 3.4 ns. No feed shape gets below the limit.
+  - PROPOSAL (UNCHECKED, cost about 2 h estimate):
+    - (a) Relay-split only the 31 flagged pairs through the feed path. Tree hops are 2-6, so the cost is at most 5 extra crossings per pair (S81 needed 43).
+    - (b) Better: re-root the spt so the heavy W/E pairs are on-feed. The candidate parents are R019 under R015W and R022 under R016W, which carry 18 kb each.
+  - Gate is R4 (die STA count-align at spice on these pairs). If R4 passes on built arrivals, keep DEPTH 8 and no relays.
+- 2026-10-28 02:02 PDT [DIE-HBM-5] PROBES ARE NOW IN GRT. The kits' last stage (STA stand-in netlists, not a GRT input) had stalled for 20+ min on the q_hub types at 100% CPU. As soon as grt.tcl, obs.tcl, route.v, psm and the abstracts were written, I stopped the adopted probe chains and launched GRT via ot-run on the same kit files (50 it, -critical_nets_percentage 0, CHECKED in grt.tcl).
+  - v1c5: GRT running on epyc2, oth-ubuntu-1151132, dtrial-grt since 02:01.
+  - c20f die tree: GRT running on intel2, oth-ubuntu-1426587, since 02:00.
+  - t63 / c20h_tree: watchers on localhost launch GRT on intel1 when their kit inputs exist.
+  - Kits: ring_ag 4dc6100ca123 is in AUTO-GEOM CHECK. tkm idpin d25 dabf2206bd6b / d30 7b97a340aa07 are in detail placement (3_5_place_dp); the autopilot picks them up at 3_place. q2 reduce e2ba1ba7dd28 is ROUTING (the autopilot pickup gap is closed).
