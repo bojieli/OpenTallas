@@ -1864,7 +1864,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             # arrival at a port = period - slack (output delay 0); at a buffer output pin = its arrival property
             "foreach p [get_ports t_*] { set n [get_full_name $p]; "
             "set smx [get_property $p slack_max_rise]; set smn [get_property $p slack_min_rise]; "
-            "puts $fh \"T $n [expr {833.333 - $smx}] [expr {$smn}]\" }",
+            "puts $fh \"T $n [expr {833.333 - $smx}] [expr {$smn}]" + (" [get_property $p slew_max_rise]"
+                         if any(int(v) > 0 for v in (tap_pad or {}).values()) else "") + "\" }",
             ("foreach i [get_cells {b* r* p*}] { set q [get_pins [get_full_name $i]/Y]; "
              if any(int(v) > 0 for v in (tap_pad or {}).values()) else
              "foreach i [get_cells b*] { set q [get_pins [get_full_name $i]/Y]; ")

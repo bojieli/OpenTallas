@@ -56,6 +56,7 @@ def test_pad_metadata_and_actual_arrival_export(tmp_path, monkeypatch):
     assert a["stages_from_root"] == 3
     assert t["sites"][a["driver"]] == [30.,20.]
     assert "get_cells {b* r* p*}" in (out/"ctree.tcl").read_text()
+    assert "[expr {$smn}] [get_property $p slew_max_rise]" in (out/"ctree.tcl").read_text()
     arr = tmp_path/"arr_TT.txt"
     arr.write_text("\n".join([f"N {cell} {10+i} {9+i}" for i, cell in enumerate(t["sites"])] +
                             [f"T {x['port']} 100 90 20" for x in t["taps"]])+"\n")
