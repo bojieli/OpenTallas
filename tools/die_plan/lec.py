@@ -499,6 +499,41 @@ def icg_to_enable(src, dst, side):
             return "1" if sig == "0" else "0"
         return newcell("$_NOT_", {"A": sig, "Y": None})
 
+    mem_wclk = {}                         # $mem_v2 -> original write-port clock identities
+
+    def gate_mem_port(cn, ln, lp, li, en):
+        """LEC-FPREG-7 10-27 (S81 dsfd_cfifo_crs4: slot ICG GCLK -> bank $mem_v2 WR_CLK): a rising-edge clocked
+        memory port on GCLK == the same port on the root clock with its enables ANDed with ENA | SE (the flop rule
+        applied to the port's write / read-enable bits).  Refused: falling-edge or unclocked write port, a clocked
+        read port with a sync / async reset, and a memory with another write port on a different clock."""
+        c = cells[ln]
+        P, pc = c["parameters"], c["connections"]
+        ival = lambda v: int(v, 2) if isinstance(v, str) else int(v)
+
+        def pbit(name, i):
+            v = P.get(name, "0")
+            b = v if isinstance(v, str) else format(int(v), "b")
+            return b.rjust(i + 1, "0")[-1 - i] == "1"
+        kind = lp[:2]
+        if kind == "WR":
+            if not (pbit("WR_CLK_ENABLE", li) and pbit("WR_CLK_POLARITY", li)):
+                raise Unproven(f"icg {side}: {cn} GCLK clocks {ln} write port {li} that is not rising-edge clocked")
+            wclk = mem_wclk.setdefault(ln, [gclk_of.get(b, through_bufs(b)) for b in pc["WR_CLK"]])  # before rewrites
+            for j, cb in enumerate(wclk):
+                if j != li and pbit("WR_CLK_ENABLE", j) and cb != wclk[li]:
+                    raise Unproven(f"icg {side}: {ln} write ports {li}/{j} on different clocks: not modelled")
+            w = ival(P["WIDTH"])
+            pc["WR_EN"][li * w:(li + 1) * w] = [and_(en, b) for b in pc["WR_EN"][li * w:(li + 1) * w]]
+        elif pbit("RD_CLK_ENABLE", li):
+            if not pbit("RD_CLK_POLARITY", li):
+                raise Unproven(f"icg {side}: {cn} GCLK clocks {ln} read port {li} on its falling edge: not modelled")
+            if any(str(pc.get(x, ["0"] * (li + 1))[li]) != "0" for x in ("RD_SRST", "RD_ARST")):
+                raise Unproven(f"icg {side}: {cn} GCLK clocks {ln} read port {li} with a reset: not modelled")
+            pc["RD_EN"][li] = and_(en, pc["RD_EN"][li])
+        pc[lp][li] = root[cn]
+        st["gated_mem_ports"] = st.get("gated_mem_ports", 0) + 1
+        st["per_gate"][cn]["mem_ports"] = st["per_gate"][cn].get("mem_ports", 0) + 1
+
     eff = {}
     for cn in sorted(icgs):
         r = root[cn]
@@ -521,9 +556,12 @@ def icg_to_enable(src, dst, side):
                 st["gated_bb_clock_pins"] += 1
                 st["per_gate"][cn]["bb_clock_pins"] += 1
                 continue
+            if t == "$mem_v2" and lp in ("WR_CLK", "RD_CLK"):
+                gate_mem_port(cn, ln, lp, li, en)
+                continue
             if not f or lp != "C" or f[2] != "P":
-                raise Unproven(f"icg {side}: {cn} GCLK reaches {t} {ln}.{lp}[{li}] (only rising-edge flop clocks "
-                               f"and black-box clock pins are modelled)")
+                raise Unproven(f"icg {side}: {cn} GCLK reaches {t} {ln}.{lp}[{li}] (only rising-edge flop clocks, "
+                               f"$mem_v2 clocked ports and black-box clock pins are modelled)")
             kind, ctl = f[1], f[3]
             if kind == "DFF" and ctl == "":
                 c["type"] = "$_DFFE_PP_"
