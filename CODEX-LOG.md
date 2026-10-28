@@ -5099,3 +5099,12 @@ All DS/QK/HBM/HEAD branches, terminal jobs, source-ready packets, remaining fail
 Fullbranches/jobs/results/failures/OWNER at handoff/codex_hbm_20261027_1455.md. Noresetnotice; parent+all6descendants running. Actualnativefulltop/sourceclosure+quarterkeep134434/56507 andSUdonor review advance; currentC15stillpendingrestoration/sourcecounts/pin46/clockPG. PG .67230.403+actualVMRlowercore3.544=33.947conditional; fullM1–M7glueunit3832916live. Exact1788511SIG143manualClaudePG-ACTIVITY-2kill1492262rootcaused, no furtheractorwork/fullDSrerun. ContinueuntilEXPLICITreset.
 
 OWNER? 2026-10-27 14:57 PDT Qwen sys_SDx6: actual current q5b logicalx6 has no physical LEF/Lib/PG footprint. Available licensedx12 wholeview2320.056x1563.57 does not fit1900.8x1036.8 lot and cannot truthfully split into x6. FLOW/kv_clock are deriving existing modeledcandidate source/ABI and actualCDC facts; if no qualifiedx6 exists, currentevent needs explicit truthful x6 physical assumptions/provider or resized wholex12 architecture, including realarea/clock1043/CDC. No blindS81analogreuse or owneranswerwait; FT/clock/core work continues. Interim packet handoff/codex_qwen_20261027_1455.md active, not parked.
+
+## Takeover 2026-10-28 04:07 PDT
+Main57372013dd, fresh0359 handoff. Exclusive owners QC=qwen, HEAD=s81_head, S81=coverage, HBM=hbm, KV=tokens; shared flow=flow, integration=merge. No old child tree resumed. Current failures collected before new builds. Root implements approved non-release parent_budget mean contract; all-lane inventory appended to lanes/CODEX.md.
+
+OWNER?
+No new owner decision requested; accepted/defaulted current COORD choices apply.
+
+CODEX: 2026-10-28 04:09 PDT takeover0359: all5dieowners collecting freshresults; sharedflowfoundMESOseedsearch0CAFAIL candidatependingSTA, romleafce_d oldfailurealreadyfixedfaf0685063. Rootacbf0993be explicitparent_budget means trial-onlyREADY8focusedPASS,releaseSIGNED/wrongviewcontrolsretained;144laneinventoryCODEX.md. Nooldchildtree/jobreruns.
+Root branch codex/coremean-0359-1028 @acbf0993be, intel2:/srv/opentallas-scratch2/claude/wt/codex-coremean-0359. No root heavy jobs. Shared integration reviewing.

@@ -187,3 +187,6 @@ PG numerical solve continues intel1:/srv/opentallas-scratch2/claude/codex-sta-pg
 
 ## CODEX notes 2026-10-27 14:02 PDT — coupled TT/FF measured frame
 Shared opt-in source READY codex/flow-mcmm-1351@2f4c07767c (own intel2 scratch2 worktree, base fba10301d). Existing two-mode repair now optionally binds measured rebind reference in BC only under BC arrival shim before GRT repair; TT mode remains unchanged, no standalone second FF-only pass in MM. Command kit_modes.py stage KIT --measured-hold. No defaults/margins changed. 23 focused tests PASS including executable mode isolation/out-of-band control. S81 core owns fresh VQ targeted trial after source review, preserving failed FF-only predecessor TT−64.57/FF+8.06; no duplicate job. Existing hrow_rb TT+25.18/FF−0.61 one EP owned S81 successor.
+
+## CODEX notes 2026-10-28 04:09 PDT
+CODEX took over approved nonrelease mean contract on codex/coremean-0359-1028@acbf0993be (pushed). Explicit parent_budget EARLY core taps with TT+FF use selected-view mean contracts in --trial kits; release refuses unsigned budgets. Legacy default unchanged, SIGNED plans use measured means. 8 focused tests PASS incl budget TT390/FF312 export, wrong-view control and release refusal. No physical run; shared merge review pending.
