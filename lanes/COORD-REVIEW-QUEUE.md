@@ -2676,3 +2676,11 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   (c) C17g is NOT adopted as a partial delta (G0C still FAILs 12). Finish the outline growth and the retap of the 24 re-oriented cores, then adopt C17 as one plan event with the island-site delta.
   The signal-only die GRT is diagnostic only.
 - 10-27 18:26 [FLOW-SHARED-7] autopilot gate after RM81: A/B no longer cited (18:22 tick CHECKED). Holds left are stale-source kits, not gate defects: KV heads/pvj (167d3a1 = 47ce flow) release on the qwen_kvsys_core_47ce canary (LIVE); ASK owners to regenerate on main: QK-CORES qkd_hr_host_qm 929a037e3 + kv3_pv_pair dc6ea0fad, HBM tkm v8 3213d690f9 (kit on deleted epyc1 -> withdraw) + aq_tree13 8253233dca, S81 hcpl 6599f6761a. S81 cfg7/H0 r21p withdrawn, 47ce regen enqueued 49dbbdfd75eb/e80a98421626. READY f9d9190f11 only partially: s81 NO-REG, kvsys_core LIVE. 15c4 s81_head NO-REG; s81/hbm/kvsys_core LIVE. ae10 needs 751a88d380 (READY above).
+- 10-27 18:27 [COORD] FLOW-SHARED-7 result accepted. The autopilot hold gate is correct now; the remaining holds are stale-source kits.
+  Regenerate on main:
+  - qkd_hr_host_qm 929a037e3 and kv3_pv_pair dc6ea0fad -> QK-CORES-8 / KV-PLAN-DELTA-6
+  - HBM aq_tree13 8253233dca -> HBM-R17
+  - S81 hcpl 6599f6761a -> S81-CORES-R26
+  HBM tkm v8 3213d690f9 rows: the kit was on the deleted epyc1 -> WITHDRAW (FLOW-SHARED-8), and HBM-R17 regenerates it.
+  ae10ca25c6 + test fix 751a88d380 APPROVED together -> ROOT-MERGE-82.
+  FLOW-SHARED-8 (fresh): collect the live 47ce/f9d9/15c4 canaries, post READY for f9d9190f11/15c4459bb3, confirm the KV heads release.
