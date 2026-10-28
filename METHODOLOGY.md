@@ -484,3 +484,20 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      reused; only partition/plan glue changes, unless a core straddles a region cut.
   f. Lanes that build a die-wide clock as the release form stop. Their reusable parts (M8 row reservations, streets, PG) move to
      the locality form.
+- 12.14 FASTER CLOSURE (OWNER 2026-10-27 "agree with your changes to close faster" + "I don't agree with working on one die first.
+     work 5 dies in parallel"). Changes to how we work; no gate threshold changes.
+  a. RULE FREEZE. The binding set is: locality first (12.13); fixed-latency mesochronous crossings + static schedule; crossing margin
+     counted after OCV + droop (landed_phase_ocv >=100 ps TT/FF); one plan source per die; NUMBER-CHECK on headline numbers; die gates
+     (12.4a freeze gate, release = die STA real views + token pass). No new rule or hard check is added unless a MEASURED failure forces
+     it; proposals are batched to the owner, never added by a lane or by COORD alone.
+  b. ESTIMATE BEFORE BUILD. Every architecture choice (region map, clock feed, crossing form, plan event) gets a one-page analytic
+     feasibility estimate first (delay/mm x span x derate, track demand vs supply, crossing margin). Build only if the estimate passes.
+  c. ALL 5 DIES IN PARALLEL, one DIE OWNER lane each (S81, HEAD, QC, KV, HBM). The die owner holds the plan, the region map, clocks,
+     crossings and gates for that die and may merge die-local changes (die plan/results/die-specific scripts) to main itself via the
+     intel2 merge.lock with tests passing. Shared tools/flow/rtl/common go through the shared merge lane.
+  d. ~10 LANES total: 5 die owners + shared merge/flow + locality/estimate tool + crossing (MESO-COUNT/OSS-MESO) + open clock tools
+     + open hierarchy tool. Current short lanes finish; their follow-ups go to the die owner.
+  e. COORD answers every ASK within 30 min; with no answer the lane's stated default applies.
+  f. GATES THAT EARN THEIR PLACE. Keep checks that have caught real failures; flow canaries run in the background and do not block
+     a row unless they show a regression; no serial gate chains where checks can run in parallel.
+  g. Once OSS-HIER works, regions become hierarchical partitions to cut the number of hard cores.
