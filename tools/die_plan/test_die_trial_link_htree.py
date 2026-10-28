@@ -102,3 +102,20 @@ def test_link_htree_full_keeps_empty_halves():
     for i, d in n.items():
         if d.get("rib") is not None and d["kids"]:
             assert len(d["kids"]) == 2
+
+
+def test_tap_pad_inserts_series_buffers_only_on_named_taps():
+    """DIE-KV-5 opt-in --tap-pad: n BUF cells in series on the named tap's last leg; default netlist byte-identical"""
+    n = D.build_link_fishbone(_P(), TAPS, REG, FEED, local="htree", leaf_um=200.0)
+    v0, p0, t0, _, _ = D.tree_netlist(n, TAPS, 450.0)
+    v1, p1, t1, _, _ = D.tree_netlist(n, TAPS, 450.0, tap_pad={})
+    assert v0 == v1 and p0 == p1 and t0 == t1
+    tp = "t_b0__ck"
+    v2, p2, t2, _, _ = D.tree_netlist(n, TAPS, 450.0, tap_pad={tp: 3})
+    assert t2 == t0 and len(p2) == len(p0) + 3
+    pads = [l for l in v2.splitlines() if l.strip().startswith(D.BUF + " p")]
+    assert len(pads) == 3
+    last = pads[-1].split(".Y(")[1].rstrip(");")
+    assert f"  assign {tp} = {last};" in v2
+    other = [l for l in v0.splitlines() if l.strip().startswith("assign") and tp not in l]
+    assert all(l in v2.splitlines() for l in other)

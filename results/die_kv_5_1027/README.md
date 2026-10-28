@@ -62,3 +62,30 @@ Kit use: intra = per (launch tap, capture tap) extra early window beyond the pla
 input bus extra hold (set_input_delay -min lowered by the deficit), so the receiving pc kit places HB4 at its input-face
 registers. Structural note: the seam pairs are phy taps 70-150 ps early vs pc (DIE-KV-3 finding); plan-computed per-tap
 sizing (12.8) of the phy region tree would remove them without HB4 -- not done here.
+
+## 4. phy+pc in-region spread (12.15c) -- fix (b): plan-computed phy tap pad (pad2/)
+Finding (00:05 ASK): the 32 phy+pc regions had in-region spread 159.6 TT / 137.8 FF (> 150): the single phy tap arrived
+51-102 ps early (light pruned branch). Fix (b) = posted DEFAULT: opt-in `die_trial.py kit --tap-pad JSON` inserts n BUFx24
+in series on the named tap only (site-legal, next to the tap node); default output byte-identical (kit_base ctree.v/tcl/
+tree.json == kit_q9c, CHECKED). Pad per phy tap from the measured stage delay (~24 ps TT) toward the pc mid-arrival:
+3-5 stages, 136 cells on 32 of 1,920 taps (`pad2/pad_it2.json`). Iteration 1 (13 ps guess, 249 cells) overshot.
+Full chain rerun (`pad2/chain.sh`: kit -> combo GRT TT+FF -> proof -> main die_sta_related spice args -> lpo -> ca_spice
+-> bind v2 --parts ocv), all CHECKED-own:
+
+| | before (H200B) | pad2 |
+|---|---|---|
+| phy+pc region late spread TT / FF (x1.00) | 159.6 / 137.8 | **82.9 / 72.3** |
+| seam related-pair skew TT / FF | 177.9 / 154.4 | 72.1 / 65.6 |
+| seam FF kit-contract hold (W 80) | -74.35 (339 pairs) | **+14.38 (0 pairs) PASS** |
+| intra FF kit-contract | -11.02 (24) | -11.02 (24, unchanged; kv3_pc_v1 HB4 k=1) |
+| seam TT setup | | +506.91 |
+| GRT TT+FF combo overflow | 0 | 0 (2.37%) |
+| CA spice: crossings / FAIL / D4/D8 / worst | 3595 / 0 / 3393/202 / 106.3/110.5 | 3595 / 0 / 3369/226 / 106.2/110.4 |
+| bind v2: loop errors / MC 2000 viol / sched_lat | 0 / 0 / 9487 | 0 / 0 / 9511 |
+| strap manifest: kits / D8 type-buses / LEC variants | 51 / 165 / 117 | 51 / 165 / 116 |
+| TOK (UNCHECKED lane-class model) | 4769.0 (2194 cyc) | 4769.0 (2194 cyc) |
+| seam HB4 (nominal kit-contract) | 31,487 cells | **0** |
+| seam HB4 OCV form (INFO, R18 additive) | 384 pairs | 465 pairs, worst 57.9, k 1-2 |
+
+Kit HB4 input with pad2: intra 24 pairs on kv3_pc_v1 only (`pad2/hb4_kit_inputs_pad2.json.gz`). Split (a) estimate
+(160 regions, S160_*) kept as fallback only; not needed.
