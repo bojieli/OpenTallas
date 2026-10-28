@@ -472,7 +472,7 @@ SCHEMA = {
                         # core's clock pins hang on their own tap, which the spine delivers (insertion_ps - common
                         # latency) early, so the core's internal flops see the common latency.  Absent: taps[] are
                         # plan records only (unchanged kits).
-                        "core_taps": {"enum": ["early"]},
+                        "core_taps": {"enum": ["early", "internal"]},
                         # Explicit selected parent clock endpoint delta; runtime network required before phys.
                         "core_groups": {"type": "array", "items": {"type": "object", "required":
                             ["name", "port", "xy", "members", "insertion_ps", "insertion_ff_ps", "basis", "source"],

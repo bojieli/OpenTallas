@@ -1526,10 +1526,10 @@ def phy_pg_pdn(P, tn, doms, macros, root=None, core_grids=False):
 
 
 def signed_mean_core_taps(P, tn):
-    """Select measured means for an explicitly SIGNED early-core-tap plan."""
+    """Select measured means for explicitly SIGNED early or internal core CTS metadata."""
     ck = P.types[tn].get("clock", {}) or {}
     taps = [tp for tp in ck.get("taps", []) or [] if tp.get("kind") == "core"]
-    return bool(ck.get("core_taps") == "early" and taps and P.types[tn].get("hard_cores")
+    return bool(ck.get("core_taps") in ("early", "internal") and taps and P.types[tn].get("hard_cores")
                 and all("insertion_ff_ps" in tp and str(tp.get("budget_owner", "")).startswith("SIGNED") for tp in taps))
 
 
@@ -1543,6 +1543,9 @@ def core_mean_contract_options(P, tn, trial=False):
     if signed_mean_core_taps(P, tn):
         return dict(mean_contract=True, require_signed=True)
     ck = P.types[tn].get("clock", {}) or {}
+    if ck.get("core_taps") == "internal":
+        import core_clock_contract as CC
+        raise CC.ContractError(f"{tn}: internal core CTS requires explicit SIGNED TT/FF mean metadata")
     taps = [tp for tp in ck.get("taps", []) or [] if tp.get("kind") == "core"]
     budget = bool(ck.get("core_taps") == "early" and taps and P.types[tn].get("hard_cores")
                   and all("insertion_ff_ps" in tp and
