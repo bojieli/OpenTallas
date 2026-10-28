@@ -5,6 +5,6 @@
 | s81_head | HEAD-CORE-LAT-R2 plan event (via PATH-S81 for the delta) | HEAD-CORE-LAT-R2 | HEAD-CORE-LAT-R2 | H-tree commensurate with core array (COORD ruling); LANDED form (12.11 main path, first to pass wins vs top-down HEAD-R24): PLAN+CLOCK owner LAND-HEAD-1 (lanes/LAND-HEAD.md) for the landed variant only; cores stay signed elemA/elemB capsules |
 | s81 | PATH-S81 | PATH-S81 (on CLOCK-128 tool) | S81-CORE-LAT | LANDED form (12.11 main path, first to pass wins vs top-down S81-CORES-R26): PLAN+CLOCK owner LAND-S81-1 (lanes/LAND-S81.md) for the landed variant only; cores stay S81-CORES (no core-kit forks) |
 | qwen_kvsys | PATH-KV | PATH-KV (re-measure c3t under 12.8) | PATH-KV core-latency sub-lanes | LANDED form (12.10a, parallel, first to pass wins): PLAN+CLOCK owner LAND-KV-1 (lanes/LAND-KV.md); cores stay QK-CORES-8 |
-| hbm | PATH-HBM (D-HBM-B1) | CLOCK-128 (tool + HBM r8 run) | HBM-CORE-LAT | "HBM clock r8 skew" lane PARKS -> CLOCK-128 |
+| hbm | HBM-STREETS-1 (from 10-27 ~18:4x, COORD; region partition = LAND-HBM-1, one combined plan event) / PATH-HBM (D-HBM-B1) | CLOCK-128 (tool + HBM r8 run) | HBM-CORE-LAT | "HBM clock r8 skew" lane PARKS -> CLOCK-128 |
 Shared tools: die_clock_mesh.py = CLOCK-128 · die_infra.py master-plan mode = MASTER-PLAN · die_infra.py pg/clock/reset = INFRA-FIRST · flow tags = ROOT-MERGE/FLOW.
 Number check: NUMBER-CHECK recomputes every owner-reported gate number (12.9f).
