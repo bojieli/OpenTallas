@@ -1101,6 +1101,25 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     flow["timing_modes"] = timing_modes_stage(kd, not a.single_mode_grt)
     if flow.get("f1") and not a.single_mode_grt:
         flow["f1"]["mechanism"] = "two-mode GRT (scene BC vclk_ff.sdc FF hold, scene tc TT setup) + gates"
+    # GATE-PINS-2 (as gen_phys.plan_pin_records, COORD 10-27 KV-KITS-7 ruling 3): kit plan_pins.json = the plan pin
+    # edge points of every pin io.tcl places, moved PIN_LEN_UM/2 inward (the io.tcl pin centres); it is the
+    # freeze pins_file whose canonical sha kit_preflight pins_canonical compares with io.tcl (+ slice placements).
+    # The plan table it derives from stays recorded as plan_pins_source / plan_pins_source_sha256.
+    pp_recs = {}
+    for r in prow:
+        n = r["bus"] if r["bit"] is None else f"{r['bus']}[{r['bit']}]"
+        x, y = r["x"], r["y"]
+        if r["face"] in "EW":
+            x = x - PIN_LEN_UM / 2 if r["face"] == "E" else x + PIN_LEN_UM / 2
+        else:
+            y = y - PIN_LEN_UM / 2 if r["face"] == "N" else y + PIN_LEN_UM / 2
+        pp_recs[n] = dict(name=n, layer=r["layer"], x=round(float(x), 4), y=round(float(y), 4))
+    pp_body = json.dumps(dict(schema="opentallas.hbm_arch.core_plan_pins.v1", view=a.view, module=module,
+                              source=v["pins_file"], source_sha256=v["pins_sha256"],
+                              rule="io.tcl pin centres = plan edge points moved PIN_LEN_UM/2 inward (gen_phys form)",
+                              pins=list(pp_recs.values())), indent=1) + "\n"
+    if not source_profile:
+        (kd / "plan_pins.json").write_text(pp_body)
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
               canonical_type=v.get("canonical_type"), wrapper=wrap_rep, outline_um=[w, h],
@@ -1115,6 +1134,11 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                plan_pins=len(names) + len(shell["dropped"]))
                           if shell else None),
               kit_hash=kit_hash(kd))
+    if not source_profile:
+        fz.update(plan_pins_source=v["pins_file"], plan_pins_source_sha256=v["pins_sha256"],
+                  plan_pins_source_canon_sha256=pins_canon, pins_file="plan_pins.json",
+                  pins_sha256=hashlib.sha256(pp_body.encode()).hexdigest(),
+                  pins_canon_sha256=plan_pins_canon_sha256(dict(pins=list(pp_recs.values())), [w, h]))
     if source_profile:
         fz["source_profile"] = source_profile
         fz["source_commit"] = source_profile["source_commit"]
