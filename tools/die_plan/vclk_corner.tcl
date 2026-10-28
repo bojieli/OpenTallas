@@ -23,7 +23,8 @@ proc ot_core_tap_bind {corner} {
     puts "OT_CORE_TAP_BIND corner ff overlay $overlay"
   } elseif {$corner eq "tt"} {
     foreach line [split $text \n] {
-      if {[regexp {^set_clock_latency -source -clock clk [-0-9.]+ \[get_ports [A-Za-z_][A-Za-z0-9_]*\]$} $line]} {
+      # own early latency, then (plan clock.tap_window) its -early window line, in SDC order
+      if {[regexp {^set_clock_latency -source (-early )?-clock clk [-0-9.]+ \[get_ports [A-Za-z_][A-Za-z0-9_]*\]$} $line]} {
         uplevel #0 $line
       }
     }
