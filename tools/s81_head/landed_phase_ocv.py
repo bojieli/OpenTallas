@@ -75,7 +75,7 @@ def endpoint_taps(P, pr, side, candidates):
     return sorted((t for t in candidates if t['port'] in selected),key=lambda t:t['port'])
 
 
-def analyse(plan, tree, arr, CA, T, corner, core_lat, budget, droop, port_taps=False):
+def analyse(plan, tree, arr, CA, T, corner, core_lat, budget, droop, port_taps=False, cls="A"):
     tap_of = {}
     for tap in tree['taps']:
         tap_of.setdefault(tap['part'],[]).append(tap)
@@ -85,7 +85,7 @@ def analyse(plan, tree, arr, CA, T, corner, core_lat, budget, droop, port_taps=F
     cache = {}
     Tarr, Narr = arr
     B = T["classes"]["B"][corner]
-    fc = T["classes"]["A"][corner]["cell_share"]
+    fc = T["classes"][cls][corner]["cell_share"]
     nB = max(1, round(core_lat / B["mu_stage_ps"])) if core_lat > 0 else 0
     rows = []
     for pr in plan["ports"]:
@@ -117,7 +117,7 @@ def analyse(plan, tree, arr, CA, T, corner, core_lat, budget, droop, port_taps=F
 
                 def br(arrv, nst):
                     u = arrv - nd
-                    stg = {"A": nst}
+                    stg = {cls: nst}
                     if nB:
                         stg["B"] = nB
                     return dict(cell_ps=fc * u + B["cell_share"] * core_lat, net_ps=(1 - fc) * u + (1 - B["cell_share"]) * core_lat,
@@ -157,11 +157,22 @@ def main(argv=None):
     ap.add_argument("--budget-ps", type=float, default=833.0 / 2)
     ap.add_argument("--core-lat", default="TT=250,FF=202.5", help="partition-internal latency per corner (12.3), class B")
     ap.add_argument("--out")
+    ap.add_argument("--clock-cell", choices=("auto", "buf", "inv", "inv2"), default="auto",
+                    help="CLK-INV-CAL-1: die clock cell (AOCV die class A for buf, Ainv for CKINVDCx16 inv/inv2); auto = "
+                         "the declaration in RUN/clk/tree.json meta clock_cell (die_trial); missing -> FAIL closed "
+                         "(COORD ruling ba28d3143)")
     ap.add_argument("--port-taps",action="store_true",help="use declared endpoint pins and union all nearest-tap pairs; legacy last tap otherwise")
     a = ap.parse_args(argv)
     sys.path.insert(0, a.tools)
     import clk_aocv as CA
     T = CA.load(Path(a.tools) / "clk_aocv_table_g021.json")
+    import die_sta_related as DSR
+    tj = Path(a.run) / "clk" / "tree.json"
+    decl = (json.loads(tj.read_text()).get("meta") or {}).get("clock_cell") if tj.is_file() else None
+    cc, cbasis = DSR.resolve_clock_cell(a.clock_cell, Path(a.run),
+                                        {"source": str(Path(a.run) / "out_TT" / "arr_TT.txt"),
+                                         **({"clock_cell": decl} if decl is not None else {})})
+    cls = DSR.CLOCK_CELL_AOCV_CLASS[cc]
     assert abs(T["systematic"]["g_per_mm"] - 0.21) < 1e-9 or abs(T["systematic"]["g_per_mm"] - 0.0021) < 1e-9, T["systematic"]
     plan = json.loads(Path(a.plan).read_text())
     run = Path(a.run)
@@ -169,6 +180,8 @@ def main(argv=None):
     cl = dict(kv.split("=") for kv in a.core_lat.split(","))
     out = dict(method=__doc__.split("\n\n")[2].strip(), budget_ps=a.budget_ps, g_per_mm=T["systematic"]["g_per_mm"],
                droop_one_sided=T["droop"]["one_sided_late_frac"], core_lat=cl, corners={})
+    if cc != "buf":                 # CLK-INV-CAL-1 record (BUFx24 output unchanged)
+        out["clock_cell"] = dict(cell=cc, basis=cbasis, aocv_class=cls)
     for c in ("TT", "FF"):
         f = run / f"out_{c}" / f"arr_{c}.txt"
         if not f.is_file():
@@ -176,7 +189,7 @@ def main(argv=None):
         arr = arrivals(f)
         for droop in ("regions", "same"):
             for clat in (float(cl[c]), 0.0):
-                rows = analyse(plan, tree, arr, CA, T, c, clat, a.budget_ps, droop, port_taps=a.port_taps)
+                rows = analyse(plan, tree, arr, CA, T, c, clat, a.budget_ps, droop, port_taps=a.port_taps, cls=cls)
                 rows.sort(key=lambda r: r["margin_ps"])
                 key = f"{c}_droop-{droop}_corelat{clat:g}"
                 out["corners"][key] = dict(crossings=len(rows), worst_margin_ps=rows[0]["margin_ps"],

@@ -277,7 +277,10 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
     for r in rows:
         r["lo"], r["hi"] = r["d_ps"] - r["p_dn_ps"], r["d_ps"] + r["p_up_ps"]
         r["_nv"], r["_edge"], r["_off"], r["_dist"], r["_s"] = sync_choice_iv(r, T, ap, start_skew, sync_ap)
-        r["_w"] = wander_frac * max(r.get("unshared_a_ps", 0.0), r.get("unshared_b_ps", 0.0))
+        # CLK-INV-CAL-1 / COORD 10-28: wander over the crossing's OWN tap pairs (unshared_sta_ps = max
+        # die_sta_related.ca_pair_unshared, the gate's function), never below the landed_phase_ocv row's own figure
+        r["_w"] = wander_frac * max(r.get("unshared_a_ps", 0.0), r.get("unshared_b_ps", 0.0),
+                                    r.get("unshared_sta_ps", 0.0))
     data_regions = sorted({r["src"] for r in rows} | {r["dst"] for r in rows})
     regions = data_regions
     if start_edges is not None:
@@ -537,7 +540,7 @@ def _lcp(a, b):
 
 
 def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="table", clock_droop=None,
-                   droop_regions_file=None, core_latency_ff=None):
+                   droop_regions_file=None, core_latency_ff=None, clock_cell="auto"):
     """{corner: dict(meta, taps, ocv, rng)} with the ONE shared die model exactly as sta_d_intervals builds it (tap
     arrivals of PROOF, --clock-cal spice, CPPR at the last common tree node, clock_ocv_fn table + shared droop)."""
     import die_sta_related as DSR
@@ -552,13 +555,15 @@ def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="tabl
         meta, taps = DSR.load_taps(Path(proof), c)
         if not all("tree_path" in t for t in taps.values()):
             raise ValueError("--start-tree clock needs tap tree_path in the proof (the clock tree topology)")
+        cc, _ = DSR.resolve_clock_cell(clock_cell, proof, meta)   # CLK-INV-CAL-1: same clock-cell model as the gate
         if clock_cal == "spice":
-            meta, taps = DSR.scale_clock(meta, taps, DSR.SPICE_CLOCK_CAL.get(c, DSR.SPICE_CLOCK_CAL["TT"]))
+            meta, taps = DSR.scale_clock(meta, taps, DSR.spice_cal_factor(c, cc))
         taps = dict(taps)
         lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
         old, DSR.CPPR_LCA = DSR.CPPR_LCA, True
         try:
-            ocv = DSR.ca_ocv(Path(proof), meta, taps, c, lat, clock_ocv, clock_droop, "mesh", droop_regions_file)
+            ocv = DSR.ca_ocv(Path(proof), meta, taps, c, lat, clock_ocv, clock_droop, "mesh", droop_regions_file,
+                             clock_cell=cc)
         finally:
             DSR.CPPR_LCA = old
         out[c] = dict(meta=meta, taps=taps, ocv=ocv, rng=meta.get("cppr_node_range_ps"))
@@ -939,6 +944,9 @@ def sta_hull(rows, sta):
             else:
                 r["fall_lo"], r["fall_hi"] = min(x[0] for x in fv), max(x[1] for x in fv)
             r["_named"] = True
+            us = [c["unshared"][r["port"]] for c in sta.values() if r["port"] in (c.get("unshared") or {})]
+            if us:
+                r["unshared_sta_ps"] = max(us)
         else:
             tag = f"{r.get('src_part', r['src'])}->{r.get('dst_part', r['dst'])}"
             iv = [c[tag] for c in sta.values() if tag in c]
@@ -971,11 +979,14 @@ def add_sta_ocv_args(ap):
     ap.add_argument("--sta-clock-droop", choices=("stated", "shared"), help="as die_sta_related --clock-droop")
     ap.add_argument("--sta-droop-regions", help="as die_sta_related --droop-regions")
     ap.add_argument("--sta-core-latency-ff", type=float, help="as die_sta_related --core-latency-ff")
+    ap.add_argument("--sta-clock-cell", choices=("auto", "buf", "inv", "inv2"), default="auto",
+                    help="as die_sta_related --clock-cell: auto = the proof's tap_arrivals clock_cell declaration; "
+                         "missing -> FAIL closed (COORD ruling ba28d3143)")
 
 
 def sta_ocv_kw(a):
     return dict(clock_ocv=a.sta_clock_ocv, clock_droop=a.sta_clock_droop, droop_regions_file=a.sta_droop_regions,
-                core_latency_ff=a.sta_core_latency_ff)
+                core_latency_ff=a.sta_core_latency_ff, clock_cell=getattr(a, "sta_clock_cell", "auto"))
 
 
 def add_start_tree_args(ap):
@@ -1017,7 +1028,7 @@ def start_tree_from_args(a, rows, err):
     cs = [c.split("_")[0] for c in a.corner.split(",")]
     cs = list(dict.fromkeys(cs))
     ctx = clock_contexts(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_clock_ocv, a.sta_clock_droop,
-                         a.sta_droop_regions, a.sta_core_latency_ff)
+                         a.sta_droop_regions, a.sta_core_latency_ff, getattr(a, "sta_clock_cell", "auto"))
     root, edges, info = clock_start_edges(rows, ctx, a.period, a.aperture, a.sync_aperture, a.start_skew,
                                           a.start_skew_clean, a.start_retime_max, a.start_clean,
                                           getattr(a, "start_retime_up", False))
@@ -1094,6 +1105,15 @@ def main(argv=None):
         sta_info.update(proof=a.sta_proof, plan=a.sta_plan, clock_cal=a.sta_clock_cal, cppr_lca=a.sta_cppr_lca,
                         clock_ocv=a.sta_clock_ocv,
                         model="hull(landed_phase_ocv derated, die_sta_related.count_align_port_intervals)")
+        import die_sta_related as DSR
+        cs = sorted({c.split("_")[0] for c in a.corner.split(",")})
+        tp = DSR.Path(a.sta_proof) / f"tap_arrivals_{cs[0]}.json"
+        # record only (the hull above already resolved the cell, fail closed); no proof file = stubbed hull in tests
+        cc, cb = (DSR.resolve_clock_cell(getattr(a, "sta_clock_cell", "auto"), a.sta_proof,
+                                         DSR.load_taps(DSR.Path(a.sta_proof), cs[0])[0]) if tp.exists()
+                  else ("buf", "no tap_arrivals"))
+        if cc != "buf":         # CLK-INV-CAL-1 (BUFx24 records unchanged)
+            sta_info["clock_cell"] = dict(cell=cc, basis=cb, aocv_class=DSR.CLOCK_CELL_AOCV_CLASS[cc])
         if sta_info["missing"]:
             print(f"WARNING --sta-proof: {sta_info['missing']} crossings without STA tap pairs keep the OCV interval "
                   "(die_sta_related fails them closed: no taps)", file=sys.stderr)

@@ -18,7 +18,7 @@ SKEW = (50.0, 60.0)
 
 def _proof(tmp_path, taps, rng):
     for c in ("TT", "FF"):
-        (tmp_path / f"tap_arrivals_{c}.json").write_text(json.dumps(dict(corner=c, cppr_node_range_ps=rng, taps=taps)))
+        (tmp_path / f"tap_arrivals_{c}.json").write_text(json.dumps(dict(corner=c, cppr_node_range_ps=rng, taps=taps, clock_cell="buf")))
     return tmp_path
 
 

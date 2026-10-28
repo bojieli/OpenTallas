@@ -2317,7 +2317,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 **({"tree_form": tree_form, "spine_dme": nodes[0].get("spine_dme"),
                     **({"link_feed": nodes[0]["link_feed"]} if "link_feed" in nodes[0] else {})}
                    if tree_form != "htree" else {}),
-                **({"region_trees": len({n.get("region_root") for n in nodes.values()} - {None})} if regions else {}), buffer=BUF, wire_r_kohm_um=wire_r, wire_c_ff_um=wire_c,
+                **({"region_trees": len({n.get("region_root") for n in nodes.values()} - {None})} if regions else {}), buffer=BUF, clock_cell=clock_cell, wire_r_kohm_um=wire_r, wire_c_ff_um=wire_c,
                 **({"clock_rc": clock_rc} if clock_rc != "ndr" else {}),
                 tap_load_ff=TAP_LOAD_FF, nodes=len(nodes), leaves=sum(1 for n in nodes.values() if n["taps"]),
                 repeaters=sum(1 for i, *_ in place if i.startswith("r")), taps=len(tap_ports),
