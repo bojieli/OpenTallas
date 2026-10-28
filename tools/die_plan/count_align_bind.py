@@ -545,7 +545,7 @@ def report(b, v):
                 sched_lat_total=sum(c["sched_lat"] for c in b["ports"].values()),
                 tree_sched_lat_total=sum(c["sched_lat"] for c in tree),
                 old_ring_total=3 * len(b["ports"]),
-                depth_hist={str(k): sum(1 for c in b["ports"].values() if c["depth"] == k) for k in (4, 8)},
+                depth_hist={str(k): sum(1 for c in b["ports"].values() if c["depth"] == k) for k in (4, 8, 16)},
                 K_range=[min(c["K"] for c in b["ports"].values()), max(c["K"] for c in b["ports"].values())],
                 start_tree_depth=max(r["depth"] for r in b["regions"].values()),
                 tree_edges_fall=sum(1 for r in b["regions"].values() if r["edge_fall"]),
