@@ -22,7 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[4] / "tools/die_plan"))
 import regen_constants as RC  # noqa: E402
 
 
-def pads(bind_dir, r8, dq_max=15):
+def pads(bind_dir, r8, dq_max=15, boot=None):
     B = RC.Bound(bind_dir)
     o = RC.Out("qwen_kvsys", B)
     RC.kv_vport(o)
@@ -30,6 +30,14 @@ def pads(bind_dir, r8, dq_max=15):
     if not rec or rec.get("value") is None:
         raise SystemExit(f"VPORT_DQ not computable on {bind_dir}: {o.c.get('VPORT_DQ') or o.c.get('VPORT_RT')}")
     dq, rt = rec["value"], o.c["VPORT_RT"]["value"]
+    model = "regen_constants.kv_vport (RL = max(W + RT), no O)"
+    if boot is not None:
+        # DIE-KV-13 10-28: the compiled boot image is authoritative for DQ (regen_constants note: boot RL = 4 + WP + O + DQ + RT
+        # adds the per-port O); take DQ from kv_boot_v36 prep vport_dq_pads.json made on the SAME bind (no second formula).
+        if set(boot["dq_unpadded"]) != set(dq):
+            raise SystemExit(f"boot vport set {sorted(boot[dq_unpadded])} != bind vports {sorted(dq)}")
+        dq = dict(boot["dq_unpadded"])
+        model = "kv_boot_v36 prep vport_dq_pads.json (kv_static_params.schedule, RL = 4 + W + O + DQ + RT)"
     by = {}
     for m in r8["members"]:
         if m["sink"] in dq and m["sink_port"] in ("pr_t", "pr_valid"):
@@ -47,21 +55,25 @@ def pads(bind_dir, r8, dq_max=15):
     bits = sum((b - a + 1) for m in out for a, b in m["sink_bits"])
     return dict(schema="opentallas.die_plan.r8_extra.v1", die="qwen_kvsys",
                 source_bind=str(bind_dir), source_r8_sha256=hashlib.sha256(json.dumps(r8, sort_keys=True).encode()).hexdigest(),
-                note=f"DIE-KV-13 vport W request pads: DQ <= {dq_max} (regen_constants.kv_vport); RL unchanged",
+                note=f"DIE-KV-13 vport W request pads: DQ <= {dq_max} ({model}); RL unchanged",
                 members=out, ports=rows,
                 summary=dict(vports=len(rows), padded=sum(1 for r in rows.values() if r["pad"]),
                              pad_stages=sum(r["pad"] for r in rows.values()), max_pad=max(r["pad"] for r in rows.values()),
                              pad_flops=sum(m["w_pad"] * sum(b - a + 1 for a, b in m["sink_bits"]) for m in out),
-                             padded_bits=bits, RL=max(r["RT"] + r["W"] for r in rows.values()),
-                             RL_after=max(r["RT"] + r["W_padded"] for r in rows.values())))
+                             padded_bits=bits,
+                             **(dict(RL=max(r["RT"] + r["W"] for r in rows.values()),
+                                     RL_after=max(r["RT"] + r["W_padded"] for r in rows.values())) if boot is None else
+                                dict(RL_boot=boot["RL"], RL_note="boot RL = 4 + W + O + DQ + RT; pads = DQ - 15 keep it by construction"))))
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("bind_dir"); ap.add_argument("r8"); ap.add_argument("out")
     ap.add_argument("--dq-max", type=int, default=15)
+    ap.add_argument("--boot-dq", metavar="VPORT_DQ_PADS_JSON", help="kv_boot_v36 prep/vport_dq_pads.json on the same bind: "
+                    "DQ from the boot generator (authoritative; adds the per-port O) instead of regen_constants")
     a = ap.parse_args(argv)
-    t = pads(a.bind_dir, json.load(open(a.r8)), a.dq_max)
+    t = pads(a.bind_dir, json.load(open(a.r8)), a.dq_max, json.load(open(a.boot_dq)) if a.boot_dq else None)
     Path(a.out).write_text(json.dumps(t, indent=1) + "\n")
     print(json.dumps(t["summary"]))
     return 0
