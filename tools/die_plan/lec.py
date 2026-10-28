@@ -1279,6 +1279,7 @@ class Lec:
                 bind(lt, self.tp[k], v)
             merged = nxt
         later = []
+        loaded = []                               # 'loaded' hypotheses: bound after every input (guard ANDs)
         # A gold-only register whose next state is its own Q is never written (no reset, no load): slang pads a
         # non-power-of-two unpacked array (rg_d[0:4] -> 8 words) with such words, where read_verilog reads X.
         # An ASAP7 flop has no power-up value, so the register holds X: a gold X source, never the constant 0
@@ -1298,6 +1299,11 @@ class Lec:
                     bind(lmap, p[k], h[1])
                 elif h and h[0] in ("eq", "cube"):
                     later.append((side, k, h))
+                elif h and h[0] == "loaded" and side == "gold":
+                    v = m.add_input(f"gold:{k}")        # its power-up value: free wherever the guard is false
+                    kind[v >> 1] = ("gold_only", k)
+                    bind(lmap, p[k], v)
+                    loaded.append((k, h, v))
                 elif free_const is not None and k.startswith("ff:"):
                     bind(lmap, p[k], free_const)  # cofactor: unpaired registers held at a constant
                 else:
@@ -1355,6 +1361,12 @@ class Lec:
                 v = m.AND(v, olmap[op[ok] & ~1] ^ (op[ok] & 1) ^ (ov ^ 1))
             lmap, p = (lg, self.gp) if side == "gold" else (lt, self.tp)
             bind(lmap, p[k], v)
+        lkeys = {k for k, _, _ in loaded}
+        for k, h, v in loaded:                    # Q = guard ? c : power-up value (loaded-valid qualification)
+            if any(key in lkeys for cube in h[2] for key, _ in cube):
+                raise LecError(f"loaded guard of {k} reads another loaded register")
+            g = guard_lit(m, h[2], lambda key: lg[self.gp[key] & ~1] ^ (self.gp[key] & 1))
+            bind(lg, self.gp[k], (m.AND(g ^ 1, v ^ 1) ^ 1) if h[1] else m.AND(g ^ 1, v))
         for d, lmap in ((self.gold, lg), (self.gate, lt)):
             base = 2 * (d["I"] + d["L"])
             a = d["ands"]
@@ -1406,6 +1418,18 @@ class Lec:
                     m.outs.append(m.XOR(d, c))
                     m.onames.append(f"hyp:{side}:{k}")
                     continue
+                if h[0] == "loaded":
+                    # next state: guard' (or a guard register's next state X) -> D(k) == c and not X
+                    gn = guard_lit(m, h[2], lambda key: self.dlit[("gold", key)])
+                    anyx = 0
+                    for cube in h[2]:
+                        for key, _ in cube:
+                            anyx = m.AND(anyx ^ 1, self.dxlit.get(key, 0) ^ 1) ^ 1
+                    gx = m.AND(gn ^ 1, anyx ^ 1) ^ 1
+                    bad = m.AND((d ^ h[1]) ^ 1, self.dxlit.get(k, 0) ^ 1) ^ 1
+                    m.outs.append(m.AND(gx, bad))
+                    m.onames.append(f"hyp:{side}:{k}")
+                    continue
                 if h[0] == "const":
                     m.outs.append(m.AND(d ^ h[1], nx(k)) if side == "gold" else d ^ h[1])
                 else:
@@ -1440,6 +1464,30 @@ class Lec:
         if duplicates:
             raise LecError("duplicate miter output names: " + ", ".join(duplicates[:8]))
         return m, kind
+
+
+def guard_lit(m, guard, lit):
+    """guard = [[[key, value], ...], ...]: an OR of cubes over gold registers -> AIG literal (lit(key) = its value)."""
+    g = 0
+    for cube in guard:
+        c = 1
+        for key, val in cube:
+            c = m.AND(c, lit(key) ^ (val ^ 1))
+        g = m.AND(g ^ 1, c ^ 1) ^ 1
+    return g
+
+
+def loaded_base(L, guard):
+    """loaded-valid base case: every guard cube is DEFINITELY false in the gold reset state (reset_state: every reset
+    port asserted OT_LEC_RESET_CYCLES edges from an all-unknown power-up; pure constant propagation).  -> None when
+    it holds, else the first cube that is not refuted there (the hint is refused: the register could be assumed
+    loaded while it still holds its power-up X)."""
+    if not hasattr(L, "rst_val"):
+        noreset_classify(L)
+    for cube in guard:
+        if not any(L.rst_val.get(("gold", key), (None, None))[0] == 1 - val for key, val in cube):
+            return cube
+    return None
 
 
 def abc_bin():
@@ -4386,7 +4434,62 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40):
     -> dict(given, applied, skipped, anon, dropped, kept)."""
     rec = dict(given=len(hints), applied=0, skipped=[], anon=0, dropped=[], kept=0)
     keys = lambda sd: L.gp if sd in ("gold", "both") else L.tp
+    # Loaded-valid qualification (LEC-FPREG-5 10-27): ['gold', key, ['loaded', c, guard]] for an RTL register with
+    # no reset that synthesis folded to the constant c it is always loaded with (ot_s81_su_rw k <= k_i == K on the
+    # first operand row).  guard = [[[gold key, 0|1], ...], ...] (an OR of cubes over gold registers: the RTL valid /
+    # job state under which the register has been loaded).  The register is bound to (guard ? c : its free power-up
+    # value), never to c unconditionally (X is not a constant); proved with every other hypothesis: guard on the next
+    # state -> D == c and not X; base case: every cube definitely false in the reset state (loaded_base), else the
+    # hint is refused.  A read of the register outside the guard sees the free value, so it differs (observed).
+    # FSM recoding hints: ['gate', key, ['cube', 'gold', [gold keys], [code bits]]] and the state constraint
+    # ['cons', 'gold', [gold keys], [[allowed bits], ...]] (fsm_proposals' forms), proved the same way.
+    gk = lambda key: isinstance(key, str) and key.startswith("ff:") and "__" not in key and key in L.gp
+    loaded = {e[1] for e in hints if isinstance(e, (list, tuple)) and len(e) == 3 and e[0] == "gold"
+              and isinstance(e[2], (list, tuple)) and e[2] and e[2][0] == "loaded"}
+    rec["loaded"], rec["loaded_refused"] = [], []
     for e in hints:
+        if isinstance(e, (list, tuple)) and e and e[0] == "cons":
+            try:
+                _, csd, ck, allowed = e
+                ok = (csd == "gold" and ck and all(gk(x) for x in ck) and allowed and
+                      all(len(a) == len(ck) and all(b in (0, 1) for b in a) for a in allowed))
+            except (ValueError, TypeError):
+                ok = False
+            if not ok:
+                rec["skipped"].append(e)
+                continue
+            L.cons = [c for c in L.cons if not (c[0] == "gold" and list(c[1]) == list(ck))]
+            L.cons.append(("gold", list(ck), [list(a) for a in allowed]))
+            rec["applied"] += 1
+            continue
+        if isinstance(e, (list, tuple)) and len(e) == 3 and isinstance(e[2], (list, tuple)) and e[2] \
+                and e[2][0] in ("loaded", "cube"):
+            try:
+                sd, k, h = e[0], e[1], e[2]
+                if h[0] == "loaded":
+                    guard = [[(x, int(v)) for x, v in cube] for cube in h[2]]
+                    ok = (sd == "gold" and k in L.gonly and gk(k) and h[1] in (0, 1) and guard and
+                          all(cube and all(gk(x) and v in (0, 1) and x not in loaded for x, v in cube)
+                              for cube in guard))
+                    hh = ("loaded", h[1], guard)
+                else:
+                    ok = (sd == "gate" and k in L.tonly and h[1] == "gold" and h[2] and
+                          all(gk(x) for x in h[2]) and len(h[3]) == len(h[2]) and all(b in (0, 1) for b in h[3]))
+                    hh = ("cube", "gold", list(h[2]), list(h[3]))
+            except (IndexError, TypeError, ValueError):
+                ok = False
+            if not ok:
+                rec["skipped"].append(e)
+                continue
+            if hh[0] == "loaded":
+                cube = loaded_base(L, hh[2])
+                if cube is not None:
+                    rec["loaded_refused"].append(dict(register=k, cube=[list(x) for x in cube],
+                                                      why="guard cube not refuted in the reset state"))
+                    continue
+            L.hyp[(sd, k)] = hh
+            rec["applied"] += 1
+            continue
         try:
             sd, k, h = e[0], e[1], tuple(e[2])
             ok = (sd in ("gold", "gate", "both") and k.startswith("ff:") and "__" not in k and k in keys(sd)
@@ -4438,12 +4541,19 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40):
         log.append(f"hint refinement round {rnd}: {len(st)} hypotheses, {len(bad)} failed {bad[:6]}")
         if not bad:
             rec["kept"] = len(L.hyp)
+            rec["loaded"] = [dict(register=k, value=h[1], guard=[[list(x) for x in c] for c in h[2]], base="reset")
+                             for (sd, k), h in sorted(L.hyp.items()) if h[0] == "loaded"]
             return rec
+        drop_failed(L, [n for n in bad if n.startswith("cons:")])
+        rec["dropped"] += [n for n in bad if n.startswith("cons:")]
         for n in bad:
+            if n.startswith("cons:"):
+                continue
             _, side, k = n.split(":", 2)
             if L.hyp.pop(("both" if side == "bothg" else side, k), None) is not None:
                 rec["dropped"].append(k)
     L.hyp.clear()
+    L.cons.clear()
     rec["kept"] = 0
     log.append("hint refinement did not converge; all unmatched flops free")
     return rec

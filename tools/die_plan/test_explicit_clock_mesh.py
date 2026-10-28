@@ -89,3 +89,19 @@ def test_native_mesh_rc_keeps_all_drivers_and_boundary_ports():
     s=E.mesh_spef_section(w,cells,'BUFx24_ASAP7_75t_R',DC.LAYER_RC,DC.VIA_KOHM)
     assert '*I a:Y O' in s and '*I b:Y O' in s and '*P tap0 O' in s
     assert s.count('*D_NET ')==1 and s.count('*END')==1
+
+
+def test_jog_y_track_runs_m8_to_m9_strap_and_reports_stub():
+    """HEAD-R23: a tap with a PG-aware jog track jogs on M8 at that y to the nearest M9 strap."""
+    m=mesh();m['taps']=[dict(xy=[3.,4.2],jog_y=5.)];m['tap_jog_um']=4.
+    t=E.conductor_graph(m)['taps'][0]
+    assert t['anchor']==['M9',0.,5.] and t['port_node']==['M8',3.,5.]
+    assert t['jog_um']==3. and t['stub_um']==0.8
+    m['tap_jog_um']=2.
+    with pytest.raises(ValueError,match='no M9 strap'): E.conductor_graph(m)
+
+
+def test_jog_y_on_m8_strap_attaches_without_jog():
+    m=mesh();m['taps']=[dict(xy=[7.,0.9],jog_y=0.)];m['tap_jog_um']=4.
+    g=E.conductor_graph(m);t=g['taps'][0]
+    assert t['anchor']==t['port_node']==['M8',7.,0.] and t['jog_um']==0.
