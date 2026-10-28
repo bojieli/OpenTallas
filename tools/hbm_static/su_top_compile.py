@@ -99,6 +99,7 @@ def main():
     ap.add_argument('--rf-local', type=int, default=0, help='1: RF broadcast local copy per slice (pgslice RF_LOCAL): classes 0..3 and 5 issued one edge earlier')
     ap.add_argument('--mlat', type=int, default=3); ap.add_argument('--alat', type=int, default=3); ap.add_argument('--leaf', type=int, default=0)
     ap.add_argument('--read-return', type=int, default=10, help='HBM-BANKLAT-SU: stream LG read round trip the die binds (pgslice READ_RETURN; MULTIRATE fill commits at serial n+srd(RR)+3)')
+    ap.add_argument('--wcopy', type=int, default=0, help='HBM-CORES-REBAL-9: 1 = pinned-bank per-column write copy (RTL WCOPY 1): every bank write commits one edge later (fill n+SRD+4)')
     ap.add_argument('--collective-red', action='store_true', help='native sequential RED_CARRY composition candidate; requires actual cxport/ring and its programme plane')
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
@@ -113,7 +114,7 @@ def main():
     # first op lane load at S0 must follow the last fill commit 1023 + srd(RR) + 3 (12 at RR 10 -> 1038, 2 edges of slack)
     import su_multirate_compile as _M; from su_multirate_compile import srd as _srd
     _M.set_round_trip(a.read_return, a.read_return - 3)   # write round trip = read - 3 (bank commit 3 vs read 6, same lanes)
-    S0, PER = max(1040, 1023 + _srd(a.read_return) + 3 + 2), 176
+    S0, PER = max(1040, 1023 + _srd(a.read_return) + 3 + a.wcopy + 2), 176
     names = [n for n, _ in SAC.OPS] + ['BYP_KV', 'AB_RF']
     NOPS = len(names)
     NE = S0 + PER * NOPS + FO + 64 + 128 + 40
@@ -280,7 +281,7 @@ def main():
                     P.expw.append((D + e + 4, q, p, sec, 0xff, words))
     P.write(out)
     man = dict(schema='opentallas.hbm.su_static_top_programme.v1', qualified=False, edges=NE, ops=names, op_start=S,
-               first_output=FO, rf_relay=R, pin_reg=a.pin_reg, rf_local=a.rf_local, fill_edges=1024, expected_vm_writes=len(P.expw), expected_scalars=len(P.exps),
+               first_output=FO, rf_relay=R, pin_reg=a.pin_reg, **({'wcopy': a.wcopy} if a.wcopy else {}), rf_local=a.rf_local, fill_edges=1024, expected_vm_writes=len(P.expw), expected_scalars=len(P.exps),
                sum_lanes=lane_sum, max_lanes=lane_max, rf_words={str(k): f'{v:08x}' for k, v in sorted(rf_val.items())},
                global_sum_export=ex3, g_ready=g_ready, rf_drain_edge=Z,
                golden='hdc_golden add/mul/to_bf16 NumPy FP32 RNE (independent of the DUT); su_arith_compile seed/gold/control reused',

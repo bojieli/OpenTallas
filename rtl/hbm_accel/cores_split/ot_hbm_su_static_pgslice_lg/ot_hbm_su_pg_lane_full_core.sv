@@ -5,7 +5,10 @@
 // Wired bit-exactly as the as-built master netlist (split_conn.py); straps = replica constants tied at the parent.
 `timescale 1ns/1ps
 `default_nettype none
-module ot_hbm_su_pg_lane_full_core (
+module ot_hbm_su_pg_lane_full_core #(
+    parameter integer MLAT = 4,
+    parameter integer WCOPY = 0
+) (
     input wire bank_clk,
     input wire bank_rst_n,
     input wire [5:0] bank_clk_macro,
@@ -91,7 +94,7 @@ module ot_hbm_su_pg_lane_full_core (
     wire u_bank__write_v;
     wire [8:0] u_bank__write_addr;
     wire [31:0] u_bank__write_data;
-    ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9)) u_bank (
+    ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9),.WCOPY(WCOPY)) u_bank (
         .clk(u_bank__clk),
         .rst_n(u_bank__rst_n),
         .clk_rd(u_bank__clk_rd),
@@ -170,7 +173,7 @@ module ot_hbm_su_pg_lane_full_core (
     wire [31:0] u_lane__ro_x;
     wire u_lane__fault;
     wire u_lane__coll;
-    ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(2),.MLAT(4),.ALAT(3),.LEAF(1),.FETCH_EXTRA_EDGES(2)) u_lane (
+    ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(2),.MLAT(MLAT),.ALAT(3),.LEAF(1),.FETCH_EXTRA_EDGES(2)) u_lane (
         .clk_stage(u_lane__clk_stage),
         .clk_insert(u_lane__clk_insert),
         .rst_n(u_lane__rst_n),
