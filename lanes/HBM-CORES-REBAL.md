@@ -52,3 +52,4 @@
   - Probe running: side_rest LEC with existing opt-in OT_LEC_RAW_BASE_STEPS=24 (--reuse), intel2 /srv/opentallas-scratch2/claude/hbm-cores-rebal-7/lec_side_rest_raw24(.log), ~55 min.
   - (4) DIE-HBM-9 plan event has no hnx_lane_x view / dr arrays yet (only README §5) -> not started.
   - Collect: lanes__canon 3_place.odb -> post-place TT/FF (ideal clock, as ring_ag/reduce) + VIEWED render -> REBAL-4 merge; raw24 verdict; after ROOT-MERGE of 9335c29df3 regen side_rest with ZERO_RST; the HBM ruling below.
+- [2026-10-28 10:51 PDT] HBM-CORES-REBAL-7 addendum: side_rest probe OT_LEC_RAW_BASE_STEPS=24 COLLECTED: still NOT EQUIVALENT, 1462 differ (u_egs 466+1, u_div 33; 5078 s, CHECKED). The raw-prefix path does not clear it, so the ASK default narrows to (A) a die reset contract from DIE-HBM, or (B) per-module resets.
