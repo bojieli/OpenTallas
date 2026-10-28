@@ -1,0 +1,15 @@
+coupon	input	router	pins	M4_3D	M5_3D	M6_3D	M7_3D	total_3D	2D_H	2D_V	source
+base_Wi	hm_r26q5c39 (d6)	FastRoute	as-generated	2904	12527	69010	6787	91228	20786	19314	d6 route.log (3D) + own parse of d6 congestion.rpt (2D)
+wi_no56	whatif ft5+ft6 out (d6)	FastRoute	as-generated	7	9	25179	2	25197	68	11	d6 log; reproduced exactly by own rerun d7/wi_no56
+base_v8	hm_r26q5c39 (d6)	FastRoute	as-generated	871	1315	26162	960	29308	2784	2275	d6 route.log + own parse
+v8_no4	whatif ft4 out (d6)	FastRoute	as-generated	76	117	25082	169	25444	210	286	d6 log; reproduced exactly by own rerun d7/v8_no4
+wi_no56	same	CUGR(3D)	as-generated	206	247	99	323	875(+55 via)	-	-	d7 wi_no56_cugr (fractional units)
+v8_no4	same	CUGR(3D)	as-generated	300	621	128	1037	2086(+44 via)	-	-	d7 v8_no4_cugr
+base_Wi	hm_r26q5c39	FastRoute	parity	4931	6062	38184	29405	78582	21869	20961	d7 par_base_Wi
+base_v8	hm_r26q5c39	FastRoute	parity	277	858	14000	2958	18093	1797	2507	d7 par_base_v8
+wi_no56	whatif	FastRoute	parity	0	0	2975	1540	4515	53	9	d7 par_wi_no56
+v8_no4	whatif	FastRoute	parity	5	28	2164	453	2650	135	184	d7 par_v8_no4
+wi_no56	whatif	FastRoute	parity+station 10.8um core clearance	0	0	2698	1558	4256	55	7	d7 clr_wi_no56
+v8_no4	whatif	FastRoute	parity+station clearance	6	18	2146	473	2643	131	187	d7 clr_v8_no4
+wi_no56	whatif	FastRoute	parity+clearance+FT face 8 b/um	4	0	2365	1636	4005	-	-	d7 wid_wi_no56 (2D sum 129)
+v8_no4	whatif	FastRoute	parity+clearance+FT face 8 b/um	146	57	2199	445	2847	-	-	d7 wid_v8_no4 (2D sum 602)
