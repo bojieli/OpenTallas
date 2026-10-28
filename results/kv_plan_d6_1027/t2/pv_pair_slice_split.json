@@ -1,0 +1,96 @@
+{
+ "module": "kv3_pv_pair",
+ "delta_id": "D-KV-PVPAIR-SPLIT-D6 (KV-PLAN-DELTA-6 task 2, 10-27; single centre-entry reach over the 220 limit)",
+ "outline_um": [
+  380.16,
+  190.08
+ ],
+ "instances_type_frame": 256,
+ "instances_die": 256,
+ "entry": {
+  "xy_um": [
+   190.08,
+   95.04
+  ],
+  "island_um": [
+   185.76,
+   90.72,
+   194.4,
+   99.36
+  ]
+ },
+ "core_tree": {
+  "form": "internal H-tree from the entry (12.8b), balanced binary (core_infra_htree --hb-axes); W/E split",
+  "grid": [
+   2,
+   1
+  ],
+  "leaf_reach_limit_um": 220.0,
+  "leaf_reach_um": 190.08,
+  "islands": [
+   {
+    "centre_um": [
+     95.04,
+     95.04
+    ],
+    "rect_um": [
+     90.72,
+     90.72,
+     99.36,
+     99.36
+    ]
+   },
+   {
+    "centre_um": [
+     285.12,
+     95.04
+    ],
+    "rect_um": [
+     280.8,
+     90.72,
+     289.44,
+     99.36
+    ]
+   }
+  ],
+  "trunk_um": [
+   95.04,
+   95.04
+  ],
+  "pred_TT_ps": 259.0,
+  "pred_FF_ps": 210.2,
+  "pred_note": "plan model kv_core_slice (core_insertion(leaf reach) + 0.20 ps/um trunk = ~2.5x optimistic per COORD; PLAN MODEL, UNCHECKED)"
+ },
+ "frame": "core R0 frame; identical on every instance and orient (islands mirror with the core, 12.8b)",
+ "die_core_islands_12_2a1": [
+  [
+   107.46,
+   138.24,
+   109.08,
+   138.51
+  ],
+  [
+   109.08,
+   138.24,
+   110.7,
+   138.51
+  ],
+  [
+   268.11,
+   43.2,
+   269.73,
+   43.47
+  ]
+ ],
+ "island_overlaps": [],
+ "replaces": {
+  "grid": [
+   1,
+   1
+  ],
+  "far_um": 285.12,
+  "pred_TT_ps": 316.6,
+  "source": "single centre entry (KV-CORE-SLICE-1 r25 pins, entry (190.08, 95.04))"
+ },
+ "in_plan_json": "slice record (kv_core_slice form); core lane applies with core_infra_htree --hb-axes; pins unchanged"
+}

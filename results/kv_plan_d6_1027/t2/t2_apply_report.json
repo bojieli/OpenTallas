@@ -1,0 +1,504 @@
+{
+ "schema": "opentallas.kv_plan_d6.t2.v1",
+ "base_plan": "pd/hm_r26q5c39.json",
+ "base_plan_sha256": "4190246956824a7a86fd0866ad8a3bf4db983bad123f767ac6a9e0e9eccce782",
+ "ectlk": {
+  "qkd_ectlk_q0": {
+   "pins_file_old": "cores/qkd_ectlk_q0_pins_r25.json",
+   "pins_file_new": "cores/qkd_ectlk_q0_pins_r26d6.json",
+   "pins_sha256": "dd9476e7d078b71a61ec74317fde59d94d23afc940cac2ef07ba2989f8516e1a",
+   "outline_old_um": [
+    216.0,
+    172.8
+   ],
+   "outline_new_um": [
+    155.52,
+    172.8
+   ],
+   "anchor": "SW",
+   "core_islands_kept": [
+    [
+     102.168,
+     8.64,
+     103.788,
+     8.91
+    ]
+   ],
+   "faces": {
+    "E": 93,
+    "S": 772,
+    "W": 609
+   },
+   "face_density_pins_per_um": {
+    "E": 0.54,
+    "S": 4.96,
+    "W": 3.52
+   },
+   "area_ratio": 0.72,
+   "fill_est": "0.205 (GEOM-31 0.1475 x 216/155.52, UNCHECKED)",
+   "single_tree": {
+    "far_old_um": 194.4,
+    "pred_old": [
+     243.5,
+     197.7
+    ],
+    "far_new_um": 164.16,
+    "pred_new": [
+     219.1,
+     177.9
+    ],
+    "note": "master_plan.core_insertion (TT, FF), PLAN MODEL UNCHECKED; far <= 200 -> no 12.8b split"
+   },
+   "entry_xy_um": [
+    77.76,
+    86.4
+   ],
+   "entry_island_um": [
+    73.44,
+    82.08,
+    82.08,
+    90.72
+   ],
+   "moved": [
+    {
+     "pin": "ck[0]",
+     "from_": [
+      "M5",
+      108.024,
+      86.4
+     ],
+     "to": [
+      "M5",
+      77.784,
+      86.4
+     ]
+    },
+    {
+     "pin": "rst_n[0]",
+     "from_": [
+      "M5",
+      108.408,
+      86.4
+     ],
+     "to": [
+      "M5",
+      78.168,
+      86.4
+     ]
+    }
+   ],
+   "trunk_12_8c": {
+    "cell": "BUFx4_ASAP7_75t_R",
+    "n": 1,
+    "pred_after_ps": {
+     "TT": 243.0,
+     "FF": 195.5
+    },
+    "place": "in the entry island ahead of the CTS root, dont_touch, identical in every instance",
+    "note": "kv_core_slice BUF_STAGE_PS TT 23.9 / FF 17.6; PLAN MODEL UNCHECKED"
+   }
+  },
+  "qkd_ectlk_q2": {
+   "pins_file_old": "cores/qkd_ectlk_q2_pins_r26q2.json",
+   "pins_file_new": "cores/qkd_ectlk_q2_pins_r26d6.json",
+   "pins_sha256": "7ab3ab638d4d168b0ed1cc2b0120ca73b99bf78f38c361d9de2b412829edd78d",
+   "outline_old_um": [
+    216.0,
+    172.8
+   ],
+   "outline_new_um": [
+    155.52,
+    172.8
+   ],
+   "anchor": "SW",
+   "core_islands_kept": [
+    [
+     102.168,
+     8.64,
+     103.788,
+     8.91
+    ]
+   ],
+   "faces": {
+    "E": 269,
+    "S": 911,
+    "W": 773
+   },
+   "face_density_pins_per_um": {
+    "E": 1.56,
+    "S": 5.86,
+    "W": 4.47
+   },
+   "area_ratio": 0.72,
+   "fill_est": "0.205 (GEOM-31 0.1475 x 216/155.52, UNCHECKED)",
+   "single_tree": {
+    "far_old_um": 194.4,
+    "pred_old": [
+     243.5,
+     197.7
+    ],
+    "far_new_um": 164.16,
+    "pred_new": [
+     219.1,
+     177.9
+    ],
+    "note": "master_plan.core_insertion (TT, FF), PLAN MODEL UNCHECKED; far <= 200 -> no 12.8b split"
+   },
+   "entry_xy_um": [
+    77.76,
+    86.4
+   ],
+   "entry_island_um": [
+    73.44,
+    82.08,
+    82.08,
+    90.72
+   ],
+   "moved": [
+    {
+     "pin": "ck[0]",
+     "from_": [
+      "M5",
+      108.024,
+      86.4
+     ],
+     "to": [
+      "M5",
+      77.784,
+      86.4
+     ]
+    },
+    {
+     "pin": "rst_n[0]",
+     "from_": [
+      "M5",
+      108.408,
+      86.4
+     ],
+     "to": [
+      "M5",
+      78.168,
+      86.4
+     ]
+    }
+   ],
+   "trunk_12_8c": {
+    "cell": "BUFx4_ASAP7_75t_R",
+    "n": 1,
+    "pred_after_ps": {
+     "TT": 243.0,
+     "FF": 195.5
+    },
+    "place": "in the entry island ahead of the CTS root, dont_touch, identical in every instance",
+    "note": "kv_core_slice BUF_STAGE_PS TT 23.9 / FF 17.6; PLAN MODEL UNCHECKED"
+   }
+  }
+ },
+ "taps": [
+  {
+   "type": "kv3_hg",
+   "tap": {
+    "name": "ectl_q0.ck[0]",
+    "kind": "core",
+    "insertion_ps": 250.0,
+    "budget_owner": "qkd_ectlk_q0",
+    "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+   },
+   "old": [
+    125.304,
+    1408.32
+   ],
+   "new": [
+    95.064,
+    1408.32
+   ]
+  },
+  {
+   "type": "kv3_hg",
+   "tap": {
+    "name": "ectl_q2.ck[0]",
+    "kind": "core",
+    "insertion_ps": 250.0,
+    "budget_owner": "qkd_ectlk_q2",
+    "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+   },
+   "old": [
+    764.664,
+    1408.32
+   ],
+   "new": [
+    734.424,
+    1408.32
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tap": {
+    "name": "ectl_q0.ck[0]",
+    "kind": "core",
+    "insertion_ps": 250.0,
+    "budget_owner": "qkd_ectlk_q0",
+    "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+   },
+   "old": [
+    125.304,
+    1408.32
+   ],
+   "new": [
+    95.064,
+    1408.32
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tap": {
+    "name": "ectl_q2.ck[0]",
+    "kind": "core",
+    "insertion_ps": 250.0,
+    "budget_owner": "qkd_ectlk_q2",
+    "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+   },
+   "old": [
+    764.664,
+    1408.32
+   ],
+   "new": [
+    734.424,
+    1408.32
+   ]
+  },
+  {
+   "type": "kv3_hg_v1",
+   "tap": {
+    "name": "ectl_q0.ck[0]",
+    "kind": "core",
+    "insertion_ps": 250.0,
+    "budget_owner": "qkd_ectlk_q0",
+    "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+   },
+   "old": [
+    125.304,
+    1408.32
+   ],
+   "new": [
+    95.064,
+    1408.32
+   ]
+  },
+  {
+   "type": "kv3_hg_v1",
+   "tap": {
+    "name": "ectl_q2.ck[0]",
+    "kind": "core",
+    "insertion_ps": 250.0,
+    "budget_owner": "qkd_ectlk_q2",
+    "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+   },
+   "old": [
+    764.664,
+    1408.32
+   ],
+   "new": [
+    734.424,
+    1408.32
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "tap": {
+    "name": "ectl_q0.ck[0]",
+    "kind": "core",
+    "insertion_ps": 250.0,
+    "budget_owner": "qkd_ectlk_q0",
+    "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+   },
+   "old": [
+    125.304,
+    1408.32
+   ],
+   "new": [
+    95.064,
+    1408.32
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "tap": {
+    "name": "ectl_q2.ck[0]",
+    "kind": "core",
+    "insertion_ps": 250.0,
+    "budget_owner": "qkd_ectlk_q2",
+    "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+   },
+   "old": [
+    764.664,
+    1408.32
+   ],
+   "new": [
+    734.424,
+    1408.32
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "tap": {
+    "name": "ectl_q0.ck[0]",
+    "kind": "core",
+    "insertion_ps": 250.0,
+    "budget_owner": "qkd_ectlk_q0",
+    "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+   },
+   "old": [
+    125.304,
+    1408.32
+   ],
+   "new": [
+    95.064,
+    1408.32
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "tap": {
+    "name": "ectl_q2.ck[0]",
+    "kind": "core",
+    "insertion_ps": 250.0,
+    "budget_owner": "qkd_ectlk_q2",
+    "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+   },
+   "old": [
+    764.664,
+    1408.32
+   ],
+   "new": [
+    734.424,
+    1408.32
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "tap": {
+    "name": "ectl_q0.ck[0]",
+    "kind": "core",
+    "insertion_ps": 250.0,
+    "budget_owner": "qkd_ectlk_q0",
+    "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+   },
+   "old": [
+    125.304,
+    1408.32
+   ],
+   "new": [
+    95.064,
+    1408.32
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "tap": {
+    "name": "ectl_q2.ck[0]",
+    "kind": "core",
+    "insertion_ps": 250.0,
+    "budget_owner": "qkd_ectlk_q2",
+    "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+   },
+   "old": [
+    764.664,
+    1408.32
+   ],
+   "new": [
+    734.424,
+    1408.32
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "tap": {
+    "name": "ectl_q0.ck[0]",
+    "kind": "core",
+    "insertion_ps": 250.0,
+    "budget_owner": "qkd_ectlk_q0",
+    "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+   },
+   "old": [
+    125.304,
+    1408.32
+   ],
+   "new": [
+    95.064,
+    1408.32
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "tap": {
+    "name": "ectl_q2.ck[0]",
+    "kind": "core",
+    "insertion_ps": 250.0,
+    "budget_owner": "qkd_ectlk_q2",
+    "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+   },
+   "old": [
+    764.664,
+    1408.32
+   ],
+   "new": [
+    734.424,
+    1408.32
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "tap": {
+    "name": "ectl_q0.ck[0]",
+    "kind": "core",
+    "insertion_ps": 250.0,
+    "budget_owner": "qkd_ectlk_q0",
+    "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+   },
+   "old": [
+    125.304,
+    1408.32
+   ],
+   "new": [
+    95.064,
+    1408.32
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "tap": {
+    "name": "ectl_q2.ck[0]",
+    "kind": "core",
+    "insertion_ps": 250.0,
+    "budget_owner": "qkd_ectlk_q2",
+    "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+   },
+   "old": [
+    764.664,
+    1408.32
+   ],
+   "new": [
+    734.424,
+    1408.32
+   ]
+  }
+ ],
+ "hard_cores_changed": 16,
+ "pv_pair": {
+  "grid": [
+   2,
+   1
+  ],
+  "leaf_reach_um": 190.08,
+  "pred_TT_ps": 259.0,
+  "pred_FF_ps": 210.2,
+  "single_far_um": 285.12,
+  "single_pred": [
+   316.6,
+   257.0
+  ]
+ },
+ "out_plan": "pd/hm_r26q5c39_t2.json",
+ "out_plan_sha256": "18adbc3d9009b8248711b5c1e8c4931c11b17073bd302946b68c715d715dd49a"
+}
