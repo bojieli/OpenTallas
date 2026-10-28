@@ -766,7 +766,7 @@ def build_spine_fishbone(P, taps, col_um=60.0, merge_um=800.0, matched=False, st
 
 
 
-def build_link_fishbone(P, taps, regions, feed, col_um=60.0):
+def build_link_fishbone(P, taps, regions, feed, col_um=60.0, region_tree="fish", leaf_um=150.0):
     """DIE-KV-2 (opt-in --tree-form link_fishbone --region-trees MAP --feed FEED, METHODOLOGY 12.13 clock follows data):
     the die clock is fed ALONG THE REGION LINKS, not by a die-wide balanced tree.
       (1) FEED: the region feed tree of tools/die_plan/locality.py (feed 'fish': max-bit spanning tree of the region
@@ -777,7 +777,12 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0):
           count-aligned ring (MESO-COUNT-1 ruling 20:35; per-crossing K from count_align_plan.py).
       (2) FISHBONE region tree: a trunk along the region's long axis through its centre; one trunk node per tap column
           (taps within col_um share it); a perpendicular stub to a leaf per tap row (leaf delay ~ Manhattan distance).
-    Region names come from the map values; every tap's partition must be in the map and every region in the feed."""
+    Region names come from the map values; every tap's partition must be in the map and every region in the feed.
+    DIE-S81-3 opt-in --tree-opt region_tree=htree (COORD 10-27 21:38 CROSS-DIE NOTE: fishbone ribs inside a region gave
+    342-650 ps in-region skew on HEAD/KV/QC): the feed is unchanged, but each region clock is a BALANCED local H-tree:
+    a shared leg from the region centre to the centre of the region's TAP bbox, then recursive bisection of the longer
+    side at the midpoint down to boxes <= leaf_um (full depth: every leaf at the same depth, equal root->leaf length by
+    construction; empty halves pruned), taps on the leaf of their box (last mile <= leaf_um)."""
     par = feed["parent"]
     tapxy = {tuple(k.split("->")): v for k, v in feed["tap"].items()}
     rt = defaultdict(list)
@@ -827,8 +832,31 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0):
             nodes[a]["region_root"] = c
             rr[c] = a
             order.append(c)
+    if region_tree == "htree":
+        def bis(nid, bb, tl, reg_box):
+            x0, y0, x1, y1 = bb
+            if max(x1 - x0, y1 - y0) <= leaf_um:
+                nodes[nid]["taps"] += tl
+                return
+            if x1 - x0 >= y1 - y0:
+                m_ = (x0 + x1) / 2
+                halves = [((x0, y0, m_, y1), [t for t in tl if t[2] < m_]), ((m_, y0, x1, y1), [t for t in tl if t[2] >= m_])]
+            else:
+                m_ = (y0 + y1) / 2
+                halves = [((x0, y0, x1, m_), [t for t in tl if t[3] < m_]), ((x0, m_, x1, y1), [t for t in tl if t[3] >= m_])]
+            for hb, ht in halves:
+                if ht:
+                    c = mk((hb[0] + hb[2]) / 2, (hb[1] + hb[3]) / 2, nid, nodes[nid]["level"] + 1, reg_box, rtree=True)
+                    bis(c, hb, ht, reg_box)
+        for r, tl in rt.items():
+            xs, ys = [t[2] for t in tl], [t[3] for t in tl]
+            # square-up the tap bbox so a 1-D row of taps still bisects to <= leaf_um on both axes
+            bb = (min(xs), min(ys), max(xs), max(ys))
+            top = leg(rr[r], (bb[0] + bb[2]) / 2, (bb[1] + bb[3]) / 2, box[r], rtree=True)
+            nodes[top]["rtree_root"] = r
+            bis(top, bb, tl, box[r])
     # (2) fishbone per region
-    for r, tl in rt.items():
+    for r, tl in (rt.items() if region_tree != "htree" else ()):
         b, (cx, cy), r0 = box[r], cen[r], rr[r]
         horiz = (b[2] - b[0]) >= (b[3] - b[1])
         ax_of = (lambda t: t[2]) if horiz else (lambda t: t[3])
@@ -2716,7 +2744,7 @@ def main(argv=None):
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
                       site_slide=a.tree_site_slide, regions=a.region_trees,
                       tree_form=a.tree_form,
-                      tree_opts={**{k: float(v) for k, v in (o.split("=") for o in a.tree_opt)},
+                      tree_opts={**{k: (v if k == "region_tree" else float(v)) for k, v in (o.split("=") for o in a.tree_opt)},
                                  **({"feed": a.feed} if a.tree_form == "link_fishbone" else {})})
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))

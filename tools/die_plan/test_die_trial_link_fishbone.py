@@ -43,3 +43,44 @@ def test_region_missing_from_feed_is_an_error():
     import pytest
     with pytest.raises(SystemExit):
         D.build_link_fishbone(_P(), TAPS, REG, {"root": "A", "parent": {"A": None}, "tap": {}})
+
+
+def _anc(n, i):
+    out = []
+    while i is not None:
+        out.append(i)
+        i = n[i]["parent"]
+    return out
+
+
+def _len(n, i):
+    L = 0.0
+    while n[i]["parent"] is not None:
+        p = n[n[i]["parent"]]
+        L += abs(p["x"] - n[i]["x"]) + abs(p["y"] - n[i]["y"])
+        i = n[i]["parent"]
+    return L
+
+
+def test_region_htree_balanced():
+    """DIE-S81-3 region_tree=htree: same feed, balanced local tree per region: every tap once, legs straight, and every
+    leaf of a region at the same root->leaf length (zero nominal in-region skew up to the <= leaf_um last mile)"""
+    taps = TAPS + [("a0", "ck2", 100.0, 350.0), ("a1", "ck2", 1900.0, 50.0), ("b0", "ck2", 2900.0, 380.0)]
+    n = D.build_link_fishbone(_P(), taps, REG, FEED, region_tree="htree", leaf_um=150.0)
+    assert sorted(t for d in n.values() for t in d["taps"]) == sorted(taps)
+    for i, d in n.items():
+        if d["parent"] is not None:
+            p = n[d["parent"]]
+            assert abs(p["x"] - d["x"]) < 1e-6 or abs(p["y"] - d["y"]) < 1e-6
+    for reg in ("A", "B"):
+        top = next(i for i, d in n.items() if d.get("rtree_root") == reg)
+        leaves = [i for i, d in n.items() if d["taps"] and REG[d["taps"][0][0]] == reg]
+        assert all(top in _anc(n, i) for i in leaves)
+        assert len(leaves) == sum(1 for t in taps if REG[t[0]] == reg)
+        lens = {round(_len(n, i) - _len(n, top), 3) for i in leaves}
+        assert len(lens) == 1, (reg, lens)
+        for i in leaves:
+            for t in n[i]["taps"]:
+                assert abs(t[2] - n[i]["x"]) + abs(t[3] - n[i]["y"]) <= 150.0
+    # no fishbone nodes
+    assert not any(d.get("rib") for d in n.values())

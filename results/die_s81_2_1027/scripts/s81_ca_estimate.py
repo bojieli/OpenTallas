@@ -25,6 +25,45 @@ import locality as LO  # noqa: E402
 import count_align_plan as CAP  # noqa: E402
 
 
+def true_margins(rin, out, T, ap, gate, summ, wander_frac=0.05):
+    """DIE-S81-3: TRUE lag interval per crossing from the derated lag (COORD 21:26).  A CLEAN tree crossing (its derated
+    interval +-ap avoids the sync boundary of its sample edge) has the fixed MESO-INTEG-1 tree K (K_tree = -1-PAD + q):
+    the lag is the nominal L_nom = s0 + ((d - s0) mod T) + qT (s0 = T rise / 1.5T fall) +- (derated spread + wander + ap),
+    not the whole sync window [s0 - w - ap, s0 + T + w + ap] that pins the low side.  An AMBIGUOUS tree crossing keeps
+    the window; non-tree rows keep the plan interval (K minimal from the derated lag + path ambiguity).  DEPTH from the
+    true high side: D4 if (3.5T - L_hi) >= gate, else D8 if (7.5T - L_hi) >= gate, else FAIL; low side must be >= gate."""
+    by = {r["port"]: r for r in rin}
+    for o in out:
+        r = by[o["port"]]
+        lo, hi = o["L_lo_ps"], o["L_hi_ps"]
+        o["window_L_lo_ps"], o["window_L_hi_ps"] = lo, hi
+        o["clean"] = r.get("_nv", 1) == 1
+        if o["kind"] == "tree" and o["clean"] and "tree_shift" in o:   # MESO-INTEG-1 rows (MESO-COUNT-2: already true)
+            w = wander_frac * max(r.get("unshared_a_ps", 0.0), r.get("unshared_b_ps", 0.0))
+            s0 = T if r.get("_edge") == "rise" else 1.5 * T
+            q = o.get("tree_shift") or 0
+            Ln = s0 + ((r["d_ps"] - s0) % T) + q * T
+            lo, hi = Ln - r["p_dn_ps"] - w - ap, Ln + r["p_up_ps"] + w + ap
+            o["L_nom_ps"] = round(Ln, 1)
+        o["L_lo_ps"], o["L_hi_ps"] = round(lo, 1), round(hi, 1)
+        o["margin_lo_ps"] = round(lo - 0.5 * T, 1)
+        dep = 4 if 3.5 * T - hi >= gate else (8 if 7.5 * T - hi >= gate else None)
+        if o["margin_lo_ps"] < gate:
+            dep = None
+        o["depth_plan"], o["depth"] = o["depth"], dep
+        o["margin_hi_ps"] = round(((dep or 8) - 0.5) * T - hi, 1)
+    summ.update(true_margin_rule=f"gate {gate} ps both sides; clean tree rows from the derated lag (MESO-INTEG-1 K_tree)",
+                depth4=sum(1 for o in out if o["depth"] == 4), depth8=sum(1 for o in out if o["depth"] == 8),
+                fail=sum(1 for o in out if not o["depth"]),
+                tree_rows=sum(1 for o in out if o["kind"] == "tree"),
+                tree_ambiguous=sum(1 for o in out if o["kind"] == "tree" and not o["clean"]),
+                moved_d4_to_d8=sum(1 for o in out if o["depth_plan"] == 4 and o["depth"] == 8),
+                worst_true_lo_tree=min((o["margin_lo_ps"] for o in out if o["kind"] == "tree"), default=None),
+                worst_true_lo_nontree=min((o["margin_lo_ps"] for o in out if o["kind"] != "tree"), default=None),
+                worst_true_hi_tree=min((o["margin_hi_ps"] for o in out if o["kind"] == "tree" and o["depth"]), default=None),
+                worst_true_hi_nontree=min((o["margin_hi_ps"] for o in out if o["kind"] != "tree" and o["depth"]), default=None))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--plan", required=True)
@@ -40,7 +79,18 @@ def main():
                     "count-aligned window become hop chains along the feed tree; all others stay direct")
     ap.add_argument("--hop", action="store_true", help="12.13c: off-feed crossings re-timed as hop chains along the "
                     "feed tree (locality.hop_rows); only on-feed + synthetic feed-edge crossings are rows")
+    ap.add_argument("--cap", default=None, help="DIE-S81-3: count_align_plan module FILE to use instead of the imported one "
+                    "(e.g. MESO-INTEG-1 4526d42d70: K_tree = -1-PAD, origin step m+1+PAD, directed start tree)")
+    ap.add_argument("--spice-scale", default=None, help="DIE-S81-3 (COORD 21:10): scale every clock arrival per corner, "
+                    "e.g. TT=1.0485,FF=1.0552 (OSS-CLOCK-2 asap7_bufx24_spice_cal.json spice_scale)")
+    ap.add_argument("--gate-ps", type=float, default=100.0, help="DIE-S81-3 true-margin gate (both sides)")
     a = ap.parse_args()
+    global CAP
+    if a.cap:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("cap_alt", a.cap)
+        CAP = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(CAP)
     D = LO.load_plan(a.plan)
     m = json.loads(Path(a.map).read_text())
     if a.map_key:
@@ -53,12 +103,19 @@ def main():
     cap = collections.defaultdict(list)
     real = LO.LP.analyse
 
+    sc = dict(kv.split("=") for kv in a.spice_scale.split(",")) if a.spice_scale else {}
+
     def wrap(*args, **kw):
+        if sc:   # spice-scaled arrivals: every tap / node arrival x the spice slope of that corner (offset cancels in d)
+            f = float(sc[args[5]])
+            Tarr, Narr = args[2]
+            args = list(args)
+            args[2] = ({k: v * f for k, v in Tarr.items()}, {k: v * f for k, v in Narr.items()})
         rows = real(*args, **kw)
         cap[args[5]].append(rows)  # corner
         return rows
     LO.LP.analyse = wrap
-    if a.feed == "fishspt":
+    if a.feed in ("fishspt", "spinespt"):
         # spine_fishbone feed whose spine follows the SHORTEST-PATH tree of the region links (spine delays) instead of
         # the max-bit spanning tree; region trees = fishbone (same leaf/shared model as 'fish')
         oft, ohd = LO.feed_tree, LO.hop_delay
@@ -69,10 +126,12 @@ def main():
                 F = oft(G, E, X, v, "spt")
             finally:
                 LO.hop_delay = ohd
-            F["kind"] = "fish"
+            # DIE-S81-3 'spinespt' (COORD 21:38): same link-following SPT spine, BALANCED H-tree region trees (locality
+            # kind 'spine': region trees hang off the spine at their centres, leaf delay = insertion I)
+            F["kind"] = "fish" if a.feed == "fishspt" else "spine"
             return F
         LO.feed_tree = ft
-        LO.SPINE_FEEDS = LO.SPINE_FEEDS + ("fishspt",)
+        LO.SPINE_FEEDS = LO.SPINE_FEEDS + (a.feed,)
     S = LO.score(D, reg, a.v_ps_mm, a.feed, padj, M, Ttab)
     s = S["summary"]
     # first call per corner = the nopad crossing rows (spine feeds have no pad reading)
@@ -126,16 +185,14 @@ def main():
                          p_up_ps=hi - t["d_ps"], margin_ps=min(t["margin_ps"], f["margin_ps"]),
                          unshared_a_ps=x["unshared_tt"], unshared_b_ps=x["unshared_tt"],
                          width=x["width"], on_feed=x["on_feed"], tree_hops=x["tree_hops"]))
-    summ, out = CAP.plan([dict(r) for r in rows], a.period, a.aperture, 0.05)
+    rin = [dict(r) for r in rows]
+    res = CAP.plan(rin, a.period, a.aperture, 0.05)
+    summ, out = res[0], res[1]     # MESO-COUNT-2 returns (summ, out, regs)
+    summ.pop("_tree", None)
     T = a.period
+    true_margins(rin, out, T, a.aperture, a.gate_ps, summ)
     meta = {r["port"]: r for r in rows}
     for o in out:
-        if o["depth"]:
-            o["margin_lo_ps"] = round(o["L_lo_ps"] - 0.5 * T, 1)
-            o["margin_hi_ps"] = round((o["depth"] - 0.5) * T - o["L_hi_ps"], 1)
-        else:
-            o["margin_lo_ps"] = round(o["L_lo_ps"] - 0.5 * T, 1)
-            o["margin_hi_ps"] = round(7.5 * T - o["L_hi_ps"], 1)
         o["width"] = meta[o["port"]]["width"]
         o["on_feed"] = meta[o["port"]]["on_feed"]
         o["unshared_tt_ps"] = meta[o["port"]]["unshared_a_ps"]
