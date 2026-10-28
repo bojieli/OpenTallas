@@ -51,3 +51,18 @@ def test_reference_rings_take_the_strap_timeout():
     assert SL.strap_timeout(4) == 63 + 12 + 8 + 8 and SL.strap_timeout(8) == 127 + 20 + 16 + 8   # = cas defaults 91 / 171
     t = "ot_dp_clk_landing_ca #(.W(5), .DEPTH(4), .K(-2)) u_cland_y ("
     assert SL.ref_timeout(t) == "ot_dp_clk_landing_ca #(.W(5), .DEPTH(4), .K(-2), .TIMEOUT(91)) u_cland_y ("
+
+
+def test_mutant_timeout_is_undecided_not_caught(tmp_path, monkeypatch):
+    """a TIMEOUT (or an error without unproven cells) must never count as a caught mutant"""
+    outs = iter([dict(equivalent=False, rc=124, unproven=None, error="TIMEOUT", log=""),
+                 dict(equivalent=False, rc=1, unproven=3, error="ERROR: Found 3 unproven", log=""),
+                 dict(equivalent=False, rc=1, unproven=None, error="ERROR: syntax", log=""),
+                 dict(equivalent=False, rc=124, unproven=None, error="TIMEOUT", log="")])
+    monkeypatch.setattr(SL, "run_lec", lambda *a, **k: next(outs))
+
+    def j(kind):
+        return ("T", "m", [], 1, "img", 1, (), 0, kind, {}, ["q0"], tmp_path)
+    rows = SL.run_jobs([j("mutant"), j("mutant"), j("mutant"), j("eq")])
+    assert [r["pass"] for r in rows] == [False, True, False, False]
+    assert [r["undecided"] for r in rows] == [True, False, True, True]

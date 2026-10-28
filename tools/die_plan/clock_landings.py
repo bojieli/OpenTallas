@@ -586,9 +586,20 @@ class Landings:
         if cat:
             logic.append("    wire cland_start;  // count origin of this region (count-aligned landings)")
         ca_raw = {}
+        # DIE-HEAD-9 FACE (c): a forwarded clock output is sourced in RTL from the SAME port its landing contract
+        # declares (source_clock_port, which also feeds create_generated_clock -source and export_tcl); default clk.
+        exp_src = {q["name"]: q["source_clock_port"]
+                   for q in self.types[key].get("clock", {}).get("landing_contract", {}).get("pins", [])
+                   if q.get("kind") == "clock" and q.get("dir") == "out" and q.get("source_clock_port")}
+
+        def _exp(name):
+            s_ = exp_src.get(name, "clk")
+            if s_ != "clk" and not re.search(r"\binput\s+(?:wire\s+)?" + re.escape(s_) + r"\b", head):
+                raise LandingError(f"{tn}: {name} contract source_clock_port {s_} is not an input port of the type")
+            return s_
         for b in mask["outputs"]:
             extra.append(f"    output wire fclk_out_{b}")
-            logic.append(f"    assign fclk_out_{b} = clk;")
+            logic.append(f"    assign fclk_out_{b} = {_exp(f'fclk_out_{b}')};")
             if cat:
                 # the sender's start, forwarded beside its bus with fclk: resets the receiver ring's write count
                 extra.append(f"    output wire cland_fstart_out_{b}")
@@ -714,7 +725,7 @@ class Landings:
             else:extra += ["    output wire cland_up_ready", "    output wire cland_up_fault"]
             if collector_info["mask"]["up_seam"]:
                 extra.append("    output wire fclk_out_cland_up")
-                logic.append("    assign fclk_out_cland_up = clk;")
+                logic.append(f"    assign fclk_out_cland_up = {_exp('fclk_out_cland_up')};")
             sources=list(collector_info["local_sources"])
             for ch in collector_info["children"]:
                 i=ch["index"]

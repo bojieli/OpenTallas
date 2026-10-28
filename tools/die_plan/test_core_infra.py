@@ -272,3 +272,19 @@ def test_installed_clock_entry_uses_same_track_and_access_as_kit_io(tmp_path):
         "make_tracks M5 -x_offset 0.02 -x_pitch 0.08 -y_offset 0.012 -y_pitch 0.048\n")
     CI.install(tmp_path, sl)
     assert json.loads((tmp_path / "core_infra_plan.json").read_text())["clock_entry"]["xy_um"] == [432.02, 432.0]
+
+
+@pytest.mark.parametrize("cell,n,pitch", [("BUFx24_ASAP7_75t_R", 3, 1.674), ("BUFx16f_ASAP7_75t_R", 2, 1.242),
+                                          ("BUFx12f_ASAP7_75t_R", 3, 1.08), ("BUFx4_ASAP7_75t_R", 4, 1.08)])
+def test_parallel_island_drivers_never_overlap(cell, n, pitch):
+    """HBM-CORES-REBAL-1: SM/programme_store islands (3 x BUFx24 at the fixed 1.08 um pitch) hit
+    OT_CORE_INFRA_PLANNED_OVERLAP; the pitch now clears the footprint, legacy 1.08 kept where it already fits."""
+    s = sample(); s["pushdown"]["islands"][0]["driver"].update(cell=cell, parallel=n)
+    ck = sorted((c for c in CI.compile_slice(s)["cells"] if "_ck" in c["name"]), key=lambda c: c["xy_um"][0])
+    assert len(ck) == n
+    w = CI.BUF_WIDTH_UM[cell.split("_ASAP7")[0]]
+    for a, b in zip(ck, ck[1:]):
+        assert b["xy_um"][0] - a["xy_um"][0] == pytest.approx(pitch)
+        assert b["xy_um"][0] - a["xy_um"][0] >= w + CI.SITE_UM - 1e-9 or pitch == CI.PARALLEL_PITCH_UM
+        assert b["xy_um"][0] - a["xy_um"][0] > w
+    assert sum(c["xy_um"][0] for c in ck) / n == pytest.approx(432)

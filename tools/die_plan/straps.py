@@ -207,13 +207,14 @@ def _bits_of(value, width):
     return [(int(value) >> b) & 1 for b in range(int(width))]
 
 
-def _expected_bits(expected):
-    """{inst: {port: (width, value)}} -> {(inst, port, bit): value} for strap_ca_* ports"""
+def _expected_bits(expected, prefix="strap_ca_"):
+    """{inst: {port: (width, value)}} -> {(inst, port, bit): value} for strap_ca_* ports (or `prefix`* ports)"""
     out = {}
+    rx = COUNT_STRAP_RE if prefix == "strap_ca_" else re.compile("^" + re.escape(prefix) + r"[A-Za-z0-9_]+$")
     for inst, ports in expected.items():
         for port, (w, v) in ports.items():
-            if not COUNT_STRAP_RE.match(port):
-                raise ValueError(f"count strap {inst}.{port}: not a strap_ca_* port")
+            if not rx.match(port):
+                raise ValueError(f"count strap {inst}.{port}: not a {prefix}* port")
             if not 0 <= int(v) < (1 << int(w)):
                 raise ValueError(f"count strap {inst}.{port}: value {v} does not fit {w} bits")
             for b, x in enumerate(_bits_of(v, w)):
@@ -226,12 +227,13 @@ def _verdict(errs, n, what):
                 errors=errs, reason=None if not errs else f"{len(errs)} count-strap {what} error(s): " + "; ".join(errs[:6]))
 
 
-def audit_count_strap_values(top_text, expected):
+def audit_count_strap_values(top_text, expected, prefix="strap_ca_"):
     """RTL die top: every declared count strap pin (strap_ca_*) of every instance in `expected`
     ({inst: {port: (width, value)}} = clock_landings.Landings.strap_expected() = count_align_bind.strap_ties values)
     must be connected to a literal of exactly that width and value.  Missing pin / non-literal / wrong width / wrong
-    value, and any strap_ca_* literal on an instance or port the bind does not list -> G0 ERROR."""
-    want = _expected_bits(expected)
+    value, and any strap_ca_* literal on an instance or port the bind does not list -> G0 ERROR.
+    prefix: the strap family audited (default strap_ca_; "strap_r8pad_" = OWNER 10-28 KV R8 pad-count straps)."""
+    want = _expected_bits(expected, prefix)
     seen, errs = set(), []
     for m in _INST_RE.finditer(top_text):
         mod, inst = m.group(1).lstrip("\\"), m.group(2).lstrip("\\")
@@ -244,11 +246,11 @@ def audit_count_strap_values(top_text, expected):
                 break
             i += 1
         body = top_text[m.end():i]
-        for c in re.finditer(r"\.\s*(\\?strap_ca_[\w$]*)\s*\(([^()]*)\)", body):
+        for c in re.finditer(r"\.\s*(\\?" + re.escape(prefix) + r"[\w$]*)\s*\(([^()]*)\)", body):
             port, arg = c.group(1).lstrip("\\"), c.group(2).strip()
             exp = expected.get(inst, {}).get(port)
             if exp is None:
-                errs.append(f"{inst}.{port}: strap_ca_* connection with no bind value")
+                errs.append(f"{inst}.{port}: {prefix}* connection with no bind value")
                 continue
             seen.add((inst, port))
             if not re.fullmatch(r"\d+\s*'\s*[bBhHdD]\s*[0-9a-fA-F_]+", arg):
