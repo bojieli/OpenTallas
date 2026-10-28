@@ -2701,3 +2701,4 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   - pv_pair: do NOT adopt the [2,1] split 90552baa6d. Regenerate pv_pair on q5c39 as is, with the primary clock binding fixed (R8/R9 failure). Split only if its real view misses 250+-20.
   - host family / core_tx / ingest_eng regeneration -> dedicated lane KV-HOST-REGEN-1, started now. The cores are shared by both KV forms (12.10a).
   - QK-CORES-9 (fresh): kvs_pc collect/render/GEOM REQ/finish, pv_pair regen, QC btab R10 port.
+- 10-27 18:40 [COORD] OWNER DECISION ("yes, do it immediately"): METHODOLOGY 12.11 -- the landed/partitioned clock form is the MAIN PATH on ALL dies. Lanes start now: LAND-S81-1, LAND-HEAD-1, LAND-HBM-1 (with HBM-STREETS-1); LAND-KV-1 and QC-SLICECLK-1 already running. Top-down lanes continue only until the landed form of the same die passes the gate. 10-29 12:00 = status check only.

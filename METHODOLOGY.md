@@ -446,4 +446,14 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      planned and built now in parallel with INFRA-FIRST-QC. It is priced by the TOK tools before adoption; first to pass the gate wins.
   c. HBM: STREET RULE is a hard plan check (G0C). Hard cores sit on a channel grid with every core <= ~400 um from a channel; channels
      are sized for clock repeaters, hold buffers and FT; no clock or die-level leg crosses a hard core. The plan generator obeys it.
-  d. S81/HEAD stay top-down; their landed plans stay ready (10-29 12:00 check still decides them).
+  d. SUPERSEDED by 12.11 (S81/HEAD were to stay top-down until the 10-29 check).
+- 12.11 LANDED/PARTITIONED CLOCKS = MAIN PATH ON ALL DIES (OWNER 2026-10-27 ~19:0x, "yes, do it immediately").
+  a. Every die (S81, s81_head, qwen_compute, qwen_kvsys, hbm) is built as regional clock domains joined by LANDED crossings
+     (+K cycles, K=2/3, ot_dp_clk_landing contract). The die-wide related-pair skew requirement, die-wide continuous mesh and die-level
+     seam hold apply only INSIDE a region. QC uses the coarser per-slice form (12.10b).
+  b. Core clock latency must match only within its region (region tree target); cross-region core latency matching is no longer required.
+  c. Gate per die = die GRT0 incl clock (regional trees) + die STA on real views for intra-region related pairs + landing contract checks
+     + token pass with the landed cycles. The cost goes in the ledger; the 5 %/15 % targets stay guidance.
+  d. The top-down lanes continue only until the landed form of the same die passes the gate (first to pass wins), then stop.
+  e. The 10-29 12:00 trigger is no longer a decision point; it becomes a status check.
+  f. Not taken: modelling a thick clock/PG layer ASAP7 lacks (would misstate the PDK); allowed only as a labelled what-if.
