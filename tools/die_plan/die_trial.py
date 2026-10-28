@@ -1573,6 +1573,106 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
     return nodes
 
 
+# ------------------------------------------------------------------------------- local core branches (opt-in, DIE-HEAD-6)
+CORE_BRANCH_PAD_PS = STAGE_1X_TT[0]     # one BUFx24 -> BUFx24 tap-pad stage (no wire): the fit's intercept
+
+
+def stage_coeffs(clock_rc="ndr"):
+    """(d0, k1, k2) of a BUFx24 stage on the clock wire model: STAGE_1X_TT scaled to the run's RC (k1 ~ C, k2 ~ R x C)."""
+    d0, k1, k2 = STAGE_1X_TT
+    if clock_rc == "1x":
+        return d0, k1, k2
+    r1, c1 = WIRE_RC_1X
+    return d0, k1 * WIRE_C / c1, k2 * WIRE_R * WIRE_C / (r1 * c1)
+
+
+def leg_ps_rc(L, rep_um, clock_rc="ndr"):
+    """leg_ps on the run's wire RC: n = ceil(L / rep_um) stages (n - 1 repeaters + the child node buffer)."""
+    n = max(1, int(math.ceil(L / rep_um - 1e-9)))
+    d0, k1, k2 = stage_coeffs(clock_rc)
+    return n * d0 + k1 * L + k2 * L * L / n
+
+
+def stub_ps_rc(L, clock_rc="ndr"):
+    """unbuffered node -> tap last mile of length L (um): the wire load + RC on the driving node buffer (no stage)."""
+    _, k1, k2 = stage_coeffs(clock_rc)
+    return k1 * L + k2 * L * L
+
+
+def split_core_taps(P, taps):
+    """(main taps, core taps): the CP2 early core taps (gen_phys.core_tap_pins) of every partition vs all other taps."""
+    core = set()
+    for n, p in P.parts.items():
+        core.update((n, port) for port, _, _ in gen_phys.core_tap_pins(P, p["type"]))
+    return [t for t in taps if (t[0], t[1]) not in core], [t for t in taps if (t[0], t[1]) in core]
+
+
+def attach_core_branches(P, nodes, core_taps, site, rep_um, clock_rc="ndr", pad_ps=CORE_BRANCH_PAD_PS):
+    """DIE-HEAD-6 (opt-in --core-branch local, COORD 10-28 02:23 ruling (a)): every partition's early core taps hang as
+    a LOCAL branch under that partition's own die leaf, so the die tree keeps one leaf per partition (its local LCAs
+    unchanged) instead of one die leaf per core tap.  Each core tap gets a leaf node at its nearest legal site (the core
+    clock pin sits inside the hard core) fed from the partition leaf; the leg is repeated by tree_netlist as any leg.
+    Early delivery (12.3 v5.0): the core pins lie farther from the leaf than the partition tap itself (a far core is
+    >= its offset farther from every point upstream), so the partition's own taps on that leaf and the core taps are
+    balanced by plan-computed per-tap pad stages (12.8, the --tap-pad cells): core tap k arrives early_ps(k) (TT)
+    before the partition tap, to within half a pad stage.  Delay model: leg_ps_rc / stub_ps_rc (STAGE_1X_TT on the run
+    RC).  Mutates nodes; -> ({tap port: pad cells}, stats)."""
+    by_part = defaultdict(list)
+    for t in core_taps:
+        by_part[t[0]].append(t)
+    early = {}
+    for n in by_part:
+        for port, _inst, _pin, e, _ins in gen_phys.core_tap_rows(P, P.parts[n]["type"], "TT"):
+            early[(n, port)] = max(early.get((n, port), 0.0), float(e))
+    pads, rows = {}, []
+    nid = max(nodes) + 1
+    for part in sorted(by_part):
+        leafs = sorted({i for i, nd in nodes.items() for t in nd["taps"] if t[0] == part})
+        if len(leafs) != 1:
+            raise ValueError(f"--core-branch local: partition {part} has its taps on {len(leafs)} die leaves (need 1)")
+        li = leafs[0]
+        L = nodes[li]
+        own = [t for t in L["taps"] if t[0] == part]
+        d_own = max(stub_ps_rc(_man((L["x"], L["y"]), (t[2], t[3])), clock_rc) for t in own)
+        legs = []
+        for t in sorted(by_part[part], key=lambda t: t[1]):
+            q = (t[2], t[3])
+            if site is not None and not site.legal(q):
+                q = site.nearest(q)
+            q = (round(q[0], 3), round(q[1], 3))
+            nodes[nid] = dict(id=nid, x=q[0], y=q[1], parent=li, level=L["level"] + 1, kids=[], taps=[t],
+                              core_branch=part, **({"region": list(L["region"])} if "region" in L else {}),
+                              **({"rib": L["rib"]} if "rib" in L else {}))
+            L["kids"].append(nid)
+            d = leg_ps_rc(_man((L["x"], L["y"]), q), rep_um, clock_rc) + stub_ps_rc(_man(q, (t[2], t[3])), clock_rc)
+            legs.append((t, nid, d, early.get((part, t[1]), 0.0)))
+            nid += 1
+        # least partition-tap pad count n so every core leg reaches its target within half a pad stage
+        n_own = 0
+        while any(n_own * pad_ps + d_own - e - d < -pad_ps / 2 - 1e-9 for _, _, d, e in legs):
+            n_own += 1
+        target = n_own * pad_ps + d_own
+        for t in own:
+            if n_own:
+                pads[f"t_{sv(part)}__{t[1]}"] = n_own
+        for t, i, d, e in legs:
+            k = max(0, int(round((target - e - d) / pad_ps)))
+            if k:
+                pads[f"t_{sv(t[0])}__{t[1]}"] = k
+            rows.append(dict(part=part, tap=t[1], node=i, leg_um=round(_man((L["x"], L["y"]), (nodes[i]["x"], nodes[i]["y"])), 1),
+                             stub_um=round(_man((nodes[i]["x"], nodes[i]["y"]), (t[2], t[3])), 1), model_ps=round(d, 1),
+                             early_ps=e, pads=k, residual_ps=round(d + k * pad_ps - (target - e), 1)))
+        rows.append(dict(part=part, tap="own", node=li, pads=n_own, model_ps=round(target, 1)))
+    res = [r["residual_ps"] for r in rows if "residual_ps" in r]
+    own_rows = [r for r in rows if r["tap"] == "own"]
+    st = dict(mode="local", parts=len(by_part), core_taps=len(core_taps), nodes=len(core_taps),
+              pad_cells=sum(pads.values()), pad_ps=round(pad_ps, 2), clock_rc=clock_rc,
+              own_pads=sorted({r["pads"] for r in own_rows}), local_delay_ps=sorted({r["model_ps"] for r in own_rows}),
+              residual_ps=[min(res, default=0.0), max(res, default=0.0)],
+              note="residual = model arrival - (partition tap - early_ps); + = core tap late")
+    return pads, st, rows
+
+
 def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None):
     """buffered tree: a BUF at every node (branch / leaf driver), repeaters every rep_um along each leg.
     tap_pad (DIE-KV-5 opt-in --tap-pad, METHODOLOGY 12.8 plan-computed per-tap sizing): {tap port: n} puts n BUF cells in
@@ -1664,7 +1764,7 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None):
 
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
-              slice_balance=False, region_dme=False):
+              slice_balance=False, region_dme=False, core_branch=None):
     out = Path(out)
     wire_r, wire_c = WIRE_RC_1X if clock_rc == "1x" else (WIRE_R, WIRE_C)
     if region_dme and not slice_spine and not (tree_form == "link_htree" and site_slide):
@@ -1673,6 +1773,11 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         raise ValueError("--slice-balance needs --slice-spine")
     out.mkdir(parents=True, exist_ok=True)
     taps = clock_taps(P)
+    core_taps = []
+    if core_branch:         # DIE-HEAD-6 opt-in: the die tree is built on the partition taps only; core taps hang below
+        if core_branch != "local":
+            raise ValueError(f"--core-branch {core_branch}: only 'local'")
+        taps, core_taps = split_core_taps(P, taps)
     if slice_spine and tree_form != "htree":
         raise ValueError("--slice-spine and --tree-form %s are exclusive opt-ins" % tree_form)
     site = None
@@ -1768,7 +1873,16 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             nd["x"], nd["y"] = round(q[0], 3), round(q[1], 3)
         if tree_form == "link_htree":
             balanced = balance_legalize(nodes, site)
-    v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site, tap_pad)
+    cb = None
+    if core_taps:
+        cpad, cb, cb_rows = attach_core_branches(P, nodes, core_taps, site, rep_um, clock_rc)
+        clash = sorted(set(cpad) & set(tap_pad or {}))
+        if clash:
+            raise ValueError(f"--core-branch: --tap-pad also pads {clash[:5]}")
+        (out / "core_branch.json").write_text(json.dumps(dict(summary=cb, rows=cb_rows)) + "\n")
+        taps = taps + core_taps
+    v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site,
+                                                            {**(tap_pad or {}), **cpad} if core_taps else tap_pad)
     if tap_pad:
         unknown = sorted(set(tap_pad) - {t[0] for t in tap_ports})
         if unknown:
@@ -1833,6 +1947,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
     if tap_pad:
         meta["tap_pad"] = dict(taps=sum(1 for v in tap_pad.values() if v), cells=sum(int(v) for v in tap_pad.values()),
                                max_per_tap=max(int(v) for v in tap_pad.values()), cell=BUF)
+    if cb is not None:
+        meta["core_branch"] = cb
     if spine_info is not None:
         meta["slice_spine"] = spine_info
         meta["region_trees"] = len(spine_info["regions"])
@@ -2806,7 +2922,7 @@ exit $rc
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
-              clock_rc="ndr", slice_balance=False, region_dme=False):
+              clock_rc="ndr", slice_balance=False, region_dme=False, core_branch=None):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -2877,7 +2993,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                            json.loads(Path(regions).read_text())["part_region"] if regions else None,
                                            tree_form=tree_form, tree_opts=tree_opts, slice_spine=slice_spine,
                                            spine_top_leaf_um=spine_top_leaf_um, slice_rows=slice_rows, tap_pad=tap_pad,
-                                           clock_rc=clock_rc, slice_balance=slice_balance, region_dme=region_dme)
+                                           clock_rc=clock_rc, slice_balance=slice_balance, region_dme=region_dme,
+                                           **({"core_branch": core_branch} if core_branch else {}))
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -3472,6 +3589,11 @@ def main(argv=None):
                         "entry; every merge point is chosen legal and zero-skew, so the site pass moves nothing; '--region-dme "
                         "priced' also prices the netlist's legal detours of legs over cores (merge_point_routed); '--region-dme delay' balances "
                         "stage-priced leg delay (leg_ps: a short leg still costs a stage) instead of length")
+    k.add_argument("--core-branch", choices=("local",), default=None,
+                   help="DIE-HEAD-6 opt-in (COORD 10-28 ruling a): build the die tree on the partition taps only and hang "
+                        "each partition's early core taps (clk_c<k>) as a local branch under that partition's own die leaf, "
+                        "balanced by plan-computed tap pads so each core tap arrives early_ps before the partition tap "
+                        "(clock/core_branch.json); default: core taps are die leaves")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
@@ -3548,7 +3670,8 @@ def main(argv=None):
                                  **({"feed": a.feed} if a.tree_form in ("link_fishbone", "link_htree") else {})},
                       slice_spine=a.slice_spine, spine_top_leaf_um=a.spine_top_leaf_um, slice_rows=a.slice_rows,
                       tap_pad=json.loads(Path(a.tap_pad).read_text())["pad"] if a.tap_pad else None,
-                      clock_rc=a.clock_rc, slice_balance=a.slice_balance, region_dme=a.region_dme)
+                      clock_rc=a.clock_rc, slice_balance=a.slice_balance, region_dme=a.region_dme,
+                      core_branch=a.core_branch)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":
