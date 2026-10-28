@@ -8,3 +8,7 @@
     - OSS-MESO-1 = region crossings.
     - OSS-HIER-1 = region grouping + abstraction + top-down pin/budget + die STA on abstracts.
   - No publishing without owner OK.
+2026-10-27 19:11 PDT COORD (OWNER "yes"): scope additions, binding for this lane and its successors:
+  - OSS-MSCTS-1: REGION MODE FIRST. Build and verify one landed region (a QC slice) end to end before any die-wide demo, verified with ngspice vs STA and a skew report.
+  - OSS-MESO-1: a FORMAL proof of deterministic start-up latency (ring pointer init under reset/start broadcast, every allowed phase |d|<P/2) is a REQUIRED deliverable, not optional; simulation alone is not enough.
+  - Guidance for OSS-HIER-1 / OSS-CLKPLAN-1: aim for 1 clock region == 1 hierarchical partition in the shared schema.
