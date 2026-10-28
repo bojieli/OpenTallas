@@ -4366,3 +4366,4 @@ Problem, from the outline, not the placement:
 CONDITIONS:
 (1) The CTS/route result must report insertion min-max and skew for this single-root tree. The die related-pair STA decides on 12.3a.
 (2) Do not freeze or sign off this outline. QC plan owner: shrink the btab slot at the next PLAN-DELTA. Sketch (UNCHECKED estimate): 2x2 SRAM block (~200x90) with the 1024 S pins at <=5/um needs a ~210-um S face. That gives about 215x125 = 27k um2, a 3.4x smaller slot, fill about 12 %, and entry-to-sink about 120 um. Otherwise record a low_fill_reason with a die-area justification.
+2026-10-28 13:53 PDT GEOM-REVIEW-46: CLAIM [AUTO-GEOM 18401993d0a5] (line 4369, odd; same kit as my 13:4x btab verdict).
