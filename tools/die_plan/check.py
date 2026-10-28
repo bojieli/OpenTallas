@@ -38,7 +38,8 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
   clock_mesh  (--clock-build DIR, repeatable; COORD PATH-S81-PD12 ruling A 10-27) the die clock mesh build in DIR is
               ONE connected net: an M8-M9 VIA89 at every strap crossing, emitted (mesh.json meta.mesh_vias) and in the
               routed DB (OT_MESH_VIAS of combo_<corner>.log); ERROR in G0 and G0C (die_clock_mesh.mesh_via_findings)
-  G0C (--completeness): hard_cores, core_faces, complete; PLAN-TOOL5 cross-die rules die_io_plan (die_io.py),
+  clock_entry_macro (G0C) plan clock entry / island (clock_entries.json) over a hard-core macro of core_macros.json
+  G0C (--completeness): hard_cores, core_faces, complete, clock_entry_macro; PLAN-TOOL5 cross-die rules die_io_plan (die_io.py),
               cut_lines / reach / face_tracks / ft_budget (xdie.py, per-layer reach table reach.py)
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
 """
@@ -70,7 +71,9 @@ def lnum(name):
 # plain G0 reports them as WARN "[G0C] ..." so a plan that passed G0 keeps passing while it is completed.
 G0C_CHECKS = ("hard_cores", "core_faces", "complete",
               # PLAN-TOOL5 (COORD die-plan visual review 10-23, cross-die items (a)-(e)): die_io.py / xdie.py
-              "die_io_plan", "cut_lines", "reach", "face_tracks", "ft_budget")
+              "die_io_plan", "cut_lines", "reach", "face_tracks", "ft_budget",
+              # HBM-MU-QUAD-6/CLK (COORD 10-27): a core clock entry (12.8a) / its island never sits over a hard-core macro
+              "clock_entry_macro")
 
 
 class Report:
@@ -156,6 +159,70 @@ def check_ft_macro_sites(P, R):
                 j, bit, macro = example; count += hits
                 R.err('geometry', f'type {tn} slot {name}: {hits} actual-bit station cells/sites intersect physical macros (stage {j}, bit {bit}, macro {macro})', type=tn)
     return count
+
+
+def check_clock_entry_macro(P, R, plan_dir=None, macros_file=None, entries_file=None, eps=1e-3):
+    """HBM-MU-QUAD-6/CLK (COORD 10-27, METHODOLOGY 12.8a): every hard core's plan clock entry (PLANDIR/clock_entries.json,
+    core frame) sits in a std-cell region: its island rect and its point must not overlap any macro rectangle (+ halo) of
+    that core's module in the plan macro sidecar (PLANDIR/core_macros.json, opentallas.core_macros.v1: cores[module] =
+    {status KNOWN|NONE|UNKNOWN, macros[{name, rect_um}]}, halo_um).  Overlap = ERROR (G0C); touching edges is legal.
+    Missing sidecar / entries, modules with UNKNOWN macro positions and hard cores without an entry are WARN."""
+    out = dict(entries=0, checked=0, over_macro=0, unknown_macros=0, no_entry=0, sidecar=None)
+    pd = Path(plan_dir) if plan_dir else None
+    mf = Path(macros_file) if macros_file else (pd / "core_macros.json" if pd else None)
+    ef = Path(entries_file) if entries_file else (pd / "clock_entries.json" if pd else None)
+    if not ef or not ef.is_file():
+        return out
+    CEN = json.loads(ef.read_text())
+    if not mf or not mf.is_file():
+        R.warn("clock_entry_macro", f"no core macro sidecar ({mf}): clock entries vs hard-core macros unchecked")
+        return out
+    MAC = json.loads(mf.read_text())
+    out["sidecar"] = str(mf)
+    halo = float(MAC.get("halo_um", 0.0))
+    cores = MAC.get("cores", {})
+
+    def ov(a, b):
+        return (min(a[2], b[2] + halo) - max(a[0], b[0] - halo) > eps and
+                min(a[3], b[3] + halo) - max(a[1], b[1] - halo) > eps)
+
+    def pin(p, b):
+        return b[0] - halo + eps < p[0] < b[2] + halo - eps and b[1] - halo + eps < p[1] < b[3] + halo - eps
+
+    unknown, seen = set(), set()
+    for tn, t in P.types.items():
+        ents = CEN.get(tn) or {}
+        for c in t.get("hard_cores", []) or []:
+            inst = c.get("inst")
+            e = ents.get(inst)
+            if not isinstance(e, dict):
+                e = ents.get(re.sub(r"__q\d+$", "", inst or ""))      # hub split u_x__q0/__q1 share u_x's entry
+            if not isinstance(e, dict):
+                out["no_entry"] += 1
+                R.warn("clock_entry_macro", f"type {tn} hard core {inst} ({c.get('module')}): no plan clock entry", type=tn)
+                continue
+            out["entries"] += 1
+            m = c.get("module")
+            cm = cores.get(m) or {}
+            if cm.get("status") != "KNOWN":
+                if cm.get("status") != "NONE" and m not in unknown:
+                    unknown.add(m)
+                    R.warn("clock_entry_macro", f"module {m}: macro positions {cm.get('status', 'not in sidecar')} -- "
+                           "clock entry vs macros unchecked", type=tn)
+                continue
+            out["checked"] += 1
+            key = (m, tuple(e["xy_um"]), tuple(e["island_um"]))
+            hits = [mm.get("name") for mm in cm.get("macros", [])
+                    if ov(e["island_um"], mm["rect_um"]) or pin(e["xy_um"], mm["rect_um"])]
+            if hits:
+                out["over_macro"] += 1
+                if key not in seen:
+                    seen.add(key)
+                    R.err("clock_entry_macro", f"type {tn} core {inst} ({m}): clock entry {e['xy_um']} / island "
+                          f"{e['island_um']} over macro(s) {hits[:3]} (+halo {halo:g}): move the entry to a std-cell "
+                          "region at the core's clock centroid (12.8a)", type=tn)
+    out["unknown_macros"] = len(unknown)
+    return out
 
 
 def check_geometry(P, R):
@@ -1700,7 +1767,7 @@ def g0c_summary(P, R):
 
 
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
-        clock_builds=None):
+        clock_builds=None, core_macros=None):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -1734,6 +1801,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
                                           side=load_core_conns(plan_dir, core_conns))
     summ["g0c"] = g0c_summary(P, R)
     summ["geometry"] = check_geometry(P, R)
+    summ["clock_entry_macro"] = check_clock_entry_macro(P, R, plan_dir, core_macros)
     import landing_islands as LI
     li_errs = LI.check(raw)
     for e in li_errs:
@@ -1804,6 +1872,7 @@ def main(argv=None):
                     help="G0C: plan-completeness + hard-core rules are ERRORs (default: WARN '[G0C]'); per-type "
                          "summary in summary.g0c (types with 0 findings = G3-eligible)")
     ap.add_argument("--core-conns", help="hard-core connectivity sidecar (default PLANDIR/core_conns.json)")
+    ap.add_argument("--core-macros", help="hard-core macro sidecar for clock_entry_macro (default PLANDIR/core_macros.json)")
     ap.add_argument("--clock-build", action="append", default=[],
                     help="die clock mesh build dir (die_clock_mesh build/combo); repeatable: ERROR unless the mesh is one "
                          "connected net (VIA89 at every strap crossing, emitted + routed DB)")
@@ -1813,7 +1882,8 @@ def main(argv=None):
     out.mkdir(parents=True, exist_ok=True)
     R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
                   groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns,
-                  completeness=a.completeness, clock_builds=a.clock_build)
+                  completeness=a.completeness, clock_builds=a.clock_build,
+                  core_macros=a.core_macros)
     ne = len(R.errors())
     nw = len(R.items) - ne
     ok = ne == 0 and not (a.strict and nw)
