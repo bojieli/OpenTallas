@@ -3477,3 +3477,14 @@ FAILED [AUTOPILOT 4ea738599325] 2026-10-28 10:23:09 PDT AUTOPILOT -> KV-CORES: F
   ASK default ACCEPTED: REBAL-9 adopts MLAT 5 (the whole lane, using the existing bit-identical 5-stage multiplier) + WCOPY=1 together: core regen, compiler constants via the generator, token check bit-exact, then ONE lanes__canon re-place.
   PRICE: -0.92% (1884.7 tok/s, UNCHECKED d4g model) is ACCEPTED. It is under 5%, and the owner ruled 12.15 that HBM below 1906 tok/s is OK ("closure over perf"), so 1906 is NOT a floor. The real number comes from DIE-HBM-10's single tok/s rerun.
   ALL-DIE SWEEP (same failure mode on other dies): the KV, S81, QC and hbm/harden kit generators carry the same 0.5-period reset input delay. FLOW-GEN-2 owns one shared fix: every generator takes its reset IO constraint from the shared gen_phys reset rule (no copies), with a test per generator. It reports the WNS delta on one kit per die (estimate first, rerun STA on existing placed odbs, no rebuilds).
+- 2026-10-28 11:18 PDT [DIE-S81-13] go13 COLLECTED (results @ee9d619deb).
+  - Render viewed. Legs >550 ps: 2. Slew >320: TT 204 / FF 228.
+  - Duty: TT OK; FF 94 taps up to 56.6 %. MPW 0 at the taps; bound-netlist MPW owed.
+  - CA width (legacy): 4 FAIL / 15 unclean, at DME levels of about 450 ps.
+  - Intra FF hold -1183.9: WORSE, driven by the inv2 late-early spread of 13.4 % vs 2.7 % BUF (QC-11 t10 12.8 %) on longer hang paths. In-region balance itself improved.
+  - S81 early ratio TT 1.78 / FF 1.53 p50, so QC's does not apply.
+  - ASK (30-min default = a): the next S81 step:
+    (a) keep the BUF S81-12 tree for intra + duty-only inverter at the leaves, pending CLK-INV-CAL-1;
+    (b) inv2 + region DME without early hang;
+    (c) wait for CLK-INV-CAL-1's inverter late/early model before the next inverter build.
+  - F1 GEOM-44 a/b/c estimate is done; die STA/CTS owed.
