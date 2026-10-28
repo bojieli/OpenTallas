@@ -283,6 +283,21 @@ class Verification:
                 if c:
                     node,relay=self._raw_node(pn,ins,info)
                     self.clock(c,pn);self.check_reset(c,pn,node,relay,port='rst_raw_n')
+            elif rg['tree_port'] in (ca.get('start_ports') or {}):
+                # START-TREE compose slice: p_start = the dedicated start pin, driven by the parent origin's start or
+                # (virtual parent region) the die-top start-stage port pst_<region>; raw reset = the local raw relay
+                sp=ca['start_ports'][rg['tree_port']]
+                if (sp.get('dst_part') or sp.get('capture_part'))!=pn:
+                    self.fail(f'count-aligned region {tag}: start port {rg["tree_port"]} does not start {pn}');continue
+                c=self.instance(path,'ot_dp_landing_origin_s' if ca.get('strap_form') else 'ot_dp_landing_origin')
+                if c:
+                    import clock_landings as CL
+                    node,relay=self._raw_node(pn,ins,info)
+                    self.clock(c,pn);self.check_reset(c,pn,node,relay,port='rst_raw_n')
+                    src=sp.get('src_part') or sp.get('launch_part')
+                    want=[self.start_net(src)] if src and not str(sp['src']).startswith('st:') else \
+                         [('top','pst_'+CL.start_net_name(tag),0)]
+                    self.equal_input(c,'p_start',want)
             else:
                 tp=next((r for r in rows if r['port']==rg['tree_port']),None)
                 if tp is None or tp['dst']!=pn:self.fail(f'count-aligned region {tag}: tree port {rg["tree_port"]} does not land in {pn}');continue
