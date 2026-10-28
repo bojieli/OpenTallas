@@ -215,6 +215,7 @@ BAND_MODES=("padded","live","ring_ff")
 # reserved 2636 um2 there (its 4 x 0.0729/bit non-flop term predates the CA ring, which maps ~9.9k AO/AND/INV cells),
 # so the placer ran out of band rows by construction (GPL: OT_CLAND no legal site for u_ring.s_d[0][26]).
 RING_FF_RESERVE_UM2=4177.4/2949
+RING_FF_PACK=1.05   # row-end allowance: first-fit leaves <= one widest reserved cell (DFF 2.7 um) per row unused
 
 
 def _storage_band(t,bus,width,used,*,has_epoch=True):
@@ -229,12 +230,18 @@ def _storage_band(t,bus,width,used,*,has_epoch=True):
     # that measured count at the same 40 % fill; W=64 gives 397 um2 (padded formula 396). Default "padded" keeps
     # every existing compose byte-identical.
     if BAND_RESERVE=="padded":area=(5*rw*.2916 + 4*rw*.0729 + 160*.2916)/.40
-    elif BAND_RESERVE=="ring_ff":area=(5*rw+160)*RING_FF_RESERVE_UM2   # ring flop count (padded ring + control) x footprint
+    elif BAND_RESERVE=="ring_ff":area=(5*rw+160)*RING_FF_RESERVE_UM2*RING_FF_PACK   # ring flop count (padded ring + control) x footprint
     else:
         wl=width+int(has_epoch)
         area=((4*(wl+3)+124)*.2916 + 612*math.ceil(wl/64)*.0729)/.40
     depth=math.ceil(max(8.64,area/length)/2.16)*2.16
     obstacles=RT.blockages(t)+used
+    if BAND_RESERVE=="ring_ff":
+        # the die clock driver islands and die clock-tree cell sites are placement blockages in the kit (die_islands.tcl,
+        # reserved_sites.tcl); a band over them loses rows the reserve counted, so ring_ff keeps the band off them
+        ck=t.get("clock") or {}
+        obstacles=obstacles+[list(r) for r in ck.get("die_islands_um",[])]+\
+            [list(r["rect_um"]) for r in ck.get("reserved_sites_um",[]) if r.get("kind")=="die_clock_tree"]
     # Existing face registers and fixed FT banks remain in place. The new ring
     # may use nearby open rows, never their occupied site bands.
     margin=17.28
