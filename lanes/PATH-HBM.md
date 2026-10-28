@@ -1316,3 +1316,6 @@ All HBM plan/streets/locality/clock/crossing/core/native boot+token/PG aliases c
     - 241 tree cells with slew over 320 ps. Their edges to the parent are median 636 um, max 1105 um, against the 450-um repeater rule. They sit on 344 of 346 bad paths and on 2578 of 2948 good paths, so they are not the sole cause.
     - clock_body_bays could not find a legal 8.64-um bay for r1567_0 in NE_b102, so the overlay was not applied and GRT used the kit's site-legal tree.
   - trial1 (DIE-HBM-9) is gone: its chain stopped at bays at 12:54, not killed by me (its PIDs no longer existed at 16:13). No hbm9-clock1 containers remain.
+- DIE-HBM-10 2026-10-28 16:54 PDT: the hbm_ckgen_rel4 rebuild is still QUEUED. The closure-loop daemon runs on the old fleet table (EPYC9/GOLD1/GOLD2/EPYC7) with TOOL_REF_HOST ot-epyc7 unreachable; main's hosts.json is epyc2/intel1/intel2.
+  - This does not block the HBM die: the C22/C23q plans hold no ckgen core (hb_ckgen is still "proposed for root"), and the HOLD=64 RTL plus bench are on main.
+  - The view rebuild follows whoever revives the loop or moves ref_tile routes to ot-run, per my 16:23 ASK.
