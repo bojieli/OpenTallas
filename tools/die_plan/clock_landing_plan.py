@@ -216,9 +216,30 @@ BAND_MODES=("padded","live","ring_ff")
 # so the placer ran out of band rows by construction (GPL: OT_CLAND no legal site for u_ring.s_d[0][26]).
 RING_FF_RESERVE_UM2=4177.4/2949
 RING_FF_PACK=1.05   # row-end allowance: first-fit leaves <= one widest reserved cell (DFF 2.7 um) per row unused
+# DIE-HEAD-12 10-28 (opt-in compose(band_spread=S), ring_ff only): a ring_ff band is ~99 % reserved by construction, and
+# landing_placement.tcl packs the ring first-fit in netlist order, so the band runs at the reserve density whatever its
+# size (hd_tile u_cland_i: 0.51 cell util / 10.8 signal pins per um2 in the band vs 0.23 die mean; 49 % of the probe GRT
+# overflow inside the band +-10 um, CHECKED DIE-HEAD-11 probe). band_spread S > 1 sizes the band at S x the reserve
+# (S = 2 -> ~0.5 of the reserve density) and records spread = band area / reserve; landing_place.py passes it to
+# landing_placement.tcl, which widens every ring cell's reserved footprint by spread, so the ring fills the WHOLE band at
+# 1/spread of the reserve density. A band that does not fit at S (macro-free, every corner within reach of the bus pin)
+# steps S down by 0.05 to 1.0 (the plain ring_ff band); the grid-scan fallback is only used at 1.0.
+BAND_SPREAD=1.0
+# DIE-HEAD-13 10-28 (opt-in compose(band_ring="ff"), ring_ff only): the band records ring_place="ff"; landing_place.py
+# emits ring:<bus>[@spread]+ff and landing_placement.tcl places only the ring FLOPS FIRM in bit-major order at the spread
+# that fills the band, leaving the ring logic to global placement (DIE-HEAD-12 probe B: -97 % GRT overflow on hd_tile vs
+# the ring FIRM in netlist order). Default "all" keeps every band byte-identical.
+BAND_RING="all"
 
 
-def _storage_band(t,bus,width,used,*,has_epoch=True):
+def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None):
+    if _scale is None and BAND_RESERVE=="ring_ff" and BAND_SPREAD>1:
+        steps=[round(BAND_SPREAD-0.05*k,4) for k in range(int(round((BAND_SPREAD-1)/0.05))+1)]
+        for k,sc in enumerate(steps):
+            try:return _storage_band(t,bus,width,used,has_epoch=has_epoch,_scale=sc)
+            except ValueError:
+                if k==len(steps)-1:raise
+    scale=1.0 if _scale is None else _scale
     b=_bus_geom(t,bus);w,h=t["outline_um"];lo,hi=b["window_um"]
     length=max(hi-lo,8.64);rw=64*math.ceil((width+int(has_epoch))/64)
     spanlo=(lo+hi-length)/2;spanhi=spanlo+length
@@ -234,6 +255,7 @@ def _storage_band(t,bus,width,used,*,has_epoch=True):
     else:
         wl=width+int(has_epoch)
         area=((4*(wl+3)+124)*.2916 + 612*math.ceil(wl/64)*.0729)/.40
+    reserve=area;area=reserve*scale   # DIE-HEAD-12 band_spread: band area = spread x reserve (scale 1.0 = unchanged)
     depth=math.ceil(max(8.64,area/length)/2.16)*2.16
     obstacles=RT.blockages(t)+used
     if BAND_RESERVE=="ring_ff":
@@ -289,7 +311,7 @@ def _storage_band(t,bus,width,used,*,has_epoch=True):
                 if max(abs(x-px)+abs(y-py) for x in(box[0],box[2]) for y in(box[1],box[3]))>405-2.16:continue
                 if any(min(box[2],o[2])>max(box[0],o[0])+1e-6 and min(box[3],o[3])>max(box[1],o[1])+1e-6 for o in obstacles):continue
                 candidates.append(box)
-    if not candidates:
+    if not candidates and scale==1.0:
         candidates=_grid_scan(w,h,obstacles,margin,px,py,area,depth,length)
     if candidates:
         box=min(candidates,key=lambda b:max(abs(x-px)+abs(y-py) for x in(b[0],b[2]) for y in(b[1],b[3])))
@@ -299,7 +321,9 @@ def _storage_band(t,bus,width,used,*,has_epoch=True):
                     live_data_storage_flops=5*(width+int(has_epoch)),padded_data_storage_flops=5*rw,
                     clock_roles=dict(forwarded_write_flops=4*rw,local_read_flops=rw),
                     max_pin_to_band_hop_um=round(max(abs(x-px)+abs(y-py) for x in(box[0],box[2]) for y in(box[1],box[3])),3),
-                    area_reserve_um2=round(area,3),placement="PROPOSED legal macro-free band; mapped anchoring pending")
+                    area_reserve_um2=round(reserve,3),placement="PROPOSED legal macro-free band; mapped anchoring pending",
+                    **({} if _scale is None else dict(spread=round((box[2]-box[0])*(box[3]-box[1])/reserve,4),band_spread_target=BAND_SPREAD)),
+                    **({} if BAND_RING=="all" else dict(ring_place=BAND_RING)))
     raise ValueError(f"no macro-free clock landing storage band for{bus}, required depth{depth:.2f}um")
 
 
@@ -615,7 +639,7 @@ FORWARD_SOURCES=("tap","clk")
 FORWARD_SOURCE="tap"
 
 
-def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",
+def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",band_spread=1.0,band_ring="all",
             forward_source="tap"):
     """band_reserve="live" (opt-in): storage bands reserve the live ring (width+epoch) instead of the 64-bit padded ring.
     observer: {module, instance_suffix, fault_port, ready_port} of the real
@@ -631,8 +655,12 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
     FORWARD_SOURCE=forward_source
     if monitor not in ("reset","dataflow","region"):raise ValueError(f"unknown monitor mode {monitor}")
     if band_reserve not in BAND_MODES:raise ValueError(f"unknown band_reserve {band_reserve}")
-    global BAND_RESERVE
-    BAND_RESERVE=band_reserve
+    if band_spread!=1.0 and (band_reserve!="ring_ff" or not 1.0<band_spread<=4.0):
+        raise ValueError(f"band_spread {band_spread} needs band_reserve=ring_ff and 1 < spread <= 4")
+    if band_ring not in ("all","ff") or (band_ring=="ff" and band_reserve!="ring_ff"):
+        raise ValueError(f"band_ring {band_ring} must be all or ff (ff needs band_reserve=ring_ff)")
+    global BAND_RESERVE,BAND_SPREAD,BAND_RING
+    BAND_RESERVE=band_reserve;BAND_SPREAD=float(band_spread);BAND_RING=band_ring
     if observer is not None or monitor=="reset":
         observer=dict(QC_OBSERVER if observer is None else observer)
         missing=[k for k in ("module","instance_suffix","fault_port","ready_port") if not observer.get(k)]

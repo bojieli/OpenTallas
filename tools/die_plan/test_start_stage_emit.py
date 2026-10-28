@@ -175,6 +175,26 @@ def test_proof_with_measured_stage_taps(tmp_path):
         E.proof_with_stages(pr, doc, {"TT": tmp_path / "missing.txt"}, tmp_path / "proof_st")
 
 
+def test_proof_stage_taps_take_measured_fall(tmp_path):
+    # DIE-HEAD-12: a FLOW-ONEMODEL-2 both-edge readout (T + F rows) gives each stage tap its own measured fall arrival;
+    # a T-only readout keeps the stage tap rise-only (unchanged)
+    v, t = _tree()
+    doc, *_ = E.emit(_bind(), _meta(), v, t)
+    pr = tmp_path / "proof"
+    pr.mkdir()
+    (pr / "tap_arrivals_TT.json").write_text(json.dumps(dict(_meta(), corner="TT")))
+    arr = tmp_path / "arr_TT.txt"
+    arr.write_text("# OT_EDGES v1\nT t_st_b1__clk 33.5 31.0 18\nF t_st_b1__clk 450.0 447.5 19\n"
+                   "T t_st_b2__clk 61.25 57.0 19\nF t_st_b2__clk 470.5 466.0 20\nM b0 1 1\n")
+    taps = DSR.load_taps(E.proof_with_stages(pr, doc, {"TT": arr}, tmp_path / "p2"), "TT")[1]
+    k = f"__st__{P_L}"
+    assert taps[k]["late_ps"] == 61.25 and taps[k]["fall_late_ps"] == 470.5 and taps[k]["fall_early_ps"] == 466.0
+    assert taps[f"__st__{P_ROOT}"]["fall_late_ps"] == 450.0
+    arr.write_text("T t_st_b1__clk 33.5 31.0 18\nT t_st_b2__clk 61.25 57.0 19\n")
+    taps = DSR.load_taps(E.proof_with_stages(pr, doc, {"TT": arr}, tmp_path / "p3"), "TT")[1]
+    assert "fall_late_ps" not in taps[k]
+
+
 def test_rejects_non_stage_virtual_region_and_missing_node():
     v, t = _tree()
     b = _bind()

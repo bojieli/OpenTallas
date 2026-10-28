@@ -185,3 +185,193 @@ def test_byte_identical_to_lane_planner(tmp_path):
                     "--entry", "160,250", "--pin-offset", "ot_qwen_tile_romleaf=10,5", "--orient-rule", "200",
                     "--child-ins", ci], cwd=tmp_path, check=True, capture_output=True)
     assert (tmp_path / "lane.json").read_bytes() == (tmp_path / "shared.json").read_bytes()
+
+
+# ---------------------------------------------------------------- DIE-QC-17: opt-in balanced top-down bipartition
+def test_default_topology_is_greedy(tmp_path):
+    """--topology greedy (the default) is the DIE-QC-15 planner: same bytes with or without the flag, no new keys"""
+    P0, _, o0 = _plan(tmp_path)
+    b0 = o0.read_bytes()
+    P1, _, o1 = _plan(tmp_path, ["--topology", "greedy"])
+    assert o1.read_bytes() == b0
+    assert "topology" not in P1["summary"] and "plan_ocv" not in P1["summary"]
+
+
+def _far_singleton(tmp, regs=False):
+    """A0 nl failure shape: a dense glue field + a 1-register cluster far at the N edge + children in two columns"""
+    macros = [[40.0, 60.0, 140.0, 160.0], [300.0, 60.0, 400.0, 160.0]]
+    kids = [dict(inst="k0", module="mod_n", pin=[90.0, 110.0]), dict(inst="k1", module="mod_n", pin=[350.0, 110.0])]
+    roots = [[180.0 + 30 * (i % 4), 220.0 + 30 * (i // 4)] for i in range(8)] + [[220.0, 760.0]]
+    clusters = [dict(name="c%d" % i, n=10, root=r, box=[], regs=(["r_c%d_%d" % (i, j) for j in range(3)] if regs else []))
+                for i, r in enumerate(roots)]
+    G = dict(W=440.0, H=800.0, macros=macros, kids=kids, clusters=clusters)
+    ins = {c["name"]: dict(TT=dict(mean=70.0 + 4 * (i % 3)), FF=dict(mean=55.0 + 3 * (i % 3))) for i, c in enumerate(clusters)}
+    ins["c8"] = dict(TT=dict(mean=24.0), FF=dict(mean=21.0))
+    g = tmp / "fs_geom.json"; g.write_text(json.dumps(G)); c = tmp / "fs_ins.json"; c.write_text(json.dumps(ins))
+    return g, c, G
+
+
+def _fs_plan(tmp, extra=(), regs=False):
+    g, c, G = _far_singleton(tmp, regs)
+    out = tmp / ("fs_%s.json" % ("_".join(x.strip("-").replace("/", "-") for x in extra) or "greedy"))
+    PT.main(["plan", str(g), str(c), str(out), "--entry", "220,300", "--child-ins", "mod_n=150/120"] + list(extra))
+    return json.loads(out.read_text()), G, out
+
+
+def _plan_ocv(P):
+    T = PT._load_aocv(PT.HERE / "clk_aocv_table_g021.json")
+    rng = {C: {k: (x[C.lower()], x[C.lower()]) for k, x in P["arrival_plan"].items()} for C in ("TT", "FF")}
+    o = PT.ocv_spread(T, P["tree"], rng)
+    return max(o["TT"]["ocv_inclusive_spread"], o["FF"]["ocv_inclusive_spread"])
+
+
+@pytest.fixture(scope="module")
+def fs_pair(tmp_path_factory):
+    tmp = tmp_path_factory.mktemp("fs")
+    return _fs_plan(tmp), _fs_plan(tmp, ["--topology", "bipart"]), tmp
+
+
+def test_bipart_structure(fs_pair):
+    (Pg, G, _), (Pb, _, _), _ = fs_pair
+    s = Pb["summary"]
+    assert s["topology"] == "bipart" and s["odd_parity_sinks"] == []
+    assert sorted(k["name"] for k in Pb["sinks"]) == sorted(k["name"] for k in Pg["sinks"])
+    for i in Pb["insts"]:
+        x, y = i["p"]
+        assert not any(m[0] - 1 < x < m[2] + 1 and m[1] - 1 < y < m[3] + 1 for m in G["macros"]), i
+    # the winner is the argmin of the stated objective over the evaluated variants
+    obj = [max(r["ocv_tt"], r["ocv_ff"]) for r in s["bipart_table"]]
+    assert len(obj) >= 2 and max(s["plan_ocv"]["TT"]["ocv_inclusive_spread"],
+                                 s["plan_ocv"]["FF"]["ocv_inclusive_spread"]) == pytest.approx(min(obj), abs=0.05)
+    # plan_ocv is the plan-model OCV spread of the emitted tree (recomputed independently from the json)
+    assert _plan_ocv(Pb) == pytest.approx(min(obj), abs=0.05)
+
+
+def test_bipart_beats_greedy_on_objective(fs_pair):
+    """on the far-singleton shape the bipartition objective (OCV-inclusive spread) is no worse than greedy's"""
+    (Pg, _, _), (Pb, _, _), _ = fs_pair
+    assert _plan_ocv(Pb) <= _plan_ocv(Pg) + 0.05
+
+
+def test_bipart_variant_select_and_fail_closed(tmp_path):
+    P, _, _ = _fs_plan(tmp_path, ["--topology", "bipart", "--bipart-variants", "geo/count/auto", "--bipart-pull", "0"])
+    assert [r["variant"] for r in P["summary"]["bipart_table"]] == ["geo/count/auto/p0"]
+    with pytest.raises(ValueError, match="selects none"):
+        _fs_plan(tmp_path, ["--topology", "bipart", "--bipart-variants", "nope/x/y"])
+
+
+def _arr_corner(P, tmp, C, ci):
+    lines = []
+    for k in P["sinks"]:
+        a = P["arrival_plan"][k["name"]][C.lower()]
+        if k["kind"] == "cluster":
+            for j in range(3):
+                lines.append("S r_%s_%d/CLK DFFHQNx1_ASAP7_75t_R clknet_%s %.3f %.3f %.3f" % (k["name"], j, k["name"], a, a + 416.5, a))
+        else:
+            lines.append("S %s/clk mod_n %s %.3f %.3f %.3f" % (k["name"], k["net"], a - (150.0, 120.0)[ci], a, a))
+    f = tmp / ("arr_%s.txt" % C); f.write_text("\n".join(lines) + "\n")
+    return f
+
+
+def test_ocv_mode_and_corr_on_bipart(tmp_path):
+    """ocv mode on arrivals equal to the plan reproduces the plan-model OCV spread; corr runs on a bipart tree"""
+    P, G, out = _fs_plan(tmp_path, ["--topology", "bipart"], regs=True)
+    fT, fF = _arr_corner(P, tmp_path, "TT", 0), _arr_corner(P, tmp_path, "FF", 1)
+    o = tmp_path / "ocv.json"
+    PT.main(["ocv", str(out), str(fT), str(fF), str(o)])
+    oc = json.loads(o.read_text())
+    for C in ("TT", "FF"):
+        assert oc[C]["ocv_inclusive_spread"] == pytest.approx(P["summary"]["plan_ocv"][C]["ocv_inclusive_spread"], abs=0.2)
+    # fail closed: a plan sink without measured arrivals
+    fT.write_text("\n".join(l for l in fT.read_text().splitlines() if "r_c3_" not in l) + "\n")
+    with pytest.raises(ValueError, match="miss 1 plan sinks"):
+        PT.main(["ocv", str(out), str(fT), str(fF)])
+    PT.main(["corr", str(out), str(_arr_corner(P, tmp_path, "TT", 0)), str(tmp_path / "c1.json")])
+    C1 = json.loads((tmp_path / "c1.json").read_text())
+    assert C1["summary"]["iteration"] == 1 and C1["summary"]["odd_parity_sinks"] == []
+
+
+# ---------------------------------------------------------------- DIE-QC-18: eco (rebuild only the changed legs)
+def _eco_netlist(built, eco_tcl):
+    """apply the eco tcl (parsed) to the netlist of the as-built plan; returns ({inst: (in, out)}, {sink: net})"""
+    import re
+    insts = {i["name"]: (i["in_net"], i["out_net"]) for i in built["insts"]}
+    sinks = {s["name"]: s["net"] for s in built["sinks"]}
+    merge_in = {}
+    lines = eco_tcl.read_text().splitlines()
+    pend = None
+    for l in lines:
+        m = re.match(r"set i \[\$blk findInst \{(.+?)\}\]; .*dbInst_destroy", l)
+        if m:
+            insts.pop(m.group(1)); continue
+        m = re.match(r"set m .*dbInst_create \$blk \$m (\S+?)\]; .*econet (\S+)\].*econet (\S+)\]$", l)
+        if m:
+            insts[m.group(1)] = (m.group(2), m.group(3)); continue
+        m = re.match(r"set it \[\[\$blk findInst (?:\{(.+?)\}|\[string cat \{(.+?)\} \$RS\])\] findITerm (\S+)\]$", l)
+        if m:
+            pend = (m.group(1) or m.group(2), m.group(3)); continue
+        m = re.match(r"\$it disconnect; \$it connect \[econet (\S+)\]$", l)
+        if m:
+            name, pin = pend
+            if pin == "A" and name in insts:
+                insts[name] = (m.group(1), insts[name][1])
+            else:
+                sinks[name] = m.group(1)
+            pend = None
+    return insts, sinks
+
+
+def test_eco_identity_and_partial_rebuild(planned, tmp_path):
+    P, G, out = planned
+    # identity: nothing to rebuild, as-built == plan
+    PT.main(["eco", str(out), str(out), str(tmp_path / "e0.tcl"), str(tmp_path / "b0.json")])
+    B0 = json.loads((tmp_path / "b0.json").read_text())
+    assert B0["insts"] == P["insts"] and B0["sinks"] == P["sinks"]
+    assert B0["summary"]["eco"]["legs_rebuilt"] == 0 and "dbInst_destroy" not in (tmp_path / "e0.tcl").read_text()
+    # corr changes some legs: only those are rebuilt, every other cell keeps its name and nets
+    f = _arrivals(P, tmp_path, bump=("cl0", -40.0))
+    PT.main(["corr", str(out), str(f), str(tmp_path / "c1.json")])
+    C1 = json.loads((tmp_path / "c1.json").read_text())
+    PT.main(["eco", str(out), str(tmp_path / "c1.json"), str(tmp_path / "e1.tcl"), str(tmp_path / "b1.json")])
+    B1 = json.loads((tmp_path / "b1.json").read_text()); e = B1["summary"]["eco"]
+    assert 1 <= e["legs_rebuilt"] < e["legs_kept"]
+    assert e["cells_added"] == sum(1 for i in B1["insts"] if "_e1_r" in i["name"])
+    old = {i["name"] for i in P["insts"]}
+    assert len([i for i in B1["insts"] if i["name"] in old]) == len(P["insts"]) - e["cells_removed"]
+    # the as-built plan is the planned geometry (same cells / positions as the corr plan, emit order kept)
+    assert [(i["cell"], i["p"]) for i in B1["insts"]] == [(i["cell"], i["p"]) for i in C1["insts"]]
+    assert B1["summary"]["n_inv"] == C1["summary"]["n_inv"] and len(B1["insts"]) == len(C1["insts"])
+    # applying the eco tcl to the built netlist gives exactly the as-built netlist
+    ins, snk = _eco_netlist(P, tmp_path / "e1.tcl")
+    assert ins == {i["name"]: (i["in_net"], i["out_net"]) for i in B1["insts"]}
+    assert snk == {s["name"]: s["net"] for s in B1["sinks"]}
+    # the chain continues: corr + eco on the as-built plan
+    PT.main(["corr", str(tmp_path / "b1.json"), str(_arrivals(B1, tmp_path, bump=("cl2", 25.0))), str(tmp_path / "c2.json")])
+    PT.main(["eco", str(tmp_path / "b1.json"), str(tmp_path / "c2.json"), str(tmp_path / "e2.tcl"), str(tmp_path / "b2.json")])
+    B2 = json.loads((tmp_path / "b2.json").read_text())
+    ins, snk = _eco_netlist(B1, tmp_path / "e2.tcl")
+    assert ins == {i["name"]: (i["in_net"], i["out_net"]) for i in B2["insts"]}
+    assert snk == {s["name"]: s["net"] for s in B2["sinks"]}
+
+
+def test_eco_fail_closed(planned, tmp_path):
+    P, G, out = planned
+    g, c, _ = _fixture(tmp_path)
+    o2 = tmp_path / "other.json"
+    PT.main(["plan", str(g), str(c), str(o2), "--entry", "160,250", "--child-ins", CI, "--pin-offset", "mod_rl=10,5",
+             "--orient-rule", "150", "--topology", "bipart"])
+    if json.loads(o2.read_text())["tree"] != P["tree"]:
+        with pytest.raises(ValueError, match="eco: (topology|node) differs"):
+            PT.main(["eco", str(out), str(o2), str(tmp_path / "x.tcl"), str(tmp_path / "x.json")])
+    bad = dict(P); bad["insts"] = P["insts"][:-1]
+    (tmp_path / "bad.json").write_text(json.dumps(bad))
+    with pytest.raises(ValueError, match="plan insts"):
+        PT.main(["eco", str(tmp_path / "bad.json"), str(out), str(tmp_path / "x.tcl"), str(tmp_path / "x.json")])
+
+
+def test_grt_tcl_inc_loads_routes_first():
+    s = (HERE / "parent_trunk_grt.tcl").read_text()
+    i = s.index('$MODE eq "inc"')
+    blk = s[i:s.index("global_route -end_incremental", i)]
+    assert blk.index("estimate_parasitics -global_routing") < blk.index("global_route -start_incremental") < \
+        blk.index("source $::env(ECO)")

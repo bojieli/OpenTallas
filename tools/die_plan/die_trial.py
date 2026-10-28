@@ -355,7 +355,18 @@ class SiteMap:
                 if self.forb[k][0] < q[0] < self.forb[k][2] and self.forb[k][1] < q[1] < self.forb[k][3]]
 
     def in_part(self, q, m=0.5):
-        return any(r[0] + m <= q[0] <= r[2] - m and r[1] + m <= q[1] <= r[3] - m for r in self.parts)
+        # DIE-S81-16: bucket index of the partition rects (built on first use; a rect that contains q lies in q's bucket),
+        # same boolean as the linear scan over every partition, which was ~70 % of the merge-mode DME runtime (snake_leg)
+        pi = self.__dict__.get("_pidx")
+        if pi is None or self.__dict__.get("_pidx_n") != len(self.parts):
+            pi = {}
+            for r in self.parts:
+                for i in range(int(r[0] // self.b), int(r[2] // self.b) + 1):
+                    for j in range(int(r[1] // self.b), int(r[3] // self.b) + 1):
+                        pi.setdefault((i, j), []).append(r)
+            self._pidx, self._pidx_n = pi, len(self.parts)
+        return any(r[0] + m <= q[0] <= r[2] - m and r[1] + m <= q[1] <= r[3] - m
+                   for r in pi.get((int(q[0] // self.b), int(q[1] // self.b)), ()))
 
     def why(self, q):
         h = self.hits(q)
@@ -1361,6 +1372,7 @@ def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, 
     return q, abs(leg_ps(md(q, c1), rep_um) + s1 - leg_ps(md(q, c2), rep_um) - s2), md(q, c1) + md(q, c2) - D_
 
 
+DME_JOIN_BUDGET = 4096  # DIE-S81-16: join() calls per top-level merge before the bounded monotone join-down takes over
 SNAKE_TOL_PS = 1.0      # DIE-QC-9 --region-dme-snake: a delay-mode merge imbalanced by more than this is elongated
 
 
@@ -1429,14 +1441,43 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
                         Smin=min(da + A["Smin"], db + B["Smin"]), W=da + db + A["W"] + B["W"], imb=imb, ex=ex))
         return len(out) - 1
 
+    def reach_of(A, B):
+        r = _man((A["x"], A["y"]), (B["x"], B["y"]))
+        return leg_ps(r, delay_rep_um) - leg_ps(0.0, delay_rep_um) if delay_rep_um else r
+
+    class _JoinBudget(Exception):
+        pass
+
+    jcalls, jfall = [0], []
+
     def join(a, b, depth=0):
         """merge a and b; when no snake-free zero-skew point exists (|S_a - S_b| > |a - b|), the shallow subtree is
         merged DOWN into the deep one instead (with the deep root's kid nearest to it, recursively), and the deep
-        root is re-embedded over the result and its other kid: the depths meet where they match."""
+        root is re-embedded over the result and its other kid: the depths meet where they match.
+        DIE-S81-16: the re-embedding (join of the new node with the other kid) can descend into the node it has just
+        built, so a pair whose depths never meet ping-pongs to the depth cap with 2 calls per level (2^25 worst case;
+        go14 merge mode spent >2 h here).  Calls are counted per top-level join; one that needs more than
+        DME_JOIN_BUDGET calls is discarded and redone by join_mono() (bounded, logged in stats join_fallbacks).  Any
+        join that finishes within the budget is unchanged (same nodes, same ids: the whole output is byte-identical)."""
+        if depth:
+            jcalls[0] += 1
+            if jcalls[0] > DME_JOIN_BUDGET:
+                raise _JoinBudget
+            return join_down(a, b, depth)
+        jcalls[0] = 0
+        n0 = len(out)
+        try:
+            return join_down(a, b, 0)
+        except _JoinBudget:
+            del out[n0:]            # orphans of the discarded attempt (never referenced by kept nodes)
+            gap = abs(out[a]["S"] - out[b]["S"])
+            r = join_mono(a, b)
+            jfall.append((round(gap, 1), round(out[r].get("imb", 0.0), 1)))
+            return r
+
+    def join_down(a, b, depth):
         A, B = out[a], out[b]
-        reach = _man((A["x"], A["y"]), (B["x"], B["y"]))
-        if delay_rep_um:
-            reach = leg_ps(reach, delay_rep_um) - leg_ps(0.0, delay_rep_um)
+        reach = reach_of(A, B)
         if abs(A["S"] - B["S"]) <= reach + 1e-6 or depth > 24:
             return merge(a, b)
         if A["S"] > B["S"]:
@@ -1446,6 +1487,25 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
         k = min(B["kids"], key=lambda c: _man((A["x"], A["y"]), (out[c]["x"], out[c]["y"])))
         o = [c for c in B["kids"] if c != k][0]
         return join(join(a, k, depth + 1), o, depth + 1)
+
+    def join_mono(a, b):
+        """DIE-S81-16 bounded join-down (standard DME): the shallow subtree a descends into the deep one b only while
+        the deep side's nearest kid is still at least as deep as a (strict progress: one level per call, never back
+        into a node built on the way), merges where the depths meet, and the deep side is re-embedded by plain
+        merges up the same path; any residual gap is the merge's own delay balance (the fast leg is snaked when
+        --region-dme-snake is on, else it is reported as imbalance).  Calls <= depth of b."""
+        A, B = out[a], out[b]
+        if abs(A["S"] - B["S"]) <= reach_of(A, B) + 1e-6:
+            return merge(a, b)
+        if A["S"] > B["S"]:
+            a, b, A, B = b, a, B, A
+        if not B["kids"]:
+            return merge(a, b)
+        k = min(B["kids"], key=lambda c: _man((A["x"], A["y"]), (out[c]["x"], out[c]["y"])))
+        if out[k]["S"] + reach_of(A, out[k]) + 1e-6 < A["S"]:
+            return merge(a, b)          # the depths meet at b: merge here, the fast side takes the detour
+        o = [c for c in B["kids"] if c != k][0]
+        return merge(join_mono(a, k), o)
 
     def build(items, pos, mk_leaf, mode):
         if mode != "greedy":
@@ -1572,6 +1632,10 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
                 st["worst_imbalance_um"] = max(st["worst_imbalance_um"], round(d["imb"], 1))
     st["extra_wire_um"] = round(st["extra_wire_um"], 1)
     st["spread_um"] = round(out[root]["S"] - out[root]["Smin"], 1)
+    if jfall:       # DIE-S81-16: top-level joins redone by join_mono (only present when it happened)
+        st["join_fallbacks"] = len(jfall)
+        st["join_fallback_worst_gap_ps"] = max(g for g, _ in jfall)
+        st["join_fallback_worst_imb"] = max(i for _, i in jfall)
     return out, root, st
 
 
@@ -2036,7 +2100,8 @@ def clock_edge_readout(verilog, path, period="833.333", cells="b*", tap_slew=Fal
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
               slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
-              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang"):
+              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
+              cell_paths=False):
     global EVEN_LEGS
     EVEN_LEGS = clock_cell == "inv2"
     out = Path(out)
@@ -2253,7 +2318,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 **({"tree_form": tree_form, "spine_dme": nodes[0].get("spine_dme"),
                     **({"link_feed": nodes[0]["link_feed"]} if "link_feed" in nodes[0] else {})}
                    if tree_form != "htree" else {}),
-                **({"region_trees": len({n.get("region_root") for n in nodes.values()} - {None})} if regions else {}), buffer=BUF, wire_r_kohm_um=wire_r, wire_c_ff_um=wire_c,
+                **({"region_trees": len({n.get("region_root") for n in nodes.values()} - {None})} if regions else {}), buffer=BUF, clock_cell=clock_cell, wire_r_kohm_um=wire_r, wire_c_ff_um=wire_c,
                 **({"clock_rc": clock_rc} if clock_rc != "ndr" else {}),
                 tap_load_ff=TAP_LOAD_FF, nodes=len(nodes), leaves=sum(1 for n in nodes.values() if n["taps"]),
                 repeaters=sum(1 for i, *_ in place if i.startswith("r")), taps=len(tap_ports),
@@ -2295,7 +2360,9 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                                   for i, n in nodes.items()},
                 taps=[dict(port=tp, part=part, tap=port, xy=[x, y], node=i) for tp, x, y, part, port, i in tap_ports],
                 node_buf=node_buf, parent_of=parent_of, sites={inst: [round(x, 3), round(y, 3)] for inst, x, y in place})
-    if any(int(v) > 0 for v in (tap_pad or {}).values()):
+    if cell_paths or any(int(v) > 0 for v in (tap_pad or {}).values()):
+        # DIE-S81-15 --cell-paths (opt-in): the same physical paths without pads, so every leg repeater is a tree-path
+        # node in trial_tap_arrivals (start-tree retime candidates at the EXISTING repeaters; netlist unchanged).
         # Physical paths include every repeater and final pad. The geometric
         # node id is retained for region membership, never substituted for the
         # actual padded tap driver during CPPR / depth accounting.
@@ -3253,7 +3320,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
               clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
-              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang"):
+              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
+              cell_paths=False):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -3329,7 +3397,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                            region_dme_early_ff=region_dme_early_ff, region_dme_snake=region_dme_snake,
                                            **({"clock_cell": clock_cell} if clock_cell != "buf" else {}),
                                            **({"region_dme_early_mode": region_dme_early_mode}
-                                              if region_dme_early_mode != "hang" else {}))
+                                              if region_dme_early_mode != "hang" else {}),
+                                           **({"cell_paths": True} if cell_paths else {}))
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -3944,6 +4013,11 @@ def main(argv=None):
     k.add_argument("--region-dme-early-ff", type=float, default=None, metavar="RATIO_FF",
                    help="DIE-QC-9 opt-in (with --region-dme-early): corner-averaged early hang target = mean of "
                         "early_TT/RATIO and early_FF/RATIO_FF (model ps), e.g. 1.293 from QC trial6 FF")
+    k.add_argument("--cell-paths", action="store_true",
+                   help="DIE-S81-15 opt-in: tree.json taps carry physical cell paths (driver/path/stages, as with "
+                        "--tap-pad) so trial_tap_arrivals exports every leg repeater as a tree-path node; the start "
+                        "tree (count_align_plan --start-retime-up) can then retime at the existing repeaters. "
+                        "Netlist, placement and timing unchanged; default off = byte-identical tree.json")
     k.add_argument("--region-dme-early-mode", choices=("hang", "merge"), default="hang",
                    help="DIE-S81-14 opt-in (with --region-dme-early): 'merge' = the declared early (model ps) is a DME "
                         "sink delay, so bottom-up zero-skew merges deliver the core tap early (binary, no upper-node hang "
@@ -4053,6 +4127,7 @@ def main(argv=None):
                       region_dme_early=a.region_dme_early, region_dme_early_ff=a.region_dme_early_ff,
                       **({"clock_cell": a.clock_cell} if a.clock_cell != "buf" else {}),
                       **({"region_dme_early_mode": a.region_dme_early_mode} if a.region_dme_early_mode != "hang" else {}),
+                      **({"cell_paths": True} if a.cell_paths else {}),
                       region_dme_snake=(a.region_dme_snake if a.region_dme_snake == "all" else
                                         set(r for r in a.region_dme_snake.split(",") if r)) if a.region_dme_snake else None)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",

@@ -109,7 +109,7 @@ def _fold_proof(tmp_path):
     meta = dict(cppr_node_range_ps={"h": 0.0}, node_late_ps={"h": 20.0}, node_early_ps={"h": 10.0},
                 node_stages={"h": 0}, node_xy_um={"h": [1500.0, 0.0]})
     for c in ("TT", "FF"):
-        (tmp_path / f"tap_arrivals_{c}.json").write_text(json.dumps(dict(corner=c, taps=taps, **meta)))
+        (tmp_path / f"tap_arrivals_{c}.json").write_text(json.dumps(dict(corner=c, taps=taps, clock_cell="buf", **meta)))
     plan = dict(clock=dict(common_latency_ps=250.0), ports=[dict(id="x", src=dict(part="A"), dst=dict(part="B"), width=1)])
     (tmp_path / "plan.json").write_text(json.dumps(plan))
     return tmp_path, {t["port"]: t for t in taps}, meta, plan
@@ -188,7 +188,8 @@ def test_planner_cli_flags_reach_sta_port_intervals(tmp_path, monkeypatch):
     try:
         CAP.main([str(tmp_path / "r.json"), "--corner", "TT_x", "--sta-proof", str(tmp_path), "--sta-plan", "p.json",
                   "--sta-clock-ocv", "table", "--sta-clock-droop", "shared", "--sta-droop-regions", "dr.json",
-                  "--sta-core-latency-ff", "202.5", "--out", str(tmp_path / "o.json")])
+                  "--sta-core-latency-ff", "202.5", "--sta-clock-cell", "inv2", "--out", str(tmp_path / "o.json")])
     except SystemExit:
         pass
-    assert seen == dict(clock_ocv="table", clock_droop="shared", droop_regions_file="dr.json", core_latency_ff=202.5)
+    assert seen == dict(clock_ocv="table", clock_droop="shared", droop_regions_file="dr.json", core_latency_ff=202.5,
+                       clock_cell="inv2")

@@ -40,7 +40,7 @@ def _two_region_proof(tmp_path):
             dict(port="t_pcA", part="pcA", late_ps=1500.0, early_ps=1100.0, cppr_node="R1", slew_ps=10.0),
             dict(port="t_pcB", part="pcB", late_ps=1800.0, early_ps=1600.0, cppr_node="R2", slew_ps=10.0)]
     for c in ("TT", "FF"):
-        (tmp_path / f"tap_arrivals_{c}.json").write_text(json.dumps(dict(corner=c, cppr_node_range_ps={}, taps=taps)))
+        (tmp_path / f"tap_arrivals_{c}.json").write_text(json.dumps(dict(corner=c, cppr_node_range_ps={}, taps=taps, clock_cell="buf")))
     plan = dict(ports=[dict(id="phy", src=dict(part="phyA"), dst=dict(part="phyB"), width=1),
                        dict(id="pc", src=dict(part="pcA"), dst=dict(part="pcB"), width=1)])
     return tmp_path, {t["port"]: t for t in taps}, plan

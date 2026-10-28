@@ -9,9 +9,17 @@ import os
 import re
 from pathlib import Path
 import sys
-os.environ['OT_QWEN_HEAD_PREP']='1'
-sys.path.insert(0,str(Path(__file__).resolve().parent))
-import record_bundles as RB
+
+
+def _record_bundles():
+    """record_bundles in HEAD_PREP mode, loaded only when a GEN is measured.  Setting OT_QWEN_HEAD_PREP=1 and
+    importing record_bundles at module import leaked HEAD_PREP into every later module of the same process
+    (die_params / record_bundles / static_link_bind read it at import: other view pin geometry), so a pytest
+    session that imported this module for export_result() failed unrelated qwen_split tests."""
+    os.environ['OT_QWEN_HEAD_PREP']='1'
+    sys.path.insert(0,str(Path(__file__).resolve().parent))
+    import record_bundles as RB
+    return RB
 
 def face_boundaries(root, case, master):
     if master != 'qfd_sys_face_lctx3_wrapped':
@@ -85,7 +93,7 @@ def measure(case, tt_source_receipt=None):
             raise ValueError('selected GEN must have one exact head-prepare master for '+base+': '+str(sorted(names)))
         selected.append(next(iter(names)))
     if not lanes.is_file(): raise ValueError('actual GEN fwd_lanes.json required; K-only reconstruction prohibited')
-    audit=RB.audit_netlist(die,lanes)
+    audit=_record_bundles().audit_netlist(die,lanes)
     if audit['verdict']!='PASS': raise ValueError('record bundle audit fails: '+str(audit['fails']))
     ages={}
     for name,n in [('TT.head_prepare',4),('SF.head_descriptor',3)]:
@@ -101,11 +109,12 @@ def measure(case, tt_source_receipt=None):
       die_sha256=hashlib.sha256(die.read_bytes()).hexdigest(),
       selected_masters=selected,
       lanes_sha256=hashlib.sha256(lanes.read_bytes()).hexdigest(),
-      source_intrinsic_edges=dict(ct_lm_sample=tt_local,native_prepare_descriptor=3,face_held_bank=1),
+      source_intrinsic_edges=dict(ct_lm_sample=tt_local,native_prepare_descriptor=3,user0_prepare_minimum=4,face_held_bank=1),
       tt_source=tt_source,
-      actual_transport_edges=ages,head_prepare_edges=total,
+      actual_transport_edges=ages,head_prepare_edges=None,
+      filler_head_prepare_edges=total,user0_prepare_only_min_edges=total+1,calendar_installable=False,
       host_user0_contract='HOST O61 token/position/epoch must match actual prepare before publication; compiler must price actual HOST availability',
-      scope='GEN-derived fixed schedule age; physical timing and final sole calendar qualification remain separate',
+      scope='GEN-derived filler component age and user0 prepare-only minimum; HOST dates and final sole calendar qualification remain separate',
       bundles={k:audit['bundles'][k] for k in ages})
     if face:
         result['source_intrinsic_edges'].update(face_input_capture=face_input,face_output_capture=face['output_capture_edges'])
@@ -113,12 +122,59 @@ def measure(case, tt_source_receipt=None):
         result['head_prepare_edges_scope']='internal held-bank availability; face output capture belongs to later published head-TX/codec-wire ledger'
     return result
 
+def apply_host_schedule(result, profile):
+    """Validate an explicit component reservation; never qualify a programme."""
+    from head_prepare_bound import host_join
+    if (profile.get('schema') != 'opentallas.qwen.head_prepare_component_schedule.v1' or
+            profile.get('scope') != 'COMPONENT_ONLY' or
+            profile.get('die_sha256') != result['die_sha256']):
+        raise ValueError('typed actual-GEN component HOST schedule required')
+    joined = host_join(profile['native_prepare_capture_edge'], profile['token'], profile['position'],
+                       profile['host_core_interval'], profile['filler_descriptor_edges'])
+    edges = (result['actual_transport_edges']['SF.head_descriptor'] +
+             result['source_intrinsic_edges'].get('face_input_capture', 0) +
+             result['source_intrinsic_edges']['face_held_bank'])
+    ready = joined['descriptor_core_edge'] + edges
+    reservation = profile['reserved_held_bank_edge']
+    if type(reservation) is not int or reservation < ready:
+        raise ValueError('actual HOST descriptor misses the reserved held-bank edge')
+    return dict(native_join=joined, held_bank_ready_edge=ready, reserved_held_bank_edge=reservation,
+                scope='COMPONENT_ONLY; outgoing face/codec and sole programme remain unqualified')
+
+
+def export_result(result, *, component_only=False, host_schedule=None):
+    result = dict(result)
+    result['head_prepare_edges'] = None
+    result['calendar_installable'] = False
+    if host_schedule is not None:
+        result['host_schedule_component'] = apply_host_schedule(result, host_schedule)
+    if component_only:
+        result['verdict'] = 'PASS_COMPONENT_ONLY'
+        return result, 0
+    result['verdict'] = 'BLOCKED'
+    result['reason'] = ('No installable universal HEAD_PREP scalar: user0 requires actual HOST publication/identity, '
+                        'pending join and a qualified current sole-programme reservation. '
+                        'Use --component-only for source-local ages; component HOST schedules do not qualify production.')
+    return result, 2
+
+
 def main():
+    os.environ['OT_QWEN_HEAD_PREP']='1'   # the CLI process runs HEAD_PREP (was set at import)
     p=argparse.ArgumentParser();p.add_argument('case');p.add_argument('--out',required=True)
     p.add_argument('--tt-source-receipt',help='source/LP-record hash-bound local embedding output ages for a selected LP/native TT')
+    p.add_argument('--component-only',action='store_true',help='export noninstallable filler/user0-minimum component ages only')
+    p.add_argument('--host-schedule',help='typed actual-GEN COMPONENT_ONLY HOST interval/reservation to check')
     a=p.parse_args()
-    try: result=measure(a.case,a.tt_source_receipt)
+    try:
+        result=measure(a.case,a.tt_source_receipt)
+        profile=json.loads(Path(a.host_schedule).read_text()) if a.host_schedule else None
+        result,code=export_result(result,component_only=a.component_only,host_schedule=profile)
     except (ValueError,OSError,KeyError) as e:
         result=dict(verdict='FAIL',reason=str(e));Path(a.out).write_text(json.dumps(result,indent=2)+'\n');print(result['reason']);return 1
-    result['verdict']='PASS';Path(a.out).write_text(json.dumps(result,indent=2)+'\n');print('HEAD_PREPARE_EDGES='+str(result['head_prepare_edges']));return 0
+    Path(a.out).write_text(json.dumps(result,indent=2)+'\n')
+    if code==0:
+        print('FILLER_HEAD_PREPARE_EDGES='+str(result['filler_head_prepare_edges']))
+        print('USER0_PREPARE_ONLY_MIN_EDGES='+str(result['user0_prepare_only_min_edges']))
+    else: print(result['reason'])
+    return code
 if __name__=='__main__':sys.exit(main())

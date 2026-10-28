@@ -20,8 +20,10 @@ if {[info exists ::cland_avoid_rects]} {
  foreach r $::cland_avoid_rects { lassign $r ra rb rc rd; cland_occupy $ra $rb [expr {$rc-$ra}] [expr {$rd-$rb}] }
 }
 set cland_fh [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
-proc cland_put {i rect tag} {
- global ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done cland_n cland_fh
+# DIE-HEAD-13 opt-in: sp = reserve spread given by the caller (else from the tag), cur = resume the row scan at the last
+# site this band placed (ordered fill: O(n) instead of the O(n^2) rescan from the band corner). Defaults unchanged.
+proc cland_put {i rect tag {sp {}} {cur 0}} {
+ global ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done cland_n cland_fh cland_cursor
  set name [$i getName]
  if {[dict exists $cland_done $name]} { error "OT_CLAND duplicate placement $name" }
  lassign $rect ax ay bx by
@@ -43,9 +45,11 @@ proc cland_put {i rect tag} {
  set bx [expr {min($ff_x1,$bx)}];set by [expr {min($ff_y1,$by)}]
  set startx [expr {$ff_x0+int(ceil(double($ax-$ff_x0)/$ff_sw))*$ff_sw}]
  set starty [expr {$ff_y0+int(ceil(double($ay-$ff_y0)/$ff_rh))*$ff_rh}]
+ if {$cur && [llength $cland_cursor]==2} { lassign $cland_cursor cy cx; if {$cy>$starty} { set starty $cy } } else { set cy {} }
  for {set y $starty} {$y+$h<=$by} {incr y $ff_rh} {
   if {![dict exists $ff_orient $y]} continue
   set x $startx
+  if {$cur && $cy ne {} && $y==$cy && $cx>$x} { set x $cx }
   while {$x+$w<=$bx} {
    set skip $x;set r0 [expr {int(($y-$ff_y0)/$ff_rh)}];set r1 [expr {int(ceil(double($y+$h-$ff_y0)/$ff_rh))}]
    for {set r $r0} {$r<$r1} {incr r} {
@@ -60,7 +64,11 @@ proc cland_put {i rect tag} {
    $i setOrient [dict get $ff_orient $y];$i setLocation $x $y;$i setPlacementStatus FIRM
    # Reserve spacing as well as the real body. Density margin permits the
    # datapath mux/control cells and leaves room for clock/reset repair.
-   cland_occupy $x $y [expr {int(ceil(double($w)/0.4/$ff_sw))*$ff_sw}] $h
+   # DIE-HEAD-12 opt-in band spread: tag ring:<bus>@<spread> widens the reserved footprint so the ring fills its band
+   if {$sp eq {}} { set sp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> sp }
+   set rw [expr {int(ceil(double($w)/0.4*$sp/$ff_sw))*$ff_sw}]
+   cland_occupy $x $y $rw $h
+   if {$cur} { set cland_cursor [list $y [expr {$x+$rw}]] }
    dict set cland_done $name 1;incr cland_n
    puts $cland_fh "$name\tcland:$tag\t[expr {$x/double($ff_dbu)}]\t[expr {$y/double($ff_dbu)}]\t-"
    return
@@ -103,9 +111,46 @@ foreach spec $cland_optional_groups {
   cland_put $i $rect $tag
  }
 }
+# DIE-HEAD-13 10-28 opt-in ring_place=ff (tag suffix +ff, compose(band_ring="ff")): only the ring's SEQUENTIAL cells are
+# placed FIRM, in bit-major order (a 2-D register x[slot][bit] sorts by bit, then slot, so the DEPTH copies of one bit and
+# their write/read logic sit together), at the spread that fills the band to cland_ff_fill; the ring's combinational logic
+# (write enables, read muxes, count compare) is left to global placement next to the flops it connects. Measured why
+# (DIE-HEAD-12 probe B, hd_tile): ring FIRM in netlist order 676,805 GRT overflow, flops-only FIRM -97 %.
+set cland_ff_fill 0.90
+set cland_cursor {}
+proc cland_ffkey {nm} {
+ if {[regexp {^([^\[]*)\[([0-9]+)\\?\]\\?\[([0-9]+)\\?\](.*)$} $nm -> b s i t]} { return [format {%s|%09d|%09d|%s} [string trimright $b \\] $i $s $t] }
+ return $nm
+}
+proc cland_place_ff {prefix rect tag} {
+ global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor
+ set ffs {};set comb 0;set need 0.0
+ foreach i [$ff_blk getInsts] {
+  set nm [$i getName]
+  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
+  if {[dict exists $cland_done $nm]} continue
+  set m [$i getMaster]
+  if {[$m isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
+  if {![regexp {DFF|DHL|DLL|SDF} [$m getName]]} { incr comb;continue }
+  lappend ffs [list [cland_ffkey $nm] $i]
+  set need [expr {$need+int(ceil(double([$m getWidth])/0.4/$ff_sw))*$ff_sw*double([$m getHeight])}]
+ }
+ if {![llength $ffs]} { return 0 }
+ lassign $rect ax ay bx by
+ set sp [expr {max(1.0,$cland_ff_fill*($bx-$ax)*($by-$ay)*$ff_dbu*$ff_dbu/$need)}]
+ set cland_cursor {}
+ foreach pr [lsort -dictionary -index 0 $ffs] { cland_put [lindex $pr 1] $rect $tag $sp 1 }
+ set cland_cursor {}
+ puts "OT_CLAND ring_place=ff $prefix: [llength $ffs] ring flops FIRM bit-major at spread [format %.4f $sp], $comb ring logic cells left to global placement"
+ return [llength $ffs]
+}
 foreach spec $cland_groups {
  lassign $spec prefix rect tag
  set hit 0
+ if {[string match {ring:*+ff} $tag]} {
+  if {![cland_place_ff $prefix $rect $tag]} { error "OT_CLAND no mapped ring flops found under $prefix" }
+  continue
+ }
  foreach i [$ff_blk getInsts] {
   set nm [$i getName]
   if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue

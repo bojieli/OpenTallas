@@ -137,6 +137,120 @@ def make_tracks(plan):
     return "\n".join(lines) + "\n" + M123_TRACKS
 
 
+
+def _reset_sdc(rsts, per):
+    """reset ports: the shared core-kit reset IO rule tools/die_plan/gen_phys.core_reset_sdc (no local copy)."""
+    import sys
+    sys.path.insert(0, str(REPO / "tools/die_plan"))
+    import gen_phys
+    return gen_phys.core_reset_sdc(rsts, per)
+# HBM-CORES-REBAL-9 (COORD 13:1x, FG2 (f) macro_pin_grid): statically placed hard macros must put every signal pin on a
+# preferred-direction track of its layer.  ASAP7 tech LEF preferred direction / PITCH / min WIDTH per layer (the same
+# table as tools/die_plan/kit_contract.py macro_pin_grid); the offsets come from the kit's own make_tracks.tcl.
+TECH_TRACK_LAYERS = {"M2": ("H", 36, 18), "M3": ("V", 36, 18), "M4": ("H", 48, 24), "M5": ("V", 48, 24),
+                     "M6": ("H", 64, 32), "M7": ("V", 64, 32), "M8": ("H", 80, 40), "M9": ("V", 80, 40)}   # nm
+PLATFORM_TRACK_OFFSETS = {"M2": [45, 81], "M3": [9], "M4": [12], "M5": [12], "M6": [16], "M7": [16], "M8": [116],
+                          "M9": [116]}   # nm, platforms/asap7/openRoad/make_tracks.tcl (used for a layer the kit omits)
+
+
+def _nm(v):
+    return int(round(float(v) * 1000))
+
+
+def kit_track_offsets(tracks_tcl):
+    """{layer: [offset nm...]} preferred-direction track offsets with the tech pitch: per layer from the kit
+    make_tracks file, else the platform offsets (the same rule as kit_contract macro_pin_grid)."""
+    out = {}
+    for m in re.finditer(r"(?m)^\s*make_tracks\s+(M\d)\s+(.*)$", tracks_tcl):
+        L = m.group(1)
+        if L not in TECH_TRACK_LAYERS:
+            continue
+        a = "y" if TECH_TRACK_LAYERS[L][0] == "H" else "x"
+        o = re.search(rf"-{a}_offset\s+([-0-9.eE]+)", m.group(2))
+        p = re.search(rf"-{a}_pitch\s+([-0-9.eE]+)", m.group(2))
+        if o and p and _nm(p.group(1)) == TECH_TRACK_LAYERS[L][1]:
+            out.setdefault(L, []).append(_nm(o.group(1)))
+    return dict({k: list(v) for k, v in PLATFORM_TRACK_OFFSETS.items()}, **out)
+
+
+def lef_signal_pins(lef_text, master):
+    """(w nm, h nm, [(layer, x0, y0, x1, y1) nm]) signal pin rects of one LEF MACRO in its own frame."""
+    m = re.search(rf"(?ms)^MACRO\s+{re.escape(master)}\b(.*?)^END\s+{re.escape(master)}\b", lef_text)
+    if not m:
+        raise SystemExit(f"macro grid snap: MACRO {master} not in its LEF")
+    s = re.search(r"SIZE\s+([0-9.]+)\s+BY\s+([0-9.]+)", m.group(1))
+    rects = []
+    for pm in re.finditer(r"(?ms)^\s*PIN\s+(\S+)(.*?)^\s*END\s+\1\b", m.group(1)):
+        if re.search(r"\bUSE\s+(POWER|GROUND)\b", pm.group(2)):
+            continue
+        layer = None
+        for tok in re.finditer(r"LAYER\s+(\S+)\s*;|RECT\s+([-0-9.]+)\s+([-0-9.]+)\s+([-0-9.]+)\s+([-0-9.]+)", pm.group(2)):
+            if tok.group(1):
+                layer = tok.group(1)
+            elif layer:
+                x0, y0, x1, y1 = (_nm(tok.group(i)) for i in range(2, 6))
+                rects.append((layer, min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)))
+    return _nm(s.group(1)), _nm(s.group(2)), rects
+
+
+def _oriented(r, o, w, h):
+    x0, y0, x1, y1 = r
+    f = {"R0": lambda a, b: (a, b), "MX": lambda a, b: (a, h - b), "MY": lambda a, b: (w - a, b),
+         "R180": lambda a, b: (w - a, h - b)}.get(o)
+    if f is None:
+        raise SystemExit(f"macro grid snap: orientation {o} not supported (R0/MX/MY/R180)")
+    (ax, ay), (bx, by) = f(x0, y0), f(x1, y1)
+    return min(ax, bx), min(ay, by), max(ax, bx), max(ay, by)
+
+
+def _on_track(lo, hi, width, pitch, offsets):
+    for of in offsets:
+        k = -((lo + width // 2 - of) // -pitch)               # first track >= lo + width/2
+        if of + k * pitch <= hi - width // 2:
+            return True
+    return False
+
+
+def snap_macro_placement(placements, tracks_tcl, lef_text_of, outline_um):
+    """Move every placement origin by the smallest (dx, dy) on the 1-nm grid that puts ALL its signal pins on a
+    preferred-direction track (V-layer pins fix x, H-layer pins fix y; |d| <= one pitch).  Fail closed if none exists,
+    if a moved macro leaves the outline or overlaps another.  Returns (placements, moves); on-grid input is unchanged."""
+    offs = kit_track_offsets(tracks_tcl)
+    out, moves, boxes = [], [], []
+    for p_ in placements:
+        o = p_.get("orient", "R0")
+        w, h, rects = lef_signal_pins(lef_text_of(p_["macro"]), p_["macro"])
+        x, y = (_nm(c) for c in p_["xy_um"])
+        d = {}
+        for axis, dirn in (("x", "V"), ("y", "H")):
+            pins = []
+            for L, *r in rects:
+                if L in offs and TECH_TRACK_LAYERS[L][0] == dirn:
+                    X0, Y0, X1, Y1 = _oriented(r, o, w, h)
+                    pins.append(((X0, X1) if dirn == "V" else (Y0, Y1), TECH_TRACK_LAYERS[L], offs[L]))
+            base = x if axis == "x" else y
+            span = max([pt[1][1] for pt in pins], default=0)
+            d[axis] = next((s for s in sorted(range(-span, span + 1), key=lambda v: (abs(v), v))
+                            if all(_on_track(base + lo + s, base + hi + s, wd, pt, of) for (lo, hi), (_, pt, wd), of in pins)),
+                           None)
+            if d[axis] is None:
+                raise SystemExit(f"macro grid snap: {p_['inst']} {o}: no {axis} origin within one pitch puts all "
+                                 f"{len(pins)} {dirn} signal pins on the kit track grid")
+        nx, ny = x + d["x"], y + d["y"]
+        if nx < 0 or ny < 0 or nx + (h if o.endswith("90") else w) > _nm(outline_um[0]) or ny + h > _nm(outline_um[1]):
+            raise SystemExit(f"macro grid snap: {p_['inst']} leaves the outline after the snap")
+        box = (nx, ny, nx + w, ny + h)
+        for q in boxes:
+            if box[0] < q[2] and q[0] < box[2] and box[1] < q[3] and q[1] < box[3]:
+                raise SystemExit(f"macro grid snap: {p_['inst']} overlaps another macro after the snap")
+        boxes.append(box)
+        if d["x"] or d["y"]:
+            moves.append(dict(inst=p_["inst"], orient=o, from_um=list(p_["xy_um"]), dx_nm=d["x"], dy_nm=d["y"]))
+            p_ = dict(p_, xy_um=[round(nx / 1000.0, 3), round(ny / 1000.0, 3)])
+        out.append(p_)
+    return out, moves
+
+
 def sdc(per, ins, tol, clks, rsts, tag, common=None):
     io = IO_BUDGET * per
     hdr = (f"# the partition logic around the core runs on the plan common latency ({ins:g} ps): virtual IO clock\n"
@@ -162,14 +276,9 @@ def sdc(per, ins, tol, clks, rsts, tag, common=None):
          f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n"
          f"set_output_delay -min 0.0000 -clock vclk [all_outputs]\n")
     if rsts:
-        # HBM-CORES-REBAL-8 (COORD 10-28, REBAL-7 ruling (a)): a core reset pin is driven by the die reset tree's last
-        # relay flop (tools/die_plan/reset_tree.py; DIE-HBM-10 reset contract: synchronised die reset held >= 64 edges
-        # with clocks running), so it is a SYNCHRONOUS input timed under the kit IO budget like every data pin (= the
-        # shared gen_phys arst_n floor IO_BUDGET * per).  The old extra 0.5 T input delay (416.5 ps at 833) modelled an
-        # unregistered half-cycle source that the contract does not have.  The reset ports stay in $non_clk_in.
-        rnames = " ".join(sorted(set(re.sub(r"\[\d+\]$", "", c) for c in rsts)))
-        s += (f"# reset ({rnames}): synchronous input from the die reset tree's last relay (reset contract); "
-              f"IO budget {io:.4f} as every data input, recovery/removal timed\n")
+        # HBM-CORES-REBAL-8 / FLOW-GEN-2 (d): the shared core-kit reset IO rule (gen_phys.core_reset_sdc): synchronous
+        # input from the die reset tree under the data IO budget ($non_clk_in), no reset-specific input delay.
+        s += _reset_sdc(sorted(set(re.sub(r"\[\d+\]$", "", c) for c in rsts)), per)
     return s + (f"set_load {IO_LOAD_FF:g} [all_outputs]\n"
                 "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
@@ -548,6 +657,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                     help="HBM-CORES3 10-25: plan family macro placement JSON (e.g. B2n_inputs/exp_lane.json): "
                          "macro_placement[k] = {macro, origin_um, orient} for macro instance k (fixed, place_macro -exact); "
                          "--macro-inst-fmt gives the instance path of k")
+    ap.add_argument("--macro-grid-snap", default="on", choices=["on", "off"],
+                    help="HBM-CORES-REBAL-9: snap --macro-placement origins to the kit pin-layer track grid "
+                         "(kit preflight macro_pin_grid); 'off' keeps the table verbatim (that kit fails preflight)")
     ap.add_argument("--macro-inst-fmt", default=None,
                     help="instance path of macro k, python format with {k}, e.g. 'u_core.u_bank.u_data.g_read\\[{k}\\].u_m'")
     ap.add_argument("--face-shell", default="on", choices=["on", "off"],
@@ -1053,6 +1165,17 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                 ly, uy = 4.32, h - 4.32
         cfg += [f"export RTLMP_FENCE_LX = {lx:g}", f"export RTLMP_FENCE_LY = {ly:g}",
                 f"export RTLMP_FENCE_UX = {ux:g}", f"export RTLMP_FENCE_UY = {uy:g}"]
+    if rec.get("macro_placement") and a.macro_grid_snap == "on":
+        # HBM-CORES-REBAL-9 (FG2 (f) macro_pin_grid): snap every static macro origin so its signal pins sit on the
+        # kit's preferred-direction tracks (smallest move; an on-grid table is unchanged byte for byte).
+        rec["macro_placement"], snap_moves = snap_macro_placement(
+            rec["macro_placement"], (kd / "make_tracks.tcl").read_text(),
+            lambda m: (kd / "macros" / f"{m}.lef").read_text(), (w, h))
+        if snap_moves:
+            rec["macro_grid_snap"] = dict(moves=len(snap_moves), max_abs_nm=max(max(abs(m_["dx_nm"]), abs(m_["dy_nm"]))
+                                                                                 for m_ in snap_moves))
+            (kd / "macro_grid_snap.json").write_text(json.dumps(dict(source="gen_core_kit_hbm.snap_macro_placement",
+                                                                     moves=snap_moves), indent=1) + "\n")
     if rec.get("macro_placement"):
         # HBM-CORES-REBAL-4: one foreach {inst master x y orient} table = the static-site form that
         # kit_contract.macro_boxes already parses (master + LEF SIZE per row), so macro_channels / clock_entry_clear
