@@ -317,6 +317,11 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      path, but on the clock only the DIFFERENTIAL droop between the two clock branches is charged: 0 for branches in the same mesh /
      PDN region; for branches in different regions the full one-sided +5.1 % stays until a PDNSim/region-droop result gives the
      real differential. PDNSim replaces the stated values when it exists.
+  b2. (OWNER 10-27 ~18:1x, LIB-VDROOP-CHECK) DATA DROOP DERATE at 35 mV budget: die-level STA charges data paths per class --
+     RVT logic cells + flop clk->Q +10 % late, wire/repeater segments (M8/M9 repeated stages) +5 % late (FF: +8 % / +4 %); replaces the
+     flat +5.1 % data term. PG budget stays <=35 mV. CORE level (option i): core sign-off is unchanged -- the 60 ps setup uncertainty
+     covers jitter + core-internal droop, provided the die PG holds <=35 mV; cores with TT setup slack < 25 ps get a 0.665 V
+     sign-off rerun (information + fix if it fails) at their next re-sign. Option (b) (19 mV budget, keep +5.1 %) REJECTED.
   c. Site sufficiency: max gap between legal station/repeater sites along each die net corridor <= 405 um; corridor track use <= 0.6;
      via-field porosity + per-gcell pin-stack limit on every M8/M9 -> bay drop and every island stack; bay fill <= 60 %; mesh-driver
      power density / EM in islands.
@@ -344,6 +349,7 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   - 10-26 17:0x OWNER: MSCTS die clock (12.8e) = CURRENT: M8/M9 global H-tree + regional meshes signed off by variation sim (mesh = common point, sim skew as uncertainty) + short local trees; landed crossings only for remaining seams. Supersedes the 06:07 blanket ban on mesh-node CPPR credit for SIGNED meshes only (unsigned: still banned).
   - 10-26 17:3x OWNER: "if continuous mesh can work, switch to it" (12.8e1) = CURRENT: continuous die mesh cut only at landed crossings is the preferred form; per-region meshes = fallback when the continuous mesh fails its evaluation. Reason: seam pairs between separate regional meshes still see unshared global-tree delay (~1.5-2 ns, UNCHECKED estimate).
   - 10-26 17:4x OWNER: "replace the flat clock margin with a depth- and distance-based table, the standard practice" (12.4a b1) = CURRENT. Supersedes flat 5 %/3 % clock derates (die CI lane choice 10-24, never an owner decision). Gates after owner review of the table.
+  - 10-27 18:1x OWNER: data droop derate per class (RVT logic +10 %, wires +5 %) at 35 mV die level; cores keep 60 ps uncertainty (12.4a b2) = CURRENT.
   - 10-26 17:5x OWNER: supply droop treated as SHARED between the two clocks (12.4a b1) = CURRENT: clock charged only differential droop (0 within one mesh/PDN region; full +5.1 % one-sided across regions until PDNSim); data path keeps +5.1 % late. (COORD first misread the owner as keeping the one-sided margin; corrected same minute.)
   - 10-26 ~17:3x OWNER: "approve automatic hold-buffer insertion on data paths" (12.4a a1) = CURRENT. Supersedes reading "hold safe by structure, never padding" as a ban on data-path hold buffers; clock padding stays banned. Trigger: QC-MP-REGION-2 zero-logic seam hold budget 10.9 ps FF < >=29.5 ps flat-OCV pessimism (UNCHECKED).
   - 10-26 18:4x OWNER: "use 0.21% per mm" (12.4a b1) = CURRENT: AOCV clock table approved to gate with distance gradient 0.21 %/mm (interim; the 0.42 %/mm corner-derived bound was global variation, NUMBER-CHECK-AOCV).
