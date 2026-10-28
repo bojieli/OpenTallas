@@ -82,3 +82,16 @@ def test_dataflow_monitor_uniform_tree_bus():
     tb, parent, dist = CLP._dataflow_tree(S.Plan(p), t, {x["id"]: x for x in p["ports"]}, "ctl")
     assert tb["hd_tile"] == "o" and tb["hd_ctl"] is None and parent["ctl"] is None
     assert all(dist[c] < dist[n] for n, c in parent.items() if c is not None)
+
+
+def test_region_map_granularity(tmp_path):
+    """DIE-HEAD 10-27: opt-in map:FILE granularity; only ports between different map regions land (feed40 map)."""
+    p = _plan()
+    m = ROOT / "results" / "die_head_1027" / "maps" / "feed36b.json"
+    if not m.is_file():
+        return
+    pr = json.loads(m.read_text())["part_region"]
+    t = F.table(p, "map:" + str(m))
+    assert len(t["regions"]) == len(set(pr.values())) == 40
+    assert len(t["ports"]) == 94 and all(pr[r["src"]] != pr[r["dst"]] for r in t["ports"])
+    assert F.head_pass(p, t)["head_pass_crossings"] == 4
