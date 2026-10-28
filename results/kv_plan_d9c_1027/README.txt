@@ -20,7 +20,10 @@ HEADLINE: the hub_Wi FT coupon FAILS on every variant and the 36 kept ports / 13
    hub_Wi                    q9b       F1        70,263     34,188  26,855   5,450   3,770  | 17,015 19,413
    hub_Wi (13 stations re-sited) q9c   stacked   89,641     67,469   7,192  13,263   1,717  | 18,640 20,455
    hub_Wi (13 stations re-sited) q9c   F1        78,068     39,046  27,966   6,044   5,012  | 21,175 20,007
-   hub_Wi (q9c2, see 3)      q9c2      both      see coupons_q9c2.txt (launched 22:29, collected if done before stop)
+   hub_Wi (36->9 kept, see 3b) q9c2    stacked   66,362     53,740   5,353   5,930   1,339  | 15,076 11,283
+   hub_Wi (36->9 kept, see 3b) q9c2    F1        57,305     30,830  21,094   3,001   2,380  | 11,494 10,735
+   hub_C                     q9c2      F1            0  PASS   (coupons_q9c2.txt; map ovf_q9b_q9c2_f1.png VIEWED: x 800-1000 bottom cleared,
+                                                         residual at x 170-650, y 0-460 = ft5/ft4/ft16/ft29)
    GRT-0113/0114/0229 errors: 0 in every run.  Maps ovf_q9b.png, ovf_q9_q9b_q9c_f1.png (VIEWED): overflow sits at
    x 180-1000, y 0-450 (bottom band + over the small-core field); top half, middle channel, slit stations: clean.
    D9b (F2 windows + 92 slit stations) helped a little (F1 78.6k -> 70.3k, 2D 42.8k -> 36.4k).
@@ -58,11 +61,12 @@ HEADLINE: the hub_Wi FT coupon FAILS on every variant and the 36 kept ports / 13
      27 slots re-sited (hub_Wi + hub_C), 112 stations moved (max 931 um); 13 slit + 17 reach-bad fixed; 0 stuck slit stations.
      Gates (CHECKED-own): schema PASS 0; G0 PASS 0 err; G0C PASS 0 err / 1892 WARN.  Render hubWi_q9c2.png (VIEWED; the
      right panel title says "D9c hm_r26q9c" but shows q9c2).
-     Die GRT0 incl clock: NOT RUN (face pins moved -> die GRT input changes).  Coupon: see coupons_q9c2.txt.
+     Die GRT0 incl clock: NOT RUN (face pins moved -> die GRT input changes).  Coupon: best so far (F1 70,263 -> 57,305 3D,
+     2D 36.4k -> 22.2k, -39% vs q9b) but still FAIL; hub_C 0.
 
 ASK (COORD, default stated): hub_Wi FT coupon fails ~70-90k (3D) / ~36-41k (2D) with or without the 36 ports / 13 stations;
-  the estimate shows the bottom band 1.5-1.6x over with ft5 inside.  DEFAULT: keep q9b as the working plan (die GRT0 PASS,
-  best coupon); do not adopt q9c; treat q9c2 as a candidate only if its coupon beats q9b; re-open the ft5 (+ft4 path) move
+  the estimate shows the bottom band 1.5-1.6x over with ft5 inside.  DEFAULT: q9c2 becomes the working-plan CANDIDATE (best coupon,
+  G0/G0C PASS) once its die GRT0 incl clock passes (TO RUN below); q9b stays working until then; do not adopt q9c; re-open the ft5 (+ft4 path) move
   or a bottom-band growth of hub_Wi as the structural fix (KV-PLAN-DELTA-6/7 evidence).
 TO RUN (if q9c2 is wanted): die GRT incl clock on q9c2 = results/kv_plan_d9b_1027/chainD9b.sh with PL=.../pd9c/hm_r26q9c2.json
   (die_trial kit -> c39 mesh nx32 ny71 -> combo, 50 it, -critical_nets_percentage 0, TT+FF, MEM=48).
