@@ -1,17 +1,9 @@
-"""Hold production kit waves until a completed reference canary shows NO-REGRESSION for the kit's flow.
+"""Background flow-canary admission (METHODOLOGY12.14f).
 
-Binding canary (COORD 10-26 05:10) = ANY completed released run of the reference die <= 24 h old, or the newest
-completed one, whose flow equals the kit's; formerly only the NEWEST COMPLETED canary run of the reference die (canary.json whose
-'src' equals canary_meta.json 'src_commit'); still-pending newer runs never mask it.
-A releasing run binds a kit only when the kit's watched flow files equal the released canary's
-(main's flow is not consulted: a kit runs on the flow it was generated from, AUTOPILOT-FIX 10-25 23:30).  A corrective kit names the reference failure by path (after the last '@').
-Only runs of the die's CURRENT reference item (tools/flow_canary/canaries.json) count: after a reference switch the
-old item's results neither bind nor hold (FLOW-CANARY 10-25: HBM rows kept binding the retired B2l calendar FAIL).
-Reference die: cp1 -> s81; a qwen_kvsys hard-core kit (runner run_kit_kv.sh, or a kit dir holding one) ->
-qwen_kvsys_core, the canary of that flow (gen_core_kit_kv.py), not the gen_phys type canary kv3_io_ft.
-A completed run binds by its REGRESSION verdict vs the reference's recorded baseline (tools/flow_canary/baseline.py,
-COORD CANARY GATING RULING 10-25 14:38), never by an absolute PASS of the reference design: NO-REGRESSION and INFO (the
-run that set the baseline) release; REGRESSION and NO-BASELINE hold.
+Pending, absent and different-source references are advisory. An actual
+REGRESSION matching the kit flow blocks until a newer matching measured release.
+Kit source/watch integrity and corrective-reference identity still fail closed.
+Geometry, preflight, formal and timing gates remain outside this module.
 """
 import fnmatch
 import importlib.util
@@ -45,7 +37,7 @@ def regression(run, root, repo, seed=True):
         try:
             v = _baseline_mod(repo).verdict(run['run'], root, seed=seed)
             run['reg'] = (v['verdict'], v['why'])
-        except Exception as e:                      # a broken verdict never releases rows
+        except Exception as e:                      # evaluation errors remain distinct from an absent baseline
             run['reg'] = ('NO-BASELINE', 'regression verdict error ' + type(e).__name__ + ': ' + str(e))
     return run['reg']
 
@@ -110,7 +102,7 @@ def _flow_diff(run_git, repo, a, b, watch, spec=None, die=None):
     return changed
 
 
-def _corrective(correction, runs, root, die, repo, seed):
+def _corrective(correction, runs, root, die, repo, seed, validate_only=False):
     named = correction.rsplit('@', 1)[-1].strip()
     run_dir = Path(named).parent if Path(named).name == 'canary.json' else Path(named)
     try:
@@ -129,6 +121,8 @@ def _corrective(correction, runs, root, die, repo, seed):
                            + die + '; enqueue as a normal row')
         return False, 'corrective canary unknown: ' + named + ' is not a canary run under ' + str(root)
     r = match[0]
+    if validate_only:
+        return True, 'corrective reference recorded: ' + r['ref']
     if not r['done']:
         if r is runs[-1]:
             return True, 'explicit corrective kit for newest (pending) canary ' + r['ref']
@@ -174,59 +168,42 @@ def assess(row, root, repo, run_git, seed=True):
     if spec:
         item = next((c.get('item') for c in spec.get('canaries', []) if c.get('die') == ref_die), None)
     runs = _runs(root, ref_die, item)
-    if not runs:
-        return False, ('no reference canary for die ' + ref_die + (' item ' + item if item else '')
-                       + '; register a reviewed reference canary first')
-    newest = runs[-1]
-    completed = [r for r in runs if r['done']]
-    correction = row.get('canary_fix')
-    if correction:
-        return _corrective(correction, runs, root, ref_die, repo, seed)
-    if not completed:
-        return False, ('newest reference canary pending: ' + newest['ref']
-                       + '; reviewed corrective kit only: re-enqueue --canary-fix ' + newest['ref'])
     if not spec or 'watch' not in spec:
         return False, 'flow canary watch specification missing'
-    watch = spec['watch']
     kit_source = row.get('src', '').rsplit('@', 1)[-1]
     if not kit_source:
         return False, 'queued kit source is missing'
-    if os.environ.get('AUTOPILOT_CANARY_NEWEST_ONLY') == '1':
-        return _bind_newest(completed[-1], kit_source, root, repo, run_git, seed, watch, spec, ref_die)
-    return _bind_any(completed, kit_source, root, repo, run_git, seed, watch, spec, ref_die)
+    correction = row.get('canary_fix')
+    if correction:
+        valid, why = _corrective(correction, runs, root, ref_die, repo, seed, validate_only=True)
+        if not valid:
+            return False, why
+    completed = [r for r in runs if r['done']]
+    if not completed:
+        return True, ('background canary advisory: reference pending' if runs else
+                      'background canary advisory: no reference result')
+    return _bind_any(completed, kit_source, root, repo, run_git, seed, spec['watch'], spec, ref_die)
 
 
 def _bind_any(completed, kit_source, root, repo, run_git, seed, watch, spec, ref_die, now=None):
-    """COORD 10-26 05:10: newest first over the newest completed run + every completed run <= 24 h old; the first run
-    whose flow equals the kit's flow decides (released -> route, else hold)."""
-    now = time.time() if now is None else now
-    newest = completed[-1]
-    cands = [r for r in reversed(completed)
-             if r is newest or (r.get('finished') and now - r['finished'] <= ANY_CANARY_MAX_AGE_S)]
-    first_diff = None
-    for r in cands:
+    """METHODOLOGY12.14f: background references block only on an actual matching regression.
+
+    Latest matching measured verdict wins. Unknown/no-baseline results do not
+    erase an older measured regression; source changes are advisory until tested.
+    Corrective annotations cannot override a regression of the same flow.
+    """
+    for r in reversed(completed):
         changed = _flow_diff(run_git, repo, r['src'], kit_source, watch, spec, ref_die)
-        if changed is None:
-            continue
-        if changed:
-            first_diff = first_diff or (r, changed)
+        if changed is None or changed:
             continue
         rv, rwhy = regression(r, root, repo, seed)
         if rv in RELEASE:
-            age = '' if r is newest else ' (not the newest; completed <= 24 h ago, COORD 10-26 05:10)'
-            return True, 'completed canary ' + rv + ' covers kit flow: ' + r['ref'] + age + ' (' + rwhy[:200] + ')'
-        return False, ("completed reference canary of the kit's flow " + rv + ' vs baseline: ' + r['ref'] + ' ('
-                       + rwhy[:300] + '); reviewed corrective kit only: re-enqueue --canary-fix ' + r['ref'])
-    rv, rwhy = regression(newest, root, repo, seed)
-    if rv not in RELEASE:
-        return False, ('newest completed reference canary ' + rv + ' vs baseline: ' + newest['ref'] + ' (' + rwhy[:300]
-                       + '); no completed canary <= 24 h old covers the kit flow; reviewed corrective kit only: '
-                       're-enqueue --canary-fix ' + newest['ref'])
-    if first_diff is None:
-        return False, 'cannot compare queued kit flow source to released canary source'
-    r, changed = first_diff
-    return False, ('queued kit flow differs from released canary ' + newest['ref'] + ' and from every completed canary '
-                   '<= 24 h old; regenerate from canaried flow: ' + ', '.join(changed[:4]) + ' (src ' + newest['src'] + ')')
+            return True, 'completed canary ' + rv + ' covers kit flow: ' + r['ref'] + ' (' + rwhy[:200] + ')'
+        if rv == 'NO-BASELINE' and rwhy.startswith('regression verdict error'):
+            return False, 'matching canary evaluation error: ' + rwhy
+        if rv == 'REGRESSION':
+            return False, ('matching reference canary REGRESSION: ' + r['ref'] + ' (' + rwhy[:300] + ')')
+    return True, 'background canary advisory: no measured regression of this kit flow'
 
 
 def _bind_newest(bind, kit_source, root, repo, run_git, seed, watch, spec, ref_die):
