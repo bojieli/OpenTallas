@@ -2816,3 +2816,9 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   - The ~7 ns unshared clock (analytic) is exactly the case MESO-COUNT-1 targets: with count-aligned rings the spread is absorbed by ring depth. The HBM region-tree build waits for C19 + the native views + the MESO-COUNT-1 verdict; it does not start before them.
   - HBM's critical path is the 55 core types without a native view (HBM-STREETS-3 queues them).
   - LAND-HBM-2 starts when C19 is out.
+2026-10-27 19:33 PDT [COORD] LAND-S81-1 rulings (20a7f28c24, results only):
+  - 179 regions accepted. The landed form adds 0 G0C errors and changes no hard-core pins (CHECKED).
+  - Price: -2.19% AR / -2.02% MTP (UNCHECKED; NUMBER-CHECK before it is quoted). The ledger row S81.LANDED_REGIONS_G2 is accepted; the S81 total of ~19.2% is a target overshoot, recorded.
+  - Clock: the same root cause as HEAD (all regions hang off the full die tree; 320/1173 pairs >3.4 ns unshared). Reverting --region-equal was correct.
+  - LAND-S81-2 starts when (a) the MESO-COUNT-1 verdict and (b) LAND-HEAD-3's feed tool are in. It puts the top splits on the low-crossing cuts (x=16 mm / y=12.4 mm) and uses one shared feed tool, no fork.
+  - The S81 plan owner (S81-CORES lane) takes the svc13/PD7f band-room change for the 20 ring storage-band placement failures, plus the 21 base G0C errors.
