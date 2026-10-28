@@ -1075,6 +1075,15 @@ def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_
     return nodes, info
 
 
+DME_WORKERS = 1     # DIE-QC-20 opt-in --region-dme-workers: region DME trees computed in parallel (fork pool), attached in order
+_DME_POOL_JOBS = None
+
+
+def _dme_pool_job(k):
+    site, tl, kw = _DME_POOL_JOBS[k]
+    return dme_region_tree(site, tl, **kw)
+
+
 def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None, route_um=480.0, only=None, early=None,
                       snake=None, early_mode="hang", merge_only=None):
     """DIE-QC-3 opt-in (--tree-form link_htree --region-dme): hang one legal-site DME tree (dme_region_tree) under every
@@ -1084,6 +1093,7 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
     for t in taps:
         rt[regions[t[0]]].append(t)
     st = {}
+    jobs = []
     for e in [i for i, nd in list(nodes.items()) if nd.get("region_root") is not None]:
         rn = nodes[e]["region_root"]
         if not rt.get(rn) or (only is not None and rn not in only):   # DIE-QC-4 --region-dme-only: listed regions only
@@ -1093,9 +1103,23 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
         # deep core sink is a DME sink with its declared early as sink delay, so the merge point sits at the core entry
         # and the shallow glue subtree joins there); every other region keeps early_mode
         em = "merge" if (merge_only and rn in merge_only) else early_mode
-        dn, droot, dst = dme_region_tree(site, rt[rn], rep_um=rep_um, delay_rep_um=delay_rep_um, early=early,
-                                         **({"snake": True} if sn else {}),
-                                         **({"early_mode": em} if em != "hang" else {}))
+        jobs.append((e, rn, sn, dict(rep_um=rep_um, delay_rep_um=delay_rep_um, early=early,
+                                     **({"snake": True} if sn else {}), **({"early_mode": em} if em != "hang" else {}))))
+    # DIE-QC-20 opt-in DME_WORKERS > 1: dme_region_tree is a pure function of (site, region taps, options), so the region
+    # trees are computed in a fork pool and attached below in the same order (same nodes / ids as the serial loop)
+    global _DME_POOL_JOBS
+    if DME_WORKERS > 1 and len(jobs) > 1:
+        import multiprocessing as mp
+        _DME_POOL_JOBS = [(site, rt[rn], kw) for _, rn, _, kw in jobs]
+        try:
+            with mp.get_context("fork").Pool(min(DME_WORKERS, len(jobs))) as pool:
+                trees = pool.map(_dme_pool_job, range(len(jobs)), chunksize=1)
+        finally:
+            _DME_POOL_JOBS = None
+    else:
+        trees = None
+    for jk, (e, rn, sn, kw) in enumerate(jobs):
+        dn, droot, dst = trees[jk] if trees is not None else dme_region_tree(site, rt[rn], **kw)
 
         def attach(j, parent, snake_pts=None):
             d = dn[j]
@@ -4034,6 +4058,9 @@ def main(argv=None):
                    help="DIE-S81-14 opt-in (with --region-dme-early): 'merge' = the declared early (model ps) is a DME "
                         "sink delay, so bottom-up zero-skew merges deliver the core tap early (binary, no upper-node hang "
                         "legs / star nodes); default 'hang' = DIE-QC-8 hang from an upper node")
+    k.add_argument("--region-dme-workers", type=int, default=1, metavar="N",
+                   help="DIE-QC-20 opt-in: compute the region DME trees in N fork workers (same trees, attached in the "
+                        "same order; default 1 = serial)")
     k.add_argument("--region-dme-early-merge-only", default=None, metavar="REGIONS",
                    help="DIE-QC-19 opt-in (with --region-dme-early): comma list of regions that use early mode 'merge' "
                         "(core sink delay = declared early, so the region tree is rooted at the core entry and the glue "
@@ -4087,6 +4114,8 @@ def main(argv=None):
     e.add_argument("--prefix", default="", help="instance prefix in the routed design (e.g. ck_)")
     e.add_argument("--tap-slew", action="store_true")
     a = ap.parse_args(argv)
+    global DME_WORKERS
+    DME_WORKERS = max(1, int(getattr(a, "region_dme_workers", 1) or 1))
     if a.cmd == "readout":
         print("\n".join(clock_edge_readout(Path(a.ctree_v).read_text(), a.path, a.period, a.cells, a.tap_slew,
                                            a.prefix)))
