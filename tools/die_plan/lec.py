@@ -2501,6 +2501,31 @@ def proved_state_constant(L, side, key, seen=None):
     return None
 
 
+def unobservable_keys(L):
+    """{'ff:<key>'} gold registers no compare point observes: outside the bit-level backward cone (through register
+    next states, to a fixpoint) of every wrapper output capture (po:) and black-box input (bb:) in the gold AIG.  Such
+    a register drives nothing, so dead-logic removal (ORFS eliminate_dead_logic) may delete it; that is not a merge
+    (QC-A0-KITS-4 10-28, romleaf: 32 of 1206 kept bits xa_m[8k+7] only reach a shift that drops them; FLOW-GEN-1)."""
+    g = L.gold
+    I, NL, ands, latches = g["I"], g["L"], g["ands"], g["latches"]
+    seen, stack = set(), [lit >> 1 for k, lit in L.gc.items() if k[:3] in ("po:", "bb:")]
+    if not stack:                                       # no compare point: nothing can be judged dead (fail closed)
+        return set()
+    while stack:
+        v = stack.pop()
+        if v == 0 or v in seen:
+            continue
+        seen.add(v)
+        if v <= I:
+            continue
+        if v <= I + NL:
+            stack.append(latches[v - I - 1] >> 1)
+        else:
+            k = v - I - NL - 1
+            stack += (ands[2 * k] >> 1, ands[2 * k + 1] >> 1)
+    return {k for k, lit in L.gp.items() if k.startswith("ff:") and (lit >> 1) not in seen}
+
+
 def kept_wire_alias_copies(L, declared, aliases_file):
     """Recognize RTL Q-wire aliases while requiring one distinct gate FF per kept bit.
 
@@ -2644,6 +2669,11 @@ def kept_registers(L, keep_file):
             continue
         if k not in alias_copies and k not in reset_copies:
             missing.append(k)
+    # FLOW-GEN-1 10-28: a kept bit no observable point reads drives nothing; removing it is not a merge.  Reported
+    # (L.kept_unobservable), not failed.  A kept bit that is read stays fail-closed.
+    dead = unobservable_keys(L) if missing else set()
+    L.kept_unobservable = sorted(k for k in missing if k in dead or inv_alias.get(k, k) in dead)
+    missing = [k for k in missing if k not in L.kept_unobservable]
     return sorted(declared), missing, const
 
 
@@ -5127,8 +5157,12 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         kf = Path(str(out / "gold") + ".keep")
         if kf.is_file():
             kdecl, kmiss, kconst = kept_registers(L, kf)
-            rec["kept_registers"] = dict(declared=len(kdecl), in_netlist=len(kdecl) - len(kmiss) - len(kconst),
-                                         constant_proved=lst(kconst), missing=lst(kmiss))
+            kdead = getattr(L, "kept_unobservable", [])
+            rec["kept_registers"] = dict(declared=len(kdecl), in_netlist=len(kdecl) - len(kmiss) - len(kconst) - len(kdead),
+                                         constant_proved=lst(kconst), missing=lst(kmiss),
+                                         unobservable_removed=lst(kdead),
+                                         unobservable_reason="no compare point (output / black-box input) observes "
+                                                             "it in the gold AIG: dead logic, removal is not a merge" if kdead else None)
         else:
             kmiss = None
             rec["kept_registers"] = "not checked (no gold.keep: AIGs reused from an older lec.py)"
