@@ -137,6 +137,14 @@ def make_tracks(plan):
     return "\n".join(lines) + "\n" + M123_TRACKS
 
 
+
+def _reset_sdc(rsts, per):
+    """reset ports: the shared core-kit reset IO rule tools/die_plan/gen_phys.core_reset_sdc (no local copy)."""
+    import sys
+    sys.path.insert(0, str(REPO / "tools/die_plan"))
+    import gen_phys
+    return gen_phys.core_reset_sdc(rsts, per)
+
 def sdc(per, ins, tol, clks, rsts, tag, common=None):
     io = IO_BUDGET * per
     hdr = (f"# the partition logic around the core runs on the plan common latency ({ins:g} ps): virtual IO clock\n"
@@ -162,14 +170,9 @@ def sdc(per, ins, tol, clks, rsts, tag, common=None):
          f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n"
          f"set_output_delay -min 0.0000 -clock vclk [all_outputs]\n")
     if rsts:
-        # HBM-CORES-REBAL-8 (COORD 10-28, REBAL-7 ruling (a)): a core reset pin is driven by the die reset tree's last
-        # relay flop (tools/die_plan/reset_tree.py; DIE-HBM-10 reset contract: synchronised die reset held >= 64 edges
-        # with clocks running), so it is a SYNCHRONOUS input timed under the kit IO budget like every data pin (= the
-        # shared gen_phys arst_n floor IO_BUDGET * per).  The old extra 0.5 T input delay (416.5 ps at 833) modelled an
-        # unregistered half-cycle source that the contract does not have.  The reset ports stay in $non_clk_in.
-        rnames = " ".join(sorted(set(re.sub(r"\[\d+\]$", "", c) for c in rsts)))
-        s += (f"# reset ({rnames}): synchronous input from the die reset tree's last relay (reset contract); "
-              f"IO budget {io:.4f} as every data input, recovery/removal timed\n")
+        # HBM-CORES-REBAL-8 / FLOW-GEN-2 (d): the shared core-kit reset IO rule (gen_phys.core_reset_sdc): synchronous
+        # input from the die reset tree under the data IO budget ($non_clk_in), no reset-specific input delay.
+        s += _reset_sdc(sorted(set(re.sub(r"\[\d+\]$", "", c) for c in rsts)), per)
     return s + (f"set_load {IO_LOAD_FF:g} [all_outputs]\n"
                 "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
