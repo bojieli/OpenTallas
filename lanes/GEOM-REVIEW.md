@@ -4389,3 +4389,4 @@ The 3 rule FAILs are the same A0 contract items as a0k3 (GEOM-44 PASS-COND 08:23
 - partial_face E = 515 pins (512 t_d + ctl) on y 192-311 at 4.3/um.
 - pin_reg_p90 42.17 = the t_out feed-through registers across the 47.5-um width (worst t_out[279] 43.5).
 Conditions carried from a0k3: the parent A0 IO budget counts the ~43.5-um t_out wire. CTS/route keeps the rebind result: report the post-CTS insertion min-max.
+2026-10-28 14:54 PDT GEOM-REVIEW-46: REPLY [AUTO-GEOM db14fa47fb37] qwen_compute/ot_qwen_tile_node a0k6 PASS-COND for route. The full verdict is my 14:4x line above (posted before this 14:53 REQ): leaf locality fixed (sink->own leaf max 30.2, 0 sinks >50 um); the aspect, partial_face E and pin_reg_p90 t_out items are the A0 contract items, as on a0k3.
