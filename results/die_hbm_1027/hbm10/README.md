@@ -170,3 +170,20 @@ are under `results/die_hbm_1027/hbm10/vmx/` on that branch.
   crossing reads, 0 late, 0 unpriced; replay end 15,406 -> 15,406 / 15,416 cycles. RTL slice replay: NOT RUN.
 - C23 PHY map + rc_slice generator (claude/die-hbm-10-physlice-1028@c99b18e969): see `phy_split/`.
 - Reset contract per kit: `write_kit_reset_contract.py`, 65 HBM kits, all gate-checked used = 64.
+
+## (6) 2026-10-28 11:40-12:10: C23 face census -> re-balanced split C23q (ESTIMATE, plan time, no build)
+
+- Scoping the C23 build found a capacity problem. No cut crossing means every PC's in and out bits (585 b/PC) take one path.
+  - 8/16/8: the centre column vsN4..6 must carry PCs 8-23 = 9360 b, because L22/L22m rdata now leave PHY_NC through it.
+  - That is 1674 um of the 1684.8-um face at the plan's achieved 5.59 b/um (fill 0.994). It is NOT buildable safely.
+- 2-way variants:
+  - `ca_c23b`: everything goes on the W/E mcb paths. The spu0 and spt0 faces reach 1.17 of face_pins_per_um. FAIL.
+  - `ca_c23h`: the column feeds the W half. T057~T060W fails direct. Hop chains cost 6/10 cycles. Rejected.
+- **C23q = W PC 0-9 / C PC 10-21 / E PC 22-31** (whole channels; `c23q.py`, `feed_c23q.tsv`, `ca_c23q.json`, `feed_c23q_census.json`).
+  - Face fills, worst / column / column window: C22b 0.89 / 0.56 / 0.60, C23 0.70 / 0.93 / 0.99, **C23q 0.82 / 0.69 / 0.75**.
+  - CA: 0 fail, 0 below 100.
+    - Die worst is still T047~T052 at 109.6 ps.
+    - PHY links: T059~T060W and T060E~T061 are D4 at 206.9 / 1039.9 ps. T057~T060C is D4 at 283.1 / 1116.1 ps.
+  - Grade: UNCHECKED model until the build re-plans on the merged CLK-INV-CAL-1 model.
+  - Slices: rc_slice `--pcs 0-9 / 10-21 / 22-31` = 308 / 369 / 308 x 8.64 = 2661.12 / 3188.16 / 2661.12 um (sum 8510.4 <= PHY_N 8804.16).
+  - Cost: the hub PHY buses regroup by PC (W path 10 PCs, column 6 PCs per hub). This is a hub face re-pin inside the C23 plan event.
