@@ -21,3 +21,19 @@ table, one-sided droop, core lat 250/202.5, 5 % wander, start tree = clock tree 
       RT bound 95 RTL proof (vport_rt95_bench.txt; kv_bootage_bench.sh vport, Verilator 5.050): qkd_pv16_vport_b #(DQ 15, RT 95) vs
       qkd_pv16_vport #(D,R) lockstep, D in {0,15} x R in {1,31,63,66,70,74,95}: 14/14 PASS; mutants 1,2,4,5,6,7 caught, 8 caught
       (invalid ages 0/3), mut 3 (K/V flag) not exercised by the bench stimulus (same PASS at RB 63, pre-existing).
+
+== Step 4 (2026-10-28 08:45 PDT): clock build + GRT0 + built-arrival recheck ==
+kit_rt (die_trial link_htree on retree_feed.json, H200B leaf 200/rep 250, site-legal/slide, pad_it2): 1920 taps, 2147 repeaters,
+  89 levels, 201.9 mm feed wire, 0 slide fallbacks, 0 unbalanced.  Render clock_tree_rt.png VIEWED: region H-trees in all 128
+  regions, phy edge columns fed by single spurs, no stray wires off-die.
+Combo GRT0 incl clock TT and FF (mk_combo_kv ADJ .75/M7 0, 50 congestion iters): overflow 0 on every layer, usage 2.37% total
+  (grt_{TT,FF}_congestion.txt).
+Built arrivals -> landed_phase_ocv -> ca_spice (x1.0485/1.0552) -> START-TREE-1 91c2e9fec3 (git archive, no fork)
+  count_align_bind --from-ocv --parts ocv --start-tree clock, K with OCV (clock-ocv table, spice, cppr-lca, shared droop, FF 202.5):
+  phase: D4/D8 3517/78, start depth 28, start-skew fail 0/149, plan sim min 105.3 ps (500 samples, 0 window violations)
+  width: D4/D8 3466/129, start depth 47, start-skew fail 2/280 (TT and FF), plan sim min 105.0 ps
+  main die_sta_related re-check (HB4, region key): CA TT fail 2 (min 85.2), FF fail 6 (min 44.5); all 8 are phy edge-column
+  chains (phy_WN_5..0, phy_EN_6->5, EN_4->3, ES_3->2), K=-2/4, D4.  Plan intervals are 60-80 ps later on L_lo than the gate STA
+  (e.g. L678_5 plan 523.0 vs STA 461.2 ps): a plan/gate interval disagreement on the phy columns, not a re-tree long loop.
+  Baseline pad2 (DIE-KV-9 sta_table): TT 38 / FF 55 fail, start-skew 23/127.  Landed class FAIL is the same plan-defined
+  landed-hop form as the baseline (count-aligned crossings carry it).
