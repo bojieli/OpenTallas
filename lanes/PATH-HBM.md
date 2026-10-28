@@ -917,3 +917,18 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
   - That is fewer D8 than the mirrored map (171). fish @278.6 has 3 FAIL, so spt stays the feed.
   - The in-hub HX crossings are D4: phys 2 on the heavy direction (NW W->E 6855 b, NE E->W 6571 b) and 4 on the light one.
   - The region build kit uses the corrected cut: dry_c20h_hs on intel1 (C20h + kit_hs.py, 36 regions), then C20i.
+- 10-28 02:25 PDT DIE-HBM-5 tkm tile reach, step (b) (COORD 02:0x): plan delta built as C20i-po, no RTL change.
+  - Measured on the d25/d30 placements (CHECKED as measurements):
+    - Capture columns follow slot s(k)=4*(k%86)+k//86 (Spearman 0.975/0.973), not the bit order (0.256/0.267).
+    - |pin-column| today, max/median: 228.2/71.2 (d25) and 203.7/65.5 (d30).
+    - With s(k) slots: 71.4/9.0 and 99.4/8.0.
+    - tile_ins_b r2r: 542.8 with 396 > 405 today; pin at the column median gives 353.7 with 0 > 405.
+    - tile_up_in: 331.7 with 0 > 405, so no delta.
+  - Delta: apply_tkm_pinorder.py permutes the EXISTING x slots of the following pins, so no new sites and on-track legality is unchanged:
+    - tile ins_b (S) and ovf_b (N); ovf_b x == ins_b x is asserted, so the abutted chain stays aligned;
+    - terminal-tile ins_b;
+    - root tiles_0 ins_b (N).
+  - Plan c20i_po sha 068b9d8c0030 = fork C20i + delta. G0/G0C running on intel1.
+  - UNCHECKED:
+    - the root-side driver reach after the permutation (no root placement dump);
+    - the post-move tile r2r, which needs a re-kit of the tkm tile (d25/d30 rows are WITHDRAWN).
