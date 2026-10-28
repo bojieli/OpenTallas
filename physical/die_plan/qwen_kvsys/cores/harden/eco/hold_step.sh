@@ -8,8 +8,7 @@
 #   hold_step.sh KIT SO_ROOT [CPUS=8] [MEM_GB=32] [MARGIN_PS=3]     (SO_ROOT = checkout holding tools/die_plan/signoff.py)
 # FLOW-SHARED-9 2026-10-27: KIT/hold_step.json records the step (NOT_NEEDED / SKIP / PASS / FAILED + rc + first ERROR);
 # a FAILED step removes any older KIT/signoff_hold, prints HOLD_STEP FAILED and is a canary stage FAIL (never silently
-# judged as the plain route).  OT_PAD_NEW (default 1 site): the ECO pads the cells it inserts before legalisation
-# (47ce kvsys_core: DRT-1231 RESETN access point after a hold buffer abutted a DFFASRHQNx1).
+# judged as the plain route).
 set -uo pipefail
 K=$(cd "$1" && pwd); SO=$(cd "$2" && pwd); CPUS=${3:-8}; MEM=${4:-32}; HM=${5:-3}
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -25,7 +24,6 @@ FO=$(sed -n 's/^set_max_fanout \([0-9][0-9]*\).*/\1/p' "$K/max_fanout.tcl" 2>/de
 D=${K}_holdeco
 echo "HOLD_STEP FF hold WNS $W ps < 0: ECO b$HM fanout cap ${FO:-0} -> $D"
 rm -rf "$K/signoff_hold"
-export OT_PAD_NEW=${OT_PAD_NEW:-1}
 bash "$HERE/mk_eco.sh" "$K" "$D" "b$HM" "$SO" || { echo "HOLD_STEP FAILED: mk_eco"; rec FAILED 1 "mk_eco failed" "$D"; exit 1; }
 sed -i "s/^OT_MAX_FANOUT=.*/OT_MAX_FANOUT=${FO:-0}/" "$D/variant.env"
 cp "$HERE/run_eco.sh" "$D/"
@@ -36,7 +34,8 @@ if [ -f "$D/signoff/signoff.json" ]; then
   echo "HOLD_STEP signoff -> $K/signoff_hold/signoff.json"
   grep -E "^SIGNOFF" "$D/signoff.log" 2>/dev/null | tail -n 1
 fi
-if [ $rc = 0 ] && [ -f "$K/signoff_hold/signoff.json" ]; then rec PASS 0 "" "$D"; else
+# the ECO reached its own sign-off (SIGNED or not: a measured hold-step result) -> PASS / SIGNOFF_RC; no ECO sign-off -> FAILED
+if [ -f "$K/signoff_hold/signoff.json" ]; then rec $([ $rc = 0 ] && echo PASS || echo SIGNOFF_RC) $rc "" "$D"; else
   [ $rc = 0 ] && rc=3
   ERR=$(grep -h -m1 -E '^\[ERROR|^Error' "$D/run_eco.log" "$D"/run/logs/asap7/*/base/*.log 2>/dev/null | head -n 1)
   rec FAILED $rc "${ERR:-no hold sign-off (rc.txt: $(tr '\n' ' ' < "$D/rc.txt" 2>/dev/null))}" "$D"

@@ -17,9 +17,6 @@ set _ckf [file join [file dirname [info script]] clk_freeze.tcl]
 if {![file exists $_ckf]} { error "OT_CLK_FREEZE FAIL: $_ckf not staged (ECO refuses to run without the clock lock)" }
 source $_ckf
 ot_clk_freeze
-# FLOW-SHARED-9: names of the routed DB's instances, so OT_PAD_NEW pads only the cells this ECO inserts
-set ::kvc_pre_insts [dict create]
-foreach _o [[ord::get_db_block] getInsts] { dict set ::kvc_pre_insts [$_o getName] 1 }
 global_route -start_incremental
 proc kvc_drv {} {
   if {$::env(OT_MAX_FANOUT) > 0} {
@@ -73,22 +70,6 @@ if {[info exists ::env(OT_PAD_MASTERS)] && $::env(OT_PAD_MASTERS) ne ""} {
     puts "KVCORES_ECO set_placement_padding -masters $m -left $n -right $n"
     set_placement_padding -masters [list $m] -left $n -right $n
   }
-}
-# OT_PAD_NEW N (FLOW-SHARED-9 2026-10-27, hold_step.sh default 1): pad every cell this ECO inserted by N sites each side,
-# so the legaliser never abuts a new buffer to a routed cell.  47ce kvsys_core canary: hold buffer hold17011 abutted
-# DFFASRHQNx1 u_p/y[15] -> DRT-1231 'RESETN has no access point' on a DFFASRHQNx1 elsewhere.  Padding the master
-# instead (OT_PAD_MASTERS DFFASRHQNx1:1) moved 1026 routed cells and left 342 padding violations against LOCKED clock
-# cells (DPL-0033); new-cell padding moved 26 cells, check_placement clean (probes flow-shared-9/dpl_{PM,PN}.log).
-if {[info exists ::env(OT_PAD_NEW)] && $::env(OT_PAD_NEW) > 0} {
-  set _new {}
-  foreach _o [[ord::get_db_block] getInsts] {
-    if {[dict exists $::kvc_pre_insts [$_o getName]]} continue
-    set _c [get_cells -quiet [$_o getName]]
-    if {$_c eq ""} { error "KVCORES_ECO pad_new: no STA cell for new instance [$_o getName]" }
-    lappend _new $_c
-  }
-  puts "KVCORES_ECO pad_new [llength $_new] new cells -left $::env(OT_PAD_NEW) -right $::env(OT_PAD_NEW)"
-  if {[llength $_new]} { set_placement_padding -instances $_new -left $::env(OT_PAD_NEW) -right $::env(OT_PAD_NEW) }
 }
 detailed_placement
 global_route -end_incremental
