@@ -34,3 +34,6 @@
   - (5) real die region NOT BUILT: HEAD 27-region map ~12 cores/region ~10x over the 400k flat cap -> region partition must hold member cores as BLOCK macros (TT LEF+ETM) + flattened glue; next lane: one QC-slice sub-region of 2-4 cores.
   - LIVE: gen5 (= registered map at CORNER=TC) ot-run intel2 containers ohier_riscv_top_RCORE_3303283 / ohier_flat_3302759 -> collect per RESULTS.md 'Live at lane end' (first TT-built flat vs hier).
 2026-10-27 21:57 PDT OSS-HIER-2 addendum: gen5 (CORNER=TC) collected @ claude/oss-hier-1027 HEAD: native TT ETM boundary setup -15.7 mean/40.3 max (r 0.9998), matches re-char -> corner fix CONFIRMED; top DRT 0 viol; stitched WNS -500.0 (internal RCORE path, budgets/QoR next). TC flat work5_flat still live (ohier_flat_3302759), collect with --flat-work work5_flat. UNCHECKED.
+
+## CODEX notes 2026-10-28 04:50 PDT — terminal collection
+InheritedTCflat demo/work5_flat finished2026-10-27 22:07 rc0(unit3302520), reports6_finishWNS−366.46ps and empty5_route_drc.rpt0markers. StaleLIVE note superseded. Stitched−500ps remainsQoRgap; ETMholdmax-only unusable, stitchedhold required. No repeatedbuild; actualdiehierarchicalregiondemo next remains sharedtoolsbacklog afterSTART/kitfrontdoors.
