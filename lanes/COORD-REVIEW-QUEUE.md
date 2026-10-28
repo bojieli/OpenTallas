@@ -3164,3 +3164,14 @@ FAILED [AUTOPILOT a036cb2f6232] 2026-10-28 04:52:34 PDT AUTOPILOT -> HBM-CORE-LA
   - master_slice: master_slice.tcl missing or not generated from this slice
   - master_slice: core slice without pushdown section: islands would be strip blockages (12.2a1)
   - rc_calibration: setRC_rcx.tcl: no # OT_RC_CAL signal reco | kit localhost:/srv/opentallas-scratch2/claude/hbm-cores-r7/kits/ot_hbm_xp_aq_tree13_fmt_99f8f39449e6-_k2 src claude/hbm-cores-r8-1027@8253233dca | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+FAILED [AUTOPILOT 123ab8799e77] 2026-10-28 05:22:32 PDT AUTOPILOT -> KV-CORES: FAILED 123ab8799e77 qwen_kvsys/ot_qwen_tp8_pv_join_t (CRASH/flow-error): K
+Elapsed time: 0:06.26[h:]min:sec. CPU time: user 5.97 sys 0.29 (99%). Peak memory: 447928KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/hc_ot_qwen_tp8_pv_join_t__172_8x172_8/base/4_1_cts.odb] Error 2
+GRT hold repair step (FF vclk frame) failed
+ | kit localhost:/srv/opentallas-scratch2/claude/kv-kits-6/pvj/r0/ot_qwen_tp8_pv_join_t__172.8x172.8 src claude/kv-kits-6-1028@d5f8300a851aae0b435c741e2edcf0248935464f | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+FAILED [AUTOPILOT f4fe40e9cd9b] 2026-10-28 05:22:35 PDT AUTOPILOT -> KV-CORES: FAILED f4fe40e9cd9b qwen_kvsys/ot_qwen_tp8_pv_join_t__fR180 (CRASH/flow-error): sed time: 0:06.44[h:]min:sec. CPU time: user 6.09 sys 0.35 (99%). Peak memory: 448204KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/hc_ot_qwen_tp8_pv_join_t__172_8x172_8_fR180/base/4_1_cts.odb] Error 2
+GRT hold repair step (FF vclk frame) failed
+ | kit localhost:/srv/opentallas-scratch2/claude/kv-kits-6/pvj/fr180/ot_qwen_tp8_pv_join_t__172.8x172.8_fR180 src claude/kv-kits-6-1028@d5f8300a851aae0b435c741e2edcf0248935464f | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
