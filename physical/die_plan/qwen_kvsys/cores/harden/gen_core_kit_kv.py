@@ -1601,10 +1601,12 @@ def main():
     # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
     ms = MS.kit_apply(kd, hc["module"], [w, h], a.master_slice, plan, a.trial, kind="core",
                       gpl_hook=kd / "face_flops.tcl")
-    # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
-    MS.plan_tree_cts(kd, cfg)
+    # --cts-setup-only edits POST_CTS BEFORE the shared hook (CTS-HOOK-PORT-1: no cfg edit after it); with a plan tree
+    # the hook prepends its report-only lines to post_cts_setup.tcl, which then sources the previous POST_CTS hook
     if a.cts_setup_only:
         cts_setup_only(kd, cfg)
+    # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
+    MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.kv.core_freeze.v1", type=tid, module=mod, outline_um=[w, h],
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),
