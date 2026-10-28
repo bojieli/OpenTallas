@@ -1,8 +1,8 @@
 {
 "module": "dsdv_idx_tx_n32",
 "lef": "/home/ubuntu/closed_archive/dsdv_idx_tx_n32/s81dv_idxtxn32x2-x2-b642addfb/run/record/views/dsdv_idx_tx_n32/dsdv_idx_tx_n32.lef.zst",
-"source": "S81-P9-HC 10-23 from LEF /home/ubuntu/closed_archive/dsdv_idx_tx_n32/s81dv_idxtxn32x2-x2-b642addfb/run/record/views/dsdv_idx_tx_n32/dsdv_idx_tx_n32.lef.zst (largest non-M1 rect centre, CORE-KS rule); 2 multi-port pins re-pointed to their on-track access rect (core_pins_fix rule)",
-"pinhash": "ac2f751902ce",
+"source": "S81-P9-HC 10-23 from LEF /home/ubuntu/closed_archive/dsdv_idx_tx_n32/s81dv_idxtxn32x2-x2-b642addfb/run/record/views/dsdv_idx_tx_n32/dsdv_idx_tx_n32.lef.zst (largest non-M1 rect centre, CORE-KS rule); 2 multi-port pins re-pointed to their on-track access rect (core_pins_fix rule) | S81-CORES-R26 10-27: vi[5] onto its N-edge PORT RECT (delta_g0c_r26_1027.py)",
+"pinhash": "ee4dff3ad09b",
 "pins": [
 {
 "name": "ck",
@@ -3158,7 +3158,7 @@
 "name": "vi[5]",
 "layer": "M5",
 "x": 27.18,
-"y": 545.0345
+"y": 561.558
 },
 {
 "name": "vi[60]",

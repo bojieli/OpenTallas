@@ -109282,6 +109282,27 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 414 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     },
     {
+     "conn": "core:u_lf.u_vn.u_b.n_pre|core:u_lf.u_vp.u_b1",
+     "from_um": [
+      952.65,
+      159.96
+     ],
+     "to_um": [
+      921.144,
+      544.776
+     ],
+     "regs_um": [
+      [
+       959.148,
+       380.387
+      ]
+     ],
+     "bits": 128,
+     "launch": "core:u_lf.u_vn.u_b.n_pre",
+     "capture": "u_lf.u_vp.u_b1",
+     "note": "S81-CORES-R26 10-27 (delta_g0c_r26_1027.py): pin-to-pin > 405 um; same vni chain (u_cst_vni, CS_VNI_D) and same station as the type's existing n_pre entry: 0 new cycles"
+    },
+    {
      "conn": "bus:leafdn_i0",
      "from_um": [
       735.534,
@@ -123849,6 +123870,69 @@
      "launch": "core:u_lf.u_vn.u_b.n_pre",
      "capture": "u_lf.u_vp.u_b0",
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 415 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_b.n_go|core:u_lf.u_vp.u_b0",
+     "from_um": [
+      987.21,
+      255.864
+     ],
+     "to_um": [
+      972.984,
+      657.096
+     ],
+     "regs_um": [
+      [
+       1002.348,
+       445.187
+      ]
+     ],
+     "bits": 1,
+     "launch": "core:u_lf.u_vn.u_b.n_go",
+     "capture": "u_lf.u_vp.u_b0",
+     "note": "S81-CORES-R26 10-27 (delta_g0c_r26_1027.py): pin-to-pin > 405 um; same vni chain (u_cst_vni, CS_VNI_D) and same station as the type's existing n_pre entry: 0 new cycles"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_b.n_pre|core:u_lf.u_vp.u_b1",
+     "from_um": [
+      987.21,
+      229.08
+     ],
+     "to_um": [
+      947.064,
+      605.256
+     ],
+     "regs_um": [
+      [
+       1002.348,
+       445.187
+      ]
+     ],
+     "bits": 128,
+     "launch": "core:u_lf.u_vn.u_b.n_pre",
+     "capture": "u_lf.u_vp.u_b1",
+     "note": "S81-CORES-R26 10-27 (delta_g0c_r26_1027.py): pin-to-pin > 405 um; same vni chain (u_cst_vni, CS_VNI_D) and same station as the type's existing n_pre entry: 0 new cycles"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_b.wl_d|core:u_lf.u_vp.u_b0",
+     "from_um": [
+      987.21,
+      256.056
+     ],
+     "to_um": [
+      972.984,
+      657.096
+     ],
+     "regs_um": [
+      [
+       1002.348,
+       445.187
+      ]
+     ],
+     "bits": 128,
+     "launch": "core:u_lf.u_vn.u_b.wl_d",
+     "capture": "u_lf.u_vp.u_b0",
+     "note": "S81-CORES-R26 10-27 (delta_g0c_r26_1027.py): pin-to-pin > 405 um; same vni chain (u_cst_vni, CS_VNI_D) and same station as the type's existing n_pre entry: 0 new cycles"
     },
     {
      "conn": "core:u_lf.u_vq.u|core:u_lf.u_vs",
@@ -166790,6 +166874,69 @@
      "launch": "core:u_lf.u_vn.u_b.n_pre",
      "capture": "u_lf.u_vp.u_b1",
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 415 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_b.n_go|core:u_lf.u_vp.u_b1",
+     "from_um": [
+      1090.89,
+      290.424
+     ],
+     "to_um": [
+      1085.304,
+      700.296
+     ],
+     "regs_um": [
+      [
+       1097.388,
+       484.067
+      ]
+     ],
+     "bits": 1,
+     "launch": "core:u_lf.u_vn.u_b.n_go",
+     "capture": "u_lf.u_vp.u_b1",
+     "note": "S81-CORES-R26 10-27 (delta_g0c_r26_1027.py): pin-to-pin > 405 um; same vni chain (u_cst_vni, CS_VNI_D) and same station as the type's existing n_pre entry: 0 new cycles"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_b.n_pre|core:u_lf.u_vp.u_b0",
+     "from_um": [
+      1090.89,
+      263.64
+     ],
+     "to_um": [
+      1059.384,
+      648.456
+     ],
+     "regs_um": [
+      [
+       1097.388,
+       484.067
+      ]
+     ],
+     "bits": 128,
+     "launch": "core:u_lf.u_vn.u_b.n_pre",
+     "capture": "u_lf.u_vp.u_b0",
+     "note": "S81-CORES-R26 10-27 (delta_g0c_r26_1027.py): pin-to-pin > 405 um; same vni chain (u_cst_vni, CS_VNI_D) and same station as the type's existing n_pre entry: 0 new cycles"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_b.wl_d|core:u_lf.u_vp.u_b1",
+     "from_um": [
+      1090.89,
+      290.616
+     ],
+     "to_um": [
+      1085.304,
+      700.296
+     ],
+     "regs_um": [
+      [
+       1097.388,
+       484.067
+      ]
+     ],
+     "bits": 128,
+     "launch": "core:u_lf.u_vn.u_b.wl_d",
+     "capture": "u_lf.u_vp.u_b1",
+     "note": "S81-CORES-R26 10-27 (delta_g0c_r26_1027.py): pin-to-pin > 405 um; same vni chain (u_cst_vni, CS_VNI_D) and same station as the type's existing n_pre entry: 0 new cycles"
     },
     {
      "conn": "core:u_lf.u_vn.u_b.y|core:u_lf.u_vq",
