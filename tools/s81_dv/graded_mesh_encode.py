@@ -193,8 +193,9 @@ def xy_rect(lay, c, w, lo, hi):
     return (lo, c - w / 2, hi, c + w / 2) if lay == "M8" else (c - w / 2, lo, c + w / 2, hi)
 
 
-def phy_band_findings(shapes, phx, space=PHY_SPACE, kinds=("mesh",)):
-    """encoded shapes of `kinds` closer than `space` (2-D edge distance) to any PHY PG stripe of the same layer"""
+def phy_band_findings(shapes, phx, space=PHY_SPACE, kinds=("mesh",), same_net_ok=False):
+    """encoded shapes of `kinds` closer than `space` (2-D edge distance) to any PHY PG stripe of the same layer;
+    same_net_ok (R25 option a): a shape of the stripe's own net (VSS shield at a PHY VSS stripe end) is not a finding"""
     bad = []
     for sh in shapes:
         if kinds is not None and sh[2] not in kinds:
@@ -202,6 +203,8 @@ def phy_band_findings(shapes, phx, space=PHY_SPACE, kinds=("mesh",)):
         lay, plo, phi, alo, ahi = sh[0], sh[3], sh[4], sh[5], sh[6]
         r = (alo, plo, ahi, phi) if lay == "M8" else (plo, alo, phi, ahi)
         for c, st, net in phx.near(lay, plo - space - 2.0, phi + space + 2.0):
+            if same_net_ok and sh[1] == net:
+                continue
             gap = rect_gap(r, st)
             if gap < space - 1e-6:
                 bad.append(dict(layer=lay, kind=sh[2], rect=[round(v, 4) for v in r], phy=[round(v, 4) for v in st], net=net, gap=round(gap, 4)))
@@ -569,13 +572,19 @@ def cap_widths(g, cap):
     return dict(g, segments=segs, vias=vias), rep
 
 
-def _stripe_cuts(lay, plo, phi, alo, ahi, idx, space, nd, shield):
+def _stripe_cuts(lay, plo, phi, alo, ahi, idx, space, nd, shield, abut=False):
     """along-axis cuts of a shield strip [plo, phi] x [alo, ahi] (2-D): `space` from every PHY PG stripe (any net), the
-    NDR/wide space from every core PG stripe of another net; same-net core VSS stripes need no space"""
+    NDR/wide space from every core PG stripe of another net; same-net core VSS stripes need no space.
+    abut (COORD R24 ruling c option a): a PHY PG stripe of the SHIELD net needs no space either -- the shield is cut
+    only over that stripe's own along span (no halo), so it ends abutting the stripe end (same net)"""
     cuts = []
     for _, st, net in idx.near(lay, plo - 4.0, phi + 4.0):
         slo, shi, a0, a1 = (st[1], st[3], st[0], st[2]) if lay == "M8" else (st[0], st[2], st[1], st[3])
         pw = shi - slo
+        if pw > PHY_PG_MIN_W and abut and net == shield:
+            if max(slo - phi, plo - shi, 0.0) < space - 1e-6:
+                cuts.append((a0, a1))
+            continue
         if pw > PHY_PG_MIN_W:
             req = space
         elif net == shield:
@@ -611,7 +620,7 @@ def _vss_cover(lay, c, w, a0, a1, sg, idx, shield, reach=6.0):
     return out
 
 
-def _vss_side_fill(lay, c, sg, pc, inf, idx, space, nd, shield, ws, ext=2.0):
+def _vss_side_fill(lay, c, sg, pc, inf, idx, space, nd, shield, ws, ext=2.0, abut=False):
     """drawn VSS strips on the VSS side (sign sg) of rail piece pc over every run its VSS PG stripes leave uncovered"""
     P0, P1 = pc[0][4], pc[-1][5]
     cov = []
@@ -628,7 +637,7 @@ def _vss_side_fill(lay, c, sg, pc, inf, idx, space, nd, shield, ws, ext=2.0):
             m = (a + b) / 2
             o = max(off for lo, hi, off in inf if lo < m < hi)
             p = c + sg * o
-            for x0, x1 in subtract((a, b), _stripe_cuts(lay, p - ws / 2, p + ws / 2, a, b, idx, space, nd, shield), min_len=0.0):
+            for x0, x1 in subtract((a, b), _stripe_cuts(lay, p - ws / 2, p + ws / 2, a, b, idx, space, nd, shield, abut), min_len=0.0):
                 out.append((lay, shield, "rail_shield", round(p - ws / 2, 6), round(p + ws / 2, 6), round(x0, 6), round(x1, 6)))
         # bridge onto a core (non-PHY) VSS stripe inside each extension, where one covers the rail
         for z0, z1 in ((e0, u0), (u1, e1)):
@@ -644,14 +653,14 @@ def _vss_side_fill(lay, c, sg, pc, inf, idx, space, nd, shield, ws, ext=2.0):
                 far = slo if sg > 0 else shi
                 q0, q1 = sorted((pin, far))
                 al = (round(m - ws / 2, 6), round(m + ws / 2, 6))
-                if [z for z in _stripe_cuts(lay, q0, q1, al[0], al[1], idx, space, nd, shield) if z[0] < al[1] and z[1] > al[0]]:
+                if [z for z in _stripe_cuts(lay, q0, q1, al[0], al[1], idx, space, nd, shield, abut) if z[0] < al[1] and z[1] > al[0]]:
                     continue
                 out.append((lay, shield, "rail_shield", round(q0, 6), round(q1, 6), al[0], al[1]))
                 break
     return out
 
 
-def shield_profile(g, pgr, nd, shield="VSS", space=PHY_SPACE, pitch=4.32):
+def shield_profile(g, pgr, nd, shield="VSS", space=PHY_SPACE, pitch=4.32, abut=False):
     """--shield-full: one drawn VSS shield per rail on its VDD side, as a stepped profile.  At every along position t
     the shield sits at O(t) = max over the rail segments whose box-spacing reach covers t of (w/2 + wide-row gap(w) +
     ws/2), so it steps WITH the grading (no gap at width steps); steps are joined by a ws-long across-axis bridge inside
@@ -700,7 +709,7 @@ def shield_profile(g, pgr, nd, shield="VSS", space=PHY_SPACE, pitch=4.32):
             kept = []
             for a, b, o in ivs:
                 p = c + sg * o
-                cov = subtract((a, b), _stripe_cuts(lay, p - ws / 2, p + ws / 2, a, b, idx, space, nd, shield), min_len=2 * ws)
+                cov = subtract((a, b), _stripe_cuts(lay, p - ws / 2, p + ws / 2, a, b, idx, space, nd, shield, abut), min_len=2 * ws)
                 kept.append((a, b, o, cov))
                 for x0, x1 in cov:
                     shapes.append((lay, shield, "rail_shield", round(p - ws / 2, 6), round(p + ws / 2, 6), x0, x1))
@@ -708,7 +717,7 @@ def shield_profile(g, pgr, nd, shield="VSS", space=PHY_SPACE, pitch=4.32):
             # VSS side: wherever no legal adjacent VSS PG stripe covers the rail (PG interruptions, e.g. the 7.44-um
             # PHY-domain / core-grid hand-over), a drawn VSS fill strip at the same stepped offset, extended into the
             # covered run and bridged onto the core VSS stripe there (same net) so it is tied without a VIA89
-            shapes += _vss_side_fill(lay, c, -sg, pc, inf, idx, space, nd, shield, ws)
+            shapes += _vss_side_fill(lay, c, -sg, pc, inf, idx, space, nd, shield, ws, abut=abut)
             for (a0, b0, o0, c0), (a1, b1, o1, c1) in zip(kept, kept[1:]):
                 tb = b0
                 if abs(a1 - tb) > 1e-9 or not c0 or not c1 or abs(c0[-1][1] - tb) > 1e-9 or abs(c1[0][0] - tb) > 1e-9:
@@ -717,7 +726,7 @@ def shield_profile(g, pgr, nd, shield="VSS", space=PHY_SPACE, pitch=4.32):
                 al = (tb - ws, tb) if o0 < o1 else (tb, tb + ws)
                 pl, ph = sorted((c + sg * lo_o, c + sg * hi_o))
                 bl = (round(pl - ws / 2, 6), round(ph + ws / 2, 6))
-                cl = [(x0, x1) for x0, x1 in _stripe_cuts(lay, bl[0], bl[1], al[0], al[1], idx, space, nd, shield) if x0 < al[1] and x1 > al[0]]
+                cl = [(x0, x1) for x0, x1 in _stripe_cuts(lay, bl[0], bl[1], al[0], al[1], idx, space, nd, shield, abut) if x0 < al[1] and x1 > al[0]]
                 if cl:
                     continue
                 shapes.append((lay, shield, "rail_shield", bl[0], bl[1], round(al[0], 6), round(al[1], 6)))
@@ -966,7 +975,7 @@ def mesh_graph(g):
         raise
 
 
-def encode(plan, build, out, limit=400, gap_snap=False, phy_clip_on=False, vss_side=False, shield_full=False):
+def encode(plan, build, out, limit=400, gap_snap=False, phy_clip_on=False, vss_side=False, shield_full=False, phy_vss_abut=False):
     import die_infra as DI
     P = S.Plan(S.load(plan), str(plan))
     b, dst = Path(build), Path(out)
@@ -992,7 +1001,7 @@ def encode(plan, build, out, limit=400, gap_snap=False, phy_clip_on=False, vss_s
     rshapes, rails = rail_shapes(g, nd, sh, drawn=not gap_snap)
     tie_rep, ties_v, floating = None, [], []
     if shield_full:  # stepped per-rail VDD-side shield + both-side coverage census + VSS-grid ties
-        dsh, _runs = shield_profile(g, pgr, nd, sh)
+        dsh, _runs = shield_profile(g, pgr, nd, sh, abut=phy_vss_abut)
         rshapes += dsh
         crep, crows = shield_census(g, pgr, dsh, nd, sh)
         ties_v, tie_rep, floating = shield_ties(dsh, pgr, sh)
@@ -1032,7 +1041,7 @@ def encode(plan, build, out, limit=400, gap_snap=False, phy_clip_on=False, vss_s
     tree = C.clock_shapes(C.tree_segs(wires), nd, sh) if wires else []
     census = C.metal_census(C.pg_shapes(pgr) + rshapes + ties + tree, nd["space"], limit=limit)
     phx = phy_index(pgr)
-    phyb_mesh = phy_band_findings(rshapes, phx, kinds=("mesh", "rail_shield"))
+    phyb_mesh = phy_band_findings(rshapes, phx, kinds=("mesh", "rail_shield"), same_net_ok=phy_vss_abut)
     phyb_other = phy_band_findings(ties + tree, phx, kinds=None)   # info: router-placed, already PG-wide-rule legal
     tree_mode = collections.Counter(m for w in wires for m in (w.get("shield_modes") or []))
     rep = dict(
@@ -1054,7 +1063,7 @@ def encode(plan, build, out, limit=400, gap_snap=False, phy_clip_on=False, vss_s
         metal_shapes=census["shapes"], metal_shorts=census["shorts"], metal_spacing=census["spacing"],
         shorts_by_kind=census["shorts_by_kind"], spacing_by_kind=census["spacing_by_kind"],
         rail_ends_off_via=len(dangling_ends(g)), phy_clip=clip, graph_before_clip=full_cycles, phy_band_mesh=len(phyb_mesh), phy_band_other_info=len(phyb_other),
-        shield_mode="full" if shield_full else ("vss_side" if vss_side else ("pg" if gap_snap else "drawn")), shield=shield_rep)
+        phy_vss_abut=phy_vss_abut, shield_mode="full" if shield_full else ("vss_side" if vss_side else ("pg" if gap_snap else "drawn")), shield=shield_rep)
     rep["rail_end_extensions"] = 2 * (rep["rails"]["M8"] + rep["rails"]["M9"])
     fails = [k for k in ("segments_not_fitting_pg_gap", "m8_maxwidth_violations", "via_outside_incident", "pg_gap_shared", "rail_pg_too_close",
                          "tie_errors", "tree_plan_errors", "metal_shorts", "metal_spacing", "phy_band_mesh", "rail_ends_off_via") if rep[k]]
@@ -1094,5 +1103,8 @@ if __name__ == "__main__":
     ap.add_argument("--phy-clip", action="store_true", help="R24: stop every rail >= 1.0 um before PHY PG bands, at a crossing")
     ap.add_argument("--vss-side", action="store_true", help="R24: rail at legal spacing to the VSS stripe; drawn VSS shield on VDD sides")
     ap.add_argument("--shield-full", action="store_true", help="R24b: 100%% shield: width cap, stepped VDD-side shield, both-side census, ties")
+    ap.add_argument("--phy-vss-abut", action="store_true", help="R25 (COORD R24 ruling c, option a): with --shield-full the VSS shield may "
+                    "end abutting a PHY VSS stripe end (same net; no 1.0-um halo to same-net PHY stripes)")
     a = ap.parse_args()
-    encode(a.plan, a.build, a.out, gap_snap=a.gap_snap, phy_clip_on=a.phy_clip, vss_side=a.vss_side, shield_full=a.shield_full)
+    encode(a.plan, a.build, a.out, gap_snap=a.gap_snap, phy_clip_on=a.phy_clip, vss_side=a.vss_side, shield_full=a.shield_full,
+           phy_vss_abut=a.phy_vss_abut)

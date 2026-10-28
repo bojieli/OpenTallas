@@ -121,6 +121,9 @@ def main(a):
         wins.append(("first census finding", fpts[0][0], fpts[0][1], 12))
     if len(fpts) > 1:
         wins.append(("middle census finding", fpts[len(fpts) // 2][0], fpts[len(fpts) // 2][1], 12))
+    for spec in (a.at or []):   # R25: extra named windows "x,y,r[,title]" (e.g. PHY VSS stripe-end abutments)
+        f = spec.split(",", 3)
+        wins.append((f[3] if len(f) > 3 else "requested window", float(f[0]), float(f[1]), float(f[2])))
     for i, (t, x, y, r) in enumerate(wins):
         fig, ax = plt.subplots(figsize=(9, 9), dpi=120)
         window(ax, E, (x - r, y - r, x + r, y + r), f"{t} @ ({x:.2f},{y:.2f}) +-{r} um", fpts)
@@ -129,4 +132,6 @@ def main(a):
 
 
 if __name__ == "__main__":
-    p = argparse.ArgumentParser(); p.add_argument("dir"); main(p.parse_args())
+    p = argparse.ArgumentParser(); p.add_argument("dir")
+    p.add_argument("--at", action="append", help="extra zoom window x,y,r[,title] (repeatable)")
+    main(p.parse_args())

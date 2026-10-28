@@ -1,0 +1,134 @@
+{
+ "schema": "opentallas.s81.graded_mesh_encode.v1",
+ "build": "/srv/opentallas-scratch2/claude/codex-s81-graded-1351/p128_stage18",
+ "plan_sha256": "5b91b79891cafabe60423fbd83ed68136378e47cbf4d04e57d7e8329f4df1ede",
+ "graded_metal_sha256": "5bb26a05963e7374d27dbf8ed8676a9ddc7804d8dbb1e9139b08905fdf5f3480",
+ "rails": {
+  "M8": 192,
+  "M9": 192
+ },
+ "segments": 72579,
+ "crossings": 36486,
+ "via_cuts": 1909050,
+ "rail_width_max_um": {
+  "M8": 1.6,
+  "M9": 1.6
+ },
+ "m8_maxwidth_um": 2.0,
+ "m8_maxwidth_violations": 0,
+ "rail_end_extensions": 768,
+ "via_outside_incident": 0,
+ "gap_snap": {
+  "max_um": 1.36,
+  "mean_um": 0.5606,
+  "rails": 384
+ },
+ "rail_shield_mode": "pg",
+ "segments_not_fitting_pg_gap": 0,
+ "segments_not_fitting_by_pg_width": {},
+ "pg_gap_shared": 0,
+ "rail_pg_too_close": 0,
+ "graph": {
+  "components": 1,
+  "cycles": 36094,
+  "expected_cycles": 36481,
+  "full_grid_expected": false
+ },
+ "attachments": {
+  "driver": 3747,
+  "local_tree_input": 7481
+ },
+ "bank_tie_segments": 3756,
+ "stub_drops": 7481,
+ "pin_stacks": 48021,
+ "tie_errors": 0,
+ "tree_nets": 18270,
+ "tree_segments": 77079,
+ "tree_mm": 4032.741,
+ "tree_shield_modes": {
+  "drawn": 77079
+ },
+ "tree_plan_errors": 0,
+ "router_modes": {
+  "M8:drawn": 64235,
+  "M9:drawn": 24081
+ },
+ "router_move_max_um": 6.719,
+ "pg_rects": 49238,
+ "metal_shapes": 410012,
+ "metal_shorts": 0,
+ "metal_spacing": 0,
+ "shorts_by_kind": {},
+ "spacing_by_kind": {},
+ "rail_ends_off_via": 0,
+ "phy_clip": {
+  "phy_stripes": 14014,
+  "segments_clipped": 765,
+  "segments_trimmed": 0,
+  "floating_pieces_dropped": 0,
+  "floating_segments_dropped": 0,
+  "segments_kept": 72579,
+  "vias_dropped": 378,
+  "rails_removed": 0,
+  "attachments_moved": 8,
+  "attachments_moved_by_role": {
+   "driver": 4,
+   "local_tree_input": 4
+  },
+  "attachment_move_max_um": 10.815
+ },
+ "graph_before_clip": {
+  "nodes": 84956,
+  "edges": 121436,
+  "components": 1,
+  "cycles": 36481,
+  "expected_cycles": 36481,
+  "via_edges": 36864,
+  "native_extraction_qualified": false,
+  "driver_pin_metal_encoded": false,
+  "resistance_model": null
+ },
+ "phy_band_mesh": 0,
+ "phy_band_other_info": 95,
+ "phy_vss_abut": true,
+ "shield_mode": "full",
+ "shield": {
+  "census": {
+   "sides": {
+    "shielded": 145158
+   },
+   "unshielded_um": 0,
+   "shielded_side_um": 21005776.8
+  },
+  "ties": {
+   "shield_shapes": 23247,
+   "shield_groups": 933,
+   "tie_vias": 11757,
+   "groups_tied_by_core_vss_touch": 0,
+   "floating_groups": 0,
+   "floating_um": 0
+  },
+  "width_cap": {
+   "cap_um": 1.6,
+   "segments_narrowed": 1528,
+   "narrowed_by_layer_width": {
+    "M8:1.68": 760,
+    "M8:1.76": 192,
+    "M9:1.68": 384,
+    "M9:1.76": 192
+   },
+   "narrowed_um": 287901.4,
+   "segment_R_increase_max_pct": 10.0,
+   "via_cuts_before": 1963176,
+   "via_cuts_after": 1950504
+  }
+ },
+ "fails": [],
+ "status": "ENCODED_CENSUS_PASS",
+ "physical_encoder_qualified": false,
+ "limits": [
+  "geometry only; extraction/EM/IR/timing OPEN",
+  "M1-M7 pin stacks + M7 risers recorded, not censused against signal routing",
+  "shield ties = 1-cut VIA89 at each shield x orthogonal VSS stripe crossing (census of placement only)"
+ ]
+}

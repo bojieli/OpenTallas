@@ -273,3 +273,37 @@ def test_shield_ties_report_floating_piece():
     pg = _pg("M9", 2, 3, 440.0, 460.0)                                            # x = 8.64 VSS, 12.96 VDD
     ties, rep, fl = E.shield_ties(sh, pg)
     assert rep["floating_groups"] == 1 and not ties and fl
+
+
+def _phy_vss_end_rail():
+    # die-like PHY-domain stripe end (enc7 row M8 248.52 x 3482.88): thin 0.08 rail; PHY VSS 1.92 above ends at x=20,
+    # VDDPHY 1.92 below ends at x=15.68; the core grid (VSS 250.56 / VDD 246.24, 0.48) starts at x=23.12
+    c = 248.52
+    pg = [("VSS", "M8", 0.0, 249.6, 20.0, 251.52), ("VDDPHY", "M8", 0.0, 245.28, 15.68, 247.2),
+          ("VSS", "M8", 23.12, 250.32, 60.0, 250.8), ("VDD", "M8", 23.12, 246.0, 60.0, 246.48)] + _pg("M9", 0, 14, 240.0, 260.0)
+    xs = [0.0, 30.0, 60.0]
+    segs = [dict(layer="M8", width_um=0.08, centre_um=[a, c, b, c], rect_um=[a, c - 0.04, b, c + 0.04]) for a, b in zip(xs, xs[1:])]
+    vias = [dict(x_um=x, y_um=c, rows=1, cols=1, cut_um=.04, pitch_um=.098, pad_um=.08) for x in xs]
+    return dict(segments=segs, vias=vias, xs=xs, ys=[c], attachments=[]), pg, c
+
+
+def test_phy_vss_abut_closes_stripe_end_side_and_stays_legal():
+    import die_clock_128 as C
+    g, pg, c = _phy_vss_end_rail()
+    sh0, _ = E.shield_profile(g, pg, ND)                                          # R24 form: 1.0-um halo to every PHY stripe
+    rep0, rows0 = E.shield_census(g, pg, sh0, ND)
+    assert rep0["sides"].get("unshielded", 0) >= 1 and all(r["side"] == 1 for r in rows0), rows0
+    sh, _ = E.shield_profile(g, pg, ND, abut=True)                                # option (a): may abut the PHY VSS stripe end
+    rep, rows = E.shield_census(g, pg, sh, ND)
+    assert rep["sides"] == {"shielded": 2 * len(g["segments"])} and rep["unshielded_um"] == 0, rows
+    assert not any(s[5] < 20.0 - 1e-6 and s[3] < 251.52 and s[4] > 249.6 for s in sh)   # never laid over the PHY VSS stripe
+    mesh_shapes, _ = E.rail_shapes(g, ND, drawn=False)
+    cen = C.metal_census(C.pg_shapes(pg) + mesh_shapes + sh, ND["space"])
+    assert cen["shorts"] == 0 and cen["spacing"] == 0, cen["rows"][:3]
+    phx = E.phy_index(pg)
+    assert E.phy_band_findings(mesh_shapes + sh, phx, kinds=("mesh", "rail_shield"), same_net_ok=True) == []
+    assert E.phy_band_findings(sh, phx, kinds=("rail_shield",), same_net_ok=False)    # only the same-net VSS end is waived
+    other = [s for s in sh if any(E.rect_gap((s[5], s[3], s[6], s[4]), st) < 1.0 - 1e-6 for _, st, n in phx.near("M8", 240, 260) if n != "VSS")]
+    assert other == []                                                            # still >= 1.0 um from VDDPHY
+    ties, trep, floating = E.shield_ties(sh, pg)
+    assert trep["floating_groups"] == 0 and not floating
