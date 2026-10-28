@@ -503,3 +503,16 @@ def test_native_top_regions_include_early_core_clock_inputs():
     # A clock-looking name outside the generated grid/core families stays rejected.
     with pytest.raises(LandingError, match="still drives a partition pin"):
         Landings(p, t).top_rtl(top.replace(".clk_c0(clk)", ".clk_phy(clk)"))
+
+
+def test_forwarded_clock_rtl_source_follows_landing_contract():
+    """DIE-HEAD-9 FACE (c): fclk_out_* is assigned from the contract's source_clock_port (default clk)."""
+    p, t = vehicle()
+    p["partition_types"]["A"]["clock"] = dict(landing_contract=dict(pins=[dict(
+        name="fclk_out_x", dir="out", kind="clock", layer="M8", xy_um=[9.0, 1.5], epoch=False,
+        source_clock_port="clk_t3")]))
+    c = Landings(p, t)
+    a = "module a_mod (\n input wire clk,\n input wire clk_t3,\n output wire [4:0] x\n);\n assign x = 0;\nendmodule\n"
+    assert "assign fclk_out_x = clk_t3;" in c.type_rtl("A", a)
+    with pytest.raises(LandingError, match="source_clock_port clk_t3"):
+        c.type_rtl("A", a.replace(" input wire clk_t3,\n", ""))
