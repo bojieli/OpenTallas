@@ -2908,11 +2908,19 @@ def trace_constant_closure(L, log, tried):
 RESET_PORT = re.compile(r"^(?:\w+_)?(?:rst|reset|rn|rstn|nrst|arst|srst)(?:_?n|_ni|_b|_l)?(?:_pin)?$", re.I)
 
 
-def reset_vars(d, pis):
+def reset_vars(d, pis, asserted=None, levels=None):
     """{var: asserted value} of the reset ports of one side (pi keys; OT_LEC_RESET_PORTS=a,b overrides the name
-    pattern).  Active low when the name ends in n / _ni / _b / _l (rst_n, rn, core_rst_n)."""
+    pattern).  Active low when the name ends in n / _ni / _b / _l (rst_n, rn, core_rst_n) -- unless the structure
+    says otherwise (LEC-FPREG-7 10-27, S81 dsdv_bksel_c: port 'rst' is the ACTIVE-LOW async reset of every register,
+    'always @(posedge ck or negedge rst[0])'; the name rule asserted rst = 1 = released, so the 'reset state' reset
+    nothing and 6,382 points differed).  The asserted level of a reset is by definition the level that forces the
+    registers: from an all-unknown state, one edge with the port at each level (the other reset ports at their
+    level); when the opposite level of the name rule forces more than twice as many registers, it is the asserted
+    level.  OT_LEC_RESET_POLARITY=name keeps the name rule only.  asserted: {pi key: logical asserted value} decided
+    on the gold side, applied unchanged to the gate (one port, one polarity); levels: dict filled with {pi key: asserted
+    value} -> R = {var: asserted literal value}."""
     names = [n for n in os.environ.get("OT_LEC_RESET_PORTS", "").split(",") if n]
-    R = {}
+    R, key_of, lv = {}, {}, {}
     for k, lit in pis.items():
         if not k.startswith("pi:"):
             continue
@@ -2921,7 +2929,17 @@ def reset_vars(d, pis):
             continue
         stem = re.sub(r"_pin$", "", base, flags=re.I)
         low = bool(re.search(r"(n|_ni|_b|_l)$", stem, re.I))
-        R[lit >> 1] = (0 if low else 1) ^ (lit & 1)
+        lv[k] = asserted[k] if asserted and k in asserted else (0 if low else 1)
+        R[lit >> 1] = lv[k] ^ (lit & 1)
+        key_of[lit >> 1] = k
+    if asserted is None and R and "I" in d and os.environ.get("OT_LEC_RESET_POLARITY", "struct") != "name":
+        for v in sorted(R):
+            n = {b: len(reset_state(d, {**R, v: b}, 1)[0]) for b in (0, 1)}
+            if n[1 - R[v]] > 2 * max(1, n[R[v]]):
+                R[v] = 1 - R[v]
+                lv[key_of[v]] ^= 1
+    if levels is not None:
+        levels.update(lv)
     return R
 
 
@@ -2964,8 +2982,12 @@ def noreset_classify(L):
     L.rst_val[(side, key)] = (value or None, first edge)."""
     cycles = int(os.environ.get("OT_LEC_RESET_CYCLES", "4"))
     L.rst_val, L.rst_ports = {}, {}
+    pol = None
     for side, d, p in (("gold", L.gold, L.gp), ("gate", L.gate, L.tp)):
-        R = reset_vars(d, p)
+        lv = {}
+        R = reset_vars(d, p, pol, lv)
+        pol = lv if pol is None else pol
+        L.__dict__.setdefault("rst_asserted", {})[side] = lv
         L.rst_ports[side] = sorted(k for k, lit in p.items() if (lit >> 1) in R and k.startswith("pi:"))
         st, first = reset_state(d, R, cycles)
         L.__dict__.setdefault("_rst_state", {})[side] = st
@@ -3383,7 +3405,7 @@ def noreset_report(L):
                                "reset" if edge <= 1 else "reloaded" if edge <= cyc else "release"))
     dropped = [dict(register=k, side=sd, value=c) for (sd, k), c in sorted(getattr(L, "noreset_dropped", {}).items())
                if (sd, k) not in L.hyp]
-    return dict(enabled=True, reset_ports=L.rst_ports, reset_cycles=int(os.environ.get("OT_LEC_RESET_CYCLES", "4")),
+    return dict(enabled=True, reset_ports=L.rst_ports, reset_asserted=getattr(L, "rst_asserted", {}), reset_cycles=int(os.environ.get("OT_LEC_RESET_CYCLES", "4")),
                 release_edges=int(os.environ.get("OT_LEC_RELEASE_EDGES", "8")),
                 n_release=sum(1 for e in kept if e["basis"] == "release"),
                 release=[e for e in kept if e["basis"] == "release"][:500],
