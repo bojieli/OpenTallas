@@ -3351,6 +3351,40 @@ def raw_prefix_bases(L, candidates, steps, work, conflicts, log):
                    f"{sum(status.get(n) == 'proved' for n in m.onames)} / {len(todo)} bases")
 
 
+def eq_const_resolve(L, log=None):
+    """An equality hypothesis whose representative carries a constant hypothesis is that constant (HBM-CORES-REBAL-6
+    10-28, side_rest u_egs: gold-only rem_stage[0][34..] = eq gold g_dig[2].src_rem[0], itself const 0, while the
+    identical u_sq copy got const 0).  Left as 'eq', the register blocks every reload base case through its cone
+    (noreset_sound refuses cones with equality hypotheses), so 466 structural shift-in zeros of one fsqrt copy were
+    dropped.  Rewritten to ('const', c ^ inv) it must pass the same reset-state base case as any constant (stricter
+    than the equality), and the final induction still proves it.  Chains resolve transitively; cycles and free
+    representatives stay as they are. -> number rewritten."""
+    def const_of(sd, k, seen):
+        for key in (("both", k), (sd, k)):
+            h = L.hyp.get(key)
+            if h is None:
+                continue
+            if h[0] == "const":
+                return h[1]
+            if h[0] == "eq" and key not in seen:
+                c = const_of(h[1], h[2], seen | {key})
+                return None if c is None else c ^ h[3]
+        return None
+    n, first = 0, []
+    for key, h in list(L.hyp.items()):
+        if h[0] != "eq":
+            continue
+        c = const_of(h[1], h[2], {key})
+        if c is not None:
+            L.hyp[key] = ("const", c ^ h[3])
+            n += 1
+            if len(first) < 6:
+                first.append(f"{key[0]}:{key[1]}={c ^ h[3]}")
+    if n and log is not None:
+        log.append(f"eq-to-const hypotheses resolved: {n} {first}")
+    return n
+
+
 def noreset_filter(L, log, tried, work=None, conflicts=1000):
     """Constant hypotheses on registers that are not that constant in the reset state (LEC-TOOL-4 10-27, COORD
     ruling on no-reset constants).  The correspondence induction proves Q == c -> D(Q) == c; its base case is the
@@ -3361,6 +3395,7 @@ def noreset_filter(L, log, tried, work=None, conflicts=1000):
     do); the others are dropped and never re-proposed (the register stays a free input, so an observable difference
     is reported, never assumed away). There is no switch to assume an unknown
     power-up value equals a constant. -> number dropped."""
+    eq_const_resolve(L, log)
     if work is not None:
         raw_constant_bases(L, work, conflicts, log)
         steps = int(os.environ.get("OT_LEC_RAW_BASE_STEPS", "0"))
