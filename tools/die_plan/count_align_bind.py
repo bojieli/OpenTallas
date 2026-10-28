@@ -330,8 +330,10 @@ def verify(b, samples=2000, seed=1, need_ps=100.0):
                      "sync physics with metastable resolution both ways")
 
 
-def annotate_table(table, b, root_settle_cycles=64):
-    """clock_landings / fallback_land region table -> count-aligned form (opt-in; the old ring stays the default)"""
+def annotate_table(table, b, root_settle_cycles=64, strap_form=False):
+    """clock_landings / fallback_land region table -> count-aligned form (opt-in; the old ring stays the default).
+    strap_form (MESO-STRAP-1, OWNER 12.15a, opt-in): clock_landings emits the strap form (strap_ca_* pins, one design
+    per type, parent ties from strap_ties())."""
     t = json.loads(json.dumps(table))
     miss = [r["port"] for r in t["ports"] if r["port"] not in b["ports"]]
     if miss:
@@ -351,11 +353,149 @@ def annotate_table(table, b, root_settle_cycles=64):
                               regions={k: {x: v[x] for x in ("parent", "tree_port", "edge_fall", "pad", "origin_part")
                                            if x in v}
                                        for k, v in b["regions"].items()})
+    if strap_form:
+        t["count_aligned"]["strap_form"] = True
     if "parts" in b:
         t["count_aligned"]["parts"] = {q: {x: v[x] for x in ("region", "role", "src", "stages")}
                                        for q, v in b["parts"].items()}
         t["count_aligned"]["relay_stages"] = b["relay_stages"]
     return t
+
+
+# MESO-STRAP-1 (OWNER 12.15a COUNT STRAPS; METHODOLOGY 1.8 conditions).  Strap form: every copy of a partition type
+# shares one hardened design; the count-aligned constants that differ between copies are strap_* INPUT pins tied at the
+# parent (TIEHI/TIELO per bit), the ring DEPTH is the type's largest.  Pins (per receiving type):
+#   strap_ca_k_<bus>[KW-1:0]  ring read offset K mod 2^KW, KW = log2(DEPTH) + 4 (ot_dp_clk_landing_cas strap_k)
+#   strap_ca_pad[PADW-1:0], strap_ca_efall   child origin PAD / EDGE_FALL (ot_dp_landing_origin_s), child-capable types
+#   strap_ca_tsel[TSW-1:0]  which landed input carries the parent's forwarded start (only if it differs between copies)
+#   strap_ca_root           root origin (ot_dp_landing_root) instead of a child origin (only if both occur in the type)
+# Copies that differ in the intra-region RELAY role (rx relay vs origin, or tx relay out present vs absent) change the
+# type's pin list (cland_rstart_in / cland_rstart_out) and stay a TYPE_SPLIT (residual_split; never an open/tied input).
+STRAP_PREFIX = "strap_ca_"
+
+
+def strap_kw(depth):
+    """strap width of a ring K: the ring's count width log2(DEPTH) + 1 + LAPX(3)"""
+    return int(depth).bit_length() - 1 + 4
+
+
+def strap_bits(value, width):
+    """K (any integer) -> its width-bit two's-complement pattern as an int (K mod 2^width)"""
+    return int(value) % (1 << int(width))
+
+
+def strap_ties(ca, plan):
+    """count-aligned bind table (annotate_table()["count_aligned"]) + die plan -> per-type strap declarations and the
+    per-instance tie VALUES (the single source the parent ties, the tie-value audit and the LEC variants use).
+    -> dict(schema, types={type: dict(buses={bus: dict(depth, kw)}, origin, straps={port: width}, variants,
+            residual_split)}, instances={part: dict(type, values={port: int}, role, variant)}, summary)"""
+    ports = {p["id"]: p for p in plan["ports"]}
+    ptype = {p["name"]: p["type"] for p in plan["partitions"]}
+    inst_bus = defaultdict(dict)
+    for pid, c in ca["ports"].items():
+        p = ports.get(pid)
+        if p is None:
+            raise BindError(f"strap ties: bind crossing {pid} has no plan port")
+        q, bus = p["dst"]["part"], p["dst"]["bus"]
+        if bus in inst_bus[q]:
+            raise BindError(f"strap ties: two count-aligned crossings land on {q}.{bus}")
+        inst_bus[q][bus] = dict(K=int(c["K"]), depth=int(c["depth"]), port=pid, tree=bool(c["tree"]))
+    cparts = ca.get("parts")
+    role = {}
+    landed = set(inst_bus) | {ports[pid]["src"]["part"] for pid in ca["ports"]}
+    for q in sorted(landed):
+        if cparts is not None:
+            pi = cparts.get(q)
+            if pi is None:
+                raise BindError(f"strap ties: landed partition {q} has no bind role")
+            reg_name, kind = pi["region"], pi["role"]
+        else:
+            regs = [x for x, r in ca["regions"].items() if r.get("origin_part", None) == q]
+            reg_name = regs[0] if regs else None
+            kind = "origin"
+            if reg_name is None:   # one partition per region (MESO-INTEG-1): the tree port's receiver / root sender
+                reg_name = next((x for x, r in ca["regions"].items() if r["tree_port"]
+                                 and ports[r["tree_port"]]["dst"]["part"] == q), None)
+                if reg_name is None:
+                    reg_name = ca["root"]
+        tx = cparts is not None and kind == "origin" and any(v["role"] == "relay" and v["src"] == q
+                                                              for v in cparts.values())
+        if kind == "relay":
+            role[q] = dict(kind="relay", tx=False)
+            continue
+        r = ca["regions"][reg_name]
+        if r["parent"] is None:
+            role[q] = dict(kind="root", tx=tx)
+        else:
+            tp = ports[r["tree_port"]]
+            if tp["dst"]["part"] != q:
+                raise BindError(f"strap ties: region {reg_name} tree port {r['tree_port']} lands on "
+                                f"{tp['dst']['part']}, not its origin {q}")
+            role[q] = dict(kind="child", tx=tx, tree_bus=tp["dst"]["bus"], pad=int(r["pad"]),
+                           edge_fall=bool(r["edge_fall"]))
+    by_type = defaultdict(list)
+    for q in landed:
+        by_type[ptype[q]].append(q)
+    types, insts = {}, {}
+    for tn, qs in sorted(by_type.items()):
+        qs.sort()
+        buses = sorted({b for q in qs for b in inst_bus.get(q, {})})
+        miss = [(q, b) for q in qs for b in buses if b not in inst_bus.get(q, {})]
+        if miss:
+            raise BindError(f"strap ties: type {tn} copies land different buses (landing mask split first): {miss[:3]}")
+        depth = {b: max(inst_bus[q][b]["depth"] for q in qs) for b in buses}
+        straps = {f"{STRAP_PREFIX}k_{b}": strap_kw(depth[b]) for b in buses}
+        # origin class: relay rx / origin with or without tx relay -> a pin-list difference -> residual split
+        cls = {q: (role[q]["kind"] == "relay", role[q]["tx"]) for q in qs}
+        kinds = {role[q]["kind"] for q in qs}
+        org = sorted(q for q in qs if role[q]["kind"] in ("root", "child"))
+        tsel = sorted({role[q]["tree_bus"] for q in org if role[q]["kind"] == "child"})
+        has_child = any(role[q]["kind"] == "child" for q in org)
+        origin = dict(form="none" if not org else "root" if not has_child else "strap", tree_buses=tsel,
+                      root=("root" in kinds) and has_child, relay_rx="relay" in kinds,
+                      relay_tx=any(role[q]["tx"] for q in qs))
+        if has_child:
+            padmax = max(role[q]["pad"] for q in org if role[q]["kind"] == "child")
+            origin["padw"] = max(1, int(padmax).bit_length())
+            straps[f"{STRAP_PREFIX}pad"] = origin["padw"]
+            straps[f"{STRAP_PREFIX}efall"] = 1
+            if len(tsel) > 1:
+                origin["tsw"] = (len(tsel) - 1).bit_length()
+                straps[f"{STRAP_PREFIX}tsel"] = origin["tsw"]
+            if origin["root"]:
+                straps[f"{STRAP_PREFIX}root"] = 1
+        variants = {}
+        for q in qs:
+            v = {f"{STRAP_PREFIX}k_{b}": strap_bits(inst_bus[q][b]["K"], straps[f"{STRAP_PREFIX}k_{b}"]) for b in buses}
+            rq = role[q]
+            if has_child and rq["kind"] in ("root", "child"):
+                ch = rq["kind"] == "child"
+                v[f"{STRAP_PREFIX}pad"] = rq["pad"] if ch else 0
+                v[f"{STRAP_PREFIX}efall"] = int(rq["edge_fall"]) if ch else 0
+                if "tsw" in origin:
+                    v[f"{STRAP_PREFIX}tsel"] = tsel.index(rq["tree_bus"]) if ch else 0
+                if origin["root"]:
+                    v[f"{STRAP_PREFIX}root"] = int(not ch)
+            elif has_child:     # relay copy of a child-capable type (residual split): origin straps unused -> 0
+                v.update({k: 0 for k in straps if not k.startswith(f"{STRAP_PREFIX}k_")})
+            key = json.dumps([cls[q], sorted(v.items())])
+            vi = variants.setdefault(key, len(variants))
+            insts[q] = dict(type=tn, values=v, role=dict(rq), variant=vi,
+                            K={b: inst_bus[q][b]["K"] for b in buses})
+        classes = sorted({cls[q] for q in qs})
+        types[tn] = dict(instances=qs, buses={b: dict(depth=depth[b], kw=straps[f"{STRAP_PREFIX}k_{b}"]) for b in buses},
+                         origin=origin, straps=straps, strap_bits=sum(straps.values()), variants=len(variants),
+                         residual_split=[dict(relay_rx=a, relay_tx=b_, instances=[q for q in qs if cls[q] == (a, b_)])
+                                         for a, b_ in classes] if len(classes) > 1 else [])
+    summ = dict(types=len(types), instances=len(insts), lec_variants=sum(t["variants"] for t in types.values()),
+                tied_strap_bits=sum(t["strap_bits"] * len(t["instances"]) for t in types.values()),
+                residual_split_types=sum(1 for t in types.values() if t["residual_split"]),
+                types_after_straps=sum(max(1, len(t["residual_split"])) for t in types.values()),
+                d8_type_buses=sum(1 for t in types.values() for b in t["buses"].values() if b["depth"] == 8),
+                types_with_tsel=sum(1 for t in types.values() if "tsw" in t["origin"]),
+                types_with_root_strap=sum(1 for t in types.values() if t["origin"].get("root")))
+    return dict(schema="opentallas.count_straps.v1", rule="OWNER 12.15a count straps (METHODOLOGY 1.8 conditions)",
+                types=types, instances=dict(sorted(insts.items())), summary=summ)
 
 
 def table_parts(table):
@@ -429,6 +569,10 @@ def main(argv=None):
                          "start relays (DIE-KV-3/CAORIGIN), endpoints from the regions table / the OCV rows' "
                          "src_part,dst_part (with --from-ocv); auto = table when --table is given, else region")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--plan-die", help="MESO-STRAP-1: die plan (partitions/ports) for --straps-out")
+    ap.add_argument("--strap-form", action="store_true", help="MESO-STRAP-1: mark the --table-out for the strap form")
+    ap.add_argument("--straps-out", help="MESO-STRAP-1 (OWNER 12.15a): write per-type strap pins + per-instance tie "
+                    "values (count_straps.v1) for the annotated table (needs --table and --plan-die)")
     a = ap.parse_args(argv)
     if a.from_ocv:
         rows = CAP.load_rows(a.plan_json, a.corner, a.scale)
@@ -456,8 +600,12 @@ def main(argv=None):
     b["report"] = rep
     Path(a.out).write_text(json.dumps(b, indent=0) + "\n")
     if a.table:
-        t = annotate_table(table, b, a.root_settle)
+        t = annotate_table(table, b, a.root_settle, strap_form=a.strap_form)
         Path(a.table_out).write_text(json.dumps(t, indent=1) + "\n")
+        if a.straps_out:
+            st = strap_ties(t["count_aligned"], json.load(open(a.plan_die)))
+            Path(a.straps_out).write_text(json.dumps(st, indent=1) + "\n")
+            rep["straps"] = st["summary"]
     print(json.dumps(rep, indent=1))
     ok = not v["identity_and_loop_errors"] and v["sim_window_violations"] == 0
     return 0 if ok else 1

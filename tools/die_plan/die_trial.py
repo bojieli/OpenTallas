@@ -2712,7 +2712,7 @@ def standin_netlist(P, tn, hold_contract=True, clock_contract=True):
     # top, kit SDC set_false_path -from).  Declared ports only: no face flop, no contract cell, so die STA sees the
     # connection (no 'port not found') and times nothing through it.  Never tied off or dropped here.
     free = [(gen_rtl.sv_id(pd["name"]), pd["dir"], pd["width"]) for pd in t.get("pads", []) or []] + \
-        [(sp["name"], "in", sp["width"]) for sp in t.get("id_straps", []) or []]
+        [(sp["name"], "in", sp["width"]) for sp in (t.get("id_straps", []) or []) + (t.get("count_straps", []) or [])]
     for n, d, w in free:
         ports.append(f"  {'input' if d == 'in' else 'output'} [{w - 1}:0] {n};")
     names = tapn + [n for n, _, _ in rin] + [n for n, _, _ in rout] + sorted(bits) + [n for n, _, _ in free]
