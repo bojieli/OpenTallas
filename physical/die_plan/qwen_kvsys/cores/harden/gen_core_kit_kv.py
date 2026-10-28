@@ -600,6 +600,19 @@ def core_clocks_resets(cj):
     return clks, rsts
 
 
+def extra_resets(cj, names, rsts=()):
+    """--reset-ports: declared extra reset ports (e.g. power-on reset por_n), each a data-class ('in') input of the core
+    json not already a reset; anything else is a SystemExit (a typo must not silently leave the port as data)."""
+    out = []
+    for n in [x.strip() for x in (names or "").split(",") if x.strip()]:
+        cls = {c for p, c in cj["pin_class"].items() if split_name(p)[0] == n}
+        if cls != {"in"}:
+            raise SystemExit(f"--reset-ports {n}: not an input port of the core json (classes {sorted(cls)})")
+        if n not in rsts and n not in out:
+            out.append(n)
+    return out
+
+
 def _module_body(text, mod):
     """Body of `module mod` after its header (ANSI port list) up to endmodule, comments stripped."""
     text = re.sub(r"/\*.*?\*/", " ", text, flags=re.S)
@@ -884,6 +897,10 @@ def main():
     ap.add_argument("--hr-face-ports", metavar="DIR", help="KVHR2 10-26: qkd_hr_* zero-cycle face recut: kit RTL = DIR/<core>.v "
                     "from hr_face_ports.sh (private port flop copies of shared output flops, merged identical input "
                     "capture flops; equiv proof + mutant in DIR/eq_rc.txt) + the macro black boxes of the core json")
+    ap.add_argument("--reset-ports", default="", metavar="P1,P2",
+                    help="DIE-KV-3/CORETX 10-27: extra async reset input ports (base names, comma list) declared as reset "
+                         "controls beside the RST_RE names (SDC reset delay, core.json boundary_role reset, "
+                         "boundary_guard_context reset_ports, face_flops skip), e.g. core_tx u_ctrl__por_n; default none")
     ap.add_argument("--hold-ff-margin", type=float, default=5.0, help="FF-only GRT hold repair margin (ps)")
     ap.add_argument("--plan-inst", default=None,
                     help="KV-CORES-PV2: plan hard_cores[] slot (inst of the core json's partition type) whose pins_file this "
@@ -1089,6 +1106,7 @@ def main():
             transform="physical/die_plan/qwen_kvsys/cores/harden/hr_face_ports.py (hr_face_ports.sh)",
             added_cycles=0, private_port_flops=len(fr["private_out"]), merged_input_captures=len(fr["merged_in"]),
             listed_not_changed={k: fr["n_" + k] for k in ("unregistered_out", "feedthrough", "dropped_in", "logic_in", "multi_in", "const_out")},
+            **({"retimed_input_captures": fr["retimed_in"]} if fr.get("retimed_in") else {}),
             proof="equiv_make/equiv_simple -seq 2/equiv_induct/equiv_status -assert: post PASS, emitted .v PASS, mutant FAIL (caught)"), indent=1) + "\n")
     if a.ectlk_face_ports:
         if not (mod == "qkd_ectlk" or re.fullmatch(r"qkd_ectlk_q[0-3]", mod)):   # CORES-KITS/KVX 10-26: + the four quarter cores (same leaves)
@@ -1260,6 +1278,7 @@ def main():
     clks = list(dict.fromkeys(split_name(n)[0] for n in clk_bits))
     rsts = list(dict.fromkeys(split_name(n)[0] for n, c in cj["pin_class"].items()
                               if c == "in" and re.search(RST_RE, split_name(n)[0])))
+    rsts += extra_resets(cj, a.reset_ports, rsts)
     per = float(plan["die"]["period_ps"])
     ins = float(plan["clock"].get("common_latency_ps", plan["clock"]["insertion_ps"]))
     tol = float(plan["clock"]["insertion_tol_ps"])

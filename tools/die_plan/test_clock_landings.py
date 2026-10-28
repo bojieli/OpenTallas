@@ -263,6 +263,66 @@ def test_replicas_of_one_type_must_agree_on_ring_form():
         Landings(p, t)
 
 
+def region_vehicle():
+    """DIE-HEAD-3: dataflow_vehicle + partition c in a's clock region r0 with NO landed port; its tree bus u feeds
+    a.v inside the region, so its status rides same-region ctl pins (compose monitor="region")."""
+    def pin(n, d):
+        return dict(name=n, dir=d, width=1, face="E", window_um=[1, 2], layers=["M4"])
+    p, t, a, b = dataflow_vehicle()
+    t["regions"][0]["box_um"] = [0, 0, 10, 20]
+    p["partitions"].append(dict(name="c", type="C", origin_um=[0, 10]))
+    p["partition_types"]["C"] = dict(module="c_mod", outline_um=[10, 10], buses=[pin("cland_up_ready_u", "out"), pin("cland_up_fault_u", "out")])
+    p["partition_types"]["A"]["buses"] += [pin("cland_dn_ready_v", "in"), pin("cland_dn_fault_v", "in")]
+    p["ports"].append(dict(id="R", width=2, kind="data", src=dict(part="c", bus="u"), dst=dict(part="a", bus="v")))
+    for k in ("ready", "fault"):
+        p["ports"].append(dict(id=f"cland_mon_{k}__R", width=1, kind="ctl", src=dict(part="c", bus=f"cland_up_{k}_u"),
+                               dst=dict(part="a", bus=f"cland_dn_{k}_v")))
+    col = t["collector"]; col["monitor"] = "region"
+    for m in col["types"].values():
+        m["mask"].update(monitor="region", intra_inputs=[], intra_outputs=[])
+    col["types"]["A"]["mask"]["intra_inputs"] = ["v"]
+    col["types"]["C"] = dict(mask=dict(inputs=[], outputs=[], active=True, observer=False, monitor="region", tree_bus="u",
+                                       intra_inputs=[], intra_outputs=["u"]),
+                             tree=None, local_registered_depth=1, collector_root_xy=[5, 5], children=[], local_sources=[])
+    col["parts"]["c"] = dict(parent="a", active=True)
+    c = ("module c_mod (\n input wire clk,\n output wire [1:0] u\n);\n wire rst_n, rst_n_t0, rr_parent, run;\n"
+         " ot_dp_rgate u_rrl_0 (.clk(clk), .d(rr_parent), .run(run), .q(rst_n_t0));\n assign u = 2'b0;\nendmodule\n")
+    return p, t, a, b, c
+
+
+def test_region_monitor_binds_same_region_status_pins():
+    p, t, a, b, c = region_vehicle(); L = Landings(p, t)
+    cc = L.type_rtl("C", c)
+    assert "output wire cland_up_ready_u" in cc and "u_cland_rst_monitor (.clk(clk), .d(rr_parent), .q(cland_reset_monitor))" in cc
+    assert ".clk(clk), .rst_n(cland_reset_monitor), .ready_i({1'b1}),\n        .fault_i({1'b0}), .ready_o(cland_up_ready_u)" in cc
+    aa = L.type_rtl("A", a)
+    assert "input wire cland_dn_ready_v" in aa
+    assert ".ready_i({cland_ok_w, cland_dn_ready_v}),\n        .fault_i({cland_bad_w, cland_dn_fault_v}), .ready_o(cland_up_ready), .fault_o(cland_up_fault)" in aa
+    L.type_rtl("B", b)
+    top = ("module die_bound_top (rst_n, clk_core);\n    a_mod a (\n        .clk(clk_core)\n    );\n    b_mod b (\n        .clk(clk_core)\n    );\n"
+           "    c_mod c (\n        .clk(clk_core)\n    );\nendmodule\n")
+    tt = L.top_rtl(top)
+    assert "wire cland_mon_c__u_ready, cland_mon_c__u_fault;" in tt
+    assert ".cland_up_ready_u(cland_mon_c__u_ready)" in tt and ".cland_dn_fault_v(cland_mon_c__u_fault)" in tt
+    assert "fclk_in_v" not in tt and "u_cland_v" not in aa          # same region: no ring, no forwarded clock
+    assert L.manifest()["implemented"] is True and L.reset_placements["C"]["monitor"]["mode"] == "region"
+    # composed form: the status ports live in clock.landing_network.edges, not in ports
+    p, t, a, b, c = region_vehicle()
+    mon = [x for x in p["ports"] if x["id"].startswith("cland_mon_")]
+    p["ports"] = [x for x in p["ports"] if x not in mon]; p["clock"] = dict(landing_network=dict(edges=mon))
+    assert Landings(p, t).intra_links == [("R", "c", "u", "a", "v")]
+
+
+def test_region_monitor_fails_closed():
+    p, t, a, b, c = region_vehicle(); t["collector"]["types"]["A"]["mask"]["intra_inputs"] = []
+    with pytest.raises(LandingError, match="region monitor pins"):
+        Landings(p, t)
+    p, t, a, b, c = region_vehicle(); p["ports"] = [x for x in p["ports"] if x["id"] != "cland_mon_fault__R"]
+    with pytest.raises(LandingError, match="ready/fault pair"):
+        Landings(p, t)
+    p, t, a, b, c = region_vehicle(); t["collector"]["monitor"] = "dataflow"   # plain dataflow keeps its strict rules
+    with pytest.raises(LandingError):
+        Landings(p, t)
 def ca_vehicle(k=-2, depth=4, edge_fall=False):
     """MESO-INTEG-1 count-aligned form: the same a -> b crossing with the bind's K/DEPTH/latency and start tree."""
     p, t = vehicle()

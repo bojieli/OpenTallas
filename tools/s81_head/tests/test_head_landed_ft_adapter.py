@@ -88,3 +88,20 @@ def test_ftspare_must_be_a_bound_output(raw, monkeypatch):
     del m["partition_types"]["hd_tile"]["contents"][0]["bind"][t["ft_spare_outputs"][0]["port"]]
     with pytest.raises(gen_rtl.GenError):
         _wrapper(m, monkeypatch)
+
+
+def test_adapter_covers_landing_cohort_clones(raw):
+    """DIE-HEAD-3: monitor="region" splits hd_tile into landed-mask cohort clones; every clone gets the same adapter."""
+    P0 = copy.deepcopy(raw)
+    clone = copy.deepcopy(P0["partition_types"]["hd_tile"]); clone["module"] = "hd_tile__clx"; clone["landing_base_type"] = "hd_tile"
+    P0["partition_types"]["hd_tile__clx"] = clone
+    moved = [p for p in P0["partitions"] if p["type"] == "hd_tile"][:3]
+    for p in moved:
+        p["type"] = "hd_tile__clx"
+    P, rep = A.apply(P0, signed=None)
+    assert rep["types"] == ["hd_tile", "hd_tile__clx"] and rep["ports_bound"] == 80 and rep["spare_outputs"] == 40
+    for tn in rep["types"]:
+        t = P["partition_types"][tn]
+        assert t["contents"][0]["module"] == "ot_s81hd_tile_native" and len(t["ft_spare_outputs"]) == 20
+    _, rep1 = A.apply(raw, signed=None)
+    assert "types" not in rep1 and rep1["ports_bound"] == 40          # no clones: report form unchanged

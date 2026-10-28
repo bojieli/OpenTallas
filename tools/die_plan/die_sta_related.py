@@ -233,6 +233,7 @@ def count_align_ss_info(landed, taps, bind, period, reg=None, scale=1.27, need_p
 
 # METHODOLOGY 12.15 b (OWNER 10-27 23:2x): die STA gates scale clock-network arrivals by the measured OpenSTA-vs-ngspice
 # factor (ASAP7 BUFx24 spice calibration: x1.0485 TT, x1.0552 FF); data-path derates unchanged.  Opt-in --clock-cal spice.
+# Source: OSS-CLOCK-2 data/asap7_bufx24_spice_cal.json "spice_scale" (opentools/mscts/data/, claude/oss-clock-2-1027@285ba72636).
 SPICE_CLOCK_CAL = {"TT": 1.0485, "FF": 1.0552}
 TAP_TIME_KEYS = ("late_ps", "early_ps", "abs_late_ps", "abs_early_ps")
 

@@ -558,6 +558,8 @@ def main(argv=None):
     ap.add_argument("--pad", type=int, default=0)
     ap.add_argument("--edge-pad", action="append", metavar="PORT=N", help="count_align_plan.py --edge-pad (with --from-ocv)")
     ap.add_argument("--scale", type=float, default=1.0, help="count_align_plan.py --scale (with --from-ocv)")
+    ap.add_argument("--start-skew", type=CAP.parse_skew, default=(0.0, 0.0), metavar="LO,HI",
+                    help="count_align_plan.py --start-skew (with --from-ocv)")
     ap.add_argument("--samples", type=int, default=2000)
     ap.add_argument("--table")
     ap.add_argument("--table-out")
@@ -575,7 +577,9 @@ def main(argv=None):
     if a.from_ocv:
         rows = CAP.load_rows(a.plan_json, a.corner, a.scale)
         s, out, regs = CAP.plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad,
-                                CAP.parse_edge_pad(a.edge_pad))
+                                CAP.parse_edge_pad(a.edge_pad), a.start_skew)
+        if any(a.start_skew):
+            s["start_skew_ps"] = list(a.start_skew)
         s.update(period_ps=a.period, aperture_ps=a.aperture, sync_aperture_ps=a.sync_aperture, pad=a.pad, scale=a.scale,
                  wander_frac=a.wander_frac, source=a.plan_json)
         plan = plan_doc(s, out, regs)

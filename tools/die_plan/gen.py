@@ -187,6 +187,8 @@ def main(argv=None):
     a3.add_argument("--kit-rtl", action="append", default=[], metavar="TYPE=FILELIST",
                     help="G3: the type's kit RTL = this filelist (bind.py kit-rtl: bound partition inside the plan "
                          "wrapper) instead of the generated plan wrapper + type sources; repeatable")
+    a3.add_argument("--clock-landing", help="opt-in (DIE-HEAD-4b): clock_landing_plan sidecar (landed_sidecar.json) of this "
+                    "composed landed plan; kits take the landed wrapper of gen rtl --clock-landing + the ring RTL")
     a4 = sub.add_parser("assembly")
     a4.add_argument("plan")
     a4.add_argument("--out", required=True)
@@ -224,7 +226,8 @@ def main(argv=None):
                                            (a.slew_margin, a.cap_margin), a.skip_kit_ir, a.max_wire_um,
                                            plan_path=Path(a.plan).resolve(), rc_cal=not a.stock_rc,
                                            master_slice=a.master_slice, trial=a.trial,
-                                           gpl_plain=[x for x in a.gpl_plain.split(",") if x])
+                                           gpl_plain=[x for x in a.gpl_plain.split(",") if x],
+                                           landing=load_json(a.clock_landing) if a.clock_landing else None)
             else:
                 kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views, plan_path=Path(a.plan).resolve(),
                                                 pg_map=json.loads(Path(a.pg_map).read_text()) if a.pg_map else None)]

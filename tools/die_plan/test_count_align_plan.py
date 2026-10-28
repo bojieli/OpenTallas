@@ -115,3 +115,42 @@ def test_mc_catches_wrong_start_offset():
     for o in out:
         o["K"] -= {"ab": 1, "bc": 1, "ac": 2}[o["port"]]   # n0 one larger per tree hop
     assert cap.mc_check(rows, out, regs, T, 300)[1] > 0
+
+
+def test_start_skew_moves_near_tie_edge_off_the_boundary():
+    """DIE-HEAD-4b (NC-HEAD-PART chE/W*_t__0): static d in [150, 273.5] ps is 150 from the rise boundary and 143 from
+    the fall one, so the plan alone picks rise; the start arrives 57-90 ps late (parent clk->Q), the sampled phase
+    d - skew reaches 60 ps from the rise boundary.  With --start-skew the edge is fall, >= ap from either boundary with
+    and without the skew, and the die_sta_related start-row checks (|skew| <= limit, skewed dist >= sync aperture) hold."""
+    rows = [row("ab", "a", "b", 211.75, 61.75, 61.75)]
+    s0, _, r0 = cap.plan([dict(r) for r in rows], T, AP, 0.0)
+    assert {g["region"]: g["start_from"] for g in r0}["b"]["edge"] == "rise"
+    rows1 = [dict(r) for r in rows]
+    s1, out, r1 = cap.plan(rows1, T, AP, 0.0, start_skew=(57.0, 90.0))
+    e = {g["region"]: g["start_from"] for g in r1}["b"]
+    assert e["edge"] == "fall" and e["sync_values"] == 1 and e["sync_dist_ps"] >= AP
+    assert e["start_skew_limit_ps"] >= 90.0
+    lo, hi = 150.0 - 90.0, 273.5 - 57.0
+    off = T / 2
+    k = math.floor((lo - off) / T)
+    assert min(lo - (off + k * T), off + (k + 1) * T - hi) >= 26.5
+    assert cap.mc_check(rows1, out, r1, T, 300)[1] == 0
+    # default (0, 0) is the unskewed plan
+    assert cap.plan([dict(r) for r in rows], T, AP, 0.0, start_skew=(0.0, 0.0))[2] == r0
+
+
+def test_start_skew_keeps_an_edge_that_already_clears_it():
+    """d in [200, 300]: rise is 200 ps off, the skewed phase [110, 243] still clears ap and the STA limit, so the skew
+    changes nothing (no edge is moved that does not need it)"""
+    rows = [row("ab", "a", "b", 250.0, 50.0, 50.0)]
+    r0 = cap.plan([dict(r) for r in rows], T, AP, 0.0)[2]
+    r1 = cap.plan([dict(r) for r in rows], T, AP, 0.0, start_skew=(57.0, 90.0))[2]
+    assert r1 == r0 and {g["region"]: g["start_from"] for g in r1}["b"]["edge"] == "rise"
+
+
+def test_parse_skew():
+    assert cap.parse_skew("57,90") == (57.0, 90.0)
+    import argparse
+    import pytest
+    with pytest.raises(argparse.ArgumentTypeError):
+        cap.parse_skew("90,57")

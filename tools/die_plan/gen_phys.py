@@ -1968,8 +1968,12 @@ exit $rc
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
-               rc_cal=True, master_slice=None, trial=False, gpl_plain=()):
+               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None):
     """gpl_plain: types whose kit places on plain-wirelength GPL (pure-FT corridors, --gpl-plain)."""
+    """landing (opt-in, DIE-HEAD-4b, gen phys --clock-landing): the clock_landing_plan sidecar of a composed landed plan.
+    The kit wrapper is the SAME landed wrapper gen rtl --clock-landing emits (clock_landings.type_rtl: rings, ring
+    reset relays, monitor), every type generated so the sidecar's type check sees all copies, and each kit carries the
+    landing ring RTL its wrapper instantiates (LANDING_RTL).  Default None: byte-identical kits."""
     """margins (slew_pct, cap_pct): opt-in repair_design SLEW_MARGIN / CAP_MARGIN (None: not exported)."""
     """kit_rtl {type: filelist}: G3 kits take the bound partition RTL (bind.py kit-rtl: the bound module inside a
     port-only wrapper with the plan type's module name and exact pins) instead of the generated plan wrapper"""
@@ -1988,7 +1992,11 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
     gtypes = types
     if kit_rtl:                # kit-rtl types take the bound RTL: no generated plan wrapper for them
         gtypes = [tn for tn in (types or P.types) if tn not in kit_rtl]
-    files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path)
+    if landing is not None:
+        if kit_rtl:
+            raise gen_rtl.GenError("clock landing: --kit-rtl kits take the bound RTL; landing kits use the landed wrapper")
+        gtypes = None          # the landed emitter checks every copy of every type
+    files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path, landing=landing)
     cells = rtl_dir / "ot_dp_cells.sv"
     root = Path(rtl_root) if rtl_root else Path(__file__).resolve().parent.parent.parent
     rs = root / "rtl" / "lib" / "ot_reset_sync.sv"
@@ -2010,6 +2018,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             mine = fl
         else:
             mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
+            if landing is not None:
+                mine += landing_rtl(root, (rtl_dir / f"{t['module']}.sv").read_text())
         bumps = kit_bump_ports(P, tn, kit_rtl[tn]) if kit_rtl and tn in kit_rtl else None
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
                                    skip_ir, max_wire_um, rc_cal, master_slice, trial, bump_ports=bumps,
@@ -2017,6 +2027,21 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits
+
+
+LANDING_RTL = ("rtl/common/ot_dp_clk_landing.sv", "rtl/common/ot_dp_clk_landing_ca.sv")
+
+
+def landing_rtl(root, wrapper_text):
+    """the landing ring RTL files (LANDING_RTL, under root) defining a module the landed wrapper instantiates."""
+    import re
+    used = set(re.findall(r"^\s*(\w+)\s+(?:#\(|\w+\s*\()", wrapper_text, re.M))
+    out = []
+    for rel in LANDING_RTL:
+        f = Path(root) / rel
+        if f.is_file() and used & set(re.findall(r"^\s*module\s+(\w+)", f.read_text(), re.M)):
+            out.append(f)
+    return out
 
 
 # ------------------------------------------------------------------------------------------------- assembly (3d)
