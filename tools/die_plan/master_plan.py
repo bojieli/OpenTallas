@@ -1084,18 +1084,26 @@ def size_driver(length_um, sinks, sink_cin_ff=2.0):
     return dict(cell=name, parallel=n, load_ff=r3(c), rc_ps=r3(r * c / n))
 
 
-def pushdown_island(k, rect, centre, role, drive_len_um, sinks):
+# 12.2a1 island ft pins sit +-pin_dx_um from the island centre in x (+-2.16 in y).  The legacy 2.16 puts every M5 pin
+# on x = lattice + 2.16 = the centre of the 72 nm gap between the core M5 VSS/VDD stripe pair (pdn offset 2.064, width
+# 0.12, spacing 0.072): 20 nm to each stripe and no legal M5 track (offset 0.024, pitch 0.048) -> DRT-0255 "cannot find
+# path" on mp_isl*_rst_* (HBM-CORES-REBAL-2 10-28, coll_q2 reduce route).  1.08 lands on an M5 track ~0.9 um clear of
+# both stripe pairs.  Opt-in (plan die.pushdown_ft_pin_dx_um / keyword); the default stays byte-identical.
+FT_PIN_DX_UM = 2.16
+
+
+def pushdown_island(k, rect, centre, role, drive_len_um, sinks, pin_dx_um=FT_PIN_DX_UM):
     """12.2a1 pushdown spec of one in-core island: ft ports (in from the M9->M5 stack, out to the die mesh/tree or
     the core-internal tree), fixed driver cells at the island centre, sizing per 12.8 d1."""
     cx, cy = centre
     return dict(name=f"isl{k}", role=role, rect_um=rect, centre_um=[r3(cx), r3(cy)], via_stack=["M9", "M5"],
-                ft_ports=[dict(name=f"mp_isl{k}_ck_i", dir="in", layer="M5", xy_um=[r3(cx - 2.16), r3(cy + 2.16)],
+                ft_ports=[dict(name=f"mp_isl{k}_ck_i", dir="in", layer="M5", xy_um=[r3(cx - pin_dx_um), r3(cy + 2.16)],
                                connect="die M9 clock stack (M9->M5 at the island centre)"),
-                          dict(name=f"mp_isl{k}_ck_o", dir="out", layer="M5", xy_um=[r3(cx + 2.16), r3(cy + 2.16)],
+                          dict(name=f"mp_isl{k}_ck_o", dir="out", layer="M5", xy_um=[r3(cx + pin_dx_um), r3(cy + 2.16)],
                                connect="die mesh/tree feed-through net; independent core clock pin"),
-                          dict(name=f"mp_isl{k}_rst_i", dir="in", layer="M5", xy_um=[r3(cx - 2.16), r3(cy - 2.16)],
+                          dict(name=f"mp_isl{k}_rst_i", dir="in", layer="M5", xy_um=[r3(cx - pin_dx_um), r3(cy - 2.16)],
                                connect="die regional reset stack (M9->M5)"),
-                          dict(name=f"mp_isl{k}_rst_o", dir="out", layer="M5", xy_um=[r3(cx + 2.16), r3(cy - 2.16)],
+                          dict(name=f"mp_isl{k}_rst_o", dir="out", layer="M5", xy_um=[r3(cx + pin_dx_um), r3(cy - 2.16)],
                                connect="die reset feed-through net; independent core reset pin")],
                 driver=dict(size_driver(drive_len_um, sinks), placement="fixed dont_touch at centre_um",
                             basis="12.8 d1: plan geometry only (driven length %.1f um, %d sinks)" % (drive_len_um, sinks)),
