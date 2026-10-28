@@ -61,6 +61,11 @@ def _runs(root, die, item=None):
             # canaries of any main flow: HBM kits were held by the f9d9190f1 A/B run as 'newest completed reference'.
             if '/flow-canary/ab/' in str(meta.get('src', '')):
                 continue
+            # FLOW-SHARED-9 2026-10-27 (COORD 19:36 (3)): canaries run from immutable commits only -- a run whose source is
+            # a mutable lane worktree (not a flow-canary/sources/<sha> snapshot) never binds or holds kits.
+            src = str(meta.get('src', '') or '')
+            if src and '/flow-canary/sources/' not in src:
+                continue
             if item and meta['spec'].get('item', item) != item:
                 continue
             mtime = p.stat().st_mtime_ns

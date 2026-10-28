@@ -43,6 +43,15 @@ def is_ab_candidate(meta):
     return "/flow-canary/ab/" in str(meta.get("src", ""))
 
 
+def mutable_source(meta):
+    """FLOW-SHARED-9 (COORD 10-27 19:36 (3)): canaries run from immutable commits only.  A run whose source is not a
+    commit snapshot (flow-canary/sources/<sha> for main, flow-canary/ab/sources/<sha> for A/B) -- e.g. one submitted
+    from a lane worktree such as wt/qk-cores-6 that kept moving under it -- is neither a reference nor blocks the
+    trigger.  Legacy metadata without a src keeps the old behaviour."""
+    src = str(meta.get("src", "") or "")
+    return bool(src) and "/flow-canary/sources/" not in src and "/flow-canary/ab/sources/" not in src
+
+
 def live_dies(root, now=None):
     """Uncollected transient clients never expire into permission for a duplicate.
 
@@ -57,7 +66,7 @@ def live_dies(root, now=None):
         if (run / "canary.json").exists():
             continue
         m = json.loads(Path(d).read_text())
-        if is_ab_candidate(m):
+        if is_ab_candidate(m) or mutable_source(m):
             continue
         if m.get("client_unit") or now - run.stat().st_mtime < LIVE_S:
             out.add(m["spec"]["die"])

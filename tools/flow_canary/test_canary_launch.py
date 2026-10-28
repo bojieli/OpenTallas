@@ -7,6 +7,8 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).parent));import canary as C
+import os
+os.environ['OT_CANARY_ANY_SOURCE']='1'  # tmp sources below are not flow-canary/sources snapshots
 
 class Launch(unittest.TestCase):
  def test_client_is_independent_transient_service(self):
@@ -52,5 +54,27 @@ class Launch(unittest.TestCase):
     self.assertEqual(C.cmd_submit(a),1)
    result=json.loads(next((Path(d)/'runs').glob('*/canary.json')).read_text())
    self.assertEqual(result['verdict'],'FAIL');self.assertEqual(result['failing'],['launch'])
+
+class ImmutableSource(unittest.TestCase):
+ def test_submit_refuses_mutable_worktree_source(self):
+  # FLOW-SHARED-9: qwen_kvsys_core_167d3a11a ran from the lane worktree wt/qk-cores-6
+  with tempfile.TemporaryDirectory() as d:
+   spec=dict(die='test',item='ref',top='top',mem_gb=16,kit='{gen}/ref',gen='true',run='true')
+   a=SimpleNamespace(spec=None,die=['test'],src=str(Path(d)/'wt/qk-cores-6'),root=str(Path(d)/'runs'),image='image',dry=False)
+   with patch.dict(os.environ,{'OT_CANARY_ANY_SOURCE':''}),patch.object(C,'load_spec',return_value=({'test':spec},{})),patch.object(C.subprocess,'run') as run:
+    self.assertEqual(C.cmd_submit(a),2)
+   run.assert_not_called();self.assertFalse((Path(d)/'runs').exists())
+ def test_trigger_and_gate_ignore_mutable_source_runs(self):
+  spec=importlib.util.spec_from_file_location('trig9',Path(__file__).with_name('trigger.py'));T=importlib.util.module_from_spec(spec);spec.loader.exec_module(T)
+  sys.path.insert(0,str(Path(__file__).resolve().parent.parent/'autopilot'));import canary_gate as G
+  with tempfile.TemporaryDirectory() as d:
+   root=Path(d)
+   for name,src in (('wt_run','/srv/x/claude/wt/qk-cores-6'),('main_run','/srv/x/claude/flow-canary/sources/abbbffac9b85')):
+    (root/name).mkdir();(root/name/'canary_meta.json').write_text(json.dumps({'spec':{'die':'qwen_kvsys_core'},'src':src,'src_commit':name,'client_unit':'u-'+name}))
+   self.assertTrue(T.mutable_source({'src':'/srv/x/claude/wt/qk-cores-6'}));self.assertFalse(T.mutable_source({}))
+   self.assertEqual(T.live_dies(root),{'qwen_kvsys_core'})
+   (root/'main_run'/'canary.json').write_text('{}')
+   self.assertEqual(T.live_dies(root),set())   # the live worktree run does not block the trigger
+   self.assertEqual([r['src'] for r in G._runs(root,'qwen_kvsys_core')],['main_run'])
 
 if __name__=='__main__':unittest.main()

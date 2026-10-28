@@ -159,6 +159,9 @@ def test_submit_dry(tmp_path):
     assert not (run / "canary_meta.json").exists() and (run / "canary_meta.dry.json").is_file()
     assert T.live_dies(tmp_path / "runs") == set()
     (run / "canary_meta.dry.json").rename(run / "canary_meta.json")     # now simulate a real, verdict-less run
+    m = json.loads((run / "canary_meta.json").read_text())             # from a commit snapshot (FLOW-SHARED-9)
+    m["src"] = "/srv/x/flow-canary/sources/abc123456789"
+    (run / "canary_meta.json").write_text(json.dumps(m))
     assert T.live_dies(tmp_path / "runs") == {"s81"}
     # a live canary blocks the trigger (no checkout under it)
     import subprocess

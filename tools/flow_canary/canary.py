@@ -565,6 +565,12 @@ def cmd_submit(a):
     specs, _ = load_spec(a.spec)
     dies = a.die or list(specs)
     src = Path(a.src).resolve()
+    # FLOW-SHARED-9 (COORD 10-27 19:36 (3)): canaries run from immutable commit snapshots only (the trigger's
+    # flow-canary/sources/<sha>, A/B under flow-canary/ab/sources/<sha>); a lane worktree keeps moving under the run.
+    if (not getattr(a, "dry", False) and "/flow-canary/sources/" not in str(src) + "/"
+            and "/flow-canary/ab/sources/" not in str(src) + "/" and os.environ.get("OT_CANARY_ANY_SOURCE") != "1"):
+        print(f"CANARY REFUSED: --src {src} is not a flow-canary/sources/<sha> commit snapshot (mutable worktree?)")
+        return 2
     sha = git_head(src)
     stamp = time.strftime("%m%d_%H%M%S") + f"_{time.time_ns() % 1000000:06d}"
     for die in dies:
