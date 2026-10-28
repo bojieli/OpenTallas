@@ -132,6 +132,12 @@ class Gate(unittest.TestCase):
         self.assertFalse(ok)
         self.assertIn('source integrity error',why)
 
+    def test_newer_comparison_error_does_not_fall_back_to_old_release(self):
+        self.runref('old','PASS')
+        self.runref('new','FAIL',src='missing123')
+        self.git=lambda args,**kw:(128,'','missing') if args[-2]=='missing123' else (0,'','')
+        self.assertFalse(self.gate())
+
     def test_existing_adoption_observation_unblocked(self):
         self.row['mode']='adopt'
         self.assertTrue(self.gate())
