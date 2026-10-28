@@ -77,8 +77,8 @@ for tn, t in P["partition_types"].items():
         if d is None:
             moved.append(dict(type=tn, core=hc["inst"], before=[ox, oy], after=None, shift=None, note="NO FREE LATTICE SLOT"))
             continue
-        b0 = box(hc); inr = [r for r in regs if inside(b0, r)] + push
-        for r in inr:                                  # in-core station registers ride with their core
+        inr = push                                     # in-core regs stay (G0 hop <= 405 unchanged); only swept face regs move
+        for r in inr:
             r[0], r[1] = round(r[0] + d[0], 4), round(r[1] + d[1], 4)
         hc["origin_um"] = [round(ox + d[0], 4), round(oy + d[1], 4)]
         nt = 0
@@ -96,7 +96,7 @@ for tn, t in P["partition_types"].items():
             for k, key in (("from_um", "launch"), ("to_um", "capture")):
                 if (e.get(key) or "").split(".")[0] == hc["inst"]:
                     e[k] = [round(e[k][0] + d[0], 4), round(e[k][1] + d[1], 4)]; ns += 1
-        moved.append(dict(type=tn, core=hc["inst"], before=[ox, oy], after=hc["origin_um"], shift=list(d), taps=nt, incore_regs=len(inr) - len(push), pushed_face_regs=len(push),
+        moved.append(dict(type=tn, core=hc["inst"], before=[ox, oy], after=hc["origin_um"], shift=list(d), taps=nt, pushed_face_regs=len(push),
                           die_taps=nd, station_ends=ns))
 rep["lattice"] = moved
 # (3) off-track plan pins of the tkm root chain view (plan pins_file, not a native view)
