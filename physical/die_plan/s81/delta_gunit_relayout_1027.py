@@ -123,7 +123,12 @@ def repin_l3(pins):
     def snap(x):                                  # today's vi_s / vo_s lattice: 157.404 + k * 0.096
         return round(157.404 + round((x - 157.404) / 0.096) * 0.096, 3)
     out = [dict(p, x=snap(345.4 - 0.096 * (len(vi) - 1 - i)), layer="M5") for i, p in enumerate(vi)]
-    out += [dict(p, x=snap(0.204 + 0.096 * i), layer="M5") for i, p in enumerate(vo)]
+    # S81-CORES-R26: 0.204 sits half-way between lattice points (0.156 / 0.252), so snap() rounded consecutive vo_s
+    # bits onto the same site (core_pin_sites_gate dup_site 87).  Start the W-end pack on the first lattice point >= 0.204.
+    v0 = snap(0.204 + 0.048 + 1e-6)
+    out += [dict(p, x=round(v0 + 0.096 * i, 3), layer="M5") for i, p in enumerate(vo)]
+    xs = [(q["layer"], q["x"], q["y"]) for q in keep + out]
+    assert len(xs) == len(set(xs)), "L3 re-pin stacks pins on one site"
     return keep + out
 
 
@@ -259,6 +264,12 @@ def apply(check_only):
     print(json.dumps(rep, indent=1))
     if rep["worst_bundle"] > 405 or any(max(v) > 405 for v in hops.values()):
         raise SystemExit("reach target missed")
+    sys.path.insert(0, str(REPO / "tools" / "die_plan"))
+    import core_pin_sites_gate
+    for inst in ("u_l2", "u_l3"):
+        pg = core_pin_sites_gate.check_pins(pins[inst], *cores[inst]["outline_um"])
+        if pg.get("stacked_pins"):
+            raise SystemExit(f"{inst}: core_pin_sites_gate {pg[counts]}")
     if check_only:
         return rep
     for inst in ("u_l2", "u_l3"):
