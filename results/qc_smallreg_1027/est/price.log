@@ -1,0 +1,18 @@
+==> /srv/opentallas-scratch2/claude/qc-smallreg-1027/price/prep_rowrec.log <==
+{"cb_add": 28, "cb_after": 44, "cb_before": 16, "hop_add": 51, "l9_add": 9, "lanes": 1764, "ports": 2396}
+rephase relations 29 whole-port pads 0
+
+==> /srv/opentallas-scratch2/claude/qc-smallreg-1027/price/cost_rowrec/compose.log <==
+q_rowrec_land 317581 3780.1 8719 9231
+==> /srv/opentallas-scratch2/claude/qc-smallreg-1027/price/prep_grpphys.log <==
+{"cb_add": 33, "cb_after": 49, "cb_before": 16, "hop_add": 51, "l9_add": 9, "lanes": 1812, "ports": 2540}
+rephase relations 204 whole-port pads 0
+
+==> /srv/opentallas-scratch2/claude/qc-smallreg-1027/price/cost_grpphys/compose.log <==
+q_grpphys_land 318301 3771.5 8739 9251
+==> /srv/opentallas-scratch2/claude/qc-smallreg-1027/price/prep_rowphys.log <==
+{"cb_add": 28, "cb_after": 44, "cb_before": 16, "hop_add": 51, "l9_add": 9, "lanes": 1764, "ports": 2396}
+rephase relations 24 whole-port pads 0
+
+==> /srv/opentallas-scratch2/claude/qc-smallreg-1027/price/cost_rowphys/compose.log <==
+q_rowphys_land 317581 3780.1 8719 9231

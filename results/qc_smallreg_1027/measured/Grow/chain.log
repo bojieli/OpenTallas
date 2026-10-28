@@ -1,0 +1,7 @@
+START code 810b714798 plan 5545cbfca017 map /srv/opentallas-scratch2/claude/qc-smallreg-1027/regions_row.json feed /srv/opentallas-scratch2/claude/qc-smallreg-1027/feed_row.json args  Tue Oct 27 23:44:46 PDT 2026
+kit rc 0 Tue Oct 27 23:48:36 PDT 2026
+{'leaf_um': 200.0, 'rep_um': 250.0, 'tree_form': 'link_htree', 'spine_dme': None, 'link_feed': {'root': 'sl_E0_stm', 'regions': 221, 'local': 'htree', 'leaf_um': 200.0, 'feed_edges': 220, 'feed_wire_um': 449318.8}, 'region_trees': 221, 'buffer': 'BUFx24_ASAP7_75t_R', 'wire_r_kohm_um': 0.0043358024999999994, 'wire_c_ff_um': 0.10824363000000001, 'tap_load_ff': 3.0, 'nodes': 28872, 'leaves': 7096, 'repeaters': 18387, 'wire_um': 7995563.5, 'levels': 63, 'site_legal': {'mode': 'slide', 'slide_fallbacks': 142, 'cells': 47259, 'illegal': {}, 'forbidden_rects': 960, 'moved_nodes': 20209, 'balance': {'nodes': 28353, 'moved': 19822, 'unbalanced': 1172, 'worst_imbalance_um': 280.5}, 'detoured_legs': 385, 'detour_added_um': 2457.0}}
+clock rc 0 Tue Oct 27 23:49:06 PDT 2026
+combo TT rc 0 EXIT 0 Tue Oct 27 23:54:07 PDT 2026
+combo FF rc 0 EXIT 0 Tue Oct 27 23:54:14 PDT 2026
+CHAIN_DONE Tue Oct 27 23:54:14 PDT 2026
