@@ -464,3 +464,23 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
 - 12.12 (OWNER 2026-10-27 ~19:1x) droop INFO rerun extended: every signed core with TT setup slack < 70 ps gets the 0.665 V INFO rerun
      (12.4a b2 had < 25 ps). An INFO FAIL is fixed structurally at the core's next re-sign; it is not a sign-off gate. Measured basis:
      VQ 2.48 -> -60.90, NNfd 8.23 -> -65.12 (DROOP-DERATE-1, UNCHECKED).
+- 12.13 LOCALITY FIRST (OWNER 2026-10-27 ~20:3x: "all of the non-closing dies must be reworked to use locality as the first principle").
+     Applies to every die that has not passed the 12.4a freeze gate, which today is all 5. It overrides any earlier die-wide clock
+     form (12.7/12.8 MSCTS die mesh/H-tree as the release clock). Top-down PLANNING (12.7 master plan, PG first, streets, budgets,
+     pins) stays: it is how locality is made.
+  a. Regions from connectivity. Cluster cores/tiles by measured traffic (bit-mm from the plan/RTL), so that heavy traffic stays inside a
+     region. Size regions so the region clock stays shallow (guidance about 3-4 mm span, about 1-1.5 ns insertion). The gate is the
+     derated margin in d, not these numbers.
+  b. Clock follows data. Each region has its own local tree/spine. Region clocks are fed along the inter-region link graph
+     (neighbour-forwarded, or from a shared spine running along the links). No region hangs off a deep die-wide tree.
+  c. Links. Neighbour links are registered hops placed along the clock spine. Far links are chains of neighbour hops that cross
+     regions through fixed-latency mesochronous crossings. The crossing design follows the MESO-COUNT-1 verdict: count-aligned if
+     proven, otherwise the current ring with a per-crossing margin. The 10-14 static schedule stays: no runtime credits/backpressure on
+     production paths.
+  d. Gates unchanged: die GRT0 incl clock; die STA related pairs inside regions; landed_phase_ocv derated margin >=100 ps TT and FF on
+     every crossing; token pass. NUMBER-CHECK before quoting.
+  e. Rework order per die: traffic matrix -> region map with a locality score (bit-mm inside vs across, crossings, worst unshared
+     clock per crossing) -> re-plan event (one source for the die) -> region clocks -> crossings -> gates. Existing closed cores are
+     reused; only partition/plan glue changes, unless a core straddles a region cut.
+  f. Lanes that build a die-wide clock as the release form stop. Their reusable parts (M8 row reservations, streets, PG) move to
+     the locality form.
