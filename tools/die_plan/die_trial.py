@@ -1641,7 +1641,8 @@ def attach_core_branches(P, nodes, core_taps, site, rep_um, clock_rc="ndr", pad_
                 q = site.nearest(q)
             q = (round(q[0], 3), round(q[1], 3))
             nodes[nid] = dict(id=nid, x=q[0], y=q[1], parent=li, level=L["level"] + 1, kids=[], taps=[t],
-                              core_branch=part, **({"region": list(L["region"])} if "region" in L else {}),
+                              core_branch=part, **({"req_xy": [t[2], t[3]]} if site is not None else {}),
+                              **({"region": list(L["region"])} if "region" in L else {}),
                               **({"rib": L["rib"]} if "rib" in L else {}))
             L["kids"].append(nid)
             d = leg_ps_rc(_man((L["x"], L["y"]), q), rep_um, clock_rc) + stub_ps_rc(_man(q, (t[2], t[3])), clock_rc)
