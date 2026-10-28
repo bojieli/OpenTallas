@@ -315,6 +315,9 @@ SCHEMA = {
                 "type": "object", "required": ["module", "outline_um"], "additionalProperties": False,
                 "properties": {
                     "module": _name,                 # generated wrapper module name
+                    # DIE-HEAD-5 10-28 (gen_phys.phy_pg_domains opt-in): the type PHY body is off-model (behind its pads),
+                    # so its die.pg.domains region may hold no macro; the note states why
+                    "phy_pg_offmodel": {"type": "string", "minLength": 1},
                     "infra_ports": {"type": "array", "items": _infra_port},
                     "infra_arcs": {"type": "array", "items": _infra_arc},
                     # HEAD native views: physical (synthesis black-box) source -> simulation model source

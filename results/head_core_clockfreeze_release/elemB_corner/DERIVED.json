@@ -1,0 +1,58 @@
+{
+ "schema": "opentallas.derived_corner_views.v1",
+ "core": "ot_s81hd_elemB_cv",
+ "lane": "DIE-HEAD-5 KITS34",
+ "date": "2026-10-28T00:37:37-07:00",
+ "source_capsule": "results/head_core_clockfreeze_release/elemB_signed",
+ "source_run": "epyc2:/srv/opentallas-scratch2/claude/codex-head-version-1351/elemB.eco_clockfreeze_tagb_hm0",
+ "source_verdict": "SIGNED",
+ "inputs_sha256_checked_vs_provenance": {
+  "6_final.odb": "11bcdd53cd6bfef42f940c4ffb5cf7d8505f79ec8693d5844b5452da4fb7e68d",
+  "6_final.spef": "a1a0029b0d4426023dbda37fcbbfc4b1ccb19c2207fce2c65d25e0d69d1507a1"
+ },
+ "sdc_sha256": "79875fbb5ffc75e1025aef9fabebf074befc8981aee3c589e595a5ab1c33afb5",
+ "method": "corner_lib.sh: openroad read_liberty ONLY that corner (5 RVT std-cell libs, same versions as the signed generate_abstract) + macros/*_<corner>.lib, read_db/read_sdc/read_spef of the signed 6_final, write_timing_model (cl_TT.tcl/cl_FF.tcl). No route/ECO/netlist change.",
+ "why": "signed _BC.lib = multi-scene write_timing_model -scene BC: FF-scene arcs but header nom 0.70 V/25 C and pin capacitances of the TT default library (elemA pin cap 1.2532 = TT, FF 1.3333), so it does NOT match the FF kit corner (asap7 FF libs PVT_0P77V_0C); COORD 00:22 ruling (c): do not alias, get the right corner lib.",
+ "tt_equals_signed_tc": "byte-identical except nom_/comment/date lines (0 differing lines)",
+ "op_conditions": {
+  "ot_s81hd_elemB_cv_tt.lib": {
+   "nom_process": 1.0,
+   "nom_voltage": 0.7,
+   "nom_temperature": 25.0
+  },
+  "ot_s81hd_elemB_cv_ff.lib": {
+   "nom_process": 1.0,
+   "nom_voltage": 0.77,
+   "nom_temperature": 0.0
+  },
+  "signed ot_s81hd_elemB_cv_tc.lib": {
+   "nom_process": 1.0,
+   "nom_voltage": 0.7,
+   "nom_temperature": 25.0
+  },
+  "signed ot_s81hd_elemB_cv_BC.lib": {
+   "nom_process": 1.0,
+   "nom_voltage": 0.7,
+   "nom_temperature": 25.0
+  }
+ },
+ "kit_corners": {
+  "TT": {
+   "nom_process": 1,
+   "nom_voltage": 0.7,
+   "nom_temperature": 25,
+   "lib": "asap7sc7p5t_*_RVT_TT PVT_0P7V_25C"
+  },
+  "FF": {
+   "nom_process": 1,
+   "nom_voltage": 0.77,
+   "nom_temperature": 0,
+   "lib": "asap7sc7p5t_*_RVT_FF PVT_0P77V_0C"
+  }
+ },
+ "sha256": {
+  "ot_s81hd_elemB_cv_tt.lib": "4d70c736167eba9aa0cd55d92688b693d3b1ae751c11850f402c5e58d3ec4401",
+  "ot_s81hd_elemB_cv_ff.lib": "3fb9072cb39a5bd7194d43e071c164cb67e2b4b7f15b84e54505cca96c82d4ea",
+  "ot_s81hd_elemB_cv.lef": "da3694b459011242245b718bdab8c76d57b652e11d540d0a2e854c0326517795"
+ }
+}
