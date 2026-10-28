@@ -35,7 +35,7 @@ import json
 import math
 import random
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -43,6 +43,10 @@ import count_align_plan as CAP  # noqa: E402
 
 SYNC = 3    # ot_dp_landing_origin synchroniser flops (s0, s1, s2); the fall form adds a negedge stage (in s below)
 LAUNCH = 1  # the forwarded start is the parent origin's REGISTER output: it rises one parent edge before word 0
+# Intra-region start relay (DIE-KV-3/CAORIGIN, COORD 21:14 ASK 3): tx flop in the origin partition + rx flop in the
+# relay partition, both ot_dp_landing_relay on the region clock (rtl/common/ot_dp_clk_landing_ca.sv).  A relay
+# partition starts RELAY_STAGES counts after its region origin.
+RELAY_STAGES = 2
 
 
 class BindError(ValueError):
@@ -68,8 +72,11 @@ def plan_doc(summ, out, regs):
     return dict(summary=summ, regions=regs, crossings=out)
 
 
-def bind(plan, T=None):
-    """plan = count_align_plan.py --out document {summary, regions, crossings}"""
+def bind(plan, T=None, parts=None):
+    """plan = count_align_plan.py --out document {summary, regions, crossings}.
+    parts (opt-in, DIE-KV-3/CAORIGIN): {port: (src_partition, dst_partition)}; None = one origin per region (output
+    unchanged).  With parts a region holding several landed partitions gets ONE origin partition and a timed start
+    relay to the others (bind_parts); the plan's origins/latency/lag are unchanged, only non-tree RTL K moves."""
     summ, regs, xs = plan["summary"], plan["regions"], plan["crossings"]
     T = float(summ.get("period_ps", 833.0) if T is None else T)
     if summ.get("regions_reached") != summ.get("regions"):
@@ -117,36 +124,132 @@ def bind(plan, T=None):
                                 d_lo_ps=round(o["d_ps"] - o["p_dn_ps"], 1), d_hi_ps=round(o["d_ps"] + o["p_up_ps"], 1),
                                 wander_ps=o.get("wander_ps", 0.0), margin_lo_ps=o["margin_lo_ps"],
                                 margin_hi_ps=o["margin_hi_ps"])
-    return dict(schema="opentallas.count_align_bind.v2", form="count_aligned", period_ps=T,
+    b = dict(schema="opentallas.count_align_bind.v2", form="count_aligned", period_ps=T,
                 pad=int(summ.get("pad", 0)), root=root[0], ports=ports, regions=regions,
                 sync_aperture_ps=summ.get("sync_aperture_ps", 26.5), aperture_ps=summ.get("aperture_ps", T / 8),
                 start_skew_limit_min_ps=summ.get("start_skew_limit_min_ps"),
                 convention="a_child - a_parent = PAD + 2 + J(d) = MESO-INTEG-1 m + 1 + PAD (identity, checked per edge); "
                            "RTL K = plan K_eff - n0",
                 latency_frame="receiver counts; sched_lat = K + 1 + n_dst - n_src (nominal) = plan lat_cycles")
+    return b if parts is None else bind_parts(b, parts)
+
+
+def bind_parts(b, parts):
+    """Intra-region start relay (DIE-KV-3/CAORIGIN 69d1ba8933 on the plan-param bind v2; COORD 21:14 ASK 3).
+
+    ORIGIN CHOICE (deterministic): a child region's origin is the partition that receives its start-tree port; the root
+    region's origin is the partition that sends the most child-region tree ports, then the most landed crossings, then
+    the first by name.  Every other landed partition of the region is a RELAY: origin start -> RELAY_STAGES registers of
+    the region clock (ot_dp_landing_relay tx -> cland_rstart pin -> rx): a same-clock registered ctl path timed by the die
+    STA as an intra-region pair, not a landed crossing.
+    COUNT FRAMES: N(root origin) = 0; N(origin of child x on tree port s->o_x) = N(sender partition of s) + plan step
+    (PAD_e + 2 + J, unchanged by a relayed sender); N(relay q) = N(region origin) + r.  Lag L = (K + N_d - N_s) T + d
+    keeps the plan's value, so tree K = plan K and non-tree K = sched_lat - 1 - (N_d - N_s); sched_lat unchanged.
+    LOOPS over the partition tree (relay edge: sched_lat r, K + 1 = 0) are checked by verify()."""
+    reg, ports = b["regions"], b["ports"]
+    reg_parts = defaultdict(set)
+    for pid, c in ports.items():
+        if pid not in parts:
+            raise BindError(f"crossing {pid}: no partition endpoints")
+        sp, dp = parts[pid]
+        reg_parts[c["src"]].add(sp)
+        reg_parts[c["dst"]].add(dp)
+    owner = {}
+    for r, ps in reg_parts.items():
+        for pn in ps:
+            if owner.setdefault(pn, r) != r:
+                raise BindError(f"partition {pn} lands in two regions ({owner[pn]}, {r})")
+    tree_ports = {r["tree_port"] for r in reg.values() if r["tree_port"]}
+    sends, nports = defaultdict(int), defaultdict(int)
+    for port in tree_ports:
+        sends[parts[port][0]] += 1
+    for pid in ports:
+        sp, dp = parts[pid]
+        nports[sp] += 1
+        nports[dp] += 1
+    root = b["root"]
+    origin = {x: parts[r["tree_port"]][1] for x, r in reg.items() if r["tree_port"]}
+    origin[root] = min(reg_parts[root], key=lambda q: (-sends[q], -nports[q], q))
+    N, pinfo = {origin[root]: 0}, {}
+
+    def relays(x):
+        for q in sorted(reg_parts[x] - {origin[x]}):
+            N[q] = N[origin[x]] + RELAY_STAGES
+            pinfo[q] = dict(region=x, role="relay", src=origin[x], stages=RELAY_STAGES, n_nominal=N[q])
+        pinfo[origin[x]] = dict(region=x, role="origin", src=None, stages=0, n_nominal=N[origin[x]])
+    relays(root)
+    for x in sorted((x for x in reg if reg[x]["parent"] is not None), key=lambda x: reg[x]["depth"]):
+        r = reg[x]
+        step = r["n_nominal"] - reg[r["parent"]]["n_nominal"]
+        N[origin[x]] = N[parts[r["tree_port"]][0]] + step
+        relays(x)
+    for pid, c in ports.items():
+        sp, dp = parts[pid]
+        if not c["tree"]:
+            c["K"] = c["sched_lat"] - 1 - (N[dp] - N[sp])
+        c.update(src_part=sp, dst_part=dp)
+    for x, r in reg.items():
+        r["origin_part"] = origin[x]
+        r["n_region_frame"] = r["n_nominal"]
+        r["n_nominal"] = N[origin[x]]
+    b.update(parts=dict(sorted(pinfo.items())), relay_stages=RELAY_STAGES,
+             latency_frame="receiver PARTITION counts; sched_lat = K + 1 + N_dst - N_src (nominal) = plan lat_cycles; "
+                           "relay partition N = origin N + relay_stages")
+    return b
+
+
+def _start_tree(b):
+    """node -> (parent node, edge id) of the start spanning tree; nodes are regions, or partitions when the bind has
+    relays (edge id 'relay:<partition>' for an intra-region relay)"""
+    reg = b["regions"]
+    if "parts" not in b:
+        return {x: (r["parent"], r["tree_port"]) for x, r in reg.items()}
+    up = {}
+    for q, pi in b["parts"].items():
+        if pi["role"] == "relay":
+            up[q] = (pi["src"], "relay:" + q)
+        elif reg[pi["region"]]["parent"] is None:
+            up[q] = (None, None)
+        else:
+            tp = reg[pi["region"]]["tree_port"]
+            up[q] = (b["ports"][tp]["src_part"], tp)
+    return up
+
+
+def _ends(b, c):
+    return (c["src_part"], c["dst_part"]) if "parts" in b else (c["src"], c["dst"])
+
+
+def _edge(b, eid):
+    """(sched_lat, K + 1) of a start-tree edge or crossing; a relay edge is r stages with K + 1 = 0"""
+    if eid.startswith("relay:"):
+        return b["parts"][eid[6:]]["stages"], 0
+    c = b["ports"][eid]
+    return c["sched_lat"], c["K"] + 1
 
 
 def fundamental_cycles(b):
-    """one loop per non-tree crossing: the crossing plus the tree path back; returns [(port, +1/-1 orientation)]"""
-    reg = b["regions"]
+    """one loop per non-tree crossing: the crossing plus the tree path back; returns [(edge id, +1/-1 orientation)]"""
+    upm = _start_tree(b)
 
     def up(x):
         path = []
-        while reg[x]["parent"] is not None:
+        while upm[x][0] is not None:
             path.append(x)
-            x = reg[x]["parent"]
+            x = upm[x][0]
         return path + [x]
     cyc = []
     for pid, c in b["ports"].items():
         if c["tree"]:
             continue
-        pu, pv = up(c["src"]), up(c["dst"])
+        s, d = _ends(b, c)
+        pu, pv = up(s), up(d)
         common = next(x for x in pu if x in set(pv))
         loop = [(pid, +1)]
         for x in pv[:pv.index(common)]:
-            loop.append((reg[x]["tree_port"], -1))
+            loop.append((upm[x][1], -1))
         for x in reversed(pu[:pu.index(common)]):
-            loop.append((reg[x]["tree_port"], +1))
+            loop.append((upm[x][1], +1))
         cyc.append(loop)
     return cyc
 
@@ -156,19 +259,29 @@ def verify(b, samples=2000, seed=1, need_ps=100.0):
     sap = float(b.get("sync_aperture_ps", 26.5))
     reg, ports = b["regions"], b["ports"]
     errs = []
+    nom = b["parts"] if "parts" in b else reg
     for pid, c in ports.items():
-        lhs = c["K"] + 1 + reg[c["dst"]]["n_nominal"] - reg[c["src"]]["n_nominal"]
+        s_, d_ = _ends(b, c)
+        lhs = c["K"] + 1 + nom[d_]["n_nominal"] - nom[s_]["n_nominal"]
         if lhs != c["sched_lat"]:
             errs.append(f"identity {pid}: K+1+dn {lhs} != sched_lat {c['sched_lat']}")
+    for q, pi in b.get("parts", {}).items():
+        if pi["role"] == "relay" and pi["n_nominal"] != nom[pi["src"]]["n_nominal"] + pi["stages"]:
+            errs.append(f"relay {q}: N {pi['n_nominal']} != origin N + {pi['stages']}")
     loops = fundamental_cycles(b)
     for lp in loops:
-        s1 = sum(sg * ports[p]["sched_lat"] for p, sg in lp)
-        s2 = sum(sg * (ports[p]["K"] + 1) for p, sg in lp)
+        s1 = sum(sg * _edge(b, p)[0] for p, sg in lp)
+        s2 = sum(sg * _edge(b, p)[1] for p, sg in lp)
         if s1 != s2:
             errs.append(f"loop {lp[0][0]}: sum sched_lat {s1} != sum(K+1) {s2}")
     rnd = random.Random(seed)
     order = sorted(reg, key=lambda x: reg[x]["depth"])
     worst_lo, worst_hi, bad, worst = math.inf, math.inf, 0, {}
+    relay_of = defaultdict(list)
+    for q, pi in b.get("parts", {}).items():
+        if pi["role"] == "relay":
+            relay_of[pi["region"]].append(q)
+    org = {x: r.get("origin_part", x) for x, r in reg.items()}
     for i in range(samples):
         mode = i % 3       # 0 uniform, 1 / 2 interval endpoints (mixed)
         dd = {}
@@ -180,7 +293,9 @@ def verify(b, samples=2000, seed=1, need_ps=100.0):
         for x in order:
             r = reg[x]
             if r["parent"] is None:
-                nn[x] = 0
+                nn[org[x]] = 0
+                for q in relay_of[x]:
+                    nn[q] = b["parts"][q]["stages"]      # registered same-clock relay: exact
                 continue
             c = ports[r["tree_port"]]
             # the start was synchronised at a phase inside the derated interval (no post-start wander yet)
@@ -193,9 +308,13 @@ def verify(b, samples=2000, seed=1, need_ps=100.0):
                 m += 1                             # metastable just after the boundary: resolved late
             elif ph > T - sap and rnd.random() < 0.5:
                 m -= 1                             # metastable just before: resolved early
-            nn[x] = nn[r["parent"]] + m + SYNC - 1 - LAUNCH + r["pad"]
+            snd = _ends(b, c)[0]                   # the tree port's sender (a relay partition starts r late)
+            nn[org[x]] = nn[snd] + m + SYNC - 1 - LAUNCH + r["pad"]
+            for q in relay_of[x]:
+                nn[q] = nn[org[x]] + b["parts"][q]["stages"]
         for pid, c in ports.items():
-            L = (c["K"] + nn[c["dst"]] - nn[c["src"]]) * T + dd[pid]
+            s_, d_ = _ends(b, c)
+            L = (c["K"] + nn[d_] - nn[s_]) * T + dd[pid]
             ml, mh = L - 0.5 * T, (c["depth"] - 0.5) * T - L
             if ml < worst_lo:
                 worst_lo, worst["lo"] = ml, pid
@@ -221,15 +340,46 @@ def annotate_table(table, b, root_settle_cycles=64):
         c = b["ports"][r["port"]]
         if (c["src"], c["dst"]) != (r["src_region"], r["dst_region"]):
             raise BindError(f"{r['port']}: bind regions {c['src']}->{c['dst']} != table {r['src_region']}->{r['dst_region']}")
+        if "parts" in b and (c["src_part"], c["dst_part"]) != (r["src"], r["dst"]):
+            raise BindError(f"{r['port']}: bind partitions {c['src_part']}->{c['dst_part']} != table {r['src']}->{r['dst']}")
         r["added_cycles"] = c["sched_lat"]
     tp = {r["port"] for r in t["ports"]}
     t["count_aligned"] = dict(schema=b["schema"], period_ps=b["period_ps"], root=b["root"], pad=b["pad"],
                               root_settle_cycles=root_settle_cycles,
                               ports={pid: {k: c[k] for k in ("K", "depth", "sched_lat", "tree")}
                                      for pid, c in b["ports"].items() if pid in tp},
-                              regions={k: {x: v[x] for x in ("parent", "tree_port", "edge_fall", "pad")}
+                              regions={k: {x: v[x] for x in ("parent", "tree_port", "edge_fall", "pad", "origin_part")
+                                           if x in v}
                                        for k, v in b["regions"].items()})
+    if "parts" in b:
+        t["count_aligned"]["parts"] = {q: {x: v[x] for x in ("region", "role", "src", "stages")}
+                                       for q, v in b["parts"].items()}
+        t["count_aligned"]["relay_stages"] = b["relay_stages"]
     return t
+
+
+def table_parts(table):
+    """{port: (src partition, dst partition)} from a clock_landings regions table"""
+    return {r["port"]: (r["src"], r["dst"]) for r in table["ports"]}
+
+
+def relay_summary(b):
+    """regions with several landed partitions, relay pins, and the relay shift of K on the crossings"""
+    if "parts" not in b:
+        return dict(multi_partition_regions=0, relay_partitions=0)
+    per = defaultdict(int)
+    for q, v in b["parts"].items():
+        per[v["region"]] += 1
+    rel = {q for q, v in b["parts"].items() if v["role"] == "relay"}
+    shifted = [p for p, c in b["ports"].items() if not c["tree"] and (c["src_part"] in rel) != (c["dst_part"] in rel)]
+    return dict(landed_regions=len(per), multi_partition_regions=sum(1 for v in per.values() if v > 1),
+                partitions_per_region_hist=dict(sorted(Counter(per.values()).items())),
+                relay_partitions=len(rel), relay_pins=dict(tx_out=sum(1 for v in per.values() if v > 1), rx_in=len(rel)),
+                relay_stages=b["relay_stages"],
+                crossings_with_relayed_receiver=sum(1 for c in b["ports"].values() if c["dst_part"] in rel),
+                crossings_with_relayed_sender=sum(1 for c in b["ports"].values() if c["src_part"] in rel),
+                tree_ports_from_relay_sender=sum(1 for c in b["ports"].values() if c["tree"] and c["src_part"] in rel),
+                nontree_K_shifted_by_relay=len(shifted))
 
 
 def lane_cycles(table):
@@ -272,6 +422,10 @@ def main(argv=None):
     ap.add_argument("--table")
     ap.add_argument("--table-out")
     ap.add_argument("--root-settle", type=int, default=64)
+    ap.add_argument("--parts", choices=("auto", "region", "table", "ocv"), default="auto",
+                    help="count frames: region = one origin per region; table / ocv = per partition with intra-region "
+                         "start relays (DIE-KV-3/CAORIGIN), endpoints from the regions table / the OCV rows' "
+                         "src_part,dst_part (with --from-ocv); auto = table when --table is given, else region")
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     if a.from_ocv:
@@ -283,14 +437,22 @@ def main(argv=None):
         plan = plan_doc(s, out, regs)
     else:
         plan = json.load(open(a.plan_json))
-    b = bind(plan)
+    table = json.load(open(a.table)) if a.table else None
+    mode = ("table" if table else "region") if a.parts == "auto" else a.parts
+    if mode == "ocv" and not a.from_ocv:
+        raise SystemExit("--parts ocv needs --from-ocv")
+    parts = (table_parts(table) if mode == "table" else
+             {r["port"]: (r["src_part"], r["dst_part"]) for r in rows} if mode == "ocv" else None)
+    b = bind(plan, parts=parts)
     v = verify(b, a.samples)
     rep = report(b, v)
+    if parts is not None:
+        rep["relay"] = relay_summary(b)
     rep["plan_source"] = a.plan_json
     b["report"] = rep
     Path(a.out).write_text(json.dumps(b, indent=0) + "\n")
     if a.table:
-        t = annotate_table(json.load(open(a.table)), b, a.root_settle)
+        t = annotate_table(table, b, a.root_settle)
         Path(a.table_out).write_text(json.dumps(t, indent=1) + "\n")
     print(json.dumps(rep, indent=1))
     ok = not v["identity_and_loop_errors"] and v["sim_window_violations"] == 0

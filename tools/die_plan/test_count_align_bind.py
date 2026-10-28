@@ -167,3 +167,81 @@ def test_edge_pad_rejects_non_tree_edge_and_below_default():
     with pytest.raises(ValueError):
         CAP.plan([dict(r) for r in rows], T, T / 8, 0.05, 26.5, 2, {"b": 1})
     assert CAP.parse_edge_pad(["tW0b10=1", "x=y=2"]) == {"tW0b10": 1, "x=y": 2}
+
+
+# DIE-KV-3/CAORIGIN (COORD 21:14 ASK 3), ported onto the plan-param bind v2: one origin per region + timed start relay
+# to the region's other partitions
+def multi_rows():
+    """regions a, b, c; a holds a1/a2, c holds c1/c2/c3; crossings hit relayed senders and receivers"""
+    pr = dict(a1="a", a2="a", b="b", c1="c", c2="c", c3="c")
+    ph = dict(a=0, b=300, c=-250)
+    edges = [("a1", "b"), ("b", "c1"), ("c2", "a2"), ("a2", "c3"), ("c3", "b"), ("b", "a2"), ("c1", "a1"), ("a2", "b"),
+             ("b", "c2")]
+    rows = [row(f"{u}_{v}", pr[u], pr[v], ph[pr[v]] - ph[pr[u]], 60, 60) for u, v in edges]
+    return rows, {f"{u}_{v}": (u, v) for u, v in edges}
+
+
+def test_multi_partition_regions_get_one_origin_and_relays():
+    rows, parts = multi_rows()
+    br = CB.bind(plan(rows))                           # one origin per region
+    b = CB.bind(plan(rows), parts=parts)
+    v = CB.verify(b, 400)
+    assert not v["identity_and_loop_errors"] and v["sim_window_violations"] == 0, v
+    for x, rg in b["regions"].items():
+        org = [q for q, p in b["parts"].items() if p["region"] == x and p["role"] == "origin"]
+        assert org == [rg["origin_part"]]
+        if rg["parent"] is not None:
+            assert b["ports"][rg["tree_port"]]["dst_part"] == rg["origin_part"]
+    dn = {q: p["n_nominal"] - br["regions"][p["region"]]["n_nominal"] for q, p in b["parts"].items()}
+    assert sum(1 for p in b["parts"].values() if p["role"] == "relay") == 3 and set(dn.values()) - {0}
+    for pid, c in b["ports"].items():
+        assert c["sched_lat"] == br["ports"][pid]["sched_lat"]            # schedule / TOK latency unchanged
+        if not c["tree"]:
+            assert c["K"] == br["ports"][pid]["K"] - dn[c["dst_part"]] + dn[c["src_part"]]
+        else:
+            assert c["K"] == br["ports"][pid]["K"]                        # tree K = plan K
+    assert v["fundamental_cycles"] == len(rows) - (len(b["parts"]) - 1 - 3)   # partition tree: tree ports + 3 relays
+    s = CB.relay_summary(b)
+    assert s["multi_partition_regions"] == 2 and s["relay_pins"] == dict(tx_out=2, rx_in=3)
+
+
+def test_relay_offset_ignored_is_caught():
+    rows, parts = multi_rows()
+    b = CB.bind(plan(rows), parts=parts)
+    rel = {q: (p["stages"] if p["role"] == "relay" else 0) for q, p in b["parts"].items()}
+    hit = [p for p, c in b["ports"].items() if not c["tree"] and rel[c["dst_part"]] != rel[c["src_part"]]]
+    assert hit
+    c = b["ports"][hit[0]]
+    c["K"] += rel[c["dst_part"]] - rel[c["src_part"]]                    # region-frame K: relay offset dropped
+    v = CB.verify(b, 200)
+    # a 2-count K error can stay inside the D4 window (wrong WORD, not a window violation): the frame identity and the
+    # loop sums catch it here, the RTL loop bench (mutant_noshift) catches the wrong words
+    assert any(e.startswith("identity " + hit[0]) for e in v["identity_and_loop_errors"])
+    assert any(e.startswith("loop ") for e in v["identity_and_loop_errors"])
+
+
+def test_relay_with_edge_pad_keeps_identity():
+    rows, parts = multi_rows()
+    p0 = plan(rows)
+    child = [g["region"] for g in p0["regions"] if g["start_from"]][0]
+    s, out, regs = CAP.plan([dict(r) for r in rows], T, T / 8, 0.05, 26.5, 0, {child: 1})
+    s.update(period_ps=T, aperture_ps=T / 8, sync_aperture_ps=26.5, pad=0)
+    b = CB.bind(CB.plan_doc(s, out, regs), parts=parts)
+    v = CB.verify(b, 400)
+    assert not v["identity_and_loop_errors"] and v["sim_window_violations"] == 0, v
+    assert b["regions"][child]["pad"] == 1
+
+
+def test_annotate_table_writes_partition_roles():
+    rows, parts = multi_rows()
+    b = CB.bind(plan(rows), parts=parts)
+    table = dict(regions=[], ports=[dict(port=p, src=c["src_part"], dst=c["dst_part"], src_region=c["src"],
+                                         dst_region=c["dst"], width=8, lane="L" + p) for p, c in b["ports"].items()])
+    assert CB.table_parts(table) == parts
+    t = CB.annotate_table(table, b)
+    ca = t["count_aligned"]
+    assert ca["relay_stages"] == 2 and set(ca["parts"]) == set(b["parts"])
+    assert all(ca["regions"][x]["origin_part"] == b["regions"][x]["origin_part"] for x in b["regions"])
+    table["ports"][0]["dst"] = "zz"
+    with pytest.raises(CB.BindError, match="bind partitions"):
+        CB.annotate_table(table, b)
