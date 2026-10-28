@@ -405,3 +405,114 @@ def test_declared_dead_input_needs_no_load_and_a_proof(tmp_path):
     assert face_guard.kit_dead_list(tmp_path) == []
     (tmp_path / "dead_inputs.json").write_text(json.dumps(ok))
     assert face_guard.kit_dead_list(tmp_path) == ["a[1]"]
+
+
+# ---- hold_mux land_slot form (COORD 10-28 06:30, DIE-HEAD-8 witness + controls): one-to-one slot flop, own-Q hold,
+# mutually exclusive write enables, no leak.  Fixtures = the DIE-HEAD-8 negative-control netlists (face_negctl.py).
+_X = "_ASAP7_75t_R"
+
+
+def _mux_tc():
+    return [f"DFFHQNx1{_X} tq0 (.CLK(fclk), .D(nt0), .QN(t0n));", f"DFFHQNx1{_X} tq1 (.CLK(fclk), .D(nt1), .QN(t1n));",
+            f"INVx1{_X} it0 (.A(t0n), .Y(t0));", f"INVx1{_X} it1 (.A(t1n), .Y(t1));",
+            f"BUFx2{_X} bn0 (.A(t0n), .Y(nt0));", f"XNOR2xp5{_X} xn1 (.A(t0), .B(t1n), .Y(nt1));",
+            f"NOR2x1{_X} e0 (.A(t0), .B(t1), .Y(w0));", f"AND2x2{_X} e1 (.A(t0), .B(t1n), .Y(w1));",
+            f"AND2x2{_X} e2 (.A(t0n), .B(t1), .Y(w2));", f"AND2x2{_X} e3 (.A(t0), .B(t1), .Y(w3));"] + \
+           [f"INVx1{_X} ne{k} (.A(w{k}), .Y(nw{k}));" for k in range(4)]
+
+
+def _mux_slot(k, w=None, nw=None, hold=True, src="d", tag=""):
+    w, nw = w or f"w{k}", nw or f"nw{k}"
+    s = [f"DFFHQNx1{_X} sf{tag}{k} (.CLK(fclk), .D(sd{tag}{k}), .QN(sq{tag}{k}n));",
+         f"INVx1{_X} si{tag}{k} (.A(sq{tag}{k}n), .Y(sq{tag}{k}));"]
+    if hold:
+        s.append(f"AO22x1{_X} sm{tag}{k} (.A1({src}), .A2({w}), .B1(sq{tag}{k}), .B2({nw}), .Y(sd{tag}{k}));")
+    else:
+        s.append(f"AND2x2{_X} sm{tag}{k} (.A({src}), .B({w}), .Y(sd{tag}{k}));")
+    return s
+
+
+def _mux_mod(body, extra_ports="", extra_in=""):
+    outs = [p.strip() for p in extra_ports.split(",") if p.strip()]
+    ins = [p.strip() for p in extra_in.split(",") if p.strip()]
+    hdr = ", ".join(["fclk", "d"] + ins + outs)
+    return (f"module top({hdr});\n input fclk; input d;\n" + "".join(f" input {p};\n" for p in ins) +
+            "".join(f" output {p};\n" for p in outs) + "\n".join(" " + b for b in body) + "\nendmodule\n")
+
+
+def _mux_slots4(**kw):
+    return sum((_mux_slot(k, **kw) for k in range(4)), [])
+
+
+MUX4 = {"d": {"D": 4, "form": "hold_mux"}}
+
+
+def _g(net, land=MUX4):
+    return face_guard.guard(net, "top", clocks=["fclk"], land=land)
+
+
+def test_land_mux_positive():
+    r = _g(_mux_mod(_mux_tc() + _mux_slots4()))
+    assert r["verdict"] == "PASS" and r["land_mux_bits"] == 1 and r["land_mux_depth"] == {"1": 4}, r["fails"]
+
+
+def test_land_mux_undeclared_and_icg_declared_still_fail():
+    net = _mux_mod(_mux_tc() + _mux_slots4())
+    assert "shared" in _g(net, land=None)["fail_counts"]          # default unchanged
+    assert "land_slot" in _g(net, land={"d": 4})["fail_counts"]    # ICG form does not accept the mux form
+    assert "land_slot" in _g(net, land={"d": {"D": 4, "form": "icg"}})["fail_counts"]
+
+
+@pytest.mark.parametrize("name,body,ports,D", [
+    ("nonexclusive", lambda: _mux_tc() + _mux_slot(0) + _mux_slot(1, w="w0", nw="nw0") + _mux_slot(2) + _mux_slot(3), "", 4),
+    ("leak_to_flop", lambda: _mux_tc() + _mux_slots4() + [f"XOR2xp5{_X} lx (.A(d), .B(t0), .Y(lk));",
+                                                         f"DFFHQNx1{_X} lf (.CLK(fclk), .D(lk), .QN(lkq));"], "", 4),
+    ("leak_to_flop_same_count", lambda: _mux_tc() + _mux_slot(0) + _mux_slot(1) + _mux_slot(2) +
+        [f"DFFHQNx1{_X} sf3 (.CLK(fclk), .D(sd3), .QN(sq3n));", f"INVx1{_X} si3 (.A(sq3n), .Y(sq3));",
+         f"AO22x1{_X} sm3 (.A1(d), .A2(w3), .B1(sq3), .B2(nw3), .Y(sd3));",
+         f"DFFHQNx1{_X} lf (.CLK(fclk), .D(sd3), .QN(lkq));"], "", 4),
+    ("leak_to_port", lambda: _mux_tc() + _mux_slots4() + [f"BUFx2{_X} lb (.A(d), .Y(dout));"], "dout", 4),
+    ("leak_via_slot_logic_to_port", lambda: _mux_tc() + _mux_slot(0) + _mux_slot(1) + _mux_slot(2) + _mux_slot(3) +
+        [f"BUFx2{_X} lb (.A(sd3), .Y(dout));"], "dout", 4),
+    ("no_hold", lambda: _mux_tc() + _mux_slots4(hold=False), "", 4),
+    ("two_loads_one_flop", lambda: _mux_tc() + [f"DFFHQNx1{_X} sf0 (.CLK(fclk), .D(sd0), .QN(sq0n));",
+        f"INVx1{_X} si0 (.A(sq0n), .Y(sq0));", f"AO22x1{_X} smA (.A1(d), .A2(w0), .B1(sq0), .B2(nw0), .Y(x0));",
+        f"AND2x2{_X} smB (.A(d), .B(x0), .Y(sd0));"], "", 2),
+    ("never_written", lambda: _mux_tc() + _mux_slot(0) + _mux_slot(1) + _mux_slot(2) +
+        _mux_slot(3, w="CONST0", nw="CONST1"), "", 4),
+    ("two_clocks", lambda: _mux_tc() + _mux_slot(0) + _mux_slot(1) + _mux_slot(2) +
+        [f"DFFHQNx1{_X} sf3 (.CLK(ck2), .D(sd3), .QN(sq3n));", f"INVx1{_X} si3 (.A(sq3n), .Y(sq3));",
+         f"AO22x1{_X} sm3 (.A1(d), .A2(w3), .B1(sq3), .B2(nw3), .Y(sd3));"], "", 4),
+    ("wrong_depth", lambda: _mux_tc() + _mux_slots4(), "", 3),
+])
+def test_land_mux_mutants(name, body, ports, D):
+    net = _mux_mod(body(), ports, extra_in="ck2" if name == "two_clocks" else "")
+    net = net.replace("(CONST0)", "(1'b0)").replace("(CONST1)", "(1'b1)")
+    r = face_guard.guard(net, "top", clocks=["fclk", "ck2"], land={"d": {"D": D, "form": "hold_mux"}})
+    assert r["verdict"] == "FAIL" and "land_slot" in r["fail_counts"], (name, r["fail_counts"], r["fails"])
+
+
+def test_land_mux_two_bits_one_flop_is_merged_and_landing_bit_enable_refused():
+    # bit e writes the slots of d and e (one AO22 per slot keyed on its own enable): legit two-bit word -> PASS
+    two = _mux_tc() + _mux_slots4() + sum((_mux_slot(k, src="e", tag="e") for k in range(4)), [])
+    land = {"d": {"D": 4, "form": "hold_mux"}, "e": {"D": 4, "form": "hold_mux"}}
+    r = face_guard.guard(_mux_mod(two, extra_in="e"), "top", clocks=["fclk"], land=land)
+    assert r["verdict"] == "PASS" and r["land_mux_bits"] == 2, r["fails"]
+    # enable of d's slot 0 taken from landing bit e -> data-dependent write: refused
+    bad = _mux_tc() + [f"AND2x2{_X} ex (.A(w0), .B(e), .Y(we0));", f"INVx1{_X} nex (.A(we0), .Y(nwe0));"] + \
+        _mux_slot(0, w="we0", nw="nwe0") + _mux_slot(1) + _mux_slot(2) + _mux_slot(3)
+    r = face_guard.guard(_mux_mod(bad, extra_in="e"), "top", clocks=["fclk"], land={"d": {"D": 4, "form": "hold_mux"},
+                                                                                     "e": {"D": 2, "form": "hold_mux"}})
+    assert r["verdict"] == "FAIL" and any("landing bit" in x for x in r["fails"]["land_slot"]), r["fails"]
+
+
+def test_land_spec_and_kit_file(tmp_path):
+    assert face_guard.land_spec(4) == (4, "icg") and face_guard.land_spec({"D": 4, "form": "hold_mux"}) == (4, "hold_mux")
+    for bad in ({"D": 4, "form": "or_any"}, {"D": 4, "form": "hold_mux", "x": 1}):
+        with pytest.raises(ValueError):
+            face_guard.land_spec(bad)
+    (tmp_path / "net.v").write_text(_mux_mod(_mux_tc() + _mux_slots4()))
+    (tmp_path / "pins.json").write_text("[]")
+    (tmp_path / "constraint.sdc").write_text("create_clock -name fclk -period 833 [get_ports fclk]\n")
+    (tmp_path / "land_slots.json").write_text(json.dumps({"buses": MUX4}))
+    assert face_guard.main([str(tmp_path / "net.v"), "--pins", str(tmp_path / "pins.json")]) == 0
