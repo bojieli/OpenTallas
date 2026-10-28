@@ -14,22 +14,23 @@ The predecessor's 554-BUFx24 QC slice tree (late_split, synthetic pairs) was com
 | corner | sinks | spice insertion | spice skew | STA skew | STA - spice (mean, spread) | model(STA fit) - spice |
 |---|---|---|---|---|---|---|
 | FF | 192 | 2719.8-2740.3 | 20.5 | 12.8 | -133.8 (-128.1..-137.6) = -4.9 % | -154.8 |
-| TT | TT_ROW |
+| TT | 192 | 3222.2-3239.5 | 17.3 | 15.0 | -136.5 (-132.1..-141.1) = -4.2 % | -171.0 |
 
-- qcs_nn TT (the nearest-objective tree): NN_ROW
-- Files: qcs_ls_compare_{TT,FF}.json.
+- qcs_nn TT (the nearest-objective tree): spice skew 12.9, STA 11.5, STA - spice -134.7 (-130.3..-136.2) = -4.2 %, crossing d STA vs spice max 4.5 ps.
+- Held-out check of the v1 pure-scale calibration (1.0727/1.0731 fitted on <= 1 ns trees): it over-predicts the 2.7-3.2 ns full slice by ~1.2-1.4 % -> replaced by the affine slope below.
+- Files: qcs_ls_compare_{TT,FF}.json, qcs_nn_compare_TT.json.
 
 ## 2. Stage model recalibrated to ngspice (finding for COORD)
-Pooled data: qcs_small (24 sinks), qcq_ls (48), qcq_nn (48, TT only) and the full slice qcs_ls (192). That is
-0.5-2.7 ns insertion on the same netlists in both tools. `python3 -m mscts.calib spice-scale compare_*.json`:
+Pooled data: qcs_small (24 sinks), qcq_ls (48), qcq_nn (48, TT only) and the full slice qcs_ls (192) + qcs_nn
+(192, TT only). That is 0.5-3.2 ns insertion on the same netlists in both tools. `python3 -m mscts.calib spice-scale compare_*.json`:
 
 | corner | spice = s x STA (all sizes) | STA-fit model / STA (small, quarter, full) | spice = a x model + b (per-stage slope a) |
 |---|---|---|---|
 | FF | s = 1.0515, residual -5.4..+3.8 ps | 0.975, 0.981, 0.992 | a = 1.0552, b = 12.6 ps, residual -5.5..+4.7 |
-| TT | TT_CAL |
+| TT | s = 1.044, residual -5.3..+5.1 ps | 0.970, 0.976, 0.989 | a = 1.0485, b = 21.6 ps, residual -8.1..+9.2 |
 
-- **OpenSTA reads a stable 4.4-4.9 % early against transistor-level spice.** The offset is the same from 0.5 to
-  2.7 ns. The per-sink scatter around that scale is <= ~10 ps at 2.7 ns, about 0.35 % of insertion.
+- **OpenSTA reads a stable 4.2-4.7 % (TT) / 4.9-5.2 % (FF) early against transistor-level spice.** The offset
+  is the same from 0.5 to 3.2 ns. The per-sink scatter around that scale is <= ~10 ps at 2.7 ns, about 0.35 % of insertion.
 - **The planner (MSCTS STA-fit stage model) adds a size-dependent deficit on top.** It reads 2.5 % below STA on
   small trees and 0.8 % below at 2.7-3.5 ns (the E0 build below gives model/STA 0.989 TT / 0.994 FF).
   - Total: 6-7.5 % below spice. This is the "7 % optimistic" figure.
@@ -74,15 +75,15 @@ claude/qc-infra-r35-1027@c2b1eb75be qc_slice_rows.json.
 
 | E0 build (spice-cal model) | buffers | wire mm | snake mm | model latency TT | model skew TT / FF | OpenSTA latency skew TT / FF | crossing d model vs STA (max) | worst crossing margin TT / FF (model, same-region droop) |
 |---|---|---|---|---|---|---|---|---|
-| late_split | 1607 | 374.1 | 58.9 (15.8 %) | 4034 | 0.5 / 31.8 | 30.0 / 26.6 | 6.0 / 2.8 | 224.5 / 240.8, 0 of 78 < 100 |
-| nearest | 1613 | 380.4 | 62.7 (16.5 %) | 4203 | 0.6 / 27.7 | 26.7 / 19.1 | 18.9 / 7.2 | 218.1 / 236.4 |
+| late_split | 1607 | 374.2 | 59.0 (15.8 %) | 3949 | 0.5 / 32.6 | 30.6 / 26.6 | 6.0 / 3.0 | 228.6 / 243.6, 0 of 78 < 100 |
+| nearest | 1614 | 380.4 | 62.7 (16.5 %) | 4114 | 0.5 / 27.3 | 24.7 / 18.6 | 18.9 / 7.6 | 222.2 / 239.4 |
 | late_split, NO keepouts (reference) | 1455 | 329.7 | 14.1 (4.3 %) | - | 16.3 / 31.0 | - | - | 228.7 / 248.2 |
 
 - Other numbers (OWN):
-  - Late split cuts the mean unshared on the 78 real pairs from 541 to 429 ps TT (max 3.76 ns: pairs split at the
+  - Late split cuts the mean unshared on the 78 real pairs from 529 to 419 ps TT (max 3.76 ns: pairs split at the
     slice root).
-  - OpenSTA ran on the emitted Verilog + SPEF. Model/STA is 1.061 TT / 1.066 FF on the spice-cal model, and
-    0.989 / 0.994 on the STA fit.
+  - OpenSTA ran on the emitted Verilog + SPEF. Model/STA is 1.037 TT / 1.048 FF on the spice-cal model (measured spice/STA
+    1.044 / 1.052, so within ~0.7 %), and 0.989 / 0.994 on the STA fit.
   - Files: E0_*_summary.json, E0_*_sta_check.json, qc_E0_spec.json.
 - Legality result (OWN): 0 illegal merge or repeater buffers; the only illegal sinks are the 8 SU core clock pins,
   which are pins.
@@ -104,11 +105,11 @@ claude/qc-infra-r35-1027@c2b1eb75be qc_slice_rows.json.
 - **Comparison with QC-SLICECLK-3** (claude/qc-sliceclk3-1027@e898bf05ab, die_trial on the same R35 rows):
   - Its in-slice spread is 176-177 ps TT / 149 FF (ctree STA, placement parasitics, stock bisection to 600-um
     leaves).
-  - This build gives an OpenSTA latency skew of 30.0 / 26.6 ps on 584 grid + core taps. That is OpenSTA with an
+  - This build gives an OpenSTA latency skew of 30.6 / 26.6 ps on 584 grid + core taps. That is OpenSTA with an
     analytic SPEF (4.45 ohm/um, 0.11 fF/um), not a routed extraction, and it carries the 15.8 % meander above.
   - Both use the same trunk. The difference is the local trees: MSCTS zero-skew legal merges instead of stock
     bisection.
-  - Crossings in the slice pass on this model (worst +224.5 / +240.8). Slice<->slice crossings are clkplan region
+  - Crossings in the slice pass on this model (worst +228.6 / +243.6). Slice<->slice crossings are clkplan region
     mode's job (count-aligned mode below).
 
 ## 4. clkplan: count-aligned crossing margin mode

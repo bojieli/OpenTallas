@@ -118,5 +118,5 @@ def test_trunk_compose_balances_leaves_and_keeps_trunk_shared():
 def test_spice_scale_model_file():
     S = MD.load(str(ROOT / "data" / "asap7_bufx24_spice_cal.json"))
     F = MD.load(str(ROOT / "data" / "asap7_bufx24_sta_fit.json"))
-    for c, s in (("TT", 1.0727), ("FF", 1.0731)):
+    for c, s in (("TT", 1.0485), ("FF", 1.0552)):
         assert abs(S.wire_ps(2000, c) / F.wire_ps(2000, c) - s) < 1e-9
