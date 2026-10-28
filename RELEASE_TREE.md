@@ -65,6 +65,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 - [ ] HBM.CLK Mesh clock 12.8 on unified plan · CLOCK-128 · FAIL/INVALID · r7/r8 on old plan; rebuild after HBM.B1, 4 new types need islands (bank/fused/tnode/keybuf); core-lat R3: 11/28 types gate-PASS, 0 built past place, xcal/ep need structure ruling
 - [ ] HBM.BIND Native B2 one-clock bind · PATH-HBM / HC-NATIVE · RUNNING · 98 unread outputs classified (svg redundant views, sm.request/expected check w/o comparator, xl y, ordinals); no open inputs
 - [ ] HBM.STA Die related-pair STA real routed clock (TT setup/FF hold) · DIE-PROTO · WAITS · → HBM.GRT; SU latency qualified first (HBM.SU)
+- [ ] HBM.PHYCLK ASSUMED licensed-PHY abstract: HBM3E PHY clocked per 4-channel group (one clk/rst_n per slice W PC0-7 / C PC8-23 / E PC24-31; stack-global functions in C) · COORD ruling f6eced6f9 (10-28) · ASSUMED · basis for PHY_N C23 split + hbm_phy_gen rc_slice (claude/die-hbm-10-physlice-1028@c99b18e969); remove when IP datasheet confirms or the split is dropped
 - [ ] HBM.SU SU latency qual: ds_ar on planU2; OWNER 10-27 accepts 1917 tok/s (upper) -> priced PASS; measured SU bench PR0/PR1 rerun on main LIVE intel1 · TOK-HBM · RUNNING
 
 ## TOKEN · Token-pass gate per design
