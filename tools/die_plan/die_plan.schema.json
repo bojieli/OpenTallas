@@ -3049,6 +3049,32 @@
      "epoch": {
       "type": "boolean"
      },
+     "segments": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+       "type": "object",
+       "required": [
+        "pins",
+        "window_um"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "pins": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "window_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        }
+       }
+      }
+     },
      "note": {
       "type": "string"
      }
