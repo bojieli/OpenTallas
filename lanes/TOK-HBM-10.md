@@ -23,3 +23,7 @@ CODEX took over HBM token/source timing on codex/hbm-token-0830. All inherited t
 
 ## PARKED 2026-10-29 09:04 PDT — EXPLICIT CLAUDE RESET
 Branchcodex/hbm-token-0830@1af5b8b12 clean/pushed;allownjobs terminal. Fullhandoff CODEX-LOG 2026-10-29 09:04 PDT, exactsource128VMSrecipes andVMcapacity399360witness ready. Noengineering/jobs/mergesafterreset. OWNER?:none.
+
+## CODEX notes 2026-10-29 14:01 PDT — owner-selected VM(B) finite phases
+CODEX took over actual VM(B) compiler work on codex/hbm-token-1355@eedbe28aa (own sparseWT from exactpriorlane1af5b8b12). Read1355handoff/latestPATH-HBM/HBM-BIND/METH/AGENTS/BRIEFING. No inheritedownjobs,none launchedheavy. Currentbind103UNPLANNED84076b+HBM035EMIT;SPBV3nowGRT0/pinaccessPASS. DMAdefault(b)responseSRAM andVMdefault(B)finitephases retained.
+READYeedbe28aa: actualSU1470N6->3xN2 compilerfragments preserveall6rowarithmetic/template/slotidentity, existingISAlegality/independencePASS;bounds/aliascontrolsrefused. Explicitcandidateworkspace178224/carry260144. Noexecutableimage/fullphasefitclaim: actualproducerpublication/HBMscratch/otherlivevalues/laterRconsumers/calendardatesmissing. Concretechosenpolicy245760A/Bwordspill+245760reload=1966080bytes/12DMArecords, not1-2records. Consumer-onlyrowsplitcannotremovealreadyresidentproducerarrays. Old0.36-0.72%fixedlatencysensitivitydoesNOTpriceactualbytes; notpromotedtorate. Nextsplitactualproducerrowsandemitrealstores/reloadswithdisjointscratchauthority;thencomposefullphasefit/model. OWNER?:none.

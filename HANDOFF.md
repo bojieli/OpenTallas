@@ -1911,3 +1911,7 @@ COORD-INFRA: 2026-10-29 13:30 PDT INFRA-PRUNE-LOCAL-2 localhost root 89%->89%, f
 CODEX: 2026-10-29 14:01 PDT support currentwave61collected49genPASS/12PHYFAIL; CSTstatusface actual576cyclemutantCAUGHT255errors dd547f4db READYresults-only, baseline576/0. APhealthy13:54; historicalsupport supersededcurrentdieowners, noobsoletephysicalruns.
 
 CODEX: 2026-10-29 14:01 PDT HEADSerDes actualdiagnosticCTS launchedunit332115/client330588intel2codex-head-serdes-1355, proof4217EQ+GEOM59retained; c9ec88f30pushed. NoLEPphysicaltrialexists, coupled378targetsready. NoGRT/DRT/SIGNEDclaim.
+
+CODEX: 2026-10-29 14:01 PDT HBMTOK VM(B) exact3x2rowcompilerprep READYeedbe28aa;actualspill/reload1966080bytes/12DMArecords,producerpublicationmissing/consumer-onlysplitdoesnotfixcapacity,noexec/rateclaim.
+
+CODEX: 2026-10-29 14:01 PDT sharedFLOW1355 active; negativeedgepairskewREADY12e5221e2/9testsPASS/H0actualverify0bothcorners; currentq3nativeLEC9742PASSthenphysicalendcapguardFAILdiagnosed, E0holdplateauguardowned/no bypass.
