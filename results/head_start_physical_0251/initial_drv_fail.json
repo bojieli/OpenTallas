@@ -1,0 +1,58 @@
+{
+ "TT": {
+  "counts": {
+   "slew/DFFLQNx1_ASAP7_75t_R": 1211,
+   "slew/INVx1_ASAP7_75t_R": 1032,
+   "slew/AND2x2_ASAP7_75t_R": 21,
+   "slew/clock_or_boundary": 119,
+   "slew/DFFHQNx1_ASAP7_75t_R": 62,
+   "cap/INVx1_ASAP7_75t_R": 771
+  },
+  "worst_slew": {
+   "kind": "slew",
+   "pin": "start_cell_11225/D",
+   "limit": 320.0,
+   "actual": 2402.15,
+   "slack": -2082.15,
+   "source": "$flatten\\u_st_r3_1.$auto$ff.cc:337:slice$479",
+   "cell": "DFFLQNx1_ASAP7_75t_R"
+  },
+  "worst_cap": {
+   "kind": "cap",
+   "pin": "start_cell_0/Y",
+   "limit": 46.08,
+   "actual": 239.55,
+   "slack": -193.47,
+   "source": "$flatten\\u_st_b0.$abc$574$auto$blifparse.cc:397:parse_blif$575",
+   "cell": "INVx1_ASAP7_75t_R"
+  }
+ },
+ "FF": {
+  "counts": {
+   "slew/DFFLQNx1_ASAP7_75t_R": 1100,
+   "slew/INVx1_ASAP7_75t_R": 706,
+   "slew/AND2x2_ASAP7_75t_R": 21,
+   "slew/clock_or_boundary": 124,
+   "slew/DFFHQNx1_ASAP7_75t_R": 68,
+   "cap/INVx1_ASAP7_75t_R": 771
+  },
+  "worst_slew": {
+   "kind": "slew",
+   "pin": "start_cell_11225/D",
+   "limit": 320.0,
+   "actual": 1711.17,
+   "slack": -1391.17,
+   "source": "$flatten\\u_st_r3_1.$auto$ff.cc:337:slice$479",
+   "cell": "DFFLQNx1_ASAP7_75t_R"
+  },
+  "worst_cap": {
+   "kind": "cap",
+   "pin": "start_cell_0/Y",
+   "limit": 46.08,
+   "actual": 239.86,
+   "slack": -193.78,
+   "source": "$flatten\\u_st_b0.$abc$574$auto$blifparse.cc:397:parse_blif$575",
+   "cell": "INVx1_ASAP7_75t_R"
+  }
+ }
+}

@@ -130,13 +130,16 @@ def overlay(base_v, base_tcl, mapped, top, stages, physical):
     t = t.replace(marker, '\n'.join(place) + '\n' + marker, 1)
     if any(not q for q in clock_pins.values()):
         raise ValueError('a declared stage clock has no actual mapped FF load')
-    readout=['set sh [open /out/arr_$::env(CORNER).txt a]']
+    # CLK pins carry a synthetic zero-arrival unclocked seed in OpenSTA.
+    # Keep only real paths launched by the root port; no new clock or phase
+    # constraint is introduced, and the original data-waveform reference stays.
+    readout=['proc ot_root_arrival {pin edge mm} {', '  if {$mm eq "min"} {set best 1e30} else {set best -1e30}', '  set seen 0', '  foreach vertex [$pin vertices] {', '    if {$vertex eq "NULL"} {continue}', '    set iter [$vertex path_iterator $edge $mm]', '    while {[$iter has_next]} {', '      set path [$iter next]', '      set start [$path start_path]', '      set name [get_full_name [$start pin]]', '      if {$name ne "root"} {continue}', '      set value [get_property $path arrival]', '      incr seen', '      if {$mm eq "min"} {set best [expr {min($best,$value)}]} else {set best [expr {max($best,$value)}]}', '    }', '    $iter finish', '  }', '  if {!$seen} {error "no actual root-path arrival at [get_full_name $pin] $edge $mm"}', '  return $best', '}']+['set sh [open /out/arr_$::env(CORNER).txt a]']
     for clk, pins in sorted(clock_pins.items()):
         readout += ['set st_late_rise -1e30; set st_early_rise 1e30; set st_late_fall -1e30; set st_early_fall 1e30',
                     'foreach name {'+' '.join(pins)+'} {',
                     '  set p [get_pins $name]; if {[llength $p] != 1} {error "missing actual START FF clock pin $name"}',
                     '  foreach edge {rise fall} {',
-                    '    set late [get_property $p arrival_max_$edge]; set early [get_property $p arrival_min_$edge]',
+                    '    set late [ot_root_arrival $p $edge max]; set early [ot_root_arrival $p $edge min]',
                     '    if {![string is double -strict $late] || ![string is double -strict $early] || [regexp -nocase {inf|nan} "$late $early"]} {error "untimed actual START FF clock pin $name"}',
                     '    set st_late_$edge [expr {max([set st_late_$edge],$late)}]',
                     '    set st_early_$edge [expr {min([set st_early_$edge],$early)}]',
