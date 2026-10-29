@@ -3686,7 +3686,7 @@ def cmd_bind(a):
                                                            note="per crossing bus: as-built stages (relays / landings "
                                                                 "removed) vs bound stages (2 boundary flops)",
                                                            buses=lat, landing_pads=B.land_pads,
-                                                           **({"reset": json.loads((out / "bind_reset.json").read_text())}
+                                                           **({"reset": (json.loads((out / "bind_reset.json").read_text()) if (out / "bind_reset.json").exists() else {"missing": "bind_reset.json not written"})}
                                                               if B.wavefront_plan() is not None else {})), indent=1))
     pr = rep["proof"]
     print(json.dumps(dict(partitions=rep["partitions"], types=len(rep["types"]), crossings=rep["crossings"],
