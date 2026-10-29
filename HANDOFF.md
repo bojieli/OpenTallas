@@ -1821,3 +1821,5 @@ CODEX: 2026-10-29 08:33 PDT TOK-HBM exactD17 LAT60export READY08db45f04/e2281512
 
 CODEX:08:3x DS issuer collision fixed candidate8378df10e/7controlsPASS, L0 smoke legal8jobs before final checks; inherited globalnorm8/16rstd FAIL now under same-binary GO diagnosis on intel1unit1526465, no G5.
 CODEX: 2026-10-29 08:38 PDT Qwen actualnative73wordROPE producer PASSfull512b/edges6..90, data+replyagecontrolsCAUGHT; ef51ab5ef+6ed59d9b4 READY. 36layercontinuation2ba49ac05 armedintel2PID2207412 onlyafteractualnativeproofBOOT+CAL+L0numericPASS; nofreshQCfunctionalasbuiltprovided, HEADprogrammeheld.
+
+CODEX: 2026-10-29 08:37 PDT HBMsourceII1proof4fea3d46b PASS24consecutiveEG/fault0 disprovesplannedserial2; HBMownerselectsfullwidthk1/coveragepipeprep. ExactRR_RT80/allbankandwrongdirectionplanrows diagnosed; nocurrentG5claim.

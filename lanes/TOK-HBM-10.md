@@ -9,3 +9,8 @@ CODEX took over HBM token/source timing on codex/hbm-token-0830. All inherited t
 - LIVE own minimum EG sourceII probe: ot-run intel2:/srv/opentallas-scratch2/claude/codex-hbm-token-0830/eg_ii, current actual body same SHA as manifest source, native SRAM model,24consecutive legal mirrorwrites. Collect EG_II1_PASS or diagnose simulator failure. No P&R/STA.
 - Next: send sourceII result to HBM owner; apply D18 LAT export; regenerate actual transport/calendar only after authoritative signal map+source materialization.
 - OWNER?: none.
+
+## CODEX notes 2026-10-29 08:37 PDT — actual NE source II failure and selected fix
+- READY4fea3d46b exact six source link/bit contract + actual nativebank proof. Unit intel2 oth-ubuntu-2189907-1793288032 terminalPASS:24legalconsecutive mirrorwrites,24consecutive EG responses,distinctpayload correct,status0at833ps. Selectedbody SHA identical currentmanifest. Initial2150410 missingCEcountermodule elaborationfailure diagnosed/fixed using exactexistingmodule. Allownjobs terminal.
+- SourceNEII1 disproves transparentserial_k2; parentHBM selects fullwidthk1plan candidate fiveNEoutputs. Coverageworker owns optionalNW3stage/NE6stage samewidthpipeline materializer. Sourceembeddedvalidresetmasks sent; no inventedepochbits. Source/currentplan timingadoption stillheld.
+- ConsumerNW hb_dbk_NW RR_RT80 checks all8returnvalidbits simultaneously and usescommontag; isolatedbank4+3pipe cannotcomplete returncontract. All8request/replydelays+padtobudget must becomposed. Foundpreexistingwrongdirectionplanrows bank.rq1(INPUT)->dbk anddbk.rr(INPUT)->bank, pluswholebuswidths vsactual17/257slices; HBMowner informed toconsume actualdirectedbitgraph. No source budgetchanged blindly.
