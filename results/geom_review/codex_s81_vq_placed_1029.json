@@ -1,0 +1,8 @@
+{
+  "design": "ot_s81sl_vq_planned_macro",
+  "verdict": "PASS-COND",
+  "scope": "CTS+GRT trial only; independent parent review requested",
+  "picture": "results/codex_s81_cores_1028/vq_planned_actual.png",
+  "source": "fde6f6a690",
+  "findings": "Personally VIEWED actual 172.8x129.6 placement, balanced upper and side logic clear single lower SRAM, centered M5 clock86.412,64.8, fill.3359/empty.2217, pinmax7.34um,0unregistered,r2r277.02/0over405, ownleaf50.11um/nearest17.12,0onmacro/blockedcuts, channelH.629WARN near NW SRAMcorner but actual50itGRT0; V.493/col.471. Fullcurrent LEC EQUIVALENT. Macro-inclusive plan10314sinks/489clockcells/225leaves/6stages, TT196.56window17.33/FF154.64window18.34, valid same-depth own SRAMleaf with exact per-corner clockcap. No DRT approval until actual TT/FF+macroclock reach/timing/pinaccess gates."
+}
