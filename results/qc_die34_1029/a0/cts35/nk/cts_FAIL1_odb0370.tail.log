@@ -1,0 +1,12 @@
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "ck" found for clock "clk".
+[INFO CTS-0011]  Clock net "ck" for macros has 39 sinks.
+[ERROR ODB-0370] Attempt to disconnect term CLK of dont_touch instance ot_fconst_00001_ff
+Error: cts.tcl, 36 ODB-0370
+Elapsed time: 0:11.70[h:]min:sec. CPU time: user 11.07 sys 0.62 (99%). Peak memory: 585608KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/kq_qfd_tile_nk_a0c_a0nk14icg2rr1/base/4_1_cts.odb] Error 2

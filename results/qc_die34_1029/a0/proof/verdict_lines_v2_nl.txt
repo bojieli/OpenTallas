@@ -1,0 +1,40 @@
+A0ICG_COUNTS tile=nl MUT=0 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=6703 (55%) engine_busy=4570 wakeups=10
+A0ICG_CONTRACT tile=nl MUT=0 lead_fail=0 drain_fail=0 first=-1
+A0ICG_PASS tile=nl MUT=0 checks=12000 gated=6703 qualified_errors=0 strict=6865
+A0ICG_COUNTS tile=nl MUT=1 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=10055 (83%) engine_busy=4570 wakeups=11
+A0ICG_CONTRACT tile=nl MUT=1 lead_fail=0 drain_fail=0 first=-1
+A0ICG_FAIL tile=nl MUT=1 contract_lead=0 contract_drain=0 qualified_errors=4164 (t_out 4164 n_y 0) first_cycle=250 checks=12000
+A0ICG_COUNTS tile=nl MUT=2 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=11160 (93%) engine_busy=4570 wakeups=11
+A0ICG_CONTRACT tile=nl MUT=2 lead_fail=0 drain_fail=0 first=-1
+A0ICG_FAIL tile=nl MUT=2 contract_lead=0 contract_drain=0 qualified_errors=10462 (t_out 10462 n_y 0) first_cycle=270 checks=12000
+A0ICG_CONTRACT_DRAIN cyc761 en=0 1 cycles after the last act
+A0ICG_CONTRACT_DRAIN cyc762 en=0 2 cycles after the last act
+A0ICG_CONTRACT_LEAD cyc7006 hop lsl0 closed 6 cycles after en rose (bound s-1 = 6)
+A0ICG_CONTRACT_LEAD cyc7006 hop lsl1 closed 6 cycles after en rose (bound s-1 = 6)
+A0ICG_CONTRACT_LEAD cyc7006 hop lsl2 closed 6 cycles after en rose (bound s-1 = 6)
+A0ICG_COUNTS tile=nl MUT=3 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=7404 (61%) engine_busy=4570 wakeups=10
+A0ICG_CONTRACT tile=nl MUT=3 lead_fail=8 drain_fail=630 first=761
+A0ICG_FAIL tile=nl MUT=3 contract_lead=8 contract_drain=630 qualified_errors=0 (t_out 0 n_y 0) first_cycle=-1 checks=12000
+A0ICG_CONTRACT_DRAIN cyc8700 en=0 1 cycles after the last act
+A0ICG_CONTRACT_DRAIN cyc8701 en=0 2 cycles after the last act
+A0ICG_COUNTS tile=nl MUT=5 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=6900 (57%) engine_busy=4570 wakeups=9
+A0ICG_CONTRACT tile=nl MUT=5 lead_fail=0 drain_fail=63 first=8700
+A0ICG_FAIL tile=nl MUT=5 contract_lead=0 contract_drain=63 qualified_errors=0 (t_out 0 n_y 0) first_cycle=-1 checks=12000
+A0ICG_COUNTS tile=nl MUT=6 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=6703 (55%) engine_busy=4570 wakeups=10
+A0ICG_CONTRACT tile=nl MUT=6 lead_fail=0 drain_fail=0 first=-1
+A0ICG_PASS tile=nl MUT=6 checks=12000 gated=6703 qualified_errors=0 strict=6865
+A0ICG_CONTRACT_LEAD cyc200 hop ck closed 0 cycles after en rose (bound s-1 = 0)
+A0ICG_CONTRACT_LEAD cyc202 hop rp0 closed 2 cycles after en rose (bound s-1 = 2)
+A0ICG_CONTRACT_LEAD cyc202 hop rp1 closed 2 cycles after en rose (bound s-1 = 2)
+A0ICG_COUNTS tile=nl MUT=7 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=10046 (83%) engine_busy=4570 wakeups=11
+A0ICG_CONTRACT tile=nl MUT=7 lead_fail=99 drain_fail=0 first=200
+A0ICG_FAIL tile=nl MUT=7 contract_lead=99 contract_drain=0 qualified_errors=4164 (t_out 4164 n_y 0) first_cycle=250 checks=12000
+A0ICG_CONTRACT_LEAD cyc202 hop rp0 closed 2 cycles after en rose (bound s-1 = 2)
+A0ICG_CONTRACT_LEAD cyc202 hop rp1 closed 2 cycles after en rose (bound s-1 = 2)
+A0ICG_CONTRACT_LEAD cyc202 hop rp2 closed 2 cycles after en rose (bound s-1 = 2)
+A0ICG_COUNTS tile=nl MUT=8 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=6703 (55%) engine_busy=4570 wakeups=10
+A0ICG_CONTRACT tile=nl MUT=8 lead_fail=90 drain_fail=0 first=202
+A0ICG_FAIL tile=nl MUT=8 contract_lead=90 contract_drain=0 qualified_errors=0 (t_out 0 n_y 0) first_cycle=-1 checks=12000
+A0ICG_COUNTS tile=nl MUT=9 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=0 (0%) engine_busy=4570 wakeups=0
+A0ICG_ACTIVITY_MISSING
+A0ICG_CONTRACT tile=nl MUT=9 lead_fail=0 drain_fail=0 first=-1
