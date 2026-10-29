@@ -1,0 +1,118 @@
+{
+ "rule": "R-SRAM-ENTRY (C columns, results/hbm_cores_kits_3/mp_rule_c.py)",
+ "kit": "ot_hgi_sfu_core_split3__opstore_b_de3ef0436950-_k1c24",
+ "outline_um": [
+  760.32,
+  691.2
+ ],
+ "core_um": [
+  4.32,
+  4.32,
+  756.0,
+  686.88
+ ],
+ "halo_um": 4.32,
+ "clock_entry_um": [
+  380.16,
+  345.6
+ ],
+ "entry_island_um": [
+  375.84,
+  341.28,
+  384.48,
+  349.92
+ ],
+ "n_macros": 48,
+ "masters": {
+  "ot_sram_1r1w_256x256_m2_r2c2": {
+   "w": 172.824,
+   "h": 41.064,
+   "pins_W": 411,
+   "pins_E": 410
+  }
+ },
+ "tried": [
+  {
+   "C": 1,
+   "issues": [
+    "C=1 column 0: stack y [-847.34,1538.54] leaves core y [4.32,686.88] (deficit 1703.33 um)"
+   ],
+   "esc_max": 1.422
+  },
+  {
+   "C": 2,
+   "issues": [
+    "C=2 column 0: stack y [-250.90,942.10] leaves core y [4.32,686.88] (deficit 510.43 um)",
+    "C=2 column 1: stack y [-250.90,942.10] leaves core y [4.32,686.88] (deficit 510.43 um)"
+   ],
+   "esc_max": 2.145
+  },
+  {
+   "C": 3,
+   "issues": [
+    "C=3 column 0: stack y [-52.08,743.28] leaves core y [4.32,686.88] (deficit 112.80 um)",
+    "C=3 column 1: stack y [-52.08,743.28] leaves core y [4.32,686.88] (deficit 112.80 um)",
+    "C=3 column 2: stack y [-52.08,743.28] leaves core y [4.32,686.88] (deficit 112.80 um)"
+   ],
+   "esc_max": 4.127
+  },
+  {
+   "C": 4,
+   "issues": [],
+   "esc_max": 54.132
+  }
+ ],
+ "area_um2": {
+  "core": 513067,
+  "macros_with_halo": 432935,
+  "free": 80131
+ },
+ "verdict": "ESCAPE-RISK",
+ "columns": 4,
+ "channel_um": [
+  11.599,
+  12.396,
+  12.396,
+  12.396,
+  11.597
+ ],
+ "column_x_um": [
+  15.93,
+  201.15,
+  386.37,
+  571.59
+ ],
+ "escape": [
+  {
+   "channel": 0,
+   "band_um": 7.279,
+   "pins": 4932,
+   "use": 13.972
+  },
+  {
+   "channel": 1,
+   "band_um": 3.756,
+   "pins": 9852,
+   "use": 54.132
+  },
+  {
+   "channel": 2,
+   "band_um": 3.756,
+   "pins": 9852,
+   "use": 54.132
+  },
+  {
+   "channel": 3,
+   "band_um": 3.756,
+   "pins": 9852,
+   "use": 54.132
+  },
+  {
+   "channel": 4,
+   "band_um": 7.277,
+   "pins": 4920,
+   "use": 13.938
+  }
+ ],
+ "entry_to_far_corner_manhattan_um": 717.12
+}
