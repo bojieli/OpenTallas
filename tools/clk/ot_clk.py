@@ -21,6 +21,7 @@ Usage:
   ot_clk.py argv    CONFIG [--legacy] [--out D] print the die_trial kit argv (JSON list)
   ot_clk.py kit     CONFIG --out D [--workers N] fail-closed build: check, write stage cal, run die_trial kit
   ot_clk.py replay  CONFIG --out D [--legacy]   P0: run kit, cmp clock outputs vs the config's reference run
+  ot_clk.py replay  CONFIG --out D --compare-only   re-judge an existing replay (no die_trial run)
   ot_clk.py register --cal FILE --id ID --cell C --clock-rc R [--route LABEL] [--basis TEXT]
                                                 print a registry entry for a die_trial --region-dme-stage-cal file
 """
@@ -390,6 +391,49 @@ def json_diff_keys(a, b, pre=""):
     return out
 
 
+def ctree_clock_cells(ctree_v):
+    """library cells instantiated in a ctree.v (the physical record a tree.json meta.clock_cell must agree with)"""
+    return sorted(set(re.findall(r"^\s*([A-Za-z0-9]+x[0-9A-Za-z]+_ASAP7_75t_[RLS])\s", Path(ctree_v).read_text(), re.M)))
+
+
+def compare_replay(cfg, config, out, ok, why, rebase):
+    """replay verdict of out/kit/clock vs the config's reference clock dir.  IDENTICAL_EXCEPT_META = every compared file
+    byte-identical or differing only in tree.json meta keys; a meta key ABSENT in the reference (schema field added
+    after the reference run, e.g. meta.clock_cell) is listed as meta_added and, for clock_cell, must name the cell
+    family that the byte-identical ctree.v actually instantiates (else DIFFERENT)."""
+    ref = Path(cfg["event"]["reference_clock_dir"])
+    res = {}
+    for f in cfg["event"].get("compare", ["tree.json", "ctree.v"]):
+        x, y = out / "kit" / "clock" / f, reference_file(ref, f)
+        res[f] = dict(identical=x.is_file() and y.is_file() and x.read_bytes() == y.read_bytes(),
+                      sha_new=hashlib.sha256(x.read_bytes()).hexdigest()[:16] if x.is_file() else None,
+                      sha_ref=hashlib.sha256(y.read_bytes()).hexdigest()[:16] if y.is_file() else None)
+    for f, v in res.items():          # tree.json: name the differing top-level / meta keys (provenance-only diffs)
+        x, y = out / "kit" / "clock" / f, reference_file(ref, f)
+        v["reference_file"] = y.name
+        if not v["identical"] and f.endswith(".json") and x.is_file() and y.is_file():
+            jx, jy = json.loads(x.read_text()), json.loads(y.read_text())
+            v["diff_keys"] = json_diff_keys(jx, jy)
+            mx, my = jx.get("meta") or {}, jy.get("meta") or {}
+            v["meta_added"] = [f"meta.{k}" for k in sorted(set(mx) - set(my))]
+            if "clock_cell" in mx and "clock_cell" not in my:
+                cv = out / "kit" / "clock" / "ctree.v"
+                want = CELLS.get(mx["clock_cell"])
+                have = ctree_clock_cells(cv) if cv.is_file() else []
+                v["clock_cell_check"] = dict(meta=mx["clock_cell"], cell=want, ctree_cells=have,
+                                             consistent=bool(want) and have == [want]
+                                             and res.get("ctree.v", {}).get("identical", False))
+    meta_only = all(v["identical"] or (v.get("diff_keys") is not None and
+                                       all(k.startswith("meta.") for k in v["diff_keys"]) and
+                                       v.get("clock_cell_check", {}).get("consistent", True))
+                    for v in res.values())
+    return dict(schema="ot_clk_replay/1", die=cfg["die"], event=cfg["event"].get("name"), config=str(config),
+                reference=str(ref), stage_check="PASS" if ok else "FAIL", stage_why=why, pins_rebase=rebase,
+                files=res,
+                replay="IDENTICAL" if all(v["identical"] for v in res.values())
+                else "IDENTICAL_EXCEPT_META" if meta_only else "DIFFERENT")
+
+
 # ---------------------------------------------------------------------------------------------------------- commands
 def _prepare(cfg, out, legacy, registry):
     ok, entry, why = stage_check(cfg, registry)
@@ -425,6 +469,8 @@ def main(argv=None):
                            help="die_trial.py to run (default: this checkout); path + git sha are recorded")
         if n == "replay":
             p.add_argument("--python", default=sys.executable)
+            p.add_argument("--compare-only", action="store_true",
+                           help="do not run die_trial: compare the clock outputs already in --out/kit/clock")
     r = sub.add_parser("register")
     r.add_argument("--cal", required=True)
     r.add_argument("--id", required=True)
@@ -459,33 +505,21 @@ def main(argv=None):
     args = kit_argv(cfg, out / "kit", cal, a.workers, plan)
     out.mkdir(parents=True, exist_ok=True)
     dt = Path(a.die_trial).resolve()
-    (out / "ot_clk_argv.json").write_text(json.dumps(dict(config=str(a.config), stage_check="PASS" if ok else "FAIL",
+    (out / ("ot_clk_argv_compare.json" if getattr(a, "compare_only", False) else "ot_clk_argv.json")).write_text(json.dumps(dict(config=str(a.config), stage_check="PASS" if ok else "FAIL",
                                                           why=why, pins_rebase=rebase, die_trial=die_trial_rev(dt),
                                                           argv=args), indent=1) + "\n")
-    rc = subprocess.call([getattr(a, "python", sys.executable), str(dt)] + args,
-                         stdout=open(out / "kit.log", "w"), stderr=subprocess.STDOUT)
+    if getattr(a, "compare_only", False):          # re-judge an existing replay's clock outputs, no rebuild
+        if not (out / "kit" / "clock").is_dir():
+            print(f"compare-only: {out / 'kit' / 'clock'} missing", file=sys.stderr)
+            return 2
+        rc = 0
+    else:
+        rc = subprocess.call([getattr(a, "python", sys.executable), str(dt)] + args,
+                             stdout=open(out / "kit.log", "w"), stderr=subprocess.STDOUT)
     if rc or a.cmd == "kit":
         print(json.dumps(dict(rc=rc, stage_check="PASS" if ok else "FAIL", out=str(out))))
         return rc
-    ref = Path(cfg["event"]["reference_clock_dir"])
-    res = {}
-    for f in cfg["event"].get("compare", ["tree.json", "ctree.v"]):
-        x, y = out / "kit" / "clock" / f, reference_file(ref, f)
-        res[f] = dict(identical=x.is_file() and y.is_file() and x.read_bytes() == y.read_bytes(),
-                      sha_new=hashlib.sha256(x.read_bytes()).hexdigest()[:16] if x.is_file() else None,
-                      sha_ref=hashlib.sha256(y.read_bytes()).hexdigest()[:16] if y.is_file() else None)
-    for f, v in res.items():          # tree.json: name the differing top-level / meta keys (provenance-only diffs)
-        x, y = out / "kit" / "clock" / f, reference_file(ref, f)
-        v["reference_file"] = y.name
-        if not v["identical"] and f.endswith(".json") and x.is_file() and y.is_file():
-            v["diff_keys"] = json_diff_keys(json.loads(x.read_text()), json.loads(y.read_text()))
-    meta_only = all(v["identical"] or (v.get("diff_keys") is not None and
-                                       all(k.startswith("meta.") for k in v["diff_keys"])) for v in res.values())
-    verdict = dict(schema="ot_clk_replay/1", die=cfg["die"], event=cfg["event"].get("name"), config=str(a.config),
-                   reference=str(ref), stage_check="PASS" if ok else "FAIL", stage_why=why, pins_rebase=rebase,
-                   files=res,
-                   replay="IDENTICAL" if all(v["identical"] for v in res.values())
-                   else "IDENTICAL_EXCEPT_META" if meta_only else "DIFFERENT")
+    verdict = compare_replay(cfg, a.config, out, ok, why, rebase)
     (out / "replay.json").write_text(json.dumps(verdict, indent=1) + "\n")
     print(json.dumps(verdict, indent=1))
     return 0 if verdict["replay"] in ("IDENTICAL", "IDENTICAL_EXCEPT_META") else 2
