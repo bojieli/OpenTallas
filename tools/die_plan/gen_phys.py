@@ -2453,6 +2453,75 @@ exit $rc
 """
 
 
+_CLAND_RING = re.compile(r"\b(ot_dp_clk_landing_cas?)\s*#\(([^;]*?)\)\s*u_cland_(\w+)\s*\(")
+
+
+def kit_rtl_land_slots(lands, tn, rtl_files):
+    """land_slots of a --kit-rtl type (DIE-KV-31): Landings.land_slots(tn), fail-closed against the bound RTL text.
+    Every declared hold_mux ring <b> (cland_dn_ready_/fault_<b> ride ring <b>) must be an ot_dp_clk_landing_ca/_cas
+    instance u_cland_<b> with DEPTH == D; every ring_start must name a declared ring; an origin_start origin must be
+    an ot_dp_landing_origin* instance; and every count-aligned u_cland_* ring in the bound RTL must be declared
+    (no undeclared ring, no declared ring that the binder did not build).  None when the type lands nothing."""
+    import copy
+    import gen_rtl
+    ls = copy.deepcopy(lands.land_slots(tn))
+    txt = "\n".join(Path(f).read_text(errors="replace") for f in rtl_files if Path(f).suffix in (".sv", ".v"))
+    built = {}
+    for m in _CLAND_RING.finditer(txt):
+        d = re.search(r"\.DEPTH\s*\(\s*(\d+)\s*\)", m.group(2))
+        if not d:
+            raise gen_rtl.GenError(f"type {tn}: bound ring u_cland_{m.group(3)} ({m.group(1)}) has no literal DEPTH")
+        built[m.group(3)] = int(d.group(1))
+    buses = (ls or {}).get("buses", {})
+    rings = {}
+    for b, v in buses.items():
+        if v.get("form") == "hold_mux":
+            r = re.sub(r"^cland_dn_(ready|fault)_", "", b)
+            if r not in built:
+                raise gen_rtl.GenError(f"type {tn}: land_slots ring {r}: no ot_dp_clk_landing_ca/_cas u_cland_{r} "
+                                       "in the bound RTL")
+            if built[r] != int(v["D"]):
+                raise gen_rtl.GenError(f"type {tn}: land_slots ring {r}: D {v['D']} != bound DEPTH {built[r]}")
+            rings[r] = built[r]
+    for b, v in buses.items():
+        if v.get("form") == "ring_start":
+            for r in ([v["ring"]] if isinstance(v["ring"], str) else v["ring"]):
+                if r not in rings:
+                    raise gen_rtl.GenError(f"type {tn}: land_slots {b}: ring_start of undeclared ring {r}")
+        elif v.get("form") == "origin_start":
+            path = _kit_inst_path(txt, v["origin"], r"ot_dp_landing_origin\w*")
+            if path is None:
+                raise gen_rtl.GenError(f"type {tn}: land_slots {b}: origin {v['origin']} is not one bound "
+                                       "ot_dp_landing_origin* instance under one instance path")
+            v["origin"] = path      # face_guard matches the synthesized instance path (kit top -> u_bound -> origin)
+    extra = sorted(set(built) - set(rings))
+    if extra:
+        raise gen_rtl.GenError(f"type {tn}: bound count-aligned rings not declared by the landing sidecar: {extra[:5]}")
+    return ls
+
+
+def _kit_inst_path(txt, inst, mod_re):
+    """Dotted instance path of the ONE `<mod_re> inst (` instance from the kit top of the bound RTL text (each enclosing
+    module instantiated exactly once up to a module nobody instantiates, e.g. kit top -> u_bound -> inst); else None."""
+    txt = re.sub(r"//[^\n]*|/\*.*?\*/", "", txt, flags=re.S)       # "bound module X" in a header comment
+    mods = {m.group(1): m.group(2) for m in re.finditer(r"^\s*module\s+(\w+)(.*?)\bendmodule\b", txt, re.S | re.M)}
+    own = [mn for mn, body in mods.items()
+           if re.search(rf"\b{mod_re}\s*(?:#\([^;]*?\))?\s*{re.escape(inst)}\s*\(", body)]
+    if len(own) != 1:
+        return None
+    path, mn = [inst], own[0]
+    for _ in range(len(mods)):
+        up = [(pn, m.group(1)) for pn, body in mods.items() if pn != mn
+              for m in re.finditer(rf"\b{re.escape(mn)}\s*(?:#\([^;]*?\))?\s*(\w+)\s*\(", body)]
+        if not up:
+            return ".".join(reversed(path))
+        if len(up) != 1:
+            return None
+        mn = up[0][0]
+        path.append(up[0][1])
+    return None
+
+
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
                rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=()):
@@ -2490,11 +2559,21 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
     gtypes = types
     if kit_rtl:                # kit-rtl types take the bound RTL: no generated plan wrapper for them
         gtypes = [tn for tn in (types or P.types) if tn not in kit_rtl]
+    # DIE-KV-31 (opt-in): --kit-rtl + --clock-landing = declaration only.  The bound RTL already carries the landing
+    # rings (the binder ran the same sidecar), so nothing is re-emitted; the sidecar only yields each kit's face_guard
+    # land_slots.json, checked against the bound RTL's u_cland_* instances (kit_rtl_land_slots).  Every selected type
+    # must then be a kit-rtl type (a generated wrapper would need the landed emitter).
+    land_decl_only = landing is not None and bool(kit_rtl)
     if landing is not None:
-        if kit_rtl:
-            raise gen_rtl.GenError("clock landing: --kit-rtl kits take the bound RTL; landing kits use the landed wrapper")
-        gtypes = None          # the landed emitter checks every copy of every type
-    files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path, landing=landing)
+        if land_decl_only:
+            plain = [tn for tn in (types or P.types) if tn not in kit_rtl and not P.types[tn].get("hard")]
+            if plain:
+                raise gen_rtl.GenError(f"clock landing with --kit-rtl declares land_slots only; types {plain[:5]} "
+                                       "have no bound RTL (landing kits use the landed wrapper)")
+        else:
+            gtypes = None          # the landed emitter checks every copy of every type
+    files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path,
+                              landing=None if land_decl_only else landing)
     lands = None
     if landing is not None:    # DIE-HEAD-21: the same Landings write_rtl just validated -> per-type land_slots.json
         import clock_landings as CL
@@ -2528,7 +2607,9 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
                                    skip_ir, max_wire_um, rc_cal, master_slice, trial, bump_ports=bumps,
                                    gpl_plain=tn in (gpl_plain or ()),
-                                   land_slots=lands.land_slots(tn) if lands is not None else None))
+                                   land_slots=(None if lands is None else
+                                               kit_rtl_land_slots(lands, tn, mine) if land_decl_only else
+                                               lands.land_slots(tn))))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits
