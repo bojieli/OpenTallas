@@ -1,0 +1,24 @@
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "ft1_i", "old_um2": 2636.0, "reserve_um2": 4521.6, "new_rect_um": [17.28, 445.4408, 71.28, 532.6088], "hop_um": 114.864}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_host_boot_go", "old_um2": 223.9, "reserve_um2": 713.9, "new_rect_um": [17.28, 384.1672, 101.52, 392.8072], "hop_um": 105.84}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_host_die_rst_n", "old_um2": 223.9, "reserve_um2": 713.9, "new_rect_um": [17.28, 412.728, 101.52, 421.368], "hop_um": 105.84}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_host_host_drained_local", "old_um2": 223.9, "reserve_um2": 713.9, "new_rect_um": [17.28, 556.4336, 101.52, 565.0736], "hop_um": 105.84}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_host_link_rst_n", "old_um2": 223.9, "reserve_um2": 713.9, "new_rect_um": [17.28, 584.7464, 101.52, 593.3864], "hop_um": 105.84}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_host_lrc", "old_um2": 223.9, "reserve_um2": 713.9, "new_rect_um": [17.28, 613.1472, 101.52, 621.7872], "hop_um": 105.84}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_host_program_begin_v", "old_um2": 223.9, "reserve_um2": 713.9, "new_rect_um": [17.28, 641.756, 101.52, 650.396], "hop_um": 105.84}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_host_rec_tx", "old_um2": 2772.4, "reserve_um2": 4521.6, "new_rect_um": [17.28, 674.4288, 66.96, 766.1088], "hop_um": 112.8}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_host_token_epoch", "old_um2": 261.3, "reserve_um2": 713.9, "new_rect_um": [17.28, 791.1896, 101.52, 799.8296], "hop_um": 105.84}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_kvs_attn_attn__tx_payload", "old_um2": 2767.1, "reserve_um2": 4521.6, "new_rect_um": [2093.04, 653.1422, 2142.72, 744.6462], "hop_um": 112.712}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_kvs_attn_attn__tx_valid", "old_um2": 223.9, "reserve_um2": 713.9, "new_rect_um": [2058.48, 764.4535, 2142.72, 773.0935], "hop_um": 105.84}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_kvs_ctl_boot__link_cfg_addr", "old_um2": 242.6, "reserve_um2": 713.9, "new_rect_um": [2058.48, 789.1648, 2142.72, 797.8048], "hop_um": 105.84}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_kvs_ctl_boot__link_cfg_data", "old_um2": 317.3, "reserve_um2": 713.9, "new_rect_um": [2058.48, 816.4601, 2142.72, 825.1001], "hop_um": 105.84}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_kvs_ctl_boot__link_cfg_rx_we", "old_um2": 223.9, "reserve_um2": 713.9, "new_rect_um": [1974.24, 843.3394, 2058.48, 851.9794], "hop_um": 190.08}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_kvs_ctl_boot__link_cfg_tx_we", "old_um2": 223.9, "reserve_um2": 713.9, "new_rect_um": [2058.48, 867.6347, 2142.72, 876.2747], "hop_um": 105.84}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_kvs_ctl_kvi", "old_um2": 401.9, "reserve_um2": 713.9, "new_rect_um": [2073.6, 896.082, 2142.72, 906.418], "hop_um": 91.568}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_kvs_ctl_oobs__kv_active_local", "old_um2": 223.9, "reserve_um2": 713.9, "new_rect_um": [2058.48, 926.2253, 2142.72, 934.8653], "hop_um": 105.84}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_kvs_ctl_oobs__kv_drained_local", "old_um2": 223.9, "reserve_um2": 713.9, "new_rect_um": [2058.48, 950.5206, 2142.72, 959.1606], "hop_um": 105.84}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_kvs_ctl_oobs__kv_flush_local", "old_um2": 223.9, "reserve_um2": 713.9, "new_rect_um": [2058.48, 974.8159, 2142.72, 983.4559], "hop_um": 105.84}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_kvs_emb_rowtx__emb_tx_payload", "old_um2": 2767.1, "reserve_um2": 4521.6, "new_rect_um": [17.28, 824.9104, 66.96, 916.4144], "hop_um": 112.712}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_kvs_emb_rowtx__emb_tx_v", "old_um2": 223.9, "reserve_um2": 713.9, "new_rect_um": [17.28, 940.2392, 101.52, 948.8792], "hop_um": 105.84}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_serdes_E_tx_up", "old_um2": 223.9, "reserve_um2": 713.9, "new_rect_um": [2058.48, 999.1112, 2142.72, 1007.7512], "hop_um": 105.84}
+OT_BAND_RESIZE {"type": "kv3_sys_c", "bus": "i_serdes_W_tx_up", "old_um2": 223.9, "reserve_um2": 713.9, "new_rect_um": [17.28, 996.8648, 101.52, 1005.5048], "hop_um": 105.84}
+OT_BAND_RESIZE 23 bands re-sized in kv3_sys_c

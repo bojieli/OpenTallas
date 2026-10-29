@@ -1,0 +1,84 @@
+{
+ "TT": {
+  "taps": 1920,
+  "taps_missing": 0,
+  "tap_arr": [
+   737.7,
+   8279.3
+  ],
+  "regions": 128,
+  "spread_worst": [
+   [
+    134.8,
+    "pv_N_5"
+   ],
+   [
+    141.3,
+    "pv_S_0"
+   ],
+   [
+    150.2,
+    "pv_S_5"
+   ]
+  ],
+  "n_over_150": 1,
+  "clk_cell_out_slew_max": 114.1,
+  "tap_slew_max": 66.5,
+  "provider_ff": 10530,
+  "provider_ff_clk_arr": [
+   41.8,
+   8187.9
+  ],
+  "provider_ff_clk_slew_max": 118.6,
+  "ff_clk_slew_over_320": 0,
+  "duty_range": [
+   0.487,
+   0.547
+  ],
+  "duty_outside_45_55": 0,
+  "drv_violations": 9127,
+  "drv_clock_pin_violations": 0,
+  "drv_clock_examples": []
+ },
+ "FF": {
+  "taps": 1920,
+  "taps_missing": 0,
+  "tap_arr": [
+   656.0,
+   7335.6
+  ],
+  "regions": 128,
+  "spread_worst": [
+   [
+    120.4,
+    "pv_N_5"
+   ],
+   [
+    123.7,
+    "pv_S_0"
+   ],
+   [
+    132.2,
+    "pv_S_5"
+   ]
+  ],
+  "n_over_150": 0,
+  "clk_cell_out_slew_max": 93.2,
+  "tap_slew_max": 61.4,
+  "provider_ff": 10530,
+  "provider_ff_clk_arr": [
+   35.5,
+   7252.5
+  ],
+  "provider_ff_clk_slew_max": 116.1,
+  "ff_clk_slew_over_320": 0,
+  "duty_range": [
+   0.484,
+   0.574
+  ],
+  "duty_outside_45_55": 309,
+  "drv_violations": 7499,
+  "drv_clock_pin_violations": 0,
+  "drv_clock_examples": []
+ }
+}
