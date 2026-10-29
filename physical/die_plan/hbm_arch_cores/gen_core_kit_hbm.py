@@ -809,6 +809,29 @@ def _ms():
     return m
 
 
+def stamp_generation_inputs(kit, repo=REPO):
+    """Stamp only inputs assembled now from the actual clean source checkout.
+
+    Diagnostic dirty/profile-mismatched generations remain unqualified; this
+    function never assigns a current commit to an older already-built kit.
+    """
+    sys.path.insert(0, str(TOOL))
+    import lec
+    kit = Path(kit)
+    provenance = lec._repo_provenance(repo)
+    freeze = json.loads((kit / "freeze.json").read_text())
+    profile_commit = freeze.get("source_profile", {}).get("source_commit")
+    if (provenance.get("dirty") is not False or
+            not re.fullmatch(r"[0-9a-f]{40}", provenance.get("commit") or "") or
+            (profile_commit is not None and profile_commit != provenance["commit"])):
+        print("generation provenance unqualified: checkout/profile is not the same clean committed source", file=sys.stderr)
+        return False
+    freeze["source_commit"] = provenance["commit"]
+    (kit / "freeze.json").write_text(json.dumps(freeze, indent=1) + "\n")
+    lec.write_kit_provenance(kit, repo, provenance=provenance)
+    return True
+
+
 def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--views", required=True)
@@ -1519,6 +1542,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if ms is not None:
         fz["master_plan"] = ms
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
+    stamp_generation_inputs(kd)
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=len(rsts), design=design, top=top,
                           wrapper=bool(wrap_rep), face_shell=fz["face_shell"], kit_hash=fz["kit_hash"])))
 
