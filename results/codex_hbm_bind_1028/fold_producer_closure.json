@@ -1,0 +1,5686 @@
+{
+  "schema": "opentallas.hbm.fold_producer_closure.v1",
+  "candidate_instances": 28,
+  "undefined_after_all28": [
+    "col_sfu_SE__active",
+    "col_sfu_SE__fault",
+    "col_sfu_SE__ready",
+    "col_sfu_SW__active",
+    "col_sfu_SW__fault",
+    "col_sfu_SW__ready",
+    "cp_svg_SW0__active",
+    "cp_svg_SW0__configured",
+    "cp_svg_SW0__fault",
+    "cp_svg_SW1__active",
+    "cp_svg_SW1__configured",
+    "cp_svg_SW1__fault",
+    "cp_svg_SW2__active",
+    "cp_svg_SW2__configured",
+    "cp_svg_SW2__fault",
+    "cp_svg_SW3__active",
+    "cp_svg_SW3__configured",
+    "cp_svg_SW3__fault",
+    "epcal_SE__active",
+    "epcal_SE__fault",
+    "epcal_SE__tgt_configured",
+    "epcal_SE__tgt_fault",
+    "epcal_SW__active",
+    "epcal_SW__fault",
+    "epcal_SW__tgt_configured",
+    "epcal_SW__tgt_fault",
+    "fcx_SE__fault",
+    "fcx_SW__fault",
+    "hb_coll_SE__fault",
+    "hb_coll_SE__hgi_busy",
+    "hb_coll_SE__hgi_fault",
+    "hb_coll_SE__program_configured",
+    "hb_coll_SE__program_fault",
+    "hb_coll_SE__vm_kq",
+    "hb_coll_SE__vm_rq",
+    "hb_coll_SW__fault",
+    "hb_coll_SW__hgi_busy",
+    "hb_coll_SW__hgi_fault",
+    "hb_coll_SW__program_configured",
+    "hb_coll_SW__program_fault",
+    "hb_coll_SW__vm_kq",
+    "hb_coll_SW__vm_rq",
+    "hb_dbk_SE__cp_active",
+    "hb_dbk_SE__cp_configured",
+    "hb_dbk_SE__cp_fault",
+    "hb_dbk_SW__cp_active",
+    "hb_dbk_SW__cp_configured",
+    "hb_dbk_SW__cp_fault",
+    "hb_quant_SW__hbfd_qdq_split_or__Y",
+    "hb_quant_SW__program_leaf__active",
+    "hb_quant_SW__program_leaf__configured",
+    "hc_SE__configured",
+    "hc_SE__hcq_fault",
+    "hc_SE__program_active",
+    "hc_SW__configured",
+    "hc_SW__hcq_fault",
+    "hc_SW__program_active",
+    "hcollgi_SE__vm_rq_hi",
+    "hcollgi_SE__vm_rq_lo",
+    "hcollgi_SW__vm_rq_hi",
+    "hcollgi_SW__vm_rq_lo",
+    "hcollgl_SE__vm_kq_hi",
+    "hcollgl_SE__vm_kq_lo",
+    "hcollgl_SW__vm_kq_hi",
+    "hcollgl_SW__vm_kq_lo",
+    "refcfg_SE__active",
+    "refcfg_SE__fault",
+    "refcfg_SE__ready",
+    "refcfg_SW__active",
+    "refcfg_SW__fault",
+    "refcfg_SW__ready",
+    "sfup_SE__fault",
+    "sfup_SW__fault",
+    "sfus_SE__fault",
+    "sfus_SW__fault",
+    "smw_SW__active",
+    "smw_SW__configured",
+    "smw_SW__fault",
+    "vmfc_SE__active",
+    "vmfc_SE__fault",
+    "vmfc_SE__payload",
+    "vmfc_SE__tgt_configured",
+    "vmfc_SE__tgt_fault",
+    "vmfc_SW__active",
+    "vmfc_SW__fault",
+    "vmfc_SW__payload",
+    "vmfc_SW__tgt_configured",
+    "vmfc_SW__tgt_fault",
+    "vmks_SW0__fill_bank",
+    "vmks_SW0__fill_data",
+    "vmks_SW0__fill_epoch",
+    "vmks_SW0__fill_slot",
+    "vmks_SW0__fill_v",
+    "vmks_SW1__fill_bank",
+    "vmks_SW1__fill_data",
+    "vmks_SW1__fill_epoch",
+    "vmks_SW1__fill_slot",
+    "vmks_SW1__fill_v",
+    "vmks_SW2__fill_bank",
+    "vmks_SW2__fill_data",
+    "vmks_SW2__fill_epoch",
+    "vmks_SW2__fill_slot",
+    "vmks_SW2__fill_v",
+    "vmks_SW3__fill_bank",
+    "vmks_SW3__fill_data",
+    "vmks_SW3__fill_epoch",
+    "vmks_SW3__fill_slot",
+    "vmks_SW3__fill_v",
+    "wbk_SE__fault",
+    "wbk_SW__fault",
+    "xc_SW0__active",
+    "xc_SW0__configured",
+    "xc_SW0__fault",
+    "xc_SW1__active",
+    "xc_SW1__configured",
+    "xc_SW1__fault",
+    "xc_SW2__active",
+    "xc_SW2__configured",
+    "xc_SW2__fault",
+    "xc_SW3__active",
+    "xc_SW3__configured",
+    "xc_SW3__fault",
+    "xl_SE_ctl__active",
+    "xl_SE_ctl__configured",
+    "xl_SE_ctl__fault",
+    "xl_SW_ctl__active",
+    "xl_SW_ctl__configured",
+    "xl_SW_ctl__fault"
+  ],
+  "rows": [
+    {
+      "instance": "hcollks_SE_p0",
+      "template": "hcollks_NE_p0",
+      "module": "ot_hgi_coll_kq_share2_leaf",
+      "params": {},
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "a_kq",
+          "expression": "hb_coll_SE__vm_kq[561:0]"
+        },
+        {
+          "port": "b_kq",
+          "expression": "hcollgl_SE__vm_kq_lo[561:0]"
+        }
+      ],
+      "produced": [
+        {
+          "net": "hcollks_SE_p0__vm_kq",
+          "port": "vm_kq",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hcollks_SE_p0__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        }
+      ],
+      "undefined_input_nets": {
+        "hb_coll_SE__vm_kq": [
+          "a_kq"
+        ],
+        "hcollgl_SE__vm_kq_lo": [
+          "b_kq"
+        ]
+      },
+      "undefined_after_all28": {
+        "hb_coll_SE__vm_kq": [
+          "a_kq"
+        ],
+        "hcollgl_SE__vm_kq_lo": [
+          "b_kq"
+        ]
+      }
+    },
+    {
+      "instance": "hcollks_SE_p1",
+      "template": "hcollks_NE_p1",
+      "module": "ot_hgi_coll_kq_share2_leaf",
+      "params": {},
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "a_kq",
+          "expression": "hb_coll_SE__vm_kq[1123:562]"
+        },
+        {
+          "port": "b_kq",
+          "expression": "hcollgl_SE__vm_kq_lo[1123:562]"
+        }
+      ],
+      "produced": [
+        {
+          "net": "hcollks_SE_p1__vm_kq",
+          "port": "vm_kq",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hcollks_SE_p1__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        }
+      ],
+      "undefined_input_nets": {
+        "hb_coll_SE__vm_kq": [
+          "a_kq"
+        ],
+        "hcollgl_SE__vm_kq_lo": [
+          "b_kq"
+        ]
+      },
+      "undefined_after_all28": {
+        "hb_coll_SE__vm_kq": [
+          "a_kq"
+        ],
+        "hcollgl_SE__vm_kq_lo": [
+          "b_kq"
+        ]
+      }
+    },
+    {
+      "instance": "hcollks_SE_p2",
+      "template": "hcollks_NE_p2",
+      "module": "ot_hgi_coll_kq_share2_leaf",
+      "params": {},
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "a_kq",
+          "expression": "hb_coll_SE__vm_kq[1685:1124]"
+        },
+        {
+          "port": "b_kq",
+          "expression": "hcollgl_SE__vm_kq_hi[561:0]"
+        }
+      ],
+      "produced": [
+        {
+          "net": "hcollks_SE_p2__vm_kq",
+          "port": "vm_kq",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hcollks_SE_p2__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        }
+      ],
+      "undefined_input_nets": {
+        "hb_coll_SE__vm_kq": [
+          "a_kq"
+        ],
+        "hcollgl_SE__vm_kq_hi": [
+          "b_kq"
+        ]
+      },
+      "undefined_after_all28": {
+        "hb_coll_SE__vm_kq": [
+          "a_kq"
+        ],
+        "hcollgl_SE__vm_kq_hi": [
+          "b_kq"
+        ]
+      }
+    },
+    {
+      "instance": "hcollks_SE_p3",
+      "template": "hcollks_NE_p3",
+      "module": "ot_hgi_coll_kq_share2_leaf",
+      "params": {},
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "a_kq",
+          "expression": "hb_coll_SE__vm_kq[2247:1686]"
+        },
+        {
+          "port": "b_kq",
+          "expression": "hcollgl_SE__vm_kq_hi[1123:562]"
+        }
+      ],
+      "produced": [
+        {
+          "net": "hcollks_SE_p3__vm_kq",
+          "port": "vm_kq",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hcollks_SE_p3__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        }
+      ],
+      "undefined_input_nets": {
+        "hb_coll_SE__vm_kq": [
+          "a_kq"
+        ],
+        "hcollgl_SE__vm_kq_hi": [
+          "b_kq"
+        ]
+      },
+      "undefined_after_all28": {
+        "hb_coll_SE__vm_kq": [
+          "a_kq"
+        ],
+        "hcollgl_SE__vm_kq_hi": [
+          "b_kq"
+        ]
+      }
+    },
+    {
+      "instance": "hcollks_SW_p0",
+      "template": "hcollks_NW_p0",
+      "module": "ot_hgi_coll_kq_share2_leaf",
+      "params": {},
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "a_kq",
+          "expression": "hb_coll_SW__vm_kq[561:0]"
+        },
+        {
+          "port": "b_kq",
+          "expression": "hcollgl_SW__vm_kq_lo[561:0]"
+        }
+      ],
+      "produced": [
+        {
+          "net": "hcollks_SW_p0__vm_kq",
+          "port": "vm_kq",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hcollks_SW_p0__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        }
+      ],
+      "undefined_input_nets": {
+        "hb_coll_SW__vm_kq": [
+          "a_kq"
+        ],
+        "hcollgl_SW__vm_kq_lo": [
+          "b_kq"
+        ]
+      },
+      "undefined_after_all28": {
+        "hb_coll_SW__vm_kq": [
+          "a_kq"
+        ],
+        "hcollgl_SW__vm_kq_lo": [
+          "b_kq"
+        ]
+      }
+    },
+    {
+      "instance": "hcollks_SW_p1",
+      "template": "hcollks_NW_p1",
+      "module": "ot_hgi_coll_kq_share2_leaf",
+      "params": {},
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "a_kq",
+          "expression": "hb_coll_SW__vm_kq[1123:562]"
+        },
+        {
+          "port": "b_kq",
+          "expression": "hcollgl_SW__vm_kq_lo[1123:562]"
+        }
+      ],
+      "produced": [
+        {
+          "net": "hcollks_SW_p1__vm_kq",
+          "port": "vm_kq",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hcollks_SW_p1__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        }
+      ],
+      "undefined_input_nets": {
+        "hb_coll_SW__vm_kq": [
+          "a_kq"
+        ],
+        "hcollgl_SW__vm_kq_lo": [
+          "b_kq"
+        ]
+      },
+      "undefined_after_all28": {
+        "hb_coll_SW__vm_kq": [
+          "a_kq"
+        ],
+        "hcollgl_SW__vm_kq_lo": [
+          "b_kq"
+        ]
+      }
+    },
+    {
+      "instance": "hcollks_SW_p2",
+      "template": "hcollks_NW_p2",
+      "module": "ot_hgi_coll_kq_share2_leaf",
+      "params": {},
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "a_kq",
+          "expression": "hb_coll_SW__vm_kq[1685:1124]"
+        },
+        {
+          "port": "b_kq",
+          "expression": "hcollgl_SW__vm_kq_hi[561:0]"
+        }
+      ],
+      "produced": [
+        {
+          "net": "hcollks_SW_p2__vm_kq",
+          "port": "vm_kq",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hcollks_SW_p2__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        }
+      ],
+      "undefined_input_nets": {
+        "hb_coll_SW__vm_kq": [
+          "a_kq"
+        ],
+        "hcollgl_SW__vm_kq_hi": [
+          "b_kq"
+        ]
+      },
+      "undefined_after_all28": {
+        "hb_coll_SW__vm_kq": [
+          "a_kq"
+        ],
+        "hcollgl_SW__vm_kq_hi": [
+          "b_kq"
+        ]
+      }
+    },
+    {
+      "instance": "hcollks_SW_p3",
+      "template": "hcollks_NW_p3",
+      "module": "ot_hgi_coll_kq_share2_leaf",
+      "params": {},
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "a_kq",
+          "expression": "hb_coll_SW__vm_kq[2247:1686]"
+        },
+        {
+          "port": "b_kq",
+          "expression": "hcollgl_SW__vm_kq_hi[1123:562]"
+        }
+      ],
+      "produced": [
+        {
+          "net": "hcollks_SW_p3__vm_kq",
+          "port": "vm_kq",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hcollks_SW_p3__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        }
+      ],
+      "undefined_input_nets": {
+        "hb_coll_SW__vm_kq": [
+          "a_kq"
+        ],
+        "hcollgl_SW__vm_kq_hi": [
+          "b_kq"
+        ]
+      },
+      "undefined_after_all28": {
+        "hb_coll_SW__vm_kq": [
+          "a_kq"
+        ],
+        "hcollgl_SW__vm_kq_hi": [
+          "b_kq"
+        ]
+      }
+    },
+    {
+      "instance": "hcollrs_SE",
+      "template": "hcollrs_NE",
+      "module": "ot_hbm_idx_vm_share2_static_r",
+      "params": {
+        "BANK_RT": "7"
+      },
+      "source_inputs": [
+        {
+          "port": "clk_pair",
+          "expression": "{hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0]}"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "a_rq",
+          "expression": "hb_coll_SE__vm_rq[135:0]"
+        },
+        {
+          "port": "b_rq",
+          "expression": "{hcollgi_SE__vm_rq_hi[67:0], hcollgi_SE__vm_rq_lo[67:0]}"
+        },
+        {
+          "port": "vm_rr",
+          "expression": "{vmb_SE7__rr3[256:0], vmb_SE6__rr3[256:0], vmb_SE5__rr3[256:0], vmb_SE4__rr3[256:0], vmb_SE3__rr3[256:0], vmb_SE2__rr3[256:0], vmb_SE1__rr3[256:0], vmb_SE0__rr3[256:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "hcollrs_SE__vm_rq",
+          "port": "vm_rq",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hcollrs_SE__a_rr",
+          "port": "a_rr",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hcollrs_SE__b_rr",
+          "port": "b_rr",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hcollrs_SE__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        }
+      ],
+      "undefined_input_nets": {
+        "hb_coll_SE__vm_rq": [
+          "a_rq"
+        ],
+        "hcollgi_SE__vm_rq_hi": [
+          "b_rq"
+        ],
+        "hcollgi_SE__vm_rq_lo": [
+          "b_rq"
+        ]
+      },
+      "undefined_after_all28": {
+        "hb_coll_SE__vm_rq": [
+          "a_rq"
+        ],
+        "hcollgi_SE__vm_rq_hi": [
+          "b_rq"
+        ],
+        "hcollgi_SE__vm_rq_lo": [
+          "b_rq"
+        ]
+      }
+    },
+    {
+      "instance": "hcollrs_SW",
+      "template": "hcollrs_NW",
+      "module": "ot_hbm_idx_vm_share2_static_r",
+      "params": {
+        "BANK_RT": "7"
+      },
+      "source_inputs": [
+        {
+          "port": "clk_pair",
+          "expression": "{hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0]}"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "a_rq",
+          "expression": "hb_coll_SW__vm_rq[135:0]"
+        },
+        {
+          "port": "b_rq",
+          "expression": "{hcollgi_SW__vm_rq_hi[67:0], hcollgi_SW__vm_rq_lo[67:0]}"
+        },
+        {
+          "port": "vm_rr",
+          "expression": "{vmb_SW7__rr4[256:0], vmb_SW6__rr4[256:0], vmb_SW5__rr4[256:0], vmb_SW4__rr4[256:0], vmb_SW3__rr4[256:0], vmb_SW2__rr4[256:0], vmb_SW1__rr4[256:0], vmb_SW0__rr4[256:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "hcollrs_SW__vm_rq",
+          "port": "vm_rq",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hcollrs_SW__a_rr",
+          "port": "a_rr",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hcollrs_SW__b_rr",
+          "port": "b_rr",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hcollrs_SW__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        }
+      ],
+      "undefined_input_nets": {
+        "hb_coll_SW__vm_rq": [
+          "a_rq"
+        ],
+        "hcollgi_SW__vm_rq_hi": [
+          "b_rq"
+        ],
+        "hcollgi_SW__vm_rq_lo": [
+          "b_rq"
+        ]
+      },
+      "undefined_after_all28": {
+        "hb_coll_SW__vm_rq": [
+          "a_rq"
+        ],
+        "hcollgi_SW__vm_rq_hi": [
+          "b_rq"
+        ],
+        "hcollgi_SW__vm_rq_lo": [
+          "b_rq"
+        ]
+      }
+    },
+    {
+      "instance": "hleaf_SE",
+      "template": "hleaf_NE",
+      "module": "ot_hbm_host_cfg_leaf2",
+      "params": {
+        "NT": "21",
+        "NF": "31"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "cfg_v",
+          "expression": "host_cp_ingress__cfg_v[0:0]"
+        },
+        {
+          "port": "cfg_target",
+          "expression": "host_cp_ingress__cfg_target[7:0]"
+        },
+        {
+          "port": "cfg_addr",
+          "expression": "host_cp_ingress__cfg_addr[11:0]"
+        },
+        {
+          "port": "cfg_data",
+          "expression": "host_cp_ingress__cfg_data[255:0]"
+        },
+        {
+          "port": "desc_v",
+          "expression": "host_cp_ingress__desc_v[0:0]"
+        },
+        {
+          "port": "desc_base",
+          "expression": "host_cp_ingress__desc_base[11:0]"
+        },
+        {
+          "port": "desc_limit",
+          "expression": "host_cp_ingress__desc_limit[12:0]"
+        },
+        {
+          "port": "desc_loops",
+          "expression": "host_cp_ingress__desc_loops[15:0]"
+        },
+        {
+          "port": "launch_v",
+          "expression": "host_cp_ingress__launch_v[0:0]"
+        },
+        {
+          "port": "t_ready",
+          "expression": "{hc_eng__configured[0:0], hc_eng__configured[0:0], col_idx__ready[0:0], col_su__ready[0:0], refcfg_SE__ready[0:0], hb_dbk_SE__cp_configured[0:0], xl_SE_ctl__configured[0:0], xc_NW7__configured[0:0], xc_NW6__configured[0:0], xc_NW5__configured[0:0], xc_NW4__configured[0:0], epcal_SE__tgt_configured[0:0], hc_SE__configured[0:0], calendar_SE__tgt_configured[0:0], cp_svg_NW7__configured[0:0], cp_svg_NW6__configured[0:0], cp_svg_NW5__configured[0:0], cp_svg_NW4__configured[0:0], vmfc_SE__tgt_configured[0:0], col_sfu_SE__ready[0:0], hb_coll_SE__program_configured[0:0]}"
+        },
+        {
+          "port": "t_active",
+          "expression": "{hc_eng__program_active[0:0], hc_eng__program_active[0:0], col_idx__active[0:0], col_su__active[0:0], refcfg_SE__active[0:0], hb_dbk_SE__cp_active[0:0], xl_SE_ctl__active[0:0], xc_NW7__active[0:0], xc_NW6__active[0:0], xc_NW5__active[0:0], xc_NW4__active[0:0], epcal_SE__active[0:0], hc_SE__program_active[0:0], calendar_SE__active[0:0], cp_svg_NW7__active[0:0], cp_svg_NW6__active[0:0], cp_svg_NW5__active[0:0], cp_svg_NW4__active[0:0], vmfc_SE__active[0:0], col_sfu_SE__active[0:0], hb_coll_SE__hgi_busy[0:0]}"
+        },
+        {
+          "port": "t_fault",
+          "expression": "{hc_eng__fault[0:0], ep_S3__fault[0:0], col_idx__fault[0:0], col_su__fault[0:0], wbk_SE__fault[0:0], refcfg_SE__fault[0:0], hb_dbk_SE__cp_fault[0:0], xl_SE_ctl__fault[0:0], sfup_SE__fault[0:0], sfus_SE__fault[0:0], fcx_SE__fault[0:0], xc_NW7__fault[0:0], xc_NW6__fault[0:0], xc_NW5__fault[0:0], xc_NW4__fault[0:0], ep_N2__fault[0:0], epcal_SE__fault[0:0], epcal_SE__tgt_fault[0:0], hc_SE__hcq_fault[0:0], calendar_SE__fault[0:0], calendar_SE__tgt_fault[0:0], cp_svg_NW7__fault[0:0], cp_svg_NW6__fault[0:0], cp_svg_NW5__fault[0:0], cp_svg_NW4__fault[0:0], vmfc_SE__fault[0:0], vmfc_SE__tgt_fault[0:0], col_sfu_SE__fault[0:0], hb_coll_SE__fault[0:0], hb_coll_SE__hgi_fault[0:0], hb_coll_SE__program_fault[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "hleaf_SE__a_cfg_v",
+          "port": "a_cfg_v",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SE__a_cfg_target",
+          "port": "a_cfg_target",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SE__a_cfg_addr",
+          "port": "a_cfg_addr",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SE__a_cfg_data",
+          "port": "a_cfg_data",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SE__a_desc_v",
+          "port": "a_desc_v",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SE__a_desc_base",
+          "port": "a_desc_base",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SE__a_desc_limit",
+          "port": "a_desc_limit",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SE__a_desc_loops",
+          "port": "a_desc_loops",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SE__a_launch_v",
+          "port": "a_launch_v",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SE__b_cfg_v",
+          "port": "b_cfg_v",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SE__b_cfg_target",
+          "port": "b_cfg_target",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SE__b_cfg_addr",
+          "port": "b_cfg_addr",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SE__b_cfg_data",
+          "port": "b_cfg_data",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SE__b_desc_v",
+          "port": "b_desc_v",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SE__b_desc_base",
+          "port": "b_desc_base",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SE__b_desc_limit",
+          "port": "b_desc_limit",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SE__b_desc_loops",
+          "port": "b_desc_loops",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SE__b_launch_v",
+          "port": "b_launch_v",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SE__s_ready",
+          "port": "s_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SE__s_active",
+          "port": "s_active",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SE__s_fault",
+          "port": "s_fault",
+          "existing_top_input": false,
+          "declared": false
+        }
+      ],
+      "undefined_input_nets": {
+        "col_sfu_SE__ready": [
+          "t_ready"
+        ],
+        "epcal_SE__tgt_configured": [
+          "t_ready"
+        ],
+        "hb_coll_SE__program_configured": [
+          "t_ready"
+        ],
+        "hb_dbk_SE__cp_configured": [
+          "t_ready"
+        ],
+        "hc_SE__configured": [
+          "t_ready"
+        ],
+        "refcfg_SE__ready": [
+          "t_ready"
+        ],
+        "vmfc_SE__tgt_configured": [
+          "t_ready"
+        ],
+        "xl_SE_ctl__configured": [
+          "t_ready"
+        ],
+        "col_sfu_SE__active": [
+          "t_active"
+        ],
+        "epcal_SE__active": [
+          "t_active"
+        ],
+        "hb_coll_SE__hgi_busy": [
+          "t_active"
+        ],
+        "hb_dbk_SE__cp_active": [
+          "t_active"
+        ],
+        "hc_SE__program_active": [
+          "t_active"
+        ],
+        "refcfg_SE__active": [
+          "t_active"
+        ],
+        "vmfc_SE__active": [
+          "t_active"
+        ],
+        "xl_SE_ctl__active": [
+          "t_active"
+        ],
+        "col_sfu_SE__fault": [
+          "t_fault"
+        ],
+        "epcal_SE__fault": [
+          "t_fault"
+        ],
+        "epcal_SE__tgt_fault": [
+          "t_fault"
+        ],
+        "fcx_SE__fault": [
+          "t_fault"
+        ],
+        "hb_coll_SE__fault": [
+          "t_fault"
+        ],
+        "hb_coll_SE__hgi_fault": [
+          "t_fault"
+        ],
+        "hb_coll_SE__program_fault": [
+          "t_fault"
+        ],
+        "hb_dbk_SE__cp_fault": [
+          "t_fault"
+        ],
+        "hc_SE__hcq_fault": [
+          "t_fault"
+        ],
+        "refcfg_SE__fault": [
+          "t_fault"
+        ],
+        "sfup_SE__fault": [
+          "t_fault"
+        ],
+        "sfus_SE__fault": [
+          "t_fault"
+        ],
+        "vmfc_SE__fault": [
+          "t_fault"
+        ],
+        "vmfc_SE__tgt_fault": [
+          "t_fault"
+        ],
+        "wbk_SE__fault": [
+          "t_fault"
+        ],
+        "xl_SE_ctl__fault": [
+          "t_fault"
+        ]
+      },
+      "undefined_after_all28": {
+        "col_sfu_SE__ready": [
+          "t_ready"
+        ],
+        "epcal_SE__tgt_configured": [
+          "t_ready"
+        ],
+        "hb_coll_SE__program_configured": [
+          "t_ready"
+        ],
+        "hb_dbk_SE__cp_configured": [
+          "t_ready"
+        ],
+        "hc_SE__configured": [
+          "t_ready"
+        ],
+        "refcfg_SE__ready": [
+          "t_ready"
+        ],
+        "vmfc_SE__tgt_configured": [
+          "t_ready"
+        ],
+        "xl_SE_ctl__configured": [
+          "t_ready"
+        ],
+        "col_sfu_SE__active": [
+          "t_active"
+        ],
+        "epcal_SE__active": [
+          "t_active"
+        ],
+        "hb_coll_SE__hgi_busy": [
+          "t_active"
+        ],
+        "hb_dbk_SE__cp_active": [
+          "t_active"
+        ],
+        "hc_SE__program_active": [
+          "t_active"
+        ],
+        "refcfg_SE__active": [
+          "t_active"
+        ],
+        "vmfc_SE__active": [
+          "t_active"
+        ],
+        "xl_SE_ctl__active": [
+          "t_active"
+        ],
+        "col_sfu_SE__fault": [
+          "t_fault"
+        ],
+        "epcal_SE__fault": [
+          "t_fault"
+        ],
+        "epcal_SE__tgt_fault": [
+          "t_fault"
+        ],
+        "fcx_SE__fault": [
+          "t_fault"
+        ],
+        "hb_coll_SE__fault": [
+          "t_fault"
+        ],
+        "hb_coll_SE__hgi_fault": [
+          "t_fault"
+        ],
+        "hb_coll_SE__program_fault": [
+          "t_fault"
+        ],
+        "hb_dbk_SE__cp_fault": [
+          "t_fault"
+        ],
+        "hc_SE__hcq_fault": [
+          "t_fault"
+        ],
+        "refcfg_SE__fault": [
+          "t_fault"
+        ],
+        "sfup_SE__fault": [
+          "t_fault"
+        ],
+        "sfus_SE__fault": [
+          "t_fault"
+        ],
+        "vmfc_SE__fault": [
+          "t_fault"
+        ],
+        "vmfc_SE__tgt_fault": [
+          "t_fault"
+        ],
+        "wbk_SE__fault": [
+          "t_fault"
+        ],
+        "xl_SE_ctl__fault": [
+          "t_fault"
+        ]
+      }
+    },
+    {
+      "instance": "hleaf_SW",
+      "template": "hleaf_NW",
+      "module": "ot_hbm_host_cfg_leaf2",
+      "params": {
+        "NT": "20",
+        "NF": "32"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "cfg_v",
+          "expression": "host_cp_ingress__cfg_v[0:0]"
+        },
+        {
+          "port": "cfg_target",
+          "expression": "host_cp_ingress__cfg_target[7:0]"
+        },
+        {
+          "port": "cfg_addr",
+          "expression": "host_cp_ingress__cfg_addr[11:0]"
+        },
+        {
+          "port": "cfg_data",
+          "expression": "host_cp_ingress__cfg_data[255:0]"
+        },
+        {
+          "port": "desc_v",
+          "expression": "host_cp_ingress__desc_v[0:0]"
+        },
+        {
+          "port": "desc_base",
+          "expression": "host_cp_ingress__desc_base[11:0]"
+        },
+        {
+          "port": "desc_limit",
+          "expression": "host_cp_ingress__desc_limit[12:0]"
+        },
+        {
+          "port": "desc_loops",
+          "expression": "host_cp_ingress__desc_loops[15:0]"
+        },
+        {
+          "port": "launch_v",
+          "expression": "host_cp_ingress__launch_v[0:0]"
+        },
+        {
+          "port": "t_ready",
+          "expression": "{u_mu_fused_programme__ready[0:0], refcfg_SW__ready[0:0], xc_SW3__configured[0:0], xc_SW2__configured[0:0], xc_SW1__configured[0:0], xc_SW0__configured[0:0], smw_SW__configured[0:0], epcal_SW__tgt_configured[0:0], hc_SW__configured[0:0], hb_dbk_SW__cp_configured[0:0], xl_SW_ctl__configured[0:0], calendar_SW__tgt_configured[0:0], cp_svg_SW3__configured[0:0], cp_svg_SW2__configured[0:0], cp_svg_SW1__configured[0:0], cp_svg_SW0__configured[0:0], vmfc_SW__tgt_configured[0:0], col_sfu_SW__ready[0:0], hb_coll_SW__program_configured[0:0], hb_quant_SW__program_leaf__configured[0:0]}"
+        },
+        {
+          "port": "t_active",
+          "expression": "{u_mu_fused_programme__active[0:0], refcfg_SW__active[0:0], xc_SW3__active[0:0], xc_SW2__active[0:0], xc_SW1__active[0:0], xc_SW0__active[0:0], smw_SW__active[0:0], epcal_SW__active[0:0], hc_SW__program_active[0:0], hb_dbk_SW__cp_active[0:0], xl_SW_ctl__active[0:0], calendar_SW__active[0:0], cp_svg_SW3__active[0:0], cp_svg_SW2__active[0:0], cp_svg_SW1__active[0:0], cp_svg_SW0__active[0:0], vmfc_SW__active[0:0], col_sfu_SW__active[0:0], hb_coll_SW__hgi_busy[0:0], hb_quant_SW__program_leaf__active[0:0]}"
+        },
+        {
+          "port": "t_fault",
+          "expression": "{u_mu_fused_programme__fault[0:0], b2_ep1_root__rx_o[614:614], ep_S0__fault[0:0], refcfg_SW__fault[0:0], sfup_SW__fault[0:0], sfus_SW__fault[0:0], fcx_SW__fault[0:0], wbk_SW__fault[0:0], xc_SW3__fault[0:0], xc_SW2__fault[0:0], xc_SW1__fault[0:0], xc_SW0__fault[0:0], smw_SW__fault[0:0], ep_N0__fault[0:0], epcal_SW__fault[0:0], epcal_SW__tgt_fault[0:0], hc_SW__hcq_fault[0:0], hb_dbk_SW__cp_fault[0:0], xl_SW_ctl__fault[0:0], calendar_SW__fault[0:0], calendar_SW__tgt_fault[0:0], cp_svg_SW3__fault[0:0], cp_svg_SW2__fault[0:0], cp_svg_SW1__fault[0:0], cp_svg_SW0__fault[0:0], vmfc_SW__fault[0:0], vmfc_SW__tgt_fault[0:0], col_sfu_SW__fault[0:0], hb_coll_SW__fault[0:0], hb_coll_SW__hgi_fault[0:0], hb_coll_SW__program_fault[0:0], hb_quant_SW__hbfd_qdq_split_or__Y[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "hleaf_SW__a_cfg_v",
+          "port": "a_cfg_v",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SW__a_cfg_target",
+          "port": "a_cfg_target",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SW__a_cfg_addr",
+          "port": "a_cfg_addr",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SW__a_cfg_data",
+          "port": "a_cfg_data",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SW__a_desc_v",
+          "port": "a_desc_v",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SW__a_desc_base",
+          "port": "a_desc_base",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SW__a_desc_limit",
+          "port": "a_desc_limit",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SW__a_desc_loops",
+          "port": "a_desc_loops",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SW__a_launch_v",
+          "port": "a_launch_v",
+          "existing_top_input": true,
+          "declared": true
+        },
+        {
+          "net": "hleaf_SW__b_cfg_v",
+          "port": "b_cfg_v",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SW__b_cfg_target",
+          "port": "b_cfg_target",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SW__b_cfg_addr",
+          "port": "b_cfg_addr",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SW__b_cfg_data",
+          "port": "b_cfg_data",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SW__b_desc_v",
+          "port": "b_desc_v",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SW__b_desc_base",
+          "port": "b_desc_base",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SW__b_desc_limit",
+          "port": "b_desc_limit",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SW__b_desc_loops",
+          "port": "b_desc_loops",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SW__b_launch_v",
+          "port": "b_launch_v",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SW__s_ready",
+          "port": "s_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SW__s_active",
+          "port": "s_active",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "hleaf_SW__s_fault",
+          "port": "s_fault",
+          "existing_top_input": false,
+          "declared": false
+        }
+      ],
+      "undefined_input_nets": {
+        "col_sfu_SW__ready": [
+          "t_ready"
+        ],
+        "cp_svg_SW0__configured": [
+          "t_ready"
+        ],
+        "cp_svg_SW1__configured": [
+          "t_ready"
+        ],
+        "cp_svg_SW2__configured": [
+          "t_ready"
+        ],
+        "cp_svg_SW3__configured": [
+          "t_ready"
+        ],
+        "epcal_SW__tgt_configured": [
+          "t_ready"
+        ],
+        "hb_coll_SW__program_configured": [
+          "t_ready"
+        ],
+        "hb_dbk_SW__cp_configured": [
+          "t_ready"
+        ],
+        "hb_quant_SW__program_leaf__configured": [
+          "t_ready"
+        ],
+        "hc_SW__configured": [
+          "t_ready"
+        ],
+        "refcfg_SW__ready": [
+          "t_ready"
+        ],
+        "smw_SW__configured": [
+          "t_ready"
+        ],
+        "vmfc_SW__tgt_configured": [
+          "t_ready"
+        ],
+        "xc_SW0__configured": [
+          "t_ready"
+        ],
+        "xc_SW1__configured": [
+          "t_ready"
+        ],
+        "xc_SW2__configured": [
+          "t_ready"
+        ],
+        "xc_SW3__configured": [
+          "t_ready"
+        ],
+        "xl_SW_ctl__configured": [
+          "t_ready"
+        ],
+        "col_sfu_SW__active": [
+          "t_active"
+        ],
+        "cp_svg_SW0__active": [
+          "t_active"
+        ],
+        "cp_svg_SW1__active": [
+          "t_active"
+        ],
+        "cp_svg_SW2__active": [
+          "t_active"
+        ],
+        "cp_svg_SW3__active": [
+          "t_active"
+        ],
+        "epcal_SW__active": [
+          "t_active"
+        ],
+        "hb_coll_SW__hgi_busy": [
+          "t_active"
+        ],
+        "hb_dbk_SW__cp_active": [
+          "t_active"
+        ],
+        "hb_quant_SW__program_leaf__active": [
+          "t_active"
+        ],
+        "hc_SW__program_active": [
+          "t_active"
+        ],
+        "refcfg_SW__active": [
+          "t_active"
+        ],
+        "smw_SW__active": [
+          "t_active"
+        ],
+        "vmfc_SW__active": [
+          "t_active"
+        ],
+        "xc_SW0__active": [
+          "t_active"
+        ],
+        "xc_SW1__active": [
+          "t_active"
+        ],
+        "xc_SW2__active": [
+          "t_active"
+        ],
+        "xc_SW3__active": [
+          "t_active"
+        ],
+        "xl_SW_ctl__active": [
+          "t_active"
+        ],
+        "col_sfu_SW__fault": [
+          "t_fault"
+        ],
+        "cp_svg_SW0__fault": [
+          "t_fault"
+        ],
+        "cp_svg_SW1__fault": [
+          "t_fault"
+        ],
+        "cp_svg_SW2__fault": [
+          "t_fault"
+        ],
+        "cp_svg_SW3__fault": [
+          "t_fault"
+        ],
+        "epcal_SW__fault": [
+          "t_fault"
+        ],
+        "epcal_SW__tgt_fault": [
+          "t_fault"
+        ],
+        "fcx_SW__fault": [
+          "t_fault"
+        ],
+        "hb_coll_SW__fault": [
+          "t_fault"
+        ],
+        "hb_coll_SW__hgi_fault": [
+          "t_fault"
+        ],
+        "hb_coll_SW__program_fault": [
+          "t_fault"
+        ],
+        "hb_dbk_SW__cp_fault": [
+          "t_fault"
+        ],
+        "hb_quant_SW__hbfd_qdq_split_or__Y": [
+          "t_fault"
+        ],
+        "hc_SW__hcq_fault": [
+          "t_fault"
+        ],
+        "refcfg_SW__fault": [
+          "t_fault"
+        ],
+        "sfup_SW__fault": [
+          "t_fault"
+        ],
+        "sfus_SW__fault": [
+          "t_fault"
+        ],
+        "smw_SW__fault": [
+          "t_fault"
+        ],
+        "vmfc_SW__fault": [
+          "t_fault"
+        ],
+        "vmfc_SW__tgt_fault": [
+          "t_fault"
+        ],
+        "wbk_SW__fault": [
+          "t_fault"
+        ],
+        "xc_SW0__fault": [
+          "t_fault"
+        ],
+        "xc_SW1__fault": [
+          "t_fault"
+        ],
+        "xc_SW2__fault": [
+          "t_fault"
+        ],
+        "xc_SW3__fault": [
+          "t_fault"
+        ],
+        "xl_SW_ctl__fault": [
+          "t_fault"
+        ]
+      },
+      "undefined_after_all28": {
+        "col_sfu_SW__ready": [
+          "t_ready"
+        ],
+        "cp_svg_SW0__configured": [
+          "t_ready"
+        ],
+        "cp_svg_SW1__configured": [
+          "t_ready"
+        ],
+        "cp_svg_SW2__configured": [
+          "t_ready"
+        ],
+        "cp_svg_SW3__configured": [
+          "t_ready"
+        ],
+        "epcal_SW__tgt_configured": [
+          "t_ready"
+        ],
+        "hb_coll_SW__program_configured": [
+          "t_ready"
+        ],
+        "hb_dbk_SW__cp_configured": [
+          "t_ready"
+        ],
+        "hb_quant_SW__program_leaf__configured": [
+          "t_ready"
+        ],
+        "hc_SW__configured": [
+          "t_ready"
+        ],
+        "refcfg_SW__ready": [
+          "t_ready"
+        ],
+        "smw_SW__configured": [
+          "t_ready"
+        ],
+        "vmfc_SW__tgt_configured": [
+          "t_ready"
+        ],
+        "xc_SW0__configured": [
+          "t_ready"
+        ],
+        "xc_SW1__configured": [
+          "t_ready"
+        ],
+        "xc_SW2__configured": [
+          "t_ready"
+        ],
+        "xc_SW3__configured": [
+          "t_ready"
+        ],
+        "xl_SW_ctl__configured": [
+          "t_ready"
+        ],
+        "col_sfu_SW__active": [
+          "t_active"
+        ],
+        "cp_svg_SW0__active": [
+          "t_active"
+        ],
+        "cp_svg_SW1__active": [
+          "t_active"
+        ],
+        "cp_svg_SW2__active": [
+          "t_active"
+        ],
+        "cp_svg_SW3__active": [
+          "t_active"
+        ],
+        "epcal_SW__active": [
+          "t_active"
+        ],
+        "hb_coll_SW__hgi_busy": [
+          "t_active"
+        ],
+        "hb_dbk_SW__cp_active": [
+          "t_active"
+        ],
+        "hb_quant_SW__program_leaf__active": [
+          "t_active"
+        ],
+        "hc_SW__program_active": [
+          "t_active"
+        ],
+        "refcfg_SW__active": [
+          "t_active"
+        ],
+        "smw_SW__active": [
+          "t_active"
+        ],
+        "vmfc_SW__active": [
+          "t_active"
+        ],
+        "xc_SW0__active": [
+          "t_active"
+        ],
+        "xc_SW1__active": [
+          "t_active"
+        ],
+        "xc_SW2__active": [
+          "t_active"
+        ],
+        "xc_SW3__active": [
+          "t_active"
+        ],
+        "xl_SW_ctl__active": [
+          "t_active"
+        ],
+        "col_sfu_SW__fault": [
+          "t_fault"
+        ],
+        "cp_svg_SW0__fault": [
+          "t_fault"
+        ],
+        "cp_svg_SW1__fault": [
+          "t_fault"
+        ],
+        "cp_svg_SW2__fault": [
+          "t_fault"
+        ],
+        "cp_svg_SW3__fault": [
+          "t_fault"
+        ],
+        "epcal_SW__fault": [
+          "t_fault"
+        ],
+        "epcal_SW__tgt_fault": [
+          "t_fault"
+        ],
+        "fcx_SW__fault": [
+          "t_fault"
+        ],
+        "hb_coll_SW__fault": [
+          "t_fault"
+        ],
+        "hb_coll_SW__hgi_fault": [
+          "t_fault"
+        ],
+        "hb_coll_SW__program_fault": [
+          "t_fault"
+        ],
+        "hb_dbk_SW__cp_fault": [
+          "t_fault"
+        ],
+        "hb_quant_SW__hbfd_qdq_split_or__Y": [
+          "t_fault"
+        ],
+        "hc_SW__hcq_fault": [
+          "t_fault"
+        ],
+        "refcfg_SW__fault": [
+          "t_fault"
+        ],
+        "sfup_SW__fault": [
+          "t_fault"
+        ],
+        "sfus_SW__fault": [
+          "t_fault"
+        ],
+        "smw_SW__fault": [
+          "t_fault"
+        ],
+        "vmfc_SW__fault": [
+          "t_fault"
+        ],
+        "vmfc_SW__tgt_fault": [
+          "t_fault"
+        ],
+        "wbk_SW__fault": [
+          "t_fault"
+        ],
+        "xc_SW0__fault": [
+          "t_fault"
+        ],
+        "xc_SW1__fault": [
+          "t_fault"
+        ],
+        "xc_SW2__fault": [
+          "t_fault"
+        ],
+        "xc_SW3__fault": [
+          "t_fault"
+        ],
+        "xl_SW_ctl__fault": [
+          "t_fault"
+        ]
+      }
+    },
+    {
+      "instance": "vmdel_SE0",
+      "template": "vmdel_NE0",
+      "module": "ot_hbm_svc_vmdel_lane_n",
+      "params": {
+        "NPC": "2"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "bank_id",
+          "expression": "3'b000"
+        },
+        {
+          "port": "begin_v_i",
+          "expression": "vmfc_SE__payload[0:0]"
+        },
+        {
+          "port": "begin_bank_i",
+          "expression": "vmfc_SE__payload[1:1]"
+        },
+        {
+          "port": "begin_epoch_i",
+          "expression": "vmfc_SE__payload[17:2]"
+        },
+        {
+          "port": "start_i",
+          "expression": "vmfc_SE__payload[18:18]"
+        },
+        {
+          "port": "start_bank_i",
+          "expression": "vmfc_SE__payload[19:19]"
+        },
+        {
+          "port": "start_epoch_i",
+          "expression": "vmfc_SE__payload[35:20]"
+        },
+        {
+          "port": "start_base_sector_i",
+          "expression": "vmfc_SE__payload[51:36]"
+        },
+        {
+          "port": "fill_v_i",
+          "expression": "{vmks_NW6__fill_v[0:0], vmks_NW4__fill_v[0:0]}"
+        },
+        {
+          "port": "fill_bank_i",
+          "expression": "{vmks_NW6__fill_bank[0:0], vmks_NW4__fill_bank[0:0]}"
+        },
+        {
+          "port": "fill_slot_i",
+          "expression": "{vmks_NW6__fill_slot[5:0], vmks_NW4__fill_slot[5:0]}"
+        },
+        {
+          "port": "fill_epoch_i",
+          "expression": "{vmks_NW6__fill_epoch[15:0], vmks_NW4__fill_epoch[15:0]}"
+        },
+        {
+          "port": "fill_data_i",
+          "expression": "{vmks_NW6__fill_data[255:0], vmks_NW4__fill_data[255:0]}"
+        },
+        {
+          "port": "full0_all",
+          "expression": "{vmdel_SE7__full0[0:0], vmdel_SE6__full0[0:0], vmdel_SE5__full0[0:0], vmdel_SE4__full0[0:0], vmdel_SE3__full0[0:0], vmdel_SE2__full0[0:0], vmdel_SE1__full0[0:0], vmdel_SE0__full0[0:0]}"
+        },
+        {
+          "port": "full1_all",
+          "expression": "{vmdel_SE7__full1[0:0], vmdel_SE6__full1[0:0], vmdel_SE5__full1[0:0], vmdel_SE4__full1[0:0], vmdel_SE3__full1[0:0], vmdel_SE2__full1[0:0], vmdel_SE1__full1[0:0], vmdel_SE0__full1[0:0]}"
+        },
+        {
+          "port": "pcbad_all",
+          "expression": "{vmdel_SE7__pcbad[0:0], vmdel_SE6__pcbad[0:0], vmdel_SE5__pcbad[0:0], vmdel_SE4__pcbad[0:0], vmdel_SE3__pcbad[0:0], vmdel_SE2__pcbad[0:0], vmdel_SE1__pcbad[0:0], vmdel_SE0__pcbad[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "vmdel_SE0__full0",
+          "port": "full0",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE0__full1",
+          "port": "full1",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE0__pcbad",
+          "port": "pcbad",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE0__block_ready",
+          "port": "block_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE0__busy",
+          "port": "busy",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE0__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE0__dq",
+          "port": "dq",
+          "existing_top_input": true,
+          "declared": true
+        }
+      ],
+      "undefined_input_nets": {
+        "vmfc_SE__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmdel_SE0__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE1__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE2__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE3__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE4__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE5__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE6__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE7__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE0__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE1__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE2__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE3__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE4__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE5__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE6__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE7__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE0__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE1__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE2__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE3__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE4__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE5__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE6__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE7__pcbad": [
+          "pcbad_all"
+        ]
+      },
+      "undefined_after_all28": {
+        "vmfc_SE__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ]
+      }
+    },
+    {
+      "instance": "vmdel_SE1",
+      "template": "vmdel_NE1",
+      "module": "ot_hbm_svc_vmdel_lane_n",
+      "params": {
+        "NPC": "2"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "bank_id",
+          "expression": "3'b001"
+        },
+        {
+          "port": "begin_v_i",
+          "expression": "vmfc_SE__payload[0:0]"
+        },
+        {
+          "port": "begin_bank_i",
+          "expression": "vmfc_SE__payload[1:1]"
+        },
+        {
+          "port": "begin_epoch_i",
+          "expression": "vmfc_SE__payload[17:2]"
+        },
+        {
+          "port": "start_i",
+          "expression": "vmfc_SE__payload[18:18]"
+        },
+        {
+          "port": "start_bank_i",
+          "expression": "vmfc_SE__payload[19:19]"
+        },
+        {
+          "port": "start_epoch_i",
+          "expression": "vmfc_SE__payload[35:20]"
+        },
+        {
+          "port": "start_base_sector_i",
+          "expression": "vmfc_SE__payload[51:36]"
+        },
+        {
+          "port": "fill_v_i",
+          "expression": "{vmks_NW6__fill_v[1:1], vmks_NW4__fill_v[1:1]}"
+        },
+        {
+          "port": "fill_bank_i",
+          "expression": "{vmks_NW6__fill_bank[1:1], vmks_NW4__fill_bank[1:1]}"
+        },
+        {
+          "port": "fill_slot_i",
+          "expression": "{vmks_NW6__fill_slot[11:6], vmks_NW4__fill_slot[11:6]}"
+        },
+        {
+          "port": "fill_epoch_i",
+          "expression": "{vmks_NW6__fill_epoch[31:16], vmks_NW4__fill_epoch[31:16]}"
+        },
+        {
+          "port": "fill_data_i",
+          "expression": "{vmks_NW6__fill_data[511:256], vmks_NW4__fill_data[511:256]}"
+        },
+        {
+          "port": "full0_all",
+          "expression": "{vmdel_SE7__full0[0:0], vmdel_SE6__full0[0:0], vmdel_SE5__full0[0:0], vmdel_SE4__full0[0:0], vmdel_SE3__full0[0:0], vmdel_SE2__full0[0:0], vmdel_SE1__full0[0:0], vmdel_SE0__full0[0:0]}"
+        },
+        {
+          "port": "full1_all",
+          "expression": "{vmdel_SE7__full1[0:0], vmdel_SE6__full1[0:0], vmdel_SE5__full1[0:0], vmdel_SE4__full1[0:0], vmdel_SE3__full1[0:0], vmdel_SE2__full1[0:0], vmdel_SE1__full1[0:0], vmdel_SE0__full1[0:0]}"
+        },
+        {
+          "port": "pcbad_all",
+          "expression": "{vmdel_SE7__pcbad[0:0], vmdel_SE6__pcbad[0:0], vmdel_SE5__pcbad[0:0], vmdel_SE4__pcbad[0:0], vmdel_SE3__pcbad[0:0], vmdel_SE2__pcbad[0:0], vmdel_SE1__pcbad[0:0], vmdel_SE0__pcbad[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "vmdel_SE1__full0",
+          "port": "full0",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE1__full1",
+          "port": "full1",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE1__pcbad",
+          "port": "pcbad",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE1__block_ready",
+          "port": "block_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE1__busy",
+          "port": "busy",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE1__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE1__dq",
+          "port": "dq",
+          "existing_top_input": true,
+          "declared": true
+        }
+      ],
+      "undefined_input_nets": {
+        "vmfc_SE__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmdel_SE0__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE1__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE2__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE3__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE4__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE5__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE6__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE7__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE0__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE1__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE2__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE3__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE4__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE5__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE6__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE7__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE0__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE1__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE2__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE3__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE4__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE5__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE6__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE7__pcbad": [
+          "pcbad_all"
+        ]
+      },
+      "undefined_after_all28": {
+        "vmfc_SE__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ]
+      }
+    },
+    {
+      "instance": "vmdel_SE2",
+      "template": "vmdel_NE2",
+      "module": "ot_hbm_svc_vmdel_lane_n",
+      "params": {
+        "NPC": "2"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "bank_id",
+          "expression": "3'b010"
+        },
+        {
+          "port": "begin_v_i",
+          "expression": "vmfc_SE__payload[0:0]"
+        },
+        {
+          "port": "begin_bank_i",
+          "expression": "vmfc_SE__payload[1:1]"
+        },
+        {
+          "port": "begin_epoch_i",
+          "expression": "vmfc_SE__payload[17:2]"
+        },
+        {
+          "port": "start_i",
+          "expression": "vmfc_SE__payload[18:18]"
+        },
+        {
+          "port": "start_bank_i",
+          "expression": "vmfc_SE__payload[19:19]"
+        },
+        {
+          "port": "start_epoch_i",
+          "expression": "vmfc_SE__payload[35:20]"
+        },
+        {
+          "port": "start_base_sector_i",
+          "expression": "vmfc_SE__payload[51:36]"
+        },
+        {
+          "port": "fill_v_i",
+          "expression": "{vmks_NW6__fill_v[2:2], vmks_NW4__fill_v[2:2]}"
+        },
+        {
+          "port": "fill_bank_i",
+          "expression": "{vmks_NW6__fill_bank[2:2], vmks_NW4__fill_bank[2:2]}"
+        },
+        {
+          "port": "fill_slot_i",
+          "expression": "{vmks_NW6__fill_slot[17:12], vmks_NW4__fill_slot[17:12]}"
+        },
+        {
+          "port": "fill_epoch_i",
+          "expression": "{vmks_NW6__fill_epoch[47:32], vmks_NW4__fill_epoch[47:32]}"
+        },
+        {
+          "port": "fill_data_i",
+          "expression": "{vmks_NW6__fill_data[767:512], vmks_NW4__fill_data[767:512]}"
+        },
+        {
+          "port": "full0_all",
+          "expression": "{vmdel_SE7__full0[0:0], vmdel_SE6__full0[0:0], vmdel_SE5__full0[0:0], vmdel_SE4__full0[0:0], vmdel_SE3__full0[0:0], vmdel_SE2__full0[0:0], vmdel_SE1__full0[0:0], vmdel_SE0__full0[0:0]}"
+        },
+        {
+          "port": "full1_all",
+          "expression": "{vmdel_SE7__full1[0:0], vmdel_SE6__full1[0:0], vmdel_SE5__full1[0:0], vmdel_SE4__full1[0:0], vmdel_SE3__full1[0:0], vmdel_SE2__full1[0:0], vmdel_SE1__full1[0:0], vmdel_SE0__full1[0:0]}"
+        },
+        {
+          "port": "pcbad_all",
+          "expression": "{vmdel_SE7__pcbad[0:0], vmdel_SE6__pcbad[0:0], vmdel_SE5__pcbad[0:0], vmdel_SE4__pcbad[0:0], vmdel_SE3__pcbad[0:0], vmdel_SE2__pcbad[0:0], vmdel_SE1__pcbad[0:0], vmdel_SE0__pcbad[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "vmdel_SE2__full0",
+          "port": "full0",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE2__full1",
+          "port": "full1",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE2__pcbad",
+          "port": "pcbad",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE2__block_ready",
+          "port": "block_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE2__busy",
+          "port": "busy",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE2__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE2__dq",
+          "port": "dq",
+          "existing_top_input": true,
+          "declared": true
+        }
+      ],
+      "undefined_input_nets": {
+        "vmfc_SE__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmdel_SE0__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE1__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE2__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE3__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE4__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE5__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE6__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE7__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE0__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE1__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE2__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE3__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE4__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE5__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE6__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE7__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE0__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE1__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE2__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE3__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE4__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE5__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE6__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE7__pcbad": [
+          "pcbad_all"
+        ]
+      },
+      "undefined_after_all28": {
+        "vmfc_SE__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ]
+      }
+    },
+    {
+      "instance": "vmdel_SE3",
+      "template": "vmdel_NE3",
+      "module": "ot_hbm_svc_vmdel_lane_n",
+      "params": {
+        "NPC": "2"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "bank_id",
+          "expression": "3'b011"
+        },
+        {
+          "port": "begin_v_i",
+          "expression": "vmfc_SE__payload[0:0]"
+        },
+        {
+          "port": "begin_bank_i",
+          "expression": "vmfc_SE__payload[1:1]"
+        },
+        {
+          "port": "begin_epoch_i",
+          "expression": "vmfc_SE__payload[17:2]"
+        },
+        {
+          "port": "start_i",
+          "expression": "vmfc_SE__payload[18:18]"
+        },
+        {
+          "port": "start_bank_i",
+          "expression": "vmfc_SE__payload[19:19]"
+        },
+        {
+          "port": "start_epoch_i",
+          "expression": "vmfc_SE__payload[35:20]"
+        },
+        {
+          "port": "start_base_sector_i",
+          "expression": "vmfc_SE__payload[51:36]"
+        },
+        {
+          "port": "fill_v_i",
+          "expression": "{vmks_NW6__fill_v[3:3], vmks_NW4__fill_v[3:3]}"
+        },
+        {
+          "port": "fill_bank_i",
+          "expression": "{vmks_NW6__fill_bank[3:3], vmks_NW4__fill_bank[3:3]}"
+        },
+        {
+          "port": "fill_slot_i",
+          "expression": "{vmks_NW6__fill_slot[23:18], vmks_NW4__fill_slot[23:18]}"
+        },
+        {
+          "port": "fill_epoch_i",
+          "expression": "{vmks_NW6__fill_epoch[63:48], vmks_NW4__fill_epoch[63:48]}"
+        },
+        {
+          "port": "fill_data_i",
+          "expression": "{vmks_NW6__fill_data[1023:768], vmks_NW4__fill_data[1023:768]}"
+        },
+        {
+          "port": "full0_all",
+          "expression": "{vmdel_SE7__full0[0:0], vmdel_SE6__full0[0:0], vmdel_SE5__full0[0:0], vmdel_SE4__full0[0:0], vmdel_SE3__full0[0:0], vmdel_SE2__full0[0:0], vmdel_SE1__full0[0:0], vmdel_SE0__full0[0:0]}"
+        },
+        {
+          "port": "full1_all",
+          "expression": "{vmdel_SE7__full1[0:0], vmdel_SE6__full1[0:0], vmdel_SE5__full1[0:0], vmdel_SE4__full1[0:0], vmdel_SE3__full1[0:0], vmdel_SE2__full1[0:0], vmdel_SE1__full1[0:0], vmdel_SE0__full1[0:0]}"
+        },
+        {
+          "port": "pcbad_all",
+          "expression": "{vmdel_SE7__pcbad[0:0], vmdel_SE6__pcbad[0:0], vmdel_SE5__pcbad[0:0], vmdel_SE4__pcbad[0:0], vmdel_SE3__pcbad[0:0], vmdel_SE2__pcbad[0:0], vmdel_SE1__pcbad[0:0], vmdel_SE0__pcbad[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "vmdel_SE3__full0",
+          "port": "full0",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE3__full1",
+          "port": "full1",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE3__pcbad",
+          "port": "pcbad",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE3__block_ready",
+          "port": "block_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE3__busy",
+          "port": "busy",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE3__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE3__dq",
+          "port": "dq",
+          "existing_top_input": true,
+          "declared": true
+        }
+      ],
+      "undefined_input_nets": {
+        "vmfc_SE__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmdel_SE0__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE1__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE2__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE3__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE4__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE5__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE6__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE7__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE0__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE1__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE2__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE3__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE4__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE5__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE6__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE7__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE0__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE1__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE2__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE3__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE4__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE5__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE6__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE7__pcbad": [
+          "pcbad_all"
+        ]
+      },
+      "undefined_after_all28": {
+        "vmfc_SE__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ]
+      }
+    },
+    {
+      "instance": "vmdel_SE4",
+      "template": "vmdel_NE4",
+      "module": "ot_hbm_svc_vmdel_lane_n",
+      "params": {
+        "NPC": "2"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "bank_id",
+          "expression": "3'b100"
+        },
+        {
+          "port": "begin_v_i",
+          "expression": "vmfc_SE__payload[0:0]"
+        },
+        {
+          "port": "begin_bank_i",
+          "expression": "vmfc_SE__payload[1:1]"
+        },
+        {
+          "port": "begin_epoch_i",
+          "expression": "vmfc_SE__payload[17:2]"
+        },
+        {
+          "port": "start_i",
+          "expression": "vmfc_SE__payload[18:18]"
+        },
+        {
+          "port": "start_bank_i",
+          "expression": "vmfc_SE__payload[19:19]"
+        },
+        {
+          "port": "start_epoch_i",
+          "expression": "vmfc_SE__payload[35:20]"
+        },
+        {
+          "port": "start_base_sector_i",
+          "expression": "vmfc_SE__payload[51:36]"
+        },
+        {
+          "port": "fill_v_i",
+          "expression": "{vmks_NW7__fill_v[0:0], vmks_NW5__fill_v[0:0]}"
+        },
+        {
+          "port": "fill_bank_i",
+          "expression": "{vmks_NW7__fill_bank[0:0], vmks_NW5__fill_bank[0:0]}"
+        },
+        {
+          "port": "fill_slot_i",
+          "expression": "{vmks_NW7__fill_slot[5:0], vmks_NW5__fill_slot[5:0]}"
+        },
+        {
+          "port": "fill_epoch_i",
+          "expression": "{vmks_NW7__fill_epoch[15:0], vmks_NW5__fill_epoch[15:0]}"
+        },
+        {
+          "port": "fill_data_i",
+          "expression": "{vmks_NW7__fill_data[255:0], vmks_NW5__fill_data[255:0]}"
+        },
+        {
+          "port": "full0_all",
+          "expression": "{vmdel_SE7__full0[0:0], vmdel_SE6__full0[0:0], vmdel_SE5__full0[0:0], vmdel_SE4__full0[0:0], vmdel_SE3__full0[0:0], vmdel_SE2__full0[0:0], vmdel_SE1__full0[0:0], vmdel_SE0__full0[0:0]}"
+        },
+        {
+          "port": "full1_all",
+          "expression": "{vmdel_SE7__full1[0:0], vmdel_SE6__full1[0:0], vmdel_SE5__full1[0:0], vmdel_SE4__full1[0:0], vmdel_SE3__full1[0:0], vmdel_SE2__full1[0:0], vmdel_SE1__full1[0:0], vmdel_SE0__full1[0:0]}"
+        },
+        {
+          "port": "pcbad_all",
+          "expression": "{vmdel_SE7__pcbad[0:0], vmdel_SE6__pcbad[0:0], vmdel_SE5__pcbad[0:0], vmdel_SE4__pcbad[0:0], vmdel_SE3__pcbad[0:0], vmdel_SE2__pcbad[0:0], vmdel_SE1__pcbad[0:0], vmdel_SE0__pcbad[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "vmdel_SE4__full0",
+          "port": "full0",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE4__full1",
+          "port": "full1",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE4__pcbad",
+          "port": "pcbad",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE4__block_ready",
+          "port": "block_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE4__busy",
+          "port": "busy",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE4__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE4__dq",
+          "port": "dq",
+          "existing_top_input": true,
+          "declared": true
+        }
+      ],
+      "undefined_input_nets": {
+        "vmfc_SE__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmdel_SE0__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE1__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE2__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE3__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE4__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE5__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE6__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE7__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE0__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE1__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE2__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE3__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE4__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE5__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE6__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE7__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE0__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE1__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE2__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE3__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE4__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE5__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE6__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE7__pcbad": [
+          "pcbad_all"
+        ]
+      },
+      "undefined_after_all28": {
+        "vmfc_SE__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ]
+      }
+    },
+    {
+      "instance": "vmdel_SE5",
+      "template": "vmdel_NE5",
+      "module": "ot_hbm_svc_vmdel_lane_n",
+      "params": {
+        "NPC": "2"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "bank_id",
+          "expression": "3'b101"
+        },
+        {
+          "port": "begin_v_i",
+          "expression": "vmfc_SE__payload[0:0]"
+        },
+        {
+          "port": "begin_bank_i",
+          "expression": "vmfc_SE__payload[1:1]"
+        },
+        {
+          "port": "begin_epoch_i",
+          "expression": "vmfc_SE__payload[17:2]"
+        },
+        {
+          "port": "start_i",
+          "expression": "vmfc_SE__payload[18:18]"
+        },
+        {
+          "port": "start_bank_i",
+          "expression": "vmfc_SE__payload[19:19]"
+        },
+        {
+          "port": "start_epoch_i",
+          "expression": "vmfc_SE__payload[35:20]"
+        },
+        {
+          "port": "start_base_sector_i",
+          "expression": "vmfc_SE__payload[51:36]"
+        },
+        {
+          "port": "fill_v_i",
+          "expression": "{vmks_NW7__fill_v[1:1], vmks_NW5__fill_v[1:1]}"
+        },
+        {
+          "port": "fill_bank_i",
+          "expression": "{vmks_NW7__fill_bank[1:1], vmks_NW5__fill_bank[1:1]}"
+        },
+        {
+          "port": "fill_slot_i",
+          "expression": "{vmks_NW7__fill_slot[11:6], vmks_NW5__fill_slot[11:6]}"
+        },
+        {
+          "port": "fill_epoch_i",
+          "expression": "{vmks_NW7__fill_epoch[31:16], vmks_NW5__fill_epoch[31:16]}"
+        },
+        {
+          "port": "fill_data_i",
+          "expression": "{vmks_NW7__fill_data[511:256], vmks_NW5__fill_data[511:256]}"
+        },
+        {
+          "port": "full0_all",
+          "expression": "{vmdel_SE7__full0[0:0], vmdel_SE6__full0[0:0], vmdel_SE5__full0[0:0], vmdel_SE4__full0[0:0], vmdel_SE3__full0[0:0], vmdel_SE2__full0[0:0], vmdel_SE1__full0[0:0], vmdel_SE0__full0[0:0]}"
+        },
+        {
+          "port": "full1_all",
+          "expression": "{vmdel_SE7__full1[0:0], vmdel_SE6__full1[0:0], vmdel_SE5__full1[0:0], vmdel_SE4__full1[0:0], vmdel_SE3__full1[0:0], vmdel_SE2__full1[0:0], vmdel_SE1__full1[0:0], vmdel_SE0__full1[0:0]}"
+        },
+        {
+          "port": "pcbad_all",
+          "expression": "{vmdel_SE7__pcbad[0:0], vmdel_SE6__pcbad[0:0], vmdel_SE5__pcbad[0:0], vmdel_SE4__pcbad[0:0], vmdel_SE3__pcbad[0:0], vmdel_SE2__pcbad[0:0], vmdel_SE1__pcbad[0:0], vmdel_SE0__pcbad[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "vmdel_SE5__full0",
+          "port": "full0",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE5__full1",
+          "port": "full1",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE5__pcbad",
+          "port": "pcbad",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE5__block_ready",
+          "port": "block_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE5__busy",
+          "port": "busy",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE5__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE5__dq",
+          "port": "dq",
+          "existing_top_input": true,
+          "declared": true
+        }
+      ],
+      "undefined_input_nets": {
+        "vmfc_SE__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmdel_SE0__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE1__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE2__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE3__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE4__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE5__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE6__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE7__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE0__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE1__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE2__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE3__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE4__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE5__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE6__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE7__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE0__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE1__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE2__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE3__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE4__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE5__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE6__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE7__pcbad": [
+          "pcbad_all"
+        ]
+      },
+      "undefined_after_all28": {
+        "vmfc_SE__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ]
+      }
+    },
+    {
+      "instance": "vmdel_SE6",
+      "template": "vmdel_NE6",
+      "module": "ot_hbm_svc_vmdel_lane_n",
+      "params": {
+        "NPC": "2"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "bank_id",
+          "expression": "3'b110"
+        },
+        {
+          "port": "begin_v_i",
+          "expression": "vmfc_SE__payload[0:0]"
+        },
+        {
+          "port": "begin_bank_i",
+          "expression": "vmfc_SE__payload[1:1]"
+        },
+        {
+          "port": "begin_epoch_i",
+          "expression": "vmfc_SE__payload[17:2]"
+        },
+        {
+          "port": "start_i",
+          "expression": "vmfc_SE__payload[18:18]"
+        },
+        {
+          "port": "start_bank_i",
+          "expression": "vmfc_SE__payload[19:19]"
+        },
+        {
+          "port": "start_epoch_i",
+          "expression": "vmfc_SE__payload[35:20]"
+        },
+        {
+          "port": "start_base_sector_i",
+          "expression": "vmfc_SE__payload[51:36]"
+        },
+        {
+          "port": "fill_v_i",
+          "expression": "{vmks_NW7__fill_v[2:2], vmks_NW5__fill_v[2:2]}"
+        },
+        {
+          "port": "fill_bank_i",
+          "expression": "{vmks_NW7__fill_bank[2:2], vmks_NW5__fill_bank[2:2]}"
+        },
+        {
+          "port": "fill_slot_i",
+          "expression": "{vmks_NW7__fill_slot[17:12], vmks_NW5__fill_slot[17:12]}"
+        },
+        {
+          "port": "fill_epoch_i",
+          "expression": "{vmks_NW7__fill_epoch[47:32], vmks_NW5__fill_epoch[47:32]}"
+        },
+        {
+          "port": "fill_data_i",
+          "expression": "{vmks_NW7__fill_data[767:512], vmks_NW5__fill_data[767:512]}"
+        },
+        {
+          "port": "full0_all",
+          "expression": "{vmdel_SE7__full0[0:0], vmdel_SE6__full0[0:0], vmdel_SE5__full0[0:0], vmdel_SE4__full0[0:0], vmdel_SE3__full0[0:0], vmdel_SE2__full0[0:0], vmdel_SE1__full0[0:0], vmdel_SE0__full0[0:0]}"
+        },
+        {
+          "port": "full1_all",
+          "expression": "{vmdel_SE7__full1[0:0], vmdel_SE6__full1[0:0], vmdel_SE5__full1[0:0], vmdel_SE4__full1[0:0], vmdel_SE3__full1[0:0], vmdel_SE2__full1[0:0], vmdel_SE1__full1[0:0], vmdel_SE0__full1[0:0]}"
+        },
+        {
+          "port": "pcbad_all",
+          "expression": "{vmdel_SE7__pcbad[0:0], vmdel_SE6__pcbad[0:0], vmdel_SE5__pcbad[0:0], vmdel_SE4__pcbad[0:0], vmdel_SE3__pcbad[0:0], vmdel_SE2__pcbad[0:0], vmdel_SE1__pcbad[0:0], vmdel_SE0__pcbad[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "vmdel_SE6__full0",
+          "port": "full0",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE6__full1",
+          "port": "full1",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE6__pcbad",
+          "port": "pcbad",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE6__block_ready",
+          "port": "block_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE6__busy",
+          "port": "busy",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE6__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE6__dq",
+          "port": "dq",
+          "existing_top_input": true,
+          "declared": true
+        }
+      ],
+      "undefined_input_nets": {
+        "vmfc_SE__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmdel_SE0__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE1__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE2__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE3__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE4__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE5__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE6__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE7__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE0__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE1__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE2__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE3__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE4__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE5__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE6__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE7__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE0__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE1__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE2__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE3__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE4__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE5__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE6__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE7__pcbad": [
+          "pcbad_all"
+        ]
+      },
+      "undefined_after_all28": {
+        "vmfc_SE__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ]
+      }
+    },
+    {
+      "instance": "vmdel_SE7",
+      "template": "vmdel_NE7",
+      "module": "ot_hbm_svc_vmdel_lane_n",
+      "params": {
+        "NPC": "2"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "bank_id",
+          "expression": "3'b111"
+        },
+        {
+          "port": "begin_v_i",
+          "expression": "vmfc_SE__payload[0:0]"
+        },
+        {
+          "port": "begin_bank_i",
+          "expression": "vmfc_SE__payload[1:1]"
+        },
+        {
+          "port": "begin_epoch_i",
+          "expression": "vmfc_SE__payload[17:2]"
+        },
+        {
+          "port": "start_i",
+          "expression": "vmfc_SE__payload[18:18]"
+        },
+        {
+          "port": "start_bank_i",
+          "expression": "vmfc_SE__payload[19:19]"
+        },
+        {
+          "port": "start_epoch_i",
+          "expression": "vmfc_SE__payload[35:20]"
+        },
+        {
+          "port": "start_base_sector_i",
+          "expression": "vmfc_SE__payload[51:36]"
+        },
+        {
+          "port": "fill_v_i",
+          "expression": "{vmks_NW7__fill_v[3:3], vmks_NW5__fill_v[3:3]}"
+        },
+        {
+          "port": "fill_bank_i",
+          "expression": "{vmks_NW7__fill_bank[3:3], vmks_NW5__fill_bank[3:3]}"
+        },
+        {
+          "port": "fill_slot_i",
+          "expression": "{vmks_NW7__fill_slot[23:18], vmks_NW5__fill_slot[23:18]}"
+        },
+        {
+          "port": "fill_epoch_i",
+          "expression": "{vmks_NW7__fill_epoch[63:48], vmks_NW5__fill_epoch[63:48]}"
+        },
+        {
+          "port": "fill_data_i",
+          "expression": "{vmks_NW7__fill_data[1023:768], vmks_NW5__fill_data[1023:768]}"
+        },
+        {
+          "port": "full0_all",
+          "expression": "{vmdel_SE7__full0[0:0], vmdel_SE6__full0[0:0], vmdel_SE5__full0[0:0], vmdel_SE4__full0[0:0], vmdel_SE3__full0[0:0], vmdel_SE2__full0[0:0], vmdel_SE1__full0[0:0], vmdel_SE0__full0[0:0]}"
+        },
+        {
+          "port": "full1_all",
+          "expression": "{vmdel_SE7__full1[0:0], vmdel_SE6__full1[0:0], vmdel_SE5__full1[0:0], vmdel_SE4__full1[0:0], vmdel_SE3__full1[0:0], vmdel_SE2__full1[0:0], vmdel_SE1__full1[0:0], vmdel_SE0__full1[0:0]}"
+        },
+        {
+          "port": "pcbad_all",
+          "expression": "{vmdel_SE7__pcbad[0:0], vmdel_SE6__pcbad[0:0], vmdel_SE5__pcbad[0:0], vmdel_SE4__pcbad[0:0], vmdel_SE3__pcbad[0:0], vmdel_SE2__pcbad[0:0], vmdel_SE1__pcbad[0:0], vmdel_SE0__pcbad[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "vmdel_SE7__full0",
+          "port": "full0",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE7__full1",
+          "port": "full1",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE7__pcbad",
+          "port": "pcbad",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE7__block_ready",
+          "port": "block_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE7__busy",
+          "port": "busy",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE7__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SE7__dq",
+          "port": "dq",
+          "existing_top_input": true,
+          "declared": true
+        }
+      ],
+      "undefined_input_nets": {
+        "vmfc_SE__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmdel_SE0__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE1__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE2__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE3__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE4__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE5__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE6__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE7__full0": [
+          "full0_all"
+        ],
+        "vmdel_SE0__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE1__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE2__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE3__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE4__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE5__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE6__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE7__full1": [
+          "full1_all"
+        ],
+        "vmdel_SE0__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE1__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE2__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE3__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE4__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE5__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE6__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SE7__pcbad": [
+          "pcbad_all"
+        ]
+      },
+      "undefined_after_all28": {
+        "vmfc_SE__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ]
+      }
+    },
+    {
+      "instance": "vmdel_SW0",
+      "template": "vmdel_NW0",
+      "module": "ot_hbm_svc_vmdel_lane_n",
+      "params": {
+        "NPC": "2"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "bank_id",
+          "expression": "3'b000"
+        },
+        {
+          "port": "begin_v_i",
+          "expression": "vmfc_SW__payload[0:0]"
+        },
+        {
+          "port": "begin_bank_i",
+          "expression": "vmfc_SW__payload[1:1]"
+        },
+        {
+          "port": "begin_epoch_i",
+          "expression": "vmfc_SW__payload[17:2]"
+        },
+        {
+          "port": "start_i",
+          "expression": "vmfc_SW__payload[18:18]"
+        },
+        {
+          "port": "start_bank_i",
+          "expression": "vmfc_SW__payload[19:19]"
+        },
+        {
+          "port": "start_epoch_i",
+          "expression": "vmfc_SW__payload[35:20]"
+        },
+        {
+          "port": "start_base_sector_i",
+          "expression": "vmfc_SW__payload[51:36]"
+        },
+        {
+          "port": "fill_v_i",
+          "expression": "{vmks_SW2__fill_v[0:0], vmks_SW0__fill_v[0:0]}"
+        },
+        {
+          "port": "fill_bank_i",
+          "expression": "{vmks_SW2__fill_bank[0:0], vmks_SW0__fill_bank[0:0]}"
+        },
+        {
+          "port": "fill_slot_i",
+          "expression": "{vmks_SW2__fill_slot[5:0], vmks_SW0__fill_slot[5:0]}"
+        },
+        {
+          "port": "fill_epoch_i",
+          "expression": "{vmks_SW2__fill_epoch[15:0], vmks_SW0__fill_epoch[15:0]}"
+        },
+        {
+          "port": "fill_data_i",
+          "expression": "{vmks_SW2__fill_data[255:0], vmks_SW0__fill_data[255:0]}"
+        },
+        {
+          "port": "full0_all",
+          "expression": "{vmdel_SW7__full0[0:0], vmdel_SW6__full0[0:0], vmdel_SW5__full0[0:0], vmdel_SW4__full0[0:0], vmdel_SW3__full0[0:0], vmdel_SW2__full0[0:0], vmdel_SW1__full0[0:0], vmdel_SW0__full0[0:0]}"
+        },
+        {
+          "port": "full1_all",
+          "expression": "{vmdel_SW7__full1[0:0], vmdel_SW6__full1[0:0], vmdel_SW5__full1[0:0], vmdel_SW4__full1[0:0], vmdel_SW3__full1[0:0], vmdel_SW2__full1[0:0], vmdel_SW1__full1[0:0], vmdel_SW0__full1[0:0]}"
+        },
+        {
+          "port": "pcbad_all",
+          "expression": "{vmdel_SW7__pcbad[0:0], vmdel_SW6__pcbad[0:0], vmdel_SW5__pcbad[0:0], vmdel_SW4__pcbad[0:0], vmdel_SW3__pcbad[0:0], vmdel_SW2__pcbad[0:0], vmdel_SW1__pcbad[0:0], vmdel_SW0__pcbad[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "vmdel_SW0__full0",
+          "port": "full0",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW0__full1",
+          "port": "full1",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW0__pcbad",
+          "port": "pcbad",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW0__block_ready",
+          "port": "block_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW0__busy",
+          "port": "busy",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW0__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW0__dq",
+          "port": "dq",
+          "existing_top_input": true,
+          "declared": true
+        }
+      ],
+      "undefined_input_nets": {
+        "vmfc_SW__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmks_SW0__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW2__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW0__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW2__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW0__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW2__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW0__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW2__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW0__fill_data": [
+          "fill_data_i"
+        ],
+        "vmks_SW2__fill_data": [
+          "fill_data_i"
+        ],
+        "vmdel_SW0__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW1__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW2__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW3__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW4__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW5__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW6__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW7__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW0__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW1__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW2__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW3__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW4__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW5__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW6__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW7__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW0__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW1__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW2__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW3__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW4__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW5__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW6__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW7__pcbad": [
+          "pcbad_all"
+        ]
+      },
+      "undefined_after_all28": {
+        "vmfc_SW__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmks_SW0__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW2__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW0__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW2__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW0__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW2__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW0__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW2__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW0__fill_data": [
+          "fill_data_i"
+        ],
+        "vmks_SW2__fill_data": [
+          "fill_data_i"
+        ]
+      }
+    },
+    {
+      "instance": "vmdel_SW1",
+      "template": "vmdel_NW1",
+      "module": "ot_hbm_svc_vmdel_lane_n",
+      "params": {
+        "NPC": "2"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "bank_id",
+          "expression": "3'b001"
+        },
+        {
+          "port": "begin_v_i",
+          "expression": "vmfc_SW__payload[0:0]"
+        },
+        {
+          "port": "begin_bank_i",
+          "expression": "vmfc_SW__payload[1:1]"
+        },
+        {
+          "port": "begin_epoch_i",
+          "expression": "vmfc_SW__payload[17:2]"
+        },
+        {
+          "port": "start_i",
+          "expression": "vmfc_SW__payload[18:18]"
+        },
+        {
+          "port": "start_bank_i",
+          "expression": "vmfc_SW__payload[19:19]"
+        },
+        {
+          "port": "start_epoch_i",
+          "expression": "vmfc_SW__payload[35:20]"
+        },
+        {
+          "port": "start_base_sector_i",
+          "expression": "vmfc_SW__payload[51:36]"
+        },
+        {
+          "port": "fill_v_i",
+          "expression": "{vmks_SW2__fill_v[1:1], vmks_SW0__fill_v[1:1]}"
+        },
+        {
+          "port": "fill_bank_i",
+          "expression": "{vmks_SW2__fill_bank[1:1], vmks_SW0__fill_bank[1:1]}"
+        },
+        {
+          "port": "fill_slot_i",
+          "expression": "{vmks_SW2__fill_slot[11:6], vmks_SW0__fill_slot[11:6]}"
+        },
+        {
+          "port": "fill_epoch_i",
+          "expression": "{vmks_SW2__fill_epoch[31:16], vmks_SW0__fill_epoch[31:16]}"
+        },
+        {
+          "port": "fill_data_i",
+          "expression": "{vmks_SW2__fill_data[511:256], vmks_SW0__fill_data[511:256]}"
+        },
+        {
+          "port": "full0_all",
+          "expression": "{vmdel_SW7__full0[0:0], vmdel_SW6__full0[0:0], vmdel_SW5__full0[0:0], vmdel_SW4__full0[0:0], vmdel_SW3__full0[0:0], vmdel_SW2__full0[0:0], vmdel_SW1__full0[0:0], vmdel_SW0__full0[0:0]}"
+        },
+        {
+          "port": "full1_all",
+          "expression": "{vmdel_SW7__full1[0:0], vmdel_SW6__full1[0:0], vmdel_SW5__full1[0:0], vmdel_SW4__full1[0:0], vmdel_SW3__full1[0:0], vmdel_SW2__full1[0:0], vmdel_SW1__full1[0:0], vmdel_SW0__full1[0:0]}"
+        },
+        {
+          "port": "pcbad_all",
+          "expression": "{vmdel_SW7__pcbad[0:0], vmdel_SW6__pcbad[0:0], vmdel_SW5__pcbad[0:0], vmdel_SW4__pcbad[0:0], vmdel_SW3__pcbad[0:0], vmdel_SW2__pcbad[0:0], vmdel_SW1__pcbad[0:0], vmdel_SW0__pcbad[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "vmdel_SW1__full0",
+          "port": "full0",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW1__full1",
+          "port": "full1",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW1__pcbad",
+          "port": "pcbad",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW1__block_ready",
+          "port": "block_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW1__busy",
+          "port": "busy",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW1__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW1__dq",
+          "port": "dq",
+          "existing_top_input": true,
+          "declared": true
+        }
+      ],
+      "undefined_input_nets": {
+        "vmfc_SW__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmks_SW0__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW2__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW0__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW2__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW0__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW2__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW0__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW2__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW0__fill_data": [
+          "fill_data_i"
+        ],
+        "vmks_SW2__fill_data": [
+          "fill_data_i"
+        ],
+        "vmdel_SW0__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW1__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW2__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW3__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW4__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW5__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW6__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW7__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW0__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW1__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW2__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW3__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW4__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW5__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW6__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW7__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW0__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW1__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW2__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW3__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW4__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW5__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW6__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW7__pcbad": [
+          "pcbad_all"
+        ]
+      },
+      "undefined_after_all28": {
+        "vmfc_SW__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmks_SW0__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW2__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW0__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW2__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW0__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW2__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW0__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW2__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW0__fill_data": [
+          "fill_data_i"
+        ],
+        "vmks_SW2__fill_data": [
+          "fill_data_i"
+        ]
+      }
+    },
+    {
+      "instance": "vmdel_SW2",
+      "template": "vmdel_NW2",
+      "module": "ot_hbm_svc_vmdel_lane_n",
+      "params": {
+        "NPC": "2"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "bank_id",
+          "expression": "3'b010"
+        },
+        {
+          "port": "begin_v_i",
+          "expression": "vmfc_SW__payload[0:0]"
+        },
+        {
+          "port": "begin_bank_i",
+          "expression": "vmfc_SW__payload[1:1]"
+        },
+        {
+          "port": "begin_epoch_i",
+          "expression": "vmfc_SW__payload[17:2]"
+        },
+        {
+          "port": "start_i",
+          "expression": "vmfc_SW__payload[18:18]"
+        },
+        {
+          "port": "start_bank_i",
+          "expression": "vmfc_SW__payload[19:19]"
+        },
+        {
+          "port": "start_epoch_i",
+          "expression": "vmfc_SW__payload[35:20]"
+        },
+        {
+          "port": "start_base_sector_i",
+          "expression": "vmfc_SW__payload[51:36]"
+        },
+        {
+          "port": "fill_v_i",
+          "expression": "{vmks_SW2__fill_v[2:2], vmks_SW0__fill_v[2:2]}"
+        },
+        {
+          "port": "fill_bank_i",
+          "expression": "{vmks_SW2__fill_bank[2:2], vmks_SW0__fill_bank[2:2]}"
+        },
+        {
+          "port": "fill_slot_i",
+          "expression": "{vmks_SW2__fill_slot[17:12], vmks_SW0__fill_slot[17:12]}"
+        },
+        {
+          "port": "fill_epoch_i",
+          "expression": "{vmks_SW2__fill_epoch[47:32], vmks_SW0__fill_epoch[47:32]}"
+        },
+        {
+          "port": "fill_data_i",
+          "expression": "{vmks_SW2__fill_data[767:512], vmks_SW0__fill_data[767:512]}"
+        },
+        {
+          "port": "full0_all",
+          "expression": "{vmdel_SW7__full0[0:0], vmdel_SW6__full0[0:0], vmdel_SW5__full0[0:0], vmdel_SW4__full0[0:0], vmdel_SW3__full0[0:0], vmdel_SW2__full0[0:0], vmdel_SW1__full0[0:0], vmdel_SW0__full0[0:0]}"
+        },
+        {
+          "port": "full1_all",
+          "expression": "{vmdel_SW7__full1[0:0], vmdel_SW6__full1[0:0], vmdel_SW5__full1[0:0], vmdel_SW4__full1[0:0], vmdel_SW3__full1[0:0], vmdel_SW2__full1[0:0], vmdel_SW1__full1[0:0], vmdel_SW0__full1[0:0]}"
+        },
+        {
+          "port": "pcbad_all",
+          "expression": "{vmdel_SW7__pcbad[0:0], vmdel_SW6__pcbad[0:0], vmdel_SW5__pcbad[0:0], vmdel_SW4__pcbad[0:0], vmdel_SW3__pcbad[0:0], vmdel_SW2__pcbad[0:0], vmdel_SW1__pcbad[0:0], vmdel_SW0__pcbad[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "vmdel_SW2__full0",
+          "port": "full0",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW2__full1",
+          "port": "full1",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW2__pcbad",
+          "port": "pcbad",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW2__block_ready",
+          "port": "block_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW2__busy",
+          "port": "busy",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW2__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW2__dq",
+          "port": "dq",
+          "existing_top_input": true,
+          "declared": true
+        }
+      ],
+      "undefined_input_nets": {
+        "vmfc_SW__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmks_SW0__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW2__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW0__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW2__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW0__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW2__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW0__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW2__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW0__fill_data": [
+          "fill_data_i"
+        ],
+        "vmks_SW2__fill_data": [
+          "fill_data_i"
+        ],
+        "vmdel_SW0__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW1__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW2__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW3__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW4__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW5__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW6__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW7__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW0__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW1__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW2__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW3__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW4__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW5__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW6__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW7__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW0__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW1__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW2__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW3__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW4__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW5__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW6__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW7__pcbad": [
+          "pcbad_all"
+        ]
+      },
+      "undefined_after_all28": {
+        "vmfc_SW__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmks_SW0__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW2__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW0__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW2__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW0__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW2__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW0__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW2__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW0__fill_data": [
+          "fill_data_i"
+        ],
+        "vmks_SW2__fill_data": [
+          "fill_data_i"
+        ]
+      }
+    },
+    {
+      "instance": "vmdel_SW3",
+      "template": "vmdel_NW3",
+      "module": "ot_hbm_svc_vmdel_lane_n",
+      "params": {
+        "NPC": "2"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "bank_id",
+          "expression": "3'b011"
+        },
+        {
+          "port": "begin_v_i",
+          "expression": "vmfc_SW__payload[0:0]"
+        },
+        {
+          "port": "begin_bank_i",
+          "expression": "vmfc_SW__payload[1:1]"
+        },
+        {
+          "port": "begin_epoch_i",
+          "expression": "vmfc_SW__payload[17:2]"
+        },
+        {
+          "port": "start_i",
+          "expression": "vmfc_SW__payload[18:18]"
+        },
+        {
+          "port": "start_bank_i",
+          "expression": "vmfc_SW__payload[19:19]"
+        },
+        {
+          "port": "start_epoch_i",
+          "expression": "vmfc_SW__payload[35:20]"
+        },
+        {
+          "port": "start_base_sector_i",
+          "expression": "vmfc_SW__payload[51:36]"
+        },
+        {
+          "port": "fill_v_i",
+          "expression": "{vmks_SW2__fill_v[3:3], vmks_SW0__fill_v[3:3]}"
+        },
+        {
+          "port": "fill_bank_i",
+          "expression": "{vmks_SW2__fill_bank[3:3], vmks_SW0__fill_bank[3:3]}"
+        },
+        {
+          "port": "fill_slot_i",
+          "expression": "{vmks_SW2__fill_slot[23:18], vmks_SW0__fill_slot[23:18]}"
+        },
+        {
+          "port": "fill_epoch_i",
+          "expression": "{vmks_SW2__fill_epoch[63:48], vmks_SW0__fill_epoch[63:48]}"
+        },
+        {
+          "port": "fill_data_i",
+          "expression": "{vmks_SW2__fill_data[1023:768], vmks_SW0__fill_data[1023:768]}"
+        },
+        {
+          "port": "full0_all",
+          "expression": "{vmdel_SW7__full0[0:0], vmdel_SW6__full0[0:0], vmdel_SW5__full0[0:0], vmdel_SW4__full0[0:0], vmdel_SW3__full0[0:0], vmdel_SW2__full0[0:0], vmdel_SW1__full0[0:0], vmdel_SW0__full0[0:0]}"
+        },
+        {
+          "port": "full1_all",
+          "expression": "{vmdel_SW7__full1[0:0], vmdel_SW6__full1[0:0], vmdel_SW5__full1[0:0], vmdel_SW4__full1[0:0], vmdel_SW3__full1[0:0], vmdel_SW2__full1[0:0], vmdel_SW1__full1[0:0], vmdel_SW0__full1[0:0]}"
+        },
+        {
+          "port": "pcbad_all",
+          "expression": "{vmdel_SW7__pcbad[0:0], vmdel_SW6__pcbad[0:0], vmdel_SW5__pcbad[0:0], vmdel_SW4__pcbad[0:0], vmdel_SW3__pcbad[0:0], vmdel_SW2__pcbad[0:0], vmdel_SW1__pcbad[0:0], vmdel_SW0__pcbad[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "vmdel_SW3__full0",
+          "port": "full0",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW3__full1",
+          "port": "full1",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW3__pcbad",
+          "port": "pcbad",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW3__block_ready",
+          "port": "block_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW3__busy",
+          "port": "busy",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW3__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW3__dq",
+          "port": "dq",
+          "existing_top_input": true,
+          "declared": true
+        }
+      ],
+      "undefined_input_nets": {
+        "vmfc_SW__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmks_SW0__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW2__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW0__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW2__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW0__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW2__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW0__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW2__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW0__fill_data": [
+          "fill_data_i"
+        ],
+        "vmks_SW2__fill_data": [
+          "fill_data_i"
+        ],
+        "vmdel_SW0__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW1__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW2__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW3__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW4__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW5__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW6__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW7__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW0__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW1__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW2__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW3__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW4__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW5__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW6__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW7__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW0__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW1__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW2__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW3__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW4__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW5__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW6__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW7__pcbad": [
+          "pcbad_all"
+        ]
+      },
+      "undefined_after_all28": {
+        "vmfc_SW__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmks_SW0__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW2__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW0__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW2__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW0__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW2__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW0__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW2__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW0__fill_data": [
+          "fill_data_i"
+        ],
+        "vmks_SW2__fill_data": [
+          "fill_data_i"
+        ]
+      }
+    },
+    {
+      "instance": "vmdel_SW4",
+      "template": "vmdel_NW4",
+      "module": "ot_hbm_svc_vmdel_lane_n",
+      "params": {
+        "NPC": "2"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "bank_id",
+          "expression": "3'b100"
+        },
+        {
+          "port": "begin_v_i",
+          "expression": "vmfc_SW__payload[0:0]"
+        },
+        {
+          "port": "begin_bank_i",
+          "expression": "vmfc_SW__payload[1:1]"
+        },
+        {
+          "port": "begin_epoch_i",
+          "expression": "vmfc_SW__payload[17:2]"
+        },
+        {
+          "port": "start_i",
+          "expression": "vmfc_SW__payload[18:18]"
+        },
+        {
+          "port": "start_bank_i",
+          "expression": "vmfc_SW__payload[19:19]"
+        },
+        {
+          "port": "start_epoch_i",
+          "expression": "vmfc_SW__payload[35:20]"
+        },
+        {
+          "port": "start_base_sector_i",
+          "expression": "vmfc_SW__payload[51:36]"
+        },
+        {
+          "port": "fill_v_i",
+          "expression": "{vmks_SW3__fill_v[0:0], vmks_SW1__fill_v[0:0]}"
+        },
+        {
+          "port": "fill_bank_i",
+          "expression": "{vmks_SW3__fill_bank[0:0], vmks_SW1__fill_bank[0:0]}"
+        },
+        {
+          "port": "fill_slot_i",
+          "expression": "{vmks_SW3__fill_slot[5:0], vmks_SW1__fill_slot[5:0]}"
+        },
+        {
+          "port": "fill_epoch_i",
+          "expression": "{vmks_SW3__fill_epoch[15:0], vmks_SW1__fill_epoch[15:0]}"
+        },
+        {
+          "port": "fill_data_i",
+          "expression": "{vmks_SW3__fill_data[255:0], vmks_SW1__fill_data[255:0]}"
+        },
+        {
+          "port": "full0_all",
+          "expression": "{vmdel_SW7__full0[0:0], vmdel_SW6__full0[0:0], vmdel_SW5__full0[0:0], vmdel_SW4__full0[0:0], vmdel_SW3__full0[0:0], vmdel_SW2__full0[0:0], vmdel_SW1__full0[0:0], vmdel_SW0__full0[0:0]}"
+        },
+        {
+          "port": "full1_all",
+          "expression": "{vmdel_SW7__full1[0:0], vmdel_SW6__full1[0:0], vmdel_SW5__full1[0:0], vmdel_SW4__full1[0:0], vmdel_SW3__full1[0:0], vmdel_SW2__full1[0:0], vmdel_SW1__full1[0:0], vmdel_SW0__full1[0:0]}"
+        },
+        {
+          "port": "pcbad_all",
+          "expression": "{vmdel_SW7__pcbad[0:0], vmdel_SW6__pcbad[0:0], vmdel_SW5__pcbad[0:0], vmdel_SW4__pcbad[0:0], vmdel_SW3__pcbad[0:0], vmdel_SW2__pcbad[0:0], vmdel_SW1__pcbad[0:0], vmdel_SW0__pcbad[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "vmdel_SW4__full0",
+          "port": "full0",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW4__full1",
+          "port": "full1",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW4__pcbad",
+          "port": "pcbad",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW4__block_ready",
+          "port": "block_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW4__busy",
+          "port": "busy",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW4__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW4__dq",
+          "port": "dq",
+          "existing_top_input": true,
+          "declared": true
+        }
+      ],
+      "undefined_input_nets": {
+        "vmfc_SW__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmks_SW1__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW3__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW1__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW3__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW1__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW3__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW1__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW3__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW1__fill_data": [
+          "fill_data_i"
+        ],
+        "vmks_SW3__fill_data": [
+          "fill_data_i"
+        ],
+        "vmdel_SW0__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW1__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW2__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW3__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW4__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW5__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW6__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW7__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW0__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW1__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW2__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW3__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW4__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW5__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW6__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW7__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW0__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW1__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW2__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW3__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW4__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW5__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW6__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW7__pcbad": [
+          "pcbad_all"
+        ]
+      },
+      "undefined_after_all28": {
+        "vmfc_SW__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmks_SW1__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW3__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW1__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW3__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW1__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW3__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW1__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW3__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW1__fill_data": [
+          "fill_data_i"
+        ],
+        "vmks_SW3__fill_data": [
+          "fill_data_i"
+        ]
+      }
+    },
+    {
+      "instance": "vmdel_SW5",
+      "template": "vmdel_NW5",
+      "module": "ot_hbm_svc_vmdel_lane_n",
+      "params": {
+        "NPC": "2"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "bank_id",
+          "expression": "3'b101"
+        },
+        {
+          "port": "begin_v_i",
+          "expression": "vmfc_SW__payload[0:0]"
+        },
+        {
+          "port": "begin_bank_i",
+          "expression": "vmfc_SW__payload[1:1]"
+        },
+        {
+          "port": "begin_epoch_i",
+          "expression": "vmfc_SW__payload[17:2]"
+        },
+        {
+          "port": "start_i",
+          "expression": "vmfc_SW__payload[18:18]"
+        },
+        {
+          "port": "start_bank_i",
+          "expression": "vmfc_SW__payload[19:19]"
+        },
+        {
+          "port": "start_epoch_i",
+          "expression": "vmfc_SW__payload[35:20]"
+        },
+        {
+          "port": "start_base_sector_i",
+          "expression": "vmfc_SW__payload[51:36]"
+        },
+        {
+          "port": "fill_v_i",
+          "expression": "{vmks_SW3__fill_v[1:1], vmks_SW1__fill_v[1:1]}"
+        },
+        {
+          "port": "fill_bank_i",
+          "expression": "{vmks_SW3__fill_bank[1:1], vmks_SW1__fill_bank[1:1]}"
+        },
+        {
+          "port": "fill_slot_i",
+          "expression": "{vmks_SW3__fill_slot[11:6], vmks_SW1__fill_slot[11:6]}"
+        },
+        {
+          "port": "fill_epoch_i",
+          "expression": "{vmks_SW3__fill_epoch[31:16], vmks_SW1__fill_epoch[31:16]}"
+        },
+        {
+          "port": "fill_data_i",
+          "expression": "{vmks_SW3__fill_data[511:256], vmks_SW1__fill_data[511:256]}"
+        },
+        {
+          "port": "full0_all",
+          "expression": "{vmdel_SW7__full0[0:0], vmdel_SW6__full0[0:0], vmdel_SW5__full0[0:0], vmdel_SW4__full0[0:0], vmdel_SW3__full0[0:0], vmdel_SW2__full0[0:0], vmdel_SW1__full0[0:0], vmdel_SW0__full0[0:0]}"
+        },
+        {
+          "port": "full1_all",
+          "expression": "{vmdel_SW7__full1[0:0], vmdel_SW6__full1[0:0], vmdel_SW5__full1[0:0], vmdel_SW4__full1[0:0], vmdel_SW3__full1[0:0], vmdel_SW2__full1[0:0], vmdel_SW1__full1[0:0], vmdel_SW0__full1[0:0]}"
+        },
+        {
+          "port": "pcbad_all",
+          "expression": "{vmdel_SW7__pcbad[0:0], vmdel_SW6__pcbad[0:0], vmdel_SW5__pcbad[0:0], vmdel_SW4__pcbad[0:0], vmdel_SW3__pcbad[0:0], vmdel_SW2__pcbad[0:0], vmdel_SW1__pcbad[0:0], vmdel_SW0__pcbad[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "vmdel_SW5__full0",
+          "port": "full0",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW5__full1",
+          "port": "full1",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW5__pcbad",
+          "port": "pcbad",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW5__block_ready",
+          "port": "block_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW5__busy",
+          "port": "busy",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW5__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW5__dq",
+          "port": "dq",
+          "existing_top_input": true,
+          "declared": true
+        }
+      ],
+      "undefined_input_nets": {
+        "vmfc_SW__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmks_SW1__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW3__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW1__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW3__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW1__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW3__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW1__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW3__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW1__fill_data": [
+          "fill_data_i"
+        ],
+        "vmks_SW3__fill_data": [
+          "fill_data_i"
+        ],
+        "vmdel_SW0__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW1__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW2__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW3__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW4__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW5__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW6__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW7__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW0__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW1__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW2__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW3__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW4__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW5__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW6__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW7__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW0__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW1__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW2__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW3__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW4__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW5__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW6__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW7__pcbad": [
+          "pcbad_all"
+        ]
+      },
+      "undefined_after_all28": {
+        "vmfc_SW__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmks_SW1__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW3__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW1__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW3__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW1__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW3__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW1__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW3__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW1__fill_data": [
+          "fill_data_i"
+        ],
+        "vmks_SW3__fill_data": [
+          "fill_data_i"
+        ]
+      }
+    },
+    {
+      "instance": "vmdel_SW6",
+      "template": "vmdel_NW6",
+      "module": "ot_hbm_svc_vmdel_lane_n",
+      "params": {
+        "NPC": "2"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "bank_id",
+          "expression": "3'b110"
+        },
+        {
+          "port": "begin_v_i",
+          "expression": "vmfc_SW__payload[0:0]"
+        },
+        {
+          "port": "begin_bank_i",
+          "expression": "vmfc_SW__payload[1:1]"
+        },
+        {
+          "port": "begin_epoch_i",
+          "expression": "vmfc_SW__payload[17:2]"
+        },
+        {
+          "port": "start_i",
+          "expression": "vmfc_SW__payload[18:18]"
+        },
+        {
+          "port": "start_bank_i",
+          "expression": "vmfc_SW__payload[19:19]"
+        },
+        {
+          "port": "start_epoch_i",
+          "expression": "vmfc_SW__payload[35:20]"
+        },
+        {
+          "port": "start_base_sector_i",
+          "expression": "vmfc_SW__payload[51:36]"
+        },
+        {
+          "port": "fill_v_i",
+          "expression": "{vmks_SW3__fill_v[2:2], vmks_SW1__fill_v[2:2]}"
+        },
+        {
+          "port": "fill_bank_i",
+          "expression": "{vmks_SW3__fill_bank[2:2], vmks_SW1__fill_bank[2:2]}"
+        },
+        {
+          "port": "fill_slot_i",
+          "expression": "{vmks_SW3__fill_slot[17:12], vmks_SW1__fill_slot[17:12]}"
+        },
+        {
+          "port": "fill_epoch_i",
+          "expression": "{vmks_SW3__fill_epoch[47:32], vmks_SW1__fill_epoch[47:32]}"
+        },
+        {
+          "port": "fill_data_i",
+          "expression": "{vmks_SW3__fill_data[767:512], vmks_SW1__fill_data[767:512]}"
+        },
+        {
+          "port": "full0_all",
+          "expression": "{vmdel_SW7__full0[0:0], vmdel_SW6__full0[0:0], vmdel_SW5__full0[0:0], vmdel_SW4__full0[0:0], vmdel_SW3__full0[0:0], vmdel_SW2__full0[0:0], vmdel_SW1__full0[0:0], vmdel_SW0__full0[0:0]}"
+        },
+        {
+          "port": "full1_all",
+          "expression": "{vmdel_SW7__full1[0:0], vmdel_SW6__full1[0:0], vmdel_SW5__full1[0:0], vmdel_SW4__full1[0:0], vmdel_SW3__full1[0:0], vmdel_SW2__full1[0:0], vmdel_SW1__full1[0:0], vmdel_SW0__full1[0:0]}"
+        },
+        {
+          "port": "pcbad_all",
+          "expression": "{vmdel_SW7__pcbad[0:0], vmdel_SW6__pcbad[0:0], vmdel_SW5__pcbad[0:0], vmdel_SW4__pcbad[0:0], vmdel_SW3__pcbad[0:0], vmdel_SW2__pcbad[0:0], vmdel_SW1__pcbad[0:0], vmdel_SW0__pcbad[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "vmdel_SW6__full0",
+          "port": "full0",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW6__full1",
+          "port": "full1",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW6__pcbad",
+          "port": "pcbad",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW6__block_ready",
+          "port": "block_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW6__busy",
+          "port": "busy",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW6__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW6__dq",
+          "port": "dq",
+          "existing_top_input": true,
+          "declared": true
+        }
+      ],
+      "undefined_input_nets": {
+        "vmfc_SW__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmks_SW1__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW3__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW1__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW3__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW1__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW3__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW1__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW3__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW1__fill_data": [
+          "fill_data_i"
+        ],
+        "vmks_SW3__fill_data": [
+          "fill_data_i"
+        ],
+        "vmdel_SW0__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW1__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW2__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW3__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW4__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW5__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW6__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW7__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW0__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW1__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW2__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW3__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW4__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW5__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW6__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW7__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW0__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW1__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW2__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW3__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW4__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW5__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW6__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW7__pcbad": [
+          "pcbad_all"
+        ]
+      },
+      "undefined_after_all28": {
+        "vmfc_SW__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmks_SW1__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW3__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW1__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW3__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW1__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW3__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW1__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW3__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW1__fill_data": [
+          "fill_data_i"
+        ],
+        "vmks_SW3__fill_data": [
+          "fill_data_i"
+        ]
+      }
+    },
+    {
+      "instance": "vmdel_SW7",
+      "template": "vmdel_NW7",
+      "module": "ot_hbm_svc_vmdel_lane_n",
+      "params": {
+        "NPC": "2"
+      },
+      "source_inputs": [
+        {
+          "port": "clk",
+          "expression": "hb_ckgen__pll_stream[0:0]"
+        },
+        {
+          "port": "rst_n",
+          "expression": "hb_ckgen__por_stream[0:0]"
+        },
+        {
+          "port": "bank_id",
+          "expression": "3'b111"
+        },
+        {
+          "port": "begin_v_i",
+          "expression": "vmfc_SW__payload[0:0]"
+        },
+        {
+          "port": "begin_bank_i",
+          "expression": "vmfc_SW__payload[1:1]"
+        },
+        {
+          "port": "begin_epoch_i",
+          "expression": "vmfc_SW__payload[17:2]"
+        },
+        {
+          "port": "start_i",
+          "expression": "vmfc_SW__payload[18:18]"
+        },
+        {
+          "port": "start_bank_i",
+          "expression": "vmfc_SW__payload[19:19]"
+        },
+        {
+          "port": "start_epoch_i",
+          "expression": "vmfc_SW__payload[35:20]"
+        },
+        {
+          "port": "start_base_sector_i",
+          "expression": "vmfc_SW__payload[51:36]"
+        },
+        {
+          "port": "fill_v_i",
+          "expression": "{vmks_SW3__fill_v[3:3], vmks_SW1__fill_v[3:3]}"
+        },
+        {
+          "port": "fill_bank_i",
+          "expression": "{vmks_SW3__fill_bank[3:3], vmks_SW1__fill_bank[3:3]}"
+        },
+        {
+          "port": "fill_slot_i",
+          "expression": "{vmks_SW3__fill_slot[23:18], vmks_SW1__fill_slot[23:18]}"
+        },
+        {
+          "port": "fill_epoch_i",
+          "expression": "{vmks_SW3__fill_epoch[63:48], vmks_SW1__fill_epoch[63:48]}"
+        },
+        {
+          "port": "fill_data_i",
+          "expression": "{vmks_SW3__fill_data[1023:768], vmks_SW1__fill_data[1023:768]}"
+        },
+        {
+          "port": "full0_all",
+          "expression": "{vmdel_SW7__full0[0:0], vmdel_SW6__full0[0:0], vmdel_SW5__full0[0:0], vmdel_SW4__full0[0:0], vmdel_SW3__full0[0:0], vmdel_SW2__full0[0:0], vmdel_SW1__full0[0:0], vmdel_SW0__full0[0:0]}"
+        },
+        {
+          "port": "full1_all",
+          "expression": "{vmdel_SW7__full1[0:0], vmdel_SW6__full1[0:0], vmdel_SW5__full1[0:0], vmdel_SW4__full1[0:0], vmdel_SW3__full1[0:0], vmdel_SW2__full1[0:0], vmdel_SW1__full1[0:0], vmdel_SW0__full1[0:0]}"
+        },
+        {
+          "port": "pcbad_all",
+          "expression": "{vmdel_SW7__pcbad[0:0], vmdel_SW6__pcbad[0:0], vmdel_SW5__pcbad[0:0], vmdel_SW4__pcbad[0:0], vmdel_SW3__pcbad[0:0], vmdel_SW2__pcbad[0:0], vmdel_SW1__pcbad[0:0], vmdel_SW0__pcbad[0:0]}"
+        }
+      ],
+      "produced": [
+        {
+          "net": "vmdel_SW7__full0",
+          "port": "full0",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW7__full1",
+          "port": "full1",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW7__pcbad",
+          "port": "pcbad",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW7__block_ready",
+          "port": "block_ready",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW7__busy",
+          "port": "busy",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW7__fault",
+          "port": "fault",
+          "existing_top_input": false,
+          "declared": false
+        },
+        {
+          "net": "vmdel_SW7__dq",
+          "port": "dq",
+          "existing_top_input": true,
+          "declared": true
+        }
+      ],
+      "undefined_input_nets": {
+        "vmfc_SW__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmks_SW1__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW3__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW1__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW3__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW1__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW3__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW1__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW3__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW1__fill_data": [
+          "fill_data_i"
+        ],
+        "vmks_SW3__fill_data": [
+          "fill_data_i"
+        ],
+        "vmdel_SW0__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW1__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW2__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW3__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW4__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW5__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW6__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW7__full0": [
+          "full0_all"
+        ],
+        "vmdel_SW0__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW1__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW2__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW3__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW4__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW5__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW6__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW7__full1": [
+          "full1_all"
+        ],
+        "vmdel_SW0__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW1__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW2__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW3__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW4__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW5__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW6__pcbad": [
+          "pcbad_all"
+        ],
+        "vmdel_SW7__pcbad": [
+          "pcbad_all"
+        ]
+      },
+      "undefined_after_all28": {
+        "vmfc_SW__payload": [
+          "begin_v_i",
+          "begin_bank_i",
+          "begin_epoch_i",
+          "start_i",
+          "start_bank_i",
+          "start_epoch_i",
+          "start_base_sector_i"
+        ],
+        "vmks_SW1__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW3__fill_v": [
+          "fill_v_i"
+        ],
+        "vmks_SW1__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW3__fill_bank": [
+          "fill_bank_i"
+        ],
+        "vmks_SW1__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW3__fill_slot": [
+          "fill_slot_i"
+        ],
+        "vmks_SW1__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW3__fill_epoch": [
+          "fill_epoch_i"
+        ],
+        "vmks_SW1__fill_data": [
+          "fill_data_i"
+        ],
+        "vmks_SW3__fill_data": [
+          "fill_data_i"
+        ]
+      }
+    }
+  ]
+}
