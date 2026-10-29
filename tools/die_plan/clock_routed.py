@@ -233,13 +233,27 @@ def stack_down(s):
             raise ValueError("heterogeneous tie entry must share its backbone row")
         if abs(px-x)>1e-6: pts.append(("M7",px,py))
         x=px
+    if s.get("m6_entry_xy"):
+        if s.get("entry_xy") or s.get("tie"):
+            raise ValueError("M6-entry jog cannot also use an M7 tie entry")
+        px, ey = map(float, s["m6_entry_xy"])
+        if abs(ey-py)>1e-6:
+            raise ValueError("M6-entry jog must share the actual pin row")
+        pts.append(("M6", x, py))
+        if abs(px-x)>1e-6: pts.append(("M6", px, py))
+        return pts + [(L_, px, py) for L_ in ("M5", "M4", "M3", "M2", "M1")]
     return pts + [(L_, x, py) for L_ in ("M6", "M5", "M4", "M3", "M2", "M1")]
 
 
 def stack_pad_layers(s):
     """{(x, y): set(layers)} of the min-area pads of one stack (M2..M6 at the pin row)"""
     xy = (round(s["xy"][0], 4), round(s["xy"][1], 4))
-    pads = {xy: {"M2", "M3", "M4", "M5", "M6"}}
+    if s.get("m6_entry_xy"):
+        actual=(round(s["m6_entry_xy"][0],4),round(s["m6_entry_xy"][1],4))
+        pads={actual:{"M2","M3","M4","M5","M6"}}
+        pads.setdefault(xy,set()).add("M6")
+    else:
+        pads = {xy: {"M2", "M3", "M4", "M5", "M6"}}
     if s.get("short_stack"):
         pads[xy].add("M7")
         pads.setdefault((xy[0], round(s["riser_from"][1], 4)), set()).add("M8")
@@ -515,6 +529,9 @@ def stack_shapes(w):
         x, py, jy = s["xy"][0], s["xy"][1], s["riser_from"][1]
         h = WIDTH["M7"] / 2                          # M7 riser on the bar column
         out.append((w["name"], "M7", x - h, min(py, jy) - h, x + h, max(py, jy) + h))
+        if s.get("m6_entry_xy"):
+            px,ey=s["m6_entry_xy"];h6=WIDTH["M6"]/2
+            out.append((w["name"],"M6",min(x,px)-h6,py-h6,max(x,px)+h6,py+h6))
         if s.get("tie"):                             # R12 M7 tie strap through every unit pin row
             t = s["tie"]
             out.append((w["name"], "M7", x - h, t["y_lo"] - h, x + h, t["y_hi"] + h))
