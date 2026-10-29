@@ -86,7 +86,13 @@ def split_long_leaves(P, limit_um):
     for u in sorted(sp):
         if sp[u] <= limit_um:
             continue
-        sinks = P['leafsinks'][u]; br = node[u][1]; drv = node[br][1]; hub = node[br][2]
+        # the leaf's own wire edge starts at its '_br' branch buffer; a repeated leaf edge (node[u][1] = u_rK) keeps
+        # its repeater count on every part, so siblings hang on the branch's driver with the same stage count
+        sinks = P['leafsinks'][u]; br = u + '_br'; drv = node[br][1]; hub = node[br][2]
+        nseg = len(next(w['segs'] for w in P['wires'] if w['edge'] == u))
+        if nseg > 1:
+            reps = {u + '_r%d' % i for i in range(nseg - 1)}
+            P['nodes'] = [n for n in P['nodes'] if n[0] not in reps]
         parts = farthest_clusters(sinks, limit_um)
         cells = [mz.cell((sum(p[0] for p in g) / len(g), sum(p[1] for p in g) / len(g))) for g in parts]
         free = [u[:-1] + ch for ch in NAME_POOL if u[:-1] + ch not in taken]
@@ -97,13 +103,21 @@ def split_long_leaves(P, limit_um):
         for i, (nm, g, c) in enumerate(zip(names, parts, cells)):
             if i == 0:
                 bcell = node[br][2]
-                P['nodes'] = [(n[0], n[1], c if n[0] == u else n[2], n[3], n[4]) for n in P['nodes']]
-                P['wires'] = [w for w in P['wires'] if w['edge'] != u]
             else:
                 bcell = mz.cell((mz.xy(hub)[0], mz.xy(hub)[1] + (nsib + i - 1) * 1.08))
                 P['nodes'].append((nm + '_br', drv, bcell, H.BIG, 'branch'))
-                P['nodes'].append((nm, nm + '_br', c, H.BIG, 'leaf'))
-            P['wires'].append(dict(level=len(P['splits']), edge=nm, segs=[mz.md(bcell, c)], cells=[mz.path(bcell, c)]))
+            pts = H.exact_points(mz, bcell, c, mz.md(bcell, c), nseg) if nseg > 1 else []
+            prev = nm + '_br'
+            for j, q in enumerate(pts):
+                P['nodes'].append((nm + '_r%d' % j, prev, q, H.REP, 'rep')); prev = nm + '_r%d' % j
+            if i == 0:
+                P['nodes'] = [(n[0], prev if n[0] == u else n[1], c if n[0] == u else n[2], n[3], n[4]) for n in P['nodes']]
+                P['wires'] = [w for w in P['wires'] if w['edge'] != u]
+            else:
+                P['nodes'].append((nm, prev, c, H.BIG, 'leaf'))
+            chain = [bcell] + pts + [c]
+            P['wires'].append(dict(level=len(P['splits']), edge=nm, segs=[mz.md(chain[j], chain[j + 1]) for j in range(len(chain) - 1)],
+                                   cells=[mz.path(chain[j], chain[j + 1]) for j in range(len(chain) - 1)]))
             P['leafsinks'][nm] = g
         out.append(dict(leaf=u, spread_um=sp[u], parts=len(parts), part_sinks=[len(g) for g in parts]))
     order, seen, rest = [], set(), list(P['nodes'])
