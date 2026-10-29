@@ -135,3 +135,26 @@ def test_projected_radius_rejects_impossible_keepout_sink():
     with pytest.raises(ValueError, match="did not converge"):
         reg_spine.close_projected_radius([dict(id=0, x=38.0, y=50.0, node="A", pad=0)],
                                         [("illegal", 50.0, 50.0)], spec["trunk"], spec)
+
+
+def test_tap_footprint_folds_long_chain_in_narrow_edge_channel_and_moves_off_keepout():
+    spec = dict(pad_pitch_um=0.81, keepouts_um=[[20.0, 0.0, 100.0, 100.0]],
+                tap_footprint=dict(core_um=[4.32, 4.32, 200.0, 200.0], keepout_halo_um=2.0, max_move_um=10.0))
+    # 12 pads need 9.72+0.3+1.62 um: the 4.32..18 um edge channel holds it only when folded
+    taps = [dict(id=0, x=6.0, y=50.0, node="A", pad=12), dict(id=1, x=103.0, y=50.0, node="A", pad=4),
+            dict(id=2, x=150.0, y=150.0, node="A", pad=3)]
+    out = reg_spine.legalize_tap_footprints([dict(t) for t in taps], spec)
+    t0, t1, t2 = out
+    assert len(t0["pad_xy"]) == 12 and all(4.32 <= x and x + 0.378 <= 18.0 for x, _ in t0["pad_xy"])
+    assert t0["pad_xy"][-1][1] == t0["y"]                      # last pad on the driver row
+    assert "pad_xy" not in t2 and "footprint_move_um" not in t2  # legal 1-row chain is untouched
+    left = min(x for x, _ in t1["pad_xy"]) if "pad_xy" in t1 else t1["x"] - 4 * 0.81 - 0.3
+    assert left >= 102.0 and abs(t1["x"] - 103.0) + abs(t1["y"] - 50.0) <= 10.0
+
+
+def test_tap_footprint_fails_closed_without_room():
+    import pytest
+    spec = dict(keepouts_um=[[0.0, 0.0, 300.0, 300.0]],
+                tap_footprint=dict(core_um=[0.0, 0.0, 300.0, 300.0], max_move_um=2.0))
+    with pytest.raises(ValueError):
+        reg_spine.legalize_tap_footprints([dict(id=0, x=150.0, y=150.0, node="A", pad=3)], spec)

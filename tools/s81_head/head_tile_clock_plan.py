@@ -13,11 +13,19 @@ sys.path.insert(0,str(ROOT/'tools/die_plan'))
 import reg_spine as R
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('directory',type=Path);a=p.parse_args();d=a.directory
+ p=argparse.ArgumentParser();p.add_argument('directory',type=Path);p.add_argument('--footprint',type=Path,help='tap_footprint JSON (core_um, extra_keepouts_um): legalize whole pad+driver footprints, iterate pads to a fixed point');a=p.parse_args();d=a.directory
  spec=json.loads((d/'fresh_unpadded_spec.json').read_text());prior=json.loads((d/'unpadded_plan.json').read_text())
  sinks=R.load_sinks(d/'sinks.txt');taps=prior['taps'];attach=[t for t in spec['trunk'] if t[3]!='-' and t[0] not in spec.get('express',[])]
  spec['projected_radius_um']=spec['radius_um']
  taps=R.close_projected_radius(taps,sinks,spec['trunk'],spec)
+ import copy;orig=copy.deepcopy(taps)
+ if a.footprint:spec['tap_footprint']=json.loads(a.footprint.read_text())
+ def regroup(taps):
+  asg={n:min(range(len(taps)),key=lambda i:(abs(taps[i]['x']-x)+abs(taps[i]['y']-y),i)) for n,x,y in sinks}
+  for t in taps:
+   t['node']=min(attach,key=lambda n:(abs(n[1]-t['x'])+abs(n[2]-t['y']),n[0]))[0]
+   group=[(x,y) for n,x,y in sinks if asg[n]==t['id']];t['sinks']=len(group);t['radius_um']=max(abs(x-t['x'])+abs(y-t['y']) for x,y in group)
+  return asg
  asg={n:min(range(len(taps)),key=lambda i:(abs(taps[i]['x']-x)+abs(taps[i]['y']-y),i)) for n,x,y in sinks}
  for t in taps:
   t['node']=min(attach,key=lambda n:(abs(n[1]-t['x'])+abs(n[2]-t['y']),n[0]))[0]
@@ -44,8 +52,25 @@ def main():
   X=np.array([feat(t,oldtr) for t in old['taps']]);y=np.array([means[t['id']]-t['pad']*stage[corner]-scale*prefix[t['node']] for t in old['taps']]);coef,res=nnls(X,y)
   model[corner]=dict(prefix_scale=scale,local_coefficients=coef.tolist(),calibration_max_residual_ps=float(max(abs(X@coef-y))),stage_ps=stage[corner],target_ps=target)
   pred[corner]=[float(scale*prefix[t['node']]+coef[1]*delta.get(t['node'],0)+np.dot(feat(t),coef)) for t in taps]
- for i,t in enumerate(taps):
-  pad=min(range(33),key=lambda p:sum(((pred[c][i]+p*stage[c]-model[c]['target_ps'])/model[c]['target_ps'])**2 for c in ('TT','FF')));t['pad']=pad;t['predicted_ps']={c:round(pred[c][i]+pad*stage[c],2) for c in ('TT','FF')}
+ def fitpads(taps):
+  pred={}
+  for corner,scale,target in [('TT',1.,525.),('FF',.81,425.25)]:
+   coef=np.array(model[corner]['local_coefficients']);pred[corner]=[float(scale*prefix[t['node']]+coef[1]*delta.get(t['node'],0)+np.dot(feat(t),coef)) for t in taps]
+  return pred
+ history=[]
+ for it in range(8 if a.footprint else 1):
+  if it:
+   pads={t['id']:t['pad'] for t in taps};taps=copy.deepcopy(orig)
+   for t in taps:t['pad']=pads[t['id']]
+   taps=R.legalize_tap_footprints(taps,spec);asg=regroup(taps);pred=fitpads(taps)
+  before=[t.get('pad') for t in taps]
+  for i,t in enumerate(taps):
+   pad=min(range(33),key=lambda p:sum(((pred[c][i]+p*stage[c]-model[c]['target_ps'])/model[c]['target_ps'])**2 for c in ('TT','FF')));t['pad']=pad;t['predicted_ps']={c:round(pred[c][i]+pad*stage[c],2) for c in ('TT','FF')}
+  history.append(sum(t['pad'] for t in taps))
+  if it and before==[t['pad'] for t in taps]:break
+ else:
+  if a.footprint:raise SystemExit('footprint/pad iteration did not reach a fixed point: '+str(history))
+ if a.footprint:assert max(t['radius_um'] for t in taps)<=spec['radius_um'],'footprint move broke radius'
  spec['pads']={str(t['id']):t['pad'] for t in taps};spec['note']='Fresh actual3_place groups; projected-radius refinement; prebuild h17 matched-prefix and qualifiedspice BUFx4 calibration. No postbuild trimming.'
  R.write(str(d),spec['trunk'],taps,asg,spec);(d/'reg_spine.json').write_text(json.dumps(spec,indent=2)+'\n')
  report=dict(sinks=len(sinks),taps=len(taps),max_radius_um=max(t['radius_um'] for t in taps),max_sinks=max(t['sinks'] for t in taps),min_sinks=min(t['sinks'] for t in taps),pads=sum(t['pad'] for t in taps),model=model,predicted_ranges={c:[min(t['predicted_ps'][c] for t in taps),max(t['predicted_ps'][c] for t in taps)] for c in ('TT','FF')},assumptions=['Matched physical h17 BUFx24 trunk prefixes; changed tap loads only modeled by new local group fit.','FF prefix scales TT by0.81: planning approximation, actual dualcorner measurement required.','NNLS local-tree delay vs stub/log2sinkcount/radius calibrated to h17 after subtracting old pad physical stage delay.','BUFx4 rise-stage slope from qualified model_corr golden SPICE, bothcorners; no BUFx24factor applied to BUFx4.','HR0 inherited illegal ideal site660,690 moved to legal uppercrossbar660,717; prefix wirelength difference modeled, actual legalclocksites required.', 'Existing macro early-tap paths unchanged, stagesA6/B4 retained; actual corepin insertion must be remeasured.','Plan only; no timing closure or signoff claim.'])
