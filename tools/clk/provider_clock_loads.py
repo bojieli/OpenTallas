@@ -21,8 +21,29 @@ def tcl_word(value):
     return '{' + value + '}'
 
 
+# ot_clk leaf-drivers (tools/clk/leaf_drivers.py, 12.16 / KV-019): register CLK pins leave the trunk nets; the trunk
+# net then carries the trunk-side inverter A pin of each leaf driver pair (role clock_leaf). Those A pins are the actual
+# fixed-tree loads. Plans without leaf drivers keep the sequential-CLK-only path unchanged.
+LEAF_ROLE = 'clock_leaf'
+LEAF_MASTERS = ('CKINVDC', 'INV')
+
+
+def load_pin(load):
+    """Actual clock terminal of one inventory load: CLK of a register, or A of a leaf-driver trunk-side inverter."""
+    name, master = load['inst'], load['master']
+    if load.get('role') == LEAF_ROLE:
+        if load.get('pin') != 'A' or not master.startswith(LEAF_MASTERS):
+            raise ValueError(f'leaf-driver clock load is not an inverter A pin: {name}')
+        return 'A'
+    if not master.startswith(('DFF','SDFF')):
+        raise ValueError(f'provider clock load is not a sequential cell: {name}')
+    if load.get('pin', 'CLK') != 'CLK':
+        raise ValueError(f'provider register clock load is not its CLK pin: {name}')
+    return 'CLK'
+
+
 def pin_entry(load, dbu, via12):
-    """Select a VIA12 enclosure wholly inside actual M1 CLK pin metal."""
+    """Select a VIA12 enclosure wholly inside actual M1 clock pin metal (CLK, or A of a leaf driver)."""
     candidates = []
     hx, hy = via12
     for shape in load['shapes_dbu']:
@@ -32,10 +53,10 @@ def pin_entry(load, dbu, via12):
         x, y = (x0+x1)/2, (y0+y1)/2
         candidates.append((-(y1-y0), -(x1-x0), x, y, shape))
     if not candidates:
-        raise ValueError(f"actual M1 CLK metal cannot enclose VIA12: {load['inst']}")
+        raise ValueError(f"actual M1 {load_pin(load)} metal cannot enclose VIA12: {load['inst']}")
     _, _, x, y, shape = min(candidates)
     return dict(layer='M1', xy=[x/dbu,y/dbu], rect_um=[v/dbu for v in shape[1:]],
-                inst=load['inst'], pin='CLK', net=load['net'],
+                inst=load['inst'], pin=load_pin(load), net=load['net'],
                 via12_enclosure_um=[hx/dbu,hy/dbu], actual_m1=True)
 
 
@@ -66,8 +87,7 @@ def extend(nets, ports, endpoints, inventory, bindings, via12=(9,11)):
         raw = actual if actual in bynet else actual[3:] if actual.startswith('ck_') else actual
         if raw not in bynet:
             raise ValueError(f'provider clock is absent from the unchanged tree: {actual}')
-        if not load['master'].startswith(('DFF','SDFF')):
-            raise ValueError(f'provider clock load is not a sequential cell: {name}')
+        load_pin(load)
         port = f'provider_clk_{index:05d}'
         if port in ports or port in endpoints:
             raise ValueError(f'duplicate physical endpoint key: {port}')
@@ -77,10 +97,14 @@ def extend(nets, ports, endpoints, inventory, bindings, via12=(9,11)):
         bynet[raw]['loads'].append('port:'+port)
         rows.append(dict(port=port,stage=load['stage'],raw_net=raw,**ep))
         net_count[actual] = net_count.get(actual,0)+1
-    return nets, ports, endpoints, dict(schema='opentallas.provider_clock_loads.v1',
+    report = dict(schema='opentallas.provider_clock_loads.v1',
         status='ACTUAL_M1_ENDPOINTS_UNROUTED', physical_route=False, timing_qualified=False,
         loads=len(rows), nets=len(net_count), max_added_fanout=max(net_count.values(),default=0),
         added_cells=0, cycles_added=0, rows=rows)
+    leaf = sum(r['pin'] == 'A' for r in rows)
+    if leaf:  # FF-only plans keep the report byte-identical
+        report.update(leaf_driver_loads=leaf, register_loads=len(rows)-leaf)
+    return nets, ports, endpoints, report
 
 
 
@@ -132,6 +156,7 @@ def main(argv=None):
     (a.out/'graph.json').write_text(json.dumps(dict(graph,nets=nets,ports=ports,endpoints=endpoints))+'\n')
     report['inputs']={key:dict(path=str(getattr(a,key)),sha256=hashlib.sha256(getattr(a,key).read_bytes()).hexdigest()) for key in ('graph','loads','bindings')}
     (a.out/'provider_endpoints.json').write_text(json.dumps(report)+'\n')
-    print(f"PROVIDER_CLOCK_ENDPOINTS {report['loads']} actual M1 CLK terminals on {report['nets']} unchanged nets; UNROUTED")
+    kind='clock' if report.get('leaf_driver_loads') else 'CLK'
+    print(f"PROVIDER_CLOCK_ENDPOINTS {report['loads']} actual M1 {kind} terminals on {report['nets']} unchanged nets; UNROUTED")
 
 if __name__=='__main__':main()
