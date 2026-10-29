@@ -1,0 +1,39 @@
+{
+  "verdict": "SOURCE_COMPONENT_PASS",
+  "job": "intel1 oth-ubuntu-2440549-1793270205",
+  "source_correction": "actual4SVGphysicalsources separated multi-mm; optional4inputTXcoupon not a physicalstar adoption",
+  "topology": "one ownpacket seed then3distributedfixedslotmerges; eachnode onlylocalpacket1099 plusupstreamrail1112",
+  "payload_bit_comparisons": 1503432,
+  "rows": 171,
+  "lanes": 4,
+  "lane_bases": [
+    0,
+    4
+  ],
+  "period_ps": 833,
+  "SRAM": "actual",
+  "mutants_caught": [
+    "payload",
+    "packet tag",
+    "missing source injection",
+    "collision between upstreamrail andlocalfixedslot"
+  ],
+  "boundary": {
+    "bits": 1112,
+    "registered_nodes_perhub": 4,
+    "FF_bits_perhub": 4448,
+    "assembly_FF": 0,
+    "extra405um_station_FF_bits": 1112
+  },
+  "compiler": "align finaldestination slot using per-source named positivecycle paths; check collisions at every sharednode, not onlydestination",
+  "qualified": {
+    "source_component": true,
+    "actual_named_routes": false,
+    "HBM_allocation": false,
+    "source_service_deadline": false,
+    "current_clock": false,
+    "native": false,
+    "G5": false,
+    "SIGNED": false
+  }
+}

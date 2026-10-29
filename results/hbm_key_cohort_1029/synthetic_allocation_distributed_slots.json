@@ -1,0 +1,451 @@
+{
+  "schema": "opentallas.hbm_idx.key_cohort_allocation.v1",
+  "physical_stack": 2,
+  "slots": 4,
+  "packet_from_go_edges": 4,
+  "relay_cycles": 3,
+  "go_done_tail_edges": 10,
+  "query_start_at": 4000,
+  "programme_base": 32,
+  "descriptor_base": 16,
+  "occupied_programme_ranges": [
+    [
+      0,
+      32
+    ]
+  ],
+  "occupied_descriptor_ranges": [
+    [
+      0,
+      16
+    ]
+  ],
+  "cohorts": [
+    {
+      "id": 0,
+      "groups": [
+        {
+          "lane": 0,
+          "blocks": [
+            {
+              "row_base": 100,
+              "slot": 0,
+              "epoch": 100,
+              "go_at": 401,
+              "cache_ready_by": 381
+            },
+            {
+              "row_base": 100,
+              "slot": 1,
+              "epoch": 101,
+              "go_at": 801,
+              "cache_ready_by": 781
+            },
+            {
+              "row_base": 100,
+              "slot": 2,
+              "epoch": 102,
+              "go_at": 1201,
+              "cache_ready_by": 1181
+            }
+          ]
+        },
+        {
+          "lane": 1,
+          "blocks": [
+            {
+              "row_base": 100,
+              "slot": 0,
+              "epoch": 100,
+              "go_at": 402,
+              "cache_ready_by": 382
+            },
+            {
+              "row_base": 100,
+              "slot": 1,
+              "epoch": 101,
+              "go_at": 802,
+              "cache_ready_by": 782
+            },
+            {
+              "row_base": 100,
+              "slot": 2,
+              "epoch": 102,
+              "go_at": 1202,
+              "cache_ready_by": 1182
+            }
+          ]
+        },
+        {
+          "lane": 2,
+          "blocks": [
+            {
+              "row_base": 100,
+              "slot": 0,
+              "epoch": 100,
+              "go_at": 403,
+              "cache_ready_by": 383
+            },
+            {
+              "row_base": 100,
+              "slot": 1,
+              "epoch": 101,
+              "go_at": 803,
+              "cache_ready_by": 783
+            },
+            {
+              "row_base": 100,
+              "slot": 2,
+              "epoch": 102,
+              "go_at": 1203,
+              "cache_ready_by": 1183
+            }
+          ]
+        },
+        {
+          "lane": 3,
+          "blocks": [
+            {
+              "row_base": 100,
+              "slot": 0,
+              "epoch": 100,
+              "go_at": 404,
+              "cache_ready_by": 384
+            },
+            {
+              "row_base": 100,
+              "slot": 1,
+              "epoch": 101,
+              "go_at": 804,
+              "cache_ready_by": 784
+            },
+            {
+              "row_base": 100,
+              "slot": 2,
+              "epoch": 102,
+              "go_at": 1204,
+              "cache_ready_by": 1184
+            }
+          ]
+        },
+        {
+          "lane": 4,
+          "blocks": [
+            {
+              "row_base": 100,
+              "slot": 0,
+              "epoch": 100,
+              "go_at": 401,
+              "cache_ready_by": 381
+            },
+            {
+              "row_base": 100,
+              "slot": 1,
+              "epoch": 101,
+              "go_at": 801,
+              "cache_ready_by": 781
+            },
+            {
+              "row_base": 100,
+              "slot": 2,
+              "epoch": 102,
+              "go_at": 1201,
+              "cache_ready_by": 1181
+            }
+          ]
+        },
+        {
+          "lane": 5,
+          "blocks": [
+            {
+              "row_base": 100,
+              "slot": 0,
+              "epoch": 100,
+              "go_at": 402,
+              "cache_ready_by": 382
+            },
+            {
+              "row_base": 100,
+              "slot": 1,
+              "epoch": 101,
+              "go_at": 802,
+              "cache_ready_by": 782
+            },
+            {
+              "row_base": 100,
+              "slot": 2,
+              "epoch": 102,
+              "go_at": 1202,
+              "cache_ready_by": 1182
+            }
+          ]
+        },
+        {
+          "lane": 6,
+          "blocks": [
+            {
+              "row_base": 100,
+              "slot": 0,
+              "epoch": 100,
+              "go_at": 403,
+              "cache_ready_by": 383
+            },
+            {
+              "row_base": 100,
+              "slot": 1,
+              "epoch": 101,
+              "go_at": 803,
+              "cache_ready_by": 783
+            },
+            {
+              "row_base": 100,
+              "slot": 2,
+              "epoch": 102,
+              "go_at": 1203,
+              "cache_ready_by": 1183
+            }
+          ]
+        },
+        {
+          "lane": 7,
+          "blocks": [
+            {
+              "row_base": 100,
+              "slot": 0,
+              "epoch": 100,
+              "go_at": 404,
+              "cache_ready_by": 384
+            },
+            {
+              "row_base": 100,
+              "slot": 1,
+              "epoch": 101,
+              "go_at": 804,
+              "cache_ready_by": 784
+            },
+            {
+              "row_base": 100,
+              "slot": 2,
+              "epoch": 102,
+              "go_at": 1204,
+              "cache_ready_by": 1184
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "groups": [
+        {
+          "lane": 0,
+          "blocks": [
+            {
+              "row_base": 101,
+              "slot": 0,
+              "epoch": 110,
+              "go_at": 1901,
+              "cache_ready_by": 1881
+            },
+            {
+              "row_base": 101,
+              "slot": 1,
+              "epoch": 111,
+              "go_at": 2301,
+              "cache_ready_by": 2281
+            },
+            {
+              "row_base": 101,
+              "slot": 2,
+              "epoch": 112,
+              "go_at": 2701,
+              "cache_ready_by": 2681
+            }
+          ]
+        },
+        {
+          "lane": 1,
+          "blocks": [
+            {
+              "row_base": 101,
+              "slot": 0,
+              "epoch": 110,
+              "go_at": 1902,
+              "cache_ready_by": 1882
+            },
+            {
+              "row_base": 101,
+              "slot": 1,
+              "epoch": 111,
+              "go_at": 2302,
+              "cache_ready_by": 2282
+            },
+            {
+              "row_base": 101,
+              "slot": 2,
+              "epoch": 112,
+              "go_at": 2702,
+              "cache_ready_by": 2682
+            }
+          ]
+        },
+        {
+          "lane": 2,
+          "blocks": [
+            {
+              "row_base": 101,
+              "slot": 0,
+              "epoch": 110,
+              "go_at": 1903,
+              "cache_ready_by": 1883
+            },
+            {
+              "row_base": 101,
+              "slot": 1,
+              "epoch": 111,
+              "go_at": 2303,
+              "cache_ready_by": 2283
+            },
+            {
+              "row_base": 101,
+              "slot": 2,
+              "epoch": 112,
+              "go_at": 2703,
+              "cache_ready_by": 2683
+            }
+          ]
+        },
+        {
+          "lane": 3,
+          "blocks": [
+            {
+              "row_base": 101,
+              "slot": 0,
+              "epoch": 110,
+              "go_at": 1904,
+              "cache_ready_by": 1884
+            },
+            {
+              "row_base": 101,
+              "slot": 1,
+              "epoch": 111,
+              "go_at": 2304,
+              "cache_ready_by": 2284
+            },
+            {
+              "row_base": 101,
+              "slot": 2,
+              "epoch": 112,
+              "go_at": 2704,
+              "cache_ready_by": 2684
+            }
+          ]
+        },
+        {
+          "lane": 4,
+          "blocks": [
+            {
+              "row_base": 101,
+              "slot": 0,
+              "epoch": 110,
+              "go_at": 1901,
+              "cache_ready_by": 1881
+            },
+            {
+              "row_base": 101,
+              "slot": 1,
+              "epoch": 111,
+              "go_at": 2301,
+              "cache_ready_by": 2281
+            },
+            {
+              "row_base": 101,
+              "slot": 2,
+              "epoch": 112,
+              "go_at": 2701,
+              "cache_ready_by": 2681
+            }
+          ]
+        },
+        {
+          "lane": 5,
+          "blocks": [
+            {
+              "row_base": 101,
+              "slot": 0,
+              "epoch": 110,
+              "go_at": 1902,
+              "cache_ready_by": 1882
+            },
+            {
+              "row_base": 101,
+              "slot": 1,
+              "epoch": 111,
+              "go_at": 2302,
+              "cache_ready_by": 2282
+            },
+            {
+              "row_base": 101,
+              "slot": 2,
+              "epoch": 112,
+              "go_at": 2702,
+              "cache_ready_by": 2682
+            }
+          ]
+        },
+        {
+          "lane": 6,
+          "blocks": [
+            {
+              "row_base": 101,
+              "slot": 0,
+              "epoch": 110,
+              "go_at": 1903,
+              "cache_ready_by": 1883
+            },
+            {
+              "row_base": 101,
+              "slot": 1,
+              "epoch": 111,
+              "go_at": 2303,
+              "cache_ready_by": 2283
+            },
+            {
+              "row_base": 101,
+              "slot": 2,
+              "epoch": 112,
+              "go_at": 2703,
+              "cache_ready_by": 2683
+            }
+          ]
+        },
+        {
+          "lane": 7,
+          "blocks": [
+            {
+              "row_base": 101,
+              "slot": 0,
+              "epoch": 110,
+              "go_at": 1904,
+              "cache_ready_by": 1884
+            },
+            {
+              "row_base": 101,
+              "slot": 1,
+              "epoch": 111,
+              "go_at": 2304,
+              "cache_ready_by": 2284
+            },
+            {
+              "row_base": 101,
+              "slot": 2,
+              "epoch": 112,
+              "go_at": 2704,
+              "cache_ready_by": 2684
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

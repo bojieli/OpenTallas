@@ -13,7 +13,7 @@ def fixture():
         for lane in range(8):
             blocks=[]
             for b in range(3):
-                go=400+c*1500+b*400+lane%4
+                go=401+c*1500+b*400+lane%4
                 blocks.append(dict(row_base=100+c,slot=b,epoch=100+c*10+b,go_at=go,cache_ready_by=go-20))
             groups.append(dict(lane=lane,blocks=blocks))
         a['cohorts'].append(dict(id=c,groups=groups))
@@ -48,11 +48,26 @@ class KeyProgramme(unittest.TestCase):
             self.assertEqual((w>>25)&1,0)
             self.assertEqual((w>>40)&((1<<43)-1),0)
 
+    def test_distributed_paths_align_final_slots_and_reject_node_collisions(self):
+        a=fixture()
+        for c in a['cohorts']:
+            for g in c['groups']:
+                lane=g['lane'];p=lane%4
+                g['path']=[dict(node=f'hub{lane//4}_node{n}',cycles=1) for n in range(p,4)]
+                for b,x in enumerate(g['blocks']):
+                    x['go_at']=400+c['id']*1500+b*400+2*p
+                    x['cache_ready_by']=x['go_at']-20
+        r=compile_allocation(a)
+        self.assertTrue(all(x['arrival_edge']%4==x['lane'] for x in r['ingest_timeline']))
+        self.assertEqual(len({(x['physical_lane']//4,x['arrival_edge']) for x in r['ingest_timeline']}),2736)
+        a['cohorts'][0]['groups'][0]['path'][2]['node']='hub0_node1'
+        with self.assertRaisesRegex(ValueError,'named distributed path node'):compile_allocation(a)
+
     def test_rejects_alias_late_go_bad_slot_or_early_query(self):
         for mutation in ('alias','late','slot','query','missing','programme_overlap','descriptor_overlap','capacity'):
             a=fixture()
             if mutation=='alias':a['cohorts'][1]['groups'][0]['blocks'][0]['row_base']=100
-            if mutation=='late':a['cohorts'][0]['groups'][0]['blocks'][0]['cache_ready_by']=400
+            if mutation=='late':a['cohorts'][0]['groups'][0]['blocks'][0]['cache_ready_by']=401
             if mutation=='slot':a['cohorts'][0]['groups'][1]['blocks'][0]['go_at']+=1
             if mutation=='query':a['query_start_at']=400
             if mutation=='missing':a['cohorts'][0]['groups'].pop()

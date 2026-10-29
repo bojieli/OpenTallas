@@ -51,6 +51,9 @@ def compile_allocation(a):
         if sorted(g['lane'] for g in c['groups'])!=list(range(8)):raise ValueError('each cohort needs all8 physical source groups')
         for g in sorted(c['groups'],key=lambda g:g['lane']):
             lane=g['lane'];blocks=g['blocks'];key=f'svg_NW{lane}'
+            path=g.get('path',[])
+            if any(type(n.get('cycles')) is not int or n['cycles']<1 or not n.get('node') for n in path):raise ValueError('named positive-cycle path segments required')
+            source_relay=sum(n['cycles'] for n in path) if path else relay
             if len(blocks)!=3:raise ValueError('171rows require64,64,43 blocks')
             rows_done=0
             for b,x in enumerate(blocks):
@@ -61,7 +64,7 @@ def compile_allocation(a):
                 if ident in used:raise ValueError('physical key allocations alias across blocks/cohorts')
                 used.add(ident)
                 if ready>=go or ready<0:raise ValueError('cache not resident strictly before fixed GO')
-                if (go+packet_delay)%4!=lane%4:raise ValueError('source packet edge misses its static local lane slot')
+                if (go+packet_delay+source_relay)%4!=lane%4:raise ValueError('source packet edge misses its static local lane slot')
                 # A group cannot run two programmes or issue both cohorts at once.
                 prev=groups.setdefault(key,[])
                 if prev and go<prev[-1]['go_at']+prev[-1]['programme_runtime_edges']+a['go_done_tail_edges']:
@@ -74,14 +77,22 @@ def compile_allocation(a):
                 prev.append(rec)
                 for r in range(rows):
                     edge=go+packet_delay+r*4
-                    timeline.append(dict(edge=edge,arrival_edge=edge+relay,source=key,lane=lane%4,physical_lane=lane,cohort=c['id'],row=rows_done+r,tag=(128*lane+rows_done+r)%1024,consumer=('hb_idx__s_SW' if lane<4 else 'hb_idx__s_SE') if c['id']==0 else ('hb_idx__s_NW' if lane<4 else 'hb_idx__s_NE')))
+                    timeline.append(dict(edge=edge,arrival_edge=edge+source_relay,path=path,source=key,lane=lane%4,physical_lane=lane,cohort=c['id'],row=rows_done+r,tag=(128*lane+rows_done+r)%1024,consumer=('hb_idx__s_SW' if lane<4 else 'hb_idx__s_SE') if c['id']==0 else ('hb_idx__s_NW' if lane<4 else 'hb_idx__s_NE')))
                 rows_done+=rows
     # One1112b pipe per hub; every reserved edge is unique, including cross-block/cohort boundaries.
     taken=set()
     for t in timeline:
-        k=(t['physical_lane']//4,t['edge'])
+        k=(t['physical_lane']//4,t['arrival_edge'])
         if k in taken:raise ValueError('two source packets collide in one local pipe slot')
         taken.add(k)
+    node_events=set()
+    for t in timeline:
+        edge=t['edge']
+        for segment in t['path']:
+            edge+=segment['cycles']
+            identity=(segment['node'],edge)
+            if identity in node_events:raise ValueError('source packets collide at named distributed path node')
+            node_events.add(identity)
     last=max(t['arrival_edge'] for t in timeline)
     if query<=last+1:raise ValueError('query begins before all distinct role SRAM writes commit')
     return dict(schema='opentallas.hbm_idx.key_cohort_programme.v1',verdict='SOURCE_CANDIDATE',installable=False,programme_words=[f'{w:064x}' for w in pwords],programme_word_count=len(pwords),programme_base=programme_base,descriptor_base=descriptor_base,source_groups=groups,ingest_timeline=sorted(timeline,key=lambda x:(x['edge'],x['physical_lane'])),last_arrival_edge=last,query_start_at=query,unused_prefill_slack=query-last-1,HBM_deadlines='caller supplied, not measured by compiler',claim=dict(native=False,physical=False,token=False))
