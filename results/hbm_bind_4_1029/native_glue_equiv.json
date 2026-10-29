@@ -1,0 +1,85 @@
+{
+ "schema": "hbm.bind4.native_glue_equiv.v1",
+ "verdict": "PASS",
+ "helpers": 11,
+ "rows": [
+  {
+   "helper": "ot_bind_native_005beba15a80a308e879b26d",
+   "type": "$shiftx",
+   "equiv": "PASS",
+   "mutant_out0_inverted": "CAUGHT",
+   "verdict": "PASS"
+  },
+  {
+   "helper": "ot_bind_native_129bb1e301d3931c53ca86a8",
+   "type": "$shiftx",
+   "equiv": "PASS",
+   "mutant_out0_inverted": "CAUGHT",
+   "verdict": "PASS"
+  },
+  {
+   "helper": "ot_bind_native_45f66b912fda1eb8622b9d8e",
+   "type": "$shiftx",
+   "equiv": "PASS",
+   "mutant_out0_inverted": "CAUGHT",
+   "verdict": "PASS"
+  },
+  {
+   "helper": "ot_bind_native_6f922c5d0dd37fdfbb9f06c8",
+   "type": "$shiftx",
+   "equiv": "PASS",
+   "mutant_out0_inverted": "CAUGHT",
+   "verdict": "PASS"
+  },
+  {
+   "helper": "ot_bind_native_7dd3b9e580e15a9577069521",
+   "type": "$shift",
+   "equiv": "PASS",
+   "mutant_out0_inverted": "CAUGHT",
+   "verdict": "PASS"
+  },
+  {
+   "helper": "ot_bind_native_81d476fcdeae3bef6e625d82",
+   "type": "$shift",
+   "equiv": "PASS",
+   "mutant_out0_inverted": "CAUGHT",
+   "verdict": "PASS"
+  },
+  {
+   "helper": "ot_bind_native_974cbc95d4993d1877d9b509",
+   "type": "$shiftx",
+   "equiv": "PASS",
+   "mutant_out0_inverted": "CAUGHT",
+   "verdict": "PASS"
+  },
+  {
+   "helper": "ot_bind_native_a6cd61606ddc74fb0338941a",
+   "type": "$shiftx",
+   "equiv": "PASS",
+   "mutant_out0_inverted": "CAUGHT",
+   "verdict": "PASS"
+  },
+  {
+   "helper": "ot_bind_native_ae8f4c379baf3e206f511477",
+   "type": "$shift",
+   "equiv": "PASS",
+   "mutant_out0_inverted": "CAUGHT",
+   "verdict": "PASS"
+  },
+  {
+   "helper": "ot_bind_native_ba122f83495a00500f6b5212",
+   "type": "$shiftx",
+   "equiv": "PASS",
+   "mutant_out0_inverted": "CAUGHT",
+   "verdict": "PASS"
+  },
+  {
+   "helper": "ot_bind_native_d696d9eee6b1c8b5bd724061",
+   "type": "$shiftx",
+   "equiv": "PASS",
+   "mutant_out0_inverted": "CAUGHT",
+   "verdict": "PASS"
+  }
+ ],
+ "method": "gold=original primitive JSON, gate=emitted write_verilog SV; equiv_simple/induct -undef; mutant gate inverts output bit 0"
+}
