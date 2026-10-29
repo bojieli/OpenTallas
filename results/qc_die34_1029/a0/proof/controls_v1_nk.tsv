@@ -1,0 +1,10 @@
+mutant	functional	contract	line
+0	PASS	CAUGHT	A0ICG_CONTRACT tile=nk MUT=0 lead_fail=0 drain_fail=2 first=7068
+9	NOVERDICT	PASS	A0ICG_CONTRACT tile=nk MUT=9 lead_fail=0 drain_fail=0 first=-1
+7	CAUGHT(qualified_errors=4165)	CAUGHT	A0ICG_CONTRACT tile=nk MUT=7 lead_fail=154 drain_fail=2 first=200
+8	PASS	CAUGHT	A0ICG_CONTRACT tile=nk MUT=8 lead_fail=100 drain_fail=2 first=202
+3	CAUGHT(qualified_errors=5342)	CAUGHT	A0ICG_CONTRACT tile=nk MUT=3 lead_fail=1058 drain_fail=1171 first=761
+1	CAUGHT(qualified_errors=4164)	CAUGHT	A0ICG_CONTRACT tile=nk MUT=1 lead_fail=0 drain_fail=2 first=7068
+2	CAUGHT(qualified_errors=9834)	CAUGHT	A0ICG_CONTRACT tile=nk MUT=2 lead_fail=0 drain_fail=2 first=7068
+5	CAUGHT(qualified_errors=4999)	CAUGHT	A0ICG_CONTRACT tile=nk MUT=5 lead_fail=0 drain_fail=64 first=8700
+6	PASS	CAUGHT	A0ICG_CONTRACT tile=nk MUT=6 lead_fail=0 drain_fail=2 first=7068
