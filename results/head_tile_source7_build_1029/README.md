@@ -11,3 +11,5 @@ Reproduce from a clean checkout:
     python3 tools/s81_head/head_tile_source7_kit.py run/head_tile_source7_1029/head_start_source7 --out run/head_tile_source7_1029/gen
 
 Trial-place review: results/geom_review/head_tile_source7_prebuild_1029.md. Start with canonical run_kit.sh goal synth; require source/face/LEC PASS before PLACE. Fresh actual new-FF clock model/assignment is mandatory before CTS. Route remains held. All measured prior raw clock/ring failures and the corrected435FIRMbaseline belong to earlier source versions, not this new candidate.
+
+SYNTH2 passed preflight/SDC/RTL/SELRANGE/synthesis, then failed strictport_bind on8extra countstrapbits. Rootcause: compose declares countstraps withoutsites; the earlier HEAD physical pin-stamping step was missing from the SOURCE7 portable source. Driver now runs existing head_count_strap_sites only for hd_tile beforeGEN; optionaltypesfilter leaves itsdefaultunchanged (3existingtestsPASS). GEN3 places all8M5countpins with4.32um pitch in macro-free area, noportwaiver, then strictsourcegates continue. Failed SYNTH2 receipt retained; noP&R occurred.
