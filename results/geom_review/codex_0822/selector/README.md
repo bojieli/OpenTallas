@@ -20,3 +20,12 @@ FAIL. Channel projection2.394/1.18 is unconfirmed pending inherited GRT.
 The inherited AUTO-GRT was mistakenly classified no-verdict while still
 running: epyc2 pid2873587, ~100percent CPU, iteration26/50 at08:15. It remains
 untouched. No zero-overflow or CTS/SIGNED claim. Image/json are placement-only.
+
+Targeted structural feasibility from the same saved graph (08:37 PDT):
+BFS from rst_core_n through combinational logic reaches11031 reset captures.
+Their bbox is x5.13..594.486/y9.045..398.925. Exact unconstrained single-source
+Manhattan minimax radius is425.817um at (248.967,201.501), above405 even before
+legal-row/macro constraints. A simple source relocation cannot fix this.
+The current rst_n pin is (599.952,28.44); the source FF already sits near it.
+A local reset relay/distribution or structural cut is required, with cycles
+priced in the model. HBM owner notified; no competing RTL edit made.
