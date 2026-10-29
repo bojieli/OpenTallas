@@ -2708,6 +2708,19 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
     v += [c for c in cells if c.lstrip().startswith("assign")]
     v.append("endmodule")
     if DME_ACTUAL_MAX_UM is not None:
+        # FEED/reach-pad legs have no DME physical_leg yet. Retain their actual
+        # emitted pre-pack costs too; treating them as zero packing delta hides
+        # the clock cost of native-home motion from the model ledger.
+        before_xy = {name:(x,y) for name,x,y in place}
+        before_cost = {}
+        for i,nd in nodes.items():
+            if nd.get("parent") is None:
+                continue
+            chain = [node_buf[i]]
+            target = node_buf[nd["parent"]]
+            while chain[-1] != target:
+                chain.append(parent_of[chain[-1]])
+            before_cost[i] = chain_ps([before_xy[c] for c in reversed(chain)])
         place = physical_pack(site,place)
         xy = {name:(x,y) for name,x,y in place}
         for i,nd in nodes.items():
@@ -2726,7 +2739,8 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
             nd["physical_leg"] = dict(chain=pts,stages=len(pts)-1,delay_ps=chain_ps(pts),
                                       wire_um=sum(_man(a,b) for a,b in zip(pts,pts[1:])),
                                       repairs=old.get("repairs",()) if old else (),
-                                      packing_delay_delta_ps=chain_ps(pts)-(old["delay_ps"] if old else chain_ps(pts)))
+                                      packing_delay_delta_ps=chain_ps(pts)-before_cost[i],
+                                      prepack_delay_ps=before_cost[i])
             nd["detour"] = [list(q) for q in pts]
             pa = nodes[nd["parent"]]
             nd["detour_um"] = round(nd["physical_leg"]["wire_um"]-_man((pa["x"],pa["y"]),(nd["x"],nd["y"])),1)

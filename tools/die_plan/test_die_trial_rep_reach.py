@@ -182,6 +182,8 @@ def test_feed_repair_composes_with_native_body_packing(monkeypatch):
         pl = n[i]['physical_leg']
         assert pl['stages'] % 2 == 0
         assert pl['delay_ps'] == pytest.approx(D.chain_ps(pl['chain']))
+        assert pl['packing_delay_delta_ps'] == pytest.approx(pl['delay_ps']-pl['prepack_delay_ps'])
+        assert abs(pl['packing_delay_delta_ps']) > 1e-8
     for k, (_, x, y) in enumerate(place):
         assert site.legal((x,y))
         assert all(abs(x-xx) >= D.ISLAND_CELL_UM[0]-1e-8 or abs(y-yy) >= D.ISLAND_CELL_UM[1]-1e-8
