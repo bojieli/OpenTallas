@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "fresh synthesis and placement trial only",
+  "image": "results/head_serdes_split_1029/baseline_place.png",
+  "actual_image_viewed": true,
+  "source_change": "opt-in4regional E2 counters14/14/14/13 plus3E3 carry-save levels; +10E2FFbits,0cycles,same945pins216x194.4frame",
+  "findings": [
+    "Compact uniform216x194.4 core with50.39%fill; no macros or halo walls;4extra E2 FFs negligible area.",
+    "Wide input sources enter west, correction outputs north; natural hard internal logic ports require typed first/lastFF reach, not genericR2 relaxation.",
+    "Clock centre gives178.21um baseline worstreach; no clock pin/source change; new sinks need native CTS.",
+    "Original GRT50overflow0; small col_v0.763 hotspot retained; freshplacement/reach/clock/GRT needed before any detailedroute.",
+    "Existing continuous PG topology retained; original pin_unreg320 AUTOFAIL remains immutable; actual typed373.230um bound is separate prior independent review."
+  ],
+  "holds": [
+    "No detailedroute/signoff until actual candidate placement/fulltypedreach and TT/FFCTS/GRT pass.",
+    "Halfvariant estimate retained likelyFAIL; only quarter candidate has positive transferred actual path estimate and may enter fresh physical trial after exactness/synthLEC."
+  ]
+}

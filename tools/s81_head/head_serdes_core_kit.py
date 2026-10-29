@@ -91,8 +91,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--plan", required=True)
     ap.add_argument("--out", required=True)
-    ap.add_argument("--root-count-split", action="store_true",
-                    help="opt-in zero-cycle regional root-count retiming; requires its own physical qualification")
+    ap.add_argument("--root-count-split", type=int, nargs="?", const=1, default=0, choices=(0,1,2),
+                    help="0=original,1=halves,2=quarters; opt-in retiming requires its own physical qualification")
     ap.add_argument("rest", nargs="*")
     a = ap.parse_args()
     out = Path(a.out).resolve()
@@ -106,7 +106,7 @@ def main():
                 "--out", str(out), "--recipe-key", MODULE, "--face-shell", "off",
                 "--core-insertion", "none", "--sigmax", "M5"] + a.rest
     commit = subprocess.check_output(["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True).strip()
-    recipe = dict(top=MODULE, files=FILES, params=({"ROOT_COUNT_SPLIT": 1} if a.root_count_split else {}), macros=[], source_commit=commit, read_at_commit=True,
+    recipe = dict(top=MODULE, files=FILES, params=({"ROOT_COUNT_SPLIT": a.root_count_split} if a.root_count_split else {}), macros=[], source_commit=commit, read_at_commit=True,
                   synth_memory_max_bits=10240,
                   source="HEAD SerDes existing KP4 Chien/Forney child; no latency change")
     profile = dict(source_commit=commit, family="HEAD_KP4_DCHN_NATIVE", added_face_cycles=0,

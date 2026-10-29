@@ -1,6 +1,9 @@
 `timescale 1ns/1ps
 // Compare the default frozen root-count structure to the opt-in 28/27 split
 // at every actual decoder output cycle; omitted Forney division must diverge.
+`ifndef OT_KP4_COUNT_TEST_SPLIT
+`define OT_KP4_COUNT_TEST_SPLIT 2
+`endif
 module tb_head_serdes_dchn;
     reg clk=0, rst_n=0;
     always #0.4165 clk=~clk;
@@ -16,10 +19,10 @@ module tb_head_serdes_dchn;
     ot_s81_kp4_dchn #(.MUT(0)) a(
         .clk(clk),.rst_n(rst_n),.k_v(k_v),.k_lo(k_lo),.k_L(k_L),.k_any(k_any),
         .cw_q(a_cw),.apply(a_ap),.o_unc(a_un),.o_ne(a_ne),.fs(a_fs),.n_corr(a_nc),.n_unc(a_nu));
-    ot_s81_kp4_dchn #(.ROOT_COUNT_SPLIT(1)) b(
+    ot_s81_kp4_dchn #(.ROOT_COUNT_SPLIT(`OT_KP4_COUNT_TEST_SPLIT)) b(
         .clk(clk),.rst_n(rst_n),.k_v(k_v),.k_lo(k_lo),.k_L(k_L),.k_any(k_any),
         .cw_q(b_cw),.apply(b_ap),.o_unc(b_un),.o_ne(b_ne),.fs(b_fs),.n_corr(b_nc),.n_unc(b_nu));
-    ot_s81_kp4_dchn #(.MUT(2),.ROOT_COUNT_SPLIT(1)) mutant(
+    ot_s81_kp4_dchn #(.MUT(2),.ROOT_COUNT_SPLIT(`OT_KP4_COUNT_TEST_SPLIT)) mutant(
         .clk(clk),.rst_n(rst_n),.k_v(k_v),.k_lo(k_lo),.k_L(k_L),.k_any(k_any),
         .cw_q(m_cw),.apply(m_ap),.o_unc(m_un),.o_ne(m_ne),.fs(m_fs),.n_corr(m_nc),.n_unc(m_nu));
     integer n=0, checked=0, caught=0, frames=0;
