@@ -1,0 +1,14 @@
+{
+ "reviewer": "/root/geom",
+ "tag": "HBM-VM_CAL-CFGWE-GENPLACE-1029",
+ "verdict": "PASS-COND ONE private GEN/PLACE ONLY",
+ "image": "results/hbm_calendar_clock_1029/cfg_we/proposal.png",
+ "viewed": true,
+ "findings": [
+  "136W/120E followsactualnativeSRAMfaces",
+  "272W/240E existingFFguide clear4.32halo; movablefill.138/.147, releasedbeforeDPL",
+  "same555publicRTLbitidentity/cycles0",
+  "freshactualpin/FFmatching,body,PG,typedFT,reach,cut required",
+  "parent FT/tap/CA/PG recomposition required; prior1.099FAILretained; noCTS/GRT"
+ ]
+}
