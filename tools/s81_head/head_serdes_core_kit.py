@@ -69,8 +69,15 @@ def interior_io(orig, G):
 
 def inputs(plan, work):
     work.mkdir(parents=True, exist_ok=True)
-    pinfile = work / "dchn_pins.json"
-    pinfile.write_text(json.dumps(pins(), indent=1) + "\n")
+    if plan.resolve().is_relative_to(ROOT):
+        # A release-capable source profile must read its original pin table
+        # from the pinned repository, not a generated /srv input path.
+        pinfile = ROOT / "tools/s81_head/data/kp4_dchn_pins.json"
+        if json.loads(pinfile.read_text()) != pins():
+            raise SystemExit("tracked KP4 Chien pin table differs from the declared core shape")
+    else:
+        pinfile = work / "dchn_pins.json"
+        pinfile.write_text(json.dumps(pins(), indent=1) + "\n")
     views = dict(plan=str(plan.resolve()), view_list=[dict(
         view=f"{MODULE}@head", module=MODULE, outline_um=OUTLINE,
         pins_file=str(pinfile.resolve()), pins_sha256=hashlib.sha256(pinfile.read_bytes()).hexdigest(),
