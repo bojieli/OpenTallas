@@ -1,0 +1,22 @@
+{
+  "source_odb": "/srv/opentallas-scratch2/claude/nc-qc-2/indep/mut_vdd_via12.odb",
+  "contacts": 185698,
+  "VDD": {
+    "contacts": 92849,
+    "connected": 0,
+    "grid_stripes": 6653,
+    "shapes": 2159388,
+    "grid_components": 5829
+  },
+  "VSS": {
+    "contacts": 92849,
+    "connected": 92849,
+    "grid_stripes": 6651,
+    "shapes": 2267891,
+    "grid_components": 5794
+  },
+  "failed": 92849,
+  "seconds": 88,
+  "verdict": "FAIL_PG_CONTACT_CONNECTIVITY",
+  "scope": "Contact-to-canonical-grid conductor connectivity only. Not DRC, not IR, not native-cell PG, not clock route."
+}

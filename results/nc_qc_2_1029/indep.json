@@ -1,0 +1,144 @@
+{
+  "groups": 109168,
+  "contacts": 185698,
+  "cells": 92849,
+  "per_net": {
+    "VSS": 92849,
+    "VDD": 92849
+  },
+  "plan_vias": 873344,
+  "plan_failed": 0,
+  "path_keys": [
+    "m8",
+    "members",
+    "net",
+    "rail",
+    "stack"
+  ],
+  "provider_cells_all_cells_json": 48259,
+  "contact_cells_in_provider": 48259,
+  "contact_cells_not_provider": 44590,
+  "not_provider_prefix": [
+    [
+      "ck",
+      44590
+    ]
+  ],
+  "src": {
+    "pg": {
+      "VDD": {
+        "wires": 0,
+        "vias": 0,
+        "long_m8m9": 0,
+        "by_layer": {}
+      },
+      "VSS": {
+        "wires": 0,
+        "vias": 0,
+        "long_m8m9": 0,
+        "by_layer": {}
+      }
+    },
+    "nonpg": {
+      "insts": 93226,
+      "signal_nets": 92852,
+      "sha256": "a9f0284ea05ff92b4d64ca81007d85f219cf83170de8cb9574afb062b242723d"
+    }
+  },
+  "out": {
+    "pg": {
+      "VDD": {
+        "wires": 1308279,
+        "vias": 433714,
+        "long_m8m9": 6653,
+        "by_layer": {
+          "M1": 54584,
+          "M2": 109168,
+          "M3": 163752,
+          "M4": 163752,
+          "M5": 163752,
+          "M6": 163752,
+          "M7": 217099,
+          "M8": 215944,
+          "M9": 56476
+        }
+      },
+      "VSS": {
+        "wires": 1307878,
+        "vias": 433582,
+        "long_m8m9": 6651,
+        "by_layer": {
+          "M1": 54584,
+          "M2": 109168,
+          "M3": 163753,
+          "M4": 163752,
+          "M5": 163752,
+          "M6": 163752,
+          "M7": 217031,
+          "M8": 215675,
+          "M9": 56411
+        }
+      }
+    },
+    "nonpg": {
+      "insts": 93226,
+      "signal_nets": 92852,
+      "sha256": "a9f0284ea05ff92b4d64ca81007d85f219cf83170de8cb9574afb062b242723d"
+    }
+  },
+  "contact_cell_masters": {
+    "other": 32181,
+    "CKINV": 60668
+  },
+  "contact_cells_missing": 0,
+  "contact_master_top": [
+    [
+      "CKINVDCx16_ASAP7_75t_R",
+      44590
+    ],
+    [
+      "DFFHQNx1_ASAP7_75t_R",
+      16333
+    ],
+    [
+      "INVx1_ASAP7_75t_R",
+      16078
+    ],
+    [
+      "NOR2xp33_ASAP7_75t_R",
+      9547
+    ],
+    [
+      "DFFLQNx1_ASAP7_75t_R",
+      6032
+    ],
+    [
+      "AND2x2_ASAP7_75t_R",
+      250
+    ],
+    [
+      "NAND2xp33_ASAP7_75t_R",
+      4
+    ],
+    [
+      "AOI21xp33_ASAP7_75t_R",
+      3
+    ]
+  ],
+  "mutant_vdd_via12_deleted": 54584,
+  "delta": {
+    "VDD": {
+      "wires": 1308279,
+      "vias": 433714
+    },
+    "VSS": {
+      "wires": 1307878,
+      "vias": 433582
+    }
+  },
+  "delta_total": {
+    "wires": 2616157,
+    "vias": 867296
+  },
+  "seconds": 157
+}

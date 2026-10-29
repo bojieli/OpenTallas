@@ -1,0 +1,21 @@
+{
+  "verdict": "IMPORTED_NO_SIGNOFF",
+  "provider_cells": 48259,
+  "contacts": 185698,
+  "groups": 109168,
+  "planned_wire_rectangles": 2947537,
+  "planned_technology_vias": 873344,
+  "added_wire_rectangles": 2602853,
+  "added_technology_vias": 867296,
+  "non_pg_before_sha256": "cf78b75a187d6b66d04d8203a35564182e1428502e9f302e0373b3788672ffc0",
+  "non_pg_after_sha256": "cf78b75a187d6b66d04d8203a35564182e1428502e9f302e0373b3788672ffc0",
+  "actual_grid_rectangles": 13304,
+  "freeze_qualified": false,
+  "DRC": "NOT RUN",
+  "IR": "NOT RUN",
+  "source_odb_sha256": "ddab9669bf36e2c744636dbe4748d6140efac15b4c74d2a4791d82b10b2174ca",
+  "out_odb_sha256": "96515c35da007791822b0bfed23cf34f66b98db325f6cc429bd627b7c6beb2fe",
+  "canonical_grid_stripes": 13304,
+  "seconds": 56,
+  "scope": "Full mixed clock/provider PG access materialization. Canonical M8/M9 grid materialized from readback/pg_rects.json (dbu-rounded). Native-cell PG bridges, connectivity census, DRC, IR NOT in this step."
+}
