@@ -1,0 +1,75 @@
+# ot-clk config: QC A0-quad REGION MESH form (CLK-TOOL-6, OWNER 12.17(2)) = the QC-MESH-PILOT-1 builder
+# (results/qc_mesh_pilot_1/qc_mesh_pilot.py, die-local) expressed as config keys of tools/clk/mesh_form.py.
+# Reference trials: intel2 qc-mesh-pilot-1/tA3 (c_E3_bf_11, adjust 0.4) and tB (c_W2_bn_01, adjust 0.4) on plan
+# ev_qc23pg (DIE-QC-23 claude/die-qc23-pg-1028@520b88330) + trial14 tap map.  tA2 = same with adjust 0.7 (variant
+# config qc_mesh_p1_adj07 not kept: the only difference is region.mesh.adjust, covered by test_ot_clk_mesh).
+# 'ot_clk replay' rebuilds every part and compares pilot.json/pilot.def/run.tcl/run_ff.tcl/run.sh byte-for-byte.
+schema: ot_clk_config/1
+die: qc
+event:
+  name: mesh_pilot1
+  host: intel2
+  source: QC-MESH-PILOT-1 058de253f (qc_mesh_pilot.py build PLAN TREE PART OUT --adjust 0.4)
+  reference_mesh_dirs:
+    c_E3_bf_11: /srv/opentallas-scratch2/claude/qc-mesh-pilot-1/tA3
+    c_W2_bn_01: /srv/opentallas-scratch2/claude/qc-mesh-pilot-1/tB
+inputs:
+  plan: /srv/opentallas-scratch2/claude/die-qc23-1028/plan/ev_qc23pg.json
+  tree: /srv/opentallas-scratch2/claude/die-qc21-1028/trial14/clock/tree.json
+stack:
+  cell: buf
+  clock_rc: ndr
+region:
+  form: mesh
+  parts:
+    - c_E3_bf_11
+    - c_W2_bn_01
+  mesh:
+    cols: 4
+    rows: 7
+    driver_pitch_um: 360.0
+    adjust: 0.4
+    trunk_offset_um: 2.0
+    early_tap_prefix: clk_c
+    driver_master: BUFx24_ASAP7_75t_R
+    load_master: BUFx4f_ASAP7_75t_R
+    cell_w: {BUFx24_ASAP7_75t_R: 1.62, BUFx4f_ASAP7_75t_R: 0.432}
+    site_name: asap7sc7p5t
+    site_w: 0.054
+    row_h: 0.27
+    dbu: 1000
+    pg_pitch: 4.32
+    pg_w: {M8: 0.48, M9: 0.672}
+    strap_w: 0.16
+    strap_layers: {h: M8, v: M9, via: VIA89}
+    core_layers: [M1, M2, M3, M4, M5, M6, M7]
+    window_layers: [M2, M3, M4, M5, M6, M7]
+    window: [-3, -3, 4.7, 3.3]
+    core_keepout: 0.5
+    core_pin_load_dx: [0.6, 1.1]
+    ndr:
+      name: CK2W2S
+      layers: [M8, M9]
+      width: 0.08
+      spacing: 0.32
+    period_ps: 833.0
+    edges: rise
+    routing:
+      signal: M2-M9
+      clock: M8-M9
+      adjust_layers: [M8, M9]
+      blocked_layers: [M2, M3, M4, M5, M6, M7]
+      blocked_adjust: 0.99
+      grt_iterations: 50
+    run:
+      name_prefix: qcmp
+      memory: 64g
+      cpus: 16
+      threads: 16
+      image: openroad/orfs:asap7lock
+      libdir: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM
+    rec:
+      driver_pin_dy: 0.135
+      ndr: 4w
+      rc: r6
+      tap_load_ff: 2.3

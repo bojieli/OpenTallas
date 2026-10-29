@@ -1,0 +1,46 @@
+{
+  "groups": 89178,
+  "attempted": 89178,
+  "connected_groups": 89178,
+  "connected_contacts": 89180,
+  "failed_groups": 0,
+  "routing_rectangles": 2407806,
+  "vias": 713424,
+  "verdict": "GEOMETRY_CANDIDATE",
+  "reserved_power_rectangles": 1690,
+  "owned_grid_obstructions": 13304,
+  "rejections": {
+    "obstacle_M8": 700703,
+    "obstacle_M7": 2
+  },
+  "obstacle_examples": {
+    "M8": {
+      "candidate": [
+        11764152,
+        74980,
+        11767404,
+        75020
+      ],
+      "blocking": [
+        11764520.0,
+        74840.0,
+        11765272.0,
+        75480.0
+      ]
+    },
+    "M7": {
+      "candidate": [
+        17009424,
+        12463360,
+        17009456,
+        12463512
+      ],
+      "blocking": [
+        17009363.0,
+        12463299.0,
+        17009395.0,
+        12463371.0
+      ]
+    }
+  }
+}

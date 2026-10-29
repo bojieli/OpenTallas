@@ -1,0 +1,68 @@
+{
+ "source_spacing": 0.32,
+ "note": "rechecks only the census failures; rows = legal in-pin rows",
+ "by_spacing": {
+  "0.32": {
+   "failures_rechecked": 2469,
+   "classes": {
+    "blocked_by_canonical_PG": 933,
+    "blocked_by_witness": 1536
+   },
+   "canonical_blocker_net_width": [
+    [
+     [
+      "VSS",
+      0.48
+     ],
+     476
+    ],
+    [
+     [
+      "VDD",
+      0.48
+     ],
+     457
+    ]
+   ]
+  },
+  "0.16": {
+   "failures_rechecked": 2469,
+   "classes": {
+    "blocked_by_canonical_PG": 932,
+    "pass_all": 1537
+   },
+   "canonical_blocker_net_width": [
+    [
+     [
+      "VSS",
+      0.48
+     ],
+     476
+    ],
+    [
+     [
+      "VDD",
+      0.48
+     ],
+     456
+    ]
+   ]
+  },
+  "0.08": {
+   "failures_rechecked": 2469,
+   "classes": {
+    "blocked_by_reserved_power_access": 32,
+    "pass_all": 2437
+   },
+   "canonical_blocker_net_width": []
+  },
+  "0.04": {
+   "failures_rechecked": 2469,
+   "classes": {
+    "blocked_by_reserved_power_access": 32,
+    "pass_all": 2437
+   },
+   "canonical_blocker_net_width": []
+  }
+ }
+}
