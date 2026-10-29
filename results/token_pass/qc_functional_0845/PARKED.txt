@@ -1,0 +1,39 @@
+PARKED on explicit Claude reset 2026-10-29 09:03 PDT. No further jobs/engineering.
+
+Current QC source candidate is NOT STRICT-BIND PASS. Fresh ELAB succeeded unit
+3507624 (elab2, current own source;84modules/10full/39lib). Exact candidate uses
+current physical plan d0b301f8, native perimeter1/bind CA table, current3266-stage
+START provider, explicit HEAD_CONTEXT/ROPE/L_CONTEXTS1 and INNERwitness4to8.
+QC owner approved this ONE candidate; physical plan not adopted.
+
+Native CA table changes234/2525data port schedule values, aggregate-168portcycles
+(NOT token latency). ca_cycle_delta.json retains each row. Source nominal count
+frames tt_ctlm170/native59176/glue188 are RECEIVER-count-frame quantities.
+
+Failures diagnosed, preserved epyc2 codex-qc-functional-0845:
+ bind1: raw planner table omitted strap_form ->40TYPE_SPLIT. Fixed by canonical
+ count_align_bind.annotate_table(...strap_form=True).
+ bind2: stale type count_straps declarations -> canonical _ca_strap_pins fixed
+ only3type control strap shapes; exact count_strap_delta.json retained.
+ bind3: logical plan copy lacked16 plan-relative hard-core pin tables. Copied
+ exact physical_event declared tables (inputs/current_pin_tables.tgz + cores/).
+ bind4: now emits real selected coherent params, but FAIL242:
+  216 LANE_LANDING_LATENCY because raw plan latency.lanes cache was not rebuilt
+  after updating clock.landing_network.count_aligned_cycles;
+  25 TYPE_SPLIT in ibus signatures, likely stale R8/CB16pads needing regeneration;
+  1 EMIT: module/type inventory changed after cohort composition due splits.
+ No unbound/tied/source error asserted as pass, no full verification/portbind.
+
+NEXT: regenerate plan latency cache canonically (gen.latency_table(schema.Plan)
+ or gen.write_latency inplace), then fresh bind bus groups, R8 pads, base-R8 bind,
+ CB16 pads, and final strict bind. Preserve failed dirs. Source file param_regen
+ in bind4 proves actual3ones and TXDP0f01120d, HEAD/witness callbacks8/8 +return5,
+ capture18. Do not claim current programme/physical qualification from that.
+
+Provider source integration next: start_provider_bind only supports public raw
+ reset input. Actual required reset source is internal sl_E0_fw.rst_o_0 ->
+ rstw_sl_E0_fw_rst_o_0. FLOW shared owner knows private-export adapter needed;
+ send actual successful bound top+plan reset_source when ready. No raw reset tie.
+
+All own heavy units terminal; inherited nativeKV proof and own continuation
+ watcher remain running untouched. No new job after reset.
