@@ -992,6 +992,8 @@ def main():
     ap.add_argument("--kvspc-face-ports", action="store_true", help="kvs_pc / kvs_pc_h_head_p boundary recut: one clock (hck + HBM data clocks := ck), dead-pin drop (land_er[258:1]; head ki[30:21]/[14:1]) as an in-memory plan delta until KV-PLAN3 lands it, ki/ko split (+1 hclk per kc station), fi landing (+1 fault edge), po / land_es private port flops (0 cycles); miter results/kvspc_face_1025")
     ap.add_argument("--kvspc-private-ports", action="store_true", help="with --kvspc-face-ports: private output ports (kvspc_private_ports.py, PATH-KV-PC 10-25): return actual_* port flops with internal hold copy + actual_valid kept (0 cycles), o_grp[296:289] status pin flops (+1 fault/drain observation edge; o_grp[294] no longer a pc__fo feedthrough), o_prev private launch (+1 edge per o_prev hop, non-head), pi[0] single capture, pc/cfg_stack single landing (chain station reads the landed copy), head upo kept pin flops (0 cycles)")
     ap.add_argument("--kvspc-core-clock", action="store_true", help="explicit common833ps controller profile at actual PC u_pc, including physical-minimum timing/counter widths and current canonical RTL; requires --kvspc-face-ports")
+    ap.add_argument("--kvspc-input-collar", action="store_true",
+                    help="opt-in unsigned PC coherent input capture: all non-clock/non-strap inputs +1 edge, boot +1; unchanged leaf RTL, current parent latency event required")
     ap.add_argument("--kvspc-static-refresh", action="store_true",
                     help="with --kvspc-face-ports: PC controller u_ctrl (qkd_static_kv_pc_path_nc) instantiated with "
                          "STATIC_REFRESH=1: REFpb bank = round-robin refresh_rr (compiler-known) instead of the run-time "
@@ -1410,6 +1412,14 @@ def main():
             and re.search(r"\bmodule\s+" + re.escape(mod) + r"\b", f.read_text(errors="replace"))]
     if len(tops) != 1:
         raise SystemExit(f"{tid}: clock binding check: {len(tops)} kit RTL files define module {mod}")
+    if a.kvspc_input_collar:
+        if mod != "qkd_kvs_pc" or not a.kvspc_face_ports:
+            raise SystemExit("--kvspc-input-collar requires qkd_kvs_pc with --kvspc-face-ports")
+        import kvspc_input_collar
+        text, receipt = kvspc_input_collar.transform_wrapper(
+            tops[0].read_text(), enabled=True, declared_straps=kit_id_straps(hc, cj))
+        tops[0].write_text(text)
+        (kd / "input_collar.json").write_text(json.dumps(receipt, indent=1) + "\n")
     clock_rebind = rtl_clock_binding(tops[0].read_text(errors="replace"), mod, cj)
     if clock_rebind:
         print(f"{tid}: CLOCK_REBIND {json.dumps(clock_rebind)}")
@@ -1510,7 +1520,9 @@ def main():
     # ck[0]/rst_n[0] even though the contract names its bus ck/rst_n.  Without
     # the suffix, face_flops treats CLK/reset loads as data and steals a real
     # data flop's anchor before its own port is visited.
-    skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + r")(\[[0-9]+\])?$"
+    # The collar makes reset a timed data capture at its declared input pin.
+    skip_ports = clks if a.kvspc_input_collar else clks + rsts
+    skip = "^(" + "|".join(re.escape(n) for n in skip_ports) + r")(\[[0-9]+\])?$"
     ff = (tool / "face_flops.tcl").read_text()
     ff, replacements = re.subn(r"^set ff_skip_re \{[^}\n]*\}",
                                lambda _: "set ff_skip_re {" + skip + "}", ff, flags=re.M)
