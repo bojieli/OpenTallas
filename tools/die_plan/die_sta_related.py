@@ -1107,6 +1107,7 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
     (gen_phys core_tap_rows), so the kit contract measures each tap's arrival + its declared earliness: a core tap
     delivered as planned is damage-free, a LATE core tap (not early enough) is charged.  None = unchanged."""
     ws, wh, sk, rows = None, None, 0.0, []
+    sk_raw, trows = 0.0, []
     rv = dict(pairs=0, ws=None, wh=None, nneg_s=0, nneg_h=0, both=0, bs=None, bh=None, bneg_s=0, bneg_h=0,
               dmg=[]) if views is not None else None
     ocv_max = {"setup": 0.0, "hold": 0.0}
@@ -1171,7 +1172,15 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                     rec[(a, b, tag, c_[3], c_[4])] = (c_[0] - po_s, c_[1] - po_h, c_[2], c_[5])
         nneg_s += s < 0
         nneg_h += h < 0
-        sk = max(sk, dmg_s, dmg_h)
+        sk_raw = max(sk_raw, dmg_s, dmg_h)
+        # DIE-S81-18 (COORD 10-28 21:33 rule 2): skew = arrival minus PLANNED target.  A planned early core tap is
+        # delivered kit_offset (= its declared earliness) before the plain taps on purpose; its target-relative arrival
+        # is arrival + earliness, so designed earliness is not counted as skew (go15: raw 925 vs real 523.8 TT).
+        # Dies without early core taps: ko = 0, identical to the raw number.
+        ko = (kit_offset.get(b, 0.0) - kit_offset.get(a, 0.0)) if kit_offset else 0.0
+        tdm_s, tdm_h = dmg_s - ko, dmg_h + ko
+        sk = max(sk, tdm_s, tdm_h)
+        trows.append((max(tdm_s, tdm_h), a, b))
         if ws is None or s < ws[0]:
             ws = (s, a, b, tag, dmg_s, cr)
         if wh is None or h < wh[0]:
@@ -1187,10 +1196,13 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                worst_hold_slack_ps=round(wh[0], 2), hold_neg_pairs=int(nneg_h),
                worst_hold=dict(launch=wh[1], capture=wh[2], where=wh[3], clock_damage_ps=round(wh[4], 2),
                                cppr_ps=round(wh[5], 2)),
-               skew_diag_max_ps=round(sk, 2), skew_diag_over_80=sum(1 for r in rows if r[0] > 80.0),
+               skew_diag_max_ps=round(sk, 2), skew_diag_over_80=sum(1 for r in trows if r[0] > 80.0),
+               skew_diag_basis=("arrival minus planned target (early core tap + its declared earliness)" if kit_offset
+                                else "raw tap arrival (no planned early core taps)"),
+               skew_raw_max_ps=round(sk_raw, 2),
                sens_core_tol=dict(tol_ps=lat_tol, worst_setup_slack_ps=round(ws[0] - 2 * lat_tol, 2),
                                   worst_hold_slack_ps=round(wh[0] - 2 * lat_tol, 2)),
-               worst_skew=[[round(v, 2), a, b] for v, a, b in sorted(rows, reverse=True)[:5]])
+               worst_skew=[[round(v, 2), a, b] for v, a, b in sorted(trows, reverse=True)[:5]])
     if rv is not None:
         out["real_view"] = dict(pairs_with_real_endpoint=rv["pairs"], pairs_both_real=int(rv["both"]),
                                 pairs_total=len(pairs), setup_neg_pairs=int(rv["nneg_s"]), hold_neg_pairs=int(rv["nneg_h"]))
