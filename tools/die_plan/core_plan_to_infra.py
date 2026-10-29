@@ -172,8 +172,14 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
         # supply an outline through the first row's width or the subrow count.
         a, b, c, d = rec["core"]
         outline = [a+c, b+d]
-    outline = outline or [sites["rows"][0][0] * 2 + sites["row0"]["nsites"] * sites["row0"]["site_w"],
-                          sites["rows"][0][1] * 2 + len(sites["rows"]) * sites["row0"]["site_h"]]
+    if outline is None:
+        rows = sites["rows"]
+        # Macro-cut ROW records are fragments, not one full row per y. Their
+        # count/first width cannot define the physical core outline.
+        if len({r[1] for r in rows}) != len(rows) or len({(r[0],r[3]) for r in rows}) != 1:
+            raise ConvertError("split/nonuniform placement rows require explicit --outline W,H or plan core bounds")
+        outline = [rows[0][0] * 2 + sites["row0"]["nsites"] * sites["row0"]["site_w"],
+                   rows[0][1] * 2 + len(rows) * sites["row0"]["site_h"]]
     names = {n[0]: ident(n[0], prefix) for n in nodes}
     for nm_, r in icg_rows.items():
         names[nm_] = r["gate"] if r["first"] else ident(nm_[:-2] + "_icg", prefix)
