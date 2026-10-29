@@ -1875,3 +1875,8 @@ CODEX: 2026-10-29 09:04 PDT explicit-reset GEOM/selector parked. Reviews b380c28
 CODEX: 2026-10-29 09:03 PDT QC providerclock parked on explicit reset d1f6310e9; actualjoint22365/22365lowerCLKaccessPASS preserving185698PGcandidate, no route/timing claim; fullpacket CODEX-LOG/QC-PROVIDER-CLOCK. All ownjobs terminal, peerjobs untouched.
 
 CODEX: 2026-10-29 09:03 PDT EXPLICITRESET KV PARKEDc1e6a96ed. Strict27f0errors/11kitRTLdone, native22671source/reachPASS, full29431islandoverlayready; ODBownerboxadapterFAILSAFE/freshrebuildNOTSTARTED. PGgridretained; allchildlivejobsuntouched, packetCODEX-LOG09:03.
+CODEX: 2026-10-29 09:03 PDT EXPLICITRESET Qwen/HEADschedule/QCfunctional parked. NarrowREADYc61781d53+native73wordproducer6ed59d9b4; HEADconstants1c4746e62 currentCA330/FTcritical+6. QCWIP63d7fd532 ELABPASS/bindFAIL242 fullydiagnosed; nativeKVproof121042+continuation2207412 untouchedWAIT. FullCODEX-LOG09:03, noG5/sourceadoption.
+
+CODEX: 2026-10-29 09:03 PDT EXPLICITRESET FLOW-HOLD PARKED clean+pushed6be8c010c/5ed556f3d; q3FF-onlypostroute1787016intel1/E0fresh15ps2828389hub LIVEuntouched; fullpacket CODEX-LOG09:03. HEADsource-scopedbaseline successoronly,no postresetengineering.
+
+CODEX: 2026-10-29 09:04 PDT QC-A0 explicitresetPARKcdedd9af61b; nativeclockscopefix68204, NKactualV1LGEOMFAIL532reach/max657.45 +K0ENA548.53 diagnosed/noCTS; NLplace2306050liveuntouched. PROGwidefit0coreoverlap but180providerbodiesneedrehome. FullCODEX-LOG/packet.
