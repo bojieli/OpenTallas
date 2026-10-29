@@ -9,3 +9,6 @@
 - 2026-10-28 22:31 PDT START 21:0x; branch claude/die-qc24-1028@308a1adfba (= die-qc23-pg 520b88330 + die-qc23 e714ae5bb + main 5123301db), runs intel2:/srv/opentallas-scratch2/claude/die-qc24-1028, WT intel2 wt/die-qc24-1028.
 - 2026-10-28 22:31 PDT RESULT: --rep-on-leg + --rep-off-leg-max guard (opt-in, 5 tests, tools/die_plan 2904 pass); 146.8-um slide root cause = region-DME L route across an A0 core accepted (blocked run ~466 <= route_um 480), site.nearest moves the mid repeater sideways to the closest core edge; trial24 (stock tree, ev_qc23pg, guard 50) tree/ctree/routed arr_TT/FF md5-identical to trial14, guard PASS (max off-leg 7.0 um); st_a fault hop dropped in gen_plan + plan event ev_qc24 e12e39da0fae; gate g24 (spice_edge) running.
 - 2026-10-28 22:31 PDT PARKED: g24 gate (intel2 die-qc24-1028/g24, chain.log -> DONE ~23:20) + trial15x fix-check kit (kit15x.log) running; successor DIE-QC-25 collects.
+
+## DIE-QC-25 (QC die owner, successor of DIE-QC-24)
+- 2026-10-28 22:52 PDT START 22:32; branch claude/die-qc25-1028 (from 308a1adfba), WT intel2 wt/die-qc25-1028, runs intel2 /srv/opentallas-scratch2/claude/die-qc25-1028. Adopted g24 + trial15x (DIE-QC-24, running). Map rule u_suvm.* -> su_c in asbuilt_map_p6 @a10349f943.
