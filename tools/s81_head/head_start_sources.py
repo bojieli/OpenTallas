@@ -69,10 +69,13 @@ def complete_top(text,plan,stages):
 
 
 def main():
-    a=argparse.ArgumentParser(description=__doc__);a.add_argument('compose');a.add_argument('provider');a.add_argument('exports');a.add_argument('--observer-spec',required=True);a.add_argument('--observer-rtl',required=True);a.add_argument('--out',required=True);a=a.parse_args()
+    a=argparse.ArgumentParser(description=__doc__);a.add_argument('compose');a.add_argument('provider');a.add_argument('exports');a.add_argument('--observer-spec',required=True);a.add_argument('--observer-rtl',required=True);a.add_argument('--out',required=True);a.add_argument('--origin-export-copy',action='append',default=[],help='carry an already-qualified retained START export-copy type into this source plan');a=a.parse_args()
     src=Path(a.compose);provider=Path(a.provider);out=Path(a.out);out.mkdir(parents=True,exist_ok=False)
     plan=json.load(open(src/'landed_plan.json'));side=json.load(open(src/'landed_sidecar.json'));exports=json.load(open(a.exports));stages=json.load(open(provider/'start_stages.json'))
     observer=json.load(open(a.observer_spec));side['collector']['observer']=observer;plan['clock']['landing_network']['root_observer']=observer
+    for tn in a.origin_export_copy:
+        if tn not in plan['partition_types']:raise ValueError('unknown retained origin-copy type '+tn)
+        plan['partition_types'][tn].setdefault('clock',{})['landing_origin_export_copy']=True
     plan=declare(plan,exports);P=S.Plan(plan,src/'landed_plan.json');L=C.Landings(plan,side);ep=G.bus_epochs(P)
     observer_text=Path(a.observer_rtl).read_text();L.validate_observer_native(lambda tn:observer_text,G.parse_leaf_ports)
     (out/'ot_dp_cells.sv').write_text(G.CELLS)
@@ -86,7 +89,7 @@ def main():
     top,spares=complete_top(top,plan,stages);(out/(G.sv_id(P.name)+'_top.sv')).write_text(top)
     (out/'start_stages.sv').write_bytes((provider/'start_stages.sv').read_bytes())
     (out/'source_plan.json').write_text(json.dumps(plan,indent=1)+'\n');(out/'source_sidecar.json').write_text(json.dumps(side,indent=1)+'\n')
-    report=dict(types=count,uniform_raw_exports=aliases,reused_type_raw_outputs=reused,reset_inputs=len(stages['reset_ports']),
+    report=dict(types=count,uniform_raw_exports=aliases,reused_type_raw_outputs=reused,retained_origin_export_copy_types=a.origin_export_copy,reset_inputs=len(stages['reset_ports']),
         connected_start_outputs=len(stages['die_outputs']),unused_uniform_exports=spares,
         observer=observer,observer_rtl_sha256=hashlib.sha256(observer_text.encode()).hexdigest(),
         stage_clock_ports=len(stages['stages']),physical_clock_groups=len(set(side['count_aligned']['frame_clock_regions'].values())),
