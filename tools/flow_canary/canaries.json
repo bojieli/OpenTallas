@@ -9,6 +9,8 @@
            "tools/die_plan/selrange_gate.py", "tools/die_plan/sdc_lint.py", "tools/die_plan/port_bind_gate.py",
            "tools/die_plan/reg_fanout_gate.py", "tools/die_plan/rtl_lint.py", "tools/die_plan/reset_tree.py", "tools/die_plan/setRC_rcx_asap7.tcl",
            "tools/die_plan/schema.py", "tools/die_plan/taps.py", "tools/die_plan/pin_audit.py",
+           "tools/orfs_hold_mm.tcl", "tools/orfs_hold_mm.py", "tools/die_plan/kit_modes.py", "tools/die_plan/io_hold_qualification.py",
+           "tools/die_plan/vclk_ref.py", "tools/die_plan/data_droop.py", "tools/die_plan/core_io_reference.py",
            "physical/common_flow/*", "physical/die_plan/hbm_arch_cores/*", "physical/die_plan/qwen_kvsys/cores/harden/*",
            "tools/flow_canary/canaries.json",
            "tools/ref_tile/*.py", "tools/ref_tile/*.tcl", "tools/ref_tile/*.sh", "tools/ref_tile/*.mk", "tools/ref_tile/*.sdc",
