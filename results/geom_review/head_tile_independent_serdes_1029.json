@@ -1,0 +1,36 @@
+{
+ "design": "s81_head/hd_tile",
+ "reviewer": "CODEX HEAD SerDes, independent of tile implementation",
+ "verdict": "PASS-COND",
+ "scope": "actual final placement visual and full data-reach concurrence; diagnosticCTS only after fresh sink assignment",
+ "viewed_image": "/srv/opentallas-scratch/claude/wt/codex-head-spn-1028/results/head_tile_relays_1029/final_place.png",
+ "actual_odb": "epyc2:/srv/opentallas-scratch2/claude/codex-head-startcopy-1029/tile/run/results/asap7/dp_hd_tile/base/3_place.odb",
+ "actual_dump": "epyc2:/srv/opentallas-scratch2/claude/codex-head-startcopy-1029/placed_geom.tsv",
+ "census": {
+  "captures": 27665,
+  "gt405": 0,
+  "max_um": 400.95,
+  "comb_loops": 0,
+  "worst": "u_cland_rst_i/q -> u_cland_up_o/fault_o"
+ },
+ "findings": [
+  "Viewed actual final placement:2440 targeted states follow central vertical and horizontal macro corridors; five macro outlines and pins unchanged.",
+  "Held result family is in upper crossbar; retained START export copy is outside lower-right macro at E/lower-channel corner; no visible cell wall or macro-overlap concern in the actual plot.",
+  "Source Tcl explicitly reserves getBlockages plus existing cells; actual DPL unit439324 reports all row/site/overlap/edge/padding checks zero.",
+  "400.95um worst reach leaves4.05um to405 limit. Recheck full reach if subsequent clock work displaces data states."
+ ],
+ "constraints_read": {
+  "clock_period_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "current_vclk_TT_ps": 525,
+  "current_seam_max_ps": 166.6
+ },
+ "conditions": [
+  "Fresh reg_spine sink assignment and clock geometry must be reviewed before diagnosticCTS.",
+  "Current forwarded-edge158.1..163.5ps and other historical clock ages are not accepted as fresh clock/START timing.",
+  "Actual pin-to-S0/START capture timing, routed congestion, normal timing/proof gates and signoff remain open."
+ ],
+ "new_cycles": 0,
+ "signed": false
+}
