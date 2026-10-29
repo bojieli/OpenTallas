@@ -1,0 +1,15 @@
+    r = P.compile_all(pr, 0x0b0b, die_cfg_words=die_cfg, die_cfg_ages=die_cfg is not None)
+  File "/srv/opentallas-scratch2/claude/wt/die-kv-16/tools/qwen_kv_die/kv_static_programme.py", line 1248, in compile_all
+    mu = mu_images(layer_words, own, lead=own_lead, att_end=tx_end - LR.RX_CMD,
+                   phase=None if not pr['phase'] else dict(PH0=pr['phase']['PH0'], lo=pr['phase']['SAFE_LOW_U'],
+                                                           hi=pr['phase']['SAFE_HIGH_U'], groups=pr['groups'],
+                                                           core_u=CORE_U, beat_u=HBM_U))   # TOK-QK-MUFS: this compile's ticks
+  File "/srv/opentallas-scratch2/claude/wt/die-kv-16/tools/qwen_kv_die/kv_static_programme.py", line 1293, in mu_images
+    return _mu_images(layer_words, own_words, receipt, lead, att_end)
+  File "/srv/opentallas-scratch2/claude/wt/die-kv-16/tools/qwen_kv_die/kv_static_programme.py", line 1323, in _mu_images
+    fs, _ = MC.kv_frame_search(rows, F, filler_tokens=ft)
+            ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/wt/die-kv-16/tools/qwen_static_schedule/mu_calendar.py", line 874, in kv_frame_search
+    raise ScheduleError(f"kv_frame_search: no collision-free frame in {tries} tries")
+tools.qwen_static_schedule.calendar.ScheduleError: kv_frame_search: no collision-free frame in 400 tries
+RC 1
