@@ -218,7 +218,9 @@ def clock_bterm_from_log(log, declared):
     return b
 
 
-def census(kit, work):
+def census(kit, work, gated=False):
+    """gated (family icg_copies, CORES-EARLY-5): a separate census geo_gated.txt with GATED=1 (GATE lines + every gated
+    sink tagged gate=<ICG>); the default geo.txt census is unchanged."""
     kit = Path(kit).resolve(); work.mkdir(parents=True, exist_ok=True)
     base = sorted(kit.glob("run/results/asap7/*/base"))
     if not base or not (base[-1] / "3_place.odb").is_file():
@@ -226,6 +228,10 @@ def census(kit, work):
     rel = base[-1].relative_to(kit)
     ctx = json.loads((kit / "boundary_guard_context.json").read_text())
     clk = ctx["clock_ports"][0]
+    if gated and not (work / "geo_gated.txt").is_file():
+        docker_or(kit, "core_family_geo.tcl", dict(ODB="/work/%s/3_place.odb" % rel, OUT="/work/r13_geo_gated.txt", CLK=clk, GATED="1"),
+                  work / "geo_gated.log")
+        (kit / "r13_geo_gated.txt").replace(work / "geo_gated.txt")
     if not (work / "geo.txt").is_file():
         docker_or(kit, "core_family_geo.tcl", dict(ODB="/work/%s/3_place.odb" % rel, OUT="/work/r13_geo.txt", CLK=clk), work / "geo.log")
         (kit / "r13_geo.txt").replace(work / "geo.txt")
@@ -584,6 +590,49 @@ def keepout_mode(fam, core):
 
 
 
+def icg_copies_mode(fam, core):
+    """family 'icg_copies' (CORES-EARLY-5, COORD form C): absent/false = unchanged; true for every member, or
+    {member: bool}. true = the core's RTL clock gates become planned stages: one ICG copy (core_infra clone_of, same
+    ENA/SE nets) per (gate, locality tile) as the planned parent of that group's planned leaves."""
+    k = fam.get("icg_copies", False)
+    return bool(k.get(core, False)) if isinstance(k, dict) else bool(k)
+
+
+def gate_tile_groups(geo, tile_um):
+    """form C grouping from a GATED census: {(gate or 'ROOT', ix, iy): [sink names]} on a tile_um grid (outline origin),
+    every SINK in exactly one group; MACRO lines with gate= are group members too (macro leaves)."""
+    if not tile_um > 0:
+        raise SystemExit("gate_tile_groups: tile_um must be > 0")
+    groups, gates = collections.defaultdict(list), set()
+    for l in open(geo):
+        f = l.split()
+        if not f:
+            continue
+        tag = [t[5:] for t in f if t.startswith("gate=")]
+        g = tag[0] if tag else "ROOT"
+        if f[0] == "GATE":
+            gates.add(f[1]); continue
+        if f[0] == "SINK":
+            x, y, name = float(f[1]), float(f[2]), "%s/%s" % (f[4], f[5])
+        elif f[0] == "MACRO":
+            x, y, name = float(f[8]), float(f[9]), "%s/%s" % (f[1], f[7])
+        else:
+            continue
+        groups[(g, int(x // tile_um), int(y // tile_um))].append(name)
+    bad = {k[0] for k in groups if k[0] != "ROOT"} - gates
+    if bad:
+        raise SystemExit("gate_tile_groups: gated sinks of undeclared gates %s" % sorted(bad)[:3])
+    return dict(groups)
+
+
+def icg_groups_summary(groups, small=25):
+    n = [len(v) for v in groups.values()]
+    gated = [k for k in groups if k[0] != "ROOT"]
+    return dict(groups=len(groups), gated_groups=len(gated), gates=len({k[0] for k in gated}),
+                tiles=len({k[1:] for k in groups}), sinks=sum(n), small_groups=sum(1 for v in n if v < small),
+                sinks_in_small=sum(v for v in n if v < small))
+
+
 def entry_mode(fam, core):
     """family 'entry': absent = 'centre' (12.8a outline centre from the census, unchanged); a mode string for every
     member, or {member: mode}.  'sink_centroid' = the core clock entry at the mean of the placed clock sinks (COORD
@@ -617,7 +666,16 @@ def entry_geo(geo, mode):
 def run_core(fams, core, kit, work, a):
     fam = next(f for f in fams["families"] if core in f["members"])
     work = Path(work) / core; work.mkdir(parents=True, exist_ok=True)
-    clk = census(kit, work)
+    icg = icg_copies_mode(fam, core)
+    clk = census(kit, work, gated=True) if icg else census(kit, work)
+    if icg:
+        # form C stage 1 (CORES-EARLY-5): GATED census + (gate, tile) grouping only. The planner/converter/core_infra
+        # stages (ICG copy nodes, planned leaves under a gate, kit clone hook + post-clone LEC) are not built yet, so
+        # the run stops here FAIL-CLOSED instead of planning the gated flops as if they were on the core clock.
+        tile = float(fam.get("icg_tile_um", 50.0))
+        gs = icg_groups_summary(gate_tile_groups(work / "geo_gated.txt", tile))
+        (work / "icg_groups.json").write_text(json.dumps(dict(tile_um=tile, **gs), indent=1))
+        raise SystemExit("run: icg_copies census + grouping written (%s); planner stage not implemented -> no plan" % json.dumps(gs))
     geo = entry_geo(work / "geo.txt", entry_mode(fam, core))
     if keepout_mode(fam, core):
         fam = dict(fam, keepout_um=macro_keepouts(work / "sites.txt"))

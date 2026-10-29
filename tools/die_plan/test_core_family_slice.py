@@ -280,3 +280,34 @@ def test_htree_plan_keeps_every_node_out_of_the_block(tmp_path):
     inside = lambda P: [n[0] for n in P["nodes"] if blk[0] <= P["mz"].xy(n[2])[0] <= blk[2] and blk[1] <= P["mz"].xy(n[2])[1] <= blk[3]]
     assert inside(P0)                                      # without the keep-out the W hub sits in the block
     assert not inside(P1)
+
+
+def test_icg_copies_mode_default_off_and_member_map():
+    assert F.icg_copies_mode(dict(name="f"), "a") is False
+    assert F.icg_copies_mode(dict(name="f", icg_copies=True), "a") is True
+    fam = dict(name="f", icg_copies={"a": True})
+    assert F.icg_copies_mode(fam, "a") is True and F.icg_copies_mode(fam, "b") is False
+
+
+def test_gate_tile_groups_gated_census(tmp_path):
+    geo = tmp_path / "geo_gated.txt"
+    geo.write_text("\n".join([
+        "DIE 0 0 100 100", "CORE 0 0 100 100", "PIN ck 50 50",
+        "SINK 5 5 DFFHQNx1_ASAP7_75t_R u0 CLK",
+        "GATE g0 ICGx1_ASAP7_75t_R 40 40",
+        "SINK 10 10 DFFHQNx1_ASAP7_75t_R a CLK gate=g0",
+        "SINK 60 10 DFFHQNx1_ASAP7_75t_R b CLK gate=g0",
+        "SINK 61 11 DFFHQNx1_ASAP7_75t_R c CLK gate=g0",
+        "MACRO rom M 0 50 20 70 clk 10 60 gate=g0",
+        "ISLCOUNT 0"]) + "\n")
+    g = F.gate_tile_groups(geo, 50)
+    assert g == {("ROOT", 0, 0): ["u0/CLK"], ("g0", 0, 0): ["a/CLK"], ("g0", 1, 0): ["b/CLK", "c/CLK"], ("g0", 0, 1): ["rom/clk"]}
+    s = F.icg_groups_summary(g)
+    assert s["groups"] == 4 and s["gated_groups"] == 3 and s["gates"] == 1 and s["sinks"] == 5 and s["small_groups"] == 4
+
+
+def test_gate_tile_groups_refuses_undeclared_gate(tmp_path):
+    geo = tmp_path / "g.txt"
+    geo.write_text("SINK 1 1 DFF x CLK gate=nope\n")
+    with pytest.raises(SystemExit):
+        F.gate_tile_groups(geo, 50)
