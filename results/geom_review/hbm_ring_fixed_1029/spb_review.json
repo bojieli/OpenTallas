@@ -1,0 +1,10 @@
+{
+ "picture": "results/geom_review/hbm_ring_fixed_1029/spb_street.png",
+ "verdict": "FAIL-FOR-ROUTE legacy skeleton; complete tuple construction only",
+ "findings": [
+  "Personally viewed complete PHY body, PG domain, EP core and old station skeleton. Digital and physical PHY, PG/bumps and halo shift together103.68 on both variants.",
+  "Legacy 6 station centres per variant remain inside full PHY PG domain and must be replaced by actual-source native4104FF banks; old skeleton is not real transport.",
+  "Physical PHY ends1050, PGhalo1113.64, EP begins1088.64. Domain halo overlaps bottom25um of EP; actual PG contacts/net isolation require qualification; bounding-box overlap alone is not evidence of a supply short.",
+  "Native bank/clock phase-aware driver construction, source model/compiler +4RX/+4TX actual delta, reset/START and full PG solve must compose before G2/P&R. No physical closure claim."
+ ]
+}
