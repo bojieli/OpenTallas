@@ -266,3 +266,68 @@ def test_real_partition_root_drives_virtual_stages_without_duplicate_counter():
         b["regions"]["hub_C"] = invalid
         with pytest.raises(E.StageError):
             E.emit(b, _meta(), v, t)
+
+
+def _real_root_bind():
+    b = _bind()
+    root = f'st:{P_ROOT}'
+    b['root'] = 'hub_C'
+    b['regions']['hub_C'] = dict(b['regions'].pop(root), virtual=False)
+    for r in b['regions'].values():
+        if r.get('parent') == root:r['parent'] = 'hub_C'
+    for e in b['start_ports'].values():
+        if e['src'] == root:e.update(src='hub_C', launch_part='hub_C')
+    return b
+
+
+def test_bounded_reset_removes_global_star_and_counts_ordinary_relays():
+    v,t = _tree()
+    d,sv,*_ = E.emit(_real_root_bind(), _meta(),v,t,reset_wave=True)
+    assert 'input  wire rst_raw_n' not in sv
+    assert 'input  wire rraw_hub_C' in sv and '.rst_raw_n(st_b2_rraw)' in sv
+    assert d['counts']['flops'] == 9  # original 3+PAD2+fall1, reset2+fall1
+    assert d['stages'][0]['reset_flops'] == 3
+    assert 'async_reg' not in sv and 'negedge rst' not in sv
+    assert d['reset_inputs'] == [dict(region='hub_C',part='hub_C',net='rraw_hub_C')]
+    d,sv,*_ = E.emit(_bind(),_meta(),v,t,reset_wave=True)
+    assert sv.count('.rst_raw_n(rst_raw_n)') == 1  # virtual root only, no global reset star
+    assert '.rst_raw_n(st_b2_rraw)' in sv
+
+
+def test_bounded_reset_cold_warm_protocol_and_bad_parent_control(tmp_path):
+    import subprocess,shutil
+    iv=shutil.which('iverilog')
+    if iv is None:pytest.skip('iverilog not installed')
+    v,t=_tree();b=_real_root_bind()
+    _,ref,*_=E.emit(b,_meta(),v,t)
+    _,wave,*_=E.emit(b,_meta(),v,t,reset_wave=True)
+    ref=ref.replace('module ot_die_start_stages','module reference_stages')
+    # Root uses its delivered synchronous reset, START settle 8 edges. Assert is
+    # held 12 edges for cold and warm reset: longer than the 3-edge relay+PAD flush.
+    tb='''module tb;
+reg clk=0, raw=0;reg parent_raw=0;wire parent_start,a,g;
+integer compares=0,errors=0;
+always #5 clk=~clk;
+always @(posedge clk) parent_raw<=raw;
+ot_dp_landing_root #(.SETTLE(8)) root(.clk(clk),.rst_raw_n(parent_raw),.start(parent_start));
+reference_stages ref0(.rst_raw_n(parent_raw),.t_st_b2__clk(clk),.rs_hub_C(parent_start),.pst_a(g));
+ot_die_start_stages dut(.rraw_hub_C(parent_raw),.t_st_b2__clk(clk),.rs_hub_C(parent_start),.pst_a(a));
+always @(posedge clk) begin #1;if(raw)begin compares=compares+1;if(a!==g)errors=errors+1;end end
+initial begin repeat(12)@(negedge clk);raw=1;repeat(60)@(negedge clk);raw=0;
+repeat(12)@(negedge clk);raw=1;repeat(60)@(negedge clk);
+$display("COMPARES %0d ERRORS %0d",compares,errors);if(errors)$fatal(1,"mismatch");$finish;end
+endmodule\n'''
+    common=Path(__file__).resolve().parents[2]/'rtl/common/ot_dp_clk_landing_ca.sv'
+    (tmp_path/'ref.sv').write_text(ref);(tmp_path/'tb.sv').write_text(tb)
+    results=[]
+    for mutant in (False,True):
+        # A wrong parent contract feeds START in place of delivered reset. It
+        # releases the local reset late and changes the first valid start edge.
+        candidate=wave.replace('st_b2_rrf <= rraw_hub_C','st_b2_rrf <= rs_hub_C') if mutant else wave
+        (tmp_path/'dut.sv').write_text(candidate)
+        p=subprocess.run([iv,'-g2012','-s','tb','-o',str(tmp_path/'sim'),str(common),str(tmp_path/'ref.sv'),str(tmp_path/'dut.sv'),str(tmp_path/'tb.sv')],capture_output=True,text=True)
+        assert p.returncode==0,p.stderr
+        q=subprocess.run(['vvp',str(tmp_path/'sim')],capture_output=True,text=True)
+        results.append(q)
+    assert results[0].returncode==0,results[0].stdout+results[0].stderr
+    assert results[1].returncode!=0 and 'mismatch' in results[1].stdout

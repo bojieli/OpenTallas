@@ -138,7 +138,7 @@ def place_stage(xy, n_flops, rows, site=None, W=None, H=None):
     raise StageError(f"no free legal row segment ({n_flops} flops) within {MAX_ROW_TRIES} rows of {xy}")
 
 
-def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_settle=None, path_encoding="unicode"):
+def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_settle=None, path_encoding="unicode", reset_wave=False):
     """-> (stages json dict, start_stages.sv text, patched ctree.v, patched ctree.tcl)"""
     settle = int(root_settle if root_settle is not None else bind.get("root_settle_cycles", ROOT_SETTLE))
     if settle < 1:
@@ -181,6 +181,8 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
             raise StageError(f"stage {x}: node cell {inst} not in the clock tree netlist / placement")
         root = r.get("parent") is None
         nf = stage_flops(r, settle if root else None)
+        reset_ff = (2 + int(bool(r.get("edge_fall")))) if reset_wave and not root else 0
+        nf += reset_ff
         rect = place_stage(cxy[key], nf, rows, site, *die_wh)
         inv = polarity(cells, key) % 2
         # an inverting tree (die_trial --clock-cell inv/inv2): a node cell with inverted output -> the stage takes the
@@ -226,7 +228,15 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
         raise StageError(f"start tree must have exactly one root stage or a declared real root partition, found {roots}")
     # A real root partition already contains ot_dp_landing_root. Its rs_* output
     # feeds virtual stages through die_inputs; emitting another root changes reset timing.
-    pl = ["    input  wire rst_raw_n"]
+    reset_inputs = []
+    if reset_wave:
+        if not (len(roots) == 1 or root_in_partition):
+            raise StageError("bounded reset wave needs one virtual root or the declared real root partition")
+        reset_parts = {e['src_region']: e['src_part'] for e in ins}
+        if any(not p for p in reset_parts.values()):
+            raise StageError("bounded reset wave needs physical real-parent reset outputs")
+        reset_inputs = [dict(region=n, part=p, net='rraw_' + sv_name(n)) for n,p in sorted(reset_parts.items())]
+    pl = ((["    input  wire rst_raw_n"] if roots else []) + [f"    input  wire {e['net']}" for e in reset_inputs]) if reset_wave else ["    input  wire rst_raw_n"]
     pl += [f"    input  wire {s['clock_port']}" for s in stages]
     pl += [f"    input  wire {n}" for n in in_nets]
     pl += [f"    output wire {o['net']}" for o in outs]
@@ -235,6 +245,21 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
     for s in stages:
         sv.append(f"    wire st_{s['id']}_start;")
     for s in stages:
+        local_reset = "rst_raw_n"
+        if reset_wave and not s["root"]:
+            parent_reset = (f"st_{by_region[s['parent']]['id']}_rraw" if s['parent'] in by_region
+                            else 'rraw_' + sv_name(s['parent']))
+            name, clk = s['id'], s['clock_port']
+            sv += [f"    reg st_{name}_rr0, st_{name}_rraw;"]
+            reset_in = parent_reset
+            if s['edge_fall']:
+                sv += [f"    reg st_{name}_rrf;", f"    always @(negedge {clk}) st_{name}_rrf <= {parent_reset};"]
+                reset_in = f"st_{name}_rrf"
+            sv += [f"    always @(posedge {clk}) begin st_{name}_rr0 <= {reset_in}; st_{name}_rraw <= st_{name}_rr0; end"]
+            local_reset = f"st_{name}_rraw"
+            s['reset_parent'] = parent_reset
+            s['reset_output'] = local_reset
+            s['reset_flops'] = 2 + int(s['edge_fall'])
         if s["root"]:
             # the start-tree root stage IS the die's root counter (DIE-HEAD-11): SETTLE cycles after the raw release on
             # its own tree tap, the same ot_dp_landing_root a root partition uses; no die-top root start input
@@ -243,7 +268,7 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
             continue
         ps = start_net(s["parent"])
         sv.append(f"    {STAGE_MODULE} #(.PAD({s['pad']}), .EDGE_FALL({int(s['edge_fall'])})) u_st_{s['id']} "
-                  f"(.clk({s['clock_port']}), .rst_raw_n(rst_raw_n), .p_start({ps}), .start(st_{s['id']}_start));")
+                  f"(.clk({s['clock_port']}), .rst_raw_n({local_reset}), .p_start({ps}), .start(st_{s['id']}_start));")
     for o in outs:
         sv.append(f"    assign {o['net']} = st_{o['stage']}_start;")
     sv.append("endmodule")
@@ -270,6 +295,8 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
     doc = dict(schema=SCHEMA, stage_module=STAGE_MODULE, root_module=ROOT_MODULE, root_settle=settle,
                flop_w_um=FLOP_W_UM, stages=stages,
                die_inputs=ins, die_outputs=outs, direct_ports=direct,
+               **(dict(reset_wave="bounded_synchronous_parent_relays", reset_inputs=reset_inputs,
+                       reset_rule="ordinary timed relay flops, no async controls or false paths; cold/warm flush + START lead proven separately") if reset_wave else {}),
                counts=dict(stages=len(stages), flops=sum(s["flops"] for s in stages), die_inputs=len(ins),
                            die_outputs=len(outs), direct_ports=len(direct),
                            max_cell_to_stage_um=max(abs(s["rect_um"][0] - cxy[s["node_cell"]][0]) +
@@ -331,6 +358,7 @@ def main(argv=None):
     e.add_argument("--corner", default="TT")
     e.add_argument("--ctree", required=True, help="die_trial clock dir with ctree.v + ctree.tcl")
     e.add_argument("--plan", help="die plan: stage rows must be legal die_trial SiteMap points")
+    e.add_argument("--reset-wave", action="store_true", help="bounded ordinary synchronous reset relay stream along START graph; real root/local reset inputs required")
     e.add_argument("--path-encoding", choices=("unicode", "base36"), default="unicode",
                    help="declared tree path alphabet; die_trial/trial_tap_arrivals use base36")
     e.add_argument("--out", required=True)
@@ -352,7 +380,7 @@ def main(argv=None):
             P = S.Plan(S.load(a.plan))
             site, wh = DT.SiteMap(P), (P.W, P.H)
         doc, sv, v, t = emit(bind, meta, (cd / "ctree.v").read_text(), (cd / "ctree.tcl").read_text(), site, wh,
-                            a.root_settle, a.path_encoding)
+                            a.root_settle, a.path_encoding, a.reset_wave)
         o = Path(a.out)
         o.mkdir(parents=True, exist_ok=True)
         (o / "start_stages.json").write_text(json.dumps(doc, indent=1))
