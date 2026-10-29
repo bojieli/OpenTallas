@@ -1,8 +1,32 @@
 {
- "method": "Icarus RTL320-bit hop chain against independent20/24-entry shift reference and next-edge consumer,340clockcases including warmreset",
- "positive": [{"hops":20,"producer_to_consumer_edges":21,"comparisons":318,"verdict":"PASS"},{"hops":24,"producer_to_consumer_edges":25,"comparisons":314,"verdict":"PASS"}],
- "mutant": {"expected_hops":20,"actual_hops":19,"verdict":"CAUGHT","first_mismatch_case":22},
- "reset_state_bits_per_hop":3,
- "added_token_cycles":0,
- "adoption": "Candidate only: physical plan selects totalhopcountincludingboundaryflops andCAstagecost; default20 is not a physical route claim"
+  "method": "Icarus RTL320-bit hop chain against independent20/24-entry shift reference and next-edge consumer,340clockcases including warmreset",
+  "positive": [
+    {
+      "hops": 20,
+      "producer_to_consumer_edges": 21,
+      "comparisons": 318,
+      "verdict": "PASS"
+    },
+    {
+      "hops": 24,
+      "producer_to_consumer_edges": 25,
+      "comparisons": 314,
+      "verdict": "PASS"
+    },
+    {
+      "hops": 25,
+      "producer_to_consumer_edges": 26,
+      "comparisons": 313,
+      "verdict": "PASS"
+    }
+  ],
+  "mutant": {
+    "expected_hops": 20,
+    "actual_hops": 19,
+    "verdict": "CAUGHT",
+    "first_mismatch_case": 22
+  },
+  "reset_state_bits_per_hop": 3,
+  "added_token_cycles": 0,
+  "adoption": "Physicalcandidate25hops(NW20+root5), max345.6umsourceplanner; CA/binderboundarycoststillspecifiedseparately,noP&Rclaim"
 }
