@@ -1,0 +1,22 @@
+{
+ "lane": "DIE-HEAD-21 (CA record sub-lane)",
+ "date": "2026-10-28 21:44 PDT",
+ "what": "HEAD count-aligned start stages re-emitted at hd_tile insertion LAT 567.2 TT / 461.2 FF; CA gate record run",
+ "tools": "wt/die-head-21 @ a9d8617e6c (origin/main + FSTART + DH20); shared tools/die_plan",
+ "recipe": "iter21.sh = DH17 iter17.sh copy; CA chain run_ca21.sh = DH20 run_ca20.sh with DH21 tools; RINGG='--ca-ring ca_ring_hd_tile_dh20.json'; RINGP='--sta-ca-ring ca_ring_hd_tile_dh20.json --start-prev <previous pass plan.json>'; combo GRT docker on intel1 (same orfs image id 16470cea), CA chain on intel2",
+ "repro_B": "run_ca21_reproB.sh with RINGP prev=die-head-17/clk17_max_2/ca/plan.json reproduces DH20 run B log line-identical (plan/bind differ only in path strings) -> flags pinned",
+ "seed": "die-head-20/ca/clk20_B (ca/bind.json + proof_t), --start-prev = clk20_B/ca/plan.json",
+ "converged_pass": 1,
+ "converge": "emit(1) from run B == emit(2) from pass-1 run: 362/362 stages, 0 diffs, start_stages.json byte-identical",
+ "stages": 362, "flops": 1451, "edge_fall_stages": 360, "edge_rise_stages": 2, "pad": 0,
+ "vs_st_max_2": "358 -> 362 stages: 4 new (r3_8, r18_2, r19_2, r37_2, 4 flops each, fall) + 3 changed (b3, b19, b37: 3 flops rise -> 4 flops fall)",
+ "combo_grt": {"TT": "overflow 0, EXIT 0", "FF": "overflow 0, EXIT 0"},
+ "plan": {"regions": 688, "crossings": 427, "depth4": 427, "fail": 0, "worst_margin_lo_ps": 134.6, "worst_margin_hi_ps": 572.0},
+ "start": {"virtual_nodes": 362, "start_edges": 687, "start_clean": 687, "start_fail": 0, "start_min_sync_dist_ps": 116.4, "start_skew_ps": [57.5, 89.7], "gate_start_skew_fail": "0/687", "ss_info_x1.27": "worst lo 71.9 hi 423.6, start-skew fail 0/687 (run B: 8/687), INFO never gates"},
+ "mc": {"chips": 2000, "violations": 0, "worst_lo_to_guard_ps": 134.5, "worst_hi_to_guard_ps": 572.1},
+ "gate": {
+  "TT": {"lo": 134.5, "hi": 573.2, "verdict": "PASS", "built_240_hd_tile_lo": 659.5, "built_240_hd_tile_hi": 1074.2, "declared_187_lo": 134.5, "declared_187_hi": 573.2},
+  "FF": {"lo": 162.7, "hi": 624.9, "verdict": "PASS", "built_240_hd_tile_lo": 614.8, "built_240_hd_tile_hi": 1112.5, "declared_187_lo": 162.7, "declared_187_hi": 624.9}
+ },
+ "labels": "all numbers CHECKED (run by this lane). MODEL-CORR-1: 360/362 start stages sample on the FALLING edge (COORD note said 12), so every CA lo/hi, MC and start-skew number above depends on falling-edge stages -> UNCHECKED for the falling-edge BUF hold optimism until the per-edge refit lands"
+}

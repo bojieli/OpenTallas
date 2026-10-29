@@ -1,0 +1,14 @@
+START Wed Oct 28 21:43:59 PDT 2026 code a9d8617e6c G=/srv/opentallas-scratch2/claude/die-head-21/ca/clk21_lat567_1 LAT TT=567.2 FF=461.2
+scaled {'TT_droop-regions_corelat567.2': 427, 'TT_droop-regions_corelat0': 0, 'TT_droop-same_corelat567.2': 0, 'TT_droop-same_corelat0': 0, 'FF_droop-regions_corelat461.2': 427, 'FF_droop-regions_corelat0': 0, 'FF_droop-same_corelat461.2': 0, 'FF_droop-same_corelat0': 0} {'TT': 1.0485, 'FF': 1.0552}
+PLAN_RC 0
+PLAN {'regions': 688, 'tree_edges': 687, 'tree_edges_clean': 687, 'tree_edges_fall': 685, 'crossings': 427, 'depth4': 427, 'depth8': 0, 'depth16': 0, 'fail': 0, 'below_100ps': 0, 'worst_margin_lo_ps': 134.6, 'worst_margin_hi_ps': 572.0}
+START {'virtual_nodes': 362, 'retime_nodes': 195, 'start_edges': 687, 'start_clean': 687, 'start_fail': 0, 'start_min_sync_dist_ps': 116.4, 'fall_measured': 687}
+MC {'chips': 2000, 'violations': 0, 'worst_lo_to_guard_ps': 134.5, 'worst_hi_to_guard_ps': 572.1} STA_INTERVAL rows_without_fall 0
+BIND_RC 0
+STA_MAIN_RC 0
+COUNT-ALIGN SS-INFO (TT x 1.27) worst lo 71.9 hi 423.6 fail 8 slot_read fail 0 guard fail 0 start-skew fail 0/687 FAIL (INFO, never gates)
+COUNT-ALIGN TT crossings 427 (sta 427, tree 0, no taps 0, key region unbound 0) worst lo 134.5 hi 573.2 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/687 <100 0 ocv table max lo/hi 201.8/201.8 PASS
+COUNT-ALIGN TT RING built 240 (worst lo 659.5 hi 1074.2) declared 187 (worst lo 134.5 hi 573.2)
+COUNT-ALIGN FF crossings 427 (sta 427, tree 0, no taps 0, key region unbound 0) worst lo 162.7 hi 624.9 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/687 <100 0 ocv table max lo/hi 171.1/171.1 PASS
+COUNT-ALIGN FF RING built 240 (worst lo 614.8 hi 1112.5) declared 187 (worst lo 162.7 hi 624.9)
+END Wed Oct 28 21:44:42 PDT 2026

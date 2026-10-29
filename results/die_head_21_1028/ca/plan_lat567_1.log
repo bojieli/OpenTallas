@@ -1,0 +1,135 @@
+{
+ "regions": 688,
+ "regions_reached": 688,
+ "tree_root": "st:h\u0100\u0100",
+ "tree_edges": 687,
+ "tree_edges_clean": 687,
+ "edge_pad": {},
+ "tree_edges_fall": 685,
+ "start_skew_limit_clean_min_ps": 89.9,
+ "start_skew_limit_min_ps": 89.9,
+ "max_tree_depth": 38,
+ "min_sync_dist_clean_ps": 116.4,
+ "crossings": 427,
+ "depth4": 427,
+ "depth8": 0,
+ "depth16": 0,
+ "max_depth": 8,
+ "fail": 0,
+ "max_path_ambiguous_cycles": 0,
+ "worst_margin_lo_ps": 134.6,
+ "worst_margin_lo_port": "sp_x1__0",
+ "worst_margin_hi_ps": 572.0,
+ "worst_margin_hi_port": "sp_b3__0",
+ "below_100ps": 0,
+ "lat_hist": {
+  "2": 252,
+  "3": 175
+ },
+ "K_hist": {
+  "-11": 5,
+  "-8": 11,
+  "-5": 146,
+  "-3": 1,
+  "-2": 18,
+  "0": 1,
+  "1": 51,
+  "2": 13,
+  "4": 18,
+  "5": 12,
+  "6": 1,
+  "8": 128,
+  "11": 11,
+  "14": 11
+ },
+ "lat_total_vs_old3": -252,
+ "old_ring_not_cycle_fixed": 206,
+ "old_ring_fail_margin": 78,
+ "start_tree": {
+  "form": "clock",
+  "data_regions": 326,
+  "virtual_nodes": 362,
+  "retime_nodes": 195,
+  "start_edges": 687,
+  "start_clean": 687,
+  "start_fail": 0,
+  "start_fail_edges": [],
+  "start_width_ps": {
+   "median": 151.3,
+   "max": 176.70000000000002
+  },
+  "start_min_sync_dist_ps": 116.4,
+  "crossing_start_hops": {
+   "median": 4,
+   "max": 26
+  },
+  "rule": "12.16b(iv): every start (reset-release) port is a crossing; CLEAN iff its interval (same shared model, clock_variation table) +- aperture holds no sampling boundary; an unclean port FAILs the plan",
+  "clean_by": "width",
+  "clean_by_width": 687,
+  "fall_measured": 687,
+  "root": "st:h\u0100\u0100",
+  "root_path": "h\u0100\u0100",
+  "leg_ps": {
+   "TT": [
+    42.76428264359947,
+    37.74626528399949,
+    1
+   ],
+   "FF": [
+    40.30376450800031,
+    34.981262666000475,
+    1
+   ]
+  },
+  "regions": 326,
+  "branch_nodes": 167,
+  "branch_nodes_contracted": 0,
+  "prev_kept": 361,
+  "prev_nodes": 687
+ },
+ "start_skew_ps": [
+  57.5,
+  89.7
+ ],
+ "sta_interval": {
+  "corners": [
+   "FF",
+   "TT"
+  ],
+  "rows": 427,
+  "widened": 427,
+  "max_widen_ps": 462.5,
+  "max_widen_port": "sp_x3__0",
+  "missing": 0,
+  "missing_ports": [],
+  "interval": "port (die_sta_related.count_align_port_intervals)",
+  "rows_without_measured_fall": 0,
+  "unbound": 0,
+  "unbound_tags": [],
+  "proof": "/srv/opentallas-scratch2/claude/die-head-21/ca/clk21_lat567_1/proof",
+  "plan": "/srv/opentallas-scratch2/claude/die-head-21/ca/clk21_lat567_1/die_plan_root_sp5_lat567.2.json",
+  "clock_cal": "spice",
+  "cppr_lca": true,
+  "clock_ocv": "table",
+  "model": "hull(landed_phase_ocv derated, die_sta_related.count_align_port_intervals)",
+  "clock_cell": {
+   "cell": "inv",
+   "basis": "--clock-cell inv2",
+   "aocv_class": "Ainv"
+  }
+ },
+ "corner": "TT_droop-regions_corelat567.2,FF_droop-regions_corelat461.2",
+ "period_ps": 833.0,
+ "aperture_ps": 104.125,
+ "sync_aperture_ps": 26.5,
+ "wander_frac": 0.05,
+ "pad": 0,
+ "scale": 1.0,
+ "source": "/srv/opentallas-scratch2/claude/die-head-21/ca/clk21_lat567_1/ocv_spice.json",
+ "mc": {
+  "chips": 2000,
+  "violations": 0,
+  "worst_lo_to_guard_ps": 134.5,
+  "worst_hi_to_guard_ps": 572.1
+ }
+}
