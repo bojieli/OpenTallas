@@ -1,0 +1,54 @@
+{
+ "q_hub_nw": [
+  {
+   "index": 543,
+   "conn": "u_vmb_Q4.rr1|u_hb_dbk_Q",
+   "bits": 258,
+   "old": 2,
+   "final": 3,
+   "added": 1
+  }
+ ],
+ "q_hub_ne": [
+  {
+   "index": 546,
+   "conn": "u_vmb_Q7.eg|u_hb_vms_Q",
+   "bits": 139,
+   "old": 5,
+   "final": 6,
+   "added": 1
+  },
+  {
+   "index": 548,
+   "conn": "u_vmb_Q7.pr|u_hb_vms_Q",
+   "bits": 134,
+   "old": 5,
+   "final": 6,
+   "added": 1
+  },
+  {
+   "index": 555,
+   "conn": "u_vmb_Q7.status|u_hb_vms_Q",
+   "bits": 10,
+   "old": 5,
+   "final": 6,
+   "added": 1
+  },
+  {
+   "index": 560,
+   "conn": "u_vmb_Q7.xq2_done|u_hb_vms_Q",
+   "bits": 1,
+   "old": 5,
+   "final": 6,
+   "added": 1
+  },
+  {
+   "index": 562,
+   "conn": "u_vmb_Q7.xq_done|u_hb_vms_Q",
+   "bits": 1,
+   "old": 5,
+   "final": 6,
+   "added": 1
+  }
+ ]
+}

@@ -71,7 +71,10 @@ def _legs(legs_um):
 # 'master' names the cell; 'cell' stays the die clock-cell model key ('buf' = non-inverting).  These decks ramp VDD from
 # 0 with uic (no DC operating point: the xAct3D BUFx4 transient aborts after one, MODEL-CORR-1 section 6) and put the
 # source edge at RAMP_T0_PS; crossings before T_SETTLE_PS are dropped by collect_case.
-MASTERS = {"BUFx4_ASAP7_75t_R": dict(inverting=False), "BUFx6f_ASAP7_75t_R": dict(inverting=False),
+MASTERS = {"BUFx10_ASAP7_75t_R": dict(inverting=False), "BUFx12_ASAP7_75t_R": dict(inverting=False),
+           "BUFx12f_ASAP7_75t_R": dict(inverting=False),
+           "BUFx16f_ASAP7_75t_R": dict(inverting=False, spice_ports=("A", "VSS", "VDD", "Y")),
+           "BUFx4_ASAP7_75t_R": dict(inverting=False), "BUFx6f_ASAP7_75t_R": dict(inverting=False),
            "BUFx24_ASAP7_75t_R": dict(inverting=False), "CKINVDCx16_ASAP7_75t_R": dict(inverting=True),
            "BUFx8_ASAP7_75t_R": dict(inverting=False)}
 RAMP_T0_PS = 1000.0
@@ -98,6 +101,21 @@ CASES = {
     "bufx8_1x60_d20": dict(cell="buf", master="BUFx8_ASAP7_75t_R", rc="1x", segs=[60.0] * 20, taps=[5, 20],
                            ramp=True),
 }
+
+
+# BTAB-F3 masters: abutted delay and loaded tree legs bound the two physical forms.
+for _label in ("10", "12", "12f", "16f"):
+    for _um in (2.0, 60.0):
+        CASES[f"bufx{_label}_1x{int(_um)}_d20"] = dict(
+            cell="buf", master=f"BUFx{_label}_ASAP7_75t_R", rc="1x",
+            segs=[_um] * 20, taps=[5, 20], ramp=True)
+
+
+def spice_cell_instance(name, master, a, y):
+    """Preserve the extracted CDL pin order (BUFx16f puts A before its supply pins)."""
+    nets = {"A": a, "Y": y, "VSS": "vss", "VDD": "vdd"}
+    ports = MASTERS[master].get("spice_ports", ("VSS", "VDD", "A", "Y"))
+    return f"X{name} " + " ".join(nets[p] for p in ports) + f" {master}"
 
 
 def case_geom(name):
@@ -139,9 +157,9 @@ def gen_case(name, d, libdir="/w/lib", osdi="/w/osdi/bsimcmg23.osdi"):
              f".include {libdir}/{c}/models.sp", f".include {libdir}/{c}/cells.sp",
              f"Vdd vdd 0 PWL(0 0 {VDD_RAMP_PS:.0f}p {v})" if ramp else f"Vdd vdd 0 {v}", "Vss vss 0 0",
              f"Vin src 0 {CIC.pwl_pulse(v, t0=RAMP_T0_PS, w=PULSE_PS) if ramp else CIC.pwl_pulse(v, w=PULSE_PS)}",
-             f"Xp1 vss vdd src p1 {cell}", f"Xp2 vss vdd p1 i_t0 {cell}"]
+             spice_cell_instance("p1", cell, "src", "p1"), spice_cell_instance("p2", cell, "p1", "i_t0")]
         for b in cells:
-            L.append(f"X{b} vss vdd i_{b} o_{b} {cell}")
+            L.append(spice_cell_instance(b, cell, f"i_{b}", f"o_{b}"))
         for k, (dr, ld, um) in enumerate(edges):
             L += CIC.ladder(f"e{k}", f"o_{dr}", f"i_{ld}", um, w)
         for s in sorted(loads):

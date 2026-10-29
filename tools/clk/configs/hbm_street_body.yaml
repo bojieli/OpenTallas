@@ -8,9 +8,10 @@
 #                             equality tested in tools/clk/test_ot_clk.py
 # Its in-script region fix (split PHY_N* parts inherit the PHY_N region) -> inputs.region_fill.
 # Its zero-skew (snake) regions = the 'corrected' build's region_dme spread > 120 ps plus T003/T019, listed explicitly.
-# Stage model: the script's inline cal (fitted on the trial2b ROUTED legs, a clock_rc ndr build) is registry entry
-# inv2_ndr_hbm_trial2b_early; this stack is clock_rc 1x, so the fail-closed check FAILS and only --legacy replays it.
-# A new build needs an ot_clk refit on a 1x route (or stack clock_rc ndr) first.
+# Stage model: native NW_sm3 386-cell 1x routed coupon, shared ot_clk refit --placed-stages.
+# Actual retained stage chains (66 legs) + 34 tap wires; TT/FF early-rise RMS11.53/10.21ps.
+# Historical NDR stage model remains in the registry and legacy_cal preserves the old replay.
+# This qualifies the stack model for a new build; full-die routed clock/timing gates remain open.
 schema: ot_clk_config/1
 die: hbm
 event:
@@ -46,8 +47,8 @@ region:
     ff: 0.8639019524013111
     mode: merge
 stage_model:
-  entry: inv2_ndr_hbm_trial2b_early
-  corners: [TT]
+  entry: inv2_1x_hbm_native_sm3_early
+  corners: [TT, FF]
   edge: rise
   legacy_cal: /srv/opentallas-scratch2/claude/codex-hbm-clock-1028/street_body/stage_cal.json
 residual:

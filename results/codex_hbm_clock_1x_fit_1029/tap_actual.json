@@ -1,0 +1,371 @@
+{
+ "tap": [
+  -0.16872392164000646,
+  0.0007625548462490601
+ ],
+ "tap_FF": [
+  -0.16345633729496192,
+  0.0007405243396790624
+ ],
+ "source": "actual GRT NW_sm3 1x tap rise-early minus native logical-node rise-early; least squares no intercept",
+ "fit": {
+  "TT": {
+   "taps": 34,
+   "length_min_um": 8.84599999999864,
+   "length_max_um": 334.49800000000073,
+   "rms_ps": 1.805052424768879,
+   "max_abs_resid_ps": 2.77437508789356,
+   "rows": [
+    {
+     "port": "t_NW_sm3__clk_c0",
+     "length_um": 332.877999999999,
+     "early_delay_ps": 30.572388000000046
+    },
+    {
+     "port": "t_NW_sm3__clk_c4",
+     "length_um": 324.2379999999987,
+     "early_delay_ps": 27.132567999999992
+    },
+    {
+     "port": "t_NW_sm3__clk_c8",
+     "length_um": 332.87799999999993,
+     "early_delay_ps": 30.72497599999997
+    },
+    {
+     "port": "t_NW_sm3__clk_c1",
+     "length_um": 332.877999999999,
+     "early_delay_ps": 30.31616199999985
+    },
+    {
+     "port": "t_NW_sm3__clk_c2",
+     "length_um": 332.8779999999988,
+     "early_delay_ps": 26.06518600000004
+    },
+    {
+     "port": "t_NW_sm3__clk_c9",
+     "length_um": 332.87799999999993,
+     "early_delay_ps": 30.31579600000009
+    },
+    {
+     "port": "t_NW_sm3__clk_c10",
+     "length_um": 332.8779999999997,
+     "early_delay_ps": 26.065185000000156
+    },
+    {
+     "port": "t_NW_sm3__clk_c5",
+     "length_um": 324.2379999999987,
+     "early_delay_ps": 26.875244000000066
+    },
+    {
+     "port": "t_NW_sm3__clk",
+     "length_um": 8.84599999999864,
+     "early_delay_ps": 0.0
+    },
+    {
+     "port": "t_NW_sm3__clk_c6",
+     "length_um": 324.23799999999846,
+     "early_delay_ps": 22.736327999999958
+    },
+    {
+     "port": "t_NW_sm3__clk_c3",
+     "length_um": 332.87799999999925,
+     "early_delay_ps": 28.107299999999896
+    },
+    {
+     "port": "t_NW_sm3__clk_c7",
+     "length_um": 324.2379999999989,
+     "early_delay_ps": 24.74121100000002
+    },
+    {
+     "port": "t_NW_sm3__clk_c11",
+     "length_um": 332.87800000000016,
+     "early_delay_ps": 27.979736000000003
+    },
+    {
+     "port": "t_NW_sm3__clk_c12",
+     "length_um": 324.2380000000005,
+     "early_delay_ps": 27.05566399999998
+    },
+    {
+     "port": "t_NW_sm3__clk_c16",
+     "length_um": 332.87799999999993,
+     "early_delay_ps": 30.490967000000182
+    },
+    {
+     "port": "t_NW_sm3__clk_c20",
+     "length_um": 324.2380000000005,
+     "early_delay_ps": 27.00695799999994
+    },
+    {
+     "port": "t_NW_sm3__clk_c24",
+     "length_um": 332.87799999999993,
+     "early_delay_ps": 29.57458500000007
+    },
+    {
+     "port": "t_NW_sm3__clk_c28",
+     "length_um": 334.49800000000073,
+     "early_delay_ps": 26.4827879999998
+    },
+    {
+     "port": "t_NW_sm3__clk_c25",
+     "length_um": 332.87799999999993,
+     "early_delay_ps": 30.315673999999944
+    },
+    {
+     "port": "t_NW_sm3__clk_c26",
+     "length_um": 332.8779999999997,
+     "early_delay_ps": 26.06494100000009
+    },
+    {
+     "port": "t_NW_sm3__clk_c21",
+     "length_um": 324.2380000000005,
+     "early_delay_ps": 26.874023999999963
+    },
+    {
+     "port": "t_NW_sm3__clk_t1",
+     "length_um": 8.909999999998945,
+     "early_delay_ps": 0.0
+    },
+    {
+     "port": "t_NW_sm3__clk_c22",
+     "length_um": 324.2380000000003,
+     "early_delay_ps": 22.68652300000008
+    },
+    {
+     "port": "t_NW_sm3__clk_c29",
+     "length_um": 324.2379999999987,
+     "early_delay_ps": 26.847778000000062
+    },
+    {
+     "port": "t_NW_sm3__clk_c30",
+     "length_um": 324.23799999999846,
+     "early_delay_ps": 22.783691999999974
+    },
+    {
+     "port": "t_NW_sm3__clk_c23",
+     "length_um": 324.23800000000074,
+     "early_delay_ps": 24.725830000000087
+    },
+    {
+     "port": "t_NW_sm3__clk_c27",
+     "length_um": 332.87800000000016,
+     "early_delay_ps": 28.031005999999934
+    },
+    {
+     "port": "t_NW_sm3__clk_c31",
+     "length_um": 324.2379999999989,
+     "early_delay_ps": 24.65795899999989
+    },
+    {
+     "port": "t_NW_sm3__clk_c13",
+     "length_um": 324.2380000000005,
+     "early_delay_ps": 26.847533999999996
+    },
+    {
+     "port": "t_NW_sm3__clk_c14",
+     "length_um": 324.2380000000003,
+     "early_delay_ps": 22.783570000000054
+    },
+    {
+     "port": "t_NW_sm3__clk_c17",
+     "length_um": 332.87799999999993,
+     "early_delay_ps": 30.31579600000009
+    },
+    {
+     "port": "t_NW_sm3__clk_c18",
+     "length_um": 332.8779999999997,
+     "early_delay_ps": 26.06506300000001
+    },
+    {
+     "port": "t_NW_sm3__clk_c15",
+     "length_um": 324.23800000000074,
+     "early_delay_ps": 24.7414560000002
+    },
+    {
+     "port": "t_NW_sm3__clk_c19",
+     "length_um": 332.87800000000016,
+     "early_delay_ps": 27.979736000000003
+    }
+   ]
+  },
+  "FF": {
+   "taps": 34,
+   "length_min_um": 8.84599999999864,
+   "length_max_um": 334.49800000000073,
+   "rms_ps": 1.7570406848290145,
+   "max_abs_resid_ps": 2.710685762328797,
+   "rows": [
+    {
+     "port": "t_NW_sm3__clk_c0",
+     "length_um": 332.877999999999,
+     "early_delay_ps": 29.81054599999993
+    },
+    {
+     "port": "t_NW_sm3__clk_c4",
+     "length_um": 324.2379999999987,
+     "early_delay_ps": 26.473023000000012
+    },
+    {
+     "port": "t_NW_sm3__clk_c8",
+     "length_um": 332.87799999999993,
+     "early_delay_ps": 29.93151899999998
+    },
+    {
+     "port": "t_NW_sm3__clk_c1",
+     "length_um": 332.877999999999,
+     "early_delay_ps": 29.566162000000077
+    },
+    {
+     "port": "t_NW_sm3__clk_c2",
+     "length_um": 332.8779999999988,
+     "early_delay_ps": 25.429687000000058
+    },
+    {
+     "port": "t_NW_sm3__clk_c9",
+     "length_um": 332.87799999999993,
+     "early_delay_ps": 29.56603999999993
+    },
+    {
+     "port": "t_NW_sm3__clk_c10",
+     "length_um": 332.8779999999997,
+     "early_delay_ps": 25.429687000000058
+    },
+    {
+     "port": "t_NW_sm3__clk_c5",
+     "length_um": 324.2379999999987,
+     "early_delay_ps": 26.219727000000148
+    },
+    {
+     "port": "t_NW_sm3__clk",
+     "length_um": 8.84599999999864,
+     "early_delay_ps": 0.0
+    },
+    {
+     "port": "t_NW_sm3__clk_c6",
+     "length_um": 324.23799999999846,
+     "early_delay_ps": 22.194702000000007
+    },
+    {
+     "port": "t_NW_sm3__clk_c3",
+     "length_um": 332.87799999999925,
+     "early_delay_ps": 27.416138000000046
+    },
+    {
+     "port": "t_NW_sm3__clk_c7",
+     "length_um": 324.2379999999989,
+     "early_delay_ps": 24.146118000000115
+    },
+    {
+     "port": "t_NW_sm3__clk_c11",
+     "length_um": 332.87800000000016,
+     "early_delay_ps": 27.30871500000012
+    },
+    {
+     "port": "t_NW_sm3__clk_c12",
+     "length_um": 324.2380000000005,
+     "early_delay_ps": 26.415283000000045
+    },
+    {
+     "port": "t_NW_sm3__clk_c16",
+     "length_um": 332.87799999999993,
+     "early_delay_ps": 29.752928999999995
+    },
+    {
+     "port": "t_NW_sm3__clk_c20",
+     "length_um": 324.2380000000005,
+     "early_delay_ps": 26.374755999999934
+    },
+    {
+     "port": "t_NW_sm3__clk_c24",
+     "length_um": 332.87799999999993,
+     "early_delay_ps": 28.897339000000102
+    },
+    {
+     "port": "t_NW_sm3__clk_c28",
+     "length_um": 334.49800000000073,
+     "early_delay_ps": 25.884277999999995
+    },
+    {
+     "port": "t_NW_sm3__clk_c25",
+     "length_um": 332.87799999999993,
+     "early_delay_ps": 29.566162000000077
+    },
+    {
+     "port": "t_NW_sm3__clk_c26",
+     "length_um": 332.8779999999997,
+     "early_delay_ps": 25.429687000000058
+    },
+    {
+     "port": "t_NW_sm3__clk_c21",
+     "length_um": 324.2380000000005,
+     "early_delay_ps": 26.240233999999873
+    },
+    {
+     "port": "t_NW_sm3__clk_t1",
+     "length_um": 8.909999999998945,
+     "early_delay_ps": 0.0
+    },
+    {
+     "port": "t_NW_sm3__clk_c22",
+     "length_um": 324.2380000000003,
+     "early_delay_ps": 22.142090000000053
+    },
+    {
+     "port": "t_NW_sm3__clk_c29",
+     "length_um": 324.2379999999987,
+     "early_delay_ps": 26.230223999999907
+    },
+    {
+     "port": "t_NW_sm3__clk_c30",
+     "length_um": 324.23799999999846,
+     "early_delay_ps": 22.24743699999999
+    },
+    {
+     "port": "t_NW_sm3__clk_c23",
+     "length_um": 324.23800000000074,
+     "early_delay_ps": 24.134766000000127
+    },
+    {
+     "port": "t_NW_sm3__clk_c27",
+     "length_um": 332.87800000000016,
+     "early_delay_ps": 27.35998500000005
+    },
+    {
+     "port": "t_NW_sm3__clk_c31",
+     "length_um": 324.2379999999989,
+     "early_delay_ps": 24.04504299999985
+    },
+    {
+     "port": "t_NW_sm3__clk_c13",
+     "length_um": 324.2380000000005,
+     "early_delay_ps": 26.23022500000002
+    },
+    {
+     "port": "t_NW_sm3__clk_c14",
+     "length_um": 324.2380000000003,
+     "early_delay_ps": 22.24743699999999
+    },
+    {
+     "port": "t_NW_sm3__clk_c17",
+     "length_um": 332.87799999999993,
+     "early_delay_ps": 29.56616199999985
+    },
+    {
+     "port": "t_NW_sm3__clk_c18",
+     "length_um": 332.8779999999997,
+     "early_delay_ps": 25.42968800000017
+    },
+    {
+     "port": "t_NW_sm3__clk_c15",
+     "length_um": 324.23800000000074,
+     "early_delay_ps": 24.146118000000115
+    },
+    {
+     "port": "t_NW_sm3__clk_c19",
+     "length_um": 332.87800000000016,
+     "early_delay_ps": 27.308716000000004
+    }
+   ]
+  }
+ }
+}
