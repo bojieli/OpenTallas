@@ -25,3 +25,10 @@ Per-probe verdict lines: probes.tsv.
 
 SRAM-edge rule: cxport_ij_q has no SRAMs (N/A). whatif.py = placement-held what-if on geom.tsv (estimate);
 hotnets.py = nets crossing a cut window.
+
+## Follow-on candidates (same G0/G0C: G0 PASS, G0C 8 inherited, 0 new; CHECKED)
+- d21h (die_plan 53b6d7beccd3) = d21 + the 11 HBM-BIND-8 h8b hop-chain lanes (main lane_add, --near-um 20000 --max-hops 8
+  --first-id 200, rows_h8b.json): built 11 / 1,791 b, 0 far/failed.
+- d21s (die_plan d0c9b4260b84) = d21h + host_cp_rxs outline 434.808x480 -> 434.808x302.4 (mkvar.py, spec_rxs.json, RB
+  macros, origin [34.56,587.52], entry (216,151.2) in the centre channel): macro area 67.5k of 131.5k um2 = 51 % ->
+  low fill becomes macro-dominated INFO (estimate; kit not yet built).

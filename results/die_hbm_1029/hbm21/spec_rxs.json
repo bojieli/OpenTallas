@@ -1,0 +1,76 @@
+[
+ {
+  "module": "ot_hbm_host_cp_rxs",
+  "tag": "dh21s",
+  "w": 434.808,
+  "h": 302.4,
+  "macros": [
+   {
+    "name": "u_fcore.u_link.g_bank[3].u_store.u_native.u_sram",
+    "master": "ot_sram_1r1w_64x512_m1_r2c2",
+    "rect_um": [
+     15.12,
+     15.12,
+     186.408,
+     92.904
+    ],
+    "orient": "MY"
+   },
+   {
+    "name": "u_fcore.u_link.g_bank[2].u_store.u_native.u_sram",
+    "master": "ot_sram_1r1w_64x512_m1_r2c2",
+    "rect_um": [
+     15.12,
+     101.544,
+     186.408,
+     179.328
+    ],
+    "orient": "MY"
+   },
+   {
+    "name": "u_fcore.u_land.g_bank[0].u_mem",
+    "master": "ot_sram_1r1w_256x256_m2_r2c2",
+    "rect_um": [
+     15.12,
+     187.968,
+     187.944,
+     229.032
+    ],
+    "orient": "MY"
+   },
+   {
+    "name": "u_fcore.u_link.g_bank[1].u_store.u_native.u_sram",
+    "master": "ot_sram_1r1w_64x512_m1_r2c2",
+    "rect_um": [
+     248.4,
+     15.12,
+     419.688,
+     92.904
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_link.g_bank[0].u_store.u_native.u_sram",
+    "master": "ot_sram_1r1w_64x512_m1_r2c2",
+    "rect_um": [
+     248.4,
+     101.544,
+     419.688,
+     179.328
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_land.g_bank[1].u_mem",
+    "master": "ot_sram_1r1w_256x256_m2_r2c2",
+    "rect_um": [
+     246.864,
+     187.968,
+     419.688,
+     229.032
+    ],
+    "orient": "R0"
+   }
+  ]
+ }
+]
