@@ -1,0 +1,590 @@
+{
+  "status": "PARTIAL_DIAGNOSTIC",
+  "period_ps": 833,
+  "corners": {
+    "TT": {
+      "clips": [
+        "c0",
+        "core"
+      ],
+      "sinks": {
+        "L_clk": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t12": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t16": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t20": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t24": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t4": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t8": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M0ddd": {
+          "high_min_ps": 435.114138,
+          "high_max_ps": 460.333888,
+          "low_min_ps": 372.666112,
+          "low_max_ps": 397.885862
+        },
+        "M0ddu": {
+          "high_min_ps": 434.84369100000004,
+          "high_max_ps": 460.53667699999994,
+          "low_min_ps": 372.46332300000006,
+          "low_max_ps": 398.15630899999996
+        },
+        "M0dud": {
+          "high_min_ps": 435.155947,
+          "high_max_ps": 460.399531,
+          "low_min_ps": 372.600469,
+          "low_max_ps": 397.8440529999999
+        },
+        "M0duu": {
+          "high_min_ps": 435.103823,
+          "high_max_ps": 460.4074969999999,
+          "low_min_ps": 372.5925030000001,
+          "low_max_ps": 397.89617699999997
+        },
+        "M0udd": {
+          "high_min_ps": 434.981721,
+          "high_max_ps": 460.05559800000003,
+          "low_min_ps": 372.94440199999997,
+          "low_max_ps": 398.018279
+        },
+        "M0udu": {
+          "high_min_ps": 434.95297400000004,
+          "high_max_ps": 460.0840709999999,
+          "low_min_ps": 372.91592900000006,
+          "low_max_ps": 398.04702599999996
+        },
+        "M0uud": {
+          "high_min_ps": 434.99826200000007,
+          "high_max_ps": 460.1333880000001,
+          "low_min_ps": 372.866612,
+          "low_max_ps": 398.00173799999993
+        },
+        "M0uuu": {
+          "high_min_ps": 434.992068,
+          "high_max_ps": 460.139735,
+          "low_min_ps": 372.86026499999997,
+          "low_max_ps": 398.007932
+        },
+        "L_clk_c0": {
+          "high_min_ps": 424.553224,
+          "high_max_ps": 435.14931000000007,
+          "low_min_ps": 397.85069000000004,
+          "low_max_ps": 408.446776
+        },
+        "L_clk_c1": {
+          "high_min_ps": 424.555665,
+          "high_max_ps": 435.1468530000001,
+          "low_min_ps": 397.8531469999999,
+          "low_max_ps": 408.444335
+        },
+        "L_clk_c2": {
+          "high_min_ps": 424.55676400000004,
+          "high_max_ps": 435.191333,
+          "low_min_ps": 397.808667,
+          "low_max_ps": 408.443236
+        },
+        "L_clk_c3": {
+          "high_min_ps": 424.556414,
+          "high_max_ps": 435.191775,
+          "low_min_ps": 397.808225,
+          "low_max_ps": 408.443586
+        },
+        "L_clk_t1": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t10": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t17": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t18": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t2": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t21": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t22": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t25": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t26": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t5": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t6": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t9": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M1ddd": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M1ddu": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M1dud": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M1duu": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M1udd": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M1udu": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M1uud": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M1uuu": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M2ddd": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M2ddu": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M2dud": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M2duu": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M2udd": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M2udu": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M2uud": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M2uuu": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        }
+      },
+      "min_high_ps": 424.553224,
+      "min_low_ps": 372.46332300000006
+    },
+    "FF": {
+      "clips": [
+        "c0",
+        "core"
+      ],
+      "sinks": {
+        "L_clk": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t12": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t16": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t20": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t24": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t4": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t8": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M0ddd": {
+          "high_min_ps": 433.08855700000004,
+          "high_max_ps": 455.6039199999999,
+          "low_min_ps": 377.39608000000004,
+          "low_max_ps": 399.91144299999996
+        },
+        "M0ddu": {
+          "high_min_ps": 432.8460349999999,
+          "high_max_ps": 455.81278199999997,
+          "low_min_ps": 377.18721800000003,
+          "low_max_ps": 400.1539650000001
+        },
+        "M0dud": {
+          "high_min_ps": 433.13839199999995,
+          "high_max_ps": 455.6488109999999,
+          "low_min_ps": 377.35118900000003,
+          "low_max_ps": 399.86160800000005
+        },
+        "M0duu": {
+          "high_min_ps": 433.10107000000005,
+          "high_max_ps": 455.66284900000005,
+          "low_min_ps": 377.33715099999995,
+          "low_max_ps": 399.89892999999995
+        },
+        "M0udd": {
+          "high_min_ps": 432.918911,
+          "high_max_ps": 455.25739299999987,
+          "low_min_ps": 377.7426070000001,
+          "low_max_ps": 400.081089
+        },
+        "M0udu": {
+          "high_min_ps": 432.8918110000001,
+          "high_max_ps": 455.28315,
+          "low_min_ps": 377.71685,
+          "low_max_ps": 400.1081889999999
+        },
+        "M0uud": {
+          "high_min_ps": 432.9428049999999,
+          "high_max_ps": 455.33625099999995,
+          "low_min_ps": 377.663749,
+          "low_max_ps": 400.0571950000001
+        },
+        "M0uuu": {
+          "high_min_ps": 432.9363659999999,
+          "high_max_ps": 455.342537,
+          "low_min_ps": 377.657463,
+          "low_max_ps": 400.0636340000001
+        },
+        "L_clk_c0": {
+          "high_min_ps": 422.73552900000004,
+          "high_max_ps": 431.71378500000003,
+          "low_min_ps": 401.28621499999997,
+          "low_max_ps": 410.26447099999996
+        },
+        "L_clk_c1": {
+          "high_min_ps": 422.73729899999995,
+          "high_max_ps": 431.71161799999993,
+          "low_min_ps": 401.288382,
+          "low_max_ps": 410.2627010000001
+        },
+        "L_clk_c2": {
+          "high_min_ps": 422.75268000000005,
+          "high_max_ps": 431.7603399999999,
+          "low_min_ps": 401.23966,
+          "low_max_ps": 410.24732
+        },
+        "L_clk_c3": {
+          "high_min_ps": 422.75284800000003,
+          "high_max_ps": 431.76069000000007,
+          "low_min_ps": 401.23931,
+          "low_max_ps": 410.24715199999997
+        },
+        "L_clk_t1": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t10": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t17": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t18": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t2": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t21": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t22": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t25": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t26": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t5": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t6": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "L_clk_t9": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M1ddd": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M1ddu": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M1dud": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M1duu": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M1udd": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M1udu": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M1uud": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M1uuu": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M2ddd": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M2ddu": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M2dud": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M2duu": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M2udd": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M2udu": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M2uud": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        },
+        "M2uuu": {
+          "high_min_ps": Infinity,
+          "high_max_ps": -Infinity,
+          "low_min_ps": Infinity,
+          "low_max_ps": -Infinity
+        }
+      },
+      "min_high_ps": 422.73552900000004,
+      "min_low_ps": 377.18721800000003
+    }
+  }
+}
