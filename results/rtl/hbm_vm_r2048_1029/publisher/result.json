@@ -1,7 +1,7 @@
 {
   "status": "COMPONENT_SOURCE_PASS",
-  "run": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-vm-capacity-1029/publish_r3",
-  "unit": "oth-ubuntu-3152652-1793274178",
+  "run": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-vm-capacity-1029/publish_r4",
+  "unit": "oth-ubuntu-3179360-1793274321",
   "exit": 0,
   "source_protocol": {
     "actual_target": 120,
@@ -40,5 +40,6 @@
   "selected_source": false,
   "runtime_A_replication_qualified": false,
   "SIGNED": false,
-  "full_token": false
+  "full_token": false,
+  "reset": "actual native ot_rst_relay SYNC2 TREE1 regional reset; raw pin drives relay only, +3releaseedges"
 }
