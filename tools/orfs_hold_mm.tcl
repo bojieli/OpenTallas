@@ -649,6 +649,10 @@ proc ot_repair_hold_guarded {rt_args} {
 # it carries the flow-default macro clock clustering (clock_tree_synthesis wrapper; physical/common_flow/
 # macro_cts_cluster.tcl, which the closure loop ships into older snapshots next to this file).
 if {[info commands ot_mcc_cts_orig] eq ""} {
-  set ot_mcc_file [file join [file dirname [file dirname [file normalize [info script]]]] physical common_flow macro_cts_cluster.tcl]
-  if {[file exists $ot_mcc_file]} { source $ot_mcc_file } else { puts "OT_MACRO_CTS unavailable: $ot_mcc_file missing" }
+  set ot_mcc_dir [file dirname [file normalize [info script]]]
+  set ot_mcc_file [file join $ot_mcc_dir macro_cts_cluster.tcl]
+  if {![file isfile $ot_mcc_file]} {
+    set ot_mcc_file [file join [file dirname $ot_mcc_dir] physical common_flow macro_cts_cluster.tcl]
+  }
+  if {[file isfile $ot_mcc_file]} { source $ot_mcc_file } else { puts "OT_MACRO_CTS unavailable: $ot_mcc_file missing" }
 }
