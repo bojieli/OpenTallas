@@ -94,6 +94,13 @@ class DirectStationTest(unittest.TestCase):
                               (dict(control_mask=1), "explicit caller")):
             with self.assertRaisesRegex(ValueError, error):
                 materialize(SOURCE, [dict(CHAIN, **change)], enabled=True)
+        partial, record = materialize(SOURCE, [dict(CHAIN, source_lsb=4,
+                                                   source_width=17, sink_lsb=4)], enabled=True)
+        self.assertEqual(record["chains"][0]["source_segments"], [("n", "bank__rr1", 4, 20)])
+        self.assertIn("{other[256:0], bank__rr1[256:21], __ot_station_bank_rr1_out[16:0], bank__rr1[3:0]}", partial)
+        for change in (dict(source_lsb=256, source_width=2), dict(source_width=0)):
+            with self.assertRaisesRegex(ValueError, "source slice outside"):
+                materialize(SOURCE, [dict(CHAIN, **change)], enabled=True)
 
     def test_lockstep_exact_delay_and_mutants(self):
         candidate, _ = materialize(SOURCE, [CHAIN], enabled=True)
