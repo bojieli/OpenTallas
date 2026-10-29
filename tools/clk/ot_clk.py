@@ -311,6 +311,13 @@ def register_entry(cal_path, eid, cell, clock_rc, route=None, basis=None):
     return e
 
 
+def reference_file(ref, f):
+    """die runs that post-process the kit (clock_body_bays overlay) keep die_trial's own output as <stem>_GENERATED<ext>;
+    compare against that when present"""
+    g = Path(ref) / f"{Path(f).stem}_GENERATED{Path(f).suffix}"
+    return g if g.is_file() else Path(ref) / f
+
+
 def json_diff_keys(a, b, pre=""):
     """differing keys of two JSON objects: top level, and one level down inside 'meta' (tool-version provenance)"""
     out = []
@@ -391,12 +398,13 @@ def main(argv=None):
     ref = Path(cfg["event"]["reference_clock_dir"])
     res = {}
     for f in cfg["event"].get("compare", ["tree.json", "ctree.v"]):
-        x, y = out / "kit" / "clock" / f, ref / f
+        x, y = out / "kit" / "clock" / f, reference_file(ref, f)
         res[f] = dict(identical=x.is_file() and y.is_file() and x.read_bytes() == y.read_bytes(),
                       sha_new=hashlib.sha256(x.read_bytes()).hexdigest()[:16] if x.is_file() else None,
                       sha_ref=hashlib.sha256(y.read_bytes()).hexdigest()[:16] if y.is_file() else None)
     for f, v in res.items():          # tree.json: name the differing top-level / meta keys (provenance-only diffs)
-        x, y = out / "kit" / "clock" / f, ref / f
+        x, y = out / "kit" / "clock" / f, reference_file(ref, f)
+        v["reference_file"] = y.name
         if not v["identical"] and f.endswith(".json") and x.is_file() and y.is_file():
             v["diff_keys"] = json_diff_keys(json.loads(x.read_text()), json.loads(y.read_text()))
     meta_only = all(v["identical"] or (v.get("diff_keys") is not None and

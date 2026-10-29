@@ -210,3 +210,10 @@ def test_json_diff_keys_names_meta_only_differences():
 def test_s81_go16_draft_passes_with_the_routed_s81_fit():
     ok, e, why = O.stage_check(cfg("s81_go16"), reg())
     assert ok and e["id"] == "inv2_ndr_s81_go15", why
+
+
+def test_reference_prefers_generated_copy(tmp_path):
+    (tmp_path / "tree.json").write_text("{}")
+    assert O.reference_file(tmp_path, "tree.json").name == "tree.json"
+    (tmp_path / "tree_GENERATED.json").write_text("{}")
+    assert O.reference_file(tmp_path, "tree.json").name == "tree_GENERATED.json"

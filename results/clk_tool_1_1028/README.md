@@ -12,7 +12,7 @@ Labels: CHECKED = run here on the named data; UNCHECKED = not measured by this l
 | `tools/clk/configs/{qc,s81,kv,hbm,head}.yaml` | one config per die = that die's current die_trial clock build (inputs, stack, top form, region form, residual tools) |
 | `tools/clk/configs/s81_go16.yaml` | DRAFT for DIE-S81-18: go15 recipe + registry stage model `inv2_ndr_s81_go15` + early 1.0/1.0 (DIE-S81-17 ASK default) |
 | `tools/clk/stage_registry.json` | P1 stage-model table `ot_clk_stage/1`: key (cell, polarity, clock_rc, corners, edges) -> leg/tap coefficients + source + `coeff_sha` |
-| `tools/clk/test_ot_clk.py` | 24 tests incl. the mutant; PASS on intel2 python3.14 + PyYAML and in python:3.12 without PyYAML (built-in YAML subset reader, 5 PyYAML-compare tests skip there) CHECKED |
+| `tools/clk/test_ot_clk.py` | 25 tests incl. the mutant; PASS on intel2 python3.14 + PyYAML and in python:3.12 without PyYAML (built-in YAML subset reader, 5 PyYAML-compare tests skip there) CHECKED |
 | `tools/clk/replay.sh` | P0 replay in a capped docker container (diagnostic probe, fleet host only) |
 
 Config keys -> die_trial flags: `inputs.{plan,region_map,feed,views}`, `stack.{cell,clock_rc}`, `top.{form,leaf_um,rep_um,
@@ -32,7 +32,7 @@ main is default-identical for each die's flag set. Runs: intel2/intel1 `/srv/ope
 | HEAD | intel2 die-head-11/inv/inv2r200 (= g5_r200 = DIE-HEAD-14 base tree) | LAND-HEAD 09:25 line (not scripted) | **ctree.v byte-identical; tree.json identical except `meta.clock_cell`** (CHECKED) |
 | KV | intel1 die-kv-15-1028/kit_fb_inv_r150 | results/die_kv_15_1028/kit2.sh fb_inv_r150 inv 150 | **ctree.v byte-identical; tree.json identical except `meta.clock_cell`** (CHECKED) |
 | HBM | intel2 die-hbm-10/trial2b/kit | results/die_hbm_1027/hbm10/trial2b/chain.sh | RUNNING (container clktool1-hbm, single-thread like the original ~3.5 h kit) -> collect `replay_hbm/replay.json` |
-| QC | intel2 die-qc21-1028/trial14 | results/die_qc21_1028/kit21.sh t13 (stage cal via the registry) | RUNNING (clktool1-qc, 24 workers; original 23 min, host load ~170) -> collect `replay_qc/replay.json` |
+| QC | intel2 die-qc21-1028/trial14 | results/die_qc21_1028/kit21.sh t13 (stage cal via the registry) | **tree_GENERATED.json + ctree_GENERATED.tcl + ctree.v byte-identical** (non-legacy: stage cal written from registry entry `inv2_ndr_qc_trial13b`; 71 min at host load ~170) (CHECKED). The trial14 `tree.json` itself was later rewritten in place by `clock_body_bays.py` (meta.body_overlay, 36,269 cells moved), so replay compares die_trial's own `*_GENERATED*` copy when present |
 | S81 | intel2 die-s81-16/go15/kit | results/die_s81_16_1028/scripts/go15.sh (`--legacy`: stage check FAIL by design) | RUNNING (clktool1-s81, `--legacy --workers 24`; original serial 3:02 h) -> collect `replay_s81/replay.json` |
 
 `meta.clock_cell` is a provenance key that main die_trial writes and the 1465eff51c-era tool did not; nodes, taps, sites,
