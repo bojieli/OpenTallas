@@ -22,6 +22,7 @@ def main():
  step('region_ocv',[H/'head_strip_ocv_regions.py',out/'physical_ocv.json','--table',D/'region_plan/regions_map.json','--regions',D/'spine_regions.json','--out',out/'region_ocv.json'])
  step('plan',[T/'count_align_plan.py',out/'region_ocv.json','--corner','TT_droop-regions_corelat450,FF_droop-regions_corelat380','--sta-proof',out/'proof','--sta-plan',plan,'--sta-clock-cal','spice_edge','--sta-cppr-lca','--sta-clock-ocv','table','--sta-clock-droop','shared','--sta-droop-regions',out/'proof/droop_regions.json','--sta-core-latency-ff','380','--sta-ca-ring',D/'clock_profile/ca_ring_hd_tile_dh20.json','--sta-clock-cell','inv2','--start-tree','clock','--start-clean','width','--mc-chips','2000','--out',out/'plan.json'])
  result=json.load(open(out/'plan.json'))['summary'];iv=result['sta_interval']
+ assert result['crossings']==427 and iv['rows']==427,('incomplete HEAD external crossing set',result)
  assert not any(iv.get(k,0) for k in ('missing','unbound','rows_without_measured_fall')),('incomplete physical STA hull',iv)
  assert result['fail']==0 and result['below_100ps']==0,('CA design margin failure',result)
  step('bind',[T/'count_align_bind.py',out/'plan.json','--parts','table','--table',D/'region_plan/regions_map.json','--table-out',out/'regions_ca.json','--out',out/'bind.json','--strap-form','--plan-die',plan,'--straps-out',out/'straps.json'])
