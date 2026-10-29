@@ -661,7 +661,8 @@
  "ot_hbm_idx_topk_link_static__650.16x500.04": {
   "top": "ot_hbm_idx_topk_link_static",
   "files": [
-   "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv"
+   "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv"
   ],
   "defines": [],
   "params": {},

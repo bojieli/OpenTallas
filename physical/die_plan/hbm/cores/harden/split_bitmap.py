@@ -210,9 +210,14 @@ def build(mj, mtop, rest_txt, rtop, cut, canon_tid=None):
             (p, w), = m.items()
             exp = [[p, 0, 0, w]]
             whole[c] = 'SAME_NET' if smap.get(c) == exp else f'DIFFERS: bit map {smap.get(c)}'
-    ok = not problems and not in_multi and not unresolved_rtl
+    # Candidate regrouping is useful diagnostics, but lost cut-bit identity cannot be
+    # established by width/order inference. Never install these candidates as PASS maps.
+    unproven = {bus: note for bus, note in notes.items()
+                if note.startswith(('NARROW:', 'BY_ELIMINATION:'))}
+    ok = not problems and not in_multi and not unresolved_rtl and not in_unc
+    verdict = 'FAIL' if not ok else ('UNPROVEN' if unproven else 'PASS')
     return dict(slices=smap, check=dict(
-        verdict='PASS' if ok else 'FAIL', plan_buses=len(cut), mapped_buses=len(smap),
+        verdict=verdict, unproven_mappings=unproven, plan_buses=len(cut), mapped_buses=len(smap),
         plan_bits=sum(w for _, _, w, _ in cut), problems=problems, unresolved_rtl=unresolved_rtl[:50],
         n_unresolved_rtl=len(unresolved_rtl), rtl_inputs_uncovered=in_unc[:200], n_rtl_inputs_uncovered=len(in_unc),
         rtl_inputs_multi=in_multi[:50], rtl_outputs_open=len(out_open), constant_plan_bits=consts,

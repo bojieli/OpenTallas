@@ -1,0 +1,45 @@
+
+** Trying induction with length 1 **
+
+Setting up time step 3:
+Import set-constraint: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Imported 176 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+Import show expression: \clk
+Import show expression: \rst_n
+Import show expression: \clear
+Import show expression: \ingest
+Import show expression: \mask
+Import show expression: \words
+
+[base case 1] Solving problem with 151693 variables and 414566 clauses..
+Base case for induction length 1 proven.
+
+Setting up time step 2:
+Import set-constraint: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Imported 176 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+Import show expression: \clk
+Import show expression: \rst_n
+Import show expression: \clear
+Import show expression: \ingest
+Import show expression: \mask
+Import show expression: \words
+
+[induction step 1] Solving problem with 100770 variables and 275185 clauses..
+Induction step proven: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
