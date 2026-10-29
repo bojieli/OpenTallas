@@ -1,0 +1,73 @@
+{
+ "schema": "opentallas.hbm.spb0_bank_clock_inventory.v1",
+ "status": "PLANNED_NATIVE_BANKS_ONLY_NOT_ACTUAL_BOUND_GEN_OR_CTS",
+ "physical_assignment_rule": "clock_taps.tcl cell-lower-left Manhattan, original tap order tie-break",
+ "source": "reviewed ot_hbm_spb0_regs kept stage/bit identity",
+ "bits": 4104,
+ "native_ff_loads": {
+  "clk": 512,
+  "clk_t1": 514,
+  "clk_t2": 512,
+  "clk_t3": 514,
+  "clk_t4": 1026,
+  "clk_t5": 1026
+ },
+ "smallest_second_tap_distance_margin_um": 194.076,
+ "internal_stage_clock_groups": [
+  {
+   "instance": "u_hbm_spb0_rx",
+   "launch_stage": 0,
+   "capture_stage": 1,
+   "launch_tap": "clk_t1",
+   "capture_tap": "clk_t3",
+   "bits": 514
+  },
+  {
+   "instance": "u_hbm_spb0_rx",
+   "launch_stage": 1,
+   "capture_stage": 2,
+   "launch_tap": "clk_t3",
+   "capture_tap": "clk_t4",
+   "bits": 514
+  },
+  {
+   "instance": "u_hbm_spb0_rx",
+   "launch_stage": 2,
+   "capture_stage": 3,
+   "launch_tap": "clk_t4",
+   "capture_tap": "clk_t5",
+   "bits": 514
+  },
+  {
+   "instance": "u_hbm_spb0_tx",
+   "launch_stage": 0,
+   "capture_stage": 1,
+   "launch_tap": "clk_t4",
+   "capture_tap": "clk_t5",
+   "bits": 512
+  },
+  {
+   "instance": "u_hbm_spb0_tx",
+   "launch_stage": 1,
+   "capture_stage": 2,
+   "launch_tap": "clk_t5",
+   "capture_tap": "clk_t2",
+   "bits": 512
+  },
+  {
+   "instance": "u_hbm_spb0_tx",
+   "launch_stage": 2,
+   "capture_stage": 3,
+   "launch_tap": "clk_t2",
+   "capture_tap": "clk",
+   "bits": 512
+  }
+ ],
+ "conditions": [
+  "actual selected raw wrapper and delivered clock/reset contract required",
+  "actual GEN must preserve sites and check these exact kept-bit assignments",
+  "full control/face loads remain separate and must not be subtracted",
+  "endpoint source/capture groups withheld until actual bound contract"
+ ],
+ "full_bit_inventory": "Regenerate with bank_clock_inventory.py and reviewed placement/clock_delta; every per-bit site/tap entry is emitted."
+}
