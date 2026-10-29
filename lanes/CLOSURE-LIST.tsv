@@ -1,0 +1,7 @@
+# CLOSURE LIST (OWNER 12.18, 10-29). One row per failing item from the FULL-GATE CENSUS of a die's current plan.
+# Columns (TAB-separated): id	die	gate	item	measure	status	owner_lane	found_run	opened	closed
+#   id: DIE-NNN (e.g. KV-001); gate: BIND|GRT|CLOCK|DIESTA-TT|DIESTA-FF|CA|SPREAD|KIT:<type>|GEOM|LEC|TOKEN
+#   status: OPEN|FIXING|CLOSED|WONTFIX(owner)   measure: the number vs limit, e.g. "-47.98 ps (>=0)"
+# Rules: items are added ONLY from census runs or reruns of the same gates on the same frozen plan (found_run = run id/path).
+#        A new kind of check is NOT added without an OWNER decision (rule freeze). Group many errors of one root cause into one row (with count).
+id	die	gate	item	measure	status	owner_lane	found_run	opened	closed
