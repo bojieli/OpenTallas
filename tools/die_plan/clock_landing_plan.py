@@ -966,3 +966,52 @@ def _finish(raw,P,bytype,pports,side):
             {(e[s]["part"],e[s]["bus"]) for e in infra_edges for s in ("src","dst")})
     for t in raw["partition_types"].values():t.pop("_cland_geom",None)
     return raw,side
+
+
+# DIE-KV-32 10-29 (opt-in, fix-only): a plan composed with band_reserve="live"/"padded" sizes each storage band from the
+# pre-CA ring (612 non-flop cells per 64-bit chunk); the count-aligned ring maps ~1.7x that (KV io_ft u_cland_ft0_i W=523:
+# 11853 cells / 2721 flops, 3902 um2 reserved at 40 % fill in a 2641 um2 band; hroot ft10_i W=33: 351 in 317, CHECKED
+# 3_3_place_gp "no legal nonoverlapping row/site in reserved band"). resize_undersized_bands re-sizes, in the named
+# types only, every ring band whose area is below the ring_ff reserve (ring flop count x measured footprint), with the
+# same _storage_band search (405-um reach, macro/island/clock-site/FT-site/other-band free); bands that already meet the
+# reserve, monitor bands and all other types stay byte-identical.
+def ring_ff_reserve_um2(width,has_epoch=True):
+    rw=64*math.ceil((int(width)+int(has_epoch))/64)
+    return (5*rw+160)*RING_FF_RESERVE_UM2*RING_FF_PACK
+
+
+def resize_undersized_bands(plan,sidecar,types):
+    global BAND_RESERVE,BAND_SPREAD,BAND_RING
+    geoms=sidecar["collector"]["types"];out=copy.deepcopy(plan);report=[]
+    saved=(BAND_RESERVE,BAND_SPREAD,BAND_RING)
+    BAND_RESERVE,BAND_SPREAD,BAND_RING="ring_ff",1.0,"all"
+    try:
+        for tn in types:
+            t=out["partition_types"][tn];bands=t["clock"]["landing_contract"]["bands"]
+            tt=copy.deepcopy(t);tt["_cland_geom"]=copy.deepcopy(geoms[tn]["bus_geometry"])
+            for bus in sorted(bands):
+                b=bands[bus]
+                if bus.startswith("monitor_") or not b.get("rect_um"):continue
+                x0,y0,x1,y1=b["rect_um"];need=ring_ff_reserve_um2(b["width"])
+                if (x1-x0)*(y1-y0)+1e-6>=need:continue
+                used=[list(o["rect_um"]) for k,o in bands.items() if k!=bus and o.get("rect_um")]
+                nb=_storage_band(tt,bus,int(b["width"]),used)
+                nb.update(instance=b.get("instance","u_cland_"+bus),resized_from_um=list(b["rect_um"]),
+                          resize="DIE-KV-32 ring_ff reserve (undersized for the CA ring)")
+                report.append(dict(type=tn,bus=bus,old_um2=round((x1-x0)*(y1-y0),1),reserve_um2=round(need,1),
+                                   new_rect_um=nb["rect_um"],hop_um=nb["max_pin_to_band_hop_um"]))
+                bands[bus]=nb
+    finally:
+        BAND_RESERVE,BAND_SPREAD,BAND_RING=saved
+    return out,report
+
+
+if __name__=="__main__":
+    import argparse
+    ap=argparse.ArgumentParser(description="fix-only: re-size undersized landing storage bands");ap.add_argument("cmd",choices=["resize-bands"]);ap.add_argument("plan");ap.add_argument("sidecar")
+    ap.add_argument("--types",required=True);ap.add_argument("--out",required=True)
+    a=ap.parse_args()
+    new,rep=resize_undersized_bands(json.load(open(a.plan)),json.load(open(a.sidecar)),a.types.split(","))
+    open(a.out,"w").write(json.dumps(new,indent=1))
+    for r in rep:print("OT_BAND_RESIZE",json.dumps(r))
+    print(f"OT_BAND_RESIZE {len(rep)} bands re-sized in {a.types}")
