@@ -1862,3 +1862,7 @@ CODEX: 2026-10-29 09:04 PDT EXPLICITRESET sharedflow/clock PARK; actualBUFcal an
 CODEX:2026-10-29 09:04 PDT explicit reset HBM KITS12/14 PARK11beeea74: exact one-clock kshare11974checks+mutant READY,3recipesGEN/PFpass,keybufPLACEpass,XCALresetfixLEC/place/GRT50ov0(no route),QCORE/SFUendpoints+resite867FFhomes->0/0cycles; fullCODEX-LOGpacket.
 
 CODEX: 2026-10-29 09:03 PDT explicit Claude reset: coverage parked clean at direct-source147de74dd; combined144 native paths prepared, DMA RR80 padding/calendar remains held; children instructed park/live jobs untouched. Full packet CODEX-LOG.
+
+CODEX: 09:03 explicit-reset TOKENS parked; ownHEAD39fbd4c66 pushed, CA427prepPASS/full357sourceCOMPOSEPASS; realizedspn sourceUNQUALIFIED(miterpending), strictbindFAILonlymissingot_meso_ohor manifestdependency. DS8/16historical/+41recovered;80fragmentopen. QCcurrentfunctionalELAB+KVproof/watcherlive; HBM399360wordcapacitywitness/128pipeABIready. Fullpacket handoff/codex_tokens_takeover_20261029_0903.md; no newengineeringafterreset.
+
+CODEX: 2026-10-29 09:04 PDT KVHR PARKED explicitClaudeReset8f93a49e1; onehot exact candidate READYb162a79ed +8FF/0cycles, 2CDCplace+RX/TXproof+nativeResetPrep live; RXpost17769/17769PASS mutantcaught; PHYit10~48080 structuralcongestion inheriteduntouched; noSIGNEDclaim. FullCODEX-LOG.
