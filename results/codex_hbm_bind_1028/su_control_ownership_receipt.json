@@ -1,0 +1,482 @@
+{
+  "schema": "opentallas.hbm.su_control_ownership_proposal.v1",
+  "source_json": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0300/current_r2/asbuilt.json",
+  "manifest": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0300/native_cones_r2/asbuilt.json",
+  "status": "PROPOSAL_ONLY_NO_PHYSICAL_CAPACITY_OR_CYCLE_ADOPTION",
+  "excluded": "Clock/reset nets and pins; source outside SU roots not assigned.",
+  "unmapped_before": 30922,
+  "assigned_original_su_cells": 25350,
+  "other_unmapped_cells": 5572,
+  "cycles": "PENDING actual route/landing/token price",
+  "note": "Every original SU residual cell is owned once; each FF Q/D bit exactly once. Mixed vectors require existing exact primitive_splits. Ties/solver uncertainty explicit; tied/unconnected homes are estimates requiring plan-owner choice. Qbits count visible primitives ONLY; retained leaf state/macros require source body census before density. No comb primitive duplication or semantic edit.",
+  "per_source": [
+    {
+      "source_root": "su_NE0",
+      "per_part": {
+        "NE_su00": {
+          "nonfractured_cells": 1786,
+          "sequential_fragments": 168,
+          "known_primitive_q_bits": 14390,
+          "retained_leaf_cells": [
+            {
+              "path": "su_NE0.g_tap_r8b.u_tap",
+              "module": "ot_hbm_vm_lg_pair_tap",
+              "parameters": {
+                "READ_RETURN": "25",
+                "WRITE_RETURN": "22"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            },
+            {
+              "path": "su_NE0.u_slice.g_leaf[0].u_leaf",
+              "module": "ot_hbm_su_static_vm_bank_leaf",
+              "parameters": {
+                "B": "0",
+                "QID": "3",
+                "READ_RETURN": "25",
+                "WRITE_RETURN": "22"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            },
+            {
+              "path": "su_NE0.u_slice.g_leaf[1].u_leaf",
+              "module": "ot_hbm_su_static_vm_bank_leaf",
+              "parameters": {
+                "B": "1",
+                "QID": "3",
+                "READ_RETURN": "25",
+                "WRITE_RETURN": "22"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            }
+          ]
+        },
+        "NE_su01": {
+          "nonfractured_cells": 1192,
+          "sequential_fragments": 50,
+          "known_primitive_q_bits": 320,
+          "retained_leaf_cells": []
+        }
+      },
+      "solver": {
+        "method": "bit-weighted endpoint harmonic vote; fixed native cut anchors; whole combinational primitives",
+        "iterations": 192,
+        "converged_iterations": null,
+        "last_delta": 0.0001246238614987516,
+        "tied_ff_bits": 12169,
+        "unconnected_cells": 186
+      }
+    },
+    {
+      "source_root": "su_NE1",
+      "per_part": {
+        "NE_su10": {
+          "nonfractured_cells": 1474,
+          "sequential_fragments": 96,
+          "known_primitive_q_bits": 12523,
+          "retained_leaf_cells": []
+        },
+        "NE_su11": {
+          "nonfractured_cells": 1485,
+          "sequential_fragments": 102,
+          "known_primitive_q_bits": 1967,
+          "retained_leaf_cells": [
+            {
+              "path": "su_NE1.g_tap_r8b.u_tap",
+              "module": "ot_hbm_vm_lg_pair_tap",
+              "parameters": {
+                "READ_RETURN": "15",
+                "WRITE_RETURN": "12"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            },
+            {
+              "path": "su_NE1.u_slice.g_leaf[0].u_leaf",
+              "module": "ot_hbm_su_static_vm_bank_leaf",
+              "parameters": {
+                "B": "2",
+                "QID": "3",
+                "READ_RETURN": "15",
+                "WRITE_RETURN": "12"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            },
+            {
+              "path": "su_NE1.u_slice.g_leaf[1].u_leaf",
+              "module": "ot_hbm_su_static_vm_bank_leaf",
+              "parameters": {
+                "B": "3",
+                "QID": "3",
+                "READ_RETURN": "15",
+                "WRITE_RETURN": "12"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            }
+          ]
+        }
+      },
+      "solver": {
+        "method": "bit-weighted endpoint harmonic vote; fixed native cut anchors; whole combinational primitives",
+        "iterations": 192,
+        "converged_iterations": null,
+        "last_delta": 9.874542816412646e-05,
+        "tied_ff_bits": 12169,
+        "unconnected_cells": 165
+      }
+    },
+    {
+      "source_root": "su_NE2",
+      "per_part": {
+        "NE_su20": {
+          "nonfractured_cells": 1775,
+          "sequential_fragments": 156,
+          "known_primitive_q_bits": 14130,
+          "retained_leaf_cells": [
+            {
+              "path": "su_NE2.g_tap_r8b.u_tap",
+              "module": "ot_hbm_vm_lg_pair_tap",
+              "parameters": {
+                "READ_RETURN": "19",
+                "WRITE_RETURN": "16"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            },
+            {
+              "path": "su_NE2.u_slice.g_leaf[0].u_leaf",
+              "module": "ot_hbm_su_static_vm_bank_leaf",
+              "parameters": {
+                "B": "4",
+                "QID": "3",
+                "READ_RETURN": "19",
+                "WRITE_RETURN": "16"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            },
+            {
+              "path": "su_NE2.u_slice.g_leaf[1].u_leaf",
+              "module": "ot_hbm_su_static_vm_bank_leaf",
+              "parameters": {
+                "B": "5",
+                "QID": "3",
+                "READ_RETURN": "19",
+                "WRITE_RETURN": "16"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            }
+          ]
+        },
+        "NE_su21": {
+          "nonfractured_cells": 1192,
+          "sequential_fragments": 50,
+          "known_primitive_q_bits": 448,
+          "retained_leaf_cells": []
+        }
+      },
+      "solver": {
+        "method": "bit-weighted endpoint harmonic vote; fixed native cut anchors; whole combinational primitives",
+        "iterations": 192,
+        "converged_iterations": null,
+        "last_delta": 0.00012575520855301336,
+        "tied_ff_bits": 12169,
+        "unconnected_cells": 173
+      }
+    },
+    {
+      "source_root": "su_NE3",
+      "per_part": {
+        "NE_su30": {
+          "nonfractured_cells": 1474,
+          "sequential_fragments": 96,
+          "known_primitive_q_bits": 12651,
+          "retained_leaf_cells": []
+        },
+        "NE_su31": {
+          "nonfractured_cells": 1485,
+          "sequential_fragments": 102,
+          "known_primitive_q_bits": 1839,
+          "retained_leaf_cells": [
+            {
+              "path": "su_NE3.g_tap_r8b.u_tap",
+              "module": "ot_hbm_vm_lg_pair_tap",
+              "parameters": {
+                "READ_RETURN": "15",
+                "WRITE_RETURN": "12"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            },
+            {
+              "path": "su_NE3.u_slice.g_leaf[0].u_leaf",
+              "module": "ot_hbm_su_static_vm_bank_leaf",
+              "parameters": {
+                "B": "6",
+                "QID": "3",
+                "READ_RETURN": "15",
+                "WRITE_RETURN": "12"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            },
+            {
+              "path": "su_NE3.u_slice.g_leaf[1].u_leaf",
+              "module": "ot_hbm_su_static_vm_bank_leaf",
+              "parameters": {
+                "B": "7",
+                "QID": "3",
+                "READ_RETURN": "15",
+                "WRITE_RETURN": "12"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            }
+          ]
+        }
+      },
+      "solver": {
+        "method": "bit-weighted endpoint harmonic vote; fixed native cut anchors; whole combinational primitives",
+        "iterations": 192,
+        "converged_iterations": null,
+        "last_delta": 9.871306187492213e-05,
+        "tied_ff_bits": 12169,
+        "unconnected_cells": 165
+      }
+    },
+    {
+      "source_root": "su_NW0",
+      "per_part": {
+        "NW_su00": {
+          "nonfractured_cells": 1786,
+          "sequential_fragments": 168,
+          "known_primitive_q_bits": 14390,
+          "retained_leaf_cells": [
+            {
+              "path": "su_NW0.g_tap_r8b.u_tap",
+              "module": "ot_hbm_vm_lg_pair_tap",
+              "parameters": {
+                "READ_RETURN": "25",
+                "WRITE_RETURN": "22"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            },
+            {
+              "path": "su_NW0.u_slice.g_leaf[0].u_leaf",
+              "module": "ot_hbm_su_static_vm_bank_leaf",
+              "parameters": {
+                "B": "0",
+                "QID": "2",
+                "READ_RETURN": "25",
+                "WRITE_RETURN": "22"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            },
+            {
+              "path": "su_NW0.u_slice.g_leaf[1].u_leaf",
+              "module": "ot_hbm_su_static_vm_bank_leaf",
+              "parameters": {
+                "B": "1",
+                "QID": "2",
+                "READ_RETURN": "25",
+                "WRITE_RETURN": "22"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            }
+          ]
+        },
+        "NW_su01": {
+          "nonfractured_cells": 1192,
+          "sequential_fragments": 50,
+          "known_primitive_q_bits": 320,
+          "retained_leaf_cells": []
+        }
+      },
+      "solver": {
+        "method": "bit-weighted endpoint harmonic vote; fixed native cut anchors; whole combinational primitives",
+        "iterations": 192,
+        "converged_iterations": null,
+        "last_delta": 0.0001246238614987516,
+        "tied_ff_bits": 12169,
+        "unconnected_cells": 186
+      }
+    },
+    {
+      "source_root": "su_NW1",
+      "per_part": {
+        "NW_su10": {
+          "nonfractured_cells": 1474,
+          "sequential_fragments": 96,
+          "known_primitive_q_bits": 12523,
+          "retained_leaf_cells": []
+        },
+        "NW_su11": {
+          "nonfractured_cells": 1485,
+          "sequential_fragments": 102,
+          "known_primitive_q_bits": 1967,
+          "retained_leaf_cells": [
+            {
+              "path": "su_NW1.g_tap_r8b.u_tap",
+              "module": "ot_hbm_vm_lg_pair_tap",
+              "parameters": {
+                "READ_RETURN": "15",
+                "WRITE_RETURN": "12"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            },
+            {
+              "path": "su_NW1.u_slice.g_leaf[0].u_leaf",
+              "module": "ot_hbm_su_static_vm_bank_leaf",
+              "parameters": {
+                "B": "2",
+                "QID": "2",
+                "READ_RETURN": "15",
+                "WRITE_RETURN": "12"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            },
+            {
+              "path": "su_NW1.u_slice.g_leaf[1].u_leaf",
+              "module": "ot_hbm_su_static_vm_bank_leaf",
+              "parameters": {
+                "B": "3",
+                "QID": "2",
+                "READ_RETURN": "15",
+                "WRITE_RETURN": "12"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            }
+          ]
+        }
+      },
+      "solver": {
+        "method": "bit-weighted endpoint harmonic vote; fixed native cut anchors; whole combinational primitives",
+        "iterations": 192,
+        "converged_iterations": null,
+        "last_delta": 9.874542816412646e-05,
+        "tied_ff_bits": 12169,
+        "unconnected_cells": 165
+      }
+    },
+    {
+      "source_root": "su_NW2",
+      "per_part": {
+        "NW_su20": {
+          "nonfractured_cells": 1775,
+          "sequential_fragments": 156,
+          "known_primitive_q_bits": 14130,
+          "retained_leaf_cells": [
+            {
+              "path": "su_NW2.g_tap_r8b.u_tap",
+              "module": "ot_hbm_vm_lg_pair_tap",
+              "parameters": {
+                "READ_RETURN": "19",
+                "WRITE_RETURN": "16"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            },
+            {
+              "path": "su_NW2.u_slice.g_leaf[0].u_leaf",
+              "module": "ot_hbm_su_static_vm_bank_leaf",
+              "parameters": {
+                "B": "4",
+                "QID": "2",
+                "READ_RETURN": "19",
+                "WRITE_RETURN": "16"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            },
+            {
+              "path": "su_NW2.u_slice.g_leaf[1].u_leaf",
+              "module": "ot_hbm_su_static_vm_bank_leaf",
+              "parameters": {
+                "B": "5",
+                "QID": "2",
+                "READ_RETURN": "19",
+                "WRITE_RETURN": "16"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            }
+          ]
+        },
+        "NW_su21": {
+          "nonfractured_cells": 1192,
+          "sequential_fragments": 50,
+          "known_primitive_q_bits": 448,
+          "retained_leaf_cells": []
+        }
+      },
+      "solver": {
+        "method": "bit-weighted endpoint harmonic vote; fixed native cut anchors; whole combinational primitives",
+        "iterations": 192,
+        "converged_iterations": null,
+        "last_delta": 0.00012575520855301336,
+        "tied_ff_bits": 12169,
+        "unconnected_cells": 173
+      }
+    },
+    {
+      "source_root": "su_NW3",
+      "per_part": {
+        "NW_su30": {
+          "nonfractured_cells": 1474,
+          "sequential_fragments": 96,
+          "known_primitive_q_bits": 12651,
+          "retained_leaf_cells": []
+        },
+        "NW_su31": {
+          "nonfractured_cells": 1485,
+          "sequential_fragments": 102,
+          "known_primitive_q_bits": 1839,
+          "retained_leaf_cells": [
+            {
+              "path": "su_NW3.g_tap_r8b.u_tap",
+              "module": "ot_hbm_vm_lg_pair_tap",
+              "parameters": {
+                "READ_RETURN": "15",
+                "WRITE_RETURN": "12"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            },
+            {
+              "path": "su_NW3.u_slice.g_leaf[0].u_leaf",
+              "module": "ot_hbm_su_static_vm_bank_leaf",
+              "parameters": {
+                "B": "6",
+                "QID": "2",
+                "READ_RETURN": "15",
+                "WRITE_RETURN": "12"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            },
+            {
+              "path": "su_NW3.u_slice.g_leaf[1].u_leaf",
+              "module": "ot_hbm_su_static_vm_bank_leaf",
+              "parameters": {
+                "B": "7",
+                "QID": "2",
+                "READ_RETURN": "15",
+                "WRITE_RETURN": "12"
+              },
+              "internal_state": "UNELABORATED_REQUIRED_BEFORE_DENSITY"
+            }
+          ]
+        }
+      },
+      "solver": {
+        "method": "bit-weighted endpoint harmonic vote; fixed native cut anchors; whole combinational primitives",
+        "iterations": 192,
+        "converged_iterations": null,
+        "last_delta": 9.871306187492213e-05,
+        "tied_ff_bits": 12169,
+        "unconnected_cells": 165
+      }
+    }
+  ],
+  "ff_fractures": 16,
+  "incident_crossing_bits": 60296,
+  "central_counterfactual_bits": 86328,
+  "source_map_validation": {
+    "helper_commit": "d3b422a9c64d171d9a6c3a1bb31a5561ab995617",
+    "mapped_su_residuals": true,
+    "remaining_unmapped": 5572,
+    "status": "SOURCE_MAP_AND_EXACT_BIT_FRACTURE_VALIDATED_ONLY_NO_TYPE_OR_PHYSICAL_ADOPTION"
+  },
+  "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-bind-0300/su_ownership_r2",
+  "validation_unit": "oth-ubuntu-3320840-1793275099",
+  "initial_validation_failure": "Helper packaging omitted sibling tools/die_port_bind.py; exact main d3b helper restored, source unchanged."
+}
