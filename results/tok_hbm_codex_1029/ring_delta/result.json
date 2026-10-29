@@ -1,0 +1,20 @@
+{
+  "kind": "actual_2stop_ring_AG_incremental_latency",
+  "actual_source_roles": [
+    "NW_QID2",
+    "NE_QID3"
+  ],
+  "unit": "oth-ubuntu-2312407-1793269418",
+  "clock_ps": 833,
+  "payloads_per_stop": 224,
+  "exact_publishes_each_case": 448,
+  "source_injection_II": 3,
+  "baseline_tail": 674,
+  "candidate_tail": 675,
+  "baseline_span": 671,
+  "candidate_span": 672,
+  "added_latency_once_per_component_batch": 1,
+  "parallel_cw_ccw_are_not_serial_costs": true,
+  "stale_RX_slot_control": "CAUGHT_895errors_224of448matched",
+  "scope": "Actual ring bodies with one extra stage only on NE inbound CW/CCW; no absolute11/13station realization or current whole-token rate claim"
+}
