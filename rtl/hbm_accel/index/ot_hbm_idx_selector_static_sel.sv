@@ -90,7 +90,6 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
   reg [15:0] mask_choose;
   reg [19:0] last_id;
   integer count;
-  reg[15:0] hist_hits;
   reg [15:0] ky;
   reg choose;
   wire compact=rv&&rop==6;
@@ -125,27 +124,40 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
    end
   end
   end
+  if(STRUCT)begin:bounded_hist
+   // Keep predicate temporaries combinational and each histogram register's
+   // clocked process small. This preserves the original same-edge priority.
+   for(genvar b=0;b<64;b=b+1)begin:bin
+    reg[15:0] hits;
+    always @*begin
+     hits=0;
+     for(integer l=0;l<W;l=l+1)begin
+      if(op==2)begin
+       if(in_line[q*LW+l*EW]&&((orderkey(in_line[q*LW+l*EW+1+:16])>>11)==16'(b)))hits[l]=1;
+      end else if(raw[l*EW]&&((orderkey(raw[l*EW+1+:16])&prior_mask)==(threshold&prior_mask))&&
+       (((orderkey(raw[l*EW+1+:16])>>shift)&binmask)==16'(b)))hits[l]=1;
+     end
+    end
+    always @(posedge clk_q[q] or negedge rst_n)begin
+     if(!rst_n)hist[q][b]<=0;
+     else begin
+      if(op==3)hist[q][b]<=0;
+      if((rv&&rop==4)||op==2)hist[q][b]<=hist[q][b]+14'(pop16(hits));
+     end
+    end
+   end
+  end
   always @(posedge clk_q[q] or negedge rst_n)begin
    if(!rst_n)begin
     rv<=0;buf_q<=0;fill<=0;wp<=0;tie_rem<=0;comp_started<=0;selected[q]<=0;qfault[q]<=0;selected_v[q]<=0;last_id<=0;
-    for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
+    if(!STRUCT)for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
    end else begin
     rv<=re;rop<=op;rpass<=pass;raddr<=addr;selected_v[q]<=compact;
     for(integer l=0;l<W;l=l+1)begin selected_line[q*LW+l*EW+:EW]<=raw[l*EW+:EW];selected_line[q*LW+l*EW]<=compact&&mask_choose[l];end
     if(op==1)begin buf_q<=0;fill<=0;wp<=0;tie_rem<=0;comp_started<=0;selected[q]<=0;last_id<=0;end
-    if(op==3)for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
-    if((rv&&rop==4)||op==2)begin
+    if(!STRUCT&&op==3)for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
+    if(!STRUCT&&((rv&&rop==4)||op==2))begin
      for(integer b=0;b<64;b=b+1)begin
-      if(STRUCT)begin
-       hist_hits=0;
-       for(integer l=0;l<W;l=l+1)begin
-        if(op==2)begin
-         if(in_line[q*LW+l*EW]&&((orderkey(in_line[q*LW+l*EW+1+:16])>>11)==16'(b)))hist_hits[l]=1;
-        end else if(raw[l*EW]&&((orderkey(raw[l*EW+1+:16])&prior_mask)==(threshold&prior_mask))&&
-         (((orderkey(raw[l*EW+1+:16])>>shift)&binmask)==16'(b)))hist_hits[l]=1;
-       end
-       hist[q][b]<=hist[q][b]+14'(pop16(hist_hits));
-      end else begin
       count=0;
       for(integer l=0;l<W;l=l+1)begin
        if(op==2)begin
@@ -154,7 +166,6 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
          ((orderkey(raw[l*EW+1+:16]) >> shift)&binmask)==16'(b))count=count+1;
       end
       hist[q][b]<=hist[q][b]+14'(count);
-      end
      end
     end
     if(compact)begin
