@@ -1,0 +1,5 @@
+NATIVE_CUT PASS cycles=1024
+- tb_native_cut.sv:106: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 0.487 s; speed 21.024 us/s
+- Verilator: cpu 0.487 s on 1 threads; allocated 8 MB

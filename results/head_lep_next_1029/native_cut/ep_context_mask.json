@@ -1,0 +1,122 @@
+{
+  "clk": {
+    "direction": "input",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "rst_v": {
+    "direction": "input",
+    "width": 17,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "mem_rst_n": {
+    "direction": "input",
+    "width": 176,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "in_valid": {
+    "direction": "input",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "in_ready": {
+    "direction": "output",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "in_data": {
+    "direction": "input",
+    "width": 552,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "in_last": {
+    "direction": "input",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "out_valid": {
+    "direction": "output",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "out_ready_v": {
+    "direction": "input",
+    "width": 3,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "out_data": {
+    "direction": "output",
+    "width": 552,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "out_last": {
+    "direction": "output",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "f_tx_v": {
+    "direction": "output",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "f_tx": {
+    "direction": "output",
+    "width": 595,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "f_rx_v": {
+    "direction": "input",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "f_rx": {
+    "direction": "input",
+    "width": 595,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "r_tx_v": {
+    "direction": "output",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "r_tx": {
+    "direction": "output",
+    "width": 53,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "r_rx_v": {
+    "direction": "input",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "r_rx": {
+    "direction": "input",
+    "width": 53,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "fault": {
+    "direction": "output",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  }
+}
