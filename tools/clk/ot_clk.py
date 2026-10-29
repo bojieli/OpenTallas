@@ -27,6 +27,12 @@ Usage:
                                                 keyed by the config's stack (cell, clock_rc); --write appends it
   ot_clk.py register --cal FILE --id ID --cell C --clock-rc R [--route LABEL] [--basis TEXT]
                                                 print a registry entry for a die_trial --region-dme-stage-cal file
+  ot_clk.py rec     CONFIG --trial DIR --stage grt|drt   region.form mesh: routed trial -> explicit_mesh_signoff rec
+
+region.form mesh (CLK-TOOL-6): the region clock is built by tools/clk/mesh_form.py from the config section region.mesh
+(every die value explicit, no defaults), not by die_trial.  check/argv/kit/replay/rec take the same CONFIG; kit writes
+OUT/mesh/<part>/ per region of region.parts; replay compares each part with event.reference_mesh_dirs[part]; refit
+refuses (an equal-leg mesh tree consumes no stage model); duty reads the OT_EDGES v1 files of region.mesh.edges: both.
 """
 import argparse
 import hashlib
@@ -50,6 +56,7 @@ SCHEMA_REG = "ot_clk_stage/1"
 CELLS = {"buf": "BUFx24_ASAP7_75t_R", "inv": "CKINVDCx16_ASAP7_75t_R", "inv2": "CKINVDCx16_ASAP7_75t_R"}
 POLARITY = {"buf": "noninv", "inv": "inv", "inv2": "pair"}
 STAGE_FORMS = ("dme",)       # region forms whose builder consumes a stage model
+MESH_FILES = ("pilot.json", "pilot.def", "run.tcl", "run_ff.tcl", "run.sh")   # mesh-form build outputs compared on replay
 
 
 class ConfigError(Exception):
@@ -168,7 +175,8 @@ def load_config(path):
     cfg = load_yaml(path)
     if not isinstance(cfg, dict) or cfg.get("schema") != SCHEMA_CFG:
         raise ConfigError(f"{path}: schema must be {SCHEMA_CFG}")
-    for k in ("die", "event", "inputs", "stack", "top"):
+    mesh = (cfg.get("region") or {}).get("form") == "mesh"
+    for k in ("die", "event", "inputs", "stack") + (() if mesh else ("top",)):
         if k not in cfg:
             raise ConfigError(f"{path}: missing '{k}'")
     if cfg["stack"].get("cell") not in CELLS:
@@ -224,6 +232,8 @@ def rebase_plan(cfg, out):
 
 def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None):
     """die_trial.py kit argv for a config (flag order is irrelevant to die_trial; values are exact)"""
+    if is_mesh(cfg):
+        raise ConfigError("region.form mesh is built by tools/clk/mesh_form.py (ot_clk kit), not by die_trial")
     i, st, top, reg, res = cfg["inputs"], cfg["stack"], cfg["top"], cfg["region"], cfg["residual"]
     a = ["kit", plan or i["plan"], "--out", str(out)]
     if i.get("views"):
@@ -277,8 +287,10 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None):
         w = workers if workers is not None else reg.get("workers")
         if w and int(w) > 1:
             a += ["--region-dme-workers", str(int(w))]
+    elif reg.get("form", "none") == "mesh":
+        raise ConfigError("region.form mesh is built by tools/clk/mesh_form.py (ot_clk kit), not by die_trial")
     elif reg.get("form", "none") != "none":
-        raise ConfigError(f"region.form {reg['form']!r}: only dme / none are wired in P0")
+        raise ConfigError(f"region.form {reg['form']!r}: only dme / mesh / none are wired")
     sn = region_list(res.get("snake"), cfg)
     if sn:
         a += ["--region-dme-snake", sn if sn == "all" else ",".join(sn)]
@@ -468,6 +480,57 @@ def compare_replay(cfg, config, out, ok, why, rebase):
                 else "IDENTICAL_EXCEPT_META" if meta_only else "DIFFERENT")
 
 
+# ------------------------------------------------------------------------------------------------- region mesh form
+def is_mesh(cfg):
+    return (cfg.get("region") or {}).get("form") == "mesh"
+
+
+def mesh_parts(cfg):
+    parts = region_list(cfg["region"].get("parts"), cfg)
+    if not parts or parts == "all":
+        raise ConfigError("region.form mesh needs an explicit region.parts list")
+    return parts
+
+
+def mesh_plan(cfg):
+    """what a mesh-form kit builds: inputs (with sha), parts, the region.mesh section and its sha"""
+    import mesh_form
+    i = cfg["inputs"]
+    mesh_form.params(cfg["region"].get("mesh"))
+    sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()[:16] if Path(p).is_file() else None
+    return dict(form="mesh", builder="tools/clk/mesh_form.py", plan=i["plan"], plan_sha256=sha(i["plan"]),
+                tree=i["tree"], tree_sha256=sha(i["tree"]), parts=mesh_parts(cfg),
+                mesh_sha=hashlib.sha256(json.dumps(cfg["region"]["mesh"], sort_keys=True).encode()).hexdigest()[:16])
+
+
+def mesh_kit(cfg, out):
+    import mesh_form
+    built = {}
+    for p in mesh_parts(cfg):
+        built[p] = mesh_form.build(cfg["inputs"]["plan"], cfg["inputs"]["tree"], p, Path(out) / "mesh" / p,
+                                   cfg["region"]["mesh"])
+    return built
+
+
+def compare_mesh(cfg, config, out):
+    refs = (cfg["event"].get("reference_mesh_dirs") or {})
+    files = cfg["event"].get("compare", list(MESH_FILES))
+    res = {}
+    for p in mesh_parts(cfg):
+        if p not in refs:
+            res[p] = dict(reference=None, identical=False, why="no event.reference_mesh_dirs entry")
+            continue
+        fr = {}
+        for f in files:
+            x, y = Path(out) / "mesh" / p / f, Path(refs[p]) / f
+            fr[f] = dict(identical=x.is_file() and y.is_file() and x.read_bytes() == y.read_bytes(),
+                         sha_new=hashlib.sha256(x.read_bytes()).hexdigest()[:16] if x.is_file() else None,
+                         sha_ref=hashlib.sha256(y.read_bytes()).hexdigest()[:16] if y.is_file() else None)
+        res[p] = dict(reference=refs[p], files=fr, identical=all(v["identical"] for v in fr.values()))
+    return dict(schema="ot_clk_replay/1", die=cfg["die"], event=cfg["event"].get("name"), config=str(config),
+                form="mesh", parts=res, replay="IDENTICAL" if all(v["identical"] for v in res.values()) else "DIFFERENT")
+
+
 # ---------------------------------------------------------------------------------------------------------- commands
 def _prepare(cfg, out, legacy, registry):
     ok, entry, why = stage_check(cfg, registry)
@@ -519,6 +582,10 @@ def main(argv=None):
     rf.add_argument("--route")
     rf.add_argument("-o", required=True)
     rf.add_argument("--write", action="store_true", help="append the entry to --registry (refuses a duplicate id)")
+    rc_ = sub.add_parser("rec", help="region.form mesh: routed trial -> explicit_mesh_signoff rec")
+    rc_.add_argument("config")
+    rc_.add_argument("--trial", required=True)
+    rc_.add_argument("--stage", required=True, choices=("grt", "drt"))
     r = sub.add_parser("register")
     r.add_argument("--cal", required=True)
     r.add_argument("--id", required=True)
@@ -537,6 +604,10 @@ def main(argv=None):
         print(json.dumps(register_entry(a.cal, a.id, a.cell, a.clock_rc, a.route, a.basis), indent=1))
         return 0
     cfg = load_config(a.config)
+    if is_mesh(cfg):
+        return main_mesh(cfg, a)
+    if a.cmd == "rec":
+        raise ConfigError("rec needs region.form mesh")
     registry = load_registry(a.registry)
     if a.cmd == "refit":
         e = refit_entry(cfg, registry, a)
@@ -581,6 +652,43 @@ def main(argv=None):
     (out / "replay.json").write_text(json.dumps(verdict, indent=1) + "\n")
     print(json.dumps(verdict, indent=1))
     return 0 if verdict["replay"] in ("IDENTICAL", "IDENTICAL_EXCEPT_META") else 2
+
+
+def main_mesh(cfg, a):
+    """check/argv/kit/replay/rec for region.form mesh (no die_trial run, no stage model)"""
+    if a.cmd == "check":
+        mesh_plan(cfg)
+        print("PASS: region.form=mesh: equal-leg tree balanced by construction, no stage model consumed")
+        return 0
+    if a.cmd == "refit":
+        raise ConfigError("refit: region.form mesh consumes no stage model (equal-leg tree by construction)")
+    if a.cmd == "rec":
+        sys.path.insert(0, str(REPO / "tools" / "die_plan"))
+        import explicit_mesh_signoff
+        import mesh_form
+        r, warn = mesh_form.rec(a.trial, a.stage, cfg["region"]["mesh"], explicit_mesh_signoff.mesh_rc)
+        if warn:
+            print("WARNING:", warn)
+        print(json.dumps(dict(rec=str(Path(a.trial) / f"rec_{a.stage}.json"), nodes=len(r["nodes"]), segs=len(r["segs"]),
+                              taps=len(r["taps"]))))
+        return 0
+    if a.cmd == "argv":
+        print(json.dumps(dict(stage_check="PASS", why=["region.form=mesh"], mesh=mesh_plan(cfg)), indent=1))
+        return 0
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    plan = mesh_plan(cfg)
+    if not getattr(a, "compare_only", False):
+        plan["built"] = mesh_kit(cfg, out)
+    (out / ("ot_clk_argv_compare.json" if getattr(a, "compare_only", False) else "ot_clk_argv.json")).write_text(
+        json.dumps(dict(config=str(a.config), stage_check="PASS", mesh=plan), indent=1) + "\n")
+    if a.cmd == "kit":
+        print(json.dumps(dict(rc=0, form="mesh", out=str(out), parts=plan["parts"])))
+        return 0
+    verdict = compare_mesh(cfg, a.config, out)
+    (out / "replay.json").write_text(json.dumps(verdict, indent=1) + "\n")
+    print(json.dumps(verdict, indent=1))
+    return 0 if verdict["replay"] == "IDENTICAL" else 2
 
 
 if __name__ == "__main__":
