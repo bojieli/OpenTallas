@@ -1,0 +1,5 @@
+BOOT cyc70 ctl.start_t20=1
+BOOT cyc121 ctl.cland_start=1
+RINGTRIP tb.dut.sst5.u_cland_u_i t=113000 armed=1 rv=1 lap=1 glo=0 ghi=1 tmo=0 k=0 seen=1
+BOOT cyc213 ctl.cland_up_fault=1
+DIE_SPINE FAIL results0 of2 bad0
