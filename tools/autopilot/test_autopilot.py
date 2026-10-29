@@ -1204,6 +1204,21 @@ class TestDistinctDesigns(unittest.TestCase):
         self.assertTrue(all(re.fullmatch(r"pc_ctrl_[0-9a-f]{12}", k) for k in pc))
         self.assertEqual(sorted(cores[k]["replicas"] for k in pc), [1, 3])
 
+    def test_superseded_run_row_is_no_longer_an_event(self):
+        import ownership as O
+        plan, pins, canonical = self.hbm()
+        now = time.time()
+        tr = [{"t": now - 7200, "id": "14e02be8d1cf", "die": "hbm", "type": "piece__r0", "lane": "L",
+               "file": "structural.tsv", "cls": "CRASH/infra-orphan", "review_dir": ""}]
+        base = dict(plans={"hbm": plan}, core_pins={"hbm": pins}, canonical=canonical, trows=tr)
+        st = lambda inp: {r["item"]: r["state"] for r in O.build(inp, now=now)[0] if r["die"] == "hbm"}["piece__r0"]
+        self.assertEqual(st(base), "REVIEW")
+        ok = "REVIEW-NO-ACTION 14e02be8d1cf\t2026-10-27 10:52\tSUPERSEDED\tx\tL\t2026-10-27 20:13 PDT\tsplit\n"
+        self.assertEqual(st(dict(base, resolved_text=ok)), "NEEDS-KIT")
+        for other in (ok.replace("SUPERSEDED", "QUEUED"), ok.replace("14e02be8d1cf", "000000000000"), ""):
+            self.assertEqual(st(dict(base, resolved_text=other)), "REVIEW")
+        self.assertEqual(O.superseded_runs(ok), {"14e02be8d1cf"})
+
     def test_one_signoff_clears_every_replica_but_not_other_tables(self):
         import ownership as O
         plan, pins, canonical = self.hbm()

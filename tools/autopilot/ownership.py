@@ -524,7 +524,10 @@ def build(inp, now=None):
         where = m.group(1) if m else args[:80]
         for k in M.text(where if m else args):
             E[k]["live"].append((f"ot-run pid {pid} {where[-70:]}", "", kind))
+    sup = superseded_runs(inp.get("resolved_text"))
     for r in inp.get("trows") or []:
+        if r.get("id") in sup:          # resolved.tsv 'REVIEW-NO-ACTION <id> ... SUPERSEDED': no longer an event
+            continue
         for k in keys_for(r.get("type", ""), r.get("die")):
             E[k]["events"].append((r["t"] or now, "RUN", f"{r['file']} {r['id']} {r.get('cls', '')} {r.get('review_dir', '')}".strip()))
             E[k]["mentions"].append((r["t"] or now, ""))
@@ -647,6 +650,20 @@ def build(inp, now=None):
         gaps.append((t, f"UNOWNED-ITEM {die} -> {owner}: {len(lst)} items with no live job and no lane activity > 60 min "
                         f"((LANE) = last lane that touched it; OWNERS.tsv) -- {detail}"))
     return rows, gaps, summary(rows, unowned, inp)
+
+
+def superseded_runs(text):
+    """coord autopilot/resolved.tsv rows 'REVIEW-NO-ACTION <run id> TAB <time> TAB SUPERSEDED ...' -> {run id}: a
+    review.tsv / structural.tsv row that a lane closed as SUPERSEDED (successor kit) stops being the item's REVIEW/FIX
+    event (QC-A0-KITS-10: nk_a0c stayed FIX on 14e02be8d1cf CRASH/infra-orphan after its 10-27 SUPERSEDED row).
+    Opt-in by data: no such rows -> nothing dropped (default unchanged)."""
+    out = set()
+    for ln in (text or "").splitlines():
+        f = ln.split("\t")
+        m = re.fullmatch(r"REVIEW-NO-ACTION ([0-9a-f]{12})", f[0].strip())
+        if m and len(f) > 2 and f[2].strip() == "SUPERSEDED":
+            out.add(m.group(1))
+    return out
 
 
 def parse_retired(text):

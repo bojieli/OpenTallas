@@ -2215,7 +2215,8 @@ def ownership_inputs(st, geom_text, trows):
     return dict(plans=plans, proto=proto, cache=cache, jobs=list(st["jobs"].values()), trows=trows,
                 geom_text=geom_text, lane_texts=lane_texts, live=hub_otrun_clients(), core_pins=core_pins, bound_rtl=bound_rtl,
                 canonical=_json(read_repo(OWN.CANONICAL_SPLIT)),
-                retired=OWN.parse_retired(read_coord("autopilot/OWNERS-RETIRED.tsv")))
+                retired=OWN.parse_retired(read_coord("autopilot/OWNERS-RETIRED.tsv")),
+                resolved_text=read_coord("autopilot/resolved.tsv"))
 
 
 def status(args):
