@@ -94,3 +94,9 @@
     4. Enqueue the finish with enqueue.py --goal finish --mode trial, after the hand run ends.
     5. Sign off with signoff.py + routed LEC, then run export_view.py.
   - Chains chain_r10.sh run nohup on intel2 and stop on their own when the ot-run pid exits: gk ot-run pid 1678896, gr ot-run pid 1833999.
+- 2026-10-28 19:04 PDT PROGRESS [HBM-CORES-REBAL-11] claude/hbm-cores-rebal-11-1028@da691e5dfd (README results/hbm_cores_rebal_11_1028). C24 3ab76af4 kits, all KIT_PREFLIGHT PASS 0 (CHECKED) after the master_slice driver_rect fix (READY):
+  - lanes_plain__canon_663526_717c67b4174a-_c24_m5w1gr: oneclk delta + MLAT5/WCOPY1 + C24 array (24 SRAMs, 8 driver_rects, max detour 19.1) + keep/copy/relay guides. Relay hop estimate <=344.9 um -> +225..+277 ps (UNCHECKED model).
+  - ot_hgi_sfu_programme_store_r10_20117b319f18-_c24: C24 array (44 SRAMs, 16 driver_rects, max detour 87.4).
+  - hnx_lane_x_c17b412817f2-_c24: C24 child view 285.12x302.4 / 1670 pins, lane-cut recipe, face shell off (ASK).
+  - Hand trial runs intel2 ot-run GOAL cts (--mem 32): lp pid 1260421, ps 1260423, hnx 1313911; chain_r11.sh collects 3_place/4_cts into intel2:/srv/opentallas-scratch2/claude/hbm-cores-rebal-11/post_{lp,ps,hnx}/.
+  - SU/SFU slices: no full-RTL manifest (sbind_canon still aliases _s/_sp2) -> ASK DIE-HBM.
