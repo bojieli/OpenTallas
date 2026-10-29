@@ -145,3 +145,44 @@ def test_fail_closed(monkeypatch):
         D.dme_region_tree(site, taps)
     with pytest.raises(ValueError, match="hang-mode"):
         D.dme_region_tree(site, taps, delay_rep_um=250.0, early={(taps[0][0], taps[0][1]): 60.0})
+
+
+def _feed_chain(levels=12):
+    """a deep region feed (the HEAD hk4 shape): feed nodes in a chain 600 um apart, each also feeding a region end
+    (non-feed leaf with one tap) -> every feed node is a branch (heavy) stage"""
+    nodes = {0: dict(id=0, x=0.0, y=0.0, parent=None, level=0, kids=[], taps=[], region=[0, 0, 1, 1], feed=True)}
+    taps = []
+    prev = 0
+    for k in range(1, levels + 1):
+        f = len(nodes)
+        nodes[f] = dict(id=f, x=600.0 * k, y=0.0, parent=prev, level=k, kids=[], taps=[], region=[0, 0, 1, 1], feed=True)
+        nodes[prev]["kids"].append(f)
+        e = len(nodes)
+        t = ("p%d" % k, "ck", 600.0 * k, 330.0)
+        nodes[e] = dict(id=e, x=600.0 * k, y=300.0, parent=f, level=k + 1, kids=[], taps=[t], region=[0, 0, 1, 1])
+        nodes[f]["kids"].append(e)
+        taps.append(t)
+        prev = f
+    return nodes, taps
+
+
+def test_feed_polarity_cancels_the_per_level_sum(monkeypatch):
+    nb, taps = _feed_chain()
+    vb = D.tree_netlist(nb, taps, rep_um=250.0, clock_cell="inv2")[0]
+    monkeypatch.setattr(D, "EDGE_ALT", True)
+    na, _ = _feed_chain()
+    rep = D.feed_edge_pol(na)
+    assert rep["inverted"] >= 3 and rep["feed_edge_max"] < rep["feed_edge_max_inv2"] / 3, rep
+    va = D.tree_netlist(na, taps, rep_um=250.0, clock_cell="inv2")[0]
+    pa, pb = _paths(va), _paths(vb)
+    assert all(st[-1][0] == 0 for st in pa.values()) and " q" not in va          # true taps, no parity inverters
+    eb, ea = _edge(pb), _edge(pa)
+    assert max(map(abs, eb.values())) >= 20.0                                    # inv2: +2 per feed level
+    assert max(map(abs, ea.values())) <= 4.0, ea
+
+
+def test_feed_pol_default_untouched():
+    n, taps = _feed_chain(3)
+    assert D.EDGE_ALT is False
+    st = D.attach_region_dme(n, None, [], {}, delay_rep_um=250.0)
+    assert st == {} and all("pol" not in d for d in n.values()) and "edge_alt_feed" not in n[0]

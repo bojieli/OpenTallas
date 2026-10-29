@@ -1570,6 +1570,51 @@ def _dme_pool_job(k):
     return dme_region_tree(site, tl, **kw)
 
 
+def feed_edge_pol(nodes, extra_load=None):
+    """CLK-TOOL-8 EDGE_ALT, the region FEED (link_fishbone/link_htree feed=True nodes; unbalanced by design, its phase
+    offsets are absorbed by the count-aligned ring, so a +-1 stage parity change on a feed leg needs no rebalancing):
+    top-down, every feed node below the root takes the polarity P that brings the running edge sum E (EDGE_B model:
+    +b at an inverted stage output, -b at a true one; one uncancelled light stage per even leg) closest to 0.  Non-feed
+    nodes stay true polarity (balanced region trees keep equal legs).  extra_load {node: loads attached later (the
+    region DME root)}.  Sets nd['pol'] on inverted feed nodes; -> report dict"""
+    bl, bh = EDGE_B
+    kids = defaultdict(list)
+    for i, nd in nodes.items():
+        if nd["parent"] is not None:
+            kids[nd["parent"]].append(i)
+
+    def b(i):
+        fo = len(kids[i]) + len(nodes[i]["taps"]) + int((extra_load or {}).get(i, 0))
+        return bh if fo >= 2 else bl
+    root = next(i for i, nd in nodes.items() if nd["parent"] is None)
+    E = {root: bl - b(root)}                 # 2-stage inv2 root: inverted first stage, true root driver
+    E0 = dict(E)
+    order = [root]
+    flipped = 0
+    for i in order:
+        for k in sorted(kids[i]):
+            order.append(k)
+            pp = node_pol(nodes[i])
+            even0 = bl * (1.0 if not pp else -1.0)      # even leg: its one uncancelled light stage (output 1 - pp)
+            E0[k] = E0[i] + bl - b(k)                    # inv2 reference (every node true, every leg even)
+            if not nodes[k].get("feed"):
+                E[k] = E[i] + (even0 if pp == 0 else 0.0) - b(k)     # true node: leg parity = pp
+                continue
+            c = {}
+            for P in (0, 1):
+                sg = 1.0 if P else -1.0
+                c[P] = E[i] + (even0 if P == pp else 0.0) + sg * b(k)
+            P = min((0, 1), key=lambda q: (round(abs(c[q]), 9), q))
+            if P:
+                nodes[k]["pol"] = 1
+                flipped += 1
+            E[k] = c[P]
+    feed = [i for i in order if nodes[i].get("feed")]
+    return dict(feed_nodes=len(feed), inverted=flipped, model=list(EDGE_B),
+                feed_edge_max_inv2=round(max((abs(E0[i]) for i in feed), default=0.0), 3),
+                feed_edge_max=round(max((abs(E[i]) for i in feed), default=0.0), 3))
+
+
 def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None, route_um=480.0, only=None, early=None,
                       snake=None, early_mode="hang", merge_only=None):
     """DIE-QC-3 opt-in (--tree-form link_htree --region-dme): hang one legal-site DME tree (dme_region_tree) under every
@@ -1580,6 +1625,12 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
         rt[regions[t[0]]].append(t)
     st = {}
     jobs = []
+    if EDGE_ALT and any(nd.get("feed") for nd in nodes.values()):
+        # CLK-TOOL-8: feed polarities first (the DME root leg below a feed end is laid with its parity)
+        dme_ends = {e: 1 for e, nd in nodes.items() if nd.get("region_root") is not None and rt.get(nd["region_root"])
+                    and (only is None or nd["region_root"] in only)}
+        root0 = next(i for i, nd in nodes.items() if nd["parent"] is None)
+        nodes[root0]["edge_alt_feed"] = feed_edge_pol(nodes, dme_ends)
     for e in [i for i, nd in list(nodes.items()) if nd.get("region_root") is not None]:
         rn = nodes[e]["region_root"]
         if not rt.get(rn) or (only is not None and rn not in only):   # DIE-QC-4 --region-dme-only: listed regions only
