@@ -1,0 +1,1295 @@
+{
+ "schema": "hbm.bind6.fused_lower_tree_splice.v1",
+ "added_cells": 60,
+ "lanes": 32,
+ "tnodes": 28,
+ "changed_cells": [
+  "u_mu_fused_n4_nw",
+  "u_mu_fused_n4_ne"
+ ],
+ "other_top_cells_identical": 407,
+ "other_modules_identical": 297,
+ "new_modules": [
+  "ot_hnx_fused_lane"
+ ],
+ "removed_ports": [
+  "native_required__u_mu_fused_n4_nw__ua",
+  "native_required__u_mu_fused_n4_nw__ub",
+  "native_required__u_mu_fused_n4_ne__ua",
+  "native_required__u_mu_fused_n4_ne__ub"
+ ],
+ "demoted_outputs": [
+  "u_mu_fused_n4_nw__da",
+  "u_mu_fused_n4_nw__db",
+  "u_mu_fused_n4_ne__da",
+  "u_mu_fused_n4_ne__db"
+ ],
+ "new_input_ports": 180,
+ "new_output_ports": 160,
+ "obligations": [
+  {
+   "instance": "u_mu_fused_n3_q0_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n3_q0_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n3_q0_nw",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n3_q0_nw__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n3_q0_nw",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n3_q0_nw__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n2L_q0_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n2L_q0_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n2L_q0_nw",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n2L_q0_nw__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n2L_q0_nw",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n2L_q0_nw__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n2R_q0_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n2R_q0_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n2R_q0_nw",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n2R_q0_nw__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n2R_q0_nw",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n2R_q0_nw__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_0_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n1_q0_0_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_0_nw",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n1_q0_0_nw__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_0_nw",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n1_q0_0_nw__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_1_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n1_q0_1_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_1_nw",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n1_q0_1_nw__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_1_nw",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n1_q0_1_nw__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_2_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n1_q0_2_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_2_nw",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n1_q0_2_nw__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_2_nw",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n1_q0_2_nw__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_3_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n1_q0_3_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_3_nw",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n1_q0_3_nw__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_3_nw",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n1_q0_3_nw__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n3_q1_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n3_q1_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n3_q1_nw",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n3_q1_nw__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n3_q1_nw",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n3_q1_nw__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n2L_q1_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n2L_q1_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n2L_q1_nw",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n2L_q1_nw__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n2L_q1_nw",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n2L_q1_nw__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n2R_q1_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n2R_q1_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n2R_q1_nw",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n2R_q1_nw__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n2R_q1_nw",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n2R_q1_nw__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_0_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n1_q1_0_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_0_nw",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n1_q1_0_nw__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_0_nw",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n1_q1_0_nw__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_1_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n1_q1_1_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_1_nw",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n1_q1_1_nw__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_1_nw",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n1_q1_1_nw__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_2_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n1_q1_2_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_2_nw",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n1_q1_2_nw__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_2_nw",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n1_q1_2_nw__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_3_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n1_q1_3_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_3_nw",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n1_q1_3_nw__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_3_nw",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n1_q1_3_nw__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_0_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_0_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_0_nw",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_0_nw__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_0_nw",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_0_nw__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_1_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_1_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_1_nw",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_1_nw__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_1_nw",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_1_nw__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_2_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_2_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_2_nw",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_2_nw__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_2_nw",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_2_nw__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_3_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_3_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_3_nw",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_3_nw__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_3_nw",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_3_nw__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_4_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_4_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_4_nw",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_4_nw__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_4_nw",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_4_nw__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_5_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_5_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_5_nw",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_5_nw__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_5_nw",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_5_nw__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_6_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_6_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_6_nw",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_6_nw__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_6_nw",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_6_nw__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_7_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_7_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_7_nw",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_7_nw__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_7_nw",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_7_nw__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_8_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_8_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_8_nw",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_8_nw__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_8_nw",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_8_nw__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_9_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_9_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_9_nw",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_9_nw__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_9_nw",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_9_nw__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_10_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_10_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_10_nw",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_10_nw__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_10_nw",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_10_nw__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_11_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_11_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_11_nw",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_11_nw__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_11_nw",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_11_nw__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_12_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_12_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_12_nw",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_12_nw__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_12_nw",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_12_nw__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_13_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_13_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_13_nw",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_13_nw__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_13_nw",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_13_nw__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_14_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_14_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_14_nw",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_14_nw__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_14_nw",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_14_nw__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_15_nw",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_15_nw__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_15_nw",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_15_nw__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_15_nw",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_15_nw__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_n3_q0_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n3_q0_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n3_q0_ne",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n3_q0_ne__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n3_q0_ne",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n3_q0_ne__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n2L_q0_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n2L_q0_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n2L_q0_ne",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n2L_q0_ne__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n2L_q0_ne",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n2L_q0_ne__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n2R_q0_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n2R_q0_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n2R_q0_ne",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n2R_q0_ne__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n2R_q0_ne",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n2R_q0_ne__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_0_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n1_q0_0_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_0_ne",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n1_q0_0_ne__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_0_ne",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n1_q0_0_ne__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_1_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n1_q0_1_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_1_ne",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n1_q0_1_ne__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_1_ne",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n1_q0_1_ne__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_2_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n1_q0_2_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_2_ne",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n1_q0_2_ne__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_2_ne",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n1_q0_2_ne__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_3_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n1_q0_3_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_3_ne",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n1_q0_3_ne__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q0_3_ne",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n1_q0_3_ne__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n3_q1_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n3_q1_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n3_q1_ne",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n3_q1_ne__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n3_q1_ne",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n3_q1_ne__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n2L_q1_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n2L_q1_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n2L_q1_ne",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n2L_q1_ne__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n2L_q1_ne",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n2L_q1_ne__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n2R_q1_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n2R_q1_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n2R_q1_ne",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n2R_q1_ne__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n2R_q1_ne",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n2R_q1_ne__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_0_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n1_q1_0_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_0_ne",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n1_q1_0_ne__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_0_ne",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n1_q1_0_ne__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_1_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n1_q1_1_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_1_ne",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n1_q1_1_ne__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_1_ne",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n1_q1_1_ne__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_2_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n1_q1_2_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_2_ne",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n1_q1_2_ne__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_2_ne",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n1_q1_2_ne__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_3_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_n1_q1_3_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_3_ne",
+   "port": "pad_k",
+   "net": "native_required__u_mu_fused_n1_q1_3_ne__pad_k",
+   "width": 6,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_n1_q1_3_ne",
+   "port": "pad_b",
+   "net": "native_required__u_mu_fused_n1_q1_3_ne__pad_b",
+   "width": 1,
+   "reason": "Lower FUSED tree pad strap depends on the realised die link latencies (plan mu_tree stations); die binder strap unbound"
+  },
+  {
+   "instance": "u_mu_fused_0_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_0_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_0_ne",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_0_ne__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_0_ne",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_0_ne__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_1_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_1_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_1_ne",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_1_ne__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_1_ne",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_1_ne__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_2_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_2_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_2_ne",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_2_ne__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_2_ne",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_2_ne__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_3_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_3_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_3_ne",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_3_ne__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_3_ne",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_3_ne__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_4_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_4_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_4_ne",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_4_ne__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_4_ne",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_4_ne__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_5_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_5_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_5_ne",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_5_ne__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_5_ne",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_5_ne__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_6_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_6_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_6_ne",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_6_ne__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_6_ne",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_6_ne__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_7_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_7_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_7_ne",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_7_ne__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_7_ne",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_7_ne__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_8_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_8_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_8_ne",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_8_ne__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_8_ne",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_8_ne__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_9_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_9_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_9_ne",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_9_ne__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_9_ne",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_9_ne__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_10_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_10_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_10_ne",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_10_ne__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_10_ne",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_10_ne__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_11_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_11_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_11_ne",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_11_ne__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_11_ne",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_11_ne__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_12_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_12_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_12_ne",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_12_ne__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_12_ne",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_12_ne__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_13_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_13_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_13_ne",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_13_ne__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_13_ne",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_13_ne__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_14_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_14_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_14_ne",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_14_ne__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_14_ne",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_14_ne__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_15_ne",
+   "port": "rst_n",
+   "net": "native_required__u_mu_fused_15_ne__rst_n",
+   "width": 1,
+   "reason": "Current die-delivered reset endpoint/offset is not bound; original POR is provenance only"
+  },
+  {
+   "instance": "u_mu_fused_15_ne",
+   "port": "rr_v",
+   "net": "native_required__u_mu_fused_15_ne__rr_v",
+   "width": 1,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  },
+  {
+   "instance": "u_mu_fused_15_ne",
+   "port": "rr_d",
+   "net": "native_required__u_mu_fused_15_ne__rr_d",
+   "width": 256,
+   "reason": "FUSED lane VM bank read return: no native VM bank port feeds a FUSED lane in the current source (calendar bank-port assignment pending)"
+  }
+ ],
+ "mutant": null,
+ "base": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/c2/out/asbuilt.json",
+ "base_sha256": "b413d77e1911b36be7305c668c30677f8d9cf93d100a0b85f7173bf54b3609f6",
+ "out_sha256": "0bc457cafaadfc971c3e9e05842aeb05c93179470617f39184ececaf6f4c055d"
+}
