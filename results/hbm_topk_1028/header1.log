@@ -1,0 +1,156 @@
+
+-- Running command `read_verilog -sv /srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/header_proof.sv; chparam -set MUT 1 header_proof; hierarchy -check -top header_proof; proc; flatten; opt; sat -verify -prove bad 0 -show-inputs' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/header_proof.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/header_proof.sv' to AST representation.
+Generating RTLIL representation for module `\header_proof'.
+Successfully finished Verilog frontend.
+Parameter \MUT = 1
+
+2. Executing AST frontend in derive mode using pre-parsed AST for module `\header_proof'.
+Parameter \MUT = 1
+Generating RTLIL representation for module `$paramod\header_proof\MUT=s32'00000000000000000000000000000001'.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \header_proof
+
+3.2. Analyzing design hierarchy..
+Top module:  \header_proof
+Removed 0 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module header_proof.
+<suppressed ~1 debug messages>
+
+5. Executing FLATTEN pass (flatten design).
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module header_proof.
+<suppressed ~4 debug messages>
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\header_proof'.
+Computing hashes of 5 cells of `\header_proof'.
+Finding duplicate cells in `\header_proof'.
+Removed a total of 0 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \header_proof..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \header_proof.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\header_proof'.
+Computing hashes of 5 cells of `\header_proof'.
+Finding duplicate cells in `\header_proof'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \header_proof..
+Removed 0 unused cells and 3 unused wires.
+<suppressed ~1 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module header_proof.
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \header_proof..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \header_proof.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\header_proof'.
+Computing hashes of 5 cells of `\header_proof'.
+Finding duplicate cells in `\header_proof'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \header_proof..
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module header_proof.
+
+6.16. Finished fast OPT passes. (There is nothing left to do.)
+
+7. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 5 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+Import show expression: \group
+Import show expression: \lane
+Import show expression: \gbase
+Import show expression: \rank
+
+Solving problem with 855 variables and 2301 clauses..
+SAT proof finished - model found: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Signal Name             Dec       Hex           Bin
+  --------------- ----------- --------- -------------
+  \gbase                    0         0      00000000
+  \group                    0         0          0000
+  \lane                     1         1            01
+  \rank                     0         0      00000000
+
+ERROR: Called with -verify and proof did fail!
