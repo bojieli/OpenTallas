@@ -41,3 +41,24 @@ Jobs and results: intel1:/srv/opentallas-scratch2/claude/codex-selector-1028.
 The first ORFS-image sim attempt failed because iverilog is absent from that
 image; the corrected run uses installed host iverilog through ot-run. No source
 or timing gate was waived.
+
+Final source results: full production lockstep PASS 8079 cycles / 1018 selected
+beats / 0 mismatches. A full-shape all-equal-key/k64 boundary frame also PASSes
+1367 cycles / 171 beats / 0 mismatches. The threshold mutant is caught on that
+frame (311 mismatches); the op8-fault mutant is caught by the reset/op8 test.
+The original random-only threshold mutant survived because its stimulus did not
+oversubscribe boundary ties; that receipt remains explicitly SURVIVED.
+
+The first full run failed only on three reset-only cycles: the legacy/default
+core left selected_line valid bits X while the bounded logic produced zero,
+with selected_v=0 and fault=0 throughout. The startup triad reproduces this.
+The final bench compares valid/fault on every edge, requires zero valid during
+the existing two reset-release plus one output-pin startup edges, and compares
+every payload bit from edge3 onward, including invalid mission beats. No design
+cycle or mission comparison is removed.
+
+summary.json and receipts/ contain the final results and surviving-control
+diagnosis. recipe_struct.json is a concrete opt-in proposal for the existing
+master, using STRUCT=1 and source-pinned helper files. It has not changed the
+canonical recipe or running k11 job. Source gating does not claim timing,
+mapped-cell fit, physical sign-off or die release.
