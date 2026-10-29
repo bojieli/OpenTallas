@@ -38,3 +38,9 @@ fixed_tree prebuild/materialize need a source ODB whose abstracts carry the grow
 (Codex packet handoff/codex_qc_20261029_0511.md: fresh native abstracts for 111-type provider islands + native reset outputs, explicit
 bindings, 22,365 provider FFCK local branches not routed by the fixed encoder). Strict bind (QC-001) -> die GRT0 incl clock (QC-002)
 -> clock check (QC-005) stay BLOCKED on that import. No freeze.
+
+## NK A0 floorplan item (COORD 06:3x, pre-freeze)
+QC-A0-KITS-12 NK GEOM FAIL (r2r 634.61 / 124 > 405; NODE in the 65-um east FF column) is a QC plan change and is part of this plan
+event (`nk_a0_floorplan`). Die-owner DEFAULT = V1 (move the NODE off the east column; NK keeps the NL east FF column, no macro
+pitch/outline change); flip to V2 (re-pitch macro columns) only if the QC-A0-KITS-13 estimate finds no legal NODE site with legs <=405 um.
+Status PENDING_ESTIMATE; GEOM plan review before any re-place.
