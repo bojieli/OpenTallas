@@ -209,6 +209,15 @@ def main():
         "buses": {b: {"D": 4, "form": "hold_mux"}
                   for b in ("k_lo_v", "k_lo_d", "k_li_r", "k_rxv")},
     }, indent=1) + "\n")
+    # The generic hard-core runner supplies its own pin list directly to
+    # guard(), so it must also pass the declaration (the partition CLI loads
+    # land_slots.json automatically).  Keep all existing guard inputs intact.
+    fg = kd / "face_guard_core.py"
+    fg_text = fg.read_text()
+    old = 'r = FG.guard(Path(net).read_text(), fz["design"], skip_re=skip, pins=pins)'
+    if fg_text.count(old) != 1:
+        raise SystemExit("core face_guard invocation changed; review landing declaration hook")
+    fg.write_text(fg_text.replace(old, old[:-1] + ', land=FG.kit_land(kd / "land_slots.json"))'))
     inter = fix_interior(kd, *json.loads((kd / "freeze.json").read_text())["outline_um"])
     print(json.dumps(dict(kit=str(kd), clk=clk, interior=inter, srams=nm)))
 
