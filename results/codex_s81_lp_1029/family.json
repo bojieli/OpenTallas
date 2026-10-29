@@ -1,0 +1,10 @@
+{
+ "schema":"opentallas.s81_core_families.r13",
+ "families":[{
+  "name":"lp_natural_compact","members":["dsdv_mu_land"],
+  "leaf_target":48,"smax":70.0,"leaf_limit":35.0,"wire":"std",
+  "reassign":true,"reassign_cap":1.5,"macro_keepout":false,"macro_leaves":true,
+  "keepout_um":[[12.96,4.32,116.424,54.024],[125.28,4.32,228.744,54.024],[12.96,56.208,116.424,105.912],[125.28,56.208,228.744,105.912],[12.96,108.096,116.424,157.8]],
+  "keepout_basis":"Exact five real 94.824x41.064 SRAM bodies plus actual4.32um floorplan rowcut halo; macro clock pins remain explicit typed leaves with actual TT/FF caps. Current-source sink census is required; no post-CTS tree edits."
+ }]
+}

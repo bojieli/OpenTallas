@@ -1,0 +1,51 @@
+{
+ "scope": "Original LP fault output physical diagnosis",
+ "pin": {
+  "k": 1,
+  "name": "fault",
+  "io": "OUTPUT",
+  "sig": "SIGNAL",
+  "layer": "M5",
+  "x": 1.308,
+  "y": 0.042
+ },
+ "driver_chain": [
+  {
+   "kind": "B",
+   "master": "BUFx10_ASAP7_75t_R",
+   "inst": "wire3890",
+   "centre": [
+    82.134,
+    6.345000000000001
+   ]
+  },
+  {
+   "kind": "B",
+   "master": "BUFx3_ASAP7_75t_R",
+   "inst": "place8383",
+   "centre": [
+    237.438,
+    7.695
+   ]
+  },
+  {
+   "kind": "B",
+   "master": "INVx1_ASAP7_75t_R",
+   "inst": "_2479_",
+   "centre": [
+    239.301,
+    8.504999999999999
+   ]
+  },
+  {
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "inst": "fault$_DFF_PN0_",
+   "centre": [
+    326.26800000000003,
+    8.775
+   ]
+  }
+ ],
+ "source_reg_distance_um": 333.69300000000004
+}
