@@ -1,0 +1,95 @@
+MISMATCH out-data xe_o cyc 1
+MISMATCH out-data xe_o cyc 2
+MISMATCH out-data xe_o cyc 3
+MISMATCH out-data xe_o cyc 4
+MISMATCH out-data xe_o cyc 5
+MISMATCH out-data xe_o cyc 6
+MISMATCH out-data xe_o cyc 7
+MISMATCH out-data xe_o cyc 8
+MISMATCH out-data xe_o cyc 9
+MISMATCH out-data xe_o cyc 10
+MISMATCH out-data xe_o cyc 11
+MISMATCH out-data xe_o cyc 12
+MISMATCH out-data xe_o cyc 13
+MISMATCH out-data xe_o cyc 14
+MISMATCH out-data xe_o cyc 15
+MISMATCH out-data xe_o cyc 16
+MISMATCH out-data xe_o cyc 17
+MISMATCH out-data xe_o cyc 18
+MISMATCH out-data xe_o cyc 19
+MITER_RESULT checks=299008 fails=4097 eq_conservative=3 cycles=4096
+TOGGLE leaf u_spo.ck delay 0 changes 0
+TOGGLE leaf u_spo.rst_n delay 0 changes 3
+TOGGLE leaf u_spo.i delay 0 changes 3254
+TOGGLE leaf u_spr.ck delay 0 changes 0
+TOGGLE leaf u_spr.rst_n delay 0 changes 3
+TOGGLE leaf u_spr.i delay 0 changes 4096
+TOGGLE leaf u_spr.iw delay 5 changes 4095
+TOGGLE leaf u_spr.ie delay 4 changes 4095
+TOGGLE out rst_o_0 delay 0 changes 3
+TOGGLE out rst_o_1 delay 0 changes 3
+TOGGLE out rst_o_2 delay 0 changes 3
+TOGGLE out rst_o_3 delay 0 changes 3
+TOGGLE out rst_o_4 delay 0 changes 3
+TOGGLE out rst_o_5 delay 0 changes 3
+TOGGLE out start_o_0 delay 0 changes 3
+TOGGLE out start_o_1 delay 0 changes 3
+TOGGLE out start_o_2 delay 0 changes 3
+TOGGLE out start_o_3 delay 0 changes 3
+TOGGLE out start_o_4 delay 0 changes 3
+TOGGLE out start_o_5 delay 0 changes 3
+TOGGLE out b_o delay 0 changes 4096
+TOGGLE out xw_o delay 1 changes 4096
+TOGGLE out xe_o delay 2 changes 4096
+TOGGLE out hu_o delay 0 changes 2993
+TOGGLE out hd_o delay 0 changes 3083
+TOGGLE out au_o delay 0 changes 3076
+TOGGLE out ad_o delay 0 changes 3249
+TOGGLE out bu_o delay 0 changes 3064
+TOGGLE out bd_o delay 0 changes 3001
+TOGGLE out fclk_out_ad_o delay 0 changes 0
+TOGGLE out cland_fstart_out_ad_o delay 0 changes 1946
+TOGGLE out fclk_out_au_o delay 0 changes 0
+TOGGLE out cland_fstart_out_au_o delay 0 changes 1946
+TOGGLE out fclk_out_b_o delay 0 changes 0
+TOGGLE out cland_fstart_out_b_o delay 0 changes 1946
+TOGGLE out fclk_out_bd_o delay 0 changes 0
+TOGGLE out cland_fstart_out_bd_o delay 0 changes 1946
+TOGGLE out fclk_out_bu_o delay 0 changes 0
+TOGGLE out cland_fstart_out_bu_o delay 0 changes 1946
+TOGGLE out fclk_out_hd_o delay 0 changes 0
+TOGGLE out cland_fstart_out_hd_o delay 0 changes 1946
+TOGGLE out fclk_out_hu_o delay 0 changes 0
+TOGGLE out cland_fstart_out_hu_o delay 0 changes 1946
+TOGGLE out cland_up_ready_ad_o delay 0 changes 0
+TOGGLE out cland_up_fault_ad_o delay 0 changes 0
+TOGGLE out cland_up_ready_au_o delay 0 changes 0
+TOGGLE out cland_up_fault_au_o delay 0 changes 1579
+TOGGLE out cland_up_ready_b_o delay 0 changes 0
+TOGGLE out cland_up_fault_b_o delay 0 changes 0
+TOGGLE out cland_up_ready_bd_o delay 0 changes 0
+TOGGLE out cland_up_fault_bd_o delay 0 changes 0
+TOGGLE out cland_up_ready_bu_o delay 0 changes 0
+TOGGLE out cland_up_fault_bu_o delay 0 changes 0
+TOGGLE out cland_up_ready_hd_o delay 0 changes 0
+TOGGLE out cland_up_fault_hd_o delay 0 changes 0
+TOGGLE out cland_up_ready_hu_o delay 0 changes 0
+TOGGLE out cland_up_fault_hu_o delay 0 changes 0
+TOGGLE out rst_start_raw_2 delay 0 changes 3
+TOGGLE out rst_start_raw_4 delay 0 changes 3
+TOGGLE out rst_start_raw_5 delay 0 changes 3
+TOGGLE out rst_start_raw_6 delay 0 changes 3
+TOGGLE out rst_start_raw_7 delay 0 changes 3
+TOGGLE out rst_start_raw_8 delay 0 changes 3
+TOGGLE out rst_start_raw_9 delay 0 changes 3
+TOGGLE out rst_start_raw_10 delay 0 changes 3
+TOGGLE out rst_start_raw_12 delay 0 changes 3
+TOGGLE out rst_start_raw_13 delay 0 changes 3
+TOGGLE out rst_start_raw_14 delay 0 changes 3
+TOGGLE out rst_start_raw_16 delay 0 changes 3
+TOGGLE out rst_start_raw_17 delay 0 changes 3
+TOGGLE out rst_start_raw_18 delay 0 changes 3
+- /srv/opentallas-scratch2/claude/die-head-28/spn_miter/hd_spn_end/tb.sv:713: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 8us; walltime 0.026 s; speed 302.158 us/s
+- Verilator: cpu 0.027 s on 1 threads; alloced 889 MB
