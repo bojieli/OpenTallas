@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_kvn_ctx_ovl_rope",
- "enable": false,
- "reason": "Actual RTL captures head/user/calrx/admission once, owner/stage update and output capture separately; reset_first/reset_last land rst_n in two ck edges. No flow-inserted stage or scalar context substitution."
-}

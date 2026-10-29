@@ -1,9 +1,0 @@
-650aca25a1bec3b6c9bffe3c3037ebd9f81de1dd164166950f1df3473530ba7e  /srv/opentallas-scratch/claude/codex-kv-ovl-2000/positive_current_ref2/obj/sim
-      |        ^~~~~~~~~~~~~~~~~~~
-%Error-PINNOTFOUND: /srv/opentallas-scratch/claude/codex-kv-ovl-2000/src/rtl/test/qwen_split/tb_kv_d2d_sfm_miter.sv:113:23: Parameter not found: 'SAFE_RC'
-  113 | qkd_d2d_static_ovl #(.SAFE_RC(1), .NTX(3), .PR(1), .TXDP(TXDP)) ref_dut (
-      |                       ^~~~~~~
-                                                                                                                          : ... Location of instance's module declaration
-  325 | module qkd_d2d_static_ovl #(parameter integer MUT = 0, parameter integer NL = 2, parameter integer NTX = 4, parameter integer PR = 1, parameter [31:0] TXDP = 32'd0) (
-      |        ^~~~~~~~~~~~~~~~~~
-%Error: Exiting due to 8 error(s)

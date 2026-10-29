@@ -1,7 +1,0 @@
-{
-  "tag": "KV-KITS-5 b53",
-  "verdict": "FAIL STRUCTURAL",
-  "supersedes": "kv_kits5_io_cor_hroot_codex_1027.json FT-only PASS",
-  "cause": "Full r2r census includes ordinary data and synchronous reset reach not covered by FT-chain-only census. io_cor1135.67um/1640captureFF>405; hroot1407.24um/2257captureFF>405.",
-  "next": "Qwen physical lead owns structural all-signal placement/relay fix, no route until new full census and review."
-}

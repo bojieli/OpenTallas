@@ -1,1 +1,0 @@
-Initial source-layout component test failed: expected 1920 native weight lines, actual 288. 1920 is valid k32 row-block payloads, not packed 8-lane lines. Corrected test/model to 288 lines and retained actual existing group-slot issue span 316. Native packing implementation unchanged. No real-source runtime was performed by this failed component test.

@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.reset_landing.v1",
- "top": "qkd_kvs_emb",
- "enable": false,
- "reason": "HKV-EMBHOLD2 10-19 (ROOT-RST rule): rst_n is not a declared reset port here; it is a registered data pin (pin_regs reset '^$'), landed by ONE S-face pin flop rst_n__ot_q (1 sink at the port, textbook_lint reset_landing measures 1 <= rst_land_max 2); the core reset tree hangs off that flop. A second landing stage would add an unpriced reset-release cycle to the KV die static schedule."
-}

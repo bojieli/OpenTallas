@@ -1,9 +1,0 @@
-CASE PASS-CONTRACT PASS 0 fails 0 stale
-CASE M1-INJ FAIL | 256/256 consumer bits not from cij_SE.inj_d_r1[0+:256]: undriven:256 | expect 'consumer bits not from cij_SE.inj_d_r1' OK
-CASE M2-DEL FAIL | 545/545 consumer bits not from hb_coll_NW.del_flit[1090+:545]: hb_coll_NW.del_flit:545 | expect 'consumer bits not from hb_coll_NW.del_flit[1090' OK
-CASE M3-HC FAIL | 768/768 consumer bits not from hc_eng.result[2304+:768]: undriven:768 | expect 'undriven' OK
-CASE M4-XCMD FAIL | 2048/2048 consumer bits not from xq_NE_p1_eg.xw_data[0+:2048]: xq_NE_p0_eg.xw_data:2048 | expect 'consumer bits not from xq_NE_p1_eg.xw_data' OK
-CASE M5-SLOT FAIL | cxij_NW.INJ_RET = 11, slot needs 9 (ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12)) | expect 'cxij_NW.INJ_RET = 11, slot needs 9' OK
-CASE M6-STALE FAIL | stale G-HC-ENG | expect 'stale G-HC-ENG' OK
-CASE M7-XRD FAIL | relay stages [1] != hc_eng.XRD = 0 (compiled slot) | expect 'relay stages [1] != hc_eng.XRD = 0' OK
-FB_TEST PASS

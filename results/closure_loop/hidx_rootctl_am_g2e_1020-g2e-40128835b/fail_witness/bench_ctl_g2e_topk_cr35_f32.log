@@ -1,4 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job hidx_rootctl_am_g2e_1020-g2e-40128835b bench bench_ctl_g2e_topk_cr35_f32 host ot-epyc6 run /srv/opentallas-scratch/claude/closure-loop/hidx_rootctl_am_g2e_1020-g2e-40128835b log cl/bench_ctl_g2e_topk_cr35_f32.a1b1.log captured 2026-10-21T08:14:00-07:00
-# fail_regex '^CASE topk_cr35_f32 .*TOPK_LAT VM_RT_M=65 CR_RT_M=36 VM_RT_P=65 CR_RT_P=35 AMMUT=0 requests [1-9][0-9]* .*errors [1-9][0-9]* IDX_AM_TOPK_LAT FAIL'
-CASE topk_cr35_f32 WRITE 8 differs WRITE 9 differs TOPK_LAT VM_RT_M=65 CR_RT_M=36 VM_RT_P=65 CR_RT_P=35 AMMUT=0 requests 5103 writes 1136 events 240 (done 186 fault 27 illegal 27) max_row 3 share_fault 0/0 errors 1019 IDX_AM_TOPK_LAT FAIL 

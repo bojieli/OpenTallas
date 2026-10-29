@@ -1,7 +1,0 @@
-port keys ['K', 'L_hi_ps', 'L_lo_ps', 'd_hi_ps', 'd_lo_ps', 'depth', 'dst', 'dst_part', 'kind', 'margin_hi_ps', 'margin_lo_ps', 'sched_lat', 'src', 'src_part', 'tree', 'wander_ps']
-ports changed per field {'K': 362, 'L_lo_ps': 673, 'L_hi_ps': 655, 'd_lo_ps': 677, 'd_hi_ps': 661, 'margin_lo_ps': 673, 'margin_hi_ps': 655, 'wander_ps': 81, 'depth': 25, 'sched_lat': 14}
-RTL-relevant (K/depth/rtl) changed ports 362
-regions frame changed 54
-start ports rec/new 156 161
-report rec {'sched_lat_total': 9730, 'depth_hist': {'4': 3570, '8': 25, '16': 0}, 'K_range': [-9, 11], 'start_tree_depth': 13, 'tree_edges_fall': 27, 'max_origin_cycles': 28}
-report new {'sched_lat_total': 9742, 'depth_hist': {'4': 3545, '8': 50, '16': 0}, 'K_range': [-9, 12], 'start_tree_depth': 14, 'tree_edges_fall': 31, 'max_origin_cycles': 30}

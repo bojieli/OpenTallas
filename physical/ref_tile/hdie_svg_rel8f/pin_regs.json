@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hbm_svc_sm_group_rel_h",
- "enable": false,
- "reason": "HBM-SVGREL8: K request/response pins are RTL 2-entry registered skids (ot_hbm_svc_pin_skid2_r32, hbm family); SM / host faces land in the die relays (09:05 rule: pin registers only at region crossings / >405 um); a kit pin stage cannot span the two families"
-}

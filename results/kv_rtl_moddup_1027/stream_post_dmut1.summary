@@ -1,6 +1,0 @@
-SUMMARY worst_stream_ps=1344512 mean_stream_ps=1165397 first_data_ps_min=43008 first_data_ps_max=263168 layers_over_need=11
-SUMMARY bytes_per_layer=1048576 worst_Bps=779893373953 mean_Bps=899758365673
-SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36866 PRE=36866 PREab=0 REF=48815 RD=1179648 max_ref_gap_ps=120832 max_landing=32
-SELF SUMMARY worst_from_attn_ps(L1..)=1401856 layer0_cold_ps=1184768 over_need=35 max_go_after_attn_ps=57344 tap_desc=1152 tap_bad=0 head_ovf=0 issuer_fault=0 dmut=1 jit=0
-SUMMARY verdict=FAIL
-rc=0

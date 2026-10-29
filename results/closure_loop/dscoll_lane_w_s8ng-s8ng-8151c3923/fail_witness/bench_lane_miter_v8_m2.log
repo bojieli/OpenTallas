@@ -1,8 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job dscoll_lane_w_s8ng-s8ng-8151c3923 bench bench_lane_miter_v8_m2 host ot-epyc5 run /srv/opentallas-scratch2/claude/closure-loop/dscoll_lane_w_s8ng-s8ng-8151c3923 log cl/bench_lane_miter_v8_m2.a1b1.log captured 2026-10-21T11:52:52-07:00
-# fail_regex 'COLL_COLLISION_UNSAFE'
-Verilator 5.050 2026-07-01 rev v5.050
-[58000] %Fatal: ot_sram_oldread_b64.sv:54: Assertion failed in tb_coll_safe4_boundary.variant[1].safe.e.u.u_ep.g_fifo_safe.u_m.g_bank[0].g_depth[0]: COLL_COLLISION_UNSAFE bank64 macro read/write same address bank0 depth0
-%Error: rtl/lib/ot_sram_oldread_b64.sv:54: Verilog $stop
-Aborting...
-sim exit 1

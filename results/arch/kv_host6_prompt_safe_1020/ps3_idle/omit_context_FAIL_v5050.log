@@ -1,8 +1,0 @@
-IDLE_RESET_QUIESCENT PASS cycle=67
-IDLE_BOUNDARY_FIRST_EDGE PASS
-IDLE_READ_DRAIN cycles=9
-IDLE_WRITE_DRAIN cycles=9
-IDLE_RESPONSE_DRAIN PASS cycle=179
-[578000] %Fatal: tb_hkv_mu4_idle.sv:156: Assertion failed in tb_hkv_mu4_idle: IDLE_FAIL paused live contexts
-%Error: rtl/test/qwen_host/tb_hkv_mu4_idle.sv:156: Verilog $stop
-Aborting...

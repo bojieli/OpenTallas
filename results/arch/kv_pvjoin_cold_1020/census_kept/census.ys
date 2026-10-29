@@ -1,5 +1,0 @@
-read_verilog -sv -DSYNTHESIS /srv/opentallas-scratch/claude/codex-pvjoin-cold-1020/src/rtl/hdc/nearhbm/ot_qwen_tp8_pv_join_cold_t.sv /srv/opentallas-scratch/claude/codex-pvjoin-cold-1020/src/rtl/hdc/ot_hdc_fp32_add_lat.sv /srv/opentallas-scratch/claude/codex-pvjoin-cold-1020/src/rtl/hdc/ot_hdc_prefix.sv /srv/opentallas-scratch/claude/codex-pvjoin-cold-1020/src/rtl/hdc/ot_hdc_delay.sv /srv/opentallas-scratch/claude/codex-pvjoin-cold-1020/src/physical/ref_tile/ot_qkh_ktree_m5/src/rtl/hdc/ot_hdc_fastfp.sv
-hierarchy -check -top ot_qwen_tp8_pv_join_cold_t -chparam COLD_INIT 1 -chparam RESET_PIN 1
-tcl /srv/opentallas-scratch/claude/codex-pvjoin-cold-1020/src/tools/qwen_kv_die/pv_join_cold/ot_keep_regs.tcl
-synth -top ot_qwen_tp8_pv_join_cold_t -flatten -noabc
-write_json synth.json

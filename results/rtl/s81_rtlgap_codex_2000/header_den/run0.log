@@ -1,7 +1,0 @@
-PVSO_JOB 0 words534 span533 exact8192FP32
-PVSO_JOB 1 words534 span533 exact8192FP32
-PVSO_PASS jobs2 checks1068
-- tools/s81_dv/pv_so_assembly_1021/tb_pv_so_ingress.sv:69: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2us; walltime 0.019 s; speed 124.379 us/s
-- Verilator: cpu 0.019 s on 1 threads; allocated 7 MB

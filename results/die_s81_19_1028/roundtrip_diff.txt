@@ -1,4 +1,0 @@
-types differing outside landing_contract: 1 ['serdes__t3']
-rest of plan equal (excl types, landing_network, note): True []
-edge ids equal True endpoint-equal 1694
-{'id': 'cland_mon_ready__fW5_p3_b0', 'src': {'part': 'fW5_p3_b0', 'bus': 'cland_up_ready'}, 'dst': {'part': 'lk_WN0', 'bus': 'cland_dn_ready_0'}, 'kind': 'ctl', 'width': 1, 'epoch': False, 'max_hop_um': 405, 'source_registered': True, 'capture_registered': True} {'id': 'cland_mon_ready__fW5_p3_b0', 'src': {'part': 'fW5_p3_b0', 'bus': 'cland_up_ready'}, 'dst': {'part': 'lk_WN0', 'bus': 'cland_dn_ready_1'}, 'kind': 'ctl', 'width': 1, 'epoch': False, 'max_hop_um': 405, 'source_registered': True, 'capture_registered': True}

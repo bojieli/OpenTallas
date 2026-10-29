@@ -1,6 +1,0 @@
-RESULT mode=3 cyc_ctx_valid=33 cyc_hbe_hdr=126 recv_edge_at_hdr=1100 cyc_fhost_write=-1 writes=0 rx_fault=090 hbc_fault=00 tid=37 epoch=00001021 prog=f1c617d9224a57bf
-PASS mode=3
-- tools/s81_dv/hostctx_1021/tb_hostb_stage_hbc.sv:48: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 164ns; walltime 0.001 s; speed 110.802 us/s
-- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

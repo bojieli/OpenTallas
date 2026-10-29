@@ -1,5 +1,0 @@
-#!/bin/bash
-# KV-HOST-REGEN-1: hr_face_ports.sh stage 1 only -- the three equivalence proofs are deferred (exit 99) and run in parallel by fp_core.sh
-for a; do last=$a; done
-case "$last" in */eq_post.ys|*/eq_mut.ys|*/eq_v.ys) exit 99;; esac
-exec /OpenROAD-flow-scripts/tools/install/yosys/bin/yosys "$@"

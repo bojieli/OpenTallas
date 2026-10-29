@@ -1,7 +1,0 @@
-Actual bound-source simulation failure: all frame QX leaves had empty INSTANCE strings. CFG-only instance_path_params did not name QX weights. The functional-only s13func successor adds the predecessor QX module selector rule: selector assignment runs before substitution to _gb, so the original full leaf path is retained as the variant INSTANCE. Physical plan, cycles, pins and RTL are unchanged; die owner publishes the manifest.
-
-Exact source/split pin proof identifies all24QX cells across h9/h10 r0/r1/r2 and canonical _e<id> suffixes. frame_qx_identity emits the four native4096x274 bank aliases from the actual binder audit, rejects empty/wrong/missing/duplicate selectors and preserves conflicting files. Six focused controls PASS.
-
-Actual h10x frame source flatten -> real binder selector assignment -> real _gb substitution confirms12empty→12unique inherited names. First-band4QX/16bank aliases use real L0 checkpoint masks; native current ot_rom_4096x274_m8 reads65536full274bit words at833ps PASS, wrong-leaf mutant and empty-audit control caught. This proves image namespace/runtime for that source mechanism, not frame arithmetic, earlyGO provider, current die clocks or token pass. BF identity remains excluded: h9r0 root/cols moved clock/data wiring vs canonical reference, so no blind alias rule is added.
-
-Raw intel1:/srv/opentallas-scratch2/claude/codex-tok-s81-1028/qx_alias_native; source f7f659610e. Current physical s13 and functional s13func full bind stages run separately, after identical RTL/frontend elaboration.

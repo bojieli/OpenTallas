@@ -1,9 +1,0 @@
-OT_R5_CLKPIN M5 125.264 187.824 125.296 188.016
-OT_R4_MEMBERSHIP sinks 9977 leaves 128 load 46..90
-OT_MSCTS_BUILD macro u_fcore.u_rxb.g_block\[1\].u_block.g_mem\[1\].u_mem.u_sram designed leaf stage BUFx24_ASAP7_75t_R at (30.780,100.440) on the S net of leaf T0073 (same depth as register leaves)
-OT_MSCTS_BUILD macro u_fcore.u_rxb.g_block\[1\].u_block.g_mem\[0\].u_mem.u_sram designed leaf stage BUFx24_ASAP7_75t_R at (32.400,198.180) on the S net of leaf T0123 (same depth as register leaves)
-OT_MSCTS_BUILD macro u_fcore.u_rxb.g_block\[0\].u_block.g_mem\[1\].u_mem.u_sram designed leaf stage BUFx24_ASAP7_75t_R at (31.860,14.580) on the S net of leaf T0020 (same depth as register leaves)
-OT_MSCTS_BUILD macro u_fcore.u_rxb.g_block\[0\].u_block.g_mem\[0\].u_mem.u_sram designed leaf stage BUFx24_ASAP7_75t_R at (28.620,279.720) on the S net of leaf T0150 (same depth as register leaves)
-OT_MSCTS_BUILD H-tree: entry chain 4, 202 nodes, 128 leaves at depth 6, 9977 register sinks, 4 macro leaves
-OT_MSCTS H: TritonCTS not run (tree fully plan-built)
-OT_R4_POST_CTS report-only (no F4 chain moves, no tap balance pads)

@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "dsdv_sh_lb_lk",
- "enable": false,
- "reason": "source-registered landing halves: every input lands in a write-half bank register at its pin, every output leaves the read-half output register (ot_pl_land_local_r.o)"
-}

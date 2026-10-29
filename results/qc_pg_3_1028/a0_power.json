@@ -1,9 +1,0 @@
-{"scope":"QC A0 NK tile power, TT, child + parent CTS dbs (Codex qc-a0-activity-0359 power dirs; QC-A0-KITS-3 parent nk 4_cts), placement RC",
- "area_mm2":0.5301614592,
- "floor_mW":{"rawleaf":27.43381,"romleaf":13.93440,"node":25.30979,"parent_nk":51.43083},
- "busy_mW":{"rawleaf":57.99181,"romleaf_active":16.01821,"romleaf_other":13.93440,"node_stress_bound":69.14761,"parent_nk_0p5_bound":91.22734},
- "counts":{"rawleaf":8,"romleaf":10,"romleaf_active_per_cycle":2,"node":1},
- "tile_floor_mW":435.56,"tile_busy_mW":767.82,"floor_W_mm2":0.8216,"busy_W_mm2":1.4483,
- "duty":{"token_avg":0.0649,"gate_up_window":0.477,"lm_head_window":0.505,"burst":1.0},
- "A0_W_mm2":{"floor":0.8216,"token_avg":0.8621,"window":1.1380,"burst":1.4483},
- "pass_limit_W_mm2":{"current_150um":0.62,"C3":1.0,"G12":1.7,"B75":1.85}}

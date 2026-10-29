@@ -1,9 +1,0 @@
-ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/claude/smmv-stacked-native/src_mut
-ot-run: ot-epyc4       admits  -423 GB (avail 405, growth 262, headroom 48, waiters 2/550 GB) load 137/128 running 30 disk 1283 GB 
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/smmv-stacked-native/src_mut
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/smmv-stacked-native/src_mut
-ot-run: -> ot-epyc4 (will queue: admits -423 GB < 46 GB)
-ot-heavy: admitted on regular-crane as oth-ubuntu-4103039-1791945457 after 0 s
-L00 sliding                      FAIL records 92 6 s fault None bad ['L0.ffn', 'block0']
-fail
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-4103039-1791945457): exit 1

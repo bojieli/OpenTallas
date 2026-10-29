@@ -1,6 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job hidx_meta146_main_1021-m146-5f37df325 bench bench_wrong_age_145 host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/hidx_meta146_main_1021-m146-5f37df325 log cl/bench_wrong_age_145.a1b1.log captured 2026-10-21T21:59:27-07:00
-# fail_regex 'COL8_META_SRAM_FAIL cycle='
-[1470000] %Fatal: tb_col8_meta_sram.sv:10: Assertion failed in tb_col8_meta_sram: COL8_META_SRAM_FAIL cycle=147
-%Error: rtl/test/hbm_idx_static/tb_col8_meta_sram.sv:10: Verilog $stop
-Aborting...

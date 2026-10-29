@@ -1,4 +1,0 @@
-vk_phy9 expect=PASS got=PASS -> OK
-    XQ_E C2K_cmd_issue_to_land=32 C2K_q31_issue_to_land=33 C2K_q_first_issue_to_last_land=65 K2C_r31_issue_to_land=32 K2C_r0_issue_to_land=32 K2C_r_first_issue_to_last_land=63 KVN_k3_issue_to_land=22 roundtrip_cmd_issue_to_r31_land=1843 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=2
-    XQ_CFG C_REAL=0 K_REAL=1 QGAP=0 PHY=9 TXL=6 X=10 period=6845 stages C 0,0,0,0,0,0 K 11,11,9,9,9,11,11 MUT=0 layers=35
-    XQ_PASS layers=35 bit-exact Q/RESULT/KVN, every landing on its compiled cycle, no fault

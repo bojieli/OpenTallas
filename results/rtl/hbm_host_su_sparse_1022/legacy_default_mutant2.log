@@ -1,6 +1,0 @@
-FAIL A ready with an uninstalled row t=506907000
-FAIL block_ready with an uninstalled row t=506907000
-FAIL A ready without descriptor after reconfig t=507180000
-FAIL block_ready held low after configuration frames t=587664000
-FAIL errors=4 checks=35
-tb.sv:200: $finish called at 587883000 (1ps)

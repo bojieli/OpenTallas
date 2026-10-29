@@ -1,7 +1,0 @@
-GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
-GATE INFO oflop: E face 6.3 pins/um (q, vo, coll): recipe-2 hold stages take 2.11 um behind the face, the pin flops need gap 2.7 um and 12 columns (derived in the flow)
-GATE INFO remote: ot-run selected ot-epyc1tb for 24 GB; inputs ship there before admission
-GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_sfu_ctl60lo_ref_20261014-032143.source_snapshot.json
-GATE INFO remote: remote log /tmp/ref_gate_sfu_ctl60lo_ref_20261014-032143.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/sfu_ctl60lo_ref-20261014-032143
-GATE FAIL synth_smoke: ORFS synthesis did not finish within 0 s (yosys SHARE / ABC stall class): see gate_remote.log  -> FIX: decoded constant-index slices instead of runtime part-selects; replicate instead of wide shifters
-PRE_ROUTE_GATE: FAIL (1 fail, 0 warn)

@@ -1,8 +1,0 @@
-A0ICG_QMISMATCH cyc769 t_out [513:512] off00 on01 data 145 bits | n_y [513:512] off00 on00 data 0 bits
-A0ICG_QMISMATCH cyc770 t_out [513:512] off00 on01 data 137 bits | n_y [513:512] off00 on00 data 0 bits
-A0ICG_QMISMATCH cyc771 t_out [513:512] off00 on01 data 117 bits | n_y [513:512] off00 on00 data 0 bits
-A0ICG_QMISMATCH cyc772 t_out [513:512] off00 on01 data 137 bits | n_y [513:512] off00 on00 data 0 bits
-A0ICG_QMISMATCH cyc773 t_out [513:512] off00 on01 data 105 bits | n_y [513:512] off00 on00 data 0 bits
-A0ICG_COUNTS tile=nl MUT=3 checks=12000 cmds=11 t_valid=4139 t_nonzero=4139 n_valid=0 gated_cycles=7348 (61%) engine_busy=4626 wakeups=10
-A0ICG_STRICT tile=nl MUT=3 strict_mismatch_cycles=7567 (t_out 7567 n_y 0) first=769
-A0ICG_FAIL tile=nl MUT=3 qualified_errors=6054 (t_out 6054 n_y 0) first_cycle=769 checks=12000

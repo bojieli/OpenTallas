@@ -1,9 +1,0 @@
-ot-run: ot-epyc1tb     admits    77 GB (avail 563, growth 422, headroom 64, waiters 0/0 GB) load 54/128 running 26 disk 1058 GB 
-ot-run: ot-epyc4       admits   -56 GB (avail 598, growth 277, headroom 48, waiters 1/382 GB) load 172/128 running 24 disk 1214 GB 
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/tkm2240
-ot-run: ot-agidock128  admits   -90 GB (avail 79, growth 62, headroom 24, waiters 2/96 GB) load 22/64 running 8 disk 328 GB 
-ot-run: -> ot-epyc1tb (will queue: admits 77 GB < 96 GB)
-ot-heavy: waiting for memory on ot-epyc1tb: need 96 GB, admissible 77 GB: available 560 GB, growth charged 419 GB, young 313 GB, headroom 64 GB, real floor 227 GB
-ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-760248-1791957320 after 21 s
-Terminated                 /usr/local/bin/ot-heavy --mem 96 --tag otrun-ubuntu-3276835-957320460 -- bash -c 'TKM_CLUSTER=1 J=8 bash rtl/hbm_accel/generic/collective/tkm/run_tkm_bench.sh noid tkm2240-vec mut 4; grep -q "HGI_TKM FAIL" noid/SUMMARY && grep -q "FAIL tb_hgi_coll_tkm" noid/logs/mut4_syn_sel.log'
-ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-760248-1791957320): exit 143

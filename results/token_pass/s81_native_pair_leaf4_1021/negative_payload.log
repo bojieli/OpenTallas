@@ -1,4 +1,0 @@
-RDPAIR_LEAF4 mode=1 mut=1 bad=1 rf=0 xf=0 pf=0 commits=1 CTL=90 XRcmd=95 VPcmd=99 VPlo=104 XRlo=108 CI=111 Vout=113 Eout=-1 XRsw=119 VPsw=123 SRAMcommit=124
-[183000] %Fatal: tb_rd_pair_leaf4.sv:78: Assertion failed in tb_rd_pair_leaf4: RDPAIR_LEAF4 FAIL
-%Error: /srv/opentallas-scratch/claude/codex-s81-kv-vp-1021/src/tools/s81_dv/rdpair_leaf4_1021/tb_rd_pair_leaf4.sv:78: Verilog $stop
-Aborting...

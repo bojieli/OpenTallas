@@ -1,9 +1,0 @@
-# QC-A0 rawleaf reset reach — measured minimal anchor proposal
-
-Read-only exact intel2:qc-a0-kits-1027/rawleaf/kits/ot_qwen_tile_lsl_rawfault_m3_a0k/run/results/asap7/kq_ot_qwen_tile_lsl_rawfault_m3_a0k/base/3_place.odb. No source, RTL, pin, cycle or ODB mutation. Author rawleaf_a0k_place.png personally viewed: uniform body, no macro; misplaced contract clock annotation is not used for this measurement (actual clock is centre M5).
-
-Complete BTerm-to-first-sequential cone census identifies exactly ONE rst_n capture above140um, thus exactly one above150um: u_ls.g_lrst2.g_rt[1].u_rt.q DFFASRHQNx1_ASAP7_75t_R, origin(31.752,135), orientationR0, size1.404x.27, centre(32.454,135.135). rst_n pincentre(115.302,67.020) ->150.963um. All other rst_n firstcaptures are <=140um.
-
-Minimal candidate preserving existing cells and logic: origin(31.860,129.060), R0, actualROW_462. Rectangle[31.860,129.060]-[33.264,129.330] is on the actual row/site lattice and has zero overlap against every actual instance rectangle. Manhattan move6.048um; pin-to-centre reach144.915um. Set destination-row orientation BEFORE location, preserve this anchor through detailed placement, then read back actual location/row and the changed pin reach. This is a measured legal-empty anchor proposal, not a completed DPL/PG signoff or routing approval. Existing row/PG architecture remains unchanged; no new reset stage or latency is proposed.
-
-Direct-net diagnosis: input rst_n first drives input967 BUFx2 at(109.998,66.960). Target RESETN net1918 is a local six-load branch driven by place1919 BUFx3 at(64.044,133.110), with reset captures line[2], line[1],g_rt[2].q,g_rt[1].q,g_rg[2].q,g_rg[0].q. Other five originsx49.194..62.856 are local to that branch; g_rt1 is the isolated west outlier. The candidate also moves it toward its branch driver. Parent GEOM/Qwen source owner coordinates application before any routing; this review made no production edits.

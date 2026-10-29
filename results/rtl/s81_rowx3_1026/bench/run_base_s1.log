@@ -1,6 +1,0 @@
-TRANSPORT_TIMING first_export 22 span 2558 hop_sum 294 (re-pair 42 + reduce/broadcast 2 x 15 hops + slots 2240 + hdr) J 1 LON 3 LX 12
-ROWXM seed 1 fix 0 perm 1 j 1 ovl 0 short 0 skew 0 words0 2049 err 0 mut 0 verdict=PASS
-- /srv/opentallas-scratch2/claude/wt/s81-rowx3-1026/rtl/dsrom_sys/s81_dv/svc_rs/rowx/test/tb_dsdv_rowx_xm.sv:160: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 3us; walltime 0.035 s; speed 80.246 us/s
-- Verilator: cpu 0.035 s on 1 threads; allocated 10 MB

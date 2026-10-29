@@ -1,5 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qfd_sys_face-rs3-5aa256c9f bench bench_sys_face_emb_index_mutant host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/qfd_sys_face-rs3-5aa256c9f log cl/bench_sys_face_emb_index_mutant.a1b1.log captured 2026-10-18T01:37:05-07:00
-# fail_regex '^SYS_FACE_FAIL MUT=2'
-SYS_FACE_PASS MUT=0 boot 54 records, PW 1024 DW 8, 1512 events exact, row 64+scale exact
-SYS_FACE_FAIL MUT=2 timeout (errors 64, face_fault 1 cal_fault 0)

@@ -1,9 +1,0 @@
-# [QC-A0-KITS-RAWLEAF reset-anchor successor95444301f] PASS geometry
-
-Exact new checkpoint intel2:/srv/opentallas-scratch2/claude/codex-geom-1351/rawleaf_anchor_local/3_place.odb, source95444301f, owner native local DPL unit3804312 exit0/check_placementPASS. Original kit DB remained read-only. Independently reviewed the hook before execution and read the completed successor; no independent P&R/STA rerun.
-
-All-instance comparison against original kit23a47eb989d590c7 shows exactly one changed instance: u_ls.g_lrst2.g_rt[1].u_rt.q origin31.752,135.000 ->31.860,129.060, unchanged DFFASRHQNx1 master/R0orientation, statusPLACED->FIRM. Zero other master/origin/orientation/status changes, zero missing/added instances; all BTerm rectangles and row definitions identical. Original150.963um reset-reach failure and first global-DPL trial's unrelated-cell movement failure remain historical, superseded only by this exact local successor.
-
-Independent all-timed CLOCK-mterm census:11838sequentialcells,13728timedinputs,132465pairs,max155.790um,0over405,0loops. All56172COREstandardcells row/railcompatible,0offrow. Complete input BTerm-to-firstseq maximum now144.915um, still rst_n to g_rt1.q (previous150.963). Pins E455M4 peak5.9/um, N50M5 peak0.7,1interiorclock. No RTL, interface, latency, clock-source or other placement changes.
-
-Personally viewed exact successor full image and local zoom in rawleaf_successor.png: uniform body, open centre clock entry, one6.048um move into the measured empty site; nearby cells unchanged. The sameR0destination row preserves rail compatibility. PASS geometry permits the owner's normal trial continuation under current source/canary/clock-plan gates; no new routed timing, DRT access or signoff claim. Parent/root/Qwen own application of this reproducible local hook to the authoritative kit.

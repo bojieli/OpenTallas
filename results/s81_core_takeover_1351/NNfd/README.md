@@ -1,5 +1,0 @@
-# NNfd routed proof collected
-
-Exact old ECO1 NNfd physical signoff: TT+8.23ps / FF+2.11ps, DRC0, pin202/202. Earlier R19 routed proof was NOT_EQ265cal_d points; retained unchanged at predecessor. Reviewed release-edge toolfd417bb02 on exact routed6_final.v now EQUIVALENT2066/2066,0diff/undecided in67.5s; sourceRTL unchanged. The raw newtool receipt was also2066/2066; old2062compare count must not be mistaken for a source-port edit. Tools/root review already merged sound release-edge base handling; no reset-duration assumption or RTL-X base waiver added here.
-
-Immutable proof capsule intel2 codex-s81-core-1351/nnfd_routed_fd417, unit3718806-1793134870, out_retry. First CLI request stopped beforeproof because netlist outsidekit; correctedinsidekit retry is the sole completed proof. This packet joins actual routed proof to the retained exact physical receipt. It does not broaden an old physical view to a changed master or confer a generic flowrelease. Parent/root owns view publication, matching-interface binding and flow tag.

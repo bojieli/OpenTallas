@@ -1,9 +1,0 @@
-# KV calibration profile ROM (D-ROM-3b)
-
-The controller keeps the BC4 reset banks and all public pin registers. One generated `ot_rom_64x32_m2` stores the 36 layer starts and eight scalar constants; the dead TX/RX initial image writes are removed. SEG2 is loaded first, before the outer output reset releases. All scalar reads finish inside the existing 66-edge suppressed init stream. Each next layer START is read while the current layer runs; profile generation refuses a gap below two clocks.
-
-`build_rtl.py` deterministically regenerates the two new RTL files from the immutable BC4 sources. `prepare_bench.py SOURCE OUT` prepares an ot-run staged component miter. `install_bind.py RECIPE PROFILE_JSON NEW_OUT` generates a new repo-relative recipe and a uniform alias with the existing dcal module/ports, plus the per-content macro via map. It never changes the original recipe. All paths must be inside the same repo root.
-
-Use `physical/die_plan/qwen_kvsys/dcal_rom/profiles/cal_pair1024/kv_dcal.profile.json` for the current pair1024 cohort. After root merges this branch, run install_bind in the new bind cohort, then bind and token gates. The macro blackbox is preferred over the behavioural memory during binding/synthesis. Kits must include the generated LEF and TT/FF Liberty files and place the 8.856x9.192um macro inside the sys_c dcal region. Review the macro placement before routing. No old routed view is qualified for this added macro.
-
-Two 1.5-million-edge lockstep benches pass, on the actual pair1024 and MU calendars, exercising every layer and randomized reset/reload/halt/epoch/boot writes. A START[1] via-map mutant is caught in both. Every public output matches each cycle, and cal_ready remains edge 74. Added boot cycles: 0. Added production cycles: 0. Macro area: 81.404352um2, plus 256 cached scalar bits and 11 control/tag bits; net standard-cell area and physical timing remain to be measured in the re-kit. No rate improvement is claimed.

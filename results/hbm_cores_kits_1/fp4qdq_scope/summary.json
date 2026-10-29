@@ -1,5 +1,0 @@
-{"what": "ot_hgi_fp4qdq: module-scope loop integers i/j/b moved into the 11 always blocks that use them (process-local); fixes rtl_lint check -assert 68 problems (multi-driven ot_hgi_fp4qdq.b/.j) that stopped ot_hgi_qw_dec at FAIL_PREFLOOR (C20b/C20e)",
- "equivalence": "yosys equiv_make/equiv_simple -seq 2/equiv_induct -seq 2 old(main 8e38d8187f) vs new, all 8 parameter sets PACKED/PIPE/XEXT in {0,1}: Equivalence successfully proven (eq_*.txt)",
- "lint": "check -assert on new: PASS for XEXT=1 (all users with XEXT=1: qw_dec3); XEXT=0 has 1024 undriven x4 bits in BOTH old and new (pre-existing, unchanged)",
- "cycles": "0 added cycles (no register added/removed; equivalence proven sequentially)",
- "users": ["rtl/hbm_accel/generic/qw/ot_hgi_qw_dec3.sv (PIPE=1,XEXT=1)", "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv (defaults)", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv (PIPE=1,PACKED=1)"]}

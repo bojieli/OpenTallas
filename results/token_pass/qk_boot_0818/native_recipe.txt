@@ -1,8 +1,0 @@
-Current-source native KV recipe (source preparation only; no new elaboration launched):
-1. Use one owned checkout containing the boot-window implementation, PHY WL=5 model and native HOST ABI helper. Before binding, prepare_native_mission.py threads BOOT_AGES from the actual native dispatcher and checks loader/dispatcher/image word counts. The loader defaults preserve the legacy ABI.
-2. BOOT_SOURCE_TREE=<that checkout> HOSTSIDE_SOURCE_TREE=<that checkout> stage_src.sh <current strict bind> <new vehicle> [ordered include list]
-3. The stage copies the actual bound top and selected leaf closure. native_boot_sources.py updates every staged copy of the four boot-window source files, and SRAM clones when selected, to the same checkout. It fails before mutation when any required native source is absent or the selected checkout lacks boot_win.
-4. NATIVE_BOOT=1 build.sh <new vehicle> <new build> then drives every bound regional clock using bind_tb_clocks.py. Use the current bind's pair image with D2D_IMG, not the default legacy image.
-5. run.sh reads the build native_boot.profile and passes +START_AFTER_SETUP automatically; direct simulator callers must pass it: the tracked sender uses the qualified static HOST_FRAME_GAP=3 and AUTH replay spacing. This profile is boot qualification; it does not add per-layer history selection.
-6. run.sh must require KVSLICE_BOOT PASS and nonzero on failure. A process exit0 alone is not a functional verdict.
-This does not claim a current whole-die token pass. HOST ABI, static frame pacing, calendar/image regeneration and real bound-profile facts must accompany the current plan. The corrected private B48 trial is a predecessor component vehicle, not the current-plan release gate.

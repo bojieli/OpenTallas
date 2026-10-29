@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "/srv/opentallas-scratch/claude/root5-shared-bytes-1020/actual_native_fullclosure.py", line 15, in <module>
-    plan=R.reset_landing_plan(s)
-  File "/srv/opentallas-scratch/claude/root5-shared-bytes-1020/native2/tools/ref_tile/ref_tile_native_successor.py", line 378, in reset_landing_plan
-    native = source_native_reset_landing(s, rl)
-  File "/srv/opentallas-scratch/claude/root5-shared-bytes-1020/native2/tools/ref_tile/ref_tile_native_successor.py", line 366, in source_native_reset_landing
-    raise SpecError("spec: source-native reset source fingerprint changed or missing: " + path)
-candidate.SpecError: spec: source-native reset source fingerprint changed or missing: physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v

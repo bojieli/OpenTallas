@@ -1,9 +1,0 @@
-SU327 fault=0 code=00 installed=001 next=0
-NATIVE_MU327 fault=1 code=80 installed=000 next=326 gap=1
-ACTUAL_MU_IMAGE_ABI_CAUSE_REPRODUCED
-NATIVE_MU471 fault=0 code=00 installed=001 next=0
-ACTUAL_NATIVE_MU471_IMAGE_PASS
-- /srv/opentallas-scratch2/claude/tok-qk-1825/abi/repo/results/rtl/native_boot_abi_1713/tb_boot_mu_abi_positive.sv:23: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 8us; walltime 0.001 s; speed 9.508 ms/s
-- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

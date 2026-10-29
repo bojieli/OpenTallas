@@ -1,7 +1,0 @@
-SU_PROGRAMME_PART_MISMATCH t=802497000 valid=1/1 edge=255/255 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
-SU_PROGRAMME_PART_MISMATCH t=805047000 valid=1/1 edge=510/510 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
-SU_PROGRAMME_PART_MISMATCH t=805057000 valid=1/1 edge=511/511 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
-SU_PROGRAMME_PART_MISMATCH t=807607000 valid=1/1 edge=766/766 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
-[942356000] %Fatal: tb_hbm_su_programme_part.sv:76: Assertion failed in tb_hbm_su_programme_part: SU_PROGRAMME_PART FAIL mismatches=124 active=14222 of 14222 checked=14249
-%Error: rtl/hbm_accel/generic/adapters/static_su/programme/tb_hbm_su_programme_part.sv:76: Verilog $stop
-Aborting...

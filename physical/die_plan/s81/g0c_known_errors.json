@@ -1,7 +1,0 @@
-{
- "owner": "S81-CORES-R26",
- "rule": "COORD 10-27 18:21 (S81-CORES-R25 ruling 1): the gunit plan event 117e37566c merges the pin-to-pin core-bundle check ON; the 8 G0C errors it newly exposed are listed here. The list may only shrink and must be empty before the S81 freeze. Fix in flight: claude/s81-cores-r26-g0c-1027@b37d1c52c6 (8 -> 0, RM83).",
- "added": "ROOT-MERGE-82 2026-10-27",
- "errors": [],
- "shrunk": "ROOT-MERGE-83 2026-10-27: all 8 cleared by claude/s81-cores-r26-g0c-1027@b37d1c52c6 (list empty)"
-}

@@ -1,9 +1,0 @@
-LOCKSTEP MISMATCH t52 twin v0 a0000000000 done0 f1 | pinned-2P v0 a0000000000 done0 f0
-LOCKSTEP MISMATCH t53 twin v0 a0000000000 done0 f1 | pinned-2P v0 a0000000000 done0 f0
-LOCKSTEP MISMATCH t54 twin v0 a0000000000 done0 f1 | pinned-2P v0 a0000000000 done0 f0
-LOCKSTEP MISMATCH t55 twin v0 a0000000000 done0 f1 | pinned-2P v0 a0000000000 done0 f0
-LOCKSTEP MISMATCH t56 twin v0 a0000000000 done0 f1 | pinned-2P v0 a0000000000 done0 f0
-FAULT got1
-[786000] %Fatal: tb_hbm_tkm_bound_tkx_ft21.sv:139: Assertion failed in tb_hbm_tkm_bound_tkx_ft21: TKM_L74 FAIL errors=882 lockstep_errors=881 tid_errors=0 words=2 cycles=886
-%Error: tools/hbm_b2/tkm_l74/tb_hbm_tkm_bound_tkx_ft21.sv:139: Verilog $stop
-Aborting...

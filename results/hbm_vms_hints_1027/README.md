@@ -1,5 +1,0 @@
-The NC=0 VMS native hub has four 3-bit expected tag words. Slang flattens the unpacked inner dimension in reverse word order, while the gate frontend names actual elements. The source driver Q-net identities establish expected#t[i][0] -> gold expected[9-3*i]; four bit0 pair candidates were missing from automatic matching. Each candidate is proved by the normal induction, never assumed.
-
-Actual inherited-kit diagnostic proof: EQUIVALENT107,998/107,998; four hints applied, none skipped or dropped. The wrong forward-index control expected[3*i] drops all four false correspondences and remains UNPROVEN1/107,990 at status[0]. Original failures are retained. No RTL/cycle change; physical/signoff and current-kit provenance remain separate gates. The inherited R7 kit lacks PROVENANCE.json as honestly recorded in raw receipts; these are source-fix diagnostics, not release views. Every future fresh kit re-proves its hints.
-
-Depends on the HBM recipe hint-emitter source61a829674e. This commit adds only the VMS recipe candidates and diagnostic evidence.

@@ -1,9 +1,0 @@
-2026-10-21T01:27:45-07:00
-6ec4c0f2a142aa67e7f0e4986bdfbde97bb3980c84d836912de4da4825ee7cba  /usr/local/bin/ot-heavy
-ed5369b4bdcc2db753cfcbceb504a330599f7dc471f1cd879907029fa571d516  /usr/local/bin/ot-protect-die
-83f8411f78b12e53989b23d0b476857dab8181202940b9c53882286addd61a1d  /usr/local/bin/ot-heavy-reconcile
-maxsessions 256
-maxstartups 200:30:400
-persourcemaxstartups none
-{"host": "ot-epyc7", "total_gb": 1008, "avail_gb": 281, "used_gb": 685, "charged_gb": 844, "reserved_gb": 1256, "growth_gb": 101, "growth_raw_gb": 159, "young_gb": 0, "plenty": false, "headroom_gb": 0, "floor_gb": 50, "cpu_load1": 56.19, "ncpu": 96, "running": 24, "fresh": 0, "waiting": 0, "waiting_gb": 0, "waiting_req_gb": 0, "disk_gb": 4783, "admit_gb": 257, "free_gb": 257}
-2026-10-21T01:26:14-07:00 oth-ubuntu-222926-1792570427 mem 12G avail 281G grow 101G: python3 dv_route72.py plan72_unrouted.json plan72_routed.json

@@ -1,8 +1,0 @@
-WARN  [core_faces] type hd_tile: 5/5 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
-WARN  [geometry] type hd_host slot au: crossing ~1335 um > 3 station(s) x reach 405 (see hops)
-WARN  [geometry] type hd_host slot ad: crossing ~1335 um > 3 station(s) x reach 405 (see hops)
-WARN  [r8] R8 not checked: no as-built bus groups (BINDER2 bind.py bus_groups.json; pass --groups)
-WARN  [clock] type hd_serdes: farthest boundary point 2592 um from the tap (> 2 hops)
-WARN  [census] census coverage not run: top-down plan of a new die: no bound as-built head-die netlist in this partitioning (the bottom-up H10 die chain used a different block split and FAILED STA); census follows the first bind (G3)
-G0C per type: 16/16 types clean (G3-eligible: 16); die-level {}; reported as WARN (run --completeness)
-G0 PASS: 0 errors, 6 warnings; 16 types / 326 partitions (0 in near-duplicate groups); worst cut {'ratio': 0.0655, 'at': 'horizontal@3750'}, worst partition segment {'ratio': 0.3587, 'at': 'horizontal@3250:turnE5b'}; report results/s81_head_plan_pg/g0/g0_report.json

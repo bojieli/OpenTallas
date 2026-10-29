@@ -1,8 +1,0 @@
-MISMATCH cycle=1 got=b722072dfd8d9d77248004595fa24450 expected=00000000000000000000000000000000
-MISMATCH cycle=3 got=efabb33d277ec04d06d9195798483aff expected=00000000000000000000000000000000
-FIXED_REPAIR MUT=2 checks=12000 errors=11744 same_address=3381 masked_writes=8628
-FAIL
-- tb_fixed_repair.sv:23: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 120us; walltime 0.045 s; speed 2.646 ms/s
-- Verilator: cpu 0.045 s on 1 threads; allocated 7 MB

@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hgi_sm_xload_cl2p_ctlx",
- "enable": false,
- "reason": "cl2 rule (owner 19:50, 10-15): ctlw RTL registers every leaf pin (issuer cfg/desc pin flops, raw rr capture rr_c, flop-driven rq/c_*/r_*/l_d_o/q*/bsel/lane_en/eg_* outputs); ot_pin_regs would add a second edge per port"
-}

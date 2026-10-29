@@ -1,1 +1,0 @@
-Diagnostic physical clock repair review: /srv/opentallas-scratch/claude/codex-hbm/xcal_live_diag/clock_repeated.png viewed. Macro halos clear; 13 repeaters in perimeter/channels. PASS-COND for placement-estimate STA only; buffer overlaps require legalization and RC extraction before any closure claim. No RTL/cycle change.

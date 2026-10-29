@@ -1,4 +1,0 @@
-lpt_top_lp: 3 landings, 1 pads, reset depth 4, flops {'landing': 159, 'pads': 48, 'reset': 19}, audit PASS; outputs in /srv/opentallas-scratch/claude/codex-root-tools-suite-1019/cand/tools/landed_parent/lp_selftest_hhpd0n_2
-SELFTEST PASS (offsets {'u0': 0, 'u1': 3, 'u2': 3, 'u3': 6} ; unland mutant audit FAIL: UNLANDED y0__l_rb: u0 (ra) -> u1.a (rb) )
-REGIONAL_BINDINGS EXACT_LSB_MAP_AND_RESET_EPOCH PASS
-REGIONAL_BINDINGS INVALID_SHAPES_ALIASES_ROOTS_AND_AUDIT_MUTANTS PASS

@@ -1,1 +1,0 @@
-Inherited native FUSED component regression now passes PRE/POST at N1/N6. The actual old numerical failure is resolved by current native source/pad fixes. Same-binary address control produces 5,113 mismatches although the bench exits zero; result.json classifies the functional marker. No current C25c/full-die timing or G5 claim. Original historical failures remain unchanged.

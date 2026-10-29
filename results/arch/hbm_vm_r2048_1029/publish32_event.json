@@ -1,0 +1,245 @@
+{
+  "schema": "ot.vm.f20_boot_publication.v1",
+  "default_off": true,
+  "source_sha256": "722d1e366cd0ebf9c0e15ac96c5941253c763c6dfa47989689fede90aee0bfe7",
+  "target": 120,
+  "header_address": 3840,
+  "payload_address": 3841,
+  "regular_word_address_bits": 19,
+  "words_per_payload": 8,
+  "header_frames_per_contiguous_region": 1,
+  "payload_frames_per_sector": 1,
+  "drain_cycles_after_bank_sample": 5,
+  "extra_steady_cycles": 0,
+  "collision_policy": "suppress new and all colliding writecarriers; preserve readonly pq and readslots; actual target78 fault",
+  "banks": [
+    {
+      "bank": "vmb_SW0",
+      "destination": 0,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_SW1",
+      "destination": 1,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_SW2",
+      "destination": 2,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_SW3",
+      "destination": 3,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_SW4",
+      "destination": 4,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_SW5",
+      "destination": 5,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_SW6",
+      "destination": 6,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_SW7",
+      "destination": 7,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_SE0",
+      "destination": 8,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_SE1",
+      "destination": 9,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_SE2",
+      "destination": 10,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_SE3",
+      "destination": 11,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_SE4",
+      "destination": 12,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_SE5",
+      "destination": 13,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_SE6",
+      "destination": 14,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_SE7",
+      "destination": 15,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_NW0",
+      "destination": 16,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_NW1",
+      "destination": 17,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_NW2",
+      "destination": 18,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_NW3",
+      "destination": 19,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_NW4",
+      "destination": 20,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_NW5",
+      "destination": 21,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_NW6",
+      "destination": 22,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_NW7",
+      "destination": 23,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_NE0",
+      "destination": 24,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_NE1",
+      "destination": 25,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_NE2",
+      "destination": 26,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_NE3",
+      "destination": 27,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_NE4",
+      "destination": 28,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_NE5",
+      "destination": 29,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_NE6",
+      "destination": 30,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    },
+    {
+      "bank": "vmb_NE7",
+      "destination": 31,
+      "carrier_valid_checks": 7,
+      "new_write_owner": 1,
+      "old_phases_preserved_without_new_or_collision": true
+    }
+  ],
+  "whole_image_qualified": false,
+  "runtime_computed_A_replication_qualified": false,
+  "source_selected": false,
+  "SIGNED": false
+}

@@ -1,6 +1,0 @@
-Traceback (most recent call last):
-  File "/srv/opentallas-scratch2/claude/wt/die-hbm-10/tools/die_plan/clock_body_bays.py", line 49, in <module>
-    q=take(n,p,p);base[n]=q
-  File "/srv/opentallas-scratch2/claude/wt/die-hbm-10/tools/die_plan/clock_body_bays.py", line 46, in take
-    raise RuntimeError('no legal 8.64um body bay for '+name+' at '+str(p))
-RuntimeError: no legal 8.64um body bay for r1567_0 at [27935.58, 4992.782]

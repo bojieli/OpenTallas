@@ -1,9 +1,0 @@
-{"lane": "PG-ACTIVITY-4", "date": "2026-10-27",
- "psm_explicit_load_adds_sta_power": {"status": "CHECKED (EM M6-M7 source current)", "sta_only_A": 0.25961, "explicit_0.1168W_plus_sta_A": 0.42646,
-   "expected_explicit_only_A": 0.16686, "ab_ratio_same_values": 2.0, "fix": "superposition: drop(explicit+STA) - drop(STA-only), pg_colo_superpose.py"},
- "KV_below_m7": {"vehicle": "kv3_head_eighth_e1 signed 6_final.odb, no ripup, + plan M6 0.288@4.32/M7 0.288@8.64, PG pins on M7, FULL",
-   "sta_0.1817W_mV": 6.095, "measured_0.1168W_superposed_mV": 5.479, "old_codex_6.05": "REPRODUCED (CHECKED)",
-   "total_conservative_mV": 31.489, "total_measured_mV": 30.873, "above_m7_basis": "PG-ACT3 edge-fit LR 25.394", "verdict": "PASS CHECKED"},
- "QC_672": {"status": "PENDING", "conservative_run": "intel2 pg-act-3-1027/qc_orig_full (explicit+STA)", "sta_only_run": "intel2 pg-act4-1027/qc_sta_only",
-   "upper_above_m7_mV": 30.403, "below_budget_mV": 4.597},
- "HBM_14_cases": {"status": "RUNNING", "unit": "oth-ubuntu-473444-1793147036", "dir": "intel2 /srv/opentallas-scratch2/claude/pg-act4-1027/hbm", "hbm_ir": "UNCHECKED 30.4 (x1.202) until collected"}}

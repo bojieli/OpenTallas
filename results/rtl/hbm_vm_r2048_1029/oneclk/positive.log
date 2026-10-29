@@ -1,0 +1,2 @@
+VM_R2048_ONECLK PASS cycles=2701 legacy_lockstep=404 checks=2689 writes=1282 reads=1283 SRAMs=4 regular_rows=2048 mirror_rows=1024 return_edges=7 write_edges=4 added_cycles=0 SECDED_high=1 highmirror_rejected=1
+tools/hbm_static/vm_r2048/tb_oneclk.sv:101: $finish called at 2249933 (1ps)

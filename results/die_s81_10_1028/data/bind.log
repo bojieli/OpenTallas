@@ -1,9 +1,0 @@
-Traceback (most recent call last):
-  File "/srv/opentallas-scratch2/claude/wt/die-s81-10/tools/die_plan/count_align_bind.py", line 641, in <module>
-    sys.exit(main())
-             ~~~~^^
-  File "/srv/opentallas-scratch2/claude/wt/die-s81-10/tools/die_plan/count_align_bind.py", line 620, in main
-    b = bind(plan, parts=parts)
-  File "/srv/opentallas-scratch2/claude/wt/die-s81-10/tools/die_plan/count_align_bind.py", line 86, in bind
-    raise BindError(f"{len(bad)} crossings have no RTL K/DEPTH (plan FAIL/unreached): {bad[:5]}")
-BindError: 44 crossings have no RTL K/DEPTH (plan FAIL/unreached): ['xtier__seqhost__bk_sel__0', 'xtier__bk_sel__seqhost__16', 'unit__seqhost__svc_11__0', 'unit__s_7N_LP__seqhost__13', 'unit__seqhost__s_7S_LP__0']

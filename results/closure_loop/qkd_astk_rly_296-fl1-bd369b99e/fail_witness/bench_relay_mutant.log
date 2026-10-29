@@ -1,6 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qkd_astk_rly_296-fl1-bd369b99e bench bench_relay_mutant host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/qkd_astk_rly_296-fl1-bd369b99e log cl/bench_relay_mutant.a1b1.log captured 2026-10-19T00:21:11-07:00
-# fail_regex 'FAIL ASTK physical relay'
-FAIL ASTK physical relay cycle=1
-FATAL: /srv/opentallas-scratch2/claude/closure-loop/qkd_astk_rly_296-fl1-bd369b99e/bench_src_a1/rtl/test/qwen_kv_die/tb_qkd_astk_phys.sv:16: 
-       Time: 26000  Scope: tb_qkd_astk_phys

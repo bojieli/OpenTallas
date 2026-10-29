@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.reset_landing.v1",
- "top": "col_h10_l4_lp",
- "enable": false,
- "reason": "the RTL lands it: kit u_frl_rst = 2 plain ot_pl_pad stages on ck_r0 (rst_n -> 1 flop) before crs4 rst (its own 2-stage rsync_q on cr, then crs4 rs gates the lp regional reset runs) and the 4 u_xo forwarded-clock relays (rs); +2 edges reset epoch; FRRST: the u_xo relay reset is re-synchronised onto each xk[k] (ot_reset_sync 2 flops, async assert / sync release, +2 xk edges)"
-}

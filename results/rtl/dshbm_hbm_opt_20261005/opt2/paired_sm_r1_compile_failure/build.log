@@ -1,8 +1,0 @@
-%Error: /srv/opentallas/jobs-overflow/erdos-w2-source-eb5b887d5/rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_caller.sv:19:39: syntax error, unexpected ';'
-   19 |     localparam integer RW=$clog2(RMAX);
-      |                                       ^
-        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
-%Error: /srv/opentallas/jobs-overflow/erdos-w2-source-eb5b887d5/rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_caller.sv:26:5: syntax error, unexpected assign
-   26 |     assign start_ready=sm_ready && ctx_ready;
-      |     ^~~~~~
-%Error: Exiting due to 2 error(s)

@@ -1,9 +1,0 @@
-images loaded in 3.7 s
-stream: total_words=86 preroll=5000 ctl_cycles; words_ready_at_start=86/86
-models constructed in 11.2 s (tiles/die=1536 nodes/die=1440)
-progress tick=0 cyc=1 pc_base=0/0 me_busy=1/1 wall=0s passes=3
-progress tick=4096 cyc=4097 pc_base=21/21 me_busy=3356/3356 wall=688s passes=11886
-STAGE L0 done cycles=6392 start_cyc=7 end_cyc=6399 me_busy=4726/4726 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=10128 su_writes=175142 wall=947s
-HBMSTAT L0 die0 hbm_wait=0 kv_wait=4 matmul=2151 attention=371 collective=816 stream_unit=2982 other=69 ctl_cycles=10206 rd=264192 room_block=0 desc_gap=384 words_done=86 last_wread_cyc=5594 hbm_fault=0 wst_fault=0
-HBMSTAT L0 die1 hbm_wait=0 kv_wait=4 matmul=2151 attention=371 collective=816 stream_unit=2982 other=69 ctl_cycles=10206 rd=264192 room_block=0 desc_gap=384 words_done=86 last_wread_cyc=5594 hbm_fault=0 wst_fault=0
-QWEN_HBMACC_TOKEN PASS stages=1 token=0 val=00000000 die1_token=0 cycles=6399 edges=6399 settle_max=2 wall_s=947.5 RSS_KiB=984048 threads=4 ctl_cycles=10207 preroll=5000

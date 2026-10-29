@@ -1,1 +1,0 @@
-module mini(input ck,input in,output q,output serial); wire ab,bc; base_tile a(.ck(ck),.d(in),.q(ab)); tree_tile b(.\ck[0] (ck),.d(ab),.q(bc)); base_tile d(.ck(ck),.d(bc),.q(q)); base_tile c(.ck(ck),.d(bc),.q(serial)); endmodule

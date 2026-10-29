@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_s81hd_lsc_t8",
- "enable": false,
- "reason": "Source-registered, unchanged per-bit edges (release freeze): every input lands in a flop (td -> txd_p, tvk/crk -> slice tv_q/cr_q, li_d -> rd_q, tx_v/lo_r -> kept kf copies, li_v -> rv_q/cr_q/credit check, lf/ovf_t -> flt_q) and every output leaves a flop (lod = slice ld, lv/ovf, rx_d, rx_v, li_r, flt, tvk/crk, reset leaves). A recipe pin stage would add an edge to the frozen latency contract."
-}

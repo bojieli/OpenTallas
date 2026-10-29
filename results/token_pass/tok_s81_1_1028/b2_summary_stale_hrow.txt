@@ -1,7 +1,0 @@
-TOK-S81 BIND Wed Oct 28 20:55:11 PDT 2026 tree 410e940f4f plan c8ad231bcce7 manifest physical/die_plan/s81/bind/asbuilt_b178_coll.json (58c229575f42)
-1 FRAME_LK rc=0 FRAME_LK PASS frames=72 band_checks=216 errors=0
-2a ELAB rc=0 Wed Oct 28 21:18:48 PDT 2026
-2b BIND --strict rc=2 Wed Oct 28 21:21:40 PDT 2026 bind: ERROR stale dead-input dependency dsdv_svc_sx_hrow
-3 LATENCY NOT RUN (no bind_latency.json)
-4 CA NOT RUN: no CA_LPO: the S81 clock proof count_align_bind input (go15 lpo.json) crashes KeyError src_part (DIE-S81-17)
-VERDICT FAIL Wed Oct 28 21:21:40 PDT 2026

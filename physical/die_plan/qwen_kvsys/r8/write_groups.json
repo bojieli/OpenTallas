@@ -1,8 +1,0 @@
-{
- "schema": "opentallas.kv.r8_write_groups.v1",
- "note": "DIE-KV-13 10-28 (COORD TOK-ALL-13r): one write group = the enable + address + data of ONE sink write port; the producer emits them on ONE source edge, so they must land on ONE edge (12.16c: one generator rule, no per-lane hand pad). R8 as-built reference = the group's latest member stage (the source event). Basis: codex/qk-native-1351 results/token_pass/qk_native_1351/contract/source_event_contract.json (qkd_static_kv_boot_dispatch_mu_nc32 u_boot DSTG1 -> qkd_d2d_cal_seq_pin_bc4.bcfg_*: relative edges 0/0/0/0; historical as-built 6/6/5/5 -> WE landed 1 edge early = STALE write, sim CHECKED by Codex).",
- "groups": [
-  {"name": "dcal_bcfg", "sink": "^dcal$", "src_part": "^hub_C$",
-   "ports": ["bcfg_addr", "bcfg_data", "bcfg_rx_we", "bcfg_tx_we"]}
- ]
-}

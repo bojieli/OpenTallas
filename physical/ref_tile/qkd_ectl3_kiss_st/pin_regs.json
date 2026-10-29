@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_ectl3_kiss_st",
- "enable": false,
- "reason": "Parent is wires only (assign-only t0 / t1 concatenation); the hard children own every registered endpoint and the ECTL static calendar constants count their boundary edges (QK_ISSUE_AGE / ROW_RETURN_LAT / HXK); a parent pin register would shift the fixed-cycle K issue / row return. Parent wires are part of the die hop budget."
-}

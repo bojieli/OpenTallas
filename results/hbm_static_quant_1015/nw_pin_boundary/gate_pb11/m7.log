@@ -1,6 +1,0 @@
-%Warning: results/hbm_static_quant_1015/nw_pin_boundary/nw_compact_program_rg5_io0.hex:151: $readmem file ended before specified final address (IEEE 1800-2023 21.4)
-FAULT_CAUSE cycle=50 bad=0 decode=0 qfault=0 vo=1 expected=0 rr_mask=00001111
-FAULT_CAUSE cycle=154 bad=0 decode=0 qfault=0 vo=0 expected=1 rr_mask=00000000
-[105750000] %Fatal: tb_hgi_qdq_compact_host_pin_boundary.sv:157: Assertion failed in tb_hgi_qdq_compact_host_pin_boundary.unnamedblk4: bank fault 0 20000
-%Error: rtl/test/hbm_accel/generic/tb_hgi_qdq_compact_host_pin_boundary.sv:157: Verilog $stop
-Aborting...

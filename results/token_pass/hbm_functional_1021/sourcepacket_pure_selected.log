@@ -1,7 +1,0 @@
-{"records": 91, "events": 7685, "counts": {"blocked:format_open": 57, "blocked:unsupported_lowering": 3, "blocked:v1_unsupported": 1, "emitted": 8, "emitted_unparameterised": 1, "unsupported_lowering": 11, "v1_unsupported": 10}, "t0_serial": 86}
-layout OK
-golden OK (31 ops)
-layer OK: 8 SU records emitted in 4 programmes, 1336 VM checks, counts {'blocked:format_open': 57, 'blocked:unsupported_lowering': 3, 'blocked:v1_unsupported': 1, 'emitted': 8, 'emitted_unparameterised': 1, 'unsupported_lowering': 11, 'v1_unsupported': 10}
-fixture OK: L2 9 SU records emitted, 10868 O words == ds_native; split into 2 parts
-cp OK: 18 hleaf_SW targets in die.v, SW_TARGETS (18) match
-TEST_LAYER_IMAGES PASS

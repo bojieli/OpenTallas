@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "kv_ring_w1063d8",
- "enable": false,
- "reason": "the ring registers every input in its write slots (s_d, fclk) and every output in the read register (RDREG, clk); a recipe pin register would add an unpriced cycle"
-}

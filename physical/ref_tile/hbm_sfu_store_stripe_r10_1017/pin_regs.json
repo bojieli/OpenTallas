@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hgi_sfu_store_stripe_leaf_r10",
- "enable": false,
- "reason": "the r10 leaf RTL registers every input at the pin (pure flops: rb/we_q/addr_q/data_q/start_*_q/cv_q) and every output is a register (out_cal relay+gate, calendar_v/active/done/fault/ordinal, out_hz, calendar[26], chain out = the dedicated fwd_addr_q/fwd_data_q export flops (r10n)); a kit flop stage would add an edge to the priced r7c schedule (D=4)"
-}

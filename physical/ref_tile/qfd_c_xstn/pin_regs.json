@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qfd_c_xstn",
- "enable": false,
- "reason": "the RTL is one register stage: every data input pin drives a flop D (flop-first) and every data output pin is a flop Q (flop-last)"
-}

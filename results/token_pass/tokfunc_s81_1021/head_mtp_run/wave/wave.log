@@ -1,6 +1,0 @@
-BAD wave                   expect=pass got=runtime_error 
-OK  mut_sseq_earlydone     expect=fail got=fail WAVE FAIL: stub 101->2 word 0 of (p0, t5651) last 0
-BAD mut_hep_stale          expect=fail got=runtime_error 
-BAD smoke                  expect=pass got=runtime_error 
-MTP_WAVE_BENCH FAIL
-rc 1

@@ -1,8 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job hcoll_issuer_r256v8_grid-grid-95a231167 bench bench_issuer256_nofwd host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167 log cl/bench_issuer256_nofwd.a1b1.log captured 2026-10-21T16:09:28-07:00
-# fail_regex '^ISSUER_V8R256_MITER FAIL mismatches[1-9][0-9]*'
-LEAF_MISMATCH t=155180000 busy 1/1 fault 0/0 uop_v 1/1 pc 224/224 d1_eq 1
-LEAF_MISMATCH t=193300000 busy 1/1 fault 0/0 uop_v 1/1 pc 3/3 d1_eq 1
-LEAF_MISMATCH t=193320000 busy 1/1 fault 0/0 uop_v 1/1 pc 161/161 d1_eq 1
-ISSUER_V8R256_MITER FAIL mismatches115965 leaf115965 checks741062
-ISSUER_V8R256_MUTANT_REJECTED nofwd

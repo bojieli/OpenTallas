@@ -1,6 +1,0 @@
-PASS qfd_vm_xcol NRB=16 SMAX=9 SEED=1 exact 3983 checks: stalls=966 q_changes=882 line_writes=1501 replications=1031 odd_parity=630
-- rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xcol.sv:57: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 40us; walltime 0.120 s; speed 333.245 us/s
-- Verilator: cpu 0.120 s on 1 threads; allocated 7 MB
-maxrss_kb=4256 wall=0.12

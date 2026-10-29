@@ -1,4 +1,0 @@
-read_verilog -sv -DSYNTHESIS rtl/dsrom_sys/s81_dv/unit/dsdv_static_ks6.sv
-hierarchy -top dsdv_static_ks6
-synth -top dsdv_static_ks6 -noabc
-tee -o /srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/static_ks6_cost/stat.json stat -json

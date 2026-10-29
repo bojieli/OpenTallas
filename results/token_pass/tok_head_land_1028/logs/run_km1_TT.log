@@ -1,8 +1,0 @@
-BOOT cyc70 ctl.start_t20=1
-BOOT cyc124 ctl.cland_start=1
-BOOT cyc216 ctl.cland_up_fault=1
-- /srv/opentallas-scratch2/claude/tok-head-land-1/tb_TT.sv:1091: Verilog $finish
-DIE_SPINE FAIL results0 of2 bad0
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 20us; walltime 544.916 s; speed 36.707 ns/s
-- Verilator: cpu 544.572 s on 1 threads; allocated 13 MB

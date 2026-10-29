@@ -1,9 +1,0 @@
-ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-hbm-1027/keybuf
-ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-hbm-1027/keybuf
-ot-run: localhost      admits   414 GB (avail 834, reserve 0, fresh 95, peak 260.8, headroom 0, waiters 0/0 GB) load 53/112 running 27 disk 910 GB 
-ot-run: -> localhost
-ot-heavy: admitted on tolerant-swine as oth-ubuntu-361872-1793102911 after 0 s
-- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
-- Verilator: Built from 0.065 MB sources in 4 modules, into 0.123 MB in 6 C++ files needing 0.000 MB
-- Verilator: Walltime 0.072 s (elab=0.003, cvt=0.058, bld=0.000); cpu 0.072 s on 1 threads; allocated 40.609 MB
-ot-run: RAN on localhost (unit oth-ubuntu-361872-1793102911): exit 0

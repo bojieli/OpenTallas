@@ -1,6 +1,0 @@
-verilog_defines -DSYNTHESIS
-read_verilog -defer -sv -noautowire -I/work/rtl /work/rtl/ot_rst_relay.sv
-read_verilog -defer -sv -noautowire -I/work/rtl /work/rtl/ot_s81sl_xrt.sv
-hierarchy -check -top ot_s81sl_xrt1 -chparam FOREG 0
-proc
-check -assert

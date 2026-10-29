@@ -1,3 +1,0 @@
-TKM no-ID physical-register-bound mechanism collection, 2026-10-26
-
-Frozen source dc40d0dcd0b6a06897111f7767c6b56fa4bcf922, runtime epyc1:/srv/opentallas-scratch2/claude/tok-hbm-1830/noidpr_r2. Final syn_cand completed 03:56 with 4096 exact words, 35059 cycles, 35105 lockstep edges and 256 writes. syn_sel 1024 words/64 writes and rank128 zero test 2 words/2 writes also pass. Phase and flit transport mutants abort as expected. Explicit path age 271 includes physical face 258 and forward 9/split 2/return 2. These are existing results collected without rerun; simulation counts are mechanism-only and do not qualify common clock 833 ps, die timing, G5 or full-token throughput.

@@ -1,9 +1,0 @@
-DIE-KV-14b RTL proof, ot_qwen_tp8_pv_slice_lc_t (G=4) vs ot_qwen_tp8_pv_slice_t (RESET_PIN=1), slice boundary,
-bcx tied to bc[17]/bc[18]; yosys (openroad/orfs:asap7lock) equiv_make / equiv_simple -seq 2 / equiv_induct -seq 2;
-SRAM black box -> lec_sram_stub.v on both sides (every SRAM pin a compare point). Wed Oct 28 17:54:05 PDT 2026
-nominal MUT_LC=0: 101305 equiv cells, 101284 proven, 21 unproven. The 21 are ALL in logic the edit does not touch:
-  u.u_slice.fp[2],fp[6], u.u_slice.lastp[2], u.fc[2], u.tc[2], u.u_slice.g_lane[0..15].u_prod.v3
-  (reset-domain shift registers deeper than the 2-cycle window; no c_r / copy / reduce_a / lane-mux cell is unproven).
-mutant  MUT_LC=1: 277 unproven = the same 21 + 256 on g_lane[15] only (u_add a/b/a_man/b_man/u_ca/u_cmp cones) -> CAUGHT.
-Pending (not collected here): the same run with an added equiv_simple -seq 12 pass for those 21 shift registers,
-intel1 docker kv14b-lec3-m0/m1, results /srv/opentallas-scratch2/claude/kv14b-lec/t0 (nominal) and /srv/opentallas-scratch2/claude/kv14b-lec/t1 (mutant), equiv_status.txt.

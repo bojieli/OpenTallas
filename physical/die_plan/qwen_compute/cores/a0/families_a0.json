@@ -1,8 +1,0 @@
-{
- "schema": "opentallas.s81_core_families.r13",
- "rule": "QC-A0-KITS-3 10-28 (COORD 06:37 ruling (b)): A0 node child in-core plan tree through the shared core_family_slice path (one template, no per-core tuning); family parameters = S81 gunit template",
- "families": [
-  {"name": "a0node", "critical": "QC A0 NK node child (47.52 x 432, centre entry), 12.8b in-core tree", "members": ["ot_qwen_tile_node"],
-   "leaf_target": 48, "smax": 70.0, "leaf_limit": 35.0, "wire": "std", "reassign": true, "reassign_cap": 1.5}
- ]
-}

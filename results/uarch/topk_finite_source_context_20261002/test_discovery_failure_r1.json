@@ -1,8 +1,0 @@
-{
-  "classification": "UNRELATED_DISCOVERY_IMPORT_ERROR",
-  "command": "python3 -m unittest discover -s tests -p test_uarch_topk_finite_source_context.py -v",
-  "correction": "Run explicit test modules from tests directory; no source or expectation change",
-  "discovery_error": "tests/abi3/__init__.py imports runtime.abi3.capability; ModuleNotFoundError: No module named runtime.abi3",
-  "hardware_jobs": 0,
-  "new_model_tests_passed": 12
-}

@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_hr_ingest_eng_sp6",
- "enable": false,
- "reason": "QKO-HROOT2: engine face to the touching CDC shell tile (one ck_ingest region, 1.667 ns): direct wires, no pin registers, so the split is cycle-exact; the native32 engine source registers its state internally"
-}

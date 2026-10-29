@@ -1,6 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qfd_dv_s5_btab_s4-btab-s4-3f0f4b600 bench bench_btab_safe_bankmut host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qfd_dv_s5_btab_s4-btab-s4-3f0f4b600 log cl/bench_btab_safe_bankmut.a1b1.log captured 2026-10-20T05:05:28-07:00
-# fail_regex 'BTAB_EQ FAIL'
-[139000] %Fatal: tb_btab_s4.sv:47: Assertion failed in tb_btab_s4: BTAB_EQ FAIL cycle=137 ref=001b000f001b000e001b000d001b000c001b000b001b000a001b0009001b0008 got=001e0007001e0006001e0005001e0004001e0003001e0002001e0001001e0000
-%Error: rtl/test/qwen_dv/s5/tb_btab_s4.sv:47: Verilog $stop
-Aborting...
