@@ -114,6 +114,17 @@ def landing_transport_rules():
              drop_in=['clk','fclk','rst_n','t_rst_n','strap_k'],drop_out=['ready','fault'],stages=0,stages_port='strap_k')]
 
 
+def set_count_aligned_transport(graph,stages):
+    """Use verified per-instance fixed CA latency, never unsigned modular strap K."""
+    for ci,c in enumerate(graph.F.cells):
+        if c.path not in stages:continue
+        if c.module not in ('ot_dp_clk_landing_ca','ot_dp_clk_landing_cas'):
+            raise ValueError('count-aligned latency names a non-CA cell '+c.path)
+        spec=dict(graph.spec[ci],stages=int(stages[c.path]))
+        spec.pop('stages_param',None);spec.pop('stages_port',None)
+        graph.spec[ci]=spec
+
+
 def cmd_verify(a):
     import bind as _b
     _b._AB_OVERRIDE["path"] = getattr(a, "asbuilt", None)
@@ -166,6 +177,7 @@ def cmd_verify(a):
                     raise ValueError('landing verify: inconsistent live lane width '+lane)
                 live_widths[lane]=width
         landing_verify=CLV.Verification(F,G,raw,landing_table,names,live_widths=live_widths,plan_path=Path(a.plan))
+        set_count_aligned_transport(G,landing_verify.transport_stages)
     clk_top = {}
     for pn, (d, bits) in F.top_ports.items():
         if pn.startswith("clk_"):
