@@ -17,7 +17,9 @@ rec['alias_of']='ot_hbm_su_static_pgslice_lg__lanes0_3__587.52x933.12';rec['alia
 orig=G.relay_reg_guide_spec;eg=json.load(open(R/'estimate.json'));reads=json.load(open(R/'read_guides.json'))
 def guided(*a,**kw):
  out=orig(*a,**kw)
- assert out==eg['write_relays'],'write guide geometry changed from reviewed estimate'
+ if out!=eg['write_relays']:
+  json.dump(out,open(OUT/'actual_write_guide_mismatch.json','w'),indent=1)
+  raise AssertionError('write guide geometry changed from reviewed estimate')
  return out+reads
 G.relay_reg_guide_spec=guided
 # Public view and slice generators read only this shadow candidate, never the die owner's live plan.

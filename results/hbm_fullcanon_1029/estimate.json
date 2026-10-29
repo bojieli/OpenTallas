@@ -20,145 +20,145 @@
   {
    "bank": 0,
    "reader": 0,
-   "span_um": 726.924,
+   "span_um": 727.02,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 363.462
+   "minimax_lower_bound_um": 363.51
   },
   {
    "bank": 0,
    "reader": 1,
-   "span_um": 711.66,
+   "span_um": 711.756,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 355.83
+   "minimax_lower_bound_um": 355.878
   },
   {
    "bank": 0,
    "reader": 2,
-   "span_um": 700.332,
+   "span_um": 700.428,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 350.166
+   "minimax_lower_bound_um": 350.214
   },
   {
    "bank": 0,
    "reader": 3,
-   "span_um": 672.492,
+   "span_um": 672.588,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 336.246
+   "minimax_lower_bound_um": 336.294
   },
   {
    "bank": 0,
    "reader": 5,
-   "span_um": 691.212,
+   "span_um": 691.308,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 345.606
+   "minimax_lower_bound_um": 345.654
   },
   {
    "bank": 1,
    "reader": 0,
-   "span_um": 777.852,
+   "span_um": 777.948,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 388.926
+   "minimax_lower_bound_um": 388.974
   },
   {
    "bank": 1,
    "reader": 1,
-   "span_um": 666.636,
+   "span_um": 666.732,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 333.318
+   "minimax_lower_bound_um": 333.366
   },
   {
    "bank": 1,
    "reader": 2,
-   "span_um": 776.988,
+   "span_um": 777.084,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 388.494
+   "minimax_lower_bound_um": 388.542
   },
   {
    "bank": 1,
    "reader": 3,
-   "span_um": 783.324,
+   "span_um": 783.42,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 391.662
+   "minimax_lower_bound_um": 391.71
   },
   {
    "bank": 1,
    "reader": 5,
-   "span_um": 470.604,
+   "span_um": 470.7,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 235.302
+   "minimax_lower_bound_um": 235.35
   },
   {
    "bank": 2,
    "reader": 0,
-   "span_um": 447.3,
+   "span_um": 447.396,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 223.65
+   "minimax_lower_bound_um": 223.698
   },
   {
    "bank": 2,
    "reader": 1,
-   "span_um": 260.196,
+   "span_um": 260.292,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 130.098
+   "minimax_lower_bound_um": 130.146
   },
   {
    "bank": 2,
    "reader": 2,
-   "span_um": 378.324,
+   "span_um": 378.42,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 189.162
+   "minimax_lower_bound_um": 189.21
   },
   {
    "bank": 2,
    "reader": 3,
-   "span_um": 343.812,
+   "span_um": 343.908,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 171.906
+   "minimax_lower_bound_um": 171.954
   },
   {
    "bank": 2,
    "reader": 5,
-   "span_um": 397.116,
+   "span_um": 397.212,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 198.558
+   "minimax_lower_bound_um": 198.606
   },
   {
    "bank": 3,
    "reader": 0,
-   "span_um": 521.412,
+   "span_um": 521.508,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 260.706
+   "minimax_lower_bound_um": 260.754
   },
   {
    "bank": 3,
    "reader": 1,
-   "span_um": 438.708,
+   "span_um": 438.804,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 219.354
+   "minimax_lower_bound_um": 219.402
   },
   {
    "bank": 3,
    "reader": 2,
-   "span_um": 776.436,
+   "span_um": 776.532,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 388.218
+   "minimax_lower_bound_um": 388.266
   },
   {
    "bank": 3,
    "reader": 3,
-   "span_um": 686.004,
+   "span_um": 686.1,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 343.002
+   "minimax_lower_bound_um": 343.05
   },
   {
    "bank": 3,
    "reader": 5,
-   "span_um": 755.58,
+   "span_um": 755.676,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 377.79
+   "minimax_lower_bound_um": 377.838
   }
  ],
- "max_read_hop_lower_bound_um": 391.662,
+ "max_read_hop_lower_bound_um": 391.71,
  "write_relays": [
   {
    "name": "wdbank0",
@@ -175,7 +175,7 @@
     213.64,
     153.64
    ],
-   "hop_pins_um": 267.3,
+   "hop_pins_um": 267.4,
    "hop_sinks_um": 386.9,
    "pins": 32,
    "sink_macros": 6
@@ -195,7 +195,7 @@
     221.48,
     161.48
    ],
-   "hop_pins_um": 249.4,
+   "hop_pins_um": 249.5,
    "hop_sinks_um": 386.9,
    "pins": 9,
    "sink_macros": 6
@@ -215,7 +215,7 @@
     226.48,
     166.48
    ],
-   "hop_pins_um": 379.2,
+   "hop_pins_um": 379.3,
    "hop_sinks_um": 386.9,
    "pins": 1,
    "sink_macros": 6
@@ -235,7 +235,7 @@
     353.64,
     263.64
    ],
-   "hop_pins_um": 282.9,
+   "hop_pins_um": 283.0,
    "hop_sinks_um": 256.8,
    "pins": 32,
    "sink_macros": 6
@@ -255,7 +255,7 @@
     286.48,
     186.48
    ],
-   "hop_pins_um": 326.5,
+   "hop_pins_um": 326.6,
    "hop_sinks_um": 326.3,
    "pins": 9,
    "sink_macros": 6
@@ -275,7 +275,7 @@
     146.48,
     261.48
    ],
-   "hop_pins_um": 392.8,
+   "hop_pins_um": 392.9,
    "hop_sinks_um": 391.3,
    "pins": 1,
    "sink_macros": 6
@@ -295,7 +295,7 @@
     228.64,
     178.64
    ],
-   "hop_pins_um": 368.6,
+   "hop_pins_um": 368.7,
    "hop_sinks_um": 372.8,
    "pins": 32,
    "sink_macros": 6
@@ -335,7 +335,7 @@
     16.48,
     366.48
    ],
-   "hop_pins_um": 366.3,
+   "hop_pins_um": 366.4,
    "hop_sinks_um": 365.0,
    "pins": 1,
    "sink_macros": 6
@@ -355,7 +355,7 @@
     388.64,
     248.64
    ],
-   "hop_pins_um": 324.2,
+   "hop_pins_um": 324.3,
    "hop_sinks_um": 354.5,
    "pins": 32,
    "sink_macros": 6
@@ -375,7 +375,7 @@
     276.48,
     291.48
    ],
-   "hop_pins_um": 395.9,
+   "hop_pins_um": 396.0,
    "hop_sinks_um": 399.5,
    "pins": 9,
    "sink_macros": 6
@@ -395,7 +395,7 @@
     381.48,
     201.48
    ],
-   "hop_pins_um": 389.9,
+   "hop_pins_um": 390.0,
    "hop_sinks_um": 394.5,
    "pins": 1,
    "sink_macros": 6
@@ -449,7 +449,7 @@
     113.64,
     721.44
    ],
-   "hop_pins_um": 363.1,
+   "hop_pins_um": 363.2,
    "hop_sinks_um": 363.8,
    "pins": 32,
    "sink_macros": 2
@@ -500,7 +500,7 @@
     168.64,
     718.64
    ],
-   "hop_pins_um": 353.8,
+   "hop_pins_um": 353.9,
    "hop_sinks_um": 357.9,
    "pins": 32,
    "sink_macros": 2
@@ -551,7 +551,7 @@
     418.64,
     513.64
    ],
-   "hop_pins_um": 349.5,
+   "hop_pins_um": 349.6,
    "hop_sinks_um": 350.8,
    "pins": 32,
    "sink_macros": 2
@@ -602,7 +602,7 @@
     473.64,
     513.64
    ],
-   "hop_pins_um": 335.2,
+   "hop_pins_um": 335.3,
    "hop_sinks_um": 337.3,
    "pins": 32,
    "sink_macros": 2
@@ -653,7 +653,7 @@
     173.64,
     188.64
    ],
-   "hop_pins_um": 344.6,
+   "hop_pins_um": 344.7,
    "hop_sinks_um": 346.6,
    "pins": 32,
    "sink_macros": 2
@@ -704,7 +704,7 @@
     278.64,
     693.64
    ],
-   "hop_pins_um": 390.9,
+   "hop_pins_um": 391.0,
    "hop_sinks_um": 386.9,
    "pins": 32,
    "sink_macros": 2
@@ -755,7 +755,7 @@
     348.64,
     721.44
    ],
-   "hop_pins_um": 331.6,
+   "hop_pins_um": 331.7,
    "hop_sinks_um": 335.0,
    "pins": 32,
    "sink_macros": 2
@@ -857,7 +857,7 @@
     518.64,
     573.64
    ],
-   "hop_pins_um": 393.1,
+   "hop_pins_um": 393.2,
    "hop_sinks_um": 390.3,
    "pins": 32,
    "sink_macros": 2
@@ -908,7 +908,7 @@
     83.64,
     188.64
    ],
-   "hop_pins_um": 237.1,
+   "hop_pins_um": 237.2,
    "hop_sinks_um": 233.5,
    "pins": 32,
    "sink_macros": 2
@@ -959,7 +959,7 @@
     8.64,
     378.64
    ],
-   "hop_pins_um": 223.9,
+   "hop_pins_um": 224.0,
    "hop_sinks_um": 223.4,
    "pins": 32,
    "sink_macros": 2
@@ -1010,7 +1010,7 @@
     53.64,
     533.64
    ],
-   "hop_pins_um": 131.4,
+   "hop_pins_um": 131.5,
    "hop_sinks_um": 128.7,
    "pins": 32,
    "sink_macros": 2
@@ -1061,7 +1061,7 @@
     8.64,
     448.64
    ],
-   "hop_pins_um": 189.0,
+   "hop_pins_um": 189.1,
    "hop_sinks_um": 189.3,
    "pins": 32,
    "sink_macros": 2
@@ -1112,7 +1112,7 @@
     8.64,
     483.64
    ],
-   "hop_pins_um": 171.5,
+   "hop_pins_um": 171.6,
    "hop_sinks_um": 172.3,
    "pins": 32,
    "sink_macros": 2
@@ -1214,7 +1214,7 @@
     8.64,
     413.64
    ],
-   "hop_pins_um": 259.1,
+   "hop_pins_um": 259.2,
    "hop_sinks_um": 262.3,
    "pins": 32,
    "sink_macros": 2
@@ -1265,7 +1265,7 @@
     73.64,
     533.64
    ],
-   "hop_pins_um": 221.7,
+   "hop_pins_um": 221.8,
    "hop_sinks_um": 217.0,
    "pins": 32,
    "sink_macros": 2
@@ -1316,7 +1316,7 @@
     263.64,
     573.64
    ],
-   "hop_pins_um": 389.2,
+   "hop_pins_um": 389.3,
    "hop_sinks_um": 387.2,
    "pins": 32,
    "sink_macros": 2
@@ -1367,7 +1367,7 @@
     93.64,
     468.64
    ],
-   "hop_pins_um": 341.8,
+   "hop_pins_um": 341.9,
    "hop_sinks_um": 344.2,
    "pins": 32,
    "sink_macros": 2
@@ -1418,24 +1418,24 @@
     258.64,
     188.64
    ],
-   "hop_pins_um": 377.0,
+   "hop_pins_um": 377.1,
    "hop_sinks_um": 378.6,
    "pins": 32,
    "sink_macros": 2
   }
  ],
- "max_read_relay_hop_um": 393.1,
+ "max_read_relay_hop_um": 393.2,
  "drivers": [
   {
    "island": 0,
    "original_centre_um": [
-    380.16,
+    380.136,
     362.88
    ],
    "driver_rect_um": [
-    379.08,
+    379.056,
     361.8,
-    381.24,
+    381.216,
     363.96
    ],
    "detour_um": 0.0
@@ -1666,7 +1666,7 @@
   }
  ],
  "max_driver_detour_um": 4.32,
- "clock_contract_candidate": "scalar clk_bank at current planned centre380.16,362.88, replacing76aliases; nonclockpins unchanged; die owner adoption pending",
+ "clock_contract_candidate": "scalar clk_bank at current planned centre380.136,362.88, replacing76aliases; nonclockpins unchanged; die owner adoption pending",
  "ft_pin_dx_um": 1.08,
  "verdict": "PASS-ESTIMATE",
  "limits": "Read value is lower bound from existing macro->read_dataFF->faceFF two hops, not actualplaced reach. Write guides use actual sourcepins, macrocentres and legal disjoint guide boxes; fullr2r census required afterplace. Clock parentisland metadata adoption pending."

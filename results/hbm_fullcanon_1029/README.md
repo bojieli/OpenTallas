@@ -9,3 +9,5 @@ The candidate separately adopts ALAT4 vs old physical ALAT3, a priced +1 edge pe
 Existing earlier C24lp f12 trial is5/3/WCOPY1, solely multiplier-profile feasibility; it does not claim the5/4 candidate or change the intentional SIDE3/3 contract. The f12 source profile maps LAT5 multiplication to f12_l5 and LAT4 addition to f12_l4; both standard units retain their declared latency.
 
 Run estimate.py WT SOURCE_PLAN RESULTDIR relay_guides.json, then prepare.py WT SOURCE_PLAN SHADOW_PLAN. On a fleet host, gen.py WT RESULTDIR SHADOW_PLAN RUN_OUT produces one candidate kit through public view/slice/core generators. FT pin dx1.08 is the approved physical contract; parent clock/island metadata still needs die-owner batch audit. No release/freeze/signoff claim.
+
+Generation diagnostic: the public generator normalizes raw pin edge points (e.g.S y0.096 -> edge y0.0) before its relay planner. The initial intentional equality guard caught that0.096um input-coordinate mismatch before a kit could be used; source estimate now uses the exact public edge convention. Current exact clock entry remains380.136/362.88. The GRT/placement trials have not run on this candidate.
