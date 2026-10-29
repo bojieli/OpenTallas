@@ -113,6 +113,42 @@ module qfd_tile_nl_a0c #(
     //   node face valid / fault bits           -> node pipe, mis_q, fy_q
     //   ~rst_n                                 -> clocked through reset
     //   drain counter dr (reloaded on any term, also during reset) -> output faces, tree/node drain, reset relays
+    // former clock entries: one clock domain, CTS balances every sink (macros via clock_tree_path)
+    wire ck_rp0;
+    wire ck_rp1;
+    wire ck_rp2;
+    wire ck_rp3;
+    wire ck_rp4;
+    wire ck_rp5;
+    wire ck_rp6;
+    wire ck_rp7;
+    wire ck_rp8;
+    wire ck_rp9;
+    wire ck_tx0;
+    wire ck_tx1;
+    wire ck_tx2;
+    wire ck_tx3;
+    wire ck_tx4;
+    wire ck_tx5;
+    wire ck_tx6;
+    wire ck_tx7;
+    wire ck_rsw;
+    wire ck_rnw;
+    wire ck_dw;
+    wire ck_de;
+    wire ck_rs;
+    wire ck_rn;
+    wire ck_fa2;
+    wire ck_fa4 = ck;
+    wire ck_lsl0;
+    wire ck_lsl1;
+    wire ck_lsl2;
+    wire ck_lsl3;
+    wire ck_lsl4;
+    wire ck_lsl5;
+    wire ck_lsl6;
+    wire ck_lsl7;
+
     wire ck_g;
     wire me_idle;   // body port: the matvec engine idle register (QC-PG-5: threaded through the 4 body modules)
     generate if (ICG == 0) begin : g_noicg
@@ -253,41 +289,6 @@ module qfd_tile_nl_a0c #(
         end
         initial if (ICG_GOH < 2 || ICG_DRAIN < 1 || ICG_DRAIN > 255 || ICG > 2) $fatal(1, "a0c ICG: ICG <= 2, ICG_GOH >= 2, 1 <= ICG_DRAIN <= 255");
     end endgenerate
-    // former clock entries: one clock domain, CTS balances every sink (macros via clock_tree_path)
-    wire ck_rp0;
-    wire ck_rp1;
-    wire ck_rp2;
-    wire ck_rp3;
-    wire ck_rp4;
-    wire ck_rp5;
-    wire ck_rp6;
-    wire ck_rp7;
-    wire ck_rp8;
-    wire ck_rp9;
-    wire ck_tx0;
-    wire ck_tx1;
-    wire ck_tx2;
-    wire ck_tx3;
-    wire ck_tx4;
-    wire ck_tx5;
-    wire ck_tx6;
-    wire ck_tx7;
-    wire ck_rsw;
-    wire ck_rnw;
-    wire ck_dw;
-    wire ck_de;
-    wire ck_rs;
-    wire ck_rn;
-    wire ck_fa2;
-    wire ck_fa4 = ck;
-    wire ck_lsl0;
-    wire ck_lsl1;
-    wire ck_lsl2;
-    wire ck_lsl3;
-    wire ck_lsl4;
-    wire ck_lsl5;
-    wire ck_lsl6;
-    wire ck_lsl7;
 `ifndef SYNTHESIS
     qfd_tile_nl_rp2_45 #(.ROM_TILE(ROM_TILE),.RPH(3),.REGROOT(REGROOT_MODE)) u_g (
 `else
