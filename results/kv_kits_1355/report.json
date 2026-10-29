@@ -1,0 +1,662 @@
+[
+  {
+    "type": "kv3_io_ft",
+    "stage": "3_3_place_gp",
+    "cland_cells": 29353,
+    "cland_fixed": 24585,
+    "fixed_tap_overlap": 3,
+    "examples": [
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[3\\].u_dsel/_206_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.504,
+          208.17,
+          1251.774,
+          208.44
+        ],
+        "tap": "TAP_TAPCELL_ROW_755_26540",
+        "taprect": [
+          1251.72,
+          208.17,
+          1251.828,
+          208.44
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft2_i/u_ring.dch\\[4\\].u_dsel/_181_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          54.054,
+          636.93,
+          54.324,
+          637.2
+        ],
+        "tap": "TAP_TAPCELL_ROW_2343_66216",
+        "taprect": [
+          54.216,
+          636.93,
+          54.324,
+          637.2
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/_421_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          54.054,
+          645.57,
+          54.324,
+          645.84
+        ],
+        "tap": "TAP_TAPCELL_ROW_2375_67016",
+        "taprect": [
+          54.216,
+          645.57,
+          54.324,
+          645.84
+        ]
+      }
+    ]
+  },
+  {
+    "type": "kv3_io_ft",
+    "stage": "3_4_place_resized",
+    "cland_cells": 29353,
+    "cland_fixed": 24585,
+    "fixed_tap_overlap": 3,
+    "examples": [
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[3\\].u_dsel/_206_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.504,
+          208.17,
+          1251.774,
+          208.44
+        ],
+        "tap": "TAP_TAPCELL_ROW_755_26540",
+        "taprect": [
+          1251.72,
+          208.17,
+          1251.828,
+          208.44
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft2_i/u_ring.dch\\[4\\].u_dsel/_181_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          54.054,
+          636.93,
+          54.324,
+          637.2
+        ],
+        "tap": "TAP_TAPCELL_ROW_2343_66216",
+        "taprect": [
+          54.216,
+          636.93,
+          54.324,
+          637.2
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/_421_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          54.054,
+          645.57,
+          54.324,
+          645.84
+        ],
+        "tap": "TAP_TAPCELL_ROW_2375_67016",
+        "taprect": [
+          54.216,
+          645.57,
+          54.324,
+          645.84
+        ]
+      }
+    ],
+    "cland_resized_since_prior": 0,
+    "resize_examples": [],
+    "cland_new_since_prior": 0
+  },
+  {
+    "type": "kv3_io_ft",
+    "stage": "3_5_place_dp-failed",
+    "cland_cells": 29353,
+    "cland_fixed": 24578,
+    "fixed_tap_overlap": 3,
+    "examples": [
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[3\\].u_dsel/_206_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.504,
+          208.17,
+          1251.774,
+          208.44
+        ],
+        "tap": "TAP_TAPCELL_ROW_755_26540",
+        "taprect": [
+          1251.72,
+          208.17,
+          1251.828,
+          208.44
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft2_i/u_ring.dch\\[4\\].u_dsel/_181_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          54.054,
+          636.93,
+          54.324,
+          637.2
+        ],
+        "tap": "TAP_TAPCELL_ROW_2343_66216",
+        "taprect": [
+          54.216,
+          636.93,
+          54.324,
+          637.2
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/_421_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          54.054,
+          645.57,
+          54.324,
+          645.84
+        ],
+        "tap": "TAP_TAPCELL_ROW_2375_67016",
+        "taprect": [
+          54.216,
+          645.57,
+          54.324,
+          645.84
+        ]
+      }
+    ],
+    "cland_resized_since_prior": 0,
+    "resize_examples": [],
+    "cland_new_since_prior": 0
+  },
+  {
+    "type": "kv3_io_ft_v1",
+    "stage": "3_3_place_gp",
+    "cland_cells": 29239,
+    "cland_fixed": 24527,
+    "fixed_tap_overlap": 8,
+    "examples": [
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[0\\].u_dsel/_181_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1226.556,
+          190.62,
+          1226.826,
+          190.89
+        ],
+        "tap": "TAP_TAPCELL_ROW_690_24915",
+        "taprect": [
+          1226.772,
+          190.62,
+          1226.88,
+          190.89
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[0\\].u_dsel/_185_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.558,
+          194.13,
+          1251.828,
+          194.4
+        ],
+        "tap": "TAP_TAPCELL_ROW_703_25240",
+        "taprect": [
+          1251.72,
+          194.13,
+          1251.828,
+          194.4
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[0\\].u_dsel/_187_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.558,
+          194.67,
+          1251.828,
+          194.94
+        ],
+        "tap": "TAP_TAPCELL_ROW_705_25290",
+        "taprect": [
+          1251.72,
+          194.67,
+          1251.828,
+          194.94
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[0\\].u_dsel/_189_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.558,
+          195.21,
+          1251.828,
+          195.48
+        ],
+        "tap": "TAP_TAPCELL_ROW_707_25340",
+        "taprect": [
+          1251.72,
+          195.21,
+          1251.828,
+          195.48
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[0\\].u_dsel/_191_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1226.556,
+          197.64,
+          1226.826,
+          197.91
+        ],
+        "tap": "TAP_TAPCELL_ROW_716_25565",
+        "taprect": [
+          1226.772,
+          197.64,
+          1226.88,
+          197.91
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[2\\].u_dsel/_421_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.558,
+          206.01,
+          1251.828,
+          206.28
+        ],
+        "tap": "TAP_TAPCELL_ROW_747_26340",
+        "taprect": [
+          1251.72,
+          206.01,
+          1251.828,
+          206.28
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[4\\].u_dsel/_181_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.504,
+          208.17,
+          1251.774,
+          208.44
+        ],
+        "tap": "TAP_TAPCELL_ROW_755_26540",
+        "taprect": [
+          1251.72,
+          208.17,
+          1251.828,
+          208.44
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft2_i/u_ring.dch\\[0\\].u_dsel/_190_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          54.0,
+          626.67,
+          54.27,
+          626.94
+        ],
+        "tap": "TAP_TAPCELL_ROW_2305_65266",
+        "taprect": [
+          54.216,
+          626.67,
+          54.324,
+          626.94
+        ]
+      }
+    ]
+  },
+  {
+    "type": "kv3_io_ft_v1",
+    "stage": "3_4_place_resized",
+    "cland_cells": 29239,
+    "cland_fixed": 24527,
+    "fixed_tap_overlap": 8,
+    "examples": [
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[0\\].u_dsel/_181_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1226.556,
+          190.62,
+          1226.826,
+          190.89
+        ],
+        "tap": "TAP_TAPCELL_ROW_690_24915",
+        "taprect": [
+          1226.772,
+          190.62,
+          1226.88,
+          190.89
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[0\\].u_dsel/_185_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.558,
+          194.13,
+          1251.828,
+          194.4
+        ],
+        "tap": "TAP_TAPCELL_ROW_703_25240",
+        "taprect": [
+          1251.72,
+          194.13,
+          1251.828,
+          194.4
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[0\\].u_dsel/_187_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.558,
+          194.67,
+          1251.828,
+          194.94
+        ],
+        "tap": "TAP_TAPCELL_ROW_705_25290",
+        "taprect": [
+          1251.72,
+          194.67,
+          1251.828,
+          194.94
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[0\\].u_dsel/_189_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.558,
+          195.21,
+          1251.828,
+          195.48
+        ],
+        "tap": "TAP_TAPCELL_ROW_707_25340",
+        "taprect": [
+          1251.72,
+          195.21,
+          1251.828,
+          195.48
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[0\\].u_dsel/_191_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1226.556,
+          197.64,
+          1226.826,
+          197.91
+        ],
+        "tap": "TAP_TAPCELL_ROW_716_25565",
+        "taprect": [
+          1226.772,
+          197.64,
+          1226.88,
+          197.91
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[2\\].u_dsel/_421_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.558,
+          206.01,
+          1251.828,
+          206.28
+        ],
+        "tap": "TAP_TAPCELL_ROW_747_26340",
+        "taprect": [
+          1251.72,
+          206.01,
+          1251.828,
+          206.28
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[4\\].u_dsel/_181_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.504,
+          208.17,
+          1251.774,
+          208.44
+        ],
+        "tap": "TAP_TAPCELL_ROW_755_26540",
+        "taprect": [
+          1251.72,
+          208.17,
+          1251.828,
+          208.44
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft2_i/u_ring.dch\\[0\\].u_dsel/_190_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          54.0,
+          626.67,
+          54.27,
+          626.94
+        ],
+        "tap": "TAP_TAPCELL_ROW_2305_65266",
+        "taprect": [
+          54.216,
+          626.67,
+          54.324,
+          626.94
+        ]
+      }
+    ],
+    "cland_resized_since_prior": 0,
+    "resize_examples": [],
+    "cland_new_since_prior": 0
+  },
+  {
+    "type": "kv3_io_ft_v1",
+    "stage": "3_5_place_dp-failed",
+    "cland_cells": 29239,
+    "cland_fixed": 24520,
+    "fixed_tap_overlap": 8,
+    "examples": [
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[0\\].u_dsel/_181_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1226.556,
+          190.62,
+          1226.826,
+          190.89
+        ],
+        "tap": "TAP_TAPCELL_ROW_690_24915",
+        "taprect": [
+          1226.772,
+          190.62,
+          1226.88,
+          190.89
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[0\\].u_dsel/_185_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.558,
+          194.13,
+          1251.828,
+          194.4
+        ],
+        "tap": "TAP_TAPCELL_ROW_703_25240",
+        "taprect": [
+          1251.72,
+          194.13,
+          1251.828,
+          194.4
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[0\\].u_dsel/_187_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.558,
+          194.67,
+          1251.828,
+          194.94
+        ],
+        "tap": "TAP_TAPCELL_ROW_705_25290",
+        "taprect": [
+          1251.72,
+          194.67,
+          1251.828,
+          194.94
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[0\\].u_dsel/_189_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.558,
+          195.21,
+          1251.828,
+          195.48
+        ],
+        "tap": "TAP_TAPCELL_ROW_707_25340",
+        "taprect": [
+          1251.72,
+          195.21,
+          1251.828,
+          195.48
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[0\\].u_dsel/_191_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1226.556,
+          197.64,
+          1226.826,
+          197.91
+        ],
+        "tap": "TAP_TAPCELL_ROW_716_25565",
+        "taprect": [
+          1226.772,
+          197.64,
+          1226.88,
+          197.91
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[2\\].u_dsel/_421_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.558,
+          206.01,
+          1251.828,
+          206.28
+        ],
+        "tap": "TAP_TAPCELL_ROW_747_26340",
+        "taprect": [
+          1251.72,
+          206.01,
+          1251.828,
+          206.28
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft0_i/u_ring.dch\\[4\\].u_dsel/_181_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          1251.504,
+          208.17,
+          1251.774,
+          208.44
+        ],
+        "tap": "TAP_TAPCELL_ROW_755_26540",
+        "taprect": [
+          1251.72,
+          208.17,
+          1251.828,
+          208.44
+        ]
+      },
+      {
+        "cell": "u_bound.u_cland_ft2_i/u_ring.dch\\[0\\].u_dsel/_190_",
+        "master": "INVx3_ASAP7_75t_R",
+        "status": "FIRM",
+        "rect": [
+          54.0,
+          626.67,
+          54.27,
+          626.94
+        ],
+        "tap": "TAP_TAPCELL_ROW_2305_65266",
+        "taprect": [
+          54.216,
+          626.67,
+          54.324,
+          626.94
+        ]
+      }
+    ],
+    "cland_resized_since_prior": 0,
+    "resize_examples": [],
+    "cland_new_since_prior": 0
+  }
+]
