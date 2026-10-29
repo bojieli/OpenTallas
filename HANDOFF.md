@@ -1830,3 +1830,17 @@ CODEX: 2026-10-29 08:39 PDT BTAB4missingBUFmasters actualSPICE/STAcalREADYacedd3
 CODEX: 2026-10-29 08:39 PDT sharedclock actualnative-stagefit1a3bf0a2b andot_clk local-entry aca469fad ready;actualHEAD1356buffergeometrybyte-identical0cycles,CLK-TOOL8suite215PASS18SKIP;no dieclockadoption.
 
 CODEX: 2026-10-29 08:36 PDT KV providerallcellimportDONE6ec7234c7; actual15271pinpathsmax355.326/0over405, PGjoinsnext. Strictbind60minstallquadraticparserdiagnosed+fixed3b3ec585a/9178c9c15, originaluntouched.
+
+CODEX: 10-29 08:45 PDT QC PROG staleSIGNEDwrongaspect/PGfailure diagnosed; nativePG216→0candidateheld, currentwide376comblogicEcornerstructuralspread e037ebcb9 actualreach354.73/0over405, independentG1ONEGRT50approved/liveepyc2. BTABF3bDRT/F3rholdrepairprogress; A0Slangclockdeclscopefix restoresallROM/gate/relaycounts, NL/NKplacementlive.
+
+CODEX: 2026-10-29 08:46 PDT HBMK13filledidleEPYC2with13reviewedplace-onlykits; RINGretentionrepairLEC26002/26002PASS,placeLIVE. Side_restproof51d9001af+strapadapter58ca31ed5READY. HNXm10bNOTSIGNEDdiagnosed3slewroots+3holdends;ONEdataonlycloneapproved.
+
+CODEX: 2026-10-29 08:46 PDT QC-A0 native B-hop clock-scope repair68204ac61dc restores34/36ICGs+10ROMs; fixedsynthPASS; approvedONE NL/NK V1LplacementsLIVEintel2 2306050/2355573, actualREGROOT3 mappedleafproofownedqc_proof; noCTS/signoff.
+
+CODEX: 2026-10-29 08:49 PDT QC native import: fixed2resetreceiveFFreach failures483.618/469.233->fullactual32514arc max403.698/0over405/0undriven via2FF -79.92um y,0cycles/RTLchange; source ddab9669, ownnumbersUNCHECKED. 185694/185698PGcontacts candidate,4b190VSScontacts underlocaljogdiagnosis; realFFCLKbranchhelperlive. Results3c28601388a+2f83a96087f pushed.
+
+CODEX: 2026-10-29 08:49 PDT HBMnativeVMS actualplanprune+128piperecipes READY73a128163/aa06f3c6b;coverageactualsource128materialized/379instpreserved,27mutantscaught;128Southgeometryexplicitmissing,parentHBMcut/sourcecalendarcontinues.
+
+CODEX: 2026-10-29 08:49 PDT HEAD actualhk5 tile LEC33806EQ/face1159PASS; reviewedtrialPLACEintel2unit2374806live. Spn omittedIS +stale rawresetprovider diagnosed; fullhk5 source regenerating. LEP/FT structural fixes remain candidate, no release claim.
+
+CODEX: 2026-10-29 08:50 PDT FLOW realKV ECOcornerbug READY6be8c010c/20PASS; correctedq3FF-onlypostroute LIVEintel1unit1787016, ownwrongmodejobstoppedonly, inheritedV1untouched. Coreparentmetadata e6d+RCexactlibs65bb ready/merged; KVPHY usesexistingreservehook.
