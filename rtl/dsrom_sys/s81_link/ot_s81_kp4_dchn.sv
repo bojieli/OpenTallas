@@ -121,7 +121,7 @@ module ot_s81_kp4_dchn #(parameter integer MUT = 0, parameter integer ROOT_COUNT
     end
     always @(posedge clk) nrc <= pt[0][5:0];
     always @(posedge clk) nacc <= (ce2[0] ? 6'd0 : nacc) + nrc;
-    end else begin : g_count_split
+    end else if (ROOT_COUNT_SPLIT == 1) begin : g_count_split
         // Same E2/E3 boundaries: register the two regional subtotals at E2,
         // then complete their addition in the previously light E3 accumulator.
         // nrc has no reader other than nacc. No output or control cycle changes.
@@ -136,6 +136,28 @@ module ot_s81_kp4_dchn #(parameter integer MUT = 0, parameter integer ROOT_COUNT
         wire [5:0] carry_bits = ((acc & a) | (acc & b) | (a & b));
         wire [5:0] carry = {carry_bits[4:0],1'b0};
         always @(posedge clk) nacc <= sum + carry;
+    end else begin : g_count_quarters
+        // Four local E2 counters shorten the count critical path further.
+        // Three parallel-carry levels in E3 preserve the original modulo64 sum.
+        wire [3:0] sub0, sub1, sub2, sub3;
+        reg [3:0] nrc0, nrc1, nrc2, nrc3;
+        ot_s81_kp4_count14 u0(.bits({2'd0,lzv[13:0]}),.count(sub0));
+        ot_s81_kp4_count14 u1(.bits({2'd0,lzv[27:14]}),.count(sub1));
+        ot_s81_kp4_count14 u2(.bits({2'd0,lzv[41:28]}),.count(sub2));
+        ot_s81_kp4_count14 u3(.bits({3'd0,lzv[54:42]}),.count(sub3));
+        always @(posedge clk) begin
+            nrc0 <= sub0; nrc1 <= sub1; nrc2 <= sub2; nrc3 <= sub3;
+        end
+        wire [5:0] a = ce2[0] ? 6'd0 : nacc;
+        wire [5:0] b = {2'd0,nrc0}, c = {2'd0,nrc1};
+        wire [5:0] d = {2'd0,nrc2}, e = {2'd0,nrc3};
+        wire [5:0] s1 = a ^ b ^ c, cb1 = (a & b) | (a & c) | (b & c);
+        wire [5:0] c1 = {cb1[4:0],1'b0};
+        wire [5:0] s2 = s1 ^ d ^ e, cb2 = (s1 & d) | (s1 & e) | (d & e);
+        wire [5:0] c2 = {cb2[4:0],1'b0};
+        wire [5:0] s3 = s2 ^ c1 ^ c2, cb3 = (s2 & c1) | (s2 & c2) | (c1 & c2);
+        wire [5:0] c3 = {cb3[4:0],1'b0};
+        always @(posedge clk) nacc <= s3 + c3;
     end endgenerate
     // correction words: word w = {chunk w-1, chunk w}[549 + 6 w -: 544] at T + 45 + w -> cw_q at T + 46 + w
     reg  [549:0] crp;
@@ -192,4 +214,21 @@ module ot_s81_kp4_count28(input wire [31:0] bits, output wire [4:0] count);
         end
     endgenerate
     assign count=s16[0]+s16[1];
+endmodule
+
+// Four-bit subtotal of14 (or13) lanes. The caller pads unused input bits0.
+module ot_s81_kp4_count14(input wire[15:0]bits,output wire[3:0]count);
+    wire[1:0]s2[0:7];wire[2:0]s4[0:3];wire[3:0]s8[0:1];genvar j;
+    generate
+        for(j=0;j<8;j=j+1)begin:g2
+            assign s2[j]={1'b0,bits[2*j]}+{1'b0,bits[2*j+1]};
+        end
+        for(j=0;j<4;j=j+1)begin:g4
+            assign s4[j]={1'b0,s2[2*j]}+{1'b0,s2[2*j+1]};
+        end
+        for(j=0;j<2;j=j+1)begin:g8
+            assign s8[j]={1'b0,s4[2*j]}+{1'b0,s4[2*j+1]};
+        end
+    endgenerate
+    assign count=s8[0]+s8[1];
 endmodule
