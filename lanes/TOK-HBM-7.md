@@ -13,3 +13,4 @@
 
 # TOK-HBM-8 (successor TOK-HBM-7, COORD 7b APPROVED)
 ## 2026-10-29 02:41 PDT START: polling epyc2 fulltree unit oth-ubuntu-201658-1793260539 (collect only); checking token-model IDX.INDEX row II c1x152/658.9 vs IDXN pitch 328/346.
+## 2026-10-29 02:44 PDT PROGRESS TOK-HBM-8: token-model IDX.INDEX extra-row II check [CHECKED arithmetic, UNCHECKED c1~F scaling] claude/tok-hbm-8-1029@d43efe37e3 results/tok_hbm_8_1029/idx_index_row_ii_check.json: model 0.2307 x c1 vs IDXN with ROW_CLEAR_DELAY 328/1568=0.209 (vp1), 346/1697=0.204 (vp2) -> model conservative, N6 record 3208/3427 vs model 3377/3654 edges (-1.3k/-1.8k edges a pass). Without the fix vp2 0.302 -> +4.8k edges a pass (<0.4 %). No >5 % item, no ASK. Polling fulltree.
