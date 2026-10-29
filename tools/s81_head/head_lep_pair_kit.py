@@ -114,7 +114,7 @@ def sram_sites(srams, w, h):
     return out
 
 
-def build_inputs(plan_f, work):
+def build_inputs(plan_f, work, child_delta=None):
     plan = json.loads(plan_f.read_text())
     t = plan["partition_types"]["hd_lep0N"]
     cores = [c for c in t.get("hard_cores", []) if c["module"] == MODULE]
@@ -142,13 +142,28 @@ def build_inputs(plan_f, work):
         recipe_keys=[MODULE])])
     vf = work / "views_lep_pair.json"
     vf.write_text(json.dumps(views, indent=1) + "\n")
-    child = json.loads((ROOT / DELTA).read_text())["child_type"]
+    # A fix-only parent event can resize the child only together with its own
+    # macro floorplan. Keep the historical default intact; an explicit delta
+    # supplies the new, reviewed child geometry instead of stretching old sites.
+    delta_file = Path(child_delta) if child_delta is not None else ROOT / DELTA
+    child = json.loads(delta_file.read_text())["child_type"]
     if child["module"] != MODULE or [float(v) for v in child["outline_um"]] != [float(w), float(h)]:
         raise SystemExit("plan delta child_type does not match the plan core outline")
     srams = [c for c in child["contents"] if c.get("kind") == "sram"]
-    sites = sram_sites(srams, w, h)
-    mp = dict(source=f"{DELTA} child_type.contents (instances/masters); sites = head_lep_pair_kit.sram_sites",
-              macro_placement=[dict(k=c["inst"], origin_um=sites[c["inst"]], orient="R0", macro=c["module"])
+    if child_delta is None:
+        sites = sram_sites(srams, w, h)
+        site_source = "head_lep_pair_kit.sram_sites"
+        delta_source = DELTA
+    else:
+        # Never invent a new macro position for a resized core. The shared
+        # generator checks the supplied LEF dimensions, halo and outline fit.
+        if len(srams) != 55 or len({c["inst"] for c in srams}) != 55:
+            raise SystemExit("explicit LEP child delta must name each of the 55 SRAMs exactly once")
+        sites = {c["inst"]: c["origin_um"] for c in srams}
+        site_source = "explicit child_type.contents origins/orientations"
+        delta_source = str(delta_file)
+    mp = dict(source=f"{delta_source} child_type.contents (instances/masters); sites = {site_source}",
+              macro_placement=[dict(k=c["inst"], origin_um=sites[c["inst"]], orient=c.get("orient", "R0") if child_delta is not None else "R0", macro=c["module"])
                                for c in srams])
     mf = work / "lep_pair_macros.json"
     mf.write_text(json.dumps(mp, indent=1) + "\n")
@@ -190,10 +205,12 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", required=True)
     ap.add_argument("--plan", default=str(ROOT / "physical/die_plan/s81_head/die_plan.json"))
+    ap.add_argument("--child-delta", type=Path,
+                    help="explicit reviewed child_type geometry for a fix-only parent event; outline must match all four parent cores")
     ap.add_argument("rest", nargs="*", help="extra gen_core_kit_hbm.py args (after --)")
     a = ap.parse_args()
     out = Path(a.out)
-    vf, mf, rec, clk, nm = build_inputs(Path(a.plan), out / "_inputs")
+    vf, mf, rec, clk, nm = build_inputs(Path(a.plan), out / "_inputs", a.child_delta)
     G.io_tcl = io_tcl_interior(G.io_tcl)
     sys.argv = ["gen_core_kit_hbm.py", "--views", str(vf), "--view", f"{MODULE}@kit", "--out", str(out),
                 "--recipe-key", MODULE, "--face-shell", "off", "--core-insertion", "none",
