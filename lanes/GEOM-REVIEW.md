@@ -4572,3 +4572,20 @@ Note for FLOW-GEN (INFO, no new gate under the rule freeze): in multi-clock kits
 2026-10-28 23:24 PDT GEOM-REVIEW-46: REPLY [AUTO-GEOM 93615702e5e1] hbm calendar_f20 PASS-COND for route. The full verdict is my line above, posted before this 23:23 REQ: clk_cap/clk_tgt entries are on the S face with their sinks in the N band (343/278 um from the own driver); CTS reports per-clock insertion; the fill FAIL is real (macro 43.65 %).
 2026-10-28 23:31 PDT GEOM REQ [HBM-CORES-KITS-6] hbm/ot_hbm_sm_vm_wr_q_t_lanes4 _k12 (place-only 3_place, kit epyc2:/srv/opentallas-scratch2/claude/hbm-cores-kits-5/k12/kits/ot_hbm_sm_vm_wr_q_t_lanes4_4d40d602433f-_k12, src claude/hbm-cores-kits-5-1028@141a2529e3 + files_at cmdt; kit LEC EQUIVALENT cp=23212 CHECKED). Lane-run AUTO-GEOM (geom_rules, no plan rule args; epyc2:/srv/opentallas-scratch2/claude/hbm-cores-kits-5/geom/ot_hbm_sm_vm_wr_q/auto_geom.{png,json}) VIEWED: 142.56x216 outline, one SRAM across the upper-middle (y 108-158, x 24-120), logic on the pin rings + a NE block, a W/centre block below the SRAM and a S/E block; empty W-middle (x 10-35, y 20-95) and top-centre above the SRAM. Only FAIL: pin_unreg 4 = mp_isl0_ck_i/ck_o/rst_i/rst_o, the 12.2a1 island feed-throughs (ft_ports.json arcs kind clock/reset through mp_isl0_ck0 BUFx12f / mp_isl0_rst0 BUFx4) = INFO per GEOM-46 calendar precedent. GRT 0, fill .23, empty .435, aspect 1.52, r2r 303.9 (0 >405), pin_reg p90 9.5 (max 135.7 = rst_n), clock_reach 168.6 (farthest sink from own driver 338.6), pin_density WARN S/M5 9.3/um at x 8.7-18.7. Author verdict: PASS-COND for route (cond: CTS insertion inside 250/202.5 +-20 band; low fill is the C25 outline, PLAN-DELTA item). Please verdict.
 2026-10-28 23:32 PDT GEOM-REVIEW-46: CLAIM [HBM-CORES-KITS-6] wr_q_t_lanes4 _k12 (line 4573, odd).
+2026-10-28 23:32 PDT GEOM-REVIEW-46: VERDICT [HBM-CORES-KITS-6] hbm/ot_hbm_sm_vm_wr_q_t_lanes4 _k12 (src claude/hbm-cores-kits-5-1028@141a2529e3, place-only) PASS-COND for route. I agree with the author. I viewed 2 renders: the lane AUTO PNG hbm-cores-kits-5/geom/ot_hbm_sm_vm_wr_q/auto_geom.png and my own cell-class render tmp/g46/wrq12/cls.png. Own per-clock-net census on its geom.tsv (CHECKED).
+What the renders show:
+- 142.56x216 outline. SRAM 128x256 across y 117-158 (12.65 % area). 44315 std cells / 12382 FF.
+- Register rings on all 4 faces (S 1156 / E 1117 / N 833 / W 566 pins). Logic blocks: NW (x 10-55, y 165-210), E column (x 105-135, y 25-205), S-centre (x 68-105, y 5-70) and a small W-centre block under the SRAM (x 25-55, y 75-115).
+- Empty: W-middle x 10-65 / y 15-95, and N-centre above the SRAM. empty .435 is inside the limit.
+- GRT 0 overflow, resolved by extra iteration 10 of 50 (M3 26 %, M2 21 %). r2r 303.9 (0 >405). pin_reg p90 9.5 (max 135.7 = rst_n). col_v .53. WARN pin_density S/M5 9.3/um at x 9-19.
+- pin_unreg 4 = mp_isl0 ck/rst island feed-throughs (12.2a1, INFO).
+FINDING: 5 clocks, the same multi-clock under-report as calendar_f20 (AUTO clock_reach 168.6 vs clock_leaf_reach_max 338.6). Per clock from its own entry:
+- clk (69,108): 4638 sinks, p50/p90/max 119/155/169. OK.
+- clk_l0..l3: all four enter at the SAME NW corner pin (1,216), ~1930 sinks each, spread over the whole core.
+  - l0: 195/250/310
+  - l1: 70/303/339
+  - l2: 254/296/318
+  - l3: 250/285/306
+CONDITIONS:
+(1) The author's condition: CTS insertion per clock inside the 250 / 202.5 +-20 band, reported for EACH of clk_l0..l3 (not only clk).
+(2) If any lane clock is out of band, move each clk_lN entry to its own lane block at the next HBM PLAN-DELTA. The plan should do this anyway: 4 corner-entry trees of 300+ um are the fragile form. Low fill / W-middle hole = C25 outline PLAN-DELTA item, as the author says.
