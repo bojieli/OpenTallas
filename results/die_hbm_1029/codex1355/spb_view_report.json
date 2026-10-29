@@ -1,0 +1,32 @@
+{
+ "schema": "hbm.spb_view.v1",
+ "qualification": "PREP_ONLY_NO_ADOPTION",
+ "source_sha": "0b7b966cbaf2561f11c447e5924b043d4e3ba2a5a4e41fcb5f908706b9681c7e",
+ "winning_lef_sha": "62a39ad785713372b4e810a1152550249d37aca567679360f275797988292b9b",
+ "changes": [
+  {
+   "type": "q_spb0",
+   "inst": "u_lk_S0",
+   "old": "cores/ot_pdie_serdes__600.048x600.48__NW_io_u_lk_N0.json",
+   "new": "cores/ot_pdie_serdes__600.048x600.48__NW_io_u_lk_N0__spbV3_m67.json",
+   "data_pins": 1024,
+   "clock_reset_unchanged": true,
+   "source_and_cycle_changes": 0
+  },
+  {
+   "type": "q_spb0__physical_v1",
+   "inst": "u_lk_S0",
+   "old": "cores/ot_pdie_serdes__600.048x600.48__NW_io_u_lk_N0.json",
+   "new": "cores/ot_pdie_serdes__600.048x600.48__NW_io_u_lk_N0__spbV3_m67.json",
+   "data_pins": 1024,
+   "clock_reset_unchanged": true,
+   "source_and_cycle_changes": 0
+  }
+ ],
+ "holds": [
+  "Independent geometry review",
+  "Native four-stage source/FF contract and actual parent clock/reset/PG",
+  "Update stored station endpoint geometry then resite",
+  "Regenerate affected PHY view before die GRT"
+ ]
+}
