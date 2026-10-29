@@ -11,7 +11,10 @@ B=$1; V=$2; O=$3; N=$4; HD=$5; shift 5
 CTX=${CTX:-8192}; POST=${POST:-300000}
 I=/srv/opentallas-scratch2/claude/tok-qk-b48/inputs
 PHYS=/srv/opentallas-scratch2/claude/wt/codex-kv-pv-image-0733/physical
-mkdir -p $O/$N/vecl; cd $O/$N; ln -sfn $PHYS physical
+mkdir -p $O/$N/vecl; cd $O/$N
+if [ -n "${KV_DCAL_VIAMAP:-}" ]; then
+  python3 -I "$H/runtime_rom.py" --build "$(dirname "$(dirname "$(readlink -f "$B")")")" --runtime . --viamap "$KV_DCAL_VIAMAP" || exit 2
+fi; ln -sfn $PHYS physical
 : > preload.txt; : > preload.log
 for n in $(seq 0 35); do
   S=$V/L${n}_$HD; D=vecl/L$n; mkdir -p $D
