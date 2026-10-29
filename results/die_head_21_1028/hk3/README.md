@@ -96,3 +96,17 @@ Render: `png/hd_lep0N.png` (VIEWED).
 - Renders `png/<type>.png`: all 15 VIEWED. Bands sit at their faces, with no visible overlap with macros, islands or
   die-clock sites. The hd_turn_b band ends at x82.56, and the die-clock sites start at x84.72.
 - Placement-only diagnostic (ot-run on intel2, `run_diag.sh KIT place`): see the PLACEMENT section below.
+
+## PLACEMENT (diagnostic, place only, on the hk3 kits; intel2 scratch /srv/opentallas-scratch2/claude/die-head-21-hk3/diag)
+
+- **hd_turn_a: PASS to 3_place.odb** (ot-run unit oth-ubuntu-3209201-1793252198, exit 0, 16 GB / 8 threads; CHECKED from
+  the logs). Landing: "OT_CLAND ring_place=ff u_cland_t_i: 2941 ring flops FIRM bit-major at spread 3.8086, 9853 ring
+  logic cells to GPL" and "placed 2943 actual mapped cells FIRM". GPL final overflow 0.194, with 1098 overflowed tiles
+  (0.20 %). The ring bank blockage was released before DPL. DPL is legal (HPWL delta -0.0 %) and preserves 2943 FIRM
+  cells. The old bands failed here. face_guard / face_guard_odb FAIL are the known HEAD-KITS-1 DIAGNOSTIC (start ports),
+  not fatal.
+- **hd_st_str: RUNNING at write time** (unit oth-ubuntu-3209574-1793252199, 32 GB / 16 threads). OT_CLAND already placed
+  5366 cells FIRM in the d_i / u_i bands (spread 4.29). It was in global placement. To collect:
+  diag/hd_st_str.otrun.log ("RAN ... exit"), diag/hd_st_str/run/logs/asap7/dp_hd_st_str/base/3_5_place_dp.log, and
+  FAIL_* files if any.
+- No placement render was made; the plan renders above were viewed. The other 13 types were not placed (UNCHECKED).
