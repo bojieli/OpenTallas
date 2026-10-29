@@ -1,0 +1,416 @@
+[
+ {
+  "dme_split_level": 0,
+  "groups": {
+   "0": [
+    "t_NW_sm3__clk",
+    "t_NW_sm3__clk_c0",
+    "t_NW_sm3__clk_c1",
+    "t_NW_sm3__clk_c10",
+    "t_NW_sm3__clk_c11",
+    "t_NW_sm3__clk_c12",
+    "t_NW_sm3__clk_c13",
+    "t_NW_sm3__clk_c14",
+    "t_NW_sm3__clk_c15",
+    "t_NW_sm3__clk_c16",
+    "t_NW_sm3__clk_c17",
+    "t_NW_sm3__clk_c18",
+    "t_NW_sm3__clk_c19",
+    "t_NW_sm3__clk_c2",
+    "t_NW_sm3__clk_c20",
+    "t_NW_sm3__clk_c21",
+    "t_NW_sm3__clk_c22",
+    "t_NW_sm3__clk_c23",
+    "t_NW_sm3__clk_c24",
+    "t_NW_sm3__clk_c25",
+    "t_NW_sm3__clk_c26",
+    "t_NW_sm3__clk_c27",
+    "t_NW_sm3__clk_c28",
+    "t_NW_sm3__clk_c29",
+    "t_NW_sm3__clk_c3",
+    "t_NW_sm3__clk_c30",
+    "t_NW_sm3__clk_c31",
+    "t_NW_sm3__clk_c4",
+    "t_NW_sm3__clk_c5",
+    "t_NW_sm3__clk_c6",
+    "t_NW_sm3__clk_c7",
+    "t_NW_sm3__clk_c8",
+    "t_NW_sm3__clk_c9",
+    "t_NW_sm3__clk_t1"
+   ]
+  },
+  "corners": {
+   "TT": {
+    "0": {
+     "worst_abs_ps": 214.03662498227288,
+     "pair": [
+      "t_NW_sm3__clk_c4",
+      "t_NW_sm3__clk_c28"
+     ]
+    }
+   },
+   "FF": {
+    "0": {
+     "worst_abs_ps": 173.32375458477185,
+     "pair": [
+      "t_NW_sm3__clk_c4",
+      "t_NW_sm3__clk_c28"
+     ]
+    }
+   }
+  },
+  "all_groups_under150": false,
+  "CA_crossing_count": "PENDING actual source graph; clock tap pairs are NOT data crossings"
+ },
+ {
+  "dme_split_level": 1,
+  "groups": {
+   "1": [
+    "t_NW_sm3__clk",
+    "t_NW_sm3__clk_c0",
+    "t_NW_sm3__clk_c1",
+    "t_NW_sm3__clk_c10",
+    "t_NW_sm3__clk_c11",
+    "t_NW_sm3__clk_c2",
+    "t_NW_sm3__clk_c3",
+    "t_NW_sm3__clk_c4",
+    "t_NW_sm3__clk_c5",
+    "t_NW_sm3__clk_c6",
+    "t_NW_sm3__clk_c7",
+    "t_NW_sm3__clk_c8",
+    "t_NW_sm3__clk_c9"
+   ],
+   "26": [
+    "t_NW_sm3__clk_c12",
+    "t_NW_sm3__clk_c13",
+    "t_NW_sm3__clk_c14",
+    "t_NW_sm3__clk_c15",
+    "t_NW_sm3__clk_c16",
+    "t_NW_sm3__clk_c17",
+    "t_NW_sm3__clk_c18",
+    "t_NW_sm3__clk_c19",
+    "t_NW_sm3__clk_c20",
+    "t_NW_sm3__clk_c21",
+    "t_NW_sm3__clk_c22",
+    "t_NW_sm3__clk_c23",
+    "t_NW_sm3__clk_c24",
+    "t_NW_sm3__clk_c25",
+    "t_NW_sm3__clk_c26",
+    "t_NW_sm3__clk_c27",
+    "t_NW_sm3__clk_c28",
+    "t_NW_sm3__clk_c29",
+    "t_NW_sm3__clk_c30",
+    "t_NW_sm3__clk_c31",
+    "t_NW_sm3__clk_t1"
+   ]
+  },
+  "corners": {
+   "TT": {
+    "1": {
+     "worst_abs_ps": 139.84024754811657,
+     "pair": [
+      "t_NW_sm3__clk_c4",
+      "t_NW_sm3__clk_c3"
+     ]
+    },
+    "26": {
+     "worst_abs_ps": 197.70938004785083,
+     "pair": [
+      "t_NW_sm3__clk_c24",
+      "t_NW_sm3__clk_c15"
+     ]
+    }
+   },
+   "FF": {
+    "1": {
+     "worst_abs_ps": 117.0529746832259,
+     "pair": [
+      "t_NW_sm3__clk_c4",
+      "t_NW_sm3__clk_c3"
+     ]
+    },
+    "26": {
+     "worst_abs_ps": 164.0747977731372,
+     "pair": [
+      "t_NW_sm3__clk_c24",
+      "t_NW_sm3__clk_c15"
+     ]
+    }
+   }
+  },
+  "all_groups_under150": false,
+  "CA_crossing_count": "PENDING actual source graph; clock tap pairs are NOT data crossings"
+ },
+ {
+  "dme_split_level": 2,
+  "groups": {
+   "2": [
+    "t_NW_sm3__clk_c0",
+    "t_NW_sm3__clk_c4",
+    "t_NW_sm3__clk_c8"
+   ],
+   "27": [
+    "t_NW_sm3__clk_c12",
+    "t_NW_sm3__clk_c16",
+    "t_NW_sm3__clk_c20",
+    "t_NW_sm3__clk_c21",
+    "t_NW_sm3__clk_c22",
+    "t_NW_sm3__clk_c23",
+    "t_NW_sm3__clk_c24",
+    "t_NW_sm3__clk_c25",
+    "t_NW_sm3__clk_c26",
+    "t_NW_sm3__clk_c27",
+    "t_NW_sm3__clk_c28",
+    "t_NW_sm3__clk_c29",
+    "t_NW_sm3__clk_c30",
+    "t_NW_sm3__clk_c31",
+    "t_NW_sm3__clk_t1"
+   ],
+   "56": [
+    "t_NW_sm3__clk_c13",
+    "t_NW_sm3__clk_c14",
+    "t_NW_sm3__clk_c15",
+    "t_NW_sm3__clk_c17",
+    "t_NW_sm3__clk_c18",
+    "t_NW_sm3__clk_c19"
+   ],
+   "7": [
+    "t_NW_sm3__clk",
+    "t_NW_sm3__clk_c1",
+    "t_NW_sm3__clk_c10",
+    "t_NW_sm3__clk_c11",
+    "t_NW_sm3__clk_c2",
+    "t_NW_sm3__clk_c3",
+    "t_NW_sm3__clk_c5",
+    "t_NW_sm3__clk_c6",
+    "t_NW_sm3__clk_c7",
+    "t_NW_sm3__clk_c9"
+   ]
+  },
+  "corners": {
+   "TT": {
+    "2": {
+     "worst_abs_ps": 102.05498326617717,
+     "pair": [
+      "t_NW_sm3__clk_c0",
+      "t_NW_sm3__clk_c4"
+     ]
+    },
+    "7": {
+     "worst_abs_ps": 116.80563092908159,
+     "pair": [
+      "t_NW_sm3__clk",
+      "t_NW_sm3__clk_c3"
+     ]
+    },
+    "27": {
+     "worst_abs_ps": 189.1050748183667,
+     "pair": [
+      "t_NW_sm3__clk_c24",
+      "t_NW_sm3__clk_c23"
+     ]
+    },
+    "56": {
+     "worst_abs_ps": 65.69298149579963,
+     "pair": [
+      "t_NW_sm3__clk_c18",
+      "t_NW_sm3__clk_c15"
+     ]
+    }
+   },
+   "FF": {
+    "2": {
+     "worst_abs_ps": 86.58172127058626,
+     "pair": [
+      "t_NW_sm3__clk_c0",
+      "t_NW_sm3__clk_c4"
+     ]
+    },
+    "7": {
+     "worst_abs_ps": 104.62908610878338,
+     "pair": [
+      "t_NW_sm3__clk",
+      "t_NW_sm3__clk_c3"
+     ]
+    },
+    "27": {
+     "worst_abs_ps": 162.22143871086553,
+     "pair": [
+      "t_NW_sm3__clk_c24",
+      "t_NW_sm3__clk_c23"
+     ]
+    },
+    "56": {
+     "worst_abs_ps": 52.32352643766313,
+     "pair": [
+      "t_NW_sm3__clk_c13",
+      "t_NW_sm3__clk_c19"
+     ]
+    }
+   }
+  },
+  "all_groups_under150": false,
+  "CA_crossing_count": "PENDING actual source graph; clock tap pairs are NOT data crossings"
+ },
+ {
+  "dme_split_level": 3,
+  "groups": {
+   "21": [
+    "t_NW_sm3__clk_c11",
+    "t_NW_sm3__clk_c3",
+    "t_NW_sm3__clk_c7"
+   ],
+   "28": [
+    "t_NW_sm3__clk_c12",
+    "t_NW_sm3__clk_c16",
+    "t_NW_sm3__clk_c20",
+    "t_NW_sm3__clk_c24",
+    "t_NW_sm3__clk_c28"
+   ],
+   "3": [
+    "t_NW_sm3__clk_c0"
+   ],
+   "37": [
+    "t_NW_sm3__clk_c21",
+    "t_NW_sm3__clk_c22",
+    "t_NW_sm3__clk_c23",
+    "t_NW_sm3__clk_c25",
+    "t_NW_sm3__clk_c26",
+    "t_NW_sm3__clk_c27",
+    "t_NW_sm3__clk_c29",
+    "t_NW_sm3__clk_c30",
+    "t_NW_sm3__clk_c31",
+    "t_NW_sm3__clk_t1"
+   ],
+   "4": [
+    "t_NW_sm3__clk_c4",
+    "t_NW_sm3__clk_c8"
+   ],
+   "57": [
+    "t_NW_sm3__clk_c13",
+    "t_NW_sm3__clk_c14",
+    "t_NW_sm3__clk_c17",
+    "t_NW_sm3__clk_c18"
+   ],
+   "64": [
+    "t_NW_sm3__clk_c15",
+    "t_NW_sm3__clk_c19"
+   ],
+   "8": [
+    "t_NW_sm3__clk",
+    "t_NW_sm3__clk_c1",
+    "t_NW_sm3__clk_c10",
+    "t_NW_sm3__clk_c2",
+    "t_NW_sm3__clk_c5",
+    "t_NW_sm3__clk_c6",
+    "t_NW_sm3__clk_c9"
+   ]
+  },
+  "corners": {
+   "TT": {
+    "4": {
+     "worst_abs_ps": 86.16475823113245,
+     "pair": [
+      "t_NW_sm3__clk_c4",
+      "t_NW_sm3__clk_c8"
+     ]
+    },
+    "8": {
+     "worst_abs_ps": 69.63752110569673,
+     "pair": [
+      "t_NW_sm3__clk_c2",
+      "t_NW_sm3__clk"
+     ]
+    },
+    "21": {
+     "worst_abs_ps": 60.275514609564205,
+     "pair": [
+      "t_NW_sm3__clk_c3",
+      "t_NW_sm3__clk_c7"
+     ]
+    },
+    "28": {
+     "worst_abs_ps": 135.0570259431113,
+     "pair": [
+      "t_NW_sm3__clk_c12",
+      "t_NW_sm3__clk_c24"
+     ]
+    },
+    "37": {
+     "worst_abs_ps": 100.67954387171885,
+     "pair": [
+      "t_NW_sm3__clk_c22",
+      "t_NW_sm3__clk_c23"
+     ]
+    },
+    "57": {
+     "worst_abs_ps": 43.30059278782396,
+     "pair": [
+      "t_NW_sm3__clk_c13",
+      "t_NW_sm3__clk_c18"
+     ]
+    },
+    "64": {
+     "worst_abs_ps": 47.00480447144905,
+     "pair": [
+      "t_NW_sm3__clk_c15",
+      "t_NW_sm3__clk_c19"
+     ]
+    }
+   },
+   "FF": {
+    "4": {
+     "worst_abs_ps": 71.00395496640289,
+     "pair": [
+      "t_NW_sm3__clk_c4",
+      "t_NW_sm3__clk_c8"
+     ]
+    },
+    "8": {
+     "worst_abs_ps": 61.82622717086029,
+     "pair": [
+      "t_NW_sm3__clk_c2",
+      "t_NW_sm3__clk"
+     ]
+    },
+    "21": {
+     "worst_abs_ps": 50.26056063339228,
+     "pair": [
+      "t_NW_sm3__clk_c3",
+      "t_NW_sm3__clk_c7"
+     ]
+    },
+    "28": {
+     "worst_abs_ps": 110.64639145535477,
+     "pair": [
+      "t_NW_sm3__clk_c12",
+      "t_NW_sm3__clk_c24"
+     ]
+    },
+    "37": {
+     "worst_abs_ps": 81.26763491153572,
+     "pair": [
+      "t_NW_sm3__clk_c26",
+      "t_NW_sm3__clk_c23"
+     ]
+    },
+    "57": {
+     "worst_abs_ps": 33.827509783542155,
+     "pair": [
+      "t_NW_sm3__clk_c13",
+      "t_NW_sm3__clk_c18"
+     ]
+    },
+    "64": {
+     "worst_abs_ps": 37.21351764089819,
+     "pair": [
+      "t_NW_sm3__clk_c15",
+      "t_NW_sm3__clk_c19"
+     ]
+    }
+   }
+  },
+  "all_groups_under150": true,
+  "CA_crossing_count": "PENDING actual source graph; clock tap pairs are NOT data crossings"
+ }
+]

@@ -1,0 +1,54 @@
+{
+ "TT": {
+  "clock_cell": "inv",
+  "calibration": "spice_edge via clock_components per-master telescoping",
+  "shared_droop_region": "NW_sm3",
+  "AOCV_table": "clk_aocv_table_g021.json",
+  "parent_core_latency_budget_ps": 250.0,
+  "calibrated_late_window_ps": 114.64792451279982,
+  "calibrated_early_window_ps": 102.86254466950004,
+  "worst_related_interval_abs_ps": 214.03662498227288,
+  "worst_pair": {
+   "launch": "t_NW_sm3__clk_c4",
+   "capture": "t_NW_sm3__clk_c28",
+   "lo_ps": -15.555626130474451,
+   "hi_ps": 214.03662498227288,
+   "ocv_setup_ps": 72.63055470677409,
+   "ocv_hold_ps": 72.82169929047295,
+   "common": "h"
+  },
+  "pairs": 1122,
+  "complete_measured_components": "measured source-edge T/N/F/M; per-master telescoping stage delays",
+  "root_parent_inventory_repair": {
+   "b0": "b0_r"
+  },
+  "added_clock_scale": 1.0,
+  "signed_native_core_views": false
+ },
+ "FF": {
+  "clock_cell": "inv",
+  "calibration": "spice_edge via clock_components per-master telescoping",
+  "shared_droop_region": "NW_sm3",
+  "AOCV_table": "clk_aocv_table_g021.json",
+  "parent_core_latency_budget_ps": 202.5,
+  "calibrated_late_window_ps": 100.36846225,
+  "calibrated_early_window_ps": 97.13750178689997,
+  "worst_related_interval_abs_ps": 173.32375458477185,
+  "worst_pair": {
+   "launch": "t_NW_sm3__clk_c4",
+   "capture": "t_NW_sm3__clk_c28",
+   "lo_ps": -2.143028048101499,
+   "hi_ps": 173.32375458477185,
+   "ocv_setup_ps": 64.9144227855015,
+   "ocv_hold_ps": 65.08528805887201,
+   "common": "h"
+  },
+  "pairs": 1122,
+  "complete_measured_components": "measured source-edge T/N/F/M; per-master telescoping stage delays",
+  "root_parent_inventory_repair": {
+   "b0": "b0_r"
+  },
+  "added_clock_scale": 1.0,
+  "signed_native_core_views": false
+ }
+}

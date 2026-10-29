@@ -1,0 +1,1132 @@
+{
+ "plan_sha256": "5956f04b1e9dcb1ff9694aece3011c16a538e333da1ae08c0fd1682ad06f0ee5",
+ "source": "schema.core_taps semantic names + gen_phys.core_tap_pins actual M5 track snap; measuredcouponxy equality all32",
+ "part": "NW_sm3",
+ "type": "q_sm3",
+ "core_taps": [
+  {
+   "port": "clk_c0",
+   "instance": "u_sm_t00_s",
+   "ideal_type_xy_um": [
+    315.36,
+    518.4
+   ],
+   "physical_type_xy_um": [
+    315.36,
+    518.368
+   ],
+   "global_xy_um": [
+    7866.719999999999,
+    518.368
+   ],
+   "module": "hnx_rp3lp3h_s",
+   "clock_pin": "ck_s",
+   "declared_budget_owner": "hnx_rp3lp3h_s",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_s.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_s",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 518.4
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t00_s"
+   ],
+   "adaptive_clock_node": "1"
+  },
+  {
+   "port": "clk_c1",
+   "instance": "u_sm_t00_n",
+   "ideal_type_xy_um": [
+    315.36,
+    1641.6
+   ],
+   "physical_type_xy_um": [
+    315.36,
+    1641.632
+   ],
+   "global_xy_um": [
+    7866.719999999999,
+    1641.632
+   ],
+   "module": "hnx_rp3lp3h_n",
+   "clock_pin": "ck_n",
+   "declared_budget_owner": "hnx_rp3lp3h_n",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_n.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_n",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 604.8
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t00_n"
+   ],
+   "adaptive_clock_node": "1"
+  },
+  {
+   "port": "clk_c2",
+   "instance": "u_sm_t10_s",
+   "ideal_type_xy_um": [
+    315.36,
+    2782.08
+   ],
+   "physical_type_xy_um": [
+    315.36,
+    2782.048
+   ],
+   "global_xy_um": [
+    7866.719999999999,
+    2782.048
+   ],
+   "module": "hnx_rp3lp3h_s",
+   "clock_pin": "ck_s",
+   "declared_budget_owner": "hnx_rp3lp3h_s",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_s.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_s",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 518.4
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t10_s"
+   ],
+   "adaptive_clock_node": "1"
+  },
+  {
+   "port": "clk_c3",
+   "instance": "u_sm_t10_n",
+   "ideal_type_xy_um": [
+    315.36,
+    3905.28
+   ],
+   "physical_type_xy_um": [
+    315.36,
+    3905.312
+   ],
+   "global_xy_um": [
+    7866.719999999999,
+    3905.312
+   ],
+   "module": "hnx_rp3lp3h_n",
+   "clock_pin": "ck_n",
+   "declared_budget_owner": "hnx_rp3lp3h_n",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_n.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_n",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 604.8
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t10_n"
+   ],
+   "adaptive_clock_node": "1"
+  },
+  {
+   "port": "clk_c4",
+   "instance": "u_sm_t01_s",
+   "ideal_type_xy_um": [
+    1049.76,
+    518.4
+   ],
+   "physical_type_xy_um": [
+    1049.76,
+    518.368
+   ],
+   "global_xy_um": [
+    8601.119999999999,
+    518.368
+   ],
+   "module": "hnx_rp3lp3h_s",
+   "clock_pin": "ck_s",
+   "declared_budget_owner": "hnx_rp3lp3h_s",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_s.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_s",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 518.4
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t01_s"
+   ],
+   "adaptive_clock_node": "1"
+  },
+  {
+   "port": "clk_c5",
+   "instance": "u_sm_t01_n",
+   "ideal_type_xy_um": [
+    1049.76,
+    1641.6
+   ],
+   "physical_type_xy_um": [
+    1049.76,
+    1641.632
+   ],
+   "global_xy_um": [
+    8601.119999999999,
+    1641.632
+   ],
+   "module": "hnx_rp3lp3h_n",
+   "clock_pin": "ck_n",
+   "declared_budget_owner": "hnx_rp3lp3h_n",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_n.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_n",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 604.8
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t01_n"
+   ],
+   "adaptive_clock_node": "1"
+  },
+  {
+   "port": "clk_c6",
+   "instance": "u_sm_t11_s",
+   "ideal_type_xy_um": [
+    1049.76,
+    2782.08
+   ],
+   "physical_type_xy_um": [
+    1049.76,
+    2782.048
+   ],
+   "global_xy_um": [
+    8601.119999999999,
+    2782.048
+   ],
+   "module": "hnx_rp3lp3h_s",
+   "clock_pin": "ck_s",
+   "declared_budget_owner": "hnx_rp3lp3h_s",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_s.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_s",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 518.4
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t11_s"
+   ],
+   "adaptive_clock_node": "1"
+  },
+  {
+   "port": "clk_c7",
+   "instance": "u_sm_t11_n",
+   "ideal_type_xy_um": [
+    1049.76,
+    3905.28
+   ],
+   "physical_type_xy_um": [
+    1049.76,
+    3905.312
+   ],
+   "global_xy_um": [
+    8601.119999999999,
+    3905.312
+   ],
+   "module": "hnx_rp3lp3h_n",
+   "clock_pin": "ck_n",
+   "declared_budget_owner": "hnx_rp3lp3h_n",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_n.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_n",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 604.8
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t11_n"
+   ],
+   "adaptive_clock_node": "1"
+  },
+  {
+   "port": "clk_c8",
+   "instance": "u_sm_t02_s",
+   "ideal_type_xy_um": [
+    1784.16,
+    518.4
+   ],
+   "physical_type_xy_um": [
+    1784.16,
+    518.368
+   ],
+   "global_xy_um": [
+    9335.52,
+    518.368
+   ],
+   "module": "hnx_rp3lp3h_s",
+   "clock_pin": "ck_s",
+   "declared_budget_owner": "hnx_rp3lp3h_s",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_s.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_s",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 518.4
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t02_s"
+   ],
+   "adaptive_clock_node": "1"
+  },
+  {
+   "port": "clk_c9",
+   "instance": "u_sm_t02_n",
+   "ideal_type_xy_um": [
+    1784.16,
+    1641.6
+   ],
+   "physical_type_xy_um": [
+    1784.16,
+    1641.632
+   ],
+   "global_xy_um": [
+    9335.52,
+    1641.632
+   ],
+   "module": "hnx_rp3lp3h_n",
+   "clock_pin": "ck_n",
+   "declared_budget_owner": "hnx_rp3lp3h_n",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_n.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_n",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 604.8
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t02_n"
+   ],
+   "adaptive_clock_node": "1"
+  },
+  {
+   "port": "clk_c10",
+   "instance": "u_sm_t12_s",
+   "ideal_type_xy_um": [
+    1784.16,
+    2782.08
+   ],
+   "physical_type_xy_um": [
+    1784.16,
+    2782.048
+   ],
+   "global_xy_um": [
+    9335.52,
+    2782.048
+   ],
+   "module": "hnx_rp3lp3h_s",
+   "clock_pin": "ck_s",
+   "declared_budget_owner": "hnx_rp3lp3h_s",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_s.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_s",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 518.4
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t12_s"
+   ],
+   "adaptive_clock_node": "1"
+  },
+  {
+   "port": "clk_c11",
+   "instance": "u_sm_t12_n",
+   "ideal_type_xy_um": [
+    1784.16,
+    3905.28
+   ],
+   "physical_type_xy_um": [
+    1784.16,
+    3905.312
+   ],
+   "global_xy_um": [
+    9335.52,
+    3905.312
+   ],
+   "module": "hnx_rp3lp3h_n",
+   "clock_pin": "ck_n",
+   "declared_budget_owner": "hnx_rp3lp3h_n",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_n.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_n",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 604.8
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t12_n"
+   ],
+   "adaptive_clock_node": "1"
+  },
+  {
+   "port": "clk_c12",
+   "instance": "u_sm_t03_s",
+   "ideal_type_xy_um": [
+    2518.56,
+    518.4
+   ],
+   "physical_type_xy_um": [
+    2518.56,
+    518.368
+   ],
+   "global_xy_um": [
+    10069.92,
+    518.368
+   ],
+   "module": "hnx_rp3lp3h_s",
+   "clock_pin": "ck_s",
+   "declared_budget_owner": "hnx_rp3lp3h_s",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_s.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_s",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 518.4
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t03_s"
+   ],
+   "adaptive_clock_node": "28"
+  },
+  {
+   "port": "clk_c13",
+   "instance": "u_sm_t03_n",
+   "ideal_type_xy_um": [
+    2518.56,
+    1641.6
+   ],
+   "physical_type_xy_um": [
+    2518.56,
+    1641.632
+   ],
+   "global_xy_um": [
+    10069.92,
+    1641.632
+   ],
+   "module": "hnx_rp3lp3h_n",
+   "clock_pin": "ck_n",
+   "declared_budget_owner": "hnx_rp3lp3h_n",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_n.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_n",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 604.8
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t03_n"
+   ],
+   "adaptive_clock_node": "56"
+  },
+  {
+   "port": "clk_c14",
+   "instance": "u_sm_t13_s",
+   "ideal_type_xy_um": [
+    2518.56,
+    2782.08
+   ],
+   "physical_type_xy_um": [
+    2518.56,
+    2782.048
+   ],
+   "global_xy_um": [
+    10069.92,
+    2782.048
+   ],
+   "module": "hnx_rp3lp3h_s",
+   "clock_pin": "ck_s",
+   "declared_budget_owner": "hnx_rp3lp3h_s",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_s.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_s",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 518.4
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t13_s"
+   ],
+   "adaptive_clock_node": "56"
+  },
+  {
+   "port": "clk_c15",
+   "instance": "u_sm_t13_n",
+   "ideal_type_xy_um": [
+    2518.56,
+    3905.28
+   ],
+   "physical_type_xy_um": [
+    2518.56,
+    3905.312
+   ],
+   "global_xy_um": [
+    10069.92,
+    3905.312
+   ],
+   "module": "hnx_rp3lp3h_n",
+   "clock_pin": "ck_n",
+   "declared_budget_owner": "hnx_rp3lp3h_n",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_n.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_n",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 604.8
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t13_n"
+   ],
+   "adaptive_clock_node": "56"
+  },
+  {
+   "port": "clk_c16",
+   "instance": "u_sm_t04_s",
+   "ideal_type_xy_um": [
+    3252.96,
+    518.4
+   ],
+   "physical_type_xy_um": [
+    3252.96,
+    518.368
+   ],
+   "global_xy_um": [
+    10804.32,
+    518.368
+   ],
+   "module": "hnx_rp3lp3h_s",
+   "clock_pin": "ck_s",
+   "declared_budget_owner": "hnx_rp3lp3h_s",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_s.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_s",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 518.4
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t04_s"
+   ],
+   "adaptive_clock_node": "28"
+  },
+  {
+   "port": "clk_c17",
+   "instance": "u_sm_t04_n",
+   "ideal_type_xy_um": [
+    3252.96,
+    1641.6
+   ],
+   "physical_type_xy_um": [
+    3252.96,
+    1641.632
+   ],
+   "global_xy_um": [
+    10804.32,
+    1641.632
+   ],
+   "module": "hnx_rp3lp3h_n",
+   "clock_pin": "ck_n",
+   "declared_budget_owner": "hnx_rp3lp3h_n",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_n.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_n",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 604.8
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t04_n"
+   ],
+   "adaptive_clock_node": "56"
+  },
+  {
+   "port": "clk_c18",
+   "instance": "u_sm_t14_s",
+   "ideal_type_xy_um": [
+    3252.96,
+    2782.08
+   ],
+   "physical_type_xy_um": [
+    3252.96,
+    2782.048
+   ],
+   "global_xy_um": [
+    10804.32,
+    2782.048
+   ],
+   "module": "hnx_rp3lp3h_s",
+   "clock_pin": "ck_s",
+   "declared_budget_owner": "hnx_rp3lp3h_s",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_s.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_s",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 518.4
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t14_s"
+   ],
+   "adaptive_clock_node": "56"
+  },
+  {
+   "port": "clk_c19",
+   "instance": "u_sm_t14_n",
+   "ideal_type_xy_um": [
+    3252.96,
+    3905.28
+   ],
+   "physical_type_xy_um": [
+    3252.96,
+    3905.312
+   ],
+   "global_xy_um": [
+    10804.32,
+    3905.312
+   ],
+   "module": "hnx_rp3lp3h_n",
+   "clock_pin": "ck_n",
+   "declared_budget_owner": "hnx_rp3lp3h_n",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_n.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_n",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 604.8
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t14_n"
+   ],
+   "adaptive_clock_node": "56"
+  },
+  {
+   "port": "clk_c20",
+   "instance": "u_sm_t05_s",
+   "ideal_type_xy_um": [
+    3987.36,
+    518.4
+   ],
+   "physical_type_xy_um": [
+    3987.36,
+    518.368
+   ],
+   "global_xy_um": [
+    11538.72,
+    518.368
+   ],
+   "module": "hnx_rp3lp3h_s",
+   "clock_pin": "ck_s",
+   "declared_budget_owner": "hnx_rp3lp3h_s",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_s.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_s",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 518.4
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t05_s"
+   ],
+   "adaptive_clock_node": "28"
+  },
+  {
+   "port": "clk_c21",
+   "instance": "u_sm_t05_n",
+   "ideal_type_xy_um": [
+    3987.36,
+    1641.6
+   ],
+   "physical_type_xy_um": [
+    3987.36,
+    1641.632
+   ],
+   "global_xy_um": [
+    11538.72,
+    1641.632
+   ],
+   "module": "hnx_rp3lp3h_n",
+   "clock_pin": "ck_n",
+   "declared_budget_owner": "hnx_rp3lp3h_n",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_n.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_n",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 604.8
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t05_n"
+   ],
+   "adaptive_clock_node": "37"
+  },
+  {
+   "port": "clk_c22",
+   "instance": "u_sm_t15_s",
+   "ideal_type_xy_um": [
+    3987.36,
+    2782.08
+   ],
+   "physical_type_xy_um": [
+    3987.36,
+    2782.048
+   ],
+   "global_xy_um": [
+    11538.72,
+    2782.048
+   ],
+   "module": "hnx_rp3lp3h_s",
+   "clock_pin": "ck_s",
+   "declared_budget_owner": "hnx_rp3lp3h_s",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_s.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_s",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 518.4
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t15_s"
+   ],
+   "adaptive_clock_node": "37"
+  },
+  {
+   "port": "clk_c23",
+   "instance": "u_sm_t15_n",
+   "ideal_type_xy_um": [
+    3987.36,
+    3905.28
+   ],
+   "physical_type_xy_um": [
+    3987.36,
+    3905.312
+   ],
+   "global_xy_um": [
+    11538.72,
+    3905.312
+   ],
+   "module": "hnx_rp3lp3h_n",
+   "clock_pin": "ck_n",
+   "declared_budget_owner": "hnx_rp3lp3h_n",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_n.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_n",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 604.8
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t15_n"
+   ],
+   "adaptive_clock_node": "37"
+  },
+  {
+   "port": "clk_c24",
+   "instance": "u_sm_t06_s",
+   "ideal_type_xy_um": [
+    4721.76,
+    518.4
+   ],
+   "physical_type_xy_um": [
+    4721.76,
+    518.368
+   ],
+   "global_xy_um": [
+    12273.119999999999,
+    518.368
+   ],
+   "module": "hnx_rp3lp3h_s",
+   "clock_pin": "ck_s",
+   "declared_budget_owner": "hnx_rp3lp3h_s",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_s.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_s",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 518.4
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t06_s"
+   ],
+   "adaptive_clock_node": "28"
+  },
+  {
+   "port": "clk_c25",
+   "instance": "u_sm_t06_n",
+   "ideal_type_xy_um": [
+    4721.76,
+    1641.6
+   ],
+   "physical_type_xy_um": [
+    4721.76,
+    1641.632
+   ],
+   "global_xy_um": [
+    12273.119999999999,
+    1641.632
+   ],
+   "module": "hnx_rp3lp3h_n",
+   "clock_pin": "ck_n",
+   "declared_budget_owner": "hnx_rp3lp3h_n",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_n.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_n",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 604.8
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t06_n"
+   ],
+   "adaptive_clock_node": "37"
+  },
+  {
+   "port": "clk_c26",
+   "instance": "u_sm_t16_s",
+   "ideal_type_xy_um": [
+    4721.76,
+    2782.08
+   ],
+   "physical_type_xy_um": [
+    4721.76,
+    2782.048
+   ],
+   "global_xy_um": [
+    12273.119999999999,
+    2782.048
+   ],
+   "module": "hnx_rp3lp3h_s",
+   "clock_pin": "ck_s",
+   "declared_budget_owner": "hnx_rp3lp3h_s",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_s.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_s",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 518.4
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t16_s"
+   ],
+   "adaptive_clock_node": "37"
+  },
+  {
+   "port": "clk_c27",
+   "instance": "u_sm_t16_n",
+   "ideal_type_xy_um": [
+    4721.76,
+    3905.28
+   ],
+   "physical_type_xy_um": [
+    4721.76,
+    3905.312
+   ],
+   "global_xy_um": [
+    12273.119999999999,
+    3905.312
+   ],
+   "module": "hnx_rp3lp3h_n",
+   "clock_pin": "ck_n",
+   "declared_budget_owner": "hnx_rp3lp3h_n",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_n.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_n",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 604.8
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t16_n"
+   ],
+   "adaptive_clock_node": "37"
+  },
+  {
+   "port": "clk_c28",
+   "instance": "u_sm_t07_s",
+   "ideal_type_xy_um": [
+    5456.16,
+    518.4
+   ],
+   "physical_type_xy_um": [
+    5456.16,
+    518.368
+   ],
+   "global_xy_um": [
+    13007.52,
+    518.368
+   ],
+   "module": "hnx_rp3lp3h_s",
+   "clock_pin": "ck_s",
+   "declared_budget_owner": "hnx_rp3lp3h_s",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_s.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_s",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 518.4
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t07_s"
+   ],
+   "adaptive_clock_node": "28"
+  },
+  {
+   "port": "clk_c29",
+   "instance": "u_sm_t07_n",
+   "ideal_type_xy_um": [
+    5456.16,
+    1641.6
+   ],
+   "physical_type_xy_um": [
+    5456.16,
+    1641.632
+   ],
+   "global_xy_um": [
+    13007.52,
+    1641.632
+   ],
+   "module": "hnx_rp3lp3h_n",
+   "clock_pin": "ck_n",
+   "declared_budget_owner": "hnx_rp3lp3h_n",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_n.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_n",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 604.8
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t07_n"
+   ],
+   "adaptive_clock_node": "37"
+  },
+  {
+   "port": "clk_c30",
+   "instance": "u_sm_t17_s",
+   "ideal_type_xy_um": [
+    5456.16,
+    2782.08
+   ],
+   "physical_type_xy_um": [
+    5456.16,
+    2782.048
+   ],
+   "global_xy_um": [
+    13007.52,
+    2782.048
+   ],
+   "module": "hnx_rp3lp3h_s",
+   "clock_pin": "ck_s",
+   "declared_budget_owner": "hnx_rp3lp3h_s",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_s.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_s",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 518.4
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t17_s"
+   ],
+   "adaptive_clock_node": "37"
+  },
+  {
+   "port": "clk_c31",
+   "instance": "u_sm_t17_n",
+   "ideal_type_xy_um": [
+    5456.16,
+    3905.28
+   ],
+   "physical_type_xy_um": [
+    5456.16,
+    3905.312
+   ],
+   "global_xy_um": [
+    13007.52,
+    3905.312
+   ],
+   "module": "hnx_rp3lp3h_n",
+   "clock_pin": "ck_n",
+   "declared_budget_owner": "hnx_rp3lp3h_n",
+   "TT_insertion_ps": 250.0,
+   "FF_insertion_ps": 202.5,
+   "source_pin_file": "cores/hnx_rp3lp3h_n.json",
+   "native_clock_pins": [
+    {
+     "name": "ck_n",
+     "layer": "M5",
+     "x": 315.384,
+     "y": 604.8
+    }
+   ],
+   "logical_alias_binding": [
+    "tap:u_sm_t17_n"
+   ],
+   "adaptive_clock_node": "37"
+  }
+ ],
+ "soft_taps": [
+  {
+   "port": "t_NW_sm3__clk",
+   "part": "NW_sm3",
+   "tap": "clk",
+   "xy": [
+    9002.912,
+    2255.008
+   ],
+   "node": 19
+  },
+  {
+   "port": "t_NW_sm3__clk_t1",
+   "part": "NW_sm3",
+   "tap": "clk_t1",
+   "xy": [
+    11905.888,
+    2255.008
+   ],
+   "node": 46
+  }
+ ],
+ "planned_wrapper_face_FT_sinks": 3708,
+ "planned_nearest_soft_counts": {
+  "clk": 476,
+  "clk_t1": 3232
+ },
+ "planned_nearest_soft_max_radius_um": {
+  "clk": 3634.0639999999994,
+  "clk_t1": 3358.2880000000014
+ },
+ "soft_actual_assignment_status": "SOURCE-EXACT GEN/RT softFF sink assignments NOT AVAILABLE in this clock-only coupon. Planned counts exclude actual reset/START source inventory; do not treat as actual sink proof.",
+ "core_membership_conflicts": {},
+ "external_clock_pins_per_core": 1,
+ "native_input_clock_aliases_not_split": true,
+ "surface_note": "Measured coupon pins are GP.core_tap_pins planned snapped die interface; actual core pin file ck_s/ck_n can differ by0.024/0.032um. No actual hard-core clock STA or SIGNED view claimed."
+}

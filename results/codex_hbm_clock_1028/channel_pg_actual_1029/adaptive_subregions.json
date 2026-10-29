@@ -1,0 +1,193 @@
+{
+ "scope": "same measured tree topological cut candidate, no RTL/clock geometry changes; native CA data crossing inventory/model pricing still pending",
+ "groups": [
+  {
+   "clock_node": "1",
+   "origin_um": [
+    8976.15,
+    2906.28
+   ],
+   "tap_ports": [
+    "t_NW_sm3__clk_c0",
+    "t_NW_sm3__clk_c4",
+    "t_NW_sm3__clk_c8",
+    "t_NW_sm3__clk_c1",
+    "t_NW_sm3__clk_c2",
+    "t_NW_sm3__clk_c9",
+    "t_NW_sm3__clk_c10",
+    "t_NW_sm3__clk_c5",
+    "t_NW_sm3__clk",
+    "t_NW_sm3__clk_c6",
+    "t_NW_sm3__clk_c3",
+    "t_NW_sm3__clk_c7",
+    "t_NW_sm3__clk_c11"
+   ],
+   "corners": {
+    "TT": {
+     "worst_abs_ps": 139.84024754811657,
+     "raw_calibrated_late_spread_ps": 71.27760984119959,
+     "worst_pair": {
+      "launch": "t_NW_sm3__clk_c4",
+      "capture": "t_NW_sm3__clk_c3",
+      "lo_ps": -3.90322344581881,
+      "hi_ps": 139.84024754811657,
+      "ocv_setup_ps": 49.52889070331878,
+      "ocv_hold_ps": 49.6897567811169,
+      "common": "h00000000000000"
+     }
+    },
+    "FF": {
+     "worst_abs_ps": 117.0529746832259,
+     "raw_calibrated_late_spread_ps": 64.86784680599999,
+     "worst_pair": {
+      "launch": "t_NW_sm3__clk_c4",
+      "capture": "t_NW_sm3__clk_c3",
+      "lo_ps": 8.054987853715495,
+      "hi_ps": 117.0529746832259,
+      "ocv_setup_ps": 42.94071075518458,
+      "ocv_hold_ps": 43.05838986332595,
+      "common": "h00000000000000"
+     }
+    }
+   }
+  },
+  {
+   "clock_node": "28",
+   "origin_um": [
+    11637.27,
+    2253.96
+   ],
+   "tap_ports": [
+    "t_NW_sm3__clk_c12",
+    "t_NW_sm3__clk_c16",
+    "t_NW_sm3__clk_c20",
+    "t_NW_sm3__clk_c24",
+    "t_NW_sm3__clk_c28"
+   ],
+   "corners": {
+    "TT": {
+     "worst_abs_ps": 135.0570259431113,
+     "raw_calibrated_late_spread_ps": 67.20552999719985,
+     "worst_pair": {
+      "launch": "t_NW_sm3__clk_c12",
+      "capture": "t_NW_sm3__clk_c24",
+      "lo_ps": -2.8878609097306054,
+      "hi_ps": 135.0570259431113,
+      "ocv_setup_ps": 47.13794615973069,
+      "ocv_hold_ps": 47.19649296331126,
+      "common": "h100000000000000000"
+     }
+    },
+    "FF": {
+     "worst_abs_ps": 110.64639145535477,
+     "raw_calibrated_late_spread_ps": 58.84942400399996,
+     "worst_pair": {
+      "launch": "t_NW_sm3__clk_c12",
+      "capture": "t_NW_sm3__clk_c24",
+      "lo_ps": 5.511259966485127,
+      "hi_ps": 110.64639145535477,
+      "ocv_setup_ps": 40.88752188221507,
+      "ocv_hold_ps": 40.92817715155479,
+      "common": "h100000000000000000"
+     }
+    }
+   }
+  },
+  {
+   "clock_node": "37",
+   "origin_um": [
+    12639.51,
+    3284.28
+   ],
+   "tap_ports": [
+    "t_NW_sm3__clk_c25",
+    "t_NW_sm3__clk_c26",
+    "t_NW_sm3__clk_c21",
+    "t_NW_sm3__clk_t1",
+    "t_NW_sm3__clk_c22",
+    "t_NW_sm3__clk_c29",
+    "t_NW_sm3__clk_c30",
+    "t_NW_sm3__clk_c23",
+    "t_NW_sm3__clk_c27",
+    "t_NW_sm3__clk_c31"
+   ],
+   "corners": {
+    "TT": {
+     "worst_abs_ps": 100.67954387171885,
+     "raw_calibrated_late_spread_ps": 45.95951208239967,
+     "worst_pair": {
+      "launch": "t_NW_sm3__clk_c22",
+      "capture": "t_NW_sm3__clk_c23",
+      "lo_ps": -100.67954387171885,
+      "hi_ps": 12.1917112513655,
+      "ocv_setup_ps": 42.1091668854192,
+      "ocv_hold_ps": 42.031116532865376,
+      "common": "h10000000000010000000"
+     }
+    },
+    "FF": {
+     "worst_abs_ps": 81.26763491153572,
+     "raw_calibrated_late_spread_ps": 37.72327022800005,
+     "worst_pair": {
+      "launch": "t_NW_sm3__clk_c26",
+      "capture": "t_NW_sm3__clk_c23",
+      "lo_ps": -81.26763491153572,
+      "hi_ps": 5.533678459900024,
+      "ocv_setup_ps": 36.288782991335935,
+      "ocv_hold_ps": 36.29999992520005,
+      "common": "h10000000000010000000"
+     }
+    }
+   }
+  },
+  {
+   "clock_node": "56",
+   "origin_um": [
+    10479.51,
+    3359.88
+   ],
+   "tap_ports": [
+    "t_NW_sm3__clk_c13",
+    "t_NW_sm3__clk_c14",
+    "t_NW_sm3__clk_c17",
+    "t_NW_sm3__clk_c18",
+    "t_NW_sm3__clk_c15",
+    "t_NW_sm3__clk_c19"
+   ],
+   "corners": {
+    "TT": {
+     "worst_abs_ps": 65.69298149579963,
+     "raw_calibrated_late_spread_ps": 11.911717691999911,
+     "worst_pair": {
+      "launch": "t_NW_sm3__clk_c18",
+      "capture": "t_NW_sm3__clk_c15",
+      "lo_ps": -65.69298149579963,
+      "hi_ps": 44.61002444800709,
+      "ocv_setup_ps": 40.658121969300005,
+      "ocv_hold_ps": 40.58739569670759,
+      "common": "h10000010000000000000"
+     }
+    },
+    "FF": {
+     "worst_abs_ps": 52.32352643766313,
+     "raw_calibrated_late_spread_ps": 10.456805239999994,
+     "worst_pair": {
+      "launch": "t_NW_sm3__clk_c13",
+      "capture": "t_NW_sm3__clk_c19",
+      "lo_ps": -34.20837161708708,
+      "hi_ps": 52.32352643766313,
+      "ocv_setup_ps": 35.97739281218717,
+      "ocv_hold_ps": 35.993353297263,
+      "common": "h10000010000000000000"
+     }
+    }
+   }
+  }
+ ],
+ "original_region": "NW_sm3",
+ "original_gate_TT214_FF173": "FAIL",
+ "full_die_adoption": false,
+ "added_clock_cells": 0,
+ "added_clock_wires": 0,
+ "CA_added_data_cycles": "UNPRICED; parentTOK must derive actual crossing consumers"
+}

@@ -1,7 +1,7 @@
 {
  "type": "q_spb0",
  "source_plan_sha256": "bb9b7abddd68542ac3e937e2af1a11937bb2439a0c44937f4bef29d719c0dd5f",
- "source_placement_commit": "PENDING",
+ "source_placement_commit": "295e1f985",
  "clock_update": {
   "tap_mode": "explicit",
   "tap_radius_um": 200.0,
@@ -20627,5 +20627,82 @@
   "reserve actual nativeclockbody/R0homes separately; rawtapxy are interface pins"
  ],
  "source_placement_file": "spb_driver_gaps_1029/placement.json",
- "budget_status": "native4104sites fit; actualcomposedreset/controlPINbudget pending"
+ "new_tap_budget": [
+  {
+   "port": "clk",
+   "xy": [
+    784.647,
+    639.225
+   ],
+   "sinks": 512.0,
+   "radius_um": 22.463999999999828
+  },
+  {
+   "port": "clk_t1",
+   "xy": [
+    20.007,
+    639.495
+   ],
+   "sinks": 514.0,
+   "radius_um": 22.464000000000045
+  },
+  {
+   "port": "clk_t2",
+   "xy": [
+    784.647,
+    1012.905
+   ],
+   "sinks": 512.0,
+   "radius_um": 22.463999999999942
+  },
+  {
+   "port": "clk_t3",
+   "xy": [
+    20.007,
+    1013.175
+   ],
+   "sinks": 514.0,
+   "radius_um": 22.46399999999993
+  },
+  {
+   "port": "clk_t4",
+   "xy": [
+    144.639,
+    1136.295
+   ],
+   "sinks": 1026.0,
+   "radius_um": 42.551999999999964
+  },
+  {
+   "port": "clk_t5",
+   "xy": [
+    465.831,
+    1206.495
+   ],
+   "sinks": 1026.0,
+   "radius_um": 139.3199999999997
+  },
+  {
+   "port": "clk_t6",
+   "xy": [
+    872.16,
+    1483.92
+   ],
+   "sinks": 1.0,
+   "radius_um": 10.768000000000029
+  },
+  {
+   "port": "clk_t7",
+   "xy": [
+    1728.0,
+    1486.08
+   ],
+   "sinks": 15.0,
+   "radius_um": 29.903999999999996
+  }
+ ],
+ "budget_tools_commit": "709b2c77b",
+ "budget_plan_sha256": "4d53747fd73d5309096d825c013a4c41c464c036f747155bd910af604b9ba817",
+ "source_hardcore_frame_unchanged": true,
+ "budget_status": "PASS full actual shifted native FF + actual reset/START control budget,8taps,maxload1026,maxradius139.32"
 }
