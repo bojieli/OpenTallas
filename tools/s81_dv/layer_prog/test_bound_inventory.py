@@ -2,6 +2,7 @@
 import sys
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import bound_inventory as I
 E = I.E
@@ -60,6 +61,22 @@ class InventoryTests(unittest.TestCase):
         self.assertEqual(u['params']['W'], "8'b00000001")
         self.assertNotEqual(u['ports']['x']['bits'], u['ports']['y']['bits'])
         self.assertEqual(rec['source_variants']['parent_applied'][0]['master'], 'slice')
+
+    def test_native_entry_keeps_only_exact_intermediate_buffer_metadata(self):
+        y = design()
+        y['modules']['$paramodP']['cells']['hidden'] = dict(type='$buf', parameters={},
+            connections={'A': [20], 'Y': [21]}, port_directions={'A':'input','Y':'output'})
+        plain = I.extract(y, {'top':'top'}, ['u_s_0S'], asbuilt_sha256='a'*64, top_sha256='b'*64)
+        with patch.object(I, 'native_vp_units', return_value=[]):
+            native = I.extract(y, {'top':'top'}, ['u_s_0S'], native_entry=True,
+                               asbuilt_sha256='a'*64, top_sha256='b'*64)
+        path = 'u_s_0S.hidden'
+        self.assertNotIn(path, plain['leaf_interfaces'])
+        self.assertEqual(native['leaf_interfaces'][path], dict(module='$buf',kind='glue',
+            ports={'A':dict(dir='input',width=1),'Y':dict(dir='output',width=1)}))
+        self.assertEqual(plain['drivers'],native['drivers'])
+        self.assertEqual(plain['input_pins'],native['input_pins'])
+        self.assertEqual(plain['units'],native['units'])
 
     def test_wrong_logical_unit_is_not_guessed(self):
         with self.assertRaisesRegex(ValueError, 'absent from actual source'):
