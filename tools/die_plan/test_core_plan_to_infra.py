@@ -274,3 +274,21 @@ def test_icg_copy_members_must_equal_its_leaves():
     sl = C.convert(r, _icg_sites(), "tiny_core", outline=[37.8, 37.8])
     with pytest.raises(CI.InfraError):
         CI.compile_slice(sl)
+
+
+def test_split_rows_cannot_silently_inflate_default_outline():
+    s=sites()
+    s['rows'].append((30.,s['rows'][0][1],"R0",20))
+    with pytest.raises(C.ConvertError,match="split/nonuniform placement rows"):
+        C.convert(plan(),s,"tiny_core")
+    # The same actual fragments remain legal with the owner's physical canvas.
+    a=C.convert(plan(),s,"tiny_core",outline=[37.8,37.8])
+    assert a['outline_um']==[37.8,37.8]
+
+
+def test_nonuniform_single_fragments_need_explicit_core_bounds():
+    s=sites();r=list(s['rows'][0]);r[3]-=10;s['rows'][0]=tuple(r)
+    with pytest.raises(C.ConvertError,match="explicit --outline"):
+        C.convert(plan(),s,"tiny_core")
+    p=plan();p['core']=[4.32,4.32,33.48,33.48]
+    assert C.convert(p,s,"tiny_core")['outline_um']==[37.8,37.8]
