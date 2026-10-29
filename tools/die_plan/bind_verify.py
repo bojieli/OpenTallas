@@ -125,6 +125,21 @@ def set_count_aligned_transport(graph,stages):
         graph.spec[ci]=spec
 
 
+def native_lib_stubs(lib, vdir):
+    """Interface-only leaf stubs for the NATIVE Yosys verify read.
+
+    Verify always parses with read_verilog -sv, even when elaboration used slang
+    (which accepts typed string parameters, e.g. the ROM macro VIAMAP/INSTANCE).
+    Native Yosys rejects `parameter string`, so the stub file -- a black-box
+    interface only, never a verification body -- is staged with untyped
+    string-valued parameters (same literal defaults). Real sources unchanged."""
+    if not lib:
+        return []
+    stub = E.lib_stubs(lib, vdir / "lib_stubs.sv")
+    staged, _rec = E.string_parameter_compat([stub], vdir / "string_parameter_compat")
+    return staged
+
+
 def cmd_verify(a):
     import bind as _b
     _b._AB_OVERRIDE["path"] = getattr(a, "asbuilt", None)
@@ -148,7 +163,7 @@ def cmd_verify(a):
     vdir.mkdir(exist_ok=True)
     sc = vdir / "bound.ys"
     js = vdir / "bound.json"
-    ylib = [E.lib_stubs(lib, vdir / "lib_stubs.sv")] if lib else []
+    ylib = native_lib_stubs(lib, vdir)
     sc.write_text(E.yosys_script(ab, ab["netlist"], full, ylib, js, check=True, inc_files=lib))
     mounts = [out, E.REPO] + [Path(f).parent for f in lib]
     roots = sorted({str(Path(m).resolve()) for m in mounts}, key=len)
