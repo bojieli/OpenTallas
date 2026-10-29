@@ -232,6 +232,7 @@ def pg_grid_tcl(pg):
 def access_windows(P,cells,nets,access,radius):
     """Actual free M7 bar-column intervals inside the existing clock host."""
     bucket=500.;hosts=defaultdict(list);rects={n:P.rect(n) for n in P.parts}
+    margin=max([CR.WIDTH['M7']/2]+[boxes['M7'][1] for boxes in CR.via_rects().values() if 'M7' in boxes])
     for name,r in rects.items():
         for bx in range(math.floor(r[0]/bucket),math.floor(r[2]/bucket)+1):
             for by in range(math.floor(r[1]/bucket),math.floor(r[3]/bucket)+1):hosts[(bx,by)].append(name)
@@ -247,11 +248,11 @@ def access_windows(P,cells,nets,access,radius):
         host=matches[0];r=rects[host]
         for pin in ('A','Y'):
             x=c['x']+access[c['lib']][pin][0];y=cy
-            lo=max(y-radius,r[1]+.016);hi=min(y+radius,r[3]-.016)
+            lo=max(y-radius,r[1]+margin);hi=min(y+radius,r[3]-margin)
             for x0,y0,x1,y1,tag in byhost[host]+io:
                 halo=2.16
-                if x0-halo-.016 < x < x1+halo+.016:
-                    a,b=y0-halo-.016,y1+halo+.016
+                if x0-halo-margin < x < x1+halo+margin:
+                    a,b=y0-halo-margin,y1+halo+margin
                     if a <= y <= b:raise ValueError(f'existing clock pin enters hard-core halo: {name}/{pin} {tag}')
                     if b<y:lo=max(lo,b)
                     if a>y:hi=min(hi,a)
@@ -324,18 +325,14 @@ def main():
     router.reserve(C128.pg_shapes(pg))
     router.reserve(C128.pg_shapes(power_access))
     windows,net_windows,window_report=access_windows(P,cells,nets,access,args.max_move)
-    original_place=router.place
-    def window_place(layer,ideal,a0,a1,net,**kwargs):
-        if layer=='M8':
-            touched=[r for r in net_windows.get(net,[]) if min(a0,a1)-.1<=r[0]<=max(a0,a1)+.1
-                     and abs(r[1]-ideal)<=args.max_move+1e-6]
-            if touched:
-                lo=max(r[2] for r in touched);hi=min(r[3] for r in touched)
-                if kwargs.get('keep'):lo=max(lo,kwargs['keep'][0]);hi=min(hi,kwargs['keep'][1])
-                if lo>hi:return None,None,None
-                kwargs['keep']=(lo,hi)
-        return original_place(layer,ideal,a0,a1,net,**kwargs)
-    router.place=window_place
+    def endpoint_window(net,what):
+        if what in ('trunk','driver jog'):cell,pin=net['drv'],'Y'
+        elif what.startswith(('jog ','drop ')):cell,pin=what.split(' ',1)[1],'A'
+        else:return None
+        if cell.startswith('port:'):return None
+        return windows[(cell,pin)][2:]
+    router.access_window=endpoint_window
+    router.riser_legal=lambda cell,pin,y:windows[(cell,pin)][2]-1e-6<=y<=windows[(cell,pin)][3]+1e-6
     summary = dict(status='PREBUILD', physical_route=False, source_cells=len(cells), source_nets=len(nets),
                    tap_iterms=len(taps), source_masters=sorted(masters), pin_access=access,
                    inputs={k:dict(path=getattr(args,k),sha256=hashlib.sha256(Path(getattr(args,k)).read_bytes()).hexdigest())
