@@ -1,0 +1,13 @@
+{
+ "reference":"actualot_hbm_host_cfg_leaf2NT21NF32 copyA with arbitraryindependentstatusinputs",
+ "candidate":"ot_hnx_calendar_cfg_leaf",
+ "method":"realRTLlockstepIcarus340clockcaseswithcold/warmresetandindependent317bitpayload/3valids/status",
+ "comparisons":333,
+ "verdict":"PASS",
+ "mutant":{"change":"cfg_dataLSBflip","first_mismatch_case":7,"verdict":"CAUGHT"},
+ "configuration_latency":2,
+ "synchronized_reset_release":3,
+ "added_cycles_vs_intended_leaf":0,
+ "removed_inputs":"OnlyunneededtargetstatusfaninandunusedcopyBarenotexposed; nocontentinputtied",
+ "scope":"NewSroleq0sourceonly. ExistingNrolefullleavesuntouched. CalendarSdiagnosticsremaindietopoutputs; hoststatusjoincoveragegapexplicit."
+}

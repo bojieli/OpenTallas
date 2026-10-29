@@ -1,0 +1,69 @@
+{
+  "parts": {
+    "hleaf_SW": [
+      "NW_hub",
+      "u_hleaf_Q__q0"
+    ],
+    "hleaf_SE": [
+      "NE_hub",
+      "u_hleaf_Q__q0"
+    ]
+  },
+  "providers": [
+    {
+      "instance": "hleaf_SW",
+      "partition": "NW_hub",
+      "plan_instance": "u_hleaf_Q__q0",
+      "module": "ot_hnx_calendar_cfg_leaf",
+      "params": {},
+      "input_bits": 320,
+      "output_bits": 320,
+      "clock_reset_bits": 2,
+      "config_latency": 2,
+      "reset_release": 3,
+      "added_boot_cycles_vs_intended_leaf": 0
+    },
+    {
+      "instance": "hleaf_SE",
+      "partition": "NE_hub",
+      "plan_instance": "u_hleaf_Q__q0",
+      "module": "ot_hnx_calendar_cfg_leaf",
+      "params": {},
+      "input_bits": 320,
+      "output_bits": 320,
+      "clock_reset_bits": 2,
+      "config_latency": 2,
+      "reset_release": 3,
+      "added_boot_cycles_vs_intended_leaf": 0
+    }
+  ],
+  "removed_external_inputs": [
+    "hleaf_SE__a_cfg_addr",
+    "hleaf_SE__a_cfg_data",
+    "hleaf_SE__a_cfg_target",
+    "hleaf_SE__a_cfg_v",
+    "hleaf_SE__a_desc_base",
+    "hleaf_SE__a_desc_limit",
+    "hleaf_SE__a_desc_loops",
+    "hleaf_SE__a_desc_v",
+    "hleaf_SE__a_launch_v",
+    "hleaf_SW__a_cfg_addr",
+    "hleaf_SW__a_cfg_data",
+    "hleaf_SW__a_cfg_target",
+    "hleaf_SW__a_cfg_v",
+    "hleaf_SW__a_desc_base",
+    "hleaf_SW__a_desc_limit",
+    "hleaf_SW__a_desc_loops",
+    "hleaf_SW__a_desc_v",
+    "hleaf_SW__a_launch_v"
+  ],
+  "unchanged_diagnostics": [
+    "calendar_SW__tgt_configured",
+    "calendar_SW__tgt_fault",
+    "calendar_SW__fault",
+    "calendar_SE__tgt_configured",
+    "calendar_SE__tgt_fault",
+    "calendar_SE__fault"
+  ],
+  "host_status_gap": "TheseSrolecalendarstatuspinsremainexplicitdietopoutputs,notfoldedintotheexistingtwoNorthleafhost_statusjoin. TokenbootmustcheckactualSconfigured/faultbeforeSTART; noabsentScomputestatuscoverageclaim."
+}

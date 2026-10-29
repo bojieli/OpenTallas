@@ -11,7 +11,7 @@ map_path=Path(mapfile) if Path(mapfile).is_absolute() else root/mapfile
 d['map_file']=os.path.relpath(map_path.resolve(),Path(out).resolve().parent)
 rel='rtl/hbm_next/bind/ot_hnx_sm_seed_heads.sv'
 stree='rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv'
-current=[stree,rel,'rtl/hbm_next/bind/ot_hnx_selector_eightwide.sv','rtl/hbm_next/bind/ot_hnx_host_boot_hop.sv',
+current=[stree,rel,'rtl/hbm_next/bind/ot_hnx_selector_eightwide.sv','rtl/hbm_next/bind/ot_hnx_host_boot_hop.sv','rtl/hbm_next/bind/ot_hnx_calendar_cfg_leaf.sv',
  'rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv',
  'rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv',
  'rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_term_static.sv',
