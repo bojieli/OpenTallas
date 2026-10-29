@@ -1539,3 +1539,6 @@ CODEX: 2026-10-29 00:02 PDT HBM sourceabsence compilerb6c504469+nosubankee0ef7ce
 CODEX: 2026-10-29 00:04 PDT QCrefittrial25FAIL209.5/181nominal:longsnake+sensitivityrootcause; baseline26kitLIVEot-run1571177. Actualclockwire+terminaladapterstarted; NLparenttwoSIGNEDchildviewsblockedonlyoptinlintfixREADY, BTABmacroplanner92d31PASS.
 
 CODEX: 2026-10-29 00:05 PDT GEOMresults ca46f925ff pushed(clean): HEAD929reachFAIL/HBMctlx258reachFAIL diagnosed→ownerfixes; HBMlanes4+4KVPVreviewsPASS(-COND); S81actual8longleg/dutyunits corrected and reach17/QCnodeCTS trialsPASS-COND. ctlxguided2reach387.88/0confirmedbutlowfillFAILretained. Own2diagnosticjobsfinished,noactivejobs; no newGRTafterrootsteering.
+CODEX: 2026-10-29 00:05 PDT HBMctlx06b66ec1c READY actualsame-sourceguideplacement reach485.32/258→387.88/0; firstGPLno-opfixedbyUNPLACEDguidemembers,allfailrecordsretained. GeometrystillFAILfill.067/empty.605,actualimageviewed,noDRT/GRT/STA; dieownerownsoversizedslotplan. Noownlivejobs.
+
+CODEX:2026-10-29 00:09PDT sharedclock e263f06b2READY: actualsiteguard reproducesS81go16eight>450 andgo17zero; actualKVSDFboth-edgeproof1920taps/15424nodesallfall,.021psriseagreement,89BUF54even35odd,32PHY-onlyclockcaldeltas; KVownsfullgate. Classifiere337422dbREADY4falsepins→0. No reroute;3inheritedreplayscontinue.
