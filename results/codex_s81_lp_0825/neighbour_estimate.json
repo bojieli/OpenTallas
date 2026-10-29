@@ -1,0 +1,777 @@
+{
+ "verdict": "ESTIMATE ONLY; same-order first/last bits, actual full-plan bind/reach required",
+ "changed_endpoints": 35,
+ "estimated_extra_station_cycles": 5,
+ "rows": [
+  {
+   "parent": "s_0S_LP",
+   "port": "coll__lk_WS1__s_0S_LP__8",
+   "parent_bus": "coll_i1",
+   "neighbour": "s_0S_x05",
+   "neighbour_type": "slice_station__t38",
+   "slot": "ft7",
+   "end": "out",
+   "new_world_window_um": [
+    9079.981,
+    9203.340999999999
+   ],
+   "new_type_window_um": [
+    319.02100000000064,
+    442.3809999999994
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1440.433,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0S_LP",
+   "port": "coll__s_0S_LP__lk_WS1__0",
+   "parent_bus": "coll_o1",
+   "neighbour": "s_0S_x05",
+   "neighbour_type": "slice_station__t38",
+   "slot": "ft1",
+   "end": "in",
+   "new_world_window_um": [
+    9241.585,
+    9364.224999999999
+   ],
+   "new_type_window_um": [
+    480.625,
+    603.2649999999994
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1374.373,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0S_LP",
+   "port": "coll__s_0S_LP__lk_WS0__0",
+   "parent_bus": "coll_o0",
+   "neighbour": "s_0S_x05",
+   "neighbour_type": "slice_station__t38",
+   "slot": "ft0",
+   "end": "in",
+   "new_world_window_um": [
+    8933.039999999999,
+    9055.679999999998
+   ],
+   "new_type_window_um": [
+    172.07999999999993,
+    294.71999999999935
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1286.736,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0S_LP",
+   "port": "coll__lk_WS0__s_0S_LP__7",
+   "parent_bus": "coll_i0",
+   "neighbour": "s_0S_x05",
+   "neighbour_type": "slice_station__t38",
+   "slot": "ft6",
+   "end": "out",
+   "new_world_window_um": [
+    8771.436,
+    8894.795999999998
+   ],
+   "new_type_window_um": [
+    10.476000000000568,
+    133.83599999999933
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1243.632,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0S_LP",
+   "port": "unit__seqhost__s_0S_LP__6",
+   "parent_bus": "unit_i0",
+   "neighbour": "s_0S_x05",
+   "neighbour_type": "slice_station__t38",
+   "slot": "ft12",
+   "end": "out",
+   "new_world_window_um": [
+    9565.681999999999,
+    9582.741999999998
+   ],
+   "new_type_window_um": [
+    804.7219999999998,
+    821.7819999999992
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1311.694,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0S_LP",
+   "port": "unit__seqhost__s_0N_LP__6",
+   "parent_bus": "ft3_i",
+   "neighbour": "s_0S_x05",
+   "neighbour_type": "slice_station__t38",
+   "slot": "ft9",
+   "end": "out",
+   "new_world_window_um": [
+    9545.001999999999,
+    9554.766
+   ],
+   "new_type_window_um": [
+    784.0419999999995,
+    793.8060000000005
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1383.85,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0S_LP",
+   "port": "ctrl__s_0N_LP__seqhost__6",
+   "parent_bus": "ft1_o",
+   "neighbour": "s_0S_x05",
+   "neighbour_type": "slice_station__t38",
+   "slot": "ft3",
+   "end": "in",
+   "new_world_window_um": [
+    9554.766,
+    9565.681999999999
+   ],
+   "new_type_window_um": [
+    793.8060000000005,
+    804.7219999999998
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1375.374,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0S_LP",
+   "port": "coll__s_0S_LP__lk_WS2__0",
+   "parent_bus": "coll_o2",
+   "neighbour": "s_0S_x05",
+   "neighbour_type": "slice_station__t38",
+   "slot": "ft4",
+   "end": "in",
+   "new_world_window_um": [
+    9762.814999999999,
+    9885.454999999998
+   ],
+   "new_type_window_um": [
+    1001.8549999999996,
+    1124.494999999999
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1334.963,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0S_LP",
+   "port": "coll__lk_WS2__s_0S_LP__9",
+   "parent_bus": "coll_i2",
+   "neighbour": "s_0S_x05",
+   "neighbour_type": "slice_station__t38",
+   "slot": "ft10",
+   "end": "out",
+   "new_world_window_um": [
+    9601.211,
+    9724.571
+   ],
+   "new_type_window_um": [
+    840.2510000000002,
+    963.6110000000008
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1417.727,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0S_LP",
+   "port": "coll__s_0S_LP__lk_WS3__0",
+   "parent_bus": "coll_o3",
+   "neighbour": "s_0S_x05",
+   "neighbour_type": "slice_station__t38",
+   "slot": "ft5",
+   "end": "in",
+   "new_world_window_um": [
+    10071.359999999999,
+    10194.0
+   ],
+   "new_type_window_um": [
+    1310.3999999999996,
+    1433.0400000000009
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1531.38,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0S_LP",
+   "port": "coll__lk_WS3__s_0S_LP__6",
+   "parent_bus": "coll_i3",
+   "neighbour": "s_0S_x05",
+   "neighbour_type": "slice_station__t38",
+   "slot": "ft11",
+   "end": "out",
+   "new_world_window_um": [
+    9909.756,
+    10033.115999999998
+   ],
+   "new_type_window_um": [
+    1148.7960000000003,
+    1272.155999999999
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1614.528,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0S_LP",
+   "port": "ql__s_0N_LP__iqf__6",
+   "parent_bus": "ft0_o",
+   "neighbour": "s_0S_x05",
+   "neighbour_type": "slice_station__t38",
+   "slot": "ft2",
+   "end": "in",
+   "new_world_window_um": [
+    9382.057999999999,
+    9490.125999999998
+   ],
+   "new_type_window_um": [
+    621.098,
+    729.1659999999993
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1391.018,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0S_LP",
+   "port": "qc__iqf__s_0N_LP__7",
+   "parent_bus": "ft2_i",
+   "neighbour": "s_0S_x05",
+   "neighbour_type": "slice_station__t38",
+   "slot": "ft8",
+   "end": "out",
+   "new_world_window_um": [
+    9490.125999999998,
+    9545.001999999999
+   ],
+   "new_type_window_um": [
+    729.1659999999993,
+    784.0419999999995
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1386.19,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0N_LP",
+   "port": "coll__s_0N_LP__lk_WN0__0",
+   "parent_bus": "coll_o0",
+   "neighbour": "s_0N_x03",
+   "neighbour_type": "slice_station__t41",
+   "slot": "ft7",
+   "end": "in",
+   "new_world_window_um": [
+    8933.039999999999,
+    9055.679999999998
+   ],
+   "new_type_window_um": [
+    172.07999999999993,
+    294.71999999999935
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1512.72,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0N_LP",
+   "port": "coll__lk_WN2__s_0N_LP__7",
+   "parent_bus": "coll_i2",
+   "neighbour": "s_0N_x03",
+   "neighbour_type": "slice_station__t41",
+   "slot": "ft4",
+   "end": "out",
+   "new_world_window_um": [
+    9593.232,
+    9716.591999999999
+   ],
+   "new_type_window_um": [
+    832.2720000000008,
+    955.6319999999996
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1841.94,
+   "old_stations": 4,
+   "estimated_stations": 5,
+   "estimated_added_cycles": 1
+  },
+  {
+   "parent": "s_0N_LP",
+   "port": "coll__lk_WN0__s_0N_LP__5",
+   "parent_bus": "coll_i0",
+   "neighbour": "s_0N_x03",
+   "neighbour_type": "slice_station__t41",
+   "slot": "ft2",
+   "end": "out",
+   "new_world_window_um": [
+    8771.436,
+    8894.795999999998
+   ],
+   "new_type_window_um": [
+    10.476000000000568,
+    133.83599999999933
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1243.632,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0N_LP",
+   "port": "coll__s_0N_LP__lk_WN2__0",
+   "parent_bus": "coll_o2",
+   "neighbour": "s_0N_x03",
+   "neighbour_type": "slice_station__t41",
+   "slot": "ft9",
+   "end": "in",
+   "new_world_window_um": [
+    9754.836,
+    9877.475999999999
+   ],
+   "new_type_window_um": [
+    993.8760000000002,
+    1116.5159999999996
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1551.432,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0N_LP",
+   "port": "coll__lk_WN3__s_0N_LP__4",
+   "parent_bus": "coll_i3",
+   "neighbour": "s_0N_x03",
+   "neighbour_type": "slice_station__t41",
+   "slot": "ft5",
+   "end": "out",
+   "new_world_window_um": [
+    9909.756,
+    10033.115999999998
+   ],
+   "new_type_window_um": [
+    1148.7960000000003,
+    1272.155999999999
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 2042.304,
+   "old_stations": 4,
+   "estimated_stations": 6,
+   "estimated_added_cycles": 2
+  },
+  {
+   "parent": "s_0N_LP",
+   "port": "coll__s_0N_LP__lk_WN3__0",
+   "parent_bus": "coll_o3",
+   "neighbour": "s_0N_x03",
+   "neighbour_type": "slice_station__t41",
+   "slot": "ft10",
+   "end": "in",
+   "new_world_window_um": [
+    10071.359999999999,
+    10194.0
+   ],
+   "new_type_window_um": [
+    1310.3999999999996,
+    1433.0400000000009
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1755.828,
+   "old_stations": 4,
+   "estimated_stations": 5,
+   "estimated_added_cycles": 1
+  },
+  {
+   "parent": "s_0N_LP",
+   "port": "coll__lk_WN1__s_0N_LP__6",
+   "parent_bus": "coll_i1",
+   "neighbour": "s_0N_x03",
+   "neighbour_type": "slice_station__t41",
+   "slot": "ft3",
+   "end": "out",
+   "new_world_window_um": [
+    9087.96,
+    9211.32
+   ],
+   "new_type_window_um": [
+    327.0,
+    450.3600000000006
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1448.412,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0N_LP",
+   "port": "coll__s_0N_LP__lk_WN1__0",
+   "parent_bus": "coll_o1",
+   "neighbour": "s_0N_x03",
+   "neighbour_type": "slice_station__t41",
+   "slot": "ft8",
+   "end": "in",
+   "new_world_window_um": [
+    9249.563999999998,
+    9372.204
+   ],
+   "new_type_window_um": [
+    488.60399999999936,
+    611.2440000000006
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1308.708,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0N_LP",
+   "port": "tl__bk_sel__s_0N_LP__9",
+   "parent_bus": "tl_i0",
+   "neighbour": "s_0N_x03",
+   "neighbour_type": "slice_station__t41",
+   "slot": "ft6",
+   "end": "out",
+   "new_world_window_um": [
+    9510.705999999998,
+    9570.774
+   ],
+   "new_type_window_um": [
+    749.7459999999992,
+    809.8140000000003
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1507.598,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0N_LP",
+   "port": "ca__s_0N_LP__bk_sel__0",
+   "parent_bus": "ca_o0",
+   "neighbour": "s_0N_x03",
+   "neighbour_type": "slice_station__t41",
+   "slot": "ft11",
+   "end": "in",
+   "new_world_window_um": [
+    9394.026,
+    9450.637999999999
+   ],
+   "new_type_window_um": [
+    633.0660000000007,
+    689.6779999999999
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1501.782,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_0N_LP",
+   "port": "cb__s_0N_LP__bk_sel__0",
+   "parent_bus": "cb_o0",
+   "neighbour": "s_0N_x03",
+   "neighbour_type": "slice_station__t41",
+   "slot": "ft12",
+   "end": "in",
+   "new_world_window_um": [
+    9450.637999999999,
+    9510.705999999998
+   ],
+   "new_type_window_um": [
+    689.6779999999999,
+    749.7459999999992
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1506.418,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_7N_LP",
+   "port": "coll__s_7N_LP__lk_EN0__0",
+   "parent_bus": "coll_o0",
+   "neighbour": "s_7N_x13",
+   "neighbour_type": "slice_station__t51",
+   "slot": "ft8",
+   "end": "in",
+   "new_world_window_um": [
+    22895.04,
+    23017.68
+   ],
+   "new_type_window_um": [
+    172.08000000000084,
+    294.72000000000025
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1286.736,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_7N_LP",
+   "port": "coll__lk_EN0__s_7N_LP__5",
+   "parent_bus": "coll_i0",
+   "neighbour": "s_7N_x13",
+   "neighbour_type": "slice_station__t51",
+   "slot": "ft2",
+   "end": "out",
+   "new_world_window_um": [
+    23055.924000000003,
+    23179.284000000003
+   ],
+   "new_type_window_um": [
+    10.475999999997839,
+    133.83599999999842
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1243.632,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_7N_LP",
+   "port": "coll__lk_EN1__s_7N_LP__6",
+   "parent_bus": "coll_i1",
+   "neighbour": "s_7N_x13",
+   "neighbour_type": "slice_station__t51",
+   "slot": "ft3",
+   "end": "out",
+   "new_world_window_um": [
+    22739.077,
+    22862.437
+   ],
+   "new_type_window_um": [
+    327.3229999999994,
+    450.683
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1448.735,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_7N_LP",
+   "port": "coll__s_7N_LP__lk_EN1__0",
+   "parent_bus": "coll_o1",
+   "neighbour": "s_7N_x13",
+   "neighbour_type": "slice_station__t51",
+   "slot": "ft9",
+   "end": "in",
+   "new_world_window_um": [
+    22578.193000000003,
+    22700.833000000002
+   ],
+   "new_type_window_um": [
+    488.92699999999877,
+    611.5669999999982
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1382.675,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_7N_LP",
+   "port": "coll__s_7N_LP__lk_EN2__0",
+   "parent_bus": "coll_o2",
+   "neighbour": "s_7N_x13",
+   "neighbour_type": "slice_station__t51",
+   "slot": "ft11",
+   "end": "in",
+   "new_world_window_um": [
+    22073.567000000003,
+    22196.207000000002
+   ],
+   "new_type_window_um": [
+    993.552999999999,
+    1116.1929999999984
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1365.245,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_7N_LP",
+   "port": "coll__lk_EN2__s_7N_LP__4",
+   "parent_bus": "coll_i2",
+   "neighbour": "s_7N_x13",
+   "neighbour_type": "slice_station__t51",
+   "slot": "ft5",
+   "end": "out",
+   "new_world_window_um": [
+    22234.451,
+    22357.811
+   ],
+   "new_type_window_um": [
+    831.9489999999996,
+    955.3090000000002
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1552.273,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_7N_LP",
+   "port": "coll__s_7N_LP__lk_EN3__0",
+   "parent_bus": "coll_o3",
+   "neighbour": "s_7N_x13",
+   "neighbour_type": "slice_station__t51",
+   "slot": "ft12",
+   "end": "in",
+   "new_world_window_um": [
+    21756.72,
+    21879.36
+   ],
+   "new_type_window_um": [
+    1310.4000000000005,
+    1433.04
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1569.396,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_7N_LP",
+   "port": "coll__lk_EN3__s_7N_LP__7",
+   "parent_bus": "coll_i3",
+   "neighbour": "s_7N_x13",
+   "neighbour_type": "slice_station__t51",
+   "slot": "ft6",
+   "end": "out",
+   "new_world_window_um": [
+    21917.604000000003,
+    22040.964000000004
+   ],
+   "new_type_window_um": [
+    1148.7959999999975,
+    1272.1559999999981
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1756.032,
+   "old_stations": 4,
+   "estimated_stations": 5,
+   "estimated_added_cycles": 1
+  },
+  {
+   "parent": "s_7N_LP",
+   "port": "tp__bk_sel__s_7N_LP__6",
+   "parent_bus": "tp_i0",
+   "neighbour": "s_7N_x13",
+   "neighbour_type": "slice_station__t51",
+   "slot": "ft7",
+   "end": "out",
+   "new_world_window_um": [
+    22440.298000000003,
+    22496.142000000003
+   ],
+   "new_type_window_um": [
+    693.6179999999977,
+    749.4619999999986
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1277.454,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_7N_LP",
+   "port": "tp__s_7N_LP__bk_sel__0",
+   "parent_bus": "tp_o0",
+   "neighbour": "s_7N_x13",
+   "neighbour_type": "slice_station__t51",
+   "slot": "ft10",
+   "end": "in",
+   "new_world_window_um": [
+    22380.43,
+    22440.298000000003
+   ],
+   "new_type_window_um": [
+    749.4619999999986,
+    809.3300000000008
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1282.858,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  },
+  {
+   "parent": "s_7N_LP",
+   "port": "tp__bk_sel__s_7S_LP__6",
+   "parent_bus": "ft0_i",
+   "neighbour": "s_7N_x13",
+   "neighbour_type": "slice_station__t51",
+   "slot": "ft4",
+   "end": "out",
+   "new_world_window_um": [
+    22496.142000000003,
+    22556.210000000003
+   ],
+   "new_type_window_um": [
+    633.5499999999984,
+    693.6179999999977
+   ],
+   "old_max_bit_manhattan_um": 1226.88,
+   "new_max_bit_manhattan_um": 1403.47,
+   "old_stations": 4,
+   "estimated_stations": 4,
+   "estimated_added_cycles": 0
+  }
+ ]
+}

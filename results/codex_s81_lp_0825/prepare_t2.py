@@ -48,6 +48,20 @@ sl['outline_um']=[w,H]
 sl['event']='codex_s81_lp_0825 T2 candidate; not adopted/no build'
 (OUT/'slices').mkdir(exist_ok=True)
 write(OUT/'slices/dsfd_coll_lane_w_safe8_ntf.json',sl)
+child_plan=read(SRC/'kit_plan.json')
+old_type,pt=next(iter(child_plan['partition_types'].items()))
+pt['outline_um']=[w,H]
+hc=pt['hard_cores'][0]
+hc['outline_um']=[w,H]
+hc['pins_file']=os.path.relpath(OUT/'plan_pins.json',ROOT/'physical/die_plan/s81')
+hc['lef']=str((OUT/'lane.lef').relative_to(ROOT))
+child_plan['partition_types']={old_type+'_t2':pt}
+write(OUT/'kit_plan.json',child_plan)
+base_recipe=read(ROOT/'results/s81_lp_3_1029/lane/recipes.json')['dsfd_coll_lane_w_safe8_ntf__TC']
+base_recipe.update(ref_tile=str(OUT.relative_to(ROOT)),plan=str((OUT/'kit_plan.json').relative_to(ROOT)),
+                   suffix='lp_t2_candidate')
+base_recipe.setdefault('orfs_vars',{})['OT_FSM_NONE_WIRES']='hunt'
+write(OUT/'recipes_candidate.json',{'dsfd_coll_lane_w_safe8_ntf__T2':base_recipe})
 plan=read(ROOT/'physical/die_plan/s81/die_plan.json')
 fit=read(ROOT/'results/s81_lp_3_1029/parent_estimate_T.json')
 receipts={}

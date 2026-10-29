@@ -26,7 +26,12 @@ signed child LEF/lib abstracts and its fix-only window event before build.
 
 Verdict: prepared estimate only. No CTS/route authority. First resolve the
 current full-shape LEC failure, then judge the actual placed image and clock
-model under GEOM-55's existing conditions. No data/control cycles added.
+model under GEOM-55's existing conditions. The child crop adds no cycles.
+The complete parent window event also moves adjacent FT endpoint windows:
+`neighbour_estimate.json` prices an estimated five extra station cycles across
+four neighbour slots (s_0N_x03 ft4 +1, ft5 +2, ft10 +1; s_7N_x13 ft6 +1).
+Those changes must enter the real plan, compiler and bind together. The prepared
+parent-only plan does not include/adopt them.
 
 Reproduce with `prepare_t2.py` then `render_t2.py`. Generated large candidate
 plan/pin/LEF files are left in the worktree's `t2/`; they are not canonical
