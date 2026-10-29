@@ -43,6 +43,7 @@ def test_cap_moves_merge_point_up(cap):
     assert st["snakes"] < st0["snakes"] and st["snake_wire_um"] < st0["snake_wire_um"]
     assert st["snake_legs_over_cap"] == 0 and st["snake_max_leg_um"] <= 1200.0
     assert "snake_legs_over_cap" not in st0                                # stats only with the cap
+    assert st["snake_cap_rebuilt"] == 1
     g = [v for k, v in a.items() if not k.startswith("c")]
     assert max(g) - min(g) <= 5.0                                          # glue still zero-skew
     m = sum(g) / len(g)
@@ -52,6 +53,12 @@ def test_cap_moves_merge_point_up(cap):
         i = st_.pop()
         assert len(dn[i]["kids"]) <= 2                                     # binary, no hang
         st_ += dn[i]["kids"]
+
+
+def test_partition_within_cap_keeps_stock_tree(cap):
+    dn0, r0, st0 = _run(None)
+    dn, root, st = _run(1e9)                     # no stock snake leg is over the cap -> nothing rebuilt
+    assert st["snake_cap_rebuilt"] == 0 and (dn, root) == (dn0, r0)
 
 
 def test_default_and_non_merge_unchanged(cap):

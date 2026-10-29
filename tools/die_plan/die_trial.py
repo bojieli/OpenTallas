@@ -1146,7 +1146,8 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
         st[rn] = dict(merges=dst.get("merges"), imbalanced=dst.get("imbalanced"), spread=dst.get("spread_um"),
                       **({"early_taps": dst["early_taps"]} if dst.get("early_taps") else {}),
                       **({k: dst[k] for k in ("snakes", "snake_wire_um", "snake_buffers")} if sn else {}),
-                      **({k: dst[k] for k in ("snake_max_leg_um", "snake_legs_over_cap") if k in dst} if sn else {}))
+                      **({k: dst[k] for k in ("snake_max_leg_um", "snake_legs_over_cap", "snake_cap_rebuilt") if k in dst}
+                         if sn else {}))
     return st
 
 
@@ -1428,9 +1429,10 @@ SNAKE_TOL_PS = 1.0      # DIE-QC-9 --region-dme-snake: a delay-mode merge imbala
 # merges it with whatever glue taps the spatial cut puts beside it, so EVERY such low glue subtree gets its own snake
 # (trial14: 1787 snake legs, 179 > 1.2 mm, up to 1.8 mm with 7 buffers; the 9 identical 1.8 mm replicas route -15..+41
 # ps off the calibrated model, residual sd 9.6 ps < 400 um -> 19.0 ps > 1.6 mm).  Those snakes sit on glue-to-glue
-# UNSHARED paths (glue intra hold).  With the cap set, the merge point moves up: per partition the non-early (glue) taps
-# are built into one tree first and each early core sink is then joined at the glue root (join(): it descends only where
-# the depths meet), so the elongation lands on the glue root leg (shared by every glue tap) once per core.  The kept
+# UNSHARED paths (glue intra hold).  With the cap set, the merge point moves up in every partition whose stock tree has
+# a snake leg longer than the cap: the non-early (glue) taps are built into one tree first and each early core sink is
+# then joined at the glue root (join(): it descends only where the depths meet), so the elongation lands on the glue
+# root leg (shared by every glue tap) once per core; the rebuild is kept only if its longest snake leg is shorter.  The kept
 # tree's snake legs longer than the cap are counted in the stats (snake_legs_over_cap; reported, never hidden).
 DME_SNAKE_CAP_UM = None
 
@@ -1597,21 +1599,41 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
     if late and not byp:
         byp[late[0][0]] = late
         late = []
+    def snake_legs(r_):
+        legs, stack = [], [r_]
+        while stack:
+            d = out[stack.pop()]
+            stack += d["kids"]
+            for k_, pts in (d.get("snakes") or {}).items():
+                ch = [(d["x"], d["y"])] + [tuple(x) for x in pts] + [(out[k_]["x"], out[k_]["y"])]
+                legs.append(sum(_man(a, b) for a, b in zip(ch, ch[1:])))
+        return legs
+
+    def max_snake_leg(r_):
+        return max(snake_legs(r_), default=0.0)
+
+    cap_rebuilt = []
     proots, pick = [], defaultdict(int)
     for pn in sorted(byp):
         tl = sorted(byp[pn], key=lambda t: (t[2], t[3], t[1]))
+        tries = [build(tl, lambda t: (t[2], t[3]), leaf, m) for m in modes]
         ear = ([t for t in tl if float(sink_early.get((t[0], t[1]), 0.0)) > 0.0]
                if (DME_SNAKE_CAP_UM is not None and snake and sink_early) else [])
         gl = [t for t in tl if t not in ear]
-        if ear and gl:      # DIE-QC-23 --region-dme-snake-cap: glue tree first, early core sinks joined at its root
-            tries = []
+        if ear and gl and max(max_snake_leg(r_) for r_ in tries) > DME_SNAKE_CAP_UM + 1e-6:
+            # DIE-QC-23 --region-dme-snake-cap: only a partition whose stock tree has a snake leg over the cap is rebuilt
+            # glue tree first, early core sinks joined at its root; a rebuild is kept only if its longest snake leg is
+            # shorter (trial15: applying it to every partition re-embedded glue trees that had no long snake: c_*_tf_00
+            # routed glue spread 19.5 -> 136 ps)
+            alt = []
             for m in modes:
                 r_ = build(gl, lambda t: (t[2], t[3]), leaf, m)
                 for t in sorted(ear, key=lambda t: (-float(sink_early[(t[0], t[1])]), t[1])):
                     r_ = join(r_, leaf(t))
-                tries.append(r_)
-        else:
-            tries = [build(tl, lambda t: (t[2], t[3]), leaf, m) for m in modes]
+                alt.append(r_)
+            if max(max_snake_leg(r_) for r_ in alt) < max(max_snake_leg(r_) for r_ in tries):
+                tries = alt
+                cap_rebuilt.append(pn)
         k = min(range(len(tries)), key=lambda j: (round(out[tries[j]]["S"] - out[tries[j]]["Smin"], 1), out[tries[j]]["W"]))
         pick[modes[k]] += 1
         out[tries[k]]["part_root"] = pn
@@ -1704,16 +1726,10 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
     st["extra_wire_um"] = round(st["extra_wire_um"], 1)
     st["spread_um"] = round(out[root]["S"] - out[root]["Smin"], 1)
     if snake and DME_SNAKE_CAP_UM is not None:     # DIE-QC-23: kept-tree snake leg lengths vs the cap
-        legs, stack = [], [root]
-        while stack:
-            i = stack.pop()
-            d = out[i]
-            stack += d["kids"]
-            for k_, pts in (d.get("snakes") or {}).items():
-                ch = [(d["x"], d["y"])] + [tuple(x) for x in pts] + [(out[k_]["x"], out[k_]["y"])]
-                legs.append(sum(_man(a, b) for a, b in zip(ch, ch[1:])))
+        legs = snake_legs(root)
         st.update(snake_cap_um=float(DME_SNAKE_CAP_UM), snake_max_leg_um=round(max(legs, default=0.0), 1),
-                  snake_legs_over_cap=sum(1 for x in legs if x > DME_SNAKE_CAP_UM + 1e-6))
+                  snake_legs_over_cap=sum(1 for x in legs if x > DME_SNAKE_CAP_UM + 1e-6),
+                  snake_cap_rebuilt=len(cap_rebuilt))
     if jfall:       # DIE-S81-16: top-level joins redone by join_mono (only present when it happened)
         st["join_fallbacks"] = len(jfall)
         st["join_fallback_worst_gap_ps"] = max(g for g, _ in jfall)
