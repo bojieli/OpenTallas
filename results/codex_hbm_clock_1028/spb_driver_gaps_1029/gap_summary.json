@@ -1,0 +1,120 @@
+{
+ "flops": 4104,
+ "moved_flops": 68,
+ "gaps": [
+  {
+   "port": "clk",
+   "rect_um": [
+    782.514,
+    638.82,
+    786.834,
+    639.9
+   ],
+   "native_master": "CKINVDCx16_ASAP7_75t_R",
+   "native_cell_um": [
+    1.62,
+    0.27
+   ]
+  },
+  {
+   "port": "clk_t1",
+   "rect_um": [
+    17.82,
+    639.36,
+    22.14,
+    640.44
+   ],
+   "native_master": "CKINVDCx16_ASAP7_75t_R",
+   "native_cell_um": [
+    1.62,
+    0.27
+   ]
+  },
+  {
+   "port": "clk_t2",
+   "rect_um": [
+    782.514,
+    1012.5,
+    786.834,
+    1013.58
+   ],
+   "native_master": "CKINVDCx16_ASAP7_75t_R",
+   "native_cell_um": [
+    1.62,
+    0.27
+   ]
+  },
+  {
+   "port": "clk_t3",
+   "rect_um": [
+    17.82,
+    1013.04,
+    22.14,
+    1014.12
+   ],
+   "native_master": "CKINVDCx16_ASAP7_75t_R",
+   "native_cell_um": [
+    1.62,
+    0.27
+   ]
+  },
+  {
+   "port": "clk_t4",
+   "rect_um": [
+    142.506,
+    1136.16,
+    146.826,
+    1137.24
+   ],
+   "native_master": "CKINVDCx16_ASAP7_75t_R",
+   "native_cell_um": [
+    1.62,
+    0.27
+   ]
+  },
+  {
+   "port": "clk_t5",
+   "rect_um": [
+    463.644,
+    1206.36,
+    467.964,
+    1207.44
+   ],
+   "native_master": "CKINVDCx16_ASAP7_75t_R",
+   "native_cell_um": [
+    1.62,
+    0.27
+   ]
+  }
+ ],
+ "summary": [
+  {
+   "instance": "u_hbm_spb0_rx",
+   "max_per_bit_hops_um": [
+    399.966,
+    373.68000000000006,
+    257.904,
+    392.6340000000001,
+    306.0540000000001
+   ],
+   "maximum_um": 399.966,
+   "width": 514,
+   "stages": 4
+  },
+  {
+   "instance": "u_hbm_spb0_tx",
+   "max_per_bit_hops_um": [
+    390.4440000000002,
+    347.76,
+    402.57,
+    373.68000000000006,
+    389.6219999999999
+   ],
+   "maximum_um": 402.57,
+   "width": 512,
+   "stages": 4
+  }
+ ],
+ "added_cycles": 0,
+ "source_changed": false
+}
