@@ -1,0 +1,162 @@
+{
+ "nl": {
+  "base": {
+   "ws": -281.18,
+   "fails": 5078,
+   "by_class": {
+    "reg->async": {
+     "n_fail": 3,
+     "worst": -19.28
+    },
+    "zero_logic": {
+     "n_fail": 1290,
+     "worst": -224.63
+    },
+    "reg->macro": {
+     "n_fail": 2761,
+     "worst": -177.15
+    },
+    "logic": {
+     "n_fail": 508,
+     "worst": -105.15
+    },
+    "reg->outport": {
+     "n_fail": 516,
+     "worst": -281.18
+    }
+   }
+  },
+  "A": {
+   "ws": -281.18,
+   "fails": 4447,
+   "by_class": {
+    "reg->async": {
+     "n_fail": 3,
+     "worst": -19.28
+    },
+    "zero_logic": {
+     "n_fail": 659,
+     "worst": -27.81
+    },
+    "reg->macro": {
+     "n_fail": 2761,
+     "worst": -177.15
+    },
+    "logic": {
+     "n_fail": 508,
+     "worst": -105.15
+    },
+    "reg->outport": {
+     "n_fail": 516,
+     "worst": -281.18
+    }
+   }
+  },
+  "B": {
+   "ws": -281.18,
+   "fails": 5055,
+   "by_class": {
+    "reg->async": {
+     "n_fail": 3,
+     "worst": -19.28
+    },
+    "zero_logic": {
+     "n_fail": 1270,
+     "worst": -190.46
+    },
+    "reg->macro": {
+     "n_fail": 2761,
+     "worst": -177.15
+    },
+    "logic": {
+     "n_fail": 505,
+     "worst": -105.15
+    },
+    "reg->outport": {
+     "n_fail": 516,
+     "worst": -281.18
+    }
+   }
+  }
+ },
+ "nk": {
+  "base": {
+   "ws": -289.88,
+   "fails": 6433,
+   "by_class": {
+    "port->*": {
+     "n_fail": 1556,
+     "worst": -251.51
+    },
+    "reg->async": {
+     "n_fail": 10,
+     "worst": -42.83
+    },
+    "reg->macro": {
+     "n_fail": 3518,
+     "worst": -289.88
+    },
+    "logic": {
+     "n_fail": 238,
+     "worst": -172.09
+    },
+    "zero_logic": {
+     "n_fail": 1111,
+     "worst": -125.24
+    }
+   }
+  },
+  "A": {
+   "ws": -289.88,
+   "fails": 5880,
+   "by_class": {
+    "port->*": {
+     "n_fail": 1556,
+     "worst": -251.51
+    },
+    "reg->async": {
+     "n_fail": 10,
+     "worst": -42.83
+    },
+    "reg->macro": {
+     "n_fail": 3518,
+     "worst": -289.88
+    },
+    "logic": {
+     "n_fail": 238,
+     "worst": -172.09
+    },
+    "zero_logic": {
+     "n_fail": 558,
+     "worst": -22.08
+    }
+   }
+  },
+  "B": {
+   "ws": -289.88,
+   "fails": 6420,
+   "by_class": {
+    "port->*": {
+     "n_fail": 1556,
+     "worst": -239.6
+    },
+    "reg->async": {
+     "n_fail": 7,
+     "worst": -38.21
+    },
+    "reg->macro": {
+     "n_fail": 3518,
+     "worst": -289.88
+    },
+    "logic": {
+     "n_fail": 234,
+     "worst": -125.28
+    },
+    "zero_logic": {
+     "n_fail": 1105,
+     "worst": -125.24
+    }
+   }
+  }
+ }
+}
