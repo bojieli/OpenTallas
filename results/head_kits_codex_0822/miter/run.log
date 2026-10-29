@@ -1,0 +1,6 @@
+ot-run: localhost      admits   436 GB (avail 853, reserve 0, fresh 320.6, peak 31.8, headroom 0, waiters 0/0 GB) load 71/112 running 40 disk 1371 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2383942-1793288365 after 1 s
+PASS lockstep payload1026bits +epoch/reset: checks=4087 mutant_caught=4087 added_data_cycles=2 boot_delta=0
+/srv/opentallas-scratch2/claude/codex-head-kits-0822/miter/tb.sv:29: $finish called at 40966000 (1ps)
+ot-run: RAN on localhost (unit oth-ubuntu-2383942-1793288365): exit 0
