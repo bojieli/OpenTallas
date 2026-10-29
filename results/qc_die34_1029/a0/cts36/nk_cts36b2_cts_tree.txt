@@ -1,0 +1,62 @@
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0 -no_insertion_delay
+[INFO CTS-0098] Clock net "ck"
+[INFO CTS-0099]  Sinks 1672
+[INFO CTS-0102]  Path depth 14 - 14
+[INFO CTS-0098] Clock net "clonenet_1_ck_g"
+[INFO CTS-0099]  Sinks 23
+[INFO CTS-0102]  Path depth 2 - 2
+[INFO CTS-0098] Clock net "clonenet_1_ck_fa2"
+[INFO CTS-0099]  Sinks 525
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0098] Clock net "clonenet_1_ck_fa3"
+[INFO CTS-0099]  Sinks 526
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0098] Clock net "ck_tx7"
+[INFO CTS-0099]  Sinks 801
+[INFO CTS-0102]  Path depth 8 - 9
+[INFO CTS-0098] Clock net "ck_tx6"
+[INFO CTS-0099]  Sinks 819
+[INFO CTS-0102]  Path depth 4 - 5
+[INFO CTS-0098] Clock net "ck_tx5"
+[INFO CTS-0099]  Sinks 792
+[INFO CTS-0102]  Path depth 8 - 10
+[INFO CTS-0098] Clock net "ck_tx4"
+[INFO CTS-0099]  Sinks 816
+[INFO CTS-0102]  Path depth 3 - 4
+[INFO CTS-0098] Clock net "ck_tx3"
+[INFO CTS-0099]  Sinks 818
+[INFO CTS-0102]  Path depth 4 - 5
+[INFO CTS-0098] Clock net "ck_tx2"
+[INFO CTS-0099]  Sinks 800
+[INFO CTS-0102]  Path depth 7 - 8
+[INFO CTS-0098] Clock net "ck_tx1"
+[INFO CTS-0099]  Sinks 815
+[INFO CTS-0102]  Path depth 5 - 6
+[INFO CTS-0098] Clock net "ck_tx0"
+[INFO CTS-0099]  Sinks 806
+[INFO CTS-0102]  Path depth 6 - 7
+[INFO CTS-0098] Clock net "ck_rsw"
+[INFO CTS-0099]  Sinks 539
+[INFO CTS-0102]  Path depth 4 - 5
+[INFO CTS-0098] Clock net "ck_rs"
+[INFO CTS-0099]  Sinks 537
+[INFO CTS-0102]  Path depth 4 - 4
+[INFO CTS-0098] Clock net "ck_rnw"
+[INFO CTS-0099]  Sinks 538
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0098] Clock net "ck_rn"
+[INFO CTS-0099]  Sinks 533
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0098] Clock net "ck_fa3"
+[INFO CTS-0099]  Sinks 2
+[INFO CTS-0102]  Path depth 2 - 2
+[INFO CTS-0098] Clock net "ck_dw"
+[INFO CTS-0099]  Sinks 1080
+[INFO CTS-0102]  Path depth 6 - 7
+[INFO CTS-0098] Clock net "ck_de"
+[INFO CTS-0099]  Sinks 1093
+[INFO CTS-0102]  Path depth 5 - 6
+[INFO CTS-0098] Clock net "ck_g"
+[INFO CTS-0099]  Sinks 2379
+[INFO CTS-0102]  Path depth 8 - 10
+Took 17 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0 -no_insertion_delay

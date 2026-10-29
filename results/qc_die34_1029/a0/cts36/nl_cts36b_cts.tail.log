@@ -1,0 +1,40 @@
+[INFO DPL-0500] Runtime: 79.11s
+Placement Analysis
+---------------------------------
+total displacement      19109.4 u
+average displacement        0.2 u
+max displacement           67.5 u
+original HPWL         1867254.6 u
+legalized HPWL        1882973.2 u
+delta HPWL                    1 %
+
+Took 79 seconds: detailed_placement
+estimate_parasitics -placement
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_HOLD_MM sync: SS setup ws -418.95 / FF hold ws -172.53 ps
+repair_timing -setup_margin 0 -hold_margin 15 -repair_tns 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 55 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 55 out of 55 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+------------------------------------------------------------------------------------------------------------------------------
+     140+ |       1 |      21 |        8 |      0 |     5 |    +0.0% | -226.146 |    -1612.6 |     -252.6 |      3 | g_icg.g_hop.u_hop_ck/u_icg/ENA
+     142+ |       1 |      22 |        8 |      0 |     6 |    +0.0% | -223.546 |    -1614.2 |     -250.0 |      3 | g_icg.g_hop.u_hop_ck/u_icg/ENA
+     143+ |       1 |      22 |        8 |      0 |     6 |    +0.0% | -223.546 |    -1614.2 |     -250.0 |      3 | g_icg.g_hop.u_hop_ck/u_icg/ENA
+     144+ |       1 |      22 |        8 |      0 |     6 |    +0.0% | -223.546 |    -1614.2 |     -250.0 |      3 | g_icg.g_hop.u_hop_ck/u_icg/ENA
+    final |       1 |      22 |        8 |      0 |     6 |    +0.0% | -223.546 |    -1614.2 |     -250.0 |      3 | g_icg.g_hop.u_hop_ck/u_icg/ENA
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0059] Removed 1 buffers.
+[INFO RSZ-0040] Inserted 8 buffers.
+[INFO RSZ-0051] Resized 22 instances: 22 up, 0 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 6 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 19.42s
+Took 20 seconds: repair_timing -setup_margin 0 -hold_margin 15 -repair_tns 100 -verbose -setup
+OT_HOLD_STRUCTURAL stage=cts: FF hold ws -172.53 ps, 2370 true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair
+OT_HOLD_MM after repair: SS setup ws -223.55 / FF hold ws -172.53 ps
+Error: cts.tcl, 83 OT_HOLD_STRUCTURAL stage=cts: FF hold ws -172.53 ps, 2370 true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair
+Elapsed time: 2:23.66[h:]min:sec. CPU time: user 160.92 sys 10.64 (119%). Peak memory: 2549752KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/kq_qfd_tile_nl_a0c_a0nl14icg2rr2/base/4_1_cts.odb] Error 2

@@ -100,3 +100,49 @@ Scratch root: `intel2:/srv/opentallas-scratch2/claude/die-qc34-a0`. AUTO-GEOM = 
   2. Internal hold = zero-logic register pairs across SIBLING hop trees, each built separately: NL worst `g_tx.g_r[0].di[244]` (dw-hop tree, CLK 688.84) -> `u_tx/q[244]` (tx1-hop tree, CLK 801.14) through one INV = 112 ps skew, slack -102.96 (`cts35/nl/paths_hold_internal_latency.rpt`). Same class in NK (tap_q -> ib_i, -129.31).
   3. TT setup at the root/node hop ICG enable (-223.55 / -181.77) = early ICG clock pin vs late-clocked enable logic, the same depth imbalance (GEOM-59 asked for this number at 4_cts: it is this).
 - No GRT (clock-incl GRT >= 50 needs 4_cts); the col_v (260,267) hotspot check is still open. Nothing was padded, trimmed or edited on the clock.
+
+## 6. DIE-QC-35 (A0) round 2, 2026-10-29 12:1x-12:3x PDT: COORD 12:0x rulings (1) A/B and (2) kitgen
+
+### 6.1 (2) kit generator fix, DONE (shared tool, own branch)
+- `claude/die-qc-35-kitgen-1029@866c6a98e96` (from origin/main 7a0b04e3cf9): `gen_core_kit_qc.py` now writes `fc_dt_lift_cts.tcl`
+  (the pre-CTS dont_touch lift on the POST_SYNTH `ot_fcap_*/ot_fconst_*` flops) for EVERY kit: sourced by `hold_budget.tcl`
+  under `insertion_balance`, else it is `PRE_CTS_TCL` itself. New test `FcapDontTouchLift` (both branches). Tests on intel2:
+  `test_gen_core_kit_qc.py` 20 OK; pytest `legacy/` + `tools/die_plan/test_kit_cts_hook.py` 52 passed (CHECKED). READY for ROOT-MERGE.
+
+### 6.2 (1B) diagnostic CTS with `-delay_buffer_derate 0` on kit copies: NO EFFECT -> not adopted
+- Copies `intel2:/srv/opentallas-scratch2/claude/die-qc34-a0/cts36b/<kit>` (4_* removed, CTS_ARGS derate -> 0; `make -n cts` =
+  do-4_1_cts + do-4_cts only, enforced in `cts36/n?_b_cts.sh`). Units oth-ubuntu-1312702 (NL) / 1312694 (NK), exit 2.
+- CHECKED from cts.log: the TritonCTS tree is IDENTICAL to the derate 1.0 (NL) / 0.5 (NK) runs (same per-net sinks / leaf buffers /
+  path depths), `CTS-0033 Balancing latency for clock clk` still inserts **192 (NL) / 209 (NK) delay buffers**, and the gate
+  result is bit-identical: NL FF hold **-172.53 / 2370**, TT setup -223.55; NK **-571.84 / 3082**, setup -181.77.
+  => in this OpenROAD (26Q3-1510-g6cb3f2b704) `-delay_buffer_derate` does not drive the ICG latency balancer. (B) closes nothing.
+
+### 6.3 cause isolation (DIAGNOSTIC ONLY, not a closure candidate): derate 0 + `-no_insertion_delay`
+- Copies `.../cts36b2/<kit>`, units oth-ubuntu-1376997 (NL) / 1376993 (NK), exit 2. CHECKED: no CTS-0033 delay buffers;
+  macro net `ck` path depth 13 (NL) / 14 (NK); hold gate NL **-415.73 / 5985**, NK **-328.98 / 6636**; TT setup NL -189.17, NK -256.11.
+- Reading (UNCHECKED class split, no dump taken): the 192/209-buffer root chains exist to balance the register/ICG trees against the
+  18 (NL) / 19 (NK) clocked macros (10 romleaf + 8 LSL (+ NK node), each alone behind its own hop ICG). The macro liberty
+  insertion (CHECKED from the kit libs, FF min..max): romleaf 190.4..256.8, LSL 182.1..221.3 (TT romleaf 245.1..324.1, LSL
+  234.9..289.0). Without that balancing the macro <-> register skew opens instead. Neither TritonCTS knob is a structural fix.
+
+### 6.4 clock census of the PASS-COND places (CHECKED, `cts36/census/n?.tsv.gz`, `census.tcl`, read-only on 3_place.odb)
+- Port `ck` at (228.95, 578.64); outline 457.92 x 1157.76. All hop ICGs sit in the centre hop cluster (x 138-230, y 630-715).
+- NL root net: 607 FF + 34 ICG. Gated domains: ck 2849, de/dw 1027, tx0..7 781 each, rs/rsw 515, rn/rnw/fa2 514, rp0..9 and
+  lsl0..7 ONE macro clock pin each. NK root: 1633 FF + 36 ICG; ck 2336, de/dw 1027, tx 781, fa2 515, fa3 516, rs/rsw 515,
+  rn/rnw 514, node + rp0..9 + lsl0..7 one macro pin each. FF domains span most of the tile (e.g. NL ck x 6-453, y 404-1140).
+
+### 6.5 (1A) plan-built tile tree: NOT LAUNCHED (tool gap found; spec below)
+- The kits' `core_infra_plan.json` has `core_tree: null` (slice pushdown: "Native TritonCTS fallback owns all internal clock
+  cells"), so `core_infra_cts.tcl` is not installed and a slice core_tree must be authored first.
+- `tools/die_plan/core_infra.py compile_slice` cannot express this tile as-is: (i) every gated_domain leaf is CTS-open and all
+  CTS-open leaves must have EQUAL planned local stage counts (ceil(log_24 N)): 1-sink macro domains = 0, 514 = 2, 781..2849 = 3
+  -> InfraError; (ii) a macro early tap (12.3, by the macro's own view insertion, 182-257 FF) has no form under a hop ICG:
+  `preserved_hard_clocks` is root-only and leaf levels must be equal stage counts, not delay-balanced; (iii) the tree hook runs
+  pre-GPL (master_core_infra.tcl from face_flops.tcl), so "no re-place" needs it sourced at PRE_CTS + incremental DPL of the
+  planned cells. The ICG positions themselves are plan data (graph homes FIRM), so the gates can keep their placed xy.
+- Spec for the successor (shared-tool delta, needs a COORD ruling before build): register hop ICGs at one depth below a
+  planned root node; FF gated domains as CTS-open leaves with a declared per-leaf `cts_stages` under `stage_basis: total`
+  (all = 3); macro hop ICGs as planned-domain gates (form C) on a shallower planned node whose depth difference is fixed by
+  the macro view insertion (needs a new "early_tap_ps from signed/real view" leaf field + test); root registers (607/1633)
+  as equal-count planned register leaves; kit vclk then = the realized root insertion through the root event (no kit edit).
+- No CTS on (A) -> CTS gates, and the clock-incl GRT >= 50 iterations for the GEOM-59 col_v (260,267) hotspot, stay OPEN.
