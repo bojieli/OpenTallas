@@ -93,3 +93,20 @@ yosys select -clear
 if {[info exists ::env(OT_RST_COPIES_MAX)] && [string is integer -strict $::env(OT_RST_COPIES_MAX)] && $::env(OT_RST_COPIES_MAX) > 0} {
   source [file join [file dirname [file normalize [info script]]] ot_rst_copies.tcl]
 }
+# DIE-S81-26 2026-10-29 (COORD 10:41 ruling (a) + 11:0x follow-up): declared clock-landing rings are flip-flops by design.
+# ot_dp_clk_landing (keep_hierarchy) holds an ot_meso_ring whose DEPTH x W data slots Yosys infers as one memory; S81
+# stations carry 4 x 1105-bit rings, which the ORFS SYNTH_MEMORY_MAX_BITS check (4096) stopped.  OT_LANDING_FF=1 (gen
+# phys sets it only when the kit RTL defines ot_dp_clk_landing) inlines the ring into each landing module and maps ONLY
+# those memories to flip-flops here, before synth's memory check.  The limit itself is unchanged, so any other inferred
+# memory above it in the same kit still FAILs.  Function unchanged (memory_map is what synth does to every small memory).
+if {[info exists ::env(OT_LANDING_FF)] && $::env(OT_LANDING_FF) eq "1"} {
+  yosys select -set ot_lf {*}{*ot_dp_clk_landing*}
+  set ot_lf_s [string trim [yosys tee -q -s result.string select -list {*}{@ot_lf}]]
+  yosys flatten {*}{@ot_lf}
+  yosys memory -nomap {*}{@ot_lf}
+  yosys memory_map {*}{@ot_lf}
+  yosys select -clear
+  set ot_lf_n 0
+  foreach l [split $ot_lf_s "\n"] { if {[string trim $l] ne "" && [string first "/" $l] < 0} { incr ot_lf_n } }
+  puts "OT_LANDING_FF: landing-ring memories mapped to flip-flops in $ot_lf_n landing module(s)"
+}
