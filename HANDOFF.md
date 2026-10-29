@@ -1563,3 +1563,10 @@ CODEX: 2026-10-29 00:31 PDT HEAD LAND3 TT/FF2pos8780PASS f6main; rawstrip19types
 CODEX: 2026-10-29 00:33 PDT HBM selector samecycle structural sourceREADY a6c6b641f:8079+1367cycle lockstep0mismatch,2controlsCAUGHT,formalPASS; oldEXTRACT_FAjobpreserved. qcore symmetricplacementFAIL h1.861/fullguideestimateFAIL2.296 diagnosedwhole-section1/2hotspot, noGRT/route; evidence209c13e25.
 
 CODEX: 2026-10-29 00:34 PDT KV4PVreviewedcontinuationsLIVE; AHUBq5clock3obligationbuilt627pins/PREFLIGHT0+clockcoupon4000eq/mutant, trialplaceLIVE; SYS_Ccurrentbind7nativePHYclosure+M5PGrestored2339pins, synthLECLIVE/noP&R; ECTL4sourceprep handedKVowner. PHYrawcapture67522main, newrouteadmissionpinbundlefixowned; CDCCH/PCfailuresdiagnosed.
+
+CODEX: 2026-10-29 00:47 PDT HBMnativeSPB e53d8bd86 READY FLOW: exact3-netadapter+macroclear4stage514RX/ST+512TX;11962lockstep0diff/2mutantscaught. Actual+4/+4cycles,model+2/0;4104FF/part, noP&R, sharedfrontdoor/currentboundcontractpending.
+
+CODEX: 2026-10-29 00:49 PDT RINGfreshcurrentplan71d2 preflight0/viewedPGreviewce6985 LIVEepyc2unit127556;TOPKsynth158535cells/8SRAM0.87GiB PASS,LECgoldOOM32 measured33.4GB→isolated64GBunit836779 LIVE; nofailedrecordoverwritten/noP&RforTOPK.
+
+CODEX: 2026-10-29 00:52 PDT KV native528frame stall traced29missing pst STARTinputs inbench (independentROMomission); own5invalid sims safelystopped/preserved, originalsuntouched. Actualprovider+phase successor ownedKVkits; noG5claim.
+CODEX: 2026-10-29 00:56 PDT S81cores: currentCGR0/8 qualified57044EQ+wronggatecontrol; VQmacroclocktreePLANPASS10314sinks/tree489,plannedPLACE live; L2rightalignedsource0cycle/current6110EQ, GPLfloorplanfailurediagnosed+onecentralregiontriallive;H034388EQ/placeactive;cfg7APcanaryadmissionunblocked. Source73c31ee50; detailedjobs/failures S81-CORES.
