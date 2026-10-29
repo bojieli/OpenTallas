@@ -48,6 +48,8 @@ base={};moves=[]
 for n,p in T['sites'].items():
  q=take(n,p,p);base[n]=q
  if abs(q[0]-p[0])+abs(q[1]-p[1])>1e-6:moves.append(dict(cell=n,old=p,new=q,manhattan_um=abs(q[0]-p[0])+abs(q[1]-p[1])))
+if (T.get('meta') or {}).get('physical_dme') and moves:
+ raise RuntimeError('physical DME homes are frozen; re-plan/reprice before changing '+str(len(moves))+' clock cells')
 pads={}
 for t in T['taps']:
  n=counts.get(t['port'],0)
