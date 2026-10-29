@@ -101,7 +101,15 @@ if dup:
     # module definitions and missing dependencies below.
     print('SUPPLEMENT_IN_PLAN %d' % len(dup))
     extra = [s for s in extra if s not in src]
-fl = sorted(str(p) for p in gen.glob('*.sv')) + src + extra
+# DIE-HEAD-28 10-29: the landed wrappers instantiate the clock-landing rings (rtl/common/ot_dp_clk_landing*.sv), which
+# instantiate ot_meso_ring/_ohor/... (rtl/common/ot_meso_fifo.sv); no type `sources` list them.  Take the SAME transitive
+# closure gen_phys.landing_rtl gives the kits (DIE-HEAD-7 10-28) so --manifest-only resolves them (SOURCE7 strict bind
+# unit 3445572 FAIL: unresolved ot_meso_ohor).  Repo-relative, deduplicated against src + extra.
+import gen_phys as GP  # noqa: E402
+land = [str(f) for f in GP.landing_rtl('.', '\n'.join(p.read_text() for p in sorted(gen.glob('*.sv'))))
+        if str(f) not in src and str(f) not in extra]
+print('LANDING_CLOSURE %d %s' % (len(land), land))
+fl = sorted(str(p) for p in gen.glob('*.sv')) + src + extra + land
 (out / 'portbind.f').write_text('\n'.join(fl) + '\n')
 print('pads: %d instances, %d open wavefront outs' % (len(pads), sum(len(v['ports']) for v in pads.values())))
 r = subprocess.run([sys.executable, 'tools/die_port_bind.py', str(top), '--top', 's81_head_top', '-f', str(out / 'portbind.f'),

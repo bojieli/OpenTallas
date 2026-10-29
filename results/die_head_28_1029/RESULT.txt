@@ -1,0 +1,16 @@
+DIE-HEAD-28 2026-10-29 09:38 PDT HEAD SOURCE7 strict bind + spn station miters (sub-agent of DIE-HEAD-28)
+1) spn wrapper station miters (cut-point lockstep with planned offset; leaves ot_s81hd_spo/spr = identical xorshift stubs,
+   leaf inputs compared via hierarchy; 4096 cycles incl. warm mid-run reset; Verilator v5.032 docker 8 GB cap, intel2).
+   REF = codex-head-start-0828/hk5_source/source, REAL = codex-head-0830/source_realized1 (only these 2 wrappers differ).
+   Planned stages read from REF source_plan.json internal_stations (len regs_um): hd_spn 24, hd_spn_end 12.
+   hd_spn     base PASS 417792 checks 0 fails (eq early-clear-in-reset conservative 9); mutants bypass_in_b_i 3020 fails,
+              bypass_out_x_o 4093, wrongbus_in_b_i 4090 -> all 3 CAUGHT
+   hd_spn_end base PASS 299008 checks 0 fails (conservative 3); mutants bypass_in_bw_i 4091, bypass_out_xe_o 4097,
+              wrongbus_in_bw_i 4091 -> all 3 CAUGHT
+2) SOURCE7 strict bind rerun (tools/die_port_bind.py main f483150e0, --manifest-only --logic-free-stub, same source3 copy
+   = source_realized1 wrappers + Codex straps/pads; ot-run unit oth-ubuntu-127937-1793291420 exit 0):
+   manifest = Codex 111 entries + rtl/common/ot_meso_fifo.sv (gen_phys.landing_rtl closure; head_source_bind_manifest.py)
+   DIE_PORT_BIND PASS masters=26 instances=358, every error counter 0, unresolved_children 0 (was 1: ot_meso_ohor).
+   INFO (not part of the die_port_bind verdict): head_die_portbind step-7 nested leaf-pin check reports FAIL
+   unbound 136 / unknown 67 / unresolved 452; sampled examples are all ot_dp_clk_landing_cas / ot_dp_landing_collect
+   (ifdef-guarded fv_* ports in the landing header) -> likely parser artefacts, UNCHECKED.

@@ -1,0 +1,417 @@
+{
+ "type": "hd_spn_end",
+ "module": "ot_s81hd_spn_end_strip",
+ "planned_from": "REF source_plan.json internal_stations len(regs_um)",
+ "planned": {
+  "xw_o": 1,
+  "xe_o": 2,
+  "bw_i": 5,
+  "be_i": 4
+ },
+ "in_bus": {
+  "bw_i": 5,
+  "be_i": 4
+ },
+ "out_bus": {
+  "xw_o": 1,
+  "xe_o": 2
+ },
+ "leaf_checks": [
+  {
+   "inst": "u_spo",
+   "pin": "ck",
+   "width": 1,
+   "delay": 0,
+   "bus": null,
+   "ref_net": "clk",
+   "real_net": "clk"
+  },
+  {
+   "inst": "u_spo",
+   "pin": "rst_n",
+   "width": 1,
+   "delay": 0,
+   "bus": null,
+   "ref_net": "rst_n",
+   "real_net": "rst_n"
+  },
+  {
+   "inst": "u_spo",
+   "pin": "i",
+   "width": 565,
+   "delay": 0,
+   "bus": null,
+   "ref_net": "x_i_q",
+   "real_net": "x_i_q"
+  },
+  {
+   "inst": "u_spr",
+   "pin": "ck",
+   "width": 1,
+   "delay": 0,
+   "bus": null,
+   "ref_net": "clk",
+   "real_net": "clk"
+  },
+  {
+   "inst": "u_spr",
+   "pin": "rst_n",
+   "width": 1,
+   "delay": 0,
+   "bus": null,
+   "ref_net": "rst_n",
+   "real_net": "rst_n"
+  },
+  {
+   "inst": "u_spr",
+   "pin": "i",
+   "width": 565,
+   "delay": 0,
+   "bus": null,
+   "ref_net": "n_bottom_seed",
+   "real_net": "n_bottom_seed"
+  },
+  {
+   "inst": "u_spr",
+   "pin": "iw",
+   "width": 565,
+   "delay": 5,
+   "bus": "bw_i",
+   "ref_net": "bw_i_q",
+   "real_net": "bw_i_is4_q"
+  },
+  {
+   "inst": "u_spr",
+   "pin": "ie",
+   "width": 565,
+   "delay": 4,
+   "bus": "be_i",
+   "ref_net": "be_i_q",
+   "real_net": "be_i_is3_q"
+  }
+ ],
+ "out_checks": [
+  {
+   "name": "rst_o_0",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_o_1",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_o_2",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_o_3",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_o_4",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_o_5",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "start_o_0",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "start_o_1",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "start_o_2",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "start_o_3",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "start_o_4",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "start_o_5",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "b_o",
+   "width": 566,
+   "delay": 0
+  },
+  {
+   "name": "xw_o",
+   "width": 566,
+   "delay": 1
+  },
+  {
+   "name": "xe_o",
+   "width": 566,
+   "delay": 2
+  },
+  {
+   "name": "hu_o",
+   "width": 277,
+   "delay": 0
+  },
+  {
+   "name": "hd_o",
+   "width": 278,
+   "delay": 0
+  },
+  {
+   "name": "au_o",
+   "width": 65,
+   "delay": 0
+  },
+  {
+   "name": "ad_o",
+   "width": 65,
+   "delay": 0
+  },
+  {
+   "name": "bu_o",
+   "width": 65,
+   "delay": 0
+  },
+  {
+   "name": "bd_o",
+   "width": 65,
+   "delay": 0
+  },
+  {
+   "name": "fclk_out_ad_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_fstart_out_ad_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "fclk_out_au_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_fstart_out_au_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "fclk_out_b_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_fstart_out_b_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "fclk_out_bd_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_fstart_out_bd_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "fclk_out_bu_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_fstart_out_bu_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "fclk_out_hd_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_fstart_out_hd_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "fclk_out_hu_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_fstart_out_hu_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_up_ready_ad_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_up_fault_ad_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_up_ready_au_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_up_fault_au_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_up_ready_b_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_up_fault_b_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_up_ready_bd_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_up_fault_bd_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_up_ready_bu_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_up_fault_bu_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_up_ready_hd_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_up_fault_hd_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_up_ready_hu_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "cland_up_fault_hu_o",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_start_raw_2",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_start_raw_4",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_start_raw_5",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_start_raw_6",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_start_raw_7",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_start_raw_8",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_start_raw_9",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_start_raw_10",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_start_raw_12",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_start_raw_13",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_start_raw_14",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_start_raw_16",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_start_raw_17",
+   "width": 1,
+   "delay": 0
+  },
+  {
+   "name": "rst_start_raw_18",
+   "width": 1,
+   "delay": 0
+  }
+ ],
+ "mutants": [
+  "bypass_in_bw_i",
+  "bypass_out_xe_o",
+  "wrongbus_in_bw_i"
+ ],
+ "cycles": 4096,
+ "reset_win": 24
+}

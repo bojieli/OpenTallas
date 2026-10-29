@@ -1,0 +1,64 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "die_v": "/srv/opentallas-scratch2/claude/die-head-28/source7_bind/source3/s81_head_top_nonansi.sv",
+ "top": "s81_head_top",
+ "verdict": "PASS",
+ "failing": [],
+ "summary": {
+  "masters": 26,
+  "instances": 358,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 0,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "unread_net_bits": 0,
+  "output_open_ports": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 119,
+  "pad_bits": 0,
+  "spare_out_bits": 2953,
+  "unresolved_children": 0,
+  "ambiguous_children": 0,
+  "variant_children": 0,
+  "manifest_missing": 0
+ },
+ "source_mode": "manifest_only",
+ "manifest_missing": [],
+ "die_sha256": "cf37500c125aa6f3c2e377dc958295b3405342555c961220f5b0f5af527add6e",
+ "top_assigns": [],
+ "params_not_in_rtl": [],
+ "child_closure": {
+  "modules": 201,
+  "unresolved_children": {},
+  "model_children": {
+   "ot_rom_4096x274_m8": [
+    "ot_s81hd_elem"
+   ],
+   "ot_sram_1r1w2c_32x64_m1": [
+    "ot_sram_showahead_b64"
+   ],
+   "ot_sram_1r1w2c_64x546_m1": [
+    "ot_s81_kp4_ddly"
+   ],
+   "ot_sram_1r1w_128x256_m1_r0c0": [
+    "dsdv_mu_land_head_nr"
+   ],
+   "ot_sram_1r1w_32x546_m1": [
+    "ot_s81_kp4_dout"
+   ],
+   "ot_sram_1r1w_64x512_m1_r2c2": [
+    "ot_s81hd_ctl_hsf0_static"
+   ]
+  },
+  "variant_children": {},
+  "ambiguous_children": {}
+ }
+}
