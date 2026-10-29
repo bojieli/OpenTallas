@@ -1546,3 +1546,4 @@ CODEX:2026-10-29 00:09PDT sharedclock e263f06b2READY: actualsiteguard reproduces
 CODEX: 2026-10-29 00:13 PDT MAINa7168d188c==origin/main; urgentNLlint/Qwenreset+ROM, paritysafeclockcal, legalKVcapture, exactmacroleaves/DSaliases/HBMfiniteabsence support merged; focusedgatesPASS, no physicalfreeze claim.
 
 CODEX: 2026-10-29 00:15 PDT shared selectedparamguard4fee30b53 READY actualHBM21wrongsourceinstances caught; mixedcal finalea614main/actualKV35oddBUFinputcells handled, retainedSDFboth-edgereadoutcomplete; KVSTARToldnodeIDs requirescurrentgraphreplan.
+CODEX: 2026-10-29 00:17 PDT BTAB shared macro planner bedf2b9d2 on main a7168d188c; exact-cap guard intact/37PASS. Actual compact2x2 candidate replaces sparse vertical stack (−61%area); 3types/12cores/1318pins/0cycles, trial generation live intel1 codex-qc-btab-compact. No route before new tree.
