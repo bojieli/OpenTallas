@@ -1,1 +1,13 @@
-{"verdict":"PASS-COND","scope":"same-C24-floorplan f12-profile synth/place/CTS trial only; no route approval","picture":"results/hbm_cores_rebal_codex_2345/lp_cts.png","findings":["Viewed actual predecessor CTS image: 24 SRAMs in three columns, macro channels remain open, copy registers max22.5um from their own SRAM; relay boxes retained.","Predecessor fails TT -323.21ps on original lat5i compression plus CPA stage and FF endpoint count; no routing of predecessor.","Successor changes arithmetic micro-pipeline cuts at identical MLAT5/ALAT4/WCOPY1, uses existing c12/f12 profile, keeps pins/macros/outline/driver islands/PG. Arithmetic data stage is structurally divided; no new clock modifications.","Place and CTS trial must be inspected and timed before route; no post-route closure claimed."],"estimate":"Same-cycle f12 partitions compression and CPA into separate existing stages; standalone f12_l5 is an established closure unit. Tile timing remains to be measured.","cycles_added":0}
+{
+ "verdict": "PASS-COND",
+ "scope": "same-C24-floorplan f12-profile synth/place/CTS trial only; no route approval",
+ "picture": "results/hbm_cores_rebal_codex_2345/lp_cts.png",
+ "findings": [
+  "Viewed actual predecessor CTS image: 24 SRAMs in three columns, macro channels remain open, copy registers max22.5um from their own SRAM; relay boxes retained.",
+  "Predecessor fails TT -323.21ps on original lat5i compression plus CPA stage and FF endpoint count; no routing of predecessor.",
+  "Successor changes arithmetic micro-pipeline cuts at identical MLAT5/ALAT3/WCOPY1, uses existing c12/f12 profile, keeps pins/macros/outline/driver islands/PG. Arithmetic data stage is structurally divided; no new clock modifications.",
+  "Place and CTS trial must be inspected and timed before route; no post-route closure claimed."
+ ],
+ "estimate": "Same-cycle f12 partitions compression and CPA into separate existing stages; standalone f12_l5 is an established closure unit. Tile timing remains to be measured.",
+ "cycles_added": 0
+}
