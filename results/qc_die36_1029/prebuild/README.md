@@ -48,3 +48,25 @@ Run root intel2 `/srv/opentallas-scratch2/claude/die-qc36/` (inputs as DIE-QC-35
 ## 5. KV-019 risk sweep (estimate, CHECKED counts from E1 fixed_wires + provider clock_loads_access.json)
 - 22,365 die-level provider FF CLK sinks hang directly on 2,420 tree nets (root ck_n0 8 FF / 309 um); long (>21.6 um) 2,406 nets /
   22,267 FF. All planned on M8/M9 FIXED metal -> exposure only if those nets reach die GRT unfixed; confirm at GRT0 with probe3.
+
+## 6. E2 result (unit oth-ubuntu-383438, `prebuild_e2_backbone_noaccess/`) — FAIL, CHECKED prebuild.json
+- With the bb1 backbone records (88,801; 379 unresolved left on default windows) the TRACK stage fails again: **17,859
+  no_clock_track on 16,489 nets** (trunk 11,048 / driver 4,364 / drop 1,402 / jog 1,045; e.g. ck_n2 trunk ideal 12463.335),
+  vs E1 0 without any backbone. So pinning each riser window to ONE witness track still over-constrains the shared trunks even
+  when that witness is the E1 router track: the M6 jogs move the riser column bx, the reserved 0.192x0.08 M8 landing pads of
+  the 88,801 records (router.reserve in bb1) occupy the track ends other nets need, and the 25,204 fallback pins are pinned to
+  tracks the router did not choose.
+- Reading: a single-y window (m7_window = [y, ty]) is the wrong contract between backbone and router. Next structural form
+  (no new check): backbone records carry the FULL feasible M7 riser range of their column bx (every M8 track inside the island
+  hole where riser + landing are clear), the router chooses the trunk inside it, and the M8 landing pad is reserved only after
+  the router has chosen (two-pass: E1 tracks -> jog columns with range windows -> router -> landings -> PG access).
+
+## 7. PG access replan around the re-sited pin stacks (units pa A oth-ubuntu-44xxxx / B, `pa_{A,B}/run.log`) — CHECKED run.log
+- Seed = exact re-sited clock base stacks (v2, 8,156 moved), joint reserved = endpoint landings + bb1 jogs/risers/M8 pads.
+- PA-A (Codex import-0824 plan_access + native bridges): 109,808 groups, **41 failed** (185,654 contacts connected), 2,288 M7
+  rejections (vs 50 in the old-site fullpg) = the bb1 M7 risers/jogs.
+- PA-B (shared pg_access_plan @b7a872287 --m9-select cover --m8-landing fallback, no bridges reserved): **1 failed group**
+  (185,694 contacts) = the same residue as the old-site fullpg (closed there by the incremental replan of 9 groups).
+- So the PG access CAN be planned around the re-sited pin stacks (DIE-QC-35 d5 collisions 12,860 shorts were the OLD access on
+  the OLD sites). Not materialized: the reservation is against bb1, whose backbone fails the track stage (section 6); rerun PA
+  on the range-window backbone once it passes E2.
