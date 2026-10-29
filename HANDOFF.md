@@ -1634,3 +1634,6 @@ CODEX: 2026-10-29 02:57 PDT KV25 nativeclock START reprice LIVEintel1; sharedmap
 CODEX: 2026-10-29 02:58 PDT QC takeover native313STARTreprice LIVE2701652; BTAB50it measuredoverflow0/4layers, jointPGclock484/484witnessseedPASS, full89180PGreplanLIVE; A0freshproof/nativejoins independentlyowned.
 
 CODEX: 2026-10-29 02:58 PDT S81 resumed allphysical work via ownbranches; currentV2PHYrecomposeLIVE(+6/+1cycles3586FF), FEEDclockrepair ownedCLOCK, coreCFG/H0/VQ/L2 ownedcores. Actualresetforest counterexample disprovesreleaseoffset=assertwindow; nofalsecontract emitted, OWNER plainlog.
+CODEX: 2026-10-29 02:59 PDT HBM ring exact-count geometry fixes NW L4 draft+2/+1 and NE vmdel+1; all shorterchains restored. Only2NEpr_cw/ccw11->12 remain TOKENpricepending; noPNR, actualbusFFpack/clock/PG owed. Source codex/hbm-plan-1029.
+
+CODEX: 2026-10-29 02:59 PDT HBM inherited fulltree4components numericPASS PRE671/1197 POST376/1016edges; addressmutantCAUGHT5113mismatches. C25c/G5/sourceK stillopen; P3actualrowcomposition next.
