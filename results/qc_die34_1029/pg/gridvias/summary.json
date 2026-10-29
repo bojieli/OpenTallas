@@ -1,0 +1,34 @@
+{
+  "source_odb": "/srv/opentallas-scratch2/claude/die-qc34/fullpg_mat/provider_pg.odb",
+  "source_sha256": "96515c35da007791822b0bfed23cf34f66b98db325f6cc429bd627b7c6beb2fe",
+  "nets": {
+    "VDD": {
+      "m8_stripes": 3040,
+      "m9_stripes": 3613,
+      "crossings_with_via": 10983520,
+      "via_arrays": {
+        "7x5": 10983520
+      },
+      "planned_components": 1,
+      "readback_vias": 10983520,
+      "readback_orphan_vias": 0,
+      "readback_components": 1
+    },
+    "VSS": {
+      "m8_stripes": 3039,
+      "m9_stripes": 3612,
+      "crossings_with_via": 10976868,
+      "via_arrays": {
+        "7x5": 10976868
+      },
+      "planned_components": 1,
+      "readback_vias": 10976868,
+      "readback_orphan_vias": 0,
+      "readback_components": 1
+    }
+  },
+  "out_odb_sha256": "a762649eab82f213a98ed3ed5e1b881e34ffad51ce549383b317ac9b4a3249aa",
+  "verdict": "PASS_ONE_GRID_PIECE_PER_NET",
+  "seconds": 397,
+  "scope": "Canonical M8/M9 grid continuity (plan add_pdn_connect M8 M9) on the materialized mixed PG. Contacts already reach a stripe (census 185,698/185,698). Not DRC/IR."
+}
