@@ -1,0 +1,24 @@
+*SPEF "IEEE 1481-1998"
+*DESIGN "head_driver_coupon"
+*DATE "2026-10-29"
+*VENDOR "OpenTallas"
+*PROGRAM "explicit_pi_coupon"
+*VERSION "1"
+*DESIGN_FLOW "PIN_CAP NONE"
+*DIVIDER /
+*DELIMITER :
+*BUS_DELIMITER [ ]
+*T_UNIT 1 PS
+*C_UNIT 1 FF
+*R_UNIT 1 OHM
+*L_UNIT 1 HENRY
+*D_NET buf_y 34.704922716
+*CONN
+*I buf8:Y O
+*P buf_y O
+*CAP
+1 buf8:Y 17.352461358
+2 buf_y 17.352461358
+*RES
+1 buf8:Y buf_y 4919.564354400
+*END

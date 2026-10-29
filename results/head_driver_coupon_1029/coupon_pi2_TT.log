@@ -1,0 +1,69 @@
+OpenSTA 3.1.0 be771a0116 Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Startpoint: a (input port clocked by vclk)
+Endpoint: buf_y (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock vclk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000 v input external delay
+     2    1.470620  100.000000    0.000000    0.000000 v a (in)
+     1   35.556923   30.123009   61.807671   61.807671 v buf8/Y (BUFx8_ASAP7_75t_R)
+                    211.393921   66.008141  127.815811 v buf_y (out)
+                                            127.815811   data arrival time
+
+                      0.000000  833.000000  833.000000   clock vclk (rise edge)
+                                  0.000000  833.000000   clock network delay (ideal)
+                                -60.000000  773.000000   clock uncertainty
+                                  0.000000  773.000000   clock reconvergence pessimism
+                                  0.000000  773.000000   output external delay
+                                            773.000000   data required time
+---------------------------------------------------------------------------------------------
+                                            773.000000   data required time
+                                           -127.815811   data arrival time
+---------------------------------------------------------------------------------------------
+                                            645.184204   slack (MET)
+
+
+Startpoint: a (input port clocked by vclk)
+Endpoint: inv_y (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock vclk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000 v input external delay
+     2    1.470620  100.000000    0.000000    0.000000 v a (in)
+     1   15.000000  143.686600   98.820587   98.820587 ^ inv/Y (INVx1_ASAP7_75t_R)
+                    143.686600    0.000000   98.820587 ^ inv_y (out)
+                                             98.820587   data arrival time
+
+                      0.000000  833.000000  833.000000   clock vclk (rise edge)
+                                  0.000000  833.000000   clock network delay (ideal)
+                                -60.000000  773.000000   clock uncertainty
+                                  0.000000  773.000000   clock reconvergence pessimism
+                                  0.000000  773.000000   output external delay
+                                            773.000000   data required time
+---------------------------------------------------------------------------------------------
+                                            773.000000   data required time
+                                            -98.820587   data arrival time
+---------------------------------------------------------------------------------------------
+                                            674.179443   slack (MET)
+
+
+COUPON TT inv rise delay_min_ps=98.820587 delay_max_ps=98.820587 slew_min_ps=143.686600 slew_max_ps=143.686600
+COUPON TT inv fall delay_min_ps=85.669052 delay_max_ps=85.669052 slew_min_ps=114.197929 slew_max_ps=114.197929
+COUPON TT buf8 rise delay_min_ps=56.628471 delay_max_ps=56.628471 slew_min_ps=34.997295 slew_max_ps=34.997295
+COUPON TT buf8 fall delay_min_ps=61.807671 delay_max_ps=61.807671 slew_min_ps=30.123009 slew_max_ps=30.123009
+FAR_PI TT rise delay_min_ps=123.213882 delay_max_ps=123.213882 slew_min_ps=214.192352 slew_max_ps=214.192352
+FAR_PI TT fall delay_min_ps=127.815811 delay_max_ps=127.815811 slew_min_ps=211.393921 slew_max_ps=211.393921
+COUPON_DONE TT

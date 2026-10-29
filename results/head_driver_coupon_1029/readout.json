@@ -1,0 +1,248 @@
+{
+  "scope": "STANDARD_CELL_ANALYTICAL_PREBUILD_COUPON_NOT_SIGNOFF",
+  "period_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "input_transition_ps": 100,
+  "lumped_loads_ff": {
+    "inv": 15,
+    "buf8": 34.7049
+  },
+  "distributed_wire": {
+    "length_um": 185.166,
+    "R_ohm": 4919.5643544,
+    "C_ff": 34.704922716,
+    "pi_split": "halfnearhalffar",
+    "downstream_load_ff": 0.852,
+    "Elmore_first_moment_ps": 85.366550358
+  },
+  "records": [
+    {
+      "kind": "driver",
+      "source": "coupon_TT.log",
+      "corner": "TT",
+      "cell": "inv",
+      "edge": "rise",
+      "delay_min_ps": 98.820587,
+      "delay_max_ps": 98.820587,
+      "slew_min_ps": 143.6866,
+      "slew_max_ps": 143.6866
+    },
+    {
+      "kind": "driver",
+      "source": "coupon_TT.log",
+      "corner": "TT",
+      "cell": "inv",
+      "edge": "fall",
+      "delay_min_ps": 85.669052,
+      "delay_max_ps": 85.669052,
+      "slew_min_ps": 114.197929,
+      "slew_max_ps": 114.197929
+    },
+    {
+      "kind": "driver",
+      "source": "coupon_TT.log",
+      "corner": "TT",
+      "cell": "buf8",
+      "edge": "rise",
+      "delay_min_ps": 64.547539,
+      "delay_max_ps": 64.547539,
+      "slew_min_ps": 48.18951,
+      "slew_max_ps": 48.18951
+    },
+    {
+      "kind": "driver",
+      "source": "coupon_TT.log",
+      "corner": "TT",
+      "cell": "buf8",
+      "edge": "fall",
+      "delay_min_ps": 68.911728,
+      "delay_max_ps": 68.911728,
+      "slew_min_ps": 40.489437,
+      "slew_max_ps": 40.489437
+    },
+    {
+      "kind": "driver",
+      "source": "coupon_FF.log",
+      "corner": "FF",
+      "cell": "inv",
+      "edge": "rise",
+      "delay_min_ps": 74.572639,
+      "delay_max_ps": 74.572639,
+      "slew_min_ps": 105.084297,
+      "slew_max_ps": 105.084297
+    },
+    {
+      "kind": "driver",
+      "source": "coupon_FF.log",
+      "corner": "FF",
+      "cell": "inv",
+      "edge": "fall",
+      "delay_min_ps": 65.930832,
+      "delay_max_ps": 65.930832,
+      "slew_min_ps": 90.020569,
+      "slew_max_ps": 90.020569
+    },
+    {
+      "kind": "driver",
+      "source": "coupon_FF.log",
+      "corner": "FF",
+      "cell": "buf8",
+      "edge": "rise",
+      "delay_min_ps": 47.939728,
+      "delay_max_ps": 47.939728,
+      "slew_min_ps": 34.997482,
+      "slew_max_ps": 34.997482
+    },
+    {
+      "kind": "driver",
+      "source": "coupon_FF.log",
+      "corner": "FF",
+      "cell": "buf8",
+      "edge": "fall",
+      "delay_min_ps": 52.494926,
+      "delay_max_ps": 52.494926,
+      "slew_min_ps": 30.979097,
+      "slew_max_ps": 30.979097
+    },
+    {
+      "kind": "driver",
+      "source": "coupon_pi2_TT.log",
+      "corner": "TT",
+      "cell": "inv",
+      "edge": "rise",
+      "delay_min_ps": 98.820587,
+      "delay_max_ps": 98.820587,
+      "slew_min_ps": 143.6866,
+      "slew_max_ps": 143.6866
+    },
+    {
+      "kind": "driver",
+      "source": "coupon_pi2_TT.log",
+      "corner": "TT",
+      "cell": "inv",
+      "edge": "fall",
+      "delay_min_ps": 85.669052,
+      "delay_max_ps": 85.669052,
+      "slew_min_ps": 114.197929,
+      "slew_max_ps": 114.197929
+    },
+    {
+      "kind": "driver",
+      "source": "coupon_pi2_TT.log",
+      "corner": "TT",
+      "cell": "buf8",
+      "edge": "rise",
+      "delay_min_ps": 56.628471,
+      "delay_max_ps": 56.628471,
+      "slew_min_ps": 34.997295,
+      "slew_max_ps": 34.997295
+    },
+    {
+      "kind": "driver",
+      "source": "coupon_pi2_TT.log",
+      "corner": "TT",
+      "cell": "buf8",
+      "edge": "fall",
+      "delay_min_ps": 61.807671,
+      "delay_max_ps": 61.807671,
+      "slew_min_ps": 30.123009,
+      "slew_max_ps": 30.123009
+    },
+    {
+      "kind": "far_endpoint",
+      "source": "coupon_pi2_TT.log",
+      "corner": "TT",
+      "cell": "buf8",
+      "edge": "rise",
+      "delay_min_ps": 123.213882,
+      "delay_max_ps": 123.213882,
+      "slew_min_ps": 214.192352,
+      "slew_max_ps": 214.192352
+    },
+    {
+      "kind": "far_endpoint",
+      "source": "coupon_pi2_TT.log",
+      "corner": "TT",
+      "cell": "buf8",
+      "edge": "fall",
+      "delay_min_ps": 127.815811,
+      "delay_max_ps": 127.815811,
+      "slew_min_ps": 211.393921,
+      "slew_max_ps": 211.393921
+    },
+    {
+      "kind": "driver",
+      "source": "coupon_pi2_FF.log",
+      "corner": "FF",
+      "cell": "inv",
+      "edge": "rise",
+      "delay_min_ps": 74.572639,
+      "delay_max_ps": 74.572639,
+      "slew_min_ps": 105.084297,
+      "slew_max_ps": 105.084297
+    },
+    {
+      "kind": "driver",
+      "source": "coupon_pi2_FF.log",
+      "corner": "FF",
+      "cell": "inv",
+      "edge": "fall",
+      "delay_min_ps": 65.930832,
+      "delay_max_ps": 65.930832,
+      "slew_min_ps": 90.020569,
+      "slew_max_ps": 90.020569
+    },
+    {
+      "kind": "driver",
+      "source": "coupon_pi2_FF.log",
+      "corner": "FF",
+      "cell": "buf8",
+      "edge": "rise",
+      "delay_min_ps": 42.156502,
+      "delay_max_ps": 42.156502,
+      "slew_min_ps": 24.244848,
+      "slew_max_ps": 24.244848
+    },
+    {
+      "kind": "driver",
+      "source": "coupon_pi2_FF.log",
+      "corner": "FF",
+      "cell": "buf8",
+      "edge": "fall",
+      "delay_min_ps": 47.015839,
+      "delay_max_ps": 47.015839,
+      "slew_min_ps": 22.24015,
+      "slew_max_ps": 22.24015
+    },
+    {
+      "kind": "far_endpoint",
+      "source": "coupon_pi2_FF.log",
+      "corner": "FF",
+      "cell": "buf8",
+      "edge": "rise",
+      "delay_min_ps": 107.406616,
+      "delay_max_ps": 107.406616,
+      "slew_min_ps": 208.015182,
+      "slew_max_ps": 208.015182
+    },
+    {
+      "kind": "far_endpoint",
+      "source": "coupon_pi2_FF.log",
+      "corner": "FF",
+      "cell": "buf8",
+      "edge": "fall",
+      "delay_min_ps": 112.042557,
+      "delay_max_ps": 112.042557,
+      "slew_min_ps": 207.046082,
+      "slew_max_ps": 207.046082
+    }
+  ],
+  "failed_probe": "Initialdistributedreadout used Portarrival unsupported; convert viasta::get_port_pin; oldfailedcoupon_pi_TT.log retained.",
+  "limitations": [
+    "No wireRCinlumpedcase; driverYslewisnotfarendclockpintiming.",
+    "Distributedcase isoneanalyticpiwire, notactualGRT/RCX.",
+    "Inputtransitionfixed100ps; doesnotcomposeINVactual143psoutputintobufferinput.",
+    "No OCV/droop/relatedpairphaseG4orSIGNEDclaim."
+  ]
+}
