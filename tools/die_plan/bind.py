@@ -341,8 +341,13 @@ class Graph:
                          for k in ("A_SIGNED", "B_SIGNED"))
             for port in ("A", "B"):
                 bits = cell.ports.get(port, [])
-                digits = [constant(net) for net in bits]
-                if not digits or any(d is None for d in digits):
+                digits = []
+                for net in bits:
+                    digit = constant(net)
+                    if digit is None:
+                        return None
+                    digits.append(digit)
+                if not digits:
                     return None
                 value = sum(d << i for i, d in enumerate(digits))
                 if signed and digits[-1]:
