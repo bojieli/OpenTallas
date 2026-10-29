@@ -781,6 +781,11 @@ def post_cts_setup_hook(kd, cfg):
     return dict(previous_post_cts=prev, repair="setup only (scene tc / vclk OT_VCLK_TT)", hold="GRT step only")
 
 
+def drv_fanout(a):
+    """HBM-CORES-KITS-20 DRV basis: fanout cap for every repair_design (0 = off)."""
+    return int(getattr(a, "max_fanout", 0) or 0)
+
+
 def hold_ff_margin(a):
     """FLOW-HOLD-1 (OWNER 12.19): OT_HOLD_FF_MARGIN = --hold-ff-margin, else max(--hold-margin, shared default 10)."""
     if a.hold_ff_margin is not None:
@@ -859,6 +864,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # is its own knob now: default max(--hold-margin, tools/die_plan/core_flow.HOLD_FF_MARGIN_DEFAULT = 10); 15 where a
     # measured GRT->final RC hold loss > 10 ps is documented (ring).  HOLD_SLACK_MARGIN (other steps) stays --hold-margin.
     ap.add_argument("--hold-ff-margin", type=float, default=None, help="OT_HOLD_FF_MARGIN ps (FF GRT hold repair)")
+    # HBM-CORES-KITS-20: shared core-flow DRV basis (KV/S81/QC); 0 disables either knob
+    ap.add_argument("--max-fanout", type=int, default=64, help="set_max_fanout for every repair_design (0 = off)")
+    ap.add_argument("--slew-margin", type=float, default=20.0, help="ORFS SLEW_MARGIN = CAP_MARGIN percent (0 = off)")
     ap.add_argument("--tag", default="", help="kit dir suffix (variants)")
     ap.add_argument("--macro-placement", default=None,
                     help="HBM-CORES3 10-25: plan family macro placement JSON (e.g. B2n_inputs/exp_lane.json): "
@@ -1226,7 +1234,15 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     for f in ("face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "lec.py", "selrange_gate.py", "vclk_corner.tcl", "postcts_gate.tcl", "pinreg_measure.tcl"):
         shutil.copyfile(TOOL / f, kd / f)
-    (kd / "core_grt_pre.tcl").write_text("source /work/vclk_corner.tcl\nsource /work/hold_cap.tcl\n")
+    # HBM-CORES-KITS-20 10-29 DRV basis (= KV gen_core_kit_kv.py FLOW 10-25 / S81 / QC: SLEW/CAP margin 20, fanout cap 64 =
+    # shared signoff FANOUT_MAX at every repair_design).  HBM kits had none: bdring _k18 routed RCX slew 7496 vs 0 on the
+    # GRT estimate (wire C SPEF/GRT p50 1.69); fo64+margin20 -> 3455 / setup -22.43 -> +6.30, margin30 -> 1538 / +11.07.
+    fo = drv_fanout(a)
+    if fo:
+        (kd / "max_fanout.tcl").write_text("# HBM DRV basis (gen_core_kit_hbm.py --max-fanout): fanout cap at every repair_design\n"
+                                           f"set_max_fanout {fo} [current_design]\nputs \"HBMCORES max_fanout {fo}\"\n")
+    (kd / "core_grt_pre.tcl").write_text(("source /work/max_fanout.tcl\n" if fo else "") +
+                                         "source /work/vclk_corner.tcl\nsource /work/hold_cap.tcl\n")
     # FLOW 10-26 PG: cells created by CTS / tap / F4 / GRT repair (dont_touch ones included) get their supplies, then
     # the hard check (OT_PG_OPEN fails the GRT step); tools/die_plan/pg_connect.tcl
     shutil.copyfile(TOOL / "pg_connect.tcl", kd / "pg_connect.tcl")
@@ -1346,6 +1362,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
            "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) " + " ".join(fflibs),
            "export ADDITIONAL_LIBS =",
            "override export LIB_FILES = $(TC_LIB_FILES)",
+           *(["export PRE_RESIZE_TCL = /work/max_fanout.tcl"] if drv_fanout(a) else []),
+           *([f"export SLEW_MARGIN = {a.slew_margin:g}", f"export CAP_MARGIN = {a.slew_margin:g}"] if a.slew_margin else []),
            *[f"export {k} = {vv}" for k, vv in rec.get("orfs_vars", {}).items()]]
     if lefs:
         cfg += [f"export ADDITIONAL_LEFS = {' '.join(lefs)}",
