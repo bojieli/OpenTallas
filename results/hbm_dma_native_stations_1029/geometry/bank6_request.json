@@ -1,0 +1,635 @@
+{
+ "bank": 6,
+ "kind": "request",
+ "verdict": "PASS",
+ "width": 17,
+ "stations": 3,
+ "registered_bits": 51,
+ "regs_um": [
+  [
+   7408.8,
+   730.08
+  ],
+  [
+   7464.96,
+   1036.8
+  ],
+  [
+   7611.84,
+   1248.48
+  ]
+ ],
+ "max_bit_hop_um": 362.88,
+ "source_escape_um": [
+  7408.8,
+  730.08
+ ],
+ "sink_escape_um": [
+  7611.84,
+  1248.48
+ ],
+ "source_pin_hop_max_um": 8.52,
+ "sink_pin_hop_max_um": 8.28,
+ "source": "hb_dbk_NW",
+ "sink": "vmb_NW6",
+ "valid_src_bit": 118,
+ "valid_dst_bit": 16,
+ "endpoint_pin_pairs": [
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[102]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     727.944
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[0]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7613.064,
+     1241.904
+    ]
+   },
+   "native_net": 242401,
+   "src_bit": 102,
+   "dst_bit": 0
+  },
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[103]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     728.04
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[1]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7612.872,
+     1241.904
+    ]
+   },
+   "native_net": 242402,
+   "src_bit": 103,
+   "dst_bit": 1
+  },
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[104]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     728.184
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[2]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7612.68,
+     1241.904
+    ]
+   },
+   "native_net": 242403,
+   "src_bit": 104,
+   "dst_bit": 2
+  },
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[105]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     728.28
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[3]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7612.488,
+     1241.904
+    ]
+   },
+   "native_net": 242404,
+   "src_bit": 105,
+   "dst_bit": 3
+  },
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[106]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     728.376
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[4]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7612.344,
+     1241.904
+    ]
+   },
+   "native_net": 242405,
+   "src_bit": 106,
+   "dst_bit": 4
+  },
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[107]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     728.472
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[5]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7612.152,
+     1241.904
+    ]
+   },
+   "native_net": 242406,
+   "src_bit": 107,
+   "dst_bit": 5
+  },
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[108]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     728.568
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[6]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7611.96,
+     1241.904
+    ]
+   },
+   "native_net": 242407,
+   "src_bit": 108,
+   "dst_bit": 6
+  },
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[109]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     728.664
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[7]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7611.768,
+     1241.904
+    ]
+   },
+   "native_net": 242408,
+   "src_bit": 109,
+   "dst_bit": 7
+  },
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[110]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     728.76
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[8]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7611.576,
+     1241.904
+    ]
+   },
+   "native_net": 242409,
+   "src_bit": 110,
+   "dst_bit": 8
+  },
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[111]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     728.856
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[9]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7611.432,
+     1241.904
+    ]
+   },
+   "native_net": 242410,
+   "src_bit": 111,
+   "dst_bit": 9
+  },
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[112]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     729.0
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[10]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7611.24,
+     1241.904
+    ]
+   },
+   "native_net": 242411,
+   "src_bit": 112,
+   "dst_bit": 10
+  },
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[113]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     729.096
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[11]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7611.048,
+     1241.904
+    ]
+   },
+   "native_net": 242412,
+   "src_bit": 113,
+   "dst_bit": 11
+  },
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[114]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     729.192
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[12]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7610.856,
+     1241.904
+    ]
+   },
+   "native_net": 242413,
+   "src_bit": 114,
+   "dst_bit": 12
+  },
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[115]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     729.288
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[13]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7610.664,
+     1241.904
+    ]
+   },
+   "native_net": 242414,
+   "src_bit": 115,
+   "dst_bit": 13
+  },
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[116]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     729.384
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[14]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7610.52,
+     1241.904
+    ]
+   },
+   "native_net": 242415,
+   "src_bit": 116,
+   "dst_bit": 14
+  },
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[117]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     729.48
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[15]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7610.328,
+     1241.904
+    ]
+   },
+   "native_net": 242416,
+   "src_bit": 117,
+   "dst_bit": 15
+  },
+  {
+   "src": {
+    "native": "hb_dbk_NW",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_hb_dbk_Q__q1",
+    "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "pin": "rq[118]",
+    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+    "layer": "M4",
+    "orient": "MY",
+    "xy_um": [
+     7402.416,
+     729.576
+    ]
+   },
+   "dst": {
+    "native": "vmb_NW6",
+    "part": "NW_hub",
+    "type": "q_hub_nw",
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "pin": "rq1[16]",
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+    "layer": "M5",
+    "orient": "R180",
+    "xy_um": [
+     7610.136,
+     1241.904
+    ]
+   },
+   "native_net": 242417,
+   "src_bit": 118,
+   "dst_bit": 16
+  }
+ ],
+ "qualification": "station-center geometry/count preparation; actual per-bit FF packing/capacity and RTL adoption not run"
+}
