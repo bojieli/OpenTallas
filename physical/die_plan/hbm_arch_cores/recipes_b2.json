@@ -301,6 +301,10 @@
   "source": "d4g as-built die_r18h5.v instance sucore_NW (module ot_hbm_su_static_qcore_r13); files = closure of ot_hbm_su_static_qcore_r13 at d34578d6f",
   "source_commit": "d34578d6f",
   "read_at_commit": true,
+  "files_at": {
+   "rtl/hdc/ot_hdc_fp32_add_n32.sv": "63194fb4f5"
+  },
+  "files_at_note": "HBM-CORES-KITS-4 10-28: n32 DRST 0 err bit 1 constant into u_cc (kit LEC NEQ 8 on the d34578d6f copy); all other files byte-identical at d34578d6f",
   "asbuilt_inst": "sucore_NW",
   "ambiguous_defs_resolved": {
    "ot_hdc_ksadd_k": [
