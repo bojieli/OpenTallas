@@ -32,9 +32,15 @@ def reserve(component, timeline, compute_gen_sha256):
     if delays['native_prepare_descriptor'] != 3 or delays['face_held_bank'] != 1:
         raise ValueError('unsupported actual prepare/held-bank implementation')
     outgoing = timeline['outgoing']
-    # This is deliberately a supplied endpoint conversion: a held-bank date
-    # cannot inherit an old calendar's output-register/codec/send-slot origin.
-    tail = edge(outgoing['held_bank_to_send_slot_edges'], 'held_bank_to_send_slot_edges')
+    # A calendar callback can precede its eventual bank sample. Preserve that
+    # endpoint explicitly instead of treating a published output-wire date as
+    # a calendar slot or prematurely releasing an occupied held bank.
+    bank_offset = outgoing['send_slot_to_bank_sample_edges']
+    if type(bank_offset) is not int:
+        raise ValueError('explicit signed slot-to-bank sample offset required')
+    record_offset = edge(outgoing['send_slot_to_record_capture_edges'], 'send_slot_to_record_capture_edges')
+    if record_offset < bank_offset:
+        raise ValueError('record capture precedes its actual source bank sample')
     if not outgoing.get('path'):
         raise ValueError('actual held-bank to outgoing calendar path required')
     events = timeline['events']
@@ -73,7 +79,7 @@ def reserve(component, timeline, compute_gen_sha256):
             row['host_at_native'] = host
         row['held_bank_ready_edge'] = row['descriptor_core_edge'] + sum(
             delays[k] for k in ('native_to_face', 'face_input', 'face_held_bank'))
-        row['earliest_send_slot_edge'] = row['held_bank_ready_edge'] + tail
+        row['earliest_send_slot_edge'] = row['held_bank_ready_edge'] + 1 - bank_offset
     # A single recurring slot serves every user; dates are converted from the
     # shared absolute programme origin to each owner's actual token-run origin.
     slot = max(5, max(r['earliest_send_slot_edge'] - r['run_start_edge'] for r in rows))
@@ -82,6 +88,8 @@ def reserve(component, timeline, compute_gen_sha256):
         slot += 1
     for row in rows:
         row['reserved_send_slot_edge'] = row['run_start_edge'] + slot
+        row['reserved_bank_sample_edge'] = row['reserved_send_slot_edge'] + bank_offset
+        row['reserved_record_capture_edge'] = row['reserved_send_slot_edge'] + record_offset
         if row['reserved_send_slot_edge'] > edge(row['latest_send_slot_edge'], 'latest_send_slot_edge'):
             raise ValueError('HEAD reservation misses outgoing descriptor deadline')
     if len({r['reserved_send_slot_edge'] for r in rows}) != len(rows):
@@ -93,7 +101,7 @@ def reserve(component, timeline, compute_gen_sha256):
         for previous, current in zip(owner_rows, owner_rows[1:]):
             if user == 0 and current['native_prepare_capture_edge'] + 2 <= previous['descriptor_core_edge']:
                 raise ValueError('next user0 prepare overwrites pending HOST join')
-            if current['held_bank_ready_edge'] <= previous['reserved_send_slot_edge'] - tail:
+            if current['held_bank_ready_edge'] <= previous['reserved_bank_sample_edge']:
                 raise ValueError('next descriptor overwrites an occupied owner held bank')
     return dict(schema='opentallas.qwen.head_prepare_reservation.v1',
                 status='SOURCE_SCHEDULE_CANDIDATE', compute_gen_sha256=compute_gen_sha256,

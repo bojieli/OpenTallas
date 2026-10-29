@@ -1,0 +1,54 @@
+{
+  "status": "SOURCE_REPAIR_CANDIDATE_NOT_ADOPTED",
+  "diagnosed": "Current bind3 shared programme port1 has TXDP3 while actual callback/record loop needs18HEAD and14witness; no common capture age exists until callbacks align. Current semantic profile itself still requires three opt-in mode corrections.",
+  "current_internal_edges": {
+    "head_callback": 8,
+    "witness_callback": 4,
+    "record_return": 5,
+    "context_ingress": 4
+  },
+  "candidate": {
+    "existing_INNER_witness_delay": {
+      "asbuilt": 4,
+      "landed": 8,
+      "extra_control_flops": 4
+    },
+    "shared_port1_txd": 18,
+    "TXDP_C": "32'h0f01120d",
+    "old_TXDP_C": "32'h0f01030d",
+    "changed_capture_age": 15,
+    "witness_source_pipeline_delta": 4,
+    "calendar_slot_to_owner_bank_sample_edges": 10,
+    "calendar_slot_to_record_capture_edges": 18,
+    "source_ROPE_loop_delta_already_reported": 20
+  },
+  "implementation": "Opt-in profile hook requires coherent callback paths and derives shared P1 age; independent regen_constants checker reads actual emitted source and enabled parameters. Pair compiler passes actual P1 age, reservation model keeps bank sample and record capture offsets distinct.",
+  "tests": {
+    "head_tests": 37,
+    "source_primitive_loop": "actual selected flat head-TX and actual n32 record port; full sources unchanged",
+    "positives": [
+      "HEAD8/return5/TXD18",
+      "witness4/return5/TXD14",
+      "aligned witness8/return5/TXD18"
+    ],
+    "expected_failures": [
+      "currentHEADTXD3",
+      "currentwitnessTXD3",
+      "unalignedwitness4/TXD18",
+      "HEADTXD17",
+      "HEADTXD19"
+    ],
+    "actual_host": "intel1",
+    "unit": "oth-ubuntu-2285078-1793269253",
+    "exit": 0,
+    "calendar_smoke": "two-message compile actual Cseams; C TXD13/18/1/15, no full programme or token claim"
+  },
+  "affected_types": [
+    "glue",
+    "native59 (semantic ROPE/profile only)"
+  ],
+  "adoption": "HELD for ONE-QC source/profile + INNER-table fold, fresh current pair image and model, synth/LEC/cells and physical clock gates",
+  "additional_HOST_lower_bound": "Actual coherent inbound context4 stages were absent from old provisional HOST24/native30/held37. Do not adopt absolute37/41 without source-origin/phase qualification.",
+  "physical_qualified": false,
+  "token_qualified": false
+}

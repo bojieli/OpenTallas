@@ -405,6 +405,8 @@ def main():
     ap.add_argument("--ofs", type=int, default=0)
     ap.add_argument("--txd-c", default="1,1,1,1", help="compute end codec latency per TX port")
     ap.add_argument("--txd-k", default="1,1,1,1", help="KV end codec latency per TX port")
+    ap.add_argument("--compute-record-txd", type=int,
+                    help="actual shared compute HEAD/witness P1 capture age including PR flops; explicit coherent source/profile only")
     ap.add_argument("--spec", help="message list JSON (default: bench layer profile)")
     ap.add_argument("--profile", default="bench", choices=["bench", "dies", "dies_token", "program"])
     ap.add_argument("--token-path", default="results/arch/token_path_20261009/qwen_rom.json")
@@ -469,6 +471,10 @@ def main():
         txd = {k: [x + e for x, e in zip(v, ext[k])] for k, v in txd.items()}
         phy_c = a.phy + 2                      # compiled pin-to-pin: TX pin flop + far RX pin flop
         txl_p, phy_p = a.txl + 2, a.phy + 2    # message placement: slot->codec-out budget grows by 4 (see docstring)
+    if a.compute_record_txd is not None:
+        if not 1 <= a.compute_record_txd <= 255:
+            ap.error('--compute-record-txd must fit the actual TXDP byte')
+        txd['C'][1] = a.compute_record_txd
     layout = None
     if a.spec:
         msgs = json.load(open(a.spec))
