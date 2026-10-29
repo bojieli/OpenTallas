@@ -27,7 +27,7 @@ def named_ports(text):
     return out
 
 
-def emit(source, abi, clocks=None, native=None):
+def emit(source, abi, clocks=None, native=None, oneclk=False):
     cells=[c for c in abi['cells'] if c['path'].startswith('vmb_')]
     expected={f'vmb_{q}{b}' for q in ('SW','SE','NW','NE') for b in range(8)}
     if {c['path'] for c in cells}!=expected or len(cells)!=32:raise ValueError('need exactly32actual VM callers')
@@ -61,14 +61,19 @@ def emit(source, abi, clocks=None, native=None):
         for p,expr in overrides.items():
             if not isinstance(expr,str) or not expr.strip():raise ValueError('explicit native source expression required')
             mapped[p]=expr
-        if clocks is not None:mapped['clk_macro3']=clocks[name]
-        else:mapped['clk_macro3']='REQUIRES_PLANNED_MACRO3_CLOCK'
-        lines.append('hfd_vms_bank_native_q0_faces_r2048 '+name+' (\n'+',\n'.join(f'    .{p}({expr})' for p,expr in mapped.items())+'\n);')
+        if oneclk:
+            clock_ports=['clk','clk_n','clk_s','clk_e','clk_w','clk_macro0','clk_macro1','clk_macro2']
+            if len({re.sub(r'\s+','',conns[p]) for p in clock_ports})!=1:raise ValueError('actual caller clock aliases differ '+name)
+            for p in clock_ports[1:]:mapped.pop(p)
+        elif clocks is not None:mapped['clk_macro3']=clocks[name]
+        elif not oneclk:mapped['clk_macro3']='REQUIRES_PLANNED_MACRO3_CLOCK'
+        master='hfd_vms_bank_native_q0_faces_r2048_oneclk' if oneclk else 'hfd_vms_bank_native_q0_faces_r2048'
+        lines.append(master+' '+name+' (\n'+',\n'.join(f'    .{p}({expr})' for p,expr in mapped.items())+'\n);')
         replacements.append((match.start(),match.end(),'\n'.join(lines)))
-        records.append(dict(path=name,old_master=cell['module'],new_master='hfd_vms_bank_native_q0_faces_r2048',
+        records.append(dict(path=name,old_master=cell['module'],new_master=master,
             old_connections=conns,native_overrides=overrides,
             status_fault_receiver=dict(expression=old('status'),fault_bit=17,top_net_bits=ports['status']['top_net_bits']),
-            macro3_clock=mapped['clk_macro3'],native_upper_regular_client_requested=bool(overrides)))
+            macro3_clock=mapped.get('clk_macro3',mapped['clk']),oneclk=oneclk,native_upper_regular_client_requested=bool(overrides)))
     transformed=source
     for start,end,text in sorted(replacements,reverse=True):transformed=transformed[:start]+text+transformed[end:]
     event=dict(schema='opentallas.hbm.vm_r2048.source_event.v1',status='SOURCE_PACKET_ONLY',default_off=True,
@@ -89,10 +94,11 @@ def main():
     for p in ('source','abi','out'):ap.add_argument('--'+p,type=Path,required=True)
     ap.add_argument('--apply',action='store_true',help='explicitly emit a fresh transformed top (default only packet)')
     ap.add_argument('--macro3-clocks',type=Path)
+    ap.add_argument('--oneclk',action='store_true',help='explicit approved ONECLK candidate; requires allactual caller clock aliases identical')
     ap.add_argument('--native-ports',type=Path)
     a=ap.parse_args();read=lambda p:json.loads(p.read_text()) if p else None
-    if a.apply and not a.macro3_clocks:ap.error('--apply requires explicit macro3 clock expressions; never infer a physical tap')
-    source=a.source.read_text();new,event=emit(source,read(a.abi),read(a.macro3_clocks),read(a.native_ports))
+    if a.apply and not a.macro3_clocks and not a.oneclk:ap.error('--apply requires explicit macro3 clock expressions; never infer a physical tap')
+    source=a.source.read_text();new,event=emit(source,read(a.abi),read(a.macro3_clocks),read(a.native_ports),a.oneclk)
     a.out.mkdir(parents=True,exist_ok=False)
     (a.out/'event.json').write_text(json.dumps(event,indent=1)+'\n')
     if a.apply:(a.out/'top_r2048.sv').write_text(new)
