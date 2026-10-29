@@ -1,0 +1,23 @@
+{
+ "start_nets_grafted": 313,
+ "reset_iterms_grafted": 2,
+ "clock_ports": 3266,
+ "clock_tap_Y": 2345,
+ "clock_tap_A": 921,
+ "clock_and_cells_sha": "0a0caa5638eac9d71078f52d4a5298e49e1e4218069071dce1c8f6710a55c80f",
+ "remaining_bterms": [
+  "root",
+  "rst_n"
+ ],
+ "source_in_sha256": "cd4060c57e5ecf509efc0d32c7b0371a487e0d81c1fa872257b574c174ed08ac",
+ "signal_sha256": "48fb01de09e21485c4895594fe92ea271a9a80de0b8ae28cf9f6ae30c47fb41e",
+ "stages_sha256": "e4ad3d568b2aab42aca3f38726a50ae231a4e098e00ec702928e6321fd6152ad",
+ "plan_sha256": "d0b301f8738717f3f225690e9540ecfd5005961c85a1ce2937d84123702dffed",
+ "out_odb_sha256": "60d6fc073d973b15bc218a0ea20cf0bbe55bb9bf8048b0817986e7cd95b29e75",
+ "bindings_sha256": "42a2139d0721fa78430187ab61d8023f09c927b8b13792108cf1f72f107c6131",
+ "roles": {
+  "start_output": 313,
+  "reset": 1,
+  "clock": 3266
+ }
+}
