@@ -2,7 +2,7 @@
 # Why (CP1 10-23): a wirelength-driven GPL put the boundary flops of the u_bin_/u_bout_/u_ft_ stations up to ~1 mm
 # from their face pins (seam path c0 u_bout_xo_o0 -> c1 u_bin_xo_i0: 17 placement buffers, ~950 ps of wire inside the
 # capture partition, setup -1.27 ns at 833 ps) although the plan budgets pin_reg_p90_um.  Here every flop that is
-# reached from a signal port through at most 2 buffer/inverter cells is placed FIRM in a band along its face, at the
+# reached from a signal port through at most 4 buffer/inverter cells is placed FIRM in a band along its face, at the
 # row / column nearest its pin; face_flops_release.tcl (PRE_DETAIL_PLACE) releases them to PLACED for DPL.
 # ft slots (COORD 10-23 R3): station 0 is the in-port face flop; station j (j >= 1) of k sits FIRM at L*j/k along the
 # slot's planned route (G0 lane_geometry/check.zroute: L for a turning slot, else Z through the midpoint) or at its
@@ -52,7 +52,7 @@ proc ff_sig_iterms {inst io} {
   }
   return $r
 }
-# input port: loads, through <= 2 buffers, to a flop D
+# input port: loads, through <= 4 buffers, to a flop D
 proc ff_from_in {net depth} {
   if {$net eq "NULL" || $net eq ""} { return "" }
   foreach it [$net getITerms] {
@@ -63,7 +63,7 @@ proc ff_from_in {net depth} {
     if {[$mt getIoType] ne "INPUT" || [$mt getSigType] eq "CLOCK"} continue
     if {[ff_is_ff $i]} { return $i }
   }
-  if {$depth >= 2} { return "" }
+  if {$depth >= 4} { return "" }
   foreach it [$net getITerms] {
     set i [$it getInst]
     if {[[$it getMTerm] getIoType] ne "INPUT" || ![ff_is_buf $i]} continue
@@ -71,14 +71,14 @@ proc ff_from_in {net depth} {
   }
   return ""
 }
-# output port: driver, through <= 2 buffers, back to a flop
+# output port: driver, through <= 4 buffers, back to a flop
 proc ff_from_out {net depth} {
   if {$net eq "NULL" || $net eq ""} { return "" }
   foreach it [$net getITerms] {
     if {[[$it getMTerm] getIoType] ne "OUTPUT"} continue
     set i [$it getInst]
     if {[ff_is_ff $i]} { return $i }
-    if {$depth < 2 && [ff_is_buf $i]} {
+    if {$depth < 4 && [ff_is_buf $i]} {
       foreach n [ff_sig_iterms $i in] { set f [ff_from_out [$n getNet] [expr {$depth + 1}]]; if {$f ne ""} { return $f } }
     }
   }
@@ -91,7 +91,7 @@ proc ff_chain_out {net depth} {
     if {[[$it getMTerm] getIoType] ne "OUTPUT"} continue
     set i [$it getInst]
     if {[ff_is_ff $i]} { return [list $i] }
-    if {$depth < 2 && [ff_is_buf $i]} {
+    if {$depth < 4 && [ff_is_buf $i]} {
       foreach n [ff_sig_iterms $i in] { set c [ff_chain_out [$n getNet] [expr {$depth + 1}]]; if {$c ne ""} { return [linsert $c 0 $i] } }
     }
   }
@@ -99,7 +99,7 @@ proc ff_chain_out {net depth} {
 }
 # CP1 r6: yosys merges identical boundary flops of DIFFERENT buses (u_bout_x_o0.q[718] also drove frame_int_o0[892]
 # on the N face; the W-face x path then ran 1 mm, TT -90 ps).  A pin register already claimed by another port is
-# duplicated with its <= 2 buffer chain, and this port moves onto the copy (logically identical: same D / clock).
+# duplicated with its <= 4 buffer chain, and this port moves onto the copy (logically identical: same D / clock).
 set ff_ndup 0
 proc ff_clone_for {bt chain} {
   global ff_blk ff_ndup
