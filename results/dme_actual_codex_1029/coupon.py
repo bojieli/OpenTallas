@@ -12,6 +12,8 @@ ap=argparse.ArgumentParser(description=__doc__)
 ap.add_argument('plan');ap.add_argument('calfile');ap.add_argument('mode');ap.add_argument('out')
 ap.add_argument('--clock-cal',choices=('none','spice_edge'),default='none',
                 help='explicit raw-model/physical-target conversion using shared inverter late calibration')
+ap.add_argument('--early-basis',choices=('corner_mean','tt'),default='corner_mean',
+                help='tt matches the scalar TT stage model; corner_mean reproduces historical recipes')
 a=ap.parse_args();plan,calfile,mode,out=a.plan,a.calfile,a.mode,a.out
 out=Path(out);out.mkdir(parents=True,exist_ok=True)
 factor={c:STA.spice_cal_factor(c,'inv') if a.clock_cal=='spice_edge' else 1. for c in ('TT','FF')}
@@ -21,7 +23,8 @@ site=D.clock_site(P) if mode=='body' else D.SiteMap(P)
 cal=json.load(open(calfile));taps=[t for t in D.clock_taps(P) if t[0]=='bk_sel'];early={};targets={}
 for port,_,_,tp in S.core_taps(P,P.parts['bk_sel']['type']):
  vals={c:S.core_tap_early_ps(P,tp,c) for c in ('TT','FF')};targets[('bk_sel',port)]=vals
- if vals['TT']>0:early[('bk_sel',port)]=(vals['TT']/factor['TT']+vals['FF']/factor['FF'])/2
+ if vals['TT']>0:
+  early[('bk_sel',port)]=vals['TT']/factor['TT'] if a.early_basis=='tt' else (vals['TT']/factor['TT']+vals['FF']/factor['FF'])/2
 start=time.time();dn,root,stats=D.dme_region_tree(site,taps,delay_rep_um=250.,early=early,snake=True,early_mode='merge')
 print('DME_DONE',mode,len(dn),time.time()-start,flush=True)
 nodes={};original={}
@@ -63,7 +66,7 @@ for p,x,y,part,tp,node in ports:
  rows.append(dict(port=p,part=part,tap=tp,delay_ps=vals))
 summary=dict(mode=mode,taps=len(taps),dme_nodes=len(dn),elapsed_s=time.time()-start,reach=reach,
              calibration=dict(mode=a.clock_cal,late_factor=factor,stage_model_file=calfile,
-                              scope=cal.get('scope'),early_target='physical ps / corner factor then corner mean',
+                              scope=cal.get('scope'),early_target=a.early_basis,
                               report_units='raw path * corner factor + physical early ps'),
              window_ps={c:max(r['delay_ps'][c] for r in rows)-min(r['delay_ps'][c] for r in rows) for c in ('TT','FF')},
              stats=stats,rows=rows)
