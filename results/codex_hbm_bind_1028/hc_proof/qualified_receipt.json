@@ -1,0 +1,10 @@
+{
+ "source_commit":"993fd8c27",
+ "positive":[{"configuration":"defaultNQ4againstoldsplitroot","equivalent_points":11064,"unproven_points":0,"verdict":"PASS"},{"configuration":"nativeNQ2againstcanonicalcurrentrootwithsamequalifiedsplittail","equivalent_points":9248,"unproven_points":0,"verdict":"PASS"}],
+ "negative":{"mutation":"ps_q register captures complementofqps","method":"Yosys2-edgeSATpinregistercone,otheropaquesignored; sameunconditionaldataFFarefullymodeled","result":"SAT proof finished - model found: FAIL!","wave":"mutant_counterexample.json","verdict":"CAUGHT"},
+ "limits":"Initialnegativewhole-rootinduct stopped on opaqueot_rst_relay after64ps_qpointsremainedunproven; preservedinitialreceiptisnotthenegativequalification. TheexplicitSATcounterexampleabovequalifiesthecontrol.",
+ "added_cycles_vs_intended_canonical_NQ2":0,
+ "native_NQ2_raw_arrival_vs_wrong_old_NQ4_alias":4,
+ "calendar":"TOK-HBM mustconfirmexistingnativeNQ2+4rawarrivalprice; nooldfour-quarteraliaslatencyclaim",
+ "run":"intel1:/srv/opentallas-scratch2/claude/codex-hbm-bind-1028/hcproof_v2"
+}

@@ -3,13 +3,15 @@ usage: update_manifest.py INPUT_MANIFEST OUT_MANIFEST MAP_FILE NETLIST
 BASE is the current worktree, no source is read from a Claude worktree.
 """
 from pathlib import Path
-import json,sys
+import json,sys,os
 here=Path(__file__).resolve().parent;root=here.parents[1]
 a,out,mapfile,netlist=sys.argv[1:5]
-d=json.loads(Path(a).read_text());d['base']=str(root);d['netlist']=[netlist];d['map_file']=mapfile
+d=json.loads(Path(a).read_text());d['base']=str(root);d['netlist']=[netlist]
+map_path=Path(mapfile) if Path(mapfile).is_absolute() else root/mapfile
+d['map_file']=os.path.relpath(map_path.resolve(),Path(out).resolve().parent)
 rel='rtl/hbm_next/bind/ot_hnx_sm_seed_heads.sv'
 stree='rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv'
-current=[stree,rel,'rtl/hbm_next/bind/ot_hnx_selector_eightwide.sv',
+current=[stree,rel,'rtl/hbm_next/bind/ot_hnx_selector_eightwide.sv','rtl/hbm_next/bind/ot_hnx_host_boot_hop.sv',
  'rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv',
  'rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv',
  'rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_term_static.sv',

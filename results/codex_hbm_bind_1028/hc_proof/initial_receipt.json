@@ -1,0 +1,23 @@
+{
+  "checks": [
+    {
+      "case": "default4",
+      "nq": 4,
+      "returncode": 0,
+      "accepted": true
+    },
+    {
+      "case": "native2",
+      "nq": 2,
+      "returncode": 0,
+      "accepted": true
+    },
+    {
+      "case": "native2_mutant",
+      "nq": 2,
+      "returncode": 1,
+      "accepted": true
+    }
+  ],
+  "pass_all": true
+}
