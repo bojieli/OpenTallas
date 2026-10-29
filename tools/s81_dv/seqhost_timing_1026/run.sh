@@ -4,7 +4,7 @@ set -euo pipefail
 O=$(realpath -m "$1"); U=${2:-seqhost}
 ROOT=$(git rev-parse --show-toplevel)
 case "$U" in seqhost) TOP=dsdv_hostb_seqhost_mux; TB=tb_seqhost_timing;; bk) TOP=dsdv_bk_sel_vmtx; TB=tb_bk_timing;; *) exit 2;; esac
-python3 "$ROOT/tools/s81_dv/seqhost_timing_1026/prepare.py" "$O/source" "$TOP"
+python3 "$ROOT/tools/s81_dv/seqhost_timing_1026/prepare.py" "$O/source" "$TOP" "${3:-physical/die_plan/s81/bind/asbuilt_b178_coll.json}"
 git rev-parse HEAD > "$O/source_commit.txt"
 cd "$O/source"
 mkdir run

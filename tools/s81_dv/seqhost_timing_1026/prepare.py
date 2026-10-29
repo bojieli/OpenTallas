@@ -10,7 +10,10 @@ import bind_elab as E
 out=Path(sys.argv[1])
 if out.exists() and any(out.iterdir()):raise ValueError('preserve existing staged sources; select a fresh output')
 out.mkdir(parents=True,exist_ok=True)
-ab=json.loads((ROOT/'physical/die_plan/s81/bind/asbuilt_b178_coll.json').read_text())
+manifest=Path(sys.argv[3]) if len(sys.argv)>3 else Path('physical/die_plan/s81/bind/asbuilt_b178_coll.json')
+if manifest.is_absolute() or '..' in manifest.parts:
+ raise ValueError('selected manifest must be repo-relative')
+ab=json.loads((ROOT/manifest).read_text());ab=ab.get('asbuilt',ab)
 files=[];impl={}
 for name in ab['files']:
  p=ROOT/name
@@ -36,7 +39,7 @@ for name in closure:
 bench='tools/s81_dv/seqhost_timing_1026/tb_bk.sv' if top=='dsdv_bk_sel_vmtx' else 'tools/s81_dv/seqhost_timing_1026/tb.sv'
 for name in [bench]:
  p=ROOT/name;dest=out/name;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,dest)
-record['physical/die_plan/s81/bind/asbuilt_b178_coll.json']=hashlib.sha256((ROOT/'physical/die_plan/s81/bind/asbuilt_b178_coll.json').read_bytes()).hexdigest()
+record[str(manifest)]=hashlib.sha256((ROOT/manifest).read_bytes()).hexdigest()
 (out/'files.f').write_text('\n'.join(relative+[bench])+'\n')
 (out/'source_record.json').write_text(json.dumps(dict(schema='opentallas.s81.seqhost_local_sources.v1',source_sha256=record,defines=ab['defines'],params=(dict(TX_SRAM=1) if top=='dsdv_bk_sel_vmtx' else dict(HOSTB_ENABLE=0,STATIC_KS6=0)),implementation_children=children,memory_implementations={str(Path(k).relative_to(ROOT)):str(Path(v).relative_to(ROOT)) for k,v in impl.items() if v in closure}),indent=1)+'\n')
 (out/'defines.f').write_text('\n'.join('+define+'+d for d in ab['defines'])+'\n')
