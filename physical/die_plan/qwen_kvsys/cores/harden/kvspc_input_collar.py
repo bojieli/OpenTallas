@@ -73,6 +73,28 @@ def transform_wrapper(text: str, *, enabled: bool = False,
                      strap_passthrough=sorted(straps | {n for _, _, n in ports if n.startswith("strap_")}),
                      leaf_logic_changed=False, default_enabled=False)
 
+
+def interior_captures(pins, captured):
+    """Interior reset/data pins stay local; the generic face hook uses outer edges."""
+    ports = {r["port"] for r in captured}
+    return [p for p in pins if p.get("bus") in ports and p.get("face") == "interior"]
+
+def interior_tcl(pins):
+    lines = ["# Source-defined interior input-collar capture sites, after face_flops.tcl",
+             "uplevel #0 {"]
+    for p in pins:
+        name = p["bus"] + ("[" + str(p["bit"]) + "]" if p.get("bit") is not None else "")
+        lines += ["set ci_bt [$ff_blk findBTerm {" + name + "}]",
+                  'if {$ci_bt eq "NULL"} { error "PC_INPUT_COLLAR: missing interior input pin" }',
+                  "set ci_f [ff_from_in [$ci_bt getNet] 0]",
+                  'if {$ci_f eq ""} { error "PC_INPUT_COLLAR: missing interior capture" }',
+                  "set ci_x [expr {round(" + str(float(p["x"])) + "*$ff_dbu)}]",
+                  "set ci_y [expr {round(" + str(float(p["y"])) + "*$ff_dbu)}]",
+                  "lassign [ff_put_near $ci_f $ci_x $ci_y] ci_ax ci_ay",
+                  'if {abs($ci_ax-$ci_x)+abs($ci_ay-$ci_y) > 30*$ff_dbu} { error "PC_INPUT_COLLAR: interior capture exceeds30um" }',
+                  'puts "PC_INPUT_COLLAR interior [$ci_bt getName] -> [$ci_f getName] at $ci_ax $ci_ay"']
+    return "\n".join(lines + ["}", ""])
+
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument("wrapper", type=Path)

@@ -43,3 +43,14 @@ def test_duplicate_transform_is_rejected():
 def test_unconsumed_functional_input_is_rejected():
     with pytest.raises(ValueError,match="no leaf use"):
         transform_wrapper(WRAP.replace('.data(i_next[7:0]),','.data(8\'d0),'),enabled=True)
+
+
+def test_interior_reset_is_local_without_relocating_edge_ports():
+    from kvspc_input_collar import interior_captures, interior_tcl
+    pins=[dict(bus="rst_n",bit=0,x=199.128,y=181.44,face="interior"),
+          dict(bus="hrst_n",bit=0,x=2.472,y=0.0,face="S")]
+    inner=interior_captures(pins,[dict(port="rst_n"),dict(port="hrst_n")])
+    assert inner==pins[:1]
+    text=interior_tcl(inner)
+    assert "{rst_n[0]}" in text and "199.128" in text and "181.44" in text
+    assert "ff_put_near" in text and "hrst_n" not in text

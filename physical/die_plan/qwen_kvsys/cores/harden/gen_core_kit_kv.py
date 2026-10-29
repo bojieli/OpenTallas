@@ -1521,7 +1521,14 @@ def main():
     # the suffix, face_flops treats CLK/reset loads as data and steals a real
     # data flop's anchor before its own port is visited.
     # The collar makes reset a timed data capture at its declared input pin.
-    skip_ports = clks if a.kvspc_input_collar else clks + rsts
+    collar_inner = []
+    if a.kvspc_input_collar:
+        collar_meta = json.loads((kd / "input_collar.json").read_text())
+        collar_inner = kvspc_input_collar.interior_captures(prow, collar_meta["captured"])
+        skip_ports = clks + list(dict.fromkeys(p["bus"] for p in collar_inner))
+        (kd / "input_collar_sites.tcl").write_text(kvspc_input_collar.interior_tcl(collar_inner))
+    else:
+        skip_ports = clks + rsts
     skip = "^(" + "|".join(re.escape(n) for n in skip_ports) + r")(\[[0-9]+\])?$"
     ff = (tool / "face_flops.tcl").read_text()
     ff, replacements = re.subn(r"^set ff_skip_re \{[^}\n]*\}",
@@ -1539,6 +1546,8 @@ def main():
                     "set ff_unreg [open $::env(RESULTS_DIR)/ot_unreg_pins.txt w]")
     ff = ff.replace("    if {$f eq \"\"} { incr ff_miss; continue }",
                     "    if {$f eq \"\"} { incr ff_miss; puts $ff_unreg \"$pass\\t$nm\"; continue }")
+    if a.kvspc_input_collar and collar_inner:
+        ff += "\nsource /work/input_collar_sites.tcl\n"
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(tool / "face_flops_release.tcl", kd / "face_flops_release.tcl")
     # KV 10-25 structural flow basis (owner rule 10-25 c; FLOW 9f716b354 defaults for new kits, now also for KV hard cores):
