@@ -1,0 +1,15 @@
+{
+ "schema": "opentallas.head_lep_plan_qualification.v1",
+ "source_model": "register_plan_v4.json",
+ "physical_limit_um": 405.0,
+ "private_projection_goal_um": 390.0,
+ "private_goal_misses": 1,
+ "max_registered_endpoint_centre_um": 390.15,
+ "registered_paths_over405": 0,
+ "private_goal_status": "MISS0.15um row quantization",
+ "plan_verdict": "PASS_FOR_PLACE_TRIAL",
+ "cells": 28161,
+ "data_cycles_added": 0,
+ "macro_clock_ports_unchanged": true,
+ "macro_outline_sites_unchanged": true
+}
