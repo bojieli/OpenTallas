@@ -1,0 +1,455 @@
+{
+ "schema": "opentallas.kit_preflight.v2",
+ "kit": "/srv/opentallas-scratch2/claude/die-kv-31-kits-1029/kits_gen2/kv3_hroot",
+ "contract": [
+  "corner_modes",
+  "ff_binding",
+  "clock_pin_geometry",
+  "rc_calibration",
+  "duplicate_modules",
+  "keep_hook",
+  "pins_canonical",
+  "mesh_vias",
+  "macro_channels",
+  "clock_entry_clear",
+  "island_macro_clear",
+  "macro_pin_grid",
+  "macro_instances"
+ ],
+ "contract_binding": true,
+ "contract_advisory": {},
+ "verdict": "PASS",
+ "checks": {
+  "staged_tools": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "staged_inputs": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "sdc_and_ff_binding": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "yosys_cast_forms": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "module_closure": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "corner_modes": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "corners": [
+     "tc",
+     "bc"
+    ],
+    "per_mode": false,
+    "hooks": [
+     "clock_taps.tcl",
+     "constraint.sdc",
+     "cts_post.tcl",
+     "die_islands.tcl",
+     "face_flops.tcl",
+     "face_flops_release.tcl",
+     "face_keep.tcl",
+     "face_keep_release.tcl",
+     "ft_bit_sites.tcl",
+     "grt_post.tcl",
+     "grt_pre.tcl",
+     "istations.tcl",
+     "keepout_phys.tcl",
+     "landing_exports.tcl",
+     "landing_placement.tcl",
+     "leaf_affinity.tcl",
+     "ot_keep_regs.tcl",
+     "ot_pin_regs.tcl",
+     "ot_rst_copies.tcl",
+     "pdn.tcl",
+     "pg_connect.tcl",
+     "pre_cts.tcl",
+     "prects_estimate.tcl",
+     "reset_taps.tcl",
+     "reset_tree.tcl",
+     "setRC_rcx.tcl",
+     "tap_balance.tcl",
+     "vclk_corner.tcl"
+    ]
+   }
+  },
+  "ff_binding": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "values": {
+     "OT_VCLK_TT": 250.0,
+     "OT_VCLK_FF": 202.5,
+     "sdc_lint_insertion_ps": 250.0,
+     "sdc_lint_insertion_ff_ps": 202.5,
+     "clock_binding_tt": 250.0,
+     "clock_binding_ff": 202.5
+    }
+   }
+  },
+  "clock_pin_geometry": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "kind": "partition",
+    "clock_ports": [
+     "clk",
+     "clk_t1",
+     "clk_t2",
+     "clk_t3",
+     "clk_t4",
+     "fclk_in_ft0_i",
+     "fclk_in_ft10_i",
+     "fclk_in_ft11_i",
+     "fclk_in_ft12_i",
+     "fclk_in_ft13_i",
+     "fclk_in_ft1_i",
+     "fclk_in_ft2_i",
+     "fclk_in_ft3_i",
+     "fclk_in_ft4_i",
+     "fclk_in_ft5_i",
+     "fclk_in_ft6_i",
+     "fclk_in_ft7_i",
+     "fclk_in_ft8_i",
+     "fclk_in_ft9_i",
+     "fclk_in_i_fch_pc_Q_N_q",
+     "fclk_in_i_host_die_rst_n",
+     "fclk_in_i_host_hbm_rst_n",
+     "fclk_in_i_idsrc_Q_y",
+     "fclk_in_i_kvpc_Q_N_o_next",
+     "fclk_in_i_kvpc_Q_N_pc__fo",
+     "fclk_in_i_kvs_ctl_o_hroot_Q",
+     "fclk_in_i_seq__g_fan_N__u_fan_kc",
+     "fclk_in_i_slg_Q_N_o_ctl"
+    ],
+    "placements": {
+     "clk": 1,
+     "clk_t1": 1,
+     "clk_t2": 1,
+     "clk_t3": 1,
+     "clk_t4": 1,
+     "fclk_in_ft0_i": 1,
+     "fclk_in_ft10_i": 1,
+     "fclk_in_ft11_i": 1,
+     "fclk_in_ft12_i": 1,
+     "fclk_in_ft13_i": 1,
+     "fclk_in_ft1_i": 1,
+     "fclk_in_ft2_i": 1,
+     "fclk_in_ft3_i": 1,
+     "fclk_in_ft4_i": 1,
+     "fclk_in_ft5_i": 1,
+     "fclk_in_ft6_i": 1,
+     "fclk_in_ft7_i": 1,
+     "fclk_in_ft8_i": 1,
+     "fclk_in_ft9_i": 1,
+     "fclk_in_i_fch_pc_Q_N_q": 1,
+     "fclk_in_i_host_die_rst_n": 1,
+     "fclk_in_i_host_hbm_rst_n": 1,
+     "fclk_in_i_idsrc_Q_y": 1,
+     "fclk_in_i_kvpc_Q_N_o_next": 1,
+     "fclk_in_i_kvpc_Q_N_pc__fo": 1,
+     "fclk_in_i_kvs_ctl_o_hroot_Q": 1,
+     "fclk_in_i_seq__g_fan_N__u_fan_kc": 1,
+     "fclk_in_i_slg_Q_N_o_ctl": 1
+    },
+    "entries": [
+     [
+      "io.tcl",
+      "clk",
+      190.56,
+      21.6
+     ],
+     [
+      "io.tcl",
+      "clk_t1",
+      570.72,
+      21.6
+     ],
+     [
+      "io.tcl",
+      "clk_t2",
+      949.92,
+      21.6
+     ],
+     [
+      "io.tcl",
+      "clk_t3",
+      1331.04,
+      21.6
+     ],
+     [
+      "io.tcl",
+      "clk_t4",
+      1711.2,
+      21.6
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft0_i",
+      1898.656,
+      221.984
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft10_i",
+      913.888,
+      2.656
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft11_i",
+      917.344,
+      2.656
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft12_i",
+      920.8,
+      2.656
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft13_i",
+      931.168,
+      2.656
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft1_i",
+      1898.656,
+      242.976
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft2_i",
+      1898.656,
+      277.152
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft3_i",
+      1898.656,
+      331.104
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft4_i",
+      1898.656,
+      659.296
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft5_i",
+      1898.656,
+      672.288
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft6_i",
+      903.52,
+      2.656
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft7_i",
+      906.528,
+      2.656
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft8_i",
+      908.704,
+      2.656
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft9_i",
+      910.432,
+      2.656
+     ],
+     [
+      "io.tcl",
+      "fclk_in_i_fch_pc_Q_N_q",
+      871.968,
+      2.656
+     ],
+     [
+      "io.tcl",
+      "fclk_in_i_host_die_rst_n",
+      1898.656,
+      311.264
+     ],
+     [
+      "io.tcl",
+      "fclk_in_i_host_hbm_rst_n",
+      1898.656,
+      321.184
+     ],
+     [
+      "io.tcl",
+      "fclk_in_i_idsrc_Q_y",
+      1898.656,
+      441.696
+     ],
+     [
+      "io.tcl",
+      "fclk_in_i_kvpc_Q_N_o_next",
+      1366.176,
+      2.656
+     ],
+     [
+      "io.tcl",
+      "fclk_in_i_kvpc_Q_N_pc__fo",
+      926.88,
+      2.656
+     ],
+     [
+      "io.tcl",
+      "fclk_in_i_kvs_ctl_o_hroot_Q",
+      1898.656,
+      554.592
+     ],
+     [
+      "io.tcl",
+      "fclk_in_i_seq__g_fan_N__u_fan_kc",
+      1898.656,
+      809.376
+     ],
+     [
+      "io.tcl",
+      "fclk_in_i_slg_Q_N_o_ctl",
+      938.528,
+      2.656
+     ]
+    ],
+    "rule": "12.7 M7 on-ramp at plan tap"
+   }
+  },
+  "rc_calibration": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "files": [
+     "setRC_rcx.tcl"
+    ],
+    "records": {
+     "setRC_rcx.tcl": {
+      "signal": "set_wire_rc -signal = RCX unit R/C fit on SIGNAL nets >= 5 um, 4 designs (FLOW-RC-1 2026-10-27); GRT basis shares the per-layer table",
+      "clock": "set_layer_rc per layer = clock-sink arrival fit (FLOW 2026-10-25, rc_calib.json); set_wire_rc -clock unchanged"
+     }
+    }
+   }
+  },
+  "duplicate_modules": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "modules": 52,
+    "files": 15
+   }
+  },
+  "keep_hook": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "keep_attrs": 54,
+    "named_keep_modules": [],
+    "paramod_renamed": []
+   }
+  },
+  "pins_canonical": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "kit_canon": "69244e6554efae1fc80cfce69b658a95014742516213c8b9f94ebf16f9ede129",
+    "recorded": "69244e6554efae1fc80cfce69b658a95014742516213c8b9f94ebf16f9ede129",
+    "plan_file": "/srv/opentallas-scratch2/claude/die-kv-31-kits-1029/kits_gen2/kv3_hroot/plan_pins.json",
+    "plan_canon": "69244e6554efae1fc80cfce69b658a95014742516213c8b9f94ebf16f9ede129",
+    "slice": false,
+    "plan_place_canon": "69244e6554efae1fc80cfce69b658a95014742516213c8b9f94ebf16f9ede129"
+   }
+  },
+  "mesh_vias": {
+   "verdict": "NA",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": false,
+    "reason": "no clock-mesh inputs in the kit"
+   }
+  },
+  "macro_channels": {
+   "verdict": "NA",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": false,
+    "reason": "no macros"
+   }
+  },
+  "clock_entry_clear": {
+   "verdict": "NA",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": false,
+    "reason": "no macros"
+   }
+  },
+  "island_macro_clear": {
+   "verdict": "NA",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": false,
+    "reason": "no island_ft rects"
+   }
+  },
+  "macro_pin_grid": {
+   "verdict": "NA",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": false
+   }
+  },
+  "macro_instances": {
+   "verdict": "NA",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": false
+   }
+  }
+ },
+ "issues": [],
+ "deferred": [
+  "RTL elaboration/SELRANGE",
+  "synthesis face/fanout/port binding/LEC",
+  "placed and routed PG",
+  "TT setup / FF hold",
+  "routed LEC"
+ ]
+}
