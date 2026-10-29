@@ -2376,7 +2376,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("partition_ir.py"), kd / "partition_ir.py")
     (kd / "pins.json").write_text(json.dumps([dict(bus=b, bit=i, layer=l, x=x, y=y, face=f)
                                               for b, i, l, x, y, f in pins]) + "\n")
-    plain = plain_ring_land_slots(kd / "rtl", {b for b, *_ in pins}) if plain_rings else {}
+    # face buses = planned pins + the type's declared landing-contract inputs (cland_dn_ready_/fault_<n> monitor rings)
+    lc_in = {str(x["name"]) for x in P.types[tn].get("clock", {}).get("landing_contract", {}).get("pins", [])
+             if x.get("dir") == "in" and x.get("kind") != "clock"}
+    plain = plain_ring_land_slots(kd / "rtl", {b for b, *_ in pins} | lc_in) if plain_rings else {}
     if plain:                                   # DIE-S81-26: plain forwarded-clock rings (S81 stations), merged
         from clock_landings import LAND_SLOTS_SCHEMA
         land_slots = dict(land_slots or {"schema": LAND_SLOTS_SCHEMA, "buses": {}})
