@@ -117,6 +117,22 @@ def carry_evidence(base_path, plan, out, tools):
                         basis="native predecessor estimate excluding predecessor landing rings; cells.py adds current rings")
     (out/"cells_est.json").write_text(json.dumps(dict(cells_per_type=rows, sources=sources), indent=1)+"\n")
     shutil.copyfile(base_path.parent/"die_io.json", out/"die_io.json")
+    # Composed plans can reference a former worktree through several '..'
+    # components. Snapshot the exact predecessor tables, preserving nested SU
+    # paths. Never retain or write through an inherited relative symlink.
+    for directory in ("cores", "census"):
+        destination = out/directory
+        if destination.is_symlink():
+            raise ValueError(f"refuse inherited output symlink: {destination}")
+        shutil.copytree(base_path.parent/directory, destination,
+                        symlinks=False, dirs_exist_ok=True)
+    for typ in plan["partition_types"].values():
+        for core in typ.get("hard_cores", []):
+            path = core.get("pins_file")
+            if path and "/cores/" in path:
+                core["pins_file"] = "cores/"+path.split("/cores/", 1)[1]
+            if core.get("pins_file") and not (out/core["pins_file"]).is_file():
+                raise ValueError(f"missing native core table: {core['pins_file']}")
 
 
 if __name__ == "__main__":
