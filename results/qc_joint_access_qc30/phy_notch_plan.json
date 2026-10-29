@@ -1,0 +1,137 @@
+{
+ "status": "FAIL",
+ "notches": [
+  {
+   "port": "t_io_serdes__clk",
+   "net": "VSS",
+   "strap_y": [
+    15171.599999999666,
+    15172.079999999665
+   ],
+   "gap_x": [
+    777.216,
+    778.048
+   ],
+   "gap_um": 0.832,
+   "left_feed_m9_x": [
+    768.96
+   ],
+   "right_feed_m9_x": [
+    786.24
+   ]
+  },
+  {
+   "port": "t_io_serdes_1__clk",
+   "net": "VSS",
+   "strap_y": [
+    3481.67999999999,
+    3482.1599999999894
+   ],
+   "gap_x": [
+    777.216,
+    778.048
+   ],
+   "gap_um": 0.832,
+   "left_feed_m9_x": [
+    768.96
+   ],
+   "right_feed_m9_x": [
+    786.24
+   ]
+  },
+  {
+   "port": "t_ucie_kv__clk",
+   "net": "VSS",
+   "strap_y": [
+    9633.360000000039,
+    9633.840000000038
+   ],
+   "gap_x": [
+    388.352,
+    389.184
+   ],
+   "gap_um": 0.832,
+   "left_feed_m9_x": [
+    380.16
+   ],
+   "right_feed_m9_x": [
+    397.44
+   ]
+  },
+  {
+   "port": "t_io_serdes_2__clk",
+   "net": "VSS",
+   "strap_y": [
+    1157.52,
+    1158.0
+   ],
+   "gap_x": [
+    777.216,
+    778.048
+   ],
+   "gap_um": 0.832,
+   "left_feed_m9_x": [
+    768.96
+   ],
+   "right_feed_m9_x": [
+    786.24
+   ]
+  }
+ ],
+ "landings": [
+  {
+   "port": "t_io_serdes__clk",
+   "entry_xy_um": [
+    777.632,
+    15171.8
+   ]
+  },
+  {
+   "port": "t_io_serdes_1__clk",
+   "entry_xy_um": [
+    777.632,
+    3481.96
+   ]
+  },
+  {
+   "port": "t_ucie_kv__clk",
+   "entry_xy_um": [
+    388.768,
+    9633.56
+   ]
+  }
+ ],
+ "failures": [
+  {
+   "port": "t_io_serdes_2__clk",
+   "inst": "io_serdes_2",
+   "pin": "clk",
+   "net": "ck_n19431",
+   "rect_um": [
+    777.616,
+    1157.408,
+    777.648,
+    1158.176
+   ],
+   "reference_xy_um": [
+    777.632,
+    1157.792
+   ],
+   "legal_in_pin_rows_um": [
+    1157.8,
+    1157.72,
+    1157.88,
+    1157.64,
+    1157.96,
+    1157.56,
+    1158.04,
+    1157.48,
+    1158.12
+   ]
+  }
+ ],
+ "total_landed": 7888,
+ "total_pins": 7889,
+ "ir": "UNCHECKED (strap remainders fed by nearest M9; no IR run)",
+ "physical_route": false
+}
