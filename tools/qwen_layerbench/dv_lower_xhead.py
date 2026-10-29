@@ -131,6 +131,28 @@ def hr_word(go=0, ib=0, xpf72=0):
     return 1 | (xpf72 << 1) | (ib << 73) | (int(go) << 452)
 
 
+def hr_rows(rows):
+    """Pack simultaneous XPF and GO into their one physical HR write.
+
+    Other collisions remain errors: two writes to either field cannot be
+    represented by this port. Metadata may still retain the two logical rows.
+    """
+    packed = {}
+    for edge, word in rows:
+        if word < 0 or word >= 1 << 453 or not word & 1:
+            raise ValueError('invalid HR word')
+        if edge in packed:
+            old = packed[edge]
+            xpf_only = lambda w: bool(w & 2) and not (w >> 73)
+            go_only = lambda w: bool(w >> 452) and not (w & ((1 << 73) - 2))
+            if not ((xpf_only(old) and go_only(word)) or
+                    (go_only(old) and xpf_only(word))):
+                raise ValueError('conflicting HR writes on one edge')
+            word |= old
+        packed[edge] = word
+    return sorted(packed.items())
+
+
 # ------------------------------------------------------------------------------------------------ hr arrival
 def hr_arrival(relay=None, model=None):
     """edges from dvs_W5.hr_wi to slice m's hr pin register input (slice 0 = 0): 1 a hop (hr_o is the pin register) +

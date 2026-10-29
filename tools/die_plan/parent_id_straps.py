@@ -16,10 +16,10 @@ KV_ID_WIDTHS = {'strap_corner': 2, 'strap_hid': 2, 'strap_bsel': 2}
 # local vocab row, ten = 1 used / 0 dark tile), per-instance partition straps tied at the die top (plan id_straps)
 S81HD_ID_WIDTHS = {'strap_row0': 17, 'strap_ten': 1}
 PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6, **S81HD_ID_WIDTHS}
-ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', 'sidx', *PHYSICAL_ID_WIDTHS})
+ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', 'sidx', 'strap_lane_id', *PHYSICAL_ID_WIDTHS})
 
 
-def validate_parent_id_straps(descriptor, inputs=None, pins=None):
+def validate_parent_id_straps(descriptor, inputs=None, pins=None, actual_module=None):
     """Return {port: {width, value}}; inputs optionally maps input names to widths.
 
     The caller's actual input inventory is authoritative. A missing or output
@@ -52,6 +52,21 @@ def validate_parent_id_straps(descriptor, inputs=None, pins=None):
                 raise ValueError(f'hard-core ID strap {port}: require an exact {width}-bit binary literal')
             value = int(value.split("'", 1)[1][1:], 2)
         raw[port] = dict(width=entry['width'], value=value)
+    # Exact owner-approved key-buffer position ID; never authorize a similarly
+    # named data/control port on another hardware master.
+    if 'strap_lane_id' in raw:
+        if actual_module is not None and actual_module != 'ot_hnx_idxn_keybuf_slice':
+            raise ValueError('strap_lane_id actual hardware master differs from KEYBUF contract')
+        pos = descriptor.get('position_id_contract')
+        if descriptor.get('module') != 'ot_hnx_idxn_keybuf_slice' or not isinstance(pos, dict):
+            raise ValueError('strap_lane_id requires exact KEYBUF hardware master and position contract')
+        if set(pos) != {'kind', 'pbase', 'lane'} or pos.get('kind') != 'KEYBUF_LANE_ID':
+            raise ValueError('strap_lane_id requires typed KEYBUF_LANE_ID position')
+        base, lane = pos['pbase'], pos['lane']
+        if type(base) is not int or base not in (0, 4) or type(lane) is not int or not 0 <= lane <= 3:
+            raise ValueError('KEYBUF_LANE_ID requires pbase 0/4 and lane 0..3')
+        if raw['strap_lane_id'] != {'width': 3, 'value': base + lane}:
+            raise ValueError('KEYBUF_LANE_ID requires exact 3-bit pbase+lane value')
     result = {}
     for port, contract in raw.items():
         if port not in ID_PORTS:

@@ -1,0 +1,33 @@
+{
+  "source_commit": "c79e550be",
+  "vehicle": "actual generated hd_tile_p kit, existing same interfaces/macros",
+  "FWD_COPY": 1,
+  "face_guard_netlist": [
+    1144,
+    1144
+  ],
+  "face_guard_odb": [
+    1144,
+    1144
+  ],
+  "LEC": {
+    "verdict": "EQUIVALENT",
+    "compare_points": 33708,
+    "proved": 33708,
+    "differs": 0,
+    "undecided": 0,
+    "seconds": 127.8,
+    "new_result_time_PDT": "2026-10-29 00:28:35"
+  },
+  "mapped_sequential_cells": {
+    "added": 1,
+    "lost": 0,
+    "new": "u_cland_origin/g_export.g_copy[0].u_copy/q$_SDFF_PN0_"
+  },
+  "added_data_cycles": 0,
+  "added_boot_cycles": 0,
+  "new_export_flops_per_PADW1_origin": 1,
+  "route_or_timing_claim": false,
+  "source_gate_unit": "epyc2 oth-ubuntu-3564365-1793258734",
+  "physical_trial": "fresh global placement pending, clock assignment not yet rebuilt"
+}

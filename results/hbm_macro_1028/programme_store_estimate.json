@@ -1,0 +1,175 @@
+{
+  "status": "ESTIMATE ONLY; not build-approved",
+  "old_outline_um": [
+    574.56,
+    738.72
+  ],
+  "outline_um": [
+    864.0,
+    734.4
+  ],
+  "source_rows_south_to_north": [
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      6,
+      null,
+      8
+    ],
+    [
+      7,
+      10,
+      9
+    ],
+    [
+      5,
+      4,
+      3
+    ]
+  ],
+  "leaf_box_um": [
+    285.12,
+    181.44
+  ],
+  "within_leaf_macro_origin_max_manhattan_um": 239.868,
+  "old_same_leaf_macro_origin_max_manhattan_um": {
+    "1": 268.518,
+    "2": 302.172,
+    "0": 649.026,
+    "4": 268.566,
+    "5": 268.566,
+    "7": 335.826,
+    "10": 317.52,
+    "8": 234.912,
+    "9": 581.754,
+    "3": 234.912,
+    "6": 239.22
+  },
+  "local_spine_inner_usable_um": 44.49599999999999,
+  "outer_usable_um": 15.120000000000001,
+  "local_spine_escape_bound": 0.3828016643550625,
+  "outer_escape_bound": 0.5632653061224488,
+  "leaf_logic_guides": [
+    {
+      "leaf": 2,
+      "rect_um": [
+        4.32,
+        4.32,
+        289.44,
+        185.76
+      ],
+      "pattern": "u_fcore.g_leaf[2].u_leaf.*"
+    },
+    {
+      "leaf": 1,
+      "rect_um": [
+        289.44,
+        4.32,
+        574.56,
+        185.76
+      ],
+      "pattern": "u_fcore.g_leaf[1].u_leaf.*"
+    },
+    {
+      "leaf": 0,
+      "rect_um": [
+        574.5600000000001,
+        4.32,
+        859.6800000000001,
+        185.76
+      ],
+      "pattern": "u_fcore.g_leaf[0].u_leaf.*"
+    },
+    {
+      "leaf": 6,
+      "rect_um": [
+        4.32,
+        185.76,
+        289.44,
+        367.2
+      ],
+      "pattern": "u_fcore.g_leaf[6].u_leaf.*"
+    },
+    {
+      "leaf": 8,
+      "rect_um": [
+        574.5600000000001,
+        185.76,
+        859.6800000000001,
+        367.2
+      ],
+      "pattern": "u_fcore.g_leaf[8].u_leaf.*"
+    },
+    {
+      "leaf": 7,
+      "rect_um": [
+        4.32,
+        367.2,
+        289.44,
+        548.64
+      ],
+      "pattern": "u_fcore.g_leaf[7].u_leaf.*"
+    },
+    {
+      "leaf": 10,
+      "rect_um": [
+        289.44,
+        367.2,
+        574.56,
+        548.64
+      ],
+      "pattern": "u_fcore.g_leaf[10].u_leaf.*"
+    },
+    {
+      "leaf": 9,
+      "rect_um": [
+        574.5600000000001,
+        367.2,
+        859.6800000000001,
+        548.64
+      ],
+      "pattern": "u_fcore.g_leaf[9].u_leaf.*"
+    },
+    {
+      "leaf": 5,
+      "rect_um": [
+        4.32,
+        548.64,
+        289.44,
+        730.0799999999999
+      ],
+      "pattern": "u_fcore.g_leaf[5].u_leaf.*"
+    },
+    {
+      "leaf": 4,
+      "rect_um": [
+        289.44,
+        548.64,
+        574.56,
+        730.0799999999999
+      ],
+      "pattern": "u_fcore.g_leaf[4].u_leaf.*"
+    },
+    {
+      "leaf": 3,
+      "rect_um": [
+        574.5600000000001,
+        548.64,
+        859.6800000000001,
+        730.0799999999999
+      ],
+      "pattern": "u_fcore.g_leaf[3].u_leaf.*"
+    }
+  ],
+  "needed_before_build": [
+    "clock islands repositioned to local spines; preserve current plan ports",
+    "guide every g_leaf[n] standard cell to its own leaf zone",
+    "position per-row pr/cr/sp/si and output o_ctl/o_io relay FFs from RTL row topology",
+    "check every output face path and head/row relay reach405; candidate is macro-fit only",
+    "source constant resets/cycles unchanged; no new latency claimed"
+  ],
+  "reason": "C24 leaf0 and leaf9 SRAM page spans >405um; original RTL explicitly specifies three-column/four-row local leaves. Whole-column edge sum assumes nonexistent long-distance demand and is only an upper bound."
+}

@@ -185,6 +185,35 @@ def validate_local_su_absence(spec, schedule):
                 scope='Only this finite static calendar; no all-mode or whole-token qualification')
 
 
+def validate_s_role_backing_only(spec, schedule):
+    """Optional finite mode for the source's S-role IDX/ring backing banks.
+
+    Port numbers are the actual RG5/WG2 q0 bank ABI, not a topology guess:
+    read4=IDX, read5=packet; write3=CW, write4=packet, write5=CCW.
+    This never selects a bank master or invents a production programme.
+    """
+    if schedule.get('s_role_backing_only') is not True:
+        return None
+    if schedule.get('local_su_present') is not False or spec['quadrant'] not in ('SW', 'SE'):
+        raise ValueError('S-role backing-only mode requires explicit SW/SE local_su_present=false')
+    if spec['params']['RG'] != 5 or spec['params']['WG'] != 2:
+        raise ValueError('S-role backing-only mode requires actual RG5/WG2 bank ABI')
+    allowed = {'r': (4, 5), 'w': (3, 4, 5)}
+    for pc, cycle in enumerate(schedule['cycles']):
+        values = {k: int(v, 0) if isinstance(v, str) else v for k, v in cycle.items()}
+        for kind, width in (('r', spec['params']['RB']), ('w', spec['params']['WB'])):
+            for bank in range(8):
+                if values.get(kind + 'slot_v', 0) >> bank & 1:
+                    owner = values.get(kind + 'slot', 0) >> (bank * width) & ((1 << width) - 1)
+                    if owner not in allowed[kind]:
+                        raise ValueError(f'absent S-role service: {kind} group{owner} at word {pc}, bank {bank}')
+    return dict(schema='opentallas.hbm.s_role_backing_only.v1', role=spec['quadrant'],
+                checked_build_mode=schedule['build_mode'], configured_words=len(schedule['cycles']),
+                allowed_read_groups=list(allowed['r']), allowed_write_groups=list(allowed['w']),
+                source_abi='ot_vms_bank_q0_faces_body RG5/WG2',
+                scope='Only this finite calendar; actual production modes and source/plan adoption remain unproved')
+
+
 def compile_schedule(spec, schedule):
     base = schedule.get('base', 0)
     loops = schedule.get('loops', 1)
@@ -194,6 +223,7 @@ def compile_schedule(spec, schedule):
     if not 1 <= loops <= 65535:
         raise ValueError('Loop count must fit the actual nonzero 16-bit counter')
     absence = validate_local_su_absence(spec, schedule)
+    backing = validate_s_role_backing_only(spec, schedule)
     validate_resources(spec, cycles, loops, schedule.get('lg_pad'))
     writes = []
     for offset, values in enumerate(cycles):
@@ -209,6 +239,8 @@ def compile_schedule(spec, schedule):
                 limits='Caller must prove these calendars against actual producer requests, transport latency and response identities.')
     if absence is not None:
         result['local_su_absence'] = absence
+    if backing is not None:
+        result['s_role_backing_only'] = backing
     return result
 
 

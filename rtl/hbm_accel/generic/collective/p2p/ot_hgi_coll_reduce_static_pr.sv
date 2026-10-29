@@ -15,7 +15,16 @@
 // compiled programme); the fault status +2 edges.  The ring_ag core needs nothing (its only body crossing, fault, is a
 // flop captured by u_fj's flop; every other ring port is a master pin).
 // MUT (bench): 1 = in_flit NOT registered (data one edge ahead of its control) -> must FAIL; 2 = fault not registered.
-module ot_hgi_coll_reduce_static_pr #(parameter integer MUT_TAG=0,MUT_BF16=0,MUT=0)(
+module ot_hgi_coll_reduce_static_pr #(parameter integer MUT_TAG=0,MUT_BF16=0,MUT=0,
+ // Local physical profile can select kept replicas without editing generated
+ // split-core tops. Normal/default builds retain the shared control stage.
+ parameter integer LOCAL_CTRL=
+`ifdef OT_HBM_REDUCE_LOCAL_CTRL
+ 1
+`else
+ 0
+`endif
+)(
  input wire clk_control,input wire [15:0] clk_state,clk_add,
  input wire rst_n,clear,in_v,input wire [544:0] in_flit,
  input wire load_v,input wire [3:0] load_tag,
@@ -37,7 +46,7 @@ module ot_hgi_coll_reduce_static_pr #(parameter integer MUT_TAG=0,MUT_BF16=0,MUT
   pub_bf16_q<=pub_bf16;pub_meta_q<=pub_meta;
  end
  wire f_c;
- ot_hgi_coll_reduce_static #(.MUT_TAG(MUT_TAG),.MUT_BF16(MUT_BF16)) u_red(
+ ot_hgi_coll_reduce_static #(.MUT_TAG(MUT_TAG),.MUT_BF16(MUT_BF16),.LOCAL_CTRL(LOCAL_CTRL)) u_red(
   .clk_control(clk_control),.clk_state(clk_state),.clk_add(clk_add),.rst_n(rst_n),.clear(clear_q),.in_v(in_v_q),
   .in_flit((MUT==1)?in_flit:in_flit_q),.load_v(load_v_q),.load_tag(load_tag_q),.add_read(add_read_q),.read_tag(read_tag_q),
   .add_issue(add_issue_q),.pub_read(pub_read_q),.pub_tag_a(pub_tag_a_q),.pub_tag_b(pub_tag_b_q),.pub_bf16(pub_bf16_q),

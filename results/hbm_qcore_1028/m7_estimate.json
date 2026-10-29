@@ -1,0 +1,36 @@
+{
+  "status": "ESTIMATE_ONLY_NO_CEILING_CHANGE",
+  "original_M5": {
+    "h": 1.275,
+    "v": 0.811,
+    "GRT50_overflow": 1141
+  },
+  "M7_estimate": {
+    "channel_v_max": 0.614,
+    "channel_v_at": [
+      180.0,
+      190.0,
+      107.5
+    ],
+    "blocked_v": 0,
+    "detour_v": 0,
+    "col_v_max": 0.614,
+    "col_v_at": [
+      180.0,
+      107.5
+    ],
+    "tracks_v_per_um": 48.18,
+    "channel_h_max": 0.821,
+    "channel_h_at": [
+      40.0,
+      50.0,
+      62.5
+    ],
+    "blocked_h": 0,
+    "detour_h": 0,
+    "tracks_h_per_um": 48.18,
+    "demand_layers": "M2-M7"
+  },
+  "assumptions": "Actual original placed nets and macro OBS; M6/M7 available to core in hypothetical ceiling. No die-over-core capacity reserved here.",
+  "gate": "Requires die-owner/COORD plan ruling before any changed-ceiling build."
+}

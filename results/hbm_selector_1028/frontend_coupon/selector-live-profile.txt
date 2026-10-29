@@ -1,0 +1,27 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 39  of event 'cpu/cycles/P'
+# Event count (approx.): 4000987620
+#
+# Overhead  Command  Shared Object        Symbol                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+# ........  .......  ...................  ................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+#
+    28.49%  yosys    yosys                [.] Yosys::RTLIL::SigSpec::to_sigbit_vector() const
+    18.38%  yosys    yosys                [.] Yosys::RTLIL::SigSpec::append(Yosys::RTLIL::SigSpec const&)
+    18.37%  yosys    yosys                [.] void std::__introsort_loop<__gnu_cxx::__normal_iterator<Yosys::RTLIL::SigBit*, std::vector<Yosys::RTLIL::SigBit, std::allocator<Yosys::RTLIL::SigBit> > >, long, __gnu_cxx::__ops::_Iter_less_iter>(__gnu_cxx::__normal_iterator<Yosys::RTLIL::SigBit*, std::vector<Yosys::RTLIL::SigBit, std::allocator<Yosys::RTLIL::SigBit> > >, __gnu_cxx::__normal_iterator<Yosys::RTLIL::SigBit*, std::vector<Yosys::RTLIL::SigBit, std::allocator<Yosys::RTLIL::SigBit> > >, long, __gnu_cxx::__ops::_Iter_less_iter) [clone .isra.0]
+     7.88%  yosys    yosys                [.] void std::vector<Yosys::RTLIL::SigBit, std::allocator<Yosys::RTLIL::SigBit> >::_M_realloc_append<Yosys::RTLIL::SigBit const&>(Yosys::RTLIL::SigBit const&)
+     5.25%  yosys    libc.so.6            [.] 0x00000000000b286e
+     5.25%  yosys    yosys                [.] std::vector<Yosys::RTLIL::SigChunk, std::allocator<Yosys::RTLIL::SigChunk> >::~vector()
+     5.25%  yosys    libstdc++.so.6.0.35  [.] operator new(unsigned long)
+     2.63%  yosys    yosys                [.] Yosys::RTLIL::SigSpec::append(Yosys::RTLIL::SigBit const&)
+     2.63%  yosys    yosys                [.] operator new(unsigned long)@plt
+     2.61%  yosys    libc.so.6            [.] 0x00000000000b3cf4
+     2.60%  yosys    yosys                [.] Yosys::RTLIL::SigSpec::extract(Yosys::RTLIL::SigSpec const&, Yosys::RTLIL::SigSpec const*) const
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

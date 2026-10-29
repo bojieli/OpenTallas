@@ -369,12 +369,13 @@ def main():
     ap.add_argument('--rfd-slack', type=int, default=1)  # HBM-SUFIX: class-5 RF drain strictly after RF commit (su_top_compile Z > g_ready)
     ap.add_argument('--pretree', action='store_true')    # HBM-PRETREE2: reductions through the bound pre-tree (build PRETREE=1)
     ap.add_argument('--qpr', type=int, default=0)        # quarters per reduction row: 1/2/4; 0 = try all, keep the fastest
+    ap.add_argument('--alat', type=int, default=3)       # explicit physical candidate, default unchanged
     ap.add_argument('--mlat', type=int, default=4)       # HBM-CORES-REBAL-9: lane build (die su / pg_lane* MLAT)
     ap.add_argument('--wcopy', type=int, default=0)      # HBM-CORES-REBAL-9: pinned-bank WCOPY (bank write commit +1)
     a = ap.parse_args()
-    global MLAT, LIN, WCOPY
-    SLB.check(a.mlat, ALAT, LEAF, a.wcopy)
-    MLAT, WCOPY = a.mlat, SLB.commit_extra(a.wcopy)
+    global MLAT, ALAT, LIN, WCOPY
+    SLB.check(a.mlat, a.alat, LEAF, a.wcopy)
+    MLAT, ALAT, WCOPY = a.mlat, a.alat, SLB.commit_extra(a.wcopy)
     LIN = SLB.lin(MLAT, ALAT, LEAF)
     if a.pretree and RECS[a.rec][5] and a.qpr == 0:
         import copy, io, contextlib
@@ -787,7 +788,7 @@ def compile_rec(a):
                        'MODEL order (hdc_golden_v41.csum chunk8 / ordered canonical max), asserted on the lowered tree') if PT else
                       'hdc_golden add/mul/to_bf16/exp + NumPy float32 division (independent of the DUT), calendar order',
                pretree=dict(on=True, qpr=QPR, quarter_run_words=SW, blocks_per_row=NBQ, pt_red=SPL.PT_RED) if PT else None)
-    if (MLAT, WCOPY) != (4, 0):
+    if (MLAT, ALAT, WCOPY) != (4, 3, 0):
         man['lane_build'] = dict(mlat=MLAT, alat=ALAT, leaf=LEAF, wcopy=WCOPY, lin=LIN, source='tools/hbm_static/su_lane_build.py')
     (out / 'programme.json').write_text(json.dumps(man, indent=1) + '\n')
     print(json.dumps({k: man[k] for k in ('record', 'issues', 'emissions', 'cycles_serial', 'cycles_stream_833ps', 'edges', 'expected_vm_writes', 'expected_scalars')}))

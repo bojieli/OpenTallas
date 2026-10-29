@@ -8,6 +8,7 @@ import math
 import re
 from pathlib import Path
 
+REFERENCE_TOL_PS = 1e-3  # Same metadata precision as kit_contract.TOL; generators serialize :g/.4f.
 
 def load(kit):
     kit = Path(kit)
@@ -63,11 +64,11 @@ def binding_errors(kit, ref):
     records["constraint.sdc.tt"] = float(tt[0]) if len(tt) == 1 else None
     for key, value in records.items():
         corner = key.rsplit(".", 1)[1]
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or abs(value-ref[corner]) > 1e-4:
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or abs(value-ref[corner]) > REFERENCE_TOL_PS:
             errors.append(f"{key} = {value!r}, expected typed IO reference {ref[corner]:g}")
     return errors
 
 
 def validate_ff_override(reference, value):
-    if value is not None and (not math.isfinite(float(value)) or abs(float(value)-reference["ff"]) > 1e-4):
+    if value is not None and (not math.isfinite(float(value)) or abs(float(value)-reference["ff"]) > REFERENCE_TOL_PS):
         raise ValueError("FF CLI override differs from the typed plan-declared core IO reference")

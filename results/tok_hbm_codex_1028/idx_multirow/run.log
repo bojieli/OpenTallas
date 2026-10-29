@@ -1,0 +1,5 @@
+IDX256_PASS cases=10 identity_edges=2280 writes=1026 launches=4 legacy_aliases=2 MUT=0
+- tb_idxq818.sv:93: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.010 s; speed 367.619 us/s
+- Verilator: cpu 0.010 s on 1 threads; allocated 7 MB

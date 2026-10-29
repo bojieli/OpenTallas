@@ -1,0 +1,17 @@
+{
+  "status": "FUSED_FIELDS_RECOVERED_WHOLE_IMAGE_HASH_DIFF",
+  "historical_image_sha256": "f0b932311ee09139ebd1d56601f4d92b4b4e10ec6da12f31fa8be4433fa972e9",
+  "candidate_image_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
+  "native_fused_records": 161,
+  "all_native_fields_offsets_payload_formats_equal": true,
+  "source_commit": "e938fd6db",
+  "emitter_source_commit": "42d0caba4",
+  "lowerer_source_commit": "3842596e3",
+  "command": [
+    "emitter.py --mode mtp --whole --fused-align --P 3",
+    "fused_image_lower.py --batch"
+  ],
+  "immutable_candidate": "results/tok_hbm_codex_1028/candidate_mtp_N6_a122.hgi1r",
+  "scope": "FUSED subset source restored with new image identity; current plan calendar still required; not a historical byte-image recovery or full token pass",
+  "open_failure": "Lost original whole image hashf0 differs from deterministic sourcea122 despite161identicalnative jobs and3916same recordcount; other records cannot be compared without lost bytes"
+}

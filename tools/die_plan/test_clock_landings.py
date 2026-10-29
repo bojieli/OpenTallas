@@ -91,6 +91,16 @@ def test_registered_monitor_replaces_long_die_status_vectors():
     b="module b_mod (\n input wire clk,\n input wire [4:0] y\n);\n wire rst_root_n, rst_n_t0;\n ot_dp_rgate u_rrl_0 (.clk(clk),.d(rst_root_n),.run(run),.q(rst_n_t0));\n wire [4:0] y_q; assign y_q=y;\nendmodule\n"
     aa=c.type_rtl("A",a);bb=c.type_rtl("B",b)
     assert "ot_dp_clk_landing #(.W(2)) u_cland_monitor_0" in aa
+    # A terminal START-gated tap has no rr_t0 copy until a boot monitor needs it.
+    terminal=a.replace("wire rr_t0;", "wire rst_n_t0;\n ot_dp_rgate u_rrl_0 (.clk(clk),.d(rst_root_n),.run(run),.q(rst_n_t0));")
+    terminal_out=Landings(p,t).type_rtl("A",terminal)
+    assert terminal_out.count("wire cland_reset_rst_n_t0;")==1
+    assert terminal_out.count("ot_dp_rrelay u_cland_reset_rst_n_t0")==1
+    assert ".rst_n(cland_reset_rst_n_t0)" in terminal_out
+    boot=a.replace("wire rr_t0;", "wire rst_n_t0;\n ot_dp_rrelay u_rrl_0 (.clk(clk),.d(rst_root_n),.q(rst_n_t0));")
+    boot_out=Landings(p,t).type_rtl("A",boot)
+    assert "cland_reset_rst_n_t0" not in boot_out
+    assert ".rst_n(rst_n_t0)" in boot_out
     assert "ot_dp_landing_collect" in aa
     assert "output wire landing_fault_y" not in bb
     assert "wire landing_ready_y, landing_fault_y;" in bb
