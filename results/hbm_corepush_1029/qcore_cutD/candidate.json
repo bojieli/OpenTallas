@@ -1,5 +1,5 @@
 {
-  "status": "unsigned_source_candidate_pending_coupon",
+  "status": "unsigned_source_candidate_native_coupon_PASS",
   "source_sha256": "ecf7bc1efdbe739782ab56cee9222f5c20d2ba61a223e4ce85d6e83c4c2cbbb0",
   "candidate_sha256": "1fc866152e21a8dd4e0394018de47c4c35fd1061994037b56f04132ce3069088",
   "production_rtl_changed": false,
@@ -23,5 +23,13 @@
     "Ordinary full-core LEC",
     "Current plan/source atomic adoption and native clock sink placement review",
     "Current derated M7 G2 and actual TT/FF closure"
-  ]
+  ],
+  "native_coupon": {
+    "checks": 83899,
+    "mismatches": 0,
+    "wrong_phase_control": 98427,
+    "wrong_data_control": 45093,
+    "resets": "3cold/warm pulses",
+    "added_edges": 0
+  }
 }
