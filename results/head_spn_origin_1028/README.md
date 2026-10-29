@@ -48,3 +48,8 @@ Actual hk3 hd_spn mechanism synthesis is running in the same remote lane under
 This is synthesis/face_guard/LEC only, no P&R/STA on the obsolete hk3 outline.
 `actual_hd_spn_origin.patch` is its generated source change. Original face_guard
 FAIL is preserved under remote `original/face_guard.json`.
+
+Actual hk3 spine mechanism run COMPLETED exit0: face_guard PASS6224/6224 on
+synthesized netlist AND synth-ODB export; LEC EQUIVALENT30456/30456, differs0,
+undecided0 (294.8s), port_bind6311/6311PASS, fanout29175regs/0over64.
+These artifacts qualify the sampler repair, not the obsolete outline.

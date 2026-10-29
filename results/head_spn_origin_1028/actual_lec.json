@@ -1,0 +1,1359 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-10-29T06:57:42+0000",
+ "verdict": "EQUIVALENT",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": null,
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "top": "ot_s81hd_spn",
+ "netlist": "/work/run/results/asap7/dp_hd_spn/base/1_2_yosys.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {},
+ "ports": {
+  "inputs": 3186,
+  "outputs": 3125
+ },
+ "t_aig_s": 37.3,
+ "kit_reset_ports": null,
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [
+    "pi:arst_n[0]"
+   ],
+   "gate": [
+    "pi:arst_n[0]"
+   ]
+  },
+  "reset_asserted": {
+   "gold": {
+    "pi:arst_n[0]": 0
+   },
+   "gate": {
+    "pi:arst_n[0]": 0
+   }
+  },
+  "reset_cycles": 4,
+  "release_edges": 8,
+  "n_release": 0,
+  "release": [],
+  "n_universal_raw_D": 0,
+  "universal_raw_D": [],
+  "raw_base_steps": 0,
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_kept": 357,
+  "n_reloaded": 0,
+  "n_dropped": 194,
+  "reloaded": [],
+  "dropped": [
+   {
+    "register": "ff:u_dut.u_cland_ad_i.arm_cnt[1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.arm_cnt[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.arm_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.fault_state",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.tmo_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.tmo_cnt[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.tmo_cnt[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.tmo_cnt[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.u_ring.g_tag.s_tag[0][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.u_ring.g_tag.s_tag[0][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.u_ring.g_tag.s_tag[1][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.u_ring.g_tag.s_tag[1][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.u_ring.g_tag.s_tag[2][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.u_ring.g_tag.s_tag[2][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.u_ring.g_tag.s_tag[3][0]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.u_ring.g_tag.s_tag[3][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.u_ring.g_tag.s_tag[3][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.u_ring.tc[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_ad_i.u_ring.tc[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_agg_1.ready_o",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.arm_cnt[0]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.arm_cnt[1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.arm_cnt[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.arm_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.fault_state",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.tmo_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.tmo_cnt[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.tmo_cnt[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.tmo_cnt[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.u_ring.g_tag.s_tag[0][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.u_ring.g_tag.s_tag[0][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.u_ring.g_tag.s_tag[1][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.u_ring.g_tag.s_tag[1][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.u_ring.g_tag.s_tag[2][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.u_ring.g_tag.s_tag[2][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.u_ring.g_tag.s_tag[3][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.u_ring.g_tag.s_tag[3][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.u_ring.tc[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_au_i.u_ring.tc[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.arm_cnt[1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.arm_cnt[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.arm_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.fault_state",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.tmo_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.tmo_cnt[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.tmo_cnt[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.tmo_cnt[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.u_ring.g_tag.s_tag[0][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.u_ring.g_tag.s_tag[0][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.u_ring.g_tag.s_tag[1][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.u_ring.g_tag.s_tag[1][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.u_ring.g_tag.s_tag[2][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.u_ring.g_tag.s_tag[2][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.u_ring.g_tag.s_tag[3][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.u_ring.g_tag.s_tag[3][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.u_ring.tc[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_b_i.u_ring.tc[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.arm_cnt[0]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.arm_cnt[1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.arm_cnt[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.arm_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.fault_state",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.tmo_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.tmo_cnt[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.tmo_cnt[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.tmo_cnt[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.u_ring.g_tag.s_tag[0][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.u_ring.g_tag.s_tag[0][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.u_ring.g_tag.s_tag[1][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.u_ring.g_tag.s_tag[1][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.u_ring.g_tag.s_tag[2][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.u_ring.g_tag.s_tag[2][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.u_ring.g_tag.s_tag[3][0]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.u_ring.g_tag.s_tag[3][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.u_ring.g_tag.s_tag[3][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.u_ring.tc[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bd_i.u_ring.tc[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.arm_cnt[0]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.arm_cnt[1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.arm_cnt[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.arm_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.fault_state",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.tmo_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.tmo_cnt[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.tmo_cnt[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.tmo_cnt[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.u_ring.g_tag.s_tag[0][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.u_ring.g_tag.s_tag[0][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.u_ring.g_tag.s_tag[1][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.u_ring.g_tag.s_tag[1][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.u_ring.g_tag.s_tag[2][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.u_ring.g_tag.s_tag[2][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.u_ring.g_tag.s_tag[3][0]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.u_ring.g_tag.s_tag[3][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.u_ring.g_tag.s_tag[3][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.u_ring.tc[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_be_i.u_ring.tc[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.arm_cnt[0]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.arm_cnt[1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.arm_cnt[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.arm_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.fault_state",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.tmo_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.tmo_cnt[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.tmo_cnt[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.tmo_cnt[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.u_ring.g_tag.s_tag[0][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.u_ring.g_tag.s_tag[0][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.u_ring.g_tag.s_tag[1][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.u_ring.g_tag.s_tag[1][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.u_ring.g_tag.s_tag[2][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.u_ring.g_tag.s_tag[2][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.u_ring.g_tag.s_tag[3][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.u_ring.g_tag.s_tag[3][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.u_ring.tc[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bu_i.u_ring.tc[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.arm_cnt[0]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.arm_cnt[1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.arm_cnt[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.arm_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.fault_state",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.tmo_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.tmo_cnt[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.tmo_cnt[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.tmo_cnt[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.u_ring.g_tag.s_tag[0][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.u_ring.g_tag.s_tag[0][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.u_ring.g_tag.s_tag[1][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.u_ring.g_tag.s_tag[1][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.u_ring.g_tag.s_tag[2][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.u_ring.g_tag.s_tag[2][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.u_ring.g_tag.s_tag[3][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.u_ring.g_tag.s_tag[3][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.u_ring.tc[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_bw_i.u_ring.tc[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.arm_cnt[0]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.arm_cnt[1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.arm_cnt[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.arm_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.fault_state",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.tmo_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.tmo_cnt[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.tmo_cnt[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.tmo_cnt[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.u_ring.g_tag.s_tag[0][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.u_ring.g_tag.s_tag[0][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.u_ring.g_tag.s_tag[1][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.u_ring.g_tag.s_tag[1][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.u_ring.g_tag.s_tag[2][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.u_ring.g_tag.s_tag[2][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.u_ring.g_tag.s_tag[3][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.u_ring.g_tag.s_tag[3][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.u_ring.tc[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hd_i.u_ring.tc[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.arm_cnt[1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.arm_cnt[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.arm_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.fault_state",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.ready",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.tmo_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.tmo_cnt[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.tmo_cnt[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.tmo_cnt[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.u_ring.g_tag.s_tag[0][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.u_ring.g_tag.s_tag[0][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.u_ring.g_tag.s_tag[1][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.u_ring.g_tag.s_tag[1][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.u_ring.g_tag.s_tag[2][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.u_ring.g_tag.s_tag[2][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.u_ring.g_tag.s_tag[3][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.u_ring.g_tag.s_tag[3][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.u_ring.tc[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_hu_i.u_ring.tc[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_root.n[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_root.n[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_root.n[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.arm_cnt[1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.arm_cnt[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.arm_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.fault_state",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.tmo_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.tmo_cnt[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.tmo_cnt[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.tmo_cnt[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.u_ring.g_tag.s_tag[0][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.u_ring.g_tag.s_tag[0][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.u_ring.g_tag.s_tag[1][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.u_ring.g_tag.s_tag[1][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.u_ring.g_tag.s_tag[2][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.u_ring.g_tag.s_tag[2][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.u_ring.g_tag.s_tag[3][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.u_ring.g_tag.s_tag[3][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.u_ring.tc[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_x_i.u_ring.tc[5]",
+    "side": "both",
+    "value": 0
+   }
+  ],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants; equality/FSM assumptions never establish a constant's base case"
+ },
+ "t_corr_s": 247.7,
+ "keypoints": {
+  "gold": {
+   "inputs": 3470,
+   "flops": 25680,
+   "outputs": 0,
+   "ands": 74682
+  },
+  "gate": {
+   "inputs": 3399,
+   "flops": 61475,
+   "outputs": 0,
+   "ands": 78867
+  },
+  "matched": 18709,
+  "gold_constant_flops": {
+   "n": 357,
+   "first": [
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[10]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[11]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[12]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[13]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[14]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[15]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[16]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[17]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[18]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[19]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[20]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[21]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[22]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[23]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[24]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[25]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[26]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[27]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[28]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[29]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[30]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[31]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[32]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[33]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[34]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[35]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[36]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[37]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[38]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[39]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[3]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[40]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[41]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[42]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[43]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[44]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[45]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[46]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[47]",
+    "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.y#t[48]"
+   ]
+  },
+  "paired_flops": {
+   "n": 9842,
+   "first": [
+    "both:ff:u_dut.u_bout_x_o.u_ep.eq=ff:u_dut.u_bout_b_o.u_ep.eq",
+    "both:ff:u_dut.u_bout_xe_o.q[0]=ff:u_dut.u_bout_x_o.q[0]",
+    "both:ff:u_dut.u_bout_xe_o.q[100]=ff:u_dut.u_bout_x_o.q[100]",
+    "both:ff:u_dut.u_bout_xe_o.q[101]=ff:u_dut.u_bout_x_o.q[101]",
+    "both:ff:u_dut.u_bout_xe_o.q[102]=ff:u_dut.u_bout_x_o.q[102]",
+    "both:ff:u_dut.u_bout_xe_o.q[103]=ff:u_dut.u_bout_x_o.q[103]",
+    "both:ff:u_dut.u_bout_xe_o.q[104]=ff:u_dut.u_bout_x_o.q[104]",
+    "both:ff:u_dut.u_bout_xe_o.q[105]=ff:u_dut.u_bout_x_o.q[105]",
+    "both:ff:u_dut.u_bout_xe_o.q[106]=ff:u_dut.u_bout_x_o.q[106]",
+    "both:ff:u_dut.u_bout_xe_o.q[107]=ff:u_dut.u_bout_x_o.q[107]",
+    "both:ff:u_dut.u_bout_xe_o.q[108]=ff:u_dut.u_bout_x_o.q[108]",
+    "both:ff:u_dut.u_bout_xe_o.q[109]=ff:u_dut.u_bout_x_o.q[109]",
+    "both:ff:u_dut.u_bout_xe_o.q[10]=ff:u_dut.u_bout_x_o.q[10]",
+    "both:ff:u_dut.u_bout_xe_o.q[110]=ff:u_dut.u_bout_x_o.q[110]",
+    "both:ff:u_dut.u_bout_xe_o.q[111]=ff:u_dut.u_bout_x_o.q[111]",
+    "both:ff:u_dut.u_bout_xe_o.q[112]=ff:u_dut.u_bout_x_o.q[112]",
+    "both:ff:u_dut.u_bout_xe_o.q[113]=ff:u_dut.u_bout_x_o.q[113]",
+    "both:ff:u_dut.u_bout_xe_o.q[114]=ff:u_dut.u_bout_x_o.q[114]",
+    "both:ff:u_dut.u_bout_xe_o.q[115]=ff:u_dut.u_bout_x_o.q[115]",
+    "both:ff:u_dut.u_bout_xe_o.q[116]=ff:u_dut.u_bout_x_o.q[116]",
+    "both:ff:u_dut.u_bout_xe_o.q[117]=ff:u_dut.u_bout_x_o.q[117]",
+    "both:ff:u_dut.u_bout_xe_o.q[118]=ff:u_dut.u_bout_x_o.q[118]",
+    "both:ff:u_dut.u_bout_xe_o.q[119]=ff:u_dut.u_bout_x_o.q[119]",
+    "both:ff:u_dut.u_bout_xe_o.q[11]=ff:u_dut.u_bout_x_o.q[11]",
+    "both:ff:u_dut.u_bout_xe_o.q[120]=ff:u_dut.u_bout_x_o.q[120]",
+    "both:ff:u_dut.u_bout_xe_o.q[121]=ff:u_dut.u_bout_x_o.q[121]",
+    "both:ff:u_dut.u_bout_xe_o.q[122]=ff:u_dut.u_bout_x_o.q[122]",
+    "both:ff:u_dut.u_bout_xe_o.q[123]=ff:u_dut.u_bout_x_o.q[123]",
+    "both:ff:u_dut.u_bout_xe_o.q[124]=ff:u_dut.u_bout_x_o.q[124]",
+    "both:ff:u_dut.u_bout_xe_o.q[125]=ff:u_dut.u_bout_x_o.q[125]",
+    "both:ff:u_dut.u_bout_xe_o.q[126]=ff:u_dut.u_bout_x_o.q[126]",
+    "both:ff:u_dut.u_bout_xe_o.q[127]=ff:u_dut.u_bout_x_o.q[127]",
+    "both:ff:u_dut.u_bout_xe_o.q[128]=ff:u_dut.u_bout_x_o.q[128]",
+    "both:ff:u_dut.u_bout_xe_o.q[129]=ff:u_dut.u_bout_x_o.q[129]",
+    "both:ff:u_dut.u_bout_xe_o.q[12]=ff:u_dut.u_bout_x_o.q[12]",
+    "both:ff:u_dut.u_bout_xe_o.q[130]=ff:u_dut.u_bout_x_o.q[130]",
+    "both:ff:u_dut.u_bout_xe_o.q[131]=ff:u_dut.u_bout_x_o.q[131]",
+    "both:ff:u_dut.u_bout_xe_o.q[132]=ff:u_dut.u_bout_x_o.q[132]",
+    "both:ff:u_dut.u_bout_xe_o.q[133]=ff:u_dut.u_bout_x_o.q[133]",
+    "both:ff:u_dut.u_bout_xe_o.q[134]=ff:u_dut.u_bout_x_o.q[134]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 6192,
+   "first": [
+    "ff:u_dut.u_bin_b_i.eq",
+    "ff:u_dut.u_bin_be_i.eq",
+    "ff:u_dut.u_bin_be_i.q#t[0]",
+    "ff:u_dut.u_bin_be_i.q#t[100]",
+    "ff:u_dut.u_bin_be_i.q#t[101]",
+    "ff:u_dut.u_bin_be_i.q#t[102]",
+    "ff:u_dut.u_bin_be_i.q#t[103]",
+    "ff:u_dut.u_bin_be_i.q#t[104]",
+    "ff:u_dut.u_bin_be_i.q#t[105]",
+    "ff:u_dut.u_bin_be_i.q#t[106]",
+    "ff:u_dut.u_bin_be_i.q#t[107]",
+    "ff:u_dut.u_bin_be_i.q#t[108]",
+    "ff:u_dut.u_bin_be_i.q#t[109]",
+    "ff:u_dut.u_bin_be_i.q#t[10]",
+    "ff:u_dut.u_bin_be_i.q#t[110]",
+    "ff:u_dut.u_bin_be_i.q#t[111]",
+    "ff:u_dut.u_bin_be_i.q#t[112]",
+    "ff:u_dut.u_bin_be_i.q#t[113]",
+    "ff:u_dut.u_bin_be_i.q#t[114]",
+    "ff:u_dut.u_bin_be_i.q#t[115]",
+    "ff:u_dut.u_bin_be_i.q#t[116]",
+    "ff:u_dut.u_bin_be_i.q#t[117]",
+    "ff:u_dut.u_bin_be_i.q#t[118]",
+    "ff:u_dut.u_bin_be_i.q#t[119]",
+    "ff:u_dut.u_bin_be_i.q#t[11]",
+    "ff:u_dut.u_bin_be_i.q#t[120]",
+    "ff:u_dut.u_bin_be_i.q#t[121]",
+    "ff:u_dut.u_bin_be_i.q#t[122]",
+    "ff:u_dut.u_bin_be_i.q#t[123]",
+    "ff:u_dut.u_bin_be_i.q#t[124]",
+    "ff:u_dut.u_bin_be_i.q#t[125]",
+    "ff:u_dut.u_bin_be_i.q#t[126]",
+    "ff:u_dut.u_bin_be_i.q#t[127]",
+    "ff:u_dut.u_bin_be_i.q#t[128]",
+    "ff:u_dut.u_bin_be_i.q#t[129]",
+    "ff:u_dut.u_bin_be_i.q#t[12]",
+    "ff:u_dut.u_bin_be_i.q#t[130]",
+    "ff:u_dut.u_bin_be_i.q#t[131]",
+    "ff:u_dut.u_bin_be_i.q#t[132]",
+    "ff:u_dut.u_bin_be_i.q#t[133]"
+   ]
+  },
+  "gold_x_sources": 284,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 213,
+  "gold_only_compare": {
+   "n": 7032,
+   "first": [
+    "ff:u_dut.u_bin_be_i.q[514]",
+    "ff:u_dut.u_bin_be_i.q[515]",
+    "ff:u_dut.u_bin_be_i.q[516]",
+    "ff:u_dut.u_bin_be_i.q[517]",
+    "ff:u_dut.u_bin_be_i.q[518]",
+    "ff:u_dut.u_bin_be_i.q[519]",
+    "ff:u_dut.u_bin_be_i.q[520]",
+    "ff:u_dut.u_bin_be_i.q[521]",
+    "ff:u_dut.u_bin_be_i.q[522]",
+    "ff:u_dut.u_bin_be_i.q[523]",
+    "ff:u_dut.u_bin_be_i.q[524]",
+    "ff:u_dut.u_bin_be_i.q[525]",
+    "ff:u_dut.u_bin_be_i.q[526]",
+    "ff:u_dut.u_bin_be_i.q[527]",
+    "ff:u_dut.u_bin_be_i.q[528]",
+    "ff:u_dut.u_bin_be_i.q[529]",
+    "ff:u_dut.u_bin_be_i.q[530]",
+    "ff:u_dut.u_bin_be_i.q[531]",
+    "ff:u_dut.u_bin_be_i.q[532]",
+    "ff:u_dut.u_bin_be_i.q[533]",
+    "ff:u_dut.u_bin_be_i.q[534]",
+    "ff:u_dut.u_bin_be_i.q[535]",
+    "ff:u_dut.u_bin_be_i.q[536]",
+    "ff:u_dut.u_bin_be_i.q[537]",
+    "ff:u_dut.u_bin_be_i.q[538]",
+    "ff:u_dut.u_bin_be_i.q[539]",
+    "ff:u_dut.u_bin_be_i.q[540]",
+    "ff:u_dut.u_bin_be_i.q[541]",
+    "ff:u_dut.u_bin_be_i.q[542]",
+    "ff:u_dut.u_bin_be_i.q[543]",
+    "ff:u_dut.u_bin_be_i.q[544]",
+    "ff:u_dut.u_bin_be_i.q[545]",
+    "ff:u_dut.u_bin_be_i.q[546]",
+    "ff:u_dut.u_bin_be_i.q[547]",
+    "ff:u_dut.u_bin_be_i.q[548]",
+    "ff:u_dut.u_bin_be_i.q[549]",
+    "ff:u_dut.u_bin_be_i.q[550]",
+    "ff:u_dut.u_bin_be_i.q[551]",
+    "ff:u_dut.u_bin_be_i.q[552]",
+    "ff:u_dut.u_bin_be_i.q[553]"
+   ]
+  },
+  "gate_only_compare": {
+   "n": 13652,
+   "first": [
+    "ff:u_dut.u_bin_b_i.eq",
+    "ff:u_dut.u_bin_be_i.eq",
+    "ff:u_dut.u_bin_be_i.q#t[0]",
+    "ff:u_dut.u_bin_be_i.q#t[100]",
+    "ff:u_dut.u_bin_be_i.q#t[101]",
+    "ff:u_dut.u_bin_be_i.q#t[102]",
+    "ff:u_dut.u_bin_be_i.q#t[103]",
+    "ff:u_dut.u_bin_be_i.q#t[104]",
+    "ff:u_dut.u_bin_be_i.q#t[105]",
+    "ff:u_dut.u_bin_be_i.q#t[106]",
+    "ff:u_dut.u_bin_be_i.q#t[107]",
+    "ff:u_dut.u_bin_be_i.q#t[108]",
+    "ff:u_dut.u_bin_be_i.q#t[109]",
+    "ff:u_dut.u_bin_be_i.q#t[10]",
+    "ff:u_dut.u_bin_be_i.q#t[110]",
+    "ff:u_dut.u_bin_be_i.q#t[111]",
+    "ff:u_dut.u_bin_be_i.q#t[112]",
+    "ff:u_dut.u_bin_be_i.q#t[113]",
+    "ff:u_dut.u_bin_be_i.q#t[114]",
+    "ff:u_dut.u_bin_be_i.q#t[115]",
+    "ff:u_dut.u_bin_be_i.q#t[116]",
+    "ff:u_dut.u_bin_be_i.q#t[117]",
+    "ff:u_dut.u_bin_be_i.q#t[118]",
+    "ff:u_dut.u_bin_be_i.q#t[119]",
+    "ff:u_dut.u_bin_be_i.q#t[11]",
+    "ff:u_dut.u_bin_be_i.q#t[120]",
+    "ff:u_dut.u_bin_be_i.q#t[121]",
+    "ff:u_dut.u_bin_be_i.q#t[122]",
+    "ff:u_dut.u_bin_be_i.q#t[123]",
+    "ff:u_dut.u_bin_be_i.q#t[124]",
+    "ff:u_dut.u_bin_be_i.q#t[125]",
+    "ff:u_dut.u_bin_be_i.q#t[126]",
+    "ff:u_dut.u_bin_be_i.q#t[127]",
+    "ff:u_dut.u_bin_be_i.q#t[128]",
+    "ff:u_dut.u_bin_be_i.q#t[129]",
+    "ff:u_dut.u_bin_be_i.q#t[12]",
+    "ff:u_dut.u_bin_be_i.q#t[130]",
+    "ff:u_dut.u_bin_be_i.q#t[131]",
+    "ff:u_dut.u_bin_be_i.q#t[132]",
+    "ff:u_dut.u_bin_be_i.q#t[133]"
+   ]
+  }
+ },
+ "t_prove_s": 1.7,
+ "x_dont_care_points": {
+  "n": 279,
+  "first": [
+   "ff:u_dut.u_cland_ad_i.arm_cnt[0]",
+   "ff:u_dut.u_cland_ad_i.arm_cnt[1]",
+   "ff:u_dut.u_cland_ad_i.arm_cnt[2]",
+   "ff:u_dut.u_cland_ad_i.arm_cnt[3]",
+   "ff:u_dut.u_cland_ad_i.seen",
+   "ff:u_dut.u_cland_ad_i.tmo_cnt[0]",
+   "ff:u_dut.u_cland_ad_i.tmo_cnt[1]",
+   "ff:u_dut.u_cland_ad_i.tmo_cnt[2]",
+   "ff:u_dut.u_cland_ad_i.tmo_cnt[3]",
+   "ff:u_dut.u_cland_ad_i.tmo_cnt[4]",
+   "ff:u_dut.u_cland_ad_i.tmo_cnt[5]",
+   "ff:u_dut.u_cland_ad_i.tmo_cnt[6]",
+   "ff:u_dut.u_cland_ad_i.u_ring.dch[0].u_dsel.di[0]",
+   "ff:u_dut.u_cland_ad_i.u_ring.dch[0].u_dsel.di[1]",
+   "ff:u_dut.u_cland_ad_i.u_ring.dch[0].u_dsel.di[2]",
+   "ff:u_dut.u_cland_ad_i.u_ring.dch[0].u_dsel.di[3]",
+   "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.di[0]",
+   "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.di[1]",
+   "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.di[2]",
+   "ff:u_dut.u_cland_ad_i.u_ring.dch[1].u_dsel.di[3]",
+   "ff:u_dut.u_cland_au_i.arm_cnt[0]",
+   "ff:u_dut.u_cland_au_i.arm_cnt[1]",
+   "ff:u_dut.u_cland_au_i.arm_cnt[2]",
+   "ff:u_dut.u_cland_au_i.arm_cnt[3]",
+   "ff:u_dut.u_cland_au_i.seen",
+   "ff:u_dut.u_cland_au_i.tmo_cnt[0]",
+   "ff:u_dut.u_cland_au_i.tmo_cnt[1]",
+   "ff:u_dut.u_cland_au_i.tmo_cnt[2]",
+   "ff:u_dut.u_cland_au_i.tmo_cnt[3]",
+   "ff:u_dut.u_cland_au_i.tmo_cnt[4]",
+   "ff:u_dut.u_cland_au_i.tmo_cnt[5]",
+   "ff:u_dut.u_cland_au_i.tmo_cnt[6]",
+   "ff:u_dut.u_cland_au_i.u_ring.dch[0].u_dsel.di[0]",
+   "ff:u_dut.u_cland_au_i.u_ring.dch[0].u_dsel.di[1]",
+   "ff:u_dut.u_cland_au_i.u_ring.dch[0].u_dsel.di[2]",
+   "ff:u_dut.u_cland_au_i.u_ring.dch[0].u_dsel.di[3]",
+   "ff:u_dut.u_cland_au_i.u_ring.dch[1].u_dsel.di[0]",
+   "ff:u_dut.u_cland_au_i.u_ring.dch[1].u_dsel.di[1]",
+   "ff:u_dut.u_cland_au_i.u_ring.dch[1].u_dsel.di[2]",
+   "ff:u_dut.u_cland_au_i.u_ring.dch[1].u_dsel.di[3]"
+  ]
+ },
+ "kept_registers": {
+  "declared": 12865,
+  "in_netlist": 12865,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "counts": {
+  "compare_points": 30456,
+  "proved": 30456,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "30456 compare points proved; 18709 key points matched by name, 9842 register pairs / merges and 357 constant registers proved inductively; 0 RTL and 6192 gate registers unmatched and unobservable (proved as free inputs); 279 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "t_total_s": 294.8,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "kit provenance invalid: FileNotFoundError: [Errno 2] No such file or directory: '/work/PROVENANCE.json'"
+ }
+}

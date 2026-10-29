@@ -1,0 +1,259 @@
+{
+ "top": "ot_s81hd_spn",
+ "checked": 6224,
+ "ok": 6224,
+ "fails": {},
+ "flops": {
+  "rst_o_0": "u_rrl_88/q$_DFF_P_",
+  "rst_o_1": "u_rrl_127/q$_DFF_P_",
+  "rst_o_2": "u_rrl_126/q$_DFF_P_",
+  "start_o_0": "u_srl_88/q$_DFF_P_",
+  "start_o_1": "u_srl_127/q$_DFF_P_",
+  "start_o_2": "u_srl_126/q$_DFF_P_",
+  "x_i[565]": "u_cland_x_i/u_ring.s_d[3][565]$_DFFE_PP_",
+  "x_i[564]": "u_cland_x_i/u_ring.s_d[3][564]$_DFFE_PP_",
+  "x_i[563]": "u_cland_x_i/u_ring.s_d[3][563]$_DFFE_PP_",
+  "x_i[562]": "u_cland_x_i/u_ring.s_d[3][562]$_DFFE_PP_",
+  "x_i[561]": "u_cland_x_i/u_ring.s_d[3][561]$_DFFE_PP_",
+  "x_i[560]": "u_cland_x_i/u_ring.s_d[3][560]$_DFFE_PP_",
+  "x_i[559]": "u_cland_x_i/u_ring.s_d[3][559]$_DFFE_PP_",
+  "x_i[558]": "u_cland_x_i/u_ring.s_d[3][558]$_DFFE_PP_",
+  "x_i[557]": "u_cland_x_i/u_ring.s_d[3][557]$_DFFE_PP_",
+  "x_i[556]": "u_cland_x_i/u_ring.s_d[3][556]$_DFFE_PP_",
+  "x_i[555]": "u_cland_x_i/u_ring.s_d[3][555]$_DFFE_PP_",
+  "x_i[554]": "u_cland_x_i/u_ring.s_d[3][554]$_DFFE_PP_",
+  "x_i[553]": "u_cland_x_i/u_ring.s_d[3][553]$_DFFE_PP_",
+  "x_i[552]": "u_cland_x_i/u_ring.s_d[3][552]$_DFFE_PP_"
+ },
+ "straps_exempt": [
+  "strap_ca_efall",
+  "strap_ca_k_ad_i",
+  "strap_ca_k_au_i",
+  "strap_ca_k_b_i",
+  "strap_ca_k_bd_i",
+  "strap_ca_k_be_i",
+  "strap_ca_k_bu_i",
+  "strap_ca_k_bw_i",
+  "strap_ca_k_hd_i",
+  "strap_ca_k_hu_i",
+  "strap_ca_k_x_i",
+  "strap_ca_pad",
+  "strap_ca_root",
+  "strap_ca_tsel"
+ ],
+ "dead_declared": [],
+ "bumps_exempt": [],
+ "clock_exports": {
+  "fclk_out_ad_o": "clk",
+  "fclk_out_au_o": "clk",
+  "fclk_out_b_o": "clk",
+  "fclk_out_bd_o": "clk",
+  "fclk_out_bu_o": "clk",
+  "fclk_out_hd_o": "clk",
+  "fclk_out_hu_o": "clk",
+  "fclk_out_x_o": "clk",
+  "fclk_out_xe_o": "clk",
+  "fclk_out_xw_o": "clk"
+ },
+ "land_mux_depth": {
+  "2": 11582,
+  "1": 814
+ },
+ "land_slot_bits": 3099,
+ "land_mux_bits": 3099,
+ "ring_start": {
+  "cland_fstart_in_ad_i": {
+   "ring": [
+    "ad_i"
+   ],
+   "ring_clock": [
+    "u_cland_ad_i/fclk"
+   ],
+   "writer_flops": 294,
+   "writer_groups": {
+    "u_cland_ad_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_cland_ad_i/u_ring.s_d[N][N]$_DFFE_PP_": 268,
+    "u_cland_ad_i/u_ring.s_lap[N]$_DFFE_PP_": 4,
+    "u_cland_ad_i/u_ring.s_w[N]$_SDFF_PN0_": 4,
+    "u_cland_ad_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_au_i": {
+   "ring": [
+    "au_i"
+   ],
+   "ring_clock": [
+    "u_cland_au_i/fclk"
+   ],
+   "writer_flops": 294,
+   "writer_groups": {
+    "u_cland_au_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_cland_au_i/u_ring.s_d[N][N]$_DFFE_PP_": 268,
+    "u_cland_au_i/u_ring.s_lap[N]$_DFFE_PP_": 4,
+    "u_cland_au_i/u_ring.s_w[N]$_SDFF_PN0_": 4,
+    "u_cland_au_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_b_i": {
+   "ring": [
+    "b_i"
+   ],
+   "ring_clock": [
+    "u_cland_b_i/fclk"
+   ],
+   "writer_flops": 2298,
+   "writer_groups": {
+    "u_cland_b_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_cland_b_i/u_ring.s_d[N][N]$_DFFE_PP_": 2272,
+    "u_cland_b_i/u_ring.s_lap[N]$_DFFE_PP_": 4,
+    "u_cland_b_i/u_ring.s_w[N]$_SDFF_PN0_": 4,
+    "u_cland_b_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_bd_i": {
+   "ring": [
+    "bd_i"
+   ],
+   "ring_clock": [
+    "u_cland_bd_i/fclk"
+   ],
+   "writer_flops": 294,
+   "writer_groups": {
+    "u_cland_bd_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_cland_bd_i/u_ring.s_d[N][N]$_DFFE_PP_": 268,
+    "u_cland_bd_i/u_ring.s_lap[N]$_DFFE_PP_": 4,
+    "u_cland_bd_i/u_ring.s_w[N]$_SDFF_PN0_": 4,
+    "u_cland_bd_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_be_i": {
+   "ring": [
+    "be_i"
+   ],
+   "ring_clock": [
+    "u_cland_be_i/fclk"
+   ],
+   "writer_flops": 2298,
+   "writer_groups": {
+    "u_cland_be_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_cland_be_i/u_ring.s_d[N][N]$_DFFE_PP_": 2272,
+    "u_cland_be_i/u_ring.s_lap[N]$_DFFE_PP_": 4,
+    "u_cland_be_i/u_ring.s_w[N]$_SDFF_PN0_": 4,
+    "u_cland_be_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_bu_i": {
+   "ring": [
+    "bu_i"
+   ],
+   "ring_clock": [
+    "u_cland_bu_i/fclk"
+   ],
+   "writer_flops": 294,
+   "writer_groups": {
+    "u_cland_bu_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_cland_bu_i/u_ring.s_d[N][N]$_DFFE_PP_": 268,
+    "u_cland_bu_i/u_ring.s_lap[N]$_DFFE_PP_": 4,
+    "u_cland_bu_i/u_ring.s_w[N]$_SDFF_PN0_": 4,
+    "u_cland_bu_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_bw_i": {
+   "ring": [
+    "bw_i"
+   ],
+   "ring_clock": [
+    "u_cland_bw_i/fclk"
+   ],
+   "writer_flops": 2298,
+   "writer_groups": {
+    "u_cland_bw_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_cland_bw_i/u_ring.s_d[N][N]$_DFFE_PP_": 2272,
+    "u_cland_bw_i/u_ring.s_lap[N]$_DFFE_PP_": 4,
+    "u_cland_bw_i/u_ring.s_w[N]$_SDFF_PN0_": 4,
+    "u_cland_bw_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_hd_i": {
+   "ring": [
+    "hd_i"
+   ],
+   "ring_clock": [
+    "u_cland_hd_i/fclk"
+   ],
+   "writer_flops": 1146,
+   "writer_groups": {
+    "u_cland_hd_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_cland_hd_i/u_ring.s_d[N][N]$_DFFE_PP_": 1120,
+    "u_cland_hd_i/u_ring.s_lap[N]$_DFFE_PP_": 4,
+    "u_cland_hd_i/u_ring.s_w[N]$_SDFF_PN0_": 4,
+    "u_cland_hd_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [
+    "u_cland_origin_t0/s0$_SDFF_PN0_",
+    "u_cland_origin_t0/sf$_DFF_N_"
+   ],
+   "sampler_clock": "u_srl_98/clk"
+  },
+  "cland_fstart_in_hu_i": {
+   "ring": [
+    "hu_i"
+   ],
+   "ring_clock": [
+    "u_cland_hu_i/fclk"
+   ],
+   "writer_flops": 1142,
+   "writer_groups": {
+    "u_cland_hu_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_cland_hu_i/u_ring.s_d[N][N]$_DFFE_PP_": 1116,
+    "u_cland_hu_i/u_ring.s_lap[N]$_DFFE_PP_": 4,
+    "u_cland_hu_i/u_ring.s_w[N]$_SDFF_PN0_": 4,
+    "u_cland_hu_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [
+    "u_cland_origin_t1/s0$_SDFF_PN0_",
+    "u_cland_origin_t1/sf$_DFF_N_"
+   ],
+   "sampler_clock": "u_srl_98/clk"
+  },
+  "cland_fstart_in_x_i": {
+   "ring": [
+    "x_i"
+   ],
+   "ring_clock": [
+    "u_cland_x_i/fclk"
+   ],
+   "writer_flops": 2298,
+   "writer_groups": {
+    "u_cland_x_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_cland_x_i/u_ring.s_d[N][N]$_DFFE_PP_": 2272,
+    "u_cland_x_i/u_ring.s_lap[N]$_DFFE_PP_": 4,
+    "u_cland_x_i/u_ring.s_w[N]$_SDFF_PN0_": 4,
+    "u_cland_x_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  }
+ },
+ "ring_start_bits": 10,
+ "pairs_declared": [],
+ "planned_bits": 6158,
+ "missing_ports": 0,
+ "fail_counts": {},
+ "verdict": "PASS",
+ "netlist": "/work/run/results/asap7/dp_hd_spn/base/1_2_yosys.v"
+}
