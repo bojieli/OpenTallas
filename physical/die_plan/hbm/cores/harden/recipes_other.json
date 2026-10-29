@@ -384,7 +384,11 @@
   "source_commit": "d34578d6f",
   "view_cell": "ot_hgi_coll_gq_issue",
   "view_kind": "SYNTH",
-  "view_port_bits": 4032
+  "view_port_bits": 4032,
+  "files_at": {
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv": "f437090e018c13d87f7854d83b40be0578f80b2a"
+  },
+  "files_at_note": "DIE-HBM-18 2026-10-29: tree13 read at f437090e0 (format pipeline reset; old pin gave kit LEC NEQ 1056/1024 on s8/s10_fp4 X power-up); fresh-synth kit LEC EQUIVALENT 16081/16081 (fmt)"
  },
  "ot_hgi_coll_gq_land__237.6x237.6": {
   "top": "ot_hgi_coll_gq_land",
