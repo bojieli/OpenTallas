@@ -115,3 +115,46 @@ def test_bitmap_by_net_identity():
 def test_bitmap_unknown_bus_fails():
     r = SB.build(MASTER, "mtop", REST, "rtop", [["ro_x_n", "input", 4, 0], ["nobody", "input", 3, 0]])
     assert r["check"]["verdict"] == "FAIL" and any("nobody" in p for p in r["check"]["problems"])
+
+
+@pytest.mark.parametrize("heuristic", ["NARROW", "BY_ELIMINATION"])
+def test_heuristic_mapping_cannot_be_pass_or_installed(tmp_path, monkeypatch, heuristic):
+    import json
+    master = {"modules": {"mtop": {"netnames": {"a": {"bits": [2, 3, 4, 5]}}, "cells": {}}}}
+    rest = """module rtop (
+    input wire [1:0] a
+);
+    rtop_x u_x (
+        .\\a[0] (a[0]),
+        .\\a[2] (a[1])
+    );
+endmodule
+"""
+    bus = "a" if heuristic == "NARROW" else "glue"
+    cut = [[bus, "input", 2, 0]]
+    r = SB.build(master, "mtop", rest, "rtop", cut)
+    assert r["check"]["verdict"] == "UNPROVEN"
+    assert r["check"]["notes"][bus].startswith(heuristic + ":")
+    assert r["check"]["unproven_mappings"][bus]
+    for name, obj in [("master.json", master), ("cut.json", {"piece": {"piece": cut}}),
+                      ("canon.json", {"types": {"ft": {"type_ids": {"tid": {"cut_pins": {}}}}}})]:
+        (tmp_path / name).write_text(json.dumps(obj))
+    (tmp_path / "rest.sv").write_text(rest)
+    sidecar = tmp_path / "canonical_bitmap_split.json"
+    argv = ["split_bitmap.py", "--master-json", str(tmp_path / "master.json"), "--master-top", "mtop",
+            "--rest-sv", str(tmp_path / "rest.sv"), "--rest-top", "rtop", "--cut", str(tmp_path / "cut.json"),
+            "--piece", "piece", "--canon", str(tmp_path / "canon.json"), "--ftype", "ft",
+            "--out", str(tmp_path / "check.json"), "--sidecar", str(sidecar)]
+    monkeypatch.setattr(sys, "argv", argv)
+    assert SB.main() == 1
+    assert not sidecar.exists()
+    # A rejected candidate must also leave an existing qualified sidecar untouched.
+    sidecar.write_text('{"existing": "preserved"}\n')
+    assert SB.main() == 1
+    assert sidecar.read_text() == '{"existing": "preserved"}\n'
+
+
+def test_missing_rtl_input_blocks_pass():
+    r = SB.build(MASTER, "mtop", REST, "rtop", [["ro_x_n", "input", 4, 0]])
+    assert r["check"]["n_rtl_inputs_uncovered"] > 0
+    assert r["check"]["verdict"] == "FAIL"
