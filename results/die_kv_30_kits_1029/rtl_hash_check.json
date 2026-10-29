@@ -1,0 +1,571 @@
+{
+ "kv3_hroot": {
+  "kit_rtl_f": "/srv/opentallas-scratch2/claude/codex-kv-0822/bind_fast/kit_rtl/kv3_hroot/kit_rtl.f",
+  "kit_rtl_f_sha256": "be071faa468afb883b708d446fa5d0efbfaab120be0dc1b651731dd811ddf674",
+  "n_src": 15,
+  "n_kit": 15,
+  "mismatch": [],
+  "kit_only": [],
+  "verdict": "MATCH",
+  "files": [
+   [
+    "kv3_hroot_part.sv",
+    "20f4164d81108021",
+    "20f4164d81108021"
+   ],
+   [
+    "kv3_hroot_part_bound.sv",
+    "d560ec2ea7bc0b14",
+    "d560ec2ea7bc0b14"
+   ],
+   [
+    "bind_cells.sv",
+    "be7f7687ed209ec8",
+    "be7f7687ed209ec8"
+   ],
+   [
+    "ot_reset_sync.sv",
+    "607e5cbb71e4912c",
+    "607e5cbb71e4912c"
+   ],
+   [
+    "qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv",
+    "e38a80024ea26b60",
+    "e38a80024ea26b60"
+   ],
+   [
+    "qkd_kv_hroot_land.sv",
+    "7fded0aa5be4bdf9",
+    "7fded0aa5be4bdf9"
+   ],
+   [
+    "qkd_kv_ctl_half_root_b.sv",
+    "8dc8b6ed81b9fe2b",
+    "8dc8b6ed81b9fe2b"
+   ],
+   [
+    "qkd_hp_or2.sv",
+    "f198c3fcd26190bc",
+    "f198c3fcd26190bc"
+   ],
+   [
+    "qkd_ctrl_strip.sv",
+    "5350c7f38ff06dee",
+    "5350c7f38ff06dee"
+   ],
+   [
+    "ot_async_fifo.sv",
+    "7a3df9c5491bddcd",
+    "7a3df9c5491bddcd"
+   ],
+   [
+    "ot_dp_clk_landing_ca.sv",
+    "1f43df7fd4a54f8a",
+    "1f43df7fd4a54f8a"
+   ],
+   [
+    "ot_dp_clk_landing.sv",
+    "ba518aa441e7e838",
+    "ba518aa441e7e838"
+   ],
+   [
+    "ot_dp_id.sv",
+    "9ddf1e22d339f040",
+    "9ddf1e22d339f040"
+   ],
+   [
+    "ot_dp_efault.sv",
+    "1669eae2f0c5d69e",
+    "1669eae2f0c5d69e"
+   ],
+   [
+    "ot_meso_fifo.sv",
+    "12326142ee9281ef",
+    "12326142ee9281ef"
+   ]
+  ]
+ },
+ "kv3_io_cor": {
+  "kit_rtl_f": "/srv/opentallas-scratch2/claude/codex-kv-0822/bind_fast/kit_rtl/kv3_io_cor/kit_rtl.f",
+  "kit_rtl_f_sha256": "897f1a9967b6040dbf27cf0dfa54038f2c6d182d49e3862d26202593b1b75037",
+  "n_src": 7,
+  "n_kit": 7,
+  "mismatch": [],
+  "kit_only": [],
+  "verdict": "MATCH",
+  "files": [
+   [
+    "kv3_io_cor_part.sv",
+    "72194be855ed452d",
+    "72194be855ed452d"
+   ],
+   [
+    "kv3_io_cor_part_bound.sv",
+    "656795d30129e9fa",
+    "656795d30129e9fa"
+   ],
+   [
+    "bind_cells.sv",
+    "be7f7687ed209ec8",
+    "be7f7687ed209ec8"
+   ],
+   [
+    "ot_reset_sync.sv",
+    "607e5cbb71e4912c",
+    "607e5cbb71e4912c"
+   ],
+   [
+    "ot_dp_clk_landing_ca.sv",
+    "1f43df7fd4a54f8a",
+    "1f43df7fd4a54f8a"
+   ],
+   [
+    "ot_dp_clk_landing.sv",
+    "ba518aa441e7e838",
+    "ba518aa441e7e838"
+   ],
+   [
+    "ot_meso_fifo.sv",
+    "12326142ee9281ef",
+    "12326142ee9281ef"
+   ]
+  ]
+ },
+ "kv3_io_cor_v1": {
+  "kit_rtl_f": "/srv/opentallas-scratch2/claude/codex-kv-0822/bind_fast/kit_rtl/kv3_io_cor_v1/kit_rtl.f",
+  "kit_rtl_f_sha256": "2e84724fefd77d2968672495adadd5be289a8802ac0735ec07be4f354e55e6a4",
+  "n_src": 7,
+  "n_kit": 7,
+  "mismatch": [],
+  "kit_only": [],
+  "verdict": "MATCH",
+  "files": [
+   [
+    "kv3_io_cor_v1_part.sv",
+    "cf06c4549a22e2fb",
+    "cf06c4549a22e2fb"
+   ],
+   [
+    "kv3_io_cor_v1_part_bound.sv",
+    "6f1c171fbe41ab19",
+    "6f1c171fbe41ab19"
+   ],
+   [
+    "bind_cells.sv",
+    "be7f7687ed209ec8",
+    "be7f7687ed209ec8"
+   ],
+   [
+    "ot_reset_sync.sv",
+    "607e5cbb71e4912c",
+    "607e5cbb71e4912c"
+   ],
+   [
+    "ot_dp_clk_landing_ca.sv",
+    "1f43df7fd4a54f8a",
+    "1f43df7fd4a54f8a"
+   ],
+   [
+    "ot_dp_clk_landing.sv",
+    "ba518aa441e7e838",
+    "ba518aa441e7e838"
+   ],
+   [
+    "ot_meso_fifo.sv",
+    "12326142ee9281ef",
+    "12326142ee9281ef"
+   ]
+  ]
+ },
+ "kv3_io_ft": {
+  "kit_rtl_f": "/srv/opentallas-scratch2/claude/codex-kv-0822/bind_fast/kit_rtl/kv3_io_ft/kit_rtl.f",
+  "kit_rtl_f_sha256": "a802db2bf2475a8f6b55839bcd58548cff52a1a3602a5e699d6976b081d0dcf8",
+  "n_src": 7,
+  "n_kit": 7,
+  "mismatch": [],
+  "kit_only": [],
+  "verdict": "MATCH",
+  "files": [
+   [
+    "kv3_io_ft_part.sv",
+    "5d437e8237282655",
+    "5d437e8237282655"
+   ],
+   [
+    "kv3_io_ft_part_bound.sv",
+    "c79aac1558fff5a0",
+    "c79aac1558fff5a0"
+   ],
+   [
+    "bind_cells.sv",
+    "be7f7687ed209ec8",
+    "be7f7687ed209ec8"
+   ],
+   [
+    "ot_reset_sync.sv",
+    "607e5cbb71e4912c",
+    "607e5cbb71e4912c"
+   ],
+   [
+    "ot_dp_clk_landing_ca.sv",
+    "1f43df7fd4a54f8a",
+    "1f43df7fd4a54f8a"
+   ],
+   [
+    "ot_dp_clk_landing.sv",
+    "ba518aa441e7e838",
+    "ba518aa441e7e838"
+   ],
+   [
+    "ot_meso_fifo.sv",
+    "12326142ee9281ef",
+    "12326142ee9281ef"
+   ]
+  ]
+ },
+ "kv3_io_ft_v1": {
+  "kit_rtl_f": "/srv/opentallas-scratch2/claude/codex-kv-0822/bind_fast/kit_rtl/kv3_io_ft_v1/kit_rtl.f",
+  "kit_rtl_f_sha256": "030cdf57de2481dcbd4f3e4b09dba84552e6cc64c9e980e41f7f015fddc9910a",
+  "n_src": 7,
+  "n_kit": 7,
+  "mismatch": [],
+  "kit_only": [],
+  "verdict": "MATCH",
+  "files": [
+   [
+    "kv3_io_ft_v1_part.sv",
+    "cae9dcc23d48e7a2",
+    "cae9dcc23d48e7a2"
+   ],
+   [
+    "kv3_io_ft_v1_part_bound.sv",
+    "2bf041083c755caf",
+    "2bf041083c755caf"
+   ],
+   [
+    "bind_cells.sv",
+    "be7f7687ed209ec8",
+    "be7f7687ed209ec8"
+   ],
+   [
+    "ot_reset_sync.sv",
+    "607e5cbb71e4912c",
+    "607e5cbb71e4912c"
+   ],
+   [
+    "ot_dp_clk_landing_ca.sv",
+    "1f43df7fd4a54f8a",
+    "1f43df7fd4a54f8a"
+   ],
+   [
+    "ot_dp_clk_landing.sv",
+    "ba518aa441e7e838",
+    "ba518aa441e7e838"
+   ],
+   [
+    "ot_meso_fifo.sv",
+    "12326142ee9281ef",
+    "12326142ee9281ef"
+   ]
+  ]
+ },
+ "kv3_hub_Ei": {
+  "kit_rtl_f": "/srv/opentallas-scratch2/claude/codex-kv-0822/bind_fast/kit_rtl/kv3_hub_Ei/kit_rtl.f",
+  "kit_rtl_f_sha256": "a43f39cbaae1d6309a3108b7f70436cc385beb88b6e774079cf637ce5db3071b",
+  "n_src": 8,
+  "n_kit": 8,
+  "mismatch": [],
+  "kit_only": [],
+  "verdict": "MATCH",
+  "files": [
+   [
+    "kv3_hub_Ei_part.sv",
+    "f9a1b9b3ad91103c",
+    "f9a1b9b3ad91103c"
+   ],
+   [
+    "kv3_hub_Ei_part_bound.sv",
+    "249151da40e937b8",
+    "249151da40e937b8"
+   ],
+   [
+    "bind_cells.sv",
+    "be7f7687ed209ec8",
+    "be7f7687ed209ec8"
+   ],
+   [
+    "ot_reset_sync.sv",
+    "607e5cbb71e4912c",
+    "607e5cbb71e4912c"
+   ],
+   [
+    "qkd_hp_or2.sv",
+    "f198c3fcd26190bc",
+    "f198c3fcd26190bc"
+   ],
+   [
+    "ot_dp_clk_landing_ca.sv",
+    "1f43df7fd4a54f8a",
+    "1f43df7fd4a54f8a"
+   ],
+   [
+    "ot_dp_clk_landing.sv",
+    "ba518aa441e7e838",
+    "ba518aa441e7e838"
+   ],
+   [
+    "ot_meso_fifo.sv",
+    "12326142ee9281ef",
+    "12326142ee9281ef"
+   ]
+  ]
+ },
+ "kv3_sys_SD": {
+  "kit_rtl_f": "/srv/opentallas-scratch2/claude/codex-kv-0822/bind_fast/kit_rtl/kv3_sys_SD/kit_rtl.f",
+  "kit_rtl_f_sha256": "0d30d8fb710bb31f79ed1449913d170fa48f47019af0f3a764f4812ec0d741ad",
+  "n_src": 11,
+  "n_kit": 11,
+  "mismatch": [],
+  "kit_only": [],
+  "verdict": "MATCH",
+  "files": [
+   [
+    "kv3_sys_SD_part.sv",
+    "fa16bdc7ef20f48b",
+    "fa16bdc7ef20f48b"
+   ],
+   [
+    "kv3_sys_SD_part_bound.sv",
+    "7adff5b72b92045d",
+    "7adff5b72b92045d"
+   ],
+   [
+    "bind_cells.sv",
+    "be7f7687ed209ec8",
+    "be7f7687ed209ec8"
+   ],
+   [
+    "ot_reset_sync.sv",
+    "607e5cbb71e4912c",
+    "607e5cbb71e4912c"
+   ],
+   [
+    "serdes_c45.sv",
+    "512d83f552259211",
+    "512d83f552259211"
+   ],
+   [
+    "kv_phy_slices.sv",
+    "7dc1dc73edddec83",
+    "7dc1dc73edddec83"
+   ],
+   [
+    "ot_fdi_phy_cdc.sv",
+    "9ef73a80ebe183af",
+    "9ef73a80ebe183af"
+   ],
+   [
+    "ot_async_fifo.sv",
+    "7a3df9c5491bddcd",
+    "7a3df9c5491bddcd"
+   ],
+   [
+    "ot_dp_clk_landing_ca.sv",
+    "1f43df7fd4a54f8a",
+    "1f43df7fd4a54f8a"
+   ],
+   [
+    "ot_dp_clk_landing.sv",
+    "ba518aa441e7e838",
+    "ba518aa441e7e838"
+   ],
+   [
+    "ot_meso_fifo.sv",
+    "12326142ee9281ef",
+    "12326142ee9281ef"
+   ]
+  ]
+ },
+ "kv3_sys_SD_v1": {
+  "kit_rtl_f": "/srv/opentallas-scratch2/claude/codex-kv-0822/bind_fast/kit_rtl/kv3_sys_SD_v1/kit_rtl.f",
+  "kit_rtl_f_sha256": "6b703072eecd5a5e2f31705b3bc8d92a1d7c0d6761172228c4ad8e16b2cd566e",
+  "n_src": 11,
+  "n_kit": 11,
+  "mismatch": [],
+  "kit_only": [],
+  "verdict": "MATCH",
+  "files": [
+   [
+    "kv3_sys_SD_v1_part.sv",
+    "38aa350f3134b8e1",
+    "38aa350f3134b8e1"
+   ],
+   [
+    "kv3_sys_SD_v1_part_bound.sv",
+    "6f7ddfd25c57deef",
+    "6f7ddfd25c57deef"
+   ],
+   [
+    "bind_cells.sv",
+    "be7f7687ed209ec8",
+    "be7f7687ed209ec8"
+   ],
+   [
+    "ot_reset_sync.sv",
+    "607e5cbb71e4912c",
+    "607e5cbb71e4912c"
+   ],
+   [
+    "serdes_c45.sv",
+    "512d83f552259211",
+    "512d83f552259211"
+   ],
+   [
+    "kv_phy_slices.sv",
+    "7dc1dc73edddec83",
+    "7dc1dc73edddec83"
+   ],
+   [
+    "ot_fdi_phy_cdc.sv",
+    "9ef73a80ebe183af",
+    "9ef73a80ebe183af"
+   ],
+   [
+    "ot_async_fifo.sv",
+    "7a3df9c5491bddcd",
+    "7a3df9c5491bddcd"
+   ],
+   [
+    "ot_dp_clk_landing_ca.sv",
+    "1f43df7fd4a54f8a",
+    "1f43df7fd4a54f8a"
+   ],
+   [
+    "ot_dp_clk_landing.sv",
+    "ba518aa441e7e838",
+    "ba518aa441e7e838"
+   ],
+   [
+    "ot_meso_fifo.sv",
+    "12326142ee9281ef",
+    "12326142ee9281ef"
+   ]
+  ]
+ },
+ "kv3_sys_c": {
+  "kit_rtl_f": "/srv/opentallas-scratch2/claude/codex-kv-0822/bind_fast/kit_rtl/kv3_sys_c/kit_rtl.f",
+  "kit_rtl_f_sha256": "826514e4db775291ceb2756e970744f94d7127b8a3047043f2d078caf348a690",
+  "n_src": 21,
+  "n_kit": 21,
+  "mismatch": [],
+  "kit_only": [],
+  "verdict": "MATCH",
+  "files": [
+   [
+    "kv3_sys_c_part.sv",
+    "390b0b7dd8981753",
+    "390b0b7dd8981753"
+   ],
+   [
+    "kv3_sys_c_part_bound.sv",
+    "5d9ae08b801dfedb",
+    "5d9ae08b801dfedb"
+   ],
+   [
+    "bind_cells.sv",
+    "be7f7687ed209ec8",
+    "be7f7687ed209ec8"
+   ],
+   [
+    "ot_reset_sync.sv",
+    "607e5cbb71e4912c",
+    "607e5cbb71e4912c"
+   ],
+   [
+    "kv_hard_models.sv",
+    "871d85a23104c456",
+    "871d85a23104c456"
+   ],
+   [
+    "ot_qwen_d2d_sfm.sv",
+    "cabd2585331f943c",
+    "cabd2585331f943c"
+   ],
+   [
+    "ot_qwen_d2d_services.sv",
+    "5f195b4304470722",
+    "5f195b4304470722"
+   ],
+   [
+    "ot_rst_pipe.sv",
+    "cda7b2cfd896d067",
+    "cda7b2cfd896d067"
+   ],
+   [
+    "ot_qwen_d2d_safe_fo.sv",
+    "1dd96671d8b118f0",
+    "1dd96671d8b118f0"
+   ],
+   [
+    "ot_qwen_status_observers_v1.sv",
+    "69b74338e3eca226",
+    "69b74338e3eca226"
+   ],
+   [
+    "ot_qwen_crc_parallel.sv",
+    "5af1eb77614de845",
+    "5af1eb77614de845"
+   ],
+   [
+    "d2d_sram_1r1w_64x137_m1_r2c2_p288_bb.v",
+    "1c73f0dd60671fec",
+    "1c73f0dd60671fec"
+   ],
+   [
+    "d2d_sram_1r1w_64x137_m1_r2c2_p192_bb.v",
+    "69027506af25d592",
+    "69027506af25d592"
+   ],
+   [
+    "ot_qwen_d2d_dies.sv",
+    "c74e71552631c487",
+    "c74e71552631c487"
+   ],
+   [
+    "qkd_d2d_cal_seq_bc4_rom64.sv",
+    "0f45c0c45a969c84",
+    "0f45c0c45a969c84"
+   ],
+   [
+    "ot_rom_64x32_m2_bb.v",
+    "bc04bd8bf385f146",
+    "bc04bd8bf385f146"
+   ],
+   [
+    "ot_qwen_d2d_cal_seq_rom64_core.sv",
+    "7114036128819c85",
+    "7114036128819c85"
+   ],
+   [
+    "ot_qkvd_ucie_x64_phy_bb.v",
+    "e7149e816801a2c4",
+    "e7149e816801a2c4"
+   ],
+   [
+    "ot_dp_clk_landing_ca.sv",
+    "1f43df7fd4a54f8a",
+    "1f43df7fd4a54f8a"
+   ],
+   [
+    "ot_dp_clk_landing.sv",
+    "ba518aa441e7e838",
+    "ba518aa441e7e838"
+   ],
+   [
+    "ot_meso_fifo.sv",
+    "12326142ee9281ef",
+    "12326142ee9281ef"
+   ]
+  ]
+ }
+}

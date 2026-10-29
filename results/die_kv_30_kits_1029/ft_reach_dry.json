@@ -1,0 +1,81 @@
+{
+ "kv3_hroot": {
+  "n_ft_slots": 14,
+  "slots_needing_more_stations": 0,
+  "examples": []
+ },
+ "kv3_io_cor": {
+  "n_ft_slots": 19,
+  "slots_needing_more_stations": 0,
+  "examples": []
+ },
+ "kv3_io_cor_v1": {
+  "n_ft_slots": 25,
+  "slots_needing_more_stations": 0,
+  "examples": []
+ },
+ "kv3_io_ft": {
+  "n_ft_slots": 4,
+  "slots_needing_more_stations": 0,
+  "examples": []
+ },
+ "kv3_io_ft_v1": {
+  "n_ft_slots": 4,
+  "slots_needing_more_stations": 0,
+  "examples": []
+ },
+ "kv3_hub_Ei": {
+  "n_ft_slots": 76,
+  "slots_needing_more_stations": 7,
+  "examples": [
+   {
+    "type": "kv3_hub_Ei",
+    "slot": "ft0",
+    "stations": [
+     6,
+     7
+    ],
+    "worst_bit_route_um": 2387.456,
+    "reach_um": 405.0,
+    "margin": 0.98
+   },
+   {
+    "type": "kv3_hub_Ei",
+    "slot": "ft15",
+    "stations": [
+     6,
+     7
+    ],
+    "worst_bit_route_um": 2397.568,
+    "reach_um": 405.0,
+    "margin": 0.98
+   },
+   {
+    "type": "kv3_hub_Ei",
+    "slot": "ft16",
+    "stations": [
+     6,
+     7
+    ],
+    "worst_bit_route_um": 2389.184,
+    "reach_um": 405.0,
+    "margin": 0.98
+   }
+  ]
+ },
+ "kv3_sys_SD": {
+  "n_ft_slots": 0,
+  "slots_needing_more_stations": 0,
+  "examples": []
+ },
+ "kv3_sys_SD_v1": {
+  "n_ft_slots": 0,
+  "slots_needing_more_stations": 0,
+  "examples": []
+ },
+ "kv3_sys_c": {
+  "n_ft_slots": 1,
+  "slots_needing_more_stations": 0,
+  "examples": []
+ }
+}
