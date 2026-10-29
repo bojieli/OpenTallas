@@ -14,3 +14,10 @@ request is rejected while its actual 1x stack is accepted.
 
 Inherited clock replays remain live on intel2 (`clktool1-hbm`,
 `clktool3-qc25`) and epyc2 (`clktool3-s81go16`); no duplicate builds started.
+
+The future s81_go16 config now uses 24 independent DME workers, matching
+the existing QC configuration. The inherited serial replay continues
+untouched. DME attaches regions in the same serial order; existing
+serial/parallel equality and config/argv checks: 17 PASS. This avoids
+unnecessarily serial region solves on future clock builds; CLI --workers
+still overrides it to match admitted resources. No RTL or cycle change.
