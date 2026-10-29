@@ -35,6 +35,11 @@ def test_macro_leaves_equal_total_stages(form):
             assert nodes[n]["master"] == PM.CHAIN_MASTER
             n, k = nodes[n]["parent"], k + 1
         assert k + 1 == S + 1
+    for n in nodes.values():                           # KV-KITS-15: chain cell footprint (xy = centre) inside its island
+        if n["name"].startswith("mp_pv_ck_mac"):
+            x0, y0, x1, y1 = n["island_rect_um"]
+            x, y = n["xy_um"]
+            assert x0 <= x - PM.CHAIN_W_UM / 2 and x + PM.CHAIN_W_UM / 2 <= x1 and y0 <= y - PM.ROW_UM / 2 and y + PM.ROW_UM / 2 <= y1
     for l in t["leaves"]:                              # island nets carry registers only
         if l["node"].startswith("mp_pv_ck_isl"):
             assert l.get("cts_open") and not any("u_mem" in s for s in l["sinks"])
