@@ -13,6 +13,7 @@ sys.path[:0]=[str(ROOT/'tools/die_plan'),str(ROOT/'tools/s81_head')]
 import gen_phys
 from head_start_reset_aliases import patch_rtl
 from head_tile_relay_kit import install
+from head_count_strap_sites import apply as count_strap_sites
 
 def build(source,out):
  source,out=Path(source).resolve(),Path(out).resolve()
@@ -25,6 +26,11 @@ def build(source,out):
  t['clock'].update(insertion_ps=525.,insertion_ff_ps=425.25,insertion_basis='native hd_tile525/425.25 physical contract; fresh clock assignment required after candidate placement')
  # Exactly one count-aligned data ring is in this tile; the per-ring manifest below must confirm it.
  t['cells']=int(t.get('cells',0))+8
+ # Compose exports declare the constant straps but do not allocate their pin
+ # sites. Stamp the existing HEAD pin planner before kit generation, so the
+ # netlist's8 count bits have physical pins and remain in the port-bind census.
+ plan,strap_sites=count_strap_sites(plan,path,ROOT,types={'hd_tile'})
+ t=plan['partition_types']['hd_tile']
  candidate=path.with_name('source_plan_statuscopy.json');candidate.write_text(json.dumps(plan,indent=1)+'\n')
  kits=gen_phys.write_phys(plan,out,ROOT,types=['hd_tile'],trial=True,plan_path=candidate,landing=side)
  kit=Path(kits[0]);wrapper=out/'_rtl'/f"{t['module']}.sv"
@@ -39,7 +45,7 @@ def build(source,out):
  if ff!=8:raise ValueError('status-copy price must be exactly8extraFF for this SOURCE7 tile, got'+str(ff))
  report=dict(source_plan_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),source_sidecar_sha256=hashlib.sha256(side_path.read_bytes()).hexdigest(),
   retained_export_copy=True,raw_reset_exports=len(rows),added_status_flops=ff,added_cycles=0,clock_source_budget_ps=dict(TT=525.,FF=425.25),
-  corridor=receipt,physical_clock_assignment='NOT RUN: actual new sinks required before CTS',route_qualified=False)
+  corridor=receipt,count_strap_sites=strap_sites,physical_clock_assignment='NOT RUN: actual new sinks required before CTS',route_qualified=False)
  (out/'source7_tile_receipt.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
  return kit
 

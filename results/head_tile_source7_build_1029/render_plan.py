@@ -12,6 +12,8 @@ for side,color in [('i','blue'),('o','purple')]:
  q=[q for q in pins if q['bus']==side];ax.scatter([q['x'] for q in q],[q['y'] for q in q],s=3,color=color,label=side+' data pins')
 for e in t['reset_start_raw_exports']:
  x,y=e['xy_um'];ax.plot(x,y,'ro',ms=4);ax.text(x+2,y,e['port'],fontsize=5)
+for st in t.get('count_straps',[]):
+ for x,y in st.get('sites_um',[]):ax.plot(x,y,'gD',ms=3)
 for b in t['clock']['landing_contract']['bands'].values():
  x0,y0,x1,y1=b['rect_um'];ax.add_patch(Rectangle((x0,y0),x1-x0,y1-y0,fill=False,ls='--',edgecolor='green',lw=2))
 ax.plot(354.24,354.24,'*',ms=15,color='black',label='clock/reset entry')

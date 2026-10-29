@@ -11,11 +11,12 @@ import gen_phys as G
 import schema as S
 
 
-def apply(raw, plan_path, repo):
+def apply(raw, plan_path, repo, types=None):
     raw=copy.deepcopy(raw)
     P=S.Plan(raw, path=plan_path)
     report={}
     for tn,t in P.types.items():
+        if types is not None and tn not in types: continue
         straps=t.get('count_straps',[])
         if not straps: continue
         if any(s.get('sites_um') for s in straps):
