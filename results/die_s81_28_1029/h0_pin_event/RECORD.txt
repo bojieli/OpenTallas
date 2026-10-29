@@ -1,0 +1,16 @@
+DIE-S81-28 S81 source-pin event (S81-013 H0 / S81-028 class), 2026-10-29 13:00 PDT
+Fix-only delta on frozen plan_s13r2 (same form as CFG7 event 28ba49f68): physical/die_plan/s81/delta_h0_ck_m5_1029.py
+  inputs/core_pins/dsdv_eng_rr_h0.json ck M4 W face (0.096,133.932) -> M5 interior (82.092,133.92) 0.048x0.48
+  cores/eng/lef/dsdv_eng_rr_h0.lef ck PORT LAYER M5 RECT 82.068 133.680 82.116 134.160 (USE CLOCK kept)
+Source of the new site: d25 master-plan slice island ck_entry M9->M5 centre (82.08,133.92) snapped by
+  master_slice.slice_placements onto M5 track 1710 (x=82.092), CLOCK_PIN_SIZE 0.048x0.48 = exactly the routed view
+  (kit intel2 die-s81-25-cores/h0/kits/dsdv_eng_rr_h0_prefix48c_d25 abstract: PIN ck LAYER M5 RECT 82.068 133.68 82.116 134.16).
+cores/svc/pin_audit_core.py: face C (declared interior clock, gen_core_kit_legacy 684600a2f) = box centre on the plan
+  point in both coordinates (before: KeyError on face C).
+CHECKED: gen_core_kit_legacy.py --master-slice (this tree) emits pins.json ck {M5, 82.092, 133.92, face C}, io.tcl
+  place_pin ck M5 {82.0920 133.9200} {0.0480 0.4800}; other 644 pins byte-identical to the d25 kit pins.json.
+CHECKED: PIN_AUDIT on the routed d25 6_final.odb vs the new plan pins: PASS 645/645 (pin_audit_routed_d25.json) -- was 644/645.
+  -> no re-route needed for the pin.
+Plan impact: die_plan.json / plan_s13r2.json reference the core by path (u_eng.u_h0 pins_file/lef) -> plan sha unchanged.
+  H0 is not an early die tap: the u_eng partition-local tree reaches the pin from M6 (core obs_max M5); die tree unchanged.
+  u_eng parent kits pick the M5 entry up at their next generation.
