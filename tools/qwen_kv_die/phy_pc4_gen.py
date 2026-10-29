@@ -24,7 +24,7 @@ PORTS = [("rst_n", 1, "input")] + [
                                  ("fh", 4, "output"), ("rh", 4, "output"))]
 
 
-def generate(out: Path, width: float, height: float) -> dict:
+def generate(out: Path, width: float, height: float, layout: dict | None = None) -> dict:
     # Four core-facing edges keep this 2502-pin interface from becoming one
     # impossible escape wall. The explicit footprint must fit the demand.
     if min(width, height) <= 0:
@@ -37,28 +37,49 @@ def generate(out: Path, width: float, height: float) -> dict:
     for n, w, d in PORTS[1:]:
         groups[int(n[-1])].extend((n if w == 1 else f"{n}[{b}]", d) for b in range(w))
     dims = (height, height, width, width)
-    if any(len(g) * pitch + 2 * margin > dim for g, dim in zip(groups, dims)):
+    if layout is None and any(len(g) * pitch + 2 * margin > dim for g, dim in zip(groups, dims)):
         raise ValueError("modeled PHY footprint cannot fit four-PC pins at 0.192 um pitch")
     lef = ["# MODELED licensed PHY: geometry/timing assumptions, not silicon signoff", "VERSION 5.8 ;",
            'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {NAME}", " CLASS BLOCK ;",
            " ORIGIN 0 0 ;", " SYMMETRY X Y ;", f" SIZE {width:g} BY {height:g} ;"]
     sites = {}
-    for face, group, dim in zip(("W", "E", "S", "N"), groups, dims):
-        start = round((dim - (len(group) - 1) * pitch) / 2 / .048) * .048 + .024
-        for i, (n, direction) in enumerate(group):
-            c = round(start + i * pitch, 6)
-            rect = {"W": (0, c-pw/2, plen, c+pw/2), "E": (width-plen, c-pw/2, width, c+pw/2),
-                    "S": (c-pw/2, 0, c+pw/2, plen), "N": (c-pw/2, height-plen, c+pw/2, height)}[face]
-            layer = "M4" if face in ("W", "E") else "M5"
-            lef += [f" PIN {n}", f"  DIRECTION {direction.upper()} ;", f"  USE {'CLOCK' if n == 'clk' else 'SIGNAL'} ;",
-                    "  PORT", f"   LAYER {layer} ;", "   RECT " + " ".join(f"{v:.6f}" for v in rect) + " ;",
-                    "  END", f" END {n}"]
-            sites[n] = dict(face=face, layer=layer, rect_um=rect)
+    def emit_pin(n, direction, layer, rects, face):
+        if layer not in {f"M{i}" for i in range(1,8)} or not rects:
+            raise ValueError(f"invalid pin layer/access for {n}")
+        for rect in rects:
+            x0,y0,x1,y1=rect
+            if not (0 <= x0 < x1 <= width and 0 <= y0 < y1 <= height):
+                raise ValueError(f"pin {n} outside modeled footprint")
+        lef.extend([f" PIN {n}", f"  DIRECTION {direction.upper()} ;", f"  USE {'CLOCK' if n == 'clk' else 'SIGNAL'} ;",
+                    "  PORT", f"   LAYER {layer} ;"])
+        lef.extend("   RECT " + " ".join(f"{v:.6f}" for v in rect) + " ;" for rect in rects)
+        lef.extend(["  END", f" END {n}"])
+        sites[n] = dict(face=face, layer=layer, rect_um=rects[0], access_rects_um=rects)
+    if layout is not None:
+        wanted = {n for n,_ in bits}
+        if set(layout.get("pins",{})) != wanted:
+            raise ValueError("explicit layout must contain exactly every four-PC pin")
+        for n,direction in bits:
+            p=layout["pins"][n]
+            emit_pin(n,direction,p["layer"],p["rects_um"],p.get("face","interior"))
+        rows=[(n,p["layer"],r) for n,p in sites.items() for r in p["access_rects_um"]]
+        for i,(n,layer,a) in enumerate(rows):
+            for other,l,b in rows[i+1:]:
+                if n != other and l == layer and min(a[2],b[2]) > max(a[0],b[0])+1e-8 and min(a[3],b[3]) > max(a[1],b[1])+1e-8:
+                    raise ValueError(f"overlapping modeled pins {n}/{other}")
+    else:
+        for face, group, dim in zip(("W", "E", "S", "N"), groups, dims):
+            start = round((dim - (len(group) - 1) * pitch) / 2 / .048) * .048 + .024
+            for i, (n, direction) in enumerate(group):
+                c = round(start + i * pitch, 6)
+                rect = {"W": (0, c-pw/2, plen, c+pw/2), "E": (width-plen, c-pw/2, width, c+pw/2),
+                        "S": (c-pw/2, 0, c+pw/2, plen), "N": (c-pw/2, height-plen, c+pw/2, height)}[face]
+                emit_pin(n,direction,"M4" if face in ("W","E") else "M5",[rect],face)
     for net, use, y in (("VDD", "POWER", margin), ("VSS", "GROUND", margin+2.4)):
         lef += [f" PIN {net}", "  DIRECTION INOUT ;", f"  USE {use} ;", "  PORT", "   LAYER M6 ;",
                 f"   RECT {margin:g} {y:g} {width-margin:g} {y+.288:g} ;", "  END", f" END {net}"]
     lef += [" OBS"]
-    for i in range(1, 8):
+    for i in (layout.get("obstruction_layers", list(range(1,8))) if layout else range(1,8)):
         # pin access rim stays clear; analog body blocks ordinary signal routing.
         lef += [f"  LAYER M{i} ;", f"   RECT 0.4 0.4 {width-.4:g} {height-.4:g} ;"]
     lef += [" END", f"END {NAME}", "END LIBRARY", ""]
@@ -97,8 +118,9 @@ def main():
     p.add_argument("--out", type=Path, required=True)
     p.add_argument("--width-um", type=float, required=True)
     p.add_argument("--height-um", type=float, required=True)
+    p.add_argument("--layout", type=Path, help="explicit native per-bit pin/access geometry and obstruction layers")
     a = p.parse_args()
-    sheet = generate(a.out, a.width_um, a.height_um)
+    sheet = generate(a.out, a.width_um, a.height_um, json.loads(a.layout.read_text()) if a.layout else None)
     print(f"MODELED {NAME}: {len(sheet['pins'])} pins, footprint {sheet['footprint_um']}")
 
 if __name__ == "__main__":
