@@ -52,6 +52,7 @@ endmodule
 module ot_s81hd_host_ep_core #(
  parameter[1:0]CH_B=2'b11,
  parameter integer LOCAL_STAGE=255,LOCAL_RANK=4,PHASE_BOUND=0,
+ parameter integer HBC_VARIABLE_WORDS=0,
  parameter integer MUT=0,
  parameter[63:0]CLOCK_RESET_ID=0,
  parameter[47:0]BOOT_HEADER_EDGE=48'hffffffffffff,
@@ -85,7 +86,7 @@ module ot_s81hd_host_ep_core #(
  wire[514:0]f_host;wire[52:0]ks;wire[2:0]ks_slot;wire[5:0]arm_mask;wire arm_commit;
  wire[47:0]receiver_edge,boot_edge;
  dsdv_hostb_stage_hbc #(.ENABLE(1),.LOCAL_STAGE(LOCAL_STAGE),.LOCAL_RANK(LOCAL_RANK),
-  .PHASE_BOUND(PHASE_BOUND),.RETURN_LOCAL(0),.RX_ONLY(1),.HOST_FRAMES(1),.CLOCK_RESET_ID(CLOCK_RESET_ID),
+  .PHASE_BOUND(PHASE_BOUND),.VARIABLE_WORDS(HBC_VARIABLE_WORDS),.RETURN_LOCAL(0),.RX_ONLY(1),.HOST_FRAMES(1),.CLOCK_RESET_ID(CLOCK_RESET_ID),
   .BOOT_HEADER_EDGE(BOOT_HEADER_EDGE),.BOOT_COMMIT_EDGE(BOOT_COMMIT_EDGE))u_hbc(
   .ck(ck),.rst_n(rst_n),.job_active(job_active_pin),.starter_armed(start_i),
   .from_prev(from_prev),.local_ro(local_ro),.return_ro(local_ro),
