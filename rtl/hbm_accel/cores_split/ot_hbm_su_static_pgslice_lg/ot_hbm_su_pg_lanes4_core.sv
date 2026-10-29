@@ -7,6 +7,7 @@
 `default_nettype none
 module ot_hbm_su_pg_lanes4_core #(
     parameter integer MLAT = 4,
+    parameter integer ALAT = 3,
     parameter integer WCOPY = 0
 ) (
     input wire bank0_clk,
@@ -321,7 +322,7 @@ module ot_hbm_su_pg_lanes4_core #(
     wire [31:0] u_lane0__ro_x;
     wire u_lane0__fault;
     wire u_lane0__coll;
-    ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(0),.MLAT(MLAT),.ALAT(3),.LEAF(1),.FETCH_EXTRA_EDGES(2)) u_lane0 (
+    ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(0),.MLAT(MLAT),.ALAT(ALAT),.LEAF(1),.FETCH_EXTRA_EDGES(2)) u_lane0 (
         .clk_stage(u_lane0__clk_stage),
         .clk_insert(u_lane0__clk_insert),
         .rst_n(u_lane0__rst_n),
@@ -454,7 +455,7 @@ module ot_hbm_su_pg_lanes4_core #(
     wire [31:0] u_lane1__ro_x;
     wire u_lane1__fault;
     wire u_lane1__coll;
-    ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(0),.MLAT(MLAT),.ALAT(3),.LEAF(1),.FETCH_EXTRA_EDGES(2)) u_lane1 (
+    ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(0),.MLAT(MLAT),.ALAT(ALAT),.LEAF(1),.FETCH_EXTRA_EDGES(2)) u_lane1 (
         .clk_stage(u_lane1__clk_stage),
         .clk_insert(u_lane1__clk_insert),
         .rst_n(u_lane1__rst_n),
@@ -587,7 +588,7 @@ module ot_hbm_su_pg_lanes4_core #(
     wire [31:0] u_lane2__ro_x;
     wire u_lane2__fault;
     wire u_lane2__coll;
-    ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(0),.MLAT(MLAT),.ALAT(3),.LEAF(1),.FETCH_EXTRA_EDGES(2)) u_lane2 (
+    ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(0),.MLAT(MLAT),.ALAT(ALAT),.LEAF(1),.FETCH_EXTRA_EDGES(2)) u_lane2 (
         .clk_stage(u_lane2__clk_stage),
         .clk_insert(u_lane2__clk_insert),
         .rst_n(u_lane2__rst_n),
@@ -720,7 +721,7 @@ module ot_hbm_su_pg_lanes4_core #(
     wire [31:0] u_lane3__ro_x;
     wire u_lane3__fault;
     wire u_lane3__coll;
-    ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(0),.MLAT(MLAT),.ALAT(3),.LEAF(1),.FETCH_EXTRA_EDGES(2)) u_lane3 (
+    ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(0),.MLAT(MLAT),.ALAT(ALAT),.LEAF(1),.FETCH_EXTRA_EDGES(2)) u_lane3 (
         .clk_stage(u_lane3__clk_stage),
         .clk_insert(u_lane3__clk_insert),
         .rst_n(u_lane3__rst_n),

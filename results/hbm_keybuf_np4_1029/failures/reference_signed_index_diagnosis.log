@@ -1,0 +1,6 @@
+REFDIAG lane=0 tag_g=101 tag_w=101 data_equal=0
+REFDIAG lane=1 tag_g=201 tag_w=201 data_equal=0
+REFDIAG lane=2 tag_g=301 tag_w=301 data_equal=0
+REFDIAG lane=3 tag_g=401 tag_w=401 data_equal=0
+FATAL: src/tb_keybuf_np4.sv:55: REFERENCE_DATA cycle=429 pbase=0 replay=1 index=128
+       Time: 359857000  Scope: tb_keybuf_np4.step

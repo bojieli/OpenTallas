@@ -1,0 +1,41 @@
+{
+  "status": "PRODUCTION_RECIPE_SCHEDULE_PRICE",
+  "default_files_byte_identical": 6,
+  "records": [
+    {
+      "record": "ds_rs",
+      "alat3_edges": 135,
+      "alat4_edges": 139,
+      "added_core_edges": 4,
+      "output_words_equal": true,
+      "input_words_equal": true,
+      "physical_target": {
+        "mlat": 5,
+        "alat": 4,
+        "leaf": 1,
+        "wcopy": 1,
+        "lin": 33,
+        "source": "tools/hbm_static/su_lane_build.py"
+      },
+      "legacy_metadata_notice": "cycles_stream_833ps uses retired4/3 conversion; only raw programme/core edge delta is used here"
+    },
+    {
+      "record": "ds_spsqrt4",
+      "alat3_edges": 375,
+      "alat4_edges": 448,
+      "added_core_edges": 73,
+      "output_words_equal": true,
+      "input_words_equal": true,
+      "physical_target": {
+        "mlat": 5,
+        "alat": 4,
+        "leaf": 1,
+        "wcopy": 1,
+        "lin": 33,
+        "source": "tools/hbm_static/su_lane_build.py"
+      },
+      "legacy_metadata_notice": "cycles_stream_833ps uses retired4/3 conversion; only raw programme/core edge delta is used here"
+    }
+  ],
+  "scope": "Actual compiler output dates and independent golden words; no new RTL timing, full-layer calendar or whole-token qualification"
+}

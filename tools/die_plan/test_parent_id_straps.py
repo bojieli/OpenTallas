@@ -48,3 +48,24 @@ def test_partial_bound_id_preserves_internal_low_bits_and_rejects_unknown():
 def test_sidx_width_is_exact():
     assert validate_parent_id_straps({'parent_id_straps':{'sidx':dict(width=3,value=7)}},{'sidx':3})
     with pytest.raises(ValueError):validate_parent_id_straps({'parent_id_straps':{'sidx':dict(width=4,value=7)}})
+
+
+@pytest.mark.parametrize('base,lane', [(b,l) for b in (0,4) for l in range(4)])
+def test_exact_keybuf_lane_identity(base,lane):
+    d = {'module':'ot_hnx_idxn_keybuf_slice',
+         'position_id_contract':{'kind':'KEYBUF_LANE_ID','pbase':base,'lane':lane},
+         'parent_id_straps':{'strap_lane_id':{'width':3,'value':base+lane}}}
+    assert validate_parent_id_straps(d, {'strap_lane_id':3}, [f'strap_lane_id[{i}]' for i in range(3)]) == d['parent_id_straps']
+    import copy
+    for path, value in [('module','ot_other'), ('position_id_contract',None)]:
+        bad = copy.deepcopy(d); bad[path] = value
+        with pytest.raises(ValueError): validate_parent_id_straps(bad)
+    for key,value in [('pbase',2),('pbase',True),('lane',4),('lane',True),('kind','OTHER')]:
+        bad = copy.deepcopy(d); bad['position_id_contract'][key]=value
+        with pytest.raises(ValueError): validate_parent_id_straps(bad)
+    for key,value in [('width',4),('value',(base+lane+1)%8)]:
+        bad = copy.deepcopy(d); bad['parent_id_straps']['strap_lane_id'][key]=value
+        with pytest.raises(ValueError): validate_parent_id_straps(bad)
+    with pytest.raises(ValueError): validate_parent_id_straps(d, {'strap_lane_id':3}, actual_module='ot_other')
+    with pytest.raises(ValueError): validate_parent_id_straps(d, {})
+    with pytest.raises(ValueError): validate_parent_id_straps(d, {'strap_lane_id':3}, ['strap_lane_id[0]'])

@@ -1,0 +1,76 @@
+{
+ "top": "ot_s81hd_tile_p",
+ "checked": 1144,
+ "ok": 1144,
+ "fails": {},
+ "flops": {
+  "cland_dn_fault_i": "u_cland_i/u_ring.s_d[3][567]$_DFFE_PP_",
+  "cland_dn_ready_i": "u_cland_i/u_ring.s_d[3][566]$_DFFE_PP_",
+  "cland_fstart_out_o": "u_cland_fstart_o/q$_SDFF_PN0_",
+  "cland_up_fault_o": "u_cland_up_o/fault_o$_SDFF_PN0_",
+  "cland_up_ready_o": "u_cland_up_o/ready_o$_SDFF_PN0_",
+  "rst_o_0": "u_rrl_7/q$_DFF_P_",
+  "rst_o_1": "u_rrl_48/q$_DFF_P_",
+  "rst_o_2": "u_rrl_52/q$_DFF_P_",
+  "start_o_0": "u_srl_7/q$_DFF_P_",
+  "start_o_1": "u_srl_48/q$_DFF_P_",
+  "start_o_2": "u_srl_52/q$_DFF_P_",
+  "i[565]": "u_cland_i/u_ring.s_d[3][565]$_DFFE_PP_",
+  "i[564]": "u_cland_i/u_ring.s_d[3][564]$_DFFE_PP_",
+  "i[563]": "u_cland_i/u_ring.s_d[3][563]$_DFFE_PP_",
+  "i[562]": "u_cland_i/u_ring.s_d[3][562]$_DFFE_PP_",
+  "i[561]": "u_cland_i/u_ring.s_d[3][561]$_DFFE_PP_",
+  "i[560]": "u_cland_i/u_ring.s_d[3][560]$_DFFE_PP_",
+  "i[559]": "u_cland_i/u_ring.s_d[3][559]$_DFFE_PP_",
+  "i[558]": "u_cland_i/u_ring.s_d[3][558]$_DFFE_PP_",
+  "i[557]": "u_cland_i/u_ring.s_d[3][557]$_DFFE_PP_"
+ },
+ "straps_exempt": [
+  "strap_ca_efall",
+  "strap_ca_k_i",
+  "strap_ca_pad",
+  "strap_row0",
+  "strap_ten"
+ ],
+ "dead_declared": [],
+ "bumps_exempt": [],
+ "clock_exports": {
+  "fclk_out_o": "clk"
+ },
+ "land_mux_depth": {
+  "2": 2271,
+  "1": 1
+ },
+ "land_slot_bits": 568,
+ "land_mux_bits": 568,
+ "ring_start": {
+  "cland_fstart_in_i": {
+   "ring": [
+    "i"
+   ],
+   "ring_clock": [
+    "fclk_in_i"
+   ],
+   "writer_flops": 2298,
+   "writer_groups": {
+    "u_cland_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_cland_i/u_ring.s_d[N][N]$_DFFE_PP_": 2272,
+    "u_cland_i/u_ring.s_lap[N]$_DFFE_PP_": 4,
+    "u_cland_i/u_ring.s_w[N]$_SDFF_PN0_": 4,
+    "u_cland_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [
+    "u_cland_origin/s0$_SDFF_PN0_",
+    "u_cland_origin/sf$_DFF_N_"
+   ],
+   "sampler_clock": "clk"
+  }
+ },
+ "ring_start_bits": 1,
+ "pairs_declared": [],
+ "planned_bits": 1132,
+ "missing_ports": 0,
+ "fail_counts": {},
+ "verdict": "PASS",
+ "netlist": "/work/1_synth_odb.v"
+}

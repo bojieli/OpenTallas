@@ -19,7 +19,7 @@ measurement (12.8 d / d1):
   * joint_nldm_plan load balance (leaf sink counts differ) with the plan model's TT/FF sink window as qualification
     (core_infra refuses the build outside 230-270 TT / 182.5-222.5 FF, window <= 20, slew <= 80; with --band info
     (12.3a v5.0, COORD RULING S81-CORE-LAT-R9) the band is reported as INFO and only window <= 20 + slew <= 80 gate).
-Sites file = OpenROAD dump (ROW0/ROW/FIXED/MASTER/PG lines) of the kit's 2_4_floorplan_pdn.odb.
+Sites file = OpenROAD dump (ROW0/ROW/FIXED/BLOCKAGE/MASTER/PG lines) of the kit's floorplan ODB.
 """
 import argparse, gzip, json, math, re, sys
 from pathlib import Path
@@ -33,7 +33,7 @@ class ConvertError(ValueError):
 
 
 def read_sites(path):
-    rows, fixed, masters, pg = [], [], {}, {"M4": [], "M5": []}
+    rows, fixed, blockages, masters, pg = [], [], [], {}, {"M4": [], "M5": []}
     row0 = None
     for l in Path(path).read_text().splitlines():
         f = l.split()
@@ -46,13 +46,21 @@ def read_sites(path):
             rows.append((float(f[1]), float(f[2]), f[3], int(f[4])))
         elif f[0] == "FIXED":
             fixed.append(tuple(map(float, f[3:7])))
+        elif f[0] == "BLOCKAGE":
+            if len(f) != 6:
+                raise ConvertError(f"{path}: malformed hard BLOCKAGE row")
+            rect = tuple(map(float, f[2:6]))
+            if not all(math.isfinite(v) for v in rect) or rect[0] >= rect[2] or rect[1] >= rect[3]:
+                raise ConvertError(f"{path}: invalid hard BLOCKAGE rectangle")
+            blockages.append(rect)
         elif f[0] == "MASTER":
             masters[f[1]] = (float(f[2]), float(f[3]))
         elif f[0] == "PG" and f[2] in pg:
             pg[f[2]].append(tuple(map(float, f[3:7])))
     if row0 is None or not rows or not masters:
         raise ConvertError(f"{path}: sites file needs ROW0, ROW and MASTER lines")
-    return dict(row0=row0, rows=sorted(rows, key=lambda r: r[1]), fixed=fixed, masters=masters, pg=pg)
+    return dict(row0=row0, rows=sorted(rows, key=lambda r: r[1]), fixed=fixed, blockages=blockages,
+                masters=masters, pg=pg)
 
 
 def pg_obstructions(sites, pad_half_um=0.04):
@@ -72,7 +80,7 @@ class SiteMap:
         self.sw = self.r0["site_w"]; self.sh = self.r0["site_h"]; self.ns = self.r0["nsites"]
         self.occ = [dict() for _ in self.rows]          # row -> {site index: owner}
         self.straps = [(r[0] - strap_clear_um, r[2] + strap_clear_um) for r in sites["pg"]["M5"]]
-        for (a, b, c, d) in sites["fixed"]:
+        for (a, b, c, d) in sites["fixed"] + sites.get("blockages", []):
             for k, row in enumerate(self.rows):
                 if row[1] < d - 1e-6 and row[1] + self.sh > b + 1e-6:
                     for s in range(self._s(a, k), self._s(c - 1e-6, k) + 1):
@@ -147,7 +155,12 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
     roots = [n for n in nodes if n[1] is None]
     if len(roots) != 1 or roots[0][4] != "entry":
         raise ConvertError("plan needs exactly one entry root")
-    bad = sorted({n[3] for n in nodes if not ENVELOPE.fullmatch(n[3])})
+    # form C (CORES-EARLY-6): kind 'icg' nodes are planned clock-gate stages (RTL gate or clone_of copy, rec icg_copies),
+    # emitted as core_tree.gates (domain planned), not as buffer cells; their master is the RTL gate's, outside the envelope
+    icg_rows = {r["node"]: r for r in rec.get("icg_copies", [])}
+    if {n[0] for n in nodes if n[4] == "icg"} != set(icg_rows):
+        raise ConvertError("plan icg nodes and icg_copies rows differ")
+    bad = sorted({n[3] for n in nodes if n[4] != "icg" and not ENVELOPE.fullmatch(n[3])})
     if bad and not calibration:
         raise ConvertError(f"masters outside the BUFx8..x24 gating envelope: {bad} (re-plan, or --calibration)")
     for n in nodes:
@@ -162,14 +175,25 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
     outline = outline or [sites["rows"][0][0] * 2 + sites["row0"]["nsites"] * sites["row0"]["site_w"],
                           sites["rows"][0][1] * 2 + len(sites["rows"]) * sites["row0"]["site_h"]]
     names = {n[0]: ident(n[0], prefix) for n in nodes}
+    for nm_, r in icg_rows.items():
+        names[nm_] = r["gate"] if r["first"] else ident(nm_[:-2] + "_icg", prefix)
     # placement order: plan order (parents before children) -> deterministic
-    placements, tree_nodes, seen = {}, [], set()
+    placements, tree_nodes, seen, gates = {}, [], set(), []
     for n in nodes:
         nm, par, xy, master, kind = n
         if par is not None and par not in seen:
             raise ConvertError(f"{nm}: parent {par} must precede it")
         seen.add(nm)
         p = sm.place(names[nm], master, float(xy[0]), float(xy[1]))
+        if kind == "icg":
+            r = icg_rows[nm]
+            g = dict(inst=names[nm], master=master, parent=names[par], xy_um=p["centre_um"], domain="planned")
+            if not r["first"]:
+                g.update(clone_of=r["gate"], members=list(r["members"]))
+            gates.append(g)
+            tree_nodes.append(dict(name=names[nm], master=master, xy_um=p["centre_um"], parent=names[par], plan_xy_um=list(xy),
+                                   displacement_um=p["displacement_um"], kind=kind))
+            continue
         placements[names[nm]] = dict(master=master, **{k: p[k] for k in ("centre_um", "origin_um", "orient")})
         tree_nodes.append(dict(name=names[nm], master=master, xy_um=p["centre_um"],
                                parent=("port:" + clock_port) if par is None else names[par],
@@ -188,7 +212,15 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
         q[corner] = dict(leaf_min=m[corner_keys[0]], leaf_max=m[corner_keys[1]], leaf_window=m["window"],
                          slew_max=max(m.get("leaf_out_slew_max", 0), m.get("leaf_slew_in_max", 0)), mean=m["mean"])
     disp = [t["displacement_um"] for t in tree_nodes]
+    macro_leaves = set(rec.get("macro_leaves", []))
+    for leaf in leaves:
+        if leaf["node"] in {names[u] for u in macro_leaves}:
+            leaf["load_class"] = "macro"
     ex, ey = rec["entry"]
+    gates = [g for g in gates if "clone_of" not in g] + [g for g in gates if "clone_of" in g]   # originals before copies
+    if gates:
+        icg_conv = dict(gates=len(gates), originals=sum(1 for g in gates if "clone_of" not in g),
+                        copies=sum(1 for g in gates if "clone_of" in g))
     sl = dict(schema=schema, die=die, kind="core", type=module, module=module, instances=[],
               master_plan_sha256=master_plan_sha256, frozen=False, outline_um=[round(v, 4) for v in outline],
               latency=dict(common_clock_latency_ps={"TT": 250, "FF": 202.5}, tol_ps=20, early_taps=False),
@@ -197,8 +229,10 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
               islands=[dict(name="ck_entry", rect_um=[ex - 2.16, ey - 2.16, ex + 2.16, ey + 2.16], centre_um=[ex, ey],
                             use="clock_driver", via_stack=["M9", "M5"], clock_pin=dict(layer="M5", xy_um=[ex, ey]))],
               pushdown=dict(islands=[], clock_repeaters=[], note="in-core clock tree only (core_tree); no feedthrough ports"),
-              core_tree=dict(clock_port=clock_port, nodes=[{k: t[k] for k in ("name", "master", "xy_um", "parent")} for t in tree_nodes],
+              core_tree=dict(clock_port=clock_port, nodes=[{k: t[k] for k in ("name", "master", "xy_um", "parent")} for t in tree_nodes
+                                                           if t["kind"] != "icg"],
                              leaves=leaves, equal_load=False, load_balance="joint_nldm_plan", trunk_layers=["M4", "M5"],
+                             **({"gates": gates} if gates else {}),
                              model_qualification=dict(measured_timing_used=False, source=rec.get("name"),
                                                       model=rec.get("model", "plan model"), corners=q)),
               clock_ndr=dict(name="ot_core_ck_%dw%ds" % ndr, layers=["M4", "M5"], width_multiplier=ndr[0], spacing_multiplier=ndr[1]),
@@ -209,6 +243,8 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
                                    displacement_um=dict(max=max(disp), mean=round(sum(disp) / len(disp), 4),
                                                         over_2um=sum(d > 2 for d in disp)),
                                    site_rule="row by y, site-grid x, no overlap with planned/fixed cells, centre x off M5 straps"))
+    if gates:
+        sl["plan_conversion"]["icg"] = icg_conv
     return sl
 
 
@@ -223,6 +259,8 @@ def main():
     ap.add_argument("--band", choices=("gate", "info"), default="gate",
                     help="core latency band policy in core_infra (default gate = unchanged); info = 12.3a design target, "
                          "only window <= 20 + slew <= 80 gate (COORD RULING S81-CORE-LAT-R9)")
+    ap.add_argument("--window-policy", choices=("gate", "info"), default="gate",
+                    help="12.3a opt-in: report planned tap window as a design target; requires --band info; routed sign-off unchanged")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
     op = gzip.open if a.plan.endswith(".gz") else open
@@ -239,6 +277,8 @@ def main():
         sl.pop("clock_ndr", None)       # standard-width trunk (S81-CORE-LAT-R9 track b)
     if a.band == "info":
         sl["core_tree"]["model_qualification"]["band_policy"] = "info"   # 12.3a v5.0 (S81-CORE-LAT-R10)
+    if a.window_policy == "info":
+        sl["core_tree"]["model_qualification"]["window_policy"] = "info"
     # compile through core_infra: the same refusals the kit hook applies (fail before any build)
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import core_infra as CI

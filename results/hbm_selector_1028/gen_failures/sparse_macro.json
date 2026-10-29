@@ -1,0 +1,23 @@
+{
+ "ot_hbm_idx_selector_static_sel": [
+  {
+   "view": "ot_hbm_idx_selector_static_sel@ca11ad493af0",
+   "rc": 1,
+   "cls": "GEN_FAIL",
+   "kit": null,
+   "entry": [
+    298.08,
+    224.64
+   ],
+   "port": null,
+   "merged": [
+    "clk_ctl",
+    "clk_mem",
+    "clk_q"
+   ],
+   "islands": 9,
+   "log": "/srv/opentallas-scratch2/claude/codex-selector-gen-1029/kits/gen_ot_hbm_idx_selector_static_sel_codex_st1.log",
+   "msg": "macro ot_sram_1r1w_256x256_m2_r2c2: no LEF in /srv/opentallas-scratch2/claude/wt/codex-hbm-selector-gen-1029/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2"
+  }
+ ]
+}

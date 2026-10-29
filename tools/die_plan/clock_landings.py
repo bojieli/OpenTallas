@@ -272,6 +272,7 @@ class Landings:
         self.rows = []
         self.region = {}
         self.emitted_types = set()
+        self.forwarded_clock_only_inputs = {}
         self.emitted_top = False
         self.reset_placements = {}
         for pn, p in self.parts.items():
@@ -676,7 +677,23 @@ class Landings:
         def _exp(name):
             s_ = exp_src.get(name, "clk")
             if s_ != "clk" and not re.search(r"\binput\s+(?:wire\s+)?" + re.escape(s_) + r"\b", head):
-                raise LandingError(f"{tn}: {name} contract source_clock_port {s_} is not an input port of the type")
+                contract = self.types[key].get("clock", {}).get("landing_contract", {})
+                if contract.get("forwarded_clock_only_inputs") is not True:
+                    raise LandingError(f"{tn}: {name} contract source_clock_port {s_} is not an input port of the type")
+                # The logical leaf may have one clock while its physical
+                # wrapper has several planned tap inputs. Expose ONLY a tap
+                # already in that physical interface, used by an actual clock
+                # export. Do not remap any data or leaf clock.
+                import schema
+                if not hasattr(self, "_physical_clock_plan"):
+                    self._physical_clock_plan = schema.Plan(self.plan)
+                planned = {n for n, _x, _y in schema.tap_grid(self._physical_clock_plan, key)}
+                if s_ not in planned:
+                    raise LandingError(f"{tn}: forwarded clock source {s_} is not a planned physical tap input")
+                needed = self.forwarded_clock_only_inputs.setdefault(tn, [])
+                if s_ not in needed:
+                    needed.append(s_)
+                    extra.append(f"    input wire {s_}  // planned physical tap: forwarded-clock export only")
             return s_
         for b in mask["outputs"]:
             extra.append(f"    output wire fclk_out_{b}")
@@ -816,15 +833,18 @@ class Landings:
                 extra.append("    output wire fclk_out_cland_up")
                 logic.append(f"    assign fclk_out_cland_up = {_exp('fclk_out_cland_up')};")
             sources=list(collector_info["local_sources"])
+            monitor_reset_copies = []
             for ch in collector_info["children"]:
                 i=ch["index"]
                 extra += [f"    input wire {ch['ready']}", f"    input wire {ch['fault']}"]
                 src=dict(ch,name=f"child{i}")
                 if ch["seam"]:
                     extra.append(f"    input wire fclk_in_cland_dn_{i}")
-                    reset=LC.raw(ch.get("node",f"rst_n_t{ch.get('tap',0)}"))
-                    if not re.search(r"\bwire\b[^;]*\b"+reset+r"\b",body):
-                        raise LandingError(f"{tn}: raw monitor receiver reset {reset} missing")
+                    node=ch.get("node",f"rst_n_t{ch.get('tap',0)}")
+                    reset, added, copies = LC.raw_reset(collector_info["tree"], node,
+                                                       body+"\n"+"\n".join(logic))
+                    logic.extend(added)
+                    monitor_reset_copies.extend(copies)
                     logic += [f"    wire [1:0] cland_dn_word_{i};",
                               f"    wire cland_dn_trained_{i}, cland_dn_guard_{i};",
                               f"    ot_dp_clk_landing #(.W(2)) u_cland_monitor_{i} (",
@@ -839,6 +859,7 @@ class Landings:
             else:
                 reduction=LC.build_local(collector_info["tree"],sources,body+"\n"+"\n".join(logic),
                     root_node=collector_info.get("collector_root_node","rst_root_n"))
+            reduction["instances"] = monitor_reset_copies + reduction["instances"]
             logic.extend(reduction["rtl"])
             self.reset_placements.setdefault(tn,{})["collector"]=reduction
             if collector_info["mask"].get("observer"):
@@ -922,6 +943,8 @@ class Landings:
         root counter is chosen by strap_ca_root. The
         raw reset of each choice is exactly the parameter form's (child: the tree bus's timed relay; root: local_raw)."""
         _, tbs, padw, settle, root = role
+        copy_export = getattr(self, "types", {}).get(tn, {}).get("clock", {}).get("landing_origin_export_copy", False)
+        fwd_param = ", .FWD_COPY(1)" if copy_export else ""
         ca_raw = dict(ca_raw)
         if START_PIN_IN in tbs:
             # START-TREE: the dedicated start pin is one of the choices; its raw reset is a local timed relay
@@ -973,12 +996,12 @@ class Landings:
             starts_d = [f"cland_start_t{i}_d" for i in range(len(tbs))]
             logic.append(f"    wire {', '.join(starts + starts_d)};")
             for i, b in enumerate(tbs):
-                logic += [f"    ot_dp_landing_origin_s #(.PADW({padw})) u_cland_origin_t{i} (",
+                logic += [f"    ot_dp_landing_origin_s #(.PADW({padw}){fwd_param}) u_cland_origin_t{i} (",
                           f"        .clk(clk), .rst_raw_n({ca_raw[b]}), .p_start({pin(b)}), .strap_efall(strap_ca_efall), "
                           f".strap_pad(strap_ca_pad), .start({starts[i]}), .start_d({starts_d[i]}));"]
             logic += [f"    assign {start} = {sel(starts)};", f"    assign {start_d} = {sel(starts_d)};"]
         else:
-            logic += [f"    ot_dp_landing_origin_s #(.PADW({padw})) u_cland_origin (",
+            logic += [f"    ot_dp_landing_origin_s #(.PADW({padw}){fwd_param}) u_cland_origin (",
                       f"        .clk(clk), .rst_raw_n({raw}), .p_start({p_start}), .strap_efall(strap_ca_efall), "
                       f".strap_pad(strap_ca_pad), .start({start}), .start_d({start_d}));"]
         self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="strap", tree_buses=list(tbs), padw=padw,
@@ -1154,6 +1177,12 @@ class Landings:
             if count < 1:
                 raise LandingError(f"clock landing: default clock connection not found on {pn}")
             conn = [f"        .fclk_out_{b}({fwd[(pn,b)]})" for b in sorted(self.outs[pn])]
+            # Functional binding uses the region source, as existing grid/core
+            # tap connections do. The physical kit keeps the distinct planned
+            # input pins and the export's source_clock_port contract.
+            for tap in self.forwarded_clock_only_inputs.get(p["type"], []):
+                if not re.search(r"\." + re.escape(tap) + r"\s*\(", body):
+                    conn.append(f"        .{tap}(clk_region_{ident(self.region[pn])})")
             conn += [f"        .cland_fstart_out_{b}({fst[(pn,b)]})" for b in sorted(self.outs[pn]) if self.ca]
             if ts:
                 tpins = ts["type_pins"].get(p["type"], {})
@@ -1281,6 +1310,7 @@ class Landings:
                     types=self.by_type, reset_placements=self.reset_placements,
                     collector=self.collector,
                     observer_source=getattr(self,"observer_source",None),
+                    forwarded_clock_only_inputs=self.forwarded_clock_only_inputs,
                     emitted_modules=getattr(self,"emitted_modules",None),
                     remaining_gates=["placed clock/status pins", "landing ring window STA",
                                      "trained region calendar offsets", "token pass"])

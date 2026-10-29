@@ -1,0 +1,27 @@
+{
+  "ot_hbm_idx_selector_static_sel": {
+    "top": "ot_hbm_idx_selector_static_sel",
+    "files": [
+      "rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_selector_compact.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv"
+    ],
+    "defines": [],
+    "params": {
+      "STRUCT": 1
+    },
+    "macros": [
+      "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "source": "Opt-in same-cycle bounded compaction/histogram structural successor; exact gate results/hbm_selector_1028; no pin/edge/12-SRAM change. Source only; no timing/route qualification.",
+    "source_commit": "d34578d6f",
+    "view_cell": "ot_hbm_idx_selector_static_sel",
+    "view_kind": "SYNTH",
+    "view_port_bits": 4783,
+    "files_at": {
+      "rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv": "23c203b01",
+      "rtl/hbm_accel/index/ot_hbm_idx_selector_compact.sv": "3a56d4eea",
+      "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv": "353da5b41"
+    }
+  }
+}

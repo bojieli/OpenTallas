@@ -62,15 +62,24 @@ class Net:
                 continue
             m = INST.match(ln)
             if m and cur is None and m.group(1) not in ('module',):
-                cur = (m.group(2), m.group(1), {})
+                cur = (m.group(2), m.group(1), [])
                 continue
             if cur is not None:
-                m = PORT.match(ln)
-                if m:
-                    if m.group(2).strip():
-                        cur[2][m.group(1)] = m.group(2).strip()
-                elif ln.strip().startswith(');'):
-                    self.insts[cur[0]] = (cur[1], cur[2]); cur = None
+                # Current binder emits multiple named ports per line and may close
+                # the instance on the final port line. Parse the complete balanced
+                # argument list, rather than consuming later wire declarations as ports.
+                text = ln.split('//', 1)[0].strip()
+                cur[2].append(text)
+                if re.search(r'\)\s*;\s*$', text):
+                    args = re.sub(r'\)\s*;\s*$', '', ' '.join(cur[2]))
+                    pm = {}
+                    for item in split_top(args):
+                        port = re.fullmatch(r'\s*\.(\w+)\s*\((.*)\)\s*', item)
+                        if port and port.group(2).strip():
+                            pm[port.group(1)] = port.group(2).strip()
+                        elif item.strip():
+                            raise ValueError(f"unparsed named port in {cur[0]}: {item!r}")
+                    self.insts[cur[0]] = (cur[1], pm); cur = None
                 continue
             m = ASSIGN.match(ln)
             if m:

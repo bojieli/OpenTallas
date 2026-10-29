@@ -428,7 +428,13 @@ def main(argv=None):
     r.add_argument("--clock-rc", required=True, choices=("ndr", "1x"))
     r.add_argument("--route")
     r.add_argument("--basis")
+    duty = sub.add_parser("duty", help="measured both-edge duty with shared clock calibration")
+    sys.path.insert(0, str(REPO / "tools" / "die_plan"))
+    import clock_duty
+    clock_duty.add_arguments(duty)
     a = ap.parse_args(argv)
+    if a.cmd == "duty":
+        return clock_duty.run(a)
     if a.cmd == "register":
         print(json.dumps(register_entry(a.cal, a.id, a.cell, a.clock_rc, a.route, a.basis), indent=1))
         return 0

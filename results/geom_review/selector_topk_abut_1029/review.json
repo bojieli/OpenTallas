@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS-COND plan candidate; die owner must compose/bind current source, no P&R approval",
+  "image": "results/geom_review/selector_topk_abut_1029/selector_topk_abut.png",
+  "findings": [
+    "Actual source is selector.selected_line OUT -> TOPK.selected_line IN; selector.in_line is unchanged and belongs to xqr.",
+    "Both ports use local W. TOPK MY makes it global E; selector R0 remains global W. All2368 bit positions align, no crossed order.",
+    "2369 payload+epoch FF cells occupy two row/site-legal columns in the15.12um physical gap. No hard-core overlap;13.844% of gap area, maxactualendpoint hop8.493um.",
+    "Clock pins/positions, outlines, all other pins, relay count1 and cycles0 are unchanged. Per20um peaks112/113=5.60/5.65 pins/um.",
+    "Canonical kit_istations.exact_banks accepts1bank/2369cells at[1.404,.27]. Existing macro/island review remains valid because those coordinates are unchanged."
+  ],
+  "conditions": [
+    "Compose into C25c with actual full-source metadata, rebind the existing station to actual selector->link flow, regenerate pin hashes/views and both kits.",
+    "Die clock/PG and placed prototype checks remain required; no STA, GRT, detailed route or freeze claim."
+  ]
+}

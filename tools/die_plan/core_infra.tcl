@@ -196,6 +196,15 @@ proc ot_ci_tree_gate_copy {inst master orig parent clk_pin out_pin x y rect pins
   dict set ::ot_ci_tree_out $inst $n
   puts "OT_CORE_INFRA_GATE_COPY $inst of=$orig members=[llength $members]"
 }
+# FORM C (CORES-EARLY-5): a planned-domain gate drives planned nodes; every sink now on its GCLK net becomes an
+# expected tree sink (ot_ci_tree_sink may move it to its planned leaf; ot_ci_tree_finish asserts all were assigned).
+proc ot_ci_tree_gate_planned {inst} {
+  set n [dict get $::ot_ci_tree_out $inst]
+  set k 0
+  foreach it [$n getITerms] {if {[$it isInputSignal]} {lappend ::ot_ci_tree_expected $it; incr k}}
+  if {$k < 1} {error "OT_CORE_INFRA_GATE_PLANNED_EMPTY $inst"}
+  puts "OT_CORE_INFRA_GATE_PLANNED $inst sinks=$k"
+}
 proc ot_ci_lec_netlist {path} {
   write_verilog $path
   puts "OT_CORE_INFRA_LEC_NETLIST $path (gate copies: kit LEC must run lec.py --netlist on it)"

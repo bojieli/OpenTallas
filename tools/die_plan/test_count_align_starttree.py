@@ -319,3 +319,39 @@ def test_start_tree_check_fails_closed():
         cap.start_tree_check("R", e)
     with pytest.raises(ValueError, match="not reached"):
         cap.start_tree_check("R", [dict(src="R", dst="A"), dict(src="Q", dst="B")])
+
+
+def test_physical_reach_keeps_stages_and_retimes_phase_clean_chain():
+    rows = chain_rows(12)
+    _, default, _ = cap.clock_start_edges(rows, ctx_chain(12, seg=5))
+    _, bounded, info = cap.clock_start_edges(rows, ctx_chain(12, seg=5), max_hop_um=150, retime_max=32)
+    assert len(bounded) > len(default)
+    assert info['reach_fail'] == 0 and info['retime_nodes'] > 0
+    assert all(e['hop_um'] <= 150 and e['clean_ok'] for e in bounded)
+    # The additional registered edges enter the existing boot/path price calculation.
+    s, _, regs = cap.plan(rows, T, AP, 0.05, start_edges=bounded, start_root=info['root'])
+    assert s['start_tree']['start_fail'] == 0
+    old, _, _ = cap.plan(rows, T, AP, 0.05, start_edges=default, start_root=info['root'])
+    assert s['max_tree_depth'] > old['max_tree_depth']
+    assert max(g['origin_cycles'] for g in regs) > 3
+    assert all('hop_um' in g['start_from'] for g in regs if g['start_from'])
+
+
+def test_physical_reach_fails_closed_without_intermediate_nodes():
+    _, edges, info = cap.clock_start_edges(chain_rows(), ctx_chain(), max_hop_um=50)
+    assert info['reach_fail'] > 0
+    assert any(e['hop_um'] > 50 and not e['clean_ok'] for e in edges)
+    c = ctx_chain()
+    del c['TT']['meta']['node_xy_um']
+    with pytest.raises(ValueError, match='coordinates'):
+        cap.clock_start_edges(chain_rows(), c, max_hop_um=405)
+    with pytest.raises(ValueError, match='finite and positive'):
+        cap.clock_start_edges(chain_rows(), ctx_chain(), max_hop_um=float('nan'))
+
+
+def test_capture_override_uses_actual_declared_region_tap():
+    _, edges, _ = cap.clock_start_edges(chain_rows(), ctx_chain(), capture_taps={'R3':'t_R3_1'})
+    assert next(e for e in edges if e['dst']=='R3')['capture']=='t_R3_1'
+    for bad in [{'R3':'t_R4_0'}, {'R3':'invented'}, {'R99':'t_R3_0'}]:
+        with pytest.raises(ValueError, match='measured proof tap'):
+            cap.clock_start_edges(chain_rows(), ctx_chain(), capture_taps=bad)

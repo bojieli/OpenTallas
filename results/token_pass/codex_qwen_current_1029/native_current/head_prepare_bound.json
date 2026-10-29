@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.qwen.bound_head_prepare_age.v1",
+  "status": "BOUND_COMPONENT_AGE_NOT_PROGRAMME_QUALIFIED",
+  "selected_masters": {
+    "tt": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1",
+    "native": "qfd_native59_dv_headprep_obs1",
+    "face": "qfd_sys_face_lctx3_wrapped"
+  },
+  "tt_source": {
+    "status": "QUALIFIED_SOURCE_LOCAL_EDGES",
+    "schema": "opentallas.qwen.tt_source_local.v1",
+    "master": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1",
+    "calendar_sample_edges": 1,
+    "producer_instance": "u_gi",
+    "producer_offset_edges": 0,
+    "output_offset_edges": 1,
+    "source_to_output_edges": 1,
+    "receipt_sha256": "c4d3bf7beddf720aaa4ca0fff311a8d8217b304b1e15c24188dd67c5d1cd85e7",
+    "rtl_sha256": "5d45a822fe5a7550e98e274ebb7d19f4c27ac1f3e3352daefa0258b9a29b5b04",
+    "source_record_sha256": "7325ef53be570be75a63590fcb26ffeb68970de34ec02fa3a35e59722d5d999e",
+    "bench_receipt_sha256": "92b3b786d8179c523bd9b53c597eb94bd9cc5fde629825542967744fbe2c9a46"
+  },
+  "landed_fields": {
+    "prepare": {
+      "head_prepare_position": 9,
+      "head_prepare_token": 9,
+      "head_prepare_user": 9,
+      "head_prepare_v": 9
+    },
+    "descriptor": {
+      "head_descriptor_generation": 4,
+      "head_descriptor_tag": 4,
+      "head_descriptor_v": 4
+    },
+    "host": {
+      "host_epoch": 5,
+      "host_epoch_valid": 5,
+      "host_fused_capability": 5,
+      "host_generation": 5,
+      "host_tag": 5
+    }
+  },
+  "edges": {
+    "tt_local": 2,
+    "tt_to_native": 9,
+    "native_prepare_descriptor": 3,
+    "native_to_face": 4,
+    "host_to_native": 5,
+    "native_host_capture": 1,
+    "face_input": 1,
+    "face_held_bank": 1
+  },
+  "filler_head_prepare_edges": 20,
+  "user0_prepare_only_min_edges": 21,
+  "head_prepare_edges": null,
+  "calendar_installable": false,
+  "programme_blockers": [
+    "actual core-published HOST cohort interval/identity",
+    "selected current programme and producer reservation"
+  ],
+  "scope": "Calendar sample to held bank only; HOST cohort availability, selected programme and outgoing face capture remain separate"
+}
