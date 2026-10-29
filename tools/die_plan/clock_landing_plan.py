@@ -12,6 +12,7 @@ import math
 from collections import defaultdict
 
 import clock_landings as CL
+from clock_landings import STATUS_FACE_CYCLES  # same-region status face flop (DIE-S81-29): +1 boot status cycle
 import reset_tree as RT
 import schema as S
 
@@ -586,7 +587,7 @@ def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,obser
             raw["ports"].append(dict(id=f"cland_mon_{kind}__{pid}",src=dict(part=s_,bus=f"cland_up_{kind}_{sb}"),
                 dst=dict(part=d,bus=f"cland_dn_{kind}_{db}"),width=1,kind="ctl",epoch=False))
         monitor_edges.append(dict(port=pid,src=s_,dst=d,seam=False,carries="aggregate" if parent[s_]==d else "local",
-            data_cycles_added=0,boot_transport_extra_cycles=1))
+            data_cycles_added=0,boot_transport_extra_cycles=1+STATUS_FACE_CYCLES))
     _ca_relay_ports(raw,table)
     _ca_strap_pins(raw,table)
     tstart=_ca_start_pins(raw,table)
@@ -860,7 +861,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
             dst=dict(part=par,bus=f"fclk_in_cland_dn_{i}"),width=1,kind="clock",epoch=False))
         end=_monitor_endpoints(P,W,pn,par,hard_xy);a=P.to_die(pn,end["src_xy"]);b=P.to_die(par,end["dst_xy"])
         monitor_edges.append(dict(src=pn,dst=par,dst_index=i,seam=seam,hop_um=abs(a[0]-b[0])+abs(a[1]-b[1]),
-            data_cycles_added=0,boot_transport_extra_cycles=3 if seam else 0))
+            data_cycles_added=0,boot_transport_extra_cycles=3 if seam else STATUS_FACE_CYCLES))
     root=observer_part
     side=copy.deepcopy(table);side["added_cycles_per_crossing"]="count_aligned" if table.get("count_aligned") else 3
     if tstart:side["count_aligned"]["start_pins"]=tstart
@@ -888,7 +889,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
         local_depths[pn]=max([distances[n]+1 for n in nodes]or[0])
     def deadline(pn):
         if pn in deadlines:return deadlines[pn]
-        child=[deadline(c["part"])+(21 if c["seam"] else 0) for c in children[pn]]
+        child=[deadline(c["part"])+(21 if c["seam"] else STATUS_FACE_CYCLES) for c in children[pn]]
         deadlines[pn]=max([W["max_release"]+21]+child)+local_depths[pn]
         return deadlines[pn]
     side["collector"]["boot_budget"]=dict(raw_reset_release_max_cycles=W["max_release"],

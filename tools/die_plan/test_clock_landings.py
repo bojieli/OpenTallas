@@ -307,7 +307,14 @@ def test_region_monitor_binds_same_region_status_pins():
     assert ".clk(clk), .rst_n(cland_reset_monitor), .ready_i({1'b1}),\n        .fault_i({1'b0}), .ready_o(cland_up_ready_u)" in cc
     aa = L.type_rtl("A", a)
     assert "input wire cland_dn_ready_v" in aa
-    assert ".ready_i({cland_ok_w, cland_dn_ready_v}),\n        .fault_i({cland_bad_w, cland_dn_fault_v}), .ready_o(cland_up_ready), .fault_o(cland_up_fault)" in aa
+    # DIE-S81-29: each same-region status pin is captured by its own face flop; the reduction reads the flop q
+    assert "ot_dp_landing_face u_cland_face_ready_v (.clk(clk), .d(cland_dn_ready_v), .q(cland_dn_fq_ready_v));" in aa
+    assert "ot_dp_landing_face u_cland_face_fault_v (.clk(clk), .d(cland_dn_fault_v), .q(cland_dn_fq_fault_v));" in aa
+    assert aa.count("(cland_dn_ready_v)") == 1 and aa.count("(cland_dn_fault_v)") == 1
+    assert ".ready_i({cland_ok_w, cland_dn_fq_ready_v}),\n        .fault_i({cland_bad_w, cland_dn_fq_fault_v}), .ready_o(cland_up_ready), .fault_o(cland_up_fault)" in aa
+    mon = L.reset_placements["A"]["monitor"]
+    assert mon["status_face_flops"] == 2 and mon["status_cycles_added"] == 1 and mon["data_cycles_added"] == 0
+    assert "status_faces" not in L.reset_placements["C"]["monitor"]       # no same-region input: unchanged record
     L.type_rtl("B", b)
     top = ("module die_bound_top (rst_n, clk_core);\n    a_mod a (\n        .clk(clk_core)\n    );\n    b_mod b (\n        .clk(clk_core)\n    );\n"
            "    c_mod c (\n        .clk(clk_core)\n    );\nendmodule\n")

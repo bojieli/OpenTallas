@@ -252,6 +252,15 @@ class Verification:
                         if len(c.ports.get('q',[]))!=2:self.fail(path+': monitor must retain both status bits')
                     r=boolean('and',[self.output(path,'q',0),self.output(path,'ready'),('not',self.output(path,'fault'))])
                     f=boolean('or',[self.output(path,'q',1),self.output(path,'fault')])
+                else:
+                    # DIE-S81-29: a same-region status pin pair is captured by its own face flops (clk, d = the child's
+                    # registered root output); the reduction reads their q
+                    faced=[]
+                    for kind,want in (('ready',r),('fault',f)):
+                        path=ident(pn)+f".u_cland_face_{kind}_{child['index']}";c=self.instance(path,'ot_dp_landing_face')
+                        if c:self.clock(c,pn);self.equal_input(c,'d',[want])
+                        faced.append(self.output(path,'q'))
+                    r,f=faced
                 sources.append(dict(node=child['node'],ready=r,fault=f))
             tree=info['tree'];root=info['collector_root_node'];adj=defaultdict(list)
             for row in tree['relays']:adj[row['q']].append(row['d']);adj[row['d']].append(row['q'])
@@ -274,7 +283,7 @@ class Verification:
                     want=[s[key] for s in at[n]]+[self.output(ident(pn)+'.u_cland_collect_'+ident(q),key+'_o') for q in sorted(children[n])]
                     # Concatenation is MSB first in RTL, Yosys bits are LSB first.
                     self.equal_input(c,port,list(reversed(want)))
-        actual={c.path for c in self.F.cells if c.module in ('ot_dp_clk_landing','ot_dp_landing_collect','ot_dp_clk_landing_ca',
+        actual={c.path for c in self.F.cells if c.module in ('ot_dp_clk_landing','ot_dp_landing_collect','ot_dp_clk_landing_ca','ot_dp_landing_face',
                                                              'ot_dp_landing_origin','ot_dp_landing_root','ot_dp_landing_relay',
                                                              'ot_dp_clk_landing_cas','ot_dp_landing_origin_s')}
         for x in sorted(actual-self.expected):self.fail('unexpected/unpriced infrastructure '+x)
