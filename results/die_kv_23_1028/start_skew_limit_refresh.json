@@ -1,0 +1,131 @@
+{
+ "aperture_ps": 26.5,
+ "basis": "refreshed = clk->Q hi + gate sta_sync_dist (clk->Q-shifted) - sync aperture; plan field kept, INFO only",
+ "corners": {
+  "TT": {
+   "rows": 161,
+   "stale_plan_limit": 11,
+   "min_refreshed_limit_ps": 170.7,
+   "refreshed_fail": 0,
+   "stale_rows": [
+    {
+     "port": "start:hg_EN_3->phy_EN_3",
+     "region": "phy_EN_3",
+     "plan_limit_ps": 79.1,
+     "clkq_hi_ps": 91.4,
+     "stale": true,
+     "sta_sync_dist_ps": 193.0,
+     "refreshed_limit_ps": 257.9,
+     "refreshed_ok": true
+    },
+    {
+     "port": "start:hg_EN_6->phy_EN_6",
+     "region": "phy_EN_6",
+     "plan_limit_ps": 88.7,
+     "clkq_hi_ps": 91.4,
+     "stale": true,
+     "sta_sync_dist_ps": 199.1,
+     "refreshed_limit_ps": 264.0,
+     "refreshed_ok": true
+    },
+    {
+     "port": "start:hg_WN_4->phy_WN_4",
+     "region": "phy_WN_4",
+     "plan_limit_ps": 85.2,
+     "clkq_hi_ps": 91.4,
+     "stale": true,
+     "sta_sync_dist_ps": 198.4,
+     "refreshed_limit_ps": 263.3,
+     "refreshed_ok": true
+    },
+    {
+     "port": "start:hg_WS_3->phy_WS_3",
+     "region": "phy_WS_3",
+     "plan_limit_ps": 81.0,
+     "clkq_hi_ps": 91.4,
+     "stale": true,
+     "sta_sync_dist_ps": 195.7,
+     "refreshed_limit_ps": 260.6,
+     "refreshed_ok": true
+    },
+    {
+     "port": "start:hg_WS_6->phy_WS_6",
+     "region": "phy_WS_6",
+     "plan_limit_ps": 87.0,
+     "clkq_hi_ps": 91.4,
+     "stale": true,
+     "sta_sync_dist_ps": 204.8,
+     "refreshed_limit_ps": 269.7,
+     "refreshed_ok": true
+    },
+    {
+     "port": "start:hg_WS_7->st:h3000100000000",
+     "region": "st:h3000100000000",
+     "plan_limit_ps": 88.6,
+     "clkq_hi_ps": 91.4,
+     "stale": true,
+     "sta_sync_dist_ps": 211.8,
+     "refreshed_limit_ps": 276.7,
+     "refreshed_ok": true
+    },
+    {
+     "port": "start:hub_C->pv_N_7",
+     "region": "pv_N_7",
+     "plan_limit_ps": 85.8,
+     "clkq_hi_ps": 91.4,
+     "stale": true,
+     "sta_sync_dist_ps": 227.6,
+     "refreshed_limit_ps": 292.5,
+     "refreshed_ok": true
+    },
+    {
+     "port": "start:hub_Wo->st:h1000000010000",
+     "region": "st:h1000000010000",
+     "plan_limit_ps": 88.2,
+     "clkq_hi_ps": 91.4,
+     "stale": true,
+     "sta_sync_dist_ps": 221.6,
+     "refreshed_limit_ps": 286.5,
+     "refreshed_ok": true
+    },
+    {
+     "port": "start:hub_Wo->st:h1000100010000",
+     "region": "st:h1000100010000",
+     "plan_limit_ps": 86.8,
+     "clkq_hi_ps": 91.4,
+     "stale": true,
+     "sta_sync_dist_ps": 220.2,
+     "refreshed_limit_ps": 285.1,
+     "refreshed_ok": true
+    },
+    {
+     "port": "start:io_E6->st:h2000200020002000200020002000200000001000001010",
+     "region": "st:h2000200020002000200020002000200000001000001010",
+     "plan_limit_ps": 85.2,
+     "clkq_hi_ps": 91.4,
+     "stale": true,
+     "sta_sync_dist_ps": 203.3,
+     "refreshed_limit_ps": 268.2,
+     "refreshed_ok": true
+    },
+    {
+     "port": "start:io_W2->st:h200020002000200020002000200020001000100000001000",
+     "region": "st:h200020002000200020002000200020001000100000001000",
+     "plan_limit_ps": 78.4,
+     "clkq_hi_ps": 91.4,
+     "stale": true,
+     "sta_sync_dist_ps": 197.0,
+     "refreshed_limit_ps": 261.9,
+     "refreshed_ok": true
+    }
+   ]
+  },
+  "FF": {
+   "rows": 161,
+   "stale_plan_limit": 0,
+   "min_refreshed_limit_ps": 192.2,
+   "refreshed_fail": 0,
+   "stale_rows": []
+  }
+ }
+}
