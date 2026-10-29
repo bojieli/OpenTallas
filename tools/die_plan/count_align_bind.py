@@ -653,7 +653,7 @@ def main(argv=None):
                     help="count_align_plan.py --tree-parent (with --from-ocv)")
     ap.add_argument("--sta-proof", metavar="DIR", help="count_align_plan.py --sta-proof (with --from-ocv)")
     ap.add_argument("--sta-plan", help="count_align_plan.py --sta-plan (with --from-ocv)")
-    ap.add_argument("--sta-clock-cal", choices=("none", "spice", "spice_edge"), default="spice")
+    ap.add_argument("--sta-clock-cal", choices=("none", "spice", "spice_edge", "spice_buf_edge"), default="spice")
     ap.add_argument("--sta-cppr-lca", action="store_true")
     CAP.add_sta_ocv_args(ap)
     CAP.add_start_tree_args(ap)

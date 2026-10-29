@@ -1138,7 +1138,7 @@ def main(argv=None):
                     ".json) of die_sta_related; each crossing's interval becomes its hull with the STA d interval "
                     "(die_sta_related.count_align_d_intervals) on the --corner corners; needs --sta-plan")
     ap.add_argument("--sta-plan", help="die plan JSON die_sta_related --plan reads (partition pairs of the ports)")
-    ap.add_argument("--sta-clock-cal", choices=("none", "spice", "spice_edge"), default="spice",
+    ap.add_argument("--sta-clock-cal", choices=("none", "spice", "spice_edge", "spice_buf_edge"), default="spice",
                     help="as die_sta_related --clock-cal (12.15b gate: spice)")
     ap.add_argument("--sta-cppr-lca", action="store_true", help="as die_sta_related --cppr-lca")
     add_sta_ocv_args(ap)
