@@ -550,6 +550,12 @@ def load_start_data_delay(path):
     result = dict(ports=ports, model=model, basis=doc.get("basis"))
     if "corners" in doc:
         result["corners"] = {c: checked(rows) for c, rows in doc["corners"].items()}
+    if "corner_models" in doc:
+        result["corner_models"] = {c: {k: tuple(float(x) for x in model[k]) for k in ("lo_ps", "hi_ps")}
+                                   for c, model in doc["corner_models"].items()}
+        if not all(len(v) == 2 and all(math.isfinite(x) for x in v)
+                   for model in result["corner_models"].values() for v in model.values()):
+            raise ValueError("--start-data-delay corner_models need finite [intercept, slope] coefficients")
     return result
 
 
@@ -562,7 +568,7 @@ def start_data_delay_for_corner(doc, corner):
     return doc["corners"].get(corner, {}) if "corners" in doc else doc["ports"]
 
 
-def shift_corner_data_delay(r, by_corner, delays):
+def shift_corner_data_delay(r, by_corner, delays, source="measured"):
     """Union same-corner (clock - data) intervals, without cross-corner combinations."""
     first = next(iter(by_corner))
     lo = min(iv[0] - delays[c][1] for c, iv in by_corner.items())
@@ -571,7 +577,7 @@ def shift_corner_data_delay(r, by_corner, delays):
     q = dict(r, d_ps=d, p_dn_ps=d-lo, p_up_ps=hi-d,
              clock_interval_ps=[round(r["d_ps"]-r["p_dn_ps"], 1), round(r["d_ps"]+r["p_up_ps"], 1)],
              data_delay_ps=[min(v[0] for v in delays.values()), max(v[1] for v in delays.values())],
-             data_delay_by_corner_ps=delays, data_delay_source="measured")
+             data_delay_by_corner_ps=delays, data_delay_source=source)
     if all(iv[2] is not None for iv in by_corner.values()):
         q["fall_lo"] = min(iv[2]-delays[c][1] for c, iv in by_corner.items())
         q["fall_hi"] = max(iv[3]-delays[c][0] for c, iv in by_corner.items())
@@ -729,7 +735,7 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     Returns (root, edges, info)."""
     if max_hop_um is not None and (not math.isfinite(max_hop_um) or max_hop_um <= 0):
         raise ValueError("START max hop must be finite and positive")
-    if data_delay is not None and data_delay.get("model") is not None and max_hop_um is None:
+    if data_delay is not None and (data_delay.get("model") is not None or data_delay.get("corner_models")) and max_hop_um is None:
         raise ValueError("--start-data-delay hop model needs --start-max-hop-um (port hop geometry)")
     import die_sta_related as DSR
     cs = list(ctx)
@@ -878,6 +884,13 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
             # the candidate model. Entirely new candidate edges may use the model.
             if any(v is not None for v in delays.values()) or port in data_delay["ports"]:
                 return dict(r, data_delay_source="missing")
+            models = data_delay.get("corner_models", {})
+            if all(c in models for c in cs):
+                h = r["hop_um"]
+                delays = {c: tuple(models[c][key][0] + models[c][key][1]*h for key in ("lo_ps", "hi_ps")) for c in cs}
+                if any(lo > hi for lo, hi in delays.values()):
+                    raise ValueError(f"START data-delay corner model has inverted interval at hop {h}")
+                return shift_corner_data_delay(r, by_corner, delays, "model")
         dd = data_delay_of(data_delay, port, r)
         return dict(r, data_delay_source="missing") if dd is None else shift_data_delay(r, *dd)
 
