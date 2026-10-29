@@ -1855,4 +1855,5 @@ set cc_plans {
 {{u_leaf.u_pc.u_pce.u_path.u_ctrl.u_port.rd_q\[96\]$_DFF_P_} {u_leaf.u_pc.u_pce.u_path.u_ctrl.u_port.rd_q[96]$_DFF_P_} DFFHQNx1_ASAP7_75t_R 202.284000 159.840000 1.080000 0.270000}
 {{u_leaf.u_pc.u_pce.u_path.u_ctrl.u_port.rd_q\[97\]$_DFF_P_} {u_leaf.u_pc.u_pce.u_path.u_ctrl.u_port.rd_q[97]$_DFF_P_} DFFHQNx1_ASAP7_75t_R 203.904000 159.840000 1.080000 0.270000}
 {{u_leaf.u_pc.u_pce.u_path.u_ctrl.u_port.rd_q\[9\]$_DFF_P_} {u_leaf.u_pc.u_pce.u_path.u_ctrl.u_port.rd_q[9]$_DFF_P_} DFFHQNx1_ASAP7_75t_R 205.524000 159.840000 1.080000 0.270000}
+{{u_leaf.u_pc.u_pce.u_path.u_ctrl.u_sched.u_ctl.core.on.s1i\[1\]\[2\]$_DFF_PN0_} {u_leaf.u_pc.u_pce.u_path.u_ctrl.u_sched.u_ctl.core.on.s1i[1][2]$_DFF_PN0_} DFFASRHQNx1_ASAP7_75t_R 198.720000 207.360000 1.404000 0.270000}
 }

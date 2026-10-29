@@ -1,0 +1,18 @@
+{
+  "scope": "Actual new mapped netlist + prebuild source constraints; new collar FF locations ideal face sites, NOT a placed gate",
+  "old_seq_matched": 43751,
+  "new_collar": 1831,
+  "new_explicit_constraints": [
+    "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_sched.u_ctl.core.on.s1i[1][2]$_DFF_PN0_"
+  ],
+  "unmatched": [],
+  "r2r": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 400.73,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 43752,
+    "comb_loop_cells": 0,
+    "r2r_worst": "pcin_hrst_n$_DFF_P_ -> u_leaf.u_pc.u_pce.u_path.u_return.hr$_DFF_P_"
+  }
+}
