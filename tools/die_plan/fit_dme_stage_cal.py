@@ -44,21 +44,39 @@ def read_node_early(path):
     return out
 
 
-def leg_rows(tree, arr, rep_um=250.0, even_legs=True):
+def leg_rows(tree, arr, rep_um=250.0, even_legs=True, placed_stages=False):
     """[(node id, [n, sumL, sumL2, fanout-1], measured ps, (pts, snake))] for every DME leg with both ends read"""
     nodes = {int(k): v for k, v in tree["nodes"].items()}
     nb = {int(k): v for k, v in tree["node_buf"].items()}
     ntap = collections.Counter(t["node"] for t in tree.get("taps", []))
     rows = []
     for i, nd in sorted(nodes.items()):
-        if not nd.get("dme") or nd.get("parent") is None:
+        if (not placed_stages and not nd.get("dme")) or nd.get("parent") is None:
             continue
         a, b = arr.get(nb.get(i)), arr.get(nb.get(nd["parent"]))
         if a is None or b is None:
             continue
         p = nodes[nd["parent"]]
         pa, q = (p["x"], p["y"]), (nd["x"], nd["y"])
-        if nd.get("snake"):
+        if placed_stages:
+            # The retained native stage graph is authoritative: body packing and
+            # legal detours can change both count and wire from the ideal leg.
+            # This explicit mode also accepts isolated region coupons without
+            # die-level dme labels; it never invents missing connectivity/sites.
+            child, parent = nb[i], nb[nd["parent"]]
+            chain, seen = [child], {child}
+            while chain[-1] != parent:
+                pred = tree.get("parent_of", {}).get(chain[-1])
+                if pred is None or pred in seen:
+                    raise ValueError(f"placed stage leg {i}: no connected chain {child} -> {parent}")
+                chain.append(pred)
+                seen.add(pred)
+            try:
+                pts = [tree["sites"][c] for c in reversed(chain)]
+            except KeyError as exc:
+                raise ValueError(f"placed stage leg {i}: missing site {exc}") from exc
+            segs = [D._man(u, v) for u, v in zip(pts, pts[1:])]
+        elif nd.get("snake"):
             pts = [pa] + [tuple(x) for x in nd["snake"]] + [q]
             segs = [D._man(u, v) for u, v in zip(pts, pts[1:])]
         else:
@@ -110,6 +128,9 @@ def main(argv=None):
     g.add_argument("--tap", nargs=2, type=float, metavar=("K1", "K2"), help="tap leg wire coefficients (TT)")
     ap.add_argument("--rep-um", type=float, default=250.0, help="repeater pitch the tree was built with")
     ap.add_argument("--even-legs", action="store_true", help="the tree used even stage counts (die_trial EVEN_LEGS)")
+    ap.add_argument("--placed-stages", action="store_true",
+                    help="use retained parent_of/sites stage chains for every logical region leg; accepts isolated "
+                         "region coupons without dme labels, refuses disconnected chains or missing sites")
     ap.add_argument("--built-with", default=None, help="cal file the tree was built with (default: uncalibrated "
                     "STAGE_1X_TT, fanout 0) -> rms_built_ps")
     ap.add_argument("-o", "--out", required=True)
@@ -134,9 +155,11 @@ def main(argv=None):
                source=dict(tree=str(a.tree), arrivals=str(a.arr_prefix), rep_um=a.rep_um, even_legs=a.even_legs,
                            built_with=built_lab, tap_from=tap_src),
                fit={})
+    if a.placed_stages:
+        out["source"]["placed_stages"] = True
     for c in a.corners.split(","):
         arr = read_node_early(f"{a.arr_prefix}_{c}/arr_{c}.txt")
-        f = fit(leg_rows(tree, arr, a.rep_um, a.even_legs), built[c] if c in built else None)
+        f = fit(leg_rows(tree, arr, a.rep_um, a.even_legs, a.placed_stages), built[c] if c in built else None)
         out["fit"][c] = f
         key = "leg" if c == "TT" else f"leg_{c}"
         out[key] = f["coef"]
