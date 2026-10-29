@@ -1549,3 +1549,17 @@ CODEX: 2026-10-29 00:15 PDT shared selectedparamguard4fee30b53 READY actualHBM21
 CODEX: 2026-10-29 00:17 PDT BTAB shared macro planner bedf2b9d2 on main a7168d188c; exact-cap guard intact/37PASS. Actual compact2x2 candidate replaces sparse vertical stack (−61%area); 3types/12cores/1318pins/0cycles, trial generation live intel1 codex-qc-btab-compact. No route before new tree.
 
 CODEX:2026-10-2900:20PDTS81s13resetG0C24->20/noaddeddataedges;reach17GRT0/actualreach403.272/FFduty94->4,post-DMEtimingregressiondiagnosedcoherentcostfixownedFLOW;VQ/cfg7/H0currentkitsadvancing,TOKDSfunctionalQXnamespacefix271584e32,noend-to-endclaim.
+
+CODEX: 2026-10-29 00:19 PDT ONEQC119strictbindPASS0;currentQCseam+3/+2 requiresfreshpair;STATUSslotcapturecompilerfix15fa21816 imagePASS,xdie/ovl4uLIVE. Composef9fc10406 fixes1288duplicateclocks;remaining490physicalerrorsownedQC.
+
+CODEX: 2026-10-29 00:24 PDT HBMsourcefixpacketsa73b46435 qualified HCsplitNQ2 EQ9248/default4EQ11064+SATmutant,21stalepreferredwidthcontracts+selectorquarterpackingfixed;25hosthopRTL313checksPASS. Actualhubgraphsentphysicalowner;28Sserviceclonesleave128upstreamsourceholes64968b234, tokensownsabsencecontracts; freshstrictbindliveintel1unit464062.
+
+CODEX: 2026-10-29 00:24 PDT HBM93d467de7 street structuralPHYtuple move103.68um gives4->0/1192reach; routeheld2relay/PHYoverlaps. Actualsource graph reveals45stalesidecaraliases; broad86pinfixUNADOPTED,184actualpartialfacefails/sourcecoverageopen. NoRTL/cycles.
+
+CODEX: 2026-10-29 00:29 PDT TOPK merged353 newkitpreflight0/source synthLEC LIVEintel1unit476300 (<1GiB,ABC). OldSstationactualreach>538 diagnosed; die-requested abutmentcandidate5a27 max8.493um/2369legalFF/0cycles reviewedREADY, actualHBMemitter+bind stillrequired, noP&R.
+
+CODEX: 2026-10-29 00:31 PDT HEAD LAND3 TT/FF2pos8780PASS f6main; rawstrip19types351partsG0C0E00f5 thinREADY; actualtilewholegraphdatareachclosed/29STARTresetresiduals copyfixlive; LEP67gearboxreachFAIL diagnosedmacromap; naturalSerdes190k exact+typedPASS LEC/place live; productionHOST authorityowned.
+
+CODEX: 2026-10-29 00:33 PDT HBM selector samecycle structural sourceREADY a6c6b641f:8079+1367cycle lockstep0mismatch,2controlsCAUGHT,formalPASS; oldEXTRACT_FAjobpreserved. qcore symmetricplacementFAIL h1.861/fullguideestimateFAIL2.296 diagnosedwhole-section1/2hotspot, noGRT/route; evidence209c13e25.
+
+CODEX: 2026-10-29 00:34 PDT KV4PVreviewedcontinuationsLIVE; AHUBq5clock3obligationbuilt627pins/PREFLIGHT0+clockcoupon4000eq/mutant, trialplaceLIVE; SYS_Ccurrentbind7nativePHYclosure+M5PGrestored2339pins, synthLECLIVE/noP&R; ECTL4sourceprep handedKVowner. PHYrawcapture67522main, newrouteadmissionpinbundlefixowned; CDCCH/PCfailuresdiagnosed.
