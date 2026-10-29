@@ -47,3 +47,11 @@ Namespace: measured ordinary frame-valid HFWD magic payload collision is real in
 `1f2412352` is single independent reviewfile `results/geom_review/head_tile_independent_serdes_1029.json`, PASS-COND actualdata geometry. Viewed spnWT`results/head_tile_relays_1029/final_place.png`; actual0/27665captures>405,max400.95, comb0,DPL0,2440targets in legal macro corridors. Fresh reg_spine assignment required before diagnosticCTS; any data displacement must preserve4.05um margin. No oldclock/START age accepted.
 
 Fresh clock image also personally viewed at spnWT`results/head_tile_clock_1029/clock_assignment.png` and planning_report.json:45taps/25749sinks,maxradius97.225um,maxstub365um;332BUFx4pads, residual25.84TT/20.71FF means planningonly. One unresolved visual check sent spn: HR0 plannednode(660,690) appears inside upper-right macro; clarify idealbranchpoint vs actual preserved/legalized h17BUFx24 centre. No unconditional clockG1 concurrence issued; parent/spn own continuation. No new heavy review run was started.
+
+Final tile clock clarification from spn after park: HR0 planned site was moved
+(660,690)->(660,717). Further physical pad rectangle audit found26 illegal
+horizontal-left pad sites for IDs4/14/37/38/43. Clock G1 has NOT passed site
+legality; no CTS launched. Source/results saved `ca2607c93` on
+`codex/head-tile-relays-1029`, `results/head_tile_clock_1029/RESET_HANDOFF.md`.
+The actual data reach remains unchanged and the independent data-only review
+stays conditional. Parent informed; this supersedes the unresolved HR0 item.
