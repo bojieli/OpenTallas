@@ -82,6 +82,10 @@ def add(physical,stages,plan,ctree_v,ctree_tcl,sizes,master=MASTER):
             rejected.add(r[0],r[2],y)
         else:raise ValueError('no complete local clock-buffer body for '+s['id'])
         rows.add(x,x+w,y)
+        # DIE-HEAD-29 (FLOW-CLOCK-R / COORD 10-29 10:01): two stages naming one clock_port silently replaced the
+        # first driver (its flops lost their isolation buffer); fail closed instead.
+        if s['clock_port'] in drivers:
+            raise ValueError('duplicate local clock port '+s['clock_port']+': stages '+drivers[s['clock_port']]['stage']+' and '+s['id'])
         drivers[s['clock_port']]=dict(cell=master,inst='start_clock_'+s['id'],stage=s['id'],xy_um=[x,y],rect_um=[x,y,round(x+w,3),round(y+h,3)],orient=row_orientation(y),flop_loads=s['flops'],logical_cycles_added=0)
     ph['stage_clock_drivers']=drivers
     ph['clock_driver_scope']='universal prebuild FF clock-load isolation; measured phase/insertion required'
