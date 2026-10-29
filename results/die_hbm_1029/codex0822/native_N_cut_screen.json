@@ -1,0 +1,94 @@
+{
+ "before": {
+  "q_hub_nw": {
+   "x": {
+    "cuts": 1901,
+    "max_use": 0.693,
+    "at_um": 2414.88,
+    "bits": 47119,
+    "face_bits": 16724,
+    "tracks": 68039,
+    "core_core_max_use": 0.454,
+    "cuts_over_0p6": 152
+   },
+   "y": {
+    "cuts": 999,
+    "max_use": 0.608,
+    "at_um": 1550.88,
+    "bits": 68604,
+    "face_bits": 22074,
+    "tracks": 112800,
+    "core_core_max_use": 0.412,
+    "cuts_over_0p6": 5
+   }
+  },
+  "q_hub_ne": {
+   "x": {
+    "cuts": 1901,
+    "max_use": 0.671,
+    "at_um": 2540.16,
+    "bits": 47062,
+    "face_bits": 16820,
+    "tracks": 70132,
+    "core_core_max_use": 0.477,
+    "cuts_over_0p6": 163
+   },
+   "y": {
+    "cuts": 999,
+    "max_use": 0.642,
+    "at_um": 1620.0,
+    "bits": 72631,
+    "face_bits": 22491,
+    "tracks": 113070,
+    "core_core_max_use": 0.443,
+    "cuts_over_0p6": 33
+   }
+  }
+ },
+ "source_native_N": {
+  "q_hub_nw": {
+   "x": {
+    "cuts": 1901,
+    "max_use": 0.688,
+    "at_um": 2410.56,
+    "bits": 46813,
+    "face_bits": 16724,
+    "tracks": 68039,
+    "core_core_max_use": 0.454,
+    "cuts_over_0p6": 151
+   },
+   "y": {
+    "cuts": 999,
+    "max_use": 0.605,
+    "at_um": 1550.88,
+    "bits": 68286,
+    "face_bits": 22074,
+    "tracks": 112800,
+    "core_core_max_use": 0.41,
+    "cuts_over_0p6": 5
+   }
+  },
+  "q_hub_ne": {
+   "x": {
+    "cuts": 1901,
+    "max_use": 0.67,
+    "at_um": 6160.32,
+    "bits": 38489,
+    "face_bits": 11265,
+    "tracks": 57408,
+    "core_core_max_use": 0.477,
+    "cuts_over_0p6": 150
+   },
+   "y": {
+    "cuts": 999,
+    "max_use": 0.644,
+    "at_um": 1620.0,
+    "bits": 72859,
+    "face_bits": 22491,
+    "tracks": 113070,
+    "core_core_max_use": 0.445,
+    "cuts_over_0p6": 43
+   }
+  }
+ }
+}

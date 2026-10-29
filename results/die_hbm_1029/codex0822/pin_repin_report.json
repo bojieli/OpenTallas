@@ -1,0 +1,423 @@
+{
+ "moves": [
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_4b5563d7.json",
+   "orient": "MY",
+   "port": "rq2",
+   "to_face": "W",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.99
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_4b5563d7.json",
+   "orient": "MY",
+   "port": "rr2",
+   "to_face": "W",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.99
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_6493f802.json",
+   "orient": "MY",
+   "port": "rq2",
+   "to_face": "N",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.96
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_6493f802.json",
+   "orient": "MY",
+   "port": "rr2",
+   "to_face": "N",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.96
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_6d492f89.json",
+   "orient": "MY",
+   "port": "dq",
+   "to_face": "E",
+   "insts": 2,
+   "fails": [
+    2,
+    0
+   ],
+   "scores_after": [
+    0.98,
+    0.98
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_80c37a6f.json",
+   "orient": "MY",
+   "port": "dq",
+   "to_face": "N",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.85
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_80c37a6f.json",
+   "orient": "MY",
+   "port": "rq2",
+   "to_face": "E",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.9
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_80c37a6f.json",
+   "orient": "MY",
+   "port": "rr2",
+   "to_face": "E",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.9
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_a5d7aa1f.json",
+   "orient": "MY",
+   "port": "dq",
+   "to_face": "N",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.85
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_101f7349.json",
+   "orient": "R0",
+   "port": "kq",
+   "to_face": "N",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.79
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_79b1ed8e.json",
+   "orient": "R0",
+   "port": "kq",
+   "to_face": "E",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.96
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_8087f868.json",
+   "orient": "R0",
+   "port": "rr0",
+   "to_face": "N",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.99
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_9eec3f96.json",
+   "orient": "R0",
+   "port": "rq1",
+   "to_face": "N",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.93
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_9eec3f96.json",
+   "orient": "R0",
+   "port": "rr1",
+   "to_face": "N",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.93
+   ]
+  }
+ ],
+ "skipped": [
+  {
+   "pins_file": "cores/hfd_ep_static__241.92x397.44__r15_wesplit.json",
+   "port": "sd_tx",
+   "why": "table used outside --types"
+  }
+ ],
+ "tables": {
+  "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_4b5563d7__cfix_MY.json": {
+   "old": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_4b5563d7.json",
+   "cores": [
+    "q_hub_ne/u_vmb_Q0_mu1"
+   ],
+   "ports": {
+    "rr2": {
+     "pins": 257,
+     "from_faces": {
+      "S": 257
+     },
+     "to_face": "W",
+     "layer": "M4",
+     "track_step": 2,
+     "free_tracks": 3328
+    },
+    "rq2": {
+     "pins": 18,
+     "from_faces": {
+      "S": 18
+     },
+     "to_face": "W",
+     "layer": "M4",
+     "track_step": 2,
+     "free_tracks": 3071
+    }
+   }
+  },
+  "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_6493f802__cfix_MY.json": {
+   "old": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_6493f802.json",
+   "cores": [
+    "q_hub_ne/u_vmb_Q4_mu1"
+   ],
+   "ports": {
+    "rr2": {
+     "pins": 257,
+     "from_faces": {
+      "S": 257
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 2760
+    },
+    "rq2": {
+     "pins": 18,
+     "from_faces": {
+      "S": 18
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 2503
+    }
+   }
+  },
+  "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_6d492f89__cfix_MY.json": {
+   "old": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_6d492f89.json",
+   "cores": [
+    "q_hub_nw/u_vmb_Q7_mu1",
+    "q_hub_ne/u_vmb_Q7_mu1"
+   ],
+   "ports": {
+    "dq": {
+     "pins": 282,
+     "from_faces": {
+      "W": 282
+     },
+     "to_face": "E",
+     "layer": "M4",
+     "track_step": 2,
+     "free_tracks": 3324
+    }
+   }
+  },
+  "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_80c37a6f__cfix_MY.json": {
+   "old": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_80c37a6f.json",
+   "cores": [
+    "q_hub_ne/u_vmb_Q6_mu1"
+   ],
+   "ports": {
+    "dq": {
+     "pins": 282,
+     "from_faces": {
+      "W": 282
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 2760
+    },
+    "rr2": {
+     "pins": 257,
+     "from_faces": {
+      "S": 257
+     },
+     "to_face": "E",
+     "layer": "M4",
+     "track_step": 2,
+     "free_tracks": 3324
+    },
+    "rq2": {
+     "pins": 18,
+     "from_faces": {
+      "S": 18
+     },
+     "to_face": "E",
+     "layer": "M4",
+     "track_step": 2,
+     "free_tracks": 3067
+    }
+   }
+  },
+  "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_a5d7aa1f__cfix_MY.json": {
+   "old": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_a5d7aa1f.json",
+   "cores": [
+    "q_hub_nw/u_vmb_Q6_mu1"
+   ],
+   "ports": {
+    "dq": {
+     "pins": 282,
+     "from_faces": {
+      "W": 282
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 2760
+    }
+   }
+  },
+  "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_101f7349__cfix_R0.json": {
+   "old": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_101f7349.json",
+   "cores": [
+    "q_hub_ne/u_vmb_Q2"
+   ],
+   "ports": {
+    "kq": {
+     "pins": 281,
+     "from_faces": {
+      "S": 281
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 2487
+    }
+   }
+  },
+  "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_79b1ed8e__cfix_R0.json": {
+   "old": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_79b1ed8e.json",
+   "cores": [
+    "q_hub_ne/u_vmb_Q0"
+   ],
+   "ports": {
+    "kq": {
+     "pins": 281,
+     "from_faces": {
+      "S": 281
+     },
+     "to_face": "E",
+     "layer": "M4",
+     "track_step": 2,
+     "free_tracks": 1073
+    }
+   }
+  },
+  "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_8087f868__cfix_R0.json": {
+   "old": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_8087f868.json",
+   "cores": [
+    "q_hub_ne/u_vmb_Q3"
+   ],
+   "ports": {
+    "rr0": {
+     "pins": 257,
+     "from_faces": {
+      "W": 257
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 2487
+    }
+   }
+  },
+  "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_9eec3f96__cfix_R0.json": {
+   "old": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_9eec3f96.json",
+   "cores": [
+    "q_hub_ne/u_vmb_Q4"
+   ],
+   "ports": {
+    "rr1": {
+     "pins": 257,
+     "from_faces": {
+      "S": 257
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 2487
+    },
+    "rq1": {
+     "pins": 17,
+     "from_faces": {
+      "S": 17
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 2230
+    }
+   }
+  }
+ }
+}

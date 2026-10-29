@@ -1,0 +1,10 @@
+{
+ "verdict": "PREP PASS-COND pins only; no P&R approved",
+ "image": "results/geom_review/hbm_bank_pin_conflicts_0822/pins.png",
+ "findings": [
+  "Viewed nine distinct bank physical views. Red data groups replace wrong-facing blue groups on the same outline; clock/reset/island pins unchanged. 10 conflicting instances share9new directional-signature tables; 14 data groups moved. Source/pin names/widths/cycles unchanged.",
+  "Static core_faces reports15hubawaygroups->0;2SPBawaygroups remain and are not waived (the direct-endpoint model omits actualSPB4stagepath).",
+  "No route adoption: correct actual source directions/role names and update stored internal station endpoint geometry before resiting, and rebuild every affected physical view. No PG/timing/IR qualification from this pin-only image."
+ ],
+ "status": "PARKED at explicit Claude reset"
+}

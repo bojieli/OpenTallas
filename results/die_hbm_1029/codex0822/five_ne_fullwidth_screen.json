@@ -1,0 +1,93 @@
+{
+ "schema": "hbm.native_fullwidth.v1",
+ "qualification": "LOWER_BOUND_SCREEN_ONLY",
+ "changes": [
+  {
+   "conn": "u_vmb_Q7.eg|u_hb_vms_Q",
+   "old_bits": 139,
+   "old_parallel": 278,
+   "source_bits": 276,
+   "stages": 6,
+   "extra_cycles_vs_actual_direct": 6
+  },
+  {
+   "conn": "u_vmb_Q7.pr|u_hb_vms_Q",
+   "old_bits": 134,
+   "old_parallel": 268,
+   "source_bits": 266,
+   "stages": 6,
+   "extra_cycles_vs_actual_direct": 6
+  },
+  {
+   "conn": "u_vmb_Q7.status|u_hb_vms_Q",
+   "old_bits": 10,
+   "old_parallel": 19,
+   "source_bits": 18,
+   "stages": 6,
+   "extra_cycles_vs_actual_direct": 6
+  },
+  {
+   "conn": "u_vmb_Q7.xq2_done|u_hb_vms_Q",
+   "old_bits": 1,
+   "old_parallel": 2,
+   "source_bits": 1,
+   "stages": 6,
+   "extra_cycles_vs_actual_direct": 6
+  },
+  {
+   "conn": "u_vmb_Q7.xq_done|u_hb_vms_Q",
+   "old_bits": 1,
+   "old_parallel": 2,
+   "source_bits": 1,
+   "stages": 6,
+   "extra_cycles_vs_actual_direct": 6
+  }
+ ],
+ "added_flops": 1662,
+ "before": {
+  "x": {
+   "cuts": 1901,
+   "max_use": 0.671,
+   "at_um": 2540.16,
+   "bits": 47062,
+   "face_bits": 16820,
+   "tracks": 70132,
+   "core_core_max_use": 0.477,
+   "cuts_over_0p6": 163
+  },
+  "y": {
+   "cuts": 999,
+   "max_use": 0.642,
+   "at_um": 1620.0,
+   "bits": 72631,
+   "face_bits": 22491,
+   "tracks": 113070,
+   "core_core_max_use": 0.443,
+   "cuts_over_0p6": 33
+  }
+ },
+ "after": {
+  "x": {
+   "cuts": 1901,
+   "max_use": 0.671,
+   "at_um": 2540.16,
+   "bits": 47062,
+   "face_bits": 16820,
+   "tracks": 70132,
+   "core_core_max_use": 0.477,
+   "cuts_over_0p6": 163
+  },
+  "y": {
+   "cuts": 999,
+   "max_use": 0.645,
+   "at_um": 1620.0,
+   "bits": 72908,
+   "face_bits": 22491,
+   "tracks": 113070,
+   "core_core_max_use": 0.446,
+   "cuts_over_0p6": 35
+  }
+ },
+ "source_gate": "PREP: source materialization and complete per-bank request/return dates required",
+ "physical_gate": "NOT RUN: per-bit station bays/geometry, PG, clock, route, timing"
+}

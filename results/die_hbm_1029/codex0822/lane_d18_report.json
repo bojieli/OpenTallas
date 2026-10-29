@@ -1,0 +1,3138 @@
+{
+ "schema": "die_plan.lane_add.v1",
+ "base": "base_d16f",
+ "base_sha": "419c9aaed4bd",
+ "out_sha": "92a841730cca",
+ "near_um": 1200.0,
+ "totals": {
+  "built": 60,
+  "built_bits": 95311,
+  "far": 90,
+  "far_bits": 56289,
+  "failed": 13,
+  "by_kind": {
+   "adj": 50,
+   "same": 4,
+   "reverse": 4,
+   "path": 2
+  },
+  "cycle_mismatch": 0,
+  "macro_hits": 0
+ },
+ "built": [
+  {
+   "lane": "L160",
+   "src": "NW_hub",
+   "dst": "NW_b000",
+   "bits": 4986,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_hub",
+    "NW_b000"
+   ],
+   "windows": [
+    {
+     "edge": "NW_hub|NW_b000",
+     "face": "W",
+     "window_um": [
+      8823.632,
+      9654.7987
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L161",
+   "src": "NW_b000",
+   "dst": "NW_b010",
+   "bits": 4512,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_b000",
+    "NW_b010"
+   ],
+   "windows": [
+    {
+     "edge": "NW_b000|NW_b010",
+     "face": "W",
+     "window_um": [
+      9515.984,
+      10268.1507
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L162",
+   "src": "NW_su01",
+   "dst": "NW_su00",
+   "bits": 3728,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_su01",
+    "NW_su00"
+   ],
+   "windows": [
+    {
+     "edge": "NW_su01|NW_su00",
+     "face": "W",
+     "window_um": [
+      10860.768,
+      11482.268
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L163",
+   "src": "NW_su21",
+   "dst": "NW_su20",
+   "bits": 3728,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_su21",
+    "NW_su20"
+   ],
+   "windows": [
+    {
+     "edge": "NW_su21|NW_su20",
+     "face": "W",
+     "window_um": [
+      4612.528,
+      5234.028
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L164",
+   "src": "NW_b102",
+   "dst": "NW_b103",
+   "bits": 3367,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_b102",
+    "NW_b103"
+   ],
+   "windows": [
+    {
+     "edge": "NW_b102|NW_b103",
+     "face": "E",
+     "window_um": [
+      5007.008,
+      5568.3413
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L165",
+   "src": "NW_su10",
+   "dst": "NW_su11",
+   "bits": 3356,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_su10",
+    "NW_su11"
+   ],
+   "windows": [
+    {
+     "edge": "NW_su10|NW_su11",
+     "face": "E",
+     "window_um": [
+      10891.76,
+      11451.26
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L166",
+   "src": "NW_b001",
+   "dst": "NW_b011",
+   "bits": 3332,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_b001",
+    "NW_b011"
+   ],
+   "windows": [
+    {
+     "edge": "NW_b001|NW_b011",
+     "face": "W",
+     "window_um": [
+      8978.96,
+      9534.46
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L167",
+   "src": "NW_b000",
+   "dst": "NW_b001",
+   "bits": 1389,
+   "kind": "same",
+   "template": "L14",
+   "chain": [
+    "NW_b000",
+    "NW_b010",
+    "NW_b001"
+   ],
+   "windows": [
+    {
+     "edge": "NW_b000|NW_b010",
+     "face": "W",
+     "window_um": [
+      7992.56,
+      8224.2267
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NW_b010|NW_b001",
+     "face": "W",
+     "window_um": [
+      7191.536,
+      7423.2027
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NW_b010",
+     "slot": "L167x1",
+     "stations": 6,
+     "route_um": 1630.5,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 8,
+   "stations": 6,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    8
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 2
+  },
+  {
+   "lane": "L168",
+   "src": "NW_b000",
+   "dst": "NW_b001",
+   "bits": 1388,
+   "kind": "same",
+   "template": "L14",
+   "chain": [
+    "NW_b000",
+    "NW_b010",
+    "NW_b001"
+   ],
+   "windows": [
+    {
+     "edge": "NW_b000|NW_b010",
+     "face": "W",
+     "window_um": [
+      7759.056,
+      7990.556
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NW_b010|NW_b001",
+     "face": "W",
+     "window_um": [
+      8978.96,
+      9210.46
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NW_b010",
+     "slot": "L168x1",
+     "stations": 6,
+     "route_um": 2049.3,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 8,
+   "stations": 6,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    8
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 2
+  },
+  {
+   "lane": "L169",
+   "src": "root",
+   "dst": "NW_hub",
+   "bits": 559,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "root",
+    "NW_hub"
+   ],
+   "windows": [
+    {
+     "edge": "root|NW_hub",
+     "face": "W",
+     "window_um": [
+      8354.353,
+      8447.6863
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2,
+    13,
+    15
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 4
+  },
+  {
+   "lane": "L170",
+   "src": "root",
+   "dst": "NW_hub",
+   "bits": 559,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "root",
+    "NW_hub"
+   ],
+   "windows": [
+    {
+     "edge": "root|NW_hub",
+     "face": "W",
+     "window_um": [
+      10052.0,
+      10145.3333
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2,
+    13,
+    15
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 4
+  },
+  {
+   "lane": "L171",
+   "src": "root",
+   "dst": "NW_hub",
+   "bits": 559,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "root",
+    "NW_hub"
+   ],
+   "windows": [
+    {
+     "edge": "root|NW_hub",
+     "face": "W",
+     "window_um": [
+      10147.3333,
+      10240.6666
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2,
+    13,
+    15
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 4
+  },
+  {
+   "lane": "L172",
+   "src": "root",
+   "dst": "NW_hub",
+   "bits": 558,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "root",
+    "NW_hub"
+   ],
+   "windows": [
+    {
+     "edge": "root|NW_hub",
+     "face": "W",
+     "window_um": [
+      10242.6666,
+      10335.8333
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2,
+    13,
+    15
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 4
+  },
+  {
+   "lane": "L173",
+   "src": "NW_hub",
+   "dst": "NW_su11",
+   "bits": 2172,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_hub",
+    "NW_su11"
+   ],
+   "windows": [
+    {
+     "edge": "NW_hub|NW_su11",
+     "face": "N",
+     "window_um": [
+      10787.392,
+      11149.5587
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L174",
+   "src": "NW_hub",
+   "dst": "NW_su31",
+   "bits": 2172,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_hub",
+    "NW_su31"
+   ],
+   "windows": [
+    {
+     "edge": "NW_hub|NW_su31",
+     "face": "S",
+     "window_um": [
+      11534.752,
+      11896.9187
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L175",
+   "src": "NW_b010",
+   "dst": "NW_b001",
+   "bits": 1756,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_b010",
+    "NW_b001"
+   ],
+   "windows": [
+    {
+     "edge": "NW_b010|NW_b001",
+     "face": "W",
+     "window_um": [
+      9515.984,
+      9808.8173
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L176",
+   "src": "NW_b011",
+   "dst": "NW_b002",
+   "bits": 1747,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_b011",
+    "NW_b002"
+   ],
+   "windows": [
+    {
+     "edge": "NW_b011|NW_b002",
+     "face": "W",
+     "window_um": [
+      8978.96,
+      9270.2933
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L177",
+   "src": "NW_su11",
+   "dst": "NW_su10",
+   "bits": 1527,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_su11",
+    "NW_su10"
+   ],
+   "windows": [
+    {
+     "edge": "NW_su11|NW_su10",
+     "face": "W",
+     "window_um": [
+      11453.26,
+      11707.9267
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L178",
+   "src": "NW_su00",
+   "dst": "NW_su01",
+   "bits": 1152,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_su00",
+    "NW_su01"
+   ],
+   "windows": [
+    {
+     "edge": "NW_su00|NW_su01",
+     "face": "E",
+     "window_um": [
+      11484.268,
+      11676.4347
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L179",
+   "src": "NW_b103",
+   "dst": "NW_b102",
+   "bits": 1146,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_b103",
+    "NW_b102"
+   ],
+   "windows": [
+    {
+     "edge": "NW_b103|NW_b102",
+     "face": "W",
+     "window_um": [
+      5570.3413,
+      5761.508
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L180",
+   "src": "NW_su11",
+   "dst": "NW_hub",
+   "bits": 1108,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_su11",
+    "NW_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NW_su11|NW_hub",
+     "face": "S",
+     "window_um": [
+      11151.5587,
+      11336.392
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L181",
+   "src": "NW_su31",
+   "dst": "NW_hub",
+   "bits": 1108,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_su31",
+    "NW_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NW_su31|NW_hub",
+     "face": "N",
+     "window_um": [
+      12177.488,
+      12362.3213
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L182",
+   "src": "NW_su20",
+   "dst": "NW_su21",
+   "bits": 1024,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_su20",
+    "NW_su21"
+   ],
+   "windows": [
+    {
+     "edge": "NW_su20|NW_su21",
+     "face": "E",
+     "window_um": [
+      5496.272,
+      5667.1053
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L183",
+   "src": "NW_b010",
+   "dst": "NW_b002",
+   "bits": 569,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NW_b010",
+    "NW_b001",
+    "NW_b011",
+    "NW_b002"
+   ],
+   "windows": [
+    {
+     "edge": "NW_b010|NW_b001",
+     "face": "W",
+     "window_um": [
+      9810.8173,
+      9905.8173
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NW_b001|NW_b011",
+     "face": "W",
+     "window_um": [
+      9810.816,
+      9905.816
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NW_b011|NW_b002",
+     "face": "W",
+     "window_um": [
+      9810.816,
+      9905.816
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NW_b001",
+     "slot": "L183x1",
+     "stations": 3,
+     "route_um": 786.2,
+     "macro_hits": 0
+    },
+    {
+     "part": "NW_b011",
+     "slot": "L183x2",
+     "stations": 2,
+     "route_um": 380.2,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 7,
+   "stations": 5,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L184",
+   "src": "NW_b112",
+   "dst": "NW_hub",
+   "bits": 410,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_b112",
+    "NW_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NW_b112|NW_hub",
+     "face": "S",
+     "window_um": [
+      12718.384,
+      12786.884
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L185",
+   "src": "NW_hub",
+   "dst": "NW_b112",
+   "bits": 160,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_hub",
+    "NW_b112"
+   ],
+   "windows": [
+    {
+     "edge": "NW_hub|NW_b112",
+     "face": "N",
+     "window_um": [
+      12788.884,
+      12815.7173
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L186",
+   "src": "NW_b001",
+   "dst": "NW_b010",
+   "bits": 72,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_b001",
+    "NW_b010"
+   ],
+   "windows": [
+    {
+     "edge": "NW_b001|NW_b010",
+     "face": "E",
+     "window_um": [
+      9212.46,
+      9224.6267
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L187",
+   "src": "NW_b002",
+   "dst": "NW_b011",
+   "bits": 35,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_b002",
+    "NW_b011"
+   ],
+   "windows": [
+    {
+     "edge": "NW_b002|NW_b011",
+     "face": "E",
+     "window_um": [
+      7365.184,
+      7371.184
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L188",
+   "src": "NW_b010",
+   "dst": "NW_b000",
+   "bits": 35,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_b010",
+    "NW_b000"
+   ],
+   "windows": [
+    {
+     "edge": "NW_b010|NW_b000",
+     "face": "E",
+     "window_um": [
+      7751.04,
+      7757.04
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L189",
+   "src": "NW_b003",
+   "dst": "NW_b002",
+   "bits": 1,
+   "kind": "reverse",
+   "template": "L10",
+   "chain": [
+    "NW_b003",
+    "NW_b012",
+    "NW_b002"
+   ],
+   "windows": [
+    {
+     "edge": "NW_b003|NW_b012",
+     "face": "E",
+     "window_um": [
+      8910.416,
+      8910.7493
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NW_b012|NW_b002",
+     "face": "E",
+     "window_um": [
+      8970.512,
+      8971.0533
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NW_b012",
+     "slot": "L189x1",
+     "stations": 4,
+     "route_um": 613.2,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 6,
+   "stations": 4,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L190",
+   "src": "NW_b010",
+   "dst": "NW_b011",
+   "bits": 1,
+   "kind": "reverse",
+   "template": "L11",
+   "chain": [
+    "NW_b010",
+    "NW_b001",
+    "NW_b011"
+   ],
+   "windows": [
+    {
+     "edge": "NW_b010|NW_b001",
+     "face": "W",
+     "window_um": [
+      9226.6267,
+      9226.96
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NW_b001|NW_b011",
+     "face": "W",
+     "window_um": [
+      9536.46,
+      9537.0013
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NW_b001",
+     "slot": "L190x1",
+     "stations": 5,
+     "route_um": 1096.2,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 7,
+   "stations": 5,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L160m",
+   "src": "NE_hub",
+   "dst": "NE_b000",
+   "bits": 4986,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_hub",
+    "NE_b000"
+   ],
+   "windows": [
+    {
+     "edge": "NE_hub|NE_b000",
+     "face": "E",
+     "window_um": [
+      8823.632,
+      9654.7987
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L161m",
+   "src": "NE_b000",
+   "dst": "NE_b010",
+   "bits": 4512,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_b000",
+    "NE_b010"
+   ],
+   "windows": [
+    {
+     "edge": "NE_b000|NE_b010",
+     "face": "E",
+     "window_um": [
+      9515.984,
+      10268.1507
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L162m",
+   "src": "NE_su01",
+   "dst": "NE_su00",
+   "bits": 3728,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_su01",
+    "NE_su00"
+   ],
+   "windows": [
+    {
+     "edge": "NE_su01|NE_su00",
+     "face": "E",
+     "window_um": [
+      10860.768,
+      11482.268
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L163m",
+   "src": "NE_su21",
+   "dst": "NE_su20",
+   "bits": 3728,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_su21",
+    "NE_su20"
+   ],
+   "windows": [
+    {
+     "edge": "NE_su21|NE_su20",
+     "face": "E",
+     "window_um": [
+      4612.528,
+      5234.028
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L164m",
+   "src": "NE_b102",
+   "dst": "NE_b103",
+   "bits": 3367,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_b102",
+    "NE_b103"
+   ],
+   "windows": [
+    {
+     "edge": "NE_b102|NE_b103",
+     "face": "W",
+     "window_um": [
+      5007.008,
+      5568.3413
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L165m",
+   "src": "NE_su10",
+   "dst": "NE_su11",
+   "bits": 3356,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_su10",
+    "NE_su11"
+   ],
+   "windows": [
+    {
+     "edge": "NE_su10|NE_su11",
+     "face": "W",
+     "window_um": [
+      10891.76,
+      11451.26
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L166m",
+   "src": "NE_b001",
+   "dst": "NE_b011",
+   "bits": 3332,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_b001",
+    "NE_b011"
+   ],
+   "windows": [
+    {
+     "edge": "NE_b001|NE_b011",
+     "face": "E",
+     "window_um": [
+      8978.96,
+      9534.46
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L191",
+   "src": "NE_b000",
+   "dst": "NE_b001",
+   "bits": 1389,
+   "kind": "same",
+   "template": "L14m",
+   "chain": [
+    "NE_b000",
+    "NE_b010",
+    "NE_b001"
+   ],
+   "windows": [
+    {
+     "edge": "NE_b000|NE_b010",
+     "face": "E",
+     "window_um": [
+      7992.56,
+      8224.2267
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NE_b010|NE_b001",
+     "face": "E",
+     "window_um": [
+      7191.536,
+      7423.2027
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NE_b010",
+     "slot": "L191x1",
+     "stations": 6,
+     "route_um": 1630.5,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 8,
+   "stations": 6,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    8
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 2
+  },
+  {
+   "lane": "L192",
+   "src": "NE_b000",
+   "dst": "NE_b001",
+   "bits": 1388,
+   "kind": "same",
+   "template": "L14m",
+   "chain": [
+    "NE_b000",
+    "NE_b010",
+    "NE_b001"
+   ],
+   "windows": [
+    {
+     "edge": "NE_b000|NE_b010",
+     "face": "E",
+     "window_um": [
+      7759.056,
+      7990.556
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NE_b010|NE_b001",
+     "face": "E",
+     "window_um": [
+      8978.96,
+      9210.46
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NE_b010",
+     "slot": "L192x1",
+     "stations": 6,
+     "route_um": 2049.3,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 8,
+   "stations": 6,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    8
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 2
+  },
+  {
+   "lane": "L173m",
+   "src": "NE_hub",
+   "dst": "NE_su11",
+   "bits": 2172,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_hub",
+    "NE_su11"
+   ],
+   "windows": [
+    {
+     "edge": "NE_hub|NE_su11",
+     "face": "N",
+     "window_um": [
+      17250.112,
+      17612.2787
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L174m",
+   "src": "NE_hub",
+   "dst": "NE_su31",
+   "bits": 2172,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_hub",
+    "NE_su31"
+   ],
+   "windows": [
+    {
+     "edge": "NE_hub|NE_su31",
+     "face": "S",
+     "window_um": [
+      16502.752,
+      16864.9187
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L175m",
+   "src": "NE_b010",
+   "dst": "NE_b001",
+   "bits": 1756,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_b010",
+    "NE_b001"
+   ],
+   "windows": [
+    {
+     "edge": "NE_b010|NE_b001",
+     "face": "E",
+     "window_um": [
+      9515.984,
+      9808.8173
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L176m",
+   "src": "NE_b011",
+   "dst": "NE_b002",
+   "bits": 1747,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_b011",
+    "NE_b002"
+   ],
+   "windows": [
+    {
+     "edge": "NE_b011|NE_b002",
+     "face": "E",
+     "window_um": [
+      8978.96,
+      9270.2933
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L177m",
+   "src": "NE_su11",
+   "dst": "NE_su10",
+   "bits": 1527,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_su11",
+    "NE_su10"
+   ],
+   "windows": [
+    {
+     "edge": "NE_su11|NE_su10",
+     "face": "E",
+     "window_um": [
+      11453.26,
+      11707.9267
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L178m",
+   "src": "NE_su00",
+   "dst": "NE_su01",
+   "bits": 1152,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_su00",
+    "NE_su01"
+   ],
+   "windows": [
+    {
+     "edge": "NE_su00|NE_su01",
+     "face": "W",
+     "window_um": [
+      11484.268,
+      11676.4347
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L179m",
+   "src": "NE_b103",
+   "dst": "NE_b102",
+   "bits": 1146,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_b103",
+    "NE_b102"
+   ],
+   "windows": [
+    {
+     "edge": "NE_b103|NE_b102",
+     "face": "E",
+     "window_um": [
+      5570.3413,
+      5761.508
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L180m",
+   "src": "NE_su11",
+   "dst": "NE_hub",
+   "bits": 1108,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_su11",
+    "NE_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NE_su11|NE_hub",
+     "face": "S",
+     "window_um": [
+      17063.264,
+      17248.0973
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L181m",
+   "src": "NE_su31",
+   "dst": "NE_hub",
+   "bits": 1108,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_su31",
+    "NE_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NE_su31|NE_hub",
+     "face": "N",
+     "window_um": [
+      16037.344,
+      16222.1773
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L182m",
+   "src": "NE_su20",
+   "dst": "NE_su21",
+   "bits": 1024,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_su20",
+    "NE_su21"
+   ],
+   "windows": [
+    {
+     "edge": "NE_su20|NE_su21",
+     "face": "W",
+     "window_um": [
+      5496.272,
+      5667.1053
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L169m",
+   "src": "root",
+   "dst": "NE_hub",
+   "bits": 850,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "root",
+    "NE_hub"
+   ],
+   "windows": [
+    {
+     "edge": "root|NE_hub",
+     "face": "E",
+     "window_um": [
+      8723.423,
+      8865.2563
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2,
+    13,
+    15
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L193",
+   "src": "NE_b010",
+   "dst": "NE_b002",
+   "bits": 569,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NE_b010",
+    "NE_b001",
+    "NE_b011",
+    "NE_b002"
+   ],
+   "windows": [
+    {
+     "edge": "NE_b010|NE_b001",
+     "face": "E",
+     "window_um": [
+      9810.8173,
+      9905.8173
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NE_b001|NE_b011",
+     "face": "E",
+     "window_um": [
+      9810.816,
+      9905.816
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NE_b011|NE_b002",
+     "face": "E",
+     "window_um": [
+      9810.816,
+      9905.816
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NE_b001",
+     "slot": "L193x1",
+     "stations": 3,
+     "route_um": 786.2,
+     "macro_hits": 0
+    },
+    {
+     "part": "NE_b011",
+     "slot": "L193x2",
+     "stations": 2,
+     "route_um": 380.2,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 7,
+   "stations": 5,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L184m",
+   "src": "NE_b112",
+   "dst": "NE_hub",
+   "bits": 410,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_b112",
+    "NE_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NE_b112|NE_hub",
+     "face": "S",
+     "window_um": [
+      15612.784,
+      15681.284
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L194",
+   "src": "NE_hub",
+   "dst": "root",
+   "bits": 264,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_hub",
+    "root"
+   ],
+   "windows": [
+    {
+     "edge": "NE_hub|root",
+     "face": "W",
+     "window_um": [
+      8315.049,
+      8359.2157
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2,
+    5,
+    13
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L185m",
+   "src": "NE_hub",
+   "dst": "NE_b112",
+   "bits": 160,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_hub",
+    "NE_b112"
+   ],
+   "windows": [
+    {
+     "edge": "NE_hub|NE_b112",
+     "face": "N",
+     "window_um": [
+      15683.284,
+      15710.1173
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L186m",
+   "src": "NE_b001",
+   "dst": "NE_b010",
+   "bits": 72,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_b001",
+    "NE_b010"
+   ],
+   "windows": [
+    {
+     "edge": "NE_b001|NE_b010",
+     "face": "W",
+     "window_um": [
+      9212.46,
+      9224.6267
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L187m",
+   "src": "NE_b002",
+   "dst": "NE_b011",
+   "bits": 35,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_b002",
+    "NE_b011"
+   ],
+   "windows": [
+    {
+     "edge": "NE_b002|NE_b011",
+     "face": "W",
+     "window_um": [
+      7365.184,
+      7371.184
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L188m",
+   "src": "NE_b010",
+   "dst": "NE_b000",
+   "bits": 35,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_b010",
+    "NE_b000"
+   ],
+   "windows": [
+    {
+     "edge": "NE_b010|NE_b000",
+     "face": "W",
+     "window_um": [
+      7751.04,
+      7757.04
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L195",
+   "src": "NE_b003",
+   "dst": "NE_b002",
+   "bits": 1,
+   "kind": "reverse",
+   "template": "L10m",
+   "chain": [
+    "NE_b003",
+    "NE_b012",
+    "NE_b002"
+   ],
+   "windows": [
+    {
+     "edge": "NE_b003|NE_b012",
+     "face": "W",
+     "window_um": [
+      8910.416,
+      8910.7493
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NE_b012|NE_b002",
+     "face": "W",
+     "window_um": [
+      8970.512,
+      8971.0533
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NE_b012",
+     "slot": "L195x1",
+     "stations": 4,
+     "route_um": 613.2,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 6,
+   "stations": 4,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L196",
+   "src": "NE_b010",
+   "dst": "NE_b011",
+   "bits": 1,
+   "kind": "reverse",
+   "template": "L11m",
+   "chain": [
+    "NE_b010",
+    "NE_b001",
+    "NE_b011"
+   ],
+   "windows": [
+    {
+     "edge": "NE_b010|NE_b001",
+     "face": "E",
+     "window_um": [
+      9226.6267,
+      9226.96
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NE_b001|NE_b011",
+     "face": "E",
+     "window_um": [
+      9536.46,
+      9537.0013
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NE_b001",
+     "slot": "L196x1",
+     "stations": 5,
+     "route_um": 1096.2,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 7,
+   "stations": 5,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  }
+ ],
+ "far": [
+  {
+   "src": "NW_b100",
+   "dst": "NW_b101",
+   "bits": 3333,
+   "gap_um": 2246.4
+  },
+  {
+   "src": "NW_b100",
+   "dst": "NW_b102",
+   "bits": 2777,
+   "gap_um": 8942.4
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b113",
+   "bits": 2277,
+   "gap_um": 3283.2
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_b111",
+   "bits": 1662,
+   "gap_um": 4320.0
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_b112",
+   "bits": 1662,
+   "gap_um": 10290.2
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_b110",
+   "bits": 1534,
+   "gap_um": 12847.7
+  },
+  {
+   "src": "NW_b102",
+   "dst": "NW_b101",
+   "bits": 1146,
+   "gap_um": 11923.2
+  },
+  {
+   "src": "NW_b111",
+   "dst": "NW_b113",
+   "bits": 1000,
+   "gap_um": 4320.0
+  },
+  {
+   "src": "NW_b112",
+   "dst": "NW_b113",
+   "bits": 1000,
+   "gap_um": 10290.2
+  },
+  {
+   "src": "NW_b110",
+   "dst": "NW_b113",
+   "bits": 800,
+   "gap_um": 12847.7
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_hub",
+   "bits": 693,
+   "gap_um": 3283.2
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_spb0",
+   "bits": 632,
+   "gap_um": 4561.9
+  },
+  {
+   "src": "root",
+   "dst": "vsN0",
+   "bits": 632,
+   "gap_um": 2833.9
+  },
+  {
+   "src": "NW_spb0",
+   "dst": "NW_hub",
+   "bits": 615,
+   "gap_um": 4561.9
+  },
+  {
+   "src": "vsN0",
+   "dst": "root",
+   "bits": 615,
+   "gap_um": 2833.9
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_su11",
+   "bits": 596,
+   "gap_um": 7931.5
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_su20",
+   "bits": 596,
+   "gap_um": 4682.9
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_su31",
+   "bits": 596,
+   "gap_um": 13262.4
+  },
+  {
+   "src": "NW_b101",
+   "dst": "NW_b103",
+   "bits": 569,
+   "gap_um": 11214.7
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_b113",
+   "bits": 516,
+   "gap_um": 7931.5
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_b113",
+   "bits": 516,
+   "gap_um": 4682.9
+  },
+  {
+   "src": "NW_su31",
+   "dst": "NW_b113",
+   "bits": 516,
+   "gap_um": 13262.4
+  },
+  {
+   "src": "NW_b111",
+   "dst": "NW_hub",
+   "bits": 410,
+   "gap_um": 2920.3
+  },
+  {
+   "src": "NW_b002",
+   "dst": "root",
+   "bits": 297,
+   "gap_um": 10670.4
+  },
+  {
+   "src": "NW_b103",
+   "dst": "root",
+   "bits": 297,
+   "gap_um": 11940.5
+  },
+  {
+   "src": "root",
+   "dst": "NW_b000",
+   "bits": 180,
+   "gap_um": 8216.6
+  },
+  {
+   "src": "root",
+   "dst": "NW_b100",
+   "bits": 180,
+   "gap_um": 2972.2
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b111",
+   "bits": 160,
+   "gap_um": 2920.3
+  },
+  {
+   "src": "NW_sm0",
+   "dst": "NW_hub",
+   "bits": 37,
+   "gap_um": 1572.5
+  },
+  {
+   "src": "NW_sm1",
+   "dst": "NW_hub",
+   "bits": 37,
+   "gap_um": 1572.5
+  },
+  {
+   "src": "NW_sm2",
+   "dst": "NW_hub",
+   "bits": 37,
+   "gap_um": 1555.2
+  },
+  {
+   "src": "NW_sm3",
+   "dst": "NW_hub",
+   "bits": 37,
+   "gap_um": 1555.2
+  },
+  {
+   "src": "NW_b101",
+   "dst": "NW_b102",
+   "bits": 35,
+   "gap_um": 11923.2
+  },
+  {
+   "src": "NW_spt0",
+   "dst": "root",
+   "bits": 9,
+   "gap_um": 5771.5
+  },
+  {
+   "src": "NW_b002",
+   "dst": "NW_hub",
+   "bits": 4,
+   "gap_um": 2453.8
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_hub",
+   "bits": 3,
+   "gap_um": 2073.6
+  },
+  {
+   "src": "NW_b103",
+   "dst": "NW_hub",
+   "bits": 2,
+   "gap_um": 3723.8
+  },
+  {
+   "src": "NW_b000",
+   "dst": "NW_b002",
+   "bits": 1,
+   "gap_um": 1995.8
+  },
+  {
+   "src": "NW_b000",
+   "dst": "NW_b011",
+   "bits": 1,
+   "gap_um": 1615.7
+  },
+  {
+   "src": "NW_b013",
+   "dst": "NW_hub",
+   "bits": 1,
+   "gap_um": 3939.8
+  },
+  {
+   "src": "NW_b100",
+   "dst": "NW_b103",
+   "bits": 1,
+   "gap_um": 8233.9
+  },
+  {
+   "src": "NW_su00",
+   "dst": "NW_su11",
+   "bits": 1,
+   "gap_um": 5823.4
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_su20",
+   "bits": 1,
+   "gap_um": 9884.2
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_su31",
+   "bits": 1,
+   "gap_um": 6575.0
+  },
+  {
+   "src": "NE_b100",
+   "dst": "NE_b101",
+   "bits": 3332,
+   "gap_um": 2246.4
+  },
+  {
+   "src": "NE_b100",
+   "dst": "NE_b102",
+   "bits": 2777,
+   "gap_um": 8942.4
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NW_hub",
+   "bits": 2775,
+   "gap_um": 1684.8
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NE_hub",
+   "bits": 2730,
+   "gap_um": 1684.8
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b113",
+   "bits": 2277,
+   "gap_um": 3283.2
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_b111",
+   "bits": 1662,
+   "gap_um": 4320.0
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_b112",
+   "bits": 1662,
+   "gap_um": 10290.2
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_b110",
+   "bits": 1534,
+   "gap_um": 12847.7
+  },
+  {
+   "src": "NE_b102",
+   "dst": "NE_b101",
+   "bits": 1146,
+   "gap_um": 11923.2
+  },
+  {
+   "src": "NE_b111",
+   "dst": "NE_b113",
+   "bits": 1000,
+   "gap_um": 4320.0
+  },
+  {
+   "src": "NE_b112",
+   "dst": "NE_b113",
+   "bits": 1000,
+   "gap_um": 10290.2
+  },
+  {
+   "src": "NE_b110",
+   "dst": "NE_b113",
+   "bits": 800,
+   "gap_um": 12847.7
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_hub",
+   "bits": 693,
+   "gap_um": 3283.2
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_spb0",
+   "bits": 632,
+   "gap_um": 4561.9
+  },
+  {
+   "src": "NE_spb0",
+   "dst": "NE_hub",
+   "bits": 615,
+   "gap_um": 4561.9
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_su11",
+   "bits": 596,
+   "gap_um": 7931.5
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_su20",
+   "bits": 596,
+   "gap_um": 4682.9
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_su31",
+   "bits": 596,
+   "gap_um": 13262.4
+  },
+  {
+   "src": "NE_b101",
+   "dst": "NE_b103",
+   "bits": 569,
+   "gap_um": 11214.7
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_b113",
+   "bits": 516,
+   "gap_um": 7931.5
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_b113",
+   "bits": 516,
+   "gap_um": 4682.9
+  },
+  {
+   "src": "NE_su31",
+   "dst": "NE_b113",
+   "bits": 516,
+   "gap_um": 13262.4
+  },
+  {
+   "src": "NE_b111",
+   "dst": "NE_hub",
+   "bits": 410,
+   "gap_um": 2920.3
+  },
+  {
+   "src": "NE_b002",
+   "dst": "root",
+   "bits": 297,
+   "gap_um": 10670.4
+  },
+  {
+   "src": "NE_b103",
+   "dst": "root",
+   "bits": 297,
+   "gap_um": 11940.5
+  },
+  {
+   "src": "root",
+   "dst": "NE_b000",
+   "bits": 180,
+   "gap_um": 8216.6
+  },
+  {
+   "src": "root",
+   "dst": "NE_b100",
+   "bits": 178,
+   "gap_um": 2972.2
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b111",
+   "bits": 160,
+   "gap_um": 2920.3
+  },
+  {
+   "src": "NE_sm0",
+   "dst": "NE_hub",
+   "bits": 37,
+   "gap_um": 1572.5
+  },
+  {
+   "src": "NE_sm1",
+   "dst": "NE_hub",
+   "bits": 37,
+   "gap_um": 1572.5
+  },
+  {
+   "src": "NE_sm2",
+   "dst": "NE_hub",
+   "bits": 37,
+   "gap_um": 1555.2
+  },
+  {
+   "src": "NE_sm3",
+   "dst": "NE_hub",
+   "bits": 37,
+   "gap_um": 1555.2
+  },
+  {
+   "src": "NE_b101",
+   "dst": "NE_b102",
+   "bits": 35,
+   "gap_um": 11923.2
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "root",
+   "bits": 9,
+   "gap_um": 5771.5
+  },
+  {
+   "src": "NE_b002",
+   "dst": "NE_hub",
+   "bits": 4,
+   "gap_um": 2453.8
+  },
+  {
+   "src": "NE_b011",
+   "dst": "NE_hub",
+   "bits": 3,
+   "gap_um": 2073.6
+  },
+  {
+   "src": "NE_b103",
+   "dst": "NE_hub",
+   "bits": 2,
+   "gap_um": 3723.8
+  },
+  {
+   "src": "NE_spb2",
+   "dst": "NW_hub",
+   "bits": 2,
+   "gap_um": 9046.1
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "NW_hub",
+   "bits": 2,
+   "gap_um": 9028.8
+  },
+  {
+   "src": "NE_b000",
+   "dst": "NE_b002",
+   "bits": 1,
+   "gap_um": 1995.8
+  },
+  {
+   "src": "NE_b000",
+   "dst": "NE_b011",
+   "bits": 1,
+   "gap_um": 1615.7
+  },
+  {
+   "src": "NE_b013",
+   "dst": "NE_hub",
+   "bits": 1,
+   "gap_um": 3939.8
+  },
+  {
+   "src": "NE_b100",
+   "dst": "NE_b103",
+   "bits": 1,
+   "gap_um": 8233.9
+  },
+  {
+   "src": "NE_su00",
+   "dst": "NE_su11",
+   "bits": 1,
+   "gap_um": 5823.4
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_su20",
+   "bits": 1,
+   "gap_um": 9884.2
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_su31",
+   "bits": 1,
+   "gap_um": 6575.0
+  }
+ ],
+ "failed": [
+  {
+   "src": "NW_su30",
+   "dst": "NW_su31",
+   "bits": 3356,
+   "why": "no free window NW_su30|NW_b100",
+   "chains": [
+    [
+     "NW_su30",
+     "NW_b100",
+     "NW_b110",
+     "NW_su31"
+    ]
+   ]
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su00",
+   "bits": 2846,
+   "why": "no free window NW_b010|NW_su00",
+   "chains": [
+    [
+     "NW_hub",
+     "NW_su01",
+     "NW_su00"
+    ],
+    [
+     "NW_hub",
+     "NW_b000",
+     "NW_b010",
+     "NW_b001",
+     "NW_su00"
+    ],
+    [
+     "NW_hub",
+     "NW_b000",
+     "NW_b010",
+     "NW_su00"
+    ]
+   ]
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su20",
+   "bits": 2846,
+   "why": "no macro-free station chain with 6 stations (hop<= 364)",
+   "chains": [
+    [
+     "NW_hub",
+     "NW_su21",
+     "NW_su20"
+    ],
+    [
+     "NW_hub",
+     "NW_b000",
+     "NW_b010",
+     "NW_su20"
+    ]
+   ]
+  },
+  {
+   "src": "NW_hub",
+   "dst": "root",
+   "bits": 2065,
+   "why": "no free window NW_hub|root",
+   "chains": [
+    [
+     "NW_hub",
+     "root"
+    ]
+   ]
+  },
+  {
+   "src": "NW_su31",
+   "dst": "NW_su30",
+   "bits": 1399,
+   "why": "no macro-free station chain with 6 stations (hop<= 364)",
+   "chains": [
+    [
+     "NW_su31",
+     "NW_b110",
+     "NW_b100",
+     "NW_su30"
+    ]
+   ]
+  },
+  {
+   "src": "NW_su00",
+   "dst": "NW_hub",
+   "bits": 1207,
+   "why": "no macro-free station chain with 15 stations (hop<= 364)",
+   "chains": [
+    [
+     "NW_su00",
+     "NW_su01",
+     "NW_hub"
+    ],
+    [
+     "NW_su00",
+     "NW_b001",
+     "NW_b010",
+     "NW_b000",
+     "NW_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_hub",
+   "bits": 1207,
+   "why": "no free window NW_su21|NW_hub",
+   "chains": [
+    [
+     "NW_su20",
+     "NW_su21",
+     "NW_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NE_su30",
+   "dst": "NE_su31",
+   "bits": 3356,
+   "why": "no free window NE_su30|NE_b100",
+   "chains": [
+    [
+     "NE_su30",
+     "NE_b100",
+     "NE_b110",
+     "NE_su31"
+    ]
+   ]
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su00",
+   "bits": 2846,
+   "why": "no free window NE_b010|NE_su00",
+   "chains": [
+    [
+     "NE_hub",
+     "NE_su01",
+     "NE_su00"
+    ],
+    [
+     "NE_hub",
+     "NE_b000",
+     "NE_b010",
+     "NE_b001",
+     "NE_su00"
+    ],
+    [
+     "NE_hub",
+     "NE_b000",
+     "NE_b010",
+     "NE_su00"
+    ]
+   ]
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su20",
+   "bits": 2846,
+   "why": "no macro-free station chain with 6 stations (hop<= 364)",
+   "chains": [
+    [
+     "NE_hub",
+     "NE_su21",
+     "NE_su20"
+    ],
+    [
+     "NE_hub",
+     "NE_b000",
+     "NE_b010",
+     "NE_su20"
+    ]
+   ]
+  },
+  {
+   "src": "NE_su31",
+   "dst": "NE_su30",
+   "bits": 1399,
+   "why": "no macro-free station chain with 6 stations (hop<= 364)",
+   "chains": [
+    [
+     "NE_su31",
+     "NE_b110",
+     "NE_b100",
+     "NE_su30"
+    ]
+   ]
+  },
+  {
+   "src": "NE_su00",
+   "dst": "NE_hub",
+   "bits": 1207,
+   "why": "no macro-free station chain with 15 stations (hop<= 364)",
+   "chains": [
+    [
+     "NE_su00",
+     "NE_su01",
+     "NE_hub"
+    ],
+    [
+     "NE_su00",
+     "NE_b001",
+     "NE_b010",
+     "NE_b000",
+     "NE_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_hub",
+   "bits": 1207,
+   "why": "no free window NE_su21|NE_hub",
+   "chains": [
+    [
+     "NE_su20",
+     "NE_su21",
+     "NE_hub"
+    ]
+   ]
+  }
+ ]
+}

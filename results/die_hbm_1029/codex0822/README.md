@@ -1,0 +1,16 @@
+HBM takeover 08:22 to explicit Claude reset 09:03 PDT, 2026-10-29.
+
+`codex/hbm-0822` holds opt-in local-lane construction and preparatory plan/source diagnosis. No HBM plan was adopted or frozen.
+
+- d18 local lane planner: 60 lanes / 95,311 bits, 13 complete pairs failed / 27,787 bits, 90 far pairs / 56,289 bits. No partial-pair publication. Canonical364.5um station reach fixes the d17 new reach failures. G0C d18 FAIL10 inherited core-face errors /132pending, no new reach failures. Figures are own tool results, independent review not claimed.
+- Shared flow review found four further constructor bugs (actual clock-landing cycles, split-word cycles, split-ID shadowing, consistent4.32halo). Corrected candidate e86c02839 from /root/flow_clock is pending root; d18 must be rebuilt before adoption.
+- `pin_conflicts.py` plus ordinary core_face_repin creates9measured physical pin variants for10bank instances, removing all15hubawaygroups without source/outline/cycle changes. Endpoint metadata/source-role corrections and resiting still required; prep only.
+- Five NE source links cannot use serial_k2: the actual native bank emits distinct legal responses at II1. Fullwidth screen is retained, not adopted. Canonical source-native N-role VMS pruning comes from TOK tool73a128163:112reversed/duplicate rows removed,128real N links prepared,128Srole geometry missing. Lower-bound cuts remain above0.6; source-backed placement/capacity work is still needed.
+- Original SPB modeled M6/M7 escape G2 ended overflow195 onM6 (max1,capacity2/use3), pinaccess0unreachable, exit0. Its failed verdict is preserved. Two reviewed source-identical signal-only variants are live on epyc2. A clusters modeled PHY pins beside the FF banks (same homes), B tall endpoint FF banks (same pins); source4104FF/5130nets/+0cycles unchanged. Exact OpenROAD pre-route reach A394.505um / B404.391um. Neither is a die clock/timing/IR result.
+
+Live own jobs at park:
+- epyc2:/srv/opentallas-scratch2/claude/codex-hbm-spb-g2-0822/A_pin_bundles, unit oth-ubuntu-3605746-1793289724, client3663114 onintel2, container codex-spb0822-a_pin_bundles.
+- epyc2:/srv/opentallas-scratch2/claude/codex-hbm-spb-g2-0822/B_tall_banks, unit oth-ubuntu-3605743-1793289724, client3663116 onintel2, container codex-spb0822-b_tall_banks.
+Check each grt.log Final congestion report and pinaccess, probe.exit. PASS requires >=50iterations overflow0 AND pinaccess0; do not use exit0 alone. Clientlogs intel2:/srv/opentallas-scratch2/claude/codex-hbm-spb-g2-0822-clients/{A,B}.log.
+
+Next actual work: use corrected lane tool; compose child KITS pin/outline/oneclock delta; regenerate actual source-derived DMA/VMS station geometry (including128S links) and compile/read-date/padding agreement; exact normalized glue bind ->0 before full ot_clk GRT. Intrinsic DMA7 launch cycles +physical rq/rsp counts leave8RR_RT80 deficits; requestpadding moves memory sample dates, responsepadding requires SRAM by2kbpolicy, neither chosen. All source pipeline preparations remain unadopted. Existing token capacity exceeds legacy VM; grown VM and real runtime19bit publication are separate explicit gates. See child CODEX-LOG handoffs for all kit jobs and source fixes. No new OWNER question was opened.

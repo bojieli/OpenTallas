@@ -1,0 +1,147 @@
+{
+ "schema": "hbm.pin_conflicts.v1",
+ "changes": [
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q0",
+   "old": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0.json",
+   "new": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_79b1ed8e.json",
+   "signature": [
+    [
+     "kq",
+     "E"
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q0_mu1",
+   "old": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "new": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_4b5563d7.json",
+   "signature": [
+    [
+     "rq2",
+     "W"
+    ],
+    [
+     "rr2",
+     "W"
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q2",
+   "old": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0.json",
+   "new": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_101f7349.json",
+   "signature": [
+    [
+     "kq",
+     "N"
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q3",
+   "old": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0.json",
+   "new": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_8087f868.json",
+   "signature": [
+    [
+     "rr0",
+     "N"
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q4",
+   "old": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0.json",
+   "new": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__conflict_9eec3f96.json",
+   "signature": [
+    [
+     "rq1",
+     "N"
+    ],
+    [
+     "rr1",
+     "N"
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q4_mu1",
+   "old": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "new": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_6493f802.json",
+   "signature": [
+    [
+     "rq2",
+     "N"
+    ],
+    [
+     "rr2",
+     "N"
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q6_mu1",
+   "old": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "new": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_80c37a6f.json",
+   "signature": [
+    [
+     "dq",
+     "N"
+    ],
+    [
+     "rq2",
+     "E"
+    ],
+    [
+     "rr2",
+     "E"
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q7_mu1",
+   "old": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "new": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_6d492f89.json",
+   "signature": [
+    [
+     "dq",
+     "E"
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q6_mu1",
+   "old": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "new": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_a5d7aa1f.json",
+   "signature": [
+    [
+     "dq",
+     "N"
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q7_mu1",
+   "old": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "new": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__conflict_6d492f89.json",
+   "signature": [
+    [
+     "dq",
+     "E"
+    ]
+   ]
+  }
+ ],
+ "new_tables": 9,
+ "source_or_cycle_changes": 0
+}
