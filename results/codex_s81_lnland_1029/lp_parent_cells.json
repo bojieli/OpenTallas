@@ -1,0 +1,65 @@
+{
+ "scope": "SYNTHESIZED CELL COUNT ONLY, not timing/geometry/signoff",
+ "module": "s81p_dsdv_slice_lepw_mus_LP__t2",
+ "source_graph_commit": "e4ad09a663275339e3078d0fd816aa662ca7acb0",
+ "params": {
+  "S_u_ln0_chb": 1,
+  "S_u_ln1_chb": 1,
+  "S_u_ln2_chb": 1,
+  "S_u_ln3_chb": 1
+ },
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "S81CTRL_SRAM_FIFO",
+  "S81CTRL_SRAM_P192",
+  "S81CTRL_NATIVE32",
+  "OT_COLL_NATIVE32",
+  "OT_COLL_NATIVE32_OFF",
+  "OT_S81ENG_TAP_N32R2",
+  "OT_S81SL_KV_TRANSPORT",
+  "OT_SVC_ALLQ",
+  "SU_SMU_T",
+  "OT_ATTN_HCORE",
+  "OT_S81ENG_RR_N32",
+  "OT_S81C_HCORE_CTLA",
+  "OT_S81C_HCORE_RST_TIMED",
+  "S81_HOSTB_LAND_OBS"
+ ],
+ "mapped_total_cells": 557031,
+ "mapped_std_cells": 556766,
+ "yosys_metadata_cells": {
+  "$scopeinfo": 142
+ },
+ "yosys_design_cells_including_metadata": 557173,
+ "top_direct_cells": 318768,
+ "hierarchy_expansion": "Recursive through every kept module instance; count primitive physical cells, not module definitions",
+ "macro_instances": {
+  "ot_sram_1r1w2c_256x64_m1": 144,
+  "ot_sram_1r1w2c_32x64_m1": 76,
+  "ot_sram_1r1w_128x256_m1_r2c2": 5,
+  "ot_sram_1r1w_32x128_m1": 20,
+  "ot_sram_1r1w_512x128_m4_r2c2": 20
+ },
+ "macro_count": 265,
+ "unmapped_cells": {},
+ "cell_limit": 400000,
+ "cell_margin": -156766,
+ "cap_verdict": "FAIL",
+ "area_um2": 76976.61174,
+ "includes": "actual current full partition plus all landing rings, monitor, reset and feedthrough RTL",
+ "source_syntax_fix": {
+  "scope": "Clock-port comment emission only, no functional connection or latency changes",
+  "source_snapshot": "/srv/opentallas-scratch2/claude/codex-s81-lp-parent-1029/census",
+  "fix_commit": "62c2ae900",
+  "changes": [
+   {
+    "file": "rtl/000_s81p_dsdv_slice_lepw_mus_LP__t2.sv",
+    "ports": 2,
+    "old_sha256": "ce58971371f73ce6feacbcb0ec6eb903393fbbaad4d951845d0583c445715952",
+    "new_sha256": "65515660c424c2adc693a892eba2edd0a755a500c1bafb9801d4fce5bed2e16d"
+   }
+  ]
+ },
+ "physical_macro_interface_count": 7,
+ "g0c_integration": "Set exact type.cells to complete mapped count; cells.py otherwise adds estimated landing rings a second time. Parent source/geometry/clock release gates remain open."
+}

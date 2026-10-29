@@ -1,0 +1,698 @@
+[
+ {
+  "module": "$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\\ot_pl_land_local_kw",
+  "instances": 552,
+  "std_cells_each": 211,
+  "std_cells": 116472
+ },
+ {
+  "module": "$paramod\\ot_dp_clk_landing\\W=s32'00000000000000000000001000000011",
+  "instances": 4,
+  "std_cells_each": 11551,
+  "std_cells": 46204
+ },
+ {
+  "module": "$paramod$92bac6825d85a41550a0bee9b5d831cc330b35e0\\ot_pl_land_local_r",
+  "instances": 552,
+  "std_cells_each": 69,
+  "std_cells": 38088
+ },
+ {
+  "module": "$paramod\\ot_dp_clk_landing\\W=s32'00000000000000000000000100000011",
+  "instances": 1,
+  "std_cells_each": 6079,
+  "std_cells": 6079
+ },
+ {
+  "module": "$paramod\\ot_dp_st\\W=s32'00000000000000000000010001010000",
+  "instances": 2,
+  "std_cells_each": 2210,
+  "std_cells": 4420
+ },
+ {
+  "module": "$paramod\\ot_dp_st\\W=s32'00000000000000000000001000000010",
+  "instances": 4,
+  "std_cells_each": 1030,
+  "std_cells": 4120
+ },
+ {
+  "module": "$paramod\\ot_dp_st\\W=s32'00000000000000000000001000000001",
+  "instances": 4,
+  "std_cells_each": 1028,
+  "std_cells": 4112
+ },
+ {
+  "module": "$paramod\\ot_dp_st\\W=s32'00000000000000000000001000000000",
+  "instances": 4,
+  "std_cells_each": 1026,
+  "std_cells": 4104
+ },
+ {
+  "module": "$paramod\\ot_dp_clk_landing\\W=s32'00000000000000000000000000101110",
+  "instances": 2,
+  "std_cells_each": 1300,
+  "std_cells": 2600
+ },
+ {
+  "module": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000100000010",
+  "instances": 4,
+  "std_cells_each": 518,
+  "std_cells": 2072
+ },
+ {
+  "module": "ot_s81ph_kff4_10",
+  "instances": 36,
+  "std_cells_each": 20,
+  "std_cells": 720
+ },
+ {
+  "module": "$paramod$18cbae745c0c34766d85be9d853d86a969abe316\\ot_pl_land_local_kw",
+  "instances": 4,
+  "std_cells_each": 179,
+  "std_cells": 716
+ },
+ {
+  "module": "$paramod\\ot_dp_clk_landing\\W=s32'00000000000000000000000000000010",
+  "instances": 1,
+  "std_cells_each": 597,
+  "std_cells": 597
+ },
+ {
+  "module": "$paramod$da4b5385f24b7b3f29e912846d53b19ffc940823\\ot_pl_land_local_kw",
+  "instances": 4,
+  "std_cells_each": 147,
+  "std_cells": 588
+ },
+ {
+  "module": "$paramod$759cc08167689ff53e926615631256f87759f2ef\\ot_sram_showahead_readptr",
+  "instances": 32,
+  "std_cells_each": 18,
+  "std_cells": 576
+ },
+ {
+  "module": "ot_sram_showahead_b64_hit5",
+  "instances": 48,
+  "std_cells_each": 12,
+  "std_cells": 576
+ },
+ {
+  "module": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000100010100",
+  "instances": 1,
+  "std_cells_each": 554,
+  "std_cells": 554
+ },
+ {
+  "module": "ot_sram_showahead_hit5",
+  "instances": 40,
+  "std_cells_each": 12,
+  "std_cells": 480
+ },
+ {
+  "module": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000000101101",
+  "instances": 5,
+  "std_cells_each": 92,
+  "std_cells": 460
+ },
+ {
+  "module": "ot_s81sl_lep_host_event",
+  "instances": 18,
+  "std_cells_each": 23,
+  "std_cells": 414
+ },
+ {
+  "module": "ot_s81ph_rewind4",
+  "instances": 12,
+  "std_cells_each": 27,
+  "std_cells": 324
+ },
+ {
+  "module": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000000100000",
+  "instances": 4,
+  "std_cells_each": 66,
+  "std_cells": 264
+ },
+ {
+  "module": "ot_s81ph_kff4_1",
+  "instances": 132,
+  "std_cells_each": 2,
+  "std_cells": 264
+ },
+ {
+  "module": "$paramod$6f23b8761e858e40d52e5a37027335b80029643d\\ot_pl_land_local_r",
+  "instances": 4,
+  "std_cells_each": 58,
+  "std_cells": 232
+ },
+ {
+  "module": "$paramod\\ot_sram_showahead_writepins\\AW=s32'00000000000000000000000000000100",
+  "instances": 20,
+  "std_cells_each": 10,
+  "std_cells": 200
+ },
+ {
+  "module": "$paramod$59c7c23143edb4f1cc6f498315269839cb908579\\ot_pl_land_local_r",
+  "instances": 4,
+  "std_cells_each": 49,
+  "std_cells": 196
+ },
+ {
+  "module": "ot_dp_rrelay",
+  "instances": 54,
+  "std_cells_each": 2,
+  "std_cells": 108
+ },
+ {
+  "module": "ot_s81sl_lep_rx_control",
+  "instances": 9,
+  "std_cells_each": 12,
+  "std_cells": 108
+ },
+ {
+  "module": "$paramod\\ot_dp_landing_collect\\N=s32'00000000000000000000000000000001",
+  "instances": 13,
+  "std_cells_each": 6,
+  "std_cells": 78
+ },
+ {
+  "module": "ot_s81sl_lep_tx_push",
+  "instances": 22,
+  "std_cells_each": 3,
+  "std_cells": 66
+ },
+ {
+  "module": "ot_s81sl_lep_stamp",
+  "instances": 5,
+  "std_cells_each": 11,
+  "std_cells": 55
+ },
+ {
+  "module": "ot_s81sl_lep_vcopy",
+  "instances": 25,
+  "std_cells_each": 2,
+  "std_cells": 50
+ },
+ {
+  "module": "ot_s81sl_lep_idx_sel",
+  "instances": 24,
+  "std_cells_each": 2,
+  "std_cells": 48
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000000000000000",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000010000000000",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000010000000001",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000010000000010",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000000000",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000000001",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000000010",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000000011",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000000100",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000000101",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000000110",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000000111",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000001000",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000001001",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000001010",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000001011",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000001100",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000001101",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000001110",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000001111",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000010000",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000010001",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000010010",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000010011",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000010100",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000010101",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000010110",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000010111",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000011000",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000011001",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000011010",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000011011",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000011100",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000011101",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000011110",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000011111",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000100000",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000100001",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000100010",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000100011",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000100100",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000100101",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000100110",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000100111",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000101000",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000101001",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000101010",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000101011",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000101100",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000101101",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000101110",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000101111",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000110000",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000110001",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000110010",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000110011",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000110100",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000110101",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000110110",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000110111",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000111000",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000111001",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000111010",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000111011",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000111100",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000111101",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000111110",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100000111111",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100001000000",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100001000001",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100001000010",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100001000011",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100001000100",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_pl_land_field_copy_bit\\ID=s32'00000000000000000000100001000101",
+  "instances": 16,
+  "std_cells_each": 2,
+  "std_cells": 32
+ },
+ {
+  "module": "$paramod\\ot_dp_landing_collect\\N=s32'00000000000000000000000000000010",
+  "instances": 5,
+  "std_cells_each": 6,
+  "std_cells": 30
+ },
+ {
+  "module": "ot_s81sl_lep_bsel_next",
+  "instances": 9,
+  "std_cells_each": 2,
+  "std_cells": 18
+ },
+ {
+  "module": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000000000001",
+  "instances": 2,
+  "std_cells_each": 4,
+  "std_cells": 8
+ },
+ {
+  "module": "ot_link_credit_rx_b64_pop",
+  "instances": 8,
+  "std_cells_each": 1,
+  "std_cells": 8
+ },
+ {
+  "module": "$paramod\\ot_dp_landing_collect\\N=s32'00000000000000000000000000000011",
+  "instances": 1,
+  "std_cells_each": 6,
+  "std_cells": 6
+ },
+ {
+  "module": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000000000010",
+  "instances": 1,
+  "std_cells_each": 6,
+  "std_cells": 6
+ },
+ {
+  "module": "ot_s81sl_lep_host_enable",
+  "instances": 4,
+  "std_cells_each": 1,
+  "std_cells": 4
+ },
+ {
+  "module": "ot_s81sl_lep_pair_ready",
+  "instances": 4,
+  "std_cells_each": 1,
+  "std_cells": 4
+ },
+ {
+  "module": "ot_s81ph_kp4_20",
+  "instances": 8,
+  "std_cells_each": 0,
+  "std_cells": 0
+ }
+]

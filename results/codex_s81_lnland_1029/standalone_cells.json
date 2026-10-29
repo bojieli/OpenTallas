@@ -1,0 +1,21 @@
+{
+ "module": "ot_s81_mu72_lnland_nst_1ck",
+ "std_cells": 39666,
+ "flops": 10486,
+ "histogram": {
+  "AO21x1_ASAP7_75t_R": 1820,
+  "AOI21xp33_ASAP7_75t_R": 6550,
+  "DFFHQNx1_ASAP7_75t_R": 10486,
+  "INVx1_ASAP7_75t_R": 9646,
+  "NOR2xp33_ASAP7_75t_R": 7256,
+  "NOR3xp33_ASAP7_75t_R": 280,
+  "OA21x2_ASAP7_75t_R": 420,
+  "OR2x2_ASAP7_75t_R": 280,
+  "AOI22xp33_ASAP7_75t_R": 2508,
+  "NAND3xp33_ASAP7_75t_R": 140,
+  "O2A1O1Ixp33_ASAP7_75t_R": 140,
+  "OAI31xp33_ASAP7_75t_R": 140
+ },
+ "area_um2": 4881.384,
+ "scope": "Standalone mapped synthesis only; no physical qualification"
+}

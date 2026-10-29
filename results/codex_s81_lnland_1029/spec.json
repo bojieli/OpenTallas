@@ -1,0 +1,27 @@
+{
+ "name": "ot_s81_mu72_lnland_nst_1ck",
+ "top": "ot_s81_mu72_lnland_nst_1ck",
+ "kind": "tile",
+ "sources": [
+  "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81_mu72_lnland.sv",
+  "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "rtl/common/landed_parent/ot_pl_land_kept_enable.sv",
+  "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_lnland_nst_1ck.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "ck_k",
+ "reset_ports": [
+  "rs_k",
+  "rs_n"
+ ],
+ "outline": {
+  "w": 112.32,
+  "h": 112.32
+ },
+ "macros": []
+}

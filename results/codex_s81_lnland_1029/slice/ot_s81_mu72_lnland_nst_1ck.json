@@ -1,0 +1,41 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "kind": "core",
+ "die": "s81",
+ "type": "ot_s81_mu72_lnland_nst_1ck",
+ "module": "ot_s81_mu72_lnland_nst_1ck",
+ "master_plan_sha256": "15d6327f537bd795bbd833a098f6e94bf9793a06fce1478c2444e92f8e114575",
+ "frozen": false,
+ "outline_um": [
+  112.32,
+  112.32
+ ],
+ "instances": [],
+ "keepouts": [],
+ "bays": [],
+ "entry_pins": [
+  {
+   "name": "core_clock",
+   "pin": "ck_k",
+   "layer": "M5",
+   "xy_um": [
+    56.172,
+    56.16
+   ]
+  }
+ ],
+ "islands": [],
+ "latency": {
+  "common_clock_latency_ps": {
+   "TT": 250,
+   "FF": 202.5
+  },
+  "tol_ps": 40
+ },
+ "core_clock_port": "ck_k",
+ "gates": {
+  "geometry": "NOT RUN",
+  "tree": "NOT RUN"
+ },
+ "note": "Standalone natural master proposal; exact bound clock aliases checked. No parent adoption, cycles added0."
+}

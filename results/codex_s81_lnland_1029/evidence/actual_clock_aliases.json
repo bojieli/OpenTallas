@@ -1,0 +1,35 @@
+{
+ "parent_sha256": "65515660c424c2adc693a892eba2edd0a755a500c1bafb9801d4fce5bed2e16d",
+ "instances": [
+  {
+   "inst": "u_u_lnl0",
+   "ck_k": "clk",
+   "ck_n": "clk",
+   "rs_k": "lpc_i0_q[0]",
+   "rs_n": "w_13_Y[0]"
+  },
+  {
+   "inst": "u_u_lnl1",
+   "ck_k": "clk",
+   "ck_n": "clk",
+   "rs_k": "lpc_i0_q[0]",
+   "rs_n": "w_14_Y[0]"
+  },
+  {
+   "inst": "u_u_lnl2",
+   "ck_k": "clk",
+   "ck_n": "clk",
+   "rs_k": "lpc_i0_q[0]",
+   "rs_n": "w_15_Y[0]"
+  },
+  {
+   "inst": "u_u_lnl3",
+   "ck_k": "clk",
+   "ck_n": "clk",
+   "rs_k": "lpc_i0_q[0]",
+   "rs_n": "w_16_Y[0]"
+  }
+ ],
+ "added_cycles": 0,
+ "new_clock_port": "ck_k"
+}

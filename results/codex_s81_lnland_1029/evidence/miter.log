@@ -1,0 +1,5 @@
+LN_ONECLK_PASS cycles=4096 checks=4527296 latency_mutant=4064 reset_mutant=3102
+- /srv/opentallas-scratch2/claude/codex-s81-lnland-1029/proof_vlt_width/miter.sv:76: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.125 s; speed 27.390 us/s
+- Verilator: cpu 0.125 s on 1 threads; allocated 8 MB

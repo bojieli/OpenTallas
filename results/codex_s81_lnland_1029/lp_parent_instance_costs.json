@@ -1,0 +1,826 @@
+{
+ "scope": "Mapped physical cells by preserved instance prefix; ABC merged gates retain generated names",
+ "top_instances_parsed": 321506,
+ "std_cells": 556766,
+ "groups": [
+  {
+   "prefix": "MERGED_ABC_OR_INFRA",
+   "std_cells": 318369,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_u_lnl0",
+   "std_cells": 39665,
+   "macros": {},
+   "cell_histogram": {
+    "AO21x1_ASAP7_75t_R": 1820,
+    "AOI21xp33_ASAP7_75t_R": 6549,
+    "AOI22xp33_ASAP7_75t_R": 2508,
+    "DFFHQNx1_ASAP7_75t_R": 10486,
+    "INVx1_ASAP7_75t_R": 9645,
+    "NAND3xp33_ASAP7_75t_R": 139,
+    "NOR2xp33_ASAP7_75t_R": 7255,
+    "O2A1O1Ixp33_ASAP7_75t_R": 141,
+    "OA21x2_ASAP7_75t_R": 418,
+    "OAI31xp33_ASAP7_75t_R": 140,
+    "OR2x2_ASAP7_75t_R": 278,
+    "NAND2xp33_ASAP7_75t_R": 3,
+    "OAI21xp33_ASAP7_75t_R": 2,
+    "NOR3xp33_ASAP7_75t_R": 280,
+    "AND2x2_ASAP7_75t_R": 1
+   }
+  },
+  {
+   "prefix": "u_u_lnl1",
+   "std_cells": 39665,
+   "macros": {},
+   "cell_histogram": {
+    "AO21x1_ASAP7_75t_R": 1820,
+    "AOI21xp33_ASAP7_75t_R": 6549,
+    "AOI22xp33_ASAP7_75t_R": 2508,
+    "DFFHQNx1_ASAP7_75t_R": 10486,
+    "INVx1_ASAP7_75t_R": 9645,
+    "NAND3xp33_ASAP7_75t_R": 139,
+    "NOR2xp33_ASAP7_75t_R": 7255,
+    "O2A1O1Ixp33_ASAP7_75t_R": 141,
+    "OA21x2_ASAP7_75t_R": 418,
+    "OAI31xp33_ASAP7_75t_R": 140,
+    "OR2x2_ASAP7_75t_R": 278,
+    "NAND2xp33_ASAP7_75t_R": 3,
+    "OAI21xp33_ASAP7_75t_R": 2,
+    "NOR3xp33_ASAP7_75t_R": 280,
+    "AND2x2_ASAP7_75t_R": 1
+   }
+  },
+  {
+   "prefix": "u_u_lnl2",
+   "std_cells": 39665,
+   "macros": {},
+   "cell_histogram": {
+    "AO21x1_ASAP7_75t_R": 1820,
+    "AOI21xp33_ASAP7_75t_R": 6549,
+    "AOI22xp33_ASAP7_75t_R": 2508,
+    "DFFHQNx1_ASAP7_75t_R": 10486,
+    "INVx1_ASAP7_75t_R": 9645,
+    "NAND3xp33_ASAP7_75t_R": 139,
+    "NOR2xp33_ASAP7_75t_R": 7255,
+    "O2A1O1Ixp33_ASAP7_75t_R": 141,
+    "OA21x2_ASAP7_75t_R": 418,
+    "OAI31xp33_ASAP7_75t_R": 140,
+    "OR2x2_ASAP7_75t_R": 278,
+    "NAND2xp33_ASAP7_75t_R": 3,
+    "OAI21xp33_ASAP7_75t_R": 2,
+    "NOR3xp33_ASAP7_75t_R": 280,
+    "AND2x2_ASAP7_75t_R": 1
+   }
+  },
+  {
+   "prefix": "u_u_lnl3",
+   "std_cells": 39665,
+   "macros": {},
+   "cell_histogram": {
+    "AO21x1_ASAP7_75t_R": 1820,
+    "AOI21xp33_ASAP7_75t_R": 6549,
+    "AOI22xp33_ASAP7_75t_R": 2508,
+    "DFFHQNx1_ASAP7_75t_R": 10486,
+    "INVx1_ASAP7_75t_R": 9645,
+    "NAND3xp33_ASAP7_75t_R": 139,
+    "NOR2xp33_ASAP7_75t_R": 7255,
+    "O2A1O1Ixp33_ASAP7_75t_R": 141,
+    "OA21x2_ASAP7_75t_R": 418,
+    "OAI31xp33_ASAP7_75t_R": 140,
+    "OR2x2_ASAP7_75t_R": 278,
+    "NAND2xp33_ASAP7_75t_R": 3,
+    "OAI21xp33_ASAP7_75t_R": 2,
+    "NOR3xp33_ASAP7_75t_R": 280,
+    "AND2x2_ASAP7_75t_R": 1
+   }
+  },
+  {
+   "prefix": "u_cland_coll_i0",
+   "std_cells": 11551,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_coll_i1",
+   "std_cells": 11551,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_coll_i2",
+   "std_cells": 11551,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_coll_i3",
+   "std_cells": 11551,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_ft2_i",
+   "std_cells": 6079,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_bin_lepk_i0",
+   "std_cells": 2210,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_bout_lepk_o0",
+   "std_cells": 2210,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_u_lep",
+   "std_cells": 2023,
+   "macros": {
+    "ot_sram_1r1w_32x128_m1": 20,
+    "ot_sram_1r1w_512x128_m4_r2c2": 20
+   },
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_ft3_i",
+   "std_cells": 1300,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_unit_i0",
+   "std_cells": 1300,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_bin_coll_i0",
+   "std_cells": 1030,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_bin_coll_i1",
+   "std_cells": 1030,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_bin_coll_i2",
+   "std_cells": 1030,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_bin_coll_i3",
+   "std_cells": 1030,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_ft_ft0_o_0",
+   "std_cells": 1028,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_ft_ft0_o_1",
+   "std_cells": 1028,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_ft_ft0_o_2",
+   "std_cells": 1028,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_ft_ft0_o_3",
+   "std_cells": 1028,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_bout_coll_o0",
+   "std_cells": 1026,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_bout_coll_o1",
+   "std_cells": 1026,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_bout_coll_o2",
+   "std_cells": 1026,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_bout_coll_o3",
+   "std_cells": 1026,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_monitor_0",
+   "std_cells": 597,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_bout_tp_o0",
+   "std_cells": 554,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_ft_ft2_o_0",
+   "std_cells": 518,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_ft_ft2_o_1",
+   "std_cells": 518,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_ft_ft2_o_2",
+   "std_cells": 518,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_ft_ft2_o_3",
+   "std_cells": 518,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_u_ln0",
+   "std_cells": 473,
+   "macros": {
+    "ot_sram_1r1w2c_256x64_m1": 36,
+    "ot_sram_1r1w2c_32x64_m1": 19
+   },
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_u_ln1",
+   "std_cells": 473,
+   "macros": {
+    "ot_sram_1r1w2c_256x64_m1": 36,
+    "ot_sram_1r1w2c_32x64_m1": 19
+   },
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_u_ln2",
+   "std_cells": 473,
+   "macros": {
+    "ot_sram_1r1w2c_256x64_m1": 36,
+    "ot_sram_1r1w2c_32x64_m1": 19
+   },
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_u_ln3",
+   "std_cells": 473,
+   "macros": {
+    "ot_sram_1r1w2c_256x64_m1": 36,
+    "ot_sram_1r1w2c_32x64_m1": 19
+   },
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_bin_unit_i0",
+   "std_cells": 92,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_ft_ft3_o_0",
+   "std_cells": 92,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_ft_ft3_o_1",
+   "std_cells": 92,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_ft_ft3_o_2",
+   "std_cells": 92,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_ft_ft3_o_3",
+   "std_cells": 92,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_ft_ft1_o_0",
+   "std_cells": 66,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_ft_ft1_o_1",
+   "std_cells": 66,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_ft_ft1_o_2",
+   "std_cells": 66,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_ft_ft1_o_3",
+   "std_cells": 66,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_bin_lpc_i0",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_n_t0",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_n_t1",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_n_t16",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_n_t2",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_rl_0",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_rl_11",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_rl_12",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_rl_21",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_rl_26",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_rl_30",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_rl_33",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_rl_46",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_rl_47",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_rl_48",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_rl_49",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_rl_50",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_rl_6",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_rl_7",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_cland_collect_rst_root_n",
+   "std_cells": 6,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_bin_lepf_i0",
+   "std_cells": 4,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_bout_flt_o0",
+   "std_cells": 4,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_0",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_1",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_10",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_11",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_12",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_13",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_14",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_15",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_16",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_17",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_18",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_19",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_2",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_20",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_21",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_22",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_23",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_24",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_25",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_26",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_27",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_28",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_29",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_3",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_30",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_31",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_32",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_33",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_34",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_35",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_36",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_37",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_38",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_39",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_4",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_40",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_41",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_42",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_43",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_44",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_45",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_46",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_47",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_48",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_49",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_5",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_50",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_51",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_52",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_6",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_7",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_8",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rrl_9",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_rst_in",
+   "std_cells": 2,
+   "macros": {},
+   "cell_histogram": null
+  },
+  {
+   "prefix": "u_u_land",
+   "std_cells": 0,
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 5
+   },
+   "cell_histogram": null
+  }
+ ]
+}

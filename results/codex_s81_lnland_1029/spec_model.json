@@ -1,0 +1,93 @@
+{
+ "scope": "Plan-first optional natural hardening master; no parent adoption or physical qualification",
+ "module": "ot_s81_mu72_lnland_nst_1ck",
+ "actual_parent": "s81p_dsdv_slice_lepw_mus_LP__t2",
+ "actual_instances": [
+  "u_u_lnl0",
+  "u_u_lnl1",
+  "u_u_lnl2",
+  "u_u_lnl3"
+ ],
+ "actual_source_module": "ot_s81_mu72_lnland_nst",
+ "actual_source": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81_mu72_lnland.sv",
+ "params": {
+  "MUT": 0
+ },
+ "replica_count": 4,
+ "std_cells_per_master_parent_receipt": 39665,
+ "four_master_std_cells": 158660,
+ "whole_parent_std_cells": 556766,
+ "predicted_remaining_parent_std_cells": 398106,
+ "predicted_cell_margin": 1894,
+ "footprint_um": [
+  112.32,
+  112.32
+ ],
+ "data_bits_per_cycle": {
+  "K_to_N": 556,
+  "N_to_K": 558
+ },
+ "pin_groups": {
+  "W": {
+   "direction": "in",
+   "pins": [
+    "k_lo_v",
+    "k_lo_d[552:0]",
+    "k_li_r",
+    "k_rxv"
+   ],
+   "bits": 556
+  },
+  "S": {
+   "direction": "out",
+   "pins": [
+    "k_lo_r",
+    "k_li_v",
+    "k_li_d[552:0]",
+    "k_flt[2:0]"
+   ],
+   "bits": 558
+  },
+  "E": {
+   "direction": "in",
+   "pins": [
+    "n_lo_r",
+    "n_li_v",
+    "n_li_d[552:0]",
+    "n_flt[2:0]"
+   ],
+   "bits": 558
+  },
+  "N": {
+   "direction": "out",
+   "pins": [
+    "n_lo_v",
+    "n_lo_d[552:0]",
+    "n_li_r",
+    "n_rxv"
+   ],
+   "bits": 556
+  }
+ },
+ "pins": 2231,
+ "clocks": {
+  "physical_entry": "ck_k",
+  "preserved_alias": "actual ck_k=clk and ck_n=clk in every bound parent instance",
+  "period_ps": 833,
+  "target_TT_ps": 250,
+  "target_FF_ps": 202.5
+ },
+ "resets": [
+  "rs_k",
+  "rs_n"
+ ],
+ "added_cycles": 0,
+ "latency": "Original landed-ring timing, unchanged; exactly3destinationedges from source contract",
+ "memory_ports": "No SRAM/ROM macro, original flop rings and epoch/control retained",
+ "next": "Actual-area outline and parent lot, exact clock-alias lockstep+mutant, current standalone master synthesis, then reviewed core kit. No P&R from this source/model alone.",
+ "actual_std_area_um2": 4881.25278,
+ "actual_flops": 10486,
+ "std_utilization_after_4p32um_core_margin": 0.45408935546875007,
+ "clock_cells": "PENDING actual sink census and macro-free structured-family plan",
+ "port_compatibility": "New master preserves every old NST data/reset pin and ck_k; removes only redundant ck_n after exact actual-parent alias guard. No new port alias in binder."
+}
