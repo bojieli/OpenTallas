@@ -66,3 +66,13 @@ Production-hook integration updates:
 
 All failed stage logs/JSON and old10-failure ODB retained under remote history/.
 No route/CTS/STA or sign-off claim has been made.
+
+Final actual source-integrated placement (2026-10-29 01:50 PDT):
+- DPL successor439324 exit0; row/site/overlap/edge/padding checks all0.
+- Actual dump478387:0/27665captures>405um,max400.95um,combloops0.
+- `final_place_census.json` and VIEWED `final_place.png` reflect actual3_place,
+  not target estimates. `targets_copy_result.tsv` is the final2440-target table.
+- ODB: epyc2:/srv/opentallas-scratch2/claude/codex-head-startcopy-1029/tile/run/results/asap7/dp_hd_tile/base/3_place.odb
+- Dump: epyc2:/srv/opentallas-scratch2/claude/codex-head-startcopy-1029/placed_geom.tsv
+- Independent GEOM review requested. Fresh reg_spine assignment, actual built
+  pin-to-S0 input timing/CA, clock closure and later routing remain HEAD lead work.
