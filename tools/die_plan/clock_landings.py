@@ -833,15 +833,18 @@ class Landings:
                 extra.append("    output wire fclk_out_cland_up")
                 logic.append(f"    assign fclk_out_cland_up = {_exp('fclk_out_cland_up')};")
             sources=list(collector_info["local_sources"])
+            monitor_reset_copies = []
             for ch in collector_info["children"]:
                 i=ch["index"]
                 extra += [f"    input wire {ch['ready']}", f"    input wire {ch['fault']}"]
                 src=dict(ch,name=f"child{i}")
                 if ch["seam"]:
                     extra.append(f"    input wire fclk_in_cland_dn_{i}")
-                    reset=LC.raw(ch.get("node",f"rst_n_t{ch.get('tap',0)}"))
-                    if not re.search(r"\bwire\b[^;]*\b"+reset+r"\b",body):
-                        raise LandingError(f"{tn}: raw monitor receiver reset {reset} missing")
+                    node=ch.get("node",f"rst_n_t{ch.get('tap',0)}")
+                    reset, added, copies = LC.raw_reset(collector_info["tree"], node,
+                                                       body+"\n"+"\n".join(logic))
+                    logic.extend(added)
+                    monitor_reset_copies.extend(copies)
                     logic += [f"    wire [1:0] cland_dn_word_{i};",
                               f"    wire cland_dn_trained_{i}, cland_dn_guard_{i};",
                               f"    ot_dp_clk_landing #(.W(2)) u_cland_monitor_{i} (",
@@ -856,6 +859,7 @@ class Landings:
             else:
                 reduction=LC.build_local(collector_info["tree"],sources,body+"\n"+"\n".join(logic),
                     root_node=collector_info.get("collector_root_node","rst_root_n"))
+            reduction["instances"] = monitor_reset_copies + reduction["instances"]
             logic.extend(reduction["rtl"])
             self.reset_placements.setdefault(tn,{})["collector"]=reduction
             if collector_info["mask"].get("observer"):
