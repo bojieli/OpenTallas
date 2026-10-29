@@ -1,0 +1,26 @@
+{
+  "status": "Existing CTS failure diagnosis only; no new pad build",
+  "classes": {
+    "async": {
+      "count": 3,
+      "worst_ps": -29.092506
+    },
+    "input_data": {
+      "count": 1616,
+      "worst_ps": -108.753395
+    },
+    "reg2reg": {
+      "count": 1457,
+      "worst_ps": -24.442476
+    }
+  },
+  "planned_input_HB4_count_distribution": {
+    "4": 16,
+    "3": 1574,
+    "2": 26
+  },
+  "planned_input_HB4_total": 4838,
+  "max_cells_per_input": 4,
+  "policy": "Existing staged OT_IO_HOLD_PAD=1 CTS data-only mechanism;3async paths excluded,clock/r2r/output unchanged. No threshold/corner changes. New actual placement/timing required.",
+  "units": "Raw classification multiplied OpenSTA FF path-property ps by1e12; corrected offline here without repeated STA."
+}
