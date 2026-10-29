@@ -17,11 +17,12 @@ def local_source(path):
 records=[]
 for side,qid in [('NW',2),('NE',3)]:
     mother='hb_coll_'+side;mc=d.insts[mother]
+    actual=next(c['module'] for c in g['cells'] if c['path']==mother)
     expected='ot_hfd_coll_q_hard_v8g_body' + ('_s' if side=='NE' else '')
-    fs=[local_source(f) for f in selected['lib'] if module_body(local_source(f),mc['master'])]
+    fs=[local_source(f) for f in selected['lib'] if module_body(local_source(f),actual)]
     assert len(fs)==1,(mother,fs)
-    body=module_body(fs[0],mc['master'])
-    assert len(re.findall(r'\b'+re.escape(expected)+r'\s*#',body))==1
+    body=module_body(fs[0],actual)
+    assert len(re.findall(r'\b'+re.escape(expected)+r'\s*#',body))==1,(mother,fs[0],expected,body[-250:])
     inner=module_body(fs[0],expected)
     assert len(re.findall(r'\bot_hgi_coll_ring_ag\s*#\([^;]*?\)\s+u_ring\s*\(',inner,re.S))==1
     assert parse_expr(mc['conns']['qid'],d.widths)==[('c',2,qid)]
@@ -34,7 +35,7 @@ for side,qid in [('NW',2),('NE',3)]:
     q0=[c for c in g['cells'] if c['partition']==side+'_hub' and c['plan_instance'] in forbidden]
     assert not q0
     assert not any(name.startswith('hcollgi_'+s) for name in d.insts for s in ('SW','SE'))
-    records.append(dict(hub=side+'_hub',mother=mother,module=mc['master'],native_qid=qid,
+    records.append(dict(hub=side+'_hub',mother=mother,module=actual,raw_module=mc['master'],native_qid=qid,
                         body_module=expected,ring_path=mother+'.u_body.u_ring',ring_instances=1,
                         selected_source=str(fs[0]),source_sha256=hashlib.sha256(fs[0].read_bytes()).hexdigest(),
                         gq_issue=issue,gq_plan_instance=row['plan_instance'],
