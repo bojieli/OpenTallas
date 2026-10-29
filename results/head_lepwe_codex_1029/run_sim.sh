@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # run_sim.sh WT OUT NCYC [MUT]: verilator compare; MUT=1 builds a mutant new design (slot enable off by one) that must FAIL
 set -euo pipefail
+FIXTURE=$(cd "$(dirname "$0")" && pwd)
 W=$1; OUT=$2; N=$3; M=${4:-0}
 mkdir -p "$OUT"; cd "$OUT"
 cp "$W/physical/die_plan/s81/bind/source_modules/portfix178/ot_s81_mu72_lnland.sv" "$W/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv" \
@@ -17,8 +18,16 @@ if sys.argv[2]=="1":
     t=t.replace("wire we = (wc[AW-1:0] == s);","wire we = (wc[AW-1:0] == ((s+1)%D));"); assert "(s+1)%D" in t
 open("new_dw.sv","w").write(t)
 PY
-cp /srv/opentallas-scratch2/claude/dh21-lepwe/eq/tb_lnland_dw.sv .
+cp "$FIXTURE/tb_lnland_dw.sv" .
 export PATH=$HOME/.local/opentallas-tools/bin:$PATH
 verilator --binary --timing -O2 -Wno-fatal -DNCYC=$N -j 4 --top-module tb_lnland_dw --Mdir obj *.sv > build.log 2>&1 || { tail -20 build.log; exit 2; }
-obj/Vtb_lnland_dw +verilator+seed+7 > run.log 2>&1 || true
-tail -2 run.log
+set +e
+obj/Vtb_lnland_dw +verilator+seed+7 > run.log 2>&1
+rc=$?
+set -e
+if [ "$M" = 1 ]; then
+    [ "$rc" != 0 ] && grep -qE "LAND_FAULT|LNLAND_DW MISMATCH" run.log
+else
+    [ "$rc" = 0 ] && grep -q "LNLAND_DW PASS" run.log
+fi
+tail -5 run.log
