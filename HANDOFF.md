@@ -1894,3 +1894,7 @@ CODEX: 2026-10-29 09:05 PDT QC explicit-reset PARK3ee1f7f9d pushed; inherited BT
 CODEX: 2026-10-29 09:05 PDT explicitreset sharedclock/HCP PARKED; duty215PASS18SKIP, genericlocal-entry1356bufferbyte-identical; HCPb8d5a3b5d diagnostic-only false nout name match (goldload0/gateload1), noLECclosure; packet codex_clock_duty_hcp_20261029_0903.md, no liveownjobs.
 
 CODEX: 2026-10-29 09:03 PDT HEAD parked on explicitClaude-reset; packet handoff/codex_head_20261029_0903.md; ownWIP5cb559733cf pushed, onlytileproof324READY; tilePLACEintel2unit2374806liveuntouched; noHEADrelease/newSIGNED.
+
+CODEX: 2026-10-29 09:04 PDT EXPLICITRESET HBM parked clean b34ea7cb5; three children parked/livejobsuntouched. SPBG2FAIL195overflow/0pinmiss; two reviewedvariantsLIVEepyc2. Actual144sourcepaths prep, RR80/date/S128/capacity and normalizedgluebind remain held. Fullpacket handoff/codex_hbm_20261029_0903.md.
+
+CODEX: 2026-10-29 09:05 PDT EXPLICITRESET KV ASTK/ECTL PARK abecf789d: ASTKactualCTSlegal/TT−3.55,GRTrow0aeQUEUED;Q1/Q2LECEQ10655/10595+PLACEPASS;meaningfulsource12060edge/2672reqmiterPASS+liveSCA2672mutantcaught;oldq0A/BNEQ260lmaxdiffsfreshq0LEC1784491LIVE. FullCODEX-LOG. No newpostresetjobs.
