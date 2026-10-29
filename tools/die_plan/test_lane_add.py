@@ -93,3 +93,96 @@ def test_station_spacing_uses_existing_layer_margin(tmp_path):
     x = rep["built"][0]
     for slot in x["crossings"]:
         assert slot["route_um"] / slot["stations"] <= b.reach
+
+
+def _builder_raw():
+    raw = json.loads((HERE / "examples/tiny_plan.json").read_text())
+    raw["partition_types"]["mid2"] = json.loads(json.dumps(raw["partition_types"]["mid"]))
+    next(p for p in raw["partitions"] if p["name"] == "pm2")["type"] = "mid2"
+    return raw
+
+
+def test_final_natural_landing_latency_rejects_and_restores(monkeypatch):
+    raw = _builder_raw()
+    before = json.loads(json.dumps(raw))
+    natural = S.Plan.lane_natural
+
+    def with_new_landing(plan, lid):
+        d = natural(plan, lid)
+        if lid.startswith("L16"):
+            d["clock_landing"] = 3
+            d["cycles"] += 3
+        return d
+
+    monkeypatch.setattr(S.Plan, "lane_natural", with_new_landing)
+    b = lane_add.Builder(raw)
+    b.build([dict(src="pa", dst="pm1", unplanned_bits=24)])
+    assert not b.report["built"] and len(b.report["failed"]) == 1
+    assert "including clock landings" in b.report["failed"][0]["why"]
+    assert raw == before and b.next_id == 160 and not b.ids
+    assert not any(b.taken.values())
+
+
+def test_parallel_word_parts_must_have_identical_actual_cycles(monkeypatch):
+    raw = _builder_raw()
+    before = json.loads(json.dumps(raw))
+    b = lane_add.Builder(raw)
+    alloc, stations = b.alloc, b.stations_for
+    monkeypatch.setattr(b, "alloc", lambda a, z, width, prefer=None:
+                        None if width > 70 else alloc(a, z, width, prefer))
+    count = [0]
+
+    def varied(*args):
+        k, seg, length = stations(*args)
+        count[0] += 1
+        return k + (count[0] % 2), seg, length
+
+    monkeypatch.setattr(b, "stations_for", varied)
+    b.build([dict(src="pa", dst="pm2", unplanned_bits=128)])
+    assert not b.report["built"] and len(b.report["failed"]) == 1
+    assert "split cycles" in b.report["failed"][0]["why"]
+    assert raw == before and b.next_id == 160 and not any(b.taken.values())
+
+
+def test_near_mirror_keeps_the_split_index():
+    base = _builder_raw()
+    raw = json.loads(json.dumps(base))
+    raw["partition_types"], raw["partitions"], raw["ports"], raw["lanes"] = {}, [], [], []
+    raw["latency"]["lanes"] = {}
+    for prefix, dy in (("NW_", 0), ("NE_", 1728)):
+        for tn, t in base["partition_types"].items():
+            raw["partition_types"][prefix + tn] = json.loads(json.dumps(t))
+        for src in base["partitions"]:
+            p = json.loads(json.dumps(src))
+            p["name"], p["type"] = prefix + p["name"], prefix + p["type"]
+            p["origin_um"][1] += dy
+            raw["partitions"].append(p)
+        for src in base["ports"]:
+            p = json.loads(json.dumps(src)); p["id"] = prefix + p["id"]
+            for end in ("src", "dst"):
+                if p[end]["part"] != S.DIE_PART:
+                    p[end]["part"] = prefix + p[end]["part"]
+            if p.get("face") in ("E", "W"):
+                p["window_um"] = [x + dy for x in p["window_um"]]
+            raw["ports"].append(p)
+        for src in base["lanes"]:
+            q = json.loads(json.dumps(src)); q["id"] = prefix + q["id"]
+            q["ports"] = [prefix + x for x in q["ports"]]
+            raw["lanes"].append(q)
+        for lid, ent in base["latency"]["lanes"].items():
+            raw["latency"]["lanes"][prefix + lid] = json.loads(json.dumps(ent))
+    b = lane_add.Builder(raw)
+    b.build([dict(src="NW_pa", dst="NW_pm2", unplanned_bits=12),
+             dict(src="NE_pa", dst="NE_pm2", unplanned_bits=12)])
+    assert not b.report["failed"]
+    assert [r["lane"] for r in b.report["built"]] == ["L160", "L160m"]
+
+
+def test_macro_station_halo_is_the_existing_resite_halo():
+    raw = _builder_raw()
+    raw["partition_types"]["mid"]["hard_cores"] = [dict(
+        inst="core", origin_um=[100, 100], outline_um=[100, 100], module="core")]
+    b = lane_add.Builder(raw)
+    # Type x98 lies outside the core body but inside its existing 4.32-um station halo.
+    assert b.macro_hits("pm1", [b.P.to_die("pm1", (98, 150))]) == 1
+    assert b.macro_hits("pm1", [b.P.to_die("pm1", (94, 150))]) == 0
