@@ -36,3 +36,17 @@ Run: intel2:/srv/opentallas-scratch2/claude/codex-s81-ce12-tag-1029,
 ot-run unit oth-ubuntu-2211290-1793288077 (terminal PASS). The inherited
 ce10-lecrb64-bf and ce10-lecrb64-rom jobs remain untouched and are distinct
 full-column/ROM reset-contract LECs.
+
+Full-column RTL lint at the production parameter tuple, using the existing
+behavioural ICG model, passes for TAG_GROUPS=0/4/16 with identical existing
+TIMESCALEMOD/WIDTHEXPAND/WIDTHTRUNC warning classes (`lint.json`). The first
+SYNTHESIS-only lint attempt lacked the technology ICG module and was rejected;
+no fabricated ICG was added. This lint does not qualify a physical clock.
+
+`bf_tag_recipes.json` names both canonical-source variants. The actual V1
+placement estimate and viewed picture are in `bf_tag_estimate.json` and
+`bf_tag_review.png`. The first four-copy median-site proposal landed in two
+ROMs and was revised before any build; current candidate sites have 6-um
+macro clearance. Maximum accumulator-centre source reach is 198.387 um for
+four groups and 29.403 um for sixteen. Complete tag nets and new clock sinks
+remain physical obligations; recipes are source preparation only.
