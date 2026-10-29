@@ -440,6 +440,25 @@ class SiteMap:
         return None
 
 
+def clock_site(P):
+    """Physical DME uses native 1.62x0.27 cell origins, not zero-area points.
+    This is the body-site adapter measured on HBM, shared without a runtime monkeypatch.
+    """
+    site = SiteMap(P)
+    if DME_ACTUAL_MAX_UM is None:
+        return site
+    w, h = ISLAND_CELL_UM
+    site.parts = [(a,b,c-w,d-h) for a,b,c,d in site.parts]
+    site.forb = [(r[0]-w,r[1]-h,*r[2:]) for r in site.forb]
+    site.idx = {}
+    for k,r in enumerate(site.forb):
+        for i in range(int(r[0]//site.b),int(r[2]//site.b)+1):
+            for j in range(int(r[1]//site.b),int(r[3]//site.b)+1):
+                site.idx.setdefault((i,j),[]).append(k)
+    site.native_body_um = [w,h]
+    return site
+
+
 def balance_legalize(nodes, site, radius_um=800.0, step=1.08, tol_um=2.0, select=None, extra_wire_w=0.1, skip_regions=None):
     """DIE-KV-3 (link_htree + --tree-site-slide/--tree-site-legal): legal sites for the region H-tree buffers that KEEP the
     tree balanced.  The feed-leg slide (sliding a branch node back along its incoming leg) lengthens one child leg and
@@ -703,6 +722,273 @@ def straight_leg_span(site, p, nd, nrep):
                                 for j in range(nrep)] + [(nd["x"], nd["y"])]
     return max(abs(b[0] - a[0]) + abs(b[1] - a[1]) for a, b in zip(pts, pts[1:]))
 
+
+# CLK-TOOL-4 opt-in reach-legal leg placement (--rep-reach-max UM; default None = byte-identical netlist/placement).
+# Root cause (S81 go16, CLK-TOOL-4 10-29): every leg WITHOUT a plan-given physical path (global FEED legs, plain region
+# legs) gets ceil(L/rep_um)-1 evenly spaced repeaters that site.nearest() snaps out of hard cores; a core wider than the
+# reach then leaves one unrepeated span across it (7 S81 feed legs: 457.38 um > 450, found only by the post-build
+# --rep-actual-max guard).  With REP_REACH_MAX_UM set, a non-snake leg whose snapped chain has a span > UM is re-placed:
+# (1) on its own path (planned route/detour, else the straight or either L route) with the fewest repeaters that keep
+# every span <= UM, spread to the smallest feasible max span; (2) if no such placement exists, on the shortest REACH
+# detour (legal grid cells, straight overfly jumps <= UM, bend penalty), same placement rule; (3) else the kit FAILS.
+# Every changed leg records nd['reach_fix'] (before/after spans, repeaters, wire) and meta.reach_fix the totals, so the
+# added stages/wire are visible to the planner, CA regeneration and the die STA (which measures the routed result).
+REP_REACH_MAX_UM = None
+
+
+def chain_spans(chain):
+    return [abs(b[0] - a[0]) + abs(b[1] - a[1]) for a, b in zip(chain, chain[1:])]
+
+
+def reach_place(site, poly, reach, nmin=0, even=False, step=0.54):
+    """repeater points on Manhattan polyline poly (ends = the leg's driver/load, assumed legal) with every
+    consecutive Manhattan span <= reach: the fewest repeaters (>= nmin; stage count n+1 even when even) placed to
+    minimise the largest arc span -> [(x, y)] or None when no legal placement within reach exists.  Points are legal
+    sites ON the polyline (arc samples every ~step um plus its corners), so the leg wire stays the path wire."""
+    import bisect
+    _, L = polyline_points(poly, [])
+    acc, cand = 0.0, set()
+    for a, b in zip(poly, poly[1:]):
+        acc += abs(b[0] - a[0]) + abs(b[1] - a[1])
+        if 0 < acc < L:
+            cand.add(round(acc, 6))
+    n = int(L / step)
+    for k in range(1, n + 1):
+        cand.add(round(k * L / (n + 1), 6))
+    arcs = sorted(cand)
+    pts = dict(zip(arcs, polyline_points(poly, [t / L for t in arcs])[0])) if L > 0 else {}
+    ok = [t for t in arcs if site.legal((round(pts[t][0], 3), round(pts[t][1], 3)))]
+
+    def greedy(s):
+        out, pos = [], 0.0
+        while L - pos > s + 1e-9:
+            k = bisect.bisect_right(ok, pos + s + 1e-9) - 1
+            if k < 0 or ok[k] <= pos + 1e-9:
+                return None
+            pos = ok[k]
+            out.append(pos)
+        return out
+    g = greedy(reach)
+    if g is None:
+        return None
+    need = max(len(g), nmin)
+    if even and (need + 1) % 2:
+        need += 1
+    lo, hi, best = L / (need + 1), reach, g
+    for _ in range(40):
+        mid = (lo + hi) / 2
+        r = greedy(mid)
+        if r is not None and len(r) <= need:
+            hi, best = mid, r
+        else:
+            lo = mid
+    best = list(best)
+    while len(best) < need:             # split the largest span at the legal point nearest its middle
+        ch = [0.0] + best + [L]
+        k = max(range(len(ch) - 1), key=lambda i: ch[i + 1] - ch[i])
+        m = (ch[k] + ch[k + 1]) / 2
+        inside = [t for t in ok if ch[k] + 1e-9 < t < ch[k + 1] - 1e-9]
+        if not inside:
+            return None
+        best = sorted(best + [min(inside, key=lambda t: abs(t - m))])
+    q = [(round(pts[t][0], 3), round(pts[t][1], 3)) for t in best]
+    if max(chain_spans([poly[0]] + q + [poly[-1]])) > reach + 1e-6:
+        return None
+    return q
+
+
+def reach_detour(site, a, b, reach, step=5.4, margin=600.0, turn_um=20.0, max_expand=2_000_000):
+    """shortest Manhattan polyline a -> b over legal grid cells where a straight run may overfly illegal cells for at
+    most reach - 2*step um between two legal cells (bend penalty turn_um; bends only on legal cells); None if none in
+    the leg bbox + margin.  The repeaters then go on legal points along it (reach_place)."""
+    import heapq
+    x0, y0 = max(0.0, min(a[0], b[0]) - margin), max(0.0, min(a[1], b[1]) - margin)
+    x1, y1 = min(site.W, max(a[0], b[0]) + margin), min(site.H, max(a[1], b[1]) + margin)
+    nx, ny = int((x1 - x0) / step) + 1, int((y1 - y0) / step) + 1
+    jmax = max(1, int((reach - 2 * step) / step))
+
+    def pt(i, j):
+        return (round(x0 + i * step, 3), round(y0 + j * step, 3))
+
+    def cell(q):
+        return (min(nx - 1, max(0, int(round((q[0] - x0) / step)))), min(ny - 1, max(0, int(round((q[1] - y0) / step)))))
+    s, g = cell(a), cell(b)
+    ok = {}
+
+    def legal(c):
+        if c == s or c == g:
+            return True
+        if c not in ok:
+            ok[c] = site.legal(pt(*c))
+        return ok[c]
+
+    def h(c):
+        return (abs(c[0] - g[0]) + abs(c[1] - g[1])) * step
+    best, prev = {(s, None): 0.0}, {}
+    pq = [(h(s), 0.0, s, None)]
+    end, n = None, 0
+    while pq:
+        _, c0, c, d = heapq.heappop(pq)
+        if c == g:
+            end = (c, d)
+            break
+        if c0 > best.get((c, d), 1e30):
+            continue
+        n += 1
+        if n > max_expand:
+            return None
+        for dv in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            for k in range(1, jmax + 1):
+                q = (c[0] + dv[0] * k, c[1] + dv[1] * k)
+                if not (0 <= q[0] < nx and 0 <= q[1] < ny):
+                    break
+                if not legal(q):
+                    continue
+                c1 = c0 + k * step + (turn_um if d is not None and d != dv else 0.0)
+                if c1 < best.get((q, dv), 1e30):
+                    best[(q, dv)] = c1
+                    prev[(q, dv)] = (c, d)
+                    heapq.heappush(pq, (c1 + h(q), c1, q, dv))
+                break           # first legal cell in this direction: a longer jump never beats stepping on it
+    if end is None:
+        return None
+    st = [end]
+    while st[-1] in prev:
+        st.append(prev[st[-1]])
+    path = [pt(*c) for c, _ in reversed(st)]
+    path = [tuple(a), (path[0][0], a[1])] + path + [(path[-1][0], b[1]), tuple(b)]
+    out = [path[0]]
+    for v in path[1:]:
+        if abs(v[0] - out[-1][0]) < 1e-6 and abs(v[1] - out[-1][1]) < 1e-6:
+            continue
+        if len(out) >= 2:
+            u, w = out[-2], out[-1]
+            if (abs(u[0] - w[0]) < 1e-6 and abs(w[0] - v[0]) < 1e-6) or (abs(u[1] - w[1]) < 1e-6 and abs(w[1] - v[1]) < 1e-6):
+                out[-1] = v
+                continue
+        out.append(v)
+    return out
+
+
+def reach_fix_leg(site, p, nd, poly, chain, reach, rep_um, even):
+    """CLK-TOOL-4: (points, poly, info) re-placing one leg whose snapped chain has a span > reach (see REP_REACH_MAX_UM);
+    raises ValueError when neither the leg's own path nor a reach detour admits a placement"""
+    a, b = (p["x"], p["y"]), (nd["x"], nd["y"])
+    before = max(chain_spans(chain))
+    L0 = polyline_points(poly, [])[1] if poly is not None else _man(a, b)
+    own = [poly] if poly is not None else (
+        [[a, b]] if abs(a[0] - b[0]) < 1e-6 or abs(a[1] - b[1]) < 1e-6 else [[a, (b[0], a[1]), b], [a, (a[0], b[1]), b]])
+    tried = []
+    for kind, cands in (("on_path", own), ("reach_detour", None)):
+        if cands is None:
+            d = reach_detour(site, a, b, reach)
+            cands = [d] if d is not None else []
+        res = []
+        for q in cands:
+            Lq = polyline_points(q, [])[1]
+            r = reach_place(site, q, reach, max(0, int(math.ceil(Lq / rep_um)) - 1), even)   # same count rule as every leg
+            tried.append(kind)
+            if r is not None:
+                res.append((len(r), Lq, r, q))
+        if res:
+            nrep, Lq, r, q = min(res, key=lambda t: (t[1], t[0]))
+            after = max(chain_spans([a] + r + [b]))
+            return r, q, dict(kind=kind, span_before_um=round(before, 3), span_after_um=round(after, 3),
+                              nrep_before=len(chain) - 2, nrep_after=nrep, wire_before_um=round(L0, 3),
+                              wire_after_um=round(Lq, 3), added_wire_um=round(Lq - L0, 3),
+                              added_stages=nrep - (len(chain) - 2))
+    raise ValueError(f"--rep-reach-max {reach:g}: leg to node {nd.get('id')} ({a} -> {b}, span {before:.2f} um) has no "
+                     f"legal repeater placement within reach on its path or a reach detour ({tried})")
+
+
+REP_REACH_BALANCE = True        # with REP_REACH_MAX_UM: pad the other branches so relative arrivals are unchanged
+REACH_PAD_TOL_PS = 0.5
+
+
+def reach_balance(nodes, site, rep_um, even):
+    """CLK-TOOL-4 (with --rep-reach-max): price every reach-fixed leg with the die stage model (chain_ps, the calibrated
+    STAGE_1X_TT when --region-dme-stage-cal is given) against the chain it replaces, then keep every root->node RELATIVE
+    arrival of the built tree: added delay A(n) on the root->n path, D = max A over tap-bearing nodes, every tap-bearing
+    node needs D - A(n); the need is padded as high in the tree as it is common (pad(n) = minneed(subtree n) -
+    minneed(subtree parent)), each pad as a plan-computed snake on that leg (snake_leg, priced on the snapped chain).
+    A pad leg that cannot take a snake (reach-fixed leg, no snake in range, odd inv2 stage count) passes its pad to
+    its kids; a node with taps that still cannot be padded is a recorded residual.  -> report dict"""
+    global EVEN_LEGS
+    kids = defaultdict(list)
+    for i, nd in nodes.items():
+        if nd["parent"] is not None:
+            kids[nd["parent"]].append(i)
+    add, cur = {}, {}
+    for i, nd in sorted(nodes.items()):
+        if nd["parent"] is None:
+            continue
+        p = nodes[nd["parent"]]
+        _, _, _, _, fix, chain = _leg_layout(i, nd, p, site, rep_um, even)
+        if chain is None:
+            continue
+        cur[i] = chain_ps(chain)
+        if fix is not None:
+            d = chain_ps([(p["x"], p["y"])] + list(fix) + [(nd["x"], nd["y"])]) - cur[i]
+            nd["reach_fix"]["added_ps_model"] = round(d, 3)
+            add[i] = d
+    rep = dict(model=list(STAGE_1X_TT), fixed_legs=len(add), added_ps_model=sorted(round(v, 3) for v in add.values()),
+               pads=0, pad_wire_um=0.0, residual=[])
+    if not add:
+        return rep
+    root = next(i for i, nd in nodes.items() if nd["parent"] is None)
+    A = {root: 0.0}
+    order = [root]
+    for i in order:
+        for k in kids[i]:
+            A[k] = A[i] + add.get(k, 0.0)
+            order.append(k)
+    D = max(A[i] for i in order if nodes[i]["taps"]) if any(nodes[i]["taps"] for i in order) else max(A.values())
+    mn = {}
+    for i in reversed(order):
+        v = [D - A[i]] if nodes[i]["taps"] else []
+        v += [mn[k] for k in kids[i] if mn[k] is not None]
+        mn[i] = min(v) if v else None
+    pend = {root: mn[root] or 0.0}       # pad still owed to the subtree, beyond the pads above it
+    old_even = EVEN_LEGS
+    EVEN_LEGS = bool(even)
+    try:
+        for i in order:
+            owe = pend.pop(i, 0.0)
+            if i != root and owe > REACH_PAD_TOL_PS:
+                nd, p = nodes[i], nodes[nodes[i]["parent"]]
+                r = None
+                if i not in add and i in cur and not nd.get("physical_leg"):
+                    pa, q = (p["x"], p["y"]), (nd["x"], nd["y"])
+                    r = snake_leg(site, pa, q, cur[i] + owe, rep_um)
+                    if r is not None and even and (len(r[0]) + 1) % 2:
+                        r = None
+                if r is not None:
+                    nd["snake"] = [list(x) for x in r[0]]
+                    nd["reach_pad"] = dict(pad_ps=round(owe, 3), got_ps=round(r[1] - cur[i], 3),
+                                           added_wire_um=round(r[2], 3))
+                    rep["pads"] += 1
+                    rep["pad_wire_um"] = round(rep["pad_wire_um"] + r[2], 3)
+                    owe -= r[1] - cur[i]
+                    if abs(owe) <= REACH_PAD_TOL_PS:
+                        owe = 0.0
+                    if owe < 0:          # overshoot: the snake's delay quantum; record, never negative pads below
+                        rep["residual"].append(dict(node=i, residual_ps=round(owe, 3), why="snake overshoot"))
+                        owe = 0.0
+                if owe > REACH_PAD_TOL_PS and nd["taps"]:
+                    rep["residual"].append(dict(node=i, residual_ps=round(owe, 3),
+                                                why="pad not placeable on a leg carrying taps"))
+            if nodes[i]["taps"] and mn[i] is not None and (D - A[i]) - mn[i] > REACH_PAD_TOL_PS:
+                rep["residual"].append(dict(node=i, residual_ps=round((D - A[i]) - mn[i], 3),
+                                            why="taps on a node above a later (reach-fixed) kid"))
+            for k in kids[i]:
+                if mn[k] is None:
+                    continue
+                pend[k] = owe + (mn[k] - (mn[i] or 0.0))
+    finally:
+        EVEN_LEGS = old_even
+    rep["D_ps_model"] = round(D, 3)
+    rep["residual_max_ps"] = max([abs(r["residual_ps"]) for r in rep["residual"]], default=0.0)
+    return rep
 
 def build_htree(P, taps, leaf_um=600.0, full_depth=False, regions=None):
     """explicit H-tree: nodes {id: dict(x, y, parent, level, kids, taps)} rooted at the spine root.  Region bisection
@@ -1184,6 +1470,10 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
             nodes[i]["req_xy"] = [nodes[i]["x"], nodes[i]["y"]]
             nodes[parent]["kids"].append(i)
             pa, q = (nodes[parent]["x"], nodes[parent]["y"]), (nodes[i]["x"], nodes[i]["y"])
+            if DME_ACTUAL_MAX_UM is not None and delay_rep_um:
+                pl = physical_leg(site, pa, q, delay_rep_um,
+                                  [pa] + list(snake_pts) + [q] if snake_pts is not None else None)
+                nodes[i]["physical_leg"] = pl
             if snake_pts:       # DIE-QC-9: elongated leg = explicit legal buffer chain (tree_netlist places it as is)
                 nodes[i]["snake"] = [list(x) for x in snake_pts]
             elif abs(pa[0] - q[0]) > 1e-6 and abs(pa[1] - q[1]) > 1e-6:
@@ -1375,6 +1665,127 @@ def chain_ps(pts):
     return s
 
 
+DME_ACTUAL_MAX_UM = None  # opt-in: one legal physical chain drives both DME cost and emitted buffers
+
+
+def physical_leg(site, a, b, rep_um, points=None):
+    """Immutable physical leg: exact legal repeater chain, stage count and fitted delay.
+    Reach repairs are derived from actual snapped geometry, with paired insertions
+    on inv2 legs. The same returned chain is stored on the node and emitted intact.
+    """
+    a, b = tuple(a), tuple(b)
+    bound = float(DME_ACTUAL_MAX_UM)
+    if not math.isfinite(bound) or bound <= 0:
+        raise ValueError("DME actual reach bound must be finite and positive")
+    key = (a, b, float(rep_um), bool(EVEN_LEGS), bound, tuple(STAGE_1X_TT),
+           tuple(tuple(q) for q in points) if points is not None else None)
+    cache = getattr(site, "_physical_leg_cache", None)
+    if cache is None:
+        cache = site._physical_leg_cache = {}
+    if key in cache:
+        return cache[key]
+    if points is None:
+        L = _man(a, b)
+        n = max(1, int(math.ceil(L / rep_um - 1e-9)))
+        if EVEN_LEGS and n % 2:
+            n += 1
+        axis = "x" if abs(a[0]-b[0]) >= abs(a[1]-b[1]) else "y"
+        pts = [a] + [round_legal(site, site.nearest((a[0]+(b[0]-a[0])*j/n,
+                                                  a[1]+(b[1]-a[1])*j/n), axis)) for j in range(1,n)] + [b]
+    else:
+        pts = [tuple(q) for q in points]
+        if not pts or _man(pts[0], a) > 1e-6 or _man(pts[-1], b) > 1e-6:
+            raise ValueError("physical leg endpoint mismatch")
+    chain = [pts[0]]
+    repairs = []
+    for aa, bb in zip(pts, pts[1:]):
+        if _man(aa, bb) <= bound + 1e-6:
+            chain.append(bb)
+            continue
+        poly = legal_detour(site, aa, bb)
+        if poly is None:
+            raise ValueError("no legal channel detour for physical clock leg")
+        length = polyline_points(poly, [])[1]
+        # Adding an even number of inverters preserves the leg polarity. The
+        # geometry sets the initial count; finer sampling handles grid corners.
+        step = 2 if EVEN_LEGS else 1
+        nadd = max(step, int(math.ceil(length/bound))-1)
+        nadd += (-nadd) % step
+        solution = None
+        # A stage at each 5.4-um routing-grid point is the finite geometry limit.
+        maxadd = max(nadd, int(math.ceil(length/5.4))+step)
+        for count in range(nadd, maxadd+1, step):
+            raw, _ = polyline_points(poly, [(j+1)/(count+1) for j in range(count)])
+            placed = []
+            for q in raw:
+                q = (round(round(q[0]/0.054)*0.054, 6), round(round(q[1]/0.54)*0.54, 6))
+                candidates = [(round(q[0]+dx*0.054,6), round(q[1]+dy*0.54,6))
+                              for dy in (0,1,-1,2,-2) for dx in (0,1,-1,2,-2,3,-3)]
+                occupied = pts + chain + placed
+                z = next((z for z in candidates if site.legal(z) and not any(
+                    abs(z[0]-r[0]) < 2.16 and abs(z[1]-r[1]) < .269 for r in occupied)), None)
+                if z is None:
+                    break
+                placed.append(z)
+            if len(placed) != count:
+                continue
+            actual = [aa] + placed + [bb]
+            if max(_man(x,y) for x,y in zip(actual,actual[1:])) <= bound + 1e-6:
+                solution = placed
+                break
+        if solution is None:
+            raise ValueError("no reachable legal clock chain on channel detour")
+        repairs.append(dict(old_um=_man(aa,bb), added=len(solution), poly=tuple(poly)))
+        chain += solution + [bb]
+    if EVEN_LEGS and (len(chain)-1) % 2:
+        raise ValueError("physical clock chain has odd inverter parity")
+    if any(not site.legal(q) for q in chain):
+        raise ValueError("physical clock chain contains illegal site")
+    result = dict(chain=tuple(chain), stages=len(chain)-1, delay_ps=chain_ps(chain),
+                  wire_um=sum(_man(x,y) for x,y in zip(chain,chain[1:])), repairs=tuple(repairs))
+    cache[key] = result
+    return result
+
+
+def physical_pack(site, place, max_displacement=8.64):
+    """Prebuild native-body home allocation (the existing clock_body_bays recipe).
+    All homes are fixed before final leg costs and placement are published.
+    No later placement overlay may move these cells.
+    """
+    W,H = ISLAND_CELL_UM
+    occ = defaultdict(list)
+    B = 8.64
+    def buckets(q):
+        for i in range(math.floor(q[0]/B),math.floor((q[0]+W-1e-8)/B)+1):
+            for j in range(math.floor(q[1]/B),math.floor((q[1]+H-1e-8)/B)+1):
+                yield i,j
+    def clear(q):
+        return site.legal(q) and not any(abs(q[0]-p[0]) < W-1e-8 and abs(q[1]-p[1]) < H-1e-8
+                                        for b in buckets(q) for p in occ[b])
+    shifts = sorted([(31*i,j) for i in range(-5,6) for j in range(-16,17)],
+                    key=lambda d:(abs(d[0]*.054)+abs(d[1]*.54),abs(d[1]),d))
+    result = []
+    for name,x,y in place:
+        anchor = round_legal(site,(x,y))
+        home = None
+        for dx,dy in shifts:
+            q = (round(anchor[0]+dx*.054,6),round(anchor[1]+dy*.54,6))
+            if _man(q,(x,y)) <= max_displacement+1e-6 and clear(q):
+                home = q
+                break
+        if home is None:
+            raise ValueError(f"no native clock body bay within {max_displacement} um of {name}")
+        for b in buckets(home):
+            occ[b].append(home)
+        result.append((name,*home))
+    return result
+
+
+def placed_leg_ps(site, a, b, rep_um):
+    return physical_leg(site,round_legal(site,a),round_legal(site,b),rep_um)["delay_ps"] \
+        if DME_ACTUAL_MAX_UM is not None else leg_ps(_man(a,b),rep_um)
+
+
 def _snake_pts(pa, q, u, h, rep_um, shape="dogleg"):
     """elongated leg pa -> q, pushed h um outside the pa/q bounding box along axis direction u (adds 2h of wire):
     'dogleg' = one turning buffer w at the bbox mid-edge + h u (waypoints pa, w, q: >= 1 extra stage);
@@ -1408,7 +1819,7 @@ def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08):
     reported delay is that of the placed buffers).  Kept only if it beats the plain leg.  Ties: least snap distance,
     then least wire.  -> (repeater points [excluding pa and q], chain ps, added wire um over the plain leg) or None"""
     L0 = _man(pa, q)
-    plain = leg_ps(L0, rep_um)
+    plain = placed_leg_ps(site, pa, q, rep_um)
     best = None
     for shape in ("dogleg", "hairpin"):
         for u in ((1, 0), (-1, 0), (0, 1), (0, -1)):
@@ -1435,6 +1846,12 @@ def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08):
                 pts.append(q)
                 if EVEN_LEGS and (len(pts) - 1) % 2:
                     continue            # inv2: odd stage count would flip polarity
+                if DME_ACTUAL_MAX_UM is not None:
+                    try:
+                        placed = physical_leg(site, pa, q, rep_um, pts)
+                    except ValueError:
+                        continue
+                    pts = list(placed["chain"])
                 ps = chain_ps(pts)
                 wire = sum(_man(a, b) for a, b in zip(pts, pts[1:]))
                 key = (round(abs(ps - target_ps), 1), round(snap, 1), wire)
@@ -1470,10 +1887,17 @@ def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, 
                 pool.append(q)
 
     def cost(q):
-        return (abs(leg_ps(md(q, c1), rep_um) + s1 - leg_ps(md(q, c2), rep_um) - s2)
-                + extra_ps_um * (md(q, c1) + md(q, c2) - D_))
+        try:
+            return (abs(placed_leg_ps(site, q, c1, rep_um) + s1 - placed_leg_ps(site, q, c2, rep_um) - s2)
+                    + extra_ps_um * (md(q, c1) + md(q, c2) - D_))
+        except ValueError:
+            if DME_ACTUAL_MAX_UM is None:
+                raise
+            return float("inf")
     q = min(pool, key=cost)
-    return q, abs(leg_ps(md(q, c1), rep_um) + s1 - leg_ps(md(q, c2), rep_um) - s2), md(q, c1) + md(q, c2) - D_
+    if not math.isfinite(cost(q)):
+        raise ValueError("no reachable physical DME merge candidate")
+    return q, abs(placed_leg_ps(site, q, c1, rep_um) + s1 - placed_leg_ps(site, q, c2, rep_um) - s2), md(q, c1) + md(q, c2) - D_
 
 
 DME_JOIN_BUDGET = 4096  # DIE-S81-16: join() calls per top-level merge before the bounded monotone join-down takes over
@@ -1514,7 +1938,7 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
         q = (t[2], t[3]) if site.legal((t[2], t[3])) else site.nearest((t[2], t[3]))
         q = round_legal(site, q)
         d = _man(q, (t[2], t[3]))
-        sd = tap_wire_ps(d) if snake and delay_rep_um else d
+        sd = tap_wire_ps(d) if delay_rep_um and (snake or DME_ACTUAL_MAX_UM is not None) else d
         if sink_early:      # DIE-S81-14 --region-dme-early-mode merge: declared early = DME sink delay (zero-skew merge)
             sd += float(sink_early.get((t[0], t[1]), 0.0))
         out.append(dict(x=q[0], y=q[1], kids=[], taps=[t], S=sd, Smin=sd, W=d))
@@ -1527,7 +1951,11 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
             q, imb, ex = merge_point_delay(site, (A["x"], A["y"]), A["S"], (B["x"], B["y"]), B["S"], delay_rep_um, rad)
             q = round_legal(site, q)
             la, lb = _man(q, (A["x"], A["y"])), _man(q, (B["x"], B["y"]))
-            da, db = leg_ps(la, delay_rep_um), leg_ps(lb, delay_rep_um)
+            da = placed_leg_ps(site, q, (A["x"], A["y"]), delay_rep_um)
+            db = placed_leg_ps(site, q, (B["x"], B["y"]), delay_rep_um)
+            if DME_ACTUAL_MAX_UM is not None:
+                la = physical_leg(site,q,(A["x"],A["y"]),delay_rep_um)["wire_um"]
+                lb = physical_leg(site,q,(B["x"],B["y"]),delay_rep_um)["wire_um"]
             snakes, sw = {}, 0.0
             if snake and abs(da + A["S"] - db - B["S"]) > SNAKE_TOL_PS:
                 # DIE-QC-9 opt-in: no zero-skew legal point -> elongate the fast kid's leg (plan-computed hairpin of
@@ -1714,14 +2142,14 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
                 d = tap_wire_ps(d)
 
             def miss(j):
-                return out[j]["S"] - e - leg_ps(_man((out[j]["x"], out[j]["y"]), q), delay_rep_um) - d
+                return out[j]["S"] - e - placed_leg_ps(site,(out[j]["x"],out[j]["y"]),q,delay_rep_um) - d
             cand = [j for j in kept if out[j]["kids"]]
             if snake and cand and max(miss(j) for j in cand) < -SNAKE_TOL_PS:
                 # DIE-QC-9: no node is deep enough for this early -> a new top node at the old root's site; the leg
                 # down to the old root is elongated (in place: a dogleg out and back on legal sites) so the new
                 # root is exactly deep enough; the early tap then hangs from it like any other
                 rq = (out[root]["x"], out[root]["y"])
-                need = e + leg_ps(_man(rq, q), delay_rep_um) + d - out[root]["S"]
+                need = e + placed_leg_ps(site,rq,q,delay_rep_um) + d - out[root]["S"]
                 r = snake_leg(site, rq, rq, max(need, leg_ps(0.0, delay_rep_um)), delay_rep_um)
                 if r is None:   # no elongated chain beats one plain stage (stage quantum): take the plain stage
                     r = ([], leg_ps(0.0, delay_rep_um), 0.0)
@@ -1748,7 +2176,7 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
                        root_S_ps=round(out[root]["S"], 2))
             if snake and m0 > SNAKE_TOL_PS:
                 jq = (out[j]["x"], out[j]["y"])
-                r = snake_leg(site, jq, q, leg_ps(_man(jq, q), delay_rep_um) + m0, delay_rep_um)
+                r = snake_leg(site, jq, q, placed_leg_ps(site,jq,q,delay_rep_um) + m0, delay_rep_um)
                 if r is not None:
                     pts, ps, sw = r
                     out[j].setdefault("snakes", {})[len(out) - 1] = [list(x) for x in pts]
@@ -1796,6 +2224,20 @@ def round_legal(site, q, nd=3):
     a halo edge, and rounding 10620.7200000001 -> 10620.72 put 3 QC node buffers 1e-12 um inside a core halo
     (strict-inside test).  Try the 9 neighbours on the 10^-nd grid (nearest first); keep the plain rounding if the
     unrounded point was illegal too (that case is reported by site_legal, not hidden here)."""
+    if DME_ACTUAL_MAX_UM is not None:
+        def snap(p):
+            return (round(round(p[0]/.054)*.054,6), round(round(p[1]/.54)*.54,6))
+        r = snap(q)
+        if site.legal(r):
+            return r
+        r = snap(site.nearest(r))
+        candidates = [(round(r[0]+dx*.054,6),round(r[1]+dy*.54,6))
+                      for dx,dy in sorted(((x,y) for x in (-1,0,1) for y in (-1,0,1)),
+                                          key=lambda d:abs(d[0])+abs(d[1]))]
+        for p in candidates:
+            if site.legal(p):
+                return p
+        raise ValueError("no native R0 row site for physical clock cell")
     r = (round(q[0], nd), round(q[1], nd))
     if site.legal(r) or not site.legal(q):
         return r
@@ -2034,6 +2476,92 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
     return nodes
 
 
+def _leg_layout(i, nd, p, site, rep_um, even):
+    """repeater layout of the leg parent p -> node nd as tree_netlist places it (moved verbatim out of tree_netlist,
+    CLK-TOOL-4): -> (L, nrep, poly, pts, fix_pts, dry_chain); dry_chain (only with REP_REACH_MAX_UM) = the default
+    snapped chain p..nd, fix_pts = reach-fixed repeater points or None.  Sets nd detour/reach_fix keys as before."""
+    pts = None
+    chain = None
+    L = abs(p["x"] - nd["x"]) + abs(p["y"] - nd["y"])
+    nrep = max(0, int(math.ceil(L / rep_um)) - 1)
+    poly = None
+    if nd.get("physical_leg"):
+        pl = nd["physical_leg"]
+        poly = [tuple(q) for q in pl["chain"]]
+        if _man(poly[0],(p["x"],p["y"])) > 1e-6 or _man(poly[-1],(nd["x"],nd["y"])) > 1e-6:
+            raise ValueError("physical leg changed after DME planning")
+        pts, nrep = poly[1:-1], len(poly)-2
+        if any(not site.legal(q) for q in poly):
+            raise ValueError("physical leg became illegal before export")
+        nd["detour"] = [list(q) for q in poly]
+        nd["detour_um"] = round(pl["wire_um"]-L, 1)
+        chain = list(poly)
+        return L, nrep, poly, pts, None, chain       # reach-legal by construction (DME_ACTUAL_MAX_UM)
+    if nd.get("snake"):     # DIE-QC-9 --region-dme-snake: plan-computed elongated leg, buffers at the given sites
+        pts = [tuple(q) for q in nd["snake"]]
+        nrep = len(pts)
+        chain = [(p["x"], p["y"])] + pts + [(nd["x"], nd["y"])]
+        poly = chain
+        nd["detour"] = [[round(a, 3), round(b, 3)] for a, b in chain]
+        nd["detour_um"] = round(sum(_man(a, b) for a, b in zip(chain, chain[1:])) - L, 1)
+    elif nd.get("route") and site is not None and _man(nd["route"][0], (p["x"], p["y"])) < 1e-3 \
+            and _man(nd["route"][-1], (nd["x"], nd["y"])) < 1e-3:    # DIE-QC-3 --region-dme: the leg's L route
+        poly = [tuple(q) for q in nd["route"]]
+        _, Ld = polyline_points(poly, [])
+        nrep = max(0, int(math.ceil(Ld / rep_um)) - 1)
+        pts, _ = polyline_points(poly, [(j + 1) / (nrep + 1) for j in range(nrep)])
+        nd["detour"] = [[round(a, 3), round(b, 3)] for a, b in poly]
+        nd["detour_um"] = round(Ld - L, 1)
+    elif site is not None and L > 2 * rep_um and leg_blocked_run(site, (p["x"], p["y"]), (nd["x"], nd["y"])) > rep_um \
+            and straight_leg_span(site, p, nd, nrep) > DETOUR_SPAN_X * rep_um:
+        poly = legal_detour(site, (p["x"], p["y"]), (nd["x"], nd["y"]))
+        if poly is not None:       # slid-root fix: repeaters evenly along the legal detour path
+            _, Ld = polyline_points(poly, [])
+            nrep = max(0, int(math.ceil(Ld / rep_um)) - 1)
+            pts, _ = polyline_points(poly, [(j + 1) / (nrep + 1) for j in range(nrep)])
+            nd["detour"] = [[round(a, 3), round(b, 3)] for a, b in poly]
+            nd["detour_um"] = round(Ld - L, 1)
+    if even and (nrep + 1) % 2 and not nd.get("snake"):
+        nrep += 1
+        if poly is not None:
+            pts, _ = polyline_points(poly, [(j + 1) / (nrep + 1) for j in range(nrep)])
+    if even and nd.get("snake") and (nrep + 1) % 2:
+        raise ValueError(f"inv2: snake leg of node {i} has an odd stage count")
+    fix_pts = None
+    if REP_REACH_MAX_UM is not None and site is not None and not nd.get("snake"):
+        # CLK-TOOL-4 opt-in: dry run of the default placement below; re-place the leg if a span exceeds reach
+        dry, arc_d = [], 0.0
+        on_d = REP_ON_LEG and poly is not None
+        Lp_d = polyline_points(poly, [])[1] if on_d else 0.0
+        for j in range(nrep):
+            f = (j + 1) / (nrep + 1)
+            x = p["x"] + (nd["x"] - p["x"]) * f
+            y = p["y"] + (nd["y"] - p["y"]) * f
+            if poly is not None:
+                x, y = pts[j]
+                if not site.legal((x, y)):
+                    q = poly_slide(site, poly, f, arc_d) if on_d else None
+                    if q is not None:
+                        x, y, arc_d = q
+                    else:
+                        x, y = site.nearest((x, y))
+                elif on_d:
+                    arc_d = max(arc_d, f * Lp_d)
+            else:
+                x, y = site.nearest((x, y), "x" if abs(nd["x"] - p["x"]) >= abs(nd["y"] - p["y"]) else "y")
+            dry.append((x, y))
+        chain = [(p["x"], p["y"])] + dry + [(nd["x"], nd["y"])]
+        if max(chain_spans(chain)) > REP_REACH_MAX_UM + 1e-6:
+            fix_pts, fix_poly, info = reach_fix_leg(site, p, dict(nd, id=i), poly, chain, REP_REACH_MAX_UM,
+                                                    rep_um, even)
+            nrep = len(fix_pts)
+            nd["reach_fix"] = {**(nd.get("reach_fix") or {}), **info}   # keeps the reach_balance price
+            if info["kind"] == "reach_detour":
+                nd["detour"] = [[round(a, 3), round(b, 3)] for a, b in fix_poly]
+                nd["detour_um"] = round(info["wire_after_um"] - L, 1)
+    return L, nrep, poly, pts, fix_pts, chain
+
+
 def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sites=None, clock_cell="buf"):
     """buffered tree: a BUF at every node (branch / leaf driver), repeaters every rep_um along each leg.
     tap_pad (DIE-KV-5 opt-in --tap-pad, METHODOLOGY 12.8 plan-computed per-tap sizing): {tap port: n} puts n BUF cells in
@@ -2052,6 +2580,9 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
         clock_cell = "inv"
     CELL = CLK_INV if clock_cell == "inv" else BUF
     par_in = {}
+    if REP_REACH_MAX_UM is not None and REP_REACH_BALANCE and site is not None:
+        root0 = next(i for i, nd in nodes.items() if nd["parent"] is None)
+        nodes[root0]["reach_balance"] = reach_balance(nodes, site, rep_um, even)
     cells, place, wires = [], [], []
     node_buf, parent_of = {}, {}
     off_leg = []
@@ -2076,39 +2607,7 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
                 src = f"nr{i}"
         else:
             p = nodes[nd["parent"]]
-            L = abs(p["x"] - nd["x"]) + abs(p["y"] - nd["y"])
-            nrep = max(0, int(math.ceil(L / rep_um)) - 1)
-            poly = None
-            if nd.get("snake"):     # DIE-QC-9 --region-dme-snake: plan-computed elongated leg, buffers at the given sites
-                pts = [tuple(q) for q in nd["snake"]]
-                nrep = len(pts)
-                chain = [(p["x"], p["y"])] + pts + [(nd["x"], nd["y"])]
-                poly = chain
-                nd["detour"] = [[round(a, 3), round(b, 3)] for a, b in chain]
-                nd["detour_um"] = round(sum(_man(a, b) for a, b in zip(chain, chain[1:])) - L, 1)
-            elif nd.get("route") and site is not None and _man(nd["route"][0], (p["x"], p["y"])) < 1e-3 \
-                    and _man(nd["route"][-1], (nd["x"], nd["y"])) < 1e-3:    # DIE-QC-3 --region-dme: the leg's L route
-                poly = [tuple(q) for q in nd["route"]]
-                _, Ld = polyline_points(poly, [])
-                nrep = max(0, int(math.ceil(Ld / rep_um)) - 1)
-                pts, _ = polyline_points(poly, [(j + 1) / (nrep + 1) for j in range(nrep)])
-                nd["detour"] = [[round(a, 3), round(b, 3)] for a, b in poly]
-                nd["detour_um"] = round(Ld - L, 1)
-            elif site is not None and L > 2 * rep_um and leg_blocked_run(site, (p["x"], p["y"]), (nd["x"], nd["y"])) > rep_um \
-                    and straight_leg_span(site, p, nd, nrep) > DETOUR_SPAN_X * rep_um:
-                poly = legal_detour(site, (p["x"], p["y"]), (nd["x"], nd["y"]))
-                if poly is not None:       # slid-root fix: repeaters evenly along the legal detour path
-                    _, Ld = polyline_points(poly, [])
-                    nrep = max(0, int(math.ceil(Ld / rep_um)) - 1)
-                    pts, _ = polyline_points(poly, [(j + 1) / (nrep + 1) for j in range(nrep)])
-                    nd["detour"] = [[round(a, 3), round(b, 3)] for a, b in poly]
-                    nd["detour_um"] = round(Ld - L, 1)
-            if even and (nrep + 1) % 2 and not nd.get("snake"):
-                nrep += 1
-                if poly is not None:
-                    pts, _ = polyline_points(poly, [(j + 1) / (nrep + 1) for j in range(nrep)])
-            if even and nd.get("snake") and (nrep + 1) % 2:
-                raise ValueError(f"inv2: snake leg of node {i} has an odd stage count")
+            L, nrep, poly, pts, fix_pts, _ = _leg_layout(i, nd, p, site, rep_um, even)
             src = f"{net(nd['parent'])}"
             prev_inst = node_buf[nd["parent"]]
             on_leg = REP_ON_LEG and poly is not None and not nd.get("snake")
@@ -2119,7 +2618,9 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
                 x = p["x"] + (nd["x"] - p["x"]) * f
                 y = p["y"] + (nd["y"] - p["y"]) * f
                 inst = f"r{i}_{j}"
-                if poly is not None:
+                if fix_pts is not None:
+                    x, y = fix_pts[j]
+                elif poly is not None:
                     x, y = pts[j]
                     if not site.legal((x, y)):
                         q = poly_slide(site, poly, f, arc) if on_leg else None
@@ -2139,7 +2640,8 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
                 prev_inst = inst
                 src = o
                 if REP_OFF_LEG_MAX_UM is not None:
-                    leg = poly if poly is not None else [(p["x"], p["y"]), (nd["x"], nd["y"])]
+                    leg = (nd["detour"] if fix_pts is not None and nd.get("detour") else
+                           poly if poly is not None else [(p["x"], p["y"]), (nd["x"], nd["y"])])
                     d = off_leg_um((x, y), leg)
                     if d > REP_OFF_LEG_MAX_UM:
                         off_leg.append((round(d, 1), inst, nd.get("dme")))
@@ -2205,6 +2707,43 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
     v += [c for c in cells if not c.lstrip().startswith("assign")]
     v += [c for c in cells if c.lstrip().startswith("assign")]
     v.append("endmodule")
+    if DME_ACTUAL_MAX_UM is not None:
+        # FEED/reach-pad legs have no DME physical_leg yet. Retain their actual
+        # emitted pre-pack costs too; treating them as zero packing delta hides
+        # the clock cost of native-home motion from the model ledger.
+        before_xy = {name:(x,y) for name,x,y in place}
+        before_cost = {}
+        for i,nd in nodes.items():
+            if nd.get("parent") is None:
+                continue
+            chain = [node_buf[i]]
+            target = node_buf[nd["parent"]]
+            while chain[-1] != target:
+                chain.append(parent_of[chain[-1]])
+            before_cost[i] = chain_ps([before_xy[c] for c in reversed(chain)])
+        place = physical_pack(site,place)
+        xy = {name:(x,y) for name,x,y in place}
+        for i,nd in nodes.items():
+            nd["x"],nd["y"] = xy[node_buf[i]]
+        for i,nd in nodes.items():
+            if nd.get("parent") is None:
+                continue
+            old = nd.get("physical_leg")
+            chain = [node_buf[i]]
+            target = node_buf[nd["parent"]]
+            while chain[-1] != target:
+                chain.append(parent_of[chain[-1]])
+            pts = tuple(xy[c] for c in reversed(chain))
+            if max(_man(a,b) for a,b in zip(pts,pts[1:])) > DME_ACTUAL_MAX_UM+1e-6:
+                raise ValueError("body home allocation broke physical clock reach; re-plan before build")
+            nd["physical_leg"] = dict(chain=pts,stages=len(pts)-1,delay_ps=chain_ps(pts),
+                                      wire_um=sum(_man(a,b) for a,b in zip(pts,pts[1:])),
+                                      repairs=old.get("repairs",()) if old else (),
+                                      packing_delay_delta_ps=chain_ps(pts)-before_cost[i],
+                                      prepack_delay_ps=before_cost[i])
+            nd["detour"] = [list(q) for q in pts]
+            pa = nodes[nd["parent"]]
+            nd["detour_um"] = round(nd["physical_leg"]["wire_um"]-_man((pa["x"],pa["y"]),(nd["x"],nd["y"])),1)
     return "\n".join(v) + "\n", place, tap_ports, node_buf, parent_of
 
 
@@ -2317,7 +2856,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
     if slice_spine:         # QC-SLICECLK-3 opt-in: spine-column region trees + shared top spine, no slide along a split axis
         if not regions:
             raise ValueError("--slice-spine needs --region-trees")
-        site = SiteMap(P)
+        site = clock_site(P)
         nodes, spine_info = build_slice_spine_tree(P, taps, regions, leaf_um, site, spine_top_leaf_um,
                                                     json.loads(Path(slice_rows).read_text()) if slice_rows else None,
                                                     region_dme=region_dme,
@@ -2363,7 +2902,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         nodes = (build_spine_fishbone(P, taps, **(tree_opts or {})) if tree_form == "spine_fishbone" else
                  build_htree(P, taps, leaf_um, full_depth, regions))
     if site_slide and not slice_spine:          # opt-in: slide each buffer back along its OWN incoming leg (equal length by construction)
-        site = SiteMap(P)
+        site = clock_site(P)
         for nd in nodes.values():
             nd["req_xy"] = [nd["x"], nd["y"]]
         for nd in nodes.values():
@@ -2386,7 +2925,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 if q is None:
                     slid_fallback += 1
                     q = site.nearest(tuple(nd["req_xy"]))
-            nd["x"], nd["y"] = round(q[0], 3), round(q[1], 3)
+            nd["x"], nd["y"] = round_legal(site,q) if DME_ACTUAL_MAX_UM is not None else (round(q[0],3),round(q[1],3))
         if tree_form == "link_htree" and region_dme_only:   # DIE-QC-4 opt-in: H-tree regions balanced, listed regions DME
             balanced = balance_legalize(nodes, site, skip_regions=set(region_dme_only))
             balanced["region_dme"] = attach_region_dme(nodes, site, taps, regions,
@@ -2411,7 +2950,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         elif tree_form == "link_htree":
             balanced = balance_legalize(nodes, site)
     elif site_legal and not slice_spine:          # opt-in: every buffer/repeater on a legal channel site; a one-entry leaf drives AT its entry
-        site = SiteMap(P)
+        site = clock_site(P)
         for nd in nodes.values():
             nd["req_xy"] = [nd["x"], nd["y"]]
             if tree_form == "link_htree" and (nd.get("rib") is not None or nd.get("region_root") is not None):
@@ -2420,7 +2959,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 q = nd["taps"][0][2:4]
             else:
                 q = site.nearest((nd["x"], nd["y"]))
-            nd["x"], nd["y"] = round(q[0], 3), round(q[1], 3)
+            nd["x"], nd["y"] = round_legal(site,q) if DME_ACTUAL_MAX_UM is not None else (round(q[0],3),round(q[1],3))
         if tree_form == "link_htree":
             balanced = balance_legalize(nodes, site)
     # Optional explicit plan bays share the existing tap-pad JSON; ordinary
@@ -2533,10 +3072,29 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         if det:
             meta["site_legal"]["detoured_legs"] = len(det)
             meta["site_legal"]["detour_added_um"] = round(sum(det.values()), 1)
+        rf = {i: n["reach_fix"] for i, n in nodes.items() if n.get("reach_fix")}
+        if rf:                  # CLK-TOOL-4 --rep-reach-max: priced record of every re-placed leg (planner/CA inputs)
+            meta["reach_fix"] = dict(
+                reach_um=REP_REACH_MAX_UM, legs=len(rf), on_path=sum(v["kind"] == "on_path" for v in rf.values()),
+                reach_detour=sum(v["kind"] == "reach_detour" for v in rf.values()),
+                feed_legs=sum(1 for i in rf if nodes[i].get("feed")),
+                added_stages=sum(v["added_stages"] for v in rf.values()),
+                added_wire_um=round(sum(v["added_wire_um"] for v in rf.values()), 3),
+                worst_span_before_um=max(v["span_before_um"] for v in rf.values()),
+                worst_span_after_um=max(v["span_after_um"] for v in rf.values()),
+                note="stages/wire added after the plan balance: re-run CA/related-pair STA on this tree (no plan "
+                     "arrival in this tree.json includes them)",
+                balance=next((n["reach_balance"] for n in nodes.values() if n.get("reach_balance")), None))
     tree = dict(meta=meta, nodes={i: {k: v for k, v in n.items() if k != "taps"} | dict(ntaps=len(n["taps"]))
                                   for i, n in nodes.items()},
                 taps=[dict(port=tp, part=part, tap=port, xy=[x, y], node=i) for tp, x, y, part, port, i in tap_ports],
                 node_buf=node_buf, parent_of=parent_of, sites={inst: [round(x, 3), round(y, 3)] for inst, x, y in place})
+    if DME_ACTUAL_MAX_UM is not None:
+        from clock_reach import freeze_sites
+        meta["physical_dme"] = freeze_sites(tree,DME_ACTUAL_MAX_UM)
+        meta["physical_dme"]["packing_cost_delta_max_ps"] = max(
+            (abs(n["physical_leg"].get("packing_delay_delta_ps",0.)) for n in nodes.values()
+             if n.get("physical_leg")), default=0.)
     if cell_paths or any(int(v) > 0 for v in (tap_pad or {}).values()):
         # DIE-S81-15 --cell-paths (opt-in): the same physical paths without pads, so every leg repeater is a tree-path
         # node in trial_tap_arrivals (start-tree retime candidates at the EXISTING repeaters; netlist unchanged).
@@ -4290,6 +4848,14 @@ def main(argv=None):
                    help="top-spine 1-D bisection leaf (um): nominal top imbalance <= half of it")
     k.add_argument("--slice-rows", help="with --slice-spine: qc_slice_clock_rows/1 reservation (INFRA-FIRST-QC-R35): "
                    "column x and top spine row come from the plan reservation")
+    k.add_argument("--rep-reach-max", type=float, default=None, metavar="UM",
+                   help="CLK-TOOL-4 opt-in: a leg without a plan-given snake (global FEED and plain region legs) whose "
+                        "snapped repeater chain leaves a span > UM is re-placed on its own path, else on a reach "
+                        "detour, with the fewest repeaters keeping every span <= UM (inv2 parity kept); the kit FAILS "
+                        "if neither exists; nodes[].reach_fix + meta.reach_fix record added stages/wire. Default off")
+    k.add_argument("--rep-reach-no-balance", action="store_true",
+                   help="with --rep-reach-max: do NOT pad the other branches for the added reach-fix delay "
+                        "(geometry diagnosis only; the default balances so relative arrivals stay as built)")
     k.add_argument("--rep-actual-max", type=float, default=None, metavar="UM",
                    help="opt-in: reject actual cell-to-cell and final-tap Manhattan hops over UM after legal snapping; "
                         "write actual_reach.json, default off; re-run clock_reach.py after any later clock overlay")
@@ -4339,6 +4905,9 @@ def main(argv=None):
                    help="DIE-QC-19 opt-in (with --region-dme-early): comma list of regions that use early mode 'merge' "
                         "(core sink delay = declared early, so the region tree is rooted at the core entry and the glue "
                         "joins there); other regions keep --region-dme-early-mode. Default: none")
+    k.add_argument("--region-dme-actual-max", type=float, default=None, metavar="UM",
+                   help="opt-in coherent physical DME legs: price and emit one snapped reachable repeater chain; "
+                        "geometry-derived paired detours before merge balancing, default unchanged")
     k.add_argument("--region-dme-snake", default=None, metavar="REGIONS",
                    help="DIE-QC-9 opt-in (with --region-dme delay, link_htree; COORD 10-28: standard zero-skew DME wire "
                         "elongation, plan-computed, part of the tree, not a residual ECO): comma list of DME regions "
@@ -4404,6 +4973,10 @@ def main(argv=None):
     e.add_argument("--prefix", default="", help="instance prefix in the routed design (e.g. ck_)")
     e.add_argument("--tap-slew", action="store_true")
     a = ap.parse_args(argv)
+    global DME_ACTUAL_MAX_UM
+    DME_ACTUAL_MAX_UM = getattr(a, "region_dme_actual_max", None)
+    if DME_ACTUAL_MAX_UM is not None and (not math.isfinite(DME_ACTUAL_MAX_UM) or DME_ACTUAL_MAX_UM <= 0):
+        raise ValueError("--region-dme-actual-max needs finite positive reach")
     global DME_WORKERS
     DME_WORKERS = max(1, int(getattr(a, "region_dme_workers", 1) or 1))
     if getattr(a, "region_dme_stage_cal", None):
@@ -4413,9 +4986,14 @@ def main(argv=None):
         if not getattr(a, "region_dme_snake", None):
             raise SystemExit("--region-dme-snake-cap needs --region-dme-snake")
         DME_SNAKE_CAP_UM = float(a.region_dme_snake_cap)
-    global REP_ON_LEG, REP_OFF_LEG_MAX_UM
+    global REP_ON_LEG, REP_OFF_LEG_MAX_UM, REP_REACH_MAX_UM
     REP_ON_LEG = bool(getattr(a, "rep_on_leg", False))
     REP_OFF_LEG_MAX_UM = getattr(a, "rep_off_leg_max", None)
+    REP_REACH_MAX_UM = getattr(a, "rep_reach_max", None)
+    global REP_REACH_BALANCE
+    REP_REACH_BALANCE = not getattr(a, "rep_reach_no_balance", False)
+    if REP_REACH_MAX_UM is not None and not (math.isfinite(REP_REACH_MAX_UM) and REP_REACH_MAX_UM > 0):
+        raise SystemExit("--rep-reach-max must be finite and positive")
     if a.cmd == "readout":
         print("\n".join(clock_edge_readout(Path(a.ctree_v).read_text(), a.path, a.period, a.cells, a.tap_slew,
                                            a.prefix)))

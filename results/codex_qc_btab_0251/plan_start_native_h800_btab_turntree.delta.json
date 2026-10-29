@@ -1,0 +1,142 @@
+{
+ "label": "UNADOPTED candidate; compile/placement/tree required",
+ "changed_types": 3,
+ "changed_core_instances": 12,
+ "rows": [
+  {
+   "type": "sle_su_c",
+   "core": "u_suvm_u_vm8q_u_bt",
+   "origin_um": [
+    665.28,
+    380.16
+   ],
+   "old_outline_um": [
+    354.24,
+    259.2
+   ],
+   "new_outline_um": [
+    293.76,
+    155.52
+   ],
+   "clock": {
+    "old": {
+     "name": "u_suvm_u_vm8q_u_bt.ck",
+     "kind": "core",
+     "xy": [
+      842.424,
+      380.214
+     ],
+     "orient": "R0",
+     "insertion_ps": 352.8,
+     "insertion_tol_ps": 40,
+     "budget_owner": "CORELAT-SQ-1 EARLY TAP (re-tap): parent_budget pin_register_mean physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab/insertion.json (routed SPEF ref view xbtab_86288faea; VIEW NOT FINAL: bta",
+     "insertion_ff_ps": 295.2
+    },
+    "new": {
+     "name": "u_suvm_u_vm8q_u_bt.ck",
+     "kind": "core",
+     "xy": [
+      833.196,
+      441.18
+     ],
+     "orient": "R0",
+     "insertion_ps": 250,
+     "insertion_tol_ps": 40,
+     "budget_owner": "BTAB compact frozen planned tree CANDIDATE; routed related-pair TT/FF actual view pending",
+     "insertion_ff_ps": 202.5
+    }
+   }
+  },
+  {
+   "type": "slw_su_c__cl92142dac",
+   "core": "u_suvm_u_vm8q_u_bt",
+   "origin_um": [
+    665.28,
+    380.16
+   ],
+   "old_outline_um": [
+    354.24,
+    259.2
+   ],
+   "new_outline_um": [
+    293.76,
+    155.52
+   ],
+   "clock": {
+    "old": {
+     "name": "u_suvm_u_vm8q_u_bt.ck",
+     "kind": "core",
+     "xy": [
+      842.424,
+      380.214
+     ],
+     "orient": "R0",
+     "insertion_ps": 352.8,
+     "insertion_tol_ps": 40,
+     "budget_owner": "CORELAT-SQ-1 EARLY TAP (re-tap): parent_budget pin_register_mean physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab/insertion.json (routed SPEF ref view xbtab_86288faea; VIEW NOT FINAL: bta",
+     "insertion_ff_ps": 295.2
+    },
+    "new": {
+     "name": "u_suvm_u_vm8q_u_bt.ck",
+     "kind": "core",
+     "xy": [
+      833.196,
+      441.18
+     ],
+     "orient": "R0",
+     "insertion_ps": 250,
+     "insertion_tol_ps": 40,
+     "budget_owner": "BTAB compact frozen planned tree CANDIDATE; routed related-pair TT/FF actual view pending",
+     "insertion_ff_ps": 202.5
+    }
+   }
+  },
+  {
+   "type": "slw_su_c__cl19bb38ef",
+   "core": "u_suvm_u_vm8q_u_bt",
+   "origin_um": [
+    665.28,
+    380.16
+   ],
+   "old_outline_um": [
+    354.24,
+    259.2
+   ],
+   "new_outline_um": [
+    293.76,
+    155.52
+   ],
+   "clock": {
+    "old": {
+     "name": "u_suvm_u_vm8q_u_bt.ck",
+     "kind": "core",
+     "xy": [
+      842.424,
+      380.214
+     ],
+     "orient": "R0",
+     "insertion_ps": 352.8,
+     "insertion_tol_ps": 40,
+     "budget_owner": "CORELAT-SQ-1 EARLY TAP (re-tap): parent_budget pin_register_mean physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab/insertion.json (routed SPEF ref view xbtab_86288faea; VIEW NOT FINAL: bta",
+     "insertion_ff_ps": 295.2
+    },
+    "new": {
+     "name": "u_suvm_u_vm8q_u_bt.ck",
+     "kind": "core",
+     "xy": [
+      833.196,
+      441.18
+     ],
+     "orient": "R0",
+     "insertion_ps": 250,
+     "insertion_tol_ps": 40,
+     "budget_owner": "BTAB compact frozen planned tree CANDIDATE; routed related-pair TT/FF actual view pending",
+     "insertion_ff_ps": 202.5
+    }
+   }
+  }
+ ],
+ "parent_partitions_unchanged": true,
+ "ports_lanes_unchanged": true,
+ "added_cycles": 0
+}

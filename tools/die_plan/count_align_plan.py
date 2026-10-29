@@ -580,8 +580,43 @@ def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="tabl
     return out
 
 
+def partition_start_origins(rows):
+    """Give each physical partition its own origin; data intervals remain unchanged.
+
+    This removes same-region START relays only as part of a full origin/K/depth reprice.
+    It does not change the measured data clock hull or invent another clock phase.
+    """
+    for r in rows:
+        if not r.get("src_part") or not r.get("dst_part"):
+            raise ValueError("partition START origins require actual src_part/dst_part on every crossing")
+        r["src"], r["dst"] = r["src_part"], r["dst_part"]
+    return rows
+
+
+def native_start_clocks(rows, ctx):
+    """Map each origin to the emitted .clk(clk) frame, never the nearest data tap.
+
+    A multi-partition region must first be split or have an explicit physical origin;
+    guessing its origin from a convenient capture tap changes counter phase.
+    """
+    owners = defaultdict(set)
+    for r in rows:
+        for side in ("src", "dst"):
+            owners[r[side]].add(r.get(side + "_part", r[side]))
+    out = {}
+    for region, parts in owners.items():
+        if len(parts) != 1:
+            raise ValueError(f"native START region {region} has {len(parts)} physical partitions; split its origins first")
+        part = next(iter(parts))
+        tap = f"t_{part}__clk"
+        if any(tap not in c["taps"] or c["taps"][tap].get("part") != part for c in ctx.values()):
+            raise ValueError(f"native START origin {region} needs measured {tap} at every corner")
+        out[region] = tap
+    return out
+
+
 def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew=(0.0, 0.0), skew_clean=False,
-                      retime_max=8, clean_by="phase", retime_up=False, prev=None, max_hop_um=None, capture_taps=None):
+                      retime_max=8, clean_by="phase", retime_up=False, prev=None, max_hop_um=None, capture_taps=None, launch_taps=None, endpoint_xy=None, root_region=None, distinct_stage_clocks=False):
     """START TREE = CLOCK TREE (START-TREE-1).  ctx = clock_contexts() ({corner: meta/taps/ocv/rng}, first = nominal).
     Nodes: every data region at its clock root (longest common tree_path prefix of its taps) and every branch node of
     the clock subtree spanning those roots (virtual 'st:<path>', a retime flop on that tree node).  Each node's start
@@ -634,10 +669,16 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     miss = [x for x in regions if not rtaps.get(x)]
     if miss:
         raise ValueError(f"--start-tree clock: {len(miss)} regions without proof taps (e.g. {miss[:5]})")
-    if capture_taps is not None:
-        for region, tap in capture_taps.items():
+    for role, overrides in (("capture", capture_taps), ("launch", launch_taps)):
+        for region, tap in (overrides or {}).items():
             if region not in rtaps or tap not in rtaps[region] or any(tap not in ctx[c]["taps"] for c in cs):
-                raise ValueError(f"START capture override {region}: {tap} is not that region's measured proof tap")
+                raise ValueError(f"START {role} override {region}: {tap} is not that region's measured proof tap")
+    for role, positions in (endpoint_xy or {}).items():
+        if role not in ("launch", "capture"):
+            raise ValueError("START endpoint coordinates require launch/capture roles")
+        for region, xy in positions.items():
+            if region not in regions or len(xy) != 2 or not all(math.isfinite(float(v)) for v in xy):
+                raise ValueError("START endpoint coordinates need finite points of real START regions")
     leg = {c: DSR.tap_leg(k["meta"], k["taps"]) for c, k in ctx.items()}
     fleg = {c: DSR.tap_leg_fall(k["meta"], k["taps"]) for c, k in ctx.items()}
     rootp = {}
@@ -680,6 +721,8 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     def launch_of(x, cap_path):
         if x.startswith("st:"):
             return vtap(cs[0], path_of[x])
+        if launch_taps is not None and x in launch_taps:
+            return launch_taps[x]
         m = c0["meta"]
 
         def key(k):
@@ -717,12 +760,15 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
         d = min(max(d, lo), hi)
         geometry = {}
         if max_hop_um is not None:
-            def xy(t):
-                q = t.get("xy_um", c0["meta"].get("node_xy_um", {}).get(t["tree_path"]))
+            def xy(t, role):
+                region = p2r.get(t.get("part"))
+                q = (endpoint_xy or {}).get(role, {}).get(region)
+                if q is None:
+                    q = t.get("xy_um", c0["meta"].get("node_xy_um", {}).get(t["tree_path"]))
                 if q is None or len(q) != 2 or not all(math.isfinite(float(v)) for v in q):
                     raise ValueError("START max-hop needs finite physical coordinates for every tap/node")
                 return q
-            aa, bb = xy(A), xy(B)
+            aa, bb = xy(A, "launch"), xy(B, "capture")
             geometry = dict(hop_um=sum(abs(float(x) - float(y)) for x, y in zip(aa, bb)))
         return dict(**geometry, d_ps=d, p_dn_ps=d - lo, p_up_ps=hi - d, fork_node=node,
                     fall_lo=flo if fall_ok else None, fall_hi=fhi if fall_ok else None,
@@ -756,6 +802,23 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
             pp = max((q for q in allp if len(q) < len(p) and p.startswith(q)), key=len)
             pairs.append((node_of[pp], prim))
         pairs += [(prim, x) for x in at.get(p, [])[1:]]
+    if root_region is not None:
+        if root_region not in regions:
+            raise ValueError(f"START root {root_region} is not a real data region")
+        # The physical clock tree is undirected for reset/START forwarding. Keep
+        # the real boot source rather than inventing a root outside the host.
+        neighbours = defaultdict(list)
+        for a, b in pairs:
+            neighbours[a].append(b)
+            neighbours[b].append(a)
+        seen, queue, pairs = {root_region}, [root_region], []
+        for a in queue:
+            for b in sorted(neighbours[a]):
+                if b not in seen:
+                    seen.add(b)
+                    queue.append(b)
+                    pairs.append((a, b))
+        root = root_region
     # contract virtual branch nodes: a branch node needs its own start stage only if some child cannot take a CLEAN
     # port straight from the branch node's parent (fewer stages, fewer retime flops; every kept port stays clean)
     par_of = {y: x for x, y in pairs}
@@ -845,6 +908,11 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
         edges.append(dict(port=f"start:{src}->{y}", src=src, dst=y, launch=lau, capture=cap, launch_part=part(lau),
                           capture_part=part(cap), retime=False, clean_ok=clean(r), **r))
     for e in edges:
+        # Climbing the same clock node from different real origins creates
+        # distinct START flops. Keep each future measured clock pin distinct.
+        for side, key in (("src", "launch"), ("dst", "capture")):
+            if distinct_stage_clocks and e[side].startswith("st:") and "@" in e[side]:
+                e[key] = vtap(cs[0], e[side][3:])
         e["lo"], e["hi"] = e["d_ps"] - e["p_dn_ps"], e["d_ps"] + e["p_up_ps"]
     start_tree_check(root, edges)
     info = dict(clean_by=clean_by, clean_by_width=sum(1 for e in edges if width_robust(e, T, ap)),
@@ -1059,6 +1127,15 @@ def add_start_tree_args(ap):
                          "tree of --sta-proof, one dedicated start port per clock-tree edge (fork tap -> child sync tap, "
                          "retime flops on tree nodes where a port would be unclean), each port checked as a crossing "
                          "with the --sta-clock-ocv model; needs --sta-proof/--sta-plan and --sta-clock-ocv table")
+    ap.add_argument("--start-root-region", help="real boot source region; forward START over the same undirected clock-tree links")
+    ap.add_argument("--start-native-clocks", action="store_true",
+                    help="use measured t_<part>__clk for both START ends, matching emitted .clk(clk); no nearest data-tap substitution")
+    ap.add_argument("--start-partition-origins", action="store_true",
+                    help="full reprice with one origin per src_part/dst_part (removes long same-region START relays); requires native clocks")
+    ap.add_argument("--start-launch-taps", metavar="JSON",
+                    help="opt-in {region: measured proof tap port} fixed physical origin launch clocks")
+    ap.add_argument("--start-endpoint-xy", metavar="JSON",
+                    help="opt-in {launch|capture: {region: [die x,y]}} actual physical START pins; clock proof tap selection is separate")
     ap.add_argument("--start-capture-taps", metavar="JSON",
                     help="opt-in {region: measured proof tap port} capture selection; actual type-uniform GLUE pin mapping is supplied by plan owner")
     ap.add_argument("--start-max-hop-um", type=float,
@@ -1079,9 +1156,17 @@ def add_start_tree_args(ap):
 
 
 def check_start_tree_args(a, err):
+    if getattr(a, "start_partition_origins", False) and not getattr(a, "start_native_clocks", False):
+        err("--start-partition-origins needs --start-native-clocks")
     if a.start_tree != "clock":
+        if getattr(a, "start_root_region", None):
+            err("--start-root-region needs --start-tree clock")
+        if getattr(a, "start_native_clocks", False):
+            err("--start-native-clocks needs --start-tree clock")
         if getattr(a, "start_prev", None):
             err("--start-prev needs --start-tree clock")
+        if getattr(a, "start_launch_taps", None) or getattr(a, "start_endpoint_xy", None):
+            err("--start-launch-taps / --start-endpoint-xy need --start-tree clock")
         if getattr(a, "start_capture_taps", None):
             err("--start-capture-taps needs --start-tree clock")
         if getattr(a, "start_max_hop_um", None) is not None:
@@ -1106,11 +1191,22 @@ def start_tree_from_args(a, rows, err):
     cs = list(dict.fromkeys(cs))
     ctx = clock_contexts(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_clock_ocv, a.sta_clock_droop,
                          a.sta_droop_regions, a.sta_core_latency_ff, getattr(a, "sta_clock_cell", "auto"))
+    native = native_start_clocks(rows, ctx) if getattr(a, "start_native_clocks", False) else None
+    captures = json.load(open(a.start_capture_taps)) if getattr(a, "start_capture_taps", None) else None
+    launches = json.load(open(a.start_launch_taps)) if getattr(a, "start_launch_taps", None) else None
+    if native is not None:
+        if any(t != native.get(r) for m in (captures, launches) for r, t in (m or {}).items()):
+            raise ValueError("explicit START override conflicts with emitted native clock frame")
+        captures = launches = native
     root, edges, info = clock_start_edges(rows, ctx, a.period, a.aperture, a.sync_aperture, a.start_skew,
                                           a.start_skew_clean, a.start_retime_max, a.start_clean,
                                           getattr(a, "start_retime_up", False), start_prev_doc(a),
                                           getattr(a, "start_max_hop_um", None),
-                                          json.load(open(a.start_capture_taps)) if getattr(a, "start_capture_taps", None) else None)
+                                          captures, launches,
+                                          json.load(open(a.start_endpoint_xy)) if getattr(a, "start_endpoint_xy", None) else None,
+                                          getattr(a, "start_root_region", None), bool(native))
+    if native is not None:
+        info["native_origin_clocks"] = native
     return edges, root, info
 
 
@@ -1189,6 +1285,8 @@ def main(argv=None):
     a = ap.parse_args(argv)
     check_start_tree_args(a, ap.error)
     rows = load_rows(a.ocv_json, a.corner, a.scale)
+    if a.start_partition_origins:
+        partition_start_origins(rows)
     sta_info = None
     if a.sta_proof:
         if not a.sta_plan:

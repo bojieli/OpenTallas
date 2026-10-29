@@ -127,3 +127,16 @@ def test_explicit_slice_interior_clock_exact_rectangle():
         G.planned_pin_geometry(dict(q,name="data"),{},259.2,43.2)
     with pytest.raises(SystemExit,match="full-sized"):
         G.planned_pin_geometry(q,{"clk":("M5",.024,.084,129.6,21.558,129.624,21.642)},259.2,43.2,interior_clock=contract)
+
+
+def test_natural_core_publishes_latency_contract(tmp_path):
+    """A natural core must retain the FF frame used by its hold repair."""
+    r = subprocess.run([sys.executable, str(GEN), "--module", "ot_s81_cfg7_seq_bfp",
+                        "--out", str(tmp_path), "--trial"], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr[-2000:]
+    kit = Path(json.loads(r.stdout.strip().splitlines()[-1])["kit"])
+    sys.path.insert(0, str(G.TOOL))
+    import signoff
+    cc = signoff.hard_core_latency_contract({"kit": str(kit)})
+    assert cc is not None and cc["kind"] == "hard_core_latency"
+    assert json.loads((kit / "sdc_lint.json").read_text())["insertion_ff_ps"] == 202.5
