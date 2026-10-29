@@ -1443,8 +1443,26 @@ def retry_unversioned(st):
 
 def canary_wave_gate(row):
     import canary_gate
-    return canary_gate.assess(row, os.environ.get("AP_CANARY_ROOT", "/srv/opentallas-scratch2/claude/flow-canary/runs"),
-                              HOME / "OpenTallas", sh)
+    root = os.environ.get("AP_CANARY_ROOT", "/srv/opentallas-scratch2/claude/flow-canary/runs")
+    repo = HOME / "OpenTallas"
+    result = canary_gate.assess(row, root, repo, sh)
+    # The wave gate precedes resolve_provenance (which normally fetches the
+    # queued branch). A new published kit source may therefore be absent here.
+    # Recover the exact object, then run the SAME gate; never turn an error or
+    # measured regression into an advisory result.
+    if not result[0] and result[1].startswith("source integrity error:"):
+        src = row.get("src", "")
+        if "@" in src:
+            branch, sha = src.rsplit("@", 1)
+            if branch and not branch.startswith("-") and re.fullmatch(r"[0-9a-fA-F]{7,40}", sha):
+                cmd = ["git", "-C", str(repo), "rev-parse", "-q", "--verify", sha + "^{commit}"]
+                rc, obj, _ = sh(cmd, timeout=60)
+                if rc or not obj.strip():
+                    fetched, _, _ = sh(["git", "-C", str(repo), "fetch", "-q", "origin", branch], timeout=300)
+                    rc, obj, _ = sh(cmd, timeout=60)
+                    if not fetched and not rc and obj.strip():
+                        return canary_gate.assess(row, root, repo, sh)
+    return result
 
 
 def withdraw_unqueued(st, rows):
