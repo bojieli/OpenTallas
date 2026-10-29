@@ -98,10 +98,14 @@ module ot_hidx_score_hcol #(
                 always @(posedge ck) begin csi_p <= cs[HL]; cfi_p <= cf[HL]; end
             end
             if (H == 0) begin : g_seed
-                wire [32:0] seed_d;
-                ot_hdc_delay #(.W(33), .D(FPL)) u_sd (.clk(ck), .rst_n(1'b1),
-                    .d({tf, (tm[14:0] == 15'd0) ? 32'd0 : {tm, 16'd0}}), .q(seed_d));
-                always @(posedge ck) begin cs_o <= seed_d[31:0]; cf_o <= seed_d[32]; end
+                // Seed low half is 0 by construction ({tm, 16'd0} or 0): carry only the 17 live bits down the
+                // unreset line and load cs_o[15:0] with its defined 0 directly (HBM-CORES-KITS-21: the old 33-b line
+                // made cs_o[15:0] -> head-1 csi_p[15:0] a 9-edge X power-up chain, longer than the kit LEC reset
+                // window; synthesis already folds these bits to 0, so gate logic is unchanged).
+                wire [16:0] seed_d;
+                ot_hdc_delay #(.W(17), .D(FPL)) u_sd (.clk(ck), .rst_n(1'b1),
+                    .d({tf, (tm[14:0] == 15'd0) ? 16'd0 : tm}), .q(seed_d));
+                always @(posedge ck) begin cs_o <= {seed_d[15:0], 16'd0}; cf_o <= seed_d[16]; end
             end else begin : g_sum
                 wire [1:0] err; wire vo_unused; wire [31:0] sum; wire pf;
                 ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(ck), .rst_n(rs), .valid_in(1'b1),

@@ -1,0 +1,9 @@
+A1_bmc30: PASS
+A1_induct: PASS
+A2_arbinit_from_edge9: PASS
+N1b_arbinit_from_edge8: FAIL (rc=1)
+N1_arbinit_from1: FAIL (rc=1)
+N2_mutant: FAIL (rc=1)
+B_low16_zero_from2: PASS
+DONE
+# 2026-10-29T22:44:49Z intel1 docker openroad/orfs:asap7lock --memory=16g; RTL = branch rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv g_seed vs origin/main f0972bc4b; full ot_hidx_score_hcol HALF 0/1 elaborates (yosys hierarchy+proc rc=0)
