@@ -31,7 +31,8 @@
     }
   },
   "pinreg_mean_ps": 228.04,
-  "contract_bound_ps": 202.5,
-  "contract_deviation_ps": 25.54,
-  "next": "Do not blind-pad: worst IO needs5HB4 beyond canonical4 cap; current source/clock placement successor required. CUTS11 addresses TT separately."
+  "next": "Do not blind-pad: worst IO needs5HB4 beyond canonical4 cap; current source/clock placement successor required. CUTS11 addresses TT separately.",
+  "design_target_bound_ps": 202.5,
+  "design_target_deviation_ps": 25.54,
+  "mean_band_classification": "METH12.3a design target diagnostic only; not automatic pass/fail gate. Actual TT/FF closure remains required."
 }
