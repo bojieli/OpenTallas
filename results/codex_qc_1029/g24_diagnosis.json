@@ -1,0 +1,159 @@
+{
+  "artifact": "/srv/opentallas-scratch/claude/wt/codex-qc-1029/results/codex_qc_1029/g24_input.json",
+  "artifact_sha256": "8956cf9ae76829b10d256d2824f1beca4b92684fafdb0b95ca2aa794257d02cd",
+  "plan": "/srv/opentallas-scratch2/claude/die-qc23-1028/plan/ev_qc23pg.json",
+  "plan_sha256": "ad01d656b2b552caa0df01e24fb7b3db32baaac2563e1f69b5172e1d3880f409",
+  "summary": {
+    "intra": {
+      "tt_setup_ps": 110.24,
+      "ff_hold_ps": -488.97,
+      "verdict": "FAIL",
+      "ff_hold_kit_contract_ps": 46.68,
+      "kit_contract_window_ps": 180.0,
+      "kit_contract_window_needed_ps": 133.32,
+      "kit_contract_verdict": "PASS",
+      "real_view": {
+        "pairs": "3360/209284",
+        "tt_setup_ps": 215.2,
+        "ff_hold_ps": -79.58
+      }
+    },
+    "seam": {
+      "tt_setup_ps": 240.84,
+      "ff_hold_ps": -368.34,
+      "verdict": "FAIL",
+      "ff_hold_kit_contract_ps": 117.43,
+      "kit_contract_window_ps": 180.0,
+      "kit_contract_window_needed_ps": 62.57,
+      "kit_contract_verdict": "PASS",
+      "real_view": {
+        "pairs": "0/7012",
+        "tt_setup_ps": null,
+        "ff_hold_ps": null
+      }
+    },
+    "core_insertion": {
+      "mode": "view",
+      "early_core_taps": 864,
+      "source": {
+        "TT": {
+          "view": 84,
+          "declared": 0,
+          "missing": 780
+        },
+        "FF": {
+          "view": 84,
+          "declared": 0,
+          "missing": 780
+        }
+      },
+      "verdict": "FAIL",
+      "note": "FAIL = early core taps without a signed core view (fail closed); DECLARED = planning estimate on plan per-tap insertion, not a gate pass"
+    },
+    "landed": {
+      "form": "count_aligned",
+      "bind": "/srv/opentallas-scratch2/claude/die-qc24-1028/g24/bind_clock.json",
+      "worst_margin_lo_ps": {
+        "TT": 105.6,
+        "FF": 105.1
+      },
+      "worst_margin_hi_ps": {
+        "TT": 336.7,
+        "FF": 341.0
+      },
+      "half_period_INFO": {
+        "tt_setup_margin_ps": -932.36,
+        "ff_hold_margin_ps": -1047.5,
+        "verdict": "FAIL"
+      },
+      "ss_INFO": {
+        "SS": "FAIL"
+      },
+      "clock_variation": {
+        "TT": "table",
+        "FF": "table"
+      },
+      "verdict": "PASS"
+    },
+    "status": "UNCHECKED (NUMBER-CHECK pending)",
+    "label": "real-view (5 core views, 0 kits) + declared-budget rest",
+    "data_droop": {
+      "mode": "class",
+      "tt_setup_penalty_max_ps": {
+        "intra": 38.3,
+        "intra_cross_region": null,
+        "seam": 8.81,
+        "landed": 32.57,
+        "seam_nearest_INFO": 8.81,
+        "landed_nearest_INFO": 25.22
+      }
+    }
+  },
+  "landed_single_cycle_INFO": {
+    "TT": {
+      "worst_setup_slack_ps": -806.86,
+      "setup_neg_pairs": 76992,
+      "worst_setup": {
+        "launch": "t_sl_E2_st_a__clk_t4",
+        "capture": "t_sl_E2_fw__clk_t2",
+        "where": "sl_E2_st_a->sl_E2_fw",
+        "clock_damage_ps": 1349.03,
+        "cppr_ps": 58.03
+      },
+      "worst_hold_slack_ps": -1684.37,
+      "hold_neg_pairs": 263804,
+      "plan_landing": {
+        "window_ps": 416.67,
+        "setup_margin_ps": -932.36,
+        "hold_margin_ps": -1265.41,
+        "damage_max_ps": 1682.07,
+        "verdict": "FAIL",
+        "note": "plan-defined landed/forwarded hop: region-to-region clock damage vs landing window; single-cycle slacks above are INFO for landed pairs"
+      }
+    },
+    "FF": {
+      "worst_setup_slack_ps": -575.95,
+      "setup_neg_pairs": 21247,
+      "worst_setup": {
+        "launch": "t_sl_E2_st_a__clk_t4",
+        "capture": "t_sl_E2_fw__clk_t2",
+        "where": "sl_E2_st_a->sl_E2_fw",
+        "clock_damage_ps": 1176.23,
+        "cppr_ps": 35.44
+      },
+      "worst_hold_slack_ps": -1468.58,
+      "hold_neg_pairs": 263790,
+      "plan_landing": {
+        "window_ps": 416.67,
+        "setup_margin_ps": -759.56,
+        "hold_margin_ps": -1047.5,
+        "damage_max_ps": 1464.17,
+        "verdict": "FAIL",
+        "note": "plan-defined landed/forwarded hop: region-to-region clock damage vs landing window; single-cycle slacks above are INFO for landed pairs"
+      }
+    }
+  },
+  "actual_open_items": [
+    {
+      "item": "early core taps without matching real views",
+      "source": {
+        "TT": {
+          "view": 84,
+          "declared": 0,
+          "missing": 780
+        },
+        "FF": {
+          "view": 84,
+          "declared": 0,
+          "missing": 780
+        }
+      },
+      "owner": "QC-A0-KITS / QC die owner"
+    },
+    {
+      "item": "intra FF hold on real-view endpoints",
+      "ps": -79.58,
+      "owner": "QC die owner; signed-view replacement then legal data hold repair"
+    }
+  ]
+}
