@@ -63,7 +63,7 @@ def _forwarded_multistart(wrong_selected_origin=False):
     v.region = {"p": "r1"}
     v._strap = {"types": {"B": {"origin": {"tree_buses": ["a", "b"]}}},
                 "instances": {"p": {"values": {"strap_ca_tsel": 1}}}}
-    cells = [SimpleNamespace(path=f"p.u_cland_origin_t{i}", module="ot_dp_landing_origin_s",
+    cells = [SimpleNamespace(path=f"p.u_cland_origin_t{i}", module="ot_dp_landing_origin_s", kind="opaque",
                              ports={"clk": [1], "rst_raw_n": [2], "start_d": [4+i], "start": [6+i]})
              for i in range(2)]
     cells.append(SimpleNamespace(path="p.u_cland_fstart_x", module="ot_dp_landing_relay",
