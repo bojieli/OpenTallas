@@ -1,0 +1,67 @@
+{
+ "schema": "hbm.dead_loop_index_source_prep.v1",
+ "verdict": "PASS",
+ "module_cells": [
+  {
+   "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hbm_idx_score_quarter_static_h",
+   "cell": "$auto$proc_dlatch.cc:543:proc_dlatch$66815",
+   "type": "$adlatch",
+   "width": 2,
+   "aliases": [
+    "$fordecl_block$9.j"
+   ],
+   "loads": 0,
+   "module_ports": 0,
+   "keep": false,
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv:73.2-79.5"
+  },
+  {
+   "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hbm_idx_score_quarter_static_h",
+   "cell": "$auto$proc_dlatch.cc:543:proc_dlatch$66821",
+   "type": "$adlatch",
+   "width": 29,
+   "aliases": [
+    "$fordecl_block$9.j"
+   ],
+   "loads": 0,
+   "module_ports": 0,
+   "keep": false,
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv:73.2-79.5"
+  },
+  {
+   "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hbm_idx_score_quarter_static_h",
+   "cell": "$auto$proc_dlatch.cc:545:proc_dlatch$66818",
+   "type": "$adlatch",
+   "width": 1,
+   "aliases": [
+    "$fordecl_block$9.j"
+   ],
+   "loads": 0,
+   "module_ports": 0,
+   "keep": false,
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv:73.2-79.5"
+  }
+ ],
+ "deleted_flat_cells": [
+  "hb_idx__s_NE.scorer.$auto$proc_dlatch.cc:543:proc_dlatch$66815",
+  "hb_idx__s_NE.scorer.$auto$proc_dlatch.cc:543:proc_dlatch$66821",
+  "hb_idx__s_NE.scorer.$auto$proc_dlatch.cc:545:proc_dlatch$66818",
+  "hb_idx__s_NW.scorer.$auto$proc_dlatch.cc:543:proc_dlatch$66815",
+  "hb_idx__s_NW.scorer.$auto$proc_dlatch.cc:543:proc_dlatch$66821",
+  "hb_idx__s_NW.scorer.$auto$proc_dlatch.cc:545:proc_dlatch$66818",
+  "hb_idx__s_SE.scorer.$auto$proc_dlatch.cc:543:proc_dlatch$66815",
+  "hb_idx__s_SE.scorer.$auto$proc_dlatch.cc:543:proc_dlatch$66821",
+  "hb_idx__s_SE.scorer.$auto$proc_dlatch.cc:545:proc_dlatch$66818",
+  "hb_idx__s_SW.scorer.$auto$proc_dlatch.cc:543:proc_dlatch$66815",
+  "hb_idx__s_SW.scorer.$auto$proc_dlatch.cc:543:proc_dlatch$66821",
+  "hb_idx__s_SW.scorer.$auto$proc_dlatch.cc:545:proc_dlatch$66818"
+ ],
+ "retained_cells": 71041,
+ "every_retained_terminal_identical": true,
+ "every_module_port_checked": true,
+ "observable_q_mutant": "CAUGHT",
+ "mutant_reason": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hbm_idx_score_quarter_static_h/$auto$proc_dlatch.cc:543:proc_dlatch$66815: observable Q exports=['__mutant_observable_loop_index'] loads=[]",
+ "source": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt.json",
+ "output": "/srv/opentallas-scratch2/claude/hbm-bind-4-1029/dce/asbuilt.json",
+ "added_cycles": 0
+}

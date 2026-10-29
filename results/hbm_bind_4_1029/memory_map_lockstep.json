@@ -1,0 +1,147 @@
+{
+ "schema": "hbm.bind4.memory_map_lockstep.v1",
+ "verdict": "PASS",
+ "source": "/srv/opentallas-scratch2/claude/hbm-bind-4-1029/dce/asbuilt.json",
+ "cycles_per_module": 4000,
+ "reference": "memory_collect (array)",
+ "dut": "memory_collect+memory_map (stock Yosys)",
+ "mutant": "write ADDR bits swapped before memory_map, must be CAUGHT",
+ "modules": [
+  {
+   "module": "$paramod$32013c79d529c4284a3635ad7d93b1643f2f4216\\ot_hbm_su_static_pgslice_s",
+   "inputs": 166,
+   "outputs": 162,
+   "en_unique": 0,
+   "lockstep": {
+    "checks": 4000,
+    "known_bits": 1295190,
+    "mismatches": 0
+   },
+   "mutant_swapped_write_addr": {
+    "checks": 4000,
+    "known_bits": 1295190,
+    "mismatches": 330548
+   },
+   "verdict": "PASS"
+  },
+  {
+   "module": "$paramod$60f488de779c91801178aa20332549e1a7743946\\ot_hbm_su_static_pgslice_s",
+   "inputs": 166,
+   "outputs": 162,
+   "en_unique": 0,
+   "lockstep": {
+    "checks": 4000,
+    "known_bits": 1295190,
+    "mismatches": 0
+   },
+   "mutant_swapped_write_addr": {
+    "checks": 4000,
+    "known_bits": 1295190,
+    "mismatches": 320978
+   },
+   "verdict": "PASS"
+  },
+  {
+   "module": "$paramod$6500bf7bb1c9bf4e3f69ca2c8e44316dbdb87275\\ot_hbm_su_static_pgslice_s",
+   "inputs": 166,
+   "outputs": 162,
+   "en_unique": 0,
+   "lockstep": {
+    "checks": 4000,
+    "known_bits": 1295676,
+    "mismatches": 0
+   },
+   "mutant_swapped_write_addr": {
+    "checks": 4000,
+    "known_bits": 1295676,
+    "mismatches": 331514
+   },
+   "verdict": "PASS"
+  },
+  {
+   "module": "$paramod$6f4939bec693e875a183aa5bb90ba04a20e6b1e4\\ot_hbm_su_static_pgslice_s",
+   "inputs": 166,
+   "outputs": 162,
+   "en_unique": 0,
+   "lockstep": {
+    "checks": 4000,
+    "known_bits": 1295190,
+    "mismatches": 0
+   },
+   "mutant_swapped_write_addr": {
+    "checks": 4000,
+    "known_bits": 1295190,
+    "mismatches": 322433
+   },
+   "verdict": "PASS"
+  },
+  {
+   "module": "$paramod$9d1cb875af4144dd3dc7f5d20013d9ff8c33d014\\ot_hbm_su_static_pgslice_s",
+   "inputs": 166,
+   "outputs": 162,
+   "en_unique": 0,
+   "lockstep": {
+    "checks": 4000,
+    "known_bits": 1295352,
+    "mismatches": 0
+   },
+   "mutant_swapped_write_addr": {
+    "checks": 4000,
+    "known_bits": 1295352,
+    "mismatches": 324423
+   },
+   "verdict": "PASS"
+  },
+  {
+   "module": "$paramod$b869ae45b5d1ce06637892d71f37c822608abc61\\ot_hbm_su_static_pgslice_s",
+   "inputs": 166,
+   "outputs": 162,
+   "en_unique": 0,
+   "lockstep": {
+    "checks": 4000,
+    "known_bits": 1295352,
+    "mismatches": 0
+   },
+   "mutant_swapped_write_addr": {
+    "checks": 4000,
+    "known_bits": 1295352,
+    "mismatches": 324064
+   },
+   "verdict": "PASS"
+  },
+  {
+   "module": "$paramod$d2a283626f98fab7d53c6c3fda2ec13188ffea3c\\ot_hbm_su_static_pgslice_s",
+   "inputs": 166,
+   "outputs": 162,
+   "en_unique": 0,
+   "lockstep": {
+    "checks": 4000,
+    "known_bits": 1295028,
+    "mismatches": 0
+   },
+   "mutant_swapped_write_addr": {
+    "checks": 4000,
+    "known_bits": 1295028,
+    "mismatches": 329867
+   },
+   "verdict": "PASS"
+  },
+  {
+   "module": "$paramod$e5ebdd17011c7df7911026ed0cecfa35a12a1ddb\\ot_hbm_su_static_pgslice_s",
+   "inputs": 166,
+   "outputs": 162,
+   "en_unique": 0,
+   "lockstep": {
+    "checks": 4000,
+    "known_bits": 1295514,
+    "mismatches": 0
+   },
+   "mutant_swapped_write_addr": {
+    "checks": 4000,
+    "known_bits": 1295514,
+    "mismatches": 325081
+   },
+   "verdict": "PASS"
+  }
+ ]
+}

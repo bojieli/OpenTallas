@@ -1,0 +1,29 @@
+{
+ "schema": "hbm.exact_primitive_name_rebase.v1",
+ "matched_cells": 63067,
+ "unmatched_old_hc_banks": [
+  "hcb_NE0",
+  "hcb_NE1",
+  "hcb_NE2",
+  "hcb_NE3",
+  "hcb_NE4",
+  "hcb_NE5",
+  "hcb_NE6",
+  "hcb_NE7",
+  "hcb_NW0",
+  "hcb_NW1",
+  "hcb_NW2",
+  "hcb_NW3",
+  "hcb_NW4",
+  "hcb_NW5",
+  "hcb_NW6",
+  "hcb_NW7"
+ ],
+ "renamed_cells": 61416,
+ "checked_terminals": 6756789,
+ "bijective_nets": 2578524,
+ "cycles_added": 0,
+ "terminal_net_bijection": true,
+ "original_source": "/srv/opentallas-scratch2/claude/hbm-bind-3-1029/b1/out/asbuilt.json",
+ "new_source": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt.json"
+}

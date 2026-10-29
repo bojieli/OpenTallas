@@ -1,0 +1,55 @@
+{
+ "schema": "hbm.bind4.memory_map.v1",
+ "verdict": "PASS",
+ "passes": [
+  "memory_collect",
+  "memory_map"
+ ],
+ "source": "/srv/opentallas-scratch2/claude/hbm-bind-4-1029/dce/asbuilt.json",
+ "output": "/srv/opentallas-scratch2/claude/hbm-bind-4-1029/norm/asbuilt.json",
+ "memories": 8,
+ "memory_shape": "4x162 g_inj.slot, 1 sync write, 1 async read",
+ "removed_flat_memory_cells": [
+  "su_NE0.u_slice.$auto$proc_memwr.cc:45:proc_memwr$71875",
+  "su_NE0.u_slice.$memrd$\\g_inj.slot$ot_hbm_su_static_pgslice_s.sv:261$51259",
+  "su_NE1.u_slice.$auto$proc_memwr.cc:45:proc_memwr$71876",
+  "su_NE1.u_slice.$memrd$\\g_inj.slot$ot_hbm_su_static_pgslice_s.sv:261$48005",
+  "su_NE2.u_slice.$auto$proc_memwr.cc:45:proc_memwr$71877",
+  "su_NE2.u_slice.$memrd$\\g_inj.slot$ot_hbm_su_static_pgslice_s.sv:261$44751",
+  "su_NE3.u_slice.$auto$proc_memwr.cc:45:proc_memwr$71878",
+  "su_NE3.u_slice.$memrd$\\g_inj.slot$ot_hbm_su_static_pgslice_s.sv:261$41497",
+  "su_NW0.u_slice.$auto$proc_memwr.cc:45:proc_memwr$71879",
+  "su_NW0.u_slice.$memrd$\\g_inj.slot$ot_hbm_su_static_pgslice_s.sv:261$38243",
+  "su_NW1.u_slice.$auto$proc_memwr.cc:45:proc_memwr$71880",
+  "su_NW1.u_slice.$memrd$\\g_inj.slot$ot_hbm_su_static_pgslice_s.sv:261$34989",
+  "su_NW2.u_slice.$auto$proc_memwr.cc:45:proc_memwr$71881",
+  "su_NW2.u_slice.$memrd$\\g_inj.slot$ot_hbm_su_static_pgslice_s.sv:261$31735",
+  "su_NW3.u_slice.$auto$proc_memwr.cc:45:proc_memwr$71882",
+  "su_NW3.u_slice.$memrd$\\g_inj.slot$ot_hbm_su_static_pgslice_s.sv:261$28481"
+ ],
+ "owners": {
+  "su_NE0.u_slice": "NE_su00",
+  "su_NE1.u_slice": "NE_su10",
+  "su_NE2.u_slice": "NE_su20",
+  "su_NE3.u_slice": "NE_su30",
+  "su_NW0.u_slice": "NW_su00",
+  "su_NW1.u_slice": "NW_su10",
+  "su_NW2.u_slice": "NW_su20",
+  "su_NW3.u_slice": "NW_su30"
+ },
+ "retained_cells": 71025,
+ "retained_terminals_bijective": true,
+ "net_bijection_size": 3020220,
+ "new_cells": 152,
+ "new_cell_types": {
+  "$eq": 32,
+  "$and": 32,
+  "$mux": 56,
+  "$dff": 32
+ },
+ "map_entries_added": 152,
+ "boundary_nets_shared": 789,
+ "added_cycles": 0,
+ "ties": 0,
+ "latches": 0
+}

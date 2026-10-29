@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+python3 /srv/opentallas-scratch2/claude/wt/hbm-bind-4-1029/results/hbm_bind_4_1029/native_glue_probe.py /srv/opentallas-scratch2/claude/hbm-bind-4-1029/norm/asbuilt.json /srv/opentallas-scratch2/claude/hbm-bind-4-1029/glue/helpers > /srv/opentallas-scratch2/claude/hbm-bind-4-1029/glue.log 2>&1 || exit 1
+python3 /srv/opentallas-scratch2/claude/wt/hbm-bind-4-1029/results/hbm_bind_4_1029/glue_equiv.py /srv/opentallas-scratch2/claude/hbm-bind-4-1029/glue/helpers /srv/opentallas-scratch2/claude/hbm-bind-4-1029/glue/equiv >> /srv/opentallas-scratch2/claude/hbm-bind-4-1029/glue.log 2>&1; rc=$?; head -1 /srv/opentallas-scratch2/claude/hbm-bind-4-1029/glue.log; tail -1 /srv/opentallas-scratch2/claude/hbm-bind-4-1029/glue.log; exit $rc
