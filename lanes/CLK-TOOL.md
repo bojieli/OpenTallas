@@ -81,3 +81,6 @@ Duty compatibility215PASS18SKIP codex/clock-duty-cont-0827@6dd1e733c; native-sta
 
 ## CODEX notes 2026-10-29 14:00 PDT — resumed shared clock collection
 Resumed takeover per parent. Current explicit intel2 main fb1fc7959 already contains15598c002 (DIE-HEAD-29), fixing the09:59 local_entry duplicate-clock_port finding: raises with both stage names and has focused duplicate-port regression. No duplicate patch, new worktree, duty sweep, route or frozen plan change. Prior duty replays terminal; HBM1x fit reviewed with routed-arrival qualification; optional dme_alt experiments remain deferred; QC mesh keepout belongs die/import step5. Pair-skew negative-edge change owned parent; baseline positive-edge target fixtures override the3-argument clock-arrival proc, noted for compatibility. HCP old lane still refers to sharedFLOW helper; parent asked whether current successor exists before resuming older retained-source proof. OWNER? none.
+
+## CODEX notes 2026-10-29 14:04 PDT — explicit reset PARKED
+Duplicate local-entry finding already15598c002 onfb1fc7959; no patch/duty sweep. New HCP WIPf399cac65 codex/clock-hcp-1355: actual retained-AIG rekey joint528PASS/fullcompare355DIFF (notEQ); unit508598intel1 terminal before reset, no liveownjobs. Fullpacket handoff/codex_clock_hcp_20261029_1402.md. No newengineeringafterreset.
