@@ -1,0 +1,45 @@
+{
+  "cause": "actual native reset driver-to-first receive FF reach 483.618/469.233um",
+  "moved": [
+    {
+      "inst": "$flatten\\u_rst_r1_1.$auto$ff.cc:337:slice$491",
+      "old": [
+        17318826,
+        12462660,
+        17319906,
+        12462930
+      ],
+      "new": [
+        17318826,
+        12382740,
+        17319906,
+        12383010
+      ],
+      "delta_dbu": [
+        0,
+        -79920
+      ]
+    },
+    {
+      "inst": "$flatten\\u_rst_r3_1.$auto$ff.cc:337:slice$491",
+      "old": [
+        16701066,
+        12462660,
+        16702146,
+        12462930
+      ],
+      "new": [
+        16701066,
+        12382740,
+        16702146,
+        12383010
+      ],
+      "delta_dbu": [
+        0,
+        -79920
+      ]
+    }
+  ],
+  "added_cells": 0,
+  "added_cycles": 0
+}
