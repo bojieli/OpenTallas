@@ -56,8 +56,7 @@ body/grid/halo failures, actualreachmax349.92um, frozen-home digest matches.
 Construction cost15DME snakes/4101.8um/39buffers, all preplanned.
 
 Own TT02 geometry ot-run epyc2 unitoth-ubuntu-409313-1793262958 exit0,
-253.6s; body/render unitoth-ubuntu-462913-1793263598 (see own remote log
-if the allocator unit differs), exit0. Operational source6735cd301;
+253.6s; body/render unitoth-ubuntu-462772-1793263549 exit0. Operational source6735cd301;
 epyc2 codex-dme-actual-1029/body_late_2w2s_TT02 contains exact ctree.v,
 ctree.tcl PLRC scaffold, placement_frozen.tcl, make_tracks.tcl, tree_frozen,
 targets, image and summary. S81 owner actual same-NDR/PG TT/FF coupon
