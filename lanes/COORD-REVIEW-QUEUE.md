@@ -4402,3 +4402,6 @@ FAILED [AUTOPILOT 06baabd188ec] 2026-10-29 02:03:03 PDT AUTOPILOT -> CODEX-S81-C
   - master_slice: core_infra_impl.tcl differs from the shared tools/die_plan/core_infra.tcl
 KIT_PREFLIGHT FAIL: autopilot stopped before physical runner
 ot-run: RAN on localhost (unit oth-ubuntu-9173 | kit localhost:/srv/opentallas-scratch2/claude/codex-s81-cores-1028/kits/ot_s81_cfg7_seq_bfp_finish1029 src codex/s81-cores-1028@33dac0fdb8 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-10-29 02:04 PDT [COORD] READY [CODEX KEYBUF-NP4] codex/keybuf-np4-1029@f3c8405b9 APPROVED -> ROOT-MERGE (opt-in RTL modules + bench only, SRAM17 vs 20 full PASS 13824 checks, 3 mutants caught; no default-flow change).
+- 2026-10-29 02:04 PDT [COORD] READY [CODEX CTLX sizing] codex/geom-1028@09ccb3d869 APPROVED results-only -> ROOT-MERGE. Outline 216x233.28 = candidate; HEAD die owner may run one trial, adoption needs GEOM PASS + die gate as usual.
+- 2026-10-29 02:04 PDT [COORD] Post-limit restart: Codex owns all lanes since 23:43 (CODEX-LOG Takeover). COORD restarts NO Claude lanes (no duplicates); TOK-KV-5 one-shot SKIPPED, KV token owned by Codex (chain admitted on key-cardinal). COORD continues rulings only.
