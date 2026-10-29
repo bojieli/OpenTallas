@@ -55,3 +55,17 @@ Of the 5 DH9 kit-local generator fixes, main now has the strap [0] fix and the l
 the DFFHQN+INV status-driver and status-site fixes were not found on main (UNCHECKED beyond grep).
 So "regenerate hd_tile" from main needs the one-entry plan generator on main first (die-local tools/s81_head, Codex
 author) or a committed one-entry HEAD plan file; otherwise the gate run is again a DIAGNOSTIC copy.
+
+## 6. Step 1 launched (DIAGNOSTIC gate-shaped run, cts0114 + regspine on main 5123301db at 20:52)
+Kit intel1:/srv/opentallas-scratch2/claude/die-head-19/kits/hd_tile = copy of DH17 hd_tile_gen (synth/floorplan/place
+reused, 4_*/5_* removed) with kit-local edits = what main gen_phys emits for the approved keys (kitlocal_h19.diff):
+landing_exports.tcl from main landing_contract.export_tcl (landing_export_form=fwd_buffer); main tap_balance.tcl +
+OT_TAP_PASSTHRU=1 (tap_passthrough); OT_TAP_REPORT_ONLY=1 (reg_spine); DH14 pre_cts/cts_post workarounds removed;
+IO/tap basis = the reg_spine target 525 TT / 425.25 FF (0.81 x, gen_phys rule) instead of 450/380 (constraint.sdc,
+stage SDCs, config.mk, budget.json; kit_preflight PASS).  run_diag.sh (DH14 copy: face_guard FAIL recorded, not fatal)
+via ot-run intel1, 32 GB / 16 thr, GOAL=route, unit oth-ubuntu-2789635-1793246256, container dpkit-hd_tile-2789721.
+CHECKED so far (4_1_cts.log, hold_gate.log, 21:03): no CTS-0114; OT_CLAND_EXPORT drops orphan output655 and drives
+fclk_out_o from cland_fwd_fclk_out_o (BUFx24 at clk); OT_TAP_PASSTHRU follows ft_ck0/ft_ck1/ft_mesh of all 5 cores;
+REG_SPINE 34 taps / 276 pads; post-CTS FF structural hold gate PASS (OT_HOLD_GATE PASS FF wns -82.15, 1797 endpoints,
+vclk FF 425.25).  Core tap effective (placement RC) 568-600 TT vs 525 (WARN, same as DH17 placement-RC 313-351 pins;
+routed RC was 503-517).  At 21:04 in 5_1_grt.  NOT a sign-off run (diagnostic kit lineage, section 5).
