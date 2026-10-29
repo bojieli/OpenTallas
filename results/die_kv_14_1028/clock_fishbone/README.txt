@@ -22,3 +22,8 @@ GATE (main count_align_bind + die_sta_related, clock_variation table, spice, cpp
               intervals agree (same d), so the start-stage placement on the shorter tree needs a re-plan: OPEN.
   intra FF kit-contract hold -62.8 (KV-13 -76.5); landed class = plan-defined forwarded form (as baseline).
 Run data: intel1:/srv/opentallas-scratch2/claude/die-kv-14-1028 (kit_fb_inv_r150, out_fb_inv_r150_*, proof_*, ca_*, sta_*).
+START-TREE FIX (17:32 PDT): the 12/7 phase start-skew fails were rise-only samples (FLOW-ONEMODEL-1 fail-closed: a proof without
+measured fall loses fall-edge start samples).  tap_fall_merge.py (main, tap deltas from the duty readout, TT then FF) -> proofF_fb;
+st2.sh fall (phase, same options): 27 fall tree edges, CA TT/FF fail 0 (min 106.5/108.4), START-SKEW 0/156 TT and FF -> COUNT-ALIGN
+PASS both corners (sta_start_fall_ca_lines.txt).  retime-up / start-skew-clean on the rise proof did not help (ru 12/7, rusk 18/18).
+Gate of record for the KV clock = phase start, proofF_fb (both edges at taps; tree-node falls not in the readout, stay rise-only).
