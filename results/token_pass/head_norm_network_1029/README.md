@@ -7,3 +7,5 @@ The candidate common existing-widthPDSK512 changes a signed master parameter and
 head_native_encoding_receipt is only source encoding/decoding through bound_boot with synthetic matching cadence; it is not an actual CSR-cadence or reset/clock proof. It emitted393HOSTwords withoutBEGIN/SEAL. Bound boot matches broadcasts by(template,slice), so one GAINrow validates all8targets.
 
 The actual16XR/16ringstop/16XFIN/38hop/nativeleaf37 feedback component is separately recorded after its terminal verdict; current packet alone does not qualify numerical publication or physicalSTART.
+
+The native packet includes each exact command-to-leaf plus partial-return transport sum. Conditional bound_control spacing composes those ages with current sourcePDSK rather than incorrectly applying a command-only check. Source arithmetic check: all16current-profile groups FAIL, all16test-onlycandidate groups PASS. This is a source relative alignment check, not RTL adoption.

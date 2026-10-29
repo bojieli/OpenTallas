@@ -48,7 +48,8 @@ def convert(book,control,timing,ack_edges):
             if engine!=('VN'if sid&1 else'VS'):raise ValueError('nativecommand selects wrong tier')
             c=dict(kind=r['kind'],slice=sl,sid=sid,issue=issue,template=index,source_vo_edge=r['issue_vo_edge'])
             if r['kind']=='NORMR':
-                leaf=r['leaf'];leaves.add((sid,leaf));c.update(leaf=leaf,global_beat=5*sid+leaf,bf16=True,q=False)
+                leaf=r['leaf'];leaves.add((sid,leaf));c.update(leaf=leaf,global_beat=5*sid+leaf,bf16=True,q=False,
+                    partial_transport_edges=groups[sl]['extra_command_return_edges'][leaf])
             elif r['kind']=='XFIN_GO':go.add(sid)
             elif r['kind']=='GAIN':gain.add(sid)
             else:raise ValueError('unexpected HEAD event')

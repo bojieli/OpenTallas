@@ -1,0 +1,1228 @@
+{
+ "scope": "SOURCE_FORMULA_16SLICE_NO_RTL_ADOPTION",
+ "old_current_profile_failures": 16,
+ "test_only_candidate_passes": 16,
+ "reports": {
+  "current": {
+   "u_s_0N": {
+    "status": "FAIL_CONTROL_SPACING",
+    "leaf_edges": [
+     1138,
+     1144,
+     1126,
+     1122,
+     1112
+    ],
+    "successive_leaf_edges": [
+     6,
+     -18,
+     -4,
+     -10
+    ],
+    "current_source_pdsk": [
+     4,
+     3,
+     2,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1153,
+     1152,
+     1151,
+     1149,
+     1149
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     23,
+     26,
+     37
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_0S": {
+    "status": "FAIL_CONTROL_SPACING",
+    "leaf_edges": [
+     1245,
+     1251,
+     1235,
+     1233,
+     1221
+    ],
+    "successive_leaf_edges": [
+     6,
+     -16,
+     -2,
+     -12
+    ],
+    "current_source_pdsk": [
+     4,
+     3,
+     2,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1260,
+     1259,
+     1258,
+     1256,
+     1256
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     21,
+     22,
+     35
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_1N": {
+    "status": "FAIL_CONTROL_SPACING",
+    "leaf_edges": [
+     1161,
+     1167,
+     1152,
+     1145,
+     1139
+    ],
+    "successive_leaf_edges": [
+     6,
+     -15,
+     -7,
+     -6
+    ],
+    "current_source_pdsk": [
+     4,
+     3,
+     2,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1176,
+     1175,
+     1174,
+     1172,
+     1172
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     20,
+     26,
+     33
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_1S": {
+    "status": "FAIL_CONTROL_SPACING",
+    "leaf_edges": [
+     1274,
+     1280,
+     1260,
+     1261,
+     1246
+    ],
+    "successive_leaf_edges": [
+     6,
+     -20,
+     1,
+     -15
+    ],
+    "current_source_pdsk": [
+     4,
+     3,
+     2,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1289,
+     1288,
+     1287,
+     1285,
+     1285
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     25,
+     23,
+     39
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_2N": {
+    "status": "FAIL_CONTROL_SPACING",
+    "leaf_edges": [
+     1189,
+     1195,
+     1177,
+     1175,
+     1165
+    ],
+    "successive_leaf_edges": [
+     6,
+     -18,
+     -2,
+     -10
+    ],
+    "current_source_pdsk": [
+     4,
+     3,
+     2,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1204,
+     1203,
+     1202,
+     1200,
+     1200
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     23,
+     24,
+     35
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_2S": {
+    "status": "FAIL_CONTROL_SPACING",
+    "leaf_edges": [
+     1303,
+     1309,
+     1293,
+     1292,
+     1278
+    ],
+    "successive_leaf_edges": [
+     6,
+     -16,
+     -1,
+     -14
+    ],
+    "current_source_pdsk": [
+     4,
+     3,
+     2,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1318,
+     1317,
+     1316,
+     1314,
+     1314
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     21,
+     21,
+     36
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_3N": {
+    "status": "FAIL_CONTROL_SPACING",
+    "leaf_edges": [
+     1206,
+     1212,
+     1198,
+     1197,
+     1190
+    ],
+    "successive_leaf_edges": [
+     6,
+     -14,
+     -1,
+     -7
+    ],
+    "current_source_pdsk": [
+     4,
+     3,
+     2,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1220,
+     1219,
+     1218,
+     1216,
+     1216
+    ],
+    "partial_transport_edges": [
+     10,
+     4,
+     18,
+     18,
+     26
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_3S": {
+    "status": "FAIL_CONTROL_SPACING",
+    "leaf_edges": [
+     1328,
+     1334,
+     1317,
+     1314,
+     1304
+    ],
+    "successive_leaf_edges": [
+     6,
+     -17,
+     -3,
+     -10
+    ],
+    "current_source_pdsk": [
+     4,
+     3,
+     2,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1342,
+     1341,
+     1340,
+     1338,
+     1338
+    ],
+    "partial_transport_edges": [
+     10,
+     4,
+     21,
+     23,
+     34
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_4N": {
+    "status": "FAIL_CONTROL_SPACING",
+    "leaf_edges": [
+     1230,
+     1236,
+     1221,
+     1214,
+     1205
+    ],
+    "successive_leaf_edges": [
+     6,
+     -15,
+     -7,
+     -9
+    ],
+    "current_source_pdsk": [
+     4,
+     3,
+     2,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1245,
+     1244,
+     1243,
+     1241,
+     1241
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     20,
+     26,
+     36
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_4S": {
+    "status": "FAIL_CONTROL_SPACING",
+    "leaf_edges": [
+     1348,
+     1354,
+     1339,
+     1336,
+     1327
+    ],
+    "successive_leaf_edges": [
+     6,
+     -15,
+     -3,
+     -9
+    ],
+    "current_source_pdsk": [
+     4,
+     3,
+     2,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1363,
+     1362,
+     1361,
+     1359,
+     1359
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     20,
+     22,
+     32
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_5N": {
+    "status": "FAIL_CONTROL_SPACING",
+    "leaf_edges": [
+     1271,
+     1277,
+     1259,
+     1260,
+     1250
+    ],
+    "successive_leaf_edges": [
+     6,
+     -18,
+     1,
+     -10
+    ],
+    "current_source_pdsk": [
+     4,
+     3,
+     2,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1286,
+     1285,
+     1284,
+     1282,
+     1282
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     23,
+     21,
+     32
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_5S": {
+    "status": "FAIL_CONTROL_SPACING",
+    "leaf_edges": [
+     1393,
+     1399,
+     1380,
+     1377,
+     1368
+    ],
+    "successive_leaf_edges": [
+     6,
+     -19,
+     -3,
+     -9
+    ],
+    "current_source_pdsk": [
+     4,
+     3,
+     2,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1408,
+     1407,
+     1406,
+     1404,
+     1404
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     24,
+     26,
+     36
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_6N": {
+    "status": "FAIL_CONTROL_SPACING",
+    "leaf_edges": [
+     1308,
+     1314,
+     1294,
+     1297,
+     1283
+    ],
+    "successive_leaf_edges": [
+     6,
+     -20,
+     3,
+     -14
+    ],
+    "current_source_pdsk": [
+     4,
+     3,
+     2,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1323,
+     1322,
+     1321,
+     1319,
+     1319
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     25,
+     21,
+     36
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_6S": {
+    "status": "FAIL_CONTROL_SPACING",
+    "leaf_edges": [
+     1433,
+     1439,
+     1419,
+     1421,
+     1405
+    ],
+    "successive_leaf_edges": [
+     6,
+     -20,
+     2,
+     -16
+    ],
+    "current_source_pdsk": [
+     4,
+     3,
+     2,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1448,
+     1447,
+     1446,
+     1444,
+     1444
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     25,
+     22,
+     39
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_7N": {
+    "status": "FAIL_CONTROL_SPACING",
+    "leaf_edges": [
+     1349,
+     1355,
+     1337,
+     1333,
+     1323
+    ],
+    "successive_leaf_edges": [
+     6,
+     -18,
+     -4,
+     -10
+    ],
+    "current_source_pdsk": [
+     4,
+     3,
+     2,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1364,
+     1363,
+     1362,
+     1360,
+     1360
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     23,
+     26,
+     37
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_7S": {
+    "status": "FAIL_CONTROL_SPACING",
+    "leaf_edges": [
+     1473,
+     1479,
+     1459,
+     1462,
+     1448
+    ],
+    "successive_leaf_edges": [
+     6,
+     -20,
+     3,
+     -14
+    ],
+    "current_source_pdsk": [
+     4,
+     3,
+     2,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1488,
+     1487,
+     1486,
+     1484,
+     1484
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     25,
+     21,
+     36
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   }
+  },
+  "candidate": {
+   "u_s_0N": {
+    "status": "PASS_CONTROL_SPACING",
+    "leaf_edges": [
+     1138,
+     1144,
+     1126,
+     1122,
+     1112
+    ],
+    "successive_leaf_edges": [
+     6,
+     -18,
+     -4,
+     -10
+    ],
+    "current_source_pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1149,
+     1149,
+     1149,
+     1149,
+     1149
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     23,
+     26,
+     37
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_0S": {
+    "status": "PASS_CONTROL_SPACING",
+    "leaf_edges": [
+     1245,
+     1251,
+     1235,
+     1233,
+     1221
+    ],
+    "successive_leaf_edges": [
+     6,
+     -16,
+     -2,
+     -12
+    ],
+    "current_source_pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1256,
+     1256,
+     1256,
+     1256,
+     1256
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     21,
+     22,
+     35
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_1N": {
+    "status": "PASS_CONTROL_SPACING",
+    "leaf_edges": [
+     1161,
+     1167,
+     1152,
+     1145,
+     1139
+    ],
+    "successive_leaf_edges": [
+     6,
+     -15,
+     -7,
+     -6
+    ],
+    "current_source_pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1172,
+     1172,
+     1172,
+     1172,
+     1172
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     20,
+     26,
+     33
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_1S": {
+    "status": "PASS_CONTROL_SPACING",
+    "leaf_edges": [
+     1274,
+     1280,
+     1260,
+     1261,
+     1246
+    ],
+    "successive_leaf_edges": [
+     6,
+     -20,
+     1,
+     -15
+    ],
+    "current_source_pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1285,
+     1285,
+     1285,
+     1285,
+     1285
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     25,
+     23,
+     39
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_2N": {
+    "status": "PASS_CONTROL_SPACING",
+    "leaf_edges": [
+     1189,
+     1195,
+     1177,
+     1175,
+     1165
+    ],
+    "successive_leaf_edges": [
+     6,
+     -18,
+     -2,
+     -10
+    ],
+    "current_source_pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1200,
+     1200,
+     1200,
+     1200,
+     1200
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     23,
+     24,
+     35
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_2S": {
+    "status": "PASS_CONTROL_SPACING",
+    "leaf_edges": [
+     1303,
+     1309,
+     1293,
+     1292,
+     1278
+    ],
+    "successive_leaf_edges": [
+     6,
+     -16,
+     -1,
+     -14
+    ],
+    "current_source_pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1314,
+     1314,
+     1314,
+     1314,
+     1314
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     21,
+     21,
+     36
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_3N": {
+    "status": "PASS_CONTROL_SPACING",
+    "leaf_edges": [
+     1206,
+     1212,
+     1198,
+     1197,
+     1190
+    ],
+    "successive_leaf_edges": [
+     6,
+     -14,
+     -1,
+     -7
+    ],
+    "current_source_pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1216,
+     1216,
+     1216,
+     1216,
+     1216
+    ],
+    "partial_transport_edges": [
+     10,
+     4,
+     18,
+     18,
+     26
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_3S": {
+    "status": "PASS_CONTROL_SPACING",
+    "leaf_edges": [
+     1328,
+     1334,
+     1317,
+     1314,
+     1304
+    ],
+    "successive_leaf_edges": [
+     6,
+     -17,
+     -3,
+     -10
+    ],
+    "current_source_pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1338,
+     1338,
+     1338,
+     1338,
+     1338
+    ],
+    "partial_transport_edges": [
+     10,
+     4,
+     21,
+     23,
+     34
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_4N": {
+    "status": "PASS_CONTROL_SPACING",
+    "leaf_edges": [
+     1230,
+     1236,
+     1221,
+     1214,
+     1205
+    ],
+    "successive_leaf_edges": [
+     6,
+     -15,
+     -7,
+     -9
+    ],
+    "current_source_pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1241,
+     1241,
+     1241,
+     1241,
+     1241
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     20,
+     26,
+     36
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_4S": {
+    "status": "PASS_CONTROL_SPACING",
+    "leaf_edges": [
+     1348,
+     1354,
+     1339,
+     1336,
+     1327
+    ],
+    "successive_leaf_edges": [
+     6,
+     -15,
+     -3,
+     -9
+    ],
+    "current_source_pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1359,
+     1359,
+     1359,
+     1359,
+     1359
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     20,
+     22,
+     32
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_5N": {
+    "status": "PASS_CONTROL_SPACING",
+    "leaf_edges": [
+     1271,
+     1277,
+     1259,
+     1260,
+     1250
+    ],
+    "successive_leaf_edges": [
+     6,
+     -18,
+     1,
+     -10
+    ],
+    "current_source_pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1282,
+     1282,
+     1282,
+     1282,
+     1282
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     23,
+     21,
+     32
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_5S": {
+    "status": "PASS_CONTROL_SPACING",
+    "leaf_edges": [
+     1393,
+     1399,
+     1380,
+     1377,
+     1368
+    ],
+    "successive_leaf_edges": [
+     6,
+     -19,
+     -3,
+     -9
+    ],
+    "current_source_pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1404,
+     1404,
+     1404,
+     1404,
+     1404
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     24,
+     26,
+     36
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_6N": {
+    "status": "PASS_CONTROL_SPACING",
+    "leaf_edges": [
+     1308,
+     1314,
+     1294,
+     1297,
+     1283
+    ],
+    "successive_leaf_edges": [
+     6,
+     -20,
+     3,
+     -14
+    ],
+    "current_source_pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1319,
+     1319,
+     1319,
+     1319,
+     1319
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     25,
+     21,
+     36
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_6S": {
+    "status": "PASS_CONTROL_SPACING",
+    "leaf_edges": [
+     1433,
+     1439,
+     1419,
+     1421,
+     1405
+    ],
+    "successive_leaf_edges": [
+     6,
+     -20,
+     2,
+     -16
+    ],
+    "current_source_pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1444,
+     1444,
+     1444,
+     1444,
+     1444
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     25,
+     22,
+     39
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_7N": {
+    "status": "PASS_CONTROL_SPACING",
+    "leaf_edges": [
+     1349,
+     1355,
+     1337,
+     1333,
+     1323
+    ],
+    "successive_leaf_edges": [
+     6,
+     -18,
+     -4,
+     -10
+    ],
+    "current_source_pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1360,
+     1360,
+     1360,
+     1360,
+     1360
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     23,
+     26,
+     37
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   },
+   "u_s_7S": {
+    "status": "PASS_CONTROL_SPACING",
+    "leaf_edges": [
+     1473,
+     1479,
+     1459,
+     1462,
+     1448
+    ],
+    "successive_leaf_edges": [
+     6,
+     -20,
+     3,
+     -14
+    ],
+    "current_source_pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "command_edges_plus_pdsk": [
+     1484,
+     1484,
+     1484,
+     1484,
+     1484
+    ],
+    "partial_transport_edges": [
+     11,
+     5,
+     25,
+     21,
+     36
+    ],
+    "scope": "command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate"
+   }
+  }
+ },
+ "physical_START": false
+}
