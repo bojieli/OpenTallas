@@ -117,3 +117,9 @@ def test_missing_local_edge_fails_closed(tmp_path):
     out["taps"][0]["clock_components"][0].pop("source_rise_input_edge")
     with pytest.raises(ValueError,match="input-edge polarity"):
         C.apply(out,{"t":out["taps"][0]},"TT","spice_edge")
+
+
+def test_standalone_die_sta_bundle_ships_component_helper(tmp_path):
+    import signoff
+    signoff.copy_signoff_bundle(tmp_path, extra=("die_sta_related.py",))
+    assert (tmp_path/"clock_components.py").is_file()
