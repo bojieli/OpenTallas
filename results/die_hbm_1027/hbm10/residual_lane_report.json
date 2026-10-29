@@ -1,0 +1,7221 @@
+{
+ "status": "DIAGNOSTIC ONLY; no route/latency/source edits",
+ "reservation_basis": "Existing sourcefix manifest has no plan_cells, so reserved_buses is empty",
+ "lane_count": 241,
+ "reservations": [],
+ "pairs": [
+  {
+   "src": "NE_b002",
+   "dst": "NE_hub",
+   "actual_missing_bits": 3,
+   "actual_driver_widths": {
+    "hcb_NE2.fa_wfault_o": 1,
+    "hcb_NE2.fb_wfault_o": 1,
+    "hcb_NE2.wfault": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_b002",
+       "NE_b003",
+       "NE_b013",
+       "NE_b012",
+       "NE_b011",
+       "NE_b010",
+       "NE_b000",
+       "NE_hub"
+      ],
+      "bits": 4097
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20m",
+      "src": "NE_b010",
+      "dst": "NE_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_b002",
+       "NE_b003",
+       "NE_b013",
+       "NE_b012",
+       "NE_b011",
+       "NE_b010",
+       "NE_b000",
+       "NE_hub"
+      ],
+      "bits": 4097
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20m",
+      "src": "NE_b010",
+      "dst": "NE_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L10m",
+      "src": "NE_b002",
+      "dst": "NE_b003",
+      "capacity": 4401,
+      "reserved": false,
+      "used": 4401,
+      "left": 0
+     },
+     {
+      "id": "L71m",
+      "src": "NE_b002",
+      "dst": "NE_b001",
+      "capacity": 274,
+      "reserved": false,
+      "used": 274,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_b003",
+   "dst": "NE_b002",
+   "actual_missing_bits": 1,
+   "actual_driver_widths": {
+    "hcb_NE3.wfault": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_b003",
+       "NE_b013",
+       "NE_b012",
+       "NE_b011",
+       "NE_b010",
+       "NE_b000",
+       "NE_b001",
+       "NE_b002"
+      ],
+      "bits": 4097
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20m",
+      "src": "NE_b010",
+      "dst": "NE_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_b003",
+       "NE_b013",
+       "NE_b012",
+       "NE_b011",
+       "NE_b010",
+       "NE_b000",
+       "NE_b001",
+       "NE_b002"
+      ],
+      "bits": 4097
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20m",
+      "src": "NE_b010",
+      "dst": "NE_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L16m",
+      "src": "NE_b003",
+      "dst": "NE_b013",
+      "capacity": 4127,
+      "reserved": false,
+      "used": 4127,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_b010",
+   "dst": "NE_b011",
+   "actual_missing_bits": 1,
+   "actual_driver_widths": {
+    "hcb_NE7.wfault": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_b010",
+       "NE_b000",
+       "NE_hub",
+       "NE_b011"
+      ],
+      "bits": 788
+     },
+     {
+      "parts": [
+       "NE_b010",
+       "NE_b000",
+       "NE_hub",
+       "NE_b013",
+       "NE_b012",
+       "NE_b011"
+      ],
+      "bits": 274
+     },
+     {
+      "parts": [
+       "NE_b010",
+       "NE_b000",
+       "NE_b001",
+       "NE_b002",
+       "NE_b003",
+       "NE_b013",
+       "NE_b012",
+       "NE_b011"
+      ],
+      "bits": 3035
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20m",
+      "src": "NE_b010",
+      "dst": "NE_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_b010",
+       "NE_b000",
+       "NE_hub",
+       "NE_b011"
+      ],
+      "bits": 788
+     },
+     {
+      "parts": [
+       "NE_b010",
+       "NE_b000",
+       "NE_hub",
+       "NE_b013",
+       "NE_b012",
+       "NE_b011"
+      ],
+      "bits": 274
+     },
+     {
+      "parts": [
+       "NE_b010",
+       "NE_b000",
+       "NE_b001",
+       "NE_b002",
+       "NE_b003",
+       "NE_b013",
+       "NE_b012",
+       "NE_b011"
+      ],
+      "bits": 3035
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20m",
+      "src": "NE_b010",
+      "dst": "NE_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L20m",
+      "src": "NE_b010",
+      "dst": "NE_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_b011",
+   "dst": "NE_hub",
+   "actual_missing_bits": 3,
+   "actual_driver_widths": {
+    "hcb_NE6.fa_wfault_o": 1,
+    "hcb_NE6.fb_wfault_o": 1,
+    "hcb_NE6.wfault": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_b011",
+       "NE_b010",
+       "NE_b000",
+       "NE_hub"
+      ],
+      "bits": 4097
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20m",
+      "src": "NE_b010",
+      "dst": "NE_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_b011",
+       "NE_b010",
+       "NE_b000",
+       "NE_hub"
+      ],
+      "bits": 4097
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20m",
+      "src": "NE_b010",
+      "dst": "NE_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L11m",
+      "src": "NE_b011",
+      "dst": "NE_b010",
+      "capacity": 4401,
+      "reserved": false,
+      "used": 4401,
+      "left": 0
+     },
+     {
+      "id": "L72m",
+      "src": "NE_b011",
+      "dst": "NE_b012",
+      "capacity": 274,
+      "reserved": false,
+      "used": 274,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_b013",
+   "dst": "NE_hub",
+   "actual_missing_bits": 1,
+   "actual_driver_widths": {
+    "hcb_NE4.wfault": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_b013",
+       "NE_b012",
+       "NE_b011",
+       "NE_b010",
+       "NE_b000",
+       "NE_hub"
+      ],
+      "bits": 4097
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20m",
+      "src": "NE_b010",
+      "dst": "NE_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_b013",
+       "NE_b012",
+       "NE_b011",
+       "NE_b010",
+       "NE_b000",
+       "NE_hub"
+      ],
+      "bits": 4097
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20m",
+      "src": "NE_b010",
+      "dst": "NE_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L18m",
+      "src": "NE_b013",
+      "dst": "NE_b012",
+      "capacity": 4127,
+      "reserved": false,
+      "used": 4127,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_spb0",
+   "actual_missing_bits": 632,
+   "actual_driver_widths": {
+    "epcal_NE.payload": 19,
+    "hb_coll_NE.tx_pin_flit": 612,
+    "hb_coll_NE.tx_pin_v": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": []
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": []
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L4m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L8m",
+      "src": "NE_hub",
+      "dst": "PHY_NE",
+      "capacity": 3070,
+      "reserved": false,
+      "used": 3070,
+      "left": 0
+     },
+     {
+      "id": "L9m",
+      "src": "NE_hub",
+      "dst": "PHY_NC",
+      "capacity": 1842,
+      "reserved": false,
+      "used": 1842,
+      "left": 0
+     },
+     {
+      "id": "L42m",
+      "src": "NE_hub",
+      "dst": "NE_b002",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L43m",
+      "src": "NE_hub",
+      "dst": "NE_b011",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L51m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L63m",
+      "src": "NE_hub",
+      "dst": "PHY_NC",
+      "capacity": 126,
+      "reserved": false,
+      "used": 126,
+      "left": 0
+     },
+     {
+      "id": "L65m",
+      "src": "NE_hub",
+      "dst": "NE_b000",
+      "capacity": 304,
+      "reserved": false,
+      "used": 304,
+      "left": 0
+     },
+     {
+      "id": "L73m",
+      "src": "NE_hub",
+      "dst": "NE_b013",
+      "capacity": 274,
+      "reserved": false,
+      "used": 274,
+      "left": 0
+     },
+     {
+      "id": "L74m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 279,
+      "reserved": false,
+      "used": 279,
+      "left": 0
+     },
+     {
+      "id": "L89m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 1,
+      "reserved": false,
+      "used": 1,
+      "left": 0
+     },
+     {
+      "id": "L96m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L101m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 21,
+      "reserved": false,
+      "used": 21,
+      "left": 0
+     },
+     {
+      "id": "L63wm",
+      "src": "NE_hub",
+      "dst": "PHY_NE",
+      "capacity": 210,
+      "reserved": false,
+      "used": 210,
+      "left": 0
+     },
+     {
+      "id": "N4U_NE",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 271,
+      "reserved": false,
+      "used": 271,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NW_hub",
+   "actual_missing_bits": 2775,
+   "actual_driver_widths": {
+    "hb_vms_SE.ccw_out": 2170,
+    "hcollb_NE.ccw_o": 280,
+    "hcollb_NE.cw_o": 280,
+    "obs_NE.r_d": 32,
+    "obs_NE.r_idx": 8,
+    "obs_NE.r_v": 1,
+    "svg_NW4.run_done": 1,
+    "svg_NW5.run_done": 1,
+    "svg_NW6.run_done": 1,
+    "svg_NW7.run_done": 1
+   },
+   "direct_lanes": [
+    {
+     "id": "L4m",
+     "src": "NE_hub",
+     "dst": "NW_hub",
+     "capacity": 2816,
+     "reserved": false,
+     "used": 2816,
+     "left": 0
+    },
+    {
+     "id": "L96m",
+     "src": "NE_hub",
+     "dst": "NW_hub",
+     "capacity": 22,
+     "reserved": false,
+     "used": 22,
+     "left": 0
+    }
+   ],
+   "capacity_before_reservations": {
+    "maxflow_bits": 5564,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_hub",
+       "NW_hub"
+      ],
+      "bits": 2838
+     },
+     {
+      "parts": [
+       "NE_hub",
+       "PHY_NC",
+       "NW_hub"
+      ],
+      "bits": 1542
+     },
+     {
+      "parts": [
+       "NE_hub",
+       "root",
+       "NW_hub"
+      ],
+      "bits": 551
+     },
+     {
+      "parts": [
+       "NE_hub",
+       "NE_io",
+       "root",
+       "NW_hub"
+      ],
+      "bits": 633
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L4m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L22",
+      "src": "PHY_NC",
+      "dst": "NW_hub",
+      "capacity": 1536,
+      "reserved": false,
+      "used": 1536,
+      "left": 0
+     },
+     {
+      "id": "L51m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L74m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 279,
+      "reserved": false,
+      "used": 279,
+      "left": 0
+     },
+     {
+      "id": "L89m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 1,
+      "reserved": false,
+      "used": 1,
+      "left": 0
+     },
+     {
+      "id": "L96m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L101m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 21,
+      "reserved": false,
+      "used": 21,
+      "left": 0
+     },
+     {
+      "id": "L114",
+      "src": "PHY_NC",
+      "dst": "NW_hub",
+      "capacity": 6,
+      "reserved": false,
+      "used": 6,
+      "left": 0
+     },
+     {
+      "id": "N4U_NE",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 271,
+      "reserved": false,
+      "used": 271,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 5564,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_hub",
+       "NW_hub"
+      ],
+      "bits": 2838
+     },
+     {
+      "parts": [
+       "NE_hub",
+       "PHY_NC",
+       "NW_hub"
+      ],
+      "bits": 1542
+     },
+     {
+      "parts": [
+       "NE_hub",
+       "root",
+       "NW_hub"
+      ],
+      "bits": 551
+     },
+     {
+      "parts": [
+       "NE_hub",
+       "NE_io",
+       "root",
+       "NW_hub"
+      ],
+      "bits": 633
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L4m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L22",
+      "src": "PHY_NC",
+      "dst": "NW_hub",
+      "capacity": 1536,
+      "reserved": false,
+      "used": 1536,
+      "left": 0
+     },
+     {
+      "id": "L51m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L74m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 279,
+      "reserved": false,
+      "used": 279,
+      "left": 0
+     },
+     {
+      "id": "L89m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 1,
+      "reserved": false,
+      "used": 1,
+      "left": 0
+     },
+     {
+      "id": "L96m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L101m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 21,
+      "reserved": false,
+      "used": 21,
+      "left": 0
+     },
+     {
+      "id": "L114",
+      "src": "PHY_NC",
+      "dst": "NW_hub",
+      "capacity": 6,
+      "reserved": false,
+      "used": 6,
+      "left": 0
+     },
+     {
+      "id": "N4U_NE",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 271,
+      "reserved": false,
+      "used": 271,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L4m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L8m",
+      "src": "NE_hub",
+      "dst": "PHY_NE",
+      "capacity": 3070,
+      "reserved": false,
+      "used": 3070,
+      "left": 0
+     },
+     {
+      "id": "L9m",
+      "src": "NE_hub",
+      "dst": "PHY_NC",
+      "capacity": 1842,
+      "reserved": false,
+      "used": 1842,
+      "left": 0
+     },
+     {
+      "id": "L42m",
+      "src": "NE_hub",
+      "dst": "NE_b002",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L43m",
+      "src": "NE_hub",
+      "dst": "NE_b011",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L51m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L63m",
+      "src": "NE_hub",
+      "dst": "PHY_NC",
+      "capacity": 126,
+      "reserved": false,
+      "used": 126,
+      "left": 0
+     },
+     {
+      "id": "L65m",
+      "src": "NE_hub",
+      "dst": "NE_b000",
+      "capacity": 304,
+      "reserved": false,
+      "used": 304,
+      "left": 0
+     },
+     {
+      "id": "L73m",
+      "src": "NE_hub",
+      "dst": "NE_b013",
+      "capacity": 274,
+      "reserved": false,
+      "used": 274,
+      "left": 0
+     },
+     {
+      "id": "L74m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 279,
+      "reserved": false,
+      "used": 279,
+      "left": 0
+     },
+     {
+      "id": "L89m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 1,
+      "reserved": false,
+      "used": 1,
+      "left": 0
+     },
+     {
+      "id": "L96m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L101m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 21,
+      "reserved": false,
+      "used": 21,
+      "left": 0
+     },
+     {
+      "id": "L63wm",
+      "src": "NE_hub",
+      "dst": "PHY_NE",
+      "capacity": 210,
+      "reserved": false,
+      "used": 210,
+      "left": 0
+     },
+     {
+      "id": "N4U_NE",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 271,
+      "reserved": false,
+      "used": 271,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_hub",
+   "dst": "root",
+   "actual_missing_bits": 263,
+   "actual_driver_widths": {
+    "hleaf_NE.a_cfg_data": 93,
+    "hleaf_NE.a_cfg_target": 8,
+    "hleaf_NE.a_cfg_v": 1,
+    "hleaf_NE.a_desc_base": 12,
+    "hleaf_NE.a_desc_limit": 13,
+    "hleaf_NE.a_desc_loops": 16,
+    "hleaf_NE.a_desc_v": 1,
+    "hleaf_NE.a_launch_v": 1,
+    "hleaf_NE.s_active": 21,
+    "hleaf_NE.s_fault": 31,
+    "hleaf_NE.s_ready": 21,
+    "pgp_NE.fault": 1,
+    "smw_NE.active": 1,
+    "smw_NE.configured": 1,
+    "smw_NE.fault": 1,
+    "stl_NE.up_o": 41
+   },
+   "direct_lanes": [
+    {
+     "id": "L74m",
+     "src": "NE_hub",
+     "dst": "root",
+     "capacity": 279,
+     "reserved": false,
+     "used": 279,
+     "left": 0
+    },
+    {
+     "id": "L89m",
+     "src": "NE_hub",
+     "dst": "root",
+     "capacity": 1,
+     "reserved": false,
+     "used": 1,
+     "left": 0
+    },
+    {
+     "id": "N4U_NE",
+     "src": "NE_hub",
+     "dst": "root",
+     "capacity": 271,
+     "reserved": false,
+     "used": 271,
+     "left": 0
+    }
+   ],
+   "capacity_before_reservations": {
+    "maxflow_bits": 5564,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_hub",
+       "root"
+      ],
+      "bits": 551
+     },
+     {
+      "parts": [
+       "NE_hub",
+       "NE_io",
+       "root"
+      ],
+      "bits": 633
+     },
+     {
+      "parts": [
+       "NE_hub",
+       "NW_hub",
+       "root"
+      ],
+      "bits": 2838
+     },
+     {
+      "parts": [
+       "NE_hub",
+       "PHY_NC",
+       "NW_hub",
+       "root"
+      ],
+      "bits": 1542
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L4m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L22",
+      "src": "PHY_NC",
+      "dst": "NW_hub",
+      "capacity": 1536,
+      "reserved": false,
+      "used": 1536,
+      "left": 0
+     },
+     {
+      "id": "L51m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L74m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 279,
+      "reserved": false,
+      "used": 279,
+      "left": 0
+     },
+     {
+      "id": "L89m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 1,
+      "reserved": false,
+      "used": 1,
+      "left": 0
+     },
+     {
+      "id": "L96m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L101m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 21,
+      "reserved": false,
+      "used": 21,
+      "left": 0
+     },
+     {
+      "id": "L114",
+      "src": "PHY_NC",
+      "dst": "NW_hub",
+      "capacity": 6,
+      "reserved": false,
+      "used": 6,
+      "left": 0
+     },
+     {
+      "id": "N4U_NE",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 271,
+      "reserved": false,
+      "used": 271,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 5564,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_hub",
+       "root"
+      ],
+      "bits": 551
+     },
+     {
+      "parts": [
+       "NE_hub",
+       "NE_io",
+       "root"
+      ],
+      "bits": 633
+     },
+     {
+      "parts": [
+       "NE_hub",
+       "NW_hub",
+       "root"
+      ],
+      "bits": 2838
+     },
+     {
+      "parts": [
+       "NE_hub",
+       "PHY_NC",
+       "NW_hub",
+       "root"
+      ],
+      "bits": 1542
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L4m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L22",
+      "src": "PHY_NC",
+      "dst": "NW_hub",
+      "capacity": 1536,
+      "reserved": false,
+      "used": 1536,
+      "left": 0
+     },
+     {
+      "id": "L51m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L74m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 279,
+      "reserved": false,
+      "used": 279,
+      "left": 0
+     },
+     {
+      "id": "L89m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 1,
+      "reserved": false,
+      "used": 1,
+      "left": 0
+     },
+     {
+      "id": "L96m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L101m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 21,
+      "reserved": false,
+      "used": 21,
+      "left": 0
+     },
+     {
+      "id": "L114",
+      "src": "PHY_NC",
+      "dst": "NW_hub",
+      "capacity": 6,
+      "reserved": false,
+      "used": 6,
+      "left": 0
+     },
+     {
+      "id": "N4U_NE",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 271,
+      "reserved": false,
+      "used": 271,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L4m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L8m",
+      "src": "NE_hub",
+      "dst": "PHY_NE",
+      "capacity": 3070,
+      "reserved": false,
+      "used": 3070,
+      "left": 0
+     },
+     {
+      "id": "L9m",
+      "src": "NE_hub",
+      "dst": "PHY_NC",
+      "capacity": 1842,
+      "reserved": false,
+      "used": 1842,
+      "left": 0
+     },
+     {
+      "id": "L42m",
+      "src": "NE_hub",
+      "dst": "NE_b002",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L43m",
+      "src": "NE_hub",
+      "dst": "NE_b011",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L51m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L63m",
+      "src": "NE_hub",
+      "dst": "PHY_NC",
+      "capacity": 126,
+      "reserved": false,
+      "used": 126,
+      "left": 0
+     },
+     {
+      "id": "L65m",
+      "src": "NE_hub",
+      "dst": "NE_b000",
+      "capacity": 304,
+      "reserved": false,
+      "used": 304,
+      "left": 0
+     },
+     {
+      "id": "L73m",
+      "src": "NE_hub",
+      "dst": "NE_b013",
+      "capacity": 274,
+      "reserved": false,
+      "used": 274,
+      "left": 0
+     },
+     {
+      "id": "L74m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 279,
+      "reserved": false,
+      "used": 279,
+      "left": 0
+     },
+     {
+      "id": "L89m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 1,
+      "reserved": false,
+      "used": 1,
+      "left": 0
+     },
+     {
+      "id": "L96m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L101m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 21,
+      "reserved": false,
+      "used": 21,
+      "left": 0
+     },
+     {
+      "id": "L63wm",
+      "src": "NE_hub",
+      "dst": "PHY_NE",
+      "capacity": 210,
+      "reserved": false,
+      "used": 210,
+      "left": 0
+     },
+     {
+      "id": "N4U_NE",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 271,
+      "reserved": false,
+      "used": 271,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_sm0",
+   "dst": "NE_hub",
+   "actual_missing_bits": 37,
+   "actual_driver_widths": {
+    "sm_NW4.u_front.request": 37
+   },
+   "direct_lanes": [
+    {
+     "id": "L67m",
+     "src": "NE_sm0",
+     "dst": "NE_hub",
+     "capacity": 268,
+     "reserved": false,
+     "used": 268,
+     "left": 0
+    },
+    {
+     "id": "L120m",
+     "src": "NE_sm0",
+     "dst": "NE_hub",
+     "capacity": 9,
+     "reserved": false,
+     "used": 9,
+     "left": 0
+    }
+   ],
+   "capacity_before_reservations": {
+    "maxflow_bits": 277,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_sm0",
+       "NE_hub"
+      ],
+      "bits": 277
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L67m",
+      "src": "NE_sm0",
+      "dst": "NE_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L120m",
+      "src": "NE_sm0",
+      "dst": "NE_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 277,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_sm0",
+       "NE_hub"
+      ],
+      "bits": 277
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L67m",
+      "src": "NE_sm0",
+      "dst": "NE_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L120m",
+      "src": "NE_sm0",
+      "dst": "NE_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L67m",
+      "src": "NE_sm0",
+      "dst": "NE_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L120m",
+      "src": "NE_sm0",
+      "dst": "NE_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_sm1",
+   "dst": "NE_hub",
+   "actual_missing_bits": 37,
+   "actual_driver_widths": {
+    "sm_NW5.u_front.request": 37
+   },
+   "direct_lanes": [
+    {
+     "id": "L68m",
+     "src": "NE_sm1",
+     "dst": "NE_hub",
+     "capacity": 268,
+     "reserved": false,
+     "used": 268,
+     "left": 0
+    },
+    {
+     "id": "L121m",
+     "src": "NE_sm1",
+     "dst": "NE_hub",
+     "capacity": 9,
+     "reserved": false,
+     "used": 9,
+     "left": 0
+    }
+   ],
+   "capacity_before_reservations": {
+    "maxflow_bits": 277,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_sm1",
+       "NE_hub"
+      ],
+      "bits": 277
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L68m",
+      "src": "NE_sm1",
+      "dst": "NE_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L121m",
+      "src": "NE_sm1",
+      "dst": "NE_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 277,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_sm1",
+       "NE_hub"
+      ],
+      "bits": 277
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L68m",
+      "src": "NE_sm1",
+      "dst": "NE_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L121m",
+      "src": "NE_sm1",
+      "dst": "NE_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L68m",
+      "src": "NE_sm1",
+      "dst": "NE_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L121m",
+      "src": "NE_sm1",
+      "dst": "NE_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_sm2",
+   "dst": "NE_hub",
+   "actual_missing_bits": 37,
+   "actual_driver_widths": {
+    "sm_NW6.u_front.request": 37
+   },
+   "direct_lanes": [
+    {
+     "id": "L69m",
+     "src": "NE_sm2",
+     "dst": "NE_hub",
+     "capacity": 268,
+     "reserved": false,
+     "used": 268,
+     "left": 0
+    },
+    {
+     "id": "L122m",
+     "src": "NE_sm2",
+     "dst": "NE_hub",
+     "capacity": 9,
+     "reserved": false,
+     "used": 9,
+     "left": 0
+    }
+   ],
+   "capacity_before_reservations": {
+    "maxflow_bits": 277,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_sm2",
+       "NE_hub"
+      ],
+      "bits": 277
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L69m",
+      "src": "NE_sm2",
+      "dst": "NE_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L122m",
+      "src": "NE_sm2",
+      "dst": "NE_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 277,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_sm2",
+       "NE_hub"
+      ],
+      "bits": 277
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L69m",
+      "src": "NE_sm2",
+      "dst": "NE_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L122m",
+      "src": "NE_sm2",
+      "dst": "NE_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L69m",
+      "src": "NE_sm2",
+      "dst": "NE_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L122m",
+      "src": "NE_sm2",
+      "dst": "NE_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_sm3",
+   "dst": "NE_hub",
+   "actual_missing_bits": 37,
+   "actual_driver_widths": {
+    "sm_NW7.u_front.request": 37
+   },
+   "direct_lanes": [
+    {
+     "id": "L70m",
+     "src": "NE_sm3",
+     "dst": "NE_hub",
+     "capacity": 268,
+     "reserved": false,
+     "used": 268,
+     "left": 0
+    },
+    {
+     "id": "L123m",
+     "src": "NE_sm3",
+     "dst": "NE_hub",
+     "capacity": 9,
+     "reserved": false,
+     "used": 9,
+     "left": 0
+    }
+   ],
+   "capacity_before_reservations": {
+    "maxflow_bits": 277,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_sm3",
+       "NE_hub"
+      ],
+      "bits": 277
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L70m",
+      "src": "NE_sm3",
+      "dst": "NE_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L123m",
+      "src": "NE_sm3",
+      "dst": "NE_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 277,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_sm3",
+       "NE_hub"
+      ],
+      "bits": 277
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L70m",
+      "src": "NE_sm3",
+      "dst": "NE_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L123m",
+      "src": "NE_sm3",
+      "dst": "NE_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L70m",
+      "src": "NE_sm3",
+      "dst": "NE_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L123m",
+      "src": "NE_sm3",
+      "dst": "NE_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_spb0",
+   "dst": "NE_hub",
+   "actual_missing_bits": 615,
+   "actual_driver_widths": {
+    "ep_S3.fault": 1,
+    "ep_S3.phy_up": 1,
+    "ep_S3.rx_pin_flit": 612,
+    "ep_S3.rx_pin_v": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 13,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_spb0",
+       "root",
+       "NE_hub"
+      ],
+      "bits": 13
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L117m",
+      "src": "NE_spb0",
+      "dst": "root",
+      "capacity": 11,
+      "reserved": false,
+      "used": 11,
+      "left": 0
+     },
+     {
+      "id": "L138m",
+      "src": "NE_spb0",
+      "dst": "root",
+      "capacity": 2,
+      "reserved": false,
+      "used": 2,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 13,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_spb0",
+       "root",
+       "NE_hub"
+      ],
+      "bits": 13
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L117m",
+      "src": "NE_spb0",
+      "dst": "root",
+      "capacity": 11,
+      "reserved": false,
+      "used": 11,
+      "left": 0
+     },
+     {
+      "id": "L138m",
+      "src": "NE_spb0",
+      "dst": "root",
+      "capacity": 2,
+      "reserved": false,
+      "used": 2,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L117m",
+      "src": "NE_spb0",
+      "dst": "root",
+      "capacity": 11,
+      "reserved": false,
+      "used": 11,
+      "left": 0
+     },
+     {
+      "id": "L138m",
+      "src": "NE_spb0",
+      "dst": "root",
+      "capacity": 2,
+      "reserved": false,
+      "used": 2,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_spb2",
+   "dst": "NW_hub",
+   "actual_missing_bits": 2,
+   "actual_driver_widths": {
+    "xc_NW6.done": 1,
+    "xc_NW7.done": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 1478,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_spb2",
+       "NE_hub",
+       "NW_hub"
+      ],
+      "bits": 1132
+     },
+     {
+      "parts": [
+       "NE_spb2",
+       "NE_sm2",
+       "NE_hub",
+       "NW_hub"
+      ],
+      "bits": 173
+     },
+     {
+      "parts": [
+       "NE_spb2",
+       "NE_sm3",
+       "NE_hub",
+       "NW_hub"
+      ],
+      "bits": 173
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L40m",
+      "src": "NE_spb2",
+      "dst": "NE_hub",
+      "capacity": 1064,
+      "reserved": false,
+      "used": 1064,
+      "left": 0
+     },
+     {
+      "id": "L75m",
+      "src": "NE_spb2",
+      "dst": "NE_sm2",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L76m",
+      "src": "NE_spb2",
+      "dst": "NE_sm3",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L87m",
+      "src": "NE_spb2",
+      "dst": "NE_hub",
+      "capacity": 68,
+      "reserved": false,
+      "used": 66,
+      "left": 2
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 1478,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_spb2",
+       "NE_hub",
+       "NW_hub"
+      ],
+      "bits": 1132
+     },
+     {
+      "parts": [
+       "NE_spb2",
+       "NE_sm2",
+       "NE_hub",
+       "NW_hub"
+      ],
+      "bits": 173
+     },
+     {
+      "parts": [
+       "NE_spb2",
+       "NE_sm3",
+       "NE_hub",
+       "NW_hub"
+      ],
+      "bits": 173
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L40m",
+      "src": "NE_spb2",
+      "dst": "NE_hub",
+      "capacity": 1064,
+      "reserved": false,
+      "used": 1064,
+      "left": 0
+     },
+     {
+      "id": "L75m",
+      "src": "NE_spb2",
+      "dst": "NE_sm2",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L76m",
+      "src": "NE_spb2",
+      "dst": "NE_sm3",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L87m",
+      "src": "NE_spb2",
+      "dst": "NE_hub",
+      "capacity": 68,
+      "reserved": false,
+      "used": 66,
+      "left": 2
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L4m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L8m",
+      "src": "NE_hub",
+      "dst": "PHY_NE",
+      "capacity": 3070,
+      "reserved": false,
+      "used": 3070,
+      "left": 0
+     },
+     {
+      "id": "L9m",
+      "src": "NE_hub",
+      "dst": "PHY_NC",
+      "capacity": 1842,
+      "reserved": false,
+      "used": 1842,
+      "left": 0
+     },
+     {
+      "id": "L42m",
+      "src": "NE_hub",
+      "dst": "NE_b002",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L43m",
+      "src": "NE_hub",
+      "dst": "NE_b011",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L51m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L63m",
+      "src": "NE_hub",
+      "dst": "PHY_NC",
+      "capacity": 126,
+      "reserved": false,
+      "used": 126,
+      "left": 0
+     },
+     {
+      "id": "L65m",
+      "src": "NE_hub",
+      "dst": "NE_b000",
+      "capacity": 304,
+      "reserved": false,
+      "used": 304,
+      "left": 0
+     },
+     {
+      "id": "L73m",
+      "src": "NE_hub",
+      "dst": "NE_b013",
+      "capacity": 274,
+      "reserved": false,
+      "used": 274,
+      "left": 0
+     },
+     {
+      "id": "L74m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 279,
+      "reserved": false,
+      "used": 279,
+      "left": 0
+     },
+     {
+      "id": "L89m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 1,
+      "reserved": false,
+      "used": 1,
+      "left": 0
+     },
+     {
+      "id": "L96m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L101m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 21,
+      "reserved": false,
+      "used": 21,
+      "left": 0
+     },
+     {
+      "id": "L63wm",
+      "src": "NE_hub",
+      "dst": "PHY_NE",
+      "capacity": 210,
+      "reserved": false,
+      "used": 210,
+      "left": 0
+     },
+     {
+      "id": "N4U_NE",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 271,
+      "reserved": false,
+      "used": 271,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "NW_hub",
+   "actual_missing_bits": 2,
+   "actual_driver_widths": {
+    "xc_NW4.done": 1,
+    "xc_NW5.done": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 1478,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_spt0",
+       "NE_hub",
+       "NW_hub"
+      ],
+      "bits": 1132
+     },
+     {
+      "parts": [
+       "NE_spt0",
+       "NE_sm0",
+       "NE_hub",
+       "NW_hub"
+      ],
+      "bits": 173
+     },
+     {
+      "parts": [
+       "NE_spt0",
+       "NE_sm1",
+       "NE_hub",
+       "NW_hub"
+      ],
+      "bits": 173
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L41m",
+      "src": "NE_spt0",
+      "dst": "NE_hub",
+      "capacity": 1064,
+      "reserved": false,
+      "used": 1064,
+      "left": 0
+     },
+     {
+      "id": "L77m",
+      "src": "NE_spt0",
+      "dst": "NE_sm0",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L78m",
+      "src": "NE_spt0",
+      "dst": "NE_sm1",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L88m",
+      "src": "NE_spt0",
+      "dst": "NE_hub",
+      "capacity": 68,
+      "reserved": false,
+      "used": 66,
+      "left": 2
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 1478,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_spt0",
+       "NE_hub",
+       "NW_hub"
+      ],
+      "bits": 1132
+     },
+     {
+      "parts": [
+       "NE_spt0",
+       "NE_sm0",
+       "NE_hub",
+       "NW_hub"
+      ],
+      "bits": 173
+     },
+     {
+      "parts": [
+       "NE_spt0",
+       "NE_sm1",
+       "NE_hub",
+       "NW_hub"
+      ],
+      "bits": 173
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L41m",
+      "src": "NE_spt0",
+      "dst": "NE_hub",
+      "capacity": 1064,
+      "reserved": false,
+      "used": 1064,
+      "left": 0
+     },
+     {
+      "id": "L77m",
+      "src": "NE_spt0",
+      "dst": "NE_sm0",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L78m",
+      "src": "NE_spt0",
+      "dst": "NE_sm1",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L88m",
+      "src": "NE_spt0",
+      "dst": "NE_hub",
+      "capacity": 68,
+      "reserved": false,
+      "used": 66,
+      "left": 2
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L4m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L8m",
+      "src": "NE_hub",
+      "dst": "PHY_NE",
+      "capacity": 3070,
+      "reserved": false,
+      "used": 3070,
+      "left": 0
+     },
+     {
+      "id": "L9m",
+      "src": "NE_hub",
+      "dst": "PHY_NC",
+      "capacity": 1842,
+      "reserved": false,
+      "used": 1842,
+      "left": 0
+     },
+     {
+      "id": "L42m",
+      "src": "NE_hub",
+      "dst": "NE_b002",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L43m",
+      "src": "NE_hub",
+      "dst": "NE_b011",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L51m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L63m",
+      "src": "NE_hub",
+      "dst": "PHY_NC",
+      "capacity": 126,
+      "reserved": false,
+      "used": 126,
+      "left": 0
+     },
+     {
+      "id": "L65m",
+      "src": "NE_hub",
+      "dst": "NE_b000",
+      "capacity": 304,
+      "reserved": false,
+      "used": 304,
+      "left": 0
+     },
+     {
+      "id": "L73m",
+      "src": "NE_hub",
+      "dst": "NE_b013",
+      "capacity": 274,
+      "reserved": false,
+      "used": 274,
+      "left": 0
+     },
+     {
+      "id": "L74m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 279,
+      "reserved": false,
+      "used": 279,
+      "left": 0
+     },
+     {
+      "id": "L89m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 1,
+      "reserved": false,
+      "used": 1,
+      "left": 0
+     },
+     {
+      "id": "L96m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L101m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 21,
+      "reserved": false,
+      "used": 21,
+      "left": 0
+     },
+     {
+      "id": "L63wm",
+      "src": "NE_hub",
+      "dst": "PHY_NE",
+      "capacity": 210,
+      "reserved": false,
+      "used": 210,
+      "left": 0
+     },
+     {
+      "id": "N4U_NE",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 271,
+      "reserved": false,
+      "used": 271,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "root",
+   "actual_missing_bits": 9,
+   "actual_driver_widths": {
+    "cp_svg_NW4.run_arg": 8,
+    "cp_svg_NW4.run_v": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 1478,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_spt0",
+       "NE_hub",
+       "root"
+      ],
+      "bits": 551
+     },
+     {
+      "parts": [
+       "NE_spt0",
+       "NE_hub",
+       "NE_io",
+       "root"
+      ],
+      "bits": 581
+     },
+     {
+      "parts": [
+       "NE_spt0",
+       "NE_sm0",
+       "NE_hub",
+       "NE_io",
+       "root"
+      ],
+      "bits": 52
+     },
+     {
+      "parts": [
+       "NE_spt0",
+       "NE_sm0",
+       "NE_hub",
+       "NW_hub",
+       "root"
+      ],
+      "bits": 121
+     },
+     {
+      "parts": [
+       "NE_spt0",
+       "NE_sm1",
+       "NE_hub",
+       "NW_hub",
+       "root"
+      ],
+      "bits": 173
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L41m",
+      "src": "NE_spt0",
+      "dst": "NE_hub",
+      "capacity": 1064,
+      "reserved": false,
+      "used": 1064,
+      "left": 0
+     },
+     {
+      "id": "L77m",
+      "src": "NE_spt0",
+      "dst": "NE_sm0",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L78m",
+      "src": "NE_spt0",
+      "dst": "NE_sm1",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L88m",
+      "src": "NE_spt0",
+      "dst": "NE_hub",
+      "capacity": 68,
+      "reserved": false,
+      "used": 66,
+      "left": 2
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 1478,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_spt0",
+       "NE_hub",
+       "root"
+      ],
+      "bits": 551
+     },
+     {
+      "parts": [
+       "NE_spt0",
+       "NE_hub",
+       "NE_io",
+       "root"
+      ],
+      "bits": 581
+     },
+     {
+      "parts": [
+       "NE_spt0",
+       "NE_sm0",
+       "NE_hub",
+       "NE_io",
+       "root"
+      ],
+      "bits": 52
+     },
+     {
+      "parts": [
+       "NE_spt0",
+       "NE_sm0",
+       "NE_hub",
+       "NW_hub",
+       "root"
+      ],
+      "bits": 121
+     },
+     {
+      "parts": [
+       "NE_spt0",
+       "NE_sm1",
+       "NE_hub",
+       "NW_hub",
+       "root"
+      ],
+      "bits": 173
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L41m",
+      "src": "NE_spt0",
+      "dst": "NE_hub",
+      "capacity": 1064,
+      "reserved": false,
+      "used": 1064,
+      "left": 0
+     },
+     {
+      "id": "L77m",
+      "src": "NE_spt0",
+      "dst": "NE_sm0",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L78m",
+      "src": "NE_spt0",
+      "dst": "NE_sm1",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L88m",
+      "src": "NE_spt0",
+      "dst": "NE_hub",
+      "capacity": 68,
+      "reserved": false,
+      "used": 66,
+      "left": 2
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L4m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L8m",
+      "src": "NE_hub",
+      "dst": "PHY_NE",
+      "capacity": 3070,
+      "reserved": false,
+      "used": 3070,
+      "left": 0
+     },
+     {
+      "id": "L9m",
+      "src": "NE_hub",
+      "dst": "PHY_NC",
+      "capacity": 1842,
+      "reserved": false,
+      "used": 1842,
+      "left": 0
+     },
+     {
+      "id": "L42m",
+      "src": "NE_hub",
+      "dst": "NE_b002",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L43m",
+      "src": "NE_hub",
+      "dst": "NE_b011",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L51m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L63m",
+      "src": "NE_hub",
+      "dst": "PHY_NC",
+      "capacity": 126,
+      "reserved": false,
+      "used": 126,
+      "left": 0
+     },
+     {
+      "id": "L65m",
+      "src": "NE_hub",
+      "dst": "NE_b000",
+      "capacity": 304,
+      "reserved": false,
+      "used": 304,
+      "left": 0
+     },
+     {
+      "id": "L73m",
+      "src": "NE_hub",
+      "dst": "NE_b013",
+      "capacity": 274,
+      "reserved": false,
+      "used": 274,
+      "left": 0
+     },
+     {
+      "id": "L74m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 279,
+      "reserved": false,
+      "used": 279,
+      "left": 0
+     },
+     {
+      "id": "L89m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 1,
+      "reserved": false,
+      "used": 1,
+      "left": 0
+     },
+     {
+      "id": "L96m",
+      "src": "NE_hub",
+      "dst": "NW_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L101m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 21,
+      "reserved": false,
+      "used": 21,
+      "left": 0
+     },
+     {
+      "id": "L63wm",
+      "src": "NE_hub",
+      "dst": "PHY_NE",
+      "capacity": 210,
+      "reserved": false,
+      "used": 210,
+      "left": 0
+     },
+     {
+      "id": "N4U_NE",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 271,
+      "reserved": false,
+      "used": 271,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_su00",
+   "dst": "NE_su11",
+   "actual_missing_bits": 1,
+   "actual_driver_widths": {
+    "fl_NE0.fault": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 517,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_su00",
+       "NE_hub",
+       "NE_su11"
+      ],
+      "bits": 517
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L55m",
+      "src": "NE_su00",
+      "dst": "NE_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L134m",
+      "src": "NE_su00",
+      "dst": "NE_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 517,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_su00",
+       "NE_hub",
+       "NE_su11"
+      ],
+      "bits": 517
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L55m",
+      "src": "NE_su00",
+      "dst": "NE_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L134m",
+      "src": "NE_su00",
+      "dst": "NE_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L55m",
+      "src": "NE_su00",
+      "dst": "NE_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L134m",
+      "src": "NE_su00",
+      "dst": "NE_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_su20",
+   "actual_missing_bits": 1,
+   "actual_driver_widths": {
+    "fl_NE1.fault": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 517,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_su11",
+       "NE_hub",
+       "NE_su20"
+      ],
+      "bits": 517
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L57m",
+      "src": "NE_su11",
+      "dst": "NE_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L135m",
+      "src": "NE_su11",
+      "dst": "NE_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 517,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_su11",
+       "NE_hub",
+       "NE_su20"
+      ],
+      "bits": 517
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L57m",
+      "src": "NE_su11",
+      "dst": "NE_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L135m",
+      "src": "NE_su11",
+      "dst": "NE_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L57m",
+      "src": "NE_su11",
+      "dst": "NE_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L135m",
+      "src": "NE_su11",
+      "dst": "NE_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_su31",
+   "actual_missing_bits": 1,
+   "actual_driver_widths": {
+    "fl_NE2.fault": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 517,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_su20",
+       "NE_hub",
+       "NE_su31"
+      ],
+      "bits": 517
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L59m",
+      "src": "NE_su20",
+      "dst": "NE_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L136m",
+      "src": "NE_su20",
+      "dst": "NE_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 517,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NE_su20",
+       "NE_hub",
+       "NE_su31"
+      ],
+      "bits": 517
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L59m",
+      "src": "NE_su20",
+      "dst": "NE_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L136m",
+      "src": "NE_su20",
+      "dst": "NE_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L59m",
+      "src": "NE_su20",
+      "dst": "NE_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L136m",
+      "src": "NE_su20",
+      "dst": "NE_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_b002",
+   "dst": "NW_hub",
+   "actual_missing_bits": 3,
+   "actual_driver_widths": {
+    "hcb_NW2.fa_wfault_o": 1,
+    "hcb_NW2.fb_wfault_o": 1,
+    "hcb_NW2.wfault": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_b002",
+       "NW_b003",
+       "NW_b013",
+       "NW_b012",
+       "NW_b011",
+       "NW_b010",
+       "NW_b000",
+       "NW_hub"
+      ],
+      "bits": 4097
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20",
+      "src": "NW_b010",
+      "dst": "NW_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_b002",
+       "NW_b003",
+       "NW_b013",
+       "NW_b012",
+       "NW_b011",
+       "NW_b010",
+       "NW_b000",
+       "NW_hub"
+      ],
+      "bits": 4097
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20",
+      "src": "NW_b010",
+      "dst": "NW_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L10",
+      "src": "NW_b002",
+      "dst": "NW_b003",
+      "capacity": 4401,
+      "reserved": false,
+      "used": 4401,
+      "left": 0
+     },
+     {
+      "id": "L71",
+      "src": "NW_b002",
+      "dst": "NW_b001",
+      "capacity": 274,
+      "reserved": false,
+      "used": 274,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_b003",
+   "dst": "NW_b002",
+   "actual_missing_bits": 1,
+   "actual_driver_widths": {
+    "hcb_NW3.wfault": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_b003",
+       "NW_b013",
+       "NW_b012",
+       "NW_b011",
+       "NW_b010",
+       "NW_b000",
+       "NW_b001",
+       "NW_b002"
+      ],
+      "bits": 4097
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20",
+      "src": "NW_b010",
+      "dst": "NW_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_b003",
+       "NW_b013",
+       "NW_b012",
+       "NW_b011",
+       "NW_b010",
+       "NW_b000",
+       "NW_b001",
+       "NW_b002"
+      ],
+      "bits": 4097
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20",
+      "src": "NW_b010",
+      "dst": "NW_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L16",
+      "src": "NW_b003",
+      "dst": "NW_b013",
+      "capacity": 4127,
+      "reserved": false,
+      "used": 4127,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_b010",
+   "dst": "NW_b011",
+   "actual_missing_bits": 1,
+   "actual_driver_widths": {
+    "hcb_NW7.wfault": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_b010",
+       "NW_b000",
+       "NW_hub",
+       "NW_b011"
+      ],
+      "bits": 788
+     },
+     {
+      "parts": [
+       "NW_b010",
+       "NW_b000",
+       "NW_hub",
+       "NW_b013",
+       "NW_b012",
+       "NW_b011"
+      ],
+      "bits": 274
+     },
+     {
+      "parts": [
+       "NW_b010",
+       "NW_b000",
+       "NW_b001",
+       "NW_b002",
+       "NW_b003",
+       "NW_b013",
+       "NW_b012",
+       "NW_b011"
+      ],
+      "bits": 3035
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20",
+      "src": "NW_b010",
+      "dst": "NW_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_b010",
+       "NW_b000",
+       "NW_hub",
+       "NW_b011"
+      ],
+      "bits": 788
+     },
+     {
+      "parts": [
+       "NW_b010",
+       "NW_b000",
+       "NW_hub",
+       "NW_b013",
+       "NW_b012",
+       "NW_b011"
+      ],
+      "bits": 274
+     },
+     {
+      "parts": [
+       "NW_b010",
+       "NW_b000",
+       "NW_b001",
+       "NW_b002",
+       "NW_b003",
+       "NW_b013",
+       "NW_b012",
+       "NW_b011"
+      ],
+      "bits": 3035
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20",
+      "src": "NW_b010",
+      "dst": "NW_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L20",
+      "src": "NW_b010",
+      "dst": "NW_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_hub",
+   "actual_missing_bits": 3,
+   "actual_driver_widths": {
+    "hcb_NW6.fa_wfault_o": 1,
+    "hcb_NW6.fb_wfault_o": 1,
+    "hcb_NW6.wfault": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_b011",
+       "NW_b010",
+       "NW_b000",
+       "NW_hub"
+      ],
+      "bits": 4097
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20",
+      "src": "NW_b010",
+      "dst": "NW_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_b011",
+       "NW_b010",
+       "NW_b000",
+       "NW_hub"
+      ],
+      "bits": 4097
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20",
+      "src": "NW_b010",
+      "dst": "NW_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L11",
+      "src": "NW_b011",
+      "dst": "NW_b010",
+      "capacity": 4401,
+      "reserved": false,
+      "used": 4401,
+      "left": 0
+     },
+     {
+      "id": "L72",
+      "src": "NW_b011",
+      "dst": "NW_b012",
+      "capacity": 274,
+      "reserved": false,
+      "used": 274,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_b013",
+   "dst": "NW_hub",
+   "actual_missing_bits": 1,
+   "actual_driver_widths": {
+    "hcb_NW4.wfault": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_b013",
+       "NW_b012",
+       "NW_b011",
+       "NW_b010",
+       "NW_b000",
+       "NW_hub"
+      ],
+      "bits": 4097
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20",
+      "src": "NW_b010",
+      "dst": "NW_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 4097,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_b013",
+       "NW_b012",
+       "NW_b011",
+       "NW_b010",
+       "NW_b000",
+       "NW_hub"
+      ],
+      "bits": 4097
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L20",
+      "src": "NW_b010",
+      "dst": "NW_b000",
+      "capacity": 4097,
+      "reserved": false,
+      "used": 4097,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L18",
+      "src": "NW_b013",
+      "dst": "NW_b012",
+      "capacity": 4127,
+      "reserved": false,
+      "used": 4127,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NE_hub",
+   "actual_missing_bits": 2730,
+   "actual_driver_widths": {
+    "hb_vms_SW.cw_out": 2170,
+    "hcollb_NW.ccw_o": 280,
+    "hcollb_NW.cw_o": 280
+   },
+   "direct_lanes": [
+    {
+     "id": "L4",
+     "src": "NW_hub",
+     "dst": "NE_hub",
+     "capacity": 2816,
+     "reserved": false,
+     "used": 2816,
+     "left": 0
+    },
+    {
+     "id": "L96",
+     "src": "NW_hub",
+     "dst": "NE_hub",
+     "capacity": 22,
+     "reserved": false,
+     "used": 22,
+     "left": 0
+    }
+   ],
+   "capacity_before_reservations": {
+    "maxflow_bits": 8496,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_hub",
+       "NE_hub"
+      ],
+      "bits": 2838
+     },
+     {
+      "parts": [
+       "NW_hub",
+       "PHY_NC",
+       "NE_hub"
+      ],
+      "bits": 1542
+     },
+     {
+      "parts": [
+       "NW_hub",
+       "root",
+       "NE_hub"
+      ],
+      "bits": 3499
+     },
+     {
+      "parts": [
+       "NW_hub",
+       "root",
+       "NE_io",
+       "NE_hub"
+      ],
+      "bits": 617
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L4",
+      "src": "NW_hub",
+      "dst": "NE_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L12m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1980,
+      "reserved": false,
+      "used": 1980,
+      "left": 0
+     },
+     {
+      "id": "L22m",
+      "src": "PHY_NC",
+      "dst": "NE_hub",
+      "capacity": 1536,
+      "reserved": false,
+      "used": 1536,
+      "left": 0
+     },
+     {
+      "id": "L52m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L62m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 330,
+      "reserved": false,
+      "used": 330,
+      "left": 0
+     },
+     {
+      "id": "L96",
+      "src": "NW_hub",
+      "dst": "NE_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L114m",
+      "src": "PHY_NC",
+      "dst": "NE_hub",
+      "capacity": 6,
+      "reserved": false,
+      "used": 6,
+      "left": 0
+     },
+     {
+      "id": "L126m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 5,
+      "reserved": false,
+      "used": 5,
+      "left": 0
+     },
+     {
+      "id": "L12ms",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1016,
+      "reserved": false,
+      "used": 1016,
+      "left": 0
+     },
+     {
+      "id": "N4D_NE",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 8496,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_hub",
+       "NE_hub"
+      ],
+      "bits": 2838
+     },
+     {
+      "parts": [
+       "NW_hub",
+       "PHY_NC",
+       "NE_hub"
+      ],
+      "bits": 1542
+     },
+     {
+      "parts": [
+       "NW_hub",
+       "root",
+       "NE_hub"
+      ],
+      "bits": 3499
+     },
+     {
+      "parts": [
+       "NW_hub",
+       "root",
+       "NE_io",
+       "NE_hub"
+      ],
+      "bits": 617
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L4",
+      "src": "NW_hub",
+      "dst": "NE_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L12m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1980,
+      "reserved": false,
+      "used": 1980,
+      "left": 0
+     },
+     {
+      "id": "L22m",
+      "src": "PHY_NC",
+      "dst": "NE_hub",
+      "capacity": 1536,
+      "reserved": false,
+      "used": 1536,
+      "left": 0
+     },
+     {
+      "id": "L52m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L62m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 330,
+      "reserved": false,
+      "used": 330,
+      "left": 0
+     },
+     {
+      "id": "L96",
+      "src": "NW_hub",
+      "dst": "NE_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L114m",
+      "src": "PHY_NC",
+      "dst": "NE_hub",
+      "capacity": 6,
+      "reserved": false,
+      "used": 6,
+      "left": 0
+     },
+     {
+      "id": "L126m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 5,
+      "reserved": false,
+      "used": 5,
+      "left": 0
+     },
+     {
+      "id": "L12ms",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1016,
+      "reserved": false,
+      "used": 1016,
+      "left": 0
+     },
+     {
+      "id": "N4D_NE",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L4",
+      "src": "NW_hub",
+      "dst": "NE_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L8",
+      "src": "NW_hub",
+      "dst": "PHY_NW",
+      "capacity": 3070,
+      "reserved": false,
+      "used": 3070,
+      "left": 0
+     },
+     {
+      "id": "L9",
+      "src": "NW_hub",
+      "dst": "PHY_NC",
+      "capacity": 1842,
+      "reserved": false,
+      "used": 1842,
+      "left": 0
+     },
+     {
+      "id": "L12m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1980,
+      "reserved": false,
+      "used": 1980,
+      "left": 0
+     },
+     {
+      "id": "L42",
+      "src": "NW_hub",
+      "dst": "NW_b002",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L43",
+      "src": "NW_hub",
+      "dst": "NW_b011",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L52m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L62m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 330,
+      "reserved": false,
+      "used": 330,
+      "left": 0
+     },
+     {
+      "id": "L63",
+      "src": "NW_hub",
+      "dst": "PHY_NC",
+      "capacity": 126,
+      "reserved": false,
+      "used": 126,
+      "left": 0
+     },
+     {
+      "id": "L65",
+      "src": "NW_hub",
+      "dst": "NW_b000",
+      "capacity": 304,
+      "reserved": false,
+      "used": 304,
+      "left": 0
+     },
+     {
+      "id": "L73",
+      "src": "NW_hub",
+      "dst": "NW_b013",
+      "capacity": 274,
+      "reserved": false,
+      "used": 274,
+      "left": 0
+     },
+     {
+      "id": "L96",
+      "src": "NW_hub",
+      "dst": "NE_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L126m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 5,
+      "reserved": false,
+      "used": 5,
+      "left": 0
+     },
+     {
+      "id": "L12ms",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1016,
+      "reserved": false,
+      "used": 1016,
+      "left": 0
+     },
+     {
+      "id": "L63w",
+      "src": "NW_hub",
+      "dst": "PHY_NW",
+      "capacity": 210,
+      "reserved": false,
+      "used": 210,
+      "left": 0
+     },
+     {
+      "id": "N4D_NE",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_spb0",
+   "actual_missing_bits": 632,
+   "actual_driver_widths": {
+    "epcal_NW.payload": 19,
+    "hb_coll_NW.tx_pin_flit": 612,
+    "hb_coll_NW.tx_pin_v": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": []
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": []
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L4",
+      "src": "NW_hub",
+      "dst": "NE_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L8",
+      "src": "NW_hub",
+      "dst": "PHY_NW",
+      "capacity": 3070,
+      "reserved": false,
+      "used": 3070,
+      "left": 0
+     },
+     {
+      "id": "L9",
+      "src": "NW_hub",
+      "dst": "PHY_NC",
+      "capacity": 1842,
+      "reserved": false,
+      "used": 1842,
+      "left": 0
+     },
+     {
+      "id": "L12m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1980,
+      "reserved": false,
+      "used": 1980,
+      "left": 0
+     },
+     {
+      "id": "L42",
+      "src": "NW_hub",
+      "dst": "NW_b002",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L43",
+      "src": "NW_hub",
+      "dst": "NW_b011",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L52m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L62m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 330,
+      "reserved": false,
+      "used": 330,
+      "left": 0
+     },
+     {
+      "id": "L63",
+      "src": "NW_hub",
+      "dst": "PHY_NC",
+      "capacity": 126,
+      "reserved": false,
+      "used": 126,
+      "left": 0
+     },
+     {
+      "id": "L65",
+      "src": "NW_hub",
+      "dst": "NW_b000",
+      "capacity": 304,
+      "reserved": false,
+      "used": 304,
+      "left": 0
+     },
+     {
+      "id": "L73",
+      "src": "NW_hub",
+      "dst": "NW_b013",
+      "capacity": 274,
+      "reserved": false,
+      "used": 274,
+      "left": 0
+     },
+     {
+      "id": "L96",
+      "src": "NW_hub",
+      "dst": "NE_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L126m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 5,
+      "reserved": false,
+      "used": 5,
+      "left": 0
+     },
+     {
+      "id": "L12ms",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1016,
+      "reserved": false,
+      "used": 1016,
+      "left": 0
+     },
+     {
+      "id": "L63w",
+      "src": "NW_hub",
+      "dst": "PHY_NW",
+      "capacity": 210,
+      "reserved": false,
+      "used": 210,
+      "left": 0
+     },
+     {
+      "id": "N4D_NE",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_hub",
+   "dst": "root",
+   "actual_missing_bits": 2385,
+   "actual_driver_widths": {
+    "hleaf_NW.a_cfg_data": 119,
+    "hleaf_NW.a_cfg_target": 8,
+    "hleaf_NW.a_cfg_v": 1,
+    "hleaf_NW.a_desc_base": 12,
+    "hleaf_NW.a_desc_limit": 13,
+    "hleaf_NW.a_desc_loops": 16,
+    "hleaf_NW.a_desc_v": 1,
+    "hleaf_NW.a_launch_v": 1,
+    "hleaf_NW.s_active": 20,
+    "hleaf_NW.s_fault": 32,
+    "hleaf_NW.s_ready": 20,
+    "obs_NW.r_d": 32,
+    "obs_NW.r_idx": 8,
+    "obs_NW.r_v": 1,
+    "pgp_NW.busy": 1,
+    "pgp_NW.done": 1,
+    "pgp_NW.fault": 1,
+    "pgp_NW.valid": 1,
+    "stl_NW.up_o": 41,
+    "vmb_SW0.rr4": 257,
+    "vmb_SW1.rr4": 257,
+    "vmb_SW2.rr4": 257,
+    "vmb_SW3.rr4": 257,
+    "vmb_SW4.rr4": 257,
+    "vmb_SW5.rr4": 257,
+    "vmb_SW6.rr4": 257,
+    "vmb_SW7.rr4": 257
+   },
+   "direct_lanes": [
+    {
+     "id": "L74",
+     "src": "NW_hub",
+     "dst": "root",
+     "capacity": 1171,
+     "reserved": false,
+     "used": 1171,
+     "left": 0
+    },
+    {
+     "id": "L89",
+     "src": "NW_hub",
+     "dst": "root",
+     "capacity": 2,
+     "reserved": false,
+     "used": 2,
+     "left": 0
+    },
+    {
+     "id": "L156",
+     "src": "NW_hub",
+     "dst": "root",
+     "capacity": 2740,
+     "reserved": false,
+     "used": 2740,
+     "left": 0
+    },
+    {
+     "id": "N4U_NW",
+     "src": "NW_hub",
+     "dst": "root",
+     "capacity": 271,
+     "reserved": false,
+     "used": 271,
+     "left": 0
+    },
+    {
+     "id": "HOST_BOOT",
+     "src": "NW_hub",
+     "dst": "root",
+     "capacity": 320,
+     "reserved": false,
+     "used": 0,
+     "left": 320
+    }
+   ],
+   "capacity_before_reservations": {
+    "maxflow_bits": 6321,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_hub",
+       "root"
+      ],
+      "bits": 4504
+     },
+     {
+      "parts": [
+       "NW_hub",
+       "NE_hub",
+       "root"
+      ],
+      "bits": 551
+     },
+     {
+      "parts": [
+       "NW_hub",
+       "NW_io",
+       "root"
+      ],
+      "bits": 633
+     },
+     {
+      "parts": [
+       "NW_hub",
+       "NE_hub",
+       "NE_io",
+       "root"
+      ],
+      "bits": 633
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L51",
+      "src": "NW_hub",
+      "dst": "NW_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 611,
+      "left": 1
+     },
+     {
+      "id": "L51m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L74",
+      "src": "NW_hub",
+      "dst": "root",
+      "capacity": 1171,
+      "reserved": false,
+      "used": 1171,
+      "left": 0
+     },
+     {
+      "id": "L74m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 279,
+      "reserved": false,
+      "used": 279,
+      "left": 0
+     },
+     {
+      "id": "L89",
+      "src": "NW_hub",
+      "dst": "root",
+      "capacity": 2,
+      "reserved": false,
+      "used": 2,
+      "left": 0
+     },
+     {
+      "id": "L89m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 1,
+      "reserved": false,
+      "used": 1,
+      "left": 0
+     },
+     {
+      "id": "L101",
+      "src": "NW_hub",
+      "dst": "NW_io",
+      "capacity": 21,
+      "reserved": false,
+      "used": 21,
+      "left": 0
+     },
+     {
+      "id": "L101m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 21,
+      "reserved": false,
+      "used": 21,
+      "left": 0
+     },
+     {
+      "id": "L156",
+      "src": "NW_hub",
+      "dst": "root",
+      "capacity": 2740,
+      "reserved": false,
+      "used": 2740,
+      "left": 0
+     },
+     {
+      "id": "N4U_NW",
+      "src": "NW_hub",
+      "dst": "root",
+      "capacity": 271,
+      "reserved": false,
+      "used": 271,
+      "left": 0
+     },
+     {
+      "id": "N4U_NE",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 271,
+      "reserved": false,
+      "used": 271,
+      "left": 0
+     },
+     {
+      "id": "HOST_BOOT",
+      "src": "NW_hub",
+      "dst": "root",
+      "capacity": 320,
+      "reserved": false,
+      "used": 0,
+      "left": 320
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 6321,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_hub",
+       "root"
+      ],
+      "bits": 4504
+     },
+     {
+      "parts": [
+       "NW_hub",
+       "NE_hub",
+       "root"
+      ],
+      "bits": 551
+     },
+     {
+      "parts": [
+       "NW_hub",
+       "NW_io",
+       "root"
+      ],
+      "bits": 633
+     },
+     {
+      "parts": [
+       "NW_hub",
+       "NE_hub",
+       "NE_io",
+       "root"
+      ],
+      "bits": 633
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L51",
+      "src": "NW_hub",
+      "dst": "NW_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 611,
+      "left": 1
+     },
+     {
+      "id": "L51m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L74",
+      "src": "NW_hub",
+      "dst": "root",
+      "capacity": 1171,
+      "reserved": false,
+      "used": 1171,
+      "left": 0
+     },
+     {
+      "id": "L74m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 279,
+      "reserved": false,
+      "used": 279,
+      "left": 0
+     },
+     {
+      "id": "L89",
+      "src": "NW_hub",
+      "dst": "root",
+      "capacity": 2,
+      "reserved": false,
+      "used": 2,
+      "left": 0
+     },
+     {
+      "id": "L89m",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 1,
+      "reserved": false,
+      "used": 1,
+      "left": 0
+     },
+     {
+      "id": "L101",
+      "src": "NW_hub",
+      "dst": "NW_io",
+      "capacity": 21,
+      "reserved": false,
+      "used": 21,
+      "left": 0
+     },
+     {
+      "id": "L101m",
+      "src": "NE_hub",
+      "dst": "NE_io",
+      "capacity": 21,
+      "reserved": false,
+      "used": 21,
+      "left": 0
+     },
+     {
+      "id": "L156",
+      "src": "NW_hub",
+      "dst": "root",
+      "capacity": 2740,
+      "reserved": false,
+      "used": 2740,
+      "left": 0
+     },
+     {
+      "id": "N4U_NW",
+      "src": "NW_hub",
+      "dst": "root",
+      "capacity": 271,
+      "reserved": false,
+      "used": 271,
+      "left": 0
+     },
+     {
+      "id": "N4U_NE",
+      "src": "NE_hub",
+      "dst": "root",
+      "capacity": 271,
+      "reserved": false,
+      "used": 271,
+      "left": 0
+     },
+     {
+      "id": "HOST_BOOT",
+      "src": "NW_hub",
+      "dst": "root",
+      "capacity": 320,
+      "reserved": false,
+      "used": 0,
+      "left": 320
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 320,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_hub",
+       "root"
+      ],
+      "bits": 320
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L4",
+      "src": "NW_hub",
+      "dst": "NE_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L8",
+      "src": "NW_hub",
+      "dst": "PHY_NW",
+      "capacity": 3070,
+      "reserved": false,
+      "used": 3070,
+      "left": 0
+     },
+     {
+      "id": "L9",
+      "src": "NW_hub",
+      "dst": "PHY_NC",
+      "capacity": 1842,
+      "reserved": false,
+      "used": 1842,
+      "left": 0
+     },
+     {
+      "id": "L42",
+      "src": "NW_hub",
+      "dst": "NW_b002",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L43",
+      "src": "NW_hub",
+      "dst": "NW_b011",
+      "capacity": 788,
+      "reserved": false,
+      "used": 788,
+      "left": 0
+     },
+     {
+      "id": "L48",
+      "src": "NW_io",
+      "dst": "root",
+      "capacity": 634,
+      "reserved": false,
+      "used": 634,
+      "left": 0
+     },
+     {
+      "id": "L63",
+      "src": "NW_hub",
+      "dst": "PHY_NC",
+      "capacity": 126,
+      "reserved": false,
+      "used": 126,
+      "left": 0
+     },
+     {
+      "id": "L65",
+      "src": "NW_hub",
+      "dst": "NW_b000",
+      "capacity": 304,
+      "reserved": false,
+      "used": 304,
+      "left": 0
+     },
+     {
+      "id": "L73",
+      "src": "NW_hub",
+      "dst": "NW_b013",
+      "capacity": 274,
+      "reserved": false,
+      "used": 274,
+      "left": 0
+     },
+     {
+      "id": "L74",
+      "src": "NW_hub",
+      "dst": "root",
+      "capacity": 1171,
+      "reserved": false,
+      "used": 1171,
+      "left": 0
+     },
+     {
+      "id": "L89",
+      "src": "NW_hub",
+      "dst": "root",
+      "capacity": 2,
+      "reserved": false,
+      "used": 2,
+      "left": 0
+     },
+     {
+      "id": "L96",
+      "src": "NW_hub",
+      "dst": "NE_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L125",
+      "src": "NW_io",
+      "dst": "root",
+      "capacity": 7,
+      "reserved": false,
+      "used": 7,
+      "left": 0
+     },
+     {
+      "id": "L156",
+      "src": "NW_hub",
+      "dst": "root",
+      "capacity": 2740,
+      "reserved": false,
+      "used": 2740,
+      "left": 0
+     },
+     {
+      "id": "L63w",
+      "src": "NW_hub",
+      "dst": "PHY_NW",
+      "capacity": 210,
+      "reserved": false,
+      "used": 210,
+      "left": 0
+     },
+     {
+      "id": "N4U_NW",
+      "src": "NW_hub",
+      "dst": "root",
+      "capacity": 271,
+      "reserved": false,
+      "used": 271,
+      "left": 0
+     },
+     {
+      "id": "HOST_BOOT",
+      "src": "NW_hub",
+      "dst": "root",
+      "capacity": 320,
+      "reserved": false,
+      "used": 0,
+      "left": 320
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_sm0",
+   "dst": "NW_hub",
+   "actual_missing_bits": 37,
+   "actual_driver_widths": {
+    "sm_NW0.u_front.request": 37
+   },
+   "direct_lanes": [
+    {
+     "id": "L67",
+     "src": "NW_sm0",
+     "dst": "NW_hub",
+     "capacity": 268,
+     "reserved": false,
+     "used": 268,
+     "left": 0
+    },
+    {
+     "id": "L120",
+     "src": "NW_sm0",
+     "dst": "NW_hub",
+     "capacity": 9,
+     "reserved": false,
+     "used": 9,
+     "left": 0
+    }
+   ],
+   "capacity_before_reservations": {
+    "maxflow_bits": 277,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_sm0",
+       "NW_hub"
+      ],
+      "bits": 277
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L67",
+      "src": "NW_sm0",
+      "dst": "NW_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L120",
+      "src": "NW_sm0",
+      "dst": "NW_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 277,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_sm0",
+       "NW_hub"
+      ],
+      "bits": 277
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L67",
+      "src": "NW_sm0",
+      "dst": "NW_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L120",
+      "src": "NW_sm0",
+      "dst": "NW_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L67",
+      "src": "NW_sm0",
+      "dst": "NW_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L120",
+      "src": "NW_sm0",
+      "dst": "NW_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_sm1",
+   "dst": "NW_hub",
+   "actual_missing_bits": 37,
+   "actual_driver_widths": {
+    "sm_NW1.u_front.request": 37
+   },
+   "direct_lanes": [
+    {
+     "id": "L68",
+     "src": "NW_sm1",
+     "dst": "NW_hub",
+     "capacity": 268,
+     "reserved": false,
+     "used": 268,
+     "left": 0
+    },
+    {
+     "id": "L121",
+     "src": "NW_sm1",
+     "dst": "NW_hub",
+     "capacity": 9,
+     "reserved": false,
+     "used": 9,
+     "left": 0
+    }
+   ],
+   "capacity_before_reservations": {
+    "maxflow_bits": 277,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_sm1",
+       "NW_hub"
+      ],
+      "bits": 277
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L68",
+      "src": "NW_sm1",
+      "dst": "NW_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L121",
+      "src": "NW_sm1",
+      "dst": "NW_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 277,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_sm1",
+       "NW_hub"
+      ],
+      "bits": 277
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L68",
+      "src": "NW_sm1",
+      "dst": "NW_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L121",
+      "src": "NW_sm1",
+      "dst": "NW_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L68",
+      "src": "NW_sm1",
+      "dst": "NW_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L121",
+      "src": "NW_sm1",
+      "dst": "NW_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_sm2",
+   "dst": "NW_hub",
+   "actual_missing_bits": 37,
+   "actual_driver_widths": {
+    "sm_NW2.u_front.request": 37
+   },
+   "direct_lanes": [
+    {
+     "id": "L69",
+     "src": "NW_sm2",
+     "dst": "NW_hub",
+     "capacity": 268,
+     "reserved": false,
+     "used": 268,
+     "left": 0
+    },
+    {
+     "id": "L122",
+     "src": "NW_sm2",
+     "dst": "NW_hub",
+     "capacity": 9,
+     "reserved": false,
+     "used": 9,
+     "left": 0
+    }
+   ],
+   "capacity_before_reservations": {
+    "maxflow_bits": 277,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_sm2",
+       "NW_hub"
+      ],
+      "bits": 277
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L69",
+      "src": "NW_sm2",
+      "dst": "NW_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L122",
+      "src": "NW_sm2",
+      "dst": "NW_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 277,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_sm2",
+       "NW_hub"
+      ],
+      "bits": 277
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L69",
+      "src": "NW_sm2",
+      "dst": "NW_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L122",
+      "src": "NW_sm2",
+      "dst": "NW_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L69",
+      "src": "NW_sm2",
+      "dst": "NW_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L122",
+      "src": "NW_sm2",
+      "dst": "NW_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_sm3",
+   "dst": "NW_hub",
+   "actual_missing_bits": 37,
+   "actual_driver_widths": {
+    "sm_NW3.u_front.request": 37
+   },
+   "direct_lanes": [
+    {
+     "id": "L70",
+     "src": "NW_sm3",
+     "dst": "NW_hub",
+     "capacity": 268,
+     "reserved": false,
+     "used": 268,
+     "left": 0
+    },
+    {
+     "id": "L123",
+     "src": "NW_sm3",
+     "dst": "NW_hub",
+     "capacity": 9,
+     "reserved": false,
+     "used": 9,
+     "left": 0
+    }
+   ],
+   "capacity_before_reservations": {
+    "maxflow_bits": 277,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_sm3",
+       "NW_hub"
+      ],
+      "bits": 277
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L70",
+      "src": "NW_sm3",
+      "dst": "NW_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L123",
+      "src": "NW_sm3",
+      "dst": "NW_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 277,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_sm3",
+       "NW_hub"
+      ],
+      "bits": 277
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L70",
+      "src": "NW_sm3",
+      "dst": "NW_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L123",
+      "src": "NW_sm3",
+      "dst": "NW_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L70",
+      "src": "NW_sm3",
+      "dst": "NW_hub",
+      "capacity": 268,
+      "reserved": false,
+      "used": 268,
+      "left": 0
+     },
+     {
+      "id": "L123",
+      "src": "NW_sm3",
+      "dst": "NW_hub",
+      "capacity": 9,
+      "reserved": false,
+      "used": 9,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_spb0",
+   "dst": "NW_hub",
+   "actual_missing_bits": 615,
+   "actual_driver_widths": {
+    "ep_S0.fault": 1,
+    "ep_S0.phy_up": 1,
+    "ep_S0.rx_pin_flit": 612,
+    "ep_S0.rx_pin_v": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 13,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_spb0",
+       "root",
+       "NW_hub"
+      ],
+      "bits": 13
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L117",
+      "src": "NW_spb0",
+      "dst": "root",
+      "capacity": 11,
+      "reserved": false,
+      "used": 11,
+      "left": 0
+     },
+     {
+      "id": "L138",
+      "src": "NW_spb0",
+      "dst": "root",
+      "capacity": 2,
+      "reserved": false,
+      "used": 2,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 13,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_spb0",
+       "root",
+       "NW_hub"
+      ],
+      "bits": 13
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L117",
+      "src": "NW_spb0",
+      "dst": "root",
+      "capacity": 11,
+      "reserved": false,
+      "used": 11,
+      "left": 0
+     },
+     {
+      "id": "L138",
+      "src": "NW_spb0",
+      "dst": "root",
+      "capacity": 2,
+      "reserved": false,
+      "used": 2,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L117",
+      "src": "NW_spb0",
+      "dst": "root",
+      "capacity": 11,
+      "reserved": false,
+      "used": 11,
+      "left": 0
+     },
+     {
+      "id": "L138",
+      "src": "NW_spb0",
+      "dst": "root",
+      "capacity": 2,
+      "reserved": false,
+      "used": 2,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_spt0",
+   "dst": "root",
+   "actual_missing_bits": 9,
+   "actual_driver_widths": {
+    "cp_svg_NW0.run_arg": 8,
+    "cp_svg_NW0.run_v": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 1478,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_spt0",
+       "NW_hub",
+       "root"
+      ],
+      "bits": 1132
+     },
+     {
+      "parts": [
+       "NW_spt0",
+       "NW_sm0",
+       "NW_hub",
+       "root"
+      ],
+      "bits": 173
+     },
+     {
+      "parts": [
+       "NW_spt0",
+       "NW_sm1",
+       "NW_hub",
+       "root"
+      ],
+      "bits": 173
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L41",
+      "src": "NW_spt0",
+      "dst": "NW_hub",
+      "capacity": 1064,
+      "reserved": false,
+      "used": 1064,
+      "left": 0
+     },
+     {
+      "id": "L77",
+      "src": "NW_spt0",
+      "dst": "NW_sm0",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L78",
+      "src": "NW_spt0",
+      "dst": "NW_sm1",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L88",
+      "src": "NW_spt0",
+      "dst": "NW_hub",
+      "capacity": 68,
+      "reserved": false,
+      "used": 68,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 1478,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_spt0",
+       "NW_hub",
+       "root"
+      ],
+      "bits": 1132
+     },
+     {
+      "parts": [
+       "NW_spt0",
+       "NW_sm0",
+       "NW_hub",
+       "root"
+      ],
+      "bits": 173
+     },
+     {
+      "parts": [
+       "NW_spt0",
+       "NW_sm1",
+       "NW_hub",
+       "root"
+      ],
+      "bits": 173
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L41",
+      "src": "NW_spt0",
+      "dst": "NW_hub",
+      "capacity": 1064,
+      "reserved": false,
+      "used": 1064,
+      "left": 0
+     },
+     {
+      "id": "L77",
+      "src": "NW_spt0",
+      "dst": "NW_sm0",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L78",
+      "src": "NW_spt0",
+      "dst": "NW_sm1",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L88",
+      "src": "NW_spt0",
+      "dst": "NW_hub",
+      "capacity": 68,
+      "reserved": false,
+      "used": 68,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L41",
+      "src": "NW_spt0",
+      "dst": "NW_hub",
+      "capacity": 1064,
+      "reserved": false,
+      "used": 1064,
+      "left": 0
+     },
+     {
+      "id": "L77",
+      "src": "NW_spt0",
+      "dst": "NW_sm0",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L78",
+      "src": "NW_spt0",
+      "dst": "NW_sm1",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "L88",
+      "src": "NW_spt0",
+      "dst": "NW_hub",
+      "capacity": 68,
+      "reserved": false,
+      "used": 68,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_su00",
+   "dst": "NW_su11",
+   "actual_missing_bits": 1,
+   "actual_driver_widths": {
+    "fl_NW0.fault": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 517,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_su00",
+       "NW_hub",
+       "NW_su11"
+      ],
+      "bits": 517
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L55",
+      "src": "NW_su00",
+      "dst": "NW_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L134",
+      "src": "NW_su00",
+      "dst": "NW_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 517,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_su00",
+       "NW_hub",
+       "NW_su11"
+      ],
+      "bits": 517
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L55",
+      "src": "NW_su00",
+      "dst": "NW_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L134",
+      "src": "NW_su00",
+      "dst": "NW_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L55",
+      "src": "NW_su00",
+      "dst": "NW_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L134",
+      "src": "NW_su00",
+      "dst": "NW_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_su20",
+   "actual_missing_bits": 1,
+   "actual_driver_widths": {
+    "fl_NW1.fault": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 517,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_su11",
+       "NW_hub",
+       "NW_su20"
+      ],
+      "bits": 517
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L57",
+      "src": "NW_su11",
+      "dst": "NW_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L135",
+      "src": "NW_su11",
+      "dst": "NW_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 517,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_su11",
+       "NW_hub",
+       "NW_su20"
+      ],
+      "bits": 517
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L57",
+      "src": "NW_su11",
+      "dst": "NW_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L135",
+      "src": "NW_su11",
+      "dst": "NW_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L57",
+      "src": "NW_su11",
+      "dst": "NW_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L135",
+      "src": "NW_su11",
+      "dst": "NW_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_su31",
+   "actual_missing_bits": 1,
+   "actual_driver_widths": {
+    "fl_NW2.fault": 1
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 517,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_su20",
+       "NW_hub",
+       "NW_su31"
+      ],
+      "bits": 517
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L59",
+      "src": "NW_su20",
+      "dst": "NW_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L136",
+      "src": "NW_su20",
+      "dst": "NW_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 517,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "NW_su20",
+       "NW_hub",
+       "NW_su31"
+      ],
+      "bits": 517
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L59",
+      "src": "NW_su20",
+      "dst": "NW_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L136",
+      "src": "NW_su20",
+      "dst": "NW_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L59",
+      "src": "NW_su20",
+      "dst": "NW_hub",
+      "capacity": 514,
+      "reserved": false,
+      "used": 514,
+      "left": 0
+     },
+     {
+      "id": "L136",
+      "src": "NW_su20",
+      "dst": "NW_hub",
+      "capacity": 3,
+      "reserved": false,
+      "used": 3,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "root",
+   "dst": "NE_hub",
+   "actual_missing_bits": 848,
+   "actual_driver_widths": {
+    "hc_eng.result": 104,
+    "hc_eng.result_position": 3,
+    "hc_eng.result_v": 1,
+    "host_cp_ingress.cfg_addr": 12,
+    "host_cp_ingress.cfg_data": 256,
+    "host_cp_ingress.cfg_target": 8,
+    "host_cp_ingress.cfg_v": 1,
+    "host_cp_ingress.desc_base": 12,
+    "host_cp_ingress.desc_limit": 13,
+    "host_cp_ingress.desc_loops": 16,
+    "host_cp_ingress.desc_v": 1,
+    "host_cp_ingress.launch_v": 1,
+    "obs_C.r_d": 32,
+    "obs_C.r_idx": 8,
+    "obs_C.r_v": 1,
+    "str_C.dn1_o": 82,
+    "su_prog.r_bank": 16,
+    "su_prog.r_data": 256,
+    "su_prog.r_len": 16,
+    "su_prog.r_row": 7,
+    "su_prog.r_start": 1,
+    "su_prog.r_we": 1
+   },
+   "direct_lanes": [
+    {
+     "id": "L12m",
+     "src": "root",
+     "dst": "NE_hub",
+     "capacity": 1980,
+     "reserved": false,
+     "used": 1980,
+     "left": 0
+    },
+    {
+     "id": "L62m",
+     "src": "root",
+     "dst": "NE_hub",
+     "capacity": 330,
+     "reserved": false,
+     "used": 330,
+     "left": 0
+    },
+    {
+     "id": "L12ms",
+     "src": "root",
+     "dst": "NE_hub",
+     "capacity": 1016,
+     "reserved": false,
+     "used": 1016,
+     "left": 0
+    },
+    {
+     "id": "N4D_NE",
+     "src": "root",
+     "dst": "NE_hub",
+     "capacity": 173,
+     "reserved": false,
+     "used": 173,
+     "left": 0
+    }
+   ],
+   "capacity_before_reservations": {
+    "maxflow_bits": 8496,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "root",
+       "NE_hub"
+      ],
+      "bits": 3499
+     },
+     {
+      "parts": [
+       "root",
+       "NE_io",
+       "NE_hub"
+      ],
+      "bits": 617
+     },
+     {
+      "parts": [
+       "root",
+       "NW_hub",
+       "NE_hub"
+      ],
+      "bits": 2838
+     },
+     {
+      "parts": [
+       "root",
+       "NW_hub",
+       "PHY_NC",
+       "NE_hub"
+      ],
+      "bits": 1542
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L4",
+      "src": "NW_hub",
+      "dst": "NE_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L12m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1980,
+      "reserved": false,
+      "used": 1980,
+      "left": 0
+     },
+     {
+      "id": "L22m",
+      "src": "PHY_NC",
+      "dst": "NE_hub",
+      "capacity": 1536,
+      "reserved": false,
+      "used": 1536,
+      "left": 0
+     },
+     {
+      "id": "L52m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L62m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 330,
+      "reserved": false,
+      "used": 330,
+      "left": 0
+     },
+     {
+      "id": "L96",
+      "src": "NW_hub",
+      "dst": "NE_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L114m",
+      "src": "PHY_NC",
+      "dst": "NE_hub",
+      "capacity": 6,
+      "reserved": false,
+      "used": 6,
+      "left": 0
+     },
+     {
+      "id": "L126m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 5,
+      "reserved": false,
+      "used": 5,
+      "left": 0
+     },
+     {
+      "id": "L12ms",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1016,
+      "reserved": false,
+      "used": 1016,
+      "left": 0
+     },
+     {
+      "id": "N4D_NE",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 8496,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "root",
+       "NE_hub"
+      ],
+      "bits": 3499
+     },
+     {
+      "parts": [
+       "root",
+       "NE_io",
+       "NE_hub"
+      ],
+      "bits": 617
+     },
+     {
+      "parts": [
+       "root",
+       "NW_hub",
+       "NE_hub"
+      ],
+      "bits": 2838
+     },
+     {
+      "parts": [
+       "root",
+       "NW_hub",
+       "PHY_NC",
+       "NE_hub"
+      ],
+      "bits": 1542
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L4",
+      "src": "NW_hub",
+      "dst": "NE_hub",
+      "capacity": 2816,
+      "reserved": false,
+      "used": 2816,
+      "left": 0
+     },
+     {
+      "id": "L12m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1980,
+      "reserved": false,
+      "used": 1980,
+      "left": 0
+     },
+     {
+      "id": "L22m",
+      "src": "PHY_NC",
+      "dst": "NE_hub",
+      "capacity": 1536,
+      "reserved": false,
+      "used": 1536,
+      "left": 0
+     },
+     {
+      "id": "L52m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L62m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 330,
+      "reserved": false,
+      "used": 330,
+      "left": 0
+     },
+     {
+      "id": "L96",
+      "src": "NW_hub",
+      "dst": "NE_hub",
+      "capacity": 22,
+      "reserved": false,
+      "used": 22,
+      "left": 0
+     },
+     {
+      "id": "L114m",
+      "src": "PHY_NC",
+      "dst": "NE_hub",
+      "capacity": 6,
+      "reserved": false,
+      "used": 6,
+      "left": 0
+     },
+     {
+      "id": "L126m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 5,
+      "reserved": false,
+      "used": 5,
+      "left": 0
+     },
+     {
+      "id": "L12ms",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1016,
+      "reserved": false,
+      "used": 1016,
+      "left": 0
+     },
+     {
+      "id": "N4D_NE",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L12",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 1980,
+      "reserved": false,
+      "used": 1980,
+      "left": 0
+     },
+     {
+      "id": "L12m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1980,
+      "reserved": false,
+      "used": 1980,
+      "left": 0
+     },
+     {
+      "id": "L13",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 2628,
+      "reserved": false,
+      "used": 2628,
+      "left": 0
+     },
+     {
+      "id": "L52m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L53",
+      "src": "root",
+      "dst": "NW_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L62",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 324,
+      "reserved": false,
+      "used": 324,
+      "left": 0
+     },
+     {
+      "id": "L62m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 330,
+      "reserved": false,
+      "used": 330,
+      "left": 0
+     },
+     {
+      "id": "L106",
+      "src": "root",
+      "dst": "NW_io",
+      "capacity": 20,
+      "reserved": false,
+      "used": 20,
+      "left": 0
+     },
+     {
+      "id": "L126m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 5,
+      "reserved": false,
+      "used": 5,
+      "left": 0
+     },
+     {
+      "id": "L12s",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 1016,
+      "reserved": false,
+      "used": 1016,
+      "left": 0
+     },
+     {
+      "id": "L12ms",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1016,
+      "reserved": false,
+      "used": 1016,
+      "left": 0
+     },
+     {
+      "id": "N4D_NW",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "N4D_NE",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "root",
+   "dst": "NW_hub",
+   "actual_missing_bits": 2235,
+   "actual_driver_widths": {
+    "hb_idx__link.tx": 39,
+    "hb_idx__link.tx_v": 4,
+    "hb_router_ids.ids": 54,
+    "hb_router_ids.ids_cohort": 16,
+    "hb_router_ids.ids_layer": 8,
+    "hb_router_ids.ids_v": 1,
+    "hc_eng.qd_nv": 8,
+    "hc_eng.qd_ss": 1,
+    "hc_eng.qd_v": 1,
+    "hc_eng.qd_wa": 10,
+    "hc_eng.qd_xa": 10,
+    "hc_eng.qi_cnt": 12,
+    "hc_eng.qi_kind": 1,
+    "hc_eng.qi_lo": 5,
+    "hc_eng.qi_slot": 2,
+    "hc_eng.qi_v": 1,
+    "hc_eng.qi_w": 6,
+    "hc_eng.qi_word": 10,
+    "hc_eng.result": 768,
+    "hc_eng.result_position": 3,
+    "hc_eng.result_v": 1,
+    "host_cp_ingress.cfg_addr": 12,
+    "host_cp_ingress.cfg_data": 256,
+    "host_cp_ingress.cfg_target": 8,
+    "host_cp_ingress.cfg_v": 1,
+    "host_cp_ingress.desc_base": 12,
+    "host_cp_ingress.desc_limit": 13,
+    "host_cp_ingress.desc_loops": 16,
+    "host_cp_ingress.desc_v": 1,
+    "host_cp_ingress.launch_v": 1,
+    "str_C.dn0_o": 82,
+    "su_prog.r_bank": 16,
+    "su_prog.r_data": 256,
+    "su_prog.r_len": 16,
+    "su_prog.r_row": 7,
+    "su_prog.r_start": 1,
+    "su_prog.r_we": 1,
+    "tkm_SW.busy": 1,
+    "tkm_SW.done": 1,
+    "tkm_SW.fault": 1,
+    "tkm_SW.w_addr": 40,
+    "tkm_SW.w_data": 512,
+    "tkm_SW.w_mask": 16,
+    "tkm_SW.w_v": 1,
+    "u_mu_fused_programme.active": 1,
+    "u_mu_fused_programme.fault": 1,
+    "u_mu_fused_programme.ready": 1
+   },
+   "direct_lanes": [
+    {
+     "id": "L12",
+     "src": "root",
+     "dst": "NW_hub",
+     "capacity": 1980,
+     "reserved": false,
+     "used": 1980,
+     "left": 0
+    },
+    {
+     "id": "L13",
+     "src": "root",
+     "dst": "NW_hub",
+     "capacity": 2628,
+     "reserved": false,
+     "used": 2628,
+     "left": 0
+    },
+    {
+     "id": "L62",
+     "src": "root",
+     "dst": "NW_hub",
+     "capacity": 324,
+     "reserved": false,
+     "used": 324,
+     "left": 0
+    },
+    {
+     "id": "L12s",
+     "src": "root",
+     "dst": "NW_hub",
+     "capacity": 1016,
+     "reserved": false,
+     "used": 1016,
+     "left": 0
+    },
+    {
+     "id": "N4D_NW",
+     "src": "root",
+     "dst": "NW_hub",
+     "capacity": 173,
+     "reserved": false,
+     "used": 173,
+     "left": 0
+    }
+   ],
+   "capacity_before_reservations": {
+    "maxflow_bits": 10854,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "root",
+       "NW_hub"
+      ],
+      "bits": 6121
+     },
+     {
+      "parts": [
+       "root",
+       "NE_hub",
+       "NW_hub"
+      ],
+      "bits": 2838
+     },
+     {
+      "parts": [
+       "root",
+       "NW_io",
+       "NW_hub"
+      ],
+      "bits": 617
+     },
+     {
+      "parts": [
+       "root",
+       "NE_hub",
+       "PHY_NC",
+       "NW_hub"
+      ],
+      "bits": 661
+     },
+     {
+      "parts": [
+       "root",
+       "NE_io",
+       "NE_hub",
+       "PHY_NC",
+       "NW_hub"
+      ],
+      "bits": 617
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L12",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 1980,
+      "reserved": false,
+      "used": 1980,
+      "left": 0
+     },
+     {
+      "id": "L12m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1980,
+      "reserved": false,
+      "used": 1980,
+      "left": 0
+     },
+     {
+      "id": "L13",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 2628,
+      "reserved": false,
+      "used": 2628,
+      "left": 0
+     },
+     {
+      "id": "L52",
+      "src": "NW_io",
+      "dst": "NW_hub",
+      "capacity": 612,
+      "reserved": false,
+      "used": 610,
+      "left": 2
+     },
+     {
+      "id": "L52m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L62",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 324,
+      "reserved": false,
+      "used": 324,
+      "left": 0
+     },
+     {
+      "id": "L62m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 330,
+      "reserved": false,
+      "used": 330,
+      "left": 0
+     },
+     {
+      "id": "L126",
+      "src": "NW_io",
+      "dst": "NW_hub",
+      "capacity": 5,
+      "reserved": false,
+      "used": 5,
+      "left": 0
+     },
+     {
+      "id": "L126m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 5,
+      "reserved": false,
+      "used": 5,
+      "left": 0
+     },
+     {
+      "id": "L12s",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 1016,
+      "reserved": false,
+      "used": 1016,
+      "left": 0
+     },
+     {
+      "id": "L12ms",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1016,
+      "reserved": false,
+      "used": 1016,
+      "left": 0
+     },
+     {
+      "id": "N4D_NW",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "N4D_NE",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 10854,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "root",
+       "NW_hub"
+      ],
+      "bits": 6121
+     },
+     {
+      "parts": [
+       "root",
+       "NE_hub",
+       "NW_hub"
+      ],
+      "bits": 2838
+     },
+     {
+      "parts": [
+       "root",
+       "NW_io",
+       "NW_hub"
+      ],
+      "bits": 617
+     },
+     {
+      "parts": [
+       "root",
+       "NE_hub",
+       "PHY_NC",
+       "NW_hub"
+      ],
+      "bits": 661
+     },
+     {
+      "parts": [
+       "root",
+       "NE_io",
+       "NE_hub",
+       "PHY_NC",
+       "NW_hub"
+      ],
+      "bits": 617
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L12",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 1980,
+      "reserved": false,
+      "used": 1980,
+      "left": 0
+     },
+     {
+      "id": "L12m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1980,
+      "reserved": false,
+      "used": 1980,
+      "left": 0
+     },
+     {
+      "id": "L13",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 2628,
+      "reserved": false,
+      "used": 2628,
+      "left": 0
+     },
+     {
+      "id": "L52",
+      "src": "NW_io",
+      "dst": "NW_hub",
+      "capacity": 612,
+      "reserved": false,
+      "used": 610,
+      "left": 2
+     },
+     {
+      "id": "L52m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L62",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 324,
+      "reserved": false,
+      "used": 324,
+      "left": 0
+     },
+     {
+      "id": "L62m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 330,
+      "reserved": false,
+      "used": 330,
+      "left": 0
+     },
+     {
+      "id": "L126",
+      "src": "NW_io",
+      "dst": "NW_hub",
+      "capacity": 5,
+      "reserved": false,
+      "used": 5,
+      "left": 0
+     },
+     {
+      "id": "L126m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 5,
+      "reserved": false,
+      "used": 5,
+      "left": 0
+     },
+     {
+      "id": "L12s",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 1016,
+      "reserved": false,
+      "used": 1016,
+      "left": 0
+     },
+     {
+      "id": "L12ms",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1016,
+      "reserved": false,
+      "used": 1016,
+      "left": 0
+     },
+     {
+      "id": "N4D_NW",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "N4D_NE",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L12",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 1980,
+      "reserved": false,
+      "used": 1980,
+      "left": 0
+     },
+     {
+      "id": "L12m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1980,
+      "reserved": false,
+      "used": 1980,
+      "left": 0
+     },
+     {
+      "id": "L13",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 2628,
+      "reserved": false,
+      "used": 2628,
+      "left": 0
+     },
+     {
+      "id": "L52m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L53",
+      "src": "root",
+      "dst": "NW_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L62",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 324,
+      "reserved": false,
+      "used": 324,
+      "left": 0
+     },
+     {
+      "id": "L62m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 330,
+      "reserved": false,
+      "used": 330,
+      "left": 0
+     },
+     {
+      "id": "L106",
+      "src": "root",
+      "dst": "NW_io",
+      "capacity": 20,
+      "reserved": false,
+      "used": 20,
+      "left": 0
+     },
+     {
+      "id": "L126m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 5,
+      "reserved": false,
+      "used": 5,
+      "left": 0
+     },
+     {
+      "id": "L12s",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 1016,
+      "reserved": false,
+      "used": 1016,
+      "left": 0
+     },
+     {
+      "id": "L12ms",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1016,
+      "reserved": false,
+      "used": 1016,
+      "left": 0
+     },
+     {
+      "id": "N4D_NW",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "N4D_NE",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "root",
+   "dst": "vsN0",
+   "actual_missing_bits": 632,
+   "actual_driver_widths": {
+    "b2_ep1_root.tx_o": 632
+   },
+   "direct_lanes": [],
+   "capacity_before_reservations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": []
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": []
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L12",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 1980,
+      "reserved": false,
+      "used": 1980,
+      "left": 0
+     },
+     {
+      "id": "L12m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1980,
+      "reserved": false,
+      "used": 1980,
+      "left": 0
+     },
+     {
+      "id": "L13",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 2628,
+      "reserved": false,
+      "used": 2628,
+      "left": 0
+     },
+     {
+      "id": "L52m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L53",
+      "src": "root",
+      "dst": "NW_io",
+      "capacity": 612,
+      "reserved": false,
+      "used": 612,
+      "left": 0
+     },
+     {
+      "id": "L62",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 324,
+      "reserved": false,
+      "used": 324,
+      "left": 0
+     },
+     {
+      "id": "L62m",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 330,
+      "reserved": false,
+      "used": 330,
+      "left": 0
+     },
+     {
+      "id": "L106",
+      "src": "root",
+      "dst": "NW_io",
+      "capacity": 20,
+      "reserved": false,
+      "used": 20,
+      "left": 0
+     },
+     {
+      "id": "L126m",
+      "src": "NE_io",
+      "dst": "NE_hub",
+      "capacity": 5,
+      "reserved": false,
+      "used": 5,
+      "left": 0
+     },
+     {
+      "id": "L12s",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 1016,
+      "reserved": false,
+      "used": 1016,
+      "left": 0
+     },
+     {
+      "id": "L12ms",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 1016,
+      "reserved": false,
+      "used": 1016,
+      "left": 0
+     },
+     {
+      "id": "N4D_NW",
+      "src": "root",
+      "dst": "NW_hub",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     },
+     {
+      "id": "N4D_NE",
+      "src": "root",
+      "dst": "NE_hub",
+      "capacity": 173,
+      "reserved": false,
+      "used": 173,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  },
+  {
+   "src": "vsN0",
+   "dst": "root",
+   "actual_missing_bits": 615,
+   "actual_driver_widths": {
+    "ep_S1.rx_block_ready": 2,
+    "ep_S1.rx_pin_flit": 612,
+    "ep_S1.rx_pin_v": 1
+   },
+   "direct_lanes": [
+    {
+     "id": "L118",
+     "src": "vsN0",
+     "dst": "root",
+     "capacity": 11,
+     "reserved": false,
+     "used": 11,
+     "left": 0
+    },
+    {
+     "id": "L141",
+     "src": "vsN0",
+     "dst": "root",
+     "capacity": 2,
+     "reserved": false,
+     "used": 2,
+     "left": 0
+    }
+   ],
+   "capacity_before_reservations": {
+    "maxflow_bits": 13,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "vsN0",
+       "root"
+      ],
+      "bits": 13
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L118",
+      "src": "vsN0",
+      "dst": "root",
+      "capacity": 11,
+      "reserved": false,
+      "used": 11,
+      "left": 0
+     },
+     {
+      "id": "L141",
+      "src": "vsN0",
+      "dst": "root",
+      "capacity": 2,
+      "reserved": false,
+      "used": 2,
+      "left": 0
+     }
+    ]
+   },
+   "capacity_after_reservations": {
+    "maxflow_bits": 13,
+    "augmenting_paths": [
+     {
+      "parts": [
+       "vsN0",
+       "root"
+      ],
+      "bits": 13
+     }
+    ],
+    "mincut_edges": [
+     {
+      "id": "L118",
+      "src": "vsN0",
+      "dst": "root",
+      "capacity": 11,
+      "reserved": false,
+      "used": 11,
+      "left": 0
+     },
+     {
+      "id": "L141",
+      "src": "vsN0",
+      "dst": "root",
+      "capacity": 2,
+      "reserved": false,
+      "used": 2,
+      "left": 0
+     }
+    ]
+   },
+   "residual_after_saved_actual_allocations": {
+    "maxflow_bits": 0,
+    "augmenting_paths": [],
+    "mincut_edges": [
+     {
+      "id": "L118",
+      "src": "vsN0",
+      "dst": "root",
+      "capacity": 11,
+      "reserved": false,
+      "used": 11,
+      "left": 0
+     },
+     {
+      "id": "L141",
+      "src": "vsN0",
+      "dst": "root",
+      "capacity": 2,
+      "reserved": false,
+      "used": 2,
+      "left": 0
+     }
+    ]
+   },
+   "note": "Max-flow is an independent per-pair upper bound; not a simultaneous allocation or cycle-compatible route."
+  }
+ ]
+}
