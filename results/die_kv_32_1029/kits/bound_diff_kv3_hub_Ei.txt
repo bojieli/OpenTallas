@@ -1,0 +1,19 @@
+1143,1146c1143,1144
+<     (* keep = "true", face_keep = "true" *) reg cland_raw_reset_q;
+<     always @(posedge clk) cland_raw_reset_q <= rst_n_t0;
+<     assign cland_raw_reset_out = cland_raw_reset_q;
+<     assign cland_tstart_out = cland_start;
+---
+>     ot_dp_rrelay u_cland_raw_reset_o (.clk(clk), .d(rst_n_t0), .q(cland_raw_reset_out));
+>     ot_dp_landing_relay u_cland_tstart_o (.clk(clk), .rst_raw_n(cland_start_raw), .d(cland_start_d), .q(cland_tstart_out));
+1147a1146,1147
+>     wire cland_reset_rst_n_t21;
+>     ot_dp_rrelay u_cland_reset_rst_n_t21 (.clk(clk), .d(rst_rl_57), .q(cland_reset_rst_n_t21));
+1151c1151
+<         .fclk(fclk_in_cland_dn_0), .clk(clk), .rst_n(rr_t21),
+---
+>         .fclk(fclk_in_cland_dn_0), .clk(clk), .rst_n(cland_reset_rst_n_t21),
+1180c1180
+<         .clk(clk), .rst_n(rr_t21), .ready_i({(cland_dn_word_0[0] && cland_dn_trained_0 && !cland_dn_guard_0)}),
+---
+>         .clk(clk), .rst_n(cland_reset_rst_n_t21), .ready_i({(cland_dn_word_0[0] && cland_dn_trained_0 && !cland_dn_guard_0)}),
