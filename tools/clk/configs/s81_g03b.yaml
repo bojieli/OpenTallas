@@ -1,0 +1,49 @@
+# S81 g03b (DIE-S81-23, OWNER 12.17(3) winner of A/B): g03 + early ff 0.938 (corner-averaged early target, Codex TT02
+# coupon FF factor). GRT0 PASS; skew TT 264 / FF 220.4, kit-contract 8 regions <0 (epyc2 die-s81-23/g03route/run_b).
+# ot-clk config: S81 current-plan die clock = CLOCK geometry03 (Codex CLK-TOOL-4, epyc2 codex-clock-takeover-1029/src03,
+# python driver geometry_feed03.py) re-expressed as an ot-clk config (OWNER 12.17(2): ot_clk.py is the only die clock path).
+# plan_s13r2 + map398 + feed_sb6; inv2 2W2S NDR; region DME delay, early 0.9324 merge (TT only, as geometry03), snake all,
+# cell paths; FEED/rep reach fix 400 um, actual-hop guard 405 um, region DME actual max 405 um (extra_argv: not yet a key).
+# Stage model = inv2_ndr_s81_bk2w2s_late (local bk_sel coupon fit; qualify by refit on the g03route routed legs).
+schema: ot_clk_config/1
+die: s81
+event:
+  name: g03b
+  host: epyc2
+  source: CLOCK geometry03 (codex/clock-takeover-1029 fe1d0cde0 = main 2b90210bd die_trial); DIE-S81-23 g03route run.sh
+  reference_clock_dir: /srv/opentallas-scratch2/claude/die-s81-23/g03route/run_b/kit/clock
+inputs:
+  plan: /srv/opentallas-scratch2/claude/die-s81-23/g03route/plan_s13r2.json
+  region_map: /srv/opentallas-scratch2/claude/die-s81-23/g03route/map398.json
+  feed: /srv/opentallas-scratch2/claude/die-s81-23/g03route/feed_sb6.json
+stack:
+  cell: inv2
+  clock_rc: ndr
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 250
+  site_legal: true
+  site_slide: true
+  rep_reach_max: 400
+  rep_actual_max: 405
+  opts:
+    dme_feed_centroid: 1
+region:
+  form: dme
+  workers: 24
+  dme_mode: delay
+  only:
+    all_from_map: true
+  early:
+    tt: 0.9324
+    ff: 0.938
+    mode: merge
+stage_model:
+  entry: inv2_ndr_s81_bk2w2s_late
+  corners: [TT, FF]
+  edge: rise
+residual:
+  snake: all
+  cell_paths: true
+extra_argv: [--region-dme-actual-max, 405]

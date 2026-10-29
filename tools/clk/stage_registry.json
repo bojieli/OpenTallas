@@ -353,6 +353,66 @@
      "rms_built_ps": 8.47
     }
    }
+  },
+  {
+   "id": "inv2_ndr_s81_g03b_refit",
+   "key": {
+    "cell": "CKINVDCx16_ASAP7_75t_R",
+    "polarity": "pair",
+    "clock_rc": "ndr",
+    "corners": [
+     "TT",
+     "FF"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": "S81 g03b routed 2W2S NDR M8/M9 (epyc2 die-s81-23/g03route/run_b)"
+   },
+   "basis": "ot_clk refit (s81 g03b) of stack inv2/ndr on routed legs run_b/out_<C>; TT 16604 legs rms 7.95 ps (old model 20.06), FF 16604 legs rms 7.16 ps (old model 20.11)",
+   "source": {
+    "file": "results/die_s81_23_1029/cal_g03b_refit.json",
+    "sha256": "a23d9ff85ff9fed5f229988c8b40e7feba8b0750ebc6534c6d451dce0ca7ec01",
+    "tree": "epyc2:/srv/opentallas-scratch2/claude/die-s81-23/g03route/run_b/kit/clock/tree.json",
+    "arrivals": "epyc2:/srv/opentallas-scratch2/claude/die-s81-23/g03route/run_b/out_<C>",
+    "rep_um": 250.0,
+    "even_legs": true,
+    "built_with": "epyc2:/srv/opentallas-scratch2/claude/die-s81-23/g03route/cal_g03b_refit.built_with.json",
+    "tap_from": "results/die_s81_23_1029/bk_stage_cal_2w2s_late.json"
+   },
+   "leg": [
+    12.653713,
+    0.159163,
+    0.000232,
+    11.144621
+   ],
+   "tap": [
+    0.028407301153837154,
+    0.0
+   ],
+   "leg_FF": [
+    10.706683,
+    0.142556,
+    0.000228,
+    8.186148
+   ],
+   "tap_FF": [
+    0.02839839954669633,
+    0.0
+   ],
+   "coeff_sha": "c6bf8463507c9d0f",
+   "fit": {
+    "TT": {
+     "legs": 16604,
+     "rms_ps": 7.95,
+     "rms_built_ps": 20.06
+    },
+    "FF": {
+     "legs": 16604,
+     "rms_ps": 7.16,
+     "rms_built_ps": 20.11
+    }
+   }
   }
  ]
 }
