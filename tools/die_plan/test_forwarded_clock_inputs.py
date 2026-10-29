@@ -66,3 +66,53 @@ def test_kit_rtl_connects_bound_planned_tap_once(tmp_path):
     text=(kit/'a_mod.sv').read_text()
     assert len(re.findall(r'input\s+wire\s+clk_t3\b',text))==1
     assert text.count('.clk_t3(clk_t3)')==1
+
+
+def test_multiple_export_taps_parse_and_forward_distinct_clocks(tmp_path):
+    """A tap inserted before a later port must not comment out its comma."""
+    import shutil
+    import subprocess
+    iv = shutil.which("iverilog")
+    vv = shutil.which("vvp")
+    if not iv or not vv:
+        pytest.skip("iverilog/vvp required for executable generated-header regression")
+    p, t = physical_vehicle()
+    pp = copy.deepcopy(p["ports"][0]); pp.update(id="P2")
+    pp["src"]["bus"] = "z"; pp["dst"]["bus"] = "y2"; p["ports"].append(pp)
+    tp = copy.deepcopy(t["ports"][0]); tp.update(port="P2", lane="L2"); t["ports"].append(tp)
+    cpin = copy.deepcopy(p["partition_types"]["A"]["buses"][0]); cpin["name"]="fclk_out_z"
+    p["partition_types"]["A"]["buses"].append(cpin)
+    for name in ("y2", "fclk_in_y2", "landing_ready_y2", "landing_fault_y2"):
+        q=copy.deepcopy(next(x for x in p["partition_types"]["B"]["buses"] if x["name"]==name.replace("y2","y")))
+        q["name"]=name; p["partition_types"]["B"]["buses"].append(q)
+    p["partition_types"]["A"]["clock"]["landing_contract"]["pins"].append(dict(
+        name="fclk_out_z",dir="out",kind="clock",layer="M8",xy_um=[799,3.5],source_clock_port="clk_t2"))
+    source=A.replace(" output wire [4:0] x", " output wire [4:0] z,\n output wire [4:0] x").replace(" assign x = 0;"," assign x = 0; assign z = 0;")
+    emitted=Landings(p,t).type_rtl("A",source)
+    assert "assign fclk_out_x = clk_t3;" in emitted and "assign fclk_out_z = clk_t2;" in emitted
+    bench="""module tb;
+reg clk=0, c2=0, c3=0; wire fx,fz; wire [4:0] x,z;
+a_mod u(.clk(clk),.clk_t2(c2),.clk_t3(c3),.fclk_out_x(fx),.fclk_out_z(fz),.x(x),.z(z));
+initial begin
+ #1; c2=1; #1; if(fz!==1 || fx!==0 || x!==0 || z!==0) $fatal(1,"c2 forwarding");
+ c3=1; c2=0; #1; if(fx!==1 || fz!==0) $fatal(1,"c3 forwarding");
+ clk=1; #1; if(fx!==1 || fz!==0) $fatal(1,"data clock changed export");
+ $display("CLOCK_EXPORT_PASS"); $finish;
+end
+endmodule
+"""
+    def compile_run(label,rtl):
+        f=tmp_path/(label+".sv");f.write_text(rtl+"\n"+bench);exe=tmp_path/label
+        cp=subprocess.run([iv,"-g2012","-s","tb","-o",str(exe),str(f)],capture_output=True,text=True)
+        if cp.returncode:return cp,None
+        return cp,subprocess.run([vv,str(exe)],capture_output=True,text=True)
+    cp,r=compile_run("normal",emitted)
+    assert cp.returncode==0,cp.stderr
+    assert r.returncode==0 and "CLOCK_EXPORT_PASS" in r.stdout,r.stdout+r.stderr
+    # Exact old defect: the comma after this input becomes part of its line comment.
+    legacy=emitted.replace("/* planned physical tap: forwarded-clock export only */", "// planned physical tap: forwarded-clock export only")
+    cp,_=compile_run("commented_comma",legacy)
+    assert cp.returncode!=0
+    # A parse-only regression would miss a real wrong export-clock connection.
+    cp,r=compile_run("wrong_clock",emitted.replace("assign fclk_out_z = clk_t2;", "assign fclk_out_z = clk_t3;"))
+    assert cp.returncode==0 and r.returncode!=0
