@@ -1,0 +1,87 @@
+{
+ "schema": "head_start_placed_reach/1",
+ "scope": "prebuild placed-cell geometry, no timing",
+ "summary": {
+  "limit_um": 405.0,
+  "bodies": 30576,
+  "body_kinds": {
+   "start": 18370,
+   "clock": 10850,
+   "local_clk": 1356
+  },
+  "overlaps": 0,
+  "overlap_kinds": {},
+  "off_row_phase": 0,
+  "off_site_grid": 0,
+  "sitemap_illegal": 0,
+  "missing": {},
+  "hops": {
+   "cell->START_out_pin": {
+    "n": 351,
+    "max": 183.341,
+    "worst": [
+     183.341,
+     "u_st_b76.branch_1686_0",
+     "pst_tW3o2"
+    ],
+    "over": 0
+   },
+   "cell->cell": {
+    "n": 18405,
+    "max": 186.462,
+    "worst": [
+     186.462,
+     "u_st_b0.branch_1_0",
+     "u_st_b0.branch_1_1"
+    ],
+    "over": 0
+   },
+   "local_clk->FF": {
+    "n": 5299,
+    "max": 20.034,
+    "worst": [
+     20.034,
+     "start_clock_b0",
+     "$flatten\\u_st_b0.$auto$ff.cc:337:slice$318"
+    ],
+    "over": 0
+   },
+   "reset_port->cell": {
+    "n": 4072,
+    "max": 328.317,
+    "worst": [
+     328.317,
+     "wrst_tW5o0__rst_start_raw_6",
+     "$flatten\\u_st_b59.$abc$566$auto$blifparse.cc:397:parse_blif$573"
+    ],
+    "over": 0
+   },
+   "tree->local_clk": {
+    "n": 1356,
+    "max": 197.586,
+    "worst": [
+     197.586,
+     "b768",
+     "start_clock_r1158_0"
+    ],
+    "over": 0
+   },
+   "tree->tree": {
+    "n": 10849,
+    "max": 341.28,
+    "worst": [
+     341.28,
+     "r97_0",
+     "b97"
+    ],
+    "over": 0
+   }
+  },
+  "all_hops_over": 0,
+  "verdict": "PASS"
+ },
+ "overlap_examples": [],
+ "illegal_examples": [],
+ "rowbad": [],
+ "over": []
+}
