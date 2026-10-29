@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-26 06:21 PDT by CLAUDE coordinator)
 
-Snapshot 2026-10-29 13:22 PDT: signed types S81 4/171 HEAD 0/16 QC 0/68 KV 0/40 HBM 0/49; hard cores 15/52, 2/3, 4/9(+1, +PROG pending record fix), 4/31, 0/210. FROZEN: KV (event26a), HEAD (hk5), S81 (plan_s13r2 + s81_g03c2, WS3 V2 fix). KV die GRT0 incl clock PASS 0 ov -> clock check + die STA real views. QC prebuild: tracks fit, pin-stack vs PG access next. S81 fresh strict bind ~13:45. HBM bind re-pointed to d16k; SPB stagger variants. S81 29/8, QC 20/1, KV 21/1+2W, HBM 34/3, HEAD 19/6, TOTAL 123 rows 19 closed.
+Snapshot 2026-10-29 14:21 PDT: signed types S81 4/171 HEAD 0/16 QC 0/68 KV 0/40 HBM 0/49; hard cores 15/52, 2/3, 4/9 (PROG MIF1 view signed off but native binds MIF0 -> QC-020 open), 4/31, 0/210. FROZEN: KV (event26a), HEAD (hk5), S81 (plan_s13r2 + s81_g03c2, WS3 V2 fix). KV: GRT0 0 ov, clock check FAIL KV-019 (FFs on trunk legs) -> ot_clk leaf-driver rule (DIE-KV-34); same class on QC (22,365 FFs). QC: backbone single-track pins over-constrain -> track ranges (DIE-QC-37). HBM: plan of record d16k_q2L, SPB V3 closed, hfd_ep_static tx/rx split vs wider slot. HEAD: hk5l onto 25-type source, hd_tile r2r 755/55. Main da21832de. Burn-down S81 29/8, QC 20/0, KV 21/3, HBM 36/5, HEAD 19/6, TOTAL 125 rows 22 closed.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
