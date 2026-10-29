@@ -23,8 +23,10 @@ at the supplied commits; run via ot-run in the ORFS image.
 Full arithmetic source equivalence at fp4 tied0 was also collected from the
 KITS-6 candidate (intel2 codex-hbm-gqlec-1029/inspect.log): 19000/19001 points
 PROVEN; the only unproven point is internal u.s7_fp4, whose unreset/reset
-invalid-cycle values differ. All actual module outputs prove. Its valid
-condition is proved by the tiny miter. This is not a 19001/19001 pass.
+invalid-cycle values differ. The discharged output cells are compositional and may use internal
+cutpoints, so they are not standalone whole-module equivalence while this
+point remains open. Its valid condition is proved by the tiny miter. This
+is not a 19001/19001 pass.
 
 The inherited new-gold/old-gate kit LEC probe is still running at intel2
 hbm-cores-kits-6/gq/lecprobe (k6gq-lecprobe). The source change is ready for
