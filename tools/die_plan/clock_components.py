@@ -42,19 +42,20 @@ def annotate(arrivals, netlist, raw):
             drivers[pins["Y"]] = m.group(2)
     if not cells:
         raise ValueError("clock components: no clock cells")
-    memo, active = {}, set()
+    memo, parity, input_parity, active = {}, {}, {}, set()
 
     def arrival(cell):
         if cell not in N or cell not in M:
             raise ValueError(f"clock components: missing measured rise/fall node {cell}")
         return N[cell] + M[cell]
 
-    def increment(parts, master, delta):
+    def increment(parts, master, phase, delta):
         if not all(math.isfinite(x) and x >= -0.001 for x in delta):
             raise ValueError(f"clock components: invalid measured increment for {master}: {delta}")
         # Tiny negative differences can arise from printed-arrival rounding.
-        old = parts.get(master, (0.,) * 4)
-        parts[master] = tuple(x + y for x, y in zip(old, delta))
+        key = (master, phase)
+        old = parts.get(key, (0.,) * 4)
+        parts[key] = tuple(x + y for x, y in zip(old, delta))
 
     def cell_parts(cell):
         if cell in memo:
@@ -66,13 +67,17 @@ def annotate(arrivals, netlist, raw):
         parent = driver(pin)
         base = arrival(parent) if parent else (0.,) * 4
         parts = dict(cell_parts(parent)) if parent else {}
-        increment(parts, master, tuple(x-y for x, y in zip(arrival(cell), base)))
+        phase = parity[parent] if parent else 0
+        input_parity[cell] = phase
+        parity[cell] = phase ^ int("INV" in master.upper())
+        increment(parts, master, phase, tuple(x-y for x, y in zip(arrival(cell), base)))
         memo[cell] = parts
         active.remove(cell)
         return parts
 
     def records(parts):
-        return [dict(master=m, **dict(zip(KEYS, v))) for m, v in sorted(parts.items())]
+        return [dict(master=m, source_rise_input_edge="fall" if phase else "rise", **dict(zip(KEYS, v)))
+                for (m, phase), v in sorted(parts.items())]
 
     out = copy.deepcopy(arrivals)
     for tap in out["taps"]:
@@ -85,7 +90,7 @@ def annotate(arrivals, netlist, raw):
             if k not in tap or abs(tap[k]-x) > .001:
                 raise ValueError(f"clock components: stale tap arrival {port} {k}")
         parts = dict(cell_parts(cell))
-        increment(parts, cells[cell][0], tuple(x-y for x,y in zip(v, arrival(cell))))
+        increment(parts, cells[cell][0], input_parity[cell], tuple(x-y for x,y in zip(v, arrival(cell))))
         tap["clock_components"] = records(parts)
     nc = out.get("node_cell")
     if not nc or set(nc) != set(out.get("node_late_ps", {})):
@@ -117,6 +122,12 @@ def scaled(parts, values, corner, mode):
             fs = dict(rise_late=late, fall_late=late, rise_early=early, fall_early=early)
         else:
             fs = D.cell_cal_factors(corner, [master])
+        phase = p.get("source_rise_input_edge")
+        if phase not in ("rise", "fall"):
+            raise ValueError("clock components: missing source/local input-edge polarity")
+        if phase == "fall":
+            fs = dict(rise_late=fs["fall_late"], rise_early=fs["fall_early"],
+                      fall_late=fs["rise_late"], fall_early=fs["rise_early"])
         for k, fk in zip(KEYS, factors):
             value = float(p[k])
             if not math.isfinite(value) or value < -.001:

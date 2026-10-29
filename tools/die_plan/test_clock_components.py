@@ -29,9 +29,11 @@ def test_weighted_both_edges_and_nodes(tmp_path):
     assert "clock_components_basis" not in raw
     m,t = D.apply_clock_cal(a,{"t":a["taps"][0]},"TT","inv","spice_edge")
     fs = D.SPICE_CLOCK_CAL_CELL[B]["TT"]
-    assert t["t"]["late_ps"] == pytest.approx(100*D.SPICE_CLOCK_CAL_INV["TT"]+25*fs["rise_late"])
-    assert t["t"]["fall_late_ps"] == pytest.approx(105*D.SPICE_CLOCK_CAL_INV["TT"]+36*fs["fall_late"])
-    assert m["node_late_ps"]["h0"] == pytest.approx(100*.9324+20*fs["rise_late"])
+    # Source rise reaches the BUF input as a FALL after the one inverter.
+    assert t["t"]["late_ps"] == pytest.approx(100*D.SPICE_CLOCK_CAL_INV["TT"]+25*fs["fall_late"])
+    assert t["t"]["fall_late_ps"] == pytest.approx(105*D.SPICE_CLOCK_CAL_INV["TT"]+36*fs["rise_late"])
+    assert t["t"]["late_ps"] != pytest.approx(100*.9324+25*fs["rise_late"])
+    assert m["node_late_ps"]["h0"] == pytest.approx(100*.9324+20*fs["fall_late"])
     assert m["cppr_node_range_ps"]["h0"] == round(max(0,m["node_late_ps"]["h0"]-m["node_early_ps"]["h0"]),4)
     # Mutant: using the rise increment for fall fails the independently measured sum.
     bad=copy.deepcopy(a); bad["taps"][0]["clock_components"][0]["fall_late_ps"]-=11
@@ -99,3 +101,19 @@ def test_old_proofs_unchanged_without_optin(tmp_path):
     m,t = D.apply_clock_cal(p,{"t":p["taps"][0]},"TT","inv","spice_edge")
     assert t["t"]["late_ps"]==pytest.approx(125*.9324)
     assert "clock_cal_components" not in m
+
+
+def test_even_inverter_prefix_keeps_buf_rise_factor(tmp_path):
+    p,n,a=vehicle(tmp_path)
+    n.write_text(n.read_text().replace(f"{C.INV} i0", f"{B} i0"))
+    out=C.annotate(p,n,a)
+    assert all(r["source_rise_input_edge"]=="rise" for r in out["taps"][0]["clock_components"])
+    _,t=C.apply(out,{"t":out["taps"][0]},"TT","spice_edge")
+    assert t["t"]["late_ps"]==pytest.approx(125*D.SPICE_CLOCK_CAL_CELL[B]["TT"]["rise_late"])
+
+
+def test_missing_local_edge_fails_closed(tmp_path):
+    p,n,a=vehicle(tmp_path); out=C.annotate(p,n,a)
+    out["taps"][0]["clock_components"][0].pop("source_rise_input_edge")
+    with pytest.raises(ValueError,match="input-edge polarity"):
+        C.apply(out,{"t":out["taps"][0]},"TT","spice_edge")
