@@ -362,11 +362,15 @@ def main():
         summary.update(status='FAIL',cause='actual host/halo M7 window',findings=window_violations)
         (out/'prebuild.json').write_text(json.dumps(summary,indent=1)+'\n')
         raise ValueError('M7 clock riser leaves actual legal glue window')
+    print('PREBUILD_STAGE access shapes', flush=True)
     with real_pin_access(access):
         shapes = CR.stair_shapes(wires,cells,ports,next(iter(masters)))
         shapes += port_access_shapes(wires,cells,ports,next(iter(masters)))
+        print(f'PREBUILD_STAGE access census {len(shapes)} shapes', flush=True)
         census = access_census(shapes+list(power_access))
+        print(f'PREBUILD_STAGE encoder census={census["shorts"]}/{census["spacing"]}', flush=True)
         lines, rec = CR.routed_tcl(wires,cells,ports,next(iter(masters)),'QC_CLOCK_NDR')
+    print('PREBUILD_STAGE top access reservation', flush=True)
     top_hits=[]; top_count=0
     for net,layer,x0,y0,x1,y1 in shapes:
         if layer not in ('M8','M9'):continue
@@ -380,13 +384,22 @@ def main():
         summary['top_access_conflicts']=dict(count=top_count,examples=top_hits)
         (out/'prebuild.json').write_text(json.dumps(summary,indent=1)+'\n')
         raise ValueError('fixed-wire pin stacks short; revise before materializing')
+    print('PREBUILD_STAGE endpoint graft', flush=True)
     text = '\n'.join(lines)+'\n'
-    for port, ep in endpoints.items():
-        old = '$e addBTerm [BT '+port+']'
-        replacement = '$e addITerm [IT '+ep['inst']+' '+ep['pin']+']'
-        if text.count(old) != 1:
-            raise ValueError(f'endpoint encoder count is not one: {port}')
-        text = text.replace(old,replacement)
+    # One pass over the full-die encoder (thousands of tap endpoints).
+    # Repeated full-string count/replace costs O(taps * full encoded tree).
+    endpoint_counts = defaultdict(int)
+    def graft_encoder(match):
+        port = match.group(1)
+        if port not in endpoints:
+            return match.group(0)  # The root remains a real top-level BTerm.
+        endpoint_counts[port] += 1
+        ep = endpoints[port]
+        return '$e addITerm [IT '+ep['inst']+' '+ep['pin']+']'
+    text = re.sub(r'\$e addBTerm \[BT ([^\]\s]+)\]', graft_encoder, text)
+    wrong = {p:endpoint_counts[p] for p in endpoints if endpoint_counts[p] != 1}
+    if wrong:
+        raise ValueError(f'endpoint encoder count is not one: {wrong}')
     header = '''set blk [ord::get_db_block]
 set tech [[ord::get_db] getTech]
 set l8 [$tech findLayer M8]
