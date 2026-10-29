@@ -669,6 +669,25 @@ def _kit_outline(kd):
     return (x1 - x0, y1 - y0)
 
 
+def pushdown_cell_issues(islands, cells):
+    """Every pushdown island's fixed cells lie inside its slice rect.  An island with driver_rect_um (HBM-CORES-REBAL-5
+    opt-in, master_plan.pushdown_island driver_rect: island centre over a core SRAM) has its drivers placed by
+    core_infra at the planned macro-channel site, so its cells are judged against driver_rect_um instead."""
+    issues = []
+    for isl in islands:
+        mine = [c for c in cells if c["name"].startswith(f"mp_{isl['name']}_")]
+        if not mine and not isl.get("cells"):
+            issues.append(f"pushdown island {isl['name']}: no fixed cells")
+        dr = isl.get("driver_rect_um")
+        r = dr if dr is not None else isl["rect_um"]
+        for c in mine:
+            x, y = c["xy_um"]
+            if not (r[0] <= x <= r[2] and r[1] <= y <= r[3]):
+                issues.append(f"{c['name']} at {c['xy_um']} outside island {isl['name']} "
+                              + (f"driver_rect {r}" if dr is not None else f"{r}"))
+    return issues
+
+
 def check_kit(kd, slice_path=None, tol=1e-3):
     """Static kit-vs-slice gate (12.7c GEOM-REVIEW part 1).  Every finding is a FAIL; returns a report dict."""
     kd = Path(kd)
@@ -717,15 +736,7 @@ def check_kit(kd, slice_path=None, tol=1e-3):
                                       reserved_bays=len(plan.get("reserved_bays", [])),
                                       unbound_entry_pins=plan.get("unbound_entry_pins", 0))
             # island coordinates: every pushdown island's cells inside its slice rect at the slice centre
-            for isl in (sl["pushdown"].get("islands") or []):
-                mine = [c for c in plan["cells"] if c["name"].startswith(f"mp_{isl['name']}_")]
-                if not mine and not isl.get("cells"):
-                    issues.append(f"pushdown island {isl['name']}: no fixed cells")
-                for c in mine:
-                    x, y = c["xy_um"]
-                    r = isl["rect_um"]
-                    if not (r[0] <= x <= r[2] and r[1] <= y <= r[3]):
-                        issues.append(f"{c['name']} at {c['xy_um']} outside island {isl['name']} {r}")
+            issues += pushdown_cell_issues(sl["pushdown"].get("islands") or [], plan["cells"])
         except (OSError, ValueError, KeyError, CI.InfraError) as e:
             issues.append(f"pushdown not installed from the slice: {type(e).__name__}: {e}")
         # no island strip blockage left in the kit

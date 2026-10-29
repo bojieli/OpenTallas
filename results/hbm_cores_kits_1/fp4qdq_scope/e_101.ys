@@ -1,0 +1,12 @@
+read_verilog -sv /work/gold.sv
+read_verilog -sv /work/gate.sv
+chparam -set PACKED 1 -set PIPE 0 -set XEXT 1 gold gate
+proc; opt_clean
+tee -o /work/check_gate_101.txt check -assert gate
+memory; flatten; opt -fast
+async2sync
+equiv_make gold gate eq
+hierarchy -top eq
+equiv_simple -seq 2
+equiv_induct -seq 2
+tee -o /work/eq_101.txt equiv_status -assert

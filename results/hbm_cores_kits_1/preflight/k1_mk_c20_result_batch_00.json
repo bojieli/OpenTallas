@@ -1,0 +1,113 @@
+{
+ "hfd_hgi_vm_calendar_f20": [
+  {
+   "view": "hfd_hgi_vm_calendar_f20@7de3d83f77f2",
+   "rc": 0,
+   "cls": "OK",
+   "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/hfd_hgi_vm_calendar_f20_7de3d83f77f2-_k1c24",
+   "entry": [
+    120.936,
+    95.04
+   ],
+   "port": null,
+   "merged": [
+    "clk",
+    "clk_cap",
+    "clk_mem",
+    "clk_tgt"
+   ],
+   "islands": 2,
+   "log": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/gen_hfd_hgi_vm_calendar_f20_k1c24.log",
+   "msg": "{\"kit\": \"/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/hfd_hgi_vm_calendar_f20_7de3d83f77f2-_k1c24\", \"pins\": 558, \"clocks\": [\"clk\", \"clk_tgt\", \"clk_cap\", \"clk_mem\"], \"resets\": 1, \"design\": \"hfd_hgi_vm_calendar_f20\", \"top\": \"hfd_hgi_vm_calendar_f20\", \"wrapper\": false, \"face_shell\": {\"core\": \"hfd_hgi_vm_calendar_f20__fcore\", \"in_cycles\": 1, \"out_cycles\": 1, \"face_flops\": 553, \"dropped\": 0"
+  }
+ ],
+ "ot_hbm_su_static_qcore_r13": [
+  {
+   "view": "ot_hbm_su_static_qcore_r13@6fb4f29f7814",
+   "rc": 0,
+   "cls": "OK",
+   "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/ot_hbm_su_static_qcore_r13_6fb4f29f7814-_k1c24",
+   "entry": [
+    151.176,
+    112.32
+   ],
+   "port": "clk_ctl",
+   "merged": [],
+   "islands": 3,
+   "log": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/gen_ot_hbm_su_static_qcore_r13_k1c24.log",
+   "msg": "{\"kit\": \"/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/ot_hbm_su_static_qcore_r13_6fb4f29f7814-_k1c24\", \"pins\": 1472, \"clocks\": [\"clk_ctl\"], \"resets\": 1, \"design\": \"ot_hbm_su_static_qcore_r13\", \"top\": \"ot_hbm_su_static_qcore_r13\", \"wrapper\": false, \"face_shell\": {\"core\": \"ot_hbm_su_static_qcore_r13__fcore\", \"in_cycles\": 1, \"out_cycles\": 1, \"face_flops\": 1470, \"dropped\": 1, \"unread_kept\""
+  }
+ ],
+ "hnx_rp3lp3h_s": [
+  {
+   "view": "hnx_rp3lp3h_s@bcba97c60131",
+   "rc": 0,
+   "cls": "OK",
+   "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/hnx_rp3lp3h_s_bcba97c60131-_k1c24",
+   "entry": [
+    315.36,
+    518.4
+   ],
+   "port": "ck_s",
+   "merged": [],
+   "islands": 33,
+   "log": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/gen_hnx_rp3lp3h_s_k1c24.log",
+   "msg": "{\"kit\": \"/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/hnx_rp3lp3h_s_bcba97c60131-_k1c24\", \"pins\": 4537, \"clocks\": [\"ck_s\"], \"resets\": 1, \"design\": \"hnx_rp3lp3h_s\", \"top\": \"hnx_rp3lp3h_s\", \"wrapper\": false, \"face_shell\": {\"core\": \"hnx_rp3lp3h_s__fcore\", \"in_cycles\": 1, \"out_cycles\": 1, \"face_flops\": 4535, \"dropped\": 0, \"unread_kept\": 0, \"const_out_bits\": 0, \"dup_out_bits\": 0, \"plan_pins"
+  }
+ ],
+ "ot_hbm_svc_wb_kport_q": [
+  {
+   "view": "ot_hbm_svc_wb_kport_q@cee4184ae914",
+   "rc": 0,
+   "cls": "OK",
+   "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/ot_hbm_svc_wb_kport_q_cee4184ae914-_k1c24",
+   "entry": [
+    237.6,
+    237.6
+   ],
+   "port": null,
+   "merged": [
+    "hbm_clk",
+    "stream_clk",
+    "stream_fifo_clk"
+   ],
+   "islands": 9,
+   "log": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/gen_ot_hbm_svc_wb_kport_q_k1c24.log",
+   "msg": "{\"kit\": \"/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/ot_hbm_svc_wb_kport_q_cee4184ae914-_k1c24\", \"pins\": 7084, \"clocks\": [\"hbm_clk\", \"stream_clk\", \"stream_fifo_clk[0]\", \"stream_fifo_clk[1]\", \"stream_fifo_clk[2]\", \"stream_fifo_clk[3]\"], \"resets\": 2, \"design\": \"ot_hbm_svc_wb_kport_q\", \"top\": \"ot_hbm_svc_wb_kport_q\", \"wrapper\": false, \"face_shell\": {\"core\": \"ot_hbm_svc_wb_kport_q__fcore\""
+  }
+ ],
+ "ot_hgi_sfu_programme_store_r10": [
+  {
+   "view": "ot_hgi_sfu_programme_store_r10@20117b319f18",
+   "rc": 0,
+   "cls": "OK",
+   "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/ot_hgi_sfu_programme_store_r10_20117b319f18-_k1c24",
+   "entry": [
+    285.12,
+    371.52
+   ],
+   "port": "clk",
+   "merged": [],
+   "islands": 17,
+   "log": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/gen_ot_hgi_sfu_programme_store_r10_k1c24.log",
+   "msg": "{\"kit\": \"/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/ot_hgi_sfu_programme_store_r10_20117b319f18-_k1c24\", \"pins\": 2904, \"clocks\": [\"clk\"], \"resets\": 1, \"design\": \"ot_hgi_sfu_programme_store_r10\", \"top\": \"ot_hgi_sfu_programme_store_r10\", \"wrapper\": false, \"face_shell\": {\"core\": \"ot_hgi_sfu_programme_store_r10__fcore\", \"in_cycles\": 1, \"out_cycles\": 1, \"face_flops\": 2902, \"dropped\": 0, \""
+  }
+ ],
+ "ot_hgi_sfu_core_split3__opstore_b": [
+  {
+   "view": "ot_hgi_sfu_core_split3__opstore_b@de3ef0436950",
+   "rc": 0,
+   "cls": "OK",
+   "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/ot_hgi_sfu_core_split3__opstore_b_de3ef0436950-_k1c24",
+   "entry": [
+    380.16,
+    345.6
+   ],
+   "port": "clk",
+   "merged": [],
+   "islands": 17,
+   "log": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/gen_ot_hgi_sfu_core_split3__opstore_b_k1c24.log",
+   "msg": "{\"kit\": \"/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k1/kits/ot_hgi_sfu_core_split3__opstore_b_de3ef0436950-_k1c24\", \"pins\": 5508, \"clocks\": [\"clk\"], \"resets\": 1, \"design\": \"ot_hgi_sfu_core_split3__opstore_b\", \"top\": \"ot_hgi_sfu_split3_opstore_b_core\", \"wrapper\": true, \"face_shell\": {\"core\": \"ot_hgi_sfu_core_split3__opstore_b__fcore\", \"in_cycles\": 1, \"out_cycles\": 1, \"face_flops\": 5506, \"drop"
+  }
+ ]
+}

@@ -1,0 +1,20 @@
+{
+ "pins": [
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": "cores/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__440.64x457.92__canon.json",
+   "new": "cores/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__440.64x457.92__canon__oneclk.json",
+   "clock_bits_old": 76,
+   "clock_bits_new": 1,
+   "clk_site": {
+    "name": "clk_bank",
+    "layer": "M5",
+    "x": 2.328,
+    "y": 457.824
+   },
+   "nonclock": 3754,
+   "nonclock_sha256": "715110b6fae3284636ba857cb5d9958a416e258a5d0819ff2c9b947afa42f7ba"
+  }
+ ],
+ "clock_entries_edited": 8
+}
