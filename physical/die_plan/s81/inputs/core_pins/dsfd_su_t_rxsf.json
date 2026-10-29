@@ -1,14 +1,14 @@
 {
 "module": "dsfd_su_t_rxsf",
-"lef": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef",
-"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef (largest non-M1 rect centre, CORE-KS rule); OWNER DECISION 8 10-24: 2 constant pins dropped (inputs/const_pins_dropped.json)",
-"pinhash": "5911013f82a2",
+"lef": "physical/die_plan/s81/cores/rx/lef/dsfd_su_t_rxsf.lef",
+"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef (largest non-M1 rect centre, CORE-KS rule); OWNER DECISION 8 10-24: 2 constant pins dropped (inputs/const_pins_dropped.json); S81-028 DIE-S81-24 2026-10-29 (delta_clkpin_m5_1029.py): clock ck M4(140.358,92.892) -> M5(140.124,140.16) 0.048x0.48 edge rectangle on the M5 track (GEOM-21)",
+"pinhash": "01ba9df5c1a3",
 "pins": [
 {
 "name": "ck",
-"layer": "M4",
-"x": 140.358,
-"y": 92.892
+"layer": "M5",
+"x": 140.124,
+"y": 140.16
 },
 {
 "name": "i_v",
