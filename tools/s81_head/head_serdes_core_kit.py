@@ -113,13 +113,34 @@ def main():
     # sibling projects them onto a face. Keep actual plan coordinates.
     import shutil
     shutil.copyfile(G.TOOL / "pin_audit.py", kd / "pin_audit_core.py")
-    pp = json.loads((kd / "plan_pins.json").read_text())
+    ppfile = kd / "plan_pins.json"
+    if ppfile.exists():
+        pp = json.loads(ppfile.read_text())
+    else:
+        # Source-profile kits retain their original table instead of emitting
+        # the legacy canonical table. Publish the actual placed pin centres,
+        # including the interior entries, for this driver as well.
+        pp = dict(schema="opentallas.hbm_arch.core_plan_pins.v1", module=MODULE,
+                  rule="actual io.tcl centres; centre clock/reset preserved", pins=[])
+        for row in json.loads((kd / "pins.json").read_text()):
+            name = row["bus"] if row["bit"] is None else f"{row['bus']}[{row['bit']}]"
+            x, y = row["x"], row["y"]
+            if row["face"] in ("W", "E"):
+                x += G.PIN_LEN_UM / 2 if row["face"] == "W" else -G.PIN_LEN_UM / 2
+            elif row["face"] in ("N", "S"):
+                y += G.PIN_LEN_UM / 2 if row["face"] == "S" else -G.PIN_LEN_UM / 2
+            pp["pins"].append(dict(name=name, layer=row["layer"], x=round(x, 4), y=round(y, 4)))
     byname = {p["name"]: p for p in pins()}
     for p in pp["pins"]:
         if p["name"] in ("clk", "rst_n"):
             p.update({k: byname[p["name"]][k] for k in ("x", "y")})
-    (kd / "plan_pins.json").write_text(json.dumps(pp, indent=1) + "\n")
+    body = json.dumps(pp, indent=1) + "\n"
+    ppfile.write_text(body)
     fz = json.loads((kd / "freeze.json").read_text())
+    fz["plan_pins_source"] = fz["pins_file"]
+    fz["plan_pins_source_sha256"] = fz["pins_sha256"]
+    fz["pins_file"] = "plan_pins.json"
+    fz["pins_sha256"] = hashlib.sha256(body.encode()).hexdigest()
     fz["pins_canon_sha256"] = G.plan_pins_canon_sha256(dict(pins=pp["pins"]), OUTLINE)
     fz["head_driver"] = dict(instance="u_phy.u_link.u_dec.u_chn", added_cycles=0,
                              kind="existing RTL hierarchy, same default MUT=0")
