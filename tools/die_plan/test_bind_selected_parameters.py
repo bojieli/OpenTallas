@@ -1,0 +1,63 @@
+"""Unknown overrides on selected opaque masters must fail before binding."""
+import pytest
+import bind_elab as E
+
+
+def files(tmp_path, decl="parameter W=64, parameter NQ=2", override=".W(128), .NQ(2)"):
+    top=tmp_path/"top.sv"; leaf=tmp_path/"selected.sv"
+    top.write_text(f"module top(input a,output y);\ncore #({override}) u_c(.a(a),.y(y));\nendmodule\n")
+    leaf.write_text(f"module core #({decl})(input a,output y);\nendmodule\n")
+    return top,leaf
+
+
+def test_selected_valid_values_keep_frontend_responsibility(tmp_path):
+    t,l=files(tmp_path)
+    rows=E.validate_selected_parameters([t],[],[l])
+    assert rows[0]["requested"]==["W","NQ"] and rows[0]["declared"]==["NQ","W"]
+
+
+def test_actual_fixed_width_wrong_source_fails(tmp_path):
+    t,l=files(tmp_path)
+    l.write_text("module core(input a,output y); endmodule\n")
+    with pytest.raises(E.ElabError,match=r"core u_c: parameter\(s\) NQ, W not declared.*selected.sv"):
+        E.validate_selected_parameters([t],[],[l])
+
+
+def test_selected_load_order_not_any_compatible_definition(tmp_path):
+    t,l=files(tmp_path); old=tmp_path/"fixed.sv"
+    old.write_text("module core(input a,output y); endmodule\n")
+    with pytest.raises(E.ElabError,match="not declared"):
+        E.validate_selected_parameters([t],[],[l,old])
+    assert E.validate_selected_parameters([t],[],[old,l])
+
+
+def test_body_parameter_localparam_and_nested_expressions(tmp_path):
+    t,l=files(tmp_path,override=".W((1 << 7)), .NQ($clog2(4))")
+    l.write_text("module core(a,y); parameter W=64, NQ=2; localparam FIXED=4; input a; output y; endmodule\n")
+    assert E.validate_selected_parameters([t],[],[l])
+    t.write_text(t.read_text().replace(".NQ($clog2(4))", ".FIXED(2)"))
+    with pytest.raises(E.ElabError,match="FIXED not declared"):
+        E.validate_selected_parameters([t],[],[l])
+
+
+def test_inactive_defines_and_positional_limits(tmp_path):
+    t,l=files(tmp_path,override="128, 2")
+    assert E.validate_selected_parameters([t],[],[l])
+    t.write_text(t.read_text().replace("128, 2", "128, 2, 4"))
+    with pytest.raises(E.ElabError,match=r"positional\[2\]"):
+        E.validate_selected_parameters([t],[],[l])
+    t.write_text("module top;\n`ifdef OLD\ncore #(.BAD(4)) u_bad();\n`else\ncore #(.W(128)) u_good();\n`endif\nendmodule\n")
+    assert len(E.validate_selected_parameters([t],[],[l]))==1
+    with pytest.raises(E.ElabError,match="BAD not declared"):
+        E.validate_selected_parameters([t],[],[l], ["OLD"])
+
+
+def test_elab_rejects_unknown_before_frontend_runs(tmp_path, monkeypatch):
+    t,l=files(tmp_path)
+    l.write_text("module core(input a,output y); endmodule\n")
+    calls=[]
+    monkeypatch.setattr(E,"run_yosys",lambda *a,**k:calls.append(a))
+    ab=dict(top="top",frontend="slang",netlist=[str(t)],files=[str(l)],rtl_roots=[])
+    with pytest.raises(E.ElabError,match="not declared"):
+        E.elab(ab,tmp_path,tmp_path/"out")
+    assert calls==[]

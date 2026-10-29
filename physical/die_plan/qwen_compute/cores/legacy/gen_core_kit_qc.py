@@ -585,6 +585,21 @@ def lef_pin_rects(path):
     return out
 
 
+def interior_clock_pin(pin, sl, clock_port):
+    """A face-C pin is allowed only for the exact master-slice clock entry."""
+    if pin.get("face") != "C":
+        return False
+    if not sl or pin["name"] != clock_port or sl.get("core_clock_port") != clock_port:
+        raise SystemExit("interior plan pin requires the declared master-slice clock entry: " + pin["name"])
+    entries = [i["clock_pin"] for i in sl.get("islands", []) if i.get("clock_pin")]
+    if len(entries) != 1:
+        raise SystemExit("interior clock pin requires exactly one master-slice entry")
+    entry = entries[0]
+    if entry.get("layer", "M5") != pin["layer"] or any(abs(float(x)-float(y)) > 1e-6 for x,y in zip(entry["xy_um"], (pin["x"],pin["y"]))):
+        raise SystemExit("interior clock pin differs from master-slice clock entry: " + pin["name"])
+    return True
+
+
 def slice_clock_pins_out(kd, ms_mod, clks):
     """QC-A0-KITS-4 10-28: a master slice moves the clock port to its interior M5 entry (io.tcl rewritten by
     kit_apply), so the routed pin is no longer the plan face pin.  pins.json is the face-pin audit table
@@ -1054,8 +1069,9 @@ def main():
           f"{hc['pins_file']}, plan type {ptype})."]
     rows = []
     snapped = 0
+    interior_slice = MS.resolve(a.master_slice, mod, [w,h], plan, a.trial, kind="core")[1] if any(q.get("face") == "C" for q in pins) and a.master_slice else None
     for q in pins:
-        f = face_of(q["x"], q["y"], w, h)
+        f = "C" if interior_clock_pin(q, interior_slice, spec["clock_port"]) else face_of(q["x"], q["y"], w, h)
         L_ = shapes.get(q["name"], (q["layer"],))[0]
         if L_ != q["layer"]:
             raise SystemExit(f"{mod}: pin {q['name']} layer {q['layer']} != plan LEF {L_}")
@@ -1064,8 +1080,8 @@ def main():
         # rect's centre (up to ~2.4 um inside the face).  Keep the along-face coordinate (the track) exactly and put the
         # pin on the face it belongs to.
         q = dict(q)
-        perp = {"W": ("x", pw / 2), "E": ("x", w - pw / 2), "S": ("y", ph_ / 2), "N": ("y", h - ph_ / 2)}[f]
-        if abs(q[perp[0]] - perp[1]) > 1e-3:
+        perp = None if f == "C" else {"W": ("x", pw / 2), "E": ("x", w - pw / 2), "S": ("y", ph_ / 2), "N": ("y", h - ph_ / 2)}[f]
+        if perp and abs(q[perp[0]] - perp[1]) > 1e-3:
             if abs(q[perp[0]] - perp[1]) > 3.0:
                 raise SystemExit(f"{mod}: pin {q['name']} {abs(q[perp[0]] - perp[1]):.3f} um off its {f} face")
             q[perp[0]] = round(perp[1], 4)
@@ -1077,7 +1093,7 @@ def main():
                          layer=q["layer"], x=round(q["x"], 4), y=round(q["y"], 4), face=f))
         if f in "EW":
             assert abs((q["x"] - pw / 2) if f == "W" else (w - q["x"] - pw / 2)) < 1e-3, q
-        else:
+        elif f in "NS":
             assert abs((q["y"] - ph_ / 2) if f == "S" else (h - q["y"] - ph_ / 2)) < 1e-3, q
     io[0] += f" {snapped} pins snapped from the access-extension centre onto their face."
     (kd / "io.tcl").write_text("\n".join(io) + "\n")

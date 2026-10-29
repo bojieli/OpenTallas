@@ -639,6 +639,18 @@ FORWARD_SOURCES=("tap","clk")
 FORWARD_SOURCE="tap"
 
 
+def clear_generated_landing_infra(raw):
+    """A new compose owns its generated pins/clocks; retain only native infrastructure."""
+    for t in raw.get("partition_types",{}).values():
+        ck=t.get("clock",{})
+        old=ck.pop("landing_contract",None)
+        if not old:continue
+        names={p['name'] for p in old.get('pins',[])}
+        t['buses']=[b for b in t.get('buses',[]) if b['name'] not in names]
+        ck['edge_clocks']=[e for e in ck.get('edge_clocks',[]) if e['port'] not in names]
+    raw.get('clock',{}).pop('landing_network',None)
+
+
 def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",band_spread=1.0,band_ring="all",
             forward_source="tap"):
     """band_reserve="live" (opt-in): storage bands reserve the live ring (width+epoch) instead of the 64-bit padded ring.
@@ -666,6 +678,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
         missing=[k for k in ("module","instance_suffix","fault_port","ready_port") if not observer.get(k)]
         if missing:raise ValueError(f"clock landing observer spec missing {missing}")
     original=copy.deepcopy(plan);raw=copy.deepcopy(plan)
+    clear_generated_landing_infra(raw)
     _fill_ft_windows(raw,plan_path)
     _fill_port_windows(raw,plan_path,table)
     base_type={p["name"]:p["type"] for p in raw["partitions"]}
