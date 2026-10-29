@@ -206,6 +206,13 @@ def hbm_schedule(model, fmt=None):
     """-> (schedule_with(op or None, factor) -> token cycles, records per op); fmt: --op-fmt operand filter on the op"""
     sys.path.insert(0, str(TOOLS))
     from hgi_sim import timing as T
+    # The acceptance is relative to the measured composition.  Sparse checkouts
+    # must not silently replace its first-access/SM costs with estimates.
+    need = {"SM.bf16_lines_per_row_k", "SM.drain", "SM.overhead", "SU.model_check", "hbm.first_access"}
+    missing = need - T.MEAS.keys()
+    if missing:
+        raise LedgerError(f"measured calibration missing: {sorted(missing)}; restore the committed results/rtl "
+                          "measurement inputs before computing an HBM acceptance")
     if model == "ds":
         from hgi_sim import ds_native_timing as DT
         res = ROOT / "results/arch/hgi_sim_20261010/g25_proof"
