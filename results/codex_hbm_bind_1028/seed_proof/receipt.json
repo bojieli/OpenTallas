@@ -1,0 +1,34 @@
+{
+  "method": "opaque-identical-master equiv_struct, all inputs and parameters identical; arbitrary underlying sequential implementation",
+  "checks": [
+    {
+      "module": "ot_hbm_sm_attn_tile",
+      "mode": "exact",
+      "returncode": 0,
+      "expected": "PASS",
+      "accepted": true
+    },
+    {
+      "module": "ot_hbm_sm_attn_tile",
+      "mode": "mutant_seed",
+      "returncode": 1,
+      "expected": "FAIL",
+      "accepted": true
+    },
+    {
+      "module": "ot_hbm_sm_attn_be",
+      "mode": "exact",
+      "returncode": 0,
+      "expected": "PASS",
+      "accepted": true
+    },
+    {
+      "module": "ot_hbm_sm_attn_be",
+      "mode": "mutant_seed",
+      "returncode": 1,
+      "expected": "FAIL",
+      "accepted": true
+    }
+  ],
+  "pass_all": true
+}

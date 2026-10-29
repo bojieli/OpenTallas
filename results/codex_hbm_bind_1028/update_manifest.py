@@ -1,0 +1,18 @@
+"""Opt-in C25c manifest fixes; run from the repo root after seed wrapper commit is merged.
+usage: update_manifest.py INPUT_MANIFEST OUT_MANIFEST MAP_FILE NETLIST
+BASE is the current worktree, no source is read from a Claude worktree.
+"""
+from pathlib import Path
+import json,sys
+here=Path(__file__).resolve().parent;root=here.parents[1]
+a,out,mapfile,netlist=sys.argv[1:5]
+d=json.loads(Path(a).read_text());d['base']=str(root);d['netlist']=[netlist];d['map_file']=mapfile
+rel='rtl/hbm_next/bind/ot_hnx_sm_seed_heads.sv'
+stree='rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv'
+# Existing arithmetic glue literals are not a blanket leaf-pin permission.
+d['internal_primitive_constants']=True
+for k in ('files','prefer'):
+ d[k]=[stree,rel]+[x for x in d.get(k,[]) if x not in (stree,rel)]
+d['substitute_inst']=d.get('substitute_inst',[])+json.loads((here/'seed_substitute_inst.json').read_text())
+d['note']=d.get('note','')+' | CODEX C25c: preserve current NLEG stree; exact chain seed variants; internal Yosys primitive literals only'
+Path(out).write_text(json.dumps(d,indent=1)+'\n')

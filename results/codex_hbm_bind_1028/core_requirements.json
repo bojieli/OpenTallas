@@ -1,0 +1,1395 @@
+{
+  "note": "60 missing output nets group into36 absent top producers:28 hub service instances and8 SU source slices. SU cloning prohibited; timefold provider must be defined. Template mapping may be wrong: hcollrs_SW -> u_hb_idx__nwsh must verify module first.",
+  "fold_nets": 60,
+  "required_top_instances": 36,
+  "families": [
+    {
+      "asbuilt_required": "hcollks_SE_p0",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "hcollks_NE_p0",
+      "template_master": "ot_hgi_coll_kq_share2_leaf",
+      "template_params": null,
+      "template_plan_inst": "u_hcollks_Q_p0",
+      "nets": [
+        {
+          "net": "hcollks_SE_p0__vm_kq",
+          "width": 562
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_hcollks_Q_p0"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollks_SE_p1",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "hcollks_NE_p1",
+      "template_master": "ot_hgi_coll_kq_share2_leaf",
+      "template_params": null,
+      "template_plan_inst": "u_hcollks_Q_p1",
+      "nets": [
+        {
+          "net": "hcollks_SE_p1__vm_kq",
+          "width": 562
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_hcollks_Q_p1"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollks_SE_p2",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "hcollks_NE_p2",
+      "template_master": "ot_hgi_coll_kq_share2_leaf",
+      "template_params": null,
+      "template_plan_inst": "u_hcollks_Q_p2",
+      "nets": [
+        {
+          "net": "hcollks_SE_p2__vm_kq",
+          "width": 562
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_hcollks_Q_p2"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollks_SE_p3",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "hcollks_NE_p3",
+      "template_master": "ot_hgi_coll_kq_share2_leaf",
+      "template_params": null,
+      "template_plan_inst": "u_hcollks_Q_p3",
+      "nets": [
+        {
+          "net": "hcollks_SE_p3__vm_kq",
+          "width": 562
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_hcollks_Q_p3"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollks_SW_p0",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "hcollks_NW_p0",
+      "template_master": "ot_hgi_coll_kq_share2_leaf",
+      "template_params": null,
+      "template_plan_inst": "u_hcollks_Q_p0",
+      "nets": [
+        {
+          "net": "hcollks_SW_p0__vm_kq",
+          "width": 562
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_hcollks_Q_p0"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollks_SW_p1",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "hcollks_NW_p1",
+      "template_master": "ot_hgi_coll_kq_share2_leaf",
+      "template_params": null,
+      "template_plan_inst": "u_hcollks_Q_p1",
+      "nets": [
+        {
+          "net": "hcollks_SW_p1__vm_kq",
+          "width": 562
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_hcollks_Q_p1"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollks_SW_p2",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "hcollks_NW_p2",
+      "template_master": "ot_hgi_coll_kq_share2_leaf",
+      "template_params": null,
+      "template_plan_inst": "u_hcollks_Q_p2",
+      "nets": [
+        {
+          "net": "hcollks_SW_p2__vm_kq",
+          "width": 562
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_hcollks_Q_p2"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollks_SW_p3",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "hcollks_NW_p3",
+      "template_master": "ot_hgi_coll_kq_share2_leaf",
+      "template_params": null,
+      "template_plan_inst": "u_hcollks_Q_p3",
+      "nets": [
+        {
+          "net": "hcollks_SW_p3__vm_kq",
+          "width": 562
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_hcollks_Q_p3"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollrs_SE",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "hcollrs_NE",
+      "template_master": "ot_hbm_idx_vm_share2_static_r",
+      "template_params": ".BANK_RT(7)",
+      "template_plan_inst": "u_hcollrs_Q",
+      "nets": [
+        {
+          "net": "hcollrs_SE__vm_rq",
+          "width": 136
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_hcollrs_Q"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollrs_SW",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "hcollrs_NW",
+      "template_master": "ot_hbm_idx_vm_share2_static_r",
+      "template_params": ".BANK_RT(7)",
+      "template_plan_inst": "u_hcollrs_Q",
+      "nets": [
+        {
+          "net": "hcollrs_SW__vm_rq",
+          "width": 136
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_hcollrs_Q"
+      ]
+    },
+    {
+      "asbuilt_required": "hleaf_SE",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "hleaf_NE",
+      "template_master": "ot_hbm_host_cfg_leaf2",
+      "template_params": ".NT(21), .NF(31)",
+      "template_plan_inst": "u_hleaf_Q",
+      "nets": [
+        {
+          "net": "hleaf_SE__a_cfg_addr",
+          "width": 12
+        },
+        {
+          "net": "hleaf_SE__a_cfg_data",
+          "width": 256
+        },
+        {
+          "net": "hleaf_SE__a_cfg_target",
+          "width": 8
+        },
+        {
+          "net": "hleaf_SE__a_cfg_v",
+          "width": 1
+        },
+        {
+          "net": "hleaf_SE__a_desc_base",
+          "width": 12
+        },
+        {
+          "net": "hleaf_SE__a_desc_limit",
+          "width": 13
+        },
+        {
+          "net": "hleaf_SE__a_desc_loops",
+          "width": 16
+        },
+        {
+          "net": "hleaf_SE__a_desc_v",
+          "width": 1
+        },
+        {
+          "net": "hleaf_SE__a_launch_v",
+          "width": 1
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_hleaf_Q"
+      ]
+    },
+    {
+      "asbuilt_required": "hleaf_SW",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "hleaf_NW",
+      "template_master": "ot_hbm_host_cfg_leaf2",
+      "template_params": ".NT(20), .NF(32)",
+      "template_plan_inst": "u_hleaf_Q",
+      "nets": [
+        {
+          "net": "hleaf_SW__a_cfg_addr",
+          "width": 12
+        },
+        {
+          "net": "hleaf_SW__a_cfg_data",
+          "width": 256
+        },
+        {
+          "net": "hleaf_SW__a_cfg_target",
+          "width": 8
+        },
+        {
+          "net": "hleaf_SW__a_cfg_v",
+          "width": 1
+        },
+        {
+          "net": "hleaf_SW__a_desc_base",
+          "width": 12
+        },
+        {
+          "net": "hleaf_SW__a_desc_limit",
+          "width": 13
+        },
+        {
+          "net": "hleaf_SW__a_desc_loops",
+          "width": 16
+        },
+        {
+          "net": "hleaf_SW__a_desc_v",
+          "width": 1
+        },
+        {
+          "net": "hleaf_SW__a_launch_v",
+          "width": 1
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_hleaf_Q"
+      ]
+    },
+    {
+      "asbuilt_required": "su_SE0",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "su_NE0",
+      "template_master": "ot_hbm_su_static_pgslice_lg",
+      "template_params": ".QID(3), .G(0), .READ_RETURN(25), .WRITE_RETURN(22), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)",
+      "template_plan_inst": null,
+      "nets": [
+        {
+          "net": "su_SE0__lg_rq",
+          "width": 34
+        },
+        {
+          "net": "su_SE0__lg_wq",
+          "width": 562
+        }
+      ],
+      "current_template_map": null
+    },
+    {
+      "asbuilt_required": "su_SE1",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "su_NE1",
+      "template_master": "ot_hbm_su_static_pgslice_lg",
+      "template_params": ".QID(3), .G(1), .READ_RETURN(15), .WRITE_RETURN(12), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)",
+      "template_plan_inst": null,
+      "nets": [
+        {
+          "net": "su_SE1__lg_rq",
+          "width": 34
+        },
+        {
+          "net": "su_SE1__lg_wq",
+          "width": 562
+        }
+      ],
+      "current_template_map": null
+    },
+    {
+      "asbuilt_required": "su_SE2",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "su_NE2",
+      "template_master": "ot_hbm_su_static_pgslice_lg",
+      "template_params": ".QID(3), .G(2), .READ_RETURN(19), .WRITE_RETURN(16), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)",
+      "template_plan_inst": null,
+      "nets": [
+        {
+          "net": "su_SE2__lg_rq",
+          "width": 34
+        },
+        {
+          "net": "su_SE2__lg_wq",
+          "width": 562
+        }
+      ],
+      "current_template_map": null
+    },
+    {
+      "asbuilt_required": "su_SE3",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "su_NE3",
+      "template_master": "ot_hbm_su_static_pgslice_lg",
+      "template_params": ".QID(3), .G(3), .READ_RETURN(15), .WRITE_RETURN(12), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)",
+      "template_plan_inst": null,
+      "nets": [
+        {
+          "net": "su_SE3__lg_rq",
+          "width": 34
+        },
+        {
+          "net": "su_SE3__lg_wq",
+          "width": 562
+        }
+      ],
+      "current_template_map": null
+    },
+    {
+      "asbuilt_required": "su_SW0",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "su_NW0",
+      "template_master": "ot_hbm_su_static_pgslice_lg",
+      "template_params": ".QID(2), .G(0), .READ_RETURN(25), .WRITE_RETURN(22), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)",
+      "template_plan_inst": null,
+      "nets": [
+        {
+          "net": "su_SW0__lg_rq",
+          "width": 34
+        },
+        {
+          "net": "su_SW0__lg_wq",
+          "width": 562
+        }
+      ],
+      "current_template_map": null
+    },
+    {
+      "asbuilt_required": "su_SW1",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "su_NW1",
+      "template_master": "ot_hbm_su_static_pgslice_lg",
+      "template_params": ".QID(2), .G(1), .READ_RETURN(15), .WRITE_RETURN(12), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)",
+      "template_plan_inst": null,
+      "nets": [
+        {
+          "net": "su_SW1__lg_rq",
+          "width": 34
+        },
+        {
+          "net": "su_SW1__lg_wq",
+          "width": 562
+        }
+      ],
+      "current_template_map": null
+    },
+    {
+      "asbuilt_required": "su_SW2",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "su_NW2",
+      "template_master": "ot_hbm_su_static_pgslice_lg",
+      "template_params": ".QID(2), .G(2), .READ_RETURN(19), .WRITE_RETURN(16), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)",
+      "template_plan_inst": null,
+      "nets": [
+        {
+          "net": "su_SW2__lg_rq",
+          "width": 34
+        },
+        {
+          "net": "su_SW2__lg_wq",
+          "width": 562
+        }
+      ],
+      "current_template_map": null
+    },
+    {
+      "asbuilt_required": "su_SW3",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "su_NW3",
+      "template_master": "ot_hbm_su_static_pgslice_lg",
+      "template_params": ".QID(2), .G(3), .READ_RETURN(15), .WRITE_RETURN(12), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)",
+      "template_plan_inst": null,
+      "nets": [
+        {
+          "net": "su_SW3__lg_rq",
+          "width": 34
+        },
+        {
+          "net": "su_SW3__lg_wq",
+          "width": 562
+        }
+      ],
+      "current_template_map": null
+    },
+    {
+      "asbuilt_required": "vmdel_SE0",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "vmdel_NE0",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q0",
+      "nets": [
+        {
+          "net": "vmdel_SE0__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_vmdel_Q0"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SE1",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "vmdel_NE1",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q1",
+      "nets": [
+        {
+          "net": "vmdel_SE1__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_vmdel_Q1"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SE2",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "vmdel_NE2",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q2",
+      "nets": [
+        {
+          "net": "vmdel_SE2__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_vmdel_Q2"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SE3",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "vmdel_NE3",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q3",
+      "nets": [
+        {
+          "net": "vmdel_SE3__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_vmdel_Q3"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SE4",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "vmdel_NE4",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q4",
+      "nets": [
+        {
+          "net": "vmdel_SE4__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_vmdel_Q4"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SE5",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "vmdel_NE5",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q5",
+      "nets": [
+        {
+          "net": "vmdel_SE5__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_vmdel_Q5"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SE6",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "vmdel_NE6",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q6",
+      "nets": [
+        {
+          "net": "vmdel_SE6__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_vmdel_Q6"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SE7",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "vmdel_NE7",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q7",
+      "nets": [
+        {
+          "net": "vmdel_SE7__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_vmdel_Q7"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SW0",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "vmdel_NW0",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q0",
+      "nets": [
+        {
+          "net": "vmdel_SW0__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_vmdel_Q0"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SW1",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "vmdel_NW1",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q1",
+      "nets": [
+        {
+          "net": "vmdel_SW1__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_vmdel_Q1"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SW2",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "vmdel_NW2",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q2",
+      "nets": [
+        {
+          "net": "vmdel_SW2__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_vmdel_Q2"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SW3",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "vmdel_NW3",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q3",
+      "nets": [
+        {
+          "net": "vmdel_SW3__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_vmdel_Q3"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SW4",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "vmdel_NW4",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q4",
+      "nets": [
+        {
+          "net": "vmdel_SW4__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_vmdel_Q4"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SW5",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "vmdel_NW5",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q5",
+      "nets": [
+        {
+          "net": "vmdel_SW5__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_vmdel_Q5"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SW6",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "vmdel_NW6",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q6",
+      "nets": [
+        {
+          "net": "vmdel_SW6__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_vmdel_Q6"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SW7",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "vmdel_NW7",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q7",
+      "nets": [
+        {
+          "net": "vmdel_SW7__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_vmdel_Q7"
+      ]
+    }
+  ],
+  "scorers": [
+    {
+      "module": "ot_hnx_idxn_quarter_with_keybuf",
+      "params": ".TP(192), .DELIVERED_RESET(1)",
+      "inst": "hb_idx__s_NE",
+      "role": "NE",
+      "partition": "NE_hub",
+      "plan_inst": "u_hb_idx_s_Q__q1"
+    },
+    {
+      "module": "ot_hnx_idxn_quarter_with_keybuf",
+      "params": ".TP(192), .DELIVERED_RESET(1)",
+      "inst": "hb_idx__s_NW",
+      "role": "NW",
+      "partition": "NW_hub",
+      "plan_inst": "u_hb_idx_s_Q__q1"
+    },
+    {
+      "module": "ot_hnx_idxn_quarter_with_keybuf",
+      "params": ".TP(192), .DELIVERED_RESET(1)",
+      "inst": "hb_idx__s_SE",
+      "role": "SE",
+      "partition": "NE_hub",
+      "plan_inst": "u_hb_idx_s_Q__q0"
+    },
+    {
+      "module": "ot_hnx_idxn_quarter_with_keybuf",
+      "params": ".TP(192), .DELIVERED_RESET(1)",
+      "inst": "hb_idx__s_SW",
+      "role": "SW",
+      "partition": "NW_hub",
+      "plan_inst": "u_hb_idx_s_Q__q0"
+    }
+  ],
+  "hub_candidates": [
+    {
+      "asbuilt_required": "hcollks_SE_p0",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "hcollks_NE_p0",
+      "template_master": "ot_hgi_coll_kq_share2_leaf",
+      "template_params": null,
+      "template_plan_inst": "u_hcollks_Q_p0",
+      "nets": [
+        {
+          "net": "hcollks_SE_p0__vm_kq",
+          "width": 562
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_hcollks_Q_p0"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollks_SE_p1",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "hcollks_NE_p1",
+      "template_master": "ot_hgi_coll_kq_share2_leaf",
+      "template_params": null,
+      "template_plan_inst": "u_hcollks_Q_p1",
+      "nets": [
+        {
+          "net": "hcollks_SE_p1__vm_kq",
+          "width": 562
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_hcollks_Q_p1"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollks_SE_p2",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "hcollks_NE_p2",
+      "template_master": "ot_hgi_coll_kq_share2_leaf",
+      "template_params": null,
+      "template_plan_inst": "u_hcollks_Q_p2",
+      "nets": [
+        {
+          "net": "hcollks_SE_p2__vm_kq",
+          "width": 562
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_hcollks_Q_p2"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollks_SE_p3",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "hcollks_NE_p3",
+      "template_master": "ot_hgi_coll_kq_share2_leaf",
+      "template_params": null,
+      "template_plan_inst": "u_hcollks_Q_p3",
+      "nets": [
+        {
+          "net": "hcollks_SE_p3__vm_kq",
+          "width": 562
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_hcollks_Q_p3"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollks_SW_p0",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "hcollks_NW_p0",
+      "template_master": "ot_hgi_coll_kq_share2_leaf",
+      "template_params": null,
+      "template_plan_inst": "u_hcollks_Q_p0",
+      "nets": [
+        {
+          "net": "hcollks_SW_p0__vm_kq",
+          "width": 562
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_hcollks_Q_p0"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollks_SW_p1",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "hcollks_NW_p1",
+      "template_master": "ot_hgi_coll_kq_share2_leaf",
+      "template_params": null,
+      "template_plan_inst": "u_hcollks_Q_p1",
+      "nets": [
+        {
+          "net": "hcollks_SW_p1__vm_kq",
+          "width": 562
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_hcollks_Q_p1"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollks_SW_p2",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "hcollks_NW_p2",
+      "template_master": "ot_hgi_coll_kq_share2_leaf",
+      "template_params": null,
+      "template_plan_inst": "u_hcollks_Q_p2",
+      "nets": [
+        {
+          "net": "hcollks_SW_p2__vm_kq",
+          "width": 562
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_hcollks_Q_p2"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollks_SW_p3",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "hcollks_NW_p3",
+      "template_master": "ot_hgi_coll_kq_share2_leaf",
+      "template_params": null,
+      "template_plan_inst": "u_hcollks_Q_p3",
+      "nets": [
+        {
+          "net": "hcollks_SW_p3__vm_kq",
+          "width": 562
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_hcollks_Q_p3"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollrs_SE",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "hcollrs_NE",
+      "template_master": "ot_hbm_idx_vm_share2_static_r",
+      "template_params": ".BANK_RT(7)",
+      "template_plan_inst": "u_hcollrs_Q",
+      "nets": [
+        {
+          "net": "hcollrs_SE__vm_rq",
+          "width": 136
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_hcollrs_Q"
+      ]
+    },
+    {
+      "asbuilt_required": "hcollrs_SW",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "hcollrs_NW",
+      "template_master": "ot_hbm_idx_vm_share2_static_r",
+      "template_params": ".BANK_RT(7)",
+      "template_plan_inst": "u_hcollrs_Q",
+      "nets": [
+        {
+          "net": "hcollrs_SW__vm_rq",
+          "width": 136
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_hcollrs_Q"
+      ]
+    },
+    {
+      "asbuilt_required": "hleaf_SE",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "hleaf_NE",
+      "template_master": "ot_hbm_host_cfg_leaf2",
+      "template_params": ".NT(21), .NF(31)",
+      "template_plan_inst": "u_hleaf_Q",
+      "nets": [
+        {
+          "net": "hleaf_SE__a_cfg_addr",
+          "width": 12
+        },
+        {
+          "net": "hleaf_SE__a_cfg_data",
+          "width": 256
+        },
+        {
+          "net": "hleaf_SE__a_cfg_target",
+          "width": 8
+        },
+        {
+          "net": "hleaf_SE__a_cfg_v",
+          "width": 1
+        },
+        {
+          "net": "hleaf_SE__a_desc_base",
+          "width": 12
+        },
+        {
+          "net": "hleaf_SE__a_desc_limit",
+          "width": 13
+        },
+        {
+          "net": "hleaf_SE__a_desc_loops",
+          "width": 16
+        },
+        {
+          "net": "hleaf_SE__a_desc_v",
+          "width": 1
+        },
+        {
+          "net": "hleaf_SE__a_launch_v",
+          "width": 1
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_hleaf_Q"
+      ]
+    },
+    {
+      "asbuilt_required": "hleaf_SW",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "hleaf_NW",
+      "template_master": "ot_hbm_host_cfg_leaf2",
+      "template_params": ".NT(20), .NF(32)",
+      "template_plan_inst": "u_hleaf_Q",
+      "nets": [
+        {
+          "net": "hleaf_SW__a_cfg_addr",
+          "width": 12
+        },
+        {
+          "net": "hleaf_SW__a_cfg_data",
+          "width": 256
+        },
+        {
+          "net": "hleaf_SW__a_cfg_target",
+          "width": 8
+        },
+        {
+          "net": "hleaf_SW__a_cfg_v",
+          "width": 1
+        },
+        {
+          "net": "hleaf_SW__a_desc_base",
+          "width": 12
+        },
+        {
+          "net": "hleaf_SW__a_desc_limit",
+          "width": 13
+        },
+        {
+          "net": "hleaf_SW__a_desc_loops",
+          "width": 16
+        },
+        {
+          "net": "hleaf_SW__a_desc_v",
+          "width": 1
+        },
+        {
+          "net": "hleaf_SW__a_launch_v",
+          "width": 1
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_hleaf_Q"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SE0",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "vmdel_NE0",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q0",
+      "nets": [
+        {
+          "net": "vmdel_SE0__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_vmdel_Q0"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SE1",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "vmdel_NE1",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q1",
+      "nets": [
+        {
+          "net": "vmdel_SE1__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_vmdel_Q1"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SE2",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "vmdel_NE2",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q2",
+      "nets": [
+        {
+          "net": "vmdel_SE2__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_vmdel_Q2"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SE3",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "vmdel_NE3",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q3",
+      "nets": [
+        {
+          "net": "vmdel_SE3__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_vmdel_Q3"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SE4",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "vmdel_NE4",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q4",
+      "nets": [
+        {
+          "net": "vmdel_SE4__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_vmdel_Q4"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SE5",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "vmdel_NE5",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q5",
+      "nets": [
+        {
+          "net": "vmdel_SE5__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_vmdel_Q5"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SE6",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "vmdel_NE6",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q6",
+      "nets": [
+        {
+          "net": "vmdel_SE6__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_vmdel_Q6"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SE7",
+      "partition": "NE_hub",
+      "role": "SE",
+      "template": "vmdel_NE7",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q7",
+      "nets": [
+        {
+          "net": "vmdel_SE7__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NE_hub",
+        "u_vmdel_Q7"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SW0",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "vmdel_NW0",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q0",
+      "nets": [
+        {
+          "net": "vmdel_SW0__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_vmdel_Q0"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SW1",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "vmdel_NW1",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q1",
+      "nets": [
+        {
+          "net": "vmdel_SW1__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_vmdel_Q1"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SW2",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "vmdel_NW2",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q2",
+      "nets": [
+        {
+          "net": "vmdel_SW2__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_vmdel_Q2"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SW3",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "vmdel_NW3",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q3",
+      "nets": [
+        {
+          "net": "vmdel_SW3__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_vmdel_Q3"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SW4",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "vmdel_NW4",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q4",
+      "nets": [
+        {
+          "net": "vmdel_SW4__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_vmdel_Q4"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SW5",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "vmdel_NW5",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q5",
+      "nets": [
+        {
+          "net": "vmdel_SW5__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_vmdel_Q5"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SW6",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "vmdel_NW6",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q6",
+      "nets": [
+        {
+          "net": "vmdel_SW6__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_vmdel_Q6"
+      ]
+    },
+    {
+      "asbuilt_required": "vmdel_SW7",
+      "partition": "NW_hub",
+      "role": "SW",
+      "template": "vmdel_NW7",
+      "template_master": "ot_hbm_svc_vmdel_lane_n",
+      "template_params": ".NPC(2)",
+      "template_plan_inst": "u_vmdel_Q7",
+      "nets": [
+        {
+          "net": "vmdel_SW7__dq",
+          "width": 281
+        }
+      ],
+      "current_template_map": [
+        "NW_hub",
+        "u_vmdel_Q7"
+      ]
+    }
+  ]
+}
