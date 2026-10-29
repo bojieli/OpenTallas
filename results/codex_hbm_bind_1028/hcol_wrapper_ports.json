@@ -1,0 +1,80 @@
+{
+  "original": "ot_hidx_score_hcol",
+  "ports": [
+    {
+      "direction": "input",
+      "width": 2,
+      "port": "clk_pair"
+    },
+    {
+      "direction": "input",
+      "width": 1,
+      "port": "rst_col"
+    },
+    {
+      "direction": "input",
+      "width": 1,
+      "port": "qv_b"
+    },
+    {
+      "direction": "input",
+      "width": 568,
+      "port": "q_b"
+    },
+    {
+      "direction": "input",
+      "width": 544,
+      "port": "key"
+    },
+    {
+      "direction": "input",
+      "width": 32,
+      "port": "hid4"
+    },
+    {
+      "direction": "input",
+      "width": 32,
+      "port": "cs_in"
+    },
+    {
+      "direction": "input",
+      "width": 1,
+      "port": "cf_in"
+    },
+    {
+      "direction": "output",
+      "width": 32,
+      "port": "cs_out"
+    },
+    {
+      "direction": "output",
+      "width": 1,
+      "port": "cf_out"
+    },
+    {
+      "direction": "output",
+      "width": 2,
+      "port": "prdy"
+    }
+  ],
+  "forms": [
+    {
+      "module": "ot_hbm_idx_score_hcol_h0",
+      "HALF": 0,
+      "DELIVERED_RESET": 1,
+      "removed_ports": [
+        "cs_in",
+        "cf_in"
+      ],
+      "added_cycles": 0
+    },
+    {
+      "module": "ot_hbm_idx_score_hcol_h1",
+      "HALF": 1,
+      "DELIVERED_RESET": 1,
+      "removed_ports": [],
+      "added_cycles": 0
+    }
+  ],
+  "hid4": "Actual timed hid4 nets: preserve launch registers and timing; no static strap conversion"
+}

@@ -1,0 +1,445 @@
+{
+  "schema": "opentallas.hbm.np4_keybuf_plan_map.v1",
+  "active": [
+    {
+      "role": "SW",
+      "partition": "NW_hub",
+      "half": "q0",
+      "source_half_literal": "1'b0",
+      "pbase": 0,
+      "lane": 0,
+      "source_path": "hb_idx__s_SW.keybuf.gp[0].u_line",
+      "plan_inst": "u_mu_keybuf_0_s0__q0",
+      "module": "ot_hnx_idxn_keybuf_slice",
+      "parent_id_straps": {
+        "strap_lane_id": {
+          "width": 3,
+          "value": 0
+        }
+      },
+      "position_id_contract": {
+        "kind": "KEYBUF_LANE_ID",
+        "pbase": 0,
+        "lane": 0
+      }
+    },
+    {
+      "role": "SW",
+      "partition": "NW_hub",
+      "half": "q0",
+      "source_half_literal": "1'b0",
+      "pbase": 0,
+      "lane": 1,
+      "source_path": "hb_idx__s_SW.keybuf.gp[1].u_line",
+      "plan_inst": "u_mu_keybuf_0_s1__q0",
+      "module": "ot_hnx_idxn_keybuf_slice",
+      "parent_id_straps": {
+        "strap_lane_id": {
+          "width": 3,
+          "value": 1
+        }
+      },
+      "position_id_contract": {
+        "kind": "KEYBUF_LANE_ID",
+        "pbase": 0,
+        "lane": 1
+      }
+    },
+    {
+      "role": "SW",
+      "partition": "NW_hub",
+      "half": "q0",
+      "source_half_literal": "1'b0",
+      "pbase": 0,
+      "lane": 2,
+      "source_path": "hb_idx__s_SW.keybuf.gp[2].u_line",
+      "plan_inst": "u_mu_keybuf_0_s2__q0",
+      "module": "ot_hnx_idxn_keybuf_slice",
+      "parent_id_straps": {
+        "strap_lane_id": {
+          "width": 3,
+          "value": 2
+        }
+      },
+      "position_id_contract": {
+        "kind": "KEYBUF_LANE_ID",
+        "pbase": 0,
+        "lane": 2
+      }
+    },
+    {
+      "role": "SW",
+      "partition": "NW_hub",
+      "half": "q0",
+      "source_half_literal": "1'b0",
+      "pbase": 0,
+      "lane": 3,
+      "source_path": "hb_idx__s_SW.keybuf.gp[3].u_line",
+      "plan_inst": "u_mu_keybuf_0_s3__q0",
+      "module": "ot_hnx_idxn_keybuf_slice",
+      "parent_id_straps": {
+        "strap_lane_id": {
+          "width": 3,
+          "value": 3
+        }
+      },
+      "position_id_contract": {
+        "kind": "KEYBUF_LANE_ID",
+        "pbase": 0,
+        "lane": 3
+      }
+    },
+    {
+      "role": "NW",
+      "partition": "NW_hub",
+      "half": "q1",
+      "source_half_literal": "1'b0",
+      "pbase": 0,
+      "lane": 0,
+      "source_path": "hb_idx__s_NW.keybuf.gp[0].u_line",
+      "plan_inst": "u_mu_keybuf_0_s0__q1",
+      "module": "ot_hnx_idxn_keybuf_slice",
+      "parent_id_straps": {
+        "strap_lane_id": {
+          "width": 3,
+          "value": 0
+        }
+      },
+      "position_id_contract": {
+        "kind": "KEYBUF_LANE_ID",
+        "pbase": 0,
+        "lane": 0
+      }
+    },
+    {
+      "role": "NW",
+      "partition": "NW_hub",
+      "half": "q1",
+      "source_half_literal": "1'b0",
+      "pbase": 0,
+      "lane": 1,
+      "source_path": "hb_idx__s_NW.keybuf.gp[1].u_line",
+      "plan_inst": "u_mu_keybuf_0_s1__q1",
+      "module": "ot_hnx_idxn_keybuf_slice",
+      "parent_id_straps": {
+        "strap_lane_id": {
+          "width": 3,
+          "value": 1
+        }
+      },
+      "position_id_contract": {
+        "kind": "KEYBUF_LANE_ID",
+        "pbase": 0,
+        "lane": 1
+      }
+    },
+    {
+      "role": "NW",
+      "partition": "NW_hub",
+      "half": "q1",
+      "source_half_literal": "1'b0",
+      "pbase": 0,
+      "lane": 2,
+      "source_path": "hb_idx__s_NW.keybuf.gp[2].u_line",
+      "plan_inst": "u_mu_keybuf_0_s2__q1",
+      "module": "ot_hnx_idxn_keybuf_slice",
+      "parent_id_straps": {
+        "strap_lane_id": {
+          "width": 3,
+          "value": 2
+        }
+      },
+      "position_id_contract": {
+        "kind": "KEYBUF_LANE_ID",
+        "pbase": 0,
+        "lane": 2
+      }
+    },
+    {
+      "role": "NW",
+      "partition": "NW_hub",
+      "half": "q1",
+      "source_half_literal": "1'b0",
+      "pbase": 0,
+      "lane": 3,
+      "source_path": "hb_idx__s_NW.keybuf.gp[3].u_line",
+      "plan_inst": "u_mu_keybuf_0_s3__q1",
+      "module": "ot_hnx_idxn_keybuf_slice",
+      "parent_id_straps": {
+        "strap_lane_id": {
+          "width": 3,
+          "value": 3
+        }
+      },
+      "position_id_contract": {
+        "kind": "KEYBUF_LANE_ID",
+        "pbase": 0,
+        "lane": 3
+      }
+    },
+    {
+      "role": "SE",
+      "partition": "NE_hub",
+      "half": "q0",
+      "source_half_literal": "1'b1",
+      "pbase": 4,
+      "lane": 0,
+      "source_path": "hb_idx__s_SE.keybuf.gp[0].u_line",
+      "plan_inst": "u_mu_keybuf_0_s0__q0",
+      "module": "ot_hnx_idxn_keybuf_slice",
+      "parent_id_straps": {
+        "strap_lane_id": {
+          "width": 3,
+          "value": 4
+        }
+      },
+      "position_id_contract": {
+        "kind": "KEYBUF_LANE_ID",
+        "pbase": 4,
+        "lane": 0
+      }
+    },
+    {
+      "role": "SE",
+      "partition": "NE_hub",
+      "half": "q0",
+      "source_half_literal": "1'b1",
+      "pbase": 4,
+      "lane": 1,
+      "source_path": "hb_idx__s_SE.keybuf.gp[1].u_line",
+      "plan_inst": "u_mu_keybuf_0_s1__q0",
+      "module": "ot_hnx_idxn_keybuf_slice",
+      "parent_id_straps": {
+        "strap_lane_id": {
+          "width": 3,
+          "value": 5
+        }
+      },
+      "position_id_contract": {
+        "kind": "KEYBUF_LANE_ID",
+        "pbase": 4,
+        "lane": 1
+      }
+    },
+    {
+      "role": "SE",
+      "partition": "NE_hub",
+      "half": "q0",
+      "source_half_literal": "1'b1",
+      "pbase": 4,
+      "lane": 2,
+      "source_path": "hb_idx__s_SE.keybuf.gp[2].u_line",
+      "plan_inst": "u_mu_keybuf_0_s2__q0",
+      "module": "ot_hnx_idxn_keybuf_slice",
+      "parent_id_straps": {
+        "strap_lane_id": {
+          "width": 3,
+          "value": 6
+        }
+      },
+      "position_id_contract": {
+        "kind": "KEYBUF_LANE_ID",
+        "pbase": 4,
+        "lane": 2
+      }
+    },
+    {
+      "role": "SE",
+      "partition": "NE_hub",
+      "half": "q0",
+      "source_half_literal": "1'b1",
+      "pbase": 4,
+      "lane": 3,
+      "source_path": "hb_idx__s_SE.keybuf.gp[3].u_line",
+      "plan_inst": "u_mu_keybuf_0_s3__q0",
+      "module": "ot_hnx_idxn_keybuf_slice",
+      "parent_id_straps": {
+        "strap_lane_id": {
+          "width": 3,
+          "value": 7
+        }
+      },
+      "position_id_contract": {
+        "kind": "KEYBUF_LANE_ID",
+        "pbase": 4,
+        "lane": 3
+      }
+    },
+    {
+      "role": "NE",
+      "partition": "NE_hub",
+      "half": "q1",
+      "source_half_literal": "1'b1",
+      "pbase": 4,
+      "lane": 0,
+      "source_path": "hb_idx__s_NE.keybuf.gp[0].u_line",
+      "plan_inst": "u_mu_keybuf_0_s0__q1",
+      "module": "ot_hnx_idxn_keybuf_slice",
+      "parent_id_straps": {
+        "strap_lane_id": {
+          "width": 3,
+          "value": 4
+        }
+      },
+      "position_id_contract": {
+        "kind": "KEYBUF_LANE_ID",
+        "pbase": 4,
+        "lane": 0
+      }
+    },
+    {
+      "role": "NE",
+      "partition": "NE_hub",
+      "half": "q1",
+      "source_half_literal": "1'b1",
+      "pbase": 4,
+      "lane": 1,
+      "source_path": "hb_idx__s_NE.keybuf.gp[1].u_line",
+      "plan_inst": "u_mu_keybuf_0_s1__q1",
+      "module": "ot_hnx_idxn_keybuf_slice",
+      "parent_id_straps": {
+        "strap_lane_id": {
+          "width": 3,
+          "value": 5
+        }
+      },
+      "position_id_contract": {
+        "kind": "KEYBUF_LANE_ID",
+        "pbase": 4,
+        "lane": 1
+      }
+    },
+    {
+      "role": "NE",
+      "partition": "NE_hub",
+      "half": "q1",
+      "source_half_literal": "1'b1",
+      "pbase": 4,
+      "lane": 2,
+      "source_path": "hb_idx__s_NE.keybuf.gp[2].u_line",
+      "plan_inst": "u_mu_keybuf_0_s2__q1",
+      "module": "ot_hnx_idxn_keybuf_slice",
+      "parent_id_straps": {
+        "strap_lane_id": {
+          "width": 3,
+          "value": 6
+        }
+      },
+      "position_id_contract": {
+        "kind": "KEYBUF_LANE_ID",
+        "pbase": 4,
+        "lane": 2
+      }
+    },
+    {
+      "role": "NE",
+      "partition": "NE_hub",
+      "half": "q1",
+      "source_half_literal": "1'b1",
+      "pbase": 4,
+      "lane": 3,
+      "source_path": "hb_idx__s_NE.keybuf.gp[3].u_line",
+      "plan_inst": "u_mu_keybuf_0_s3__q1",
+      "module": "ot_hnx_idxn_keybuf_slice",
+      "parent_id_straps": {
+        "strap_lane_id": {
+          "width": 3,
+          "value": 7
+        }
+      },
+      "position_id_contract": {
+        "kind": "KEYBUF_LANE_ID",
+        "pbase": 4,
+        "lane": 3
+      }
+    }
+  ],
+  "active_slices": 16,
+  "active_srams": 80,
+  "packed_srams": 68,
+  "old_plan_slices": 32,
+  "old_plan_srams": 160,
+  "reserved_unbound": [
+    {
+      "partition": "NW_hub",
+      "inst": "u_mu_keybuf_0_s4__q0",
+      "status": "RESERVED_UNBOUND"
+    },
+    {
+      "partition": "NW_hub",
+      "inst": "u_mu_keybuf_0_s5__q0",
+      "status": "RESERVED_UNBOUND"
+    },
+    {
+      "partition": "NW_hub",
+      "inst": "u_mu_keybuf_0_s6__q0",
+      "status": "RESERVED_UNBOUND"
+    },
+    {
+      "partition": "NW_hub",
+      "inst": "u_mu_keybuf_0_s7__q0",
+      "status": "RESERVED_UNBOUND"
+    },
+    {
+      "partition": "NW_hub",
+      "inst": "u_mu_keybuf_0_s4__q1",
+      "status": "RESERVED_UNBOUND"
+    },
+    {
+      "partition": "NW_hub",
+      "inst": "u_mu_keybuf_0_s5__q1",
+      "status": "RESERVED_UNBOUND"
+    },
+    {
+      "partition": "NW_hub",
+      "inst": "u_mu_keybuf_0_s6__q1",
+      "status": "RESERVED_UNBOUND"
+    },
+    {
+      "partition": "NW_hub",
+      "inst": "u_mu_keybuf_0_s7__q1",
+      "status": "RESERVED_UNBOUND"
+    },
+    {
+      "partition": "NE_hub",
+      "inst": "u_mu_keybuf_0_s4__q0",
+      "status": "RESERVED_UNBOUND"
+    },
+    {
+      "partition": "NE_hub",
+      "inst": "u_mu_keybuf_0_s5__q0",
+      "status": "RESERVED_UNBOUND"
+    },
+    {
+      "partition": "NE_hub",
+      "inst": "u_mu_keybuf_0_s6__q0",
+      "status": "RESERVED_UNBOUND"
+    },
+    {
+      "partition": "NE_hub",
+      "inst": "u_mu_keybuf_0_s7__q0",
+      "status": "RESERVED_UNBOUND"
+    },
+    {
+      "partition": "NE_hub",
+      "inst": "u_mu_keybuf_0_s4__q1",
+      "status": "RESERVED_UNBOUND"
+    },
+    {
+      "partition": "NE_hub",
+      "inst": "u_mu_keybuf_0_s5__q1",
+      "status": "RESERVED_UNBOUND"
+    },
+    {
+      "partition": "NE_hub",
+      "inst": "u_mu_keybuf_0_s6__q1",
+      "status": "RESERVED_UNBOUND"
+    },
+    {
+      "partition": "NE_hub",
+      "inst": "u_mu_keybuf_0_s7__q1",
+      "status": "RESERVED_UNBOUND"
+    }
+  ],
+  "note": "Source half ports are literals at die, not dynamic conversion; actual sliced elaboration must audit resolved strap bits before physical TIE adoption"
+}

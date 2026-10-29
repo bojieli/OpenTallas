@@ -1,0 +1,25 @@
+{
+  "checks": [
+    {
+      "half": 0,
+      "mode": "exact",
+      "returncode": 0,
+      "accepted": true
+    },
+    {
+      "half": 0,
+      "mode": "seed1",
+      "returncode": 1,
+      "accepted": true
+    },
+    {
+      "half": 1,
+      "mode": "exact",
+      "returncode": 0,
+      "accepted": true
+    }
+  ],
+  "pass_all": true,
+  "added_cycles": 0,
+  "delivered_reset_forwarded": true
+}
