@@ -87,6 +87,12 @@ def ctree_cells(ctree_v, ctree_tcl):
         r"^\s*(\w+)\s+(\w+)\s*\(\s*\.A\((\w+)\)\s*,\s*\.Y\((\w+)\)\s*\);", ctree_v, re.M)}
     xy = {m.group(1): (float(m.group(2)), float(m.group(3))) for m in re.finditer(
         r"place_inst -name (\S+) -location \{([-\d.]+) ([-\d.]+)\}", ctree_tcl)}
+    # Current clock-tree converter emits explicit native homes through ot_place.
+    for m in re.finditer(r"^ot_place \{([^}]+)\} ([-\d.]+) ([-\d.]+) (\w+)\s*$", ctree_tcl, re.M):
+        key, pos = m.group(1), (float(m.group(2)), float(m.group(3)))
+        if key in xy and xy[key] != pos:
+            raise StageError(f"conflicting clock home for {key}")
+        xy[key] = pos
     return cells, xy
 
 
@@ -399,7 +405,8 @@ def proof_with_stages(proof, stages_doc, arrs, out):
                                   **({"slew_ps": float(v[2])} if len(v) > 2 else {}), cppr_node="__source__" if source_root else "h", tree_path=path,
                                   clock_source_root=source_root, placement_tree_path=placement_path,
                                   stages_from_root=int(meta["node_stages"][path]), xy_um=list(s["clock_pin_xy_um"]),
-                                  leaf_cell=s["node_cell"], start_stage=s["id"],
+                                  leaf_cell=s.get("clock_source_cell", s["node_cell"]),
+                                  placement_cell=s["node_cell"], start_stage=s["id"],
                                   **({"fall_late_ps": float(F[s["clock_port"]][0]),
                                       "fall_early_ps": float(F[s["clock_port"]][1])} if s["clock_port"] in F else {})))
         d.setdefault("basis_start_stages", f"{SCHEMA} measured stage clock pins ({len(st)})")

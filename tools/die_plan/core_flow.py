@@ -55,6 +55,11 @@ def install_rc(kd, src=None):
     shutil.copyfile(src, Path(kd) / RC_CAL_KIT)
     return check_rc_cal(Path(kd) / RC_CAL_KIT)
 LINT_RC = 8
+# FLOW-HOLD-1 (OWNER 12.19, COORD 10-29 05:52): default FF hold repair margin of every NEW kit = 10 ps (was 5 here, 0 in
+# several die generators).  A lane may raise it to 15 where a measured GRT->final RC hold loss > 10 ps is documented
+# (QC btab, HBM ring).  Already SIGNED views stay valid (new builds only).  gen_phys / gen.py / the die core generators
+# take this constant as their default.
+HOLD_FF_MARGIN_DEFAULT = 10.0
 
 # first step inside the docker bash -lc string (rc starts at 0 before it)
 LINT_STEP = ("python3 -I /work/rtl_lint.py /work > /work/rtl_lint.log 2>&1; rc=\\$?; "
@@ -116,7 +121,8 @@ def binding(tt_ps, ff_ps=None, tol_ps=40.0, basis_tt="plan clock", basis_ff=None
     return dict(tt=tt, ff=ff, tol=float(tol_ps), basis=dict(tt=basis_tt, ff=bf))
 
 
-def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=5.0, grt_pre_extra=(), grt_post_extra=()):
+def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, grt_pre_extra=(),
+          grt_post_extra=()):
     """copy the flow helpers into kit dir kd and return the config.mk lines (FLOW defaults).  grt_pre_extra /
     grt_post_extra: kit Tcl files (under /work) the generator's own PRE/POST_GLOBAL_ROUTE hooks used to be (they are
     chained after main's grt_pre.tcl / grt_post.tcl in a generated grt_pre_core.tcl / grt_post_core.tcl)."""

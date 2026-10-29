@@ -1,0 +1,194 @@
+[
+  {
+    "source": "rescopy6",
+    "phase": 0,
+    "global_phase": {
+      "first_position": 0,
+      "position_rows": 3,
+      "offset": 0,
+      "edges": 1026,
+      "source_vm_rows": [
+        0,
+        239
+      ],
+      "scalar_vm_row": null,
+      "sum_vm_row": null,
+      "released_golden": null,
+      "finals": null
+    },
+    "edges": 1026,
+    "caps": [
+      [
+        4,
+        8,
+        4,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        4,
+        8,
+        4,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "lowering": "PASS",
+    "installable": false,
+    "reload_cost": "UNKNOWN_SELECTED_HOST_PROGRAMME_PUBLICATION_CONTRACT"
+  },
+  {
+    "source": "rescopy6",
+    "phase": 1,
+    "global_phase": {
+      "first_position": 3,
+      "position_rows": 3,
+      "offset": 1026,
+      "edges": 1026,
+      "source_vm_rows": [
+        240,
+        479
+      ],
+      "scalar_vm_row": null,
+      "sum_vm_row": null,
+      "released_golden": null,
+      "finals": null
+    },
+    "edges": 1026,
+    "caps": [
+      [
+        4,
+        8,
+        4,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        4,
+        8,
+        4,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "lowering": "PASS",
+    "installable": false,
+    "reload_cost": "UNKNOWN_SELECTED_HOST_PROGRAMME_PUBLICATION_CONTRACT"
+  },
+  {
+    "source": "rescopy6_alt",
+    "phase": 0,
+    "global_phase": {
+      "first_position": 0,
+      "position_rows": 3,
+      "offset": 0,
+      "edges": 1027,
+      "source_vm_rows": [
+        0,
+        239
+      ],
+      "scalar_vm_row": null,
+      "sum_vm_row": null,
+      "released_golden": null,
+      "finals": null
+    },
+    "edges": 1027,
+    "caps": [
+      [
+        4,
+        8,
+        4,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        4,
+        8,
+        4,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "lowering": "PASS",
+    "installable": false,
+    "reload_cost": "UNKNOWN_SELECTED_HOST_PROGRAMME_PUBLICATION_CONTRACT"
+  },
+  {
+    "source": "rescopy6_alt",
+    "phase": 1,
+    "global_phase": {
+      "first_position": 3,
+      "position_rows": 3,
+      "offset": 1027,
+      "edges": 1027,
+      "source_vm_rows": [
+        240,
+        479
+      ],
+      "scalar_vm_row": null,
+      "sum_vm_row": null,
+      "released_golden": null,
+      "finals": null
+    },
+    "edges": 1027,
+    "caps": [
+      [
+        4,
+        8,
+        4,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        4,
+        8,
+        4,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "lowering": "PASS",
+    "installable": false,
+    "reload_cost": "UNKNOWN_SELECTED_HOST_PROGRAMME_PUBLICATION_CONTRACT"
+  }
+]

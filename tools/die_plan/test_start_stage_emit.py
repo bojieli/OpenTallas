@@ -396,6 +396,8 @@ def test_actual_clock_driver_path_and_root_input_have_no_extra_inv_credit(tmp_pa
     root, a, y = (taps['__st__'+x] for x in ('h', P_L, P_ROOT))
     monkeypatch.setattr(DSR, 'CPPR_LCA', True)
     assert a['tree_path'] == P_ROOT and a['stages_from_root'] == 2
+    assert a['leaf_cell'] == 'b1' and a['placement_cell'] == 'b2'
+    assert root['leaf_cell'] is None
     assert DSR.pair_node(a, y) == P_ROOT
     assert DSR.pair_node(root, a) == '__source__'
     assert meta['node_stages']['__source__'] == 0
@@ -415,3 +417,12 @@ def test_node_cell_region_alias_is_not_a_second_clock_path():
     meta['node_cell']['hub_C'] = 'b0'
     doc, *_ = E.emit(_bind(), meta, v, t)
     assert next(s for s in doc['stages'] if s['node_cell'] == 'b2')['clock_source_path'] == P_ROOT
+
+
+def test_current_native_home_converter_ot_place():
+    v, t = _tree()
+    native = re.sub(r'place_inst -name (\S+) -location \{([-\d.]+) ([-\d.]+)\} -status PLACED',
+                    r'ot_place {\1} \2 \3 R0', t)
+    assert E.ctree_cells(v, native) == E.ctree_cells(v, t)
+    doc, *_ = E.emit(_bind(), _meta(), v, native)
+    assert len(doc['stages']) == 2

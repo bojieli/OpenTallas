@@ -1,0 +1,786 @@
+{
+ "name": "dscoll_lane_w_lp2a",
+ "top": "dsfd_coll_lane_w_safe8_ntf",
+ "kind": "tile",
+ "sources": [
+  "rtl/link/ot_link_crc32.sv",
+  "rtl/lib/ot_rst_relay_tree3.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+  "rtl/lib/ot_sram_oldread_b64.sv",
+  "rtl/lib/ot_sram_showahead_b64.sv",
+  "rtl/common/ot_link_credit_rx_b64.sv",
+  "rtl/common/ot_link_credit_tx_rc.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv"
+ ],
+ "params": {
+  "CORE_CRED": 12
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 345.6,
+  "h": 561.6
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?0?.u_m",
+   "at": [
+    17.28,
+    21.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?1?.u_m",
+   "at": [
+    72.576,
+    21.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?2?.u_m",
+   "at": [
+    127.872,
+    21.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?3?.u_m",
+   "at": [
+    183.168,
+    21.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?4?.u_m",
+   "at": [
+    238.464,
+    21.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?5?.u_m",
+   "at": [
+    293.76,
+    21.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?6?.u_m",
+   "at": [
+    17.28,
+    47.52
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?7?.u_m",
+   "at": [
+    72.576,
+    47.52
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?8?.u_m",
+   "at": [
+    127.872,
+    47.52
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?9?.u_m",
+   "at": [
+    183.168,
+    47.52
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?0?.g_depth?0?.g_256.u_m",
+   "at": [
+    17.28,
+    77.784
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?0?.g_depth?1?.g_256.u_m",
+   "at": [
+    72.576,
+    77.784
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?1?.g_depth?0?.g_256.u_m",
+   "at": [
+    127.872,
+    77.784
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?1?.g_depth?1?.g_256.u_m",
+   "at": [
+    183.168,
+    77.784
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?2?.g_depth?0?.g_256.u_m",
+   "at": [
+    238.464,
+    77.784
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?2?.g_depth?1?.g_256.u_m",
+   "at": [
+    293.76,
+    77.784
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?3?.g_depth?0?.g_256.u_m",
+   "at": [
+    17.28,
+    133.944
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?3?.g_depth?1?.g_256.u_m",
+   "at": [
+    72.576,
+    133.944
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?4?.g_depth?0?.g_256.u_m",
+   "at": [
+    127.872,
+    133.944
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?4?.g_depth?1?.g_256.u_m",
+   "at": [
+    183.168,
+    133.944
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?5?.g_depth?0?.g_256.u_m",
+   "at": [
+    238.464,
+    133.944
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?5?.g_depth?1?.g_256.u_m",
+   "at": [
+    293.76,
+    133.944
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?6?.g_depth?0?.g_256.u_m",
+   "at": [
+    17.28,
+    190.104
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?6?.g_depth?1?.g_256.u_m",
+   "at": [
+    72.576,
+    190.104
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?7?.g_depth?0?.g_256.u_m",
+   "at": [
+    127.872,
+    190.104
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?7?.g_depth?1?.g_256.u_m",
+   "at": [
+    183.168,
+    190.104
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?8?.g_depth?0?.g_256.u_m",
+   "at": [
+    238.464,
+    190.104
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?8?.g_depth?1?.g_256.u_m",
+   "at": [
+    293.76,
+    190.104
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?0?.u_m",
+   "at": [
+    17.28,
+    244.416
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?1?.u_m",
+   "at": [
+    72.576,
+    244.416
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?2?.u_m",
+   "at": [
+    127.872,
+    244.416
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?3?.u_m",
+   "at": [
+    183.168,
+    244.416
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?4?.u_m",
+   "at": [
+    238.464,
+    244.416
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?5?.u_m",
+   "at": [
+    293.76,
+    244.416
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?6?.u_m",
+   "at": [
+    17.28,
+    270.336
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?7?.u_m",
+   "at": [
+    72.576,
+    270.336
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?8?.u_m",
+   "at": [
+    127.872,
+    270.336
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?0?.g_depth?0?.g_256.u_m",
+   "at": [
+    17.28,
+    300.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?0?.g_depth?1?.g_256.u_m",
+   "at": [
+    72.576,
+    300.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?1?.g_depth?0?.g_256.u_m",
+   "at": [
+    127.872,
+    300.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?1?.g_depth?1?.g_256.u_m",
+   "at": [
+    183.168,
+    300.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?2?.g_depth?0?.g_256.u_m",
+   "at": [
+    238.464,
+    300.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?2?.g_depth?1?.g_256.u_m",
+   "at": [
+    293.76,
+    300.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?3?.g_depth?0?.g_256.u_m",
+   "at": [
+    17.28,
+    356.76
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?3?.g_depth?1?.g_256.u_m",
+   "at": [
+    72.576,
+    356.76
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?4?.g_depth?0?.g_256.u_m",
+   "at": [
+    127.872,
+    356.76
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?4?.g_depth?1?.g_256.u_m",
+   "at": [
+    183.168,
+    356.76
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?5?.g_depth?0?.g_256.u_m",
+   "at": [
+    238.464,
+    356.76
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?5?.g_depth?1?.g_256.u_m",
+   "at": [
+    293.76,
+    356.76
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?6?.g_depth?0?.g_256.u_m",
+   "at": [
+    17.28,
+    412.92
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?6?.g_depth?1?.g_256.u_m",
+   "at": [
+    72.576,
+    412.92
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?7?.g_depth?0?.g_256.u_m",
+   "at": [
+    127.872,
+    412.92
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?7?.g_depth?1?.g_256.u_m",
+   "at": [
+    183.168,
+    412.92
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?8?.g_depth?0?.g_256.u_m",
+   "at": [
+    238.464,
+    412.92
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?8?.g_depth?1?.g_256.u_m",
+   "at": [
+    293.76,
+    412.92
+   ],
+   "orient": "MX"
+  }
+ ],
+ "pins": {
+  "S": [
+   "rx",
+   "tx"
+  ],
+  "N": [
+   "lo_v",
+   "lo_r",
+   "lo_d",
+   "li_v",
+   "li_r",
+   "li_d"
+  ],
+  "E": [
+   "flt",
+   "chb",
+   "rs"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "ot_sram_showahead_b64_hit5",
+   "ot_s81ph_kp4_20",
+   "ot_s81ph_kff4_1",
+   "ot_s81ph_kff4_10",
+   "ot_s81ph_rewind4"
+  ],
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "job": {
+  "owner": "Codex:CODEX-S81-1021/LEPAB",
+  "branch": "codex/s81-lepab-regional-1021",
+  "tag": "dscoll_lane_w_s12h",
+  "purpose": "Matched CORE_CRED12 guarded lane for regional LEPAB; new exact-param view required, no alias of CRED8 view.",
+  "views_to": "physical/ref_tile/dscoll_lane_w_s12h/views",
+  "record_to": "results/rtl/ref_tile/dscoll_lane_w_s12h",
+  "benches": [
+   {
+    "name": "cred12_reach_m0",
+    "cmd": "bash tools/s81_slice/coll_reach12.sh {RUN}/reach0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+"
+   },
+   {
+    "name": "cred12_reach_m5",
+    "cmd": "bash tools/s81_slice/coll_reach12.sh {RUN}/reach5 5",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "fail_regex": "(^COLL_REACH7 FAIL errors=|COLL FIFO group state differs|COLL WRL )",
+    "fail_witness": "results/rtl/s81_lepab_regional_1021/peer_m5.log"
+   },
+   {
+    "name": "cred12_reach_m6",
+    "cmd": "bash tools/s81_slice/coll_reach12.sh {RUN}/reach6 6",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "fail_regex": "(^COLL_REACH7 FAIL errors=|COLL FIFO group state differs|COLL WRL )",
+    "fail_witness": "results/rtl/s81_lepab_regional_1021/peer_m6.log"
+   },
+   {
+    "name": "cred12_reach_m7",
+    "cmd": "bash tools/s81_slice/coll_reach12.sh {RUN}/reach7 7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "fail_regex": "(^COLL_REACH7 FAIL errors=|COLL FIFO group state differs|COLL WRL )",
+    "fail_witness": "results/rtl/s81_lepab_regional_1021/peer_m7.log"
+   },
+   {
+    "name": "cred12_reach_m8",
+    "cmd": "bash tools/s81_slice/coll_reach12.sh {RUN}/reach8 8",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "fail_regex": "(^COLL_REACH7 FAIL errors=|COLL FIFO group state differs|COLL WRL )",
+    "fail_witness": "results/rtl/s81_lepab_regional_1021/peer_m8.log"
+   }
+  ],
+  "extra_paths": [
+   "tools/s81_slice/coll_reach12.sh",
+   "results/rtl/s81_lepab_regional_1021",
+   "rtl/dsrom_sys/s81_ph/test/tb_coll_reach7.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v",
+   "tools/orfs_allcorner_spef.py"
+  ]
+ },
+ "recipe": 1,
+ "pin_regs": {
+  "enable": false,
+  "reason": "safe3 RTL registers every data pin (rx -> lr_f/lr_d pin flops; tx = gearbox registered beat; lo_v/lo_d -> ot_link_credit_rx_b64 landing flops, lo_r registered credit; li_v/li_d ot_link_credit_tx_rc sender flops, li_r captured; flt flops; chb registered in the endpoint). An extra pin stage would add +1 edge to the measured xdie landing cycles (cycle-identical to P1 by the lane miter). s7 (REACH=1): rx lands in 2 flops (lr -> lr2) and lo_v/lo_d in an extra core-face flop before the credit-rx landing; these are the forwarded hops (+1 rx, +1 core->link edges, priced in the kit README), not ref_tile pin_regs."
+ },
+ "clock": "cts",
+ "children": [],
+ "inter": [],
+ "boundary_tcl": [
+  "physical/qwen_die_masters/sram_edge_guard.tcl"
+ ],
+ "pin_ranges": {
+  "rx": [
+   2.16,
+   288.36
+  ],
+  "tx": [
+   290.52,
+   576.72
+  ],
+  "lo_d": [
+   2.16,
+   274.32
+  ],
+  "lo_v": [
+   276.48,
+   277.56
+  ],
+  "lo_r": [
+   278.64,
+   279.72
+  ],
+  "chb": [
+   280.8,
+   282.96
+  ],
+  "ck": [
+   298.08,
+   300.24
+  ],
+  "rs": [
+   302.4,
+   304.56
+  ],
+  "li_v": [
+   306.72,
+   307.8
+  ],
+  "li_r": [
+   308.88,
+   309.96
+  ],
+  "flt": [
+   312.12,
+   315.36
+  ],
+  "li_d": [
+   317.52,
+   581.04
+  ]
+ },
+ "sdc_extra": [],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "ck",
+  "reason": "rs lands on the core face in two ck flops, then ot_rst_relay_tree3 (3 balanced edges, every leaf <= ~32 reset pins); same release depth as safe3"
+ },
+ "std_area_um2": 9780.1182,
+ "fill_reason": {
+  "pin_bound": "lattice/channel-bound (checklist 6): 55 bank64 SRAMs 62,002 um2 on the 43.2 lattice with >= 20 um channels force 86.4 um pitch; W/E faces carry ~1,200 bus pins each (<= 3.6/um). s8 (as s7) keeps the s6c row set (all core rows; the s5 band hook is NOT sourced -- s6c place.tcl never sourced it, so cells sit in the channels beside their macros); the low overall fill is channel area"
+ },
+ "defines": [
+  "OT_COLL_NATIVE32",
+  "OT_COLL_NATIVE32_OFF"
+ ],
+ "structural_change": "S81-LP-2 compact LP hard child variant A (345.6 x 561.6) of dscoll_lane_w_s12h: same RTL/params/defines/macros, outline from the s_0S_LP slot (4 across 1442.88), faces S link / N core / E clock; zero RTL or cycle change.",
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKKM_K": "32",
+  "OT_CKKM_PORT": "ck",
+  "OT_MEG_DEPTH_UM": "6.0",
+  "OT_MEG_OUT_UM": "1.2"
+ }
+}

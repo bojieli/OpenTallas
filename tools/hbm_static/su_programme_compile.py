@@ -204,7 +204,11 @@ def lower_columns(source, out, line_bits=2422, leaf_caps=(3,13), col_bits=32, mu
         m=lower(d/'source.mem',d,line_bits=256,param_prefix=f'COL{c}',index_pack=16)
         db=m['dictionary_banks'][0]; image_ib=m['index_banks']
         ib=(resident_edges+2047)//2048 if resident_edges is not None else image_ib
-        leaf=min(x for x in leaf_caps if x>=db)
+        candidates=[x for x in leaf_caps if x>=db]
+        if not candidates:
+            raise ValueError(f"column {c}: {db} dictionary banks required, largest available leaf {max(leaf_caps)}; "
+                             f"split the programme or qualify a larger leaf (image edges={len(rows)})")
+        leaf=min(candidates)
         assert ib+leaf<col_bits-1, 'local bank id 31 is the reject code'
         own=[(int(l[:4],16),int(l[4:6],16),l[6:]) for l in (d/'config.mem').read_text().split()]
         # Dictionary bases belong to the instantiated producer, not the current
@@ -240,12 +244,14 @@ def lower_columns(source, out, line_bits=2422, leaf_caps=(3,13), col_bits=32, mu
     (out/'cols_manifest.json').write_text(json.dumps(man,indent=2)+'\n')
     return man
 
-def lower_root5(source, out, parts=4, line_bits=9688, part_banks=320, col_bits=32, mut_q=None, start_depth=2):
+def lower_root5(source, out, parts=4, line_bits=9688, part_banks=320, col_bits=32, mut_q=None, start_depth=2, resident_edges=7111):
     """HBM-RTL5 2026-10-18 (opt-in, --root5): whole-SU line lowered for ot_hbm_su_programme_root_h5 + PARTS per-column
     clusters ot_hbm_su_programme_pslice_c5 (pgp_<q>): quarter k = lower_columns() of line bits [k*SB,(k+1)*SB) in
     out/q<k>, host config bank = part_banks*k + col_bits*column + local.  Also lowers the r4 reference (root_h 4 x 98 +
     pslice_q4, lower_partitioned) into out/ref4 so the whole-programme bench can run both on one host stimulus.
-    mut_q: quarter whose column 3 index (PC offset) and column 2 dictionary word are mutated in config_mut.mem."""
+    mut_q: quarter whose column 3 index (PC offset) and column 2 dictionary word are mutated in config_mut.mem.
+    resident_edges must match the physical pgcol EDGES (7111 for pslice_c5), even for a short image: the hardware
+    dictionary begins after its resident index banks, not after the image's occupied index banks."""
     assert line_bits%parts==0
     sb=line_bits//parts; cols=(sb+255)//256
     assert col_bits*cols<=part_banks and part_banks*parts<65536
@@ -256,7 +262,8 @@ def lower_root5(source, out, parts=4, line_bits=9688, part_banks=320, col_bits=3
         d=out/f'q{k}'; d.mkdir(parents=True,exist_ok=True)
         (d/'source.mem').write_text(''.join(f'{(r>>(k*sb))&((1<<sb)-1):0{(sb+3)//4}x}\n' for r in rows))
         m=lower_columns(d/'source.mem',d,line_bits=sb,col_bits=col_bits,
-                        mut_pc_col=3 if mut_q==k else None,mut_tpl_col=2 if mut_q==k else None)
+                        mut_pc_col=3 if mut_q==k else None,mut_tpl_col=2 if mut_q==k else None,
+                        resident_edges=resident_edges)
         caps.append([c['dictionary_banks'] for c in m['columns']]); per.append(m)
         for src,dst in (('config.mem',lines),('config_mut.mem',lines_mut)):
             for l in (d/src).read_text().split():
@@ -273,12 +280,38 @@ def lower_root5(source, out, parts=4, line_bits=9688, part_banks=320, col_bits=3
         f'R5_PART_BANKS={part_banks};\n'
         f'localparam [32*R5_NC-1:0] R5_CAP={{'+','.join("32'd"+str(x) for x in reversed(cap))+'};\n')
     man=dict(schema='opentallas.hbm.su_programme.root5.v1',qualified=False,source=str(source),source_sha256=sha(source),
-             edges=len(rows),line_bits=line_bits,parts=parts,slice_bits=sb,columns=cols,part_banks=part_banks,
+             edges=len(rows),resident_edges=resident_edges,line_bits=line_bits,parts=parts,slice_bits=sb,columns=cols,part_banks=part_banks,
              bank_numbering=f'{part_banks} x part + {col_bits} x column + local bank',leaves=leaves[0],
              dictionary_caps_per_quarter=caps,config_transactions=len(lines),
              reference=dict(parts=ref['parts'],slice_macros=ref['slice_macros'],config_transactions=ref['config_transactions']),
              mut_q=mut_q)
     (out/'root5_manifest.json').write_text(json.dumps(man,indent=2)+'\n')
+    return man
+
+def lower_root5_phases(source, out, phase_manifest, **kwargs):
+    """Publish all existing global-address phases as separately installed resident images.
+
+    This does not erase reload/retirement costs or qualify a shared source calendar.
+    """
+    rows=source.read_text().split()
+    phases=json.loads(phase_manifest.read_text())['phases']
+    out.mkdir(parents=True,exist_ok=True)
+    result=[]; next_edge=0
+    for i,phase in enumerate(phases):
+        offset,count=phase['offset'],phase['edges']
+        if offset!=next_edge or count<1 or offset+count>len(rows):
+            raise ValueError('phase coverage must be contiguous, ordered and complete')
+        d=out/f'phase{i}';d.mkdir(exist_ok=True)
+        src=d/'source.mem';src.write_text('\n'.join(rows[offset:offset+count])+'\n')
+        m=lower_root5(src,d/'lower',**kwargs)
+        result.append(dict(global_phase=phase,source=str(src),producer=m))
+        next_edge=offset+count
+    if next_edge!=len(rows): raise ValueError('phase coverage omitted native commands')
+    man=dict(schema='opentallas.su_programme.root5_phases.v1',source=str(source),source_sha256=sha(source),
+        total_commands=len(rows),phases=result,installable=False,
+        reload_cost='UNKNOWN_SELECTED_HOST_PROGRAMME_PUBLICATION_CONTRACT',
+        retirement_barrier='MUST_COMPLETE_CONSUMER_WRITES_BEFORE_RELOAD_AND_NEXT_START')
+    (out/'phases_manifest.json').write_text(json.dumps(man,indent=2)+'\n')
     return man
 
 def main():
@@ -292,11 +325,17 @@ def main():
     p.add_argument('--mut-pc-slice',type=int)
     p.add_argument('--columns',action='store_true',help='opt-in: per-column cluster lowering of one quarter line')
     p.add_argument('--mut-pc-col',type=int); p.add_argument('--mut-tpl-col',type=int)
-    p.add_argument('--root5',action='store_true',help='opt-in: root_h5 + 4 per-column clusters (whole SU line)')
+    p.add_argument('--root5',action='store_true',help='opt-in: root_h5 + per-column clusters (whole SU line)')
     p.add_argument('--mut-q',type=int)
+    p.add_argument('--phase-manifest',type=Path,help='root5: ordered existing global-address phase offsets/edges')
+    p.add_argument('--parts',type=int,default=4,help='root5 physical producer parts')
+    p.add_argument('--resident-edges',type=int,default=7111,help='root5 physical pgcol EDGES; fixes dictionary base')
     a=p.parse_args()
+    if a.root5 and a.phase_manifest:
+        print(json.dumps(lower_root5_phases(a.source,a.out,a.phase_manifest,parts=a.parts,line_bits=a.line_bits,
+            resident_edges=a.resident_edges,mut_q=a.mut_q,start_depth=a.start_depth),indent=2)); return
     if a.root5:
-        print(json.dumps(lower_root5(a.source,a.out,line_bits=a.line_bits,mut_q=a.mut_q,start_depth=a.start_depth),indent=2)); return
+        print(json.dumps(lower_root5(a.source,a.out,parts=a.parts,line_bits=a.line_bits,mut_q=a.mut_q,start_depth=a.start_depth,resident_edges=a.resident_edges),indent=2)); return
     if a.columns:
         print(json.dumps(lower_columns(a.source,a.out,a.line_bits,mut_pc_col=a.mut_pc_col,mut_tpl_col=a.mut_tpl_col),
                          indent=2)); return

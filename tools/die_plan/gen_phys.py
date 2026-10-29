@@ -1183,7 +1183,9 @@ UNC_SPLIT = 0.5
 RC_CAL_FILE, RC_CAL_KIT = "setRC_rcx_asap7.tcl", "setRC_rcx.tcl"
 # FLOW 10-25: default FF-only GRT hold repair margin (run_kit.sh grt CORNERS=bc with the FF-bound vclk); = the
 # kit HOLD_SLACK_MARGIN (owner 00:46: repair only 0..5 ps above the SDC).  gen.py phys --hold-mcmm = old MCMM GRT.
-HOLD_FF_MARGIN_DEFAULT = 5.0
+# FLOW-HOLD-1 (OWNER 12.19): 5 -> 10 ps for NEW kits (the shared core_flow.HOLD_FF_MARGIN_DEFAULT; 15 where a measured
+# GRT->final RC hold loss > 10 ps is documented); signed views stay valid.
+HOLD_FF_MARGIN_DEFAULT = 10.0
 # HOLD-REPAIR 10-26 (plan_demand kits only): repair_timing buffer cap and the HB4 hold-pad hook
 HOLD_REPAIR_MAX_BUFFER_PERCENT = 100.0
 HOLD_PAD_HB4 = Path(__file__).resolve().parents[2] / "physical" / "common_flow" / "hold_pad_hb4.tcl"

@@ -1027,7 +1027,9 @@ def main():
                          "IO-HOLD seam_hold contract (gen_phys.seam_hold): min output -SENDER, min input SENDER-SEAM, e.g. "
                          "25,25 -> -25 / 0; the parent partition logic driving the core gives the sender guarantee. "
                          "Default: legacy contract (min input -insertion_tol, min output 0), byte-identical")
-    ap.add_argument("--hold-ff-margin", type=float, default=5.0, help="FF-only GRT hold repair margin (ps)")
+    ap.add_argument("--hold-ff-margin", type=float, default=None,
+                    help="FF GRT hold repair margin (ps); default tools/die_plan/core_flow.HOLD_FF_MARGIN_DEFAULT "
+                         "(FLOW-HOLD-1, OWNER 12.19: 10)")
     ap.add_argument("--cts-setup-only", action="store_true",
                     help="KV-KITS-13 opt-in (SIGNOFF-MODES-2, COORD 10-27 10:37 ruling 2 / 10:55 KV item; the HBM-CORES-R11 "
                          "form): skip ORFS's single-mode tc+bc CTS repair (it times FF hold against the TT vclk 250 = "
@@ -1611,7 +1613,8 @@ def main():
     own = {k: v for k, v in (l.split(" = ", 1) for l in cfg if l.startswith(("export PRE_GLOBAL_ROUTE_TCL = ",
                                                                              "export POST_GLOBAL_ROUTE_TCL = ")))}
     cfg = [l for l in cfg if not l.startswith(("export PRE_GLOBAL_ROUTE_TCL = ", "export POST_GLOBAL_ROUTE_TCL = "))]
-    cfg += core_flow.apply(kd, ibind, mod, time_unit_ps=1.0, rc_cal=not a.stock_rc, hold_ff_margin=a.hold_ff_margin,
+    cfg += core_flow.apply(kd, ibind, mod, time_unit_ps=1.0, rc_cal=not a.stock_rc, hold_ff_margin=a.hold_ff_margin
+                           if a.hold_ff_margin is not None else core_flow.HOLD_FF_MARGIN_DEFAULT,
                            grt_pre_extra=[v for k, v in own.items() if "PRE_" in k],
                            grt_post_extra=[v for k, v in own.items() if "POST_" in k])
     if a.astk_zone_fences:
