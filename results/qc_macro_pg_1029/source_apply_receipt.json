@@ -1,0 +1,20 @@
+{
+  "verdict": "APPLIED_NATIVE_PG_JOINS",
+  "source": "/in/clock_grafted.odb",
+  "output": "/work/source_apply_v1/native_pg.odb",
+  "unique_supply_terms": 754,
+  "direct_contacts": 754,
+  "short_fragment_contacts": 1690,
+  "counts": {
+    "new_wire_rectangles": 1963,
+    "new_VIA89": 1961,
+    "new_VIA78": 2444
+  },
+  "clock_and_signal_wire_sha_before": "f92fee8864f0e497f4453cf539283c11c996c53a59fea430007918ea7140aa51",
+  "clock_and_signal_wire_sha_after": "f92fee8864f0e497f4453cf539283c11c996c53a59fea430007918ea7140aa51",
+  "instances_sha_before": "ef9802de1c066717db6652206394a80ea400ef26c858710e63b9e1f51076256d",
+  "instances_sha_after": "ef9802de1c066717db6652206394a80ea400ef26c858710e63b9e1f51076256d",
+  "existing_PG_clockshield_records_preserved": 0,
+  "seeded_canonical_rectangles": 273,
+  "scope": "Actual additive native PG source application only; no full-clock, distributed-current or IR closure"
+}
