@@ -1,0 +1,69 @@
+{
+ "schema": "opentallas.qc.core_freeze.v1",
+ "kit": "qfd_dv_s8x_prog_pd40a0",
+ "module": "qfd_dv_s8x_prog",
+ "plan_type": "slw_su_c",
+ "outline_um": [
+  259.2,
+  354.24
+ ],
+ "ref_tile": "physical/ref_tile/qfd_dv_s5_prog",
+ "spec": "86288faea:physical/ref_tile/qfd_dv_s5_prog/spec.json",
+ "spec_sha256": "a8fd80ffb32206515600239ea1a7a04bd13672352db032e9e5927540e4169d16",
+ "pins_file": "physical/ref_tile/qfd_dv_s5_prog/views/qfd_dv_s8x_prog/qfd_dv_s8x_prog.lef",
+ "pins_sha256": "9ccb44721b71f2b63aafa877a191292f9084117506468f7b8c647209df83eb28",
+ "pins": 1393,
+ "plan_lef": "physical/ref_tile/qfd_dv_s5_prog/views/qfd_dv_s8x_prog/qfd_dv_s8x_prog.lef",
+ "clocks": [
+  "ck"
+ ],
+ "resets": [],
+ "recipe_sha256": "98260b22d2af8a3823da1f88095979dd7354e8f8b581e14babcd195a1293ad44",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gates": [
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "4151e9fe9f",
+ "sdc_lint_sha256": "370e0378cf5e3fe4a541572a246bae9e9dfaf54e17212839d56df6d71620ae0e",
+ "face_guard_sha256": "21d4f0279e5868e62ce25fd26c8418c1bd7d57e606db1fc5df809004ef6e0811",
+ "signoff_sha256": "a838e83deb185c35f809483df6b1a3c26b9d13e426305f8642ae942d7443bd84",
+ "macros": {
+  "ot_sram_1r1w_256x256_m2_r2c2": [
+   [
+    43.2,
+    86.4,
+    "R0"
+   ],
+   [
+    43.2,
+    155.52,
+    "R0"
+   ],
+   [
+    43.2,
+    224.64,
+    "R0"
+   ],
+   [
+    43.2,
+    293.76,
+    "R0"
+   ]
+  ]
+ },
+ "rtl_patches": [
+  {
+   "file": "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+   "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).",
+   "sha256": "a72fa1cc213c41bb764453ff4df54a44ffb6d366cf8ba714515d8da8b9233120"
+  }
+ ],
+ "kit_hash": "251fe8aa6876af5b"
+}

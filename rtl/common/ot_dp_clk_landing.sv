@@ -95,3 +95,15 @@ module ot_dp_landing_collect #(parameter integer N=1) (
         else begin ready_o <= &ready_i; fault_o <= |fault_i; end
     end
 endmodule
+
+// Face capture flop of one same-region (non-seam) status input pin (DIE-S81-29, COORD DIE-S81-28-PARK (2)): the
+// partition pin loads ONLY this flop's D, with no reset term (an AND2 before D would break the face rule), and the
+// reduction above reads q. The sender's dedicated output register runs on the same region clock. +1 status cycle
+// (boot only, priced in the collector boot budget), 0 data cycles. The collector stage after it is synchronously reset.
+(* keep_hierarchy, keep *)
+module ot_dp_landing_face (
+    input wire clk, d,
+    output reg q
+);
+    always @(posedge clk) q <= d;
+endmodule

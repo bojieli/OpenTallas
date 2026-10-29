@@ -1,0 +1,19 @@
+{
+ "variant": "d2",
+ "plan": "d16k_s12",
+ "n_errors": 159,
+ "unplanned": 158,
+ "non_unplanned": [
+  "EMIT wavefront core reset q_hub_ne/u_hb_coll_Q_reduce__q0.rst_n: expected one bound leaf, found 0 (partition NE_hub root ; e.g. )"
+ ],
+ "proof": {
+  "unbound": 179387,
+  "tied": 0,
+  "undriven": 0,
+  "multiply_bound": 0,
+  "straps": 11485,
+  "plan_driven": 0
+ },
+ "unmapped": 0,
+ "open_outputs": 3036
+}

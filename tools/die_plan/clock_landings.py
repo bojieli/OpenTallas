@@ -217,6 +217,27 @@ def ident(s):
     return re.sub(r"[^A-Za-z0-9_]", "_", s)
 
 
+# Same-region (non-seam) status inputs (DIE-S81-29, COORD DIE-S81-28-PARK (2)): every such pin bit loads ONLY the D of
+# its own face capture flop ot_dp_landing_face (no reset term, so no gate between pin and D: face_guard 'unregistered'
+# on the former AND2 of the reduction's synchronous reset).  +1 status cycle (boot-only training/status path,
+# clock_landing_plan prices it in boot_transport_extra_cycles), 0 data cycles.  Types without such inputs are unchanged.
+STATUS_FACE_CYCLES = 1
+
+
+def status_face(logic, key, ready, fault, xy_um=None):
+    """Append the two face flops of one same-region status pin pair; returns (ready_q, fault_q, instance records)."""
+    k = ident(str(key))
+    rq, fq = f"cland_dn_fq_ready_{k}", f"cland_dn_fq_fault_{k}"
+    logic += [f"    wire {rq}, {fq};",
+              f"    ot_dp_landing_face u_cland_face_ready_{k} (.clk(clk), .d({ready}), .q({rq}));",
+              f"    ot_dp_landing_face u_cland_face_fault_{k} (.clk(clk), .d({fault}), .q({fq}));"]
+    insts = [dict(name=f"u_cland_face_{kind}_{k}", module="ot_dp_landing_face", flops=1, pin=pin,
+                  role="same-region status face capture", status_cycles_added=STATUS_FACE_CYCLES, data_cycles_added=0,
+                  **({"xy_um": xy_um} if xy_um is not None else {}))
+             for kind, pin in (("ready", ready), ("fault", fault))]
+    return rq, fq, insts
+
+
 def gate_observer(body,spec):
     """Bind the two real one-bit mission/observation inputs, never new IO."""
     module=re.escape(spec["module"])
@@ -887,6 +908,10 @@ class Landings:
                               f"        .ready(cland_dn_trained_{i}), .fault(cland_dn_guard_{i}));"]
                     src.update(ready=f"(cland_dn_word_{i}[0] && cland_dn_trained_{i} && !cland_dn_guard_{i})",
                                fault=f"(cland_dn_word_{i}[1] || cland_dn_guard_{i})")
+                else:
+                    ready, fault, faces = status_face(logic, i, ch["ready"], ch["fault"], ch.get("xy_um"))
+                    monitor_reset_copies.extend(faces)
+                    src.update(ready=ready, fault=fault)
                 sources.append(src)
             if collector_info["tree"].get("hard"):
                 reduction=LC.build_hard_chain(collector_info["tree"],sources)
@@ -1068,15 +1093,17 @@ class Landings:
             rst, rp["monitor_reset"] = self._region_reset(tn, key, body, logic, root_xy or [0, 0])
         ready_l = ", ".join(f"landing_ready_{b}" for b in ins); fault_l = ", ".join(f"landing_fault_{b}" for b in ins)
         ok_l = ", ".join(f"cland_ok_{b}" for b in ins); bad_l = ", ".join(f"cland_bad_{b}" for b in ins)
-        intra_in, intra_out = [], []
+        intra_in, intra_out, faced = [], [], []
         if self.region_monitor:
             intra_in = sorted(info["mask"].get("intra_inputs", []))
             intra_out = [b for b in sorted(info["mask"].get("intra_outputs", [])) if b not in mask["outputs"]]
             for b in intra_in:
                 extra += [f"    input wire cland_dn_ready_{b}", f"    input wire cland_dn_fault_{b}"]
-            # same-region status: the sender's dedicated output register on the SAME region clock -> plain inputs
-            ok_l = ", ".join([x for x in [ok_l] if x] + [f"cland_dn_ready_{b}" for b in intra_in])
-            bad_l = ", ".join([x for x in [bad_l] if x] + [f"cland_dn_fault_{b}" for b in intra_in])
+            # same-region status: the sender's dedicated output register on the SAME region clock; each pin bit is
+            # captured by its OWN face flop before the reduction (status_face, +1 status cycle, 0 data cycles)
+            faced = [status_face(logic, b, f"cland_dn_ready_{b}", f"cland_dn_fault_{b}") for b in intra_in]
+            ok_l = ", ".join([x for x in [ok_l] if x] + [f[0] for f in faced])
+            bad_l = ", ".join([x for x in [bad_l] if x] + [f[1] for f in faced])
             n = n + len(intra_in)
             if not n:                           # nothing to train or hear: ready one registered cycle after reset
                 ok_l, bad_l, n = "1'b1", "1'b0", 1
@@ -1115,7 +1142,9 @@ class Landings:
             collect("u_cland_up_observer", final_n, final_in[0], final_in[1], "cland_up_ready", "cland_up_fault")
             body = gate_observer(body, self.collector["observer"])
         rp["monitor"] = dict(mode="region" if self.region_monitor else "dataflow", raw_reset=rst, depth=depth, tree_bus=tree_bus, stages=stages,
-                             outputs=outputs, flops=2*len(stages), data_cycles_added=0)
+                             outputs=outputs, flops=2*len(stages), data_cycles_added=0,
+                             **({"status_faces": [x for f in faced for x in f[2]], "status_face_flops": 2*len(faced),
+                                 "status_cycles_added": STATUS_FACE_CYCLES} if faced else {}))
         return body
 
     def top_rtl(self, text, emitted_modules=None):

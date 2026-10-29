@@ -1,0 +1,42 @@
+replica proposal: 550 generated-register relations (gold input support modulo copy indices)
+register aliases: 0 same-name / register-output relations proposed
+sequential traces: 8556 registers, 0 constant, 2+48 cycles x 256 lanes
+simulation refinement: 459 hypotheses refuted by concrete witnesses in 4 iterations
+==== hyp0
+======== ABC command line "&r /lecout/hyp0.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/hyp0_swept.aig"
+[1;37m/lecout/hyp0[0m : i/o =  10414/    224  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.16 MB
+[1;37m/lecout/hyp0[0m : i/o =  10414/    224  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.16 MB
+SAT solver statistics:
+CO =      224  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/lecout/hyp0[0m : i/o =  10414/    224  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.16 MB
+
+correspondence round 0: 224 hypotheses, 0 failed (0 undecided) []
+matched copy closure: 1 matched registers proposed equal to a matched copy of equal trace and next state
+==== hyp1
+======== ABC command line "&r /lecout/hyp1.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/hyp1_swept.aig"
+[1;37m/lecout/hyp1[0m : i/o =  10413/    226  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.16 MB
+[1;37m/lecout/hyp1[0m : i/o =  10413/    226  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.16 MB
+SAT solver statistics:
+CO =      226  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/lecout/hyp1[0m : i/o =  10413/    226  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.16 MB
+
+correspondence round 1: 226 hypotheses, 0 failed (0 undecided) []
+==== miter
+======== ABC command line "&r /lecout/miter.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/miter_swept.aig"
+[1;37m/lecout/miter[0m : i/o =  10413/   7221  [1;36mand =    4570[0m  [1;35mlev =    5[0m [1;35m(0.32)[0m  mem = 0.32 MB
+[1;37m/lecout/miter[0m : i/o =  10413/   7221  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.27 MB
+SAT solver statistics:
+CO =     7221  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/lecout/miter[0m : i/o =  10413/   7221  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.27 MB

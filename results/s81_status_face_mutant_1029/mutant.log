@@ -1,0 +1,10 @@
+DIFF n=6 got=0/0 expected=0/1
+DIFF n=8 got=0/1 expected=1/1
+DIFF n=10 got=0/1 expected=0/0
+DIFF n=12 got=1/1 expected=0/1
+handshake ready rise after face-branch ready edge=2 (expect 3)
+handshake ready rise after direct ready edge=2 (expect 2)
+face-branch fault edge=2 (expect 3)
+direct-branch fault edge=2 (expect 2)
+face-branch ready drop edge=2 (expect 3)
+collector checks=576 errors=255

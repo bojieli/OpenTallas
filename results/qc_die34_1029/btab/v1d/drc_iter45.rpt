@@ -1,0 +1,60 @@
+violation type: Short
+	srcs: net:_1147_ net:VSS
+	bbox = (253.3330, 25.7760) - (254.3640, 25.8000) on Layer M4
+violation type: Short
+	srcs: obstruction:  obstruction:  net:_1147_
+	bbox = (253.3330, 25.7760) - (254.5920, 25.8000) on Layer M4
+violation type: Short
+	srcs: net:_1147_ inst:g_btb\[1\].u_m
+	bbox = (253.3330, 25.7760) - (254.5920, 25.8000) on Layer M4
+violation type: Short
+	srcs: net:g_btb\[0\].m_wa\[4\] net:VSS
+	bbox = (253.3810, 39.6000) - (254.3640, 39.6240) on Layer M4
+violation type: Short
+	srcs: obstruction:  obstruction:  net:g_btb\[0\].m_wa\[4\]
+	bbox = (253.3810, 39.6000) - (254.5920, 39.6240) on Layer M4
+violation type: Short
+	srcs: inst:g_btb\[1\].u_m net:g_btb\[0\].m_wa\[4\]
+	bbox = (253.3810, 39.6000) - (254.5920, 39.6240) on Layer M4
+violation type: Short
+	srcs: net:VDD net:net4002
+	bbox = (253.4290, 26.1600) - (254.3640, 26.1840) on Layer M4
+violation type: Short
+	srcs: obstruction:  obstruction:  net:net4002
+	bbox = (253.4290, 26.1600) - (254.5920, 26.1840) on Layer M4
+violation type: Short
+	srcs: inst:g_btb\[1\].u_m net:net4002
+	bbox = (253.4290, 26.1600) - (254.5920, 26.1840) on Layer M4
+violation type: Short
+	srcs: net:VDD net:g_btb\[0\].m_wa\[6\]
+	bbox = (253.4770, 36.9120) - (254.3640, 36.9360) on Layer M4
+violation type: Short
+	srcs: obstruction:  obstruction:  net:g_btb\[0\].m_wa\[6\]
+	bbox = (253.4770, 36.9120) - (254.5920, 36.9360) on Layer M4
+violation type: Short
+	srcs: inst:g_btb\[1\].u_m net:g_btb\[0\].m_wa\[6\]
+	bbox = (253.4770, 36.9120) - (254.5920, 36.9360) on Layer M4
+violation type: Short
+	srcs: net:VSS net:net5099
+	bbox = (253.4770, 96.9120) - (254.3640, 96.9360) on Layer M4
+violation type: Short
+	srcs: obstruction:  obstruction:  net:net5099
+	bbox = (253.4770, 96.9120) - (254.5920, 96.9360) on Layer M4
+violation type: Short
+	srcs: inst:g_btb\[3\].u_m net:net5099
+	bbox = (253.4770, 96.9120) - (254.5920, 96.9360) on Layer M4
+violation type: Cut Short
+	srcs: obstruction:  obstruction:  net:_1147_
+	bbox = (253.3440, 25.7760) - (253.3680, 25.8000) on Layer V4
+violation type: Cut Short
+	srcs: obstruction:  obstruction:  net:g_btb\[0\].m_wa\[4\]
+	bbox = (253.3920, 39.6000) - (253.4160, 39.6240) on Layer V4
+violation type: Cut Short
+	srcs: obstruction:  obstruction:  net:net4002
+	bbox = (253.4400, 26.1600) - (253.4640, 26.1840) on Layer V4
+violation type: Cut Short
+	srcs: obstruction:  obstruction:  net:g_btb\[0\].m_wa\[6\]
+	bbox = (253.4880, 36.9120) - (253.5120, 36.9360) on Layer V4
+violation type: Cut Short
+	srcs: obstruction:  obstruction:  net:net5099
+	bbox = (253.4880, 96.9120) - (253.5120, 96.9360) on Layer V4
