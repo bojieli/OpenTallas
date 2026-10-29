@@ -391,6 +391,16 @@ SCHEMA = {
                         "pads": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
                         "core_taps": {"type": "array", "items": {"type": "object",
                                                                  "required": ["inst", "pin", "xy", "stages"]}}}},
+                    # Optional same-cycle private CA status drivers; emitted by clock_landings.
+                    "landing_control_status_copy": {"type": "boolean"},
+                    # HEAD SOURCE7: actual existing registered raw reset Q exports.
+                    # head_start_reset_aliases verifies each source instance/net in emitted RTL.
+                    "reset_start_raw_exports": {"type": "array", "items": {
+                        "type": "object", "additionalProperties": False,
+                        "required": ["port", "instance", "net", "xy_um"],
+                        "properties": {"port": _name, "instance": {"type": "string", "minLength": 1},
+                                       "net": {"type": "string", "minLength": 1}, "xy_um": _xy,
+                                       "existing_port": _name}}},
                     # HEAD-BIND-4 10-27 (OWNER 10-25 option B): per-INSTANCE ID strap input ports of the partition
                     # (strap_* names, exact widths in parent_id_straps.PHYSICAL_ID_WIDTHS).  No pin register, kit SDC
                     # set_false_path -from, each instance ties its own value (partitions[].id_straps) at the die top;
@@ -439,6 +449,8 @@ SCHEMA = {
                                        "note": {"type": "string"}}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
+                        # Native START capture location used by physical source planning.
+                        "start_capture_um": _xy,
                         "tap_pin_heights_um": {"type": "object", "additionalProperties": {
                             "type": "number", "minimum": 0.768}},
                         # FLOW 10-25 (ruling 9.7 / decision 5e): this type's bound pin-register insertion per corner
