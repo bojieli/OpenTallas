@@ -386,7 +386,12 @@ module ot_qkd_ectl_part #(
     wire [RQD:0]        rqv_s;
     wire [15*(RQD+1)-1:0] rqd_s;
     assign rqv_s[0] = rq_valid;
-    assign rqd_s[14:0] = {rq_v, rq_g, rq_t};
+    // KV-KITS-21 (KV-014): rq_g is 0 for HEADS 1 and rq_v is 0 for a QK-only engine (loaded only with 0 when an issue
+    // fires).  The elaborated constant feeds the relay, so no unreset load-enable register carries it (synthesis folds
+    // such a register to its constant; sequential LEC cannot give it a reset-window base case).  Same values on every edge.
+    wire rq_g_o = (HEADS == 2) ? rq_g : 1'b0;
+    wire rq_v_o = (STATIC_QK || `KVD_QK_ONLY) ? 1'b0 : rq_v;
+    assign rqd_s[14:0] = {rq_v_o, rq_g_o, rq_t};
     genvar gq;
     generate for (gq = 0; gq < RQD; gq = gq + 1) begin : g_rq
         (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_v (.clk(clk), .rst_n(rc), .d(rqv_s[gq]), .q(rqv_s[gq + 1]));
@@ -661,7 +666,13 @@ module ot_qkd_ectl_part #(
     localparam integer SCD = KDEPTH + LANE_D + 2 + 2;
     wire [11:0] tag_sc;
     wire        sc_v_n;
-    ot_hdc_delay #(.W(12), .D(SCD - 1)) u_tag (.clk(clk), .rst_n(rc), .d({c_g, c_pidx[10:0]}), .q(tag_sc));
+    // KV-KITS-21 (KV-014): c_g is 0 for HEADS 1; the tag line then carries only the 11 index bits (an unreset delay line
+    // must not carry an elaborated constant through SCD-1 stages: synthesis folds it, LEC has no base case for it).
+    localparam integer TGW = (HEADS == 2) ? 12 : 11;
+    wire [11:0]     tag_d = {c_g, c_pidx[10:0]};
+    wire [TGW-1:0]  tag_q;
+    ot_hdc_delay #(.W(TGW), .D(SCD - 1)) u_tag (.clk(clk), .rst_n(rc), .d(tag_d[TGW-1:0]), .q(tag_q));
+    assign tag_sc = {(HEADS == 2) ? tag_q[TGW-1] : 1'b0, tag_q[10:0]};
     ot_hdc_delay #(.W(1), .D(SCD - 1), .RESET(1)) u_scv (.clk(clk), .rst_n(rc), .d(k_issue), .q(sc_v_n));
     reg tf2;
     wire [3:0] tf = 4'd0;
