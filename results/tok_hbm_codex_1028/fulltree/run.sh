@@ -18,7 +18,7 @@ export PATH="$HOME/.local/opentallas-tools/bin:$PATH"
 SRC=(rtl/hbm_next/fused/tb/tb_hnx_fused_tree.sv rtl/hbm_next/fused/tb/ot_hnx_fused_tree_top.sv rtl/hbm_next/fused/ot_hnx_fused_hub_n4ext.sv rtl/hbm_next/fused/ot_hnx_fused_tree.sv rtl/hbm_next/fused/ot_hnx_fused_eng.sv
  physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v
  rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_delay_ring.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/v41x/ot_dsrom_divc.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/v41x/ot_dsrom_aq12.sv rtl/lib/ot_rst_relay.sv)
-verilator --binary --timing -O1 -j 4 -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN -Wno-UNOPTFLAT --top-module tb_hnx_fused_tree -GN4EXT=1 -Mdir "$TASK_OUT/obj" -o native "${SRC[@]}" > "$TASK_OUT/build.log" 2>&1
+verilator --binary --timing -O1 -j 4 --build-jobs 4 -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN -Wno-UNOPTFLAT --top-module tb_hnx_fused_tree -GN4EXT=1 -Mdir "$TASK_OUT/obj" -o native "${SRC[@]}" > "$TASK_OUT/build.log" 2>&1
 for op in pre post; do
  for n in 1 6; do
   c="$TASK_OUT/${op}_n${n}";python3 tools/hbm_next/hnx_fused_vec.py --op "$op" --n "$n" --rgap 24 --out "$c" > "$c.gen.log"
