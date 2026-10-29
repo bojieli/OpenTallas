@@ -5,6 +5,9 @@ from pathlib import Path
 R=Path(__file__).resolve().parents[3]
 D=Path(__file__).resolve().parent
 I=D/'inputs'
+for archive in I.glob('*.json.gz'):
+ target=archive.with_suffix('')
+ if not target.exists():target.write_bytes(gzip.decompress(archive.read_bytes()))
 def read(name):
  p=I/name
  return json.loads(p.read_text() if p.exists() else gzip.decompress(Path(str(p)+'.gz').read_bytes()))
