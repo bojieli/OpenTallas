@@ -34,7 +34,10 @@ module ot_v41_bf16_lanes3 #(
     // TNODE (S81-CORE-LAT-R2/BF 2026-10-26, see ot_v41_bf_col RCG): 1 = every pairwise-tree adder node (its fadd and
     // error pipe) on its own tile u_tn (local enable copy + ICG on fclk; ~840 sinks) instead of the tree tile u_tt
     // (14,219 sinks with the 15 nodes).  Same edges by construction.  0 = the original network.
-    parameter integer TNODE = 0
+    parameter integer TNODE = 0,
+    // Final tag-stage replication; 0 retains the original shared source.
+    // 4 or 16 kept copies distribute to four-lane groups or individual lanes.
+    parameter integer TAG_GROUPS = 0
 ) (
     input  wire              fclk,     // free-running element clock
     input  wire              rst_pin,  // element reset pin
@@ -91,6 +94,13 @@ module ot_v41_bf16_lanes3 #(
     localparam [8:0] CUTT = RC != 0 ? 9'b1_1111_1111 : CUT;    // tree adders
     localparam integer LATT = 1 + CUTT[0] + CUTT[1] + CUTT[2] + CUTT[3] + CUTT[4] + CUTT[5] + CUTT[6] + CUTT[7] + CUTT[8];
     ot_hdc_delay #(.W(TW), .D(PL)) u_pt (.clk(clk), .rst_n(rst_n), .d(t_in), .q(t_p));
+    wire [16*TW-1:0] t_local;
+    generate if (TAG_GROUPS != 0) begin : g_tag_local
+        ot_v41_bf_tag_delay #(.W(TW), .D(PL), .GROUPS(TAG_GROUPS)) u_tag
+            (.clk(clk), .rst_n(rst_n), .d(t_in), .q(t_local));
+    end else begin : g_tag_shared
+        assign t_local = {16{t_p}};
+    end endgenerate
     wire [15:0] pv;
     wire [15:0] pf;
     wire [31:0] prod [0:15];
@@ -99,6 +109,7 @@ module ot_v41_bf16_lanes3 #(
     wire [TRW:0] ct [0:15];
     genvar l;
     generate for (l = 0; l < 16; l = l + 1) begin : g_l
+        wire [TW-1:0] lane_tag = t_local[TW*l +: TW];
         // lane tile: local gated clock lclk / reset lrst; the lane's own boundary registers (16-bit word and x slices,
         // valid copy) are the lane's local operand registers
         wire lclk, lrst;
@@ -119,16 +130,16 @@ module ot_v41_bf16_lanes3 #(
         assign pv[l] = vp[PL-1];
         if (RC >= 2) begin : g_cu
         ot_v41_chain2u2 #(.NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
-            .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
-            .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
+            .slot(lane_tag[TW-1 -: HW]), .first(lane_tag[TRW+2]), .last(lane_tag[TRW+1]), .term(prod[l]), .term_f(pf[l]),
+            .tag(lane_tag[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
         end else if (RC != 0) begin : g_c4
         ot_v41_chain4 #(.PD(1), .ND(4), .NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
-            .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
-            .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
+            .slot(lane_tag[TW-1 -: HW]), .first(lane_tag[TRW+2]), .last(lane_tag[TRW+1]), .term(prod[l]), .term_f(pf[l]),
+            .tag(lane_tag[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
         end else begin : g_c2
         ot_v41_chain2 #(.NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
-            .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
-            .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
+            .slot(lane_tag[TW-1 -: HW]), .first(lane_tag[TRW+2]), .last(lane_tag[TRW+1]), .term(prod[l]), .term_f(pf[l]),
+            .tag(lane_tag[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
         end
     end endgenerate
     // 4-level pairwise tree over the 16 chunk sums (all lanes emit in the same cycle)
@@ -176,4 +187,35 @@ module ot_v41_bf16_lanes3 #(
     assign ofinal = lvt[4][0];
     assign oerr = lve[4][0];
     assign fault = |cfault;
+endmodule
+
+// Replicate only the last existing stage, keeping latency D and the source clock.
+// Tags are datapath: no reset, exactly as ot_hdc_delay RESET=0.
+module ot_v41_bf_tag_delay #(
+    parameter integer W = 8,
+    parameter integer D = 8,
+    parameter integer GROUPS = 16
+) (input wire clk, input wire rst_n, input wire [W-1:0] d,
+   output wire [16*W-1:0] q);
+    wire [W-1:0] prefix;
+    ot_hdc_delay #(.W(W), .D(D-1)) u_prefix
+        (.clk(clk), .rst_n(rst_n), .d(d), .q(prefix));
+    genvar g, l;
+    generate for (g = 0; g < GROUPS; g = g + 1) begin : g_group
+        wire [W-1:0] tag_q;
+        // A kept hierarchy instance prevents opt_merge of identical registers.
+        (* keep_hierarchy *) ot_v41_kreg #(.W(W)) u_copy
+            (.clk(clk), .arst_n(rst_n), .d(prefix), .q(tag_q));
+        for (l = 0; l < 16/GROUPS; l = l + 1) begin : g_lane
+`ifdef S81_BF_TAG_MUTANT
+            assign q[(g*(16/GROUPS)+l)*W +: W] = g == 0 ? prefix : tag_q;
+`else
+            assign q[(g*(16/GROUPS)+l)*W +: W] = tag_q;
+`endif
+        end
+    end endgenerate
+    initial begin
+        if (D < 1 || (GROUPS != 4 && GROUPS != 16))
+            $fatal(1, "ot_v41_bf_tag_delay: require D>=1 and GROUPS=4 or 16");
+    end
 endmodule

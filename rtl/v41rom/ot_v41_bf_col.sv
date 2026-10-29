@@ -82,7 +82,8 @@ module ot_v41_bf_col #(
     // capture / x / control registers and the ROM macros; lanes3 gets one tile per tree adder node (TNODE).  Every copy
     // is the same register function of the same inputs, so every register keeps exactly its clock edges (clock-network
     // change only; bench + LEC: physical/die_plan/s81/core_lat/bf_col_gates.json).  RCG = 0: the original network.
-    parameter integer RCG = 0
+    parameter integer RCG = 0,
+    parameter integer TAG_GROUPS = 0 // opt-in final BF tag-stage replication; zero cycles
 ) (
     input  wire          clk,
     input  wire          rst_n_pin,
@@ -599,7 +600,7 @@ module ot_v41_bf_col #(
     if (BF16 != 0) begin : g_bf
         if (FAST != 0 && QBF != 0 && TCG != 0) begin : g_fqt
         // TCG: the BF lanes as per-lane clock / reset tiles (+ BXST pipelined input stages)
-        ot_v41_bf16_lanes3 #(.NCHB(NCHB), .TRW(TG), .CUT(CUT), .GRADUAL_RNE(GRADUAL_RNE), .RC(QBF >= 3 ? 2 : QBF >= 2 ? 1 : 0), .XST(BXST), .TNODE(RCG)) u_bf (
+        ot_v41_bf16_lanes3 #(.NCHB(NCHB), .TRW(TG), .CUT(CUT), .GRADUAL_RNE(GRADUAL_RNE), .RC(QBF >= 3 ? 2 : QBF >= 2 ? 1 : 0), .XST(BXST), .TNODE(RCG), .TAG_GROUPS(TAG_GROUPS)) u_bf (
             .fclk(clk), .rst_pin(b_rst), .ze_d(b_ze), .v(mi2_v && mi2_bf),
             .w(cap[255:0]), .x(mz_q0), .slot(mi2_t[TW-HW +: $clog2(NCHB)]), .first(mi2_t[5]), .last(mi2_t[4]),
             .tree(mi2_t[TW-HW-1 -: TG]), .final_i(mi2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),

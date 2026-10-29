@@ -55,6 +55,8 @@ for a, b in [('pv[mb]', 'pv'), ('pval[32*mb +: 32]', 'pval'), ('prow[16*mb +: 16
     assert a in body, a
     body = body.replace(a, b)
 body = re.sub(r'\bmb\b', 'MB', body)
+# Optional final tag-stage replicas, same delay as the original shared tag line.
+body = body.replace('.XST(BXST)) u_bf (', '.XST(BXST), .TAG_GROUPS(TAG_GROUPS)) u_bf (')
 ren = {'issue': 'b_issue', 'a_ctr': 'b_a_ctr', 'i1_v': 'b_i1_v', 'i1_bk': 'b_i1_bk', 'i1_bf': 'b_i1_bf', 'i1_t': 'b_i1_t',
        'i2x_q0': 'b_i2x_q0', 'i2x_e0': 'b_i2x_e0', 'i2x_q1': 'b_i2x_q1', 'i2x_e1': 'b_i2x_e1', 'rst_n_pin': 'b_rst',
        'tcg_ze_d': 'b_ze', 'so_idx': 'b_so_idx', 'so_n': 'b_so_n'}
@@ -72,7 +74,8 @@ col = f'''`timescale 1ns/1ps
 // column's own output registers.  The BF x slice is the column's u_x copy (equal to the element's i2_q0 every cycle).
 module ot_v41_bf_col #({params},
     parameter integer HDLY = 0,       // bf-hier-1011: HB4 hold-delay cells per input bit ahead of the boundary registers
-    parameter integer MB = 0          // which column (simulation ROM image name only)
+    parameter integer MB = 0,         // which column (simulation ROM image name only)
+    parameter integer TAG_GROUPS = 0 // opt-in final BF tag-stage replication; zero cycles
 ) (
     input  wire          clk,
     input  wire          rst_n_pin,
