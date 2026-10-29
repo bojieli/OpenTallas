@@ -21,7 +21,8 @@ def point(root,plan,part,inst,port,bit):
  if ori in ('MY','R180'):x=W-x
  if ori in ('MX','R180'):y=H-y
  if ori not in ('R0','MX','MY','R180'):raise ValueError(f'unsupportedorient{ori}')
- return [round(h['origin_um'][0]+x,6),round(h['origin_um'][1]+y,6)]
+ off=h.get('track_offset_um') or [0,0]
+ return [round(h['origin_um'][0]+off[0]+x,6),round(h['origin_um'][1]+off[1]+y,6)]
 rows=[];missing=[];bits=[]
 for e in g['edges']:
  if e['src_plan_instance'] not in affected and e['dst_plan_instance'] not in affected:continue
