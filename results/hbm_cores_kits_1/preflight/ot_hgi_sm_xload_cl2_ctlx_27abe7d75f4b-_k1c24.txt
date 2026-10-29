@@ -1,0 +1,6 @@
+KIT_PREFLIGHT FAIL issues 5
+  - clock_pin_geometry: io.tcl: clock clk_cal on M4, not M5
+  - clock_pin_geometry: io.tcl: clock clk_cal pin_size 0.192x0.024 < 0.048x0.48 (GEOM-21)
+  - macro_channels: 1 macro master(s) but no staged MACRO_PLACEMENT_TCL (None): placement not static, channels/entry not checkable
+  - clock_entry_clear: 1 macro master(s) but no staged MACRO_PLACEMENT_TCL (None): placement not static, channels/entry not checkable
+  - macro_pin_grid: 1 macro master(s) but no staged MACRO_PLACEMENT_TCL (None): placement not static, channels/entry not checkable
