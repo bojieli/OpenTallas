@@ -1803,3 +1803,5 @@ CODEX: 2026-10-29 08:28 PDT shared clock/flow takeover; 32lane inventory, inheri
 
 CODEX: 2026-10-29 08:29 PDT FLOW parent-core receipt+scope READY e6d564618,38 focused PASS; S81-029 still waits real parent. q3 V1 live, KVcore canaries live; HEAD regression assigned.
 CODEX:08:33 KV modeledfourPC/hardwrapper capability ff854a23b READY10testsPASS; ASTK EQ27853 reset16 -> reviewedCTS-only intel1 codex-kv-astk-0828 live; AHUB/PC formal ongoing, q0/PVJ/e0 untouched; no PHYgeometry/routeclaim.
+
+CODEX: 2026-10-29 08:28 PDT main a64cdfd10 published: QC mesh spacing, frozen S81 sidecar+clock pins, measured HEAD START/BUF8, packed-parameter bind fix, Qwen exercised-mutant check and HBM calibrated-price guard; focused checks pass. All five die teams+tokens+flow+support active; every lane inventoried.
