@@ -155,7 +155,12 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
     roots = [n for n in nodes if n[1] is None]
     if len(roots) != 1 or roots[0][4] != "entry":
         raise ConvertError("plan needs exactly one entry root")
-    bad = sorted({n[3] for n in nodes if not ENVELOPE.fullmatch(n[3])})
+    # form C (CORES-EARLY-6): kind 'icg' nodes are planned clock-gate stages (RTL gate or clone_of copy, rec icg_copies),
+    # emitted as core_tree.gates (domain planned), not as buffer cells; their master is the RTL gate's, outside the envelope
+    icg_rows = {r["node"]: r for r in rec.get("icg_copies", [])}
+    if {n[0] for n in nodes if n[4] == "icg"} != set(icg_rows):
+        raise ConvertError("plan icg nodes and icg_copies rows differ")
+    bad = sorted({n[3] for n in nodes if n[4] != "icg" and not ENVELOPE.fullmatch(n[3])})
     if bad and not calibration:
         raise ConvertError(f"masters outside the BUFx8..x24 gating envelope: {bad} (re-plan, or --calibration)")
     for n in nodes:
@@ -170,14 +175,25 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
     outline = outline or [sites["rows"][0][0] * 2 + sites["row0"]["nsites"] * sites["row0"]["site_w"],
                           sites["rows"][0][1] * 2 + len(sites["rows"]) * sites["row0"]["site_h"]]
     names = {n[0]: ident(n[0], prefix) for n in nodes}
+    for nm_, r in icg_rows.items():
+        names[nm_] = r["gate"] if r["first"] else ident(nm_[:-2] + "_icg", prefix)
     # placement order: plan order (parents before children) -> deterministic
-    placements, tree_nodes, seen = {}, [], set()
+    placements, tree_nodes, seen, gates = {}, [], set(), []
     for n in nodes:
         nm, par, xy, master, kind = n
         if par is not None and par not in seen:
             raise ConvertError(f"{nm}: parent {par} must precede it")
         seen.add(nm)
         p = sm.place(names[nm], master, float(xy[0]), float(xy[1]))
+        if kind == "icg":
+            r = icg_rows[nm]
+            g = dict(inst=names[nm], master=master, parent=names[par], xy_um=p["centre_um"], domain="planned")
+            if not r["first"]:
+                g.update(clone_of=r["gate"], members=list(r["members"]))
+            gates.append(g)
+            tree_nodes.append(dict(name=names[nm], master=master, xy_um=p["centre_um"], parent=names[par], plan_xy_um=list(xy),
+                                   displacement_um=p["displacement_um"], kind=kind))
+            continue
         placements[names[nm]] = dict(master=master, **{k: p[k] for k in ("centre_um", "origin_um", "orient")})
         tree_nodes.append(dict(name=names[nm], master=master, xy_um=p["centre_um"],
                                parent=("port:" + clock_port) if par is None else names[par],
@@ -196,7 +212,15 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
         q[corner] = dict(leaf_min=m[corner_keys[0]], leaf_max=m[corner_keys[1]], leaf_window=m["window"],
                          slew_max=max(m.get("leaf_out_slew_max", 0), m.get("leaf_slew_in_max", 0)), mean=m["mean"])
     disp = [t["displacement_um"] for t in tree_nodes]
+    macro_leaves = set(rec.get("macro_leaves", []))
+    for leaf in leaves:
+        if leaf["node"] in {names[u] for u in macro_leaves}:
+            leaf["load_class"] = "macro"
     ex, ey = rec["entry"]
+    gates = [g for g in gates if "clone_of" not in g] + [g for g in gates if "clone_of" in g]   # originals before copies
+    if gates:
+        icg_conv = dict(gates=len(gates), originals=sum(1 for g in gates if "clone_of" not in g),
+                        copies=sum(1 for g in gates if "clone_of" in g))
     sl = dict(schema=schema, die=die, kind="core", type=module, module=module, instances=[],
               master_plan_sha256=master_plan_sha256, frozen=False, outline_um=[round(v, 4) for v in outline],
               latency=dict(common_clock_latency_ps={"TT": 250, "FF": 202.5}, tol_ps=20, early_taps=False),
@@ -205,8 +229,10 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
               islands=[dict(name="ck_entry", rect_um=[ex - 2.16, ey - 2.16, ex + 2.16, ey + 2.16], centre_um=[ex, ey],
                             use="clock_driver", via_stack=["M9", "M5"], clock_pin=dict(layer="M5", xy_um=[ex, ey]))],
               pushdown=dict(islands=[], clock_repeaters=[], note="in-core clock tree only (core_tree); no feedthrough ports"),
-              core_tree=dict(clock_port=clock_port, nodes=[{k: t[k] for k in ("name", "master", "xy_um", "parent")} for t in tree_nodes],
+              core_tree=dict(clock_port=clock_port, nodes=[{k: t[k] for k in ("name", "master", "xy_um", "parent")} for t in tree_nodes
+                                                           if t["kind"] != "icg"],
                              leaves=leaves, equal_load=False, load_balance="joint_nldm_plan", trunk_layers=["M4", "M5"],
+                             **({"gates": gates} if gates else {}),
                              model_qualification=dict(measured_timing_used=False, source=rec.get("name"),
                                                       model=rec.get("model", "plan model"), corners=q)),
               clock_ndr=dict(name="ot_core_ck_%dw%ds" % ndr, layers=["M4", "M5"], width_multiplier=ndr[0], spacing_multiplier=ndr[1]),
@@ -217,6 +243,8 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
                                    displacement_um=dict(max=max(disp), mean=round(sum(disp) / len(disp), 4),
                                                         over_2um=sum(d > 2 for d in disp)),
                                    site_rule="row by y, site-grid x, no overlap with planned/fixed cells, centre x off M5 straps"))
+    if gates:
+        sl["plan_conversion"]["icg"] = icg_conv
     return sl
 
 
