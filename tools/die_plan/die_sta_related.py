@@ -210,6 +210,8 @@ def pair_node(A, B):
     --cppr-lca (opt-in, PATH-S81-PD6): taps carry 'tree_path' (root 'h' + one child-index char per tree level, so a
     prefix is an ancestor); the node is the longest common prefix = the true last common tree node (12.4b), which for
     cross-region pairs is the H-tree node above both region roots instead of the die root."""
+    if A.get("clock_source_root") or B.get("clock_source_root"):
+        return "__source__"  # actual tree input precedes the root output cell: no common cell credit
     if A["cppr_node"] == "m" and B["cppr_node"] == "m":
         return "m"     # both taps re-referenced to the signed mesh (--mesh-signoff)
     if CPPR_LCA and "tree_path" in A and "tree_path" in B:
