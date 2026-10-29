@@ -12,7 +12,7 @@
 //   the pair image's die stages (XDIE_DIE_STAGES compute half: CS_TXS 2, CS_RXV 2, CS_RXP 2, CS_X3S 3, SC_TX 2,
 //   SC_X3 2); the producer capture latency so that the master's TXDP_C law holds (port 0 native: 8 = 2 pin flops +
 //   CS_TXS + codec 1 + E0 + SC_TX -> E0 = 1; port 3 x3: 10 = 2 + CS_X3S + transport 1 + E3 + SC_X3 -> E3 = 2; port 1
-//   witness: 3 = 2 + 1); the KV->compute PHY half (LAT edges, as the KV side's ot_qkvd_ucie_x64_phy bench model);
+//   witness: 3 = 2 + 1); the compute die's UCIe macro (the macro's own model, pin-to-pin LAT both ways);
 //   the forwarded epoch / link-reset bump: compute pin = the KV die's bump pad (sys_c u_fwb_ep.a) + EPB package edges.
 // Stimulus content (declared): every compute TX slot the calendar opens is filled by its compiled kind / beat:
 //   kind 1 CMD = {position T-1, valid}, kind 2 Q beat b = q.hex words 16b..16b+15 (the same q every layer);
@@ -37,7 +37,7 @@ module kvs_compute_end #(
     input  wire [4:0]   epb,
     input  wire [15:0]  epoch,
     input  wire [12:0]  pos,             // T - 1
-    input  wire         kv_tx_v,         // KV die d2d TX at its PHY pins
+    input  wire         kv_tx_v,         // KV die d2d TX at its UCIe bumps (macro line side)
     input  wire [582:0] kv_tx_flit,
     input  wire         kv_fwd_ep_pad,
     input  wire         kv_fwd_lrst_pad,
@@ -89,15 +89,15 @@ module kvs_compute_end #(
     always @(posedge ck) begin ep_sr <= {ep_sr[30:0], kv_fwd_ep_pad}; lr_sr <= {lr_sr[30:0], kv_fwd_lrst_pad}; end
     wire c_fwd_ep = (epb == 0) ? kv_fwd_ep_pad : ep_sr[epb - 1];
     wire c_fwd_lr = (epb == 0) ? kv_fwd_lrst_pad : lr_sr[epb - 1];
-    // ---------------- PHY: KV -> compute half (the compute -> KV half is the KV side's bench PHY model)
+    // ---------------- PHY: the compute die's own UCIe macro (TOK-KV-1 10-28: the hard macro's simulation model, the far
+    // macro of the KV die's sys_c u_ucie_rom; line side = the KV die top's sys_c_link_* / sys_c_far_* bumps)
     wire c_phy_rst_n, c_ptx_v; wire [582:0] c_ptx;
-    reg [583:0] kpipe [0:PHY_LAT-1]; reg c_up = 0; integer upn = 0;
-    always @(posedge ck) begin
-        kpipe[0] <= {kv_tx_v, kv_tx_flit}; for (int i = 1; i < PHY_LAT; i++) kpipe[i] <= kpipe[i-1];
-        if (!c_phy_rst_n) begin upn <= 0; c_up <= 0; end else begin upn <= upn + 1; if (upn >= UP) c_up <= 1; end
-    end
-    wire c_prx_v = kpipe[PHY_LAT-1][583] & en; wire [582:0] c_prx = kpipe[PHY_LAT-1][582:0];
-    assign c2k_v = en & c_ptx_v; assign c2k_flit = en ? c_ptx : 583'd0;
+    wire c_up, c_prx_v0, c_lv; wire [582:0] c_prx, c_lf;
+    ot_qkvd_ucie_x64_phy_model #(.LAT(PHY_LAT), .UP(UP), .FW(583)) u_cphy (.clk(ck), .rst_n(c_phy_rst_n), .tx_up(c_up),
+        .tx_v(c_ptx_v), .tx_flit(c_ptx), .rx_v(c_prx_v0), .rx_flit(c_prx), .link_v(c_lv), .link_flit(c_lf),
+        .far_v(kv_tx_v), .far_flit(kv_tx_flit));
+    wire c_prx_v = c_prx_v0 & en;
+    assign c2k_v = en & c_lv; assign c2k_flit = en ? c_lf : 583'd0;
     // ---------------- calendar sequencer (pair image C half)
     wire s_tx, s_rx, s_cs, s_sg, s_rdy, s_run, s_ad, s_ts, s_f, c_abort; wire [5:0] s_a, s_l; wire [31:0] s_d;
     ot_qwen_d2d_cal_seq #(.TX_IMG(D2D_CAL_C_TX_IMG), .RX_IMG(D2D_CAL_C_RX_IMG), .TX_SEG1(D2D_CAL_C_TX_SEG1),
