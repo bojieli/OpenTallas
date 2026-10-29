@@ -1,0 +1,15 @@
+{
+ "status": "SOURCE_EXACT_PIN_FACE_PROPOSAL_NOT_PLACED",
+ "pins": 555,
+ "changed_physical_bits": 120,
+ "cfg_identity_preserved": true,
+ "existing_ff": 512,
+ "cycles_added": 0,
+ "source_reason": "actual SRAM LEF wd_in[0:135] W, [136:255] E; wholeWguide caused1.099verticalcut",
+ "remaining": [
+  "independent image review",
+  "new privatekitGEN/PLACE",
+  "actualG1",
+  "parent FT/tap/CA/PG recomposition"
+ ]
+}

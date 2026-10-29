@@ -1,0 +1,14 @@
+{
+ "verdict": "PASS-COND independent review then ONE PLACE",
+ "viewed": true,
+ "image": "results/hbm_calendar_clock_1029/cfg_we/proposal.png",
+ "reason": "actual LEF writes split136W120E; priorallWguideFAIL1.099verticalcut",
+ "findings": [
+  "555pinRTL/ABI identity retained, move120physicalcfg_data bit records only",
+  "split512existingFF as272W+240E using exact bit-index prefixes",
+  "bothguides clearactualSRAM+4.32halo, rows/actualcellmembership checked atPLACE",
+  "densityW/E3.5pin/um, sourceclockroot/twoislands andallotherpins unchanged",
+  "sourcecycle0; parentFT/clock/CA/PGreset event remainsrequired",
+  "noCTS/GRT and no wholeG1passclaim"
+ ]
+}
