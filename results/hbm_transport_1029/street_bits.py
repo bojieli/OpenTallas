@@ -14,24 +14,37 @@ import hub_repack as H
 def construct(module,slot,a,b,fin,fout,w,h,boxes,alloc,budget,**kwargs):
     if getattr(module,'_street_phy_hold',False):
         raise ValueError(slot['name']+': street fallback held on physical PHY domains')
-    base=set(alloc.used);R=H.Raster(w,h,list(boxes),halo=0)
-    # The street graph may use a partition boundary as a proposal. Actual
-    # FF footprints are always legalized inside the original RowAllocator
-    # bounds; its 40um displacement is included in the unchanged hop budget.
+    base=set(alloc.used);scale=2.;shift=np.array([alloc.cw/2,alloc.ch/2])
+    # A 2.16um physical grid matches actual legal FF columns. Expand blockers
+    # by the complete FF half-footprint, so a point-free sliver is not mistaken
+    # for a place that can actually hold a cell. Scaling reuses the established
+    # 4.32-grid street solver without changing its shared defaults.
+    inflate=np.array([-alloc.cw/2,-alloc.ch/2,alloc.cw/2,alloc.ch/2])
+    transformed=[((np.array(r)+inflate-np.tile(shift,2))*scale).tolist() for r in boxes]
+    R=H.Raster((w-shift[0])*scale,(h-shift[1])*scale,transformed,halo=0)
+    for ix in range(R.nx):
+        x=ix*H.G/scale+shift[0]
+        if not alloc.bounds[0]+alloc.cw/2<=x<=alloc.bounds[2]-alloc.cw/2:R.f[ix,:]=False
+    for iy in range(R.ny):
+        y=iy*H.G/scale+shift[1]
+        if not alloc.bounds[1]+alloc.ch/2<=y<=alloc.bounds[3]-alloc.ch/2:R.f[:,iy]=False
     cache={};keys=[];margin=40.;planning=budget-2*margin
     if planning<=0:raise ValueError('no physical hop after legalization allowance')
-    def key(pa,pb):return tuple(round(float(v)/H.G) for v in (*pa,*pb))
+    def key(pa,pb):return tuple(round(float(v)/(H.G/scale)) for v in (*pa,*pb))
     def path(pa,pb,n):
-        result=H.route_station(R,pa,pb,n,planning)
+        pa,pb=(pa-shift)*scale,(pb-shift)*scale
+        result=H.route_station(R,pa,pb,n,planning*scale)
         if result is None:
             aa,bb=H.escape(R,pa),H.escape(R,pb)
             if not R.free(*aa) or not R.free(*bb):return None
             poly=H.astar(R,aa,bb,step=1)
             if poly is None:return None
             la=abs(pa[0]-aa[0])+abs(pa[1]-aa[1]);lb=abs(pb[0]-bb[0])+abs(pb[1]-bb[1])
-            regs,nmin=H.place_regs(R,poly,la,lb,n,planning)
+            regs,nmin=H.place_regs(R,poly,la,lb,n,planning*scale)
             if regs is None:return None
             result=dict(regs=regs,n_min=nmin,length_um=sum(abs(p[0]-q[0])+abs(p[1]-q[1]) for p,q in zip(poly,poly[1:]))+la+lb)
+        result['regs']=[(np.array(q)/scale+shift).tolist() for q in result['regs']]
+        result['length_um']/=scale
         return result
     count=max(0,int(slot['stations'])-1)
     for bit,(pa,pb) in enumerate(zip(a,b)):
@@ -48,12 +61,13 @@ def construct(module,slot,a,b,fin,fout,w,h,boxes,alloc,budget,**kwargs):
             if result is None:raise ValueError(f'{slot["name"]}: cannot pad per-bit street chain')
         regs=list(result['regs'])
         if not regs and count:
-            q=H.escape(R,pa)
+            q=H.escape(R,(pa-shift)*scale)
             if not R.free(*q):raise ValueError(f'{slot["name"]}: no free padded target')
-            regs=[q]
+            regs=[(np.array(q)/scale+shift).tolist()]
         while len(regs)<count:regs.append(regs[-1])
         result['regs']=regs;cache[k]=(pa,pb,result)
     targets=np.array([cache[k][2]['regs'] for k in keys],float) if count else np.empty((len(a),0,2))
+    grid=np.argwhere(R.f).astype(float)*H.G/scale+shift
     actual=[]
     try:
         for stage in range(count):
@@ -65,17 +79,32 @@ def construct(module,slot,a,b,fin,fout,w,h,boxes,alloc,budget,**kwargs):
                 # bank, constrained by both adjacent actual physical hops.
                 for delta in (H.G,2*H.G,4*H.G,8*H.G):
                     candidates.extend(target+np.array([dx,dy]) for dx,dy in ((delta,0),(-delta,0),(0,delta),(0,-delta)))
-                chosen=None
-                for q in candidates:
-                    if np.abs(q-previous).sum()+margin>budget+1e-6:continue
-                    if np.abs(q-following).sum()+margin>budget+1e-6:continue
+                def attempt(q):
+                    if np.abs(q-previous).sum()+margin>budget+1e-6:return None
+                    if np.abs(q-following).sum()+margin>budget+1e-6:return None
                     keep=set(alloc.used)
                     try:xy,_=alloc.allocate(q,1,max_radius_um=margin)
-                    except ValueError:continue
+                    except ValueError:return None
                     p=xy[0]
                     if np.abs(p-previous).sum()>budget+1e-6 or np.abs(p-following).sum()+margin>budget+1e-6:
-                        alloc.used=keep;continue
-                    chosen=p;break
+                        alloc.used=keep;return None
+                    return p
+                chosen=None
+                for q in candidates:
+                    chosen=attempt(q)
+                    if chosen is not None:break
+                if chosen is None:
+                    # Search the legal street-grid lens of both adjacent
+                    # stages, rather than assuming a bank must fit close to
+                    # one projected corner. Cell legalization still moves
+                    # at most 40um; every actual adjacent hop stays gated.
+                    ok=(np.abs(grid-previous).sum(axis=1)+margin<=budget+1e-6)&(np.abs(grid-following).sum(axis=1)+margin<=budget+1e-6)
+                    pool=grid[ok];cost=np.abs(pool-target).sum(axis=1);rank=np.argsort(cost,kind='stable');bins=set()
+                    for index in rank:
+                        q=pool[index];bucket=tuple(np.floor(q/(4*H.G)).astype(int))
+                        if bucket in bins:continue
+                        bins.add(bucket);chosen=attempt(q)
+                        if chosen is not None:break
                 if chosen is None:raise ValueError(f'{slot["name"]}: per-bit street legalization failed stage {stage+1} bit {bit}')
                 points[bit]=chosen
             actual.append(points)

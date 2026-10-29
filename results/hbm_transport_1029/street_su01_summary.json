@@ -1,0 +1,332 @@
+{
+ "source_plan_sha256": "4d53747fd73d5309096d825c013a4c41c464c036f747155bd910af604b9ba817",
+ "source_census_sha256": "26538b4872fe8f69a100c4c29c59ecb49800759426a496b1e6ea5d475ad2ab1e",
+ "geometry_sha256": {
+  "NE_su01": "0f323e34754ddb7932249e8f842f530945821d3779f93597ab6c0aabc8e9f96b"
+ },
+ "status": "PARTIAL_FT_SITES_ALLOCATED",
+ "ft": [
+  {
+   "method": "per_bit_street_raster",
+   "len_um": 2193.6,
+   "stations": 10,
+   "hops_um": [
+    169.647,
+    166.05,
+    327.78,
+    325.89,
+    324.0,
+    327.78,
+    327.51,
+    327.78,
+    324.27,
+    317.861
+   ],
+   "unique_bit_paths": 127,
+   "planning_hop_um": 323.0,
+   "row_legalization_radius_um": 40.0,
+   "jog_um": 602.28,
+   "jog_lane_um": 172.373,
+   "type": "__transport_NE_su01",
+   "slot": "L29x1",
+   "width": 1615,
+   "budget_um": 403.0
+  },
+  {
+   "method": "per_bit_street_raster",
+   "len_um": 1082.256,
+   "stations": 4,
+   "hops_um": [
+    336.325,
+    331.83,
+    322.65,
+    308.231
+   ],
+   "unique_bit_paths": 126,
+   "planning_hop_um": 323.0,
+   "row_legalization_radius_um": 40.0,
+   "type": "__transport_NE_su01",
+   "slot": "L28_detour",
+   "width": 1615,
+   "budget_um": 403.0
+  },
+  {
+   "method": "per_bit_street_raster",
+   "len_um": 1976.88,
+   "stations": 7,
+   "hops_um": [
+    324.495,
+    319.68,
+    330.75,
+    319.68,
+    319.68,
+    325.08,
+    323.953
+   ],
+   "unique_bit_paths": 41,
+   "planning_hop_um": 323.0,
+   "row_legalization_radius_um": 40.0,
+   "type": "__transport_NE_su01",
+   "slot": "L55x1",
+   "width": 514,
+   "budget_um": 403.0
+  },
+  {
+   "method": "per_bit_street_raster",
+   "len_um": 1671.04,
+   "stations": 6,
+   "hops_um": [
+    322.661,
+    325.35,
+    325.35,
+    320.49,
+    320.49,
+    74.637
+   ],
+   "unique_bit_paths": 24,
+   "planning_hop_um": 323.0,
+   "row_legalization_radius_um": 40.0,
+   "jog_um": 1041.453,
+   "jog_lane_um": 32.64,
+   "type": "__transport_NE_su01",
+   "slot": "L67x1",
+   "width": 305,
+   "budget_um": 403.0
+  },
+  {
+   "method": "per_bit_street_raster",
+   "len_um": 2194.24,
+   "stations": 9,
+   "hops_um": [
+    163.839,
+    163.89,
+    326.97,
+    166.05,
+    164.97,
+    324.0,
+    325.89,
+    325.89,
+    275.663
+   ],
+   "unique_bit_paths": 2,
+   "planning_hop_um": 323.0,
+   "row_legalization_radius_um": 40.0,
+   "jog_um": 178.2,
+   "jog_lane_um": 2.453,
+   "type": "__transport_NE_su01",
+   "slot": "L97x1",
+   "width": 22,
+   "budget_um": 403.0
+  },
+  {
+   "method": "per_bit_street_raster",
+   "len_um": 1597.696,
+   "stations": 5,
+   "hops_um": [
+    328.563,
+    324.0,
+    324.81,
+    306.45,
+    327.669
+   ],
+   "unique_bit_paths": 1,
+   "planning_hop_um": 323.0,
+   "row_legalization_radius_um": 40.0,
+   "type": "__transport_NE_su01",
+   "slot": "L102x1",
+   "width": 21,
+   "budget_um": 403.0
+  },
+  {
+   "method": "per_bit_street_raster",
+   "len_um": 1939.248,
+   "stations": 7,
+   "hops_um": [
+    325.361,
+    322.92,
+    324.0,
+    315.36,
+    328.05,
+    331.56,
+    39.215
+   ],
+   "unique_bit_paths": 2,
+   "planning_hop_um": 323.0,
+   "row_legalization_radius_um": 40.0,
+   "type": "__transport_NE_su01",
+   "slot": "L106x5",
+   "width": 20,
+   "budget_um": 403.0
+  },
+  {
+   "method": "per_bit_street_raster",
+   "len_um": 1666.752,
+   "stations": 6,
+   "hops_um": [
+    320.241,
+    319.68,
+    319.68,
+    322.11,
+    322.11,
+    70.473
+   ],
+   "unique_bit_paths": 2,
+   "planning_hop_um": 323.0,
+   "row_legalization_radius_um": 40.0,
+   "jog_um": 1394.973,
+   "jog_lane_um": 1.067,
+   "type": "__transport_NE_su01",
+   "slot": "L120x1",
+   "width": 9,
+   "budget_um": 403.0
+  },
+  {
+   "method": "per_bit_street_raster",
+   "len_um": 1936.384,
+   "stations": 7,
+   "hops_um": [
+    334.791,
+    333.72,
+    319.68,
+    319.68,
+    326.16,
+    328.32,
+    19.041
+   ],
+   "unique_bit_paths": 1,
+   "planning_hop_um": 323.0,
+   "row_legalization_radius_um": 40.0,
+   "type": "__transport_NE_su01",
+   "slot": "L125x3",
+   "width": 7,
+   "budget_um": 403.0
+  },
+  {
+   "method": "per_bit_street_raster",
+   "len_um": 1939.968,
+   "stations": 7,
+   "hops_um": [
+    333.555,
+    333.45,
+    319.68,
+    319.68,
+    328.86,
+    328.05,
+    24.009
+   ],
+   "unique_bit_paths": 1,
+   "planning_hop_um": 323.0,
+   "row_legalization_radius_um": 40.0,
+   "type": "__transport_NE_su01",
+   "slot": "L134x1",
+   "width": 3,
+   "budget_um": 403.0
+  },
+  {
+   "method": "per_bit_street_raster",
+   "len_um": 2075.392,
+   "stations": 7,
+   "hops_um": [
+    322.461,
+    319.68,
+    319.68,
+    319.68,
+    319.68,
+    319.68,
+    154.825
+   ],
+   "unique_bit_paths": 1,
+   "planning_hop_um": 323.0,
+   "row_legalization_radius_um": 40.0,
+   "jog_um": 299.53,
+   "jog_lane_um": 0.213,
+   "type": "__transport_NE_su01",
+   "slot": "TR021x1",
+   "width": 1,
+   "budget_um": 403.0
+  },
+  {
+   "method": "per_bit_street_raster",
+   "len_um": 2007.296,
+   "stations": 7,
+   "hops_um": [
+    321.585,
+    313.2,
+    319.68,
+    319.68,
+    319.68,
+    319.68,
+    80.667
+   ],
+   "unique_bit_paths": 1,
+   "planning_hop_um": 323.0,
+   "row_legalization_radius_um": 40.0,
+   "type": "__transport_NE_su01",
+   "slot": "TR022x3",
+   "width": 1,
+   "budget_um": 403.0
+  }
+ ],
+ "clock_ff_load": {
+  "NE_su01": 24556
+ },
+ "wrapper_transport_ff": {
+  "NE_su01": {
+   "old": 32630,
+   "new": 33438
+  }
+ },
+ "latency_delta": [
+  {
+   "lane": "L55m",
+   "old": 8,
+   "new": 9,
+   "added": 1,
+   "reason": "actual FT row-site allocation"
+  },
+  {
+   "lane": "L106m",
+   "old": 47,
+   "new": 48,
+   "added": 1,
+   "reason": "actual FT row-site allocation"
+  },
+  {
+   "lane": "L120m",
+   "old": 7,
+   "new": 8,
+   "added": 1,
+   "reason": "actual FT row-site allocation"
+  },
+  {
+   "lane": "L125m",
+   "old": 47,
+   "new": 48,
+   "added": 1,
+   "reason": "actual FT row-site allocation"
+  },
+  {
+   "lane": "L134m",
+   "old": 8,
+   "new": 9,
+   "added": 1,
+   "reason": "actual FT row-site allocation"
+  },
+  {
+   "lane": "TR021",
+   "old": 21,
+   "new": 22,
+   "added": 1,
+   "reason": "actual FT row-site allocation"
+  },
+  {
+   "lane": "TR022",
+   "old": 34,
+   "new": 35,
+   "added": 1,
+   "reason": "actual FT row-site allocation"
+  }
+ ],
+ "scope": "OLD150LEAFCUT constructive witness; not current156native source adoption",
+ "max_actual_pair_um": 336.325
+}

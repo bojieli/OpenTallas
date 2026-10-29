@@ -163,3 +163,19 @@ Every actual paired hop is rechecked. This can construct street detours that
 independent nearest-point projection never represents. It stays disabled by
 default and is held on physical PHY supply domains. No arithmetic or existing
 RTL module is changed; each extra cycle still requires compiler/model pricing.
+
+The first actual-bit street witness closes NE_su01's twelve slots: 24,556
+internal FF cells, max actual paired hop 336.325um, main L29 unchanged at ten
+stages. Wrapper FF estimate 32,630 -> 33,438 (+808); seven smaller lanes gain
+one cycle each. The actual placement image was personally viewed and received
+PASS-COND construction-only / HOLD P&R. Narrow receipts are committed; the
+new 156-native source cut still prevents adoption of this old-cut witness.
+
+The remaining NE_b111 case exposed two further proposal limits: a raster point
+could lie in a sliver too small for a whole FF footprint, and a nearest target
+could be full even though another target in the adjacent-hop lens was free.
+The new opt-in revision expands blockers by FF half-footprints, samples actual
+legal column phase on a 2.16um grid, and searches alternate street targets in
+both adjacent hop bounds. Final RowAllocator bounds, 40um legalization radius
+and 403um actual paired-hop checks are unchanged. This revision is a candidate
+until its failing production-shape case completes.
