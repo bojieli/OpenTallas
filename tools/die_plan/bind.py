@@ -4040,6 +4040,7 @@ def kit_closure(names, idx, prefer, picks=None, views=None):
     one module dragged in the instantiations of its unrelated siblings, e.g. sle_ctl got ot_v41_attn_eng_ctl_endpoint_phys
     + ot_hdc_fastfp, two different ot_hdc_qadd -> yosys Re-definition of module at the kit preflight).  `picks`
     (optional dict) receives {module: file} for every needed module (kit_strip_dups keeps those definitions)."""
+    E.validate_preferred_files(prefer)
     seen, files, missing, macros = set(), [], set(), {}
     picks = {} if picks is None else picks
     # QC-CORES-4 10-27: a module with a hardened view under MACRO_VIEW_DIRS (`views`, macro_views(base)) is a HARD MACRO
@@ -4471,9 +4472,10 @@ def cmd_kit_rtl(a):
     base = plan_base(a.plan, raw)
     # The bind's own extra library (the clock-landing cells ot_dp_clk_landing / ot_dp_landing_collect added when a
     # landing table is selected) is a source of the bound leaves too, not only a tie-breaker.
-    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), list(ab0.get("files", [])) + list(rep.get("extra_lib", [])), base)
     prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])] + \
         rep.get("extra_lib", []) + bindf_prefer(out, base)
+    E.validate_preferred_files(prefer)
+    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), list(ab0.get("files", [])) + list(rep.get("extra_lib", [])), base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
                    {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})

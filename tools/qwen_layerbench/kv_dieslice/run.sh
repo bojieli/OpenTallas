@@ -6,10 +6,18 @@ B=$(readlink -f $1)/obj/Vtb_kvslice; I=$(readlink -f $2); O=$(mkdir -p $3 && rea
 EP=$(cat $I/epoch.txt)
 BOOT_ARGS=()
 [ "$(cat "$(dirname "$B")/../native_boot.profile" 2>/dev/null || echo 0)" = 0 ] || BOOT_ARGS+=(+START_AFTER_SETUP)
-run() { local n=$1; shift; mkdir -p $O/$n; if [ -n "${KV_DCAL_VIAMAP:-}" ]; then python3 -I "$(dirname "$0")/runtime_rom.py" --build "$(dirname "$(dirname "$B")")" --runtime "$O/$n" --viamap "$KV_DCAL_VIAMAP" || return 2; fi; ( cd $O/$n && /usr/bin/time -f "%e s %M KB" -o time $B +FRAMES=$I/frames.hex +EXPECT=$I/expect.txt +EPOCH=$EP "${BOOT_ARGS[@]}" "$@" > sim.log 2>&1; echo $? > exit ); }
+run() { local n=$1; shift; mkdir -p $O/$n; if [ -f "$(dirname "$(dirname "$B")")/vl.f" ]; then python3 -I "$(dirname "$0")/runtime_rom.py" --build "$(dirname "$(dirname "$B")")" --runtime "$O/$n" ${KV_DCAL_VIAMAP:+--viamap "$KV_DCAL_VIAMAP"} || return 2; fi; ( cd $O/$n && /usr/bin/time -f "%e s %M KB" -o time $B +FRAMES=$I/frames.hex +EXPECT=$I/expect.txt +EPOCH=$EP "${BOOT_ARGS[@]}" "$@" > sim.log 2>&1; echo $? > exit ); }
 run nominal &
-[ -n "$MF" ] && run mut_frame +MUT_FRAME=$MF &
-wait
+nominal_pid=$!
+mutant_pid=""
+if [ -n "$MF" ]; then
+  run mut_frame +MUT_FRAME=$MF &
+  mutant_pid=$!
+fi
+launch_rc=0
+wait "$nominal_pid" || launch_rc=$?
+if [ -n "$mutant_pid" ]; then wait "$mutant_pid" || launch_rc=$?; fi
+[ "$launch_rc" = 0 ] || exit "$launch_rc"
 # TOK-QK-3 10-27: VERDICT from the bench verdict line (kv_verdict.py), never from exit 0; mut_* runs are negative controls.
 H=$(cd "$(dirname "$0")" && pwd)
 for d in $O/*/; do n=$(basename $d); x=pass; case $n in mut_*) x=fail ;; esac

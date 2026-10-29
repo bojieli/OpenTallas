@@ -1482,7 +1482,17 @@ class Lec:
                     c = 1
                     for ok, ov in zip(oks, ovals):
                         c = m.AND(c, self.dlit[(oside, ok)] ^ (ov ^ 1))
-                    m.outs.append(m.XOR(d, c))
+                    # A recoded FSM bit represents a predicate over the gold state.
+                    # Preserve the same X semantics used for eq/const hypotheses.
+                    # An AND is known if all atoms are known OR one known atom is false.
+                    known, false_known = 1, 0
+                    if oside == "gold":
+                        for ok, ov in zip(oks, ovals):
+                            atom = self.dlit[(oside, ok)] ^ (ov ^ 1)
+                            known = m.AND(known, nx(ok))
+                            false_known = m.AND(false_known ^ 1, m.AND(atom ^ 1, nx(ok)) ^ 1) ^ 1
+                    known = m.AND(known ^ 1, false_known ^ 1) ^ 1
+                    m.outs.append(m.AND(m.XOR(d, c), known))
                     m.onames.append(f"hyp:{side}:{k}")
                     continue
                 if h[0] == "loaded":
@@ -2451,7 +2461,13 @@ def sim_refine(L, log, tried, words=8, quiet=3, seed=4242):
                     c = mask
                     for ok, ov in zip(h[2], h[3]):
                         c &= D(h[1], ok) ^ (0 if ov else mask)
-                    v = D(side, k) ^ c
+                    known, false_known = mask, 0
+                    if h[1] == "gold":
+                        for ok, ov in zip(h[2], h[3]):
+                            atom = D(h[1], ok) ^ (0 if ov else mask)
+                            known &= NX(ok)
+                            false_known |= (~atom & NX(ok))
+                    v = (D(side, k) ^ c) & (known | false_known)
                 else:
                     continue
             except KeyError:

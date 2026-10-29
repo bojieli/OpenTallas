@@ -76,8 +76,21 @@ def instantiated(body, idx):
     return {m.group(1) for m in INST_RE.finditer(body) if m.group(1) in idx}
 
 
+def validate_preferred_files(prefer):
+    """An explicitly preferred HDL file must exist; missing optional search directories keep their old semantics.
+
+    Otherwise a sparse checkout can silently select another same-named module with a different hardware ABI.
+    """
+    missing = [str(p) for p in prefer if Path(p).suffix.lower() in (".v", ".sv", ".vh", ".svh")
+               and not Path(p).is_file()]
+    if missing:
+        raise ElabError("preferred HDL source missing: " + ", ".join(missing)
+                        + "; restore the source checkout or correct the explicit preference")
+
+
 def closure(names, idx, prefer):
     """every file needed to elaborate `names` fully (their own definitions and everything below them)."""
+    validate_preferred_files(prefer)
     seen, files, missing = set(), [], set()
     todo = list(names)
     while todo:
@@ -228,9 +241,10 @@ def plan_sources(ab, base, idx=None, shim_dir=None):
     roots = ab.get("rtl_roots", ["rtl"])
     files = list(ab.get("files", []))
     tops = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab["netlist"]]
+    prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab.get("prefer", [])]
+    validate_preferred_files(prefer)
     if idx is None:
         idx = module_index(roots, files, base)
-    prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab.get("prefer", [])]
     subst = ab.get("substitute", {})
     pvar = [r["module"] for r in ab.get("substitute_parent", [])]
     dissolve = set(ab.get("dissolve", [])) | set(pvar)

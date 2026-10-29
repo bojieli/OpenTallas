@@ -286,3 +286,45 @@ def test_pins_canonical_plan_table_with_dir(tmp_path):
     (kd / "io.tcl").write_text((kd / "io.tcl").read_text().replace("{10.0200 0.0420}", "{10.0680 0.0420}"))
     errors, _ = KC.pins_canonical(kd)
     assert errors and "plan pin file" in errors[0]
+
+
+def _landing_clock(kit):
+    import master_slice as MS
+    _partition(kit)
+    name = 'fclk_in_contract'
+    x, y = MS.snap_on_track(kit, 'M7', 2.0, 40.0)
+    with (kit / 'constraint.sdc').open('a') as f:
+        f.write(f'create_clock -name forwarded -period 833 [get_ports {name}]\n')
+    with (kit / 'io.tcl').open('a') as f:
+        f.write(f'place_pin -pin_name {name} -layer M7 -location {{{x:.4f} {y:.4f}}} '
+                '-pin_size {0.0320 0.7680}\n')
+    contract = dict(physical_qualified=False, pins=[dict(name=name, kind='clock', dir='in',
+                                                       layer='M7', xy_um=[x, y])])
+    (kit / 'landing_contract.json').write_text(json.dumps(contract))
+    return contract
+
+
+def test_partition_declared_landing_clock_keeps_all_geometry_checks(kit):
+    _landing_clock(kit)
+    errors, info = KC.clock_pin_geometry(kit)
+    assert not errors, errors
+    assert 'fclk_in_contract' in info['clock_ports']
+    t = (kit / 'io.tcl').read_text()
+    (kit / 'io.tcl').write_text(t.replace('-pin_size {0.0320 0.7680}', '-pin_size {0.01 0.01}'))
+    assert any('pin_size' in e for e in KC.clock_pin_geometry(kit)[0])
+
+
+@pytest.mark.parametrize('mutate', ['missing', 'data', 'out', 'xy', 'layer'])
+def test_partition_landing_name_alone_or_wrong_contract_never_waives_geometry(kit, mutate):
+    contract = _landing_clock(kit)
+    p = kit / 'landing_contract.json'
+    if mutate == 'missing':
+        p.unlink()
+    else:
+        pin = contract['pins'][0]
+        if mutate == 'data': pin['kind'] = 'data'
+        if mutate == 'out': pin['dir'] = 'out'
+        if mutate == 'xy': pin['xy_um'][1] += 4.32
+        if mutate == 'layer': pin['layer'] = 'M5'
+        p.write_text(json.dumps(contract))
+    assert KC.clock_pin_geometry(kit)[0]

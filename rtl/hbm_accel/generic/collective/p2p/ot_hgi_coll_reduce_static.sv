@@ -3,7 +3,7 @@
 // Fixed-edge 16-lane FP32 reduction. No readiness, queue or dynamic issue.
 // Input data is sampled at load/read edges; compiler metadata is sampled at
 // publication read. Native arithmetic is real LAT8 hardware from the ring.
-module ot_hgi_coll_reduce_static #(parameter integer MUT_TAG=0,MUT_BF16=0)(
+module ot_hgi_coll_reduce_static #(parameter integer MUT_TAG=0,MUT_BF16=0,LOCAL_CTRL=0)(
  input wire clk_control,input wire [15:0] clk_state,clk_add,
  input wire rst_n,clear,in_v,input wire [544:0] in_flit,
  input wire load_v,input wire [3:0] load_tag,
@@ -37,9 +37,27 @@ module ot_hgi_coll_reduce_static #(parameter integer MUT_TAG=0,MUT_BF16=0)(
  endfunction
  wire [511:0] bf_packed;
  for(genvar l=0;l<16;l=l+1)begin:g_lane
+  wire local_wb;
+  wire [3:0] local_tag;
+  if(LOCAL_CTRL)begin:g_local_ctrl
+   // Same final pipeline edge as pipe_v[7]/pipe_tag[7], replicated beside
+   // each lane's state decode. No added cycle; keep stops synthesis merging
+   // these clocked control copies back into a long global fanout tree.
+   (* keep = 1 *) reg wb_q;
+   (* keep = 1 *) reg [3:0] tag_q;
+   always @(posedge clk_control or negedge rst_n)begin
+    if(!rst_n)begin wb_q<=0;tag_q<=0;end
+    else begin wb_q<=pipe_v[6];tag_q<=pipe_tag[6];end
+   end
+   assign local_wb=wb_q;
+   assign local_tag=tag_q ^ (MUT_TAG?4'd1:4'd0);
+  end else begin:g_shared_ctrl
+   assign local_wb=wb;
+   assign local_tag=wb_tag;
+  end
   ot_hgi_coll_reduce_static_state_lane u_state(
    .clk(clk_state[l]),.load_v(load_v),.load_tag(load_tag),.load_data(in_flit[l*32+:32]),
-   .wb(wb),.wb_tag(wb_tag),.wb_data(sum[l*32+:32]),
+   .wb(local_wb),.wb_tag(local_tag),.wb_data(sum[l*32+:32]),
    .add_read(add_read),.read_tag(read_tag),.external_data(in_flit[l*32+:32]),
    .pub_read(pub_read),.pub_tag_a(pub_tag_a),.pub_tag_b(pub_tag_b),
    .acc(acc[l*32+:32]),.operand(operand[l*32+:32]),
