@@ -96,6 +96,9 @@ def compile_load(fragments, *, fmt, address=0, first_edge=0, enabled=False, unit
                 dates=dict(basis='backend input sampling edge', first_selector=first_edge,
                            last_activation=events[-1]['edge'], first_safe_row=None, first_gather=None,
                            pair_hardening_delta=dict(external_row=0, external_bout=0, gather=3, reset_release=2),
+                           structural_register_stages=dict(xs_strap=5, boundary_to_leaf_row=2,
+                                                           boundary_to_leaf_beat=2, leaf_lane_front=1,
+                                                           external_rout=5, external_bout=5),
                            absolute_frontend_to_leaf_qualified=False),
-                remaining=['P3 A/context/row mapping', 'write-to-read endpoint dates',
+                remaining=['P3 A/context/row mapping', 'write-to-read endpoint dates and XS strap settling',
                            'normal-row issue and csum/gather integration', 'physical placement and loaded clock'])
