@@ -1,0 +1,11 @@
+Clock clk
+  99.56 source latency g_pr.u_rst.rst_n$_DFF_PN0_/CLK ^
+ -88.95 target latency u_prog.dq[50]$_DFFE_PP_/CLK ^
+  60.00 clock uncertainty
+  -0.26 CRPR
+--------------
+  70.35 setup skew
+
+Clock vclk
+No launch/capture paths found.
+
