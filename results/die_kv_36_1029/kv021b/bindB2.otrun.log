@@ -1,0 +1,38 @@
+ot-run: intel1         admits   793 GB (avail 903, reserve 0, fresh 0, peak 45.2, headroom 0, waiters 0/0 GB) load 24/112 running 11 disk 1352 GB 
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-1348583-1793315220 after 0 s
+ctl kv3_pc__cl254f2e73 KITRTL_RC 0
+ctl kv3_pc__cl5a95b461 KITRTL_RC 0
+bindB2 BIND_RC 0 Thu Oct 29 16:12:42 PDT 2026
+{"partitions": 160, "types": 56, "crossings": 2545, "crossing_bits": 430554, "errors": 0, "unbound": 0, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 3094, "plan_driven": 1935}
+bindB2 kv3_hg_v1 KITRTL_RC 0
+bindB2 kv3_hg_v1p3 KITRTL_RC 0
+bindB2 kv3_hg_v1p6 KITRTL_RC 0
+bindB2 kv3_hroot KITRTL_RC 0
+bindB2 kv3_hub_Wo KITRTL_RC 0
+bindB2 kv3_pc__cl254f2e73 KITRTL_RC 0
+bindB2 kv3_pc__cl5a95b461 KITRTL_RC 0
+bindB2 kv3_pc_v1__cl23f6a148 KITRTL_RC 0
+bindB2 kv3_pc_v1__cl4ea58a5c KITRTL_RC 0
+bindB2 kv3_pc_v1__cl7f648944 KITRTL_RC 0
+bindB2 kv3_pc_v3 KITRTL_RC 0
+KITDIFF ./kv3_hg_v1/kv3_hg_v1_part_bound.sv
+KITDIFF ./kv3_hg_v1p3/kv3_hg_v1p3_bound.sv
+KITDIFF ./kv3_hg_v1p6/kv3_hg_v1p6_bound.sv
+KITDIFF ./kv3_hroot/kv3_hroot_part_bound.sv
+KITDIFF ./kv3_hub_Wo/kv3_hub_Wo_part_bound.sv
+KITDIFF ./kv3_pc__cl254f2e73/kit_rtl.f
+KITDIFF ./kv3_pc__cl254f2e73/kit_rtl.json
+KITDIFF ./kv3_pc__cl254f2e73/kit_rtl_sim.f
+KITDIFF ./kv3_pc__cl254f2e73/kv3_pc__cl254f2e73_bound.sv
+KITDIFF ./kv3_pc__cl5a95b461/kit_rtl.f
+KITDIFF ./kv3_pc__cl5a95b461/kit_rtl.json
+KITDIFF ./kv3_pc__cl5a95b461/kit_rtl_sim.f
+KITDIFF ./kv3_pc__cl5a95b461/kv3_pc__cl5a95b461_bound.sv
+KITDIFF ./kv3_pc_v1__cl23f6a148/kv3_pc_v1__cl23f6a148_bound.sv
+KITDIFF ./kv3_pc_v1__cl4ea58a5c/kv3_pc_v1__cl4ea58a5c_bound.sv
+KITDIFF ./kv3_pc_v1__cl7f648944/kv3_pc_v1__cl7f648944_bound.sv
+KITDIFF ./kv3_pc_v3/kv3_pc_v3_part_bound.sv
+KITRTL_NORMALIZED_DIFF_FILES 17
+bindB2 DONE Thu Oct 29 16:21:28 PDT 2026
+ot-run: RAN on intel1 (unit oth-ubuntu-1348583-1793315220): exit 0

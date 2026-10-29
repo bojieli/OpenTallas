@@ -1,0 +1,14 @@
+{
+ "identity_and_loop_errors": [],
+ "fundamental_cycles": 3595,
+ "samples": 32,
+ "sim_window_violations": 0,
+ "sim_min_margin_low_ps": 109.5,
+ "sim_min_margin_high_ps": 109.7,
+ "sim_worst_ports": {
+  "lo": "L385_0",
+  "hi": "L450_0"
+ },
+ "sim_below_need": false,
+ "note": "margins to the ring guards 0.5T / (DEPTH-0.5)T (COORD 20:35/20:48 gate >= 100 ps); MESO-INTEG-1 sync physics with metastable resolution both ways"
+}

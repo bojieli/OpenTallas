@@ -1,0 +1,8 @@
+ot-run: intel1         admits   786 GB (avail 897, reserve 0, fresh 0, peak 47.2, headroom 0, waiters 0/0 GB) load 24/112 running 11 disk 1353 GB 
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-1313992-1793314906 after 1 s
+bindB1 BIND_RC 1 Thu Oct 29 16:05:50 PDT 2026
+   R8_STALE host.chain_a[96:127]<-hsl_EN_31.ao@22 bit 124: bind has hsl_EN_31.ao as-built 22 bound 43, table hsl_EN_31.ao as-built 22 bound 42
+   R8_STALE host.chain_a[96:127]<-hsl_EN_31.ao@22 bit 125: bind has hsl_EN_31.ao as-built 22 bound 43, table hsl_EN_31.ao as-built 22 bound 42
+bindB1 DONE Thu Oct 29 16:05:50 PDT 2026
+ot-run: RAN on intel1 (unit oth-ubuntu-1313992-1793314906): exit 0
