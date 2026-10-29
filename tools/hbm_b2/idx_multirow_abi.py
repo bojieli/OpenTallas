@@ -25,6 +25,8 @@ class Multirow:
             raise ValueError("IDXQ K8/link slots require 1..8 rows")
         if self.n_rows > 1 and self.row_pitch == 0:
             raise ValueError("multirow pitch must be positive")
+        if self.n_rows > 1 and (self.weight_row_stride % 8 or self.query_row_stride % 4):
+            raise ValueError("native row strides require weight8/query4 sector alignment")
         value = 0
         for name, base, width in FIELDS:
             field = getattr(self, name)
