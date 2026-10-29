@@ -1,0 +1,11 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/die-qc34/src/materialize_full.py", line 10, in <module>
+    res=apply_access(b,F/"pg_candidate",F/"readback/pg_rects.json",185698,json.load(open(F/"provider/all_cells.json")))
+  File "/srv/opentallas-scratch2/claude/die-qc34/src/mixed_apply_access.py", line 50, in apply_access
+    if missing:raise ValueError(f'Actual canonical PG grid missing {len(missing)} rectangles; first {missing[:2]}')
+ValueError: Actual canonical PG grid missing 13304 rectangles; first [['VDD', 'M8', 0.0, 4.08, 31216.32, 4.5600000000000005], ['VSS', 'M8', 0.0, 8.4, 31216.32, 8.88]]

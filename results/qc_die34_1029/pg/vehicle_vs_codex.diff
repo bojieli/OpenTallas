@@ -1,0 +1,17 @@
+25c25
+<  x,y=q['m8'][2:];matches=[tuple(r) for r in grid if r[0]==q['net'] and r[1]=='M9' and r[2]<=x/1000-.020 and x/1000+.020<=r[4] and r[3]<=y/1000-.020 and y/1000+.020<=r[5]];assert matches;needed.add(min(matches))
+---
+>  x,y=q['m8'][2:];matches=[tuple(r) for r in grid if r[0]==q['net'] and r[1]=='M9' and round(r[2]*1000)<=x-20 and x+20<=round(r[4]*1000) and round(r[3]*1000)<=y-20 and y+20<=round(r[5]*1000)];assert matches;needed.add(min(matches))
+54a55,57
+>  rail_idx={}
+>  for name in sorted(selected):
+>   inst=b2.findInst(name);it=inst.findITerm(n);rr=[transformed_rect(inst,z) for mp in it.getMTerm().getMPins() for z in mp.getGeometry() if z.getTechLayer() and z.getTechLayer().getName()=='M1'];assert len(rr)==1;rail_idx[name]=len(records);records.append(('M1',list(rr[0])))
+72,73c75
+<   for i,(ly,q) in enumerate(records):
+<    if ly=='M1' and min(r[2],q[2])>max(r[0],q[0]) and min(r[3],q[3])>max(r[1],q[1]) and find(i) in roots:connected=True;break
+---
+>   connected=find(rail_idx[name]) in roots
+75c77
+< summary=dict(verdict='PASS_MIXED_ACTUAL_PG_MECHANISM',selected_cells=len(selected),provider_cells=len(provider['cells']),contacts=len(connections),connected=sum(q['connected'] for q in connections),actual_m3_jog_groups=sum(bool(q.get('m3_jog_dbu')) for q in sub['paths']),first=first,reapply=second,changed_provider_body_control=control,scope='Scoped actual clock/FF/comb PG coupon plus M3 jog. Not whole-die PG/clock/DRC/IR.');json.dump(summary,open(o/'summary.json','w'),indent=2);json.dump(connections,open(o/'connectivity.json','w'),indent=2);print(json.dumps(summary,indent=2),flush=True)
+---
+> summary=dict(verdict='PASS_MIXED_ACTUAL_PG_MECHANISM',selected_cells=len(selected),provider_cells=len(provider['cells']),contacts=len(connections),connected=sum(q['connected'] for q in connections),actual_m3_jog_groups=sum(bool(q.get('m3_jog_dbu')) for q in sub['paths']),first=first,reapply=second,changed_provider_body_control=control,rail_model='abutting native M1 rails of same-row cells unioned (touching edge counts)',scope='Scoped actual clock/FF/comb PG coupon plus M3 jog. Not whole-die PG/clock/DRC/IR.');json.dump(summary,open(o/'summary.json','w'),indent=2);json.dump(connections,open(o/'connectivity.json','w'),indent=2);print(json.dumps(summary,indent=2),flush=True)

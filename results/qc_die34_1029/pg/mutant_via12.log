@@ -1,0 +1,14 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+PG_ACCESS_RECT 0 163
+PG_ACCESS_VIA 0 48
+PG_ACCESS_RECT 0 163
+PG_ACCESS_VIA 0 48
+MUTANT removed VIA12
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/die-qc34/src/mixed_import_vehicle_mut.py", line 82, in <module>
+    connections.append(dict(inst=name,pin=n,connected=connected));assert connected,(name,n)
+AssertionError: ('start_provider/$flatten\\u_rst_b190.$abc$582$auto$blifparse.cc:397:parse_blif$583', 'VDD')

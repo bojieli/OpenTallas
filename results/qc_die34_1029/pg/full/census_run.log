@@ -1,0 +1,47 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+LAYER VDD M1 202017 202215 26
+LAYER VDD M2 218336 327504 28
+LAYER VDD M3 272920 545840 31
+LAYER VDD M4 272920 545840 34
+LAYER VDD M5 272920 545840 36
+LAYER VDD M6 272920 545840 39
+LAYER VDD M7 325030 579087 44
+LAYER VDD M8 322154 516007 48
+LAYER VDD M9 109339 158589 49
+NET VDD {'contacts': 92849, 'connected': 92849, 'grid_stripes': 6653, 'shapes': 2268556, 'grid_components': 5829}
+LAYER VSS M1 202017 202487 76
+LAYER VSS M2 218336 327504 78
+LAYER VSS M3 272921 545839 81
+LAYER VSS M4 272920 545840 84
+LAYER VSS M5 272920 545840 86
+LAYER VSS M6 272920 545840 90
+LAYER VSS M7 324894 594865 92
+LAYER VSS M8 321753 538947 95
+LAYER VSS M9 109210 158397 97
+NET VSS {'contacts': 92849, 'connected': 92849, 'grid_stripes': 6651, 'shapes': 2267891, 'grid_components': 5794}
+{
+  "source_odb": "/srv/opentallas-scratch2/claude/die-qc34/fullpg_mat/provider_pg.odb",
+  "contacts": 185698,
+  "VDD": {
+    "contacts": 92849,
+    "connected": 92849,
+    "grid_stripes": 6653,
+    "shapes": 2268556,
+    "grid_components": 5829
+  },
+  "VSS": {
+    "contacts": 92849,
+    "connected": 92849,
+    "grid_stripes": 6651,
+    "shapes": 2267891,
+    "grid_components": 5794
+  },
+  "failed": 0,
+  "seconds": 101,
+  "verdict": "PASS_PG_CONTACT_CONNECTIVITY",
+  "scope": "Contact-to-canonical-grid conductor connectivity only. Not DRC, not IR, not native-cell PG, not clock route."
+}

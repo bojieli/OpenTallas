@@ -13,7 +13,7 @@ P  prepare_paired.py = Codex prepare.py + TOK-QC-2 generator rule ca_pair_rule.p
    annotate_table, then count_align_bind.verify: identity/loop errors 0, window violations 0, margins 108.0/341.1 ps.
    RS0 9->10 (1 step), RS1 8->12 (4), RS2 8->12 (4). CA ports changed vs raw plan 225, aggregate -159 port-cycles
    (Codex unpaired: 234 / -168; aggregate port cycles are NOT token latency).
-0  gen.py latency --inplace (canonical latency.lanes rebuild): 216 lanes' clock_landing/cycles re-derived.
+0  gen.py latency --inplace (canonical latency.lanes rebuild): 213 lanes' clock_landing/cycles re-derived (CORRECTED 10-29 by NUMBER-CHECK-QC-1; earlier text said 216 = the error count).
 1  probe bind (recipe minus land_align/land_r8_extra/param_regen): 0 errors.
 2  gen.py latency --groups probe/bus_groups.json -> fresh r8/ (9050 members, 2237 padded, 900,320 pad FF, max pad 20).
 3  base bind (fresh R8 + INNER witness candidate_inner.json + coll_regen): 0 errors.
@@ -22,7 +22,7 @@ P  prepare_paired.py = Codex prepare.py + TOK-QC-2 generator rule ca_pair_rule.p
    790,393 bits, unbound/tied/undriven/multiply 0, 0 type splits (final_out/bind_report.json). CHECKED (own run).
 
 ## Root causes of FAIL242
-- 216 LANE_LANDING_LATENCY: plan latency.lanes stale after the native CA update -> step 0.
+- 216 LANE_LANDING_LATENCY errors (the latency regen rewrote 213 lanes, NUMBER-CHECK-QC-1): plan latency.lanes stale after the native CA update -> step 0.
 - 25 TYPE_SPLIT (ibus) + 1 EMIT: stale R8 (r8_previous) / CB16 (cb16_previous) pads made per-instance in-bus pads
   differ; gone after the fresh R8/CB16 regen (steps 1-4); EMIT inventory follows.
 - failed_2 (after the above): 1 PARAM_REGEN coll_regen RS0 core->face 20 vs face->core 21 stages: Codex prepare.py did
