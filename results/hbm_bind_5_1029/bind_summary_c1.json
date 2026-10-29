@@ -1,0 +1,18 @@
+{
+ "run": "c1",
+ "n_errors": 159,
+ "by_class": {
+  "EMIT": 1,
+  "UNPLANNED": 158
+ },
+ "unmapped": 0,
+ "open_outputs": 2814,
+ "cells": {
+  "leaf": 1374,
+  "source": 1,
+  "glue": 64616
+ },
+ "non_unplanned_errors": [
+  "EMIT wavefront core reset q_hub_ne/u_hc_Q.u_cen.ot_hbm_hc_subtree32_0.rst_n: expected one bound leaf, found 0 (partition NE_hub root ; e.g. )"
+ ]
+}
