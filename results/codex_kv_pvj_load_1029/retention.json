@@ -1,0 +1,456 @@
+{
+ "kept_load_wires": 32,
+ "distinct_bits": 32,
+ "rows": [
+  {
+   "net": "u.g_output_load_local.g_word[0].load_q",
+   "bit": 9548,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1292",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[10].load_q",
+   "bit": 12592,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1622",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[11].load_q",
+   "bit": 12667,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1655",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[12].load_q",
+   "bit": 13354,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1688",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[13].load_q",
+   "bit": 13955,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1721",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[14].load_q",
+   "bit": 14318,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1754",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[15].load_q",
+   "bit": 14888,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1787",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[16].load_q",
+   "bit": 15558,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1820",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[17].load_q",
+   "bit": 16251,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1853",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[18].load_q",
+   "bit": 16944,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1886",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[19].load_q",
+   "bit": 17637,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1919",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[1].load_q",
+   "bit": 10232,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1325",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[20].load_q",
+   "bit": 18041,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1952",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[21].load_q",
+   "bit": 18404,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1985",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[22].load_q",
+   "bit": 18767,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$2018",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[23].load_q",
+   "bit": 19130,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$2051",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[24].load_q",
+   "bit": 19493,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$2084",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[25].load_q",
+   "bit": 19856,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$2117",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[26].load_q",
+   "bit": 20219,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$2150",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[27].load_q",
+   "bit": 20582,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$2183",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[28].load_q",
+   "bit": 20945,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$2216",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[29].load_q",
+   "bit": 21308,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$2249",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[2].load_q",
+   "bit": 10913,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1358",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[30].load_q",
+   "bit": 21671,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$2282",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[31].load_q",
+   "bit": 22034,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$2315",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[3].load_q",
+   "bit": 11594,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1391",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[4].load_q",
+   "bit": 12275,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1424",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[5].load_q",
+   "bit": 12427,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1457",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[6].load_q",
+   "bit": 12460,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1490",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[7].load_q",
+   "bit": 12493,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1523",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[8].load_q",
+   "bit": 12526,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1556",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  },
+  {
+   "net": "u.g_output_load_local.g_word[9].load_q",
+   "bit": 12559,
+   "drivers": [
+    [
+     "$auto$ff.cc:337:slice$1589",
+     "$_DFF_PN0_",
+     "Q",
+     "00000000000000000000000000000001"
+    ]
+   ],
+   "loads": 16,
+   "muxloads": 16
+  }
+ ],
+ "max_loads": 16,
+ "max_muxloads": 16
+}

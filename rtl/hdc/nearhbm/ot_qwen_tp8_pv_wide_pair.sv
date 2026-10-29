@@ -142,7 +142,7 @@ endmodule
 
 // P.V column join tile (64 per KV/system die): ((b0+b1)+(b2+b3))+((b4+b5)+(b6+b7)) over the 8 bank tree sums of one
 // column, 16 FP32 lanes, one adder set + two node registers on static slots from join_go. Every port registered.
-module ot_qwen_tp8_pv_join_t #(parameter integer MUT=0, J_LAT=7, RESET_PIN=0)(
+module ot_qwen_tp8_pv_join_t #(parameter integer MUT=0, J_LAT=7, RESET_PIN=0, OUTPUT_LOAD_LOCAL=0)(
  input wire clk,rst_n,input wire[1023:0] ts0,ts1,ts2,ts3,   // bank tree sums {b1,b0}, {b3,b2}, {b5,b4}, {b7,b6} (one face each)
  input wire join_go,input wire[7:0] sf,
  // CORES-KITS/KVX 10-26: keep on the y port flops too.  y and y_hold have the SAME next state (load ? jy : y_hold)
@@ -230,9 +230,28 @@ module ot_qwen_tp8_pv_join_t #(parameter integer MUT=0, J_LAT=7, RESET_PIN=0)(
   if(jrun&&jage==J_LAT)xr<=jy;                      // L5_0
   if(jrun&&jage==J_LAT+2)xr<=jy;                    // L5_2
   if(jrun&&jage==2*J_LAT+1)yr<=jy;                  // L6_0
-  if(jrun&&jage==J_OUT)y_hold<=jy;
-  y<=(jrun&&jage==J_OUT)?jy:y_hold;                // port copy: same value/edge as the held result, drives only its pin
  end
+ generate if(OUTPUT_LOAD_LOCAL != 0)begin:g_output_load_local
+  // Decode the next state one edge ahead, as for the operand-select copies.
+  // After each edge load_q equals the current jrun/J_OUT predicate, so the
+  // output capture cycle and golden reduction order stay unchanged. Each kept
+  // copy drives 16 hold muxes and 16 dedicated output muxes (32 loads).
+  for(genvar q=0;q<32;q=q+1)begin:g_word
+   (* keep = "true", dont_touch = "true" *) reg load_q;
+   always @(posedge clk or negedge local_rst_n)
+    if(!local_rst_n)load_q<=1'b0;
+    else load_q<=nrun&&(nage==5'(J_OUT));
+   always @(posedge clk)begin
+    if(load_q)y_hold[16*q+:16]<=jy[16*q+:16];
+    y[16*q+:16]<=load_q?jy[16*q+:16]:y_hold[16*q+:16];
+   end
+  end
+ end else begin:g_output_load_legacy
+  always @(posedge clk)begin
+   if(jrun&&jage==J_OUT)y_hold<=jy;
+   y<=(jrun&&jage==J_OUT)?jy:y_hold;
+  end
+ end endgenerate
 endmodule
 
 // Pair control tile: calendar walk, V requests, arrival identity per port, the column command word, output check.
