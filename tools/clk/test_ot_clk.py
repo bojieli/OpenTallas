@@ -210,3 +210,49 @@ def test_json_diff_keys_names_meta_only_differences():
 def test_s81_go16_draft_passes_with_the_routed_s81_fit():
     ok, e, why = O.stage_check(cfg("s81_go16"), reg())
     assert ok and e["id"] == "inv2_ndr_s81_go15", why
+
+
+def _rebase_cfg(tmp_path, pins_file, sidecar=False):
+    pd = tmp_path / "ev"
+    pd.mkdir()
+    plan = {"partition_types": {"t": {"hard_cores": [{"inst": "u", "pins_file": pins_file}]}}}
+    (pd / "plan.json").write_text(json.dumps(plan))
+    if sidecar:
+        (pd / "die_io.json").write_text("[]")
+    c = cfg("head")
+    c["inputs"] = dict(plan=str(pd / "plan.json"),
+                       pins_rebase={"from": "../../wt/gone-bind/", "to_repo": ""})
+    return c
+
+
+def test_pins_rebase_points_a_deleted_worktree_plan_at_repo_pin_tables(tmp_path):
+    rel = "physical/die_plan/s81_head/cores/elemA_pins.json"
+    c = _rebase_cfg(tmp_path, "../../wt/gone-bind/" + rel)
+    plan, prov = O.rebase_plan(c, tmp_path / "out")
+    p = json.loads(Path(plan).read_text())
+    got = p["partition_types"]["t"]["hard_cores"][0]["pins_file"]
+    assert Path(got) == (O.REPO / rel).resolve() and Path(got).is_file()
+    assert prov["pins_files"]["../../wt/gone-bind/" + rel]["repo_path"] == rel
+    assert O.kit_argv(c, tmp_path / "out" / "kit", plan=plan)[1] == plan
+
+
+def test_pins_rebase_refuses_missing_foreign_or_sidecar(tmp_path):
+    for i, (pf, side) in enumerate((("../../wt/gone-bind/physical/no_such_pins.json", False),
+                                    ("../../wt/other/physical/die_plan/s81_head/cores/elemA_pins.json", False),
+                                    ("../../wt/gone-bind/../../../../etc/passwd", False),
+                                    ("../../wt/gone-bind/physical/die_plan/s81_head/cores/elemA_pins.json", True))):
+        d = tmp_path / str(i)
+        d.mkdir()
+        with pytest.raises(O.ConfigError):
+            O.rebase_plan(_rebase_cfg(d, pf, side), d / "out")
+
+
+def test_configs_without_rebase_pass_the_plan_through(tmp_path):
+    c = cfg("kv")
+    assert O.rebase_plan(c, tmp_path) == (c["inputs"]["plan"], None)
+
+def test_reference_prefers_generated_copy(tmp_path):
+    (tmp_path / "tree.json").write_text("{}")
+    assert O.reference_file(tmp_path, "tree.json").name == "tree.json"
+    (tmp_path / "tree_GENERATED.json").write_text("{}")
+    assert O.reference_file(tmp_path, "tree.json").name == "tree_GENERATED.json"

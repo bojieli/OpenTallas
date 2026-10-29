@@ -181,10 +181,47 @@ def _fmt(v):
     return str(v)
 
 
-def kit_argv(cfg, out, stage_cal_path=None, workers=None):
+def rebase_plan(cfg, out):
+    """inputs.pins_rebase: plan events whose hard-core pins_file points into a (deleted) worktree are replayed from a
+    plan copy whose pins_file paths are rewritten onto the pin tables committed in THIS repo.  Only hard_cores[].pins_file
+    is touched (the one plan-relative sidecar die_trial reads besides die_io.json, which must not exist next to such a
+    plan); the copy is written beside the kit and the rewrite is recorded.  Returns (plan path, provenance or None)."""
+    i = cfg["inputs"]
+    rb = i.get("pins_rebase")
+    if not rb:
+        return i["plan"], None
+    src = Path(i["plan"])
+    if (src.parent / "die_io.json").is_file():
+        raise ConfigError(f"pins_rebase: {src.parent}/die_io.json is a plan-dir sidecar; a moved plan copy would lose it")
+    raw = src.read_bytes()
+    plan = json.loads(raw)
+    old, new = rb["from"], rb.get("to_repo", "")
+    done = {}
+    for tn, t in sorted(plan.get("partition_types", {}).items()):
+        for hc in t.get("hard_cores", []):
+            pf = hc.get("pins_file")
+            if not pf:
+                continue
+            if not pf.startswith(old):
+                raise ConfigError(f"pins_rebase: type {tn} pins_file {pf!r} does not start with {old!r}")
+            rel = new + pf[len(old):]
+            tgt = (REPO / rel).resolve()
+            if not tgt.is_file() or REPO.resolve() not in tgt.parents:
+                raise ConfigError(f"pins_rebase: {rel} is not a file inside the repo ({REPO})")
+            hc["pins_file"] = str(tgt)
+            done[pf] = dict(repo_path=rel, sha256=hashlib.sha256(tgt.read_bytes()).hexdigest()[:16])
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    dst = out / ("ot_clk_plan_" + src.name)
+    dst.write_text(json.dumps(plan, indent=1) + "\n")
+    return str(dst), dict(plan=str(src), plan_sha256=hashlib.sha256(raw).hexdigest()[:16], copy=str(dst),
+                          pins_files=done)
+
+
+def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None):
     """die_trial.py kit argv for a config (flag order is irrelevant to die_trial; values are exact)"""
     i, st, top, reg, res = cfg["inputs"], cfg["stack"], cfg["top"], cfg["region"], cfg["residual"]
-    a = ["kit", i["plan"], "--out", str(out)]
+    a = ["kit", plan or i["plan"], "--out", str(out)]
     if i.get("views"):
         a += ["--views", i["views"]]
     if i.get("region_map"):
@@ -311,6 +348,13 @@ def register_entry(cal_path, eid, cell, clock_rc, route=None, basis=None):
     return e
 
 
+def reference_file(ref, f):
+    """die runs that post-process the kit (clock_body_bays overlay) keep die_trial's own output as <stem>_GENERATED<ext>;
+    compare against that when present"""
+    g = Path(ref) / f"{Path(f).stem}_GENERATED{Path(f).suffix}"
+    return g if g.is_file() else Path(ref) / f
+
+
 def json_diff_keys(a, b, pre=""):
     """differing keys of two JSON objects: top level, and one level down inside 'meta' (tool-version provenance)"""
     out = []
@@ -379,10 +423,11 @@ def main(argv=None):
         return 0
     out = Path(a.out)
     ok, why, cal = _prepare(cfg, out / "kit", a.legacy, registry)
-    args = kit_argv(cfg, out / "kit", cal, a.workers)
+    plan, rebase = rebase_plan(cfg, out)
+    args = kit_argv(cfg, out / "kit", cal, a.workers, plan)
     out.mkdir(parents=True, exist_ok=True)
     (out / "ot_clk_argv.json").write_text(json.dumps(dict(config=str(a.config), stage_check="PASS" if ok else "FAIL",
-                                                          why=why, argv=args), indent=1) + "\n")
+                                                          why=why, pins_rebase=rebase, argv=args), indent=1) + "\n")
     rc = subprocess.call([getattr(a, "python", sys.executable), str(DIE_TRIAL)] + args,
                          stdout=open(out / "kit.log", "w"), stderr=subprocess.STDOUT)
     if rc or a.cmd == "kit":
@@ -391,18 +436,20 @@ def main(argv=None):
     ref = Path(cfg["event"]["reference_clock_dir"])
     res = {}
     for f in cfg["event"].get("compare", ["tree.json", "ctree.v"]):
-        x, y = out / "kit" / "clock" / f, ref / f
+        x, y = out / "kit" / "clock" / f, reference_file(ref, f)
         res[f] = dict(identical=x.is_file() and y.is_file() and x.read_bytes() == y.read_bytes(),
                       sha_new=hashlib.sha256(x.read_bytes()).hexdigest()[:16] if x.is_file() else None,
                       sha_ref=hashlib.sha256(y.read_bytes()).hexdigest()[:16] if y.is_file() else None)
     for f, v in res.items():          # tree.json: name the differing top-level / meta keys (provenance-only diffs)
-        x, y = out / "kit" / "clock" / f, ref / f
+        x, y = out / "kit" / "clock" / f, reference_file(ref, f)
+        v["reference_file"] = y.name
         if not v["identical"] and f.endswith(".json") and x.is_file() and y.is_file():
             v["diff_keys"] = json_diff_keys(json.loads(x.read_text()), json.loads(y.read_text()))
     meta_only = all(v["identical"] or (v.get("diff_keys") is not None and
                                        all(k.startswith("meta.") for k in v["diff_keys"])) for v in res.values())
     verdict = dict(schema="ot_clk_replay/1", die=cfg["die"], event=cfg["event"].get("name"), config=str(a.config),
-                   reference=str(ref), stage_check="PASS" if ok else "FAIL", stage_why=why, files=res,
+                   reference=str(ref), stage_check="PASS" if ok else "FAIL", stage_why=why, pins_rebase=rebase,
+                   files=res,
                    replay="IDENTICAL" if all(v["identical"] for v in res.values())
                    else "IDENTICAL_EXCEPT_META" if meta_only else "DIFFERENT")
     (out / "replay.json").write_text(json.dumps(verdict, indent=1) + "\n")
