@@ -36,6 +36,16 @@ class PortTaps(unittest.TestCase):
         candidates=taps('a');candidates[1]['xy']=candidates[0]['xy']
         self.assertEqual(len(L.endpoint_taps(S.Plan(p),p['ports'][0],'src',candidates)),2)
 
+    def test_cropped_ft_uses_normalized_link_layers(self):
+        p=plan()
+        p['partition_types']['p']['ft_slots']=[dict(name='f',width=2,stations=1,
+            in_face='S',out_face='N',in_window_um=[4,96],out_window_um=[4,96])]
+        p['ports'][0]['src']['bus']='f_o'
+        P=S.Plan(p)
+        self.assertNotIn('layers',p['ports'][0])
+        self.assertEqual(P.ports['link']['layers'],['M5'])
+        self.assertEqual([t['port'] for t in L.endpoint_taps(P,p['ports'][0],'src',taps('a'))],['a0','a1'])
+
     def test_union_and_actual_pad_driver(self):
         p=plan();ts=taps('a')+taps('b',200);ts[0]['driver']='a0pad'
         tree={'taps':ts,'node_buf':{'0':'a0','1':'a1','2':'b0','3':'b1'},
