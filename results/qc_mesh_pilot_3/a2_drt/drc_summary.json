@@ -1,0 +1,239 @@
+{
+ "clips": {
+  "mid": {
+   "violations": 2,
+   "harness_entry_port": 2,
+   "design": 0,
+   "drt_iterations": 48,
+   "drt_s": 1103,
+   "markers": []
+  },
+  "c0": {
+   "violations": 4,
+   "harness_entry_port": 4,
+   "design": 0,
+   "drt_iterations": 57,
+   "drt_s": 4358,
+   "markers": []
+  },
+  "c1": {
+   "violations": 4,
+   "harness_entry_port": 4,
+   "design": 0,
+   "drt_iterations": 57,
+   "drt_s": 9620,
+   "markers": []
+  },
+  "c2": {
+   "violations": 23,
+   "harness_entry_port": 5,
+   "design": 18,
+   "drt_iterations": 5,
+   "drt_s": 1629,
+   "markers": [
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_D2du",
+     "xy": [
+      688.296,
+      770.246
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_D2du",
+     "xy": [
+      688.296,
+      770.306
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_D2ud",
+     "xy": [
+      688.296,
+      1491.286
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_D2ud",
+     "xy": [
+      688.296,
+      1491.346
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_D2uu",
+     "xy": [
+      688.296,
+      2209.846
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_D2uu",
+     "xy": [
+      688.296,
+      2209.906
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_D2du",
+     "xy": [
+      688.396,
+      1128.326
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_D2du",
+     "xy": [
+      688.396,
+      1128.386
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_D2ud",
+     "xy": [
+      688.396,
+      1847.126
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_D2ud",
+     "xy": [
+      688.396,
+      1847.186
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_D2uu",
+     "xy": [
+      688.396,
+      2567.7659999999996
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_D2uu",
+     "xy": [
+      688.396,
+      2567.826
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_D2dd",
+     "xy": [
+      692.476,
+      230.24599999999998
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_D2dd",
+     "xy": [
+      692.476,
+      230.30599999999998
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_B2",
+     "xy": [
+      692.796,
+      951.766
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_B2",
+     "xy": [
+      692.796,
+      951.826
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_B2",
+     "xy": [
+      692.92,
+      1666.726
+     ],
+     "layer": "M8",
+     "harness": false
+    },
+    {
+     "type": "Min Step",
+     "srcs": "srcs: net:n_B2",
+     "xy": [
+      692.92,
+      1666.786
+     ],
+     "layer": "M8",
+     "harness": false
+    }
+   ]
+  },
+  "c3": {
+   "violations": 2,
+   "harness_entry_port": 2,
+   "design": 0,
+   "drt_iterations": 59,
+   "drt_s": 7375,
+   "markers": []
+  },
+  "core": {
+   "violations": 0,
+   "harness_entry_port": 0,
+   "design": 0,
+   "drt_iterations": 5,
+   "drt_s": 1467,
+   "markers": []
+  }
+ },
+ "total": {
+  "violations": 35,
+  "design": 18,
+  "clips_done": 6
+ },
+ "checked": "UNCHECKED"
+}

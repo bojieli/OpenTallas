@@ -1,0 +1,111 @@
+# clip mid
+violation type: Min Step
+	srcs: net:n_root
+	bbox = (619.9160, 1308.9960) - (619.9200, 1309.0000) on Layer M9
+violation type: Min Step
+	srcs: net:n_root
+	bbox = (619.9960, 1308.9200) - (620.0000, 1308.9200) on Layer M9
+# clip c0
+violation type: Short
+	srcs: net:n_in net:ck_mesh
+	bbox = (66.9560, 1308.9160) - (66.9800, 1309.6760) on Layer M9
+violation type: Short
+	srcs: net:n_in net:ck_mesh
+	bbox = (66.9560, 1308.9200) - (66.9800, 1309.0000) on Layer M9
+violation type: Min Step
+	srcs: net:n_in
+	bbox = (67.0360, 1308.9160) - (67.0400, 1308.9200) on Layer M9
+violation type: Min Step
+	srcs: net:n_in
+	bbox = (67.0360, 1309.0000) - (67.0400, 1309.0000) on Layer M9
+# clip c1
+violation type: Short
+	srcs: net:n_in net:ck_mesh
+	bbox = (546.4760, 1308.9160) - (546.5000, 1309.6760) on Layer M9
+violation type: Short
+	srcs: net:n_in net:ck_mesh
+	bbox = (546.4760, 1308.9200) - (546.5000, 1309.0000) on Layer M9
+violation type: Min Step
+	srcs: net:n_in
+	bbox = (546.5560, 1308.9160) - (546.5600, 1308.9200) on Layer M9
+violation type: Min Step
+	srcs: net:n_in
+	bbox = (546.5560, 1309.0000) - (546.5600, 1309.0000) on Layer M9
+# clip c2
+violation type: Min Step
+	srcs: net:n_D2du
+	bbox = (688.2960, 770.2360) - (688.2960, 770.2560) on Layer M8
+violation type: Min Step
+	srcs: net:n_D2du
+	bbox = (688.2960, 770.2960) - (688.2960, 770.3160) on Layer M8
+violation type: Min Step
+	srcs: net:n_D2ud
+	bbox = (688.2960, 1491.2760) - (688.2960, 1491.2960) on Layer M8
+violation type: Min Step
+	srcs: net:n_D2ud
+	bbox = (688.2960, 1491.3360) - (688.2960, 1491.3560) on Layer M8
+violation type: Min Step
+	srcs: net:n_D2uu
+	bbox = (688.2960, 2209.8360) - (688.2960, 2209.8560) on Layer M8
+violation type: Min Step
+	srcs: net:n_D2uu
+	bbox = (688.2960, 2209.8960) - (688.2960, 2209.9160) on Layer M8
+violation type: Min Step
+	srcs: net:n_D2du
+	bbox = (688.3960, 1128.3160) - (688.3960, 1128.3360) on Layer M8
+violation type: Min Step
+	srcs: net:n_D2du
+	bbox = (688.3960, 1128.3760) - (688.3960, 1128.3960) on Layer M8
+violation type: Min Step
+	srcs: net:n_D2ud
+	bbox = (688.3960, 1847.1160) - (688.3960, 1847.1360) on Layer M8
+violation type: Min Step
+	srcs: net:n_D2ud
+	bbox = (688.3960, 1847.1760) - (688.3960, 1847.1960) on Layer M8
+violation type: Min Step
+	srcs: net:n_D2uu
+	bbox = (688.3960, 2567.7560) - (688.3960, 2567.7760) on Layer M8
+violation type: Min Step
+	srcs: net:n_D2uu
+	bbox = (688.3960, 2567.8160) - (688.3960, 2567.8360) on Layer M8
+violation type: Min Step
+	srcs: net:n_D2dd
+	bbox = (692.4760, 230.2360) - (692.4760, 230.2560) on Layer M8
+violation type: Min Step
+	srcs: net:n_D2dd
+	bbox = (692.4760, 230.2960) - (692.4760, 230.3160) on Layer M8
+violation type: Min Step
+	srcs: net:n_B2
+	bbox = (692.7960, 951.7560) - (692.7960, 951.7760) on Layer M8
+violation type: Min Step
+	srcs: net:n_B2
+	bbox = (692.7960, 951.8160) - (692.7960, 951.8360) on Layer M8
+violation type: Min Step
+	srcs: net:n_B2
+	bbox = (692.9200, 1666.7160) - (692.9200, 1666.7360) on Layer M8
+violation type: Min Step
+	srcs: net:n_B2
+	bbox = (692.9200, 1666.7760) - (692.9200, 1666.7960) on Layer M8
+violation type: Min Step
+	srcs: net:n_in
+	bbox = (689.1160, 1308.9160) - (689.1200, 1308.9200) on Layer M9
+violation type: Min Step
+	srcs: net:n_in
+	bbox = (689.1160, 1309.0000) - (689.1200, 1309.0000) on Layer M9
+violation type: Short
+	srcs: net:n_in net:VDD
+	bbox = (688.8720, 1309.1960) - (689.1160, 1309.2000) on Layer M8
+violation type: Short
+	srcs: net:n_in net:ck_mesh
+	bbox = (689.0360, 1308.9160) - (689.0600, 1309.2760) on Layer M9
+violation type: Short
+	srcs: net:n_in net:ck_mesh
+	bbox = (689.0360, 1308.9200) - (689.0600, 1309.0000) on Layer M9
+# clip c3
+violation type: Min Step
+	srcs: net:n_in
+	bbox = (1168.6360, 1308.9160) - (1168.6400, 1308.9200) on Layer M9
+violation type: Min Step
+	srcs: net:n_in
+	bbox = (1168.6360, 1309.0000) - (1168.6400, 1309.0000) on Layer M9
+# clip core
