@@ -1,0 +1,54 @@
+{
+  "status": "Prospective source contract only, HOLD coordinated parent event and fresh physical proof",
+  "clock_entries": [
+    {
+      "pin_file": "dsdv_eng_rr_h0.json",
+      "clock_pin": {
+        "name": "ck",
+        "layer": "M5",
+        "x": 82.092,
+        "y": 133.92
+      },
+      "source_lef": "physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_h0.lef",
+      "source_rect": [
+        "M5",
+        0.048,
+        0.48,
+        82.068,
+        133.68,
+        82.116,
+        134.16
+      ],
+      "pin_site_verdict": "PASS",
+      "exact_slice_rectangle": [
+        0.048,
+        0.48
+      ]
+    },
+    {
+      "pin_file": "ot_s81sl_vq_tpl.json",
+      "clock_pin": {
+        "name": "clk",
+        "layer": "M5",
+        "x": 86.412,
+        "y": 64.8
+      },
+      "source_lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vq_tpl.lef",
+      "source_rect": [
+        "M5",
+        0.048,
+        0.48,
+        86.388,
+        64.56,
+        86.436,
+        65.04
+      ],
+      "pin_site_verdict": "PASS",
+      "exact_slice_rectangle": [
+        0.048,
+        0.48
+      ]
+    }
+  ],
+  "timing_and_route": "Existing H0 prefix and VQ GRT runs remain diagnostic; no old checkpoint adoption after source interface event. No RTL/cycle/data-pin change."
+}

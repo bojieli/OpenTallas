@@ -1,13 +1,13 @@
 {
 "module": "ot_s81sl_vq",
 "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vq_tpl.lef",
-"pinhash": "51f096f8504b",
+"pinhash": "4c8cf2f33802",
 "pins": [
 {
 "name": "clk",
 "layer": "M5",
-"x": 85.836,
-"y": 129.558
+"x": 86.412,
+"y": 64.8
 },
 {
 "name": "fault",
@@ -4216,5 +4216,5 @@
 "y": 4.812
 }
 ],
-"source": "TYPE-REDUCE-2 pin_template.py: ONE table for every ot_s81sl_vq instance (was 2 tables ['inputs/core_pins/ot_s81sl_vq_lfp.json', 'inputs/core_pins/ot_s81sl_vq_xm.json']); N/S V pins on ['M5'] only (mirror-compatible), order kept, max shift 0.045 um from inputs/core_pins/ot_s81sl_vq_lfp.json; MY instances use track offset x + 0.0240"
+"source": "TYPE-REDUCE-2 pin_template.py: ONE table for every ot_s81sl_vq instance (was 2 tables ['inputs/core_pins/ot_s81sl_vq_lfp.json', 'inputs/core_pins/ot_s81sl_vq_xm.json']); N/S V pins on ['M5'] only (mirror-compatible), order kept, max shift 0.045 um from inputs/core_pins/ot_s81sl_vq_lfp.json; MY instances use track offset x + 0.0240; CODEX1029 prospective explicit M5 interior clock source/LEF, parent coordinated event and fresh physical proof required"
 }

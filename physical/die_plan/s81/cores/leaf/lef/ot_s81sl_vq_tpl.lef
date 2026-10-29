@@ -7,10 +7,10 @@ MACRO ot_s81sl_vq
   SIZE 172.800 BY 129.600 ;
   PIN clk
     DIRECTION INPUT ;
-    USE SIGNAL ;
+    USE CLOCK ;
     PORT
       LAYER M5 ;
-        RECT 85.8240 129.5160 85.8480 129.6000 ;
+        RECT 86.3880 64.5600 86.4360 65.0400 ;
     END
   END clk
   PIN fault
