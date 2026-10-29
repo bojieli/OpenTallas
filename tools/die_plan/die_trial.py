@@ -447,12 +447,29 @@ class SiteMap:
         return None
 
 
+# CLK-TOOL-7 opt-ins migrated from the HBM street_body clock build (Codex codex/hbm-clock-0300 build_street_body.py
+# monkeypatch adapters body_sites.py + adaptive_detour_v2.py; OWNER 12.17(2): ot_clk is the only die clock path).
+# Default off = byte-identical trees.
+# CLOCK_BODY_SITES (--clock-body-sites): clock_site() offsets every partition / keep-out rectangle by the native clock
+#   cell body ISLAND_CELL_UM (1.62 x 0.27 um) so a placed cell origin keeps its whole body legal (body_sites.py), also
+#   without --region-dme-actual-max.
+# CHAIN_HOP_MAX_UM (--chain-hop-max UM): chain_ps prices a candidate chain with any hop > UM as infinite, so DME
+#   elongation / snake candidates that would need a repeater span beyond the reach rule are never chosen (body_sites.py).
+# DETOUR_ADAPTIVE (--detour-adaptive): legal_detour retries a failed A* with the search box widened to the connected
+#   blocking macro wall (abutting hard cores whose halos touch), first at the default grid then at 2.16 um
+#   (adaptive_detour_v2.py: the 600-um box clipped the route around the 1635-um HBM VM core).
+CLOCK_BODY_SITES = False
+CHAIN_HOP_MAX_UM = None
+DETOUR_ADAPTIVE = False
+DETOUR_STATS = []
+
+
 def clock_site(P):
     """Physical DME uses native 1.62x0.27 cell origins, not zero-area points.
     This is the body-site adapter measured on HBM, shared without a runtime monkeypatch.
     """
     site = SiteMap(P)
-    if DME_ACTUAL_MAX_UM is None:
+    if DME_ACTUAL_MAX_UM is None and not CLOCK_BODY_SITES:
         return site
     w, h = ISLAND_CELL_UM
     site.parts = [(a,b,c-w,d-h) for a,b,c,d in site.parts]
@@ -600,6 +617,69 @@ def leg_blocked_run(site, a, b, step=1.08):
 
 
 def legal_detour(site, a, b, step=5.4, margin=600.0, turn_um=20.0):
+    """legal_detour_astar; with DETOUR_ADAPTIVE a failed search is retried around the connected blocking macro wall"""
+    route = legal_detour_astar(site, a, b, step=step, margin=margin, turn_um=turn_um)
+    if route is not None or not DETOUR_ADAPTIVE:
+        return route
+    return _detour_wall(site, a, b, step, margin, turn_um)
+
+
+def _wall_components(site):
+    """connected components of the site's keep-out rectangles (touching/overlapping), cached on the site object:
+    [(rect index set, bbox)]"""
+    cc = getattr(site, "_wall_cc", None)
+    if cc is None:
+        rects = list(site.forb)
+        pending = set(range(len(rects)))
+        cc = []
+        while pending:
+            first = pending.pop()
+            ids, todo = [first], [first]
+            while todo:
+                u = rects[todo.pop()]
+                hit = [i for i in pending if u[0] <= rects[i][2] and rects[i][0] <= u[2] and u[1] <= rects[i][3]
+                       and rects[i][1] <= u[3]]
+                for i in hit:
+                    pending.remove(i)
+                    ids.append(i)
+                    todo.append(i)
+            cc.append((set(ids), (min(rects[i][0] for i in ids), min(rects[i][1] for i in ids),
+                                  max(rects[i][2] for i in ids), max(rects[i][3] for i in ids))))
+        site._wall_cc = cc = (rects, cc)
+    return cc
+
+
+def _detour_wall(site, a, b, step, margin, turn_um):
+    """DETOUR_ADAPTIVE retry: widen the A* box to the outward faces of the connected walls the direct box crosses"""
+    x0, x1 = sorted((a[0], b[0]))
+    y0, y1 = sorted((a[1], b[1]))
+    blockers = [r for r in site.forb if r[0] < x1 + step and r[2] > x0 - step and r[1] < y1 + step and r[3] > y0 - step]
+    if not blockers:
+        return None
+    rects, cc = _wall_components(site)
+    seed = {i for i, r in enumerate(rects) if r in blockers}
+    blockers = [box for ids, box in cc if ids & seed]
+    escape = []
+    for r in blockers:      # a wall crossing the direct box is bypassed above/below or left/right: nearest outward face
+        choices = [max(0., y0 - r[1]), max(0., r[3] - y1), max(0., x0 - r[0]), max(0., r[2] - x1)]
+        positive = [v for v in choices if v > step]
+        if positive:
+            escape.append(min(positive) + 2 * step)
+    needed = max([margin] + escape)
+    extent = max(max(r[2] - r[0], r[3] - r[1]) for r in blockers) + 2 * step
+    margins = sorted({round(max(needed, margin + step), 3), round(max(extent, needed), 3)})
+    for grid in sorted({step, min(step, 2.16)}, reverse=True):
+        for m in margins:
+            route = legal_detour_astar(site, a, b, step=grid, margin=m, turn_um=turn_um)
+            if route is not None:
+                DETOUR_STATS.append(dict(a=list(a), b=list(b), old_margin_um=margin, new_margin_um=m, grid_um=grid,
+                                         blockers=len(blockers)))
+                return route
+    DETOUR_STATS.append(dict(a=list(a), b=list(b), old_margin_um=margin, failed=True, blockers=len(blockers)))
+    return None
+
+
+def legal_detour_astar(site, a, b, step=5.4, margin=600.0, turn_um=20.0):
     """shortest Manhattan polyline a -> b whose grid points are legal sites (A*, bend penalty turn_um); None if none in
     the leg bbox + margin.  The endpoints themselves may be illegal (slide-fallback nodes)."""
     import heapq
@@ -1677,6 +1757,8 @@ def tap_wire_ps(d_um):
 def chain_ps(pts):
     """delay (model ps) of a leg whose buffers sit at pts[1:] (pts[0] = driver): one STAGE_1X_TT stage per consecutive
     pair, stage length = Manhattan between the two buffers (what the router connects).  leg_ps is the even-split case."""
+    if CHAIN_HOP_MAX_UM is not None and any(_man(a, b) > CHAIN_HOP_MAX_UM + 1e-6 for a, b in zip(pts, pts[1:])):
+        return float("inf")
     d0, k1, k2 = STAGE_1X_TT
     s = 0.0
     for a, b in zip(pts, pts[1:]):
@@ -3002,6 +3084,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         if unknown:
             raise ValueError(f"--tap-pad: not a tap port of this tree: {unknown[:5]}")
     (out / "ctree.v").write_text(v)
+    if DETOUR_ADAPTIVE:     # CLK-TOOL-7: widened-search retries of this process (DME fork workers keep their own)
+        (out / "detour_adaptive.json").write_text(json.dumps(DETOUR_STATS, indent=1) + "\n")
     segs = []
     for i, nd in nodes.items():
         if nd["parent"] is not None:
@@ -4961,6 +5045,16 @@ def main(argv=None):
     k.add_argument("--rep-off-leg-max", type=float, default=None, metavar="UM",
                    help="DIE-QC-24 opt-in guard (COORD 10-28 21:00): the kit FAILS if any leg repeater is placed more than "
                         "UM off its planned leg (e.g. 50). Default: no check")
+    k.add_argument("--clock-body-sites", action="store_true",
+                   help="CLK-TOOL-7 opt-in: clock cell sites keep the whole native cell body (ISLAND_CELL_UM) legal, "
+                        "not only its origin (HBM street_body body_sites). Default off (byte-identical)")
+    k.add_argument("--chain-hop-max", type=float, default=None, metavar="UM",
+                   help="CLK-TOOL-7 opt-in: the DME chain model rejects (prices as infinite) any candidate chain with a "
+                        "repeater hop > UM (HBM street_body: 450). Default: no limit")
+    k.add_argument("--detour-adaptive", action="store_true",
+                   help="CLK-TOOL-7 opt-in: a legal_detour A* that fails in its 600-um box is retried with the box "
+                        "widened to the connected blocking macro wall (HBM adaptive_detour_v2); retries listed in "
+                        "clock/detour_adaptive.json. Default off (byte-identical)")
     k.add_argument("--clock-cell", choices=("buf", "inv", "inv2"), default="buf",
                    help="DIE-QC-11 opt-in: 'inv' builds the die clock tree from CKINVDCx16 (BUFx24 footprint) so rise/fall "
                         "asymmetry cancels stage by stage (duty), with one parity inverter at odd-parity taps; 'inv2' = even inverter "
@@ -5029,6 +5123,12 @@ def main(argv=None):
     REP_REACH_MAX_UM = getattr(a, "rep_reach_max", None)
     global REP_REACH_BALANCE
     REP_REACH_BALANCE = not getattr(a, "rep_reach_no_balance", False)
+    global CLOCK_BODY_SITES, CHAIN_HOP_MAX_UM, DETOUR_ADAPTIVE
+    CLOCK_BODY_SITES = bool(getattr(a, "clock_body_sites", False))
+    CHAIN_HOP_MAX_UM = getattr(a, "chain_hop_max", None)
+    if CHAIN_HOP_MAX_UM is not None and not (math.isfinite(CHAIN_HOP_MAX_UM) and CHAIN_HOP_MAX_UM > 0):
+        raise SystemExit("--chain-hop-max must be finite and positive")
+    DETOUR_ADAPTIVE = bool(getattr(a, "detour_adaptive", False))
     if REP_REACH_MAX_UM is not None and not (math.isfinite(REP_REACH_MAX_UM) and REP_REACH_MAX_UM > 0):
         raise SystemExit("--rep-reach-max must be finite and positive")
     if a.cmd == "readout":

@@ -230,7 +230,41 @@ def rebase_plan(cfg, out):
                           pins_files=done)
 
 
-def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None):
+def fill_region_map(cfg, out, plan=None):
+    """inputs.region_fill (CLK-TOOL-7): plan parts missing from inputs.region_map get a region by rule, e.g. parts split
+    after the map was made inherit the region of the part they were split from.  Each rule {prefix, from, default}: every
+    plan part whose name starts with `prefix` and is not in the map gets map[from] (or `default` if `from` is unmapped).
+    The filled map (original order, filled parts appended in plan order) is written beside the kit.
+    Returns (region map path or None, provenance or None)."""
+    i = cfg["inputs"]
+    rules = i.get("region_fill")
+    if not rules:
+        return i.get("region_map"), None
+    if not i.get("region_map"):
+        raise ConfigError("inputs.region_fill needs inputs.region_map")
+    src = Path(i["region_map"])
+    raw = src.read_bytes()
+    reg = json.loads(raw)["part_region"]
+    names = [p["name"] for p in json.loads(Path(plan or i["plan"]).read_text())["partitions"]]
+    added = {}
+    for r in rules:
+        if set(r) - {"prefix", "from", "default"} or "prefix" not in r:
+            raise ConfigError(f"inputs.region_fill rule {r}: keys prefix (required), from, default")
+        for n in names:
+            if n.startswith(str(r["prefix"])) and n not in reg:
+                v = reg.get(r.get("from"), r.get("default"))
+                if v is None:
+                    raise ConfigError(f"inputs.region_fill {r}: part {n} has no region")
+                reg[n] = added[n] = v
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    dst = out / ("ot_clk_regions_" + src.name)
+    dst.write_text(json.dumps(dict(part_region=reg), indent=1) + "\n")
+    return str(dst), dict(region_map=str(src), sha256=hashlib.sha256(raw).hexdigest()[:16], copy=str(dst),
+                          rules=rules, added=added)
+
+
+def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=None):
     """die_trial.py kit argv for a config (flag order is irrelevant to die_trial; values are exact)"""
     if is_mesh(cfg):
         raise ConfigError("region.form mesh is built by tools/clk/mesh_form.py (ot_clk kit), not by die_trial")
@@ -238,8 +272,8 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None):
     a = ["kit", plan or i["plan"], "--out", str(out)]
     if i.get("views"):
         a += ["--views", i["views"]]
-    if i.get("region_map"):
-        a += ["--region-trees", i["region_map"]]
+    if region_map or i.get("region_map"):
+        a += ["--region-trees", region_map or i["region_map"]]
     if i.get("feed"):
         a += ["--feed", i["feed"]]
     a += ["--tree-form", top["form"]]
@@ -260,6 +294,15 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None):
         a += ["--rep-reach-max", _fmt(top["rep_reach_max"])]   # snapped span > UM; priced record meta.reach_fix
     if top.get("rep_actual_max") is not None:   # post-build guard: every actual cell/tap hop <= UM (actual_reach.json)
         a += ["--rep-actual-max", _fmt(top["rep_actual_max"])]
+    if top.get("body_sites"):                   # CLK-TOOL-7: clock sites keep the native cell body legal
+        a.append("--clock-body-sites")
+    if top.get("chain_hop_max") is not None:    # CLK-TOOL-7: DME chain candidates with a hop > UM are rejected
+        a += ["--chain-hop-max", _fmt(top["chain_hop_max"])]
+    det = top.get("detour", "astar")
+    if det == "adaptive":                       # CLK-TOOL-7: failed A* detour retried around the connected macro wall
+        a.append("--detour-adaptive")
+    elif det != "astar":
+        raise ConfigError(f"top.detour {det!r}: astar | adaptive")
     if st.get("clock_rc", "ndr") != "ndr":
         a += ["--clock-rc", st["clock_rc"]]
     if st["cell"] != "buf":
@@ -625,18 +668,21 @@ def main(argv=None):
         return 0 if ok else 1
     if a.cmd == "argv":
         ok, why, cal = _prepare(cfg, a.out, a.legacy, registry)
+        rmap, _ = fill_region_map(cfg, a.out)
         print(json.dumps(dict(stage_check="PASS" if ok else "FAIL", why=why,
-                              argv=kit_argv(cfg, a.out, cal, a.workers)), indent=1))
+                              argv=kit_argv(cfg, a.out, cal, a.workers, region_map=rmap)), indent=1))
         return 0
     out = Path(a.out)
     ok, why, cal = _prepare(cfg, out / "kit", a.legacy, registry)
     plan, rebase = rebase_plan(cfg, out)
-    args = kit_argv(cfg, out / "kit", cal, a.workers, plan)
+    rmap, rfill = fill_region_map(cfg, out, plan)
+    args = kit_argv(cfg, out / "kit", cal, a.workers, plan, rmap)
     out.mkdir(parents=True, exist_ok=True)
     dt = Path(a.die_trial).resolve()
     (out / ("ot_clk_argv_compare.json" if getattr(a, "compare_only", False) else "ot_clk_argv.json")).write_text(json.dumps(dict(config=str(a.config), stage_check="PASS" if ok else "FAIL",
                                                           why=why, pins_rebase=rebase, die_trial=die_trial_rev(dt),
-                                                          argv=args), indent=1) + "\n")
+                                                          argv=args, **({"region_fill": rfill} if rfill else {})),
+                                                          indent=1) + "\n")
     if getattr(a, "compare_only", False):          # re-judge an existing replay's clock outputs, no rebuild
         if not (out / "kit" / "clock").is_dir():
             print(f"compare-only: {out / 'kit' / 'clock'} missing", file=sys.stderr)
