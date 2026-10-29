@@ -1,0 +1,79 @@
+OBS_GO sid9 cycle1137
+OBS_GO sid3 cycle1138
+OBS_GO sid5 cycle1145
+OBS_GO sid1 cycle1147
+OBS_GO sid7 cycle1148
+OBS_GO sid11 cycle1165
+OBS_GO sid13 cycle1179
+OBS_GO sid15 cycle1189
+OBS_GO sid6 cycle1246
+OBS_GO sid4 cycle1251
+OBS_GO sid2 cycle1252
+OBS_GO sid0 cycle1254
+OBS_GO sid8 cycle1257
+OBS_INJECT sid9 cycle1266
+OBS_INJECT sid3 cycle1267
+OBS_INJECT sid5 cycle1274
+OBS_INJECT sid1 cycle1276
+OBS_INJECT sid7 cycle1276
+OBS_GO sid10 cycle1277
+OBS_GO sid12 cycle1290
+OBS_INJECT sid11 cycle1294
+OBS_GO sid14 cycle1307
+OBS_INJECT sid13 cycle1308
+OBS_INJECT sid15 cycle1318
+OBS_INJECT sid6 cycle1374
+OBS_INJECT sid4 cycle1380
+OBS_INJECT sid2 cycle1381
+OBS_INJECT sid0 cycle1383
+OBS_INJECT sid8 cycle1386
+OBS_INJECT sid10 cycle1406
+OBS_INJECT sid12 cycle1419
+OBS_INJECT sid14 cycle1436
+OBS_RSTD sid6 cycle1616
+real xfin rstd mismatch slice6 got3c2e6874 want3c2fa28c
+OBS_RSTD sid10 cycle1617
+real xfin rstd mismatch slice10 got3c2e6874 want3c2fa28c
+OBS_RSTD sid4 cycle1618
+OBS_RSTD sid12 cycle1618
+real xfin rstd mismatch slice4 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice12 got3c2e6874 want3c2fa28c
+OBS_RSTD sid8 cycle1619
+real xfin rstd mismatch slice8 got3c2e6874 want3c2fa28c
+OBS_RSTD sid2 cycle1628
+real xfin rstd mismatch slice2 got3c2e6874 want3c2fa28c
+OBS_RSTD sid14 cycle1632
+real xfin rstd mismatch slice14 got3c2e6874 want3c2fa28c
+OBS_RSTD sid0 cycle1638
+real xfin rstd mismatch slice0 got3c2e6874 want3c2fa28c
+OBS_RSTD sid15 cycle1674
+real xfin rstd mismatch slice15 got3c2e6874 want3c2fa28c
+OBS_RSTD sid5 cycle1676
+real xfin rstd mismatch slice5 got3c2e6874 want3c2fa28c
+OBS_RSTD sid3 cycle1678
+real xfin rstd mismatch slice3 got3c2e6874 want3c2fa28c
+OBS_RSTD sid1 cycle1680
+OBS_RSTD sid7 cycle1680
+real xfin rstd mismatch slice1 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice7 got3c2e6874 want3c2fa28c
+OBS_RSTD sid13 cycle1685
+real xfin rstd mismatch slice13 got3c2e6874 want3c2fa28c
+OBS_RSTD sid9 cycle1688
+real xfin rstd mismatch slice9 got3c2e6874 want3c2fa28c
+OBS_RSTD sid11 cycle1693
+real xfin rstd mismatch slice11 got3c2e6874 want3c2fa28c
+Y MISMATCH blk 0 j 0 lane 0 got 3dc40000 want 3dc60000
+Y MISMATCH blk 0 j 0 lane 1 got bf400000 want bf420000
+Y MISMATCH blk 0 j 0 lane 2 got bed50000 want bed70000
+Y MISMATCH blk 0 j 0 lane 3 got bbd40000 want bbd60000
+Y MISMATCH blk 0 j 0 lane 4 got 3d3c0000 want 3d3d0000
+Y MISMATCH blk 0 j 0 lane 5 got 3dfe0000 want 3e000000
+Y MISMATCH blk 0 j 0 lane 6 got 3e4f0000 want 3e500000
+Y MISMATCH blk 0 j 0 lane 7 got 3f0b0000 want 3f0c0000
+Y MISMATCH blk 0 j 1 lane 0 got be560000 want be580000
+Y MISMATCH blk 0 j 1 lane 1 got 3e330000 want 3e340000
+Y MISMATCH blk 0 j 1 lane 2 got be590000 want be5b0000
+Y MISMATCH blk 0 j 1 lane 3 got bd230000 want bd240000
+[14980000] %Fatal: tb.sv:136: Assertion failed in tb_s81sl_beat.unnamedblk1: actual producer HEAD data differs lane0
+%Error: /srv/opentallas-scratch2/claude/codex-ds-head-loop-1029/network37/tb.sv:136: Verilog $stop
+Aborting...

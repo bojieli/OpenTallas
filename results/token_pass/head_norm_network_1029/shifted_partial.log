@@ -1,0 +1,28 @@
+OBS_GO sid9 cycle1137
+OBS_GO sid3 cycle1138
+OBS_GO sid5 cycle1145
+OBS_GO sid1 cycle1147
+OBS_GO sid7 cycle1148
+OBS_GO sid11 cycle1165
+OBS_GO sid13 cycle1179
+OBS_GO sid15 cycle1189
+OBS_GO sid6 cycle1246
+OBS_GO sid4 cycle1251
+OBS_GO sid2 cycle1252
+OBS_GO sid0 cycle1254
+OBS_GO sid8 cycle1257
+OBS_INJECT sid9 cycle1266
+OBS_INJECT sid3 cycle1267
+OBS_INJECT sid5 cycle1274
+OBS_INJECT sid1 cycle1276
+OBS_INJECT sid7 cycle1276
+OBS_GO sid10 cycle1277
+OBS_GO sid12 cycle1290
+OBS_INJECT sid11 cycle1294
+OBS_GO sid14 cycle1307
+OBS_INJECT sid13 cycle1308
+OBS_INJECT sid15 cycle1318
+OBS_INJECT sid6 cycle1374
+[11470000] %Fatal: tb.sv:131: Assertion failed in tb_s81sl_beat: candidate actual XR fault 0001
+%Error: /srv/opentallas-scratch2/claude/codex-ds-head-loop-1029/network37/tb.sv:131: Verilog $stop
+Aborting...

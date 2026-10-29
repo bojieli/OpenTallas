@@ -1,0 +1,55 @@
+OBS_GO sid9 cycle1137
+OBS_GO sid3 cycle1138
+OBS_GO sid5 cycle1145
+OBS_GO sid1 cycle1147
+OBS_GO sid7 cycle1148
+OBS_GO sid11 cycle1165
+OBS_GO sid13 cycle1179
+OBS_GO sid15 cycle1189
+OBS_GO sid6 cycle1246
+OBS_GO sid4 cycle1251
+OBS_GO sid2 cycle1252
+OBS_GO sid0 cycle1254
+OBS_GO sid8 cycle1257
+OBS_INJECT sid9 cycle1266
+OBS_INJECT sid3 cycle1267
+OBS_INJECT sid5 cycle1274
+OBS_INJECT sid1 cycle1276
+OBS_INJECT sid7 cycle1276
+OBS_GO sid10 cycle1277
+OBS_GO sid12 cycle1290
+OBS_INJECT sid11 cycle1294
+OBS_GO sid14 cycle1307
+OBS_INJECT sid13 cycle1308
+OBS_INJECT sid15 cycle1318
+OBS_INJECT sid6 cycle1374
+OBS_INJECT sid4 cycle1380
+OBS_INJECT sid2 cycle1381
+OBS_INJECT sid0 cycle1383
+OBS_INJECT sid8 cycle1386
+OBS_INJECT sid10 cycle1406
+OBS_INJECT sid12 cycle1419
+OBS_INJECT sid14 cycle1436
+OBS_RSTD sid6 cycle1616
+OBS_RSTD sid10 cycle1617
+OBS_RSTD sid4 cycle1618
+OBS_RSTD sid12 cycle1618
+OBS_RSTD sid8 cycle1619
+OBS_RSTD sid2 cycle1628
+OBS_RSTD sid14 cycle1632
+OBS_RSTD sid0 cycle1638
+OBS_RSTD sid15 cycle1674
+OBS_RSTD sid5 cycle1676
+OBS_RSTD sid3 cycle1678
+OBS_RSTD sid1 cycle1680
+OBS_RSTD sid7 cycle1680
+OBS_RSTD sid13 cycle1685
+OBS_RSTD sid9 cycle1688
+OBS_RSTD sid11 cycle1693
+ACTUAL_HEAD_PUBLICATION beat37 edge1798 payloadbefdbe87bc7a3e8ebf8f3dad3db73dacbecebd0a3e2fbe433ed3be823e53be5ebec13e23bcc23cb63cb4bed1bdc1be2a3e81bd7cbd35be483dc23e5ebe3a3cdb3e2bbece3e303e8a3da93d153e923e6fbe9bbe83bdb2bd0d3eb43ea63e27be82bdccbe80bea7be65bd24be5b3e34be583f0c3e503e003d3dbbd6bed7bf423dc6
+HEAD_NORM_LOOP beat=37 actual_partial=49199516 partials=1 y=8 q=0 xb=1 rb=16 rerr=0 err=0 leaf_fault=0/0/0 xfin_fault=0000 partial_edge=1257 first_rstd=1616 last_rstd=1693 actual_xb_edge=1769
+PASS
+- /srv/opentallas-scratch2/claude/codex-ds-head-loop-1029/network37/tb.sv:1240: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 340.064 s; speed 11.024 ns/s
+- Verilator: cpu 340.043 s on 1 threads; allocated 105 MB
