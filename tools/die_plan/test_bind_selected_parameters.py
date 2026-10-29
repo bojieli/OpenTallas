@@ -79,6 +79,7 @@ def test_repeated_overrides_mask_each_source_once(tmp_path, monkeypatch):
     rows = E.validate_selected_parameters([top], [], [leaf])
     assert len(rows) == 32
     assert all(row['requested'] == ['W', 'NQ'] for row in rows)
-    # One parse_modules mask and one reused override-validation mask; scaling
+    # Preprocessing masks comments, parse_modules masks strings, and override
+    # validation reuses one mask; scaling
     # with instance count here formerly re-scanned the complete die text.
-    assert whole_top_calls == [True, True]
+    assert whole_top_calls == [False, True, True]
