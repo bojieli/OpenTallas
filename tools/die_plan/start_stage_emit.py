@@ -87,6 +87,12 @@ def ctree_cells(ctree_v, ctree_tcl):
         r"^\s*(\w+)\s+(\w+)\s*\(\s*\.A\((\w+)\)\s*,\s*\.Y\((\w+)\)\s*\);", ctree_v, re.M)}
     xy = {m.group(1): (float(m.group(2)), float(m.group(3))) for m in re.finditer(
         r"place_inst -name (\S+) -location \{([-\d.]+) ([-\d.]+)\}", ctree_tcl)}
+    # Current clock-tree converter emits explicit native homes through ot_place.
+    for m in re.finditer(r"^ot_place \{([^}]+)\} ([-\d.]+) ([-\d.]+) (\w+)\s*$", ctree_tcl, re.M):
+        key, pos = m.group(1), (float(m.group(2)), float(m.group(3)))
+        if key in xy and xy[key] != pos:
+            raise StageError(f"conflicting clock home for {key}")
+        xy[key] = pos
     return cells, xy
 
 
