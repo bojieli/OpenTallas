@@ -1808,3 +1808,5 @@ CODEX: 2026-10-29 08:28 PDT main a64cdfd10 published: QC mesh spacing, frozen S8
 CODEX: 2026-10-29 08:29 PDT SUPPORT recovered dropped QC PROG s8b PG-invalid legacy cache (108buffers/216terms already failed10-26); exact refs retired without overwriting evidence; surviving archived native ODB/SPEF sent QC for PG-onlyrepair. Historical l2h3 DRT47h/6692viols diagnosed SRAM Ecorner93%markers; no job killed. SYS_C old proof collected71087/71129,42unproven; KVnotified.
 
 CODEX: 2026-10-29 08:29 PDT CLK-TOOL-8 recovered actualDME+FEEDpolarityfix7e92b4abd;HEAD735tapTT/FFduty0fail,defaulttree/netlist+15configargvunchanged; evidence38728e0bd; inheritedsuiteLIVEintel2pid1808405, no newroute.
+
+CODEX: 2026-10-29 08:31 PDT HBMK13 collected RING V1b physicalSIGNED but KEEPFAIL21 diagnosed OpenROAD synth elimination; freshcapture-preserve SYNTH/LEC liveepyc2, noP&R. Side_rest25511compare+8146jointPROVED; HNXsignofflive; selectorresetlocalityownedHBM.
