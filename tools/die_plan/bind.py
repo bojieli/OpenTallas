@@ -2771,6 +2771,11 @@ class Binder:
             f.write_text(txt)
             import native_istations
             native_istations.materialize(self, tn, f)
+            import hbm_spb_native
+            try:
+                files.extend(hbm_spb_native.materialize(self, tn, f))
+            except (ValueError, KeyError, OSError) as exc:
+                raise BindError(f"HBM SPB native {tn}: {exc}") from exc
             import bound_groups
             try:
                 files.extend(bound_groups.materialize(self, tn, f))
@@ -3812,6 +3817,7 @@ def cmd_bind(a):
     out = Path(a.out)
     yjs = json.loads((out / "asbuilt.json").read_text())
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
+    B.source_plan = Path(a.plan).resolve()
     B.strict_types = bool(getattr(a, "strict", False))
     if B.ab.get("clock_landing_table"):
         import clock_landings as CL
@@ -4459,6 +4465,11 @@ def cmd_kit_rtl(a):
     kd = (Path(a.kit) if a.kit else out / "kit_rtl" / tn).resolve()
     kd.mkdir(parents=True, exist_ok=True)
     native_geometry = kit_native_station_geometry(out, key, btxt, kd)
+    import hbm_spb_native
+    try:
+        spb_geometry = hbm_spb_native.kit_geometry(out, key, btxt, kd)
+    except (ValueError, KeyError, OSError) as exc:
+        raise BindError(f"kit-rtl HBM SPB {tn}: {exc}") from exc
     if bmod == mod:          # bound module and plan module share a name: the kit carries the bound module renamed
         nb = bmod + "_bound"
         (kd / f"{nb}.sv").write_text(re.sub(rf"\b(module|endmodule\s*:)\s+{bmod}\b", rf"\1 {nb}", btxt))
@@ -4480,11 +4491,15 @@ def cmd_kit_rtl(a):
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
                    {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
+    if spb_geometry:
+        leafm = [name for name in leafm if name != 'ot_hbm_spb0_regs']
     picks = {}
     cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks, views=macro_views(base))
     if cl_missing:
         raise BindError(f"kit-rtl {tn}: leaf modules without a source {sorted(cl_missing)[:10]}")
     files = [Path(f).resolve() for f in cl]
+    if spb_geometry:
+        files.append(Path(spb_geometry['rtl']).resolve())
     pkgs = kit_packages(files + [bfile], ab0.get("rtl_roots", ["rtl"]), base)
     rs = Path(__file__).resolve().parent.parent.parent / "rtl" / "lib" / "ot_reset_sync.sv"
     fl = kit_dedupe(tn, [kd / f"{mod}.sv"] + pkgs + [bfile, (out / "rtl" / "bind_cells.sv").resolve(), rs] +
@@ -4504,6 +4519,7 @@ def cmd_kit_rtl(a):
                plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl],
                packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, include_inlined=incl, module_dedup=deduped,
                hard_macros=dict(sorted(macros.items())), native_station_geometry=native_geometry,
+               hbm_spb_native_geometry=spb_geometry,
                hard_macros_note="memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; "
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
                                 "type_macros); kit_rtl_sim.f carries the behavioural models")
