@@ -1765,3 +1765,5 @@ CODEX: 2026-10-29 04:56 PDT CLK/KV native clock repair: old actual body overlaps
 CODEX: KV START actualA/Y timing-source fix c33+57+875 READY, root-input0stage/CPPR and no inventedPDNregion;51focused+3numericcontrolPASS. Nativeclock15296bodypack0overlap, actualPGconnectorfailure ownedCLOCK/macroPG; B26b strictbind LIVEintel1unit3268011. PC/HHP actualnativeparametercollar staged byGEOM pendingcoupon, physical-only+1 notadopted.
 
 CODEX: HEAD tile private reset-export candidate77fb1fdb1 exact12FF/0cycles,4095checks+mutant+canonical2FFretentionPASS. SOURCE7nativeportbind1190/1190closed; FACEtypedring/origincheckerownedSTART. gen4 canonicalSYNTHunit2944247liveepyc2; noPLACEuntilgates.
+
+CODEX: main2b90210bd1 published: actual START clock-source path/CPPR, HEAD source/body tools, finite2Q compiler/Engram and grownVM/INDEX boot publisher candidates, PVJ output-load candidate. Meaningful combined checks pass after fixture correction; no die release/profile adoption.
