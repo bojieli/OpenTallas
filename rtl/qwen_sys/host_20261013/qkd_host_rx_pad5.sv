@@ -12,11 +12,23 @@ module qkd_host_rx_pad5 #(parameter integer MUT=0)(
  reg[527:0]q[0:4];reg[2:0]wp,rp,count,credits;
  wire pop=!fault&&count!=0&&credits!=0;
  wire padding_ok=dq[1023:528]==0;
+ // Registered onehot write address removes the binary pointer decoder.
+ // in_v keeps its sole direct capture in vq (the physical input-face ABI).
+ reg [4:0] wp_hot;
+ wire [4:0] wp_hot_next=take?{wp_hot[3:0],wp_hot[4]}:wp_hot;
  wire take=vq&&!fault&&padding_ok&&(count<5||pop);
  always @(posedge clk)begin
   dq<=in_d;
-  if(take)q[wp]<=dq[527:0];
+  for(integer k=0;k<5;k=k+1)
+   // A rejected write asserts sticky fault on this same edge. It cannot
+   // advance wp/count or be observed later; a simultaneous pop reads the
+   // pre-edge bank value. Keep validation on CONTROL, off the data enables.
+   if(vq&&wp_hot[k])q[k]<=dq[527:0];
   if(pop)out_d<={18'd0,q[rp]^((MUT==1)?528'd1:528'd0)};
+ end
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)wp_hot<=5'b00001;
+  else wp_hot<=wp_hot_next;
  end
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin vq<=0;crq<=0;wp<=0;rp<=0;count<=0;credits<=4;in_cr<=0;out_v<=0;fault<=0;end
