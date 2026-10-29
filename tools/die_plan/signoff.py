@@ -223,7 +223,7 @@ def macro_libs(kit, corner):
 
 
 SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
-                  "kit_modes.py", "data_droop.py")
+                  "kit_modes.py", "data_droop.py", "core_io_reference.py")
 
 
 def signoff_bundle_sources(source=HERE):
@@ -256,6 +256,7 @@ KIT_TOOL_DEPENDENCIES = {
     "hold_gate.tcl": ("vclk_corner.tcl",),
     "face_guard_core.py": ("face_guard.py",),
     "core_preflight.py": ("signoff.py", "face_guard.py"),
+    "kit_contract.py": ("core_io_reference.py",),
 }
 
 
@@ -1230,6 +1231,12 @@ def hard_core_latency_contract(disc):
     cc = json.loads(source.read_text()).get("clock_contract")
     if not isinstance(cc, dict) or cc.get("kind") != "hard_core_latency":
         return None
+    if cc.get("io_reference_ps") is not None:
+        import core_io_reference as CIR
+        reference = CIR.load(disc["kit"])
+        errors = CIR.binding_errors(disc["kit"], reference)
+        if errors:
+            raise ValueError("inconsistent typed core IO reference: " + "; ".join(errors))
     return cc
 
 
@@ -1608,6 +1615,9 @@ def cmd_run(a):
     disc["library_config"] = str(Path(a.library_config).resolve()) if getattr(a, "library_config", None) else None
     out = Path(a.out).resolve()
     core_contract = hard_core_latency_contract(disc)
+    if core_contract and core_contract.get("io_reference_ps") is not None:
+        import core_io_reference as CIR
+        CIR.validate_ff_override(core_contract["io_reference_ps"], getattr(a, "ff_bound_ps", None))
     # An explicit source-pinned FF reference applies to every kit family.  Keep
     # it outside the hard-core branch: die-plan kits otherwise reach the FF
     # session with bound-ff selected but no value, despite a valid CLI request.

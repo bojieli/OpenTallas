@@ -123,12 +123,18 @@ def _hook_files(kd, cfg):
 def corner_modes(kd):
     kd = Path(kd)
     cfg, err = _mk(kd), []
+    import core_io_reference as CIR
+    try:
+        reference = CIR.load(kd)
+    except ValueError as ex:
+        return [str(ex)], dict(applies=True)
+    tt_ps, ff_ps = (reference["tt"], reference["ff"]) if reference else (TT_PS, FF_PS)
     sdc = kd / "constraint.sdc"
     if not sdc.is_file():
         return ["constraint.sdc missing"], dict(applies=True)
     tt = [float(m.group(1)) for m in _VCLK_LAT.finditer(sdc.read_text())]
-    if len(tt) != 1 or not _eq(tt[0], TT_PS):
-        err.append(f"constraint.sdc vclk source latency {tt} is not exactly one line = TT {TT_PS:g} (12.3)")
+    if len(tt) != 1 or not _eq(tt[0], tt_ps):
+        err.append(f"constraint.sdc vclk source latency {tt} is not exactly one line = TT {tt_ps:g} (12.3)")
     corners = cfg.get("CORNERS", "").split()
     mm = cfg.get("OT_HOLD_MM", "0") == "1"
     if mm:
@@ -140,8 +146,8 @@ def corner_modes(kd):
             err.append(f"OT_HOLD_MM=1 but OT_MM_FF_SDC {cfg.get('OT_MM_FF_SDC')!r} is not a staged kit file")
         else:
             ff = [float(m.group(1)) for m in _VCLK_LAT.finditer(f.read_text())]
-            if len(ff) != 1 or not _eq(ff[0], FF_PS):
-                err.append(f"{f.name} (FF mode SDC) vclk latency {ff} is not exactly one line = FF {FF_PS:g}")
+            if len(ff) != 1 or not _eq(ff[0], ff_ps):
+                err.append(f"{f.name} (FF mode SDC) vclk latency {ff} is not exactly one line = FF {ff_ps:g}")
     hooks = _hook_files(kd, cfg)
     for f in hooks:
         if f.name == "constraint.sdc" or (mm and f.name == Path(cfg.get("OT_MM_FF_SDC", "")).name):
@@ -154,21 +160,21 @@ def corner_modes(kd):
             if mm:
                 err.append(f"{f.name}: global vclk latency {v:g} in a per-mode (MM) session: binds both modes "
                            "(phantom corner); bind FF through OT_MM_FF_SDC only")
-            elif len(corners) > 1 and not _eq(v, TT_PS):
+            elif len(corners) > 1 and not _eq(v, tt_ps):
                 err.append(f"{f.name}: global vclk latency {v:g} applied to every corner of the single-mode "
-                           f"session CORNERS '{' '.join(corners)}' (TT scene timed at {v:g}, not TT {TT_PS:g})")
+                           f"session CORNERS '{' '.join(corners)}' (TT scene timed at {v:g}, not TT {tt_ps:g})")
     # every literal vclk latency anywhere in the kit's generated Tcl/SDC is one of the two corner values
     for f in sorted(list(kd.glob("*.tcl")) + list(kd.glob("*.sdc"))):
         for line in f.read_text(errors="replace").splitlines():
             if not _strip_tcl_comment(line):
                 continue
             m = _VCLK_LAT.search(line)
-            if m and not (_eq(float(m.group(1)), TT_PS) or _eq(float(m.group(1)), FF_PS)):
-                err.append(f"{f.name}: vclk latency {float(m.group(1)):g} is neither TT {TT_PS:g} nor FF {FF_PS:g}")
+            if m and not (_eq(float(m.group(1)), tt_ps) or _eq(float(m.group(1)), ff_ps)):
+                err.append(f"{f.name}: vclk latency {float(m.group(1)):g} is neither TT {tt_ps:g} nor FF {ff_ps:g}")
     for p in kd.glob("eco_modes*.json"):
         d = json.loads(p.read_text())
-        if not (_eq(d.get("ot_vclk_tt"), TT_PS) and _eq(d.get("ot_vclk_ff"), FF_PS)):
-            err.append(f"{p.name}: ECO modes TT {d.get('ot_vclk_tt')} / FF {d.get('ot_vclk_ff')} != {TT_PS:g}/{FF_PS:g}")
+        if not (_eq(d.get("ot_vclk_tt"), tt_ps) and _eq(d.get("ot_vclk_ff"), ff_ps)):
+            err.append(f"{p.name}: ECO modes TT {d.get('ot_vclk_tt')} / FF {d.get('ot_vclk_ff')} != {tt_ps:g}/{ff_ps:g}")
     return list(dict.fromkeys(err)), dict(applies=True, corners=corners, per_mode=mm, hooks=sorted(f.name for f in hooks))
 
 
@@ -176,6 +182,14 @@ def corner_modes(kd):
 def ff_binding(kd):
     kd = Path(kd)
     cfg, err = _mk(kd), []
+    import core_io_reference as CIR
+    try:
+        reference = CIR.load(kd)
+    except ValueError as ex:
+        return [str(ex)], dict(applies=True)
+    tt_ps, ff_ps = (reference["tt"], reference["ff"]) if reference else (TT_PS, FF_PS)
+    if reference:
+        err += CIR.binding_errors(kd, reference)
     vals = dict(OT_VCLK_TT=_num(cfg.get("OT_VCLK_TT")), OT_VCLK_FF=_num(cfg.get("OT_VCLK_FF")))
     lint = kd / "sdc_lint.json"
     if lint.is_file():
@@ -194,9 +208,9 @@ def ff_binding(kd):
             if k in d:
                 vals["freeze_" + k] = _num(d[k])
     for k, v in vals.items():
-        want = FF_PS if ("FF" in k or k.endswith(("_ff", "_ff_ps", "bound_ps"))) else TT_PS
+        want = ff_ps if ("FF" in k or k.endswith(("_ff", "_ff_ps", "bound_ps"))) else tt_ps
         if not _eq(v, want):
-            err.append(f"{k} = {v} (must be {want:g}: 12.3 TT setup {TT_PS:g} / FF hold {FF_PS:g})")
+            err.append(f"{k} = {v} (must be {want:g}: 12.3 TT setup {tt_ps:g} / FF hold {ff_ps:g})")
     return err, dict(applies=True, values=vals)
 
 
