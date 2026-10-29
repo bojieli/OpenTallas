@@ -10,3 +10,6 @@
 - Fulltree (Codex unit oth-ubuntu-201658-1793260539, epyc2) still compiling C++ class3 at 02:39 (make -j1), then 4 slow objects + 4 cases. COLLECT: /srv/opentallas-scratch2/claude/codex-hbm-token-1028/fulltree/{pre_n1,pre_n6,post_n1,post_n6}/run.log + pre_n1/mutant_job_a.log; classify HNX_FUSED PASS/FAIL + counters, not exit code.
 - Still open, owned elsewhere: South key provider + FULLSIDE/op lowering (bind/root), regional K (DIE-HBM-11), query-core numeric multirow composition (reader+query+scorer) with D.
 - SUCCESSOR TOK-HBM-8: collect fulltree; compare token-model IDX.INDEX row II with pitch 328/346; then multirow numeric composition with ROW_CLEAR_DELAY once C25c/K land.
+
+# TOK-HBM-8 (successor TOK-HBM-7, COORD 7b APPROVED)
+## 2026-10-29 02:41 PDT START: polling epyc2 fulltree unit oth-ubuntu-201658-1793260539 (collect only); checking token-model IDX.INDEX row II c1x152/658.9 vs IDXN pitch 328/346.
