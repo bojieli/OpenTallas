@@ -31,7 +31,11 @@ module ot_s81hd_beat_tx #(
     parameter integer N   = 2,
     parameter integer MUT = 0,
     parameter integer P   = (W + N - 1) / N,
-    parameter integer BW  = (N > 1) ? $clog2(N) : 1
+    parameter integer BW  = (N > 1) ? $clog2(N) : 1,
+    // DIE-HEAD-31 (COORD 14:10 hd_ctl u_tx (B)): opt-in, default 0 = unchanged.  1: the payload pin bits are 0 in an
+    // idle cycle (vb = 0) instead of repeating the no-reset hold register, so oq_p never carries power-up X; the RX
+    // ignores pay when vb = 0, so words, beats, latency (0 added cycles) and faults are identical.
+    parameter integer IDLE_ZERO = 0
 ) (
     input  wire                 ck,
     input  wire                 rn,          // control-only reset, active low
@@ -59,6 +63,7 @@ module ot_s81hd_beat_tx #(
             if (start) hold <= (MUT == 1) ? swp[NP-1:P] : wp[NP-1:P];
             else if (owe != 0) hold <= hold >> P;
             if (start) oq_p <= (MUT == 1) ? b1 : b0;
+            else if (IDLE_ZERO != 0 && owe == 0) oq_p <= {P{1'b0}};
             else oq_p <= hold[P-1:0];
         end
         always @(posedge ck or negedge rn)
