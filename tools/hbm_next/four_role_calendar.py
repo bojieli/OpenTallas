@@ -18,6 +18,9 @@ Input 2 (--bound): the bound-latency file of the CURRENT die plan/bind (die owne
           reset_sync_stages (delivered_reset pipe), host_write_interval (host ABI edges per write)
 Input 3 (--service): measured root service cycles per (op, n) from a component bench (root capture -> root done):
     {"source": "...", "cycles": {"HC_PRE/1": int, "HC_POST/6": int, ...}}
+  OR (TOK-HBM-2) a composed segments file (schema opentallas.hbm.fused_service_segments.v1, results/tok_hbm_2_1028/
+  service_segments.json): measured root/lane/tnode segment constants; service = composed_service() per record from wsc
+  and the bound station round trip (the bound file must say legs_exclude_tree_nodes: true; wsc then adds node edges).
 Optional (--ready): per-record operand-ready edges from the layer calendar {image_offset: cycle}; without it the
   scope is FUSED-only (records back-to-back) and the receipt says so.
 
@@ -45,6 +48,37 @@ PAD_WARM = 32           # ot_hnx_fused_pad depth 0..32: full warm before START (
 FETCH, START_EDGES, STATUS = 2, 1, 2   # actual provider contract (fused_job217_emit checks these exact values)
 
 
+SEG_SCHEMA = 'opentallas.hbm.fused_service_segments.v1'
+
+
+def composed_service(seg, op, n, rgap, wsc, rt_max):
+    """TOK-HBM-2: root capture -> root done COMPOSED from measured component segments (root wrapper bench + one-lane /
+    one-tnode bench, results/tok_hbm_2_1028) and the bound station round trip rt_max = max_r(down_r + up_r) (station /
+    lane registers only; tree-node edges come from the measured tnode constants). Static calendar, so:
+      go     = wsc + nsc + go_const + min(n, 2) * nbt                      (root: capture -> GO on its command bus)
+      row II = pre_row_ii / post 100, + rgap per row (affine in rgap: measured at rgap 0 / 4 / 12)
+      HC_POST: go + rt_s + post_go_to_fin(n) + fin_to_done                  (rt_s = L (node_down + node_up_scalar) + rt_max)
+      HC_PRE : go + rt_c + cs_last(n) + pre_sum_to_r + rt_s + pre_r_to_fin + fin_to_done   (rt_c with node_up_chunk)
+    PRE x-slot rule (lane KX slots): for n > KX the r round trip rt_c + pre_sum_to_r must be <= the measured limit at
+    the record's rgap (limit + KX rgap), else the lane FAULTs (no service; the compiler must raise rgap). Returns (cycles, problem)."""
+    r, l, t = seg['root'], seg['lane'], seg['tnode']
+    if not 0 <= rgap <= 255:
+        return None, f'{op}/{n}: rgap {rgap} outside the 8-bit job field'
+    post = op == 'HC_POST'; nbt = 5 if post else 1; nsc = 3 * n if post else n
+    go = wsc + nsc + r['go_const'] + min(n, 2) * nbt
+    rt_s = t['levels'] * (t['down'] + t['up_scalar']) + rt_max
+    rt_c = t['levels'] * (t['down'] + t['up_chunk']) + rt_max
+    if post:
+        return (go + rt_s + l['post_go_to_fin_const'] + l['post_go_to_fin_per_row'] * n + rgap * (n - 1)
+                + r['fin_to_done']), None
+    rd = rt_c + r['pre_sum_to_r']; lim = l['pre_r_return_max'] + l['kx'] * rgap
+    if n > l['kx'] and rd > lim:
+        return None, (f"HC_PRE/{n}: r round trip {rd} > x-slot limit {lim} at rgap {rgap} "
+                      f"(lane FAULT; the compiler must raise rgap to >= {-(-(rd - l['pre_r_return_max']) // l['kx'])})")
+    cs = l['pre_go_to_cs_last_const'] + (l['pre_row_ii'] + rgap) * (n - 1)
+    return go + rt_c + cs + r['pre_sum_to_r'] + rt_s + l['pre_r_to_fin'] + r['fin_to_done'], None
+
+
 def compile_calendar(jobs, bound, service, ready=None):
     missing = []
     legs = bound.get('legs', {}); rtl = bound.get('rtl', {})
@@ -69,10 +103,13 @@ def compile_calendar(jobs, bound, service, ready=None):
         missing.append('no native FUSED jobs in the jobs receipt')
     if jobs.get('rejected'):
         missing.append('jobs receipt has rejected records')
+    seg = (service or {}).get('schema') == SEG_SCHEMA
     svc = (service or {}).get('cycles', {})
     if not (service or {}).get('source'):
         missing.append('root service table source (measured component bench)')
-    for j in js:
+    if seg and bound.get('legs_exclude_tree_nodes') is not True:
+        missing.append('segments mode needs bound legs_exclude_tree_nodes: true (station/lane registers only)')
+    for j in ([] if seg else js):
         key = f"{j['op']}/{j['fields']['nm1'] + 1}"
         if not isinstance(svc.get(key), int) or svc[key] <= 0:
             missing.append(f'root service cycles for {key}')
@@ -81,7 +118,8 @@ def compile_calendar(jobs, bound, service, ready=None):
         return None, missing
     boot = {r: L['reset_release_edges'] + L['reset_' + r] + L['reset_sync_stages'] for r in ('SW', 'SE', 'NW', 'NE', 'root')}
     rt = {r: L['down_' + r] + L['up_' + r] for r in ('NW', 'NE')}
-    wsc = max(rt.values()) + L['rr'] + 8
+    tn = service['tnode'] if seg else None
+    wsc = max(rt.values()) + (tn['levels'] * (tn['down'] + tn['up_scalar']) if seg else 0) + L['rr'] + 8
     pk5 = abs(rt['NW'] - rt['NE']); pb5 = int(rt['NE'] < rt['NW'])
     if wsc > 255: missing.append(f'wsc {wsc} > 255 (8-bit strap): the tree round trip does not fit')
     if pk5 > 32: missing.append(f'pk5 {pk5} > 32 (pad depth): NW/NE round trips differ by more than the t5 pad')
@@ -96,7 +134,14 @@ def compile_calendar(jobs, bound, service, ready=None):
         rdy = int((ready or {}).get(str(j['image_offset']), 0))
         launch = max(prev + 1, start + 3, rdy)
         cap = launch + 1 + L['provider_to_root']
-        done = cap + svc[f"{j['op']}/{j['fields']['nm1'] + 1}"]
+        if seg:
+            sv, why = composed_service(service, j['op'], j['fields']['nm1'] + 1, j['fields'].get('rgap', 0), wsc,
+                                       max(rt.values()))
+            if why:
+                missing.append(why); continue
+        else:
+            sv = svc[f"{j['op']}/{j['fields']['nm1'] + 1}"]
+        done = cap + sv
         dl = done + 2 + L['root_to_provider']
         recs.append(dict(image_offset=j['image_offset'], op=j['op'], ready_cycle=rdy, launch_cycle=launch,
                          root_capture_cycle=cap, root_done_cycle=done, completion_cycle=dl))

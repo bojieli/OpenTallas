@@ -1,0 +1,72 @@
+{
+ "schema": "opentallas.hbm_arch.core_freeze.v1",
+ "view": "ot_s81hd_lep_pair@kit",
+ "module": "ot_s81hd_lep_pair",
+ "design": "ot_s81hd_lep_pair",
+ "rtl_top": "ot_s81hd_lep_pair",
+ "recipe_key": "ot_s81hd_lep_pair",
+ "recipe_sha256": "1be6a8cf167344795b1990e8e95a640db27f60fc6f56294581badf1a700ebc0b",
+ "canonical_type": null,
+ "wrapper": null,
+ "outline_um": [
+  388.8,
+  432.0
+ ],
+ "plan": "/srv/opentallas-scratch2/claude/wt/head-kits-3/physical/die_plan/s81_head/die_plan.json",
+ "plan_sha256": "3df5b735229c319faa821f07590f64d2c48ae7fc35714a040e8351e5b4a6a8ff",
+ "pins_file": "plan_pins.json",
+ "pins_sha256": "366a006c938ecb7efc7c322503d19c89994bb4a1b1f060767cbfdca8d4239299",
+ "pins_canon_sha256": "1ca4ef67146a4287c1d5e8eac3c14ba1d918dc33b65738591319a680c564a5bc",
+ "pins": 2142,
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "period_ps": 833.0,
+ "common_latency_ps": 250.0,
+ "corner": "TC",
+ "plan_common_latency_ps": 250.0,
+ "core_clock_contract": null,
+ "orfs_var_overrides": [],
+ "sdc_lint": "PASS (gen)",
+ "macros": [
+  "ot_sram_1r1w2c_256x64_m1",
+  "ot_sram_1r1w2c_32x64_m1"
+ ],
+ "face_shell": null,
+ "kit_hash": "02dac40d2f087f01",
+ "plan_pins_source": "/srv/opentallas-scratch2/claude/head-kits-3/kits/_inputs/lep_pair_pins_kit.json",
+ "plan_pins_source_sha256": "d1e8eb83903e8ab2f7061914e50b8b3387e258e885ce2beabb73c51e0430354f",
+ "plan_pins_source_canon_sha256": "2091acae3f2540ffbc55b14d9044b3861b37dceefd386b9c65d83a1906f8dd91",
+ "flow_defaults": {
+  "rc_cal": true,
+  "f1": {
+   "io_tt_ps": 250.0,
+   "io_ff_ps": 202.5,
+   "mechanism": "two-mode GRT (scene BC vclk_ff.sdc FF hold, scene tc TT setup) + gates",
+   "basis": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "f4": true,
+  "cts_setup_tt": {
+   "previous_post_cts": "/work/f4_chain_leaf.tcl",
+   "repair": "setup only (scene tc / vclk OT_VCLK_TT)",
+   "hold": "GRT step only"
+  },
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold",
+   "tt": 250.0,
+   "ff": 202.5
+  },
+  "rule": "FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)"
+ },
+ "head_driver": {
+  "tool": "tools/s81_head/head_lep_pair_kit.py",
+  "interior_pins": [
+   "clk",
+   "rst_n"
+  ],
+  "pin_audit": "tools/die_plan/pin_audit.py"
+ }
+}

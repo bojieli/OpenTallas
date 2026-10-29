@@ -1,0 +1,41 @@
+{
+ "before": {
+  "run": "die-hbm-7 sbind_canon (plan c20j, 10-28 08:02)",
+  "n_errors": 473,
+  "kinds": {
+   "UNMAPPED": 201,
+   "TIED": 200,
+   "UNPLANNED": 30,
+   "TYPE_SPLIT": 28,
+   "LOCAL_NAME_CLASH": 10,
+   "EMPTY_PARTITION": 2,
+   "EMIT": 1,
+   "TIED_TOTAL": 1
+  }
+ },
+ "after": {
+  "run": "DIE-HBM-10 bindfull (plan C24 3ab76af4, release_full on)",
+  "n_errors": 476,
+  "kinds": {
+   "UNMAPPED": 201,
+   "TIED": 200,
+   "UNPLANNED": 30,
+   "TYPE_SPLIT": 28,
+   "LOCAL_NAME_CLASH": 10,
+   "EMPTY_PARTITION": 4,
+   "MAP_PARTITION": 1,
+   "EMIT": 1,
+   "TIED_TOTAL": 1
+  },
+  "new_vs_before": [
+   "MAP_PARTITION phy_NW -> PHY_N: not a plan partition",
+   "EMPTY_PARTITION PHY_NW: no as-built cell maps to it and no lane passes through it",
+   "EMPTY_PARTITION PHY_NE: no as-built cell maps to it and no lane passes through it"
+  ]
+ },
+ "slice_related_errors_after": 0,
+ "slices": {
+  "su_NE0..3/su_NW0..3": "3568-3607 glue cells + 68 leaf instances each (32 lane_pinreg, 32 pinned_bank, 2 vm_bank_leaf, 1 pretree_s, 1 lg_pair_tap)",
+  "sfucore_NE/NW": "65 glue + 35 leaves each (16 su12_sfu_sp2, 16 lane_map, operand_store, rst_relay, vm_bridge)"
+ }
+}

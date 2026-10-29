@@ -1,0 +1,118 @@
+{
+ "config": "cq_A28",
+ "status": "UNCHECKED estimate (linear RC + fitted Thevenin)",
+ "corners": {
+  "TT": {
+   "0.0": {
+    "nodes": 300,
+    "mesh_C_pF": 3.23,
+    "drivers": 28,
+    "pre_stages": 6,
+    "ins_pre_ps": 619.2,
+    "insertion_tap_ps": [
+     52.9,
+     71.7
+    ],
+    "ins_root_to_tap_ps": 680.5,
+    "skew_nominal_ps": 18.76,
+    "skew_mc_worst_ps": 35.09,
+    "sigma_tap_ps": 5.4,
+    "pair_mu_3sigma_max_ps": 38.09,
+    "pair_3sigma_only_max_ps": 20.45,
+    "nominal_pair_max_ps": 18.76
+   },
+   "30.0": {
+    "nodes": 300,
+    "mesh_C_pF": 3.23,
+    "drivers": 28,
+    "pre_stages": 6,
+    "ins_pre_ps": 619.2,
+    "insertion_tap_ps": [
+     46.2,
+     70.4
+    ],
+    "ins_root_to_tap_ps": 678.9,
+    "skew_nominal_ps": 24.27,
+    "skew_mc_worst_ps": 40.85,
+    "sigma_tap_ps": 5.27,
+    "pair_mu_3sigma_max_ps": 43.8,
+    "pair_3sigma_only_max_ps": 20.8,
+    "nominal_pair_max_ps": 24.27
+   },
+   "60.0": {
+    "nodes": 300,
+    "mesh_C_pF": 3.23,
+    "drivers": 28,
+    "pre_stages": 6,
+    "ins_pre_ps": 619.2,
+    "insertion_tap_ps": [
+     37.6,
+     79.6
+    ],
+    "ins_root_to_tap_ps": 678.4,
+    "skew_nominal_ps": 41.94,
+    "skew_mc_worst_ps": 58.8,
+    "sigma_tap_ps": 5.22,
+    "pair_mu_3sigma_max_ps": 61.08,
+    "pair_3sigma_only_max_ps": 21.16,
+    "nominal_pair_max_ps": 41.94
+   }
+  },
+  "FF": {
+   "0.0": {
+    "nodes": 300,
+    "mesh_C_pF": 3.23,
+    "drivers": 28,
+    "pre_stages": 6,
+    "ins_pre_ps": 515.4,
+    "insertion_tap_ps": [
+     41.2,
+     58.4
+    ],
+    "ins_root_to_tap_ps": 563.6,
+    "skew_nominal_ps": 17.13,
+    "skew_mc_worst_ps": 26.62,
+    "sigma_tap_ps": 4.12,
+    "pair_mu_3sigma_max_ps": 29.74,
+    "pair_3sigma_only_max_ps": 16.2,
+    "nominal_pair_max_ps": 17.13
+   },
+   "30.0": {
+    "nodes": 300,
+    "mesh_C_pF": 3.23,
+    "drivers": 28,
+    "pre_stages": 6,
+    "ins_pre_ps": 515.4,
+    "insertion_tap_ps": [
+     33.5,
+     57.6
+    ],
+    "ins_root_to_tap_ps": 562.4,
+    "skew_nominal_ps": 24.13,
+    "skew_mc_worst_ps": 37.73,
+    "sigma_tap_ps": 4.16,
+    "pair_mu_3sigma_max_ps": 40.59,
+    "pair_3sigma_only_max_ps": 16.51,
+    "nominal_pair_max_ps": 24.13
+   },
+   "60.0": {
+    "nodes": 300,
+    "mesh_C_pF": 3.23,
+    "drivers": 28,
+    "pre_stages": 6,
+    "ins_pre_ps": 515.4,
+    "insertion_tap_ps": [
+     24.7,
+     68.5
+    ],
+    "ins_root_to_tap_ps": 561.1,
+    "skew_nominal_ps": 43.81,
+    "skew_mc_worst_ps": 57.54,
+    "sigma_tap_ps": 4.2,
+    "pair_mu_3sigma_max_ps": 60.67,
+    "pair_3sigma_only_max_ps": 17.01,
+    "nominal_pair_max_ps": 43.81
+   }
+  }
+ }
+}

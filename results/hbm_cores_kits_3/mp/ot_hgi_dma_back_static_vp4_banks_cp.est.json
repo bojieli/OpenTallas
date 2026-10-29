@@ -1,0 +1,58 @@
+{
+ "rule": "R-SRAM-ENTRY (C columns, results/hbm_cores_kits_3/mp_rule_c.py)",
+ "kit": "ot_hgi_dma_back_static_vp4_banks_cp_2f0b6ac4a51c-_k1c24",
+ "outline_um": [
+  239.976,
+  240.84
+ ],
+ "core_um": [
+  4.32,
+  4.32,
+  235.656,
+  236.52
+ ],
+ "halo_um": 4.32,
+ "clock_entry_um": [
+  120.96,
+  120.96
+ ],
+ "entry_island_um": [
+  116.64,
+  116.64,
+  125.28,
+  125.28
+ ],
+ "n_macros": 10,
+ "masters": {
+  "ot_sram_1r1w_128x256_m1_r2c2": {
+   "w": 94.824,
+   "h": 41.064,
+   "pins_W": 410,
+   "pins_E": 409
+  }
+ },
+ "tried": [
+  {
+   "C": 1,
+   "issues": [
+    "C=1 column 0: stack y [-127.61,369.53] leaves core y [4.32,236.52] (deficit 264.94 um)"
+   ],
+   "esc_max": 1.318
+  },
+  {
+   "C": 2,
+   "issues": [
+    "C=2 column 0: stack y [21.50,270.12] leaves core y [4.32,236.52] (deficit 33.60 um)",
+    "C=2 column 1: stack y [21.50,270.12] leaves core y [4.32,236.52] (deficit 33.60 um)"
+   ],
+   "esc_max": 12.409
+  },
+  "C=3: channels -13.28 um < 10.8"
+ ],
+ "area_um2": {
+  "core": 53716,
+  "macros_with_halo": 51426,
+  "free": 2290
+ },
+ "verdict": "INFEASIBLE"
+}
