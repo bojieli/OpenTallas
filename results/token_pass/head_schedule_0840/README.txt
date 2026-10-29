@@ -34,3 +34,9 @@ without host/LEP contamination, missing return refusal, exact per-port CA sum,
 duplicate/wrong-endpoint/count-mismatch controls and double-charge refusal.
 No RTL edits, no physical/START adoption, no programme installability or rate
 claim. Parent tokens composes fullhk5 bind and physical START timing separately.
+
+Latest actual hk5_leaf2/bind/regions_ca.json refreshed: all327 data lane
+constants identical to earlier CA2; transport remains330. Leaf START
+frames/origins belong to the separate START source composition and are not
+invented from these unchanged data lane costs. Exact latest table and SV/JSON
+retained as regions_leaf2_ca.json and hk5_leaf2_* outputs.
