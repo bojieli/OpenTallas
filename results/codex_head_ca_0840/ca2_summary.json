@@ -1,0 +1,233 @@
+{
+ "summary": {
+  "regions": 1160,
+  "regions_reached": 1160,
+  "tree_root": "st:h",
+  "tree_edges": 1159,
+  "tree_edges_clean": 1159,
+  "tree_edges_ambiguous": [],
+  "edge_pad": {},
+  "tree_edges_fall": 1013,
+  "start_skew_limit_clean_min_ps": 109.9,
+  "start_skew_limit_min_ps": 109.9,
+  "max_tree_depth": 62,
+  "min_sync_dist_clean_ps": 136.4,
+  "crossings": 427,
+  "depth4": 427,
+  "depth8": 0,
+  "depth16": 0,
+  "max_depth": 8,
+  "fail": 0,
+  "max_path_ambiguous_cycles": 0,
+  "worst_margin_lo_ps": 115.4,
+  "worst_margin_lo_port": "coll_HOST1_u__0",
+  "worst_margin_hi_ps": 962.8,
+  "worst_margin_hi_port": "sp_x5__0",
+  "below_100ps": 0,
+  "lat_hist": {
+   "1": 2,
+   "2": 244,
+   "3": 181
+  },
+  "K_hist": {
+   "-30": 4,
+   "-23": 2,
+   "-21": 3,
+   "-20": 2,
+   "-19": 4,
+   "-18": 4,
+   "-17": 10,
+   "-16": 4,
+   "-15": 2,
+   "-14": 1,
+   "-13": 5,
+   "-12": 4,
+   "-11": 3,
+   "-10": 6,
+   "-9": 6,
+   "-8": 1,
+   "-7": 2,
+   "-6": 2,
+   "-5": 17,
+   "-4": 112,
+   "-3": 4,
+   "-2": 17,
+   "-1": 1,
+   "1": 2,
+   "2": 1,
+   "4": 13,
+   "6": 4,
+   "7": 113,
+   "8": 8,
+   "10": 2,
+   "11": 11,
+   "13": 5,
+   "14": 8,
+   "16": 6,
+   "17": 3,
+   "18": 1,
+   "19": 5,
+   "20": 10,
+   "21": 4,
+   "22": 4,
+   "23": 4,
+   "24": 1,
+   "26": 2,
+   "33": 4
+  },
+  "lat_total_vs_old3": -248,
+  "old_ring_not_cycle_fixed": 298,
+  "old_ring_fail_margin": 354,
+  "start_tree": {
+   "form": "clock",
+   "data_regions": 327,
+   "virtual_nodes": 833,
+   "retime_nodes": 662,
+   "start_edges": 1159,
+   "start_clean": 1159,
+   "start_fail": 0,
+   "start_fail_edges": [],
+   "start_width_ps": {
+    "median": 121.9,
+    "max": 198.79999999999995
+   },
+   "start_min_sync_dist_ps": 136.4,
+   "crossing_start_hops": {
+    "median": 8,
+    "max": 17
+   },
+   "rule": "12.16b(iv): every start (reset-release) port is a crossing; CLEAN iff its interval (same shared model, clock_variation table) +- aperture holds no sampling boundary; an unclean port FAILs the plan",
+   "clean_by": "width",
+   "clean_by_width": 1159,
+   "fall_measured": 1159,
+   "root": "st:h",
+   "root_path": "h",
+   "leg_ps": {
+    "TT": [
+     32.145938949599895,
+     30.207356433100017,
+     1
+    ],
+    "FF": [
+     28.54747657999974,
+     27.41725789409975,
+     1
+    ]
+   },
+   "regions": 327,
+   "branch_nodes": 171,
+   "branch_nodes_contracted": 0,
+   "max_hop_um": 405.0,
+   "reach_fail": 0
+  },
+  "sta_interval": {
+   "corners": [
+    "FF",
+    "TT"
+   ],
+   "rows": 427,
+   "widened": 427,
+   "max_widen_ps": 245.1,
+   "max_widen_port": "chE5_b5__0",
+   "missing": 0,
+   "missing_ports": [],
+   "interval": "port (die_sta_related.count_align_port_intervals)",
+   "rows_without_measured_fall": 0,
+   "unbound": 0,
+   "unbound_tags": [],
+   "proof": "/srv/opentallas-scratch2/claude/codex-head-ca-0840/ca2/proof",
+   "plan": "/srv/opentallas-scratch2/claude/codex-head-ca-0840/inputs/plan.json",
+   "clock_cal": "spice_edge",
+   "cppr_lca": true,
+   "clock_ocv": "table",
+   "model": "hull(landed_phase_ocv derated, die_sta_related.count_align_port_intervals)",
+   "clock_cell": {
+    "cell": "inv",
+    "basis": "--clock-cell inv",
+    "aocv_class": "Ainv"
+   }
+  },
+  "corner": "TT_droop-regions_corelat450,FF_droop-regions_corelat380",
+  "period_ps": 833.0,
+  "aperture_ps": 104.125,
+  "sync_aperture_ps": 26.5,
+  "wander_frac": 0.05,
+  "pad": 0,
+  "scale": 1.0,
+  "source": "/srv/opentallas-scratch2/claude/codex-head-ca-0840/ca2/region_ocv.json",
+  "mc": {
+   "chips": 2000,
+   "violations": 0,
+   "worst_lo_to_guard_ps": 115.7,
+   "worst_hi_to_guard_ps": 963.1
+  }
+ },
+ "bind_report": {
+  "verify": {
+   "identity_and_loop_errors": [],
+   "fundamental_cycles": 427,
+   "samples": 2000,
+   "sim_window_violations": 0,
+   "sim_min_margin_low_ps": 115.7,
+   "sim_min_margin_high_ps": 962.8,
+   "sim_worst_ports": {
+    "lo": "coll_HOST1_u__0",
+    "hi": "sp_x5__0"
+   },
+   "sim_below_need": false,
+   "note": "margins to the ring guards 0.5T / (DEPTH-0.5)T (COORD 20:35/20:48 gate >= 100 ps); MESO-INTEG-1 sync physics with metastable resolution both ways"
+  },
+  "sched_lat_hist": {
+   "1": 2,
+   "2": 244,
+   "3": 181
+  },
+  "sched_lat_total": 1033,
+  "tree_sched_lat_total": 0,
+  "old_ring_total": 1281,
+  "depth_hist": {
+   "4": 427,
+   "8": 0,
+   "16": 0
+  },
+  "K_range": [
+   -30,
+   33
+  ],
+  "start_tree_depth": 62,
+  "tree_edges_fall": 1013,
+  "max_origin_cycles": 186,
+  "relay": {
+   "landed_regions": 1160,
+   "multi_partition_regions": 11,
+   "partitions_per_region_hist": {
+    "1": 1149,
+    "2": 4,
+    "3": 1,
+    "5": 6
+   },
+   "relay_partitions": 30,
+   "relay_pins": {
+    "tx_out": 11,
+    "rx_in": 30
+   },
+   "relay_stages": 2,
+   "crossings_with_relayed_receiver": 40,
+   "crossings_with_relayed_sender": 37,
+   "tree_ports_from_relay_sender": 0,
+   "nontree_K_shifted_by_relay": 61
+  },
+  "plan_source": "/srv/opentallas-scratch2/claude/codex-head-ca-0840/ca2/plan.json"
+ },
+ "scope": {
+  "plan": "/srv/opentallas-scratch2/claude/codex-head-ca-0840/inputs/plan.json",
+  "regions": 327,
+  "crossings": 427,
+  "core_budget_ps": {
+   "TT": 450,
+   "FF": 380
+  },
+  "scope": "Fresh CA plan/bind preparation; emitted START clock and real core views still need their implementation gates",
+  "release": "NOT_CLAIMED"
+ }
+}

@@ -1,0 +1,7 @@
+Fresh CA preparation for the frozen full hk5 HEAD plan (357 partitions, 25 types, 427 external crossings).
+
+The exact inherited clock was replayed at TT/FF with unchanged physical inputs and GRT50. Both runs had zero overflow. The readout now carries both source edges with inverter parity resolved: 739 taps and 6,174 nodes per corner. `arr_TT/FF.txt.gz` retain these measured clock inputs; `plan.json.gz`, `regions_ca.json.gz`, and `straps.json.gz` are the resulting data-region plan/bind, with no previous K/origin table reused. CA margins 115.4/962.8 ps, zero missing/unbound/falling-edge rows, and 2,000 startup samples with no violation are this run's own results, pending independent number review.
+
+This is preparation with explicit 450/380 ps core budgets and the existing hd_tile ring profile. Real core-view STA, physical START/reset, full source assembly, and the token pass remain open. The data-region emitter has 327 outputs; current source assembly must instead consume the successor physical-leaf bind (357 leaf frames), owned by HEAD START. The earlier 351-leaf source7 exports are stale after the hk5 recut.
+
+Runtime: intel2 `/srv/opentallas-scratch2/claude/codex-head-ca-0840`; units 2129208/2129188 (clock replay) and 2203577 (CA2) completed successfully. First compose failed on sparse pin assets; second data-region compose rejected `hd_spn` START relay type splitting, so the physical-leaf successor is used. Failed outputs remain in that runtime directory.

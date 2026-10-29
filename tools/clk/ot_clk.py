@@ -648,11 +648,16 @@ def main(argv=None):
     r.add_argument("--clock-rc", required=True, choices=("ndr", "1x"))
     r.add_argument("--route")
     r.add_argument("--basis")
+    local = sub.add_parser("local-entry", help="place one native clock-load isolation buffer per emitted stage group")
+    import local_entry
+    local_entry.add_arguments(local)
     duty = sub.add_parser("duty", help="measured both-edge duty with shared clock calibration")
     sys.path.insert(0, str(REPO / "tools" / "die_plan"))
     import clock_duty
     clock_duty.add_arguments(duty)
     a = ap.parse_args(argv)
+    if a.cmd == "local-entry":
+        return local_entry.run(a)
     if a.cmd == "duty":
         return clock_duty.run(a)
     if a.cmd == "register":

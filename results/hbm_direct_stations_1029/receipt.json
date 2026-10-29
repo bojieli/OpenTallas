@@ -1,0 +1,221 @@
+{
+  "enabled": true,
+  "scope": "SOURCE_PREP_ONLY",
+  "chains": [
+    {
+      "name": "vmb_NE7_eg",
+      "source_instance": "vmb_NE7",
+      "source_port": "eg",
+      "source_segments": [
+        [
+          "n",
+          "vmb_NE7__eg",
+          0,
+          275
+        ]
+      ],
+      "sink_instance": "hb_vms_NE",
+      "sink_port": "bk_eg",
+      "sink_lsb": 1932,
+      "sink_msb": 2207,
+      "width": 276,
+      "source_cycles_before": 0,
+      "source_cycles_after": 6,
+      "added_cycles": 6,
+      "register_bits": 1656,
+      "register_names": [
+        "__ot_station_vmb_NE7_eg_s0",
+        "__ot_station_vmb_NE7_eg_s1",
+        "__ot_station_vmb_NE7_eg_s2",
+        "__ot_station_vmb_NE7_eg_s3",
+        "__ot_station_vmb_NE7_eg_s4",
+        "__ot_station_vmb_NE7_eg_s5"
+      ],
+      "clock": "hb_ckgen__pll_stream[0:0]",
+      "reset": "native_required__vmb_NE7__rst_n[0:0]",
+      "control_mask": 60708402882054033466233184588234965832575213720379360039119137804340758912662765568,
+      "data_reset": false,
+      "reset_delivery_qualified": false,
+      "parent_budget_qualified": false
+    },
+    {
+      "name": "vmb_NE7_pr",
+      "source_instance": "vmb_NE7",
+      "source_port": "pr",
+      "source_segments": [
+        [
+          "n",
+          "vmb_NE7__pr",
+          0,
+          265
+        ]
+      ],
+      "sink_instance": "hb_vms_NE",
+      "sink_port": "bk_pr",
+      "sink_lsb": 1862,
+      "sink_msb": 2127,
+      "width": 266,
+      "source_cycles_before": 0,
+      "source_cycles_after": 6,
+      "added_cycles": 6,
+      "register_bits": 1596,
+      "register_names": [
+        "__ot_station_vmb_NE7_pr_s0",
+        "__ot_station_vmb_NE7_pr_s1",
+        "__ot_station_vmb_NE7_pr_s2",
+        "__ot_station_vmb_NE7_pr_s3",
+        "__ot_station_vmb_NE7_pr_s4",
+        "__ot_station_vmb_NE7_pr_s5"
+      ],
+      "clock": "hb_ckgen__pll_stream[0:0]",
+      "reset": "native_required__vmb_NE7__rst_n[0:0]",
+      "control_mask": 59285549689505892056868344324448208820874232148807968788202283012051522375647232,
+      "data_reset": false,
+      "reset_delivery_qualified": false,
+      "parent_budget_qualified": false
+    },
+    {
+      "name": "vmb_NE7_status",
+      "source_instance": "vmb_NE7",
+      "source_port": "status",
+      "source_segments": [
+        [
+          "n",
+          "vmb_NE7__status",
+          0,
+          17
+        ]
+      ],
+      "sink_instance": "hb_vms_NE",
+      "sink_port": "bank_status",
+      "sink_lsb": 126,
+      "sink_msb": 143,
+      "width": 18,
+      "source_cycles_before": 0,
+      "source_cycles_after": 6,
+      "added_cycles": 6,
+      "register_bits": 108,
+      "register_names": [
+        "__ot_station_vmb_NE7_status_s0",
+        "__ot_station_vmb_NE7_status_s1",
+        "__ot_station_vmb_NE7_status_s2",
+        "__ot_station_vmb_NE7_status_s3",
+        "__ot_station_vmb_NE7_status_s4",
+        "__ot_station_vmb_NE7_status_s5"
+      ],
+      "clock": "hb_ckgen__pll_stream[0:0]",
+      "reset": "native_required__vmb_NE7__rst_n[0:0]",
+      "control_mask": 262143,
+      "data_reset": false,
+      "reset_delivery_qualified": false,
+      "parent_budget_qualified": false
+    },
+    {
+      "name": "vmb_NE7_xq2_done",
+      "source_instance": "vmb_NE7",
+      "source_port": "xq2_done",
+      "source_segments": [
+        [
+          "n",
+          "vmb_NE7__xq2_done",
+          0,
+          0
+        ]
+      ],
+      "sink_instance": "hb_vms_NE",
+      "sink_port": "bk_xq2_done",
+      "sink_lsb": 7,
+      "sink_msb": 7,
+      "width": 1,
+      "source_cycles_before": 0,
+      "source_cycles_after": 6,
+      "added_cycles": 6,
+      "register_bits": 6,
+      "register_names": [
+        "__ot_station_vmb_NE7_xq2_done_s0",
+        "__ot_station_vmb_NE7_xq2_done_s1",
+        "__ot_station_vmb_NE7_xq2_done_s2",
+        "__ot_station_vmb_NE7_xq2_done_s3",
+        "__ot_station_vmb_NE7_xq2_done_s4",
+        "__ot_station_vmb_NE7_xq2_done_s5"
+      ],
+      "clock": "hb_ckgen__pll_stream[0:0]",
+      "reset": "native_required__vmb_NE7__rst_n[0:0]",
+      "control_mask": 1,
+      "data_reset": false,
+      "reset_delivery_qualified": false,
+      "parent_budget_qualified": false
+    },
+    {
+      "name": "vmb_NE7_xq_done",
+      "source_instance": "vmb_NE7",
+      "source_port": "xq_done",
+      "source_segments": [
+        [
+          "n",
+          "vmb_NE7__xq_done",
+          0,
+          0
+        ]
+      ],
+      "sink_instance": "hb_vms_NE",
+      "sink_port": "bk_xq_done",
+      "sink_lsb": 7,
+      "sink_msb": 7,
+      "width": 1,
+      "source_cycles_before": 0,
+      "source_cycles_after": 6,
+      "added_cycles": 6,
+      "register_bits": 6,
+      "register_names": [
+        "__ot_station_vmb_NE7_xq_done_s0",
+        "__ot_station_vmb_NE7_xq_done_s1",
+        "__ot_station_vmb_NE7_xq_done_s2",
+        "__ot_station_vmb_NE7_xq_done_s3",
+        "__ot_station_vmb_NE7_xq_done_s4",
+        "__ot_station_vmb_NE7_xq_done_s5"
+      ],
+      "clock": "hb_ckgen__pll_stream[0:0]",
+      "reset": "native_required__vmb_NE7__rst_n[0:0]",
+      "control_mask": 1,
+      "data_reset": false,
+      "reset_delivery_qualified": false,
+      "parent_budget_qualified": false
+    },
+    {
+      "name": "vmb_NW4_rr1",
+      "source_instance": "vmb_NW4",
+      "source_port": "rr1",
+      "source_segments": [
+        [
+          "n",
+          "vmb_NW4__rr1",
+          0,
+          256
+        ]
+      ],
+      "sink_instance": "hb_dbk_NW",
+      "sink_port": "rr",
+      "sink_lsb": 1028,
+      "sink_msb": 1284,
+      "width": 257,
+      "source_cycles_before": 0,
+      "source_cycles_after": 3,
+      "added_cycles": 3,
+      "register_bits": 771,
+      "register_names": [
+        "__ot_station_vmb_NW4_rr1_s0",
+        "__ot_station_vmb_NW4_rr1_s1",
+        "__ot_station_vmb_NW4_rr1_s2"
+      ],
+      "clock": "hb_ckgen__pll_stream[0:0]",
+      "reset": "native_required__vmb_NW4__rst_n[0:0]",
+      "control_mask": 115792089237316195423570985008687907853269984665640564039457584007913129639936,
+      "data_reset": false,
+      "reset_delivery_qualified": false,
+      "parent_budget_qualified": false
+    }
+  ],
+  "qualifies_physical": false,
+  "qualifies_token": false
+}
