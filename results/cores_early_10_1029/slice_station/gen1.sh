@@ -1,0 +1,3 @@
+#!/bin/bash
+# CORES-EARLY-10 slice_station kits: gen phys at main $(cat /srv/opentallas-scratch2/claude/ce10-ss/src.sha) on plan_s13r2 e4a0d4d83e54 (DIE-S81-23 06:39)
+t=$1; cd /srv/opentallas-scratch2/claude/ce10-ss/src; python3 -I tools/die_plan/gen.py phys /srv/opentallas-scratch2/claude/ce10-ss/plan_s13r2.json --out /srv/opentallas-scratch2/claude/ce10-ss/gen/$t --types $t --rtl-root /srv/opentallas-scratch2/claude/ce10-ss/src --hold-ff-margin 10 --max-wire-um 100 > /srv/opentallas-scratch2/claude/ce10-ss/logs/gen_$t.log 2>&1; echo "$t rc=$? $(date)" >> /srv/opentallas-scratch2/claude/ce10-ss/gen_status.log

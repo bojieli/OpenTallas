@@ -1,0 +1,2 @@
+SIGNOFF kl_ot_s81_cfg7_seq_bfp_explicitpin1029: LOCAL_PASS_NEEDS_PARENT | TT setup 57.64 | FF hold 0.48 (sdc -41.38) | SS setup (info) None | pair skew TT/FF 22.5/22.0 (spread info 17.77/18.59) | DRC 0 ant 0 | sdc_lint PASS face_guard PASS
+  - io_hold_parent: NEEDS_PARENT; matching real-parent PASS receipt missing
