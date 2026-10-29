@@ -1,0 +1,16 @@
+{
+ "kind": "ESTIMATE_ONLY (no P&R), DIE-HEAD-29 sub-agent, 2026-10-29T17:25:39Z",
+ "inputs_readonly": "intel2:/srv/opentallas-scratch2/claude/codex-head-serdes-lep-0825/lep_registers_solve_v5 (input.tsv, child_delta.json, out/register_plan.json, geom_rules from code/)",
+ "metric": "geom_rules.r2r_metrics Manhattan (uv max), memories as full box (V5 patch), > 405 um; my edge census reproduces V5 baseline 1892 captures exactly (CHECKED)",
+ "baseline_V5": {"captures_gt405": 1892, "violating_edges_all_sources": 5207, "distinct_violating_sources": 2204, "float_ties_405p0000001": 51},
+ "finding": "Every family closes by register RE-PLACEMENT alone; replication is not needed. Pre-legalization coupled moves (push to fixed-neighbour region, movable neighbours ripple) reach 0 violations with 0 added flops at REFF 398/392/385/378. V5 stall = solver artefact (coordinate descent keeps only discovered extremal edges and never moves coupled neighbours that have no violation themselves), not geometry.",
+ "per_source_single_copy": "estimate.json (lep_repl_est.py, earlier version): with neighbours fixed, k=1 suffices for every movable family except u_ski.u_head.mwd (k=2 for 17-19 regs) and u_gb.idle_q/ph (k=2, 1 each); macro-sourced u_ski.u_head.g_bank->a_in (220) closes by moving a_in + prevdata/g_slice ctrl together (push run), not by replication",
+ "legalized_V5_packer": {"REFF398": 104, "REFF392": 39, "REFF385": 1, "REFF378": 0},
+ "model_census_REFF378_legalized": {"r2r_captures_gt405": 0, "r2r_max": 405.0, "r2r_captures": 27699},
+ "model_census_REFF385_legalized": {"r2r_captures_gt405": 1, "r2r_max": 407.54, "worst": "u_land.u_kn.u_w.g_chunk[8].u_local/data[0][7] (pin-anchored) -> u_land.u_kn.u_r.g_chunk[8].u_local/o[7]"},
+ "move_disp_um_REFF378": {"p50": 27.2, "p90": 50.8, "max": 80.4},
+ "density": "max DFF footprint per 20x20 um bin 38% in V5, REFF385 and REFF378 alike (no hotspot added)",
+ "macro_move_whatif": "u_ski.u_head.g_bank[8] to (82.08,146.88) or (129.6,21.6): no gain (26-27 a_in residual unchanged in non-push runs); not needed",
+ "caveats_UNCHECKED": ["comb placement/route not modelled (geometry gate only)", "register seeds must survive global placement (fix or region-constrain the moved regs)", "r2r_max 405.0 at REFF378 is a tie at the limit"],
+ "sites_seed": "sites_legal_378_push.json.gz (28161 regs, lower-left xy um)"
+}

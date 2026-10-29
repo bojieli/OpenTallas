@@ -1,0 +1,224 @@
+{
+ "kind": "ESTIMATE_ONLY_MOVE_THEN_REPLICATE",
+ "R": 405.0,
+ "REFF": 385.0,
+ "baseline_captures": 1885,
+ "baseline_edges": 5220,
+ "legalization": [
+  {
+   "round": 0,
+   "captures": 77,
+   "edges": 109,
+   "max_legal_disp": 31.86
+  },
+  {
+   "round": 1,
+   "captures": 31,
+   "edges": 54,
+   "max_legal_disp": 22.52
+  },
+  {
+   "round": 2,
+   "captures": 31,
+   "edges": 51,
+   "max_legal_disp": 22.52
+  },
+  {
+   "round": 3,
+   "captures": 31,
+   "edges": 51,
+   "max_legal_disp": 22.52
+  },
+  {
+   "round": 4,
+   "captures": 31,
+   "edges": 51,
+   "max_legal_disp": 22.52
+  }
+ ],
+ "after_move_captures": 31,
+ "after_move_edges": 51,
+ "moved_regs": 2801,
+ "move_disp_um": {
+  "p50": 20.08800000000008,
+  "p90": 45.95399999999995,
+  "max": 164.05200000000013
+ },
+ "replication_added_flops": 21,
+ "replicated_families": {
+  "u_lane.u.u_ski.u_head.mwd[]": {
+   "regs": 19,
+   "fanout_max": 3,
+   "k_max": 2,
+   "added": 19
+  },
+  "u_lane.u.u_gb.idle_q": {
+   "regs": 1,
+   "fanout_max": 221,
+   "k_max": 2,
+   "added": 1
+  },
+  "u_lane.u.u_gb.ph[]": {
+   "regs": 1,
+   "fanout_max": 208,
+   "k_max": 2,
+   "added": 1
+  }
+ },
+ "after_replication_captures": 27,
+ "not_fixable": {
+  "fixed source: u_lane.u.u_ski.u_head.g_bank[].u_m": 26,
+  "fixed source: u_land.u_kn.u_w.g_chunk[].u_local/data[][]": 4
+ },
+ "residual_edge_families": [
+  {
+   "n": 26,
+   "src": "u_lane.u.u_ski.u_head.g_bank[].u_m",
+   "cap": "u_lane.u.u_ep.a_in[]",
+   "src_macro": true,
+   "src_anch": false,
+   "cap_macro": false,
+   "cap_anch": false
+  },
+  {
+   "n": 4,
+   "src": "u_land.u_kn.u_w.g_chunk[].u_local/data[][]",
+   "cap": "u_land.u_kn.u_r.g_chunk[].u_local/o[]",
+   "src_macro": false,
+   "src_anch": true,
+   "cap_macro": false,
+   "cap_anch": false
+  }
+ ],
+ "residual_diag": {
+  "u_lane.u.u_ski.u_head.g_bank[].u_m -> u_lane.u.u_ep.a_in[]": [
+   {
+    "other": "u_lane.u.u_ep.a_in\\[89\\]$_DFF_P_",
+    "d": 427.3,
+    "joint_region_gap_um": -19.3,
+    "far": [
+     [
+      "u_lane.u.u_ski.u_head.g_bank\\[1\\].u_m",
+      [
+       34.6,
+       51.8
+      ],
+      427.3
+     ],
+     [
+      "u_lane.u.u_ski.u_head.prevdata\\[89\\]$_DFF_P_",
+      [
+       406.6,
+       450.4
+      ],
+      344.1
+     ],
+     [
+      "u_lane.u.u_ski.u_head.g_slice\\[5\\].prev_q$_DFF_PN0_",
+      [
+       393.9,
+       445.2
+      ],
+      326.5
+     ]
+    ]
+   },
+   {
+    "other": "u_lane.u.u_ep.a_in\\[90\\]$_DFF_P_",
+    "d": 427.9,
+    "joint_region_gap_um": -19.2,
+    "far": [
+     [
+      "u_lane.u.u_ski.u_head.g_bank\\[1\\].u_m",
+      [
+       34.6,
+       51.8
+      ],
+      427.9
+     ],
+     [
+      "u_lane.u.u_ski.u_head.prevdata\\[90\\]$_DFF_P_",
+      [
+       406.2,
+       450.9
+      ],
+      343.8
+     ],
+     [
+      "u_lane.u.u_ski.u_head.g_slice\\[5\\].prev_q$_DFF_PN0_",
+      [
+       393.9,
+       445.2
+      ],
+      325.9
+     ]
+    ]
+   },
+   {
+    "other": "u_lane.u.u_ep.a_in\\[91\\]$_DFF_P_",
+    "d": 428.1,
+    "joint_region_gap_um": -18.8,
+    "far": [
+     [
+      "u_lane.u.u_ski.u_head.g_bank\\[1\\].u_m",
+      [
+       34.6,
+       51.8
+      ],
+      428.1
+     ],
+     [
+      "u_lane.u.u_ski.u_head.prevdata\\[91\\]$_DFF_P_",
+      [
+       407.2,
+       450.6
+      ],
+      344.2
+     ],
+     [
+      "u_lane.u.u_ski.u_head.g_slice\\[5\\].prev_q$_DFF_PN0_",
+      [
+       393.9,
+       445.2
+      ],
+      325.7
+     ]
+    ]
+   },
+   {
+    "other": "u_lane.u.u_ep.a_in\\[92\\]$_DFF_P_",
+    "d": 427.8,
+    "joint_region_gap_um": -19.6,
+    "far": [
+     [
+      "u_lane.u.u_ski.u_head.g_bank\\[1\\].u_m",
+      [
+       34.6,
+       51.8
+      ],
+      427.8
+     ],
+     [
+      "u_lane.u.u_ski.u_head.prevdata\\[92\\]$_DFF_P_",
+      [
+       404.8,
+       451.4
+      ],
+      343.0
+     ],
+     [
+      "u_lane.u.u_ep.g_rb_safe.u_m.g_bank\\[1\\].g_depth\\[1\\].g_256.u_m",
+      [
+       315.4,
+       73.4
+      ],
+      341.4
+     ]
+    ]
+   }
+  ]
+ },
+ "residual_diag_counts": {
+  "u_lane.u.u_ski.u_head.g_bank[].u_m -> u_lane.u.u_ep.a_in[]": 26
+ }
+}

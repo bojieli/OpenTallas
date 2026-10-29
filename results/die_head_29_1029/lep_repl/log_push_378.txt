@@ -1,0 +1,44 @@
+edges 170127 anchored 3813 0.4
+baseline census 1892 violating edges 5207
+pass 0 moved 2832 violating captures 43 edges 77
+pass 1 moved 76 violating captures 0 edges 0
+after legalization: captures 46 edges 84 max legal disp 32.4
+legal round 1 captures 0 edges 0
+{
+ "kind": "ESTIMATE_ONLY_MOVE_THEN_REPLICATE",
+ "R": 405.0,
+ "REFF": 378.0,
+ "baseline_captures": 1892,
+ "baseline_edges": 5207,
+ "legalization": [
+  {
+   "round": 0,
+   "captures": 46,
+   "edges": 84,
+   "max_legal_disp": 32.4
+  },
+  {
+   "round": 1,
+   "captures": 0,
+   "edges": 0,
+   "max_legal_disp": 21.33
+  }
+ ],
+ "after_move_captures": 0,
+ "after_move_edges": 0,
+ "moved_regs": 2909,
+ "pushed_regs": 257,
+ "move_disp_um": {
+  "p50": 27.161999999999807,
+  "p90": 50.81399999999991,
+  "max": 80.35200000000009
+ },
+ "replication_added_flops": 0,
+ "replicated_families": {},
+ "after_replication_captures": 0,
+ "not_fixable": {},
+ "residual_edge_families": [],
+ "residual_diag": {},
+ "residual_diag_counts": {}
+}
+MODEL CENSUS on legalized positions: {'r2r_captures_gt405': 0, 'r2r_max': 405.0, 'r2r_captures': 27699, 'r2r_worst': 'u_lane.u.up$_DFFE_PN0P_ -> u_lane.u.u_ski.u_head.g_slice\\[4\\].cur_q$_DFF_PN0_'}

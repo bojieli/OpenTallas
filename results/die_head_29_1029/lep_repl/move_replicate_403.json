@@ -1,0 +1,426 @@
+{
+ "kind": "ESTIMATE_ONLY_MOVE_THEN_REPLICATE",
+ "R": 405.0,
+ "REFF": 403.0,
+ "baseline_captures": 1892,
+ "baseline_edges": 5207,
+ "legalization": [
+  {
+   "round": 0,
+   "captures": 725,
+   "edges": 1468,
+   "max_legal_disp": 29.05
+  },
+  {
+   "round": 1,
+   "captures": 456,
+   "edges": 890,
+   "max_legal_disp": 18.41
+  },
+  {
+   "round": 2,
+   "captures": 300,
+   "edges": 558,
+   "max_legal_disp": 18.41
+  },
+  {
+   "round": 3,
+   "captures": 242,
+   "edges": 451,
+   "max_legal_disp": 18.41
+  }
+ ],
+ "after_move_captures": 242,
+ "after_move_edges": 451,
+ "moved_regs": 2936,
+ "move_disp_um": {
+  "p50": 2.160000000000025,
+  "p90": 18.09000000000009,
+  "max": 62.694000000000045
+ },
+ "replication_added_flops": 19,
+ "replicated_families": {
+  "u_lane.u.u_ski.o_valid": {
+   "regs": 1,
+   "fanout_max": 631,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_lane.u.up": {
+   "regs": 1,
+   "fanout_max": 632,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_lane.u.u_gb.u_sf.g_slice[].cur_q": {
+   "regs": 2,
+   "fanout_max": 48,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_lane.u.u_ep.in_ready": {
+   "regs": 1,
+   "fanout_max": 89,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_lane.u.u_ski.rp[]": {
+   "regs": 4,
+   "fanout_max": 83,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_lane.u.u_sko.l_data[]": {
+   "regs": 1,
+   "fanout_max": 4,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_lane.u.u_ep.g_fifo_safe.g_address[].wp_r[]": {
+   "regs": 8,
+   "fanout_max": 14,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_lane.u.u_ep.g_fifo_safe.g_address[].rp_r[]": {
+   "regs": 7,
+   "fanout_max": 47,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_lane.u.u_gb.u_sf.g_slice[].prev_q": {
+   "regs": 2,
+   "fanout_max": 48,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_land.u_nk.u_w.g_chunk[].u_local/vld[]": {
+   "regs": 3,
+   "fanout_max": 9,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_lane.u.u_gb.u_sf.mwd[]": {
+   "regs": 42,
+   "fanout_max": 5,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_lane.u.u_rr.g_group[].group_r": {
+   "regs": 1,
+   "fanout_max": 32,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_land.u_kn.u_r.g_chunk[].u_local/read_oh[]": {
+   "regs": 4,
+   "fanout_max": 5,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_land.u_kn.u_r.g_chunk[].u_local/warm": {
+   "regs": 1,
+   "fanout_max": 5,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_land.u_nk.u_w.g_chunk[].u_local/data[][]": {
+   "regs": 15,
+   "fanout_max": 2,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_land.u_nk.u_rr.g_branch[].u_ff/q": {
+   "regs": 1,
+   "fanout_max": 32,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_lane.u.u_ep.a_in[]": {
+   "regs": 11,
+   "fanout_max": 4,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_lane.u.u_ep.b_pay[]": {
+   "regs": 2,
+   "fanout_max": 21,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_lane.u.u_ep.g_fifo_safe.g_address[].count_r[]": {
+   "regs": 3,
+   "fanout_max": 60,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_lane.u.u_ski.u_head.mwd[]": {
+   "regs": 35,
+   "fanout_max": 3,
+   "k_max": 2,
+   "added": 17
+  },
+  "u_lane.u.u_gb.u_sf.prevdata[]": {
+   "regs": 11,
+   "fanout_max": 3,
+   "k_max": 1,
+   "added": 0
+  },
+  "u_lane.u.u_gb.idle_q": {
+   "regs": 1,
+   "fanout_max": 221,
+   "k_max": 2,
+   "added": 1
+  },
+  "u_lane.u.u_gb.ph[]": {
+   "regs": 1,
+   "fanout_max": 208,
+   "k_max": 2,
+   "added": 1
+  }
+ },
+ "after_replication_captures": 120,
+ "not_fixable": {
+  "fixed source: u_lane.u.u_ski.u_head.g_bank[].u_m": 90,
+  "fixed source: u_land.u_kn.u_w.g_chunk[].u_local/data[][]": 94,
+  "fixed source: u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[].g_depth[].g_256.u_m": 1,
+  "upstream of replica cannot reach sink: u_lane.u.u_ski.u_head.mwd[]": 1
+ },
+ "residual_edge_families": [
+  {
+   "n": 94,
+   "src": "u_land.u_kn.u_w.g_chunk[].u_local/data[][]",
+   "cap": "u_land.u_kn.u_r.g_chunk[].u_local/o[]",
+   "src_macro": false,
+   "src_anch": true,
+   "cap_macro": false,
+   "cap_anch": false
+  },
+  {
+   "n": 90,
+   "src": "u_lane.u.u_ski.u_head.g_bank[].u_m",
+   "cap": "u_lane.u.u_ep.a_in[]",
+   "src_macro": true,
+   "src_anch": false,
+   "cap_macro": false,
+   "cap_anch": false
+  },
+  {
+   "n": 1,
+   "src": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[].g_depth[].g_256.u_m",
+   "cap": "u_lane.u.u_sko.l_data[]",
+   "src_macro": true,
+   "src_anch": false,
+   "cap_macro": false,
+   "cap_anch": false
+  },
+  {
+   "n": 1,
+   "src": "u_lane.u.u_ski.u_head.mwd[]",
+   "cap": "u_lane.u.u_ski.u_head.g_bank[].u_m",
+   "src_macro": false,
+   "src_anch": false,
+   "cap_macro": true,
+   "cap_anch": false
+  }
+ ],
+ "residual_diag": {
+  "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[].g_depth[].g_256.u_m -> u_lane.u.u_sko.l_data[]": [
+   {
+    "other": "u_lane.u.u_sko.l_data\\[74\\]$_DFF_P_",
+    "d": 406.3,
+    "joint_region_gap_um": -170.7,
+    "far": [
+     [
+      "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank\\[1\\].g_depth\\[1\\].g_256.u_m",
+      [
+       315.4,
+       17.3
+      ],
+      406.3
+     ],
+     [
+      "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank\\[1\\].g_depth\\[0\\].g_256.u_m",
+      [
+       267.8,
+       17.3
+      ],
+      358.8
+     ],
+     [
+      "u_land.u_nk.u_w.g_chunk\\[9\\].u_local/data\\[1\\]\\[2\\]$_DFFE_PP_",
+      [
+       102.0,
+       230.0
+      ],
+      138.0
+     ]
+    ]
+   }
+  ],
+  "u_lane.u.u_ski.u_head.mwd[] -> u_lane.u.u_ski.u_head.g_bank[].u_m": [
+   {
+    "other": "u_lane.u.u_ski.u_head.mwd\\[515\\]$_DFF_P_",
+    "d": 407.2,
+    "joint_region_gap_um": 0.3,
+    "far": [
+     [
+      "u_lane.u.u_ski.u_head.g_bank\\[8\\].u_m",
+      [
+       34.6,
+       337.0
+      ],
+      407.2
+     ],
+     [
+      "u_lane.u.u_ski.d_q\\[515\\]$_DFF_P_",
+      [
+       518.6,
+       28.4
+      ],
+      403.4
+     ],
+     [
+      "u_lane.u.u_ski.u_head.prevdata\\[515\\]$_DFF_P_",
+      [
+       332.9,
+       177.1
+      ],
+      163.8
+     ]
+    ]
+   }
+  ],
+  "u_lane.u.u_ski.u_head.g_bank[].u_m -> u_lane.u.u_ep.a_in[]": [
+   {
+    "other": "u_lane.u.u_ep.a_in\\[51\\]$_DFF_P_",
+    "d": 406.0,
+    "joint_region_gap_um": -73.3,
+    "far": [
+     [
+      "u_lane.u.u_ski.u_head.g_bank\\[0\\].u_m",
+      [
+       34.6,
+       21.6
+      ],
+      406.0
+     ],
+     [
+      "u_lane.u.u_ep.g_rb_safe.u_m.g_slice\\[6\\].forwarded\\[3\\]$_DFFE_PP_",
+      [
+       384.9,
+       114.2
+      ],
+      273.8
+     ],
+     [
+      "u_lane.u.u_ep.b_pay\\[51\\]$_DFF_P_",
+      [
+       384.9,
+       116.6
+      ],
+      271.4
+     ]
+    ]
+   },
+   {
+    "other": "u_lane.u.u_ep.a_in\\[20\\]$_DFF_P_",
+    "d": 413.8,
+    "joint_region_gap_um": -83.9,
+    "far": [
+     [
+      "u_lane.u.u_ski.u_head.g_bank\\[0\\].u_m",
+      [
+       34.6,
+       21.6
+      ],
+      413.8
+     ],
+     [
+      "u_lane.u.u_ski.u_head.g_slice\\[1\\].prev_q$_DFF_PN0_",
+      [
+       350.9,
+       346.4
+      ],
+      228.4
+     ],
+     [
+      "u_lane.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[0\\].g_256.u_m",
+      [
+       172.8,
+       73.4
+      ],
+      223.7
+     ]
+    ]
+   },
+   {
+    "other": "u_lane.u.u_ep.a_in\\[54\\]$_DFF_P_",
+    "d": 405.6,
+    "joint_region_gap_um": -73.0,
+    "far": [
+     [
+      "u_lane.u.u_ski.u_head.g_bank\\[0\\].u_m",
+      [
+       34.6,
+       21.6
+      ],
+      405.6
+     ],
+     [
+      "u_lane.u.u_ep.g_rb_safe.u_m.g_slice\\[6\\].forwarded\\[6\\]$_DFFE_PP_",
+      [
+       386.9,
+       118.8
+      ],
+      272.8
+     ],
+     [
+      "u_lane.u.u_ep.b_pay\\[54\\]$_DFF_P_",
+      [
+       385.6,
+       120.4
+      ],
+      269.8
+     ]
+    ]
+   },
+   {
+    "other": "u_lane.u.u_ep.a_in\\[55\\]$_DFF_P_",
+    "d": 409.2,
+    "joint_region_gap_um": -70.7,
+    "far": [
+     [
+      "u_lane.u.u_ski.u_head.g_bank\\[0\\].u_m",
+      [
+       34.6,
+       21.6
+      ],
+      409.2
+     ],
+     [
+      "u_lane.u.u_ski.u_head.prevdata\\[55\\]$_DFF_P_",
+      [
+       374.2,
+       349.7
+      ],
+      259.4
+     ],
+     [
+      "u_lane.u.u_ski.u_head.g_slice\\[3\\].cur_q$_DFF_PN0_",
+      [
+       365.7,
+       345.3
+      ],
+      246.7
+     ]
+    ]
+   }
+  ]
+ },
+ "residual_diag_counts": {
+  "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[].g_depth[].g_256.u_m -> u_lane.u.u_sko.l_data[]": 1,
+  "u_lane.u.u_ski.u_head.mwd[] -> u_lane.u.u_ski.u_head.g_bank[].u_m": 1,
+  "u_lane.u.u_ski.u_head.g_bank[].u_m -> u_lane.u.u_ep.a_in[]": 90
+ }
+}
