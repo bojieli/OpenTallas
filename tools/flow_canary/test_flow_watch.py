@@ -76,3 +76,16 @@ def test_shared_kit_helpers_hold_each_dies_flow_until_canary():
     # or unit-test edits into a production-flow change.
     assert watch.flow_paths(['tools/die_plan/test_core_infra.py',
                              'tools/die_plan/render.py'], spec, 's81') == []
+
+
+def test_kit_shipped_hold_rc_helpers_are_flow():
+    # FLOW-CANARY-2 (COORD 10-29): kits copy and run these hold/RC helpers (kit_modes.MM_FILES/KIT_FILES, signoff
+    # bundle IO-hold frame, droop derate); an edit to them must hold release tags like any other flow file.
+    import json
+    spec = json.loads(Path(__file__).with_name('canaries.json').read_text())
+    shipped = ['tools/orfs_hold_mm.tcl', 'tools/orfs_hold_mm.py', 'tools/die_plan/kit_modes.py',
+               'tools/die_plan/io_hold_qualification.py', 'tools/die_plan/vclk_ref.py',
+               'tools/die_plan/data_droop.py', 'tools/die_plan/core_io_reference.py']
+    for die in spec['die_plans']:
+        assert watch.flow_paths(shipped, spec, die) == sorted(shipped)
+    assert watch.flow_paths(['tools/die_plan/test_kit_modes.py', 'tools/test_orfs_hold_mm.py'], spec, 'qwen_compute') == []
