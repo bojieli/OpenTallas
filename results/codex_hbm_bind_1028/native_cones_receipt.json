@@ -1,0 +1,32 @@
+{
+  "schema": "opentallas.hbm.exclusive_native_cone_receipt.v1",
+  "cores": 156,
+  "masters": 6,
+  "source_terminal_equality": true,
+  "absorbed_combinational_cells": 4096,
+  "boundaries": {
+    "su_exp": [
+      2030
+    ],
+    "su_plain4": [
+      3470
+    ],
+    "su_pretree": [
+      1138
+    ],
+    "sfu_lane": [
+      1470
+    ],
+    "sfu_store_a": [
+      6040
+    ],
+    "sfu_store_b": [
+      7864
+    ]
+  },
+  "added_cycles": 0,
+  "scope": "DefaultOFF exact backward comb-cone grouping; original cells/ports/parameters unchanged. Only nonstate primitive outputs exclusively consumed by one current native cut are absorbed; top/shared/state/memory remain parent. Source terminal identity only; source unmapped/transport and physical gates remain open.",
+  "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-bind-0300/native_cones_r2",
+  "unit": "oth-ubuntu-2944583-1793273137",
+  "packet_sha256": "5650e9747359a56d8502bf154f49ab8f943961aea2a992fab96b4d99ba0a5116"
+}

@@ -8,7 +8,9 @@ from pathlib import Path
 import collections,copy,hashlib,json,re,sys
 root=Path(__file__).resolve().parents[2];sys.path.insert(0,str(root/'tools/die_plan'))
 import bind_elab as E,bind_compose as C
-abpath,planpath,out=map(Path,sys.argv[1:]);out.mkdir(parents=True,exist_ok=True)
+args=list(sys.argv[1:]);absorb_comb='--absorb-exclusive-comb' in args
+if absorb_comb:args.remove('--absorb-exclusive-comb')
+abpath,planpath,out=map(Path,args);out.mkdir(parents=True,exist_ok=True)
 retained=[f'sfucore_{r}.u_core.u_engine.u_memory'+s for r in ('NW','NE')for s in ('','.u_store')]
 F=E.flatten(json.loads(abpath.read_text()),'hbm_current_native_top',retain_hierarchy_ports=retained);plan=json.loads(planpath.read_text())
 slots={}
@@ -122,6 +124,37 @@ F.cells,primitive_receipt=split_cells(F.cells,primitive_splits,E.Cell)
 cells={c.path:c for c in F.cells}
 for gi,paths in glue_groups.items():
     groups[gi]['members'].extend((p,'cmd'+str(j))for j,p in enumerate(paths))
+# Optional exact backward cone ownership. State, memory, clocks, top nets and
+# shared producer outputs stay in the parent. Every output consumer must already
+# belong to one and the same cut; iterate because logic cones can be multi-level.
+comb_absorbed=[];comb_roles=collections.Counter()
+if absorb_comb:
+    owner={p:gi for gi,g in enumerate(groups) for p,_ in g['members']}
+    consumers=collections.defaultdict(set)
+    for c in F.cells:
+        for pn,bs in c.ports.items():
+            if c.dirs[pn]=='input':
+                for b in bs:
+                    if isinstance(b,int):consumers[b].add(c.path)
+    while True:
+        pending=[]
+        for c in F.cells:
+            if c.path in owner or c.kind!='glue':continue
+            if not re.match(r'(su_(NW|NE)[0-3]\.u_slice\.|sfucore_(NW|NE)\.u_core\.u_engine\.u_memory\.)',c.path):continue
+            if any(x in c.ytype.lower() for x in ('dff','latch','mem','ff','assert','assume','cover')):continue
+            outputs=[b for pn,bs in c.ports.items() if c.dirs[pn]=='output' for b in bs]
+            if not outputs or any(not isinstance(b,int) or b in topnets for b in outputs):continue
+            loads=set().union(*(consumers[b]-{c.path} for b in outputs))
+            gs={owner.get(p) for p in loads}
+            if not loads or len(gs)!=1 or None in gs:continue
+            pending.append((c.path,next(iter(gs))))
+        if not pending:break
+        for path,gi in pending:
+            owner[path]=gi
+            groups[gi]['members'].append((path,'comb'+str(comb_roles[gi])))
+            comb_roles[gi]+=1
+            comb_absorbed.append(dict(path=path,cut=groups[gi]['path']))
+
 # Recompute incidence after exact FF fragmentation.
 outside=collections.defaultdict(set)
 for c in F.cells:
@@ -198,5 +231,5 @@ for core,row in zip(cores,records):core['module']=row['module']=rename[core['mod
 (out/'compose.json').write_text(json.dumps(dict(allow_glue=True,primitive_splits=primitive_splits,cores=cores),separators=(',',':'))+'\n')
 (out/'map.json').write_text(json.dumps(dict(parts=mapping),indent=1)+'\n')
 (out/'masters.sv').write_text('`default_nettype none\n'+'\n'.join(masters.values())+'`default_nettype wire\n')
-(out/'packet.json').write_text(json.dumps(dict(cores=records,masters=list(masters),source_terminal_equality=receipt['terminal_equality'],primitive_splits=primitive_receipt,absorbed_glue_cells=sum(map(len,glue_groups.values())),added_cycles=0,note='Exact actual native members. New cut ports/masters must replace old extracted aliases and receive physical qualification; no old-kit equivalence claim.'),indent=2)+'\n')
+(out/'packet.json').write_text(json.dumps(dict(cores=records,masters=list(masters),source_terminal_equality=receipt['terminal_equality'],primitive_splits=primitive_receipt,absorbed_glue_cells=sum(map(len,glue_groups.values())),exclusive_comb_absorption=comb_absorbed,added_cycles=0,note='Exact actual native members. New cut ports/masters must replace old extracted aliases and receive physical qualification; no old-kit equivalence claim.'),indent=2)+'\n')
 print('native compounds',len(cores),'masters',len(masters),'terminal equality',receipt['terminal_equality'])
