@@ -1,0 +1,27 @@
+{
+ "crossings": 1355,
+ "parsed_max": 1355,
+ "parsed_min": 1355,
+ "dd_max_TT": {
+  "min": 140.6,
+  "p10": 194.6,
+  "median": 304.7,
+  "p90": 546.0,
+  "max": 600.7
+ },
+ "dd_min_FF": {
+  "min": 91.6,
+  "median": 210.9,
+  "max": 420.1
+ },
+ "dd_max_over_plan_skew_limit": 957,
+ "over_and_asbuilt_fail": 513,
+ "asbuilt_fail": 513,
+ "dd_max_TT_median_by_hop100": {
+  "0": 177.3,
+  "100": 214.9,
+  "200": 289.1,
+  "300": 369.7
+ },
+ "per_um_ps": 1.125
+}

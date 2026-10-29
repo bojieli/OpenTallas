@@ -1,0 +1,54 @@
+{
+ "schema": "opentallas.kv.core_freeze.v1",
+ "type": "qkd_ahub__604.8x440.64",
+ "module": "qkd_ahub",
+ "outline_um": [
+  604.8,
+  440.64
+ ],
+ "plan_sha256": "b0c808af87c594cb3b8ce052861f4730ed148502a73920280162ed707ce84e3e",
+ "pins_file": "event27/qkd_ahub_pins_r27s.json",
+ "pins_sha256": "52e350c5aaf2e8f58c5ccffae7f41df5cadd60094cafc0d73b47bd5c8d12637b",
+ "core_json_sha256": "a2fe5297bf33b1d2a1e20bd0167e46d0e3197c8d8fe7d0fae55890c0961b6064",
+ "pins": 631,
+ "plan_pins": 631,
+ "added_pins": 0,
+ "clocks": [
+  "ck"
+ ],
+ "clock_nets": {
+  "clk": "ck[0]"
+ },
+ "clock_rebind": null,
+ "resets": [
+  "rst_n"
+ ],
+ "recipe": {
+  "util": 0.6,
+  "sigmax": "M7",
+  "face_flops": true,
+  "source": "KV-CORES 10-25: macro-composed r2 (4 x ot_nhb_zh + ot_qkh_recip_leaf hard children, --hard-children qkd_ahub_hard_children.json); signals <= M7 (v3.9)"
+ },
+ "sdc_lint": "PASS (gen)",
+ "period_ps": 833.0,
+ "insertion_budget_ps": 250.0,
+ "macros": [
+  "ot_nhb_zh",
+  "ot_qkh_recip_leaf"
+ ],
+ "signal_max": "M7",
+ "flow_basis": "FLOW-1025: rcx-rc + leaf-affinity + fanout24/slew-cap-margin20 + mcmm tc/bc",
+ "head_lane_taps": false,
+ "head_strap_master": false,
+ "head_lane_s3copy": false,
+ "plan_inst": "kv3_hub_C.ahub",
+ "island_ft": [],
+ "kit_hash": "f94e1bc39e7aed8f",
+ "pins_canon_sha256": "5671fa3a8644edd47e37d35037769ea980e6a279785081684ad2edd5339589a6",
+ "source_commit": "478930de31f11b9291b10be0889b394c0d2372fb",
+ "timing_modes": {
+  "mode": "two-mode tc setup / BC hold",
+  "tt": 250.0,
+  "ff": 202.5
+ }
+}

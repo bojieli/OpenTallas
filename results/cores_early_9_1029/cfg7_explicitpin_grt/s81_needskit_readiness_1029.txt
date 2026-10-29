@@ -1,0 +1,58 @@
+NEEDS-KIT types 136 ready(all hard cores SIGNED): 30 ['dsdv_slice_lepe_mu_LP__t2', 'dsdv_slice_lepe_nh_mus_LP__t1', 'dsdv_slice_lepw_mu_LP__t2', 'dsdv_slice_lepw_mus_LP__t2', 'iqf__t1', 'ot_s81sl_kv_leaf__t1', 'ot_s81sl_kv_leaf__t2', 'ot_s81sl_kv_leaf__t3', 'ot_s81sl_kv_leaf__t4', 'ot_s81sl_kv_leaf__t5', 'phy__t1', 'seqhost__t1', 'serdes__t1', 'serdes__t12', 'serdes__t13', 'serdes__t14', 'serdes__t15', 'serdes__t16', 'serdes__t2', 'serdes__t3']
+ot_s81sl_leaf n 67 hc/type [11] types w/ all cores signed 0 top missing [('dsfd_su_t_rxsf', 67), ('ot_s81sl_ve_m', 67), ('ot_s81sl_ve_s', 67), ('ot_s81sl_vn_a', 67)]
+dsdv_slice_c1x_C n 9 hc/type [4] types w/ all cores signed 0 top missing [('ot_s81dv_xfin', 9), ('ot_s81sl_capc5r', 9), ('ot_s81sl_eg', 9), ('ot_s81sl_xrt1', 9)]
+serdes n 9 hc/type [0] types w/ all cores signed 9 top missing []
+slice_station n 9 hc/type [0] types w/ all cores signed 9 top missing []
+svc_lo_dsdv_svc_rs n 7 hc/type [2] types w/ all cores signed 0 top missing [('ot_s81c_attn_hcore', 7)]
+ot_s81sl_kv_leaf n 5 hc/type [0] types w/ all cores signed 5 top missing []
+svc_hi_dsdv_svc_rs n 5 hc/type [2] types w/ all cores signed 0 top missing [('ot_s81c_attn_hcore', 5)]
+svc_hi_dsdv_svc_pvso_entry n 2 hc/type [2] types w/ all cores signed 0 top missing [('ot_s81c_attn_hcore', 2)]
+col_h10_r0_p4 n 1 hc/type [16] types w/ all cores signed 0 top missing [('dsfd_bf_front_roots', 1), ('dsfd_cfifo_crs4', 1), ('dsfd_qbank_N', 1), ('dsfd_qbank_S', 1)]
+col_h9_r0_p1 n 1 hc/type [16] types w/ all cores signed 0 top missing [('dsfd_bf_front_roots', 1), ('dsfd_cfifo_crs4', 1), ('dsfd_qbank_N', 1), ('dsfd_qbank_S', 1)]
+col_h9_r0_p2 n 1 hc/type [16] types w/ all cores signed 0 top missing [('dsfd_bf_front_roots', 1), ('dsfd_cfifo_crs4', 1), ('dsfd_qbank_N', 1), ('dsfd_qbank_S', 1)]
+col_h9_r0_p3 n 1 hc/type [16] types w/ all cores signed 0 top missing [('dsfd_bf_front_roots', 1), ('dsfd_cfifo_crs4', 1), ('dsfd_qbank_N', 1), ('dsfd_qbank_S', 1)]
+col_h9_r0_p4 n 1 hc/type [16] types w/ all cores signed 0 top missing [('dsfd_bf_front_roots', 1), ('dsfd_cfifo_crs4', 1), ('dsfd_qbank_N', 1), ('dsfd_qbank_S', 1)]
+col_h9_r0_p5 n 1 hc/type [16] types w/ all cores signed 0 top missing [('dsfd_bf_front_roots', 1), ('dsfd_cfifo_crs4', 1), ('dsfd_qbank_N', 1), ('dsfd_qbank_S', 1)]
+col_h9_r1 n 1 hc/type [15] types w/ all cores signed 0 top missing [('dsfd_bf_front_roots', 1), ('dsfd_qbank_N', 1), ('dsfd_qbank_S', 1), ('ot_rom_4096x72_m8', 1)]
+dsdv_slice_c3x_C n 1 hc/type [4] types w/ all cores signed 0 top missing [('ot_s81dv_xfin', 1), ('ot_s81sl_capc5r', 1), ('ot_s81sl_eg', 1), ('ot_s81sl_xrt3', 1)]
+dsdv_slice_iq_C n 1 hc/type [4] types w/ all cores signed 0 top missing [('ot_s81dv_xfin', 1), ('ot_s81sl_capc5r', 1), ('ot_s81sl_eg', 1), ('ot_s81sl_xrt3', 1)]
+dsdv_slice_kv512_C n 1 hc/type [4] types w/ all cores signed 0 top missing [('ot_s81dv_xfin', 1), ('ot_s81sl_capc5r', 1), ('ot_s81sl_eg', 1), ('ot_s81sl_xrt1', 1)]
+dsdv_slice_lepe_mu_C n 1 hc/type [4] types w/ all cores signed 0 top missing [('ot_s81dv_xfin', 1), ('ot_s81sl_capc5r', 1), ('ot_s81sl_eg', 1), ('ot_s81sl_xrt1', 1)]
+dsdv_slice_lepe_mu_LP n 1 hc/type [0] types w/ all cores signed 1 top missing []
+dsdv_slice_lepe_nh_mus_C n 1 hc/type [4] types w/ all cores signed 0 top missing [('ot_s81dv_xfin', 1), ('ot_s81sl_capc5r', 1), ('ot_s81sl_eg', 1), ('ot_s81sl_xrt1', 1)]
+dsdv_slice_lepe_nh_mus_LP n 1 hc/type [0] types w/ all cores signed 1 top missing []
+dsdv_slice_lepw_mu_C n 1 hc/type [4] types w/ all cores signed 0 top missing [('ot_s81dv_xfin', 1), ('ot_s81sl_capc5r', 1), ('ot_s81sl_eg', 1), ('ot_s81sl_xrt1', 1)]
+dsdv_slice_lepw_mu_LP n 1 hc/type [0] types w/ all cores signed 1 top missing []
+dsdv_slice_lepw_mus_C n 1 hc/type [4] types w/ all cores signed 0 top missing [('ot_s81dv_xfin', 1), ('ot_s81sl_capc5r', 1), ('ot_s81sl_eg', 1), ('ot_s81sl_xrt1', 1)]
+dsdv_slice_lepw_mus_LP n 1 hc/type [0] types w/ all cores signed 1 top missing []
+eng n 1 hc/type [3] types w/ all cores signed 0 top missing [('dsdv_eng_rr_e', 1), ('dsdv_eng_rr_h0', 1)]
+iqf n 1 hc/type [0] types w/ all cores signed 1 top missing []
+phy n 1 hc/type [0] types w/ all cores signed 1 top missing []
+seqhost n 1 hc/type [0] types w/ all cores signed 1 top missing []
+svc_lo_dsdv_svc_rs_w n 1 hc/type [2] types w/ all cores signed 0 top missing [('ot_s81c_attn_hcore', 1)]
+BLOCKING cores (types blocked):
+  67 dsfd_su_t_rxsf FIX
+  67 ot_s81sl_ve_m FIX
+  67 ot_s81sl_ve_s FIX
+  67 ot_s81sl_vn_a FIX
+  67 ot_s81sl_vn_b GEOM-REQ
+  67 ot_s81sl_vs FIX
+  67 ot_s81sl_vsw NEEDS-KIT
+  67 ot_sram_1r1w_512x128_m4_r0c0 GENERATED
+  16 ot_s81dv_xfin NEEDS-KIT
+  16 ot_s81sl_capc5r NEEDS-KIT
+  16 ot_s81sl_eg KIT-PLACED
+  15 ot_s81c_attn_hcore FIX
+  14 ot_s81sl_xrt1 NEEDS-KIT
+  7 dsfd_bf_front_roots NEEDS-KIT
+  7 dsfd_qbank_N SIGNED-UNVERSIONED
+  7 dsfd_qbank_S FIX
+  7 ot_rom_4096x72_m8 GENERATED
+  7 ot_s81_cfg7_seq_bfp REVIEW
+  7 ot_s81_sstn_base566 FIX
+  7 ot_v41_bf_col NEEDS-KIT
+  7 ot_v41_rom_elem_q_qxpq_w10 NEEDS-KIT
+  6 dsfd_cfifo_crs4 NEEDS-KIT
+  2 ot_s81sl_xrt3 NEEDS-KIT
+  1 dsdv_eng_rr_e KIT-PLACED
+  1 dsdv_eng_rr_h0 KIT-PLACED

@@ -1,0 +1,22 @@
+{
+ "event": "DIE-QC-31 QC plan event delta on top of plan_event_qc30.json (claude/die-qc30-1029@a3c617aeeff)",
+ "date": "2026-10-29",
+ "nk_a0_floorplan": {
+  "choice": "V1 (die owner DIE-QC-31, COORD 07:20 recommended)",
+  "source": "QC-A0-KITS-13 estimate claude/qc-a0-kits-13-1029@b95168042 results/qc_a0_kits_13_1029/README.md s2 + nk_v1_v2_plan.png (VIEWED by DIE-QC-31)",
+  "change": "qfd_tile_nk_a0c: NODE moved from the 65-um east column to the W edge, R0 at (20.52, 688.656) with an 11.9-um pin-reg strip beside the W-face n_a/n_b/t_out/n_y pins; the 8 upper-half rawfault macros shift +60.70 um in x (columns 76.68/202.82/328.97, same 10.8-um gaps, last ends 444.31 <= 449.28); tile outline 457.9 x 1157.8 and lower half unchanged; freed slot 202.8-318.2 x 673.9-814.3 = home of the s2/s3 root stage",
+  "why": "the fail is the 2,056-bit node bus crossing the upper half (H cuts 3,378-4,682 vs NL 594-2,275; node-bus reach <=~690 um), not area (upper-half std util 7.0%); V1 removes the crossing (node t_out ~20 um); V2 can open at most 21.2 um (60 um needed, CHECKED arithmetic) and keeps the crossing",
+  "numbers": "UNCHECKED analytic except V2 arithmetic and the utilisation figures (CHECKED by QC-A0-KITS-13)",
+  "watch": "W-strip local V utilisation ~0.65-0.7 (n_a/n_b/n_y vertical runs <=~300 um); optional die pin-plan per-bit interleave",
+  "next": "GEOM REQ (plan review of the V1 floorplan) -> QC-A0-KITS re-place NK on V1 (NL anchors) -> AUTO-GEOM; parent slot/pins of qfd_tile_nk_a0c unchanged (outline unchanged) so the die plan of record (QC-IMPORT) is not touched except the NK tile view",
+  "status": "CHOSEN_PENDING_GEOM_REQ"
+ },
+ "btab_f2_clock_pin": {
+  "status": "PENDING (not adopted)",
+  "why": "QC-FIX-2's F2 routed sign-off = NOT SIGNED (intel1 qc-fix-1-1029/kits/qfd_dv_s8x_btab_f2/signoff.log 07:03: TT setup 305.76, FF hold -1.68 ps / 1 endpoint, pair skew TT/FF 65.6/60.8, DRV TT slew 88 / FF 45, DRC 1, PIN_AUDIT extra 5); the adopt condition (routed PASS) is not met, old tap 833.196 stays; re-census only after a PASS"
+ },
+ "a3_mesh_pilot_c1": {
+  "status": "FIXED in the prototype (variant K adopted)",
+  "see": "README.md section 1"
+ }
+}

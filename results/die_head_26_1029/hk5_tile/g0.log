@@ -1,0 +1,16 @@
+WARN  [types] near-duplicate types ['hd_st_n3_transit', 'hd_st_str'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['hd_spn_wshim_rx', 'hd_spn_wshim_tx'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['hd_spn_eshim_rx', 'hd_spn_eshim_tx'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [core_faces] type hd_tile: 5/5 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type hd_serdes: 2/2 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type hd_mesh: 110/110 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type hd_lep0N: 49/49 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type hd_ctl: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type hd_host: 110/110 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [geometry] type hd_host slot au: crossing ~1335 um > 3 station(s) x reach 405 (see hops)
+WARN  [geometry] type hd_host slot ad: crossing ~1335 um > 3 station(s) x reach 405 (see hops)
+WARN  [r8] R8 not checked: no as-built bus groups (BINDER2 bind.py bus_groups.json; pass --groups)
+WARN  [clock] type hd_serdes: farthest boundary point 2592 um from the tap (> 2 hops)
+WARN  [census] census coverage not run: top-down plan of a new die: no bound as-built head-die netlist in this partitioning (the bottom-up H10 die chain used a different block split and FAILED STA); census follows the first bind (G3)
+G0C per type: 21/21 types clean (G3-eligible: 21); die-level {}; reported as WARN (run --completeness)
+G0 PASS: 0 errors, 0 pending-view, 14 warnings; 21 types / 351 partitions (6 in near-duplicate groups); worst cut {'ratio': 0.0578, 'at': 'vertical@250'}, worst partition segment {'ratio': 0.3587, 'at': 'horizontal@3500:turnE5b'}; report results/die_head_26_1029/hk5_tile/g0/g0_report.json

@@ -102,6 +102,13 @@ proc tb_sinks {net} {
     foreach it [$n getITerms] {
       if {[[$it getMTerm] getIoType] ne "INPUT"} continue
       set i [$it getInst]
+      # CORES-EARLY-10 (BF G2 CTS 10-29): an integrated clock gate (ICG* CLK -> GCLK, combinational arc) is a tree
+      # node, not a sink: follow GCLK to the gated registers (as root_fclat.tcl [cg-hc]); ENA/SE are data pins.
+      # Before this, every ICG CLK was taken as a sink and clock_family failed closed (no unique active edge).
+      if {[string match "ICG*" [[$i getMaster] getName]] && [[$it getMTerm] getName] eq "CLK"} {
+        foreach o [$i getITerms] { if {[[$o getMTerm] getIoType] eq "OUTPUT" && [$o getNet] ne "NULL"} { lappend todo [$o getNet] } }
+        continue
+      }
       if {[tb_is_buf $i]} {
         foreach o [$i getITerms] { if {[[$o getMTerm] getIoType] eq "OUTPUT" && [$o getNet] ne "NULL"} { lappend todo [$o getNet] } }
       } elseif {[tb_passthru $it todo]} {

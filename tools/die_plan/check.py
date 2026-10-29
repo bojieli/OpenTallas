@@ -1406,7 +1406,7 @@ def load_core_conns(plan_dir=None, path=None):
     return json.loads(f.read_text()) if f.is_file() else {}
 
 
-def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5, per_core=None):
+def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5, per_core=None, collect=None):
     """Connectivity-aware hard-core face rule (GEOM-REVIEW face rule; COORD 10-23 PLAN-TOOL4).
 
     Every hard-core pin group (core port) that connects to a partition face or to another core / placed leaf must
@@ -1416,7 +1416,8 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5, per_core=
     port's partners between the pin's face normal and the direction from the core centre to the partner (partition
     face: the bus window centre; core / leaf: its centre); the port FAILs when the mean over its pins is < 0
     (most pins on the far side: the route wraps the core).  Cores with no known connectivity are counted
-    (unchecked) and WARNed per type."""
+    (unchecked) and WARNed per type.  `collect` (optional list, DIE-HBM-15 core_face_repin.py) receives one record per
+    scored port {type, inst, port, faces, dirs, mean}; it changes nothing else."""
     out = dict(groups=0, groups_away=0, pins=0, pins_away=0, types_away=0, cores=0, cores_unchecked=0)
     side = load_core_conns(plan_dir, conns_file)
     for tn, t in P.types.items():
@@ -1523,6 +1524,8 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5, per_core=
                 out["groups"] += 1
                 out["pins"] += len(cs)
                 out["pins_away"] += away
+                if collect is not None:
+                    collect.append(dict(type=tn, inst=ci, port=lp, faces=list(faces), dirs=dirs, mean=mean))
                 if per_core is not None:        # CLOCK-KV-R12: per-core away-pin tally (core_pins_orient.py)
                     pc = per_core.setdefault((tn, ci), [0, 0])
                     pc[0] += away

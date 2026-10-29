@@ -1,0 +1,5 @@
+KIT_PREFLIGHT FAIL issues 4
+  - clock_pin_geometry: io.tcl: clock clk_program_mem pin_size 0.024x0.192 < 0.048x0.48 (GEOM-21)
+  - macro_channels: macro column 0 x[11.016,183.84]: W vertical channel 6.696 um < 10.8
+  - macro_channels: macro column 0 x[11.016,183.84]: E vertical channel 6.672 um < 10.8
+  - macro_instances: placed macro u_fcore.u_fcore.calendar.store: component 'u_fcore' is neither an instance nor a generate block of module ot_hbm_idx_qctl_static__fcore (path from ot_hbm_idx_qctl_static)
