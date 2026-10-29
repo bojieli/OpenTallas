@@ -1,0 +1,11 @@
+# Reduce final control-stage locality candidate
+
+The corrected-island C20 reduce route finished with TT setup -111.35 ps/935 endpoints, FF hold -1.36 ps/1 endpoint and 2,235 TT slew violations. Its worst TT path is final `pipe_tag[7][3]` to lane15 state: a shared tag drives 16 lane decoders through large loaded buffers and long nets (two route-buffer delays 205/202 ps). Clock checks passed. This is a data/control distribution failure; the historical failed verdict remains unchanged.
+
+`ot_hgi_coll_reduce_static.LOCAL_CTRL=1` duplicates the existing final tag/valid register edge beside each of the sixteen lane state decoders. Each copy reads stage6 on the same control-clock edge as original stage7, with identical reset. Copies carry `keep` so synthesis cannot merge them into the global broadcast again. The default stays 0; ports, arithmetic, state update order and latency remain unchanged. Cost: 80 extra control flip-flops, zero cycles. The original global stage remains for global control bookkeeping. No kit recipe or default physical profile adopts this candidate.
+
+The mechanism proof reads the actual modified RTL, adds observation outputs only to proof copies, and discards unrelated arithmetic/state cones. Temporal induction proves all eighty local control bits equal the original final-stage bits on every edge (induction depth8). It uses no payload/state assumptions; the reset-initialized control state is zero. The retained formal log is `formal.log`.
+
+Full control/state lockstep also instantiated the actual RTL in both modes for4,098 edges, including repeated resets and arbitrary legal/illegal commands. Unchanged floating-point arithmetic was represented by a shared deterministic latency-eight provider: this is a control/state comparison, not a new numerical floating-point qualification. All publication data/valid/fault outputs matched. A one-stage-wrong tag replica mutant produced2,797 mismatches and failed. Logs `good.log`/`bad.log`; runner `run.sh`.
+
+No P&R, timing closure, sign-off or throughput gain is claimed. Next: current-plan source profile, review local replica placements, measure synthesis retention/area and trial timing before adoption. Ring-ag's separate QID-to-carry-control broadcast miss is not fixed here.
