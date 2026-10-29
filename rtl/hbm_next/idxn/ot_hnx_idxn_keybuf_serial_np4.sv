@@ -36,6 +36,7 @@ module ot_hnx_idxn_keybuf_serial_np4(
     end
    end
    if((pre_v||replay_v)&&!loaded)ingest_fault<=1;
+   if(clear&&(ingest_v||pre_v||replay_v))ingest_fault<=1;
   end
  end
  assign fault=ingest_fault|(|lane_fault);

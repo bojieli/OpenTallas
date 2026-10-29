@@ -63,6 +63,25 @@ class KeyProgramme(unittest.TestCase):
         a['cohorts'][0]['groups'][0]['path'][2]['node']='hub0_node1'
         with self.assertRaisesRegex(ValueError,'named distributed path node'):compile_allocation(a)
 
+    def test_recurring_clear_uses_explicit_controller_identity_and_both_receivers(self):
+        a=fixture();a['prefill_controls']=[]
+        for hub,consumers in enumerate((('hb_idx__s_SW','hb_idx__s_NW'),('hb_idx__s_SE','hb_idx__s_NE'))):
+            a['prefill_controls'].append(dict(hub=hub,source_lane=4*hub,target=80+4*hub,run_at=0,
+                run_base=16,run_count=6,run_arg_mask=0,run_arg_value=0,allocation_id='SYNTHETIC_EXCLUSIVE_KEY',
+                previous_query_retired_at=-1,receivers=[dict(consumer=c,capture_edges=1,
+                    path=[dict(node=f'hub{hub}_clear_node{p}',cycles=1) for p in range(4)]) for c in consumers]))
+        result=compile_allocation(a)
+        self.assertTrue(result['recurring_prefill'])
+        self.assertEqual(len(result['prefill_controls']),4)
+        self.assertTrue(all(x['clear_commit_edge']==5 for x in result['prefill_controls']))
+        for bad in ('identity','missing_cohort','late','previous_query'):
+            b=copy.deepcopy(a);c=b['prefill_controls'][0]
+            if bad=='identity':c['run_base']=15
+            if bad=='missing_cohort':c['receivers'].pop()
+            if bad=='late':c['run_at']=404
+            if bad=='previous_query':c['previous_query_retired_at']=5
+            with self.subTest(bad=bad),self.assertRaises(ValueError):compile_allocation(b)
+
     def test_rejects_alias_late_go_bad_slot_or_early_query(self):
         for mutation in ('alias','late','slot','query','missing','programme_overlap','descriptor_overlap','capacity'):
             a=fixture()

@@ -94,9 +94,49 @@ def compile_allocation(a):
             identity=(segment['node'],edge)
             if identity in node_events:raise ValueError('source packets collide at named distributed path node')
             node_events.add(identity)
+    controls=[]
+    if 'prefill_controls' in a:
+        requested=a['prefill_controls']
+        if sorted(x['hub'] for x in requested)!=[0,1]:raise ValueError('one explicit KEY clear owner per hub required')
+        ctl_nodes={}
+        for control in requested:
+            hub=control['hub'];lane=control['source_lane'];run=control['run_at']
+            if type(lane) is not int or lane//4!=hub:raise ValueError('KEY clear owner is outside its hub')
+            if control['target']!=80+lane or control['run_base']!=descriptor_base or control['run_count']!=6:
+                raise ValueError('KEY clear identity differs from actual controller target/allocated descriptors')
+            if not control.get('allocation_id'):raise ValueError('explicit exclusive KEY programme allocation identity required')
+            if any(type(control[x]) is not int or not 0<=control[x]<256 for x in ('run_arg_mask','run_arg_value')):
+                raise ValueError('explicit KEY run argument mask/value required')
+            if type(run) is not int or run<0:raise ValueError('explicit controller run presentation edge required')
+            previous=control['previous_query_retired_at']
+            if type(previous) is not int or previous< -1:raise ValueError('explicit previous-query retirement edge required')
+            expected={'hb_idx__s_SW','hb_idx__s_NW'} if hub==0 else {'hb_idx__s_SE','hb_idx__s_NE'}
+            if {r['consumer'] for r in control['receivers']}!=expected or len(control['receivers'])!=2:
+                raise ValueError('KEY clear must reach both distinct cohort receivers')
+            for receiver in control['receivers']:
+                path=receiver['path'];capture=receiver['capture_edges']
+                if not path or any(type(n.get('cycles')) is not int or n['cycles']<1 or not n.get('node') for n in path):
+                    raise ValueError('KEY clear needs a named positive-cycle physical path')
+                if type(capture) is not int or capture<1:raise ValueError('KEY clear receiver capture cost required')
+                edge=run
+                for segment in path:
+                    edge+=segment['cycles'];identity=(segment['node'],edge)
+                    if identity in node_events:raise ValueError('KEY clear collides with data at a distributed node')
+                    if identity in ctl_nodes and ctl_nodes[identity]!=hub:raise ValueError('two KEY controls collide at a node')
+                    ctl_nodes[identity]=hub
+                commit=edge+capture
+                first=min(t['arrival_edge'] for t in timeline if t['consumer']==receiver['consumer'])
+                if commit>=first:raise ValueError('KEY clear does not commit strictly before first data')
+                if control['previous_query_retired_at']>=commit:raise ValueError('KEY clear overlaps previous INDEX query')
+                controls.append(dict(hub=hub,source=f'svg_NW{lane}',target=control['target'],
+                    allocation_id=control['allocation_id'],run_base=descriptor_base,run_count=6,
+                    run_arg_mask=control['run_arg_mask'],run_arg_value=control['run_arg_value'],run_at=run,
+                    consumer=receiver['consumer'],path=path,capture_edges=capture,clear_commit_edge=commit,
+                    first_data_edge=first,control_row=255,control_lane=7,cookie='c1ea',epoch_bits=16,
+                    new_rail_bits=0,new_data_pipeline_edges=0,frame_start_clear=False))
     last=max(t['arrival_edge'] for t in timeline)
     if query<=last+1:raise ValueError('query begins before all distinct role SRAM writes commit')
-    return dict(schema='opentallas.hbm_idx.key_cohort_programme.v1',verdict='SOURCE_CANDIDATE',installable=False,programme_words=[f'{w:064x}' for w in pwords],programme_word_count=len(pwords),programme_base=programme_base,descriptor_base=descriptor_base,pipe_phase=phase,source_groups=groups,ingest_timeline=sorted(timeline,key=lambda x:(x['edge'],x['physical_lane'])),last_arrival_edge=last,query_start_at=query,unused_prefill_slack=query-last-1,HBM_deadlines='caller supplied, not measured by compiler',claim=dict(native=False,physical=False,token=False))
+    return dict(prefill_controls=controls,recurring_prefill=bool(controls),schema='opentallas.hbm_idx.key_cohort_programme.v1',verdict='SOURCE_CANDIDATE',installable=False,programme_words=[f'{w:064x}' for w in pwords],programme_word_count=len(pwords),programme_base=programme_base,descriptor_base=descriptor_base,pipe_phase=phase,source_groups=groups,ingest_timeline=sorted(timeline,key=lambda x:(x['edge'],x['physical_lane'])),last_arrival_edge=last,query_start_at=query,unused_prefill_slack=query-last-1,HBM_deadlines='caller supplied, not measured by compiler',claim=dict(native=False,physical=False,token=False))
 
 
 def main():
