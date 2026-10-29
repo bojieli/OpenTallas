@@ -1,0 +1,60 @@
+{
+  "default_off_wrapper_byte_identical": true,
+  "bundle_f12_body_canonical_after_prefix_alias_normalization": true,
+  "files": [
+    {
+      "path": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "sha256": "9cac6497544e2f925fb3cbcf213b46114521024eea068c51204caf59484a23fe"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/native_f12/ot_hdc_fastfp_lat_native_f12.sv",
+      "sha256": "e90f84170595f1760af908649325c40261f112859d7b1fd3a7239e9f8afeadf3"
+    },
+    {
+      "path": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+    },
+    {
+      "path": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "sha256": "3344a8fa53e5dbea7f2039f6f0cd31a20334fe76778d594df8035e9e55446f74"
+    },
+    {
+      "path": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "sha256": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58"
+    },
+    {
+      "path": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv",
+      "sha256": "0d6020a2d0f75cb9a29a8ff21ab7917c96ce8296a8d233651a0d4b2ba89133bf"
+    },
+    {
+      "path": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_f12.sv",
+      "sha256": "69300b54772123ec1bb4c4a6295bef424f4afae3583cede36008026bf1a971da"
+    }
+  ],
+  "profiles": {
+    "minimal_4_4_0": {
+      "MLAT": 4,
+      "ALAT": 4,
+      "WCOPY": 0,
+      "defines": [
+        "OT_HBM_NATIVE_F12_ADD4"
+      ],
+      "added_cycles": 0
+    },
+    "candidate_5_4_1": {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 1,
+      "defines": [
+        "OT_HBM_NATIVE_F12_ADD4",
+        "OT_HBM_NATIVE_F12_MUL5"
+      ],
+      "added_cycles": {
+        "each_multiply": 1,
+        "bank_write_visibility": 1,
+        "each_add": 0
+      }
+    }
+  },
+  "status": "Source candidates only; actual hierarchy/profile/caller/token/physical gates required"
+}
