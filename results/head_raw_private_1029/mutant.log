@@ -1,0 +1,4 @@
+RAW_EXPORT_PAIR_MISMATCH cycle=6 d=1 q=1 export=0 gold=1
+[4583000] %Fatal: tb_raw_export.sv:21: Assertion failed in tb_raw_export: raw export copy added delay or changed the native wavefront
+%Error: /srv/opentallas-scratch2/claude/codex-head-raw-private-1029/rtl/test/meso/raw_export/tb_raw_export.sv:21: Verilog $stop
+Aborting...

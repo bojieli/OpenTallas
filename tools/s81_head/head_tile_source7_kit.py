@@ -14,6 +14,7 @@ import gen_phys
 from head_start_reset_aliases import patch_rtl
 from head_tile_relay_kit import install
 from head_count_strap_sites import apply as count_strap_sites
+from head_start_raw_private import prepare_plan,patch_rtl as private_raw_rtl
 
 def build(source,out):
  source,out=Path(source).resolve(),Path(out).resolve()
@@ -30,22 +31,30 @@ def build(source,out):
  # sites. Stamp the existing HEAD pin planner before kit generation, so the
  # netlist's8 count bits have physical pins and remain in the port-bind census.
  plan,strap_sites=count_strap_sites(plan,path,ROOT,types={'hd_tile'})
+ plan,private_report=prepare_plan(plan,{'hd_tile'})
  t=plan['partition_types']['hd_tile']
  candidate=path.with_name('source_plan_statuscopy.json');candidate.write_text(json.dumps(plan,indent=1)+'\n')
  kits=gen_phys.write_phys(plan,out,ROOT,types=['hd_tile'],trial=True,plan_path=candidate,landing=side)
  kit=Path(kits[0]);wrapper=out/'_rtl'/f"{t['module']}.sv"
  rows=t.get('reset_start_raw_exports',[])
  text=patch_rtl(wrapper.read_text(),rows)
+ text,private_rtl_report=private_raw_rtl(text,t)
  if '.CONTROL_STATUS_COPY(1)' not in text or 'FWD_COPY(1)' not in text:raise ValueError('generated physical source lost a required opt-in')
  wrapper.write_text(text);(kit/'rtl'/wrapper.name).write_text(text)
  # Source-only helpers reproduce the already-qualified existing-stage layout.
- receipt=install(kit,ROOT/'results/head_tile_source_1029/targets_copy_result.tsv',ROOT/'tools/s81_head/head_tile_banks.tcl')
+ targets=out/'head_tile_relay_targets_private.tsv'
+ base=(ROOT/'results/head_tile_source_1029/targets_copy_result.tsv').read_text()
+ for row in rows:
+  if not row.get('existing_port'):
+   x,y=row['xy_um'];base+=f"{row['instance']}/export_q$_DFF_P_\t{x}\t{y}\n"
+ targets.write_text(base)
+ receipt=install(kit,targets,ROOT/'tools/s81_head/head_tile_banks.tcl')
  manifest=json.load(open(out/'_rtl/gen_clock_landings.json'))
  rings=manifest['reset_placements']['hd_tile'];ff=sum(v.get('status_copy_flops',0) for v in rings.values() if isinstance(v,dict))
  if ff!=8:raise ValueError('status-copy price must be exactly8extraFF for this SOURCE7 tile, got'+str(ff))
  report=dict(source_plan_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),source_sidecar_sha256=hashlib.sha256(side_path.read_bytes()).hexdigest(),
   retained_export_copy=True,raw_reset_exports=len(rows),added_status_flops=ff,added_cycles=0,clock_source_budget_ps=dict(TT=525.,FF=425.25),
-  corridor=receipt,count_strap_sites=strap_sites,physical_clock_assignment='NOT RUN: actual new sinks required before CTS',route_qualified=False)
+  corridor=receipt,count_strap_sites=strap_sites,private_raw_exports=private_report,private_raw_rtl=private_rtl_report,physical_clock_assignment='NOT RUN: actual new sinks required before CTS',route_qualified=False)
  (out/'source7_tile_receipt.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
  return kit
 

@@ -70,7 +70,7 @@ def install(kit, targets, banks):
             "uplevel #0 {source /work/head_tile_banks.tcl}\n"
             "uplevel #0 {source /work/head_tile_relays.tcl}\n" + re + "\n")
     release.write_text(rt.rstrip() + post)
-    copies = sum("g_export.g_copy" in r[0] for r in rows)
+    copies = sum("g_export.g_copy" in r[0] or "/export_q" in r[0] for r in rows)
     metadata = dict(targeted_flops=len(rows), existing_relay_flops=len(rows)-copies,
                     parallel_state_copies=copies, added_cycles=0,
                     source_hook="face_flops.tcl: after face/landing placements, before GPL-only ring-bank reservation",
