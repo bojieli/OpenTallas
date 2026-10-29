@@ -128,11 +128,12 @@ mk inv {getName u_st/inv getMaster m_inv getPlacementStatus PLACED getBBox bb ge
 mk it_dff_q {getMTerm t_out getNet qn getInst dff}
 mk it_inv_a {getMTerm t_in getNet qn getInst inv}
 mk it_inv_y {getMTerm t_out getNet st_o getInst inv}
-mk qn {getITerms {it_dff_q it_inv_a}}
-mk st_o {getITerms {@STDRV@}}
+mk qn {getName qn getITerms {it_dff_q it_inv_a}}
+mk st_o {getName @STNAME@ getITerms {@STDRV@}}
 mk it_st_d {getMTerm t_out getNet st_o getInst dff}
-mk blk {getInsts {dff inv}}
-proc blk_findNet {n} { if {$n eq "st_o"} { return st_o }; return NULL }
+mk blk {getInsts {dff inv} getNets {qn st_o @XNET@}}
+mk st_x {getName v/st_o getITerms {}}
+proc blk_findNet {n} { if {$n eq "@STNAME@"} { return st_o }; return NULL }
 rename blk blk_core
 proc blk {m args} { if {$m eq "findNet"} { return [blk_findNet {*}$args] }; return [blk_core $m {*}$args] }
 set ff_blk blk; set ff_dbu 1000
@@ -148,9 +149,10 @@ puts "LOC [dict get $::P(dff) Location] [dict get $::P(dff) PlacementStatus]"
 """
 
 
-def _run_lp(tmp_path, sx, qmaster="m_dff", inv=True):
+def _run_lp(tmp_path, sx, qmaster="m_dff", inv=True, stname="st_o", xnet=""):
     _tclsh()
     script = (MOCK.replace("@QMASTER@", qmaster).replace("@STDRV@", "it_inv_y" if inv else "it_st_d")
+              .replace("@STNAME@", stname).replace("@XNET@", xnet)
               .replace("@RES@", str(tmp_path)).replace("@SX@", str(sx)).replace("@LP@", str(LP_TCL)))
     return _tcl(tmp_path, script)
 
@@ -192,3 +194,16 @@ def test_status_point_in_core_margin_slides_inside_core(tmp_path):
 def test_status_point_outside_core_by_more_than_window_fails_closed(tmp_path):
     r = _run_lp(tmp_path, 110.0, inv=False)     # window 107.84..112.16 entirely outside: no slide, still an error
     assert r.returncode != 0 and "no legal nonoverlapping" in r.stderr
+
+
+def test_kit_rtl_prefixed_status_net_is_found(tmp_path):
+    """DIE-KV-32 10-29 (KV hroot 3_3_place_gp 'OT_CLAND missing actual status net landing_ready_ft0_i'): the flattened
+    --kit-rtl netlist names the status net u_bound.<net>; exactly one hierarchical match is placed as before."""
+    r = _run_lp(tmp_path, 50.0, stname="u_bound.st_o")
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert _loc(r)[2] == "FIRM"
+
+
+def test_ambiguous_prefixed_status_net_fails_closed(tmp_path):
+    r = _run_lp(tmp_path, 50.0, stname="u_bound.st_o", xnet="st_x")
+    assert r.returncode != 0 and "ambiguous status net st_o" in r.stderr
