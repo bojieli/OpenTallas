@@ -1,0 +1,15 @@
+{
+ "verdict": "PASS",
+ "rc": 0,
+ "top_params": [
+  "MIF",
+  "1"
+ ],
+ "errors": [],
+ "command": [
+  "yosys",
+  "-q",
+  "-s",
+  "/work/rtl_lint.ys"
+ ]
+}
