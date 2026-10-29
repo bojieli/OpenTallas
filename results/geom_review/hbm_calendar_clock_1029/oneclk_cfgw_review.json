@@ -1,0 +1,14 @@
+{
+ "verdict": "PASS-COND ONE GEN+PLACE ONLY",
+ "image": "results/hbm_calendar_1029/cfg_w/proposal.png",
+ "viewed": true,
+ "findings": [
+  "W cfg256 aligns to SRAM write face; guide512existingFF in clearWchannel meets17.28umhalo edge",
+  "216x112.32 currentSRAM geometry and twoNclockislands preserved",
+  "555pin candidate removes only clk_cap/clk_mem/clk_tgt aliases from viewed558pinproposal; one-root source exactness qualified at833ps by0f0c51e62",
+  "No clock timing qualification; actual3234sinkcensus and native fullclock geometry required before CTS/GRT",
+  "Actual parent calendar reset graft remains open"
+ ],
+ "source": "0f0c51e62",
+ "trial_prepare": "609cee7bf"
+}
