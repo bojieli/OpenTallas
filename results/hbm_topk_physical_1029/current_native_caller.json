@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.hbm.topk_wpipe_native_caller.v1",
+  "instance": "hb_idx__link",
+  "source_sha256": "c0eadd4c5f5fb9cdba414d72ac7ba149fbc5700e8017f62e47b52ab173efc4aa",
+  "candidate_sha256": "5c082f89a6785bd1c0dea6a5b996956f2918dcf0952ea88581938eab20920386",
+  "native_clock_expression": "hb_ckgen__pll_stream[0:0]",
+  "native_clock_mem_expression": "{hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0]}",
+  "exact_clock_bit_equality": true,
+  "other_callers_unchanged": true,
+  "all_port_expressions_unchanged": true,
+  "parameter": {
+    "WRITE_PIPE_STAGES": 2
+  },
+  "approved_source_revision": "e1c9d6e0d",
+  "source_files": {
+    "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv": "a95d85e5a5f9822f2e7063b3c34b4c65312810a0a433c5527231da6a56703e97",
+    "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv": "2b0367e7da1118f5441caac4cb8d2b976ea4389256d3b8f2aa87450241317b92"
+  },
+  "added_internal_write_visibility_cycles": 2,
+  "added_outer_input_output_cycles": 0,
+  "status": "CANDIDATE_ONLY_PRODUCTION_ENABLE_HELD",
+  "obligations": [
+    "actual native caller bit proof",
+    "two SRAM visibility edges in model/compiler",
+    "current source bind",
+    "new physical profile and review before placement",
+    "TT setup FF hold signoff"
+  ]
+}
