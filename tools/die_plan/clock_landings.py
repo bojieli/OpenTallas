@@ -987,7 +987,11 @@ class Landings:
                 logic = [f"    ot_dp_landing_root #(.SETTLE({role[1]})) u_cland_origin (.clk(clk), .rst_raw_n({raw}), "
                          ".start(cland_start), .start_d(cland_start_d));", f"    assign cland_start_raw = {raw};"]
             else:
-                logic = [f"    ot_dp_landing_root #(.SETTLE({role[1]})) u_cland_origin (.clk(clk), .rst_raw_n({raw}), .start(cland_start));"]
+                # DIE-HEAD-31: parameter form has no FSTART face flop; the root's start_d (a driven OUTPUT) is still bound to
+                # its own declared net so every master port is connected (port_bind_gate nested check), no tie/exemption
+                logic = ["    wire cland_start_d;  // D-side of cland_start (no FSTART face flop in the parameter form)",
+                         f"    ot_dp_landing_root #(.SETTLE({role[1]})) u_cland_origin (.clk(clk), .rst_raw_n({raw}), "
+                         ".start(cland_start), .start_d(cland_start_d));"]
         if cat.get("relay_tx"):
             self.reset_placements[tn]["count_origin"]["relay_tx"] = True
             extra.append("    output wire cland_rstart_out")

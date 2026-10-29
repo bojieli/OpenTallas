@@ -364,7 +364,8 @@ B_BODY = ("module b_mod (\n input wire clk,\n input wire [4:0] y // whole bundle
 def test_count_aligned_form_emits_ca_ring_origin_and_start_pins():
     p, t = ca_vehicle(edge_fall=True); c = Landings(p, t)
     aa = c.type_rtl("A", A_BODY); bb = c.type_rtl("B", B_BODY)
-    assert "ot_dp_landing_root #(.SETTLE(40)) u_cland_origin (.clk(clk), .rst_raw_n(rst_n_t0), .start(cland_start));" in aa
+    assert ("ot_dp_landing_root #(.SETTLE(40)) u_cland_origin (.clk(clk), .rst_raw_n(rst_n_t0), .start(cland_start), "
+            ".start_d(cland_start_d));") in aa and "    wire cland_start_d;" in aa
     assert "assign cland_fstart_out_x = cland_start;" in aa and "output wire cland_fstart_out_x" in aa
     assert "ot_dp_clk_landing_ca #(.W(5), .DEPTH(4), .K(-2)) u_cland_y" in bb
     assert ".t_rst_n(cland_fstart_in_y), .clk(clk), .rst_n(cland_start), .d(y), .q(cland_y)" in bb
@@ -589,3 +590,19 @@ def test_explicit_origin_start_face_role_matches_emitted_instance():
     assert c.land_slots('T')['buses'][START_PIN_IN]['origin']=='u_cland_origin_t1'
     c.ca_type['T']['role']=('root',74)
     assert c.land_slots('T') is None
+
+
+def test_parameter_form_root_binds_every_master_port_nested_check():
+    """DIE-HEAD-31 (COORD 14:3x): the parameter-form root origin bound .start_d too (same class as start_stage_emit's
+    u_st_b0.start_d); main port_bind_gate.nested_check on the emitted type RTL finds 0 unbound root ports."""
+    import port_bind_gate as PBG
+    from pathlib import Path
+    p, t = ca_vehicle(edge_fall=True); c = Landings(p, t)
+    aa = c.type_rtl("A", A_BODY)
+    rtl = (Path(__file__).resolve().parents[2] / "rtl" / "common" / "ot_dp_clk_landing_ca.sv").read_text()
+    lib = rtl + "\n" + (Path(__file__).resolve().parents[2] / "rtl" / "common" / "ot_dp_clk_landing.sv").read_text()
+    r = PBG.nested_check({"a.sv": aa}, [lib])
+    assert not [u for u in r["examples"].get("unbound", []) if "u_cland_origin" in u], r
+    old = aa.replace(", .start_d(cland_start_d)", "")
+    r = PBG.nested_check({"a.sv": old}, [lib])
+    assert "a_mod.u_cland_origin (ot_dp_landing_root).start_d" in r["examples"].get("unbound", []), r
