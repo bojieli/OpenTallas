@@ -1,0 +1,15 @@
+type	synth	lec	cp	place	auto_geom
+hd_host	RUNNING	pending	-	RUNNING	-
+hd_mesh	RUNNING	pending	-	RUNNING	-
+hd_lep0N	BLOCKED	-	-	BLOCKED: preflight module_closure ot_s81hd_lep_pair has no view (HEAD-013)	-
+hd_spn	exit 0	EQUIVALENT	cp=18425	RUNNING	-
+hd_spn_end	exit 0	EQUIVALENT	cp=16462	RUNNING	-
+hd_st_k5	exit 0	EQUIVALENT	cp=6371	exit 0	fill=FAIL(0.0019) empty=FAIL(0.9954) pin_reg_p90=FAIL(353.24) pin_reg_max=FAIL(362.34) clock_reach=FAIL(391.79) r2r=ok(379.03)
+hd_st_m	exit 0	EQUIVALENT	cp=794	exit 0	aspect=FAIL(11.133) fill=FAIL(0.0017) empty=FAIL(0.9946) pin_reg_p90=FAIL(363.41) pin_reg_max=FAIL(363.72) r2r=ok(381.91)
+hd_st_n3_transit	exit 0	EQUIVALENT	cp=5326	exit 0	aspect=FAIL(3.036) fill=FAIL(0.0031) empty=FAIL(0.9926) pin_reg_p90=FAIL(363.41) pin_reg_max=FAIL(363.94) clock_reach=FAIL(349.77) r2r=ok(371.52)
+hd_st_n3_turn	exit 0	EQUIVALENT	cp=6574	exit 0	aspect=FAIL(2.157) fill=FAIL(0.0031) empty=FAIL(0.9909) pin_reg_p90=FAIL(314.64) pin_reg_max=FAIL(357.78) clock_reach=FAIL(342.73) r2r=ok(377.95)
+hd_st_n4	exit 0	EQUIVALENT	cp=10947	RUNNING	-
+hd_st_str	exit 0	EQUIVALENT	cp=5352	exit 0	aspect=FAIL(3.036) fill=FAIL(0.0031) empty=FAIL(0.9921) pin_reg_p90=FAIL(363.41) pin_reg_max=FAIL(363.81) clock_reach=FAIL(415.81) r2r=ok(381.46)
+hd_st_turn	exit 0	EQUIVALENT	cp=8359	RUNNING	-
+hd_turn_a	exit 0	EQUIVALENT	cp=2281	exit 0	aspect=FAIL(3.9) fill=FAIL(0.0064) empty=FAIL(0.944) pin_reg_p90=FAIL(243.83) pin_reg_max=FAIL(275.92) clock_reach=FAIL(280.12) r2r=ok(280.69)
+hd_turn_b	exit 0	EQUIVALENT	cp=1721	exit 0	aspect=FAIL(4.05) fill=FAIL(0.0053) empty=FAIL(0.9619) pin_reg_p90=FAIL(328.76) pin_reg_max=FAIL(344.64) clock_reach=FAIL(383.96) r2r=ok(339.8)
