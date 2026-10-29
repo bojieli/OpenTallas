@@ -1,0 +1,47 @@
+# DIE-HEAD-19 (2026-10-28): ring-clock windows for the 187 non-hd_tile HEAD crossings (ESTIMATE BEFORE BUILD)
+
+Base: claude/die-head-18-1028@2876d8b484 (--ca-ring tool, approved, not yet on main). Runs: intel2:/srv/opentallas-scratch2/claude/die-head-19.
+
+## 1. Inventory: no routed kit exists for any non-tile HEAD type (CHECKED)
+Fleet search (intel1/intel2/epyc2 scratch, `*/asap7/dp_hd_*`) + autopilot OWNERS.tsv (tick 20:24):
+- NEEDS-KIT (no kit at all): hd_ctl, hd_host, hd_lep0N, hd_mesh, hd_serdes (owner LAND-HEAD, default S81-HEAD).
+- FIX (old 10-25 kits failed geometry review, withdrawn): hd_spn, hd_spn_end, hd_st_k5/m/n3/n4/str/turn, hd_turn_a/b.
+- Only routed artifacts were the 10-25 proto hd_turn_a/b and hd_st_m runs on epyc1 (retired, ODBs deleted; old form,
+  insertion 199 TT). hd_lep0N has synth-only dirs (die-head-8, codex-head-die-1028-0405). No measured ring clock is
+  obtainable today for any of the 14 non-tile types.
+
+## 2. Per-crossing windows (fixed K, the current DH18 plan; shared gate model, st_max_2, clock_variation table)
+Shift of a crossing = reader(td) - [fwd_out(ts) + fwd_wire + fclk_in(td)] (ca_ring_fn).  The gate needs
+margin_lo + shift_lo >= 100 and margin_hi - shift_hi >= T/8 (104.2, guard).  For two unbuilt types define the centre
+m = reader - fclk_in - fwd_out, with tile-like intra spreads (R 38 + C 23 + F 4 TT; 34+21+4 FF) and wire [0,1].
+Full table: windows.txt (spec_win.py on ports_r1.json.gz = DH18 r1 gate rows).  Tight rows (TT / FF):
+| pair | ports | window |
+|---|---|---|
+| hd_spn -> hd_spn | 32 | m in [-2, 438] / [-33, 493]  (the HEAD gate worst rows, lo 136.0 / hi 574.9) |
+| hd_turn_b -> hd_tile | 12 | fwd_out(hd_turn_b) late <= 354 / 328 |
+| hd_spn_end -> hd_spn | 4 | m >= -51 / -76 |
+| all other 47 pair kinds | 139 | m >= -100 ... -810, m <= +882 ... +1883 |
+The declared model (common latency on both sides) is m = 0, F + C = L.  The tile form measured in DH18 gives m = +124 TT.
+
+## 3. WHAT-IF gate runs (main gate code path, --ca-ring with ASSUMED non-tile values; hd_tile = DH18 measured)
+FF values = TT x 0.817 (tile ratio, UNCHECKED for other types).  CHECKED own (run_gate.sh, whatif/*.log):
+| form for all 14 non-tile types (TT fwd_out / fclk_in / reader) | TT lo/hi | FF lo/hi | fails |
+|---|---|---|---|
+| A tile form (DH18 measured values) | 227.0 / 417.1 | 226.2 / 503.9 | 0 PASS |
+| D centre (165-170 / 150-170 / 525-565) | 284.2 / 324.9 | 288.9 / 421.7 | 0 PASS |
+| F fwd_buffer export at clk source (45-60 / 150-200 / 525-565) | 394.2 / 204.9 | 378.8 / 323.7 | 0 PASS |
+| B writer late (295-300 / 290-310 / 525-565, m = -55) | 50.0 / 594.9 | 93.3 / 642.3 | TT 12 (spn->spn 8, spn_end->spn 4), FF 8 |
+| C writer early (40-45 / 40-60 / 525-565, m = +445) | 409.2 / 89.9 | 391.0 / 229.8 | TT 4 spn->spn (hi + guard) |
+| E deep-tap export (fwd_out at a leaf tap 500-545 / 150-200 / 525-565) | -90.8 / 659.9 | -17.5 / 695.4 | TT 66 (24 slot_read), FF 33 |
+The window algebra predicts A/B/C exactly (227.0/417.1, 50.0, 89.9), so the table in section 2 is the gate's own bound.
+Finding: the forwarded-clock EXPORT POINT decides it.  The DH9 one-entry plan exports fclk_out_* of the non-tile types
+from regional tap nets (clk_t1..clk_t44, die-head-9 plan_one_entry_450.one_entry.json; hd_tile legacy clk_t3 measured
+195 TT, i.e. form A).  If a type's export tap sits near its leaf insertion, the HEAD gate fails on up to 66 crossings (E).  With fclk_out at the clk source (FLOW-GEN-2 landing_export_form=fwd_buffer) every row
+passes with >=205 TT margin (F).  hd_spn is the only type with a two-sided window (fclk_in + fwd_out in ~[110, 550] TT
+when its reader sits at the common latency 545).
+
+## 4. Status of steps 1/2
+cts0114 @343c8080d0 and die-head-18-regspine @71b0f83f9d (approved 20:04/20:20) and die-head-18 @2876d8b484 are NOT on
+main at 20:49 (origin/main 6afcb8f45).  The hd_tile kit is a patched diagnostic lineage (DH9 mk_kit.py with kit-local
+generator fixes + DH11 band patch + DH14 pre_cts/cts_post workarounds), so the clean regeneration must run the
+compose -> latency -> ft adapter -> reserve -> gen.py phys chain on main with reg_spine + fwd_buffer + tap_passthrough.
