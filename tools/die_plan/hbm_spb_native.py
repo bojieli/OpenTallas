@@ -44,7 +44,7 @@ def materialize(binder, typ, bound):
     graph = repo_file(binder.base, cfg['graph'])
     contract = repo_file(binder.base, cfg['contract'])
     c = json.loads(contract.read_text())
-    if (c.get('schema') != 'opentallas.hbm.spb0_contract.v1' or
+    if (c.get('schema') not in ('opentallas.hbm.spb0_contract.v1','opentallas.hbm.spb0_contract.v2') or
             (c.get('lk_instance'), c.get('ep_instance'), c.get('lk_module'), c.get('ep_module')) !=
             ('u_lk_S0', 'u_ep_S0', 'ot_pdie_serdes', 'hfd_ep_static')):
         raise ValueError('SPB native requires exact reviewed endpoint modules/instances')
@@ -59,7 +59,7 @@ def materialize(binder, typ, bound):
     if sorted(c['partitions']) != expected_parts:
         raise ValueError('SPB native graph contract must cover exact physical replicas')
     text = Path(bound).read_text()
-    for inst, master in ((c['lk_instance'], c['lk_module']), (c['ep_instance'], c['ep_module'])):
+    for inst, master in ((c.get('lk_bound_instance',c['lk_instance']), c['lk_module']), (c.get('ep_bound_instance',c['ep_instance']), c['ep_module'])):
         # Check actual bound master, not only the graph's declared module.
         if not re.search(r'\b' + re.escape(master) + r'\s*(?:#\(.*?\)\s*)?' + re.escape(inst) + r'\s*\(', text, re.S):
             raise ValueError(f'SPB actual bound instance/master mismatch: {inst}/{master}')
