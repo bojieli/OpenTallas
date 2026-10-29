@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-26 06:21 PDT by CLAUDE coordinator)
 
-Snapshot 2026-10-29 10:20 PDT: signed types S81 4/171 HEAD 0/16 QC 0/68 KV 0/40 HBM 0/49; hard cores 15/52, 2/3, 4/9(+1), 4/31, 0/210. 0 new sign-offs 11 h. FROZEN: KV (event26a), HEAD (hk5), S81 (plan_s13r2 + s81_g03c2; only real-view die STA left). QC strict bind PASS -> PG + mesh + GRT0 next. HBM plan of record d16k; owner ASK open (DMA RR80 pad, VM a122). CLOSURE-LIST 115 rows, 18 closed + 2 WONTFIX. Local root 86% (Codex worktrees <24 h old; prune when idle 24 h).
+Snapshot 2026-10-29 11:21 PDT: signed types S81 4/171 HEAD 0/16 QC 0/68 KV 0/40 HBM 0/49; hard cores 15/52, 2/3, 4/9(+1), 4/31, 0/210. 0 new sign-offs 12 h. FROZEN: KV (event26a), HEAD (hk5), S81 (plan_s13r2 + s81_g03c2; only real-view die STA left). QC PG one grid per net; clock prebuild blocked on M8 tracks (control live). HBM plan of record d16k; owner ASK open (DMA RR80 pad, VM a122). CLOSURE-LIST 117 rows, 18 closed + 2 WONTFIX.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
