@@ -1,0 +1,11000 @@
+{
+ "banks": [
+  "hcb_NE0",
+  "hcb_NE1",
+  "hcb_NE2",
+  "hcb_NE3",
+  "hcb_NE4",
+  "hcb_NE5",
+  "hcb_NE6",
+  "hcb_NE7",
+  "hcb_NW0",
+  "hcb_NW1",
+  "hcb_NW2",
+  "hcb_NW3",
+  "hcb_NW4",
+  "hcb_NW5",
+  "hcb_NW6",
+  "hcb_NW7"
+ ],
+ "pair_cores": [
+  {
+   "inst": "hcb_NE0.ot_hbm_hc_bank128_pair0",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1093,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE0.ot_hbm_hc_bank128_pair1",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1093,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE0.ot_hbm_hc_bank128_pair2",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1093,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE0.ot_hbm_hc_bank128_pair3",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1093,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE0.ot_hbm_hc_bank128_pair4",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1093,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE0.ot_hbm_hc_bank128_pair5",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1093,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE0.ot_hbm_hc_bank128_pair6",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1093,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE0.ot_hbm_hc_bank128_pair7",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1093,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE1.ot_hbm_hc_bank128_pair0",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE1.ot_hbm_hc_bank128_pair1",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE1.ot_hbm_hc_bank128_pair2",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE1.ot_hbm_hc_bank128_pair3",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE1.ot_hbm_hc_bank128_pair4",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE1.ot_hbm_hc_bank128_pair5",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE1.ot_hbm_hc_bank128_pair6",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE1.ot_hbm_hc_bank128_pair7",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE2.ot_hbm_hc_bank128_pair0",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE2.ot_hbm_hc_bank128_pair1",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE2.ot_hbm_hc_bank128_pair2",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE2.ot_hbm_hc_bank128_pair3",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE2.ot_hbm_hc_bank128_pair4",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE2.ot_hbm_hc_bank128_pair5",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE2.ot_hbm_hc_bank128_pair6",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE2.ot_hbm_hc_bank128_pair7",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE3.ot_hbm_hc_bank128_pair0",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE3.ot_hbm_hc_bank128_pair1",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE3.ot_hbm_hc_bank128_pair2",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE3.ot_hbm_hc_bank128_pair3",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE3.ot_hbm_hc_bank128_pair4",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE3.ot_hbm_hc_bank128_pair5",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE3.ot_hbm_hc_bank128_pair6",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE3.ot_hbm_hc_bank128_pair7",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE4.ot_hbm_hc_bank128_pair0",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE4.ot_hbm_hc_bank128_pair1",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE4.ot_hbm_hc_bank128_pair2",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE4.ot_hbm_hc_bank128_pair3",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE4.ot_hbm_hc_bank128_pair4",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE4.ot_hbm_hc_bank128_pair5",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE4.ot_hbm_hc_bank128_pair6",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE4.ot_hbm_hc_bank128_pair7",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE5.ot_hbm_hc_bank128_pair0",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE5.ot_hbm_hc_bank128_pair1",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE5.ot_hbm_hc_bank128_pair2",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE5.ot_hbm_hc_bank128_pair3",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE5.ot_hbm_hc_bank128_pair4",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE5.ot_hbm_hc_bank128_pair5",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE5.ot_hbm_hc_bank128_pair6",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE5.ot_hbm_hc_bank128_pair7",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE6.ot_hbm_hc_bank128_pair0",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE6.ot_hbm_hc_bank128_pair1",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE6.ot_hbm_hc_bank128_pair2",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE6.ot_hbm_hc_bank128_pair3",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE6.ot_hbm_hc_bank128_pair4",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE6.ot_hbm_hc_bank128_pair5",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE6.ot_hbm_hc_bank128_pair6",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE6.ot_hbm_hc_bank128_pair7",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE7.ot_hbm_hc_bank128_pair0",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE7.ot_hbm_hc_bank128_pair1",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE7.ot_hbm_hc_bank128_pair2",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE7.ot_hbm_hc_bank128_pair3",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE7.ot_hbm_hc_bank128_pair4",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE7.ot_hbm_hc_bank128_pair5",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE7.ot_hbm_hc_bank128_pair6",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NE7.ot_hbm_hc_bank128_pair7",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW0.ot_hbm_hc_bank128_pair0",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1093,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW0.ot_hbm_hc_bank128_pair1",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1093,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW0.ot_hbm_hc_bank128_pair2",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1093,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW0.ot_hbm_hc_bank128_pair3",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1093,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW0.ot_hbm_hc_bank128_pair4",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1093,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW0.ot_hbm_hc_bank128_pair5",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1093,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW0.ot_hbm_hc_bank128_pair6",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1093,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW0.ot_hbm_hc_bank128_pair7",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1093,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW1.ot_hbm_hc_bank128_pair0",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW1.ot_hbm_hc_bank128_pair1",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW1.ot_hbm_hc_bank128_pair2",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW1.ot_hbm_hc_bank128_pair3",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW1.ot_hbm_hc_bank128_pair4",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW1.ot_hbm_hc_bank128_pair5",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW1.ot_hbm_hc_bank128_pair6",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW1.ot_hbm_hc_bank128_pair7",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW2.ot_hbm_hc_bank128_pair0",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW2.ot_hbm_hc_bank128_pair1",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW2.ot_hbm_hc_bank128_pair2",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW2.ot_hbm_hc_bank128_pair3",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW2.ot_hbm_hc_bank128_pair4",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW2.ot_hbm_hc_bank128_pair5",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW2.ot_hbm_hc_bank128_pair6",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW2.ot_hbm_hc_bank128_pair7",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW3.ot_hbm_hc_bank128_pair0",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW3.ot_hbm_hc_bank128_pair1",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW3.ot_hbm_hc_bank128_pair2",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW3.ot_hbm_hc_bank128_pair3",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW3.ot_hbm_hc_bank128_pair4",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW3.ot_hbm_hc_bank128_pair5",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW3.ot_hbm_hc_bank128_pair6",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW3.ot_hbm_hc_bank128_pair7",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW4.ot_hbm_hc_bank128_pair0",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW4.ot_hbm_hc_bank128_pair1",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW4.ot_hbm_hc_bank128_pair2",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW4.ot_hbm_hc_bank128_pair3",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW4.ot_hbm_hc_bank128_pair4",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW4.ot_hbm_hc_bank128_pair5",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW4.ot_hbm_hc_bank128_pair6",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW4.ot_hbm_hc_bank128_pair7",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW5.ot_hbm_hc_bank128_pair0",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW5.ot_hbm_hc_bank128_pair1",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW5.ot_hbm_hc_bank128_pair2",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW5.ot_hbm_hc_bank128_pair3",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW5.ot_hbm_hc_bank128_pair4",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW5.ot_hbm_hc_bank128_pair5",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW5.ot_hbm_hc_bank128_pair6",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW5.ot_hbm_hc_bank128_pair7",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW6.ot_hbm_hc_bank128_pair0",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW6.ot_hbm_hc_bank128_pair1",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW6.ot_hbm_hc_bank128_pair2",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW6.ot_hbm_hc_bank128_pair3",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW6.ot_hbm_hc_bank128_pair4",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW6.ot_hbm_hc_bank128_pair5",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW6.ot_hbm_hc_bank128_pair6",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW6.ot_hbm_hc_bank128_pair7",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW7.ot_hbm_hc_bank128_pair0",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW7.ot_hbm_hc_bank128_pair1",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW7.ot_hbm_hc_bank128_pair2",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW7.ot_hbm_hc_bank128_pair3",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW7.ot_hbm_hc_bank128_pair4",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW7.ot_hbm_hc_bank128_pair5",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW7.ot_hbm_hc_bank128_pair6",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  },
+  {
+   "inst": "hcb_NW7.ot_hbm_hc_bank128_pair7",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "members": 7,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "fault": [
+     "output",
+     2
+    ],
+    "go": [
+     "input",
+     1
+    ],
+    "lane_valid": [
+     "input",
+     16
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "square": [
+     "input",
+     16
+    ],
+    "sum_in": [
+     "input",
+     512
+    ],
+    "sum_out": [
+     "output",
+     512
+    ],
+    "weight_addr": [
+     "input",
+     10
+    ],
+    "weight_read": [
+     "input",
+     1
+    ],
+    "weight_we0": [
+     "input",
+     1
+    ],
+    "weight_we1": [
+     "input",
+     1
+    ],
+    "write_addr": [
+     "input",
+     10
+    ],
+    "write_data": [
+     "input",
+     512
+    ],
+    "x_addr": [
+     "input",
+     7
+    ],
+    "x_read": [
+     "input",
+     1
+    ],
+    "x_write": [
+     "input",
+     1
+    ]
+   },
+   "pins": 1605,
+   "noncontiguous": {}
+  }
+ ],
+ "splits": [
+  {
+   "member": "hcb_NE0.u_c.u_b.$procdff$71771",
+   "fragments": [
+    [
+     "hcb_NE0.u_c.u_b.$procdff$71771.__hc128_0",
+     512
+    ],
+    [
+     "hcb_NE0.u_c.u_b.$procdff$71771.__hc128_1",
+     512
+    ],
+    [
+     "hcb_NE0.u_c.u_b.$procdff$71771.__hc128_2",
+     512
+    ],
+    [
+     "hcb_NE0.u_c.u_b.$procdff$71771.__hc128_3",
+     512
+    ],
+    [
+     "hcb_NE0.u_c.u_b.$procdff$71771.__hc128_4",
+     512
+    ],
+    [
+     "hcb_NE0.u_c.u_b.$procdff$71771.__hc128_5",
+     512
+    ],
+    [
+     "hcb_NE0.u_c.u_b.$procdff$71771.__hc128_6",
+     512
+    ],
+    [
+     "hcb_NE0.u_c.u_b.$procdff$71771.__hc128_7",
+     512
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NE0.u_c.u_b.$procdff$71772",
+   "fragments": [
+    [
+     "hcb_NE0.u_c.u_b.$procdff$71772.__hc128_0",
+     256
+    ],
+    [
+     "hcb_NE0.u_c.u_b.$procdff$71772.__hc128_1",
+     256
+    ],
+    [
+     "hcb_NE0.u_c.u_b.$procdff$71772.__hc128_2",
+     256
+    ],
+    [
+     "hcb_NE0.u_c.u_b.$procdff$71772.__hc128_3",
+     256
+    ],
+    [
+     "hcb_NE0.u_c.u_b.$procdff$71772.__hc128_4",
+     256
+    ],
+    [
+     "hcb_NE0.u_c.u_b.$procdff$71772.__hc128_5",
+     256
+    ],
+    [
+     "hcb_NE0.u_c.u_b.$procdff$71772.__hc128_6",
+     256
+    ],
+    [
+     "hcb_NE0.u_c.u_b.$procdff$71772.__hc128_7",
+     256
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NE1.u_c.u_b.$procdff$71771",
+   "fragments": [
+    [
+     "hcb_NE1.u_c.u_b.$procdff$71771.__hc128_0",
+     512
+    ],
+    [
+     "hcb_NE1.u_c.u_b.$procdff$71771.__hc128_1",
+     512
+    ],
+    [
+     "hcb_NE1.u_c.u_b.$procdff$71771.__hc128_2",
+     512
+    ],
+    [
+     "hcb_NE1.u_c.u_b.$procdff$71771.__hc128_3",
+     512
+    ],
+    [
+     "hcb_NE1.u_c.u_b.$procdff$71771.__hc128_4",
+     512
+    ],
+    [
+     "hcb_NE1.u_c.u_b.$procdff$71771.__hc128_5",
+     512
+    ],
+    [
+     "hcb_NE1.u_c.u_b.$procdff$71771.__hc128_6",
+     512
+    ],
+    [
+     "hcb_NE1.u_c.u_b.$procdff$71771.__hc128_7",
+     512
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NE1.u_c.u_b.$procdff$71772",
+   "fragments": [
+    [
+     "hcb_NE1.u_c.u_b.$procdff$71772.__hc128_0",
+     256
+    ],
+    [
+     "hcb_NE1.u_c.u_b.$procdff$71772.__hc128_1",
+     256
+    ],
+    [
+     "hcb_NE1.u_c.u_b.$procdff$71772.__hc128_2",
+     256
+    ],
+    [
+     "hcb_NE1.u_c.u_b.$procdff$71772.__hc128_3",
+     256
+    ],
+    [
+     "hcb_NE1.u_c.u_b.$procdff$71772.__hc128_4",
+     256
+    ],
+    [
+     "hcb_NE1.u_c.u_b.$procdff$71772.__hc128_5",
+     256
+    ],
+    [
+     "hcb_NE1.u_c.u_b.$procdff$71772.__hc128_6",
+     256
+    ],
+    [
+     "hcb_NE1.u_c.u_b.$procdff$71772.__hc128_7",
+     256
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NE2.u_c.u_b.$procdff$71771",
+   "fragments": [
+    [
+     "hcb_NE2.u_c.u_b.$procdff$71771.__hc128_0",
+     512
+    ],
+    [
+     "hcb_NE2.u_c.u_b.$procdff$71771.__hc128_1",
+     512
+    ],
+    [
+     "hcb_NE2.u_c.u_b.$procdff$71771.__hc128_2",
+     512
+    ],
+    [
+     "hcb_NE2.u_c.u_b.$procdff$71771.__hc128_3",
+     512
+    ],
+    [
+     "hcb_NE2.u_c.u_b.$procdff$71771.__hc128_4",
+     512
+    ],
+    [
+     "hcb_NE2.u_c.u_b.$procdff$71771.__hc128_5",
+     512
+    ],
+    [
+     "hcb_NE2.u_c.u_b.$procdff$71771.__hc128_6",
+     512
+    ],
+    [
+     "hcb_NE2.u_c.u_b.$procdff$71771.__hc128_7",
+     512
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NE2.u_c.u_b.$procdff$71772",
+   "fragments": [
+    [
+     "hcb_NE2.u_c.u_b.$procdff$71772.__hc128_0",
+     256
+    ],
+    [
+     "hcb_NE2.u_c.u_b.$procdff$71772.__hc128_1",
+     256
+    ],
+    [
+     "hcb_NE2.u_c.u_b.$procdff$71772.__hc128_2",
+     256
+    ],
+    [
+     "hcb_NE2.u_c.u_b.$procdff$71772.__hc128_3",
+     256
+    ],
+    [
+     "hcb_NE2.u_c.u_b.$procdff$71772.__hc128_4",
+     256
+    ],
+    [
+     "hcb_NE2.u_c.u_b.$procdff$71772.__hc128_5",
+     256
+    ],
+    [
+     "hcb_NE2.u_c.u_b.$procdff$71772.__hc128_6",
+     256
+    ],
+    [
+     "hcb_NE2.u_c.u_b.$procdff$71772.__hc128_7",
+     256
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NE3.u_c.u_b.$procdff$71771",
+   "fragments": [
+    [
+     "hcb_NE3.u_c.u_b.$procdff$71771.__hc128_0",
+     512
+    ],
+    [
+     "hcb_NE3.u_c.u_b.$procdff$71771.__hc128_1",
+     512
+    ],
+    [
+     "hcb_NE3.u_c.u_b.$procdff$71771.__hc128_2",
+     512
+    ],
+    [
+     "hcb_NE3.u_c.u_b.$procdff$71771.__hc128_3",
+     512
+    ],
+    [
+     "hcb_NE3.u_c.u_b.$procdff$71771.__hc128_4",
+     512
+    ],
+    [
+     "hcb_NE3.u_c.u_b.$procdff$71771.__hc128_5",
+     512
+    ],
+    [
+     "hcb_NE3.u_c.u_b.$procdff$71771.__hc128_6",
+     512
+    ],
+    [
+     "hcb_NE3.u_c.u_b.$procdff$71771.__hc128_7",
+     512
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NE3.u_c.u_b.$procdff$71772",
+   "fragments": [
+    [
+     "hcb_NE3.u_c.u_b.$procdff$71772.__hc128_0",
+     256
+    ],
+    [
+     "hcb_NE3.u_c.u_b.$procdff$71772.__hc128_1",
+     256
+    ],
+    [
+     "hcb_NE3.u_c.u_b.$procdff$71772.__hc128_2",
+     256
+    ],
+    [
+     "hcb_NE3.u_c.u_b.$procdff$71772.__hc128_3",
+     256
+    ],
+    [
+     "hcb_NE3.u_c.u_b.$procdff$71772.__hc128_4",
+     256
+    ],
+    [
+     "hcb_NE3.u_c.u_b.$procdff$71772.__hc128_5",
+     256
+    ],
+    [
+     "hcb_NE3.u_c.u_b.$procdff$71772.__hc128_6",
+     256
+    ],
+    [
+     "hcb_NE3.u_c.u_b.$procdff$71772.__hc128_7",
+     256
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NE4.u_c.u_b.$procdff$71771",
+   "fragments": [
+    [
+     "hcb_NE4.u_c.u_b.$procdff$71771.__hc128_0",
+     512
+    ],
+    [
+     "hcb_NE4.u_c.u_b.$procdff$71771.__hc128_1",
+     512
+    ],
+    [
+     "hcb_NE4.u_c.u_b.$procdff$71771.__hc128_2",
+     512
+    ],
+    [
+     "hcb_NE4.u_c.u_b.$procdff$71771.__hc128_3",
+     512
+    ],
+    [
+     "hcb_NE4.u_c.u_b.$procdff$71771.__hc128_4",
+     512
+    ],
+    [
+     "hcb_NE4.u_c.u_b.$procdff$71771.__hc128_5",
+     512
+    ],
+    [
+     "hcb_NE4.u_c.u_b.$procdff$71771.__hc128_6",
+     512
+    ],
+    [
+     "hcb_NE4.u_c.u_b.$procdff$71771.__hc128_7",
+     512
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NE4.u_c.u_b.$procdff$71772",
+   "fragments": [
+    [
+     "hcb_NE4.u_c.u_b.$procdff$71772.__hc128_0",
+     256
+    ],
+    [
+     "hcb_NE4.u_c.u_b.$procdff$71772.__hc128_1",
+     256
+    ],
+    [
+     "hcb_NE4.u_c.u_b.$procdff$71772.__hc128_2",
+     256
+    ],
+    [
+     "hcb_NE4.u_c.u_b.$procdff$71772.__hc128_3",
+     256
+    ],
+    [
+     "hcb_NE4.u_c.u_b.$procdff$71772.__hc128_4",
+     256
+    ],
+    [
+     "hcb_NE4.u_c.u_b.$procdff$71772.__hc128_5",
+     256
+    ],
+    [
+     "hcb_NE4.u_c.u_b.$procdff$71772.__hc128_6",
+     256
+    ],
+    [
+     "hcb_NE4.u_c.u_b.$procdff$71772.__hc128_7",
+     256
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NE5.u_c.u_b.$procdff$71771",
+   "fragments": [
+    [
+     "hcb_NE5.u_c.u_b.$procdff$71771.__hc128_0",
+     512
+    ],
+    [
+     "hcb_NE5.u_c.u_b.$procdff$71771.__hc128_1",
+     512
+    ],
+    [
+     "hcb_NE5.u_c.u_b.$procdff$71771.__hc128_2",
+     512
+    ],
+    [
+     "hcb_NE5.u_c.u_b.$procdff$71771.__hc128_3",
+     512
+    ],
+    [
+     "hcb_NE5.u_c.u_b.$procdff$71771.__hc128_4",
+     512
+    ],
+    [
+     "hcb_NE5.u_c.u_b.$procdff$71771.__hc128_5",
+     512
+    ],
+    [
+     "hcb_NE5.u_c.u_b.$procdff$71771.__hc128_6",
+     512
+    ],
+    [
+     "hcb_NE5.u_c.u_b.$procdff$71771.__hc128_7",
+     512
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NE5.u_c.u_b.$procdff$71772",
+   "fragments": [
+    [
+     "hcb_NE5.u_c.u_b.$procdff$71772.__hc128_0",
+     256
+    ],
+    [
+     "hcb_NE5.u_c.u_b.$procdff$71772.__hc128_1",
+     256
+    ],
+    [
+     "hcb_NE5.u_c.u_b.$procdff$71772.__hc128_2",
+     256
+    ],
+    [
+     "hcb_NE5.u_c.u_b.$procdff$71772.__hc128_3",
+     256
+    ],
+    [
+     "hcb_NE5.u_c.u_b.$procdff$71772.__hc128_4",
+     256
+    ],
+    [
+     "hcb_NE5.u_c.u_b.$procdff$71772.__hc128_5",
+     256
+    ],
+    [
+     "hcb_NE5.u_c.u_b.$procdff$71772.__hc128_6",
+     256
+    ],
+    [
+     "hcb_NE5.u_c.u_b.$procdff$71772.__hc128_7",
+     256
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NE6.u_c.u_b.$procdff$71771",
+   "fragments": [
+    [
+     "hcb_NE6.u_c.u_b.$procdff$71771.__hc128_0",
+     512
+    ],
+    [
+     "hcb_NE6.u_c.u_b.$procdff$71771.__hc128_1",
+     512
+    ],
+    [
+     "hcb_NE6.u_c.u_b.$procdff$71771.__hc128_2",
+     512
+    ],
+    [
+     "hcb_NE6.u_c.u_b.$procdff$71771.__hc128_3",
+     512
+    ],
+    [
+     "hcb_NE6.u_c.u_b.$procdff$71771.__hc128_4",
+     512
+    ],
+    [
+     "hcb_NE6.u_c.u_b.$procdff$71771.__hc128_5",
+     512
+    ],
+    [
+     "hcb_NE6.u_c.u_b.$procdff$71771.__hc128_6",
+     512
+    ],
+    [
+     "hcb_NE6.u_c.u_b.$procdff$71771.__hc128_7",
+     512
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NE6.u_c.u_b.$procdff$71772",
+   "fragments": [
+    [
+     "hcb_NE6.u_c.u_b.$procdff$71772.__hc128_0",
+     256
+    ],
+    [
+     "hcb_NE6.u_c.u_b.$procdff$71772.__hc128_1",
+     256
+    ],
+    [
+     "hcb_NE6.u_c.u_b.$procdff$71772.__hc128_2",
+     256
+    ],
+    [
+     "hcb_NE6.u_c.u_b.$procdff$71772.__hc128_3",
+     256
+    ],
+    [
+     "hcb_NE6.u_c.u_b.$procdff$71772.__hc128_4",
+     256
+    ],
+    [
+     "hcb_NE6.u_c.u_b.$procdff$71772.__hc128_5",
+     256
+    ],
+    [
+     "hcb_NE6.u_c.u_b.$procdff$71772.__hc128_6",
+     256
+    ],
+    [
+     "hcb_NE6.u_c.u_b.$procdff$71772.__hc128_7",
+     256
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NE7.u_c.u_b.$procdff$71771",
+   "fragments": [
+    [
+     "hcb_NE7.u_c.u_b.$procdff$71771.__hc128_0",
+     512
+    ],
+    [
+     "hcb_NE7.u_c.u_b.$procdff$71771.__hc128_1",
+     512
+    ],
+    [
+     "hcb_NE7.u_c.u_b.$procdff$71771.__hc128_2",
+     512
+    ],
+    [
+     "hcb_NE7.u_c.u_b.$procdff$71771.__hc128_3",
+     512
+    ],
+    [
+     "hcb_NE7.u_c.u_b.$procdff$71771.__hc128_4",
+     512
+    ],
+    [
+     "hcb_NE7.u_c.u_b.$procdff$71771.__hc128_5",
+     512
+    ],
+    [
+     "hcb_NE7.u_c.u_b.$procdff$71771.__hc128_6",
+     512
+    ],
+    [
+     "hcb_NE7.u_c.u_b.$procdff$71771.__hc128_7",
+     512
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NE7.u_c.u_b.$procdff$71772",
+   "fragments": [
+    [
+     "hcb_NE7.u_c.u_b.$procdff$71772.__hc128_0",
+     256
+    ],
+    [
+     "hcb_NE7.u_c.u_b.$procdff$71772.__hc128_1",
+     256
+    ],
+    [
+     "hcb_NE7.u_c.u_b.$procdff$71772.__hc128_2",
+     256
+    ],
+    [
+     "hcb_NE7.u_c.u_b.$procdff$71772.__hc128_3",
+     256
+    ],
+    [
+     "hcb_NE7.u_c.u_b.$procdff$71772.__hc128_4",
+     256
+    ],
+    [
+     "hcb_NE7.u_c.u_b.$procdff$71772.__hc128_5",
+     256
+    ],
+    [
+     "hcb_NE7.u_c.u_b.$procdff$71772.__hc128_6",
+     256
+    ],
+    [
+     "hcb_NE7.u_c.u_b.$procdff$71772.__hc128_7",
+     256
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NW0.u_c.u_b.$procdff$71771",
+   "fragments": [
+    [
+     "hcb_NW0.u_c.u_b.$procdff$71771.__hc128_0",
+     512
+    ],
+    [
+     "hcb_NW0.u_c.u_b.$procdff$71771.__hc128_1",
+     512
+    ],
+    [
+     "hcb_NW0.u_c.u_b.$procdff$71771.__hc128_2",
+     512
+    ],
+    [
+     "hcb_NW0.u_c.u_b.$procdff$71771.__hc128_3",
+     512
+    ],
+    [
+     "hcb_NW0.u_c.u_b.$procdff$71771.__hc128_4",
+     512
+    ],
+    [
+     "hcb_NW0.u_c.u_b.$procdff$71771.__hc128_5",
+     512
+    ],
+    [
+     "hcb_NW0.u_c.u_b.$procdff$71771.__hc128_6",
+     512
+    ],
+    [
+     "hcb_NW0.u_c.u_b.$procdff$71771.__hc128_7",
+     512
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NW0.u_c.u_b.$procdff$71772",
+   "fragments": [
+    [
+     "hcb_NW0.u_c.u_b.$procdff$71772.__hc128_0",
+     256
+    ],
+    [
+     "hcb_NW0.u_c.u_b.$procdff$71772.__hc128_1",
+     256
+    ],
+    [
+     "hcb_NW0.u_c.u_b.$procdff$71772.__hc128_2",
+     256
+    ],
+    [
+     "hcb_NW0.u_c.u_b.$procdff$71772.__hc128_3",
+     256
+    ],
+    [
+     "hcb_NW0.u_c.u_b.$procdff$71772.__hc128_4",
+     256
+    ],
+    [
+     "hcb_NW0.u_c.u_b.$procdff$71772.__hc128_5",
+     256
+    ],
+    [
+     "hcb_NW0.u_c.u_b.$procdff$71772.__hc128_6",
+     256
+    ],
+    [
+     "hcb_NW0.u_c.u_b.$procdff$71772.__hc128_7",
+     256
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NW1.u_c.u_b.$procdff$71771",
+   "fragments": [
+    [
+     "hcb_NW1.u_c.u_b.$procdff$71771.__hc128_0",
+     512
+    ],
+    [
+     "hcb_NW1.u_c.u_b.$procdff$71771.__hc128_1",
+     512
+    ],
+    [
+     "hcb_NW1.u_c.u_b.$procdff$71771.__hc128_2",
+     512
+    ],
+    [
+     "hcb_NW1.u_c.u_b.$procdff$71771.__hc128_3",
+     512
+    ],
+    [
+     "hcb_NW1.u_c.u_b.$procdff$71771.__hc128_4",
+     512
+    ],
+    [
+     "hcb_NW1.u_c.u_b.$procdff$71771.__hc128_5",
+     512
+    ],
+    [
+     "hcb_NW1.u_c.u_b.$procdff$71771.__hc128_6",
+     512
+    ],
+    [
+     "hcb_NW1.u_c.u_b.$procdff$71771.__hc128_7",
+     512
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NW1.u_c.u_b.$procdff$71772",
+   "fragments": [
+    [
+     "hcb_NW1.u_c.u_b.$procdff$71772.__hc128_0",
+     256
+    ],
+    [
+     "hcb_NW1.u_c.u_b.$procdff$71772.__hc128_1",
+     256
+    ],
+    [
+     "hcb_NW1.u_c.u_b.$procdff$71772.__hc128_2",
+     256
+    ],
+    [
+     "hcb_NW1.u_c.u_b.$procdff$71772.__hc128_3",
+     256
+    ],
+    [
+     "hcb_NW1.u_c.u_b.$procdff$71772.__hc128_4",
+     256
+    ],
+    [
+     "hcb_NW1.u_c.u_b.$procdff$71772.__hc128_5",
+     256
+    ],
+    [
+     "hcb_NW1.u_c.u_b.$procdff$71772.__hc128_6",
+     256
+    ],
+    [
+     "hcb_NW1.u_c.u_b.$procdff$71772.__hc128_7",
+     256
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NW2.u_c.u_b.$procdff$71771",
+   "fragments": [
+    [
+     "hcb_NW2.u_c.u_b.$procdff$71771.__hc128_0",
+     512
+    ],
+    [
+     "hcb_NW2.u_c.u_b.$procdff$71771.__hc128_1",
+     512
+    ],
+    [
+     "hcb_NW2.u_c.u_b.$procdff$71771.__hc128_2",
+     512
+    ],
+    [
+     "hcb_NW2.u_c.u_b.$procdff$71771.__hc128_3",
+     512
+    ],
+    [
+     "hcb_NW2.u_c.u_b.$procdff$71771.__hc128_4",
+     512
+    ],
+    [
+     "hcb_NW2.u_c.u_b.$procdff$71771.__hc128_5",
+     512
+    ],
+    [
+     "hcb_NW2.u_c.u_b.$procdff$71771.__hc128_6",
+     512
+    ],
+    [
+     "hcb_NW2.u_c.u_b.$procdff$71771.__hc128_7",
+     512
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NW2.u_c.u_b.$procdff$71772",
+   "fragments": [
+    [
+     "hcb_NW2.u_c.u_b.$procdff$71772.__hc128_0",
+     256
+    ],
+    [
+     "hcb_NW2.u_c.u_b.$procdff$71772.__hc128_1",
+     256
+    ],
+    [
+     "hcb_NW2.u_c.u_b.$procdff$71772.__hc128_2",
+     256
+    ],
+    [
+     "hcb_NW2.u_c.u_b.$procdff$71772.__hc128_3",
+     256
+    ],
+    [
+     "hcb_NW2.u_c.u_b.$procdff$71772.__hc128_4",
+     256
+    ],
+    [
+     "hcb_NW2.u_c.u_b.$procdff$71772.__hc128_5",
+     256
+    ],
+    [
+     "hcb_NW2.u_c.u_b.$procdff$71772.__hc128_6",
+     256
+    ],
+    [
+     "hcb_NW2.u_c.u_b.$procdff$71772.__hc128_7",
+     256
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NW3.u_c.u_b.$procdff$71771",
+   "fragments": [
+    [
+     "hcb_NW3.u_c.u_b.$procdff$71771.__hc128_0",
+     512
+    ],
+    [
+     "hcb_NW3.u_c.u_b.$procdff$71771.__hc128_1",
+     512
+    ],
+    [
+     "hcb_NW3.u_c.u_b.$procdff$71771.__hc128_2",
+     512
+    ],
+    [
+     "hcb_NW3.u_c.u_b.$procdff$71771.__hc128_3",
+     512
+    ],
+    [
+     "hcb_NW3.u_c.u_b.$procdff$71771.__hc128_4",
+     512
+    ],
+    [
+     "hcb_NW3.u_c.u_b.$procdff$71771.__hc128_5",
+     512
+    ],
+    [
+     "hcb_NW3.u_c.u_b.$procdff$71771.__hc128_6",
+     512
+    ],
+    [
+     "hcb_NW3.u_c.u_b.$procdff$71771.__hc128_7",
+     512
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NW3.u_c.u_b.$procdff$71772",
+   "fragments": [
+    [
+     "hcb_NW3.u_c.u_b.$procdff$71772.__hc128_0",
+     256
+    ],
+    [
+     "hcb_NW3.u_c.u_b.$procdff$71772.__hc128_1",
+     256
+    ],
+    [
+     "hcb_NW3.u_c.u_b.$procdff$71772.__hc128_2",
+     256
+    ],
+    [
+     "hcb_NW3.u_c.u_b.$procdff$71772.__hc128_3",
+     256
+    ],
+    [
+     "hcb_NW3.u_c.u_b.$procdff$71772.__hc128_4",
+     256
+    ],
+    [
+     "hcb_NW3.u_c.u_b.$procdff$71772.__hc128_5",
+     256
+    ],
+    [
+     "hcb_NW3.u_c.u_b.$procdff$71772.__hc128_6",
+     256
+    ],
+    [
+     "hcb_NW3.u_c.u_b.$procdff$71772.__hc128_7",
+     256
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NW4.u_c.u_b.$procdff$71771",
+   "fragments": [
+    [
+     "hcb_NW4.u_c.u_b.$procdff$71771.__hc128_0",
+     512
+    ],
+    [
+     "hcb_NW4.u_c.u_b.$procdff$71771.__hc128_1",
+     512
+    ],
+    [
+     "hcb_NW4.u_c.u_b.$procdff$71771.__hc128_2",
+     512
+    ],
+    [
+     "hcb_NW4.u_c.u_b.$procdff$71771.__hc128_3",
+     512
+    ],
+    [
+     "hcb_NW4.u_c.u_b.$procdff$71771.__hc128_4",
+     512
+    ],
+    [
+     "hcb_NW4.u_c.u_b.$procdff$71771.__hc128_5",
+     512
+    ],
+    [
+     "hcb_NW4.u_c.u_b.$procdff$71771.__hc128_6",
+     512
+    ],
+    [
+     "hcb_NW4.u_c.u_b.$procdff$71771.__hc128_7",
+     512
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NW4.u_c.u_b.$procdff$71772",
+   "fragments": [
+    [
+     "hcb_NW4.u_c.u_b.$procdff$71772.__hc128_0",
+     256
+    ],
+    [
+     "hcb_NW4.u_c.u_b.$procdff$71772.__hc128_1",
+     256
+    ],
+    [
+     "hcb_NW4.u_c.u_b.$procdff$71772.__hc128_2",
+     256
+    ],
+    [
+     "hcb_NW4.u_c.u_b.$procdff$71772.__hc128_3",
+     256
+    ],
+    [
+     "hcb_NW4.u_c.u_b.$procdff$71772.__hc128_4",
+     256
+    ],
+    [
+     "hcb_NW4.u_c.u_b.$procdff$71772.__hc128_5",
+     256
+    ],
+    [
+     "hcb_NW4.u_c.u_b.$procdff$71772.__hc128_6",
+     256
+    ],
+    [
+     "hcb_NW4.u_c.u_b.$procdff$71772.__hc128_7",
+     256
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NW5.u_c.u_b.$procdff$71771",
+   "fragments": [
+    [
+     "hcb_NW5.u_c.u_b.$procdff$71771.__hc128_0",
+     512
+    ],
+    [
+     "hcb_NW5.u_c.u_b.$procdff$71771.__hc128_1",
+     512
+    ],
+    [
+     "hcb_NW5.u_c.u_b.$procdff$71771.__hc128_2",
+     512
+    ],
+    [
+     "hcb_NW5.u_c.u_b.$procdff$71771.__hc128_3",
+     512
+    ],
+    [
+     "hcb_NW5.u_c.u_b.$procdff$71771.__hc128_4",
+     512
+    ],
+    [
+     "hcb_NW5.u_c.u_b.$procdff$71771.__hc128_5",
+     512
+    ],
+    [
+     "hcb_NW5.u_c.u_b.$procdff$71771.__hc128_6",
+     512
+    ],
+    [
+     "hcb_NW5.u_c.u_b.$procdff$71771.__hc128_7",
+     512
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NW5.u_c.u_b.$procdff$71772",
+   "fragments": [
+    [
+     "hcb_NW5.u_c.u_b.$procdff$71772.__hc128_0",
+     256
+    ],
+    [
+     "hcb_NW5.u_c.u_b.$procdff$71772.__hc128_1",
+     256
+    ],
+    [
+     "hcb_NW5.u_c.u_b.$procdff$71772.__hc128_2",
+     256
+    ],
+    [
+     "hcb_NW5.u_c.u_b.$procdff$71772.__hc128_3",
+     256
+    ],
+    [
+     "hcb_NW5.u_c.u_b.$procdff$71772.__hc128_4",
+     256
+    ],
+    [
+     "hcb_NW5.u_c.u_b.$procdff$71772.__hc128_5",
+     256
+    ],
+    [
+     "hcb_NW5.u_c.u_b.$procdff$71772.__hc128_6",
+     256
+    ],
+    [
+     "hcb_NW5.u_c.u_b.$procdff$71772.__hc128_7",
+     256
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NW6.u_c.u_b.$procdff$71771",
+   "fragments": [
+    [
+     "hcb_NW6.u_c.u_b.$procdff$71771.__hc128_0",
+     512
+    ],
+    [
+     "hcb_NW6.u_c.u_b.$procdff$71771.__hc128_1",
+     512
+    ],
+    [
+     "hcb_NW6.u_c.u_b.$procdff$71771.__hc128_2",
+     512
+    ],
+    [
+     "hcb_NW6.u_c.u_b.$procdff$71771.__hc128_3",
+     512
+    ],
+    [
+     "hcb_NW6.u_c.u_b.$procdff$71771.__hc128_4",
+     512
+    ],
+    [
+     "hcb_NW6.u_c.u_b.$procdff$71771.__hc128_5",
+     512
+    ],
+    [
+     "hcb_NW6.u_c.u_b.$procdff$71771.__hc128_6",
+     512
+    ],
+    [
+     "hcb_NW6.u_c.u_b.$procdff$71771.__hc128_7",
+     512
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NW6.u_c.u_b.$procdff$71772",
+   "fragments": [
+    [
+     "hcb_NW6.u_c.u_b.$procdff$71772.__hc128_0",
+     256
+    ],
+    [
+     "hcb_NW6.u_c.u_b.$procdff$71772.__hc128_1",
+     256
+    ],
+    [
+     "hcb_NW6.u_c.u_b.$procdff$71772.__hc128_2",
+     256
+    ],
+    [
+     "hcb_NW6.u_c.u_b.$procdff$71772.__hc128_3",
+     256
+    ],
+    [
+     "hcb_NW6.u_c.u_b.$procdff$71772.__hc128_4",
+     256
+    ],
+    [
+     "hcb_NW6.u_c.u_b.$procdff$71772.__hc128_5",
+     256
+    ],
+    [
+     "hcb_NW6.u_c.u_b.$procdff$71772.__hc128_6",
+     256
+    ],
+    [
+     "hcb_NW6.u_c.u_b.$procdff$71772.__hc128_7",
+     256
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NW7.u_c.u_b.$procdff$71771",
+   "fragments": [
+    [
+     "hcb_NW7.u_c.u_b.$procdff$71771.__hc128_0",
+     512
+    ],
+    [
+     "hcb_NW7.u_c.u_b.$procdff$71771.__hc128_1",
+     512
+    ],
+    [
+     "hcb_NW7.u_c.u_b.$procdff$71771.__hc128_2",
+     512
+    ],
+    [
+     "hcb_NW7.u_c.u_b.$procdff$71771.__hc128_3",
+     512
+    ],
+    [
+     "hcb_NW7.u_c.u_b.$procdff$71771.__hc128_4",
+     512
+    ],
+    [
+     "hcb_NW7.u_c.u_b.$procdff$71771.__hc128_5",
+     512
+    ],
+    [
+     "hcb_NW7.u_c.u_b.$procdff$71771.__hc128_6",
+     512
+    ],
+    [
+     "hcb_NW7.u_c.u_b.$procdff$71771.__hc128_7",
+     512
+    ]
+   ]
+  },
+  {
+   "member": "hcb_NW7.u_c.u_b.$procdff$71772",
+   "fragments": [
+    [
+     "hcb_NW7.u_c.u_b.$procdff$71772.__hc128_0",
+     256
+    ],
+    [
+     "hcb_NW7.u_c.u_b.$procdff$71772.__hc128_1",
+     256
+    ],
+    [
+     "hcb_NW7.u_c.u_b.$procdff$71772.__hc128_2",
+     256
+    ],
+    [
+     "hcb_NW7.u_c.u_b.$procdff$71772.__hc128_3",
+     256
+    ],
+    [
+     "hcb_NW7.u_c.u_b.$procdff$71772.__hc128_4",
+     256
+    ],
+    [
+     "hcb_NW7.u_c.u_b.$procdff$71772.__hc128_5",
+     256
+    ],
+    [
+     "hcb_NW7.u_c.u_b.$procdff$71772.__hc128_6",
+     256
+    ],
+    [
+     "hcb_NW7.u_c.u_b.$procdff$71772.__hc128_7",
+     256
+    ]
+   ]
+  }
+ ]
+}
