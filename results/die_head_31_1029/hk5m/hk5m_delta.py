@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """DIE-HEAD-31 fix-only plan delta hk5m on hk5l (COORD 14:5x approved class B default (A) + class A estimate).
-1. hd_tile cland_tstart_in (landing_contract pin + clock.start_capture_um) (362.4,354.208) -> (380.16,862.944): the
+1. hd_tile cland_tstart_in (landing_contract pin + clock.start_capture_um) (362.4,354.208) -> (518.4,862.944) (E strip x 501-708, clear of eB 216-501 x 734-1020): the
    START capture pin joins the landing scalars in the hk5 band (strap_pad 0: s1 drives fstart_o directly, so s1 must be
    within 405 um of both the tstart pin reg and the E fstart pin; 857 > 810 from the tile centre).
 2. o/i status bits to the band BOTTOM: every window of the 565-bit hd_tile i/o abutment group (hd_tile i/o, 4 spine
@@ -10,7 +10,7 @@
 0 cycles, 0 flops, no RTL edit.  usage: hk5m_delta.py IN_PLAN OUT_PLAN"""
 import json, sys
 p = json.load(open(sys.argv[1])); T = p["partition_types"]; log = []
-OLD, NEW = [362.4, 354.208], [380.16, 862.944]
+OLD, NEW = [362.4, 354.208], [518.4, 862.944]
 c = T["hd_tile"]["clock"]
 assert c["start_capture_um"] == OLD, c["start_capture_um"]
 pin = [q for q in c["landing_contract"]["pins"] if q["name"] == "cland_tstart_in"]
