@@ -1,0 +1,11 @@
+# PROG wide into native h800 SU: read-only fit estimate
+
+Inputs: current nativeplan qc-import-1/plan/plan_qc_import1.json (d0b301f8), currentcombined31304windows codex-qc-import-0824/reachfix/islands/combined_island_windows.json; mainwideplanentry and GEOM-reviewed wideL2h3 source per QCdieowner. No source/plan change or physical launch.
+
+Personally rendered/viewed prog_wide_fit.png. NativeoldPROG259.2x354.24 at17.28,380.16 occupies[17.28,380.16,276.48,734.40]. Wide354.24x259.2 atsameorigin occupies[17.28,380.16,371.52,639.36]. It expandsE95.04 and vacatesN95.04. All3types sle_su_c/slw_su_c__cl92142dac/slw_su_c__cl19bb38ef have0otherhardcore overlaps; nearestCHstarts388.8 (17.28um gap;8.64um aftertwo4.32halos). Nooutline violation.
+
+FAIL for an unchanged provider/clock import: E expansion contains18/18/17 currentreservedbody windows (20/20/19 with4.32halo). Rectangles appear injson; clusters are x278.478..286.47/y559.98..564.03 and304.884..308.07/y572.94..575.37. Windows may be overlapping envelopes of the same physical island; do not call this53different actualcells without bodyownership mapping. Re-home affected clock/provider bodies in one plan event and re-check actualhop/body+PGbinding; vacatedNstrip provides room only if <=405reach andclockbranch geometry permit.
+
+Contract: nativeplan explicitly calls K2b SIGNED fallback s8b from6aa7f1fc4d with signed pins. Mainwideentry explicitly says NEW R0 ASPECT UNQUALIFIED, require newchildSIGNED. The olderSIGNEDfallback was intentional and is not thewideprototype. ItsPG216unbound issue and nativeG1r2rfailure are independent reasons it cannot now release.
+
+NativeoldclockS(35.292,.042) => SU(52.572,380.202). MainwideclockS(177.132,.042) =>(194.412,380.202). Actualwideprototypecenter(177.132,134.46) =>(194.412,514.62). Thus nativeold->actualwide clock moves141.84x134.418um (Manhattan276.258); mainwide->actualwide moves134.418um vertically. Correct pins/master abstract, parenttap/earlyfeed andactualnativeclock/PGcontracts must land atomically with newview, not silentlyreplace oldaspect or only changeSIZE. Datapins/FFcoupling/throughput stay with sourcequalification; nolatency/rate adoption inferred.
