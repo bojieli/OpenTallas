@@ -29,3 +29,17 @@ on intel1, unit oth-ubuntu-476300-1793257727, 32GB/8threads, goal synth ONLY:
 /srv/opentallas-scratch2/claude/codex-hbm-topk-1028/kits_v4/ot_hbm_idx_topk_link_static_4b8bc21191aa-_tree1028v4
 Check run_synth.log, run/logs/.../1_2_yosys.log and lec/lec.json. No place/STA/
 route runs are authorized from the failing S-face plan.
+
+The direct-source form (COORD approved after actual source inspection) is:
+
+    align_selector_topk.py SRC OUT --direct --clock-receipt topk_regional_clock.json
+
+It keeps the paired facing pins but removes the obsolete selected_line abstract
+station. Actual source is already direct and pin-registered: no RTL register or
+cycle changes. All2368 actual direct hops are15.312um. Clock-owner receipt proves
+selector output clock clk_ctl and TOPK input clock clk share regional clock T010
+(LCA b1304); this does not claim same leaf or measured STA closure. C25c must
+retain that assignment. Missing/false/incorrectly named receipt refuses mutation.
+Model repricing subtracts1 only where that obsolete abstract station was charged;
+there is no actual RTL speedup claim. Historical S failure and FF-bank candidate
+remain intact. Current-source bind, regenerated kits and real-view STA remain.
