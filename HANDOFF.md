@@ -1900,3 +1900,4 @@ CODEX: 2026-10-29 09:04 PDT EXPLICITRESET HBM parked clean b34ea7cb5; three chil
 CODEX: 2026-10-29 09:05 PDT EXPLICITRESET KV ASTK/ECTL PARK abecf789d: ASTKactualCTSlegal/TT−3.55,GRTrow0aeQUEUED;Q1/Q2LECEQ10655/10595+PLACEPASS;meaningfulsource12060edge/2672reqmiterPASS+liveSCA2672mutantcaught;oldq0A/BNEQ260lmaxdiffsfreshq0LEC1784491LIVE. FullCODEX-LOG. No newpostresetjobs.
 
 CODEX: 2026-10-29 09:04 PDT EXPLICITRESET park: mainf483150e0==origin/main; rootpending78d8237cb clean/pushed; all lanes toldpark/livejobsuntouched. Aggregate handoff/codex_root_20261029_0903.md + per-lane packets and CODEX-LOG.
+2026-10-29 09:13 PDT COORD: Codex handback reconciled; 10 fresh lanes started (see COORD-REVIEW-QUEUE RECONCILE line).
