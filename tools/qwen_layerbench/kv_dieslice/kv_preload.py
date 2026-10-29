@@ -6,7 +6,7 @@ Layout = CONTRACT map v2 (results/arch/qwen_kv_die_20261009/CONTRACT.md, KV writ
   PC {q, t[2:0]} of that stack, in-row sector {v, t[6], t[13:9], t[5:3]} (10 b), HBM row 64 + layer + 256 * user;
   in-row sector -> (bank, col): sector = ((bank >> 2) << 7) | (col << 2) | (bank & 3).
 Stack index -> stack name (--stacks, default WS,WN,ES,EN) and the as-built slice split (slice k = PCs 4k..4k+3 of the stack;
-partition phy_<S>_<j> holds slice k per the bind's asbuilt_map 'phy_<S>.u_s<k>' -> 'phy_<S>_<j>').  Both are checked against
+partition phy_<S>_<j> holds slice k per the map phy_<S>.u_s<k> -> phy_<S>_<j> that kv_phy_slice_map.py GENERATES from the bind (TOK-KV-2).  Both are checked against
 the bench's +HBM_LOG write / read addresses (the RECIPE self-check) before the preload is trusted.
     kv_preload.py --kv kv.hex --ctx T --asbuilt asbuilt_map.json [--layers 0-35] [--user 0] [--stacks WS,WN,ES,EN]
                   [--skip-last] [--mut-kswap PART]  > preload.txt

@@ -2560,7 +2560,12 @@ def kept_wire_alias_copies(L, declared, aliases_file):
         if proved_state_constant(L,"gold",k) is not None:
             continue
         old = old_names.get(k,k)
-        choices = set(bit_names.get(wire_bits.get(old), ())) & gate
+        # HEAD-KITS-2 10-28: a gate array whose bits were re-keyed as base#t[i] (Lec relaid: the gate holds bits the
+        # gold array lacks, e.g. ot_s81hd_spo o/ow/oe[512..514] = the kept g_c[c].ctl_q copies) is still that alias
+        # wire's flop; the one-distinct-gate-FF-per-kept-bit matching below stays the proof.
+        names = set(bit_names.get(wire_bits.get(old), ()))
+        names |= {m.group(1) + "#t" + m.group(2) for m in map(IDX.match, list(names)) if m}
+        choices = names & gate
         if k in gate:
             choices.add(k)
         choices.update(renamed[k])

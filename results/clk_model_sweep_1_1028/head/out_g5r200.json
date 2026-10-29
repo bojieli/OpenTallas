@@ -1,0 +1,54 @@
+{
+ "TT": {
+  "legs": 495,
+  "spine_legs": 15,
+  "coef_d0_k1_k2_kf": [
+   13.540789,
+   0.175984,
+   0.00017,
+   17.696974
+  ],
+  "rms_old_STAGE_1X": 81.04,
+  "mean_old_err": 72.32,
+  "uniform_scale": 1.533,
+  "rms_scaled": 23.62,
+  "rms_lengthonly": 20.31,
+  "rate_ps_um": 0.3086,
+  "rms_fit": 13.68,
+  "rms_fit_spine": 29.27,
+  "rms_old_spine": 179.65,
+  "stages_total": 1902,
+  "ribroot_arr": {
+   "n": 8,
+   "min": 2000.7,
+   "max": 2172.1,
+   "spread": 171.3
+  }
+ },
+ "FF": {
+  "legs": 495,
+  "spine_legs": 15,
+  "coef_d0_k1_k2_kf": [
+   11.89103,
+   0.15337,
+   0.000181,
+   13.410384
+  ],
+  "rms_old_STAGE_1X": 55.93,
+  "mean_old_err": 49.46,
+  "uniform_scale": 1.361,
+  "rms_scaled": 19.42,
+  "rms_lengthonly": 16.81,
+  "rate_ps_um": 0.2739,
+  "rms_fit": 12.34,
+  "rms_fit_spine": 26.18,
+  "rms_old_spine": 119.16,
+  "stages_total": 1902,
+  "ribroot_arr": {
+   "n": 8,
+   "min": 1778.8,
+   "max": 1930.3,
+   "spread": 151.5
+  }
+ }
+}

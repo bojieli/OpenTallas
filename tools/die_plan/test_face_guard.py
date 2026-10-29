@@ -549,3 +549,81 @@ def test_clock_export_contract(body, exports, ok):
         assert r["clock_exports"] == {"fclk_out_o": "clk_t3"}
     elif exports:
         assert "clock_export" in r["fail_counts"], r["fails"]
+
+
+# ---- ring_start form (DIE-HEAD-21): the count-aligned ring START input (t_rst_n of ot_meso_ring_ca + p_start of the
+# count origin) carries no face flop; its fan-out may end only in the declared ring's writer flops and the origin's
+# start sampler flops.  Fixture = hierarchical mini ring (u_cland_d, writes gated by st) + origin_s (u_cland_origin).
+def _rs_ring():
+    gate = [f"AND2x2{_X} g{k} (.A(w{k}), .B(st), .Y(wg{k}));" for k in range(4)] + \
+           [f"INVx1{_X} ng{k} (.A(wg{k}), .Y(nwg{k}));" for k in range(4)]
+    tc = [x.replace(".D(nt0)", ".D(ntg0)").replace(".D(nt1)", ".D(ntg1)") for x in _mux_tc()] + \
+         [f"AND2x2{_X} tg0 (.A(nt0), .B(st), .Y(ntg0));", f"AND2x2{_X} tg1 (.A(nt1), .B(st), .Y(ntg1));"]
+    body = tc + gate + sum((_mux_slot(k, w=f"wg{k}", nw=f"nwg{k}") for k in range(4)), [])
+    return "module ot_ring(fclk, d, st);\n input fclk; input d; input st;\n " + "\n ".join(body) + "\nendmodule\n"
+
+
+def _rs_origin(extra=()):
+    body = [f"DFFLQNx1{_X} sf (.CLK(clk), .D(st), .QN(sfn));", f"INVx2{_X} ie (.A(efall), .Y(nef));",
+            f"NOR2x1{_X} n0 (.A(sfn), .B(nef), .Y(a1));", f"AND2x4{_X} a0 (.A(st), .B(nef), .Y(a2));",
+            f"OA21x2{_X} o0 (.A1(a1), .A2(a2), .B(rq), .Y(s0d));", f"DFFHQNx1{_X} s0 (.CLK(clk), .D(s0d), .QN(s0n));"]
+    return ("module ot_origin(clk, st, efall, rq);\n input clk; input st; input efall; input rq;\n " +
+            "\n ".join(body + list(extra)) + "\nendmodule\n")
+
+
+def _rs_net(top_extra=(), outs="", origin_extra=(), extra_in=""):
+    o = [p.strip() for p in outs.split(",") if p.strip()]
+    xi = [p.strip() for p in extra_in.split(",") if p.strip()]
+    hdr = ", ".join(["clk", "fclk", "d", "st", "strap_efall", "rst_n"] + xi + o)
+    top = (f"module top({hdr});\n input clk; input fclk; input d; input st; input strap_efall; input rst_n;\n" +
+           "".join(f" input {p};\n" for p in xi) + "".join(f" output {p};\n" for p in o) +
+           f" DFFHQNx1{_X} rf (.CLK(clk), .D(rst_n), .QN(rq));\n"
+           " ot_ring u_cland_d (.fclk(fclk), .d(d), .st(st));\n"
+           " ot_origin u_cland_origin (.clk(clk), .st(st), .efall(strap_efall), .rq(rq));\n" +
+           "".join(f" {x}\n" for x in top_extra) + "endmodule\n")
+    return _rs_ring() + _rs_origin(origin_extra) + top
+
+
+RS = {"d": {"D": 4, "form": "hold_mux"}, "st": {"form": "ring_start", "ring": "d"}}
+
+
+def _rs(net, land=RS, straps=("strap_efall",)):
+    return face_guard.guard(net, "top", clocks=["fclk"], land=land, straps=list(straps))
+
+
+def test_ring_start_positive_and_default_unchanged():
+    r = _rs(_rs_net())
+    assert r["verdict"] == "PASS" and r["ring_start_bits"] == 1 and r["land_mux_bits"] == 1, r["fails"]
+    rec = r["ring_start"]["st"]
+    assert rec["writer_flops"] == 6 and rec["ring"] == ["d"]                 # 2 write-count + 4 slot flops
+    assert rec["sampler_flops"] == ["u_cland_origin/s0", "u_cland_origin/sf"]
+    assert "shared" in _rs(_rs_net(), land={"d": RS["d"]})["fail_counts"]     # undeclared start: today's FAIL
+
+
+@pytest.mark.parametrize("name,kw,land", [
+    ("leak_to_other_flop", dict(top_extra=[f"BUFx2{_X} lb (.A(st), .Y(stb));",
+                                           f"DFFHQNx1{_X} lf (.CLK(clk), .D(stb), .QN(lq));"]), RS),
+    ("leak_to_fclk_flop_outside_ring", dict(top_extra=[f"DFFHQNx1{_X} lf (.CLK(fclk), .D(st), .QN(lq));"]), RS),
+    ("leak_to_port", dict(top_extra=[f"BUFx2{_X} lb (.A(st), .Y(so));"], outs="so"), RS),
+    ("leak_to_clock_pin", dict(top_extra=[f"DFFHQNx1{_X} lf (.CLK(st), .D(rst_n), .QN(lq));"]), RS),
+    ("third_origin_flop", dict(origin_extra=[f"DFFHQNx1{_X} s9 (.CLK(clk), .D(st), .QN(s9n));"]), RS),
+    ("origin_cone_data_port", dict(extra_in="xd"), RS),     # sampler D gated by a data port (not a strap)
+    ("undeclared_ring", {}, {"d": RS["d"], "st": {"form": "ring_start", "ring": "zz"}}),
+    ("ring_not_hold_mux", {}, {"d": 4, "st": {"form": "ring_start", "ring": "d"}}),
+])
+def test_ring_start_mutants(name, kw, land):
+    net = _rs_net(**kw)
+    if name == "origin_cone_data_port":
+        net = net.replace(".rq(rq));", ".rq(xd));")
+    r = _rs(net, land=land)
+    assert r["verdict"] == "FAIL" and "land_slot" in r["fail_counts"], (name, r["fail_counts"], r["fails"])
+    assert any(x.startswith("st:") for x in r["fails"]["land_slot"]), (name, r["fails"])
+
+
+def test_ring_start_spec():
+    assert face_guard.land_spec({"form": "ring_start", "ring": "i"}) == (0, "ring_start")
+    assert face_guard.ring_spec({"form": "ring_start", "ring": ["i", "j"]}) == ["i", "j"]
+    for bad in ({"form": "ring_start"}, {"form": "ring_start", "ring": "i", "D": 4}, {"form": "ring_start", "ring": []},
+                {"form": "ring_start", "ring": ["i", "i"]}, {"form": "ring_start", "ring": 3}):
+        with pytest.raises(ValueError):
+            face_guard.land_spec(bad)

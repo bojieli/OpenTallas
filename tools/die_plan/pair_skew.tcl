@@ -33,8 +33,20 @@
 # This script must NOT change the session's SDC beyond the clock uncertainty (ot_ps_zero_unc), which the caller
 # runs last-in-session or restores.  It never re-reads an SDC and never touches clock source latency.
 #
-# env (standalone): OT_PS_OUT (TSV path), CORNER (label), OT_PS_CREDIT_MAX (default 5000).
-# TSV: H <key> <value> ; P <max|min> <launch> <capture> <skew_ps> <crpr_ps> <raw_damage_ps>
+# TARGET-RELATIVE SKEW (opt-in, COORD 2026-10-28 21:33 rule 2: "the skew report must measure arrival minus planned
+# target"; same definition as die_sta_related kit_offset / DIE-S81-17 D = (lc + latB) - (ea + latA) - cr).  A hard core
+# with a signed internal clock latency L is planned EARLY: its clock pin target is T - L (tap_balance.tcl CP2 core pass:
+# EFFECTIVE arrival = pin arrival + internal latency).  With a target file loaded (ot_ps_load_targets, the kit's
+# core_latency.txt at TT / core_latency_ff.txt at FF: `inst pin L_ps ...`), every clock sink is measured relative to its
+# planned target: effective arrival = pin arrival + L (L = 0 for ordinary registers), so with d = L_capture - L_launch
+#   setup: s_t = s + d   (damage -s_t = -s - d)        hold: h_t = h + d   (damage +h_t = h + d)
+# CPPR credit is unchanged (d is a per-pair constant, so the raw bound, the early stop and the verify cross-check carry
+# over).  The pin-arrival measurement (all keys above, meaning unchanged) is still written; the target-relative one is
+# added as ${dly}_tgt_* keys + PT rows, and gate_basis target_relative says the gate reads the tgt keys.  No file
+# loaded: no extra key, output byte-identical.
+#
+# env (standalone): OT_PS_OUT (TSV path), CORNER (label), OT_PS_CREDIT_MAX (default 5000), OT_PS_TARGETS (target file).
+# TSV: H <key> <value> ; P <max|min> <launch> <capture> <skew_ps> <crpr_ps> <raw_damage_ps> ; PT (same, target-relative)
 
 proc ot_ps_ps {s} { return [expr {$s * 1e12}] }
 
@@ -50,6 +62,26 @@ proc ot_ps_zero_unc {} {
 }
 
 proc ot_ps_inst {pinname} { return [regsub {/[^/]+$} $pinname {}] }
+
+proc ot_ps_load_targets {fn} {
+  # planned clock-pin earliness L (ps) per `inst pin L ...` line (gen_phys core_latency*.txt; '#' comments skipped)
+  set ::ot_ps_tfile $fn
+  set ::ot_ps_tpin {}
+  set fh [open $fn]
+  foreach l [split [read $fh] "\n"] {
+    if {[string match "#*" [string trim $l]] || [llength $l] < 3} continue
+    lassign $l i p v
+    if {![string is double -strict $v]} { close $fh; error "ot_ps_load_targets: $fn: bad latency in '$l'" }
+    dict set ::ot_ps_tpin "$i/$p" [expr {double($v)}]
+  }
+  close $fh
+}
+
+proc ot_ps_off {inst} {
+  # planned earliness L of a register instance's clock pin (0 = ordinary register / no target file)
+  if {[info exists ::ot_ps_toff] && [dict exists $::ot_ps_toff $inst]} { return [dict get $::ot_ps_toff $inst] }
+  return 0.0
+}
 
 proc ot_ps_ckarr {pin clk which} {
   # propagated CLOCK arrival (ps, latency from the launching clock edge) of a register clock pin, min or max, from the
@@ -109,6 +141,13 @@ proc ot_ps_regs {} {
       dict set ::ot_ps_insertion $cn [lindex $roots 0]
     }
     dict set R [ot_ps_inst [get_full_name $p]] [list [get_full_name $p] $cn $a $b]
+  }
+  set ::ot_ps_toff {}
+  if {[info exists ::ot_ps_tpin]} {
+    dict for {i v} $R {
+      set pn [lindex $v 0]
+      if {[dict exists $::ot_ps_tpin $pn]} { dict set ::ot_ps_toff $i [dict get $::ot_ps_tpin $pn] }
+    }
   }
   return $R
 }
@@ -183,45 +222,69 @@ proc ot_ps_p99 {v} {
   return [format %.2f [lindex $s [expr {max(0, int(ceil(0.99 * $n)) - 1)}]]]
 }
 
+proc ot_ps_check {P dly credit_max tgt} {
+  # one check (max = setup, min = hold) over the related pairs P: pin-arrival skew (tgt 0) or target-relative skew
+  # (tgt 1: signed skew + d, d = L_capture - L_launch; raw damage -d setup / +d hold)
+  set idx [expr {$dly eq "max" ? 3 : 4}]
+  set raw {}
+  dict for {k v} $P {
+    set rd [lindex $v $idx]
+    if {$tgt} {
+      set d [expr {[ot_ps_off [lindex $v 1]] - [ot_ps_off [lindex $v 0]]}]
+      set rd [expr {$dly eq "max" ? $rd - $d : $rd + $d}]
+    }
+    lappend raw [list $rd [lindex $v 0] [lindex $v 1] [lindex $v 2]]
+  }
+  set raw [lsort -real -decreasing -index 0 $raw]
+  set worst ""; set wrow {}; set rows {}; set ns 0; set nnp 0; set vfy 0.0; set bounded 0; set next ""
+  foreach r $raw {
+    lassign $r rd l c dn
+    if {$worst ne "" && $rd <= $worst} { set next ""; break }
+    if {$ns >= $credit_max} { set bounded 1; set next $rd; break }
+    incr ns
+    set pk "$l\t$dn\t$dly"
+    if {[dict exists $::ot_ps_pc $pk]} { set e [dict get $::ot_ps_pc $pk] } else {
+      set e [ot_ps_path $l $dn $dly]; dict set ::ot_ps_pc $pk $e
+    }
+    if {![llength $e]} { incr nnp; continue }
+    lassign $e sk cr
+    if {$tgt} { set sk [expr {$sk + [ot_ps_off $c] - [ot_ps_off $l]}] }
+    set dmg [expr {$dly eq "max" ? -$sk : $sk}]
+    # cross-check vs the CK pin arrivals: damage = raw - crpr
+    set d [expr {abs(($rd - $cr) - $dmg)}]
+    if {$d > $vfy} { set vfy $d }
+    lappend rows [list $l $c [format %.2f $sk] [format %.2f $cr] [format %.2f $rd]]
+    if {$worst eq "" || $dmg > $worst} { set worst $dmg; set wrow [list $l $c $sk $cr] }
+  }
+  if {$bounded && $worst ne "" && $next > $worst} { set worst $next }
+  set p99 [ot_ps_p99 [lmap r $raw {lindex $r 0}]]
+  lassign $wrow wl wc wsk wcr
+  return [dict create n [llength $raw] worst [expr {$worst eq "" ? "NA" : [format %.2f $worst]}] \
+    bounded $bounded signed [expr {$wsk eq "" ? "NA" : [format %.2f $wsk]}] launch $wl capture $wc \
+    crpr [expr {$wcr eq "" ? "NA" : [format %.2f $wcr]}] p99_raw $p99 searched $ns nopath $nnp \
+    verify [format %.3f $vfy] rows $rows]
+}
+
 proc ot_ps_measure {{credit_max 5000}} {
   # -> dict: pairs inter_clock data_pins ; per check (max|min): n worst bounded signed launch capture crpr p99_raw
-  #    searched nopath verify rows ({launch capture skew crpr raw})
+  #    searched nopath verify rows ({launch capture skew crpr raw}); with a target file also tgt_max / tgt_min (same
+  #    keys, target-relative) + target_file target_pins target_unmatched
   set ::ot_ps_method tag
   # complete timing update BEFORE any arrival / path-tag query (sta_die.tcl: arrival-first segfaults be771a0)
   sta::worst_slack_cmd max; sta::worst_slack_cmd min
   set ::ot_ps_R [ot_ps_regs]
+  set ::ot_ps_pc {}
   lassign [ot_ps_related $::ot_ps_R] P np nx nd
   set out [dict create pairs $np inter_clock $nx data_pins $nd regs [dict size $::ot_ps_R] no_clock_arrival \
              $::ot_ps_noarr method $::ot_ps_method]
-  foreach dly {max min} {
-    set idx [expr {$dly eq "max" ? 3 : 4}]
-    set raw {}
-    dict for {k v} $P { lappend raw [list [lindex $v $idx] [lindex $v 0] [lindex $v 1] [lindex $v 2]] }
-    set raw [lsort -real -decreasing -index 0 $raw]
-    set worst ""; set wrow {}; set rows {}; set ns 0; set nnp 0; set vfy 0.0; set bounded 0; set next ""
-    foreach r $raw {
-      lassign $r rd l c dn
-      if {$worst ne "" && $rd <= $worst} { set next ""; break }
-      if {$ns >= $credit_max} { set bounded 1; set next $rd; break }
-      incr ns
-      set e [ot_ps_path $l $dn $dly]
-      if {![llength $e]} { incr nnp; continue }
-      lassign $e sk cr
-      set dmg [expr {$dly eq "max" ? -$sk : $sk}]
-      # cross-check vs the CK pin arrivals: damage = raw - crpr
-      set d [expr {abs(($rd - $cr) - $dmg)}]
-      if {$d > $vfy} { set vfy $d }
-      lappend rows [list $l $c [format %.2f $sk] [format %.2f $cr] [format %.2f $rd]]
-      if {$worst eq "" || $dmg > $worst} { set worst $dmg; set wrow [list $l $c $sk $cr] }
-    }
-    if {$bounded && $worst ne "" && $next > $worst} { set worst $next }
-    set p99 [ot_ps_p99 [lmap r $raw {lindex $r 0}]]
-    lassign $wrow wl wc wsk wcr
-    dict set out $dly [dict create n [llength $raw] worst [expr {$worst eq "" ? "NA" : [format %.2f $worst]}] \
-      bounded $bounded signed [expr {$wsk eq "" ? "NA" : [format %.2f $wsk]}] launch $wl capture $wc \
-      crpr [expr {$wcr eq "" ? "NA" : [format %.2f $wcr]}] p99_raw $p99 searched $ns nopath $nnp \
-      verify [format %.3f $vfy] rows $rows]
+  foreach dly {max min} { dict set out $dly [ot_ps_check $P $dly $credit_max 0] }
+  if {[info exists ::ot_ps_tpin]} {
+    foreach dly {max min} { dict set out tgt_$dly [ot_ps_check $P $dly $credit_max 1] }
+    dict set out target_file $::ot_ps_tfile
+    dict set out target_pins [dict size $::ot_ps_toff]
+    dict set out target_unmatched [expr {[dict size $::ot_ps_tpin] - [dict size $::ot_ps_toff]}]
   }
+  unset ::ot_ps_pc
   return $out
 }
 
@@ -237,6 +300,17 @@ proc ot_ps_write {M fn corner} {
     }
     foreach r [dict get $m rows] { puts $fh "P\t$dly\t[join $r \t]" }
   }
+  if {[dict exists $M tgt_max]} {
+    foreach k {target_file target_pins target_unmatched} { puts $fh "H\t$k\t[dict get $M $k]" }
+    puts $fh "H\tgate_basis\ttarget_relative"
+    foreach dly {max min} {
+      set m [dict get $M tgt_$dly]
+      foreach k {n worst bounded signed launch capture crpr p99_raw searched nopath verify} {
+        puts $fh "H\t${dly}_tgt_$k\t[dict get $m $k]"
+      }
+      foreach r [dict get $m rows] { puts $fh "PT\t$dly\t[join $r \t]" }
+    }
+  }
   close $fh
 }
 
@@ -244,6 +318,7 @@ proc ot_ps_main {} {
   set corner [expr {[info exists ::env(CORNER)] ? $::env(CORNER) : "NA"}]
   set cm [expr {[info exists ::env(OT_PS_CREDIT_MAX)] ? $::env(OT_PS_CREDIT_MAX) : 5000}]
   set t0 [clock seconds]
+  if {[info exists ::env(OT_PS_TARGETS)] && $::env(OT_PS_TARGETS) ne ""} { ot_ps_load_targets $::env(OT_PS_TARGETS) }
   set_propagated_clock [all_clocks]
   ot_ps_zero_unc
   set M [ot_ps_measure $cm]
@@ -251,6 +326,12 @@ proc ot_ps_main {} {
   foreach dly {max min} {
     set m [dict get $M $dly]
     puts "OT_PS $corner $dly n [dict get $m n] worst [dict get $m worst] bounded [dict get $m bounded] signed [dict get $m signed] [dict get $m launch] -> [dict get $m capture] crpr [dict get $m crpr] p99_raw [dict get $m p99_raw] verify [dict get $m verify]"
+  }
+  if {[dict exists $M tgt_max]} {
+    foreach dly {max min} {
+      set m [dict get $M tgt_$dly]
+      puts "OT_PS_TGT $corner $dly n [dict get $m n] worst [dict get $m worst] bounded [dict get $m bounded] signed [dict get $m signed] [dict get $m launch] -> [dict get $m capture] crpr [dict get $m crpr] p99_raw [dict get $m p99_raw] verify [dict get $m verify] targets [dict get $M target_pins] unmatched [dict get $M target_unmatched]"
+    }
   }
   puts "OT_PS_DONE $corner [expr {[clock seconds] - $t0}] s"
 }

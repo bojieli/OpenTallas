@@ -280,8 +280,17 @@ class Planner:
         cell = a.inv_cell; pre = a.prefix
 
         def emit(nd, drv_net):
+            if nd["kind"] == "icg":      # opt-in --ungated-split: the ICG below the root merge (non-inverting)
+                nd["in_net"] = drv_net; net = pre + "_gclk"
+                for pt in nd["legs"][0]["pts"][1:-1]:
+                    r = "%s_r%d" % (pre, len(insts))
+                    insts.append(dict(name=r, cell=cell, p=list(pt), in_net=net, out_net=r + "_o")); net = r + "_o"
+                emit(nd["kids"][0], net)
+                return
             if nd["kind"] != "merge":
-                nd["net"] = drv_net; sinks.append(dict(kind=nd["kind"], name=nd["name"], net=drv_net, p=nd["p"]))
+                nd["net"] = drv_net
+                sinks.append(dict(kind=nd["kind"], name=nd["name"], net=drv_net, p=nd["p"],
+                                  **({"ungated": True} if nd.get("ungated") else {})))
                 return
             name = "%s_m%d" % (pre, len(insts)); nd["inst"] = name
             insts.append(dict(name=name, cell=cell, p=list(nd["p"]), in_net=drv_net, out_net=name + "_o"))
@@ -292,7 +301,7 @@ class Planner:
                     insts.append(dict(name=r, cell=cell, p=list(pt), in_net=net, out_net=r + "_o")); net = r + "_o"
                 emit(kid, net)
 
-        net = pre + "_gclk"
+        net = pre + ("_ckin" if has_icg(top) else "_gclk")
         for pt in rootleg[1:-1]:
             r = "%s_r%d" % (pre, len(insts))
             insts.append(dict(name=r, cell=cell, p=list(pt), in_net=net, out_net=r + "_o")); net = r + "_o"
@@ -303,6 +312,11 @@ class Planner:
         arr = {}; wire = [man(u, v) for u, v in zip(rootleg, rootleg[1:])]; imbs = []; stacked = [0]
 
         def down(nd, t, tf, ninv):
+            if nd["kind"] == "icg":
+                lg = nd["legs"][0]
+                wire.extend(man(u, v) for u, v in zip(lg["pts"], lg["pts"][1:]))
+                down(nd["kids"][0], t + lg["d_tt"], tf + lg["d_ff"], ninv + len(lg["pts"]) - 2)
+                return
             if nd["kind"] != "merge":
                 arr[nd["name"]] = dict(tt=round(t + nd["tt"], 1), ff=round(tf + nd["ff"], 1),
                                        inv=ninv + (1 if nd["kind"] == "cluster" else 0))
@@ -314,12 +328,14 @@ class Planner:
                 down(kid, t + lg["d_tt"], tf + lg["d_ff"], ninv + len(lg["pts"]) - 1)
 
         itt, iff = map(float, self.a.icg_ps.split(","))
+        if has_icg(top):         # --ungated-split: the ICG delay sits on the gated branch (in its leg), not at the root
+            itt = iff = 0.0
         down(top, itt + self.legd(rootleg), iff + self.legd(rootleg, "FF"), len(rootleg) - 2)
         v = [x["tt"] for x in arr.values()]; vf = [x["ff"] for x in arr.values()]
         elong = []
 
         def el(nd):
-            if nd["kind"] == "merge":
+            if nd["kind"] in ("merge", "icg"):
                 for kid, lg in zip(nd["kids"], nd["legs"]):
                     elong.append(lg["wire"] - man(nd["p"], kid["p"])); el(kid)
         el(top)
@@ -337,10 +353,30 @@ class Planner:
         arr, sm = self.stats(top, rootleg)
         summ = dict(entry=E, icg=dict(site=icg, cell=a.icg_cell, note=a.icg_note),
                     n_inv=len(insts), sinks=len(sinks), child_ins=CI, sp=a.sp, sp_max=a.sp_max, **sm, **extra)
+        ic = find_icg(top)
+        if ic is not None:
+            summ["ungated_split"] = dict(root_net=a.prefix + "_ckin", icg_in=ic["in_net"], gclk=a.prefix + "_gclk",
+                                         icg_ps=ic["legs"][0]["icg_ps"],
+                                         ungated_sinks=sorted(s_["name"] for s_ in sinks if s_.get("ungated")))
         json.dump(dict(summary=summ, insts=insts, sinks=sinks, arrival_plan=arr, root_leg=[list(x) for x in rootleg],
                        tree=top, cl=geom_path), open(out, "w"), indent=0)
         print(json.dumps(summ))
         return summ
+
+
+def find_icg(nd):
+    """the ICG node of an --ungated-split plan tree (None for every other plan)"""
+    if nd.get("kind") == "icg":
+        return nd
+    for k in nd.get("kids", []) if nd.get("kind") == "merge" else []:
+        r = find_icg(k)
+        if r is not None:
+            return r
+    return None
+
+
+def has_icg(nd):
+    return find_icg(nd) is not None
 
 
 def parse_child_ins(s):
@@ -388,9 +424,12 @@ def do_plan(a):
     for x in a.pin_offset or []:
         m, v = x.split("="); offsets[m] = tuple(map(float, v.split(",")))
     nodes = []
+    ung = [c["name"] for c in G["clusters"] if c.get("ungated")]
+    if ung and not a.ungated_split:
+        raise ValueError("geometry flags %d ungated clusters (e.g. %s): plan them with --ungated-split" % (len(ung), ung[0]))
     for c in G["clusters"]:
         nodes.append(dict(kind="cluster", name=c["name"], p=list(c["root"]), tt=INS[c["name"]]["TT"]["mean"],
-                          ff=INS[c["name"]]["FF"]["mean"], r=1))
+                          ff=INS[c["name"]]["FF"]["mean"], r=1, **({"ungated": True} if c.get("ungated") else {})))
     for k in G["kids"]:
         p = kid_pin(k, macros, G["W"], offsets, a.orient_rule)
         tt, ff = CI[k["module"]]
@@ -398,8 +437,23 @@ def do_plan(a):
                           tt=tt, ff=ff, r=0))
     if len(nodes) < 2:
         raise ValueError("need >= 2 sinks")
+    if a.ungated_split:
+        return do_plan_split(a, P, nodes, CI)
     if a.topology == "bipart":
         return do_plan_bipart(a, P, nodes, CI)
+    top = greedy_top(P, nodes)
+    E = tuple(map(float, a.entry.split(",")))
+    ox, oy = map(float, a.icg_offset.split(","))
+    icg = P.legal((E[0] + ox, E[1] + oy))
+    L = man(icg, top["p"]); n = max(1, math.ceil(L / a.sp))
+    if (n - 1 - top["r"]) % 2:
+        n += 1
+    _, rootleg, _ = P.build_leg(icg, tuple(top["p"]), n, L)
+    return P.save(top, rootleg, list(icg), E, a.out, dict(iteration=0), CI, a.a1)
+
+
+def greedy_top(P, nodes):
+    """DIE-QC-15 greedy bottom-up nearest-pair zero-skew merging (the default topology)."""
     live = list(nodes)
     k1 = 0.40
     while len(live) > 1:
@@ -413,15 +467,68 @@ def do_plan(a):
         _, i, j = best
         M = P.plan_merge(live[i], live[j])
         live = [x for k, x in enumerate(live) if k not in (i, j)] + [M]
-    top = live[0]
-    E = tuple(map(float, a.entry.split(",")))
+    return live[0]
+
+
+# ---------------------------------------------------------------- opt-in ungated split (QC-A0-KITS-9)
+# --ungated-split: the A0 tile root splits into an UNGATED face branch (input-face registers, enable state, reset
+# landing: clusters flagged "ungated" in the geometry) and the GATED branch (every other cluster + every hard child)
+# behind ONE ICG (QC-PG-4 structure, OWNER option c).  Both branches are planned with the same zero-skew merges; the
+# ICG (non-inverting, --icg-ps) sits at the gated subtree's root (legal(gated root + --icg-offset)) and is a node of
+# the tree, so the ROOT merge balances face vs gated latency by wire length like any other merge (no separate face
+# tree, no pad stacks).  The root leg starts at the tile entry on the clock port net (<prefix>_ckin = CLK_NET in
+# parent_trunk_insert.tcl).  Without the flag the planner is unchanged; a geometry with ungated clusters needs it.
+def _sub_top(a, P, nodes):
+    if len(nodes) == 1:
+        return dict(nodes[0])
+    if a.topology != "bipart":
+        return greedy_top(P, nodes)
+    T = _load_aocv(a.aocv_table); best = None
+    for top_ in ("type", "geo"):
+        for rule in ("delay", "count"):
+            for ax in (None, 0, 1):
+                t = bipart_topology(nodes, top_, rule, ax)
+                tp = embed(P, t)
+                arr, sm = P.stats(tp, [tp["p"], tp["p"]])
+                rng = {C: {k.replace("\\", ""): (x[C.lower()], x[C.lower()]) for k, x in arr.items()} for C in ("TT", "FF")}
+                oc = ocv_spread(T, tp, rng)
+                k = (round(max(oc["TT"]["ocv_inclusive_spread"], oc["FF"]["ocv_inclusive_spread"]), 1),
+                     sm["plan_tt"]["max"], "%s/%s/%s" % (top_, rule, ax))
+                if best is None or k < best[0]:
+                    best = (k, tp)
+    return best[1]
+
+
+def do_plan_split(a, P, nodes, CI):
+    gated = [n for n in nodes if not n.get("ungated")]; ung = [n for n in nodes if n.get("ungated")]
+    if not gated or not ung:
+        raise ValueError("--ungated-split needs >= 1 ungated cluster and >= 1 gated sink (got %d / %d)"
+                         % (len(ung), len(gated)))
+    G = _sub_top(a, P, gated); U = _sub_top(a, P, ung)
+    itt, iff = map(float, a.icg_ps.split(","))
     ox, oy = map(float, a.icg_offset.split(","))
-    icg = P.legal((E[0] + ox, E[1] + oy))
-    L = man(icg, top["p"]); n = max(1, math.ceil(L / a.sp))
+    icg = P.legal((G["p"][0] + ox, G["p"][1] + oy))
+    L = man(icg, G["p"]); n = max(1, math.ceil(L / a.sp))
+    if (n - 1 - G["r"]) % 2:
+        n += 1
+    _, gpts, gw = P.build_leg(icg, tuple(G["p"]), n, L)
+    leg = dict(n=n, Le=L, pts=[list(x) for x in gpts], wire=round(gw, 2), d_tt=round(itt + P.legd(gpts), 2),
+               d_ff=round(iff + P.legd(gpts, "FF"), 2), icg_ps=[itt, iff])
+    I = dict(kind="icg", name=a.prefix + "_icg", cell=a.icg_cell, p=list(icg), r=0,
+             tt=leg["d_tt"] + G["tt"], ff=leg["d_ff"] + G["ff"], kids=[G], legs=[leg])
+    top = P.plan_merge(I, U)
+    E = tuple(map(float, a.entry.split(",")))
+    L = man(E, top["p"]); n = max(1, math.ceil(L / a.sp))
     if (n - 1 - top["r"]) % 2:
         n += 1
-    _, rootleg, _ = P.build_leg(icg, tuple(top["p"]), n, L)
-    return P.save(top, rootleg, list(icg), E, a.out, dict(iteration=0), CI, a.a1)
+    _, rootleg, _ = P.build_leg(E, tuple(top["p"]), n, L)
+    arr, sm = P.stats(top, rootleg)
+    T = _load_aocv(a.aocv_table)
+    rng = {C: {k.replace("\\", ""): (x[C.lower()], x[C.lower()]) for k, x in arr.items()} for C in ("TT", "FF")}
+    extra = dict(iteration=0, topology=a.topology, plan_ocv=ocv_spread(T, top, rng),
+                 split_root=dict(gated_tt=round(I["tt"], 1), ungated_tt=round(U["tt"], 1), root_imb=top["imb"],
+                                 root_imb_ff=top["imb_ff"], ungated_sinks=len(ung), gated_sinks=len(gated)))
+    return P.save(top, rootleg, list(icg), list(E), a.out, extra, CI, a.a1)
 
 
 # ---------------------------------------------------------------- opt-in balanced top-down bipartition (DIE-QC-17)
@@ -499,7 +606,7 @@ def _paths(top):
     def walk(n, path):
         for lg, k in zip(n.get("legs", []), n.get("kids", [])):
             p2 = path + [lg]
-            if k["kind"] == "merge":
+            if k["kind"] in ("merge", "icg"):
                 walk(k, p2)
             else:
                 paths[k["name"].replace("\\", "")] = (p2, k)
@@ -690,6 +797,8 @@ def do_corr(a):
             m, pa = kidpin[nd["name"].replace("\\", "")]
             v = pa + CI[m][0]
             return [v, v]
+        if nd["kind"] == "icg":          # --ungated-split: no balancing at the ICG; its parent merge balances it
+            return corr(nd["kids"][0])
         rs = [corr(k) for k in nd["kids"]]
         mid = [(r[0] + r[1]) / 2 for r in rs]
         f, s = (0, 1) if mid[0] < mid[1] else (1, 0)
@@ -787,6 +896,8 @@ def do_eco(a):
     the measured arrivals of unchanged legs are reproduced (corr then converges on deterministic arrivals).
     NEW_BUILT.json = NEW with the as-built names (the next corr/eco input)."""
     B = json.load(open(a.a1)); N = json.load(open(a.a2)); pre = a.prefix
+    if has_icg(B["tree"]) or has_icg(N["tree"]):
+        raise ValueError("eco: --ungated-split plans (ICG node in the tree) are not supported; rebuild with tcl")
     lb, ln = _legs(B, pre), _legs(N, pre)
     if [x["key"] for x in lb] != [x["key"] for x in ln]:
         raise ValueError("eco: topology differs (leg keys)")
@@ -891,6 +1002,9 @@ def do_tcl(plan, out):
     d = json.load(open(plan)); s = d["summary"]
     with open(out, "w") as f:
         f.write("set ICG [list %.3f %.3f]\nset TI {}\nset TS {}\n" % tuple(s["icg"]["site"]))
+        if "ungated_split" in s:         # opt-in: ICG inside the tree; the root leg starts on the clock port net
+            u = s["ungated_split"]
+            f.write("set ROOT_NET %s\nset ICG_IN %s\n" % (u["root_net"], u["icg_in"]))
         for i in d["insts"]:
             f.write("lappend TI [list %s %s %.3f %.3f %s %s]\n" % (i["name"], i["cell"], i["p"][0], i["p"][1],
                                                                   i["in_net"], i["out_net"]))
@@ -928,6 +1042,9 @@ def build_parser():
     ap.add_argument("--aocv-table", default=str(HERE / "clk_aocv_table_g021.json"),
                     help="bipart objective / ocv mode: approved clock AOCV table (12.4a b1, g 0.21 %%/mm)")
     ap.add_argument("--eco-tag", default=None, help="eco: name tag of the new repeaters (default e<iteration>)")
+    ap.add_argument("--ungated-split", action="store_true",
+                    help="plan (opt-in, QC-A0-KITS-9): geometry clusters flagged 'ungated' form a face branch merged "
+                         "with the ICG-gated branch at the root (ICG node at the gated root + --icg-offset)")
     return ap
 
 

@@ -1,0 +1,1257 @@
+{
+ "pad_json": {
+  "pad": {
+   "t_phy_EN_0__clk": 4,
+   "t_phy_EN_1__clk": 4,
+   "t_phy_EN_2__clk": 3,
+   "t_phy_EN_3__clk": 4,
+   "t_phy_EN_4__clk": 4,
+   "t_phy_EN_5__clk": 4,
+   "t_phy_EN_6__clk": 3,
+   "t_phy_EN_7__clk": 2,
+   "t_phy_ES_0__clk": 3,
+   "t_phy_ES_1__clk": 3,
+   "t_phy_ES_2__clk": 4,
+   "t_phy_ES_3__clk": 3,
+   "t_phy_ES_4__clk": 3,
+   "t_phy_ES_5__clk": 4,
+   "t_phy_ES_6__clk": 3,
+   "t_phy_ES_7__clk": 3,
+   "t_phy_WN_0__clk": 2,
+   "t_phy_WN_1__clk": 2,
+   "t_phy_WN_2__clk": 3,
+   "t_phy_WN_3__clk": 3,
+   "t_phy_WN_4__clk": 2,
+   "t_phy_WN_5__clk": 2,
+   "t_phy_WN_6__clk": 3,
+   "t_phy_WN_7__clk": 2,
+   "t_phy_WS_0__clk": 2,
+   "t_phy_WS_1__clk": 2,
+   "t_phy_WS_2__clk": 2,
+   "t_phy_WS_3__clk": 2,
+   "t_phy_WS_4__clk": 2,
+   "t_phy_WS_5__clk": 2,
+   "t_phy_WS_6__clk": 2,
+   "t_phy_WS_7__clk": 2
+  },
+  "note": "DIE-KV-20: re-derived from the current tree (DIE-KV-15 kit_fb_inv_r150 GRT TT+FF), min max-corner region spread; replaces DIE-KV-5 pad_it2"
+ },
+ "detail": {
+  "t_phy_EN_0__clk": {
+   "region": "phy_EN_0",
+   "old": 4,
+   "old_file": 5,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 24.8,
+     "unpadded_ps": 6805.9,
+     "others_min": 6884.5,
+     "others_max": 6910.6,
+     "others_spread": 26.1
+    },
+    "FF": {
+     "pad_stage_ps": 19.29,
+     "unpadded_ps": 6025.1,
+     "others_min": 6094.2,
+     "others_max": 6119.1,
+     "others_spread": 24.9
+    }
+   },
+   "spread_old": {
+    "TT": 26.1,
+    "FF": 24.9
+   },
+   "late_vs_max_old": {
+    "TT": -5.5,
+    "FF": -16.8
+   },
+   "new": 4,
+   "spread_new": {
+    "TT": 26.1,
+    "FF": 24.9
+   },
+   "late_vs_max_new": {
+    "TT": -5.5,
+    "FF": -16.8
+   }
+  },
+  "t_phy_EN_1__clk": {
+   "region": "phy_EN_1",
+   "old": 4,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 25.87,
+     "unpadded_ps": 6373.5,
+     "others_min": 6449.4,
+     "others_max": 6474.7,
+     "others_spread": 25.3
+    },
+    "FF": {
+     "pad_stage_ps": 20.32,
+     "unpadded_ps": 5647.1,
+     "others_min": 5713.3,
+     "others_max": 5737.1,
+     "others_spread": 23.8
+    }
+   },
+   "spread_old": {
+    "TT": 27.6,
+    "FF": 23.8
+   },
+   "late_vs_max_old": {
+    "TT": 2.3,
+    "FF": -8.7
+   },
+   "new": 4,
+   "spread_new": {
+    "TT": 27.6,
+    "FF": 23.8
+   },
+   "late_vs_max_new": {
+    "TT": 2.3,
+    "FF": -8.7
+   }
+  },
+  "t_phy_EN_2__clk": {
+   "region": "phy_EN_2",
+   "old": 3,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 25.05,
+     "unpadded_ps": 5695.8,
+     "others_min": 5758.1,
+     "others_max": 5779.1,
+     "others_spread": 21.0
+    },
+    "FF": {
+     "pad_stage_ps": 19.49,
+     "unpadded_ps": 5049.1,
+     "others_min": 5103.0,
+     "others_max": 5121.3,
+     "others_spread": 18.3
+    }
+   },
+   "spread_old": {
+    "TT": 21.0,
+    "FF": 18.3
+   },
+   "late_vs_max_old": {
+    "TT": -8.2,
+    "FF": -13.7
+   },
+   "new": 3,
+   "spread_new": {
+    "TT": 21.0,
+    "FF": 18.3
+   },
+   "late_vs_max_new": {
+    "TT": -8.2,
+    "FF": -13.7
+   }
+  },
+  "t_phy_EN_3__clk": {
+   "region": "phy_EN_3",
+   "old": 4,
+   "old_file": 5,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 23.79,
+     "unpadded_ps": 5275.5,
+     "others_min": 5343.2,
+     "others_max": 5387.7,
+     "others_spread": 44.5
+    },
+    "FF": {
+     "pad_stage_ps": 18.33,
+     "unpadded_ps": 4675.4,
+     "others_min": 4734.4,
+     "others_max": 4775.1,
+     "others_spread": 40.7
+    }
+   },
+   "spread_old": {
+    "TT": 44.5,
+    "FF": 40.7
+   },
+   "late_vs_max_old": {
+    "TT": -17.0,
+    "FF": -26.4
+   },
+   "new": 4,
+   "spread_new": {
+    "TT": 44.5,
+    "FF": 40.7
+   },
+   "late_vs_max_new": {
+    "TT": -17.0,
+    "FF": -26.4
+   }
+  },
+  "t_phy_EN_4__clk": {
+   "region": "phy_EN_4",
+   "old": 4,
+   "old_file": 5,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 23.82,
+     "unpadded_ps": 4586.7,
+     "others_min": 4665.4,
+     "others_max": 4700.5,
+     "others_spread": 35.1
+    },
+    "FF": {
+     "pad_stage_ps": 18.36,
+     "unpadded_ps": 4060.3,
+     "others_min": 4128.1,
+     "others_max": 4161.2,
+     "others_spread": 33.1
+    }
+   },
+   "spread_old": {
+    "TT": 35.1,
+    "FF": 33.1
+   },
+   "late_vs_max_old": {
+    "TT": -18.5,
+    "FF": -27.5
+   },
+   "new": 4,
+   "spread_new": {
+    "TT": 35.1,
+    "FF": 33.1
+   },
+   "late_vs_max_new": {
+    "TT": -18.5,
+    "FF": -27.5
+   }
+  },
+  "t_phy_EN_5__clk": {
+   "region": "phy_EN_5",
+   "old": 4,
+   "old_file": 5,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 24.8,
+     "unpadded_ps": 4036.8,
+     "others_min": 4119.4,
+     "others_max": 4145.4,
+     "others_spread": 26.1
+    },
+    "FF": {
+     "pad_stage_ps": 19.29,
+     "unpadded_ps": 3574.1,
+     "others_min": 3646.9,
+     "others_max": 3671.8,
+     "others_spread": 24.9
+    }
+   },
+   "spread_old": {
+    "TT": 26.0,
+    "FF": 24.9
+   },
+   "late_vs_max_old": {
+    "TT": -9.4,
+    "FF": -20.5
+   },
+   "new": 4,
+   "spread_new": {
+    "TT": 26.0,
+    "FF": 24.9
+   },
+   "late_vs_max_new": {
+    "TT": -9.4,
+    "FF": -20.5
+   }
+  },
+  "t_phy_EN_6__clk": {
+   "region": "phy_EN_6",
+   "old": 3,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 26.21,
+     "unpadded_ps": 3628.9,
+     "others_min": 3692.9,
+     "others_max": 3718.2,
+     "others_spread": 25.3
+    },
+    "FF": {
+     "pad_stage_ps": 20.59,
+     "unpadded_ps": 3220.2,
+     "others_min": 3274.5,
+     "others_max": 3298.3,
+     "others_spread": 23.8
+    }
+   },
+   "spread_old": {
+    "TT": 25.3,
+    "FF": 23.8
+   },
+   "late_vs_max_old": {
+    "TT": -10.7,
+    "FF": -16.3
+   },
+   "new": 3,
+   "spread_new": {
+    "TT": 25.3,
+    "FF": 23.8
+   },
+   "late_vs_max_new": {
+    "TT": -10.7,
+    "FF": -16.3
+   }
+  },
+  "t_phy_EN_7__clk": {
+   "region": "phy_EN_7",
+   "old": 3,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 25.05,
+     "unpadded_ps": 2950.6,
+     "others_min": 3001.7,
+     "others_max": 3022.7,
+     "others_spread": 21.0
+    },
+    "FF": {
+     "pad_stage_ps": 19.49,
+     "unpadded_ps": 2620.2,
+     "others_min": 2663.8,
+     "others_max": 2682.1,
+     "others_spread": 18.3
+    }
+   },
+   "spread_old": {
+    "TT": 24.1,
+    "FF": 18.3
+   },
+   "late_vs_max_old": {
+    "TT": 3.1,
+    "FF": -3.4
+   },
+   "new": 2,
+   "spread_new": {
+    "TT": 22.0,
+    "FF": 22.9
+   },
+   "late_vs_max_new": {
+    "TT": -22.0,
+    "FF": -22.9
+   }
+  },
+  "t_phy_ES_0__clk": {
+   "region": "phy_ES_0",
+   "old": 3,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 25.08,
+     "unpadded_ps": 6802.0,
+     "others_min": 6870.4,
+     "others_max": 6893.0,
+     "others_spread": 22.5
+    },
+    "FF": {
+     "pad_stage_ps": 19.51,
+     "unpadded_ps": 6016.6,
+     "others_min": 6075.1,
+     "others_max": 6096.7,
+     "others_spread": 21.6
+    }
+   },
+   "spread_old": {
+    "TT": 22.6,
+    "FF": 21.6
+   },
+   "late_vs_max_old": {
+    "TT": -15.8,
+    "FF": -21.6
+   },
+   "new": 3,
+   "spread_new": {
+    "TT": 22.6,
+    "FF": 21.6
+   },
+   "late_vs_max_new": {
+    "TT": -15.8,
+    "FF": -21.6
+   }
+  },
+  "t_phy_ES_1__clk": {
+   "region": "phy_ES_1",
+   "old": 3,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 26.21,
+     "unpadded_ps": 6385.0,
+     "others_min": 6457.4,
+     "others_max": 6490.1,
+     "others_spread": 32.7
+    },
+    "FF": {
+     "pad_stage_ps": 20.6,
+     "unpadded_ps": 5655.1,
+     "others_min": 5717.3,
+     "others_max": 5747.8,
+     "others_spread": 30.5
+    }
+   },
+   "spread_old": {
+    "TT": 32.7,
+    "FF": 30.9
+   },
+   "late_vs_max_old": {
+    "TT": -26.5,
+    "FF": -30.9
+   },
+   "new": 3,
+   "spread_new": {
+    "TT": 32.7,
+    "FF": 30.9
+   },
+   "late_vs_max_new": {
+    "TT": -26.5,
+    "FF": -30.9
+   }
+  },
+  "t_phy_ES_2__clk": {
+   "region": "phy_ES_2",
+   "old": 4,
+   "old_file": 5,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 24.85,
+     "unpadded_ps": 5827.3,
+     "others_min": 5904.9,
+     "others_max": 5929.2,
+     "others_spread": 24.3
+    },
+    "FF": {
+     "pad_stage_ps": 19.36,
+     "unpadded_ps": 5152.5,
+     "others_min": 5228.2,
+     "others_max": 5250.4,
+     "others_spread": 22.2
+    }
+   },
+   "spread_old": {
+    "TT": 24.3,
+    "FF": 22.2
+   },
+   "late_vs_max_old": {
+    "TT": -2.5,
+    "FF": -20.5
+   },
+   "new": 4,
+   "spread_new": {
+    "TT": 24.3,
+    "FF": 22.2
+   },
+   "late_vs_max_new": {
+    "TT": -2.5,
+    "FF": -20.5
+   }
+  },
+  "t_phy_ES_3__clk": {
+   "region": "phy_ES_3",
+   "old": 3,
+   "old_file": 5,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 24.18,
+     "unpadded_ps": 5424.4,
+     "others_min": 5485.5,
+     "others_max": 5514.7,
+     "others_spread": 29.2
+    },
+    "FF": {
+     "pad_stage_ps": 18.7,
+     "unpadded_ps": 4801.7,
+     "others_min": 4859.1,
+     "others_max": 4884.9,
+     "others_spread": 25.7
+    }
+   },
+   "spread_old": {
+    "TT": 29.2,
+    "FF": 27.1
+   },
+   "late_vs_max_old": {
+    "TT": -17.8,
+    "FF": -27.1
+   },
+   "new": 3,
+   "spread_new": {
+    "TT": 29.2,
+    "FF": 27.1
+   },
+   "late_vs_max_new": {
+    "TT": -17.8,
+    "FF": -27.1
+   }
+  },
+  "t_phy_ES_4__clk": {
+   "region": "phy_ES_4",
+   "old": 3,
+   "old_file": 5,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 24.17,
+     "unpadded_ps": 4737.1,
+     "others_min": 4791.3,
+     "others_max": 4826.0,
+     "others_spread": 34.7
+    },
+    "FF": {
+     "pad_stage_ps": 18.68,
+     "unpadded_ps": 4187.5,
+     "others_min": 4240.6,
+     "others_max": 4273.4,
+     "others_spread": 32.8
+    }
+   },
+   "spread_old": {
+    "TT": 34.7,
+    "FF": 32.8
+   },
+   "late_vs_max_old": {
+    "TT": -16.4,
+    "FF": -29.9
+   },
+   "new": 3,
+   "spread_new": {
+    "TT": 34.7,
+    "FF": 32.8
+   },
+   "late_vs_max_new": {
+    "TT": -16.4,
+    "FF": -29.9
+   }
+  },
+  "t_phy_ES_5__clk": {
+   "region": "phy_ES_5",
+   "old": 4,
+   "old_file": 5,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 24.83,
+     "unpadded_ps": 4184.6,
+     "others_min": 4258.1,
+     "others_max": 4292.8,
+     "others_spread": 34.7
+    },
+    "FF": {
+     "pad_stage_ps": 19.34,
+     "unpadded_ps": 3699.2,
+     "others_min": 3770.3,
+     "others_max": 3801.3,
+     "others_spread": 30.9
+    }
+   },
+   "spread_old": {
+    "TT": 34.7,
+    "FF": 31.0
+   },
+   "late_vs_max_old": {
+    "TT": -8.9,
+    "FF": -24.7
+   },
+   "new": 4,
+   "spread_new": {
+    "TT": 34.7,
+    "FF": 31.0
+   },
+   "late_vs_max_new": {
+    "TT": -8.9,
+    "FF": -24.7
+   }
+  },
+  "t_phy_ES_6__clk": {
+   "region": "phy_ES_6",
+   "old": 3,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 26.26,
+     "unpadded_ps": 3769.8,
+     "others_min": 3834.7,
+     "others_max": 3856.9,
+     "others_spread": 22.2
+    },
+    "FF": {
+     "pad_stage_ps": 20.65,
+     "unpadded_ps": 3341.4,
+     "others_min": 3402.3,
+     "others_max": 3421.5,
+     "others_spread": 19.1
+    }
+   },
+   "spread_old": {
+    "TT": 22.2,
+    "FF": 19.2
+   },
+   "late_vs_max_old": {
+    "TT": -8.3,
+    "FF": -18.2
+   },
+   "new": 3,
+   "spread_new": {
+    "TT": 22.2,
+    "FF": 19.2
+   },
+   "late_vs_max_new": {
+    "TT": -8.3,
+    "FF": -18.2
+   }
+  },
+  "t_phy_ES_7__clk": {
+   "region": "phy_ES_7",
+   "old": 3,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 25.17,
+     "unpadded_ps": 3061.2,
+     "others_min": 3113.5,
+     "others_max": 3133.6,
+     "others_spread": 20.1
+    },
+    "FF": {
+     "pad_stage_ps": 19.62,
+     "unpadded_ps": 2713.2,
+     "others_min": 2763.3,
+     "others_max": 2781.8,
+     "others_spread": 18.5
+    }
+   },
+   "spread_old": {
+    "TT": 23.2,
+    "FF": 18.5
+   },
+   "late_vs_max_old": {
+    "TT": 3.1,
+    "FF": -9.7
+   },
+   "new": 3,
+   "spread_new": {
+    "TT": 23.2,
+    "FF": 18.5
+   },
+   "late_vs_max_new": {
+    "TT": 3.1,
+    "FF": -9.7
+   }
+  },
+  "t_phy_WN_0__clk": {
+   "region": "phy_WN_0",
+   "old": 2,
+   "old_file": 3,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 24.43,
+     "unpadded_ps": 6886.8,
+     "others_min": 6914.7,
+     "others_max": 6958.3,
+     "others_spread": 43.7
+    },
+    "FF": {
+     "pad_stage_ps": 18.73,
+     "unpadded_ps": 6100.7,
+     "others_min": 6121.0,
+     "others_max": 6163.0,
+     "others_spread": 42.0
+    }
+   },
+   "spread_old": {
+    "TT": 43.6,
+    "FF": 42.0
+   },
+   "late_vs_max_old": {
+    "TT": -22.6,
+    "FF": -24.8
+   },
+   "new": 2,
+   "spread_new": {
+    "TT": 43.6,
+    "FF": 42.0
+   },
+   "late_vs_max_new": {
+    "TT": -22.6,
+    "FF": -24.8
+   }
+  },
+  "t_phy_WN_1__clk": {
+   "region": "phy_WN_1",
+   "old": 2,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 25.35,
+     "unpadded_ps": 6429.3,
+     "others_min": 6478.0,
+     "others_max": 6514.6,
+     "others_spread": 36.7
+    },
+    "FF": {
+     "pad_stage_ps": 19.61,
+     "unpadded_ps": 5700.3,
+     "others_min": 5739.9,
+     "others_max": 5774.9,
+     "others_spread": 35.1
+    }
+   },
+   "spread_old": {
+    "TT": 36.6,
+    "FF": 35.4
+   },
+   "late_vs_max_old": {
+    "TT": -34.6,
+    "FF": -35.4
+   },
+   "new": 2,
+   "spread_new": {
+    "TT": 36.6,
+    "FF": 35.4
+   },
+   "late_vs_max_new": {
+    "TT": -34.6,
+    "FF": -35.4
+   }
+  },
+  "t_phy_WN_2__clk": {
+   "region": "phy_WN_2",
+   "old": 3,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 24.08,
+     "unpadded_ps": 5779.1,
+     "others_min": 5832.1,
+     "others_max": 5871.5,
+     "others_spread": 39.4
+    },
+    "FF": {
+     "pad_stage_ps": 18.53,
+     "unpadded_ps": 5125.8,
+     "others_min": 5170.5,
+     "others_max": 5207.4,
+     "others_spread": 36.9
+    }
+   },
+   "spread_old": {
+    "TT": 39.4,
+    "FF": 36.9
+   },
+   "late_vs_max_old": {
+    "TT": -20.2,
+    "FF": -26.0
+   },
+   "new": 3,
+   "spread_new": {
+    "TT": 39.4,
+    "FF": 36.9
+   },
+   "late_vs_max_new": {
+    "TT": -20.2,
+    "FF": -26.0
+   }
+  },
+  "t_phy_WN_3__clk": {
+   "region": "phy_WN_3",
+   "old": 3,
+   "old_file": 5,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 23.3,
+     "unpadded_ps": 5299.9,
+     "others_min": 5353.0,
+     "others_max": 5411.9,
+     "others_spread": 58.9
+    },
+    "FF": {
+     "pad_stage_ps": 17.77,
+     "unpadded_ps": 4699.0,
+     "others_min": 4743.3,
+     "others_max": 4798.7,
+     "others_spread": 55.4
+    }
+   },
+   "spread_old": {
+    "TT": 58.9,
+    "FF": 55.4
+   },
+   "late_vs_max_old": {
+    "TT": -42.1,
+    "FF": -46.4
+   },
+   "new": 3,
+   "spread_new": {
+    "TT": 58.9,
+    "FF": 55.4
+   },
+   "late_vs_max_new": {
+    "TT": -42.1,
+    "FF": -46.4
+   }
+  },
+  "t_phy_WN_4__clk": {
+   "region": "phy_WN_4",
+   "old": 2,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 23.64,
+     "unpadded_ps": 4673.9,
+     "others_min": 4708.3,
+     "others_max": 4757.2,
+     "others_spread": 48.9
+    },
+    "FF": {
+     "pad_stage_ps": 17.98,
+     "unpadded_ps": 4140.8,
+     "others_min": 4167.2,
+     "others_max": 4214.6,
+     "others_spread": 47.4
+    }
+   },
+   "spread_old": {
+    "TT": 48.9,
+    "FF": 47.4
+   },
+   "late_vs_max_old": {
+    "TT": -36.0,
+    "FF": -37.8
+   },
+   "new": 2,
+   "spread_new": {
+    "TT": 48.9,
+    "FF": 47.4
+   },
+   "late_vs_max_new": {
+    "TT": -36.0,
+    "FF": -37.8
+   }
+  },
+  "t_phy_WN_5__clk": {
+   "region": "phy_WN_5",
+   "old": 2,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 24.43,
+     "unpadded_ps": 4128.8,
+     "others_min": 4155.7,
+     "others_max": 4199.4,
+     "others_spread": 43.7
+    },
+    "FF": {
+     "pad_stage_ps": 18.73,
+     "unpadded_ps": 3657.9,
+     "others_min": 3677.2,
+     "others_max": 3719.2,
+     "others_spread": 42.0
+    }
+   },
+   "spread_old": {
+    "TT": 43.7,
+    "FF": 42.0
+   },
+   "late_vs_max_old": {
+    "TT": -21.7,
+    "FF": -23.8
+   },
+   "new": 2,
+   "spread_new": {
+    "TT": 43.7,
+    "FF": 42.0
+   },
+   "late_vs_max_new": {
+    "TT": -21.7,
+    "FF": -23.8
+   }
+  },
+  "t_phy_WN_6__clk": {
+   "region": "phy_WN_6",
+   "old": 3,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 25.06,
+     "unpadded_ps": 3664.2,
+     "others_min": 3717.2,
+     "others_max": 3753.9,
+     "others_spread": 36.7
+    },
+    "FF": {
+     "pad_stage_ps": 19.45,
+     "unpadded_ps": 3252.6,
+     "others_min": 3296.4,
+     "others_max": 3331.5,
+     "others_spread": 35.1
+    }
+   },
+   "spread_old": {
+    "TT": 36.7,
+    "FF": 35.1
+   },
+   "late_vs_max_old": {
+    "TT": -14.5,
+    "FF": -20.6
+   },
+   "new": 3,
+   "spread_new": {
+    "TT": 36.7,
+    "FF": 35.1
+   },
+   "late_vs_max_new": {
+    "TT": -14.5,
+    "FF": -20.6
+   }
+  },
+  "t_phy_WN_7__clk": {
+   "region": "phy_WN_7",
+   "old": 2,
+   "old_file": 3,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 24.37,
+     "unpadded_ps": 3012.8,
+     "others_min": 3050.7,
+     "others_max": 3090.1,
+     "others_spread": 39.4
+    },
+    "FF": {
+     "pad_stage_ps": 18.69,
+     "unpadded_ps": 2677.3,
+     "others_min": 2706.8,
+     "others_max": 2743.7,
+     "others_spread": 36.9
+    }
+   },
+   "spread_old": {
+    "TT": 39.4,
+    "FF": 36.9
+   },
+   "late_vs_max_old": {
+    "TT": -28.6,
+    "FF": -29.0
+   },
+   "new": 2,
+   "spread_new": {
+    "TT": 39.4,
+    "FF": 36.9
+   },
+   "late_vs_max_new": {
+    "TT": -28.6,
+    "FF": -29.0
+   }
+  },
+  "t_phy_WS_0__clk": {
+   "region": "phy_WS_0",
+   "old": 2,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 24.42,
+     "unpadded_ps": 6869.1,
+     "others_min": 6901.8,
+     "others_max": 6939.7,
+     "others_spread": 37.9
+    },
+    "FF": {
+     "pad_stage_ps": 18.71,
+     "unpadded_ps": 6077.7,
+     "others_min": 6101.7,
+     "others_max": 6138.3,
+     "others_spread": 36.6
+    }
+   },
+   "spread_old": {
+    "TT": 37.9,
+    "FF": 36.6
+   },
+   "late_vs_max_old": {
+    "TT": -21.8,
+    "FF": -23.2
+   },
+   "new": 2,
+   "spread_new": {
+    "TT": 37.9,
+    "FF": 36.6
+   },
+   "late_vs_max_new": {
+    "TT": -21.8,
+    "FF": -23.2
+   }
+  },
+  "t_phy_WS_1__clk": {
+   "region": "phy_WS_1",
+   "old": 2,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 25.35,
+     "unpadded_ps": 6431.6,
+     "others_min": 6468.1,
+     "others_max": 6518.1,
+     "others_spread": 50.0
+    },
+    "FF": {
+     "pad_stage_ps": 19.62,
+     "unpadded_ps": 5698.1,
+     "others_min": 5725.9,
+     "others_max": 5773.1,
+     "others_spread": 47.2
+    }
+   },
+   "spread_old": {
+    "TT": 50.0,
+    "FF": 47.2
+   },
+   "late_vs_max_old": {
+    "TT": -35.8,
+    "FF": -35.8
+   },
+   "new": 2,
+   "spread_new": {
+    "TT": 50.0,
+    "FF": 47.2
+   },
+   "late_vs_max_new": {
+    "TT": -35.8,
+    "FF": -35.8
+   }
+  },
+  "t_phy_WS_2__clk": {
+   "region": "phy_WS_2",
+   "old": 2,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 24.53,
+     "unpadded_ps": 5825.4,
+     "others_min": 5867.8,
+     "others_max": 5911.0,
+     "others_spread": 43.2
+    },
+    "FF": {
+     "pad_stage_ps": 18.88,
+     "unpadded_ps": 5156.9,
+     "others_min": 5195.7,
+     "others_max": 5236.5,
+     "others_spread": 40.8
+    }
+   },
+   "spread_old": {
+    "TT": 43.2,
+    "FF": 41.8
+   },
+   "late_vs_max_old": {
+    "TT": -36.5,
+    "FF": -41.8
+   },
+   "new": 2,
+   "spread_new": {
+    "TT": 43.2,
+    "FF": 41.8
+   },
+   "late_vs_max_new": {
+    "TT": -36.5,
+    "FF": -41.8
+   }
+  },
+  "t_phy_WS_3__clk": {
+   "region": "phy_WS_3",
+   "old": 2,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 23.77,
+     "unpadded_ps": 5448.1,
+     "others_min": 5485.5,
+     "others_max": 5537.5,
+     "others_spread": 52.0
+    },
+    "FF": {
+     "pad_stage_ps": 18.18,
+     "unpadded_ps": 4824.4,
+     "others_min": 4858.0,
+     "others_max": 4907.7,
+     "others_spread": 49.7
+    }
+   },
+   "spread_old": {
+    "TT": 52.0,
+    "FF": 49.7
+   },
+   "late_vs_max_old": {
+    "TT": -41.9,
+    "FF": -46.9
+   },
+   "new": 2,
+   "spread_new": {
+    "TT": 52.0,
+    "FF": 49.7
+   },
+   "late_vs_max_new": {
+    "TT": -41.9,
+    "FF": -46.9
+   }
+  },
+  "t_phy_WS_4__clk": {
+   "region": "phy_WS_4",
+   "old": 2,
+   "old_file": 5,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 23.76,
+     "unpadded_ps": 4779.2,
+     "others_min": 4815.0,
+     "others_max": 4862.4,
+     "others_spread": 47.4
+    },
+    "FF": {
+     "pad_stage_ps": 18.17,
+     "unpadded_ps": 4227.9,
+     "others_min": 4262.2,
+     "others_max": 4307.5,
+     "others_spread": 45.3
+    }
+   },
+   "spread_old": {
+    "TT": 47.4,
+    "FF": 45.3
+   },
+   "late_vs_max_old": {
+    "TT": -35.7,
+    "FF": -43.3
+   },
+   "new": 2,
+   "spread_new": {
+    "TT": 47.4,
+    "FF": 45.3
+   },
+   "late_vs_max_new": {
+    "TT": -35.7,
+    "FF": -43.3
+   }
+  },
+  "t_phy_WS_5__clk": {
+   "region": "phy_WS_5",
+   "old": 2,
+   "old_file": 4,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 24.53,
+     "unpadded_ps": 4262.3,
+     "others_min": 4293.7,
+     "others_max": 4339.8,
+     "others_spread": 46.1
+    },
+    "FF": {
+     "pad_stage_ps": 18.86,
+     "unpadded_ps": 3775.3,
+     "others_min": 3803.0,
+     "others_max": 3845.0,
+     "others_spread": 42.0
+    }
+   },
+   "spread_old": {
+    "TT": 46.1,
+    "FF": 42.0
+   },
+   "late_vs_max_old": {
+    "TT": -28.4,
+    "FF": -32.0
+   },
+   "new": 2,
+   "spread_new": {
+    "TT": 46.1,
+    "FF": 42.0
+   },
+   "late_vs_max_new": {
+    "TT": -28.4,
+    "FF": -32.0
+   }
+  },
+  "t_phy_WS_6__clk": {
+   "region": "phy_WS_6",
+   "old": 2,
+   "old_file": 3,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 25.43,
+     "unpadded_ps": 3811.1,
+     "others_min": 3842.7,
+     "others_max": 3884.4,
+     "others_spread": 41.7
+    },
+    "FF": {
+     "pad_stage_ps": 19.71,
+     "unpadded_ps": 3382.6,
+     "others_min": 3409.7,
+     "others_max": 3448.2,
+     "others_spread": 38.5
+    }
+   },
+   "spread_old": {
+    "TT": 41.7,
+    "FF": 38.5
+   },
+   "late_vs_max_old": {
+    "TT": -22.4,
+    "FF": -26.2
+   },
+   "new": 2,
+   "spread_new": {
+    "TT": 41.7,
+    "FF": 38.5
+   },
+   "late_vs_max_new": {
+    "TT": -22.4,
+    "FF": -26.2
+   }
+  },
+  "t_phy_WS_7__clk": {
+   "region": "phy_WS_7",
+   "old": 1,
+   "old_file": 5,
+   "corners": {
+    "TT": {
+     "pad_stage_ps": 25.77,
+     "unpadded_ps": 3148.4,
+     "others_min": 3183.0,
+     "others_max": 3226.0,
+     "others_spread": 43.1
+    },
+    "FF": {
+     "pad_stage_ps": 19.77,
+     "unpadded_ps": 2795.7,
+     "others_min": 2824.1,
+     "others_max": 2863.6,
+     "others_spread": 39.5
+    }
+   },
+   "spread_old": {
+    "TT": 51.8,
+    "FF": 48.1
+   },
+   "late_vs_max_old": {
+    "TT": -51.8,
+    "FF": -48.1
+   },
+   "new": 2,
+   "spread_new": {
+    "TT": 43.0,
+    "FF": 39.5
+   },
+   "late_vs_max_new": {
+    "TT": -26.1,
+    "FF": -28.4
+   }
+  }
+ }
+}

@@ -1,0 +1,243 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165968, pin cland_fwd_fclk_out_o:2 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165969, pin cland_fwd_fclk_out_o:6 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165970, pin cland_fwd_fclk_out_o:7 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165971, pin cland_fwd_fclk_out_o:8 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165972, pin cland_fwd_fclk_out_o:9 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165973, pin cland_fwd_fclk_out_o:10 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165974, pin cland_fwd_fclk_out_o:11 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165975, pin cland_fwd_fclk_out_o:15 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165977, pin cland_fwd_fclk_out_o:1 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165977, pin cland_fwd_fclk_out_o:2 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165978, pin cland_fwd_fclk_out_o:2 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165978, pin cland_fwd_fclk_out_o:3 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165979, pin cland_fwd_fclk_out_o:3 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165979, pin cland_fwd_fclk_out_o:4 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165980, pin cland_fwd_fclk_out_o:4 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165980, pin cland_fwd_fclk_out_o:5 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165981, pin cland_fwd_fclk_out_o:5 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165981, pin cland_fwd_fclk_out_o:6 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165982, pin cland_fwd_fclk_out_o:6 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165982, pin cland_fwd_fclk_out_o:7 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165983, pin cland_fwd_fclk_out_o:7 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165983, pin cland_fwd_fclk_out_o:8 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165984, pin cland_fwd_fclk_out_o:8 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165984, pin cland_fwd_fclk_out_o:9 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165985, pin cland_fwd_fclk_out_o:9 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165985, pin cland_fwd_fclk_out_o:10 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165986, pin cland_fwd_fclk_out_o:10 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165986, pin cland_fwd_fclk_out_o:11 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165987, pin cland_fwd_fclk_out_o:11 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165987, pin cland_fwd_fclk_out_o:12 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165988, pin cland_fwd_fclk_out_o:12 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165988, pin cland_fwd_fclk_out_o:13 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165989, pin cland_fwd_fclk_out_o:13 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165989, pin cland_fwd_fclk_out_o:14 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165990, pin cland_fwd_fclk_out_o:14 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165990, pin cland_fwd_fclk_out_o:15 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165991, pin cland_fwd_fclk_out_o:15 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165991, pin cland_fwd_fclk_out_o:16 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165992, pin cland_fwd_fclk_out_o:15 not found.
+[WARNING STA-1652] /work/meas17g/grt.spef line 1165993, pin cland_fwd_fclk_out_o:2 not found.
+worst slack max -130.64
+tns max -216479.97
+Startpoint: cland_fstart_in_i (input port clocked by vclk)
+Endpoint: u_cland_i/u_ring.s_d[2][260]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by fclk_in_i)
+Path Group: fclk_in_i
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                 0.0    0.0    0.0   clock vclk (rise edge)
+                      525.0  525.0   clock network delay (ideal)
+                      166.6  691.6 v input external delay
+     1    1.3   10.4    1.7  693.3 v cland_fstart_in_i (in)
+                10.4    0.0  693.3 v input58/A (BUFx8_ASAP7_75t_R)
+     3   10.2   19.2   28.2  721.5 v input58/Y (BUFx8_ASAP7_75t_R)
+                24.6    5.2  726.7 v u_cland_i/place15991/A (BUFx6f_ASAP7_75t_R)
+     1    6.9   14.4   24.4  751.2 v u_cland_i/place15991/Y (BUFx6f_ASAP7_75t_R)
+                17.3    3.3  754.5 v u_cland_i/wire17266/A (BUFx16f_ASAP7_75t_R)
+     3   23.8   10.9   24.0  778.5 v u_cland_i/wire17266/Y (BUFx16f_ASAP7_75t_R)
+                89.4   28.0  806.5 v u_cland_i/place15982/A (BUFx3_ASAP7_75t_R)
+     6    8.3   28.1   46.8  853.3 v u_cland_i/place15982/Y (BUFx3_ASAP7_75t_R)
+                29.0    2.8  856.1 v u_cland_i/_10108_/A (INVx2_ASAP7_75t_R)
+     5    3.7   23.4   18.9  875.0 ^ u_cland_i/_10108_/Y (INVx2_ASAP7_75t_R)
+                23.4    0.4  875.4 ^ u_cland_i/_10112_/C (OR3x1_ASAP7_75t_R)
+     3    4.8   47.9   36.3  911.7 ^ u_cland_i/_10112_/Y (OR3x1_ASAP7_75t_R)
+                48.0    0.6  912.3 ^ u_cland_i/place11773/A (BUFx6f_ASAP7_75t_R)
+     8   23.5   44.7   34.2  946.5 ^ u_cland_i/place11773/Y (BUFx6f_ASAP7_75t_R)
+                64.1   15.8  962.3 ^ u_cland_i/place11772/A (BUFx6f_ASAP7_75t_R)
+     8    8.4   19.5   32.6  994.9 ^ u_cland_i/place11772/Y (BUFx6f_ASAP7_75t_R)
+                20.1    1.8  996.7 ^ u_cland_i/place11768/A (BUFx3_ASAP7_75t_R)
+    11   12.4   43.1   34.8 1031.5 ^ u_cland_i/place11768/Y (BUFx3_ASAP7_75t_R)
+                43.2    1.2 1032.7 ^ u_cland_i/_12219_/A2 (AO21x1_ASAP7_75t_R)
+     1    5.1   50.8   43.4 1076.0 ^ u_cland_i/_12219_/Y (AO21x1_ASAP7_75t_R)
+                51.0    1.6 1077.7 ^ u_cland_i/u_ring.s_d[2][260]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                            1077.7   data arrival time
+
+                      833.0  833.0   clock fclk_in_i (rise edge)
+                        0.0  833.0   clock source latency
+     1   15.4    0.0    0.0  833.0 ^ fclk_in_i (in)
+                34.7   10.9  843.9 ^ wire17463/A (BUFx12f_ASAP7_75t_R)
+     1   19.1   20.7   25.0  869.0 ^ wire17463/Y (BUFx12f_ASAP7_75t_R)
+                57.4   17.3  886.3 ^ clkbuf_0_fclk_in_i/A (BUFx24_ASAP7_75t_R)
+     4   14.6   16.8   38.6  924.9 ^ clkbuf_0_fclk_in_i/Y (BUFx24_ASAP7_75t_R)
+                20.0    3.8  928.6 ^ clkbuf_2_0_0_fclk_in_i/A (BUFx24_ASAP7_75t_R)
+     2    7.0   11.1   26.5  955.2 ^ clkbuf_2_0_0_fclk_in_i/Y (BUFx24_ASAP7_75t_R)
+                12.4    2.0  957.1 ^ clkbuf_3_1__f_fclk_in_i/A (BUFx24_ASAP7_75t_R)
+    13   32.6   27.0   28.1  985.2 ^ clkbuf_3_1__f_fclk_in_i/Y (BUFx24_ASAP7_75t_R)
+                30.7    5.2  990.4 ^ clkbuf_leaf_12_fclk_in_i/A (BUFx24_ASAP7_75t_R)
+    26   12.3   14.4   31.1 1021.5 ^ clkbuf_leaf_12_fclk_in_i/Y (BUFx24_ASAP7_75t_R)
+                15.6    2.1 1023.6 ^ u_cland_i/u_ring.s_d[2][260]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                      -60.0  963.6   clock uncertainty
+                        0.0  963.6   clock reconvergence pessimism
+                      -16.6  947.0   library setup time
+                             947.0   data required time
+-------------------------------------------------------------------------
+                             947.0   data required time
+                            -1077.7   data arrival time
+-------------------------------------------------------------------------
+                            -130.6   slack (VIOLATED)
+
+
+Startpoint: cland_fstart_in_i (input port clocked by vclk)
+Endpoint: u_cland_i/u_ring.s_d[1][257]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by fclk_in_i)
+Path Group: fclk_in_i
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                 0.0    0.0    0.0   clock vclk (rise edge)
+                      525.0  525.0   clock network delay (ideal)
+                      166.6  691.6 v input external delay
+     1    1.3   10.4    1.7  693.3 v cland_fstart_in_i (in)
+                10.4    0.0  693.3 v input58/A (BUFx8_ASAP7_75t_R)
+     3   10.2   19.2   28.2  721.5 v input58/Y (BUFx8_ASAP7_75t_R)
+                24.6    5.2  726.7 v u_cland_i/place15991/A (BUFx6f_ASAP7_75t_R)
+     1    6.9   14.4   24.4  751.2 v u_cland_i/place15991/Y (BUFx6f_ASAP7_75t_R)
+                17.3    3.3  754.5 v u_cland_i/wire17266/A (BUFx16f_ASAP7_75t_R)
+     3   23.8   10.9   24.0  778.5 v u_cland_i/wire17266/Y (BUFx16f_ASAP7_75t_R)
+                89.4   28.0  806.5 v u_cland_i/place15982/A (BUFx3_ASAP7_75t_R)
+     6    8.3   28.1   46.8  853.3 v u_cland_i/place15982/Y (BUFx3_ASAP7_75t_R)
+                29.0    2.8  856.1 v u_cland_i/_10108_/A (INVx2_ASAP7_75t_R)
+     5    3.7   23.4   18.9  875.0 ^ u_cland_i/_10108_/Y (INVx2_ASAP7_75t_R)
+                23.4    0.4  875.3 ^ u_cland_i/_10160_/C (OR3x1_ASAP7_75t_R)
+     2    2.9   31.1   28.8  904.2 ^ u_cland_i/_10160_/Y (OR3x1_ASAP7_75t_R)
+                31.1    0.4  904.6 ^ u_cland_i/place11643/A (BUFx10_ASAP7_75t_R)
+    12   36.4   45.8   35.0  939.6 ^ u_cland_i/place11643/Y (BUFx10_ASAP7_75t_R)
+                69.5   17.9  957.5 ^ u_cland_i/place11622/A (BUFx6f_ASAP7_75t_R)
+     6    7.1   16.8   33.0  990.6 ^ u_cland_i/place11622/Y (BUFx6f_ASAP7_75t_R)
+                16.9    0.7  991.3 ^ u_cland_i/place11619/A (BUFx3_ASAP7_75t_R)
+    11    9.9   35.1   30.6 1021.9 ^ u_cland_i/place11619/Y (BUFx3_ASAP7_75t_R)
+                35.2    1.1 1023.0 ^ u_cland_i/_13508_/A2 (AO21x1_ASAP7_75t_R)
+     1    2.4   26.1   31.5 1054.5 ^ u_cland_i/_13508_/Y (AO21x1_ASAP7_75t_R)
+                26.1    0.6 1055.0 ^ u_cland_i/u_ring.s_d[1][257]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                            1055.0   data arrival time
+
+                      833.0  833.0   clock fclk_in_i (rise edge)
+                        0.0  833.0   clock source latency
+     1   15.4    0.0    0.0  833.0 ^ fclk_in_i (in)
+                34.7   10.9  843.9 ^ wire17463/A (BUFx12f_ASAP7_75t_R)
+     1   19.1   20.7   25.0  869.0 ^ wire17463/Y (BUFx12f_ASAP7_75t_R)
+                57.4   17.3  886.3 ^ clkbuf_0_fclk_in_i/A (BUFx24_ASAP7_75t_R)
+     4   14.6   16.8   38.6  924.9 ^ clkbuf_0_fclk_in_i/Y (BUFx24_ASAP7_75t_R)
+                20.0    3.8  928.6 ^ clkbuf_2_0_0_fclk_in_i/A (BUFx24_ASAP7_75t_R)
+     2    7.0   11.1   26.5  955.2 ^ clkbuf_2_0_0_fclk_in_i/Y (BUFx24_ASAP7_75t_R)
+                12.5    2.0  957.1 ^ clkbuf_3_0__f_fclk_in_i/A (BUFx24_ASAP7_75t_R)
+    13   32.4   26.9   27.2  984.3 ^ clkbuf_3_0__f_fclk_in_i/Y (BUFx24_ASAP7_75t_R)
+                32.4    6.2  990.5 ^ clkbuf_leaf_8_fclk_in_i/A (BUFx24_ASAP7_75t_R)
+    20   11.8   14.2   31.6 1022.1 ^ clkbuf_leaf_8_fclk_in_i/Y (BUFx24_ASAP7_75t_R)
+                15.1    1.8 1023.9 ^ u_cland_i/u_ring.s_d[1][257]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                      -60.0  963.9   clock uncertainty
+                        0.0  963.9   clock reconvergence pessimism
+                      -12.4  951.5   library setup time
+                             951.5   data required time
+-------------------------------------------------------------------------
+                             951.5   data required time
+                            -1055.0   data arrival time
+-------------------------------------------------------------------------
+                            -103.5   slack (VIOLATED)
+
+
+max_delay/setup group asynchronous
+
+                                     Required Actual
+Endpoint                              Delay  Delay  Slack
+---------------------------------------------------------
+u_core.owh_d[0]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R) 1346.5  976.1  370.3 (MET)
+u_core.fired$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R) 1346.4  975.8  370.7 (MET)
+u_core.chh_d[2]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R) 1346.3  975.6  370.7 (MET)
+u_core.chh_d[1]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R) 1346.1  975.0  371.0 (MET)
+u_core.ch_have$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R) 1343.2  970.6  372.6 (MET)
+
+max_delay/setup group path delay
+
+                                     Required Actual
+Endpoint                              Delay  Delay  Slack
+---------------------------------------------------------
+u_cland_i/u_ring.r_v$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  353.5  442.1  -88.6 (VIOLATED)
+u_cland_i/u_ring.r_lap_ok$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  340.7  400.6  -60.0 (VIOLATED)
+u_cland_i/u_ring.glo0$_DFF_N_/D (DFFLQNx1_ASAP7_75t_R)  343.8  314.7   29.0 (MET)
+u_cland_i/u_ring.dch[7].u_dsel/y[59]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  330.1  292.0   38.1 (MET)
+u_cland_i/u_ring.dch[8].u_dsel/y[6]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  335.7  282.6   53.1 (MET)
+
+max_delay/setup group clk
+
+                                     Required Actual
+Endpoint                              Delay  Delay  Slack
+---------------------------------------------------------
+u_bout_o/q[244]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1276.0 1284.6   -8.6 (VIOLATED)
+u_bout_o/q[114]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1272.4 1278.6   -6.2 (VIOLATED)
+u_core.u_b.g_a[0].g_ais.u_ad1/q[123]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1241.7 1237.1    4.6 (MET)
+u_bout_o/q[116]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1273.3 1258.0   15.3 (MET)
+u_bout_o/q[156]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1275.2 1252.3   22.9 (MET)
+
+max_delay/setup group fclk_in_i
+
+                                     Required Actual
+Endpoint                              Delay  Delay  Slack
+---------------------------------------------------------
+u_cland_i/u_ring.s_d[2][260]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)  947.0 1077.7 -130.6 (VIOLATED)
+u_cland_i/u_ring.s_d[2][150]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)  946.1 1076.2 -130.1 (VIOLATED)
+u_cland_i/u_ring.s_d[0][67]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)  951.0 1080.6 -129.6 (VIOLATED)
+u_cland_i/u_ring.s_d[0][168]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)  945.1 1070.3 -125.2 (VIOLATED)
+u_cland_i/u_ring.s_d[2][59]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)  949.9 1074.5 -124.6 (VIOLATED)
+
+max_delay/setup group vclk
+
+                                     Required Actual
+Endpoint                              Delay  Delay  Slack
+---------------------------------------------------------
+cland_fstart_out_o (output)          1161.4 1090.7   70.7 (MET)
+o[565] (output)                      1161.4  654.3  507.1 (MET)
+start_o_2 (output)                   1161.4  643.0  518.4 (MET)
+rst_o_2 (output)                     1161.4  642.2  519.2 (MET)
+o[497] (output)                      1161.4  640.0  521.4 (MET)
+
+RINGD_PINS 2272
