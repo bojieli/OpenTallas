@@ -718,3 +718,4 @@ CODEX RESET PARKED: explicit RESET from FLOW via root; no new engineering/jobs/S
   - pins_canonical: slice kit: plan pin file (freeze pins_file) not reachable -- cannot judge slice-placed pins
 KIT_PREFLIGHT FAIL: autopilot stopped before physical runner
 ot-run: | kit localhost:/srv/opentallas-scratch2/claude/ce9-cfg-route-1029/kit src codex/s81-cores-1029-resume@a2529927e | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-10-29 06:27 PDT CORES-EARLY-9 PARKED: CFG7 route AP c1c060c97a01 queued; BF G2 ENA isolation hook+proof claude/cores-early-9-1029@72bb9cd80, trial LIVE intel1 ce9-bf-ena-1029/kit unit 3946497 (past RSZ-3006); successor CORES-EARLY-10 (see queue).
