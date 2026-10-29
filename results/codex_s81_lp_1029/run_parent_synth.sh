@@ -13,13 +13,13 @@ ys=[]
 for f in fs:
     # Real SRAM macros are actual physical views: load their exact ports as library cells,
     # never synthesize their simulation/repair-array implementation into flop logic.
-    ys.append('read_verilog '+('-lib ' if f in physical_files else '')+'-sv -DSYNTHESIS '+' '.join('-D'+v for v in d['defines'])+' '+f)
+    ys.append('read_verilog '+('-lib ' if f in physical_files else '-defer ')+'-sv -DSYNTHESIS '+' '.join('-D'+v for v in d['defines'])+' '+f)
 for m in names:ys.append('blackbox '+m)
 for k,v in d['params'].items():ys.append('chparam -set '+k+' '+str(v)+' '+d['top'])
 ys+=['hierarchy -check -top '+d['top'],'synth -top '+d['top']+' -flatten','tee -o /out/generic_stat.json stat -json','dfflibmap -liberty /out/lib/seq.lib','abc -D 833 -liberty /out/lib/all.lib','opt_clean','tee -o /out/mapped_stat.json stat -json -liberty /out/lib/all.lib','tee -o /out/mapped_stat.txt stat -liberty /out/lib/all.lib','write_verilog -noattr /out/parent_mapped.v']
 (b/'synth.ys').write_text('\n'.join(ys)+'\n')
 PY
-docker run --rm --name s81-lp-parent-synth1029 --cpus=8 --memory="${mem}g" --memory-swap="${mem}g" -v "$b":/out -w /out -e HUID="$(id -u)" -e HGID="$(id -g)" openroad/orfs:asap7lock bash -lc '
+docker run --rm --name "s81-parent-synth-$(basename "$(dirname "$b")")" --cpus=8 --memory="${mem}g" --memory-swap="${mem}g" -v "$b":/out -w /out -e HUID="$(id -u)" -e HGID="$(id -g)" openroad/orfs:asap7lock bash -lc '
 set -euo pipefail
 source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1
 mkdir -p /out/lib
