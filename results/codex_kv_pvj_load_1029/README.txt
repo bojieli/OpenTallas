@@ -33,3 +33,14 @@ FF worst ts3[945]->t_r4017 data202.64 versus capture202.23+12.5+13.46=228.19
 is a separate actual-RC/data-hold convergence issue owned by FLOW. Its shared
 opt-in final_ff_hold.tcl must be qualified on a fresh successor before route.
 No clock/IO/uncertainty relaxation and no blanket margin increase here.
+
+Actual native source continuation: the current physical leaf includes the
+KV-KITS-16 one-hot sa/sb operand selection (cc87cab339), which is not yet in
+main. apply_native.py requires those declarations and changes ONLY the output
+load mechanism, keeping the one-hot arithmetic/operand pipeline. Native
+reference vs patched native + default0 + J_OUT-1 mutant repeat the same6391
+checks/118valid/6373mutant mismatch result. Both original R0/fR180 RTL inventories
+were byte-identical. New native_rtl files + actual source fixture are retained;
+future kits must use them, not replace the physical leaf with the main legacy
+binary operand source. Current24 parent pins are in current24/event and cores;
+all0cycle/nointerface changes. Fresh synth/LEC and physical gates still owed.
