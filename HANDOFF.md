@@ -1573,3 +1573,5 @@ CODEX: 2026-10-29 00:56 PDT S81cores: currentCGR0/8 qualified57044EQ+wronggateco
 
 CODEX: 2026-10-29 01:00 PDT KV CDC_CH actualR2shared4->0/1205pins via2SWVkeeps+2deadaliasdrops, 0cycles, toolbd668READY; PC18constantpinpacket646622 andcontrolfixsynthLIVE. PHYroute54d1fb666e93 live afterexactplanpinsbundlefix4b41 strictPASS0.
 CODEX: TOK-HBM6 01:03 f99155a4b opt-in IDX818 collar closes packed-host ABI collision,2280RTLmatchingedgesPASS+extensiondatamutantCAUGHT,0cycles/noadoption. ExplicitSUprofiles/compilerALAT READY6b/ef; imagea122newidentity has161FUSEDexactreceiptequality butnotlostf0byteidentity. Existingfulltreecomponentjob epyc2 unit201658-1793260539 LIVE40GiB after16GiBownOOM; hostprovideractualcapture31+CAK_Kpending,strictvehicleheld.
+
+CODEX: 2026-10-29 01:03 PDT NP4source/proofREADYf3c8405b9:17packedvs20slicedSRAM/full4396b13824checks3456cycles/3mutants+RS1caught/0cycles;4activepathsperquarterunlock16reservedslotsforHBMVP4jointplan. CTLXpinlimitedM5candidate09ccb3ready. S81dutyrawsharedINVscale0missesTTFF(correctslegacyBUFX4falseflags).
