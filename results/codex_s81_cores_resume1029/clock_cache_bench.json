@@ -1,0 +1,30 @@
+{
+ "scope": "Actual H0 pre-build kernel only; existing sizing job untouched",
+ "leaf": "T0000",
+ "candidates": [
+  "BUFx16f_ASAP7_75t_R",
+  "BUFx8_ASAP7_75t_R",
+  "BUFx12f_ASAP7_75t_R",
+  "BUFx24_ASAP7_75t_R"
+ ],
+ "leaf_results_per_candidate": 512,
+ "exact_full_dict_equality": true,
+ "geometry_mutant_changed_and_exact": true,
+ "uncached_seconds": 5.6768288490129635,
+ "cached_seconds": 1.2886245130212046,
+ "speedup": 4.405339795766829,
+ "cache_stats": {
+  "mst": {
+   "hits": 7167,
+   "misses": 513,
+   "maxsize": null,
+   "currsize": 513
+  },
+  "rc": {
+   "hits": 13811,
+   "misses": 2134,
+   "maxsize": null,
+   "currsize": 2134
+  }
+ }
+}
