@@ -7,8 +7,9 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 
-def render(src,plan,out):
+def render(src,plan,out,overlay=None):
  g=json.load(open(Path(src)/'geometry.json'));p=json.load(open(Path(plan)/'access_plan.json'));D=g['dbu']
+ if overlay:g['obstructions']=json.load(open(overlay))['obstructions']
  cells=g['cells'];bins=collections.Counter((int(q['bbox_dbu'][0]/D/100),int(q['bbox_dbu'][1]/D/100)) for q in cells)
  centers=[((i+.5)*100,(j+.5)*100) for (i,j),_ in bins.most_common(3)]
  fig,aa=plt.subplots(2,2,figsize=(15,11),constrained_layout=True);ax=aa.flat[0]
@@ -17,6 +18,11 @@ def render(src,plan,out):
  ax.set_xlim(0,g['die_dbu'][2]/D);ax.set_ylim(0,g['die_dbu'][3]/D);ax.set_aspect('equal')
  for a,(cx,cy) in zip(list(aa.flat)[1:],centers):
   w=50;x0,y0,x1,y1=cx-w,cy-w,cx+w,cy+w
+  for owner,ly,*rect in g['obstructions']:
+   if ly not in ('M5','M7'):continue
+   x,y,xx,yy=[v/D for v in rect]
+   if x>x1 or xx<x0 or y>y1 or yy<y0:continue
+   a.add_patch(Rectangle((x,y),xx-x,yy-y,facecolor='#f2d4a8',alpha=.4,edgecolor='none'))
   for q in cells:
    x,y,xx,yy=[v/D for v in q['bbox_dbu']]
    if x>x1 or xx<x0 or y>y1 or yy<y0:continue
@@ -31,4 +37,4 @@ def render(src,plan,out):
  for a in aa.flat:a.set_xlabel('um');a.set_ylabel('um')
  fig.savefig(out,dpi=170)
 if __name__=='__main__':
- a=argparse.ArgumentParser();a.add_argument('--source',required=True);a.add_argument('--plan',required=True);a.add_argument('--out',required=True);q=a.parse_args();render(q.source,q.plan,q.out)
+ a=argparse.ArgumentParser();a.add_argument('--source',required=True);a.add_argument('--plan',required=True);a.add_argument('--out',required=True);a.add_argument('--native-overlay');q=a.parse_args();render(q.source,q.plan,q.out,q.native_overlay)

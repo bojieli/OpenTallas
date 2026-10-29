@@ -1,0 +1,21 @@
+{
+  "source": "/r/grid3/native_grid.odb",
+  "cells": 37967,
+  "masters": {
+    "CKINVDCx16_ASAP7_75t_R": 15207,
+    "BUFx24_ASAP7_75t_R": 89,
+    "INVx1_ASAP7_75t_R": 7557,
+    "DFFLQNx1_ASAP7_75t_R": 2890,
+    "DFFHQNx1_ASAP7_75t_R": 7640,
+    "NOR2xp33_ASAP7_75t_R": 4501,
+    "AND2x2_ASAP7_75t_R": 83
+  },
+  "terms": 75934,
+  "grid_rectangles": 19798,
+  "signal_rectangles": 1858457,
+  "obstructions": 783184,
+  "existing_supplies": 6855538,
+  "regular_wired_nets": 0,
+  "owned_pg_capacity_obstructions": 13073,
+  "pg_via_representation": "conservative exact per-layer array-master bounding enclosure; no cut-array expansion"
+}

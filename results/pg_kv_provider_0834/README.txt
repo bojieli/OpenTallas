@@ -47,3 +47,34 @@ readback_grid.py reproduce the top-grid operation. export_native_bbox.py,
 export_overlay.py, plan_access.py, render_access.py and apply_access.py form the
 remaining contact-planning/import path. These later steps remain preparation
 until their actual runtime receipts are collected. No data/control cycles added.
+
+PARKED on explicit Claude reset at 2026-10-29 09:03 PDT.
+The fast bbox export completed: 19,798 actual M8/M9 grid wire rectangles,
+6,855,538 existing supply rectangles, same 37,967 standard cells / 75,934 rails.
+Original array-expanding exporter remains live, unit oth-ubuntu-1683312-1793288610;
+no job was killed or restarted. The fast exporter unit1849864 and exact grid
+readback unit1772696 finished PASS. Prepared planning input mirror and Shapely/
+matplotlib packages exist on epyc2 under codex-kv-pg-0834/plan_inputs; planner,
+geometry review of contact paths and access import have NOT RUN.
+
+Remaining source blocker: current provider-only soft abstract islands intersect
+14,634 actual clock bodies. KV prepared the full clock+provider type union of
+29,431 windows in full_abstracts/*.lef. Attempts to replace master OBS/PG pin
+boxes failed closed; no output ODB was produced. Independent tiny actual-master
+coupon proves dbBox_destroy and dbBox.destroy leave both master OBS and MPin
+geometry unchanged; list and explicit comprehension both enumerate all boxes.
+The owner-level probe also confirms dbMPin.destroy is absent from this build.
+Counts: OBS 1,699 before/after; VDD 241 before/after. Logs retained here.
+
+The next safe path is the KV owner's fresh full-source rebuild from the reviewed
+56 full_abstracts LEFs, then provider import and the same canonical PG operation.
+This fresh rebuild was NOT STARTED before reset. Preserve grid3 actual metal and
+its exports; only reuse them after verifying the rebuilt source has the same
+non-PG circuit/placement hash and matching actual top-grid metal. Refresh native
+OBS and native macro PG-pin inventory from the new actual ODB before contact
+planning. A projection or LEF alone cannot establish that actual-source gate.
+
+Known PG scope: VDDPHY has physical top stripes but zero connected ITerms in the
+current abstract source; that PHY-specific supply binding stays with the die/PHY
+owner. No standard-cell local access, macro closure, IR, DRC or freeze is claimed.
+No owner question. No further engineering or job launches after reset.

@@ -1,0 +1,25 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+API dbBox ['__swig_destroy__', 'create', 'destroy', 'getDebugName', 'getName', 'getTypeName']
+DOC dbBox {'create': 'None', 'destroy': 'None'}
+API dbMaster ['__swig_destroy__', 'create', 'destroy', 'getConstName', 'getDebugName', 'getName', 'getTypeName']
+DOC dbMaster {'create': 'None', 'destroy': 'None'}
+API dbMPin ['__swig_destroy__', 'create', 'getDebugName', 'getName', 'getTypeName']
+DOC dbMPin {'create': 'None'}
+API dbMTerm ['__swig_destroy__', 'create', 'createDefaultAntennaModel', 'createOxide2AntennaModel', 'getConstName', 'getDebugName', 'getName', 'getTypeName']
+DOC dbMTerm {'create': 'None'}
+API dbInst ['__swig_destroy__', 'create', 'destroy', 'getConstName', 'getDebugName', 'getEcoCreate', 'getEcoDestroy', 'getName', 'getTypeName', 'isNamed', 'rename', 'setEcoCreate', 'setEcoDestroy', 'swapMaster']
+DOC dbInst {'create': 'None', 'destroy': 'None', 'swapMaster': 'None', 'rename': 'None'}
+API dbLib ['__swig_destroy__', 'create', 'destroy', 'getConstName', 'getDebugName', 'getName', 'getTypeName']
+DOC dbLib {'create': 'None', 'destroy': 'None'}
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /kv/full_abstracts/kv3_hg_part.lef, created 1 library cells
+BEFORE_CLASS_DESTROY 1699
+AFTER_CLASS_DESTROY 1699
+BEFORE_MPIN_DESTROY 241
+Traceback (most recent call last):
+  File "/r/src/probe_owner_api.py", line 13, in <module>
+    odb.dbMPin.destroy(mp)
+AttributeError: type object 'dbMPin' has no attribute 'destroy'
