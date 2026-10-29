@@ -1043,6 +1043,7 @@ def main():
     # S81-CORE-LAT-R6 10-26 (COORD RULING 15:12): the plan pin table must have no stacked / duplicate pin sites (l0r r3rt22
     # GRT-0080 abort on 255 stacked W-face pins) -- refuse the kit, fix the PLAN pin assignment.
     _pg = plan_pin_sites(pins, hc["outline_um"], spec)
+    import core_pin_sites_gate  # also used by the explicit slice-entry geometry check below
     if _pg["verdict"] != "PASS":
         raise SystemExit(pin_gate_refusal(a.module, _pg))
     dirs = lef_dirs(REPO / hc["lef"])
