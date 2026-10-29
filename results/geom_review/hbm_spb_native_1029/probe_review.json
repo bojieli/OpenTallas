@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS-COND for one signal-only componentG2 probe",
+ "image": "results/hbm_spb_native_1029/banks_pg_safe.png",
+ "viewed": true,
+ "scope": "full4104FF/3actualidentitynets; exactnativebank sites; PHYfull1050um+EP M1-M5obstructions; PGplacementexclusion; signalsM2-M7capacity0.5; noCLK/STA",
+ "findings": [
+  "AllFFsites matchreviewed PGsafebanks, <=60%bayfill; fullmacro/PGplacementclearance.",
+  "Wide512/514b legsarelocal<=405um; onehopoverM5EPusesfreeM6/M7, approximate1026bits/6210M6tracks=16.5% ofEPheightbefore50%capacityderate.",
+  "ActualLEFcorner/pinaccess remains what thisprobe resolves; assumedpublishedPHYenvelope/digitalpinslabelled, no releaseIPqualification.",
+  "Clock/reset/PGsignoff untouched; thisprobe cannot freezeadie orsignapartition."
+ ]
+}
