@@ -1,0 +1,39 @@
+{
+ "regions": 40,
+ "regions_reached": 40,
+ "tree_root": "F12",
+ "tree_edges": 39,
+ "tree_edges_clean": 39,
+ "tree_edges_fall": 3,
+ "max_tree_depth": 6,
+ "min_sync_dist_clean_ps": 140.6,
+ "crossings": 94,
+ "depth4": 94,
+ "depth8": 0,
+ "fail": 0,
+ "max_path_ambiguous_cycles": 0,
+ "worst_margin_lo_ps": 307.1,
+ "worst_margin_lo_port": "coll_WS0_u__0",
+ "worst_margin_hi_ps": 1363.8,
+ "worst_margin_hi_port": "sp_x0__0",
+ "below_100ps": 0,
+ "lat_hist": {
+  "2": 51,
+  "3": 43
+ },
+ "K_hist": {
+  "-2": 4,
+  "-1": 43,
+  "4": 47
+ },
+ "lat_total_vs_old3": -51,
+ "old_ring_not_cycle_fixed": 66,
+ "old_ring_fail_margin": 78,
+ "corner": "TT_droop-regions_corelat250,FF_droop-regions_corelat202.5",
+ "period_ps": 833.0,
+ "aperture_ps": 104.125,
+ "sync_aperture_ps": 26.5,
+ "wander_frac": 0.05,
+ "pad": 0,
+ "source": "head_feed40_ocv.json"
+}

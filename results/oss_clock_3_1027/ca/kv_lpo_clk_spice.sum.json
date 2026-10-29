@@ -1,0 +1,26 @@
+{
+ "crossings": 3915,
+ "fail": 0,
+ "worst_margin_ps": 105.4,
+ "depth4": 3391,
+ "depth8": 524,
+ "worst_margin_lo_ps": 105.4,
+ "worst_margin_hi_ps": 150.6,
+ "lat_hist": {
+  "2": 2512,
+  "3": 927,
+  "4": 370,
+  "5": 106
+ },
+ "mode": "count_aligned",
+ "spice_cal": {
+  "TT": 1.0485,
+  "FF": 1.0552
+ },
+ "corners": [
+  "TT_droop-regions_corelat250",
+  "FF_droop-regions_corelat202.5"
+ ],
+ "period_ps": 833.0,
+ "source": "/srv/opentallas-scratch2/claude/oss-clock-3/ca/kv_lpo.json"
+}
