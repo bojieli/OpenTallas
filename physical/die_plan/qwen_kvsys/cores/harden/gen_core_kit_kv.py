@@ -1352,6 +1352,7 @@ def main():
         (kd / "macro_place.tcl").write_text("\n".join(mp) + "\n")
     # pins: plan pins file + added / gap / strap pins
     pins_doc = json.load(open(plandir / hc["pins_file"]))
+    shutil.copyfile(plandir / hc["pins_file"], kd / "plan_pins.json")  # self-contained sliced-kit pin contract
     ft_arcs, ft_names = island_ft_arcs(pins_doc, w, h)
     ft_pins = [p for p in pins_doc["pins"] if p["name"] in ft_names]
     pins = [p for p in pins_doc["pins"] if p["name"] not in ft_names]
