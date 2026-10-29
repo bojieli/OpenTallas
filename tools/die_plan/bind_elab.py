@@ -494,6 +494,7 @@ def validate_selected_parameters(tops, full, lib, defines=()):
             selected[mod.name] = mod
     rows, errors = [], []
     ident = r"[A-Za-z_][A-Za-z0-9_$]*"
+    instance_pattern = re.compile(r"\s*(\\\S+|" + ident + r")(?:\s*\[[^\]]+\])*\s*\(")
     for f in dict.fromkeys(list(full) + list(tops)):
         text = sources[str(f)]
         # One lexical mask per selected file. Re-masking a multi-MB die for
@@ -508,7 +509,7 @@ def validate_selected_parameters(tops, full, lib, defines=()):
             if masked is None:
                 masked = D._lexical_mask(text, strings=True)
             end = D._closing_paren_masked(masked, start)
-            instance = re.match(r"\s*(\\\S+|" + ident + r")(?:\s*\[[^\]]+\])*\s*\(", text[end+1:])
+            instance = instance_pattern.match(text, end+1)
             if instance is None:
                 continue   # The module's own parameter header, not an instance.
             params = D._split_commas(text[start+1:end])
