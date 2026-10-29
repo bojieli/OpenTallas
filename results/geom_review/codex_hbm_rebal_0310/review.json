@@ -1,0 +1,13 @@
+{
+  "fullcanon_root4": {
+    "picture": "root_rect_review.png",
+    "verdict": "PASS-COND ONE PLACE ONLY",
+    "findings": "The two existing BUFx24 bodies need3.294um width.4.32um microrectangle fits them with same centres inside existing8.64reservedisland; FT/reset faces separated, no macro/PG/pin/station/source changes."
+  },
+  "hnx_pad": {
+    "picture": "actual_pad.png",
+    "verdict": "PASS-COND ONE unchanged coupled TT/FF GRT only",
+    "findings": "Actualcompactmacrofreetile.OriginalFF/clockancestorsfixed during4838dataHB4 insertion/checkplacementPASS.37757captures max387.75um and0>405,0loops. TT57.34 FF-29.09/1459 structuralguardPASS. No clock trim/constraints/cycles change.",
+    "independent_reviewer": "/root/hbm nonimplementer, personally viewed actual_pad.png and actual_pad_r2r.json"
+  }
+}
