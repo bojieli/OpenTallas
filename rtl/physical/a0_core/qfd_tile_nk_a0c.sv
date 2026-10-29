@@ -19,6 +19,10 @@ module qfd_tile_nk_a0c #(
     // falls), ICG_DRAIN = cycles kept after the last activity (engine drained -> output faces, reset relays).
     parameter integer ICG = 0,   // 2 = B-hop (per-entry gates, relayed enables), see ICG_K_*
     parameter integer ICG_GOH = 3,
+    // DIE-QC-33 (COORD 10-29, opt-in, default 0 = unchanged): > 0 -> the ICG enable state (dr, B-hop h[*], act's reset
+    // term) resets from one ot_rst_relay (async assert, sync release after 2 + ICG_RRST edges) instead of raw rst_n, so
+    // the rst_n port drives only the relay + the native reset sample.  Only the gates' open window grows (adds edges).
+    parameter integer ICG_RRST = 0,
     parameter integer ICG_DRAIN = 64,
     // QC-A0-KITS-13 B-hop (ICG = 2, COORD ruling d): one ot_a0_icg_hop gate per clock entry; its enable = the tile en
     // relayed through ICG_K_* ungated hops (bound K <= s - 1, s = measured gated depth of the entry from the ungated
@@ -214,10 +218,26 @@ module qfd_tile_nk_a0c #(
         wire nv_act = |nv_f;
         // me_idle = engine drained flag from the body port (u_g.me_idle = u_me.idle, registered, 1 in reset)
         wire go_act = ((mut == 1) ? 1'b0 : go_f) | ((mut == 6) ? 1'b0 : |go_h);
-        wire act = ((mut == 5) ? 1'b0 : !rst_n) | go_act | ((mut == 2) ? 1'b0 : !me_idle) | ((mut == 4) ? 1'b0 : nv_act);
+        wire rst_icg;
+        if (ICG_RRST == 0) begin : g_rr0
+            assign rst_icg = rst_n;
+        end else begin : g_rr
+            wire [0:0] rr;
+            ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(ICG_RRST)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
+            assign rst_icg = rr[0];
+        end
+`ifndef SYNTHESIS
+        // bench mutant 11: release one edge early (relay depth k - 1); mutant 10: hop tx3 left on raw rst_n
+        reg [7:0] rr_m1;
+        always @(posedge ck or negedge rst_n) if (!rst_n) rr_m1 <= 8'd0; else rr_m1 <= {rr_m1[6:0], 1'b1};
+        wire rst_e = (mut == 11 && ICG_RRST > 0) ? rr_m1[ICG_RRST] : rst_icg;
+`else
+        wire rst_e = rst_icg;
+`endif
+        wire act = ((mut == 5) ? 1'b0 : !rst_e) | go_act | ((mut == 2) ? 1'b0 : !me_idle) | ((mut == 4) ? 1'b0 : nv_act);
         reg [7:0] dr;
-        always @(posedge ck or negedge rst_n)
-            if (!rst_n) dr <= (mut == 5) ? 8'd0 : 8'(ICG_DRAIN);
+        always @(posedge ck or negedge rst_e)
+            if (!rst_e) dr <= (mut == 5) ? 8'd0 : 8'(ICG_DRAIN);
             else if (act) dr <= 8'(ICG_DRAIN);
             else if (dr != 8'd0) dr <= dr - 8'd1;
         wire en = act | ((mut == 3) ? 1'b0 : (dr != 8'd0)) | (mut == 9);
@@ -269,42 +289,42 @@ module qfd_tile_nk_a0c #(
         end else begin : g_hop         // QC-A0-KITS-13 B-hop: one gate per clock entry, relayed enable
             wire xk_all = (mut == 7);  // bench mutant: every hop one stage longer (ck K 0 -> 1 > s - 1 = 0)
             wire xk_rp = (mut == 8);   // bench mutant: ROM-pair hops one stage longer (K 2 -> 3 > s - 1 = 2)
-            ot_a0_icg_hop #(.K(ICG_K_CK)) u_hop_ck (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_g));
-            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp0 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp0));
-            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp1 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp1));
-            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp2 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp2));
-            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp3 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp3));
-            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp4 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp4));
-            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp5 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp5));
-            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp6 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp6));
-            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp7 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp7));
-            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp8 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp8));
-            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp9 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp9));
-            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx0 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_tx0));
-            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx1 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_tx1));
-            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx2 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_tx2));
-            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx3 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_tx3));
-            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx4 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_tx4));
-            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx5 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_tx5));
-            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx6 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_tx6));
-            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx7 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_tx7));
-            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_rsw (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_rsw));
-            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_rnw (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_rnw));
-            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_dw (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_dw));
-            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_de (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_de));
-            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_rs (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_rs));
-            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_rn (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_rn));
-            ot_a0_icg_hop #(.K(ICG_K_FA2)) u_hop_fa2 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_fa2));
-            ot_a0_icg_hop #(.K(ICG_K_FA3)) u_hop_fa3 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_fa3));
-            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl0 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_lsl0));
-            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl1 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_lsl1));
-            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl2 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_lsl2));
-            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl3 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_lsl3));
-            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl4 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_lsl4));
-            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl5 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_lsl5));
-            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl6 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_lsl6));
-            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl7 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_lsl7));
-            ot_a0_icg_hop #(.K(ICG_K_NODE)) u_hop_node (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_node));
+            ot_a0_icg_hop #(.K(ICG_K_CK)) u_hop_ck (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_g));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp0 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp0));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp1 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp1));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp2 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp2));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp3 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp3));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp4 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp4));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp5 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp5));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp6 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp6));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp7 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp7));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp8 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp8));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp9 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp9));
+            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx0 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_tx0));
+            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx1 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_tx1));
+            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx2 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_tx2));
+            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx3 (.ck(ck), .rst_n((mut == 10) ? rst_n : rst_e), .en(en), .xk(xk_all), .gck(ck_tx3));
+            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx4 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_tx4));
+            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx5 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_tx5));
+            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx6 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_tx6));
+            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx7 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_tx7));
+            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_rsw (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_rsw));
+            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_rnw (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_rnw));
+            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_dw (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_dw));
+            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_de (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_de));
+            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_rs (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_rs));
+            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_rn (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_rn));
+            ot_a0_icg_hop #(.K(ICG_K_FA2)) u_hop_fa2 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_fa2));
+            ot_a0_icg_hop #(.K(ICG_K_FA3)) u_hop_fa3 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_fa3));
+            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl0 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_lsl0));
+            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl1 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_lsl1));
+            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl2 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_lsl2));
+            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl3 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_lsl3));
+            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl4 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_lsl4));
+            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl5 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_lsl5));
+            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl6 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_lsl6));
+            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl7 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_lsl7));
+            ot_a0_icg_hop #(.K(ICG_K_NODE)) u_hop_node (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_node));
         end
         initial if (ICG_GOH < 2 || ICG_DRAIN < 1 || ICG_DRAIN > 255 || ICG > 2) $fatal(1, "a0c ICG: ICG <= 2, ICG_GOH >= 2, 1 <= ICG_DRAIN <= 255");
     end endgenerate
