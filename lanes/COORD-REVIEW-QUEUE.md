@@ -4924,3 +4924,4 @@ FAILED [AUTOPILOT e6fe0ff4fc43] 2026-10-29 09:53:00 PDT AUTOPILOT -> KV-KITS: FA
   - A0 proof gap: mutant 8 survives on NL and NK, and the NL bench never drives the n path. Strengthen the benches until mutant 8 is caught. This blocks ICG=2 sign-off.
   - Boot budget: +3 cycles of gate-enable reset release -> record it in the QC boot line.
   - Successor DIE-QC-34 started.
+- 2026-10-29 10:11 PDT START [DIE-QC-34] fresh agent (successor DIE-QC-33). Main path: (1) bind verify/portbind on 23ef9f36b1 base; (2) provider PG materialization root cause (Codex mixed_apply_access shapely/OpenROAD-Python ABI failure) + ONE scoped mechanism; (3) qc_mesh_p1 strap_keepout_um 0.32 -> fixed-tree prebuild -> ot_clk mesh -> die GRT0. Sub-agents: DIE-QC-34-A0 (NK ICG_RRST=1 place, NL graph-home re-place, mut8/mut3 benches), DIE-QC-34-KITS (BTAB V1/V2 per ruling, PROG cand-2 PG hook + ONE route). Branch claude/die-qc-34-1029.

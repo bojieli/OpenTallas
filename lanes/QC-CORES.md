@@ -137,3 +137,4 @@ Release-cache PROG s8b SIGNED invalidated: exact FLOW-PG-INVALID108protectedbuff
 
 ## PARKED 2026-10-29 09:05 PDT
 Explicit Claude reset: all QC work/children parked, live jobs untouched; codex/qc-fix-0825@3ee1f7f9d pushed. Native PROG354FF second-placement candidate completed0 but uncensused/unreviewed, no route/STA; wide alternative GRT0 not native-contract qualified. Full packet handoff/codex_qc_20261029_0903.md.
+- 2026-10-29 10:11 PDT START [DIE-QC-34] fresh agent (successor DIE-QC-33). Main path: (1) bind verify/portbind on 23ef9f36b1 base; (2) provider PG materialization root cause (Codex mixed_apply_access shapely/OpenROAD-Python ABI failure) + ONE scoped mechanism; (3) qc_mesh_p1 strap_keepout_um 0.32 -> fixed-tree prebuild -> ot_clk mesh -> die GRT0. Sub-agents: DIE-QC-34-A0 (NK ICG_RRST=1 place, NL graph-home re-place, mut8/mut3 benches), DIE-QC-34-KITS (BTAB V1/V2 per ruling, PROG cand-2 PG hook + ONE route). Branch claude/die-qc-34-1029.
