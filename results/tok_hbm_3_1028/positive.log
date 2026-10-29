@@ -1,0 +1,54 @@
+## SEED=1 
+KB_CTL mode=IDXQ half=0 bad=0 checks=3673 lives=919 replays=2279 mismatches=0 fault=0
+KB_CTL PASS
+## SEED=1 +D4G
+KB_CTL mode= D4G half=0 bad=0 checks=1287 lives=919 replays=0 mismatches=0 fault=0
+KB_CTL PASS
+## SEED=1 +HALF
+KB_CTL mode=IDXQ half=1 bad=0 checks=3673 lives=919 replays=2279 mismatches=0 fault=0
+KB_CTL PASS
+## SEED=1 +D4G +HALF
+KB_CTL mode= D4G half=1 bad=0 checks=1287 lives=919 replays=0 mismatches=0 fault=0
+KB_CTL PASS
+## SEED=1 +BAD
+KB_CTL mode=IDXQ half=0 bad=1 checks=3674 lives=919 replays=2279 mismatches=0 fault=1
+KB_CTL PASS (bad schedule faulted)
+## SEED=1 +BAD +HALF
+KB_CTL mode=IDXQ half=1 bad=1 checks=3674 lives=919 replays=2279 mismatches=0 fault=1
+KB_CTL PASS (bad schedule faulted)
+## SEED=2 
+KB_CTL mode=IDXQ half=0 bad=0 checks=3667 lives=919 replays=2279 mismatches=0 fault=0
+KB_CTL PASS
+## SEED=2 +D4G
+KB_CTL mode= D4G half=0 bad=0 checks=1327 lives=919 replays=0 mismatches=0 fault=0
+KB_CTL PASS
+## SEED=2 +HALF
+KB_CTL mode=IDXQ half=1 bad=0 checks=3667 lives=919 replays=2279 mismatches=0 fault=0
+KB_CTL PASS
+## SEED=2 +D4G +HALF
+KB_CTL mode= D4G half=1 bad=0 checks=1327 lives=919 replays=0 mismatches=0 fault=0
+KB_CTL PASS
+## SEED=2 +BAD
+KB_CTL mode=IDXQ half=0 bad=1 checks=3668 lives=919 replays=2279 mismatches=0 fault=1
+KB_CTL PASS (bad schedule faulted)
+## SEED=2 +BAD +HALF
+KB_CTL mode=IDXQ half=1 bad=1 checks=3668 lives=919 replays=2279 mismatches=0 fault=1
+KB_CTL PASS (bad schedule faulted)
+## SEED=3 
+KB_CTL mode=IDXQ half=0 bad=0 checks=3677 lives=919 replays=2279 mismatches=0 fault=0
+KB_CTL PASS
+## SEED=3 +D4G
+KB_CTL mode= D4G half=0 bad=0 checks=1311 lives=919 replays=0 mismatches=0 fault=0
+KB_CTL PASS
+## SEED=3 +HALF
+KB_CTL mode=IDXQ half=1 bad=0 checks=3677 lives=919 replays=2279 mismatches=0 fault=0
+KB_CTL PASS
+## SEED=3 +D4G +HALF
+KB_CTL mode= D4G half=1 bad=0 checks=1311 lives=919 replays=0 mismatches=0 fault=0
+KB_CTL PASS
+## SEED=3 +BAD
+KB_CTL mode=IDXQ half=0 bad=1 checks=3678 lives=919 replays=2279 mismatches=0 fault=1
+KB_CTL PASS (bad schedule faulted)
+## SEED=3 +BAD +HALF
+KB_CTL mode=IDXQ half=1 bad=1 checks=3678 lives=919 replays=2279 mismatches=0 fault=1
+KB_CTL PASS (bad schedule faulted)
