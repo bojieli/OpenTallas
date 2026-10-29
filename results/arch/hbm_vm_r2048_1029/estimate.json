@@ -1,0 +1,98 @@
+{
+ "status": "SOURCE_CANDIDATE_NOT_ADOPTED",
+ "source_baseline": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv",
+ "source_baseline_sha256": "a60a2419fdf85e3f684effb0f0a850afe895dd2f8dfddaf9b2cc393ee11c8870",
+ "old_macros_per_bank": 3,
+ "new_macros_per_bank": 4,
+ "banks": 32,
+ "old_total_macros": 96,
+ "new_total_macros": 128,
+ "macro_master": "ot_sram_1r1w_1024x256_m2_r2c2",
+ "regular_words": 524288,
+ "mirror_words_logical": 65536,
+ "mirror_replication": 4,
+ "parity": {
+  "bits_per_sector": 56,
+  "storage_slices": {
+   "low_regular": [
+    0,
+    55
+   ],
+   "mirror": [
+    56,
+    111
+   ],
+   "high_regular": [
+    112,
+    167
+   ]
+  },
+  "unused_bits": [
+   168,
+   255
+  ]
+ },
+ "macros": {
+  "u_a": "regular row0..1023;clk_macro0",
+  "u_b": "SECDED parity all three address domains;clk_macro1",
+  "u_c": "original mirror row0..1023;clk_macro2",
+  "u_h": "regular row1024..2047;clk_macro3"
+ },
+ "native_sector": {
+  "width": 17,
+  "mirror": 16,
+  "regular_row_high": 15,
+  "sid": [
+   13,
+   14
+  ],
+  "row_low": [
+   3,
+   12
+  ],
+  "bank": [
+   0,
+   2
+  ]
+ },
+ "local_row": {
+  "width": 12,
+  "mirror": 11,
+  "regular_row_high": 10,
+  "row_low": [
+   0,
+   9
+  ]
+ },
+ "ports": {
+  "rq_each": 18,
+  "wq_each": 282,
+  "dq": 282,
+  "kq": 282,
+  "xq_each": 277,
+  "eg": 277,
+  "pq": 286,
+  "rr_each": 257,
+  "pr": 266,
+  "status": 18
+ },
+ "high_mirror": "rejected: original1024mirrorrows retained; no modulo/truncation",
+ "added_pipeline_cycles": 0,
+ "latency": {
+  "face_read_edges": 7,
+  "face_write_commit_edges": 4
+ },
+ "latency_status": "PREDICTION pending exact smallest real-bank miter",
+ "model_delta": {
+  "extra_SRAM_macros": 32,
+  "extra_physical_bits": 8388608,
+  "extra_physical_bytes": 1048576,
+  "old_7macro_price": "historical unsupported by actual current source; replace by measured128vs96 macroinventory"
+ },
+ "plan_owner": "HBM atomicC25c plan/sourceadoption/lot/PG/clock owner, no planfiles changed",
+ "qualification": {
+  "PnR": false,
+  "SIGNED": false,
+  "G5": false
+ }
+}
