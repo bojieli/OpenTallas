@@ -1,0 +1,25 @@
+KV-KITS-21 2026-10-29: ASK-C plan pin/port delta (COORD ruling YES, gate-failure fix KV-007/KV-008 on the FROZEN plan event26a).
+DIE-KV-27 (die owner) applies it as fix event "event26a-f1"; KV-KITS regenerates both kits after that and builds 2 variants each.
+
+== (A) qkd_kvs_pc (KV-008 GEOM FAIL r2r 1896 > 405; 575 of them from the chain launch u_chain.c[F_V]) ==
+Source pin file: intel2:/srv/opentallas-scratch2/claude/kv-kits-16-1028/pd/cores/qkd_kvs_pc_pins_r25.json (R0, 397.44x362.88;
+N 1108 M5 / S 1840 M5 / W 1448 M4 pins). CHECKED from the kit RTL (rtl/qkd_kvs_pc.sv): chain input pc__chain_i = i_next[779:0]
+(N face, x 2.3..278.7, i_next[0] at the NW corner = c[F_V] launch at (6.5,357)); chain output o_prev = chain_o (W face, y 150.6..343.5);
+pc__land_es[287:0] = u_chain land_es (keep regs) on the S face x 270.0..331.3 (608..681 um from c[F_V]) = the conflict.
+Delta: move pc__land_es[287:0] (288 pins, output) from S/M5 to the W face/M4, at the top of W next to the chain input
+(NW corner): new W order bottom->top i_prev(299) | o_next(299) | o_prev(780) | land_es(288) | ki(33) | ko(33) | fi | fo | x__est__0_1.
+W becomes 1736 pins over ~358 um = 4.85 /um on M4 (was 4.05; GEOM-27 PASS-COND ref: E M4 9.4/um was routable). S face drops to 1552.
+Predicted (geometry only, UNCHECKED until the re-kit place): c[F_V] -> land_es face flops <= ~75 um (was 608-681).
+Parent impact (DIE-KV-27 to check in die GRT0): pc__land_es nets to the host slice landing face now leave the W face instead of S.
+Not part of this delta (kit-local, 0 cycles): reset hr_q broadcasts (905 r2r) -> ot_rst_relay under KV reset_contract.json;
+u_esm.own phase broadcast (399) -> per-cluster replicas. V2 = same + ~233x233 outline (plan cost; estimate only unless DIE-KV-27 agrees).
+
+== (B) qkd_ahub (KV-007 GEOM FAIL clock_reach 533.84 from one entry ck[0] (302,242) to 3557 sinks) ==
+Delta: 4 new core clock input ports (same clock 'clk', M5 face pins over a die M9->M5 stack, like ck[0]):
+  ck_sw at S face (150, 0), ck_se at S face (450, 0), ck_es at E face (604.8, 110), ck_en at E face (604.8, 330).
+  Each fed from a hub_C partition-local tap of tree c (ot_clk kv_e26a.yaml; ruling A, no early core taps), leveled by the parent so
+  all 5 entries meet the 12.3 common latency (250 TT / 202.5 FF +-20) together with the in-core local trees.
+  Sink assignment in the kit: nearest entry (S band +-150 x / 45 y -> <=195 um; E column +-110 y -> <=125 um; centre cluster -> ck[0] 124 um).
+ck1/ck2 (zh macro clocks) and the recip hard clock root unchanged (Codex preserved_hard_clocks).
+Kit regen after the plan event lands: V1/V2 per COORD (kvs_pc V1 current outline, V2 ~233x233; ahub V1 5-entry, V2 5-entry + leaf
+retarget only if V1 GEOM fails).
