@@ -59,7 +59,7 @@ def compile_entry(inventory, job, timing):
     # the separate80x1024-bit K_XB activation stream.
     words = uint(job.get("host_word_count",417), 10, "HBC HOST programme word count")
     if not words:
-        raise ValueError("empty HEAD activation stream")
+        raise ValueError("empty HOST affine programme book")
     command_scope=uint(timing.get("hbc_command_scope",0),2,"HBC command scope")
     if command_scope>2:
         raise ValueError("unknown HBC command namespace")
