@@ -20,6 +20,16 @@ set -uo pipefail
 K=$(cd "$1" && pwd -P); GOAL=${2:-finish}; MEM=${3:-32}; CPUS=${4:-16}
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
+# HBM-CORES-KITS-13 10-29: the sign-off bundle (tools/die_plan/signoff.py SIGNOFF_BUNDLE, copied by the generator) must be
+# in the kit BEFORE any flow step: a hand kit copy with --exclude 'signoff*' dropped signoff.py, the ring V1/V2 flows ran
+# ~1 h to 6_final and the post sign-off then died on "can't open signoff.py" (no verdict).  Fail closed up front (rc 10,
+# marker FAIL_BUNDLE); restore with: python3 tools/die_plan/signoff.py bundle KITDIR.  Same file list as SIGNOFF_BUNDLE.
+if [ "$GOAL" = finish ] || [ "$GOAL" = route ] || [ "$GOAL" = post ]; then
+  miss=""; for f in signoff.py sdc_lint.py face_guard.py io_hold_qualification.py pair_skew.tcl clock_family.tcl kit_modes.py \
+                    data_droop.py core_io_reference.py; do [ -f "$K/$f" ] || miss="$miss $f"; done
+  if [ -n "$miss" ]; then echo "FAIL_BUNDLE sign-off bundle incomplete in $K:$miss (restore: signoff.py bundle $K)" | tee "$K/FAIL_BUNDLE"; exit 10; fi
+  rm -f "$K/FAIL_BUNDLE"
+fi
 NAME=hbmcore-$(basename "$K" | tr -c 'A-Za-z0-9_.-' _ | cut -c1-60)-$$
 $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
