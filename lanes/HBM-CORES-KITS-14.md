@@ -4,3 +4,6 @@
 
 ## CODEX notes 2026-10-29 08:27 PDT
 CODEX took over: collect all K1/K4/K5/K6/K7/K8 jobs and fix missing recipes on codex/hbm-kits-b-1029. XCAL original FAIL retained; N-strip reset relay anchor is placement-only live intel1:/srv/opentallas-scratch2/claude/codex-hbm-kits-b-1029/xcal_reset, ot-run unit oth-ubuntu-1402481-1793287550 (intel2 client1932198). LEC source unchanged; no route until fresh geometry review. Recipe candidates 4fbc4e8ff + review fb50fbf29 for kshare geometry aliases and actual keybuf slice preparing generator checks.
+
+## PARKED 2026-10-29 09:04 PDT CODEX explicit Claude reset
+Clean/pushed codex/hbm-kits-b-1029@11beeea74; full packet CODEX-LOG HBM KITS12/14. Keybuf contract PASS and PLACE completed epyc2 unit3522312; XCAL corrected-site LEC5593/PLACE/GRT50ov0 but AUTO col_v estimate FAIL retained, no route. One-clock kshare exact11974check+mutant PASS READY source26d902f68/11beeea74; paired source/plan adoption required. QCORE+SFUSTORE V1 stored endpoints corrected, final station-resite NW437/NE430 badFFhomes->0,+0cycles/0fail. Inherited long LECs untouched; hcp_sys1 sound proof owned shared FLOW helper. Remaining recipes listed full packet. No after-reset engineering/jobs.
