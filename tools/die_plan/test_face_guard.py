@@ -692,3 +692,64 @@ def test_explicit_typed_origin_start_and_mutants():
                        (_origin_only_net(), dict(RS, st={'form':'origin_start','origin':'wrong_origin'}))]:
         r = _rs(text, land=land)
         assert r['verdict'] == 'FAIL' and 'land_slot' in r['fail_counts'], r['fails']
+
+
+def _flat_like_odb(text, top="top"):
+    """Emit the hierarchical test netlist as ONE flat module with the same hierarchical instance paths (what an
+    ODB write_verilog of the synthesized design looks like): module types are lost, paths kept."""
+    mods = face_guard.parse(text)
+    T = mods[top]
+    F = face_guard.Flat(mods, top)
+    names, n = {}, [0]
+
+    def w(b):
+        if b.startswith("CONST_"):
+            return "1'b1" if b.endswith("1") else "1'b0"
+        r = F.find(b)
+        if r not in names:
+            names[r] = f"\\n_{n[0]} "
+            n[0] += 1
+        return names[r]
+    body = []
+    for m, path, pp in F.cells:
+        conns = ", ".join(f".{p}({w(bits[0])})" for p, (d, bits) in pp.items() if bits)
+        body.append(f" {m} \\{path} ({conns});")
+    ports = [p for p in T.ports]
+    decl = "".join(f" {T.dirs[p]} {p};\n" for p in ports)
+    asg = "".join(f" assign {w(p)} = {p};\n" for p in ports)
+    wires = "".join(f" wire {v};\n" for v in names.values())
+    return f"module {top}({', '.join(ports)});\n{decl}{wires}{asg}" + "\n".join(body) + "\nendmodule\n"
+
+
+def test_flat_odb_netlist_types_from_hierarchical_netlist():
+    # ODB-written netlists are flat: typed status-copy / origin proofs need the hierarchical netlist's types.
+    hier = _rs_status_helper()
+    flat = _flat_like_odb(hier)
+    assert len(face_guard.parse(flat)) == 1
+    assert _rs(hier)["verdict"] == "PASS"
+    r = _rs(flat)
+    assert r["verdict"] == "FAIL" and "land_slot" in r["fail_counts"], r["fails"]     # no types: fail-closed
+    ok = face_guard.guard(flat, "top", clocks=["fclk"], land=RS, straps=["strap_efall"],
+                          types=face_guard.hier_module_types(hier, "top"))
+    assert ok["verdict"] == "PASS", ok["fails"]
+    bad = face_guard.hier_module_types(_rs_status_helper(module="unrelated_status"), "top")
+    r = face_guard.guard(flat, "top", clocks=["fclk"], land=RS, straps=["strap_efall"], types=bad)
+    assert r["verdict"] == "FAIL" and "land_slot" in r["fail_counts"], r["fails"]
+    with pytest.raises(ValueError):
+        face_guard.guard(flat, "top", clocks=["fclk"], land=RS, straps=["strap_efall"], types=("other", {}))
+    # typed origin_start on the flat netlist
+    spec = dict(RS, st={"form": "origin_start", "origin": "u_cland_origin"})
+    oh = _origin_only_net()
+    of = _flat_like_odb(oh)
+    assert _rs(of, land=spec)["verdict"] == "FAIL"
+    r = face_guard.guard(of, "top", clocks=["fclk"], land=spec, straps=["strap_efall"],
+                         types=face_guard.hier_module_types(oh, "top"))
+    assert r["verdict"] == "PASS", r["fails"]
+    bad = face_guard.hier_module_types(oh.replace("ot_dp_landing_origin_s", "unrelated_origin"), "top")
+    r = face_guard.guard(of, "top", clocks=["fclk"], land=spec, straps=["strap_efall"], types=bad)
+    assert r["verdict"] == "FAIL", r["fails"]
+
+
+def test_run_kit_odb_face_guard_reads_hierarchical_types():
+    import gen_phys
+    assert "1_synth_odb.v --types-from \\$N" in gen_phys.RUN_KIT

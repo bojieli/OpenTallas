@@ -287,6 +287,28 @@ class Flat:
                 self.cells.append((typ, path, pins))
 
 
+def hier_module_types(text, top=None):
+    """(top, {instance path: original module type}) of a HIERARCHICAL netlist (the kit 1_2_yosys.v). An ODB
+    write_verilog netlist is flat (one module) yet keeps the same hierarchical instance paths, so the typed
+    status-copy / origin proofs read module types from this map (guard types=); an untyped path stays untyped."""
+    mods = parse(text)
+    if top is None:
+        used = {typ for M in mods.values() for typ, _, _ in M.cells}
+        tops = [m for m in mods if m not in used]
+        if len(tops) != 1:
+            raise ValueError(f"cannot pick the top module: {tops}")
+        top = tops[0]
+    out = {}
+
+    def walk(mname, pfx):
+        out[pfx.rstrip("/")] = mname
+        for typ, inst, _ in mods[mname].cells:
+            if typ in mods:
+                walk(typ, pfx + inst + "/")
+    walk(top, "")
+    return top, out
+
+
 def read_ft1(path):
     """slot names with ONE station from a kit's ft_stations.txt (`slot stations in_face out_face ...`)."""
     out = set()
@@ -520,8 +542,10 @@ def sdc_clock_exports(text):
 
 
 def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=(),
-          exports=()):
-    """straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
+          exports=(), types=None):
+    """types: (top, {path: module}) from hier_module_types of the hierarchical netlist this flat netlist was written
+    from (kit ODB write_verilog pass); fills only paths the netlist itself does not type; its top must match.
+    straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
     parent need no pin register -> exempt (recorded in the result); any other name is refused (ValueError).
     bumps: declared hard-IP line-side ports [(port, dir, width)] (plan bump_ports, KV-KITS-4 10-27): the bump IS the
     hard macro's own pin, so it carries no pin register; instead every bit must wire straight to exactly one pin of
@@ -588,6 +612,11 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         top = tops[0]
     T = mods[top]
     F = Flat(mods, top)
+    if types is not None:
+        if types[0] != top:
+            raise ValueError(f"types netlist top {types[0]} != {top}")
+        for k, v in types[1].items():
+            F.module_types.setdefault(k, v)
     drv, loads = defaultdict(list), defaultdict(list)
     for ci, (m, path, pp) in enumerate(F.cells):
         for p, (d, bits) in pp.items():
@@ -1219,6 +1248,8 @@ def main(argv=None):
     ap.add_argument("--sdc", help="kit constraint.sdc (default: beside --pins): create_clock ports are clock pins")
     ap.add_argument("--land", help="kit land_slots.json (default: beside --pins): declared landing-ring buses "
                                    "{bus: D} (ICG form) or {bus: {D, form: hold_mux}} or {bus: {form: ring_start, ring: R}}")
+    ap.add_argument("--types-from", help="hierarchical netlist (kit 1_2_yosys.v) giving instance-path module types "
+                                         "for a flat ODB-written netlist (typed status-copy / origin proofs)")
     a = ap.parse_args(argv)
     stf = a.straps or (str(Path(a.pins).parent) if a.pins else None)
     sl = kit_strap_list(Path(stf).parent if stf.endswith(".json") else stf) if stf else []
@@ -1233,8 +1264,11 @@ def main(argv=None):
     lf = a.land or (str(Path(a.pins).with_name("land_slots.json")) if a.pins else None)
     land = kit_land(lf) if lf and Path(lf).exists() else None
     dl = kit_dead_list(Path(a.pins).parent) if a.pins else []
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex)
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex,
+              types=hier_module_types(Path(a.types_from).read_text(), a.top) if a.types_from else None)
     r["netlist"] = a.netlist
+    if a.types_from:
+        r["types_from"] = a.types_from
     if a.out:
         Path(a.out).write_text(json.dumps(r, indent=1) + "\n")
     print(f"FACE_GUARD {r['verdict']} top {r['top']} bits {r['checked']} ok {r['ok']} fails {r['fail_counts']}")
