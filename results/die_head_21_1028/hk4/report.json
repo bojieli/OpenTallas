@@ -1,0 +1,5941 @@
+{
+ "schema": "opentallas.head_channel_resize.v1",
+ "tag": "DIE-HEAD-21 HK4 resize",
+ "margin_um": 17.28,
+ "grid_um": 8.64,
+ "max_keep": 0.9,
+ "types": {
+  "hd_st_turn": {
+   "old_outline_um": [
+    1442.88,
+    1226.88
+   ],
+   "instances": [
+    "nst1",
+    "nst10",
+    "sst1",
+    "sst10"
+   ],
+   "synth": {
+    "area_um2": 5445.003,
+    "cells": 37872,
+    "src": "head-kits-1/kits/hd_st_turn synth_stat"
+   },
+   "old": {
+    "outline_um": [
+     1442.88,
+     1226.88
+    ],
+    "area_um2": 1770240.614,
+    "band_area_um2": 18652.032,
+    "ring_reserve_um2": 9043.574,
+    "face_window_um": {
+     "E": 411.2,
+     "N": 411.2
+    },
+    "clock_reach_one_entry_um": 1330.44,
+    "clock_trunk_drivers": 25,
+    "clock_reach_trunk_um": 170.12,
+    "fill": 0.003
+   },
+   "action": "crop",
+   "crop_um": [
+    138.24,
+    95.04,
+    1442.88,
+    1226.88
+   ],
+   "new_outline_um": [
+    1304.64,
+    1131.84
+   ],
+   "new": {
+    "outline_um": [
+     1304.64,
+     1131.84
+    ],
+    "area_um2": 1476643.738,
+    "band_area_um2": 18652.032,
+    "ring_reserve_um2": 9043.574,
+    "face_window_um": {
+     "E": 411.2,
+     "N": 411.2
+    },
+    "clock_reach_one_entry_um": 1330.44,
+    "clock_trunk_drivers": 20,
+    "clock_reach_trunk_um": 144.92,
+    "fill": 0.004
+   },
+   "dropped_reserved": [
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      -0.0,
+      613.138,
+      3.18,
+      613.948
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      -0.0,
+      843.522,
+      3.0,
+      844.332
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      -0.0,
+      1073.906,
+      2.82,
+      1074.716
+     ]
+    }
+   ],
+   "dropped_islands": [],
+   "dropped_reset_taps": [
+    [
+     17.28,
+     604.8
+    ],
+    [
+     259.2,
+     86.4
+    ],
+    [
+     1209.6,
+     69.12
+    ],
+    [
+     743.04,
+     51.84
+    ],
+    [
+     17.28,
+     984.96
+    ],
+    [
+     17.28,
+     17.28
+    ],
+    [
+     86.4,
+     708.48
+    ],
+    [
+     207.36,
+     17.28
+    ],
+    [
+     1175.04,
+     17.28
+    ]
+   ],
+   "reset_in_site": [
+    1296.48,
+    1123.168
+   ],
+   "moves": [
+    {
+     "part": "nst1",
+     "orient": "R0",
+     "old_origin_um": [
+      1546.56,
+      14999.04
+     ],
+     "new_origin_um": [
+      1684.8,
+      15094.08
+     ],
+     "old_die_um": [
+      1546.56,
+      14999.04,
+      2989.44,
+      16225.92
+     ],
+     "new_die_um": [
+      1684.8,
+      15094.08,
+      2989.44,
+      16225.92
+     ]
+    },
+    {
+     "part": "nst10",
+     "orient": "MY",
+     "old_origin_um": [
+      14532.48,
+      14999.04
+     ],
+     "new_origin_um": [
+      14532.48,
+      15094.08
+     ],
+     "old_die_um": [
+      14532.48,
+      14999.04,
+      15975.36,
+      16225.92
+     ],
+     "new_die_um": [
+      14532.48,
+      15094.08,
+      15837.12,
+      16225.92
+     ]
+    },
+    {
+     "part": "sst1",
+     "orient": "MX",
+     "old_origin_um": [
+      1546.56,
+      1330.56
+     ],
+     "new_origin_um": [
+      1684.8,
+      1330.56
+     ],
+     "old_die_um": [
+      1546.56,
+      1330.56,
+      2989.44,
+      2557.44
+     ],
+     "new_die_um": [
+      1684.8,
+      1330.56,
+      2989.44,
+      2462.4
+     ]
+    },
+    {
+     "part": "sst10",
+     "orient": "R180",
+     "old_origin_um": [
+      14532.48,
+      1330.56
+     ],
+     "new_origin_um": [
+      14532.48,
+      1330.56
+     ],
+     "old_die_um": [
+      14532.48,
+      1330.56,
+      15975.36,
+      2557.44
+     ],
+     "new_die_um": [
+      14532.48,
+      1330.56,
+      15837.12,
+      2462.4
+     ]
+    }
+   ],
+   "taps": {
+    "bank_corner_radius_um": 148.368,
+    "n": 15,
+    "worst_radius_um": 190.6,
+    "sinks": 7835
+   }
+  },
+  "hd_st_str": {
+   "old_outline_um": [
+    1442.88,
+    1226.88
+   ],
+   "instances": [
+    "nst2",
+    "nst9",
+    "sst2",
+    "sst9"
+   ],
+   "synth": {
+    "area_um2": 4583.179,
+    "cells": 32729,
+    "src": "die-head-21-hk3/diag/hd_st_str synth_stat (hk3)"
+   },
+   "old": {
+    "outline_um": [
+     1442.88,
+     1226.88
+    ],
+    "area_um2": 1770240.614,
+    "band_area_um2": 18652.032,
+    "ring_reserve_um2": 9043.574,
+    "face_window_um": {
+     "E": 411.2,
+     "W": 411.2
+    },
+    "clock_reach_one_entry_um": 1219.2,
+    "clock_trunk_drivers": 18,
+    "clock_reach_trunk_um": 177.0,
+    "fill": 0.003
+   },
+   "action": "crop",
+   "crop_um": [
+    0.0,
+    95.04,
+    1442.88,
+    570.24
+   ],
+   "new_outline_um": [
+    1442.88,
+    475.2
+   ],
+   "new": {
+    "outline_um": [
+     1442.88,
+     475.2
+    ],
+    "area_um2": 685656.576,
+    "band_area_um2": 18652.032,
+    "ring_reserve_um2": 9043.574,
+    "face_window_um": {
+     "E": 411.2,
+     "W": 411.2
+    },
+    "clock_reach_one_entry_um": 1158.72,
+    "clock_trunk_drivers": 19,
+    "clock_reach_trunk_um": 175.04,
+    "fill": 0.007
+   },
+   "dropped_reserved": [
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      723.12,
+      612.9,
+      727.44,
+      613.71
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      1.68,
+      613.138,
+      6.0,
+      613.948
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      242.16,
+      613.138,
+      246.48,
+      613.948
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      482.64,
+      613.138,
+      486.96,
+      613.948
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      723.12,
+      613.138,
+      727.44,
+      613.948
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      962.66,
+      613.138,
+      966.98,
+      613.948
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      1202.2,
+      613.138,
+      1206.52,
+      613.948
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      1441.74,
+      613.138,
+      1442.88,
+      613.948
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      723.12,
+      843.289,
+      727.44,
+      844.099
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      1441.56,
+      843.522,
+      1442.88,
+      844.332
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      723.12,
+      1073.679,
+      727.44,
+      1074.489
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      1441.38,
+      1073.906,
+      1442.88,
+      1074.716
+     ]
+    }
+   ],
+   "dropped_islands": [
+    [
+     116.44,
+     609.12,
+     125.08,
+     617.76
+    ],
+    [
+     116.64,
+     609.12,
+     125.28,
+     617.76
+    ],
+    [
+     470.48,
+     609.12,
+     479.12,
+     617.76
+    ],
+    [
+     470.88,
+     609.12,
+     479.52,
+     617.76
+    ],
+    [
+     470.9,
+     609.12,
+     479.54,
+     617.76
+    ],
+    [
+     824.79,
+     609.12,
+     833.43,
+     617.76
+    ],
+    [
+     824.85,
+     609.12,
+     833.49,
+     617.76
+    ],
+    [
+     825.12,
+     609.12,
+     833.76,
+     617.76
+    ],
+    [
+     825.16,
+     609.12,
+     833.8,
+     617.76
+    ],
+    [
+     1179.1,
+     609.12,
+     1187.74,
+     617.76
+    ],
+    [
+     1179.23,
+     609.12,
+     1187.87,
+     617.76
+    ],
+    [
+     1179.36,
+     609.12,
+     1188.0,
+     617.76
+    ],
+    [
+     1179.43,
+     609.12,
+     1188.07,
+     617.76
+    ]
+   ],
+   "dropped_reset_taps": [
+    [
+     1209.6,
+     881.28
+    ],
+    [
+     276.48,
+     915.84
+    ],
+    [
+     552.96,
+     604.8
+    ],
+    [
+     760.32,
+     1002.24
+    ],
+    [
+     17.28,
+     604.8
+    ],
+    [
+     1209.6,
+     1123.2
+    ],
+    [
+     293.76,
+     1140.48
+    ],
+    [
+     259.2,
+     86.4
+    ],
+    [
+     1209.6,
+     69.12
+    ],
+    [
+     743.04,
+     1209.6
+    ],
+    [
+     725.76,
+     794.88
+    ],
+    [
+     743.04,
+     51.84
+    ],
+    [
+     17.28,
+     984.96
+    ],
+    [
+     1296.0,
+     1088.64
+    ],
+    [
+     17.28,
+     17.28
+    ],
+    [
+     380.16,
+     1002.24
+    ],
+    [
+     881.28,
+     639.36
+    ],
+    [
+     86.4,
+     708.48
+    ],
+    [
+     207.36,
+     17.28
+    ],
+    [
+     1175.04,
+     17.28
+    ]
+   ],
+   "reset_in_site": [
+    1434.72,
+    8.608
+   ],
+   "moves": [
+    {
+     "part": "nst2",
+     "orient": "R0",
+     "old_origin_um": [
+      2989.44,
+      14999.04
+     ],
+     "new_origin_um": [
+      2989.44,
+      15094.08
+     ],
+     "old_die_um": [
+      2989.44,
+      14999.04,
+      4432.32,
+      16225.92
+     ],
+     "new_die_um": [
+      2989.44,
+      15094.08,
+      4432.32,
+      15569.28
+     ]
+    },
+    {
+     "part": "nst9",
+     "orient": "MY",
+     "old_origin_um": [
+      13089.6,
+      14999.04
+     ],
+     "new_origin_um": [
+      13089.6,
+      15094.08
+     ],
+     "old_die_um": [
+      13089.6,
+      14999.04,
+      14532.48,
+      16225.92
+     ],
+     "new_die_um": [
+      13089.6,
+      15094.08,
+      14532.48,
+      15569.28
+     ]
+    },
+    {
+     "part": "sst2",
+     "orient": "MX",
+     "old_origin_um": [
+      2989.44,
+      1330.56
+     ],
+     "new_origin_um": [
+      2989.44,
+      1987.2
+     ],
+     "old_die_um": [
+      2989.44,
+      1330.56,
+      4432.32,
+      2557.44
+     ],
+     "new_die_um": [
+      2989.44,
+      1987.2,
+      4432.32,
+      2462.4
+     ]
+    },
+    {
+     "part": "sst9",
+     "orient": "R180",
+     "old_origin_um": [
+      13089.6,
+      1330.56
+     ],
+     "new_origin_um": [
+      13089.6,
+      1987.2
+     ],
+     "old_die_um": [
+      13089.6,
+      1330.56,
+      14532.48,
+      2557.44
+     ],
+     "new_die_um": [
+      13089.6,
+      1987.2,
+      14532.48,
+      2462.4
+     ]
+    }
+   ],
+   "taps": {
+    "bank_corner_radius_um": 148.368,
+    "n": 5,
+    "worst_radius_um": 221.4,
+    "sinks": 5264
+   }
+  },
+  "hd_st_n3": {
+   "old_outline_um": [
+    1442.88,
+    1226.88
+   ],
+   "instances": [
+    "nst3"
+   ],
+   "synth": {
+    "area_um2": 9401.709,
+    "cells": 66905,
+    "src": "head-kits-3/gen/kits/hd_st_n3 synth_stat"
+   },
+   "old": {
+    "outline_um": [
+     1442.88,
+     1226.88
+    ],
+    "area_um2": 1770240.614,
+    "band_area_um2": 37304.064,
+    "ring_reserve_um2": 18087.149,
+    "face_window_um": {
+     "E": 822.4,
+     "N": 411.2,
+     "W": 411.2
+    },
+    "clock_reach_one_entry_um": 1330.44,
+    "clock_trunk_drivers": 38,
+    "clock_reach_trunk_um": 177.0,
+    "fill": 0.005
+   },
+   "action": "keep",
+   "crop_um": [
+    0.0,
+    95.04,
+    1442.88,
+    1226.88
+   ],
+   "reason": "crop keeps 92% of the slot (> 90%): the type's own windows span the slot",
+   "taps": {
+    "bank_corner_radius_um": 148.368,
+    "n": 18,
+    "worst_radius_um": 237.8,
+    "sinks": 11558
+   }
+  },
+  "hd_st_n4": {
+   "old_outline_um": [
+    1442.88,
+    1226.88
+   ],
+   "instances": [
+    "nst4"
+   ],
+   "synth": {
+    "area_um2": 9057.869,
+    "cells": 64848,
+    "src": "head-kits-1/kits/hd_st_n4 synth_stat"
+   },
+   "old": {
+    "outline_um": [
+     1442.88,
+     1226.88
+    ],
+    "area_um2": 1770240.614,
+    "band_area_um2": 37304.064,
+    "ring_reserve_um2": 18087.149,
+    "face_window_um": {
+     "E": 822.4,
+     "W": 822.4
+    },
+    "clock_reach_one_entry_um": 1219.2,
+    "clock_trunk_drivers": 37,
+    "clock_reach_trunk_um": 177.0,
+    "fill": 0.005
+   },
+   "action": "crop",
+   "crop_um": [
+    0.0,
+    95.04,
+    1442.88,
+    1088.64
+   ],
+   "new_outline_um": [
+    1442.88,
+    993.6
+   ],
+   "new": {
+    "outline_um": [
+     1442.88,
+     993.6
+    ],
+    "area_um2": 1433645.568,
+    "band_area_um2": 37304.064,
+    "ring_reserve_um2": 18087.149,
+    "face_window_um": {
+     "E": 822.4,
+     "W": 822.4
+    },
+    "clock_reach_one_entry_um": 1219.2,
+    "clock_trunk_drivers": 35,
+    "clock_reach_trunk_um": 175.04,
+    "fill": 0.006
+   },
+   "dropped_reserved": [],
+   "dropped_islands": [],
+   "dropped_reset_taps": [
+    [
+     1209.6,
+     1123.2
+    ],
+    [
+     293.76,
+     1140.48
+    ],
+    [
+     259.2,
+     86.4
+    ],
+    [
+     1209.6,
+     69.12
+    ],
+    [
+     743.04,
+     1209.6
+    ],
+    [
+     743.04,
+     51.84
+    ],
+    [
+     17.28,
+     17.28
+    ],
+    [
+     207.36,
+     17.28
+    ],
+    [
+     1175.04,
+     17.28
+    ]
+   ],
+   "reset_in_site": [
+    1434.72,
+    8.608
+   ],
+   "moves": [
+    {
+     "part": "nst4",
+     "orient": "R0",
+     "old_origin_um": [
+      5875.2,
+      14999.04
+     ],
+     "new_origin_um": [
+      5875.2,
+      15094.08
+     ],
+     "old_die_um": [
+      5875.2,
+      14999.04,
+      7318.08,
+      16225.92
+     ],
+     "new_die_um": [
+      5875.2,
+      15094.08,
+      7318.08,
+      16087.68
+     ]
+    }
+   ],
+   "taps": {
+    "bank_corner_radius_um": 148.368,
+    "n": 13,
+    "worst_radius_um": 207.9,
+    "sinks": 10528
+   }
+  },
+  "hd_st_m": {
+   "old_outline_um": [
+    1442.88,
+    1226.88
+   ],
+   "instances": [
+    "nst7",
+    "sst4",
+    "sst7"
+   ],
+   "synth": {
+    "area_um2": 889.467,
+    "cells": 6058,
+    "src": "head-kits-3/gen/kits/hd_st_m synth_stat (db051c450d)"
+   },
+   "old": {
+    "outline_um": [
+     1442.88,
+     1226.88
+    ],
+    "area_um2": 1770240.614,
+    "band_area_um2": 4829.76,
+    "ring_reserve_um2": 2379.888,
+    "face_window_um": {
+     "E": 52.0,
+     "W": 52.0
+    },
+    "clock_reach_one_entry_um": 959.2,
+    "clock_trunk_drivers": 16,
+    "clock_reach_trunk_um": 194.0,
+    "fill": 0.001
+   },
+   "action": "crop",
+   "crop_um": [
+    0.0,
+    354.24,
+    1442.88,
+    483.84
+   ],
+   "new_outline_um": [
+    1442.88,
+    129.6
+   ],
+   "new": {
+    "outline_um": [
+     1442.88,
+     129.6
+    ],
+    "area_um2": 186997.248,
+    "band_area_um2": 4829.76,
+    "ring_reserve_um2": 2379.888,
+    "face_window_um": {
+     "E": 52.0,
+     "W": 52.0
+    },
+    "clock_reach_one_entry_um": 812.32,
+    "clock_trunk_drivers": 8,
+    "clock_reach_trunk_um": 174.24,
+    "fill": 0.005
+   },
+   "dropped_reserved": [
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      723.12,
+      612.9,
+      727.44,
+      613.71
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      0.0,
+      613.138,
+      1.14,
+      613.948
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      240.54,
+      613.138,
+      243.24,
+      613.948
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      482.64,
+      613.138,
+      485.34,
+      613.948
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      724.74,
+      613.138,
+      727.44,
+      613.948
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      963.94,
+      613.138,
+      966.64,
+      613.948
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      1203.14,
+      613.138,
+      1205.84,
+      613.948
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      723.12,
+      843.289,
+      727.44,
+      844.099
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      0.0,
+      843.522,
+      1.32,
+      844.332
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      723.12,
+      1073.679,
+      727.44,
+      1074.489
+     ]
+    },
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      0.0,
+      1073.906,
+      1.5,
+      1074.716
+     ]
+    }
+   ],
+   "dropped_islands": [
+    [
+     276.85,
+     609.12,
+     285.49,
+     617.76
+    ],
+    [
+     277.07,
+     609.12,
+     285.71,
+     617.76
+    ],
+    [
+     306.72,
+     609.12,
+     315.36,
+     617.76
+    ],
+    [
+     660.76,
+     609.12,
+     669.4,
+     617.76
+    ],
+    [
+     660.96,
+     609.12,
+     669.6,
+     617.76
+    ],
+    [
+     707.89,
+     609.12,
+     716.53,
+     617.76
+    ],
+    [
+     708.11,
+     609.12,
+     716.75,
+     617.76
+    ],
+    [
+     1014.8,
+     609.12,
+     1023.44,
+     617.76
+    ],
+    [
+     1015.2,
+     609.12,
+     1023.84,
+     617.76
+    ],
+    [
+     1015.22,
+     609.12,
+     1023.86,
+     617.76
+    ],
+    [
+     1138.93,
+     609.12,
+     1147.57,
+     617.76
+    ],
+    [
+     1139.15,
+     609.12,
+     1147.79,
+     617.76
+    ],
+    [
+     1369.11,
+     609.12,
+     1377.75,
+     617.76
+    ],
+    [
+     1369.17,
+     609.12,
+     1377.81,
+     617.76
+    ],
+    [
+     1369.44,
+     609.12,
+     1378.08,
+     617.76
+    ],
+    [
+     1369.48,
+     609.12,
+     1378.12,
+     617.76
+    ]
+   ],
+   "dropped_reset_taps": [
+    [
+     1209.6,
+     881.28
+    ],
+    [
+     1209.6,
+     276.48
+    ],
+    [
+     276.48,
+     311.04
+    ],
+    [
+     276.48,
+     915.84
+    ],
+    [
+     552.96,
+     604.8
+    ],
+    [
+     760.32,
+     1002.24
+    ],
+    [
+     725.76,
+     190.08
+    ],
+    [
+     933.12,
+     570.24
+    ],
+    [
+     17.28,
+     604.8
+    ],
+    [
+     1209.6,
+     1123.2
+    ],
+    [
+     293.76,
+     1140.48
+    ],
+    [
+     259.2,
+     86.4
+    ],
+    [
+     1399.68,
+     570.24
+    ],
+    [
+     1209.6,
+     69.12
+    ],
+    [
+     743.04,
+     1209.6
+    ],
+    [
+     725.76,
+     794.88
+    ],
+    [
+     743.04,
+     51.84
+    ],
+    [
+     17.28,
+     984.96
+    ],
+    [
+     1296.0,
+     1088.64
+    ],
+    [
+     17.28,
+     17.28
+    ],
+    [
+     1192.32,
+     172.8
+    ],
+    [
+     639.36,
+     293.76
+    ],
+    [
+     380.16,
+     1002.24
+    ],
+    [
+     881.28,
+     639.36
+    ],
+    [
+     86.4,
+     708.48
+    ],
+    [
+     207.36,
+     17.28
+    ],
+    [
+     1175.04,
+     17.28
+    ]
+   ],
+   "reset_in_site": [
+    8.16,
+    8.608
+   ],
+   "moves": [
+    {
+     "part": "nst7",
+     "orient": "R0",
+     "old_origin_um": [
+      10203.84,
+      14999.04
+     ],
+     "new_origin_um": [
+      10203.84,
+      15353.28
+     ],
+     "old_die_um": [
+      10203.84,
+      14999.04,
+      11646.72,
+      16225.92
+     ],
+     "new_die_um": [
+      10203.84,
+      15353.28,
+      11646.72,
+      15482.88
+     ]
+    },
+    {
+     "part": "sst4",
+     "orient": "R180",
+     "old_origin_um": [
+      5875.2,
+      1330.56
+     ],
+     "new_origin_um": [
+      5875.2,
+      2073.6
+     ],
+     "old_die_um": [
+      5875.2,
+      1330.56,
+      7318.08,
+      2557.44
+     ],
+     "new_die_um": [
+      5875.2,
+      2073.6,
+      7318.08,
+      2203.2
+     ]
+    },
+    {
+     "part": "sst7",
+     "orient": "MX",
+     "old_origin_um": [
+      10203.84,
+      1330.56
+     ],
+     "new_origin_um": [
+      10203.84,
+      2073.6
+     ],
+     "old_die_um": [
+      10203.84,
+      1330.56,
+      11646.72,
+      2557.44
+     ],
+     "new_die_um": [
+      10203.84,
+      2073.6,
+      11646.72,
+      2203.2
+     ]
+    }
+   ],
+   "taps": {
+    "bank_corner_radius_um": 105.88,
+    "n": 7,
+    "worst_radius_um": 162.2,
+    "sinks": 841
+   }
+  },
+  "hd_st_k5": {
+   "old_outline_um": [
+    1442.88,
+    1226.88
+   ],
+   "instances": [
+    "sst5"
+   ],
+   "synth": {
+    "area_um2": 5343.264,
+    "cells": 38071,
+    "src": "head-kits-1/kits/hd_st_k5 synth_stat"
+   },
+   "old": {
+    "outline_um": [
+     1442.88,
+     1226.88
+    ],
+    "area_um2": 1770240.614,
+    "band_area_um2": 23481.792,
+    "ring_reserve_um2": 11423.462,
+    "face_window_um": {
+     "E": 463.2,
+     "S": 411.2,
+     "W": 52.0
+    },
+    "clock_reach_one_entry_um": 1330.44,
+    "clock_trunk_drivers": 33,
+    "clock_reach_trunk_um": 197.0,
+    "fill": 0.003
+   },
+   "action": "crop",
+   "crop_um": [
+    0.0,
+    0.0,
+    1442.88,
+    872.64
+   ],
+   "new_outline_um": [
+    1442.88,
+    872.64
+   ],
+   "new": {
+    "outline_um": [
+     1442.88,
+     872.64
+    ],
+    "area_um2": 1259114.803,
+    "band_area_um2": 23481.792,
+    "ring_reserve_um2": 11423.462,
+    "face_window_um": {
+     "E": 463.2,
+     "S": 411.2,
+     "W": 52.0
+    },
+    "clock_reach_one_entry_um": 1330.44,
+    "clock_trunk_drivers": 33,
+    "clock_reach_trunk_um": 197.0,
+    "fill": 0.004
+   },
+   "dropped_reserved": [
+    {
+     "kind": "die_clock_tree",
+     "rect_um": [
+      1441.34,
+      1009.681,
+      1442.88,
+      1010.491
+     ]
+    }
+   ],
+   "dropped_islands": [],
+   "dropped_reset_taps": [
+    [
+     1209.6,
+     881.28
+    ],
+    [
+     276.48,
+     915.84
+    ],
+    [
+     760.32,
+     1002.24
+    ],
+    [
+     1209.6,
+     1123.2
+    ],
+    [
+     293.76,
+     1140.48
+    ],
+    [
+     743.04,
+     1209.6
+    ],
+    [
+     17.28,
+     984.96
+    ],
+    [
+     1296.0,
+     1088.64
+    ],
+    [
+     380.16,
+     1002.24
+    ]
+   ],
+   "reset_in_site": [
+    901.792,
+    863.968
+   ],
+   "moves": [
+    {
+     "part": "sst5",
+     "orient": "R0",
+     "old_origin_um": [
+      7318.08,
+      1330.56
+     ],
+     "new_origin_um": [
+      7318.08,
+      1330.56
+     ],
+     "old_die_um": [
+      7318.08,
+      1330.56,
+      8760.96,
+      2557.44
+     ],
+     "new_die_um": [
+      7318.08,
+      1330.56,
+      8760.96,
+      2203.2
+     ]
+    }
+   ],
+   "taps": {
+    "bank_corner_radius_um": 147.96,
+    "n": 13,
+    "worst_radius_um": 221.4,
+    "sinks": 6105
+   }
+  },
+  "hd_turn_a": {
+   "old_outline_um": [
+    172.8,
+    1036.8
+   ],
+   "instances": [
+    "turnW0a",
+    "turnE0a",
+    "turnW1a",
+    "turnE1a",
+    "turnW2a",
+    "turnE2a",
+    "turnW3a",
+    "turnE3a",
+    "turnW4a",
+    "turnE4a",
+    "turnW5a",
+    "turnE5a"
+   ],
+   "synth": {
+    "area_um2": 2241.937,
+    "cells": 16325,
+    "src": "die-head-21-hk3/diag/hd_turn_a synth_stat (hk3)"
+   },
+   "old": {
+    "outline_um": [
+     172.8,
+     1036.8
+    ],
+    "area_um2": 179159.04,
+    "band_area_um2": 9072.968,
+    "ring_reserve_um2": 4521.787,
+    "face_window_um": {
+     "S": 164.672,
+     "W": 300.032
+    },
+    "clock_reach_one_entry_um": 600.992,
+    "clock_trunk_drivers": 4,
+    "clock_reach_trunk_um": 195.68,
+    "fill": 0.013
+   },
+   "action": "crop",
+   "crop_um": [
+    0.0,
+    0.0,
+    172.8,
+    673.92
+   ],
+   "new_outline_um": [
+    172.8,
+    673.92
+   ],
+   "new": {
+    "outline_um": [
+     172.8,
+     673.92
+    ],
+    "area_um2": 116453.376,
+    "band_area_um2": 9072.968,
+    "ring_reserve_um2": 4521.787,
+    "face_window_um": {
+     "S": 164.672,
+     "W": 300.032
+    },
+    "clock_reach_one_entry_um": 600.992,
+    "clock_trunk_drivers": 4,
+    "clock_reach_trunk_um": 195.68,
+    "fill": 0.019
+   },
+   "dropped_reserved": [],
+   "dropped_islands": [],
+   "dropped_reset_taps": [
+    [
+     112.32,
+     781.92
+    ],
+    [
+     4.32,
+     902.88
+    ]
+   ],
+   "reset_in_site": [
+    8.16,
+    8.608
+   ],
+   "moves": [
+    {
+     "part": "turnW0a",
+     "orient": "MY",
+     "old_origin_um": [
+      103.68,
+      13962.24
+     ],
+     "new_origin_um": [
+      103.68,
+      13962.24
+     ],
+     "old_die_um": [
+      103.68,
+      13962.24,
+      276.48,
+      14999.04
+     ],
+     "new_die_um": [
+      103.68,
+      13962.24,
+      276.48,
+      14636.16
+     ]
+    },
+    {
+     "part": "turnE0a",
+     "orient": "R0",
+     "old_origin_um": [
+      17245.44,
+      13962.24
+     ],
+     "new_origin_um": [
+      17245.44,
+      13962.24
+     ],
+     "old_die_um": [
+      17245.44,
+      13962.24,
+      17418.24,
+      14999.04
+     ],
+     "new_die_um": [
+      17245.44,
+      13962.24,
+      17418.24,
+      14636.16
+     ]
+    },
+    {
+     "part": "turnW1a",
+     "orient": "MY",
+     "old_origin_um": [
+      103.68,
+      11888.64
+     ],
+     "new_origin_um": [
+      103.68,
+      11888.64
+     ],
+     "old_die_um": [
+      103.68,
+      11888.64,
+      276.48,
+      12925.44
+     ],
+     "new_die_um": [
+      103.68,
+      11888.64,
+      276.48,
+      12562.56
+     ]
+    },
+    {
+     "part": "turnE1a",
+     "orient": "R0",
+     "old_origin_um": [
+      17245.44,
+      11888.64
+     ],
+     "new_origin_um": [
+      17245.44,
+      11888.64
+     ],
+     "old_die_um": [
+      17245.44,
+      11888.64,
+      17418.24,
+      12925.44
+     ],
+     "new_die_um": [
+      17245.44,
+      11888.64,
+      17418.24,
+      12562.56
+     ]
+    },
+    {
+     "part": "turnW2a",
+     "orient": "MY",
+     "old_origin_um": [
+      103.68,
+      9815.04
+     ],
+     "new_origin_um": [
+      103.68,
+      9815.04
+     ],
+     "old_die_um": [
+      103.68,
+      9815.04,
+      276.48,
+      10851.84
+     ],
+     "new_die_um": [
+      103.68,
+      9815.04,
+      276.48,
+      10488.96
+     ]
+    },
+    {
+     "part": "turnE2a",
+     "orient": "R0",
+     "old_origin_um": [
+      17245.44,
+      9815.04
+     ],
+     "new_origin_um": [
+      17245.44,
+      9815.04
+     ],
+     "old_die_um": [
+      17245.44,
+      9815.04,
+      17418.24,
+      10851.84
+     ],
+     "new_die_um": [
+      17245.44,
+      9815.04,
+      17418.24,
+      10488.96
+     ]
+    },
+    {
+     "part": "turnW3a",
+     "orient": "MY",
+     "old_origin_um": [
+      103.68,
+      7741.44
+     ],
+     "new_origin_um": [
+      103.68,
+      7741.44
+     ],
+     "old_die_um": [
+      103.68,
+      7741.44,
+      276.48,
+      8778.24
+     ],
+     "new_die_um": [
+      103.68,
+      7741.44,
+      276.48,
+      8415.36
+     ]
+    },
+    {
+     "part": "turnE3a",
+     "orient": "R0",
+     "old_origin_um": [
+      17245.44,
+      7741.44
+     ],
+     "new_origin_um": [
+      17245.44,
+      7741.44
+     ],
+     "old_die_um": [
+      17245.44,
+      7741.44,
+      17418.24,
+      8778.24
+     ],
+     "new_die_um": [
+      17245.44,
+      7741.44,
+      17418.24,
+      8415.36
+     ]
+    },
+    {
+     "part": "turnW4a",
+     "orient": "MY",
+     "old_origin_um": [
+      103.68,
+      5667.84
+     ],
+     "new_origin_um": [
+      103.68,
+      5667.84
+     ],
+     "old_die_um": [
+      103.68,
+      5667.84,
+      276.48,
+      6704.64
+     ],
+     "new_die_um": [
+      103.68,
+      5667.84,
+      276.48,
+      6341.76
+     ]
+    },
+    {
+     "part": "turnE4a",
+     "orient": "R0",
+     "old_origin_um": [
+      17245.44,
+      5667.84
+     ],
+     "new_origin_um": [
+      17245.44,
+      5667.84
+     ],
+     "old_die_um": [
+      17245.44,
+      5667.84,
+      17418.24,
+      6704.64
+     ],
+     "new_die_um": [
+      17245.44,
+      5667.84,
+      17418.24,
+      6341.76
+     ]
+    },
+    {
+     "part": "turnW5a",
+     "orient": "MY",
+     "old_origin_um": [
+      103.68,
+      3594.24
+     ],
+     "new_origin_um": [
+      103.68,
+      3594.24
+     ],
+     "old_die_um": [
+      103.68,
+      3594.24,
+      276.48,
+      4631.04
+     ],
+     "new_die_um": [
+      103.68,
+      3594.24,
+      276.48,
+      4268.16
+     ]
+    },
+    {
+     "part": "turnE5a",
+     "orient": "R0",
+     "old_origin_um": [
+      17245.44,
+      3594.24
+     ],
+     "new_origin_um": [
+      17245.44,
+      3594.24
+     ],
+     "old_die_um": [
+      17245.44,
+      3594.24,
+      17418.24,
+      4631.04
+     ],
+     "new_die_um": [
+      17245.44,
+      3594.24,
+      17418.24,
+      4268.16
+     ]
+    }
+   ],
+   "taps": {
+    "bank_corner_radius_um": 149.387,
+    "n": 2,
+    "worst_radius_um": 199.6,
+    "sinks": 2274
+   }
+  },
+  "hd_turn_b": {
+   "old_outline_um": [
+    172.8,
+    1036.8
+   ],
+   "instances": [
+    "turnW0b",
+    "turnE0b",
+    "turnW1b",
+    "turnE1b",
+    "turnW2b",
+    "turnE2b",
+    "turnW3b",
+    "turnE3b",
+    "turnW4b",
+    "turnE4b",
+    "turnW5b",
+    "turnE5b"
+   ],
+   "synth": {
+    "area_um2": 2054.191,
+    "cells": 15204,
+    "src": "head-kits-1/kits/hd_turn_b synth_stat"
+   },
+   "old": {
+    "outline_um": [
+     172.8,
+     1036.8
+    ],
+    "area_um2": 179159.04,
+    "band_area_um2": 9247.98,
+    "ring_reserve_um2": 4521.787,
+    "face_window_um": {
+     "N": 164.672,
+     "W": 300.032
+    },
+    "clock_reach_one_entry_um": 600.992,
+    "clock_trunk_drivers": 5,
+    "clock_reach_trunk_um": 196.544,
+    "fill": 0.011
+   },
+   "action": "crop",
+   "crop_um": [
+    0.0,
+    336.96,
+    172.8,
+    1036.8
+   ],
+   "new_outline_um": [
+    172.8,
+    699.84
+   ],
+   "new": {
+    "outline_um": [
+     172.8,
+     699.84
+    ],
+    "area_um2": 120932.352,
+    "band_area_um2": 9247.98,
+    "ring_reserve_um2": 4521.787,
+    "face_window_um": {
+     "N": 164.672,
+     "W": 300.032
+    },
+    "clock_reach_one_entry_um": 600.992,
+    "clock_trunk_drivers": 4,
+    "clock_reach_trunk_um": 193.504,
+    "fill": 0.017
+   },
+   "dropped_reserved": [],
+   "dropped_islands": [],
+   "dropped_reset_taps": [
+    [
+     21.6,
+     276.48
+    ],
+    [
+     4.32,
+     4.32
+    ]
+   ],
+   "reset_in_site": [
+    8.16,
+    8.608
+   ],
+   "moves": [
+    {
+     "part": "turnW0b",
+     "orient": "MY",
+     "old_origin_um": [
+      103.68,
+      12925.44
+     ],
+     "new_origin_um": [
+      103.68,
+      13262.4
+     ],
+     "old_die_um": [
+      103.68,
+      12925.44,
+      276.48,
+      13962.24
+     ],
+     "new_die_um": [
+      103.68,
+      13262.4,
+      276.48,
+      13962.24
+     ]
+    },
+    {
+     "part": "turnE0b",
+     "orient": "R0",
+     "old_origin_um": [
+      17245.44,
+      12925.44
+     ],
+     "new_origin_um": [
+      17245.44,
+      13262.4
+     ],
+     "old_die_um": [
+      17245.44,
+      12925.44,
+      17418.24,
+      13962.24
+     ],
+     "new_die_um": [
+      17245.44,
+      13262.4,
+      17418.24,
+      13962.24
+     ]
+    },
+    {
+     "part": "turnW1b",
+     "orient": "MY",
+     "old_origin_um": [
+      103.68,
+      10851.84
+     ],
+     "new_origin_um": [
+      103.68,
+      11188.8
+     ],
+     "old_die_um": [
+      103.68,
+      10851.84,
+      276.48,
+      11888.64
+     ],
+     "new_die_um": [
+      103.68,
+      11188.8,
+      276.48,
+      11888.64
+     ]
+    },
+    {
+     "part": "turnE1b",
+     "orient": "R0",
+     "old_origin_um": [
+      17245.44,
+      10851.84
+     ],
+     "new_origin_um": [
+      17245.44,
+      11188.8
+     ],
+     "old_die_um": [
+      17245.44,
+      10851.84,
+      17418.24,
+      11888.64
+     ],
+     "new_die_um": [
+      17245.44,
+      11188.8,
+      17418.24,
+      11888.64
+     ]
+    },
+    {
+     "part": "turnW2b",
+     "orient": "MY",
+     "old_origin_um": [
+      103.68,
+      8778.24
+     ],
+     "new_origin_um": [
+      103.68,
+      9115.2
+     ],
+     "old_die_um": [
+      103.68,
+      8778.24,
+      276.48,
+      9815.04
+     ],
+     "new_die_um": [
+      103.68,
+      9115.2,
+      276.48,
+      9815.04
+     ]
+    },
+    {
+     "part": "turnE2b",
+     "orient": "R0",
+     "old_origin_um": [
+      17245.44,
+      8778.24
+     ],
+     "new_origin_um": [
+      17245.44,
+      9115.2
+     ],
+     "old_die_um": [
+      17245.44,
+      8778.24,
+      17418.24,
+      9815.04
+     ],
+     "new_die_um": [
+      17245.44,
+      9115.2,
+      17418.24,
+      9815.04
+     ]
+    },
+    {
+     "part": "turnW3b",
+     "orient": "MY",
+     "old_origin_um": [
+      103.68,
+      6704.64
+     ],
+     "new_origin_um": [
+      103.68,
+      7041.6
+     ],
+     "old_die_um": [
+      103.68,
+      6704.64,
+      276.48,
+      7741.44
+     ],
+     "new_die_um": [
+      103.68,
+      7041.6,
+      276.48,
+      7741.44
+     ]
+    },
+    {
+     "part": "turnE3b",
+     "orient": "R0",
+     "old_origin_um": [
+      17245.44,
+      6704.64
+     ],
+     "new_origin_um": [
+      17245.44,
+      7041.6
+     ],
+     "old_die_um": [
+      17245.44,
+      6704.64,
+      17418.24,
+      7741.44
+     ],
+     "new_die_um": [
+      17245.44,
+      7041.6,
+      17418.24,
+      7741.44
+     ]
+    },
+    {
+     "part": "turnW4b",
+     "orient": "MY",
+     "old_origin_um": [
+      103.68,
+      4631.04
+     ],
+     "new_origin_um": [
+      103.68,
+      4968.0
+     ],
+     "old_die_um": [
+      103.68,
+      4631.04,
+      276.48,
+      5667.84
+     ],
+     "new_die_um": [
+      103.68,
+      4968.0,
+      276.48,
+      5667.84
+     ]
+    },
+    {
+     "part": "turnE4b",
+     "orient": "R0",
+     "old_origin_um": [
+      17245.44,
+      4631.04
+     ],
+     "new_origin_um": [
+      17245.44,
+      4968.0
+     ],
+     "old_die_um": [
+      17245.44,
+      4631.04,
+      17418.24,
+      5667.84
+     ],
+     "new_die_um": [
+      17245.44,
+      4968.0,
+      17418.24,
+      5667.84
+     ]
+    },
+    {
+     "part": "turnW5b",
+     "orient": "MY",
+     "old_origin_um": [
+      103.68,
+      2557.44
+     ],
+     "new_origin_um": [
+      103.68,
+      2894.4
+     ],
+     "old_die_um": [
+      103.68,
+      2557.44,
+      276.48,
+      3594.24
+     ],
+     "new_die_um": [
+      103.68,
+      2894.4,
+      276.48,
+      3594.24
+     ]
+    },
+    {
+     "part": "turnE5b",
+     "orient": "R0",
+     "old_origin_um": [
+      17245.44,
+      2557.44
+     ],
+     "new_origin_um": [
+      17245.44,
+      2894.4
+     ],
+     "old_die_um": [
+      17245.44,
+      2557.44,
+      17418.24,
+      3594.24
+     ],
+     "new_die_um": [
+      17245.44,
+      2894.4,
+      17418.24,
+      3594.24
+     ]
+    }
+   ],
+   "taps": {
+    "bank_corner_radius_um": 166.624,
+    "n": 2,
+    "worst_radius_um": 166.6,
+    "sinks": 1708
+   }
+  },
+  "hd_spn": {
+   "old_outline_um": [
+    1382.4,
+    2073.6
+   ],
+   "instances": [
+    "sp0",
+    "sp1",
+    "sp2",
+    "sp3",
+    "sp4"
+   ],
+   "synth": {
+    "area_um2": 13950.654,
+    "cells": 99322,
+    "src": "head-kits-1/kits/hd_spn synth_stat"
+   },
+   "old": {
+    "outline_um": [
+     1382.4,
+     2073.6
+    ],
+    "area_um2": 2866544.64,
+    "band_area_um2": 56665.436,
+    "ring_reserve_um2": 28082.678,
+    "face_window_um": {
+     "E": 600.064,
+     "N": 486.628,
+     "S": 486.628,
+     "W": 600.064
+    },
+    "clock_reach_one_entry_um": 1603.428,
+    "clock_trunk_drivers": 29,
+    "clock_reach_trunk_um": 193.062,
+    "fill": 0.005
+   },
+   "action": "keep",
+   "reason": "carries the die clock trunk (spine root x 8760.96) and abuts both tile halves on W/E; narrowing it moves the 264-tile array (ASK, default keep)",
+   "taps": {
+    "bank_corner_radius_um": 195.38,
+    "n": 43,
+    "worst_radius_um": 195.4,
+    "sinks": 29854
+   }
+  },
+  "hd_spn_end": {
+   "old_outline_um": [
+    1382.4,
+    2073.6
+   ],
+   "instances": [
+    "sp5"
+   ],
+   "synth": {
+    "area_um2": 11924.72,
+    "cells": 84315,
+    "src": "head-kits-3/gen/kits/hd_spn_end synth_stat"
+   },
+   "old": {
+    "outline_um": [
+     1382.4,
+     2073.6
+    ],
+    "area_um2": 2866544.64,
+    "band_area_um2": 47495.199,
+    "ring_reserve_um2": 23560.891,
+    "face_window_um": {
+     "E": 600.064,
+     "N": 486.628,
+     "S": 203.58,
+     "W": 600.064
+    },
+    "clock_reach_one_entry_um": 1603.428,
+    "clock_trunk_drivers": 28,
+    "clock_reach_trunk_um": 193.062,
+    "fill": 0.004
+   },
+   "action": "keep",
+   "reason": "same as hd_spn (spine end; tile halves abut W/E)",
+   "taps": {
+    "bank_corner_radius_um": 180.264,
+    "n": 33,
+    "worst_radius_um": 224.2,
+    "sinks": 21354
+   }
+  }
+ },
+ "channels": [
+  {
+   "name": "hk4_free_nst1_0",
+   "rect_um": [
+    1546.56,
+    14999.04,
+    2989.44,
+    15094.08
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the nst1 (hd_st_turn) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "nst1",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_nst1_0",
+   "rect_um": [
+    1546.56,
+    15094.08,
+    1684.8,
+    16225.92
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the nst1 (hd_st_turn) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 3 tree sites, 0 islands",
+   "part": "nst1",
+   "tree_sites_um": [
+    [
+     1546.56,
+     15612.178,
+     1549.74,
+     15612.988
+    ],
+    [
+     1546.56,
+     15842.562,
+     1549.56,
+     15843.372
+    ],
+    [
+     1546.56,
+     16072.946,
+     1549.38,
+     16073.756
+    ]
+   ],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_nst10_1",
+   "rect_um": [
+    14532.48,
+    14999.04,
+    15975.36,
+    15094.08
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the nst10 (hd_st_turn) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "nst10",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_nst10_1",
+   "rect_um": [
+    15837.12,
+    15094.08,
+    15975.36,
+    16225.92
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the nst10 (hd_st_turn) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 3 tree sites, 0 islands",
+   "part": "nst10",
+   "tree_sites_um": [
+    [
+     15972.18,
+     15612.178,
+     15975.36,
+     15612.988
+    ],
+    [
+     15972.36,
+     15842.562,
+     15975.36,
+     15843.372
+    ],
+    [
+     15972.54,
+     16072.946,
+     15975.36,
+     16073.756
+    ]
+   ],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_sst1_2",
+   "rect_um": [
+    1546.56,
+    2462.4,
+    2989.44,
+    2557.44
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the sst1 (hd_st_turn) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "sst1",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_sst1_2",
+   "rect_um": [
+    1546.56,
+    1330.56,
+    1684.8,
+    2462.4
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the sst1 (hd_st_turn) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 3 tree sites, 0 islands",
+   "part": "sst1",
+   "tree_sites_um": [
+    [
+     1546.56,
+     1943.492,
+     1549.74,
+     1944.302
+    ],
+    [
+     1546.56,
+     1713.108,
+     1549.56,
+     1713.918
+    ],
+    [
+     1546.56,
+     1482.724,
+     1549.38,
+     1483.534
+    ]
+   ],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_sst10_3",
+   "rect_um": [
+    14532.48,
+    2462.4,
+    15975.36,
+    2557.44
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the sst10 (hd_st_turn) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "sst10",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_sst10_3",
+   "rect_um": [
+    15837.12,
+    1330.56,
+    15975.36,
+    2462.4
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the sst10 (hd_st_turn) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 3 tree sites, 0 islands",
+   "part": "sst10",
+   "tree_sites_um": [
+    [
+     15972.18,
+     1943.492,
+     15975.36,
+     1944.302
+    ],
+    [
+     15972.36,
+     1713.108,
+     15975.36,
+     1713.918
+    ],
+    [
+     15972.54,
+     1482.724,
+     15975.36,
+     1483.534
+    ]
+   ],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_nst2_0",
+   "rect_um": [
+    2989.44,
+    14999.04,
+    4432.32,
+    15094.08
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the nst2 (hd_st_str) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "nst2",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_nst2_0",
+   "rect_um": [
+    2989.44,
+    15569.28,
+    4432.32,
+    16225.92
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the nst2 (hd_st_str) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 12 tree sites, 13 islands",
+   "part": "nst2",
+   "tree_sites_um": [
+    [
+     3712.56,
+     15611.94,
+     3716.88,
+     15612.75
+    ],
+    [
+     2991.12,
+     15612.178,
+     2995.44,
+     15612.988
+    ],
+    [
+     3231.6,
+     15612.178,
+     3235.92,
+     15612.988
+    ],
+    [
+     3472.08,
+     15612.178,
+     3476.4,
+     15612.988
+    ],
+    [
+     3712.56,
+     15612.178,
+     3716.88,
+     15612.988
+    ],
+    [
+     3952.1,
+     15612.178,
+     3956.42,
+     15612.988
+    ],
+    [
+     4191.64,
+     15612.178,
+     4195.96,
+     15612.988
+    ],
+    [
+     4431.18,
+     15612.178,
+     4432.32,
+     15612.988
+    ],
+    [
+     3712.56,
+     15842.329,
+     3716.88,
+     15843.139
+    ],
+    [
+     4431.0,
+     15842.562,
+     4432.32,
+     15843.372
+    ],
+    [
+     3712.56,
+     16072.719,
+     3716.88,
+     16073.529
+    ],
+    [
+     4430.82,
+     16072.946,
+     4432.32,
+     16073.756
+    ]
+   ],
+   "islands_um": [
+    [
+     3105.88,
+     15608.16,
+     3114.52,
+     15616.8
+    ],
+    [
+     3106.08,
+     15608.16,
+     3114.72,
+     15616.8
+    ],
+    [
+     3459.92,
+     15608.16,
+     3468.56,
+     15616.8
+    ],
+    [
+     3460.32,
+     15608.16,
+     3468.96,
+     15616.8
+    ],
+    [
+     3460.34,
+     15608.16,
+     3468.98,
+     15616.8
+    ],
+    [
+     3814.23,
+     15608.16,
+     3822.87,
+     15616.8
+    ],
+    [
+     3814.29,
+     15608.16,
+     3822.93,
+     15616.8
+    ],
+    [
+     3814.56,
+     15608.16,
+     3823.2,
+     15616.8
+    ],
+    [
+     3814.6,
+     15608.16,
+     3823.24,
+     15616.8
+    ],
+    [
+     4168.54,
+     15608.16,
+     4177.18,
+     15616.8
+    ],
+    [
+     4168.67,
+     15608.16,
+     4177.31,
+     15616.8
+    ],
+    [
+     4168.8,
+     15608.16,
+     4177.44,
+     15616.8
+    ],
+    [
+     4168.87,
+     15608.16,
+     4177.51,
+     15616.8
+    ]
+   ]
+  },
+  {
+   "name": "hk4_free_nst9_1",
+   "rect_um": [
+    13089.6,
+    14999.04,
+    14532.48,
+    15094.08
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the nst9 (hd_st_str) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "nst9",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_nst9_1",
+   "rect_um": [
+    13089.6,
+    15569.28,
+    14532.48,
+    16225.92
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the nst9 (hd_st_str) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 12 tree sites, 13 islands",
+   "part": "nst9",
+   "tree_sites_um": [
+    [
+     13805.04,
+     15611.94,
+     13809.36,
+     15612.75
+    ],
+    [
+     14526.48,
+     15612.178,
+     14530.8,
+     15612.988
+    ],
+    [
+     14286.0,
+     15612.178,
+     14290.32,
+     15612.988
+    ],
+    [
+     14045.52,
+     15612.178,
+     14049.84,
+     15612.988
+    ],
+    [
+     13805.04,
+     15612.178,
+     13809.36,
+     15612.988
+    ],
+    [
+     13565.5,
+     15612.178,
+     13569.82,
+     15612.988
+    ],
+    [
+     13325.96,
+     15612.178,
+     13330.28,
+     15612.988
+    ],
+    [
+     13089.6,
+     15612.178,
+     13090.74,
+     15612.988
+    ],
+    [
+     13805.04,
+     15842.329,
+     13809.36,
+     15843.139
+    ],
+    [
+     13089.6,
+     15842.562,
+     13090.92,
+     15843.372
+    ],
+    [
+     13805.04,
+     16072.719,
+     13809.36,
+     16073.529
+    ],
+    [
+     13089.6,
+     16072.946,
+     13091.1,
+     16073.756
+    ]
+   ],
+   "islands_um": [
+    [
+     14407.4,
+     15608.16,
+     14416.04,
+     15616.8
+    ],
+    [
+     14407.2,
+     15608.16,
+     14415.84,
+     15616.8
+    ],
+    [
+     14053.36,
+     15608.16,
+     14062.0,
+     15616.8
+    ],
+    [
+     14052.96,
+     15608.16,
+     14061.6,
+     15616.8
+    ],
+    [
+     14052.94,
+     15608.16,
+     14061.58,
+     15616.8
+    ],
+    [
+     13699.05,
+     15608.16,
+     13707.69,
+     15616.8
+    ],
+    [
+     13698.99,
+     15608.16,
+     13707.63,
+     15616.8
+    ],
+    [
+     13698.72,
+     15608.16,
+     13707.36,
+     15616.8
+    ],
+    [
+     13698.68,
+     15608.16,
+     13707.32,
+     15616.8
+    ],
+    [
+     13344.74,
+     15608.16,
+     13353.38,
+     15616.8
+    ],
+    [
+     13344.61,
+     15608.16,
+     13353.25,
+     15616.8
+    ],
+    [
+     13344.48,
+     15608.16,
+     13353.12,
+     15616.8
+    ],
+    [
+     13344.41,
+     15608.16,
+     13353.05,
+     15616.8
+    ]
+   ]
+  },
+  {
+   "name": "hk4_free_sst2_2",
+   "rect_um": [
+    2989.44,
+    1330.56,
+    4432.32,
+    1987.2
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the sst2 (hd_st_str) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 12 tree sites, 13 islands",
+   "part": "sst2",
+   "tree_sites_um": [
+    [
+     3712.56,
+     1943.73,
+     3716.88,
+     1944.54
+    ],
+    [
+     2991.12,
+     1943.492,
+     2995.44,
+     1944.302
+    ],
+    [
+     3231.6,
+     1943.492,
+     3235.92,
+     1944.302
+    ],
+    [
+     3472.08,
+     1943.492,
+     3476.4,
+     1944.302
+    ],
+    [
+     3712.56,
+     1943.492,
+     3716.88,
+     1944.302
+    ],
+    [
+     3952.1,
+     1943.492,
+     3956.42,
+     1944.302
+    ],
+    [
+     4191.64,
+     1943.492,
+     4195.96,
+     1944.302
+    ],
+    [
+     4431.18,
+     1943.492,
+     4432.32,
+     1944.302
+    ],
+    [
+     3712.56,
+     1713.341,
+     3716.88,
+     1714.151
+    ],
+    [
+     4431.0,
+     1713.108,
+     4432.32,
+     1713.918
+    ],
+    [
+     3712.56,
+     1482.951,
+     3716.88,
+     1483.761
+    ],
+    [
+     4430.82,
+     1482.724,
+     4432.32,
+     1483.534
+    ]
+   ],
+   "islands_um": [
+    [
+     3105.88,
+     1939.68,
+     3114.52,
+     1948.32
+    ],
+    [
+     3106.08,
+     1939.68,
+     3114.72,
+     1948.32
+    ],
+    [
+     3459.92,
+     1939.68,
+     3468.56,
+     1948.32
+    ],
+    [
+     3460.32,
+     1939.68,
+     3468.96,
+     1948.32
+    ],
+    [
+     3460.34,
+     1939.68,
+     3468.98,
+     1948.32
+    ],
+    [
+     3814.23,
+     1939.68,
+     3822.87,
+     1948.32
+    ],
+    [
+     3814.29,
+     1939.68,
+     3822.93,
+     1948.32
+    ],
+    [
+     3814.56,
+     1939.68,
+     3823.2,
+     1948.32
+    ],
+    [
+     3814.6,
+     1939.68,
+     3823.24,
+     1948.32
+    ],
+    [
+     4168.54,
+     1939.68,
+     4177.18,
+     1948.32
+    ],
+    [
+     4168.67,
+     1939.68,
+     4177.31,
+     1948.32
+    ],
+    [
+     4168.8,
+     1939.68,
+     4177.44,
+     1948.32
+    ],
+    [
+     4168.87,
+     1939.68,
+     4177.51,
+     1948.32
+    ]
+   ]
+  },
+  {
+   "name": "hk4_free_sst2_2",
+   "rect_um": [
+    2989.44,
+    2462.4,
+    4432.32,
+    2557.44
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the sst2 (hd_st_str) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "sst2",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_sst9_3",
+   "rect_um": [
+    13089.6,
+    1330.56,
+    14532.48,
+    1987.2
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the sst9 (hd_st_str) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 12 tree sites, 13 islands",
+   "part": "sst9",
+   "tree_sites_um": [
+    [
+     13805.04,
+     1943.73,
+     13809.36,
+     1944.54
+    ],
+    [
+     14526.48,
+     1943.492,
+     14530.8,
+     1944.302
+    ],
+    [
+     14286.0,
+     1943.492,
+     14290.32,
+     1944.302
+    ],
+    [
+     14045.52,
+     1943.492,
+     14049.84,
+     1944.302
+    ],
+    [
+     13805.04,
+     1943.492,
+     13809.36,
+     1944.302
+    ],
+    [
+     13565.5,
+     1943.492,
+     13569.82,
+     1944.302
+    ],
+    [
+     13325.96,
+     1943.492,
+     13330.28,
+     1944.302
+    ],
+    [
+     13089.6,
+     1943.492,
+     13090.74,
+     1944.302
+    ],
+    [
+     13805.04,
+     1713.341,
+     13809.36,
+     1714.151
+    ],
+    [
+     13089.6,
+     1713.108,
+     13090.92,
+     1713.918
+    ],
+    [
+     13805.04,
+     1482.951,
+     13809.36,
+     1483.761
+    ],
+    [
+     13089.6,
+     1482.724,
+     13091.1,
+     1483.534
+    ]
+   ],
+   "islands_um": [
+    [
+     14407.4,
+     1939.68,
+     14416.04,
+     1948.32
+    ],
+    [
+     14407.2,
+     1939.68,
+     14415.84,
+     1948.32
+    ],
+    [
+     14053.36,
+     1939.68,
+     14062.0,
+     1948.32
+    ],
+    [
+     14052.96,
+     1939.68,
+     14061.6,
+     1948.32
+    ],
+    [
+     14052.94,
+     1939.68,
+     14061.58,
+     1948.32
+    ],
+    [
+     13699.05,
+     1939.68,
+     13707.69,
+     1948.32
+    ],
+    [
+     13698.99,
+     1939.68,
+     13707.63,
+     1948.32
+    ],
+    [
+     13698.72,
+     1939.68,
+     13707.36,
+     1948.32
+    ],
+    [
+     13698.68,
+     1939.68,
+     13707.32,
+     1948.32
+    ],
+    [
+     13344.74,
+     1939.68,
+     13353.38,
+     1948.32
+    ],
+    [
+     13344.61,
+     1939.68,
+     13353.25,
+     1948.32
+    ],
+    [
+     13344.48,
+     1939.68,
+     13353.12,
+     1948.32
+    ],
+    [
+     13344.41,
+     1939.68,
+     13353.05,
+     1948.32
+    ]
+   ]
+  },
+  {
+   "name": "hk4_free_sst9_3",
+   "rect_um": [
+    13089.6,
+    2462.4,
+    14532.48,
+    2557.44
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the sst9 (hd_st_str) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "sst9",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_nst4_0",
+   "rect_um": [
+    5875.2,
+    14999.04,
+    7318.08,
+    15094.08
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the nst4 (hd_st_n4) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "nst4",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_nst4_0",
+   "rect_um": [
+    5875.2,
+    16087.68,
+    7318.08,
+    16225.92
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the nst4 (hd_st_n4) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "nst4",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_nst7_0",
+   "rect_um": [
+    10203.84,
+    14999.04,
+    11646.72,
+    15353.28
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the nst7 (hd_st_m) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "nst7",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_nst7_0",
+   "rect_um": [
+    10203.84,
+    15482.88,
+    11646.72,
+    16225.92
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the nst7 (hd_st_m) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 11 tree sites, 16 islands",
+   "part": "nst7",
+   "tree_sites_um": [
+    [
+     10926.96,
+     15611.94,
+     10931.28,
+     15612.75
+    ],
+    [
+     10203.84,
+     15612.178,
+     10204.98,
+     15612.988
+    ],
+    [
+     10444.38,
+     15612.178,
+     10447.08,
+     15612.988
+    ],
+    [
+     10686.48,
+     15612.178,
+     10689.18,
+     15612.988
+    ],
+    [
+     10928.58,
+     15612.178,
+     10931.28,
+     15612.988
+    ],
+    [
+     11167.78,
+     15612.178,
+     11170.48,
+     15612.988
+    ],
+    [
+     11406.98,
+     15612.178,
+     11409.68,
+     15612.988
+    ],
+    [
+     10926.96,
+     15842.329,
+     10931.28,
+     15843.139
+    ],
+    [
+     10203.84,
+     15842.562,
+     10205.16,
+     15843.372
+    ],
+    [
+     10926.96,
+     16072.719,
+     10931.28,
+     16073.529
+    ],
+    [
+     10203.84,
+     16072.946,
+     10205.34,
+     16073.756
+    ]
+   ],
+   "islands_um": [
+    [
+     10480.69,
+     15608.16,
+     10489.33,
+     15616.8
+    ],
+    [
+     10480.91,
+     15608.16,
+     10489.55,
+     15616.8
+    ],
+    [
+     10510.56,
+     15608.16,
+     10519.2,
+     15616.8
+    ],
+    [
+     10864.6,
+     15608.16,
+     10873.24,
+     15616.8
+    ],
+    [
+     10864.8,
+     15608.16,
+     10873.44,
+     15616.8
+    ],
+    [
+     10911.73,
+     15608.16,
+     10920.37,
+     15616.8
+    ],
+    [
+     10911.95,
+     15608.16,
+     10920.59,
+     15616.8
+    ],
+    [
+     11218.64,
+     15608.16,
+     11227.28,
+     15616.8
+    ],
+    [
+     11219.04,
+     15608.16,
+     11227.68,
+     15616.8
+    ],
+    [
+     11219.06,
+     15608.16,
+     11227.7,
+     15616.8
+    ],
+    [
+     11342.77,
+     15608.16,
+     11351.41,
+     15616.8
+    ],
+    [
+     11342.99,
+     15608.16,
+     11351.63,
+     15616.8
+    ],
+    [
+     11572.95,
+     15608.16,
+     11581.59,
+     15616.8
+    ],
+    [
+     11573.01,
+     15608.16,
+     11581.65,
+     15616.8
+    ],
+    [
+     11573.28,
+     15608.16,
+     11581.92,
+     15616.8
+    ],
+    [
+     11573.32,
+     15608.16,
+     11581.96,
+     15616.8
+    ]
+   ]
+  },
+  {
+   "name": "hk4_free_sst4_1",
+   "rect_um": [
+    5875.2,
+    1330.56,
+    7318.08,
+    2073.6
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the sst4 (hd_st_m) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 11 tree sites, 16 islands",
+   "part": "sst4",
+   "tree_sites_um": [
+    [
+     6590.64,
+     1943.73,
+     6594.96,
+     1944.54
+    ],
+    [
+     7316.94,
+     1943.492,
+     7318.08,
+     1944.302
+    ],
+    [
+     7074.84,
+     1943.492,
+     7077.54,
+     1944.302
+    ],
+    [
+     6832.74,
+     1943.492,
+     6835.44,
+     1944.302
+    ],
+    [
+     6590.64,
+     1943.492,
+     6593.34,
+     1944.302
+    ],
+    [
+     6351.44,
+     1943.492,
+     6354.14,
+     1944.302
+    ],
+    [
+     6112.24,
+     1943.492,
+     6114.94,
+     1944.302
+    ],
+    [
+     6590.64,
+     1713.341,
+     6594.96,
+     1714.151
+    ],
+    [
+     7316.76,
+     1713.108,
+     7318.08,
+     1713.918
+    ],
+    [
+     6590.64,
+     1482.951,
+     6594.96,
+     1483.761
+    ],
+    [
+     7316.58,
+     1482.724,
+     7318.08,
+     1483.534
+    ]
+   ],
+   "islands_um": [
+    [
+     7032.59,
+     1939.68,
+     7041.23,
+     1948.32
+    ],
+    [
+     7032.37,
+     1939.68,
+     7041.01,
+     1948.32
+    ],
+    [
+     7002.72,
+     1939.68,
+     7011.36,
+     1948.32
+    ],
+    [
+     6648.68,
+     1939.68,
+     6657.32,
+     1948.32
+    ],
+    [
+     6648.48,
+     1939.68,
+     6657.12,
+     1948.32
+    ],
+    [
+     6601.55,
+     1939.68,
+     6610.19,
+     1948.32
+    ],
+    [
+     6601.33,
+     1939.68,
+     6609.97,
+     1948.32
+    ],
+    [
+     6294.64,
+     1939.68,
+     6303.28,
+     1948.32
+    ],
+    [
+     6294.24,
+     1939.68,
+     6302.88,
+     1948.32
+    ],
+    [
+     6294.22,
+     1939.68,
+     6302.86,
+     1948.32
+    ],
+    [
+     6170.51,
+     1939.68,
+     6179.15,
+     1948.32
+    ],
+    [
+     6170.29,
+     1939.68,
+     6178.93,
+     1948.32
+    ],
+    [
+     5940.33,
+     1939.68,
+     5948.97,
+     1948.32
+    ],
+    [
+     5940.27,
+     1939.68,
+     5948.91,
+     1948.32
+    ],
+    [
+     5940.0,
+     1939.68,
+     5948.64,
+     1948.32
+    ],
+    [
+     5939.96,
+     1939.68,
+     5948.6,
+     1948.32
+    ]
+   ]
+  },
+  {
+   "name": "hk4_free_sst4_1",
+   "rect_um": [
+    5875.2,
+    2203.2,
+    7318.08,
+    2557.44
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the sst4 (hd_st_m) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "sst4",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_sst7_2",
+   "rect_um": [
+    10203.84,
+    1330.56,
+    11646.72,
+    2073.6
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the sst7 (hd_st_m) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 11 tree sites, 16 islands",
+   "part": "sst7",
+   "tree_sites_um": [
+    [
+     10926.96,
+     1943.73,
+     10931.28,
+     1944.54
+    ],
+    [
+     10203.84,
+     1943.492,
+     10204.98,
+     1944.302
+    ],
+    [
+     10444.38,
+     1943.492,
+     10447.08,
+     1944.302
+    ],
+    [
+     10686.48,
+     1943.492,
+     10689.18,
+     1944.302
+    ],
+    [
+     10928.58,
+     1943.492,
+     10931.28,
+     1944.302
+    ],
+    [
+     11167.78,
+     1943.492,
+     11170.48,
+     1944.302
+    ],
+    [
+     11406.98,
+     1943.492,
+     11409.68,
+     1944.302
+    ],
+    [
+     10926.96,
+     1713.341,
+     10931.28,
+     1714.151
+    ],
+    [
+     10203.84,
+     1713.108,
+     10205.16,
+     1713.918
+    ],
+    [
+     10926.96,
+     1482.951,
+     10931.28,
+     1483.761
+    ],
+    [
+     10203.84,
+     1482.724,
+     10205.34,
+     1483.534
+    ]
+   ],
+   "islands_um": [
+    [
+     10480.69,
+     1939.68,
+     10489.33,
+     1948.32
+    ],
+    [
+     10480.91,
+     1939.68,
+     10489.55,
+     1948.32
+    ],
+    [
+     10510.56,
+     1939.68,
+     10519.2,
+     1948.32
+    ],
+    [
+     10864.6,
+     1939.68,
+     10873.24,
+     1948.32
+    ],
+    [
+     10864.8,
+     1939.68,
+     10873.44,
+     1948.32
+    ],
+    [
+     10911.73,
+     1939.68,
+     10920.37,
+     1948.32
+    ],
+    [
+     10911.95,
+     1939.68,
+     10920.59,
+     1948.32
+    ],
+    [
+     11218.64,
+     1939.68,
+     11227.28,
+     1948.32
+    ],
+    [
+     11219.04,
+     1939.68,
+     11227.68,
+     1948.32
+    ],
+    [
+     11219.06,
+     1939.68,
+     11227.7,
+     1948.32
+    ],
+    [
+     11342.77,
+     1939.68,
+     11351.41,
+     1948.32
+    ],
+    [
+     11342.99,
+     1939.68,
+     11351.63,
+     1948.32
+    ],
+    [
+     11572.95,
+     1939.68,
+     11581.59,
+     1948.32
+    ],
+    [
+     11573.01,
+     1939.68,
+     11581.65,
+     1948.32
+    ],
+    [
+     11573.28,
+     1939.68,
+     11581.92,
+     1948.32
+    ],
+    [
+     11573.32,
+     1939.68,
+     11581.96,
+     1948.32
+    ]
+   ]
+  },
+  {
+   "name": "hk4_free_sst7_2",
+   "rect_um": [
+    10203.84,
+    2203.2,
+    11646.72,
+    2557.44
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the sst7 (hd_st_m) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "sst7",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_sst5_0",
+   "rect_um": [
+    7318.08,
+    2203.2,
+    8760.96,
+    2557.44
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the sst5 (hd_st_k5) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 1 tree sites, 0 islands",
+   "part": "sst5",
+   "tree_sites_um": [
+    [
+     8759.42,
+     2340.241,
+     8760.96,
+     2341.051
+    ]
+   ],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnW0a_0",
+   "rect_um": [
+    103.68,
+    14636.16,
+    276.48,
+    14999.04
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnW0a (hd_turn_a) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnW0a",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnE0a_1",
+   "rect_um": [
+    17245.44,
+    14636.16,
+    17418.24,
+    14999.04
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnE0a (hd_turn_a) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnE0a",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnW1a_2",
+   "rect_um": [
+    103.68,
+    12562.56,
+    276.48,
+    12925.44
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnW1a (hd_turn_a) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnW1a",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnE1a_3",
+   "rect_um": [
+    17245.44,
+    12562.56,
+    17418.24,
+    12925.44
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnE1a (hd_turn_a) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnE1a",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnW2a_4",
+   "rect_um": [
+    103.68,
+    10488.96,
+    276.48,
+    10851.84
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnW2a (hd_turn_a) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnW2a",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnE2a_5",
+   "rect_um": [
+    17245.44,
+    10488.96,
+    17418.24,
+    10851.84
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnE2a (hd_turn_a) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnE2a",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnW3a_6",
+   "rect_um": [
+    103.68,
+    8415.36,
+    276.48,
+    8778.24
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnW3a (hd_turn_a) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnW3a",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnE3a_7",
+   "rect_um": [
+    17245.44,
+    8415.36,
+    17418.24,
+    8778.24
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnE3a (hd_turn_a) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnE3a",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnW4a_8",
+   "rect_um": [
+    103.68,
+    6341.76,
+    276.48,
+    6704.64
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnW4a (hd_turn_a) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnW4a",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnE4a_9",
+   "rect_um": [
+    17245.44,
+    6341.76,
+    17418.24,
+    6704.64
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnE4a (hd_turn_a) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnE4a",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnW5a_10",
+   "rect_um": [
+    103.68,
+    4268.16,
+    276.48,
+    4631.04
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnW5a (hd_turn_a) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnW5a",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnE5a_11",
+   "rect_um": [
+    17245.44,
+    4268.16,
+    17418.24,
+    4631.04
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnE5a (hd_turn_a) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnE5a",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnW0b_0",
+   "rect_um": [
+    103.68,
+    12925.44,
+    276.48,
+    13262.4
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnW0b (hd_turn_b) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnW0b",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnE0b_1",
+   "rect_um": [
+    17245.44,
+    12925.44,
+    17418.24,
+    13262.4
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnE0b (hd_turn_b) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnE0b",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnW1b_2",
+   "rect_um": [
+    103.68,
+    10851.84,
+    276.48,
+    11188.8
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnW1b (hd_turn_b) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnW1b",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnE1b_3",
+   "rect_um": [
+    17245.44,
+    10851.84,
+    17418.24,
+    11188.8
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnE1b (hd_turn_b) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnE1b",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnW2b_4",
+   "rect_um": [
+    103.68,
+    8778.24,
+    276.48,
+    9115.2
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnW2b (hd_turn_b) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnW2b",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnE2b_5",
+   "rect_um": [
+    17245.44,
+    8778.24,
+    17418.24,
+    9115.2
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnE2b (hd_turn_b) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnE2b",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnW3b_6",
+   "rect_um": [
+    103.68,
+    6704.64,
+    276.48,
+    7041.6
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnW3b (hd_turn_b) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnW3b",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnE3b_7",
+   "rect_um": [
+    17245.44,
+    6704.64,
+    17418.24,
+    7041.6
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnE3b (hd_turn_b) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnE3b",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnW4b_8",
+   "rect_um": [
+    103.68,
+    4631.04,
+    276.48,
+    4968.0
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnW4b (hd_turn_b) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnW4b",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnE4b_9",
+   "rect_um": [
+    17245.44,
+    4631.04,
+    17418.24,
+    4968.0
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnE4b (hd_turn_b) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnE4b",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnW5b_10",
+   "rect_um": [
+    103.68,
+    2557.44,
+    276.48,
+    2894.4
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnW5b (hd_turn_b) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnW5b",
+   "tree_sites_um": [],
+   "islands_um": []
+  },
+  {
+   "name": "hk4_free_turnE5b_11",
+   "rect_um": [
+    17245.44,
+    2557.44,
+    17418.24,
+    2894.4
+   ],
+   "reason": "DIE-HEAD-21 HK4 resize: freed by the turnE5b (hd_turn_b) crop; die channel: no signal std cells (12.1d), PG + filler/decap; top-owned die clock sites here (12.2a): 0 tree sites, 0 islands",
+   "part": "turnE5b",
+   "tree_sites_um": [],
+   "islands_um": []
+  }
+ ],
+ "taps": {
+  "hd_turn_a": {
+   "bank_corner_radius_um": 149.387,
+   "n": 2,
+   "worst_radius_um": 199.6,
+   "sinks": 2274,
+   "taps": [
+    {
+     "name": "clk",
+     "xy": [
+      17.28,
+      535.1253
+     ],
+     "planned_sinks": 1032,
+     "radius_um": 199.4
+    },
+    {
+     "name": "clk_t1",
+     "xy": [
+      47.52,
+      268.6933
+     ],
+     "planned_sinks": 1242,
+     "radius_um": 199.6
+    }
+   ]
+  },
+  "hd_turn_b": {
+   "bank_corner_radius_um": 166.624,
+   "n": 2,
+   "worst_radius_um": 166.6,
+   "sinks": 1708,
+   "taps": [
+    {
+     "name": "clk",
+     "xy": [
+      82.56,
+      407.424
+     ],
+     "planned_sinks": 854,
+     "radius_um": 166.6
+    },
+    {
+     "name": "clk_t1",
+     "xy": [
+      82.56,
+      682.56
+     ],
+     "planned_sinks": 854,
+     "radius_um": 101.7
+    }
+   ]
+  },
+  "hd_spn": {
+   "bank_corner_radius_um": 195.38,
+   "n": 43,
+   "worst_radius_um": 195.4,
+   "sinks": 29854,
+   "taps": [
+    {
+     "name": "clk",
+     "xy": [
+      840.992,
+      1098.696
+     ],
+     "planned_sinks": 789,
+     "radius_um": 143.5
+    },
+    {
+     "name": "clk_t1",
+     "xy": [
+      864.732,
+      17.28
+     ],
+     "planned_sinks": 1154,
+     "radius_um": 164.6
+    },
+    {
+     "name": "clk_t2",
+     "xy": [
+      1014.248,
+      17.28
+     ],
+     "planned_sinks": 1151,
+     "radius_um": 147.0
+    },
+    {
+     "name": "clk_t3",
+     "xy": [
+      1185.062,
+      17.28
+     ],
+     "planned_sinks": 386,
+     "radius_um": 195.4
+    },
+    {
+     "name": "clk_t4",
+     "xy": [
+      850.968,
+      273.9449
+     ],
+     "planned_sinks": 1088,
+     "radius_um": 147.7
+    },
+    {
+     "name": "clk_t5",
+     "xy": [
+      1074.8417,
+      345.6
+     ],
+     "planned_sinks": 1069,
+     "radius_um": 179.2
+    },
+    {
+     "name": "clk_t6",
+     "xy": [
+      1365.12,
+      354.24
+     ],
+     "planned_sinks": 672,
+     "radius_um": 164.2
+    },
+    {
+     "name": "clk_t7",
+     "xy": [
+      897.0938,
+      426.84
+     ],
+     "planned_sinks": 273,
+     "radius_um": 99.1
+    },
+    {
+     "name": "clk_t8",
+     "xy": [
+      597.5225,
+      428.96
+     ],
+     "planned_sinks": 282,
+     "radius_um": 92.8
+    },
+    {
+     "name": "clk_t9",
+     "xy": [
+      17.28,
+      504.264
+     ],
+     "planned_sinks": 1142,
+     "radius_um": 180.3
+    },
+    {
+     "name": "clk_t10",
+     "xy": [
+      289.3502,
+      504.264
+     ],
+     "planned_sinks": 566,
+     "radius_um": 168.2
+    },
+    {
+     "name": "clk_t11",
+     "xy": [
+      823.464,
+      551.3206
+     ],
+     "planned_sinks": 981,
+     "radius_um": 115.0
+    },
+    {
+     "name": "clk_t12",
+     "xy": [
+      559.8905,
+      578.472
+     ],
+     "planned_sinks": 284,
+     "radius_um": 93.8
+    },
+    {
+     "name": "clk_t13",
+     "xy": [
+      935.49,
+      582.7053
+     ],
+     "planned_sinks": 975,
+     "radius_um": 112.4
+    },
+    {
+     "name": "clk_t14",
+     "xy": [
+      1365.12,
+      654.272
+     ],
+     "planned_sinks": 572,
+     "radius_um": 165.3
+    },
+    {
+     "name": "clk_t15",
+     "xy": [
+      1088.9843,
+      691.2
+     ],
+     "planned_sinks": 746,
+     "radius_um": 179.5
+    },
+    {
+     "name": "clk_t16",
+     "xy": [
+      1201.44,
+      691.2
+     ],
+     "planned_sinks": 323,
+     "radius_um": 56.2
+    },
+    {
+     "name": "clk_t17",
+     "xy": [
+      935.49,
+      807.4637
+     ],
+     "planned_sinks": 1193,
+     "radius_um": 112.4
+    },
+    {
+     "name": "clk_t18",
+     "xy": [
+      787.944,
+      822.8974
+     ],
+     "planned_sinks": 584,
+     "radius_um": 93.9
+    },
+    {
+     "name": "clk_t19",
+     "xy": [
+      935.49,
+      1006.3962
+     ],
+     "planned_sinks": 1433,
+     "radius_um": 180.8
+    },
+    {
+     "name": "clk_t20",
+     "xy": [
+      1124.128,
+      1036.8
+     ],
+     "planned_sinks": 813,
+     "radius_um": 133.5
+    },
+    {
+     "name": "clk_t21",
+     "xy": [
+      935.49,
+      1276.6113
+     ],
+     "planned_sinks": 756,
+     "radius_um": 51.6
+    },
+    {
+     "name": "clk_t22",
+     "xy": [
+      935.49,
+      1336.1635
+     ],
+     "planned_sinks": 696,
+     "radius_um": 84.7
+    },
+    {
+     "name": "clk_t23",
+     "xy": [
+      805.992,
+      1377.2386
+     ],
+     "planned_sinks": 733,
+     "radius_um": 109.1
+    },
+    {
+     "name": "clk_t24",
+     "xy": [
+      1030.584,
+      1382.4
+     ],
+     "planned_sinks": 417,
+     "radius_um": 70.5
+    },
+    {
+     "name": "clk_t25",
+     "xy": [
+      1139.9835,
+      1382.4
+     ],
+     "planned_sinks": 840,
+     "radius_um": 178.3
+    },
+    {
+     "name": "clk_t26",
+     "xy": [
+      602.411,
+      1464.736
+     ],
+     "planned_sinks": 281,
+     "radius_um": 112.2
+    },
+    {
+     "name": "clk_t27",
+     "xy": [
+      1365.12,
+      1465.76
+     ],
+     "planned_sinks": 282,
+     "radius_um": 89.5
+    },
+    {
+     "name": "clk_t28",
+     "xy": [
+      300.4235,
+      1467.168
+     ],
+     "planned_sinks": 286,
+     "radius_um": 94.7
+    },
+    {
+     "name": "clk_t29",
+     "xy": [
+      885.339,
+      1485.912
+     ],
+     "planned_sinks": 213,
+     "radius_um": 93.8
+    },
+    {
+     "name": "clk_t30",
+     "xy": [
+      17.28,
+      1541.064
+     ],
+     "planned_sinks": 566,
+     "radius_um": 164.8
+    },
+    {
+     "name": "clk_t31",
+     "xy": [
+      935.49,
+      1586.664
+     ],
+     "planned_sinks": 1326,
+     "radius_um": 74.6
+    },
+    {
+     "name": "clk_t32",
+     "xy": [
+      527.151,
+      1614.24
+     ],
+     "planned_sinks": 285,
+     "radius_um": 113.9
+    },
+    {
+     "name": "clk_t33",
+     "xy": [
+      1365.12,
+      1615.272
+     ],
+     "planned_sinks": 284,
+     "radius_um": 90.5
+    },
+    {
+     "name": "clk_t34",
+     "xy": [
+      785.966,
+      1616.5825
+     ],
+     "planned_sinks": 908,
+     "radius_um": 52.5
+    },
+    {
+     "name": "clk_t35",
+     "xy": [
+      263.0455,
+      1617.312
+     ],
+     "planned_sinks": 280,
+     "radius_um": 92.7
+    },
+    {
+     "name": "clk_t36",
+     "xy": [
+      952.131,
+      1641.5297
+     ],
+     "planned_sinks": 606,
+     "radius_um": 93.7
+    },
+    {
+     "name": "clk_t37",
+     "xy": [
+      785.966,
+      1661.8395
+     ],
+     "planned_sinks": 848,
+     "radius_um": 94.1
+    },
+    {
+     "name": "clk_t38",
+     "xy": [
+      1152.544,
+      1728.0
+     ],
+     "planned_sinks": 1079,
+     "radius_um": 178.6
+    },
+    {
+     "name": "clk_t39",
+     "xy": [
+      1209.312,
+      1909.44
+     ],
+     "planned_sinks": 128,
+     "radius_um": 48.5
+    },
+    {
+     "name": "clk_t40",
+     "xy": [
+      715.2,
+      2056.32
+     ],
+     "planned_sinks": 571,
+     "radius_um": 86.0
+    },
+    {
+     "name": "clk_t41",
+     "xy": [
+      856.732,
+      2056.32
+     ],
+     "planned_sinks": 1137,
+     "radius_um": 164.6
+    },
+    {
+     "name": "clk_t42",
+     "xy": [
+      1158.048,
+      2056.32
+     ],
+     "planned_sinks": 856,
+     "radius_um": 142.2
+    }
+   ]
+  },
+  "hd_spn_end": {
+   "bank_corner_radius_um": 180.264,
+   "n": 33,
+   "worst_radius_um": 224.2,
+   "sinks": 21354,
+   "taps": [
+    {
+     "name": "clk",
+     "xy": [
+      935.49,
+      1035.133
+     ],
+     "planned_sinks": 607,
+     "radius_um": 100.1
+    },
+    {
+     "name": "clk_t1",
+     "xy": [
+      1081.248,
+      17.28
+     ],
+     "planned_sinks": 855,
+     "radius_um": 167.3
+    },
+    {
+     "name": "clk_t2",
+     "xy": [
+      1185.062,
+      164.16
+     ],
+     "planned_sinks": 128,
+     "radius_um": 48.5
+    },
+    {
+     "name": "clk_t3",
+     "xy": [
+      1074.4897,
+      345.6
+     ],
+     "planned_sinks": 1077,
+     "radius_um": 197.5
+    },
+    {
+     "name": "clk_t4",
+     "xy": [
+      1365.12,
+      354.24
+     ],
+     "planned_sinks": 673,
+     "radius_um": 164.2
+    },
+    {
+     "name": "clk_t5",
+     "xy": [
+      17.28,
+      504.264
+     ],
+     "planned_sinks": 1142,
+     "radius_um": 180.3
+    },
+    {
+     "name": "clk_t6",
+     "xy": [
+      289.3502,
+      504.264
+     ],
+     "planned_sinks": 566,
+     "radius_um": 168.2
+    },
+    {
+     "name": "clk_t7",
+     "xy": [
+      578.7005,
+      504.264
+     ],
+     "planned_sinks": 566,
+     "radius_um": 186.9
+    },
+    {
+     "name": "clk_t8",
+     "xy": [
+      868.8518,
+      534.984
+     ],
+     "planned_sinks": 569,
+     "radius_um": 196.9
+    },
+    {
+     "name": "clk_t9",
+     "xy": [
+      1365.12,
+      654.272
+     ],
+     "planned_sinks": 572,
+     "radius_um": 165.3
+    },
+    {
+     "name": "clk_t10",
+     "xy": [
+      1088.9843,
+      691.2
+     ],
+     "planned_sinks": 746,
+     "radius_um": 179.5
+    },
+    {
+     "name": "clk_t11",
+     "xy": [
+      1201.176,
+      691.2
+     ],
+     "planned_sinks": 323,
+     "radius_um": 56.5
+    },
+    {
+     "name": "clk_t12",
+     "xy": [
+      935.49,
+      704.983
+     ],
+     "planned_sinks": 1076,
+     "radius_um": 174.7
+    },
+    {
+     "name": "clk_t13",
+     "xy": [
+      935.49,
+      966.2382
+     ],
+     "planned_sinks": 604,
+     "radius_um": 70.5
+    },
+    {
+     "name": "clk_t14",
+     "xy": [
+      1134.112,
+      1036.8
+     ],
+     "planned_sinks": 736,
+     "radius_um": 123.5
+    },
+    {
+     "name": "clk_t15",
+     "xy": [
+      935.49,
+      1291.9687
+     ],
+     "planned_sinks": 1132,
+     "radius_um": 66.9
+    },
+    {
+     "name": "clk_t16",
+     "xy": [
+      1116.192,
+      1382.4
+     ],
+     "planned_sinks": 843,
+     "radius_um": 192.8
+    },
+    {
+     "name": "clk_t17",
+     "xy": [
+      1209.056,
+      1382.4
+     ],
+     "planned_sinks": 260,
+     "radius_um": 48.6
+    },
+    {
+     "name": "clk_t18",
+     "xy": [
+      17.28,
+      1466.856
+     ],
+     "planned_sinks": 284,
+     "radius_um": 90.6
+    },
+    {
+     "name": "clk_t19",
+     "xy": [
+      890.111,
+      1495.456
+     ],
+     "planned_sinks": 284,
+     "radius_um": 155.8
+    },
+    {
+     "name": "clk_t20",
+     "xy": [
+      282.1195,
+      1541.064
+     ],
+     "planned_sinks": 566,
+     "radius_um": 186.9
+    },
+    {
+     "name": "clk_t21",
+     "xy": [
+      564.239,
+      1541.064
+     ],
+     "planned_sinks": 566,
+     "radius_um": 224.2
+    },
+    {
+     "name": "clk_t22",
+     "xy": [
+      1365.12,
+      1541.064
+     ],
+     "planned_sinks": 566,
+     "radius_um": 164.8
+    },
+    {
+     "name": "clk_t23",
+     "xy": [
+      935.49,
+      1589.779
+     ],
+     "planned_sinks": 1374,
+     "radius_um": 121.1
+    },
+    {
+     "name": "clk_t24",
+     "xy": [
+      17.28,
+      1616.352
+     ],
+     "planned_sinks": 282,
+     "radius_um": 89.5
+    },
+    {
+     "name": "clk_t25",
+     "xy": [
+      785.966,
+      1627.1355
+     ],
+     "planned_sinks": 1132,
+     "radius_um": 115.1
+    },
+    {
+     "name": "clk_t26",
+     "xy": [
+      1041.912,
+      1728.0
+     ],
+     "planned_sinks": 350,
+     "radius_um": 122.0
+    },
+    {
+     "name": "clk_t27",
+     "xy": [
+      1157.544,
+      1728.0
+     ],
+     "planned_sinks": 588,
+     "radius_um": 193.3
+    },
+    {
+     "name": "clk_t28",
+     "xy": [
+      1225.416,
+      1728.0
+     ],
+     "planned_sinks": 195,
+     "radius_um": 32.2
+    },
+    {
+     "name": "clk_t29",
+     "xy": [
+      1209.312,
+      1909.44
+     ],
+     "planned_sinks": 128,
+     "radius_um": 48.5
+    },
+    {
+     "name": "clk_t30",
+     "xy": [
+      715.2,
+      2056.32
+     ],
+     "planned_sinks": 571,
+     "radius_um": 86.0
+    },
+    {
+     "name": "clk_t31",
+     "xy": [
+      856.732,
+      2056.32
+     ],
+     "planned_sinks": 1137,
+     "radius_um": 164.6
+    },
+    {
+     "name": "clk_t32",
+     "xy": [
+      1158.048,
+      2056.32
+     ],
+     "planned_sinks": 856,
+     "radius_um": 142.2
+    }
+   ]
+  },
+  "hd_st_turn": {
+   "bank_corner_radius_um": 148.368,
+   "n": 15,
+   "worst_radius_um": 190.6,
+   "sinks": 7835,
+   "taps": [
+    {
+     "name": "clk",
+     "xy": [
+      488.64,
+      403.848
+     ],
+     "planned_sinks": 254,
+     "radius_um": 106.2
+    },
+    {
+     "name": "clk_t1",
+     "xy": [
+      341.2663,
+      95.904
+     ],
+     "planned_sinks": 340,
+     "radius_um": 131.0
+    },
+    {
+     "name": "clk_t2",
+     "xy": [
+      668.7909,
+      126.368
+     ],
+     "planned_sinks": 515,
+     "radius_um": 147.7
+    },
+    {
+     "name": "clk_t3",
+     "xy": [
+      991.0674,
+      133.6
+     ],
+     "planned_sinks": 541,
+     "radius_um": 135.9
+    },
+    {
+     "name": "clk_t4",
+     "xy": [
+      124.768,
+      195.9497
+     ],
+     "planned_sinks": 515,
+     "radius_um": 190.6
+    },
+    {
+     "name": "clk_t5",
+     "xy": [
+      1287.36,
+      246.96
+     ],
+     "planned_sinks": 545,
+     "radius_um": 117.9
+    },
+    {
+     "name": "clk_t6",
+     "xy": [
+      409.584,
+      269.472
+     ],
+     "planned_sinks": 434,
+     "radius_um": 120.8
+    },
+    {
+     "name": "clk_t7",
+     "xy": [
+      732.0411,
+      347.976
+     ],
+     "planned_sinks": 513,
+     "radius_um": 164.6
+    },
+    {
+     "name": "clk_t8",
+     "xy": [
+      1016.384,
+      355.128
+     ],
+     "planned_sinks": 487,
+     "radius_um": 129.8
+    },
+    {
+     "name": "clk_t9",
+     "xy": [
+      1287.36,
+      452.16
+     ],
+     "planned_sinks": 544,
+     "radius_um": 117.5
+    },
+    {
+     "name": "clk_t10",
+     "xy": [
+      138.744,
+      500.8457
+     ],
+     "planned_sinks": 577,
+     "radius_um": 168.2
+    },
+    {
+     "name": "clk_t11",
+     "xy": [
+      360.416,
+      564.16
+     ],
+     "planned_sinks": 451,
+     "radius_um": 143.8
+    },
+    {
+     "name": "clk_t12",
+     "xy": [
+      119.136,
+      818.2674
+     ],
+     "planned_sinks": 489,
+     "radius_um": 125.8
+    },
+    {
+     "name": "clk_t13",
+     "xy": [
+      340.768,
+      843.584
+     ],
+     "planned_sinks": 539,
+     "radius_um": 140.0
+    },
+    {
+     "name": "clk_t14",
+     "xy": [
+      124.768,
+      1114.56
+     ],
+     "planned_sinks": 1091,
+     "radius_um": 148.4
+    }
+   ]
+  },
+  "hd_st_str": {
+   "bank_corner_radius_um": 148.368,
+   "n": 5,
+   "worst_radius_um": 221.4,
+   "sinks": 5264,
+   "taps": [
+    {
+     "name": "clk",
+     "xy": [
+      721.44,
+      230.56
+     ],
+     "planned_sinks": 1028,
+     "radius_um": 221.4
+    },
+    {
+     "name": "clk_t1",
+     "xy": [
+      17.28,
+      127.968
+     ],
+     "planned_sinks": 1091,
+     "radius_um": 148.4
+    },
+    {
+     "name": "clk_t2",
+     "xy": [
+      360.72,
+      230.56
+     ],
+     "planned_sinks": 1028,
+     "radius_um": 221.4
+    },
+    {
+     "name": "clk_t3",
+     "xy": [
+      1082.16,
+      230.56
+     ],
+     "planned_sinks": 1028,
+     "radius_um": 221.4
+    },
+    {
+     "name": "clk_t4",
+     "xy": [
+      1425.6,
+      349.56
+     ],
+     "planned_sinks": 1089,
+     "radius_um": 148.0
+    }
+   ]
+  },
+  "hd_st_n3": {
+   "bank_corner_radius_um": 148.368,
+   "n": 18,
+   "worst_radius_um": 237.8,
+   "sinks": 11558,
+   "taps": [
+    {
+     "name": "clk",
+     "xy": [
+      854.2507,
+      691.68
+     ],
+     "planned_sinks": 258,
+     "radius_um": 85.7
+    },
+    {
+     "name": "clk_t1",
+     "xy": [
+      17.28,
+      223.008
+     ],
+     "planned_sinks": 1091,
+     "radius_um": 148.4
+    },
+    {
+     "name": "clk_t2",
+     "xy": [
+      1082.16,
+      223.008
+     ],
+     "planned_sinks": 515,
+     "radius_um": 102.6
+    },
+    {
+     "name": "clk_t3",
+     "xy": [
+      360.72,
+      325.6
+     ],
+     "planned_sinks": 1028,
+     "radius_um": 221.4
+    },
+    {
+     "name": "clk_t4",
+     "xy": [
+      721.44,
+      325.6
+     ],
+     "planned_sinks": 1028,
+     "radius_um": 221.4
+    },
+    {
+     "name": "clk_t5",
+     "xy": [
+      1082.16,
+      444.6
+     ],
+     "planned_sinks": 513,
+     "radius_um": 102.4
+    },
+    {
+     "name": "clk_t6",
+     "xy": [
+      1425.6,
+      444.6
+     ],
+     "planned_sinks": 1089,
+     "radius_um": 148.0
+    },
+    {
+     "name": "clk_t7",
+     "xy": [
+      560.28,
+      698.664
+     ],
+     "planned_sinks": 296,
+     "radius_um": 237.8
+    },
+    {
+     "name": "clk_t8",
+     "xy": [
+      329.4507,
+      739.808
+     ],
+     "planned_sinks": 505,
+     "radius_um": 237.5
+    },
+    {
+     "name": "clk_t9",
+     "xy": [
+      1165.5893,
+      743.008
+     ],
+     "planned_sinks": 515,
+     "radius_um": 136.8
+    },
+    {
+     "name": "clk_t10",
+     "xy": [
+      922.64,
+      794.52
+     ],
+     "planned_sinks": 257,
+     "radius_um": 85.2
+    },
+    {
+     "name": "clk_t11",
+     "xy": [
+      681.672,
+      813.672
+     ],
+     "planned_sinks": 317,
+     "radius_um": 166.5
+    },
+    {
+     "name": "clk_t12",
+     "xy": [
+      295.84,
+      938.624
+     ],
+     "planned_sinks": 669,
+     "radius_um": 185.0
+    },
+    {
+     "name": "clk_t13",
+     "xy": [
+      1137.732,
+      964.584
+     ],
+     "planned_sinks": 513,
+     "radius_um": 153.4
+    },
+    {
+     "name": "clk_t14",
+     "xy": [
+      1425.6,
+      964.584
+     ],
+     "planned_sinks": 1089,
+     "radius_um": 148.0
+    },
+    {
+     "name": "clk_t15",
+     "xy": [
+      848.256,
+      980.256
+     ],
+     "planned_sinks": 425,
+     "radius_um": 173.1
+    },
+    {
+     "name": "clk_t16",
+     "xy": [
+      576.54,
+      997.32
+     ],
+     "planned_sinks": 359,
+     "radius_um": 183.6
+    },
+    {
+     "name": "clk_t17",
+     "xy": [
+      263.008,
+      1209.6
+     ],
+     "planned_sinks": 1091,
+     "radius_um": 148.4
+    }
+   ]
+  },
+  "hd_st_n4": {
+   "bank_corner_radius_um": 148.368,
+   "n": 13,
+   "worst_radius_um": 207.9,
+   "sinks": 10528,
+   "taps": [
+    {
+     "name": "clk",
+     "xy": [
+      721.44,
+      375.584
+     ],
+     "planned_sinks": 583,
+     "radius_um": 204.9
+    },
+    {
+     "name": "clk_t1",
+     "xy": [
+      17.28,
+      127.968
+     ],
+     "planned_sinks": 1091,
+     "radius_um": 148.4
+    },
+    {
+     "name": "clk_t2",
+     "xy": [
+      1082.16,
+      128.736
+     ],
+     "planned_sinks": 515,
+     "radius_um": 103.4
+    },
+    {
+     "name": "clk_t3",
+     "xy": [
+      721.44,
+      133.944
+     ],
+     "planned_sinks": 535,
+     "radius_um": 120.6
+    },
+    {
+     "name": "clk_t4",
+     "xy": [
+      360.72,
+      214.584
+     ],
+     "planned_sinks": 954,
+     "radius_um": 207.6
+    },
+    {
+     "name": "clk_t5",
+     "xy": [
+      1425.6,
+      349.56
+     ],
+     "planned_sinks": 1089,
+     "radius_um": 148.0
+    },
+    {
+     "name": "clk_t6",
+     "xy": [
+      1082.16,
+      365.544
+     ],
+     "planned_sinks": 585,
+     "radius_um": 207.9
+    },
+    {
+     "name": "clk_t7",
+     "xy": [
+      360.72,
+      630.304
+     ],
+     "planned_sinks": 583,
+     "radius_um": 207.4
+    },
+    {
+     "name": "clk_t8",
+     "xy": [
+      17.28,
+      647.968
+     ],
+     "planned_sinks": 1091,
+     "radius_um": 148.4
+    },
+    {
+     "name": "clk_t9",
+     "xy": [
+      1082.16,
+      781.752
+     ],
+     "planned_sinks": 956,
+     "radius_um": 207.6
+    },
+    {
+     "name": "clk_t10",
+     "xy": [
+      721.44,
+      786.504
+     ],
+     "planned_sinks": 938,
+     "radius_um": 205.2
+    },
+    {
+     "name": "clk_t11",
+     "xy": [
+      360.72,
+      867.552
+     ],
+     "planned_sinks": 519,
+     "radius_um": 118.6
+    },
+    {
+     "name": "clk_t12",
+     "xy": [
+      1425.6,
+      869.544
+     ],
+     "planned_sinks": 1089,
+     "radius_um": 148.0
+    }
+   ]
+  },
+  "hd_st_m": {
+   "bank_corner_radius_um": 105.88,
+   "n": 7,
+   "worst_radius_um": 162.2,
+   "sinks": 841,
+   "taps": [
+    {
+     "name": "clk",
+     "xy": [
+      858.528,
+      80.76
+     ],
+     "planned_sinks": 65,
+     "radius_um": 12.7
+    },
+    {
+     "name": "clk_t1",
+     "xy": [
+      17.28,
+      38.76
+     ],
+     "planned_sinks": 193,
+     "radius_um": 105.9
+    },
+    {
+     "name": "clk_t2",
+     "xy": [
+      292.2624,
+      51.384
+     ],
+     "planned_sinks": 130,
+     "radius_um": 93.7
+    },
+    {
+     "name": "clk_t3",
+     "xy": [
+      584.5248,
+      51.384
+     ],
+     "planned_sinks": 130,
+     "radius_um": 162.2
+    },
+    {
+     "name": "clk_t4",
+     "xy": [
+      1082.16,
+      51.384
+     ],
+     "planned_sinks": 130,
+     "radius_um": 110.6
+    },
+    {
+     "name": "clk_t5",
+     "xy": [
+      1332.72,
+      67.76
+     ],
+     "planned_sinks": 64,
+     "radius_um": 26.0
+    },
+    {
+     "name": "clk_t6",
+     "xy": [
+      1425.6,
+      80.76
+     ],
+     "planned_sinks": 129,
+     "radius_um": 27.9
+    }
+   ]
+  },
+  "hd_st_k5": {
+   "bank_corner_radius_um": 147.96,
+   "n": 13,
+   "worst_radius_um": 221.4,
+   "sinks": 6105,
+   "taps": [
+    {
+     "name": "clk",
+     "xy": [
+      721.44,
+      791.88
+     ],
+     "planned_sinks": 195,
+     "radius_um": 167.7
+    },
+    {
+     "name": "clk_t1",
+     "xy": [
+      160.0,
+      17.28
+     ],
+     "planned_sinks": 545,
+     "radius_um": 117.9
+    },
+    {
+     "name": "clk_t2",
+     "xy": [
+      366.0,
+      17.28
+     ],
+     "planned_sinks": 702,
+     "radius_um": 189.6
+    },
+    {
+     "name": "clk_t3",
+     "xy": [
+      741.44,
+      223.008
+     ],
+     "planned_sinks": 515,
+     "radius_um": 102.6
+    },
+    {
+     "name": "clk_t4",
+     "xy": [
+      1092.16,
+      325.6
+     ],
+     "planned_sinks": 1028,
+     "radius_um": 221.4
+    },
+    {
+     "name": "clk_t5",
+     "xy": [
+      412.824,
+      350.704
+     ],
+     "planned_sinks": 872,
+     "radius_um": 190.1
+    },
+    {
+     "name": "clk_t6",
+     "xy": [
+      741.44,
+      444.6
+     ],
+     "planned_sinks": 513,
+     "radius_um": 102.5
+    },
+    {
+     "name": "clk_t7",
+     "xy": [
+      1425.6,
+      444.6
+     ],
+     "planned_sinks": 1089,
+     "radius_um": 148.0
+    },
+    {
+     "name": "clk_t8",
+     "xy": [
+      17.28,
+      773.88
+     ],
+     "planned_sinks": 193,
+     "radius_um": 105.9
+    },
+    {
+     "name": "clk_t9",
+     "xy": [
+      292.2624,
+      786.504
+     ],
+     "planned_sinks": 130,
+     "radius_um": 128.5
+    },
+    {
+     "name": "clk_t10",
+     "xy": [
+      1150.704,
+      791.88
+     ],
+     "planned_sinks": 65,
+     "radius_um": 12.7
+    },
+    {
+     "name": "clk_t11",
+     "xy": [
+      1082.16,
+      833.88
+     ],
+     "planned_sinks": 65,
+     "radius_um": 12.6
+    },
+    {
+     "name": "clk_t12",
+     "xy": [
+      1425.6,
+      833.88
+     ],
+     "planned_sinks": 193,
+     "radius_um": 105.9
+    }
+   ]
+  },
+  "hd_mesh": {
+   "bank_corner_radius_um": 148.368,
+   "n": 5,
+   "worst_radius_um": 236.3,
+   "sinks": 3466,
+   "taps": [
+    {
+     "name": "clk",
+     "xy": [
+      484.584,
+      1209.6
+     ],
+     "planned_sinks": 513,
+     "radius_um": 117.5
+    },
+    {
+     "name": "clk_t1",
+     "xy": [
+      17.28,
+      120.0
+     ],
+     "planned_sinks": 545,
+     "radius_um": 117.9
+    },
+    {
+     "name": "clk_t2",
+     "xy": [
+      17.28,
+      326.0
+     ],
+     "planned_sinks": 1059,
+     "radius_um": 236.3
+    },
+    {
+     "name": "clk_t3",
+     "xy": [
+      1425.6,
+      405.624
+     ],
+     "planned_sinks": 258,
+     "radius_um": 118.5
+    },
+    {
+     "name": "clk_t4",
+     "xy": [
+      263.008,
+      1209.6
+     ],
+     "planned_sinks": 1091,
+     "radius_um": 148.4
+    }
+   ]
+  },
+  "hd_ctl": {
+   "bank_corner_radius_um": 148.368,
+   "n": 19,
+   "worst_radius_um": 182.0,
+   "sinks": 13298,
+   "taps": [
+    {
+     "name": "clk",
+     "xy": [
+      663.3984,
+      645.216
+     ],
+     "planned_sinks": 1028,
+     "radius_um": 162.6
+    },
+    {
+     "name": "clk_t1",
+     "xy": [
+      30.264,
+      17.28
+     ],
+     "planned_sinks": 1152,
+     "radius_um": 86.8
+    },
+    {
+     "name": "clk_t2",
+     "xy": [
+      173.532,
+      17.28
+     ],
+     "planned_sinks": 824,
+     "radius_um": 86.6
+    },
+    {
+     "name": "clk_t3",
+     "xy": [
+      315.048,
+      17.28
+     ],
+     "planned_sinks": 991,
+     "radius_um": 87.8
+    },
+    {
+     "name": "clk_t4",
+     "xy": [
+      460.832,
+      17.28
+     ],
+     "planned_sinks": 844,
+     "radius_um": 146.3
+    },
+    {
+     "name": "clk_t5",
+     "xy": [
+      17.28,
+      133.024
+     ],
+     "planned_sinks": 581,
+     "radius_um": 79.9
+    },
+    {
+     "name": "clk_t6",
+     "xy": [
+      493.862,
+      164.16
+     ],
+     "planned_sinks": 128,
+     "radius_um": 48.5
+    },
+    {
+     "name": "clk_t7",
+     "xy": [
+      17.28,
+      262.8676
+     ],
+     "planned_sinks": 1167,
+     "radius_um": 91.5
+    },
+    {
+     "name": "clk_t8",
+     "xy": [
+      17.28,
+      415.464
+     ],
+     "planned_sinks": 688,
+     "radius_um": 91.7
+    },
+    {
+     "name": "clk_t9",
+     "xy": [
+      1425.6,
+      440.0
+     ],
+     "planned_sinks": 258,
+     "radius_um": 118.9
+    },
+    {
+     "name": "clk_t10",
+     "xy": [
+      17.28,
+      568.672
+     ],
+     "planned_sinks": 1175,
+     "radius_um": 146.4
+    },
+    {
+     "name": "clk_t11",
+     "xy": [
+      321.3984,
+      578.184
+     ],
+     "planned_sinks": 513,
+     "radius_um": 65.9
+    },
+    {
+     "name": "clk_t12",
+     "xy": [
+      995.0976,
+      645.216
+     ],
+     "planned_sinks": 1028,
+     "radius_um": 182.0
+    },
+    {
+     "name": "clk_t13",
+     "xy": [
+      340.8384,
+      702.648
+     ],
+     "planned_sinks": 515,
+     "radius_um": 66.5
+    },
+    {
+     "name": "clk_t14",
+     "xy": [
+      17.28,
+      829.7316
+     ],
+     "planned_sinks": 145,
+     "radius_um": 93.4
+    },
+    {
+     "name": "clk_t15",
+     "xy": [
+      1179.872,
+      886.0416
+     ],
+     "planned_sinks": 515,
+     "radius_um": 111.8
+    },
+    {
+     "name": "clk_t16",
+     "xy": [
+      958.296,
+      905.4816
+     ],
+     "planned_sinks": 513,
+     "radius_um": 111.3
+    },
+    {
+     "name": "clk_t17",
+     "xy": [
+      17.28,
+      1104.624
+     ],
+     "planned_sinks": 142,
+     "radius_um": 101.5
+    },
+    {
+     "name": "clk_t18",
+     "xy": [
+      1179.872,
+      1209.6
+     ],
+     "planned_sinks": 1091,
+     "radius_um": 148.4
+    }
+   ]
+  },
+  "hd_host": {
+   "bank_corner_radius_um": 144.132,
+   "n": 13,
+   "worst_radius_um": 236.3,
+   "sinks": 5505,
+   "taps": [
+    {
+     "name": "clk",
+     "xy": [
+      764.424,
+      786.504
+     ],
+     "planned_sinks": 130,
+     "radius_um": 102.1
+    },
+    {
+     "name": "clk_t1",
+     "xy": [
+      1076.88,
+      17.28
+     ],
+     "planned_sinks": 1059,
+     "radius_um": 236.1
+    },
+    {
+     "name": "clk_t2",
+     "xy": [
+      1282.88,
+      17.28
+     ],
+     "planned_sinks": 545,
+     "radius_um": 117.9
+    },
+    {
+     "name": "clk_t3",
+     "xy": [
+      17.28,
+      120.0
+     ],
+     "planned_sinks": 545,
+     "radius_um": 117.9
+    },
+    {
+     "name": "clk_t4",
+     "xy": [
+      17.28,
+      326.0
+     ],
+     "planned_sinks": 1059,
+     "radius_um": 236.3
+    },
+    {
+     "name": "clk_t5",
+     "xy": [
+      1425.6,
+      773.88
+     ],
+     "planned_sinks": 193,
+     "radius_um": 105.9
+    },
+    {
+     "name": "clk_t6",
+     "xy": [
+      110.16,
+      778.88
+     ],
+     "planned_sinks": 64,
+     "radius_um": 26.0
+    },
+    {
+     "name": "clk_t7",
+     "xy": [
+      1103.652,
+      786.504
+     ],
+     "planned_sinks": 130,
+     "radius_um": 81.1
+    },
+    {
+     "name": "clk_t8",
+     "xy": [
+      17.28,
+      791.88
+     ],
+     "planned_sinks": 129,
+     "radius_um": 27.9
+    },
+    {
+     "name": "clk_t9",
+     "xy": [
+      303.904,
+      804.504
+     ],
+     "planned_sinks": 130,
+     "radius_um": 51.7
+    },
+    {
+     "name": "clk_t10",
+     "xy": [
+      517.856,
+      908.72
+     ],
+     "planned_sinks": 260,
+     "radius_um": 58.1
+    },
+    {
+     "name": "clk_t11",
+     "xy": [
+      501.862,
+      1062.72
+     ],
+     "planned_sinks": 208,
+     "radius_um": 103.6
+    },
+    {
+     "name": "clk_t12",
+     "xy": [
+      422.496,
+      1209.6
+     ],
+     "planned_sinks": 1053,
+     "radius_um": 159.2
+    }
+   ]
+  }
+ }
+}
