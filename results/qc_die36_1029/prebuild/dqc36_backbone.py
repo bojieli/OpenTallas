@@ -46,9 +46,9 @@ def lef_access(master):
 # old pin x per (net) occurrences for moved cells -> shift map keyed (net, round(old_px,3))
 shift_at = {}
 for cell, d in dx.items():
-    master, pp = pinnet[cell]; k = cell[3:]; ox = old[k][0]
-    for p in ('A', 'Y'):
-        shift_at[(pp[p], round(ox+lef_access(master)[p], 3))] = d
+    master, pp = pinnet[cell]; k = cell[3:]; ox, oy = old[k]
+    for p in ('A', 'Y'):  # key includes the row: same-net pins in one column on other rows must NOT move (fix 14:0x)
+        shift_at[(pp[p], round(ox+lef_access(master)[p], 3), round(oy, 2))] = d
 
 holes = json.load(open(a.cell_windows))['cells']
 print('STAGE geometry', flush=True)
@@ -63,8 +63,8 @@ phase, count, pitch = g['tracks']['M7']['X'][0]; phase /= dbu; pitch /= dbu
 del g
 base = json.load(open(a.clock_base)); shifted_base = 0; new_base = []
 for i in range(0, len(base), 7):
-    grp = base[i:i+7]; net = grp[0][0]; cx = round((grp[0][2]+grp[0][4])/2, 3)
-    d = shift_at.get((net, cx), 0.0)
+    grp = base[i:i+7]; net = grp[0][0]; cx = round((grp[0][2]+grp[0][4])/2, 3); cy = (grp[0][3]+grp[0][5])/2
+    d = shift_at.get((net, cx, round(cy-.135, 2)), 0.0)  # stacks sit at row y + 0.135 (pin access row)
     if d: shifted_base += 1
     for r in grp:
         r2 = [r[0], r[1], r[2]+d, r[3], r[4]+d, r[5]]; new_base.append(r2); ix.add(r2)

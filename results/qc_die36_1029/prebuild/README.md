@@ -26,9 +26,12 @@ Run root intel2 `/srv/opentallas-scratch2/claude/die-qc36/` (inputs as DIE-QC-35
   window contains the track the shared trunk uses (DIE-QC-35 cause 1). Fallback to the nearest witness only when no column at
   the router track is clear (counted). Old-site M1..M7 clock base stacks are shifted with their cell. Emits backbone_plan.json,
   joint_clock_reserved.json (input of plan_access --joint-clock-reserved) and clock_base_resite.json.
-- bb1 LIVE at park (intel2 unit oth-ubuntu-2823927, `run_bb1.sh`, log `backbone_bb1.log`): at 45,001/89,180 pins 44,853 pass /
-  148 fail; witness = router track 33,104, fallback nearest 11,749 (UNCHECKED partial). Failures keep the default column window
-  (no record) in the E2 diagnostic copy.
+- bb1 DONE (intel2 unit oth-ubuntu-2823927, `run_bb1.sh`, `backbone_bb1/summary.json`) [CHECKED]: FAIL 379 unresolved / 89,180
+  pins, 88,801 records; witness = router track 63,597, fallback nearest 25,204. Failures keep the default column window (no
+  record) in the E2 diagnostic copy. CAVEAT: bb1's base-stack shift was keyed (net, x) and moved 8,331 stacks instead of the
+  8,156 moved-pin stacks (175 same-net same-column pins on other rows wrongly shifted inside bb1's clearance index); fixed in
+  `dqc36_backbone.py` (row-keyed) and the PG access runs use the exact `clock_base_resite_v2.json` (`regen_base.py`: 8,156/8,156).
+  A bb2 rerun with the fixed key is the clean record set if E2 shows any short at those 175 pins.
 
 ## 4. Chained after bb1 (auto-launched by `chain_e2.sh` / `chain_pa.sh` on intel2, die-qc36/)
 - E2 `run_e2_backbone_noaccess.sh`: prebuild with the bb1 backbone, no PG access -> does the pin-access stage now pass on legal
