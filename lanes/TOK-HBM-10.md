@@ -20,3 +20,6 @@ CODEX took over HBM token/source timing on codex/hbm-token-0830. All inherited t
 - ActualRR1sourceprobePASS unit2548544:bankrqsample62/rrNBA68/receiver69,data24/status0. RR_RTABIproducerrequestlaunch61->replylaunch68=7,receivercapture8;coverageownsall16DMA/RR80coherentpadding.
 - Export128pipeline recipes176798FF/3074controlbits,stages2..31. CoverageactualmaterializationPASS379originalinst/master/paramsunchanged,128groups93sinkportsrewritten,allotherports/bitsunchanged;27wrongstage/bit/resetmutantscaught. Actualcandidateintel1codex-hbm-direct-station-0822/top_vms128_stationed.sv. Thisiscomponent/sourceprep;noSouthgeometry/reset/calendar/physicaladoptionclaim.
 - Noownlivejobs;nextactualSouthgeometry/cutwithHBMowner,sourcecalendardatesafterbinding. OWNER?:none.
+
+## PARKED 2026-10-29 09:04 PDT — EXPLICIT CLAUDE RESET
+Branchcodex/hbm-token-0830@1af5b8b12 clean/pushed;allownjobs terminal. Fullhandoff CODEX-LOG 2026-10-29 09:04 PDT, exactsource128VMSrecipes andVMcapacity399360witness ready. Noengineering/jobs/mergesafterreset. OWNER?:none.

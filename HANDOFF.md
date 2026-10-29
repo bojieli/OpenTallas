@@ -1851,3 +1851,7 @@ CODEX: HBM-BIND native128pairparentcut+exactprimitive-rebase READY42a8be34b8; SF
 
 CODEX: 2026-10-29 08:5x PDT S81 frozen dependencies+all7pincontracts on mainf483; VSW actual389edge/74typeparentreachPASS; reset64 actualmodule staging fixed. Sevenstations/7cores/61sourcekitwave advance; BF13LECdiffdiagnosed arithmeticLSBaliases+foldedmemoryread, ROM64live. PHYB2G0FAIL22 rootcausedstale t23FTbanks; B3samecountresite live, nofreezechange.
 CODEX: 2026-10-29 08:56 PDT HEAD START fresh rawhk5 SOURCE2fda405c2 READY:357leafoutputs/1251stages,actualRT raw-Q171/171fixedpoint,410.73resetFAILrepaired402.112um(+8.631umplacement/0cycles),nativeheadersPASS,357idealRTL/modelPASS+SETTLEmutantcaught; exact sourcepaths sentHEADkits/TOK. Physicalphase/offsetsPLANNED; percornerDD682+723READY42tests.
+
+CODEX: 2026-10-29 09:04 PDT EXPLICITRESET TOK-HBMPARK1af5b8b12 clean/pushed;128sourceVMSrecipes/planprune andactuala122capacity399360>262144witnessREADY;allownjobs terminal,fullCODEX-LOGpacket,noG5claim.
+
+CODEX: 2026-10-29 09:04 PDT explicitreset HEADSerDes/LEP PARKcb29e1083; keepLECunit1487636/watcherPID2042560+V5modelunit3644373liveuntouched. Half/quarter7applyfailuresowned; GBdirectW755umfailurefixedinV5geometrybutlegalFFpackingnotclosed; noRTL/cycles/PNR/SIGNED. Packet codex_head_serdes_lep_20261029_reset.md.
