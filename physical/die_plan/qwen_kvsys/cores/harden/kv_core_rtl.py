@@ -452,7 +452,7 @@ def build_core(B, t, hc, pins_file, straps=()):
         cls = set(bits.values())
         dirn = 'output' if cls <= {'out', 'out_alias', 'stale_out'} else 'input'
         if cls & {'out', 'out_alias', 'stale_out'} and cls - {'out', 'out_alias', 'stale_out'}:
-            raise SystemExit(f"{hc['inst']}: port {b} mixes directions {cls}")
+            raise SystemExit(f"{hc['inst']}: port {b} mixes directions {cls}; stale bits {[(i, c) for i, c in bits.items() if c.startswith('stale')][:12]}")
         if not idx:
             pdecl[b] = dict(dir=dirn, hi=None, lo=None, gaps=[])
             continue
@@ -790,6 +790,9 @@ def lint(files, top, defines=('SYNTHESIS',)):
 
 # ----------------------------------------------------------------------------------------------- main
 def kv41_file(kv41, tn):
+    native = Path(kv41) / f'{tn}.sv'
+    if native.is_file():
+        return native
     f = Path(kv41) / f'{tn}_part.sv'
     if not f.exists():
         m = re.match(r'(.*)_(r\d+)$', tn)
@@ -1287,7 +1290,7 @@ def main():
         return main_hr(a, plan, pdir, t)
     kd = Path(a.kit_rtl) / a.type
     kj = json.load(open(kd / 'kit_rtl.json'))
-    bound = kd / f"{kj['bound_module'].replace('_part_bound', '')}_part_bound.sv"
+    bound = kd / f"{kj['bound_module']}.sv"
     files = [l.strip() for l in open(kd / 'kit_rtl.f') if l.strip()]
     leaf_files = [f for f in files if not re.search(r'_part(_bound)?\.sv$', f)]
     pj = port_dirs(files)
