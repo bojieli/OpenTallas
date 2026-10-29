@@ -1,0 +1,211 @@
+{
+ "event": "C24 (DIE-HBM-10)",
+ "source": "c23r_cc/die_plan.json",
+ "source_sha": "403d45a4f115",
+ "inputs": {
+  "dr_lp.json": "f6e8e4bf42191809",
+  "dr_ps.json": "e5809cc1cfec3cee",
+  "gen_core_kit_hbm_rebal10.py": "88092a2b65f5825b",
+  "hnx_lane_cut_estimate.json": "79443b9e74e23dde",
+  "hnx_rp4lp4_leaf_selfcontained_lanecut.sv": "efe31add5be0e469",
+  "infra_hnx_n.json": "82cab717285de115",
+  "infra_hnx_s.json": "eaf0ab47deff3bef",
+  "macro_reg_guide_m5w1gr.json": "3a4c38462ad98712",
+  "mp3_hnx_n.json": "ad5ac7db833eac8a",
+  "mp3_hnx_s.json": "7a6c056929fe81e4",
+  "mp3_lanes__canon.json": "8614ee9908d03aa3",
+  "relay_lanes_canon.json": "24a1a881e871a3f4",
+  "wv3_probe.json": "e5d8911e0f9d577d"
+ },
+ "inputs_from": "claude/hbm-cores-rebal-6-1028@bd8c7c1b54 results/hbm_cores_rebal_{4,5,6}_1028 + REBAL-4 kits core_infra_plan.json (intel2:/srv/opentallas-scratch2/claude/hbm-cores-rebal-4/kits)",
+ "hnx_lane_x": {
+  "outline_um": [
+   285.12,
+   302.4
+  ],
+  "pins": 1670,
+  "pins_file": "cores/hnx_lane_x__285.12x302.4__c24.json",
+  "faces": {
+   "N": {
+    "pins": 552,
+    "layer": "M5",
+    "face_um": 285.12,
+    "per_um": 1.94,
+    "max_per_10um": 20
+   },
+   "S": {
+    "pins": 532,
+    "layer": "M5",
+    "face_um": 285.12,
+    "per_um": 1.87,
+    "max_per_10um": 20
+   },
+   "W": {
+    "pins": 531,
+    "layer": "M4",
+    "face_um": 302.4,
+    "per_um": 1.76,
+    "max_per_10um": 18
+   },
+   "E": {
+    "pins": 54,
+    "layer": "M4",
+    "face_um": 302.4,
+    "per_um": 0.18,
+    "max_per_10um": 2
+   }
+  },
+  "clock_entry": [
+   142.584,
+   151.2
+  ],
+  "port_count_note": "RTL hnx_lane_x: 1669 signal (1615 data in + 4 resets + 50 out) + clk = 1670; REBAL-5 quoted ~1672 (est.)"
+ },
+ "hnx_checks": {
+  "hnx_rp3lp3h_n": {
+   "min_child_sram_gap_um": 131.76,
+   "worst": [
+    "u_lane1",
+    "u_lf0.g_xs3.u_xs.u_leaf.g_ln\\[2\\].g_xm\\[1\\].u_x",
+    131.76
+   ],
+   "child_child_gap_um": [
+    34.56,
+    43.2,
+    55.323
+   ],
+   "children_inside_core_area": true,
+   "parent_clock_entries": [
+    [
+     [
+      315.36,
+      604.8
+     ],
+     [
+      311.04,
+      600.48,
+      319.68,
+      609.12
+     ]
+    ]
+   ],
+   "parent_entry_over_child": [],
+   "centre_channel_um": [
+    293.76,
+    336.96
+   ],
+   "channel_width_um": 43.2,
+   "lane1_top_gap_um": 34.56,
+   "sram_top_um": 429.84,
+   "rebal4_islands": 33,
+   "rebal4_islands_inside_children": 12,
+   "pass_": true
+  },
+  "hnx_rp3lp3h_s": {
+   "min_child_sram_gap_um": 15.12,
+   "worst": [
+    "u_lane1",
+    "u_lf1.g_xs3.u_xs.u_leaf.g_ln\\[1\\].g_xm\\[1\\].u_x",
+    15.12
+   ],
+   "child_child_gap_um": [
+    34.56,
+    43.2,
+    55.323
+   ],
+   "children_inside_core_area": true,
+   "parent_clock_entries": [
+    [
+     [
+      315.36,
+      518.4
+     ],
+     [
+      311.04,
+      514.08,
+      319.68,
+      522.72
+     ]
+    ]
+   ],
+   "parent_entry_over_child": [],
+   "centre_channel_um": [
+    293.76,
+    336.96
+   ],
+   "channel_width_um": 43.2,
+   "lane1_top_gap_um": 34.56,
+   "sram_top_um": 373.68,
+   "rebal4_islands": 33,
+   "rebal4_islands_inside_children": 12,
+   "pass_": true
+  }
+ },
+ "arrays": {
+  "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526": {
+   "macros": 24,
+   "islands": 9,
+   "driver_rects": 9,
+   "max_detour_um": 19.116,
+   "entry_over_macro": [],
+   "entry_is_plan_island": true
+  },
+  "ot_hgi_sfu_programme_store_r10": {
+   "macros": 44,
+   "islands": 17,
+   "driver_rects": 16,
+   "max_detour_um": 87.372,
+   "entry_over_macro": [],
+   "entry_is_plan_island": true
+  }
+ },
+ "bank3_write_v": {
+  "pins_file": "cores/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__760.32x725.76__canon.json",
+  "pin": "g_bank_k3_u_bank_write_v",
+  "before": {
+   "name": "g_bank_k3_u_bank_write_v",
+   "layer": "M5",
+   "x": 13.656,
+   "y": 0.096
+  },
+  "after": {
+   "name": "g_bank_k3_u_bank_write_v",
+   "layer": "M5",
+   "x": 569.976,
+   "y": 0.096
+  },
+  "hop_before_um": 579.3,
+  "pin_hop_before_um": 574.9,
+  "relay_before_um": [
+   259.32,
+   329.32
+  ],
+  "hop_after_um": 299.9,
+  "pin_hop_after_um": 299.9,
+  "relay_after_um": [
+   569.32,
+   299.32
+  ],
+  "model": "REBAL-10 gen_core_kit_hbm.relay_reg_guide_spec (L1, 5-um grid), kit _c20ek2m_m5w1gr guides"
+ },
+ "core_macros": {
+  "hnx_rp3lp3h_n": [
+   "UNKNOWN",
+   "KNOWN"
+  ],
+  "hnx_rp3lp3h_s": [
+   "UNKNOWN",
+   "KNOWN"
+  ],
+  "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526": [
+   "UNKNOWN",
+   "KNOWN"
+  ],
+  "ot_hgi_sfu_programme_store_r10": [
+   "UNKNOWN",
+   "KNOWN"
+  ]
+ },
+ "notes_updated": 154,
+ "plan_sha": "3ab76af4"
+}

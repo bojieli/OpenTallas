@@ -61,3 +61,18 @@ calibrated setRC_rcx) and OCV-inclusive (`parent_trunk_dme.py ocv`, approved AOC
   Sub-lane DIE-QC-18-PINILV builds the opt-in kit.
 
 ## Task 2 / 3: not started this slice (task 3 still blocked: CLK-INV-CAL-1 rework RM165 not on origin/main d2836a2d41+).
+
+## COORD 14:xx ruling: measured trunks carried into the QC die gate (gate/)
+Proof = DIE-QC-16 trial12 (c_* A0 early taps, clock GRT TT/FF); plan = trial12 event with the 64 c_* A0 core taps at the
+MEASURED routed A0 insertion (mk_ev_a0meas.py): nk t5 665.8 TT / 576.5 FF (median; 648.0-681.3 / 558.4-593.1), nl b5
+692.6 / 601.9 (679.5-711.1 / 589.1-621.7), CHECKED from arr_*.txt. Tools: CA + die STA = origin/main 4460e18d64;
+landed_phase_ocv --clock-cell inv2 = DIE-QC-13 invcal PREVIEW (RM165 not on main) -> PREVIEW/DECLARED, not a gate.
+Results (CHECKED from logs, UNCHECKED-independent):
+- CA margin: TT lo/hi 105.4/110.3, FF 104.0/107.9 (>=100, 0 fail, slot_read/guard 0 fail). CA verdict FAIL on
+  start-skew 104/489: all 104 are reset-release start-tree hops (sl_* hc2/b/l0 + start-tree nodes), 0 at A0 taps.
+- die STA declared (PLANNING): TT setup intra +343.7 / seam +421.4 (0 neg). FF hold intra -306.4 (worst c_E1_bf_00
+  glue clk_t6 -> A0 clk_c3), seam -223.5 (io_serdes_2 -> c_W5_bf_01 A0 clk_c3); worst skews 407 (glue t3 <-> A0 c3,
+  c_*_bn/bf) and 315 (io_serdes -> A0). Gate mode (view): FAIL CLOSED, 864/864 early core taps have no signed view.
+- Attribution: every worst hold/skew pair is glue <-> A0 core tap in a c_* region = the c_* region plan miss (A0 hung at
+  the region root, QC-16 shortfall ~190), not the trunk spread (A0-internal window +-17 nominal vs 97-183 ps damage).
+  Per the ruling, no per-leg calibration. Next: task 2 (c_* region root at the A0 entry) at the measured 666/693.

@@ -220,3 +220,25 @@ def test_split_repeated_leaf_keeps_stage_count_and_one_wire_per_driver(monkeypat
         assert len(w) == 1 and len(w[0]["segs"]) == 2
     assert sorted(x for u in parts for x in P["leafsinks"][u]) == sorted(
         [s(10 + i, 80, "w%d" % i) for i in range(4)] + [s(90 + i, 80, "e%d" % i) for i in range(4)])
+
+
+def test_entry_mode_default_centre_and_member_map():
+    assert F.entry_mode({"name": "f"}, "a") == "centre"
+    assert F.entry_mode({"name": "f", "entry": "sink_centroid"}, "a") == "sink_centroid"
+    fam = {"name": "f", "entry": {"a": "sink_centroid"}}
+    assert F.entry_mode(fam, "a") == "sink_centroid" and F.entry_mode(fam, "b") == "centre"
+    with pytest.raises(SystemExit):
+        F.entry_mode({"name": "f", "entry": "middle"}, "a")
+
+
+def test_entry_geo_centre_unchanged_and_centroid(tmp_path):
+    g = tmp_path / "geo.txt"
+    g.write_text("CORE 0 0 100 50\nPIN ck 50.000 25.000\nSINK 90 10 a b c\nSINK 70 30 d e f\nMACRO m x 0 0 1 1 x 0 0\n")
+    assert F.entry_geo(g, "centre") == g
+    e = F.entry_geo(g, "sink_centroid")
+    assert e.name == "geo_entry.txt" and g.read_text().count("PIN ck 50.000 25.000") == 1
+    L = e.read_text().splitlines()
+    assert L[1] == "PIN ck 80.000 20.000" and L[0] == "CORE 0 0 100 50" and L[2:] == g.read_text().splitlines()[2:]
+    g.write_text("CORE 0 0 1 1\nPIN ck 0 0\n")
+    with pytest.raises(SystemExit):
+        F.entry_geo(g, "sink_centroid")
