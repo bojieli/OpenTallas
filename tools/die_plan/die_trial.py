@@ -1563,7 +1563,7 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
         q = (t[2], t[3]) if site.legal((t[2], t[3])) else site.nearest((t[2], t[3]))
         q = round_legal(site, q)
         d = _man(q, (t[2], t[3]))
-        sd = tap_wire_ps(d) if snake and delay_rep_um else d
+        sd = tap_wire_ps(d) if delay_rep_um and (snake or DME_ACTUAL_MAX_UM is not None) else d
         if sink_early:      # DIE-S81-14 --region-dme-early-mode merge: declared early = DME sink delay (zero-skew merge)
             sd += float(sink_early.get((t[0], t[1]), 0.0))
         out.append(dict(x=q[0], y=q[1], kids=[], taps=[t], S=sd, Smin=sd, W=d))

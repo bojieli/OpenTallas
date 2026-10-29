@@ -53,3 +53,13 @@ def test_export_rejects_changed_endpoint():
 def test_default_leg_cost_is_unchanged(monkeypatch):
     monkeypatch.setattr(D,'DME_ACTUAL_MAX_UM',None)
     assert D.placed_leg_ps(Site(),(400.,900.),(400.,200.),250.) == D.leg_ps(700.,250.)
+
+
+def test_physical_mode_prices_leaf_wire_even_without_snakes(monkeypatch):
+    site=Site();tap=('p','clk',400.,500.)
+    dn,root,_=D.dme_region_tree(site,[tap],delay_rep_um=250.,snake=False)
+    distance=D._man((dn[root]['x'],dn[root]['y']),tap[2:])
+    assert dn[root]['S'] == pytest.approx(D.tap_wire_ps(distance))
+    monkeypatch.setattr(D,'DME_ACTUAL_MAX_UM',None)
+    old,root,_=D.dme_region_tree(site,[tap],delay_rep_um=250.,snake=False)
+    assert old[root]['S'] == pytest.approx(distance)
