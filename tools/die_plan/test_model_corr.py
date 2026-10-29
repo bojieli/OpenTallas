@@ -82,3 +82,13 @@ def test_reference_decks_unchanged(tmp_path, name):
     for c in MC.CORNERS:
         h = hashlib.sha256((tmp_path / name / f"deck_{c}.sp").read_bytes()).hexdigest()
         assert h == G["deck_sha256"][f"{name}/{c}"], (name, c)
+
+
+def test_routed_path_in_golden():
+    """the GRT-routed HEAD hd_tile h16 spine (BUFx24 + 16 BUFx4 delay cells, design SPEF) is part of the reference set"""
+    rows = [r for r in G["raw_rows"] if r["case"] == "routed_hd_tile_h16_t33"]
+    assert len(rows) == 76 and {r["corner"] for r in rows} == {"TT", "FF"}
+    assert {r["src_edge"] for r in rows} == {"rise", "fall"} and all(r["tap_edge"] == r["src_edge"] for r in rows)
+    assert {"routed_hd_tile_h16_t33/TT", "routed_hd_tile_h16_t33/FF"} <= set(G["deck_sha256"])
+    end = {(r["corner"], r["src_edge"]): r["spice_ps"] for r in rows if r["tap"] == "clkbuf_0_h16_t33/A"}
+    assert 440 < end["TT", "rise"] < 500 and end["TT", "fall"] > end["TT", "rise"]
