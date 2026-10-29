@@ -1,0 +1,320 @@
+Startpoint: root (input port clocked by vclk)
+Endpoint: t_hg_WS_7__clk_t3 (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock vclk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ input external delay
+   0.000    0.000 ^ root (in)
+  15.652   15.652 v ck_b0/Y (CKINVDCx16_ASAP7_75t_R)
+  76.801   92.453 ^ ck_b9/Y (CKINVDCx16_ASAP7_75t_R)
+  45.389  137.842 v ck_r10_0/Y (CKINVDCx16_ASAP7_75t_R)
+  43.348  181.190 ^ ck_r10_1/Y (CKINVDCx16_ASAP7_75t_R)
+  42.132  223.322 v ck_r10_2/Y (CKINVDCx16_ASAP7_75t_R)
+  42.550  265.872 ^ ck_r10_3/Y (CKINVDCx16_ASAP7_75t_R)
+  39.160  305.032 v ck_r10_4/Y (CKINVDCx16_ASAP7_75t_R)
+  46.444  351.476 ^ ck_r10_5/Y (CKINVDCx16_ASAP7_75t_R)
+  38.386  389.862 v ck_r10_6/Y (CKINVDCx16_ASAP7_75t_R)
+  48.382  438.244 ^ ck_r10_7/Y (CKINVDCx16_ASAP7_75t_R)
+  39.949  478.193 v ck_b10/Y (CKINVDCx16_ASAP7_75t_R)
+  14.960  493.153 ^ ck_b11/Y (CKINVDCx16_ASAP7_75t_R)
+  36.732  529.885 v ck_r12_0/Y (CKINVDCx16_ASAP7_75t_R)
+  43.084  572.969 ^ ck_r12_1/Y (CKINVDCx16_ASAP7_75t_R)
+  39.121  612.090 v ck_r12_2/Y (CKINVDCx16_ASAP7_75t_R)
+  42.926  655.016 ^ ck_r12_3/Y (CKINVDCx16_ASAP7_75t_R)
+  38.139  693.155 v ck_r12_4/Y (CKINVDCx16_ASAP7_75t_R)
+  52.204  745.359 ^ ck_b12/Y (CKINVDCx16_ASAP7_75t_R)
+  64.360  809.719 v ck_r27_0/Y (CKINVDCx16_ASAP7_75t_R)
+  53.336  863.055 ^ ck_r27_1/Y (CKINVDCx16_ASAP7_75t_R)
+  45.763  908.818 v ck_r27_2/Y (CKINVDCx16_ASAP7_75t_R)
+  50.007  958.825 ^ ck_r27_3/Y (CKINVDCx16_ASAP7_75t_R)
+  43.524 1002.349 v ck_r27_4/Y (CKINVDCx16_ASAP7_75t_R)
+  46.778 1049.127 ^ ck_r27_5/Y (CKINVDCx16_ASAP7_75t_R)
+  53.380 1102.507 v ck_r27_6/Y (CKINVDCx16_ASAP7_75t_R)
+  43.198 1145.705 ^ ck_b27/Y (CKINVDCx16_ASAP7_75t_R)
+  34.925 1180.630 v ck_r28_0/Y (CKINVDCx16_ASAP7_75t_R)
+  74.178 1254.808 ^ ck_r28_1/Y (CKINVDCx16_ASAP7_75t_R)
+  30.756 1285.564 v ck_r28_2/Y (CKINVDCx16_ASAP7_75t_R)
+  23.666 1309.230 ^ ck_r28_3/Y (CKINVDCx16_ASAP7_75t_R)
+  78.985 1388.215 v ck_b28/Y (CKINVDCx16_ASAP7_75t_R)
+  56.666 1444.881 ^ ck_r67_0/Y (CKINVDCx16_ASAP7_75t_R)
+  66.605 1511.486 v ck_r67_1/Y (CKINVDCx16_ASAP7_75t_R)
+  35.372 1546.858 ^ ck_r67_2/Y (CKINVDCx16_ASAP7_75t_R)
+  23.735 1570.593 v ck_r67_3/Y (CKINVDCx16_ASAP7_75t_R)
+  74.173 1644.766 ^ ck_b67/Y (CKINVDCx16_ASAP7_75t_R)
+  37.578 1682.344 v ck_r68_0/Y (CKINVDCx16_ASAP7_75t_R)
+  68.380 1750.724 ^ ck_r68_1/Y (CKINVDCx16_ASAP7_75t_R)
+  33.581 1784.305 v ck_r68_2/Y (CKINVDCx16_ASAP7_75t_R)
+  22.246 1806.551 ^ ck_r68_3/Y (CKINVDCx16_ASAP7_75t_R)
+  79.736 1886.287 v ck_b68/Y (CKINVDCx16_ASAP7_75t_R)
+  56.153 1942.440 ^ ck_r2363_0/Y (CKINVDCx16_ASAP7_75t_R)
+  41.514 1983.954 v ck_r2363_1/Y (CKINVDCx16_ASAP7_75t_R)
+  45.684 2029.638 ^ ck_b2363/Y (CKINVDCx16_ASAP7_75t_R)
+  31.325 2060.963 v ck_r2379_0/Y (CKINVDCx16_ASAP7_75t_R)
+  77.957 2138.920 ^ ck_r2379_1/Y (CKINVDCx16_ASAP7_75t_R)
+  39.080 2178.000 v ck_b2379/Y (CKINVDCx16_ASAP7_75t_R)
+  48.420 2226.420 ^ ck_r2380_0/Y (CKINVDCx16_ASAP7_75t_R)
+  39.646 2266.066 v ck_b2380/Y (CKINVDCx16_ASAP7_75t_R)
+  39.565 2305.631 ^ ck_r2384_0/Y (CKINVDCx16_ASAP7_75t_R)
+  44.055 2349.686 v ck_b2384/Y (CKINVDCx16_ASAP7_75t_R)
+  25.762 2375.448 ^ ck_b2385/Y (CKINVDCx16_ASAP7_75t_R)
+  32.686 2408.134 v ck_b2386/Y (CKINVDCx16_ASAP7_75t_R)
+  19.056 2427.190 ^ ck_q2386_t_hg_WS_7__clk_t3/Y (CKINVDCx16_ASAP7_75t_R)
+   6.974 2434.164 ^ t_hg_WS_7__clk_t3 (out)
+         2434.164   data arrival time
+
+ 833.333  833.333   clock vclk (rise edge)
+   0.000  833.333   clock network delay (ideal)
+   0.000  833.333   clock reconvergence pessimism
+   0.000  833.333   output external delay
+          833.333   data required time
+-----------------------------------------------------------
+          833.333   data required time
+         -2434.164   data arrival time
+-----------------------------------------------------------
+         -1600.831   slack (VIOLATED)
+
+
+Startpoint: root (input port clocked by vclk)
+Endpoint: t_hg_WS_7__clk_t3 (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock vclk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ input external delay
+   0.000    0.000 ^ root (in)
+  13.433   13.433 v ck_b0/Y (CKINVDCx16_ASAP7_75t_R)
+  63.819   77.252 ^ ck_b9/Y (CKINVDCx16_ASAP7_75t_R)
+  39.485  116.737 v ck_r10_0/Y (CKINVDCx16_ASAP7_75t_R)
+  38.441  155.178 ^ ck_r10_1/Y (CKINVDCx16_ASAP7_75t_R)
+  37.298  192.476 v ck_r10_2/Y (CKINVDCx16_ASAP7_75t_R)
+  37.580  230.056 ^ ck_r10_3/Y (CKINVDCx16_ASAP7_75t_R)
+  34.404  264.460 v ck_r10_4/Y (CKINVDCx16_ASAP7_75t_R)
+  41.163  305.623 ^ ck_r10_5/Y (CKINVDCx16_ASAP7_75t_R)
+  33.798  339.421 v ck_r10_6/Y (CKINVDCx16_ASAP7_75t_R)
+  42.348  381.769 ^ ck_r10_7/Y (CKINVDCx16_ASAP7_75t_R)
+  34.558  416.327 v ck_b10/Y (CKINVDCx16_ASAP7_75t_R)
+  12.986  429.313 ^ ck_b11/Y (CKINVDCx16_ASAP7_75t_R)
+  32.063  461.376 v ck_r12_0/Y (CKINVDCx16_ASAP7_75t_R)
+  37.836  499.212 ^ ck_r12_1/Y (CKINVDCx16_ASAP7_75t_R)
+  34.331  533.543 v ck_r12_2/Y (CKINVDCx16_ASAP7_75t_R)
+  37.832  571.375 ^ ck_r12_3/Y (CKINVDCx16_ASAP7_75t_R)
+  33.495  604.870 v ck_r12_4/Y (CKINVDCx16_ASAP7_75t_R)
+  45.440  650.310 ^ ck_b12/Y (CKINVDCx16_ASAP7_75t_R)
+  55.139  705.449 v ck_r27_0/Y (CKINVDCx16_ASAP7_75t_R)
+  46.724  752.173 ^ ck_r27_1/Y (CKINVDCx16_ASAP7_75t_R)
+  40.176  792.349 v ck_r27_2/Y (CKINVDCx16_ASAP7_75t_R)
+  43.754  836.103 ^ ck_r27_3/Y (CKINVDCx16_ASAP7_75t_R)
+  38.018  874.121 v ck_r27_4/Y (CKINVDCx16_ASAP7_75t_R)
+  41.106  915.227 ^ ck_r27_5/Y (CKINVDCx16_ASAP7_75t_R)
+  46.788  962.015 v ck_r27_6/Y (CKINVDCx16_ASAP7_75t_R)
+  38.280 1000.295 ^ ck_b27/Y (CKINVDCx16_ASAP7_75t_R)
+  30.006 1030.301 v ck_r28_0/Y (CKINVDCx16_ASAP7_75t_R)
+  65.535 1095.836 ^ ck_r28_1/Y (CKINVDCx16_ASAP7_75t_R)
+  26.132 1121.968 v ck_r28_2/Y (CKINVDCx16_ASAP7_75t_R)
+  19.981 1141.949 ^ ck_r28_3/Y (CKINVDCx16_ASAP7_75t_R)
+  69.873 1211.822 v ck_b28/Y (CKINVDCx16_ASAP7_75t_R)
+  49.125 1260.947 ^ ck_r67_0/Y (CKINVDCx16_ASAP7_75t_R)
+  58.799 1319.746 v ck_r67_1/Y (CKINVDCx16_ASAP7_75t_R)
+  29.875 1349.621 ^ ck_r67_2/Y (CKINVDCx16_ASAP7_75t_R)
+  20.067 1369.688 v ck_r67_3/Y (CKINVDCx16_ASAP7_75t_R)
+  65.680 1435.368 ^ ck_b67/Y (CKINVDCx16_ASAP7_75t_R)
+  32.336 1467.704 v ck_r68_0/Y (CKINVDCx16_ASAP7_75t_R)
+  60.266 1527.970 ^ ck_r68_1/Y (CKINVDCx16_ASAP7_75t_R)
+  28.405 1556.375 v ck_r68_2/Y (CKINVDCx16_ASAP7_75t_R)
+  18.793 1575.168 ^ ck_r68_3/Y (CKINVDCx16_ASAP7_75t_R)
+  70.445 1645.613 v ck_b68/Y (CKINVDCx16_ASAP7_75t_R)
+  48.165 1693.778 ^ ck_r2363_0/Y (CKINVDCx16_ASAP7_75t_R)
+  36.709 1730.487 v ck_r2363_1/Y (CKINVDCx16_ASAP7_75t_R)
+  39.822 1770.309 ^ ck_b2363/Y (CKINVDCx16_ASAP7_75t_R)
+  26.931 1797.240 v ck_r2379_0/Y (CKINVDCx16_ASAP7_75t_R)
+  68.904 1866.144 ^ ck_r2379_1/Y (CKINVDCx16_ASAP7_75t_R)
+  33.100 1899.244 v ck_b2379/Y (CKINVDCx16_ASAP7_75t_R)
+  41.267 1940.511 ^ ck_r2380_0/Y (CKINVDCx16_ASAP7_75t_R)
+  33.440 1973.951 v ck_b2380/Y (CKINVDCx16_ASAP7_75t_R)
+  33.214 2007.164 ^ ck_r2384_0/Y (CKINVDCx16_ASAP7_75t_R)
+  38.199 2045.363 v ck_b2384/Y (CKINVDCx16_ASAP7_75t_R)
+  21.736 2067.099 ^ ck_b2385/Y (CKINVDCx16_ASAP7_75t_R)
+  27.534 2094.633 v ck_b2386/Y (CKINVDCx16_ASAP7_75t_R)
+  16.131 2110.764 ^ ck_q2386_t_hg_WS_7__clk_t3/Y (CKINVDCx16_ASAP7_75t_R)
+   6.856 2117.620 ^ t_hg_WS_7__clk_t3 (out)
+         2117.620   data arrival time
+
+   0.000    0.000   clock vclk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000   clock reconvergence pessimism
+   0.000    0.000   output external delay
+            0.000   data required time
+-----------------------------------------------------------
+            0.000   data required time
+         -2117.620   data arrival time
+-----------------------------------------------------------
+         2117.620   slack (MET)
+
+
+Startpoint: root (input port clocked by vclk)
+Endpoint: t_hg_WS_7__clk_t8 (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock vclk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ input external delay
+   0.000    0.000 ^ root (in)
+  15.652   15.652 v ck_b0/Y (CKINVDCx16_ASAP7_75t_R)
+  76.801   92.453 ^ ck_b9/Y (CKINVDCx16_ASAP7_75t_R)
+  45.389  137.842 v ck_r10_0/Y (CKINVDCx16_ASAP7_75t_R)
+  43.348  181.190 ^ ck_r10_1/Y (CKINVDCx16_ASAP7_75t_R)
+  42.132  223.322 v ck_r10_2/Y (CKINVDCx16_ASAP7_75t_R)
+  42.550  265.872 ^ ck_r10_3/Y (CKINVDCx16_ASAP7_75t_R)
+  39.160  305.032 v ck_r10_4/Y (CKINVDCx16_ASAP7_75t_R)
+  46.444  351.476 ^ ck_r10_5/Y (CKINVDCx16_ASAP7_75t_R)
+  38.386  389.862 v ck_r10_6/Y (CKINVDCx16_ASAP7_75t_R)
+  48.382  438.244 ^ ck_r10_7/Y (CKINVDCx16_ASAP7_75t_R)
+  39.949  478.193 v ck_b10/Y (CKINVDCx16_ASAP7_75t_R)
+  14.960  493.153 ^ ck_b11/Y (CKINVDCx16_ASAP7_75t_R)
+  36.732  529.885 v ck_r12_0/Y (CKINVDCx16_ASAP7_75t_R)
+  43.084  572.969 ^ ck_r12_1/Y (CKINVDCx16_ASAP7_75t_R)
+  39.121  612.090 v ck_r12_2/Y (CKINVDCx16_ASAP7_75t_R)
+  42.926  655.016 ^ ck_r12_3/Y (CKINVDCx16_ASAP7_75t_R)
+  38.139  693.155 v ck_r12_4/Y (CKINVDCx16_ASAP7_75t_R)
+  52.204  745.359 ^ ck_b12/Y (CKINVDCx16_ASAP7_75t_R)
+  64.360  809.719 v ck_r27_0/Y (CKINVDCx16_ASAP7_75t_R)
+  53.336  863.055 ^ ck_r27_1/Y (CKINVDCx16_ASAP7_75t_R)
+  45.763  908.818 v ck_r27_2/Y (CKINVDCx16_ASAP7_75t_R)
+  50.007  958.825 ^ ck_r27_3/Y (CKINVDCx16_ASAP7_75t_R)
+  43.524 1002.349 v ck_r27_4/Y (CKINVDCx16_ASAP7_75t_R)
+  46.778 1049.127 ^ ck_r27_5/Y (CKINVDCx16_ASAP7_75t_R)
+  53.380 1102.507 v ck_r27_6/Y (CKINVDCx16_ASAP7_75t_R)
+  43.198 1145.705 ^ ck_b27/Y (CKINVDCx16_ASAP7_75t_R)
+  34.925 1180.630 v ck_r28_0/Y (CKINVDCx16_ASAP7_75t_R)
+  74.178 1254.808 ^ ck_r28_1/Y (CKINVDCx16_ASAP7_75t_R)
+  30.756 1285.564 v ck_r28_2/Y (CKINVDCx16_ASAP7_75t_R)
+  23.666 1309.230 ^ ck_r28_3/Y (CKINVDCx16_ASAP7_75t_R)
+  78.985 1388.215 v ck_b28/Y (CKINVDCx16_ASAP7_75t_R)
+  56.666 1444.881 ^ ck_r67_0/Y (CKINVDCx16_ASAP7_75t_R)
+  66.605 1511.486 v ck_r67_1/Y (CKINVDCx16_ASAP7_75t_R)
+  35.372 1546.858 ^ ck_r67_2/Y (CKINVDCx16_ASAP7_75t_R)
+  23.735 1570.593 v ck_r67_3/Y (CKINVDCx16_ASAP7_75t_R)
+  74.173 1644.766 ^ ck_b67/Y (CKINVDCx16_ASAP7_75t_R)
+  37.578 1682.344 v ck_r68_0/Y (CKINVDCx16_ASAP7_75t_R)
+  68.380 1750.724 ^ ck_r68_1/Y (CKINVDCx16_ASAP7_75t_R)
+  33.581 1784.305 v ck_r68_2/Y (CKINVDCx16_ASAP7_75t_R)
+  22.246 1806.551 ^ ck_r68_3/Y (CKINVDCx16_ASAP7_75t_R)
+  79.736 1886.287 v ck_b68/Y (CKINVDCx16_ASAP7_75t_R)
+  55.963 1942.250 ^ ck_r2394_0/Y (CKINVDCx16_ASAP7_75t_R)
+  38.292 1980.542 v ck_r2394_1/Y (CKINVDCx16_ASAP7_75t_R)
+  44.581 2025.123 ^ ck_b2394/Y (CKINVDCx16_ASAP7_75t_R)
+  38.875 2063.998 v ck_r2395_0/Y (CKINVDCx16_ASAP7_75t_R)
+  69.409 2133.407 ^ ck_r2395_1/Y (CKINVDCx16_ASAP7_75t_R)
+  25.586 2158.993 v ck_b2395/Y (CKINVDCx16_ASAP7_75t_R)
+  40.635 2199.628 ^ ck_r2396_0/Y (CKINVDCx16_ASAP7_75t_R)
+  40.913 2240.541 v ck_b2396/Y (CKINVDCx16_ASAP7_75t_R)
+  34.015 2274.556 ^ ck_r2397_0/Y (CKINVDCx16_ASAP7_75t_R)
+  28.710 2303.266 v ck_b2397/Y (CKINVDCx16_ASAP7_75t_R)
+  26.652 2329.917 ^ ck_b2398/Y (CKINVDCx16_ASAP7_75t_R)
+  28.146 2358.063 v ck_b2399/Y (CKINVDCx16_ASAP7_75t_R)
+  13.850 2371.914 ^ ck_q2399_t_hg_WS_7__clk_t8/Y (CKINVDCx16_ASAP7_75t_R)
+   8.385 2380.299 ^ t_hg_WS_7__clk_t8 (out)
+         2380.299   data arrival time
+
+ 833.333  833.333   clock vclk (rise edge)
+   0.000  833.333   clock network delay (ideal)
+   0.000  833.333   clock reconvergence pessimism
+   0.000  833.333   output external delay
+          833.333   data required time
+-----------------------------------------------------------
+          833.333   data required time
+         -2380.299   data arrival time
+-----------------------------------------------------------
+         -1546.966   slack (VIOLATED)
+
+
+Startpoint: root (input port clocked by vclk)
+Endpoint: t_hg_WS_7__clk_t8 (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock vclk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ input external delay
+   0.000    0.000 ^ root (in)
+  13.433   13.433 v ck_b0/Y (CKINVDCx16_ASAP7_75t_R)
+  63.819   77.252 ^ ck_b9/Y (CKINVDCx16_ASAP7_75t_R)
+  39.485  116.737 v ck_r10_0/Y (CKINVDCx16_ASAP7_75t_R)
+  38.441  155.178 ^ ck_r10_1/Y (CKINVDCx16_ASAP7_75t_R)
+  37.298  192.476 v ck_r10_2/Y (CKINVDCx16_ASAP7_75t_R)
+  37.580  230.056 ^ ck_r10_3/Y (CKINVDCx16_ASAP7_75t_R)
+  34.404  264.460 v ck_r10_4/Y (CKINVDCx16_ASAP7_75t_R)
+  41.163  305.623 ^ ck_r10_5/Y (CKINVDCx16_ASAP7_75t_R)
+  33.798  339.421 v ck_r10_6/Y (CKINVDCx16_ASAP7_75t_R)
+  42.348  381.769 ^ ck_r10_7/Y (CKINVDCx16_ASAP7_75t_R)
+  34.558  416.327 v ck_b10/Y (CKINVDCx16_ASAP7_75t_R)
+  12.986  429.313 ^ ck_b11/Y (CKINVDCx16_ASAP7_75t_R)
+  32.063  461.376 v ck_r12_0/Y (CKINVDCx16_ASAP7_75t_R)
+  37.836  499.212 ^ ck_r12_1/Y (CKINVDCx16_ASAP7_75t_R)
+  34.331  533.543 v ck_r12_2/Y (CKINVDCx16_ASAP7_75t_R)
+  37.832  571.375 ^ ck_r12_3/Y (CKINVDCx16_ASAP7_75t_R)
+  33.495  604.870 v ck_r12_4/Y (CKINVDCx16_ASAP7_75t_R)
+  45.440  650.310 ^ ck_b12/Y (CKINVDCx16_ASAP7_75t_R)
+  55.139  705.449 v ck_r27_0/Y (CKINVDCx16_ASAP7_75t_R)
+  46.724  752.173 ^ ck_r27_1/Y (CKINVDCx16_ASAP7_75t_R)
+  40.176  792.349 v ck_r27_2/Y (CKINVDCx16_ASAP7_75t_R)
+  43.754  836.103 ^ ck_r27_3/Y (CKINVDCx16_ASAP7_75t_R)
+  38.018  874.121 v ck_r27_4/Y (CKINVDCx16_ASAP7_75t_R)
+  41.106  915.227 ^ ck_r27_5/Y (CKINVDCx16_ASAP7_75t_R)
+  46.788  962.015 v ck_r27_6/Y (CKINVDCx16_ASAP7_75t_R)
+  38.280 1000.295 ^ ck_b27/Y (CKINVDCx16_ASAP7_75t_R)
+  30.006 1030.301 v ck_r28_0/Y (CKINVDCx16_ASAP7_75t_R)
+  65.535 1095.836 ^ ck_r28_1/Y (CKINVDCx16_ASAP7_75t_R)
+  26.132 1121.968 v ck_r28_2/Y (CKINVDCx16_ASAP7_75t_R)
+  19.981 1141.949 ^ ck_r28_3/Y (CKINVDCx16_ASAP7_75t_R)
+  69.873 1211.822 v ck_b28/Y (CKINVDCx16_ASAP7_75t_R)
+  49.125 1260.947 ^ ck_r67_0/Y (CKINVDCx16_ASAP7_75t_R)
+  58.799 1319.746 v ck_r67_1/Y (CKINVDCx16_ASAP7_75t_R)
+  29.875 1349.621 ^ ck_r67_2/Y (CKINVDCx16_ASAP7_75t_R)
+  20.067 1369.688 v ck_r67_3/Y (CKINVDCx16_ASAP7_75t_R)
+  65.680 1435.368 ^ ck_b67/Y (CKINVDCx16_ASAP7_75t_R)
+  32.336 1467.704 v ck_r68_0/Y (CKINVDCx16_ASAP7_75t_R)
+  60.266 1527.970 ^ ck_r68_1/Y (CKINVDCx16_ASAP7_75t_R)
+  28.405 1556.375 v ck_r68_2/Y (CKINVDCx16_ASAP7_75t_R)
+  18.793 1575.168 ^ ck_r68_3/Y (CKINVDCx16_ASAP7_75t_R)
+  70.445 1645.613 v ck_b68/Y (CKINVDCx16_ASAP7_75t_R)
+  48.074 1693.687 ^ ck_r2394_0/Y (CKINVDCx16_ASAP7_75t_R)
+  33.619 1727.306 v ck_r2394_1/Y (CKINVDCx16_ASAP7_75t_R)
+  37.422 1764.728 ^ ck_b2394/Y (CKINVDCx16_ASAP7_75t_R)
+  32.868 1797.596 v ck_r2395_0/Y (CKINVDCx16_ASAP7_75t_R)
+  60.670 1858.265 ^ ck_r2395_1/Y (CKINVDCx16_ASAP7_75t_R)
+  21.778 1880.043 v ck_b2395/Y (CKINVDCx16_ASAP7_75t_R)
+  34.316 1914.360 ^ ck_r2396_0/Y (CKINVDCx16_ASAP7_75t_R)
+  34.448 1948.808 v ck_b2396/Y (CKINVDCx16_ASAP7_75t_R)
+  28.788 1977.596 ^ ck_r2397_0/Y (CKINVDCx16_ASAP7_75t_R)
+  24.501 2002.097 v ck_b2397/Y (CKINVDCx16_ASAP7_75t_R)
+  22.208 2024.305 ^ ck_b2398/Y (CKINVDCx16_ASAP7_75t_R)
+  23.480 2047.785 v ck_b2399/Y (CKINVDCx16_ASAP7_75t_R)
+  11.654 2059.439 ^ ck_q2399_t_hg_WS_7__clk_t8/Y (CKINVDCx16_ASAP7_75t_R)
+   8.322 2067.761 ^ t_hg_WS_7__clk_t8 (out)
+         2067.761   data arrival time
+
+   0.000    0.000   clock vclk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000   clock reconvergence pessimism
+   0.000    0.000   output external delay
+            0.000   data required time
+-----------------------------------------------------------
+            0.000   data required time
+         -2067.761   data arrival time
+-----------------------------------------------------------
+         2067.761   slack (MET)
+
+
