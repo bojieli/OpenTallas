@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Prepare the explicitly approved current QC functional source candidate."""
-import copy,gzip,json
+import copy,gzip,json,sys
 from pathlib import Path
 R=Path(__file__).resolve().parents[3]
 D=Path(__file__).resolve().parent
@@ -25,7 +25,9 @@ for row in side['ports']:
  if old!=new:changed.append(dict(port=pid,lane=row['lane'],before=old,after=new,delta=new-old))
  row['added_cycles']=new
  raw['clock']['landing_network']['count_aligned_cycles'][pid]=new
-side['count_aligned']=ca
+sys.path.insert(0,str(R/'tools/die_plan'))
+import count_align_bind as CAB
+side=CAB.annotate_table(side,ca,root_settle_cycles=64,strap_form=True)
 side['note']='Current native perimeter1 CA table + exact data endpoints, approved coherent source candidate; no physical adoption'
 raw['note']+=' | CODEX functional candidate: native perimeter1 CA data counts and actual native START provider; explicit coherent HEAD/ROPE profile'
 rootrel='results/token_pass/qc_functional_0845'
