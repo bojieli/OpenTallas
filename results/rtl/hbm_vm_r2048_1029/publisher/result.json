@@ -1,0 +1,44 @@
+{
+  "status": "COMPONENT_SOURCE_PASS",
+  "run": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-vm-capacity-1029/publish_r3",
+  "unit": "oth-ubuntu-3152652-1793274178",
+  "exit": 0,
+  "source_protocol": {
+    "actual_target": 120,
+    "header_address": 3840,
+    "payload_address": 3841,
+    "word_address_bits": 19,
+    "header_fields": "wordaddr[18:0],sectorcount[35:19],mask[43:36];reserved upper212 zero",
+    "payload_words": 8,
+    "publication_namespace": "regular only"
+  },
+  "checks": [
+    "real four-SRAM bank low/high address write/readback distinct",
+    "actual19bit address alignment/capacity including21bit end sum",
+    "oldwriter collision suppress+fault",
+    "runtime active and unconfigured payload refused",
+    "finish before commit fence fault"
+  ],
+  "actual_source_mutants_caught": [
+    "highregular bit lost",
+    "wrong mirror flag",
+    "collision suppression lost",
+    "native launch date slipped"
+  ],
+  "fatal_width_select_lint": "PASS",
+  "source_frontend_initial_index_event": {
+    "run": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-bind-0300/index_grown",
+    "unit": "oth-ubuntu-3103326",
+    "undefined": [],
+    "ambiguous": {},
+    "width_undriven_multidriver_warnings": [],
+    "updated_publisher_frontend": "bind owner running"
+  },
+  "new_boot_frames": "1header+1payloadper8words percontiguousregion",
+  "drain_after_bank_sample_edges": 5,
+  "extra_steady_cycles": 0,
+  "selected_source": false,
+  "runtime_A_replication_qualified": false,
+  "SIGNED": false,
+  "full_token": false
+}
