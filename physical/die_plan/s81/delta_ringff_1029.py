@@ -11,6 +11,11 @@ This delta sets ring_place="ff" on every ring band (non-monitor, with rect_um) o
 rects, every other plan field and every other type stay byte-identical (text insertion of one line per band; the
 result is checked to equal the json-level edit).
 
+A2 (same event, after the A t43 canary 3_5 DPL "Overlap check failed (22)": timing-driven GPL upsized 22 FIRM ring
+flops DFFHQNx1 -> x3 in place over TAPCELLs, the KV io_ft DPL-0033 class): it also sets the existing DIE-KV-34 opt-in
+budgets.cland_fit_reserve = true (gen_phys exports OT_CLAND_FIT_RESERVE=1; landing_placement.tcl then requires the whole
+reserved footprint free, so an in-place upsize cannot reach a tapcell).
+
 usage: delta_ringff_1029.py PLAN_IN PLAN_OUT
 """
 import json, re, sys
@@ -28,7 +33,7 @@ def targets(plan):
     return out
 
 
-def apply(text, tg):
+def apply(text, tg, fit=True):
     lines = text.split("\n"); out = []; ty = None; bands_ind = None; done = set()
     type_re = re.compile(r'^  "([A-Za-z0-9_]+)": \{$')
     for ln in lines:
@@ -50,6 +55,9 @@ def apply(text, tg):
                 if (ty, mb.group(1)) in done:
                     raise SystemExit(f"duplicate band {ty} {mb.group(1)}")
                 out.append(" " * (ind + 1) + '"ring_place": "ff",'); done.add((ty, mb.group(1)))
+    if fit:
+        k = out.index(' "budgets": {')
+        out.insert(k + 1, '  "cland_fit_reserve": true,')
     if done != tg:
         raise SystemExit(f"text edit missed {sorted(tg - done)[:5]} ({len(tg - done)})")
     return "\n".join(out), done
@@ -62,11 +70,12 @@ def main():
     want = json.loads(text)
     for tn, bus in tg:
         want["partition_types"][tn]["clock"]["landing_contract"]["bands"][bus]["ring_place"] = "ff"
+    want["budgets"]["cland_fit_reserve"] = True
     if json.loads(new) != want:
         raise SystemExit("text edit != json edit")
     open(dst, "w").write(new)
     types = sorted({t for t, _ in done})
-    print(f"OT_RINGFF {len(done)} ring bands set ring_place=ff in {len(types)} slice_station types; json-level check PASS")
+    print(f"OT_RINGFF {len(done)} ring bands set ring_place=ff in {len(types)} slice_station types; budgets.cland_fit_reserve=true; json-level check PASS")
 
 
 if __name__ == "__main__":
