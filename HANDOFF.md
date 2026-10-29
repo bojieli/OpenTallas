@@ -1826,3 +1826,5 @@ CODEX: 2026-10-29 08:37 PDT HBMsourceII1proof4fea3d46b PASS24consecutiveEG/fault
 CODEX: 2026-10-29 08:37 PDT SUPPORT READY4dfbcaca2 HBMstreetactual1xclockcalibration replaceswrongNDRregistrymatch;66retainedlegs/386cells/34tapsTTFFRMS11.53/10.21ps,tap1.805/1.757;sharedstackPASS/wrongNDRFAIL. Rootintakepending,no diegateclaim.
 
 CODEX: 2026-10-29 08:39 PDT BTAB4missingBUFmasters actualSPICE/STAcalREADYacedd3ef7+947dd4bf1;64newrows/allgoldenbounds0violations/39testsPASS, old12cases84filesbyteidentical; no defaultorclosuregatechange.
+
+CODEX: 2026-10-29 08:39 PDT sharedclock actualnative-stagefit1a3bf0a2b andot_clk local-entry aca469fad ready;actualHEAD1356buffergeometrybyte-identical0cycles,CLK-TOOL8suite215PASS18SKIP;no dieclockadoption.
