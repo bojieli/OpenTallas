@@ -1807,13 +1807,17 @@ def array_maps(gkeys, tkeys):
     return out
 
 
-def relayout(L, log, words=4, trials=64):
+def relayout(L, log, words=4, trials=64, packed=frozenset()):
     """unpacked arrays: the two frontends may number the elements of `reg x [0:N-1]` in opposite order under the
     same names (read_verilog: element i = x[i]; slang: the flattened vector, element 0 at the MSB).  Greedy: for every
     array base whose matched compare points disagree in simulation, reverse the outer index on the gate side and keep
     it when clearly fewer matched compare points disagree (by 8, twice the array's bits and 1 % of the total) or the
     array's own compare points all agree after it.  A wrong choice can only produce a difference, never hide one (the
-    mapping is a bijection of key points; everything is still proved)."""
+    mapping is a bijection of key points; everything is still proved).
+    packed: gold bases the RTL declares as PACKED vectors (slang_packed_vectors); every frontend numbers a packed
+    vector's bits alike, so they are never reversed (DIE-KV-32-LEC 10-29: q0 u_b `reg [1:0] lmax_any_i` was reversed
+    on a 529 -> 508 simulation gain from its lmax_i cone before sc_addr[11] was proved constant; own 1 -> 1, then 4
+    false NOT EQUIVALENT points lmax_any[0..1] / lmax_any_i[0..1])."""
     def mismatches():
         m, kind = L.build(with_compare=False, with_hyp=False)
         val, mask = m.simulate(words, seed=4242)
@@ -1844,7 +1848,7 @@ def relayout(L, log, words=4, trials=64):
     bad = mismatches()
     tried = set()
     for _ in range(trials):
-        cand = [b for b, n in bad.most_common() if b not in tried and IDX.match(b + "[0]")]
+        cand = [b for b, n in bad.most_common() if b not in tried and b not in packed and IDX.match(b + "[0]")]
         if not cand:
             return
         base = cand[0]
@@ -3574,6 +3578,32 @@ def slang_elements(aliases_file):
     return out
 
 
+def slang_packed_vectors(aliases_file):
+    """-> {gold base 'ff:<scope>x'} of the registers the RTL declares as PACKED vectors (`reg [N-1:0] x`), read from
+    the slang gold design written before techmap (gold.aliases.json): one `$driver$x` cell (no element index; an
+    unpacked array has one `$driver$x[i]` per element, see slang_elements) whose Q is exactly the public net x, wider
+    than one bit.  Empty when the file or such cells are absent (read_verilog gold: no change)."""
+    try:
+        d = json.loads(Path(aliases_file).read_text())
+    except (OSError, ValueError):
+        return frozenset()
+    out = set()
+    for mod in d.get("modules", {}).values():
+        drv = {}                                    # Q bit tuple -> driven register name (unindexed $driver$x)
+        for cn, c in mod.get("cells", {}).items():
+            mm = re.search(r"\$driver\$([^$\[\]:]+)$", cn)
+            q = c.get("connections", {}).get("Q", ())
+            if mm and len(q) > 1 and all(isinstance(b, int) for b in q):
+                drv[tuple(q)] = mm[1]
+        if not drv:
+            continue
+        for nn, w in mod.get("netnames", {}).items():
+            name = drv.get(tuple(w.get("bits", ())))
+            if name and not w.get("hide_name") and (nn == name or nn.endswith("." + name)):
+                out.add("ff:" + nn.replace("\\", ""))
+    return frozenset(out)
+
+
 def normalize_gold_elements(L, elements, log):
     """Restore scalar unpacked element names before matching state.
 
@@ -4203,7 +4233,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     json_alias_keys(L, log, work=work)
     slang_element_keys(L, log, work=work)
     alias_arrays(L, log, work=work)
-    relayout(L, log)
+    relayout(L, log, packed=slang_packed_vectors(Path(work) / "gold.aliases.json"))
     renamed(L, log)
     replica_proposals(L, log)
     merged_proposals(L, log)
