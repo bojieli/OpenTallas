@@ -1,0 +1,166 @@
+{
+ "T": 15,
+ "port": [
+  228.948,
+  578.64
+ ],
+ "reg_gates": 16,
+ "mac_gates": 18,
+ "root_registers": 607,
+ "root_leaves": 26,
+ "leaf_counts": [
+  23,
+  24
+ ],
+ "nodes": 255,
+ "early": [
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl0/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 7,
+   "leaf_depth": 8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl1/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 7,
+   "leaf_depth": 8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl2/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 7,
+   "leaf_depth": 8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl3/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 7,
+   "leaf_depth": 8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl4/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 7,
+   "leaf_depth": 8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl5/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 7,
+   "leaf_depth": 8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl6/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 7,
+   "leaf_depth": 8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl7/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 7,
+   "leaf_depth": 8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp0/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 8,
+   "leaf_depth": 7
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp1/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 8,
+   "leaf_depth": 7
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp2/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 8,
+   "leaf_depth": 7
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp3/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 8,
+   "leaf_depth": 7
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp4/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 8,
+   "leaf_depth": 7
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp5/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 8,
+   "leaf_depth": 7
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp6/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 8,
+   "leaf_depth": 7
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp7/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 8,
+   "leaf_depth": 7
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp8/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 8,
+   "leaf_depth": 7
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp9/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 8,
+   "leaf_depth": 7
+  }
+ ],
+ "domains": {
+  "g_icg.g_hop.u_hop_ck/u_icg": 2849,
+  "g_icg.g_hop.u_hop_de/u_icg": 1027,
+  "g_icg.g_hop.u_hop_dw/u_icg": 1027,
+  "g_icg.g_hop.u_hop_fa2/u_icg": 514,
+  "g_icg.g_hop.u_hop_rn/u_icg": 514,
+  "g_icg.g_hop.u_hop_rnw/u_icg": 514,
+  "g_icg.g_hop.u_hop_rs/u_icg": 515,
+  "g_icg.g_hop.u_hop_rsw/u_icg": 515,
+  "g_icg.g_hop.u_hop_tx0/u_icg": 781,
+  "g_icg.g_hop.u_hop_tx1/u_icg": 781,
+  "g_icg.g_hop.u_hop_tx2/u_icg": 781,
+  "g_icg.g_hop.u_hop_tx3/u_icg": 781,
+  "g_icg.g_hop.u_hop_tx4/u_icg": 781,
+  "g_icg.g_hop.u_hop_tx5/u_icg": 781,
+  "g_icg.g_hop.u_hop_tx6/u_icg": 781,
+  "g_icg.g_hop.u_hop_tx7/u_icg": 781
+ },
+ "views": {
+  "ot_qwen_tile_romleaf": {
+   "TT": {
+    "min": 245.09738,
+    "max": 324.1395
+   },
+   "FF": {
+    "min": 190.35231,
+    "max": 256.77216
+   }
+  },
+  "ot_qwen_tile_lsl_rawfault_m3": {
+   "TT": {
+    "min": 234.89616,
+    "max": 289.04218
+   },
+   "FF": {
+    "min": 182.08517,
+    "max": 221.2841
+   }
+  }
+ }
+}

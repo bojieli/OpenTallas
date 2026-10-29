@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc-a0-1355/results/qc_die36_1029/a0/gen_a0_tree.py", line 228, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc-a0-1355/results/qc_die36_1029/a0/gen_a0_tree.py", line 205, in main
+    feed(rootnd["name"],rootnd["xy_um"],1,targets)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc-a0-1355/results/qc_die36_1029/a0/gen_a0_tree.py", line 195, in feed
+    if len(ready)>4 or (len(ready)==4 and later):raise ValueError(f"depth {depth}: {len(ready)} fixed-depth loads cannot have fanout<=4")
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: depth 1: 10 fixed-depth loads cannot have fanout<=4
