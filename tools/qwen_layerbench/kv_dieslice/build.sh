@@ -41,6 +41,10 @@ UCIE_MODEL=$R/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy
 BENCH="$H/kvs_link_phy_models.sv $UCIE_MODEL $H/qkd_pll_analog_model_bench.sv $H/qkd_hbm3e_phy_pc4_bench.sv $H/kvs_compute_end.sv $JOIN_SRC $R/rtl/qwen_split/qfd_kvn_static_transport.sv $R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv $R/rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv"
 # close the lists over leaf modules / packages with the BINDER's own closure (bind manifest of provenance_bind.json)
 for f in provenance_bind.json bind_report.json bind.f; do cp $V/$f $O/ || exit 2; done
+# TOK-KV-2 10-28: HBM PHY slice -> partition map for kv_preload.py, generated from this bind (bind_names.json + bound top)
+cp $V/bind_names.json $O/ || exit 2
+python3 -I $H/kv_phy_slice_map.py $O/bind_names.json $TOPF $R/physical/die_plan/qwen_kvsys/bind/models/kv_phy_slices.sv \
+  > $O/phy_slice_map.json 2> $O/phy_slice_map.log || { cat $O/phy_slice_map.log; exit 2; }
 python3 -I $H/vehicle_closure.py $O $R --bench $BENCH $O/tb_kvslice.sv > $O/vehicle_closure.log 2>&1 || { cat $O/vehicle_closure.log; exit 2; }
 tail -1 $O/vehicle_closure.log
 cat > $O/vl.f <<EOF
