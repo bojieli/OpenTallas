@@ -1,0 +1,15 @@
+{
+ "provenance": {
+  "commit": "f483150e0c838bdd28b7f2aefdaea20811cdb06e",
+  "dirty": true,
+  "source": "git",
+  "step": "bind",
+  "plan": "results/qc_die33_1029/bind/plan.json",
+  "manifest": "results/qc_die33_1029/bind/final_asbuilt.json",
+  "external_paths_allowed": false,
+  "inputs": [
+   "results/qc_die33_1029/bind/plan.json",
+   "results/qc_die33_1029/bind/final_asbuilt.json"
+  ]
+ }
+}
