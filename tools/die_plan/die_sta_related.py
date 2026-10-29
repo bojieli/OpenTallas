@@ -1525,8 +1525,8 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
         if node == "__source__":
             same = False
         if region is not None:
-            ra = region.get(a, A_["cppr_node"] if A_["cppr_node"] != "h" else None)
-            rb = region.get(b, B_["cppr_node"] if B_["cppr_node"] != "h" else None)
+            ra = region.get(a, A_["cppr_node"] if A_["cppr_node"] not in ("h", "__source__") else None)
+            rb = region.get(b, B_["cppr_node"] if B_["cppr_node"] not in ("h", "__source__") else None)
             same = ra is not None and ra == rb
         nxy = meta["node_xy_um"][node]
         pts = [A_["xy_um"], B_["xy_um"]] + ([nxy] if nxy is not None else [])
