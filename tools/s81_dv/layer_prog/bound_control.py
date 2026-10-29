@@ -242,11 +242,18 @@ def norm_spacing(commands, die):
             report[sl]=dict(status='BLOCKED',reason='five measured native command arrivals required');continue
         edges=[c['xr_command_pin_edge_from_age0_command'] for c in norms]
         deltas=[b-a for a,b in zip(edges,edges[1:])]
-        depths=xr_deskew(die,sl);aligned=[e+d for e,d in zip(edges,depths)]
+        depths=xr_deskew(die,sl)
+        transports=[c.get('partial_transport_edges',0) for c in norms]
+        if any(type(t)is not int or t<0 for t in transports):
+            raise ValueError('exact nonnegative partial transport ages required')
+        if any('partial_transport_edges'in c for c in norms) and not all('partial_transport_edges'in c for c in norms):
+            raise ValueError('all five actual partial transport ages required')
+        aligned=[e+t+d for e,t,d in zip(edges,transports,depths)]
         report[sl]=dict(status='PASS_CONTROL_SPACING' if len(set(aligned))==1 else 'FAIL_CONTROL_SPACING',
                        leaf_edges=edges,successive_leaf_edges=deltas,current_source_pdsk=depths,
-                       command_edges_plus_pdsk=aligned,
-                       scope='command-pin spacing only; partial/GO/global readiness not qualified')
+                       command_edges_plus_pdsk=aligned,partial_transport_edges=transports,
+                       scope=('command+partial-transport+currentPDSK relative alignment; common local partial latency and GO/global readiness separate'
+                              if any(transports) else 'command-pin spacing only; partial/GO/global readiness not qualified'))
     return report
 
 

@@ -1,0 +1,5 @@
+ACTUAL_HEAD_PUBLICATION beat37 edge1944 payloadbefdbe87bc7a3e8ebf8f3dad3db73dacbecebd0a3e2fbe433ed3be823e53be5ebec13e23bcc23cb63cb4bed1bdc1be2a3e81bd7cbd35be483dc23e5ebe3a3cdb3e2bbece3e303e8a3da93d153e923e6fbe9bbe83bdb2bd0d3eb43ea63e27be82bdccbe80bea7be65bd24be5b3e34be583f0c3e503e003d3dbbd6bed7bf423dc6
+HEAD_NORM_LOOP beat=37 actual_partial=49199516 partials=1 y=8 q=0 xb=1 rb=8 rerr=0 err=0 leaf_fault=0/0/0 xfin_fault=0001 partial_edge=1324 first_rstd=1799 last_rstd=1854 actual_xb_edge=1915
+[37490000] %Fatal: tb.sv:1239: Assertion failed in tb_s81sl_beat: HEAD_NORM_LOOP FAIL
+%Error: /srv/opentallas-scratch2/claude/codex-ds-head-loop-1029/network37/tb.sv:1239: Verilog $stop
+Aborting...
