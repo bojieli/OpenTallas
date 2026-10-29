@@ -60,7 +60,7 @@ def _all_seam_ports(sta):
     return [(f"{s}->{d}/{b}", dict(src=dict(part=s, bus=b), dst=dict(part=d, bus=b))) for s, d, b in sorted(keys)]
 
 
-def check(P, sta, standin_types=(), all_seams=False):
+def check(P, sta, standin_types=(), all_seams=False, core_receiver=None, core_type=None, core_ports=()):
     """-> dict(verdict, counts, ports=[...]) for every partition->partition plan port into an option-A input
     (all_seams: every die_sta seam group, P may be None)."""
     if sta.get("mode") == "etm":
@@ -86,11 +86,26 @@ def check(P, sta, standin_types=(), all_seams=False):
     miss = [c for c in (HOLD_CORNER,) + PAIR_CORNERS if c not in corners or corners[c].get("exit") != 0]
     grp = {c: _groups(corners[c]) for c in corners}
     a_cache, rows = {}, []
-    for pid, pr in (_all_seam_ports(sta) if all_seams else sorted(P.ports.items())):
+    if core_receiver:
+        if not core_type or not core_ports:
+            raise ValueError('core receipt needs a receiver master and every option-A input port')
+        ports = [(pid, pr) for pid, pr in _all_seam_ports(sta)
+                 if pr['dst']['part'] == core_receiver and pr['dst']['bus'] in core_ports]
+        covered = {pr['dst']['bus'] for _, pr in ports}
+        # Missing buses remain explicit NOT_TIMED obligations, rather than being
+        # silently omitted from an otherwise passing parent receipt.
+        ports += [(f'missing->{core_receiver}/{bus}',
+                   dict(src=dict(part='__missing_parent__', bus=bus), dst=dict(part=core_receiver, bus=bus)))
+                  for bus in sorted(set(core_ports) - covered)]
+        if (sta.get('instances') or {}).get(core_receiver) != core_type:
+            policy_problems.append('receiver instance does not bind the requested core master')
+    else:
+        ports = _all_seam_ports(sta) if all_seams else sorted(P.ports.items())
+    for pid, pr in ports:
         s, d = pr["src"]["part"], pr["dst"]["part"]
-        if all_seams:
-            dt, st, bus = d, s, pr["dst"]["bus"]
-            a = dict(in_min_ps=None, basis="--all-seams")
+        if all_seams or core_receiver:
+            dt, st, bus = core_type if core_receiver else d, s, pr["dst"]["bus"]
+            a = dict(in_min_ps=None, basis="core-in-partition real parent" if core_receiver else "--all-seams")
             key = (s, d, bus)
         else:
             if DIE_PART in (s, d) or s not in P.parts or d not in P.parts:
@@ -171,10 +186,22 @@ def main(argv=None):
     ap.add_argument("--out")
     ap.add_argument("--standin-types", default="", help="comma list of partition types that are budget stand-ins")
     ap.add_argument("--all-seams", action="store_true", help="check every die_sta seam group (no plan selection)")
+    ap.add_argument('--core-instance', help='receiver instance in a flat/ILM parent STA assembly; use with --core-kit')
+    ap.add_argument('--core-kit', help='option-A receiver kit; budget.json and sdc_lint.json supply exact scope/ports')
     a = ap.parse_args(argv)
     P = None if a.all_seams and a.plan == "-" else S.Plan(json.loads(Path(a.plan).read_text()), Path(a.plan))
+    extra = {}
+    if a.core_instance or a.core_kit:
+        if not (a.core_instance and a.core_kit) or P is None:
+            ap.error('--core-instance and --core-kit require a real plan')
+        from io_hold_qualification import kit_policy
+        kd = Path(a.core_kit)
+        policy = kit_policy(dict(kit=str(kd), sdc_lint_ctx=str(kd/'sdc_lint.json')))
+        if not policy or policy['die'] != P.name or policy['plan_sha256'] != plan_digest(P.raw):
+            ap.error('receiver kit lacks matching option-A die/plan metadata; regenerate it from this plan')
+        extra = dict(core_receiver=a.core_instance, core_type=policy['receiver_type'], core_ports=policy['input_ports'])
     r = check(P, json.loads(Path(a.die_sta_json).read_text()),
-              standin_types={x for x in a.standin_types.split(",") if x}, all_seams=a.all_seams)
+              standin_types={x for x in a.standin_types.split(",") if x}, all_seams=a.all_seams, **extra)
     if a.out:
         Path(a.out).write_text(json.dumps(r, indent=1) + "\n")
     c = r["counts"]
