@@ -3814,3 +3814,21 @@ FAILED [AUTOPILOT 2ce54bb5defe] 2026-10-28 17:32:43 PDT AUTOPILOT -> CORES-EARLY
 - [2026-10-28 18:03 PDT] DIE-KV-14 ASK (COORD): core_tx ruling said ~150x150; 3626 pins at <=6/um need >=155.5 um per side, so the plan uses 164.16x164.16 (fill .373). DEFAULT: accept 164.16. Token sim NOT run (needs the integrated event); PV pads est. -0.1% tok/s vs as-built, 0 vs the KV-13 image [UNCHECKED].
 - 2026-10-28 18:04 PDT [COORD] DIE-KV-14: READY claude/die-kv-14-1028@19cef52376 APPROVED -> ROOT-MERGE (die-local KV + results; fishbone local clock = 12.16e form: width plan 13 FAIL -> 0, CA 0 fail, start-skew 0/156 TT/FF, GRT0, duty 47-53%; core_tx 164.16 plan delta; PV pads TRUNK_D 62 / FLAG_D 78, bind6pv 0 errors). ASK pv_pair DEFAULT YES: merge (b1) claude/die-kv-14b-1028@f628504846 now (core_infra.py stage_basis='total' opt-in, default unchanged, 56 tests; ROOT-MERGE: 0-line G0/G0C diff); (b2) lane-group copies + bcx[5:0] pins with the next KV event after the 12-cycle LEC closes. ASK core_tx DEFAULT YES: 164.16x164.16 (pin-density floor, intent kept). Next: integrated KV event -> token sim (PV pads est. ~0% vs KV-13 image, UNCHECKED). KV-KITS regenerates core_tx + pv_pair kits from this plan.
 - [ROOT-MERGE-226..227 2026-10-28 18:18 PDT] DONE (separate pushes, plain merges, 0 deletions): RM226 a639e30f6f->6e2bd2ec8e DIE-HEAD-15-ststage @0adede6ab3 (results-only); RM227 ->aef8f1b162 DIE-QC-20 @87f1cd0b8d (opt-in --region-dme-workers + DIE-QC-19 merge-only mode on the RM216 join cap). Full gates CHECKED on aef8f1b162: die_plan 8 chunks, CA/STA/onemodel, extra, QC kit gen, all test_die_trial* (incl. dme_workers, region_dme_merge_only, cell_paths, join_budget) rc=0; G0/G0C 5 plans 0-line diff; only the known flow_canary FAIL. Next: RM228 DIE-S81-16-entry @dd944eb33c -> 97bb937ef3, RM229 DIE-KV-14 @19cef52376 -> 905257a06d, RM230 DIE-KV-14b @f628504846 -> 8e38d8187f stacked clean (KV-13 unit already on main as RM222), gates running on the tip.
+- 2026-10-28 18:26 PDT READY [DIE-HBM-10] C24 plan views for REBAL-11 (hnx_lane_x, dr_lp/dr_ps, bank3 write_v): see the PATH-HBM RESULT.
+  - Branch claude/die-hbm-10-1028@d543581cfe (results only). Plan sha 3ab76af4.
+  - G0 PASS; G0C 16 = C23q baseline, 0 new.
+- 2026-10-28 18:26 PDT RESULT [DIE-HBM-10] Top 3 blockers to HBM core sign-off, re COORD hourly push. Source: OWNERS.tsv 18:22 (144 hbm core NEEDS-KIT), each name looked up in the C24 plan. CHECKED.
+  - Overview: 19 NEEDS-KIT cores have a plan view today (6 with a LEF, 13 with a pins file); 125 do not.
+  - (1) SU pgslice_lg slices (50 items) + sfu_core_split3 (19). The plan holds the parent core only; slice kits come from slice rules.
+    - The SU (8) and SFU (2) slices still elaborate as stubs (PATH-HBM 1214), so they need the full-RTL manifest.
+    - The lanes_plain / programme_store / hnx_lane_x kits were blocked on my views: now posted in C24.
+    - -> REBAL-11.
+  - (2) Hash-variant families (63 items) have no plan entry under their own name: idx_score_quarter 12, pc_ctrl_leaf_cfg_h9b 10, vms_bank_q0_faces 8, hc_root 6, vmdel_lane_n 5, sm_group_rel_id 4, kshare_splitstrap 4, xload bfqg 4 / bdring 2 / xq_pegress 2.
+    - Each needs the variant-to-plan-type map (type reduction, 10-27 plan). The 4 xq_pegress cores are also PENDING-VIEW (stale 10-17 view).
+  - (3) The closure loop admits no job: TOOL_REF_HOST ot-epyc7 is unreachable and its fleet table is old (ASK 16:23). Kits can still build via ot-run, but loop sign-off records cannot.
+  - READY TO KIT NOW (have a plan view):
+    - LEF: hfd_hgi_vm_calendar_f20, ot_hbm_host_cp_rxs, ot_hbm_sm_vm_wr_q_t_lanes4, ot_hbm_su_static_cxport_ij_q, ot_hbm_su_static_qcore_r13, ot_hgi_sm_xload_cl2_ctlx.
+    - Pins: hfd_hgi_vms_glue_nw_t, hnx_rp3lp3h_n, hnx_rp3lp3h_s, ot_hbm_idx_selector_static_sel, ot_hbm_idx_topk_link_static, ot_hbm_su_programme_pslice_c5, ot_hbm_svc_wb_kport_q, ot_hgi_coll_gq_issue, ot_hgi_dma_back_static_vp4_banks_cp, ot_hgi_qw_dec, ot_hgi_sfu_programme_store_r10, ot_pdie_serdes, and the 3 ot_hgi_sfu_core_split3 with pins.
+    - Kit them from C24 sha 3ab76af4.
+  - WAIT ON PLAN: the hnx_lane_x child kit and lanes_plain/programme_store (views now in C24 -> REBAL-11).
+  - DEFAULT: COORD starts the HBM-CORES kit wave on the 22 ready cores; REBAL-11 takes (1); one type-reduction lane maps (2).

@@ -1319,3 +1319,17 @@ All HBM plan/streets/locality/clock/crossing/core/native boot+token/PG aliases c
 - DIE-HBM-10 2026-10-28 16:54 PDT: the hbm_ckgen_rel4 rebuild is still QUEUED. The closure-loop daemon runs on the old fleet table (EPYC9/GOLD1/GOLD2/EPYC7) with TOOL_REF_HOST ot-epyc7 unreachable; main's hosts.json is epyc2/intel1/intel2.
   - This does not block the HBM die: the C22/C23q plans hold no ckgen core (hb_ckgen is still "proposed for root"), and the HOLD=64 RTL plus bench are on main.
   - The view rebuild follows whoever revives the loop or moves ref_tile routes to ot-run, per my 16:23 ASK.
+- RESULT DIE-HBM-10 2026-10-28 18:26 PDT: plan event C24 (on C23q) built. CHECKED: G0 PASS (0 errors); G0C 16 errors, the same set as C23q (12 core_faces q_hub_nw/ne + 4 street_reach), 0 new; 85 PENDING-VIEW.
+  - Plan: intel2:/srv/opentallas-scratch2/claude/die-hbm-10/c24/die_plan.json, sha 3ab76af4. Branch claude/die-hbm-10-1028@d543581cfe (apply_c24.py, render_c24.py, README section 7).
+  - hnx_lane_x view: 285.12x302.4 um. Two lanes of 320 um do not fit above the S-half SRAMs, so the outline is smaller than the ~289x320 estimate.
+    - 1670 pins, counted from the RTL port list (the estimate was 1672).
+    - Faces: N operands 552 (M5), S ixb_p 532 (M5), W side store 531 (M4), E gather/reset 54 (M4); clock entry at the centre. Max 1.94 pins/um.
+    - Pins file: c24/cores/hnx_lane_x__285.12x302.4__c24.json.
+  - Children, the same in each half (H = half height): u_lane0 W R0 (8.64, H-311.04); u_lane1 W R0 (8.64, H-648); u_lane2 E MY (336.96, H-311.04).
+    - 43.2-um centre channel holds the parent clock entry.
+    - Smallest SRAM gap 15.12 um (rule 10.8).
+    - Render c24/hnx_c24.png viewed: children clear of the SRAM halos.
+  - REBAL-6 arrays in c24/c24_side.json: lanes_plain 24 SRAMs / 9 driver_rects (detour <=19.1 um); programme_store 44 SRAMs / 16 driver_rects (detour <=87.4 um).
+  - bank3 write_v: moves on the lanes__canon S face, x 13.66 -> 569.98, onto a free M5 track. Worst hop 579.3 -> 299.9 um, measured with REBAL-10's relay placement on the m5w1gr guides.
+  - UNCHECKED: timing/QoR of the children and of the write_v move.
+  - 12 of 33 REBAL-4 in-core islands per half now sit inside the children, so REBAL-11 regenerates the parent infra plan.
