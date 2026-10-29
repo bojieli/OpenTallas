@@ -1,0 +1,20 @@
+{
+  "design": "s81_head/hd_tile",
+  "review": "CODEX existing-state corridor and START-export copy, 2026-10-29",
+  "images": [
+    "results/head_tile_relays_1029/targets.png",
+    "results/head_tile_relays_1029/copy_estimate.png"
+  ],
+  "viewed": true,
+  "verdict": "PASS-COND",
+  "scope": "trial global placement only; no route/CTS/STA approval",
+  "findings": [
+    "Existing payload/transport stages use legal vertical/horizontal channels around unchanged five hard macros.",
+    "One retained START-D data state copy at E lower-channel corner; same D/clock/reset, zero cycles.",
+    "Existing forwarded START output FF moves18um toward its unchanged physical pin; all physical pins/outlines unchanged.",
+    "New synthesized whole graph placement estimate max401.19um,0captures>405; not a postplacement gate.",
+    "Keep existing PG and clock/reset island blockages; first8rowviolations diagnosed and resolved by respectinggetBlockages.",
+    "Fresh whole-graph postlegalization census, independent visual review, and reg_spine sink assignment required before route."
+  ],
+  "pdn": "existing grid/geometry unchanged, no new routed IR claim"
+}

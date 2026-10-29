@@ -34,11 +34,13 @@ def install(kit, targets, banks):
         text = text[:start] + text[tail:]
     block = ("\n" + begin + "\n"
              "# Existing pipeline stages: after face/landing banks, before GPL and DPL release.\n"
-             "source /work/head_tile_banks.tcl\n"
+             "uplevel #0 {source /work/head_tile_banks.tcl}\n"
              "set ::env(HEAD_TILE_RELAY_TARGETS) /work/head_tile_relay_targets.tsv\n"
-             "source /work/head_tile_relays.tcl\n" + end + "\n")
+             "uplevel #0 {source /work/head_tile_relays.tcl}\n" + end + "\n")
     hook.write_text(text.rstrip() + block)
-    metadata = dict(existing_relay_flops=len(rows), added_cycles=0,
+    copies = sum("g_export.g_copy" in r[0] for r in rows)
+    metadata = dict(targeted_flops=len(rows), existing_relay_flops=len(rows)-copies,
+                    parallel_state_copies=copies, added_cycles=0,
                     source_hook="face_flops.tcl: after face/landing placements",
                     fresh_reg_spine_assignment_required=True,
                     postplacement_fullgraph_and_geometry_required=True,
