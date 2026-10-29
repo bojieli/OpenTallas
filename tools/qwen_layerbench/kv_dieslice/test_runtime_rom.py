@@ -45,3 +45,18 @@ def test_boot_runner_propagates_preflight_failure_without_starting_binary(tmp_pa
     r=subprocess.run(args,env=env,capture_output=True,text=True)
     assert r.returncode==2 and not marker.exists(),(r.returncode,r.stdout,r.stderr)
     assert 'missing functional DCAL ROM' in r.stderr
+
+
+def test_token_runner_refuses_missing_rom_before_binary_launch(tmp_path):
+    import os, subprocess
+    build=tmp_path/'build';(build/'obj').mkdir(parents=True)
+    src=tmp_path/'dcal.sv';src.write_text('module qkd_d2d_cal_seq_pin_bc4 #(parameter VIAMAP="physical/p/profile.hex"); endmodule')
+    (build/'vl.f').write_text(str(src)+'\n')
+    marker=tmp_path/'binary_started'
+    binary=build/'obj/Vtb_kvslice';binary.write_text('#!/bin/bash\ntouch '+str(marker)+'\n');binary.chmod(0o755)
+    image=tmp_path/'image';image.mkdir();(image/'epoch.txt').write_text('1\n')
+    vec=tmp_path/'vec';vec.mkdir()
+    env=dict(os.environ,PRELOAD='0');env.pop('KV_DCAL_VIAMAP',None)
+    r=subprocess.run(['bash',str(Path(__file__).with_name('run_tok.sh')),str(build),str(image),str(tmp_path/'run'),'token',str(vec)],env=env,capture_output=True,text=True)
+    assert r.returncode==2 and not marker.exists(),(r.returncode,r.stdout,r.stderr)
+    assert 'missing functional DCAL ROM' in r.stderr

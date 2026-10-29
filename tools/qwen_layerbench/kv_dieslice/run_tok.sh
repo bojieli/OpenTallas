@@ -10,6 +10,16 @@ H=$(cd "$(dirname "$0")" && pwd); R=$(cd $H/../../.. && pwd)
 BD=$1; B=$(readlink -f $1)/obj/Vtb_kvslice; I=$(readlink -f $2); O=$(mkdir -p $3 && readlink -f $3); N=$4; V=$(readlink -f $5); shift 5
 CTX=${CTX:-256}; POST=${POST:-300000}
 mkdir -p $O/$N; cd $O/$N
+# Native token continuation needs the same functional ROM and mission START
+# ordering as the boot and per-layer runners.
+BD=$(readlink -f "$BD")
+if [ -f "$BD/vl.f" ]; then
+  python3 -I "$H/runtime_rom.py" --build "$BD" --runtime . ${KV_DCAL_VIAMAP:+--viamap "$KV_DCAL_VIAMAP"} || exit 2
+fi
+START_ARGS=()
+if [ -f "$BD/native_boot.profile" ] && [ "$(cat "$BD/native_boot.profile")" = 1 ]; then
+  START_ARGS=(+START_AFTER_SETUP)
+fi
 PL=""
 if [ "${PRELOAD:-1}" = 1 ]; then
   # TOK-KV-2 10-28: the PHY slice map is GENERATED from the bind of this build (kv_phy_slice_map.py, by build.sh), never
@@ -21,7 +31,7 @@ if [ "${PRELOAD:-1}" = 1 ]; then
   PL="+HBM_PRELOAD=$O/$N/preload.txt"
 fi
 /usr/bin/time -f "%e s %M KB" -o time $B +FRAMES=$I/frames.hex +EXPECT=$I/expect.txt +EPOCH=$(cat $I/epoch.txt) \
-  +FAR=1 +VEC=$V +CTX=$CTX +POST=$POST +HBM_LOG=${HBM_LOG:-16} $PL "$@" > sim.log 2>&1
+  +FAR=1 +VEC=$V +CTX=$CTX +POST=$POST +HBM_LOG=${HBM_LOG:-16} $PL "${START_ARGS[@]}" "$@" > sim.log 2>&1
 sim_rc=$?
 printf "%s\n" "$sim_rc" > exit
 # TOK-QK-3 10-27: exit 0 is not a pass -- the verdict comes from the bench verdict lines (kv_verdict.py, fail-closed).
