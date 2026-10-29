@@ -292,7 +292,7 @@ module qkd_host_rank_services_admission_obsx #(parameter integer OBS_NB=1,OBS_NF
  input wire[NL-1:0]link_up,input wire[7:0]transport_fault,physical_fault,input wire crom_fault,
  input wire[92:0]local_tk,input wire[9:0]local_kst,
  input wire program_installed_valid,input wire execution_active,program_commit_v,input wire[15:0]program_commit_epoch,input wire[63:0]program_commit_digest,
- output wire program_ready,output wire[15:0]program_epoch,output wire[63:0]program_digest,
+ output wire program_ready,program_installed_local,output wire[15:0]program_epoch,output wire[63:0]program_digest,
  output wire program_authorized_footer_v,output wire[63:0]program_authorized_footer64,
  output wire[15:0]program_begin_epoch,output wire program_begin_v,program_auth_v,output wire[10:0]program_expected_pw,output wire[3:0]program_expected_dw,output wire[15:0]program_auth_epoch,output wire[63:0]program_auth_digest,
  output wire[181:0]hc,output wire[7:0]seen,output wire irq,
@@ -400,6 +400,10 @@ end else begin:g_mu
   end
  end
  assign program_ready=static_setup_ready&&replay_target==0&&program_installed_valid&&replay_done&&committed&&!program_fault&&!ingress_fault&&!commit_fault&&!begin_image;
+ // TOK-QWEN-7: LOCAL programme install (all images replayed, programme = last target, no local fault). Unlike program_ready it
+ // excludes the peer witness/commit, which only arrives in a d2d calendar slot AFTER the boot epoch. The ordered D2D boot
+ // event (qkd_d2d_boot_event_bridge ENABLE 1) must wait on this, not program_ready, or epoch->witness->commit deadlocks.
+ assign program_installed_local=static_setup_ready&&replay_target==0&&replay_done&&!program_fault&&!ingress_fault&&!begin_image;
  qkd_host_program_loader_target u_program(.ck(ck_program_loader),.rst_n(host_rst_n),.begin_image(begin_image),.image_epoch(image_epoch),.pw_count(pw_count),.dw_count(dw_count),
  .word_v(word_v),.word_desc(word_desc),.word_addr(word_addr),.word_data(word_data),.seal(seal),.auth_v(auth_v),.auth_epoch(auth_epoch),.auth_digest(auth_digest),
  .image_target(image_target),.auth_target(auth_target),.replay_target(replay_target),.execution_active(execution_active),.pr(raw_pr),.program_ready(replay_done),.fault(program_fault),.digest(program_digest),.program_epoch(program_epoch),.authorized_footer_valid(program_authorized_footer_v),.authorized_footer(program_authorized_footer64));
