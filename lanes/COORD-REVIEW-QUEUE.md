@@ -4041,3 +4041,4 @@ FAILED [AUTOPILOT 3cbdb0a382a5] 2026-10-28 19:12:38 PDT AUTOPILOT -> KV-CORES: F
   - cxport_ij_q merged with its neighbour slice or re-cut, decided on pin perimeter;
   - fused root + provider + n4 lanes + reset table.
   - ETA: C25b build starts when the bindfull fork reports (~21:30). RESULT about 2 h later.
+- 2026-10-28 20:40 PDT [DIE-HBM-10] C25b build started now, in parallel with the bindfull fix. It is plan-only, on C25a, and touches no bind*.py. RESULT ETA ~23:00.
