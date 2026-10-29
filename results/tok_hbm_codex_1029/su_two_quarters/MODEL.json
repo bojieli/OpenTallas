@@ -1,11 +1,14 @@
 {
- "kind": "actual two-quarter SU compiler candidate before native execution",
- "physical_source": "Two 128-lane quarters: producer part0 pgp_NW QID2, part1 pgp_NE QID3; SB2470 each; 8 slices total",
- "mechanism": "Recompute element placement, fill/drain slots, finite store rows and pretree reduction from 256 actual lanes. No cropping of a 512-lane programme. Each source element maps to one live actual lane.",
- "reduction": "Contiguous power-of-two aligned csum8 subtrees; one or two quarters per row, final root join in original balanced order; assert every lowered result equals the independent released golden csum/max. New mode never uses calendar-order reduction.",
- "identity": "Commands and expected events use QIDs2/3, F2 local word quarter bits2/3, VM fill/drain SID2/3. Native programme is exactly two2470-bit producer columns including pretree fields.",
- "clock": "833 ps single core; new cycle ledger never multiplies by retired4/3 ratio",
- "profiles": ["minimal4/4/0 with canonical f12_l4 source candidate, explicit PIN_REG1", "alternate5/4/1 with canonical f12 source candidate, explicit PIN_REG1"],
- "cost": "Count actual scheduled dispatch-to-lastwrite-plus-return edges per production shape; compare two-quarter and hypothetical four-quarter widths at identical build. Added pin-register4edges are included; no guessed percentile scaling.",
- "guards": "Require explicit PIN_REG1 and declared NW0 FULL_SIDE for SIDE operations; refuse store over500 rows, missing source operands, impossible pretree/slot collisions. Current profile source/physical adoption and actual interquarter RF transport remain separate open obligations."
+  "kind": "actual two-quarter SU compiler candidate before native execution",
+  "physical_source": "Two 128-lane quarters: producer part0 pgp_NW QID2, part1 pgp_NE QID3; SB2470 each; 8 slices total",
+  "mechanism": "Recompute element placement, fill/drain slots, finite store rows and pretree reduction from 256 actual lanes. No cropping of a 512-lane programme. Each source element maps to one live actual lane.",
+  "reduction": "Contiguous power-of-two aligned csum8 subtrees; one or two quarters per row, final root join in original balanced order; assert every lowered result equals the independent released golden csum/max. New mode never uses calendar-order reduction.",
+  "identity": "Commands and expected events use QIDs2/3, F2 local word quarter bits2/3, VM fill/drain SID2/3. Native programme is exactly two2470-bit producer columns including pretree fields.",
+  "clock": "833 ps single core; new cycle ledger never multiplies by retired4/3 ratio",
+  "profiles": [
+    "minimal4/4/0 with canonical f12_l4 source candidate, explicit PIN_REG1",
+    "alternate5/4/1 with canonical f12 source candidate, explicit PIN_REG1"
+  ],
+  "cost": "833ps programme execution counts EVERY emitted edge including RF producer setup and tail; dispatch_service_edges is separate. Phase totals exclude unknown real publication/drain/reload costs and are not installable as a concatenated programme.",
+  "guards": "Require explicit PIN_REG1 and declared NW0 FULL_SIDE for SIDE operations; full512 rows allowed only without reserved scalar rows498/499; otherwise finite row phases. Refuse missing operands, impossible pretree/slots, wrong physical QIDs or native width. Actual interquarter transport, native arithmetic source execution and production phase publication remain open."
 }

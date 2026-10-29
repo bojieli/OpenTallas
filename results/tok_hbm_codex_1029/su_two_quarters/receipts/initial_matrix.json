@@ -1,0 +1,5421 @@
+{
+  "default_byte_identity": [
+    "ds_moe_sum2",
+    "ds_route_total"
+  ],
+  "source_qualified": false,
+  "profiles": {
+    "minimal4_4_0": [
+      {
+        "record": "ds_attend_den",
+        "N": 1,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 156,
+                "edges": 168,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_den/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 156,
+              "edges": 168,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_den/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 156,
+                "edges": 168,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_den/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 156,
+              "edges": 168,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_den/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_attend_exp_sum128",
+        "N": 128,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 299,
+                "edges": 439,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 17,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_exp_sum128/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 355,
+                "edges": 495,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 17,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_exp_sum128/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 356,
+                "edges": 496,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 17,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_exp_sum128/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 299,
+              "edges": 439,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 17,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_exp_sum128/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 299,
+                "edges": 439,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 17,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_exp_sum128/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 355,
+                "edges": 495,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 17,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_exp_sum128/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 299,
+              "edges": 439,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 17,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_exp_sum128/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_attend_exp_sum640",
+        "N": 640,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 335,
+                "edges": 475,
+                "issues": 20,
+                "emissions": 20,
+                "expected_writes": 81,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_exp_sum640/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 392,
+                "edges": 532,
+                "issues": 16,
+                "emissions": 16,
+                "expected_writes": 81,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_exp_sum640/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 388,
+                "edges": 528,
+                "issues": 8,
+                "emissions": 8,
+                "expected_writes": 81,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_exp_sum640/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 335,
+              "edges": 475,
+              "issues": 20,
+              "emissions": 20,
+              "expected_writes": 81,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_exp_sum640/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 335,
+                "edges": 475,
+                "issues": 20,
+                "emissions": 20,
+                "expected_writes": 81,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_exp_sum640/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 392,
+                "edges": 532,
+                "issues": 16,
+                "emissions": 16,
+                "expected_writes": 81,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_exp_sum640/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 335,
+              "edges": 475,
+              "issues": 20,
+              "emissions": 20,
+              "expected_writes": 81,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_exp_sum640/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_attend_max128",
+        "N": 128,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 215,
+                "edges": 227,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_max128/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 281,
+                "edges": 293,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_max128/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 292,
+                "edges": 304,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_max128/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 215,
+              "edges": 227,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_max128/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 215,
+                "edges": 227,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_max128/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 281,
+                "edges": 293,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_max128/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 215,
+              "edges": 227,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_max128/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_attend_max640",
+        "N": 640,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 247,
+                "edges": 259,
+                "issues": 5,
+                "emissions": 5,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_max640/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 304,
+                "edges": 316,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_max640/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 302,
+                "edges": 314,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_max640/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 247,
+              "edges": 259,
+              "issues": 5,
+              "emissions": 5,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_max640/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 247,
+                "edges": 259,
+                "issues": 5,
+                "emissions": 5,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_max640/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 304,
+                "edges": 316,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_max640/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 247,
+              "edges": 259,
+              "issues": 5,
+              "emissions": 5,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_max640/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_attend_norm",
+        "N": 512,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 108,
+                "edges": 248,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 64,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_norm/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 108,
+              "edges": 248,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 64,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_norm/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 112,
+                "edges": 252,
+                "issues": 8,
+                "emissions": 8,
+                "expected_writes": 64,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_norm/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 112,
+              "edges": 252,
+              "issues": 8,
+              "emissions": 8,
+              "expected_writes": 64,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_attend_norm/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 4,
+        "ratio": 1.037037037037037
+      },
+      {
+        "record": "ds_bf16_p128",
+        "N": 128,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 92,
+                "edges": 104,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 16,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_bf16_p128/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 92,
+              "edges": 104,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 16,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_bf16_p128/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 92,
+                "edges": 104,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 16,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_bf16_p128/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 92,
+              "edges": 104,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 16,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_bf16_p128/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_bf16_p640",
+        "N": 640,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 94,
+                "edges": 106,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 80,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_bf16_p640/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 94,
+              "edges": 106,
+              "issues": 2,
+              "emissions": 2,
+              "expected_writes": 80,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_bf16_p640/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 96,
+                "edges": 108,
+                "issues": 3,
+                "emissions": 3,
+                "expected_writes": 80,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_bf16_p640/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 96,
+              "edges": 108,
+              "issues": 3,
+              "emissions": 3,
+              "expected_writes": 80,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_bf16_p640/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 2,
+        "ratio": 1.0212765957446808
+      },
+      {
+        "record": "ds_engram_gate",
+        "N": 4,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 91,
+                "edges": 103,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_engram_gate/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 91,
+              "edges": 103,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_engram_gate/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 91,
+                "edges": 103,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_engram_gate/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 91,
+              "edges": 103,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_engram_gate/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_kv_norm_ss",
+        "N": 512,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 237,
+                "edges": 249,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_kv_norm_ss/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 292,
+                "edges": 304,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_kv_norm_ss/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 293,
+                "edges": 305,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_kv_norm_ss/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 237,
+              "edges": 249,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_kv_norm_ss/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 237,
+                "edges": 249,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_kv_norm_ss/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 292,
+                "edges": 304,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_kv_norm_ss/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 237,
+              "edges": 249,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_kv_norm_ss/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_kv_norm_y",
+        "N": 512,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 94,
+                "edges": 234,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 64,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_kv_norm_y/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 94,
+              "edges": 234,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 64,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_kv_norm_y/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 98,
+                "edges": 238,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 64,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_kv_norm_y/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 98,
+              "edges": 238,
+              "issues": 2,
+              "emissions": 2,
+              "expected_writes": 64,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_kv_norm_y/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 4,
+        "ratio": 1.0425531914893618
+      },
+      {
+        "record": "ds_moe_sum0",
+        "N": 53,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 91,
+                "edges": 103,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 7,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_moe_sum0/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 91,
+              "edges": 103,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 7,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_moe_sum0/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 91,
+                "edges": 103,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 7,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_moe_sum0/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 91,
+              "edges": 103,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 7,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_moe_sum0/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_moe_sum2",
+        "N": 53,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 92,
+                "edges": 104,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 7,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_moe_sum2/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 92,
+              "edges": 104,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 7,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_moe_sum2/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 92,
+                "edges": 104,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 7,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_moe_sum2/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 92,
+              "edges": 104,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 7,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_moe_sum2/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_q_norm_ss",
+        "N": 1280,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 261,
+                "edges": 273,
+                "issues": 10,
+                "emissions": 10,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_q_norm_ss/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 318,
+                "edges": 330,
+                "issues": 8,
+                "emissions": 8,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_q_norm_ss/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 314,
+                "edges": 326,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_q_norm_ss/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 261,
+              "edges": 273,
+              "issues": 10,
+              "emissions": 10,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_q_norm_ss/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 261,
+                "edges": 273,
+                "issues": 10,
+                "emissions": 10,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_q_norm_ss/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 318,
+                "edges": 330,
+                "issues": 8,
+                "emissions": 8,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_q_norm_ss/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 261,
+              "edges": 273,
+              "issues": 10,
+              "emissions": 10,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_q_norm_ss/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_q_norm_y",
+        "N": 1280,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 102,
+                "edges": 242,
+                "issues": 3,
+                "emissions": 3,
+                "expected_writes": 160,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_q_norm_y/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 102,
+              "edges": 242,
+              "issues": 3,
+              "emissions": 3,
+              "expected_writes": 160,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_q_norm_y/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 110,
+                "edges": 250,
+                "issues": 5,
+                "emissions": 5,
+                "expected_writes": 160,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_q_norm_y/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 110,
+              "edges": 250,
+              "issues": 5,
+              "emissions": 5,
+              "expected_writes": 160,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_q_norm_y/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 8,
+        "ratio": 1.0784313725490196
+      },
+      {
+        "record": "ds_res_copy",
+        "N": 20480,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 214,
+                "edges": 226,
+                "issues": 40,
+                "emissions": 40,
+                "expected_writes": 2560,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_res_copy/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 214,
+              "edges": 226,
+              "issues": 40,
+              "emissions": 40,
+              "expected_writes": 2560,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_res_copy/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 374,
+                "edges": 386,
+                "issues": 80,
+                "emissions": 80,
+                "expected_writes": 2560,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_res_copy/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 374,
+              "edges": 386,
+              "issues": 80,
+              "emissions": 80,
+              "expected_writes": 2560,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_res_copy/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 160,
+        "ratio": 1.7476635514018692
+      },
+      {
+        "record": "ds_route_total",
+        "N": 6,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 214,
+                "edges": 226,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_route_total/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "failure": "('qpr', 2, 6)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_route_total/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "failure": "('qpr', 4, 6)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_route_total/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 214,
+              "edges": 226,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_route_total/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 214,
+                "edges": 226,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_route_total/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "failure": "('qpr', 2, 6)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_route_total/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 214,
+              "edges": 226,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_route_total/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_route_weights",
+        "N": 6,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 105,
+                "edges": 245,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_route_weights/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 105,
+              "edges": 245,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_route_weights/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 105,
+                "edges": 245,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_route_weights/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 105,
+              "edges": 245,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_route_weights/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_rs",
+        "N": 1,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 154,
+                "edges": 166,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_rs/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 154,
+              "edges": 166,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_rs/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 154,
+                "edges": 166,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_rs/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 154,
+              "edges": 166,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_rs/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_scores_bias",
+        "N": 384,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 94,
+                "edges": 106,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 48,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_scores_bias/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 94,
+              "edges": 106,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 48,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_scores_bias/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 98,
+                "edges": 110,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 48,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_scores_bias/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 98,
+              "edges": 110,
+              "issues": 2,
+              "emissions": 2,
+              "expected_writes": 48,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_scores_bias/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 4,
+        "ratio": 1.0425531914893618
+      },
+      {
+        "record": "ds_spsqrt4",
+        "N": 4,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 399,
+                "edges": 411,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 4,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_spsqrt4/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 399,
+              "edges": 411,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 4,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_spsqrt4/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 399,
+                "edges": 411,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 4,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_spsqrt4/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 399,
+              "edges": 411,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 4,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_spsqrt4/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_swiglu",
+        "N": 24,
+        "rows": 7,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 232,
+                "edges": 384,
+                "issues": 7,
+                "emissions": 7,
+                "expected_writes": 21,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_swiglu/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 232,
+              "edges": 384,
+              "issues": 7,
+              "emissions": 7,
+              "expected_writes": 21,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_swiglu/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 232,
+                "edges": 384,
+                "issues": 7,
+                "emissions": 7,
+                "expected_writes": 21,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_swiglu/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 232,
+              "edges": 384,
+              "issues": 7,
+              "emissions": 7,
+              "expected_writes": 21,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_swiglu/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_w_scale",
+        "N": 32,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 90,
+                "edges": 102,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 4,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_w_scale/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 90,
+              "edges": 102,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 4,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_w_scale/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 90,
+                "edges": 102,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 4,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_w_scale/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 90,
+              "edges": 102,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 4,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/ds_w_scale/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "qw8_bf16_p",
+        "N": 8192,
+        "rows": 4,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 310,
+                "edges": 322,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 4096,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_bf16_p/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 310,
+              "edges": 322,
+              "issues": 64,
+              "emissions": 64,
+              "expected_writes": 4096,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_bf16_p/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 566,
+                "edges": 578,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 4096,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_bf16_p/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 566,
+              "edges": 578,
+              "issues": 128,
+              "emissions": 128,
+              "expected_writes": 4096,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_bf16_p/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 256,
+        "ratio": 1.8258064516129033
+      },
+      {
+        "record": "qw8_pv_normalize",
+        "N": 128,
+        "rows": 4,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 132,
+                "edges": 278,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 64,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_pv_normalize/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 132,
+              "edges": 278,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 64,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_pv_normalize/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 136,
+                "edges": 282,
+                "issues": 8,
+                "emissions": 8,
+                "expected_writes": 64,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_pv_normalize/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 136,
+              "edges": 282,
+              "issues": 8,
+              "emissions": 8,
+              "expected_writes": 64,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_pv_normalize/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 4,
+        "ratio": 1.0303030303030303
+      },
+      {
+        "record": "qw8_round_q",
+        "N": 512,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 92,
+                "edges": 104,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 64,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_round_q/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 92,
+              "edges": 104,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 64,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_round_q/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 94,
+                "edges": 106,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 64,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_round_q/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 94,
+              "edges": 106,
+              "issues": 2,
+              "emissions": 2,
+              "expected_writes": 64,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_round_q/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 2,
+        "ratio": 1.0217391304347827
+      },
+      {
+        "record": "qw8_row_scale_qkv",
+        "N": 768,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 98,
+                "edges": 110,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 96,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_row_scale_qkv/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 98,
+              "edges": 110,
+              "issues": 2,
+              "emissions": 2,
+              "expected_writes": 96,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_row_scale_qkv/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 102,
+                "edges": 114,
+                "issues": 3,
+                "emissions": 3,
+                "expected_writes": 96,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_row_scale_qkv/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 102,
+              "edges": 114,
+              "issues": 3,
+              "emissions": 3,
+              "expected_writes": 96,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_row_scale_qkv/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 4,
+        "ratio": 1.0408163265306123
+      },
+      {
+        "record": "qw8_softmax_max",
+        "N": 8192,
+        "rows": 4,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 397,
+                "edges": 409,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_softmax_max/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 448,
+                "edges": 460,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_softmax_max/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 450,
+                "edges": 462,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_softmax_max/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 397,
+              "edges": 409,
+              "issues": 64,
+              "emissions": 64,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_softmax_max/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 525,
+                "edges": 537,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_softmax_max/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 576,
+                "edges": 588,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_softmax_max/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 525,
+              "edges": 537,
+              "issues": 128,
+              "emissions": 128,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw8_softmax_max/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 128,
+        "ratio": 1.3224181360201512
+      },
+      {
+        "record": "qw_bf16_p",
+        "N": 8192,
+        "rows": 8,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 566,
+                "edges": 578,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 8192,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_bf16_p/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 566,
+              "edges": 578,
+              "issues": 128,
+              "emissions": 128,
+              "expected_writes": 8192,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_bf16_p/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_bf16_p/q2_r1"
+              }
+            ],
+            "best": null
+          }
+        }
+      },
+      {
+        "record": "qw_pv_normalize",
+        "N": 128,
+        "rows": 8,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 168,
+                "edges": 322,
+                "issues": 8,
+                "emissions": 8,
+                "expected_writes": 128,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_pv_normalize/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 168,
+              "edges": 322,
+              "issues": 8,
+              "emissions": 8,
+              "expected_writes": 128,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_pv_normalize/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 176,
+                "edges": 330,
+                "issues": 16,
+                "emissions": 16,
+                "expected_writes": 128,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_pv_normalize/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 176,
+              "edges": 330,
+              "issues": 16,
+              "emissions": 16,
+              "expected_writes": 128,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_pv_normalize/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 8,
+        "ratio": 1.0476190476190477
+      },
+      {
+        "record": "qw_round_q",
+        "N": 1024,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 94,
+                "edges": 106,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 128,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_round_q/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 94,
+              "edges": 106,
+              "issues": 2,
+              "emissions": 2,
+              "expected_writes": 128,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_round_q/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 98,
+                "edges": 110,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 128,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_round_q/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 98,
+              "edges": 110,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 128,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_round_q/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 4,
+        "ratio": 1.0425531914893618
+      },
+      {
+        "record": "qw_row_scale_gu",
+        "N": 6144,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 138,
+                "edges": 150,
+                "issues": 12,
+                "emissions": 12,
+                "expected_writes": 768,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_row_scale_gu/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 138,
+              "edges": 150,
+              "issues": 12,
+              "emissions": 12,
+              "expected_writes": 768,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_row_scale_gu/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 198,
+                "edges": 210,
+                "issues": 24,
+                "emissions": 24,
+                "expected_writes": 768,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_row_scale_gu/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 198,
+              "edges": 210,
+              "issues": 24,
+              "emissions": 24,
+              "expected_writes": 768,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_row_scale_gu/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 60,
+        "ratio": 1.434782608695652
+      },
+      {
+        "record": "qw_row_scale_qkv",
+        "N": 1536,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 102,
+                "edges": 114,
+                "issues": 3,
+                "emissions": 3,
+                "expected_writes": 192,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_row_scale_qkv/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 102,
+              "edges": 114,
+              "issues": 3,
+              "emissions": 3,
+              "expected_writes": 192,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_row_scale_qkv/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 114,
+                "edges": 126,
+                "issues": 6,
+                "emissions": 6,
+                "expected_writes": 192,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_row_scale_qkv/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 114,
+              "edges": 126,
+              "issues": 6,
+              "emissions": 6,
+              "expected_writes": 192,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_row_scale_qkv/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 12,
+        "ratio": 1.1176470588235294
+      },
+      {
+        "record": "qw_row_scale_res",
+        "N": 4096,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 138,
+                "edges": 150,
+                "issues": 8,
+                "emissions": 8,
+                "expected_writes": 512,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_row_scale_res/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 138,
+              "edges": 150,
+              "issues": 8,
+              "emissions": 8,
+              "expected_writes": 512,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_row_scale_res/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 186,
+                "edges": 198,
+                "issues": 16,
+                "emissions": 16,
+                "expected_writes": 512,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_row_scale_res/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 186,
+              "edges": 198,
+              "issues": 16,
+              "emissions": 16,
+              "expected_writes": 512,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_row_scale_res/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 48,
+        "ratio": 1.3478260869565217
+      },
+      {
+        "record": "qw_softmax_exp_sum_r1",
+        "N": 8192,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r1/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 589,
+                "edges": 729,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1025,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r1/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 477,
+                "edges": 617,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1025,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r1/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 4,
+              "cycles": 477,
+              "edges": 617,
+              "issues": 64,
+              "emissions": 64,
+              "expected_writes": 1025,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r1/q4_r4"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r1/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 589,
+                "edges": 729,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1025,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r1/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 2,
+              "cycles": 589,
+              "edges": 729,
+              "issues": 128,
+              "emissions": 128,
+              "expected_writes": 1025,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r1/q2_r2"
+            }
+          }
+        },
+        "added_cycles": 112,
+        "ratio": 1.2348008385744236
+      },
+      {
+        "record": "qw_softmax_exp_sum_r2",
+        "N": 8192,
+        "rows": 2,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r2/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 589,
+                "edges": 731,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 2049,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r2/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 599,
+                "edges": 741,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 2049,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r2/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 2,
+              "cycles": 589,
+              "edges": 731,
+              "issues": 128,
+              "emissions": 128,
+              "expected_writes": 2049,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r2/q4_r2"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r2/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r2/q2_r2"
+              }
+            ],
+            "best": null
+          }
+        }
+      },
+      {
+        "record": "qw_softmax_exp_sum_r3",
+        "N": 8192,
+        "rows": 3,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r3/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r3/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 759,
+                "edges": 903,
+                "issues": 192,
+                "emissions": 192,
+                "expected_writes": 3073,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r3/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 4,
+              "cycles": 759,
+              "edges": 903,
+              "issues": 192,
+              "emissions": 192,
+              "expected_writes": 3073,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r3/q4_r4"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 1024)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r3/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "failure": "('store rows', 768)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r3/q2_r2"
+              }
+            ],
+            "best": null
+          }
+        }
+      },
+      {
+        "record": "qw_softmax_exp_sum_r4",
+        "N": 8192,
+        "rows": 4,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r4/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r4/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r4/q4_r4"
+              }
+            ],
+            "best": null
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 1024)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r4/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "failure": "('store rows', 1024)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r4/q2_r2"
+              }
+            ],
+            "best": null
+          }
+        }
+      },
+      {
+        "record": "qw_softmax_max",
+        "N": 8192,
+        "rows": 8,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 525,
+                "edges": 537,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 576,
+                "edges": 588,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 578,
+                "edges": 590,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 525,
+              "edges": 537,
+              "issues": 128,
+              "emissions": 128,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 781,
+                "edges": 793,
+                "issues": 256,
+                "emissions": 256,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 832,
+                "edges": 844,
+                "issues": 256,
+                "emissions": 256,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 781,
+              "edges": 793,
+              "issues": 256,
+              "emissions": 256,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 256,
+        "ratio": 1.4876190476190476
+      },
+      {
+        "record": "qw_softmax_max_r1",
+        "N": 8192,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 397,
+                "edges": 409,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max_r1/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 384,
+                "edges": 396,
+                "issues": 32,
+                "emissions": 32,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max_r1/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 353,
+                "edges": 365,
+                "issues": 16,
+                "emissions": 16,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max_r1/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 4,
+              "cycles": 353,
+              "edges": 365,
+              "issues": 16,
+              "emissions": 16,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max_r1/q4_r4"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 397,
+                "edges": 409,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max_r1/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 384,
+                "edges": 396,
+                "issues": 32,
+                "emissions": 32,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max_r1/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 2,
+              "cycles": 384,
+              "edges": 396,
+              "issues": 32,
+              "emissions": 32,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max_r1/q2_r2"
+            }
+          }
+        },
+        "added_cycles": 31,
+        "ratio": 1.0878186968838528
+      },
+      {
+        "record": "qw_softmax_max_r4",
+        "N": 8192,
+        "rows": 4,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 397,
+                "edges": 409,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max_r4/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 448,
+                "edges": 460,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max_r4/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 450,
+                "edges": 462,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max_r4/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 397,
+              "edges": 409,
+              "issues": 64,
+              "emissions": 64,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max_r4/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 525,
+                "edges": 537,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max_r4/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 576,
+                "edges": 588,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max_r4/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 525,
+              "edges": 537,
+              "issues": 128,
+              "emissions": 128,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_max_r4/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 128,
+        "ratio": 1.3224181360201512
+      }
+    ],
+    "alternate5_4_1": [
+      {
+        "record": "ds_attend_den",
+        "N": 1,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 169,
+                "edges": 181,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_den/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 169,
+              "edges": 181,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_den/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 169,
+                "edges": 181,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_den/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 169,
+              "edges": 181,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_den/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_attend_exp_sum128",
+        "N": 128,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 311,
+                "edges": 455,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 17,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_exp_sum128/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 367,
+                "edges": 511,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 17,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_exp_sum128/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 368,
+                "edges": 512,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 17,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_exp_sum128/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 311,
+              "edges": 455,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 17,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_exp_sum128/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 311,
+                "edges": 455,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 17,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_exp_sum128/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 367,
+                "edges": 511,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 17,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_exp_sum128/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 311,
+              "edges": 455,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 17,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_exp_sum128/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_attend_exp_sum640",
+        "N": 640,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 347,
+                "edges": 491,
+                "issues": 20,
+                "emissions": 20,
+                "expected_writes": 81,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_exp_sum640/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 404,
+                "edges": 548,
+                "issues": 16,
+                "emissions": 16,
+                "expected_writes": 81,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_exp_sum640/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 400,
+                "edges": 544,
+                "issues": 8,
+                "emissions": 8,
+                "expected_writes": 81,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_exp_sum640/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 347,
+              "edges": 491,
+              "issues": 20,
+              "emissions": 20,
+              "expected_writes": 81,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_exp_sum640/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 347,
+                "edges": 491,
+                "issues": 20,
+                "emissions": 20,
+                "expected_writes": 81,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_exp_sum640/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 404,
+                "edges": 548,
+                "issues": 16,
+                "emissions": 16,
+                "expected_writes": 81,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_exp_sum640/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 347,
+              "edges": 491,
+              "issues": 20,
+              "emissions": 20,
+              "expected_writes": 81,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_exp_sum640/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_attend_max128",
+        "N": 128,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 220,
+                "edges": 232,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_max128/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 286,
+                "edges": 298,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_max128/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 297,
+                "edges": 309,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_max128/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 220,
+              "edges": 232,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_max128/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 220,
+                "edges": 232,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_max128/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 286,
+                "edges": 298,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_max128/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 220,
+              "edges": 232,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_max128/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_attend_max640",
+        "N": 640,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 252,
+                "edges": 264,
+                "issues": 5,
+                "emissions": 5,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_max640/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 309,
+                "edges": 321,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_max640/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 307,
+                "edges": 319,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_max640/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 252,
+              "edges": 264,
+              "issues": 5,
+              "emissions": 5,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_max640/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 252,
+                "edges": 264,
+                "issues": 5,
+                "emissions": 5,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_max640/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 309,
+                "edges": 321,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_max640/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 252,
+              "edges": 264,
+              "issues": 5,
+              "emissions": 5,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_max640/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_attend_norm",
+        "N": 512,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 113,
+                "edges": 257,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 64,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_norm/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 113,
+              "edges": 257,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 64,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_norm/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 117,
+                "edges": 261,
+                "issues": 8,
+                "emissions": 8,
+                "expected_writes": 64,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_norm/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 117,
+              "edges": 261,
+              "issues": 8,
+              "emissions": 8,
+              "expected_writes": 64,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_attend_norm/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 4,
+        "ratio": 1.0353982300884956
+      },
+      {
+        "record": "ds_bf16_p128",
+        "N": 128,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 98,
+                "edges": 110,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 16,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_bf16_p128/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 98,
+              "edges": 110,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 16,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_bf16_p128/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 98,
+                "edges": 110,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 16,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_bf16_p128/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 98,
+              "edges": 110,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 16,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_bf16_p128/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_bf16_p640",
+        "N": 640,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 100,
+                "edges": 112,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 80,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_bf16_p640/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 100,
+              "edges": 112,
+              "issues": 2,
+              "emissions": 2,
+              "expected_writes": 80,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_bf16_p640/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 102,
+                "edges": 114,
+                "issues": 3,
+                "emissions": 3,
+                "expected_writes": 80,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_bf16_p640/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 102,
+              "edges": 114,
+              "issues": 3,
+              "emissions": 3,
+              "expected_writes": 80,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_bf16_p640/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 2,
+        "ratio": 1.02
+      },
+      {
+        "record": "ds_engram_gate",
+        "N": 4,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 97,
+                "edges": 109,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_engram_gate/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 97,
+              "edges": 109,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_engram_gate/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 97,
+                "edges": 109,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_engram_gate/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 97,
+              "edges": 109,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_engram_gate/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_kv_norm_ss",
+        "N": 512,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 242,
+                "edges": 254,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_kv_norm_ss/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 297,
+                "edges": 309,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_kv_norm_ss/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 298,
+                "edges": 310,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_kv_norm_ss/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 242,
+              "edges": 254,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_kv_norm_ss/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 242,
+                "edges": 254,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_kv_norm_ss/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 297,
+                "edges": 309,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_kv_norm_ss/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 242,
+              "edges": 254,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_kv_norm_ss/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_kv_norm_y",
+        "N": 512,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 100,
+                "edges": 244,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 64,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_kv_norm_y/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 100,
+              "edges": 244,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 64,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_kv_norm_y/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 104,
+                "edges": 248,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 64,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_kv_norm_y/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 104,
+              "edges": 248,
+              "issues": 2,
+              "emissions": 2,
+              "expected_writes": 64,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_kv_norm_y/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 4,
+        "ratio": 1.04
+      },
+      {
+        "record": "ds_moe_sum0",
+        "N": 53,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 97,
+                "edges": 109,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 7,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_moe_sum0/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 97,
+              "edges": 109,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 7,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_moe_sum0/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 97,
+                "edges": 109,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 7,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_moe_sum0/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 97,
+              "edges": 109,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 7,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_moe_sum0/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_moe_sum2",
+        "N": 53,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 98,
+                "edges": 110,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 7,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_moe_sum2/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 98,
+              "edges": 110,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 7,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_moe_sum2/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 98,
+                "edges": 110,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 7,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_moe_sum2/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 98,
+              "edges": 110,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 7,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_moe_sum2/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_q_norm_ss",
+        "N": 1280,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 266,
+                "edges": 278,
+                "issues": 10,
+                "emissions": 10,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_q_norm_ss/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 323,
+                "edges": 335,
+                "issues": 8,
+                "emissions": 8,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_q_norm_ss/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 319,
+                "edges": 331,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_q_norm_ss/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 266,
+              "edges": 278,
+              "issues": 10,
+              "emissions": 10,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_q_norm_ss/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 266,
+                "edges": 278,
+                "issues": 10,
+                "emissions": 10,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_q_norm_ss/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 323,
+                "edges": 335,
+                "issues": 8,
+                "emissions": 8,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_q_norm_ss/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 266,
+              "edges": 278,
+              "issues": 10,
+              "emissions": 10,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_q_norm_ss/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_q_norm_y",
+        "N": 1280,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 108,
+                "edges": 252,
+                "issues": 3,
+                "emissions": 3,
+                "expected_writes": 160,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_q_norm_y/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 108,
+              "edges": 252,
+              "issues": 3,
+              "emissions": 3,
+              "expected_writes": 160,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_q_norm_y/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 116,
+                "edges": 260,
+                "issues": 5,
+                "emissions": 5,
+                "expected_writes": 160,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_q_norm_y/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 116,
+              "edges": 260,
+              "issues": 5,
+              "emissions": 5,
+              "expected_writes": 160,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_q_norm_y/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 8,
+        "ratio": 1.0740740740740742
+      },
+      {
+        "record": "ds_res_copy",
+        "N": 20480,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 215,
+                "edges": 227,
+                "issues": 40,
+                "emissions": 40,
+                "expected_writes": 2560,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_res_copy/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 215,
+              "edges": 227,
+              "issues": 40,
+              "emissions": 40,
+              "expected_writes": 2560,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_res_copy/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 375,
+                "edges": 387,
+                "issues": 80,
+                "emissions": 80,
+                "expected_writes": 2560,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_res_copy/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 375,
+              "edges": 387,
+              "issues": 80,
+              "emissions": 80,
+              "expected_writes": 2560,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_res_copy/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 160,
+        "ratio": 1.744186046511628
+      },
+      {
+        "record": "ds_route_total",
+        "N": 6,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 219,
+                "edges": 231,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_route_total/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "failure": "('qpr', 2, 6)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_route_total/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "failure": "('qpr', 4, 6)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_route_total/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 219,
+              "edges": 231,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_route_total/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 219,
+                "edges": 231,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_route_total/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "failure": "('qpr', 2, 6)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_route_total/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 219,
+              "edges": 231,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_route_total/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_route_weights",
+        "N": 6,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 110,
+                "edges": 254,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_route_weights/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 110,
+              "edges": 254,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_route_weights/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 110,
+                "edges": 254,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_route_weights/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 110,
+              "edges": 254,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_route_weights/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_rs",
+        "N": 1,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 168,
+                "edges": 180,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_rs/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 168,
+              "edges": 180,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_rs/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 168,
+                "edges": 180,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 1,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_rs/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 168,
+              "edges": 180,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 1,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_rs/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_scores_bias",
+        "N": 384,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 100,
+                "edges": 112,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 48,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_scores_bias/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 100,
+              "edges": 112,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 48,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_scores_bias/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 104,
+                "edges": 116,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 48,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_scores_bias/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 104,
+              "edges": 116,
+              "issues": 2,
+              "emissions": 2,
+              "expected_writes": 48,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_scores_bias/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 4,
+        "ratio": 1.04
+      },
+      {
+        "record": "ds_spsqrt4",
+        "N": 4,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 477,
+                "edges": 489,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 4,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_spsqrt4/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 477,
+              "edges": 489,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 4,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_spsqrt4/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 477,
+                "edges": 489,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 4,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_spsqrt4/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 477,
+              "edges": 489,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 4,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_spsqrt4/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_swiglu",
+        "N": 24,
+        "rows": 7,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 245,
+                "edges": 401,
+                "issues": 7,
+                "emissions": 7,
+                "expected_writes": 21,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_swiglu/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 245,
+              "edges": 401,
+              "issues": 7,
+              "emissions": 7,
+              "expected_writes": 21,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_swiglu/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 245,
+                "edges": 401,
+                "issues": 7,
+                "emissions": 7,
+                "expected_writes": 21,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_swiglu/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 245,
+              "edges": 401,
+              "issues": 7,
+              "emissions": 7,
+              "expected_writes": 21,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_swiglu/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "ds_w_scale",
+        "N": 32,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 96,
+                "edges": 108,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 4,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_w_scale/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 96,
+              "edges": 108,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 4,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_w_scale/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 96,
+                "edges": 108,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 4,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_w_scale/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 96,
+              "edges": 108,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 4,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/ds_w_scale/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 0,
+        "ratio": 1.0
+      },
+      {
+        "record": "qw8_bf16_p",
+        "N": 8192,
+        "rows": 4,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 311,
+                "edges": 323,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 4096,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_bf16_p/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 311,
+              "edges": 323,
+              "issues": 64,
+              "emissions": 64,
+              "expected_writes": 4096,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_bf16_p/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 567,
+                "edges": 579,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 4096,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_bf16_p/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 567,
+              "edges": 579,
+              "issues": 128,
+              "emissions": 128,
+              "expected_writes": 4096,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_bf16_p/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 256,
+        "ratio": 1.8231511254019293
+      },
+      {
+        "record": "qw8_pv_normalize",
+        "N": 128,
+        "rows": 4,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 137,
+                "edges": 287,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 64,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_pv_normalize/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 137,
+              "edges": 287,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 64,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_pv_normalize/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 141,
+                "edges": 291,
+                "issues": 8,
+                "emissions": 8,
+                "expected_writes": 64,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_pv_normalize/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 141,
+              "edges": 291,
+              "issues": 8,
+              "emissions": 8,
+              "expected_writes": 64,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_pv_normalize/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 4,
+        "ratio": 1.0291970802919708
+      },
+      {
+        "record": "qw8_round_q",
+        "N": 512,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 98,
+                "edges": 110,
+                "issues": 1,
+                "emissions": 1,
+                "expected_writes": 64,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_round_q/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 98,
+              "edges": 110,
+              "issues": 1,
+              "emissions": 1,
+              "expected_writes": 64,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_round_q/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 100,
+                "edges": 112,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 64,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_round_q/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 100,
+              "edges": 112,
+              "issues": 2,
+              "emissions": 2,
+              "expected_writes": 64,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_round_q/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 2,
+        "ratio": 1.0204081632653061
+      },
+      {
+        "record": "qw8_row_scale_qkv",
+        "N": 768,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 104,
+                "edges": 116,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 96,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_row_scale_qkv/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 104,
+              "edges": 116,
+              "issues": 2,
+              "emissions": 2,
+              "expected_writes": 96,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_row_scale_qkv/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 108,
+                "edges": 120,
+                "issues": 3,
+                "emissions": 3,
+                "expected_writes": 96,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_row_scale_qkv/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 108,
+              "edges": 120,
+              "issues": 3,
+              "emissions": 3,
+              "expected_writes": 96,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_row_scale_qkv/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 4,
+        "ratio": 1.0384615384615385
+      },
+      {
+        "record": "qw8_softmax_max",
+        "N": 8192,
+        "rows": 4,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 402,
+                "edges": 414,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_softmax_max/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 453,
+                "edges": 465,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_softmax_max/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 455,
+                "edges": 467,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_softmax_max/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 402,
+              "edges": 414,
+              "issues": 64,
+              "emissions": 64,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_softmax_max/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 530,
+                "edges": 542,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_softmax_max/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 581,
+                "edges": 593,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_softmax_max/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 530,
+              "edges": 542,
+              "issues": 128,
+              "emissions": 128,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw8_softmax_max/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 128,
+        "ratio": 1.318407960199005
+      },
+      {
+        "record": "qw_bf16_p",
+        "N": 8192,
+        "rows": 8,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 567,
+                "edges": 579,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 8192,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_bf16_p/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 567,
+              "edges": 579,
+              "issues": 128,
+              "emissions": 128,
+              "expected_writes": 8192,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_bf16_p/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_bf16_p/q2_r1"
+              }
+            ],
+            "best": null
+          }
+        }
+      },
+      {
+        "record": "qw_pv_normalize",
+        "N": 128,
+        "rows": 8,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 173,
+                "edges": 331,
+                "issues": 8,
+                "emissions": 8,
+                "expected_writes": 128,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_pv_normalize/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 173,
+              "edges": 331,
+              "issues": 8,
+              "emissions": 8,
+              "expected_writes": 128,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_pv_normalize/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 181,
+                "edges": 339,
+                "issues": 16,
+                "emissions": 16,
+                "expected_writes": 128,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_pv_normalize/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 181,
+              "edges": 339,
+              "issues": 16,
+              "emissions": 16,
+              "expected_writes": 128,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_pv_normalize/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 8,
+        "ratio": 1.046242774566474
+      },
+      {
+        "record": "qw_round_q",
+        "N": 1024,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 100,
+                "edges": 112,
+                "issues": 2,
+                "emissions": 2,
+                "expected_writes": 128,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_round_q/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 100,
+              "edges": 112,
+              "issues": 2,
+              "emissions": 2,
+              "expected_writes": 128,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_round_q/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 104,
+                "edges": 116,
+                "issues": 4,
+                "emissions": 4,
+                "expected_writes": 128,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_round_q/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 104,
+              "edges": 116,
+              "issues": 4,
+              "emissions": 4,
+              "expected_writes": 128,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_round_q/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 4,
+        "ratio": 1.04
+      },
+      {
+        "record": "qw_row_scale_gu",
+        "N": 6144,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 144,
+                "edges": 156,
+                "issues": 12,
+                "emissions": 12,
+                "expected_writes": 768,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_row_scale_gu/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 144,
+              "edges": 156,
+              "issues": 12,
+              "emissions": 12,
+              "expected_writes": 768,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_row_scale_gu/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 199,
+                "edges": 211,
+                "issues": 24,
+                "emissions": 24,
+                "expected_writes": 768,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_row_scale_gu/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 199,
+              "edges": 211,
+              "issues": 24,
+              "emissions": 24,
+              "expected_writes": 768,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_row_scale_gu/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 55,
+        "ratio": 1.3819444444444444
+      },
+      {
+        "record": "qw_row_scale_qkv",
+        "N": 1536,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 108,
+                "edges": 120,
+                "issues": 3,
+                "emissions": 3,
+                "expected_writes": 192,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_row_scale_qkv/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 108,
+              "edges": 120,
+              "issues": 3,
+              "emissions": 3,
+              "expected_writes": 192,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_row_scale_qkv/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 120,
+                "edges": 132,
+                "issues": 6,
+                "emissions": 6,
+                "expected_writes": 192,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_row_scale_qkv/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 120,
+              "edges": 132,
+              "issues": 6,
+              "emissions": 6,
+              "expected_writes": 192,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_row_scale_qkv/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 12,
+        "ratio": 1.1111111111111112
+      },
+      {
+        "record": "qw_row_scale_res",
+        "N": 4096,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 144,
+                "edges": 156,
+                "issues": 8,
+                "emissions": 8,
+                "expected_writes": 512,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_row_scale_res/q4_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 144,
+              "edges": 156,
+              "issues": 8,
+              "emissions": 8,
+              "expected_writes": 512,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_row_scale_res/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 192,
+                "edges": 204,
+                "issues": 16,
+                "emissions": 16,
+                "expected_writes": 512,
+                "golden_reduction": null,
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_row_scale_res/q2_r1"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 192,
+              "edges": 204,
+              "issues": 16,
+              "emissions": 16,
+              "expected_writes": 512,
+              "golden_reduction": null,
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_row_scale_res/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 48,
+        "ratio": 1.3333333333333333
+      },
+      {
+        "record": "qw_softmax_exp_sum_r1",
+        "N": 8192,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r1/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 589,
+                "edges": 733,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1025,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r1/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 489,
+                "edges": 633,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1025,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r1/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 4,
+              "cycles": 489,
+              "edges": 633,
+              "issues": 64,
+              "emissions": 64,
+              "expected_writes": 1025,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r1/q4_r4"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r1/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 589,
+                "edges": 733,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1025,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r1/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 2,
+              "cycles": 589,
+              "edges": 733,
+              "issues": 128,
+              "emissions": 128,
+              "expected_writes": 1025,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r1/q2_r2"
+            }
+          }
+        },
+        "added_cycles": 100,
+        "ratio": 1.2044989775051125
+      },
+      {
+        "record": "qw_softmax_exp_sum_r2",
+        "N": 8192,
+        "rows": 2,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r2/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 589,
+                "edges": 735,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 2049,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r2/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 599,
+                "edges": 745,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 2049,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r2/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 2,
+              "cycles": 589,
+              "edges": 735,
+              "issues": 128,
+              "emissions": 128,
+              "expected_writes": 2049,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r2/q4_r2"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r2/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r2/q2_r2"
+              }
+            ],
+            "best": null
+          }
+        }
+      },
+      {
+        "record": "qw_softmax_exp_sum_r3",
+        "N": 8192,
+        "rows": 3,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r3/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r3/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 759,
+                "edges": 907,
+                "issues": 192,
+                "emissions": 192,
+                "expected_writes": 3073,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r3/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 4,
+              "cycles": 759,
+              "edges": 907,
+              "issues": 192,
+              "emissions": 192,
+              "expected_writes": 3073,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r3/q4_r4"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 1024)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r3/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "failure": "('store rows', 768)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r3/q2_r2"
+              }
+            ],
+            "best": null
+          }
+        }
+      },
+      {
+        "record": "qw_softmax_exp_sum_r4",
+        "N": 8192,
+        "rows": 4,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r4/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r4/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "failure": "('store rows', 512)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r4/q4_r4"
+              }
+            ],
+            "best": null
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "failure": "('store rows', 1024)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r4/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "failure": "('store rows', 1024)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r4/q2_r2"
+              }
+            ],
+            "best": null
+          }
+        }
+      },
+      {
+        "record": "qw_softmax_max",
+        "N": 8192,
+        "rows": 8,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 530,
+                "edges": 542,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 581,
+                "edges": 593,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 583,
+                "edges": 595,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 530,
+              "edges": 542,
+              "issues": 128,
+              "emissions": 128,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 786,
+                "edges": 798,
+                "issues": 256,
+                "emissions": 256,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 837,
+                "edges": 849,
+                "issues": 256,
+                "emissions": 256,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 786,
+              "edges": 798,
+              "issues": 256,
+              "emissions": 256,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 256,
+        "ratio": 1.4830188679245282
+      },
+      {
+        "record": "qw_softmax_max_r1",
+        "N": 8192,
+        "rows": 1,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 402,
+                "edges": 414,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max_r1/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 389,
+                "edges": 401,
+                "issues": 32,
+                "emissions": 32,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max_r1/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 358,
+                "edges": 370,
+                "issues": 16,
+                "emissions": 16,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max_r1/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 4,
+              "cycles": 358,
+              "edges": 370,
+              "issues": 16,
+              "emissions": 16,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max_r1/q4_r4"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 402,
+                "edges": 414,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max_r1/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 389,
+                "edges": 401,
+                "issues": 32,
+                "emissions": 32,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max_r1/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 2,
+              "cycles": 389,
+              "edges": 401,
+              "issues": 32,
+              "emissions": 32,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max_r1/q2_r2"
+            }
+          }
+        },
+        "added_cycles": 31,
+        "ratio": 1.0865921787709498
+      },
+      {
+        "record": "qw_softmax_max_r4",
+        "N": 8192,
+        "rows": 4,
+        "cases": {
+          "4": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 402,
+                "edges": 414,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max_r4/q4_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 453,
+                "edges": 465,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max_r4/q4_r2"
+              },
+              {
+                "qpr": 4,
+                "cycles": 455,
+                "edges": 467,
+                "issues": 64,
+                "emissions": 64,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max_r4/q4_r4"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 402,
+              "edges": 414,
+              "issues": 64,
+              "emissions": 64,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max_r4/q4_r1"
+            }
+          },
+          "2": {
+            "trials": [
+              {
+                "qpr": 1,
+                "cycles": 530,
+                "edges": 542,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max_r4/q2_r1"
+              },
+              {
+                "qpr": 2,
+                "cycles": 581,
+                "edges": 593,
+                "issues": 128,
+                "emissions": 128,
+                "expected_writes": 1,
+                "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+                "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max_r4/q2_r2"
+              }
+            ],
+            "best": {
+              "qpr": 1,
+              "cycles": 530,
+              "edges": 542,
+              "issues": 128,
+              "emissions": 128,
+              "expected_writes": 1,
+              "golden_reduction": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+              "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_max_r4/q2_r1"
+            }
+          }
+        },
+        "added_cycles": 128,
+        "ratio": 1.318407960199005
+      }
+    ]
+  },
+  "remaining": [
+    {
+      "profile": "minimal4_4_0",
+      "record": "qw_bf16_p",
+      "failures": [
+        {
+          "qpr": 1,
+          "failure": "('store rows', 512)",
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_bf16_p/q2_r1"
+        }
+      ]
+    },
+    {
+      "profile": "minimal4_4_0",
+      "record": "qw_softmax_exp_sum_r2",
+      "failures": [
+        {
+          "qpr": 1,
+          "failure": "('store rows', 512)",
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r2/q2_r1"
+        },
+        {
+          "qpr": 2,
+          "failure": "('store rows', 512)",
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r2/q2_r2"
+        }
+      ]
+    },
+    {
+      "profile": "minimal4_4_0",
+      "record": "qw_softmax_exp_sum_r3",
+      "failures": [
+        {
+          "qpr": 1,
+          "failure": "('store rows', 1024)",
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r3/q2_r1"
+        },
+        {
+          "qpr": 2,
+          "failure": "('store rows', 768)",
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r3/q2_r2"
+        }
+      ]
+    },
+    {
+      "profile": "minimal4_4_0",
+      "record": "qw_softmax_exp_sum_r4",
+      "failures": [
+        {
+          "qpr": 1,
+          "failure": "('store rows', 1024)",
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r4/q2_r1"
+        },
+        {
+          "qpr": 2,
+          "failure": "('store rows', 1024)",
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/minimal4_4_0/qw_softmax_exp_sum_r4/q2_r2"
+        }
+      ]
+    },
+    {
+      "profile": "alternate5_4_1",
+      "record": "qw_bf16_p",
+      "failures": [
+        {
+          "qpr": 1,
+          "failure": "('store rows', 512)",
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_bf16_p/q2_r1"
+        }
+      ]
+    },
+    {
+      "profile": "alternate5_4_1",
+      "record": "qw_softmax_exp_sum_r2",
+      "failures": [
+        {
+          "qpr": 1,
+          "failure": "('store rows', 512)",
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r2/q2_r1"
+        },
+        {
+          "qpr": 2,
+          "failure": "('store rows', 512)",
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r2/q2_r2"
+        }
+      ]
+    },
+    {
+      "profile": "alternate5_4_1",
+      "record": "qw_softmax_exp_sum_r3",
+      "failures": [
+        {
+          "qpr": 1,
+          "failure": "('store rows', 1024)",
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r3/q2_r1"
+        },
+        {
+          "qpr": 2,
+          "failure": "('store rows', 768)",
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r3/q2_r2"
+        }
+      ]
+    },
+    {
+      "profile": "alternate5_4_1",
+      "record": "qw_softmax_exp_sum_r4",
+      "failures": [
+        {
+          "qpr": 1,
+          "failure": "('store rows', 1024)",
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r4/q2_r1"
+        },
+        {
+          "qpr": 2,
+          "failure": "('store rows', 1024)",
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-token-0330/su_matrix/alternate5_4_1/qw_softmax_exp_sum_r4/q2_r2"
+        }
+      ]
+    }
+  ]
+}

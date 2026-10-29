@@ -1,0 +1,181 @@
+{
+  "scope": "actual two-quarter static compiler components; no native arithmetic/whole-programme adoption",
+  "clock_ps": 833,
+  "profiles": {
+    "minimal4_4_0": {
+      "bf16_full512rows": {
+        "emitted_edges": 1090,
+        "dispatch_service_edges": 1078,
+        "output_words": 65536,
+        "expected_sector_writes": 8192,
+        "native_bits": 4940,
+        "selectors": {
+          "edges": 1090,
+          "read_slots": 8192,
+          "write_slots": 8192,
+          "layout": "[63:32]write32 [31:0]read32; bit q*8+p",
+          "read_command_to_lg_edges": 0,
+          "write_command_to_lg_edges": 4,
+          "source": "prog.mem commands only; independent of expected results"
+        }
+      },
+      "physical_identity_controls": [
+        {
+          "qids": [
+            0,
+            1
+          ],
+          "width": 2470,
+          "verdict": "CAUGHT"
+        },
+        {
+          "qids": [
+            2,
+            2
+          ],
+          "width": 2470,
+          "verdict": "CAUGHT"
+        },
+        {
+          "qids": [
+            2,
+            3
+          ],
+          "width": 2422,
+          "verdict": "CAUGHT"
+        }
+      ],
+      "softmax_phases": [
+        {
+          "record": "qw_softmax_exp_sum_r2",
+          "rows": 2,
+          "component_service_edges": 1458,
+          "retained_component_edges": 1458,
+          "added_publication_or_reload_edges": null,
+          "installable": false,
+          "phase_rows": [
+            1,
+            1
+          ]
+        },
+        {
+          "record": "qw_softmax_exp_sum_r3",
+          "rows": 3,
+          "component_service_edges": 2187,
+          "retained_component_edges": 2187,
+          "added_publication_or_reload_edges": null,
+          "installable": false,
+          "phase_rows": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "record": "qw_softmax_exp_sum_r4",
+          "rows": 4,
+          "component_service_edges": 2916,
+          "retained_component_edges": 2916,
+          "added_publication_or_reload_edges": null,
+          "installable": false,
+          "phase_rows": [
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    "alternate5_4_1": {
+      "bf16_full512rows": {
+        "emitted_edges": 1091,
+        "dispatch_service_edges": 1079,
+        "output_words": 65536,
+        "expected_sector_writes": 8192,
+        "native_bits": 4940,
+        "selectors": {
+          "edges": 1091,
+          "read_slots": 8192,
+          "write_slots": 8192,
+          "layout": "[63:32]write32 [31:0]read32; bit q*8+p",
+          "read_command_to_lg_edges": 0,
+          "write_command_to_lg_edges": 4,
+          "source": "prog.mem commands only; independent of expected results"
+        }
+      },
+      "physical_identity_controls": [
+        {
+          "qids": [
+            0,
+            1
+          ],
+          "width": 2470,
+          "verdict": "CAUGHT"
+        },
+        {
+          "qids": [
+            2,
+            2
+          ],
+          "width": 2470,
+          "verdict": "CAUGHT"
+        },
+        {
+          "qids": [
+            2,
+            3
+          ],
+          "width": 2422,
+          "verdict": "CAUGHT"
+        }
+      ],
+      "softmax_phases": [
+        {
+          "record": "qw_softmax_exp_sum_r2",
+          "rows": 2,
+          "component_service_edges": 1466,
+          "retained_component_edges": 1466,
+          "added_publication_or_reload_edges": null,
+          "installable": false,
+          "phase_rows": [
+            1,
+            1
+          ]
+        },
+        {
+          "record": "qw_softmax_exp_sum_r3",
+          "rows": 3,
+          "component_service_edges": 2199,
+          "retained_component_edges": 2199,
+          "added_publication_or_reload_edges": null,
+          "installable": false,
+          "phase_rows": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "record": "qw_softmax_exp_sum_r4",
+          "rows": 4,
+          "component_service_edges": 2932,
+          "retained_component_edges": 2932,
+          "added_publication_or_reload_edges": null,
+          "installable": false,
+          "phase_rows": [
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  },
+  "remaining_native_obligations": [
+    "actual input/output publication and reload between phases",
+    "actual NW/NE interquarter RF paths",
+    "current native source/canonical FP profile and bank-frontdoor selection"
+  ]
+}
