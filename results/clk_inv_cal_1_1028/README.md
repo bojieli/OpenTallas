@@ -86,3 +86,40 @@ The 5 NUMBER-CHECK near-floor crossings on trial9 (tool margin_lo; NUMBER-CHECK 
 
 intel1:/srv/opentallas-scratch2/claude/clk-inv-cal-1-1028 (MC decks/dat `run/`, `mc_inv.json`, `inv_rows.json`, trees `tree2/`, control `tree/buf450`);
 intel2:/srv/opentallas-scratch2/claude/clk-inv-cal-1-1028 (`byteid/`, `qc/t9`, `qc/t10`, `nc/`).
+
+## 7. CLK-INV-CAL-2: STA early/late gap = liberty pin-cap range (COORD 0c80c4558 / DIE-S81-16)
+
+Cause. OpenSTA's min analysis loads every pin at the LOW end of its liberty `capacitance_range`. CKINVDCx16 A is 6.68-9.54 fF (rise) and 6.64-9.53 fF (fall); BUFx24 A is only 1.76-2.35 fF, on a 24x driver. With no derate, a 20-stage CKINVDCx16 chain gives max 156.6 / min 129.3 ps (-17 %), and a BUFx24 chain gives 437.0 / 431.9 ps (-1.2 %). The built trees show the same thing at every depth (QC t10 TT: tap late - early median 12.3 %, max 13.8 %). This is a load-model difference, not variation: ngspice gives one delay.
+
+Spice vs STA on one tree path (48-stage benches, deepest sink, `spice_vs_sta_min.json`; table = Ainv/A random + net flat, no distance term):
+
+| bench | spice | STA late | STA early | early/late | spice/late | spice/early | table +/- |
+|---|---|---|---|---|---|---|---|
+| inv NDR150 TT | 1263.8 | 1354.4 | 1197.1 | 0.884 | 0.933 | 1.056 | 22.9 |
+| inv NDR150 FF | 1054.8 | 1124.9 | 984.7 | 0.875 | 0.938 | 1.071 | 21.2 |
+| inv NDR250 TT | 2122.2 | 2301.6 | 2069.1 | 0.899 | 0.922 | 1.026 | - |
+| BUF 450 TT | 4262.2 | 4044.6 | 3988.9 | 0.986 | 1.054 | 1.069 | 101.1 |
+
+The AOCV table comes from ngspice MC, so it does NOT contain the cap range. `--clock-cal spice` multiplies late and early by the same factor (0.9324), so the gate adds the cap-range gap on top of the table. That double-counts it:
+
+- inv NDR150 TT path, spice mode: late 1263, early 1116, gap 146.7, spread with table 192.5 ps.
+- spice_edge mode: early 1226, gap 36.9, spread 82.8 ps.
+- spice MC truth: +/- table = 45.8 ps.
+- BUF: gap 58.5 of 260.6 ps. The BUF is left unchanged.
+
+Fix: an opt-in in the one model, `--clock-cal spice_edge` (gate) / `--sta-clock-cal spice_edge` (planner and bind; plan == gate).
+
+- Inverter late keys are multiplied by SPICE_CLOCK_CAL_INV (unchanged).
+- Inverter early keys (tap + node, rise + fall) are multiplied by SPICE_CLOCK_CAL_INV_EARLY = TT 1.0241 / FF 1.0487. These are the smaller NDR spice/STA-min slopes, the hold-safe side. NDR150 measured 1.0550 / 1.0704.
+- Early is capped at late.
+- The CPPR node range is re-derived from the scaled node arrivals.
+- BUF is identical to `spice`, and `spice` stays byte-identical. Tests: `tools/die_plan/test_clk_inv_edge.py`.
+
+Built trees (die_sta_related, `--clock-cell inv`, table + shared droop + CPPR-LCA, no CA bind):
+
+| proof | FF intra hold spice | spice_edge | neg pairs | TT intra setup |
+|---|---|---|---|---|
+| S81 go13 (S81 ran it with the BUF model: -1183.9) | -1049.1 | -1037.9 | 149402 -> 136022 | -508.6 -> -498.3 |
+| QC t10 (proof_fall) | -249.0 | -232.3 | | 369.9 -> 387.3 |
+
+On S81 the cap range is worth only ~11 ps at the worst pair. The worst intra pair is built skew (FF skew 1007 ps), not the model. The BUF-model fallback was worth 135 ps (-1184 -> -1049).
