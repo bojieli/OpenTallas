@@ -32,3 +32,12 @@ Codex `mixed_apply_access.py` is used UNCHANGED (copy here for pinning).
 ## Not established
 Canonical M8<->M9 grid vias are not in `pg_rects.json` (grid stays 5,829/5,794 components per net here): whole-grid
 continuity, native-cell PG (44,967 native cells, bridges), DRC, IR, clock route are later steps. No freeze claim.
+
+## Grid continuity (COORD 10-29 11:0x, existing PG gate): M8<->M9 grid vias added
+`grid_vias.py` (unit oth-ubuntu-2704090, 394 s, CHECKED own run): the plan PDN rule is `add_pdn_connect -grid top
+-layers {M8 M9}` (die_trial PDN tcl), i.e. a via at every same-net M8 x M9 crossing. Added as pdngen would from tech
+`VIARULE M9_M8 GENERATE` (cut 0.04, pitch 0.097, M9 enclosure 0.02): one generated block via 7x5 cuts per crossing.
+VDD 3,040 M8 x 3,613 M9 = 10,983,520 crossings, VSS 3,039 x 3,612 = 10,976,868, all with a via. Readback from the
+written ODB (intel2 die-qc34/gridvias/provider_pg_grid.odb sha256 a762649e…49aa): 0 orphan vias,
+**1 connected grid piece per net (VDD 1, VSS 1)** (was 5,829 / 5,794 without vias). With the contact census
+(185,698/185,698 reach a stripe) every contact is on the one grid of its net. DRC/IR/native-cell PG still open.
