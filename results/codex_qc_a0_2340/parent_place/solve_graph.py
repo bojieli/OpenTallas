@@ -1,12 +1,15 @@
-import json,sys,time
+import json,sys,time,os
 import numpy as np
 from scipy.sparse import coo_matrix
 from scipy.optimize import linprog, milp, Bounds, LinearConstraint
 from scipy.sparse import hstack,vstack
 D=json.load(open('graph.json'));xy=np.array(D['xy']);N=len(xy);face=set(D['face']);limit=float(sys.argv[1]) if len(sys.argv)>1 else 395
+if os.environ.get('OT_ANCHOR_SEED'):xy=np.array(json.load(open(os.environ['OT_ANCHOR_SEED']))['positions'])
 mode=sys.argv[2] if len(sys.argv)>2 else'free'
-if len(sys.argv)>3 and sys.argv[3]=='separate_reset':
- root=next(i for i,n in enumerate(D['cells']) if n=='u_g.g_rst_native.q$_DFF_P_');D['edges']=[(i,j) for i,j in D['edges'] if i!=root];mode+='_reset_separate'
+if len(sys.argv)>3 and sys.argv[3] in ('separate_reset','separate_outer'):
+ root=next(i for i,n in enumerate(D['cells']) if n=='u_g.g_rst_native.q$_DFF_P_')
+ remove=set(range(N)) if sys.argv[3]=='separate_reset' else {j for j,n in enumerate(D['cells']) if n in ('u_g.t_out\\[512\\]$_SDFF_PN0_','u_g.t_out\\[513\\]$_SDFF_PN0_')}
+ D['edges']=[(i,j) for i,j in D['edges'] if not(i==root and j in remove)];mode+='_'+sys.argv[3]
 row=[];col=[];val=[];b=[]
 def add(terms,rhs):
  r=len(b);b.append(rhs)
