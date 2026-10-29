@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/wt/codex-head-clock/tools/die_plan/count_align_plan.py", line 1216, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch2/claude/wt/codex-head-clock/tools/die_plan/count_align_plan.py", line 1159, in main
+    sta_info = sta_rows_hull(rows, a)
+  File "/srv/opentallas-scratch2/claude/wt/codex-head-clock/tools/die_plan/count_align_plan.py", line 952, in sta_rows_hull
+    sta = DSR.sta_port_intervals(a.sta_proof, a.sta_plan, cs, ports, pr, a.sta_clock_cal, a.sta_cppr_lca, fall=True,
+                                 **sta_ocv_kw(a))
+  File "/srv/opentallas-scratch2/claude/wt/codex-head-clock/tools/die_plan/die_sta_related.py", line 910, in sta_port_intervals
+    iv, unb, _ = count_align_port_intervals(ports, pairs["landed"], taps, rng, part_region, ocv, **rk)
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/wt/codex-head-clock/tools/die_plan/die_sta_related.py", line 809, in count_align_port_intervals
+    ca_pair_interval(A, B, a, b, cppr_range, ocv, edge, ring))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/wt/codex-head-clock/tools/die_plan/die_sta_related.py", line 685, in ca_pair_interval
+    os_, oh = float(ocv(a, b, "setup")), float(ocv(a, b, "hold"))
+                    ~~~^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/wt/codex-head-clock/tools/die_plan/die_sta_related.py", line 1526, in fn
+    nxy = meta["node_xy_um"][node]
+          ~~~~~~~~~~~~~~~~~~^^^^^^
+KeyError: 'h0000000000000000000000000010000000000000407080103040102000'
