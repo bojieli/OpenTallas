@@ -1,0 +1,20 @@
+CODEX KV phy_pad speculative-bank closure fix, pre-build floorplan review
+Picture personally VIEWED: results/geom_review/kv_phy_pad_baseline.png
+Original GEOM-46 released placement, same outline/pins/clock entry; top label
+contains NA checks from its original auto-geom invocation, human verdict
+GEOM-46 PASS-COND (KV-KITS-15 lane).
+
+86.4 x95.04um macro-free standard-cell core; centre clock entry43.224/47.52.
+Payload input and output faces retain original plan windows; no change in
+bus order or nearest neighbours. Previous fill0.328, GRT overflow0,
+longest clock branch77.9um, local data reach138um, all below405um.
+Image shows open contiguous rows, no macro walls or narrow macro channels.
+Right/top edge pin concentration remains a warning handled in the existing
+plan; unchanged pins1577 and footprint. Clock-trunk seven-buffer island
+remains central; new onehot bank-address logic adds2 state bits.
+PG and metal ceilings unchanged. Source structural fix removes validation
+fanout from queue data writes; no added cycles or interface change.
+
+PASS-COND for synthesis and trial placement after fresh sink census and
+seven-stage clock-slice regeneration. New placement/clock image must be
+viewed before a route is enqueued. No physical closure claim.
