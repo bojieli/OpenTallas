@@ -6,6 +6,45 @@ proc ot_ci_begin {} {
   set ::ot_ci_cells {}; set ::ot_ci_ports {}; set ::ot_ci_arcs {}
   set ::ot_ci_fixed {}; set ::ot_ci_tree_expected {}; set ::ot_ci_tree_seen {}
   set ::ot_ci_tree_out [dict create]; set ::ot_ci_tree_open {}
+  set ::ot_ci_occ [dict create]; set ::ot_ci_occ_order [dict create]
+  set ::ot_ci_occ_next 0
+  set ::ot_ci_occ_pitch [expr {10 * $::ot_ci_u}]
+  foreach i [$::ot_ci_b getInsts] {
+    dict set ::ot_ci_occ_order $i $::ot_ci_occ_next
+    incr ::ot_ci_occ_next
+    if {[[$i getMaster] isBlock] || [$i getPlacementStatus] in {FIRM LOCKED COVER}} {
+      ot_ci_occ_add $i
+    }
+  }
+}
+# Bucket only the bodies the original fixed-overlap guard inspects. Existing
+# entries may remain after this owner moves a body: queries still read its live
+# bbox, and adding the new buckets prevents misses without an expensive rebuild.
+proc ot_ci_occ_add {i} {
+  if {![dict exists $::ot_ci_occ_order $i]} {
+    dict set ::ot_ci_occ_order $i $::ot_ci_occ_next
+    incr ::ot_ci_occ_next
+  }
+  set r [$i getBBox]; set p $::ot_ci_occ_pitch
+  for {set x [expr {int(floor([$r xMin]/double($p)))}]} {$x <= int(floor([$r xMax]/double($p)))} {incr x} {
+    for {set y [expr {int(floor([$r yMin]/double($p)))}]} {$y <= int(floor([$r yMax]/double($p)))} {incr y} {
+      dict set ::ot_ci_occ $x,$y $i 1
+    }
+  }
+}
+proc ot_ci_occ_candidates {x0 y0 x1 y1} {
+  set found [dict create]; set p $::ot_ci_occ_pitch
+  for {set x [expr {int(floor($x0/double($p)))}]} {$x <= int(floor($x1/double($p)))} {incr x} {
+    for {set y [expr {int(floor($y0/double($p)))}]} {$y <= int(floor($y1/double($p)))} {incr y} {
+      if {![dict exists $::ot_ci_occ $x,$y]} continue
+      foreach i [dict keys [dict get $::ot_ci_occ $x,$y]] {
+        dict set found $i [dict get $::ot_ci_occ_order $i]
+      }
+    }
+  }
+  set ordered {}
+  dict for {i ordinal} $found {lappend ordered [list $ordinal $i]}
+  return [lmap pair [lsort -integer -index 0 $ordered] {lindex $pair 1}]
 }
 proc ot_ci_net {name} {
   set n [$::ot_ci_b findNet $name]
@@ -54,7 +93,7 @@ proc ot_ci_place {i x y rect} {
     $i setOrient [$row getOrient]; $i setLocation $xx $yy
     $i setPlacementStatus FIRM
   }
-  foreach j [$::ot_ci_b getInsts] {
+  foreach j [ot_ci_occ_candidates $xx $yy [expr {$xx+$w}] [expr {$yy+$h}]] {
     if {$i eq $j} continue
     if {![[ $j getMaster] isBlock] && [$j getPlacementStatus] ni {FIRM LOCKED COVER}} continue
     set r [$j getBBox]
@@ -62,6 +101,7 @@ proc ot_ci_place {i x y rect} {
       error "OT_CORE_INFRA_PLANNED_OVERLAP [$i getName] [$j getName]"
     }
   }
+  ot_ci_occ_add $i
 }
 proc ot_ci_cell {name master x y rect} {
   set m [[ord::get_db] findMaster $master]
