@@ -1,0 +1,153 @@
+# INFRA-PRUNE-2 2026-10-28 PDT: host	action	MiB	path	note
+intel2	DELETED	54797	claude/qc	stale>24h; signed/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+intel2	DELETED	6734	claude/qc-a0	stale>24h; signed/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+intel2	DELETED	10962	claude/codex-qk-boot-0818	stale>24h; signed/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+intel2	DELETED	5361	claude/codex-s81	stale>24h; signed/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+intel2	DELETED	3628	claude/droop-recheck-1027	stale>24h; signed/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+intel2	DELETED	2547	claude/oss-hier-1027	stale>24h; signed/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+intel2	DELETED	2157	claude/codex-kv-cores-1351	stale>24h; signed/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+intel2	DELETED	2156	claude/flow-clkfreeze-1027	stale>24h; signed/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+epyc2	DELETED	10811	claude/codex-qc-xhead-1027	stale>24h; signed/OWNERS/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+epyc2	DELETED	6909	claude/droop-recheck-1027	stale>24h; signed/OWNERS/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+epyc2	DELETED	3970	claude/flow-shared-5	stale>24h; signed/OWNERS/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+epyc2	DELETED	1753	claude/flow-shared-6	stale>24h; signed/OWNERS/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+epyc2	DELETED	5276	claude/flow-shared-10	stale>24h; signed/OWNERS/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+epyc2	DELETED	4878	claude/codex-head-1027	stale>24h; signed/OWNERS/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+epyc2	DELETED	3911	claude/codex-head-version-1351	stale>24h; signed/OWNERS/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+epyc2	DELETED	4120	claude/codex-flow-clkfreeze-qc-1351	stale>24h; signed/OWNERS/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+epyc2	DELETED	2678	claude/s81	stale>24h; signed/OWNERS/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+epyc2	DELETED	2664	claude/s81-cores-r24	stale>24h; signed/OWNERS/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+epyc2	DELETED	2089	claude/dh3t	stale>24h; signed/OWNERS/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+epyc2	DELETED	1738	claude/codex-qc-su-const-0920	stale>24h; signed/OWNERS/main-referenced artefacts copied to intel1 signed-keep first (sha256 verified)
+epyc2	WT-REMOVED	~44000	claude/wt/infra-first-qc-r9-1026	stale lane wt; 4 mods + 1 untracked rescued to origin rescue/epyc2-infra-first-qc-r9-1026-1028@5455a0538f
+intel2	MOVED	43559	claude/wt/s81-r25-lec	broken wt (gitdir gone), 133 signoff.json -> intel1 signed-keep/wt/s81-r25-lec (rsync -c 0 diffs)
+intel2	MOVED	29861	claude/wt/codex-hbm-source-1351	Codex stale wt (dirty 2) -> intel1 signed-keep/wt/ (rsync -c 0 diffs)
+intel2	MOVED	31125	claude/wt/codex-kv-native-bind-1027	Codex stale wt (bind5 evidence, bound.json) -> intel1 signed-keep/wt/ (rsync -c 0 diffs)
+intel2	MOVED	25789	claude/wt/codex-rm1351	Codex RM60/61 wt, clean -> intel1 signed-keep/wt/ (rsync -c 0 diffs)
+intel2	SUBSTAGE	120851	claude/flow-canary/{runs,ab/runs} (90 runs untouched>24h)	only N_M_*.odb|gds sub-stage checkpoints deleted; 1_synth/2_floorplan/3_place/4_cts/5_route/6_final + signoff/logs kept
+epyc2	SUBSTAGE	50865	claude/flow-canary/{runs,ab/runs} (34 runs untouched>24h)	same rule
+intel2	SUBSTAGE	19692	claude/{clock-reset 11624,kv-cores-r8 3709,hbm-kits-1025 3259,codex-qc-a0-2157 1100}	autopilot-referenced stale kits: sub-stage checkpoints only, kit dirs kept
+intel2	SUBSTAGE-RUN	1108	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_133d979e4_1027_190209_805316	
+intel2	SUBSTAGE-RUN	1108	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_15c4459bb_1027_172559_850832	
+intel2	SUBSTAGE-RUN	1108	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_24e850d89_1027_161705_362361	
+intel2	SUBSTAGE-RUN	1321	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_441bad4d3_1027_113202_285055	
+intel2	SUBSTAGE-RUN	1108	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_47ce1af8b_1027_173405_112840	
+intel2	SUBSTAGE-RUN	1108	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_abbbffac9_1027_190550_502362	
+intel2	SUBSTAGE-RUN	1108	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_d9973ea45_1027_144716_355730	
+intel2	SUBSTAGE-RUN	1108	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_f9d9190f1_1027_162917_846560	
+intel2	SUBSTAGE-RUN	1108	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_fc7a157a9_1027_203534_744777	
+intel2	SUBSTAGE-RUN	98	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_133d979e4_1027_181722_793934	
+intel2	SUBSTAGE-RUN	98	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_15c4459bb_1027_172559_850832	
+intel2	SUBSTAGE-RUN	98	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_1907eb530_1027_164718_469511	
+intel2	SUBSTAGE-RUN	98	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_1a2aa908a_1027_220523_689082	
+intel2	SUBSTAGE-RUN	98	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_24e850d89_1027_160218_880322	
+intel2	SUBSTAGE-RUN	98	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_542a4f321_1027_150216_356094	
+intel2	SUBSTAGE-RUN	98	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_5b3f0f6b2_1027_130215_060727	
+intel2	SUBSTAGE-RUN	98	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_61e18c35b_1027_213534_972477	
+intel2	SUBSTAGE-RUN	98	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_9dc6da3a1_1027_200533_601521	
+intel2	SUBSTAGE-RUN	98	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_abbbffac9_1027_190530_113692	
+intel2	SUBSTAGE-RUN	121	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_d9d8fce68_1027_121718_535115	
+intel2	SUBSTAGE-RUN	98	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_e3497c170_1027_141718_697735	
+intel2	SUBSTAGE-RUN	98	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_e44f89176_1027_140215_132956	
+intel2	SUBSTAGE-RUN	98	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_f9d9190f1_1027_162917_846560	
+intel2	SUBSTAGE-RUN	1428	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_133d979e4_1027_181722_793934	
+intel2	SUBSTAGE-RUN	1428	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_15c4459bb_1027_172559_850832	
+intel2	SUBSTAGE-RUN	1428	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_1907eb530_1027_164718_469511	
+intel2	SUBSTAGE-RUN	1428	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_1a2aa908a_1027_215035_623231	
+intel2	SUBSTAGE-RUN	1428	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_24e850d89_1027_160218_880322	
+intel2	SUBSTAGE-RUN	1428	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_542a4f321_1027_150216_356094	
+intel2	SUBSTAGE-RUN	1428	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_5b3f0f6b2_1027_130215_060727	
+intel2	SUBSTAGE-RUN	1428	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_61e18c35b_1027_213534_972477	
+intel2	SUBSTAGE-RUN	1428	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_9dc6da3a1_1027_200533_601521	
+intel2	SUBSTAGE-RUN	1428	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_abbbffac9_1027_190530_113692	
+intel2	SUBSTAGE-RUN	1428	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_d9d8fce68_1027_121718_535115	
+intel2	SUBSTAGE-RUN	1428	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_e3497c170_1027_141718_697735	
+intel2	SUBSTAGE-RUN	1428	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_e44f89176_1027_140215_132956	
+intel2	SUBSTAGE-RUN	1428	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_f9d9190f1_1027_162917_846560	
+intel2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_133d979e4_1027_181722_793934	
+intel2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_15c4459bb_1027_172559_850832	
+intel2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_1907eb530_1027_164718_469511	
+intel2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_1a2aa908a_1027_220523_689082	
+intel2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_24e850d89_1027_160218_880322	
+intel2	SUBSTAGE-RUN	5102	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_274477ed5_1026_173308_785255	
+intel2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_47ce1af8b_1027_173405_112840	
+intel2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_542a4f321_1027_150216_356094	
+intel2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_5b3f0f6b2_1027_130215_060727	
+intel2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_61e18c35b_1027_213534_972477	
+intel2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_9dc6da3a1_1027_200533_601521	
+intel2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_abbbffac9_1027_190530_113692	
+intel2	SUBSTAGE-RUN	5102	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_b272ba0ec_1026_113812_598743	
+intel2	SUBSTAGE-RUN	2626	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_core_0f9789993_1027_043154_799814	
+intel2	SUBSTAGE-RUN	1943	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_core_15c4459bb_1027_172559_850832	
+intel2	SUBSTAGE-RUN	2626	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_core_1fdc08d9c_1027_112701_679346	
+intel2	SUBSTAGE-RUN	1746	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_core_278c7c4e8_1026_222325_886648	
+intel2	SUBSTAGE-RUN	1943	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_core_47ce1af8b_1027_173405_112840	
+intel2	SUBSTAGE-RUN	2626	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_core_6fc74684f_1027_084713_009067	
+intel2	SUBSTAGE-RUN	1943	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_core_abbbffac9_1027_190550_502362	
+intel2	SUBSTAGE-RUN	1943	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_core_f9d9190f1_1027_162917_846560	
+intel2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_d9d8fce68_1027_121718_535115	
+intel2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_e3497c170_1027_141718_697735	
+intel2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_e44f89176_1027_140215_132956	
+intel2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_f9d9190f1_1027_162917_846560	
+intel2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_fc7a157a9_1027_203534_744777	
+intel2	SUBSTAGE-RUN	2577	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_15c4459bb_1027_172559_850832	
+intel2	SUBSTAGE-RUN	2577	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_24e850d89_1027_161705_362361	
+intel2	SUBSTAGE-RUN	2577	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_47ce1af8b_1027_173405_112840	
+intel2	SUBSTAGE-RUN	2577	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_4dd848f60_1027_143215_548776	
+intel2	SUBSTAGE-RUN	2577	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_60b5ddf52_1027_104701_409335	
+intel2	SUBSTAGE-RUN	2577	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_abbbffac9_1027_190550_502362	
+intel2	SUBSTAGE-RUN	2577	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_d9d8fce68_1027_121908_752653	
+intel2	SUBSTAGE-RUN	2577	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_f9d9190f1_1027_162917_846560	
+intel2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_133d979e4_1027_181722_793934	
+intel2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_15c4459bb_1027_172559_850832	
+intel2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_1a2aa908a_1027_220523_689082	
+intel2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_24e850d89_1027_160218_880322	
+intel2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_47ce1af8b_1027_170219_849642	
+intel2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_4dd848f60_1027_143215_548776	
+intel2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_542a4f321_1027_150216_356094	
+intel2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_5b3f0f6b2_1027_130215_060727	
+intel2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_61e18c35b_1027_213534_972477	
+intel2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_9dc6da3a1_1027_200533_601521	
+intel2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_abbbffac9_1027_190530_113692	
+intel2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_d9d8fce68_1027_121718_535115	
+intel2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_e44f89176_1027_140215_132956	
+intel2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_f9d9190f1_1027_162917_846560	
+intel2	SUBSTAGE-RUN	98	/srv/opentallas-scratch2/claude/flow-canary/ab/runs/hbm_sram_bab4446cb_1027_131211_720904	
+intel2	SUBSTAGE-RUN	1745	/srv/opentallas-scratch2/claude/flow-canary/ab/runs/qwen_kvsys_core_335b3d5a4_1025_113224_947613	
+intel2	SUBSTAGE-RUN	2576	/srv/opentallas-scratch2/claude/flow-canary/ab/runs/s81_8d2f04b67_1027_125752_856630	
+intel2	SUBSTAGE-RUN	6762	/srv/opentallas-scratch2/claude/flow-canary/ab/runs/s81_fba10301d_1027_122224_884761	
+intel2	SUBSTAGE-RUN	724	/srv/opentallas-scratch2/claude/flow-canary/ab/runs/s81_head_1ae8ebeb0_1025_114536_038973	
+epyc2	SUBSTAGE-RUN	1108	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_24e850d89_1027_161705_362361	
+epyc2	SUBSTAGE-RUN	1321	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_441bad4d3_1027_113202_285055	
+epyc2	SUBSTAGE-RUN	1108	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_abbbffac9_1027_190550_502362	
+epyc2	SUBSTAGE-RUN	1108	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_f9d9190f1_1027_162917_846560	
+epyc2	SUBSTAGE-RUN	98	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_15c4459bb_1027_172559_850832	
+epyc2	SUBSTAGE-RUN	121	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_3ecb80751_1027_083211_537921	
+epyc2	SUBSTAGE-RUN	121	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_471dd392b_1027_064708_395781	
+epyc2	SUBSTAGE-RUN	121	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_8404ea2f0_1026_193821_149827	
+epyc2	SUBSTAGE-RUN	121	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_d42ddbeaf_1026_175325_817639	
+epyc2	SUBSTAGE-RUN	121	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_d9d8fce68_1027_121718_535115	
+epyc2	SUBSTAGE-RUN	98	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_e44f89176_1027_140215_132956	
+epyc2	SUBSTAGE-RUN	121	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_fa02b11f4_1027_090211_968287	
+epyc2	SUBSTAGE-RUN	121	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_fec963a5e_1026_122313_562172	
+epyc2	SUBSTAGE-RUN	1425	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_22c993282_1026_022258_497997	
+epyc2	SUBSTAGE-RUN	1428	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_24e850d89_1027_160218_880322	
+epyc2	SUBSTAGE-RUN	1425	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_a14244af6_1027_073209_595219	
+epyc2	SUBSTAGE-RUN	5102	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_29917a2ec_1026_145316_343099	
+epyc2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_471dd392b_1027_064708_395781	
+epyc2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_47ce1af8b_1027_173405_112840	
+epyc2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_7b6d9deae_1026_173308_807424	
+epyc2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_9dc6da3a1_1027_200533_601521	
+epyc2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_a14244af6_1027_073209_595219	
+epyc2	SUBSTAGE-RUN	1943	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_core_15c4459bb_1027_172559_850832	
+epyc2	SUBSTAGE-RUN	2626	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_core_1fdc08d9c_1027_112701_679346	
+epyc2	SUBSTAGE-RUN	1943	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_core_47ce1af8b_1027_173405_112840	
+epyc2	SUBSTAGE-RUN	2626	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_core_6fc74684f_1027_084713_009067	
+epyc2	SUBSTAGE-RUN	1943	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_core_abbbffac9_1027_190550_502362	
+epyc2	SUBSTAGE-RUN	5102	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_d75b94c4c_1026_030746_765407	
+epyc2	SUBSTAGE-RUN	1566	/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_d9d8fce68_1027_121718_535115	
+epyc2	SUBSTAGE-RUN	2577	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_c25f35446_1026_182326_019372	
+epyc2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_3ecb80751_1027_083211_537921	
+epyc2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_b272ba0ec_1026_113812_598743	
+epyc2	SUBSTAGE-RUN	293	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_d42ddbeaf_1026_175325_817639	
+epyc2	SUBSTAGE-RUN	6762	/srv/opentallas-scratch2/claude/flow-canary/ab/runs/s81_fba10301d_1027_122224_884761	

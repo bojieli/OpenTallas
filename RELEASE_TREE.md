@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-26 06:21 PDT by CLAUDE coordinator)
 
-Snapshot: 2026-10-28 17:20 PDT · main bfc232967f · FROZEN: none · gate numbers only on shared die STA with clock_variation=table (CA >=100 ps) · sign-off flat 12 h (KV e2/e6 signed off, ledger pending) · 12.16e local clock form on all 5 dies · KV plan delta (DIE-KV-14), HEAD GRT0 flow (HEAD-14), QC hold glue (QC-20), S81 go15 ~20:30, HBM SU lanes WCOPY re-place (REBAL-10).
+Snapshot: 2026-10-28 23:4x PDT · main b6fd7043d2 · FROZEN: none · closest KV (GRT0 done; FF hold -57.92 only on 5 budget ends, BOTH-REAL +46.08) · gate numbers only on shared die STA, --clock-cal spice_edge for inv trees (NUMBER-CHECK-INV-1 PASS); BUFx4/BUFx6f delay cells not yet covered (MODEL-REFIT-2) · sign-off: S81 4/171 15/52, HEAD 0/16 2/3, QC 0/68 4/9, KV 0/40 5/31, HBM 0/49 0/210 · generic die clock tool tools/clk (CLK-TOOL-1 approved, CLK-TOOL-2 running)
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -22,7 +22,7 @@ Snapshot: 2026-10-28 17:20 PDT · main bfc232967f · FROZEN: none · gate number
 - [ ] QC.PATH CRITICAL PATH end to end (12.9b): 12.7b plan gates -> core rebuilds (12.8) -> die clock (12.8) -> GRT0 -> skew gate -> die STA · INFRA-FIRST · RUNNING · dated ETA checklist in lanes/INFRA-FIRST.md
 - [ ] QC.INFRA One QC plan event: infra-first PG/clock/reset + batch 2 (STM ROMs, SRAM, DEAD-FAULT) + D-QC-FE-REACH stations (all FE variants) + COLLFTM-CTL + CB ID straps + SCROOT + vmr_s6kc · INFRA-FIRST + PATH-QC · RUNNING · PENDING-DELTA D-INFRA-FIRST-QC holds all 68 type routes
 - [ ] QC.LAND Per-slice clocks + landed slice crossings (12.10b/12.11, main path) · QC-SLICECLK-1 · RUNNING · price -> plan delta -> GEN -> GRT incl clock -> STA
-- [ ] QC.CLK Clock 12.16 local inverter tree · DIE-QC-24 · RUNNING · model OK (sweep); worst ~123 ps c_*_tf_00 not model-limited -> A0-quad mesh pilot (GRT pair U 45-54 ps <= 61) DRT proof QC-MESH-PILOT-2; A0 node lattice re-kit a0k8 (QC-A0-KITS-9)
+- [ ] QC.CLK Clock 12.16 local inverter tree · DIE-QC-25 · RUNNING · plan of record ev_qc24, strict bind 0 err; worst in-region ~123 ps (<=150) c_*_tf_00; A0-quad mesh pilot GRT pair 45-54 ps, DRT proof QC-MESH-PILOT-2; A0 ICG ungated split approved (est OCV FF 62.7 NK / 74.7 NL > 60, judge routed) QC-A0-KITS-10; g24 die run result pending
 - [ ] QC.SU 4 SU core types · QC-SU-F4G · DONE-RP1 · F4G RP1 ADOPTED (TT +236.87/FF +5.92/LEC 3703, window 23.2/20.3 CHECKED); F4F = fallback; F4G VMR live (epyc2 unit 714733)
 - [ ] QC.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · → QC.INFRA
 - [ ] QC.BIND Strict bind on the QC plan event (wavefront reset/START, CB16 phase classes) · PATH-QC · WAITS · → QC.INFRA
@@ -32,8 +32,8 @@ Snapshot: 2026-10-28 17:20 PDT · main bfc232967f · FROZEN: none · gate number
 ## DIE s81_head · S81 head die · rev UNFROZEN d7b8d1eb · after QC
 - [ ] HEAD.INFRA Infra-first plan event (+ HEAD8 batch 187b63494b if approved) · INFRA-FIRST-HEAD-1 · RUNNING (started 01:5x, parallel to QC) · PENDING-DELTA D-INFRA-FIRST-HEAD holds all 16 type routes → IF.TOOL
 - [ ] HEAD.LAND Landed regions (12.11, main path) · TOK-HEAD-LAND-2 · RUNNING · FIRST whole-die token pass on a landed bind PASS (bit-exact 2/2, GO->result 8,780 cyc TT/FF = value of record, mutants caught; ~9,313 cyc/token vs 10,357 window UNCHECKED) on main 410e940f4f; re-run on main after RM271 start_d
-- [ ] HEAD.CLK Clock 12.16 local tree + real hd_tile ring clocks (--ca-ring, on main 21:1x) · DIE-HEAD-20 · RUNNING · hd_tile gate CA min 136 TT/163.8 FF PASS on 240 measured crossings; 187 crossings still on ASSUMED clocks (14 types unkitted) -> no freeze claim; hd_tile diagnostic run in GRT
-- [ ] HEAD.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · old d7b8d1eb signal GRT0 no longer counts → HEAD.INFRA
+- [ ] HEAD.CLK Clock 12.16 local tree + real hd_tile ring clocks · DIE-HEAD-21 · RUNNING · CA min 136 TT/163.8 FF PASS on 240 measured crossings; 187 on ASSUMED clocks (14 types unkitted, HEAD-KITS-3 on plan_hk3) -> no freeze claim; h16 BUFx4 -20 ps hold check: no structural blocker (CHECKED); first whole-die landed token pass bit-exact 8,780 cyc (TOK-HEAD-LAND-2 rerun on main)
+- [ ] HEAD.GRT Die GRT0 incl. clock on the current plan (plan_hk3) · DIE-HEAD-21 · WAITS · old d7b8d1eb GRT0 no longer counts; needs plan_hk3 bands + lep0N floorplan
 - [ ] HEAD.BIND Whole-head as-built bind · CODEX / PATH-S81 · WAITS · contract DRAFT ASKed (host N3@276, mesh64 2-beat, head_row_map; head-core-r13@148ff6a840); gaps: ROW0/TEN straps, hd_serdes u_phy open pins → next HEAD PLAN-DELTA
 - [ ] HEAD.STA Die STA on real views · DIE-PROTO · WAITS · → HEAD.CLK, → HEAD.TILES
   - [ ] HEAD.TILES Head tile sign-offs · HEAD-KITS-1 (new 21:1x) · RUNNING · 0/16 types, 2/3 hard cores; 14 types no routed kit (5 NEEDS-KIT, 9 FIX) - kit with fwd_buffer + tap_passthrough, hd_spn/hd_spn_end/hd_turn_b first
@@ -43,26 +43,26 @@ Snapshot: 2026-10-28 17:20 PDT · main bfc232967f · FROZEN: none · gate number
 - [ ] KV.LAND Landed 128 groups (12.10a/12.11, main path) · LAND-KV-1 · RUNNING · 30 band FAILs + 20 G0C -> GEN -> GRT incl regional clocks -> STA -> token price
 - [ ] KV.CLK Clock 12.16 neighbour-forwarded inverter tree · DIE-KV-13 · RUNNING · inverter clock accepted (VPORT_RT 95); write-group rule KV-13b approved; step-5 bind (compose start pins) building = B48 vehicle source
 - [ ] KV.INFRA PG from IR + pre-routed PG/clock/reset via shared tool · PATH-KV · RUNNING · die_infra reset 287 nets max hop 377um PASS; signal GRT50 M4-M9 w/ clock reservation ovf0; PG needs KV power figure (0.15 W/mm2 fallback) → IF.TOOL
-- [ ] KV.GRT GRT0 incl. clock at >=50 it · KV-PLAN-DELTA-5 · RUNNING · stall fixed (crit 0, merged RM79), q5c TT/FF overflow 0 CHECKED; FT hub_Wi seam windows in KV event
-- [ ] KV.STA Die STA on real views · DIE-KV-21 · RUNNING · tree of record proofF_p20 (phy pads 136->89, seam contract +18.31); spice_edge: BOTH-REAL FF +46.08, real-view -57.92 = declared-budget ends (no view e0/e1/e3/e4/e7, KV-KITS-16 priority); est +32..37 when views land (UNCHECKED); pv_S_6 kit contract -6.80 -> fitted-model rebuild
+- [ ] KV.GRT GRT0 incl. clock at >=50 it · DIE-KV-22 · DONE-PENDING-FREEZE · q5c TT/FF overflow 0 CHECKED; tree of record proofF_p20 GRT0 0; pv_S_7 start crossing re-bind pending
+- [ ] KV.STA Die STA on real views · DIE-KV-22 · RUNNING · tree proofF_p20 (spice_edge): real-view FF hold -57.92 = 5 declared-budget ends (no views e0/e1/e3/e4/e7 -> KV-KITS-16 priority), BOTH-REAL +46.08, est +32..37 when views land (UNCHECKED); CA PASS; pv_S_6/7 DME refit FF +6.64 but 2/156 'no taps' start-skew (re-bind pv_S_7, DIE-KV-22)
   - [ ] KV.TILES Tile sign-offs · KV-KITS-16 · RUNNING · 5/31 hard cores (e2 e5 e6 + 2); e1 -1.6 ps re-run, phy_pad + core_tx GEOM PASS-COND queued, pv_pair re-run; two-mode GRT repair root cause
 - [ ] KV.TOK Whole-die token pass on bind5 · TOK-KV-2 · RUNNING · B48 nominal + bind5m builds on intel1 (ETA ~01:10 10-29), then boot ~1.3 h + 1 token; composer 4089.4 COMPOSER-ONLY
   - [ ] KV.CORE-SLICE One KV core slice (centre entries, in-core islands, M7 entry pins; hr recut, q2 rename, phy_pad outline) · KV-CORE-SLICE-1 · RUNNING → KV-CORES-R2 → KV.CLK
 
 ## DIE s81 · S81 (DeepSeek ROM layer die) · rev main · B2 batch
 - [ ] S81.B2 One plan event D-S81-B2: A25 + stations v4 + PHY pins + leaf pins + eng SRAM r0c0 + FT alignment/corridors + D-S81-PHY + infra-first · PATH-S81 · RUNNING · gate: lateral jog <5M bit-um → GRT0 → skew
-- [ ] S81.GRT Die GRT0 incl clock · PATH-S81-PD6 · GRT0 DONE on PD5 6d6e8b34f9 (TT+FF overflow 0, CHECKED); 13 B5 cut errors -> measured-usage waiver; 17 storage bands fixing · ETA freeze est 10-28..29
+- [ ] S81.GRT Die GRT0 incl clock · DIE-S81-19 · REDO · GRT0 0 ovf only on old PD5 6d6e8b34f9; must re-run on current plan (plan_s12) with the go16 tree
 - [ ] S81.PHY 14 SerDes windows · PATH-S81 · RUNNING · zero-area fit 14/14; gunit R180 re-plan PASS-COND (GEOM-17); bk_sel option B re-cut 864x483.84 APPROVED (rebuild quarter tile) → S81.B2
 - [ ] S81.LAND Landed regions (12.11, main path) · LAND-S81-1 · RUNNING · rebase on gunit re-layout -> G0C fix -> GEN -> GRT -> STA -> token price
 - [ ] S81.CLK Clock 12.16 local inverter tree · DIE-S81-19 · RUNNING · root cause CHECKED (label + stale BUF stage model + x1.78 double comp); go16 on epyc2 (fitted stage cal, spice_edge gate, corrected early cores) results ~01:30-02:30; plan_s12 (S81 landing observer) for strict bind; bk_sel est 140-160 > 80 needs structural form
 - [ ] S81.BIND Strict bind on main · TOK-DS · PASS on 877cfdeb2 (0 tied, 10,352 straps) → re-run after S81.B2
-- [ ] S81.STA Die STA on real views · PATH-S81-PD6 · RUNNING · related-pair STA on PD5 kit (real where signed + budget)
+- [ ] S81.STA Die STA on real views · DIE-S81-19 · RUNNING · go15 hold FAIL 397/397 regions = stale BUFx24 stage model on inv2 tree + skew label error (real 524/514 ps); CA 104.4 TT/105.0 FF PASS; go16 (refit stage model, spice_edge) on epyc2, result ~01:30-02:30 10-29
   - [ ] S81.TILES Tile sign-offs · PATH-S81 / CORES-KITS · RUNNING · 4/171 types, 16/52 hard cores signed
 
 ## DIE hbm · HBM UNIFIED SU/MTP/MU one design (OWNER 10-26 23:1x; SU latency qualified first) · plan D-HBM-B1 (5fa3c6e64838)
 - [ ] HBM.LAND Landed regions + street grid (12.10c/12.11, main path) · LAND-HBM-1 + HBM-STREETS-1 · RUNNING · region price vs 1906 tok/s -> street-rule plan event -> region trees -> GRT -> STA
 - [ ] HBM.B1 Unified plan C16 (Q3 re-lot, EP crossing capacity, clock entries fix) · HBM-R15 · RUNNING · G0/G0C gates pending; 31 core faces over pin capacity; FF clock late (245.77) -> latency fix
-- [ ] HBM.GRT Die GRT0 incl clock on the UNIFIED plan · DIE-HBM-10 · WAITS · clock-only trial2b GRT ov 0 but FF duty FAIL; full-signal GRT after C25b (bind 476 errors, S-role q0 halves, 5 reset + 3 provider legs, SRAM outlines) + 461 unbalanced legs / 38 undeliverable early taps (CLK-MODEL-SWEEP-1)
+- [ ] HBM.GRT Die GRT0 incl clock on the UNIFIED plan · DIE-HBM-10 · WAITS · clock-only trial2b GRT ov 0 but FF duty FAIL; full-signal GRT not run: plan C25b incomplete (bind 476 errors, S-role q0 halves, 5 reset + 3 provider legs) + 461 unbalanced legs / 38 undeliverable early taps; HBM-RISK-1 10/36 regions <=150 ps
 - [ ] HBM.CLK Clock 12.16 local inverter tree on unified plan · DIE-HBM-10 · RUNNING · C22b gates + trial2 (inv2); PHY_N rc_slice C23 (3 clock groups; PHY 4-ch clock ASSUMED, ledgered); reset >=64-edge sequencer + reset_contract.json per kit
 - [ ] HBM.BIND Native B2 one-clock bind · PATH-HBM / HC-NATIVE · RUNNING · 98 unread outputs classified (svg redundant views, sm.request/expected check w/o comparator, xl y, ordinals); no open inputs
 - [ ] HBM.STA Die related-pair STA real routed clock (TT setup/FF hold) · DIE-PROTO · WAITS · → HBM.GRT; SU latency qualified first (HBM.SU)
