@@ -136,3 +136,14 @@ def test_cli_accepts_spice_cell():
     assert "spice_cell" in D.CLOCK_CALS
     src = (HERE / "count_align_plan.py").read_text() + (HERE / "count_align_bind.py").read_text()
     assert src.count('"spice_cell"') >= 2
+
+
+def test_extracted_bufx16f_pin_order_and_legacy_buf_order(tmp_path):
+    """The real CDL BUFx16f header is A,VSS,VDD,Y; supply-swapping it gives a meaningless calibration."""
+    MC.gen_case("bufx16f_1x2_d20", tmp_path / "f16")
+    deck = (tmp_path / "f16/deck_TT.sp").read_text()
+    assert "Xp1 src vss vdd p1 BUFx16f_ASAP7_75t_R" in deck
+    assert "Xt0 i_t0 vss vdd o_t0 BUFx16f_ASAP7_75t_R" in deck
+    assert "Xp1 vss vdd src p1 BUFx16f_ASAP7_75t_R" not in deck
+    MC.gen_case("bufx10_1x2_d20", tmp_path / "b10")
+    assert "Xp1 vss vdd src p1 BUFx10_ASAP7_75t_R" in (tmp_path / "b10/deck_TT.sp").read_text()
