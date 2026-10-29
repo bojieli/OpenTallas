@@ -1,0 +1,84 @@
+{
+ "TT": {
+  "taps": 1920,
+  "taps_missing": 0,
+  "tap_arr_min": 737.7,
+  "tap_arr_max": 8268.3,
+  "regions": 128,
+  "spread_worst": [
+   [
+    106.2,
+    "pv_S_6"
+   ],
+   [
+    108.4,
+    "phy_WS_7"
+   ],
+   [
+    109.5,
+    "hgi_ES_3"
+   ],
+   [
+    115.0,
+    "pv_N_6"
+   ],
+   [
+    120.3,
+    "pv_N_1"
+   ]
+  ],
+  "n_over_150": 0,
+  "clk_cell_out_slew_max": 115.7,
+  "tap_slew_max": 66.5,
+  "provider_ff": 10530,
+  "provider_ff_clk_arr": [
+   40.0,
+   8178.0
+  ],
+  "provider_ff_clk_slew_max": 313.9,
+  "drv_violations": 9126,
+  "drv_clock_pin_violations": 0,
+  "drv_clock_examples": []
+ },
+ "FF": {
+  "taps": 1920,
+  "taps_missing": 0,
+  "tap_arr_min": 655.9,
+  "tap_arr_max": 7324.9,
+  "regions": 128,
+  "spread_worst": [
+   [
+    99.0,
+    "pv_S_7"
+   ],
+   [
+    99.9,
+    "phy_WS_7"
+   ],
+   [
+    100.6,
+    "pv_S_6"
+   ],
+   [
+    106.3,
+    "pv_N_6"
+   ],
+   [
+    111.5,
+    "pv_N_1"
+   ]
+  ],
+  "n_over_150": 0,
+  "clk_cell_out_slew_max": 95.0,
+  "tap_slew_max": 61.4,
+  "provider_ff": 10530,
+  "provider_ff_clk_arr": [
+   33.8,
+   7243.0
+  ],
+  "provider_ff_clk_slew_max": 311.8,
+  "drv_violations": 7499,
+  "drv_clock_pin_violations": 0,
+  "drv_clock_examples": []
+ }
+}
