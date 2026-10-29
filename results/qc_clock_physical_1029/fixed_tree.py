@@ -151,6 +151,21 @@ def access_census(shapes):
     return dict(shapes=len(shapes),shorts=shorts,spacing=spacing,examples=details)
 
 
+
+def clock_cell_via_shapes(wires):
+    # Min-area M2-M6 patches are already in CR.stair_shapes. Include actual
+    # outer-layer enclosures too: a bare M7 riser endcap is smaller than VIA78.
+    out=[];vr=CR.via_rects()
+    for wire in wires:
+        for stack in wire.get('stacks',[]):
+            x,basey=stack['xy'];topy=stack['riser_from'][1]
+            for layer,via,y in [('M1','VIA12',basey),('M7','VIA67',basey),
+                                ('M7','VIA78',topy),('M8','VIA78',topy)]:
+                hx,hy=vr[via][layer]
+                out.append((wire['name'],layer,x-hx,y-hy,x+hx,y+hy))
+    return out
+
+
 def port_access_shapes(wires,cells,ports,buf):
     shapes=[]; vias=CR.via_rects()
     for wire in wires:
@@ -268,6 +283,36 @@ def access_windows(P,cells,nets,access,radius):
     return windows,net_windows,dict(radius_um=radius,host_and_macro_clipped=clipped,pins=len(windows),macro_halo_um=2.16)
 
 
+
+def clock_column_windows(windows,nets):
+    """Disjoint physical M7 access windows for unlike-net stacked bars.
+
+    Bisect the free gap between fixed future M7 stack bases. A local M7
+    riser may not cross another clock pin, even before that net is routed.
+    Keep .048 um on each side of the bisector for VIA78 enclosure+spacing.
+    """
+    pin_net={}
+    for n in nets:
+        if not n['drv'].startswith('port:'):pin_net[(n['drv'],'Y')]=n['name']
+        pin_net.update({(ld,'A'):n['name'] for ld in n['loads'] if not ld.startswith('port:')})
+    bins=defaultdict(list);B=.1;reach=.064;count=0
+    for key,(x,y,lo,hi) in windows.items():bins[math.floor(x/B)].append((key,x,y))
+    for key,(x,y,lo,hi) in list(windows.items()):
+        old=(lo,hi)
+        for b in range(math.floor((x-reach)/B),math.floor((x+reach)/B)+1):
+            for other,ox,oy in bins[b]:
+                if other==key or pin_net[other]==pin_net[key] or abs(ox-x)>reach+1e-8:continue
+                if abs(oy-y)<1e-8:raise ValueError(f'fixed M7 stack bases conflict: {key}, {other}')
+                mid=(oy+y)/2
+                if oy>y:hi=min(hi,mid-.048)
+                else:lo=max(lo,mid+.048)
+        if lo>y+1e-6 or hi<y-1e-6:raise ValueError(f'fixed clock column lacks access interval: {key}')
+        if (lo,hi)!=old:count+=1
+        windows[key]=(x,y,lo,hi)
+    return dict(pins_clipped=count,pins=len(windows),bisector_margin_um=.048,
+                note='conservative disjoint M7 windows; no extra M7 conductor or cell move')
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     for key in ('tree', 'netlist', 'lef', 'plan', 'endpoints', 'out'):
@@ -328,6 +373,10 @@ def main():
     # reference, not a legal M8 track. Enter at a real track with the entire
     # VIA78 M7 enclosure inside actual pin metal, never a fabricated M7 jog.
     endpoint_access = {}
+    # This index checks zero-length VIA78 landing enclosures only, using
+    # the LEF access minimum; shielded tree planning retains its .32 spacing.
+    landing_ix=C128.MetalIndex(CR.SPACE['M8'])
+    for shape in C128.pg_shapes(pg)+C128.pg_shapes(power_access):landing_ix.add(shape)
     hx,hy = CR.via_rects()['VIA78']['M7']
     mx,my = CR.via_rects()['VIA78']['M8']
     pitch=DCM.DEFAULT_TRACKS['M8']['pitch_um'];phase=DCM.DEFAULT_TRACKS['M8']['offset_um']
@@ -340,16 +389,19 @@ def main():
         selected=None
         for y in candidates:
             landing=('M8',ep['net'],'access',y-my,y+my,x-mx,x+mx)
-            if not router.ix.hits(landing,first=True):
-                selected=y;router.ix.add(landing);break
+            if not landing_ix.hits(landing,first=True):
+                selected=y;landing_ix.add(landing);router.ix.add(landing);break
         if selected is None:
             raise ValueError(f'no legal reserved VIA78 access inside actual M7 pin: {tap["port"]}')
         tap['xy']=[x,selected];ports[tap['port']]['xy']=[x,selected]
         endpoint_access[tap['port']]=dict(inst=ep['inst'],pin=ep['pin'],net=ep['net'],
             reference_xy_um=ep['xy'],entry_xy_um=tap['xy'],rect_um=ep['rect_um'],
-            entry_offset_um=[0,round(selected-refy,6)],via='VIA78',m7_enclosure_inside=True)
+            entry_offset_um=[0,round(selected-refy,6)],via='VIA78',m7_enclosure_inside=True,
+            access_kind='zero-length VIA78 landing enclosure',m8_enclosure_half_um=[mx,my],
+            landing_min_spacing_um=CR.SPACE['M8'],tree_spacing_um=nd['space'])
     (out/'endpoint_access.json').write_text(json.dumps(endpoint_access)+'\n')
     windows,net_windows,window_report=access_windows(P,cells,nets,access,args.max_move)
+    column_report=clock_column_windows(windows,nets)
     def endpoint_window(net,what):
         if what in ('trunk','driver jog'):cell,pin=net['drv'],'Y'
         elif what.startswith(('jog ','drop ')):cell,pin=what.split(' ',1)[1],'A'
@@ -366,6 +418,7 @@ def main():
         summary['power_access_reservation']=dict(file=args.reserved_access,rectangles=len(power_access),
             sha256=hashlib.sha256(Path(args.reserved_access).read_bytes()).hexdigest())
     summary['physical_m7_windows']=window_report
+    summary['clock_column_windows']=column_report
     try:
         with real_pin_access(access,args.max_move):
             wires = C128.fixed_wires(M,cells,nets,max(v[0] for v in sizes.values()),.27,off=0.,router=router,pin_stack=True,l_drops=True)
@@ -391,6 +444,7 @@ def main():
     with real_pin_access(access):
         shapes = CR.stair_shapes(wires,cells,ports,next(iter(masters)))
         shapes += port_access_shapes(wires,cells,ports,next(iter(masters)))
+        shapes += clock_cell_via_shapes(wires)
         print(f'PREBUILD_STAGE access census {len(shapes)} shapes', flush=True)
         census = access_census(shapes+list(power_access))
         print(f'PREBUILD_STAGE encoder census={census["shorts"]}/{census["spacing"]}', flush=True)
