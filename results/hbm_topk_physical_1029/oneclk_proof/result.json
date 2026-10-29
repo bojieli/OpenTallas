@@ -1,0 +1,24 @@
+{
+  "status": "PUBLIC_NATIVE_ONECLK_LOCKSTEP_PASS",
+  "results": [
+    {
+      "tag": "m0c0",
+      "rc": 0,
+      "result": "PASS"
+    },
+    {
+      "tag": "m1c0",
+      "rc": 1,
+      "result": "CONTROL_CAUGHT"
+    },
+    {
+      "tag": "m0c1",
+      "rc": 1,
+      "result": "CONTROL_CAUGHT"
+    }
+  ],
+  "physical_source_sha256": "81df2a26811f8509ff15bc3001d3b7757ba4c27fa3587bbe43d8f8a5331be977",
+  "source_cycles_added": 0,
+  "existing_internal_SRAM_commit_edges": 2,
+  "scope": "Both PUBLIC native masters with existing input/output PIN stages, four compiler calendar frames/full bits/real SRAM; oneclk removes only eight same-source clock pins. Physical gen outer face shell unchanged and not a die token pass."
+}

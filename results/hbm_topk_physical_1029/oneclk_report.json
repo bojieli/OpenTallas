@@ -1,0 +1,135 @@
+{
+  "schema": "opentallas.hbm.topk_oneclk_candidate.v1",
+  "status": "CANDIDATE_SOURCE_ONLY_ENABLE_HELD",
+  "source_plan_sha256": "a4b0cb3df1672afdd3774e54d687fface8080b3f40e98531673346edfc29a59b",
+  "native_caller_sha256": "5c082f89a6785bd1c0dea6a5b996956f2918dcf0952ea88581938eab20920386",
+  "native_alias_expression": "hb_ckgen__pll_stream[0:0]",
+  "physical_source_sha256": "81df2a26811f8509ff15bc3001d3b7757ba4c27fa3587bbe43d8f8a5331be977",
+  "unchanged_core_definition_sha256": "74ee8bc580dc861a4f0a03e13919989f54d18f257e6e272a9522b50901124b95",
+  "instances": [
+    {
+      "type": "root",
+      "inst": "u_hb_idx__link",
+      "pins_before": 4597,
+      "pins_after": 4589,
+      "removed_clock_pins": [
+        {
+          "name": "clk_mem[0]",
+          "layer": "M5",
+          "x": 114.12,
+          "y": 0.096,
+          "w": 0.048,
+          "h": 0.48
+        },
+        {
+          "name": "clk_mem[1]",
+          "layer": "M5",
+          "x": 184.44,
+          "y": 0.096,
+          "w": 0.048,
+          "h": 0.48
+        },
+        {
+          "name": "clk_mem[2]",
+          "layer": "M5",
+          "x": 254.76,
+          "y": 0.096,
+          "w": 0.048,
+          "h": 0.48
+        },
+        {
+          "name": "clk_mem[3]",
+          "layer": "M5",
+          "x": 325.08,
+          "y": 0.096,
+          "w": 0.048,
+          "h": 0.48
+        },
+        {
+          "name": "clk_mem[4]",
+          "layer": "M5",
+          "x": 395.4,
+          "y": 0.096,
+          "w": 0.048,
+          "h": 0.48
+        },
+        {
+          "name": "clk_mem[5]",
+          "layer": "M5",
+          "x": 465.72,
+          "y": 0.096,
+          "w": 0.048,
+          "h": 0.48
+        },
+        {
+          "name": "clk_mem[6]",
+          "layer": "M5",
+          "x": 536.04,
+          "y": 0.096,
+          "w": 0.048,
+          "h": 0.48
+        },
+        {
+          "name": "clk_mem[7]",
+          "layer": "M5",
+          "x": 606.36,
+          "y": 0.096,
+          "w": 0.048,
+          "h": 0.48
+        }
+      ],
+      "main_clock_pin": {
+        "name": "clk",
+        "layer": "M5",
+        "x": 43.8,
+        "y": 0.096,
+        "w": 0.048,
+        "h": 0.48
+      },
+      "actual_clock_entry": {
+        "xy_um": [
+          324.0,
+          250.56
+        ],
+        "island_um": [
+          319.68,
+          246.24,
+          328.32,
+          254.88
+        ],
+        "port": "clk",
+        "merged_clock_ports": [],
+        "tap": "u_hb_idx__link",
+        "source": "CANDIDATE exact native scalar-clock physical wrapper; main root unchanged, fresh native sink tree required",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "module": "ot_hbm_idx_topk_link_static"
+      },
+      "geometry_unchanged": {
+        "origin_um": [
+          34.56,
+          0.0
+        ],
+        "outline_um": [
+          650.1600000000001,
+          500.04
+        ],
+        "orient": "MY"
+      },
+      "source_cycles_added": 0,
+      "macro_instance_paths_unchanged": true
+    }
+  ],
+  "parameters": {
+    "WRITE_PIPE_STAGES": 2
+  },
+  "extra_oneclk_data_or_control_cycles": 0,
+  "existing_write_visibility_cycles": 2,
+  "main_pin_tap_unchanged": true,
+  "production_default_unchanged": true,
+  "build_hold": "No CTS/GRT/STA until current bind plus reviewed new single-root FF+SRAM clock model/sink islands."
+}
