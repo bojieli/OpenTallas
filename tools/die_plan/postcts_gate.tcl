@@ -117,8 +117,14 @@ set ot_pg_bound [expr {$ot_pg_C eq "FF" ? $::env(OT_VCLK_FF) : $::env(OT_VCLK_TT
 set ot_pg_tol [expr {[info exists ::env(OT_POSTCTS_TOL)] ? $::env(OT_POSTCTS_TOL) : 20.0}]
 set bound $ot_pg_bound
 set tol $ot_pg_tol
-set vck [lsearch -all -inline -not [all_clocks] [get_clocks clk]]
-if {[llength $vck] == 1} { set_clock_latency -source $ot_pg_bound $vck }
+# Forwarded/landing clock roots are real clocks too. Select the IO reference by
+# its absent source rather than by excluding a single real clock named clk.
+set ot_pg_virtual {}
+foreach ot_pg_clock [all_clocks] {
+  if {![llength [get_property $ot_pg_clock sources]]} {lappend ot_pg_virtual $ot_pg_clock}
+}
+if {[llength $ot_pg_virtual] != 1} {error "postcts: expected exactly one source-less virtual IO clock"}
+set_clock_latency -source $ot_pg_bound $ot_pg_virtual
 if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARASITICS_FILE)]} {
   source $::env(LAYER_PARASITICS_FILE)
 } else {
