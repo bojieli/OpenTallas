@@ -1,0 +1,179 @@
+{
+ "schema": "opentallas.hbm.vm_finite_phase_preparation.v1",
+ "status": "MISSING_PRODUCER_PUBLICATION",
+ "executable": false,
+ "full_programme_fits": null,
+ "phases": [
+  {
+   "start_row": 0,
+   "rows": 2,
+   "input_work_words": 81920,
+   "input_work_range": [
+    178224,
+    260144
+   ],
+   "scalar_carry_range": [
+    260144,
+    260156
+   ],
+   "native_record_hex": "00000000000000000000007004000028000001004000000000000000000000000000000000000000000000000000000001000000000000000000000050000050000000000000000000000800000000000130b8020000001440000000140000000000000000000000000000000000000001305803000000144000000014000000000000000000000000000000000000000130f80300000100400000010000000000000000000000000000000000000000",
+   "publication": [
+    {
+     "operand": "A",
+     "source_vm_rows": [
+      [
+       301104,
+       20480
+      ],
+      [
+       321584,
+       20480
+      ]
+     ],
+     "reload_vm_base": 178224,
+     "words": 40960,
+     "hbm_spill_address": null,
+     "producer_store_required": true,
+     "reload_required": true
+    },
+    {
+     "operand": "B",
+     "source_vm_rows": [
+      [
+       147504,
+       20480
+      ],
+      [
+       173104,
+       20480
+      ]
+     ],
+     "reload_vm_base": 219184,
+     "words": 40960,
+     "hbm_spill_address": null,
+     "producer_store_required": true,
+     "reload_required": true
+    }
+   ]
+  },
+  {
+   "start_row": 2,
+   "rows": 2,
+   "input_work_words": 81920,
+   "input_work_range": [
+    178224,
+    260144
+   ],
+   "scalar_carry_range": [
+    260160,
+    260172
+   ],
+   "native_record_hex": "00000000000000000000007404000028000001004000000000000000000000000000000000000000000000000000000021000000000000000000000050000050000000000000000000000800000000000130b8020000001440000000140000000000000000000000000000000000000001305803000000144000000014000000000000000000000000000000000000000140f80300000100400000010000000000000000000000000000000000000000",
+   "publication": [
+    {
+     "operand": "A",
+     "source_vm_rows": [
+      [
+       342064,
+       20480
+      ],
+      [
+       362544,
+       20480
+      ]
+     ],
+     "reload_vm_base": 178224,
+     "words": 40960,
+     "hbm_spill_address": null,
+     "producer_store_required": true,
+     "reload_required": true
+    },
+    {
+     "operand": "B",
+     "source_vm_rows": [
+      [
+       198704,
+       20480
+      ],
+      [
+       224304,
+       20480
+      ]
+     ],
+     "reload_vm_base": 219184,
+     "words": 40960,
+     "hbm_spill_address": null,
+     "producer_store_required": true,
+     "reload_required": true
+    }
+   ]
+  },
+  {
+   "start_row": 4,
+   "rows": 2,
+   "input_work_words": 81920,
+   "input_work_range": [
+    178224,
+    260144
+   ],
+   "scalar_carry_range": [
+    260176,
+    260188
+   ],
+   "native_record_hex": "00000000000000000000007804000028000001004000000000000000000000000000000000000000000000000000000041000000000000000000000050000050000000000000000000000800000000000130b8020000001440000000140000000000000000000000000000000000000001305803000000144000000014000000000000000000000000000000000000000150f80300000100400000010000000000000000000000000000000000000000",
+   "publication": [
+    {
+     "operand": "A",
+     "source_vm_rows": [
+      [
+       383024,
+       20480
+      ],
+      [
+       403504,
+       20480
+      ]
+     ],
+     "reload_vm_base": 178224,
+     "words": 40960,
+     "hbm_spill_address": null,
+     "producer_store_required": true,
+     "reload_required": true
+    },
+    {
+     "operand": "B",
+     "source_vm_rows": [
+      [
+       249904,
+       20480
+      ],
+      [
+       275504,
+       20480
+      ]
+     ],
+     "reload_vm_base": 219184,
+     "words": 40960,
+     "hbm_spill_address": null,
+     "producer_store_required": true,
+     "reload_required": true
+    }
+   ]
+  }
+ ],
+ "capacity_words": 262144,
+ "source_input_words": 245760,
+ "chosen_spill_reload_bytes": 1966080,
+ "chosen_dma_records": 12,
+ "source_arithmetic_and_row_expansion_preserved": true,
+ "holds": [
+  "actual producer groups must be split/spilled before old VM exceeds capacity",
+  "provide real disjoint HBM scratch addresses and emit actual stores/reloads",
+  "complete phase live set includes other carried/scalar/table/gain operands",
+  "retime later R consumers to scalar carry and price bytes/drains/reloads on current model",
+  "consumer-only row split is not a storage reduction"
+ ],
+ "image_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
+ "source_record_index": 1470,
+ "source_image_offset": 199776
+}
