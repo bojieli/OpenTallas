@@ -1,0 +1,62 @@
+{
+  "verdict": "COMPONENT_PASS",
+  "branch": "codex/hbm-keys-0251",
+  "source_base": "309dfdf952d14c1ae4838a513f4eefe1ee200b35",
+  "job": "intel1 oth-ubuntu-2212367-1793268842",
+  "vehicle": "/srv/opentallas-scratch2/claude/codex-hbm-keys-0251/vehicle2",
+  "payload_bit_comparisons": 3006864,
+  "rows": 171,
+  "lanes": 4,
+  "lane_bases": [
+    0,
+    4
+  ],
+  "period_ps": 833,
+  "sram": "actual physical SRAM model,20percandidate",
+  "mutants_caught": [
+    "packet tag bit",
+    "missing lane",
+    "wrong static lane slot",
+    "read before full cohort loaded",
+    "payload bit at row3 lane1 bit1000"
+  ],
+  "first_failure": {
+    "job": "oth-ubuntu-2205747-1793268806",
+    "cause": "Verilator TIMESCALEMOD in existing modules and testbench PROCASSINIT warnings treated fatal",
+    "retained": true,
+    "fix": "test harness warning policy only; WIDTH/SELRANGE remain errors"
+  },
+  "hardware": {
+    "added_arithmetic": 0,
+    "new_SRAM": 0,
+    "new_SM": 0,
+    "new_HBM_stack": 0,
+    "assembly_FF": 0,
+    "added_control_FF_perquarter": 12
+  },
+  "latency": {
+    "query_and_replay_added_edges": 0,
+    "cohort_prefill_transport_edges_4slot": 1368,
+    "HBM_fetch_and_physical_relay": "NOT_QUALIFIED, must be priced before native adoption"
+  },
+  "source_contract": {
+    "input_line_layout": "[1098:11]1088payload,[10:1]10btag,[0]valid",
+    "physical_lane_base": "strap0or4",
+    "ingest_order": "row0lane0..3,row1lane0..3,...row170lane0..3",
+    "clear": "reset percohort before ingestion; each role has own20SRAM state",
+    "replay": "common pre/replay unchanged after loaded; no directlive scoring from serial bus",
+    "native_adoption": false,
+    "required_next": [
+      "actual reserved HBM key allocation/descriptor programmes for both distinct cohorts",
+      "source packet TX static slot mux + named plan-local transport",
+      "distinctquarter integration and native bind",
+      "full connected memoryservice numeric row gate",
+      "current clock/source/physical qualification"
+    ]
+  },
+  "claims": {
+    "whole_die": false,
+    "G5": false,
+    "SIGNED": false
+  }
+}

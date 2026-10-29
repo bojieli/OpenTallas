@@ -17551,3 +17551,9 @@ def qwen_sram_if_mif_model(lanes=8, slices=12, su_commands=0):
                 throughput="same streaming issue width; measured compiler ages required before adoption",
                 physical="parent/head changed views require new833ps TT/FF signoff and slot-fit/area measurement",
                 qualification="group read/write exact; head/control and full source-bound schedule gates mandatory")
+
+
+def hbm_indexer_static_key_cohort_model(**kwargs):
+    """One-stack static key prefill; source/physical qualification remains explicit."""
+    from hbm_next.key_cohort_prefill import model
+    return model(**kwargs)
