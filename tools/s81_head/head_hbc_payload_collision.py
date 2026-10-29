@@ -21,7 +21,8 @@ wire[1103:0]from_prev,local_ring;
 wire ctx;wire[47:0]boot,epoch;wire[7:0]fault;
 wire[511:0]fields;wire ctxbk;wire[47:0]epochbk;
 wire[16:0]muxfault;wire cv;wire[552:0]cd;wire[1:0]tv;wire[1105:0]td;
-ot_s81hd_host_frame_mux m(.ck(ck),.rst_n(rn),.context_valid(ctx),
+wire slot=(boot==@HEADER@)||(boot==@HEADER@+4)||(boot==@COMMIT@);
+ot_s81hd_host_frame_mux #(.HBC_SCOPE(@SCOPE@))m(.ck(ck),.rst_n(rn),.context_valid(ctx),.boot_control_slot(slot),
  .host0_v(hv),.host1_v(1'b0),.host0_d(hd),.host1_d(553'd0),
  .local_ring(local_ring),.source_fault(17'd0),.ctl_v(1'b0),.ctl_d(553'd0),
  .from_prev(from_prev),.ctl_rx_v(cv),.ctl_rx_d(cd),.lane_tx_v(tv),.lane_tx_d(td),.fault(muxfault));
@@ -42,17 +43,20 @@ always@(negedge ck)begin
   hv=1;hd=fr(DATA^512'd1);
  end
  if(c==@CONTROL_CHECK@)begin
-  if(!local_ring[0]||fault)$fatal(1,"ordinary one-bit control failed");
+  if(!cv||cd[527:16]!=(DATA^512'd1)||fault)$fatal(1,"ordinary one-bit control failed");
   control_seen=1;
  end
  if(c==@COLLISION@)begin hv=1;hd=fr(DATA);end
  if(c==@COLLISION_CHECK@)begin
-  if(local_ring[0])$fatal(1,"expected current HBC classification did not claim matching data");
+  if(@SCOPE@==0)begin
+   if(local_ring[0]||cv)$fatal(1,"expected current HBC classification did not claim matching data");
+  end else if(!cv||cd[527:16]!=DATA)$fatal(1,"candidate lost legal finite activation payload");
   collision_claimed=1;
  end
  if(c==@FINISH@)begin
-  if(!control_seen||!collision_claimed||fault==0)$fatal(1,"collision not reproduced");
-  $display("HEAD_HBC_PAYLOAD_COLLISION CONFIRMED stage%0d rank%0d fault%h data%h controlforward1 collisionforward0",@STAGE@,@RANK@,fault,DATA);
+  if(!control_seen||!collision_claimed||((@SCOPE@==0)?fault==0:fault!=0))$fatal(1,"unexpected namespace result");
+  if(@SCOPE@==0)$display("HEAD_HBC_PAYLOAD_COLLISION CONFIRMED stage%0d rank%0d fault%h data%h controlforward1 collisionforward0",@STAGE@,@RANK@,fault,DATA);
+  else $display("HEAD_HBC_PAYLOAD_NAMESPACE PASS scope%0d stage%0d rank%0d fault%h controlforward1 collisionforward1 words160 addedcycles0",@SCOPE@,@STAGE@,@RANK@,fault);
   $finish;
  end
 end
@@ -62,18 +66,20 @@ endmodule
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--scope',type=int,choices=(0,1,2),default=0)
     a=p.parse_args();out=a.out.resolve();out.mkdir(parents=True,exist_ok=False)
     job=dict(rank=3,tid=37,user=0,position=0,token=7,epoch=1,programme=9,
-             activation_words=160,plen=1,glen=0,group=4,rbase=97024,
+             host_word_count=160,plen=1,glen=0,group=4,rbase=97024,
              issue_offset=20,issue_period=10357,merge_deadline=10000)
     timing=dict(scope='CURRENT_PROVIDER_ENTRY_ONLY',reset_deassert_edge=8,host_counter_zero_edge=10,
                 link_ready_edge=24,peer_to_hbc_input=0,peer_frame_period=4,
                 peer_launch_modulus=2,peer_launch_residue=0,peer_to_ctl_settled=37,
                 commit_to_context_valid=1,ctl_start_offset=0)
+    timing['hbc_command_scope']=a.scope
     schedule=compile_entry(dict(stages=81,TP=4,head_dies=4),job,timing)
     hp=schedule['host_params'];control=schedule['context_valid_global_edge']+3
     collision=control+4
-    values=dict(STAGE=hp['LOCAL_STAGE'],RANK=hp['LOCAL_RANK'],IDENTITY=hp['CLOCK_RESET_ID'],
+    values=dict(STAGE=hp['LOCAL_STAGE'],RANK=hp['LOCAL_RANK'],IDENTITY=hp['CLOCK_RESET_ID'],SCOPE=a.scope,
                 HEADER=hp['BOOT_HEADER_EDGE'],COMMIT=hp['BOOT_COMMIT_EDGE'],CONTROL=control,
                 CONTROL_CHECK=control,COLLISION=collision,COLLISION_CHECK=collision,FINISH=collision+3)
     # Inspect combinational classification after the input is placed, before
@@ -93,11 +99,12 @@ def main():
     with (out/'build.log').open('w') as log:subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT,check=True)
     with (out/'run.log').open('w') as log:r=subprocess.run([str(out/'obj/tb')],stdout=log,stderr=subprocess.STDOUT)
     raw=(out/'run.log').read_text()
-    if r.returncode or 'HEAD_HBC_PAYLOAD_COLLISION CONFIRMED' not in raw:
+    expected='HEAD_HBC_PAYLOAD_COLLISION CONFIRMED' if a.scope==0 else 'HEAD_HBC_PAYLOAD_NAMESPACE PASS'
+    if r.returncode or expected not in raw:
         raise SystemExit('witness failed; inspect '+str(out))
-    (out/'verdict.json').write_text(json.dumps(dict(verdict='FAIL_DATA_CONTROL_NAMESPACE',
+    (out/'verdict.json').write_text(json.dumps(dict(verdict='FAIL_DATA_CONTROL_NAMESPACE' if a.scope==0 else 'PASS_NAMESPACE_CANDIDATE',
         witness='actual HOST frame mux + HBC loader',control_forwarded=True,
-        collision_forwarded=False,payload_FP32_words_all_finite=True,
+        scope=a.scope,collision_forwarded=a.scope!=0,payload_FP32_words_all_finite=True,
         old_failure_preserved=True,full_head_token=False),indent=1)+'\n')
     print(raw.strip())
 

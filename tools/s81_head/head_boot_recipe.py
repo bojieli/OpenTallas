@@ -180,6 +180,13 @@ def compile_recipe(plan, offsets, source_defaults, programme=None):
         # CSR2 silently tags rank1..3 BEST/RESULT records as rank0.
         values = {0: cfg['plen'], 1: cfg['glen'], 2: params['LOCAL_RANK'], 3: cfg['group'], 4: cfg['rbase'],
                   8: 1, 9: (cfg['issue_offset'] << 16) | cfg['issue_period'], 10: cfg['merge_deadline']}
+        mode=programme['config'].get('mode','ar')
+        if mode=='mtp':
+            values[5]=number(programme['config']['mtp_result_mtag'])
+            if not 0 <= values[5] < 1<<16:
+                raise ValueError('actual MTP RESULT/DHRES mtag must fit CSR5')
+        elif mode!='ar' or cfg['glen']!=0:
+            raise ValueError('AR entry needs glen0; MTP requires explicit CSR5 RESULT/DHRES tag')
         seen = S + offsets['parts'][cp['name']]['release']
         context = zero + params['BOOT_COMMIT_EDGE'] + tr['hbc_commit_to_context_valid']
         apply_dates = {address: number(programme['csr_apply_edges'][str(address)]) for address in values}
