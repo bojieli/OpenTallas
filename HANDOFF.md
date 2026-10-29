@@ -1769,3 +1769,24 @@ CODEX: HEAD tile private reset-export candidate77fb1fdb1 exact12FF/0cycles,4095c
 CODEX: main2b90210bd1 published: actual START clock-source path/CPPR, HEAD source/body tools, finite2Q compiler/Engram and grownVM/INDEX boot publisher candidates, PVJ output-load candidate. Meaningful combined checks pass after fixture correction; no die release/profile adoption.
 
 CODEX: HEAD tile PARKED on explicit Claude reset, branchd52ddfdb6. CanonicalLEC33806/33806PASS/private12FFactualcostclosed; reviewedraw77/FACE445notadopted. gen5SYNTHunit2983836liveepyc2untouched; noPLACE. FullpacketCODEX-LOG.
+
+CODEX: 2026-10-29 05:03 PDT HEAD SerDes/GB parked on explicit Claude reset. Counter/couponready6c5892b47, rootminAPI941cadbae, nativeGBplan/driver413cec97e; original/half/quarterLECs and GBstrictsynthunit811739intel2 continue untouched. Fullpacket CODEX-LOG05:03; no P&R or signoff claim.
+
+CODEX: 2026-10-29 05:06 PDT CLK child parked at explicit Claude reset. Source945b4c06d+2f6f0a251 on codex/kv-provider-clock-1029 preserved/pushed. Native15296body source actual0overlap/sitefault; scoped320native macroPGcontacts applied/readbackPASS,198fragment misses/noIR claim. LIVE intel1 exhaustive actualPG-body enclosure check unitoth-ubuntu-3231958-1793274654 PID3232115 left untouched; see CODEX-LOG own handoff/checkcommands. Inherited HBM replay terminal DIFFERENT onlymeta.clock_cell, ctree.v exact; no unresolved replay engineering. No new jobs/merges after reset.
+
+CODEX: 2026-10-29 05:04 PDT ring/topk PARKED explicitClaude reset. RING routedDRC0/ant0/frozen1356clock PASS butfinalsignoffFAILTT−24.13/2FF−8.51/16+DRV/meanclock; diagnosisonlyc2876c751. TOPK2currentLECjobs+old64SAT remainlive, ONECLKclockplanhold. Full ownpacket CODEX-LOG.
+CODEX:05:03 EXPLICITRESET KV PARKED, childrennotified/livejobsuntouched; packet handoff/codex_kv_reset_20261029_0503.md. B26bstrictbindPASS0/160parts430554bits;packedsourceEmitter1528/10530FF754Aactualparentpaths/1root0stagePASSdiagnostic. Own5dd8aa40e; bb3/f1ca/6afnarrowpendingroot. ActualPG+realFFCK/allbody/PC-HHPcompiler+1andphysicalfailuresremainassigned, noSIGNEDclaim.
+CODEX: HEADLEP parked05:03PDT onClaude-resetorder; fullhandoffCODEX-LOG. Ready9f23a9388(mappedanalyticprep) after8ed/91617/cca. OnlylivecanonicalLEPproof untouched. NativeEP/creditactualmappedanalytic G1FAILfill/cuts; noP&R. Mesh611/817diff stillopen, no waiver.
+
+CODEX LP explicitreset PARK d028e3573; final packet handoff/codex_lp_ln_to_claude_20261029_reset.md. Current LNflow kit ready/unplaced; fourLN-only physicalcap unsafe and oldML_WR39k subtractioninvalid. Actual MUdelays4420/4424; W515 dualroot option priced/unimplemented. KVexactsourceSYNTH unit3132367 live untouched, checkpacket. Noafterreset engineering/jobs.
+
+CODEX:05:03 explicitreset KVkits PARKED36a1968a7 +UNQUALIFIED q0APIb42ac779f; ASTK source-aware352buffer DPL+dataGRT50zerooverflow, allFFfixed; q3TTCTS153.37/nativeGRTstilllive FF−25.295; q0newAPI2faultdiffsNOT_EQ, tests/controlsnotqualified. Detailed handoff/codex_kv_kits_reset_20261029_0503.md; no jobs killed.
+
+CODEX: 2026-10-29 05:06 PDT EXPLICITRESET QCmacroPG/provider parkedclean+pusheddf6c1f123/9e7df79e4; allownjobs terminal inclmixedprojection786568, peerjobsuntouched. QC48259allcell/wholeFF404.784/exact401.67PASS,185698projectedPGcontacts0opposingrails. FullhandoffCODEX-LOG.
+
+CODEX: 2026-10-29 05:03 PDT EXPLICITRESET HBM coordinator parked; own calendar e6041d181 clean/pushed, allownjobs terminal, allchildrenpark instructed. Aggregate handoff/codex_hbm_takeover_20261029_0503.md; RING DRC0ant0 NOTSIGNED TT−24.125FF−8.506/slew1752/1479; HNX666544/nativepair2804753+peerjobs untouched; no newengineering/STA afterreset.
+
+CODEX: 2026-10-29 05:07 PDT EXPLICITRESET HEADAGGREGATEPARK735403ad0;4childrenparked/livejobsuntouched, fullhandoffcodex_head_20261029_0504.md. Nonuniform81920bitPASS; STARTphysicalbodyHOLD/refitlegal1prepared/noout4; canonicaltileLEC33806/FACE1159candidate; noHEADfreeze/G5.
+
+CODEX: 2026-10-29 05:09 PDT QC mesh/PG explicit reset PARK; be80ed573/4101eb598 clean pushed; local89180clock+89180PG geometry0; native globalaccess remainsFAIL/candidate unadopted; liveIntel1 c2mem64 unit2101680 untouched. Packet handoff/codex_qc_mesh_pg_20261029_0505.md.
+2026-10-29 05:26 PDT COORD hourly: 0 new sign-offs 6 h (Codex cover landed 130 main commits, S81 FEED clock legs fixed 0/405, HBM ring routed DRC0 but TT -24 ps). 16 lanes live. Fleet: intel1/intel2/epyc2 admit 720-810 GB at low load -> lanes told to fill. Local root 92% -> INFRA-PRUNE-1 prunes >24h worktrees in /srv/opentallas-scratch/claude/wt. GEOM spot ahub/kvs_pc CONCUR FAIL. Owner: rst_n>=64 + SPB modeled escape decided.
