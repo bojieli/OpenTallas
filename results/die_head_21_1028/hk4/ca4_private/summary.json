@@ -1,0 +1,178 @@
+{
+ "scope": "PRIVATE PLANNING ONLY; sharedoptin94496f765 pendingROOTmainadoption; no new PNR/STA",
+ "unit": "intel2 oth-ubuntu-1053398-1793264435 exit0",
+ "source_remote_sha": "00fd45dcaa79273e1d54f6bd21353a0c7ae1a9b1",
+ "summary": {
+  "regions": 1484,
+  "regions_reached": 1484,
+  "tree_root": "st:h",
+  "tree_edges": 1483,
+  "tree_edges_clean": 1483,
+  "tree_edges_ambiguous": [],
+  "edge_pad": {},
+  "tree_edges_fall": 1253,
+  "start_skew_limit_clean_min_ps": 114.1,
+  "start_skew_limit_min_ps": 114.1,
+  "max_tree_depth": 71,
+  "min_sync_dist_clean_ps": 140.6,
+  "crossings": 427,
+  "depth4": 427,
+  "depth8": 0,
+  "depth16": 0,
+  "max_depth": 8,
+  "fail": 0,
+  "max_path_ambiguous_cycles": 0,
+  "worst_margin_lo_ps": 113.0,
+  "worst_margin_lo_port": "chW0_b0__0",
+  "worst_margin_hi_ps": 1055.8,
+  "worst_margin_hi_port": "chE1_b9__0",
+  "below_100ps": 0,
+  "lat_hist": {
+   "2": 267,
+   "3": 160
+  },
+  "K_hist": {
+   "-36": 1,
+   "-33": 2,
+   "-30": 7,
+   "-29": 3,
+   "-27": 1,
+   "-20": 5,
+   "-19": 1,
+   "-17": 21,
+   "-16": 2,
+   "-14": 2,
+   "-13": 7,
+   "-11": 16,
+   "-10": 1,
+   "-6": 12,
+   "-5": 120,
+   "-4": 1,
+   "-2": 18,
+   "-1": 11,
+   "4": 5,
+   "7": 49,
+   "8": 54,
+   "9": 18,
+   "13": 1,
+   "14": 4,
+   "16": 8,
+   "17": 2,
+   "19": 2,
+   "20": 21,
+   "22": 1,
+   "23": 5,
+   "26": 12,
+   "30": 1,
+   "32": 3,
+   "33": 7,
+   "36": 2,
+   "39": 1
+  },
+  "lat_total_vs_old3": -267,
+  "old_ring_not_cycle_fixed": 242,
+  "old_ring_fail_margin": 120,
+  "start_tree": {
+   "form": "clock",
+   "data_regions": 327,
+   "virtual_nodes": 1157,
+   "retime_nodes": 986,
+   "start_edges": 1483,
+   "start_clean": 1483,
+   "start_fail": 0,
+   "start_fail_edges": [],
+   "start_width_ps": {
+    "median": 113.2,
+    "max": 193.5
+   },
+   "start_min_sync_dist_ps": 140.6,
+   "crossing_start_hops": {
+    "median": 10,
+    "max": 16
+   },
+   "rule": "12.16b(iv): every start (reset-release) port is a crossing; CLEAN iff its interval (same shared model, clock_variation table) +- aperture holds no sampling boundary; an unclean port FAILs the plan",
+   "clean_by": "width",
+   "clean_by_width": 1483,
+   "fall_measured": 1483,
+   "root": "st:h",
+   "root_path": "h",
+   "leg_ps": {
+    "TT": [
+     17.2901468123996,
+     16.231834457299783,
+     1
+    ],
+    "FF": [
+     15.416198840000106,
+     14.713291412300123,
+     1
+    ]
+   },
+   "regions": 327,
+   "branch_nodes": 171,
+   "branch_nodes_contracted": 0,
+   "max_hop_um": 360.0,
+   "worst_hop_um": 359.5750000000007,
+   "over_hop": 0
+  },
+  "sta_interval": {
+   "corners": [
+    "FF",
+    "TT"
+   ],
+   "rows": 427,
+   "widened": 427,
+   "max_widen_ps": 252.0,
+   "max_widen_port": "chE3_b3__0",
+   "missing": 0,
+   "missing_ports": [],
+   "interval": "port (die_sta_related.count_align_port_intervals)",
+   "rows_without_measured_fall": 0,
+   "unbound": 0,
+   "unbound_tags": [],
+   "proof": "/srv/opentallas-scratch2/claude/codex-head-hk4-localgrt2/ca4/proof",
+   "plan": "/srv/opentallas-scratch2/claude/wt/codex-head-clock/run/head_hk4_ca3/input/plan.json",
+   "clock_cal": "spice_edge",
+   "cppr_lca": true,
+   "clock_ocv": "table",
+   "model": "hull(landed_phase_ocv derated, die_sta_related.count_align_port_intervals)",
+   "clock_cell": {
+    "cell": "inv",
+    "basis": "--clock-cell inv2",
+    "aocv_class": "Ainv"
+   }
+  },
+  "corner": "TT_droop-regions_corelat450,FF_droop-regions_corelat380",
+  "period_ps": 833.0,
+  "aperture_ps": 104.125,
+  "sync_aperture_ps": 26.5,
+  "wander_frac": 0.05,
+  "pad": 0,
+  "scale": 1.0,
+  "source": "/srv/opentallas-scratch2/claude/codex-head-hk4-localgrt2/ca4/region_ocv.json",
+  "mc": {
+   "chips": 2000,
+   "violations": 0,
+   "worst_lo_to_guard_ps": 113.0,
+   "worst_hi_to_guard_ps": 1055.8
+  }
+ },
+ "stages": {
+  "stages": 1157,
+  "flops": 4617,
+  "die_inputs": 0,
+  "die_outputs": 327,
+  "direct_ports": 0,
+  "max_cell_to_stage_um": 9.179999999998472
+ },
+ "emitted_virtual_parent_clock_pin_spans": {
+  "edges": 1156,
+  "max_um": 359.575,
+  "over405": 0
+ },
+ "still_blocked": [
+  "30same-region2floprelaystar paths>405,max2414.912",
+  "actuallocalrawresetdeliveryandrelativeSETTLEguard",
+  "fullrealSTARTflop+landed-netroute and relatedSTA"
+ ]
+}
