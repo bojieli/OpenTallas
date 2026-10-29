@@ -101,6 +101,17 @@ def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
                 waived=[w for r in res.values() for w in r.get("waived", [])][:50], waivers=list(waive))
 
 
+def landing_transport_rules():
+    """Identity transport only; the independent landing verifier checks clock/reset/config."""
+    return [
+        dict(module='ot_dp_clk_landing',map={'q':'d'},
+             drop_in=['clk','fclk','rst_n'],drop_out=['ready','fault'],stages=3),
+        dict(module='ot_dp_clk_landing_ca',map={'q':'d'},
+             drop_in=['clk','fclk','rst_n','t_rst_n'],drop_out=['ready','fault'],stages=0,stages_param='K'),
+        dict(module='ot_dp_clk_landing_cas',map={'q':'d'},
+             drop_in=['clk','fclk','rst_n','t_rst_n','strap_k'],drop_out=['ready','fault'],stages=0,stages_port='strap_k')]
+
+
 def cmd_verify(a):
     import bind as _b
     _b._AB_OVERRIDE["path"] = getattr(a, "asbuilt", None)
@@ -137,15 +148,22 @@ def cmd_verify(a):
     if raw['asbuilt'].get('clock_landing_table'):
         landing_file=(Path(_b.plan_base(a.plan,raw))/raw['asbuilt']['clock_landing_table']).resolve()
         landing_table=json.loads(landing_file.read_text())
-        vr['transport']=vr['transport']+[dict(module='ot_dp_clk_landing',map={'q':'d'},
-            drop_in=['clk','fclk','rst_n'],drop_out=['ready','fault'],stages=3)]
+        vr['transport']=vr['transport']+landing_transport_rules()
+
     vr["clocks"], vr["resets"], vr["map"] = [], [], {}
     G = Graph(F, Rules(vr), errs)
     names = json.loads((out / "bind_names.json").read_text())
     sinks = json.loads((out / "bind_sinks.json").read_text())
     if landing_table:
         import clock_landing_verify as CLV
-        landing_verify=CLV.Verification(F,G,raw,landing_table,names)
+        live_widths={}
+        for bus in json.loads((out/'bind_latency.json').read_text())['buses']:
+            if bus.get('lane'):
+                lane=bus['lane'];width=bus['width']
+                if lane in live_widths and live_widths[lane]!=width:
+                    raise ValueError('landing verify: inconsistent live lane width '+lane)
+                live_widths[lane]=width
+        landing_verify=CLV.Verification(F,G,raw,landing_table,names,live_widths=live_widths,plan_path=Path(a.plan))
     clk_top = {}
     for pn, (d, bits) in F.top_ports.items():
         if pn.startswith("clk_"):
