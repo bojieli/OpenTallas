@@ -59,6 +59,4 @@ def install(module):
         if fn.count(before) != 1:
             raise RuntimeError('ft_corridor implementation mismatch: ' + before.strip())
         fn = fn.replace(before, after)
-    scope = dict(module.__dict__)
-    exec(compile(fn, __file__ + ':paired_corner', 'exec'), scope)
-    module._place_slot = scope['_place_slot']
+    exec(compile(fn, __file__ + ':paired_corner', 'exec'), module.__dict__)

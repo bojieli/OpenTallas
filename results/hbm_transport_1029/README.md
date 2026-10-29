@@ -81,3 +81,24 @@ has seven stages and max 287.5um; its previous five stages were insufficient
 after the real window expansion. L48 and L53 also need extra stages. See the
 narrow summary and personally viewed allocated picture; these are not routed
 STA or whole-die gates. The M7-only compressed-band successor is running.
+
+The M7-only isolated NE_b101 successor also passed all six slots, with the same
+24,345 internal FT FFs and maximum paired hop 396.1um. The adapter reserves
+0.064/0.6 = 0.106667um per vertical bit over M5 cores and rejects overlapping or
+out-of-outline compressed jog bands. The narrow plot's continuous-turn result
+therefore has a corresponding physically stronger construction result.
+
+Full atomic input is pending seven parts: both hubs, root, both spb0 and both
+b002. Per plan-owner direction, the current street input is used for 64 other
+stable parts in ten independent groups (street_groups.json). NE_b101's exact
+allocator-input identity matches the new street candidate and its successful
+M7-only fragment is reused, giving 65 stable parts in scope. geometry_identity.py
+hashes actual pin coordinates, hard-core/macro/control exclusions, FT contracts,
+clock/reset and local intersections with physical PHY PG domains. Reuse across
+plan revisions requires that exact identity and the unchanged actual source
+census; a global plan hash alone cannot justify reuse.
+
+The group wrapper keeps stdout and exit JSON at street_logs/<group>.* on epyc2.
+--keep-going preserves completed type fragments while independently diagnosing
+other failures. The candidate remains held until all required fragments, latency
+prices, complete source allocation, typed metadata, G0 and visual review close.

@@ -5,13 +5,16 @@ Rejects duplicate/missing partition results and source-plan/census mismatches.
 import argparse,copy,json,sys
 from pathlib import Path
 ap=argparse.ArgumentParser();ap.add_argument('geometry');ap.add_argument('out');ap.add_argument('shards',nargs='+');ap.add_argument('--tools',required=True);a=ap.parse_args();sys.path.insert(0,a.tools);import schema as S
+import geometry_identity
 base=Path(a.geometry);out=Path(a.out);out.mkdir(parents=True,exist_ok=False);P=json.loads((base/'die_plan.json').read_text());R=json.loads((base/'report.json').read_text());parts={p['name']:p for p in P['partitions']};seen=set();R.update(ft=[],internal=[],clock_ff_load={},wrapper_transport_ff={},completed_parts=[],allocation_failures=[])
 try:
  for directory in a.shards:
   d=Path(directory);r=json.loads((d/'report.json').read_text());p=json.loads((d/'die_plan.json').read_text());pp={q['name']:q for q in p['partitions']}
-  if r['status'] not in ('PARTIAL_FT_SITES_ALLOCATED','ACTUAL_FT_SITES_ALLOCATED_PENDING_G0_G1'):raise ValueError('shard has no allocated result: '+str(d))
-  for key in ('source_plan_sha256','source_census_sha256'):
-   if r[key]!=R[key]:raise ValueError('shard source identity mismatch: '+str(d))
+  if r['status'] not in ('PARTIAL_FT_SITES_ALLOCATED','PARTIAL_FT_SITES_ALLOCATED_WITH_FAILURES','ACTUAL_FT_SITES_ALLOCATED_PENDING_G0_G1'):raise ValueError('shard has no allocated result: '+str(d))
+  if r['source_census_sha256']!=R['source_census_sha256']:raise ValueError('shard actual-source identity mismatch: '+str(d))
+  if r['source_plan_sha256']!=R['source_plan_sha256']:
+   for pn in r['completed_parts']:
+    if r.get('geometry_sha256',{}).get(pn)!=geometry_identity.identity(P,pn):raise ValueError('partition geometry changed: '+pn)
   for pn in r['completed_parts']:
    if pn in seen:raise ValueError('partition allocated twice: '+pn)
    if pn not in R['changed_types']:raise ValueError('unexpected partition: '+pn)
