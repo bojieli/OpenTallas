@@ -1,0 +1,31 @@
+{
+  "verdict": "SOURCE_COMPONENT_PASS",
+  "job": "intel1 oth-ubuntu-2320752-1793269474",
+  "source": "current actual calendar_static_x plus verbatim current service feed R/C relocation, actual SRAM",
+  "rows_cases": [
+    64,
+    43
+  ],
+  "reads": 107,
+  "matching_packet_commands": 107,
+  "retire_per_block": 1,
+  "arithmetic_issue": false,
+  "programme_store_words": 4,
+  "loop_lstep": 1,
+  "loop_count": "actualblockrows",
+  "measured_first_cache_read_from_go_edges": 6,
+  "packet_from_go": "source estimate7 requires connected cache proof; compiler requires explicit caller value",
+  "mutants_caught": [
+    "wrong calendar wrap PC",
+    "stale launch context"
+  ],
+  "compiler_tests": "2 tests+8semantic controls pass",
+  "production_allocation_present": false,
+  "HBM_completion_qualified": false,
+  "native_installable": false,
+  "limitations": [
+    "GO/cache-ready deadlines and free source store/descriptor ranges must come from actual native programme allocation",
+    "one-stack distinct logical cohort payload placement not yet emitted",
+    "source service+TX+relay+serialSRAM+numeric scorer integration still required"
+  ]
+}

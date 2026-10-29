@@ -1,0 +1,7 @@
+KEY_PROGRAMME_CASE rows=64 first_read_from_go=6 reads=64 commands=64 retires=1
+KEY_PROGRAMME_CASE rows=43 first_read_from_go=6 reads=43 commands=43 retires=1
+KEY_PROGRAMME_PASS total_reads=107 gap=4 row_tag_exact=1 arithmetic_issue=0 SRAM=ACTUAL
+- tb_programme.sv:39: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 481ns; walltime 0.002 s; speed 266.074 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

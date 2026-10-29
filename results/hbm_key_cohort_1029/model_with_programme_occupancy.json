@@ -1,0 +1,383 @@
+{
+  "cases": {
+    "1": {
+      "schema": "opentallas.hbm_idx.static_key_cohort_prefill.v1",
+      "estimate_status": "COMPONENT_CAPACITY_PASS; physical/HBM completion NOT_QUALIFIED",
+      "default_enabled": false,
+      "adopted": false,
+      "MACs_per_cycle": 0,
+      "existing": {
+        "SMs": 8,
+        "HBM_stacks": 1,
+        "PCs": 32,
+        "service_groups": 8,
+        "quarters": 4,
+        "quarter_keybuf_SRAMs": 20,
+        "keybuf_depth": 256,
+        "rows_used": 171
+      },
+      "logical_cohorts": [
+        {
+          "id": 0,
+          "first_ord": 0,
+          "consumers": [
+            "s_SW",
+            "s_SE"
+          ]
+        },
+        {
+          "id": 1,
+          "first_ord": 342,
+          "consumers": [
+            "s_NW",
+            "s_NE"
+          ]
+        }
+      ],
+      "exactness": "distinct physical key addresses and role buffers; original1088payload,10btag,valid preserved; no arithmetic or reduction changes",
+      "service": {
+        "bytes_per_cohort": 186048,
+        "total_bytes": 372096,
+        "total_keys": 5472,
+        "physical_peak_bytes_per_edge": 1024,
+        "ideal_fetch_lower_bound_edges": 364,
+        "reserved_bytes_per_edge": null,
+        "reserved_initial_latency_edges": null,
+        "reserved_fetch_edges": null,
+        "HBM_deadline": "must be measured on current controller/reservation programme; lowerbound is not a deadline"
+      },
+      "schedule": {
+        "slots": 1,
+        "pipes": 8,
+        "cohorts": 2,
+        "block_rows": [
+          64,
+          64,
+          43
+        ],
+        "descriptors_per_group": 6,
+        "descriptor_capacity": 256,
+        "max_programme_words": 65,
+        "two_shape_programme_words": 109,
+        "programme_capacity": 2048,
+        "existing_programme_occupancy": "unknown; explicit nonoverlapping allocation required before install",
+        "transport_edges": 342,
+        "relay_edges": 0,
+        "final_capture_edges": 2,
+        "live_row_store": "independent per-lane SRAM writes on(slot,row); all171rows of all4lanes resident before query",
+        "replay": "bothcohorts fullyresident before query row0; existing query/key/selector pitch unchanged"
+      },
+      "boundary": {
+        "packet_bits": 1099,
+        "envelope_bits": 1112,
+        "total_forward_tracks": 8896,
+        "row_payload_bytes_per_transport_edge": 1088.0,
+        "assembly_FF_bits": 0,
+        "assembly_FF_area_floor_um2": 0,
+        "receive": "per-lane write-enable demux to existing independent keybuf_slice SRAMs",
+        "added_control_FF_bits_per_quarter": 12,
+        "physical": "2localhub receive/assembly stations; exactroutes/CA/stationarea pending oneHBMplan event"
+      },
+      "latency": {
+        "unoverlapped_reservation_edges": null,
+        "added_edges_per_token": null,
+        "records_per_token": 8,
+        "baseline_token_edges": 629600,
+        "rate_loss_fraction": null,
+        "qualification": "conservative added reservation, no unknown overlap credit; actual source service and physical hops pending"
+      },
+      "claims": {
+        "functional": false,
+        "physical": false,
+        "token": false
+      }
+    },
+    "4": {
+      "schema": "opentallas.hbm_idx.static_key_cohort_prefill.v1",
+      "estimate_status": "COMPONENT_CAPACITY_PASS; physical/HBM completion NOT_QUALIFIED",
+      "default_enabled": false,
+      "adopted": false,
+      "MACs_per_cycle": 0,
+      "existing": {
+        "SMs": 8,
+        "HBM_stacks": 1,
+        "PCs": 32,
+        "service_groups": 8,
+        "quarters": 4,
+        "quarter_keybuf_SRAMs": 20,
+        "keybuf_depth": 256,
+        "rows_used": 171
+      },
+      "logical_cohorts": [
+        {
+          "id": 0,
+          "first_ord": 0,
+          "consumers": [
+            "s_SW",
+            "s_SE"
+          ]
+        },
+        {
+          "id": 1,
+          "first_ord": 342,
+          "consumers": [
+            "s_NW",
+            "s_NE"
+          ]
+        }
+      ],
+      "exactness": "distinct physical key addresses and role buffers; original1088payload,10btag,valid preserved; no arithmetic or reduction changes",
+      "service": {
+        "bytes_per_cohort": 186048,
+        "total_bytes": 372096,
+        "total_keys": 5472,
+        "physical_peak_bytes_per_edge": 1024,
+        "ideal_fetch_lower_bound_edges": 364,
+        "reserved_bytes_per_edge": null,
+        "reserved_initial_latency_edges": null,
+        "reserved_fetch_edges": null,
+        "HBM_deadline": "must be measured on current controller/reservation programme; lowerbound is not a deadline"
+      },
+      "schedule": {
+        "slots": 4,
+        "pipes": 2,
+        "cohorts": 2,
+        "block_rows": [
+          64,
+          64,
+          43
+        ],
+        "descriptors_per_group": 6,
+        "descriptor_capacity": 256,
+        "max_programme_words": 254,
+        "two_shape_programme_words": 424,
+        "programme_capacity": 2048,
+        "existing_programme_occupancy": "unknown; explicit nonoverlapping allocation required before install",
+        "transport_edges": 1368,
+        "relay_edges": 0,
+        "final_capture_edges": 2,
+        "live_row_store": "independent per-lane SRAM writes on(slot,row); all171rows of all4lanes resident before query",
+        "replay": "bothcohorts fullyresident before query row0; existing query/key/selector pitch unchanged"
+      },
+      "boundary": {
+        "packet_bits": 1099,
+        "envelope_bits": 1112,
+        "total_forward_tracks": 2224,
+        "row_payload_bytes_per_transport_edge": 272.0,
+        "assembly_FF_bits": 0,
+        "assembly_FF_area_floor_um2": 0,
+        "receive": "per-lane write-enable demux to existing independent keybuf_slice SRAMs",
+        "added_control_FF_bits_per_quarter": 12,
+        "physical": "2localhub receive/assembly stations; exactroutes/CA/stationarea pending oneHBMplan event"
+      },
+      "latency": {
+        "unoverlapped_reservation_edges": null,
+        "added_edges_per_token": null,
+        "records_per_token": 8,
+        "baseline_token_edges": 629600,
+        "rate_loss_fraction": null,
+        "qualification": "conservative added reservation, no unknown overlap credit; actual source service and physical hops pending"
+      },
+      "claims": {
+        "functional": false,
+        "physical": false,
+        "token": false
+      }
+    },
+    "8": {
+      "schema": "opentallas.hbm_idx.static_key_cohort_prefill.v1",
+      "estimate_status": "COMPONENT_CAPACITY_PASS; physical/HBM completion NOT_QUALIFIED",
+      "default_enabled": false,
+      "adopted": false,
+      "MACs_per_cycle": 0,
+      "existing": {
+        "SMs": 8,
+        "HBM_stacks": 1,
+        "PCs": 32,
+        "service_groups": 8,
+        "quarters": 4,
+        "quarter_keybuf_SRAMs": 20,
+        "keybuf_depth": 256,
+        "rows_used": 171
+      },
+      "logical_cohorts": [
+        {
+          "id": 0,
+          "first_ord": 0,
+          "consumers": [
+            "s_SW",
+            "s_SE"
+          ]
+        },
+        {
+          "id": 1,
+          "first_ord": 342,
+          "consumers": [
+            "s_NW",
+            "s_NE"
+          ]
+        }
+      ],
+      "exactness": "distinct physical key addresses and role buffers; original1088payload,10btag,valid preserved; no arithmetic or reduction changes",
+      "service": {
+        "bytes_per_cohort": 186048,
+        "total_bytes": 372096,
+        "total_keys": 5472,
+        "physical_peak_bytes_per_edge": 1024,
+        "ideal_fetch_lower_bound_edges": 364,
+        "reserved_bytes_per_edge": null,
+        "reserved_initial_latency_edges": null,
+        "reserved_fetch_edges": null,
+        "HBM_deadline": "must be measured on current controller/reservation programme; lowerbound is not a deadline"
+      },
+      "schedule": {
+        "slots": 8,
+        "pipes": 1,
+        "cohorts": 2,
+        "block_rows": [
+          64,
+          64,
+          43
+        ],
+        "descriptors_per_group": 6,
+        "descriptor_capacity": 256,
+        "max_programme_words": 506,
+        "two_shape_programme_words": 844,
+        "programme_capacity": 2048,
+        "existing_programme_occupancy": "unknown; explicit nonoverlapping allocation required before install",
+        "transport_edges": 2736,
+        "relay_edges": 0,
+        "final_capture_edges": 2,
+        "live_row_store": "independent per-lane SRAM writes on(slot,row); all171rows of all4lanes resident before query",
+        "replay": "bothcohorts fullyresident before query row0; existing query/key/selector pitch unchanged"
+      },
+      "boundary": {
+        "packet_bits": 1099,
+        "envelope_bits": 1112,
+        "total_forward_tracks": 1112,
+        "row_payload_bytes_per_transport_edge": 136.0,
+        "assembly_FF_bits": 0,
+        "assembly_FF_area_floor_um2": 0,
+        "receive": "per-lane write-enable demux to existing independent keybuf_slice SRAMs",
+        "added_control_FF_bits_per_quarter": 12,
+        "physical": "2localhub receive/assembly stations; exactroutes/CA/stationarea pending oneHBMplan event"
+      },
+      "latency": {
+        "unoverlapped_reservation_edges": null,
+        "added_edges_per_token": null,
+        "records_per_token": 8,
+        "baseline_token_edges": 629600,
+        "rate_loss_fraction": null,
+        "qualification": "conservative added reservation, no unknown overlap credit; actual source service and physical hops pending"
+      },
+      "claims": {
+        "functional": false,
+        "physical": false,
+        "token": false
+      }
+    }
+  },
+  "native_source": {
+    "top_sha256": "c0eadd4c5f5fb9cdba414d72ac7ba149fbc5700e8017f62e47b52ab173efc4aa",
+    "PC_controllers": {
+      "SW": 0,
+      "SE": 0,
+      "NW": 32,
+      "NE": 0
+    },
+    "service_groups": [
+      "svg_NW0",
+      "svg_NW1",
+      "svg_NW2",
+      "svg_NW3",
+      "svg_NW4",
+      "svg_NW5",
+      "svg_NW6",
+      "svg_NW7"
+    ],
+    "unprovided_packets": [
+      "svg_SW0__sm_packet",
+      "svg_SW1__sm_packet",
+      "svg_SW2__sm_packet",
+      "svg_SW3__sm_packet",
+      "svg_SW4__sm_packet",
+      "svg_SW5__sm_packet",
+      "svg_SW6__sm_packet",
+      "svg_SW7__sm_packet"
+    ],
+    "source_to_role": [
+      {
+        "source_group": "svg_NW0",
+        "packet_port": "sm_packet",
+        "cohort0_consumer": "hb_idx__s_SW",
+        "cohort1_consumer": "hb_idx__s_NW",
+        "consumer_port": "key_lines",
+        "lane": 0,
+        "tag_base": 0
+      },
+      {
+        "source_group": "svg_NW1",
+        "packet_port": "sm_packet",
+        "cohort0_consumer": "hb_idx__s_SW",
+        "cohort1_consumer": "hb_idx__s_NW",
+        "consumer_port": "key_lines",
+        "lane": 1,
+        "tag_base": 128
+      },
+      {
+        "source_group": "svg_NW2",
+        "packet_port": "sm_packet",
+        "cohort0_consumer": "hb_idx__s_SW",
+        "cohort1_consumer": "hb_idx__s_NW",
+        "consumer_port": "key_lines",
+        "lane": 2,
+        "tag_base": 256
+      },
+      {
+        "source_group": "svg_NW3",
+        "packet_port": "sm_packet",
+        "cohort0_consumer": "hb_idx__s_SW",
+        "cohort1_consumer": "hb_idx__s_NW",
+        "consumer_port": "key_lines",
+        "lane": 3,
+        "tag_base": 384
+      },
+      {
+        "source_group": "svg_NW4",
+        "packet_port": "sm_packet",
+        "cohort0_consumer": "hb_idx__s_SE",
+        "cohort1_consumer": "hb_idx__s_NE",
+        "consumer_port": "key_lines",
+        "lane": 4,
+        "tag_base": 512
+      },
+      {
+        "source_group": "svg_NW5",
+        "packet_port": "sm_packet",
+        "cohort0_consumer": "hb_idx__s_SE",
+        "cohort1_consumer": "hb_idx__s_NE",
+        "consumer_port": "key_lines",
+        "lane": 5,
+        "tag_base": 640
+      },
+      {
+        "source_group": "svg_NW6",
+        "packet_port": "sm_packet",
+        "cohort0_consumer": "hb_idx__s_SE",
+        "cohort1_consumer": "hb_idx__s_NE",
+        "consumer_port": "key_lines",
+        "lane": 6,
+        "tag_base": 768
+      },
+      {
+        "source_group": "svg_NW7",
+        "packet_port": "sm_packet",
+        "cohort0_consumer": "hb_idx__s_SE",
+        "cohort1_consumer": "hb_idx__s_NE",
+        "consumer_port": "key_lines",
+        "lane": 7,
+        "tag_base": 896
+      }
+    ]
+  }
+}
