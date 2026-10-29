@@ -556,8 +556,7 @@ def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="tabl
         if not all("tree_path" in t for t in taps.values()):
             raise ValueError("--start-tree clock needs tap tree_path in the proof (the clock tree topology)")
         cc, _ = DSR.resolve_clock_cell(clock_cell, proof, meta)   # CLK-INV-CAL-1: same clock-cell model as the gate
-        if clock_cal == "spice":
-            meta, taps = DSR.scale_clock(meta, taps, DSR.spice_cal_factor(c, cc))
+        meta, taps = DSR.apply_clock_cal(meta, taps, c, cc, clock_cal)
         taps = dict(taps)
         lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
         old, DSR.CPPR_LCA = DSR.CPPR_LCA, True
@@ -1084,7 +1083,7 @@ def main(argv=None):
                     ".json) of die_sta_related; each crossing's interval becomes its hull with the STA d interval "
                     "(die_sta_related.count_align_d_intervals) on the --corner corners; needs --sta-plan")
     ap.add_argument("--sta-plan", help="die plan JSON die_sta_related --plan reads (partition pairs of the ports)")
-    ap.add_argument("--sta-clock-cal", choices=("none", "spice"), default="spice",
+    ap.add_argument("--sta-clock-cal", choices=("none", "spice", "spice_edge"), default="spice",
                     help="as die_sta_related --clock-cal (12.15b gate: spice)")
     ap.add_argument("--sta-cppr-lca", action="store_true", help="as die_sta_related --cppr-lca")
     add_sta_ocv_args(ap)

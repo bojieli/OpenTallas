@@ -261,12 +261,18 @@ TAP_TIME_KEYS = ("late_ps", "early_ps", "abs_late_ps", "abs_early_ps", "fall_lat
 NODE_TIME_KEYS = ("node_late_ps", "node_early_ps", "node_fall_late_ps", "node_fall_early_ps")
 
 
-def scale_clock(meta, taps, f):
+EARLY_TAP_KEYS = ("early_ps", "abs_early_ps", "fall_early_ps", "abs_fall_early_ps")
+EARLY_NODE_KEYS = ("node_early_ps", "node_fall_early_ps")
+
+
+def scale_clock(meta, taps, f, f_early=None):
     """clock arrivals x f (tap late/early incl. mesh-absolute, the CPPR node ranges and the tree NODE arrivals);
     returns new (meta, taps).  DIE-QC-5: node_late_ps / node_early_ps are clock-network arrivals too.  The clock OCV
     branch is tap - node arrival (clock_ocv_fn), so scaling the taps but not the nodes put f-1 of the whole upstream
     insertion into every branch (QC K2: FF intra OCV pessimism 77.45 vs 56.20 ps on a pre-scaled proof); a proof whose
     arr files were scaled before export (scale_arr.py) must give the same answer as --clock-cal spice."""
+    if f_early is not None and f_early != f:
+        return _scale_clock_edge(meta, taps, f, f_early)
     if f == 1.0:
         return meta, taps
     t = {k: dict(v, **{x: float(v[x]) * f for x in TAP_TIME_KEYS if x in v}) for k, v in taps.items()}
@@ -275,6 +281,45 @@ def scale_clock(meta, taps, f):
     for nk in NODE_TIME_KEYS:
         if isinstance(meta.get(nk), dict):
             m[nk] = {k: (None if v is None else float(v) * f) for k, v in meta[nk].items()}
+    return m, t
+
+
+def _scale_clock_edge(meta, taps, f, fe):
+    """--clock-cal spice_edge (CLK-INV-CAL-2): late keys x f (spice / STA max analysis), early keys x fe (spice / STA
+    min analysis).  OpenSTA's min analysis loads every pin with the LOW end of its liberty capacitance_range, so the
+    no-derate STA early/late gap of a clock tree is a load-model difference, not variation; the spice MC AOCV table
+    (clock_variation) is the variation.  Early is capped at late per key (never earlier than late after calibration
+    is only clipped, never reordered); the CPPR node range is re-derived from the scaled node arrivals where both exist."""
+    def pair(late, early):
+        lv, ev = float(late) * f, float(early) * fe
+        return lv, min(ev, lv)
+    t = {}
+    for k, v in taps.items():
+        w = dict(v)
+        for lk, ek in (("late_ps", "early_ps"), ("abs_late_ps", "abs_early_ps"), ("fall_late_ps", "fall_early_ps"),
+                       ("abs_fall_late_ps", "abs_fall_early_ps")):
+            if lk in v and ek in v:
+                w[lk], w[ek] = pair(v[lk], v[ek])
+            elif lk in v:
+                w[lk] = float(v[lk]) * f
+            elif ek in v:
+                w[ek] = float(v[ek]) * fe
+        t[k] = w
+    m = dict(meta, clock_cal_factor=f, clock_cal_factor_early=fe)
+    for lk, ek in (("node_late_ps", "node_early_ps"), ("node_fall_late_ps", "node_fall_early_ps")):
+        L, E = meta.get(lk), meta.get(ek)
+        if isinstance(L, dict):
+            m[lk] = {k: (None if v is None else float(v) * f) for k, v in L.items()}
+        if isinstance(E, dict):
+            m[ek] = {k: (None if v is None else
+                         (min(float(v) * fe, m[lk][k]) if isinstance(L, dict) and L.get(k) is not None
+                          else float(v) * fe)) for k, v in E.items()}
+    nl, ne = m.get("node_late_ps") or {}, m.get("node_early_ps") or {}
+    rng = {}
+    for k, v in (meta.get("cppr_node_range_ps") or {}).items():
+        rng[k] = (round(max(0.0, nl[k] - ne[k]), 4) if nl.get(k) is not None and ne.get(k) is not None
+                  else float(v) * fe)
+    m["cppr_node_range_ps"] = rng
     return m, t
 
 
@@ -288,6 +333,14 @@ def scale_clock(meta, taps, f):
 # 0.9333 / FF 0.9515, not a clock form).  Gate value = the larger NDR slope per corner (keeps more of the arrival, so
 # more OCV, than the smaller one).  BUFx24 control on the same bench: 1.0537 / 1.0640 vs SPICE_CLOCK_CAL 1.0485 / 1.0552.
 SPICE_CLOCK_CAL_INV = {"TT": 0.9324, "FF": 0.9380}
+# CLK-INV-CAL-2 (opt-in --clock-cal spice_edge): spice / OpenSTA MIN-analysis slope on the same benches (sta_arr_min).
+# OpenSTA min analysis takes the low end of the liberty capacitance_range (CKINVDCx16 A 6.68-9.54 fF rise, 6.64-9.53 fall),
+# so STA early sits ~12 % under STA late on a no-derate inverter tree, while ngspice gives ONE delay: spice = 0.93 x late
+# = 1.02-1.07 x early.  Measured: NDR250 TT 1.0241 / FF 1.0487, NDR150 TT 1.0550 / FF 1.0704 (1x250 1.0501 / 1.0761).
+# Gate value = the SMALLER NDR slope per corner (keeps more early/late gap, the hold-safe side).  BUFx24 keeps one
+# factor (its pin-cap range is 1.76-2.35 fF on a 24x driver: 1.2 % gap) -> spice_edge == spice for buf.
+SPICE_CLOCK_CAL_INV_EARLY = {"TT": 1.0241, "FF": 1.0487}
+CLOCK_CALS = ("none", "spice", "spice_edge")
 CLOCK_CELL_MASTERS = {"buf": ("BUFx24_ASAP7_75t_R",), "inv": ("CKINVDCx16_ASAP7_75t_R",)}
 CLOCK_CELL_AOCV_CLASS = {"buf": "A", "inv": "Ainv"}
 CLOCK_CELLS = ("auto", "buf", "inv", "inv2")
@@ -297,6 +350,20 @@ def spice_cal_factor(corner, clock_cell="buf"):
     """12.15b clock spice factor of the die clock cell ('buf' = SPICE_CLOCK_CAL; SS uses the TT factor)."""
     t = SPICE_CLOCK_CAL_INV if clock_cell == "inv" else SPICE_CLOCK_CAL
     return t.get(corner, t["TT"])
+
+
+def apply_clock_cal(meta, taps, corner, clock_cell, clock_cal):
+    """the ONE clock calibration step of planner and gate: none / spice (one factor, 12.15b) / spice_edge (inverter:
+    late x SPICE_CLOCK_CAL_INV, early x SPICE_CLOCK_CAL_INV_EARLY; buf: == spice)."""
+    if clock_cal not in CLOCK_CALS:
+        raise SystemExit(f"--clock-cal {clock_cal!r}: one of {CLOCK_CALS}")
+    if clock_cal == "none":
+        return meta, taps
+    f = spice_cal_factor(corner, clock_cell)
+    fe = None
+    if clock_cal == "spice_edge" and clock_cell == "inv":
+        fe = SPICE_CLOCK_CAL_INV_EARLY.get(corner, SPICE_CLOCK_CAL_INV_EARLY["TT"])
+    return scale_clock(meta, taps, f) if fe is None else scale_clock(meta, taps, f, fe)
 
 
 def _clock_netlists(proof, meta):
@@ -563,8 +630,7 @@ def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lc
         for c in corners:
             meta, taps = load_taps(Path(proof), c)
             cc, _ = resolve_clock_cell(clock_cell, proof, meta)
-            if clock_cal == "spice":
-                meta, taps = scale_clock(meta, taps, spice_cal_factor(c, cc))
+            meta, taps = apply_clock_cal(meta, taps, c, cc, clock_cal)
             pairs, _ = build_pairs(plan, taps)
             lt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
             lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
@@ -591,8 +657,7 @@ def sta_port_intervals(proof, plan, corners, ports, part_region=None, clock_cal=
         for c in corners:
             meta, taps = load_taps(Path(proof), c)
             cc, _ = resolve_clock_cell(clock_cell, proof, meta)
-            if clock_cal == "spice":
-                meta, taps = scale_clock(meta, taps, spice_cal_factor(c, cc))
+            meta, taps = apply_clock_cal(meta, taps, c, cc, clock_cal)
             pairs, _ = build_pairs(plan, taps)
             lt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
             lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
@@ -1909,9 +1974,10 @@ def main(argv=None):
                     help="MESO-INTEG-1 opt-in: landed pairs use the count-aligned ring lag window of this count_align_bind "
                          "file (count_align_bind.py v2; rows: lag >= 100 ps to the guards, slot->read, guard T/8, "
                          "start skew per tree edge) instead of +-T/2")
-    ap.add_argument("--clock-cal", choices=("none", "spice"), default="none",
+    ap.add_argument("--clock-cal", choices=CLOCK_CALS, default="none",
                     help="METHODOLOGY 12.15 b: spice = scale clock arrivals x1.0485 TT / x1.0552 FF (SPICE_CLOCK_CAL; SS "
-                         "uses the TT factor) before every class and the --count-align rows")
+                         "uses the TT factor) before every class and the --count-align rows; spice_edge (CLK-INV-CAL-2 "
+                         "opt-in) = inverter early arrivals on their own spice/STA-min factor (no pin-cap-range spread)")
     ap.add_argument("--clock-cell", choices=CLOCK_CELLS, default="auto",
                     help="CLK-INV-CAL-1: die clock cell of the ONE shared model (spice factor + AOCV die class). auto "
                          "(default) = tap_arrivals meta clock_cell, else the majority master of the proof's clock netlist "
@@ -2044,10 +2110,12 @@ def main(argv=None):
         ccell, cbasis = resolve_clock_cell(a.clock_cell, d, meta)
         if ccell != "buf":              # CLK-INV-CAL-1 record (BUFx24 records stay byte-identical)
             res.setdefault("clock_cell", {})[c] = dict(cell=ccell, basis=cbasis, aocv_class=CLOCK_CELL_AOCV_CLASS[ccell],
-                                                       spice_factor=spice_cal_factor(c, ccell) if a.clock_cal == "spice"
-                                                       else None)
-        if a.clock_cal == "spice":
-            meta, taps = scale_clock(meta, taps, spice_cal_factor(c, ccell))
+                                                       spice_factor=spice_cal_factor(c, ccell) if a.clock_cal != "none"
+                                                       else None,
+                                                       **({"spice_factor_early": SPICE_CLOCK_CAL_INV_EARLY.get(
+                                                           c, SPICE_CLOCK_CAL_INV_EARLY["TT"])}
+                                                          if a.clock_cal == "spice_edge" and ccell == "inv" else {}))
+        meta, taps = apply_clock_cal(meta, taps, c, ccell, a.clock_cal)
         rng = meta["cppr_node_range_ps"]
         slew = max(r["slew_ps"] for r in taps.values())
         reg = characterise(out, c, slew, a.seam_wire_um * a.wire_ff_per_um)

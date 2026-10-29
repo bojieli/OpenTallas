@@ -191,5 +191,47 @@ class SramPinColumnHalo(unittest.TestCase):
         for q in s[0]["rects"]:
             self.assertIn("{%g %g %g %g}" % tuple(q), t)
 
+
+class SeamHold(unittest.TestCase):
+    """DIE-QC-22 (COORD 10-28 19:05): opt-in --seam-hold SENDER,SEAM = the shared CLOCK-RESET IO-HOLD seam_hold contract
+    (gen_phys.seam_hold, KV gen_core_kit_kv form): min input SENDER-SEAM, min output -SENDER, recorded in sdc_lint.json
+    (sdc_lint checks sender + receiver = seam >= floor) and freeze.json; unset = legacy text byte-identical."""
+    def test_legacy_text_unchanged(self):
+        t = G.sdc(833.0, 250.0, 40.0, ["clk"], [], "m")
+        self.assertEqual(t, G.sdc(833.0, 250.0, 40.0, ["clk"], [], "m", None))
+        self.assertIn("set_input_delay -min -40.0000 -clock vclk $non_clk_in\n", t)
+        self.assertIn("set_output_delay -min 0.0000 -clock vclk [all_outputs]\n", t)
+        self.assertNotIn("seam_hold", t)
+
+    def test_contract_text(self):
+        t = G.sdc(833.0, 250.0, 40.0, ["clk"], [], "m", (25.0, 25.0))
+        self.assertIn("set_input_delay -min 0.0000 -clock vclk $non_clk_in\n", t)
+        self.assertIn("set_output_delay -min -25.0000 -clock vclk [all_outputs]\n", t)
+        self.assertNotIn("-40.0000", t)
+
+    def test_parse_refuses_bad_contracts(self):
+        self.assertIsNone(G.parse_seam_hold(None, "m"))
+        self.assertEqual(G.parse_seam_hold("25,25", "m"), (25.0, 25.0))
+        for bad in ("25,10", "-1,25", "25", "a,b"):
+            with self.assertRaises(SystemExit):
+                G.parse_seam_hold(bad, "m")
+
+    def test_generated_kit_carries_contract(self):
+        with tempfile.TemporaryDirectory() as t:
+            r = subprocess.run([sys.executable, str(HERE / "gen_core_kit_qc.py"), "--module", MODULE, "--out", t,
+                                "--seam-hold", "25,25"], capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stderr[-2000:])
+            kd = Path(json.loads(r.stdout.strip().splitlines()[-1])["kit"])
+            lctx = json.loads((kd / "sdc_lint.json").read_text())
+            self.assertEqual((lctx["hold_in_min_ps"], lctx["hold_out_min_ps"], lctx["seam_hold_ps"]), (0.0, -25.0, 25.0))
+            sys.path.insert(0, str(HERE.parents[4] / "tools/die_plan"))
+            import sdc_lint
+            self.assertEqual(sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx), [])
+            fz = json.loads((kd / "freeze.json").read_text())
+            self.assertEqual(fz["seam_hold"]["in_min_ps"], 0.0)
+            self.assertEqual(fz["seam_hold"]["out_min_ps"], -25.0)
+            self.assertIn("set_output_delay -min -25.0000", (kd / "constraint.sdc").read_text())
+
+
 if __name__ == "__main__":
     unittest.main()

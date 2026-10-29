@@ -1,0 +1,3 @@
+W=/srv/opentallas-scratch2/claude/wt/hbm-cores-kits-1; P=/srv/opentallas-scratch2/claude/die-hbm-10/c24; D=/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k3
+python3 $W/results/die_hbm_kits_1027/mk_c20.py $P $D/views.json $D/slices_f $D/kits $W ot_hbm_su_static_qcore_r13 --tag _k3mp5 --gen-args "--macro-placement /srv/opentallas-scratch2/claude/hbm-cores-kits-1/mp/ot_hbm_su_static_qcore_r13_v5.json --macro-inst-fmt {k}" > $D/mk_f.log 2>&1
+n=ot_hbm_su_static_qcore_r13_6fb4f29f7814-_k3mp5; (cd $W/tools/die_plan && timeout 1200 python3 kit_preflight.py --contract --plan-dir $P --out $D/preflight/$n.json $D/kits/$n > $D/preflight/$n.txt 2>&1); touch $D/QC5_DONE

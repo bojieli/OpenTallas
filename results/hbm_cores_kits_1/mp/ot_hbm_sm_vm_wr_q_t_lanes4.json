@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.macro_placement.v1",
+ "design": "ot_hbm_sm_vm_wr_q_t_lanes4",
+ "outline_um": [
+  142.56,
+  388.8
+ ],
+ "macro_placement": [
+  {
+   "k": "u_fcore.u_tab",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    21.6,
+    17.34
+   ],
+   "orient": "R0"
+  }
+ ],
+ "note": "HBM-CORES-KITS-1: from C24 core_macros.json (sha of plan 3ab76af4) KNOWN/placed; source /srv/opentallas-scratch2/claude/hbm-cores-r7/kits/ot_hbm_sm_vm_wr_q_t_lanes4_32936e00f936-_k2/placed.csv"
+}
