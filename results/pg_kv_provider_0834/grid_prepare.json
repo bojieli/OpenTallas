@@ -1,0 +1,8 @@
+{
+  "source": "/kv/imported/provider.odb",
+  "grid_model": "/r/grid/source_pg_reservations.json",
+  "owned_pg_reservations": 13073,
+  "removed_obstructions": 13073,
+  "non_pg_sha256": "cce6226e17592e0d3fde4fa9808970c28dfda5ee15e99794de7fd2354344d4ee",
+  "scope": "Exact same-plan PG capacity reservations removed only while pdngen draws their actual metal; restore_obs.tcl restores every original obstruction afterwards"
+}
