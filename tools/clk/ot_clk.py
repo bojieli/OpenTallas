@@ -437,6 +437,8 @@ def refit_entry(cfg, registry, a):
     argv += ["--tap-from", a.tap_from] if a.tap_from else ["--tap"] + [str(x) for x in a.tap]
     if a.even_legs:
         argv.append("--even-legs")
+    if getattr(a, "placed_stages", False):
+        argv.append("--placed-stages")
     ok, cur, _ = stage_check(cfg, registry)
     built = stage_cal_file(cur) if (ok and cur) else None
     if built is not None:
@@ -630,6 +632,8 @@ def main(argv=None):
     g.add_argument("--tap-from")
     g.add_argument("--tap", nargs=2, type=float)
     rf.add_argument("--even-legs", action="store_true")
+    rf.add_argument("--placed-stages", action="store_true",
+                    help="fit retained native parent_of/sites chains, including isolated region coupons")
     rf.add_argument("--route")
     rf.add_argument("-o", required=True)
     rf.add_argument("--write", action="store_true", help="append the entry to --registry (refuses a duplicate id)")
