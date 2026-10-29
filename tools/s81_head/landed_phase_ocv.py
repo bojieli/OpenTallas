@@ -63,7 +63,7 @@ def endpoint_taps(P, pr, side, candidates):
         for slot in P.ptype(part).get('ft_slots',[]):
             for suffix,stem in (('_i','in'),('_o','out')):
                 if bus == slot['name']+suffix and stem+'_window_um' in slot:
-                    layers=slot.get(stem+'_layers',slot.get('layers',pr.get('layers')))
+                    layers=slot.get(stem+'_layers',slot.get('layers',pr.get('layers') or P.ports[pr['id']].get('layers')))
                     if layers:
                         geom=(slot[stem+'_face'],slot[stem+'_window_um'],layers,slot.get(stem+'_order',slot.get('order','lsb_low')))
     if geom is None:
