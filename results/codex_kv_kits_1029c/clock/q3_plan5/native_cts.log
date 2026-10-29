@@ -1,0 +1,66 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /work/macros/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /work/macros/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_db /work/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/3_place.odb
+read_sdc -mode ss /work/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/3_place.sdc
+read_sdc -mode ff /work/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/3_place.sdc
+source /work/setRC_rcx.tcl
+source /work/native_pre_cts.tcl
+KVCORES max_fanout 64
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5
+OT_CORE_INFRA_CTS leaf-complete plan tree: 5490 register clock pins on planned dont_touch nets; TritonCTS not run
+estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 34040.22 um^2
+[INFO DPL-0007] Movable instances area: 0.00 um^2
+[INFO DPL-0008] Fixed instances area within core: 10118.32 um^2
+[INFO DPL-0009] Utilization: 29.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 18129 cells
+[INFO DPL-0393]   height 153 row(s): 2 cells
+[INFO DPL-0500] Runtime: 0.23s
+Placement Analysis
+---------------------------------
+total displacement          0.0 u
+average displacement        0.0 u
+max displacement            0.0 u
+original HPWL          200335.8 u
+legalized HPWL         200335.8 u
+delta HPWL                    0 %
+
+estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 10118 um^2 30% utilization.
+source /work/post_cts_setup.tcl
+OT_LEAF_AFF pairs 3681 groups 1577 cross_leaf_before 2285 cross_leaf_after 2285 groups_moved 325 sinks_moved 0 same_leaf_already 208 skip_big 0 skip_far 1044 skip_cap 0 skip_driver 0 skip_clock 0 leaf_cap 54 radius_um 30.0 report_only 1
+OT_CTS_SETUP_TT before: worst setup 153.37 ps
+OT_CTS_SETUP_TT after: worst setup 153.37 ps
+write_db /work/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/4_1_cts.odb
+write_sdc -no_timestamp /work/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/4_cts.sdc
+Elapsed time: 0:22.81[h:]min:sec. CPU time: user 30.65 sys 4.30 (153%). Peak memory: 565820KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb           22            552 1db33aef8bb773928522
+cp /work/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/4_1_cts.odb /work/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/4_cts.odb

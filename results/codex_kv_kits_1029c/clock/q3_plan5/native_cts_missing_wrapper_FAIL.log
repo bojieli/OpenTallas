@@ -1,0 +1,3440 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+mkdir -p /work/run/objects/asap7/hc_qkd_ectlk_q3__216x172_8/base
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /work/macros/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /work/macros/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_db /work/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/3_place.odb
+read_sdc -mode ss /work/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/3_place.sdc
+read_sdc -mode ff /work/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/3_place.sdc
+source /work/setRC_rcx.tcl
+source /work/native_pre_cts.tcl
+KVCORES max_fanout 64
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5
+OT_MACRO_CTS 2 clocked macros: -macro_clustering_size 2 -macro_clustering_max_diameter 40
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "ck[0]" found for clock "clk".
+[WARNING CTS-0041] Net "ck[0]" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_root_out" has 2 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tq_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tq_r0_out" has 2 sinks.
+[INFO CTS-0010]  Clock net "mp_ck_Tqq_br_out" has 4 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqs_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqs_r0_out" has 9 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqsx_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqsx_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqsx_out" has 5 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqsw_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqsw_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqsw_out" has 25 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqsv_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqsv_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqsv_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqsu_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqsu_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqsu_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqst_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqst_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqst_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqss_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqss_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqss_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqsr_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqsr_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqsr_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqsq_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqsq_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqsq_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqsp_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqsp_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqsp_out" has 19 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqr_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqr_r0_out" has 7 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqrv_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqrv_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqrv_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqru_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqru_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqru_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqrt_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqrt_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqrt_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqrs_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqrs_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqrs_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqrr_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqrr_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqrr_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqrq_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqrq_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqrq_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqrp_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqrp_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqrp_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqq_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqq_r0_out" has 7 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqqv_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqqv_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqqv_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqqu_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqqu_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqqu_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqqt_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqqt_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqqt_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqqs_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqqs_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqqs_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqqr_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqqr_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqqr_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqqq_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqqq_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqqq_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqqp_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqqp_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqqp_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqp_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqp_r0_out" has 8 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqpw_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqpw_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqpw_out" has 47 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqpv_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqpv_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqpv_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqpu_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqpu_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqpu_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqpt_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqpt_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqpt_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqps_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqps_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqps_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqpr_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqpr_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqpr_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqpq_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqpq_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqpq_out" has 2 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqqpp_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqqpp_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqqpp_out" has 49 sinks.
+[INFO CTS-0010]  Clock net "mp_ck_Tqp_br_out" has 4 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqps_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqps_r0_out" has 8 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpsw_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpsw_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpsw_out" has 6 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpsv_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpsv_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpsv_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpsu_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpsu_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpsu_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpst_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpst_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpst_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpss_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpss_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpss_out" has 43 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpsr_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpsr_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpsr_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpsq_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpsq_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpsq_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpsp_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpsp_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpsp_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpr_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpr_r0_out" has 7 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqprv_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqprv_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqprv_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpru_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpru_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpru_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqprt_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqprt_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqprt_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqprs_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqprs_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqprs_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqprr_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqprr_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqprr_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqprq_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqprq_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqprq_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqprp_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqprp_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqprp_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpq_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpq_r0_out" has 7 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpqv_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpqv_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpqv_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpqu_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpqu_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpqu_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpqt_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpqt_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpqt_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpqs_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpqs_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpqs_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpqr_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpqr_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpqr_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpqq_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpqq_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpqq_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpqp_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpqp_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpqp_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpp_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpp_r0_out" has 9 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqppx_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqppx_r0_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqppx_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqppw_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqppw_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqppw_out" has 3 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqppv_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqppv_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqppv_out" has 48 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqppu_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqppu_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqppu_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqppt_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqppt_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqppt_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqpps_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqpps_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqpps_out" has 46 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqppr_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqppr_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqppr_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqppq_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqppq_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqppq_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tqppp_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tqppp_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tqppp_out" has 50 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tp_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tp_r0_out" has 2 sinks.
+[INFO CTS-0010]  Clock net "mp_ck_Tpq_br_out" has 4 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqs_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqs_r0_out" has 9 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqsx_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqsx_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqsx_out" has 7 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqsw_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqsw_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqsw_out" has 48 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqsv_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqsv_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqsv_out" has 42 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqsu_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqsu_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqsu_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqst_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqst_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqst_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqss_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqss_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqss_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqsr_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqsr_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqsr_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqsq_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqsq_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqsq_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqsp_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqsp_r0_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqsp_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqr_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqr_r0_out" has 7 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqrv_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqrv_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqrv_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqru_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqru_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqru_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqrt_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqrt_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqrt_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqrs_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqrs_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqrs_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqrr_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqrr_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqrr_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqrq_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqrq_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqrq_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqrp_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqrp_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqrp_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqq_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqq_r0_out" has 8 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqqw_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqqw_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqqw_out" has 17 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqqv_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqqv_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqqv_out" has 32 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqqu_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqqu_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqqu_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqqt_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqqt_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqqt_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqqs_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqqs_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqqs_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqqr_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqqr_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqqr_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqqq_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqqq_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqqq_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqqp_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqqp_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqqp_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqp_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqp_r0_out" has 7 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqpv_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqpv_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqpv_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqpu_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqpu_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqpu_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqpt_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqpt_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqpt_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqps_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqps_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqps_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqpr_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqpr_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqpr_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqpq_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqpq_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqpq_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpqpp_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpqpp_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpqpp_out" has 49 sinks.
+[INFO CTS-0010]  Clock net "mp_ck_Tpp_br_out" has 4 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpps_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpps_r0_out" has 8 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppsw_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppsw_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppsw_out" has 14 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppsv_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppsv_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppsv_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppsu_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppsu_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppsu_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppst_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppst_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppst_out" has 35 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppss_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppss_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppss_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppsr_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppsr_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppsr_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppsq_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppsq_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppsq_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppsp_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppsp_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppsp_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppr_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppr_r0_out" has 8 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpprw_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpprw_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpprw_out" has 48 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpprv_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpprv_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpprv_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppru_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppru_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppru_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpprt_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpprt_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpprt_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpprs_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpprs_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpprs_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpprr_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpprr_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpprr_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpprq_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpprq_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpprq_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpprp_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpprp_r0_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpprp_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppq_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppq_r0_out" has 7 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppqv_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppqv_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppqv_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppqu_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppqu_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppqu_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppqt_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppqt_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppqt_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppqs_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppqs_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppqs_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppqr_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppqr_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppqr_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppqq_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppqq_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppqq_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppqp_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppqp_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppqp_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppp_br_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppp_r0_out" has 7 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpppv_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpppv_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpppv_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpppu_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpppu_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpppu_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpppt_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpppt_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpppt_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tppps_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tppps_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tppps_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpppr_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpppr_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpppr_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpppq_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpppq_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpppq_out" has 49 sinks.
+[WARNING CTS-0041] Net "mp_ck_Tpppp_br_out" has 1 sinks. Skipping...
+[WARNING CTS-0041] Net "mp_ck_Tpppp_r0_out" has 1 sinks. Skipping...
+[INFO CTS-0010]  Clock net "mp_ck_Tpppp_out" has 50 sinks.
+[INFO CTS-0008] TritonCTS found 143 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_root_out.
+[INFO CTS-0028]  Total number of sinks: 2.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(107550, 85725), (107715, 86805)].
+[INFO CTS-0024]  Normalized sink region: [(79.6667, 63.5), (79.7889, 64.3)].
+[INFO CTS-0025]     Width:  0.1222.
+[INFO CTS-0026]     Height: 0.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 1
+    Sub-region size: 0.1222 X 0.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 2.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tq_r0_out.
+[INFO CTS-0028]  Total number of sinks: 2.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(139410, 84645), (139410, 85725)].
+[INFO CTS-0024]  Normalized sink region: [(103.267, 62.7), (103.267, 63.5)].
+[INFO CTS-0025]     Width:  0.0000.
+[INFO CTS-0026]     Height: 0.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 1
+    Sub-region size: 0.0000 X 0.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 2.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqq_br_out.
+[INFO CTS-0028]  Total number of sinks: 4.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(180341, 108945), (181100, 112185)].
+[INFO CTS-0024]  Normalized sink region: [(133.586, 80.7), (134.148, 83.1)].
+[INFO CTS-0025]     Width:  0.5622.
+[INFO CTS-0026]     Height: 2.4000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 2
+    Sub-region size: 0.5622 X 1.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 4.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqs_r0_out.
+[INFO CTS-0028]  Total number of sinks: 9.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(119106, 123525), (120080, 132705)].
+[INFO CTS-0024]  Normalized sink region: [(88.2267, 91.5), (88.9481, 98.3)].
+[INFO CTS-0025]     Width:  0.7215.
+[INFO CTS-0026]     Height: 6.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 5
+    Sub-region size: 0.7215 X 3.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 9.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqsx_out.
+[INFO CTS-0028]  Total number of sinks: 5.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(170089, 114615), (177973, 122715)].
+[INFO CTS-0024]  Normalized sink region: [(125.992, 84.9), (131.832, 90.9)].
+[INFO CTS-0025]     Width:  5.8400.
+[INFO CTS-0026]     Height: 6.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 3
+    Sub-region size: 5.8400 X 3.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 5.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqsw_out.
+[INFO CTS-0028]  Total number of sinks: 25.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(146815, 83295), (157777, 101655)].
+[INFO CTS-0024]  Normalized sink region: [(108.752, 61.7), (116.872, 75.3)].
+[INFO CTS-0025]     Width:  8.1200.
+[INFO CTS-0026]     Height: 13.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 8.1200 X 6.8000
+[INFO CTS-0034]     Segment length (rounded): 4.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 25.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqsv_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(112741, 160785), (117223, 168345)].
+[INFO CTS-0024]  Normalized sink region: [(83.5119, 119.1), (86.8319, 124.7)].
+[INFO CTS-0025]     Width:  3.3200.
+[INFO CTS-0026]     Height: 5.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 3.3200 X 2.8000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.6600 X 2.8000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqsu_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(112633, 153495), (117547, 160785)].
+[INFO CTS-0024]  Normalized sink region: [(83.4319, 113.7), (87.0719, 119.1)].
+[INFO CTS-0025]     Width:  3.6400.
+[INFO CTS-0026]     Height: 5.4000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 3.6400 X 2.7000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.8200 X 2.7000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqst_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(113227, 146475), (117709, 153495)].
+[INFO CTS-0024]  Normalized sink region: [(83.8719, 108.5), (87.1919, 113.7)].
+[INFO CTS-0025]     Width:  3.3200.
+[INFO CTS-0026]     Height: 5.2000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 3.3200 X 2.6000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.6600 X 2.6000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqss_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(112849, 140265), (118141, 146745)].
+[INFO CTS-0024]  Normalized sink region: [(83.5919, 103.9), (87.5119, 108.7)].
+[INFO CTS-0025]     Width:  3.9200.
+[INFO CTS-0026]     Height: 4.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 3.9200 X 2.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.9600 X 2.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqsr_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(112633, 134055), (118627, 140265)].
+[INFO CTS-0024]  Normalized sink region: [(83.4319, 99.3), (87.8719, 103.9)].
+[INFO CTS-0025]     Width:  4.4400.
+[INFO CTS-0026]     Height: 4.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 4.4400 X 2.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.2200 X 2.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqsq_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(112633, 128385), (118519, 135405)].
+[INFO CTS-0024]  Normalized sink region: [(83.4319, 95.1), (87.7919, 100.3)].
+[INFO CTS-0025]     Width:  4.3600.
+[INFO CTS-0026]     Height: 5.2000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 4.3600 X 2.6000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.1800 X 2.6000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqsp_out.
+[INFO CTS-0028]  Total number of sinks: 19.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(101401, 124065), (119005, 132435)].
+[INFO CTS-0024]  Normalized sink region: [(75.1119, 91.9), (88.1519, 98.1)].
+[INFO CTS-0025]     Width:  13.0400.
+[INFO CTS-0026]     Height: 6.2000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 10
+    Sub-region size: 6.5200 X 6.2000
+[INFO CTS-0034]     Segment length (rounded): 4.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 19.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqr_r0_out.
+[INFO CTS-0028]  Total number of sinks: 7.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(206586, 131085), (207075, 137565)].
+[INFO CTS-0024]  Normalized sink region: [(153.027, 97.1), (153.389, 101.9)].
+[INFO CTS-0025]     Width:  0.3622.
+[INFO CTS-0026]     Height: 4.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 4
+    Sub-region size: 0.3622 X 2.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 7.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqrv_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(208429, 156195), (210589, 168345)].
+[INFO CTS-0024]  Normalized sink region: [(154.392, 115.7), (155.992, 124.7)].
+[INFO CTS-0025]     Width:  1.6000.
+[INFO CTS-0026]     Height: 9.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 1.6000 X 4.5000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 0.8000 X 4.5000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqru_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(209239, 141615), (210589, 155925)].
+[INFO CTS-0024]  Normalized sink region: [(154.992, 104.9), (155.992, 115.5)].
+[INFO CTS-0025]     Width:  1.0000.
+[INFO CTS-0026]     Height: 10.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 1.0000 X 5.3000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 0.5000 X 5.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqrt_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(209239, 127035), (210589, 141345)].
+[INFO CTS-0024]  Normalized sink region: [(154.992, 94.1), (155.992, 104.7)].
+[INFO CTS-0025]     Width:  1.0000.
+[INFO CTS-0026]     Height: 10.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 1.0000 X 5.3000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 0.5000 X 5.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqrs_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(179161, 117585), (205837, 128115)].
+[INFO CTS-0024]  Normalized sink region: [(132.712, 87.1), (152.472, 94.9)].
+[INFO CTS-0025]     Width:  19.7600.
+[INFO CTS-0026]     Height: 7.8000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 9.8800 X 7.8000
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 9.8800 X 3.9000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqrr_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(204487, 114615), (210589, 126765)].
+[INFO CTS-0024]  Normalized sink region: [(151.472, 84.9), (155.992, 93.9)].
+[INFO CTS-0025]     Width:  4.5200.
+[INFO CTS-0026]     Height: 9.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 4.5200 X 4.5000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.2600 X 4.5000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqrq_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(199249, 109215), (206539, 118395)].
+[INFO CTS-0024]  Normalized sink region: [(147.592, 80.9), (152.992, 87.7)].
+[INFO CTS-0025]     Width:  5.4000.
+[INFO CTS-0026]     Height: 6.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 5.4000 X 3.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.7000 X 3.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqrp_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(203245, 102735), (210589, 114345)].
+[INFO CTS-0024]  Normalized sink region: [(150.552, 76.1), (155.992, 84.7)].
+[INFO CTS-0025]     Width:  5.4400.
+[INFO CTS-0026]     Height: 8.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 5.4400 X 4.3000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.7200 X 4.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqq_r0_out.
+[INFO CTS-0028]  Total number of sinks: 7.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(180615, 89505), (181155, 96525)].
+[INFO CTS-0024]  Normalized sink region: [(133.789, 66.3), (134.189, 71.5)].
+[INFO CTS-0025]     Width:  0.4000.
+[INFO CTS-0026]     Height: 5.2000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 4
+    Sub-region size: 0.4000 X 2.6000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 7.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqqv_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(206863, 90315), (210589, 104625)].
+[INFO CTS-0024]  Normalized sink region: [(153.232, 66.9), (155.992, 77.5)].
+[INFO CTS-0025]     Width:  2.7600.
+[INFO CTS-0026]     Height: 10.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 2.7600 X 5.3000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.3800 X 5.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqqu_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(197305, 89235), (208375, 109215)].
+[INFO CTS-0024]  Normalized sink region: [(146.152, 66.1), (154.352, 80.9)].
+[INFO CTS-0025]     Width:  8.2000.
+[INFO CTS-0026]     Height: 14.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 8.2000 X 7.4000
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 4.1000 X 7.4000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqqt_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(190501, 76545), (205891, 92205)].
+[INFO CTS-0024]  Normalized sink region: [(141.112, 56.7), (152.512, 68.3)].
+[INFO CTS-0025]     Width:  11.4000.
+[INFO CTS-0026]     Height: 11.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 11.4000 X 5.8000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 5.7000 X 5.8000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqqs_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(183697, 81675), (192931, 102465)].
+[INFO CTS-0024]  Normalized sink region: [(136.072, 60.5), (142.912, 75.9)].
+[INFO CTS-0025]     Width:  6.8400.
+[INFO CTS-0026]     Height: 15.4000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 6.8400 X 7.7000
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 3.4200 X 7.7000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqqr_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(163987, 99495), (200437, 121635)].
+[INFO CTS-0024]  Normalized sink region: [(121.472, 73.7), (148.472, 90.1)].
+[INFO CTS-0025]     Width:  27.0000.
+[INFO CTS-0026]     Height: 16.4000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 13.5000 X 16.4000
+[INFO CTS-0034]     Segment length (rounded): 6.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 13.5000 X 8.2000
+[INFO CTS-0034]     Segment length (rounded): 4.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqqq_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(155617, 94365), (165607, 105705)].
+[INFO CTS-0024]  Normalized sink region: [(115.272, 69.9), (122.672, 78.3)].
+[INFO CTS-0025]     Width:  7.4000.
+[INFO CTS-0026]     Height: 8.4000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 7.4000 X 4.2000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 3.7000 X 4.2000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqqp_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(150703, 84915), (157183, 95445)].
+[INFO CTS-0024]  Normalized sink region: [(111.632, 62.9), (116.432, 70.7)].
+[INFO CTS-0025]     Width:  4.8000.
+[INFO CTS-0026]     Height: 7.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 4.8000 X 3.9000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.4000 X 3.9000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqp_r0_out.
+[INFO CTS-0028]  Total number of sinks: 8.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(206046, 54945), (207075, 63585)].
+[INFO CTS-0024]  Normalized sink region: [(152.627, 40.7), (153.389, 47.1)].
+[INFO CTS-0025]     Width:  0.7622.
+[INFO CTS-0026]     Height: 6.4000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 4
+    Sub-region size: 0.7622 X 3.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 8.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqpw_out.
+[INFO CTS-0028]  Total number of sinks: 47.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(208645, 43065), (210589, 56025)].
+[INFO CTS-0024]  Normalized sink region: [(154.552, 31.9), (155.992, 41.5)].
+[INFO CTS-0025]     Width:  1.4400.
+[INFO CTS-0026]     Height: 9.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 24
+    Sub-region size: 1.4400 X 4.8000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 12
+    Sub-region size: 0.7200 X 4.8000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 47.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqpv_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(204217, 82215), (210589, 90315)].
+[INFO CTS-0024]  Normalized sink region: [(151.272, 60.9), (155.992, 66.9)].
+[INFO CTS-0025]     Width:  4.7200.
+[INFO CTS-0026]     Height: 6.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 4.7200 X 3.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.3600 X 3.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqpu_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(198817, 76275), (210589, 84375)].
+[INFO CTS-0024]  Normalized sink region: [(147.272, 56.5), (155.992, 62.5)].
+[INFO CTS-0025]     Width:  8.7200.
+[INFO CTS-0026]     Height: 6.0000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 4.3600 X 6.0000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 4.3600 X 3.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqpt_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(195631, 72495), (210589, 78705)].
+[INFO CTS-0024]  Normalized sink region: [(144.912, 53.7), (155.992, 58.3)].
+[INFO CTS-0025]     Width:  11.0800.
+[INFO CTS-0026]     Height: 4.6000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 5.5400 X 4.6000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 5.5400 X 2.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqps_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(202921, 65475), (210589, 72225)].
+[INFO CTS-0024]  Normalized sink region: [(150.312, 48.5), (155.992, 53.5)].
+[INFO CTS-0025]     Width:  5.6800.
+[INFO CTS-0026]     Height: 5.0000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 2.8400 X 5.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 2.8400 X 2.5000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqpr_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(207187, 55755), (210589, 65745)].
+[INFO CTS-0024]  Normalized sink region: [(153.472, 41.3), (155.992, 48.7)].
+[INFO CTS-0025]     Width:  2.5200.
+[INFO CTS-0026]     Height: 7.4000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 2.5200 X 3.7000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.2600 X 3.7000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqpq_out.
+[INFO CTS-0028]  Total number of sinks: 2.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(176893, 43335), (190177, 54945)].
+[INFO CTS-0024]  Normalized sink region: [(131.032, 32.1), (140.872, 40.7)].
+[INFO CTS-0025]     Width:  9.8400.
+[INFO CTS-0026]     Height: 8.6000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 1
+    Sub-region size: 4.9200 X 8.6000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 2.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqqpp_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(195361, 28755), (210589, 43065)].
+[INFO CTS-0024]  Normalized sink region: [(144.712, 21.3), (155.992, 31.9)].
+[INFO CTS-0025]     Width:  11.2800.
+[INFO CTS-0026]     Height: 10.6000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 5.6400 X 10.6000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 5.6400 X 5.3000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqp_br_out.
+[INFO CTS-0028]  Total number of sinks: 4.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(138761, 17685), (138980, 20925)].
+[INFO CTS-0024]  Normalized sink region: [(102.786, 13.1), (102.948, 15.5)].
+[INFO CTS-0025]     Width:  0.1622.
+[INFO CTS-0026]     Height: 2.4000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 2
+    Sub-region size: 0.1622 X 1.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 4.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqps_r0_out.
+[INFO CTS-0028]  Total number of sinks: 8.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(195735, 10935), (196275, 21465)].
+[INFO CTS-0024]  Normalized sink region: [(144.989, 8.1), (145.389, 15.9)].
+[INFO CTS-0025]     Width:  0.4000.
+[INFO CTS-0026]     Height: 7.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 4
+    Sub-region size: 0.4000 X 3.9000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 8.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpsw_out.
+[INFO CTS-0028]  Total number of sinks: 6.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(175057, 41175), (180889, 54675)].
+[INFO CTS-0024]  Normalized sink region: [(129.672, 30.5), (133.992, 40.5)].
+[INFO CTS-0025]     Width:  4.3200.
+[INFO CTS-0026]     Height: 10.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 3
+    Sub-region size: 4.3200 X 5.0000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 6.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpsv_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(199357, 17998), (210589, 30645)].
+[INFO CTS-0024]  Normalized sink region: [(147.672, 13.3319), (155.992, 22.7)].
+[INFO CTS-0025]     Width:  8.3200.
+[INFO CTS-0026]     Height: 9.3681.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 8.3200 X 4.6841
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 4.1600 X 4.6841
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpsu_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(200113, 10395), (210589, 18495)].
+[INFO CTS-0024]  Normalized sink region: [(148.232, 7.7), (155.992, 13.7)].
+[INFO CTS-0025]     Width:  7.7600.
+[INFO CTS-0026]     Height: 6.0000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 3.8800 X 6.0000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 3.8800 X 3.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpst_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(206809, 4455), (210589, 11475)].
+[INFO CTS-0024]  Normalized sink region: [(153.192, 3.3), (155.992, 8.5)].
+[INFO CTS-0025]     Width:  2.8000.
+[INFO CTS-0026]     Height: 5.2000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 2.8000 X 2.6000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.4000 X 2.6000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpss_out.
+[INFO CTS-0028]  Total number of sinks: 43.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(175057, 4455), (180565, 20385)].
+[INFO CTS-0024]  Normalized sink region: [(129.672, 3.3), (133.752, 15.1)].
+[INFO CTS-0025]     Width:  4.0800.
+[INFO CTS-0026]     Height: 11.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 22
+    Sub-region size: 4.0800 X 5.9000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 11
+    Sub-region size: 2.0400 X 5.9000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 43.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpsr_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(181105, 4455), (190015, 17685)].
+[INFO CTS-0024]  Normalized sink region: [(134.152, 3.3), (140.752, 13.1)].
+[INFO CTS-0025]     Width:  6.6000.
+[INFO CTS-0026]     Height: 9.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 6.6000 X 4.9000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 3.3000 X 4.9000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpsq_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(199195, 4455), (208645, 9315)].
+[INFO CTS-0024]  Normalized sink region: [(147.552, 3.3), (154.552, 6.9)].
+[INFO CTS-0025]     Width:  7.0000.
+[INFO CTS-0026]     Height: 3.6000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 3.5000 X 3.6000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 3.5000 X 1.8000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpsp_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(190069, 4455), (198817, 18495)].
+[INFO CTS-0024]  Normalized sink region: [(140.792, 3.3), (147.272, 13.7)].
+[INFO CTS-0025]     Width:  6.4800.
+[INFO CTS-0026]     Height: 10.4000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 6.4800 X 5.2000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 3.2400 X 5.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpr_r0_out.
+[INFO CTS-0028]  Total number of sinks: 7.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(158475, 20385), (159015, 26865)].
+[INFO CTS-0024]  Normalized sink region: [(117.389, 15.1), (117.789, 19.9)].
+[INFO CTS-0025]     Width:  0.4000.
+[INFO CTS-0026]     Height: 4.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 4
+    Sub-region size: 0.4000 X 2.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 7.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqprv_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(146329, 40635), (174679, 58995)].
+[INFO CTS-0024]  Normalized sink region: [(108.392, 30.1), (129.392, 43.7)].
+[INFO CTS-0025]     Width:  21.0000.
+[INFO CTS-0026]     Height: 13.6000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 10.5000 X 13.6000
+[INFO CTS-0034]     Segment length (rounded): 6.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 10.5000 X 6.8000
+[INFO CTS-0034]     Segment length (rounded): 4.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpru_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(144547, 26055), (171925, 43875)].
+[INFO CTS-0024]  Normalized sink region: [(107.072, 19.3), (127.352, 32.5)].
+[INFO CTS-0025]     Width:  20.2800.
+[INFO CTS-0026]     Height: 13.2000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 10.1400 X 13.2000
+[INFO CTS-0034]     Segment length (rounded): 6.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 10.1400 X 6.6000
+[INFO CTS-0034]     Segment length (rounded): 4.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqprt_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(141091, 7695), (175003, 29565)].
+[INFO CTS-0024]  Normalized sink region: [(104.512, 5.7), (129.632, 21.9)].
+[INFO CTS-0025]     Width:  25.1200.
+[INFO CTS-0026]     Height: 16.2000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 12.5600 X 16.2000
+[INFO CTS-0034]     Segment length (rounded): 6.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 12.5600 X 8.1000
+[INFO CTS-0034]     Segment length (rounded): 4.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqprs_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(158047, 4455), (167065, 7965)].
+[INFO CTS-0024]  Normalized sink region: [(117.072, 3.3), (123.752, 5.9)].
+[INFO CTS-0025]     Width:  6.6800.
+[INFO CTS-0026]     Height: 2.6000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 3.3400 X 2.6000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 3.3400 X 1.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqprr_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(150217, 4455), (158047, 10665)].
+[INFO CTS-0024]  Normalized sink region: [(111.272, 3.3), (117.072, 7.9)].
+[INFO CTS-0025]     Width:  5.8000.
+[INFO CTS-0026]     Height: 4.6000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 2.9000 X 4.6000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 2.9000 X 2.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqprq_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(141250, 4455), (150217, 12781)].
+[INFO CTS-0024]  Normalized sink region: [(104.63, 3.3), (111.272, 9.46741)].
+[INFO CTS-0025]     Width:  6.6422.
+[INFO CTS-0026]     Height: 6.1674.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 3.3211 X 6.1674
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 3.3211 X 3.0837
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqprp_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(167173, 4455), (174841, 9585)].
+[INFO CTS-0024]  Normalized sink region: [(123.832, 3.3), (129.512, 7.1)].
+[INFO CTS-0025]     Width:  5.6800.
+[INFO CTS-0026]     Height: 3.8000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 2.8400 X 3.8000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 2.8400 X 1.9000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpq_r0_out.
+[INFO CTS-0028]  Total number of sinks: 7.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(126666, 66285), (127155, 72765)].
+[INFO CTS-0024]  Normalized sink region: [(93.8267, 49.1), (94.1889, 53.9)].
+[INFO CTS-0025]     Width:  0.3622.
+[INFO CTS-0026]     Height: 4.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 4
+    Sub-region size: 0.3622 X 2.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 7.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpqv_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(141793, 74655), (148975, 84915)].
+[INFO CTS-0024]  Normalized sink region: [(105.032, 55.3), (110.352, 62.9)].
+[INFO CTS-0025]     Width:  5.3200.
+[INFO CTS-0026]     Height: 7.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 5.3200 X 3.8000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.6600 X 3.8000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpqu_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(135583, 68715), (143575, 77625)].
+[INFO CTS-0024]  Normalized sink region: [(100.432, 50.9), (106.352, 57.5)].
+[INFO CTS-0025]     Width:  5.9200.
+[INFO CTS-0026]     Height: 6.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 5.9200 X 3.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.9600 X 3.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpqt_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(131263, 60075), (148057, 69525)].
+[INFO CTS-0024]  Normalized sink region: [(97.2319, 44.5), (109.672, 51.5)].
+[INFO CTS-0025]     Width:  12.4400.
+[INFO CTS-0026]     Height: 7.0000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 6.2200 X 7.0000
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 6.2200 X 3.5000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpqs_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(116356, 53281), (148003, 63855)].
+[INFO CTS-0024]  Normalized sink region: [(86.1896, 39.4674), (109.632, 47.3)].
+[INFO CTS-0025]     Width:  23.4422.
+[INFO CTS-0026]     Height: 7.8326.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 11.7211 X 7.8326
+[INFO CTS-0034]     Segment length (rounded): 6.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 11.7211 X 3.9163
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpqr_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(101185, 58141), (117220, 66285)].
+[INFO CTS-0024]  Normalized sink region: [(74.9519, 43.0674), (86.8296, 49.1)].
+[INFO CTS-0025]     Width:  11.8778.
+[INFO CTS-0026]     Height: 6.0326.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 5.9389 X 6.0326
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 5.9389 X 3.0163
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpqq_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(100807, 64935), (108961, 71415)].
+[INFO CTS-0024]  Normalized sink region: [(74.6719, 48.1), (80.7119, 52.9)].
+[INFO CTS-0025]     Width:  6.0400.
+[INFO CTS-0026]     Height: 4.8000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 3.0200 X 4.8000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 3.0200 X 2.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpqp_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(100591, 70605), (110311, 80325)].
+[INFO CTS-0024]  Normalized sink region: [(74.5119, 52.3), (81.7119, 59.5)].
+[INFO CTS-0025]     Width:  7.2000.
+[INFO CTS-0026]     Height: 7.2000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 7.2000 X 3.6000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 3.6000 X 3.6000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpp_r0_out.
+[INFO CTS-0028]  Total number of sinks: 9.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(115866, 14985), (116895, 30105)].
+[INFO CTS-0024]  Normalized sink region: [(85.8267, 11.1), (86.5889, 22.3)].
+[INFO CTS-0025]     Width:  0.7622.
+[INFO CTS-0026]     Height: 11.2000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 5
+    Sub-region size: 0.7622 X 5.6000
+[INFO CTS-0034]     Segment length (rounded): 3.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 9.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqppw_out.
+[INFO CTS-0028]  Total number of sinks: 3.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(126994, 52018), (128938, 52741)].
+[INFO CTS-0024]  Normalized sink region: [(94.0696, 38.5319), (95.5096, 39.0674)].
+[INFO CTS-0025]     Width:  1.4400.
+[INFO CTS-0026]     Height: 0.5356.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 2
+    Sub-region size: 0.7200 X 0.5356
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 3.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqppv_out.
+[INFO CTS-0028]  Total number of sinks: 48.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(131857, 4455), (140551, 12781)].
+[INFO CTS-0024]  Normalized sink region: [(97.6719, 3.3), (104.112, 9.46741)].
+[INFO CTS-0025]     Width:  6.4400.
+[INFO CTS-0026]     Height: 6.1674.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 24
+    Sub-region size: 3.2200 X 6.1674
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 12
+    Sub-region size: 3.2200 X 3.0837
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 48.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqppu_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(126184, 4455), (132127, 13138)].
+[INFO CTS-0024]  Normalized sink region: [(93.4696, 3.3), (97.8719, 9.73185)].
+[INFO CTS-0025]     Width:  4.4022.
+[INFO CTS-0026]     Height: 6.4319.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 4.4022 X 3.2159
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.2011 X 3.2159
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqppt_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(119491, 4455), (126133, 11518)].
+[INFO CTS-0024]  Normalized sink region: [(88.5119, 3.3), (93.4319, 8.53185)].
+[INFO CTS-0025]     Width:  4.9200.
+[INFO CTS-0026]     Height: 5.2319.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 4.9200 X 2.6159
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.4600 X 2.6159
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqpps_out.
+[INFO CTS-0028]  Total number of sinks: 46.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(113278, 10621), (139741, 27405)].
+[INFO CTS-0024]  Normalized sink region: [(83.9096, 7.86741), (103.512, 20.3)].
+[INFO CTS-0025]     Width:  19.6022.
+[INFO CTS-0026]     Height: 12.4326.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 23
+    Sub-region size: 9.8011 X 12.4326
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 12
+    Sub-region size: 9.8011 X 6.2163
+[INFO CTS-0034]     Segment length (rounded): 4.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 46.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqppr_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(100699, 49858), (127750, 57418)].
+[INFO CTS-0024]  Normalized sink region: [(74.5919, 36.9319), (94.6296, 42.5319)].
+[INFO CTS-0025]     Width:  20.0378.
+[INFO CTS-0026]     Height: 5.6000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 10.0189 X 5.6000
+[INFO CTS-0034]     Segment length (rounded): 6.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 10.0189 X 2.8000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqppq_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(112198, 4455), (119434, 19261)].
+[INFO CTS-0024]  Normalized sink region: [(83.1096, 3.3), (88.4696, 14.2674)].
+[INFO CTS-0025]     Width:  5.3600.
+[INFO CTS-0026]     Height: 10.9674.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 5.3600 X 5.4837
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.6800 X 5.4837
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tqppp_out.
+[INFO CTS-0028]  Total number of sinks: 50.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(100642, 4455), (111769, 7425)].
+[INFO CTS-0024]  Normalized sink region: [(74.5496, 3.3), (82.7919, 5.5)].
+[INFO CTS-0025]     Width:  8.2422.
+[INFO CTS-0026]     Height: 2.2000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 4.1211 X 2.2000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 4.1211 X 1.1000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 50.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tp_r0_out.
+[INFO CTS-0028]  Total number of sinks: 2.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(11595, 60345), (12024, 60615)].
+[INFO CTS-0024]  Normalized sink region: [(8.58889, 44.7), (8.90667, 44.9)].
+[INFO CTS-0025]     Width:  0.3178.
+[INFO CTS-0026]     Height: 0.2000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 1
+    Sub-region size: 0.1589 X 0.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 2.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpq_br_out.
+[INFO CTS-0028]  Total number of sinks: 4.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(18666, 84105), (19155, 87345)].
+[INFO CTS-0024]  Normalized sink region: [(13.8267, 62.3), (14.1889, 64.7)].
+[INFO CTS-0025]     Width:  0.3622.
+[INFO CTS-0026]     Height: 2.4000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 2
+    Sub-region size: 0.3622 X 1.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 4.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqs_r0_out.
+[INFO CTS-0028]  Total number of sinks: 9.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(9486, 136755), (11055, 151065)].
+[INFO CTS-0024]  Normalized sink region: [(7.02667, 101.3), (8.18889, 111.9)].
+[INFO CTS-0025]     Width:  1.1622.
+[INFO CTS-0026]     Height: 10.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 5
+    Sub-region size: 1.1622 X 5.3000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 9.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqsx_out.
+[INFO CTS-0028]  Total number of sinks: 7.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(30013, 124335), (57877, 124875)].
+[INFO CTS-0024]  Normalized sink region: [(22.2319, 92.1), (42.8719, 92.5)].
+[INFO CTS-0025]     Width:  20.6400.
+[INFO CTS-0026]     Height: 0.4000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 4
+    Sub-region size: 10.3200 X 0.4000
+[INFO CTS-0034]     Segment length (rounded): 5.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 7.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqsw_out.
+[INFO CTS-0028]  Total number of sinks: 48.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 115425), (10789, 120825)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 85.5), (7.99185, 89.5)].
+[INFO CTS-0025]     Width:  4.6400.
+[INFO CTS-0026]     Height: 4.0000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 24
+    Sub-region size: 2.3200 X 4.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 12
+    Sub-region size: 2.3200 X 2.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 48.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqsv_out.
+[INFO CTS-0028]  Total number of sinks: 42.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(6847, 120555), (27205, 129465)].
+[INFO CTS-0024]  Normalized sink region: [(5.07185, 89.3), (20.1519, 95.9)].
+[INFO CTS-0025]     Width:  15.0800.
+[INFO CTS-0026]     Height: 6.6000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 21
+    Sub-region size: 7.5400 X 6.6000
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 11
+    Sub-region size: 7.5400 X 3.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 42.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqsu_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 132975), (11599, 142425)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 98.5), (8.59185, 105.5)].
+[INFO CTS-0025]     Width:  5.2400.
+[INFO CTS-0026]     Height: 7.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 5.2400 X 3.5000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.6200 X 3.5000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqst_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 119745), (8791, 128115)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 88.7), (6.51185, 94.9)].
+[INFO CTS-0025]     Width:  3.1600.
+[INFO CTS-0026]     Height: 6.2000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 3.1600 X 3.1000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.5800 X 3.1000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqss_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 142425), (10465, 154845)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 105.5), (7.75185, 114.7)].
+[INFO CTS-0025]     Width:  4.4000.
+[INFO CTS-0026]     Height: 9.2000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 4.4000 X 4.6000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.2000 X 4.6000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqsr_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 127575), (10735, 133245)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 94.5), (7.95185, 98.7)].
+[INFO CTS-0025]     Width:  4.6000.
+[INFO CTS-0026]     Height: 4.2000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 2.3000 X 4.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 2.3000 X 2.1000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqsq_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 155115), (7225, 168345)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 114.9), (5.35185, 124.7)].
+[INFO CTS-0025]     Width:  2.0000.
+[INFO CTS-0026]     Height: 9.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 2.0000 X 4.9000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.0000 X 4.9000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqr_r0_out.
+[INFO CTS-0028]  Total number of sinks: 7.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(9810, 97065), (11646, 102195)].
+[INFO CTS-0024]  Normalized sink region: [(7.26667, 71.9), (8.62667, 75.7)].
+[INFO CTS-0025]     Width:  1.3600.
+[INFO CTS-0026]     Height: 3.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 4
+    Sub-region size: 1.3600 X 1.9000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 7.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqrv_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(6739, 98145), (33307, 105435)].
+[INFO CTS-0024]  Normalized sink region: [(4.99185, 72.7), (24.6719, 78.1)].
+[INFO CTS-0025]     Width:  19.6800.
+[INFO CTS-0026]     Height: 5.4000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 9.8400 X 5.4000
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 9.8400 X 2.7000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqru_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 85995), (10195, 94635)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 63.7), (7.55185, 70.1)].
+[INFO CTS-0025]     Width:  4.2000.
+[INFO CTS-0026]     Height: 6.4000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 4.2000 X 3.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.1000 X 3.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqrt_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4687, 90855), (37627, 98145)].
+[INFO CTS-0024]  Normalized sink region: [(3.47185, 67.3), (27.8719, 72.7)].
+[INFO CTS-0025]     Width:  24.4000.
+[INFO CTS-0026]     Height: 5.4000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 12.2000 X 5.4000
+[INFO CTS-0034]     Segment length (rounded): 6.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 12.2000 X 2.7000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqrs_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 103275), (13597, 108945)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 76.5), (10.0719, 80.7)].
+[INFO CTS-0025]     Width:  6.7200.
+[INFO CTS-0026]     Height: 4.2000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 3.3600 X 4.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 3.3600 X 2.1000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqrr_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 107325), (11005, 113265)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 79.5), (8.15185, 83.9)].
+[INFO CTS-0025]     Width:  4.8000.
+[INFO CTS-0026]     Height: 4.4000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 2.4000 X 4.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 2.4000 X 2.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqrq_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 95175), (8791, 103275)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 70.5), (6.51185, 76.5)].
+[INFO CTS-0025]     Width:  3.1600.
+[INFO CTS-0026]     Height: 6.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 3.1600 X 3.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.5800 X 3.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqrp_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 111375), (11221, 116775)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 82.5), (8.31185, 86.5)].
+[INFO CTS-0025]     Width:  4.9600.
+[INFO CTS-0026]     Height: 4.0000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 2.4800 X 4.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 2.4800 X 2.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqq_r0_out.
+[INFO CTS-0028]  Total number of sinks: 8.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(79686, 80865), (80715, 95445)].
+[INFO CTS-0024]  Normalized sink region: [(59.0267, 59.9), (59.7889, 70.7)].
+[INFO CTS-0025]     Width:  0.7622.
+[INFO CTS-0026]     Height: 10.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 4
+    Sub-region size: 0.7622 X 5.4000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 8.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqqw_out.
+[INFO CTS-0028]  Total number of sinks: 17.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(70027, 86265), (89413, 96525)].
+[INFO CTS-0024]  Normalized sink region: [(51.8719, 63.9), (66.2319, 71.5)].
+[INFO CTS-0025]     Width:  14.3600.
+[INFO CTS-0026]     Height: 7.6000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 9
+    Sub-region size: 7.1800 X 7.6000
+[INFO CTS-0034]     Segment length (rounded): 4.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 17.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqqv_out.
+[INFO CTS-0028]  Total number of sinks: 32.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(59281, 124065), (100321, 124875)].
+[INFO CTS-0024]  Normalized sink region: [(43.9119, 91.9), (74.3119, 92.5)].
+[INFO CTS-0025]     Width:  30.4000.
+[INFO CTS-0026]     Height: 0.6000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 16
+    Sub-region size: 15.2000 X 0.6000
+[INFO CTS-0034]     Segment length (rounded): 7.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 8
+    Sub-region size: 15.2000 X 0.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 32.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqqu_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(78181, 63045), (100051, 88155)].
+[INFO CTS-0024]  Normalized sink region: [(57.9119, 46.7), (74.1119, 65.3)].
+[INFO CTS-0025]     Width:  16.2000.
+[INFO CTS-0026]     Height: 18.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 16.2000 X 9.3000
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 8.1000 X 9.3000
+[INFO CTS-0034]     Segment length (rounded): 4.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqqt_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(56635, 80865), (68245, 95175)].
+[INFO CTS-0024]  Normalized sink region: [(41.9519, 59.9), (50.5519, 70.5)].
+[INFO CTS-0025]     Width:  8.6000.
+[INFO CTS-0026]     Height: 10.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 8.6000 X 5.3000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 4.3000 X 5.3000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqqs_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(44053, 83565), (56635, 93015)].
+[INFO CTS-0024]  Normalized sink region: [(32.6319, 61.9), (41.9519, 68.9)].
+[INFO CTS-0025]     Width:  9.3200.
+[INFO CTS-0026]     Height: 7.0000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 4.6600 X 7.0000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 4.6600 X 3.5000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqqr_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(67813, 80055), (80827, 94365)].
+[INFO CTS-0024]  Normalized sink region: [(50.2319, 59.3), (59.8719, 69.9)].
+[INFO CTS-0025]     Width:  9.6400.
+[INFO CTS-0026]     Height: 10.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 9.6400 X 5.3000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 4.8200 X 5.3000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqqq_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(91573, 57645), (100429, 74925)].
+[INFO CTS-0024]  Normalized sink region: [(67.8319, 42.7), (74.3919, 55.5)].
+[INFO CTS-0025]     Width:  6.5600.
+[INFO CTS-0026]     Height: 12.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 6.5600 X 6.4000
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 3.2800 X 6.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqqp_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(69703, 57645), (91087, 65475)].
+[INFO CTS-0024]  Normalized sink region: [(51.6319, 42.7), (67.4719, 48.5)].
+[INFO CTS-0025]     Width:  15.8400.
+[INFO CTS-0026]     Height: 5.8000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 7.9200 X 5.8000
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 7.9200 X 2.9000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqp_r0_out.
+[INFO CTS-0028]  Total number of sinks: 7.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(24066, 64125), (25635, 69525)].
+[INFO CTS-0024]  Normalized sink region: [(17.8267, 47.5), (18.9889, 51.5)].
+[INFO CTS-0025]     Width:  1.1622.
+[INFO CTS-0026]     Height: 4.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 4
+    Sub-region size: 1.1622 X 2.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 7.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqpv_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(39139, 57645), (66733, 76815)].
+[INFO CTS-0024]  Normalized sink region: [(28.9919, 42.7), (49.4319, 56.9)].
+[INFO CTS-0025]     Width:  20.4400.
+[INFO CTS-0026]     Height: 14.2000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 10.2200 X 14.2000
+[INFO CTS-0034]     Segment length (rounded): 6.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 10.2200 X 7.1000
+[INFO CTS-0034]     Segment length (rounded): 4.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqpu_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(20236, 57915), (38866, 77355)].
+[INFO CTS-0024]  Normalized sink region: [(14.9896, 42.9), (28.7896, 57.3)].
+[INFO CTS-0025]     Width:  13.8000.
+[INFO CTS-0026]     Height: 14.4000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 13.8000 X 7.2000
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 6.9000 X 7.2000
+[INFO CTS-0034]     Segment length (rounded): 4.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqpt_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(13702, 57915), (21103, 64621)].
+[INFO CTS-0024]  Normalized sink region: [(10.1496, 42.9), (15.6319, 47.8674)].
+[INFO CTS-0025]     Width:  5.4822.
+[INFO CTS-0026]     Height: 4.9674.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 2.7411 X 4.9674
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 2.7411 X 2.4837
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqps_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(25207, 80595), (46267, 94635)].
+[INFO CTS-0024]  Normalized sink region: [(18.6719, 59.7), (34.2719, 70.1)].
+[INFO CTS-0025]     Width:  15.6000.
+[INFO CTS-0026]     Height: 10.4000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 7.8000 X 10.4000
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 7.8000 X 5.2000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqpr_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 56835), (14353, 62775)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 42.1), (10.6319, 46.5)].
+[INFO CTS-0025]     Width:  7.2800.
+[INFO CTS-0026]     Height: 4.4000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 3.6400 X 4.4000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 3.6400 X 2.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqpq_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 58725), (17269, 93285)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 43.5), (12.7919, 69.1)].
+[INFO CTS-0025]     Width:  9.4400.
+[INFO CTS-0026]     Height: 25.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 9.4400 X 12.8000
+[INFO CTS-0034]     Segment length (rounded): 6.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 4.7200 X 12.8000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpqpp_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 59535), (5875, 74925)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 44.1), (4.35185, 55.5)].
+[INFO CTS-0025]     Width:  1.0000.
+[INFO CTS-0026]     Height: 11.4000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 1.0000 X 5.7000
+[INFO CTS-0034]     Segment length (rounded): 3.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 0.5000 X 5.7000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpp_br_out.
+[INFO CTS-0028]  Total number of sinks: 4.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(9486, 27945), (11646, 28485)].
+[INFO CTS-0024]  Normalized sink region: [(7.02667, 20.7), (8.62667, 21.1)].
+[INFO CTS-0025]     Width:  1.6000.
+[INFO CTS-0026]     Height: 0.4000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 2
+    Sub-region size: 0.8000 X 0.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 4.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpps_r0_out.
+[INFO CTS-0028]  Total number of sinks: 8.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(18075, 9045), (24444, 10935)].
+[INFO CTS-0024]  Normalized sink region: [(13.3889, 6.7), (18.1067, 8.1)].
+[INFO CTS-0025]     Width:  4.7178.
+[INFO CTS-0026]     Height: 1.4000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 4
+    Sub-region size: 2.3589 X 1.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 8.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppsw_out.
+[INFO CTS-0028]  Total number of sinks: 14.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(73537, 4455), (77857, 7425)].
+[INFO CTS-0024]  Normalized sink region: [(54.4719, 3.3), (57.6719, 5.5)].
+[INFO CTS-0025]     Width:  3.2000.
+[INFO CTS-0026]     Height: 2.2000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 7
+    Sub-region size: 1.6000 X 2.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 14.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppsv_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(89845, 4455), (100537, 8461)].
+[INFO CTS-0024]  Normalized sink region: [(66.5519, 3.3), (74.4719, 6.26741)].
+[INFO CTS-0025]     Width:  7.9200.
+[INFO CTS-0026]     Height: 2.9674.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 3.9600 X 2.9674
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 3.9600 X 1.4837
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppsu_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(77479, 4455), (89737, 7155)].
+[INFO CTS-0024]  Normalized sink region: [(57.3919, 3.3), (66.4719, 5.3)].
+[INFO CTS-0025]     Width:  9.0800.
+[INFO CTS-0026]     Height: 2.0000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 4.5400 X 2.0000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 4.5400 X 1.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppst_out.
+[INFO CTS-0028]  Total number of sinks: 35.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(51721, 56835), (95407, 57645)].
+[INFO CTS-0024]  Normalized sink region: [(38.3119, 42.1), (70.6719, 42.7)].
+[INFO CTS-0025]     Width:  32.3600.
+[INFO CTS-0026]     Height: 0.6000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 18
+    Sub-region size: 16.1800 X 0.6000
+[INFO CTS-0034]     Segment length (rounded): 8.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 16.1800 X 0.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 35.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppss_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(62899, 4455), (77263, 7695)].
+[INFO CTS-0024]  Normalized sink region: [(46.5919, 3.3), (57.2319, 5.7)].
+[INFO CTS-0025]     Width:  10.6400.
+[INFO CTS-0026]     Height: 2.4000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 5.3200 X 2.4000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 5.3200 X 1.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppsr_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(51451, 4455), (62737, 7965)].
+[INFO CTS-0024]  Normalized sink region: [(38.1119, 3.3), (46.4719, 5.9)].
+[INFO CTS-0025]     Width:  8.3600.
+[INFO CTS-0026]     Height: 2.6000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 4.1800 X 2.6000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 4.1800 X 1.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppsq_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(40003, 4455), (51289, 7425)].
+[INFO CTS-0024]  Normalized sink region: [(29.6319, 3.3), (37.9919, 5.5)].
+[INFO CTS-0025]     Width:  8.3600.
+[INFO CTS-0026]     Height: 2.2000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 4.1800 X 2.2000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 4.1800 X 1.1000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppsp_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(27691, 4455), (39895, 7425)].
+[INFO CTS-0024]  Normalized sink region: [(20.5119, 3.3), (29.5519, 5.5)].
+[INFO CTS-0025]     Width:  9.0400.
+[INFO CTS-0026]     Height: 2.2000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 4.5200 X 2.2000
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 4.5200 X 1.1000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppr_r0_out.
+[INFO CTS-0028]  Total number of sinks: 8.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(17586, 58725), (19695, 68445)].
+[INFO CTS-0024]  Normalized sink region: [(13.0267, 43.5), (14.5889, 50.7)].
+[INFO CTS-0025]     Width:  1.5622.
+[INFO CTS-0026]     Height: 7.2000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 4
+    Sub-region size: 1.5622 X 3.6000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 8.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpprw_out.
+[INFO CTS-0028]  Total number of sinks: 48.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(16243, 56565), (51397, 57645)].
+[INFO CTS-0024]  Normalized sink region: [(12.0319, 41.9), (38.0719, 42.7)].
+[INFO CTS-0025]     Width:  26.0400.
+[INFO CTS-0026]     Height: 0.8000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 24
+    Sub-region size: 13.0200 X 0.8000
+[INFO CTS-0034]     Segment length (rounded): 6.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 12
+    Sub-region size: 13.0200 X 0.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 48.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpprv_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(8413, 37395), (12409, 44685)].
+[INFO CTS-0024]  Normalized sink region: [(6.23185, 27.7), (9.19185, 33.1)].
+[INFO CTS-0025]     Width:  2.9600.
+[INFO CTS-0026]     Height: 5.4000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 2.9600 X 2.7000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.4800 X 2.7000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppru_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(8629, 51705), (16027, 57645)].
+[INFO CTS-0024]  Normalized sink region: [(6.39185, 38.3), (11.8719, 42.7)].
+[INFO CTS-0025]     Width:  5.4800.
+[INFO CTS-0026]     Height: 4.4000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 2.7400 X 4.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 2.7400 X 2.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpprt_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(8413, 44955), (12409, 51705)].
+[INFO CTS-0024]  Normalized sink region: [(6.23185, 33.3), (9.19185, 38.3)].
+[INFO CTS-0025]     Width:  2.9600.
+[INFO CTS-0026]     Height: 5.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 2.9600 X 2.5000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.4800 X 2.5000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpprs_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 50355), (9871, 56565)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 37.3), (7.31185, 41.9)].
+[INFO CTS-0025]     Width:  3.9600.
+[INFO CTS-0026]     Height: 4.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 3.9600 X 2.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.9800 X 2.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpprr_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 44955), (9655, 50625)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 33.3), (7.15185, 37.5)].
+[INFO CTS-0025]     Width:  3.8000.
+[INFO CTS-0026]     Height: 4.2000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 3.8000 X 2.1000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.9000 X 2.1000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpprq_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 39555), (9817, 44955)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 29.3), (7.27185, 33.3)].
+[INFO CTS-0025]     Width:  3.9200.
+[INFO CTS-0026]     Height: 4.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 3.9200 X 2.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.9600 X 2.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppq_r0_out.
+[INFO CTS-0028]  Total number of sinks: 7.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(20775, 9045), (22935, 10395)].
+[INFO CTS-0024]  Normalized sink region: [(15.3889, 6.7), (16.9889, 7.7)].
+[INFO CTS-0025]     Width:  1.6000.
+[INFO CTS-0026]     Height: 1.0000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 4
+    Sub-region size: 0.8000 X 1.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 7.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppqv_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(22777, 4455), (28987, 10665)].
+[INFO CTS-0024]  Normalized sink region: [(16.8719, 3.3), (21.4719, 7.9)].
+[INFO CTS-0025]     Width:  4.6000.
+[INFO CTS-0026]     Height: 4.6000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 2.3000 X 4.6000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 2.3000 X 2.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppqu_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(17377, 4455), (22777, 10935)].
+[INFO CTS-0024]  Normalized sink region: [(12.8719, 3.3), (16.8719, 8.1)].
+[INFO CTS-0025]     Width:  4.0000.
+[INFO CTS-0026]     Height: 4.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 4.0000 X 2.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.0000 X 2.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppqt_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(11329, 4455), (17485, 10665)].
+[INFO CTS-0024]  Normalized sink region: [(8.39185, 3.3), (12.9519, 7.9)].
+[INFO CTS-0025]     Width:  4.5600.
+[INFO CTS-0026]     Height: 4.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 4.5600 X 2.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 2.2800 X 2.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppqs_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 13365), (12409, 17955)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 9.9), (9.19185, 13.3)].
+[INFO CTS-0025]     Width:  5.8400.
+[INFO CTS-0026]     Height: 3.4000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 2.9200 X 3.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 2.9200 X 1.7000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppqr_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(6361, 8505), (12463, 13635)].
+[INFO CTS-0024]  Normalized sink region: [(4.71185, 6.3), (9.23185, 10.1)].
+[INFO CTS-0025]     Width:  4.5200.
+[INFO CTS-0026]     Height: 3.8000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 2.2600 X 3.8000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 2.2600 X 1.9000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppqq_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 4455), (11707, 8775)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 3.3), (8.67185, 6.5)].
+[INFO CTS-0025]     Width:  5.3200.
+[INFO CTS-0026]     Height: 3.2000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 2.6600 X 3.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 2.6600 X 1.6000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppqp_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 6615), (7117, 14175)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 4.9), (5.27185, 10.5)].
+[INFO CTS-0025]     Width:  1.9200.
+[INFO CTS-0026]     Height: 5.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 1.9200 X 2.8000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 0.9600 X 2.8000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppp_r0_out.
+[INFO CTS-0028]  Total number of sinks: 7.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(8946, 27405), (11646, 29025)].
+[INFO CTS-0024]  Normalized sink region: [(6.62667, 20.3), (8.62667, 21.5)].
+[INFO CTS-0025]     Width:  2.0000.
+[INFO CTS-0026]     Height: 1.2000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 4
+    Sub-region size: 1.0000 X 1.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 7.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpppv_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(6469, 33615), (12409, 39555)].
+[INFO CTS-0024]  Normalized sink region: [(4.79185, 24.9), (9.19185, 29.3)].
+[INFO CTS-0025]     Width:  4.4000.
+[INFO CTS-0026]     Height: 4.4000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 2.2000 X 4.4000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 2.2000 X 2.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpppu_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 31185), (7927, 39555)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 23.1), (5.87185, 29.3)].
+[INFO CTS-0025]     Width:  2.5200.
+[INFO CTS-0026]     Height: 6.2000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 2.5200 X 3.1000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.2600 X 3.1000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpppt_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(7657, 29025), (12409, 34695)].
+[INFO CTS-0024]  Normalized sink region: [(5.67185, 21.5), (9.19185, 25.7)].
+[INFO CTS-0025]     Width:  3.5200.
+[INFO CTS-0026]     Height: 4.2000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 3.5200 X 2.1000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.7600 X 2.1000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tppps_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 25515), (9439, 31725)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 18.9), (6.99185, 23.5)].
+[INFO CTS-0025]     Width:  3.6400.
+[INFO CTS-0026]     Height: 4.6000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 3.6400 X 2.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.8200 X 2.3000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpppr_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(7333, 20655), (12409, 28755)].
+[INFO CTS-0024]  Normalized sink region: [(5.43185, 15.3), (9.19185, 21.3)].
+[INFO CTS-0025]     Width:  3.7600.
+[INFO CTS-0026]     Height: 6.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 3.7600 X 3.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 1.8800 X 3.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpppq_out.
+[INFO CTS-0028]  Total number of sinks: 49.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 20385), (9385, 25245)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 15.1), (6.95185, 18.7)].
+[INFO CTS-0025]     Width:  3.6000.
+[INFO CTS-0026]     Height: 3.6000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 1.8000 X 3.6000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 1.8000 X 1.8000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 2 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net mp_ck_Tpppp_out.
+[INFO CTS-0028]  Total number of sinks: 50.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(4525, 16065), (11167, 20385)].
+[INFO CTS-0024]  Normalized sink region: [(3.35185, 11.9), (8.27185, 15.1)].
+[INFO CTS-0025]     Width:  4.9200.
+[INFO CTS-0026]     Height: 3.2000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 25
+    Sub-region size: 2.4600 X 3.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 2.4600 X 1.6000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 50.
+[ERROR ODB-0370] Attempt to disconnect term A of dont_touch instance mp_ck_Tq_br
+Error: cts.tcl, 36 ODB-0370
+Elapsed time: 0:08.61[h:]min:sec. CPU time: user 8.25 sys 0.36 (99%). Peak memory: 398732KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/4_1_cts.odb] Error 2

@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS-COND_ONE_CTS_GRT50_NO_DRT",
+ "actual_buffers": 410,
+ "max_buffer_plan_displacement_um": 0.0,
+ "original_cells_unchanged": 17721,
+ "actual_dpl_check": "PASS",
+ "picture": "q3_actual_dpl_clock_overlay.png",
+ "findings": "Explicit branches follow S/W face banks and macro channels; all original cells/macros fixed; clock buffers exact legal footprint, no new macro wall. TT/FF timing, PG, clock-inclusive GRT50 remain to measure."
+}
