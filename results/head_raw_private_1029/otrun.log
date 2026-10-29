@@ -1,0 +1,11 @@
+ot-run: epyc2          admits   811 GB (avail 895, reserve 0, fresh 0, peak 19.8, headroom 0, waiters 0/0 GB) load 20/128 running 9 disk 276 GB 
+ot-run: -> epyc2
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-2934138-1793274899 after 0 s
+RAW_EXPORT_MUTANT_CAUGHT
+RAW_EXPORT_PAIR_PASS checks=4095 added_cycles=0 added_FF=1
+- /srv/opentallas-scratch2/claude/codex-head-raw-private-1029/rtl/test/meso/raw_export/tb_raw_export.sv:24: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.002 s; speed 1.582 ms/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB
+RAW_EXPORT_PAIR_RETAINED actual_FF=2 added_FF=1 distinct_outputs=2 added_cycles=0
+ot-run: RAN on epyc2 (unit oth-ubuntu-2934138-1793274899): exit 0

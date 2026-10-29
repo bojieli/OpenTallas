@@ -1,0 +1,9 @@
+DIE-S81-23 2026-10-29 05:4x PDT, intel2 iverilog 12 -- S81 reset assertion width under OWNER 10-29 05:3x (boot holds rst_n low >= 64 clocks)
+cells: ot_dp_rsync_s2 + ot_dp_rrelay exactly as emitted by tools/die_plan/gen_rtl.py (main 2b90210bd; byte-same as Codex counterexample cells.sv)
+bench: tb64.sv, rsync_s2 root + 64 synchronous relays, known-low posedges counted at every depth 0..64, cold + warm, 833 ps clock
+HOLD=64 (owner contract): COLD min_sink_known_low=66 (depth0 66, depth64 66); WARM 66  -> every sink >= 64 edges PASS
+HOLD=63: 65/65 (still >= 64: 2-edge sync margin)
+HOLD=61 (mutant control): 63/63 BELOW64 -> caught
+Conclusion: synchronous relays preserve the root assertion width (+2 sync edges) at any depth, so the owner's >= 64-clock boot hold gives
+>= 64 known-low edges at every S81 core reset pin reached through the standard rsync_s2 + rrelay chain; no extra per-core stages.
+(Codex 67729fb50 counterexample = 1-cycle root assertion -> 3 edges; consistent: width in = width out + 2.)

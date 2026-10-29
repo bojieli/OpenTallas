@@ -1,0 +1,416 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-10-29T11:59:38+0000",
+ "verdict": "EQUIVALENT",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": null,
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "top": "ot_s81hd_tile_p",
+ "netlist": "/work/run/results/asap7/dp_hd_tile/base/1_2_yosys.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {
+  "ot_s81hd_elemA_cv": 24,
+  "ot_s81hd_elemB_cv": 15
+ },
+ "ports": {
+  "inputs": 600,
+  "outputs": 590
+ },
+ "t_aig_s": 24.7,
+ "kit_reset_ports": null,
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [
+    "pi:arst_n[0]"
+   ],
+   "gate": [
+    "pi:arst_n[0]"
+   ]
+  },
+  "reset_asserted": {
+   "gold": {
+    "pi:arst_n[0]": 0
+   },
+   "gate": {
+    "pi:arst_n[0]": 0
+   }
+  },
+  "reset_cycles": 4,
+  "release_edges": 8,
+  "n_release": 0,
+  "release": [],
+  "n_universal_raw_D": 0,
+  "universal_raw_D": [],
+  "raw_base_steps": 0,
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_kept": 8,
+  "n_reloaded": 0,
+  "n_dropped": 18,
+  "reloaded": [],
+  "dropped": [
+   {
+    "register": "ff:u_dut.u_cland_i.arm_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_i.fault_state",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_i.tmo_cnt[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_i.tmo_cnt[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_i.tmo_cnt[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_i.tmo_cnt[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_i.u_ring.g_tag.s_tag[0][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_i.u_ring.g_tag.s_tag[0][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_i.u_ring.g_tag.s_tag[1][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_i.u_ring.g_tag.s_tag[1][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_i.u_ring.g_tag.s_tag[2][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_i.u_ring.g_tag.s_tag[2][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_i.u_ring.g_tag.s_tag[3][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_i.u_ring.g_tag.s_tag[3][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_i.u_ring.tc[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_cland_i.u_ring.tc[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_core.fired",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_core.own_have",
+    "side": "both",
+    "value": 0
+   }
+  ],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants; equality/FSM assumptions never establish a constant's base case"
+ },
+ "t_corr_s": 80.7,
+ "keypoints": {
+  "gold": {
+   "inputs": 658,
+   "flops": 31336,
+   "outputs": 0,
+   "ands": 23624
+  },
+  "gate": {
+   "inputs": 767,
+   "flops": 58921,
+   "outputs": 0,
+   "ands": 17290
+  },
+  "matched": 26996,
+  "gold_constant_flops": {
+   "n": 8,
+   "first": [
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[56]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[57]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[58]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[59]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[60]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[61]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[62]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[63]"
+   ]
+  },
+  "paired_flops": {
+   "n": 4391,
+   "first": [
+    "both:ff:u_dut.u_cland_i.u_fault_port.q=ff:u_dut.u_cland_i.fault_state",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[1].u_dsel.di[0]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[0]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[1].u_dsel.di[1]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[1]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[1].u_dsel.di[2]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[2]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[1].u_dsel.di[3]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[3]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[2].u_dsel.di[0]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[0]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[2].u_dsel.di[1]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[1]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[2].u_dsel.di[2]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[2]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[2].u_dsel.di[3]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[3]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[3].u_dsel.di[0]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[0]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[3].u_dsel.di[1]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[1]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[3].u_dsel.di[2]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[2]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[3].u_dsel.di[3]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[3]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[4].u_dsel.di[0]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[0]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[4].u_dsel.di[1]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[1]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[4].u_dsel.di[2]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[2]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[4].u_dsel.di[3]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[3]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[5].u_dsel.di[0]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[0]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[5].u_dsel.di[1]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[1]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[5].u_dsel.di[2]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[2]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[5].u_dsel.di[3]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[3]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[6].u_dsel.di[0]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[0]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[6].u_dsel.di[1]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[1]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[6].u_dsel.di[2]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[2]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[6].u_dsel.di[3]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[3]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[7].u_dsel.di[0]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[0]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[7].u_dsel.di[1]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[1]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[7].u_dsel.di[2]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[2]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[7].u_dsel.di[3]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[3]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.di[0]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[0]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.di[1]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[1]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.di[2]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[2]",
+    "both:ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.di[3]=ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[3]",
+    "both:ff:u_dut.u_cland_i.u_ring.g_control_status_copy.u_status.lap_q[0]=ff:u_dut.u_cland_i.u_ring.g_control_status_copy.u_guard_status.lap_q[0]",
+    "both:ff:u_dut.u_cland_i.u_ring.g_control_status_copy.u_status.lap_q[1]=ff:u_dut.u_cland_i.u_ring.g_control_status_copy.u_guard_status.lap_q[1]",
+    "both:ff:u_dut.u_cland_i.u_ring.g_control_status_copy.u_status.lap_q[2]=ff:u_dut.u_cland_i.u_ring.g_control_status_copy.u_guard_status.lap_q[2]",
+    "both:ff:u_dut.u_cland_i.u_ring.g_control_status_copy.u_status.lap_q[3]=ff:u_dut.u_cland_i.u_ring.g_control_status_copy.u_guard_status.lap_q[3]",
+    "both:ff:u_dut.u_cland_i.u_ring.g_control_status_copy.u_status.written[0]=ff:u_dut.u_cland_i.u_ring.g_control_status_copy.u_guard_status.written[0]",
+    "both:ff:u_dut.u_cland_i.u_ring.g_control_status_copy.u_status.written[1]=ff:u_dut.u_cland_i.u_ring.g_control_status_copy.u_guard_status.written[1]",
+    "both:ff:u_dut.u_cland_i.u_ring.g_control_status_copy.u_status.written[2]=ff:u_dut.u_cland_i.u_ring.g_control_status_copy.u_guard_status.written[2]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 6,
+   "first": [
+    "ff:u_dut.u_bin_i.eq",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[53]",
+    "ff:u_dut.u_cland_i.u_ring.s_d#t[0][565]",
+    "ff:u_dut.u_cland_i.u_ring.s_d#t[1][565]",
+    "ff:u_dut.u_cland_i.u_ring.s_d#t[2][565]",
+    "ff:u_dut.u_cland_i.u_ring.s_d#t[3][565]"
+   ]
+  },
+  "gold_x_sources": 58,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 167,
+  "gold_only_compare": {
+   "n": 2835,
+   "first": [
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[0]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[10]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[11]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[12]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[13]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[14]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[15]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[16]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[17]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[18]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[19]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[1]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[20]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[21]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[22]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[23]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[24]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[25]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[26]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[27]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[28]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[29]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[2]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[30]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[31]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[32]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[33]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[34]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[35]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[36]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[37]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[38]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[39]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[3]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[40]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[41]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[42]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[43]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[44]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y[45]"
+   ]
+  },
+  "gate_only_compare": {
+   "n": 2337,
+   "first": [
+    "ff:u_dut.u_bin_i.eq",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[0]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[10]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[11]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[12]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[13]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[14]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[15]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[16]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[17]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[18]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[19]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[1]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[20]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[21]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[22]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[23]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[24]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[25]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[26]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[27]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[28]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[29]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[2]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[30]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[31]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[32]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[33]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[34]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[35]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[36]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[37]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[38]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[39]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[3]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[40]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[41]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[42]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[43]",
+    "ff:u_dut.u_cland_i.u_ring.dch[8].u_dsel.y#t[44]"
+   ]
+  }
+ },
+ "t_prove_s": 0.5,
+ "x_dont_care_points": {
+  "n": 50,
+  "first": [
+   "ff:u_dut.u_cland_i.arm_cnt[0]",
+   "ff:u_dut.u_cland_i.arm_cnt[1]",
+   "ff:u_dut.u_cland_i.arm_cnt[2]",
+   "ff:u_dut.u_cland_i.arm_cnt[3]",
+   "ff:u_dut.u_cland_i.seen",
+   "ff:u_dut.u_cland_i.tmo_cnt[0]",
+   "ff:u_dut.u_cland_i.tmo_cnt[1]",
+   "ff:u_dut.u_cland_i.tmo_cnt[2]",
+   "ff:u_dut.u_cland_i.tmo_cnt[3]",
+   "ff:u_dut.u_cland_i.tmo_cnt[4]",
+   "ff:u_dut.u_cland_i.tmo_cnt[5]",
+   "ff:u_dut.u_cland_i.tmo_cnt[6]",
+   "ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[0]",
+   "ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[1]",
+   "ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[2]",
+   "ff:u_dut.u_cland_i.u_ring.dch[0].u_dsel.di[3]",
+   "ff:u_dut.u_cland_i.u_ring.dch[1].u_dsel.di[0]",
+   "ff:u_dut.u_cland_i.u_ring.dch[1].u_dsel.di[1]",
+   "ff:u_dut.u_cland_i.u_ring.dch[1].u_dsel.di[2]",
+   "ff:u_dut.u_cland_i.u_ring.dch[1].u_dsel.di[3]",
+   "ff:u_dut.u_cland_i.u_ring.dch[2].u_dsel.di[0]",
+   "ff:u_dut.u_cland_i.u_ring.dch[2].u_dsel.di[1]",
+   "ff:u_dut.u_cland_i.u_ring.dch[2].u_dsel.di[2]",
+   "ff:u_dut.u_cland_i.u_ring.dch[2].u_dsel.di[3]",
+   "ff:u_dut.u_cland_i.u_ring.dch[3].u_dsel.di[0]",
+   "ff:u_dut.u_cland_i.u_ring.dch[3].u_dsel.di[1]",
+   "ff:u_dut.u_cland_i.u_ring.dch[3].u_dsel.di[2]",
+   "ff:u_dut.u_cland_i.u_ring.dch[3].u_dsel.di[3]",
+   "ff:u_dut.u_cland_i.u_ring.dch[4].u_dsel.di[0]",
+   "ff:u_dut.u_cland_i.u_ring.dch[4].u_dsel.di[1]",
+   "ff:u_dut.u_cland_i.u_ring.dch[4].u_dsel.di[2]",
+   "ff:u_dut.u_cland_i.u_ring.dch[4].u_dsel.di[3]",
+   "ff:u_dut.u_cland_i.u_ring.dch[5].u_dsel.di[0]",
+   "ff:u_dut.u_cland_i.u_ring.dch[5].u_dsel.di[1]",
+   "ff:u_dut.u_cland_i.u_ring.dch[5].u_dsel.di[2]",
+   "ff:u_dut.u_cland_i.u_ring.dch[5].u_dsel.di[3]",
+   "ff:u_dut.u_cland_i.u_ring.dch[6].u_dsel.di[0]",
+   "ff:u_dut.u_cland_i.u_ring.dch[6].u_dsel.di[1]",
+   "ff:u_dut.u_cland_i.u_ring.dch[6].u_dsel.di[2]",
+   "ff:u_dut.u_cland_i.u_ring.dch[6].u_dsel.di[3]"
+  ]
+ },
+ "kept_registers": {
+  "declared": 3134,
+  "in_netlist": 3134,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "counts": {
+  "compare_points": 33806,
+  "proved": 33806,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "33806 compare points proved; 26996 key points matched by name, 4391 register pairs / merges and 8 constant registers proved inductively; 0 RTL and 6 gate registers unmatched and unobservable (proved as free inputs); 50 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "t_total_s": 110.8,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "kit provenance invalid: FileNotFoundError: [Errno 2] No such file or directory: '/work/PROVENANCE.json'"
+ }
+}

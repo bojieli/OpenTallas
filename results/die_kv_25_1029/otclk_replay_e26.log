@@ -1,0 +1,27 @@
+{
+ "schema": "ot_clk_replay/1",
+ "die": "kv",
+ "event": "event26_c",
+ "config": "tools/clk/configs/kv_e26.yaml",
+ "reference": "/srv/opentallas-scratch2/claude/die-kv-25-1029/kit_e26/clock",
+ "stage_check": "PASS",
+ "stage_why": [
+  "entry inv_ndr_kv21_treeb matches {'cell': 'CKINVDCx16_ASAP7_75t_R', 'polarity': 'inv', 'clock_rc': 'ndr'} (DIE-KV-21 fit_dme_stage_cal on 94 routed DME legs of tree b (rms TT 6.02/FF 5.88 ps); self-consistent on tree c (refit 6.8 vs built 7.3 TT))"
+ ],
+ "pins_rebase": null,
+ "files": {
+  "tree.json": {
+   "identical": true,
+   "sha_new": "3f32147429ecd2bc",
+   "sha_ref": "3f32147429ecd2bc",
+   "reference_file": "tree.json"
+  },
+  "ctree.v": {
+   "identical": true,
+   "sha_new": "e859c791894dc0df",
+   "sha_ref": "e859c791894dc0df",
+   "reference_file": "ctree.v"
+  }
+ },
+ "replay": "IDENTICAL"
+}

@@ -1,0 +1,152 @@
+{
+ "ds": {
+  "base_cycles": 576702.4,
+  "counts": {
+   "COLL.ALL_GATHER": 584,
+   "COLL.ARGMAX_MERGE": 1,
+   "COLL.GROUP_REDUCE_MCAST": 40,
+   "COLL.ROW_GATHER": 8,
+   "COLL.TOPK_MERGE": 9
+  },
+  "cases": {
+   "NE_L4_i_+1 (upper: all COLL)": {
+    "model": "S2 schedule, fixed cycles added to every record of the op",
+    "base_cycles": 576702.4,
+    "cycles": 577176.3,
+    "added_cycles": 473.9,
+    "program_records": 642,
+    "added_cycles_per_record": 1,
+    "e2e_loss_pct": 0.082,
+    "op": "COLL.*",
+    "tok_s_at_1906": 1904.4
+   },
+   "NE_L4_i_+1 (ALL_GATHER only)": {
+    "model": "S2 schedule, fixed cycles added to every record of the op",
+    "base_cycles": 576702.4,
+    "cycles": 577118.3,
+    "added_cycles": 415.9,
+    "program_records": 584,
+    "added_cycles_per_record": 1,
+    "e2e_loss_pct": 0.072,
+    "op": "COLL.ALL_GATHER",
+    "tok_s_at_1906": 1904.6
+   },
+   "fallback_P_N3 (all COLL)": {
+    "model": "S2 schedule, fixed cycles added to every record of the op",
+    "base_cycles": 576702.4,
+    "cycles": 578134.3,
+    "added_cycles": 1431.9,
+    "program_records": 642,
+    "added_cycles_per_record": 3,
+    "e2e_loss_pct": 0.248,
+    "op": "COLL.*",
+    "tok_s_at_1906": 1901.2
+   },
+   "RX vsN0->root L118 +19 (rx_block_ready rides with rx flit; all COLL)": {
+    "model": "S2 schedule, fixed cycles added to every record of the op",
+    "base_cycles": 576702.4,
+    "cycles": 585812.5,
+    "added_cycles": 9110.1,
+    "program_records": 642,
+    "added_cycles_per_record": 19,
+    "e2e_loss_pct": 1.555,
+    "op": "COLL.*",
+    "tok_s_at_1906": 1876.3
+   },
+   "TX hub->spb0 +24 (epcal 19b rides with tx flit; all COLL)": {
+    "model": "S2 schedule, fixed cycles added to every record of the op",
+    "base_cycles": 576702.4,
+    "cycles": 588315.5,
+    "added_cycles": 11613.1,
+    "program_records": 642,
+    "added_cycles_per_record": 24,
+    "e2e_loss_pct": 1.974,
+    "op": "COLL.*",
+    "tok_s_at_1906": 1868.3
+   },
+   "TX+RX +43 (all COLL, upper bound)": {
+    "model": "S2 schedule, fixed cycles added to every record of the op",
+    "base_cycles": 576702.4,
+    "cycles": 598670.4,
+    "added_cycles": 21968.0,
+    "program_records": 642,
+    "added_cycles_per_record": 43,
+    "e2e_loss_pct": 3.669,
+    "op": "COLL.*",
+    "tok_s_at_1906": 1836.0
+   },
+   "TX+RX +43 on cross-die classes excl ALL_GATHER": {
+    "model": "S2 schedule, fixed cycles added to every record of the op",
+    "base_cycles": 576702.4,
+    "cycles": 579153.4,
+    "added_cycles": 2451.0,
+    "program_records": 57,
+    "added_cycles_per_record": 43,
+    "e2e_loss_pct": 0.423,
+    "op": "COLL.[GRTA][ROA][OPW]*",
+    "tok_s_at_1906": 1897.9
+   }
+  }
+ },
+ "qwen": {
+  "base_cycles": 1269120.1,
+  "counts": {
+   "COLL.ALL_REDUCE_SUM": 2,
+   "COLL.ARGMAX_MERGE": 1
+  },
+  "cases": {
+   "NE_L4_i_+1 (upper: all COLL)": {
+    "model": "S2 schedule, fixed cycles added to every record of the op",
+    "base_cycles": 1269120.1,
+    "cycles": 1269193.1,
+    "added_cycles": 73.0,
+    "program_records": 3,
+    "added_cycles_per_record": 1,
+    "e2e_loss_pct": 0.006,
+    "op": "COLL.*"
+   },
+   "NE_L4_i_+1 (ALL_GATHER only)": null,
+   "fallback_P_N3 (all COLL)": {
+    "model": "S2 schedule, fixed cycles added to every record of the op",
+    "base_cycles": 1269120.1,
+    "cycles": 1269339.1,
+    "added_cycles": 219.0,
+    "program_records": 3,
+    "added_cycles_per_record": 3,
+    "e2e_loss_pct": 0.017,
+    "op": "COLL.*"
+   },
+   "RX vsN0->root L118 +19 (rx_block_ready rides with rx flit; all COLL)": {
+    "model": "S2 schedule, fixed cycles added to every record of the op",
+    "base_cycles": 1269120.1,
+    "cycles": 1270507.1,
+    "added_cycles": 1387.0,
+    "program_records": 3,
+    "added_cycles_per_record": 19,
+    "e2e_loss_pct": 0.109,
+    "op": "COLL.*"
+   },
+   "TX hub->spb0 +24 (epcal 19b rides with tx flit; all COLL)": {
+    "model": "S2 schedule, fixed cycles added to every record of the op",
+    "base_cycles": 1269120.1,
+    "cycles": 1270872.1,
+    "added_cycles": 1752.0,
+    "program_records": 3,
+    "added_cycles_per_record": 24,
+    "e2e_loss_pct": 0.138,
+    "op": "COLL.*"
+   },
+   "TX+RX +43 (all COLL, upper bound)": {
+    "model": "S2 schedule, fixed cycles added to every record of the op",
+    "base_cycles": 1269120.1,
+    "cycles": 1272259.1,
+    "added_cycles": 3139.0,
+    "program_records": 3,
+    "added_cycles_per_record": 43,
+    "e2e_loss_pct": 0.247,
+    "op": "COLL.*"
+   },
+   "TX+RX +43 on cross-die classes excl ALL_GATHER": null
+  }
+ }
+}

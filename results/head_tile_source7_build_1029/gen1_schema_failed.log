@@ -1,0 +1,30 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/wt/codex-head-tile-source7-1029/tools/s81_head/head_tile_source7_kit.py", line 47, in <module>
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('source');p.add_argument('--out',required=True);a=p.parse_args();build(a.source,a.out)
+  File "/srv/opentallas-scratch/claude/wt/codex-head-tile-source7-1029/tools/s81_head/head_tile_source7_kit.py", line 29, in build
+    kits=gen_phys.write_phys(plan,out,ROOT,types=['hd_tile'],trial=True,plan_path=candidate,landing=side)
+  File "/srv/opentallas-scratch/claude/wt/codex-head-tile-source7-1029/tools/die_plan/gen_phys.py", line 2484, in write_phys
+    files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path, landing=landing)
+  File "/srv/opentallas-scratch/claude/wt/codex-head-tile-source7-1029/tools/die_plan/gen_rtl.py", line 630, in write_rtl
+    raise GenError("plan invalid:\n  " + "\n  ".join(errs[:20]))
+gen_rtl.GenError: plan invalid:
+  $.partition_types.hd_tile.clock: unknown key 'start_capture_um'
+  $.partition_types.hd_tile: unknown key 'reset_start_raw_exports'
+  $.partition_types.hd_tile: unknown key 'landing_control_status_copy'
+  $.partition_types.hd_turn_a.clock: unknown key 'start_capture_um'
+  $.partition_types.hd_turn_a: unknown key 'reset_start_raw_exports'
+  $.partition_types.hd_turn_b.clock: unknown key 'start_capture_um'
+  $.partition_types.hd_turn_b: unknown key 'reset_start_raw_exports'
+  $.partition_types.hd_spn.clock: unknown key 'start_capture_um'
+  $.partition_types.hd_spn: unknown key 'reset_start_raw_exports'
+  $.partition_types.hd_spn_end.clock: unknown key 'start_capture_um'
+  $.partition_types.hd_spn_end: unknown key 'reset_start_raw_exports'
+  $.partition_types.hd_serdes.clock: unknown key 'start_capture_um'
+  $.partition_types.hd_serdes: unknown key 'reset_start_raw_exports'
+  $.partition_types.hd_st_turn.clock: unknown key 'start_capture_um'
+  $.partition_types.hd_st_turn: unknown key 'reset_start_raw_exports'
+  $.partition_types.hd_st_str.clock: unknown key 'start_capture_um'
+  $.partition_types.hd_st_str: unknown key 'reset_start_raw_exports'
+  $.partition_types.hd_st_n4.clock: unknown key 'start_capture_um'
+  $.partition_types.hd_st_n4: unknown key 'reset_start_raw_exports'
+  $.partition_types.hd_st_m.clock: unknown key 'start_capture_um'

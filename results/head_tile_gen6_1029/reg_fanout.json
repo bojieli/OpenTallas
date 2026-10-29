@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.reg_fanout_gate.v1",
+ "top": "ot_s81hd_tile_p",
+ "max_loads": 64,
+ "registers": 28083,
+ "reg_nets": 28083,
+ "over": 0,
+ "verdict": "PASS",
+ "worst": [],
+ "hist": {
+  "1": 27598,
+  "2-8": 481,
+  "0": 4
+ },
+ "straps": [],
+ "strap_landing": [],
+ "netlist": "/work/run/results/asap7/dp_hd_tile/base/1_2_yosys.v"
+}

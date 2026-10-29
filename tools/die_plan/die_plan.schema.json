@@ -1133,6 +1133,9 @@
      "landing_control_status_copy": {
       "type": "boolean"
      },
+     "private_reset_start_exports": {
+      "type": "boolean"
+     },
      "reset_start_raw_exports": {
       "type": "array",
       "items": {

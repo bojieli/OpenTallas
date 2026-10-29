@@ -1,0 +1,29 @@
+{
+  "rtl_files": 16,
+  "byte_identical": true,
+  "land_slots": {
+    "schema": "land_slots/3",
+    "buses": {
+      "i": {
+        "D": 4,
+        "form": "hold_mux"
+      },
+      "cland_dn_ready_i": {
+        "D": 4,
+        "form": "hold_mux"
+      },
+      "cland_dn_fault_i": {
+        "D": 4,
+        "form": "hold_mux"
+      },
+      "cland_fstart_in_i": {
+        "form": "ring_start",
+        "ring": "i"
+      },
+      "cland_tstart_in": {
+        "form": "origin_start",
+        "origin": "u_cland_origin"
+      }
+    }
+  }
+}

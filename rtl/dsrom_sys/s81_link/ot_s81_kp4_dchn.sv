@@ -18,7 +18,7 @@ module ot_s81_kp4_dchn #(parameter integer MUT = 0, parameter integer ROOT_COUNT
     input  wire [4:0]    k_L,
     input  wire          k_any,
     output reg  [543:0]  cw_q,          // correction mask of PMA word k (to ot_s81_kp4_dout's SRAM delay)
-    output reg  [7:0]    apply,         // the frame is corrected (8 identical copies, 68 mask bits each in dout)
+    (* keep *) output reg [7:0] apply, // the frame is corrected (8 identical copies, 68 mask bits each in dout; keep: OT_KEEP_REGS holds all 8 flops, else synth merges them and LEC fails apply[1..7])
     output reg           o_unc,         // the frame is uncorrectable
     output reg  [4:0]    o_ne,          // symbols corrected
     output reg           fs,            // frame start: beat 0 of the frame leaves dout's beat register next cycle

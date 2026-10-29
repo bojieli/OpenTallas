@@ -96,7 +96,9 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     end
     always @(posedge ck or negedge rr[0]) if (!rr[0]) ri_v <= 1'b0; else ri_v <= ri[0];
     wire       p1_xb  = ri_v && ri_q[3:1] == K_XB;
-    wire [7:0] p1_gx  = ri_q[20:13];
+    // Existing rstop_xo HEAD producer uses bit20 as egress flag;
+    // its seven-bit global index remains0..79 in bits19:13.
+    wire [7:0] p1_gx  = {1'b0,ri_q[19:13]};
     wire       p1_tv  = rt_q[31];
     wire       p1_own = !p1_tv || c_ngrp <= 2'd1 || (c_ngrp == 2'd2 ? (rt_q[0] == c_grp[0]) : (mod3(rt_q[20:0]) == c_grp));
     reg [6:0]  fcnt;                                                   // forwarded XB beats of the open message
