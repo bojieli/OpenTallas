@@ -22,3 +22,6 @@ Prepared geometry code bc2ebedf0 (codex/s81-lp-0825): T2same55macrogrid295.92x44
 
 ## CODEX PARKED 2026-10-29 09:02 PDT
 ExplicitresetfromS81/root. No newengineering/routes/STA/mergesafterreset. Sourcebranchbc2ebedf0 andstagingf30b48c15 pushed/trackedclean. Baseline64 andhunt-none64fullLECjobscontinueuntouched; inherited5LP3LECscontinue. Allactual results/livejobchecks/fullfailure+KVnewtaskdiagnosis inCODEX-LOG09:02helperhandoff. NoOWN decisionpending. CurrentKV400659cut task onlyinvestigated: inheritedactualnativecensusstilllive4h19, nofakecount; VQ naturalcutneedsAQ_XMEM2vsoldkitparamqualificationbeforeviewreuse.
+
+## CODEX notes / PARKED 2026-10-29 14:02 PDT
+13:55takeoverrevokedpriorpark; EXPLICITROOTreset14:02nowparked. All7originalLP2/LP3LECs collectedterminalKEEPFAIL33378/33468EQ,90diff,7missing(default4); oldrc64sameFAIL, soresetdurationNOTremainingcause. hunt-none64 terminal34012/34024EQ,12diff,4missing confirms78FSMdiffsremoved. Missingrdy_k3actualdistinctDFFnamedin_ready(QN15858), nota physicalmerge; remaining3psbitsneedactualDFFtrace/hints. Existing3509profilealreadyprovesresetcopyrelations. Fresh1355WTonfb1maintrackedclean, no newsource/heavyjobs/physical. Fullhandoff handoff/codex_s81_lp_20261029_1402.md +CODEX-LOG14:02. NoOWNERitems.
