@@ -1267,6 +1267,24 @@ def merge_point_routed(site, c1, s1, c2, s2, radius_um=800.0, step=1.08, extra_w
 DME_MODES = ("gap", "median", "greedy")
 # BUFx24 stage on a 1x M8/M9 leg, d = d0 + k1 L + k2 L^2 (ps, um): OpenSTA fit on 1x ladders (DIE-QC-3 cal1x, resid <= 4 ps)
 STAGE_1X_TT = (20.8281, 0.013984, 0.00033554)
+# DIE-QC-21 opt-in --region-dme-stage-cal FILE: a stage model calibrated on ROUTED legs of the actual clock cell replaces
+# STAGE_1X_TT in the DME delay model (leg_ps / chain_ps / snake_leg / merge_point_delay), adds a per-extra-fanout term
+# at every binary merge node (its cell drives two legs: QC trial13b inv2 +10.9 ps TT, unmodelled before, so branchy glue
+# subtrees arrived later than modelled and merge-mode core taps came ~50 ps late), and prices the tap leg with the fitted
+# wire coefficients.  Default None = the uncalibrated model (byte-identical trees).
+DME_FANOUT_PS = 0.0
+TAP_WIRE_CAL = None
+
+
+def load_stage_cal(path):
+    """--region-dme-stage-cal: JSON {"leg": [d0, k1, k2, kf], "tap": [k1, k2]} (TT ps; um) -> sets the DME model globals"""
+    global STAGE_1X_TT, DME_FANOUT_PS, TAP_WIRE_CAL
+    c = json.loads(Path(path).read_text())
+    d0, k1, k2, kf = (float(x) for x in c["leg"])
+    STAGE_1X_TT = (d0, k1, k2)
+    DME_FANOUT_PS = kf
+    TAP_WIRE_CAL = tuple(float(x) for x in c["tap"])
+    return c
 
 
 def leg_ps(L, rep_um):
@@ -1285,6 +1303,8 @@ def tap_wire_ps(d_um):
     DME priced this leg as d (um read as ps): ~100 model ps too late for an in-core pin, so the tree delivered those pins
     ~150 ps TT early (trial6/7 measured).  Kept behind the opt-in so trial6 stays reproducible."""
     _, k1, k2 = STAGE_1X_TT
+    if TAP_WIRE_CAL is not None:    # DIE-QC-21 --region-dme-stage-cal: fitted routed tap-leg wire
+        k1, k2 = TAP_WIRE_CAL
     return k1 * d_um + k2 * d_um * d_um
 
 
@@ -1455,8 +1475,9 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
                     else:
                         db, lb = ps, lb + sw
                     imb = abs(da + A["S"] - db - B["S"])
-            out.append(dict(x=q[0], y=q[1], kids=[a, b], taps=[], S=max(da + A["S"], db + B["S"]),
-                            Smin=min(da + A["Smin"], db + B["Smin"]), W=la + lb + A["W"] + B["W"], imb=imb, ex=ex,
+            fo = DME_FANOUT_PS      # DIE-QC-21 --region-dme-stage-cal: this node's cell drives two legs (one extra fanout)
+            out.append(dict(x=q[0], y=q[1], kids=[a, b], taps=[], S=max(da + A["S"], db + B["S"]) + fo,
+                            Smin=min(da + A["Smin"], db + B["Smin"]) + fo, W=la + lb + A["W"] + B["W"], imb=imb, ex=ex,
                             **({"snakes": snakes, "snake_um": sw} if snakes else {})))
             return len(out) - 1
         q, imb, ex, da, db = merge_point_routed(site, (A["x"], A["y"]), A["S"], (B["x"], B["y"]), B["S"], rad, 1.08,
@@ -4058,6 +4079,11 @@ def main(argv=None):
                    help="DIE-S81-14 opt-in (with --region-dme-early): 'merge' = the declared early (model ps) is a DME "
                         "sink delay, so bottom-up zero-skew merges deliver the core tap early (binary, no upper-node hang "
                         "legs / star nodes); default 'hang' = DIE-QC-8 hang from an upper node")
+    k.add_argument("--region-dme-stage-cal", default=None, metavar="FILE",
+                   help="DIE-QC-21 opt-in (with --region-dme delay): JSON {leg: [d0, k1, k2, kf], tap: [k1, k2]} stage model "
+                        "fitted on routed legs of the clock cell (TT ps); replaces the BUFx24 1x-ladder STAGE_1X_TT in the "
+                        "DME delay model and adds kf at every binary merge node (two-leg load). --region-dme-early RATIOs "
+                        "are then measured/calibrated-model (about 1.0 TT). Default: uncalibrated model")
     k.add_argument("--region-dme-workers", type=int, default=1, metavar="N",
                    help="DIE-QC-20 opt-in: compute the region DME trees in N fork workers (same trees, attached in the "
                         "same order; default 1 = serial)")
@@ -4116,6 +4142,8 @@ def main(argv=None):
     a = ap.parse_args(argv)
     global DME_WORKERS
     DME_WORKERS = max(1, int(getattr(a, "region_dme_workers", 1) or 1))
+    if getattr(a, "region_dme_stage_cal", None):
+        load_stage_cal(a.region_dme_stage_cal)
     if a.cmd == "readout":
         print("\n".join(clock_edge_readout(Path(a.ctree_v).read_text(), a.path, a.period, a.cells, a.tap_slew,
                                            a.prefix)))

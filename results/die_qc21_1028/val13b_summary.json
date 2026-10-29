@@ -1,0 +1,148 @@
+{
+ "leg_coef": {
+  "TT": [
+   16.771128364807733,
+   0.10967414131765851,
+   0.00016716997813104317,
+   10.948145356341747
+  ],
+  "FF": [
+   14.292575430657605,
+   0.09629334538541,
+   0.0001612940840930721,
+   7.975279604101821
+  ]
+ },
+ "tap_coef": {
+  "TT": [
+   -0.0021656767040963898,
+   0.042039932701411875,
+   5.185314573004363e-06
+  ],
+  "FF": [
+   -0.0021716353919993747,
+   0.041950485064767305,
+   -4.732997088599533e-06
+  ]
+ },
+ "summary": {
+  "c_": {
+   "regions": 192,
+   "TT": {
+    "pred_glue_minus_core_med": 367.9,
+    "routed_glue_minus_core_med": 367.5,
+    "err_min": -35.2,
+    "err_med": 1.4,
+    "err_max": 20.6,
+    "glue_spread_routed_med_max": [
+     103.05,
+     190.6
+    ],
+    "glue_spread_pred_med_max": [
+     74.4,
+     104.6
+    ],
+    "glue_spread_resid_med_max": [
+     56.65,
+     123.0
+    ],
+    "leafres_spread_med_max": [
+     56.65,
+     123.0
+    ],
+    "tapres_spread_med_max": [
+     0.0,
+     0.0
+    ],
+    "tap_abs_err_med": 16.89
+   },
+   "FF": {
+    "pred_glue_minus_core_med": 319.9,
+    "routed_glue_minus_core_med": 319.8,
+    "err_min": -30.7,
+    "err_med": 0.3,
+    "err_max": 17.6,
+    "glue_spread_routed_med_max": [
+     89.1,
+     169.3
+    ],
+    "glue_spread_pred_med_max": [
+     70.75,
+     89.9
+    ],
+    "glue_spread_resid_med_max": [
+     51.2,
+     107.8
+    ],
+    "leafres_spread_med_max": [
+     51.2,
+     107.8
+    ],
+    "tapres_spread_med_max": [
+     0.0,
+     0.0
+    ],
+    "tap_abs_err_med": 15.37
+   }
+  },
+  "su_c": {
+   "regions": 12,
+   "TT": {
+    "pred_glue_minus_core_med": 39.4,
+    "routed_glue_minus_core_med": 39.7,
+    "err_min": -7.4,
+    "err_med": 2.1,
+    "err_max": 9.7,
+    "glue_spread_routed_med_max": [
+     59.8,
+     78.8
+    ],
+    "glue_spread_pred_med_max": [
+     37.1,
+     39.0
+    ],
+    "glue_spread_resid_med_max": [
+     51.5,
+     85.1
+    ],
+    "leafres_spread_med_max": [
+     51.5,
+     85.1
+    ],
+    "tapres_spread_med_max": [
+     0.0,
+     1.1
+    ],
+    "tap_abs_err_med": 25.11
+   },
+   "FF": {
+    "pred_glue_minus_core_med": 33.7,
+    "routed_glue_minus_core_med": 35.2,
+    "err_min": -7.4,
+    "err_med": 1.2,
+    "err_max": 8.6,
+    "glue_spread_routed_med_max": [
+     52.25,
+     71.0
+    ],
+    "glue_spread_pred_med_max": [
+     32.35,
+     32.9
+    ],
+    "glue_spread_resid_med_max": [
+     48.2,
+     73.9
+    ],
+    "leafres_spread_med_max": [
+     48.2,
+     73.9
+    ],
+    "tapres_spread_med_max": [
+     0.0,
+     1.1
+    ],
+    "tap_abs_err_med": 20.34
+   }
+  }
+ }
+}
