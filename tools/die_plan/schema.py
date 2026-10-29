@@ -905,6 +905,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # Liberty arcs (island ft clock pass-through, e.g. ft_ck0_i) to its outputs instead of measuring it as a clock sink.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_passthrough"] = {
     "type": "boolean"}
+# HEAD START-export fanout: retained copies of existing data states, zero added cycles.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_origin_export_copy"] = {"type": "boolean"}
 # clock-landing cohort types (clock_landing_plan.compose) name the base plan type they were split from.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_base_type"] = {"type": "string"}
 # CLOCK-KV-R22: declared die-top data landing islands (landing_islands.py; hold cells for hard->hard seams)
@@ -2085,6 +2087,3 @@ def main(argv):
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
-
-# HEAD START-export fanout: retained copies of existing data states, zero added cycles.
-SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_origin_export_copy"] = {"type": "boolean"}
