@@ -27,11 +27,22 @@ def gen(src, dst, reps):
 gen('ot_hbm_su_static_pgslice.sv', 'ot_hbm_su_static_pgslice_s.sv', [
     ('module ot_hbm_su_static_pgslice #(', 'module ot_hbm_su_static_pgslice_s #(\n parameter integer SMUT=0,'),
     (' parameter integer PIN_REG=0,', ' parameter integer PIN_REG=1,'),
+    (' parameter integer B39_NOOP=(QID==0),',
+     ' // FULL_SIDE decouples arithmetic capability from the unchanged VM address QID.\n'
+     ' // The default reproduces the original selection; explicit enablement needs a new bind/model/kit.\n'
+     ' parameter integer FULL_SIDE=(QID==0),\n'
+     ' parameter integer B39_NOOP=(QID==0),'),
+    ('localparam integer KIND=(QID==0&&L==0)?2:(L<32)?1:0;',
+     'localparam integer KIND=(FULL_SIDE!=0&&L==0)?2:(L<32)?1:0;'),
+    ('if(QID==0&&G==0)begin:g_side_pipe', 'if(FULL_SIDE!=0&&G==0)begin:g_side_pipe'),
     ('ot_hbm_su_static_side u_side(', 'ot_hbm_su_static_side_s #(.SMUT(SMUT)) u_side('),
 ])
 gen('ot_hbm_su_static_pgslice_lg.sv', 'ot_hbm_su_static_pgslice_lg_s.sv', [
     ('module ot_hbm_su_static_pgslice_lg #(', 'module ot_hbm_su_static_pgslice_lg_s #(\n parameter integer SMUT=0,'),
     (' parameter integer PIN_REG=0,', ' parameter integer PIN_REG=1,'),
+    (' parameter integer B39_NOOP=(QID==0),',
+     ' parameter integer FULL_SIDE=(QID==0),\n parameter integer B39_NOOP=(QID==0),'),
+    ('.QID(QID),.G(G),', '.QID(QID),.G(G),.FULL_SIDE(FULL_SIDE),'),
     ('ot_hbm_su_static_pgslice #(', 'ot_hbm_su_static_pgslice_s #(.SMUT(SMUT),'),
 ])
 print('generated ot_hbm_su_static_pgslice_s.sv ot_hbm_su_static_pgslice_lg_s.sv')
