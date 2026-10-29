@@ -1,12 +1,14 @@
 """Smallest real RF_LOCAL source cut: port lockstep, mutant, and driver check.
-Run after the canonical counter rename; HEAD is the unchanged source reference.
+Run after the canonical counter rename; the committed real source cut is the unchanged reference.
 """
 from pathlib import Path
 import json,subprocess,sys
 root=Path(__file__).resolve().parents[2];out=Path(sys.argv[1]);out.mkdir(parents=True,exist_ok=True)
 source='rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv'
-old=subprocess.check_output(['git','show','HEAD:'+source],cwd=root,text=True);new=(root/source).read_text()
+old=Path(__file__).with_name('rf_counter_proof').joinpath('reference_rf_local.sv').read_text();new=(root/source).read_text()
 def cut(text,name,mut=False):
+    if text.startswith('module old('):
+        return text.replace('module old(', 'module '+name+'(', 1)
     start=text.index(' if(RF_LOCAL)begin:g_rf_local');end=text.index(' end else begin:g_rf_direct',start)
     body=text[start:end].replace(' if(RF_LOCAL)begin:g_rf_local',' generate if(1)begin:g_rf_local')
     if mut:body=body.replace('rf_bcmd[vb_valid*9+8]','rf_bcmd[vb_valid*9+7]')

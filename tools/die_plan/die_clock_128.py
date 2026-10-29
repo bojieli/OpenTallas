@@ -473,6 +473,13 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
         return root if p == "port:root" else txy[p[5:]]
 
     def track(layer, ideal, a0, a1, name, what, keep=None):
+        # Optional physical access contract for callers whose pin windows are
+        # clipped by different host/core boundaries. No callback = old geometry.
+        window = getattr(router, "access_window", None) if router is not None else None
+        if window is not None and layer == "M8":
+            bound = window(n, what)
+            if bound is not None:
+                keep = (max(keep[0], bound[0]), min(keep[1], bound[1])) if keep else bound
         if router is None:
             last_ext[0] = None
             return ideal, DRAWN
@@ -557,7 +564,9 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
                     branches.append((ld, bx, p[1]))
                     xs_.append(bx)
                     continue
-                if l_drops and abs(p[1] - ty) > STACK_RISER_MAX_UM:
+                legal_riser = getattr(router, "riser_legal", None) if router is not None else None
+                if l_drops and (abs(p[1] - ty) > STACK_RISER_MAX_UM or
+                                (legal_riser is not None and not legal_riser(ld, "A", ty))):
                     # R12 L net: M9 drop at the bar column, M8 jog one track pair off the load row toward the trunk
                     sg = 1.0 if ty >= p[1] else -1.0
                     by, jm = track("M8", p[1] + sg * off, p[0] - mm, p[0] + mm, nm, f"jog {ld}")
