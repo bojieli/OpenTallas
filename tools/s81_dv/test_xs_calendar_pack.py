@@ -23,7 +23,7 @@ def replay(chunks):
 def test_dense_boundary_keeps_reader_active_without_retiming():
     cal, raw = fixture()
     chunks = split_intervals(cal)
-    assert [c['start'] for c in chunks] == [0, 400]
+    assert [c['start'] for c in chunks] == [0, 228, 300, 400]
     assert replay(chunks) == raw
     assert chunks[0]['end'] < chunks[1]['start'] - 20
 
@@ -31,7 +31,7 @@ def test_dense_boundary_keeps_reader_active_without_retiming():
 def test_existing_idle_boundary_still_rebases():
     cal, raw = fixture(200)
     chunks = split_intervals(cal)
-    assert [c['start'] for c in chunks] == [0, 229, 400]
+    assert [c['start'] for c in chunks] == [0, 200, 229, 300, 400]
     assert replay(chunks) == raw
 
 
@@ -47,3 +47,11 @@ def test_accept_outside_reader_still_refused():
     cal, _ = fixture(200, accept=228)
     with pytest.raises(AssertionError):
         split_intervals(cal)
+
+
+def test_real_idle_inside_phase_is_usable_even_with_adjacent_launch():
+    cal, raw = fixture()
+    chunks = split_intervals(cal)
+    assert 229 not in [c['start'] for c in chunks]
+    assert 228 in [c['start'] for c in chunks]
+    assert replay(chunks) == raw
