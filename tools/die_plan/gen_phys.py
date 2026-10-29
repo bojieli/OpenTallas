@@ -1750,7 +1750,9 @@ def stage_includes(rtl_files, rtl_dir):
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
-                   bump_ports=None, gpl_plain=False):
+                   bump_ports=None, gpl_plain=False, land_slots=None):
+    """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
+    kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
     if gpl_plain and not t.get("ft_slots"):
         raise ValueError(f"type {tn}: --gpl-plain is for pure-FT corridor kits; the type has no ft_slots")
@@ -2241,6 +2243,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("partition_ir.py"), kd / "partition_ir.py")
     (kd / "pins.json").write_text(json.dumps([dict(bus=b, bit=i, layer=l, x=x, y=y, face=f)
                                               for b, i, l, x, y, f in pins]) + "\n")
+    if land_slots is not None:                  # face_guard reads it beside pins.json (count-aligned landing rings)
+        (kd / "land_slots.json").write_text(json.dumps(land_slots, indent=1) + "\n")
     port_pins = port_bind_pin_records(P, tn, pins, bump_ports)
     sps = strap_pin_sites(P, tn)
     (kd / "port_bind_pins.json").write_text(json.dumps(port_pins, indent=1) + "\n")
@@ -2392,6 +2396,10 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             raise gen_rtl.GenError("clock landing: --kit-rtl kits take the bound RTL; landing kits use the landed wrapper")
         gtypes = None          # the landed emitter checks every copy of every type
     files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path, landing=landing)
+    lands = None
+    if landing is not None:    # DIE-HEAD-21: the same Landings write_rtl just validated -> per-type land_slots.json
+        import clock_landings as CL
+        lands = CL.Landings(raw, landing)
     cells = rtl_dir / "ot_dp_cells.sv"
     root = Path(rtl_root) if rtl_root else Path(__file__).resolve().parent.parent.parent
     rs = root / "rtl" / "lib" / "ot_reset_sync.sv"
@@ -2420,7 +2428,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         bumps = kit_bump_ports(P, tn, kit_rtl[tn]) if kit_rtl and tn in kit_rtl else None
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
                                    skip_ir, max_wire_um, rc_cal, master_slice, trial, bump_ports=bumps,
-                                   gpl_plain=tn in (gpl_plain or ())))
+                                   gpl_plain=tn in (gpl_plain or ()),
+                                   land_slots=lands.land_slots(tn) if lands is not None else None))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits
