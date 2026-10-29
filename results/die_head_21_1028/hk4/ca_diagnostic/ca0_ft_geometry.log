@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/wt/codex-head-clock/tools/s81_head/landed_phase_ocv.py", line 209, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/srv/opentallas-scratch2/claude/wt/codex-head-clock/tools/s81_head/landed_phase_ocv.py", line 192, in main
+    rows = analyse(plan, tree, arr, CA, T, c, clat, a.budget_ps, droop, port_taps=a.port_taps, cls=cls)
+  File "/srv/opentallas-scratch2/claude/wt/codex-head-clock/tools/s81_head/landed_phase_ocv.py", line 100, in analyse
+    cache[key] = endpoint_taps(P,pr,side,tap_of[part])
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/wt/codex-head-clock/tools/s81_head/landed_phase_ocv.py", line 61, in endpoint_taps
+    raise ValueError(f"{pr['id']} {side} {part}.{bus}: no declared endpoint geometry for tap selection")
+ValueError: chE0_t__0 dst turnE0a.t_i: no declared endpoint geometry for tap selection
