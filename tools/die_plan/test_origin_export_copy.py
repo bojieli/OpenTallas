@@ -26,3 +26,15 @@ def test_export_copy_schema_is_explicit_boolean():
     import schema
     prop = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]
     assert prop["landing_origin_export_copy"] == {"type": "boolean"}
+
+
+def test_export_copy_is_present_in_schema_cli(tmp_path):
+    import json
+    from pathlib import Path
+    import subprocess
+    import sys
+    out = tmp_path / "schema.json"
+    subprocess.run([sys.executable, str(Path(__file__).with_name("schema.py")),
+                    "dump-schema", str(out)], check=True, capture_output=True)
+    prop = json.loads(out.read_text())["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]
+    assert prop["landing_origin_export_copy"] == {"type": "boolean"}
