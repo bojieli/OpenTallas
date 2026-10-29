@@ -1,0 +1,12 @@
+{
+  "schema": "geom-review.v1",
+  "picture": "results/geom_review/hbm_ring_fixed_1029/ring_fixed.png",
+  "verdict": "PASS-COND: geometric FF centres only; HOLD PNR",
+  "findings": [
+    "Personally viewed both hub frames. Ring next to GQ and Eface pins connected through streets with no long unstationed centreline hop. NW L4 inbound two chains13FF/outbound13FF restored; all shortened chains restored to original exact count.",
+    "NE moved-control obstruction resolved at13 original FF for vmdel; only NEpr_cw_i/pr_ccw_i need12vs11 FF. TOKEN pricing required.",
+    "Signal wires use allowed M6/M7 over M5 core bodies; clock and FFs must remain in streets. Solver excludes bodies+4.32halo.",
+    "Picture shows some chains share nominal centres; these are bus centreline proposals, not 94b physical bank placements. Exact row/bit-bank allocation, added tap loads, PG and full reach/capacity required before G2/P&R.",
+    "Inherited clock/tap/PDN data not regenerated. No route approval; full atomicC25event still open."
+  ]
+}
