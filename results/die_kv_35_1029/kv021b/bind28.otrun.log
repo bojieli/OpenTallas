@@ -1,0 +1,38 @@
+ot-run: intel1         admits   782 GB (avail 893, reserve 0, fresh 0, peak 46.2, headroom 0, waiters 0/0 GB) load 28/112 running 11 disk 1353 GB 
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-1170544-1793313516 after 0 s
+bind28 BIND_RC 1 Thu Oct 29 15:42:34 PDT 2026
+bind28 kv3_hg_v1 KITRTL_RC 0
+bind28 kv3_hg_v1p3 KITRTL_RC 0
+bind28 kv3_hg_v1p6 KITRTL_RC 0
+bind28 kv3_hroot KITRTL_RC 0
+bind28 kv3_hub_Wo KITRTL_RC 0
+bind28 kv3_pc_v1__cl23f6a148 KITRTL_RC 0
+bind28 kv3_pc_v1__cl4ea58a5c KITRTL_RC 0
+bind28 kv3_pc_v1__cl7f648944 KITRTL_RC 0
+bind28 kv3_pc_v3 KITRTL_RC 0
+KITDIFF ./kv3_hg_v1/kv3_hg_v1_part_bound.sv
+KITDIFF ./kv3_hg_v1p3/kv3_hg_v1p3_bound.sv
+KITDIFF ./kv3_hg_v1p6/kv3_hg_v1p6_bound.sv
+KITDIFF ./kv3_hroot/kv3_hroot_part_bound.sv
+KITDIFF ./kv3_hub_Wo/kv3_hub_Wo_part_bound.sv
+KITDIFF ./kv3_pc_v1__cl23f6a148/kit_rtl.f
+KITDIFF ./kv3_pc_v1__cl23f6a148/kit_rtl.json
+KITDIFF ./kv3_pc_v1__cl23f6a148/kit_rtl_sim.f
+KITDIFF ./kv3_pc_v1__cl23f6a148/kv3_pc_v1__cl23f6a148.sv
+KITDIFF ./kv3_pc_v1__cl23f6a148/kv3_pc_v1__cl23f6a148_bound.sv
+KITDIFF ./kv3_pc_v3/kit_rtl.json
+KITDIFF ./kv3_pc_v3/kv3_pc_v3_part.sv
+KITDIFF ./kv3_pc_v3/kv3_pc_v3_part_bound.sv
+KITRTL_NORMALIZED_DIFF_FILES 13
+{
+ "verdict": "PASS",
+ "severity": null,
+ "checked_bits": 21888,
+ "errors": [],
+ "reason": null
+}
+
+   R8_STALE host.chain_a[96:127]<-hsl_EN_31.ao@22 bit 125: bind has hsl_EN_31.ao as-built 22 bound 43, table hsl_EN_31.ao as-built 22 bound 42
+BIND28_DONE Thu Oct 29 15:49:33 PDT 2026
+ot-run: RAN on intel1 (unit oth-ubuntu-1170544-1793313516): exit 0
