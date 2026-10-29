@@ -10,9 +10,15 @@ from shapely.strtree import STRtree
 p=argparse.ArgumentParser();p.add_argument('--input',required=True);p.add_argument('--out',required=True);p.add_argument('--limit',type=int,default=0);a=p.parse_args();src=Path(a.input);out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
 g=json.load(open(src/'geometry.json'));terms=json.load(open(src/'power_terms.json'))['terms'];ep=json.load(open(src/'endpoints.json'))['endpoints'];pg=json.load(open(src/'pg_rects.json'));tech=json.load(open(src/'probe_census.json'))['tech_vias_dbu'];D=g['dbu'];spacing={f'M{i}':v for i,v in enumerate([0,18,18,18,24,24,32,32,40,40]) if i}
 blocked=collections.defaultdict(list)
-for _,ly,*r in g['obstructions']:blocked[ly].append(r)
+grid_keys={(ly,*[round(v*D) for v in r]) for n,ly,*r in pg if ly in ['M8','M9']}
+owned_grid_obs=0
+for owner,ly,*r in g['obstructions']:
+ if owner=='BLOCK' and (ly,*r) in grid_keys:owned_grid_obs+=1
+ else:blocked[ly].append(r)
+print('exact_owned_grid_obstructions',owned_grid_obs,flush=True)
 for _,_,ly,*r in g['signal_shapes']:blocked[ly].append(r)
 for e in ep.values():blocked[e['layer']].append([round(v*D) for v in e['rect_um']])
+for n,ly,*r in json.load(open(src/'clock_base_access26.json')):blocked[ly].append([round(v*D) for v in r])
 trees={ly:STRtree([box(*r) for r in rr]) for ly,rr in blocked.items()}
 supply=collections.defaultdict(list)
 for n,ly,*r in g['existing_supplies']:supply[n,ly].append(r)
@@ -39,6 +45,7 @@ groups.sort(key=lambda q:(q[2],q[1],q[0]));print('groups',len(groups),flush=True
 stripes={n:sorted([tuple(round(v*D) for v in r) for nn,ly,*r in pg if nn==n and ly=='M9']) for n in ['VDD','VSS']}
 # Opposite proposed conductors are indexed in fine bins. No large die-wide bins.
 new=collections.defaultdict(lambda:collections.defaultdict(list));B=4000
+reasons=collections.Counter(); examples={}
 
 def binrect(r):
  x0,y0,x1,y1=r
@@ -50,9 +57,12 @@ def clear(n,ly,r):
  sp=spacing[ly];q=[r[0]-sp,r[1]-sp,r[2]+sp,r[3]+sp]
  if q[0]<0 or q[1]<0 or q[2]>g['die_dbu'][2] or q[3]>g['die_dbu'][3]:return False
  b=box(*q)
- if ly in trees and len(trees[ly].query(b)):return False
+ if ly in trees and any(hit(q,trees[ly].geometries[j].bounds) for j in trees[ly].query(b)):
+  reasons['obstacle_'+ly]+=1
+  if ly not in examples:examples[ly]=dict(candidate=r,blocking=list(trees[ly].geometries[trees[ly].query(b)[0]].bounds))
+  return False
  opp='VSS' if n=='VDD' else 'VDD'
- if (opp,ly) in suptrees and len(suptrees[opp,ly].query(b)):return False
+ if (opp,ly) in suptrees and any(hit(q,suptrees[opp,ly].geometries[j].bounds) for j in suptrees[opp,ly].query(b)):return False
  return not any(hit(q,s) for k in binrect(q) for s in new[opp,ly].get(k,[]))
 
 def stack(x,y):
@@ -61,7 +71,8 @@ def stack(x,y):
 shapes=[];vias=[];paths=[];failed=[]
 for gi,(n,x0,y0,x1,y1,members) in enumerate(groups):
  if a.limit and gi>=a.limit:break
- y=(y0+y1)//2;par=0 if n=='VDD' else 1
+ # Land outward by 2nm so VIA12's 22nm M1 box does not consume the native 18nm A/Y spacing.
+ y=(y0+y1)//2+(2 if n=='VDD' else -2);par=0 if n=='VDD' else 1
  xs=range(math.ceil((x0+50-32-64*par)/128),math.floor((x1-50-32-64*par)/128)+1)
  xs=sorted((32+64*par+128*k for k in xs),key=lambda x:abs(x-(x0+x1)/2))
  ys=sorted((40+80*par+160*k for k in range(math.floor((y-1400-40-80*par)/160),math.ceil((y+1400-40-80*par)/160)+1)),key=lambda yy:abs(yy-y))
@@ -102,4 +113,5 @@ for gi,(n,x0,y0,x1,y1,members) in enumerate(groups):
 json.dump(dict(source=g['source'],paths=paths,vias_dbu=vias,failed=failed,dbu=D),open(out/'access_plan.json','w'),separators=(',',':'))
 json.dump([[n,ly,*[v/D for v in r]] for n,ly,*r in shapes],open(out/'reserved_access.json','w'),separators=(',',':'))
 s=dict(groups=len(groups),attempted=len(paths)+len(failed),connected_groups=len(paths),connected_contacts=sum(len(q['members']) for q in paths),failed_groups=len(failed),routing_rectangles=len(shapes),vias=len(vias),verdict='GEOMETRY_CANDIDATE' if not failed else 'INCOMPLETE_NO_MATERIALIZATION')
+s['owned_grid_obstructions']=owned_grid_obs;s['rejections']=dict(reasons);s['obstacle_examples']=examples
 json.dump(s,open(out/'summary.json','w'),indent=2);print(s,flush=True)

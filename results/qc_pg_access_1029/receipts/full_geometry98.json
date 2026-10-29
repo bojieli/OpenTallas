@@ -1,0 +1,30 @@
+{
+  "groups": 89178,
+  "attempted": 89178,
+  "connected_groups": 89178,
+  "connected_contacts": 89180,
+  "failed_groups": 0,
+  "routing_rectangles": 2407806,
+  "vias": 713424,
+  "verdict": "GEOMETRY_CANDIDATE",
+  "owned_grid_obstructions": 13304,
+  "rejections": {
+    "obstacle_M7": 1
+  },
+  "obstacle_examples": {
+    "M7": {
+      "candidate": [
+        17009424,
+        12463360,
+        17009456,
+        12463512
+      ],
+      "blocking": [
+        17009363.0,
+        12463315.0,
+        17009395.0,
+        12463355.0
+      ]
+    }
+  }
+}
