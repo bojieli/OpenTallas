@@ -1504,3 +1504,6 @@ CODEX took over exact source materialization on codex/hbm-direct-station-0822@09
 
 ## CODEX notes 2026-10-29 09:00 PDT — shared lane_add review
 Reviewed f28c64757 opt-in constructor; corrective e86c02839 on codex/lane-add-0850 READY ROOT. Canonical final natural cycles (incl clock landing) now gate acceptance with full late rollback; split-word parts must share actual cycles; mirror split index preserved; existing station_resite 4.32-um halo applied consistently before fallback.10focusedPASS; all4newcontrolscatchoriginalfaults. Same-count resiting and whole-pair rollback preserved. No current die plan adoption; D18failedplan remainsimmutable.
+
+## PARKED CODEX 2026-10-29 09:04 PDT — explicit Claude reset
+Own codex/hbm-0822@b34ea7cb5 clean/pushed; children parked, livejobs untouched. Packet handoff/codex_hbm_20261029_0903.md contains all source/plan/core failures and nextsteps. SPBbaselineG2FAIL M6overflow195/pinaccess0; two source-identical reviewedvariantsLIVEepyc2units3605746/3605743. D18local60lanes95311b/G0C10inheritedFAIL; sharedcorrectedlane tool e86c02839 must precede adoption. No HBMfreeze/G5/SIGNEDclaim; source144transportpaths remain RR80/date/Srole128missing/legacyVMcapacity held. OWNER? none.
