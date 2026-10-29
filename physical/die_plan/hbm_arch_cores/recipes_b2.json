@@ -833,4 +833,51 @@
   "read_at_commit": true,
   "source": "C25c production keybuf slice as already bound: one 1099-bit lane, five 256x256 SRAMs, 3-bit quasi-static strap_lane_id. No new arithmetic or cycles."
 }
+,
+ "ot_hbm_svc_vm_kshare_splitstrap__v700685__oneclk": {
+  "top": "ot_hbm_svc_vm_kshare_oneclk",
+  "files": [
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+    "rtl/lib/ot_reset_sync.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_oneclk.sv"
+  ],
+  "defines": [],
+  "params": {
+    "MUT": 0,
+    "KRL1": 1
+  },
+  "macros": [],
+  "source": "Opt-in one-clock alias of actual native KRL1=1 kshare; guarded identical native clock expressions and 11974-check lockstep/mutant pass, no state/cycle change. Use only paired plan without redundant stream_clk pin.",
+  "source_commit": "26d902f68c743c3becf0866156b2e93718d66d48",
+  "view_cell": "ot_hbm_svc_vm_kshare_splitstrap",
+  "view_kind": "SYNTH",
+  "view_port_bits": 7343,
+  "read_at_commit": true
+},
+ "ot_hbm_svc_vm_kshare_splitstrap__v8e478a__oneclk": {
+  "top": "ot_hbm_svc_vm_kshare_oneclk",
+  "files": [
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+    "rtl/lib/ot_reset_sync.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_oneclk.sv"
+  ],
+  "defines": [],
+  "params": {
+    "MUT": 0,
+    "KRL1": 1
+  },
+  "macros": [],
+  "source": "Opt-in one-clock alias of actual native KRL1=1 kshare; guarded identical native clock expressions and 11974-check lockstep/mutant pass, no state/cycle change. Use only paired plan without redundant stream_clk pin.",
+  "source_commit": "26d902f68c743c3becf0866156b2e93718d66d48",
+  "view_cell": "ot_hbm_svc_vm_kshare_splitstrap",
+  "view_kind": "SYNTH",
+  "view_port_bits": 7343,
+  "read_at_commit": true
+}
 }
