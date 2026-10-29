@@ -1531,6 +1531,57 @@
           },
           "note": {
            "type": "string"
+          },
+          "source_latency_ps": {
+           "type": "object",
+           "required": [
+            "tt",
+            "ff",
+            "basis"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "tt": {
+             "type": "object",
+             "required": [
+              "early",
+              "late"
+             ],
+             "additionalProperties": false,
+             "properties": {
+              "early": {
+               "type": "number",
+               "minimum": 0
+              },
+              "late": {
+               "type": "number",
+               "minimum": 0
+              }
+             }
+            },
+            "ff": {
+             "type": "object",
+             "required": [
+              "early",
+              "late"
+             ],
+             "additionalProperties": false,
+             "properties": {
+              "early": {
+               "type": "number",
+               "minimum": 0
+              },
+              "late": {
+               "type": "number",
+               "minimum": 0
+              }
+             }
+            },
+            "basis": {
+             "type": "string",
+             "minLength": 1
+            }
+           }
           }
          }
         }
