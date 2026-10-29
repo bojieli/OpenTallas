@@ -138,6 +138,36 @@ proc ot_ci_tree_sink {node path} {
   }
   lappend ::ot_ci_tree_seen $it
 }
+# Preserve an already signed hard core's original early feed. This routine has
+# no connect/disconnect or placement operation: it only verifies and records an
+# actual hard-block Liberty clock pin in the complete original root census.
+proc ot_ci_tree_preserve_hard {clock_port path master} {
+  set cut [string last / $path]
+  if {$cut < 1} {error "OT_CORE_INFRA_PRESERVED_CLOCK_PIN $path"}
+  set i [$::ot_ci_b findInst [string range $path 0 [expr {$cut-1}]]]
+  if {$i eq "NULL" || ![[$i getMaster] isBlock] || [[$i getMaster] getName] ne $master} {
+    error "OT_CORE_INFRA_PRESERVED_CLOCK_MASTER $path $master"
+  }
+  set pin [string range $path [expr {$cut+1}] end]
+  set it [$i findITerm $pin]
+  if {$it eq "NULL" || ![$it isInputSignal]} {error "OT_CORE_INFRA_PRESERVED_CLOCK_INPUT $path"}
+  set root [dict get $::ot_ci_tree_out port:$clock_port]
+  if {[$it getNet] ne $root || [lsearch -exact $::ot_ci_tree_expected $it] < 0} {
+    error "OT_CORE_INFRA_PRESERVED_CLOCK_ROOT $path"
+  }
+  if {[lsearch -exact $::ot_ci_tree_seen $it] >= 0} {error "OT_CORE_INFRA_PRESERVED_CLOCK_DUPLICATE $path"}
+  set typed 0
+  set ps [get_pins -quiet [list $path]]
+  if {[llength $ps] == 1} {
+    set cells [get_lib_cells -quiet -of_objects [get_cells -quiet -of_objects $ps]]
+    foreach lp [get_lib_pins -quiet -of_objects $cells] {
+      if {[get_property $lp name] eq $pin && [get_property $lp is_clock]} {set typed 1}
+    }
+  }
+  if {!$typed} {error "OT_CORE_INFRA_PRESERVED_CLOCK_LIBERTY $path"}
+  lappend ::ot_ci_tree_seen $it
+  puts "OT_CORE_INFRA_PRESERVED_HARD_CLOCK $path master=$master original_root=$clock_port unchanged"
+}
 # ICG-aware tree (12.8b): an existing RTL clock gate is a planned stage. Its CLK pin moves from the core clock net
 # (census-checked) to its plan parent; it is placed at the plan region root; its gated output net keeps every
 # original gated sink (count asserted against the plan census) and is left open for the local CTS tree.
