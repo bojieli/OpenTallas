@@ -135,6 +135,10 @@ def compile_recipe(plan, offsets, source_defaults, programme=None):
         return result
     try:
         start = programme['start']; producer = start['producer']; S = number(start['die_edge'])
+        if programme.get('expected_host_binding', params) != params:
+            raise ValueError('compiled source HOST binding differs from selected actual plan')
+        if programme.get('expected_ctl_start_offset', offsets['parts'][cp['name']]['release']) != offsets['parts'][cp['name']]['release']:
+            raise ValueError('compiled CTL START offset differs from published selected-plan offset')
         if not producer or 'job_active' in producer.lower() or producer.upper().startswith('TEST'):
             raise ValueError('START requires its actual producer; CTL job_active is downstream of START, not a producer')
         zero = number(programme['host_boot_counter_zero_global_edge'])

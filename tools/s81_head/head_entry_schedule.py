@@ -135,7 +135,7 @@ def compile_entry(inventory, job, timing):
     params=dict(LOCAL_STAGE=stage,LOCAL_RANK=rank,PHASE_BOUND=1,CLOCK_RESET_ID=identity,
                 BOOT_HEADER_EDGE=header,BOOT_COMMIT_EDGE=commit)
     return dict(schema="opentallas.head.provider_entry.v1", scope="CURRENT_PROVIDER_ENTRY_ONLY",
-                full_head_token=False, production_transport_qualified=timing.get("scope")=="CURRENT_DIE_TRANSPORT",
+                full_head_token=False, production_transport_qualified=False, transport_input_scope=timing.get("scope"),
                 authority=dict(start_producer="@die.start", start_global_edge=start,
                                basis="explicit broadcast START input; static slots after all configuration and actual XB residency"),
                 stage_basis="next address after model layer stages0..S-1; separate HEAD sink",
@@ -151,6 +151,43 @@ def compile_entry(inventory, job, timing):
                 hbc_book_scope='legacy HOST affine-book descriptor; HOST_FRAMES1 disables HBE consumer; not activation data',
                 added_data_cycles=0, missing_release_gates=["current die transport/reset binding",
                     "actual vector residence before first compute issue", "real-view die timing", "whole-head token"])
+
+
+def boot_recipe_programme(schedule, transport):
+    """Join emitted records to the existing plan/reset recipe audit.
+
+    The two additional inputs identify the actual START source and the
+    peer-to-HOST frame age. They cannot be inferred from a component pass.
+    The caller must bind host_params into its candidate plan before auditing.
+    """
+    start=schedule['authority']['start_global_edge']
+    if start is None:
+        raise ValueError('no START without the actual80-beat XB source')
+    producer=transport['start_producer']
+    if not isinstance(producer,str) or not producer.strip():
+        raise ValueError('actual START source required')
+    t=schedule['timing'];job=schedule['job'];params=schedule['host_params']
+    records=[]
+    for f in schedule['frames']:
+        if f['kind'].startswith('HBC_'):
+            records.append(dict(receive_edge=f['edge']+t['peer_to_hbc_input']-t['host_counter_zero_edge'],
+                                payload=(f['frame']>>16)&((1<<512)-1)))
+    config={k:job[k] for k in ('plen','glen','group','rbase','issue_offset','issue_period','merge_deadline')}
+    config['mode']=schedule['mode']
+    if schedule['mode']=='mtp':config['mtp_result_mtag']=job['mtp_result_mtag']
+    return dict(start=dict(producer=producer,die_edge=start),
+                host_boot_counter_zero_global_edge=t['host_counter_zero_edge'],
+                transport=dict(peer_to_hbc_input=t['peer_to_hbc_input'],
+                               peer_to_host_frame=uint(transport['peer_to_host_frame'],48,'actual peer-to-HOST frame age'),
+                               peer_to_ctl_csr_apply=t['peer_to_ctl_settled'],
+                               hbc_commit_to_context_valid=t['commit_to_context_valid'],
+                               peer_frame_period=t['peer_frame_period']),
+                hbc_records=records,config=config,
+                csr_apply_edges={str(f['address']):f['settled_edge'] for f in schedule['frames'] if f['kind']=='CSR'},
+                test_only=schedule['transport_input_scope']!='CURRENT_DIE_TRANSPORT',
+                expected_ctl_start_offset=t['ctl_start_offset'],
+                expected_host_binding=params,
+                source_counts=schedule['source_counts'])
 
 
 def main():

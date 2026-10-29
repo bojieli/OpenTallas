@@ -48,3 +48,22 @@ def test_rejects_incompatible_source_phase_and_stage_allocation():
         if kind=='rank':j['rank']=4
         if kind=='period':j['issue_period']=0
         with pytest.raises(ValueError):compile_entry(i,j,t)
+
+
+def test_compiled_source_joins_actual_recipe_without_date_relocation():
+    from head_entry_schedule import boot_recipe_programme
+    from head_boot_recipe import compile_recipe
+    from test_head_boot_recipe import fixture as plan_fixture
+    i,j,t=fixture();j['activation_beats']=list(range(80))
+    t.update(xb_first_edge=400,xb_period=1,xb_pin_to_resident_edges=3,ctl_start_offset=12)
+    r=compile_entry(i,j,t)
+    a=boot_recipe_programme(r,dict(start_producer='component_static_calendar',peer_to_host_frame=29))
+    p,o,_=plan_fixture();p['partition_types']['h']['contents'][0]['params']=r['host_params']
+    out=compile_recipe(p,o,r['host_params'],a)
+    assert out['status']=='TEST_RECIPE',out['blockers']
+    assert out['first_issue_global_edge']==r['first_issue_global_edge']
+    actual=[(f['lane'],f['launch_global_edge'],int(f['frame553'],16)) for f in out['frames']]
+    assert actual==[(f['lane'],f['edge'],f['frame']) for f in r['frames']]
+    o['parts']['ctl']['release']+=1
+    out=compile_recipe(p,o,r['host_params'],a)
+    assert out['status']=='BLOCKED' and not out['frames']
