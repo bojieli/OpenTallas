@@ -19,6 +19,7 @@ module tb_idx_link_wpipe;
  end
  always @(posedge clk)begin
   ha0<=refdut.wa;ha1<=ha0;hd0<=refdut.wd;hd1<=hd0;
+  if(WPIPE==2&&(!rst_n||clear)&&dut.mem_we!==0)begin errors++;$display("PIPE_CLEAR_CANCEL");end
   if(rst_n&&!clear&&WPIPE==2)begin
    if(dut.mem_we!==hw1)begin errors++;if(errors<5)$display("PIPE_WE_MITER cycle%0d",cycle);end
    for(integer b=0;b<8;b=b+1)if(hw1[b])begin
@@ -45,6 +46,10 @@ module tb_idx_link_wpipe;
  initial begin
   for(integer i=0;i<4096;i=i+1)due[i]=0;
   repeat(4)@(negedge clk);rst_n=1;
+  // Queue a full write, then clear before its delayed commit; hold two clears.
+  for(integer j=0;j<64;j=j+1)selected_line[j*37]=1;
+  ingest_v=1;@(negedge clk);ingest_v=0;clear=1;
+  repeat(2)@(negedge clk);clear=0;selected_line=0;@(negedge clk);
   for(frame=0;frame<4;frame=frame+1)begin
    if(frame==2)begin rst_n=0;repeat(4)@(negedge clk);rst_n=1;repeat(2)@(negedge clk);end
    clear=1;@(negedge clk);if(frame==1)@(negedge clk);clear=0;issued=0;records=0;flits=0;
