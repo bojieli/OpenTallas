@@ -12,3 +12,5 @@
 
 ## DIE-QC-25 (QC die owner, successor of DIE-QC-24)
 - 2026-10-28 22:52 PDT START 22:32; branch claude/die-qc25-1028 (from 308a1adfba), WT intel2 wt/die-qc25-1028, runs intel2 /srv/opentallas-scratch2/claude/die-qc25-1028. Adopted g24 + trial15x (DIE-QC-24, running). Map rule u_suvm.* -> su_c in asbuilt_map_p6 @a10349f943.
+- 2026-10-28 23:35 PDT RESULT: g24 W180+OCV intra +8.30 PASS (trigger (a) off; -60.14 without spice_edge), seam +89.16, CA PASS, freeze FAIL closed (A0 views, landed class); trial15x guard PASS max 0.6 um; ev_qc25 f72264b77b08 (E crh -> crh_rp1, G0 identical); map u_suvm.* -> su_c; leg refit cal trial24 (rms 13.66 -> 7.11). Branch @955d7c11c0.
+- 2026-10-28 23:35 PDT PARKED: trial25 chain running (intel2 die-qc25-1028/chain25.sh, DONE ~01:15); successor DIE-QC-26 collects.
