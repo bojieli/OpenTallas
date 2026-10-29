@@ -1,0 +1,124 @@
+[
+ {
+  "path": "/srv/opentallas-scratch2/claude/s81-lp-1-1029/hiermap/rtl/000_s81p_dsdv_slice_lepw_mus_LP__t2.sv",
+  "sha256": "65515660c424c2adc693a892eba2edd0a755a500c1bafb9801d4fce5bed2e16d",
+  "lanes": [
+   {
+    "module": "dsfd_coll_lane_w_safe8_ntf",
+    "inst": "u_u_ln0",
+    "rs": "w_13_Y[0]",
+    "assignment": "rst_n",
+    "tap": "rst_n_t5"
+   },
+   {
+    "module": "dsfd_coll_lane_w_safe8_ntf",
+    "inst": "u_u_ln1",
+    "rs": "w_14_Y[0]",
+    "assignment": "rst_n",
+    "tap": "rst_n_t5"
+   },
+   {
+    "module": "dsfd_coll_lane_w_safe8_ntf",
+    "inst": "u_u_ln2",
+    "rs": "w_15_Y[0]",
+    "assignment": "rst_n",
+    "tap": "rst_n_t5"
+   },
+   {
+    "module": "dsfd_coll_lane_w_safe8_ntf",
+    "inst": "u_u_ln3",
+    "rs": "w_16_Y[0]",
+    "assignment": "rst_n",
+    "tap": "rst_n_t5"
+   }
+  ]
+ },
+ {
+  "path": "/srv/opentallas-scratch2/claude/s81-lp-2-1029/lepe_mu_LP__t2/phys/rtl/000_s81p_dsdv_slice_lepe_mu_LP__t2.sv",
+  "sha256": "7d882dfc040290404d9a6a7709e2944abdef8073cca617a427a13dc415e0bd5c",
+  "lanes": [
+   {
+    "module": "dsfd_coll_lane_e_safe8_ntf",
+    "inst": "u_u_ln0",
+    "rs": "w_13_Y[0]",
+    "assignment": "rst_n",
+    "tap": "rst_n_t5"
+   },
+   {
+    "module": "dsfd_coll_lane_e_safe8_ntf",
+    "inst": "u_u_ln1",
+    "rs": "w_14_Y[0]",
+    "assignment": "rst_n",
+    "tap": "rst_n_t5"
+   },
+   {
+    "module": "dsfd_coll_lane_e_safe8_ntf",
+    "inst": "u_u_ln2",
+    "rs": "w_15_Y[0]",
+    "assignment": "rst_n",
+    "tap": "rst_n_t5"
+   },
+   {
+    "module": "dsfd_coll_lane_e_safe8_ntf",
+    "inst": "u_u_ln3",
+    "rs": "w_16_Y[0]",
+    "assignment": "rst_n",
+    "tap": "rst_n_t5"
+   }
+  ]
+ },
+ {
+  "path": "/srv/opentallas-scratch2/claude/s81-lp-2-1029/lepw_mu_LP__t2/phys/rtl/000_s81p_dsdv_slice_lepw_mu_LP__t2.sv",
+  "sha256": "348af4a873f667fb88f35d756b04fbe03adbf6297002e4892000715f588b394a",
+  "lanes": [
+   {
+    "module": "dsfd_coll_lane_w_safe8_ntf",
+    "inst": "u_u_ln0",
+    "rs": "w_13_Y[0]",
+    "assignment": "rst_n",
+    "tap": "rst_n_t5"
+   },
+   {
+    "module": "dsfd_coll_lane_w_safe8_ntf",
+    "inst": "u_u_ln1",
+    "rs": "w_14_Y[0]",
+    "assignment": "rst_n",
+    "tap": "rst_n_t5"
+   },
+   {
+    "module": "dsfd_coll_lane_w_safe8_ntf",
+    "inst": "u_u_ln2",
+    "rs": "w_15_Y[0]",
+    "assignment": "rst_n",
+    "tap": "rst_n_t5"
+   },
+   {
+    "module": "dsfd_coll_lane_w_safe8_ntf",
+    "inst": "u_u_ln3",
+    "rs": "w_16_Y[0]",
+    "assignment": "rst_n",
+    "tap": "rst_n_t5"
+   }
+  ]
+ },
+ {
+  "path": "/srv/opentallas-scratch2/claude/s81-lp-2-1029/lepe_nh_mus_LP__t1/phys/rtl/000_s81p_dsdv_slice_lepe_nh_mus_LP__t1.sv",
+  "sha256": "f60c6df797073363fa98923c1ef7a4cb02ca1229a409c2abb02ad89875df8710",
+  "lanes": [
+   {
+    "module": "dsfd_coll_lane_e_safe8_ntf",
+    "inst": "u_u_ln0",
+    "rs": "w_9_Y[0]",
+    "assignment": "rst_n",
+    "tap": "rst_n_t5"
+   },
+   {
+    "module": "dsfd_coll_lane_e_safe8_ntf",
+    "inst": "u_u_ln1",
+    "rs": "w_10_Y[0]",
+    "assignment": "rst_n",
+    "tap": "rst_n_t5"
+   }
+  ]
+ }
+]

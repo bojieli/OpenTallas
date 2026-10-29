@@ -1,0 +1,35 @@
+{
+ "stage_length_um": [
+  2.1599999999998545,
+  298.08000000000084
+ ],
+ "stages_per_leg": [
+  2,
+  18
+ ],
+ "nodes": 67,
+ "physical_cells": 386,
+ "taps": 34,
+ "edge": "source rise early",
+ "residuals": {
+  "TT": {
+   "rms_ps": 11.53,
+   "abs_resid_pctl_ps": {
+    "50": 7.84,
+    "90": 18.79,
+    "99": 25.68
+   },
+   "max_abs_resid_ps": 26.61
+  },
+  "FF": {
+   "rms_ps": 10.21,
+   "abs_resid_pctl_ps": {
+    "50": 6.99,
+    "90": 16.74,
+    "99": 22.43
+   },
+   "max_abs_resid_ps": 22.89
+  }
+ },
+ "qualification": "actual 1x NW_sm3 GRT coupon only; fit interpolation is an estimate, full-die GRT+real-view STA required; negative FF linear term is regression covariance, not a negative physical delay claim"
+}

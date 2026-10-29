@@ -1054,7 +1054,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                 continue
             hits0 = len(getattr(die, 'bound_blocked_hits', ()))
             try:
-                r = m.lower(die, o, dict(ctx, t_issue=int(math.floor(o['start']))))
+                r = m.lower(die, o, dict(ctx, t_issue=int(math.floor(o['start'])),
+                                         ctl_used={(row['eng'], row['issue']) for row in prog.rows}))
             except Exception as exc:
                 if bound_rec is None or type(exc).__name__ != 'BoundBlocked':
                     raise
@@ -1076,6 +1077,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                 rec.update(native_rows=len(r['rows']), sealed_programme_held=True,
                            lifetime_qualified=bool(r.get('lifetime_qualified', False)),
                            retire_not_before=r['retire_not_before'])
+            if r.get('reservation_delays'):
+                rec['reservation_delays'] = r['reservation_delays']
             prog.absorb(fam, o, r)
             break
         low.append(rec)
@@ -1208,6 +1211,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                     'scheduled event (op schedule span below = the priced critical slice)',
         price=dict(span=sched['span'], crit=sched['crit'], source=sched['price_source'],
                    capture_extra_edges=sched['capture_extra_edges'], vsw_lr_extra_edges=sched['vsw_lr_extra_edges']),
+        reservation_delays=[dict(op=x['id'], **d) for x in low for d in x.get('reservation_delays', [])],
+        reservation_delay_price='per-leg command/event shifts; PARTIAL producer lifetimes remain unbound; not a measured token price',
         ops=sched['ops'], deps=sched['deps'], smoke=sub, line_slot_reserved=getattr(prog, 'line_avoid', {}), events=sorted(prog.events, key=lambda e: e['cycle']),
         event_words='LB2-S81/EVENTS: an encoded boundary event carries words [[edge, value hex, mask hex]] on `ports` '
                     '(LSB-first); dir in: the edge the consumer pin\'s landed register takes the value; dir out: the '

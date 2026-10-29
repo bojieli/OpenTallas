@@ -496,13 +496,18 @@ def validate_selected_parameters(tops, full, lib, defines=()):
     ident = r"[A-Za-z_][A-Za-z0-9_$]*"
     for f in dict.fromkeys(list(full) + list(tops)):
         text = sources[str(f)]
+        # One lexical mask per selected file. Re-masking a multi-MB die for
+        # every #(...) instance made this gate quadratic before Yosys started.
+        masked = None
         for match in re.finditer(r"\b(" + ident + r")\s*#\s*\(", text):
             master = match.group(1)
             mod = selected.get(master)
             if mod is None:
                 continue   # Undefined transport cells retain their existing gate.
             start = text.index("(", match.start())
-            end = D._closing_paren(text, start)
+            if masked is None:
+                masked = D._lexical_mask(text, strings=True)
+            end = D._closing_paren_masked(masked, start)
             instance = re.match(r"\s*(\\\S+|" + ident + r")(?:\s*\[[^\]]+\])*\s*\(", text[end+1:])
             if instance is None:
                 continue   # The module's own parameter header, not an instance.
