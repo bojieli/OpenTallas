@@ -1958,3 +1958,5 @@ CODEX:14:02EXPLICITRESET KV PARKED e055aea64; leafAactualPGaccess81846PASS/nonPG
 CODEX:14:04 HEADkits explicitresetPARK46b4e8c40; actual3croppedGENPASS fixesmissingrawaliases/unsitedCApins, synthnextNOTRUN; FTcensus9typesPASS146.688/boot0; SerDesCTS liveTT−2.51FF−2.35 vsoldpopcount−166.73, noSIGNED; LEPactualkitowed. Packet codex_head_kits_20261029_1402.md, jobsuntouched.
 
 CODEX: 2026-10-29 14:03 PDT EXPLICITRESETpark main da21832de==origin/main; pairactiveedge+CSTfacefix/meaningfulmutant+typedPROG/HBMevidenceintegrated; nativeMIF0stillopen. Alllanestoldpark/livejobsuntouched, handoff/codex_root_20261029_1402.md +8lanepackets/CODEXLOG.
+
+CODEX: 2026-10-29 14:05 PDT HBMcoresAPARKexplicit14:02reset, cleanpushed9c6260c19. ActualGRT/SPEFgapcollected1473/7370slewpins, nativegeometry160/770netsdumpPASS; noECO/PNRstarted. GQstale-sourcefixalready40235, childWTpreparednofreshbuildyet. Packetcodex_hbm_cores_a_reset_20261029_1402.md.

@@ -606,3 +606,6 @@ QC master-plan event supersedes legacyA0 wave; current QC owner handles bit-exac
 
 ## [DIE-QC-36] (A0) 2026-10-29 13:40 PDT
 - core_infra.py opt-in delta READY (claude/die-qc-36-a0-1029@452603b6fbb), byte-identical 701/701 fleet outputs + 33 unit cases. A0 plan-built CTS FAIL (NL hold -654.46/5718, NK -1105.87/7766, CHECKED) from single-node mp_a0_t7 fan-out across the tile; next = planned spread level in gen_a0_tree.py, fresh CTS copies.
+
+## CODEX PARKED 2026-10-29 14:04 PDT — explicit14:02reset
+WIPcodex/qc-a0-1355@33418c63c8d pushed; detailedhandoff/codex_qc_a0_20261029_1402.md. Noownlive/heavyjobs/noCTS. Shared4wayspreadT11failclosed10ROMdepth1loads;T15parentfanout4butremainingrootreglegs175.59NL/351.028NK andactualmacroICG->ROM656.499NL/547.713NKfail. Fullmacroafter-gate+rootFFspreadTabout21next, NOTIMPLEMENTED;0RTL/cycles/pinschange. Noengineeringafterreset.
