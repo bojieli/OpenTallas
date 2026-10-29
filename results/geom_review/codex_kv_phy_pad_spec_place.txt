@@ -1,0 +1,19 @@
+CODEX-KV-PHY-SPEC qkd_hr_phy_pad — PASS-COND for route
+Picture personally VIEWED: results/geom_review/kv_phy_pad_spec_place.png
+Actual successor kit d243d1cfeca8bf5e, source0fb27d2292 (same RTL as67522c5e4).
+86.4x95.04um, same1577pins/sevenstage central trunk/seam25/25, macro-free.
+
+The upper/right placement follows the unchanged incoming and outgoing bus
+faces; pin captures stay near their faces (p90 10.48/max31.49um). It has
+no macro walls/notches or blocked channels. Interior whitespace is ample
+(fill0.3133), vertical peak column0.522, clock entry central with maximum
+clock reach77.62um. All4776 clock sinks rooted, no combinational loops;
+full r2r reach152.28um, zero>405um. PG/outline/clock entry unchanged.
+GRT50 M2-M5 overflow0. Per-bank registered onehot address eliminates the
+late validation fanout that failed the predecessor. No cycles added.
+
+Remaining condition: E M4 edge pin density11.3/um, N M5 6.6/um; same
+interface density as the prior DRC0 kit. Detailed route must confirm pin
+access. This is the only auto-geom warning. Normal preflight0errors,
+kit LEC6421/6421 EQUIVALENT. No timing closure/signoff claim until routed
+TT setup/FF hold/DRV/signoff.py complete. Source constraints not relaxed.
