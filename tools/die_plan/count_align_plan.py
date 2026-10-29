@@ -581,7 +581,7 @@ def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="tabl
 
 
 def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew=(0.0, 0.0), skew_clean=False,
-                      retime_max=8, clean_by="phase", retime_up=False, prev=None, max_hop_um=None, capture_taps=None):
+                      retime_max=8, clean_by="phase", retime_up=False, prev=None, max_hop_um=None, capture_taps=None, launch_taps=None, endpoint_xy=None):
     """START TREE = CLOCK TREE (START-TREE-1).  ctx = clock_contexts() ({corner: meta/taps/ocv/rng}, first = nominal).
     Nodes: every data region at its clock root (longest common tree_path prefix of its taps) and every branch node of
     the clock subtree spanning those roots (virtual 'st:<path>', a retime flop on that tree node).  Each node's start
@@ -634,10 +634,16 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     miss = [x for x in regions if not rtaps.get(x)]
     if miss:
         raise ValueError(f"--start-tree clock: {len(miss)} regions without proof taps (e.g. {miss[:5]})")
-    if capture_taps is not None:
-        for region, tap in capture_taps.items():
+    for role, overrides in (("capture", capture_taps), ("launch", launch_taps)):
+        for region, tap in (overrides or {}).items():
             if region not in rtaps or tap not in rtaps[region] or any(tap not in ctx[c]["taps"] for c in cs):
-                raise ValueError(f"START capture override {region}: {tap} is not that region's measured proof tap")
+                raise ValueError(f"START {role} override {region}: {tap} is not that region's measured proof tap")
+    for role, positions in (endpoint_xy or {}).items():
+        if role not in ("launch", "capture"):
+            raise ValueError("START endpoint coordinates require launch/capture roles")
+        for region, xy in positions.items():
+            if region not in regions or len(xy) != 2 or not all(math.isfinite(float(v)) for v in xy):
+                raise ValueError("START endpoint coordinates need finite points of real START regions")
     leg = {c: DSR.tap_leg(k["meta"], k["taps"]) for c, k in ctx.items()}
     fleg = {c: DSR.tap_leg_fall(k["meta"], k["taps"]) for c, k in ctx.items()}
     rootp = {}
@@ -680,6 +686,8 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     def launch_of(x, cap_path):
         if x.startswith("st:"):
             return vtap(cs[0], path_of[x])
+        if launch_taps is not None and x in launch_taps:
+            return launch_taps[x]
         m = c0["meta"]
 
         def key(k):
@@ -717,12 +725,15 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
         d = min(max(d, lo), hi)
         geometry = {}
         if max_hop_um is not None:
-            def xy(t):
-                q = t.get("xy_um", c0["meta"].get("node_xy_um", {}).get(t["tree_path"]))
+            def xy(t, role):
+                region = p2r.get(t.get("part"))
+                q = (endpoint_xy or {}).get(role, {}).get(region)
+                if q is None:
+                    q = t.get("xy_um", c0["meta"].get("node_xy_um", {}).get(t["tree_path"]))
                 if q is None or len(q) != 2 or not all(math.isfinite(float(v)) for v in q):
                     raise ValueError("START max-hop needs finite physical coordinates for every tap/node")
                 return q
-            aa, bb = xy(A), xy(B)
+            aa, bb = xy(A, "launch"), xy(B, "capture")
             geometry = dict(hop_um=sum(abs(float(x) - float(y)) for x, y in zip(aa, bb)))
         return dict(**geometry, d_ps=d, p_dn_ps=d - lo, p_up_ps=hi - d, fork_node=node,
                     fall_lo=flo if fall_ok else None, fall_hi=fhi if fall_ok else None,
@@ -1059,6 +1070,10 @@ def add_start_tree_args(ap):
                          "tree of --sta-proof, one dedicated start port per clock-tree edge (fork tap -> child sync tap, "
                          "retime flops on tree nodes where a port would be unclean), each port checked as a crossing "
                          "with the --sta-clock-ocv model; needs --sta-proof/--sta-plan and --sta-clock-ocv table")
+    ap.add_argument("--start-launch-taps", metavar="JSON",
+                    help="opt-in {region: measured proof tap port} fixed physical origin launch clocks")
+    ap.add_argument("--start-endpoint-xy", metavar="JSON",
+                    help="opt-in {launch|capture: {region: [die x,y]}} actual physical START pins; clock proof tap selection is separate")
     ap.add_argument("--start-capture-taps", metavar="JSON",
                     help="opt-in {region: measured proof tap port} capture selection; actual type-uniform GLUE pin mapping is supplied by plan owner")
     ap.add_argument("--start-max-hop-um", type=float,
@@ -1082,6 +1097,8 @@ def check_start_tree_args(a, err):
     if a.start_tree != "clock":
         if getattr(a, "start_prev", None):
             err("--start-prev needs --start-tree clock")
+        if getattr(a, "start_launch_taps", None) or getattr(a, "start_endpoint_xy", None):
+            err("--start-launch-taps / --start-endpoint-xy need --start-tree clock")
         if getattr(a, "start_capture_taps", None):
             err("--start-capture-taps needs --start-tree clock")
         if getattr(a, "start_max_hop_um", None) is not None:
@@ -1110,7 +1127,9 @@ def start_tree_from_args(a, rows, err):
                                           a.start_skew_clean, a.start_retime_max, a.start_clean,
                                           getattr(a, "start_retime_up", False), start_prev_doc(a),
                                           getattr(a, "start_max_hop_um", None),
-                                          json.load(open(a.start_capture_taps)) if getattr(a, "start_capture_taps", None) else None)
+                                          json.load(open(a.start_capture_taps)) if getattr(a, "start_capture_taps", None) else None,
+                                          json.load(open(a.start_launch_taps)) if getattr(a, "start_launch_taps", None) else None,
+                                          json.load(open(a.start_endpoint_xy)) if getattr(a, "start_endpoint_xy", None) else None)
     return edges, root, info
 
 

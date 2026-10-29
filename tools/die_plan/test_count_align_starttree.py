@@ -355,3 +355,19 @@ def test_capture_override_uses_actual_declared_region_tap():
     for bad in [{'R3':'t_R4_0'}, {'R3':'invented'}, {'R99':'t_R3_0'}]:
         with pytest.raises(ValueError, match='measured proof tap'):
             cap.clock_start_edges(chain_rows(), ctx_chain(), capture_taps=bad)
+
+
+def test_fixed_launch_clock_and_actual_pin_coordinates_are_distinct():
+    c=ctx_chain()
+    c['TT']['taps']['t_R0_1']['tree_path']=c['TT']['taps']['t_R1_0']['tree_path']
+    root, edges, _ = cap.clock_start_edges(chain_rows(), c,launch_taps={'R0':'t_R0_1'},max_hop_um=405,
+        endpoint_xy={'capture':{'R3':[9000,300]}})
+    launched=[e for e in edges if e['src']=='R0']
+    assert root=='R0' and launched and all(e['launch']=='t_R0_1' for e in launched)
+    target=next(e for e in edges if e['dst']=='R3')
+    assert target['hop_um']>8000 and not target['clean_ok']
+    for bad in [{'launch':{'R2':[float('nan'),0]}},{'invented':{}}]:
+        with pytest.raises(ValueError,match='endpoint coordinates'):
+            cap.clock_start_edges(chain_rows(),ctx_chain(),endpoint_xy=bad)
+    with pytest.raises(ValueError,match='measured proof tap'):
+        cap.clock_start_edges(chain_rows(),ctx_chain(),launch_taps={'R2':'t_R3_0'})
