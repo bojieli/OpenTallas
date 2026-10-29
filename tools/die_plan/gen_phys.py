@@ -1817,6 +1817,37 @@ def defines_landing_ring(rtl_dir):
     return any(_LANDING_MOD.search(f.read_text(errors="replace")) for f in sorted(Path(rtl_dir).glob("*.sv")))
 
 
+_LANDING_BODY = re.compile(r"^\s*module\s+ot_dp_clk_landing\b(.*?)^\s*endmodule\b", re.M | re.S)
+_RING_DEPTH = re.compile(r"\bot_meso_ring\s*#\s*\([^;]*?\.DEPTH\s*\(\s*(\d+)\s*\)", re.S)
+_PLAIN_RING = re.compile(r"\bot_dp_clk_landing\s*#\s*\((?:[^()]|\([^()]*\))*\)\s*(u_cland_\w+)\s*\((.*?)\)\s*;", re.S)
+_RING_D = re.compile(r"\.d\s*\(\s*(\{[^{}]*\}|[A-Za-z_]\w*)\s*\)")
+
+
+def plain_ring_land_slots(rtl_dir, buses):
+    """DIE-S81-26 10-29 (COORD 10:41 ruling (b), face_guard config, not a new check): the PLAIN forwarded-clock landing
+    rings of a --kit-rtl type (S81 stations: ot_dp_clk_landing u_cland_<bus> from clock.landing_contract, not the
+    count-aligned Landings sidecar of DIE-KV-31 810219984cd).  Every ring whose .d is whole planned face buses (one
+    identifier or a {..} concat of identifiers, each in `buses`) declares those buses {D: ring DEPTH, form: hold_mux}
+    -- face_guard then proves per bit the D enable-mux slot flops (own-Q hold, exclusive write conditions) exactly as
+    for count-aligned rings.  A ring with any other .d expression, or a kit without the ot_dp_clk_landing module /
+    a literal ring DEPTH, declares nothing (its bits stay undeclared, so a 1-to-D fan still FAILs).  {} if none."""
+    text = "\n".join(f.read_text(errors="replace") for f in sorted(Path(rtl_dir).glob("*.sv")))
+    body = _LANDING_BODY.search(text)
+    dm = _RING_DEPTH.search(body.group(1)) if body else None
+    if not dm:
+        return {}
+    depth, out = int(dm.group(1)), {}
+    for m in _PLAIN_RING.finditer(text):
+        d = _RING_D.search(m.group(2))
+        if not d:
+            continue
+        names = [x.strip() for x in d.group(1).strip("{}").split(",")]
+        if names and all(re.fullmatch(r"[A-Za-z_]\w*", x) and x in buses for x in names):
+            for x in names:
+                out[x] = {"D": depth, "form": "hold_mux"}
+    return out
+
+
 def stage_includes(rtl_files, rtl_dir):
     """DIE-HEAD-7 / RISK-SWEEP-2 10-28: copy every `include "x" a staged source names (transitively) from the source's
     own directory into the kit rtl/ (yosys resolves includes next to the including file); the HEAD hd_serdes kit
@@ -1838,7 +1869,7 @@ def stage_includes(rtl_files, rtl_dir):
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
-                   bump_ports=None, gpl_plain=False, land_slots=None):
+                   bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False):
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
@@ -2345,6 +2376,15 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("partition_ir.py"), kd / "partition_ir.py")
     (kd / "pins.json").write_text(json.dumps([dict(bus=b, bit=i, layer=l, x=x, y=y, face=f)
                                               for b, i, l, x, y, f in pins]) + "\n")
+    plain = plain_ring_land_slots(kd / "rtl", {b for b, *_ in pins}) if plain_rings else {}
+    if plain:                                   # DIE-S81-26: plain forwarded-clock rings (S81 stations), merged
+        from clock_landings import LAND_SLOTS_SCHEMA
+        land_slots = dict(land_slots or {"schema": LAND_SLOTS_SCHEMA, "buses": {}})
+        clash = sorted(set(plain) & set(land_slots.get("buses", {})))
+        if clash:
+            import gen_rtl
+            raise gen_rtl.GenError(f"type {tn}: buses declared by both the landing sidecar and a plain ring: {clash[:5]}")
+        land_slots["buses"] = {**land_slots.get("buses", {}), **plain}
     if land_slots is not None:                  # face_guard reads it beside pins.json (count-aligned landing rings)
         (kd / "land_slots.json").write_text(json.dumps(land_slots, indent=1) + "\n")
     port_pins = port_bind_pin_records(P, tn, pins, bump_ports)
@@ -2542,7 +2582,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
                                    skip_ir, max_wire_um, rc_cal, master_slice, trial, bump_ports=bumps,
                                    gpl_plain=tn in (gpl_plain or ()),
-                                   land_slots=lands.land_slots(tn) if lands is not None else None))
+                                   land_slots=lands.land_slots(tn) if lands is not None else None,
+                                   plain_rings=bool(kit_rtl and tn in kit_rtl)))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits
