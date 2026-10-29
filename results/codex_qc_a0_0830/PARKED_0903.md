@@ -1,0 +1,19 @@
+# PARKED on EXPLICIT CLAUDE RESET 2026-10-29 09:03 PDT
+
+No new engineering/job/route/merge after reset. Own branch codex/qc-a0-0830: source68204ac61dc, reports71b2104b258/ea219c6aa4f; finalfailurepacket follows. WT intel2 /srv/opentallas-scratch2/claude/wt/codex-qc-a0-0830 kept. Ownlane root /srv/opentallas-scratch2/claude/codex-qc-a0-0830. Some untrackedprivate signedview/slice imports copied from committedb41fd652f are intentionally notproposedformain; recipefiles pointto thoseimports. They are retained, nounique source lost. No ongoingmerge.
+
+LIVE NLONEplacement: intel2 oth-ubuntu-2306050-1793288247, source kit kits/qfd_tile_nl_a0c_a0nl14icg2r1. Check tail -20 <root>/nlr1_place.otrun.log and <kit>/place.log (GPL~4270 at09:03). Do not duplicate, kill, changeinputs or rerun.
+
+NKONEplacement terminal0(unit2355573), actual19SIGNEDchildren/36ICGs/64hopFF; geometricFAIL preserved nk_v1l_icg2_place_auto_geom.json/png. PersonallyVIEWED: correctlegalV1Lmacros0overlap andopensouth/northstreets, BUT upperFFredistribution has532captures>405 max657.45 (s2_x69->sl5TXq69),7collapsedrelaychains; rst_n firstFF261.76>hard150. Pinp908.41/allregistered. ChannelH1.413/V1.516/col1.778 remainestimates. NoCTS/GRT/DRT onFAIL.
+
+Actualenablegeometry nk_enable_reach.tsv: mainK0gate(234.09,581.715) getsn_bvalid source(4.968,901.125)548.532um; NODEgate230.418,748.305 getsgo451.845,560.925 at408.807um. No longpath exemption. ExistingONEplacementTARGETS only8077oldNLFFs after5377macrohalooverlap oldpositions discarded; source/gates changed noRTLcycle beyondalreadypricedNK+1boot.
+
+NEXT approval persists: ROOTauthorizedONE repairedNKplacement only AFTER fullactualgraph-homeanalytic+visualreviewPASS-COND; then actualreach/gateenable/reset/collapsemustallclear beforeCTS/GRT. ParentQC canreviewproposal. No repairedplacementorLPlaunched before reset. Need fullactualnativegraph from nk_geom/geom.tsv includingKICGvertex endpoints (ENA) andallinput/resetfacebudget. Start from the prior 395um graphplanner (committedb41fd652f results/codex_qc_a0_2340/parent_place/{place_feasibility.py,solve_graph.py}); do not dropedges/maskreset orrelax405. Ownroot venv now has NumPy2.5.4/SciPy1.18.1. Local /srv/opentallas-scratch/claude/codex-qc-a0-0830 retains copiesofoldsolver, NOT modified/run. Source same; rootapprovalwasposition-only.
+
+Potentialexistingresetrelayhome NOTAPPLIED in nk_existing_reset_relay_v1l_candidate.json:194.184,890.055 in thetranslatedRFstreet; currentroot312.878,669.996 ->relay338.753 andrelaytoWheaders<=399.629. Oldhome136.728,874.935 nowundernewRF. Detailedrow/TAPcheckowed. Gate/dr/enableASRflops directlyonrst_n createpin150 constraints; count them inanalyticgraph. Moving thefewNVvalid/faultfirstcaptureswithinexistinghard150 (whilep90<=30) maybeneeded; do notsilentlydeclareallpins30 orallpins150. Nochangeapplied.
+
+Proof owner /root/qc_proof owns exactphysicalREGROOT3/noFP1/mappedrawleaf operationalmiter +control. Theirsourceusescurrentr1RTL; don'tsubstitutetheolderMODE9/FP1coupon. Nativeactualclockscopecensus isseparate: uncorrectedICG2slanghad1gate/0hopFF/0ROMs; source68204 movesclockdeclarationsbeforegenerate, correctNL34/66/10ROM8RF, NK36/64/10ROM8RF1NODE. Oldfailednativeartifactskept. Historical2660rom_rdwarningsunchanged andnotcriterion.
+
+PROGread-onlytask COMPLETE: wide354.24x259.2at17.28,380.16 has0othercoreoverlaps,CHgap17.28; expandsE95.04/vacatesN95.04. Current3typewindowregistryhits18/18/17; actual15providerbodies per12SUinstances(180total), one reset/originstage perSU. Exactnames inprog_wide_provider_hits.json. Mainwide isexplicitNEWASPECTUNQUALIFIED; nativeK2b deliberatelyusesSIGNEDs8b fallback. Nativeoldclock->actualwide moves141.84x134.418um, mainwideS->actualcenter134.418vertical. No swapwithoutoneprovider/clockrehome+pins/view/earlyfeed/PGevent. No source/plan edit. ParentQCownscontinuation.
+
+OWNER? None new. No new signoff/freeze/token claim.

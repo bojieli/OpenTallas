@@ -1,0 +1,80 @@
+{
+ "qfd_tile_nl_a0c": {
+  "ref_tile": "physical/die_plan/qwen_compute/cores/a0/parent/nl",
+  "pins_file": "cores/a0/parent/a0_nl_pins_dir.json",
+  "plan_pins_contract": true,
+  "hard_children": {
+   "views": {
+    "ot_qwen_tile_romleaf": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf",
+    "ot_qwen_tile_lsl_rawfault_m3": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   },
+   "children_file": "physical/die_plan/qwen_compute/cores/a0/parent/nl_children.json"
+  },
+  "insertion_ps": 692.6,
+  "insertion_ff_ps": 601.9,
+  "insertion_basis": "Root approved prebuild typed hard_core_latency: current119 declared NL mean692.6TT/601.9FF, parent common250/202.5 softtap early442.6/399.4. New intrinsic characterization must join atomic119event before final fixed reference/repair. No period/uncertainty change.",
+  "insertion_balance": false,
+  "max_routing_layer": "M7",
+  "util": 0.45,
+  "suffix": "a0nl14icg2r1",
+  "slang": true,
+  "params": {
+   "ICG": 2
+  },
+  "_why": "QC-A0-KITS-6 10-28: A0 PARENT kit (glue + SIGNED hard children). Children views must be SIGNED (export_view layout) at the listed dirs; today none is (generator refuses, all named). Clock = the slice centre entry; the plan trunk (tools/die_plan/parent_trunk_dme.py) is NOT yet wired as the kit CTS hook (insertion_balance off; next step). M7 = parent routes over children (OBS <= M5), as the QC-A0-KITS-3 parent trial.",
+  "_why_icg": "COORD 08:05 approved ONE ICG2 placement; no CTS/signoff until full geometry and mutant gaps close. Zero data/steady cycle change.",
+  "two_mode": true,
+  "rtl_patches": [
+   {
+    "file": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_45.sv",
+    "why": "NL wrapper names undeclared ck_rqr2/3 despite exposing only existing north/south return clocks0/1. Map east half to the same declared group clocks; actual recipe GLUE_HARD=0 never elaborates ck_rqre consumers. No state/cycle change; compare against parser-repaired original in native parent LEC. Candidate redundant output reset mux removal: inner tf and tv are already asynchronously zero under same reset_q; full native proof required. Zero added cycles or reset release offset.",
+    "edits": [
+     [
+      ".ck_rqre({ck_rqr3,ck_rqr2})",
+      ".ck_rqre({ck_rqr1,ck_rqr0})",
+      1
+     ],
+     [
+      "t_out_q[513:512]<=reset_q ? {tf,tv} : 2'd0;",
+      "t_out_q[513:512]<={tf,tv};",
+      1
+     ]
+    ]
+   },
+   {
+    "file": "rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv",
+    "why": "Inactive REGROOT>=8 arm must have in-bounds twin index when REGROOT3 NSPC27. Select offset0 in inactive arm, same expression when REGROOT>=8; active fallback unchanged. Actual expression lockstep20000 + active-twin mutant caught; zero cycles.",
+    "edits": [
+     [
+      "spc[4*(14+gq+SPB) +: 4]",
+      "spc[4*(14+gq+((REGROOT >= 8) ? SPB : 0)) +: 4]",
+      1
+     ]
+    ]
+   }
+  ],
+  "orfs_vars": {
+   "OT_RTL_LINT_FLATTEN": 1,
+   "MIN_CLK_ROUTING_LAYER": "M4",
+   "MAX_CLK_ROUTING_LAYER": "M7"
+  },
+  "defines": [
+   "OT_ROM_CONST0_KV"
+  ],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 1.0",
+  "clock_contract": {
+   "kind": "hard_core_latency",
+   "parent": "actual119 two cbx_q10 types /48 u_t30 copies; parent earlytap balances intrinsic",
+   "io_reference_ps": {
+    "kind": "plan_declared",
+    "tt": 692.6,
+    "ff": 601.9,
+    "basis": "Current declared intrinsic means approved before unsignedICG0build; fixed matching IOreference before repair",
+    "source": "Root coordinator2026-10-29 HARDCORE disposition; intel2 codex-qc-1029/physical_event/plan_start_native_h800.json u_t30.ck insertion692.6/601.9"
+   }
+  },
+  "includes": [
+   "rtl/physical/a0_core/ot_a0_icg_hop.sv"
+  ]
+ }
+}

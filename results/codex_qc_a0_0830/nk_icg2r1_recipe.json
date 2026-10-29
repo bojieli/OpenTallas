@@ -1,0 +1,74 @@
+{
+ "qfd_tile_nk_a0c": {
+  "ref_tile": "physical/die_plan/qwen_compute/cores/a0/parent/nk",
+  "pins_file": "cores/a0/parent/a0_nk_pins_dir.json",
+  "plan_pins_contract": true,
+  "hard_children": {
+   "views": {
+    "ot_qwen_tile_romleaf": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf",
+    "ot_qwen_tile_lsl_rawfault_m3": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3",
+    "ot_qwen_tile_node": "results/codex_qc_a0_2340/views/ot_qwen_tile_node"
+   },
+   "children_file": "results/codex_qc_a0_0830/nk_children_v1l.json"
+  },
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": "12.3 common core latency 250 TT / 202.5 FF kit frame (KIT_PREFLIGHT ff_binding); the die taps the A0 centre entry EARLY by (routed trunk insertion - frame): DIE-QC-17 routed trunk 716/623 TT/FF (nk t5), COORD 14:21",
+  "insertion_balance": false,
+  "max_routing_layer": "M7",
+  "util": 0.45,
+  "suffix": "a0nk14icg2r1",
+  "slang": true,
+  "params": {
+   "ICG": 2
+  },
+  "_why": "NK initial source/synthesis preparation: actual signed rawleaf/romleaf/node children; canonical NK control/reset kept. No NL reset-output cleanup or globalKV zero changes transferred. Existing inactive-branch width-safe patch only; exact native proof required. No placement/CTS/route authorized. Common250/202.5 remains trial IO frame until real parent plan declares per-corner insertion.",
+  "_why_icg": "COORD 08:05 approved ONE ICG2 placement; no CTS/signoff until full geometry and mutant gaps close. Zero data/steady cycle change.",
+  "two_mode": true,
+  "orfs_vars": {
+   "OT_RTL_LINT_FLATTEN": 1
+  },
+  "rtl_patches": [
+   {
+    "file": "rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv",
+    "why": "Inactive REGROOT>=8 arm must have in-bounds twin index when REGROOT3 NSPC27. Select offset0 in inactive arm, same expression when REGROOT>=8; active fallback unchanged. Actual expression lockstep20000 + active-twin mutant caught; zero cycles.",
+    "edits": [
+     [
+      "spc[4*(14+gq+SPB) +: 4]",
+      "spc[4*(14+gq+((REGROOT >= 8) ? SPB : 0)) +: 4]",
+      1
+     ]
+    ]
+   },
+   {
+    "file": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_45.sv",
+    "why": "One shared local output-reset delivery stage for W t_out and n_y header clamps. Explicit +1 boot release/assert phase under existing reset/START model, steady/data0. Actualfirstplacement exposed836um root-to-n_y path; same existing relay now feeds both guards, no second added stage. Root sample shiftedwithin150um pin allowance; fullplacement/source proof required.",
+    "edits": [
+     [
+      "    (* keep *) reg [513:0] t_out_q;",
+      "`ifdef OT_A0_LOCAL_OUT_RESET\n    // Scheduled neighbour reset delivery: root sample -> local W-output relay.\n    // Adds ONE local boot-release edge; the compiler START offset includes it.\n    (* keep = \"true\", dont_touch = \"true\" *) reg t_out_reset_q;\n    always @(posedge ck_fa2) t_out_reset_q <= reset_q;\n    wire t_out_reset_n = t_out_reset_q;\n`else\n    wire t_out_reset_n = reset_q;\n`endif\n    (* keep *) reg [513:0] t_out_q;",
+      1
+     ],
+     [
+      "t_out_q[513:512]<=reset_q ? {tf,tv} : 2'd0;",
+      "t_out_q[513:512]<=t_out_reset_n ? {tf,tv} : 2'd0;",
+      1
+     ],
+     [
+      "n_y_q[513:512]<=reset_q ? {fy_q,nvy} : 2'd0;",
+      "n_y_q[513:512]<=t_out_reset_n ? {fy_q,nvy} : 2'd0;",
+      1
+     ]
+    ]
+   }
+  ],
+  "defines": [
+   "OT_A0_LOCAL_OUT_RESET",
+   "OT_ROM_CONST0_KV"
+  ],
+  "_why_zero_kv": "NK baseline native LEC2055DIFF (2048 zero-KV TX +7 loaded-address points), same ROM-only global KV port hardwired0 cause already qualified on NL. Existing opt-in direct-zero source branch is enabled; current-source native proof of NK assembly remains required. No arithmetic/data/steady cycles changed.",
+  "includes": [
+   "rtl/physical/a0_core/ot_a0_icg_hop.sv"
+  ]
+ }
+}

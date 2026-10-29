@@ -1,0 +1,40 @@
+{
+ "status": "PREPARED_NOT_APPLIED; current ONE NK placement untouched",
+ "reason": "V1L moves rawfault columns +57.46um; the old reviewed output-reset relay x136.728/y874.935 home is now under a hard RF child. Existing one relay must occupy the new RF street if current GPL does not find a <=405um home. No new relay/boot/data stage.",
+ "source": "qfd_tile_nk_a0c_a0nk14icg2r1 same source; parent explicit local reset stage already priced+1boot",
+ "root": [
+  312.878,
+  669.996
+ ],
+ "candidate_existing_relay_center": [
+  194.184,
+  890.055
+ ],
+ "candidate_home_basis": "RF0 right188.784 / RF1 left199.80, 11.016um street; 4.32halos leave193.104..195.48; 1.08um relay bbox193.644..194.724; x-site phase exact0.108, row centre4.455+3280*0.27=890.055. Detailed row/TAP check still required.",
+ "nominal_output_centers": {
+  "t_out512": [
+   19.5,
+   989.5
+  ],
+  "t_out513": [
+   20.5,
+   990.5
+  ],
+  "ny512": [
+   8.0,
+   1102.5
+  ],
+  "ny513": [
+   8.0,
+   1103.5
+  ]
+ },
+ "approval": "only apply after actual placed reach failure is diagnosed and visually reviewed; coordinate dieowner",
+ "analytic_hops_um": {
+  "root_to_relay": 338.75299999999993,
+  "t_out512": 274.129,
+  "t_out513": 274.129,
+  "ny512": 398.629,
+  "ny513": 399.629
+ }
+}
