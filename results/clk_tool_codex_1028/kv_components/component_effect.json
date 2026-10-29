@@ -1,0 +1,660 @@
+{
+ "TT": {
+  "buf_master_input_edge_tap_components": {
+   "('BUFx24_ASAP7_75t_R', 'rise')": 20,
+   "('BUFx24_ASAP7_75t_R', 'fall')": 12
+  },
+  "changed_taps": 32,
+  "changes": [
+   {
+    "port": "t_phy_EN_0__clk",
+    "part": "phy_EN_0",
+    "delta_ps": {
+     "late_ps": 12.225067,
+     "early_ps": -0.197238,
+     "fall_late_ps": 10.506589,
+     "fall_early_ps": -0.398716
+    }
+   },
+   {
+    "port": "t_phy_EN_1__clk",
+    "part": "phy_EN_1",
+    "delta_ps": {
+     "late_ps": 12.695047,
+     "early_ps": -0.204373,
+     "fall_late_ps": 10.870214,
+     "fall_early_ps": -0.411262
+    }
+   },
+   {
+    "port": "t_phy_EN_2__clk",
+    "part": "phy_EN_2",
+    "delta_ps": {
+     "late_ps": 9.413496,
+     "early_ps": -0.151664,
+     "fall_late_ps": 8.053983,
+     "fall_early_ps": -0.30532
+    }
+   },
+   {
+    "port": "t_phy_EN_3__clk",
+    "part": "phy_EN_3",
+    "delta_ps": {
+     "late_ps": 11.72137,
+     "early_ps": -0.189699,
+     "fall_late_ps": 10.126166,
+     "fall_early_ps": -0.385434
+    }
+   },
+   {
+    "port": "t_phy_EN_4__clk",
+    "part": "phy_EN_4",
+    "delta_ps": {
+     "late_ps": 11.718761,
+     "early_ps": -0.189608,
+     "fall_late_ps": 10.122175,
+     "fall_early_ps": -0.38525
+    }
+   },
+   {
+    "port": "t_phy_EN_5__clk",
+    "part": "phy_EN_5",
+    "delta_ps": {
+     "late_ps": 12.225095,
+     "early_ps": -0.197239,
+     "fall_late_ps": 10.506612,
+     "fall_early_ps": -0.398717
+    }
+   },
+   {
+    "port": "t_phy_EN_6__clk",
+    "part": "phy_EN_6",
+    "delta_ps": {
+     "late_ps": 9.853151,
+     "early_ps": -0.158469,
+     "fall_late_ps": 8.394196,
+     "fall_early_ps": -0.317299
+    }
+   },
+   {
+    "port": "t_phy_EN_7__clk",
+    "part": "phy_EN_7",
+    "delta_ps": {
+     "late_ps": 9.413356,
+     "early_ps": -0.151666,
+     "fall_late_ps": 8.054027,
+     "fall_early_ps": -0.305318
+    }
+   },
+   {
+    "port": "t_phy_ES_0__clk",
+    "part": "phy_ES_0",
+    "delta_ps": {
+     "late_ps": 9.492602,
+     "early_ps": -0.152997,
+     "fall_late_ps": 8.114962,
+     "fall_early_ps": -0.307668
+    }
+   },
+   {
+    "port": "t_phy_ES_1__clk",
+    "part": "phy_ES_1",
+    "delta_ps": {
+     "late_ps": 9.97296,
+     "early_ps": -0.16044,
+     "fall_late_ps": 8.486392,
+     "fall_early_ps": -0.320896
+    }
+   },
+   {
+    "port": "t_phy_ES_2__clk",
+    "part": "phy_ES_2",
+    "delta_ps": {
+     "late_ps": 9.874931,
+     "early_ps": -0.372919,
+     "fall_late_ps": 11.421498,
+     "fall_early_ps": -0.183157
+    }
+   },
+   {
+    "port": "t_phy_ES_3__clk",
+    "part": "phy_ES_3",
+    "delta_ps": {
+     "late_ps": 7.215711,
+     "early_ps": -0.272308,
+     "fall_late_ps": 8.335804,
+     "fall_early_ps": -0.133463
+    }
+   },
+   {
+    "port": "t_phy_ES_4__clk",
+    "part": "phy_ES_4",
+    "delta_ps": {
+     "late_ps": 7.210728,
+     "early_ps": -0.27214,
+     "fall_late_ps": 8.330082,
+     "fall_early_ps": -0.133376
+    }
+   },
+   {
+    "port": "t_phy_ES_5__clk",
+    "part": "phy_ES_5",
+    "delta_ps": {
+     "late_ps": 9.869199,
+     "early_ps": -0.372718,
+     "fall_late_ps": 11.413531,
+     "fall_early_ps": -0.183063
+    }
+   },
+   {
+    "port": "t_phy_ES_6__clk",
+    "part": "phy_ES_6",
+    "delta_ps": {
+     "late_ps": 7.765249,
+     "early_ps": -0.292,
+     "fall_late_ps": 9.053032,
+     "fall_early_ps": -0.144662
+    }
+   },
+   {
+    "port": "t_phy_ES_7__clk",
+    "part": "phy_ES_7",
+    "delta_ps": {
+     "late_ps": 7.474023,
+     "early_ps": -0.281558,
+     "fall_late_ps": 8.676689,
+     "fall_early_ps": -0.138732
+    }
+   },
+   {
+    "port": "t_phy_WN_0__clk",
+    "part": "phy_WN_0",
+    "delta_ps": {
+     "late_ps": 6.473672,
+     "early_ps": -0.104659,
+     "fall_late_ps": 5.498555,
+     "fall_early_ps": -0.209104
+    }
+   },
+   {
+    "port": "t_phy_WN_1__clk",
+    "part": "phy_WN_1",
+    "delta_ps": {
+     "late_ps": 6.659374,
+     "early_ps": -0.107442,
+     "fall_late_ps": 5.642162,
+     "fall_early_ps": -0.213794
+    }
+   },
+   {
+    "port": "t_phy_WN_2__clk",
+    "part": "phy_WN_2",
+    "delta_ps": {
+     "late_ps": 9.110312,
+     "early_ps": -0.147408,
+     "fall_late_ps": 7.817916,
+     "fall_early_ps": -0.297509
+    }
+   },
+   {
+    "port": "t_phy_WN_3__clk",
+    "part": "phy_WN_3",
+    "delta_ps": {
+     "late_ps": 8.865757,
+     "early_ps": -0.143742,
+     "fall_late_ps": 7.631319,
+     "fall_early_ps": -0.291137
+    }
+   },
+   {
+    "port": "t_phy_WN_4__clk",
+    "part": "phy_WN_4",
+    "delta_ps": {
+     "late_ps": 6.230827,
+     "early_ps": -0.100852,
+     "fall_late_ps": 5.311936,
+     "fall_early_ps": -0.20244
+    }
+   },
+   {
+    "port": "t_phy_WN_5__clk",
+    "part": "phy_WN_5",
+    "delta_ps": {
+     "late_ps": 6.473728,
+     "early_ps": -0.104658,
+     "fall_late_ps": 5.498555,
+     "fall_early_ps": -0.209104
+    }
+   },
+   {
+    "port": "t_phy_WN_6__clk",
+    "part": "phy_WN_6",
+    "delta_ps": {
+     "late_ps": 9.488927,
+     "early_ps": -0.153208,
+     "fall_late_ps": 8.109208,
+     "fall_early_ps": -0.307539
+    }
+   },
+   {
+    "port": "t_phy_WN_7__clk",
+    "part": "phy_WN_7",
+    "delta_ps": {
+     "late_ps": 6.392826,
+     "early_ps": -0.103322,
+     "fall_late_ps": 5.436342,
+     "fall_early_ps": -0.206724
+    }
+   },
+   {
+    "port": "t_phy_WS_0__clk",
+    "part": "phy_WS_0",
+    "delta_ps": {
+     "late_ps": 6.473054,
+     "early_ps": -0.104672,
+     "fall_late_ps": 5.497982,
+     "fall_early_ps": -0.209118
+    }
+   },
+   {
+    "port": "t_phy_WS_1__clk",
+    "part": "phy_WS_1",
+    "delta_ps": {
+     "late_ps": 6.778426,
+     "early_ps": -0.109419,
+     "fall_late_ps": 5.734975,
+     "fall_early_ps": -0.217419
+    }
+   },
+   {
+    "port": "t_phy_WS_2__clk",
+    "part": "phy_WS_2",
+    "delta_ps": {
+     "late_ps": 4.842426,
+     "early_ps": -0.182335,
+     "fall_late_ps": 5.637786,
+     "fall_early_ps": -0.090039
+    }
+   },
+   {
+    "port": "t_phy_WS_3__clk",
+    "part": "phy_WS_3",
+    "delta_ps": {
+     "late_ps": 4.706843,
+     "early_ps": -0.177293,
+     "fall_late_ps": 5.462014,
+     "fall_early_ps": -0.087119
+    }
+   },
+   {
+    "port": "t_phy_WS_4__clk",
+    "part": "phy_WS_4",
+    "delta_ps": {
+     "late_ps": 4.705477,
+     "early_ps": -0.177244,
+     "fall_late_ps": 5.459882,
+     "fall_early_ps": -0.087096
+    }
+   },
+   {
+    "port": "t_phy_WS_5__clk",
+    "part": "phy_WS_5",
+    "delta_ps": {
+     "late_ps": 4.842249,
+     "early_ps": -0.182361,
+     "fall_late_ps": 5.637786,
+     "fall_early_ps": -0.090064
+    }
+   },
+   {
+    "port": "t_phy_WS_6__clk",
+    "part": "phy_WS_6",
+    "delta_ps": {
+     "late_ps": 5.001729,
+     "early_ps": -0.187974,
+     "fall_late_ps": 5.844303,
+     "fall_early_ps": -0.09336
+    }
+   },
+   {
+    "port": "t_phy_WS_7__clk",
+    "part": "phy_WS_7",
+    "delta_ps": {
+     "late_ps": 2.491848,
+     "early_ps": -0.092583,
+     "fall_late_ps": 2.960891,
+     "fall_early_ps": -0.046522
+    }
+   }
+  ]
+ },
+ "FF": {
+  "buf_master_input_edge_tap_components": {
+   "('BUFx24_ASAP7_75t_R', 'rise')": 20,
+   "('BUFx24_ASAP7_75t_R', 'fall')": 12
+  },
+  "changed_taps": 32,
+  "changes": [
+   {
+    "port": "t_phy_EN_0__clk",
+    "part": "phy_EN_0",
+    "delta_ps": {
+     "late_ps": 9.860136,
+     "early_ps": -3.392778,
+     "fall_late_ps": 7.69773,
+     "fall_early_ps": -3.954409
+    }
+   },
+   {
+    "port": "t_phy_EN_1__clk",
+    "part": "phy_EN_1",
+    "delta_ps": {
+     "late_ps": 10.319551,
+     "early_ps": -3.538588,
+     "fall_late_ps": 8.053197,
+     "fall_early_ps": -4.122628
+    }
+   },
+   {
+    "port": "t_phy_EN_2__clk",
+    "part": "phy_EN_2",
+    "delta_ps": {
+     "late_ps": 7.619201,
+     "early_ps": -2.61946,
+     "fall_late_ps": 5.934737,
+     "fall_early_ps": -3.045816
+    }
+   },
+   {
+    "port": "t_phy_EN_3__clk",
+    "part": "phy_EN_3",
+    "delta_ps": {
+     "late_ps": 9.36876,
+     "early_ps": -3.237074,
+     "fall_late_ps": 7.322714,
+     "fall_early_ps": -3.776771
+    }
+   },
+   {
+    "port": "t_phy_EN_4__clk",
+    "part": "phy_EN_4",
+    "delta_ps": {
+     "late_ps": 9.362322,
+     "early_ps": -3.234082,
+     "fall_late_ps": 7.318774,
+     "fall_early_ps": -3.773681
+    }
+   },
+   {
+    "port": "t_phy_EN_5__clk",
+    "part": "phy_EN_5",
+    "delta_ps": {
+     "late_ps": 9.860193,
+     "early_ps": -3.392779,
+     "fall_late_ps": 7.697687,
+     "fall_early_ps": -3.954443
+    }
+   },
+   {
+    "port": "t_phy_EN_6__clk",
+    "part": "phy_EN_6",
+    "delta_ps": {
+     "late_ps": 8.049058,
+     "early_ps": -2.758305,
+     "fall_late_ps": 6.265646,
+     "fall_early_ps": -3.205418
+    }
+   },
+   {
+    "port": "t_phy_EN_7__clk",
+    "part": "phy_EN_7",
+    "delta_ps": {
+     "late_ps": 7.619187,
+     "early_ps": -2.61946,
+     "fall_late_ps": 5.934759,
+     "fall_early_ps": -3.045816
+    }
+   },
+   {
+    "port": "t_phy_ES_0__clk",
+    "part": "phy_ES_0",
+    "delta_ps": {
+     "late_ps": 7.694568,
+     "early_ps": -2.646022,
+     "fall_late_ps": 5.991648,
+     "fall_early_ps": -3.075819
+    }
+   },
+   {
+    "port": "t_phy_ES_1__clk",
+    "part": "phy_ES_1",
+    "delta_ps": {
+     "late_ps": 8.169549,
+     "early_ps": -2.800949,
+     "fall_late_ps": 6.356194,
+     "fall_early_ps": -3.253062
+    }
+   },
+   {
+    "port": "t_phy_ES_2__clk",
+    "part": "phy_ES_2",
+    "delta_ps": {
+     "late_ps": 7.112607,
+     "early_ps": -3.634753,
+     "fall_late_ps": 9.076648,
+     "fall_early_ps": -3.104838
+    }
+   },
+   {
+    "port": "t_phy_ES_3__clk",
+    "part": "phy_ES_3",
+    "delta_ps": {
+     "late_ps": 5.148906,
+     "early_ps": -2.631122,
+     "fall_late_ps": 6.575962,
+     "fall_early_ps": -2.249326
+    }
+   },
+   {
+    "port": "t_phy_ES_4__clk",
+    "part": "phy_ES_4",
+    "delta_ps": {
+     "late_ps": 5.143339,
+     "early_ps": -2.628448,
+     "fall_late_ps": 6.568579,
+     "fall_early_ps": -2.246951
+    }
+   },
+   {
+    "port": "t_phy_ES_5__clk",
+    "part": "phy_ES_5",
+    "delta_ps": {
+     "late_ps": 7.104771,
+     "early_ps": -3.631043,
+     "fall_late_ps": 9.066233,
+     "fall_early_ps": -3.101563
+    }
+   },
+   {
+    "port": "t_phy_ES_6__clk",
+    "part": "phy_ES_6",
+    "delta_ps": {
+     "late_ps": 5.67744,
+     "early_ps": -2.888572,
+     "fall_late_ps": 7.261479,
+     "fall_early_ps": -2.473236
+    }
+   },
+   {
+    "port": "t_phy_ES_7__clk",
+    "part": "phy_ES_7",
+    "delta_ps": {
+     "late_ps": 5.397147,
+     "early_ps": -2.751866,
+     "fall_late_ps": 6.899292,
+     "fall_early_ps": -2.354463
+    }
+   },
+   {
+    "port": "t_phy_WN_0__clk",
+    "part": "phy_WN_0",
+    "delta_ps": {
+     "late_ps": 5.239549,
+     "early_ps": -1.80935,
+     "fall_late_ps": 4.060749,
+     "fall_early_ps": -2.092422
+    }
+   },
+   {
+    "port": "t_phy_WN_1__clk",
+    "part": "phy_WN_1",
+    "delta_ps": {
+     "late_ps": 5.419412,
+     "early_ps": -1.865345,
+     "fall_late_ps": 4.200478,
+     "fall_early_ps": -2.157301
+    }
+   },
+   {
+    "port": "t_phy_WN_2__clk",
+    "part": "phy_WN_2",
+    "delta_ps": {
+     "late_ps": 7.310349,
+     "early_ps": -2.524915,
+     "fall_late_ps": 5.695618,
+     "fall_early_ps": -2.936227
+    }
+   },
+   {
+    "port": "t_phy_WN_3__clk",
+    "part": "phy_WN_3",
+    "delta_ps": {
+     "late_ps": 7.07037,
+     "early_ps": -2.452081,
+     "fall_late_ps": 5.511482,
+     "fall_early_ps": -2.853482
+    }
+   },
+   {
+    "port": "t_phy_WN_4__clk",
+    "part": "phy_WN_4",
+    "delta_ps": {
+     "late_ps": 4.999884,
+     "early_ps": -1.732503,
+     "fall_late_ps": 3.877106,
+     "fall_early_ps": -2.005391
+    }
+   },
+   {
+    "port": "t_phy_WN_5__clk",
+    "part": "phy_WN_5",
+    "delta_ps": {
+     "late_ps": 5.239549,
+     "early_ps": -1.80935,
+     "fall_late_ps": 4.06077,
+     "fall_early_ps": -2.092445
+    }
+   },
+   {
+    "port": "t_phy_WN_6__clk",
+    "part": "phy_WN_6",
+    "delta_ps": {
+     "late_ps": 7.679289,
+     "early_ps": -2.643354,
+     "fall_late_ps": 5.979187,
+     "fall_early_ps": -3.071668
+    }
+   },
+   {
+    "port": "t_phy_WN_7__clk",
+    "part": "phy_WN_7",
+    "delta_ps": {
+     "late_ps": 5.160776,
+     "early_ps": -1.781848,
+     "fall_late_ps": 4.001226,
+     "fall_early_ps": -2.061585
+    }
+   },
+   {
+    "port": "t_phy_WS_0__clk",
+    "part": "phy_WS_0",
+    "delta_ps": {
+     "late_ps": 5.235772,
+     "early_ps": -1.808804,
+     "fall_late_ps": 4.05818,
+     "fall_early_ps": -2.091904
+    }
+   },
+   {
+    "port": "t_phy_WS_1__clk",
+    "part": "phy_WS_1",
+    "delta_ps": {
+     "late_ps": 5.543365,
+     "early_ps": -1.908665,
+     "fall_late_ps": 4.29169,
+     "fall_early_ps": -2.204967
+    }
+   },
+   {
+    "port": "t_phy_WS_2__clk",
+    "part": "phy_WS_2",
+    "delta_ps": {
+     "late_ps": 3.451646,
+     "early_ps": -1.760134,
+     "fall_late_ps": 4.424929,
+     "fall_early_ps": -1.510332
+    }
+   },
+   {
+    "port": "t_phy_WS_3__clk",
+    "part": "phy_WS_3",
+    "delta_ps": {
+     "late_ps": 3.325577,
+     "early_ps": -1.698504,
+     "fall_late_ps": 4.26149,
+     "fall_early_ps": -1.455853
+    }
+   },
+   {
+    "port": "t_phy_WS_4__clk",
+    "part": "phy_WS_4",
+    "delta_ps": {
+     "late_ps": 3.323265,
+     "early_ps": -1.697388,
+     "fall_late_ps": 4.258343,
+     "fall_early_ps": -1.454792
+    }
+   },
+   {
+    "port": "t_phy_WS_5__clk",
+    "part": "phy_WS_5",
+    "delta_ps": {
+     "late_ps": 3.448948,
+     "early_ps": -1.759288,
+     "fall_late_ps": 4.420895,
+     "fall_early_ps": -1.509533
+    }
+   },
+   {
+    "port": "t_phy_WS_6__clk",
+    "part": "phy_WS_6",
+    "delta_ps": {
+     "late_ps": 3.60313,
+     "early_ps": -1.834465,
+     "fall_late_ps": 4.620759,
+     "fall_early_ps": -1.575029
+    }
+   },
+   {
+    "port": "t_phy_WS_7__clk",
+    "part": "phy_WS_7",
+    "delta_ps": {
+     "late_ps": 1.788986,
+     "early_ps": -0.900167,
+     "fall_late_ps": 2.316903,
+     "fall_early_ps": -0.780222
+    }
+   }
+  ]
+ }
+}
