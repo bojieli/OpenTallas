@@ -591,3 +591,8 @@ CODEX 23:22 PDT correction/advance: keep-only rawleaf DPL actualFFcount11646 vs 
 
 ## CODEX notes 2026-10-26 20:14 PDT
 QC master-plan event supersedes legacyA0 wave; current QC owner handles bit-exact bound rebuilds, old failure preserved.
+
+## [DIE-QC-35] (A0) 2026-10-29 11:53 PDT
+- Proof v2 clean (mut0 0/0 NL+NK; mut8 + NL mut3 caught by LEAD/DRAIN contract monitors, bounds from measured entry depth) -> proof gap closed per COORD 11:19. claude/die-qc-35-a0-1029@4c42b9e7084 results/qc_die34_1029/a0/README.md §4.
+- CTS on GEOM PASS-COND places (NL rr2, NK rr1; no re-place) FAIL at OT_HOLD_STRUCTURAL: NL hold -172.53/2370, setup -223.55; NK hold -571.84/3082, setup -181.77 (CHECKED). Cause: TritonCTS root delaybuf chains (~520 ps NL) + sibling hop-tree skew (112 ps NL) + kit vclk frame (601.9 NL / 202.5 NK) below the realized ~750 ps FF root insertion. fcap/fconst pre-CTS dont_touch lift added (generator gap). ASK filed: plan-built A0 tree (A) + derate-0 diagnostic (B). claude/die-qc-35-a0-1029@4c42b9e7084 results/qc_die34_1029/a0/README.md §5.
+- No live jobs. Diag copies (incl. cts_prehold.odb) at intel2 die-qc34-a0/diag35/<kit>/diag for the successor.
