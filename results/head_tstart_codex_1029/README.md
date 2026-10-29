@@ -1,0 +1,7 @@
+# Existing LAND3 START contract correction
+
+Canonical source: c0fb5e87570dd796f66bd43a61a249dcd0573f5d, already merged; receipt tool checkout a3d34dd8e1e910e7da5bd8a78a64c208726ec2ce. Input is the existing generated LAND3 landed_lat_ft plan and exact count-aligned sidecar, read without modifying the live plan/source.
+
+`amend.py` calls the canonical `landing_contract.start_declaration`, adds only `clock.landing_network.start_tree`, and proves the amended plan against the exact unchanged sidecar. No compose/reset calculation is repeated. Baseline has362 unused external START pins (363 errors with the current sidecar-aware checker, whose extra error explicitly flags the missing declaration). Amended copy has0errors:346uses on346stage nets,16declared open launch outputs; every START input is used. Removing the declaration restores the baseline errors.
+
+The helper asserts exact semantic equality of the entire plan after removing that single declaration. No RTL, pin, latency, clock, reset/START schedule or geometry change is made. The existing token job's generated source is read only. Current-emitter before/after RTL-byte comparison is running separately; a result will be added when complete. `landed_lat_ft_tstart.json.gz` is the corrected copy, with the input's pin-asset references preserved verbatim; it is not a new canonical physical-plan adoption. The old failed compose receipt is not overwritten.
