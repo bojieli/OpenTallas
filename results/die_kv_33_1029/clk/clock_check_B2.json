@@ -1,0 +1,96 @@
+{
+ "TT": {
+  "taps": 1920,
+  "taps_missing": 0,
+  "tap_arr_min": 735.3,
+  "tap_arr_max": 7756.3,
+  "regions": 128,
+  "spread_worst": [
+   [
+    77.4,
+    "phy_EN_1"
+   ],
+   [
+    77.5,
+    "hgi_WS_3"
+   ],
+   [
+    78.7,
+    "hgi_ES_4"
+   ],
+   [
+    84.7,
+    "hgi_ES_3"
+   ],
+   [
+    88.4,
+    "phy_WS_7"
+   ]
+  ],
+  "n_over_150": 0,
+  "clk_cell_out_slew_max": 108.3,
+  "tap_slew_max": 66.5,
+  "provider_ff": 10530,
+  "provider_ff_clk_arr": [
+   42.2,
+   7670.5
+  ],
+  "provider_ff_clk_slew_max": 371.9,
+  "drv_violations": 9147,
+  "drv_clock_pin_violations": 21,
+  "drv_clock_examples": [
+   "start_provider/$flattenu_st_r13_0.$auto$ff.cc:337:slice$301/CLK  320.00  371.90  -51.90 (VIOLATED)",
+   "start_provider/$flattenu_rst_r13_0.$auto$ff.cc:337:slice$304/CLK  320.00  371.81  -51.81 (VIOLATED)",
+   "start_provider/$flattenu_st_r13_0.$auto$ff.cc:337:slice$299/CLK  320.00  371.76  -51.76 (VIOLATED)",
+   "start_provider/$flattenu_st_r13_0.$auto$ff.cc:337:slice$300/CLK  320.00  371.64  -51.64 (VIOLATED)",
+   "start_provider/$flattenu_st_r13_0.$auto$ff.cc:337:slice$302/CLK  320.00  371.53  -51.53 (VIOLATED)"
+  ]
+ },
+ "FF": {
+  "taps": 1920,
+  "taps_missing": 0,
+  "tap_arr_min": 654.0,
+  "tap_arr_max": 6863.7,
+  "regions": 128,
+  "spread_worst": [
+   [
+    70.5,
+    "phy_WN_7"
+   ],
+   [
+    71.8,
+    "hgi_EN_0"
+   ],
+   [
+    76.3,
+    "hgi_ES_3"
+   ],
+   [
+    79.7,
+    "phy_WS_2"
+   ],
+   [
+    81.9,
+    "phy_WS_7"
+   ]
+  ],
+  "n_over_150": 0,
+  "clk_cell_out_slew_max": 88.3,
+  "tap_slew_max": 61.4,
+  "provider_ff": 10530,
+  "provider_ff_clk_arr": [
+   33.0,
+   6784.4
+  ],
+  "provider_ff_clk_slew_max": 344.3,
+  "drv_violations": 7513,
+  "drv_clock_pin_violations": 14,
+  "drv_clock_examples": [
+   "start_provider/$flattenu_st_r13_0.$auto$ff.cc:337:slice$301/CLK  320.00  344.32  -24.32 (VIOLATED)",
+   "start_provider/$flattenu_rst_r13_0.$auto$ff.cc:337:slice$304/CLK  320.00  344.22  -24.22 (VIOLATED)",
+   "start_provider/$flattenu_st_r13_0.$auto$ff.cc:337:slice$299/CLK  320.00  344.17  -24.17 (VIOLATED)",
+   "start_provider/$flattenu_st_r13_0.$auto$ff.cc:337:slice$300/CLK  320.00  344.04  -24.04 (VIOLATED)",
+   "start_provider/$flattenu_st_r13_0.$auto$ff.cc:337:slice$302/CLK  320.00  343.92  -23.92 (VIOLATED)"
+  ]
+ }
+}
