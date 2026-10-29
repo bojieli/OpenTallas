@@ -1,0 +1,518 @@
+{
+  "parts": {
+    "u_host_boot_hop00": [
+      "NW_hub",
+      "u_host_boot_hop00"
+    ],
+    "u_host_boot_hop01": [
+      "NW_hub",
+      "u_host_boot_hop01"
+    ],
+    "u_host_boot_hop02": [
+      "NW_hub",
+      "u_host_boot_hop02"
+    ],
+    "u_host_boot_hop03": [
+      "NW_hub",
+      "u_host_boot_hop03"
+    ],
+    "u_host_boot_hop04": [
+      "NW_hub",
+      "u_host_boot_hop04"
+    ],
+    "u_host_boot_hop05": [
+      "NW_hub",
+      "u_host_boot_hop05"
+    ],
+    "u_host_boot_hop06": [
+      "NW_hub",
+      "u_host_boot_hop06"
+    ],
+    "u_host_boot_hop07": [
+      "NW_hub",
+      "u_host_boot_hop07"
+    ],
+    "u_host_boot_hop08": [
+      "NW_hub",
+      "u_host_boot_hop08"
+    ],
+    "u_host_boot_hop09": [
+      "NW_hub",
+      "u_host_boot_hop09"
+    ],
+    "u_host_boot_hop10": [
+      "NW_hub",
+      "u_host_boot_hop10"
+    ],
+    "u_host_boot_hop11": [
+      "NW_hub",
+      "u_host_boot_hop11"
+    ],
+    "u_host_boot_hop12": [
+      "NW_hub",
+      "u_host_boot_hop12"
+    ],
+    "u_host_boot_hop13": [
+      "NW_hub",
+      "u_host_boot_hop13"
+    ],
+    "u_host_boot_hop14": [
+      "NW_hub",
+      "u_host_boot_hop14"
+    ],
+    "u_host_boot_hop15": [
+      "NW_hub",
+      "u_host_boot_hop15"
+    ],
+    "u_host_boot_hop16": [
+      "NW_hub",
+      "u_host_boot_hop16"
+    ],
+    "u_host_boot_hop17": [
+      "NW_hub",
+      "u_host_boot_hop17"
+    ],
+    "u_host_boot_hop18": [
+      "NW_hub",
+      "u_host_boot_hop18"
+    ],
+    "u_host_boot_hop19": [
+      "NW_hub",
+      "u_host_boot_hop19"
+    ],
+    "u_host_boot_hop20": [
+      "NW_hub",
+      "u_host_boot_hop20"
+    ],
+    "u_host_boot_hop21": [
+      "NW_hub",
+      "u_host_boot_hop21"
+    ],
+    "u_host_boot_hop22": [
+      "NW_hub",
+      "u_host_boot_hop22"
+    ],
+    "u_host_boot_hop23": [
+      "NW_hub",
+      "u_host_boot_hop23"
+    ],
+    "u_host_boot_hop24": [
+      "NW_hub",
+      "u_host_boot_hop24"
+    ],
+    "u_host_boot_hop25": [
+      "root",
+      "u_host_boot_hop25"
+    ],
+    "u_host_boot_hop26": [
+      "root",
+      "u_host_boot_hop26"
+    ],
+    "u_host_boot_hop27": [
+      "root",
+      "u_host_boot_hop27"
+    ],
+    "u_host_boot_hop28": [
+      "root",
+      "u_host_boot_hop28"
+    ],
+    "u_host_boot_hop29": [
+      "root",
+      "u_host_boot_hop29"
+    ]
+  },
+  "hops": [
+    {
+      "instance": "u_host_boot_hop00",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop01",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop02",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop03",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop04",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop05",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop06",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop07",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop08",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop09",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop10",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop11",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop12",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop13",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop14",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop15",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop16",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop17",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop18",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop19",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop20",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop21",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop22",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop23",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop24",
+      "partition": "NW_hub",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop25",
+      "partition": "root",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop26",
+      "partition": "root",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop27",
+      "partition": "root",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop28",
+      "partition": "root",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    },
+    {
+      "instance": "u_host_boot_hop29",
+      "partition": "root",
+      "module": "ot_hnx_host_boot_hop",
+      "data_width": 320,
+      "reset_valid_bits": [
+        319,
+        42,
+        0
+      ]
+    }
+  ],
+  "fields": [
+    {
+      "port": "cfg_v",
+      "source": "hleaf_NW__a_cfg_v[0:0]",
+      "lsb": 319,
+      "width": 1
+    },
+    {
+      "port": "cfg_target",
+      "source": "hleaf_NW__a_cfg_target[7:0]",
+      "lsb": 311,
+      "width": 8
+    },
+    {
+      "port": "cfg_addr",
+      "source": "hleaf_NW__a_cfg_addr[11:0]",
+      "lsb": 299,
+      "width": 12
+    },
+    {
+      "port": "cfg_data",
+      "source": "hleaf_NW__a_cfg_data[255:0]",
+      "lsb": 43,
+      "width": 256
+    },
+    {
+      "port": "desc_v",
+      "source": "hleaf_NW__a_desc_v[0:0]",
+      "lsb": 42,
+      "width": 1
+    },
+    {
+      "port": "desc_base",
+      "source": "hleaf_NW__a_desc_base[11:0]",
+      "lsb": 30,
+      "width": 12
+    },
+    {
+      "port": "desc_limit",
+      "source": "hleaf_NW__a_desc_limit[12:0]",
+      "lsb": 17,
+      "width": 13
+    },
+    {
+      "port": "desc_loops",
+      "source": "hleaf_NW__a_desc_loops[15:0]",
+      "lsb": 1,
+      "width": 16
+    },
+    {
+      "port": "launch_v",
+      "source": "hleaf_NW__a_launch_v[0:0]",
+      "lsb": 0,
+      "width": 1
+    }
+  ],
+  "transport_cycles": 30,
+  "producer_to_consumer_edges": 31,
+  "added_boot_cycles": 30,
+  "added_token_cycles": 0,
+  "source": "hleaf_NW output \u219230named planned hops\u2192u_mu_fused_programme",
+  "note": "Existing regional CA wrapper remains external and its Kmustbeincluded by final binder, not waived"
+}

@@ -18,6 +18,12 @@
       "producer_to_consumer_edges": 26,
       "comparisons": 313,
       "verdict": "PASS"
+    },
+    {
+      "hops": 30,
+      "producer_to_consumer_edges": 31,
+      "comparisons": 308,
+      "verdict": "PASS"
     }
   ],
   "mutant": {
@@ -28,5 +34,5 @@
   },
   "reset_state_bits_per_hop": 3,
   "added_token_cycles": 0,
-  "adoption": "Physicalcandidate25hops(NW20+root5), max345.6umsourceplanner; CA/binderboundarycoststillspecifiedseparately,noP&Rclaim"
+  "adoption": "Currentstreet-safephysicalcandidate30hopsNW25root5;earlier25crossed2hardcoresandwasnotadopted;CAKseparate,notwaived"
 }
