@@ -1,0 +1,1297 @@
+{
+ "doc": "opt-in bit-level cut map (split_bitmap.py); gen_core_kit_hbm.py uses slices instead of canonical_ports_split.json cut_pins for the listed type_ids only",
+ "schema": "opentallas.hbm.split_bitmap.v1",
+ "types": {
+  "sfu_ctl": {
+   "type_ids": {
+    "ot_hgi_sfu_core_split3__ctl__388.8x345.6": {
+     "check": {
+      "constant_plan_bits": {},
+      "mapped_buses": 108,
+      "n_rtl_inputs_uncovered": 0,
+      "n_unresolved_rtl": 0,
+      "notes": {
+       "io_word": "NARROW: 470 of 471 master bits reached by the piece, ascending order",
+       "u_core_u_vm_stage_mask": "CONST_NET: whole-bus canonical entry kept"
+      },
+      "plan_bits": 11819,
+      "plan_buses": 108,
+      "problems": [],
+      "rtl_inputs_multi": [],
+      "rtl_inputs_uncovered": [],
+      "rtl_outputs_open": 0,
+      "unresolved_rtl": [],
+      "verdict": "PASS",
+      "whole_bus_entries": {
+       "clk": "SAME_NET",
+       "clk_lg": "SAME_NET",
+       "clk_pe": "SAME_NET",
+       "clk_pw": "SAME_NET",
+       "compiler_control": "SAME_NET",
+       "fault": "SAME_NET",
+       "io_word": "SAME_NET",
+       "local_rq": "SAME_NET",
+       "local_rr": "SAME_NET",
+       "local_w_done": "SAME_NET",
+       "local_wq": "SAME_NET",
+       "rst_lg_n": "SAME_NET",
+       "rst_n": "SAME_NET",
+       "u_core_u_vm_drain_result_v": "SAME_NET",
+       "u_core_u_vm_scalar_load_addr": "SAME_NET",
+       "u_core_u_vm_stage_data": "SAME_NET",
+       "u_core_u_vm_stage_mask": "SAME_NET"
+      }
+     },
+     "master_top": "ot_hgi_sfu_core_split3",
+     "rest_top": "ot_hgi_sfu_split3_ctl_core",
+     "slices": {
+      "clk": [
+       [
+        "clk",
+        0,
+        0,
+        1
+       ]
+      ],
+      "clk_lg": [
+       [
+        "clk_lg",
+        0,
+        0,
+        4
+       ]
+      ],
+      "clk_pe": [
+       [
+        "clk_pe",
+        0,
+        0,
+        1
+       ]
+      ],
+      "clk_pw": [
+       [
+        "clk_pw",
+        0,
+        0,
+        1
+       ]
+      ],
+      "compiler_control": [
+       [
+        "compiler_control",
+        0,
+        0,
+        1742
+       ]
+      ],
+      "fault": [
+       [
+        "fault",
+        0,
+        0,
+        1
+       ]
+      ],
+      "io_word": [
+       [
+        "io_word",
+        0,
+        0,
+        470
+       ]
+      ],
+      "local_rq": [
+       [
+        "local_rq",
+        0,
+        0,
+        136
+       ]
+      ],
+      "local_rr": [
+       [
+        "local_rr",
+        0,
+        0,
+        2056
+       ]
+      ],
+      "local_w_done": [
+       [
+        "local_w_done",
+        0,
+        0,
+        8
+       ]
+      ],
+      "local_wq": [
+       [
+        "local_wq",
+        0,
+        0,
+        2248
+       ]
+      ],
+      "ro_v_e": [
+       [
+        "u_core_ro_v_e",
+        0,
+        0,
+        4
+       ]
+      ],
+      "ro_v_n": [
+       [
+        "u_core_ro_v_w",
+        4,
+        0,
+        4
+       ]
+      ],
+      "ro_v_s": [
+       [
+        "u_core_ro_v_e",
+        4,
+        0,
+        4
+       ]
+      ],
+      "ro_v_w": [
+       [
+        "u_core_ro_v_w",
+        0,
+        0,
+        4
+       ]
+      ],
+      "ro_x_e": [
+       [
+        "u_core_ro_x_e",
+        0,
+        0,
+        128
+       ]
+      ],
+      "ro_x_n": [
+       [
+        "u_core_ro_x_w",
+        128,
+        0,
+        128
+       ]
+      ],
+      "ro_x_s": [
+       [
+        "u_core_ro_x_e",
+        128,
+        0,
+        128
+       ]
+      ],
+      "ro_x_w": [
+       [
+        "u_core_ro_x_w",
+        0,
+        0,
+        128
+       ]
+      ],
+      "rst_lg_n": [
+       [
+        "rst_lg_n",
+        0,
+        0,
+        4
+       ]
+      ],
+      "rst_n": [
+       [
+        "rst_n",
+        0,
+        0,
+        1
+       ]
+      ],
+      "u_core_u_vm_drain_data": [
+       [
+        "u_core_u_engine_drain_data",
+        0,
+        0,
+        512
+       ]
+      ],
+      "u_core_u_vm_drain_result_v": [
+       [
+        "u_core_u_engine_drain_result_v",
+        0,
+        0,
+        2
+       ]
+      ],
+      "u_core_u_vm_scalar_data": [
+       [
+        "u_core_u_engine_scalar_data",
+        0,
+        0,
+        128
+       ]
+      ],
+      "u_core_u_vm_scalar_load": [
+       [
+        "u_core_u_engine_scalar_load",
+        0,
+        0,
+        4
+       ]
+      ],
+      "u_core_u_vm_scalar_load_addr": [
+       [
+        "u_core_u_vm_scalar_addr_pipe_78",
+        0,
+        0,
+        96
+       ]
+      ],
+      "u_core_u_vm_stage_addr": [
+       [
+        "u_core_u_vm_g_lg_0_meta_78",
+        0,
+        0,
+        30
+       ],
+       [
+        "u_core_u_vm_g_lg_1_meta_78",
+        0,
+        30,
+        30
+       ],
+       [
+        "u_core_u_vm_g_lg_2_meta_78",
+        0,
+        60,
+        30
+       ],
+       [
+        "u_core_u_vm_g_lg_3_meta_78",
+        0,
+        90,
+        30
+       ]
+      ],
+      "u_core_u_vm_stage_data": [
+       [
+        "u_core_b_rr",
+        0,
+        0,
+        2048
+       ]
+      ],
+      "u_core_u_vm_stage_group": [
+       [
+        "u_core_u_vm_g_lg_0_meta_78",
+        30,
+        0,
+        4
+       ],
+       [
+        "u_core_u_vm_g_lg_1_meta_78",
+        30,
+        4,
+        4
+       ],
+       [
+        "u_core_u_vm_g_lg_2_meta_78",
+        30,
+        8,
+        4
+       ],
+       [
+        "u_core_u_vm_g_lg_3_meta_78",
+        30,
+        12,
+        4
+       ]
+      ],
+      "u_core_u_vm_stage_mask": [
+       [
+        "stage_mask",
+        0,
+        0,
+        64
+       ]
+      ],
+      "u_core_u_vm_stage_v": [
+       [
+        "u_core_u_engine_stage_v",
+        0,
+        0,
+        8
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_emit": [
+       [
+        "u_core_u_engine_u_arithmetic_control",
+        539,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_i_v": [
+       [
+        "u_core_u_engine_u_arithmetic_control",
+        490,
+        0,
+        24
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_krow": [
+       [
+        "u_core_u_engine_u_arithmetic_control",
+        290,
+        0,
+        24
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_ls": [
+       [
+        "u_core_u_engine_u_arithmetic_control",
+        438,
+        0,
+        4
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_lvw": [
+       [
+        "u_core_u_engine_u_arithmetic_control",
+        434,
+        0,
+        4
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_o_v": [
+       [
+        "u_core_u_engine_u_arithmetic_control",
+        514,
+        0,
+        24
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_pass": [
+       [
+        "u_core_u_engine_u_arithmetic_control",
+        0,
+        0,
+        290
+       ],
+       [
+        "u_core_u_engine_u_arithmetic_control",
+        314,
+        290,
+        120
+       ],
+       [
+        "u_core_u_engine_u_arithmetic_control",
+        442,
+        410,
+        48
+       ],
+       [
+        "u_core_u_engine_u_arithmetic_control",
+        538,
+        458,
+        1
+       ],
+       [
+        "u_core_u_engine_u_arithmetic_control",
+        1020,
+        459,
+        2
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_ld_terms": [
+       [
+        "u_core_u_engine_u_arithmetic_control",
+        540,
+        0,
+        480
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_u_sfu_coll": [
+       [
+        "u_core_u_engine_lane_coll",
+        0,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_u_sfu_fault": [
+       [
+        "u_core_u_engine_lane_fault",
+        0,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_u_sfu_ro_v": [
+       [
+        "u_core_e_rov",
+        0,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_u_sfu_ro_x": [
+       [
+        "u_core_e_rox",
+        0,
+        0,
+        32
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_10_u_sfu_coll": [
+       [
+        "u_core_u_engine_lane_coll",
+        10,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_10_u_sfu_fault": [
+       [
+        "u_core_u_engine_lane_fault",
+        10,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_10_u_sfu_ro_v": [
+       [
+        "u_core_e_rov",
+        10,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_10_u_sfu_ro_x": [
+       [
+        "u_core_e_rox",
+        320,
+        0,
+        32
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_11_u_sfu_coll": [
+       [
+        "u_core_u_engine_lane_coll",
+        11,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_11_u_sfu_fault": [
+       [
+        "u_core_u_engine_lane_fault",
+        11,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_11_u_sfu_ro_v": [
+       [
+        "u_core_e_rov",
+        11,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_11_u_sfu_ro_x": [
+       [
+        "u_core_e_rox",
+        352,
+        0,
+        32
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_12_u_sfu_coll": [
+       [
+        "u_core_u_engine_lane_coll",
+        12,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_12_u_sfu_fault": [
+       [
+        "u_core_u_engine_lane_fault",
+        12,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_12_u_sfu_ro_v": [
+       [
+        "u_core_e_rov",
+        12,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_12_u_sfu_ro_x": [
+       [
+        "u_core_e_rox",
+        384,
+        0,
+        32
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_13_u_sfu_coll": [
+       [
+        "u_core_u_engine_lane_coll",
+        13,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_13_u_sfu_fault": [
+       [
+        "u_core_u_engine_lane_fault",
+        13,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_13_u_sfu_ro_v": [
+       [
+        "u_core_e_rov",
+        13,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_13_u_sfu_ro_x": [
+       [
+        "u_core_e_rox",
+        416,
+        0,
+        32
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_coll": [
+       [
+        "u_core_u_engine_lane_coll",
+        14,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_fault": [
+       [
+        "u_core_u_engine_lane_fault",
+        14,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_v": [
+       [
+        "u_core_e_rov",
+        14,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_x": [
+       [
+        "u_core_e_rox",
+        448,
+        0,
+        32
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll": [
+       [
+        "u_core_u_engine_lane_coll",
+        15,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault": [
+       [
+        "u_core_u_engine_lane_fault",
+        15,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v": [
+       [
+        "u_core_e_rov",
+        15,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x": [
+       [
+        "u_core_e_rox",
+        480,
+        0,
+        32
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_1_u_sfu_coll": [
+       [
+        "u_core_u_engine_lane_coll",
+        1,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_1_u_sfu_fault": [
+       [
+        "u_core_u_engine_lane_fault",
+        1,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_1_u_sfu_ro_v": [
+       [
+        "u_core_e_rov",
+        1,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_1_u_sfu_ro_x": [
+       [
+        "u_core_e_rox",
+        32,
+        0,
+        32
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_2_u_sfu_coll": [
+       [
+        "u_core_u_engine_lane_coll",
+        2,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_2_u_sfu_fault": [
+       [
+        "u_core_u_engine_lane_fault",
+        2,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_2_u_sfu_ro_v": [
+       [
+        "u_core_e_rov",
+        2,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_2_u_sfu_ro_x": [
+       [
+        "u_core_e_rox",
+        64,
+        0,
+        32
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_3_u_sfu_coll": [
+       [
+        "u_core_u_engine_lane_coll",
+        3,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_3_u_sfu_fault": [
+       [
+        "u_core_u_engine_lane_fault",
+        3,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_3_u_sfu_ro_v": [
+       [
+        "u_core_e_rov",
+        3,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_3_u_sfu_ro_x": [
+       [
+        "u_core_e_rox",
+        96,
+        0,
+        32
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_4_u_sfu_coll": [
+       [
+        "u_core_u_engine_lane_coll",
+        4,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_4_u_sfu_fault": [
+       [
+        "u_core_u_engine_lane_fault",
+        4,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_4_u_sfu_ro_v": [
+       [
+        "u_core_e_rov",
+        4,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_4_u_sfu_ro_x": [
+       [
+        "u_core_e_rox",
+        128,
+        0,
+        32
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_5_u_sfu_coll": [
+       [
+        "u_core_u_engine_lane_coll",
+        5,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_5_u_sfu_fault": [
+       [
+        "u_core_u_engine_lane_fault",
+        5,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_5_u_sfu_ro_v": [
+       [
+        "u_core_e_rov",
+        5,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_5_u_sfu_ro_x": [
+       [
+        "u_core_e_rox",
+        160,
+        0,
+        32
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_6_u_sfu_coll": [
+       [
+        "u_core_u_engine_lane_coll",
+        6,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_6_u_sfu_fault": [
+       [
+        "u_core_u_engine_lane_fault",
+        6,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_6_u_sfu_ro_v": [
+       [
+        "u_core_e_rov",
+        6,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_6_u_sfu_ro_x": [
+       [
+        "u_core_e_rox",
+        192,
+        0,
+        32
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_7_u_sfu_coll": [
+       [
+        "u_core_u_engine_lane_coll",
+        7,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_7_u_sfu_fault": [
+       [
+        "u_core_u_engine_lane_fault",
+        7,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_7_u_sfu_ro_v": [
+       [
+        "u_core_e_rov",
+        7,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_7_u_sfu_ro_x": [
+       [
+        "u_core_e_rox",
+        224,
+        0,
+        32
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_8_u_sfu_coll": [
+       [
+        "u_core_u_engine_lane_coll",
+        8,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_8_u_sfu_fault": [
+       [
+        "u_core_u_engine_lane_fault",
+        8,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_8_u_sfu_ro_v": [
+       [
+        "u_core_e_rov",
+        8,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_8_u_sfu_ro_x": [
+       [
+        "u_core_e_rox",
+        256,
+        0,
+        32
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_9_u_sfu_coll": [
+       [
+        "u_core_u_engine_lane_coll",
+        9,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_9_u_sfu_fault": [
+       [
+        "u_core_u_engine_lane_fault",
+        9,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_9_u_sfu_ro_v": [
+       [
+        "u_core_e_rov",
+        9,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_9_u_sfu_ro_x": [
+       [
+        "u_core_e_rox",
+        288,
+        0,
+        32
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_drain_addr": [
+       [
+        "u_core_io_r",
+        6,
+        0,
+        30
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_drain_v": [
+       [
+        "u_core_io_r",
+        4,
+        0,
+        2
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_fault": [
+       [
+        "u_core_u_engine_store_fault",
+        0,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_rst_n": [
+       [
+        "u_core_u_rst_relay_q_0",
+        0,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_scalar_enable": [
+       [
+        "u_core_io_r",
+        0,
+        0,
+        4
+       ]
+      ]
+     },
+     "src": {
+      "master_json_sha256": "7a51cf66a893a92aeaa3925913f126cec3e39d0ff159f8afd60024bff4f127a9",
+      "ports_cut_sha256": "f575cdb4768178632c32b7edb1d5565ff15af14478f87bc84fbe1c8010f58c25",
+      "rest_sv": "ot_hgi_sfu_split3_ctl_core.sv",
+      "rest_sv_sha256": "3d5d43ce0a2cc5292f91e592542f223d954397745c05653fb2dadddf9e2d42a3"
+     }
+    }
+   }
+  },
+  "sfu_opstore_a": {
+   "type_ids": {
+    "ot_hgi_sfu_core_split3__opstore_a__388.8x345.6": {
+     "check": {
+      "constant_plan_bits": {},
+      "mapped_buses": 29,
+      "n_rtl_inputs_uncovered": 0,
+      "n_unresolved_rtl": 0,
+      "notes": {
+       "g_operand_0_u_group_sw_mask": "BY_ELIMINATION: the only free input bits of width 64 (stage_mask bits 0..63; constant net in the master)",
+       "glue": "BY_ELIMINATION: the only free input bits of width 4 (u_core_io_r bits 0..3; 0 same-width master candidates, 0 distinct nets)",
+       "glue_1": "BY_ELIMINATION: the only free output bits of width 1 (u_core_u_engine_u_memory_fault bits 0..0; 0 same-width master candidates, 0 distinct nets)",
+       "x_u_core_u_engine_u_arithmetic_vm_waddr": "NARROW: 144 of 384 master bits reached by the piece, ascending order"
+      },
+      "plan_bits": 7534,
+      "plan_buses": 29,
+      "problems": [],
+      "rtl_inputs_multi": [],
+      "rtl_inputs_uncovered": [],
+      "rtl_outputs_open": 0,
+      "unresolved_rtl": [],
+      "verdict": "PASS",
+      "whole_bus_entries": {
+       "clk": "SAME_NET",
+       "g_operand_0_u_group_sw_d": "SAME_NET",
+       "glue_1": "SAME_NET",
+       "x_u_core_u_engine_u_arithmetic_rd_addr": "SAME_NET",
+       "x_u_core_u_engine_u_arithmetic_rd_q": "SAME_NET",
+       "x_u_core_u_engine_u_arithmetic_vm_waddr": "SAME_NET",
+       "x_u_core_u_vm_scalar_load_addr": "SAME_NET",
+       "x_u_core_u_vm_stage_v": "SAME_NET"
+      }
+     },
+     "master_top": "ot_hgi_sfu_core_split3",
+     "rest_top": "ot_hgi_sfu_split3_opstore_a_core",
+     "slices": {
+      "clk": [
+       [
+        "clk",
+        0,
+        0,
+        1
+       ]
+      ],
+      "g_operand_0_u_group_sw_d": [
+       [
+        "u_core_b_rr",
+        0,
+        0,
+        2048
+       ]
+      ],
+      "g_operand_0_u_group_sw_mask": [
+       [
+        "stage_mask",
+        0,
+        0,
+        64
+       ]
+      ],
+      "glue": [
+       [
+        "u_core_io_r",
+        0,
+        0,
+        4
+       ]
+      ],
+      "glue_1": [
+       [
+        "u_core_u_engine_u_memory_fault",
+        0,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_rd_addr": [
+       [
+        "u_core_u_engine_u_arithmetic_u_grid_rd_addr",
+        0,
+        0,
+        1536
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_rd_q": [
+       [
+        "u_core_u_engine_u_arithmetic_u_grid_rd_q",
+        0,
+        0,
+        2048
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_rd_re": [
+       [
+        "u_core_u_engine_u_arithmetic_u_grid_rd_re",
+        0,
+        0,
+        64
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_rd_src": [
+       [
+        "u_core_u_engine_u_arithmetic_u_grid_rd_src",
+        0,
+        0,
+        128
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_rst_control_n": [
+       [
+        "u_core_u_rst_relay_q_0",
+        0,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_vm_waddr": [
+       [
+        "u_core_u_engine_u_arithmetic_u_grid_vm_waddr",
+        0,
+        0,
+        144
+       ]
+      ],
+      "x_u_core_u_engine_u_arithmetic_vm_we": [
+       [
+        "u_core_u_engine_u_arithmetic_u_grid_vm_we",
+        0,
+        0,
+        16
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_g_operand_2_u_group_flt": [
+       [
+        "u_core_u_engine_u_memory_group_fault",
+        0,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_g_operand_2_u_group_rd": [
+       [
+        "u_core_u_engine_u_memory_g_operand_2_data",
+        0,
+        0,
+        512
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_g_operand_2_u_group_rq": [
+       [
+        "u_core_u_engine_u_memory_g_operand_2_req",
+        0,
+        0,
+        16
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_addr": [
+       [
+        "u_core_u_vm_g_lg_0_meta_78",
+        0,
+        0,
+        30
+       ],
+       [
+        "u_core_u_vm_g_lg_1_meta_78",
+        0,
+        30,
+        30
+       ],
+       [
+        "u_core_u_vm_g_lg_2_meta_78",
+        0,
+        60,
+        30
+       ],
+       [
+        "u_core_u_vm_g_lg_3_meta_78",
+        0,
+        90,
+        30
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_v": [
+       [
+        "u_core_u_engine_u_memory_g_operand_2_sw",
+        0,
+        0,
+        8
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_g_operand_3_u_group_flt": [
+       [
+        "u_core_u_engine_u_memory_group_fault",
+        1,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_g_operand_3_u_group_rd": [
+       [
+        "u_core_u_engine_u_memory_g_operand_3_data",
+        0,
+        0,
+        512
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_g_operand_3_u_group_rq": [
+       [
+        "u_core_u_engine_u_memory_g_operand_3_req",
+        0,
+        0,
+        16
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_g_operand_3_u_group_sw_v": [
+       [
+        "u_core_u_engine_u_memory_g_operand_3_sw",
+        0,
+        0,
+        8
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_u_output_flt": [
+       [
+        "u_core_u_engine_u_memory_group_fault",
+        2,
+        0,
+        1
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_u_output_sr_addr": [
+       [
+        "u_core_io_r",
+        6,
+        0,
+        30
+       ]
+      ],
+      "x_u_core_u_engine_u_memory_u_output_sr_v": [
+       [
+        "u_core_io_r",
+        4,
+        0,
+        2
+       ]
+      ],
+      "x_u_core_u_vm_scalar_data": [
+       [
+        "u_core_u_engine_u_memory_scalar_data",
+        0,
+        0,
+        128
+       ]
+      ],
+      "x_u_core_u_vm_scalar_load": [
+       [
+        "u_core_u_engine_u_memory_scalar_load",
+        0,
+        0,
+        4
+       ]
+      ],
+      "x_u_core_u_vm_scalar_load_addr": [
+       [
+        "u_core_u_vm_scalar_addr_pipe_78",
+        0,
+        0,
+        96
+       ]
+      ],
+      "x_u_core_u_vm_stage_group": [
+       [
+        "u_core_u_vm_g_lg_0_meta_78",
+        30,
+        0,
+        4
+       ],
+       [
+        "u_core_u_vm_g_lg_1_meta_78",
+        30,
+        4,
+        4
+       ],
+       [
+        "u_core_u_vm_g_lg_2_meta_78",
+        30,
+        8,
+        4
+       ],
+       [
+        "u_core_u_vm_g_lg_3_meta_78",
+        30,
+        12,
+        4
+       ]
+      ],
+      "x_u_core_u_vm_stage_v": [
+       [
+        "u_core_u_engine_u_memory_stage_v",
+        0,
+        0,
+        8
+       ]
+      ]
+     },
+     "src": {
+      "master_json_sha256": "7a51cf66a893a92aeaa3925913f126cec3e39d0ff159f8afd60024bff4f127a9",
+      "ports_cut_sha256": "f575cdb4768178632c32b7edb1d5565ff15af14478f87bc84fbe1c8010f58c25",
+      "rest_sv": "ot_hgi_sfu_split3_opstore_a_core.sv",
+      "rest_sv_sha256": "31728b39b432c6cf9693b9e72987f58e28a3e3f0dcf2c8281ad9945404147dd8"
+     }
+    }
+   }
+  }
+ }
+}

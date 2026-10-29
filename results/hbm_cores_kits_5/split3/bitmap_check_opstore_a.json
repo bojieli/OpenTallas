@@ -1,0 +1,39 @@
+{
+ "constant_plan_bits": {},
+ "mapped_buses": 29,
+ "multi_slice_buses": [
+  "x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_addr",
+  "x_u_core_u_engine_u_memory_g_operand_3_u_group_flt",
+  "x_u_core_u_engine_u_memory_u_output_flt",
+  "x_u_core_u_engine_u_memory_u_output_sr_addr",
+  "x_u_core_u_engine_u_memory_u_output_sr_v",
+  "x_u_core_u_vm_stage_group"
+ ],
+ "n_rtl_inputs_uncovered": 0,
+ "n_unresolved_rtl": 0,
+ "notes": {
+  "g_operand_0_u_group_sw_mask": "BY_ELIMINATION: the only free input bits of width 64 (stage_mask bits 0..63; constant net in the master)",
+  "glue": "BY_ELIMINATION: the only free input bits of width 4 (u_core_io_r bits 0..3; 0 same-width master candidates, 0 distinct nets)",
+  "glue_1": "BY_ELIMINATION: the only free output bits of width 1 (u_core_u_engine_u_memory_fault bits 0..0; 0 same-width master candidates, 0 distinct nets)",
+  "x_u_core_u_engine_u_arithmetic_vm_waddr": "NARROW: 144 of 384 master bits reached by the piece, ascending order"
+ },
+ "plan_bits": 7534,
+ "plan_buses": 29,
+ "problems": [],
+ "rtl_inputs_multi": [],
+ "rtl_inputs_uncovered": [],
+ "rtl_outputs_open": 0,
+ "slices_buses": 29,
+ "unresolved_rtl": [],
+ "verdict": "PASS",
+ "whole_bus_entries": {
+  "clk": "SAME_NET",
+  "g_operand_0_u_group_sw_d": "SAME_NET",
+  "glue_1": "SAME_NET",
+  "x_u_core_u_engine_u_arithmetic_rd_addr": "SAME_NET",
+  "x_u_core_u_engine_u_arithmetic_rd_q": "SAME_NET",
+  "x_u_core_u_engine_u_arithmetic_vm_waddr": "SAME_NET",
+  "x_u_core_u_vm_scalar_load_addr": "SAME_NET",
+  "x_u_core_u_vm_stage_v": "SAME_NET"
+ }
+}

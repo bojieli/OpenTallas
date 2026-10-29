@@ -1,0 +1,10 @@
+# byte identity: opstore_b kit regenerated with main gen (before) and slice-aware gen (after), same views/plan
+fcbcc0b79f0afb98afb8e3d3c66d4cd4  before/kits/ot_hgi_sfu_core_split3__opstore_b_de3ef0436950-_s3b/rtl/ot_hgi_sfu_core_split3__opstore_b__wrap.sv
+fcbcc0b79f0afb98afb8e3d3c66d4cd4  after/kits/ot_hgi_sfu_core_split3__opstore_b_de3ef0436950-_s3b/rtl/ot_hgi_sfu_core_split3__opstore_b__wrap.sv
+diff -r (whole kit dir, 79 generated files; preflight.json excluded: written by kit_preflight into the after kit only): 0 lines
+# before (main gen): ctl / opstore_a
+MAP_AMBIGUOUS ot_hgi_sfu_core_split3__ctl: plan bus ro_v_e not in the cut map
+MAP_AMBIGUOUS ot_hgi_sfu_core_split3__opstore_a: plan bus g_operand_0_u_group_sw_mask not in the cut map
+# after: ctl / opstore_a
+{"kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-5/split3/after/kits/ot_hgi_sfu_core_split3__ctl_d51d801533c8-_s3b", "pins": 11819, "clocks": ["clk", "clk_pe", "clk_pw", "clk_lg[0]", "clk_lg[1]
+{"kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-5/split3/after/kits/ot_hgi_sfu_core_split3__opstore_a_759d2e684001-_s3b", "pins": 7470, "clocks": ["clk"], "resets": 1, "design": "ot_hgi_sfu_co

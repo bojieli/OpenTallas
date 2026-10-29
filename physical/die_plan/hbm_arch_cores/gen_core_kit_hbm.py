@@ -571,15 +571,47 @@ def clone_output_state(files, top, clone, kd):
 
 def build_wrapper(module, pb, top, params, tports, cmap=None, straps=None, ties=None):
     """pass-through wrapper `module` (plan pins pb {bus: (w, scalar)}) around `top` (tports).  cmap = {plan bus:
-    {top port: bits}} (split cut map) else names must match.  Returns (text, report)."""
+    {top port: bits}} (split cut map) else names must match.  A cmap value may instead be a SLICE LIST
+    [[top port, port lsb, plan lsb, nbits], ...] (split_bitmap.py, remainder cores whose as-built ports regroup the
+    plan bits): each sliced top port gets one internal wire and per-range assigns; every plan output bit must be
+    driven exactly once and every sliced top input bit driven exactly once.  Whole-bus maps emit the same text as
+    before.  Returns (text, report)."""
     tp = {n: (d, w) for n, d, w in tports}
     conns, rep = {}, dict(open_outputs=[], tied_inputs=[], straps={}, mapped=0)
     decl = []
+    sl = {}  # sliced top port -> [(port lsb, plan bus, plan lsb, n)]
+    sl_out = {}  # plan output bus -> covered plan bits
     for b, (w, scalar) in sorted(pb.items()):
         if cmap is not None:
             mp = cmap.get(b)
             if mp is None:
                 raise SystemExit(f"MAP_AMBIGUOUS {module}: plan bus {b} not in the cut map")
+            if isinstance(mp, list) and len(mp) == 1 and mp[0][1] == mp[0][2] == 0 and mp[0][0] in tp \
+                    and mp[0][3] == w == tp[mp[0][0]][1]:
+                mp = {mp[0][0]: w}  # a one-slice whole bus is a plain rename
+            if isinstance(mp, list):
+                dirs = set()
+                for tname, k, j, n in mp:
+                    if tname not in tp:
+                        raise SystemExit(f"PORT_MISMATCH {module}: plan bus {b} -> {tname} not a port of {top}")
+                    d, tw = tp[tname]
+                    if not (n > 0 and 0 <= k and k + n <= tw and 0 <= j and j + n <= w):
+                        raise SystemExit(f"PORT_MISMATCH {module}: slice {b}[{j}+:{n}] -> {tname}[{k}+:{n}] "
+                                         f"out of range (plan {w}, port {tw})")
+                    dirs.add(d)
+                    sl.setdefault(tname, []).append((k, b, j, n))
+                    if d == "output":
+                        cov = sl_out.setdefault(b, [0] * w)
+                        for t in range(n):
+                            cov[j + t] += 1
+                if len(dirs) != 1:
+                    raise SystemExit(f"PORT_MISMATCH {module}: plan bus {b} slices mix directions {sorted(dirs)}")
+                if dirs == {"output"} and sl_out[b] != [1] * w:
+                    raise SystemExit(f"PORT_MISMATCH {module}: plan output {b} bits not driven exactly once "
+                                     f"({sum(1 for c in sl_out[b] if c != 1)} bad)")
+                decl.append(f"    {dirs.pop()} wire {'' if scalar else f'[{w - 1}:0] '}{b}")
+                rep["mapped"] += w
+                continue
             if len(mp) != 1:
                 raise SystemExit(f"MAP_AMBIGUOUS {module}: plan bus {b} -> {mp} (several canonical ports)")
             tname, bits = next(iter(mp.items()))
@@ -590,11 +622,33 @@ def build_wrapper(module, pb, top, params, tports, cmap=None, straps=None, ties=
         d, tw = tp[tname]
         if not (bits == w == tw):
             raise SystemExit(f"PORT_MISMATCH {module}: plan bus {b} width {w} -> {tname}[{tw}] (map bits {bits})")
-        if tname in conns:
+        if tname in conns or tname in sl:
             raise SystemExit(f"PORT_MISMATCH {module}: {tname} reached twice")
         conns[tname] = b
         decl.append(f"    {d} wire {'' if scalar else f'[{w - 1}:0] '}{b}")
         rep["mapped"] += w
+    assigns = []
+    for tname, rl in sorted(sl.items()):
+        if tname in conns:
+            raise SystemExit(f"PORT_MISMATCH {module}: {tname} reached twice")
+        d, tw = tp[tname]
+        iw = f"__s_{tname}"
+        assigns.append(f"    wire {'' if tw == 1 else f'[{tw - 1}:0] '}{iw};")
+        cov = [0] * tw
+        for k, b, j, n in sorted(rl):
+            for t in range(n):
+                cov[k + t] += 1
+            pw, sc = pb[b]
+            rb = b if sc else (f"{b}[{j}]" if n == 1 else f"{b}[{j + n - 1}:{j}]")
+            rt = iw if tw == 1 else (f"{iw}[{k}]" if n == 1 else f"{iw}[{k + n - 1}:{k}]")
+            assigns.append(f"    assign {rt} = {rb};" if d == "input" else f"    assign {rb} = {rt};")
+        if d == "input" and cov != [1] * tw:
+            bad = [i for i, c in enumerate(cov) if c != 1]
+            raise SystemExit(f"PORT_MISMATCH {module}: sliced input {tname}[{tw}] bits not driven exactly once "
+                             f"(e.g. {bad[:8]}, {len(bad)} bad)")
+        if d == "output" and cov != [1] * tw:
+            rep["open_outputs"].append(f"{tname}[{tw}]:{sum(1 for c in cov if c == 0)} bits")
+        conns[tname] = iw
     body = []
     for n, (d, w) in tp.items():
         if n in conns:
@@ -622,7 +676,7 @@ def build_wrapper(module, pb, top, params, tports, cmap=None, straps=None, ties=
             conns[n] = v
     prm = (" #(" + ", ".join(f".{k}({v})" for k, v in params.items()) + ")") if params else ""
     txt = ["// GENERATED by gen_core_kit_hbm.py (ELEM-HBM): pass-through wrapper, plan pins -> RTL top; wires only.",
-           "`default_nettype none", f"module {module} (", ",\n".join(decl), ");",
+           "`default_nettype none", f"module {module} (", ",\n".join(decl), ");", *assigns,
            f"    {top}{prm} u_core (", ",\n".join(f"        .{n}({c})" for n, c in conns.items()) + ");",
            "endmodule", "`default_nettype wire", ""]
     return "\n".join(txt), rep
@@ -877,6 +931,16 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         ct = json.load(open(HARDEN / "canonical_ports_split.json"))["types"][v["canonical_type"]]
         tid = next((t for t in ct["type_ids"] if re.sub(r"__[\d.]+x[\d.]+$", "", t) == module), None)
         canon = (ct, ct["type_ids"][tid])
+        # opt-in bit-level map (split_bitmap.py) for remainder cores; absent -> whole-bus cut_pins as before
+        bmf = HARDEN / "canonical_bitmap_split.json"
+        bm = (json.load(open(bmf)).get("types", {}).get(v["canonical_type"], {}).get("type_ids", {}).get(tid)
+              if bmf.exists() else None)
+        if bm:
+            if bm.get("check", {}).get("verdict") != "PASS":
+                raise SystemExit(f"MAP_AMBIGUOUS {module}: bit map {tid} verdict {bm.get('check', {}).get('verdict')}")
+            canon = (ct, dict(canon[1], cut_pins=bm["slices"]))
+            rec["canonical_bitmap_src"] = dict(file=str(bmf.relative_to(REPO)) if str(bmf).startswith(str(REPO))
+                                               else str(bmf), sha256=sha(bmf), type_id=tid)
     kd = Path(a.out) / (re.sub(r"[^A-Za-z0-9_.-]", "_", a.view) + (f"-{a.tag}" if a.tag else ""))
     MS.precheck(a.master_slice, a.trial, plan, module)
     if kd.exists():
