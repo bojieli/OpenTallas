@@ -76,9 +76,9 @@ def compose(program, control, timing, cadence, *, mux_config=None, host_booking=
         templates={t['i']:t for t in program['templates']}
         if sorted(templates)!=list(range(len(templates))) or len(templates)>128:
             raise ValueError('actual local template indices must fit128entrytable')
-        cmds={c['template']:c for c in control['commands']}
+        cmds={(c['template'],c['slice']):c for c in control['commands']}
         for c in program['commands']:
-            measured=cmds.get(c['template'])
+            measured=cmds.get((c['template'],c['slice']))
             if not measured or measured['issue']!=c['issue'] or measured['slice']!=c['slice']:
                 raise ValueError('programme differs from actual bound command arrivals')
             if measured.get('payload186')!=templates[c['template']]['payload186']:
