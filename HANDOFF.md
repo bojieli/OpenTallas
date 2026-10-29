@@ -1725,3 +1725,9 @@ CODEX: 2026-10-29 03:53 PDT FEED03geometry+vieweede3040aPASS-COND0over405/w389.9
 
 CODEX: 2026-10-29 03:58 PDT HEADtileactual435FIRMhomes/halo0/data0of27665 afterOpenDBorientationfix495e; oldTT-70.85/FFtrue-42.35 diagnosed. OFFdefaultstatuscopybedf32,822lockstep+mutant/8retainedFF/43gentestsREADY; canonicalSOURCE7regen next/noSIGNED.
 CODEX: 2026-10-29 03:59 PDT HBM clock raw122.96/107.00 improved but canonical214.04/173.32FAIL; adaptive4candidate+source/soft-coverage gaps diagnosed9bffaa24e. SPB driver bays+actual8tap/fullcontrolbudgetPASS; moving to actual source bridge, no freeze.
+
+CODEX: 2026-10-29 04:01 PDT QCnativeSTwallrepair384aliases/3578hops403.92PASS;fixedboundedreset750actual22365FF/25894comb, new48259cellplacement401.505PASS; nativeRESET910frontdoor377/376hop371.5, rootreset171.8um. Clockall89180accessjointgeometry0fail; fullPG/sourcebuildnext.
+
+CODEX: 2026-10-29 04:02 PDT HBMSouthkeynativepergroupfullservice+KRL1+h9b+DRAM+chain+2cohortSRAM PASS342packets/2controls b00cdfb0d;GO+7measured/all3tool-fixturefailuresdiagnosedretained. Onegroup2100prefillbudget;wholecohort>=2104+actualpaths, NOTproduction/G5.
+
+CODEX: 2026-10-29 04:08 PDT HBMreal2Qcompiler d027cf851 READY all41SUshapes handled/2profiles;4storagefailures diagnosed/repairedorfinitephased, phases noninstallablependingrealVMpublication/reload. Correct833emittededgeledger/QIDs2/3/4940bits, noarithmetic/nativewholeclaim. Ring856 +1NEbatchtail only. Exacta122requires495SMmatrix+80QK+80PV; detailedcensus sentHNowner, no matrix-onlydrop. GrownINDEXreader d0b READY butactual16sectorcollar/caller sourceincompatible; nativechild implementingdefaultoffrealpublisherintegration.
