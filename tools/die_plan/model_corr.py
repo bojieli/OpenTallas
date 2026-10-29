@@ -72,7 +72,8 @@ def _legs(legs_um):
 # 0 with uic (no DC operating point: the xAct3D BUFx4 transient aborts after one, MODEL-CORR-1 section 6) and put the
 # source edge at RAMP_T0_PS; crossings before T_SETTLE_PS are dropped by collect_case.
 MASTERS = {"BUFx4_ASAP7_75t_R": dict(inverting=False), "BUFx6f_ASAP7_75t_R": dict(inverting=False),
-           "BUFx24_ASAP7_75t_R": dict(inverting=False), "CKINVDCx16_ASAP7_75t_R": dict(inverting=True)}
+           "BUFx24_ASAP7_75t_R": dict(inverting=False), "CKINVDCx16_ASAP7_75t_R": dict(inverting=True),
+           "BUFx8_ASAP7_75t_R": dict(inverting=False)}
 RAMP_T0_PS = 1000.0
 
 CASES = {
@@ -92,6 +93,10 @@ CASES = {
                            side={5: 10.0, 12: 10.0}, ramp=True),
     "bufx6f_1x60_d20": dict(cell="buf", master="BUFx6f_ASAP7_75t_R", rc="1x", segs=[60.0] * 20, taps=[5, 20],
                             ramp=True),
+    # HEAD-START-4 (COORD MODEL-CORR ruling 10-29): BUFx8 local clock-entry buffers (1356 on the HEAD START vehicle);
+    # same form as bufx6f_1x60_d20 (60 um 1x legs, taps 5/20, ramp deck)
+    "bufx8_1x60_d20": dict(cell="buf", master="BUFx8_ASAP7_75t_R", rc="1x", segs=[60.0] * 20, taps=[5, 20],
+                           ramp=True),
 }
 
 

@@ -383,6 +383,10 @@ SPICE_CLOCK_CAL_CELL = {
         "TT": dict(rise_late=1.0243, rise_early=1.0463, fall_late=1.0218, fall_early=1.0417),
         "FF": dict(rise_late=1.0101, rise_early=1.0301, fall_late=1.0056, fall_early=1.025),
     },
+    "BUFx8_ASAP7_75t_R": {
+        "TT": dict(rise_late=1.0408, rise_early=1.0528, fall_late=1.0332, fall_early=1.0437),
+        "FF": dict(rise_late=1.0236, rise_early=1.0347, fall_late=1.0189, fall_early=1.0305),
+    },
     "CKINVDCx16_ASAP7_75t_R": {
         "TT": dict(rise_late=0.9483, rise_early=1.0269, fall_late=0.9528, fall_early=1.0274),
         "FF": dict(rise_late=0.9611, rise_early=1.0515, fall_late=0.9623, fall_early=1.052),
