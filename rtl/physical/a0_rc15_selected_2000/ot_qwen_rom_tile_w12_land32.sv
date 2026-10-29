@@ -141,7 +141,8 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer GLUE_HARD = 0, // opt-in consumer hard operand and column RQR registers
     parameter integer LOCAL_ROOTS = 0, // opt-in localized soft roots, no data latency change
     parameter integer REGROOT = 0,     // Q-ROMPARENT 10-16 (RPH 3 only): ck_reg = {data E, data W, gn W, gs W} regional roots; 0 = ck_reg unused
-    parameter integer CHILD_CLOCKS = 0
+    parameter integer CHILD_CLOCKS = 0,
+    parameter integer GLOBAL_KV_CONST0 = 0 // opt-in ROM-only global KV port is already hardwired zero
 ) (
     input wire [CODE_BANKS-1:0] ck_rpair,
     input wire [CODE_BANKS-1:0] ck_pair1,
@@ -789,7 +790,11 @@ module ot_qwen_rom_tile_logic_w12 #(
             assign kv_addr = me_kv_addr;
         end
         //: host-served global KV (simulation): the same capture stage as the slice
-        if (MEM_EXTRA != 0) begin : g_kvgcap
+        if (GLOBAL_KV_CONST0 != 0) begin : g_kvgconst0
+            // The ROM wrapper ties the global KV input to zero. Express that
+            // port contract directly; request/valid scheduling is unchanged.
+            assign me_kv_q = {TG*W*32{1'b0}};
+        end else if (MEM_EXTRA != 0) begin : g_kvgcap
             reg kv_rd_q;
             reg [TG*W*32-1:0] cap;
             always @(posedge clk or negedge rst_n) if (!rst_n) kv_rd_q <= 1'b0; else kv_rd_q <= kv_re;
@@ -924,6 +929,9 @@ module ot_qwen_rom_tile_w12 #(
     ot_qwen_rom_tile_logic_w12 #(
 `ifndef SYNTHESIS
         .ROM_TILE(ROM_TILE),
+`endif
+`ifdef OT_ROM_CONST0_KV
+        .GLOBAL_KV_CONST0(1),
 `endif
         .GLUE_HARD(GLUE_HARD), .LOCAL_ROOTS(LOCAL_ROOTS), .CHILD_CLOCKS(CHILD_CLOCKS), .REGROOT(REGROOT), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(KV_SLICE),
         .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .NODE(NODE), .BMUT(BMUT)) u_logic (
