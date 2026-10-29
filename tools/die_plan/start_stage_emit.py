@@ -258,6 +258,13 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
             s['reset_output'] = local_reset
             s['reset_flops'] = 2 + int(s['edge_fall'])
         if s["root"]:
+            if reset_wave:
+                # The single timed local root reset feeds the root counter and
+                # starts the bounded relay stream; it never fans out globally.
+                sv.append(f"    wire st_{s['id']}_rraw = rst_raw_n;")
+                s['reset_parent'] = 'rst_raw_n'
+                s['reset_output'] = f"st_{s['id']}_rraw"
+                s['reset_flops'] = 0
             # the start-tree root stage IS the die's root counter (DIE-HEAD-11): SETTLE cycles after the raw release on
             # its own tree tap, the same ot_dp_landing_root a root partition uses; no die-top root start input
             sv.append(f"    {ROOT_MODULE} #(.SETTLE({s['settle']})) u_st_{s['id']} "
