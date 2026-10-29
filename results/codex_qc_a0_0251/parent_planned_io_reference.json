@@ -1,0 +1,11 @@
+{
+ "kind": "hard_core_latency",
+ "io_reference_ps": {
+  "tt": 732.25,
+  "ff": 639.4,
+  "kind": "plan_declared",
+  "basis": "Pre-build DME total internal clock latency midpoint; exact native local CTS cluster insertion and actual SIGNED hard-child latency inputs",
+  "source": "results/codex_qc_a0_2340/nl_parent_clock_plan.json"
+ },
+ "status": "REJECTED_CANDIDATE_NEVER_ADOPTED"
+}

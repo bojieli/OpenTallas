@@ -1,1 +1,11 @@
-QC A0 continuation. NK recipe consumes all three actual signed child views. Source/synthesis preparation only; unchanged canonical NK reset/node collar logic. NL-specific reset removal is excluded. Physical/clock/LEC gates remain open.
+QC A0 continuation, base d7eb2d8813, no main merge of private ancestry.
+
+NL actual fresh gate proof closes in independent packet codex/qc-lec-0251@2d2fac779: full31742/joint12570/kept9881, wrong-remap28 caught; no source/cycle change.
+
+NL local CTS PLAN_ONLY:152clusters/14257FF +18actualSIGNEDchildren. DME model candidate TT718.4..746.1/FF617..661.8, OCV63.4/81.3;403INV,18.019mmwire,4.833mmelongation (26.8%),83elongatedlegs/14shortstagepairs. GEOM FAIL: east-perimeter snake and central-street balancing hairpins dominate. No trunk materialized, no GRT/route. parent_planned_io_reference.json is REJECTED_CANDIDATE, never adopted.
+
+Root COORD approved one NL nativewhole-parent CTS prototype; independently viewed preview PASS-COND in results/geom_review/codex_qc_a0_0251_native_preclock.md. Own intel1 codex-qc-a0-0251/nl_native, no DME artifacts. Same actual3_place checkpoint/LEC, 18SIGNED ETMs full1.0 macro insertion compensation, M4..M7clock transit (upperM6/M7 overchildOBS<=M5), same833TT/FF60/25. ICG_EN/pair/full405body checks stay required. Stop before GRT50 on actual geometry/timing failures. Native prototype is not a signed/complete parent.
+
+NK source kit generated with19actualSIGNEDchildren/2584pins, ffc56b28bd7eb1e5. Own intel2 codex-qc-a0-0251/kits/qfd_tile_nk_a0c_a0nk12prep. Canonical NK control/reset remains, inactive width-safe index patch only. SYNTH/SELRANGE0/FACE2582PASS; normal LEC pending. No physical NK run. Source slice is nonfrozen/trial, same outline/centre clock input.
+
+NK RESET FAILURE DIAGNOSED: NL two-bit outer t_out reset-clamp removal cannot be generalized. Signed node contains synchronous assertion reset relay; its t_vout can stay high until a later edge. Minimal actual signed relay parameters and t_vout capture cone in nk_reset_counterexample.sv detects exactly one post-boot assertion mismatch old0/drop1 (log retained). Fault tf has direct parent asynchronous reset but valid tv comes from the hard node. No NK clamp removal adopted. Sole root sample at E(457.878,669.996) to W t_out[512] near999.756 spans787.6um; even 150um pin-flop allowance each leaves487.6>405. Needs an explicit local timed reset delivery/boot-phase plan under existing rules, or an exact actual protocol proof; no false bit-exact claim.
