@@ -9,6 +9,7 @@ from pathlib import Path
 W=Path(__file__).resolve().parents[2];sys.path.insert(0,str(W/'tools/die_plan'))
 from head_spine_strip_delta import spine_channels,X0
 import locality as L
+from head_strip_landing_types import split
 
 def main():
  a=argparse.ArgumentParser(description=__doc__);a.add_argument('--out',required=True);a=a.parse_args();out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=False)
@@ -16,6 +17,7 @@ def main():
  for q in p['partitions']:
   if q['type'] in ('hd_spn','hd_spn_end'):
    p['die'].setdefault('channels',[]).extend(spine_channels(q['name'],q['origin_um'][0]-X0,q['origin_um'][1]))
+ p,aliases=split(p);(inp/'type_aliases.json').write_text(json.dumps(aliases,indent=1))
  (inp/'plan.json').write_text(json.dumps(p,indent=1));shutil.copytree(d/'core_pins',inp/'core_pins')
  mapping=json.load(open(d/'spine_regions.json'))['part_region'];D=L.load_plan(p);G=L.region_geom(D,mapping);adj=L.part_adjacency(D);cross=L.crossings(D,mapping,G,adj);E=L.region_graph(D,mapping,adj,cross)
  # Only existing physical neighbour graph edges or declared data crossings;
