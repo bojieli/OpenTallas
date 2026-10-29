@@ -21,6 +21,21 @@ def bind_clocks(top: str, bench: str) -> tuple[str, list[str]]:
     if not match:
         raise ValueError('expected one qwen_kvsys_bound_top dut instance')
     body = match.group(1)
+    # Bind5's virtual START stages are real required inputs. Under Verilator's
+    # PINMISSING suppression an absent provider silently held all 29 low,
+    # leaving the native boot stuck at 528 frames with zero credits. The die's
+    # generated START provider must connect these pins or internalize them;
+    # the functional bench cannot substitute POR or its mission START.
+    start_inputs = sorted(set(re.findall(
+        r'\binput\s+(?:wire\s+)?(?:\[[^]]+\]\s*)?(pst_[A-Za-z0-9_$]+)\s*;', top)))
+    missing = []
+    for name in start_inputs:
+        actual = re.findall(r'\.' + re.escape(name) + r'\s*\(([^)]*)\)', body)
+        if len(actual) != 1 or not actual[0].strip():
+            missing.append(name)
+    if missing:
+        raise ValueError('missing native START provider inputs: ' + ', '.join(missing) +
+                         '; install the plan-generated START stages before building the native bench')
     for name in names:
         actual = re.findall(r'\.' + re.escape(name) + r'\s*\(([^)]*)\)', body)
         if actual and actual != ['ck_core']:
