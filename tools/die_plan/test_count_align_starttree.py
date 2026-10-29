@@ -347,3 +347,11 @@ def test_physical_reach_fails_closed_without_intermediate_nodes():
         cap.clock_start_edges(chain_rows(), c, max_hop_um=405)
     with pytest.raises(ValueError, match='finite and positive'):
         cap.clock_start_edges(chain_rows(), ctx_chain(), max_hop_um=float('nan'))
+
+
+def test_capture_override_uses_actual_declared_region_tap():
+    _, edges, _ = cap.clock_start_edges(chain_rows(), ctx_chain(), capture_taps={'R3':'t_R3_1'})
+    assert next(e for e in edges if e['dst']=='R3')['capture']=='t_R3_1'
+    for bad in [{'R3':'t_R4_0'}, {'R3':'invented'}, {'R99':'t_R3_0'}]:
+        with pytest.raises(ValueError, match='measured proof tap'):
+            cap.clock_start_edges(chain_rows(), ctx_chain(), capture_taps=bad)

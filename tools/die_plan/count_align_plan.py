@@ -581,7 +581,7 @@ def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="tabl
 
 
 def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew=(0.0, 0.0), skew_clean=False,
-                      retime_max=8, clean_by="phase", retime_up=False, prev=None, max_hop_um=None):
+                      retime_max=8, clean_by="phase", retime_up=False, prev=None, max_hop_um=None, capture_taps=None):
     """START TREE = CLOCK TREE (START-TREE-1).  ctx = clock_contexts() ({corner: meta/taps/ocv/rng}, first = nominal).
     Nodes: every data region at its clock root (longest common tree_path prefix of its taps) and every branch node of
     the clock subtree spanning those roots (virtual 'st:<path>', a retime flop on that tree node).  Each node's start
@@ -634,6 +634,10 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     miss = [x for x in regions if not rtaps.get(x)]
     if miss:
         raise ValueError(f"--start-tree clock: {len(miss)} regions without proof taps (e.g. {miss[:5]})")
+    if capture_taps is not None:
+        for region, tap in capture_taps.items():
+            if region not in rtaps or tap not in rtaps[region] or any(tap not in ctx[c]["taps"] for c in cs):
+                raise ValueError(f"START capture override {region}: {tap} is not that region's measured proof tap")
     leg = {c: DSR.tap_leg(k["meta"], k["taps"]) for c, k in ctx.items()}
     fleg = {c: DSR.tap_leg_fall(k["meta"], k["taps"]) for c, k in ctx.items()}
     rootp = {}
@@ -668,6 +672,8 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     def capture_of(y):
         if y.startswith("st:"):
             return vtap(cs[0], path_of[y])
+        if capture_taps is not None and y in capture_taps:
+            return capture_taps[y]
         m = c0["meta"]
         return min(rtaps[y], key=lambda k: (float(c0["taps"][k]["late_ps"]) - float(m["node_late_ps"][path_of[y]]), k))
 
@@ -1053,6 +1059,8 @@ def add_start_tree_args(ap):
                          "tree of --sta-proof, one dedicated start port per clock-tree edge (fork tap -> child sync tap, "
                          "retime flops on tree nodes where a port would be unclean), each port checked as a crossing "
                          "with the --sta-clock-ocv model; needs --sta-proof/--sta-plan and --sta-clock-ocv table")
+    ap.add_argument("--start-capture-taps", metavar="JSON",
+                    help="opt-in {region: measured proof tap port} capture selection; actual type-uniform GLUE pin mapping is supplied by plan owner")
     ap.add_argument("--start-max-hop-um", type=float,
                     help="opt-in physical START reach bound: keep/split clock-tree stages until each Manhattan tap-to-tap hop fits; requires physical proof coordinates; final emitted placement still needs GEOM")
     ap.add_argument("--start-retime-max", type=int, default=8, help="max retime flops per clock-tree start edge")
@@ -1074,6 +1082,8 @@ def check_start_tree_args(a, err):
     if a.start_tree != "clock":
         if getattr(a, "start_prev", None):
             err("--start-prev needs --start-tree clock")
+        if getattr(a, "start_capture_taps", None):
+            err("--start-capture-taps needs --start-tree clock")
         if getattr(a, "start_max_hop_um", None) is not None:
             err("--start-max-hop-um needs --start-tree clock")
         return
@@ -1099,7 +1109,8 @@ def start_tree_from_args(a, rows, err):
     root, edges, info = clock_start_edges(rows, ctx, a.period, a.aperture, a.sync_aperture, a.start_skew,
                                           a.start_skew_clean, a.start_retime_max, a.start_clean,
                                           getattr(a, "start_retime_up", False), start_prev_doc(a),
-                                          getattr(a, "start_max_hop_um", None))
+                                          getattr(a, "start_max_hop_um", None),
+                                          json.load(open(a.start_capture_taps)) if getattr(a, "start_capture_taps", None) else None)
     return edges, root, info
 
 
