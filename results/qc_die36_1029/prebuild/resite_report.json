@@ -1,0 +1,32 @@
+{
+ "dy_um": 4.4,
+ "cells": 44590,
+ "moved": 4078,
+ "unresolved": 0,
+ "unresolved_cells": [],
+ "still_stacked_recount": 0,
+ "baseline_overlaps": {},
+ "baseline_offgrid": 0,
+ "post_overlaps": {},
+ "post_partition_edge_changes": 0,
+ "shift_sites_hist": {
+  "-6": 111,
+  "-4": 341,
+  "-3": 44,
+  "-2": 947,
+  "1": 58,
+  "2": 2005,
+  "3": 30,
+  "4": 388,
+  "5": 34,
+  "6": 120
+ },
+ "max_abs_um": 0.324,
+ "rejected_candidates": {
+  "stacked": 17856,
+  "overlap": 821
+ },
+ "graph_sha256": "00b9a8d676a87bde995a91e4f7dbec98d5fb97a8322f71f2847d8a52e83949c2",
+ "provider_cells": 48259,
+ "note": "x-only whole-site shifts, same row; connectivity unchanged (graph sha)"
+}
