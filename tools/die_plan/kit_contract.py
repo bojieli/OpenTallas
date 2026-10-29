@@ -1155,7 +1155,8 @@ def _resolve(scopes, mod, parts, master):
             else:
                 why = f"component {name!r} is an instance of {typ}, which no staged source defines"
         return why
-    if len(parts) > 1 and re.sub(r"(\[[^\]]*\])+$", "", parts[0]) in labels:
+    head = re.sub(r"(\[[^\]]*\])+$", "", parts[0])
+    if len(parts) > 1 and (head in labels or re.fullmatch(r"genblk\d+", head)):     # unnamed blocks: yosys genblkN
         return _resolve(scopes, mod, parts[1:], master)
     return why
 

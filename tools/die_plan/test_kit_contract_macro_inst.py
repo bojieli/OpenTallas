@@ -25,6 +25,11 @@ module core #(parameter P = 1) (input [3:0] x);
         sram #(.W(8)) u_s (.a(x[i]));
     end
     sram `CVP(3) u_m (.a(x[1]));
+    if (P == 1) begin
+        if (P > 0) begin : g_m11
+            sram u_g (.a(x[2]));
+        end
+    end
     `EA(0)
     `EA(1)
 endmodule
@@ -47,9 +52,10 @@ def _kit(tmp_path, names):
 def test_resolved_paths_pass(tmp_path):
     kd = _kit(tmp_path, [("u_fcore.g_one.u_w", "sram"), ("u_fcore.g_two.u_w", "sram2"),
                          ("u_fcore.g_bank\\[1\\].u_s", "sram"), ("u_fcore.u_m", "sram"),
-                         ("u_fcore.u_e0", "sram"), ("u_fcore.u_e1", "sram")])
+                         ("u_fcore.u_e0", "sram"), ("u_fcore.u_e1", "sram"),
+                         ("u_fcore.genblk1.g_m11.u_g", "sram")])
     err, info = KC.macro_instances(kd)
-    assert err == [] and info == dict(applies=True, placed=6, resolved=6), err
+    assert err == [] and info == dict(applies=True, placed=7, resolved=7), err
 
 
 def test_double_prefix_fails(tmp_path):
