@@ -18,6 +18,8 @@ rtl/lib/ot_rst_relay.sv
 physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
 physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v'''.splitlines()
 for p in paths:(out/Path(p).name).write_bytes(subprocess.check_output(['git','show','HEAD:'+p],cwd=root))
+ref=subprocess.check_output(['git','show','7e89131fc:rtl/hbm_next/idx/ot_hnx_idx_vm_query_static_n12.sv'],cwd=root).decode()
+(out/'packed_reference.sv').write_text(ref.replace('ot_hnx_idx_vm_query_static_n12','ot_hnx_idx_vm_query_static_n12_packed_ref'))
 here=Path(__file__).parent
 for p in ['tb_idx_rows_numeric.sv','run.sh']:(out/p).write_bytes((here/p).read_bytes())
 for rt,n in [(171,1566),(173,1568)]:

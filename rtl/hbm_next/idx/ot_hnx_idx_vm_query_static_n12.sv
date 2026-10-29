@@ -8,7 +8,11 @@
 `default_nettype none
 // Actual VM operand path. Weights and FP32 queries are read from mapped SRAM;
 // there is no externally supplied internal quantisation/arithmetic result.
-module ot_hnx_idx_vm_query_static_n12_core #(parameter integer VM_RT_EXTRA=0)(
+// WEIGHT_FP32=1 reads the HGI B representation directly: 32 BF16 values
+// widened to FP32 words. All four sectors issue together; low16 != 0 faults
+// (HGI E_RANGE), never rounds/truncates an arbitrary FP32 weight. Default0
+// retains the historical two-sector packed-BF16 representation and timing.
+module ot_hnx_idx_vm_query_static_n12_core #(parameter integer VM_RT_EXTRA=0,WEIGHT_FP32=0)(
  input wire clk,rst_n,input wire[1:0]sid,
  input wire frame_start,
  input wire weight_slot,query_slot,input wire[6:0]query_index,
@@ -28,8 +32,9 @@ module ot_hnx_idx_vm_query_static_n12_core #(parameter integer VM_RT_EXTRA=0)(
  reg[135:0]slots;
  reg[127:0]tags;
  wire[2055:0]rr;wire[127:0]rtag;wire face_fault;
- reg[511:0]weights;reg[1:0]weight_seen;reg bad;
- reg[15:0]wsec[0:1];reg[15:0]qsec[0:3];
+ localparam integer WSECT=WEIGHT_FP32?4:2;
+ reg[511:0]weights;reg[WSECT-1:0]weight_seen;reg bad;
+ reg[15:0]wsec[0:WSECT-1];reg[15:0]qsec[0:3];
  // ROW BASES (HGI-1R): loaded at the record start, stepped after each row's last query slot
  reg[15:0]wbase,qbase;
  always @(posedge clk)begin
@@ -38,10 +43,10 @@ module ot_hnx_idx_vm_query_static_n12_core #(parameter integer VM_RT_EXTRA=0)(
  end
  always @*begin
   slots=0;tags=0;
-  for(integer s=0;s<2;s=s+1)wsec[s]=wbase+16'(s);
+  for(integer s=0;s<WSECT;s=s+1)wsec[s]=wbase+16'(s);
   for(integer s=0;s<4;s=s+1)qsec[s]=qbase+16'(int'(query_index)*4+s);
   for(integer l=0;l<8;l=l+1)begin
-   if(weight_slot)for(integer s=0;s<2;s=s+1)if(wsec[s][2:0]==3'(l))begin
+   if(weight_slot)for(integer s=0;s<WSECT;s=s+1)if(wsec[s][2:0]==3'(l))begin
     slots[l*17+:17]={1'b1,wsec[s]};tags[l*16+:16]=16'h8000|16'(s);
    end
    if(query_slot)for(integer s=0;s<4;s=s+1)if(qsec[s][2:0]==3'(l))begin
@@ -71,23 +76,30 @@ module ot_hnx_idx_vm_query_static_n12_core #(parameter integer VM_RT_EXTRA=0)(
   else begin
    block_v<=|parts;
    if(weight_slot&&query_slot)bad<=1;
-   if(weight_slot&&wbase[2:0]!=0)bad<=1;
+   if(weight_slot&&(WEIGHT_FP32?(wbase[1:0]!=0):(wbase[2:0]!=0)))bad<=1;
    if(query_slot&&qbase[1:0]!=0)bad<=1;
    for(integer b=0;b<8;b=b+1)if(rr[b*257+256])begin
     if(rtag[b*16+15])begin
-     for(integer w=0;w<2;w=w+1)if(rtag[b*16]==1'(w))weight_seen[w]<=1;
+     for(integer w=0;w<WSECT;w=w+1)if(rtag[b*16+:2]==2'(w))weight_seen[w]<=1;
+     if(WEIGHT_FP32)for(integer j=0;j<8;j=j+1)
+      if(rr[b*257+j*32+:16]!=16'd0)bad<=1;
     end else if(rtag[b*16+:7]!=qid)bad<=1;
    end
    if(|parts)begin
-    if(parts!=4'hf||weight_seen!=2'b11)bad<=1;
+    if(parts!=4'hf||weight_seen!={WSECT{1'b1}})bad<=1;
    end
   end
  end
  // Operand data: reset-free, written only under reset valid bits.
+ generate if(WEIGHT_FP32)begin:g_fp32_weights
+  always @(posedge clk)for(integer b=0;b<8;b=b+1)if(rr[b*257+256]&&rtag[b*16+15])
+   for(integer w=0;w<4;w=w+1)if(rtag[b*16+:2]==2'(w))
+    for(integer j=0;j<8;j=j+1)weights[w*128+j*16+:16]<=rr[b*257+j*32+16+:16];
+ end else begin:g_packed_weights
+  always @(posedge clk)for(integer b=0;b<8;b=b+1)if(rr[b*257+256]&&rtag[b*16+15])
+   for(integer w=0;w<2;w=w+1)if(rtag[b*16+:2]==2'(w))weights[w*256+:256]<=rr[b*257+:256];
+ end endgenerate
  always @(posedge clk)begin
-  for(integer b=0;b<8;b=b+1)if(rr[b*257+256]&&rtag[b*16+15])begin
-   for(integer w=0;w<2;w=w+1)if(rtag[b*16]==1'(w))weights[w*256+:256]<=rr[b*257+:256];
-  end
   if(|parts)begin
    block_head<=qid[6:2];block_number<=qid[1:0];block_data<=assembled;head_weight<=hw_sel;
   end
@@ -105,7 +117,7 @@ endmodule
 // ot_rst_relay (sync + per-region relay flops); only control flops are reset (H-NETLIST/IDXP-OPQ 2026-10-16).
 // The VM round trip crosses the vm_rq output and vm_rr input pin flops: the core's face
 // capture is n+8+VM_RT_EXTRA. Default4 preserves n12; current native profile selects171/173 explicitly.
-module ot_hnx_idx_vm_query_static_n12 #(parameter integer VM_RT_EXTRA=4)(
+module ot_hnx_idx_vm_query_static_n12 #(parameter integer VM_RT_EXTRA=4,WEIGHT_FP32=0)(
  input wire clk,rst_n,input wire[1:0]sid,
  input wire frame_start,
  input wire weight_slot,query_slot,input wire[6:0]query_index,
@@ -121,7 +133,7 @@ module ot_hnx_idx_vm_query_static_n12 #(parameter integer VM_RT_EXTRA=4)(
   sid_r<=sid;ws_r<=weight_slot;qs_r<=query_slot;qi_r<=query_index;wsec_r<=weight_sector;qsec_r<=query_sector;wstr_r<=weight_row_stride;qstr_r<=query_row_stride;fs_r<=frame_start;rr_r<=vm_rr;
   vm_rq<=c_rq;block_v<=c_bv;block_head<=c_bh;block_number<=c_bn;block_data<=c_bd;head_weight<=c_hw;fault<=c_fault;
  end
- ot_hnx_idx_vm_query_static_n12_core #(.VM_RT_EXTRA(VM_RT_EXTRA)) core(.clk(clk),.rst_n(rst_n),.sid(sid_r),.frame_start(fs_r),.weight_slot(ws_r),.query_slot(qs_r),
+ ot_hnx_idx_vm_query_static_n12_core #(.VM_RT_EXTRA(VM_RT_EXTRA),.WEIGHT_FP32(WEIGHT_FP32)) core(.clk(clk),.rst_n(rst_n),.sid(sid_r),.frame_start(fs_r),.weight_slot(ws_r),.query_slot(qs_r),
   .query_index(qi_r),.weight_sector(wsec_r),.query_sector(qsec_r),.weight_row_stride(wstr_r),.query_row_stride(qstr_r),.vm_rq(c_rq),.vm_rr(rr_r),
   .block_v(c_bv),.block_head(c_bh),.block_number(c_bn),.block_data(c_bd),.head_weight(c_hw),.fault(c_fault));
 endmodule
