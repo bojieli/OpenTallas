@@ -164,3 +164,25 @@ def test_no_balance_flag_leaves_siblings_unpadded():
         assert n[1].get("reach_fix") and not n[2].get("snake") and "reach_balance" not in n[0]
     finally:
         D.REP_REACH_BALANCE = True
+
+
+def test_feed_repair_composes_with_native_body_packing(monkeypatch):
+    # Production opt-ins must compose: global feed is outside region DME, while
+    # the final native-body pass freezes and reprices every exported chain.
+    monkeypatch.setattr(D, 'DME_ACTUAL_MAX_UM', 405.0)
+    monkeypatch.setattr(D, 'EVEN_LEGS', True)
+    monkeypatch.setattr(D, 'REP_REACH_MAX_UM', 400.0)
+    site = D.clock_site(_P())
+    n = _two()
+    _, place, _, _, par = D.tree_netlist(n, [], rep_um=250., site=site, clock_cell='inv2')
+    assert n[1]['reach_fix']['span_before_um'] > 405.
+    assert _spans(place, par) <= 405.
+    assert n[0]['reach_balance']['fixed_legs'] == 1
+    for i in (1, 2):
+        pl = n[i]['physical_leg']
+        assert pl['stages'] % 2 == 0
+        assert pl['delay_ps'] == pytest.approx(D.chain_ps(pl['chain']))
+    for k, (_, x, y) in enumerate(place):
+        assert site.legal((x,y))
+        assert all(abs(x-xx) >= D.ISLAND_CELL_UM[0]-1e-8 or abs(y-yy) >= D.ISLAND_CELL_UM[1]-1e-8
+                   for _, xx, yy in place[:k])
