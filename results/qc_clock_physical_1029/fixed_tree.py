@@ -10,6 +10,7 @@ from collections import Counter, defaultdict
 import contextlib
 import hashlib
 import json
+import math
 from pathlib import Path
 import re
 import sys
@@ -82,8 +83,22 @@ def clock_graph(text, tree):
 def real_pin_access(access):
     old = dict(CR.PIN_ACCESS)
     original_join = CR._port_join
-    def adjacent_join(*args, **kwargs):
-        pts = original_join(*args, **kwargs)
+    def adjacent_join(lines, layer_at, at, pin_layer, pxy, entering):
+        if not entering and pin_layer == 'M7':
+            x, y = at; px, py = pxy
+            pts = [(layer_at,x,y)]
+            # Stay above the macro until the final VIA78 at actual pin metal.
+            if layer_at == 'M9':
+                if y != py: pts.append(('M9',x,py))
+                pts.append(('M8',x,py))
+                if x != px: pts.append(('M8',px,py))
+            else:
+                if x != px: pts.append(('M8',px,y))
+                if y != py:
+                    pts += [('M9',px,y),('M9',px,py),('M8',px,py)]
+            pts.append(('M7',px,py))
+        else:
+            pts = original_join(lines,layer_at,at,pin_layer,pxy,entering)
         out = [pts[0]]
         for point in pts[1:]:
             prev = out[-1]
@@ -104,11 +119,99 @@ def real_pin_access(access):
         CR._port_join = original_join
 
 
+def access_census(shapes):
+    """Same rectangle short/spacing check as CR, with bounded local buckets."""
+    bins = defaultdict(list); shorts=spacing=0; details=[]; tile=2.16
+    for number,a in enumerate(shapes):
+        net,layer,x0,y0,x1,y1 = a
+        sp = CR.SPACE[layer]; seen=set()
+        for bx in range(math.floor((x0-sp)/tile),math.floor((x1+sp)/tile)+1):
+            for by in range(math.floor((y0-sp)/tile),math.floor((y1+sp)/tile)+1):
+                for k in bins[(layer,bx,by)]:
+                    if k in seen: continue
+                    seen.add(k); b=shapes[k]
+                    if net == b[0]: continue
+                    dx=max(0.,max(x0,b[2])-min(x1,b[4]));dy=max(0.,max(y0,b[3])-min(y1,b[5]))
+                    kind=None
+                    if dx == dy == 0: shorts+=1;kind='short'
+                    elif math.hypot(dx,dy)<sp-1e-9:spacing+=1;kind='spacing'
+                    if kind and len(details)<100:details.append([kind,layer,net,b[0],x0,y0])
+        for bx in range(math.floor(x0/tile),math.floor(x1/tile)+1):
+            for by in range(math.floor(y0/tile),math.floor(y1/tile)+1):bins[(layer,bx,by)].append(number)
+    return dict(shapes=len(shapes),shorts=shorts,spacing=spacing,examples=details)
+
+
+def port_access_shapes(wires,cells,ports,buf):
+    shapes=[]; vias=CR.via_rects()
+    for wire in wires:
+        net=CR.net_plan(wire,cells,ports,buf)
+        for endpoint,entering in [(net['drv'],True)]+[(p,False) for p in net['loads']]:
+            if endpoint[0] != 'port':continue
+            _,name,layer,xy,at,top=endpoint[:6]
+            pts=CR._port_join([],top,at,layer,xy,entering)
+            for a,b in zip(pts,pts[1:]):
+                if a[0] != b[0]:
+                    for lay,(hx,hy) in vias[CR.via(a[0],b[0])].items():
+                        shapes.append((wire['name'],lay,a[1]-hx,a[2]-hy,a[1]+hx,a[2]+hy))
+                elif a[1:] != b[1:]:
+                    half=.04 if a[0] in ('M8','M9') else CR.WIDTH[a[0]]/2
+                    shapes.append((wire['name'],a[0],min(a[1],b[1])-half,min(a[2],b[2])-half,max(a[1],b[1])+half,max(a[2],b[2])+half))
+    return shapes
+
+
+def review_render(P,wires,cells,pg,region,out):
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Rectangle
+    r=P.rect(region)
+    fig,ax=plt.subplots(figsize=(8,12))
+    def hits(x0,y0,x1,y1):return x0<=r[2] and x1>=r[0] and y0<=r[3] and y1>=r[1]
+    for x0,y0,x1,y1,tag in DCM.DC.keepouts(P):
+        if hits(x0,y0,x1,y1):
+            ax.add_patch(Rectangle((x0,y0),x1-x0,y1-y0,fc='#ddd',ec='#aaa'))
+    for net,layer,x0,y0,x1,y1 in pg:
+        if layer in ('M8','M9') and hits(x0,y0,x1,y1):
+            ax.add_patch(Rectangle((x0,y0),x1-x0,y1-y0,fc='#aaa',alpha=.3,lw=0))
+    selected=0
+    for wire in wires:
+        for layer,x0,y0,x1,y1 in wire['segs']:
+            if hits(min(x0,x1),min(y0,y1),max(x0,x1),max(y0,y1)):
+                ax.plot([x0,x1],[y0,y1],color='#1565c0' if layer=='M8' else '#2e7d32',lw=.65)
+                selected+=1
+    for cell in cells.values():
+        if r[0]<=cell['x']<=r[2] and r[1]<=cell['y']<=r[3]:ax.plot(cell['x'],cell['y'],'k.',ms=2)
+    ax.set(xlim=(r[0],r[2]),ylim=(r[1],r[3]),xlabel='die x (um)',ylabel='die y (um)',
+           title=f'{region}: planned FIXED clock metal, {selected} visible segments\nM8 blue / M9 green / real PG grey / hard keep-outs shaded; NOT ROUTED')
+    ax.set_aspect('equal');fig.tight_layout();fig.savefig(out,dpi=150);plt.close(fig)
+
+
+def pg_grid_tcl(pg):
+    pg_lines = []
+    for net in sorted({r[0] for r in pg if r[1] in ('M8','M9')}):
+        kind = 'GROUND' if net.upper().startswith('VSS') else 'POWER'
+        pg_lines += [f'set pn [$blk findNet {net}]',
+                     f'if {{$pn == "NULL"}} {{set pn [odb::dbNet_create $blk {net}]}}',
+                     f'$pn setSigType {kind}', '$pn setSpecial',
+                     'set psw [odb::dbSWire_create $pn FIXED]']
+        pg_lines += C128.grid_tcl(pg,'$psw',net=net)
+        horizontal = [r for r in pg if r[0] == net and r[1] == 'M8']
+        vertical = [r for r in pg if r[0] == net and r[1] == 'M9']
+        pg_lines += ['set pg_h {'+' '.join('{'+ ' '.join(map(str,r[2:])) +'}' for r in horizontal)+'}',
+                     'set pg_v {'+' '.join('{'+ ' '.join(map(str,r[2:])) +'}' for r in vertical)+'}',
+                     'set v89 [$tech findVia VIA89]',
+                     'foreach h $pg_h {lassign $h hx0 hy0 hx1 hy1; set y [expr {($hy0+$hy1)/2}]; foreach v $pg_v {lassign $v vx0 vy0 vx1 vy1; set x [expr {($vx0+$vx1)/2}]; if {$hx0 <= $x && $x <= $hx1 && $vy0 <= $y && $y <= $vy1} {'
+                     +f'set key "{net}@[um $x],[um $y]"; '
+                     +'if {![info exists pg_vias($key)]} {odb::dbSBox_create $psw $v89 [um $x] [um $y] STRIPE; set pg_vias($key) 1}}}}']
+    return pg_lines
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     for key in ('tree', 'netlist', 'lef', 'plan', 'endpoints', 'out'):
         ap.add_argument('--'+key, required=True)
     ap.add_argument('--max-move', type=float, default=8.64)
+    ap.add_argument('--review-region', default='c_E2_bf_10')
     args = ap.parse_args()
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     tree = json.loads(Path(args.tree).read_text())
@@ -134,9 +237,13 @@ def main():
         ep = endpoints[tap['port']]
         if ep['inst'] != tap['part'] or ep['pin'] != tap['tap'] or ep['layer'] != 'M7':
             raise ValueError(f'endpoint identity/layer mismatch: {tap["port"]}')
-        if max(abs(a-b) for a,b in zip(ep['xy'], tap['xy'])) > .001:
-            raise ValueError(f'endpoint coordinate mismatch: {tap["port"]}')
-        taps.append(dict(tap, layer=ep['layer']))
+        planned=ep.get('planned_xy_um',tap['xy'])
+        if max(abs(a-b) for a,b in zip(planned,tap['xy'])) > .001:
+            raise ValueError(f'endpoint source coordinate mismatch: {tap["port"]}')
+        rect=ep['rect_um'];x,y=ep['xy']
+        if not (rect[0]<=x<=rect[2] and rect[1]<=y<=rect[3]):
+            raise ValueError(f'endpoint outside actual M7 metal: {tap["port"]}')
+        taps.append(dict(tap,xy=ep['xy'],layer=ep['layer']))
     M = dict(meta=dict(root_um=[root['x'],root['y']]), taps=taps)
     ports = {t['port']:dict(layer=t['layer'],xy=t['xy']) for t in taps}
     ports['root'] = dict(layer='M9',xy=M['meta']['root_um'])
@@ -154,12 +261,24 @@ def main():
         summary.update(status='FAIL', cause='no legal fixed-wire geometry', findings=error.rows)
         (out/'prebuild.json').write_text(json.dumps(summary,indent=1)+'\n')
         raise
+    (out/'fixed_wires.json').write_text(json.dumps(wires)+'\n')
+    review_render(P,wires,cells,pg,args.review_region,out/'review_region.png')
     with real_pin_access(access):
         shapes = CR.stair_shapes(wires,cells,ports,next(iter(masters)))
-        census = CR.stair_census(shapes)
+        shapes += port_access_shapes(wires,cells,ports,next(iter(masters)))
+        census = access_census(shapes)
         lines, rec = CR.routed_tcl(wires,cells,ports,next(iter(masters)),'QC_CLOCK_NDR')
-    if census.get('shorts'):
+    top_hits=[]; top_count=0
+    for net,layer,x0,y0,x1,y1 in shapes:
+        if layer not in ('M8','M9'):continue
+        shape=(layer,net,'access',y0,y1,x0,x1) if layer=='M8' else (layer,net,'access',x0,x1,y0,y1)
+        hit=router.ix.hits(shape,first=True)
+        if hit:
+            top_count+=1
+            if len(top_hits)<100:top_hits.append(dict(net=net,layer=layer,rect=[x0,y0,x1,y1],against=router.ix.shapes[hit[0][0]],kind=hit[0][1]))
+    if census.get('shorts') or census.get('spacing') or top_count:
         summary.update(status='FAIL',cause='pin-access shorts',pin_access_census=census)
+        summary['top_access_conflicts']=dict(count=top_count,examples=top_hits)
         (out/'prebuild.json').write_text(json.dumps(summary,indent=1)+'\n')
         raise ValueError('fixed-wire pin stacks short; revise before materializing')
     text = '\n'.join(lines)+'\n'
@@ -169,12 +288,47 @@ def main():
         if text.count(old) != 1:
             raise ValueError(f'endpoint encoder count is not one: {port}')
         text = text.replace(old,replacement)
-    header = 'set blk [ord::get_db_block]\nset tech [[ord::get_db] getTech]\ncreate_ndr -name QC_CLOCK_NDR -width {M8 .08 M9 .08} -spacing {M8 .32 M9 .32}\n'
-    (out/'fixed_clock.tcl').write_text(header+text)
+    header = '''set blk [ord::get_db_block]
+set tech [[ord::get_db] getTech]
+set l8 [$tech findLayer M8]
+set l9 [$tech findLayer M9]
+proc um {x} {expr {round($x*[[ord::get_db_block] getDbUnitsPerMicron])}}
+set ::ot_clock_shield_swires {}
+if {![array exists pg_vias]} {array set pg_vias {}}
+create_ndr -name QC_CLOCK_NDR -width {M8 .08 M9 .08} -spacing {M8 .32 M9 .32}
+'''
+    pg_lines = pg_grid_tcl(pg)
+    drawn = [tuple(seg)+(ext,) for w in wires for seg,mode,ext in
+             zip(w['segs'],w.get('shield_modes') or [C128.DRAWN]*len(w['segs']),
+                 w.get('shield_ext') or [None]*len(w['segs'])) if mode == C128.DRAWN]
+    ties = C128.shield_ties(C128.shield_stripes(drawn,nd),pg,nd['width'])
+    tie_record = C128.tie_record(ties)
+    if ties['untied'] or ties['shorts']:
+        summary.update(status='FAIL',cause='shield power continuity',shield=ties)
+        (out/'prebuild.json').write_text(json.dumps(summary,indent=1)+'\n')
+        raise ValueError('shield grid attachment fails before materialization')
+    tie_lines=C128.tie_tcl(ties,'$fsw')
+    for i,line in enumerate(tie_lines):
+        if line.startswith('odb::dbSBox_create'):
+            xy=re.findall(r'\[um ([\d.-]+)\]',line)
+            if len(xy)!=2:raise ValueError('unexpected shield via emitter')
+            key=f'VSS@[um {xy[0]}],[um {xy[1]}]'
+            tie_lines[i]='set key "'+key+'"; if {![info exists pg_vias($key)]} {'+line+'; set pg_vias($key) 1}'
+    shields = CR.shield_only_tcl(C128.combo_tcl(wires,nd,'VSS')) + tie_lines
+    pg_lines += ['add_global_connection -net VDD -inst_pattern {.*} -pin_pattern {^VDD$} -power',
+                 'add_global_connection -net VSS -inst_pattern {.*} -pin_pattern {^VSS$} -ground', 'global_connect']
+    (out/'fixed_pg.tcl').write_text(header.split('create_ndr')[0]+'\n'.join(pg_lines)+'\n')
+    (out/'fixed_clock_only.tcl').write_text(header+'\n'.join(shields)+'\n'+text)
+    (out/'fixed_clock.tcl').write_text(header+'\n'.join(pg_lines+shields)+'\n'+text)
     (out/'fixed_wires.json').write_text(json.dumps(wires)+'\n')
-    (out/'infra_nets.txt').write_text('\n'.join(n['name'] for n in nets)+'\n')
-    summary.update(status='PASS_PREBUILD',encoder=rec,pin_access_census=census,
-                   note='No physical job or route proof. Render/review before source materialization. PG wires must exist separately.')
+    inventory = {n['name'] for n in nets} | {r[0] for r in pg if r[1] in ('M8','M9')}
+    (out/'infra_nets.txt').write_text('\n'.join(sorted(inventory))+'\n')
+    summary.update(status='PASS_PREBUILD',encoder=rec,pin_access_census=census,shield=tie_record,
+                   pg=dict(actual_top_grid_rects=sum(r[1] in ('M8','M9') for r in pg),same_net_vias='every M8/M9 intersection',
+                           clock_cell_power='logical VDD/VSS connected; M1-to-top-grid physical stacks NOT PROVIDED',
+                           physical_clock_power_terms_unclosed=2*len(cells),ir_and_bump_qualification=False),
+                   reset_routes='NOT PROVIDED by this clock-only adapter; must be separately materialized before infrastructure freeze',
+                   note='No physical job or route proof. Render/review before materialization. Clock-cell physical power and reset remain explicit release gaps.')
     (out/'prebuild.json').write_text(json.dumps(summary,indent=1)+'\n')
     print(json.dumps({k:v for k,v in summary.items() if k not in ('inputs','pin_access_census')},indent=1))
 
