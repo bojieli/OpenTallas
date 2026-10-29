@@ -943,6 +943,8 @@ class Landings:
         root counter is chosen by strap_ca_root. The
         raw reset of each choice is exactly the parameter form's (child: the tree bus's timed relay; root: local_raw)."""
         _, tbs, padw, settle, root = role
+        copy_export = getattr(self, "types", {}).get(tn, {}).get("clock", {}).get("landing_origin_export_copy", False)
+        fwd_param = ", .FWD_COPY(1)" if copy_export else ""
         ca_raw = dict(ca_raw)
         if START_PIN_IN in tbs:
             # START-TREE: the dedicated start pin is one of the choices; its raw reset is a local timed relay
@@ -994,12 +996,12 @@ class Landings:
             starts_d = [f"cland_start_t{i}_d" for i in range(len(tbs))]
             logic.append(f"    wire {', '.join(starts + starts_d)};")
             for i, b in enumerate(tbs):
-                logic += [f"    ot_dp_landing_origin_s #(.PADW({padw})) u_cland_origin_t{i} (",
+                logic += [f"    ot_dp_landing_origin_s #(.PADW({padw}){fwd_param}) u_cland_origin_t{i} (",
                           f"        .clk(clk), .rst_raw_n({ca_raw[b]}), .p_start({pin(b)}), .strap_efall(strap_ca_efall), "
                           f".strap_pad(strap_ca_pad), .start({starts[i]}), .start_d({starts_d[i]}));"]
             logic += [f"    assign {start} = {sel(starts)};", f"    assign {start_d} = {sel(starts_d)};"]
         else:
-            logic += [f"    ot_dp_landing_origin_s #(.PADW({padw})) u_cland_origin (",
+            logic += [f"    ot_dp_landing_origin_s #(.PADW({padw}){fwd_param}) u_cland_origin (",
                       f"        .clk(clk), .rst_raw_n({raw}), .p_start({p_start}), .strap_efall(strap_ca_efall), "
                       f".strap_pad(strap_ca_pad), .start({start}), .start_d({start_d}));"]
         self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="strap", tree_buses=list(tbs), padw=padw,
