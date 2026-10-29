@@ -91,3 +91,54 @@ def test_hub_tree_pads_rule():
     plan = dict(partition_types=dict(h=dict(internal_stations=stations)))
     r = FRC.hub_tree_pads(plan, hubs=(('h', 'NW'),), top='n4')['NW']
     assert r['round_trip_regs'] == 8 and r['pads'] == {'n4': [3, 0]}   # child a earlier -> pad a by 3
+
+
+# ---- TOK-HBM-2: composed service from measured segments (results/tok_hbm_2_1028/service_segments.json)
+SEG = json.loads((HERE.parent.parent / 'results/tok_hbm_2_1028/service_segments.json').read_text())
+
+
+def seg_bound(rt_extra=0):
+    b = bound(); b['legs_exclude_tree_nodes'] = True
+    b['legs']['down_NW']['cycles'] += rt_extra
+    return b
+
+
+def test_segments_compose_by_hand(tmp_path):
+    ct, img = setup(tmp_path)
+    emit(EMITTER, ct, img, tmp_path / 'p1'); jobs = json.loads((tmp_path / 'p1' / 'jobs.json').read_text())
+    cal, miss = FRC.compile_calendar(jobs, seg_bound(), SEG); assert not miss, miss
+    rt = max(14 + 15, 12 + 13); wsc = rt + 5 * (2 + 4) + 10 + 8
+    assert cal['root_config']['wsc'] == wsc
+    svc = {(r['op'], i): r['root_done_cycle'] - r['root_capture_cycle'] for i, r in enumerate(cal['records'])}
+    pre1 = (wsc + 1 + 5 + 1) + (55 + rt) + 188 + 114 + (30 + rt) + 36 + 1
+    post6 = (wsc + 18 + 5 + 10) + (30 + rt) + 50 + 600 + 1
+    pre2 = (wsc + 2 + 5 + 2) + (55 + rt) + 188 + 80 + 114 + (30 + rt) + 36 + 1
+    assert svc == {('HC_PRE', 0): pre1, ('HC_POST', 1): post6, ('HC_PRE', 2): pre2}
+    (tmp_path / 'cal.json').write_text(json.dumps(cal))
+    r = emit(EMITTER, ct, img, tmp_path / 'p2', tmp_path / 'cal.json'); assert r.returncode == 0, r.stdout + r.stderr
+
+
+def test_segments_fail_closed(tmp_path):
+    ct, img = setup(tmp_path)
+    emit(EMITTER, ct, img, tmp_path / 'p1'); jobs = json.loads((tmp_path / 'p1' / 'jobs.json').read_text())
+    b = bound()                                                     # legs not declared station-only
+    cal, miss = FRC.compile_calendar(jobs, b, SEG); assert cal is None and any('legs_exclude_tree_nodes' in m for m in miss)
+    j2 = json.loads(json.dumps(jobs)); j2['jobs'][0]['fields']['rgap'] = 300  # outside the 8-bit field
+    cal, miss = FRC.compile_calendar(j2, seg_bound(), SEG); assert cal is None and any('rgap' in m for m in miss)
+
+
+def test_segments_rgap_affine():
+    s = SEG
+    p0, _ = FRC.composed_service(s, 'HC_PRE', 3, 0, 60, 5); p4, _ = FRC.composed_service(s, 'HC_PRE', 3, 4, 60, 5)
+    q0, _ = FRC.composed_service(s, 'HC_POST', 3, 0, 60, 5); q4, _ = FRC.composed_service(s, 'HC_POST', 3, 4, 60, 5)
+    assert p4 - p0 == 8 and q4 - q0 == 8                    # lane bench: csN 348 -> 356, POST fin 350 -> 358
+    v, why = FRC.composed_service(s, 'HC_PRE', 5, 0, 60, 52); assert v is None and 'rgap to >= 12' in why
+    v, why = FRC.composed_service(s, 'HC_PRE', 5, 12, 60, 52); assert why is None   # 169 + 52 = 221 <= 174 + 48
+
+
+def test_segments_pre_x_slot_rule():
+    s = SEG; rt_ok = s['lane']['pre_r_return_max'] - s['root']['pre_sum_to_r'] - 5 * (2 + 9)   # = 5
+    assert rt_ok == 5
+    ok, why = FRC.composed_service(s, 'HC_PRE', 5, 0, 60, rt_ok); assert why is None and ok > 0
+    bad, why = FRC.composed_service(s, 'HC_PRE', 5, 0, 60, rt_ok + 1); assert bad is None and 'x-slot' in why
+    ok4, why = FRC.composed_service(s, 'HC_PRE', 4, 0, 60, 60); assert why is None     # n <= KX: no slot reuse
