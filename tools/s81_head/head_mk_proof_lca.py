@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""DIE-HEAD-5: DIE-HEAD-2 mk_proof.py + per-tap tree_path (root h + one child-index char per tree level) and
+"""DIE-HEAD-5: DIE-HEAD-2 mk_proof.py + per-tap START-TREE-1 tree_path (root h + U+0100 child-index char per tree level) and
 per-tree-cell cppr_node_range_ps keyed by that path, so die_sta_related --cppr-lca credits CPPR to the TRUE last common
 tree node (12.4b) instead of the die root for cross-region pairs.  Without --cppr-lca the output is used as before.
 DIE-HEAD-2 (4): die_sta_related proof-dir export from a die_trial routed die-clock run (combo GRT, FB1 one entry
@@ -55,7 +55,7 @@ stack = [root]
 while stack:
     c = stack.pop()
     for i, k in enumerate(sorted(kids.get(c, []))):
-        pathof[k] = pathof[c] + chr(0x30 + i)
+        pathof[k] = pathof[c] + chr(0x100 + i)
         stack.append(k)
 for C in ("TT", "FF"):
     T, N = {}, {}
