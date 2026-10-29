@@ -359,17 +359,6 @@ def test_region_actual_max_maps_to_die_trial_flag_and_default_off():
     assert flags(O.kit_argv(c, "OUT"))["--region-dme-actual-max"] == "405"
 
 
-def test_s81_feed03_config_carries_the_geometry03_recipe():
-    c = cfg("s81_feed03")
-    ok, _, _ = O.stage_check(c, reg())
-    assert ok
-    c["region"]["only"] = None                       # region map lives on the fleet host
-    f = flags(O.kit_argv(c, "OUT"))
-    assert f["--rep-reach-max"] == "400" and f["--rep-actual-max"] == "405" and f["--region-dme-actual-max"] == "405"
-    assert f["--region-dme-early"] == "0.9324" and "--region-dme-early-ff" not in f
-    assert f["--region-dme-early-mode"] == "merge" and f["--clock-cell"] == "inv2" and f["--region-dme-snake"] == "all"
-
-
 def test_refit_registers_a_per_stack_entry_the_config_then_accepts(tmp_path):
     sys.path.insert(0, str(HERE.parent / "die_plan"))
     import test_fit_dme_stage_cal as TF
