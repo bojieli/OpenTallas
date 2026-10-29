@@ -72,7 +72,8 @@ module ot_qwen_rom_tile_nk #(
     input  wire              n_va,
     output wire [16*32-1:0]  n_y,
     output wire              n_vy,
-    output wire              fault
+    output wire              fault,
+    output wire              idle      // QC-PG-5 ICG: u_tile.idle (engine drained, registered)
 );
     wire tile_fault;
     ot_qwen_rom_tile_w12 #(
@@ -85,7 +86,7 @@ module ot_qwen_rom_tile_nk #(
         .ck_rpair(ck_rpair), .ck_pair1(ck_pair1), .ck_rqr(ck_rqr), .ck_rqre(ck_rqre), .ck_tx(ck_tx), .ck_reg(ck_reg), .ck_rom(ck_rom), .ck_lsl(ck_lsl), .ck_node(ck_node),
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl), .t_out(t_out), .t_vout(t_vout),
         .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(tile_fault),
-        .kvw_ce(1'b0), .kvw_addr(7'd0), .kvw_data(512'd0), .kvw_mask(512'd0));
+        .kvw_ce(1'b0), .kvw_addr(7'd0), .kvw_data(512'd0), .kvw_mask(512'd0), .idle(idle));
     (* keep *) reg fault_q;    // flop-launched output pin
     always @(posedge clk or negedge rst_n)
         if (!rst_n) fault_q <= 1'b0; else fault_q <= tile_fault;

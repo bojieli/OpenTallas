@@ -273,7 +273,16 @@ SCHEMA = {
                 "pg": {"type": "object", "additionalProperties": False, "properties": {
                     "partition_pg_max": _layer,
                     "bumps": {"type": "object", "additionalProperties": False,
-                              "properties": {"pitch_um": _pos, "pad_um": _nonneg, "edge_margin_um": _nonneg}},
+                              "properties": {"pitch_um": _pos, "pad_um": _nonneg, "edge_margin_um": _nonneg,
+                                             # QC-PG-5 (OWNER 10-28): opt-in fine-pitch power-bump fields (die_trial._field_bumps)
+                                             "fields": {"type": "array", "items": {
+                                                 "type": "object", "additionalProperties": False,
+                                                 "required": ["name", "pitch_um", "pad_um", "keep_um", "rects_um"],
+                                                 "properties": {"name": _name, "pitch_um": _pos, "pad_um": _nonneg,
+                                                                "keep_um": _nonneg, "note": {"type": "string"},
+                                                                "rects_um": {"type": "array", "minItems": 1, "items": {
+                                                                    "type": "array", "items": {"type": "number"},
+                                                                    "minItems": 4, "maxItems": 4}}}}}}},
                     "grid": {"type": "array", "items": {
                         "type": "object", "required": ["layer", "width_um", "pitch_um", "offset_um"],
                         "additionalProperties": False,
@@ -366,6 +375,15 @@ SCHEMA = {
                     # DIE-HEAD-5 PGCUT 10-28 (DRT-TRIAL-1, opt-in): cut the kit M6 PG straps over the interior M5
                     # signal pins (in-core island pins) of every hard core whose LEF is known (gen_phys.pg_island_cuts)
                     "pg_island_cut": {"type": "boolean"},
+                    # DIE-HEAD-17 10-28 (opt-in): register clock spine + local trees + core early-tap branches in PRE_CTS
+                    # (gen_phys copies reg_spine.json/.py/.tcl into the kit; spec documented in reg_spine.py)
+                    "reg_spine": {"type": "object", "required": ["trunk"], "properties": {
+                        "trunk": {"type": "array", "minItems": 1, "items": {"type": "array", "minItems": 4,
+                                                                             "maxItems": 4}},
+                        "express": {"type": "array", "items": {"type": "string"}},
+                        "pads": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+                        "core_taps": {"type": "array", "items": {"type": "object",
+                                                                 "required": ["inst", "pin", "xy", "stages"]}}}},
                     # HEAD-BIND-4 10-27 (OWNER 10-25 option B): per-INSTANCE ID strap input ports of the partition
                     # (strap_* names, exact widths in parent_id_straps.PHYSICAL_ID_WIDTHS).  No pin register, kit SDC
                     # set_false_path -from, each instance ties its own value (partitions[].id_straps) at the die top;
@@ -859,6 +877,14 @@ SCHEMA = {
 # status hops are checked by landing_contract.py; default plans are unchanged.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
 SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
+# FLOW-GEN-2 CTS-0114 (DIE-HEAD-14/15, opt-in): a forwarded clock output leaves through ONE dedicated buffer at its
+# source tap (landing_contract.export_tcl "fwd_buffer"), not tied onto the clk root net; default "tie" = legacy text.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_export_form"] = {
+    "enum": ["tie", "fwd_buffer"]}
+# FLOW-GEN-2 (DIE-HEAD-14 OT_CLOCK_FAMILY, opt-in): tap_balance.tcl follows a hard-core input with only combinational
+# Liberty arcs (island ft clock pass-through, e.g. ft_ck0_i) to its outputs instead of measuring it as a clock sink.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_passthrough"] = {
+    "type": "boolean"}
 # clock-landing cohort types (clock_landing_plan.compose) name the base plan type they were split from.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_base_type"] = {"type": "string"}
 # CLOCK-KV-R22: declared die-top data landing islands (landing_islands.py; hold cells for hard->hard seams)

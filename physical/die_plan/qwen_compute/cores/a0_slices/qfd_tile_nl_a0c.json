@@ -1,0 +1,51 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "kind": "core",
+ "die": "qwen_compute",
+ "type": "qfd_tile_nl_a0c",
+ "module": "qfd_tile_nl_a0c",
+ "master_plan_sha256": "54a1aeb5065d061a14e15a838e491b5f24975530a655e1c3eafb99f22ace4e9f",
+ "frozen": false,
+ "note": "QC-A0-KITS-6 10-28: A0 parent slice = ONE centre clock entry ck M5 (228.972, 578.88) (DIE-QC-11 contract 08:36 COORD-accepted; QC-A0-KITS-3 parent trial + DIE-QC-14..17 trunks root here; M5 track x = 0.012 + 4770 x 0.048). The legacy E-face ck (457.824, 668.076) of the plan pin table is not an entry. Die plan sha = main qwen_compute die_plan.json (no master_plan freeze -> not frozen).",
+ "outline_um": [
+  457.92,
+  1157.76
+ ],
+ "instances": [],
+ "islands": [
+  {
+   "name": "clock_entry",
+   "rect_um": [
+    224.652,
+    574.56,
+    233.292,
+    583.2
+   ],
+   "centre_um": [
+    228.972,
+    578.88
+   ],
+   "clock_pin": {
+    "layer": "M5",
+    "xy_um": [
+     228.972,
+     578.88
+    ]
+   }
+  }
+ ],
+ "keepouts": [],
+ "bays": [],
+ "entry_pins": [],
+ "latency": {
+  "common_clock_latency_ps": {
+   "tt": 250.0,
+   "ff": 202.5
+  }
+ },
+ "gates": {},
+ "core_clock_port": "ck",
+ "pushdown": {
+  "islands": []
+ }
+}

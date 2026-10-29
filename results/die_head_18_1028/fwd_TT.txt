@@ -1,0 +1,11 @@
+worst slack max -42.59
+PORT clk xy 353.744 353.824
+PORT fclk_in_i xy 2.128 503.968
+PORT fclk_out_o xy 706.296 504.136
+CHAIN 0 output655/Y BUFx2_ASAP7_75t_R xy 703.512 504.09 out_max 196.737823 out_min 192.626968 net fclk_out_o npins 1
+CHAIN 1 wire17442/Y BUFx12f_ASAP7_75t_R xy 588.168 377.73 out_max 124.098846 out_min 120.420090 net net17440 npins 2
+CHAIN 2 wire17443/Y BUFx12f_ASAP7_75t_R xy 477.468 377.19 out_max 85.947685 out_min 83.355301 net net17441 npins 2
+CHAIN 3 wire17444/Y BUFx6f_ASAP7_75t_R xy 419.364 377.73 out_max 57.883621 out_min 56.118408 net net17442 npins 2
+CHAIN 4 h15_rs/Y BUFx24_ASAP7_75t_R xy 354.024 367.74 out_max 28.341930 out_min 27.166882 net h15_regs npins 2
+CHAIN end net clk (no driver pin)
+NETPIN output655/Y output amax 196.737823
