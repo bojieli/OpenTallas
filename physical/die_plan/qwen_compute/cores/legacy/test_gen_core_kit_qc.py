@@ -303,5 +303,38 @@ class MacroPinFlops(unittest.TestCase):
             self.assertIn("macro_pin_flops needs recipe macro_sites", r.stderr)
 
 
+class FcapDontTouchLift(unittest.TestCase):
+    """DIE-QC-35 10-29: the pre-CTS dont_touch lift on the POST_SYNTH ot_fcap_* / ot_fconst_* flops is emitted in
+    every kit: sourced by hold_budget.tcl under insertion_balance, the PRE_CTS hook itself without it (A0 NL/NK
+    insertion_balance off hit ODB-0370 in cts.tcl)."""
+    def _kit(self, t, **over):
+        rec = json.loads((HERE / "recipes.json").read_text())
+        rp = Path(t) / "recipes.json"
+        rec[MODULE] = dict(rec[MODULE], **over)
+        rp.write_text(json.dumps(rec))
+        r = subprocess.run([sys.executable, str(HERE / "gen_core_kit_qc.py"), "--module", MODULE, "--out", t,
+                            "--recipes", str(rp)], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr[-2000:])
+        kd = Path(json.loads(r.stdout.strip().splitlines()[-1])["kit"])
+        kv = dict(re.findall(r"^(?:override )?export (\S+) = (.*)$", (kd / "config.mk").read_text(), re.M))
+        return kd, kv
+
+    def test_lift_with_and_without_insertion_balance(self):
+        for ib in (True, False):
+            with tempfile.TemporaryDirectory() as t:
+                kd, kv = self._kit(t, insertion_balance=ib)
+                self.assertEqual((kd / G.FC_DT_LIFT).read_text(), G.FC_DT_LIFT_TCL)
+                self.assertIn("setDoNotTouch 0", G.FC_DT_LIFT_TCL)
+                self.assertIn("^ot_fc(ap|onst)_", G.FC_DT_LIFT_TCL)
+                pre = kv["PRE_CTS_TCL"]
+                if ib:
+                    self.assertEqual(pre, "/work/hold_budget.tcl")
+                    self.assertIn(f"source /work/{G.FC_DT_LIFT}", (kd / "hold_budget.tcl").read_text())
+                else:
+                    self.assertEqual(pre, f"/work/{G.FC_DT_LIFT}")
+                    self.assertFalse((kd / "hold_budget.tcl").exists())
+                    self.assertNotIn("OT_TAP_TARGET_PS", kv)
+
+
 if __name__ == "__main__":
     unittest.main()
