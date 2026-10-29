@@ -75,7 +75,7 @@ module ot_hbm_idx_topk_link_static_core #(parameter integer MUT=0, WRITE_PIPE_ST
   end
   always @(posedge clk)begin wa0<=wa;wa1<=wa0;wd0<=wd;wd1<=wd0;end
   // Existing MUT parameter includes causal pipeline-only negative controls.
-  assign mem_we=(MUT==4)?we0:we1;
+  assign mem_we=(rst_n&&!clear)?((MUT==4)?we0:we1):8'd0;
   assign mem_wa=(MUT==5)?(wa1^48'd1):wa1;
   assign mem_wd=(MUT==6)?(wd1^(4096'd1<<16)):wd1;
  end else begin:g_write_bad_depth

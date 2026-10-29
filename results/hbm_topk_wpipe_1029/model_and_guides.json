@@ -3,7 +3,7 @@
   "default_WRITE_PIPE_STAGES": 0,
   "opt_in_WRITE_PIPE_STAGES": 2,
   "added_internal_SRAM_write_visibility_edges": 2,
-  "external_token_cycles": "0 observed in compiler ordered calendar replay:2048records/1239activecyclechecks; +2internal SRAM write edges, no calendar modification. No arbitrary out-of-order emit claim.",
+  "external_token_cycles": "0 observed on compiler ordered calendar plus pending-clear preamble:2048records/1243activechecks; +2internal SRAM write edges for noncanceledwrites, immediateclear cancellation. No calendar change or arbitrary out-of-order emit claim.",
   "memory": {
     "banks": 8,
     "rows": 64,
