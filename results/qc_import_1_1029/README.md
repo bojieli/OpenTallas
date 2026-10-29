@@ -28,3 +28,18 @@ clock graft (graft_clock_targets6) -> `mechanics/clock_grafted.odb` = the fresh 
 export_constraints (fresh) -> boundary bindings (ot_provider_boundary_bindings/1: 3,266 stage clocks, 313 pst outputs,
 root reset = rstw_sl_E0_fw_rst_o_0) -> preflight -> GEOM visual review -> apply_cells -> native PG re-census ->
 fixed_tree prebuild with b1 stubs -> strict bind (epyc2, QC-001) -> ot_clk mesh + die GRT0 incl clock -> clock check.
+
+## Step 2 result (CHECKED, own run, unit oth-ubuntu-542175-1793283736 exit 0, 4 min)
+Fresh native source `mechanics/clock_grafted.odb` sha256 cd4060c5…: 119 types / 377 parts, 31,302 island windows,
+6,184 landing edges (313 provisional START), native reset wavefront (82 types carry rst_o_*), 7,889 actual partition
+clock ITerms grafted (CONNECTED_UNROUTED), frozen trial26 clock unchanged (`fresh_source.json`).
+
+## Step 3 — fresh-source preflight (CHECKED, unit oth-ubuntu-677587-1793284078)
+`run_preflight.sh`: Codex export_constraints + preflight unchanged, bindings deliberately empty.
+`preflight_nobind.json`: all 48,259 provider bodies vs the fresh source: actual OBS/keepout/PG hits 0 (old h800 source
+15,981 / 26,497), frozen clock cells changed 0, new body overlap 0, mapped-vs-inventory mismatch 0, undriven/multi-driven
+0. HOLD only on the boundary bindings: 3,580 unbound ports (3,266 stage clocks + 313 START outputs + rst_raw_n) and the
+bindings source hash. Note: preflight flags any port NAMED rst_raw_n as a global raw-reset star; with the local root
+reset (reset_source sl_E0_fw.rst_o_0) the binding must map rst_raw_n -> rstw_sl_E0_fw_rst_o_0 and the check must key
+on the bound net, not the port name (fix in the bindings step).
+`constraints.json` partition_macros = the 377 BLOCK instances (added post-export; export_constraints does not write it).
