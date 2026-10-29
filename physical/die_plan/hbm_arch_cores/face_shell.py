@@ -55,6 +55,13 @@ module {CELL} #(parameter integer W = 1) (
 endmodule
 """
 SHELL_SCHEMA = "opentallas.hbm_arch.core_face_shell.v1"
+STRAP_RE = r"^strap_"   # OWNER 10-25 option B: declared ID straps, tied at the parent
+
+
+
+def strap_inputs(widths, dirs, strap_re=STRAP_RE):
+    """declared ID straps of a core: its strap_* INPUT ports (OWNER 10-25 option B; no face register)."""
+    return sorted(n for n in widths if dirs.get(n) == "input" and strap_re and re.match(strap_re, n))
 
 
 def sv_id(n):
@@ -255,7 +262,8 @@ def rename_module(files, module, new):
     return hits[0][0]
 
 
-def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, drop=True, mutant=None, scalars=None):
+def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, drop=True, mutant=None, scalars=None,
+          strap_re=STRAP_RE):
     """turn kit `kd` (generated, top = `module` with exactly the plan pins) into a shelled kit.
     local: kit RTL paths (host), srcs: /work paths (config.mk), params: top params of `module` (moved onto the core
     instance).  Returns the report (also written to kd/face_shell.json); caller removes report['dropped'] pins from the
@@ -267,7 +275,10 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
                   log=kd / "face_shell_work" / "yosys.log")
     widths, dirs = rep.pop("port_width"), rep.pop("port_dirs")
     base = lambda n: re.sub(r"\[\d+\]$", "", n)
-    passthru = {n for n in widths if re.match(clk_re, n) or (dirs[n] == "input" and re.match(rst_re, n))}
+    # HBM-CORES-KITS-10 (OWNER 10-25 option B, COORD 10-29 05:35): declared ID straps (strap_* inputs) are parent
+    # constants -- no face register, they pass straight to the core like clock/reset (kit SDC false_path -from).
+    straps = strap_inputs(widths, dirs, strap_re)
+    passthru = {n for n in widths if re.match(clk_re, n) or (dirs[n] == "input" and re.match(rst_re, n))} | set(straps)
     clks = sorted(n for n in passthru if re.match(clk_re, n) and dirs[n] == "input")
     if not clks:
         raise RuntimeError(f"face_shell: {module}: no input clock port")
@@ -287,9 +298,9 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
     sig_in = [n for n in widths if dirs[n] == "input" and n not in passthru]
     sig_out = [n for n in widths if dirs[n] == "output" and n not in passthru]
     out = dict(schema=SHELL_SCHEMA, module=module, core=core, core_def_file=Path(deffile).name, clock=clk,
-               passthrough=sorted(passthru), scalars=scalars, params=params, mutant=mutant or None,
+               passthrough=sorted(passthru), straps=straps, scalars=scalars, params=params, mutant=mutant or None,
                latency=dict(in_cycles=1, out_cycles=1, in_to_out_extra_cycles=2, reset_delay_cycles=0,
-                            note="every signal input +1, every signal output +1; clock/reset pins pass through"),
+                            note="every signal input +1, every signal output +1; clock/reset/strap_* pins pass through"),
                in_buses=len(sig_in), out_buses=len(sig_out),
                in_bits=sum(keep[n] for n in sig_in), out_bits=sum(widths[n] for n in sig_out),
                face_flops=sum(keep[n] for n in sig_in) + sum(widths[n] for n in sig_out),

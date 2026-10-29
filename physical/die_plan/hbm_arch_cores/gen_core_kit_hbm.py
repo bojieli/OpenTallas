@@ -368,7 +368,7 @@ def relay_reg_guide_spec(relays, pins, mguides, core_box, step_um=5.0):
     return out
 
 
-def sdc(per, ins, tol, clks, rsts, tag, common=None):
+def sdc(per, ins, tol, clks, rsts, tag, common=None, straps=()):
     io = IO_BUDGET * per
     hdr = (f"# the partition logic around the core runs on the plan common latency ({ins:g} ps): virtual IO clock\n"
            if common is None or abs(ins - common) < 1e-9 else
@@ -396,6 +396,11 @@ def sdc(per, ins, tol, clks, rsts, tag, common=None):
         # HBM-CORES-REBAL-8 / FLOW-GEN-2 (d): the shared core-kit reset IO rule (gen_phys.core_reset_sdc): synchronous
         # input from the die reset tree under the data IO budget ($non_clk_in), no reset-specific input delay.
         s += _reset_sdc(sorted(set(re.sub(r"\[\d+\]$", "", c) for c in rsts)), per)
+    if straps:
+        # HBM-CORES-KITS-10 (OWNER 10-25 option B rule 2): declared ID straps are quasi-static parent constants; the one
+        # allowed exception (sdc_lint straps), no pin register (face_shell passes strap_* through).
+        s += ("# ID straps (OWNER 10-25 option B): tied at the parent, quasi-static\n"
+              f"set_false_path -from [get_ports {{{' '.join(sorted(straps))}}}]\n")
     return s + (f"set_load {IO_LOAD_FF:g} [all_outputs]\n"
                 "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
@@ -1170,7 +1175,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         ff_meas, ff_ins = None, ins
     if not 0 < ff_ins <= ins:
         raise SystemExit("IO clock binding requires 0 < FF <= TT")
-    (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common))
+    # HBM-CORES-KITS-10: declared ID straps = the face shell's strap_* passthrough inputs (face_shell.json straps)
+    kit_straps = list((shell or {}).get("straps") or [])
+    (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common, straps=kit_straps))
     sys.path.insert(0, str(TOOL))
     import sdc_lint
     ports_in = sorted({base(n) for n in names} - {base(c) for c in clks})
@@ -1199,6 +1206,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # was timed against the single TT vclk = ff_ref_missing because it was dropped here); only the basis text stays
     # out (freeze.json flow.f1).  sdc_lint.lint_kit_files fails closed if it disagrees with config.mk OT_VCLK_FF.
     lint_ctx = {k: v for k, v in lctx.items() if k != "insertion_basis"}
+    if kit_straps:
+        lint_ctx["straps"] = kit_straps
+        (kd / "straps.json").write_text(json.dumps({"straps": kit_straps}, indent=1) + "\n")
     (kd / "sdc_lint.json").write_text(json.dumps(lint_ctx, indent=1) + "\n")
     # Hints are untrusted correspondences: lec.py proves every relation by induction.
     if rec.get("lec_hints"):
@@ -1206,7 +1216,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     rst_in = [r for r in rsts if dirs.get(base(r)) != "output"]   # RECIPES2: a reset-named OUTPUT (remainder relay
     if rst_in != rsts:                                               # output) is a data output, never an input delay
         rsts = rst_in
-        (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common))
+        (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common, straps=kit_straps))
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lint_ctx)
     if lerr:
         raise SystemExit(f"{a.view}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
