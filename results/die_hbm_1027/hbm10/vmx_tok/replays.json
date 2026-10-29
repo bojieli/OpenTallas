@@ -1,0 +1,242 @@
+[
+ {
+  "binary": "base",
+  "replay": "base_ds_l0",
+  "passed": false,
+  "fails": 1336,
+  "checks": 1336,
+  "rec_commit_ok": 0,
+  "stream_edges": 12900,
+  "serial_edges": 9674,
+  "fr_SW_fault": "first=5180",
+  "replay_hdr_sha256": "ea64dfe4a1aaac4b4c6cb5d33a731ccfee125575d928eda7498462d5266db3b9",
+  "run_log_sha256": "380151296d7c3327d2d177a99b4024c7e8fdd3d69a29b61c6be49e54aef21be8",
+  "errors": [
+   "declared fault output changed from zero: fr_SW__fault (1 changes)",
+   "missing unique SLICE_PASS or explicit failure",
+   "fails: 1336",
+   "rec_fail: 1336",
+   "per-record commit checks differ from the complete replay schedule"
+  ]
+ },
+ {
+  "binary": "base",
+  "replay": "base_ds_l2",
+  "passed": false,
+  "fails": 1356,
+  "checks": 1356,
+  "rec_commit_ok": 0,
+  "stream_edges": 21030,
+  "serial_edges": 15772,
+  "fr_SW_fault": "first=3913",
+  "replay_hdr_sha256": "520593c7a063b3b772af9500f57dda8d0316ea1b62faaebe86bd6cca2931772a",
+  "run_log_sha256": "f8a2da2cc2bf075c5d1928ccad92803243a6b3ad691ce8112252086c0f566952",
+  "errors": [
+   "declared fault output changed from zero: fr_SW__fault (1 changes)",
+   "missing unique SLICE_PASS or explicit failure",
+   "fails: 1356",
+   "rec_fail: 1356",
+   "per-record commit checks differ from the complete replay schedule"
+  ]
+ },
+ {
+  "binary": "base",
+  "replay": "h0_ds_l2",
+  "passed": false,
+  "fails": 1356,
+  "checks": 1356,
+  "rec_commit_ok": 0,
+  "stream_edges": 21030,
+  "serial_edges": 15772,
+  "fr_SW_fault": "first=3893",
+  "replay_hdr_sha256": "8c0de8666cfdde2f3366ab3e866b097f004a484681c75f9a8c9b680c61a8da2a",
+  "run_log_sha256": "b280b9e30a894e1ae01e0a6d8006a3840c3b6cd1357b2869fcd8e08e76b34b96",
+  "errors": [
+   "declared fault output changed from zero: fr_SW__fault (1 changes)",
+   "missing unique SLICE_PASS or explicit failure",
+   "fails: 1356",
+   "rec_fail: 1356",
+   "per-record commit checks differ from the complete replay schedule"
+  ]
+ },
+ {
+  "binary": "h0",
+  "replay": "base_ds_l2",
+  "passed": false,
+  "fails": 1356,
+  "checks": 1356,
+  "rec_commit_ok": 0,
+  "stream_edges": 21030,
+  "serial_edges": 15772,
+  "fr_SW_fault": "first=3913",
+  "replay_hdr_sha256": "520593c7a063b3b772af9500f57dda8d0316ea1b62faaebe86bd6cca2931772a",
+  "run_log_sha256": "40cd56f5c480462098dbc4f84ac175f696fbfb50c4e7e7a964084b6afb6e83e0",
+  "errors": [
+   "declared fault output changed from zero: fr_SW__fault (1 changes)",
+   "missing unique SLICE_PASS or explicit failure",
+   "fails: 1356",
+   "rec_fail: 1356",
+   "per-record commit checks differ from the complete replay schedule"
+  ]
+ },
+ {
+  "binary": "h0",
+  "replay": "h0_ds_l0",
+  "passed": false,
+  "fails": 1336,
+  "checks": 1336,
+  "rec_commit_ok": 0,
+  "stream_edges": 12913,
+  "serial_edges": 9684,
+  "fr_SW_fault": "first=5173",
+  "replay_hdr_sha256": "8d17f88a556892ec4be83ddebabfe3a1f2fd8dc2a39644642b0bf5cf96bd1026",
+  "run_log_sha256": "3f0f8f612ebf363647ac46a964230e4cf6e79fa4f6ac8b915c8ebd14740ab300",
+  "errors": [
+   "declared fault output changed from zero: fr_SW__fault (1 changes)",
+   "missing unique SLICE_PASS or explicit failure",
+   "fails: 1336",
+   "rec_fail: 1336",
+   "per-record commit checks differ from the complete replay schedule"
+  ]
+ },
+ {
+  "binary": "h0",
+  "replay": "h0_ds_l14",
+  "passed": false,
+  "fails": 1996,
+  "checks": 1996,
+  "rec_commit_ok": 0,
+  "stream_edges": 27369,
+  "serial_edges": 20526,
+  "fr_SW_fault": "first=5574",
+  "replay_hdr_sha256": "185e88ca8b9b40d8a0db7309477b01d6f5f111ca995615ae673d3384660526ff",
+  "run_log_sha256": "cbfe58e50af9fffe28fa5f4fe8701e49a2269d3cf4a751fd874d1996fa81c1ff",
+  "errors": [
+   "declared fault output changed from zero: fr_SW__fault (1 changes)",
+   "missing unique SLICE_PASS or explicit failure",
+   "fails: 1996",
+   "rec_fail: 1996",
+   "per-record commit checks differ from the complete replay schedule"
+  ]
+ },
+ {
+  "binary": "h0",
+  "replay": "h0_ds_l2",
+  "passed": false,
+  "fails": 1356,
+  "checks": 1356,
+  "rec_commit_ok": 0,
+  "stream_edges": 21030,
+  "serial_edges": 15772,
+  "fr_SW_fault": "first=3893",
+  "replay_hdr_sha256": "8c0de8666cfdde2f3366ab3e866b097f004a484681c75f9a8c9b680c61a8da2a",
+  "run_log_sha256": "0e829a642a457bad860b1fd929ab8b01186a1a32b80b7b3d80339f75b245be52",
+  "errors": [
+   "declared fault output changed from zero: fr_SW__fault (1 changes)",
+   "missing unique SLICE_PASS or explicit failure",
+   "fails: 1356",
+   "rec_fail: 1356",
+   "per-record commit checks differ from the complete replay schedule"
+  ]
+ },
+ {
+  "binary": "h0",
+  "replay": "h1_ds_l2",
+  "passed": false,
+  "fails": 1356,
+  "checks": 1356,
+  "rec_commit_ok": 0,
+  "stream_edges": 21043,
+  "serial_edges": 15782,
+  "fr_SW_fault": "first=3906",
+  "replay_hdr_sha256": "c078d69766273ce7f9d7b46ff3d12317915aca6937feb1e80fa588b50b999b58",
+  "run_log_sha256": "dcdfdaeb33b0d027069722f454020d089aaf492a250ac3dc71b92303833ebfba",
+  "errors": [
+   "declared fault output changed from zero: fr_SW__fault (1 changes)",
+   "missing unique SLICE_PASS or explicit failure",
+   "fails: 1356",
+   "rec_fail: 1356",
+   "per-record commit checks differ from the complete replay schedule"
+  ]
+ },
+ {
+  "binary": "h1",
+  "replay": "base_ds_l2",
+  "passed": false,
+  "fails": 1356,
+  "checks": 1356,
+  "rec_commit_ok": 0,
+  "stream_edges": 21030,
+  "serial_edges": 15772,
+  "fr_SW_fault": "first=3913",
+  "replay_hdr_sha256": "520593c7a063b3b772af9500f57dda8d0316ea1b62faaebe86bd6cca2931772a",
+  "run_log_sha256": "33d0afe3c5f18f1ebd900addd98c41d0a44a30da3c72893b479032e482b05c19",
+  "errors": [
+   "declared fault output changed from zero: fr_SW__fault (1 changes)",
+   "missing unique SLICE_PASS or explicit failure",
+   "fails: 1356",
+   "rec_fail: 1356",
+   "per-record commit checks differ from the complete replay schedule"
+  ]
+ },
+ {
+  "binary": "h1",
+  "replay": "h0_ds_l2",
+  "passed": false,
+  "fails": 1356,
+  "checks": 1356,
+  "rec_commit_ok": 0,
+  "stream_edges": 21030,
+  "serial_edges": 15772,
+  "fr_SW_fault": "first=3893",
+  "replay_hdr_sha256": "8c0de8666cfdde2f3366ab3e866b097f004a484681c75f9a8c9b680c61a8da2a",
+  "run_log_sha256": "5494271ba03fed1c1f25be30b30f17efb84d0870c6ed9fb19305c0af3e27fd8e",
+  "errors": [
+   "declared fault output changed from zero: fr_SW__fault (1 changes)",
+   "missing unique SLICE_PASS or explicit failure",
+   "fails: 1356",
+   "rec_fail: 1356",
+   "per-record commit checks differ from the complete replay schedule"
+  ]
+ },
+ {
+  "binary": "h1",
+  "replay": "h1_ds_l0",
+  "passed": false,
+  "fails": 1336,
+  "checks": 1336,
+  "rec_commit_ok": 0,
+  "stream_edges": 12913,
+  "serial_edges": 9684,
+  "fr_SW_fault": "first=5173",
+  "replay_hdr_sha256": "8d17f88a556892ec4be83ddebabfe3a1f2fd8dc2a39644642b0bf5cf96bd1026",
+  "run_log_sha256": "e78cfb785601599502ad788375f3a0cbdaf75a7694e70231f8fd32471125909b",
+  "errors": [
+   "declared fault output changed from zero: fr_SW__fault (1 changes)",
+   "missing unique SLICE_PASS or explicit failure",
+   "fails: 1336",
+   "rec_fail: 1336",
+   "per-record commit checks differ from the complete replay schedule"
+  ]
+ },
+ {
+  "binary": "h1",
+  "replay": "h1_ds_l2",
+  "passed": false,
+  "fails": 1356,
+  "checks": 1356,
+  "rec_commit_ok": 0,
+  "stream_edges": 21043,
+  "serial_edges": 15782,
+  "fr_SW_fault": "first=3906",
+  "replay_hdr_sha256": "c078d69766273ce7f9d7b46ff3d12317915aca6937feb1e80fa588b50b999b58",
+  "run_log_sha256": "4f43a5b04a0bd2664887e5487681f0b87939bc4b3289e4f90917bb2713f159fe",
+  "errors": [
+   "declared fault output changed from zero: fr_SW__fault (1 changes)",
+   "missing unique SLICE_PASS or explicit failure",
+   "fails: 1356",
+   "rec_fail: 1356",
+   "per-record commit checks differ from the complete replay schedule"
+  ]
+ }
+]
