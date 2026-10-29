@@ -12,7 +12,10 @@ Plan-only slice (no measurement input), METHODOLOGY 12.8a/12.8c (kv_core_slice.p
          (TT = A + B x L_max, A 86.86 / B 0.8057 / FF_RATIO 0.8118, rms 4.8 ps; slice24 kv_core_slice.json),
          N = round((250 - pred) / 23.9 ps BUFx4 stage), placed FIRM in the entry island;
   leaf   one CTS-open leaf below the trunk with every clock sink of the kit's own synthesis netlist (census).
-usage: phy_pad_slice.py KIT_DIR PLAN_JSON OUT_DIR
+usage: phy_pad_slice.py KIT_DIR PLAN_JSON OUT_DIR [--trunk N]
+  --trunk N (KV-KITS-15, opt-in): fixed trunk stage count from a MEASURED re-prediction instead of the slice24 model
+            (DIE-KV-13 results/die_kv_13_1028/core_seam_hold/phy_pad_trunk_repredict.json: the A+B*L model
+            over-predicts this core's tree ~60 ps TT; 7 stages is the only count inside the 12.3 band). Default: model.
 """
 import hashlib
 import json
@@ -28,7 +31,7 @@ ISL = 8.64
 LAT = 4.32
 
 
-def main(kit, plan, out):
+def main(kit, plan, out, trunk=None):
     kit, out = Path(kit), Path(out)
     fz = json.loads((kit / "freeze.json").read_text())
     w, h = fz["outline_um"]
@@ -52,13 +55,15 @@ def main(kit, plan, out):
     # 12.8c trunk from the plan insertion model
     lmax = max(abs(cx - x) + abs(cy - y) for x in (0, w) for y in (0, h))
     pred = A + B * lmax
-    n = max(0, round((TARGET["TT"] - pred) / STAGE["TT"]))
+    n = max(0, round((TARGET["TT"] - pred) / STAGE["TT"])) if trunk is None else int(trunk)
     tt = pred + n * STAGE["TT"]
     ff = FF_RATIO * pred + n * STAGE["FF"]
     # Trunk sites (pv_pair core_tree convention: node xy on the 2.16 sub-lattice of the entry island).  Node x kept at
     # 1.08 / 3.24 mod 4.32, clear of the M5 PG strap pair (pdn.tcl: width 0.12, spacing 0.072, pitch 4.32, offset 2.064
     # -> both nets inside the conservative band 1.9..2.6 mod 4.32 declared below), so every edge has a legal L.
     pos = [(gx - 1.08, gy - 2.16), (gx + 1.08, gy - 2.16), (gx + 1.08, gy + 2.16), (gx - 1.08, gy + 2.16)]
+    # KV-KITS-15 --trunk > 4: the outer x = +-3.24 columns of the same rows (same 1.08/3.24 mod 4.32 PG clearance)
+    pos += [(gx - 3.24, gy + 2.16), (gx - 3.24, gy - 2.16), (gx + 3.24, gy - 2.16), (gx + 3.24, gy + 2.16)]
     assert n <= len(pos), n
     nodes, par = [], "port:ck[0]"
     for i in range(n):
@@ -97,7 +102,8 @@ def main(kit, plan, out):
             "insertion_model": {"basis": "KV-CORE-SLICE-1 slice24 model TT = A + B x L_max (rms 4.8, loo_max 10.9)",
                                 "A": A, "B": B, "FF_RATIO": FF_RATIO, "L_max_um": lmax, "pred_tree_TT_ps": round(pred, 2),
                                 "trunk_stages": n, "stage_ps": STAGE, "pred_TT_ps": round(tt, 2),
-                                "pred_FF_ps": round(ff, 2), "label": "UNCHECKED until the routed kit reports it"},
+                                "pred_FF_ps": round(ff, 2), "label": "UNCHECKED until the routed kit reports it",
+                                **({"trunk_override": {"stages": n, "basis": "DIE-KV-13 phy_pad_trunk_repredict.json (KV-KITS-13 probe, measured 4-stage insertion TT 180.1-198.3 / FF 136.5-149.8 + n x stage)", "pred_TT_ps": [round(180.1 + (n - 4) * STAGE["TT"], 1), round(198.3 + (n - 4) * STAGE["TT"], 1)], "pred_FF_ps": [round(136.5 + (n - 4) * STAGE["FF"], 1), round(149.8 + (n - 4) * STAGE["FF"], 1)]}} if trunk is not None else {})},
         },
     }
     out.mkdir(parents=True, exist_ok=True)
@@ -107,4 +113,8 @@ def main(kit, plan, out):
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:4])
+    av = sys.argv[1:]
+    tr = None
+    if "--trunk" in av:
+        i = av.index("--trunk"); tr = int(av[i + 1]); del av[i:i + 2]
+    main(*av[:3], trunk=tr)
