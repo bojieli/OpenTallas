@@ -1333,3 +1333,14 @@ All HBM plan/streets/locality/clock/crossing/core/native boot+token/PG aliases c
   - bank3 write_v: moves on the lanes__canon S face, x 13.66 -> 569.98, onto a free M5 track. Worst hop 579.3 -> 299.9 um, measured with REBAL-10's relay placement on the m5w1gr guides.
   - UNCHECKED: timing/QoR of the children and of the write_v move.
   - 12 of 33 REBAL-4 in-core islands per half now sit inside the children, so REBAL-11 regenerates the parent infra plan.
+- RESULT DIE-HBM-10 2026-10-28 20:40 PDT: plan event C25a on C24 is built.
+  - Plan: intel2:/srv/opentallas-scratch2/claude/die-hbm-10/c25a/die_plan.json, sha 20d73dea.
+  - G0 PASS (0 errors, 564 warnings); G0C 16 errors / 85 PENDING-VIEW. The finding sets are identical to C24 (CHECKED).
+  - 65 clock-class pins on the 8 multi-clock cores moved to M5 0.048x0.48, on track, >=0.096 um from other M5 pins:
+    - calendar_f20 4, selector_sel 17, topk_link 9, wr_q_t_lanes4 6, sm_group_rel_id 10, wb_kport_q 6, vp4_banks_cp 11, xload_cl2_ctlx 2.
+    - The 44 pins on E/W M4 moved to the nearer N/S face. Largest shifts: selector clk_mem 213.6 um, vp4 121.7 um; the rest <16 um.
+  - The unchanged clock_pin_geometry preflight on the 8 KITS-1 kits, regenerated from C25a: 8/8 PASS (the originals fail 8/8). CHECKED.
+  - Needs: the opt-in w/h pin size keys in gen_core_kit_hbm.py io_tcl.
+    - Byte-identical on all 77 C24 pin tables without w/h. 25 hbm_arch_cores tests pass; test_face_shell_init was not run (needs yosys).
+  - UNCHECKED: the parent hop to the moved clock pins (same merged core clock).
+  - Branch claude/die-hbm-10-1028@b784e7514b (on main 50c8df87ee): apply_c25a.py, c25a_preflight.py, README section 8.
