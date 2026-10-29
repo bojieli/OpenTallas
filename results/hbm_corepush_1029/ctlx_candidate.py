@@ -5,7 +5,7 @@ are inventoried for the owning C25 event, not silently called requalified.
 """
 import argparse,copy,hashlib,json,math,shutil
 from pathlib import Path
-ap=argparse.ArgumentParser();ap.add_argument('source',type=Path);ap.add_argument('out',type=Path);ap.add_argument('packet',type=Path);a=ap.parse_args()
+ap=argparse.ArgumentParser();ap.add_argument('source',type=Path);ap.add_argument('out',type=Path);ap.add_argument('packet',type=Path);ap.add_argument('--paired-bfq',action='store_true');a=ap.parse_args()
 assert a.source.resolve()!=a.out.resolve() and not a.out.exists()
 read=lambda p:json.loads(p.read_text())
 write=lambda p,d:p.write_text(json.dumps(d,indent=1)+'\n')
@@ -46,6 +46,28 @@ for ty,t in plan['partition_types'].items():
  for ent in ce.get(ty,{}).values():
   if ent.get('module')=='ot_hgi_sm_xload_cl2_ctlx':
    ent['xy_um']=[108,116.64];ent['island_um']=[103.68,112.32,112.32,120.96];ent['source']='CANDIDATE CTLX216x233.28; same merged clock identities; native clk_cal198.72 requires fresh source tree'
+if a.paired_bfq:
+ report['bfq_moves']=[]
+ for ty in ('q_hub_nw','q_hub_ne'):
+  t=plan['partition_types'][ty]
+  h=next(h for h in t['hard_cores'] if h['inst']=='u_xq_Q_p1_bfq3')
+  oldxy=list(h['origin_um']);h['origin_um']=[oldxy[0],round(oldxy[1]+69.12,6)]
+  for tap in t.get('clock',{}).get('taps',[]):
+   if tap.get('name')==h['inst']:tap['xy']=[tap['xy'][0],round(tap['xy'][1]+69.12,6)]
+  row={'type':ty,'inst':h['inst'],'old_origin_um':oldxy,'new_origin_um':h['origin_um'],'hard_collisions':[],'new_station_centre_hits':[],'station_dependencies':[]}
+  x,y=h['origin_um'];w,z=h['outline_um']
+  for o in t['hard_cores']:
+   if o['inst']==h['inst']:continue
+   ox,oy=o['origin_um'];ow,oh=o['outline_um']
+   if x<ox+ow and ox<x+w and y<oy+oh and oy<y+z:row['hard_collisions'].append(o['inst'])
+  for j,st in enumerate(t.get('internal_stations',[])):
+   if h['inst'] in st.get('conn','') or h['inst'] in st.get('launch','') or h['inst'] in st.get('capture',''):row['station_dependencies'].append({'index':j,'station':st})
+   for k,(rx,ry) in enumerate(st.get('regs_um',[])):
+    inside_new=x<=rx<=x+w and y<=ry<=y+z
+    inside_old=oldxy[0]<=rx<=oldxy[0]+w and oldxy[1]<=ry<=oldxy[1]+z
+    if inside_new and not inside_old:row['new_station_centre_hits'].append({'index':j,'reg_index':k,'xy_um':[rx,ry],'conn':st.get('conn')})
+  report['bfq_moves'].append(row)
+ assert not any(q['hard_collisions']for q in report['bfq_moves']),report['bfq_moves']
 assert len(report['instances'])==4
 cm=read(a.out/'core_macros.json');m=cm['cores']['ot_hgi_sm_xload_cl2_ctlx'];oldm=copy.deepcopy(m);m.update(status='PLAN-TRIAL',outline_um=[216.0,233.28],basis='CANDIDATE native-area+pin-capacity, no new place')
 assert len(m['macros'])==1

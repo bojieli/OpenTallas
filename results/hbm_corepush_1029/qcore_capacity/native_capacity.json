@@ -1,0 +1,270 @@
+{
+ "units": 1000,
+ "layers": {
+  "M2": {
+   "direction": "HORIZONTAL",
+   "positive_cap_cells": 142266,
+   "capacity_sum": 2078970.0,
+   "usage_sum": 1793789.0,
+   "excess_sum": 1352.0,
+   "zero_cap_used_cells": 0,
+   "max_capacity": 15.0,
+   "max_usage": 31.0,
+   "top_bins": [
+    [
+     "x100/y125",
+     332.0
+    ],
+    [
+     "x100/y150",
+     250.0
+    ],
+    [
+     "x0/y125",
+     145.0
+    ],
+    [
+     "x75/y75",
+     134.0
+    ],
+    [
+     "x75/y50",
+     97.0
+    ]
+   ]
+  },
+  "M3": {
+   "direction": "VERTICAL",
+   "positive_cap_cells": 142266,
+   "capacity_sum": 2252726.0,
+   "usage_sum": 1861612.0,
+   "excess_sum": 878.0,
+   "zero_cap_used_cells": 0,
+   "max_capacity": 16.0,
+   "max_usage": 28.0,
+   "top_bins": [
+    [
+     "x100/y125",
+     203.0
+    ],
+    [
+     "x100/y150",
+     136.0
+    ],
+    [
+     "x75/y100",
+     132.0
+    ],
+    [
+     "x75/y125",
+     108.0
+    ],
+    [
+     "x0/y125",
+     83.0
+    ]
+   ]
+  },
+  "M4": {
+   "direction": "HORIZONTAL",
+   "positive_cap_cells": 142266,
+   "capacity_sum": 1689919.0,
+   "usage_sum": 1261171.0,
+   "excess_sum": 1386.0,
+   "zero_cap_used_cells": 0,
+   "max_capacity": 15.0,
+   "max_usage": 32.0,
+   "top_bins": [
+    [
+     "x100/y125",
+     332.0
+    ],
+    [
+     "x75/y75",
+     297.0
+    ],
+    [
+     "x0/y125",
+     158.0
+    ],
+    [
+     "x75/y50",
+     146.0
+    ],
+    [
+     "x100/y75",
+     114.0
+    ]
+   ]
+  },
+  "M5": {
+   "direction": "VERTICAL",
+   "positive_cap_cells": 142266,
+   "capacity_sum": 1689454.0,
+   "usage_sum": 1140759.0,
+   "excess_sum": 182.0,
+   "zero_cap_used_cells": 0,
+   "max_capacity": 12.0,
+   "max_usage": 15.0,
+   "top_bins": [
+    [
+     "x75/y100",
+     44.0
+    ],
+    [
+     "x0/y125",
+     31.0
+    ],
+    [
+     "x0/y150",
+     28.0
+    ],
+    [
+     "x75/y125",
+     25.0
+    ],
+    [
+     "x100/y125",
+     19.0
+    ]
+   ]
+  },
+  "M6": {
+   "direction": "HORIZONTAL",
+   "positive_cap_cells": 0,
+   "capacity_sum": 0.0,
+   "usage_sum": 0.0,
+   "excess_sum": 0,
+   "zero_cap_used_cells": 0,
+   "max_capacity": 0,
+   "max_usage": 0,
+   "top_bins": []
+  },
+  "M7": {
+   "direction": "VERTICAL",
+   "positive_cap_cells": 0,
+   "capacity_sum": 0.0,
+   "usage_sum": 0.0,
+   "excess_sum": 0,
+   "zero_cap_used_cells": 0,
+   "max_capacity": 0,
+   "max_usage": 0,
+   "top_bins": []
+  }
+ },
+ "block_obstructions": [],
+ "macros": [
+  {
+   "name": "u_fcore.u_red.ma",
+   "orient": "R0",
+   "origin_um": [
+    15.12,
+    151.164
+   ],
+   "box_um": [
+    15.12,
+    151.164,
+    109.944,
+    192.228
+   ],
+   "obs": [
+    {
+     "layer": "M1",
+     "master_rect_um": [
+      0.0,
+      0.0,
+      94.824,
+      41.064
+     ]
+    },
+    {
+     "layer": "M2",
+     "master_rect_um": [
+      0.0,
+      0.0,
+      94.824,
+      41.064
+     ]
+    },
+    {
+     "layer": "M3",
+     "master_rect_um": [
+      0.0,
+      0.0,
+      94.824,
+      41.064
+     ]
+    },
+    {
+     "layer": "M4",
+     "master_rect_um": [
+      0.072,
+      0.0,
+      94.752,
+      41.064
+     ]
+    }
+   ]
+  },
+  {
+   "name": "u_fcore.u_red.mb",
+   "orient": "R0",
+   "origin_um": [
+    15.12,
+    98.988
+   ],
+   "box_um": [
+    15.12,
+    98.988,
+    109.944,
+    140.052
+   ],
+   "obs": [
+    {
+     "layer": "M1",
+     "master_rect_um": [
+      0.0,
+      0.0,
+      94.824,
+      41.064
+     ]
+    },
+    {
+     "layer": "M2",
+     "master_rect_um": [
+      0.0,
+      0.0,
+      94.824,
+      41.064
+     ]
+    },
+    {
+     "layer": "M3",
+     "master_rect_um": [
+      0.0,
+      0.0,
+      94.824,
+      41.064
+     ]
+    },
+    {
+     "layer": "M4",
+     "master_rect_um": [
+      0.072,
+      0.0,
+      94.752,
+      41.064
+     ]
+    }
+   ]
+  }
+ ],
+ "PG": {
+  "rect_counts_by_layer": {
+   "M1": 1071,
+   "M2": 1071,
+   "M3": 29168,
+   "M5": 100
+  }
+ }
+}

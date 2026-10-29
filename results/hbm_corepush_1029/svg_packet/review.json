@@ -1,0 +1,12 @@
+{
+ "image": "results/hbm_corepush_1029/svg_packet/pin_review.png",
+ "viewed": true,
+ "verdict": "PASS-COND single-face pin-density proposal only; no PNR",
+ "findings": [
+  "All1099sm_packetbitsremainM5S, bitorderpreserved, span215.232um",
+  "Allother6589pinsbyteidentical including10clocks/reset",
+  "Southpeak5.4/um at10umwindow, minpacket4trackpitch withguardedotherpins",
+  "Native8neighbour endpoints/currentstations andactualplacedsource mustrecompose beforeadoption"
+ ],
+ "source": "c25c_types_6658 currentpinSH e5b288da23af83cb751c760ca0bab230f3be573afb20e2b6713195f5b7b0e088"
+}

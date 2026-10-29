@@ -1,0 +1,12 @@
+{
+ "image": "/srv/opentallas-scratch/claude/codex-qcore-1028/m7_cts.png",
+ "viewed": true,
+ "verdict": "PASS-COND one actualM7 G2routing/timingdiagnostic only; noDRT/adoption",
+ "scope": "Sameoriginal macros/pins/PGlegal12FT/stations/source/clock/4CTSplacement; correct persisted router layer range only",
+ "finding": "TwoSRAMstackwest pinexitslocalhot; desiredM6M7canoverflyM1M4macroOBS; actualfailedpilotneverenabledM6M7capacity",
+ "reviewed_prior_artifacts": [
+  "codex/hbm-qcore-1028@a6f5f96b0",
+  "NativefailedODBcapacitydump proves M6/M7 zero, no M6/M7PG ormacroOBS"
+ ],
+ "before_adoption": "ActualM6/M7nonzerocapacityreceipt, GRT50zero, TTsetup/FFhold, composed dieextraOBSproof, actualgeometryreview"
+}

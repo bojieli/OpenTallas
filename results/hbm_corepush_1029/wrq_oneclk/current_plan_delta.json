@@ -1,0 +1,365 @@
+{
+ "classification": "CANDIDATE physical-clock interface; no adoption/build",
+ "physical_plan_module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+ "source_profile_top": "ot_hbm_sm_vm_wr_q_t_lanes4__oneclk",
+ "native_alias_receipt": "native_wrq_ctlx_source_clock.json",
+ "rows": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_smw_Q__q0",
+   "origin_um": [
+    2764.8,
+    933.12
+   ],
+   "orient": "MY",
+   "track_offset_um": [
+    -0.096,
+    0.0
+   ],
+   "outline_um": [
+    142.56,
+    216.0
+   ],
+   "old_pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json",
+   "old_clock_pins": [
+    {
+     "name": "clk",
+     "layer": "M5",
+     "x": 141.528,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_cal",
+     "layer": "M5",
+     "x": 141.432,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_l0",
+     "layer": "M5",
+     "x": 1.032,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_l1",
+     "layer": "M5",
+     "x": 1.128,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_l2",
+     "layer": "M5",
+     "x": 1.224,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_l3",
+     "layer": "M5",
+     "x": 1.32,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    }
+   ],
+   "new_clock_pin": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 69.144,
+    "y": 108.0,
+    "w": 0.048,
+    "h": 0.48
+   },
+   "removed_clock_names": [
+    "clk_cal",
+    "clk_l0",
+    "clk_l1",
+    "clk_l2",
+    "clk_l3"
+   ],
+   "data_pins_unchanged": 3667,
+   "same_outline": true
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_smw_Q__q1",
+   "origin_um": [
+    7015.68,
+    820.8
+   ],
+   "orient": "MY",
+   "track_offset_um": [
+    -0.096,
+    0.0
+   ],
+   "outline_um": [
+    142.56,
+    216.0
+   ],
+   "old_pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json",
+   "old_clock_pins": [
+    {
+     "name": "clk",
+     "layer": "M5",
+     "x": 141.528,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_cal",
+     "layer": "M5",
+     "x": 141.432,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_l0",
+     "layer": "M5",
+     "x": 1.032,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_l1",
+     "layer": "M5",
+     "x": 1.128,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_l2",
+     "layer": "M5",
+     "x": 1.224,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_l3",
+     "layer": "M5",
+     "x": 1.32,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    }
+   ],
+   "new_clock_pin": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 69.144,
+    "y": 108.0,
+    "w": 0.048,
+    "h": 0.48
+   },
+   "removed_clock_names": [
+    "clk_cal",
+    "clk_l0",
+    "clk_l1",
+    "clk_l2",
+    "clk_l3"
+   ],
+   "data_pins_unchanged": 3667,
+   "same_outline": true
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_smw_Q__q0",
+   "origin_um": [
+    2764.8,
+    933.12
+   ],
+   "orient": "MY",
+   "track_offset_um": [
+    -0.096,
+    0.0
+   ],
+   "outline_um": [
+    142.56,
+    216.0
+   ],
+   "old_pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json",
+   "old_clock_pins": [
+    {
+     "name": "clk",
+     "layer": "M5",
+     "x": 141.528,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_cal",
+     "layer": "M5",
+     "x": 141.432,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_l0",
+     "layer": "M5",
+     "x": 1.032,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_l1",
+     "layer": "M5",
+     "x": 1.128,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_l2",
+     "layer": "M5",
+     "x": 1.224,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_l3",
+     "layer": "M5",
+     "x": 1.32,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    }
+   ],
+   "new_clock_pin": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 69.144,
+    "y": 108.0,
+    "w": 0.048,
+    "h": 0.48
+   },
+   "removed_clock_names": [
+    "clk_cal",
+    "clk_l0",
+    "clk_l1",
+    "clk_l2",
+    "clk_l3"
+   ],
+   "data_pins_unchanged": 3667,
+   "same_outline": true
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_smw_Q__q1",
+   "origin_um": [
+    7015.68,
+    820.8
+   ],
+   "orient": "MY",
+   "track_offset_um": [
+    -0.096,
+    0.0
+   ],
+   "outline_um": [
+    142.56,
+    216.0
+   ],
+   "old_pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json",
+   "old_clock_pins": [
+    {
+     "name": "clk",
+     "layer": "M5",
+     "x": 141.528,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_cal",
+     "layer": "M5",
+     "x": 141.432,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_l0",
+     "layer": "M5",
+     "x": 1.032,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_l1",
+     "layer": "M5",
+     "x": 1.128,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_l2",
+     "layer": "M5",
+     "x": 1.224,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_l3",
+     "layer": "M5",
+     "x": 1.32,
+     "y": 215.904,
+     "w": 0.048,
+     "h": 0.48
+    }
+   ],
+   "new_clock_pin": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 69.144,
+    "y": 108.0,
+    "w": 0.048,
+    "h": 0.48
+   },
+   "removed_clock_names": [
+    "clk_cal",
+    "clk_l0",
+    "clk_l1",
+    "clk_l2",
+    "clk_l3"
+   ],
+   "data_pins_unchanged": 3667,
+   "same_outline": true
+  }
+ ],
+ "core_clock_port": "clk",
+ "merged_clock_ports": [],
+ "clock_entry_xy_um": [
+  69.12,
+  108.0
+ ],
+ "clock_pin_xy_um": [
+  69.144,
+  108.0
+ ],
+ "source_physical_cycles": 0,
+ "required": [
+  "Planowneradopts5clockpinsremoved togetherwithcurrentmacro/clock/reset/sourceprofile",
+  "Freshone-rootcurrent-sinktreewithsharedface/bodylocalbranch; do not reuse old independentclk_l subtrees",
+  "ActualSTA+GRT+signoffnormalgates",
+  "Noq0deleted: actualnativegraph currentlyonlytwoq1writers"
+ ]
+}

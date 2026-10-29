@@ -795,5 +795,23 @@
    "rtl/hbm_accel/index/ot_hbm_idx_selector_compact.sv": "3a56d4eea",
    "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv": "353da5b41"
   }
+ },
+ "ot_hbm_sm_vm_wr_q_t_lanes4__oneclk_profile": {
+  "top": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "files": [
+   "results/hbm_corepush_1029/wrq_oneclk/ot_hbm_sm_vm_wr_q_t_lanes4_physical.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_lanes_n.sv"
+  ],
+  "defines": [],
+  "params": {
+   "DEPTH": 4
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "EXPLICITOPTIN only: source-bound same-phase six-clock alias; default native master unchanged. Currentplan clock-pin delta+fresh single-root tree required. MechanismPASS100564laneedges+row/phase/wrongclockcontrols.",
+  "source_commit": "309dfdf95",
+  "read_at_commit": false
  }
 }

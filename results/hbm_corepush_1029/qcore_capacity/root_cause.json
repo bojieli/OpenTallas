@@ -1,0 +1,295 @@
+{
+ "failure": "GRT-0116 on intendedM7trial; effectiveM5-only layerstate, preservesoriginalFAIL",
+ "native_top5_bins": [
+  {
+   "bin_um": [
+    100,
+    125,
+    125,
+    150
+   ],
+   "native_excess": 886.0,
+   "by_layer": {
+    "M2": 332.0,
+    "M3": 203.0,
+    "M4": 332.0,
+    "M5": 19.0
+   },
+   "native_axes": {
+    "HORIZONTAL": 664.0,
+    "VERTICAL": 222.0
+   },
+   "report_net_mentions_by_family": {
+    "read_reduction_or_bus": 211,
+    "sector_bank_read_write_logic": 238,
+    "other_named_logic": 1716,
+    "registered_sector_read_outputs": 121,
+    "clock": 99,
+    "sector_local_oh": 30
+   },
+   "sector_mentions": {
+    "4": 133,
+    "5": 135
+   },
+   "PG_intersections": {
+    "M5": 12,
+    "M2": 93,
+    "M1": 93,
+    "M3": 357
+   },
+   "macros": [
+    {
+     "name": "u_fcore.u_red.mb",
+     "box_um": [
+      15.12,
+      98.988,
+      109.944,
+      140.052
+     ],
+     "obs_layers": [
+      "M1",
+      "M2",
+      "M3",
+      "M4"
+     ]
+    }
+   ],
+   "provenance": "Exact failedODBGrid+PG+masterOBS and congestion.rpt namednets; PGintersection alone is notcausal"
+  },
+  {
+   "bin_um": [
+    75,
+    75,
+    100,
+    100
+   ],
+   "native_excess": 458.0,
+   "by_layer": {
+    "M2": 134.0,
+    "M3": 19.0,
+    "M4": 297.0,
+    "M5": 8.0
+   },
+   "native_axes": {
+    "HORIZONTAL": 431.0,
+    "VERTICAL": 27.0
+   },
+   "report_net_mentions_by_family": {
+    "sector_local_oh": 530,
+    "registered_sector_read_outputs": 930,
+    "clock": 141,
+    "sector_bank_read_write_logic": 2911,
+    "other_named_logic": 263,
+    "read_reduction_or_bus": 18
+   },
+   "sector_mentions": {
+    "4": 1096,
+    "5": 2180,
+    "6": 162,
+    "7": 3
+   },
+   "PG_intersections": {
+    "M5": 12,
+    "M2": 82,
+    "M1": 82,
+    "M3": 492
+   },
+   "macros": [
+    {
+     "name": "u_fcore.u_red.mb",
+     "box_um": [
+      15.12,
+      98.988,
+      109.944,
+      140.052
+     ],
+     "obs_layers": [
+      "M1",
+      "M2",
+      "M3",
+      "M4"
+     ]
+    }
+   ],
+   "provenance": "Exact failedODBGrid+PG+masterOBS and congestion.rpt namednets; PGintersection alone is notcausal"
+  },
+  {
+   "bin_um": [
+    100,
+    150,
+    125,
+    175
+   ],
+   "native_excess": 443.0,
+   "by_layer": {
+    "M2": 250.0,
+    "M3": 136.0,
+    "M4": 44.0,
+    "M5": 13.0
+   },
+   "native_axes": {
+    "HORIZONTAL": 294.0,
+    "VERTICAL": 149.0
+   },
+   "report_net_mentions_by_family": {
+    "other_named_logic": 564,
+    "read_reduction_or_bus": 91,
+    "clock": 6,
+    "registered_sector_read_outputs": 3
+   },
+   "sector_mentions": {},
+   "PG_intersections": {
+    "M5": 12,
+    "M2": 93,
+    "M1": 93,
+    "M3": 279
+   },
+   "macros": [
+    {
+     "name": "u_fcore.u_red.ma",
+     "box_um": [
+      15.12,
+      151.164,
+      109.944,
+      192.228
+     ],
+     "obs_layers": [
+      "M1",
+      "M2",
+      "M3",
+      "M4"
+     ]
+    }
+   ],
+   "provenance": "Exact failedODBGrid+PG+masterOBS and congestion.rpt namednets; PGintersection alone is notcausal"
+  },
+  {
+   "bin_um": [
+    0,
+    125,
+    25,
+    150
+   ],
+   "native_excess": 417.0,
+   "by_layer": {
+    "M2": 145.0,
+    "M3": 83.0,
+    "M4": 158.0,
+    "M5": 31.0
+   },
+   "native_axes": {
+    "HORIZONTAL": 303.0,
+    "VERTICAL": 114.0
+   },
+   "report_net_mentions_by_family": {
+    "clock": 76,
+    "sector_bank_read_write_logic": 205,
+    "other_named_logic": 914,
+    "registered_sector_read_outputs": 167,
+    "read_reduction_or_bus": 19
+   },
+   "sector_mentions": {
+    "4": 180,
+    "5": 25
+   },
+   "PG_intersections": {
+    "M5": 10,
+    "M2": 93,
+    "M1": 93,
+    "M3": 264
+   },
+   "macros": [
+    {
+     "name": "u_fcore.u_red.mb",
+     "box_um": [
+      15.12,
+      98.988,
+      109.944,
+      140.052
+     ],
+     "obs_layers": [
+      "M1",
+      "M2",
+      "M3",
+      "M4"
+     ]
+    }
+   ],
+   "provenance": "Exact failedODBGrid+PG+masterOBS and congestion.rpt namednets; PGintersection alone is notcausal"
+  },
+  {
+   "bin_um": [
+    75,
+    50,
+    100,
+    75
+   ],
+   "native_excess": 247.0,
+   "by_layer": {
+    "M2": 97.0,
+    "M3": 3.0,
+    "M4": 146.0,
+    "M5": 1.0
+   },
+   "native_axes": {
+    "HORIZONTAL": 243.0,
+    "VERTICAL": 4.0
+   },
+   "report_net_mentions_by_family": {
+    "sector_local_oh": 476,
+    "registered_sector_read_outputs": 184,
+    "clock": 36,
+    "sector_bank_read_write_logic": 1578,
+    "read_reduction_or_bus": 64,
+    "other_named_logic": 285
+   },
+   "sector_mentions": {
+    "7": 707,
+    "5": 358,
+    "3": 876,
+    "6": 48,
+    "4": 58,
+    "1": 7
+   },
+   "PG_intersections": {
+    "M5": 12,
+    "M2": 92,
+    "M1": 92,
+    "M3": 552
+   },
+   "macros": [],
+   "provenance": "Exact failedODBGrid+PG+masterOBS and congestion.rpt namednets; PGintersection alone is notcausal"
+  }
+ ],
+ "upper_layers": {
+  "M6": {
+   "direction": "HORIZONTAL",
+   "positive_cap_cells": 0,
+   "capacity_sum": 0.0,
+   "usage_sum": 0.0,
+   "excess_sum": 0,
+   "zero_cap_used_cells": 0,
+   "max_capacity": 0,
+   "max_usage": 0,
+   "top_bins": []
+  },
+  "M7": {
+   "direction": "VERTICAL",
+   "positive_cap_cells": 0,
+   "capacity_sum": 0.0,
+   "usage_sum": 0.0,
+   "excess_sum": 0,
+   "zero_cap_used_cells": 0,
+   "max_capacity": 0,
+   "max_usage": 0,
+   "top_bins": []
+  }
+ },
+ "critical_causes": [
+  "NoM6/M7capacity/usage anywhere despiteMAX_ROUTING_LAYER=M7; sourceFASTROUTE/routinglayers onlyatfloorplan andCTS/GRT reusedM5DB",
+  "Noexplicit blockobstructions; SRAMOBS onlyM1-M4; PGonlyM1,M2,M3,M5; noM6/M7blockagecouldexplainzero capacity",
+  "FailedreportH/Vzero-capacityedges are distinct fromnominalDBper-layercap; notusedasunknownlayerproof"
+ ],
+ "corrective_trial": "Freshownclone,sourceplatformFASTROUTE+explicitsetsignal/clockM2-M7 inPRE_GRT, sameplacement/source/CTS, GRT50/TTFF; noDRT/adoption",
+ "live_job": "epyc2:oth-ubuntu-1682401-1793269862"
+}
