@@ -1,0 +1,2 @@
+HOST_WRITE_INTERVAL bvalid-to-bvalid min 5 max 5 edges; cfg_v-to-cfg_v min 40 max 40 edges (8 writes); cfg_v count 6
+tb_host_write_interval.sv:25: $finish called at 2620000 (1ps)
