@@ -25,6 +25,7 @@ top:
     dme_feed_centroid: 1
 region:
   form: dme
+  workers: 24  # independent region solves, attached in serial order; CLI --workers overrides
   dme_mode: delay
   only:
     all_from_map: true
