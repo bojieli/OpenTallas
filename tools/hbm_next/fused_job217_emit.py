@@ -11,7 +11,7 @@ def pack(f):
  return w
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--image',type=Path,required=True);p.add_argument('--compiler-tools',type=Path,required=True);p.add_argument('--calendar',type=Path);p.add_argument('--out',type=Path,required=True);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
+ p=argparse.ArgumentParser();p.add_argument('--image',type=Path,required=True);p.add_argument('--compiler-tools',type=Path,required=True);p.add_argument('--calendar',type=Path);p.add_argument('--calendar-rgap',action='store_true',help='accept explicit calendar PRE row-gap increases only');p.add_argument('--out',type=Path,required=True);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
  if (a.out/'programme.mem').exists():p.error('output already contains executable programme; use a fresh directory')
  sys.path[:0]=[str(a.compiler_tools),str(a.compiler_tools/'hbm_next')]
  import isa_rows as IR
@@ -61,7 +61,18 @@ def main():
   if len(sched)!=len(c['records']) or set(sched)!={j['image_offset'] for j in jobs}:missing.append('one scheduled entry per exact native record offset')
   for j in jobs:
    if j['image_offset'] not in sched:continue
-   t=sched[j['image_offset']];launch=t['launch_cycle'];deadline=t['completion_cycle']
+   t=sched[j['image_offset']]
+   override=t.get('rgap_override')
+   if override:
+    v=override.get('value'); original=j['fields']['rgap']
+    if (not a.calendar_rgap or j['op']=='HC_POST' or j['fields']['nm1']+1<=4
+        or not isinstance(v,int) or isinstance(v,bool) or not original<=v<=255
+        or override.get('original')!=original or override.get('source_job217')!=j['job217']
+        or override.get('added_service_cycles')!=(v-original)*j['fields']['nm1']):
+     missing.append('invalid/unaccepted calendar rgap override at '+str(j['image_offset']))
+    else:
+     j['source_job217']=j['job217'];j['fields']['rgap']=v;j['job217']=f'{pack(j["fields"]):055x}'
+   launch=t['launch_cycle'];deadline=t['completion_cycle']
    if t.get('root_capture_cycle')!=launch+1+c['root_ingress_cycles'] or t.get('root_done_cycle',-1)+2+c['root_status_return_cycles']!=deadline:missing.append('explicit dispatch1/statuscheck2/rootpath cycle accounting at '+str(j['image_offset']))
    if not 0<=launch<deadline<1<<32 or launch<=prev or launch<c['provider_start_cycle']+3:missing.append('ordered bounded launch/deadline at '+str(j['image_offset']))
    prev=deadline+3;words.append(((deadline-c['provider_start_cycle'])<<249)|((launch-c['provider_start_cycle'])<<217)|int(j['job217'],16))

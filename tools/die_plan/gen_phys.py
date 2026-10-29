@@ -142,6 +142,9 @@ def port_bind_pin_records(P, tn, pins, bump_ports=None):
     port_pins = [dict(bus=b, bit=i) for b, i, _l, _x, _y, _f in pins]
     port_pins += [dict(bus=n, bit=None) for n, _x, _y in tap_pins(P, tn) + reset_out_pins(P, tn)]
     port_pins += [dict(bus=b["port"], bit=i) for b in (bump_ports or []) for i in range(b["width"])]
+    # gen_rtl emits type-level PHY pads directly (distinct from bound hard-IP
+    # bump_ports). They remain exact plan ports even without a data-face flop.
+    port_pins += [dict(bus=p["name"], bit=i) for p in t.get("pads", []) for i in range(int(p["width"]))]
     import infra_rtl as IR
     port_pins += [dict(bus=p["name"], bit=None) for p in IR.type_ports(t)]
     port_pins += [dict(bus=p["name"], bit=None)

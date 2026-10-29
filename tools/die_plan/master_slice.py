@@ -405,6 +405,11 @@ def emit_tcl(sl, dbu=1000):
         x, y = p["xy_um"]
         if p.get("pin") and pushdown:
             nplaced += 1          # placed (fail-closed on a missing port) by master_core_infra.tcl ot_ci_entry
+        elif p.get("pin") and p["pin"] == sl.get("core_clock_port"):
+            # _consume_io already places the declared core clock with its full-width,
+            # on-track GEOM-21 shape. A generic entry placement here would replace
+            # it with the smaller signal-pin geometry and the unsnapped source xy.
+            nplaced += 1
         elif p.get("pin"):
             L.append(f"place_pin -pin_name {_tcl_word(p['pin'])} -layer {p.get('layer', 'M7')} "
                      f"-location {{{x:.4f} {y:.4f}}} -pin_size {{0.032 0.192}}   ;# entry {p.get('name')}")
