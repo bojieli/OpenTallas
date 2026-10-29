@@ -1,0 +1,7 @@
+Fresh clock build estimate, HK4 raw event7e1e7931e (19 types,351 parts).
+
+Data and crossing demand stays427 crossings/211,813 bits; the 24 new spine-local links abut exactly and remain in the same six spine clock regions. Existing N3 paths separate into two local roots on the same top-row feed neighborhood. Thus there is no new die-scale clock/data branch; the approved spine_fishbone feed follows the existing spine and row paths.
+
+Repeater pitch200um and explicit actual-hop405um check bound each planned clock leg. Source is inv2, M8/M9 NDR, geometric site-slide construction (no stale BUFx24 stage-delay fit). New ribbon paths are699.84um with2 existing data stations or95.04um with1; no added data cycle. The central strips are587.52um wide, preserving original N/S pins and the existing local relay counts. Density planning supplies local clock taps within250um of planned sinks; actual constructed clock reach is checked before GRT.
+
+The static event passes G0C, maximum reset hop378um, no unreachable parts, worst cut0.0697 and segment0.3587; no moved tile or new macro wall. The clock-only GEN/TRIAL is feasible on this geometry. Actual CA phase margins are NOT inferred from these dimensions: generate the fresh clock, review it, GRT50 atTT/FF, and use its proof/OCV with spice_edge on inv paths. Actual hd_tile545.3/445.7 is a real-view budget;450 is only the existing common plan target for other unmeasured types. NoSS gate, no reuse of oldK/START, no release claim.
