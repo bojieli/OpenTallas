@@ -1,0 +1,139 @@
+{
+ "schema": "opentallas.hbm.six_internal_source_contract.v1",
+ "source": "intel1:codex-hbm-bind-0300/top_native.sv",
+ "actual_hub_manifest": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0300/asbuilt_native_r2.json",
+ "links": [
+  {
+   "src_path": "vmb_NE7",
+   "src_partition": "NE_hub",
+   "src_plan_instance": "u_vmb_Q7",
+   "src_module": "hfd_vms_bank_native_q0_faces",
+   "src_port": "eg",
+   "dst_path": "hb_vms_NE",
+   "dst_partition": "NE_hub",
+   "dst_plan_instance": "u_hb_vms_Q__q1",
+   "dst_module": "hfd_hgi_vms_static_NE_glue",
+   "dst_port": "bk_eg",
+   "width": 276,
+   "source_bit_range": [
+    0,
+    275
+   ],
+   "destination_bit_range": [
+    1932,
+    2207
+   ],
+   "source_link_registers": 0
+  },
+  {
+   "src_path": "vmb_NE7",
+   "src_partition": "NE_hub",
+   "src_plan_instance": "u_vmb_Q7",
+   "src_module": "hfd_vms_bank_native_q0_faces",
+   "src_port": "pr",
+   "dst_path": "hb_vms_NE",
+   "dst_partition": "NE_hub",
+   "dst_plan_instance": "u_hb_vms_Q__q1",
+   "dst_module": "hfd_hgi_vms_static_NE_glue",
+   "dst_port": "bk_pr",
+   "width": 266,
+   "source_bit_range": [
+    0,
+    265
+   ],
+   "destination_bit_range": [
+    1862,
+    2127
+   ],
+   "source_link_registers": 0
+  },
+  {
+   "src_path": "vmb_NE7",
+   "src_partition": "NE_hub",
+   "src_plan_instance": "u_vmb_Q7",
+   "src_module": "hfd_vms_bank_native_q0_faces",
+   "src_port": "status",
+   "dst_path": "hb_vms_NE",
+   "dst_partition": "NE_hub",
+   "dst_plan_instance": "u_hb_vms_Q__q1",
+   "dst_module": "hfd_hgi_vms_static_NE_glue",
+   "dst_port": "bank_status",
+   "width": 18,
+   "source_bit_range": [
+    0,
+    17
+   ],
+   "destination_bit_range": [
+    126,
+    143
+   ],
+   "source_link_registers": 0
+  },
+  {
+   "src_path": "vmb_NE7",
+   "src_partition": "NE_hub",
+   "src_plan_instance": "u_vmb_Q7",
+   "src_module": "hfd_vms_bank_native_q0_faces",
+   "src_port": "xq2_done",
+   "dst_path": "hb_vms_NE",
+   "dst_partition": "NE_hub",
+   "dst_plan_instance": "u_hb_vms_Q__q1",
+   "dst_module": "hfd_hgi_vms_static_NE_glue",
+   "dst_port": "bk_xq2_done",
+   "width": 1,
+   "source_bit_range": [
+    0,
+    0
+   ],
+   "destination_bit_range": [
+    7,
+    7
+   ],
+   "source_link_registers": 0
+  },
+  {
+   "src_path": "vmb_NE7",
+   "src_partition": "NE_hub",
+   "src_plan_instance": "u_vmb_Q7",
+   "src_module": "hfd_vms_bank_native_q0_faces",
+   "src_port": "xq_done",
+   "dst_path": "hb_vms_NE",
+   "dst_partition": "NE_hub",
+   "dst_plan_instance": "u_hb_vms_Q__q1",
+   "dst_module": "hfd_hgi_vms_static_NE_glue",
+   "dst_port": "bk_xq_done",
+   "width": 1,
+   "source_bit_range": [
+    0,
+    0
+   ],
+   "destination_bit_range": [
+    7,
+    7
+   ],
+   "source_link_registers": 0
+  },
+  {
+   "src_path": "vmb_NW4",
+   "src_partition": "NW_hub",
+   "src_plan_instance": "u_vmb_Q4",
+   "src_module": "hfd_vms_bank_native_q0_faces",
+   "src_port": "rr1",
+   "dst_path": "hb_dbk_NW",
+   "dst_partition": "NW_hub",
+   "dst_plan_instance": "u_hb_dbk_Q__q1",
+   "dst_module": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "dst_port": "rr",
+   "width": 257,
+   "source_bit_range": [
+    0,
+    256
+   ],
+   "destination_bit_range": [
+    1028,
+    1284
+   ],
+   "source_link_registers": 0
+  }
+ ]
+}
