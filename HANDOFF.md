@@ -1537,3 +1537,5 @@ CODEX: 2026-10-29 00:00 PDT maina3d34dd8e1==origin/main; TOPKexacttree+mapguard,
 CODEX: 2026-10-29 00:02 PDT HBM sourceabsence compilerb6c504469+nosubankee0ef7ce0 READY,finitecalendarproofstillopen;actual24edgePREboundaryPASS/23faultCAUGHT. Recovering deletedf0image deterministically;strictC25cownedHBM.
 
 CODEX: 2026-10-29 00:04 PDT QCrefittrial25FAIL209.5/181nominal:longsnake+sensitivityrootcause; baseline26kitLIVEot-run1571177. Actualclockwire+terminaladapterstarted; NLparenttwoSIGNEDchildviewsblockedonlyoptinlintfixREADY, BTABmacroplanner92d31PASS.
+
+CODEX: 2026-10-29 00:05 PDT GEOMresults ca46f925ff pushed(clean): HEAD929reachFAIL/HBMctlx258reachFAIL diagnosed→ownerfixes; HBMlanes4+4KVPVreviewsPASS(-COND); S81actual8longleg/dutyunits corrected and reach17/QCnodeCTS trialsPASS-COND. ctlxguided2reach387.88/0confirmedbutlowfillFAILretained. Own2diagnosticjobsfinished,noactivejobs; no newGRTafterrootsteering.
