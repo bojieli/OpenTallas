@@ -5,7 +5,7 @@ from pathlib import Path
 sys.path.insert(0,'tools/die_plan')
 import schema as S,die_trial as D
 plan,treepath,out=sys.argv[1:4];o=Path(out);o.mkdir(parents=True,exist_ok=True)
-P=S.Plan(json.load(open(plan)));site=D.SiteMap(P);t=json.load(open(treepath));xy=t['sites'];par=t['parent_of'];bound=405.
+P=S.Plan(json.load(open(plan)));site=D.SiteMap(P);t=json.load(open(treepath));xy=t['sites'];par=t['parent_of'];bound=float(sys.argv[4]) if len(sys.argv)>4 else 405.
 def dist(a,b):return sum(abs(x-y) for x,y in zip(a,b))
 def snap(q):return [round(round(q[0]/.054)*.054,6),round(round(q[1]/.27)*.27,6)]
 def occupied(q,extra):

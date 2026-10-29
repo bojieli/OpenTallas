@@ -1,0 +1,360 @@
+{
+  "label": "ESTIMATEONLY_NOTPHYSICALLYRESERVED",
+  "cut_limit": 0.6,
+  "proposed_share": 0.5,
+  "changes": {
+    "ot_s81sl_leaf__t28": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_2N_L1"
+      ]
+    },
+    "svc_hi_dsdv_svc_rs__t1": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "svc_1"
+      ]
+    },
+    "ot_s81sl_leaf__t31": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_3S_L2"
+      ]
+    },
+    "ot_s81sl_leaf__t2": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_0S_L0"
+      ]
+    },
+    "ot_s81sl_leaf__t46": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_5S_L0"
+      ]
+    },
+    "ot_s81sl_leaf__t47": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_5S_L1"
+      ]
+    },
+    "ot_s81sl_leaf__t58": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_6S_L1"
+      ]
+    },
+    "ot_s81sl_leaf__t17": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_1N_L0"
+      ]
+    },
+    "ot_s81sl_leaf__t8": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_0N_L1"
+      ]
+    },
+    "ot_s81sl_leaf__t72": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_7N_L1"
+      ]
+    },
+    "ot_s81sl_leaf__t9": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_0N_L3"
+      ]
+    },
+    "svc_hi_dsdv_svc_rs__t6": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "svc_15"
+      ]
+    },
+    "ot_s81sl_leaf__t45": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_5S_L2"
+      ]
+    },
+    "ot_s81sl_leaf__t22": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_2S_L0"
+      ]
+    },
+    "ot_s81sl_leaf__t57": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_6S_L0"
+      ]
+    },
+    "ot_s81sl_leaf__t33": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_3S_L1"
+      ]
+    },
+    "ot_s81sl_leaf__t42": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_4N_L0"
+      ]
+    },
+    "ot_s81sl_leaf__t75": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_1N_L1"
+      ]
+    },
+    "ot_s81sl_leaf__t73": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_7N_L3"
+      ]
+    },
+    "ot_s81sl_leaf__t1": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_0S_L2"
+      ]
+    },
+    "ot_s81sl_leaf__t32": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_3S_L0"
+      ]
+    },
+    "ot_s81sl_leaf__t66": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_7S_L0"
+      ]
+    },
+    "ot_s81sl_leaf__t61": {
+      "old": 0.25,
+      "new": 0.5,
+      "parts": [
+        "s_6N_L0"
+      ]
+    }
+  },
+  "runs": [
+    {
+      "round": 0,
+      "errors": [
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "vertical cut at 13500: s_2N_L1 segment carries 4169 bits on 6626 tracks = 0.63 > 0.6",
+          "part": "s_2N_L1"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 5000: svc_1 segment carries 3142 bits on 3071 tracks = 1.02 > 0.6",
+          "part": "svc_1"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 8500: s_3S_L2 segment carries 2408 bits on 3468 tracks = 0.69 > 0.6",
+          "part": "s_3S_L2"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 9500: s_0S_L0 segment carries 4464 bits on 5965 tracks = 0.75 > 0.6",
+          "part": "s_0S_L0"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 9750: s_5S_L0 segment carries 4406 bits on 6235 tracks = 0.71 > 0.6",
+          "part": "s_5S_L0"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 11250: s_5S_L1 segment carries 3082 bits on 3468 tracks = 0.89 > 0.6",
+          "part": "s_5S_L1"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 11500: s_6S_L1 segment carries 3683 bits on 5639 tracks = 0.65 > 0.6",
+          "part": "s_6S_L1"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 17000: s_1N_L0 segment carries 3263 bits on 4064 tracks = 0.80 > 0.6",
+          "part": "s_1N_L0"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 18750: s_0N_L1 segment carries 5158 bits on 5639 tracks = 0.91 > 0.6",
+          "part": "s_0N_L1"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 19000: s_7N_L1 segment carries 5158 bits on 7639 tracks = 0.68 > 0.6",
+          "part": "s_7N_L1"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 20000: s_0N_L3 segment carries 3893 bits on 5639 tracks = 0.69 > 0.6",
+          "part": "s_0N_L3"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 20250: s_0N_L3 segment carries 3893 bits on 5965 tracks = 0.65 > 0.6",
+          "part": "s_0N_L3"
+        }
+      ],
+      "worst": {
+        "ratio": 1.023,
+        "at": "horizontal@5000:svc_1"
+      }
+    },
+    {
+      "round": 1,
+      "errors": [
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 5000: svc_15 segment carries 2957 bits on 3071 tracks = 0.96 > 0.6",
+          "part": "svc_15"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 8500: s_5S_L2 segment carries 2721 bits on 4064 tracks = 0.67 > 0.6",
+          "part": "s_5S_L2"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 9500: s_2S_L0 segment carries 3893 bits on 5965 tracks = 0.65 > 0.6",
+          "part": "s_2S_L0"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 9750: s_6S_L0 segment carries 4186 bits on 6235 tracks = 0.67 > 0.6",
+          "part": "s_6S_L0"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 11250: s_3S_L1 segment carries 4939 bits on 5639 tracks = 0.88 > 0.6",
+          "part": "s_3S_L1"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 17000: s_4N_L0 segment carries 3131 bits on 4064 tracks = 0.77 > 0.6",
+          "part": "s_4N_L0"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 18750: s_1N_L1 segment carries 2530 bits on 3468 tracks = 0.73 > 0.6",
+          "part": "s_1N_L1"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 20000: s_7N_L3 segment carries 3893 bits on 5639 tracks = 0.69 > 0.6",
+          "part": "s_7N_L3"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 20250: s_7N_L3 segment carries 3893 bits on 5965 tracks = 0.65 > 0.6",
+          "part": "s_7N_L3"
+        }
+      ],
+      "worst": {
+        "ratio": 0.9628,
+        "at": "horizontal@5000:svc_15"
+      }
+    },
+    {
+      "round": 2,
+      "errors": [
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 8500: s_0S_L2 segment carries 3199 bits on 5257 tracks = 0.61 > 0.6",
+          "part": "s_0S_L2"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 9500: s_3S_L0 segment carries 3673 bits on 5965 tracks = 0.62 > 0.6",
+          "part": "s_3S_L0"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 9750: s_7S_L0 segment carries 4169 bits on 6235 tracks = 0.67 > 0.6",
+          "part": "s_7S_L0"
+        },
+        {
+          "level": "ERROR",
+          "check": "cuts",
+          "msg": "horizontal cut at 17000: s_6N_L0 segment carries 3683 bits on 5639 tracks = 0.65 > 0.6",
+          "part": "s_6N_L0"
+        }
+      ],
+      "worst": {
+        "ratio": 0.6686,
+        "at": "horizontal@9750:s_7S_L0"
+      }
+    },
+    {
+      "round": 3,
+      "errors": [],
+      "worst": {
+        "ratio": 0.5957,
+        "at": "horizontal@11500:s_7S_L1"
+      }
+    }
+  ],
+  "limitations": [
+    "FT share changes must become actual per-layer reserved tracks/bands and prove remaining local/core-link routing demand before adoption.",
+    "No source/pin/core/interface/latency change in this estimate.",
+    "No GRT/STA or canonical plan adoption."
+  ]
+}

@@ -3,6 +3,7 @@
 import json,sys,re,copy
 from pathlib import Path
 old,out,rp=map(Path,sys.argv[1:4]);out.mkdir(parents=True,exist_ok=True)
+tag=re.sub(r'[^A-Za-z0-9_]','_',out.parent.name)
 t=json.load(open(old/'tree.json'));r=json.load(open(rp));v=(old/'ctree.v').read_text();tcl=(old/'ctree.tcl').read_text()
 rows={m.group(2):(m.group(1),m.group(3),m.group(4)) for m in re.finditer(r'^\s*(\w+)\s+(\w+)\s*\(\.A\((\w+)\),\s*\.Y\((\w+)\)\);',v,re.M)}
 odline=next(x for x in tcl.splitlines() if x.startswith('set ot_odd '));odd=set(re.findall(r'(\w+) 1',odline))
@@ -12,7 +13,7 @@ for ri,e in enumerate(r['repairs']):
  master,src,dst=rows[c];assert master=='CKINVDCx16_ASAP7_75t_R';assert rows[p][2]==src
  prev=p;net=src
  for j,xy in enumerate(e['sites']):
-  inst=f'reach17_{ri}_{j}';wire=inst+'_n'
+  inst=f'{tag}_{ri}_{j}';wire=inst+'_n'
   assert inst not in t['sites']
   addv += [f'  wire {wire};',f'  {master} {inst} (.A({net}), .Y({wire}));']
   addt.append(f'place_inst -name {inst} -location {{{xy[0]:.6f} {xy[1]:.6f}}} -status PLACED')
@@ -20,7 +21,7 @@ for ri,e in enumerate(r['repairs']):
   t['sites'][inst]=xy;t['parent_of'][inst]=prev;prev=inst;net=wire
  pattern=rf'({master}\s+{c}\s*\(\.A\(){src}(\))'
  v,n=re.subn(pattern,rf'\g<1>{net}\2',v);assert n==1
- t['parent_of'][c]=prev;ledger.append(dict(e,instances=[f'reach17_{ri}_{j}' for j in range(e['added'])]))
+ t['parent_of'][c]=prev;ledger.append(dict(e,instances=[f'{tag}_{ri}_{j}' for j in range(e['added'])]))
 v=v.replace('endmodule','\n'.join(addv)+'\nendmodule')
 lines=tcl.splitlines();i=max(i for i,x in enumerate(lines) if x.startswith('place_inst '));lines[i+1:i+1]=addt
 newlines=[]
