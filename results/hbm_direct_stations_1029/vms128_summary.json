@@ -1,0 +1,29 @@
+{
+  "enabled": true,
+  "scope": "SOURCE_PREP_ONLY",
+  "qualifies_physical": false,
+  "qualifies_token": false,
+  "actual_connection_check": {
+    "native_instances": 379,
+    "chains": 128,
+    "sink_ports_changed": 93,
+    "all_other_ports_unchanged": true,
+    "all_other_sink_bits_unchanged": true
+  },
+  "register_bits": 176798,
+  "control_register_bits": 3074,
+  "parent_qualification_holds": [
+    "No missing South-role source paths or geometry are fabricated",
+    "No parent compiler/programme/calendar dates adopted",
+    "Caller reset references only, no die-delivery qualification",
+    "No physical route or die view qualification",
+    "DMA eight-bank RR_RT80 bundle is separate and incomplete"
+  ],
+  "stage_range": [
+    2,
+    31
+  ],
+  "candidate": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-direct-station-0822/top_vms128_stationed.sv",
+  "recipe": "TOK-HBM results/tok_hbm_10_1029/vms_128_pipeline_contract.json",
+  "recipe_scope": "128Nrole source-defined directed paths; South128missinggeometry left out"
+}

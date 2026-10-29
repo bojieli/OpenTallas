@@ -86,6 +86,8 @@ def materialize(text, chains, *, enabled=False):
         sm, source_ports = instances[chain["source_instance"]]
         dm, sink_ports = instances[chain["sink_instance"]]
         source_port = B.parse_expr(source_ports[chain["source_port"]], widths)
+        if chain.get("source_connected_width", B.width_of(source_port)) != B.width_of(source_port):
+            raise ValueError("declared connected source width differs from native source")
         source_low = chain.get("source_lsb", 0)
         source_width = chain.get("source_width", B.width_of(source_port))
         if (type(source_low) is not int or type(source_width) is not int or source_low < 0 or
@@ -96,6 +98,8 @@ def materialize(text, chains, *, enabled=False):
         width = len(source_bits)
         if not width:
             raise ValueError("empty direct source")
+        if chain.get("width", width) != width:
+            raise ValueError("declared path width differs from selected native source")
         control_mask = chain.get("control_mask", 0)
         if type(control_mask) is not int or control_mask < 0 or control_mask >= (1 << width):
             raise ValueError("control mask outside source width")
@@ -185,6 +189,8 @@ def main():
     if args.output.resolve() == args.source.resolve():
         parser.error("output must be a fresh candidate path, not the source")
     contract = json.loads(args.contract.read_text())
+    if contract.get("runtime_adopt", False):
+        parser.error("source preparation cannot adopt an incomplete parent timing bundle")
     result, receipt = materialize(args.source.read_text(), contract["chains"], enabled=args.enable)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(result)
