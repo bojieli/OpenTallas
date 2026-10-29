@@ -1,0 +1,115 @@
+{
+ "rule": "COORD 08:43: duty 45-55 % at every tap (both edges, spice-scaled); lib MPW both phases",
+ "corners": {
+  "TT": {
+   "taps": 719,
+   "fall_minus_rise_ps": {
+    "min": -10.7,
+    "med": 0.2,
+    "max": 11.5
+   },
+   "duty_min": 0.4866,
+   "duty_med": 0.5003,
+   "duty_max": 0.5145,
+   "outside_45_55": 0,
+   "mpw_est_fail": 0,
+   "worst": [
+    {
+     "port": "t_tE1o10__clk",
+     "duty": 0.5145,
+     "high_ps": 428.7,
+     "low_ps": 404.6,
+     "mpw_ps": 42.2
+    },
+    {
+     "port": "t_tE4o10__clk",
+     "duty": 0.514,
+     "high_ps": 428.3,
+     "low_ps": 405.0,
+     "mpw_ps": 42.2
+    },
+    {
+     "port": "t_tE2o10__clk",
+     "duty": 0.4866,
+     "high_ps": 405.5,
+     "low_ps": 427.9,
+     "mpw_ps": 41.9
+    },
+    {
+     "port": "t_tE5o10__clk",
+     "duty": 0.4866,
+     "high_ps": 405.5,
+     "low_ps": 427.8,
+     "mpw_ps": 41.9
+    },
+    {
+     "port": "t_tE1o9__clk",
+     "duty": 0.5134,
+     "high_ps": 427.8,
+     "low_ps": 405.5,
+     "mpw_ps": 42.2
+    }
+   ]
+  },
+  "FF": {
+   "taps": 719,
+   "fall_minus_rise_ps": {
+    "min": -15.1,
+    "med": -2.6,
+    "max": 10.7
+   },
+   "duty_min": 0.4809,
+   "duty_med": 0.4967,
+   "duty_max": 0.5135,
+   "outside_45_55": 0,
+   "mpw_est_fail": 0,
+   "worst": [
+    {
+     "port": "t_sst10__clk_t1",
+     "duty": 0.4809,
+     "high_ps": 400.7,
+     "low_ps": 432.6,
+     "mpw_ps": 40.9
+    },
+    {
+     "port": "t_sst10__clk_t2",
+     "duty": 0.4809,
+     "high_ps": 400.8,
+     "low_ps": 432.6,
+     "mpw_ps": 40.8
+    },
+    {
+     "port": "t_lk_ES1__clk",
+     "duty": 0.481,
+     "high_ps": 400.8,
+     "low_ps": 432.5,
+     "mpw_ps": 41.4
+    },
+    {
+     "port": "t_nst3_turn__clk_t10",
+     "duty": 0.4812,
+     "high_ps": 401.0,
+     "low_ps": 432.4,
+     "mpw_ps": 42.2
+    },
+    {
+     "port": "t_sst10__clk_t3",
+     "duty": 0.4812,
+     "high_ps": 401.0,
+     "low_ps": 432.3,
+     "mpw_ps": 40.9
+    }
+   ]
+  }
+ },
+ "polarity": {
+  "taps": 719,
+  "odd_parity_taps": 0,
+  "odd_first": [],
+  "roots": [
+   "root"
+  ],
+  "stages_med": 88,
+  "stages_max": 208
+ }
+}
