@@ -39,5 +39,11 @@
   "throughput": "UNQUALIFIED: source lane count is not a production throughput claim",
   "memory_bytes_per_edge": "XS3 12 native128x256 SRAM perhalf; exact port activity needs P3 schedule",
   "replication_cost": "16 pair instances; one wire-only broadcast of bin to both halves; no new mux/demux; XS inputs explicit, no unproved straps",
-  "physical_gate": "No P&R until source composition and model throughput/reduction/geometry gates"
+  "physical_gate": "No P&R until source composition and model throughput/reduction/geometry gates",
+  "measured_ownership": {
+    "receipt_commit": "b22e4aa95",
+    "state_Q_bits_inside_32physical_halves": 804768,
+    "parent_residual_Q_bits": 0,
+    "parent_residual_seq_cells": 0
+  }
 }
