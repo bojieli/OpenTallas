@@ -1,0 +1,9 @@
+Claude reset: parked 2026-10-29 05:0x PDT. No data ECO was implemented or launched.
+
+RING normal DRT, finish and abstract completed exit0; DRC0/antenna0, RCX145531nets, VDD/VSS connected. Actual routed clock fingerprint1356 clock cells master+bbox/graph/sink identities unchanged vs actual original5GRT. Current post unit2936780 canonical signoff NOT SIGNED: TT-24.125146/2, FF-8.506085/16, slew1752TT/1479FF (limit320ps; max487.44ps), cap0; pair51.0TT/47.3FF passes, spread34.88/34.72. TTpin-flopmean290.5 is outside250+-40 by0.5ps. No clocktrim authorized. Pin audit also staleKITmanifest clkE233.28 vsactualcenter116.664/116.64, data2227unchanged/FT12declared. Parentplan must provide explicit approvedcurrentC25 clockentry/masterpin event; currentc25overlay alreadycontains fourRINGrefs centerclk pinsfile/note, but receipt not received. Do not silently rewrite oldpins/freeze.
+
+BothTTnegative endpoints originateqid[1] faceFF center6.588/116.775 -> lane7/6 cap_carry_we[1], -24.125/-10.97. First dataINV3 u_bin_qid/_3_ sits7.182/186.57 (~69.93um away); QNload15.10cap,100.63ps gate+29.49ps wire, INV3load26.12cap/8loads56.33ps +45.41wire. Proposed only, NOT implemented: samefunctionINVx11 move tofree6.372/116.91 slot(width.702), +BUFx2 on16actualnegativecaptureDs listed. Proposal picture generated and personally viewed; no PNR/STA/ECO launched. Need also diagnose/repair1752slew violations, manycontrolnets; simple17cellproposal does not claim to fix allDRV.
+
+First endpointdiagnostic incorrectlytime_sta_ui converted an alreadyps get_property slack by1e12; raw preserved, derived TSV/JSON divide1e12 matchingcanonicalSTA, script corrected. No rerun needed for names.
+
+Remote current kit epyc2:/srv/opentallas-scratch2/claude/codex-ring-nearmiss-1029/kit_drt, post.log, signoff/signoff.json, signoff/{tt,ff}/sta.log, views/sta_{tt,ff}.json, pin_audit.json. Tools staged fromd3b422a9 afteractiveDRT release; no oldproducer relabel.
