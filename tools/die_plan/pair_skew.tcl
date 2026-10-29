@@ -46,6 +46,8 @@
 # loaded: no extra key, output byte-identical.
 #
 # env (standalone): OT_PS_OUT (TSV path), CORNER (label), OT_PS_CREDIT_MAX (default 5000), OT_PS_TARGETS (target file).
+# OT_PS_CORNER: explicit OpenSTA corner name for a multi-corner diagnostic session;
+# filters BOTH raw clock tags and credited path searches. Unset retains single-corner behavior.
 # TSV: H <key> <value> ; P <max|min> <launch> <capture> <skew_ps> <crpr_ps> <raw_damage_ps> ; PT (same, target-relative)
 
 proc ot_ps_ps {s} { return [expr {$s * 1e12}] }
@@ -102,6 +104,7 @@ proc ot_ps_ckarr {pin clk which} {
         while {[$it has_next]} {
           set pa [$it next]; set tag [$pa tag]; set e [lindex $tag 4]
           if {[lindex $tag 3] ne $cn || $e ni {^ v} || [string first "(clock prop)" $tag] < 0} continue
+          if {[info exists ::env(OT_PS_CORNER)] && [lindex $tag 1] ne $::env(OT_PS_CORNER)} continue
           set x [expr {[$pa arrival] * 1e12 - [lindex $wf [expr {$e eq "^" ? 0 : 1}]]}]
           if {[lsearch -real $vals $x] < 0} { lappend vals $x }
         }
@@ -111,6 +114,7 @@ proc ot_ps_ckarr {pin clk which} {
       if {[llength $vals] == 1} { return [lindex $vals 0] }
       return ""
     }
+    if {[info exists ::env(OT_PS_CORNER)]} {error "OT_PS_CORNER requires clock-tag API: $err"}
     set ::ot_ps_method "property"
     puts "OT_PS_WARN clock-tag arrival API unavailable ($err); falling back to arrival_${which}_rise"
   }
@@ -187,8 +191,18 @@ proc ot_ps_related {R} {
 proc ot_ps_path {l dn dly} {
   # exact credited skew of one pair and check: {skew_ps crpr_ps} or {} when no constrained reg->reg path exists
   set lck [get_pins -quiet "[lindex [dict get $::ot_ps_R $l] 0]"]
-  if {![llength $lck] || [catch {set pes [find_timing_paths -from $lck -to [get_pins $dn] -path_delay $dly \
-                                              -group_path_count 1 -endpoint_path_count 1]}] || ![llength $pes]} { return {} }
+  set corner_args {}
+  if {[info exists ::env(OT_PS_CORNER)]} {
+    if {$::env(OT_PS_CORNER) eq ""} {error "OT_PS_CORNER must name an exact OpenSTA corner"}
+    set corner_args [list -corner $::env(OT_PS_CORNER)]
+  }
+  if {![llength $lck]} {return {}}
+  if {[catch {set pes [find_timing_paths -from $lck -to [get_pins $dn] -path_delay $dly \
+                                              -group_path_count 1 -endpoint_path_count 1 {*}$corner_args]} error]} {
+    if {[llength $corner_args]} {error "OT_PS_CORNER path search failed: $error"}
+    return {}
+  }
+  if {![llength $pes]} {return {}}
   set pe [lindex $pes 0]
   if {![$pe is_check] || [$pe is_latch_check]} { return {} }
   set role [$pe check_role]
