@@ -5453,3 +5453,5 @@ All185 lane files inventoried in lanes/CODEX.md; 8 active owner groups plus inde
 
 ### OWNER?
 None newly required; pending decisions recorded here as plain text while other work continues. Existing HEAD shared KP4 codeword owner ruling02:39 is closed and binding.
+
+OWNER? 2026-10-29 02:58 PDT: S81 has only external rst_n plus synchronous reset wavefront, so release offsets do not guarantee a long local reset assertion. Actual source 12relay+2sync counterexample yields3known-low sinkedges, not14. May the source root enforce a fixed >=64-clock hold after every reset assertion (boot latency priced) to support the BF/ROM LEC reset contract, or should the external boot/reset protocol mandate that hold? Until decided I keep the current contract unchanged and work on PHY/core closure.

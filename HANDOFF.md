@@ -1628,3 +1628,9 @@ CODEX: 2026-10-29 02:57 PDT independent HEADtileclock G1 PASS-COND diagnostic CT
 CODEX: 2026-10-29 takeover resumed; all185 lanes inventoried, physical5dies/token/sharedclock/flow/independentGEOM active; inherited jobs preserved, no blocking owner dialogs. Canonicalmain309dfdf952.
 
 CODEX: 2026-10-29 02:57 PDT HEAD tile prebuild clock site45→1→0 fixed; independent G1COND/diagnostic CTS+GRT50live epyc2 codex-head-tile-closure-1029, candidatee4be546a7, noRTLcycles/noSIGNED.
+
+CODEX: 2026-10-29 02:57 PDT KV25 nativeclock START reprice LIVEintel1; sharedmapping19testsPASS, allkit/PHY-PVcontinuations owned; actualAHUB/KVS_PCgeometryFAIL621/681um blocksroute.
+
+CODEX: 2026-10-29 02:58 PDT QC takeover native313STARTreprice LIVE2701652; BTAB50it measuredoverflow0/4layers, jointPGclock484/484witnessseedPASS, full89180PGreplanLIVE; A0freshproof/nativejoins independentlyowned.
+
+CODEX: 2026-10-29 02:58 PDT S81 resumed allphysical work via ownbranches; currentV2PHYrecomposeLIVE(+6/+1cycles3586FF), FEEDclockrepair ownedCLOCK, coreCFG/H0/VQ/L2 ownedcores. Actualresetforest counterexample disprovesreleaseoffset=assertwindow; nofalsecontract emitted, OWNER plainlog.
