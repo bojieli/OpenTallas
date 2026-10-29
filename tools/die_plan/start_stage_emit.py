@@ -280,6 +280,12 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
     sv.append(");")
     for s in stages:
         sv.append(f"    wire st_{s['id']}_start;")
+        if s["root"]:
+            # DIE-HEAD-31: the root counter's FSTART D-side output (start_d, DIE-HEAD-10) is a driven output of
+            # ot_dp_landing_root; bind it to its own named net (no load at die level, no tie, no exemption) so every
+            # master port of the stage is connected (port_bind_gate nested check).
+            s["start_d_net"] = f"st_{s['id']}_start_d"
+            sv.append(f"    wire {s['start_d_net']};")
     for s in stages:
         local_reset = "rst_raw_n"
         if reset_wave and not s["root"]:
@@ -304,7 +310,8 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
             # the start-tree root stage IS the die's root counter (DIE-HEAD-11): SETTLE cycles after the raw release on
             # its own tree tap, the same ot_dp_landing_root a root partition uses; no die-top root start input
             sv.append(f"    {ROOT_MODULE} #(.SETTLE({s['settle']})) u_st_{s['id']} "
-                      f"(.clk({s['clock_port']}), .rst_raw_n(rst_raw_n), .start(st_{s['id']}_start));")
+                      f"(.clk({s['clock_port']}), .rst_raw_n(rst_raw_n), .start(st_{s['id']}_start), "
+                      f".start_d({s['start_d_net']}));")
             continue
         ps = start_net(s["parent"])
         sv.append(f"    {STAGE_MODULE} #(.PAD({s['pad']}), .EDGE_FALL({int(s['edge_fall'])})) u_st_{s['id']} "
