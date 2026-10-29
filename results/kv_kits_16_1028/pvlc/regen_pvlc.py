@@ -163,7 +163,11 @@ def regen(plan_dir, out, tid, pins_rel):
             lctx["io_floor_ps"][p + "x"] = lctx["io_floor_ps"][p]
     lctx["inputs"] = ins
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
-    lerr = sdc_lint.lint(sdc, **lctx)
+    if (kd / "ft_ports.json").is_file():
+        import ft_ports as FT
+        (kd / "ft_interface.json").write_text(json.dumps(FT.model_skeleton(json.loads((kd / "ft_ports.json").read_text())), indent=1) + "\n")
+    fti = kd / "ft_interface.json"
+    lerr = sdc_lint.lint(sdc, **lctx, **({"ft_interface": json.loads(fti.read_text())} if fti.is_file() else {}))
     if lerr:
         raise SystemExit(f"{tid}: sdc_lint FAIL {lerr[:5]}")
 
@@ -187,9 +191,6 @@ def regen(plan_dir, out, tid, pins_rel):
 
     # (5) flow: two-mode GRT, ft interface skeleton, signoff bundle, provenance
     GK._ms().plan_tree_cts(kd, cfg)
-    if (kd / "ft_ports.json").is_file():
-        import ft_ports as FT
-        (kd / "ft_interface.json").write_text(json.dumps(FT.model_skeleton(json.loads((kd / "ft_ports.json").read_text())), indent=1) + "\n")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     tm = GK.timing_modes_stage(kd)
     subprocess.run([sys.executable, "-I", str(REPO / "tools/die_plan/signoff.py"), "bundle", str(kd)], check=True)
