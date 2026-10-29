@@ -76,5 +76,16 @@ class ExitStatus(unittest.TestCase):
    lines=''.join(f'FAR_LAYER_SUMMARY layer {n} ok 32 bad 0 cal_start 1 result_first 2 result_last 3 PASS\n' for n in range(36))
    (d/'sim.log').write_text('KVSLICE_BOOT PASS x\n'+lines.replace('layer 7 ok 32 bad 0 cal_start 1 result_first 2 result_last 3 PASS','layer 7 ok 31 bad 1 cal_start 1 result_first 2 result_last 3 FAIL'))
    self.assertEqual(kv_verdict.classify(d,36)[0],'FAIL')
+   self.assertEqual(kv_verdict.main([str(d),'--layers','36','--expect','fail']),0)
    (d/'sim.log').write_text('KVSLICE_BOOT PASS x\n'+lines); self.assertEqual(kv_verdict.classify(d,36)[0],'PASS')
+ def test_epoch_stall_cannot_catch_token_mutant(self):
+  import sys; sys.path.insert(0,str(HERE)); import kv_verdict
+  with tempfile.TemporaryDirectory() as td:
+   d=Path(td); (d/'exit').write_text('0\n')
+   stalled=''.join(f'FAR_LAYER_SUMMARY layer {n} ok 0 bad 0 cal_start -1 result_first -1 result_last -1 FAIL\n' for n in range(36))
+   (d/'sim.log').write_text('KVSLICE_BOOT PASS frames_sent 7404/7404\n'+stalled)
+   self.assertEqual(kv_verdict.main([str(d),'--layers','36','--expect','fail']),1)
+   self.assertTrue((d/'verdict').read_text().startswith('FAIL'))
+   (d/'sim.log').write_text('KVSLICE_BOOT FAIL errors 1\n'+stalled)
+   self.assertEqual(kv_verdict.main([str(d),'--layers','36','--expect','fail']),1)
 if __name__=='__main__':unittest.main()
