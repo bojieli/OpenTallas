@@ -1,0 +1,58 @@
+{
+ "scope": "Prospective soft L2 placement only: no parent binding/source adoption, clock tree or timing qualification",
+ "old_max_um": 418.4129999999999,
+ "limit_um": 400.0,
+ "ff_count": 3567,
+ "moving_ff_count": 285,
+ "moved": 285,
+ "failed_ff_ids": [],
+ "new_max_um": 399.999,
+ "new_over405": 0,
+ "known_legs": 3137,
+ "overlaps": [],
+ "unconstrained_external_ports": [
+  "fault",
+  "rst_n",
+  "sid[0]",
+  "sid[1]",
+  "sid[2]",
+  "sid[3]"
+ ],
+ "max_move_um": 25.002,
+ "original_r2r_max_um": 221.35,
+ "r2r_upper_bound_um": 271.354,
+ "preserved_orientations": true,
+ "preserved_all_other_placed_cells": 12614,
+ "parent_soft_original_slot": {
+  "inst": "u_gunit.u_l2",
+  "module": "dsdv_gunit_l2",
+  "lef": "physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2/dsdv_gunit_l2.lef",
+  "origin_um": [
+   1019.52,
+   613.44
+  ],
+  "outline_um": [
+   345.6,
+   43.2
+  ],
+  "orient": "R0",
+  "track_offset_um": [
+   0.108,
+   0.012
+  ],
+  "pins_file": "inputs/core_pins/dsdv_gunit_l2.json",
+  "obs_max": "M5"
+ },
+ "added_cycles": 0,
+ "endpoint_basis": "Actual FF bounding-box centers to actual typed partner pin coordinates (2872); CW (265) uses declared station anchor, not measured per-bit parent station FFs.",
+ "required_before_adoption": [
+  "Actual parent synthesis identity and placement binding for all source FF/logic cells",
+  "Per-bit CW station physical FF sites",
+  "Source endpoints for fault, rst_n and sid[3:0]",
+  "New parent soft-sink clock and TT/FF timing; no old core tree",
+  "Parent mapped cell-cap budget includes all original actual cells"
+ ],
+ "pin_endpoint_guard_um": 5.0,
+ "known_partner_group_max_um": 399.999,
+ "CW_anchor_group_max_um": 399.959
+}
