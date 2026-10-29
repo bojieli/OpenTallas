@@ -442,10 +442,12 @@ module ot_dp_landing_origin_s #(
         wire [PADMAX-1:0] export_q;
         for (genvar k = 0; k < PADMAX; k = k + 1) begin : g_copy
             wire d;
-            if (k == 0) assign d = s1; else assign d = export_q[k-1];
+            if (k == 0) assign d = s1;
+            else if (k == 1) assign d = s2;
+            else assign d = pd[k-2];
 `ifdef OT_ORIGIN_EXPORT_MUTANT_LATE
             wire copy_d;
-            if (k == 0) assign copy_d = s2; else assign copy_d = export_q[k-1];
+            if (k == 0) assign copy_d = s2; else assign copy_d = d;
 `else
             wire copy_d = d;
 `endif
