@@ -379,9 +379,18 @@ def _cell_base(m):
     return re.sub(r"x(p\d+|\d+).*$", "", m.split("_ASAP7")[0])
 
 
-def cell_fn(m, ins):
+def cell_fn(m, ins, output=None):
     """ins {pin: bool} -> output bool of a single-output ASAP7 combinational cell; KeyError when not modelled."""
     b = _cell_base(m)
+    if b == "HA":
+        # ASAP7 SIMPLE RVT TT liberty: CON = (!A)+(!B), SN = !(A^B).
+        # Both outputs occur in mapped binary-count decode cones.  Unknown
+        # output names still reject the proof instead of guessing a function.
+        if output == "CON":
+            return not (ins["A"] and ins["B"])
+        if output == "SN":
+            return ins["A"] == ins["B"]
+        raise KeyError(f"no boolean model for {m} output {output}")
     if b.startswith(("BUF", "HB")):
         return ins["A"]
     if b.startswith("INV"):
@@ -621,9 +630,9 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             return False
         if net in memo:
             return memo[net]
-        ci = _single_drv(net)[0]
+        ci, output = _single_drv(net)
         m, _, pp = F.cells[ci]
-        memo[net] = cell_fn(m, {k: _ev(F.find(v[0]), asg, memo) for k, (dd_, v) in pp.items() if dd_ == "in" and v})
+        memo[net] = cell_fn(m, {k: _ev(F.find(v[0]), asg, memo) for k, (dd_, v) in pp.items() if dd_ == "in" and v}, output)
         return memo[net]
 
     def _depth(src, dst, memo):
