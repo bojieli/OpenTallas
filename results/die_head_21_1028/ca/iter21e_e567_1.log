@@ -1,0 +1,20 @@
+ITER21 Wed Oct 28 21:58:47 PDT 2026 TAG=e567 N=1 PG=/srv/opentallas-scratch2/claude/die-head-21/ca/clk21e_lat567_1 LT=567.2 LF=461.2 DHOST=intel1 code 910f8b6d69
+{"stages": 203, "flops": 675, "die_inputs": 26, "die_outputs": 326, "direct_ports": 0, "max_cell_to_stage_um": 4.860000000000582}
+removed v lines 386 old pins 193 new stages 203
+removed v lines 386 old pins 193 new stages 203
+Total        1071232948       3967818            0.37%             0 /  0 /  0
+EXIT 0
+Total        1071232948       3967818            0.37%             0 /  0 /  0
+EXIT 0
+START Wed Oct 28 22:00:24 PDT 2026 code 910f8b6d69 G=/srv/opentallas-scratch2/claude/die-head-21/ca/clk21_e567_1 LAT TT=567.2 FF=461.2
+PLAN {'regions': 529, 'tree_edges': 528, 'tree_edges_clean': 528, 'tree_edges_fall': 368, 'crossings': 427, 'depth4': 427, 'depth8': 0, 'depth16': 0, 'fail': 0, 'below_100ps': 0, 'worst_margin_lo_ps': 113.2, 'worst_margin_hi_ps': 946.2}
+START {'virtual_nodes': 203, 'retime_nodes': 36, 'start_edges': 528, 'start_clean': 528, 'start_fail': 0, 'start_min_sync_dist_ps': 116.6, 'fall_measured': 528}
+MC {'chips': 2000, 'violations': 0, 'worst_lo_to_guard_ps': 113.3, 'worst_hi_to_guard_ps': 946.3} STA_INTERVAL rows_without_fall 0
+COUNT-ALIGN SS-INFO (TT x 1.27) worst lo 64.4 hi 898.7 fail 8 slot_read fail 0 guard fail 0 start-skew fail 0/528 FAIL (INFO, never gates)
+COUNT-ALIGN TT crossings 427 (sta 427, tree 0, no taps 0, key region unbound 0) worst lo 113.1 hi 947.4 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/528 <100 0 ocv table max lo/hi 205.3/205.3 PASS
+COUNT-ALIGN TT RING built 240 (worst lo 699.7 hi 1122.8) declared 187 (worst lo 113.1 hi 947.4)
+COUNT-ALIGN FF crossings 427 (sta 427, tree 0, no taps 0, key region unbound 0) worst lo 165.2 hi 999.5 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/528 <100 0 ocv table max lo/hi 175.1/175.1 PASS
+COUNT-ALIGN FF RING built 240 (worst lo 655.1 hi 1164.3) declared 187 (worst lo 165.2 hi 999.5)
+{"stages": 203, "flops": 675, "die_inputs": 26, "die_outputs": 326, "direct_ports": 0, "max_cell_to_stage_um": 4.860000000000582}
+CONVERGE /srv/opentallas-scratch2/claude/die-head-21/ca/st_e567_1 stages 203 203 diffs 0 identical
+ITER21_END Wed Oct 28 22:01:02 PDT 2026

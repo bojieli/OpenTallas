@@ -8,15 +8,122 @@
  "seed": "die-head-20/ca/clk20_B (ca/bind.json + proof_t), --start-prev = clk20_B/ca/plan.json",
  "converged_pass": 1,
  "converge": "emit(1) from run B == emit(2) from pass-1 run: 362/362 stages, 0 diffs, start_stages.json byte-identical",
- "stages": 362, "flops": 1451, "edge_fall_stages": 360, "edge_rise_stages": 2, "pad": 0,
+ "stages": 362,
+ "flops": 1451,
+ "edge_fall_stages": 360,
+ "edge_rise_stages": 2,
+ "pad": 0,
  "vs_st_max_2": "358 -> 362 stages: 4 new (r3_8, r18_2, r19_2, r37_2, 4 flops each, fall) + 3 changed (b3, b19, b37: 3 flops rise -> 4 flops fall)",
- "combo_grt": {"TT": "overflow 0, EXIT 0", "FF": "overflow 0, EXIT 0"},
- "plan": {"regions": 688, "crossings": 427, "depth4": 427, "fail": 0, "worst_margin_lo_ps": 134.6, "worst_margin_hi_ps": 572.0},
- "start": {"virtual_nodes": 362, "start_edges": 687, "start_clean": 687, "start_fail": 0, "start_min_sync_dist_ps": 116.4, "start_skew_ps": [57.5, 89.7], "gate_start_skew_fail": "0/687", "ss_info_x1.27": "worst lo 71.9 hi 423.6, start-skew fail 0/687 (run B: 8/687), INFO never gates"},
- "mc": {"chips": 2000, "violations": 0, "worst_lo_to_guard_ps": 134.5, "worst_hi_to_guard_ps": 572.1},
- "gate": {
-  "TT": {"lo": 134.5, "hi": 573.2, "verdict": "PASS", "built_240_hd_tile_lo": 659.5, "built_240_hd_tile_hi": 1074.2, "declared_187_lo": 134.5, "declared_187_hi": 573.2},
-  "FF": {"lo": 162.7, "hi": 624.9, "verdict": "PASS", "built_240_hd_tile_lo": 614.8, "built_240_hd_tile_hi": 1112.5, "declared_187_lo": 162.7, "declared_187_hi": 624.9}
+ "combo_grt": {
+  "TT": "overflow 0, EXIT 0",
+  "FF": "overflow 0, EXIT 0"
  },
- "labels": "all numbers CHECKED (run by this lane). MODEL-CORR-1: 360/362 start stages sample on the FALLING edge (COORD note said 12), so every CA lo/hi, MC and start-skew number above depends on falling-edge stages -> UNCHECKED for the falling-edge BUF hold optimism until the per-edge refit lands"
+ "plan": {
+  "regions": 688,
+  "crossings": 427,
+  "depth4": 427,
+  "fail": 0,
+  "worst_margin_lo_ps": 134.6,
+  "worst_margin_hi_ps": 572.0
+ },
+ "start": {
+  "virtual_nodes": 362,
+  "start_edges": 687,
+  "start_clean": 687,
+  "start_fail": 0,
+  "start_min_sync_dist_ps": 116.4,
+  "start_skew_ps": [
+   57.5,
+   89.7
+  ],
+  "gate_start_skew_fail": "0/687",
+  "ss_info_x1.27": "worst lo 71.9 hi 423.6, start-skew fail 0/687 (run B: 8/687), INFO never gates"
+ },
+ "mc": {
+  "chips": 2000,
+  "violations": 0,
+  "worst_lo_to_guard_ps": 134.5,
+  "worst_hi_to_guard_ps": 572.1
+ },
+ "gate": {
+  "TT": {
+   "lo": 134.5,
+   "hi": 573.2,
+   "verdict": "PASS",
+   "built_240_hd_tile_lo": 659.5,
+   "built_240_hd_tile_hi": 1074.2,
+   "declared_187_lo": 134.5,
+   "declared_187_hi": 573.2
+  },
+  "FF": {
+   "lo": 162.7,
+   "hi": 624.9,
+   "verdict": "PASS",
+   "built_240_hd_tile_lo": 614.8,
+   "built_240_hd_tile_hi": 1112.5,
+   "declared_187_lo": 162.7,
+   "declared_187_hi": 624.9
+  }
+ },
+ "labels": "all numbers CHECKED (run by this lane). MODEL-CORR-1: 360/362 start stages sample on the FALLING edge (COORD note said 12), so every CA lo/hi, MC and start-skew number above depends on falling-edge stages -> UNCHECKED for the falling-edge BUF hold optimism until the per-edge refit lands",
+ "spice_edge": {
+  "order": "COORD after NUMBER-CHECK-INV-1 (0/152 path-edges >2%): inverter-tree freeze-gate clock number uses --clock-cal spice_edge",
+  "change": "run_ca21e.sh = run_ca21.sh with count_align_plan --sta-clock-cal spice_edge and die_sta_related --clock-cal spice_edge; nothing else (same RINGG/RINGP, --clock-cell inv2 -> inv model, LAT 567.2/461.2)",
+  "not_changed": "landed_phase_ocv.py has no clock-cal option; spice_scale.py (lane script nc-headpart, not main) still multiplies landed_ocv rows by the single BUFx24 factor 1.0485/1.0552 in both runs; this feeds the planner/MC input ocv_spice.json, not the die_sta_related gate; no edge variant exists on main (rule freeze: not forked)",
+  "step0": "record CA chain on clk21_lat567_1 inputs + st_lat567_1 stages (362) with spice_edge: plan wants 203 start nodes (regions 529, retime 36), emit differs -> stages depend on the cal -> new iteration",
+  "converged_pass": 1,
+  "converge": "iter21e.sh seed clk21e_lat567_1: emit(1) 203 stages == emit(2) after combo GRT TT/FF (overflow 0) + CA, 0 diffs",
+  "stages": 203,
+  "flops": 675,
+  "edge_fall_stages": 61,
+  "edge_rise_stages": 142,
+  "pad": 0,
+  "plan": {
+   "regions": 529,
+   "tree_edges": 528,
+   "tree_edges_fall": 368,
+   "crossings": 427,
+   "fail": 0,
+   "worst_margin_lo_ps": 113.2,
+   "worst_margin_hi_ps": 946.2
+  },
+  "start": {
+   "virtual_nodes": 203,
+   "retime_nodes": 36,
+   "start_edges": 528,
+   "start_clean": 528,
+   "start_min_sync_dist_ps": 116.6,
+   "gate_start_skew_fail": "0/528",
+   "ss_info_x1.27": "worst lo 64.4 hi 898.7, start-skew fail 0/528 (INFO)"
+  },
+  "mc": {
+   "chips": 2000,
+   "violations": 0,
+   "worst_lo_to_guard_ps": 113.3,
+   "worst_hi_to_guard_ps": 946.3
+  },
+  "gate": {
+   "TT": {
+    "lo": 113.1,
+    "hi": 947.4,
+    "verdict": "PASS",
+    "built_240_lo": 699.7,
+    "built_240_hi": 1122.8,
+    "declared_187_lo": 113.1,
+    "declared_187_hi": 947.4
+   },
+   "FF": {
+    "lo": 165.2,
+    "hi": 999.5,
+    "verdict": "PASS",
+    "built_240_lo": 655.1,
+    "built_240_hi": 1164.3,
+    "declared_187_lo": 165.2,
+    "declared_187_hi": 999.5
+   }
+  },
+  "what_spice_edge_models": "inverter (CKINVDCx16) trees only: late arrivals x SPICE_CLOCK_CAL_INV (0.9324 TT / 0.9380 FF, as spice), early arrivals x SPICE_CLOCK_CAL_INV_EARLY (1.0241 / 1.0487, spice vs OpenSTA MIN analysis) capped at late; CPPR node range re-derived. It is an early/late (min/max-analysis pin-cap) correction, NOT a rise/fall per-edge model: fall_late/fall_early keys get the same factors as rise; for BUFx24 spice_edge == spice",
+  "model_corr_1": "falling-edge stages are NOT covered by a per-edge model -> the 61 falling-edge stages (and every gate/MC/start-skew number through them) stay UNCHECKED until the per-edge refit lands",
+  "tools": "CA tools unchanged between wt/die-head-21 a9d8617e6c (spice run) and 6c2502ea29/910f8b6d69 (spice_edge runs; diffs only gen_phys/clock_landings/schema/sdc_lint/strap sites)"
+ }
 }
