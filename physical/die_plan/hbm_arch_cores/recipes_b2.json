@@ -171,7 +171,7 @@
   "source_commit": "d34578d6f",
   "read_at_commit": true,
   "files_at": {
-   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv": "8e7f8a9f05",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv": "b5b883084d",
    "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": "8e7f8a9f05"
   },
   "files_at_note": "HBM-CORES-KITS-4 10-28: ot_static_cmd_target MODE 1 run_base/run_count constant (kit rtl_lint FAIL on the d34578d6f copy); HBM-CORES-KITS-5 8e7f8a9f05: + tw_sel reset (and xload ctl em_off/lsh/gtp reset for ctlx), kit LEC NOT EQUIVALENT _k10; all other files at source_commit",
