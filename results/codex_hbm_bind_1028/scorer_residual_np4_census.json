@@ -1,0 +1,2500 @@
+{
+  "schema": "opentallas.hbm.scorer_residual_census.v1",
+  "groups": {
+    "hb_idx__s_NE": {
+      "candidate_partition": "NE_b103",
+      "cells": 223,
+      "modules": {
+        "$or": 3,
+        "$add": 44,
+        "$reduce_or": 1,
+        "$not": 13,
+        "$adlatch": 3,
+        "$ge": 2,
+        "$gt": 2,
+        "$logic_and": 2,
+        "$logic_not": 19,
+        "$logic_or": 17,
+        "$lt": 8,
+        "$mul": 21,
+        "$reduce_bool": 4,
+        "$ne": 1,
+        "$nex": 4,
+        "$dff": 21,
+        "$adff": 13,
+        "$mux": 27,
+        "$reduce_and": 2,
+        "$shiftx": 8,
+        "$sub": 2,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2,
+        "hidx_meta_w25_d123_r0": 2,
+        "ot_hbm_idx_score_fault_static": 1
+      },
+      "register_bits": 5686,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NE.scorer.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "1"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 1,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[0].keep_pipe",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "106",
+            "W": "4"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 4,
+            "q": 4,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[0].md",
+          "module": "hidx_meta_w25_d123_r0",
+          "params": {},
+          "port_widths": {
+            "clk": 1,
+            "d": 25,
+            "q": 25,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[1].keep_pipe",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "106",
+            "W": "4"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 4,
+            "q": 4,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[1].md",
+          "module": "hidx_meta_w25_d123_r0",
+          "params": {},
+          "port_widths": {
+            "clk": 1,
+            "d": 25,
+            "q": 25,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.score_fault_check",
+          "module": "ot_hbm_idx_score_fault_static",
+          "params": {},
+          "port_widths": {
+            "clk": 1,
+            "fault": 1,
+            "protocol_fault": 4,
+            "rst_n": 1,
+            "score_status": 18
+          }
+        }
+      ],
+      "input_cut_bits": 5388,
+      "output_cut_bits": 5301,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NE.scorer.ge[0].gc[0]": {
+      "candidate_partition": "NE_b100",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NE.scorer.ge[0].gc[0].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[0].gc[0].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[0].gc[0].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 2926,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NE.scorer.ge[0].gc[1]": {
+      "candidate_partition": "NE_b100",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NE.scorer.ge[0].gc[1].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[0].gc[1].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[0].gc[1].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NE.scorer.ge[0].gc[2]": {
+      "candidate_partition": "NE_b101",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NE.scorer.ge[0].gc[2].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[0].gc[2].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[0].gc[2].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NE.scorer.ge[0].gc[3]": {
+      "candidate_partition": "NE_b101",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NE.scorer.ge[0].gc[3].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[0].gc[3].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[0].gc[3].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 3382,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NE.scorer.ge[1].gc[0]": {
+      "candidate_partition": "NE_b102",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NE.scorer.ge[1].gc[0].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[1].gc[0].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[1].gc[0].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 2926,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NE.scorer.ge[1].gc[1]": {
+      "candidate_partition": "NE_b102",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NE.scorer.ge[1].gc[1].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[1].gc[1].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[1].gc[1].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NE.scorer.ge[1].gc[2]": {
+      "candidate_partition": "NE_b103",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NE.scorer.ge[1].gc[2].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[1].gc[2].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[1].gc[2].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NE.scorer.ge[1].gc[3]": {
+      "candidate_partition": "NE_b103",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NE.scorer.ge[1].gc[3].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[1].gc[3].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NE.scorer.ge[1].gc[3].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 3381,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NW": {
+      "candidate_partition": "NW_b103",
+      "cells": 223,
+      "modules": {
+        "$or": 3,
+        "$add": 44,
+        "$reduce_or": 1,
+        "$not": 13,
+        "$adlatch": 3,
+        "$ge": 2,
+        "$gt": 2,
+        "$logic_and": 2,
+        "$logic_not": 19,
+        "$logic_or": 17,
+        "$lt": 8,
+        "$mul": 21,
+        "$reduce_bool": 4,
+        "$ne": 1,
+        "$nex": 4,
+        "$dff": 21,
+        "$adff": 13,
+        "$mux": 27,
+        "$reduce_and": 2,
+        "$shiftx": 8,
+        "$sub": 2,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2,
+        "hidx_meta_w25_d123_r0": 2,
+        "ot_hbm_idx_score_fault_static": 1
+      },
+      "register_bits": 5686,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NW.scorer.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "1"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 1,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[0].keep_pipe",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "106",
+            "W": "4"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 4,
+            "q": 4,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[0].md",
+          "module": "hidx_meta_w25_d123_r0",
+          "params": {},
+          "port_widths": {
+            "clk": 1,
+            "d": 25,
+            "q": 25,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[1].keep_pipe",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "106",
+            "W": "4"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 4,
+            "q": 4,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[1].md",
+          "module": "hidx_meta_w25_d123_r0",
+          "params": {},
+          "port_widths": {
+            "clk": 1,
+            "d": 25,
+            "q": 25,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.score_fault_check",
+          "module": "ot_hbm_idx_score_fault_static",
+          "params": {},
+          "port_widths": {
+            "clk": 1,
+            "fault": 1,
+            "protocol_fault": 4,
+            "rst_n": 1,
+            "score_status": 18
+          }
+        }
+      ],
+      "input_cut_bits": 5388,
+      "output_cut_bits": 5301,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NW.scorer.ge[0].gc[0]": {
+      "candidate_partition": "NW_b100",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NW.scorer.ge[0].gc[0].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[0].gc[0].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[0].gc[0].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 2926,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NW.scorer.ge[0].gc[1]": {
+      "candidate_partition": "NW_b100",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NW.scorer.ge[0].gc[1].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[0].gc[1].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[0].gc[1].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NW.scorer.ge[0].gc[2]": {
+      "candidate_partition": "NW_b101",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NW.scorer.ge[0].gc[2].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[0].gc[2].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[0].gc[2].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NW.scorer.ge[0].gc[3]": {
+      "candidate_partition": "NW_b101",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NW.scorer.ge[0].gc[3].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[0].gc[3].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[0].gc[3].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 3382,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NW.scorer.ge[1].gc[0]": {
+      "candidate_partition": "NW_b102",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NW.scorer.ge[1].gc[0].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[1].gc[0].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[1].gc[0].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 2926,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NW.scorer.ge[1].gc[1]": {
+      "candidate_partition": "NW_b102",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NW.scorer.ge[1].gc[1].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[1].gc[1].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[1].gc[1].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NW.scorer.ge[1].gc[2]": {
+      "candidate_partition": "NW_b103",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NW.scorer.ge[1].gc[2].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[1].gc[2].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[1].gc[2].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_NW.scorer.ge[1].gc[3]": {
+      "candidate_partition": "NW_b103",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_NW.scorer.ge[1].gc[3].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[1].gc[3].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_NW.scorer.ge[1].gc[3].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 3381,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SE": {
+      "candidate_partition": "NE_b002",
+      "cells": 223,
+      "modules": {
+        "$or": 3,
+        "$add": 44,
+        "$reduce_or": 1,
+        "$not": 13,
+        "$adlatch": 3,
+        "$ge": 2,
+        "$gt": 2,
+        "$logic_and": 2,
+        "$logic_not": 19,
+        "$logic_or": 17,
+        "$lt": 8,
+        "$mul": 21,
+        "$reduce_bool": 4,
+        "$ne": 1,
+        "$nex": 4,
+        "$dff": 21,
+        "$adff": 13,
+        "$mux": 27,
+        "$reduce_and": 2,
+        "$shiftx": 8,
+        "$sub": 2,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2,
+        "hidx_meta_w25_d123_r0": 2,
+        "ot_hbm_idx_score_fault_static": 1
+      },
+      "register_bits": 5686,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SE.scorer.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "1"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 1,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[0].keep_pipe",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "106",
+            "W": "4"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 4,
+            "q": 4,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[0].md",
+          "module": "hidx_meta_w25_d123_r0",
+          "params": {},
+          "port_widths": {
+            "clk": 1,
+            "d": 25,
+            "q": 25,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[1].keep_pipe",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "106",
+            "W": "4"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 4,
+            "q": 4,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[1].md",
+          "module": "hidx_meta_w25_d123_r0",
+          "params": {},
+          "port_widths": {
+            "clk": 1,
+            "d": 25,
+            "q": 25,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.score_fault_check",
+          "module": "ot_hbm_idx_score_fault_static",
+          "params": {},
+          "port_widths": {
+            "clk": 1,
+            "fault": 1,
+            "protocol_fault": 4,
+            "rst_n": 1,
+            "score_status": 18
+          }
+        }
+      ],
+      "input_cut_bits": 5388,
+      "output_cut_bits": 5300,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SE.scorer.ge[0].gc[0]": {
+      "candidate_partition": "NE_b000",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SE.scorer.ge[0].gc[0].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[0].gc[0].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[0].gc[0].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 2926,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SE.scorer.ge[0].gc[1]": {
+      "candidate_partition": "NE_b010",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SE.scorer.ge[0].gc[1].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[0].gc[1].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[0].gc[1].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SE.scorer.ge[0].gc[2]": {
+      "candidate_partition": "NE_b010",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SE.scorer.ge[0].gc[2].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[0].gc[2].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[0].gc[2].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SE.scorer.ge[0].gc[3]": {
+      "candidate_partition": "NE_b010",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SE.scorer.ge[0].gc[3].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[0].gc[3].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[0].gc[3].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 3382,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SE.scorer.ge[1].gc[0]": {
+      "candidate_partition": "NE_b001",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SE.scorer.ge[1].gc[0].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[1].gc[0].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[1].gc[0].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 2926,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SE.scorer.ge[1].gc[1]": {
+      "candidate_partition": "NE_b001",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SE.scorer.ge[1].gc[1].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[1].gc[1].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[1].gc[1].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SE.scorer.ge[1].gc[2]": {
+      "candidate_partition": "NE_b001",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SE.scorer.ge[1].gc[2].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[1].gc[2].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[1].gc[2].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SE.scorer.ge[1].gc[3]": {
+      "candidate_partition": "NE_b011",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SE.scorer.ge[1].gc[3].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[1].gc[3].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SE.scorer.ge[1].gc[3].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 3381,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SW": {
+      "candidate_partition": "NW_b002",
+      "cells": 223,
+      "modules": {
+        "$or": 3,
+        "$add": 44,
+        "$reduce_or": 1,
+        "$not": 13,
+        "$adlatch": 3,
+        "$ge": 2,
+        "$gt": 2,
+        "$logic_and": 2,
+        "$logic_not": 19,
+        "$logic_or": 17,
+        "$lt": 8,
+        "$mul": 21,
+        "$reduce_bool": 4,
+        "$ne": 1,
+        "$nex": 4,
+        "$dff": 21,
+        "$adff": 13,
+        "$mux": 27,
+        "$reduce_and": 2,
+        "$shiftx": 8,
+        "$sub": 2,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2,
+        "hidx_meta_w25_d123_r0": 2,
+        "ot_hbm_idx_score_fault_static": 1
+      },
+      "register_bits": 5686,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SW.scorer.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "1"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 1,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[0].keep_pipe",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "106",
+            "W": "4"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 4,
+            "q": 4,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[0].md",
+          "module": "hidx_meta_w25_d123_r0",
+          "params": {},
+          "port_widths": {
+            "clk": 1,
+            "d": 25,
+            "q": 25,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[1].keep_pipe",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "106",
+            "W": "4"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 4,
+            "q": 4,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[1].md",
+          "module": "hidx_meta_w25_d123_r0",
+          "params": {},
+          "port_widths": {
+            "clk": 1,
+            "d": 25,
+            "q": 25,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.score_fault_check",
+          "module": "ot_hbm_idx_score_fault_static",
+          "params": {},
+          "port_widths": {
+            "clk": 1,
+            "fault": 1,
+            "protocol_fault": 4,
+            "rst_n": 1,
+            "score_status": 18
+          }
+        }
+      ],
+      "input_cut_bits": 5388,
+      "output_cut_bits": 5300,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SW.scorer.ge[0].gc[0]": {
+      "candidate_partition": "NW_b000",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SW.scorer.ge[0].gc[0].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[0].gc[0].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[0].gc[0].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 2926,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SW.scorer.ge[0].gc[1]": {
+      "candidate_partition": "NW_b010",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SW.scorer.ge[0].gc[1].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[0].gc[1].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[0].gc[1].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SW.scorer.ge[0].gc[2]": {
+      "candidate_partition": "NW_b010",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SW.scorer.ge[0].gc[2].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[0].gc[2].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[0].gc[2].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SW.scorer.ge[0].gc[3]": {
+      "candidate_partition": "NW_b010",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SW.scorer.ge[0].gc[3].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[0].gc[3].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[0].gc[3].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 3382,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SW.scorer.ge[1].gc[0]": {
+      "candidate_partition": "NW_b001",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SW.scorer.ge[1].gc[0].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[1].gc[0].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[1].gc[0].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 2926,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SW.scorer.ge[1].gc[1]": {
+      "candidate_partition": "NW_b001",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SW.scorer.ge[1].gc[1].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[1].gc[1].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[1].gc[1].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SW.scorer.ge[1].gc[2]": {
+      "candidate_partition": "NW_b001",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SW.scorer.ge[1].gc[2].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[1].gc[2].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[1].gc[2].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 6145,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    },
+    "hb_idx__s_SW.scorer.ge[1].gc[3]": {
+      "candidate_partition": "NW_b011",
+      "cells": 71,
+      "modules": {
+        "$logic_not": 2,
+        "$eq": 3,
+        "$dff": 41,
+        "$mux": 4,
+        "$add": 8,
+        "$not": 3,
+        "$logic_and": 3,
+        "$adff": 3,
+        "$reduce_and": 1,
+        "ot_rst_delivered3": 1,
+        "ot_hdc_delay": 2
+      },
+      "register_bits": 9728,
+      "named_cells": [
+        {
+          "path": "hb_idx__s_SW.scorer.ge[1].gc[3].leaf.core.g_delivered_reset.u_rr",
+          "module": "ot_rst_delivered3",
+          "params": {
+            "REGIONS": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "rst_n": 5,
+            "rst_n_in": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[1].gc[3].leaf.core.u_qlate",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "0",
+            "W": "569"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 569,
+            "q": 569,
+            "rst_n": 1
+          }
+        },
+        {
+          "path": "hb_idx__s_SW.scorer.ge[1].gc[3].leaf.core.u_vl",
+          "module": "ot_hdc_delay",
+          "params": {
+            "D": "104",
+            "RESET": "1",
+            "W": "5"
+          },
+          "port_widths": {
+            "clk": 1,
+            "d": 5,
+            "q": 5,
+            "rst_n": 1
+          }
+        }
+      ],
+      "input_cut_bits": 3482,
+      "output_cut_bits": 3381,
+      "status": "SOFT_PLACEMENT_REQUIRED"
+    }
+  },
+  "soft_cells": 3164,
+  "register_bits": 334040,
+  "note": "Direct net cut bits, not geometric reach or pin-fit qualification. Hard child paths override residual prefixes; no hard core duplication."
+}

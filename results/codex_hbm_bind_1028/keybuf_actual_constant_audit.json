@@ -1,0 +1,376 @@
+{
+  "schema": "opentallas.hbm.keybuf_actual_constant_audit.v1",
+  "rows": [
+    {
+      "path": "hb_idx__s_NE.keybuf.gp[0].u_line",
+      "expected": 4,
+      "value": 4,
+      "source_bits": [
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_NE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3774)"
+        ],
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_NE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3774)"
+        ],
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_NE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3774)"
+        ]
+      ],
+      "pass_value": true
+    },
+    {
+      "path": "hb_idx__s_NE.keybuf.gp[1].u_line",
+      "expected": 5,
+      "value": 5,
+      "source_bits": [
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_NE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3775)"
+        ],
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_NE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3775)"
+        ],
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_NE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3775)"
+        ]
+      ],
+      "pass_value": true
+    },
+    {
+      "path": "hb_idx__s_NE.keybuf.gp[2].u_line",
+      "expected": 6,
+      "value": 6,
+      "source_bits": [
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_NE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3776)"
+        ],
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_NE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3776)"
+        ],
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_NE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3776)"
+        ]
+      ],
+      "pass_value": true
+    },
+    {
+      "path": "hb_idx__s_NE.keybuf.gp[3].u_line",
+      "expected": 7,
+      "value": 7,
+      "source_bits": [
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_NE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3777)"
+        ],
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_NE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3777)"
+        ],
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_NE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3777)"
+        ]
+      ],
+      "pass_value": true
+    },
+    {
+      "path": "hb_idx__s_NW.keybuf.gp[0].u_line",
+      "expected": 0,
+      "value": 0,
+      "source_bits": [
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_NW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3774)"
+        ],
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_NW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3774)"
+        ],
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_NW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3774)"
+        ]
+      ],
+      "pass_value": true
+    },
+    {
+      "path": "hb_idx__s_NW.keybuf.gp[1].u_line",
+      "expected": 1,
+      "value": 1,
+      "source_bits": [
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_NW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3775)"
+        ],
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_NW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3775)"
+        ],
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_NW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3775)"
+        ]
+      ],
+      "pass_value": true
+    },
+    {
+      "path": "hb_idx__s_NW.keybuf.gp[2].u_line",
+      "expected": 2,
+      "value": 2,
+      "source_bits": [
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_NW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3776)"
+        ],
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_NW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3776)"
+        ],
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_NW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3776)"
+        ]
+      ],
+      "pass_value": true
+    },
+    {
+      "path": "hb_idx__s_NW.keybuf.gp[3].u_line",
+      "expected": 3,
+      "value": 3,
+      "source_bits": [
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_NW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3777)"
+        ],
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_NW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3777)"
+        ],
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_NW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3777)"
+        ]
+      ],
+      "pass_value": true
+    },
+    {
+      "path": "hb_idx__s_SE.keybuf.gp[0].u_line",
+      "expected": 4,
+      "value": 4,
+      "source_bits": [
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_SE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3774)"
+        ],
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_SE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3774)"
+        ],
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_SE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3774)"
+        ]
+      ],
+      "pass_value": true
+    },
+    {
+      "path": "hb_idx__s_SE.keybuf.gp[1].u_line",
+      "expected": 5,
+      "value": 5,
+      "source_bits": [
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_SE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3775)"
+        ],
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_SE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3775)"
+        ],
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_SE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3775)"
+        ]
+      ],
+      "pass_value": true
+    },
+    {
+      "path": "hb_idx__s_SE.keybuf.gp[2].u_line",
+      "expected": 6,
+      "value": 6,
+      "source_bits": [
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_SE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3776)"
+        ],
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_SE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3776)"
+        ],
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_SE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3776)"
+        ]
+      ],
+      "pass_value": true
+    },
+    {
+      "path": "hb_idx__s_SE.keybuf.gp[3].u_line",
+      "expected": 7,
+      "value": 7,
+      "source_bits": [
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_SE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3777)"
+        ],
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_SE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3777)"
+        ],
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_SE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3777)"
+        ]
+      ],
+      "pass_value": true
+    },
+    {
+      "path": "hb_idx__s_SW.keybuf.gp[0].u_line",
+      "expected": 0,
+      "value": 0,
+      "source_bits": [
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_SW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3774)"
+        ],
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_SW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3774)"
+        ],
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_SW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3774)"
+        ]
+      ],
+      "pass_value": true
+    },
+    {
+      "path": "hb_idx__s_SW.keybuf.gp[1].u_line",
+      "expected": 1,
+      "value": 1,
+      "source_bits": [
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_SW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3775)"
+        ],
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_SW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3775)"
+        ],
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_SW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3775)"
+        ]
+      ],
+      "pass_value": true
+    },
+    {
+      "path": "hb_idx__s_SW.keybuf.gp[2].u_line",
+      "expected": 2,
+      "value": 2,
+      "source_bits": [
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_SW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3776)"
+        ],
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_SW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3776)"
+        ],
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_SW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3776)"
+        ]
+      ],
+      "pass_value": true
+    },
+    {
+      "path": "hb_idx__s_SW.keybuf.gp[3].u_line",
+      "expected": 3,
+      "value": 3,
+      "source_bits": [
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_SW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3777)"
+        ],
+        [
+          "const",
+          "1",
+          "$add(hb_idx__s_SW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3777)"
+        ],
+        [
+          "const",
+          "0",
+          "$add(hb_idx__s_SW.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$3777)"
+        ]
+      ],
+      "pass_value": true
+    }
+  ],
+  "pass_all": true,
+  "errors": [],
+  "note": "Proposed constant evaluator diagnostic only; no runtime inputs converted, physical frontdoor adoption remains separate."
+}
