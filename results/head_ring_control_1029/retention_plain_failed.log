@@ -1,0 +1,9 @@
+ot-run: epyc2          admits   713 GB (avail 897, reserve 0, fresh 102.6, peak 16.8, headroom 0, waiters 0/0 GB) load 25/128 running 12 disk 299 GB 
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-head-ring-control-1029
+ot-run: localhost      skipped: no /srv/opentallas-scratch2/claude/codex-head-ring-control-1029
+ot-run: -> epyc2
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-1681422-1793269859 after 0 s
+Traceback (most recent call last):
+  File "<stdin>", line 7, in <module>
+AssertionError: []
+ot-run: RAN on epyc2 (unit oth-ubuntu-1681422-1793269859): exit 1
