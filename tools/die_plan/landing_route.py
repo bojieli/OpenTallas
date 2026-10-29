@@ -1,8 +1,10 @@
 """Opt-in physical landing-network endpoints for the die route target.
 
 START boundary inputs are explicitly provisional. The actual registered START
-provider must replace these boundary nets during the infrastructure import;
+provider must replace these boundaries during the infrastructure import;
 this module never invents a tie, driver or timing model for them.
+Boundary port names must be resolved through actual ODB BTerms before creating
+an infra-replay net allowlist: a real-launch output can alias an existing net.
 """
 from collections import defaultdict
 import re

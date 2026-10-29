@@ -3686,7 +3686,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
             provisional_start_inputs=len(landing['boundary_inputs']),
             provisional_start_outputs=len(landing['boundary_outputs']),
             qualification='actual START provider and physical infra import required')
-        (out/'grt'/'landing_provisional_nets.txt').write_text(''.join(name+'\n' for name in landing['provisional']))
+        (out/'grt'/'landing_boundary_ports.txt').write_text(''.join(name+'\n' for name in landing['provisional']))
+        (out/'grt'/'landing_boundary_aliases.json').write_text(json.dumps(landing['boundary_aliases'],indent=1)+'\n')
     (out / "grt" / "route.v").write_text(rv)
     (out / "grt" / "tracks.tcl").write_text(coarse_tracks(P, coarse))
     ftf = sorted({t.get("ft_track_frac", 0.25) for t in P.types.values()})
