@@ -306,3 +306,6 @@ CODEX took over fullhk5 latency/CA on codex/head-ca-0840. Exact existing-clock G
 
 ## CODEX notes 2026-10-29 08:49 PDT
 Actual hk5 tile gen4 source gates PASS: LEC33806/33806 EQUIVALENT191.7s, FACE1159/1159 raw+ODB, portbind1190bits0missing/extra,28083registers0fanout>64. Reviewed native five-core/ring plan PASS-COND (intel2 codex-head-0830/tile_gen4_plan.png; own results/geom_review/head_tile_hk5_codex0830). ONE trial PLACE live intel2 unitoth-ubuntu-2374806-1793288350,client2373627,dircodex-head-0830/gen4,run_place.log; no CTS pending fresh mapped clock/geometry. Spn missing planned IS diagnosed; source realization currently fails closed because old SOURCE7 rawresetu_rrl171/Q selection differs from regenerated tree; fresh fullhk5 source/provider owned START+TOK. HK6 candidate LEP/nst4+FT fixes remain unadopted; native LEP child endpoint/constraint failures owned kit helper before P&R.
+
+## PARKED CODEX 2026-10-29 09:03 PDT — explicit Claude reset
+Aggregatepacket handoff/codex_head_20261029_0903.md. Ownbranchcodex/head-0830@5cb559733cf WIPonly; ancestor324a5a609ff READYtile sourceproof. ONEtilePLACEunit2374806 liveintel2 codex-head-0830/gen4; spn2genexit0/noPNR. Frozenhk5 unchanged; hk6/LEP/FTcurrentcensus+sourceIS candidatesunqualified. START2fda READY/unmerged. Child handoffs inCODEX-LOG. No newengineeringafterreset, nojobskilled.
