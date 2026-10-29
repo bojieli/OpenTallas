@@ -1510,3 +1510,5 @@ CODEX: 2026-10-28 23:43 PDT takeover all-lane coverage active; intel2 canonical 
 CODEX: 2026-10-28 23:46 PDT ROOT-MERGE inherited gate315 PASS except known baseline flowcanary; main6b03fc6b22==origin/main, RM291..315 published, HEAD fs/rommax/ringstart unblocked; continuing approved queue.
 
 CODEX: 2026-10-28 23:46 PDT QC landed-806.86 rootcause oldfaultlane+synchronousINFO; actualCA2537PASS105.6/105.1. A0rawleaf nowSIGNED90.23/5.40, nodeFF-19.63 ownedfallback; NLparent+BTABplannedtree+meshDRTprogressing, trial25live.
+
+CODEX: 2026-10-28 23:47 PDT HBM token compiler fbb6ffeb5 READY: safe PRE rowgap reaches emitted nativejob,25testsPASS; current161records price+9720FUSEDcycles; host20edgeplan+16bootcycles. C25cstrict0stillopen, noG5claim.
