@@ -1,0 +1,2 @@
+## TOK-QC-4 (successor of TOK-QC-3: ev_qc24 clk_t24 compose/bind contract, clock_landing_verify relay-rx crash (shared), portbind prefer, then bind -> verify -> portbind -> pair image -> HOST -> programme -> vehicle)
+- 2026-10-28 22:43 PDT START (fresh). Adopts WT epyc2:/srv/opentallas-scratch2/claude/wt/tok-qc-1-1028 (claude/tok-qc-3-1028@5cbf22ff41) + runs epyc2:/srv/opentallas-scratch2/claude/tok-qc-3-1028 (bind11). No live jobs left by TOK-QC-3.
