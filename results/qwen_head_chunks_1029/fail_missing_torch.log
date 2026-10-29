@@ -1,0 +1,11 @@
+ot-run: intel1         admits   553 GB (avail 849, reserve 0, fresh 158.1, peak 73.3, headroom 0, waiters 0/0 GB) load 40/112 running 25 disk 1395 GB 
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-3054848-1793273591 after 1 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-qwen-head-chunks-1029/run_actual.py", line 9, in <module>
+    W,scales=image._quant(z['W']);E,es=image._quant(z['embedding'])
+             ~~~~~~~~~~~~^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-qwen-head-chunks-1029/tools/qwen_r25_golden.py", line 122, in _quant
+    import torch
+ModuleNotFoundError: No module named 'torch'
+ot-run: RAN on intel1 (unit oth-ubuntu-3054848-1793273591): exit 1

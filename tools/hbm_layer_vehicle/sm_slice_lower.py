@@ -162,7 +162,7 @@ def lower(fix_dir, smw_dir, layer, boundary, nsm=4, t_start=4, quarter=0, priced
 QWEN_TAGS = ("qkv", "o", "gu", "down")
 
 
-def compile_qwen_sm(kv_dir: Path, L: int, k: int, rank=0, tags=QWEN_TAGS):
+def compile_qwen_sm(kv_dir: Path, L: int, k: int, rank=0, tags=QWEN_TAGS, *, partitions=16, row_chunk=None):
     """Qwen3-8B D4G8 INT8 (fmt 3) SM.MATVEC of layer L for SM k: toksim_smhbm.compile_qwen (the packed INT8 svg
     programme, PREL mark bit 118 + xc command[116], measured fi8 runs) on the REAL captured operands
     (qwen_sm_mv_kv.py sm_mv.json/.npz: W int8, A, O = lib.sm_int8) instead of its seeded draw; d4g8 placement rows
@@ -171,6 +171,8 @@ def compile_qwen_sm(kv_dir: Path, L: int, k: int, rank=0, tags=QWEN_TAGS):
     from qwen_sm_mv_unit import load_kv
     from hgi_sim import lib as A
     G, V = SB.MV.G, SB.MV.V
+    if partitions < 1 or not 0 <= k < partitions:
+        raise ValueError("SM logical partition must lie inside explicit partition count")
     _, kv = load_kv(Path(kv_dir), L, rank)
 
     def real(tags_, seed):
@@ -179,9 +181,16 @@ def compile_qwen_sm(kv_dir: Path, L: int, k: int, rank=0, tags=QWEN_TAGS):
             d = kv[tag]
             W, x, O = d["W"], np.asarray(d["A"], np.float32), np.asarray(d["O"], np.float32)
             m, K = W.shape
-            R = -(-m // 16)
+            R = -(-m // partitions)
             lo, hi = k * R, (k + 1) * R
-            if hi > m:
+            if row_chunk is not None:
+                hi = min(hi, m)
+                first, count = row_chunk
+                if first < 0 or count < 1 or first + count > hi - lo:
+                    raise ValueError(f"Qwen {tag}: chunk {row_chunk} exceeds partition rows {hi-lo}")
+                lo, hi = lo + first, lo + first + count
+                R = count
+            if hi > m or lo >= hi:
                 raise ValueError(f"Qwen {tag}: SM {k} rows [{lo},{hi}) beyond m {m}")
             Wk = W[lo:hi]
             acc = np.asarray(V.csum(G.mul(Wk.astype(np.float32), G.to_bf16(x)[None, :])), np.float32)
@@ -190,6 +199,7 @@ def compile_qwen_sm(kv_dir: Path, L: int, k: int, rank=0, tags=QWEN_TAGS):
                        np.array_equal(lib.view(np.uint32), O[lo:hi].view(np.uint32)))
             out.append(dict(k=i, tag=tag, K=K, m=m, R=R, W=Wk, x=x, acc=acc, o=O[lo:hi].view(np.uint32), ofmt="FP32",
                             gok=gok, slot=None, eid=None, fmt=0, row0=lo,
+                            logical_partition=k, partitions=partitions, row_chunk=row_chunk,
                             rec=dict(tag=tag, priced=d["meta"].get("priced_d4g8", []),
                                      desc={"A": ["VM", K, 1, "FP32", tag, L]})))
         return out
