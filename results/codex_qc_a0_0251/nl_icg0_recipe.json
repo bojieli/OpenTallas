@@ -10,13 +10,13 @@
    },
    "children_file": "physical/die_plan/qwen_compute/cores/a0/parent/nl_children.json"
   },
-  "insertion_ps": 250.0,
-  "insertion_ff_ps": 202.5,
-  "insertion_basis": "12.3 common core latency 250 TT / 202.5 FF kit frame (KIT_PREFLIGHT ff_binding); the die taps the A0 centre entry EARLY by (routed trunk insertion - frame): DIE-QC-17 routed trunk 711/622 (nl b5), COORD 14:21",
+  "insertion_ps": 692.6,
+  "insertion_ff_ps": 601.9,
+  "insertion_basis": "Root approved prebuild typed hard_core_latency: current119 declared NL mean692.6TT/601.9FF, parent common250/202.5 softtap early442.6/399.4. New intrinsic characterization must join atomic119event before final fixed reference/repair. No period/uncertainty change.",
   "insertion_balance": false,
   "max_routing_layer": "M7",
   "util": 0.45,
-  "suffix": "a0nl12icg0",
+  "suffix": "a0nl12icg0typed",
   "slang": true,
   "params": {
    "ICG": 0
@@ -61,6 +61,17 @@
   "defines": [
    "OT_ROM_CONST0_KV"
   ],
-  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 1.0"
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 1.0",
+  "clock_contract": {
+   "kind": "hard_core_latency",
+   "parent": "actual119 two cbx_q10 types /48 u_t30 copies; parent earlytap balances intrinsic",
+   "io_reference_ps": {
+    "kind": "plan_declared",
+    "tt": 692.6,
+    "ff": 601.9,
+    "basis": "Current declared intrinsic means approved before unsignedICG0build; fixed matching IOreference before repair",
+    "source": "Root coordinator2026-10-29 HARDCORE disposition; intel2 codex-qc-1029/physical_event/plan_start_native_h800.json u_t30.ck insertion692.6/601.9"
+   }
+  }
  }
 }
