@@ -1,11 +1,11 @@
 `timescale 1ns/1ps
 module tb_collar;
-parameter integer FAN=1,MUT=0;
+parameter integer FAN=1,MUT=0,SINGLE=0;
 reg clk=0;always #5 clk=~clk;
 reg rst=0,cv=0,gcv=0,dv=0,lv=0;reg[11:0]addr=0;reg[255:0]data=0;
 wire[768:0]prm,gprm;wire[288:0]native_cfg;wire ready,fault,start_v,gr,gf,gs;
 wire[1:0]go,ggo;wire[220:0]rec,grec;wire pw,gpw;wire[7:0]pa,gpa;wire[255:0]pd,gpd;
-ot_hbm_static_cfg_collar_idx256r_r2048 #(.FAN32(FAN),.MUT(MUT)) dut(.clk(clk),.clk_in(clk),.rst_n(rst),.tgt(8'h78),.cfg_v(cv),.cfg_target(8'h78),.cfg_addr(addr),.cfg_data(data),.desc_v(dv),.launch_v(lv),.c_busy(2'b0),.c_done(1'b0),.c_fault(5'b0),.pw_we(pw),.pw_addr(pa),.pw_data(pd),.prm(prm),.native_cfg(native_cfg),.start_v(start_v),.go(go),.rec(rec),.ready(ready),.active(),.fault(fault));
+ot_hbm_static_cfg_collar_idx256r_r2048 #(.FAN32(FAN),.MUT(MUT),.SINGLE_ROW_ONLY(SINGLE)) dut(.clk(clk),.clk_in(clk),.rst_n(rst),.tgt(8'h78),.cfg_v(cv),.cfg_target(8'h78),.cfg_addr(addr),.cfg_data(data),.desc_v(dv),.launch_v(lv),.c_busy(2'b0),.c_done(1'b0),.c_fault(5'b0),.pw_we(pw),.pw_addr(pa),.pw_data(pd),.prm(prm),.native_cfg(native_cfg),.start_v(start_v),.go(go),.rec(rec),.ready(ready),.active(),.fault(fault));
 ot_hbm_static_cfg_collar_idx256r #(.FAN32(FAN)) gold(.clk(clk),.clk_in(clk),.rst_n(rst),.tgt(8'h78),.cfg_v(gcv),.cfg_target(8'h78),.cfg_addr(addr),.cfg_data(data),.desc_v(dv),.launch_v(lv),.c_busy(2'b0),.c_done(1'b0),.c_fault(5'b0),.pw_we(gpw),.pw_addr(gpa),.pw_data(gpd),.prm(gprm),.start_v(gs),.go(ggo),.rec(grec),.ready(gr),.active(),.fault(gf));
 task tick;begin @(posedge clk);#1;end endtask
 task reset;begin @(negedge clk);rst=0;cv=0;gcv=0;dv=0;lv=0;repeat(5)tick();@(negedge clk);rst=1;repeat(30)tick();end endtask
@@ -23,7 +23,9 @@ task install(input bad);begin
 end endtask
 initial begin
  reset();install(0);arm();if(ready)$fatal(1,"missing row accepted");
- wr(12'h807,{223'b0,cfg[288:256]},0);arm();if(!ready||fault||!gr||gf)$fatal(1,"valid publication refused");
+ wr(12'h807,{223'b0,cfg[288:256]},0);arm();
+ if(SINGLE)begin if(ready)$fatal(1,"multirow old calendar accepted");launch();repeat(5)tick();if(!fault)$fatal(1,"multirow calendar failed open");$display("NATIVE_CFG SINGLE_ROW_GUARD PASS");$finish;end
+ if(!ready||fault||!gr||gf)$fatal(1,"valid publication refused");
  if(native_cfg!==cfg||prm!==gprm)$fatal(1,"publisher fields mismatch");
  for(r=0;r<4;r=r+1)if(native_cfg[r*68+13+:2]!==2'(r))$fatal(1,"role SID mismatch");
  launch();seen=0;repeat(24)begin tick();if(start_v)seen=seen+1;if({start_v,go,pw,ready,fault}!=={gs,ggo,gpw,gr,gf})$fatal(1,"legacy date mismatch");end

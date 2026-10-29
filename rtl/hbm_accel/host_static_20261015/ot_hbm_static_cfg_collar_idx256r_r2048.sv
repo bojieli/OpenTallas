@@ -59,6 +59,7 @@
 module ot_hbm_static_cfg_collar_idx256r_r2048 #(
     parameter integer PAGE_W=1,   // page bits per programme space (AW = PAGE_W+11)
     parameter integer NS=1,        // programme spaces (1..4)
+    parameter integer SINGLE_ROW_ONLY=0, // source candidate using legacy qctl must reject multirow
     parameter integer NPR=8,       // operand rows of 256 b (>=1)
     parameter integer NREC=8,      // record rows (0..512)
     parameter integer NGO=2,       // record go outputs (1..2)
@@ -272,7 +273,7 @@ module ot_hbm_static_cfg_collar_idx256r_r2048 #(
     reg [16:0] native_sector;
     integer nr, np;
     always @* begin
-        native_bad = native_cfg[276:272] == 0 || native_cfg[276:272] > 16 ||
+        native_bad = (SINGLE_ROW_ONLY != 0 && native_cfg[276:272] != 1) || native_cfg[276:272] == 0 || native_cfg[276:272] > 16 ||
                      (native_cfg[276:272] > 1 && native_cfg[288:277] == 0);
         for(nr=0;nr<4;nr=nr+1) for(np=0;np<2;np=np+1) begin
             native_sector = native_cfg[nr*68+np*17+:17];
