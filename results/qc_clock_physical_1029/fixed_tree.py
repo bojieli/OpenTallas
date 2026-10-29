@@ -324,6 +324,31 @@ def main():
     router = C128.TrackRouter(nd,'VSS',DCM.DEFAULT_TRACKS,args.max_move)
     router.reserve(C128.pg_shapes(pg))
     router.reserve(C128.pg_shapes(power_access))
+    # Native M7 conductor is authoritative; the graft-map centroid is a
+    # reference, not a legal M8 track. Enter at a real track with the entire
+    # VIA78 M7 enclosure inside actual pin metal, never a fabricated M7 jog.
+    endpoint_access = {}
+    hx,hy = CR.via_rects()['VIA78']['M7']
+    mx,my = CR.via_rects()['VIA78']['M8']
+    pitch=DCM.DEFAULT_TRACKS['M8']['pitch_um'];phase=DCM.DEFAULT_TRACKS['M8']['offset_um']
+    for tap in taps:
+        ep=endpoints[tap['port']];x,refy=ep['xy'];x0,y0,x1,y1=ep['rect_um']
+        if x-hx<x0-1e-6 or x+hx>x1+1e-6:
+            raise ValueError(f'VIA78 enclosure cannot fit actual M7 pin: {tap["port"]}')
+        ks=range(math.ceil((y0+hy-phase)/pitch-1e-8),math.floor((y1-hy-phase)/pitch+1e-8)+1)
+        candidates=sorted((round(phase+k*pitch,6) for k in ks),key=lambda y:(abs(y-refy),y))
+        selected=None
+        for y in candidates:
+            landing=('M8',ep['net'],'access',y-my,y+my,x-mx,x+mx)
+            if not router.ix.hits(landing,first=True):
+                selected=y;router.ix.add(landing);break
+        if selected is None:
+            raise ValueError(f'no legal reserved VIA78 access inside actual M7 pin: {tap["port"]}')
+        tap['xy']=[x,selected];ports[tap['port']]['xy']=[x,selected]
+        endpoint_access[tap['port']]=dict(inst=ep['inst'],pin=ep['pin'],net=ep['net'],
+            reference_xy_um=ep['xy'],entry_xy_um=tap['xy'],rect_um=ep['rect_um'],
+            entry_offset_um=[0,round(selected-refy,6)],via='VIA78',m7_enclosure_inside=True)
+    (out/'endpoint_access.json').write_text(json.dumps(endpoint_access)+'\n')
     windows,net_windows,window_report=access_windows(P,cells,nets,access,args.max_move)
     def endpoint_window(net,what):
         if what in ('trunk','driver jog'):cell,pin=net['drv'],'Y'
