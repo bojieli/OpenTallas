@@ -412,6 +412,13 @@ def treegen(a):
              f"foreach p [list {' '.join(f'x_{s}/A' for s in meas)}] {{",
              "  set pin [get_pins $p]",
              "  puts $f \"$p [get_property $pin arrival_max_rise] [get_property $pin arrival_max_fall]\"", "}",
+             "close $f",
+             # min analysis (hold / early): OpenSTA takes the LOW end of the liberty capacitance_range of every load
+             # pin (CKINVDCx16 A: 6.68-9.54 fF, BUFx24 A: 1.76-2.35 fF), so early = a lighter load, not variation
+             f"set f [open sta_arr_min_{c}.txt w]",
+             f"foreach p [list {' '.join(f'x_{s}/A' for s in meas)}] {{",
+             "  set pin [get_pins $p]",
+             "  puts $f \"$p [get_property $pin arrival_min_rise] [get_property $pin arrival_min_fall]\"", "}",
              "close $f"]
         (d / f"sta_{c}.tcl").write_text("\n".join(T) + "\n")
     par = {}
@@ -446,7 +453,8 @@ def compare(a):
     meas = [M["root"]] + M["sinks"]
     cr = crossings_all(d / f"arr_{c}.dat", vh)
     sta = {}
-    for ln in (d / f"sta_arr_{c}.txt").read_text().splitlines():
+    mn = getattr(a, "analysis", "max") == "min"
+    for ln in (d / (f"sta_arr_min_{c}.txt" if mn else f"sta_arr_{c}.txt")).read_text().splitlines():
         p, r, f = ln.split()
         sta[p.split("/")[0][2:]] = (float(r), float(f))
     root_sp = cr[0]           # [(t, dir)] edge 0 = rise (true polarity), edge 1 = fall
@@ -467,7 +475,7 @@ def compare(a):
                 st_ = fs - (f0 if p == 0 else r0)
             rows.append(dict(sink=s, depth=M["depth"][s], in_edge="rise" if e == 0 else "fall",
                              sink_edge="rise" if dr > 0 else "fall", sta=round(st_, 2), spice=round(sp, 2)))
-    out = dict(corner=c, cell=M["cell"], wire_um=M["wire_um"], rc=M["rc"], sinks=len(meas) - 1,
+    out = dict(corner=c, analysis="min" if mn else "max", cell=M["cell"], wire_um=M["wire_um"], rc=M["rc"], sinks=len(meas) - 1,
                all=affine([(r["sta"], r["spice"]) for r in rows]),
                sink_rise=affine([(r["sta"], r["spice"]) for r in rows if r["sink_edge"] == "rise"]),
                sink_fall=affine([(r["sta"], r["spice"]) for r in rows if r["sink_edge"] == "fall"]),
@@ -481,7 +489,7 @@ def compare(a):
           for k, v in ev.items() if "rise" in v and "fall" in v]
     out["duty_shift_fall_minus_rise_ps"] = dict(spice=[round(min(x[0] for x in dd), 2), round(max(x[0] for x in dd), 2)],
                                                 sta=[round(min(x[1] for x in dd), 2), round(max(x[1] for x in dd), 2)])
-    (d / f"compare_{c}.json").write_text(json.dumps(dict(summary=out, rows=rows), indent=1) + "\n")
+    (d / (f"compare_min_{c}.json" if mn else f"compare_{c}.json")).write_text(json.dumps(dict(summary=out, rows=rows), indent=1) + "\n")
     print(json.dumps(out))
 
 
@@ -525,6 +533,8 @@ def main(argv=None):
     tb.add_argument("--glob")
     tb.add_argument("--out", required=True)
     c = sp.add_parser("compare")
+    c.add_argument("--analysis", choices=("max", "min"), default="max",
+                   help="STA arrival analysis to fit spice against (min = hold/early readout sta_arr_min_<C>.txt)")
     c.add_argument("dir")
     c.add_argument("--corner", default="TT")
     a = ap.parse_args(argv)
