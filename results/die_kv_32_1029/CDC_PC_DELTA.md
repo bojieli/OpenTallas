@@ -19,3 +19,5 @@ Estimate: -18 die-internal crossings, 0 cycles, no non-constant path removed; cd
 G0/G0C (check.py --completeness --core-conns, main 88b244ad3 die_plan.json v3.9e): base 20 ERROR (13 cuts, 7 core_pin_form
 kv3_head_eighth_* strap pins, pre-existing) / 1428 WARN; delta 20 ERROR / 1428 WARN; finding diff = 1 WARN text only
 (cdc_pc face S edge-form count 1099 -> 1081). The delta adds 0 errors [CHECKED, logs g0_base.log / g0_cdcpc_delta.log].
+
+CORRECTION 12:0x: the hr kits use plan_e27f (codex-kv-hr-1029/pd) + pins r26q9, not main die_plan.json v3.9e; the main pins file change is reverted. Delta pins = results/die_kv_32_1029/qkd_hr_cdc_pc_pins_r26q9_pcd.json; G0/G0C on plan_e27f: base 58 ERR / 2082 WARN, delta 58 / 2082, finding diff 0/0 [CHECKED intel1 die-kv-32-1029/pcdelta].

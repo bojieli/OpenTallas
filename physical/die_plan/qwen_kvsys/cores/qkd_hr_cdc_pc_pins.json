@@ -2,10 +2,10 @@
  "schema": "opentallas.die_plan.core_pins.v1",
  "core": "qkd_hr_cdc_pc",
  "frame": "core R0, origin (0,0), outline 319.68 x 319.68",
- "source": "KVG3-WI 10-24 top-down pin assignment (core_pins_hr.py): boundary bits of the real instance members of the host-root cluster child inside the bound hub_Wi leaf u_host (qkd_host_root_admission_obsx, binder kv41, RTL e33504a6f); glue:* members stay partition glue; face = best facing to partners (other cores, host-leaf port -> partition bus windows) over all instances; even spread on the plan tracks | KV-PLAN2 v3.9d core_reface.py (core re-placed in hub_Wi) | native HR clocks from kv_core_rtl.py --hr-elab, data pins unchanged | DIE-KV-32 10-29 CDC_PC delta (COORD 11:12): u_tx__o_d[545:528] removed (18 provably-constant 0 reserved outputs, face_guard shared on one TIELO net); consumers tie 1b0 at the hub_Wi parent (declared constants, ID-strap form)",
+ "source": "KVG3-WI 10-24 top-down pin assignment (core_pins_hr.py): boundary bits of the real instance members of the host-root cluster child inside the bound hub_Wi leaf u_host (qkd_host_root_admission_obsx, binder kv41, RTL e33504a6f); glue:* members stay partition glue; face = best facing to partners (other cores, host-leaf port -> partition bus windows) over all instances; even spread on the plan tracks | KV-PLAN2 v3.9d core_reface.py (core re-placed in hub_Wi) | native HR clocks from kv_core_rtl.py --hr-elab, data pins unchanged",
  "faces": {
   "N": {
-   "pins": 1081,
+   "pins": 1099,
    "layers": [
     "M5"
    ]
@@ -6484,6 +6484,114 @@
    "name": "u_tx__o_d[527]",
    "layer": "M5",
    "x": 311.352,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[528]",
+   "layer": "M5",
+   "x": 311.64,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[529]",
+   "layer": "M5",
+   "x": 311.928,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[530]",
+   "layer": "M5",
+   "x": 312.216,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[531]",
+   "layer": "M5",
+   "x": 312.504,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[532]",
+   "layer": "M5",
+   "x": 312.792,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[533]",
+   "layer": "M5",
+   "x": 313.08,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[534]",
+   "layer": "M5",
+   "x": 313.368,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[535]",
+   "layer": "M5",
+   "x": 313.656,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[536]",
+   "layer": "M5",
+   "x": 313.944,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[537]",
+   "layer": "M5",
+   "x": 314.232,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[538]",
+   "layer": "M5",
+   "x": 314.52,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[539]",
+   "layer": "M5",
+   "x": 314.808,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[540]",
+   "layer": "M5",
+   "x": 315.096,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[541]",
+   "layer": "M5",
+   "x": 315.384,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[542]",
+   "layer": "M5",
+   "x": 315.672,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[543]",
+   "layer": "M5",
+   "x": 315.96,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[544]",
+   "layer": "M5",
+   "x": 316.248,
+   "y": 0.0
+  },
+  {
+   "name": "u_tx__o_d[545]",
+   "layer": "M5",
+   "x": 316.536,
    "y": 0.0
   },
   {
