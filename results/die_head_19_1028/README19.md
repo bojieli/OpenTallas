@@ -45,3 +45,13 @@ cts0114 @343c8080d0 and die-head-18-regspine @71b0f83f9d (approved 20:04/20:20) 
 main at 20:49 (origin/main 6afcb8f45).  The hd_tile kit is a patched diagnostic lineage (DH9 mk_kit.py with kit-local
 generator fixes + DH11 band patch + DH14 pre_cts/cts_post workarounds), so the clean regeneration must run the
 compose -> latency -> ft adapter -> reserve -> gen.py phys chain on main with reg_spine + fwd_buffer + tap_passthrough.
+
+## 5. Step 1 precondition found (CHECKED in code/history): no clean generator path for hd_tile on main
+The hd_tile kits since DIE-HEAD-9 are diagnostic copies: DH9 mk_kit.py = gen_phys.write_type_kit on
+plan_one_entry_450.json produced by the Codex UNTRACKED helper tools/s81_head/head_regional_one_entry.py (on
+claude/die-head-9-oe-1028@f1f3eeb84 only, not on main) from codex/head-die-1028-0405 plan_rs_countsites_fullpin.json,
+then DH11 band patch, DH14 ring_ff band (now main compose) + pre_cts/cts_post workarounds, DH17 reg_spine files.
+Of the 5 DH9 kit-local generator fixes, main now has the strap [0] fix and the landing_placement uplevel fix (gen_phys);
+the DFFHQN+INV status-driver and status-site fixes were not found on main (UNCHECKED beyond grep).
+So "regenerate hd_tile" from main needs the one-entry plan generator on main first (die-local tools/s81_head, Codex
+author) or a committed one-entry HEAD plan file; otherwise the gate run is again a DIAGNOSTIC copy.
