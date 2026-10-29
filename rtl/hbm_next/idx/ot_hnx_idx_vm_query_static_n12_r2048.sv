@@ -96,12 +96,12 @@ module ot_hnx_idx_vm_query_static_n12_r2048_core #(parameter integer VM_RT_EXTRA
   else begin
    block_v<=|parts;
    if((weight_slot&&query_slot)||address_bad)bad<=1;
-   if(weight_slot&&(WEIGHT_FP32?(wbase[1:0]!=0):(wbase[2:0]!=0)))bad<=1;
-   if(query_slot&&!WEIGHT_FP32&&qbase[1:0]!=0)bad<=1;
+   if(weight_slot&&((WEIGHT_FP32!=0)?(wbase[1:0]!=0):(wbase[2:0]!=0)))bad<=1;
+   if(query_slot&&(WEIGHT_FP32==0)&&qbase[1:0]!=0)bad<=1;
    for(integer b=0;b<8;b=b+1)if(rr[b*257+256])begin
     if(rtag[b*16+15])begin
      for(integer w=0;w<WSECT;w=w+1)if(rtag[b*16+:2]==2'(w))weight_seen[w]<=1;
-     if(WEIGHT_FP32)for(integer j=0;j<8;j=j+1)
+     if(WEIGHT_FP32!=0)for(integer j=0;j<8;j=j+1)
       if(rr[b*257+j*32+:16]!=16'd0)bad<=1;
     end else if(rtag[b*16+:7]!=qid)bad<=1;
    end

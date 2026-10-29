@@ -8,5 +8,7 @@ for c in packed fp32 alias;do
  rc=0;vvp "$O/$c.vvp" >"$O/$c.log" 2>&1||rc=$?
  if [ "$c" = alias ];then test "$rc" != 0;grep -q FATAL "$O/$c.log";echo "READER_MUTANT_CAUGHT high_regular_bit";else test "$rc" = 0;grep 'VM_READER_R2048 PASS' "$O/$c.log";fi
 done
-verilator --lint-only --timing -Wno-fatal -Werror-WIDTH -Werror-SELRANGE --top-module ot_hnx_idx_vm_query_static_n12_r2048 rtl/lib/ot_rst_relay.sv rtl/hbm_next/idx/ot_hnx_idx_vm_static_r2048.sv rtl/hbm_next/idx/ot_hnx_idx_vm_query_static_n12_r2048.sv >"$O/lint.log" 2>&1
+for fp in 0 1;do
+verilator --lint-only -GWEIGHT_FP32=$fp --timing -Wno-fatal -Werror-WIDTH -Werror-SELRANGE --top-module ot_hnx_idx_vm_query_static_n12_r2048 rtl/lib/ot_rst_relay.sv rtl/hbm_next/idx/ot_hnx_idx_vm_static_r2048.sv rtl/hbm_next/idx/ot_hnx_idx_vm_query_static_n12_r2048.sv >"$O/lint$fp.log" 2>&1
+done
 echo 'READER_WIDTH_SELRANGE_PASS'
