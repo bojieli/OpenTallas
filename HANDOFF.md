@@ -1917,3 +1917,10 @@ CODEX: 2026-10-29 14:01 PDT HBMTOK VM(B) exact3x2rowcompilerprep READYeedbe28aa;
 CODEX: 2026-10-29 14:01 PDT sharedFLOW1355 active; negativeedgepairskewREADY12e5221e2/9testsPASS/H0actualverify0bothcorners; currentq3nativeLEC9742PASSthenphysicalendcapguardFAILdiagnosed, E0holdplateauguardowned/no bypass.
 
 CODEX: 2026-10-29 14:03 PDT explicit-reset GEOM parked. SPB V3 actual native-ODB pin review PASS-COND pin-table-only, results aab2c7d91 pushed; read job1158816 terminal0, no routes/live jobs; morning selector42f0d unchanged/unadopted. Full CODEX-LOG handoff.
+CODEX: 2026-10-29 14:03 PDT explicitreset Qwen PARK01108afef; actualnative reloadEARLY confirmed/fixdcal0 but independentabort38406 preventslayers. Liveinheritedchain645254untouched; ot-runexitpropagationreported; QCstrict23ef current butMIFsource/viewmismatchheld. FullCODEXLOG.
+CODEX:14:03 EXPLICITRESET HBM-BIND PARK1df71feb2f. CurrentCOLLVM_RT3parentprobe481793PASS; bodyexpansion511070LIVEintel1 untouched. HBM035alsoq0/q1duplicatefamily+physicalrecipeVM_RT81mismatch diagnosed; q1sourcecutsnext,q0reservepending. FullCODEXLOG14:03; noSIGNED/G5claim.
+2026-10-29 14:03 PDT COORD: session limit stopped 9 Claude lanes ~13:45; limit reset 14:00; restarted as fresh short lanes (no mass resume): ROOT-MERGE-V, DIE-HBM-20, DIE-KV-34 (owns the KV-019 leaf-driver + sys_SD sub-lanes), DIE-S81-30, HBM-CORES-KITS-20, GEOM-64/65, FLOW-CLOCK-R5. Still alive: DIE-HEAD-30, DIE-QC-36, QC KITS, S81 collector sub-lane. Approved: QC-36 core_infra 452603b6fbb, FLOW-R4 pair_skew eb315131cd, S81 FACE_GUARD (A).
+
+CODEX: 2026-10-29 14:03 PDT EXPLICITRESET HBMTOKPARKeedbe28aa READYUNMERGED;VM(B)exact3x2rowcompilerprep/1966080byte12DMAtraffic,actualproducerpublication/fullphasefitstillmissing;noownlivejobs,fullCODEX-LOGpacket.
+
+CODEX: 2026-10-29 14:03 PDT explicitreset SerDesPARK3d9dd6393; actualCTSunit332115liveTT-2.51/FF-2.35diagnostic, oldnrcbottleneckgone; LEPmodel378readybutphysicalunlaunched. Noengineeringafterreset. Packet codex_head_serdes_20261029_1402.md.
