@@ -20,6 +20,7 @@ Usage:
   ot_clk.py check   CONFIG                      stage-model check (exit 1 on FAIL)
   ot_clk.py argv    CONFIG [--legacy] [--out D] print the die_trial kit argv (JSON list)
   ot_clk.py kit     CONFIG --out D [--workers N] fail-closed build: check, write stage cal, run die_trial kit
+                                                (the die_trial kit lands in D/kit, not D)
   ot_clk.py replay  CONFIG --out D [--legacy]   P0: run kit, cmp clock outputs vs the config's reference run
   ot_clk.py replay  CONFIG --out D --compare-only   re-judge an existing replay (no die_trial run)
   ot_clk.py refit   CONFIG --tree T --arr-prefix P --id ID (--tap-from CAL | --tap K1 K2) -o CAL [--write]
