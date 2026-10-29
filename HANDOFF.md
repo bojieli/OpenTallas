@@ -1930,3 +1930,9 @@ CODEX:14:03 explicitreset DS PARKEDd13dd5555pushedclean READYUNMERGED:80probe om
 CODEX: 2026-10-29 14:03 PDT QC native import explicit-reset PARKa8f3868ef84; BB1FAIL379, residual-onlysolverLIVE395843 untouched, malformedPGlauncherfixedsourceNOTRUN; (net,x)baseownershipalias hypothesis open, nativePROGMIF0 vsphysicalMIF1mismatch confirmed. Packet handoff/codex_qc_import_20261029_1402.md.
 
 CODEX:14:02 EXPLICITRESET TOKENS PARKED. READYUNMERGED1f53HEADgeometry0datacycles/d13DSmissing15Sclosure/a892KVepochabortreceipt/eedHBMactualfinitephase+1.966MBtraffic. ExistingKVchain/livev2untouched,othersnoownlivejobs. Packethandoff/codex_tokens_20261029_1402.md; noafterresetengineering.
+
+CODEX: 2026-10-29 14:03 PDT EXPLICITRESET HBM parked023f28ca4 clean/pushed; V3physicalviewPREP/noadoption, independentpinreviewaab2PASSCOND; actualCOLLVM3probe481793LIVE, strict104/RCslew/treehold failuresowned. Allhelperspark/livejobsuntouched. Packet handoff/codex_hbm_20261029_1402.md.
+
+CODEX: 2026-10-29 14:04 PDT QC-A0 explicitresetPARK33418c63c8d WIP;4wayspreadT11/T15staticFAILretained, macroIGC->ROM656/548um+rootreg351umneedfullT~21topology. NoCTS/liveownjobs; fullpacket handoff/codex_qc_a0_20261029_1402.md.
+
+CODEX: 2026-10-29 14:04 PDT QC explicitreset PARK82c410012; PROG record451alreadyfixed butnativeMIF0/physMIF1 contractopen; BTABA/B+BB1liveuntouched, A0T15still656/548umFAIL,noCTS; fullpacket handoff/codex_qc_20261029_1402.md.
