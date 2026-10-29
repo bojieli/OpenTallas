@@ -1,0 +1,78 @@
+{
+ "source_plan_commit": "abe1936f353f83ffc73175ee0d3652712a50f1e3",
+ "plan_sha256": "e3f35afffb6e3ad8001571a569d0c5e8ee88d5e37372e3da9318738344cf5f57",
+ "legs_exclude_tree_nodes": true,
+ "legs": {
+  "down_NW": {
+   "cycles": 53,
+   "source": "plan root bus:n4x_dn_nw 2 + lane N4D_NW 15 + q_hub_nw bus:n4x_dn_i 11 + q_hub_nw mu_tree dn 25 (critical leaf path, 60 legs; tree-node edges excluded)"
+  },
+  "up_NW": {
+   "cycles": 44,
+   "source": "plan root bus:n4x_up_nw 2 + lane N4U_NW 13 + q_hub_nw bus:n4x_up_o 9 + q_hub_nw mu_tree up 20 (critical leaf path, 60 legs; tree-node edges excluded)"
+  },
+  "down_NE": {
+   "cycles": 53,
+   "source": "plan root bus:n4x_dn_ne 2 + lane N4D_NE 15 + q_hub_ne bus:n4x_dn_i 11 + q_hub_ne mu_tree dn 25 (critical leaf path, 60 legs; tree-node edges excluded)"
+  },
+  "up_NE": {
+   "cycles": 45,
+   "source": "plan root bus:n4x_up_ne 2 + lane N4U_NE 13 + q_hub_ne bus:n4x_up_o 9 + q_hub_ne mu_tree up 21 (critical leaf path, 60 legs; tree-node edges excluded)"
+  },
+  "reset_SW": {
+   "cycles": 50,
+   "source": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) reset_legs.reset_SW.release_cycle; reset_tree.py offsets (wavefront) on the C25a plan (C25b adds only root cores u_mu_fused_root/program, same root tree: est release 17 + 1 like the other root cores, UNCHECKED until offsets on C25b)"
+  },
+  "reset_SE": {
+   "cycles": 50,
+   "source": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) reset_legs.reset_SE.release_cycle; reset_tree.py offsets (wavefront) on the C25a plan (C25b adds only root cores u_mu_fused_root/program, same root tree: est release 17 + 1 like the other root cores, UNCHECKED until offsets on C25b)"
+  },
+  "reset_NW": {
+   "cycles": 50,
+   "source": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) reset_legs.reset_NW.release_cycle; reset_tree.py offsets (wavefront) on the C25a plan (C25b adds only root cores u_mu_fused_root/program, same root tree: est release 17 + 1 like the other root cores, UNCHECKED until offsets on C25b)"
+  },
+  "reset_NE": {
+   "cycles": 50,
+   "source": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) reset_legs.reset_NE.release_cycle; reset_tree.py offsets (wavefront) on the C25a plan (C25b adds only root cores u_mu_fused_root/program, same root tree: est release 17 + 1 like the other root cores, UNCHECKED until offsets on C25b)"
+  },
+  "reset_root": {
+   "cycles": 17,
+   "source": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) reset_legs.reset_root.release_cycle; reset_tree.py offsets (wavefront) on the C25a plan (C25b adds only root cores u_mu_fused_root/program, same root tree: est release 17 + 1 like the other root cores, UNCHECKED until offsets on C25b)"
+  },
+  "provider_to_root": {
+   "cycles": 0,
+   "source": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) provider_legs.provider_to_root abutted, same partition, core_conns direct IN PLAN"
+  },
+  "root_to_provider": {
+   "cycles": 0,
+   "source": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) provider_legs.root_to_provider  IN PLAN"
+  }
+ },
+ "rtl": {
+  "rr": {
+   "value": 10,
+   "source": "rtl/hbm_next/fused/ot_hnx_fused_tree.sv ot_hnx_fused_hub RR=10"
+  },
+  "reset_release_edges": {
+   "value": 66,
+   "source": "physical/die_plan/hbm/reset_contract.json assert_edges 66 (2+HOLD 64)"
+  },
+  "reset_sync_stages": {
+   "value": 3,
+   "source": "rtl/hbm_next/fused/ot_hnx_fused_tree.sv ot_hnx_fused_delivered_reset pipe[2:0]"
+  },
+  "host_write_interval": {
+   "value": 5,
+   "source": "results/tok_hbm_6_1028/host_write_interval.log: iverilog sim of rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv at max AXI rate (AW+W together, bready=1): bvalid-to-bvalid 5 edges, cfg_v every 40 edges"
+  }
+ },
+ "missing": [
+  "host_to_provider regional CAK extra UNKNOWN; source LOADcapture31 is not a qualified clock-aligned leg"
+ ],
+ "deferred_host_to_provider": {
+  "cycles": 31,
+  "source": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) provider_legs.host_to_provider coherent320bit packet,30source FFhops incl2boundary banks; provider LOADcapture31; CAK pending SOURCE PIPE PROVED; actual FF bays reserved; CA/reset/boundary bind timing pending"
+ },
+ "qualification": "MISSING_CLOCK_EXTRA",
+ "host_clock_extra_cycles": null
+}

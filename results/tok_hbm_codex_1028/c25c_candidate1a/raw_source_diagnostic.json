@@ -1,0 +1,2086 @@
+{
+ "schema": "opentallas.hbm.raw_source_calendar_diagnostic.v1",
+ "source_plan_commit": "abe1936f353f83ffc73175ee0d3652712a50f1e3",
+ "plan_sha256": "e3f35afffb6e3ad8001571a569d0c5e8ee88d5e37372e3da9318738344cf5f57",
+ "programme_image_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
+ "roles": {
+  "NWq0": "SW",
+  "NEq0": "SE",
+  "NWq1": "NW",
+  "NEq1": "NE"
+ },
+ "boot_release_offsets": {
+  "SW": 119,
+  "SE": 119,
+  "NW": 119,
+  "NE": 119,
+  "root": 86
+ },
+ "root_config": {
+  "wsc": 146,
+  "pk5": 1,
+  "pb5": 0
+ },
+ "root_ingress_cycles": 0,
+ "root_status_return_cycles": 0,
+ "controller_fetch_cycles": 2,
+ "controller_start_cycles": 1,
+ "controller_status_check_cycles": 2,
+ "pad_warm_cycles": 32,
+ "records": [
+  {
+   "image_offset": 80,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 13094,
+   "root_capture_cycle": 13095,
+   "root_done_cycle": 14394,
+   "completion_cycle": 14396,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 5760,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 14400,
+   "root_capture_cycle": 14401,
+   "root_done_cycle": 15359,
+   "completion_cycle": 15361
+  },
+  {
+   "image_offset": 6016,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 15365,
+   "root_capture_cycle": 15366,
+   "root_done_cycle": 16665,
+   "completion_cycle": 16667,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 12400,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 16671,
+   "root_capture_cycle": 16672,
+   "root_done_cycle": 17630,
+   "completion_cycle": 17632
+  },
+  {
+   "image_offset": 21824,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 17636,
+   "root_capture_cycle": 17637,
+   "root_done_cycle": 18936,
+   "completion_cycle": 18938,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 27504,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 18942,
+   "root_capture_cycle": 18943,
+   "root_done_cycle": 19901,
+   "completion_cycle": 19903
+  },
+  {
+   "image_offset": 27760,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 19907,
+   "root_capture_cycle": 19908,
+   "root_done_cycle": 21207,
+   "completion_cycle": 21209,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 34144,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 21213,
+   "root_capture_cycle": 21214,
+   "root_done_cycle": 22172,
+   "completion_cycle": 22174
+  },
+  {
+   "image_offset": 34512,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 22178,
+   "root_capture_cycle": 22179,
+   "root_done_cycle": 23478,
+   "completion_cycle": 23480,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 42400,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 23484,
+   "root_capture_cycle": 23485,
+   "root_done_cycle": 24443,
+   "completion_cycle": 24445
+  },
+  {
+   "image_offset": 42656,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 24449,
+   "root_capture_cycle": 24450,
+   "root_done_cycle": 25749,
+   "completion_cycle": 25751,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0010840120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 48816,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 25755,
+   "root_capture_cycle": 25756,
+   "root_done_cycle": 26714,
+   "completion_cycle": 26716
+  },
+  {
+   "image_offset": 49072,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 26720,
+   "root_capture_cycle": 26721,
+   "root_done_cycle": 28020,
+   "completion_cycle": 28022,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 54880,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 28026,
+   "root_capture_cycle": 28027,
+   "root_done_cycle": 28985,
+   "completion_cycle": 28987
+  },
+  {
+   "image_offset": 55136,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 28991,
+   "root_capture_cycle": 28992,
+   "root_done_cycle": 30291,
+   "completion_cycle": 30293,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 61520,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 30297,
+   "root_capture_cycle": 30298,
+   "root_done_cycle": 31256,
+   "completion_cycle": 31258
+  },
+  {
+   "image_offset": 61776,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 31262,
+   "root_capture_cycle": 31263,
+   "root_done_cycle": 32562,
+   "completion_cycle": 32564,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 67584,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 32568,
+   "root_capture_cycle": 32569,
+   "root_done_cycle": 33527,
+   "completion_cycle": 33529
+  },
+  {
+   "image_offset": 67840,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 33533,
+   "root_capture_cycle": 33534,
+   "root_done_cycle": 34833,
+   "completion_cycle": 34835,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 74224,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 34839,
+   "root_capture_cycle": 34840,
+   "root_done_cycle": 35798,
+   "completion_cycle": 35800
+  },
+  {
+   "image_offset": 74480,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 35804,
+   "root_capture_cycle": 35805,
+   "root_done_cycle": 37104,
+   "completion_cycle": 37106,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 80288,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 37110,
+   "root_capture_cycle": 37111,
+   "root_done_cycle": 38069,
+   "completion_cycle": 38071
+  },
+  {
+   "image_offset": 80544,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 38075,
+   "root_capture_cycle": 38076,
+   "root_done_cycle": 39375,
+   "completion_cycle": 39377,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 86928,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 39381,
+   "root_capture_cycle": 39382,
+   "root_done_cycle": 40340,
+   "completion_cycle": 40342
+  },
+  {
+   "image_offset": 87184,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 40346,
+   "root_capture_cycle": 40347,
+   "root_done_cycle": 41646,
+   "completion_cycle": 41648,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 92992,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 41652,
+   "root_capture_cycle": 41653,
+   "root_done_cycle": 42611,
+   "completion_cycle": 42613
+  },
+  {
+   "image_offset": 93248,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 42617,
+   "root_capture_cycle": 42618,
+   "root_done_cycle": 43917,
+   "completion_cycle": 43919,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 99632,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 43923,
+   "root_capture_cycle": 43924,
+   "root_done_cycle": 44882,
+   "completion_cycle": 44884
+  },
+  {
+   "image_offset": 99888,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 44888,
+   "root_capture_cycle": 44889,
+   "root_done_cycle": 46188,
+   "completion_cycle": 46190,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 105696,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 46194,
+   "root_capture_cycle": 46195,
+   "root_done_cycle": 47153,
+   "completion_cycle": 47155
+  },
+  {
+   "image_offset": 105952,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 47159,
+   "root_capture_cycle": 47160,
+   "root_done_cycle": 48459,
+   "completion_cycle": 48461,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 112336,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 48465,
+   "root_capture_cycle": 48466,
+   "root_done_cycle": 49424,
+   "completion_cycle": 49426
+  },
+  {
+   "image_offset": 112704,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 49430,
+   "root_capture_cycle": 49431,
+   "root_done_cycle": 50730,
+   "completion_cycle": 50732,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 120592,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 50736,
+   "root_capture_cycle": 50737,
+   "root_done_cycle": 51695,
+   "completion_cycle": 51697
+  },
+  {
+   "image_offset": 120848,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 51701,
+   "root_capture_cycle": 51702,
+   "root_done_cycle": 53001,
+   "completion_cycle": 53003,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0010840120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 127008,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 53007,
+   "root_capture_cycle": 53008,
+   "root_done_cycle": 53966,
+   "completion_cycle": 53968
+  },
+  {
+   "image_offset": 127264,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 53972,
+   "root_capture_cycle": 53973,
+   "root_done_cycle": 55272,
+   "completion_cycle": 55274,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 133072,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 55278,
+   "root_capture_cycle": 55279,
+   "root_done_cycle": 56237,
+   "completion_cycle": 56239
+  },
+  {
+   "image_offset": 133328,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 56243,
+   "root_capture_cycle": 56244,
+   "root_done_cycle": 57543,
+   "completion_cycle": 57545,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 139712,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 57549,
+   "root_capture_cycle": 57550,
+   "root_done_cycle": 58508,
+   "completion_cycle": 58510
+  },
+  {
+   "image_offset": 139968,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 58514,
+   "root_capture_cycle": 58515,
+   "root_done_cycle": 59814,
+   "completion_cycle": 59816,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 145776,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 59820,
+   "root_capture_cycle": 59821,
+   "root_done_cycle": 60779,
+   "completion_cycle": 60781
+  },
+  {
+   "image_offset": 146032,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 60785,
+   "root_capture_cycle": 60786,
+   "root_done_cycle": 62085,
+   "completion_cycle": 62087,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 152416,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 62091,
+   "root_capture_cycle": 62092,
+   "root_done_cycle": 63050,
+   "completion_cycle": 63052
+  },
+  {
+   "image_offset": 152672,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 63056,
+   "root_capture_cycle": 63057,
+   "root_done_cycle": 64356,
+   "completion_cycle": 64358,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 158480,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 64362,
+   "root_capture_cycle": 64363,
+   "root_done_cycle": 65321,
+   "completion_cycle": 65323
+  },
+  {
+   "image_offset": 158736,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 65327,
+   "root_capture_cycle": 65328,
+   "root_done_cycle": 66627,
+   "completion_cycle": 66629,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 165120,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 66633,
+   "root_capture_cycle": 66634,
+   "root_done_cycle": 67592,
+   "completion_cycle": 67594
+  },
+  {
+   "image_offset": 165376,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 67598,
+   "root_capture_cycle": 67599,
+   "root_done_cycle": 68898,
+   "completion_cycle": 68900,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 171184,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 68904,
+   "root_capture_cycle": 68905,
+   "root_done_cycle": 69863,
+   "completion_cycle": 69865
+  },
+  {
+   "image_offset": 171440,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 69869,
+   "root_capture_cycle": 69870,
+   "root_done_cycle": 71169,
+   "completion_cycle": 71171,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 177824,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 71175,
+   "root_capture_cycle": 71176,
+   "root_done_cycle": 72134,
+   "completion_cycle": 72136
+  },
+  {
+   "image_offset": 178080,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 72140,
+   "root_capture_cycle": 72141,
+   "root_done_cycle": 73440,
+   "completion_cycle": 73442,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 183888,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 73446,
+   "root_capture_cycle": 73447,
+   "root_done_cycle": 74405,
+   "completion_cycle": 74407
+  },
+  {
+   "image_offset": 184144,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 74411,
+   "root_capture_cycle": 74412,
+   "root_done_cycle": 75711,
+   "completion_cycle": 75713,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 190528,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 75717,
+   "root_capture_cycle": 75718,
+   "root_done_cycle": 76676,
+   "completion_cycle": 76678
+  },
+  {
+   "image_offset": 200704,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 76682,
+   "root_capture_cycle": 76683,
+   "root_done_cycle": 77982,
+   "completion_cycle": 77984,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 207952,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 77988,
+   "root_capture_cycle": 77989,
+   "root_done_cycle": 78947,
+   "completion_cycle": 78949
+  },
+  {
+   "image_offset": 208208,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 78953,
+   "root_capture_cycle": 78954,
+   "root_done_cycle": 80253,
+   "completion_cycle": 80255,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a00108402dc801e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 214368,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 80259,
+   "root_capture_cycle": 80260,
+   "root_done_cycle": 81218,
+   "completion_cycle": 81220
+  },
+  {
+   "image_offset": 214624,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 81224,
+   "root_capture_cycle": 81225,
+   "root_done_cycle": 82524,
+   "completion_cycle": 82526,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 220432,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 82530,
+   "root_capture_cycle": 82531,
+   "root_done_cycle": 83489,
+   "completion_cycle": 83491
+  },
+  {
+   "image_offset": 220688,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 83495,
+   "root_capture_cycle": 83496,
+   "root_done_cycle": 84795,
+   "completion_cycle": 84797,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 227072,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 84801,
+   "root_capture_cycle": 84802,
+   "root_done_cycle": 85760,
+   "completion_cycle": 85762
+  },
+  {
+   "image_offset": 227328,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 85766,
+   "root_capture_cycle": 85767,
+   "root_done_cycle": 87066,
+   "completion_cycle": 87068,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 233136,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 87072,
+   "root_capture_cycle": 87073,
+   "root_done_cycle": 88031,
+   "completion_cycle": 88033
+  },
+  {
+   "image_offset": 233392,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 88037,
+   "root_capture_cycle": 88038,
+   "root_done_cycle": 89337,
+   "completion_cycle": 89339,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 239776,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 89343,
+   "root_capture_cycle": 89344,
+   "root_done_cycle": 90302,
+   "completion_cycle": 90304
+  },
+  {
+   "image_offset": 240032,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 90308,
+   "root_capture_cycle": 90309,
+   "root_done_cycle": 91608,
+   "completion_cycle": 91610,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 245840,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 91614,
+   "root_capture_cycle": 91615,
+   "root_done_cycle": 92573,
+   "completion_cycle": 92575
+  },
+  {
+   "image_offset": 246096,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 92579,
+   "root_capture_cycle": 92580,
+   "root_done_cycle": 93879,
+   "completion_cycle": 93881,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 252480,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 93885,
+   "root_capture_cycle": 93886,
+   "root_done_cycle": 94844,
+   "completion_cycle": 94846
+  },
+  {
+   "image_offset": 252736,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 94850,
+   "root_capture_cycle": 94851,
+   "root_done_cycle": 96150,
+   "completion_cycle": 96152,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 258544,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 96156,
+   "root_capture_cycle": 96157,
+   "root_done_cycle": 97115,
+   "completion_cycle": 97117
+  },
+  {
+   "image_offset": 258800,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 97121,
+   "root_capture_cycle": 97122,
+   "root_done_cycle": 98421,
+   "completion_cycle": 98423,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 265184,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 98427,
+   "root_capture_cycle": 98428,
+   "root_done_cycle": 99386,
+   "completion_cycle": 99388
+  },
+  {
+   "image_offset": 265440,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 99392,
+   "root_capture_cycle": 99393,
+   "root_done_cycle": 100692,
+   "completion_cycle": 100694,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 271248,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 100698,
+   "root_capture_cycle": 100699,
+   "root_done_cycle": 101657,
+   "completion_cycle": 101659
+  },
+  {
+   "image_offset": 271504,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 101663,
+   "root_capture_cycle": 101664,
+   "root_done_cycle": 102963,
+   "completion_cycle": 102965,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 277888,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 102969,
+   "root_capture_cycle": 102970,
+   "root_done_cycle": 103928,
+   "completion_cycle": 103930
+  },
+  {
+   "image_offset": 278256,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 103934,
+   "root_capture_cycle": 103935,
+   "root_done_cycle": 105234,
+   "completion_cycle": 105236,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 286176,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 105240,
+   "root_capture_cycle": 105241,
+   "root_done_cycle": 106199,
+   "completion_cycle": 106201
+  },
+  {
+   "image_offset": 286432,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 106205,
+   "root_capture_cycle": 106206,
+   "root_done_cycle": 107505,
+   "completion_cycle": 107507,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0010840120182410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 292592,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 107511,
+   "root_capture_cycle": 107512,
+   "root_done_cycle": 108470,
+   "completion_cycle": 108472
+  },
+  {
+   "image_offset": 292848,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 108476,
+   "root_capture_cycle": 108477,
+   "root_done_cycle": 109776,
+   "completion_cycle": 109778,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0002410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 298656,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 109782,
+   "root_capture_cycle": 109783,
+   "root_done_cycle": 110741,
+   "completion_cycle": 110743
+  },
+  {
+   "image_offset": 298912,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 110747,
+   "root_capture_cycle": 110748,
+   "root_done_cycle": 112047,
+   "completion_cycle": 112049,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120182410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 305296,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 112053,
+   "root_capture_cycle": 112054,
+   "root_done_cycle": 113012,
+   "completion_cycle": 113014
+  },
+  {
+   "image_offset": 305552,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 113018,
+   "root_capture_cycle": 113019,
+   "root_done_cycle": 114318,
+   "completion_cycle": 114320,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0002410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 311360,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 114324,
+   "root_capture_cycle": 114325,
+   "root_done_cycle": 115283,
+   "completion_cycle": 115285
+  },
+  {
+   "image_offset": 311616,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 115289,
+   "root_capture_cycle": 115290,
+   "root_done_cycle": 116589,
+   "completion_cycle": 116591,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120182410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 318000,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 116595,
+   "root_capture_cycle": 116596,
+   "root_done_cycle": 117554,
+   "completion_cycle": 117556
+  },
+  {
+   "image_offset": 318256,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 117560,
+   "root_capture_cycle": 117561,
+   "root_done_cycle": 118860,
+   "completion_cycle": 118862,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0002410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 324064,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 118866,
+   "root_capture_cycle": 118867,
+   "root_done_cycle": 119825,
+   "completion_cycle": 119827
+  },
+  {
+   "image_offset": 324320,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 119831,
+   "root_capture_cycle": 119832,
+   "root_done_cycle": 121131,
+   "completion_cycle": 121133,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120182410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 330704,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 121137,
+   "root_capture_cycle": 121138,
+   "root_done_cycle": 122096,
+   "completion_cycle": 122098
+  },
+  {
+   "image_offset": 331072,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 122102,
+   "root_capture_cycle": 122103,
+   "root_done_cycle": 123402,
+   "completion_cycle": 123404,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0002410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 338288,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 123408,
+   "root_capture_cycle": 123409,
+   "root_done_cycle": 124367,
+   "completion_cycle": 124369
+  },
+  {
+   "image_offset": 338544,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 124373,
+   "root_capture_cycle": 124374,
+   "root_done_cycle": 125673,
+   "completion_cycle": 125675,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a00108402dd402410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 344704,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 125679,
+   "root_capture_cycle": 125680,
+   "root_done_cycle": 126638,
+   "completion_cycle": 126640
+  },
+  {
+   "image_offset": 344960,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 126644,
+   "root_capture_cycle": 126645,
+   "root_done_cycle": 127944,
+   "completion_cycle": 127946,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0002410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 350768,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 127950,
+   "root_capture_cycle": 127951,
+   "root_done_cycle": 128909,
+   "completion_cycle": 128911
+  },
+  {
+   "image_offset": 351024,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 128915,
+   "root_capture_cycle": 128916,
+   "root_done_cycle": 130215,
+   "completion_cycle": 130217,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120182410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 357408,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 130221,
+   "root_capture_cycle": 130222,
+   "root_done_cycle": 131180,
+   "completion_cycle": 131182
+  },
+  {
+   "image_offset": 357664,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 131186,
+   "root_capture_cycle": 131187,
+   "root_done_cycle": 132486,
+   "completion_cycle": 132488,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0002410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 363472,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 132492,
+   "root_capture_cycle": 132493,
+   "root_done_cycle": 133451,
+   "completion_cycle": 133453
+  },
+  {
+   "image_offset": 363728,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 133457,
+   "root_capture_cycle": 133458,
+   "root_done_cycle": 134757,
+   "completion_cycle": 134759,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120182410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 370112,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 134763,
+   "root_capture_cycle": 134764,
+   "root_done_cycle": 135722,
+   "completion_cycle": 135724
+  },
+  {
+   "image_offset": 370368,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 135728,
+   "root_capture_cycle": 135729,
+   "root_done_cycle": 137028,
+   "completion_cycle": 137030,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0002410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 376176,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 137034,
+   "root_capture_cycle": 137035,
+   "root_done_cycle": 137993,
+   "completion_cycle": 137995
+  },
+  {
+   "image_offset": 376432,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 137999,
+   "root_capture_cycle": 138000,
+   "root_done_cycle": 139299,
+   "completion_cycle": 139301,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120182410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 382816,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 139305,
+   "root_capture_cycle": 139306,
+   "root_done_cycle": 140264,
+   "completion_cycle": 140266
+  },
+  {
+   "image_offset": 383184,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 140270,
+   "root_capture_cycle": 140271,
+   "root_done_cycle": 141570,
+   "completion_cycle": 141572,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0002410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 390400,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 141576,
+   "root_capture_cycle": 141577,
+   "root_done_cycle": 142535,
+   "completion_cycle": 142537
+  },
+  {
+   "image_offset": 390656,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 142541,
+   "root_capture_cycle": 142542,
+   "root_done_cycle": 143841,
+   "completion_cycle": 143843,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a00108402dd402410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 396816,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 143847,
+   "root_capture_cycle": 143848,
+   "root_done_cycle": 144806,
+   "completion_cycle": 144808
+  },
+  {
+   "image_offset": 397072,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 144812,
+   "root_capture_cycle": 144813,
+   "root_done_cycle": 146112,
+   "completion_cycle": 146114,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0002410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 402880,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 146118,
+   "root_capture_cycle": 146119,
+   "root_done_cycle": 147077,
+   "completion_cycle": 147079
+  },
+  {
+   "image_offset": 403136,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 147083,
+   "root_capture_cycle": 147084,
+   "root_done_cycle": 148383,
+   "completion_cycle": 148385,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120182410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 409520,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 148389,
+   "root_capture_cycle": 148390,
+   "root_done_cycle": 149348,
+   "completion_cycle": 149350
+  },
+  {
+   "image_offset": 409776,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 149354,
+   "root_capture_cycle": 149355,
+   "root_done_cycle": 150654,
+   "completion_cycle": 150656,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0002410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 415584,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 150660,
+   "root_capture_cycle": 150661,
+   "root_done_cycle": 151619,
+   "completion_cycle": 151621
+  },
+  {
+   "image_offset": 415840,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 151625,
+   "root_capture_cycle": 151626,
+   "root_done_cycle": 152925,
+   "completion_cycle": 152927,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120182410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 422224,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 152931,
+   "root_capture_cycle": 152932,
+   "root_done_cycle": 153890,
+   "completion_cycle": 153892
+  },
+  {
+   "image_offset": 422480,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 153896,
+   "root_capture_cycle": 153897,
+   "root_done_cycle": 155196,
+   "completion_cycle": 155198,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0002410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 428288,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 155202,
+   "root_capture_cycle": 155203,
+   "root_done_cycle": 156161,
+   "completion_cycle": 156163
+  },
+  {
+   "image_offset": 428544,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 156167,
+   "root_capture_cycle": 156168,
+   "root_done_cycle": 157467,
+   "completion_cycle": 157469,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120182410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 434928,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 157473,
+   "root_capture_cycle": 157474,
+   "root_done_cycle": 158432,
+   "completion_cycle": 158434
+  },
+  {
+   "image_offset": 435296,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 158438,
+   "root_capture_cycle": 158439,
+   "root_done_cycle": 159738,
+   "completion_cycle": 159740,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0002410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 442512,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 159744,
+   "root_capture_cycle": 159745,
+   "root_done_cycle": 160703,
+   "completion_cycle": 160705
+  },
+  {
+   "image_offset": 442768,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 160709,
+   "root_capture_cycle": 160710,
+   "root_done_cycle": 162009,
+   "completion_cycle": 162011,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a00108402dd402410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 448928,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 162015,
+   "root_capture_cycle": 162016,
+   "root_done_cycle": 162974,
+   "completion_cycle": 162976
+  },
+  {
+   "image_offset": 449184,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 162980,
+   "root_capture_cycle": 162981,
+   "root_done_cycle": 164280,
+   "completion_cycle": 164282,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0002410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 454992,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 164286,
+   "root_capture_cycle": 164287,
+   "root_done_cycle": 165245,
+   "completion_cycle": 165247
+  },
+  {
+   "image_offset": 455248,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 165251,
+   "root_capture_cycle": 165252,
+   "root_done_cycle": 166551,
+   "completion_cycle": 166553,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120182410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 461632,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 166557,
+   "root_capture_cycle": 166558,
+   "root_done_cycle": 167516,
+   "completion_cycle": 167518
+  },
+  {
+   "image_offset": 461888,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 167522,
+   "root_capture_cycle": 167523,
+   "root_done_cycle": 168822,
+   "completion_cycle": 168824,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0002410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 467696,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 168828,
+   "root_capture_cycle": 168829,
+   "root_done_cycle": 169787,
+   "completion_cycle": 169789
+  },
+  {
+   "image_offset": 467952,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 169793,
+   "root_capture_cycle": 169794,
+   "root_done_cycle": 171093,
+   "completion_cycle": 171095,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120182410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 474336,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 171099,
+   "root_capture_cycle": 171100,
+   "root_done_cycle": 172058,
+   "completion_cycle": 172060
+  },
+  {
+   "image_offset": 474592,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 172064,
+   "root_capture_cycle": 172065,
+   "root_done_cycle": 173364,
+   "completion_cycle": 173366,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0002410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 480400,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 173370,
+   "root_capture_cycle": 173371,
+   "root_done_cycle": 174329,
+   "completion_cycle": 174331
+  },
+  {
+   "image_offset": 480656,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 174335,
+   "root_capture_cycle": 174336,
+   "root_done_cycle": 175635,
+   "completion_cycle": 175637,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120182410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 487040,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 175641,
+   "root_capture_cycle": 175642,
+   "root_done_cycle": 176600,
+   "completion_cycle": 176602
+  },
+  {
+   "image_offset": 487408,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 176606,
+   "root_capture_cycle": 176607,
+   "root_done_cycle": 177906,
+   "completion_cycle": 177908,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0002410000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 494624,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 177912,
+   "root_capture_cycle": 177913,
+   "root_done_cycle": 178871,
+   "completion_cycle": 178873
+  },
+  {
+   "image_offset": 494880,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 178877,
+   "root_capture_cycle": 178878,
+   "root_done_cycle": 180177,
+   "completion_cycle": 180179,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a00108402dd401e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 501040,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 180183,
+   "root_capture_cycle": 180184,
+   "root_done_cycle": 181142,
+   "completion_cycle": 181144
+  },
+  {
+   "image_offset": 501296,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 181148,
+   "root_capture_cycle": 181149,
+   "root_done_cycle": 182448,
+   "completion_cycle": 182450,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 507104,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 182454,
+   "root_capture_cycle": 182455,
+   "root_done_cycle": 183413,
+   "completion_cycle": 183415
+  },
+  {
+   "image_offset": 507360,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 183419,
+   "root_capture_cycle": 183420,
+   "root_done_cycle": 184719,
+   "completion_cycle": 184721,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 513744,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 184725,
+   "root_capture_cycle": 184726,
+   "root_done_cycle": 185684,
+   "completion_cycle": 185686
+  },
+  {
+   "image_offset": 514000,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 185690,
+   "root_capture_cycle": 185691,
+   "root_done_cycle": 186990,
+   "completion_cycle": 186992,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 519808,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 186996,
+   "root_capture_cycle": 186997,
+   "root_done_cycle": 187955,
+   "completion_cycle": 187957
+  },
+  {
+   "image_offset": 520064,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 187961,
+   "root_capture_cycle": 187962,
+   "root_done_cycle": 189261,
+   "completion_cycle": 189263,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 526448,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 189267,
+   "root_capture_cycle": 189268,
+   "root_done_cycle": 190226,
+   "completion_cycle": 190228
+  },
+  {
+   "image_offset": 526704,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 190232,
+   "root_capture_cycle": 190233,
+   "root_done_cycle": 191532,
+   "completion_cycle": 191534,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 532512,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 191538,
+   "root_capture_cycle": 191539,
+   "root_done_cycle": 192497,
+   "completion_cycle": 192499
+  },
+  {
+   "image_offset": 532768,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 192503,
+   "root_capture_cycle": 192504,
+   "root_done_cycle": 193803,
+   "completion_cycle": 193805,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000003000000000a0009040120181e00000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  },
+  {
+   "image_offset": 539152,
+   "op": "HC_POST",
+   "ready_cycle": 0,
+   "launch_cycle": 193809,
+   "root_capture_cycle": 193810,
+   "root_done_cycle": 194768,
+   "completion_cycle": 194770
+  },
+  {
+   "image_offset": 539408,
+   "op": "HC_PRE_NORM",
+   "ready_cycle": 0,
+   "launch_cycle": 194774,
+   "root_capture_cycle": 194775,
+   "root_done_cycle": 196074,
+   "completion_cycle": 196076,
+   "rgap_override": {
+    "value": 24,
+    "original": 0,
+    "source_job217": "03c79ca100000280000001000000000a00090400f0001e10000000a",
+    "reason": "bound root return exceeds KX retained-row window",
+    "added_service_cycles": 120
+   }
+  }
+ ],
+ "scope": "RAW_SOURCE_ONLY; NO CLOCK EXTRA OR START AUTHORITY",
+ "derivation": {
+  "legs": {
+   "reset_SW": 50,
+   "reset_SE": 50,
+   "reset_NW": 50,
+   "reset_NE": 50,
+   "reset_root": 17,
+   "host_to_provider": 31,
+   "provider_to_root": 0,
+   "root_to_provider": 0,
+   "down_NW": 53,
+   "down_NE": 53,
+   "up_NW": 44,
+   "up_NE": 45
+  },
+  "rtl": {
+   "rr": 10,
+   "reset_release_edges": 66,
+   "reset_sync_stages": 3,
+   "host_write_interval": 5
+  },
+  "bound_sources": {
+   "reset_SW": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) reset_legs.reset_SW.release_cycle; reset_tree.py offsets (wavefront) on the C25a plan (C25b adds only root cores u_mu_fused_root/program, same root tree: est release 17 + 1 like the other root cores, UNCHECKED until offsets on C25b)",
+   "reset_SE": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) reset_legs.reset_SE.release_cycle; reset_tree.py offsets (wavefront) on the C25a plan (C25b adds only root cores u_mu_fused_root/program, same root tree: est release 17 + 1 like the other root cores, UNCHECKED until offsets on C25b)",
+   "reset_NW": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) reset_legs.reset_NW.release_cycle; reset_tree.py offsets (wavefront) on the C25a plan (C25b adds only root cores u_mu_fused_root/program, same root tree: est release 17 + 1 like the other root cores, UNCHECKED until offsets on C25b)",
+   "reset_NE": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) reset_legs.reset_NE.release_cycle; reset_tree.py offsets (wavefront) on the C25a plan (C25b adds only root cores u_mu_fused_root/program, same root tree: est release 17 + 1 like the other root cores, UNCHECKED until offsets on C25b)",
+   "reset_root": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) reset_legs.reset_root.release_cycle; reset_tree.py offsets (wavefront) on the C25a plan (C25b adds only root cores u_mu_fused_root/program, same root tree: est release 17 + 1 like the other root cores, UNCHECKED until offsets on C25b)",
+   "host_to_provider": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) provider_legs.host_to_provider coherent320bit packet,30source FFhops incl2boundary banks; provider LOADcapture31; CAK pending SOURCE PIPE PROVED; actual FF bays reserved; CA/reset/boundary bind timing pending",
+   "provider_to_root": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) provider_legs.provider_to_root abutted, same partition, core_conns direct IN PLAN",
+   "root_to_provider": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) provider_legs.root_to_provider  IN PLAN",
+   "down_NW": "plan root bus:n4x_dn_nw 2 + lane N4D_NW 15 + q_hub_nw bus:n4x_dn_i 11 + q_hub_nw mu_tree dn 25 (critical leaf path, 60 legs; tree-node edges excluded)",
+   "down_NE": "plan root bus:n4x_dn_ne 2 + lane N4D_NE 15 + q_hub_ne bus:n4x_dn_i 11 + q_hub_ne mu_tree dn 25 (critical leaf path, 60 legs; tree-node edges excluded)",
+   "up_NW": "plan root bus:n4x_up_nw 2 + lane N4U_NW 13 + q_hub_nw bus:n4x_up_o 9 + q_hub_nw mu_tree up 20 (critical leaf path, 60 legs; tree-node edges excluded)",
+   "up_NE": "plan root bus:n4x_up_ne 2 + lane N4U_NE 13 + q_hub_ne bus:n4x_up_o 9 + q_hub_ne mu_tree up 21 (critical leaf path, 60 legs; tree-node edges excluded)"
+  },
+  "service_source": "results/tok_hbm_2_1028: root_service.json (native root wrapper bench, 16 op/n x wsc 63/115) + lane_service.log (one native lane + one native tnode, 16 op/n x r-return 150/200 + sweep 170..180) at 833 ps, rtl/hbm_next/fused tree sha256 838587d4 / hub_n4ext 09a34eff; rgap 0 only"
+ }
+}

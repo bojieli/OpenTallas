@@ -1,0 +1,40 @@
+{
+ "schema": "opentallas.hbm.c25c_source_price.v1",
+ "qualification": "RAW_SOURCE_ONLY",
+ "plan_commit": "abe1936f353f83ffc73175ee0d3652712a50f1e3",
+ "plan_sha256": "e3f35afffb6e3ad8001571a569d0c5e8ee88d5e37372e3da9318738344cf5f57",
+ "image_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
+ "regional_clock_extra_cycles": null,
+ "qualified_calendar_missing": [
+  "bound leg host_to_provider: cycles + source from the current bind/plan"
+ ],
+ "source_host_load_capture31": {
+  "cycles": 31,
+  "source": "side /srv/opentallas-scratch/claude/wt/codex-hbm-1028/results/die_hbm_1027/hbm10/c25c_candidate1a/c25c_side.json (plan e3f35aff) provider_legs.host_to_provider coherent320bit packet,30source FFhops incl2boundary banks; provider LOADcapture31; CAK pending SOURCE PIPE PROVED; actual FF bays reserved; CA/reset/boundary bind timing pending"
+ },
+ "station_legs": {
+  "down_NW": 53,
+  "up_NW": 44,
+  "down_NE": 53,
+  "up_NE": 45,
+  "reset_SW": 50,
+  "reset_SE": 50,
+  "reset_NW": 50,
+  "reset_NE": 50,
+  "reset_root": 17,
+  "provider_to_root": 0,
+  "root_to_provider": 0
+ },
+ "diagnostic_root_config": {
+  "wsc": 146,
+  "pk5": 1,
+  "pb5": 0
+ },
+ "records": 161,
+ "pre_records": 81,
+ "rgap_values": [
+  24
+ ],
+ "added_service_cycles": 9720,
+ "note": "No START authority or qualified calendar emitted; actual source closure and regional clock extra remain required. Per-record FUSED component price only, no full token price. HC NQ2 non-FUSED reduction price is separate."
+}
