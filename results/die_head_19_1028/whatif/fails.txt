@@ -1,0 +1,6 @@
+E_deeptap_export TT {('hd_turn_a', 'hd_turn_b'): 6, ('hd_turn_b', 'hd_tile'): 12, ('hd_serdes', 'hd_mesh'): 2, ('hd_st_turn', 'hd_serdes'): 1, ('hd_serdes', 'hd_st_turn'): 2, ('hd_host', 'hd_st_k5'): 2, ('hd_serdes', 'hd_st_k5'): 1, ('hd_st_k5', 'hd_host'): 2, ('hd_serdes', 'hd_host'): 1, ('hd_lep0N', 'hd_ctl'): 5, ('hd_ctl', 'hd_lep0N'): 4, ('hd_spn_end', 'hd_spn'): 4, ('hd_spn', 'hd_spn'): 24}
+E_deeptap_export FF {('hd_turn_b', 'hd_tile'): 12, ('hd_host', 'hd_st_k5'): 2, ('hd_st_k5', 'hd_host'): 2, ('hd_lep0N', 'hd_ctl'): 5, ('hd_spn_end', 'hd_spn'): 4, ('hd_spn', 'hd_spn'): 8}
+B_writer_late TT {('hd_spn_end', 'hd_spn'): 4, ('hd_spn', 'hd_spn'): 8}
+B_writer_late FF {('hd_spn', 'hd_spn'): 8}
+C_writer_early TT {('hd_spn', 'hd_spn'): 4}
+C_writer_early FF {}

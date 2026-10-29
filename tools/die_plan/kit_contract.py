@@ -1017,8 +1017,190 @@ def macro_pin_grid(kd, plan_dir=None):
     return err, dict(applies=True, macros=len(sites), pins=n_pins, tracks=src, worst_off_nm=round(worst * 1000, 1))
 
 
+# ---------------------------------------------------------------------------------------------- 13 macro instances
+# HBM-CORES-KITS-3 10-28 (measured failure, COORD 19:53): the qcore_r13 kit _k3mp5 placed u_fcore.u_fcore.u_red.m{a,b}
+# (face-shell prefix twice); the netlist has u_fcore.u_red.m{a,b}, so place_macro could not find them, yet every
+# preflight item PASSed and the run was found only after synthesis.  Static RTL walk: each instance path named in the
+# static macro placement must resolve from DESIGN_NAME, one component at a time, to an instance (or a generate block
+# label, which keeps the scope) of the current module, and its last component must be an instance of the placed
+# master.  Fail closed: a path that cannot be resolved is a FAIL.
+_GEN_LABEL = re.compile(r"\bbegin\s*:\s*([A-Za-z_][\w$]*)")
+_INST_HEAD = re.compile(r"(?<![\w$.`'])([A-Za-z_][\w$]*)\s*(#\s*\()?")
+_INST_NAME = re.compile(r"\s*([A-Za-z_][\w$]*|\\\S+)\s*(?:\[[^\]]*\]\s*)*[(`]")
+
+
+_DEFINE = re.compile(r"`(?:define|OT_KC_DEFINE)[ \t]+([A-Za-z_]\w*)(\([^)]*\))?((?:[^\n\\]|\\.)*)", re.S)
+_MACRO_USE = re.compile(r"`([A-Za-z_]\w*)")
+_DIRECTIVES = {"define", "undef", "ifdef", "ifndef", "elsif", "else", "endif", "include", "timescale", "default_nettype",
+               "resetall", "celldefine", "endcelldefine", "line", "pragma", "begin_keywords", "end_keywords",
+               "unconnected_drive", "nounconnected_drive", "undefineall"}
+
+
+def _macro_defs(text):
+    """{name: (params or None, body)} of the `define lines in text (line continuations joined)."""
+    out = {}
+    for m in _DEFINE.finditer(text):
+        params = [a.strip() for a in m.group(2)[1:-1].split(",")] if m.group(2) else None
+        out[m.group(1)] = (params, re.sub(r"\\\n", "\n", m.group(3)))
+    return out
+
+
+def _expand_macros(text, defs, rounds=6):
+    """text with user `NAME / `NAME(args) uses expanded (`` token pasting); `define lines removed first.  Enough to
+    see instance names made by macros (S81 HEAD `OT_S81HD_EA(Q) -> u_eA``Q)."""
+    text = _DEFINE.sub(" ", text)
+    for _ in range(rounds):
+        out, pos, changed = [], 0, False
+        for m in _MACRO_USE.finditer(text):
+            if m.start() < pos or m.group(1) in _DIRECTIVES or m.group(1) not in defs:
+                continue
+            params, body = defs[m.group(1)]
+            end = m.end()
+            if params is not None:
+                j = end
+                while j < len(text) and text[j] in " \t\n":
+                    j += 1
+                if j >= len(text) or text[j] != "(":
+                    continue
+                d, k, args, a0 = 1, j + 1, [], j + 1
+                while k < len(text) and d:
+                    c = text[k]
+                    if c in "([{":
+                        d += 1
+                    elif c in ")]}":
+                        d -= 1
+                    elif c == "," and d == 1:
+                        args.append(text[a0:k])
+                        a0 = k + 1
+                    k += 1
+                args.append(text[a0:k - 1])
+                end = k
+                for name, val in zip(params, args):
+                    body = re.sub(r"(?<![\w$])" + re.escape(name.split("=")[0].strip()) + r"(?![\w$])",
+                                  lambda _m, v=val.strip(): v, body)
+            out.append(text[pos:m.start()])
+            out.append(" " + body.replace("``", "") + " ")
+            pos, changed = end, True
+        out.append(text[pos:])
+        text = "".join(out)
+        if not changed:
+            break
+    return text
+
+
+def _rtl_scopes(kd):
+    """{module: ({instance name: {module types}}, {generate block labels})} of the kit's staged sources, read as the
+    flow reads them (SYNTHESIS + VERILOG_DEFINES `ifdef branches, user macros expanded).  Every generate branch counts
+    (an instance name may have one type per branch)."""
+    import kit_preflight as KP
+    import rtl_lint
+    cfg = rtl_lint.config(Path(kd))
+    defines = {"SYNTHESIS"} | {re.sub(r"^-D", "", v).split("=")[0] for v in cfg.get("VERILOG_DEFINES", [])}
+    texts, defs = [], {}
+    for p in sources(kd):
+        if p.is_file():
+            # _preprocess consumes "`define NAME" (it tracks the name for `ifdef); a copy of the directive under
+            # another spelling keeps the live branch's macro body for _macro_defs.
+            raw = re.sub(r"`define([ \t]+)([A-Za-z_]\w*)", r"`define\1\2 `OT_KC_DEFINE\1\2",
+                         KP._strip_src(p.read_text(errors="replace")))
+            text = KP._strip_src(KP._preprocess(raw, set(defines)))
+            defs.update(_macro_defs(text))
+            texts.append(text)
+    out = {}
+    for text in texts:
+        text = _expand_macros(text, defs)
+        for mm in KP._MODSPAN.finditer(text):
+            body, insts = mm.group(2), {}
+            pos = 0
+            while True:
+                m = _INST_HEAD.search(body, pos)
+                if not m:
+                    break
+                pos, typ = m.end(), m.group(1)
+                if typ in KP._SV_WORDS:
+                    continue
+                if m.group(2):                       # skip the balanced #( ... ) parameter list
+                    d, j = 1, m.end()
+                    while j < len(body) and d:
+                        d += {"(": 1, ")": -1}.get(body[j], 0)
+                        j += 1
+                    pos = j
+                n = _INST_NAME.match(body, pos)
+                if n and n.group(1) not in KP._SV_WORDS:
+                    insts.setdefault(n.group(1).lstrip("\\"), set()).add(typ)
+            out.setdefault(mm.group(1), (insts, set(_GEN_LABEL.findall(body))))
+    return out, cfg.get("DESIGN_NAME", [])
+
+
+def _resolve(scopes, mod, parts, master):
+    """None when parts (instance path components below module mod) resolve to an instance of master; else why not.
+    An escaped flat name (\\u_c.u_b.g_w[1].u_m, pre-flattened netlist) may cover several components."""
+    insts, labels = scopes.get(mod, ({}, set()))
+    why = f"component {parts[0]!r} is neither an instance nor a generate block of module {mod}"
+    for n in range(len(parts), 0, -1):
+        name = ".".join(parts[:n])
+        cands = insts.get(name) or (insts.get(re.sub(r"(\[[^\]]*\])+$", "", name)) if n == 1 else None)
+        if not cands:
+            continue
+        if n == len(parts):
+            if master is None or master in cands:
+                return None
+            return f"{name!r} is an instance of {'/'.join(sorted(cands))}, placed as master {master}"
+        for typ in sorted(cands):
+            if typ in scopes:
+                sub = _resolve(scopes, typ, parts[n:], master)
+                if sub is None:
+                    return None
+                why = sub
+            else:
+                why = f"component {name!r} is an instance of {typ}, which no staged source defines"
+        return why
+    head = re.sub(r"(\[[^\]]*\])+$", "", parts[0])
+    if len(parts) > 1 and (head in labels or re.fullmatch(r"genblk\d+", head)):     # unnamed blocks: yosys genblkN
+        return _resolve(scopes, mod, parts[1:], master)
+    return why
+
+
+def _placed_instances(txt):
+    """[(instance path, master or None)] named in a static macro placement Tcl: foreach lists with an `inst` variable
+    and literal place_macro -macro_name lines."""
+    out = []
+    for vars_, body in _foreach_lists(txt):
+        if "inst" not in vars_:
+            continue
+        vals, n = _tcl_list(body), len(vars_)
+        for k in range(0, len(vals) - n + 1, n):
+            row = dict(zip(vars_, vals[k:k + n]))
+            out.append((row["inst"], row.get("master")))
+    for m in re.finditer(r"place_macro\s+-macro_name\s+(\{[^}]*\}|[^\s$]\S*)", txt):
+        out.append((m.group(1).strip("{}"), None))
+    return [(name.replace("\\[", "[").replace("\\]", "]"), master) for name, master in out]
+
+
+def macro_instances(kd):
+    kd = Path(kd)
+    cfg = _mk(kd)
+    mp = _kfile(kd, cfg.get("MACRO_PLACEMENT_TCL", "") or "/")
+    if not cfg.get("MACRO_PLACEMENT_TCL") or mp is None or not mp.is_file():
+        return [], dict(applies=False)
+    named = _placed_instances(mp.read_text(errors="replace"))
+    if not named:
+        return [], dict(applies=False, reason="placement names masters/patterns, no instance paths")
+    scopes, top = _rtl_scopes(kd)
+    if len(top) != 1 or top[0] not in scopes:
+        return [f"DESIGN_NAME {top} not defined by a staged source: {len(named)} placed instance(s) unresolvable"], \
+            dict(applies=True, placed=len(named))
+    err = []
+    for path, master in named:
+        problem = _resolve(scopes, top[0], path.split("."), master)
+        if problem:
+            err.append(f"placed macro {path}: {problem} (path from {top[0]})")
+    return err, dict(applies=True, placed=len(named), resolved=len(named) - len(err))
+
+
 CHECKS = ("corner_modes", "ff_binding", "clock_pin_geometry", "rc_calibration", "duplicate_modules", "keep_hook",
-          "pins_canonical", "mesh_vias", "macro_channels", "clock_entry_clear", "island_macro_clear", "macro_pin_grid")
+          "pins_canonical", "mesh_vias", "macro_channels", "clock_entry_clear", "island_macro_clear", "macro_pin_grid",
+          "macro_instances")
 
 
 def is_core_kit(kd):

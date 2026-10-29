@@ -911,6 +911,21 @@ def cts_setup_only(kd, cfg):
     cfg += ["export SKIP_CTS_REPAIR_TIMING = 1", "override export POST_CTS_TCL = /work/post_cts_setup.tcl"]
     return dict(previous_post_cts=prev, repair="setup only (vclk OT_VCLK_TT)", hold="FF-only GRT step only")
 
+def timing_modes_stage(kd):
+    """--two-mode-grt (KV-KITS-15): SIGNOFF-MODES-2 shared stage (tools/die_plan/kit_modes.py, as gen_core_kit_hbm):
+    CORNERS tc BC, OT_HOLD_MM=1, vclk_ff.sdc + orfs_hold_mm.{py,tcl} + kit_modes.py copies; fails closed."""
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("kit_modes", REPO / "tools/die_plan/kit_modes.py")
+    km = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(km)
+    try:
+        r = km.stage(kd)
+        km.check(kd, "grt", session="tc bc", hold_repair=True)
+    except km.Fail as e:
+        raise SystemExit(f"KIT_MODES FAIL {e}")
+    return dict(mode="two-mode tc setup / BC hold", tt=r["tt"], ff=r["ff"])
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--core-json", required=True)
@@ -1018,6 +1033,11 @@ def main():
                          "form): skip ORFS's single-mode tc+bc CTS repair (it times FF hold against the TT vclk 250 = "
                          "OT_VCLK_TT - OT_VCLK_FF too early) and run a SETUP-ONLY repair after the kit's POST_CTS hook; "
                          "FF hold stays in the FF-only GRT step (vclk OT_VCLK_FF)")
+    ap.add_argument("--two-mode-grt", action="store_true",
+                    help="KV-KITS-15 opt-in (SIGNOFF-MODES-2 one timing mode per corner, the HBM-CORES-R11 two-mode form): "
+                         "stage the MCMM kit with tools/die_plan/kit_modes.py (CORNERS tc BC, OT_HOLD_MM=1: scene tc TT setup "
+                         "vclk OT_VCLK_TT / scene BC FF hold vclk OT_VCLK_FF), so the GRT hold repair never times the TT corner "
+                         "against the FF vclk (single-mode tc+bc GRT: fake TT input hold, RSZ-0060 on qkd_hr_phy_pad); default off")
     ap.add_argument("--plan-inst", default=None,
                     help="KV-CORES-PV2: plan hard_cores[] slot (inst of the core json's partition type) whose pins_file this "
                          "kit takes (default: the core json inst); one kit per physical pin view (e.g. pv_pair R0 vs fMX)")
@@ -1627,6 +1647,7 @@ def main():
     # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
     MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
+    tm = timing_modes_stage(kd) if a.two_mode_grt else None   # after config.mk, before kit_hash
     fz = dict(schema="opentallas.kv.core_freeze.v1", type=tid, module=mod, outline_um=[w, h],
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),
               core_json_sha256=sha(a.core_json), pins=len(allp), plan_pins=len(pins), added_pins=len(added),
@@ -1647,6 +1668,8 @@ def main():
     import lec as LEC
     source_provenance = LEC._repo_provenance(REPO)
     fz["source_commit"] = source_provenance.get("commit")
+    if tm is not None:
+        fz["timing_modes"] = tm
     if ms is not None:
         fz["master_plan"] = ms
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")

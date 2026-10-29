@@ -19,6 +19,16 @@ assert s['edges']==p['serial_edges'];assert s['expected_vm_writes']==p['write_sl
 print(s['edges'],s['expected_vm_writes'],s['expected_scalars'],p['stream_edges'])
 PY
 )
+# FLOW-GEN-2 (opt-in SU_MUT_ADDR_EDGE=auto): aim the ADDR mutant at the first serial edge on which its field is live in
+# THIS programme (su_mut_addr_edge.py; fail closed). Default 'tb' = the TB's own edge 1040 (MLAT4), unchanged: a build
+# that shifts the programme (m5w1 -> 1041) otherwise mutates an idle line and reports NOT_CAUGHT.
+mut_addr_mode=${SU_MUT_ADDR_EDGE:-tb};mut_addr_arg=
+case "$mut_addr_mode" in
+ tb) ;;
+ auto) mut_addr_edge=$(python3 tools/hbm_static/su_mut_addr_edge.py "$out/vec") || { echo 'SU_MUT_ADDR_EDGE FAIL: no ADDR mutant edge from the programme' >&2;exit 1; }
+  mut_addr_arg="+MUT_ADDR_EDGE=$mut_addr_edge";echo "$mut_addr_edge" > "$out/mut_addr_edge.txt";;
+ *) echo 'SU_MUT_ADDR_EDGE must be tb or auto' >&2;exit 2;;
+esac
 if [ "$mode" = prepare ]; then echo "SU_MULTIRATE_PREPARED serial=$NE stream=$PE";exit 0;fi
 if [ "$mode" != build ] && [ "$mode" != run ];then echo 'mode must be prepare, build or run' >&2;exit 2;fi
 S=rtl/hbm_accel/generic/adapters/static_su
@@ -68,7 +78,7 @@ Path(sys.argv[2]).write_text(json.dumps(d,indent=2)+'\n')
 PY
 for mut in DATA ADDR RF RED CAL EPOCH;do
  set +e
- "$bin" +DIR="$out/vec" +MUT_$mut > "$out/mut_$mut.log" 2>&1
+ "$bin" +DIR="$out/vec" +MUT_$mut $( [ "$mut" = ADDR ] && [ -n "$mut_addr_arg" ] && echo "$mut_addr_arg" ) > "$out/mut_$mut.log" 2>&1
  rc=$?
  set -e
  if [ "$rc" = 0 ] || ! grep -q 'SU_NATIVE_MULTIRATE_TOP FAIL' "$out/mut_$mut.log";then exit 1;fi

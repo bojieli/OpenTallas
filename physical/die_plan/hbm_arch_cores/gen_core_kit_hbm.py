@@ -109,18 +109,25 @@ def io_tcl(pins, w, h, tag):
     for p in pins:
         f = face_of(p["x"], p["y"], w, h)
         lw = LAYER_W.get(p["layer"], 0.04)
+        # DIE-HBM-10 C25a (opt-in): a plan pin record with explicit w (across the face) and h (into the core) keeps that
+        # size, e.g. the clock-class pins at M5 0.048 x 0.48 (GEOM-21 / KIT_PREFLIGHT clock_pin_geometry); records
+        # without w/h (every pin before C25a) are placed exactly as before.
+        sized = p.get("w") is not None and p.get("h") is not None
+        lw, ln = (float(p["w"]), float(p["h"])) if sized else (lw, PIN_LEN_UM)
         x, y = p["x"], p["y"]
         if f in "EW":
             x = w if f == "E" else 0.0
-            size, cx, cy = (PIN_LEN_UM, lw), (x - PIN_LEN_UM / 2 if f == "E" else x + PIN_LEN_UM / 2), y
+            size, cx, cy = (ln, lw), (x - ln / 2 if f == "E" else x + ln / 2), y
         else:
             y = h if f == "N" else 0.0
-            size, cx, cy = (lw, PIN_LEN_UM), x, (y - PIN_LEN_UM / 2 if f == "N" else y + PIN_LEN_UM / 2)
+            size, cx, cy = (lw, ln), x, (y - ln / 2 if f == "N" else y + ln / 2)
         out.append(f"place_pin -pin_name {{{p['name']}}} -layer {p['layer']} -location {{{cx:.4f} {cy:.4f}}} "
                    f"-pin_size {{{size[0]:.4f} {size[1]:.4f}}}")
         b, i = split_name(p["name"])
         rows.append(dict(bus=b, bit=i, layer=p["layer"], x=round(x if f in "EW" else p["x"], 4),
                          y=round(y if f in "NS" else p["y"], 4), face=f))
+        if sized:
+            rows[-1].update(w=lw, h=ln)
     return "\n".join(out) + "\n", rows
 
 
@@ -209,6 +216,14 @@ def _on_track(lo, hi, width, pitch, offsets):
         if of + k * pitch <= hi - width // 2:
             return True
     return False
+
+
+def _um(v):
+    """HBM-CORES-KITS-2: geometry (um) for config.mk / Tcl.  '{v:g}' keeps only 6 significant digits, so the C24 plan
+    outline 1635.552 um became DIE_AREA 1635.55 (kit_preflight master_slice FAIL, hfd_hgi_vms_glue_nw_t) and every
+    coordinate >= 1000 um lost its last decimal.  10 significant digits keep the plan's 1-nm values and still drop
+    float noise (177.98399999999992 -> 177.984); values < 1000 um with <= 3 decimals print as before."""
+    return f"{float(v):.10g}"
 
 
 def snap_macro_placement(placements, tracks_tcl, lef_text_of, outline_um):
@@ -1177,8 +1192,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
            "export VERILOG_DEFINES = " + " ".join(["-DSYNTHESIS"] + [f"-D{d}" for d in rec.get("defines", [])]),
            *([f"export VERILOG_TOP_PARAMS = " + " ".join(f"{k} {vv}" for k, vv in dparams.items())] if dparams else []),
            "export SDC_FILE = /work/constraint.sdc",
-           f"export DIE_AREA = 0 0 {w:g} {h:g}",
-           f"export CORE_AREA = {m:g} {m:g} {w - m:g} {h - m:g}",
+           f"export DIE_AREA = 0 0 {_um(w)} {_um(h)}",
+           f"export CORE_AREA = {_um(m)} {_um(m)} {_um(w - m)} {_um(h - m)}",
            "export IO_CONSTRAINTS = /work/io.tcl",
            "export PDN_TCL = /work/pdn.tcl",
            "override export MAKE_TRACKS = /work/make_tracks.tcl",
@@ -1256,8 +1271,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                 else: uy = h - 4.32
             if uy - ly < mh + 2 * hx:
                 ly, uy = 4.32, h - 4.32
-        cfg += [f"export RTLMP_FENCE_LX = {lx:g}", f"export RTLMP_FENCE_LY = {ly:g}",
-                f"export RTLMP_FENCE_UX = {ux:g}", f"export RTLMP_FENCE_UY = {uy:g}"]
+        cfg += [f"export RTLMP_FENCE_LX = {_um(lx)}", f"export RTLMP_FENCE_LY = {_um(ly)}",
+                f"export RTLMP_FENCE_UX = {_um(ux)}", f"export RTLMP_FENCE_UY = {_um(uy)}"]
     if rec.get("macro_placement") and a.macro_grid_snap == "on":
         # HBM-CORES-REBAL-9 (FG2 (f) macro_pin_grid): snap every static macro origin so its signal pins sit on the
         # kit's preferred-direction tracks (smallest move; an on-grid table is unchanged byte for byte).
@@ -1280,7 +1295,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             # macro (MPL-0020). Escape every bracket the caller's --macro-inst-fmt did not already escape.
             inst = re.sub(r"(?<!\\)([\[\]])", r"\\\1", placement["inst"])
             orient = placement.get("orient", "R0")
-            rows.append(f"  {{{inst}}} {placement['macro']} {x:g} {y:g} {orient}")
+            rows.append(f"  {{{inst}}} {placement['macro']} {_um(x)} {_um(y)} {orient}")
         lines = (["foreach {inst master x y orient} {"] + rows +
                  ["} {", "  place_macro -macro_name $inst -location [list $x $y] -orientation $orient -exact", "}"])
         (kd / "macro_placement.tcl").write_text("\n".join(lines) + "\n")
@@ -1299,7 +1314,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                        [((r_["bus"] if r_["bit"] is None else f"{r_['bus']}[{r_['bit']}]"), r_["x"], r_["y"])
                                         for r_ in prow], mrg, (m, m, w - m, h - m))
         spec = " ".join(f"{{{g['name']} {{{' '.join('{' + q + '}' for q in g.get('prefixes', [g.get('prefix')]))}}} "
-                        f"{' '.join(f'{v:g}' for v in g['box_um'])}}}" for g in mrg + rly)
+                        f"{' '.join(_um(v) for v in g['box_um'])}}}" for g in mrg + rly)
         (kd / "macro_reg_guide.tcl").write_text(
             "# GENERATED by gen_core_kit_hbm.py --macro-reg-guide (HBM-CORES-REBAL-10). Do not edit.\n"
             f"set ::ot_mrg_spec [concat {spec}]\n" + (HERE / "macro_reg_guide.tcl").read_text())

@@ -223,3 +223,15 @@ event report, side data, pins file, render, probe and gate logs are in `c24/`.
   - G0 PASS: 0 errors, 564 warnings (568 on C23q).
   - G0C: 16 errors, identical to the C23q baseline (12 core_faces q_hub_nw/ne + 4 street_reach); 0 new; 85 pending-view.
 - Unchanged: the C23q PHY split, the xq_pegress view drop, section 12, all checks.
+
+## (8) C25a: clock-class pins of the 8 multi-clock cores on M5 at 0.048 x 0.48 (COORD 19:30, HBM-CORES-KITS-1 ASK b)
+- Plan: intel2:/srv/opentallas-scratch2/claude/die-hbm-10/c25a/die_plan.json, sha 20d73dea (on C24 3ab76af4). Script `apply_c25a.py`, report `c25a/c25a_event_report.json`, changed pin tables in `c25a/cores/`.
+- Clock class = gen_core_kit_hbm.CLK_RE, the ports the kit SDC creates clocks on. 65 pins in 8 tables:
+  - calendar_f20 4, selector_sel 17, topk_link 9, wr_q_t_lanes4 6, sm_group_rel_id 10, wb_kport_q 6, vp4_banks_cp 11, xload_cl2_ctlx 2.
+  - Every one is now M5, on the M5 track, with w 0.048 / h 0.48 in the record, and >= 0.096 um from every other M5 pin on its face.
+  - 44 E/W-face M4 pins move to the nearer N/S face at the same corner. M5 is vertical, so it cannot leave through E/W. Largest shift 213.6 um: selector clk_mem[3..11], E face to the N corner. vp4_banks_cp shifts up to 121.7 um; the others stay under 16 um.
+  - The 21 S-face M5 pins (topk, group_rel_id, calendar clk/clk_tgt) keep their x and only gain the size.
+- Generator: gen_core_kit_hbm.io_tcl honours plan pin w/h (opt-in). It is byte-identical to origin/main on all 77 C24 pin tables without w/h. hbm_arch_cores tests: 25 passed (5 files, with tclsh; test_face_shell_init needs yosys).
+- KIT_PREFLIGHT clock_pin_geometry (shared kit_contract, unchanged) on the 8 HBM-CORES-KITS-1 kits, with the clock lines regenerated from C25a: PASS 8/8 (the original kits: FAIL 8/8). See `c25a/c25a_preflight.json` and `c25a_preflight.py`.
+- Gates (same mainsnap check.py): G0 PASS, 0 errors, 564 warnings. G0C 16 errors, 85 pending-view, 548 warnings. G0 and G0C findings are identical to C24 (564 / 649 findings, 0 added, 0 removed).
+- UNCHECKED: the parent-side hop of the moved clock pins. They are the same core clock (merged ports; the kit slice entry stays at the centre). Not changed: outlines, all other pins, checks, section 12.

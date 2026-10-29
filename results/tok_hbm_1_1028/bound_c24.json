@@ -1,0 +1,6 @@
+{"source_plan_commit": "", "plan_sha256": "3ab76af4eb552d7cde3498067c1334e60cf04b3a93ada6297562c5bbc8800b45",
+ "note": "C24 (DIE-HBM-10, not plan of record). Hub-internal FUSED tree is in the plan (internal mu_tree stations, see calendar_c24.hub_tree.json: NW 45 / NE 46 regs round trip). Every leg below is MISSING from the plan: no reset wavefront lanes (reset release=wavefront, 0 rst ports), no fused root/provider/host instance in partition root, no n4->root lane. rr/reset constants are RTL facts.",
+ "legs": {},
+ "rtl": {"rr": {"value": 10, "source": "rtl/hbm_next/fused/ot_hnx_fused_tree.sv ot_hnx_fused_hub RR=10"},
+         "reset_release_edges": {"value": 66, "source": "physical/die_plan/hbm/reset_contract.json assert_edges 66 (2+HOLD 64)"},
+         "reset_sync_stages": {"value": 3, "source": "rtl/hbm_next/fused/ot_hnx_fused_tree.sv ot_hnx_fused_delivered_reset pipe[2:0]"}}}

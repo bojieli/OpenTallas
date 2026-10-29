@@ -1683,6 +1683,11 @@ def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed
     return dict(rows=rows, taps=taps)
 
 
+def reg_spine_spec(P, tn):
+    """DIE-HEAD-17 opt-in register spine of a type (partition_types.<t>.reg_spine, reg_spine.py spec) or None."""
+    return P.types[tn].get("reg_spine") or None
+
+
 def clock_phase_tcl(P, tn, before_cts=False):
     """Estimate only LOCAL clock trees while they are ideal; clear before CTS.
 
@@ -1869,7 +1874,15 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         shutil.copyfile(Path(__file__).resolve().parents[2] / "physical/common_flow/core_clock_groups.tcl",
                         kd / "core_clock_groups.tcl")
         group_hook = "\nsource /work/core_clock_groups_apply.tcl\n"
-    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check + group_hook)
+    # DIE-HEAD-17 (opt-in partition_types.<t>.reg_spine): register clock as a plan-placed spine + local trees and the
+    # hard-core early taps as dedicated branches (reg_spine.tcl / reg_spine.py, PRE_CTS); absent = kit unchanged.
+    rsp_hook = ""
+    if reg_spine_spec(P, tn):
+        (kd / "reg_spine.json").write_text(json.dumps(reg_spine_spec(P, tn), indent=1, sort_keys=True) + "\n")
+        for f in ("reg_spine.py", "reg_spine.tcl"):
+            shutil.copyfile(Path(__file__).with_name(f), kd / f)
+        rsp_hook = "\nuplevel #0 {source /work/reg_spine.tcl}\n"
+    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check + group_hook + rsp_hook)
     # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
     # 60/25 uncertainty once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
     import sdc_lint
@@ -1953,6 +1966,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread), then
            # FLOW 10-25 F4: zero-logic register pairs onto one leaf (leaf_affinity.tcl; OT_LEAF_AFFINITY=0 = off)
            "export POST_CTS_TCL = /work/cts_post.tcl",
+           # DIE-HEAD-17 reg_spine: the plan balances the spine taps and sizes the core early-tap branches, so the
+           # flow tap_balance pass (incl. its core re-hang pass) only reports
+           *(["export OT_TAP_REPORT_ONLY = 1"] if reg_spine_spec(P, tn) else []),
            f"export OT_TAP_TARGET_PS = {ib['tt']:g}",
            # FLOW 10-25 (ruling 9.7 / decision 5e): bound pin-register insertion per corner (vclk_corner.tcl)
            f"export OT_VCLK_TT = {t_lib(ib['tt']):.4f}",
@@ -2025,6 +2041,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         cfg += ["export OT_TAP_GRT_PRE = 1", "export OT_PINREG_PAD = 1"]
     if P.reset.get("relay_driver"):
         cfg.append("export OT_RESET_PAIR_FIXED = 1")
+    if t.get("clock", {}).get("tap_passthrough"):
+        # FLOW-GEN-2 (opt-in clock.tap_passthrough): hard-core island ft clock pass-through inputs are followed, not
+        # measured as tap sinks (tap_balance.tcl tb_passthru)
+        cfg.append("export OT_TAP_PASSTHRU = 1")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",

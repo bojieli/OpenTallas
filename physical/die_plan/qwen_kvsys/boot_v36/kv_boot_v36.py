@@ -269,6 +269,19 @@ def native_die_config(path):
     return words
 
 
+def service_pad(a):
+    """DIE-KV-18: the static attention-service pad the bound ages need (the RESULT slot follows the worst context's
+    service); run_mu833.sh feeds it to the pair image AND the compile (link_image_check keeps them equal)"""
+    from tools.qwen_kv_die import kv_static_programme as P
+    P.MU = bool(P.LINK_MU if a.mu is None else a.mu)
+    ages = json.loads(Path(a.ages).read_text())
+    os.environ['OT_KV_EMB_FILL_RELAYS'] = str(a.rs)
+    os.environ['OT_KV_WRITER_DIE'] = '1'
+    r = P.service_slot_pad(P.profile('die', ages))
+    r['ages'] = str(a.ages)
+    print(json.dumps(r, indent=1))
+
+
 def compile_(a):
     from tools.qwen_kv_die import kv_static_programme as P
     P.MU = bool(P.LINK_MU if a.mu is None else a.mu)     # Native MU1 RTL requires the compiler's real 471-word MU layer image.
@@ -335,5 +348,9 @@ if __name__ == '__main__':
     c.add_argument('--die-config', type=Path, help='producer target10 hex: 32 ECTL + 43 reset + capability + 19 ages + seal')
     c.add_argument('--native-contract', type=Path, help='actual source-derived native_die_cfg_contract JSON')
     c.add_argument('--capability',type=int,choices=[0,1],help='explicit selected native fused-programme capability')
+    s = sp.add_parser('service-pad', help='DIE-KV-18: attention-service pad the ages need (JSON on stdout)')
+    s.add_argument('--ages', required=True)
+    s.add_argument('--rs', required=True)
+    s.add_argument('--mu', action=argparse.BooleanOptionalAction, default=None)
     a = ap.parse_args()
-    prep(a) if a.cmd == 'prep' else compile_(a)
+    {'prep': prep, 'compile': compile_, 'service-pad': service_pad}[a.cmd](a)

@@ -60,7 +60,8 @@ module qfd_tile_nl_rp2_45 #(
     output wire          tie_hi,
     output wire          tie_lo,
     input  wire [507:0]  tap,
-    output wire [513:0]  t_out
+    output wire [513:0]  t_out,
+    output wire          me_idle   // QC-PG-5 ICG: u_tile.idle (engine drained, registered; tile-root ICG enable)
 );
     (* keep = "true" *) wire tie_hi_w = 1'b1;
     (* keep = "true" *) wire tie_lo_w = 1'b0;
@@ -115,7 +116,7 @@ module qfd_tile_nl_rp2_45 #(
         .ck_lsl({ck_lsl7,ck_lsl6,ck_lsl5,ck_lsl4,ck_lsl3,ck_lsl2,ck_lsl1,ck_lsl0}),
         .ck_node(ck),                                  // NODE 0: no node leaf, the entry has no sink
         .clk(ck), .rst_n(reset_q), .tile_id(tile_id_q), .ib_go(go), .ib(ib), .xl(xl), .t_out(to), .t_vout(tv),
-        .n_a(512'd0), .n_b(512'd0), .n_va(1'b0), .n_y(), .n_vy(), .fault(tf));   // NODE 0: n_* not read / not driven
+        .n_a(512'd0), .n_b(512'd0), .n_va(1'b0), .n_y(), .n_vy(), .fault(tf), .idle(me_idle));   // NODE 0: n_* not read / not driven
     (* keep *) reg [513:0] t_out_q;
     always @(posedge ck_fa2) begin
         t_out_q[511:0]<=to;

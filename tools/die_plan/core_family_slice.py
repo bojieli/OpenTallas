@@ -358,7 +358,7 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
     sinks = sum(1 for l in open(geo) if l.startswith("SINK"))
     sp = splits_for(sinks, fam)
     M7.BUFS = list(ENV)
-    P = H.plan(str(geo), sp, fam.get("smax", 70.0), [])
+    P = H.plan(str(geo), sp, fam.get("smax", 70.0), [list(k) for k in fam.get("keepout_um", [])])
     rea = reassign_nearest(P, int(fam.get("reassign_cap", 1.5) * max(len(v) for v in P["leafsinks"].values()))) if fam.get("reassign") else None
     split = split_long_leaves(P, fam.get("leaf_limit", 35.0))
     kr, kc = map(float, fam.get("rc", "0.8,0.9").split(","))
@@ -401,6 +401,8 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
                leaf_spread_max=dict(all=max(spread.values()), main=max(spread.values()), strip=0.0,
                                     n_gt_40=sum(v > 40 for v in spread.values()), top=sorted(spread.items(), key=lambda kv: -kv[1])[:8]),
                model="R7 NLDM+Elmore chain + 12.8 d1 (core_family_slice); PLAN MODEL, UNCHECKED")
+    if fam.get("keepout_um"):
+        rec["macro_keepout_um"] = [list(k) for k in fam["keepout_um"]]
     return rec
 
 
@@ -548,6 +550,38 @@ def render(geo, rec, slice_, out_png):
 
 # ------------------------------------------------------------------ entry (12.16e by intent, COORD dfd33a253)
 ENTRY_MODES = ("centre", "sink_centroid")
+MACRO_KEEPOUT_HALO_UM = 2.2     # = core_infra_htree.Maze macro halo
+
+
+def macro_keepouts(sites, halo=MACRO_KEEPOUT_HALO_UM):
+    """hard-macro rects of the kit floorplan (sites.txt FIXED lines taller than one row = blocks, not tap/endcap cells),
+    grown by the planner's macro halo.  The census (core_family_geo.tcl) writes MACRO lines only for blocks whose clock
+    pin is ON the core clock net, so a block clocked through an ICG (S81 rom_elem_q _gb: 4 ot_rom_4096x274_m8, clk via
+    u_cg_r*.gclk) is invisible to the maze: the plan put branch drivers inside a ROM (mp_ck_T00_br at (71.28,152.82),
+    26 um from the nearest legal row site) and the converter refused."""
+    L = Path(sites).read_text().splitlines(); sh = None; out = []
+    for l in L:
+        f = l.split()
+        if f[:1] == ["ROW0"]:
+            sh = float(f[6])
+    if sh is None:
+        raise SystemExit("macro_keepout: %s has no ROW0 line" % sites)
+    for l in L:
+        f = l.split()
+        if f[:1] == ["FIXED"]:
+            x0, y0, x1, y1 = map(float, f[3:7])
+            if y1 - y0 > 1.5 * sh:
+                out.append([round(x0 - halo, 4), round(y0 - halo, 4), round(x1 + halo, 4), round(y1 + halo, 4)])
+    return sorted(out)
+
+
+def keepout_mode(fam, core):
+    """family 'macro_keepout': absent/false = no node keep-out (unchanged); true for every member, or {member: bool}.
+    true = every hard macro of the member's floorplan is a NODE keep-out for the plan (no driver/repeater/branch site
+    inside macro + halo); wires may still pass over it (the plan's wire layers sit above the macro OBS)."""
+    k = fam.get("macro_keepout", False)
+    return bool(k.get(core, False)) if isinstance(k, dict) else bool(k)
+
 
 
 def entry_mode(fam, core):
@@ -585,6 +619,8 @@ def run_core(fams, core, kit, work, a):
     work = Path(work) / core; work.mkdir(parents=True, exist_ok=True)
     clk = census(kit, work)
     geo = entry_geo(work / "geo.txt", entry_mode(fam, core))
+    if keepout_mode(fam, core):
+        fam = dict(fam, keepout_um=macro_keepouts(work / "sites.txt"))
     cal = json.loads(Path(a.trunk_cal).read_text()).get(core) if getattr(a, "trunk_cal", None) else None
     rcal = json.loads(Path(a.replan_cal).read_text()).get(core) if getattr(a, "replan_cal", None) else None
     if rcal and cal:

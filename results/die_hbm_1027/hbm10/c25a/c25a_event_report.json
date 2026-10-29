@@ -1,0 +1,1357 @@
+{
+ "event": "C25a (DIE-HBM-10)",
+ "source": "c24/die_plan.json",
+ "source_sha": "3ab76af4eb55",
+ "rule": "clock-class pins M5 0.048 x 0.48 on the M5 track (COORD 19:30 / KITS-1 ASK b; GEOM-21)",
+ "cores": {
+  "hfd_hgi_vm_calendar_f20": {
+   "pins_file": "cores/hfd_hgi_vm_calendar_f20__241.92x116.64__canon.json",
+   "outline_um": [
+    241.92,
+    116.64
+   ],
+   "instances": 4,
+   "clock_pins": 4,
+   "layer_changed": 2,
+   "face_changed": 2,
+   "max_shift_um": 14.352,
+   "moves": [
+    {
+     "pin": "clk",
+     "old": {
+      "layer": "M5",
+      "x": 182.808,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 182.808,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "clk_tgt",
+     "old": {
+      "layer": "M5",
+      "x": 184.728,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 184.728,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "clk_cap",
+     "old": {
+      "layer": "M4",
+      "x": 0.096,
+      "y": 2.184,
+      "face": "W",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 1.032,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 3.024
+    },
+    {
+     "pin": "clk_mem",
+     "old": {
+      "layer": "M4",
+      "x": 0.096,
+      "y": 13.416,
+      "face": "W",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 1.128,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 14.352
+    }
+   ]
+  },
+  "ot_hbm_idx_selector_static_sel": {
+   "pins_file": "cores/ot_hbm_idx_selector_static_sel__600.048x450.36__root_u_hb_idx__selector.json",
+   "outline_um": [
+    600.048,
+    450.36
+   ],
+   "instances": 1,
+   "clock_pins": 17,
+   "layer_changed": 17,
+   "face_changed": 17,
+   "max_shift_um": 213.6,
+   "moves": [
+    {
+     "pin": "clk_ctl",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 2.184,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 599.016,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 3.024
+    },
+    {
+     "pin": "clk_q[0]",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 54.648,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 598.92,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 55.584
+    },
+    {
+     "pin": "clk_q[1]",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 80.904,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 598.824,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 81.936
+    },
+    {
+     "pin": "clk_q[2]",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 107.112,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 598.728,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 108.24
+    },
+    {
+     "pin": "clk_q[3]",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 133.368,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 598.632,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 134.592
+    },
+    {
+     "pin": "clk_mem[0]",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 159.624,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 598.536,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 160.944
+    },
+    {
+     "pin": "clk_mem[1]",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 185.832,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 598.44,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 187.248
+    },
+    {
+     "pin": "clk_mem[2]",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 212.088,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 598.344,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 213.6
+    },
+    {
+     "pin": "clk_mem[3]",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 238.296,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 599.016,
+      "y": 450.264,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 212.904
+    },
+    {
+     "pin": "clk_mem[4]",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 264.552,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 598.92,
+      "y": 450.264,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 186.744
+    },
+    {
+     "pin": "clk_mem[5]",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 290.76,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 598.824,
+      "y": 450.264,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 160.632
+    },
+    {
+     "pin": "clk_mem[6]",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 317.016,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 598.728,
+      "y": 450.264,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 134.472
+    },
+    {
+     "pin": "clk_mem[7]",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 343.272,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 598.632,
+      "y": 450.264,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 108.312
+    },
+    {
+     "pin": "clk_mem[8]",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 369.48,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 598.536,
+      "y": 450.264,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 82.2
+    },
+    {
+     "pin": "clk_mem[9]",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 395.736,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 598.44,
+      "y": 450.264,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 56.04
+    },
+    {
+     "pin": "clk_mem[10]",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 421.944,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 598.344,
+      "y": 450.264,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 29.928
+    },
+    {
+     "pin": "clk_mem[11]",
+     "old": {
+      "layer": "M4",
+      "x": 599.952,
+      "y": 448.2,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 598.248,
+      "y": 450.264,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 3.768
+    }
+   ]
+  },
+  "ot_hbm_idx_topk_link_static": {
+   "pins_file": "cores/ot_hbm_idx_topk_link_static__650.16x500.04__root_u_hb_idx__link.json",
+   "outline_um": [
+    650.16,
+    500.04
+   ],
+   "instances": 1,
+   "clock_pins": 9,
+   "layer_changed": 0,
+   "face_changed": 0,
+   "max_shift_um": 0.0,
+   "moves": [
+    {
+     "pin": "clk",
+     "old": {
+      "layer": "M5",
+      "x": 43.8,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 43.8,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "clk_mem[0]",
+     "old": {
+      "layer": "M5",
+      "x": 114.12,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 114.12,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "clk_mem[1]",
+     "old": {
+      "layer": "M5",
+      "x": 184.44,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 184.44,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "clk_mem[2]",
+     "old": {
+      "layer": "M5",
+      "x": 254.76,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 254.76,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "clk_mem[3]",
+     "old": {
+      "layer": "M5",
+      "x": 325.08,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 325.08,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "clk_mem[4]",
+     "old": {
+      "layer": "M5",
+      "x": 395.4,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 395.4,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "clk_mem[5]",
+     "old": {
+      "layer": "M5",
+      "x": 465.72,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 465.72,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "clk_mem[6]",
+     "old": {
+      "layer": "M5",
+      "x": 536.04,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 536.04,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "clk_mem[7]",
+     "old": {
+      "layer": "M5",
+      "x": 606.36,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 606.36,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    }
+   ]
+  },
+  "ot_hbm_sm_vm_wr_q_t_lanes4": {
+   "pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json",
+   "outline_um": [
+    142.56,
+    216.0
+   ],
+   "instances": 4,
+   "clock_pins": 6,
+   "layer_changed": 6,
+   "face_changed": 6,
+   "max_shift_um": 10.704,
+   "moves": [
+    {
+     "pin": "clk",
+     "old": {
+      "layer": "M4",
+      "x": 142.464,
+      "y": 206.952,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 141.528,
+      "y": 215.904,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 9.888
+    },
+    {
+     "pin": "clk_cal",
+     "old": {
+      "layer": "M4",
+      "x": 142.464,
+      "y": 207.096,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 141.432,
+      "y": 215.904,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 9.84
+    },
+    {
+     "pin": "clk_l0",
+     "old": {
+      "layer": "M4",
+      "x": 0.096,
+      "y": 206.136,
+      "face": "W",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 1.032,
+      "y": 215.904,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 10.704
+    },
+    {
+     "pin": "clk_l1",
+     "old": {
+      "layer": "M4",
+      "x": 0.096,
+      "y": 206.52,
+      "face": "W",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 1.128,
+      "y": 215.904,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 10.416
+    },
+    {
+     "pin": "clk_l2",
+     "old": {
+      "layer": "M4",
+      "x": 0.096,
+      "y": 206.856,
+      "face": "W",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 1.224,
+      "y": 215.904,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 10.176
+    },
+    {
+     "pin": "clk_l3",
+     "old": {
+      "layer": "M4",
+      "x": 0.096,
+      "y": 207.192,
+      "face": "W",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 1.32,
+      "y": 215.904,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 9.936
+    }
+   ]
+  },
+  "ot_hbm_svc_sm_group_rel_id": {
+   "pins_file": "cores/ot_hbm_svc_sm_group_rel_id__776.304x646.92__canon.json",
+   "outline_um": [
+    776.304,
+    646.92
+   ],
+   "instances": 8,
+   "clock_pins": 10,
+   "layer_changed": 0,
+   "face_changed": 0,
+   "max_shift_um": 0.0,
+   "moves": [
+    {
+     "pin": "hbm_clk",
+     "old": {
+      "layer": "M5",
+      "x": 20.664,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 20.664,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "stream_clk",
+     "old": {
+      "layer": "M5",
+      "x": 28.632,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 28.632,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "hbm_fifo_clk[0]",
+     "old": {
+      "layer": "M5",
+      "x": 44.616,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 44.616,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "hbm_fifo_clk[1]",
+     "old": {
+      "layer": "M5",
+      "x": 52.584,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 52.584,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "stream_bank_clk[0]",
+     "old": {
+      "layer": "M5",
+      "x": 60.6,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 60.6,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "stream_bank_clk[1]",
+     "old": {
+      "layer": "M5",
+      "x": 68.568,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 68.568,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "hbm_pc_clk[0]",
+     "old": {
+      "layer": "M5",
+      "x": 76.584,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 76.584,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "hbm_pc_clk[1]",
+     "old": {
+      "layer": "M5",
+      "x": 84.552,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 84.552,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "hbm_pc_clk[2]",
+     "old": {
+      "layer": "M5",
+      "x": 92.568,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 92.568,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    },
+    {
+     "pin": "hbm_pc_clk[3]",
+     "old": {
+      "layer": "M5",
+      "x": 100.536,
+      "y": 0.096,
+      "face": "S",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 100.536,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 0.0
+    }
+   ]
+  },
+  "ot_hbm_svc_wb_kport_q": {
+   "pins_file": "cores/ot_hbm_svc_wb_kport_q__475.2x475.2__canon.json",
+   "outline_um": [
+    475.2,
+    475.2
+   ],
+   "instances": 4,
+   "clock_pins": 6,
+   "layer_changed": 6,
+   "face_changed": 6,
+   "max_shift_um": 10.512,
+   "moves": [
+    {
+     "pin": "hbm_clk",
+     "old": {
+      "layer": "M4",
+      "x": 0.096,
+      "y": 465.528,
+      "face": "W",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 1.032,
+      "y": 475.104,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 10.512
+    },
+    {
+     "pin": "stream_clk",
+     "old": {
+      "layer": "M4",
+      "x": 0.096,
+      "y": 465.816,
+      "face": "W",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 1.128,
+      "y": 475.104,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 10.32
+    },
+    {
+     "pin": "stream_fifo_clk[0]",
+     "old": {
+      "layer": "M4",
+      "x": 0.096,
+      "y": 466.2,
+      "face": "W",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 1.224,
+      "y": 475.104,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 10.032
+    },
+    {
+     "pin": "stream_fifo_clk[1]",
+     "old": {
+      "layer": "M4",
+      "x": 0.096,
+      "y": 466.296,
+      "face": "W",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 1.32,
+      "y": 475.104,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 10.032
+    },
+    {
+     "pin": "stream_fifo_clk[2]",
+     "old": {
+      "layer": "M4",
+      "x": 0.096,
+      "y": 466.392,
+      "face": "W",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 1.416,
+      "y": 475.104,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 10.032
+    },
+    {
+     "pin": "stream_fifo_clk[3]",
+     "old": {
+      "layer": "M4",
+      "x": 0.096,
+      "y": 466.488,
+      "face": "W",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 1.512,
+      "y": 475.104,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 10.032
+    }
+   ]
+  },
+  "ot_hgi_dma_back_static_vp4_banks_cp": {
+   "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x240.84__canon.json",
+   "outline_um": [
+    239.976,
+    240.84
+   ],
+   "instances": 4,
+   "clock_pins": 11,
+   "layer_changed": 11,
+   "face_changed": 11,
+   "max_shift_um": 121.704,
+   "moves": [
+    {
+     "pin": "clk",
+     "old": {
+      "layer": "M4",
+      "x": 239.88,
+      "y": 18.84,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 238.968,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 19.656
+    },
+    {
+     "pin": "clk_cp",
+     "old": {
+      "layer": "M4",
+      "x": 239.88,
+      "y": 39.144,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 238.872,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 40.056
+    },
+    {
+     "pin": "clk_rst",
+     "old": {
+      "layer": "M4",
+      "x": 239.88,
+      "y": 59.448,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 238.776,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 60.456
+    },
+    {
+     "pin": "clk_bank[0]",
+     "old": {
+      "layer": "M4",
+      "x": 239.88,
+      "y": 79.8,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 238.68,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 80.904
+    },
+    {
+     "pin": "clk_bank[1]",
+     "old": {
+      "layer": "M4",
+      "x": 239.88,
+      "y": 100.104,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 238.584,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 101.304
+    },
+    {
+     "pin": "clk_bank[2]",
+     "old": {
+      "layer": "M4",
+      "x": 239.88,
+      "y": 120.408,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 238.488,
+      "y": 0.096,
+      "face": "S",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 121.704
+    },
+    {
+     "pin": "clk_bank[3]",
+     "old": {
+      "layer": "M4",
+      "x": 239.88,
+      "y": 140.76,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 238.968,
+      "y": 240.744,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 100.896
+    },
+    {
+     "pin": "clk_bank[4]",
+     "old": {
+      "layer": "M4",
+      "x": 239.88,
+      "y": 161.064,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 238.872,
+      "y": 240.744,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 80.688
+    },
+    {
+     "pin": "clk_bank[5]",
+     "old": {
+      "layer": "M4",
+      "x": 239.88,
+      "y": 181.416,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 238.776,
+      "y": 240.744,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 60.432
+    },
+    {
+     "pin": "clk_bank[6]",
+     "old": {
+      "layer": "M4",
+      "x": 239.88,
+      "y": 201.72,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 238.68,
+      "y": 240.744,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 40.224
+    },
+    {
+     "pin": "clk_bank[7]",
+     "old": {
+      "layer": "M4",
+      "x": 239.88,
+      "y": 222.024,
+      "face": "E",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 238.584,
+      "y": 240.744,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 20.016
+    }
+   ]
+  },
+  "ot_hgi_sm_xload_cl2_ctlx": {
+   "pins_file": "cores/ot_hgi_sm_xload_cl2_ctlx__388.8x388.8__canon__c20g_391.392x416.448.json",
+   "outline_um": [
+    391.392,
+    416.448
+   ],
+   "instances": 4,
+   "clock_pins": 2,
+   "layer_changed": 2,
+   "face_changed": 2,
+   "max_shift_um": 15.696,
+   "moves": [
+    {
+     "pin": "clk",
+     "old": {
+      "layer": "M4",
+      "x": 0.096,
+      "y": 401.592,
+      "face": "W",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 1.032,
+      "y": 416.352,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 15.696
+    },
+    {
+     "pin": "clk_cal",
+     "old": {
+      "layer": "M4",
+      "x": 0.096,
+      "y": 404.088,
+      "face": "W",
+      "size": "plan default"
+     },
+     "new": {
+      "layer": "M5",
+      "x": 1.128,
+      "y": 416.352,
+      "face": "N",
+      "w": 0.048,
+      "h": 0.48
+     },
+     "shift_um": 13.296
+    }
+   ]
+  }
+ },
+ "notes_updated": 30,
+ "plan_sha": "20d73dea"
+}

@@ -1,0 +1,70 @@
+{
+ "rule": "R-SRAM-ENTRY",
+ "kit": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_dd7000587876-_k2c24",
+ "outline_um": [
+  177.984,
+  177.984
+ ],
+ "core_um": [
+  4.32,
+  4.32,
+  173.664,
+  173.664
+ ],
+ "halo_um": 4.32,
+ "clock_entry_um": [
+  90.72,
+  90.72
+ ],
+ "entry_island_um": [
+  86.4,
+  86.4,
+  95.04,
+  95.04
+ ],
+ "macros": [
+  [
+   "g_wpay.u_write_payload",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  [
+   "u_response_payload",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ ],
+ "issues": [],
+ "column_x_um": [
+  43.308,
+  138.132
+ ],
+ "channels_um": {
+  "W": 38.988,
+  "E": 35.532,
+  "S_band": 36.648,
+  "N_band": 33.192
+ },
+ "entry_split": true,
+ "area_um2": {
+  "core": 28677,
+  "macros_with_halo": 10285,
+  "free": 18392,
+  "logic": 7617.0
+ },
+ "logic_util_free": 0.414,
+ "escape": {
+  "W": {
+   "band_um": 34.668,
+   "vtracks_M3_M5": 1685,
+   "macro_pins": 820,
+   "use": 0.487
+  },
+  "E": {
+   "band_um": 31.212,
+   "vtracks_M3_M5": 1517,
+   "macro_pins": 818,
+   "use": 0.539
+  }
+ },
+ "entry_to_far_corner_manhattan_um": 172.8,
+ "verdict": "FEASIBLE"
+}
