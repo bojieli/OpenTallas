@@ -1953,3 +1953,6 @@ CODEX: 2026-10-29 14:04 PDT EXPLICITRESET sharedFLOW1355PARK12e5221e2cleanpushed
 CODEX: 2026-10-29 14:04 PDT explicitreset sharedclock/HCP PARKED WIPf399cac65; duplicate-port15598 alreadyclosed; retainedHCP rekey528jointPASS but355fullcompareFAIL, noEQ/SIGNED; terminalunit508598, packet codex_clock_hcp_20261029_1402.md.
 
 CODEX: 2026-10-29 14:04 PDT ASTK/ECTL1355EXPLICIT14:02RESET PARKa15b93580;actualGRT0read-onlyTT+0.73/FF+4.60DIAG vsoldMM−59.26/−3.88(rawseamunc30/12.5,noSIGNED),mode/constraintcauseopen; q0fixedLEC3730154LIVE,noquarterregen,q0NOmacros. FullCODEX-LOG;no newpostresetjobs.
+
+CODEX:14:02EXPLICITRESET KV PARKED e055aea64; leafAactualPGaccess81846PASS/nonPGunchanged, pre-resetunit510342 GRT+TTFFclocklive; SM81830notstarted. Gen5TAPwidthcollision+SYS_C407LECdiag, HRreset788BUF24prepPASS/noSTA. Packetcodex_kv_20261029_1402.md.
+CODEX:14:04 HEADkits explicitresetPARK46b4e8c40; actual3croppedGENPASS fixesmissingrawaliases/unsitedCApins, synthnextNOTRUN; FTcensus9typesPASS146.688/boot0; SerDesCTS liveTT−2.51FF−2.35 vsoldpopcount−166.73, noSIGNED; LEPactualkitowed. Packet codex_head_kits_20261029_1402.md, jobsuntouched.
