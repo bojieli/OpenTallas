@@ -4381,3 +4381,5 @@ FAILED [AUTOPILOT b0592d3eb25d] 2026-10-28 23:03:05 PDT AUTOPILOT -> HBM-CORES: 
 2026-10-28 23:47 PDT READY [CODEX-GEOM] codex/geom-1028@21206dcc14 results-only independent HEADreachFAIL diagnosis+HBMlanes4PASS-COND newtaglink; images personallyVIEWED,no source/gate changes. HEAD owner implementing exact929pair placement remedy.
 
 2026-10-28 23:54 PDT READY [CODEX-GEOM] codex/geom-1028@0407d2ae5c supersedes21206dcc14; results-only addsHBMctlxFAIL exact258pairremedy andS81actual8physicalleg/dutyrootcause+unitcorrection, personallyVIEWEDimages; implementersHBMmacro_estimate/S81owneractive.
+
+2026-10-28 23:57 PDT READY [CODEX-GEOM] codex/geom-1028@d371415402 additive results-only successor0407 adds4KV-PVsecondreviews/concurPASS(-COND); allimagespersonallyVIEWED,noextraGRT/STA.
