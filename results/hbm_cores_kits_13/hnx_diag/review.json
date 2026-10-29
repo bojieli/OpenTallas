@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "one data-only near-miss ECO clone + incremental DRT + normal signoff",
+  "reviewers": [
+    "Codex HBM K13 personally viewed both actual images",
+    "independent /root/coverage/review personally viewed both actual images"
+  ],
+  "images": [
+    "m10b_slew.png",
+    "m10b_hold.png"
+  ],
+  "findings": [
+    "21 TT slew failures collapse to three weak data-driver nets, max 175.824um. Upsize BUFx6f->12f and two BUFx3->6f.",
+    "Three FF holds -2.15/-1.36/-1.10ps receive one adjacent BUFx2 each on D.",
+    "No source, state, clock, boundary pin, cycle or signoff-rule change. Existing mean-clock fail remains recorded.",
+    "Legalize normally and require real routed TT/FF setup/hold/slew/DRC plus canonical guards; no release claim yet."
+  ]
+}
