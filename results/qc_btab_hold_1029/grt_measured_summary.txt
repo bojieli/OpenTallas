@@ -1,0 +1,8 @@
+SO FF_VCLK applied mode pin_flop_mean clock vclk latency_ps 175.386734 samples 1318 missing 0 clocks 1
+SO STD_WNS_MIN -15.99
+SO STD_NVIOL_MIN 1060
+SO SLEW_VIOL 0
+SO CAP_VIOL 0
+SO OCV5_WNS_MIN -25.61
+SO PAIR_max n 5357 worst 41.08 bounded 0 signed -41.08 launch btcap[635]$_DFF_P_ capture bs_q[123]$_DFF_P_ crpr 0.28 p99_raw 26.38 searched 6 nopath 0 verify 0.000
+SO PAIR_min n 5357 worst 36.3 bounded 0 signed 36.3 launch g_btb[0].u_m capture btcap[94]$_DFF_P_ crpr 0.28 p99_raw 22.65 searched 2 nopath 0 verify 0.000
