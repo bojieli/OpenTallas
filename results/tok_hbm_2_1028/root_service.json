@@ -1,0 +1,400 @@
+{
+ "schema": "opentallas.hbm.root_local_service.v1",
+ "scope": "ROOT-LOCAL ONLY: production native root wrapper ot_hnx_fused_hub_n4ext DELIVERED_RESET=1 (rtl/hbm_next/fused, sha256 tree 838587d4, hub_n4ext 09a34eff), 833 ps; lower tree and 32 leaves NOT in the vehicle (scalars reflected at the n4 boundary, chunk sums/fins injected)",
+ "bench": "results/tok_hbm_2_1028/tb_root_service.sv + run_root_service.sh (source = results/hbm_n4_native_1027 snapshot + current rtl/hbm_next/fused)",
+ "edges_from": "root capture edge (job_v sampled by the root)",
+ "formula": {
+  "scrd0": "4",
+  "go": "wsc + nsc + 5 + min(n,2)*nbt  (nsc = n PRE / 3n POST; nbt = 1 PRE / 5 POST)",
+  "last_beat": "go + last_beat_minus_go(op,n) (rows >= 2 on the static per = 4NM+rgap / 5NM+rgap calendar; measured rgap 0)",
+  "pre_sum_to_r": "114 (last chunk sum of a row at the t5 output -> its r on the root command bus)",
+  "fin_to_done": "1"
+ },
+ "whole_service_status": "MISSING: root capture -> root done = root-local (this file) + down legs + leaf lane calendar (rows, chunk-sum emit, PRE r return, y writes, fin) + up legs; the leaf/tree part needs the native full-tree (32-leaf) bench at the bound plan legs, which is not requalified (results/hbm_n4_native_1027 README: full32leaf pending). four_role_calendar.py service(op,n) must therefore be measured on that vehicle at the bound wsc/pads, not taken from this root-only table.",
+ "per_op_n": {
+  "HC_PRE/1": {
+   "wsc63": {
+    "scrd0": 4,
+    "go": 70,
+    "last_beat": 69,
+    "beats": 1,
+    "scrd": 1,
+    "sum_to_r": 114,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "wsc115": {
+    "scrd0": 4,
+    "go": 122,
+    "last_beat": 121,
+    "beats": 1,
+    "scrd": 1,
+    "sum_to_r": 114,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "go_minus_wsc": 7,
+   "last_beat_minus_go": -1
+  },
+  "HC_PRE/2": {
+   "wsc63": {
+    "scrd0": 4,
+    "go": 72,
+    "last_beat": 71,
+    "beats": 2,
+    "scrd": 2,
+    "sum_to_r": 114,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "wsc115": {
+    "scrd0": 4,
+    "go": 124,
+    "last_beat": 123,
+    "beats": 2,
+    "scrd": 2,
+    "sum_to_r": 114,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "go_minus_wsc": 9,
+   "last_beat_minus_go": -1
+  },
+  "HC_PRE/3": {
+   "wsc63": {
+    "scrd0": 4,
+    "go": 73,
+    "last_beat": 192,
+    "beats": 3,
+    "scrd": 3,
+    "sum_to_r": 114,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "wsc115": {
+    "scrd0": 4,
+    "go": 125,
+    "last_beat": 244,
+    "beats": 3,
+    "scrd": 3,
+    "sum_to_r": 114,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "go_minus_wsc": 10,
+   "last_beat_minus_go": 119
+  },
+  "HC_PRE/4": {
+   "wsc63": {
+    "scrd0": 4,
+    "go": 74,
+    "last_beat": 273,
+    "beats": 4,
+    "scrd": 4,
+    "sum_to_r": 114,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "wsc115": {
+    "scrd0": 4,
+    "go": 126,
+    "last_beat": 325,
+    "beats": 4,
+    "scrd": 4,
+    "sum_to_r": 114,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "go_minus_wsc": 11,
+   "last_beat_minus_go": 199
+  },
+  "HC_PRE/5": {
+   "wsc63": {
+    "scrd0": 4,
+    "go": 75,
+    "last_beat": 354,
+    "beats": 5,
+    "scrd": 5,
+    "sum_to_r": 114,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "wsc115": {
+    "scrd0": 4,
+    "go": 127,
+    "last_beat": 406,
+    "beats": 5,
+    "scrd": 5,
+    "sum_to_r": 114,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "go_minus_wsc": 12,
+   "last_beat_minus_go": 279
+  },
+  "HC_PRE/6": {
+   "wsc63": {
+    "scrd0": 4,
+    "go": 76,
+    "last_beat": 435,
+    "beats": 6,
+    "scrd": 6,
+    "sum_to_r": 114,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "wsc115": {
+    "scrd0": 4,
+    "go": 128,
+    "last_beat": 487,
+    "beats": 6,
+    "scrd": 6,
+    "sum_to_r": 114,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "go_minus_wsc": 13,
+   "last_beat_minus_go": 359
+  },
+  "HC_PRE/7": {
+   "wsc63": {
+    "scrd0": 4,
+    "go": 77,
+    "last_beat": 516,
+    "beats": 7,
+    "scrd": 7,
+    "sum_to_r": 114,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "wsc115": {
+    "scrd0": 4,
+    "go": 129,
+    "last_beat": 568,
+    "beats": 7,
+    "scrd": 7,
+    "sum_to_r": 114,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "go_minus_wsc": 14,
+   "last_beat_minus_go": 439
+  },
+  "HC_PRE/8": {
+   "wsc63": {
+    "scrd0": 4,
+    "go": 78,
+    "last_beat": 597,
+    "beats": 8,
+    "scrd": 8,
+    "sum_to_r": 114,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "wsc115": {
+    "scrd0": 4,
+    "go": 130,
+    "last_beat": 649,
+    "beats": 8,
+    "scrd": 8,
+    "sum_to_r": 114,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "go_minus_wsc": 15,
+   "last_beat_minus_go": 519
+  },
+  "HC_POST/1": {
+   "wsc63": {
+    "scrd0": 4,
+    "go": 76,
+    "last_beat": 75,
+    "beats": 5,
+    "scrd": 3,
+    "sum_to_r": -1,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "wsc115": {
+    "scrd0": 4,
+    "go": 128,
+    "last_beat": 127,
+    "beats": 5,
+    "scrd": 3,
+    "sum_to_r": -1,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "go_minus_wsc": 13,
+   "last_beat_minus_go": -1
+  },
+  "HC_POST/2": {
+   "wsc63": {
+    "scrd0": 4,
+    "go": 84,
+    "last_beat": 83,
+    "beats": 10,
+    "scrd": 6,
+    "sum_to_r": -1,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "wsc115": {
+    "scrd0": 4,
+    "go": 136,
+    "last_beat": 135,
+    "beats": 10,
+    "scrd": 6,
+    "sum_to_r": -1,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "go_minus_wsc": 21,
+   "last_beat_minus_go": -1
+  },
+  "HC_POST/3": {
+   "wsc63": {
+    "scrd0": 4,
+    "go": 87,
+    "last_beat": 210,
+    "beats": 15,
+    "scrd": 9,
+    "sum_to_r": -1,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "wsc115": {
+    "scrd0": 4,
+    "go": 139,
+    "last_beat": 262,
+    "beats": 15,
+    "scrd": 9,
+    "sum_to_r": -1,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "go_minus_wsc": 24,
+   "last_beat_minus_go": 123
+  },
+  "HC_POST/4": {
+   "wsc63": {
+    "scrd0": 4,
+    "go": 90,
+    "last_beat": 313,
+    "beats": 20,
+    "scrd": 12,
+    "sum_to_r": -1,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "wsc115": {
+    "scrd0": 4,
+    "go": 142,
+    "last_beat": 365,
+    "beats": 20,
+    "scrd": 12,
+    "sum_to_r": -1,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "go_minus_wsc": 27,
+   "last_beat_minus_go": 223
+  },
+  "HC_POST/5": {
+   "wsc63": {
+    "scrd0": 4,
+    "go": 93,
+    "last_beat": 416,
+    "beats": 25,
+    "scrd": 15,
+    "sum_to_r": -1,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "wsc115": {
+    "scrd0": 4,
+    "go": 145,
+    "last_beat": 468,
+    "beats": 25,
+    "scrd": 15,
+    "sum_to_r": -1,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "go_minus_wsc": 30,
+   "last_beat_minus_go": 323
+  },
+  "HC_POST/6": {
+   "wsc63": {
+    "scrd0": 4,
+    "go": 96,
+    "last_beat": 519,
+    "beats": 30,
+    "scrd": 18,
+    "sum_to_r": -1,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "wsc115": {
+    "scrd0": 4,
+    "go": 148,
+    "last_beat": 571,
+    "beats": 30,
+    "scrd": 18,
+    "sum_to_r": -1,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "go_minus_wsc": 33,
+   "last_beat_minus_go": 423
+  },
+  "HC_POST/7": {
+   "wsc63": {
+    "scrd0": 4,
+    "go": 99,
+    "last_beat": 622,
+    "beats": 35,
+    "scrd": 21,
+    "sum_to_r": -1,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "wsc115": {
+    "scrd0": 4,
+    "go": 151,
+    "last_beat": 674,
+    "beats": 35,
+    "scrd": 21,
+    "sum_to_r": -1,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "go_minus_wsc": 36,
+   "last_beat_minus_go": 523
+  },
+  "HC_POST/8": {
+   "wsc63": {
+    "scrd0": 4,
+    "go": 102,
+    "last_beat": 725,
+    "beats": 40,
+    "scrd": 24,
+    "sum_to_r": -1,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "wsc115": {
+    "scrd0": 4,
+    "go": 154,
+    "last_beat": 777,
+    "beats": 40,
+    "scrd": 24,
+    "sum_to_r": -1,
+    "fin_to_done": 1,
+    "end": "DONE"
+   },
+   "go_minus_wsc": 39,
+   "last_beat_minus_go": 623
+  }
+ }
+}

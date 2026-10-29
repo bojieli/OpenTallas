@@ -183,7 +183,9 @@ module ot_qwen_rom_tile_logic_w12 #(
     // global KV port (KV_LOCAL = 0)
     output wire              kv_re,
     output wire [TG*AW-1:0]  kv_addr,
-    input  wire [TG*W*32-1:0] kv_q
+    input  wire [TG*W*32-1:0] kv_q,
+    // QC-PG-5 ICG: the engine drained flag (u_me.idle, registered, 1 in reset) for the A0 tile-root clock-gate enable
+    output wire              idle
 );
     localparam integer IBW = 3 * NW + 13 * AW + 13;
     //: REGROOT 9 (QW-CB16A0-2 10-20, A0 rc10): the ROM group words cross from the group roots (ck_rsw/rnw, ck_rs/rn) to the
@@ -270,7 +272,7 @@ module ot_qwen_rom_tile_logic_w12 #(
         .GLUE_HARD(GLUE_HARD), .LOCAL_ROOTS(LOCAL_ROOTS), .CHILD_CLOCKS(CHILD_CLOCKS), .REGROOT(REGROOT), .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
         .ck_lsl(ck_lsl), .ck_tx(ck_tx), .ck_reg(ck_reg),
-        .clk(clk), .rst_n(rst_n), .go(go_i), .go_cp(go_cp), .ready(), .idle(),
+        .clk(clk), .rst_n(rst_n), .go(go_i), .go_cp(go_cp), .ready(), .idle(idle),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
         .i_wbase(b_wbase), .i_ts(b_ts), .i_ks(b_ks), .i_js(b_js),
         .i_xbase(b_xbase), .i_xks(b_xks), .i_xjs(b_xjs), .i_xcs(b_xcs),
@@ -908,7 +910,8 @@ module ot_qwen_rom_tile_w12 #(
     input  wire              kvw_ce,
     input  wire [6:0]        kvw_addr,
     input  wire [511:0]      kvw_data,
-    input  wire [511:0]      kvw_mask
+    input  wire [511:0]      kvw_mask,
+    output wire              idle      // QC-PG-5 ICG: u_logic.u_me.idle
 );
     wire [CODE_BANKS-1:0] rom_ce;
     wire [11:0]           rom_addr, rom_addr_n;
@@ -929,7 +932,7 @@ module ot_qwen_rom_tile_w12 #(
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_addr_b(rom_addr_b), .rom_req_m(rom_req_m), .rom_rd(rom_rd),
         .kvs_r_ce(kvs_r_ce), .kvs_r_addr(kvs_r_addr), .kvs_rd(kvs_rd),
-        .kv_re(), .kv_addr(), .kv_q({4*16*32{1'b0}}));
+        .kv_re(), .kv_addr(), .kv_q({4*16*32{1'b0}}), .idle(idle));
     genvar p, b;
     generate
         //: BAW 12 keeps the original macro path g_col[p].g_bank[b].u_rom (floorplan scripts, die views, runtime

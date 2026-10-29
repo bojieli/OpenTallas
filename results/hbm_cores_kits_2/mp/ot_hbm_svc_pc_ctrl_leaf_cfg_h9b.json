@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.macro_placement.v1",
+ "design": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+ "outline_um": [
+  177.984,
+  177.984
+ ],
+ "macro_placement": [
+  {
+   "k": "g_wpay.u_write_payload",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    43.308,
+    40.968
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_response_payload",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    43.308,
+    99.408
+   ],
+   "orient": "R0"
+  }
+ ],
+ "note": "HBM-CORES-KITS-2 rule R-SRAM-ENTRY (results/hbm_cores_kits_2/mp_rule.py): column centred on the plan clock entry x, stack split at the entry island + halo, 10.8 um channels; k below the face shell"
+}

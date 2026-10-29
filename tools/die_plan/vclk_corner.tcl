@@ -27,6 +27,10 @@ proc ot_core_tap_bind {corner} {
       if {[regexp {^set_clock_latency -source (-early )?-clock clk [-0-9.]+ \[get_ports [A-Za-z_][A-Za-z0-9_]*\]$} $line]} {
         uplevel #0 $line
       }
+      # plan clock.edge_clocks[].source_latency_ps: the forwarded edge clock's TT early / late arrival
+      if {[regexp {^set_clock_latency -source -(early|late) [0-9.]+ \[get_clocks [A-Za-z_][A-Za-z0-9_]*\]$} $line]} {
+        uplevel #0 $line
+      }
     }
   } else {
     error "core tap corner: unsupported corner $corner"

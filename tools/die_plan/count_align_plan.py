@@ -65,7 +65,7 @@ def J(d, T, off):
     return -math.floor((d - off) / T)
 
 
-def sync_choice_iv(r, T, ap, start_skew=(0.0, 0.0), sync_ap=26.5):
+def sync_choice_iv(r, T, ap, start_skew=(0.0, 0.0), sync_ap=26.5, prefer=None):
     """(n_values, edge, off, dist): best sample edge for the start sync across crossing r.
     start_skew (lo, hi) ps (DIE-HEAD-4b, COORD NC-HEAD-PART): start arrival at the child's first sync flop minus the
     forwarded clock (clk->Q of the parent origin register + start wire - fclk wire; die_sta_related start row).  The
@@ -80,13 +80,16 @@ def sync_choice_iv(r, T, ap, start_skew=(0.0, 0.0), sync_ap=26.5):
     fall arrival, die_sta_related.ca_pair_interval edge 'fall'), the fall candidate is judged on THAT interval and only
     if it is clean (one value); fall_lo None (no measured fall arrival) = rise only (fail closed, never rise + T/2).
     Without the keys (rows with no proof taps) the legacy T/2 form is kept.  Returns (n, edge, off, dist, (lo, hi, d))
-    with the sampled interval and its nominal."""
+    with the sampled interval and its nominal.
+    prefer (FLOW-GEN-2 --start-prev, opt-in): 'rise' / 'fall' = the edge a previous pass chose; it is kept whenever it
+    ties the best on (values, hard, soft), i.e. it is as valid as the best and loses only on the static distance (the
+    near-tie EDGE_FALL flips between passes).  None (default): unchanged."""
     lo0, hi0 = r["lo"], r["hi"]
     measured = "fall_lo" in r
     s_lo, s_hi = float(start_skew[0]), float(start_skew[1])
     skewed = bool(s_lo or s_hi)
     smax = max(abs(s_lo), abs(s_hi))
-    best = None
+    best = pref = None
     for edge, off in (("rise", 0.0), ("fall", T / 2)):
         lo, hi, dn = lo0, hi0, r.get("d_ps", 0.5 * (lo0 + hi0))
         if edge == "fall" and measured:
@@ -106,6 +109,10 @@ def sync_choice_iv(r, T, ap, start_skew=(0.0, 0.0), sync_ap=26.5):
         key = (n, hard, soft, -dist)
         if best is None or key < best[0]:
             best = (key, (n, edge, off, dist, (lo, hi, dn)))
+        if prefer == edge:
+            pref = (key, (n, edge, off, dist, (lo, hi, dn)))
+    if pref is not None and pref[0][:3] == best[0][:3]:
+        return pref[1]
     return best[1]
 
 
@@ -201,7 +208,8 @@ def directed_tree(rows, regions):
 
 
 def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edge_pad=None, start_skew=(0.0, 0.0),
-         skew_clean=False, _pad_pass=False, tree_parent=None, max_depth=8, start_edges=None, start_root=None):
+         skew_clean=False, _pad_pass=False, tree_parent=None, max_depth=8, start_edges=None, start_root=None,
+         start_prefer=None):
     """edge_pad {tree port or child region: PAD}: per-start-tree-edge PAD overriding the default `pad` (MESO-RECONCILE-1,
     COORD 10-27).  An edge PAD p_e >= pad delays the child's origin by p_e - pad counts and HOLDS the tree crossing's RTL K
     at its default-PAD value, so that crossing's lag (and latency) grow by (p_e - pad) T; every other crossing's K is
@@ -222,7 +230,9 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
     start_edges / start_root (START-TREE-1, METHODOLOGY 12.16b(iv)/12.16e, opt-in --start-tree clock): the start tree is
     given (clock_start_edges: the clock tree's own region/branch nodes, one dedicated start port per edge) instead of
     the min-ambiguity tree over data crossings; every data crossing is then 'nontree' and its origin difference is
-    summed over the start ports on the clock-tree path between its two regions.  None (default): unchanged."""
+    summed over the start ports on the clock-tree path between its two regions.  None (default): unchanged.
+    start_prefer {start port: 'rise' | 'fall'} (FLOW-GEN-2 --start-prev, opt-in): the previous pass's EDGE_FALL pick
+    of a start port is kept while it ties the best edge on validity (sync_choice_iv prefer).  None: unchanged."""
     if max_depth not in (8, 16):
         raise ValueError(f"max_depth {max_depth}: standard ring depths are 8 or 16")
     if start_edges is not None:
@@ -235,7 +245,7 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
             raise ValueError("skew_clean needs a nonzero start_skew (--start-skew LO,HI)")
         need = 100.0 + smax
         args = (T, ap, wander_frac, sync_ap, pad)
-        kw = dict(start_edges=start_edges, start_root=start_root)
+        kw = dict(start_edges=start_edges, start_root=start_root, start_prefer=start_prefer)
         s0, out0, regs0 = plan([dict(r) for r in rows], *args, edge_pad, start_skew, True, True, tree_parent, max_depth,
                                **kw)
         byp = {o["port"]: o for o in out0}
@@ -286,7 +296,8 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
     if start_edges is not None:
         for r in start_edges:
             r["lo"], r["hi"] = r["d_ps"] - r["p_dn_ps"], r["d_ps"] + r["p_up_ps"]
-            r["_nv"], r["_edge"], r["_off"], r["_dist"], r["_s"] = sync_choice_iv(r, T, ap, start_skew, sync_ap)
+            r["_nv"], r["_edge"], r["_off"], r["_dist"], r["_s"] = sync_choice_iv(
+                r, T, ap, start_skew, sync_ap, (start_prefer or {}).get(r["port"]))
             r["_w"] = 0.0
         root, par = start_root, {start_root: None}
         for r in start_edges:
@@ -556,8 +567,7 @@ def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="tabl
         if not all("tree_path" in t for t in taps.values()):
             raise ValueError("--start-tree clock needs tap tree_path in the proof (the clock tree topology)")
         cc, _ = DSR.resolve_clock_cell(clock_cell, proof, meta)   # CLK-INV-CAL-1: same clock-cell model as the gate
-        if clock_cal == "spice":
-            meta, taps = DSR.scale_clock(meta, taps, DSR.spice_cal_factor(c, cc))
+        meta, taps = DSR.apply_clock_cal(meta, taps, c, cc, clock_cal, proof=Path(proof))
         taps = dict(taps)
         lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
         old, DSR.CPPR_LCA = DSR.CPPR_LCA, True
@@ -571,7 +581,7 @@ def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="tabl
 
 
 def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew=(0.0, 0.0), skew_clean=False,
-                      retime_max=8, clean_by="phase", retime_up=False):
+                      retime_max=8, clean_by="phase", retime_up=False, prev=None):
     """START TREE = CLOCK TREE (START-TREE-1).  ctx = clock_contexts() ({corner: meta/taps/ocv/rng}, first = nominal).
     Nodes: every data region at its clock root (longest common tree_path prefix of its taps) and every branch node of
     the clock subtree spanning those roots (virtual 'st:<path>', a retime flop on that tree node).  Each node's start
@@ -592,6 +602,12 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     the LAUNCH side of the clock tree: a retime flop on the shallowest clean ancestor of the launch tap, down to the
     fork node itself (sync on the spine tap at the fork), then continues down the capture path as above.
     Virtual taps: node arrival + the proof's median tap leg (late / early / stages from the tap's driving tree node).
+    prev (FLOW-GEN-2, opt-in --start-prev: a previous count_align_plan --out doc): deterministic tie-break between
+    passes.  A branch node the previous plan kept as its own stage is not contracted again, and a retime node it used
+    ('st:<path>' dst of a retime start edge) is taken again whenever it is a candidate of the same search and still
+    CLEAN under the same rule; only otherwise the default choice (deepest clean node) applies.  So re-planning from
+    the measured build of a plan keeps its stage set (fixed point) unless a kept stage is no longer clean.
+    None (default): unchanged.
     Returns (root, edges, info)."""
     import die_sta_related as DSR
     cs = list(ctx)
@@ -688,6 +704,9 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
                     unshared_a_ps=float(A["late_ps"]) - float(nl[node]), unshared_b_ps=float(B["late_ps"]) - float(nl[node]))
 
     smax = max(abs(float(start_skew[0])), abs(float(start_skew[1])))
+    prev_mid = {e["dst"] for e in (prev or {}).get("start_edges", []) if e.get("retime")}
+    prev_nodes = {e["dst"] for e in (prev or {}).get("start_edges", []) if not e.get("retime")}
+    kept = 0
 
     def clean(r):
         q = dict(r, lo=r["d_ps"] - r["p_dn_ps"], hi=r["d_ps"] + r["p_up_ps"])
@@ -728,6 +747,9 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
         def direct_ok(c):
             cp = capture_of(c)
             return clean(interval(launch_of(x, c0["taps"][cp]["tree_path"]), cp))
+        if v in prev_nodes:
+            kept += 1           # FLOW-GEN-2 --start-prev: the previous plan kept this branch stage; keep it
+            continue
         if all(direct_ok(c) for c in kids_of[v]):
             for c in kids_of[v]:
                 par_of[c] = x
@@ -751,7 +773,15 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
             # or to the sync tap's driving node inside the child region (its own clock tree)
             stop = len(path_of[y]) - 1 if y.startswith("st:") else len(cpath) - 1
             best = None
-            for n in range(stop, len(f), -1):
+            for n in (range(stop, len(f), -1) if prev_mid else ()):
+                mp = cpath[:n]
+                if f"st:{mp}" in prev_mid:
+                    rm = interval(lau, vtap(cs[0], mp))
+                    if clean(rm):
+                        best = (mp, rm)
+                        kept += 1
+                        break
+            for n in (range(stop, len(f), -1) if best is None else ()):
                 mp = cpath[:n]
                 rm = interval(lau, vtap(cs[0], mp))
                 if clean(rm):
@@ -797,6 +827,9 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
                 root=root, root_path=path_of[root], leg_ps={c: list(v) for c, v in leg.items()},
                 regions=len(regions), branch_nodes=sum(1 for p in allp if not at.get(p)), branch_nodes_contracted=contracted,
                 retime_nodes=sum(1 for e in edges if e["retime"]))
+    if prev is not None:
+        info["prev_kept"] = kept
+        info["prev_nodes"] = len(prev_mid) + len(prev_nodes)
     return root, edges, info
 
 
@@ -979,6 +1012,8 @@ def add_sta_ocv_args(ap):
     ap.add_argument("--sta-clock-droop", choices=("stated", "shared"), help="as die_sta_related --clock-droop")
     ap.add_argument("--sta-droop-regions", help="as die_sta_related --droop-regions")
     ap.add_argument("--sta-core-latency-ff", type=float, help="as die_sta_related --core-latency-ff")
+    ap.add_argument("--sta-ca-ring", metavar="SPEC.json",
+                    help="as die_sta_related --ca-ring (DIE-HEAD-18 opt-in): the hull uses the BUILT ring clocks")
     ap.add_argument("--sta-clock-cell", choices=("auto", "buf", "inv", "inv2"), default="auto",
                     help="as die_sta_related --clock-cell: auto = the proof's tap_arrivals clock_cell declaration; "
                          "missing -> FAIL closed (COORD ruling ba28d3143)")
@@ -986,7 +1021,8 @@ def add_sta_ocv_args(ap):
 
 def sta_ocv_kw(a):
     return dict(clock_ocv=a.sta_clock_ocv, clock_droop=a.sta_clock_droop, droop_regions_file=a.sta_droop_regions,
-                core_latency_ff=a.sta_core_latency_ff, clock_cell=getattr(a, "sta_clock_cell", "auto"))
+                core_latency_ff=a.sta_core_latency_ff, clock_cell=getattr(a, "sta_clock_cell", "auto"),
+                **({"ca_ring": a.sta_ca_ring} if getattr(a, "sta_ca_ring", None) else {}))
 
 
 def add_start_tree_args(ap):
@@ -1001,6 +1037,10 @@ def add_start_tree_args(ap):
                     help="--start-tree clock (opt-in): allow retime flops on ANCESTOR nodes of the launch tap (climb the "
                          "launch region tree to the fork node, sync on the spine tap) when no capture-side node is clean; "
                          "default off = byte-identical")
+    ap.add_argument("--start-prev", metavar="PLAN_JSON",
+                    help="--start-tree clock (opt-in, FLOW-GEN-2): deterministic tie-break between passes: keep the "
+                         "retime nodes and start EDGE_FALL picks of this previous count_align_plan --out doc wherever "
+                         "they are still clean / tie the best edge (default off = byte-identical)")
     ap.add_argument("--start-clean", choices=("phase", "width"), default="phase",
                     help="--start-tree clock: 'phase' (default) = the CA rule: the port's derated interval (shared model, "
                          "OCV + droop) keeps >= T/8 from every sampling boundary of the chosen edge; 'width' (stricter) = "
@@ -1009,6 +1049,8 @@ def add_start_tree_args(ap):
 
 def check_start_tree_args(a, err):
     if a.start_tree != "clock":
+        if getattr(a, "start_prev", None):
+            err("--start-prev needs --start-tree clock")
         return
     if not (a.sta_proof and a.sta_plan):
         err("--start-tree clock needs --sta-proof and --sta-plan (the clock tree)")
@@ -1031,8 +1073,20 @@ def start_tree_from_args(a, rows, err):
                          a.sta_droop_regions, a.sta_core_latency_ff, getattr(a, "sta_clock_cell", "auto"))
     root, edges, info = clock_start_edges(rows, ctx, a.period, a.aperture, a.sync_aperture, a.start_skew,
                                           a.start_skew_clean, a.start_retime_max, a.start_clean,
-                                          getattr(a, "start_retime_up", False))
+                                          getattr(a, "start_retime_up", False), start_prev_doc(a))
     return edges, root, info
+
+
+def start_prev_doc(a):
+    """--start-prev PLAN_JSON -> the previous plan doc (None without the flag)"""
+    p = getattr(a, "start_prev", None)
+    return json.load(open(p)) if p else None
+
+
+def start_prefer_of(doc):
+    """{start port: 'rise' | 'fall'} of a previous plan doc's start tree (regions[].start_from)"""
+    return {g["start_from"]["port"]: g["start_from"]["edge"] for g in (doc or {}).get("regions", [])
+            if g.get("start_from") and g["start_from"].get("edge")}
 
 
 def parse_skew(text):
@@ -1084,7 +1138,8 @@ def main(argv=None):
                     ".json) of die_sta_related; each crossing's interval becomes its hull with the STA d interval "
                     "(die_sta_related.count_align_d_intervals) on the --corner corners; needs --sta-plan")
     ap.add_argument("--sta-plan", help="die plan JSON die_sta_related --plan reads (partition pairs of the ports)")
-    ap.add_argument("--sta-clock-cal", choices=("none", "spice"), default="spice",
+    ap.add_argument("--sta-clock-cal", choices=("none", "spice", "spice_edge", "spice_buf_edge", "spice_cell"),
+                    default="spice",
                     help="as die_sta_related --clock-cal (12.15b gate: spice)")
     ap.add_argument("--sta-cppr-lca", action="store_true", help="as die_sta_related --cppr-lca")
     add_sta_ocv_args(ap)
@@ -1121,6 +1176,8 @@ def main(argv=None):
         ap.error("--start-skew-clean needs --start-skew LO,HI")
     sedges, sroot, sinfo = start_tree_from_args(a, rows, ap.error)
     skw = dict(start_edges=sedges, start_root=sroot) if sedges is not None else {}
+    if sedges is not None and getattr(a, "start_prev", None):
+        skw["start_prefer"] = start_prefer_of(start_prev_doc(a))
     summ, out, regs = plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad, parse_edge_pad(a.edge_pad),
                            a.start_skew, a.start_skew_clean, tree_parent=parse_edge_pad(a.tree_parent, str) or None,
                            max_depth=a.max_depth, **skw)

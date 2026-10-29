@@ -14,6 +14,7 @@ from pathlib import Path
 
 
 _RING_PLAN = {}
+LAND_SLOTS_SCHEMA = "land_slots/2"   # face_guard kit land_slots.json (Landings.land_slots); /2 = + ring_start form
 
 
 def ring_taps(plan, tn):
@@ -656,8 +657,15 @@ class Landings:
             cat["role"] = tuple(cat["role"])
             for b, d in (depth or {}).items():
                 cat["rings"][b]["depth"] = int(d)
+        # DIE-HEAD-10 FSTART out (strap form, every origin but an intra-region relay rx): each forwarded start pin
+        # cland_fstart_out_<b> is the Q of its OWN face flop u_cland_fstart_<b> (ot_dp_landing_relay on the region
+        # start's raw reset, d = the start's D-side), equal to cland_start every cycle (0 added cycles); internal
+        # loads keep cland_start.  Parameter forms and relay rx partitions keep the shared start.
+        face_start = bool(cat) and bool(self.strap) and cat["role"][0] != "relay"
         if cat:
             logic.append("    wire cland_start;  // count origin of this region (count-aligned landings)")
+            if face_start:
+                logic.append("    wire cland_start_d, cland_start_raw;  // D-side + raw reset of cland_start (FSTART face flops)")
         ca_raw = {}
         # DIE-HEAD-9 FACE (c): a forwarded clock output is sourced in RTL from the SAME port its landing contract
         # declares (source_clock_port, which also feeds create_generated_clock -source and export_tcl); default clk.
@@ -676,7 +684,11 @@ class Landings:
             if cat:
                 # the sender's start, forwarded beside its bus with fclk: resets the receiver ring's write count
                 extra.append(f"    output wire cland_fstart_out_{b}")
-                logic.append(f"    assign cland_fstart_out_{b} = cland_start;")
+                if face_start:
+                    logic.append(f"    ot_dp_landing_relay u_cland_fstart_{b} (.clk(clk), .rst_raw_n(cland_start_raw), "
+                                 f".d(cland_start_d), .q(cland_fstart_out_{b}));")
+                else:
+                    logic.append(f"    assign cland_fstart_out_{b} = cland_start;")
         part = next(p for p, v in self.parts.items() if v["type"] == key)
         for b in mask["inputs"]:
             r = self.ins[part][b]
@@ -880,7 +892,11 @@ class Landings:
         else:
             raw = local_raw("root count origin")
             self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="root", raw_reset=raw, settle=role[1])
-            logic = [f"    ot_dp_landing_root #(.SETTLE({role[1]})) u_cland_origin (.clk(clk), .rst_raw_n({raw}), .start(cland_start));"]
+            if self.strap:
+                logic = [f"    ot_dp_landing_root #(.SETTLE({role[1]})) u_cland_origin (.clk(clk), .rst_raw_n({raw}), "
+                         ".start(cland_start), .start_d(cland_start_d));", f"    assign cland_start_raw = {raw};"]
+            else:
+                logic = [f"    ot_dp_landing_root #(.SETTLE({role[1]})) u_cland_origin (.clk(clk), .rst_raw_n({raw}), .start(cland_start));"]
         if cat.get("relay_tx"):
             self.reset_placements[tn]["count_origin"]["relay_tx"] = True
             extra.append("    output wire cland_rstart_out")
@@ -925,17 +941,22 @@ class Landings:
         if root:
             extra.append("    input wire strap_ca_root")   # SCALAR_STRAPS
             rraw = local_raw("root count origin")
-            logic += ["    wire cland_start_child, cland_start_root;",
+            # FSTART face flops of a root+child type: the static strap select picks the D-side and the raw reset
+            # BEFORE the flop (never on the port net)
+            logic += ["    wire cland_start_child, cland_start_root, cland_start_child_d, cland_start_root_d;",
                       f"    wire cland_raw_sel = strap_ca_root ? {rraw} : {raw};",
                       f"    ot_dp_landing_root #(.SETTLE({settle})) u_cland_root (.clk(clk), .rst_raw_n({rraw}), "
-                      ".start(cland_start_root));",
-                      "    assign cland_start = strap_ca_root ? cland_start_root : cland_start_child;"]
-            start, raw_used = "cland_start_child", "cland_raw_sel"
+                      ".start(cland_start_root), .start_d(cland_start_root_d));",
+                      "    assign cland_start = strap_ca_root ? cland_start_root : cland_start_child;",
+                      "    assign cland_start_d = strap_ca_root ? cland_start_root_d : cland_start_child_d;",
+                      "    assign cland_start_raw = cland_raw_sel;"]
+            start, start_d, raw_used = "cland_start_child", "cland_start_child_d", "cland_raw_sel"
         else:
-            raw_used = raw
+            raw_used, start_d = raw, "cland_start_d"
+            logic.append(f"    assign cland_start_raw = {raw};")
         logic += [f"    ot_dp_landing_origin_s #(.PADW({padw})) u_cland_origin (",
                   f"        .clk(clk), .rst_raw_n({raw}), .p_start({p_start}), .strap_efall(strap_ca_efall), "
-                  f".strap_pad(strap_ca_pad), .start({start}));"]
+                  f".strap_pad(strap_ca_pad), .start({start}), .start_d({start_d}));"]
         self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="strap", tree_buses=list(tbs), padw=padw,
                                                                      root=bool(root), raw_reset=raw_used)
         return logic, raw_used
@@ -1195,6 +1216,30 @@ class Landings:
             return {}
         return {q: {sp: (self.strap["types"][v["type"]]["straps"][sp], v["values"][sp]) for sp in v["values"]}
                 for q, v in self.strap["instances"].items()}
+
+    def land_slots(self, tn):
+        """kit land_slots.json of plan type tn for face_guard (DIE-HEAD-21; face_guard.kit_land / land_spec), or None.
+        Only the count-aligned ring (ot_dp_clk_landing_ca / _cas -> ot_meso_ring_ca) is declared: its writer stores
+        s_d[slot] <= t_d under the write-count enable (own-Q hold, no ICG), i.e. face_guard form "hold_mux", with D =
+        the ring DEPTH type_rtl emits for that bus.  With the dataflow monitor the ring d = {cland_dn_fault_b,
+        cland_dn_ready_b, b}, so both status pins land the same D slots.  The ring's forwarded START cland_fstart_in_b
+        (t_rst_n of the ring writer + p_start of the count origin; no face flop: it would shift the count frame by one
+        cycle) is declared {"form": "ring_start", "ring": b}: face_guard proves its fan-out ends only in ring b's writer
+        flops and the origin's start sampler flops.  Schema land_slots/2 (/1 had no ring_start entries; face_guard
+        ignores the schema string, an older face_guard copy refuses the ring_start spec: fail-closed).  None (no file):
+        no count-aligned table or no landed input on tn (the default ot_dp_clk_landing ring and non-landed kits stay as
+        they are)."""
+        cat = self.ca_type.get(tn) if self.ca else None
+        ins = (self.by_type.get(tn) or {}).get("inputs") or ()
+        if not cat or not ins:
+            return None
+        buses = {}
+        for b in sorted(ins):
+            d = {"D": int(cat["rings"][b]["depth"]), "form": "hold_mux"}
+            for n in [b] + ([f"cland_dn_ready_{b}", f"cland_dn_fault_{b}"] if self.dataflow else []):
+                buses[n] = dict(d)
+            buses[f"cland_fstart_in_{b}"] = {"form": "ring_start", "ring": b}    # emitted with every ca landed input
+        return {"schema": LAND_SLOTS_SCHEMA, "buses": buses}
 
     def manifest(self):
         by_lane = defaultdict(int)

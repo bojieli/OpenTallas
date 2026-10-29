@@ -1,0 +1,3 @@
+AP_AUTO_GEOM_GRT rc 0 (M2-M5 adj 0.25, 50 it)
+AP_AUTO_GEOM AUTO-GEOM FAIL hbm/cxport place k3 probe WARN[pin_density 9.1: S/M5 9.1/um at x 8.71-18.71] fill=FAIL(0.0613) empty=FAIL(0.7972) pin_reg_max=FAIL(320.52) pin_unreg=FAIL(20) r2r=FAIL(488.24) r2r_count=FAIL(1014) col_v=FAIL(1.123) pin_density=WARN(9.1) outline=ok(250.56x449.28) aspect=ok(1.793) fill_hi=ok(0.0613) pin_reg_p90=ok(9.18) partial_face=ok(0) blocked_h=ok(0) blocked_v=ok(0) clock_on_macro=ok(0) clock_reach=ok(172.48) grt=ok(0) comb_loops=ok(0) clock_rooted=ok(0) clock_sinks=ok(13217)
+AP_AUTO_GEOM_PNG /srv/opentallas-scratch2/claude/hbm-cores-kits-3/geom/cxport/auto_geom.png

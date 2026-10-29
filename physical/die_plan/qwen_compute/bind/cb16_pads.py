@@ -5,6 +5,9 @@ arrival shift of a leg = (landed - as-built) accumulated along its path: the fab
 (u_fab.u_x_c_r -> tile.tap) gives the tile's t_out shift; a node's n_y carries the later of its legs.  The earlier side
 of every skewed node gets the MINIMUM pad (its r8 member pad + skew), nothing else.  Output = r8-member-schema table for
 asbuilt.land_r8_extra (authoritative for the ids it lists).
+TOK-QC-2 10-28 (COORD 20:49 item 1): an early leg that is an INTRA-partition edge (both tiles in one partition, e.g. a
+node fed by its own t_out under the count-aligned landing) has no crossing member; it gets an INNER:<part>:<sink>.<port>
+<-<source leaf>@<as-built> member (bind.py _apply_inner: the intra ot_dp_dly re-sized to landed = as-built + skew).
 
     cb16_pads.py BIND_DIR R8_TABLE OUT.json
 """
@@ -13,6 +16,8 @@ from collections import defaultdict
 bdir, table, outp = sys.argv[1:4]
 sinks = json.load(open(bdir + "/bind_sinks.json"))
 bg = json.load(open(bdir + "/bus_groups.json"))
+part_of = {leaf: k.split(".", 1)[0] for k, leaf in json.load(open(bdir + "/bind_names.json")).items()}
+intra = {}    # (sink leaf, port) -> {source leaf: set(stages)} for intra-partition legs (no crossing member)
 r8 = {m["id"]: m for m in json.load(open(table))["members"]}
 asb, gid = {}, {}
 for g in bg["landing"]:
@@ -36,6 +41,8 @@ for k, v in sinks.items():
     sl, sp = v[1].rsplit("[", 1)[0].rsplit(".", 1)
     a = asb.get((leaf, port, b))
     off = 0 if a is None else v[2] - a
+    if a is None:
+        intra.setdefault((leaf, port), {}).setdefault(sl, set()).add(v[2])
     cur = inp[leaf].get(port)
     if cur is None or off > cur[2]:
         inp[leaf][port] = (sl, sp, off)
@@ -70,7 +77,19 @@ for leaf in sorted(inp):
             continue
         ids = gid.get((leaf, side), set())
         if not ids:
-            bad.append(f"{leaf}.{side}: early side is not a crossing member (intra-partition leg)")
+            srcs = intra.get((leaf, side), {})
+            pt, ps = part_of.get(leaf), {part_of.get(x) for x in srcs}
+            if len(srcs) != 1 or ps != {pt} or pt is None or len(next(iter(srcs.values()))) != 1:
+                bad.append(f"{leaf}.{side}: early leg is neither a crossing member nor one intra-partition edge "
+                           f"({pt} <- {sorted(srcs)} parts {sorted(map(str, ps))})")
+                continue
+            (sl, st), = srcs.items()
+            a = next(iter(st))
+            mem.append(dict(id=f"INNER:{pt}:{leaf}.{side}<-{sl}@{a}", sink=leaf, sink_part=pt, src_part=pt,
+                            sink_port=side, sink_bits=[], source=sl, asbuilt=a, bound=a, pad=hi - x, landed=a + hi - x,
+                            lane=None, tree_align=hi - x,
+                            why=f"CB16 node {leaf.split('.')[-1]}: intra-partition {side} lands {hi - x} cycle(s) early"))
+            sites[f"{leaf.split('.')[-1]}.{side}"].add(hi - x)
             continue
         for mid in sorted(ids):
             t = r8.get(mid)
@@ -82,8 +101,15 @@ for leaf in sorted(inp):
         sites[f"{leaf.split('.')[-1]}.{side}"].add(hi - x)
 if bad:
     sys.exit("\n".join(bad[:20]))
-bits = lambda m: sum(b - a + 1 for a, b in m["sink_bits"])
-summ = dict(members=len(mem), clusters=len({m["sink"].split(".")[0] for m in mem}),
+W_INNER = defaultdict(int)
+for k in sinks:
+    if k.startswith("c16_"):
+        lp = k.rsplit("[", 1)[0]
+        for m in mem:
+            if m["id"].startswith("INNER:") and lp == f"{m['sink']}.{m['sink_port']}":
+                W_INNER[m["id"]] += 1
+bits = lambda m: sum(b - a + 1 for a, b in m["sink_bits"]) if m["sink_bits"] else W_INNER[m["id"]]
+summ = dict(members=len(mem), inner=sum(m["id"].startswith("INNER:") for m in mem), clusters=len({m["sink"].split(".")[0] for m in mem}),
             pad_flops=sum(m["tree_align"] * bits(m) for m in mem), sites={k: sorted(v) for k, v in sorted(sites.items())})
 json.dump(dict(schema="opentallas.die_plan.r8_landing.v1", die=bg["die"], kind="cb16_tree_align_pads", note=__doc__,
                r8_table=str(table), summary=summ, members=mem), open(outp, "w"), indent=1)

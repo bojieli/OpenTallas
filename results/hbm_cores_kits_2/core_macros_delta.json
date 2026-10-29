@@ -1,0 +1,91 @@
+{
+ "schema": "opentallas.core_macros.v1",
+ "note": "HBM-CORES-KITS-2 delta for the next DIE-HBM-10 plan event (COORD ruling (a) 10-28 19:30): macro rectangles in the core frame (R0, origin = core lower-left) from the snapped static kit placement (macro_placement.tcl of the _k6 kits, KIT_PREFLIGHT --contract PASS); rule R-SRAM-ENTRY (results/hbm_cores_kits_2/mp_rule.py)",
+ "halo_um": 0.0,
+ "cores": {
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": {
+   "status": "KNOWN",
+   "outline_um": [
+    177.984,
+    177.984
+   ],
+   "basis": "plan rule (kit static placement)",
+   "rule": "R-SRAM-ENTRY: one column centred on the clock entry x, stack split at entry island + halo, >=10.8 um channels",
+   "macros": [
+    {
+     "name": "u_fcore.g_wpay.u_write_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      43.308,
+      40.956,
+      138.132,
+      82.02
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_response_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      43.308,
+      99.42,
+      138.132,
+      140.484
+     ],
+     "orient": "R0"
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-kits-2/k6/kits/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_dd7000587876-_k6/macro_placement.tcl",
+     "sha256": "292ac4f62245e3fa8f463587ef8d4920833dfdb943b441949dfb02855e8f577c"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hbm_su_static_qcore_r13": {
+   "status": "KNOWN",
+   "outline_um": [
+    224.64,
+    207.36
+   ],
+   "basis": "plan rule (kit static placement)",
+   "rule": "KITS-1 v5 W column x15.12 (10.8 channels, interior 10.8), entry (151.176,112.32) 41 um E of the column; replaces the C24 KNOWN stacked placement (gap 0.024 um, macro_channels FAIL)",
+   "macros": [
+    {
+     "name": "u_fcore.u_red.ma",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      15.12,
+      151.164,
+      109.944,
+      192.228
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_red.mb",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      15.12,
+      98.988,
+      109.944,
+      140.052
+     ],
+     "orient": "R0"
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-kits-2/k6/kits/ot_hbm_su_static_qcore_r13_6fb4f29f7814-_k6/macro_placement.tcl",
+     "sha256": "33d6123abe5465bf99a3e9924b7c9a10166d4d1adf6456f0ff7cc24c522f57ca"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  }
+ }
+}

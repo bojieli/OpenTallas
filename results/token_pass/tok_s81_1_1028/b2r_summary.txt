@@ -1,0 +1,7 @@
+TOK-S81 BIND Wed Oct 28 21:23:47 PDT 2026 tree 274723b84a plan 27e26b68d1da manifest physical/die_plan/s81/bind/asbuilt_b178_coll_s11.json (a18cca98b993)
+1 FRAME_LK rc=0 FRAME_LK PASS frames=72 band_checks=216 errors=0
+2a ELAB reused /srv/opentallas-scratch2/claude/tok-s81-1/b2/out/asbuilt.json
+2b BIND --strict rc=1 Wed Oct 28 21:32:18 PDT 2026    LANE_LANDING_LATENCY rt_W2_out_2: latency table clock_landing 15 != bound landing hardware cycles 0 (no clock_landing_table bound)
+3 LATENCY rc=0 873 lanes -> /srv/opentallas-scratch2/claude/tok-s81-1/b2/lat/s81_lat_pkg.sv, /srv/opentallas-scratch2/claude/tok-s81-1/b2/lat/s81_latency.json
+4 CA NOT RUN: no CA_LPO: the S81 clock proof count_align_bind input (go15 lpo.json) crashes KeyError src_part (DIE-S81-17)
+VERDICT FAIL Wed Oct 28 21:32:33 PDT 2026
