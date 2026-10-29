@@ -13,6 +13,8 @@ import turn_corridor
 turn_corridor.install(F)
 import occupied_rows
 occupied_rows.install(F)
+import local_project
+local_project.install(F)
 from tools.die_trial.legal_sites import RowAllocator
 src=Path(a.geometry);out=Path(a.out);out.mkdir(parents=True,exist_ok=False);P=json.loads((src/'die_plan.json').read_text());report=json.loads((src/'report.json').read_text());report['status']='ALLOCATING';report['allocation_failures']=[];report['clock_ff_load']={};model=S.Plan(P);parts=model.parts;selected=set(a.parts.split(',')) if a.parts else set(report['changed_types']);report['completed_parts']=[];report['wrapper_transport_ff']={};report['part_failures']=[];report['geometry_sha256']={pn:geometry_identity.identity(P,pn) for pn in selected}
 # All PHY supply domains are physical keepouts, including digital-core side strips.

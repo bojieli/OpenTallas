@@ -142,3 +142,14 @@ at the old arbitrary 240um search cap. These planning proposals still require
 successful actual-site construction; a search failure is not itself proof of
 physical impossibility. The shared wrapper's underlying NoChain cause is now
 preserved in failure reports instead of being discarded.
+
+The current 156-native source cut expands to 98 unplanned pairs / 44,681 bits;
+old-150-leaf 50-pair results stay diagnostic only. The transform accepts the
+new census once source ownership/absorption is settled. No old snapshot is
+adopted by these constructive witnesses.
+
+local_project.py removes an observed planning hot path: candidate point clouds
+query only intersecting blocker rectangles, rather than testing thousands of
+irrelevant banks. Blocked proposals still return infinite cost, and final
+full-row and paired-hop gates are unchanged. New coupons use a clean source
+worktree pinned to their commit; live earlier jobs remain untouched.
