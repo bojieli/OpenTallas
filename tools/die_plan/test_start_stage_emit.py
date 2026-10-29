@@ -407,3 +407,11 @@ def test_actual_clock_driver_path_and_root_input_have_no_extra_inv_credit(tmp_pa
         s.pop('clock_source_path')
     with pytest.raises(E.StageError, match='re-emit'):
         E.proof_with_stages(pr, legacy, {'TT': arr}, tmp_path/'legacy')
+
+
+def test_node_cell_region_alias_is_not_a_second_clock_path():
+    v, t = _tree('INVx1_ASAP7_75t_R')
+    meta = _meta()
+    meta['node_cell']['hub_C'] = 'b0'
+    doc, *_ = E.emit(_bind(), meta, v, t)
+    assert next(s for s in doc['stages'] if s['node_cell'] == 'b2')['clock_source_path'] == P_ROOT
