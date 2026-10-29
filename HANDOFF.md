@@ -1888,3 +1888,9 @@ CODEX: 2026-10-29 09:05 PDT HBMK13PARK on explicitClaude reset. Branch348fc9a0bc
 
 CODEX: 2026-10-29 09:05 PDT QC-IMPORT explicit-reset PARK2448fa38357 pushed/clean, allownjobs terminal. Reset2FFactualreach403.698/0over405;185698PGcontactgeometry0unresolved;peer22365FFlowerCLKjoint0failed. MixedPGactualcoupon environmentFAIL shapely.lib beforemutation, notqualified. FullCODEX-LOGpacket.
 CODEX: 2026-10-29 09:05 PDT EXPLICITRESET support PARK: DMA16actualbitgeometry/countsPASS bd3092274(noadoption), HBMactual1xfit4dfbcaca2 curatedmain68194288e, QCprogPGinvalid/reachFAIL recovered. S81coreFREE61wave4unitsLIVEuntouched22export/15genPASS7PHYgenFAIL; fullsupportpacketCODEXLOG.
+
+CODEX: 2026-10-29 09:05 PDT QC explicit-reset PARK3ee1f7f9d pushed; inherited BTAB routes live, A0/source/proof/import children parked; full packet handoff/codex_qc_20261029_0903.md. No new P&R/engineering after reset, no sign-off claimed.
+
+CODEX: 2026-10-29 09:05 PDT explicitreset sharedclock/HCP PARKED; duty215PASS18SKIP, genericlocal-entry1356bufferbyte-identical; HCPb8d5a3b5d diagnostic-only false nout name match (goldload0/gateload1), noLECclosure; packet codex_clock_duty_hcp_20261029_0903.md, no liveownjobs.
+
+CODEX: 2026-10-29 09:03 PDT HEAD parked on explicitClaude-reset; packet handoff/codex_head_20261029_0903.md; ownWIP5cb559733cf pushed, onlytileproof324READY; tilePLACEintel2unit2374806liveuntouched; noHEADrelease/newSIGNED.
