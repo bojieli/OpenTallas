@@ -47,6 +47,13 @@ python3 -I $H/kv_phy_slice_map.py $O/bind_names.json $TOPF $R/physical/die_plan/
   > $O/phy_slice_map.json 2> $O/phy_slice_map.log || { cat $O/phy_slice_map.log; exit 2; }
 python3 -I $H/vehicle_closure.py $O $R --bench $BENCH $O/tb_kvslice.sv > $O/vehicle_closure.log 2>&1 || { cat $O/vehicle_closure.log; exit 2; }
 tail -1 $O/vehicle_closure.log
+# Native boot ABI must follow the actual post-closure dispatcher, including the
+# selected HOST hierarchy library. Old staged binds can still carry legacy
+# loader defaults even when their dispatcher and image use AGES=1.
+if [ "${NATIVE_BOOT_ABI:-${NATIVE_BOOT:-0}}" != 0 ]; then
+  python3 -I $H/staged_boot_abi.py "$O" > "$O/native_boot_abi.log" 2>&1 || { cat "$O/native_boot_abi.log"; exit 2; }
+  tail -1 "$O/native_boot_abi.log"
+fi
 cat > $O/vl.f <<EOF
 -Wno-fatal
 -Wno-lint
