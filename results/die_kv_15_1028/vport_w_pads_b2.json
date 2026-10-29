@@ -1,0 +1,629 @@
+{
+ "schema": "opentallas.die_plan.r8_extra.v1",
+ "die": "qwen_kvsys",
+ "source_bind": "/srv/opentallas-scratch2/claude/die-kv-15-1028/bind2",
+ "source_r8_sha256": "fb4cd101ef770d0c3cfb45856e86b15ea63ead7a2ef2d07c7c5e0e78dd4819a8",
+ "note": "DIE-KV-13 vport W request pads: DQ <= 15 (kv_boot_v36 prep vport_dq_pads.json (kv_static_params.schedule, RL = 4 + W + O + DQ + RT)); RL unchanged",
+ "members": [
+  {
+   "id": "vport_EN_0.pr_t[0:13]<-pvw_1__u_ctl.req_t@53",
+   "sink": "vport_EN_0",
+   "sink_part": "pv_N_3",
+   "src_part": "hub_C",
+   "sink_port": "pr_t",
+   "sink_bits": [
+    [
+     0,
+     13
+    ]
+   ],
+   "source": "pvw_1__u_ctl.req_t",
+   "asbuilt": 53,
+   "bound": 36,
+   "pad": 21,
+   "landed": 57,
+   "lane": "L1953",
+   "w_pad": 16
+  },
+  {
+   "id": "vport_EN_0.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@53",
+   "sink": "vport_EN_0",
+   "sink_part": "pv_N_3",
+   "src_part": "hub_C",
+   "sink_port": "pr_valid",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "pvw_1__u_ctl.req_valid",
+   "asbuilt": 53,
+   "bound": 41,
+   "pad": 16,
+   "landed": 57,
+   "lane": "L1957",
+   "w_pad": 16
+  },
+  {
+   "id": "vport_EN_1.pr_t[0:13]<-pvw_1__u_ctl.req_t@42",
+   "sink": "vport_EN_1",
+   "sink_part": "pv_N_5",
+   "src_part": "hub_C",
+   "sink_port": "pr_t",
+   "sink_bits": [
+    [
+     0,
+     13
+    ]
+   ],
+   "source": "pvw_1__u_ctl.req_t",
+   "asbuilt": 42,
+   "bound": 21,
+   "pad": 56,
+   "landed": 77,
+   "lane": "L1952",
+   "w_pad": 51
+  },
+  {
+   "id": "vport_EN_1.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@42",
+   "sink": "vport_EN_1",
+   "sink_part": "pv_N_5",
+   "src_part": "hub_C",
+   "sink_port": "pr_valid",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "pvw_1__u_ctl.req_valid",
+   "asbuilt": 42,
+   "bound": 26,
+   "pad": 51,
+   "landed": 77,
+   "lane": "L1956",
+   "w_pad": 51
+  },
+  {
+   "id": "vport_EN_3.pr_t[0:13]<-pvw_1__u_ctl.req_t@44",
+   "sink": "vport_EN_3",
+   "sink_part": "pv_N_7",
+   "src_part": "hub_C",
+   "sink_port": "pr_t",
+   "sink_bits": [
+    [
+     0,
+     13
+    ]
+   ],
+   "source": "pvw_1__u_ctl.req_t",
+   "asbuilt": 44,
+   "bound": 4,
+   "pad": 86,
+   "landed": 90,
+   "lane": "L1951",
+   "w_pad": 86
+  },
+  {
+   "id": "vport_EN_3.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@44",
+   "sink": "vport_EN_3",
+   "sink_part": "pv_N_7",
+   "src_part": "hub_C",
+   "sink_port": "pr_valid",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "pvw_1__u_ctl.req_valid",
+   "asbuilt": 44,
+   "bound": 4,
+   "pad": 86,
+   "landed": 90,
+   "lane": "L1955",
+   "w_pad": 86
+  },
+  {
+   "id": "vport_ES_0.pr_t[0:13]<-pvw_0__u_ctl.req_t@43",
+   "sink": "vport_ES_0",
+   "sink_part": "pv_S_3",
+   "src_part": "hub_C",
+   "sink_port": "pr_t",
+   "sink_bits": [
+    [
+     0,
+     13
+    ]
+   ],
+   "source": "pvw_0__u_ctl.req_t",
+   "asbuilt": 43,
+   "bound": 36,
+   "pad": 21,
+   "landed": 57,
+   "lane": "L1841",
+   "w_pad": 16
+  },
+  {
+   "id": "vport_ES_0.pr_valid[0:0]<-pvw_0__u_ctl.req_valid@43",
+   "sink": "vport_ES_0",
+   "sink_part": "pv_S_3",
+   "src_part": "hub_C",
+   "sink_port": "pr_valid",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "pvw_0__u_ctl.req_valid",
+   "asbuilt": 43,
+   "bound": 41,
+   "pad": 16,
+   "landed": 57,
+   "lane": "L1845",
+   "w_pad": 16
+  },
+  {
+   "id": "vport_ES_1.pr_t[0:13]<-pvw_0__u_ctl.req_t@51",
+   "sink": "vport_ES_1",
+   "sink_part": "pv_S_5",
+   "src_part": "hub_C",
+   "sink_port": "pr_t",
+   "sink_bits": [
+    [
+     0,
+     13
+    ]
+   ],
+   "source": "pvw_0__u_ctl.req_t",
+   "asbuilt": 51,
+   "bound": 21,
+   "pad": 56,
+   "landed": 77,
+   "lane": "L1840",
+   "w_pad": 51
+  },
+  {
+   "id": "vport_ES_1.pr_valid[0:0]<-pvw_0__u_ctl.req_valid@51",
+   "sink": "vport_ES_1",
+   "sink_part": "pv_S_5",
+   "src_part": "hub_C",
+   "sink_port": "pr_valid",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "pvw_0__u_ctl.req_valid",
+   "asbuilt": 51,
+   "bound": 26,
+   "pad": 51,
+   "landed": 77,
+   "lane": "L1844",
+   "w_pad": 51
+  },
+  {
+   "id": "vport_ES_3.pr_t[0:13]<-pvw_0__u_ctl.req_t@59",
+   "sink": "vport_ES_3",
+   "sink_part": "pv_S_7",
+   "src_part": "hub_C",
+   "sink_port": "pr_t",
+   "sink_bits": [
+    [
+     0,
+     13
+    ]
+   ],
+   "source": "pvw_0__u_ctl.req_t",
+   "asbuilt": 59,
+   "bound": 4,
+   "pad": 87,
+   "landed": 91,
+   "lane": "L1839",
+   "w_pad": 87
+  },
+  {
+   "id": "vport_ES_3.pr_valid[0:0]<-pvw_0__u_ctl.req_valid@59",
+   "sink": "vport_ES_3",
+   "sink_part": "pv_S_7",
+   "src_part": "hub_C",
+   "sink_port": "pr_valid",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "pvw_0__u_ctl.req_valid",
+   "asbuilt": 59,
+   "bound": 4,
+   "pad": 87,
+   "landed": 91,
+   "lane": "L1843",
+   "w_pad": 87
+  },
+  {
+   "id": "vport_WN_0.pr_t[0:13]<-pvw_1__u_ctl.req_t@58",
+   "sink": "vport_WN_0",
+   "sink_part": "pv_N_3",
+   "src_part": "hub_C",
+   "sink_port": "pr_t",
+   "sink_bits": [
+    [
+     0,
+     13
+    ]
+   ],
+   "source": "pvw_1__u_ctl.req_t",
+   "asbuilt": 58,
+   "bound": 36,
+   "pad": 21,
+   "landed": 57,
+   "lane": "L1953",
+   "w_pad": 16
+  },
+  {
+   "id": "vport_WN_0.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@58",
+   "sink": "vport_WN_0",
+   "sink_part": "pv_N_3",
+   "src_part": "hub_C",
+   "sink_port": "pr_valid",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "pvw_1__u_ctl.req_valid",
+   "asbuilt": 58,
+   "bound": 41,
+   "pad": 16,
+   "landed": 57,
+   "lane": "L1957",
+   "w_pad": 16
+  },
+  {
+   "id": "vport_WN_1.pr_t[0:13]<-pvw_1__u_ctl.req_t@48",
+   "sink": "vport_WN_1",
+   "sink_part": "pv_N_5",
+   "src_part": "hub_C",
+   "sink_port": "pr_t",
+   "sink_bits": [
+    [
+     0,
+     13
+    ]
+   ],
+   "source": "pvw_1__u_ctl.req_t",
+   "asbuilt": 48,
+   "bound": 21,
+   "pad": 60,
+   "landed": 81,
+   "lane": "L1952",
+   "w_pad": 55
+  },
+  {
+   "id": "vport_WN_1.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@48",
+   "sink": "vport_WN_1",
+   "sink_part": "pv_N_5",
+   "src_part": "hub_C",
+   "sink_port": "pr_valid",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "pvw_1__u_ctl.req_valid",
+   "asbuilt": 48,
+   "bound": 26,
+   "pad": 55,
+   "landed": 81,
+   "lane": "L1956",
+   "w_pad": 55
+  },
+  {
+   "id": "vport_WN_3.pr_t[0:13]<-pvw_1__u_ctl.req_t@44",
+   "sink": "vport_WN_3",
+   "sink_part": "pv_N_7",
+   "src_part": "hub_C",
+   "sink_port": "pr_t",
+   "sink_bits": [
+    [
+     0,
+     13
+    ]
+   ],
+   "source": "pvw_1__u_ctl.req_t",
+   "asbuilt": 44,
+   "bound": 4,
+   "pad": 90,
+   "landed": 94,
+   "lane": "L1951",
+   "w_pad": 90
+  },
+  {
+   "id": "vport_WN_3.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@44",
+   "sink": "vport_WN_3",
+   "sink_part": "pv_N_7",
+   "src_part": "hub_C",
+   "sink_port": "pr_valid",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "pvw_1__u_ctl.req_valid",
+   "asbuilt": 44,
+   "bound": 4,
+   "pad": 90,
+   "landed": 94,
+   "lane": "L1955",
+   "w_pad": 90
+  },
+  {
+   "id": "vport_WS_0.pr_t[0:13]<-pvw_0__u_ctl.req_t@48",
+   "sink": "vport_WS_0",
+   "sink_part": "pv_S_3",
+   "src_part": "hub_C",
+   "sink_port": "pr_t",
+   "sink_bits": [
+    [
+     0,
+     13
+    ]
+   ],
+   "source": "pvw_0__u_ctl.req_t",
+   "asbuilt": 48,
+   "bound": 36,
+   "pad": 21,
+   "landed": 57,
+   "lane": "L1841",
+   "w_pad": 16
+  },
+  {
+   "id": "vport_WS_0.pr_valid[0:0]<-pvw_0__u_ctl.req_valid@48",
+   "sink": "vport_WS_0",
+   "sink_part": "pv_S_3",
+   "src_part": "hub_C",
+   "sink_port": "pr_valid",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "pvw_0__u_ctl.req_valid",
+   "asbuilt": 48,
+   "bound": 41,
+   "pad": 16,
+   "landed": 57,
+   "lane": "L1845",
+   "w_pad": 16
+  },
+  {
+   "id": "vport_WS_1.pr_t[0:13]<-pvw_0__u_ctl.req_t@57",
+   "sink": "vport_WS_1",
+   "sink_part": "pv_S_5",
+   "src_part": "hub_C",
+   "sink_port": "pr_t",
+   "sink_bits": [
+    [
+     0,
+     13
+    ]
+   ],
+   "source": "pvw_0__u_ctl.req_t",
+   "asbuilt": 57,
+   "bound": 21,
+   "pad": 60,
+   "landed": 81,
+   "lane": "L1840",
+   "w_pad": 55
+  },
+  {
+   "id": "vport_WS_1.pr_valid[0:0]<-pvw_0__u_ctl.req_valid@57",
+   "sink": "vport_WS_1",
+   "sink_part": "pv_S_5",
+   "src_part": "hub_C",
+   "sink_port": "pr_valid",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "pvw_0__u_ctl.req_valid",
+   "asbuilt": 57,
+   "bound": 26,
+   "pad": 55,
+   "landed": 81,
+   "lane": "L1844",
+   "w_pad": 55
+  },
+  {
+   "id": "vport_WS_3.pr_t[0:13]<-pvw_0__u_ctl.req_t@64",
+   "sink": "vport_WS_3",
+   "sink_part": "pv_S_7",
+   "src_part": "hub_C",
+   "sink_port": "pr_t",
+   "sink_bits": [
+    [
+     0,
+     13
+    ]
+   ],
+   "source": "pvw_0__u_ctl.req_t",
+   "asbuilt": 64,
+   "bound": 4,
+   "pad": 91,
+   "landed": 95,
+   "lane": "L1839",
+   "w_pad": 91
+  },
+  {
+   "id": "vport_WS_3.pr_valid[0:0]<-pvw_0__u_ctl.req_valid@64",
+   "sink": "vport_WS_3",
+   "sink_part": "pv_S_7",
+   "src_part": "hub_C",
+   "sink_port": "pr_valid",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "pvw_0__u_ctl.req_valid",
+   "asbuilt": 64,
+   "bound": 4,
+   "pad": 91,
+   "landed": 95,
+   "lane": "L1843",
+   "w_pad": 91
+  }
+ ],
+ "ports": {
+  "vport_EN_0": {
+   "RT": 67,
+   "DQ": 31,
+   "pad": 16,
+   "W": 41,
+   "W_padded": 57,
+   "sink_part": "pv_N_3"
+  },
+  "vport_EN_1": {
+   "RT": 69,
+   "DQ": 66,
+   "pad": 51,
+   "W": 26,
+   "W_padded": 77,
+   "sink_part": "pv_N_5"
+  },
+  "vport_EN_2": {
+   "RT": 70,
+   "DQ": 0,
+   "pad": 0,
+   "W": 57,
+   "W_padded": 57,
+   "sink_part": "pv_N_1"
+  },
+  "vport_EN_3": {
+   "RT": 70,
+   "DQ": 101,
+   "pad": 86,
+   "W": 4,
+   "W_padded": 90,
+   "sink_part": "pv_N_7"
+  },
+  "vport_ES_0": {
+   "RT": 67,
+   "DQ": 31,
+   "pad": 16,
+   "W": 41,
+   "W_padded": 57,
+   "sink_part": "pv_S_3"
+  },
+  "vport_ES_1": {
+   "RT": 69,
+   "DQ": 66,
+   "pad": 51,
+   "W": 26,
+   "W_padded": 77,
+   "sink_part": "pv_S_5"
+  },
+  "vport_ES_2": {
+   "RT": 71,
+   "DQ": 0,
+   "pad": 0,
+   "W": 57,
+   "W_padded": 57,
+   "sink_part": "pv_S_1"
+  },
+  "vport_ES_3": {
+   "RT": 70,
+   "DQ": 102,
+   "pad": 87,
+   "W": 4,
+   "W_padded": 91,
+   "sink_part": "pv_S_7"
+  },
+  "vport_WN_0": {
+   "RT": 68,
+   "DQ": 31,
+   "pad": 16,
+   "W": 41,
+   "W_padded": 57,
+   "sink_part": "pv_N_3"
+  },
+  "vport_WN_1": {
+   "RT": 67,
+   "DQ": 70,
+   "pad": 55,
+   "W": 26,
+   "W_padded": 81,
+   "sink_part": "pv_N_5"
+  },
+  "vport_WN_2": {
+   "RT": 65,
+   "DQ": 14,
+   "pad": 0,
+   "W": 57,
+   "W_padded": 57,
+   "sink_part": "pv_N_1"
+  },
+  "vport_WN_3": {
+   "RT": 66,
+   "DQ": 105,
+   "pad": 90,
+   "W": 4,
+   "W_padded": 94,
+   "sink_part": "pv_N_7"
+  },
+  "vport_WS_0": {
+   "RT": 68,
+   "DQ": 31,
+   "pad": 16,
+   "W": 41,
+   "W_padded": 57,
+   "sink_part": "pv_S_3"
+  },
+  "vport_WS_1": {
+   "RT": 67,
+   "DQ": 70,
+   "pad": 55,
+   "W": 26,
+   "W_padded": 81,
+   "sink_part": "pv_S_5"
+  },
+  "vport_WS_2": {
+   "RT": 65,
+   "DQ": 14,
+   "pad": 0,
+   "W": 57,
+   "W_padded": 57,
+   "sink_part": "pv_S_1"
+  },
+  "vport_WS_3": {
+   "RT": 66,
+   "DQ": 106,
+   "pad": 91,
+   "W": 4,
+   "W_padded": 95,
+   "sink_part": "pv_S_7"
+  }
+ },
+ "summary": {
+  "vports": 16,
+  "padded": 12,
+  "pad_stages": 630,
+  "max_pad": 91,
+  "pad_flops": 9450,
+  "padded_bits": 180,
+  "RL_boot": 186,
+  "RL_note": "boot RL = 4 + W + O + DQ + RT; pads = DQ - 15 keep it by construction"
+ }
+}
