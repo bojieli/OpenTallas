@@ -17,6 +17,15 @@ def register(B):
     for p in names:
         if p not in B.parts or p not in W['parts']:raise ValueError('reset carrier not in solved wavefront: '+p)
         t=B.types[B.parts[p]['type']]
+        pc=getattr(B,'pc',None)
+        if pc is not None and pc.T.get(pc.ptype(p)):
+            raise ValueError('reset carrier has plan-cell entries: '+p)
+        if getattr(B,'intra_dly',{}).get(p):
+            raise ValueError('reset carrier has retained transport stages: '+p)
+        if any(p in (link.get('src'),link.get('dst')) or
+               any(hop.get('part')==p for hop in link.get('ft',[]))
+               for link in getattr(B,'links',[])):
+            raise ValueError('reset carrier participates in payload transport links: '+p)
         if p in B.members:raise ValueError('reset carrier already contains source cells or transport: '+p)
         if t.get('hard') or t.get('hard_cores') or t.get('buses') or t.get('ft_slots') or t.get('internal_stations') or t.get('pads'):
             raise ValueError('reset carrier has payload hardware: '+p)
