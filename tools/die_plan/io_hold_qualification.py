@@ -8,6 +8,18 @@ from pathlib import Path
 def plan_digest(raw):
     return hashlib.sha256(json.dumps(raw,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
+
+def core_kit_budget(plan, module, parent_type):
+    """Scope an option-A hard core to the actual plan read by its generator.
+
+    A hard core is the receiver master, not its containing partition type.  The
+    latter is retained separately so a parent timing run can locate its owners.
+    This records an obligation; it supplies no timing evidence.
+    """
+    return dict(die=plan['die']['name'], type=module, parent_type=parent_type,
+                io_hold=dict(mode='sender_min', plan_sha256=plan_digest(plan), requires_parent=True,
+                             receiver_kind='core'))
+
 def digest(path):
     h = hashlib.sha256()
     with Path(path).open('rb') as f:

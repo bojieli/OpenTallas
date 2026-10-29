@@ -308,6 +308,13 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
         a += ["--clock-rc", st["clock_rc"]]
     if st["cell"] != "buf":
         a += ["--clock-cell", st["cell"]]
+    eb = st.get("edge_balance", "none")
+    if eb == "dme_alt":                         # CLK-TOOL-8: region DME branch polarity chosen per node (duty)
+        if st["cell"] != "inv2":
+            raise ConfigError("stack.edge_balance dme_alt needs stack.cell inv2")
+        a.append("--clock-edge-alt")
+    elif eb != "none":
+        raise ConfigError(f"stack.edge_balance {eb!r}: none | dme_alt")
     if reg.get("form", "none") == "dme":
         mode = reg.get("dme_mode", True)
         a += ["--region-dme"] + ([] if mode is True else [str(mode)])
