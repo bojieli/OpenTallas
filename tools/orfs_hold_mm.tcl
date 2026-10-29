@@ -237,8 +237,16 @@ proc ot_rc_cal_apply {kind} {
   return 1
 }
 proc ot_rc_cal_restore {} {
-  source $::env(PLATFORM_DIR)/setRC.tcl
-  puts "OT_RC_CAL restored platform setRC.tcl"
+  # Restore the kit's selected baseline, which may itself be RCX calibrated.
+  # Falling back to platform RC here changes every subsequent timing report.
+  if {[info exists ::env(LAYER_PARASITICS_FILE)] && $::env(LAYER_PARASITICS_FILE) ne ""} {
+    set baseline $::env(LAYER_PARASITICS_FILE)
+    if {![file isfile $baseline]} {error "OT_RC_CAL missing selected RC baseline $baseline"}
+  } else {
+    set baseline $::env(PLATFORM_DIR)/setRC.tcl
+  }
+  source $baseline
+  puts "OT_RC_CAL restored selected RC baseline $baseline"
 }
 # Run BODY with calibrated hold RC. Numeric FF I/O references must be measured
 # with that same RC, and measured again after restoring platform RC. Unsync FIRST:
