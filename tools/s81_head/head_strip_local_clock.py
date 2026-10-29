@@ -17,7 +17,7 @@ def main():
   if q['type'] in ('hd_spn','hd_spn_end'):
    p['die'].setdefault('channels',[]).extend(spine_channels(q['name'],q['origin_um'][0]-X0,q['origin_um'][1]))
  (inp/'plan.json').write_text(json.dumps(p,indent=1));shutil.copytree(d/'core_pins',inp/'core_pins')
- mapping=json.load(open(d/'spine_regions.json'))['part_region'];G=L.region_geom(p,mapping);adj=L.part_adjacency(p);cross=L.crossings(p,mapping,G,adj);E=L.region_graph(p,mapping,adj,cross)
+ mapping=json.load(open(d/'spine_regions.json'))['part_region'];D=L.load_plan(p);G=L.region_geom(D,mapping);adj=L.part_adjacency(D);cross=L.crossings(D,mapping,G,adj);E=L.region_graph(D,mapping,adj,cross)
  # Only existing physical neighbour graph edges or declared data crossings;
  # disconnected regions are explicitly recorded by the generic proposer.
  f=L.feed_tree(G,E,cross,1.0,'fish');feed={'root':f['root'],'parent':f['parent'],'tap':{f'{x}->{y}':v for (x,y),v in f['tap'].items()},'joined':f['joined'],'source':'generic maximum-traffic physical neighbour/data graph'}
