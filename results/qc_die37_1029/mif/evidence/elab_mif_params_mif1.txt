@@ -1,0 +1,10 @@
+$paramod\qfd_dv_s8_suvm_rp1\MIF=s32'000000000 u_vm8q $paramod\qfd_dv_s8_vm8q_rp1\MIF=s32'00000000000000000000000000000001 {}
+$paramod\qfd_dv_s8_vm8q_rp1\MIF=s32'000000000 u_bt qfd_dv_s8x_btab {'MIF': '00000000000000000000000000000001'}
+$paramod\qfd_dv_s8_vm8q_rp1\MIF=s32'000000000 u_ch qfd_dv_s8_crh_rp1 {'MIF': '00000000000000000000000000000001'}
+$paramod\qfd_dv_s8_vm8q_rp1\MIF=s32'000000000 u_cl qfd_dv_s8_crh_rp1 {'MIF': '00000000000000000000000000000001'}
+$paramod\qfd_dv_s8_vm8q_rp1\MIF=s32'000000000 u_pg qfd_dv_s8x_prog {'MIF': '00000000000000000000000000000001'}
+$paramod\qfd_dv_s8_vm8q_rp1\MIF=s32'000000000 u_va qfd_dv_s8x_vmr {'MIF': '00000000000000000000000000000001'}
+qfd_dv_s8_flat u_btab qfd_dv_s6_btab {}
+qfd_dv_s8_flat u_head0 qfd_dv_lane_h_safe2 {'MEMORY_ALIGNMENT': '00000000000000000000000000000000', 'MEMORY_READ_EXTRA': '00000000000000000000000000000001'}
+qfd_dv_s8_flat u_suvm $paramod\qfd_dv_s8_suvm_rp1\MIF=s32'00000000000000000000000000000001 {}
+['qfd_dv_lane_h_safe2', 'qfd_dv_s8x_prog']
