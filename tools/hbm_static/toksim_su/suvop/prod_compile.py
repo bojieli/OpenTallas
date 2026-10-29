@@ -484,7 +484,11 @@ def compile_rec(a):
     nxt = 0
     for r in vm_roles + (['O'] if writes_o else []):
         base[r] = nxt; nxt += rows_per
-    assert nxt <= 500, ('store rows', nxt)
+    if NQ == 2:
+        reserved = ({498} if red else set()) | ({499} if roles.get('B') == 'rf' else set())
+        assert nxt <= 512 and not any(r < nxt for r in reserved), ('store rows', nxt, 'reserved', sorted(reserved))
+    else:
+        assert nxt <= 500, ('store rows', nxt)
     # per-issue live lanes per quarter
     live = np.zeros((G, NQ), dtype=np.int64)
     for g in range(G):
