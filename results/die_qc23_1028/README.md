@@ -69,3 +69,35 @@ hard-core data pins 2.15 M. Glue-to-glue internal paths NOT counted (no netlist)
   seam_hold 25,180 kept. Built on claude/die-qc23-pg-1028 (= this branch + merge of claude/qc-pg-5-1028; 109/109 die_trial +
   test_pg_bump_fields PASS locally). QC-PG-5 re-ran trial15 clock GRT with M9 0.672: 0 overflow, arrivals identical
   (their number, UNCHECKED here). Next QC trial uses ev_qc23pg.
+
+## 7. Gate g15 (= trial16 inputs; ev_qc23 W180, real views where signed, OCV table + shared droop) - CHECKED (gate run)
+- Intra kit-contract hold at W180: plain -4.28 ps (9 pairs); WITH clock OCV -46.24 ps (279 pairs, worst
+  c_W0/W5/E4_tf_00 t8->t24) -> mesh trigger (a) FIRES. trial14 at W180 (DIE-QC-22 what-if): -45.8 OCV (62 pairs, 42 in
+  c_W2_bn_01): the cap moved the failure from c_W2_bn_01 to the *_tf_00 regions, it did not remove it.
+- Seam kit-contract W180: +81.68 plain / +54.32 OCV PASS. CA 2537 crossings TT/FF PASS (worst lo 104.1 / hi 142.8 TT).
+  Gate verdict FAIL closed (768 A0 taps without a signed view; TT intra setup 58.98, FF intra hold -527 in view mode).
+- CA depth (TOK-QC-1 / 12.16b(iii)): 2525 crossings DEPTH 4, 12 DEPTH 8. All D4 crossings rely on the MESO-COUNT-1 D4 RTL
+  proof (results/meso_count_1027/README.md: lag sweep K {-2,1,2,5} x DEPTH 4, clean [0.502, 3.501] T, 0 silent-wrong of
+  14995); D8 on the D8 sweep line. None is without a proof, so none moved; the 12.16b(iii) text lists only 8/16 -> ASK.
+
+## 8. Root cause of the 270.8-ps routed tap move trial14 -> trial15 (COORD 20:5x). Scripts tapmove23/slide23/legres23.
+- Above the region roots nothing moved: the feed node driving each region root has 0.0 ps arrival change on 204 regions;
+  region roots move <= 44.8 ps. The move is inside the rebuilt region trees.
+- Fixed calibrated model (val14 coef) on both trees: within-region predicted move <= 26.0 ps (0 taps > 30); routed
+  within-region move up to 96.3 ps (875 taps > 30). Absolute move: predicted up to 109.5 ps (rebuilt regions are deeper by
+  design), routed up to 270.8.
+- Cap-specific defect (the *_tf_00 regression): the re-embedded glue tree runs 504-um legs across A0 core rows and site
+  legalisation slides 28 repeaters 146.8 um off the planned leg (trial14: 0 cells > 50 um, max 7 um) in 14 regions -> a
+  392-um cell hop, leg residual +73 ps (trial14 worst leg +43). The model is blind to the slide (it assumes the planned
+  route). Reason enough to keep the cap rejected; a guard "repeater off-leg > 50 um -> fail kit" would catch it.
+- Not cap-specific (both trees): per-leg routed residual is small (short sd 5.6, long sd 10-12, snake sd 9-11 ps, |res|
+  <= 43 ps), but it accumulates over ~8 legs per path: per-tap region-relative residual max 95.8 ps (trial14) / 98.0
+  (trial16), p99 45 / 53 ps. So the stock tree is reproducible to its model only to ~+-50 ps p99 per tap; this is the
+  routed spread the W180 window and the mesh estimate (Rr 30-60) already carry. It is a property of the deep (~8-stage)
+  region trees, not an instability that flips between runs (same tree routes md5-identical: trial15 == trial16).
+
+## 9. a0k6s AP 7d28e91ad84d: NOT SIGNED (FF hold) -> hold census (CHECKED, scripts/a0k6s_census.tcl on the routed odb)
+- Sign-off: TT setup +29.65, FF hold -15.32 (kit std overlay in_min 0 / out_min -25; raw SDC -35.98), DRC 0, ant 0.
+- 290 failing endpoints: input side 216 (ports b[]/a[] -> u_w.q regs, worst -8.36, med -3.27, TNS -688), internal
+  reg->reg 74 (g_add[*] adder regs, worst -15.32 on a 51-ps T0/T1 branch skew of the kit CTS, med -4.14, TNS -358),
+  output side 0. Not routed LEC / export_view (not signed off).
