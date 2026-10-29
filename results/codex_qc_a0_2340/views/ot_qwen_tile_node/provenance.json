@@ -1,0 +1,114 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "ot_qwen_tile_node_a0k10t",
+  "module": "ot_qwen_tile_node",
+  "plan_type": "a0_children",
+  "outline_um": [
+   47.52,
+   432.0
+  ],
+  "ref_tile": "physical/ref_tile/ot_qwen_tile_node",
+  "spec": "physical/ref_tile/ot_qwen_tile_node/spec.json",
+  "spec_sha256": "cd3cccb126daa39f8e04878476ba0cd07d9fecc365724d0d7ff29df3804b201a",
+  "pins_file": "node_pins_ilv.json",
+  "pins_sha256": "93903d00962826d6876b6f881739e94bb1646cc25003c931f1cca6102269a42e",
+  "pins": 2567,
+  "plan_lef": "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node.lef",
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "d524a1fdb02c37c47c05c17642efd8be0795efcc7946a8f298e6996590ce2adc",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "12.3 common core latency 250 TT / 202.5 FF kit frame; parent A0 early tap absorbs the centre-entry trunk (QC-A0-KITS-3, COORD 10-28 06:37 (b))",
+   "ff": "12.3 common core latency 250 TT / 202.5 FF kit frame; parent A0 early tap absorbs the centre-entry trunk (QC-A0-KITS-3, COORD 10-28 06:37 (b))"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 60.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "708828883",
+  "sdc_lint_sha256": "aaf0002b018df3a74214410026cc649523f31ce641e8c93914931de763ec9150",
+  "face_guard_sha256": "e48fa41c7deec78347ca137716d8576b39fe184aae0844354d2252d99c1a192c",
+  "signoff_sha256": "e72cc7c120bbddf384d79f8ab20ff3bb15abbf55bba5a5dc66c9d80880ecdfd0",
+  "macros": {},
+  "sram_pincol_halo": [],
+  "rtl_patches": [
+   {
+    "file": "rtl/lib/ot_rst_relay.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input; the relay's async-clear synchroniser + tree stages become synchronous stages of the same release depth (kit-local patch, as the QC SU recipes).",
+    "sha256": "15184dad516ec56061f58d1722934adee433fb147579328774bc1ceac3d4675c"
+   }
+  ],
+  "kit_hash": "388e80e3b8db66e0",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5
+  },
+  "master_plan": {
+   "slice_sha256": "6f441847cd8f2927bd15da509e82f490e8fa7bdebb84ce3b53744f738f078c86",
+   "master_plan_sha256": "a0-child-contract:qc-cores-1027-a0clk-r3@f217587b2 (no frozen QC master plan yet)",
+   "type": "ot_qwen_tile_node",
+   "frozen": false
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 25.0,
+   "in_min_ps": 0.0,
+   "out_min_ps": -25.0,
+   "basis": "shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold"
+  },
+  "pins_canon_sha256": "341db2979949fb15653f290f27626481fdd8457149203113e58e0f91c8f9fd5f",
+  "pins_placed_canon_sha256": "15aaa9f5bc925897d92c0bebc731b2371728cd9fdd02a0cc1e511e8ab847017f",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/codex-qc-a0-2340/node_finalff",
+ "src_commit": "d9716851c",
+ "flow_tag": "flow-20261029-c-qc",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-10-29T01:56:06-07:00",
+  "kit": "/srv/opentallas-scratch2/claude/codex-qc-a0-2340/node_finalff",
+  "base": "/srv/opentallas-scratch2/claude/codex-qc-a0-2340/node_finalff/run/results/asap7/kq_ot_qwen_tile_node_a0k10t/base",
+  "signoff": "/srv/opentallas-scratch2/claude/codex-qc-a0-2340/node_finalff/signoff/signoff.json",
+  "signoff_sha256": "d96e994b3c252612b68545db5d6b48f3926a81d885ec122a6676afc19a2694a0",
+  "signoff_generated": "2026-10-29T01:46:57-07:00",
+  "odb": "/srv/opentallas-scratch2/claude/codex-qc-a0-2340/node_finalff/run/results/asap7/kq_ot_qwen_tile_node_a0k10t/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/codex-qc-a0-2340/node_finalff/lec_routed_autopilot_1793263816826000331/lec.json",
+  "note": "NativeCTS fallback; corrected selected RC; independent GEOM+NUMBER; routed LEC14420PASS; exactORFS final_tc.lib and final_BC.lib stagedcanonicalnames inkit/views",
+  "lib_basis": null,
+  "files_sha256": {
+   "ot_qwen_tile_node.lef": "2e7e7adc15fccf93bdbbb29afc9f89c9e2a9c4deee20833115ad300f47f169c0",
+   "ot_qwen_tile_node_ff.lib": "6c445b01c69dd4e5c4ddcfd49557106d2dbe7683b28e4213b87a1c98f3160040",
+   "ot_qwen_tile_node_tt.lib": "ebfd470cb11555215eec8d694252d332f6ed3285cdd30a682c36311e9d08871b",
+   "pins.json": "206607ab5a9394ed850869e35bf186440589d0ab5bdc8464e388e65fe755f4a4"
+  }
+ },
+ "flow_release": {
+  "tag_source": "d9716851c667eb0a09ea34b440a61aee4e4caae6",
+  "basis": "Exact-source qwen_compute_d9716851c_1029_023141_904597 canonical regression NO-REGRESSION (absolute design failure retained); FLOW-CANARY-1 02:43",
+  "signoff_unchanged": true,
+  "routed_lec_unchanged": true,
+  "physical_rebuild": false
+ }
+}

@@ -218,6 +218,10 @@ def main():
     if fg_text.count(old) != 1:
         raise SystemExit("core face_guard invocation changed; review landing declaration hook")
     fg.write_text(fg_text.replace(old, old[:-1] + ', land=FG.kit_land(kd / "land_slots.json"))'))
+    # Exact original-netlist matching; all nine entries remain untrusted SAT
+    # obligations, including the one-to-one kept alias matches.
+    from head_collective_lec_hints import collective_lec_hints
+    (kd / "lec_hints.json").write_text(json.dumps(collective_lec_hints(), indent=1) + "\n")
     inter = fix_interior(kd, *json.loads((kd / "freeze.json").read_text())["outline_um"])
     print(json.dumps(dict(kit=str(kd), clk=clk, interior=inter, srams=nm)))
 

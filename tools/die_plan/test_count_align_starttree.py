@@ -369,3 +369,58 @@ def test_data_count_frames_can_be_clock_tree_leaves():
     assert not parts & {e['src'] for e in edges}
     assert all(e['clean_ok'] for e in edges)
     assert info['leaf_origins']
+
+
+def test_fixed_launch_clock_and_actual_pin_coordinates_are_distinct():
+    c=ctx_chain()
+    c['TT']['taps']['t_R0_1']['tree_path']=c['TT']['taps']['t_R1_0']['tree_path']
+    root, edges, _ = cap.clock_start_edges(chain_rows(), c,launch_taps={'R0':'t_R0_1'},max_hop_um=405,
+        endpoint_xy={'capture':{'R3':[9000,300]}})
+    launched=[e for e in edges if e['src']=='R0']
+    assert root=='R0' and launched and all(e['launch']=='t_R0_1' for e in launched)
+    target=next(e for e in edges if e['dst']=='R3')
+    assert target['hop_um']>8000 and not target['clean_ok']
+    for bad in [{'launch':{'R2':[float('nan'),0]}},{'invented':{}}]:
+        with pytest.raises(ValueError,match='endpoint coordinates'):
+            cap.clock_start_edges(chain_rows(),ctx_chain(),endpoint_xy=bad)
+    with pytest.raises(ValueError,match='measured proof tap'):
+        cap.clock_start_edges(chain_rows(),ctx_chain(),launch_taps={'R2':'t_R3_0'})
+
+
+def test_native_start_clocks_reject_nearest_phase_substitution():
+    rows = [dict(src='A', dst='B', src_part='pa', dst_part='pb')]
+    taps = {'t_pa__clk': dict(part='pa'), 't_pb__clk': dict(part='pb'),
+            't_pa__clk_t0': dict(part='pa')}
+    ctx = {'TT': dict(taps=taps), 'FF': dict(taps=taps)}
+    assert cap.native_start_clocks(rows, ctx) == {'A': 't_pa__clk', 'B': 't_pb__clk'}
+    bad = copy.deepcopy(ctx)
+    del bad['FF']['taps']['t_pa__clk']
+    with pytest.raises(ValueError, match='every corner'):
+        cap.native_start_clocks(rows, bad)
+
+
+def test_partition_origin_split_preserves_data_hulls():
+    rows = [dict(src='r', dst='s', src_part='pa', dst_part='pb', d_ps=47., p_dn_ps=20., p_up_ps=35.),
+            dict(src='r', dst='s', src_part='pc', dst_part='pb', d_ps=48., p_dn_ps=21., p_up_ps=36.)]
+    ctx = {'TT': dict(taps={f't_{p}__clk': dict(part=p) for p in ('pa', 'pb', 'pc')})}
+    with pytest.raises(ValueError, match='split its origins'):
+        cap.native_start_clocks(rows, ctx)
+    old = [(r['d_ps'], r['p_dn_ps'], r['p_up_ps']) for r in rows]
+    assert cap.partition_start_origins(rows) is rows
+    assert [(r['src'], r['dst']) for r in rows] == [('pa', 'pb'), ('pc', 'pb')]
+    assert [(r['d_ps'], r['p_dn_ps'], r['p_up_ps']) for r in rows] == old
+    assert len(cap.native_start_clocks(rows, ctx)) == 3
+    with pytest.raises(ValueError, match='actual src_part'):
+        cap.partition_start_origins([dict(src='a', dst='b')])
+
+
+def test_real_boot_root_preserved_with_reversed_clock_links():
+    ctx = ctx_chain()
+    rows = [dict(port='p', src='R0', dst='R5', d_ps=0., p_dn_ps=0., p_up_ps=0.)]
+    root, edges, info = cap.clock_start_edges(rows, ctx, root_region='R5', retime_up=True)
+    assert root == 'R5'
+    cap.start_tree_check(root, edges)
+    assert any(e['dst'] == 'R0' for e in edges)
+    assert all(e['dst'] != 'R5' for e in edges)
+    with pytest.raises(ValueError, match='not a real data region'):
+        cap.clock_start_edges(rows, ctx, root_region='absent')

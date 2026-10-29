@@ -112,3 +112,109 @@ def test_kit_byte_identical_without_spine_and_hook_with_it():
         c_ = filecmp.dircmp(k0, k1)
         assert set(c_.right_only) == {"reg_spine.json", "reg_spine.py", "reg_spine.tcl"} and not c_.left_only
         assert set(c_.diff_files) <= {"pre_cts.tcl", "config.mk"}, c_.diff_files
+
+
+def test_projected_radius_closes_sparse_outliers_and_keeps_pad_ids():
+    spec = copy.deepcopy(SPEC)
+    spec.update(projected_radius_um=20.0, pads={"0": 2, "1": 3})
+    # A keepout-projected centroid and small-cluster merging can leave sparse
+    # distant sinks beyond the nominal k-means radius.
+    sinks = [("left", 0.0, 50.0), ("right", 100.0, 50.0)]
+    initial = [dict(id=0, x=38.0, y=50.0, node="A", pad=2)]
+    taps = reg_spine.close_projected_radius(initial, sinks, spec["trunk"], spec)
+    assert len(taps) == 2
+    # tap 0 (pad 2) is pruned; created taps 1 (pad 3) and 2 (no pad) survive as ids 0/1 WITH their own pads
+    assert [t["pad"] for t in taps] == [3, 0]
+    assert all(min(abs(t["x"]-x)+abs(t["y"]-y) for t in taps) <= 20 for _, x, y in sinks)
+    assert not any(40 <= t["x"] <= 60 and 40 <= t["y"] <= 60 for t in taps)
+
+
+def test_projected_radius_prune_keeps_each_surviving_pad():
+    # ROOT-MERGE probe: an earlier tap is pruned (no sink); the survivor must keep ITS pad, not read pads by new id
+    spec = copy.deepcopy(SPEC)
+    spec.update(projected_radius_um=20.0, pads={"0": 2, "1": 5, "2": 7})
+    sinks = [("a", 0.0, 50.0), ("b", 5.0, 50.0)]
+    initial = [dict(id=0, x=200.0, y=200.0, node="A", pad=2), dict(id=1, x=2.0, y=50.0, node="A", pad=5)]
+    taps = reg_spine.close_projected_radius(initial, sinks, spec["trunk"], spec)
+    assert [(t["id"], t["x"], t["pad"]) for t in taps] == [(0, 2.0, 5)]
+
+def test_projected_radius_rejects_impossible_keepout_sink():
+    import pytest
+    spec = copy.deepcopy(SPEC)
+    spec.update(projected_radius_um=1.0, max_projected_splits=2)
+    with pytest.raises(ValueError, match="did not converge"):
+        reg_spine.close_projected_radius([dict(id=0, x=38.0, y=50.0, node="A", pad=0)],
+                                        [("illegal", 50.0, 50.0)], spec["trunk"], spec)
+
+
+def test_tap_footprint_folds_long_chain_in_narrow_edge_channel_and_moves_off_keepout():
+    spec = dict(pad_pitch_um=0.81, keepouts_um=[[20.0, 0.0, 100.0, 100.0]],
+                tap_footprint=dict(core_um=[4.32, 4.32, 200.0, 200.0], keepout_halo_um=2.0, max_move_um=10.0))
+    # 12 pads need 9.72+0.3+1.62 um: the 4.32..18 um edge channel holds it only when folded
+    taps = [dict(id=0, x=6.0, y=50.0, node="A", pad=12), dict(id=1, x=103.0, y=50.0, node="A", pad=4),
+            dict(id=2, x=150.0, y=150.0, node="A", pad=3)]
+    out = reg_spine.legalize_tap_footprints([dict(t) for t in taps], spec)
+    t0, t1, t2 = out
+    assert len(t0["pad_xy"]) == 12 and all(4.32 <= x and x + 0.378 <= 18.0 for x, _ in t0["pad_xy"])
+    assert t0["pad_xy"][-1][1] == t0["y"]                      # last pad on the driver row
+    assert "pad_xy" not in t2 and "footprint_move_um" not in t2  # legal 1-row chain is untouched
+    left = min(x for x, _ in t1["pad_xy"]) if "pad_xy" in t1 else t1["x"] - 4 * 0.81 - 0.3
+    assert left >= 102.0 and abs(t1["x"] - 103.0) + abs(t1["y"] - 50.0) <= 10.0
+
+
+def test_tap_footprint_fails_closed_without_room():
+    import pytest
+    spec = dict(keepouts_um=[[0.0, 0.0, 300.0, 300.0]],
+                tap_footprint=dict(core_um=[0.0, 0.0, 300.0, 300.0], max_move_um=2.0))
+    with pytest.raises(ValueError):
+        reg_spine.legalize_tap_footprints([dict(id=0, x=150.0, y=150.0, node="A", pad=3)], spec)
+
+
+def test_tap_footprint_move_budget_is_manhattan_not_square():
+    import pytest
+    # Only (+1,+1) clears the lower core edges. A square search accepted this
+    # 2um movement despite the explicitly 1um Manhattan budget.
+    spec=dict(site_um=[.01,.1], pad_pitch_um=.1,
+              tap_footprint=dict(core_um=[5.6,5.6,7,7],tap_width_um=.1,
+                                 margin_um=0,step_um=1,max_move_um=1))
+    t=dict(id=0,x=5,y=5,node='A',pad=0)
+    with pytest.raises(ValueError,match='no legal pad'):
+        reg_spine.legalize_tap_footprints([dict(t)],spec)
+    spec['tap_footprint']['max_move_um']=2
+    out=reg_spine.legalize_tap_footprints([dict(t)],spec)
+    assert (out[0]['x'],out[0]['y'])==(6,6)
+
+
+def test_tap_footprint_budget_covers_written_rounding():
+    import pytest
+    spec=dict(tap_footprint=dict(core_um=[0,0,20,20],max_move_um=0))
+    with pytest.raises(ValueError,match='no legal pad'):
+        reg_spine.legalize_tap_footprints([dict(id=0,x=5.004,y=5.004,node='A',pad=0)],spec)
+
+
+def test_tap_footprint_rejects_nonfinite_and_invalid_dimensions():
+    import pytest
+    base=dict(tap_footprint=dict(core_um=[0,0,20,20],max_move_um=1))
+    for key,value in [('step_um',0),('step_um',-1),('step_um',float('nan')),
+                      ('max_move_um',-1),('max_move_um',float('inf')),
+                      ('tap_width_um',0),('margin_um',-1),('keepout_halo_um',float('nan'))]:
+        spec=copy.deepcopy(base);spec['tap_footprint'][key]=value
+        with pytest.raises(ValueError,match='invalid'):
+            reg_spine.legalize_tap_footprints([],spec)
+    for key,value in [('site_um',[0,.27]),('pad_pitch_um',-1)]:
+        spec=copy.deepcopy(base);spec[key]=value
+        with pytest.raises(ValueError,match='invalid'):
+            reg_spine.legalize_tap_footprints([],spec)
+
+
+def test_source_fixed_clock_homes_are_explicit_and_validated():
+    import pytest
+    trunk, taps, assign = reg_spine.plan(SPEC, _sinks())
+    with tempfile.TemporaryDirectory() as d:
+        reg_spine.write(d, trunk, taps, assign, SPEC)
+        default = (Path(d) / 'reg_spine_plan.tcl').read_text()
+        assert 'placement_status' not in default
+        reg_spine.write(d, trunk, taps, assign, dict(SPEC, placement_status='FIRM'))
+        assert (Path(d) / 'reg_spine_plan.tcl').read_text().replace('  placement_status FIRM\n', '') == default
+        with pytest.raises(ValueError, match='placement_status'):
+            reg_spine.write(d, trunk, taps, assign, dict(SPEC, placement_status='LOCKED'))

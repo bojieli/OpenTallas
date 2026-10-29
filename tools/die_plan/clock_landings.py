@@ -704,7 +704,7 @@ class Landings:
                 needed = self.forwarded_clock_only_inputs.setdefault(tn, [])
                 if s_ not in needed:
                     needed.append(s_)
-                    extra.append(f"    input wire {s_}  // planned physical tap: forwarded-clock export only")
+                    extra.append(f"    input wire {s_}  /* planned physical tap: forwarded-clock export only */")
             return s_
         for b in mask["outputs"]:
             extra.append(f"    output wire fclk_out_{b}")

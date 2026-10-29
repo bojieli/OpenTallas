@@ -5,9 +5,20 @@ This is an opt-in check of METHODOLOGY 12.1e's existing repeater reach,
 not a timing sign-off or a check of the pre-legalisation topology.
 """
 import argparse
+import hashlib
 import json
 import math
 from pathlib import Path
+
+
+def sites_digest(sites):
+    return hashlib.sha256(json.dumps(sites,sort_keys=True,separators=(",",":")).encode()).hexdigest()
+
+
+def freeze_sites(tree, reach_um):
+    return dict(schema="opentallas.physical_clock_homes.v1", body_um=[1.62,.27],
+                site_pitch_um=.054, r0_row_pitch_um=.54, reach_um=reach_um,
+                frozen_sites_sha256=sites_digest(tree["sites"]))
 
 
 def actual_reach(tree, max_um=450.0):
@@ -37,12 +48,19 @@ def actual_reach(tree, max_um=450.0):
         add('tap', t['port'], driver, t.get('xy'), sites.get(driver))
     over = sorted((x for x in edges if x['length_um'] > max_um + 1e-6),
                   key=lambda x: (-x['length_um'], x['child']))
-    return dict(schema='ot_clk_actual_reach/1', max_um=max_um,
-                verdict='FAIL' if over or missing else 'PASS',
-                cell_edges=sum(x['kind'] == 'cell' for x in edges),
-                tap_edges=sum(x['kind'] == 'tap' for x in edges),
-                worst_um=max((x['length_um'] for x in edges), default=0.),
-                over_count=len(over), over=over, missing_sites=missing)
+    result = dict(schema='ot_clk_actual_reach/1', max_um=max_um,
+                  verdict='FAIL' if over or missing else 'PASS',
+                  cell_edges=sum(x['kind'] == 'cell' for x in edges),
+                  tap_edges=sum(x['kind'] == 'tap' for x in edges),
+                  worst_um=max((x['length_um'] for x in edges), default=0.),
+                  over_count=len(over), over=over, missing_sites=missing)
+    frozen = (tree.get("meta") or {}).get("physical_dme")
+    if frozen:
+        match = frozen.get("frozen_sites_sha256") == sites_digest(sites)
+        result["frozen_home_match"] = match
+        if not match:
+            result["verdict"] = "FAIL"
+    return result
 
 
 def main(argv=None):

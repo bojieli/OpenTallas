@@ -26,6 +26,7 @@ then the rows above / below), clear of every die clock cell of the tree and of t
 die_trial SiteMap point when --plan is given.  No timing value is used.  Default flows are unchanged (new file).
 """
 import argparse
+import hashlib
 import json
 import re
 import shutil
@@ -76,7 +77,7 @@ def stages_of(bind):
         if r.get("virtual"):
             if not x.startswith("st:"):
                 raise StageError(f"virtual region {x!r} is not an 'st:<tree_path>' stage")
-            out[x] = x[3:]
+            out[x] = x[3:].split("@", 1)[0]
     return out
 
 
@@ -159,6 +160,8 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
         if inst is None:
             raise StageError(f"stage {x}: tree path not in the proof's node_cell")
         i = sv_name(inst[3:] if inst.startswith("ck_") else inst)    # one stage per tree node = its node cell
+        if "@" in x:
+            i += "_r" + hashlib.sha256(x.encode()).hexdigest()[:16]
         if i in ids.values():
             raise StageError(f"two stages on one node cell {inst}")
         ids[x] = i
@@ -216,8 +219,13 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
           "// one ot_dp_landing_origin per virtual tree-node stage, clocked by its own die clock-tree tap port.",
           "module ot_die_start_stages ("]
     roots = [s["id"] for s in stages if s["root"]]
-    if len(roots) != 1:
-        raise StageError(f"start tree must have exactly one root stage, found {roots}")
+    real_root = reg.get(bind.get("root"))
+    root_in_partition = (isinstance(real_root, dict) and real_root.get("virtual") is False
+                         and real_root.get("parent") is None)
+    if len(roots) != 1 and not (not roots and root_in_partition):
+        raise StageError(f"start tree must have exactly one root stage or a declared real root partition, found {roots}")
+    # A real root partition already contains ot_dp_landing_root. Its rs_* output
+    # feeds virtual stages through die_inputs; emitting another root changes reset timing.
     pl = ["    input  wire rst_raw_n"]
     pl += [f"    input  wire {s['clock_port']}" for s in stages]
     pl += [f"    input  wire {n}" for n in in_nets]
@@ -295,8 +303,9 @@ def proof_with_stages(proof, stages_doc, arrs, out):
         meta = d
         have = {t["port"] for t in d["taps"]}
         for s in st:
-            path = s["region"][3:]
-            k = f"__st__{path}"
+            identity = s["region"][3:]
+            path = identity.split("@", 1)[0]
+            k = f"__st__{identity}"
             if k in have:
                 raise StageError(f"proof {pf} already has {k}")
             if s["clock_port"] not in T:

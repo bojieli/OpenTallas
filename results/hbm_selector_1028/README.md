@@ -62,3 +62,21 @@ diagnosis. recipe_struct.json is a concrete opt-in proposal for the existing
 master, using STRUCT=1 and source-pinned helper files. It has not changed the
 canonical recipe or running k11 job. Source gating does not claim timing,
 mapped-cell fit, physical sign-off or die release.
+
+The first STRUCT1 kit face-shell analysis completed, but a two-second live CPU
+sample located its hour-long delay in ProcDffPass: repeated signal sorting and
+extraction inside the large per-quadrant histogram process. The follow-on
+process split keeps STRUCT0 unchanged and moves each STRUCT1 bin's predicate
+mask into a combinational process and its 14-bit histogram into a separate
+clocked process. All 3584 histogram bits, twelve SRAMs, clocks, ports and edge
+priorities remain the same. In particular, simultaneous histogram clear and
+read-return accumulation still accumulates from the OLD histogram value.
+
+The split source passes the full production lockstep (8079 cycles, 1018 beats,
+zero mismatches), the 1367-cycle/171-beat equal-key frame, and catches both the
+threshold and op8-fault controls. An arbitrary 16-hit histogram-bin transition
+proves equivalent; a clear-wins priority mutant is caught with op3 plus a
+simultaneous op4 read return. Receipts are in procsplit_receipts/. Frontend
+coupon and live sampling reports are in frontend_coupon/; the tiny coupon
+only demonstrates eager default-parameter elaboration, not the actual delay.
+There is no measured process-split frontend speedup or new kit/physical claim.

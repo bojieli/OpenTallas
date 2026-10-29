@@ -19,7 +19,7 @@ Rules (id: limit -- source):
               pre-route gate, TILE-REVIEW 10-23); METHODOLOGY 1.14 (target 40-60 %); GEOM-REVIEW qkd_ahub 12 % FAIL
   empty     : share of macro-free density bins below 5 % density <= 50 % -- layout_review.py EMPTY_FLAG/EMPTY_BIN_DENSITY;
               GEOM-REVIEW qkd_ahub "W/N thirds empty" FAIL
-  pin_reg   : every signal pin registered (flop within <= 4 buffers, or a hard-macro pin) and pin->register p90
+  pin_reg   : every signal pin registered (first flop through pure BUF/INV, or a hard-macro pin) and pin->register p90
               <= 30 um -- METHODOLOGY 1.9 (R2 face flops, "pin-to-reg p90 <= 30 um"); layout_review.py PIN_REG_P90_FAIL
               150 um is the hard backstop; clock ports and declared strap_* pins are exempt (METHODOLOGY 1.8 R7 note)
   r2r       : max register->register Manhattan distance (flop centre to flop centre through combinational logic and
@@ -47,6 +47,8 @@ Rules (id: limit -- source):
 from __future__ import annotations
 
 import argparse
+import importlib.util
+from pathlib import Path
 import json
 import math
 import re
@@ -89,6 +91,8 @@ def load(path, extra=None):
                 ex["tech"][f[1]] = (f[2], float(f[3]))
             elif t == "O":
                 ex["mobs"][f[1]] = set(x for x in f[2:] if x)
+            elif t == "I":
+                ex.setdefault("macro_ports", {})[f[1]] = dict(v.split(":",1) for v in f[2:])
             elif t == "Q":
                 ex["status"][int(f[1])] = f[2]
             elif t == "C":
@@ -139,8 +143,15 @@ def ref(s):
 
 
 class Design:
-    def __init__(self, path):
+    def __init__(self, path, memory_libs=(), memory_reach=False):
         self.extra = {}
+        self.memory_models = {}
+        # COORD 10-29: typed-memory reach is OPT-IN (default off = macros omitted from r2r exactly as before)
+        self.memory_reach = bool(memory_reach)
+        if memory_libs and self.memory_reach:
+            spec=importlib.util.spec_from_file_location("geom_memory", Path(__file__).with_name("geom_memory.py"))
+            module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+            self.memory_models=module.liberty_models(memory_libs)
         self.die, self.cells, self.pins, raw = load(path, self.extra)
         self.pin_by_k = {p["k"]: p for p in self.pins}
         self.nets = []            # (sig, drv ref, [sink refs])
@@ -287,7 +298,7 @@ def pin_metrics(D, strap_re):
 
 
 def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
-    """pin -> nearest register through <= PINREG_DEPTH buffers (layout_review.tcl semantics, directional)"""
+    """pin -> first directional register through pure BUF/INV; visited nets bound cycles, not buffer count."""
     dist, unreg, macro, exempt = [], [], 0, 0
     worst = []
     for p in D.pins:
@@ -303,8 +314,9 @@ def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
             continue
         best, hit_m = INF, False
         if p["io"] == "OUTPUT":
-            cur, depth = n, 0
-            while depth <= PINREG_DEPTH:
+            cur, seen = n, set()
+            while cur not in seen:
+                seen.add(cur)
                 dr = D.nets[cur][1]
                 if not dr or dr[0] != "i":
                     break
@@ -318,11 +330,13 @@ def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
                     break
                 if k != "B" or not D.cell_in.get(dr[1]):
                     break
-                cur = D.cell_in[dr[1]][0][0]
-                depth += 1
+                inputs = [nn for nn, clock in D.cell_in[dr[1]] if not clock]
+                if len(inputs) != 1:
+                    break
+                cur = inputs[0]
         else:
-            front, seen, depth = [n], {n}, 0
-            while front and depth <= PINREG_DEPTH and best == INF and not hit_m:
+            front, seen = [n], {n}
+            while front and best == INF and not hit_m:
                 nf = []
                 for nn in front:
                     for s in D.nets[nn][2]:
@@ -340,7 +354,6 @@ def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
                                     seen.add(on)
                                     nf.append(on)
                 front = nf
-                depth += 1
         if best < INF:
             dist.append(best)
             worst.append((best, p["name"]))
@@ -359,6 +372,24 @@ def r2r_metrics(D):
     """max Manhattan launch-flop -> capture-flop distance over every combinational path (data + reset pins, clock pins
     excluded), exact: per node keep min/max of u = x + y and v = x - y over the launching flops (Manhattan distance =
     max(|du|, |dv|)), propagated in topological order through the combinational cells."""
+    memories=set(); unknown=[]
+    for cid,c in D.cells.items():
+        if not getattr(D,'memory_reach',False):break
+        if c[0]!='M':continue
+        model=getattr(D,'memory_models',{}).get(c[1])
+        if model is None:unknown.append(c[1]+': missing actual Liberty model');continue
+        if model['kind']=='nonmemory':continue
+        if model['kind']!='synchronous_memory':unknown.append(c[1]+': '+','.join(model.get('errors',[])));continue
+        physical=D.extra.get('macro_ports',{}).get(c[1])
+        expected={p:'INPUT' for p in model['captures']+model['clocks']}
+        expected.update({p:'OUTPUT' for p in model['launches']})
+        if physical!=expected:unknown.append(c[1]+': missing/mismatched actual master port inventory');continue
+        memories.add(cid)
+    seq={cid for cid,c in D.cells.items() if c[0]=='S'}|memories
+    def bounds(cid):
+        c=D.cells[cid]
+        if cid in memories:return c[2]+c[3],c[4]+c[5],c[2]-c[5],c[4]-c[3]
+        x,y=ctr(c);return x+y,x+y,x-y,x-y
     comb = {cid for cid, c in D.cells.items() if c[0] in "BLK"}
     # per comb cell: [umin, umax, vmin, vmax, src_umin, src_umax, src_vmin, src_vmax]
     st = {}
@@ -386,19 +417,18 @@ def r2r_metrics(D):
             e[3], e[7] = v1, d_
     caps = defaultdict(list)          # capture flop -> [(umin, umax, vmin, vmax, srcs...)]
     for cid, c in D.cells.items():
-        if c[0] != "S":
+        if cid not in seq:
             continue
-        x, y = ctr(c)
-        u, v = x + y, x - y
+        u0,u1,v0,v1=bounds(cid)
         for n in D.drives.get(cid, []):
             for s in D.nets[n][2]:
                 if s[0] != "i" or s[2]:
                     continue
                 k = D.kind(s[1])
-                if k == "S":
-                    caps[s[1]].append((u, u, v, v, cid, cid, cid, cid))
+                if s[1] in seq:
+                    caps[s[1]].append((u0,u1,v0,v1,cid,cid,cid,cid))
                 elif s[1] in comb:
-                    merge(s[1], u, u, v, v, cid, cid, cid, cid)
+                    merge(s[1],u0,u1,v0,v1,cid,cid,cid,cid)
     dq = deque(cid for cid in comb if indeg[cid] == 0)
     done = 0
     while dq:
@@ -410,7 +440,7 @@ def r2r_metrics(D):
                 if s[0] != "i" or s[2]:
                     continue
                 if e is not None:
-                    if D.kind(s[1]) == "S":
+                    if s[1] in seq:
                         caps[s[1]].append(tuple(e))
                     elif s[1] in comb:
                         merge(s[1], *e)
@@ -421,11 +451,10 @@ def r2r_metrics(D):
     loops = len(comb) - done
     best, arg, n_gt = 0.0, None, 0
     for cap, lst in caps.items():
-        x, y = ctr(D.cells[cap])
-        u, v = x + y, x - y
+        u0,u1,v0,v1=bounds(cap)
         mx, src = 0.0, None
         for e in lst:
-            for val, s in ((u - e[0], e[4]), (e[1] - u, e[5]), (v - e[2], e[6]), (e[3] - v, e[7])):
+            for val, s in ((u1-e[0],e[4]),(e[1]-u0,e[5]),(v1-e[2],e[6]),(e[3]-v0,e[7])):
                 if val > mx:
                     mx, src = val, s
         if mx > R2R_MAX:
@@ -433,7 +462,7 @@ def r2r_metrics(D):
         if mx > best:
             best, arg = mx, (src, cap)
     name = lambda i: D.cells[i][6] if i in D.cells else str(i)
-    return dict(r2r_max=round(best, 2), r2r_captures_gt405=n_gt, r2r_captures=len(caps), comb_loop_cells=loops,
+    return dict(r2r_memory_instances=len(memories),r2r_incomplete_macros=sorted(set(unknown)),r2r_max=round(best, 2), r2r_captures_gt405=n_gt, r2r_captures=len(caps), comb_loop_cells=loops,
                 r2r_worst=None if not arg else f"{name(arg[0])} -> {name(arg[1])}")
 
 
@@ -1037,7 +1066,9 @@ def judge(m, template=None, outline=None, all_kits=False):
     lim("pin_reg_max", "pin_reg_max", PINREG_HARD, "layout_review.py PIN_REG_P90_FAIL 150 (backstop)")
     lim("pin_unreg", "pins_unregistered", 0, "METHODOLOGY 1.9 register every partition pin",
         detail=", ".join(m["unregistered_sample"][:4]))
-    if m["r2r_captures"]:
+    if m.get("r2r_incomplete_macros"):
+        add("r2r","NA",None,f"<={R2R_MAX}","METHODOLOGY 1.3/4.2 complete sequential reach",'; '.join(m['r2r_incomplete_macros'][:4]))
+    elif m["r2r_captures"]:
         lim("r2r", "r2r_max", R2R_MAX, "METHODOLOGY 1.3/4.2 reach 405",
             detail=f"{m['r2r_captures_gt405']} captures > 405; worst {m['r2r_worst']}")
         lim("r2r_count", "r2r_captures_gt405", 0, "METHODOLOGY 1.3 (count of captures > 405 um)")
@@ -1203,8 +1234,8 @@ def stage_of_odb(name):
     return "placed" if b.startswith("3_place") else "cts" if b.startswith("4_cts") else "other" if b else ""
 
 
-def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None):
-    D = Design(path)
+def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None, memory_libs=(), memory_reach=False):
+    D = Design(path, memory_libs, memory_reach)
     sr = re.compile(strap_re)
     m = area_metrics(D)
     m.update(pin_metrics(D, sr))
@@ -1238,6 +1269,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("dump")
     ap.add_argument("--json")
+    ap.add_argument("--memory-lib",action="append",default=[],help="Actual kit Liberty model(s); used only with --memory-reach")
+    ap.add_argument("--memory-reach", action="store_true", help="opt-in (COORD 10-29, default off): typed synchronous memories become r2r endpoints; missing/unproven macro models make r2r NA")
     ap.add_argument("--all-kits", action="store_true", help="owner 10-27: independent absolute checks without a template")
     ap.add_argument("--template", help="the template checkpoint's auto_geom.json (metrics of the visually passed part)")
     ap.add_argument("--outline", help="parent slot WxH (um)")
@@ -1248,7 +1281,7 @@ def main(argv=None):
     ap.add_argument("--max-layer", default="M5", help="kit MAX_ROUTING_LAYER (channel / column capacity)")
     ap.add_argument("--grt-log", default=None, help="geom_grt.tcl log (>= 50 congestion iterations)")
     a = ap.parse_args(argv)
-    m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log)
+    m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log, a.memory_lib, a.memory_reach)
     tmpl = json.load(open(a.template)) if a.template else None
     outline = [float(x) for x in a.outline.lower().split("x")] if a.outline else (m["outline"] if a.outline_self else None)
     rules, verdict = judge(m, tmpl, outline, a.all_kits)

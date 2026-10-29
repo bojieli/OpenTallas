@@ -18,8 +18,13 @@ if {$bt eq "NULL"} {
 if {$bt eq "NULL"} { puts "DUMP_GEO_ERROR clock port $::env(CLK) has no BTerm (nor a 1-bit bus $::env(CLK)\[0\])"; exit 2 }
 if {[$bt getNet] eq "NULL"} { puts "DUMP_GEO_ERROR clock BTerm [$bt getName] has no net"; exit 2 }
 puts "DUMP_GEO_CLKPORT [$bt getName]"
-set net [$bt getNet]; set ns 0; set nm 0; set nb 0
-foreach it [$net getITerms] {
+set nets [list [$bt getNet]]; set visited {}; set ns 0; set nm 0; set nb 0
+while {[llength $nets]} {
+ set net [lindex $nets 0]; set nets [lrange $nets 1 end]
+ if {[dict exists $visited [$net getName]]} continue
+ dict set visited [$net getName] 1
+ foreach it [$net getITerms] {
+  if {[$it getIoType] ne "INPUT"} continue
   set i [$it getInst]; set m [$i getMaster]
   set ib [$it getBBox]; set x [um [expr {([$ib xMin]+[$ib xMax])/2}]]; set y [um [expr {([$ib yMin]+[$ib yMax])/2}]]
   if {[$m isBlock]} {
@@ -27,9 +32,17 @@ foreach it [$net getITerms] {
     puts $f "MACRO [$i getName] [$m getName] [um [$r xMin]] [um [$r yMin]] [um [$r xMax]] [um [$r yMax]] [[$it getMTerm] getName] $x $y"; incr nm; continue
   }
   if {[[$it getMTerm] getSigType] ne "CLOCK" && ![$it isInputSignal]} continue
-  if {[string match {*BUF*} [$m getName]] || [string match {*INV*} [$m getName]]} { incr nb; continue }
+  if {[string match {*BUF*} [$m getName]] || [string match {*INV*} [$m getName]]} {
+    incr nb
+    foreach op [$i getITerms] {
+      if {[$op getIoType] eq "OUTPUT" && [$op getNet] ne "NULL"} { lappend nets [$op getNet] }
+    }
+    continue
+  }
   puts $f "SINK $x $y [$m getName] [$i getName] [[$it getMTerm] getName]"; incr ns
 }
+}
+if {!$ns && !$nm} { error "clock census has no sequential or macro sinks reachable from [$bt getName]" }
 puts $f "ISLCOUNT 0"
 close $f
 puts "DUMP_GEO sinks $ns macros $nm skipped_buf $nb"

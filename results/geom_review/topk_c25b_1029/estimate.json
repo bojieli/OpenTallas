@@ -1,0 +1,50 @@
+{
+  "pins_by_face": {
+    "N": 1506,
+    "S": 2377,
+    "E": 703,
+    "W": 11
+  },
+  "clock_islands": 17,
+  "current_outline_um": [
+    650.16,
+    500.04
+  ],
+  "macro_halo_area_um2": 124401,
+  "tree_historical_logic_area_um2": 15519.65,
+  "historical_free_area_fill": 0.08132198363043774,
+  "minimum_width_full_pin_escape_at_util1_um": 629.4013497942386,
+  "minimum_width_full_pin_escape_at_util06_um": 803.3382496570645,
+  "minimum_height_2col_macro_array_um": 354.336,
+  "escape_upper_bound": [
+    {
+      "channel": 0,
+      "band_um": 73.158,
+      "pins": 3172,
+      "use": 0.892
+    },
+    {
+      "channel": 1,
+      "band_um": 135.432,
+      "pins": 6340,
+      "use": 0.963
+    },
+    {
+      "channel": 2,
+      "band_um": 73.074,
+      "pins": 3168,
+      "use": 0.892
+    }
+  ],
+  "note": "Full-pin bound includes fixed mask/repair pins; actual dynamic routing demand is lower. Do not shrink width from low logic fill. Review placement/clock/data reach and GRT before any route.",
+  "selected_line_pins": {
+    "count": 2368,
+    "xmin": 211.272,
+    "xmax": 438.888,
+    "span": 227.61599999999999,
+    "face_fraction": 0.3500922849760059,
+    "max_pins_in_20um": 209,
+    "peak_pins_per_um": 10.45,
+    "minimum_span_at_6pins_per_um": 394.6666666666667
+  }
+}
