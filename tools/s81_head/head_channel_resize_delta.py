@@ -379,6 +379,10 @@ def run(plan, types=None, margin=MARGIN, max_keep=0.9, synth=None):
         rep["types"][tn] = row
     for tn in [n for n in types if n in pt] + [n for n in TAP_TYPES_EXTRA if n in pt]:
         set_bank_taps(pt[tn])
+        # Cropping changes which neighboring face can deliver reset. Let the
+        # existing die wavefront planner choose a legal input from its standard
+        # candidate faces rather than retaining a stale slot-corner override.
+        in_sites.pop(tn, None)
     plan["note"] = (plan.get("note", "") + f" | {TAG}: ft channel types cropped to their windows (plan_hk4)").strip(" |")
     return plan, rep
 
