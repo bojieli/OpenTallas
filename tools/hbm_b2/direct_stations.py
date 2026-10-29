@@ -85,7 +85,13 @@ def materialize(text, chains, *, enabled=False):
             instances[name] = (match, ports)
         sm, source_ports = instances[chain["source_instance"]]
         dm, sink_ports = instances[chain["sink_instance"]]
-        source = B.parse_expr(source_ports[chain["source_port"]], widths)
+        source_port = B.parse_expr(source_ports[chain["source_port"]], widths)
+        source_low = chain.get("source_lsb", 0)
+        source_width = chain.get("source_width", B.width_of(source_port))
+        if (type(source_low) is not int or type(source_width) is not int or source_low < 0 or
+                source_width < 1 or source_low + source_width > B.width_of(source_port)):
+            raise ValueError("source slice outside connected port")
+        source = B.slice_segs(source_port, source_low, source_low + source_width - 1)
         source_bits = bits(source)
         width = len(source_bits)
         if not width:
@@ -154,6 +160,7 @@ def materialize(text, chains, *, enabled=False):
         text = text[:end] + "\n" + "\n".join(declarations) + text[end:]
         emitted.append(dict(name=ident, source_instance=chain["source_instance"],
                             source_port=chain["source_port"], source_segments=source,
+                            source_lsb=source_low, source_msb=source_low + width - 1,
                             sink_instance=chain["sink_instance"], sink_port=chain["sink_port"],
                             sink_lsb=low, sink_msb=low + width - 1, width=width,
                             source_cycles_before=0, source_cycles_after=stages,
