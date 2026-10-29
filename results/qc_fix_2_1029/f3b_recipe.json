@@ -1,0 +1,52 @@
+{
+ "qfd_dv_s8x_btab__f3b": {
+  "ref_tile": "physical/ref_tile/qfd_dv_s5_btab",
+  "spec_git": "86288faea:physical/ref_tile/qfd_dv_s5_btab/spec.json",
+  "plan_type": "slw_su_c",
+  "rtl_patches": [
+   {
+    "file": "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).",
+    "edits": [
+     [
+      "always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end",
+      "always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end   // QC-CORES kit patch (OWNER DECISION 13): rst_n = synchronous registered input; 2-stage synchronous relay, same release depth",
+      4
+     ]
+    ]
+   }
+  ],
+  "suffix": "f3b",
+  "plan_module": "qfd_dv_s8x_btab",
+  "plan_pins_contract": true,
+  "macro_sites": {
+   "ot_sram_1r1w_128x256_m1_r2c2": [
+    [
+     17.28,
+     17.28,
+     "MY"
+    ],
+    [
+     159.84,
+     17.28,
+     "MY"
+    ],
+    [
+     17.28,
+     90.72,
+     "MY"
+    ],
+    [
+     159.84,
+     90.72,
+     "MY"
+    ]
+   ]
+  },
+  "sram_pincol_halo": true,
+  "_why": "QC-FIX-2 f3b: turntree outline/pins/macros; tree re-planned by core_family_slice.py from the census placement ; measured hold + FF hold margin 15. UNADOPTED candidate.",
+  "two_mode": true,
+  "hold_ff_margin": 15.0,
+  "macro_pin_flops": true
+ }
+}

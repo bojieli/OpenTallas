@@ -9,12 +9,16 @@
 # PLACED.  Placement only, 0 cycles, no netlist / SDC change.
 #   OT_MPF_HOPS (default 4)   OT_MPF_GAP_UM (default 0.54: clearance beyond the halo)
 #   OT_MPF_HALO_UM (default MACRO_ROWS_HALO_X, else 5.4)
+#   OT_MPF_CASES (default ab: both; a = read captures only, b = write landings only). QC-FIX-2 10-29: BTAB F2 anchored
+#   both; the 1024 write landings at the SRAM pin faces left 175-um single-sink tw_data wires from the S IO band (routed TT
+#   slew 88 / 320 ps), while the read captures (case a) cured the rd_out drift. Opt-in; absent = unchanged.
 set ot_mpf_blk [ord::get_db_block]
 set ot_mpf_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 proc ot_mpf_env {k d} { expr {[info exists ::env($k)] && $::env($k) ne "" ? $::env($k) : $d} }
 set ot_mpf_hops [ot_mpf_env OT_MPF_HOPS 4]
 set ot_mpf_gap [ot_mpf_env OT_MPF_GAP_UM 0.54]
 set ot_mpf_halo [ot_mpf_env OT_MPF_HALO_UM [ot_mpf_env MACRO_ROWS_HALO_X 5.4]]
+set ot_mpf_cases [ot_mpf_env OT_MPF_CASES ab]
 set ot_mpf_core [$ot_mpf_blk getCoreArea]
 proc ot_mpf_isff {inst} { set m [[$inst getMaster] getName]; expr {[string match "DFF*" $m] || [string match "ASYNC_DFF*" $m]} }
 proc ot_mpf_isbuf {inst} { set m [[$inst getMaster] getName]; expr {[string match "INV*" $m] || [string match "BUF*" $m] || [string match "HB*" $m]} }
@@ -91,12 +95,12 @@ foreach mac [$ot_mpf_blk getInsts] {
     set net [$it getNet]; if {$net eq "NULL" || $net eq ""} continue
     if {[$net getSigType] in {POWER GROUND CLOCK}} continue
     if {[[$it getMTerm] getSigType] eq "CLOCK"} continue
-    if {[$it isOutputSignal]} {
+    if {[$it isOutputSignal] && [string first a $ot_mpf_cases] >= 0} {
       set ff [ot_mpf_capture $net $ot_mpf_hops]
       if {$ff eq "" || [$ff isFixed] || [$ff getPlacementStatus] eq "FIRM" || [dict exists $ot_mpf_seen [$ff getName]]} continue
       lassign [ot_mpf_xy $it $ot_mpf_dbu] px py
       ot_mpf_anchor $ff $mac $px $py; incr ot_mpf_na
-    } elseif {[$it isInputSignal]} {
+    } elseif {[$it isInputSignal] && [string first b $ot_mpf_cases] >= 0} {
       # walk back from the pin through single-fanout buffers to a flop
       set d [ot_mpf_drv $net]; set ff ""
       for {set h 0} {$h <= $ot_mpf_hops && $d ne ""} {incr h} {
