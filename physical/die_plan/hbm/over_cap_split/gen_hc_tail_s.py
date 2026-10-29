@@ -5,7 +5,7 @@ read only; every replacement must hit exactly once):
                                  ONE sink edge: CAP 289 -> 289 + SDIV (L = 198 + SDIV + CAP + 2: 496 -> 503 core edges)
   ot_hbm_hc_root_static_s      = ot_hbm_hc_root_static scoped to the tail_unit_s (emit >= tail launch + L + 1 = 504)
 SMUT (bench mutant, 0 = design): 1 = CAP NOT moved (capture one sink edge before the split Sinkhorn's out_valid).
-usage: gen_hc_tail_s.py REPO_ROOT"""
+usage: gen_hc_tail_s.py REPO_ROOT [--root-only]"""
 import sys
 from pathlib import Path
 root = Path(sys.argv[1]); H = root / 'rtl/hbm_accel/generic/peers/static_hc'
@@ -20,6 +20,8 @@ def sub(s, a, b, n=1):
     return s.replace(a, b)
 
 def gen(src, dst, reps):
+    if '--root-only' in sys.argv and dst != 'ot_hbm_hc_root_static_s.sv':
+        return
     s = (H / src).read_text()
     for a, b in reps:
         s = sub(s, a, b)
@@ -39,7 +41,7 @@ gen('ot_hbm_hc_tail_unit_static.sv', 'ot_hbm_hc_tail_unit_static_s.sv', [
 ])
 gen('ot_hbm_hc_root_static.sv', 'ot_hbm_hc_root_static_s.sv', [
     ('module ot_hbm_hc_root_static #(', 'module ot_hbm_hc_root_static_s #('),
-    ('    parameter integer MUT  = 0\n)(', '    parameter integer MUT  = 0,\n    parameter integer SMUT = 0                   // split bench mutant (tail_unit_s SMUT)\n)('),
+    ('    parameter integer MUT  = 0,\n', '    parameter integer MUT  = 0,\n    parameter integer SMUT = 0,                  // split bench mutant (tail_unit_s SMUT)\n'),
     ('ot_hbm_hc_tail_unit_static #(.MUT_PRE((MUT == 2 && gu == 0) ? 1 : 0)) u_t (',
      'ot_hbm_hc_tail_unit_static_s #(.MUT_PRE((MUT == 2 && gu == 0) ? 1 : 0), .SMUT(SMUT)) u_t ('),
 ])
