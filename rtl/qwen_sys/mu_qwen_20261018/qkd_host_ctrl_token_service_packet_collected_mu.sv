@@ -98,10 +98,11 @@ end else begin:g_mu
  integer lane_write;
  reg[2:0] did_q,die_capture;
  reg[7:0] role_onehot_q;
- wire[7:0] role_mask=CONST_LANE_WRITES?(STRAPPED?role_onehot_q:(8'd1<<DIE)):(8'd1<<role);
- wire role_root=CONST_LANE_WRITES?role_mask[0]:(role==0);
+
  reg role_valid,die_sampled;
  wire[2:0] role;
+ wire[7:0] role_mask=CONST_LANE_WRITES?(STRAPPED?role_onehot_q:(8'd1<<DIE)):(8'd1<<role);
+ wire role_root=CONST_LANE_WRITES?role_mask[0]:(role==0);
  reg rv,tc,cv;
  reg[511:0] rd;
  reg[HCW-1:0] cd;

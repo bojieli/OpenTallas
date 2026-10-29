@@ -46,9 +46,10 @@ module qkd_host_ctrl_token_service_packet_collected #(parameter integer DIE=0,MU
  integer lane_write;
  reg[2:0]did_q,die_capture;
  reg[7:0] role_onehot_q;
- wire[7:0] role_mask=CONST_LANE_WRITES?(STRAPPED?role_onehot_q:(8'd1<<DIE)):(8'd1<<role);
- wire role_root=CONST_LANE_WRITES?role_mask[0]:(role==0);reg role_valid,die_sampled;
+reg role_valid,die_sampled;
  wire[2:0]role=STRAPPED?did_q:3'(DIE);
+ wire[7:0] role_mask=CONST_LANE_WRITES?(STRAPPED?role_onehot_q:(8'd1<<DIE)):(8'd1<<role);
+ wire role_root=CONST_LANE_WRITES?role_mask[0]:(role==0);
  reg rv,tc,cv;reg[511:0]rd;reg[181:0]cd;reg[92:0]lt;reg[9:0]lk;reg[1:0]lb;
  reg[511:0]q[0:3];reg[1:0]wp,rp;reg[2:0]count;
  reg[181:0]cq[0:3];reg[1:0]cw,cr;reg[2:0]cn;
