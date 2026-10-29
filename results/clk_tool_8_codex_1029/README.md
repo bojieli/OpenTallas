@@ -1,4 +1,4 @@
-CLK-TOOL-8 recovered continuation, 2026-10-29 08:31 PDT.
+CLK-TOOL-8 recovered continuation, 2026-10-29 08:28 PDT.
 
 Tool source: predecessor claude/clk-tool-8-1029-local@7e92b4abd, on a592c118f.
 New opt-in stack.edge_balance: dme_alt maps to --clock-edge-alt (inv2 only).
@@ -23,5 +23,6 @@ replaced with the same fixed list on both sides for this argv-only comparison.
 
 Inherited tests1 finished212pass/15skip/1fail: failure is absent sparse
 results/die_qc21_1028/inv2_stage_cal_trial13b.json, not a numerical failure.
-Inherited corrected tests2 is still live, pid1808405 intel2; collect tests2.log.
+Inherited corrected tests2 finished215PASS/18SKIP in511.49s.
+Focused current edge/default cases15PASS in11.72s.
 No new P&R or STA launched by this continuation.

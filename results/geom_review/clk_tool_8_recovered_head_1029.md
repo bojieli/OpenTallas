@@ -1,5 +1,5 @@
 # Recovered HEAD hk4 edge-balance diagnostic
-Image: results/clk_tool_8_codex_1029/tree_review.png; personally viewed08:31PDT.
+Image: results/clk_tool_8_codex_1029/tree_review.png; personally viewed08:28PDT.
 Construction review PASS-COND for the inherited diagnostic, not current-hk5 release.
 The large repeated tile fields keep regular local branches and taps; long feed
 chains follow the centre column and peripheral strips. Branch polarity varies
