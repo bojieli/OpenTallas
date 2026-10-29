@@ -1,0 +1,14 @@
+{
+ "verdict": "PASS-COND PLACE census only",
+ "image": "results/codex_s81_lp_1029/compact_plan.png",
+ "reviewer": "Codex S81 LP",
+ "findings": [
+  "Five real SRAM bodies in two columns and three rows, outside W/E digital bands17.28um, interior horizontal channels10.824um and central channel17.496um; outline241.92x159.84 aspect1.514,50.35%macro area. Existing macro-dominated GEOM clause applies without threshold changes.",
+  "All 2224 original signal/clock/reset pin names retained; wd/rd banks placed on nearby faces (W/E M4, S/N M5) with <=5.3 pins/um, no stacked/off-track sites. Unchanged RTL, macro kind/count, parameters and data/reset cycles.",
+  "Centreclock120.972,79.92 in17.496um macro-body corridor (8.856um after4.32um row halos); actual sink tree NOT RUN.",
+  "Both interior horizontal channels10.824um satisfy existing10.8um gate; after4.32um macrohalos2.184um rows remain. PG/pinaccess/channel measurements still required; noCTS until actual geometryPASS.",
+  "Original 475.2x216 result FAIL preserved: aspect2.2/fill.0141/empty.9129/fault333.69um/clock443.9um despite GRT0. New proposal addresses whole body and bank-local pin placement, not clock-only tuning.",
+  "Standalone natural child only. Parent source footprint/partner-reach and plan-delta adoption NOT RUN. One PLACE census only, no CTS/route/signoff authority.",
+  "Firstcompact preflight rejected6.456um horizontal gaps; retained originalfailure and raised row pitch to51.888um rather than relaxing gate. Firstown launch sequencing mistake stopped during synthesis/formal; successor requires preflightPASS before launch."
+ ]
+}
