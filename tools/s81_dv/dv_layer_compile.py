@@ -428,10 +428,10 @@ GAP_FRAME_PLACE = ('tools/s81_dv/frame_return_plan.py', 'plan_phase(rows = 2 * 1
 GAP_XDIE = ('ot_s81sl_slice_lep* / ot_pdie_serdes', 'cross-die collective lanes',
             'TP4 collective: owned by TOKEN-XDIE-S81 (TOK.DS.XDIE); the slice bench replays the remote partials at '
             'their scheduled cycles at the end-slice lep port')
-GAP_HEAD = ('head die (separate die type)', 'no netlist in the p4l DV bind',
-            'head.* / draft.* / token.return run on the head dies (LM head 129,280 rows, argmax, MTP draft heads); the '
-            'p4l DV die does not contain them, so their programme needs the head-die netlist of record and RTL (not in '
-            'results/fleet_viz/die_sources.json), then this compiler targets it the same way')
+GAP_HEAD = ('head die (separate die type)', 'final-layer publication to HEAD programme is not lowered',
+            'head.* / draft.* / token.return run on the head dies (LM head 129,280 rows, argmax, MTP draft heads). '
+            'Current HEAD RTL and its receiving HOST/CTL/SRAM entry contract exist; this compiler still lacks the '
+            'selected final-layer activation producer, transport/publication dates, and HEAD programme lowering')
 GAP_KV_UNIT = ('p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs',
                'SPEC section 2 slice SU lanes "KV 32" (RMSNorm -> RoPE -> FP8 QDQ, D 512)',
                'TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs '
