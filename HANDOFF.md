@@ -1767,3 +1767,5 @@ CODEX: KV START actualA/Y timing-source fix c33+57+875 READY, root-input0stage/C
 CODEX: HEAD tile private reset-export candidate77fb1fdb1 exact12FF/0cycles,4095checks+mutant+canonical2FFretentionPASS. SOURCE7nativeportbind1190/1190closed; FACEtypedring/origincheckerownedSTART. gen4 canonicalSYNTHunit2944247liveepyc2; noPLACEuntilgates.
 
 CODEX: main2b90210bd1 published: actual START clock-source path/CPPR, HEAD source/body tools, finite2Q compiler/Engram and grownVM/INDEX boot publisher candidates, PVJ output-load candidate. Meaningful combined checks pass after fixture correction; no die release/profile adoption.
+
+CODEX: HEAD tile PARKED on explicit Claude reset, branchd52ddfdb6. CanonicalLEC33806/33806PASS/private12FFactualcostclosed; reviewedraw77/FACE445notadopted. gen5SYNTHunit2983836liveepyc2untouched; noPLACE. FullpacketCODEX-LOG.
