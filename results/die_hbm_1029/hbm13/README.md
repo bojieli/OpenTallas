@@ -29,3 +29,14 @@ The move displaces 24 (NW) / 72 (NE) station points, which need the exact-count 
 are unchanged. pin_access diagnostic: `Complete pin access`, exit 0 (spb_m67_access.log; was DRT-0073 ep/sd_rx[448], phy/rx[0]).
 Full G2 (GRT 50 it + pin_access) is LIVE: intel1 docker d13-spb-m67-g2, /srv/opentallas-scratch2/claude/die-hbm-13/m67_g2
 (grt.log, probe.exit, congestion.rpt). The baseline took ~3 h. PASS needs overflow 0 + pin_access clean.
+
+## Plan c25c_d14 (sha256 84d4117c2454...): option-R gq_land pair move, built on d13
+`gl_pairmove.py d13 d14 tools/die_plan ring_fixed_count.py` then `gl_direct.py d14/die_plan.json`.
+- u_hcollgl_Q__q1 moved to (4492.8,2246.4) in both hubs (NW from 4043.52,2756.16; NE from 4043.52,2064.96), just south of ring_ag__q1.
+  Its tap and station endpoints move with it. The die tap moves through the partition orient (NE MY).
+- Every touched chain is re-sited with the SAME register count by the codex exact-count Manhattan solver: NW 40 chains, NE 76 chains, 0 added, 0 failed.
+- Ring ag_* -> gl pa_* q1 is now 226.5-272.0 um direct (<=405) and the RTL is direct, so the plan carries 0 regs there
+  (removed NW 43 / NE 37 phantom station FFs). 0 cycles; the RTL is unchanged. This is endpoint-centre Manhattan, UNCHECKED at pin level.
+- G0 PASS 0 err/761 warn; G0C 16 err (same set as d13). Station FFs inside any core body+4.32 halo do not rise (NW 2107->2103, NE 2142->2139).
+  But about 2100 PRE-EXISTING plan station FFs per hub sit inside hard-core body+halo. That is inherited, not from this delta.
+- Image gl_pairmove.png personally viewed (before/after both hubs).
