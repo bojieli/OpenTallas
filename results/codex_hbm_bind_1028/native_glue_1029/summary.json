@@ -1,0 +1,47 @@
+{
+  "added_cycles": 0,
+  "source_terminal_equality": true,
+  "frontdoor_replay_exact": true,
+  "primitive_vectors_split": 256,
+  "absorbed_glue_cells": 256,
+  "families": {
+    "sfu_lane": {
+      "count": 32,
+      "boundary_pins": [
+        1470
+      ]
+    },
+    "su_exp": {
+      "count": 64,
+      "boundary_pins": [
+        2028
+      ]
+    },
+    "su_plain4": {
+      "count": 48,
+      "boundary_pins": [
+        3960
+      ]
+    },
+    "su_pretree": {
+      "count": 8,
+      "boundary_pins": [
+        1138
+      ]
+    }
+  },
+  "masters": [
+    "ot_hnx_su_exp__7238eb25e266",
+    "ot_hnx_su_plain4__8fcf1b3a5a82",
+    "ot_hnx_su_pretree__40a88add71d7",
+    "ot_hnx_sfu_lane__cf694489f05c"
+  ],
+  "sha256": {
+    "compose.json": "7a4fc1794bb938feaa49b6dc06c495f0feeab3b7601450148f7c030ffa500b62",
+    "map.json": "8fbad98badb3ba44c854bf22b8c8cc750852f35eb282d80eab1aa8be585ae30a",
+    "masters.sv": "aa7a486c562206fecb9213796edaaadeabf65a631988da8a441d8ba400b0de34",
+    "packet.json": "de3911d3f2cfafc64db117a759a873155915853bcd287dcb8ea24df4714cb3c1"
+  },
+  "source_profile": "Existing actual native4/4/WCOPY0 source; future FULLSIDE opt-in source requires regeneration",
+  "physical_status": "No native placement/reach/STA/signoff claimed"
+}
