@@ -1,0 +1,3 @@
+    raise ValueError(f'T={T}: attention service needs {pv + r + 49} edges, the link slot gives {service_end}')
+ValueError: T=7809: attention service needs 1759 edges, the link slot gives 1753
+RC 1

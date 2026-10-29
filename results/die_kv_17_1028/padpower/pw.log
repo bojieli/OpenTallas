@@ -1,0 +1,53 @@
+OpenSTA 3.1.0  Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning 1212: /tmp/l/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13178, timing group from output port.
+Warning 1212: /tmp/l/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13211, timing group from output port.
+Warning 1212: /tmp/l/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13244, timing group from output port.
+Warning 1212: /tmp/l/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13277, timing group from output port.
+Warning 1212: /tmp/l/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13310, timing group from output port.
+Warning 1212: /tmp/l/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13343, timing group from output port.
+Warning 1212: /tmp/l/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13376, timing group from output port.
+Warning 1212: /tmp/l/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 14772, timing group from output port.
+Warning 1212: /tmp/l/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 14805, timing group from output port.
+Warning 1212: /tmp/l/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 14838, timing group from output port.
+OT_ACT 0.0
+Group                     Internal     Switching       Leakage         Total
+                             Power         Power         Power         Power (Watts)
+----------------------------------------------------------------------------
+Sequential           1.3465856e-03 0.0000000e+00 2.3524903e-07 1.3468208e-03 100.0%
+Combinational        0.0000000e+00 0.0000000e+00 2.6193423e-08 2.6193423e-08   0.0%
+Clock                0.0000000e+00 0.0000000e+00 0.0000000e+00 0.0000000e+00   0.0%
+Macro                0.0000000e+00 0.0000000e+00 0.0000000e+00 0.0000000e+00   0.0%
+Pad                  0.0000000e+00 0.0000000e+00 0.0000000e+00 0.0000000e+00   0.0%
+----------------------------------------------------------------------------
+Total                1.3465856e-03 0.0000000e+00 2.6144221e-07 1.3468470e-03 100.0%
+                            100.0%          0.0%          0.0%
+OT_ACT 0.1435
+Group                     Internal     Switching       Leakage         Total
+                             Power         Power         Power         Power (Watts)
+----------------------------------------------------------------------------
+Sequential           1.5762680e-03 2.6792390e-05 2.3524903e-07 1.6032957e-03  97.7%
+Combinational        1.4880978e-05 2.2642065e-05 2.6193423e-08 3.7549238e-05   2.3%
+Clock                0.0000000e+00 0.0000000e+00 0.0000000e+00 0.0000000e+00   0.0%
+Macro                0.0000000e+00 0.0000000e+00 0.0000000e+00 0.0000000e+00   0.0%
+Pad                  0.0000000e+00 0.0000000e+00 0.0000000e+00 0.0000000e+00   0.0%
+----------------------------------------------------------------------------
+Total                1.5911333e-03 4.9434173e-05 2.6144221e-07 1.6408289e-03 100.0%
+                             97.0%          3.0%          0.0%
+OT_ACT 0.5
+Group                     Internal     Switching       Leakage         Total
+                             Power         Power         Power         Power (Watts)
+----------------------------------------------------------------------------
+Sequential           2.1469260e-03 9.3353949e-05 2.3524903e-07 2.2405151e-03  94.5%
+Combinational        5.1849944e-05 7.8892597e-05 2.6193423e-08 1.3076873e-04   5.5%
+Clock                0.0000000e+00 0.0000000e+00 0.0000000e+00 0.0000000e+00   0.0%
+Macro                0.0000000e+00 0.0000000e+00 0.0000000e+00 0.0000000e+00   0.0%
+Pad                  0.0000000e+00 0.0000000e+00 0.0000000e+00 0.0000000e+00   0.0%
+----------------------------------------------------------------------------
+Total                2.1987618e-03 1.7224663e-04 2.6144221e-07 2.3712700e-03 100.0%
+                             92.7%          7.3%          0.0%
+OT_NREG 1024
