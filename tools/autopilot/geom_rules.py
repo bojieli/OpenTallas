@@ -19,7 +19,7 @@ Rules (id: limit -- source):
               pre-route gate, TILE-REVIEW 10-23); METHODOLOGY 1.14 (target 40-60 %); GEOM-REVIEW qkd_ahub 12 % FAIL
   empty     : share of macro-free density bins below 5 % density <= 50 % -- layout_review.py EMPTY_FLAG/EMPTY_BIN_DENSITY;
               GEOM-REVIEW qkd_ahub "W/N thirds empty" FAIL
-  pin_reg   : every signal pin registered (flop within <= 4 buffers, or a hard-macro pin) and pin->register p90
+  pin_reg   : every signal pin registered (first flop through pure BUF/INV, or a hard-macro pin) and pin->register p90
               <= 30 um -- METHODOLOGY 1.9 (R2 face flops, "pin-to-reg p90 <= 30 um"); layout_review.py PIN_REG_P90_FAIL
               150 um is the hard backstop; clock ports and declared strap_* pins are exempt (METHODOLOGY 1.8 R7 note)
   r2r       : max register->register Manhattan distance (flop centre to flop centre through combinational logic and
@@ -287,7 +287,7 @@ def pin_metrics(D, strap_re):
 
 
 def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
-    """pin -> nearest register through <= PINREG_DEPTH buffers (layout_review.tcl semantics, directional)"""
+    """pin -> first directional register through pure BUF/INV; visited nets bound cycles, not buffer count."""
     dist, unreg, macro, exempt = [], [], 0, 0
     worst = []
     for p in D.pins:
@@ -303,8 +303,9 @@ def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
             continue
         best, hit_m = INF, False
         if p["io"] == "OUTPUT":
-            cur, depth = n, 0
-            while depth <= PINREG_DEPTH:
+            cur, seen = n, set()
+            while cur not in seen:
+                seen.add(cur)
                 dr = D.nets[cur][1]
                 if not dr or dr[0] != "i":
                     break
@@ -318,11 +319,13 @@ def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
                     break
                 if k != "B" or not D.cell_in.get(dr[1]):
                     break
-                cur = D.cell_in[dr[1]][0][0]
-                depth += 1
+                inputs = [nn for nn, clock in D.cell_in[dr[1]] if not clock]
+                if len(inputs) != 1:
+                    break
+                cur = inputs[0]
         else:
-            front, seen, depth = [n], {n}, 0
-            while front and depth <= PINREG_DEPTH and best == INF and not hit_m:
+            front, seen = [n], {n}
+            while front and best == INF and not hit_m:
                 nf = []
                 for nn in front:
                     for s in D.nets[nn][2]:
@@ -340,7 +343,6 @@ def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
                                     seen.add(on)
                                     nf.append(on)
                 front = nf
-                depth += 1
         if best < INF:
             dist.append(best)
             worst.append((best, p["name"]))
