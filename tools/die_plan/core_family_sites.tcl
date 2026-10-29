@@ -13,7 +13,7 @@ foreach i [$b getInsts] {
   set s [$i getPlacementStatus]
   if {$s in {FIRM LOCKED COVER}} { set bb [$i getBBox]; puts $f "FIXED [$i getName] [[$i getMaster] getName] [um [$bb xMin]] [um [$bb yMin]] [um [$bb xMax]] [um [$bb yMax]]" }
 }
-foreach n {BUFx8_ASAP7_75t_R BUFx10_ASAP7_75t_R BUFx12_ASAP7_75t_R BUFx12f_ASAP7_75t_R BUFx16f_ASAP7_75t_R BUFx24_ASAP7_75t_R BUFx6f_ASAP7_75t_R BUFx5_ASAP7_75t_R BUFx4f_ASAP7_75t_R} {
+foreach n {BUFx8_ASAP7_75t_R BUFx10_ASAP7_75t_R BUFx12_ASAP7_75t_R BUFx12f_ASAP7_75t_R BUFx16f_ASAP7_75t_R BUFx24_ASAP7_75t_R BUFx6f_ASAP7_75t_R BUFx5_ASAP7_75t_R BUFx4f_ASAP7_75t_R ICGx1_ASAP7_75t_R ICGx2_ASAP7_75t_R ICGx3_ASAP7_75t_R ICGx4_ASAP7_75t_R ICGx4DC_ASAP7_75t_R ICGx5_ASAP7_75t_R ICGx8DC_ASAP7_75t_R} {
   set m [[ord::get_db] findMaster $n]; puts $f "MASTER $n [um [$m getWidth]] [um [$m getHeight]]" }
 foreach net [$b getNets] {
   if {![$net isSpecial]} continue
