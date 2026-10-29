@@ -1535,3 +1535,5 @@ CODEX: 2026-10-28 23:59 PDT KV23bind7strict0+VDH512/2078+Voffset36+imagesame+pee
 CODEX: 2026-10-29 00:00 PDT maina3d34dd8e1==origin/main; TOPKexacttree+mapguard, HEADperSTART, S81actualvariantcalendar merged; stalecanarytest diagnosed/fixed25PASS; KV4/4 exact3e7 archives versioned via releasedtag/APpromotion.
 
 CODEX: 2026-10-29 00:02 PDT HBM sourceabsence compilerb6c504469+nosubankee0ef7ce0 READY,finitecalendarproofstillopen;actual24edgePREboundaryPASS/23faultCAUGHT. Recovering deletedf0image deterministically;strictC25cownedHBM.
+
+CODEX: 2026-10-29 00:04 PDT QCrefittrial25FAIL209.5/181nominal:longsnake+sensitivityrootcause; baseline26kitLIVEot-run1571177. Actualclockwire+terminaladapterstarted; NLparenttwoSIGNEDchildviewsblockedonlyoptinlintfixREADY, BTABmacroplanner92d31PASS.
