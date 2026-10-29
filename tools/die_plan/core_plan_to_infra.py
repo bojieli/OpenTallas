@@ -34,12 +34,15 @@ class ConvertError(ValueError):
 
 def read_sites(path):
     rows, fixed, blockages, masters, pg = [], [], [], {}, {"M4": [], "M5": []}
-    row0 = None
+    row0 = die = None
     for l in Path(path).read_text().splitlines():
         f = l.split()
         if not f:
             continue
-        if f[0] == "ROW0":
+        if f[0] == "DIE":
+            # the floorplan ODB die area = the kit DIE_AREA (core_family_sites.tcl): the exact nominal outline
+            die = tuple(float(v) for v in f[1:5])
+        elif f[0] == "ROW0":
             row0 = dict(x=float(f[1]), y=float(f[2]), site_w=float(f[4]), site_h=float(f[6]), nrows=int(f[8]),
                         nsites=int(f[10]))
         elif f[0] == "ROW":
@@ -59,8 +62,11 @@ def read_sites(path):
             pg[f[2]].append(tuple(map(float, f[3:7])))
     if row0 is None or not rows or not masters:
         raise ConvertError(f"{path}: sites file needs ROW0, ROW and MASTER lines")
-    return dict(row0=row0, rows=sorted(rows, key=lambda r: r[1]), fixed=fixed, blockages=blockages,
-                masters=masters, pg=pg)
+    r = dict(row0=row0, rows=sorted(rows, key=lambda r: r[1]), fixed=fixed, blockages=blockages,
+             masters=masters, pg=pg)
+    if die is not None:
+        r["die"] = die
+    return r
 
 
 def pg_obstructions(sites, pad_half_um=0.04):
@@ -167,6 +173,12 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
         if rec["frozen_masters"].get(n[0]) != n[3]:
             raise ConvertError(f"{n[0]}: node master {n[3]} differs from the frozen plan master")
     sm = SiteMap(sites)
+    if outline is None and sites.get("die"):
+        # DIE-S81-30: the source die area is the nominal outline.  The plan core is the ODB row extent
+        # (getCoreArea), truncated to whole sites, so core + mirrored margin is short when CORE_AREA is not a
+        # site multiple (BF TAG16: rows end 445.824 vs CORE_AREA 445.848 -> 450.144 vs kit DIE 450.168).
+        x0, y0, x1, y1 = sites["die"]
+        outline = [x1 - x0, y1 - y0]
     if outline is None and rec.get("core"):
         # The plan records the symmetric CORE_AREA. Macro-cut subrows cannot
         # supply an outline through the first row's width or the subrow count.

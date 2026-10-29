@@ -67,7 +67,8 @@ def test_emit_stages_netlist_and_clock_taps():
     assert l["parent"] == f"st:{P_ROOT}" and l["children"] == ["a"] and r["children"] == ["b", f"st:{P_L}"]
     # netlist: the root stage is the die root counter (no die-top root start), chain, outputs to the data regions
     assert ("ot_dp_landing_root #(.SETTLE(64)) u_st_b1 (.clk(t_st_b1__clk), .rst_raw_n(rst_raw_n), "
-            ".start(st_b1_start))") in sv
+            ".start(st_b1_start), .start_d(st_b1_start_d))") in sv
+    assert "    wire st_b1_start_d;" in sv and r["start_d_net"] == "st_b1_start_d"
     assert "root_p_start" not in sv
     assert "#(.PAD(2), .EDGE_FALL(1)) u_st_b2 (.clk(t_st_b2__clk), .rst_raw_n(rst_raw_n), .p_start(st_b1_start)" in sv
     assert "assign pst_a = st_b2_start;" in sv and "assign pst_b = st_b1_start;" in sv
@@ -81,6 +82,22 @@ def test_emit_stages_netlist_and_clock_taps():
     x, y = l["clock_pin_xy_um"]
     assert f"place_pin -pin_name t_st_b2__clk -layer M9 -location {{{x:.3f} {y:.3f}}}" in t2
     assert t2.index("t_st_b2__clk") < t2.index("place_inst")
+
+
+def test_root_stage_binds_every_master_port_nested_check():
+    """DIE-HEAD-31 (DIE-HEAD-30 bind 0a054fa865 nested FAIL u_st_b0.start_d open): every port of every emitted stage
+    instance, incl. the root counter's FSTART D-side output start_d, is bound (main port_bind_gate.nested_check)."""
+    import port_bind_gate as PBG
+    v, t = _tree()
+    _, sv, _, _ = E.emit(_bind(), _meta(), v, t)
+    rtl = (Path(__file__).resolve().parents[2] / "rtl" / "common" / "ot_dp_clk_landing_ca.sv").read_text()
+    r = PBG.nested_check({"start_stages.sv": sv}, [rtl])
+    assert (r["verdict"], r["instances"], r["unbound"], r["unknown"], r["width_mismatch"], r["unresolved"]) == \
+        ("PASS", 2, 0, 0, 0, 0), r
+    # the pre-fix netlist (root .start_d open) fails the same check on exactly that pin
+    old = sv.replace(", .start_d(st_b1_start_d)", "")
+    r = PBG.nested_check({"start_stages.sv": old}, [rtl])
+    assert r["verdict"] == "FAIL" and r["examples"]["unbound"] == ["ot_die_start_stages.u_st_b1 (ot_dp_landing_root).start_d"]
 
 
 def test_root_counter_settle_from_bind_or_option():

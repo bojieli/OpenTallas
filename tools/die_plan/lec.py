@@ -3514,6 +3514,7 @@ def noreset_report(L):
                                "reset" if edge <= 1 else "reloaded" if edge <= cyc else "release"))
     dropped = [dict(register=k, side=sd, value=c) for (sd, k), c in sorted(getattr(L, "noreset_dropped", {}).items())
                if (sd, k) not in L.hyp]
+    L.noreset_kept_all, L.noreset_dropped_all = kept, dropped      # uncapped: noreset_listing
     return dict(enabled=True, reset_ports=L.rst_ports, reset_asserted=getattr(L, "rst_asserted", {}), reset_cycles=int(os.environ.get("OT_LEC_RESET_CYCLES", "4")),
                 release_edges=int(os.environ.get("OT_LEC_RELEASE_EDGES", "8")),
                 n_release=sum(1 for e in kept if e["basis"] == "release"),
@@ -3530,6 +3531,26 @@ def noreset_report(L):
                        "reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic "
                        "reload is inductively constant from already established constants; equality/FSM "
                        "assumptions never establish a constant's base case"))
+
+
+def noreset_listing(L, path):
+    """COORD 10-29 (hd_ctl): lec.py lists EVERY register it treats as a constant, not only the first 500 that
+    lec.json carries.  Writes PATH (TSV: status kept|dropped, side, register, value, edge, basis) from the last
+    noreset_report and -> dict(file, sha256, n_kept, n_dropped) for lec.json.  The constant rule itself is
+    unchanged: a register is a constant only when its reset state or a structurally constant reload chain gives
+    that constant (noreset_sound); a no-reset register on a hold / enable path (D = en ? c : Q) is never one."""
+    kept = getattr(L, "noreset_kept_all", None)
+    if kept is None:
+        noreset_report(L)
+        kept = L.noreset_kept_all
+    rows = ["status\tside\tregister\tvalue\tedge\tbasis"]
+    rows += [f"kept\t{e['side']}\t{e['register']}\t{e['value']}\t{e['edge']}\t{e['basis']}" for e in kept]
+    rows += [f"dropped\t{e['side']}\t{e['register']}\t{e['value']}\t\tnot constant in the reset state"
+             for e in L.noreset_dropped_all]
+    data = ("\n".join(rows) + "\n").encode()
+    Path(path).write_bytes(data)
+    return dict(file=str(path), sha256=hashlib.sha256(data).hexdigest(), n_kept=len(kept),
+                n_dropped=len(L.noreset_dropped_all))
 
 
 def slang_elements(aliases_file):
@@ -5325,6 +5346,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             raise LecError(f"hints file {hints} not found")
         noreset_filter(L, log, collections.Counter(), out, conflicts)
         rec["noreset_constants"] = noreset_report(L)
+        rec["noreset_constants"]["listing"] = noreset_listing(L, out / "noreset_constants.tsv")
         (out / "hyp.json").write_text(json.dumps([[sd, k, list(h)] for (sd, k), h in sorted(L.hyp.items())]) + "\n")
         m, kind = L.build(with_compare=True, with_hyp=True)
         rec["t_corr_s"] = round(time.time() - t1, 1)

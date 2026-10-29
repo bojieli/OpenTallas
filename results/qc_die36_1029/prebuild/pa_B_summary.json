@@ -1,0 +1,75 @@
+{
+  "groups": 109808,
+  "attempted": 109808,
+  "connected_groups": 109807,
+  "connected_contacts": 185694,
+  "failed_groups": 1,
+  "routing_rectangles": 2964629,
+  "vias": 878416,
+  "verdict": "INCOMPLETE_NO_MATERIALIZATION",
+  "owned_grid_obstructions": 13304,
+  "rejections": {
+    "obstacle_M8": 669294,
+    "obstacle_M7": 2288,
+    "obstacle_M5": 26,
+    "obstacle_M6": 12
+  },
+  "obstacle_examples": {
+    "M8": {
+      "candidate": [
+        11764152,
+        74980,
+        11767404,
+        75020
+      ],
+      "blocking": [
+        11764520.0,
+        74840.0,
+        11765272.0,
+        75480.0
+      ]
+    },
+    "M7": {
+      "candidate": [
+        12135696,
+        567680,
+        12135728,
+        567852
+      ],
+      "blocking": [
+        12135696.0,
+        567108.0,
+        12135728.0,
+        567667.0
+      ]
+    },
+    "M5": {
+      "candidate": [
+        3108692,
+        11793550,
+        3108716,
+        11793646
+      ],
+      "blocking": [
+        3108732.0,
+        11793408.0,
+        3108756.0,
+        11793600.0
+      ]
+    },
+    "M6": {
+      "candidate": [
+        2185656,
+        12463182,
+        2185736,
+        12463214
+      ],
+      "blocking": [
+        2185728.0,
+        12463120.0,
+        2185920.0,
+        12463152.0
+      ]
+    }
+  }
+}
