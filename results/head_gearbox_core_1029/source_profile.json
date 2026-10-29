@@ -1,0 +1,139 @@
+{
+  "instance": "u_lane.u.u_gb",
+  "derived_module": "$paramod$11739ca8d524a464ea603ccd8bec0aacaaec48b8\\ot_s81ph_link_gbx_safe3",
+  "original_module": "ot_s81ph_link_gbx_safe3",
+  "parameters": {
+    "BW": 512,
+    "FFW": 595,
+    "G": 456,
+    "IDLE_P": 1024,
+    "KC": 8,
+    "KH": 6,
+    "KP": 4,
+    "KR": 12,
+    "MUT": 0,
+    "NCC": 25,
+    "NHC": 19,
+    "NPC": 19,
+    "NRC": 18,
+    "NSH": 38,
+    "OC": 13,
+    "OH": 9,
+    "OP": 2,
+    "OR": 7,
+    "OS": 17,
+    "RFW": 53,
+    "RL": 24,
+    "RN": 22,
+    "S": 596,
+    "SL": 24
+  },
+  "ports": {
+    "clk": {
+      "direction": "input",
+      "width": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "width": 22
+    },
+    "f_tx_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "f_tx": {
+      "direction": "input",
+      "width": 595
+    },
+    "r_tx_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "r_tx": {
+      "direction": "input",
+      "width": 53
+    },
+    "beat_tx": {
+      "direction": "output",
+      "width": 512
+    },
+    "beat_rx_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "beat_rx": {
+      "direction": "input",
+      "width": 512
+    },
+    "f_rx_v": {
+      "direction": "output",
+      "width": 1
+    },
+    "f_rx": {
+      "direction": "output",
+      "width": 595
+    },
+    "r_rx_v": {
+      "direction": "output",
+      "width": 1
+    },
+    "r_rx": {
+      "direction": "output",
+      "width": 53
+    },
+    "locked": {
+      "direction": "output",
+      "width": 1
+    },
+    "fault": {
+      "direction": "output",
+      "width": 1
+    }
+  },
+  "macro_inventory": [
+    {
+      "inst": "u_sf.g_bank[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1"
+    },
+    {
+      "inst": "u_sf.g_bank[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1"
+    },
+    {
+      "inst": "u_sf.g_bank[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1"
+    },
+    {
+      "inst": "u_sf.g_bank[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1"
+    },
+    {
+      "inst": "u_sf.g_bank[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1"
+    },
+    {
+      "inst": "u_sf.g_bank[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1"
+    },
+    {
+      "inst": "u_sf.g_bank[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1"
+    },
+    {
+      "inst": "u_sf.g_bank[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1"
+    },
+    {
+      "inst": "u_sf.g_bank[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1"
+    },
+    {
+      "inst": "u_sf.g_bank[9].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1"
+    }
+  ],
+  "source_files": [
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+    "rtl/lib/ot_sram_showahead_b64.sv"
+  ]
+}

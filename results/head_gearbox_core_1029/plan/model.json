@@ -1,0 +1,78 @@
+{
+  "outline_um": [
+    129.6,
+    233.28
+  ],
+  "core_margin_um": 4.32,
+  "macro_halo_um": 4.32,
+  "central_channel_um": 24.168,
+  "interrow_channel_um": 17.256,
+  "west_logic_rail_um": 8.64,
+  "east_logic_rail_um": 6.888,
+  "full_outline_manhattan_um": 362.88,
+  "core_r2r_geometric_bound_um": 345.6,
+  "signal_reach_limit_um": 405,
+  "max_pins_per_10um": {
+    "E": 60,
+    "W": 60,
+    "N": 2
+  },
+  "pins": 2350,
+  "macro_count": 10,
+  "ff_bits": 4042,
+  "sram_area_um2": 5535.89568,
+  "stdcell_area_estimate_um2": 2238.6472000000003,
+  "fill_estimate": 0.2571534498890752,
+  "low_fill_reason": "pin-limited full1300-bit EPface at<=6pins/um plus4.32halos/clock/data channels; do not pack to routinglimit",
+  "forward_frames_per_cycle": 0.749267578125,
+  "forward_frame_bits": 595,
+  "reverse_frames_per_cycle": 1,
+  "reverse_frame_bits": 53,
+  "added_cycles": 0,
+  "clock_period_ps": 833,
+  "TT_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "clock_taps_planned": [
+    [
+      8.664,
+      38.88
+    ],
+    [
+      8.664,
+      116.64
+    ],
+    [
+      8.664,
+      194.4
+    ],
+    [
+      64.824,
+      38.88
+    ],
+    [
+      64.824,
+      116.64
+    ],
+    [
+      64.824,
+      194.4
+    ],
+    [
+      120.984,
+      38.88
+    ],
+    [
+      120.984,
+      116.64
+    ],
+    [
+      120.984,
+      194.4
+    ]
+  ],
+  "clock_nearest_tap_manhattan_bound_um": 66.96,
+  "clock_tap_max_sinks": 1250,
+  "clock_tap_radius_limit_um": 80,
+  "routing_cut_estimate": "NOT RUN; pins/halos/reach geometry only; actual graph estimate remains required",
+  "physical_signoff": "NOT RUN"
+}

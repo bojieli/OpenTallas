@@ -1,0 +1,198 @@
+{
+  "schema": "opentallas.head.native_core_spec.v1",
+  "module": "ot_s81ph_link_gbx_safe3",
+  "view": "ot_s81ph_link_gbx_safe3@head",
+  "source_commit": "8edc97f13d990f185bc0f9954295af2cc0205359",
+  "source_files": [
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+    "rtl/lib/ot_sram_showahead_b64.sv"
+  ],
+  "params": {
+    "BW": 512,
+    "FFW": 595,
+    "G": 456,
+    "IDLE_P": 1024,
+    "KC": 8,
+    "KH": 6,
+    "KP": 4,
+    "KR": 12,
+    "MUT": 0,
+    "NCC": 25,
+    "NHC": 19,
+    "NPC": 19,
+    "NRC": 18,
+    "NSH": 38,
+    "OC": 13,
+    "OH": 9,
+    "OP": 2,
+    "OR": 7,
+    "OS": 17,
+    "RFW": 53,
+    "RL": 24,
+    "RN": 22,
+    "S": 596,
+    "SL": 24
+  },
+  "defines": [
+    "OT_COLL_NATIVE32",
+    "OT_COLL_NATIVE32_OFF"
+  ],
+  "outline_um": [
+    129.6,
+    233.28
+  ],
+  "pins_file": "pins.json",
+  "macro_placement": [
+    {
+      "inst": "u_sf.g_bank[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        17.28,
+        17.28
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "MY",
+      "halo_um": 4.32
+    },
+    {
+      "inst": "u_sf.g_bank[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        82.08,
+        17.28
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0",
+      "halo_um": 4.32
+    },
+    {
+      "inst": "u_sf.g_bank[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        17.28,
+        60.48
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "MY",
+      "halo_um": 4.32
+    },
+    {
+      "inst": "u_sf.g_bank[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        82.08,
+        60.48
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0",
+      "halo_um": 4.32
+    },
+    {
+      "inst": "u_sf.g_bank[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        17.28,
+        103.68
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "MY",
+      "halo_um": 4.32
+    },
+    {
+      "inst": "u_sf.g_bank[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        82.08,
+        103.68
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0",
+      "halo_um": 4.32
+    },
+    {
+      "inst": "u_sf.g_bank[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        17.28,
+        146.88
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "MY",
+      "halo_um": 4.32
+    },
+    {
+      "inst": "u_sf.g_bank[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        82.08,
+        146.88
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0",
+      "halo_um": 4.32
+    },
+    {
+      "inst": "u_sf.g_bank[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        17.28,
+        190.08
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "MY",
+      "halo_um": 4.32
+    },
+    {
+      "inst": "u_sf.g_bank[9].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        82.08,
+        190.08
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0",
+      "halo_um": 4.32
+    }
+  ],
+  "parent_partition": "hd_lep0N",
+  "parent_instance": "u_lane.u.u_gb",
+  "geometry_review": "geometry_review.json",
+  "clock_ports": [
+    "clk"
+  ],
+  "reset_ports": [
+    "rst_n"
+  ],
+  "added_cycles": 0,
+  "context_mask_file": "context_mask.json"
+}

@@ -1,0 +1,92 @@
+{
+  "clk": {
+    "direction": "input",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "rst_n": {
+    "direction": "input",
+    "width": 22,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "f_tx_v": {
+    "direction": "input",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "f_tx": {
+    "direction": "input",
+    "width": 595,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "r_tx_v": {
+    "direction": "input",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "r_tx": {
+    "direction": "input",
+    "width": 53,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "beat_tx": {
+    "direction": "output",
+    "width": 512,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "beat_rx_v": {
+    "direction": "input",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "beat_rx": {
+    "direction": "input",
+    "width": 512,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "f_rx_v": {
+    "direction": "output",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "f_rx": {
+    "direction": "output",
+    "width": 595,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "r_rx_v": {
+    "direction": "output",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "r_rx": {
+    "direction": "output",
+    "width": 53,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "locked": {
+    "direction": "output",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  },
+  "fault": {
+    "direction": "output",
+    "width": 1,
+    "constant_bits": {},
+    "unused_bits": []
+  }
+}

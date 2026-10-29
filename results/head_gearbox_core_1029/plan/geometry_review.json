@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS-COND",
+  "allow_kit_gen": true,
+  "allow_pnr": false,
+  "image": "results/head_gearbox_core_1029/plan/plan.png",
+  "reviewer": "Codex /root/head/serdes",
+  "findings": [
+    "Personally viewed nine-bay revised image: two opposing macro columns, 24.168um central channel, 4.32um halos and legal edge pin planes.",
+    "650+650 EP pins on E; corresponding EP W face must copy coordinates with track-preserving parent offset.",
+    "Nine clock bays avoid macros; balanced native tree is not yet constructed.",
+    "Actual mapped area/fill, graph cuts, register reach, controls and PDN remain required. Pin-limited low fill may fail."
+  ],
+  "scope": "Allow unchanged-source GEN/SYNTH sizing only; HOLD_PNR until mapped geometry, typed endpoint gate and strict LEC pass."
+}
