@@ -1,0 +1,3 @@
+# KV-HR-1 -- KV hr_* host core kits (COORD 10-29 08:0x, from KV-KITS-21 ASK; plan event27f db8fc720ab16)
+
+- [2026-10-29 08:04 PDT] START+CLAIM [KV-HR-1] qwen_kvsys items owned by KV-HR-1: qkd_hr_cdc_ch qkd_hr_cdc_ci qkd_hr_cdc_hi qkd_hr_cdc_pc qkd_hr_core_guard qkd_hr_core_order qkd_hr_core_peer qkd_hr_core_prompt qkd_hr_core_queue qkd_hr_core_rx qkd_hr_ingest_eng qkd_hr_phy_adp qkd_hr_host_qm (FIX, plan) qkd_hr_phy_pad (REVIEW) qkd_hr_core_tx (ROUTING ap-ba6778f278fa, collect only). Branch claude/kv-hr-1-1029. Step 1 = state census (face proofs, kits, live jobs) then batch kits from event27f pins.
