@@ -104,8 +104,13 @@ set ot_pg_bound [expr {$ot_pg_C eq "FF" ? $::env(OT_VCLK_FF) : $::env(OT_VCLK_TT
 set ot_pg_tol [expr {[info exists ::env(OT_POSTCTS_TOL)] ? $::env(OT_POSTCTS_TOL) : 20.0}]
 set bound $ot_pg_bound
 set tol $ot_pg_tol
-set vck [lsearch -all -inline -not [all_clocks] [get_clocks clk]]
-if {[llength $vck] == 1} { set_clock_latency -source $ot_pg_bound $vck }
+# DIE-HEAD-21: the IO virtual clock = the one clock without sources (vclk_corner.tcl ot_vclk_bind rule).  The old
+# every clock except clk list had 2 entries once a kit has a PHY-edge / ring write clock (fclk_in_*), and the FF
+# rebind was then skipped silently (FF hold gate timed vclk at the TT bound).  Fail closed instead.
+set vck {}
+foreach c [all_clocks] { if {![llength [get_property $c sources]]} { lappend vck $c } }
+if {[llength $vck] != 1} { error "postcts: expected exactly one IO virtual clock, found [llength $vck]" }
+set_clock_latency -source $ot_pg_bound [lindex $vck 0]
 if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARASITICS_FILE)]} {
   source $::env(LAYER_PARASITICS_FILE)
 } else {
