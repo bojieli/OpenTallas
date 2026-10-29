@@ -2734,6 +2734,7 @@ def route_netlist(P, type_bits, channel_nets=True, landing_infra=False):
         v += [f'  output {name};' for name in landing['boundary_outputs']]
     if landing:
         v += [f'  wire {name};' for name in landing['wires']]
+        v += [f'  assign {name} = {wire};' for name,wire in sorted(landing['boundary_aliases'].items())]
     insts, nft = [], 0
     smod = standin_module_names(P)
     width, ftw, slots = {}, {}, {}

@@ -89,3 +89,18 @@ def test_real_start_launch_is_output_boundary_not_an_input_driver(monkeypatch):
     assert n['boundary_outputs']==['rs_a'] and n['boundary_inputs']==['pst_b']
     v,_=DT.route_netlist(p,{tn:{} for tn in p.types},landing_infra=True)
     assert 'output rs_a;' in v and 'input rs_a;' not in v and '.fwd(rs_a)' in v
+
+
+def test_real_child_and_virtual_start_fanout_share_single_output_connection(monkeypatch):
+    import die_trial as DT
+    p=fixture(monkeypatch,[edge('real_child','a','b')],
+              [dict(part='a',pin='fwd',net='rs_a'),dict(part='c',pin='start',net='pst_c')])
+    p.name='t';p.ports={}
+    monkeypatch.setattr(DT,'standin_module_names',lambda p:{tn:'m_'+tn for tn in p.types})
+    n=landing_route.network(p)
+    assert n['boundary_aliases']=={'rs_a':'landing_real_child'}
+    assert n['bindings']['a']=={'fwd':'landing_real_child'}
+    v,_=DT.route_netlist(p,{tn:{} for tn in p.types},landing_infra=True)
+    assert 'assign rs_a = landing_real_child;' in v and 'output rs_a;' in v
+    assert v.count('.fwd(landing_real_child)')==1 and '.fwd(rs_a)' not in v
+    assert 'input rs_a;' not in v
