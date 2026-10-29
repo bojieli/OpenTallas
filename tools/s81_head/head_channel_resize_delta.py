@@ -180,7 +180,8 @@ def shift_type(t, R):
         kept = []
         for p in rs["local_taps_um"]:
             q = _sp(p, dx, dy)
-            (kept if _in(q, Rn) else drop_rt).append(q if _in(q, Rn) else p)
+            legal = _in(q, [MARGIN, MARGIN, W-MARGIN, H-MARGIN])
+            (kept if legal else drop_rt).append(q if legal else p)
         if not kept and c.get("tap_um"):
             kept = [list(c["tap_um"][:2])]
         rs["local_taps_um"] = kept
