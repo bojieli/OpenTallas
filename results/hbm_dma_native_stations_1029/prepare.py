@@ -7,6 +7,7 @@ remain unchanged. Physical body placement and token pricing are separate work.
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 
 
@@ -64,6 +65,7 @@ def main():
                     xy_um=[round(ox + dx + x, 6), round(oy + dy + y, 6)])
 
     groups = []
+    used = {}
     for g in native['groups']:
         if g['width'] not in (17, 257) or len(g['src_bits']) != g['width'] or len(g['dst_bits']) != g['width']:
             raise ValueError('actual source contract width/bit list mismatch')
@@ -73,6 +75,8 @@ def main():
             if s['part'] != d['part']:
                 raise ValueError('DMA native edge crosses plan partitions')
             pairs.append(dict(src=s, dst=d, native_net=net, src_bit=sb, dst_bit=db))
+            for ep, port, bit in ((s, g['src_port'], sb), (d, g['dst_port'], db)):
+                used.setdefault((ep['native'], port, ep['pins_file']), set()).add(bit)
         groups.append(dict(bank=g['bank'], kind='request' if g['width'] == 17 else 'return',
                            width=g['width'], valid_src_bit=g['valid_src_bit'], valid_dst_bit=g['valid_dst_bit'],
                            actual_source_stages=g['actual_source_stages'], source=g['src'], sink=g['dst'], pairs=pairs))
@@ -86,6 +90,16 @@ def main():
                   source=dict(plan_sha256=digest(base/'die_plan.json'), native_sha256=digest(a.native),
                               map_sha256=digest(a.map)), bits=sum(g['width'] for g in groups),
                   qualification='native bit identity + exact plan pin projection; no adopted source/physical pipeline')
+    census = []
+    for (name, port, file), actual in sorted(used.items()):
+        pat = re.compile(re.escape(port) + r'\[(\d+)\]$')
+        declared = {int(m[1]) for pin in pins[str(base/file)] if (m := pat.fullmatch(pin))}
+        census.append(dict(native=name, port=port, physical_pin_file=file,
+                           actual_bits=len(actual), declared_physical_bits=len(declared),
+                           surplus_physical_bits=sorted(declared-actual),
+                           missing_actual_bits=sorted(actual-declared)))
+    result['physical_port_census'] = census
+    result['plan_abi_correction_required'] = any(c['surplus_physical_bits'] for c in census)
     (out / 'pin_projection.json').write_text(json.dumps(result, indent=1) + '\n')
     subset = {name: mapping[name] for name in {g['source'] for g in groups} | {g['sink'] for g in groups}}
     (out / 'map_subset.json').write_text(json.dumps(subset, indent=1) + '\n')
