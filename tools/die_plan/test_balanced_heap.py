@@ -58,3 +58,10 @@ def test_optional_numpy_fallback_preserves_legacy_order(monkeypatch):
     expected = H.balanced(points, centres, distance, iters=13)
     monkeypatch.setattr(builtins, "__import__", without_numpy)
     assert H.balanced(points, centres, distance, iters=13) == expected == legacy_balanced(points, centres, distance, iters=13)
+
+
+def test_nonfinite_distances_keep_legacy_scalar_correction_order():
+    points = list(range(11)); centres = list(range(3))
+    for special in (float("nan"), float("inf"), -float("inf")):
+        distance = lambda p, c: special if p == 0 and c == 1 else float(abs(p - c))
+        assert H.balanced(points, centres, distance, iters=2) == legacy_balanced(points, centres, distance, iters=2)
