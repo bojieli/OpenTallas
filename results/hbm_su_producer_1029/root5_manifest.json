@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.hbm.su_programme.root5.v1",
+  "qualified": false,
+  "source": "/srv/opentallas-scratch/claude/codex-hbm-su-producer-1029/native_prog.mem",
+  "source_sha256": "92f623df0ee51a60d17ac67b763137c5102e158f387807ef477c5a50a1f23d4b",
+  "edges": 386,
+  "resident_edges": 7111,
+  "line_bits": 4940,
+  "parts": 2,
+  "slice_bits": 2470,
+  "columns": 10,
+  "part_banks": 320,
+  "bank_numbering": "320 x part + 32 x column + local bank",
+  "leaves": [
+    "ot_hbm_su_programme_pgcol_s",
+    "ot_hbm_su_programme_pgcol_s",
+    "ot_hbm_su_programme_pgcol_s",
+    "ot_hbm_su_programme_pgcol_s",
+    "ot_hbm_su_programme_pgcol_s",
+    "ot_hbm_su_programme_pgcol_s",
+    "ot_hbm_su_programme_pgcol_s",
+    "ot_hbm_su_programme_pgcol_s",
+    "ot_hbm_su_programme_pgcol_s",
+    "ot_hbm_su_programme_pgcol_s"
+  ],
+  "dictionary_caps_per_quarter": [
+    [
+      2,
+      3,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      2,
+      3,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ]
+  ],
+  "config_transactions": 2136,
+  "reference": {
+    "parts": 2,
+    "slice_macros": [
+      18,
+      18
+    ],
+    "config_transactions": 2408
+  },
+  "mut_q": 0
+}
