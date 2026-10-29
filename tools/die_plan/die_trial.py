@@ -4036,9 +4036,25 @@ def render_all(d, P, plan_path):
                                edgecolor="red" if w.get("host") else "magenta", lw=1.2, ls="--"))
         ax.text(x0 / 1000, y1 / 1000, w["name"].replace("io_", "").replace("_u_phy", ""), fontsize=4, color="m")
     segs, lw = [], []
+    # Pin expansion is per type, not per instance or feedthrough slot.  QC
+    # repeats a type's wide pin table many times; expanding it inside this
+    # loop made the required visual review take minutes before its first PNG.
+    ft_pins_by_type = {}
     for n, p in P.parts.items():
+        tn = p["type"]
+        if tn not in ft_pins_by_type:
+            wanted = {s["name"] + suffix
+                      for s in P.types[tn].get("ft_slots", []) or []
+                      for suffix in ("_i", "_o")}
+            by_name = collections.defaultdict(list)
+            if wanted:
+                for q in gen_phys.type_pins(P, tn):
+                    if q[0] in wanted:
+                        by_name[q[0]].append(q)
+            ft_pins_by_type[tn] = by_name
         for s in P.types[p["type"]].get("ft_slots", []) or []:
-            pins = [q for q in gen_phys.type_pins(P, p["type"]) if q[0] in (s["name"] + "_i", s["name"] + "_o")]
+            pins = (ft_pins_by_type[tn][s["name"] + "_i"]
+                    + ft_pins_by_type[tn][s["name"] + "_o"])
             if not pins:
                 continue
             ins = [P.to_die(n, (q[3], q[4])) for q in pins if q[0].endswith("_i")]
