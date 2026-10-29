@@ -207,3 +207,12 @@ def test_rejects_non_stage_virtual_region_and_missing_node():
         E.emit(_bind(), m, v, t)
     with pytest.raises(E.StageError):
         E.path_id("hx")
+
+
+def test_explicit_die_trial_base36_path_labels():
+    assert E.path_id('h', 'base36') == 'h'
+    assert E.path_id('h0az', 'base36') == 'h_0_10_35'
+    with pytest.raises(E.StageError):
+        E.path_id('h0a')
+    with pytest.raises(E.StageError):
+        E.path_id('hA', 'base36')
