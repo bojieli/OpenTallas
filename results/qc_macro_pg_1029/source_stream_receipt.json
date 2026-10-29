@@ -1,0 +1,18 @@
+{
+  "verdict": "APPLIED_NATIVE_PG_JOINS",
+  "source": "/work/source_apply_v1/native_pg.odb",
+  "output": "/work/source_apply_v1/native_pg_stream_targeted.odb",
+  "unique_supply_terms": 754,
+  "direct_contacts": 754,
+  "short_fragment_contacts": 1690,
+  "counts": {},
+  "clock_and_signal_wire_sha_before": "f92fee8864f0e497f4453cf539283c11c996c53a59fea430007918ea7140aa51",
+  "clock_and_signal_wire_sha_after": "f92fee8864f0e497f4453cf539283c11c996c53a59fea430007918ea7140aa51",
+  "instances_sha_before": "ef9802de1c066717db6652206394a80ea400ef26c858710e63b9e1f51076256d",
+  "instances_sha_after": "ef9802de1c066717db6652206394a80ea400ef26c858710e63b9e1f51076256d",
+  "existing_PG_clockshield_records_preserved": 6368,
+  "existing_PG_clockshield_swires_preserved": 2,
+  "PG_preservation_memory": "streamed original-SWire hashes; no per-PG-shape Python retention",
+  "seeded_canonical_rectangles": 0,
+  "scope": "Actual additive native PG source application only; no full-clock, distributed-current or IR closure"
+}
