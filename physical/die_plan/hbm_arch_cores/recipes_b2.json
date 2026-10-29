@@ -773,4 +773,64 @@
  },
  "ot_hbm_idx_score_hcol_h0": {"defines": [], "files": ["rtl/lib/ot_rst_relay.sv", "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv", "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"], "functional_type": "score_hcol_h0", "macros": [], "params": {"HALF": 0, "MUT": 0}, "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c0_k0h0__181.44x155.52\"]", "source": "Exact canonical alias of ot_hbm_idx_score_quarter_static__r0c0_k0h0__181.44x155.52, HALF=0; pass-through names, no new arithmetic or cycles", "top": "ot_hidx_score_hcol", "source_commit": "1add09346a353c4e4ad11fef73e2e95c5df4dbab", "read_at_commit": true},
  "ot_hbm_idx_score_hcol_h1": {"defines": [], "files": ["rtl/lib/ot_rst_relay.sv", "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv", "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"], "functional_type": "score_hcol_h1", "macros": [], "params": {"HALF": 1, "MUT": 0}, "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c0_k0h1__181.44x155.52\"]", "source": "Exact canonical alias of ot_hbm_idx_score_quarter_static__r0c0_k0h1__181.44x155.52, HALF=1; pass-through names, no new arithmetic or cycles", "top": "ot_hidx_score_hcol", "source_commit": "1add09346a353c4e4ad11fef73e2e95c5df4dbab", "read_at_commit": true}
+,
+ "ot_hbm_svc_vm_kshare_splitstrap__v700685": {
+  "top": "ot_hbm_svc_vm_kshare_splitstrap",
+  "files": [
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+    "rtl/lib/ot_reset_sync.sv"
+  ],
+  "defines": [],
+  "params": {
+    "MUT": 0,
+    "KRL1": 1
+  },
+  "macros": [],
+  "source": "C25c geometry-view alias of the existing splitstrap KRL1=1 recipe; same 7343 plan pin bits, no logic/parameter/cycle change. r18h5 die view ot_hbm_svc_vm_kshare_splitstrap (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_svc_vm_kshare_splitstrap @ 6f783d0a1); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_svc_vm_kshare_splitstrap)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_svc_vm_kshare_splitstrap",
+  "view_kind": "SYNTH",
+  "view_port_bits": 7343
+},
+ "ot_hbm_svc_vm_kshare_splitstrap__v8e478a": {
+  "top": "ot_hbm_svc_vm_kshare_splitstrap",
+  "files": [
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+    "rtl/lib/ot_reset_sync.sv"
+  ],
+  "defines": [],
+  "params": {
+    "MUT": 0,
+    "KRL1": 1
+  },
+  "macros": [],
+  "source": "C25c geometry-view alias of the existing splitstrap KRL1=1 recipe; same 7343 plan pin bits, no logic/parameter/cycle change. r18h5 die view ot_hbm_svc_vm_kshare_splitstrap (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_svc_vm_kshare_splitstrap @ 6f783d0a1); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_svc_vm_kshare_splitstrap)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_svc_vm_kshare_splitstrap",
+  "view_kind": "SYNTH",
+  "view_port_bits": 7343
+},
+ "ot_hnx_idxn_keybuf_slice": {
+  "top": "ot_hnx_idxn_keybuf_slice",
+  "files": [
+    "rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_slice.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+    "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "macro_dirs": {
+    "ot_sram_1r1w_256x256_m2_r2c2": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+  },
+  "source_commit": "a592c118f6f3405cd1eaad09d71e9237f8d38d94",
+  "read_at_commit": true,
+  "source": "C25c production keybuf slice as already bound: one 1099-bit lane, five 256x256 SRAMs, 3-bit quasi-static strap_lane_id. No new arithmetic or cycles."
+}
 }
