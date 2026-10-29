@@ -1,0 +1,23 @@
+{
+ "basis": "FF duty fall-rise vs signed alternating load length over physical inverter paths; diagnostic regression only",
+ "features": [
+  "signed stage count",
+  "signed outgoing L sum",
+  "signed outgoing L2 sum",
+  "signed extra fanout",
+  "signed max leg"
+ ],
+ "coef": [
+  -10.226096732142063,
+  -0.0014975637733655775,
+  1.068172293423983e-05,
+  0.8243185604169361,
+  0.012888690387349971
+ ],
+ "rms": 6.482556144402216,
+ "baseline_rms": 23.18024600209276,
+ "y_range": [
+  -47.68115300000045,
+  83.30920500000002
+ ]
+}
