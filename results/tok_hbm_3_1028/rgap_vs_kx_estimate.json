@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.tok_hbm_3.rgap_vs_kx_estimate.v1",
+ "status": "ESTIMATE (UNCHECKED except the KX=4 lane bound, CHECKED by TOK-HBM-2 lane_rgap_sweep.log)",
+ "question": "HC_PRE n>=5 rows: lane x-slot reuse (row p+KX reuses slot p) needs r round trip rd <= L(KX, rgap). Price rgap (compiler, no RTL) vs a deeper x store (KX=8).",
+ "lane_bound": {
+  "KX4_measured": "L = 174 + 4 rgap edges (rgap 0/4/12: 174/190/222 PASS, +1 FAIL) [CHECKED TOK-HBM-2]",
+  "model": "L(KX) = 174 + 4 rgap + (KX-4)(80 + rgap): each extra slot buys one PRE row II (4 NM + rgap = 80 + rgap at D 5,120) [UNCHECKED]",
+  "KX8": "L = 494 + 8 rgap [UNCHECKED]",
+  "composed_rd": "169 + RT, RT = station round trip; C24 tree 45/46 + n4->root lanes (C25b) -> ~215-221 [UNCHECKED]",
+  "KX4_rgap_needed": "11-12 on PRE n>=5 records; KX8: 0 (margin ~270 edges)"
+ },
+ "area_KX8": {
+  "x_store_now": "1 x ot_sram_1r1w_128x256_m1_r2c2 per lane (94.824 x 41.064 um = 3,894 um2); KX*NM = 80 of 128 rows",
+  "x_store_KX8": "KX*NM = 160 rows > 128 ($error g_xb_fit) -> ot_sram_1r1w_256x256_m2_r2c2 (172.824 x 41.064 um = 7,097 um2)",
+  "delta_per_lane_um2": 3203,
+  "lanes": 32,
+  "delta_die_mm2": 0.1025,
+  "other": "lane outline +78 um macro width (32 lanes beside their VM bank pairs: plan re-fit + kit rebuild + re-sign of the lane core); RTL: 128->256 macro swap + 8-bit address (opt-in parameter)"
+ },
+ "rgap_cost": {
+  "SU_AR": "HC_PRE_NORM / HC_POST N = 1 (tools/hbm_static/toksim_su/hc/hnx_fused_bench_rr.sh) -> 0 cost on the 1906 tok/s SU price",
+  "MTP_verify": "HC_PRE n = P = 6 (tools/hgi_sim/ds_mtp_rows.py P = 6): (n-1) x 12 = 60 edges a record, 2 HC_PRE records a layer",
+  "per_layer_edges": 120,
+  "assumption": "43 layers on the verify path, serial (worst case: nothing hides it) [UNCHECKED layer count]",
+  "per_verify_edges": 5160,
+  "per_verify_us": 4.3,
+  "verify_step_ms": "~1.19 (exploratory screen 3,500 tok/s at tau 4.159; not an adopted target) [UNCHECKED]",
+  "cost_fraction": "~0.36% of an MTP verify step (<= ~0.5% at 61 layers); 0% on SU AR"
+ },
+ "verdict": "rgap (compiler-emitted, static, no RTL/area) is far below the 5% owner gate; KX=8 costs ~0.10 mm2 + lane re-plan/re-sign for a <0.5% MTP-only gain -> keep rgap (COORD 21:06 default). Re-price on the measured whole-die token run once the programme (op, n) list exists."
+}

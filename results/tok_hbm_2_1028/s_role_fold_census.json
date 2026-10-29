@@ -1,0 +1,1018 @@
+{
+ "schema": "opentallas.tok_hbm_2.s_role_fold_census.v1",
+ "source": "/srv/opentallas-scratch2/claude/die-hbm-10/bindfull/hbm_current_native_top.sv",
+ "sha256": "50d55436db769b55c62a299814017cb27a2fd4b1b0e95a4bdf3e8eadc62cb0c5",
+ "note": "read-only; S role = q0 half of the folded hub (DIE-HBM-7/8 fold contract). Template = the N-role mirror driver in the same composed top. Copy params (QID, READ/WRITE_RETURN, ...) must come from the plan legs, not from the template.",
+ "families": {
+  "hb_dbk_S*": {
+   "nets": 2,
+   "bits": 272,
+   "template_instances": 2,
+   "template_masters": [
+    "ot_hgi_dma_back_static_vp4_banks_cp"
+   ],
+   "nets_without_mirror_driver": 0
+  },
+  "hcollks_S*": {
+   "nets": 8,
+   "bits": 4496,
+   "template_instances": 8,
+   "template_masters": [
+    "ot_hgi_coll_kq_share2_leaf"
+   ],
+   "nets_without_mirror_driver": 0
+  },
+  "hcollrs_S*": {
+   "nets": 2,
+   "bits": 272,
+   "template_instances": 2,
+   "template_masters": [
+    "ot_hbm_idx_vm_share2_static_r"
+   ],
+   "nets_without_mirror_driver": 0
+  },
+  "hleaf_S*": {
+   "nets": 18,
+   "bits": 640,
+   "template_instances": 2,
+   "template_masters": [
+    "ot_hbm_host_cfg_leaf2"
+   ],
+   "nets_without_mirror_driver": 0
+  },
+  "smw_S*": {
+   "nets": 16,
+   "bits": 4496,
+   "template_instances": 9,
+   "template_masters": [
+    "hfd_vms_wq2_merge",
+    "ot_hbm_sm_vm_wr_q_t_lanes4"
+   ],
+   "nets_without_mirror_driver": 0
+  },
+  "su_S*": {
+   "nets": 16,
+   "bits": 4768,
+   "template_instances": 8,
+   "template_masters": [
+    "ot_hbm_su_static_pgslice_lg"
+   ],
+   "nets_without_mirror_driver": 0
+  },
+  "svg_S*": {
+   "nets": 8,
+   "bits": 8792,
+   "template_instances": 0,
+   "template_masters": [],
+   "nets_without_mirror_driver": 8
+  },
+  "vmdel_S*": {
+   "nets": 16,
+   "bits": 4496,
+   "template_instances": 16,
+   "template_masters": [
+    "ot_hbm_svc_vmdel_lane_n"
+   ],
+   "nets_without_mirror_driver": 0
+  },
+  "xl_S*": {
+   "nets": 2,
+   "bits": 272,
+   "template_instances": 2,
+   "template_masters": [
+    "ot_hgi_sm_xload_cl2_ctlx"
+   ],
+   "nets_without_mirror_driver": 0
+  }
+ },
+ "nets": [
+  {
+   "net": "hb_dbk_SE__rq",
+   "width": 136,
+   "mirror": "hb_dbk_NE__rq",
+   "mirror_driver": {
+    "instance": "hb_dbk_NE",
+    "port": "rq",
+    "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "params": ".RR_RT(80)"
+   }
+  },
+  {
+   "net": "hb_dbk_SW__rq",
+   "width": 136,
+   "mirror": "hb_dbk_NW__rq",
+   "mirror_driver": {
+    "instance": "hb_dbk_NW",
+    "port": "rq",
+    "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "params": ".RR_RT(80)"
+   }
+  },
+  {
+   "net": "hcollks_SE_p0__vm_kq",
+   "width": 562,
+   "mirror": "hcollks_NE_p0__vm_kq",
+   "mirror_driver": {
+    "instance": "hcollks_NE_p0",
+    "port": "vm_kq",
+    "master": "ot_hgi_coll_kq_share2_leaf",
+    "params": ""
+   }
+  },
+  {
+   "net": "hcollks_SE_p1__vm_kq",
+   "width": 562,
+   "mirror": "hcollks_NE_p1__vm_kq",
+   "mirror_driver": {
+    "instance": "hcollks_NE_p1",
+    "port": "vm_kq",
+    "master": "ot_hgi_coll_kq_share2_leaf",
+    "params": ""
+   }
+  },
+  {
+   "net": "hcollks_SE_p2__vm_kq",
+   "width": 562,
+   "mirror": "hcollks_NE_p2__vm_kq",
+   "mirror_driver": {
+    "instance": "hcollks_NE_p2",
+    "port": "vm_kq",
+    "master": "ot_hgi_coll_kq_share2_leaf",
+    "params": ""
+   }
+  },
+  {
+   "net": "hcollks_SE_p3__vm_kq",
+   "width": 562,
+   "mirror": "hcollks_NE_p3__vm_kq",
+   "mirror_driver": {
+    "instance": "hcollks_NE_p3",
+    "port": "vm_kq",
+    "master": "ot_hgi_coll_kq_share2_leaf",
+    "params": ""
+   }
+  },
+  {
+   "net": "hcollks_SW_p0__vm_kq",
+   "width": 562,
+   "mirror": "hcollks_NW_p0__vm_kq",
+   "mirror_driver": {
+    "instance": "hcollks_NW_p0",
+    "port": "vm_kq",
+    "master": "ot_hgi_coll_kq_share2_leaf",
+    "params": ""
+   }
+  },
+  {
+   "net": "hcollks_SW_p1__vm_kq",
+   "width": 562,
+   "mirror": "hcollks_NW_p1__vm_kq",
+   "mirror_driver": {
+    "instance": "hcollks_NW_p1",
+    "port": "vm_kq",
+    "master": "ot_hgi_coll_kq_share2_leaf",
+    "params": ""
+   }
+  },
+  {
+   "net": "hcollks_SW_p2__vm_kq",
+   "width": 562,
+   "mirror": "hcollks_NW_p2__vm_kq",
+   "mirror_driver": {
+    "instance": "hcollks_NW_p2",
+    "port": "vm_kq",
+    "master": "ot_hgi_coll_kq_share2_leaf",
+    "params": ""
+   }
+  },
+  {
+   "net": "hcollks_SW_p3__vm_kq",
+   "width": 562,
+   "mirror": "hcollks_NW_p3__vm_kq",
+   "mirror_driver": {
+    "instance": "hcollks_NW_p3",
+    "port": "vm_kq",
+    "master": "ot_hgi_coll_kq_share2_leaf",
+    "params": ""
+   }
+  },
+  {
+   "net": "hcollrs_SE__vm_rq",
+   "width": 136,
+   "mirror": "hcollrs_NE__vm_rq",
+   "mirror_driver": {
+    "instance": "hcollrs_NE",
+    "port": "vm_rq",
+    "master": "ot_hbm_idx_vm_share2_static_r",
+    "params": ".BANK_RT(7)"
+   }
+  },
+  {
+   "net": "hcollrs_SW__vm_rq",
+   "width": 136,
+   "mirror": "hb_idx__nwsh__vm_rq",
+   "mirror_driver": {
+    "instance": "hb_idx__nwsh",
+    "port": "vm_rq",
+    "master": "ot_hbm_idx_vm_share2_static_r",
+    "params": ".BANK_RT(54)"
+   }
+  },
+  {
+   "net": "hleaf_SE__a_cfg_addr",
+   "width": 12,
+   "mirror": "hleaf_NE__a_cfg_addr",
+   "mirror_driver": {
+    "instance": "hleaf_NE",
+    "port": "a_cfg_addr",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(21), .NF(31)"
+   }
+  },
+  {
+   "net": "hleaf_SE__a_cfg_data",
+   "width": 256,
+   "mirror": "hleaf_NE__a_cfg_data",
+   "mirror_driver": {
+    "instance": "hleaf_NE",
+    "port": "a_cfg_data",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(21), .NF(31)"
+   }
+  },
+  {
+   "net": "hleaf_SE__a_cfg_target",
+   "width": 8,
+   "mirror": "hleaf_NE__a_cfg_target",
+   "mirror_driver": {
+    "instance": "hleaf_NE",
+    "port": "a_cfg_target",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(21), .NF(31)"
+   }
+  },
+  {
+   "net": "hleaf_SE__a_cfg_v",
+   "width": 1,
+   "mirror": "hleaf_NE__a_cfg_v",
+   "mirror_driver": {
+    "instance": "hleaf_NE",
+    "port": "a_cfg_v",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(21), .NF(31)"
+   }
+  },
+  {
+   "net": "hleaf_SE__a_desc_base",
+   "width": 12,
+   "mirror": "hleaf_NE__a_desc_base",
+   "mirror_driver": {
+    "instance": "hleaf_NE",
+    "port": "a_desc_base",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(21), .NF(31)"
+   }
+  },
+  {
+   "net": "hleaf_SE__a_desc_limit",
+   "width": 13,
+   "mirror": "hleaf_NE__a_desc_limit",
+   "mirror_driver": {
+    "instance": "hleaf_NE",
+    "port": "a_desc_limit",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(21), .NF(31)"
+   }
+  },
+  {
+   "net": "hleaf_SE__a_desc_loops",
+   "width": 16,
+   "mirror": "hleaf_NE__a_desc_loops",
+   "mirror_driver": {
+    "instance": "hleaf_NE",
+    "port": "a_desc_loops",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(21), .NF(31)"
+   }
+  },
+  {
+   "net": "hleaf_SE__a_desc_v",
+   "width": 1,
+   "mirror": "hleaf_NE__a_desc_v",
+   "mirror_driver": {
+    "instance": "hleaf_NE",
+    "port": "a_desc_v",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(21), .NF(31)"
+   }
+  },
+  {
+   "net": "hleaf_SE__a_launch_v",
+   "width": 1,
+   "mirror": "hleaf_NE__a_launch_v",
+   "mirror_driver": {
+    "instance": "hleaf_NE",
+    "port": "a_launch_v",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(21), .NF(31)"
+   }
+  },
+  {
+   "net": "hleaf_SW__a_cfg_addr",
+   "width": 12,
+   "mirror": "hleaf_NW__a_cfg_addr",
+   "mirror_driver": {
+    "instance": "hleaf_NW",
+    "port": "a_cfg_addr",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(20), .NF(32)"
+   }
+  },
+  {
+   "net": "hleaf_SW__a_cfg_data",
+   "width": 256,
+   "mirror": "hleaf_NW__a_cfg_data",
+   "mirror_driver": {
+    "instance": "hleaf_NW",
+    "port": "a_cfg_data",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(20), .NF(32)"
+   }
+  },
+  {
+   "net": "hleaf_SW__a_cfg_target",
+   "width": 8,
+   "mirror": "hleaf_NW__a_cfg_target",
+   "mirror_driver": {
+    "instance": "hleaf_NW",
+    "port": "a_cfg_target",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(20), .NF(32)"
+   }
+  },
+  {
+   "net": "hleaf_SW__a_cfg_v",
+   "width": 1,
+   "mirror": "hleaf_NW__a_cfg_v",
+   "mirror_driver": {
+    "instance": "hleaf_NW",
+    "port": "a_cfg_v",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(20), .NF(32)"
+   }
+  },
+  {
+   "net": "hleaf_SW__a_desc_base",
+   "width": 12,
+   "mirror": "hleaf_NW__a_desc_base",
+   "mirror_driver": {
+    "instance": "hleaf_NW",
+    "port": "a_desc_base",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(20), .NF(32)"
+   }
+  },
+  {
+   "net": "hleaf_SW__a_desc_limit",
+   "width": 13,
+   "mirror": "hleaf_NW__a_desc_limit",
+   "mirror_driver": {
+    "instance": "hleaf_NW",
+    "port": "a_desc_limit",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(20), .NF(32)"
+   }
+  },
+  {
+   "net": "hleaf_SW__a_desc_loops",
+   "width": 16,
+   "mirror": "hleaf_NW__a_desc_loops",
+   "mirror_driver": {
+    "instance": "hleaf_NW",
+    "port": "a_desc_loops",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(20), .NF(32)"
+   }
+  },
+  {
+   "net": "hleaf_SW__a_desc_v",
+   "width": 1,
+   "mirror": "hleaf_NW__a_desc_v",
+   "mirror_driver": {
+    "instance": "hleaf_NW",
+    "port": "a_desc_v",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(20), .NF(32)"
+   }
+  },
+  {
+   "net": "hleaf_SW__a_launch_v",
+   "width": 1,
+   "mirror": "hleaf_NW__a_launch_v",
+   "mirror_driver": {
+    "instance": "hleaf_NW",
+    "port": "a_launch_v",
+    "master": "ot_hbm_host_cfg_leaf2",
+    "params": ".NT(20), .NF(32)"
+   }
+  },
+  {
+   "net": "smw_SE__wq_s0",
+   "width": 281,
+   "mirror": "smw_NE__wq_s0",
+   "mirror_driver": {
+    "instance": "smw_NE",
+    "port": "wq_s0",
+    "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+    "params": ".DEPTH(4)"
+   }
+  },
+  {
+   "net": "smw_SE__wq_s1",
+   "width": 281,
+   "mirror": "smw_NE__wq_s1",
+   "mirror_driver": {
+    "instance": "smw_NE",
+    "port": "wq_s1",
+    "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+    "params": ".DEPTH(4)"
+   }
+  },
+  {
+   "net": "smw_SE__wq_s2",
+   "width": 281,
+   "mirror": "smw_NE__wq_s2",
+   "mirror_driver": {
+    "instance": "smw_NE",
+    "port": "wq_s2",
+    "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+    "params": ".DEPTH(4)"
+   }
+  },
+  {
+   "net": "smw_SE__wq_s3",
+   "width": 281,
+   "mirror": "smw_NE__wq_s3",
+   "mirror_driver": {
+    "instance": "smw_NE",
+    "port": "wq_s3",
+    "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+    "params": ".DEPTH(4)"
+   }
+  },
+  {
+   "net": "smw_SE__wq_t0",
+   "width": 281,
+   "mirror": "smw_NE__wq_t0",
+   "mirror_driver": {
+    "instance": "smw_NE",
+    "port": "wq_t0",
+    "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+    "params": ".DEPTH(4)"
+   }
+  },
+  {
+   "net": "smw_SE__wq_t1",
+   "width": 281,
+   "mirror": "smw_NE__wq_t1",
+   "mirror_driver": {
+    "instance": "smw_NE",
+    "port": "wq_t1",
+    "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+    "params": ".DEPTH(4)"
+   }
+  },
+  {
+   "net": "smw_SE__wq_t2",
+   "width": 281,
+   "mirror": "smw_NE__wq_t2",
+   "mirror_driver": {
+    "instance": "smw_NE",
+    "port": "wq_t2",
+    "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+    "params": ".DEPTH(4)"
+   }
+  },
+  {
+   "net": "smw_SE__wq_t3",
+   "width": 281,
+   "mirror": "smw_NE__wq_t3",
+   "mirror_driver": {
+    "instance": "smw_NE",
+    "port": "wq_t3",
+    "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+    "params": ".DEPTH(4)"
+   }
+  },
+  {
+   "net": "smw_SW__wq_s0",
+   "width": 281,
+   "mirror": "vmm_NW0__wq_m",
+   "mirror_driver": {
+    "instance": "vmm_NW0",
+    "port": "wq_m",
+    "master": "hfd_vms_wq2_merge",
+    "params": ""
+   }
+  },
+  {
+   "net": "smw_SW__wq_s1",
+   "width": 281,
+   "mirror": "vmm_NW1__wq_m",
+   "mirror_driver": {
+    "instance": "vmm_NW1",
+    "port": "wq_m",
+    "master": "hfd_vms_wq2_merge",
+    "params": ""
+   }
+  },
+  {
+   "net": "smw_SW__wq_s2",
+   "width": 281,
+   "mirror": "vmm_NW2__wq_m",
+   "mirror_driver": {
+    "instance": "vmm_NW2",
+    "port": "wq_m",
+    "master": "hfd_vms_wq2_merge",
+    "params": ""
+   }
+  },
+  {
+   "net": "smw_SW__wq_s3",
+   "width": 281,
+   "mirror": "vmm_NW3__wq_m",
+   "mirror_driver": {
+    "instance": "vmm_NW3",
+    "port": "wq_m",
+    "master": "hfd_vms_wq2_merge",
+    "params": ""
+   }
+  },
+  {
+   "net": "smw_SW__wq_t0",
+   "width": 281,
+   "mirror": "vmm_NW4__wq_m",
+   "mirror_driver": {
+    "instance": "vmm_NW4",
+    "port": "wq_m",
+    "master": "hfd_vms_wq2_merge",
+    "params": ""
+   }
+  },
+  {
+   "net": "smw_SW__wq_t1",
+   "width": 281,
+   "mirror": "vmm_NW5__wq_m",
+   "mirror_driver": {
+    "instance": "vmm_NW5",
+    "port": "wq_m",
+    "master": "hfd_vms_wq2_merge",
+    "params": ""
+   }
+  },
+  {
+   "net": "smw_SW__wq_t2",
+   "width": 281,
+   "mirror": "vmm_NW6__wq_m",
+   "mirror_driver": {
+    "instance": "vmm_NW6",
+    "port": "wq_m",
+    "master": "hfd_vms_wq2_merge",
+    "params": ""
+   }
+  },
+  {
+   "net": "smw_SW__wq_t3",
+   "width": 281,
+   "mirror": "vmm_NW7__wq_m",
+   "mirror_driver": {
+    "instance": "vmm_NW7",
+    "port": "wq_m",
+    "master": "hfd_vms_wq2_merge",
+    "params": ""
+   }
+  },
+  {
+   "net": "su_SE0__lg_rq",
+   "width": 34,
+   "mirror": "su_NE0__lg_rq",
+   "mirror_driver": {
+    "instance": "su_NE0",
+    "port": "lg_rq",
+    "master": "ot_hbm_su_static_pgslice_lg",
+    "params": ".QID(3), .G(0), .READ_RETURN(25), .WRITE_RETURN(22), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)"
+   }
+  },
+  {
+   "net": "su_SE0__lg_wq",
+   "width": 562,
+   "mirror": "su_NE0__lg_wq",
+   "mirror_driver": {
+    "instance": "su_NE0",
+    "port": "lg_wq",
+    "master": "ot_hbm_su_static_pgslice_lg",
+    "params": ".QID(3), .G(0), .READ_RETURN(25), .WRITE_RETURN(22), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)"
+   }
+  },
+  {
+   "net": "su_SE1__lg_rq",
+   "width": 34,
+   "mirror": "su_NE1__lg_rq",
+   "mirror_driver": {
+    "instance": "su_NE1",
+    "port": "lg_rq",
+    "master": "ot_hbm_su_static_pgslice_lg",
+    "params": ".QID(3), .G(1), .READ_RETURN(15), .WRITE_RETURN(12), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)"
+   }
+  },
+  {
+   "net": "su_SE1__lg_wq",
+   "width": 562,
+   "mirror": "su_NE1__lg_wq",
+   "mirror_driver": {
+    "instance": "su_NE1",
+    "port": "lg_wq",
+    "master": "ot_hbm_su_static_pgslice_lg",
+    "params": ".QID(3), .G(1), .READ_RETURN(15), .WRITE_RETURN(12), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)"
+   }
+  },
+  {
+   "net": "su_SE2__lg_rq",
+   "width": 34,
+   "mirror": "su_NE2__lg_rq",
+   "mirror_driver": {
+    "instance": "su_NE2",
+    "port": "lg_rq",
+    "master": "ot_hbm_su_static_pgslice_lg",
+    "params": ".QID(3), .G(2), .READ_RETURN(19), .WRITE_RETURN(16), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)"
+   }
+  },
+  {
+   "net": "su_SE2__lg_wq",
+   "width": 562,
+   "mirror": "su_NE2__lg_wq",
+   "mirror_driver": {
+    "instance": "su_NE2",
+    "port": "lg_wq",
+    "master": "ot_hbm_su_static_pgslice_lg",
+    "params": ".QID(3), .G(2), .READ_RETURN(19), .WRITE_RETURN(16), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)"
+   }
+  },
+  {
+   "net": "su_SE3__lg_rq",
+   "width": 34,
+   "mirror": "su_NE3__lg_rq",
+   "mirror_driver": {
+    "instance": "su_NE3",
+    "port": "lg_rq",
+    "master": "ot_hbm_su_static_pgslice_lg",
+    "params": ".QID(3), .G(3), .READ_RETURN(15), .WRITE_RETURN(12), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)"
+   }
+  },
+  {
+   "net": "su_SE3__lg_wq",
+   "width": 562,
+   "mirror": "su_NE3__lg_wq",
+   "mirror_driver": {
+    "instance": "su_NE3",
+    "port": "lg_wq",
+    "master": "ot_hbm_su_static_pgslice_lg",
+    "params": ".QID(3), .G(3), .READ_RETURN(15), .WRITE_RETURN(12), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)"
+   }
+  },
+  {
+   "net": "su_SW0__lg_rq",
+   "width": 34,
+   "mirror": "su_NW0__lg_rq",
+   "mirror_driver": {
+    "instance": "su_NW0",
+    "port": "lg_rq",
+    "master": "ot_hbm_su_static_pgslice_lg",
+    "params": ".QID(2), .G(0), .READ_RETURN(25), .WRITE_RETURN(22), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)"
+   }
+  },
+  {
+   "net": "su_SW0__lg_wq",
+   "width": 562,
+   "mirror": "su_NW0__lg_wq",
+   "mirror_driver": {
+    "instance": "su_NW0",
+    "port": "lg_wq",
+    "master": "ot_hbm_su_static_pgslice_lg",
+    "params": ".QID(2), .G(0), .READ_RETURN(25), .WRITE_RETURN(22), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)"
+   }
+  },
+  {
+   "net": "su_SW1__lg_rq",
+   "width": 34,
+   "mirror": "su_NW1__lg_rq",
+   "mirror_driver": {
+    "instance": "su_NW1",
+    "port": "lg_rq",
+    "master": "ot_hbm_su_static_pgslice_lg",
+    "params": ".QID(2), .G(1), .READ_RETURN(15), .WRITE_RETURN(12), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)"
+   }
+  },
+  {
+   "net": "su_SW1__lg_wq",
+   "width": 562,
+   "mirror": "su_NW1__lg_wq",
+   "mirror_driver": {
+    "instance": "su_NW1",
+    "port": "lg_wq",
+    "master": "ot_hbm_su_static_pgslice_lg",
+    "params": ".QID(2), .G(1), .READ_RETURN(15), .WRITE_RETURN(12), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)"
+   }
+  },
+  {
+   "net": "su_SW2__lg_rq",
+   "width": 34,
+   "mirror": "su_NW2__lg_rq",
+   "mirror_driver": {
+    "instance": "su_NW2",
+    "port": "lg_rq",
+    "master": "ot_hbm_su_static_pgslice_lg",
+    "params": ".QID(2), .G(2), .READ_RETURN(19), .WRITE_RETURN(16), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)"
+   }
+  },
+  {
+   "net": "su_SW2__lg_wq",
+   "width": 562,
+   "mirror": "su_NW2__lg_wq",
+   "mirror_driver": {
+    "instance": "su_NW2",
+    "port": "lg_wq",
+    "master": "ot_hbm_su_static_pgslice_lg",
+    "params": ".QID(2), .G(2), .READ_RETURN(19), .WRITE_RETURN(16), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)"
+   }
+  },
+  {
+   "net": "su_SW3__lg_rq",
+   "width": 34,
+   "mirror": "su_NW3__lg_rq",
+   "mirror_driver": {
+    "instance": "su_NW3",
+    "port": "lg_rq",
+    "master": "ot_hbm_su_static_pgslice_lg",
+    "params": ".QID(2), .G(3), .READ_RETURN(15), .WRITE_RETURN(12), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)"
+   }
+  },
+  {
+   "net": "su_SW3__lg_wq",
+   "width": 562,
+   "mirror": "su_NW3__lg_wq",
+   "mirror_driver": {
+    "instance": "su_NW3",
+    "port": "lg_wq",
+    "master": "ot_hbm_su_static_pgslice_lg",
+    "params": ".QID(2), .G(3), .READ_RETURN(15), .WRITE_RETURN(12), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(4), .LEAF(1), .MUT(0), .MULTIRATE(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .RSYNC(0)"
+   }
+  },
+  {
+   "net": "svg_SW0__sm_packet",
+   "width": 1099,
+   "mirror": null,
+   "mirror_driver": null
+  },
+  {
+   "net": "svg_SW1__sm_packet",
+   "width": 1099,
+   "mirror": null,
+   "mirror_driver": null
+  },
+  {
+   "net": "svg_SW2__sm_packet",
+   "width": 1099,
+   "mirror": null,
+   "mirror_driver": null
+  },
+  {
+   "net": "svg_SW3__sm_packet",
+   "width": 1099,
+   "mirror": null,
+   "mirror_driver": null
+  },
+  {
+   "net": "svg_SW4__sm_packet",
+   "width": 1099,
+   "mirror": null,
+   "mirror_driver": null
+  },
+  {
+   "net": "svg_SW5__sm_packet",
+   "width": 1099,
+   "mirror": null,
+   "mirror_driver": null
+  },
+  {
+   "net": "svg_SW6__sm_packet",
+   "width": 1099,
+   "mirror": null,
+   "mirror_driver": null
+  },
+  {
+   "net": "svg_SW7__sm_packet",
+   "width": 1099,
+   "mirror": null,
+   "mirror_driver": null
+  },
+  {
+   "net": "vmdel_SE0__dq",
+   "width": 281,
+   "mirror": "vmdel_NE0__dq",
+   "mirror_driver": {
+    "instance": "vmdel_NE0",
+    "port": "dq",
+    "master": "ot_hbm_svc_vmdel_lane_n",
+    "params": ".NPC(2)"
+   }
+  },
+  {
+   "net": "vmdel_SE1__dq",
+   "width": 281,
+   "mirror": "vmdel_NE1__dq",
+   "mirror_driver": {
+    "instance": "vmdel_NE1",
+    "port": "dq",
+    "master": "ot_hbm_svc_vmdel_lane_n",
+    "params": ".NPC(2)"
+   }
+  },
+  {
+   "net": "vmdel_SE2__dq",
+   "width": 281,
+   "mirror": "vmdel_NE2__dq",
+   "mirror_driver": {
+    "instance": "vmdel_NE2",
+    "port": "dq",
+    "master": "ot_hbm_svc_vmdel_lane_n",
+    "params": ".NPC(2)"
+   }
+  },
+  {
+   "net": "vmdel_SE3__dq",
+   "width": 281,
+   "mirror": "vmdel_NE3__dq",
+   "mirror_driver": {
+    "instance": "vmdel_NE3",
+    "port": "dq",
+    "master": "ot_hbm_svc_vmdel_lane_n",
+    "params": ".NPC(2)"
+   }
+  },
+  {
+   "net": "vmdel_SE4__dq",
+   "width": 281,
+   "mirror": "vmdel_NE4__dq",
+   "mirror_driver": {
+    "instance": "vmdel_NE4",
+    "port": "dq",
+    "master": "ot_hbm_svc_vmdel_lane_n",
+    "params": ".NPC(2)"
+   }
+  },
+  {
+   "net": "vmdel_SE5__dq",
+   "width": 281,
+   "mirror": "vmdel_NE5__dq",
+   "mirror_driver": {
+    "instance": "vmdel_NE5",
+    "port": "dq",
+    "master": "ot_hbm_svc_vmdel_lane_n",
+    "params": ".NPC(2)"
+   }
+  },
+  {
+   "net": "vmdel_SE6__dq",
+   "width": 281,
+   "mirror": "vmdel_NE6__dq",
+   "mirror_driver": {
+    "instance": "vmdel_NE6",
+    "port": "dq",
+    "master": "ot_hbm_svc_vmdel_lane_n",
+    "params": ".NPC(2)"
+   }
+  },
+  {
+   "net": "vmdel_SE7__dq",
+   "width": 281,
+   "mirror": "vmdel_NE7__dq",
+   "mirror_driver": {
+    "instance": "vmdel_NE7",
+    "port": "dq",
+    "master": "ot_hbm_svc_vmdel_lane_n",
+    "params": ".NPC(2)"
+   }
+  },
+  {
+   "net": "vmdel_SW0__dq",
+   "width": 281,
+   "mirror": "vmdel_NW0__dq",
+   "mirror_driver": {
+    "instance": "vmdel_NW0",
+    "port": "dq",
+    "master": "ot_hbm_svc_vmdel_lane_n",
+    "params": ".NPC(2)"
+   }
+  },
+  {
+   "net": "vmdel_SW1__dq",
+   "width": 281,
+   "mirror": "vmdel_NW1__dq",
+   "mirror_driver": {
+    "instance": "vmdel_NW1",
+    "port": "dq",
+    "master": "ot_hbm_svc_vmdel_lane_n",
+    "params": ".NPC(2)"
+   }
+  },
+  {
+   "net": "vmdel_SW2__dq",
+   "width": 281,
+   "mirror": "vmdel_NW2__dq",
+   "mirror_driver": {
+    "instance": "vmdel_NW2",
+    "port": "dq",
+    "master": "ot_hbm_svc_vmdel_lane_n",
+    "params": ".NPC(2)"
+   }
+  },
+  {
+   "net": "vmdel_SW3__dq",
+   "width": 281,
+   "mirror": "vmdel_NW3__dq",
+   "mirror_driver": {
+    "instance": "vmdel_NW3",
+    "port": "dq",
+    "master": "ot_hbm_svc_vmdel_lane_n",
+    "params": ".NPC(2)"
+   }
+  },
+  {
+   "net": "vmdel_SW4__dq",
+   "width": 281,
+   "mirror": "vmdel_NW4__dq",
+   "mirror_driver": {
+    "instance": "vmdel_NW4",
+    "port": "dq",
+    "master": "ot_hbm_svc_vmdel_lane_n",
+    "params": ".NPC(2)"
+   }
+  },
+  {
+   "net": "vmdel_SW5__dq",
+   "width": 281,
+   "mirror": "vmdel_NW5__dq",
+   "mirror_driver": {
+    "instance": "vmdel_NW5",
+    "port": "dq",
+    "master": "ot_hbm_svc_vmdel_lane_n",
+    "params": ".NPC(2)"
+   }
+  },
+  {
+   "net": "vmdel_SW6__dq",
+   "width": 281,
+   "mirror": "vmdel_NW6__dq",
+   "mirror_driver": {
+    "instance": "vmdel_NW6",
+    "port": "dq",
+    "master": "ot_hbm_svc_vmdel_lane_n",
+    "params": ".NPC(2)"
+   }
+  },
+  {
+   "net": "vmdel_SW7__dq",
+   "width": 281,
+   "mirror": "vmdel_NW7__dq",
+   "mirror_driver": {
+    "instance": "vmdel_NW7",
+    "port": "dq",
+    "master": "ot_hbm_svc_vmdel_lane_n",
+    "params": ".NPC(2)"
+   }
+  },
+  {
+   "net": "xl_SE_ctl__rq",
+   "width": 136,
+   "mirror": "xl_NE_ctl__rq",
+   "mirror_driver": {
+    "instance": "xl_NE_ctl",
+    "port": "rq",
+    "master": "ot_hgi_sm_xload_cl2_ctlx",
+    "params": ".PMAX(8), .RD_LAT({8'd46, 8'd44, 8'd66, 8'd62, 8'd30, 8'd28, 8'd44, 8'd42}), .NR(32), .LEAD(8)"
+   }
+  },
+  {
+   "net": "xl_SW_ctl__rq",
+   "width": 136,
+   "mirror": "xl_NW_ctl__rq",
+   "mirror_driver": {
+    "instance": "xl_NW_ctl",
+    "port": "rq",
+    "master": "ot_hgi_sm_xload_cl2_ctlx",
+    "params": ".PMAX(8), .RD_LAT({8'd46, 8'd44, 8'd66, 8'd62, 8'd30, 8'd28, 8'd44, 8'd42}), .NR(32), .LEAD(8)"
+   }
+  }
+ ]
+}

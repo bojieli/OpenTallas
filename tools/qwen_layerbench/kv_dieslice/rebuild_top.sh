@@ -11,12 +11,12 @@ H=$(cd "$(dirname "$0")" && pwd); R=$(cd $H/../../.. && pwd)
 O=$(readlink -f $1); A=$O/obj/Vtb_kvslice__hierMkArgs.f
 IMGD=${D2D_IMG:-$R/physical/die_plan/qwen_kvsys/boot_v36/image_kv41}
 [ -f $A.orig ] || cp $A $A.orig
-python3 - $A.orig $A $H $R $IMGD <<'EOF'
+python3 - $A.orig $A $H $R $IMGD $O <<'EOF'
 import sys
-src, dst, H, R, IMGD = sys.argv[1:]
-extra = [f'{H}/kvs_compute_end.sv', f'{R}/rtl/qwen_split/qfd_kvn_static_transport.sv',
+src, dst, H, R, IMGD, O = sys.argv[1:]
+extra = [f'{R}/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv', f'{H}/kvs_compute_end.sv', f'{R}/rtl/qwen_split/qfd_kvn_static_transport.sv',
          f'{R}/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv', f'{R}/rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv',
-         f'+incdir+{IMGD}', f'+incdir+{H}']
+         f'+incdir+{O}/gen', f'+incdir+{IMGD}', f'+incdir+{H}']
 out = []
 for l in open(src).read().splitlines():
     if l.endswith('/kv_dieslice/tb_kvslice.sv'):
