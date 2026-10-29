@@ -150,15 +150,23 @@ def balanced(points, centres, dist, iters=400):
         if all(cnt[c] == tgt[c] for c in range(k)): break
         for c in range(k): w[c] += 0.5 * (cnt[c] - tgt[c]) / max(1, n / k) * 20 / (1 + it / 50)
     cnt = collections.Counter(a)
-    while any(cnt[c] > tgt[c] for c in range(k)):
-        best = None
-        for i in range(n):
-            if cnt[a[i]] <= tgt[a[i]]: continue
-            for c in range(k):
-                if cnt[c] < tgt[c]:
-                    cost = Dm[i][c] - Dm[i][a[i]]
-                    if best is None or cost < best[0]: best = (cost, i, c)
-        _, i, c = best; cnt[a[i]] -= 1; cnt[c] += 1; a[i] = c
+    # Every correction moves from an overfull group into a deficit group. A destination never becomes overfull,
+    # so eligible moves only disappear; no new move can become eligible. The old full scan after each transfer
+    # therefore equals this static heap with lazy invalidation. Tuple order preserves its first-i/first-c tie break.
+    import heapq
+    over = {c for c in range(k) if cnt[c] > tgt[c]}
+    deficit = [c for c in range(k) if cnt[c] < tgt[c]]
+    original = list(a)
+    candidates = [(Dm[i][c] - Dm[i][source], i, c)
+                  for i, source in enumerate(a) if source in over for c in deficit]
+    heapq.heapify(candidates)
+    excess = sum(max(0, cnt[c] - tgt[c]) for c in range(k))
+    while excess:
+        _, i, c = heapq.heappop(candidates)
+        source = original[i]
+        if a[i] != source or cnt[source] <= tgt[source] or cnt[c] >= tgt[c]:
+            continue
+        cnt[source] -= 1; cnt[c] += 1; a[i] = c; excess -= 1
     return [[points[i] for i in range(n) if a[i] == c] for c in range(k)]
 
 
