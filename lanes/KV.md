@@ -21,3 +21,4 @@
 
 ## CODEX notes 2026-10-25 21:48 PDT
 CODEX remaining-lanes takeover: Legacy physical fixes subsumed PATH-KV. Jobs: Current jobs owned qwen_physical. Next: Only current833 reset/start bind+geometry repairs. Failure disposition: ECTLK drops/ASTK fanout old causes captured; no oldA/B reroute.
+- [2026-10-29 02:18 PDT] [DIE-KV-24] START; see queue START line. Codex handback handoff/codex_kv_to_claude_20261029_0203.md read.
