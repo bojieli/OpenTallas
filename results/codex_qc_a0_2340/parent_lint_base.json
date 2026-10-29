@@ -1,0 +1,21 @@
+{
+ "verdict": "PASS",
+ "rc": 0,
+ "mapped_cell_types": 6,
+ "top_params": [
+  "G4_ROOTS",
+  "1",
+  "REGROOT_MODE",
+  "3",
+  "ICG",
+  "1"
+ ],
+ "errors": [],
+ "yosys_cast": 0,
+ "command": [
+  "yosys",
+  "-q",
+  "-s",
+  "/work/rtl_lint.ys"
+ ]
+}

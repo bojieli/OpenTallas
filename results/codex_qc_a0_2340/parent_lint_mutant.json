@@ -1,0 +1,23 @@
+{
+ "verdict": "FAIL",
+ "rc": 1,
+ "mapped_cell_types": 6,
+ "top_params": [
+  "G4_ROOTS",
+  "1",
+  "REGROOT_MODE",
+  "3",
+  "ICG",
+  "1"
+ ],
+ "errors": [
+  "ERROR: Found 514 problems in 'check -assert'."
+ ],
+ "yosys_cast": 0,
+ "command": [
+  "yosys",
+  "-q",
+  "-s",
+  "/work/rtl_lint.ys"
+ ]
+}

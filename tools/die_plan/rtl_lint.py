@@ -67,7 +67,11 @@ def script(kit, mount='/work'):
                        if re.search(r'_bb\.(?:v|sv)$', s) else
                        'read_verilog -defer -sv -noautowire ') +
                       ' '.join(includes + [s]) for s in sources] +
-                     parameter_commands + [f'hierarchy -check -top {top[0]}', 'proc',
+                     # Optional actual-top liveness for macro-composed parents: hierarchy-local dead outputs can
+                     # retain undriven cones whose consumers disappear only across module boundaries. Flatten
+                     # before pruning preserves every LIVE undriven top connection for check -assert.
+                     parameter_commands + [f'hierarchy -check -top {top[0]}', 'proc'] +
+                     (['flatten', 'opt_expr -keepdc'] if cfg.get('OT_RTL_LINT_FLATTEN') == ['1'] else []) + [
                                            # Check the elaborated live design. Dead parameter-disabled cones can
                                            # retain unassigned legacy wires after proc (safe4 PIPE=2); live
                                            # undriven nets still survive opt_clean and fail check -assert.
