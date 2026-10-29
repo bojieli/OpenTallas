@@ -1,0 +1,137 @@
+{
+  "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+  "status": "ESTIMATE ONLY; instance assignment and current plan pins pending",
+  "outline_um": [
+    501.12,
+    311.04
+  ],
+  "old_outline_um": [
+    239.976,
+    275.4
+  ],
+  "clock_entry_um": [
+    250.56,
+    155.52
+  ],
+  "macro_size_um": [
+    94.8,
+    41.1
+  ],
+  "macro_count": 10,
+  "columns": 2,
+  "channel_gaps_um": [
+    76.19399999999999,
+    150.63,
+    76.056
+  ],
+  "channel_load_bits": [
+    2050,
+    4095,
+    2045
+  ],
+  "vertical_track_density": 48.611111111111114,
+  "escape_bound": [
+    0.5867410826088512,
+    0.5932812169871117,
+    0.5864359795440425
+  ],
+  "macro_positions": [
+    {
+      "column": 0,
+      "row": 0,
+      "origin_um": [
+        80.514,
+        105.732
+      ],
+      "orient": "R0"
+    },
+    {
+      "column": 0,
+      "row": 1,
+      "origin_um": [
+        80.514,
+        55.992
+      ],
+      "orient": "R0"
+    },
+    {
+      "column": 0,
+      "row": 2,
+      "origin_um": [
+        80.514,
+        164.208
+      ],
+      "orient": "R0"
+    },
+    {
+      "column": 0,
+      "row": 3,
+      "origin_um": [
+        80.514,
+        213.948
+      ],
+      "orient": "R0"
+    },
+    {
+      "column": 0,
+      "row": 4,
+      "origin_um": [
+        80.514,
+        263.688
+      ],
+      "orient": "R0"
+    },
+    {
+      "column": 1,
+      "row": 0,
+      "origin_um": [
+        325.944,
+        105.732
+      ],
+      "orient": "R0"
+    },
+    {
+      "column": 1,
+      "row": 1,
+      "origin_um": [
+        325.944,
+        55.992
+      ],
+      "orient": "R0"
+    },
+    {
+      "column": 1,
+      "row": 2,
+      "origin_um": [
+        325.944,
+        164.208
+      ],
+      "orient": "R0"
+    },
+    {
+      "column": 1,
+      "row": 3,
+      "origin_um": [
+        325.944,
+        213.948
+      ],
+      "orient": "R0"
+    },
+    {
+      "column": 1,
+      "row": 4,
+      "origin_um": [
+        325.944,
+        263.688
+      ],
+      "orient": "R0"
+    }
+  ],
+  "assumptions": [
+    "all ten macros same R0 abstract",
+    "M3+M5 usable in vertical channels; macro halo excluded",
+    "whole-column summed edge pins bound <=0.6; sufficient channel budget, not GRT proof",
+    "clock islands/entry must be resited before build; external pins regenerate from die owner",
+    "no RTL/calendar/cycle change"
+  ]
+}
