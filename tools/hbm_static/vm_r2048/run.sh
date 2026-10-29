@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 O=${1:?fresh output root}
-D=rtl/hbm_accel/generic/vm/static/faces_q0
+D=physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/faces_q0
 N=rtl/hbm_accel/generic/vm/static/faces_q0_r2048
 B=tools/hbm_static/vm_r2048
 mkdir -p "$O"
@@ -15,3 +15,6 @@ for c in positive high_alias mirror_alias;do
   test "$rc" != 0;grep -q FATAL "$O/$c.log";echo "MUTANT_CAUGHT $c"
  fi
 done
+
+verilator --lint-only --timing -Wno-fatal -Werror-WIDTH -Werror-SELRANGE --top-module hfd_vms_bank_native_q0_faces_r2048 "$N"/*.sv rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v >"$O/lint.log" 2>&1
+echo 'VM_R2048 WIDTH_SELRANGE_PASS'
