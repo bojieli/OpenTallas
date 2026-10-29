@@ -1,0 +1,8 @@
+{
+ "schema":"opentallas.geom_review.v1",
+ "design":"ot_s81sl_vq_census1028",
+ "picture":"results/codex_s81_cores_1028/vq_trial_plan.png",
+ "review":"Personally viewed; trial placement only. 172.8x129.6 um rectangle, bottom SRAM at55.296,2.16 size94.824x41.064 leaves21.576um to the central M5 clock entry. Registered perimeter buses unchanged. Centre-to-corner Manhattan reach151.2um is below200um. No macro wall; free upper region and left/right channels. Existing PDN recipe is retained; actual PG continuity, pin density, sinks and congestion require placed review.",
+ "verdict":"PASS-COND",
+ "scope":"PLACE ONLY: current-RTL sink census. No structured tree yet; no CTS/STA/route/signoff authority. Canonical die core interface unchanged pending one plan event."
+}
