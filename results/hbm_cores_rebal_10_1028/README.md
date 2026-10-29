@@ -52,3 +52,18 @@ Verdict: the estimate passes, so build. bank3 write_v is the thinnest hop; its p
 * `_c20ek2m_m5w1gk` = keep + copy guides only (A/B arm: shows the relay effect), KIT_PREFLIGHT PASS 0.
 * chain_r10.sh collects 3_place (TT ideal-clock STA + render) and 4_cts (propagated TT STA + render), writing
   post_{gr,gk}/status, sta_*.log, *.png. sta_r10.tcl reports per hop: relay_D / copy_D / sram_wd / sram_waddr / sram_wce.
+* Synth CHECKED (both kits, 1_synth.v): 42 copy flops under every one of the 24 columns = 1008 (REBAL-9: 168).
+  Next stages in the kit chain: face_guard/port_bind, LEC (~66 min), floorplan, place, CTS, post-CTS hold gate.
+
+## 5. Successor steps
+1. post_gr/status shows 3_place: VIEW post_gr/3_place.png. Copy flops should sit inside their dashed boxes, and the
+   relay groups at their points. Read sta_3_place.log HOP lines. Post a GEOM REQ [HBM-CORES-REBAL-10 lanes__canon m5w1gr]
+   with the render.
+2. 4_cts: sta_4_cts.log (WNS/TNS/NEG, CLS, HOP, MULALL, reset) and hold_gate.log. Compare with gk (relay A/B) and
+   REBAL-9 (-124.3 / 903).
+3. Enqueue the finish (intel2 enqueue.py --die hbm --type ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77
+   --kit intel2:<gr kit> --src claude/hbm-cores-rebal-10-1028@<sha> --geom REQ --geom-ref "<GEOM REQ tag>" --mem 32
+   --cells 330000 --lane HBM-CORES-REBAL --goal finish --mode trial). Do this ONLY after the hand CTS run has ended,
+   so the autopilot never runs it twice. The autopilot route then gives signoff.py + routed LEC; export the view with
+   export_view.py (provenance.json, pin file plan_pins.json).
+4. READY ROOT-MERGE for this branch: RTL keep + opt-in generator guides.
