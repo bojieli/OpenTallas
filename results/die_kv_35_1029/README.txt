@@ -49,7 +49,7 @@ KV-021 part 2 (15:10-15:55, after COORD approved default eA2 at ~15:3x) -- kv021
     RESPONSE_LAT). Cause: the K+1 set contains ECTL request ports (hg->pc o_ectl_Q_N_kf on EN_1/EN_3/WN_4) and response
     ports (pc->hg slg krsp/rsp on WN_1/WS_3/WS_6), so those 6 frames go 17->18 and the other frames stay 17 (frame list
     inferred from the port list, UNCHECKED). eA2 is therefore NOT bind-clean yet.
-10. Kit RTL (9 re-tied types, kit-rtl on bind28 vs control bindOld, run-path normalised): 13 files differ on 8 types
+10. Kit RTL (9 re-tied types, kit-rtl on bind28 vs control bindOld, run-path normalised): 13 files differ on 7 types
     (bound wrappers *_bound.sv of hg_v1/hg_v1p3/hg_v1p6/hroot/hub_Wo/pc_v1__cl23f6a148/pc_v3 + pc_v1__cl23f6a148 and
     pc_v3 part RTL) = the landing/latency change reaches kit RTL -> those kits need re-kit + LEC + re-sign; on the
     failing bind this list is provisional.
