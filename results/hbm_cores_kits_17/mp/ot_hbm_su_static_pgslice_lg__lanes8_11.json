@@ -1,0 +1,227 @@
+{
+ "schema": "opentallas.macro_placement.v1",
+ "design": "ot_hbm_su_static_pgslice_lg__lanes8_11",
+ "outline_um": [
+  760.32,
+  725.76
+ ],
+ "macro_placement": [
+  {
+   "k": "u_core.u_bank3.u_data.g_read[5].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    147.69,
+    313.128
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank3.u_data.g_read[4].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    147.69,
+    263.424
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank3.u_data.g_read[3].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    147.69,
+    213.72
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank3.u_data.g_read[2].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    147.69,
+    164.016
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank3.u_data.g_read[1].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    147.69,
+    114.312
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank3.u_data.g_read[0].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    147.69,
+    64.608
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank2.u_data.g_read[5].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    147.69,
+    371.568
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank2.u_data.g_read[4].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    147.69,
+    421.272
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank2.u_data.g_read[3].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    147.69,
+    470.976
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank2.u_data.g_read[2].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    147.69,
+    520.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank2.u_data.g_read[1].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    147.69,
+    570.384
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank2.u_data.g_read[0].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    147.69,
+    620.088
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank1.u_data.g_read[5].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    518.13,
+    313.128
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank1.u_data.g_read[4].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    518.13,
+    263.424
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank1.u_data.g_read[3].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    518.13,
+    213.72
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank1.u_data.g_read[2].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    518.13,
+    164.016
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank1.u_data.g_read[1].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    518.13,
+    114.312
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank1.u_data.g_read[0].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    518.13,
+    64.608
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank0.u_data.g_read[5].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    518.13,
+    371.568
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank0.u_data.g_read[4].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    518.13,
+    421.272
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank0.u_data.g_read[3].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    518.13,
+    470.976
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank0.u_data.g_read[2].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    518.13,
+    520.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank0.u_data.g_read[1].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    518.13,
+    570.384
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_core.u_bank0.u_data.g_read[0].u_m",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    518.13,
+    620.088
+   ],
+   "orient": "R0"
+  }
+ ],
+ "note": "HBM-CORES-KITS-3 rule R-SRAM-ENTRY, C columns (mp_rule_c.py): equal 10.8+ um channels, array centred on the entry x, every column split at the entry island + halo; k below the face shell"
+}

@@ -1,0 +1,50 @@
+{
+ "rule": "R-SRAM-ENTRY (C columns, results/hbm_cores_kits_3/mp_rule_c.py)",
+ "kit": "ot_hbm_svc_vmdel_lane_n_dbb7f4d909eb-_k17",
+ "outline_um": [
+  142.56,
+  116.64
+ ],
+ "core_um": [
+  4.32,
+  4.32,
+  138.24,
+  112.32
+ ],
+ "halo_um": 4.32,
+ "clock_entry_um": [
+  17.28,
+  51.84
+ ],
+ "entry_island_um": [
+  12.96,
+  47.52,
+  21.6,
+  56.16
+ ],
+ "n_macros": 2,
+ "masters": {
+  "ot_sram_1r1w_128x256_m1_r2c2": {
+   "w": 94.824,
+   "h": 41.064,
+   "pins_W": 410,
+   "pins_E": 409
+  }
+ },
+ "tried": [
+  {
+   "C": 1,
+   "issues": [
+    "C=1 column 0: stack y [2.09,101.59] leaves core y [4.32,112.32] (deficit 2.23 um)"
+   ],
+   "esc_max": 1.108
+  },
+  "C=2: channels -18.58 um < 10.8"
+ ],
+ "area_um2": {
+  "core": 14463,
+  "macros_with_halo": 10285,
+  "free": 4178
+ },
+ "verdict": "INFEASIBLE"
+}
