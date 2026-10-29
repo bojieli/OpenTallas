@@ -10,6 +10,10 @@
 set -eu
 B=$(readlink -f "$1"); O=$(mkdir -p "$2" && readlink -f "$2")
 H=$(cd "$(dirname "$0")" && pwd); R=$(cd "$H/../../../.." && pwd); cd "$R"
+# Preserve explicit selected-pair requests across the historical flags file.
+# Unset keeps its original component recipe; these values do not qualify GEN.
+task_head_prepare_edges=${OT_KV_HEAD_PREP_EDGES:-}
+task_compute_record_txd=${OT_KV_COMPUTE_RECORD_TXD:-}
 AS=$O/asbuilt_rtl6; mkdir -p "$AS"
 cp "$H/asbuilt_rtl6/kv_flags.env" "$H/asbuilt_rtl6/SOURCE_COMMIT" "$AS/"
 for f in "$H"/asbuilt_rtl6/*.json.gz; do zcat "$f" > "$AS/$(basename "${f%.gz}")"; done
@@ -17,12 +21,14 @@ BG=$B/bus_groups.json; [ -f "$BG" ] || { zcat "$B/bus_groups.json.gz" > "$O/bus_
 KST=${KST:-$(python3 "$H/kst.py" "$BG")}; echo "KST $KST"
 T=physical/die_plan/qwen_kvsys/boot_v36/kv_boot_v36.py
 set -a; . "$AS/kv_flags.env"; set +a
+[ -z "$task_compute_record_txd" ] || export OT_KV_COMPUTE_RECORD_TXD=$task_compute_record_txd
 export OT_KV_RETIRE_SUCCESSOR=$AS/health_successor.json OT_KV_RETIRE_LOGICAL=1 PYTHONDONTWRITEBYTECODE=1
 PV_ARGS=(); [ -z "${OT_KV_PV_RESULT_CALENDAR:-}" ] || PV_ARGS=(--pv-result-calendar "$OT_KV_PV_RESULT_CALENDAR")
 python3 $T prep "${PV_ARGS[@]}" --rs "$AS/relay_stages.json" --model "$AS/static_model.json" --groups "$BG" --out "$O/prep" > "$O/prep.log"
-EMB=${OT_KV_EMB_WIN_REC:-1627}; HP=12   # one link profile for the pair image AND the compile (link_image_check fails closed)
+EMB=${OT_KV_EMB_WIN_REC:-1627}; HP=${task_head_prepare_edges:-${OT_KV_HEAD_PREP_EDGES:-12}}
+CST=${CST:-2,2,2,3,2,2}   # selected compute seam; one profile for image AND native compile
 pair_image() {   # $1 = attention-service pad
-  D2D_K_STAGES=$KST D2D_DIE_STAGES=2,2,2,3,2,2/$KST D2D_MU=1 D2D_EMB_WINDOW=$EMB D2D_ROPE=1 D2D_HEAD_PREPARE_EDGES=$HP \
+  D2D_K_STAGES=$KST D2D_DIE_STAGES=$CST/$KST D2D_MU=1 D2D_EMB_WINDOW=$EMB D2D_ROPE=1 D2D_HEAD_PREPARE_EDGES=$HP \
     D2D_ATTN_SERVICE_PAD=$1 D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213 \
     bash tools/qwen_split/d2d_cal_image_production.sh "$O/img_bnd" > "$O/img.log" 2>&1
 }
