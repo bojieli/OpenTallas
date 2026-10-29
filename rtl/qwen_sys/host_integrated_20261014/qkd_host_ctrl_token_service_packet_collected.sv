@@ -13,7 +13,7 @@
 // only after all copies were emitted. Routing preserves per-source FIFO order.
 // Status snapshots send on relevant-state change; active cycle counter changes
 // alone do not flood the link. Complete tk including final cycle count is sent.
-module qkd_host_ctrl_token_service_packet_collected #(parameter integer DIE=0,MUT=0,STRAPPED=0,ENABLE_SERVICE=0,ENABLE_TOKEN=0)(
+module qkd_host_ctrl_token_service_packet_collected #(parameter integer DIE=0,MUT=0,STRAPPED=0,ENABLE_SERVICE=0,ENABLE_TOKEN=0,CONST_LANE_WRITES=0)(
  input wire ck,rst_n,input wire[2:0]die_id,
  input wire rx_v,input wire[511:0]rx_d,output reg rx_cr,
  output reg tx_v,output reg[511:0]tx_d,input wire tx_cr,
@@ -43,6 +43,7 @@ module qkd_host_ctrl_token_service_packet_collected #(parameter integer DIE=0,MU
  output reg cancel_valid,output reg[58:0]cancel_tag,output reg[1:0]cancel_generation,
  output reg cancel_done,cancel_fault,output reg[3:0]cancel_drained,input wire terminal_accepted
 );
+ integer lane_write;
  reg[2:0]did_q,die_capture;reg role_valid,die_sampled;
  wire[2:0]role=STRAPPED?did_q:3'(DIE);
  reg rv,tc,cv;reg[511:0]rd;reg[181:0]cd;reg[92:0]lt;reg[9:0]lk;reg[1:0]lb;
@@ -157,7 +158,16 @@ module qkd_host_ctrl_token_service_packet_collected #(parameter integer DIE=0,MU
    if(role_valid&&STRAPPED&&die_capture!=did_q)fault<=1;rv<=rx_v;tc<=tx_cr;cv<=cmd_v;lt<=local_tk;lk<=local_kst;lb<=local_boot;rx_cr<=take;cmd_cr<=0;tx_v<=0;
    // Pulse fields must be cleared each edge; token/generation/write data persist.
    hc[38]<=0;hc[113]<=0;hc[181]<=0;
+   // Constant lane slices avoid variable-shift update muxes on the status bus.
+   // Each lane retains the original local-write / later RX-write priority.
+   if(CONST_LANE_WRITES)begin
+    for(lane_write=0;lane_write<8;lane_write=lane_write+1)if(role==3'(lane_write))begin
+     tk8[lane_write*93+:93]<=lt;kst8[lane_write*10+:10]<=lk;
+     boot8[lane_write*2+:2]<=lb;seen[lane_write]<=1;
+    end
+   end else begin
    tk8[role*93+:93]<=lt;kst8[role*10+:10]<=lk;boot8[role*2+:2]<=lb;seen[role]<=1;
+   end
    if(tc)begin if(credits==4)fault<=1;else credits<=credits+1'b1;end
    if(rv&&!fault)begin if(count==4)fault<=1;else wp<=wp+1'b1;end
    if(take)rp<=rp+1'b1;
@@ -220,8 +230,15 @@ module qkd_host_ctrl_token_service_packet_collected #(parameter integer DIE=0,MU
     else if(h[7:0]==8'h21&&role==0&&src!=0&&
       ((!ENABLE_SERVICE&&h[15:8]==1&&h[511:153]==0)||(ENABLE_SERVICE&&h[15:8]==2&&h[511:170]==0)))begin
      if(!ENABLE_SERVICE||MUT==3||h[169:154]==epoch)begin
+     if(CONST_LANE_WRITES)begin
+      for(lane_write=0;lane_write<8;lane_write=lane_write+1)if(src==3'(lane_write))begin
+       tk8[lane_write*93+:93]<=(MUT==1&&lane_write==7)?h[140:48]^(93'd1<<64):h[140:48];
+       kst8[lane_write*10+:10]<=h[150:141];boot8[lane_write*2+:2]<=h[152:151];seen[lane_write]<=1;
+      end
+     end else begin
      tk8[src*93+:93]<=(MUT==1&&src==7)?h[140:48]^(93'd1<<64):h[140:48];
      kst8[src*10+:10]<=h[150:141];boot8[src*2+:2]<=h[152:151];seen[src]<=1;
+     end
      if(ENABLE_SERVICE)begin
       service_epoch8[src*16+:16]<=h[169:154];
       if((MUT==3||h[169:154]==epoch))begin

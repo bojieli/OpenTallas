@@ -14,7 +14,7 @@
 //   HCW (KV-P3-RTL 10-23, default 182 = unchanged): width of the hc command field.  39 = START only (hc[38:0] =
 //     start,gen,token,pos), MU 1 only: no PW/DW command field or event logic; the link frame's PW/DW field (229:87)
 //     is reserved zero and a peer faults on a frame that sets it.  Used by the OBSX START-only admission composition.
-module qkd_host_ctrl_token_service_packet_collected_mu #(parameter integer DIE=0,MUT=0,STRAPPED=0,ENABLE_SERVICE=0,ENABLE_TOKEN=0,parameter integer MU=1,parameter integer HCW=182)(
+module qkd_host_ctrl_token_service_packet_collected_mu #(parameter integer DIE=0,MUT=0,STRAPPED=0,ENABLE_SERVICE=0,ENABLE_TOKEN=0,CONST_LANE_WRITES=0,parameter integer MU=1,parameter integer HCW=182)(
  input wire ck,rst_n,input wire[2:0]die_id,
  input wire rx_v,input wire[511:0]rx_d,output reg rx_cr,
  output reg tx_v,output reg[511:0]tx_d,input wire tx_cr,
@@ -79,7 +79,7 @@ generate if(MU==0)begin:g_plain
  wire w_cancel_done;
  wire w_cancel_fault;
  wire[3:0] w_cancel_drained;
- qkd_host_ctrl_token_service_packet_collected #(.DIE(DIE),.MUT(MUT),.STRAPPED(STRAPPED),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_TOKEN(ENABLE_TOKEN)) u_plain(.ck(ck),.rst_n(rst_n),.die_id(die_id),.rx_v(rx_v),.rx_d(rx_d),.rx_cr(w_rx_cr),.tx_v(w_tx_v),.tx_d(w_tx_d),.tx_cr(tx_cr),.local_tk(local_tk),.local_kst(local_kst),.local_boot(local_boot),.cmd_v(cmd_v),.cmd_hc(cmd_hc),.cmd_cr(w_cmd_cr),.hc(w_hc),.tk8(w_tk8),.kst8(w_kst8),.boot8(w_boot8),.seen(w_seen),.fault(w_fault),.startup_allowed(startup_allowed),.local_service_ready(local_service_ready),.local_service_epoch(local_service_epoch),.begin_v(begin_v),.begin_epoch(begin_epoch),.begin_cr(w_begin_cr),.begin_available(w_begin_available),.service_begin_v(w_service_begin_v),.service_begin_epoch(w_service_begin_epoch),.pending_advertised(w_pending_advertised),.pending_epoch(w_pending_epoch),.service_ready8(w_service_ready8),.pending_ack8(w_pending_ack8),.service_epoch8(w_service_epoch8),.ingest_permission(w_ingest_permission),.por_n(por_n),.token_wrap_fence_valid(token_wrap_fence_valid),.token_wrap_drained(token_wrap_drained),.token_wrap_link_reset_seen(token_wrap_link_reset_seen),.token_wrap_retraining_done(token_wrap_retraining_done),.token_allocator_fault(token_allocator_fault),.package_abort(package_abort),.abort_drained(abort_drained),.token_request_valid(w_token_request_valid),.token_request_ready(token_request_ready),.token_request_token(w_token_request_token),.token_request_position(w_token_request_position),.token_request_generation(w_token_request_generation),.token_grant_valid(token_grant_valid),.token_grant_ready(w_token_grant_ready),.token_grant_epoch(token_grant_epoch),.token_grant_token(token_grant_token),.token_grant_position(token_grant_position),.token_grant_generation(token_grant_generation),.token_grant_tag(token_grant_tag),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),.allocated_epoch(allocated_epoch),.allocated_token(allocated_token),.allocated_position(allocated_position),.allocated_generation(allocated_generation),.token_epoch_valid(w_token_epoch_valid),.token_epoch(w_token_epoch),.cancel_valid(w_cancel_valid),.cancel_tag(w_cancel_tag),.cancel_generation(w_cancel_generation),.cancel_done(w_cancel_done),.cancel_fault(w_cancel_fault),.cancel_drained(w_cancel_drained),.terminal_accepted(terminal_accepted));
+ qkd_host_ctrl_token_service_packet_collected #(.DIE(DIE),.MUT(MUT),.STRAPPED(STRAPPED),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_TOKEN(ENABLE_TOKEN),.CONST_LANE_WRITES(CONST_LANE_WRITES)) u_plain(.ck(ck),.rst_n(rst_n),.die_id(die_id),.rx_v(rx_v),.rx_d(rx_d),.rx_cr(w_rx_cr),.tx_v(w_tx_v),.tx_d(w_tx_d),.tx_cr(tx_cr),.local_tk(local_tk),.local_kst(local_kst),.local_boot(local_boot),.cmd_v(cmd_v),.cmd_hc(cmd_hc),.cmd_cr(w_cmd_cr),.hc(w_hc),.tk8(w_tk8),.kst8(w_kst8),.boot8(w_boot8),.seen(w_seen),.fault(w_fault),.startup_allowed(startup_allowed),.local_service_ready(local_service_ready),.local_service_epoch(local_service_epoch),.begin_v(begin_v),.begin_epoch(begin_epoch),.begin_cr(w_begin_cr),.begin_available(w_begin_available),.service_begin_v(w_service_begin_v),.service_begin_epoch(w_service_begin_epoch),.pending_advertised(w_pending_advertised),.pending_epoch(w_pending_epoch),.service_ready8(w_service_ready8),.pending_ack8(w_pending_ack8),.service_epoch8(w_service_epoch8),.ingest_permission(w_ingest_permission),.por_n(por_n),.token_wrap_fence_valid(token_wrap_fence_valid),.token_wrap_drained(token_wrap_drained),.token_wrap_link_reset_seen(token_wrap_link_reset_seen),.token_wrap_retraining_done(token_wrap_retraining_done),.token_allocator_fault(token_allocator_fault),.package_abort(package_abort),.abort_drained(abort_drained),.token_request_valid(w_token_request_valid),.token_request_ready(token_request_ready),.token_request_token(w_token_request_token),.token_request_position(w_token_request_position),.token_request_generation(w_token_request_generation),.token_grant_valid(token_grant_valid),.token_grant_ready(w_token_grant_ready),.token_grant_epoch(token_grant_epoch),.token_grant_token(token_grant_token),.token_grant_position(token_grant_position),.token_grant_generation(token_grant_generation),.token_grant_tag(token_grant_tag),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),.allocated_epoch(allocated_epoch),.allocated_token(allocated_token),.allocated_position(allocated_position),.allocated_generation(allocated_generation),.token_epoch_valid(w_token_epoch_valid),.token_epoch(w_token_epoch),.cancel_valid(w_cancel_valid),.cancel_tag(w_cancel_tag),.cancel_generation(w_cancel_generation),.cancel_done(w_cancel_done),.cancel_fault(w_cancel_fault),.cancel_drained(w_cancel_drained),.terminal_accepted(terminal_accepted));
  always @*begin rx_cr=w_rx_cr;tx_v=w_tx_v;tx_d=w_tx_d;cmd_cr=w_cmd_cr;hc=w_hc;tk8=w_tk8;kst8=w_kst8;boot8=w_boot8;seen=w_seen;fault=w_fault;begin_cr=w_begin_cr;begin_available=w_begin_available;service_begin_v=w_service_begin_v;service_begin_epoch=w_service_begin_epoch;pending_advertised=w_pending_advertised;pending_epoch=w_pending_epoch;service_ready8=w_service_ready8;pending_ack8=w_pending_ack8;service_epoch8=w_service_epoch8;ingest_permission=w_ingest_permission;token_request_valid=w_token_request_valid;token_request_token=w_token_request_token;token_request_position=w_token_request_position;token_request_generation=w_token_request_generation;token_grant_ready=w_token_grant_ready;token_epoch_valid=w_token_epoch_valid;token_epoch=w_token_epoch;cancel_valid=w_cancel_valid;cancel_tag=w_cancel_tag;cancel_generation=w_cancel_generation;cancel_done=w_cancel_done;cancel_fault=w_cancel_fault;cancel_drained=w_cancel_drained;end
 end else begin:g_mu
  // KV-PEER13: g_mu declarations hoisted before first use (Yosys declare-before-use; tools/qwen_kv_die/mu_peer/hoist_gmu_decls.py)
@@ -95,6 +95,7 @@ end else begin:g_mu
  wire cu_latest;
  wire[15:0] cu_epoch;
  wire hc_rsv_ok;
+ integer lane_write;
  reg[2:0] did_q,die_capture;
  reg role_valid,die_sampled;
  wire[2:0] role;
@@ -292,7 +293,16 @@ end else begin:g_mu
    if(role_valid&&STRAPPED&&die_capture!=did_q)fault<=1;rv<=rx_v;tc<=tx_cr;cv<=cmd_v;lt<=local_tk;lk<=local_kst;lb<=local_boot;rx_cr<=take;cmd_cr<=0;tx_v<=0;
    // Pulse fields must be cleared each edge; token/generation/write data persist.
    hc<=hc&~(START_EV|PWDW_EV);
+   // Constant lane slices avoid variable-shift update muxes on the status bus.
+   // Each lane retains the original local-write / later RX-write priority.
+   if(CONST_LANE_WRITES)begin
+    for(lane_write=0;lane_write<8;lane_write=lane_write+1)if(role==3'(lane_write))begin
+     tk8[lane_write*93+:93]<=lt;kst8[lane_write*10+:10]<=lk;
+     boot8[lane_write*2+:2]<=lb;seen[lane_write]<=1;
+    end
+   end else begin
    tk8[role*93+:93]<=lt;kst8[role*10+:10]<=lk;boot8[role*2+:2]<=lb;seen[role]<=1;
+   end
    if(tc)begin if(credits==4)fault<=1;else credits<=credits+1'b1;end
    if(rv&&!fault)begin if(count==4)fault<=1;else wp<=wp+1'b1;end
    if(take)rp<=rp+1'b1;
@@ -355,8 +365,15 @@ end else begin:g_mu
     else if(h[7:0]==8'h21&&role==0&&src!=0&&
       ((!ENABLE_SERVICE&&h[15:8]==1&&h[511:153]==0)||(ENABLE_SERVICE&&h[15:8]==2&&h[511:170]==0)))begin
      if(!ENABLE_SERVICE||MUT==3||h[169:154]==epoch)begin
+     if(CONST_LANE_WRITES)begin
+      for(lane_write=0;lane_write<8;lane_write=lane_write+1)if(src==3'(lane_write))begin
+       tk8[lane_write*93+:93]<=(MUT==1&&lane_write==7)?h[140:48]^(93'd1<<64):h[140:48];
+       kst8[lane_write*10+:10]<=h[150:141];boot8[lane_write*2+:2]<=h[152:151];seen[lane_write]<=1;
+      end
+     end else begin
      tk8[src*93+:93]<=(MUT==1&&src==7)?h[140:48]^(93'd1<<64):h[140:48];
      kst8[src*10+:10]<=h[150:141];boot8[src*2+:2]<=h[152:151];seen[src]<=1;
+     end
      if(ENABLE_SERVICE)begin
       service_epoch8[src*16+:16]<=h[169:154];
       if((MUT==3||h[169:154]==epoch))begin
