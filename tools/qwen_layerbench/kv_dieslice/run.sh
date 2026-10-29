@@ -6,7 +6,7 @@ B=$(readlink -f $1)/obj/Vtb_kvslice; I=$(readlink -f $2); O=$(mkdir -p $3 && rea
 EP=$(cat $I/epoch.txt)
 BOOT_ARGS=()
 [ "$(cat "$(dirname "$B")/../native_boot.profile" 2>/dev/null || echo 0)" = 0 ] || BOOT_ARGS+=(+START_AFTER_SETUP)
-run() { local n=$1; shift; mkdir -p $O/$n; ( cd $O/$n && /usr/bin/time -f "%e s %M KB" -o time $B +FRAMES=$I/frames.hex +EXPECT=$I/expect.txt +EPOCH=$EP "${BOOT_ARGS[@]}" "$@" > sim.log 2>&1; echo $? > exit ); }
+run() { local n=$1; shift; mkdir -p $O/$n; if [ -n "${KV_DCAL_VIAMAP:-}" ]; then python3 -I "$(dirname "$0")/runtime_rom.py" --build "$(dirname "$(dirname "$B")")" --runtime "$O/$n" --viamap "$KV_DCAL_VIAMAP" || return 2; fi; ( cd $O/$n && /usr/bin/time -f "%e s %M KB" -o time $B +FRAMES=$I/frames.hex +EXPECT=$I/expect.txt +EPOCH=$EP "${BOOT_ARGS[@]}" "$@" > sim.log 2>&1; echo $? > exit ); }
 run nominal &
 [ -n "$MF" ] && run mut_frame +MUT_FRAME=$MF &
 wait
