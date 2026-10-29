@@ -570,3 +570,15 @@ def test_independent_start_count_frames_preserve_physical_clock_groups():
     ca['frame_clock_regions']['r1c']='r0'
     with pytest.raises(LandingError,match='count frame clock mismatch'):
         Landings(p,t,require_geometry=False)
+
+
+def test_explicit_origin_start_face_role_matches_emitted_instance():
+    from clock_landings import START_PIN_IN
+    c=Landings.__new__(Landings);c.ca=True;c.dataflow=False
+    c.by_type={'T':{'inputs':[]}}
+    c.ca_type={'T':{'role':('strap',(START_PIN_IN,),1,74,False)}}
+    assert c.land_slots('T')['buses']=={START_PIN_IN:{'form':'origin_start','origin':'u_cland_origin'}}
+    c.ca_type['T']['role']=('strap',('d',START_PIN_IN),1,74,False)
+    assert c.land_slots('T')['buses'][START_PIN_IN]['origin']=='u_cland_origin_t1'
+    c.ca_type['T']['role']=('root',74)
+    assert c.land_slots('T') is None
