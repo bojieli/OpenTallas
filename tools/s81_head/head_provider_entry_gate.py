@@ -51,6 +51,8 @@ always@(negedge ck)begin
  for(index=0;index<80;index++)if(c==int'(xb_edge[index]))begin
   if(!(mut==2&&index==79))begin
    ri=(1104'(data[index])<<21)|(1104'(index)<<13)|1104'd5;
+   if(mut==3||mut==4)ri[20]=1'b1; // actual rstop_xo HEAD egress flag
+   if(mut==4&&index==0)ri[19:13]=7'd80; // invalid low index stays invalid
    tag=32'd@TAG@;sent++;
   end
  end
@@ -119,17 +121,17 @@ def main():
          '--Mdir',str(out/'obj'),'-o','tb',*(str(ROOT/f) for f in files),str(out/'tb.sv')]
     with (out/'build.log').open('w') as log:subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT,check=True)
     results={}
-    for mode in (0,1,2):
+    for mode in (0,1,2,3,4):
         with (out/f'run{mode}.log').open('w') as log:
             r=subprocess.run([str(out/'obj/tb'),'+DATA='+str(out),f'+MUT={mode}'],stdout=log,stderr=subprocess.STDOUT)
         text=(out/f'run{mode}.log').read_text()
-        ok=(r.returncode==0 and 'HEAD_PROVIDER_ENTRY PASS' in text) if mode==0 else (
-            r.returncode!=0 and ('wrong rank CSR2' if mode==1 else 'actual XB residency missing') in text)
-        results[mode]=dict(passed=ok,returncode=r.returncode,kind=('positive','wrong_rank','missing_last_XB')[mode])
+        ok=(r.returncode==0 and 'HEAD_PROVIDER_ENTRY PASS' in text) if mode in (0,3) else (
+            r.returncode!=0 and ({1:'wrong rank CSR2',2:'actual XB residency missing',4:'current provider fault'}[mode]) in text)
+        results[mode]=dict(passed=ok,returncode=r.returncode,kind=('positive','wrong_rank','missing_last_XB','flagged_XB_positive','invalid_low_index')[mode])
         if not ok:raise SystemExit('entry gate failed mode'+str(mode)+'; inspect '+str(out))
     (out/'verdict.json').write_text(json.dumps(dict(verdict='PASS_AR_PROVIDER_ENTRY_COMPONENT',results=results,
         source_counts=schedule['source_counts'],full_head_token=False,production_transport=False,MTP=False),indent=1)+'\n')
-    print((out/'run0.log').read_text().strip());print('wrong_rank and missing_last_XB controls CAUGHT')
+    print((out/'run0.log').read_text().strip());print('flagged_XB positive PASS; wrong_rank, missing_last_XB, invalid_low_index controls CAUGHT')
 
 
 if __name__=='__main__':main()
