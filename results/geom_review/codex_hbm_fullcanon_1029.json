@@ -1,1 +1,14 @@
-{"verdict":"PASS-COND","scope":"reviewed C25 fullcanon5/4/WCOPY1 candidate; kit/preflight only until die owner folds scalar clock+array+driver packet; one trial placement after adoption","picture":"results/hbm_fullcanon_1029/candidate.png","findings":["Actual24 SRAMs preserved with >=10.8um row/column channels; all pin sides remain accessible and bank grouping follows native boundary traffic.","Existing write relays and read_data registers receive legal disjoint guide boxes. Centre hop estimates399.5/393.1um; actual fullr2r census required before route.","Exact centre entry380.136/362.88 has an open hole. Seventeen clock/reset driver boxes clear SRAM halos, max relocation4.32um charged to sizing; no clock trims/ECOs.","CurrentPG is preserved; physicalFTpins use approveddx1.08, parent legacydx2.16metadata still owner-batch-held. No signal or clock route authorized by this record.","Native programme alignment/prices of explicit5/4/WCOPY1 remain TOK-HBM-owned; intentionalSIDE3/3 retained."]}
+{
+ "verdict": "PASS-COND",
+ "scope": "one current-C25 candidate trial placement authorized by ROOT instruction to estimatefit/reach before oneplacement; route/signoff/currentplanadoption remain held",
+ "picture": "results/hbm_fullcanon_1029/candidate.png",
+ "findings": [
+  "Actual24 SRAMs preserved with >=10.8um row/column channels; all pin sides remain accessible and bank grouping follows native boundary traffic.",
+  "Existing write relays and read_data registers receive legal disjoint guide boxes. Centre hop estimates399.5/393.1um; actual fullr2r census required before route.",
+  "Exact centre entry380.136/362.88 has an open hole. Seventeen clock/reset driver boxes clear SRAM halos, max relocation4.32um charged to sizing; no clock trims/ECOs.",
+  "CurrentPG is preserved; physicalFTpins use approveddx1.08, parent legacydx2.16metadata still owner-batch-held. No signal or clock route authorized by this record.",
+  "Native programme alignment/prices of explicit5/4/WCOPY1 remain TOK-HBM-owned; intentionalSIDE3/3 retained.",
+  "Latestcolumn-aligned candidate image personallyviewed afterpreflightfix: channelsopen, centreentryholeclear, driverboxesoffmacros; publicKIT_PREFLIGHT --contract PASS0 on v4hash81e78090115ce905."
+ ],
+ "trial_authority": "ROOT assigned currentfullcanon successor and explicitlyauthorizedparallel5/4/WCOPY1 candidate; estimate andpublicpreflight nowpass"
+}
