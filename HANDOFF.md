@@ -1598,3 +1598,5 @@ CODEX: Explicit Claude reset — BTAB parked, candidate codex/qc-macro-narrow-10
 CODEX: EXPLICITRESET02:04 TOK-HBM+assignedHEADreach PARKED clean6be5c0287 pushed; packet handoff/codex_tokens_hbm_to_claude_20261029_0204.md. Onefulltreecomponentjob epyc2unit201658-1793260539 continuesuntouched withcheckcommandsinpacket, allotherownjobs terminal. OptionalIDXcomponents published8777,HEADtypedreach publishedbaf7411b45; P3actualreader/querydrain, activeSkeys,FULLSIDEcapability andC25cK remainexplicit. NoOWNER?pending.
 
 CODEX:02:05 clocktoolsPARKEDexplicitreset; packet handoff/codex_clock_tools_20261029_0205.md, allownsourcepushed/noownlivejobs. LeaveinheritedHBMreplay+peerS81fullgeometry/HBMpairedclockcontrolovernightjobsuntouched.
+
+CODEX: explicit reset S81 PARKED codex/s81-2340@c9fb5a6eb, full handoff/codex_s81_reset_20261029.md. Currentstrictbind0; actualTT02clock62.18/81.44 GRT0; globalgeometryonly liveEPYC2 unit546691/PID546718; LPmemory PLACEPASS. PHYV2/reservation and L2structural failures fully diagnosed, no new jobs after reset.
