@@ -31,14 +31,15 @@ for p in (wr[0], kit / "rtl" / wr[0].name):
     assert t.count(OLD) == 1 and "u_rrl_39 (.clk(clk), .d(rst_rl_34), .q(rst_rl_39));  // raw wire tap None depth 3" in t
     assert "u_rrl_34 (.clk(clk), .d(rst_rl_27)" in t and "u_rrl_27 (.clk(clk), .d(rst_root_n)" in t
     p.write_text(t.replace(OLD, NEW))
-ANCH = {"u_cland_origin/sf$_DFF_N_": (380.16, 862.9), "u_cland_origin/s0$_SDFF_PN0_": (380.16, 862.9),
-        "u_cland_origin/s1$_SDFF_PN0_": (420, 866), "u_cland_origin/g_export.g_copy\\[0\\].u_copy/q$_SDFF_PN0_": (600, 866),
-        "u_cland_fstart_o/q$_SDFF_PN0_": (700, 867), "u_cland_origin/s2$_SDFF_PN0_": (240, 860),
-        "u_cland_origin/pd$_SDFF_PN0_": (240, 860),
-        "u_cland_agg_1/fault_o$_SDFF_PN0_": (250, 862), "u_cland_agg_1/ready_o$_SDFF_PN0_": (250, 862),
-        "u_cland_agg_2/fault_o$_SDFF_PN0_": (480, 862), "u_cland_agg_2/ready_o$_SDFF_PN0_": (480, 862),
-        "u_cland_rst_i/q$_DFF_P_": (480, 800),
-        "u_core.goo_q$_DFF_PN0_": (480, 600), "u_core.xvo_q$_DFF_PN0_": (480, 600), "u_core.o_rv$_DFF_PN0_": (480, 600)}
+# macro-free sites (eA0-3 + eB 216-501 x 734.4-1019.5 excluded; channel y 699.84-734.4 free), all hops <= 397 um
+ANCH = {"u_cland_origin/sf$_DFF_N_": (518.4, 862.9), "u_cland_origin/s0$_SDFF_PN0_": (518.4, 862.9),
+        "u_cland_origin/s1$_SDFF_PN0_": (505, 830), "u_cland_origin/g_export.g_copy\\[0\\].u_copy/q$_SDFF_PN0_": (620, 866),
+        "u_cland_fstart_o/q$_SDFF_PN0_": (700, 867), "u_cland_origin/s2$_SDFF_PN0_": (200, 830),
+        "u_cland_origin/pd$_SDFF_PN0_": (200, 830),
+        "u_cland_agg_1/fault_o$_SDFF_PN0_": (190, 800), "u_cland_agg_1/ready_o$_SDFF_PN0_": (190, 800),
+        "u_cland_agg_2/fault_o$_SDFF_PN0_": (520, 862), "u_cland_agg_2/ready_o$_SDFF_PN0_": (520, 862),
+        "u_cland_rst_i/q$_DFF_P_": (450, 720),
+        "u_core.goo_q$_DFF_PN0_": (375, 717), "u_core.xvo_q$_DFF_PN0_": (375, 717), "u_core.o_rv$_DFF_PN0_": (375, 717)}
 tsv = kit / "head_tile_relay_targets.tsv"
 rows, seen = [], set()
 for l in tsv.read_text().splitlines():
