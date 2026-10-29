@@ -1,0 +1,16 @@
+{
+ "lane": "DIE-HEAD-29", "date": "2026-10-29", "label": "HEAD per-token cycle split (COORD 10:01: record as CHECKED)",
+ "rows": {
+  "xb_ingress": {"cyc": 162, "basis": "model row results/uarch/s81_head_die.json latency.rows.xb_ingress (composed, not simulated)", "status": "CHECKED (value read from main)"},
+  "go_to_result_landed": {"cyc": 8780, "basis": "TOK-HEAD-LAND-1 simulated on the landed DIE-HEAD-17 bind, TT and FF tap arrivals, results/token_pass/tok_head_land_1028/README.md", "status": "CHECKED (simulated)"},
+  "rank_merge": {"cyc": 419, "basis": "TOK-ALL-16 simulated b_i -> rank-merge valid on the generated top (results/token_pass/head_rank_merge_1027/README.md); unlanded form, D=251 serdes leaf-to-leaf", "status": "CHECKED (simulated, unlanded)"},
+  "mtp_seq_token_former": {"cyc": 6, "basis": "model row", "status": "CHECKED (value read from main)"},
+  "out_hop_issue": {"cyc": 4, "basis": "model row", "status": "CHECKED (value read from main)"}
+ },
+ "per_token_cycles": 9371,
+ "calendar_window_cycles": 10357, "window_basis": "results/uarch/s81_head_die.json latency.calendar_head_window",
+ "slack_cycles": 986,
+ "correction": "TOK-HEAD-LAND-1 composed 9,313 with the MODEL rank_merge 361; TOK-ALL-16 measured 419 (+58) -> 9,371. DIE-HEAD-28 tok_price used 9,313.",
+ "with_A1_and_hk5_crop_worst_all_serial": {"added": 109, "per_token": 9480, "slack": 877, "fits_window": true, "bound_frac_if_HEAD_set_rate": 0.0116},
+ "open": "rank_merge on the LANDED bind is not simulated (the landing added +89 on the spine path); the composition is a sum of separately simulated spans + 3 model rows, not one end-to-end simulation."
+}
