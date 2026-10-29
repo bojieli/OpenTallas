@@ -3,6 +3,8 @@
  "die": "s81",
  "edges": 64,
  "modules": [
+  "dsfd_coll_lane_w_safe8_ntf",
+  "dsfd_coll_lane_e_safe8_ntf",
   "dsdv_bk_g",
   "dsdv_bksel_c",
   "dsdv_bksel_q",
@@ -65,7 +67,7 @@
  },
  "generator": "OWNER decision 10-29 05:3x: boot holds the die rst_n low for >= 64 clocks with the die clock running; die root ot_dp_rsync_s2 (async assert, 2-clock release) as emitted by tools/die_plan/gen_rtl.py",
  "sinks": "every S81 core reset pin is reached through the standard rsync_s2 root + ot_dp_rrelay synchronous relays (width-preserving: width out = width in + 2 sync edges at any depth); no extra per-core reset stages",
- "modules_basis": "all 50 S81 hard-core modules of autopilot OWNERS.tsv (kind core, 10-29 06:13) + plan_s13r2 hard_cores (ROM _gb variant); SRAM/ROM macros excluded (no LEC)",
+ "modules_basis": "all 50 S81 hard-core modules of autopilot OWNERS.tsv (kind core, 10-29 06:13) + plan_s13r2 hard_cores (ROM _gb variant); plus the 2 LP lane hard-child masters, reset-width proof results/codex_s81_lp_0825/README.md (same 64-edge die contract); SRAM/ROM macros excluded (no LEC)",
  "kit_use": "copy reset_contract.json + reset_contract/receipt.txt into KIT/ (receipt path is relative), or set OT_LEC_RESET_CONTRACT to this file; a kit LEC may use OT_LEC_RESET_CYCLES <= 64",
  "scope": "boot reset only (owner contract on the external rst_n); a mid-run rst_n pulse shorter than 64 clocks is outside this contract"
 }
