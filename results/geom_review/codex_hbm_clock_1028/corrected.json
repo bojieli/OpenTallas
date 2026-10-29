@@ -1,0 +1,14 @@
+{
+ "scope": "HBM C25b calibrated DME clock, pre-route geometry",
+ "source_commit": "cef2eac649",
+ "image": "results/geom_review/codex_hbm_clock_1028/corrected.png",
+ "viewed": true,
+ "verdict": "FAIL",
+ "findings": [
+  "Most clock legs stay in the visible channels and the tree is substantially shallower in dense hub areas than the geometric predecessor.",
+  "23 actual cell-parent legs still exceed450um; several bottom SM stripes cross joined S/N macro walls without repeater bays. Worst actual gap1207.669um. No route permitted.",
+  "12of63 regional model spreads exceed150ps before routed OCV; NW/NE hub model273.5/255.8ps. These are planning estimates, not sign-off.",
+  "PG plan and die outline are identical to inherited trial2b. Clock cells have no point-level macro hit; body packing is still required before route."
+ ],
+ "next": "Connected-obstacle detour search and limited planned DME zero-skew wire elongation; re-render and inspect before any P&R/STA."
+}
