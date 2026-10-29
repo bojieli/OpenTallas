@@ -5830,3 +5830,5 @@ No new owner decision required at takeover. Rule/contract questions will be appe
 2026-10-29 08:27 PDT QC takeover: import and A0 children active; BTAB F3b/F3r inherited routes live intel1. Older QC kit waves remain superseded pending native event, no old failed route revived. VMR unversioned publication referred to FLOW release owner; rst3 PG gap already resolved in29f2f0be61.
 
 2026-10-29 08:28 PDT: main a64cdfd10 integrated actual blockers above; all 197 lane files assigned in CODEX-COVERAGE-0822. COORD authorized structural HEAD FT+1cycle if exact and priced; no owner wait. BTAB proxy remains diagnostic; actual missing-master SPICE active. QC prog archived PG-invalid receipt discovered, owner repairing actual route.
+
+2026-10-29 08:31 PDT HEADSerDes/LEP: codex/head-serdes-lep-0825@710c3bc21 (runtime16a8156c6). InheritedkeepLEC liveintel2unit1487636; ownPID2042560 dockerwait->EQUIVALENT-only32GB8threadtrialPLACE, codex-head-serdes-lep-0825/continue.log. Half4197/4204 andquarter4203/4210 failonly7apply; fixkeep alreadylive. LEP73440EQUIVALENT. Explicit child-delta supportREADY, expandedparentgeometryownedHEAD. NoCTS/route/signoffclaim.
