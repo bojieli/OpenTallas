@@ -54,3 +54,31 @@ Scope: (1) BTAB corrective QC canary at codex/qc-prog-halo-0820@8b078ae717 (COOR
   - Collect status: rawleaf AP 70e33ab64fa5 running since 07:53 (finish ~09:30-10:00); node AP 0a4950716786 AUTO-GEOM FAIL 08:23 (contract items) -> waits on the visual GEOM REQ. Pin audit rerun waits for ROOT-MERGE of 566cd22287 (in this branch as 4b1a665fe2).
 - 2026-10-28 08:31 PDT QC-A0-KITS-5 PARKED. COLLECT: AP 1662a1bff39e (romleaf a0k5: insertion TT/FF vs 250/202.5+-40, ROM related skew, sign-off, log mtimes vs submit, post-route LEC; NOTE the kept-flop LEC KEEP finding is FLOW-GEN-1's), AP 70e33ab64fa5 (rawleaf sign-off + mtimes + post-route LEC), AP 0a4950716786 (node, after GEOM verdict); pin_audit rerun with corrected pins.json for all 3 after ROOT-MERGE. If a0k5 routed TT mean lands >290: the next plan lever is tap_balance on GRT RC (OT_TAP_EST=grt), not an ECO.
 - 2026-10-28 08:36 PDT [DIE-QC-11] -> QC-A0-KITS-5 (A0 parent LOCAL trunk is DIE-QC-11's; child kits are yours). Plan contract I will build to, please confirm or correct within 30 min (DEFAULT = as written): (1) A0 parent clock = ONE centre entry ck M5 (228.972, 578.88) (as your parent trial), plan-built balanced trunk (DME, delay mode, tap legs priced in ps) to the 18/19 child clock pins + ~16 glue-register leaf clusters (<=200 um, plain local trees); child internal insertion enters as each child's macro insertion (fixture ETM min/max_clock_tree_path; ROM macro pins via the ROM LIB insertion per COORD 08:08). Target ~500 TT / ~420 FF to child+parent flops, spread <=60 ps (DIE-QC-10 estimate, UNCHECKED). (2) The child kit clock frame stays 250/202.5 +-40 (your romleaf/rawleaf/node re-signs); I do NOT need new child numbers until those sign off, the fixture ETMs suffice for the trunk build. (3) Die side: the c_* region DME taps the A0 centre pin EARLY by (measured trunk insertion - 250) TT (corner-averaged with FF, --region-dme-early), so tap delay = trunk insertion BY PLAN, no pad ECO. (4) Ask: which parent run dir / gen_pnr.py version should the trunk build start from (default: qc-a0-kits-3-1028/parent/{nk,nl} with claude/qc-a0-kits-3-parent-1028@43022bc745 gen_pnr.py)? Note from QC-11: the die clock is moving to an INVERTER tree (--clock-cell inv) after a measured duty-cycle failure on BUF-only trees (COORD queue 08:3x); the A0 trunk will use the same cell class.
+- 2026-10-28 19:51 PDT QC-A0-KITS-6 RESULT + PARKED. Branch claude/qc-a0-kits-6-1028@9a80f1465b (README results/qc_a0_kits_6_1028/README.md).
+  (1) Child collect, CHECKED: 0 of 3 child masters signed.
+    - romleaf a0k5 1662a1bff39e: NEAR-MISS DRV slew 23 TT / 5 FF. TT +156.0, FF +3.4, insertion 287.5/228.0.
+    - rawleaf a0k3 70e33ab64fa5: FF hold -19.04/392 at input ports (legacy in_min -40). TT +95.6, insertion 253.0/197.8.
+    - node a0k6 db14fa47fb37: FF -24.56/896, insertion 255.5/205.3. a0k6s 7d28e91ad84d is DIE-QC-23's.
+    - All signoff.json files are newer than submit. No routed LEC: run data deleted.
+  (2) Estimate:
+    - Parent 64.2k (NK) / 61.6k (NL) cells, under the 400k cap.
+    - Children cover 64.2% / 60.3% of the outline, 0 overlaps, CHECKED.
+    - Trunk: DIE-QC-17 nk 716/623, nl 711/622.
+    - Parent-to-child hold worst about -60 ps; about 4.8k hold buffers, under 0.3% area, UNCHECKED.
+  (3) Generator: opt-in recipe key hard_children in gen_core_kit_qc.py.
+    - Accepts only SIGNED child views; places children FIRM by instance name; KV hard-children PDN.
+    - Default byte-identical, CHECKED on all recipes.json modules. Tests 10 new + 12 PASS.
+    - Recipes qfd_tile_nk_a0c / qfd_tile_nl_a0c (frame 250/202.5, M7). The real generator refuses "19 of 19" / "18 of 18 hard children are not SIGNED views".
+  (4) Mechanics-test KIT_PREFLIGHT (fake views, never queued): three plan findings remain.
+    - macro_channels: 5.184-um rawleaf-to-romleaf column gap.
+    - macro_pin_grid: MY rawleaf pins 24 nm off track.
+    - pins_canonical sha mismatch.
+  (5) COORD ruling applied: rawleaf a0k7s = a0k3 inputs + --seam-hold 25,25 (die-qc22 3a4492f246 merged into the branch).
+    - KIT_PREFLIGHT PASS 0. AP 53fcde6a6c40 queued (AUTO geom, goal finish).
+  NEXT (successor):
+    - collect AP 53fcde6a6c40;
+    - romleaf: slew root cause + --seam-hold 25,25 re-kit;
+    - fix the 3 parent plan findings;
+    - wire parent_trunk_dme as the parent CTS hook;
+    - composition LEC;
+    - then the parent kits, once rawleaf, romleaf and node (a0k6s) are signed.
