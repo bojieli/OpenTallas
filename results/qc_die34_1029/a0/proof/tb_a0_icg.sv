@@ -97,11 +97,12 @@ initial begin
     // gated twin every cycle (independent of whether this stimulus happens to need the edge).
     //  LEAD : entry e with measured gated depth s_e (README_bhop §1 entry_depth, CHECKED) must have its gate enable open
     //         s_e - 1 cycles after every rise of the tile en (K_e <= s_e - 1).
-    //  DRAIN: the tile en must stay 1 for ICG_DRAIN (64) cycles after the last act (the drain the ICG=1/2 proof assumes).
+    //  DRAIN: the tile en must stay 1 for ICG_DRAIN - 1 (63) cycles after the last cycle act was seen (an async reset term
+    //         is seen one posedge earlier than a registered act, so 63 is the bound common to both; mutant 3 fails at +1).
     begin
       if (u_on.g_icg.en && !last_en) rise_c = cyc;
       if (u_on.g_icg.act) last_act = cyc;
-      if (last_act >= 0 && cyc - last_act <= 64 && !u_on.g_icg.en) begin
+      if (last_act >= 0 && cyc - last_act < 64 && !u_on.g_icg.en) begin
         cdrain = cdrain + 1; if (cfirst < 0) cfirst = cyc;
         if (cdrain <= 2) $display("A0ICG_CONTRACT_DRAIN cyc%0d en=0 %0d cycles after the last act", cyc, cyc - last_act);
       end

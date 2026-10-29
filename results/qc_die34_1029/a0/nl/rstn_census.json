@@ -1,0 +1,23 @@
+{
+"rst_n_direct_flops": 4,
+"max": 233.17,
+"gt150": 1,
+"flops": [
+[
+15.07,
+"g_icg.g_rr.u_rr.sync_q\\[0\\]$_DFF_PN0_"
+],
+[
+84.62,
+"g_icg.g_rr.u_rr.sync_q\\[1\\]$_DFF_PN0_"
+],
+[
+139.13,
+"u_g.g_rst_native.q$_DFF_P_"
+],
+[
+233.17,
+"g_icg.g_rr.u_rr.rst_n$_DFF_PN0_"
+]
+]
+}

@@ -1,0 +1,101 @@
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_MISMATCH cyc827 t_out 130 bits ([513:512] off00 on00) n_y 0 bits ([513:512] off00 on00)
+A0ICG_MISMATCH cyc828 t_out 112 bits ([513:512] off00 on00) n_y 0 bits ([513:512] off00 on00)
+A0ICG_CONTRACT_DRAIN cyc7068 en=0 64 cycles after the last act
+A0ICG_CONTRACT_DRAIN cyc8766 en=0 64 cycles after the last act
+A0ICG_COUNTS tile=nl MUT=0 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=6703 (55%) engine_busy=4570 wakeups=10
+A0ICG_STRICT tile=nl MUT=0 strict_mismatch_cycles=6865 (t_out 6865 n_y 0) first=827
+A0ICG_CONTRACT tile=nl MUT=0 lead_fail=0 drain_fail=2 first=7068
+A0ICG_FAIL tile=nl MUT=0 contract_lead=0 contract_drain=2 qualified_errors=0 (t_out 0 n_y 0) first_cycle=-1 checks=12000
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_MISMATCH cyc250 t_out 175 bits ([513:512] off01 on00) n_y 0 bits ([513:512] off00 on00)
+A0ICG_QMISMATCH cyc250 t_out [513:512] off01 on00 data 174 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_MISMATCH cyc251 t_out 156 bits ([513:512] off01 on00) n_y 0 bits ([513:512] off00 on00)
+A0ICG_QMISMATCH cyc251 t_out [513:512] off01 on00 data 155 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc252 t_out [513:512] off01 on00 data 167 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc253 t_out [513:512] off01 on00 data 171 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc254 t_out [513:512] off01 on00 data 169 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_CONTRACT_DRAIN cyc7068 en=0 64 cycles after the last act
+A0ICG_CONTRACT_DRAIN cyc8766 en=0 64 cycles after the last act
+A0ICG_COUNTS tile=nl MUT=1 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=10055 (83%) engine_busy=4570 wakeups=11
+A0ICG_STRICT tile=nl MUT=1 strict_mismatch_cycles=11678 (t_out 11678 n_y 0) first=250
+A0ICG_CONTRACT tile=nl MUT=1 lead_fail=0 drain_fail=2 first=7068
+A0ICG_FAIL tile=nl MUT=1 contract_lead=0 contract_drain=2 qualified_errors=4164 (t_out 4164 n_y 0) first_cycle=250 checks=12000
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_MISMATCH cyc270 t_out 113 bits ([513:512] off01 on01) n_y 0 bits ([513:512] off00 on00)
+A0ICG_QMISMATCH cyc270 t_out [513:512] off01 on01 data 113 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_MISMATCH cyc271 t_out 115 bits ([513:512] off01 on01) n_y 0 bits ([513:512] off00 on00)
+A0ICG_QMISMATCH cyc271 t_out [513:512] off01 on01 data 115 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc272 t_out [513:512] off01 on01 data 127 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc273 t_out [513:512] off01 on01 data 136 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc274 t_out [513:512] off01 on01 data 134 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_CONTRACT_DRAIN cyc7068 en=0 64 cycles after the last act
+A0ICG_CONTRACT_DRAIN cyc8766 en=0 64 cycles after the last act
+A0ICG_COUNTS tile=nl MUT=2 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=11160 (93%) engine_busy=4570 wakeups=11
+A0ICG_STRICT tile=nl MUT=2 strict_mismatch_cycles=11602 (t_out 11602 n_y 0) first=270
+A0ICG_CONTRACT tile=nl MUT=2 lead_fail=0 drain_fail=2 first=7068
+A0ICG_FAIL tile=nl MUT=2 contract_lead=0 contract_drain=2 qualified_errors=10462 (t_out 10462 n_y 0) first_cycle=270 checks=12000
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_CONTRACT_DRAIN cyc761 en=0 1 cycles after the last act
+A0ICG_CONTRACT_DRAIN cyc762 en=0 2 cycles after the last act
+A0ICG_MISMATCH cyc763 t_out 144 bits ([513:512] off00 on00) n_y 0 bits ([513:512] off00 on00)
+A0ICG_MISMATCH cyc764 t_out 122 bits ([513:512] off00 on00) n_y 0 bits ([513:512] off00 on00)
+A0ICG_CONTRACT_LEAD cyc7006 hop lsl0 closed 6 cycles after en rose (bound s-1 = 6)
+A0ICG_CONTRACT_LEAD cyc7006 hop lsl1 closed 6 cycles after en rose (bound s-1 = 6)
+A0ICG_CONTRACT_LEAD cyc7006 hop lsl2 closed 6 cycles after en rose (bound s-1 = 6)
+A0ICG_COUNTS tile=nl MUT=3 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=7404 (61%) engine_busy=4570 wakeups=10
+A0ICG_STRICT tile=nl MUT=3 strict_mismatch_cycles=7535 (t_out 7535 n_y 0) first=763
+A0ICG_CONTRACT tile=nl MUT=3 lead_fail=8 drain_fail=640 first=761
+A0ICG_FAIL tile=nl MUT=3 contract_lead=8 contract_drain=640 qualified_errors=0 (t_out 0 n_y 0) first_cycle=-1 checks=12000
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_MISMATCH cyc0 t_out 512 bits ([513:512] off00 on00) n_y 0 bits ([513:512] off00 on00)
+A0ICG_MISMATCH cyc1 t_out 512 bits ([513:512] off00 on00) n_y 0 bits ([513:512] off00 on00)
+A0ICG_CONTRACT_DRAIN cyc8700 en=0 1 cycles after the last act
+A0ICG_CONTRACT_DRAIN cyc8701 en=0 2 cycles after the last act
+A0ICG_COUNTS tile=nl MUT=5 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=6900 (57%) engine_busy=4570 wakeups=9
+A0ICG_STRICT tile=nl MUT=5 strict_mismatch_cycles=7280 (t_out 7280 n_y 0) first=0
+A0ICG_CONTRACT tile=nl MUT=5 lead_fail=0 drain_fail=64 first=8700
+A0ICG_FAIL tile=nl MUT=5 contract_lead=0 contract_drain=64 qualified_errors=0 (t_out 0 n_y 0) first_cycle=-1 checks=12000
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_MISMATCH cyc827 t_out 130 bits ([513:512] off00 on00) n_y 0 bits ([513:512] off00 on00)
+A0ICG_MISMATCH cyc828 t_out 112 bits ([513:512] off00 on00) n_y 0 bits ([513:512] off00 on00)
+A0ICG_CONTRACT_DRAIN cyc7068 en=0 64 cycles after the last act
+A0ICG_CONTRACT_DRAIN cyc8766 en=0 64 cycles after the last act
+A0ICG_COUNTS tile=nl MUT=6 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=6703 (55%) engine_busy=4570 wakeups=10
+A0ICG_STRICT tile=nl MUT=6 strict_mismatch_cycles=6865 (t_out 6865 n_y 0) first=827
+A0ICG_CONTRACT tile=nl MUT=6 lead_fail=0 drain_fail=2 first=7068
+A0ICG_FAIL tile=nl MUT=6 contract_lead=0 contract_drain=2 qualified_errors=0 (t_out 0 n_y 0) first_cycle=-1 checks=12000
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_CONTRACT_LEAD cyc200 hop ck closed 0 cycles after en rose (bound s-1 = 0)
+A0ICG_CONTRACT_LEAD cyc202 hop rp0 closed 2 cycles after en rose (bound s-1 = 2)
+A0ICG_CONTRACT_LEAD cyc202 hop rp1 closed 2 cycles after en rose (bound s-1 = 2)
+A0ICG_MISMATCH cyc250 t_out 175 bits ([513:512] off01 on00) n_y 0 bits ([513:512] off00 on00)
+A0ICG_QMISMATCH cyc250 t_out [513:512] off01 on00 data 174 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_MISMATCH cyc251 t_out 156 bits ([513:512] off01 on00) n_y 0 bits ([513:512] off00 on00)
+A0ICG_QMISMATCH cyc251 t_out [513:512] off01 on00 data 155 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc252 t_out [513:512] off01 on00 data 167 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc253 t_out [513:512] off01 on00 data 171 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc254 t_out [513:512] off01 on00 data 169 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_CONTRACT_DRAIN cyc7068 en=0 64 cycles after the last act
+A0ICG_CONTRACT_DRAIN cyc8766 en=0 64 cycles after the last act
+A0ICG_COUNTS tile=nl MUT=7 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=10046 (83%) engine_busy=4570 wakeups=11
+A0ICG_STRICT tile=nl MUT=7 strict_mismatch_cycles=11678 (t_out 11678 n_y 0) first=250
+A0ICG_CONTRACT tile=nl MUT=7 lead_fail=99 drain_fail=2 first=200
+A0ICG_FAIL tile=nl MUT=7 contract_lead=99 contract_drain=2 qualified_errors=4164 (t_out 4164 n_y 0) first_cycle=250 checks=12000
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_CONTRACT_LEAD cyc202 hop rp0 closed 2 cycles after en rose (bound s-1 = 2)
+A0ICG_CONTRACT_LEAD cyc202 hop rp1 closed 2 cycles after en rose (bound s-1 = 2)
+A0ICG_CONTRACT_LEAD cyc202 hop rp2 closed 2 cycles after en rose (bound s-1 = 2)
+A0ICG_MISMATCH cyc827 t_out 130 bits ([513:512] off00 on00) n_y 0 bits ([513:512] off00 on00)
+A0ICG_MISMATCH cyc828 t_out 112 bits ([513:512] off00 on00) n_y 0 bits ([513:512] off00 on00)
+A0ICG_CONTRACT_DRAIN cyc7068 en=0 64 cycles after the last act
+A0ICG_CONTRACT_DRAIN cyc8766 en=0 64 cycles after the last act
+A0ICG_COUNTS tile=nl MUT=8 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=6703 (55%) engine_busy=4570 wakeups=10
+A0ICG_STRICT tile=nl MUT=8 strict_mismatch_cycles=6865 (t_out 6865 n_y 0) first=827
+A0ICG_CONTRACT tile=nl MUT=8 lead_fail=90 drain_fail=2 first=202
+A0ICG_FAIL tile=nl MUT=8 contract_lead=90 contract_drain=2 qualified_errors=0 (t_out 0 n_y 0) first_cycle=-1 checks=12000
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_COUNTS tile=nl MUT=9 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=0 (0%) engine_busy=4570 wakeups=0
+A0ICG_STRICT tile=nl MUT=9 strict_mismatch_cycles=0 (t_out 0 n_y 0) first=-1
+A0ICG_ACTIVITY_MISSING
+A0ICG_CONTRACT tile=nl MUT=9 lead_fail=0 drain_fail=0 first=-1
