@@ -1824,3 +1824,5 @@ CODEX: 2026-10-29 08:38 PDT Qwen actualnative73wordROPE producer PASSfull512b/ed
 
 CODEX: 2026-10-29 08:37 PDT HBMsourceII1proof4fea3d46b PASS24consecutiveEG/fault0 disprovesplannedserial2; HBMownerselectsfullwidthk1/coveragepipeprep. ExactRR_RT80/allbankandwrongdirectionplanrows diagnosed; nocurrentG5claim.
 CODEX: 2026-10-29 08:37 PDT SUPPORT READY4dfbcaca2 HBMstreetactual1xclockcalibration replaceswrongNDRregistrymatch;66retainedlegs/386cells/34tapsTTFFRMS11.53/10.21ps,tap1.805/1.757;sharedstackPASS/wrongNDRFAIL. Rootintakepending,no diegateclaim.
+
+CODEX: 2026-10-29 08:39 PDT BTAB4missingBUFmasters actualSPICE/STAcalREADYacedd3ef7+947dd4bf1;64newrows/allgoldenbounds0violations/39testsPASS, old12cases84filesbyteidentical; no defaultorclosuregatechange.

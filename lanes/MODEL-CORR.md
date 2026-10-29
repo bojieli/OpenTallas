@@ -17,3 +17,6 @@ Shared coverage inventory: handoff/codex_shared_coverage_0822.tsv (32 lanes). CL
 
 ## CODEX notes 2026-10-29 08:36 PDT
 Historical clock-model jobs terminal; no repeated calibration. HBM accepted-cost sparse-input fallback fixed bf5983f3f codex/token-model-0828: require measured HBM/SM/SU records before schedule pricing, same policy as perf.survey;30 focused tests PASS. Two historic ledger fixture failures diagnosed (COLLPIN aggregate .414 vs per-workload .310; stale S81 2.775 expected vs current14.048) retained without repricing. Current BUF8/10/12/12f/16f fit owned shared-clock lane.
+
+## CODEX notes 2026-10-29 08:39 PDT — BTAB missing clock masters calibrated
+READY codex/buf-cal-0827 source acedd3ef7 + measurement947dd4bf1 (root informed; Buf8base already main). Actual Intel2unit2001498 EXIT0: BUF10/12/12f/16f x2/60um1x xTT/FF xrise/fall =64newrows. Entire golden0late<spice/early>spice violations; oldratios unchanged,12legacycases84files byte-identical,39focused testsPASS. NativeBUF16f CDL pinorder differs(A,VSS,VDD,Y), generator preserves it. InitialEPYCOSDISIGILL failures retained. No RTL/cycles/defaultmode/constraintschange. QC-FIX has allrequiredmasterrows; actualroutedband/signoffstilldecides.
