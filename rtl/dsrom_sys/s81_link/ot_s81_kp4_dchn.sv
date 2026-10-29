@@ -4,7 +4,7 @@
 // ot_s81_kp4_dec (frame / code: tools/s81_link/rs544.py; cluster structure and schedule: ot_s81_kp4_dec.sv).
 //   forward Chien search + Forney over 55 lanes in two registered stages (E1: Lambda(X^-1), Omega(X^-1) X^-30,
 //   Lambda_odd(X^-1); E2: e = Omega X^-30 / Lambda_odd with a kept-hierarchy inverse LUT, so yosys cannot fold the E1
-//   register into an inferred ROM), a 64-leaf balanced root-count tree, the uncorrectable decision (L > 15 or roots
+//   register into an inferred ROM), a carry-save root-count reduction, the uncorrectable decision (L > 15 or roots
 //   != L), and the correction masks re-cut to 544-bit PMA words (cw_q, to ot_s81_kp4_dout).  Every time is relative to
 //   the k_v the tile sees: T' = that cycle - 42; chunk c is evaluated at T' + 43 + c, cw_q of word k at T' + 46 + k,
 //   apply / o_unc / o_ne / fs at T' + 56.  Regional synchronous reset, no datapath reset.
@@ -110,14 +110,11 @@ module ot_s81_kp4_dchn #(parameter integer MUT = 0) (
         assign lzv[gk] = e1_lz[gk] && !(gk >= 49 && ce1[9]);     // positions 544..549 of chunk 9 do not exist
         always @(posedge clk) crc[549 - 10 * gk -: 10] <= lzv[gk] ? ev : 10'd0;
     end endgenerate
-    // root count of the chunk: balanced adder tree (64 leaves, 6 levels)
-    reg [6:0] pt [0:126];
-    integer pa;
-    always @* begin
-        for (pa = 0; pa < 64; pa = pa + 1) pt[63 + pa] = (pa < SPC) ? {6'd0, lzv[pa]} : 7'd0;
-        for (pa = 62; pa >= 0; pa = pa - 1) pt[pa] = pt[2 * pa + 1] + pt[2 * pa + 2];
-    end
-    always @(posedge clk) nrc <= pt[0][5:0];
+    // Apply the last-chunk mask only to the six-symbol tail subtotal.
+    // Carry-save compression preserves the existing E2 register/latency.
+    wire [5:0] root_count;
+    ot_s81_kp4_root_count u_root_count(.roots(e1_lz),.last_chunk(ce1[9]),.count(root_count));
+    always @(posedge clk) nrc <= root_count;
     reg  [5:0] nacc;                     // roots of the frame so far (final at T + 55)
     always @(posedge clk) nacc <= (ce2[0] ? 6'd0 : nacc) + nrc;
     // correction words: word w = {chunk w-1, chunk w}[549 + 6 w -: 544] at T + 45 + w -> cw_q at T + 46 + w
@@ -151,4 +148,39 @@ module ot_s81_kp4_dchn #(parameter integer MUT = 0) (
                 if (unc_n) n_unc <= n_unc + 1; else if (fin_any) n_corr <= n_corr + fin_L;
             end
         end
+endmodule
+
+// Exact combinational49+6 symbol popcount.3:2 compressors do not propagate
+// carry within a level. No registers or source/output cycles are introduced.
+module ot_s81_kp4_root_count(
+    input wire[54:0] roots,input wire last_chunk,output wire[5:0] count
+);
+    function integer n_at(input integer level);
+        integer k,n;
+        begin n=49;for(k=0;k<level;k=k+1)n=2*(n/3)+(n%3);n_at=n;end
+    endfunction
+    wire[5:0] rows[0:9][0:48];
+    genvar l,j;
+    generate for(j=0;j<49;j=j+1)begin:g_leaf
+        assign rows[0][j]={5'd0,roots[j]};
+    end
+    for(l=0;l<9;l=l+1)begin:g_level
+        localparam integer N=n_at(l),G=N/3,R=N%3;
+        for(j=0;j<G;j=j+1)begin:g_compress
+            wire[5:0]a=rows[l][3*j],b=rows[l][3*j+1],c=rows[l][3*j+2];
+            assign rows[l+1][2*j]=a^b^c;
+            assign rows[l+1][2*j+1]=((a&b)|(a&c)|(b&c))<<1;
+        end
+        for(j=0;j<R;j=j+1)begin:g_tail
+            assign rows[l+1][2*G+j]=rows[l][3*G+j];
+        end
+        for(j=2*G+R;j<49;j=j+1)begin:g_unused
+            assign rows[l+1][j]=6'd0;
+        end
+    end endgenerate
+    wire[5:0] base=rows[9][0]+rows[9][1];
+    wire[2:0] tail_a={2'd0,roots[49]}+{2'd0,roots[50]}+{2'd0,roots[51]};
+    wire[2:0] tail_b={2'd0,roots[52]}+{2'd0,roots[53]}+{2'd0,roots[54]};
+    wire[2:0] tail=tail_a+tail_b;
+    assign count=base+(last_chunk?6'd0:{3'd0,tail});
 endmodule
