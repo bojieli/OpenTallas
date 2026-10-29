@@ -1,0 +1,7 @@
+# BTAB cached GRT admission compatibility
+
+The reviewed DRT continuation fe9765a29deb failed before P&R because its old generated infrastructure predates canonical empty FORM-C gate metadata. The actual physical design already passes G2 (6d86f7012): GRT0, TT267.725/FF11.123, exact5357pairskew46.61/41.08, macro-inclusive387.85um/0bad,319clock/FTfootprintsunchanged andclear. Independent GEOM[BTAB-TURNTREE-DRT-0251] approved exactcachedGRT continuation.
+
+Current canonical309dfdf95 compiler equals the admission bundle9e2be567. New successor copies the cached kit and changes exactly TWO of195 files: core_tree.under_gate absent becomes{}, and core_infra_impl adds an unused9line planned-gate helper. BTAB has no gates. Compiled cells/ports/arcs/nodes/sinks and emitted active implementation/CTS hooks are identical. All other files, including exact5_1GRT ODB/SDC, pins,RTL,macros,constraints and master_slice remain byte-identical. The old failed path is retained. Current strict KIT_PREFLIGHT --contract PASS0.
+
+No P&R or timing was repeated. This source commit records the exact composite: completed physical GRT sourcef28e60fc9464, canonical compatibility compiler309dfdf95. Route successor intel1:/srv/opentallas-scratch2/claude/codex-qc-btab-0251/kits_route_compat/qfd_dv_s8x_btab_turntree. Standard autopilot continuation remains required; no manual bypass, constraint, topology or clock offset change.

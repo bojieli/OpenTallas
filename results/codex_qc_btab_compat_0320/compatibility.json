@@ -1,0 +1,26 @@
+{
+ "scope": "admission compatibility; no physical build",
+ "canonical_compiler_source": "309dfdf952d14c1ae4838a513f4eefe1ee200b35",
+ "native_GRT_source": "f28e60fc9464",
+ "changed_files": [
+  "core_infra_impl.tcl",
+  "core_infra_plan.json"
+ ],
+ "compile_difference": "core_tree.under_gate absent -> empty dictionary",
+ "implementation_difference": "unused ot_ci_tree_gate_planned procedure only",
+ "all_other_file_hashes_unchanged": true,
+ "files_compared": 195,
+ "frozen_physical": {
+  "constraint.sdc": "f71c59ebc2f026b0fbf8b81814870812c47ceece1d307327db356dc3330e55f7",
+  "core_infra_cts.tcl": "c585b0cc5d2b11c176ae2064d20a4fea9c9fa2f1da566d2f5d5d1fcd86c79aca",
+  "master_slice.json": "f4b9e010d1f657ce1bba8db86ece7a698a5a310cd63d3d3e4bf4aba70d8fb3ef",
+  "master_core_infra.tcl": "b74485837f68cf76636a53d8e726424da5e76813f5e3dcaf6681bbea885a5ec7",
+  "pins.json": "3ccd9aec3a5723305f1c1d53420183b7cb2f15317a2ab1b1838f6b2b1f0ca154",
+  "plan_pins.json": "b756685f27c99f45ef54e6c9a9e0d16836f6381161865117e23e946684c47c2a",
+  "run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/5_1_grt.odb": "f49e58dfb11a079936b861a9013130ddb41f1b78e28c0d4077d75449383731f6",
+  "run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/5_1_grt.sdc": "9fc9568331f977658cab16ba895adb1636f1d2d9ed04aaa6b227df9e446135fc",
+  "run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/3_place.odb": "a475145d263dddec3e85abb84cba8388aed59b00902dbdeeac3cbdad685cd6c3"
+ },
+ "compiler_sha256": "e2e133e9719dbb692624a09dfd899783b367ba170f7d96ff65a0564593ee0ec7",
+ "implementation_sha256": "efaabc05224bd30b7704664bdaf6ee5ee1f9365c845c9348b3c092fe9ecec6c1"
+}
