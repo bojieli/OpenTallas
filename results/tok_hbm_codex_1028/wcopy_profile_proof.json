@@ -1,0 +1,156 @@
+{
+  "default_structural_identity": true,
+  "missing": [],
+  "differing_modules": [],
+  "profile": [
+    {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 1,
+      "banks": 32,
+      "bank_values": [
+        1
+      ]
+    },
+    {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 1,
+      "banks": 32,
+      "bank_values": [
+        1
+      ]
+    },
+    {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 1,
+      "banks": 32,
+      "bank_values": [
+        1
+      ]
+    },
+    {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 1,
+      "banks": 32,
+      "bank_values": [
+        1
+      ]
+    },
+    {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 1,
+      "banks": 32,
+      "bank_values": [
+        1
+      ]
+    },
+    {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 1,
+      "banks": 32,
+      "bank_values": [
+        1
+      ]
+    },
+    {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 1,
+      "banks": 32,
+      "bank_values": [
+        1
+      ]
+    },
+    {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 1,
+      "banks": 32,
+      "bank_values": [
+        1
+      ]
+    }
+  ],
+  "mutant": [
+    {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 0,
+      "banks": 32,
+      "bank_values": [
+        0
+      ]
+    },
+    {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 0,
+      "banks": 32,
+      "bank_values": [
+        0
+      ]
+    },
+    {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 0,
+      "banks": 32,
+      "bank_values": [
+        0
+      ]
+    },
+    {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 0,
+      "banks": 32,
+      "bank_values": [
+        0
+      ]
+    },
+    {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 0,
+      "banks": 32,
+      "bank_values": [
+        0
+      ]
+    },
+    {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 0,
+      "banks": 32,
+      "bank_values": [
+        0
+      ]
+    },
+    {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 0,
+      "banks": 32,
+      "bank_values": [
+        0
+      ]
+    },
+    {
+      "MLAT": 5,
+      "ALAT": 4,
+      "WCOPY": 0,
+      "banks": 32,
+      "bank_values": [
+        0
+      ]
+    }
+  ],
+  "optin_propagated": true,
+  "mutant_caught": true,
+  "scope": "Actual selected-source structural default identity plus enabled parameter propagation; underlying WCOPY numeric bank mechanism has existing REBAL gate, no new whole-token claim"
+}
