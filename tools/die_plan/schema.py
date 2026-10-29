@@ -366,6 +366,15 @@ SCHEMA = {
                     # DIE-HEAD-5 PGCUT 10-28 (DRT-TRIAL-1, opt-in): cut the kit M6 PG straps over the interior M5
                     # signal pins (in-core island pins) of every hard core whose LEF is known (gen_phys.pg_island_cuts)
                     "pg_island_cut": {"type": "boolean"},
+                    # DIE-HEAD-17 10-28 (opt-in): register clock spine + local trees + core early-tap branches in PRE_CTS
+                    # (gen_phys copies reg_spine.json/.py/.tcl into the kit; spec documented in reg_spine.py)
+                    "reg_spine": {"type": "object", "required": ["trunk"], "properties": {
+                        "trunk": {"type": "array", "minItems": 1, "items": {"type": "array", "minItems": 4,
+                                                                             "maxItems": 4}},
+                        "express": {"type": "array", "items": {"type": "string"}},
+                        "pads": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+                        "core_taps": {"type": "array", "items": {"type": "object",
+                                                                 "required": ["inst", "pin", "xy", "stages"]}}}},
                     # HEAD-BIND-4 10-27 (OWNER 10-25 option B): per-INSTANCE ID strap input ports of the partition
                     # (strap_* names, exact widths in parent_id_straps.PHYSICAL_ID_WIDTHS).  No pin register, kit SDC
                     # set_false_path -from, each instance ties its own value (partitions[].id_straps) at the die top;
