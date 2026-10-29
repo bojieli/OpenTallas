@@ -1,7 +1,7 @@
 {
 "module": "ot_s81sl_vn_a",
 "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vn_a_tpl.lef",
-"pinhash": "8a256d4507bb",
+"pinhash": "887951e96ae6",
 "pins": [
 {
 "name": "c_s[0]",
@@ -197,8 +197,8 @@
 },
 {
 "name": "clk",
-"layer": "M4",
-"x": 0.042,
+"layer": "M5",
+"x": 0.06,
 "y": 81.9
 },
 {
@@ -5500,5 +5500,5 @@
 "y": 27.084
 }
 ],
-"source": "TYPE-REDUCE-2 pin_template.py: ONE table for every ot_s81sl_vn_a instance (was 2 tables ['inputs/core_pins/ot_s81sl_vn_a.json', 'inputs/core_pins/ot_s81sl_vn_a_xm.json']); N/S V pins on ['M5'] only (mirror-compatible), order kept, max shift 0.045 um from inputs/core_pins/ot_s81sl_vn_a.json; MY instances use track offset x + 0.0240"
+"source": "TYPE-REDUCE-2 pin_template.py: ONE table for every ot_s81sl_vn_a instance (was 2 tables ['inputs/core_pins/ot_s81sl_vn_a.json', 'inputs/core_pins/ot_s81sl_vn_a_xm.json']); N/S V pins on ['M5'] only (mirror-compatible), order kept, max shift 0.045 um from inputs/core_pins/ot_s81sl_vn_a.json; MY instances use track offset x + 0.0240; S81-028 DIE-S81-24 2026-10-29 (delta_clkpin_m5_1029b.py): clock clk M4(0.042,81.9) -> M5(0.06,81.9) 0.120x0.480 edge rectangle on the M5 track (GEOM-21)"
 }
