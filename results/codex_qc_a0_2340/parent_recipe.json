@@ -16,7 +16,7 @@
   "insertion_balance": false,
   "max_routing_layer": "M7",
   "util": 0.45,
-  "suffix": "a0p10r1",
+  "suffix": "a0p10r3",
   "slang": true,
   "params": {
    "ICG": 1
@@ -35,7 +35,21 @@
       1
      ]
     ]
+   },
+   {
+    "file": "rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv",
+    "why": "Inactive REGROOT>=8 arm must have in-bounds twin index when REGROOT3 NSPC27. Select offset0 in inactive arm, same expression when REGROOT>=8; active fallback unchanged. Actual expression lockstep20000 + active-twin mutant caught; zero cycles.",
+    "edits": [
+     [
+      "spc[4*(14+gq+SPB) +: 4]",
+      "spc[4*(14+gq+((REGROOT >= 8) ? SPB : 0)) +: 4]",
+      1
+     ]
+    ]
    }
-  ]
+  ],
+  "orfs_vars": {
+   "OT_RTL_LINT_FLATTEN": 1
+  }
  }
 }
