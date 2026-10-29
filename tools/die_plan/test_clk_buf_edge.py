@@ -70,7 +70,8 @@ def test_buf_edge_scales_each_edge_and_analysis(tmp_path):
 
 
 def test_factors_bound_every_golden_buf_row():
-    rows = [r for r in G["raw_rows"] if r["cell"] == "buf" and r["case"] in MC.CASES]     # BUFx24 benches
+    rows = [r for r in G["raw_rows"] if r["cell"] == "buf" and r["case"] in MC.CASES       # BUFx24 benches
+            and "master" not in MC.CASES[r["case"]]]                                       # (not MODEL-REFIT-2 masters)
     assert len(rows) >= 36
     for c in ("TT", "FF"):
         F = D.SPICE_CLOCK_CAL_BUF_EDGE[c]
@@ -86,7 +87,8 @@ def test_factors_bound_every_golden_buf_row():
 
 def test_golden_buf_rows_bounded_and_duty_corrected():
     new, old = G["modes"]["spice_buf_edge"], G["modes"]["spice"]
-    buf = [k for k in new if k.split("|")[0] in MC.CASES and k.startswith("buf")]       # BUFx24 benches
+    buf = [k for k in new if k.split("|")[0] in MC.CASES and k.startswith("buf")        # BUFx24 benches
+           and "master" not in MC.CASES[k.split("|")[0]]]
     for k in buf:
         v = new[k]
         if k.endswith("|duty"):

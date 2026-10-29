@@ -67,6 +67,14 @@ def _legs(legs_um):
     return segs, side, taps
 
 
+# MODEL-REFIT-2: per-master chain cases (delay / buffer cells on live die clock paths besides BUFx24 / CKINVDCx16).
+# 'master' names the cell; 'cell' stays the die clock-cell model key ('buf' = non-inverting).  These decks ramp VDD from
+# 0 with uic (no DC operating point: the xAct3D BUFx4 transient aborts after one, MODEL-CORR-1 section 6) and put the
+# source edge at RAMP_T0_PS; crossings before T_SETTLE_PS are dropped by collect_case.
+MASTERS = {"BUFx4_ASAP7_75t_R": dict(inverting=False), "BUFx6f_ASAP7_75t_R": dict(inverting=False),
+           "BUFx24_ASAP7_75t_R": dict(inverting=False), "CKINVDCx16_ASAP7_75t_R": dict(inverting=True)}
+RAMP_T0_PS = 1000.0
+
 CASES = {
     "buf_ndr450_d50": dict(cell="buf", rc="ndr", segs=[450.0] * 50, taps=[5, 20, 50]),
     "inv_ndr250_d50": dict(cell="inv", rc="ndr", segs=[250.0] * 50, taps=[5, 20, 50]),
@@ -76,6 +84,14 @@ CASES = {
     "inv_1x250_d20": dict(cell="inv", rc="1x", segs=[250.0] * 20, taps=[5, 20]),
     "buf_legs_1_2mm": dict(cell="buf", rc="ndr", legs=[(1000.0, 3), (2000.0, 5), (1000.0, 3), (2000.0, 5)]),
     "inv_legs_1_2mm": dict(cell="inv", rc="ndr", legs=[(1000.0, 4), (2000.0, 8), (1000.0, 4), (2000.0, 8)]),
+    # MODEL-REFIT-2 (ramp decks): BUFx4 delay-cell chain as built in HEAD hd_tile h16 (abutted, 0.1-0.24 fF nets ->
+    # 2 um 1x wire), BUFx4 on 30 um 1x legs with a fanout-2 side load, BUFx6f on 60 um 1x legs.
+    "bufx4_dly2_d32": dict(cell="buf", master="BUFx4_ASAP7_75t_R", rc="1x", segs=[2.0] * 32, taps=[4, 16, 32],
+                           ramp=True),
+    "bufx4_1x30_d20": dict(cell="buf", master="BUFx4_ASAP7_75t_R", rc="1x", segs=[30.0] * 20, taps=[5, 20],
+                           side={5: 10.0, 12: 10.0}, ramp=True),
+    "bufx6f_1x60_d20": dict(cell="buf", master="BUFx6f_ASAP7_75t_R", rc="1x", segs=[60.0] * 20, taps=[5, 20],
+                            ramp=True),
 }
 
 
@@ -91,8 +107,9 @@ def case_geom(name):
 # ------------------------------------------------------------------------------------------------ chain decks
 def gen_case(name, d, libdir="/w/lib", osdi="/w/osdi/bsimcmg23.osdi"):
     g = case_geom(name)
-    cell = CIC.CELLS[g["cell"]]["cell"]
-    inv = CIC.CELLS[g["cell"]]["inverting"]
+    cell = g.get("master") or CIC.CELLS[g["cell"]]["cell"]
+    inv = MASTERS[cell]["inverting"] if g.get("master") else CIC.CELLS[g["cell"]]["inverting"]
+    ramp = bool(g.get("ramp"))
     w = CIC.WIRE_1X if g["rc"] == "1x" else CIC.WIRE_NDR
     N = len(g["segs"])
     trunk = [f"t{i}" for i in range(N + 1)]
@@ -108,10 +125,16 @@ def gen_case(name, d, libdir="/w/lib", osdi="/w/osdi/bsimcmg23.osdi"):
     for c in CORNERS:
         v = CIC.CORNER[c]["vdd"]
         L = [f"* MODEL-CORR-1 {name} {cell} {c}", ".control", f"pre_osdi {osdi}", "set noaskquit", "run",
-             f"wrdata arr_{c}.dat " + " ".join(f"v(i_{s})" for s in meas), "quit", ".endc", ".options klu",
+             f"wrdata arr_{c}.dat " + " ".join(f"v(i_{s})" for s in meas), "quit", ".endc",
+             # ramp decks: abstol 1 nA / vntol 10 uV -- with the defaults the xAct3D BUFx4 transient aborts
+             # ("timestep too small ... vss#branch", FF) or stalls (TT); cross-checked against BUFx6f default-option
+             # crossings and a no-Vss-source deck (MODEL-REFIT-2 README)
+             ".options abstol=1e-9 vntol=1e-5" if ramp else ".options klu",
              ".save " + " ".join(f"v(i_{s})" for s in meas), f".temp {CIC.CORNER[c]['temp']}",
-             f".include {libdir}/{c}/models.sp", f".include {libdir}/{c}/cells.sp", f"Vdd vdd 0 {v}", "Vss vss 0 0",
-             f"Vin src 0 {CIC.pwl_pulse(v, w=PULSE_PS)}", f"Xp1 vss vdd src p1 {cell}", f"Xp2 vss vdd p1 i_t0 {cell}"]
+             f".include {libdir}/{c}/models.sp", f".include {libdir}/{c}/cells.sp",
+             f"Vdd vdd 0 PWL(0 0 {VDD_RAMP_PS:.0f}p {v})" if ramp else f"Vdd vdd 0 {v}", "Vss vss 0 0",
+             f"Vin src 0 {CIC.pwl_pulse(v, t0=RAMP_T0_PS, w=PULSE_PS) if ramp else CIC.pwl_pulse(v, w=PULSE_PS)}",
+             f"Xp1 vss vdd src p1 {cell}", f"Xp2 vss vdd p1 i_t0 {cell}"]
         for b in cells:
             L.append(f"X{b} vss vdd i_{b} o_{b} {cell}")
         for k, (dr, ld, um) in enumerate(edges):
@@ -120,7 +143,7 @@ def gen_case(name, d, libdir="/w/lib", osdi="/w/osdi/bsimcmg23.osdi"):
             L.append(f"Cl_{s} o_{s} 0 {SINK_FF}f")
         per = 160.0 if g["cell"] == "buf" else 90.0
         tend = 100 + PULSE_PS + sum(max(1.0, u / 250.0) for u in g["segs"]) * per + 1500
-        L += [f".tran 1p {tend:.0f}p", ".end"]
+        L += [f".tran 1p {tend + RAMP_T0_PS:.0f}p uic" if ramp else f".tran 1p {tend:.0f}p", ".end"]
         (d / f"deck_{c}.sp").write_text("\n".join(L) + "\n")
     drv = {ld: dr for dr, ld, _ in edges}
     V = ["module chain (src, " + ", ".join(f"q_{s}" for s in sorted(loads)) + ");", "input src;"]
@@ -176,6 +199,8 @@ def gen_case(name, d, libdir="/w/lib", osdi="/w/osdi/bsimcmg23.osdi"):
              taps=[f"t{k}" for k in g["taps"]], depth={s: depth[s] for s in meas},
              parity={s: (depth[s] % 2 if inv else 0) for s in meas}, sink_ff=SINK_FF, pulse_ps=PULSE_PS,
              wire=w, pi_um=CIC.PI_UM)
+    if ramp:
+        M.update(t_settle_ps=T_SETTLE_PS, vdd_ramp_ps=VDD_RAMP_PS, t0_ps=RAMP_T0_PS)
     (d / "meas.json").write_text(json.dumps(M, indent=1) + "\n")
     return M
 
@@ -383,7 +408,23 @@ def collect_case(d, c):
             rows.append(dict(case=M["case"], corner=c, cell=M["cell"], form=M["form"], tap=s, depth=M["depth"][s],
                              src_edge=ed, tap_edge=tap_edge, spice_ps=round(sp_, 3), sta_late_ps=round(mx, 3),
                              sta_early_ps=round(mn, 3)))
+            ms = tap_masters(M, s)
+            if ms is not None:
+                rows[-1]["masters"] = ms
     return rows
+
+
+def tap_masters(M, tap):
+    """MODEL-REFIT-2: sorted clock masters between the reference root and `tap` (the cells whose delay the arrival
+    holds), or None for the MODEL-CORR-1 chain cases (one master = the case cell; their raw rows stay unchanged).
+    routed: the path cells before the tap (meas.json masters + tap order); ramp chain: the case master."""
+    if M["kind"] == "routed":
+        order = [t.split("/")[0] for t in M["tap_names"]]
+        k = order.index(tap.split("/")[0])
+        return sorted({M["masters"][i] for i in order[:k]})
+    if M.get("t_settle_ps"):
+        return [M["master"]]
+    return None
 
 
 def collect(a):
@@ -436,7 +477,8 @@ def ratios(raw_rows, R=None):
         res = out.setdefault(mode, {})
         for (case, c, cell), taps in by.items():
             t = {k: dict(late_ps=v["rise"]["sta_late_ps"], early_ps=v["rise"]["sta_early_ps"],
-                         fall_late_ps=v["fall"]["sta_late_ps"], fall_early_ps=v["fall"]["sta_early_ps"])
+                         fall_late_ps=v["fall"]["sta_late_ps"], fall_early_ps=v["fall"]["sta_early_ps"],
+                         **({"clock_masters": v["rise"]["masters"]} if v["rise"].get("masters") else {}))
                  for k, v in taps.items()}
             m = model_arrivals(t, c, cell, mode, R)
             for k, v in taps.items():
@@ -451,6 +493,57 @@ def ratios(raw_rows, R=None):
                 res[f"{case}|{c}|{k}|duty"] = dict(model_ps=round(dm, 3), spice_ps=round(ds, 3),
                                                     err_ps=round(dm - ds, 3), ref_ps=v["rise"]["spice_ps"])
     return out
+
+
+DEFAULT_MASTER = {"buf": "BUFx24_ASAP7_75t_R", "inv": "CKINVDCx16_ASAP7_75t_R"}
+FIT_KEYS = ("rise_late", "rise_early", "fall_late", "fall_early")
+
+
+def row_masters(r):
+    return tuple(r.get("masters") or (DEFAULT_MASTER[r["cell"]],))
+
+
+def fit_cell_factors(raw_rows, digits=4):
+    """MODEL-REFIT-2 bounding fit of SPICE_CLOCK_CAL_CELL: per master, corner, source edge: late = MAX spice/STA-late,
+    early = MIN spice/STA-early over the single-master rows, rounded outward (late up, early down); then every
+    multi-master (routed) row must hold under the set bound (max late / min early of its masters): a violated row raises
+    the late of its largest-late master / lowers the early of its smallest-early master to the row's ratio."""
+    q = 10 ** digits
+    up = lambda x: math.ceil(x * q - 1e-9) / q        # noqa: E731
+    dn = lambda x: math.floor(x * q + 1e-9) / q       # noqa: E731
+    T = {}
+    for r in raw_rows:
+        ms = row_masters(r)
+        if len(ms) != 1:
+            continue
+        e = T.setdefault(ms[0], {}).setdefault(r["corner"], {})
+        ed = r["src_edge"]
+        lk, ek = f"{ed}_late", f"{ed}_early"
+        e[lk] = max(e.get(lk, 0.0), up(r["spice_ps"] / r["sta_late_ps"]))
+        e[ek] = min(e.get(ek, 9.0), dn(r["spice_ps"] / r["sta_early_ps"]))
+    for r in raw_rows:
+        ms = row_masters(r)
+        if len(ms) == 1:
+            continue
+        ed, c = r["src_edge"], r["corner"]
+        lk, ek = f"{ed}_late", f"{ed}_early"
+        if any(m not in T or c not in T[m] or lk not in T[m][c] for m in ms):
+            raise SystemExit(f"fit: routed row {r['case']} {r['tap']} has a master without single-master rows: {ms}")
+        rl, re_ = r["spice_ps"] / r["sta_late_ps"], r["spice_ps"] / r["sta_early_ps"]
+        mL = max(ms, key=lambda m: T[m][c][lk])
+        if T[mL][c][lk] < rl:
+            T[mL][c][lk] = up(rl)
+        mE = min(ms, key=lambda m: T[m][c][ek])
+        if T[mE][c][ek] > re_:
+            T[mE][c][ek] = dn(re_)
+    return {m: {c: {k: v[c][k] for k in FIT_KEYS} for c in sorted(v)} for m, v in sorted(T.items())}
+
+
+def bound_violations(G, R=None, mode="spice_cell"):
+    """rows of `mode` where model late < spice or model early > spice (the per-master bound the mode promises)."""
+    cur = ratios(G["raw_rows"], R).get(mode, {})
+    return [(k, v["late"], v["early"]) for k, v in cur.items()
+            if not k.endswith("|duty") and (v["late_ps"] < v["spice_ps"] - 1e-9 or v["early_ps"] > v["spice_ps"] + 1e-9)]
 
 
 def raw_hash(raw_rows):
@@ -531,6 +624,11 @@ def outside(G, R=None, tol=REPORT_TOL, modes=None):
                 if abs(v[side] - 1.0) > tol:
                     out.append((mode, k, side, v[side], v[f"{side}_ps"], v["spice_ps"]))
     return out
+
+
+def fit(a):
+    rows = json.loads(Path(a.raw or a.golden).read_text())["raw_rows" if not a.raw else "rows"]
+    print(json.dumps(fit_cell_factors(rows), indent=1))
 
 
 def check(a):
@@ -642,6 +740,9 @@ def main(argv=None):
     o.add_argument("--out", default=str(GOLDEN))
     o.add_argument("--merge")
     o.add_argument("--meta")
+    ft = sp.add_parser("fit")
+    ft.add_argument("--golden", default=str(GOLDEN))
+    ft.add_argument("--raw", help="raw.json instead of the golden's raw rows")
     k = sp.add_parser("check")
     k.add_argument("--golden", default=str(GOLDEN))
     p = sp.add_parser("report")
@@ -658,7 +759,8 @@ def main(argv=None):
     f.add_argument("--jobs", type=int, default=8)
     f.add_argument("--allow-host", action="store_true")
     a = ap.parse_args(argv)
-    return dict(gen=gen, routed=routed, collect=collect, golden=golden, check=check, report=report, full=full)[a.cmd](a)
+    return dict(gen=gen, routed=routed, collect=collect, golden=golden, check=check, report=report, full=full,
+                fit=fit)[a.cmd](a)
 
 
 if __name__ == "__main__":

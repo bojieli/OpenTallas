@@ -142,3 +142,89 @@ Over the 19 taps, model early is above spice in every calibrated mode:
 The model late is 3-8 % above spice there, which is pessimistic for setup.
 The fix is per-master (per-cell) factors, at least BUFx4, which is about 1.0 TT and 0.99 FF from this path. It needs a BUFx4 chain bench.
 That is a separate MODEL-REFIT item. This branch does not change it: rule freeze, and the default stays spice.
+
+## 7. MODEL-REFIT-2: per-master clock factors (opt-in `--clock-cal` / `--sta-clock-cal spice_cell`)
+COORD 22:47 asked for this after section 6: the BUFx24 factor does not carry over to BUFx4 delay cells.
+
+**Census of clock masters on the live die trees (10-28, CHECKED from netlists, read-only).**
+- Die-level trees of all 5 dies are CKINVDCx16 only, with one exception: KV `clk_p20` / DIE-KV-21 `clk_c` also has 89 BUFx24 tap-pad cells (1-4 per tap on the 32 PHY taps `t_phy_*__clk`). The KV gate scales those with the inverter factor.
+- The HEAD hd_tile h16 spine (16 BUFx4 delay cells per tap, 276 in total, plus 28 BUFx4 in the h15 early-tap chains) is inside the hd_tile partition. It reaches the HEAD die gate only as the scalar core latency and the `--ca-ring` file, both added after `apply_clock_cal`, so no clock-cal mode scales them (raw GRT OpenSTA).
+- hd_tile `fclk_out_o` has BUFx12f / BUFx6f / BUFx10 / BUFx16f / BUFx2 resizer buffers. No die-level tree has BUFx4, BUFx6f, HB* or ICG cells.
+
+**Benches** (`model_corr.py` CASES, ramp decks):
+
+| case | form | rows |
+|---|---|---|
+| `bufx4_dly2_d32` | BUFx4 delay chain as built in h16 (abutted; the SPEF nets are 0.1-0.24 fF, so 2 um 1x wire), taps 4/16/32 | 12 |
+| `bufx4_1x30_d20` | BUFx4 on 30 um 1x legs with fanout-2 side loads, taps 5/20 | 8 |
+| `bufx6f_1x60_d20` | BUFx6f on 60 um 1x legs, taps 5/20 | 8 |
+
+Bench setup:
+- Spice cells: BUFx4 and BUFx6f come from asap7sc7p5t_28 `CDL/xAct3D_extracted/asap7sc7p5t_28_R.sp` @ e5bd25da72. The same transform as the CLK-INV-CAL lib reproduces all 17 lib subckts byte for byte.
+- Deck: VDD ramps 0 -> V with uic. `.options abstol=1e-9 vntol=1e-5` is needed: with the defaults the BUFx4 transient aborts at FF ("timestep too small, vss#branch") and stalls at TT.
+- Cross-check (CHECKED): BUFx6f with default options against these options agrees within 0.003 ps on every crossing.
+- Second cross-check (CHECKED): the BUFx4 loaded deck at FF with default tolerances and the Vss source removed (vss = node 0, which also converges) agrees within 0.056 ps.
+
+Raw spice / OpenSTA (CHECKED):
+
+| bench | TT late | TT early | FF late | FF early |
+|---|---|---|---|---|
+| BUFx4 abutted | 0.992-1.004 | 1.002-1.017 | 0.978-0.986 | 0.988-0.997 |
+| BUFx4 loaded | 1.038-1.044 | 1.049-1.057 | 1.023-1.026 | 1.035-1.038 |
+| BUFx6f | 1.021-1.024 | 1.042-1.047 | 1.004-1.010 | 1.025-1.030 |
+
+For BUFx4, OpenSTA error depends on the load: about 4 % between the abutted and the loaded form.
+
+**Model.** `SPICE_CLOCK_CAL_CELL` in die_sta_related holds one factor per master, corner, source edge and analysis.
+- Fit (`model_corr.py fit`, a test asserts the table equals the fit):
+  - late = MAX spice / STA-late, early = MIN spice / STA-early, over the single-master golden rows, rounded outward.
+  - A routed multi-master row that is not yet bounded lowers or raises the factor of its binding master.
+- Taps:
+  - A tap with masters S takes late = max over S and early = min over S. This is a stage-wise bound: sum f_i d_i lies in [min f, max f] x sum d_i.
+  - The masters come from the tap's `clock_masters`, else the proof's clock netlist (ctree.v, traced from the tap port to the root, `netlist_tap_masters`), else meta `clock_masters`, else the die clock cell's master.
+  - A master without a factor fails closed.
+- Routed golden rows now carry `masters` (the cells between the root and the tap).
+
+| master | TT rise late / early | TT fall late / early | FF rise late / early | FF fall late / early |
+|---|---|---|---|---|
+| BUFx24 | 1.0473 / 1.0222 | 1.0227 / 1.0206 | 1.0552 / 1.0073 | 1.0257 / 1.0025 |
+| BUFx4 | 1.0443 / 1.0164 | 1.0388 / 1.0018 | 1.0263 / 0.9972 | 1.0240 / 0.9877 |
+| BUFx6f | 1.0243 / 1.0463 | 1.0218 / 1.0417 | 1.0101 / 1.0301 | 1.0056 / 1.0250 |
+| CKINVDCx16 | 0.9483 / 1.0269 | 0.9528 / 1.0274 | 0.9611 / 1.0515 | 0.9623 / 1.0520 |
+
+BUFx24 early is below spice_buf_edge (1.0524 / 1.0593 rise) because two routed h16 rows have only BUFx24 upstream (h16_n_D1/A, h16_t33_d0/A). Their spice / STA-early is 1.037 / 1.022 TT and 1.031 / 1.007 FF: the routed BUFx24 form sits under the chain bound.
+
+CKINVDCx16 late is a bound too: 0.9483 / 0.9611 against spice_edge 0.9324 / 0.9380, because spice_edge leaves 46 of 60 inverter rows with late below spice (min 0.975).
+
+**Golden (CHECKED, own spice).**
+- 200 raw rows, 0 rows with model late < spice or model early > spice under spice_cell.
+- none, spice, spice_edge and spice_buf_edge are byte-identical on all 1032 old keys.
+- h16 path end clkbuf_0_h16_t33/A, model / spice:
+
+| mode | TT rise late / early | TT fall late / early | FF rise late / early | FF fall late / early |
+|---|---|---|---|---|
+| spice_buf_edge | 1.045 / 1.030 | 1.028 / 1.012 | 1.071 / 1.056 | 1.047 / 1.034 |
+| spice_cell | 1.043 / 0.995 | 1.044 / 0.991 | 1.071 / 0.994 | 1.047 / 0.992 |
+
+On the h16 path, early is now hold-safe.
+
+**Cost of one factor per master.** All 207 rows outside 2 % are on the safe side.
+- Routed late reaches 1.078 FF (setup-pessimistic) and early 0.958 TT (hold-pessimistic).
+- BUFx24 chain early is 0.938-0.974 FF.
+- BUFx4 loaded early is 0.954-0.962.
+- Duty error is -7.2..+27.1 ps.
+
+**Tests:** test_clk_cell_cal (10).
+- The table equals the fit.
+- Every golden row is bounded.
+- Mutant: BUFx24 factors applied to BUFx4 FAIL, early above spice on the BUFx4 / routed rows.
+- Mutant: dropping the per-tap masters on the routed rows FAILS.
+- The old modes are byte-identical.
+- Netlist trace of the KV tap-pad form; an unknown master fails closed.
+
+**UNCHECKED:**
+- The effect on any die gate. Default stays spice / spice_edge.
+- On KV, the 32 PHY taps would take the BUFx24 late factor on their whole ~4-7 ns arrival under spice_cell (+~10 % late), which is very pessimistic.
+- A delay-weighted split (tree node arrival x inverter factor + pad segment x BUFx24 factor) needs the node -> net map; this is the next step if KV adopts spice_cell.
+- The h16 / h15 BUFx4 arrivals enter the HEAD gate unscaled (core latency + ca-ring). On that path spice / raw-STA-early is 0.995-1.031 FF, so raw STA early is up to 0.5 % (~2 ps) later than spice (hold-optimistic).
+- Full mode (`model_corr.py full`) needs `--lib` = the MODEL-REFIT-2 lib (intel1:/srv/opentallas-scratch2/claude/model-refit2-1028/lib, cells.sp md5 fb2de1d8..., which adds BUFx4 / BUFx6f and the other BUF / HB masters).
