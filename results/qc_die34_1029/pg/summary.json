@@ -1,0 +1,43 @@
+{
+  "verdict": "PASS_MIXED_ACTUAL_PG_MECHANISM",
+  "selected_cells": 6,
+  "provider_cells": 5,
+  "contacts": 12,
+  "connected": 12,
+  "actual_m3_jog_groups": 1,
+  "first": {
+    "verdict": "IMPORTED_NO_SIGNOFF",
+    "provider_cells": 5,
+    "contacts": 12,
+    "groups": 6,
+    "planned_wire_rectangles": 163,
+    "planned_technology_vias": 48,
+    "added_wire_rectangles": 145,
+    "added_technology_vias": 48,
+    "non_pg_before_sha256": "e36ee8b538cd256153c9d496d5900140d4d8135f671be4a65435554d22660d85",
+    "non_pg_after_sha256": "e36ee8b538cd256153c9d496d5900140d4d8135f671be4a65435554d22660d85",
+    "actual_grid_rectangles": 6,
+    "freeze_qualified": false,
+    "DRC": "NOT RUN",
+    "IR": "NOT RUN"
+  },
+  "reapply": {
+    "verdict": "IMPORTED_NO_SIGNOFF",
+    "provider_cells": 5,
+    "contacts": 12,
+    "groups": 6,
+    "planned_wire_rectangles": 163,
+    "planned_technology_vias": 48,
+    "added_wire_rectangles": 0,
+    "added_technology_vias": 0,
+    "non_pg_before_sha256": "e36ee8b538cd256153c9d496d5900140d4d8135f671be4a65435554d22660d85",
+    "non_pg_after_sha256": "e36ee8b538cd256153c9d496d5900140d4d8135f671be4a65435554d22660d85",
+    "actual_grid_rectangles": 6,
+    "freeze_qualified": false,
+    "DRC": "NOT RUN",
+    "IR": "NOT RUN"
+  },
+  "changed_provider_body_control": "Mapped provider body moved start_provider/$flatten\\u_rst_b190.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+  "rail_model": "abutting native M1 rails of same-row cells unioned (touching edge counts)",
+  "scope": "Scoped actual clock/FF/comb PG coupon plus M3 jog. Not whole-die PG/clock/DRC/IR."
+}

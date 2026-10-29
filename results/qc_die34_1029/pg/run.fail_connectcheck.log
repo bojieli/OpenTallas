@@ -1,0 +1,37 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+PG_ACCESS_RECT 0 163
+PG_ACCESS_VIA 0 48
+PG_ACCESS_RECT 0 163
+PG_ACCESS_VIA 0 48
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/die-qc34/src/mixed_import_vehicle.py", line 74, in <module>
+    connections.append(dict(inst=name,pin=n,connected=connected));assert connected,(name,n)
+AssertionError: ('start_provider/$flatten\\u_rst_b190.$abc$582$auto$blifparse.cc:397:parse_blif$583', 'VDD')
+Command exited with non-zero status 1
+	Command being timed: "openroad -python -exit /srv/opentallas-scratch2/claude/die-qc34/src/mixed_import_vehicle.py --root /srv/opentallas-scratch2/claude/die-qc34 --tools /srv/opentallas-scratch2/claude/wt/codex-qc-import-0824/tools/die_plan"
+	User time (seconds): 29.61
+	System time (seconds): 3.22
+	Percent of CPU this job got: 102%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:32.04
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3079940
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1363067
+	Voluntary context switches: 83
+	Involuntary context switches: 265
+	Swaps: 0
+	File system inputs: 635344
+	File system outputs: 388768
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
