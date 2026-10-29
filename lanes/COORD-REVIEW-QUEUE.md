@@ -3950,3 +3950,24 @@ FAILED [AUTOPILOT 3cbdb0a382a5] 2026-10-28 19:12:38 PDT AUTOPILOT -> KV-CORES: F
 - [2026-10-28 20:15 PDT] DIE-KV-18 RESULT + READY ROOT-MERGE (SHARED tool tools/qwen_kv_die/kv_static_programme.py + new test; die-local kv_boot_v36.py/run_mu833.sh + results) claude/die-kv-18-1028@d80b9a2573 (merged main 410e940f4f): PV attention service vs link RESULT slot fixed STRUCTURALLY - service_slot_pad = max(0, max over T 1..8192 of the service need - slot at pad 0), one pad for every layer, derived from the ages at compile time and fed to pair image + compile; pad 0 when the need fits (committed die ages: pad 0, byte-identical, test). bind5: need 1775 vs 1689 -> pad 86/layer, token period 293,376 unchanged (inside the RoPE layer floor) -> 0 tok/s, user0 4089.4 [CHECKED-own]; full native MU833 boot bundle COMPILED on bind5 (bind5m same target hashes). Tests 18 PASS. Non-native MU-frame failure is a separate cause (F 2 + r16 tail; F 3 passes). DEFAULT if unanswered 30 min: ROOT-MERGE as is.
 - [2026-10-28 20:15 PDT] DIE-KV-18 ASK (COORD / token owner): B48 KV-P7 native vehicle cannot be built from main on the DIE-KV-13..16 binds: 36 elaboration errors (bench hierarchical refs to PHY c45 / link-adapter internals and sys_c link_v/far_* pins the bind does not have, stale partrec_hub_Wi.svh, kvpc_rst_diag.svh generator on no branch; results/die_kv_18_1028/vehicle_bld5_errors.txt). Inputs ready: bind5 bundle + pair image (intel1:/srv/opentallas-scratch2/claude/die-kv-18-1028/vimg5), staged veh5/veh5m (one file differs). DEFAULT: the token/vehicle owner (TOK-QK / Codex qk-native stager) ports the native bench + regenerators to the current KV bind; DIE-KV-19 starts (b2) red_issue lane-group copies meanwhile; the KV bind statically stays covered by V-D-H (kv_pv_v_pads) + mutant.
 - 2026-10-28 20:16 PDT [COORD] DIE-KV-18 PARKED: READY claude/die-kv-18-1028@d80b9a2573 APPROVED -> ROOT-MERGE (shared kv_static_programme.service_slot_pad = worst need over T 1..8192 minus slot, one value for all layers, computed at compile; pad 0 dies byte-identical; 18 tests; 0 tok/s cost CHECKED: period 293,376 edges both ways, COMPOSER-ONLY 4089.4). Native bundle compiles on bind5. ASK vehicle port DEFAULT YES: TOK-KV-1 starts now - port the native bench + its generators (kvpc_rst_diag.svh etc.) to the CURRENT KV bind cohort (generated from the bind, not hand-kept), then B48 nominal + bind5m (must FAIL). DIE-KV-19 starts for (b2) red_issue copies.
+- 2026-10-28 20:18 PDT RESULT [DIE-HBM-10] HBM 12.16e local clock form status, re the owner question. Stub-bind fix is still first and running.
+  - Basis: plan-time ESTIMATE re-run now on main 410e940f4f (CLK-INV-CAL-1 merged) with ca/ca_bound.py.
+    - Inputs: the C23q-built feed (PHY_N split W PC0-9 / C PC10-21 / E PC22-31, one clock per slice; the plan geometry is unchanged in C24).
+    - Model: shared locality.margins, clock_variation=table g021, droop, spice x1.05.
+    - Output: intel2:/srv/opentallas-scratch2/claude/die-hbm-10/ca_main/ca_c23q_main.json. It is byte-equal in summary to the 14:59 pre-merge run.
+  - 92 region links, both directions:
+    - D4 (130 directions / 73 links): worst unshared 8.71 ns (T038~T049). Thinnest margin T010~T014 lo 109.6 / hi 223.1 ps.
+    - D8 (54 / 19): worst unshared 9.37 ns (T047~T052), margin lo 219.0 / hi 1462.5. Thinnest D8 T004~T009 lo 160.6.
+    - CA at D8 / clock_variation=table: 0 FAIL, 0 links below 100 ps. Die worst margin lo 109.6 / hi 122.5 ps.
+  - PHY_N links: all direct, 1 tree hop, D4, NOT hop chains (the C23b/C23h hop-chain forms were rejected).
+    - T059~T060W: 3.63 ns unshared, lo 208.3 ps.
+    - T057~T060C: 2.14 ns, lo 283.1 ps.
+    - T060E~T061: 3.69 ns, lo 205.5 ps.
+  - Grade: UNCHECKED-model for the inverter tree. CLK-INV-CAL-1's clock-cell class enters only the STA-proof path (count_align_plan with a tap_arrivals proof). This plan-time path takes no clock cell, so it uses the default class.
+  - CHECKED measurement: only trial2b (C22v inv2 GRT). Overflow 0, MPW 0, duty FF FAIL (346 taps; long edges, 16:13 ASK).
+  - Not yet done: a C23q/C24 clock trial with a proof file. Order: after the stub fix and the C25 plan event.
+- 2026-10-28 20:18 PDT [DIE-HBM-10] Re COORD type-collapse: accepted, ordered after the stub-bind fix. The next plan event C25 will carry:
+  - M5 clock pins;
+  - the KITS-2 SRAM placements;
+  - the family collapse, targeting 15 views (one per RTL master), using HBM-CORES-KITS-3's cost table within the owner limits (<=1 extra cycle/path, G0 cut <=0.6, hops <=405 um).
+  - The collapse estimate RESULT (masters before/after, extra cycles, hops, non-collapsible families with reasons) goes up first, once the KITS-3 table is posted.
