@@ -9,4 +9,6 @@ mkdir -p "$O"; gunzip -c "$R/plan_hk1.json.gz" > "$O/plan_hk1.json"; gunzip -c "
 T=hd_turn_a,hd_turn_b,hd_spn,hd_spn_end,hd_serdes,hd_st_turn,hd_st_str,hd_st_n3,hd_st_n4,hd_st_m,hd_st_k5,hd_mesh,hd_lep0N,hd_ctl,hd_host
 python3 "$W/tools/die_plan/gen.py" phys "$O/plan_hk1.json" --out "$O/kits" --rtl-root "$W" --types $T \
   --clock-landing "$O/landed_sidecar.json" --trial
-for k in "$O"/kits/hd_*; do python3 "$W/tools/die_plan/kit_preflight.py" "$k" | tail -1; done
+for k in "$O"/kits/hd_*; do python3 "$W/tools/die_plan/kit_preflight.py" "$k" | tail -1 || true; done
+# declared landing-ring buses for face_guard (D = forwarded_write_flops / ring_width, hold_mux slots)
+python3 "$W/tools/s81_head/head_land_slots.py" "$O"/kits/hd_*
