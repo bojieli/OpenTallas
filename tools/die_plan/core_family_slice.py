@@ -363,7 +363,8 @@ def refresh_after_d1(rec0, rec):
 def plan(geo, fam, libtt, libff, name, trunk_cal=None, seqlibs=None):
     """seqlibs = (SEQ TT, SEQ FF) liberty: form C gate-aware plan (family icg_copies, CORES-EARLY-6); None = unchanged."""
     sinks = sum(1 for l in open(geo) if l.startswith("SINK"))
-    if seqlibs:
+    macros_only = bool(fam.get("macro_leaves")) and not seqlibs
+    if seqlibs or macros_only:
         sinks += sum(1 for l in open(geo) if l.startswith("MACRO"))
     sp = splits_for(sinks, fam)
     M7.BUFS = list(ENV)
@@ -375,6 +376,10 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None, seqlibs=None):
                         [list(k) for k in fam.get("keepout_um", [])], int(fam.get("icg_copy_max", 400)),
                         float(fam.get("leaf_target", 48)), at_leaf=(lvl == "leaf"))
         rea = None       # nearest-leaf reassignment would mix gate domains under one leaf: not used in form C
+    elif macros_only:
+        P = ungated_macro_htree(str(geo), sp[:-1], fam.get("smax", 70.0),
+                                [list(k) for k in fam.get("keepout_um", [])], float(fam.get("leaf_target", 48)))
+        rea = None
     else:
         P = H.plan(str(geo), sp, fam.get("smax", 70.0), [list(k) for k in fam.get("keepout_um", [])])
         rea = reassign_nearest(P, int(fam.get("reassign_cap", 1.5) * max(len(v) for v in P["leafsinks"].values()))) if fam.get("reassign") else None
@@ -440,6 +445,11 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None, seqlibs=None):
                                   ungated_parts=sum(1 for v in P["copy_gate"].values() if v is None),
                                   gated_sinks=sum(len(g["members"]) for g in rows), parts_per_gate_max=max(nb.values()) if nb else 0,
                                   copy_max=int(fam.get("icg_copy_max", 400)), leaf_target=fam.get("leaf_target", 48))
+    if macros_only:
+        rec["macro_clock_model"] = "separate same-stage macro leaves, exact per-corner liberty clock pin caps; zero internal macro clock latency"
+        rec["sinks"] = sum(len(v) for v in P["leafsinks"].values())
+        rec["sinkcap"] = P["sinkcap"]
+        rec["macro_leaves"] = sorted(u for u, v in P["leafsinks"].items() if all(s_[4].startswith("MACRO:") for s_ in v))
     return rec
 
 
@@ -649,6 +659,7 @@ def replan_structure(geo, fam, libtt, libff, name, cal, jobs=8):
 def checks(rec, slice_, geo, gated=False):
     """gated (form C): gated hard-macro clock pins (MACRO lines with gate=) are census sinks planned as macro leaves."""
     out = {}; fails = []
+    macro_model = bool(rec.get("macro_clock_model"))
     # (1) every leg <= 1.10 x Manhattan of its own endpoints
     worst = 0.0; nover = 0; nleg = 0
     for w in rec["wire_paths"]:
@@ -661,7 +672,7 @@ def checks(rec, slice_, geo, gated=False):
     sp = rec["leaf_spread_um"]; out["leaf_spread"] = dict(max=max(sp.values()), n_gt_40=sum(v > GATES["leaf_spread_um"] for v in sp.values()))
     if out["leaf_spread"]["n_gt_40"]: fails.append("leaves over 40 um spread: %d" % out["leaf_spread"]["n_gt_40"])
     cen = {"%s/%s" % (l.split()[4], l.split()[5]) for l in open(geo) if l.startswith("SINK")}
-    if gated:
+    if gated or macro_model:
         cen |= {"%s/%s" % (l.split()[1], l.split()[7]) for l in open(geo) if l.startswith("MACRO")}
     got = collections.Counter(s for v in rec["leaf_sinks"].values() for s in v)
     out["sinks"] = dict(census=len(cen), planned=len(got), missing=len(cen - set(got)), dup=sum(1 for v in got.values() if v > 1),
@@ -687,10 +698,12 @@ def checks(rec, slice_, geo, gated=False):
         if out["pg_clearance"] not in (None, "PASS"): fails.append("trunk PG clearance %s" % out["pg_clearance"])
     nmac = sum(1 for l in open(geo) if l.startswith("MACRO"))
     out["macro_clock_pins"] = nmac
-    if gated:
+    if gated or macro_model:
         out["macro_leaves"] = len(rec.get("macro_leaves", []))
         out["icg"] = rec.get("icg_summary")
-        if out["macro_leaves"] != nmac: fails.append("%d gated macro clock pins but %d macro leaves" % (nmac, out["macro_leaves"]))
+        if out["macro_leaves"] != nmac: fails.append("%d macro clock pins but %d macro leaves" % (nmac, out["macro_leaves"]))
+        if macro_model:
+            fails.extend(macro_leaf_errors(rec, geo))
     elif nmac: fails.append("%d macro clock pins: family template has no macro (early-tap, v5.0) leaf yet" % nmac)
     out["verdict"] = "FAIL" if fails else "PASS"; out["fails"] = fails
     out["scope"] = "automated geometry gates on the PLAN (GEOM-REVIEW-10 form); latency numbers PLAN MODEL, UNCHECKED"
@@ -1002,6 +1015,44 @@ def gated_htree(geo, upper, smax, keepout, copy_max, leaf_target, at_leaf=False)
                 land=land, leafsinks={name(g): groups[g] for g in leaves}, macros=[], splits=list(upper) + ["gate", "leaf"],
                 nm=name, copy_gate={name(g): v for g, v in copy_gate.items()}, gate_master=gm, sinkcap=caps,
                 gate_of=gate_of)
+
+
+def macro_leaf_errors(rec, geo):
+    """Verify opt-in macro coverage/classification and both actual liberty caps."""
+    errors = []
+    leaves = rec.get("leaf_sinks", {})
+    macro_leaves = set(rec.get("macro_leaves", []))
+    for line in open(geo):
+        fields = line.split()
+        if fields[:1] != ["MACRO"]:
+            continue
+        inst, master, pin = fields[1], fields[2], fields[7]
+        sink = inst + "/" + pin
+        owners = [leaf for leaf, sinks in leaves.items() if sink in sinks]
+        if len(owners) != 1 or owners[0] not in macro_leaves or leaves[owners[0]] != [sink]:
+            errors.append("macro leaf coverage/classification: " + sink)
+        expected = macro_clk_cap(master, pin)
+        for corner, cap in expected.items():
+            actual = rec.get("sinkcap", {}).get(corner, {}).get(sink)
+            if actual is None or abs(actual - cap) > 1e-12:
+                errors.append("macro leaf cap mismatch %s %s" % (corner, sink))
+    return errors
+
+
+def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48):
+    """Opt-in nongated macro clock support. Reuse the geometric same-stage
+    partitioner and exact macro pin caps; remove its uniform gate-level BUF
+    stage because this vehicle has no ICGs. Missing caps and gated inputs fail.
+    Every macro keeps its actual clock pin position and its own leaf.
+    """
+    _, _, _, _, gates, _ = read_gated_geo(geo)
+    if any(gates.values()):
+        raise SystemExit("macro_leaves does not accept gated sinks; use icg_copies")
+    P = gated_htree(geo, upper, smax, keepout, copy_max=400, leaf_target=leaf_target)
+    bypass = {n[0]: n[1] for n in P["nodes"] if n[4] == "gbuf"}
+    P["nodes"] = [(n[0], bypass.get(n[1], n[1]), n[2], n[3], n[4])
+                  for n in P["nodes"] if n[0] not in bypass]
+    return P
 
 
 def icg_copy_table(P):
