@@ -1946,6 +1946,9 @@
        "tap_passthrough": {
         "type": "boolean"
        },
+       "landing_origin_export_copy": {
+        "type": "boolean"
+       },
        "out_hold_check_ps": {
         "minimum": 0,
         "type": "number"
@@ -1955,9 +1958,6 @@
          "legacy",
          "sender_min"
         ]
-       },
-       "landing_origin_export_copy": {
-        "type": "boolean"
        }
       }
      },
