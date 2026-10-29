@@ -1684,3 +1684,5 @@ CODEX: 2026-10-29 03:17 PDT HBMSouthkey concrete1stack/8service source diagnosed
 CODEX: 2026-10-29 03:19 PDT QC nativePG additiveactualsource09d0READY754terms+1690fragment,actualapply/reapplyPASSzeroexistingwirechange;providerallcellimporterassignedQC+KVnext.
 
 CODEX: 2026-10-29 03:20 PDT HBM directHGIweight/querylayout sourcea1d3c708fREADY,0cycles12extraVMreads/N6,originalreaderlockstep+golden+controlsPASS. Actual512kVMvsold256kregularnamespace sourcefailure diagnosed/nativechildownsrepair; noalias/fulltokenclaim.
+
+CODEX: 2026-10-29 03:21 PDT BTABactualGRT0/TT267.725/FF11.123/pair46.61,41.08/fullmacroreach387.85/0bad;319clockexactclear. IndependentGEOMall257holdfacechainsproved;DRTcontinuationqueuedsamecachedGRT,noRTL/cycles. 6d86f7012READYresults.
