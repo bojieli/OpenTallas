@@ -1,0 +1,6 @@
+{"schema": "opentallas.s81.core_families.v1",
+ "rule": "S81-LP-3 plan-model insertion ESTIMATE for the LP lane kits (GEOM-55 cond (1)); gunit template parameters, SRAM macros as node keep-outs. INFO only, not a slice for sign-off.",
+ "families": [{"name": "lp_lane", "members": ["dsfd_coll_lane_w_safe8_ntf", "dsfd_coll_lane_e_safe8_ntf"],
+   "leaf_target": 48, "smax": 70.0, "leaf_limit": 35.0, "wire": "std", "reassign": true, "reassign_cap": 1.5,
+   "macro_keepout": true}],
+ "other_generators": []}

@@ -1,0 +1,52 @@
+[
+ {
+  "variant": "T",
+  "outline_um": [
+   295.92,
+   473.04
+  ],
+  "area_um2": 139982.0,
+  "macro_area_um2": 62002.4,
+  "std_area_um2_est": 11927.2,
+  "fill_incl_macros": 0.528,
+  "four_across_um": 1183.68,
+  "parent_width_left_um": 259.2,
+  "rows": [
+   [
+    "*u_gb.u_sf",
+    21.6,
+    64.824
+   ],
+   [
+    "*u_ep.g_rb_safe",
+    75.84,
+    221.73600000000002
+   ],
+   [
+    "*u_ski.u_head",
+    232.752,
+    275.976
+   ],
+   [
+    "*u_ep.g_fifo_safe",
+    286.992,
+    432.888
+   ]
+  ],
+  "top_macro_um": 432.89,
+  "n_band_um": 40.15,
+  "clock_pin_um": [
+   147.948,
+   473.04
+  ],
+  "clock_reach_max_um": 621.0,
+  "plan_type": "source_coll_lane_w_lp3t",
+  "pins": 2143,
+  "face_pins": {
+   "S": 1027,
+   "N": 1111,
+   "E": 5
+  },
+  "pin_pitch_um": 0.24
+ }
+]

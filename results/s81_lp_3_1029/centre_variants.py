@@ -5,12 +5,12 @@ single-root master-plan CORE slice is added (precedent physical/die_plan/s81/del
 one 4.32-um island carrying the M5 clock entry in the macro column channel nearest the lane centre, empty pushdown
 (in-core tree = the kit's standard CTS from the entry; no new script).  The plan pin table / LEF keep ck[0] on the N face
 (HCPL precedent); gen_core_kit_legacy --master-slice rewrites the kit io.tcl ck[0] to the entry.
-    python3 centre_variants.py   # writes results/s81_lp_3_1029/lane/{AC,BC}/... + recipes.json
+    python3 centre_variants.py [SRCDIR V...]  # default results/s81_lp_2_1029/lane A B; writes results/s81_lp_3_1029/lane/{AC,BC}/... + recipes.json
 """
 import json, math, shutil, sys, os
 from pathlib import Path
 R = Path(__file__).resolve().parents[2]
-SRC = R / 'results/s81_lp_2_1029/lane'
+SRC = R / (sys.argv[1] if len(sys.argv) > 1 else 'results/s81_lp_2_1029/lane')   # S81-LP-3: also laneT (tight T)
 OUT = R / 'results/s81_lp_3_1029/lane'
 MOD = 'dsfd_coll_lane_w_safe8_ntf'
 BG_W = 34.584
@@ -19,9 +19,11 @@ M5_OFF, M5_PITCH = 0.012, 0.048
 sys.path.insert(0, str(R / 'tools/die_plan'))
 import master_slice as MS
 
-recs = {}
-rep = []
-for v in ('A', 'B'):
+VARS = sys.argv[2:] or ['A', 'B']
+recs = json.load(open(OUT / 'recipes.json')) if (OUT / 'recipes.json').is_file() else {}
+old = json.load(open(OUT / 'centre_estimate.json')) if (OUT / 'centre_estimate.json').is_file() else []
+rep = [r for r in old if r['variant'] not in [v_ + 'C' for v_ in VARS]]
+for v in VARS:
     s = json.load(open(SRC / v / 'spec.json'))
     w, h = s['outline']['w'], s['outline']['h']
     cx, cy = w / 2, h / 2
