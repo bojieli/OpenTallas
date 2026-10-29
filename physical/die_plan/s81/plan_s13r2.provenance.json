@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.plan_landing.v1",
+ "plan": "physical/die_plan/s81/plan_s13r2.json",
+ "status": "FROZEN (OWNER 12.17(1), COORD 2026-10-29 07:31): S81 die GRT0 incl clock + clock check PASS with ot_clk tools/clk/configs/s81_g03c2.yaml (DIE-S81-23)",
+ "original": {
+  "path": "epyc2:/srv/opentallas-scratch2/claude/codex-s81-2340/global_clock_src/plan_s13r2.json (== intel1:/srv/opentallas-scratch2/claude/codex-tok-s81-1028/plan_s13r2.json)",
+  "sha256": "e4a0d4d83e5401f948e8276bfb9848495d363d00b99aca4c442074e613edd41d",
+  "bytes": 126424385,
+  "format": "json indent 2"
+ },
+ "landed_format": "physical/die_plan/s81/compact_plan.py dumps (the main die_plan.json form; the indent-2 original is 126 MB)",
+ "canonical_sha256": "ffc1b501c130df2d8a8758fbd5a5fe1b3ca46fc7ff224385237335b81ead5ded",
+ "canonical_rule": "sha256(json.dumps(plan, sort_keys=True, separators=(,, :))): equal for the original and the landed file (content identical, only whitespace differs)",
+ "types": 204,
+ "partitions": 398,
+ "strict_bind_source": {
+  "commit": "e4ad09a663275339e3078d0fd816aa662ca7acb0 (codex/s81-bind-s13r-1029, never pushed; object in the fleet store)",
+  "manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll_s13pfunc.json",
+  "clock_landing_table": "physical/die_plan/s81/s13/landed_sidecar_s13.json",
+  "dead_input_proof": "results/token_pass/s81_dead_inputs_2148/proof_closing_s13obs_1029.json",
+  "codex_result": "intel1:/srv/opentallas-scratch2/claude/codex-tok-s81-1028/bind_s13rfunc_reset: partitions 398, types 204, crossings 873, bits 606281, errors 0, unbound 0, tied 0, undriven 0, multiply_bound 0",
+  "narrow_extract": "only these 3 data files were missing on main; the shared tools (bind.py, clock_landings.py, tests) and the 393 RTL/macro files the manifest selects are already on main (identical or newer)"
+ },
+ "main_die_plan_json": "unchanged (171-type plan 3ad0879042a7); switching die_plan.json to this plan is a separate ROOT-MERGE ruling (flow canary + die_ci + core-kit tests read it)"
+}
