@@ -42,3 +42,8 @@ Input sources are read-only; generated manifest records every actual file hash.
 The actual source builds run under ot-run in
 `/srv/opentallas-scratch2/claude/codex-qc-proof-0831/native_{nl,nk}`.
 No physical claim or simulator cycle change.
+
+Build note: `--hosts intel2` is invalid inside the current intel2 admission hub
+(self is `localhost`); those first calls were NOT RUN with DNS exit255.
+The corrected native builds were admitted on intel2 as units2507986/2506142.
+They progress with unchanged 64GB admission and source snapshots.
