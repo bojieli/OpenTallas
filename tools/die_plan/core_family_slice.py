@@ -368,8 +368,12 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None, seqlibs=None):
     sp = splits_for(sinks, fam)
     M7.BUFS = list(ENV)
     if seqlibs:
-        P = gated_htree(str(geo), sp[:-1], fam.get("smax", 70.0), [list(k) for k in fam.get("keepout_um", [])],
-                        int(fam.get("icg_copy_max", 400)), float(fam.get("leaf_target", 48)))
+        lvl = fam.get("icg_level", "part")
+        if lvl not in ("part", "leaf"):
+            raise SystemExit("family %s: icg_level %r: one of part, leaf" % (fam.get("name"), lvl))
+        P = gated_htree(str(geo), sp if lvl == "leaf" else sp[:-1], fam.get("smax", 70.0),
+                        [list(k) for k in fam.get("keepout_um", [])], int(fam.get("icg_copy_max", 400)),
+                        float(fam.get("leaf_target", 48)), at_leaf=(lvl == "leaf"))
         rea = None       # nearest-leaf reassignment would mix gate domains under one leaf: not used in form C
     else:
         P = H.plan(str(geo), sp, fam.get("smax", 70.0), [list(k) for k in fam.get("keepout_um", [])])
@@ -428,7 +432,10 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None, seqlibs=None):
         rec["sinkcap"] = P["sinkcap"]
         rec["macro_leaves"] = sorted(u for u, v in P["leafsinks"].items() if all(s_[4].startswith("MACRO:") for s_ in v))
         nb = collections.Counter(g["gate"] for g in rows)
-        rec["icg_summary"] = dict(rule="form C (COORD 20:00): ICG copy per (gate, tile part) as a planned stage, planned leaves below",
+        lvl = fam.get("icg_level", "part")
+        rec["icg_summary"] = dict(rule="form C (COORD 20:00): ICG copy per (gate, tile part) as a planned stage, planned leaves below"
+                                  if lvl == "part" else "form C, icg_level leaf: ICG copy per (gate, tile) leaf, one branch + leaf per copy",
+                                  icg_level=lvl,
                                   rtl_gates=len(P["gate_master"]), gate_parts=len(rows), copies_added=len(rows) - len(nb),
                                   ungated_parts=sum(1 for v in P["copy_gate"].values() if v is None),
                                   gated_sinks=sum(len(g["members"]) for g in rows), parts_per_gate_max=max(nb.values()) if nb else 0,
@@ -736,7 +743,7 @@ def read_gated_geo(geo):
     return core, entry, sinks, macros, gate_of, gm
 
 
-def gated_htree(geo, upper, smax, keepout, copy_max, leaf_target):
+def gated_htree(geo, upper, smax, keepout, copy_max, leaf_target, at_leaf=False):
     """form C planned tree (COORD 20:00 ruling): the family H partition of ALL clock sinks (gated + ungated) for the
     upper levels (upper = family splits without the leaf level, ~50 um tiles at the last upper level), then
       GATE level: each tile's sinks grouped by their RTL gate (ungated = 'ROOT'); a group larger than copy_max sinks is
@@ -745,6 +752,10 @@ def gated_htree(geo, upper, smax, keepout, copy_max, leaf_target):
       LEAF level: each part's flops in max(1, round(n / leaf_target)) equal-count leaves (+1 leaf per gated macro pin).
     Every root->sink path has the same stage count by construction; every edge = its own shortest legal maze path;
     the gate-level branch sits at the tile hub like any H-tree branch buffer and drives ONE wire to its part's hub.
+    at_leaf=True (family icg_level "leaf"): the gate-level parts ARE the leaves (each gate group of a tile in
+      max(1, round(n / leaf_target)) equal-count leaves, one leaf per gated macro pin; no separate leaf level), so every
+      ICG copy drives exactly one co-located branch -> wire -> leaf buffer, and each tile hub drives about the same
+      number of equal-load ICG inputs (the part-level hub fan-out of 1..16 ICGs gave a 56 ps TT window on bf_col).
     Returns the core_infra_htree.plan dict plus copy_gate {edge: gate or None}, gate_master, sinkcap."""
     core, entry, sinks, macros, gate_of, gm = read_gated_geo(geo)
     mz = H.Maze(core, macros, keepout=keepout); ent = mz.cell(entry, node=False)
@@ -767,13 +778,19 @@ def gated_htree(geo, upper, smax, keepout, copy_max, leaf_target):
             by[gate_of[key_of(s)] or ""].append(s)
         j = 0
         for gname in sorted(by, key=lambda x: (x == "", x)):
-            pts = by[gname]; k = max(1, math.ceil(len(pts) / float(copy_max)))
-            parts = H.split(pts, k) if k > 1 else [pts]
+            pts = by[gname]
+            if at_leaf:
+                mac = [s for s in pts if s[4].startswith("MACRO:")]; fl = [s for s in pts if not s[4].startswith("MACRO:")]
+                k = max(1, int(round(len(fl) / float(leaf_target)))) if fl else 0
+                parts = [[m] for m in mac] + ((H.split(fl, k) if k > 1 else [fl]) if fl else [])
+            else:
+                k = max(1, math.ceil(len(pts) / float(copy_max)))
+                parts = H.split(pts, k) if k > 1 else [pts]
             for g in parts:
                 if j >= len(NAME_CH):
                     raise SystemExit("gated_htree: more than %d gate-level parts in tile %s" % (len(NAME_CH), name(key)))
                 groups[key + (j,)] = g; copy_gate[key + (j,)] = gname or None; j += 1
-    for key in sorted(g for g in groups if len(g) == nu + 1):
+    for key in ([] if at_leaf else sorted(g for g in groups if len(g) == nu + 1)):
         pts = groups[key]
         mac = [s for s in pts if s[4].startswith("MACRO:")]; fl = [s for s in pts if not s[4].startswith("MACRO:")]
         parts = [[m] for m in mac]
@@ -784,7 +801,7 @@ def gated_htree(geo, upper, smax, keepout, copy_max, leaf_target):
             raise SystemExit("gated_htree: %d leaves under %s (> %d names)" % (len(parts), name(key), len(NAME_CH)))
         for i, g in enumerate(parts):
             groups[key + (i,)] = g
-    depth = nu + 2
+    depth = nu + (1 if at_leaf else 2)
     leaves = sorted(g for g in groups if len(g) == depth)
     site = {}
     for g in leaves:

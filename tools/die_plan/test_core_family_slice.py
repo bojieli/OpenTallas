@@ -372,3 +372,22 @@ def test_icg_lib_cells_reads_the_combinational_clk_gclk_arc(tmp_path):
     assert c["cin"] == 2.19131 and c["rise"][2][0][0] == 10 and c["fall"][2][0][0] == 30 and c["tfall"][2][1][1] == 43
     with pytest.raises(SystemExit):
         F.icg_lib_cells(p, ["ICGx2_ASAP7_75t_R"])
+
+
+def test_gated_htree_at_leaf_one_branch_per_copy(tmp_path):
+    geo = _gated_geo(tmp_path)
+    P = F.gated_htree(str(geo), [2, 2], 70.0, [], copy_max=400, leaf_target=4, at_leaf=True)
+    par = {n[0]: n[1] for n in P["nodes"]}; kind = {n[0]: n[4] for n in P["nodes"]}
+    kids = collections.Counter(n[1] for n in P["nodes"])
+    depth = set()
+    for u, ss in P["leafsinks"].items():
+        assert len({P["gate_of"]["%s/%s" % (s[2], s[3])] for s in ss}) == 1
+        d, v, gl = 0, u, []
+        while v:
+            if kind[v] in ("icg", "gbuf"): gl.append(v)
+            v = par[v]; d += 1
+        depth.add(d); assert len(gl) == 1 and kids[gl[0]] == 1                    # each copy drives ONE branch
+    assert len(depth) == 1
+    rows = F.icg_copy_table(P)
+    assert len(rows) == sum(1 for u, ss in P["leafsinks"].items() if P["gate_of"]["%s/%s" % (ss[0][2], ss[0][3])])
+    assert any(r["members"] == ["rom/clk"] for r in rows)                          # gated macro pin = own leaf + copy
