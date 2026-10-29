@@ -1,0 +1,2 @@
+VM_FIELDS_R2048 PASS exhaustive_sectors=65536 checks=65536 read_groups=5 write_groups=2 carriers=7 reverse_high_guard=1 existing_status_fault_bit=17 added_cycles=0
+tools/hbm_static/vm_r2048/tb_fields.sv:27: $finish called at 65536 (1ps)
