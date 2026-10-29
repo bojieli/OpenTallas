@@ -192,3 +192,32 @@ def test_rec_equals_the_legacy_pilot_rec(tmp_path):
     a, b = (json.loads((tmp_path / d / "rec_grt.json").read_text()) for d in ("a", "b"))
     a.pop("source"); b.pop("source")
     assert a == b
+
+
+def test_strap_keepout_opt_in_bands_both_sides_default_unchanged(tmp_path):
+    """DIE-QC-31 A3 keep-out form: strap_keepout_um adds a strap-layer band each side of every strap; absent = same DEF"""
+    for d in "azbn":
+        (tmp_path / d).mkdir()
+    built(tmp_path / "a")
+    base = (tmp_path / "a" / "o" / "pilot.def").read_text()
+    built(tmp_path / "z", dict(mesh_cfg(), strap_keepout_um=0))
+    assert (tmp_path / "z" / "o" / "pilot.def").read_text() == base
+    J = built(tmp_path / "b", dict(mesh_cfg(), strap_keepout_um=0.32))
+    d = (tmp_path / "b" / "o" / "pilot.def").read_text()
+    n0 = int(re.search(r"BLOCKAGES (\d+) ;", base).group(1))
+    n1 = int(re.search(r"BLOCKAGES (\d+) ;", d).group(1))
+    g = J["geom"]
+    assert n1 - n0 == 2 * (len(g["vx"]) + len(g["hy"])) == 2 * (4 + 7)
+    U = lambda v: int(round(v * 1000))
+    x = g["vx"][1]
+    y0, y1 = (U(v) for v in g["y_span"])
+    assert f"- LAYER M9 RECT ( {U(x - 0.08 - 0.32)} {y0} ) ( {U(x - 0.08)} {y1} ) ;" in d
+    assert f"- LAYER M9 RECT ( {U(x + 0.08)} {y0} ) ( {U(x + 0.08 + 0.32)} {y1} ) ;" in d
+    y = g["hy"][0]
+    x0, x1 = (U(v) for v in g["x_span"])
+    assert f"- LAYER M8 RECT ( {x0} {U(y + 0.08)} ) ( {x1} {U(y + 0.4)} ) ;" in d
+    # only the BLOCKAGES section changes (straps stay the special net ck_mesh)
+    cut = lambda t: t.replace(t[t.index("BLOCKAGES"):t.index("END BLOCKAGES")], "")
+    assert cut(d) == cut(base)
+    with pytest.raises(MF.MeshConfigError):
+        built(tmp_path / "n", dict(mesh_cfg(), strap_keepout_um=-1))
