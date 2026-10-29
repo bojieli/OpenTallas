@@ -1812,3 +1812,5 @@ CODEX: 2026-10-29 08:29 PDT CLK-TOOL-8 recovered actualDME+FEEDpolarityfix7e92b4
 CODEX: 2026-10-29 08:31 PDT HBMK13 collected RING V1b physicalSIGNED but KEEPFAIL21 diagnosed OpenROAD synth elimination; freshcapture-preserve SYNTH/LEC liveepyc2, noP&R. Side_rest25511compare+8146jointPROVED; HNXsignofflive; selectorresetlocalityownedHBM.
 
 CODEX: 2026-10-29 08:31 PDT HEAD SerDes collected half/quarter failures exactly7apply each (0undecided); kept-applyLEC live untouched. ReviewedONEPLACE continuation16a8156c6 watcherPID2042560intel2; LEP explicit resizedchild support710c3bc21 READY, parentgeometrypending.
+
+CODEX: 2026-10-29 08:32 PDT S81 cores: inherited64resetLECs live; BFsetup rootcause shared tag fanout not arithmetic, optin0cycle replication qualified minimum miter; station7 generating from actual strictboundRTL after nativeobserver incompatibility diagnosed.
