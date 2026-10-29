@@ -33,6 +33,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import re
 from collections import defaultdict
 from pathlib import Path
 
@@ -147,12 +148,30 @@ def rebind_links(die, B, *, diagnostic=False):
     for n in die.inst:
         if n.startswith('st_'):
             st_of[n[3:].rsplit('_', 1)[0]].append(n)
+    def bundle_key(lk, L):
+        # sub-lanes <stem>_l<i> of one bundle between the same die instances (their port sets may differ per lane)
+        return (re.sub(r'_l\d+$', '', lk), frozenset(x[0] for x in L['src']), frozenset(x[0] for x in L['dst']))
     sib = defaultdict(list)
     for lk, L in die.links.items():
-        sib[(frozenset(map(tuple, L['src'])), frozenset(map(tuple, L['dst'])))].append(lk)
+        sib[bundle_key(lk, L)].append(lk)
     inner = defaultdict(list)
     for m in B.get('internal') or []:
         inner[(_top(m['source']), _top(m['sink']))].append(m)
+    def select(lk, L):
+        S = {x[0] for x in L['src']}
+        D = {x[0] for x in L['dst']}
+        sp = {x[1] for x in L['src']}
+        dp = {x[1] for x in L['dst']}
+        land = L.get('landing')
+        # crossing bits: sink at a die-level destination (landing removed) or at the retained landing tile
+        cand = [(m, False) for s in S for d in D for m in by_pair.get((s, d), [])]
+        if land:
+            cand += [(m, True) for s in S for m in by_pair.get((s, land), [])]
+        # port identity: the die-level port names when they reach the leaf; else the pair must be unambiguous
+        exact = [(m, r) for m, r in cand if (r or m['kport'] in dp) and m['sport'] in sp]
+        portk = [(m, r) for m, r in cand if (r or m['kport'] in dp)]
+        return ((exact, 'ports') if exact else ((portk, 'sink_port') if portk else (cand, 'pair')))
+
     rows, new = {}, {}
     for lk, L in sorted(die.links.items()):
         S = {s for s, _ in L['src']}
@@ -165,15 +184,14 @@ def rebind_links(die, B, *, diagnostic=False):
         K = L['K'] if L['K'] is not None else L['E']
         landed = bool(land or L.get('internal_landing'))
         row = dict(link=lk, legacy_age=legacy, stations=n, K=K, landed=landed, src=sorted(S), dst=sorted(D))
-        # crossing bits: sink at a die-level destination (landing removed) or at the retained landing tile
-        cand = [(m, False) for s in S for d in D for m in by_pair.get((s, d), [])]
-        if land:
-            cand += [(m, True) for s in S for m in by_pair.get((s, land), [])]
-        # port identity: the die-level port names when they reach the leaf; else the pair must be unambiguous
-        exact = [(m, r) for m, r in cand if (r or m['kport'] in dp) and m['sport'] in sp]
-        portk = [(m, r) for m, r in cand if (r or m['kport'] in dp)]
-        use, ident = (exact, 'ports') if exact else ((portk, 'sink_port') if portk else (cand, 'pair'))
-        siblings = sib[(frozenset(map(tuple, L['src'])), frozenset(map(tuple, L['dst'])))]
+        use, ident = select(lk, L)
+        siblings = sib[bundle_key(lk, L)]
+        if len(siblings) > 1:
+            pool = {}
+            for Lk in siblings:
+                for m, r in select(Lk, die.links[Lk])[0]:
+                    pool[id(m)] = (m, r and Lk == lk)
+            use = list(pool.values())
         if use and len(siblings) > 1:
             # sub-lanes of one bundle (_l0/_l1/..) share the die ports and endpoint logic: find the ONE common
             # non-transport stage count x such that every sub-lane i owns the bits with as-built stages T_i + x
