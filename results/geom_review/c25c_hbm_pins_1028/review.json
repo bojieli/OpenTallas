@@ -1,0 +1,13 @@
+{
+ "verdict": "PASS-COND PLAN CANDIDATE; NOT ROUTE APPROVAL",
+ "picture": "results/die_hbm_1027/hbm10/c25c_pins/c25c_pins.png",
+ "viewed": true,
+ "findings": [
+  "bdring wider centre-anchored same-area outline clears all four parent neighbourhoods; clock remains at the exact original die coordinate",
+  "bdring W2048 input pins at legal two-track0.096um pitch; E640 output pins0.288um. W density9.48pins/um exceeds original6.77 and requires G2 pin-access/capacity confirmation. If capacity fails, structural face redistribution/ceiling change is required before routing.",
+  "qw_dec E/S pins now cover96.15% of faces in preserved local order; clock pin preserved and its neighbouring data pins remain>=0.096um clear",
+  "76 affected station chains max401.8979um after two same-count bay resites outside all core outlines; no scheduled cycles added",
+  "No macro-bearing cores changed; bdring core_macros status NONE. Its outline must be updated in parent core_macros side data; centre entries/PG continuity retained."
+ ],
+ "cycles_added": 0
+}
