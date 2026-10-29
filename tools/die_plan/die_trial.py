@@ -53,6 +53,7 @@ import gen_phys  # noqa: E402
 import die_sta  # noqa: E402
 import gen_rtl  # noqa: E402
 import schema as S  # noqa: E402
+import clock_legal_dme as CLD  # noqa: E402
 
 IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:latest")
 PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
@@ -719,7 +720,7 @@ def path_lengths(nodes):
     return L
 
 
-def tree_netlist(nodes, taps, rep_um=450.0, site=None):
+def tree_netlist(nodes, taps, rep_um=450.0, site=None, rep_fn=None):
     """buffered tree: a BUF at every node (branch / leaf driver), repeaters every rep_um along each leg.
     -> (verilog, placements [(inst, x, y)], tap ports [(port, x, y)], node_buf {node id: inst}, path {tap port: [inst]})"""
     cells, place, wires = [], [], []
@@ -738,6 +739,9 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
             p = nodes[nd["parent"]]
             L = abs(p["x"] - nd["x"]) + abs(p["y"] - nd["y"])
             nrep = max(0, int(math.ceil(L / rep_um)) - 1)
+            rpts = rep_fn((p["x"], p["y"]), (nd["x"], nd["y"])) if rep_fn is not None else None
+            if rpts is not None:
+                nrep = len(rpts)
             src = f"{net(nd['parent'])}"
             prev_inst = node_buf[nd["parent"]]
             for j in range(nrep):
@@ -745,7 +749,9 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
                 x = p["x"] + (nd["x"] - p["x"]) * f
                 y = p["y"] + (nd["y"] - p["y"]) * f
                 inst = f"r{i}_{j}"
-                if site is not None:
+                if rpts is not None:
+                    x, y = rpts[j]
+                elif site is not None:
                     x, y = site.nearest((x, y), "x" if abs(nd["x"] - p["x"]) >= abs(nd["y"] - p["y"]) else "y")
                 o = f"rn{i}_{j}"
                 cells.append(f"  {BUF} {inst} (.A({src}), .Y({o}));")
@@ -774,8 +780,10 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
 
 
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None,
-              slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None):
+              slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, clock_rc="ndr", legal_dme=False):
     out = Path(out)
+    wire_r, wire_c = (CLD.RC_1X if clock_rc == "1x" else (WIRE_R, WIRE_C))
+    rep_fn, dme_info = None, None
     out.mkdir(parents=True, exist_ok=True)
     taps = clock_taps(P)
     site = None
@@ -801,6 +809,16 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             moves.append(dict(node=i, fixed=bool(nd.get("fixed")), um=round(_man(q, (nd["x"], nd["y"])), 3),
                               imbalance_um=c))
             nd["x"], nd["y"] = round_legal(site, q)
+        if legal_dme:       # DIE-QC-3 opt-in: bottom-up DME on legal sites (exact placed stages, 1x stage model)
+            fs = CLD.FastSite(site)
+            dme_info = CLD.legal_dme(nodes, fs, rep_um)
+            rep_fn = lambda a, b: CLD.place_reps(fs, a, b, rep_um)[0]   # noqa: E731  (same placement as the model)
+            for i, nd in nodes.items():
+                if nd.get("region_root"):
+                    lo, hi = nd["dme"]
+                    spine_info["regions"].setdefault(nd["region_root"], {})["dme_model_TT_ps"] = dict(
+                        lo=round(lo, 1), hi=round(hi, 1), spread=round(hi - lo, 1))
+            spine_info["legal_dme"] = dme_info
         L = path_lengths(nodes)
         reg_len = defaultdict(list)
         for i, nd in nodes.items():
@@ -846,7 +864,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             else:
                 q = site.nearest((nd["x"], nd["y"]))
             nd["x"], nd["y"] = round(q[0], 3), round(q[1], 3)
-    v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site)
+    v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site, rep_fn)
     (out / "ctree.v").write_text(v)
     segs = []
     for i, nd in nodes.items():
@@ -870,8 +888,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         tcl.append(f"place_pin -pin_name {tp} -layer M9 -location {{{x:.3f} {y:.3f}}} -pin_size {sz9}")
     for inst, x, y in place:
         tcl.append(f"place_inst -name {inst} -location {{{max(0.0, x):.3f} {max(0.0, y):.3f}}} -status PLACED")
-    tcl += [f"set_wire_rc -signal -resistance {WIRE_R:.6e} -capacitance {WIRE_C:.6e}",
-            f"set_wire_rc -clock -resistance {WIRE_R:.6e} -capacitance {WIRE_C:.6e}",
+    tcl += [f"set_wire_rc -signal -resistance {wire_r:.6e} -capacitance {wire_c:.6e}",
+            f"set_wire_rc -clock -resistance {wire_r:.6e} -capacitance {wire_c:.6e}",
             "estimate_parasitics -placement",
             "create_clock -name vclk -period 833.333",
             f"set_driving_cell -lib_cell {BUF} -pin Y [get_ports root]",
@@ -890,7 +908,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             "puts OT_DONE"]
     (out / "ctree.tcl").write_text("\n".join(tcl) + "\n")
     meta = dict(leaf_um=leaf_um, rep_um=rep_um, **({"full_depth": True} if full_depth else {}),
-                **({"region_trees": len({n.get("region_root") for n in nodes.values()} - {None})} if regions else {}), buffer=BUF, wire_r_kohm_um=WIRE_R, wire_c_ff_um=WIRE_C,
+                **({"region_trees": len({n.get("region_root") for n in nodes.values()} - {None})} if regions else {}), buffer=BUF, wire_r_kohm_um=wire_r, wire_c_ff_um=wire_c, clock_rc=clock_rc,
                 tap_load_ff=TAP_LOAD_FF, nodes=len(nodes), leaves=sum(1 for n in nodes.values() if n["taps"]),
                 repeaters=sum(1 for i, *_ in place if i.startswith("r")), taps=len(tap_ports),
                 wire_um=round(sum(abs(a - c) + abs(b - d) for a, b, c, d, _ in segs) +
@@ -1820,7 +1838,7 @@ exit $rc
 
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
-              slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None):
+              slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, clock_rc="ndr", legal_dme=False):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -1889,7 +1907,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     # clock
     nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um, full_depth, site_legal, site_slide,
                                            json.loads(Path(regions).read_text())["part_region"] if regions else None,
-                                           slice_spine, spine_top_leaf_um, slice_rows)
+                                           slice_spine, spine_top_leaf_um, slice_rows, clock_rc, legal_dme)
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -2462,6 +2480,13 @@ def main(argv=None):
                    help="top-spine 1-D bisection leaf (um): nominal top imbalance <= half of it")
     k.add_argument("--slice-rows", help="with --slice-spine: qc_slice_clock_rows/1 reservation (INFRA-FIRST-QC-R35): "
                    "column x and top spine row come from the plan reservation")
+    k.add_argument("--clock-rc", default="ndr", choices=["ndr", "1x"],
+                   help="model wire RC of the die clock: ndr = 2W2S assumption (R/2, Cx1.1; legacy default), 1x = ASAP7 "
+                        "M8/M9 setRC as routed without NDR (DIE-QC-3 opt-in)")
+    k.add_argument("--legal-dme", action="store_true",
+                   help="DIE-QC-3 opt-in (with --slice-spine): after the site pass, re-place every movable node bottom-up "
+                        "on the legal site that equalises its subtree delay (exact placed stages, 1x stage model); the "
+                        "netlist uses the same repeater placement")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
@@ -2531,7 +2556,8 @@ def main(argv=None):
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
                       site_slide=a.tree_site_slide, regions=a.region_trees, slice_spine=a.slice_spine,
-                      spine_top_leaf_um=a.spine_top_leaf_um, slice_rows=a.slice_rows)
+                      spine_top_leaf_um=a.spine_top_leaf_um, slice_rows=a.slice_rows, clock_rc=a.clock_rc,
+                      legal_dme=a.legal_dme)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":
