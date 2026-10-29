@@ -1,0 +1,113 @@
+{
+ "status": "PLANNED_RECTANGLE_ACCESS_DIAGNOSTIC_NO_REAL_IP_ABSTRACT",
+ "changes": [
+  {
+   "master": "PHY_SPB_PROBE",
+   "pin": "st[0]",
+   "old_rect_um": [
+    2.312,
+    634.928,
+    2.344,
+    634.96
+   ],
+   "new_rect_um": [
+    2.316,
+    634.848,
+    2.34,
+    635.04
+   ],
+   "origin_y_um": 0.0,
+   "global_center_um": [
+    106.00800000000001,
+    634.944
+   ],
+   "authority": "canonical gen_core_kit_hbm.io_tcl unsized M5 edge pin: .024 across, .192 depth; PLANNED only"
+  },
+  {
+   "master": "PHY_SPB_PROBE",
+   "pin": "st[1]",
+   "old_rect_um": [
+    2.84,
+    634.928,
+    2.872,
+    634.96
+   ],
+   "new_rect_um": [
+    2.844,
+    634.848,
+    2.868,
+    635.04
+   ],
+   "origin_y_um": 0.0,
+   "global_center_um": [
+    106.536,
+    634.944
+   ],
+   "authority": "canonical gen_core_kit_hbm.io_tcl unsized M5 edge pin: .024 across, .192 depth; PLANNED only"
+  },
+  {
+   "master": "EP_SPB_PROBE",
+   "pin": "sd_st[0]",
+   "old_rect_um": [
+    108.008,
+    0.08,
+    108.04,
+    0.112
+   ],
+   "new_rect_um": [
+    108.012,
+    0.0,
+    108.036,
+    0.192
+   ],
+   "origin_y_um": 1088.64,
+   "global_center_um": [
+    289.464,
+    1088.736
+   ],
+   "authority": "canonical gen_core_kit_hbm.io_tcl unsized M5 edge pin: .024 across, .192 depth; PLANNED only"
+  },
+  {
+   "master": "EP_SPB_PROBE",
+   "pin": "sd_st[1]",
+   "old_rect_um": [
+    116.648,
+    0.08,
+    116.68,
+    0.112
+   ],
+   "new_rect_um": [
+    116.652,
+    0.0,
+    116.676,
+    0.192
+   ],
+   "origin_y_um": 1088.64,
+   "global_center_um": [
+    298.104,
+    1088.736
+   ],
+   "authority": "canonical gen_core_kit_hbm.io_tcl unsized M5 edge pin: .024 across, .192 depth; PLANNED only"
+  }
+ ],
+ "baseline": {
+  "path": "/srv/opentallas-scratch/claude/codex-hbm-spb-access-1029/baseline",
+  "lef_sha256": "8a126e5cd10bb6755caff6820d10b9b01357d77dfd9dcde5c07a51d7a00f5887",
+  "grt_overflow": 193,
+  "overflow_layer": "M6",
+  "wire_um": 2021045,
+  "nets": 5130,
+  "flops": 4104
+ },
+ "unchanged": [
+  "all native FF sites and nets",
+  "all other pin rectangles",
+  "all fullM1-M5OBS",
+  "all signal layers/trackgrid/capacity/PHYPG placement keepout"
+ ],
+ "missing_authority": [
+  "EP plan241.92x397.44 vsattachedLEF434.72x371.52",
+  "PHY no current selected LEF;1050envelope assumption"
+ ],
+ "scope": "pin_access only; no global_route/STA/PGsolve"
+}

@@ -1,0 +1,14 @@
+{
+ "reviewer": "/root/geom",
+ "tag": "HBM-SPB-STATUS-PINACCESS-1029",
+ "verdict": "PASS-COND ONE pin_access-only PLANNING DIAGNOSTIC",
+ "viewed": true,
+ "image": "results/hbm_spb_access_1029/status_access.png",
+ "findings": [
+  "fourunchangedcenter M5statusshapes restoredfromsynthetic.032squaretocanonicalPLANNED.024x.192edgeform",
+  "PHYoldshapemissesadjacenttracks;EPoldshapetooShortforlandingcandidate",
+  "all4104oldFFsites/5130nets/OBS/trackgrid/capacityunchanged",
+  "realEP/PHYabstractauthoritymissingormismatched; noactualendpointqualification",
+  "M6overflow193 remainsFAIL; noGRT/STA/routeadmission"
+ ]
+}
