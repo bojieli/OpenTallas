@@ -522,7 +522,8 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
 # + OCV), so with OCV many start edges are ambiguous, and a crossing between regions that are far apart in that tree
 # sums every ambiguous edge on the path (QC t6: 6-9 cycles on all 94 FAILs, 10-11 start hops).
 START_EDGE_KEYS = ("launch", "capture", "launch_part", "capture_part", "retime", "unshared_a_ps", "unshared_b_ps",
-                   "fork_node", "clean_ok", "hop_um", "clock_interval_ps", "data_delay_ps", "data_delay_source")
+                   "fork_node", "clean_ok", "hop_um", "clock_interval_ps", "data_delay_ps", "data_delay_source",
+                   "data_delay_by_corner_ps")
 
 
 def load_start_data_delay(path):
@@ -534,16 +535,47 @@ def load_start_data_delay(path):
     corners, the FF min; hi = max, the TT max); model (optional, planner only) = a + b x hop_um for candidate ports with
     no measurement (retime / contraction search, new stages), labelled 'model'.  die_sta_related reads only 'ports'."""
     doc = json.load(open(path))
-    ports = {}
-    for p, v in (doc.get("ports") or {}).items():
-        lo, hi = float(v[0]), float(v[1])
-        if not (math.isfinite(lo) and math.isfinite(hi)) or lo > hi:
-            raise ValueError(f"--start-data-delay {p}: want finite [lo, hi] with lo <= hi, got {v}")
-        ports[p] = (lo, hi)
+    def checked(rows):
+        ports = {}
+        for p, v in rows.items():
+            lo, hi = float(v[0]), float(v[1])
+            if not (math.isfinite(lo) and math.isfinite(hi)) or lo > hi:
+                raise ValueError(f"--start-data-delay {p}: want finite [lo, hi] with lo <= hi, got {v}")
+            ports[p] = (lo, hi)
+        return ports
+    ports = checked(doc.get("ports") or {})
     model = doc.get("model")
     if model is not None:
         model = {k: (float(model[k][0]), float(model[k][1])) for k in ("lo_ps", "hi_ps")}
-    return dict(ports=ports, model=model, basis=doc.get("basis"))
+    result = dict(ports=ports, model=model, basis=doc.get("basis"))
+    if "corners" in doc:
+        result["corners"] = {c: checked(rows) for c, rows in doc["corners"].items()}
+    return result
+
+
+def start_data_delay_for_corner(doc, corner):
+    """Measured DATA delay for this clock corner; absent corner/port fails closed.
+
+    Legacy documents contain one conservative interval per port. A document with
+    ``corners`` never substitutes another corner's measurement for a missing row.
+    """
+    return doc["corners"].get(corner, {}) if "corners" in doc else doc["ports"]
+
+
+def shift_corner_data_delay(r, by_corner, delays):
+    """Union same-corner (clock - data) intervals, without cross-corner combinations."""
+    first = next(iter(by_corner))
+    lo = min(iv[0] - delays[c][1] for c, iv in by_corner.items())
+    hi = max(iv[1] - delays[c][0] for c, iv in by_corner.items())
+    d = min(max(r["d_ps"] - sum(delays[first]) / 2, lo), hi)
+    q = dict(r, d_ps=d, p_dn_ps=d-lo, p_up_ps=hi-d,
+             clock_interval_ps=[round(r["d_ps"]-r["p_dn_ps"], 1), round(r["d_ps"]+r["p_up_ps"], 1)],
+             data_delay_ps=[min(v[0] for v in delays.values()), max(v[1] for v in delays.values())],
+             data_delay_by_corner_ps=delays, data_delay_source="measured")
+    if all(iv[2] is not None for iv in by_corner.values()):
+        q["fall_lo"] = min(iv[2]-delays[c][1] for c, iv in by_corner.items())
+        q["fall_hi"] = max(iv[3]-delays[c][0] for c, iv in by_corner.items())
+    return q
 
 
 def data_delay_of(dd, port, r):
@@ -786,7 +818,7 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
             return (-len(f), float(t["late_ps"]) - float(m["node_late_ps"][f]), k)
         return min(rtaps[x], key=key)
 
-    def interval(a, b):
+    def interval(a, b, corner_intervals=None):
         old, DSR.CPPR_LCA = DSR.CPPR_LCA, True
         try:
             lo = hi = flo = fhi = None
@@ -806,6 +838,9 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
                     fhi = fv[1] if fhi is None else max(fhi, fv[1])
                 except DSR.FallArrivalMissing:
                     fall_ok = False
+                    fv = (None, None)
+                if corner_intervals is not None:
+                    corner_intervals[c] = (iv[0], iv[1], fv[0], fv[1])
         finally:
             DSR.CPPR_LCA = old
         A, B = c0["taps"][a], c0["taps"][b]
@@ -830,10 +865,20 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
                     unshared_a_ps=float(A["late_ps"]) - float(nl[node]), unshared_b_ps=float(B["late_ps"]) - float(nl[node]))
 
     def ival(a, b, src, dst):
-        r = interval(a, b)
+        by_corner = {} if data_delay is not None and "corners" in data_delay else None
+        r = interval(a, b, by_corner)
         if data_delay is None:
             return r
-        dd = data_delay_of(data_delay, f"start:{src}->{dst}", r)
+        port = f"start:{src}->{dst}"
+        if by_corner is not None:
+            delays = {c: start_data_delay_for_corner(data_delay, c).get(port) for c in cs}
+            if all(v is not None for v in delays.values()):
+                return shift_corner_data_delay(r, by_corner, delays)
+            # An incomplete measured port cannot fall back to another corner or
+            # the candidate model. Entirely new candidate edges may use the model.
+            if any(v is not None for v in delays.values()) or port in data_delay["ports"]:
+                return dict(r, data_delay_source="missing")
+        dd = data_delay_of(data_delay, port, r)
         return dict(r, data_delay_source="missing") if dd is None else shift_data_delay(r, *dd)
 
     smax = max(abs(float(start_skew[0])), abs(float(start_skew[1])))

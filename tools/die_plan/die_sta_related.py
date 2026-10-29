@@ -2635,9 +2635,10 @@ def main(argv=None):
                 print("WARNING --count-align: no clock variation model (--clock-ocv none): the CA interval carries no "
                       "AOCV/droop term (12.14a margin after OCV + droop not met by this run)")
             # HEAD-START-4 V1 (opt-in): measured START data delay per start port (None = unchanged)
-            sdd = ({p: tuple(float(x) for x in v) for p, v in
-                    json.loads(Path(a.count_align_start_data_delay).read_text())["ports"].items()}
-                   if a.count_align_start_data_delay else None)
+            sdd = None
+            if a.count_align_start_data_delay:
+                from count_align_plan import load_start_data_delay, start_data_delay_for_corner
+                sdd = start_data_delay_for_corner(load_start_data_delay(a.count_align_start_data_delay), c)
             ca = count_align_landed(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,
                                     start_wire=json.loads(Path(a.count_align_start_wire).read_text())
                                     if a.count_align_start_wire else None, cppr_range=rng, key=a.count_align_key,
