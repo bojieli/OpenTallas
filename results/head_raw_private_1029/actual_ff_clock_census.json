@@ -1,0 +1,27 @@
+{
+  "actual_ff": 28083,
+  "masters": {
+    "DFFASRHQNx1_ASAP7_75t_R": 54,
+    "DFFHQNx1_ASAP7_75t_R": 28026,
+    "DFFLQNx1_ASAP7_75t_R": 3
+  },
+  "clock_roots": {
+    "u_srl_9/clk": 25777,
+    "u_cland_i/u_ring.g_control_status_copy.u_status/tclk": 2306
+  },
+  "top_clock_aliases": {
+    "clk": "u_srl_9/clk",
+    "fclk_out_o": "fclk_out_o",
+    "fclk_in_i": "u_cland_i/u_ring.g_control_status_copy.u_status/tclk"
+  },
+  "masters_per_clock": {
+    "clk": {
+      "DFFASRHQNx1_ASAP7_75t_R": 54,
+      "DFFHQNx1_ASAP7_75t_R": 25720,
+      "DFFLQNx1_ASAP7_75t_R": 3
+    },
+    "fclk_in_i": {
+      "DFFHQNx1_ASAP7_75t_R": 2306
+    }
+  }
+}

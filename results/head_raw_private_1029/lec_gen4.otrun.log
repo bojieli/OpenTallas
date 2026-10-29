@@ -1,0 +1,5 @@
+ot-run: epyc2          admits   772 GB (avail 888, reserve 0, fresh 30.9, peak 19.9, headroom 0, waiters 0/0 GB) load 15/128 running 10 disk 276 GB 
+ot-run: -> epyc2
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-2960898-1793275177 after 0 s
+LEC EQUIVALENT: ot_s81hd_tile_p cp=33806 proved=33806 differs=0 undecided=0 33806 compare points proved; 26996 key points matched by name, 4391 register pairs / merges and 8 constant registers proved inductively; 0 RTL and 6 gate registers unmatched and unobservable (proved as free inputs); 50 of them reach an RTL X (don't care: equal wherever the RTL is not X) (110.8 s)
+ot-run: RAN on epyc2 (unit oth-ubuntu-2960898-1793275177): exit 0
