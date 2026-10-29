@@ -1,0 +1,2526 @@
+{
+ "status": "READY plan overlay, explicit variants; requires one coherent GEN/reset/clock regeneration and fresh strict binding",
+ "variant_count": 28,
+ "changes": [
+  {
+   "old_type": "q_b000",
+   "new_type": "q_b000__physical_v1",
+   "instances": [
+    "NW_b000"
+   ],
+   "reason": [
+    "NW_b000 (ft ft only-in-NE_b000 ['L51x1_i', 'L52x8_i'] only-in-NW_b000 ['L51x1_i', 'L52x8_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_b001",
+   "new_type": "q_b001__physical_v1",
+   "instances": [
+    "NW_b001"
+   ],
+   "reason": [
+    "NW_b001 (ft ft only-in-NE_b001 ['L51x3_i', 'L52x6_i'] only-in-NW_b001 ['L51x3_i', 'L52x6_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_b002",
+   "new_type": "q_b002__physical_v1",
+   "instances": [
+    "NW_b002"
+   ],
+   "reason": [
+    "NW_b002 (ft ft only-in-NE_b002 ['L51x5_i', 'L52x4_i'] only-in-NW_b002 ['L51x5_i', 'L52x4_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_b003",
+   "new_type": "q_b003__physical_v1",
+   "instances": [
+    "NW_b003"
+   ],
+   "reason": [
+    "NW_b003 (ft ft only-in-NE_b003 ['L51x7_i', 'L52x2_i'] only-in-NW_b003 ['L51x7_i', 'L52x2_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_b010",
+   "new_type": "q_b010__physical_v1",
+   "instances": [
+    "NW_b010"
+   ],
+   "reason": [
+    "NW_b010 (ft ft only-in-NE_b010 ['L51x2_i', 'L52x7_i'] only-in-NW_b010 ['L51x2_i', 'L52x7_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_b011",
+   "new_type": "q_b011__physical_v1",
+   "instances": [
+    "NW_b011"
+   ],
+   "reason": [
+    "NW_b011 (ft ft only-in-NE_b011 ['L51x4_i', 'L52x5_i'] only-in-NW_b011 ['L51x4_i', 'L52x5_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_b012",
+   "new_type": "q_b012__physical_v1",
+   "instances": [
+    "NW_b012"
+   ],
+   "reason": [
+    "NW_b012 (ft ft only-in-NE_b012 ['L51x6_i', 'L52x3_i'] only-in-NW_b012 ['L51x6_i', 'L52x3_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_b013",
+   "new_type": "q_b013__physical_v1",
+   "instances": [
+    "NW_b013"
+   ],
+   "reason": [
+    "NW_b013 (ft ft only-in-NE_b013 ['L51x8_i', 'L52x1_i'] only-in-NW_b013 ['L51x8_i', 'L52x1_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_b100",
+   "new_type": "q_b100__physical_v1",
+   "instances": [
+    "NE_b100"
+   ],
+   "reason": [
+    "NE_b100 (ft ft only-in-NW_b100 ['L48x8_i', 'L53x4_i'] only-in-NE_b100 ['L48x8_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_b102",
+   "new_type": "q_b102__physical_v1",
+   "instances": [
+    "NE_b102"
+   ],
+   "reason": [
+    "NE_b102 (ft ft only-in-NW_b102 ['L48x1_i', 'L53x11_i'] only-in-NE_b102 ['L48x1_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_b103",
+   "new_type": "q_b103__physical_v1",
+   "instances": [
+    "NE_b103"
+   ],
+   "reason": [
+    "NE_b103 (ft ft only-in-NW_b103 ['L48x2_i', 'L53x10_i'] only-in-NE_b103 ['L48x2_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_b110",
+   "new_type": "q_b110__physical_v1",
+   "instances": [
+    "NE_b110"
+   ],
+   "reason": [
+    "NE_b110 (ft ft only-in-NW_b110 ['L48x9_i', 'L53x3_i'] only-in-NE_b110 ['L48x9_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_b111",
+   "new_type": "q_b111__physical_v1",
+   "instances": [
+    "NE_b111"
+   ],
+   "reason": [
+    "NE_b111 (ft ft only-in-NW_b111 ['L48x3_i', 'L53x9_i'] only-in-NE_b111 ['L48x3_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_b112",
+   "new_type": "q_b112__physical_v1",
+   "instances": [
+    "NE_b112"
+   ],
+   "reason": [
+    "NE_b112 (ft ft only-in-NW_b112 ['L106x1_i'] only-in-NE_b112 ['L106x1_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_b113",
+   "new_type": "q_b113__physical_v1",
+   "instances": [
+    "NE_b113"
+   ],
+   "reason": [
+    "NE_b113 (ft ft only-in-NW_b113 ['L106x7_i'] only-in-NE_b113 ['L106x7_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_spb0",
+   "new_type": "q_spb0__physical_v1",
+   "instances": [
+    "NE_spb0"
+   ],
+   "reason": [
+    "NE_spb0 (conns e.g. input [('u_lk_S0', 'pma_rck'), ('u_lk_S0', 'pma_rx')])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_spb2",
+   "new_type": "q_spb2__physical_v1",
+   "instances": [
+    "NE_spb2"
+   ],
+   "reason": [
+    "NE_spb2 (conns, obus e.g. input [('u_xc_Q2', 'cfg_addr'), ('u_xc_Q2', 'cfg_data')])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_spt0",
+   "new_type": "q_spt0__physical_v1",
+   "instances": [
+    "NE_spt0"
+   ],
+   "reason": [
+    "NE_spt0 (conns, obus e.g. input [('u_xc_Q0', 'cfg_addr'), ('u_xc_Q0', 'cfg_data')])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_spu0",
+   "new_type": "q_spu0__physical_v1",
+   "instances": [
+    "NE_spu0"
+   ],
+   "reason": [
+    "NE_spu0 (ft ft only-in-NW_spu0 ['L106x4_i', 'L88x1_i'] only-in-NE_spu0 ['L106x4_i', 'L88x1_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_spu1",
+   "new_type": "q_spu1__physical_v1",
+   "instances": [
+    "NE_spu1"
+   ],
+   "reason": [
+    "NE_spu1 (ft ft only-in-NW_spu1 ['L48x6_i', 'L53x6_i', 'L87x1_i'] only-in-NE_spu1 ['L48x6_i', 'L87x1_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_su00",
+   "new_type": "q_su00__physical_v1",
+   "instances": [
+    "NW_su00"
+   ],
+   "reason": [
+    "NW_su00 (ft ft only-in-NE_su00 ['L106x6_i'] only-in-NW_su00 ['L106x6_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_su01",
+   "new_type": "q_su01__physical_v1",
+   "instances": [
+    "NE_su01"
+   ],
+   "reason": [
+    "NE_su01 (ft ft only-in-NW_su01 ['L106x5_i'] only-in-NE_su01 ['L106x5_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_su10",
+   "new_type": "q_su10__physical_v1",
+   "instances": [
+    "NE_su10"
+   ],
+   "reason": [
+    "NE_su10 (ft ft only-in-NW_su10 ['L106x3_i'] only-in-NE_su10 ['L106x3_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_su11",
+   "new_type": "q_su11__physical_v1",
+   "instances": [
+    "NW_su11"
+   ],
+   "reason": [
+    "NW_su11 (ft ft only-in-NE_su11 ['L106x2_i'] only-in-NW_su11 ['L106x2_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_su20",
+   "new_type": "q_su20__physical_v1",
+   "instances": [
+    "NW_su20"
+   ],
+   "reason": [
+    "NW_su20 (ft ft only-in-NE_su20 ['L48x4_i'] only-in-NW_su20 ['L48x4_i', 'L53x8_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_su21",
+   "new_type": "q_su21__physical_v1",
+   "instances": [
+    "NE_su21"
+   ],
+   "reason": [
+    "NE_su21 (ft ft only-in-NW_su21 ['L48x5_i', 'L53x7_i'] only-in-NE_su21 ['L48x5_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_su30",
+   "new_type": "q_su30__physical_v1",
+   "instances": [
+    "NE_su30"
+   ],
+   "reason": [
+    "NE_su30 (ft ft only-in-NW_su30 ['L48x7_i', 'L53x5_i'] only-in-NE_su30 ['L48x7_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  },
+  {
+   "old_type": "q_su31",
+   "new_type": "q_su31__physical_v1",
+   "instances": [
+    "NW_su31"
+   ],
+   "reason": [
+    "NW_su31 (ft ft only-in-NE_su31 ['L48x10_i'] only-in-NW_su31 ['L48x10_i', 'L53x2_i'])"
+   ],
+   "hardcore_interfaces_changed": false
+  }
+ ],
+ "instance_type_map": {
+  "NW_b000": "q_b000__physical_v1",
+  "NW_b001": "q_b001__physical_v1",
+  "NW_b002": "q_b002__physical_v1",
+  "NW_b003": "q_b003__physical_v1",
+  "NW_b010": "q_b010__physical_v1",
+  "NW_b011": "q_b011__physical_v1",
+  "NW_b012": "q_b012__physical_v1",
+  "NW_b013": "q_b013__physical_v1",
+  "NE_b100": "q_b100__physical_v1",
+  "NE_b102": "q_b102__physical_v1",
+  "NE_b103": "q_b103__physical_v1",
+  "NE_b110": "q_b110__physical_v1",
+  "NE_b111": "q_b111__physical_v1",
+  "NE_b112": "q_b112__physical_v1",
+  "NE_b113": "q_b113__physical_v1",
+  "NE_spb0": "q_spb0__physical_v1",
+  "NE_spb2": "q_spb2__physical_v1",
+  "NE_spt0": "q_spt0__physical_v1",
+  "NE_spu0": "q_spu0__physical_v1",
+  "NE_spu1": "q_spu1__physical_v1",
+  "NW_su00": "q_su00__physical_v1",
+  "NE_su01": "q_su01__physical_v1",
+  "NE_su10": "q_su10__physical_v1",
+  "NW_su11": "q_su11__physical_v1",
+  "NW_su20": "q_su20__physical_v1",
+  "NE_su21": "q_su21__physical_v1",
+  "NE_su30": "q_su30__physical_v1",
+  "NW_su31": "q_su31__physical_v1"
+ },
+ "type_keyed_indices": [],
+ "sidecars": [
+  {
+   "file": "bank_channels_report.json",
+   "indices": [
+    "bank_channels_report.json/width_changes/q_b000__physical_v1",
+    "bank_channels_report.json/width_changes/q_b001__physical_v1",
+    "bank_channels_report.json/width_changes/q_b002__physical_v1",
+    "bank_channels_report.json/width_changes/q_b003__physical_v1",
+    "bank_channels_report.json/width_changes/q_b010__physical_v1",
+    "bank_channels_report.json/width_changes/q_b011__physical_v1",
+    "bank_channels_report.json/width_changes/q_b012__physical_v1",
+    "bank_channels_report.json/width_changes/q_b013__physical_v1",
+    "bank_channels_report.json/cores/q_b000__physical_v1",
+    "bank_channels_report.json/cores/q_b001__physical_v1",
+    "bank_channels_report.json/cores/q_b002__physical_v1",
+    "bank_channels_report.json/cores/q_b003__physical_v1",
+    "bank_channels_report.json/cores/q_b010__physical_v1",
+    "bank_channels_report.json/cores/q_b011__physical_v1",
+    "bank_channels_report.json/cores/q_b012__physical_v1",
+    "bank_channels_report.json/cores/q_b013__physical_v1"
+   ]
+  },
+  {
+   "file": "b3_report.json",
+   "indices": [
+    "b3_report.json/types/q_b000__physical_v1",
+    "b3_report.json/types/q_b001__physical_v1",
+    "b3_report.json/types/q_b002__physical_v1",
+    "b3_report.json/types/q_b003__physical_v1",
+    "b3_report.json/types/q_b010__physical_v1",
+    "b3_report.json/types/q_b011__physical_v1",
+    "b3_report.json/types/q_b012__physical_v1",
+    "b3_report.json/types/q_b013__physical_v1",
+    "b3_report.json/types/q_b100__physical_v1",
+    "b3_report.json/types/q_b102__physical_v1",
+    "b3_report.json/types/q_b103__physical_v1",
+    "b3_report.json/types/q_b110__physical_v1",
+    "b3_report.json/types/q_b111__physical_v1",
+    "b3_report.json/types/q_b112__physical_v1",
+    "b3_report.json/types/q_b113__physical_v1",
+    "b3_report.json/types/q_spb0__physical_v1",
+    "b3_report.json/types/q_spb2__physical_v1",
+    "b3_report.json/types/q_spt0__physical_v1",
+    "b3_report.json/types/q_spu0__physical_v1",
+    "b3_report.json/types/q_spu1__physical_v1",
+    "b3_report.json/types/q_su00__physical_v1",
+    "b3_report.json/types/q_su01__physical_v1",
+    "b3_report.json/types/q_su10__physical_v1",
+    "b3_report.json/types/q_su11__physical_v1",
+    "b3_report.json/types/q_su20__physical_v1",
+    "b3_report.json/types/q_su21__physical_v1",
+    "b3_report.json/types/q_su30__physical_v1",
+    "b3_report.json/types/q_su31__physical_v1"
+   ]
+  },
+  {
+   "file": "g0c_fix_report.json",
+   "indices": [
+    "g0c_fix_report.json/remaining/q_b002__physical_v1",
+    "g0c_fix_report.json/remaining/q_b011__physical_v1",
+    "g0c_fix_report.json/remaining/q_b110__physical_v1",
+    "g0c_fix_report.json/remaining/q_b111__physical_v1",
+    "g0c_fix_report.json/remaining/q_b112__physical_v1",
+    "g0c_fix_report.json/remaining/q_b113__physical_v1",
+    "g0c_fix_report.json/remaining/q_su11__physical_v1"
+   ]
+  },
+  {
+   "file": "dead_lanes_report.json",
+   "indices": [
+    "dead_lanes_report.json/type_buses/q_b000__physical_v1",
+    "dead_lanes_report.json/type_buses/q_b001__physical_v1",
+    "dead_lanes_report.json/type_buses/q_b002__physical_v1",
+    "dead_lanes_report.json/type_buses/q_b003__physical_v1",
+    "dead_lanes_report.json/type_buses/q_b010__physical_v1",
+    "dead_lanes_report.json/type_buses/q_b011__physical_v1",
+    "dead_lanes_report.json/type_buses/q_b012__physical_v1",
+    "dead_lanes_report.json/type_buses/q_b013__physical_v1",
+    "dead_lanes_report.json/type_buses/q_b100__physical_v1",
+    "dead_lanes_report.json/type_buses/q_b110__physical_v1",
+    "dead_lanes_report.json/type_buses/q_b111__physical_v1",
+    "dead_lanes_report.json/type_buses/q_b112__physical_v1",
+    "dead_lanes_report.json/type_buses/q_spb0__physical_v1",
+    "dead_lanes_report.json/type_buses/q_spb2__physical_v1",
+    "dead_lanes_report.json/type_buses/q_spt0__physical_v1",
+    "dead_lanes_report.json/type_buses/q_spu0__physical_v1",
+    "dead_lanes_report.json/type_buses/q_spu1__physical_v1",
+    "dead_lanes_report.json/type_buses/q_su00__physical_v1",
+    "dead_lanes_report.json/type_buses/q_su01__physical_v1",
+    "dead_lanes_report.json/type_buses/q_su10__physical_v1",
+    "dead_lanes_report.json/type_buses/q_su11__physical_v1",
+    "dead_lanes_report.json/type_buses/q_su20__physical_v1",
+    "dead_lanes_report.json/type_buses/q_su21__physical_v1",
+    "dead_lanes_report.json/type_buses/q_su30__physical_v1",
+    "dead_lanes_report.json/type_buses/q_su31__physical_v1"
+   ]
+  },
+  {
+   "file": "type_pins_report.json",
+   "indices": [
+    "type_pins_report.json/types/q_b000__physical_v1",
+    "type_pins_report.json/types/q_b001__physical_v1",
+    "type_pins_report.json/types/q_b002__physical_v1",
+    "type_pins_report.json/types/q_b003__physical_v1",
+    "type_pins_report.json/types/q_b010__physical_v1",
+    "type_pins_report.json/types/q_b011__physical_v1",
+    "type_pins_report.json/types/q_b012__physical_v1",
+    "type_pins_report.json/types/q_b013__physical_v1",
+    "type_pins_report.json/types/q_b100__physical_v1",
+    "type_pins_report.json/types/q_b102__physical_v1",
+    "type_pins_report.json/types/q_b103__physical_v1",
+    "type_pins_report.json/types/q_b110__physical_v1",
+    "type_pins_report.json/types/q_b111__physical_v1",
+    "type_pins_report.json/types/q_b112__physical_v1",
+    "type_pins_report.json/types/q_b113__physical_v1",
+    "type_pins_report.json/types/q_spb0__physical_v1",
+    "type_pins_report.json/types/q_spb2__physical_v1",
+    "type_pins_report.json/types/q_spt0__physical_v1",
+    "type_pins_report.json/types/q_spu0__physical_v1",
+    "type_pins_report.json/types/q_spu1__physical_v1",
+    "type_pins_report.json/types/q_su00__physical_v1",
+    "type_pins_report.json/types/q_su01__physical_v1",
+    "type_pins_report.json/types/q_su10__physical_v1",
+    "type_pins_report.json/types/q_su11__physical_v1",
+    "type_pins_report.json/types/q_su20__physical_v1",
+    "type_pins_report.json/types/q_su21__physical_v1",
+    "type_pins_report.json/types/q_su30__physical_v1",
+    "type_pins_report.json/types/q_su31__physical_v1"
+   ]
+  },
+  {
+   "file": "composition_report.json",
+   "indices": [
+    "composition_report.json/internal_type_max/q_b112__physical_v1",
+    "composition_report.json/internal_type_max/q_b113__physical_v1"
+   ]
+  },
+  {
+   "file": "superset_faces_report.json",
+   "indices": [
+    "superset_faces_report.json/start_errors/q_b002__physical_v1",
+    "superset_faces_report.json/start_errors/q_b011__physical_v1",
+    "superset_faces_report.json/start_errors/q_b113__physical_v1"
+   ]
+  },
+  {
+   "file": "type_views.json",
+   "indices": [
+    "type_views.json/views/q_b000__physical_v1",
+    "type_views.json/views/q_b001__physical_v1",
+    "type_views.json/views/q_b002__physical_v1",
+    "type_views.json/views/q_b003__physical_v1",
+    "type_views.json/views/q_b010__physical_v1",
+    "type_views.json/views/q_b011__physical_v1",
+    "type_views.json/views/q_b012__physical_v1",
+    "type_views.json/views/q_b013__physical_v1",
+    "type_views.json/views/q_b100__physical_v1",
+    "type_views.json/views/q_b102__physical_v1",
+    "type_views.json/views/q_b103__physical_v1",
+    "type_views.json/views/q_b110__physical_v1",
+    "type_views.json/views/q_b111__physical_v1",
+    "type_views.json/views/q_b112__physical_v1",
+    "type_views.json/views/q_b113__physical_v1",
+    "type_views.json/views/q_spb0__physical_v1",
+    "type_views.json/views/q_spb2__physical_v1",
+    "type_views.json/views/q_spt0__physical_v1",
+    "type_views.json/views/q_su00__physical_v1",
+    "type_views.json/views/q_su01__physical_v1",
+    "type_views.json/views/q_su10__physical_v1",
+    "type_views.json/views/q_su11__physical_v1",
+    "type_views.json/views/q_su20__physical_v1",
+    "type_views.json/views/q_su21__physical_v1",
+    "type_views.json/views/q_su30__physical_v1",
+    "type_views.json/views/q_su31__physical_v1"
+   ]
+  },
+  {
+   "file": "perbit_nudge_report.json",
+   "indices": [
+    "perbit_nudge_report.json/types/q_b100__physical_v1"
+   ]
+  },
+  {
+   "file": "sfu_corridor_report.json",
+   "indices": [
+    "sfu_corridor_report.json/moves/q_b112__physical_v1",
+    "sfu_corridor_report.json/moves/q_b113__physical_v1"
+   ]
+  },
+  {
+   "file": "die_ft_band_report.json",
+   "indices": [
+    "die_ft_band_report.json/bands/q_b000__physical_v1",
+    "die_ft_band_report.json/bands/q_b001__physical_v1",
+    "die_ft_band_report.json/bands/q_b002__physical_v1",
+    "die_ft_band_report.json/bands/q_b003__physical_v1",
+    "die_ft_band_report.json/bands/q_b010__physical_v1",
+    "die_ft_band_report.json/bands/q_b011__physical_v1",
+    "die_ft_band_report.json/bands/q_b012__physical_v1",
+    "die_ft_band_report.json/bands/q_b013__physical_v1",
+    "die_ft_band_report.json/bands/q_b100__physical_v1",
+    "die_ft_band_report.json/bands/q_b102__physical_v1",
+    "die_ft_band_report.json/bands/q_b103__physical_v1",
+    "die_ft_band_report.json/bands/q_b110__physical_v1",
+    "die_ft_band_report.json/bands/q_b111__physical_v1",
+    "die_ft_band_report.json/bands/q_su20__physical_v1",
+    "die_ft_band_report.json/bands/q_su21__physical_v1",
+    "die_ft_band_report.json/bands/q_su30__physical_v1",
+    "die_ft_band_report.json/bands/q_su31__physical_v1"
+   ]
+  },
+  {
+   "file": "c21_event_report.json",
+   "indices": [
+    "c21_event_report.json/idx_homes/q_b001__physical_v1",
+    "c21_event_report.json/idx_homes/q_b010__physical_v1"
+   ]
+  },
+  {
+   "file": "c23q_event_report.json",
+   "indices": [
+    "c23q_event_report.json/wpath/q_spt0__physical_v1",
+    "c23q_event_report.json/wpath/q_spu0__physical_v1"
+   ]
+  },
+  {
+   "file": "hub_repack_report.json",
+   "indices": [
+    "hub_repack_report.json/stations/q_spb2__physical_v1",
+    "hub_repack_report.json/stations/q_spt0__physical_v1"
+   ]
+  },
+  {
+   "file": "street_event_report.json",
+   "indices": [
+    "street_event_report.json/moved/q_su00__physical_v1",
+    "street_event_report.json/moved/q_su01__physical_v1",
+    "street_event_report.json/moved/q_su11__physical_v1",
+    "street_event_report.json/moved/q_su31__physical_v1"
+   ]
+  },
+  {
+   "file": "relay_composition_report.json",
+   "indices": [
+    "relay_composition_report.json/sources/q_b000__physical_v1",
+    "relay_composition_report.json/sources/q_b001__physical_v1",
+    "relay_composition_report.json/sources/q_b002__physical_v1",
+    "relay_composition_report.json/sources/q_b003__physical_v1",
+    "relay_composition_report.json/sources/q_b010__physical_v1",
+    "relay_composition_report.json/sources/q_b011__physical_v1",
+    "relay_composition_report.json/sources/q_b012__physical_v1",
+    "relay_composition_report.json/sources/q_b013__physical_v1"
+   ]
+  },
+  {
+   "file": "r8_delta_report.json",
+   "indices": [
+    "r8_delta_report.json/banks/q_b100__physical_v1",
+    "r8_delta_report.json/banks/q_b102__physical_v1",
+    "r8_delta_report.json/banks/q_b103__physical_v1",
+    "r8_delta_report.json/plan_cut/types/q_b100__physical_v1",
+    "r8_delta_report.json/plan_cut/types/q_b102__physical_v1",
+    "r8_delta_report.json/plan_cut/types/q_b103__physical_v1"
+   ]
+  },
+  {
+   "file": "clock_entries.json",
+   "indices": [
+    "clock_entries.json/q_b000__physical_v1",
+    "clock_entries.json/q_b001__physical_v1",
+    "clock_entries.json/q_b002__physical_v1",
+    "clock_entries.json/q_b003__physical_v1",
+    "clock_entries.json/q_b010__physical_v1",
+    "clock_entries.json/q_b011__physical_v1",
+    "clock_entries.json/q_b012__physical_v1",
+    "clock_entries.json/q_b013__physical_v1",
+    "clock_entries.json/q_b100__physical_v1",
+    "clock_entries.json/q_b102__physical_v1",
+    "clock_entries.json/q_b103__physical_v1",
+    "clock_entries.json/q_b110__physical_v1",
+    "clock_entries.json/q_b111__physical_v1",
+    "clock_entries.json/q_b112__physical_v1",
+    "clock_entries.json/q_b113__physical_v1",
+    "clock_entries.json/q_spb0__physical_v1",
+    "clock_entries.json/q_spb2__physical_v1",
+    "clock_entries.json/q_spt0__physical_v1",
+    "clock_entries.json/q_su00__physical_v1",
+    "clock_entries.json/q_su01__physical_v1",
+    "clock_entries.json/q_su10__physical_v1",
+    "clock_entries.json/q_su11__physical_v1",
+    "clock_entries.json/q_su20__physical_v1",
+    "clock_entries.json/q_su21__physical_v1",
+    "clock_entries.json/q_su30__physical_v1",
+    "clock_entries.json/q_su31__physical_v1"
+   ]
+  },
+  {
+   "file": "c22_event_report.json",
+   "indices": [
+    "c22_event_report.json/idx_homes/q_b000__physical_v1",
+    "c22_event_report.json/idx_homes/q_b001__physical_v1",
+    "c22_event_report.json/idx_homes/q_b002__physical_v1",
+    "c22_event_report.json/idx_homes/q_b010__physical_v1",
+    "c22_event_report.json/idx_homes/q_b011__physical_v1"
+   ]
+  },
+  {
+   "file": "c20_event_report.json",
+   "indices": [
+    "c20_event_report.json/sm_widen/bounds/q_spb0__physical_v1",
+    "c20_event_report.json/sm_widen/bounds/q_spb2__physical_v1",
+    "c20_event_report.json/sm_widen/bounds/q_spt0__physical_v1",
+    "c20_event_report.json/sm_widen/outlines/q_spb0__physical_v1",
+    "c20_event_report.json/sm_widen/outlines/q_spt0__physical_v1"
+   ]
+  },
+  {
+   "file": "cores_b2.json",
+   "indices": [
+    "cores_b2.json/types/q_b000__physical_v1",
+    "cores_b2.json/types/q_b001__physical_v1",
+    "cores_b2.json/types/q_b002__physical_v1",
+    "cores_b2.json/types/q_b003__physical_v1",
+    "cores_b2.json/types/q_b010__physical_v1",
+    "cores_b2.json/types/q_b011__physical_v1",
+    "cores_b2.json/types/q_b012__physical_v1",
+    "cores_b2.json/types/q_b013__physical_v1",
+    "cores_b2.json/types/q_b100__physical_v1",
+    "cores_b2.json/types/q_b102__physical_v1",
+    "cores_b2.json/types/q_b103__physical_v1",
+    "cores_b2.json/types/q_b110__physical_v1",
+    "cores_b2.json/types/q_b111__physical_v1",
+    "cores_b2.json/types/q_b112__physical_v1",
+    "cores_b2.json/types/q_b113__physical_v1",
+    "cores_b2.json/types/q_spb0__physical_v1",
+    "cores_b2.json/types/q_spb2__physical_v1",
+    "cores_b2.json/types/q_spt0__physical_v1",
+    "cores_b2.json/types/q_su00__physical_v1",
+    "cores_b2.json/types/q_su01__physical_v1",
+    "cores_b2.json/types/q_su10__physical_v1",
+    "cores_b2.json/types/q_su11__physical_v1",
+    "cores_b2.json/types/q_su20__physical_v1",
+    "cores_b2.json/types/q_su21__physical_v1",
+    "cores_b2.json/types/q_su30__physical_v1",
+    "cores_b2.json/types/q_su31__physical_v1",
+    "cores_b2.json/bands/q_b000__physical_v1",
+    "cores_b2.json/bands/q_b001__physical_v1",
+    "cores_b2.json/bands/q_b002__physical_v1",
+    "cores_b2.json/bands/q_b003__physical_v1",
+    "cores_b2.json/bands/q_b010__physical_v1",
+    "cores_b2.json/bands/q_b011__physical_v1",
+    "cores_b2.json/bands/q_b012__physical_v1",
+    "cores_b2.json/bands/q_b013__physical_v1",
+    "cores_b2.json/bands/q_b100__physical_v1",
+    "cores_b2.json/bands/q_b102__physical_v1",
+    "cores_b2.json/bands/q_b103__physical_v1",
+    "cores_b2.json/bands/q_b110__physical_v1",
+    "cores_b2.json/bands/q_b111__physical_v1",
+    "cores_b2.json/bands/q_b112__physical_v1",
+    "cores_b2.json/bands/q_b113__physical_v1",
+    "cores_b2.json/bands/q_spb0__physical_v1",
+    "cores_b2.json/bands/q_spb2__physical_v1",
+    "cores_b2.json/bands/q_spt0__physical_v1",
+    "cores_b2.json/bands/q_su00__physical_v1",
+    "cores_b2.json/bands/q_su01__physical_v1",
+    "cores_b2.json/bands/q_su10__physical_v1",
+    "cores_b2.json/bands/q_su11__physical_v1",
+    "cores_b2.json/bands/q_su20__physical_v1",
+    "cores_b2.json/bands/q_su21__physical_v1",
+    "cores_b2.json/bands/q_su30__physical_v1",
+    "cores_b2.json/bands/q_su31__physical_v1"
+   ]
+  },
+  {
+   "file": "compose_report.json",
+   "indices": [
+    "compose_report.json/growth/grown_local_y_um/q_b000__physical_v1",
+    "compose_report.json/growth/grown_local_y_um/q_b001__physical_v1",
+    "compose_report.json/growth/grown_local_y_um/q_b002__physical_v1",
+    "compose_report.json/growth/grown_local_y_um/q_b003__physical_v1",
+    "compose_report.json/growth/grown_local_y_um/q_b010__physical_v1",
+    "compose_report.json/growth/grown_local_y_um/q_b011__physical_v1",
+    "compose_report.json/growth/grown_local_y_um/q_b012__physical_v1",
+    "compose_report.json/growth/grown_local_y_um/q_b013__physical_v1"
+   ]
+  },
+  {
+   "file": "b1_verify.json",
+   "indices": [
+    "b1_verify.json/cut_max_by_type/q_b000__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_b001__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_b002__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_b003__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_b010__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_b011__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_b012__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_b013__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_b100__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_b102__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_b103__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_b110__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_b111__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_b112__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_b113__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_spb2__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_spt0__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_spu0__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_spu1__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_su00__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_su01__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_su10__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_su11__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_su20__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_su21__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_su30__physical_v1",
+    "b1_verify.json/cut_max_by_type/q_su31__physical_v1",
+    "b1_verify.json/perbit_census/types/q_b000__physical_v1",
+    "b1_verify.json/perbit_census/types/q_b001__physical_v1",
+    "b1_verify.json/perbit_census/types/q_b002__physical_v1",
+    "b1_verify.json/perbit_census/types/q_b003__physical_v1",
+    "b1_verify.json/perbit_census/types/q_b010__physical_v1",
+    "b1_verify.json/perbit_census/types/q_b011__physical_v1",
+    "b1_verify.json/perbit_census/types/q_b012__physical_v1",
+    "b1_verify.json/perbit_census/types/q_b013__physical_v1",
+    "b1_verify.json/perbit_census/types/q_b100__physical_v1",
+    "b1_verify.json/perbit_census/types/q_b102__physical_v1",
+    "b1_verify.json/perbit_census/types/q_b103__physical_v1",
+    "b1_verify.json/perbit_census/types/q_b110__physical_v1",
+    "b1_verify.json/perbit_census/types/q_b111__physical_v1",
+    "b1_verify.json/perbit_census/types/q_b112__physical_v1",
+    "b1_verify.json/perbit_census/types/q_b113__physical_v1",
+    "b1_verify.json/perbit_census/types/q_spb2__physical_v1",
+    "b1_verify.json/perbit_census/types/q_spt0__physical_v1",
+    "b1_verify.json/perbit_census/types/q_spu0__physical_v1",
+    "b1_verify.json/perbit_census/types/q_spu1__physical_v1",
+    "b1_verify.json/perbit_census/types/q_su00__physical_v1",
+    "b1_verify.json/perbit_census/types/q_su01__physical_v1",
+    "b1_verify.json/perbit_census/types/q_su10__physical_v1",
+    "b1_verify.json/perbit_census/types/q_su11__physical_v1",
+    "b1_verify.json/perbit_census/types/q_su20__physical_v1",
+    "b1_verify.json/perbit_census/types/q_su21__physical_v1",
+    "b1_verify.json/perbit_census/types/q_su30__physical_v1",
+    "b1_verify.json/perbit_census/types/q_su31__physical_v1"
+   ]
+  },
+  {
+   "file": "corridor_report.json",
+   "indices": [
+    "corridor_report.json/types/q_b001__physical_v1",
+    "corridor_report.json/types/q_b011__physical_v1",
+    "corridor_report.json/types/q_spt0__physical_v1",
+    "corridor_report.json/types/q_spu0__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_b000__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_b001__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_b002__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_b003__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_b010__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_b011__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_b012__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_b013__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_b100__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_b102__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_b103__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_b110__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_b111__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_spu1__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_su20__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_su21__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_su30__physical_v1",
+    "corridor_report.json/unproven_face_budgets/q_su31__physical_v1"
+   ]
+  },
+  {
+   "file": "su_corridor_report.json",
+   "indices": [
+    "su_corridor_report.json/moves/q_su00__physical_v1",
+    "su_corridor_report.json/moves/q_su01__physical_v1",
+    "su_corridor_report.json/moves/q_su11__physical_v1"
+   ]
+  },
+  {
+   "file": "clock_htree.json",
+   "indices": [
+    "clock_htree.json/ft_budget_change/q_b000__physical_v1",
+    "clock_htree.json/ft_budget_change/q_b001__physical_v1",
+    "clock_htree.json/ft_budget_change/q_b002__physical_v1",
+    "clock_htree.json/ft_budget_change/q_b003__physical_v1",
+    "clock_htree.json/ft_budget_change/q_b010__physical_v1",
+    "clock_htree.json/ft_budget_change/q_b011__physical_v1",
+    "clock_htree.json/ft_budget_change/q_b012__physical_v1",
+    "clock_htree.json/ft_budget_change/q_b013__physical_v1",
+    "clock_htree.json/ft_budget_change/q_b100__physical_v1",
+    "clock_htree.json/ft_budget_change/q_b102__physical_v1",
+    "clock_htree.json/ft_budget_change/q_b103__physical_v1",
+    "clock_htree.json/ft_budget_change/q_b110__physical_v1",
+    "clock_htree.json/ft_budget_change/q_b111__physical_v1",
+    "clock_htree.json/ft_budget_change/q_b112__physical_v1",
+    "clock_htree.json/ft_budget_change/q_b113__physical_v1",
+    "clock_htree.json/ft_budget_change/q_spb0__physical_v1",
+    "clock_htree.json/ft_budget_change/q_spb2__physical_v1",
+    "clock_htree.json/ft_budget_change/q_spt0__physical_v1",
+    "clock_htree.json/ft_budget_change/q_spu0__physical_v1",
+    "clock_htree.json/ft_budget_change/q_spu1__physical_v1",
+    "clock_htree.json/ft_budget_change/q_su00__physical_v1",
+    "clock_htree.json/ft_budget_change/q_su01__physical_v1",
+    "clock_htree.json/ft_budget_change/q_su10__physical_v1",
+    "clock_htree.json/ft_budget_change/q_su11__physical_v1",
+    "clock_htree.json/ft_budget_change/q_su20__physical_v1",
+    "clock_htree.json/ft_budget_change/q_su21__physical_v1",
+    "clock_htree.json/ft_budget_change/q_su30__physical_v1",
+    "clock_htree.json/ft_budget_change/q_su31__physical_v1"
+   ]
+  },
+  {
+   "file": "core_conns.json",
+   "indices": [
+    "core_conns.json/q_b000__physical_v1",
+    "core_conns.json/q_b001__physical_v1",
+    "core_conns.json/q_b002__physical_v1",
+    "core_conns.json/q_b003__physical_v1",
+    "core_conns.json/q_b010__physical_v1",
+    "core_conns.json/q_b011__physical_v1",
+    "core_conns.json/q_b012__physical_v1",
+    "core_conns.json/q_b013__physical_v1",
+    "core_conns.json/q_b100__physical_v1",
+    "core_conns.json/q_b102__physical_v1",
+    "core_conns.json/q_b103__physical_v1",
+    "core_conns.json/q_b110__physical_v1",
+    "core_conns.json/q_b111__physical_v1",
+    "core_conns.json/q_b112__physical_v1",
+    "core_conns.json/q_b113__physical_v1",
+    "core_conns.json/q_spb0__physical_v1",
+    "core_conns.json/q_spb2__physical_v1",
+    "core_conns.json/q_spt0__physical_v1",
+    "core_conns.json/q_su00__physical_v1",
+    "core_conns.json/q_su01__physical_v1",
+    "core_conns.json/q_su10__physical_v1",
+    "core_conns.json/q_su11__physical_v1",
+    "core_conns.json/q_su20__physical_v1",
+    "core_conns.json/q_su21__physical_v1",
+    "core_conns.json/q_su30__physical_v1",
+    "core_conns.json/q_su31__physical_v1"
+   ]
+  }
+ ],
+ "ft_signatures": {
+  "NE_b000": [
+   [
+    "L101x1_i",
+    "L101x1_o",
+    21
+   ],
+   [
+    "L126x8_i",
+    "L126x8_o",
+    5
+   ],
+   [
+    "L28x1_i",
+    "L28x1_o",
+    1615
+   ],
+   [
+    "L36x1_i",
+    "L36x1_o",
+    1169
+   ],
+   [
+    "L42x1_i",
+    "L42x1_o",
+    788
+   ],
+   [
+    "L43x1_i",
+    "L43x1_o",
+    788
+   ],
+   [
+    "L51x1_i",
+    "L51x1_o",
+    612
+   ],
+   [
+    "L52x8_i",
+    "L52x8_o",
+    612
+   ],
+   [
+    "L73x1_i",
+    "L73x1_o",
+    274
+   ]
+  ],
+  "NW_b000": [
+   [
+    "L101x1_i",
+    "L101x1_o",
+    21
+   ],
+   [
+    "L126x8_i",
+    "L126x8_o",
+    5
+   ],
+   [
+    "L28x1_i",
+    "L28x1_o",
+    1615
+   ],
+   [
+    "L36x1_i",
+    "L36x1_o",
+    1169
+   ],
+   [
+    "L42x1_i",
+    "L42x1_o",
+    788
+   ],
+   [
+    "L43x1_i",
+    "L43x1_o",
+    788
+   ],
+   [
+    "L51x1_i",
+    "L51x1_o",
+    611
+   ],
+   [
+    "L52x8_i",
+    "L52x8_o",
+    610
+   ],
+   [
+    "L73x1_i",
+    "L73x1_o",
+    274
+   ]
+  ],
+  "NE_b001": [
+   [
+    "L101x3_i",
+    "L101x3_o",
+    21
+   ],
+   [
+    "L11x1_i",
+    "L11x1_o",
+    4401
+   ],
+   [
+    "L126x6_i",
+    "L126x6_o",
+    5
+   ],
+   [
+    "L36x3_i",
+    "L36x3_o",
+    1169
+   ],
+   [
+    "L42x3_i",
+    "L42x3_o",
+    788
+   ],
+   [
+    "L43x3_i",
+    "L43x3_o",
+    788
+   ],
+   [
+    "L51x3_i",
+    "L51x3_o",
+    612
+   ],
+   [
+    "L52x6_i",
+    "L52x6_o",
+    612
+   ],
+   [
+    "L73x3_i",
+    "L73x3_o",
+    274
+   ]
+  ],
+  "NW_b001": [
+   [
+    "L101x3_i",
+    "L101x3_o",
+    21
+   ],
+   [
+    "L11x1_i",
+    "L11x1_o",
+    4401
+   ],
+   [
+    "L126x6_i",
+    "L126x6_o",
+    5
+   ],
+   [
+    "L36x3_i",
+    "L36x3_o",
+    1169
+   ],
+   [
+    "L42x3_i",
+    "L42x3_o",
+    788
+   ],
+   [
+    "L43x3_i",
+    "L43x3_o",
+    788
+   ],
+   [
+    "L51x3_i",
+    "L51x3_o",
+    611
+   ],
+   [
+    "L52x6_i",
+    "L52x6_o",
+    610
+   ],
+   [
+    "L73x3_i",
+    "L73x3_o",
+    274
+   ]
+  ],
+  "NE_b002": [
+   [
+    "L101x5_i",
+    "L101x5_o",
+    21
+   ],
+   [
+    "L126x4_i",
+    "L126x4_o",
+    5
+   ],
+   [
+    "L17x1_i",
+    "L17x1_o",
+    4128
+   ],
+   [
+    "L51x5_i",
+    "L51x5_o",
+    612
+   ],
+   [
+    "L52x4_i",
+    "L52x4_o",
+    612
+   ],
+   [
+    "L72x1_i",
+    "L72x1_o",
+    274
+   ],
+   [
+    "L73x5_i",
+    "L73x5_o",
+    274
+   ]
+  ],
+  "NW_b002": [
+   [
+    "L101x5_i",
+    "L101x5_o",
+    21
+   ],
+   [
+    "L126x4_i",
+    "L126x4_o",
+    5
+   ],
+   [
+    "L17x1_i",
+    "L17x1_o",
+    4128
+   ],
+   [
+    "L51x5_i",
+    "L51x5_o",
+    611
+   ],
+   [
+    "L52x4_i",
+    "L52x4_o",
+    610
+   ],
+   [
+    "L72x1_i",
+    "L72x1_o",
+    274
+   ],
+   [
+    "L73x5_i",
+    "L73x5_o",
+    274
+   ]
+  ],
+  "NE_b003": [
+   [
+    "L101x7_i",
+    "L101x7_o",
+    21
+   ],
+   [
+    "L126x2_i",
+    "L126x2_o",
+    5
+   ],
+   [
+    "L18x1_i",
+    "L18x1_o",
+    4127
+   ],
+   [
+    "L51x7_i",
+    "L51x7_o",
+    612
+   ],
+   [
+    "L52x2_i",
+    "L52x2_o",
+    612
+   ],
+   [
+    "L73x7_i",
+    "L73x7_o",
+    274
+   ]
+  ],
+  "NW_b003": [
+   [
+    "L101x7_i",
+    "L101x7_o",
+    21
+   ],
+   [
+    "L126x2_i",
+    "L126x2_o",
+    5
+   ],
+   [
+    "L18x1_i",
+    "L18x1_o",
+    4127
+   ],
+   [
+    "L51x7_i",
+    "L51x7_o",
+    611
+   ],
+   [
+    "L52x2_i",
+    "L52x2_o",
+    610
+   ],
+   [
+    "L73x7_i",
+    "L73x7_o",
+    274
+   ]
+  ],
+  "NE_b010": [
+   [
+    "L101x2_i",
+    "L101x2_o",
+    21
+   ],
+   [
+    "L126x7_i",
+    "L126x7_o",
+    5
+   ],
+   [
+    "L14x1_i",
+    "L14x1_o",
+    4127
+   ],
+   [
+    "L28x2_i",
+    "L28x2_o",
+    1615
+   ],
+   [
+    "L36x2_i",
+    "L36x2_o",
+    1169
+   ],
+   [
+    "L42x2_i",
+    "L42x2_o",
+    788
+   ],
+   [
+    "L43x2_i",
+    "L43x2_o",
+    788
+   ],
+   [
+    "L51x2_i",
+    "L51x2_o",
+    612
+   ],
+   [
+    "L52x7_i",
+    "L52x7_o",
+    612
+   ],
+   [
+    "L73x2_i",
+    "L73x2_o",
+    274
+   ]
+  ],
+  "NW_b010": [
+   [
+    "L101x2_i",
+    "L101x2_o",
+    21
+   ],
+   [
+    "L126x7_i",
+    "L126x7_o",
+    5
+   ],
+   [
+    "L14x1_i",
+    "L14x1_o",
+    4127
+   ],
+   [
+    "L28x2_i",
+    "L28x2_o",
+    1615
+   ],
+   [
+    "L36x2_i",
+    "L36x2_o",
+    1169
+   ],
+   [
+    "L42x2_i",
+    "L42x2_o",
+    788
+   ],
+   [
+    "L43x2_i",
+    "L43x2_o",
+    788
+   ],
+   [
+    "L51x2_i",
+    "L51x2_o",
+    611
+   ],
+   [
+    "L52x7_i",
+    "L52x7_o",
+    610
+   ],
+   [
+    "L73x2_i",
+    "L73x2_o",
+    274
+   ]
+  ],
+  "NE_b011": [
+   [
+    "L101x4_i",
+    "L101x4_o",
+    21
+   ],
+   [
+    "L126x5_i",
+    "L126x5_o",
+    5
+   ],
+   [
+    "L15x1_i",
+    "L15x1_o",
+    4128
+   ],
+   [
+    "L42x4_i",
+    "L42x4_o",
+    788
+   ],
+   [
+    "L51x4_i",
+    "L51x4_o",
+    612
+   ],
+   [
+    "L52x5_i",
+    "L52x5_o",
+    612
+   ],
+   [
+    "L71x1_i",
+    "L71x1_o",
+    274
+   ],
+   [
+    "L73x4_i",
+    "L73x4_o",
+    274
+   ]
+  ],
+  "NW_b011": [
+   [
+    "L101x4_i",
+    "L101x4_o",
+    21
+   ],
+   [
+    "L126x5_i",
+    "L126x5_o",
+    5
+   ],
+   [
+    "L15x1_i",
+    "L15x1_o",
+    4128
+   ],
+   [
+    "L42x4_i",
+    "L42x4_o",
+    788
+   ],
+   [
+    "L51x4_i",
+    "L51x4_o",
+    611
+   ],
+   [
+    "L52x5_i",
+    "L52x5_o",
+    610
+   ],
+   [
+    "L71x1_i",
+    "L71x1_o",
+    274
+   ],
+   [
+    "L73x4_i",
+    "L73x4_o",
+    274
+   ]
+  ],
+  "NE_b012": [
+   [
+    "L101x6_i",
+    "L101x6_o",
+    21
+   ],
+   [
+    "L10x1_i",
+    "L10x1_o",
+    4401
+   ],
+   [
+    "L126x3_i",
+    "L126x3_o",
+    5
+   ],
+   [
+    "L51x6_i",
+    "L51x6_o",
+    612
+   ],
+   [
+    "L52x3_i",
+    "L52x3_o",
+    612
+   ],
+   [
+    "L73x6_i",
+    "L73x6_o",
+    274
+   ]
+  ],
+  "NW_b012": [
+   [
+    "L101x6_i",
+    "L101x6_o",
+    21
+   ],
+   [
+    "L10x1_i",
+    "L10x1_o",
+    4401
+   ],
+   [
+    "L126x3_i",
+    "L126x3_o",
+    5
+   ],
+   [
+    "L51x6_i",
+    "L51x6_o",
+    611
+   ],
+   [
+    "L52x3_i",
+    "L52x3_o",
+    610
+   ],
+   [
+    "L73x6_i",
+    "L73x6_o",
+    274
+   ]
+  ],
+  "NE_b013": [
+   [
+    "L101x8_i",
+    "L101x8_o",
+    21
+   ],
+   [
+    "L126x1_i",
+    "L126x1_o",
+    5
+   ],
+   [
+    "L51x8_i",
+    "L51x8_o",
+    612
+   ],
+   [
+    "L52x1_i",
+    "L52x1_o",
+    612
+   ]
+  ],
+  "NW_b013": [
+   [
+    "L101x8_i",
+    "L101x8_o",
+    21
+   ],
+   [
+    "L126x1_i",
+    "L126x1_o",
+    5
+   ],
+   [
+    "L51x8_i",
+    "L51x8_o",
+    611
+   ],
+   [
+    "L52x1_i",
+    "L52x1_o",
+    610
+   ]
+  ],
+  "NW_b100": [
+   [
+    "L100x1_i",
+    "L100x1_o",
+    22
+   ],
+   [
+    "L117x5_i",
+    "L117x5_o",
+    11
+   ],
+   [
+    "L123x1_i",
+    "L123x1_o",
+    9
+   ],
+   [
+    "L138x5_i",
+    "L138x5_o",
+    2
+   ],
+   [
+    "L48x8_i",
+    "L48x8_o",
+    634
+   ],
+   [
+    "L53x4_i",
+    "L53x4_o",
+    612
+   ],
+   [
+    "L70x1_i",
+    "L70x1_o",
+    268
+   ]
+  ],
+  "NE_b100": [
+   [
+    "L100x1_i",
+    "L100x1_o",
+    22
+   ],
+   [
+    "L117x5_i",
+    "L117x5_o",
+    11
+   ],
+   [
+    "L123x1_i",
+    "L123x1_o",
+    9
+   ],
+   [
+    "L138x5_i",
+    "L138x5_o",
+    2
+   ],
+   [
+    "L48x8_i",
+    "L48x8_o",
+    7
+   ],
+   [
+    "L70x1_i",
+    "L70x1_o",
+    268
+   ]
+  ],
+  "NW_b102": [
+   [
+    "L48x1_i",
+    "L48x1_o",
+    634
+   ],
+   [
+    "L53x11_i",
+    "L53x11_o",
+    612
+   ]
+  ],
+  "NE_b102": [
+   [
+    "L48x1_i",
+    "L48x1_o",
+    7
+   ]
+  ],
+  "NW_b103": [
+   [
+    "L48x2_i",
+    "L48x2_o",
+    634
+   ],
+   [
+    "L53x10_i",
+    "L53x10_o",
+    612
+   ]
+  ],
+  "NE_b103": [
+   [
+    "L48x2_i",
+    "L48x2_o",
+    7
+   ]
+  ],
+  "NW_b110": [
+   [
+    "L117x6_i",
+    "L117x6_o",
+    11
+   ],
+   [
+    "L138x6_i",
+    "L138x6_o",
+    2
+   ],
+   [
+    "L48x9_i",
+    "L48x9_o",
+    634
+   ],
+   [
+    "L53x3_i",
+    "L53x3_o",
+    612
+   ]
+  ],
+  "NE_b110": [
+   [
+    "L117x6_i",
+    "L117x6_o",
+    11
+   ],
+   [
+    "L138x6_i",
+    "L138x6_o",
+    2
+   ],
+   [
+    "L48x9_i",
+    "L48x9_o",
+    7
+   ]
+  ],
+  "NW_b111": [
+   [
+    "L48x3_i",
+    "L48x3_o",
+    634
+   ],
+   [
+    "L53x9_i",
+    "L53x9_o",
+    612
+   ]
+  ],
+  "NE_b111": [
+   [
+    "L48x3_i",
+    "L48x3_o",
+    7
+   ]
+  ],
+  "NW_b112": [
+   [
+    "L106x1_i",
+    "L106x1_o",
+    20
+   ],
+   [
+    "L114x5_i",
+    "L114x5_o",
+    6
+   ],
+   [
+    "L125x7_i",
+    "L125x7_o",
+    7
+   ]
+  ],
+  "NE_b112": [
+   [
+    "L106x1_i",
+    "L106x1_o",
+    2
+   ],
+   [
+    "L114x5_i",
+    "L114x5_o",
+    6
+   ],
+   [
+    "L125x7_i",
+    "L125x7_o",
+    7
+   ]
+  ],
+  "NW_b113": [
+   [
+    "L106x7_i",
+    "L106x7_o",
+    20
+   ],
+   [
+    "L125x1_i",
+    "L125x1_o",
+    7
+   ]
+  ],
+  "NE_b113": [
+   [
+    "L106x7_i",
+    "L106x7_o",
+    2
+   ],
+   [
+    "L125x1_i",
+    "L125x1_o",
+    7
+   ]
+  ],
+  "NW_spb0": [],
+  "NE_spb0": [],
+  "NW_spb2": [
+   [
+    "L117x2_i",
+    "L117x2_o",
+    11
+   ],
+   [
+    "L138x2_i",
+    "L138x2_o",
+    2
+   ],
+   [
+    "L33x2_i",
+    "L33x2_o",
+    1615
+   ]
+  ],
+  "NE_spb2": [
+   [
+    "L117x2_i",
+    "L117x2_o",
+    11
+   ],
+   [
+    "L138x2_i",
+    "L138x2_o",
+    2
+   ],
+   [
+    "L33x2_i",
+    "L33x2_o",
+    1615
+   ]
+  ],
+  "NW_spt0": [
+   [
+    "L114wx4_i",
+    "L114wx4_o",
+    10
+   ],
+   [
+    "L21x4_i",
+    "L21x4_o",
+    2560
+   ],
+   [
+    "L63wx2_i",
+    "L63wx2_o",
+    210
+   ],
+   [
+    "L66x2_i",
+    "L66x2_o",
+    268
+   ],
+   [
+    "L79x2_i",
+    "L79x2_o",
+    154
+   ],
+   [
+    "L82x3_i",
+    "L82x3_o",
+    140
+   ],
+   [
+    "L8x2_i",
+    "L8x2_o",
+    3070
+   ]
+  ],
+  "NE_spt0": [
+   [
+    "L114wx4_i",
+    "L114wx4_o",
+    10
+   ],
+   [
+    "L21x4_i",
+    "L21x4_o",
+    2560
+   ],
+   [
+    "L63wx2_i",
+    "L63wx2_o",
+    210
+   ],
+   [
+    "L66x2_i",
+    "L66x2_o",
+    268
+   ],
+   [
+    "L79x2_i",
+    "L79x2_o",
+    154
+   ],
+   [
+    "L82x3_i",
+    "L82x3_o",
+    140
+   ],
+   [
+    "L8x2_i",
+    "L8x2_o",
+    3070
+   ]
+  ],
+  "NW_spu0": [
+   [
+    "L106x4_i",
+    "L106x4_o",
+    20
+   ],
+   [
+    "L114wx5_i",
+    "L114wx5_o",
+    10
+   ],
+   [
+    "L125x4_i",
+    "L125x4_o",
+    7
+   ],
+   [
+    "L21x5_i",
+    "L21x5_o",
+    2560
+   ],
+   [
+    "L41x1_i",
+    "L41x1_o",
+    1064
+   ],
+   [
+    "L50x1_i",
+    "L50x1_o",
+    618
+   ],
+   [
+    "L63wx1_i",
+    "L63wx1_o",
+    210
+   ],
+   [
+    "L66x1_i",
+    "L66x1_o",
+    268
+   ],
+   [
+    "L79x1_i",
+    "L79x1_o",
+    154
+   ],
+   [
+    "L82x4_i",
+    "L82x4_o",
+    140
+   ],
+   [
+    "L84x1_i",
+    "L84x1_o",
+    28
+   ],
+   [
+    "L88x1_i",
+    "L88x1_o",
+    68
+   ],
+   [
+    "L8x1_i",
+    "L8x1_o",
+    3070
+   ]
+  ],
+  "NE_spu0": [
+   [
+    "L106x4_i",
+    "L106x4_o",
+    2
+   ],
+   [
+    "L114wx5_i",
+    "L114wx5_o",
+    10
+   ],
+   [
+    "L125x4_i",
+    "L125x4_o",
+    7
+   ],
+   [
+    "L21x5_i",
+    "L21x5_o",
+    2560
+   ],
+   [
+    "L41x1_i",
+    "L41x1_o",
+    1064
+   ],
+   [
+    "L50x1_i",
+    "L50x1_o",
+    618
+   ],
+   [
+    "L63wx1_i",
+    "L63wx1_o",
+    210
+   ],
+   [
+    "L66x1_i",
+    "L66x1_o",
+    268
+   ],
+   [
+    "L79x1_i",
+    "L79x1_o",
+    154
+   ],
+   [
+    "L82x4_i",
+    "L82x4_o",
+    140
+   ],
+   [
+    "L84x1_i",
+    "L84x1_o",
+    28
+   ],
+   [
+    "L88x1_i",
+    "L88x1_o",
+    66
+   ],
+   [
+    "L8x1_i",
+    "L8x1_o",
+    3070
+   ]
+  ],
+  "NW_spu1": [
+   [
+    "L117x3_i",
+    "L117x3_o",
+    11
+   ],
+   [
+    "L138x3_i",
+    "L138x3_o",
+    2
+   ],
+   [
+    "L33x1_i",
+    "L33x1_o",
+    1615
+   ],
+   [
+    "L40x1_i",
+    "L40x1_o",
+    1064
+   ],
+   [
+    "L48x6_i",
+    "L48x6_o",
+    634
+   ],
+   [
+    "L49x1_i",
+    "L49x1_o",
+    618
+   ],
+   [
+    "L53x6_i",
+    "L53x6_o",
+    612
+   ],
+   [
+    "L83x1_i",
+    "L83x1_o",
+    28
+   ],
+   [
+    "L87x1_i",
+    "L87x1_o",
+    68
+   ]
+  ],
+  "NE_spu1": [
+   [
+    "L117x3_i",
+    "L117x3_o",
+    11
+   ],
+   [
+    "L138x3_i",
+    "L138x3_o",
+    2
+   ],
+   [
+    "L33x1_i",
+    "L33x1_o",
+    1615
+   ],
+   [
+    "L40x1_i",
+    "L40x1_o",
+    1064
+   ],
+   [
+    "L48x6_i",
+    "L48x6_o",
+    7
+   ],
+   [
+    "L49x1_i",
+    "L49x1_o",
+    618
+   ],
+   [
+    "L83x1_i",
+    "L83x1_o",
+    28
+   ],
+   [
+    "L87x1_i",
+    "L87x1_o",
+    66
+   ]
+  ],
+  "NE_su00": [
+   [
+    "L106x6_i",
+    "L106x6_o",
+    2
+   ],
+   [
+    "L125x2_i",
+    "L125x2_o",
+    7
+   ],
+   [
+    "L28x3_i",
+    "L28x3_o",
+    1615
+   ]
+  ],
+  "NW_su00": [
+   [
+    "L106x6_i",
+    "L106x6_o",
+    20
+   ],
+   [
+    "L125x2_i",
+    "L125x2_o",
+    7
+   ],
+   [
+    "L28x3_i",
+    "L28x3_o",
+    1615
+   ]
+  ],
+  "NW_su01": [
+   [
+    "L102x1_i",
+    "L102x1_o",
+    21
+   ],
+   [
+    "L106x5_i",
+    "L106x5_o",
+    20
+   ],
+   [
+    "L120x1_i",
+    "L120x1_o",
+    9
+   ],
+   [
+    "L125x3_i",
+    "L125x3_o",
+    7
+   ],
+   [
+    "L134x1_i",
+    "L134x1_o",
+    3
+   ],
+   [
+    "L28_detour_i",
+    "L28_detour_o",
+    1615
+   ],
+   [
+    "L29x1_i",
+    "L29x1_o",
+    1615
+   ],
+   [
+    "L55x1_i",
+    "L55x1_o",
+    514
+   ],
+   [
+    "L67x1_i",
+    "L67x1_o",
+    268
+   ],
+   [
+    "L97x1_i",
+    "L97x1_o",
+    15
+   ]
+  ],
+  "NE_su01": [
+   [
+    "L102x1_i",
+    "L102x1_o",
+    21
+   ],
+   [
+    "L106x5_i",
+    "L106x5_o",
+    2
+   ],
+   [
+    "L120x1_i",
+    "L120x1_o",
+    9
+   ],
+   [
+    "L125x3_i",
+    "L125x3_o",
+    7
+   ],
+   [
+    "L134x1_i",
+    "L134x1_o",
+    3
+   ],
+   [
+    "L28_detour_i",
+    "L28_detour_o",
+    1615
+   ],
+   [
+    "L29x1_i",
+    "L29x1_o",
+    1615
+   ],
+   [
+    "L55x1_i",
+    "L55x1_o",
+    514
+   ],
+   [
+    "L67x1_i",
+    "L67x1_o",
+    268
+   ],
+   [
+    "L97x1_i",
+    "L97x1_o",
+    15
+   ]
+  ],
+  "NW_su10": [
+   [
+    "L106x3_i",
+    "L106x3_o",
+    20
+   ],
+   [
+    "L121x1_i",
+    "L121x1_o",
+    9
+   ],
+   [
+    "L125x5_i",
+    "L125x5_o",
+    7
+   ],
+   [
+    "L68x1_i",
+    "L68x1_o",
+    268
+   ],
+   [
+    "L98x1_i",
+    "L98x1_o",
+    15
+   ]
+  ],
+  "NE_su10": [
+   [
+    "L106x3_i",
+    "L106x3_o",
+    2
+   ],
+   [
+    "L121x1_i",
+    "L121x1_o",
+    9
+   ],
+   [
+    "L125x5_i",
+    "L125x5_o",
+    7
+   ],
+   [
+    "L68x1_i",
+    "L68x1_o",
+    268
+   ],
+   [
+    "L98x1_i",
+    "L98x1_o",
+    15
+   ]
+  ],
+  "NE_su11": [
+   [
+    "L106x2_i",
+    "L106x2_o",
+    2
+   ],
+   [
+    "L125x6_i",
+    "L125x6_o",
+    7
+   ],
+   [
+    "L30x1_i",
+    "L30x1_o",
+    1615
+   ],
+   [
+    "L31x1_i",
+    "L31x1_o",
+    1615
+   ]
+  ],
+  "NW_su11": [
+   [
+    "L106x2_i",
+    "L106x2_o",
+    20
+   ],
+   [
+    "L125x6_i",
+    "L125x6_o",
+    7
+   ],
+   [
+    "L30x1_i",
+    "L30x1_o",
+    1615
+   ],
+   [
+    "L31x1_i",
+    "L31x1_o",
+    1615
+   ]
+  ],
+  "NE_su20": [
+   [
+    "L48x4_i",
+    "L48x4_o",
+    7
+   ]
+  ],
+  "NW_su20": [
+   [
+    "L48x4_i",
+    "L48x4_o",
+    634
+   ],
+   [
+    "L53x8_i",
+    "L53x8_o",
+    612
+   ]
+  ],
+  "NW_su21": [
+   [
+    "L104x1_i",
+    "L104x1_o",
+    21
+   ],
+   [
+    "L122x1_i",
+    "L122x1_o",
+    9
+   ],
+   [
+    "L136x1_i",
+    "L136x1_o",
+    3
+   ],
+   [
+    "L32x1_i",
+    "L32x1_o",
+    1615
+   ],
+   [
+    "L38x1_i",
+    "L38x1_o",
+    1169
+   ],
+   [
+    "L48x5_i",
+    "L48x5_o",
+    634
+   ],
+   [
+    "L53x7_i",
+    "L53x7_o",
+    612
+   ],
+   [
+    "L59x1_i",
+    "L59x1_o",
+    514
+   ],
+   [
+    "L69x1_i",
+    "L69x1_o",
+    268
+   ],
+   [
+    "L99x1_i",
+    "L99x1_o",
+    15
+   ]
+  ],
+  "NE_su21": [
+   [
+    "L104x1_i",
+    "L104x1_o",
+    21
+   ],
+   [
+    "L122x1_i",
+    "L122x1_o",
+    9
+   ],
+   [
+    "L136x1_i",
+    "L136x1_o",
+    3
+   ],
+   [
+    "L32x1_i",
+    "L32x1_o",
+    1615
+   ],
+   [
+    "L38x1_i",
+    "L38x1_o",
+    1169
+   ],
+   [
+    "L48x5_i",
+    "L48x5_o",
+    7
+   ],
+   [
+    "L59x1_i",
+    "L59x1_o",
+    514
+   ],
+   [
+    "L69x1_i",
+    "L69x1_o",
+    268
+   ],
+   [
+    "L99x1_i",
+    "L99x1_o",
+    15
+   ]
+  ],
+  "NW_su30": [
+   [
+    "L117x4_i",
+    "L117x4_o",
+    11
+   ],
+   [
+    "L138x4_i",
+    "L138x4_o",
+    2
+   ],
+   [
+    "L48x7_i",
+    "L48x7_o",
+    634
+   ],
+   [
+    "L53x5_i",
+    "L53x5_o",
+    612
+   ]
+  ],
+  "NE_su30": [
+   [
+    "L117x4_i",
+    "L117x4_o",
+    11
+   ],
+   [
+    "L138x4_i",
+    "L138x4_o",
+    2
+   ],
+   [
+    "L48x7_i",
+    "L48x7_o",
+    7
+   ]
+  ],
+  "NE_su31": [
+   [
+    "L117x7_i",
+    "L117x7_o",
+    11
+   ],
+   [
+    "L138x7_i",
+    "L138x7_o",
+    2
+   ],
+   [
+    "L34x1_i",
+    "L34x1_o",
+    1615
+   ],
+   [
+    "L35x1_i",
+    "L35x1_o",
+    1608
+   ],
+   [
+    "L48x10_i",
+    "L48x10_o",
+    7
+   ]
+  ],
+  "NW_su31": [
+   [
+    "L117x7_i",
+    "L117x7_o",
+    11
+   ],
+   [
+    "L138x7_i",
+    "L138x7_o",
+    2
+   ],
+   [
+    "L34x1_i",
+    "L34x1_o",
+    1615
+   ],
+   [
+    "L35x1_i",
+    "L35x1_o",
+    1608
+   ],
+   [
+    "L48x10_i",
+    "L48x10_o",
+    634
+   ],
+   [
+    "L53x2_i",
+    "L53x2_o",
+    612
+   ]
+  ]
+ },
+ "rtl_cycles_changed": 0,
+ "leaf_interfaces_changed": false,
+ "check_waiver": false,
+ "note": "FT mismatches are actual width/presence differences, not bit permutation. No unused capacity is silently instantiated or erased."
+}
