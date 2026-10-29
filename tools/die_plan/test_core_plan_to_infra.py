@@ -292,3 +292,21 @@ def test_nonuniform_single_fragments_need_explicit_core_bounds():
         C.convert(plan(),s,"tiny_core")
     p=plan();p['core']=[4.32,4.32,33.48,33.48]
     assert C.convert(p,s,"tiny_core")['outline_um']==[37.8,37.8]
+
+
+def test_outline_is_the_source_die_area_not_row_truncated_core(tmp_path):
+    """DIE-S81-30 (BF TAG16): CORE_AREA 4.32..445.848 is not a whole number of 0.054 sites; ODB rows (= plan core,
+    getCoreArea) end at 445.824, so core + mirrored margin gave 450.144 != kit DIE 450.168.  The sites dump carries the
+    floorplan die area and the converter takes it exactly."""
+    p = plan(); p["core"] = [4.32, 4.32, 445.824, 194.4]
+    s = sites(); s["die"] = (0.0, 0.0, 450.168, 198.72)
+    assert C.convert(p, s, "tiny_core")["outline_um"] == [450.168, 198.72]
+    f = tmp_path / "sites.txt"
+    f.write_text("DIE 0.0000 0.0000 450.1680 198.7200\n"
+                 "ROW0 4.32 4.32 site_w .054 site_h .27 nrows 1 nsites 8176 orient0 R0\n"
+                 "ROW 4.32 4.32 R0 8176\nMASTER BUFx8_ASAP7_75t_R .648 .27\n")
+    assert C.read_sites(f)["die"] == (0.0, 0.0, 450.168, 198.72)
+    # explicit outline still wins; a sites file without DIE keeps the plan-core rule (default unchanged)
+    assert C.convert(p, s, "tiny_core", outline=[37.8, 37.8])["outline_um"] == [37.8, 37.8]
+    s.pop("die")
+    assert C.convert(p, s, "tiny_core")["outline_um"] == [450.144, 198.72]

@@ -4,6 +4,7 @@ read_db $::env(ODB)
 set b [ord::get_db_block]; set u [[ord::get_db_tech] getDbUnitsPerMicron]
 proc um {v} { return [format %.4f [expr {$v / double($::u)}]] }
 set f [open $::env(OUT) w]
+set d [$b getDieArea]; puts $f "DIE [um [$d xMin]] [um [$d yMin]] [um [$d xMax]] [um [$d yMax]]"
 set r0 [lindex [$b getRows] 0]
 set nrows [llength [$b getRows]]
 lassign [$r0 getOrigin] rx ry
