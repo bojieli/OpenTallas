@@ -1,14 +1,51 @@
 {
  "event": "QC-PLAN-EVENT qc30-growth-b1 (DIE-QC-30, QC die owner, 2026-10-29)",
  "status": "ADOPTED_BY_DIE_OWNER_PENDING_NATIVE_IMPORT",
- "base_plan": {"path": "intel2:/srv/opentallas-scratch2/claude/codex-qc-1029/physical_event/plan_start_native_h800.json", "sha256": "0ff4c77a67b2dd0df1d51a53b3f2a1b5c7633529dfa5a3b31928ff9374135c12"},
- "growth": {"plan_path": "intel2:/srv/opentallas-scratch2/claude/codex-qc-mesh5-1029/native_growth/plan_growth_candidate.json", "plan_sha256": "bddfe45dadd71636740d278a5b32adebc2f3e4e957d38b4cdf3846054853d8b4",
-   "candidate_sha256": "a38e1ddcfb2503147e4bbe00eb0a9a0982312f7446d9fdaa517daa1545457e57",
-   "delta": "partition_types[*].tap_pin_heights_um only: 29 types / 327 type-pin pairs / 3,217 instance pins, M7 proxy heights 0.864..2.048 um, centres fixed, 0 cycles, added M7 32.53 um2",
-   "checks": "load + gen_phys tap_pins 0 err; G0/G1 identical finding set base vs growth (DIE-QC-29, CHECKED)"},
- "landing_first_pg": {"reserved_power": "intel2:/srv/opentallas-scratch2/claude/die-qc29/formA/reserved_power_new.json", "sha256": "7136b195eca4017a006025a29bbc0258bc563048fd0d853da0eea5cc1112e8ac", "contacts": "89,180/89,180, 0 failed groups"},
- "phy_clock_stubs_b1": {"plan": "results/qc_joint_access_qc30/phy_stub_plan.json", "pins": 4, "stub_len_beyond_pin_um": [0.171, 0.211, 0.211, 0.275], "pg_change": "none"},
+ "base_plan": {
+  "path": "intel2:/srv/opentallas-scratch2/claude/codex-qc-1029/physical_event/plan_start_native_h800.json",
+  "sha256": "0ff4c77a67b2dd0df1d51a53b3f2a1b5c7633529dfa5a3b31928ff9374135c12"
+ },
+ "growth": {
+  "plan_path": "intel2:/srv/opentallas-scratch2/claude/codex-qc-mesh5-1029/native_growth/plan_growth_candidate.json",
+  "plan_sha256": "bddfe45dadd71636740d278a5b32adebc2f3e4e957d38b4cdf3846054853d8b4",
+  "candidate_sha256": "a38e1ddcfb2503147e4bbe00eb0a9a0982312f7446d9fdaa517daa1545457e57",
+  "delta": "partition_types[*].tap_pin_heights_um only: 29 types / 327 type-pin pairs / 3,217 instance pins, M7 proxy heights 0.864..2.048 um, centres fixed, 0 cycles, added M7 32.53 um2",
+  "checks": "load + gen_phys tap_pins 0 err; G0/G1 identical finding set base vs growth (DIE-QC-29, CHECKED)"
+ },
+ "landing_first_pg": {
+  "reserved_power": "intel2:/srv/opentallas-scratch2/claude/die-qc29/formA/reserved_power_new.json",
+  "sha256": "7136b195eca4017a006025a29bbc0258bc563048fd0d853da0eea5cc1112e8ac",
+  "contacts": "89,180/89,180, 0 failed groups"
+ },
+ "phy_clock_stubs_b1": {
+  "plan": "results/qc_joint_access_qc30/phy_stub_plan.json",
+  "pins": 4,
+  "stub_len_beyond_pin_um": [
+   0.171,
+   0.211,
+   0.211,
+   0.275
+  ],
+  "pg_change": "none"
+ },
  "census": "7,889/7,889 native M7 clock landings at clock NDR 0.32 (7,885 in-pin VIA78 + 4 parent M7 stub+VIA78)",
  "main_plan_note": "main physical/die_plan/qwen_compute/die_plan.json (68 types, PLAN-QCv2) does not carry native tap pins; this event applies to the native h800 physical-event plan and lands on main together with the fresh native provider import (QC-001).",
- "not_done": ["fixed_tree prebuild + materialize_joint on a source ODB whose abstracts carry the grown pins", "strict bind (QC-001)", "die GRT0 incl clock (QC-002)", "clock check (QC-005)"]
+ "not_done": [
+  "fixed_tree prebuild + materialize_joint on a source ODB whose abstracts carry the grown pins",
+  "strict bind (QC-001)",
+  "die GRT0 incl clock (QC-002)",
+  "clock check (QC-005)",
+  "nk_a0_floorplan V1/V2 estimate (QC-A0-KITS-13) -> plan event amendment"
+ ],
+ "nk_a0_floorplan": {
+  "source": "QC-A0-KITS-12 claude/qc-a0-kits-12-1029@2d0edc11e2: NK ONE placement GEOM FAIL r2r 634.61 um / 124 captures >405, channel_h 1.174 / channel_v 1.845 (CHECKED by that lane); root cause = NODE occupies the 65-um east column where NL keeps ~3000 ME FFs (65x440 um)",
+  "options": {
+   "V1": "move the NODE off the east column so NK keeps the NL east FF column (same std-cell column as NL, macro pitch + tile outline unchanged)",
+   "V2": "re-pitch the rawfault macro columns to open a ~60-um FF column"
+  },
+  "choice": "V1 (DEFAULT, die owner)",
+  "why": "keeps NL/NK one floorplan (template commonality, NL anchors project 1:1), no macro pitch or outline/slot change, clock-follows-data unchanged for the ~3000 east FFs; V2 changes every macro column and risks the parent slot fit",
+  "flip_condition": "QC-A0-KITS-13 estimate shows no legal NODE site inside the NK outline with all NODE pin legs <=405 um, or V1 r2r estimate >405 -> take V2",
+  "status": "PENDING_ESTIMATE (QC-A0-KITS-13); GEOM plan review before any re-place; must be in the plan before the QC freeze"
+ }
 }
