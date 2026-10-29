@@ -55,6 +55,10 @@ proc clock_tree_synthesis {args} {
   puts [exec env PT_CORNER=$corner PT_LIBS=$::env($var) openroad -exit /work/parent_trunk_measure.tcl 2>@1]
  }
  puts [exec python3 -I /work/parent_trunk_plan.py 2>@1]
+ if {[info exists ::env(OT_PT_PLAN_ONLY)] && $::env(OT_PT_PLAN_ONLY) eq "1"} {
+  puts "PARENT_TRUNK_PLAN_ONLY: local CTS and proposed trunk saved; inspect rendered tree before inserting trunk or GRT"
+  return
+ }
  set ::env(TTCL) /work/parent_trunk_plan.tcl
  set ::env(ICG_INST) [$icg getName]
  set ::env(OT_PT_NO_IO) 1

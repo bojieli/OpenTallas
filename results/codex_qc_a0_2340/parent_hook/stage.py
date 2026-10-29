@@ -9,7 +9,7 @@ for fn in ['parent_trunk_dme.py','parent_trunk_insert.tcl','parent_trunk_stage_t
 (kd/'parent_trunk_options.json').write_text(json.dumps(opt,indent=1)+'\n')
 s=(kd/'config.mk').read_text()
 if 'parent_trunk_cts.tcl' in s:raise SystemExit('already staged; refuse overwrite')
-s+='\n# CODEX A0 parent opt-in local cluster + RTL ICG split DME clock\nexport PRE_CTS_TCL = /work/parent_trunk_cts.tcl\nexport SKIP_CTS_REPAIR_TIMING = 1\n'
+s+='\n# CODEX A0 parent opt-in local cluster + RTL ICG split DME clock\nexport PRE_CTS_TCL = /work/parent_trunk_cts.tcl\nexport SKIP_CTS_REPAIR_TIMING = 1\nexport OT_PT_PLAN_ONLY = 1\n'
 (kd/'config.mk').write_text(s)
 # Physical trials track this stage explicitly; regenerate the ordinary kit hash with the added files.
 sys.path.insert(0,str(repo/'physical/die_plan/qwen_compute/cores/legacy'));from gen_core_kit_qc import kit_hash
