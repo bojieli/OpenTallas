@@ -147,27 +147,37 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
     end
    end
   end
+  else begin:legacy_hist
+   // Legacy (STRUCT=0) histogram writes, in their own generate-time process so that with STRUCT=1 the
+   // per-bin processes above are the only drivers of hist (a runtime if(!STRUCT) inside the shared process
+   // still elaborated a second, hold-only driver per bit: 3584 double-driven bits at rtl_lint). Same clock,
+   // reset and statement order as before, so STRUCT=0 behaviour is unchanged.
+   always @(posedge clk_q[q] or negedge rst_n)begin
+    if(!rst_n)for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
+    else begin
+     if(op==3)for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
+     if((rv&&rop==4)||op==2)begin
+      for(integer b=0;b<64;b=b+1)begin
+       count=0;
+       for(integer l=0;l<W;l=l+1)begin
+        if(op==2)begin
+         if(in_line[q*LW+l*EW]&&(orderkey(in_line[q*LW+l*EW+1+:16])>>11)==16'(b))count=count+1;
+        end else if(raw[l*EW]&&((orderkey(raw[l*EW+1+:16])&prior_mask)==(threshold&prior_mask))&&
+          ((orderkey(raw[l*EW+1+:16]) >> shift)&binmask)==16'(b))count=count+1;
+       end
+       hist[q][b]<=hist[q][b]+14'(count);
+      end
+     end
+    end
+   end
+  end
   always @(posedge clk_q[q] or negedge rst_n)begin
    if(!rst_n)begin
     rv<=0;buf_q<=0;fill<=0;wp<=0;tie_rem<=0;comp_started<=0;selected[q]<=0;qfault[q]<=0;selected_v[q]<=0;last_id<=0;
-    if(!STRUCT)for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
    end else begin
     rv<=re;rop<=op;rpass<=pass;raddr<=addr;selected_v[q]<=compact;
     for(integer l=0;l<W;l=l+1)begin selected_line[q*LW+l*EW+:EW]<=raw[l*EW+:EW];selected_line[q*LW+l*EW]<=compact&&mask_choose[l];end
     if(op==1)begin buf_q<=0;fill<=0;wp<=0;tie_rem<=0;comp_started<=0;selected[q]<=0;last_id<=0;end
-    if(!STRUCT&&op==3)for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
-    if(!STRUCT&&((rv&&rop==4)||op==2))begin
-     for(integer b=0;b<64;b=b+1)begin
-      count=0;
-      for(integer l=0;l<W;l=l+1)begin
-       if(op==2)begin
-        if(in_line[q*LW+l*EW]&&(orderkey(in_line[q*LW+l*EW+1+:16])>>11)==16'(b))count=count+1;
-       end else if(raw[l*EW]&&((orderkey(raw[l*EW+1+:16])&prior_mask)==(threshold&prior_mask))&&
-         ((orderkey(raw[l*EW+1+:16]) >> shift)&binmask)==16'(b))count=count+1;
-      end
-      hist[q][b]<=hist[q][b]+14'(count);
-     end
-    end
     if(compact)begin
      comp_started<=1;tie_rem<=ties_next;selected[q]<=selected[q]+chosen_next;
      if(pack_write)begin buf_q<=packed_next>>LW;fill<=5'(fill_next-16);wp<=wp+1;end
