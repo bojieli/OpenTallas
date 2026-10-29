@@ -1,0 +1,149 @@
+{
+ "source": "codex/kv-physical-prep-1027 dd4cdbbc7 physical/die_plan/qwen_kvsys/die_plan.json",
+ "contents": {
+  "kv3_sys_SD": [
+   {
+    "inst": "serdes",
+    "module": "ot_qfd_serdes_112g_x6_phy",
+    "status": "reuse",
+    "note": "Modeled x6 academic physical abstract, exact native W/7-port ABI and synthesized hierarchy checked; analog implementation and PG closure pending",
+    "physical_inst": "u_bound.u_core.u_phy.g_native.u_macro",
+    "physical_master": "ot_qfd_serdes_112g_x6_phy_w522",
+    "origin_um": [
+     17.28,
+     54.0
+    ],
+    "outline_um": [
+     1866.24,
+     972.0
+    ],
+    "orient": "R0",
+    "lef": "results/kv_serdes_pg_event27/ot_qfd_serdes_112g_x6_phy_w522/ot_qfd_serdes_112g_x6_phy_w522.lef",
+    "lib": "results/kv_serdes_pg_event27/ot_qfd_serdes_112g_x6_phy_w522/ot_qfd_serdes_112g_x6_phy_w522_tt.lib"
+   }
+  ],
+  "kv3_sys_SD_v1": [
+   {
+    "inst": "serdes",
+    "module": "ot_qfd_serdes_112g_x6_phy",
+    "status": "reuse",
+    "note": "Modeled x6 academic physical abstract, exact native W/7-port ABI and synthesized hierarchy checked; analog implementation and PG closure pending",
+    "physical_inst": "u_bound.u_core.u_phy.g_native.u_macro",
+    "physical_master": "ot_qfd_serdes_112g_x6_phy_w521",
+    "origin_um": [
+     17.28,
+     54.0
+    ],
+    "outline_um": [
+     1866.24,
+     972.0
+    ],
+    "orient": "R0",
+    "lef": "results/kv_serdes_pg_event27/ot_qfd_serdes_112g_x6_phy_w521/ot_qfd_serdes_112g_x6_phy_w521.lef",
+    "lib": "results/kv_serdes_pg_event27/ot_qfd_serdes_112g_x6_phy_w521/ot_qfd_serdes_112g_x6_phy_w521_tt.lib"
+   }
+  ]
+ },
+ "domains": [
+  {
+   "name": "phy_sys_SW_serdes",
+   "nets": [
+    "VDDPHY_SW",
+    "VSS"
+   ],
+   "io": [
+    "io_sys_SW_serdes"
+   ],
+   "rect_um": [
+    17.28,
+    26060.4,
+    1883.52,
+    27032.4
+   ],
+   "grid": [
+    {
+     "layer": "M8",
+     "width_um": 0.48,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDDPHY_SW",
+      "VSS"
+     ]
+    },
+    {
+     "layer": "M9",
+     "width_um": 0.48,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDDPHY_SW",
+      "VSS"
+     ]
+    }
+   ],
+   "bumps": {
+    "rect_um": [
+     17.28,
+     26060.4,
+     1883.52,
+     27032.4
+    ],
+    "pitch_um": 45.0,
+    "use": "power_ground",
+    "note": "Existing 45um PHY lattice assumption,45%PGshare; retain only in-leaf legal sites in generator. Connectivity achieved, current IR diagnostic FAIL; not signoff"
+   },
+   "note": "Modeled leaf VDD/VSS M6 accessed through M7; distinct PHY supply. 4.37W/x6 assumed; core glue density0.15W/mm2 diagnostic. IR closure pending."
+  },
+  {
+   "name": "phy_sys_SE_serdes",
+   "nets": [
+    "VDDPHY_SE",
+    "VSS"
+   ],
+   "io": [
+    "io_sys_SE_serdes"
+   ],
+   "rect_um": [
+    9192.960000000001,
+    26060.4,
+    11059.2,
+    27032.4
+   ],
+   "grid": [
+    {
+     "layer": "M8",
+     "width_um": 0.48,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDDPHY_SE",
+      "VSS"
+     ]
+    },
+    {
+     "layer": "M9",
+     "width_um": 0.48,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDDPHY_SE",
+      "VSS"
+     ]
+    }
+   ],
+   "bumps": {
+    "rect_um": [
+     9192.960000000001,
+     26060.4,
+     11059.2,
+     27032.4
+    ],
+    "pitch_um": 45.0,
+    "use": "power_ground",
+    "note": "Existing 45um PHY lattice assumption,45%PGshare; retain only in-leaf legal sites in generator. Connectivity achieved, current IR diagnostic FAIL; not signoff"
+   },
+   "note": "Modeled leaf VDD/VSS M6 accessed through M7; distinct PHY supply. 4.37W/x6 assumed; core glue density0.15W/mm2 diagnostic. IR closure pending."
+  }
+ ]
+}

@@ -1,0 +1,130 @@
+{
+ "source": "KV R26 + pending event; additions to existing UCIe domain only",
+ "domains": [
+  {
+   "name": "phy_sys_SW_serdes",
+   "nets": [
+    "VDDPHY_SW",
+    "VSS"
+   ],
+   "io": [
+    "io_sys_SW_serdes"
+   ],
+   "rect_um": [
+    17.28,
+    26060.4,
+    1883.52,
+    27032.4
+   ],
+   "grid": [
+    {
+     "layer": "M8",
+     "width_um": 0.48,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDDPHY_SW",
+      "VSS"
+     ]
+    },
+    {
+     "layer": "M9",
+     "width_um": 0.48,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDDPHY_SW",
+      "VSS"
+     ]
+    }
+   ],
+   "bumps": {
+    "lattice_io_ref": "io_sys_SW_serdes",
+    "site_pitch_um": 45.0,
+    "pg_share": 0.45,
+    "effective_pg_pitch_um": 67.082,
+    "source": "existing infra_pg.pg_bumps; keep original IO-window lattice points, assign only inside leaf to VDDPHY"
+   },
+   "power_w": 4.37,
+   "leaf": {
+    "instance": "serdes",
+    "logical_module": "ot_qfd_serdes_112g_x6_phy",
+    "physical_master": "ot_qfd_serdes_112g_x6_phy_w522",
+    "parameter_W": 522,
+    "origin_type_um": [
+     17.28,
+     54.0
+    ],
+    "outline_um": [
+     1866.24,
+     972.0
+    ],
+    "pg_access_layer": "M6"
+   },
+   "status": "PENDING physical-synth master alias + macro placement/PG import; no full-IO domain relabel"
+  },
+  {
+   "name": "phy_sys_SE_serdes",
+   "nets": [
+    "VDDPHY_SE",
+    "VSS"
+   ],
+   "io": [
+    "io_sys_SE_serdes"
+   ],
+   "rect_um": [
+    9192.960000000001,
+    26060.4,
+    11059.2,
+    27032.4
+   ],
+   "grid": [
+    {
+     "layer": "M8",
+     "width_um": 0.48,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDDPHY_SE",
+      "VSS"
+     ]
+    },
+    {
+     "layer": "M9",
+     "width_um": 0.48,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDDPHY_SE",
+      "VSS"
+     ]
+    }
+   ],
+   "bumps": {
+    "lattice_io_ref": "io_sys_SE_serdes",
+    "site_pitch_um": 45.0,
+    "pg_share": 0.45,
+    "effective_pg_pitch_um": 67.082,
+    "source": "existing infra_pg.pg_bumps; keep original IO-window lattice points, assign only inside leaf to VDDPHY"
+   },
+   "power_w": 4.37,
+   "leaf": {
+    "instance": "serdes",
+    "logical_module": "ot_qfd_serdes_112g_x6_phy",
+    "physical_master": "ot_qfd_serdes_112g_x6_phy_w521",
+    "parameter_W": 521,
+    "origin_type_um": [
+     17.28,
+     54.0
+    ],
+    "outline_um": [
+     1866.24,
+     972.0
+    ],
+    "pg_access_layer": "M6"
+   },
+   "status": "PENDING physical-synth master alias + macro placement/PG import; no full-IO domain relabel"
+  }
+ ],
+ "scope": "candidate input, no source plan PG mutation before truthful leaf integration"
+}
