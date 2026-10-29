@@ -1,4 +1,4 @@
-# DIE-HBM-13 (2026-10-29 05:15-06:15 PDT)
+# DIE-HBM-13 (2026-10-29 05:15-05:47 PDT)
 
 Base plan: Codex street plan `4d53747f` = codex/hbm-plan-1029 exact-count ring (f9c82446b) + PHY tuple 103.68 (886f74f7d).
 Derived plan `c25c_d13` sha256 `1d0b75d17db0...` = `c25c_d13_delta.py STREET OUT` (reproduced byte-identical; runtime copy
