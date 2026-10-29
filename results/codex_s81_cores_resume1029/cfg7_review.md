@@ -1,0 +1,5 @@
+CFG7 review before metadata-only continuation
+
+Image viewed: results/codex_s81_cores_1028/cfg7_grt_actual.png is the retained initial diagnostic image (FAIL/NA checkpoint classifier), not the later corrected geometry receipt. Actual later corrected review11d86272f and AUTO-GEOM absolute receipt are in prior source. No physical design change in continuation: 30.24x60.48 tile, central clock, diffuse vertical logic field, no macros or walls; localized NE channel0.44 and face-density warning retained. Wide data pins span abutting faces; measured first-register reach16.4um andr2r59.29um; exact deep-output receipt114paths/0unresolved, max39.528um. VerdictPASS-COND metadata-only continuation of originalGRT, subject unchanged existing actual corrected geometry review+runtime preflight. No constraint waiver or fresh floorplan adoption.
+
+Corrected actual geometry image results/codex_s81_cores_1028/auto_geom_absolute.png now personally VIEWED: same compact field, balanced centered clock, no macro walls; correct PASS/GRT0 classification and localized channel warning retained.
