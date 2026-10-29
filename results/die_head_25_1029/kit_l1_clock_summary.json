@@ -1,0 +1,50 @@
+{
+ "leaf_um": 200.0,
+ "rep_um": 250.0,
+ "tree_form": "link_htree",
+ "spine_dme": null,
+ "region_trees": 327,
+ "buffer": "BUFx24_ASAP7_75t_R",
+ "clock_cell": "inv2",
+ "wire_r_kohm_um": 0.0043358024999999994,
+ "wire_c_ff_um": 0.10824363000000001,
+ "tap_load_ff": 3.0,
+ "nodes": 2446,
+ "leaves": 735,
+ "repeaters": 3025,
+ "taps": 735,
+ "wire_um": 540949.9,
+ "levels": 65,
+ "site_legal": {
+  "mode": "slide",
+  "slide_fallbacks": 1,
+  "cells": 5472,
+  "illegal": {},
+  "forbidden_rects": 1849,
+  "moved_nodes": 653,
+  "detoured_legs": 6,
+  "detour_added_um": 0.0
+ },
+ "region_dme_spread_plan_worst": [
+  [
+   16.7,
+   "sp0"
+  ],
+  [
+   16.7,
+   "sp1"
+  ],
+  [
+   32.6,
+   "sp4"
+  ],
+  [
+   46.1,
+   "sp5"
+  ],
+  [
+   65.5,
+   "sp3"
+  ]
+ ]
+}
