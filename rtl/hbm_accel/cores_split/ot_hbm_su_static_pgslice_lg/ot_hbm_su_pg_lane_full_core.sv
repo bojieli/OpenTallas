@@ -7,6 +7,7 @@
 `default_nettype none
 module ot_hbm_su_pg_lane_full_core #(
     parameter integer MLAT = 4,
+    parameter integer ALAT = 3,
     parameter integer WCOPY = 0
 ) (
     input wire bank_clk,
@@ -173,7 +174,7 @@ module ot_hbm_su_pg_lane_full_core #(
     wire [31:0] u_lane__ro_x;
     wire u_lane__fault;
     wire u_lane__coll;
-    ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(2),.MLAT(MLAT),.ALAT(3),.LEAF(1),.FETCH_EXTRA_EDGES(2)) u_lane (
+    ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(2),.MLAT(MLAT),.ALAT(ALAT),.LEAF(1),.FETCH_EXTRA_EDGES(2)) u_lane (
         .clk_stage(u_lane__clk_stage),
         .clk_insert(u_lane__clk_insert),
         .rst_n(u_lane__rst_n),
