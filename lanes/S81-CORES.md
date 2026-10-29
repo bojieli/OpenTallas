@@ -729,3 +729,6 @@ CODEX took over CORES-EARLY-12 continuation on codex/s81-ce12-1029. Inherited in
 
 ## CODEX notes 2026-10-29 09:05 PDT — PARKED explicit Claude reset
 Final clean/pushed codex/s81-ce12-1029@5ef5ae78e; full packet handoff/codex_s81_cores_20261029_0903.md. Six reset64 core PLACE jobs LIVE intel2 core_kits3; seven actualboundstation kits terminal RTLlintFAIL forwardedclkport comma commentedout, notfixed afterreset; VSW heldmacrochannel0.024um; BF inherited64LEC FAIL13/60889 diagnosed aliases+memory_dff, ROMLEC stillLIVE. Source optin tag4/16 exact0cycle qualified d2ba/1b43/f6d; no BFphysical/signoff claim. Queue13REQ published, noCTS/GRT untilactualreview.
+
+## CODEX notes 2026-10-29 14:04 PDT — PARKED explicit14:02 reset
+Explicit ROOTreset14:02; no newheavyjobs/sourcefixes this13:55takeover. Owncodex/s81-cores-1355-1029@0afb53fa0 frommainfb1fc79593, collectedH0actualECO TT+8.97/FF+1.75 DRC0ant0DRV0PGopen0, onlypairmeasurement14.899/7.917ps+io_parentblock; corrected12eprobeNOTSTARTED. BFLEC61663/61663EQ; ROM64stillLIVEintel1 ds81-26-rom64. ve_scentrePLACE+LEC45122EQ complete, actualGEOMnext. BFt16a/b FAILEDslice450.144vskit450.168 +windowtargets; VSWd1FAIL22.05/19.38/2detours, noPNR. rxsf25psrouteNOTSTARTED. Alljobsuntouched. Fullpacket handoff/codex_s81_cores_20261029_1402.md; noOWNER?.
