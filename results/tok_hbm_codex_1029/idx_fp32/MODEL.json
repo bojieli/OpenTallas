@@ -1,0 +1,10 @@
+{
+  "status": "OPT_IN_CANDIDATE_BEFORE_BUILD",
+  "contract": "HGI INDEX B is 32 BF16 values in FP32 words; low16 nonzero is E_RANGE",
+  "representation": "Native reader WEIGHT_FP32=1 issues four B sectors in one weight_slot and packs only after checking every low16 field",
+  "bandwidth_per_row": {"prior_weight_reads": 2, "fp32_weight_reads": 4, "query_reads": 512, "available_parallel_vm_banks": 8},
+  "cost": {"added_read_requests_per_row": 2, "added_sixrow_read_requests": 12, "added_capture_cycles": 0, "weight_row_stride_sectors": 4, "row_local_weight_seen_bits": 4},
+  "calendar": "All four weight sectors occupy distinct VM banks in the same existing weight slot. No overlap with query_slot is permitted. RT171/173 and all query emit dates are unchanged.",
+  "source_default": "WEIGHT_FP32=0 keeps packed two-sector default; no current source manifest or plan selects the candidate",
+  "gate": "Old-source packed reader lockstep versus new default and FP32-source path, independent sixrow FP4 query golden, invalid lower16/control/stride faults, current plan VM port/capture binding before adoption"
+}

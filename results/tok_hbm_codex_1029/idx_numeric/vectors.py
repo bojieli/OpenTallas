@@ -24,5 +24,6 @@ for row in range(6):
     for s in range(4):mem[base+row*512+(h*4+b)*4+s]=sum(int(w)<<(i*32) for i,w in enumerate(words[s*8:s*8+8]))
   w=0x3f00+row*32+h;gold.append((w,scales,codes))
   for base in [0x4000,0x6000]:mem[base+row*8+h//16]|=w<<((h%16)*16)
+  for base in [0x4100,0x6100]:mem[base+row*4+h//8]|=(w<<16)<<((h%8)*32)
 (out/'vm.hex').write_text(''.join(f'{v:064x}\n' for v in mem))
 (out/'gold.hex').write_text(''.join(f'{w:04x}{s:08x}{c:0128x}\n' for w,s,c in gold))
