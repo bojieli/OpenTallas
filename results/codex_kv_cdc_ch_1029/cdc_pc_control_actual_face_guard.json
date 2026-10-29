@@ -1,0 +1,42 @@
+{
+ "verdict": "FAIL",
+ "top": "qkd_hr_cdc_pc",
+ "checked": 2160,
+ "ok": 2142,
+ "fail_counts": {
+  "shared": 18
+ },
+ "fails": {
+  "shared": [
+   "u_tx__o_d[545]: net _077740_ has 53 loads besides the port chain",
+   "u_tx__o_d[544]: net _077740_ has 53 loads besides the port chain",
+   "u_tx__o_d[543]: net _077740_ has 53 loads besides the port chain",
+   "u_tx__o_d[542]: net _077740_ has 53 loads besides the port chain",
+   "u_tx__o_d[541]: net _077740_ has 53 loads besides the port chain"
+  ]
+ },
+ "dead_declared": [],
+ "netlist": "/work/run/results/asap7/hc_qkd_hr_cdc_pc__319_68x319_68/base/1_2_yosys.v",
+ "pins": "/work/pins.json",
+ "boundary_context": {
+  "manifest": "/work/boundary_guard_context.json",
+  "source_core_json": "/work/core.json",
+  "controls": [
+   "ck",
+   "u_rx__wrst_n",
+   "u_rx__rrst_n",
+   "u_tx__wrst_n",
+   "u_tx__rrst_n"
+  ]
+ },
+ "one_station_ft_slots": [],
+ "port_gate": {
+  "verdict": "PASS",
+  "io_pins": 2165,
+  "netlist_ports": 2165,
+  "io_only": 0,
+  "net_only": 0,
+  "io_only_first": [],
+  "net_only_first": []
+ }
+}

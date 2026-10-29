@@ -31,3 +31,5 @@ core_json port_decl/pin_class, exact pin table, parent hard-core binding and
 any affected adapter type together. Regenerate parent bind/portbind and
 changed core kits/clock sink census once. Keep current event23 unchanged
 until then. Proposed added cycles0; no clock/outline change priced.
+
+2026-10-29 CODEX actual control-only synthesis collected: optional control preservation on u_rx/u_tx removed all4 control violations. CORE_PREFLIGHT FAIL shared18; port gate PASS2165/2165. All remaining18 are precisely u_tx__o_d[545:528] from the documented TIELO/reserved-prefix cone. This is expected physical ABI failure and not a signable result. Source536/546 widths unchanged in this diagnostic. No tie waiver, sibling capture, extra latency or invented padding FF. Actual face_guard receipt retained beside this proposal. Original shared22 verdict untouched.
