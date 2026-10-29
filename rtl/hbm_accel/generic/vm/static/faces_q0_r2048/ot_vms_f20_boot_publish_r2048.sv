@@ -29,7 +29,9 @@ module ot_vms_f20_boot_publish_r2048 #(parameter integer MUT=0)(
  assign destination={sector[14:13],sector[2:0]};
  wire cl=packet_v && legacy_write_valid[destination];
  assign collision=cl && MUT!=3;
- wire allowed=packet_v && !collision && !index_active;
+ reg delayed_v;
+ always @(posedge clk or negedge rst_n)if(!rst_n)delayed_v<=0;else delayed_v<=packet_v;
+ wire allowed=((MUT==4)?delayed_v:packet_v) && !collision && !index_active;
  wire[16:0]mapped_sector=(MUT==1)?{sector[16],1'b0,sector[14:0]}:
                             (MUT==2)?{1'b1,sector[15:0]}:sector;
  assign native_wq={allowed,mapped_sector,payload,packet_mask};
@@ -39,7 +41,7 @@ module ot_vms_f20_boot_publish_r2048 #(parameter integer MUT=0)(
   else begin
    packet_v<=0;
    if(allowed)drain<=3'd5;else if(drain!=0)drain<=drain-1'b1;
-   if(finish && pending)fault<=1;
+   if(finish && (pending || take))fault<=1;
    if(cl || (packet_v && index_active))fault<=1;
    if(cv)begin
     if(active_q || index_active || fault)fault<=1;
