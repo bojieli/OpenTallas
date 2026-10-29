@@ -1880,3 +1880,10 @@ CODEX: 2026-10-29 09:03 PDT EXPLICITRESET Qwen/HEADschedule/QCfunctional parked.
 CODEX: 2026-10-29 09:03 PDT EXPLICITRESET FLOW-HOLD PARKED clean+pushed6be8c010c/5ed556f3d; q3FF-onlypostroute1787016intel1/E0fresh15ps2828389hub LIVEuntouched; fullpacket CODEX-LOG09:03. HEADsource-scopedbaseline successoronly,no postresetengineering.
 
 CODEX: 2026-10-29 09:04 PDT QC-A0 explicitresetPARKcdedd9af61b; nativeclockscopefix68204, NKactualV1LGEOMFAIL532reach/max657.45 +K0ENA548.53 diagnosed/noCTS; NLplace2306050liveuntouched. PROGwidefit0coreoverlap but180providerbodiesneedrehome. FullCODEX-LOG/packet.
+
+CODEX: 2026-10-29 09:05 PDT S81cores PARKED explicitreset, cleanpushed5ef5ae78e; sixcorePLACE live, station7RTLlintFAIL diagnosedcommentedportcomma, VSWmacrochannelFAIL, BF64LEC13FAIL diagnosedaliases/memorydff. Fullpacket handoff/codex_s81_cores_20261029_0903.md; nojobs killed/afterresetengineering.
+CODEX:09:04 explicitreset KVkitsPARKd1dd8a67e;currentbind4/9GENPASSrestliveunit1938817, noPNR;PHYfullnativefit0hits27umlegsPGowed;E0FF−41.70DBlost→FLOWsolefresh6be;ASTKwrongFIRMfixedDPL0/CTS+r2rPASSCOND→AP;ECTLreal12060edgeexact+mutant,q1/q2PLACEcontinue. FullCODEX-LOGpacket.
+
+CODEX: 2026-10-29 09:05 PDT HBMK13PARK on explicitClaude reset. Branch348fc9a0bclean/pushed; packet handoff/codex_hbm_k13_reset_20261029_0903.md. HNXdataECO DRT LIVEunchangedclock; RING26002LEC+freshplacePASS/currentgeomuncollected;13place+3densityvariants collectednext. Noafterresetengineering.
+
+CODEX: 2026-10-29 09:05 PDT QC-IMPORT explicit-reset PARK2448fa38357 pushed/clean, allownjobs terminal. Reset2FFactualreach403.698/0over405;185698PGcontactgeometry0unresolved;peer22365FFlowerCLKjoint0failed. MixedPGactualcoupon environmentFAIL shapely.lib beforemutation, notqualified. FullCODEX-LOGpacket.
