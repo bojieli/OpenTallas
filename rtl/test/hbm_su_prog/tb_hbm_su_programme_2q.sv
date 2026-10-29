@@ -20,6 +20,7 @@ end
 always @(posedge clk) begin
  cycle=cycle+1;
  if(start) start_cycle=cycle;
+ // Post-NBA presentation age; a downstream always_ff consumes this word one edge later.
  #0.01;
  if(rst_n) begin
   if(fault || |q_fault) $fatal(1,"2Q_FAULT cycle=%0d",cycle);
