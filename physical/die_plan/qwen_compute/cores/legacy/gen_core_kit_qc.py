@@ -1153,7 +1153,13 @@ def main():
                                         + "".join(f"pair {i_} {o_}\n" for i_, o_ in pairs))
     # typed boundary roles (signoff.py boundary_controls): the clock / reset buses only, never a data pin
     roles = {ckb: "clk", **{r: "reset" for r in rsb}}
-    (kd / "core.json").write_text(json.dumps(dict(module=mod, plan_type=ptype, boundary_role=roles), indent=1) + "\n")
+    core_meta = dict(module=mod, plan_type=ptype, boundary_role=roles)
+    if rec.get("clock_contract") is not None:
+        cc = rec["clock_contract"]
+        if not isinstance(cc, dict) or cc.get("kind") != "hard_core_latency":
+            raise SystemExit(f"{mod}: recipe clock_contract must be a typed hard_core_latency contract")
+        core_meta["clock_contract"] = cc
+    (kd / "core.json").write_text(json.dumps(core_meta, indent=1) + "\n")
     (kd / "boundary_guard_context.json").write_text(json.dumps(dict(
         schema="opentallas.core_boundary_guard_context.v1", source_core_json="core.json", clock_ports=[ckb],
         unused_clock_ports=[], reset_ports=rsb, data_pin_exemptions=[]), indent=1) + "\n")
@@ -1320,6 +1326,8 @@ def main():
               **({"timing_modes": tm} if tm else {}))
     if ms is not None:
         fz["master_plan"] = ms
+    if (rec.get("clock_contract") or {}).get("io_reference_ps") is not None:
+        fz["io_reference_ps"] = rec["clock_contract"]["io_reference_ps"]
     if seam:
         fz["seam_hold"] = dict(sender_ps=seam[0], seam_ps=seam[1], in_min_ps=seam[0] - seam[1], out_min_ps=-seam[0],
                                basis="shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold")
