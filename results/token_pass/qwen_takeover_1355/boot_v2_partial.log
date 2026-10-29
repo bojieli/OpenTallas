@@ -1,0 +1,35 @@
+BOOT_IMAGE cyc 5627 target 2 epoch 2827 digest abe7ba21416eb901 fault 0
+BOOT_IMAGE cyc 5828 target 3 epoch 2827 digest 35450525f1e7f0bb fault 0
+BOOT_IMAGE cyc 6894 target 4 epoch 2827 digest bea9d9a9eee491ec fault 0
+BOOT_IMAGE cyc 7962 target 5 epoch 2827 digest ebfc8cfcbbb1c4b8 fault 0
+BOOT_IMAGE cyc 12856 target 6 epoch 2827 digest 51484f5354505241 fault 0
+BOOT_IMAGE cyc 17751 target 7 epoch 2827 digest 51484f5354505240 fault 0
+HB cyc 20000 t 16660000000 frames_sent 3827 credits 2 images_ready 8 setup 0 boot_pr_changes 3192 die_to_host 4 host_faults 000000
+BOOT_IMAGE cyc 22646 target 8 epoch 2827 digest 51484f535450524f fault 0
+BOOT_IMAGE cyc 27541 target 9 epoch 2827 digest 51484f535450524e fault 0
+BOOT_IMAGE cyc 28028 target 11 epoch 2827 digest 63c589ac73704f85 fault 0
+DCALOBS cyc 28121 reload 0 base 1 tx 1 rx 0 data 0000000a seg2 0000000a/0000000b cal_start 0 seg 0 layer 0 btx_seen 0 brx_seen 0 f_col 0 f_run 0 f_stale 0 f_early 0 s_fault 0 fault 0
+DCALOBS cyc 28122 reload 0 base 1 tx 0 rx 1 data 0000000b seg2 0000000a/0000000b cal_start 0 seg 0 layer 0 btx_seen 1 brx_seen 0 f_col 0 f_run 0 f_stale 0 f_early 0 s_fault 0 fault 0
+BOOT_IMAGE cyc 32924 target 12 epoch 2827 digest e49fde4ffbb0e2eb fault 0
+BOOT_IMAGE cyc 33145 target 13 epoch 2827 digest 0fae355d67dd0275 fault 0
+POSTOBS cyc 33396 boot_go 0 link_rst_n 1 prog_begin 1 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+POSTOBS cyc 33397 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+DCALOBS cyc 33397 reload 1 base 0 tx 0 rx 0 data 0000000b seg2 0000000a/0000000b cal_start 0 seg 0 layer 0 btx_seen 1 brx_seen 1 f_col 0 f_run 0 f_stale 0 f_early 0 s_fault 0 fault 0
+POSTOBS cyc 33399 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 0 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+POSTOBS cyc 33465 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+BOOT_IMAGE cyc 38077 target 0 epoch 2827 digest 514bb0b28004c8e8 fault 0
+SETUP_READY cyc 38084
+KVSLICE_START cycle 38214 setup_cycle 38084 delay 130
+BOOTOBS cyc 38232 boot_go_d1_hgi_WN_7 1 host_rst_n 1 hbm_rst_n 1 die_rst_n 1 boot_go 0
+BOOTOBS cyc 38233 boot_go_d1_hgi_WN_7 0 host_rst_n 1 hbm_rst_n 1 die_rst_n 1 boot_go 0
+POSTOBS cyc 38307 boot_go 1 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+POSTOBS cyc 38308 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+POSTOBS cyc 38318 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 1 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+POSTOBS cyc 38319 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+DCALOBS cyc 38393 reload 0 base 0 tx 0 rx 0 data 0000000b seg2 0000000a/0000000b cal_start 1 seg 1 layer 63 btx_seen 1 brx_seen 1 f_col 0 f_run 0 f_stale 0 f_early 0 s_fault 0 fault 0
+FAR_CAL cyc 38114 cal_start seg 1 layer 63 (adm 0 ready 1)
+POSTOBS cyc 38406 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 1 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+FAR_FAULT cyc 38138 master 0 seq 0 codec 0 (cause 0000) kvn 0 abort 1 transport 00 layer 63
+POSTOBS cyc 38558 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 1 d2d_fault 1 dcal_fault 0 tf 80 link_up 10 token_epoch 0000 fdi_tx 0
+HB cyc 40000 t 33320000000 frames_sent 7404 credits 4 images_ready 14 setup 1 boot_pr_changes 7376 die_to_host 4 host_faults 000000
+KVSLICE_BOOT PASS frames_sent 7404/7404 images_ready 14/14 errors 0 boot_fault 0 setup_ready 1 (cyc 38084) cf_fault 0 pll_locked 1 host_faults 000000 dcal_fault 0 die_to_host_words 4 last_ready_cyc 38077 cyc 40085

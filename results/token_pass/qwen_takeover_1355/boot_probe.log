@@ -1,0 +1,834 @@
+HBM_PRELOAD phy_WS_7 words 73728
+HBM_PRELOAD phy_WS_6 words 73728
+HBM_PRELOAD phy_WS_5 words 73728
+HBM_PRELOAD phy_WS_4 words 73728
+HBM_PRELOAD phy_WS_3 words 73728
+HBM_PRELOAD phy_WS_2 words 73728
+HBM_PRELOAD phy_WS_1 words 73728
+HBM_PRELOAD phy_WN_7 words 73728
+HBM_PRELOAD phy_WN_6 words 73728
+HBM_PRELOAD phy_WN_5 words 73728
+HBM_PRELOAD phy_WN_4 words 73728
+HBM_PRELOAD phy_WN_3 words 73728
+HBM_PRELOAD phy_WN_2 words 73728
+HBM_PRELOAD phy_WN_1 words 73728
+HBM_PRELOAD phy_ES_7 words 73728
+HBM_PRELOAD phy_ES_6 words 73728
+HBM_PRELOAD phy_ES_5 words 73728
+HBM_PRELOAD phy_ES_4 words 73728
+HBM_PRELOAD phy_ES_3 words 73728
+HBM_PRELOAD phy_ES_2 words 73728
+HBM_PRELOAD phy_ES_1 words 73728
+HBM_PRELOAD phy_EN_7 words 73656
+HBM_PRELOAD phy_EN_6 words 73728
+HBM_PRELOAD phy_EN_5 words 73656
+HBM_PRELOAD phy_EN_4 words 73728
+HBM_PRELOAD phy_EN_3 words 73656
+HBM_PRELOAD phy_EN_2 words 73728
+HBM_PRELOAD phy_EN_1 words 73656
+HBM_PRELOAD phy_WS_0 words 73728
+HBM_PRELOAD phy_WN_0 words 73728
+HBM_PRELOAD phy_ES_0 words 73728
+HBM_PRELOAD phy_EN_0 words 73728
+FAR_VECL /srv/opentallas-scratch2/claude/tok-kv-2-1029/kvl/boot_probe/vecl layers 36 T 8192 mut_qswap 0 q0 bd2223f0 gold0 3a876298 q35 3f1e702c
+KVSLICE_CFG phase boot frames 7404 expect 14 mut_frame -1 top tb_kvslice.unnamedblk3
+HB cyc 0 t 0 frames_sent 0 credits 4 images_ready 0 setup 0 boot_pr_changes 0 die_to_host 0 host_faults 000000
+POSTOBS cyc 1 boot_go 0 link_rst_n 0 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 0 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 00 token_epoch 0000 fdi_tx 0
+BOOTOBS cyc 417 boot_go_d1_hgi_WN_7 0 host_rst_n 1 hbm_rst_n 0 die_rst_n 0 boot_go 0
+POSTOBS cyc 500 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 0 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 00 token_epoch 0000 fdi_tx 0
+POSTOBS cyc 571 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 01 token_epoch 0000 fdi_tx 0
+KVSLICE host board link up at core cycle 632
+BOOTOBS cyc 658 boot_go_d1_hgi_WN_7 0 host_rst_n 1 hbm_rst_n 1 die_rst_n 0 boot_go 0
+BGOBS cyc 819 d2_hub_Wo 1 hub_Eo_in 0 hroot_ft1 WS 0 WN 0 ES 0 EN 0 chain_end WS 0 WN 0 ES 0 EN 0
+BOOTOBS cyc 819 boot_go_d1_hgi_WN_7 0 host_rst_n 1 hbm_rst_n 1 die_rst_n 0 boot_go 1
+BGOBS cyc 820 d2_hub_Wo 0 hub_Eo_in 0 hroot_ft1 WS 0 WN 0 ES 0 EN 0 chain_end WS 0 WN 0 ES 0 EN 0
+BOOTOBS cyc 820 boot_go_d1_hgi_WN_7 0 host_rst_n 1 hbm_rst_n 1 die_rst_n 0 boot_go 0
+BGOBS cyc 837 d2_hub_Wo 0 hub_Eo_in 1 hroot_ft1 WS 0 WN 0 ES 0 EN 0 chain_end WS 0 WN 0 ES 0 EN 0
+BGOBS cyc 838 d2_hub_Wo 0 hub_Eo_in 0 hroot_ft1 WS 0 WN 0 ES 0 EN 0 chain_end WS 0 WN 0 ES 0 EN 0
+BGOBS cyc 851 d2_hub_Wo 0 hub_Eo_in 0 hroot_ft1 WS 1 WN 0 ES 0 EN 0 chain_end WS 0 WN 0 ES 0 EN 0
+BGOBS cyc 852 d2_hub_Wo 0 hub_Eo_in 0 hroot_ft1 WS 0 WN 0 ES 1 EN 0 chain_end WS 0 WN 0 ES 0 EN 0
+BGOBS cyc 853 d2_hub_Wo 0 hub_Eo_in 0 hroot_ft1 WS 0 WN 0 ES 0 EN 0 chain_end WS 0 WN 0 ES 0 EN 0
+BGOBS cyc 854 d2_hub_Wo 0 hub_Eo_in 0 hroot_ft1 WS 0 WN 1 ES 0 EN 0 chain_end WS 0 WN 0 ES 0 EN 0
+BGOBS cyc 855 d2_hub_Wo 0 hub_Eo_in 0 hroot_ft1 WS 0 WN 0 ES 0 EN 1 chain_end WS 0 WN 0 ES 0 EN 0
+BGOBS cyc 856 d2_hub_Wo 0 hub_Eo_in 0 hroot_ft1 WS 0 WN 0 ES 0 EN 0 chain_end WS 0 WN 0 ES 0 EN 0
+HBM_PO_FIRST phy_WS_7 pc 3 edge 874 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_ES_7 pc 3 edge 874 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WS_7 pc 2 edge 876 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_ES_7 pc 2 edge 876 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WS_7 pc 1 edge 878 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WN_7 pc 3 edge 878 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_ES_7 pc 1 edge 878 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_EN_7 pc 3 edge 878 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WS_7 pc 0 edge 880 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WN_7 pc 2 edge 880 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_ES_7 pc 0 edge 880 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_EN_7 pc 2 edge 880 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WN_7 pc 1 edge 882 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_EN_7 pc 1 edge 882 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WN_7 pc 0 edge 884 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_EN_7 pc 0 edge 884 row_v 1 op 1 col_v 0 we 0
+HBM_WR phy_WS_7 pc 3 bank 3 row 0 col 2 edge 888
+HBM_PO_FIRST phy_WS_6 pc 3 edge 888 row_v 0 op 1 col_v 0 we 0
+HBM_WR phy_ES_7 pc 3 bank 3 row 0 col 2 edge 888
+HBM_PO_FIRST phy_ES_6 pc 3 edge 888 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WS_0 pc 0 edge 888 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_WS_7 pc 2 bank 3 row 0 col 2 edge 889
+HBM_WR phy_ES_7 pc 2 bank 3 row 0 col 2 edge 889
+HBM_PO_FIRST phy_WS_6 pc 2 edge 890 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_ES_6 pc 2 edge 890 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WS_0 pc 1 edge 891 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_WS_7 pc 1 bank 3 row 0 col 2 edge 892
+HBM_PO_FIRST phy_WS_6 pc 1 edge 892 row_v 0 op 1 col_v 0 we 0
+HBM_WR phy_WN_7 pc 3 bank 3 row 0 col 2 edge 892
+HBM_PO_FIRST phy_WN_6 pc 3 edge 892 row_v 0 op 1 col_v 0 we 0
+HBM_WR phy_ES_7 pc 1 bank 3 row 0 col 2 edge 892
+HBM_PO_FIRST phy_ES_6 pc 1 edge 892 row_v 0 op 1 col_v 0 we 0
+HBM_WR phy_EN_7 pc 3 bank 3 row 0 col 2 edge 892
+HBM_PO_FIRST phy_EN_6 pc 3 edge 892 row_v 0 op 1 col_v 0 we 0
+HBM_WR phy_WS_7 pc 0 bank 3 row 0 col 2 edge 893
+HBM_PO_FIRST phy_WS_1 pc 0 edge 893 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_WN_7 pc 2 bank 3 row 0 col 2 edge 893
+HBM_WR phy_ES_7 pc 0 bank 3 row 0 col 2 edge 893
+HBM_WR phy_EN_7 pc 2 bank 3 row 0 col 2 edge 893
+HBM_PO_FIRST phy_WN_0 pc 0 edge 893 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WS_6 pc 0 edge 894 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WN_6 pc 2 edge 894 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_ES_6 pc 0 edge 894 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_EN_6 pc 2 edge 894 row_v 1 op 1 col_v 0 we 0
+HBM_WR phy_WN_7 pc 1 bank 3 row 0 col 2 edge 896
+HBM_PO_FIRST phy_WN_6 pc 1 edge 896 row_v 0 op 1 col_v 0 we 0
+HBM_WR phy_EN_7 pc 1 bank 3 row 0 col 2 edge 896
+HBM_PO_FIRST phy_EN_6 pc 1 edge 896 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WS_0 pc 2 edge 896 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WN_0 pc 1 edge 896 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_WN_7 pc 0 bank 3 row 0 col 2 edge 897
+HBM_WR phy_EN_7 pc 0 bank 3 row 0 col 2 edge 897
+HBM_PO_FIRST phy_WS_1 pc 1 edge 898 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WN_6 pc 0 edge 898 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WN_1 pc 0 edge 898 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_EN_6 pc 0 edge 898 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WS_0 pc 3 edge 899 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WS_2 pc 0 edge 901 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WS_1 pc 2 edge 901 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WN_0 pc 2 edge 901 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_WS_6 pc 3 bank 3 row 0 col 2 edge 902
+HBM_PO_FIRST phy_WS_5 pc 3 edge 902 row_v 1 op 1 col_v 0 we 0
+HBM_WR phy_ES_6 pc 3 bank 3 row 0 col 2 edge 902
+HBM_PO_FIRST phy_ES_5 pc 3 edge 902 row_v 1 op 1 col_v 0 we 0
+HBM_WR phy_WS_6 pc 2 bank 3 row 0 col 2 edge 903
+HBM_PO_FIRST phy_WN_1 pc 1 edge 903 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_ES_6 pc 2 bank 3 row 0 col 2 edge 903
+HBM_PO_FIRST phy_WS_5 pc 2 edge 904 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WS_2 pc 1 edge 904 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WS_1 pc 3 edge 904 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_ES_5 pc 2 edge 904 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WN_0 pc 3 edge 904 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WN_2 pc 0 edge 905 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_WS_6 pc 1 bank 3 row 0 col 2 edge 906
+HBM_PO_FIRST phy_WS_5 pc 1 edge 906 row_v 1 op 1 col_v 0 we 0
+HBM_WR phy_WN_6 pc 3 bank 3 row 0 col 2 edge 906
+HBM_PO_FIRST phy_WN_5 pc 3 edge 906 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WN_1 pc 2 edge 906 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_ES_6 pc 1 bank 3 row 0 col 2 edge 906
+HBM_PO_FIRST phy_ES_5 pc 1 edge 906 row_v 1 op 1 col_v 0 we 0
+HBM_WR phy_EN_6 pc 3 bank 3 row 0 col 2 edge 906
+HBM_PO_FIRST phy_EN_5 pc 3 edge 906 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_ES_0 pc 0 edge 906 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_WS_6 pc 0 bank 3 row 0 col 2 edge 907
+HBM_PO_FIRST phy_WS_3 pc 0 edge 907 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WS_2 pc 2 edge 907 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_WN_6 pc 2 bank 3 row 0 col 2 edge 907
+HBM_WR phy_ES_6 pc 0 bank 3 row 0 col 2 edge 907
+HBM_WR phy_EN_6 pc 2 bank 3 row 0 col 2 edge 907
+HBM_PO_FIRST phy_WS_5 pc 0 edge 908 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WN_5 pc 2 edge 908 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WN_2 pc 1 edge 908 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_ES_5 pc 0 edge 908 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_EN_5 pc 2 edge 908 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WN_1 pc 3 edge 909 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_ES_0 pc 1 edge 909 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WS_3 pc 1 edge 910 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_WN_6 pc 1 bank 3 row 0 col 2 edge 910
+HBM_PO_FIRST phy_WN_5 pc 1 edge 910 row_v 1 op 1 col_v 0 we 0
+HBM_WR phy_EN_6 pc 1 bank 3 row 0 col 2 edge 910
+HBM_PO_FIRST phy_EN_5 pc 1 edge 910 row_v 1 op 1 col_v 0 we 0
+HBM_WR phy_WN_6 pc 0 bank 3 row 0 col 2 edge 911
+HBM_PO_FIRST phy_WN_3 pc 0 edge 911 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WN_2 pc 2 edge 911 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_ES_1 pc 0 edge 911 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_EN_6 pc 0 bank 3 row 0 col 2 edge 911
+HBM_PO_FIRST phy_EN_0 pc 0 edge 911 row_v 1 op 6 col_v 0 we 0
+HBM_RD phy_WS_7 pc 3 bank 3 row 0 col 2 edge 912
+HBM_PO_FIRST phy_WS_2 pc 3 edge 912 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WN_5 pc 0 edge 912 row_v 0 op 1 col_v 0 we 0
+HBM_RD phy_ES_7 pc 3 bank 3 row 0 col 2 edge 912
+HBM_PO_FIRST phy_EN_5 pc 0 edge 912 row_v 0 op 1 col_v 0 we 0
+HBM_RD phy_WS_7 pc 2 bank 3 row 0 col 2 edge 913
+HBM_RD phy_ES_7 pc 2 bank 3 row 0 col 2 edge 913
+HBM_PO_FIRST phy_WN_3 pc 1 edge 914 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_ES_4 pc 3 edge 914 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_ES_0 pc 2 edge 914 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_EN_0 pc 1 edge 914 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_WS_5 pc 3 bank 3 row 0 col 2 edge 915
+HBM_PO_FIRST phy_WS_4 pc 0 edge 915 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WS_4 pc 3 edge 915 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WS_3 pc 2 edge 915 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_ES_5 pc 3 bank 3 row 0 col 2 edge 915
+HBM_RD phy_WS_7 pc 1 bank 3 row 0 col 2 edge 916
+HBM_RD phy_WN_7 pc 3 bank 3 row 0 col 2 edge 916
+HBM_PO_FIRST phy_WN_2 pc 3 edge 916 row_v 1 op 6 col_v 0 we 0
+HBM_RD phy_ES_7 pc 1 bank 3 row 0 col 2 edge 916
+HBM_PO_FIRST phy_ES_4 pc 2 edge 916 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_ES_1 pc 1 edge 916 row_v 1 op 6 col_v 0 we 0
+HBM_RD phy_EN_7 pc 3 bank 3 row 0 col 2 edge 916
+HBM_PO_FIRST phy_EN_1 pc 0 edge 916 row_v 1 op 6 col_v 0 we 0
+HBM_RD phy_WS_7 pc 0 bank 3 row 0 col 2 edge 917
+HBM_RD phy_WN_7 pc 2 bank 3 row 0 col 2 edge 917
+HBM_RD phy_ES_7 pc 0 bank 3 row 0 col 2 edge 917
+HBM_RD phy_EN_7 pc 2 bank 3 row 0 col 2 edge 917
+HBM_PO_FIRST phy_ES_0 pc 3 edge 917 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_WS_5 pc 2 bank 3 row 0 col 2 edge 918
+HBM_PO_FIRST phy_WS_4 pc 1 edge 918 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WS_3 pc 3 edge 918 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_ES_5 pc 2 bank 3 row 0 col 2 edge 918
+HBM_PO_FIRST phy_ES_4 pc 1 edge 918 row_v 0 op 1 col_v 0 we 0
+HBM_WR phy_WS_5 pc 1 bank 3 row 0 col 2 edge 919
+HBM_WR phy_WN_5 pc 3 bank 3 row 0 col 2 edge 919
+HBM_PO_FIRST phy_WN_4 pc 0 edge 919 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WN_4 pc 3 edge 919 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_WN_3 pc 2 edge 919 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_ES_5 pc 1 bank 3 row 0 col 2 edge 919
+HBM_PO_FIRST phy_ES_2 pc 0 edge 919 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_ES_1 pc 2 edge 919 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_EN_5 pc 3 bank 3 row 0 col 2 edge 919
+HBM_PO_FIRST phy_EN_4 pc 3 edge 919 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_EN_0 pc 2 edge 919 row_v 1 op 6 col_v 0 we 0
+HBM_RD phy_WN_7 pc 1 bank 3 row 0 col 2 edge 920
+HBM_PO_FIRST phy_ES_4 pc 0 edge 920 row_v 1 op 1 col_v 0 we 0
+HBM_RD phy_EN_7 pc 1 bank 3 row 0 col 2 edge 920
+HBM_PO_FIRST phy_WS_4 pc 2 edge 921 row_v 1 op 6 col_v 0 we 0
+HBM_RD phy_WN_7 pc 0 bank 3 row 0 col 2 edge 921
+HBM_RD phy_EN_7 pc 0 bank 3 row 0 col 2 edge 921
+HBM_PO_FIRST phy_EN_4 pc 2 edge 921 row_v 1 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_EN_1 pc 1 edge 921 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_WS_5 pc 0 bank 3 row 0 col 2 edge 922
+HBM_WR phy_WN_5 pc 2 bank 3 row 0 col 2 edge 922
+HBM_PO_FIRST phy_WN_4 pc 1 edge 922 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WN_3 pc 3 edge 922 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_ES_5 pc 0 bank 3 row 0 col 2 edge 922
+HBM_PO_FIRST phy_ES_2 pc 1 edge 922 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_ES_1 pc 3 edge 922 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_EN_5 pc 2 bank 3 row 0 col 2 edge 922
+HBM_PO_FIRST phy_EN_0 pc 3 edge 922 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_WN_5 pc 1 bank 3 row 0 col 2 edge 923
+HBM_WR phy_EN_5 pc 1 bank 3 row 0 col 2 edge 923
+HBM_PO_FIRST phy_EN_4 pc 1 edge 923 row_v 0 op 1 col_v 0 we 0
+HBM_PO_FIRST phy_EN_2 pc 0 edge 923 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_EN_1 pc 2 edge 924 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_WN_4 pc 2 edge 925 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_ES_3 pc 0 edge 925 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_ES_2 pc 2 edge 925 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_EN_4 pc 0 edge 925 row_v 1 op 1 col_v 0 we 0
+HBM_RD phy_WS_6 pc 3 bank 3 row 0 col 2 edge 926
+HBM_WR phy_WN_5 pc 0 bank 3 row 0 col 2 edge 926
+HBM_RD phy_ES_6 pc 3 bank 3 row 0 col 2 edge 926
+HBM_WR phy_EN_5 pc 0 bank 3 row 0 col 2 edge 926
+HBM_PO_FIRST phy_EN_2 pc 1 edge 926 row_v 1 op 6 col_v 0 we 0
+HBM_RD phy_WS_6 pc 2 bank 3 row 0 col 2 edge 927
+HBM_RD phy_ES_6 pc 2 bank 3 row 0 col 2 edge 927
+HBM_PO_FIRST phy_EN_1 pc 3 edge 927 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_ES_4 pc 3 bank 3 row 0 col 2 edge 928
+HBM_PO_FIRST phy_ES_3 pc 1 edge 928 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_WS_4 pc 3 bank 3 row 0 col 2 edge 929
+HBM_WR phy_ES_4 pc 2 bank 3 row 0 col 2 edge 929
+HBM_PO_FIRST phy_EN_3 pc 0 edge 929 row_v 1 op 6 col_v 0 we 0
+HBM_PO_FIRST phy_EN_2 pc 2 edge 929 row_v 1 op 6 col_v 0 we 0
+HBM_RD phy_WS_6 pc 1 bank 3 row 0 col 2 edge 930
+HBM_RD phy_WN_6 pc 3 bank 3 row 0 col 2 edge 930
+HBM_RD phy_ES_6 pc 1 bank 3 row 0 col 2 edge 930
+HBM_PO_FIRST phy_ES_2 pc 3 edge 930 row_v 1 op 6 col_v 0 we 0
+HBM_RD phy_EN_6 pc 3 bank 3 row 0 col 2 edge 930
+HBM_RD phy_WS_6 pc 0 bank 3 row 0 col 2 edge 931
+HBM_RD phy_WN_6 pc 2 bank 3 row 0 col 2 edge 931
+HBM_RD phy_ES_6 pc 0 bank 3 row 0 col 2 edge 931
+HBM_RD phy_EN_6 pc 2 bank 3 row 0 col 2 edge 931
+HBM_WR phy_ES_4 pc 1 bank 3 row 0 col 2 edge 932
+HBM_PO_FIRST phy_EN_3 pc 1 edge 932 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_WN_4 pc 3 bank 3 row 0 col 2 edge 933
+HBM_WR phy_ES_4 pc 0 bank 3 row 0 col 2 edge 933
+HBM_PO_FIRST phy_ES_3 pc 2 edge 933 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_EN_4 pc 3 bank 3 row 0 col 2 edge 933
+HBM_RD phy_WN_6 pc 1 bank 3 row 0 col 2 edge 934
+HBM_RD phy_EN_6 pc 1 bank 3 row 0 col 2 edge 934
+HBM_WR phy_EN_4 pc 2 bank 3 row 0 col 2 edge 934
+HBM_PO_FIRST phy_EN_2 pc 3 edge 934 row_v 1 op 6 col_v 0 we 0
+HBM_RD phy_WN_6 pc 0 bank 3 row 0 col 2 edge 935
+HBM_RD phy_EN_6 pc 0 bank 3 row 0 col 2 edge 935
+HBM_PO_FIRST phy_ES_3 pc 3 edge 936 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_EN_4 pc 1 bank 3 row 0 col 2 edge 937
+HBM_PO_FIRST phy_EN_3 pc 2 edge 937 row_v 1 op 6 col_v 0 we 0
+HBM_WR phy_EN_4 pc 0 bank 3 row 0 col 2 edge 938
+HBM_RD phy_WS_5 pc 3 bank 3 row 0 col 2 edge 939
+HBM_RD phy_ES_5 pc 3 bank 3 row 0 col 2 edge 939
+HBM_WR phy_WS_4 pc 0 bank 3 row 0 col 2 edge 940
+HBM_PO_FIRST phy_EN_3 pc 3 edge 940 row_v 1 op 6 col_v 0 we 0
+HBM_RD phy_WS_5 pc 2 bank 3 row 0 col 2 edge 942
+HBM_RD phy_ES_5 pc 2 bank 3 row 0 col 2 edge 942
+BGOBS cyc 943 d2_hub_Wo 0 hub_Eo_in 0 hroot_ft1 WS 0 WN 0 ES 0 EN 0 chain_end WS 1 WN 0 ES 1 EN 0
+HBM_RD phy_WS_5 pc 1 bank 3 row 0 col 2 edge 943
+HBM_WR phy_WS_4 pc 1 bank 3 row 0 col 2 edge 943
+HBM_WR phy_WS_3 pc 3 bank 3 row 0 col 2 edge 943
+HBM_RD phy_WN_5 pc 3 bank 3 row 0 col 2 edge 943
+HBM_RD phy_ES_5 pc 1 bank 3 row 0 col 2 edge 943
+HBM_RD phy_EN_5 pc 3 bank 3 row 0 col 2 edge 943
+BGOBS cyc 944 d2_hub_Wo 0 hub_Eo_in 0 hroot_ft1 WS 0 WN 0 ES 0 EN 0 chain_end WS 0 WN 0 ES 0 EN 0
+HBM_WR phy_WS_3 pc 2 bank 3 row 0 col 2 edge 944
+HBM_WR phy_WN_4 pc 0 bank 3 row 0 col 2 edge 944
+HBM_WR phy_WS_3 pc 1 bank 3 row 0 col 2 edge 945
+HBM_RD phy_WS_5 pc 0 bank 3 row 0 col 2 edge 946
+HBM_WR phy_WS_4 pc 2 bank 3 row 0 col 2 edge 946
+HBM_RD phy_WN_5 pc 2 bank 3 row 0 col 2 edge 946
+HBM_RD phy_ES_5 pc 0 bank 3 row 0 col 2 edge 946
+HBM_RD phy_EN_5 pc 2 bank 3 row 0 col 2 edge 946
+HBM_RD phy_WN_5 pc 1 bank 3 row 0 col 2 edge 947
+HBM_WR phy_WN_4 pc 1 bank 3 row 0 col 2 edge 947
+HBM_WR phy_WN_3 pc 3 bank 3 row 0 col 2 edge 947
+HBM_RD phy_EN_5 pc 1 bank 3 row 0 col 2 edge 947
+BGOBS cyc 948 d2_hub_Wo 0 hub_Eo_in 0 hroot_ft1 WS 0 WN 0 ES 0 EN 0 chain_end WS 0 WN 1 ES 0 EN 1
+HBM_WR phy_WS_3 pc 0 bank 3 row 0 col 2 edge 948
+HBM_WR phy_WN_3 pc 2 bank 3 row 0 col 2 edge 948
+BGOBS cyc 949 d2_hub_Wo 0 hub_Eo_in 0 hroot_ft1 WS 0 WN 0 ES 0 EN 0 chain_end WS 0 WN 0 ES 0 EN 0
+HBM_WR phy_WN_3 pc 1 bank 3 row 0 col 2 edge 949
+HBM_RD phy_WN_5 pc 0 bank 3 row 0 col 2 edge 950
+HBM_WR phy_WN_4 pc 2 bank 3 row 0 col 2 edge 950
+HBM_WR phy_ES_3 pc 0 bank 3 row 0 col 2 edge 950
+HBM_RD phy_EN_5 pc 0 bank 3 row 0 col 2 edge 950
+HBM_WR phy_WN_3 pc 0 bank 3 row 0 col 2 edge 952
+HBM_RD phy_ES_4 pc 3 bank 3 row 0 col 2 edge 952
+HBM_RD phy_WS_4 pc 3 bank 3 row 0 col 2 edge 953
+HBM_RD phy_ES_4 pc 2 bank 3 row 0 col 2 edge 953
+HBM_WR phy_ES_3 pc 1 bank 3 row 0 col 2 edge 953
+HBM_WR phy_EN_3 pc 0 bank 3 row 0 col 2 edge 954
+HBM_WR phy_WS_2 pc 3 bank 3 row 0 col 2 edge 955
+HBM_WR phy_ES_2 pc 3 bank 3 row 0 col 2 edge 955
+HBM_WR phy_WS_2 pc 2 bank 3 row 0 col 2 edge 956
+HBM_RD phy_ES_4 pc 1 bank 3 row 0 col 2 edge 956
+HBM_WR phy_ES_2 pc 2 bank 3 row 0 col 2 edge 956
+HBM_RD phy_WN_4 pc 3 bank 3 row 0 col 2 edge 957
+HBM_RD phy_ES_4 pc 0 bank 3 row 0 col 2 edge 957
+HBM_RD phy_EN_4 pc 3 bank 3 row 0 col 2 edge 957
+HBM_WR phy_EN_3 pc 1 bank 3 row 0 col 2 edge 957
+HBM_WR phy_ES_3 pc 2 bank 3 row 0 col 2 edge 958
+HBM_RD phy_EN_4 pc 2 bank 3 row 0 col 2 edge 958
+HBM_WR phy_WS_2 pc 1 bank 3 row 0 col 2 edge 959
+HBM_WR phy_WN_2 pc 3 bank 3 row 0 col 2 edge 959
+HBM_WR phy_ES_2 pc 1 bank 3 row 0 col 2 edge 959
+HBM_WR phy_EN_2 pc 3 bank 3 row 0 col 2 edge 959
+HBM_WR phy_WS_2 pc 0 bank 3 row 0 col 2 edge 960
+HBM_WR phy_WN_2 pc 2 bank 3 row 0 col 2 edge 960
+HBM_WR phy_ES_2 pc 0 bank 3 row 0 col 2 edge 960
+HBM_WR phy_EN_2 pc 2 bank 3 row 0 col 2 edge 960
+HBM_WR phy_ES_3 pc 3 bank 3 row 0 col 2 edge 961
+HBM_RD phy_EN_4 pc 1 bank 3 row 0 col 2 edge 961
+HBM_RD phy_EN_4 pc 0 bank 3 row 0 col 2 edge 962
+HBM_WR phy_EN_3 pc 2 bank 3 row 0 col 2 edge 962
+HBM_WR phy_WN_2 pc 1 bank 3 row 0 col 2 edge 963
+HBM_WR phy_EN_2 pc 1 bank 3 row 0 col 2 edge 963
+HBM_RD phy_WS_4 pc 0 bank 3 row 0 col 2 edge 964
+HBM_WR phy_WN_2 pc 0 bank 3 row 0 col 2 edge 964
+HBM_WR phy_EN_2 pc 0 bank 3 row 0 col 2 edge 964
+HBM_WR phy_EN_3 pc 3 bank 3 row 0 col 2 edge 965
+HBM_RD phy_WS_4 pc 1 bank 3 row 0 col 2 edge 967
+HBM_RD phy_WS_3 pc 3 bank 3 row 0 col 2 edge 967
+HBM_WR phy_WS_1 pc 3 bank 3 row 0 col 2 edge 967
+HBM_WR phy_ES_1 pc 3 bank 3 row 0 col 2 edge 967
+HBM_RD phy_WS_3 pc 2 bank 3 row 0 col 2 edge 968
+HBM_RD phy_WN_4 pc 0 bank 3 row 0 col 2 edge 968
+HBM_RD phy_WS_3 pc 1 bank 3 row 0 col 2 edge 969
+HBM_RD phy_WS_4 pc 2 bank 3 row 0 col 2 edge 970
+HBM_WR phy_WS_1 pc 2 bank 3 row 0 col 2 edge 970
+HBM_WR phy_ES_1 pc 2 bank 3 row 0 col 2 edge 970
+HBM_WR phy_WS_1 pc 1 bank 3 row 0 col 2 edge 971
+HBM_RD phy_WN_4 pc 1 bank 3 row 0 col 2 edge 971
+HBM_RD phy_WN_3 pc 3 bank 3 row 0 col 2 edge 971
+HBM_WR phy_ES_1 pc 1 bank 3 row 0 col 2 edge 971
+HBM_RD phy_WS_3 pc 0 bank 3 row 0 col 2 edge 972
+HBM_RD phy_WN_3 pc 2 bank 3 row 0 col 2 edge 972
+HBM_WR phy_WN_1 pc 3 bank 3 row 0 col 2 edge 972
+HBM_WR phy_EN_1 pc 3 bank 3 row 0 col 2 edge 972
+HBM_RD phy_WN_3 pc 1 bank 3 row 0 col 2 edge 973
+HBM_WR phy_WS_1 pc 0 bank 3 row 0 col 2 edge 974
+HBM_RD phy_WN_4 pc 2 bank 3 row 0 col 2 edge 974
+HBM_RD phy_ES_3 pc 0 bank 3 row 0 col 2 edge 974
+HBM_WR phy_ES_1 pc 0 bank 3 row 0 col 2 edge 974
+HBM_WR phy_WN_1 pc 2 bank 3 row 0 col 2 edge 975
+HBM_WR phy_EN_1 pc 2 bank 3 row 0 col 2 edge 975
+HBM_RD phy_WN_3 pc 0 bank 3 row 0 col 2 edge 976
+HBM_WR phy_WN_1 pc 1 bank 3 row 0 col 2 edge 976
+HBM_WR phy_EN_1 pc 1 bank 3 row 0 col 2 edge 976
+HBM_RD phy_ES_3 pc 1 bank 3 row 0 col 2 edge 977
+HBM_RD phy_EN_3 pc 0 bank 3 row 0 col 2 edge 978
+HBM_RD phy_WS_2 pc 3 bank 3 row 0 col 2 edge 979
+HBM_WR phy_WN_1 pc 0 bank 3 row 0 col 2 edge 979
+HBM_RD phy_ES_2 pc 3 bank 3 row 0 col 2 edge 979
+HBM_WR phy_EN_1 pc 0 bank 3 row 0 col 2 edge 979
+HBM_RD phy_WS_2 pc 2 bank 3 row 0 col 2 edge 980
+HBM_RD phy_ES_2 pc 2 bank 3 row 0 col 2 edge 980
+HBM_RD phy_EN_3 pc 1 bank 3 row 0 col 2 edge 981
+HBM_WR phy_WS_7 pc 3 bank 3 row 0 col 2 edge 982
+HBM_RD phy_ES_3 pc 2 bank 3 row 0 col 2 edge 982
+HBM_WR phy_WS_0 pc 3 bank 3 row 0 col 2 edge 982
+HBM_WR phy_ES_0 pc 3 bank 3 row 0 col 2 edge 982
+HBM_WR phy_WS_7 pc 2 bank 3 row 0 col 2 edge 983
+HBM_RD phy_WS_2 pc 1 bank 3 row 0 col 2 edge 983
+HBM_RD phy_WN_2 pc 3 bank 3 row 0 col 2 edge 983
+HBM_WR phy_ES_7 pc 2 bank 3 row 0 col 2 edge 983
+HBM_RD phy_ES_2 pc 1 bank 3 row 0 col 2 edge 983
+HBM_RD phy_EN_2 pc 3 bank 3 row 0 col 2 edge 983
+HBM_WR phy_WS_0 pc 2 bank 3 row 0 col 2 edge 983
+HBM_WR phy_ES_0 pc 2 bank 3 row 0 col 2 edge 983
+HBM_RD phy_WS_2 pc 0 bank 3 row 0 col 2 edge 984
+HBM_RD phy_WN_2 pc 2 bank 3 row 0 col 2 edge 984
+HBM_WR phy_ES_7 pc 3 bank 3 row 0 col 2 edge 984
+HBM_RD phy_ES_2 pc 0 bank 3 row 0 col 2 edge 984
+HBM_RD phy_EN_2 pc 2 bank 3 row 0 col 2 edge 984
+HBM_RD phy_ES_3 pc 3 bank 3 row 0 col 2 edge 985
+HBM_WR phy_WS_7 pc 1 bank 3 row 0 col 2 edge 986
+HBM_WR phy_WN_7 pc 3 bank 3 row 0 col 2 edge 986
+HBM_WR phy_ES_7 pc 1 bank 3 row 0 col 2 edge 986
+HBM_RD phy_EN_3 pc 2 bank 3 row 0 col 2 edge 986
+HBM_WR phy_WS_0 pc 1 bank 3 row 0 col 2 edge 986
+HBM_WR phy_ES_0 pc 1 bank 3 row 0 col 2 edge 986
+HBM_WR phy_WS_7 pc 0 bank 3 row 0 col 2 edge 987
+HBM_WR phy_WN_7 pc 2 bank 3 row 0 col 2 edge 987
+HBM_RD phy_WN_2 pc 1 bank 3 row 0 col 2 edge 987
+HBM_WR phy_ES_7 pc 0 bank 3 row 0 col 2 edge 987
+HBM_WR phy_EN_7 pc 2 bank 3 row 0 col 2 edge 987
+HBM_RD phy_EN_2 pc 1 bank 3 row 0 col 2 edge 987
+HBM_WR phy_WS_0 pc 0 bank 3 row 0 col 2 edge 987
+HBM_WR phy_WN_0 pc 3 bank 3 row 0 col 2 edge 987
+HBM_WR phy_ES_0 pc 0 bank 3 row 0 col 2 edge 987
+HBM_WR phy_EN_0 pc 3 bank 3 row 0 col 2 edge 987
+HBM_RD phy_WN_2 pc 0 bank 3 row 0 col 2 edge 988
+HBM_WR phy_EN_7 pc 3 bank 3 row 0 col 2 edge 988
+HBM_RD phy_EN_2 pc 0 bank 3 row 0 col 2 edge 988
+HBM_WR phy_WN_0 pc 2 bank 3 row 0 col 2 edge 988
+HBM_WR phy_EN_0 pc 2 bank 3 row 0 col 2 edge 988
+HBM_RD phy_EN_3 pc 3 bank 3 row 0 col 2 edge 989
+HBM_WR phy_WN_7 pc 1 bank 3 row 0 col 2 edge 990
+HBM_WR phy_EN_7 pc 1 bank 3 row 0 col 2 edge 990
+HBM_RD phy_WS_1 pc 3 bank 3 row 0 col 2 edge 991
+HBM_WR phy_WN_7 pc 0 bank 3 row 0 col 2 edge 991
+HBM_RD phy_ES_1 pc 3 bank 3 row 0 col 2 edge 991
+HBM_WR phy_EN_7 pc 0 bank 3 row 0 col 2 edge 991
+HBM_WR phy_WN_0 pc 1 bank 3 row 0 col 2 edge 991
+HBM_WR phy_EN_0 pc 1 bank 3 row 0 col 2 edge 991
+HBM_WR phy_WN_0 pc 0 bank 3 row 0 col 2 edge 992
+HBM_WR phy_EN_0 pc 0 bank 3 row 0 col 2 edge 992
+HBM_RD phy_WS_1 pc 2 bank 3 row 0 col 2 edge 994
+HBM_RD phy_ES_1 pc 2 bank 3 row 0 col 2 edge 994
+HBM_RD phy_WS_1 pc 1 bank 3 row 0 col 2 edge 995
+HBM_RD phy_ES_1 pc 1 bank 3 row 0 col 2 edge 995
+HBM_WR phy_WS_6 pc 3 bank 3 row 0 col 2 edge 996
+HBM_RD phy_WN_1 pc 3 bank 3 row 0 col 2 edge 996
+HBM_WR phy_ES_6 pc 3 bank 3 row 0 col 2 edge 996
+HBM_RD phy_EN_1 pc 3 bank 3 row 0 col 2 edge 996
+HBM_WR phy_WS_6 pc 2 bank 3 row 0 col 2 edge 997
+HBM_WR phy_ES_6 pc 2 bank 3 row 0 col 2 edge 997
+HBM_RD phy_WS_1 pc 0 bank 3 row 0 col 2 edge 998
+HBM_RD phy_ES_1 pc 0 bank 3 row 0 col 2 edge 998
+HBM_RD phy_WN_1 pc 2 bank 3 row 0 col 2 edge 999
+HBM_RD phy_EN_1 pc 2 bank 3 row 0 col 2 edge 999
+HBM_WR phy_WS_6 pc 1 bank 3 row 0 col 2 edge 1000
+HBM_WR phy_WN_6 pc 3 bank 3 row 0 col 2 edge 1000
+HBM_RD phy_WN_1 pc 1 bank 3 row 0 col 2 edge 1000
+HBM_WR phy_ES_6 pc 1 bank 3 row 0 col 2 edge 1000
+HBM_WR phy_EN_6 pc 3 bank 3 row 0 col 2 edge 1000
+HBM_RD phy_EN_1 pc 1 bank 3 row 0 col 2 edge 1000
+HBM_WR phy_WS_6 pc 0 bank 3 row 0 col 2 edge 1001
+HBM_WR phy_WN_6 pc 2 bank 3 row 0 col 2 edge 1001
+HBM_WR phy_ES_6 pc 0 bank 3 row 0 col 2 edge 1001
+HBM_WR phy_EN_6 pc 2 bank 3 row 0 col 2 edge 1001
+HBM_RD phy_WN_1 pc 0 bank 3 row 0 col 2 edge 1003
+HBM_RD phy_EN_1 pc 0 bank 3 row 0 col 2 edge 1003
+HBM_WR phy_WN_6 pc 1 bank 3 row 0 col 2 edge 1004
+HBM_WR phy_EN_6 pc 1 bank 3 row 0 col 2 edge 1004
+HBM_WR phy_WN_6 pc 0 bank 3 row 0 col 2 edge 1005
+HBM_WR phy_EN_6 pc 0 bank 3 row 0 col 2 edge 1005
+HBM_RD phy_WS_7 pc 3 bank 3 row 0 col 2 edge 1006
+HBM_RD phy_WS_0 pc 3 bank 3 row 0 col 2 edge 1006
+HBM_RD phy_ES_0 pc 3 bank 3 row 0 col 2 edge 1006
+HBM_RD phy_WS_7 pc 2 bank 3 row 0 col 2 edge 1007
+HBM_RD phy_ES_7 pc 2 bank 3 row 0 col 2 edge 1007
+HBM_RD phy_WS_0 pc 2 bank 3 row 0 col 2 edge 1007
+HBM_RD phy_ES_0 pc 2 bank 3 row 0 col 2 edge 1007
+HBM_RD phy_ES_7 pc 3 bank 3 row 0 col 2 edge 1008
+HBM_WR phy_WS_5 pc 3 bank 3 row 0 col 2 edge 1009
+HBM_WR phy_ES_5 pc 3 bank 3 row 0 col 2 edge 1009
+HBM_RD phy_WS_7 pc 1 bank 3 row 0 col 2 edge 1010
+HBM_RD phy_WN_7 pc 3 bank 3 row 0 col 2 edge 1010
+HBM_RD phy_ES_7 pc 1 bank 3 row 0 col 2 edge 1010
+HBM_RD phy_WS_0 pc 1 bank 3 row 0 col 2 edge 1010
+HBM_RD phy_ES_0 pc 1 bank 3 row 0 col 2 edge 1010
+HBM_RD phy_WS_7 pc 0 bank 3 row 0 col 2 edge 1011
+HBM_RD phy_WN_7 pc 2 bank 3 row 0 col 2 edge 1011
+HBM_RD phy_ES_7 pc 0 bank 3 row 0 col 2 edge 1011
+HBM_RD phy_EN_7 pc 2 bank 3 row 0 col 2 edge 1011
+HBM_RD phy_WS_0 pc 0 bank 3 row 0 col 2 edge 1011
+HBM_RD phy_WN_0 pc 3 bank 3 row 0 col 2 edge 1011
+HBM_RD phy_ES_0 pc 0 bank 3 row 0 col 2 edge 1011
+HBM_RD phy_EN_0 pc 3 bank 3 row 0 col 2 edge 1011
+HBM_WR phy_WS_5 pc 2 bank 3 row 0 col 2 edge 1012
+HBM_WR phy_ES_5 pc 2 bank 3 row 0 col 2 edge 1012
+HBM_RD phy_EN_7 pc 3 bank 3 row 0 col 2 edge 1012
+HBM_RD phy_WN_0 pc 2 bank 3 row 0 col 2 edge 1012
+HBM_RD phy_EN_0 pc 2 bank 3 row 0 col 2 edge 1012
+HBM_WR phy_WS_5 pc 1 bank 3 row 0 col 2 edge 1013
+HBM_WR phy_WN_5 pc 3 bank 3 row 0 col 2 edge 1013
+HBM_WR phy_ES_5 pc 1 bank 3 row 0 col 2 edge 1013
+HBM_WR phy_EN_5 pc 3 bank 3 row 0 col 2 edge 1013
+HBM_RD phy_WN_7 pc 1 bank 3 row 0 col 2 edge 1014
+HBM_RD phy_EN_7 pc 1 bank 3 row 0 col 2 edge 1014
+HBM_RD phy_WN_7 pc 0 bank 3 row 0 col 2 edge 1015
+HBM_RD phy_EN_7 pc 0 bank 3 row 0 col 2 edge 1015
+HBM_RD phy_WN_0 pc 1 bank 3 row 0 col 2 edge 1015
+HBM_RD phy_EN_0 pc 1 bank 3 row 0 col 2 edge 1015
+HBM_WR phy_WS_5 pc 0 bank 3 row 0 col 2 edge 1016
+HBM_WR phy_WN_5 pc 2 bank 3 row 0 col 2 edge 1016
+HBM_WR phy_ES_5 pc 0 bank 3 row 0 col 2 edge 1016
+HBM_WR phy_EN_5 pc 2 bank 3 row 0 col 2 edge 1016
+HBM_RD phy_WN_0 pc 0 bank 3 row 0 col 2 edge 1016
+HBM_RD phy_EN_0 pc 0 bank 3 row 0 col 2 edge 1016
+HBM_WR phy_WN_5 pc 1 bank 3 row 0 col 2 edge 1017
+HBM_WR phy_EN_5 pc 1 bank 3 row 0 col 2 edge 1017
+HBM_RD phy_WS_6 pc 3 bank 3 row 0 col 2 edge 1020
+HBM_WR phy_WN_5 pc 0 bank 3 row 0 col 2 edge 1020
+HBM_RD phy_ES_6 pc 3 bank 3 row 0 col 2 edge 1020
+HBM_WR phy_EN_5 pc 0 bank 3 row 0 col 2 edge 1020
+HBM_RD phy_WS_6 pc 2 bank 3 row 0 col 2 edge 1021
+HBM_RD phy_ES_6 pc 2 bank 3 row 0 col 2 edge 1021
+HBM_WR phy_ES_4 pc 3 bank 3 row 0 col 2 edge 1022
+HBM_WR phy_WS_4 pc 3 bank 3 row 0 col 2 edge 1023
+HBM_WR phy_ES_4 pc 2 bank 3 row 0 col 2 edge 1023
+HBM_RD phy_WS_6 pc 1 bank 3 row 0 col 2 edge 1024
+HBM_RD phy_WN_6 pc 3 bank 3 row 0 col 2 edge 1024
+HBM_RD phy_ES_6 pc 1 bank 3 row 0 col 2 edge 1024
+HBM_RD phy_EN_6 pc 3 bank 3 row 0 col 2 edge 1024
+HBM_RD phy_WS_6 pc 0 bank 3 row 0 col 2 edge 1025
+HBM_RD phy_WN_6 pc 2 bank 3 row 0 col 2 edge 1025
+HBM_RD phy_ES_6 pc 0 bank 3 row 0 col 2 edge 1025
+HBM_RD phy_EN_6 pc 2 bank 3 row 0 col 2 edge 1025
+HBM_WR phy_ES_4 pc 1 bank 3 row 0 col 2 edge 1026
+HBM_WR phy_WN_4 pc 3 bank 3 row 0 col 2 edge 1027
+HBM_WR phy_ES_4 pc 0 bank 3 row 0 col 2 edge 1027
+HBM_WR phy_EN_4 pc 3 bank 3 row 0 col 2 edge 1027
+HBM_RD phy_WN_6 pc 1 bank 3 row 0 col 2 edge 1028
+HBM_RD phy_EN_6 pc 1 bank 3 row 0 col 2 edge 1028
+HBM_WR phy_EN_4 pc 2 bank 3 row 0 col 2 edge 1028
+HBM_RD phy_WN_6 pc 0 bank 3 row 0 col 2 edge 1029
+HBM_RD phy_EN_6 pc 0 bank 3 row 0 col 2 edge 1029
+HBM_WR phy_EN_4 pc 1 bank 3 row 0 col 2 edge 1031
+HBM_WR phy_EN_4 pc 0 bank 3 row 0 col 2 edge 1032
+HBM_RD phy_WS_5 pc 3 bank 3 row 0 col 2 edge 1033
+HBM_RD phy_ES_5 pc 3 bank 3 row 0 col 2 edge 1033
+HBM_WR phy_WS_4 pc 0 bank 3 row 0 col 2 edge 1034
+HBM_RD phy_WS_5 pc 2 bank 3 row 0 col 2 edge 1036
+HBM_RD phy_ES_5 pc 2 bank 3 row 0 col 2 edge 1036
+HBM_RD phy_WS_5 pc 1 bank 3 row 0 col 2 edge 1037
+HBM_WR phy_WS_4 pc 1 bank 3 row 0 col 2 edge 1037
+HBM_WR phy_WS_3 pc 3 bank 3 row 0 col 2 edge 1037
+HBM_RD phy_WN_5 pc 3 bank 3 row 0 col 2 edge 1037
+HBM_RD phy_ES_5 pc 1 bank 3 row 0 col 2 edge 1037
+HBM_RD phy_EN_5 pc 3 bank 3 row 0 col 2 edge 1037
+HBM_WR phy_WS_3 pc 2 bank 3 row 0 col 2 edge 1038
+HBM_WR phy_WN_4 pc 0 bank 3 row 0 col 2 edge 1038
+HBM_WR phy_WS_3 pc 1 bank 3 row 0 col 2 edge 1039
+HBM_RD phy_WS_5 pc 0 bank 3 row 0 col 2 edge 1040
+HBM_WR phy_WS_4 pc 2 bank 3 row 0 col 2 edge 1040
+HBM_RD phy_WN_5 pc 2 bank 3 row 0 col 2 edge 1040
+HBM_RD phy_ES_5 pc 0 bank 3 row 0 col 2 edge 1040
+HBM_RD phy_EN_5 pc 2 bank 3 row 0 col 2 edge 1040
+HBM_RD phy_WN_5 pc 1 bank 3 row 0 col 2 edge 1041
+HBM_WR phy_WN_4 pc 1 bank 3 row 0 col 2 edge 1041
+HBM_WR phy_WN_3 pc 3 bank 3 row 0 col 2 edge 1041
+HBM_RD phy_EN_5 pc 1 bank 3 row 0 col 2 edge 1041
+HBM_WR phy_WS_3 pc 0 bank 3 row 0 col 2 edge 1042
+HBM_WR phy_WN_3 pc 2 bank 3 row 0 col 2 edge 1042
+HBM_WR phy_WN_3 pc 1 bank 3 row 0 col 2 edge 1043
+HBM_RD phy_WN_5 pc 0 bank 3 row 0 col 2 edge 1044
+HBM_WR phy_WN_4 pc 2 bank 3 row 0 col 2 edge 1044
+HBM_WR phy_ES_3 pc 0 bank 3 row 0 col 2 edge 1044
+HBM_RD phy_EN_5 pc 0 bank 3 row 0 col 2 edge 1044
+HBM_WR phy_WN_3 pc 0 bank 3 row 0 col 2 edge 1046
+HBM_RD phy_ES_4 pc 3 bank 3 row 0 col 2 edge 1046
+SLICEBOOT cyc 1047 done/ok/fault WS 1/1/0 WN 0/0/0 ES 0/0/0 EN 0/0/0
+HBM_RD phy_WS_4 pc 3 bank 3 row 0 col 2 edge 1047
+HBM_RD phy_ES_4 pc 2 bank 3 row 0 col 2 edge 1047
+HBM_WR phy_ES_3 pc 1 bank 3 row 0 col 2 edge 1047
+HBM_WR phy_EN_3 pc 0 bank 3 row 0 col 2 edge 1048
+SLICEBOOT cyc 1049 done/ok/fault WS 1/1/0 WN 0/0/0 ES 1/1/0 EN 0/0/0
+HBM_WR phy_WS_2 pc 3 bank 3 row 0 col 2 edge 1049
+HBM_WR phy_ES_2 pc 3 bank 3 row 0 col 2 edge 1049
+SLICEBOOT cyc 1050 done/ok/fault WS 2/2/0 WN 0/0/0 ES 2/2/0 EN 0/0/0
+HBM_WR phy_WS_2 pc 2 bank 3 row 0 col 2 edge 1050
+HBM_RD phy_ES_4 pc 1 bank 3 row 0 col 2 edge 1050
+HBM_WR phy_ES_2 pc 2 bank 3 row 0 col 2 edge 1050
+SLICEBOOT cyc 1051 done/ok/fault WS 2/2/0 WN 1/1/0 ES 2/2/0 EN 0/0/0
+HBM_RD phy_WN_4 pc 3 bank 3 row 0 col 2 edge 1051
+HBM_RD phy_ES_4 pc 0 bank 3 row 0 col 2 edge 1051
+HBM_RD phy_EN_4 pc 3 bank 3 row 0 col 2 edge 1051
+HBM_WR phy_EN_3 pc 1 bank 3 row 0 col 2 edge 1051
+HBM_WR phy_ES_3 pc 2 bank 3 row 0 col 2 edge 1052
+HBM_RD phy_EN_4 pc 2 bank 3 row 0 col 2 edge 1052
+SLICEBOOT cyc 1053 done/ok/fault WS 2/2/0 WN 1/1/0 ES 2/2/0 EN 1/1/0
+HBM_WR phy_WN_2 pc 3 bank 3 row 0 col 2 edge 1053
+HBM_WR phy_ES_2 pc 1 bank 3 row 0 col 2 edge 1053
+HBM_WR phy_EN_2 pc 3 bank 3 row 0 col 2 edge 1053
+SLICEBOOT cyc 1054 done/ok/fault WS 2/2/0 WN 2/2/0 ES 2/2/0 EN 2/2/0
+HBM_WR phy_WN_2 pc 2 bank 3 row 0 col 2 edge 1054
+HBM_WR phy_ES_2 pc 0 bank 3 row 0 col 2 edge 1054
+HBM_WR phy_EN_2 pc 2 bank 3 row 0 col 2 edge 1054
+SLICEBOOT cyc 1055 done/ok/fault WS 3/3/0 WN 2/2/0 ES 3/3/0 EN 2/2/0
+HBM_WR phy_ES_3 pc 3 bank 3 row 0 col 2 edge 1055
+HBM_RD phy_EN_4 pc 1 bank 3 row 0 col 2 edge 1055
+HBM_RD phy_EN_4 pc 0 bank 3 row 0 col 2 edge 1056
+HBM_WR phy_EN_3 pc 2 bank 3 row 0 col 2 edge 1056
+HBM_WR phy_EN_2 pc 1 bank 3 row 0 col 2 edge 1057
+SLICEBOOT cyc 1058 done/ok/fault WS 4/4/0 WN 2/2/0 ES 4/4/0 EN 2/2/0
+HBM_RD phy_WS_4 pc 0 bank 3 row 0 col 2 edge 1058
+HBM_WR phy_EN_2 pc 0 bank 3 row 0 col 2 edge 1058
+SLICEBOOT cyc 1059 done/ok/fault WS 4/4/0 WN 3/3/0 ES 4/4/0 EN 3/3/0
+HBM_WR phy_EN_3 pc 3 bank 3 row 0 col 2 edge 1059
+HBM_RD phy_WS_4 pc 1 bank 3 row 0 col 2 edge 1061
+HBM_RD phy_WS_3 pc 3 bank 3 row 0 col 2 edge 1061
+HBM_WR phy_ES_1 pc 3 bank 3 row 0 col 2 edge 1061
+SLICEBOOT cyc 1062 done/ok/fault WS 4/4/0 WN 4/4/0 ES 4/4/0 EN 4/4/0
+HBM_RD phy_WS_3 pc 2 bank 3 row 0 col 2 edge 1062
+HBM_RD phy_WN_4 pc 0 bank 3 row 0 col 2 edge 1062
+HBM_RD phy_WS_3 pc 1 bank 3 row 0 col 2 edge 1063
+HBM_RD phy_WS_4 pc 2 bank 3 row 0 col 2 edge 1064
+HBM_WR phy_ES_1 pc 2 bank 3 row 0 col 2 edge 1064
+HBM_RD phy_WN_4 pc 1 bank 3 row 0 col 2 edge 1065
+HBM_RD phy_WN_3 pc 3 bank 3 row 0 col 2 edge 1065
+HBM_RD phy_WS_3 pc 0 bank 3 row 0 col 2 edge 1066
+HBM_RD phy_WN_3 pc 2 bank 3 row 0 col 2 edge 1066
+HBM_WR phy_EN_1 pc 3 bank 3 row 0 col 2 edge 1066
+HBM_WR phy_WS_1 pc 1 bank 3 row 0 col 2 edge 1067
+HBM_RD phy_WN_3 pc 1 bank 3 row 0 col 2 edge 1067
+HBM_WR phy_WS_1 pc 0 bank 3 row 0 col 2 edge 1068
+HBM_RD phy_WN_4 pc 2 bank 3 row 0 col 2 edge 1068
+HBM_RD phy_ES_3 pc 0 bank 3 row 0 col 2 edge 1068
+HBM_WR phy_EN_1 pc 2 bank 3 row 0 col 2 edge 1069
+HBM_WR phy_WS_2 pc 0 bank 3 row 0 col 2 edge 1070
+HBM_WR phy_WS_1 pc 2 bank 3 row 0 col 2 edge 1070
+HBM_RD phy_WN_3 pc 0 bank 3 row 0 col 2 edge 1070
+HBM_RD phy_ES_3 pc 1 bank 3 row 0 col 2 edge 1071
+HBM_WR phy_WN_1 pc 1 bank 3 row 0 col 2 edge 1072
+HBM_RD phy_EN_3 pc 0 bank 3 row 0 col 2 edge 1072
+SLICEBOOT cyc 1073 done/ok/fault WS 5/5/0 WN 4/4/0 ES 5/5/0 EN 4/4/0
+HBM_WR phy_WS_2 pc 1 bank 3 row 0 col 2 edge 1073
+HBM_RD phy_WS_2 pc 3 bank 3 row 0 col 2 edge 1073
+HBM_WR phy_WS_1 pc 3 bank 3 row 0 col 2 edge 1073
+HBM_WR phy_WN_1 pc 0 bank 3 row 0 col 2 edge 1073
+HBM_RD phy_ES_2 pc 3 bank 3 row 0 col 2 edge 1073
+HBM_RD phy_WS_2 pc 2 bank 3 row 0 col 2 edge 1074
+HBM_WR phy_WN_2 pc 0 bank 3 row 0 col 2 edge 1074
+HBM_RD phy_ES_2 pc 2 bank 3 row 0 col 2 edge 1074
+HBM_WR phy_WN_1 pc 2 bank 3 row 0 col 2 edge 1075
+HBM_RD phy_EN_3 pc 1 bank 3 row 0 col 2 edge 1075
+SLICEBOOT cyc 1076 done/ok/fault WS 6/6/0 WN 4/4/0 ES 6/6/0 EN 4/4/0
+HBM_RD phy_ES_3 pc 2 bank 3 row 0 col 2 edge 1076
+HBM_WR phy_WS_0 pc 3 bank 3 row 0 col 2 edge 1076
+SLICEBOOT cyc 1077 done/ok/fault WS 6/6/0 WN 5/5/0 ES 6/6/0 EN 5/5/0
+HBM_WR phy_WN_2 pc 1 bank 3 row 0 col 2 edge 1077
+HBM_RD phy_WN_2 pc 3 bank 3 row 0 col 2 edge 1077
+HBM_RD phy_ES_2 pc 1 bank 3 row 0 col 2 edge 1077
+HBM_RD phy_EN_2 pc 3 bank 3 row 0 col 2 edge 1077
+HBM_WR phy_WS_0 pc 2 bank 3 row 0 col 2 edge 1077
+HBM_RD phy_WN_2 pc 2 bank 3 row 0 col 2 edge 1078
+HBM_WR phy_WN_1 pc 3 bank 3 row 0 col 2 edge 1078
+HBM_RD phy_ES_2 pc 0 bank 3 row 0 col 2 edge 1078
+HBM_RD phy_EN_2 pc 2 bank 3 row 0 col 2 edge 1078
+HBM_RD phy_ES_3 pc 3 bank 3 row 0 col 2 edge 1079
+SLICEBOOT cyc 1080 done/ok/fault WS 6/6/0 WN 6/6/0 ES 6/6/0 EN 6/6/0
+HBM_WR phy_ES_1 pc 0 bank 3 row 0 col 2 edge 1080
+HBM_RD phy_EN_3 pc 2 bank 3 row 0 col 2 edge 1080
+HBM_WR phy_WS_0 pc 1 bank 3 row 0 col 2 edge 1080
+HBM_WR phy_ES_0 pc 1 bank 3 row 0 col 2 edge 1080
+SLICEBOOT cyc 1081 done/ok/fault WS 7/7/0 WN 6/6/0 ES 7/7/0 EN 6/6/0
+HBM_RD phy_EN_2 pc 1 bank 3 row 0 col 2 edge 1081
+HBM_WR phy_WS_0 pc 0 bank 3 row 0 col 2 edge 1081
+HBM_WR phy_WN_0 pc 3 bank 3 row 0 col 2 edge 1081
+HBM_WR phy_ES_0 pc 0 bank 3 row 0 col 2 edge 1081
+HBM_RD phy_EN_2 pc 0 bank 3 row 0 col 2 edge 1082
+HBM_WR phy_WN_0 pc 2 bank 3 row 0 col 2 edge 1082
+HBM_RD phy_EN_3 pc 3 bank 3 row 0 col 2 edge 1083
+HBM_WR phy_ES_0 pc 2 bank 3 row 0 col 2 edge 1083
+SLICEBOOT cyc 1084 done/ok/fault WS 8/8/0 WN 6/6/0 ES 8/8/0 EN 6/6/0
+SLICEBOOT cyc 1085 done/ok/fault WS 8/8/0 WN 7/7/0 ES 8/8/0 EN 7/7/0
+HBM_WR phy_ES_1 pc 1 bank 3 row 0 col 2 edge 1085
+HBM_RD phy_ES_1 pc 3 bank 3 row 0 col 2 edge 1085
+HBM_WR phy_EN_1 pc 0 bank 3 row 0 col 2 edge 1085
+HBM_WR phy_WN_0 pc 1 bank 3 row 0 col 2 edge 1085
+HBM_WR phy_EN_0 pc 1 bank 3 row 0 col 2 edge 1085
+HBM_WR phy_WN_0 pc 0 bank 3 row 0 col 2 edge 1086
+HBM_WR phy_ES_0 pc 3 bank 3 row 0 col 2 edge 1086
+HBM_WR phy_EN_0 pc 0 bank 3 row 0 col 2 edge 1086
+SLICEBOOT cyc 1088 done/ok/fault WS 8/8/0 WN 8/8/0 ES 8/8/0 EN 8/8/0
+HBM_RD phy_ES_1 pc 2 bank 3 row 0 col 2 edge 1088
+HBM_WR phy_EN_0 pc 2 bank 3 row 0 col 2 edge 1088
+HBM_WR phy_EN_1 pc 1 bank 3 row 0 col 2 edge 1090
+HBM_RD phy_EN_1 pc 3 bank 3 row 0 col 2 edge 1090
+HBM_RD phy_WS_1 pc 1 bank 3 row 0 col 2 edge 1091
+HBM_WR phy_EN_0 pc 3 bank 3 row 0 col 2 edge 1091
+HBM_RD phy_WS_1 pc 0 bank 3 row 0 col 2 edge 1092
+HBM_RD phy_EN_1 pc 2 bank 3 row 0 col 2 edge 1093
+HBM_RD phy_WS_2 pc 0 bank 3 row 0 col 2 edge 1094
+HBM_RD phy_WS_1 pc 2 bank 3 row 0 col 2 edge 1094
+HBM_RD phy_WN_1 pc 1 bank 3 row 0 col 2 edge 1096
+HBM_RD phy_WS_2 pc 1 bank 3 row 0 col 2 edge 1097
+HBM_RD phy_WS_1 pc 3 bank 3 row 0 col 2 edge 1097
+HBM_RD phy_WN_1 pc 0 bank 3 row 0 col 2 edge 1097
+SLICEBOOT cyc 1098 done/ok/fault WS 9/9/0 WN 8/8/0 ES 9/9/0 EN 8/8/0
+HBM_RD phy_WN_2 pc 0 bank 3 row 0 col 2 edge 1098
+HBM_RD phy_WN_1 pc 2 bank 3 row 0 col 2 edge 1099
+HBM_RD phy_WS_0 pc 3 bank 3 row 0 col 2 edge 1100
+HBM_RD phy_WN_2 pc 1 bank 3 row 0 col 2 edge 1101
+HBM_RD phy_WS_0 pc 2 bank 3 row 0 col 2 edge 1101
+SLICEBOOT cyc 1102 done/ok/fault WS 9/9/0 WN 9/9/0 ES 9/9/0 EN 9/9/0
+HBM_RD phy_WN_1 pc 3 bank 3 row 0 col 2 edge 1102
+SLICEBOOT cyc 1103 done/ok/fault WS 10/10/0 WN 9/9/0 ES 10/10/0 EN 9/9/0
+HBM_RD phy_ES_1 pc 0 bank 3 row 0 col 2 edge 1104
+HBM_RD phy_WS_0 pc 1 bank 3 row 0 col 2 edge 1104
+HBM_RD phy_ES_0 pc 1 bank 3 row 0 col 2 edge 1104
+HBM_RD phy_WS_0 pc 0 bank 3 row 0 col 2 edge 1105
+HBM_RD phy_WN_0 pc 3 bank 3 row 0 col 2 edge 1105
+HBM_RD phy_ES_0 pc 0 bank 3 row 0 col 2 edge 1105
+SLICEBOOT cyc 1106 done/ok/fault WS 11/11/0 WN 9/9/0 ES 11/11/0 EN 9/9/0
+HBM_RD phy_WN_0 pc 2 bank 3 row 0 col 2 edge 1106
+SLICEBOOT cyc 1107 done/ok/fault WS 11/11/0 WN 10/10/0 ES 11/11/0 EN 10/10/0
+HBM_RD phy_ES_0 pc 2 bank 3 row 0 col 2 edge 1107
+HBM_RD phy_ES_1 pc 1 bank 3 row 0 col 2 edge 1109
+HBM_RD phy_EN_1 pc 0 bank 3 row 0 col 2 edge 1109
+HBM_RD phy_WN_0 pc 1 bank 3 row 0 col 2 edge 1109
+HBM_RD phy_EN_0 pc 1 bank 3 row 0 col 2 edge 1109
+SLICEBOOT cyc 1110 done/ok/fault WS 11/11/0 WN 11/11/0 ES 11/11/0 EN 11/11/0
+HBM_RD phy_WN_0 pc 0 bank 3 row 0 col 2 edge 1110
+HBM_RD phy_ES_0 pc 3 bank 3 row 0 col 2 edge 1110
+HBM_RD phy_EN_0 pc 0 bank 3 row 0 col 2 edge 1110
+SLICEBOOT cyc 1111 done/ok/fault WS 12/12/0 WN 11/11/0 ES 12/12/0 EN 11/11/0
+HBM_RD phy_EN_0 pc 2 bank 3 row 0 col 2 edge 1112
+HBM_RD phy_EN_1 pc 1 bank 3 row 0 col 2 edge 1114
+SLICEBOOT cyc 1115 done/ok/fault WS 12/12/0 WN 12/12/0 ES 12/12/0 EN 12/12/0
+HBM_RD phy_EN_0 pc 3 bank 3 row 0 col 2 edge 1115
+SLICEBOOT cyc 1125 done/ok/fault WS 13/13/0 WN 12/12/0 ES 13/13/0 EN 12/12/0
+SLICEBOOT cyc 1128 done/ok/fault WS 13/13/0 WN 12/12/0 ES 14/14/0 EN 12/12/0
+SLICEBOOT cyc 1129 done/ok/fault WS 13/13/0 WN 13/13/0 ES 14/14/0 EN 13/13/0
+SLICEBOOT cyc 1132 done/ok/fault WS 13/13/0 WN 13/13/0 ES 14/14/0 EN 14/14/0
+SLICEBOOT cyc 1133 done/ok/fault WS 13/13/0 WN 13/13/0 ES 15/15/0 EN 14/14/0
+SLICEBOOT cyc 1136 done/ok/fault WS 13/13/0 WN 13/13/0 ES 16/16/0 EN 14/14/0
+SLICEBOOT cyc 1137 done/ok/fault WS 13/13/0 WN 13/13/0 ES 16/16/0 EN 15/15/0
+SLICEBOOT cyc 1140 done/ok/fault WS 13/13/0 WN 13/13/0 ES 16/16/0 EN 16/16/0
+SLICEBOOT cyc 1142 done/ok/fault WS 14/14/0 WN 13/13/0 ES 16/16/0 EN 16/16/0
+SLICEBOOT cyc 1143 done/ok/fault WS 15/15/0 WN 13/13/0 ES 16/16/0 EN 16/16/0
+SLICEBOOT cyc 1144 done/ok/fault WS 16/16/0 WN 13/13/0 ES 16/16/0 EN 16/16/0
+SLICEBOOT cyc 1146 done/ok/fault WS 16/16/0 WN 14/14/0 ES 16/16/0 EN 16/16/0
+SLICEBOOT cyc 1147 done/ok/fault WS 16/16/0 WN 15/15/0 ES 16/16/0 EN 16/16/0
+SLICEBOOT cyc 1148 done/ok/fault WS 16/16/0 WN 16/16/0 ES 16/16/0 EN 16/16/0
+SLICEBOOT cyc 1152 done/ok/fault WS 17/17/0 WN 16/16/0 ES 16/16/0 EN 16/16/0
+SLICEBOOT cyc 1155 done/ok/fault WS 18/18/0 WN 16/16/0 ES 16/16/0 EN 16/16/0
+SLICEBOOT cyc 1156 done/ok/fault WS 18/18/0 WN 17/17/0 ES 16/16/0 EN 16/16/0
+SLICEBOOT cyc 1158 done/ok/fault WS 19/19/0 WN 17/17/0 ES 16/16/0 EN 16/16/0
+SLICEBOOT cyc 1159 done/ok/fault WS 19/19/0 WN 18/18/0 ES 16/16/0 EN 16/16/0
+SLICEBOOT cyc 1162 done/ok/fault WS 19/19/0 WN 19/19/0 ES 16/16/0 EN 16/16/0
+SLICEBOOT cyc 1163 done/ok/fault WS 20/20/0 WN 19/19/0 ES 16/16/0 EN 16/16/0
+SLICEBOOT cyc 1165 done/ok/fault WS 20/20/0 WN 19/19/0 ES 17/17/0 EN 16/16/0
+SLICEBOOT cyc 1166 done/ok/fault WS 20/20/0 WN 19/19/0 ES 18/18/0 EN 16/16/0
+SLICEBOOT cyc 1167 done/ok/fault WS 20/20/0 WN 20/20/0 ES 18/18/0 EN 16/16/0
+SLICEBOOT cyc 1169 done/ok/fault WS 20/20/0 WN 20/20/0 ES 19/19/0 EN 17/17/0
+SLICEBOOT cyc 1170 done/ok/fault WS 20/20/0 WN 20/20/0 ES 20/20/0 EN 18/18/0
+SLICEBOOT cyc 1173 done/ok/fault WS 20/20/0 WN 20/20/0 ES 20/20/0 EN 19/19/0
+SLICEBOOT cyc 1174 done/ok/fault WS 20/20/0 WN 20/20/0 ES 20/20/0 EN 20/20/0
+SLICEBOOT cyc 1177 done/ok/fault WS 21/21/0 WN 20/20/0 ES 21/21/0 EN 20/20/0
+SLICEBOOT cyc 1180 done/ok/fault WS 22/22/0 WN 20/20/0 ES 22/22/0 EN 20/20/0
+SLICEBOOT cyc 1181 done/ok/fault WS 22/22/0 WN 20/20/0 ES 22/22/0 EN 21/21/0
+SLICEBOOT cyc 1182 done/ok/fault WS 22/22/0 WN 21/21/0 ES 22/22/0 EN 21/21/0
+SLICEBOOT cyc 1184 done/ok/fault WS 22/22/0 WN 21/21/0 ES 22/22/0 EN 22/22/0
+SLICEBOOT cyc 1185 done/ok/fault WS 22/22/0 WN 22/22/0 ES 23/23/0 EN 22/22/0
+SLICEBOOT cyc 1188 done/ok/fault WS 22/22/0 WN 22/22/0 ES 24/24/0 EN 22/22/0
+SLICEBOOT cyc 1189 done/ok/fault WS 22/22/0 WN 22/22/0 ES 24/24/0 EN 23/23/0
+SLICEBOOT cyc 1192 done/ok/fault WS 22/22/0 WN 22/22/0 ES 24/24/0 EN 24/24/0
+SLICEBOOT cyc 1202 done/ok/fault WS 22/22/0 WN 22/22/0 ES 25/25/0 EN 24/24/0
+SLICEBOOT cyc 1204 done/ok/fault WS 23/23/0 WN 22/22/0 ES 25/25/0 EN 24/24/0
+SLICEBOOT cyc 1205 done/ok/fault WS 24/24/0 WN 22/22/0 ES 25/25/0 EN 24/24/0
+SLICEBOOT cyc 1206 done/ok/fault WS 24/24/0 WN 22/22/0 ES 25/25/0 EN 25/25/0
+SLICEBOOT cyc 1207 done/ok/fault WS 24/24/0 WN 22/22/0 ES 26/26/0 EN 25/25/0
+SLICEBOOT cyc 1209 done/ok/fault WS 24/24/0 WN 23/23/0 ES 26/26/0 EN 25/25/0
+SLICEBOOT cyc 1210 done/ok/fault WS 24/24/0 WN 24/24/0 ES 26/26/0 EN 25/25/0
+SLICEBOOT cyc 1211 done/ok/fault WS 24/24/0 WN 24/24/0 ES 26/26/0 EN 26/26/0
+SLICEBOOT cyc 1212 done/ok/fault WS 25/25/0 WN 24/24/0 ES 26/26/0 EN 26/26/0
+SLICEBOOT cyc 1213 done/ok/fault WS 26/26/0 WN 24/24/0 ES 26/26/0 EN 26/26/0
+SLICEBOOT cyc 1214 done/ok/fault WS 27/27/0 WN 24/24/0 ES 26/26/0 EN 26/26/0
+SLICEBOOT cyc 1215 done/ok/fault WS 28/28/0 WN 24/24/0 ES 26/26/0 EN 26/26/0
+SLICEBOOT cyc 1217 done/ok/fault WS 28/28/0 WN 25/25/0 ES 26/26/0 EN 26/26/0
+SLICEBOOT cyc 1218 done/ok/fault WS 28/28/0 WN 26/26/0 ES 26/26/0 EN 26/26/0
+SLICEBOOT cyc 1219 done/ok/fault WS 28/28/0 WN 27/27/0 ES 26/26/0 EN 26/26/0
+SLICEBOOT cyc 1220 done/ok/fault WS 28/28/0 WN 28/28/0 ES 26/26/0 EN 26/26/0
+SLICEBOOT cyc 1227 done/ok/fault WS 28/28/0 WN 28/28/0 ES 27/27/0 EN 26/26/0
+SLICEBOOT cyc 1229 done/ok/fault WS 29/29/0 WN 28/28/0 ES 27/27/0 EN 26/26/0
+SLICEBOOT cyc 1230 done/ok/fault WS 29/29/0 WN 28/28/0 ES 28/28/0 EN 26/26/0
+SLICEBOOT cyc 1231 done/ok/fault WS 29/29/0 WN 28/28/0 ES 28/28/0 EN 27/27/0
+SLICEBOOT cyc 1232 done/ok/fault WS 30/30/0 WN 28/28/0 ES 28/28/0 EN 27/27/0
+SLICEBOOT cyc 1234 done/ok/fault WS 30/30/0 WN 29/29/0 ES 28/28/0 EN 28/28/0
+SLICEBOOT cyc 1237 done/ok/fault WS 31/31/0 WN 30/30/0 ES 29/29/0 EN 28/28/0
+SLICEBOOT cyc 1238 done/ok/fault WS 31/31/0 WN 30/30/0 ES 30/30/0 EN 28/28/0
+SLICEBOOT cyc 1239 done/ok/fault WS 31/31/0 WN 30/30/0 ES 31/31/0 EN 28/28/0
+SLICEBOOT cyc 1240 done/ok/fault WS 32/32/0 WN 30/30/0 ES 32/32/0 EN 28/28/0
+SLICEBOOT cyc 1241 done/ok/fault WS 32/32/0 WN 30/30/0 ES 32/32/0 EN 29/29/0
+SLICEBOOT cyc 1242 done/ok/fault WS 32/32/0 WN 31/31/0 ES 32/32/0 EN 30/30/0
+SLICEBOOT cyc 1243 done/ok/fault WS 32/32/0 WN 31/31/0 ES 32/32/0 EN 31/31/0
+SLICEBOOT cyc 1244 done/ok/fault WS 32/32/0 WN 31/31/0 ES 32/32/0 EN 32/32/0
+SLICEBOOT cyc 1245 done/ok/fault WS 32/32/0 WN 32/32/0 ES 32/32/0 EN 32/32/0
+BOOTOBS cyc 1290 boot_go_d1_hgi_WN_7 0 host_rst_n 1 hbm_rst_n 1 die_rst_n 1 boot_go 0
+BOOT_IMAGE cyc 2259 target 10 epoch 2827 digest 2c526fb81fd8aca9 fault 0
+BOOT_IMAGE cyc 4610 target 1 epoch 2827 digest 2a60093040c303d2 fault 0
+BOOT_IMAGE cyc 5627 target 2 epoch 2827 digest abe7ba21416eb901 fault 0
+BOOT_IMAGE cyc 5828 target 3 epoch 2827 digest 35450525f1e7f0bb fault 0
+BOOT_IMAGE cyc 6894 target 4 epoch 2827 digest bea9d9a9eee491ec fault 0
+BOOT_IMAGE cyc 7962 target 5 epoch 2827 digest ebfc8cfcbbb1c4b8 fault 0
+BOOT_IMAGE cyc 12856 target 6 epoch 2827 digest 51484f5354505241 fault 0
+BOOT_IMAGE cyc 17751 target 7 epoch 2827 digest 51484f5354505240 fault 0
+HB cyc 20000 t 16660000000 frames_sent 3827 credits 2 images_ready 8 setup 0 boot_pr_changes 3192 die_to_host 4 host_faults 000000
+BOOT_IMAGE cyc 22646 target 8 epoch 2827 digest 51484f535450524f fault 0
+BOOT_IMAGE cyc 27541 target 9 epoch 2827 digest 51484f535450524e fault 0
+BOOT_IMAGE cyc 28028 target 11 epoch 2827 digest 63c589ac73704f85 fault 0
+DCALOBS cyc 28121 reload 0 base 1 tx 1 rx 0 data 0000000a seg2 0000000a/0000000b cal_start 0 seg 0 layer 0 btx_seen 0 brx_seen 0 f_col 0 f_run 0 f_stale 0 f_early 0 s_fault 0 fault 0
+DCALOBS cyc 28122 reload 0 base 1 tx 0 rx 1 data 0000000b seg2 0000000a/0000000b cal_start 0 seg 0 layer 0 btx_seen 1 brx_seen 0 f_col 0 f_run 0 f_stale 0 f_early 0 s_fault 0 fault 0
+BOOT_IMAGE cyc 32924 target 12 epoch 2827 digest e49fde4ffbb0e2eb fault 0
+BOOT_IMAGE cyc 33145 target 13 epoch 2827 digest 0fae355d67dd0275 fault 0
+POSTOBS cyc 33396 boot_go 0 link_rst_n 1 prog_begin 1 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+POSTOBS cyc 33397 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+DCALOBS cyc 33397 reload 1 base 0 tx 0 rx 0 data 0000000b seg2 0000000a/0000000b cal_start 0 seg 0 layer 0 btx_seen 1 brx_seen 1 f_col 0 f_run 0 f_stale 0 f_early 0 s_fault 0 fault 0
+POSTOBS cyc 33399 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 0 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+POSTOBS cyc 33465 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+BOOT_IMAGE cyc 38077 target 0 epoch 2827 digest 514bb0b28004c8e8 fault 0
+SETUP_READY cyc 38084
+KVSLICE_START cycle 38214 setup_cycle 38084 delay 130
+BOOTOBS cyc 38232 boot_go_d1_hgi_WN_7 1 host_rst_n 1 hbm_rst_n 1 die_rst_n 1 boot_go 0
+BOOTOBS cyc 38233 boot_go_d1_hgi_WN_7 0 host_rst_n 1 hbm_rst_n 1 die_rst_n 1 boot_go 0
+POSTOBS cyc 38307 boot_go 1 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+POSTOBS cyc 38308 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+POSTOBS cyc 38318 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 1 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+POSTOBS cyc 38319 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 0 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+DCALOBS cyc 38393 reload 0 base 0 tx 0 rx 0 data 0000000b seg2 0000000a/0000000b cal_start 1 seg 1 layer 63 btx_seen 0 brx_seen 0 f_col 0 f_run 0 f_stale 0 f_early 0 s_fault 0 fault 0
+POSTOBS cyc 38394 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 0 d2d_fault 0 dcal_fault 1 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+DCALOBS cyc 38394 reload 0 base 0 tx 0 rx 0 data 0000000b seg2 0000000a/0000000b cal_start 0 seg 0 layer 63 btx_seen 0 brx_seen 0 f_col 0 f_run 0 f_stale 0 f_early 1 s_fault 0 fault 1
+FAR_CAL cyc 38114 cal_start seg 1 layer 63 (adm 0 ready 1)
+POSTOBS cyc 38406 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 1 d2d_fault 0 dcal_fault 1 tf 00 link_up 11 token_epoch 0000 fdi_tx 0
+FAR_FAULT cyc 38138 master 0 seq 0 codec 0 (cause 0000) kvn 0 abort 1 transport 00 layer 63
+POSTOBS cyc 38558 boot_go 0 link_rst_n 1 prog_begin 0 fwd_epoch 0 fwd_lrst_n 1 cal_ready 1 adm_done 0 tok_start 0 running 0 epoch_abort 1 d2d_fault 1 dcal_fault 1 tf 80 link_up 10 token_epoch 0000 fdi_tx 0
+HB cyc 40000 t 33320000000 frames_sent 7404 credits 4 images_ready 14 setup 1 boot_pr_changes 7376 die_to_host 4 host_faults 000000
+KVSLICE_BOOT FAIL frames_sent 7404/7404 images_ready 14/14 errors 0 boot_fault 0 setup_ready 1 (cyc 38084) cf_fault 0 pll_locked 1 host_faults 000000 dcal_fault 1 die_to_host_words 4 last_ready_cyc 38077 cyc 40085
+[33391000000] %Fatal: tb_kvslice_obs.sv:603: Assertion failed in tb_kvslice.unnamedblk3: KVSLICE_BOOT verdict FAIL: native bench exits nonzero
+%Error: /srv/opentallas-scratch2/claude/tok-kv-2-1029/b5_probe/tb_kvslice_obs.sv:603: Verilog $stop
+Aborting...
