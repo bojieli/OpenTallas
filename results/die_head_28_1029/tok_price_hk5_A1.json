@@ -1,0 +1,199 @@
+{
+ "lane": "DIE-HEAD-28",
+ "date": "2026-10-29",
+ "label": "COMPOSER-ONLY estimate",
+ "inputs": {
+  "hk5_tile": "origin/main results/die_head_26_1029/hk5_tile/plan_hk5_tile.json.gz",
+  "hk5": "origin/main results/die_head_26_1029/hk5/plan_hk5.json.gz",
+  "hk6_A1": "codex/head-0830@5cb559733cf results/codex_head_0830/hk6/plan_hk6_candidate.json.gz"
+ },
+ "crop_delta_cycles": {
+  "ctrl_lep": [
+   2,
+   4
+  ],
+  "head_lep_fault_return": [
+   2,
+   4
+  ],
+  "head_lep_landing": [
+   2,
+   5
+  ],
+  "host_rx": [
+   38,
+   40
+  ],
+  "host_tx": [
+   38,
+   40
+  ],
+  "lepf": [
+   2,
+   3
+  ],
+  "m0S_rx": [
+   51,
+   54
+  ],
+  "m0S_tx": [
+   49,
+   52
+  ],
+  "m7N_rx": [
+   7,
+   13
+  ],
+  "m7N_tx": [
+   6,
+   12
+  ],
+  "m7S_rx": [
+   47,
+   50
+  ],
+  "m7S_tx": [
+   46,
+   49
+  ],
+  "unit_lep": [
+   2,
+   3
+  ]
+ },
+ "crop_sum": 37,
+ "crop_lanes": 13,
+ "A1_delta_cycles": {
+  "chE0_t": [
+   7,
+   9
+  ],
+  "chE1_t": [
+   7,
+   9
+  ],
+  "chE2_t": [
+   7,
+   9
+  ],
+  "chE3_t": [
+   7,
+   9
+  ],
+  "chE4_t": [
+   7,
+   9
+  ],
+  "chE5_t": [
+   7,
+   9
+  ],
+  "chW0_t": [
+   7,
+   9
+  ],
+  "chW1_t": [
+   7,
+   9
+  ],
+  "chW2_t": [
+   7,
+   9
+  ],
+  "chW3_t": [
+   7,
+   9
+  ],
+  "chW4_t": [
+   7,
+   9
+  ],
+  "chW5_t": [
+   7,
+   9
+  ],
+  "coll_EN1_d": [
+   12,
+   15
+  ],
+  "coll_EN1_u": [
+   13,
+   16
+  ],
+  "coll_ES1_d": [
+   12,
+   15
+  ],
+  "coll_ES1_u": [
+   13,
+   16
+  ],
+  "coll_HOST0_d": [
+   6,
+   7
+  ],
+  "coll_HOST0_u": [
+   6,
+   7
+  ],
+  "coll_WN1_d": [
+   10,
+   12
+  ],
+  "coll_WN1_u": [
+   12,
+   14
+  ],
+  "coll_WN2_d": [
+   20,
+   26
+  ],
+  "coll_WN2_u": [
+   21,
+   27
+  ],
+  "coll_WS1_d": [
+   12,
+   15
+  ],
+  "coll_WS1_u": [
+   13,
+   16
+  ],
+  "m0S_rx": [
+   54,
+   56
+  ],
+  "m0S_tx": [
+   52,
+   56
+  ],
+  "m7N_rx": [
+   13,
+   14
+  ],
+  "m7N_tx": [
+   12,
+   14
+  ],
+  "m7S_rx": [
+   50,
+   51
+  ],
+  "m7S_tx": [
+   49,
+   51
+  ]
+ },
+ "A1_sum": 72,
+ "A1_lanes": 30,
+ "A1_critical_transport_codex": "+6 (187->193 raw), UNCHECKED here",
+ "head_per_token_cycles": 9313,
+ "head_token_window_cycles": 10357,
+ "head_ref": "TOK-HEAD-LAND-1 lanes/LAND-HEAD.md 22:36 (GO->result 8780 CHECKED; per-token 9313 vs window 10357 UNCHECKED composition)",
+ "worst_case_all_serial_added": 109,
+ "worst_case_head_latency": 9422,
+ "fits_window": true,
+ "bound_frac_of_head_latency": 0.0117,
+ "tok_s_drop": "0 pct while HEAD per-token latency stays inside the window (S81 dies set the rate); upper bound if HEAD alone set the rate = 1.17 pct (<5) -> no OWNER ASK, A1 stands"
+}
