@@ -1,0 +1,36 @@
+KV-KITS-21 hold V1 (KV-003) -- ESTIMATE BEFORE BUILD (12.14), 2026-10-29. hg_WS_7 first.
+
+WHAT hg_WS_7 IS (CHECKED, plan intel1:/srv/opentallas-scratch2/claude/die-kv-26-1029/plan_e26a.json + Codex bind26b RTL
+intel1:/srv/opentallas-scratch2/claude/codex-kv-25-1029/bind26b/rtl/kv3_hg_v3_part.sv):
+  partition hg_WS_7 = type kv3_hg_v3 (module kv3_hg_v3_part, soft, outline 1278.72 x 1520.64 um, origin (1900.8,10644.48) R0).
+  hard_cores[] = 20: kv3_head_eighth e0 x2, e1 x4 (incl e3 = e1), e2 x2, e5 x4 (incl e7), e6 x4 (incl e4), qkd_ectlk_q0..q3.
+  glue = 268 ot_dp_dly, 171 ot_dp_rrelay, 67 ot_dp_st, 53+18 landing collect/relay, 22 clk_landing, head gather/sstage,
+  astk ex/ep/er stages, ectl3 kiss.  Plan note: L1 4.97 M cells flat, 4.58 M in replicated datapath leaves -> glue <=~0.39 M
+  (plan note, UNCHECKED) = at the 400k cells/run cap.  All 10 kv3_hg* / kv3_hgi* RTL types carry the same 16-head set (CHECKED grep).
+
+WHY THE DIE NUMBER FAILS (CHECKED from sta_e26a_edge/die_sta_related.json + die_sta_related.py endpoint_slacks):
+  worst real-view FF hold -58.23 = launch e6 view (tap t8) -> capture 'budget' glue (tap t3), clock damage 64.55.
+  Back-solved e6 view launch out_min (ETM arc incl. own insertion, at 6 fF) = -58.23 + 64.55 + 202.5 + 23.90 + 25 = 257.7 ps.
+  Same pair with a real e1 capture (in_hold ~130) = +38.27.  So the glue's DECLARED 202.5 FF latency + die tap damage is what
+  fails; the core->glue path itself is a short boundary path.  View libs (CHECKED parse): FF min_clock_tree_path e6 165.4,
+  e2 173.0, e1 167.9, e5 164.9; out bits e6/e2 535, e1/e5 68.
+
+IN-KIT ESTIMATE (UNCHECKED arithmetic; kit hold repair = 12.19 default --measured-hold + OT_HOLD_FF_MARGIN 10):
+  per bit: slack = 257.7 - (L_glue + 23.9) - 25 - 10 - skew(core clk pin vs glue flop, in-kit routed)
+    L_glue 202.5, skew 0  : -3.7 ps  -> 1 HB4 (FF early 44.6) max
+    L_glue 222.5 (+20 tol): -23.7    -> 1 HB4
+    skew at the 80 ps kit window: -83.7 -> 2 HB4
+  bits at risk per hg partition = head outputs landing on glue: e6 4x535 + e2 2x535 + e0 2x535 (e0 width assumed = e2/e6,
+  UNCHECKED) + e1 4x68 + e5 4x68 = 4,824 bits -> 0..9,648 HB4 (<=0.99k um2 at 0.1021 um2, vs 1.94 mm2 outline: negligible).
+  TT setup cost: 2 x 91.3 = 182.6 vs die worst +315.78 -> +133.2 (no setup risk; worst setup pair is this same hg_WS_7 e1->e6).
+  => V1 is sane by estimate: hold closes in-kit with <=2 HB4/bit and no setup risk.
+
+BUILD: BLOCKED (not launched).
+  gen_phys.write_type_kit refuses any hard-core macro without timing liberty ("macros have LEF but no timing liberty"), and 12.19
+  judges hold only on signed real views.  Signed views today (autopilot/closed/qwen_kvsys, intel1+intel2 CHECKED): e1, e2, e5,
+  e6 @3e7fccd216 only.  Missing in kv3_hg_v3: kv3_head_eighth_e0 (KV-013, GRT hold plateau -38.91), qkd_ectlk_q0 (KV-014 LEC
+  272), qkd_ectlk_q1, qkd_ectlk_q2 (no signed view), qkd_ectlk_q3 (KV-009, DRT/sign-off live).  Same block on every hg/hgi type.
+  A kit with stand-in (budget) macros would only reproduce the die declared-budget number, so it is not built.
+NEXT: build the hg_WS_7 kit (gen.py phys --types kv3_hg_v3 on plan event26a, --hold-ff-margin 10 + --measured-hold) as soon
+  as e0 + ectlk q0..q3 signed views land; first check the glue cell count against the 400k cap at synth (split by kv3_hg_v3
+  halves if >400k).  The V2 die HB4 cost estimate stays with DIE-KV-27.
