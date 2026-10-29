@@ -1,0 +1,21 @@
+{
+ "scope": "native SPB clock construction only; no PNR/STA/parent control-budget closure",
+ "native_bank_flops": 4104,
+ "clock_cells": 68,
+ "fixed_FF_body_hits": [],
+ "macro_PG_body_hits": [],
+ "clock_body_overlaps": [],
+ "row_errors": [],
+ "reach": {
+  "schema": "ot_clk_actual_reach/1",
+  "max_um": 405.0,
+  "verdict": "PASS",
+  "cell_edges": 66,
+  "tap_edges": 10,
+  "worst_um": 366.628,
+  "over_count": 0,
+  "over": [],
+  "missing_sites": [],
+  "frozen_home_match": true
+ }
+}
