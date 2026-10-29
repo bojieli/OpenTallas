@@ -941,6 +941,37 @@ def planned_tree_cts(kd, cfg):
     return _ms().plan_tree_cts(kd, cfg)
 
 
+def stage_reset_contract(kd, module, source=None):
+    """Carry the existing, module-qualified die reset proof into a fresh kit.
+
+    Missing/unlisted contracts keep the old four-edge LEC behavior. A listed
+    contract must pass the same consumer as kit LEC before it is copied.
+    """
+    source = Path(source) if source is not None else S81 / "reset_contract.json"
+    if not source.is_file():
+        return None
+    try:
+        c = json.loads(source.read_text())
+    except (OSError, ValueError) as e:
+        raise SystemExit(f"{module}: unreadable die reset contract: {e}")
+    if module not in c.get("modules", []):
+        return None
+    import lec
+    report = lec.reset_contract_gate(source.parent, module,
+                                     environ={"OT_LEC_RESET_CONTRACT": str(source)})
+    if report.get("refused"):
+        raise SystemExit(f"{module}: die reset contract refused: {report['refused']}")
+    receipt = Path(c["proof"]["receipt"])
+    if receipt.is_absolute() or ".." in receipt.parts:
+        raise SystemExit(f"{module}: reset receipt must stay relative to the staged contract")
+    kd = Path(kd)
+    (kd / receipt).parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(source.parent / receipt, kd / receipt)
+    shutil.copyfile(source, kd / "reset_contract.json")
+    return dict(edges=report["used"], module=module,
+                contract_sha256=sha(source), receipt_sha256=sha(source.parent / receipt))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--module", required=True, help="recipe key (= plan module unless the recipe names plan_module)")
@@ -1492,6 +1523,7 @@ def main():
                       **({"clock_ports": [p for r_ in mr["roots"] for p in r_["pins"]]} if mr else {}))
     planned_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
+    reset_contract = stage_reset_contract(kd, mod)
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True).stdout.strip() or "?"
     fz = dict(schema="opentallas.s81.core_freeze.v1", kit=f"{mod}_{suffix}", module=mod, plan_type=ptype,
@@ -1518,6 +1550,8 @@ def main():
                            for f, pt in patches.items()], kit_hash=kit_hash(kd))
     if ms is not None:
         fz["master_plan"] = ms
+    if reset_contract is not None:
+        fz["reset_contract"] = reset_contract
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=rsts, ins=len(buses_in),
                           outs=len(buses_out), macros=sum(len(v) for v in mplace.values()), kit_hash=fz["kit_hash"])))
