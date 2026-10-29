@@ -45,8 +45,16 @@ STRUCTURAL_HOLD = (r"OT_HOLD_STRUCTURAL stage=(?:cts|grt): FF hold ws -?[0-9.]+ 
                    r"[0-9]+ true failing endpoints \(limits: ws >= -100 ps, endpoints <= 2000\); "
                    r"revise plan/RTL/boundary before repair")
 STRUCTURAL_HOLD_RE = re.compile(r"^" + STRUCTURAL_HOLD + r"$", re.M)
+# FLOW-HOLD-2 2026-10-29 (OWNER 12.19): the measured-frame hold step (tools/die_plan/vclk_measured_hold.tcl, default on
+# new two-mode rebind kits since 81f9c6c39e) refuses to repair hold when the kit's FF pin-register mean is outside the
+# sign-off insertion band -- the band the post-CTS insertion gate (FAIL_POSTCTS) judges, reached earlier inside GRT.
+# It is a design stop (grt_gate FAIL, later metrics NOT REACHED), not a Tcl crash.  Classification only, no new check.
+MEASURED_BAND = (r"OT_VCLK_MEASURED_HOLD: FF pin-register mean -?[0-9.]+ outside bound -?[0-9.]+ \+- [0-9.]+ "
+                 r"\(sign-off band FAIL; fix the clock, not the hold\)")
+MEASURED_BAND_RE = re.compile(MEASURED_BAND)
 GATE_ERR_RE = re.compile(r"Error: hold_gate\.tcl, \d+ structural FF hold failure|"
-                         r"Error: [^\n]*\.tcl, \d+ " + STRUCTURAL_HOLD + r"$")
+                         r"Error: [^\n]*\.tcl, \d+ " + STRUCTURAL_HOLD + r"$|"
+                         r"Error: [^\n]*\.tcl, \d+ " + MEASURED_BAND + r"$")
 STAGES = ("lint", "sdc_lint", "selrange", "synth", "lec", "face_guard", "face_cover", "reg_fanout", "rc_file", "vclk_basis",
           "cts", "grt_gate", "route", "rcx", "signoff", "tcl_errors")
 # vclk_basis (COORD 10-25, main 9f716b354, METHODOLOGY 9.7 / BRIEFING 5e): the IO virtual clock must be the kit's
@@ -469,6 +477,7 @@ def check_run(run, spec=None, die_plan_dir=None):
     structural_holds = []
     for log_path in step_logs:
         structural_holds.extend(m.group(0) for m in STRUCTURAL_HOLD_RE.finditer(read(log_path)))
+        structural_holds.extend(m.group(0) for m in MEASURED_BAND_RE.finditer(read(log_path)))
     if structural_holds:
         # A deliberate runtime hold rejection is a failed gate, including for
         # references that opt out of the insertion gate. Baseline comparison
