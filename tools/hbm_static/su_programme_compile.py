@@ -288,6 +288,32 @@ def lower_root5(source, out, parts=4, line_bits=9688, part_banks=320, col_bits=3
     (out/'root5_manifest.json').write_text(json.dumps(man,indent=2)+'\n')
     return man
 
+def lower_root5_phases(source, out, phase_manifest, **kwargs):
+    """Publish all existing global-address phases as separately installed resident images.
+
+    This does not erase reload/retirement costs or qualify a shared source calendar.
+    """
+    rows=source.read_text().split()
+    phases=json.loads(phase_manifest.read_text())['phases']
+    out.mkdir(parents=True,exist_ok=True)
+    result=[]; next_edge=0
+    for i,phase in enumerate(phases):
+        offset,count=phase['offset'],phase['edges']
+        if offset!=next_edge or count<1 or offset+count>len(rows):
+            raise ValueError('phase coverage must be contiguous, ordered and complete')
+        d=out/f'phase{i}';d.mkdir(exist_ok=True)
+        src=d/'source.mem';src.write_text('\n'.join(rows[offset:offset+count])+'\n')
+        m=lower_root5(src,d/'lower',**kwargs)
+        result.append(dict(global_phase=phase,source=str(src),producer=m))
+        next_edge=offset+count
+    if next_edge!=len(rows): raise ValueError('phase coverage omitted native commands')
+    man=dict(schema='opentallas.su_programme.root5_phases.v1',source=str(source),source_sha256=sha(source),
+        total_commands=len(rows),phases=result,installable=False,
+        reload_cost='UNKNOWN_SELECTED_HOST_PROGRAMME_PUBLICATION_CONTRACT',
+        retirement_barrier='MUST_COMPLETE_CONSUMER_WRITES_BEFORE_RELOAD_AND_NEXT_START')
+    (out/'phases_manifest.json').write_text(json.dumps(man,indent=2)+'\n')
+    return man
+
 def main():
     p=argparse.ArgumentParser(); p.add_argument('source',type=Path); p.add_argument('out',type=Path)
     p.add_argument('--extra-mem',type=Path); p.add_argument('--extra-bits',type=int,default=0)
@@ -301,9 +327,13 @@ def main():
     p.add_argument('--mut-pc-col',type=int); p.add_argument('--mut-tpl-col',type=int)
     p.add_argument('--root5',action='store_true',help='opt-in: root_h5 + per-column clusters (whole SU line)')
     p.add_argument('--mut-q',type=int)
+    p.add_argument('--phase-manifest',type=Path,help='root5: ordered existing global-address phase offsets/edges')
     p.add_argument('--parts',type=int,default=4,help='root5 physical producer parts')
     p.add_argument('--resident-edges',type=int,default=7111,help='root5 physical pgcol EDGES; fixes dictionary base')
     a=p.parse_args()
+    if a.root5 and a.phase_manifest:
+        print(json.dumps(lower_root5_phases(a.source,a.out,a.phase_manifest,parts=a.parts,line_bits=a.line_bits,
+            resident_edges=a.resident_edges,mut_q=a.mut_q,start_depth=a.start_depth),indent=2)); return
     if a.root5:
         print(json.dumps(lower_root5(a.source,a.out,parts=a.parts,line_bits=a.line_bits,mut_q=a.mut_q,start_depth=a.start_depth,resident_edges=a.resident_edges),indent=2)); return
     if a.columns:
