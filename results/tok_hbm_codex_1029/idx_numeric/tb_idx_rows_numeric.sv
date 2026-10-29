@@ -3,7 +3,7 @@
 // returns only requests issued by the reader, at its current bound latency.
 // Independent released-golden query vectors vary in every row.
 module tb_idx_rows_numeric;
- parameter integer RT=173, LEN=1568, PITCH=328, NROWS=6,WFP32=0;
+ parameter integer RT=173, LEN=1568, PITCH=328, NROWS=6,WFP32=0,QSECTOR=0;
  localparam integer DELAY=8+RT-3;
  reg clk=0;always begin #416 clk=1;#417 clk=0;end
  reg rst_n=0,pw=0,start=0;reg[7:0]pa=0;reg[255:0]pd=0;
@@ -27,7 +27,7 @@ module tb_idx_rows_numeric;
   .nq(nq),.frame_start(fs),.row_start(rs),.fault(cf));
  ot_hnx_idx_vm_query_static_n12 #(.VM_RT_EXTRA(RT),.WEIGHT_FP32(WFP32)) reader(.clk(clk),.rst_n(rst_n),.sid(RT==173?2'd2:2'd3),
   .weight_slot(ws),.query_slot(qs),.query_index(qi),.frame_start(fs),
-  .weight_sector((RT==173?16'h4000:16'h6000)+(WFP32?16'h0100:16'd0)),.query_sector(RT==173?16'h4400:16'h6400),.weight_row_stride(WFP32?16'd4:16'd8),.query_row_stride(wrong_stride?16'd0:16'd512),
+  .weight_sector((RT==173?16'h4000:16'h6000)+(WFP32?16'h0100:16'd0)),.query_sector(QSECTOR!=0?16'(QSECTOR):(RT==173?16'h4400:16'h6400)),.weight_row_stride(WFP32?16'd4:16'd8),.query_row_stride(wrong_stride?16'd0:16'd512),
   .vm_rq(rq),.vm_rr(rr),.block_v(bv),.block_head(bh),.block_number(bn),.block_data(bd),.head_weight(hw),.fault(rf));
  ot_hbm_idx_query_static query(.clk(clk),.clk_quant(clk),.clk_quant_delay(clk),.clk_bank({4{clk}}),.rst_n(rst_n),
   .frame_start(rs&&!drop_clear),.block_v(bv),.block_head(bh),.block_number(bn),.block_data(bd),.head_weight(hw),

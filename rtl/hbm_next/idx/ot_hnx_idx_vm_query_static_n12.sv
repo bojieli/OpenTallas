@@ -12,6 +12,10 @@
 // widened to FP32 words. All four sectors issue together; low16 != 0 faults
 // (HGI E_RANGE), never rounds/truncates an arbitrary FP32 weight. Default0
 // retains the historical two-sector packed-BF16 representation and timing.
+// HGI FP32 mode also permits an eight-word-aligned query (one sector). The
+// four consecutive sectors always name distinct banks; result tags restore
+// their block order, including a bank7->bank0 wrap. Packed mode keeps its
+// historical four-sector alignment gate.
 module ot_hnx_idx_vm_query_static_n12_core #(parameter integer VM_RT_EXTRA=0,WEIGHT_FP32=0)(
  input wire clk,rst_n,input wire[1:0]sid,
  input wire frame_start,
@@ -77,7 +81,7 @@ module ot_hnx_idx_vm_query_static_n12_core #(parameter integer VM_RT_EXTRA=0,WEI
    block_v<=|parts;
    if(weight_slot&&query_slot)bad<=1;
    if(weight_slot&&(WEIGHT_FP32?(wbase[1:0]!=0):(wbase[2:0]!=0)))bad<=1;
-   if(query_slot&&qbase[1:0]!=0)bad<=1;
+   if(query_slot&&!WEIGHT_FP32&&qbase[1:0]!=0)bad<=1;
    for(integer b=0;b<8;b=b+1)if(rr[b*257+256])begin
     if(rtag[b*16+15])begin
      for(integer w=0;w<WSECT;w=w+1)if(rtag[b*16+:2]==2'(w))weight_seen[w]<=1;
