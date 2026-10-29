@@ -40,6 +40,9 @@ module ot_hbm_su_static_pgslice_s #(
  // PIN_REG (owner rule 10-15 19:50): every lane is the pin-registered leaf ot_hbm_su_static_lane_pinreg: its store /
  // RF-stream requests leave +2 edges and its writes / reducer operands +4 edges later (su_top_compile --pin-reg)
  parameter integer PIN_REG=1,
+ // WCOPY (HBM-CORES-REBAL-9, opt-in, default 0 = unchanged): the pinned banks per-column registered write copy
+ // (ot_hbm_su_static_pinned_bank WCOPY): every bank write (fill / delivery / lane) commits one edge later (fill n+SRD+4)
+ parameter integer WCOPY=0,
  // COLLPORT (H-NETLIST/suport 2026-10-16, default 0 = unchanged): the quarter's COLL joins through ot_hbm_su_static_cxport.
  //   INJECT  inj_rd/inj_addr (stream, from COLL, captured at A in a stream pin slot); serial edge n = ceil((3A+3)/4)
  //           (A mod 4 in {0,1,3}) drives bank READ PORT 5 (shared with DRAIN by the compiler calendar) of the store groups
@@ -309,7 +312,7 @@ module ot_hbm_su_static_pgslice_s #(
    for(p2=0;p2<4;p2=p2+1)if(rv[p2]&&(rd_addr[(n*4+p2)*24+:7]!=7'(L)||rd_addr[(n*4+p2)*24+14+:2]!=2'(QID)))idf=1;
   end
   assign st_id_fault[n]=idf;
-  ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9)) u_bank(.clk(clk_bank[n]),.clk_rd(clk_bank[n]),.clk_ws(clk_bank[n]),.clk_macro(clk_bank_macro[n*6+:6]),.rst_n(rst_n),.read_v(rv),.read_addr(ra),
+  ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9),.WCOPY(WCOPY)) u_bank(.clk(clk_bank[n]),.clk_rd(clk_bank[n]),.clk_ws(clk_bank[n]),.clk_macro(clk_bank_macro[n*6+:6]),.rst_n(rst_n),.read_v(rv),.read_addr(ra),
    .read_data(q),.read_return(),.write_v(lw|fw|dwn),.write_addr(fw?fr_row[H]:dwn?dwr:{la[17:16],la[13:7]}),
    .write_data(fw?fr_dat[H][K*32+:32]:dwn?dwd:ldat));
  end

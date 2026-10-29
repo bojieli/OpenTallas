@@ -19,6 +19,7 @@
 module ot_hbm_su_static_pgslice_lg #(
  parameter integer QID=0,G=0,READ_RETURN=10,WRITE_RETURN=7,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,
  parameter integer PIN_REG=0,
+ parameter integer WCOPY=0,
  parameter integer COLLPORT=0,
  parameter integer B39_NOOP=(QID==0),
  parameter integer RF_LOCAL=0,
@@ -67,7 +68,7 @@ module ot_hbm_su_static_pgslice_lg #(
  output wire [66:0] tree_o
 );
  wire [33:0] s_rq; wire [561:0] s_wq; wire [513:0] s_rr; wire [1:0] s_done;
- ot_hbm_su_static_pgslice #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG),.COLLPORT(COLLPORT),.B39_NOOP(B39_NOOP),.RF_LOCAL(RF_LOCAL),.PG_RSYNC(RSYNC),.PRETREE(PRETREE)) u_slice(
+ ot_hbm_su_static_pgslice #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG),.WCOPY(WCOPY),.COLLPORT(COLLPORT),.B39_NOOP(B39_NOOP),.RF_LOCAL(RF_LOCAL),.PG_RSYNC(RSYNC),.PRETREE(PRETREE)) u_slice(
   .pg_clk(pg_clk),
   .clk_lane(clk_lane),
   .clk_insert(clk_insert),

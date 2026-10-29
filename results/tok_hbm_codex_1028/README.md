@@ -19,3 +19,13 @@ A separate explicit no-local-SU bank master is under minimal real-SRAM lockstep 
 ## Native lane boundary at the actual C25b return distance
 
 Reused the already compiled TOK-HBM-2 native one-lane + one-tnode binary through ot-run (intel2/tolerant-swine unit oth-ubuntu-1542756-1793257104), without rebuilding. `+N=6 +RD=267 +RGAP=24`: fin1011 afterGO,120chunk sums,120writes,6returns,fault0. The same binary at rgap23 latches fault atGO+477 (although it later finishes); it is a required failure, not an exit-status pass. This measures the newly scheduled24-edge boundary directly in native RTL at833ps. The fixed VM returns are zero-data; this proves retained-row occupancy/service behavior, not full-tree numeric correctness or whole-die token passage. The inherited source/bench is the TOK-HBM-2 lane_service vehicle.
+
+## Actual bound SU profile and explicit physical candidates
+
+Corrected-source Yosys elaboration contains eight pgslice_lg_s parent paramods at MLAT4/ALAT4/LEAF1, QID2/3. The aliases lack WCOPY; this differs from the physical5/3/WCOPY1 candidate. SIDE3/3 is intentional: su_lane_build.side_ii prices its result hold until lane consumption. No SIDE RTL change is needed.
+
+Regenerating pgslice_s restores default0 WCOPY at the pinned-bank instance. The lg wrapper now passes default0 WCOPY through; its _s twin is regenerated too. No arithmetic/default/clock/SIDE behavior changes. Opt-in1 reaches the existing REBAL-gated bank mechanism. Fresh bind/compiler alignment is still required.
+
+The explicit su_build_profile.py --profile m5a3w1|m5a4w1 candidate transform changes only eight source instances, validates QID/G/ownership, preserves other parameters and all body bits, emits per-slice deltas/compiler flags, and refuses missing/extra South slices. There is no default selection/adoption.
+
+Profile5/3/1: linear emit-write32 versus actual29 (+3), bank-commit+1, SIDE II rsqrt19/sqrt1/spsqrt37/egate15. Profile5/4/1: linear33 (+4), bank+1, SIDE II22/1/55/24. Relative5/3 to5/4 adds1 linear adder stage; nonlinear depths grow by actual adder counts, so no global+1 token shortcut. Eleven source-profile/compiler-formula checks pass. Actual default/source-profile structural proof and physical winner selection remain open; prior5/3 component evidence does not qualify a4/4 bound.
