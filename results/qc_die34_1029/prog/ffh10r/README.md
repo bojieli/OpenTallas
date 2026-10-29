@@ -51,3 +51,12 @@ Verdict: physical sign-off (signoff.json SIGNED) + routed LEC EQUIVALENT + PG ce
 Structural item for the next plan event (not a blocker): related-pair headroom 0.8 ps (79.2 vs 80 TT; this pair spanned
 78.4-85.6 ps over three routes of the same tree) -> PROG CTS tree leaf re-balance of the pcap / p_q and u_hi_wd -> u_hi
 leaf groups.
+
+## DIE-QC-36 KITS: freeze.json provenance corrected (2026-10-29 13:27 PDT)
+
+COORD ruling [DIE-QC-35 KITS update] (1): kit freeze.json now records the RTL actually signed. `fix_freeze_provenance.py`
+(run on intel2 kit_ffh10r) added `rtl_signed` = main 66b68bff2 rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv (sha256 6680b721..), MIF=1,
++ the 3 SRAM _bb.v of 86288faea (d5e85b37/9352069d/35e0905c, verified against git), netlist 6_final.v c273e187, lec.json 34f4dfc4.
+The old spec/spec_sha256/repo_rev/rtl_patches values are kept verbatim under `superseded[]` (with the reason and the original
+file sha256 c6f46503); the untouched original is kept as `freeze.json.pre_provenance_fix` (both copied here). spec 86288faea stays
+the physical spec (pins/outline/macros); only the RTL source of record moved. Kit freeze.json sha256 now fdad72b9.
