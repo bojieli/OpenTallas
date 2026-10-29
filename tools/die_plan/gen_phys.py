@@ -1894,6 +1894,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                                " ".join(f"[expr {{round({v:.4f}*$dbu)}}]" for v in r))
                 k += 1
         pdn = PDN + "\n".join(obs) + "\n"
+    import partition_ft_reserve
+    ft_reservation = partition_ft_reserve.reservation(P, tn)
+    if ft_reservation is not None:
+        (kd / "partition_ft_reservation.json").write_text(json.dumps(ft_reservation, indent=1) + "\n")
+        pdn += partition_ft_reserve.tcl(ft_reservation)
     phy_doms = phy_pg_domains(P, tn)
     if phy_doms:
         # PATH-KV-SYSC 10-25 PHY PG hook: separate VDDPHY region(s) of die.pg.domains inside this type
