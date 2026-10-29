@@ -200,6 +200,15 @@ def main():
                 "--macro-placement", str(mf), "--macro-inst-fmt", "{k}"] + a.rest
     G.main(recipe_overrides=rec)
     kd = out / re.sub(r"[^A-Za-z0-9_.-]", "_", f"{MODULE}@kit")
+    # These four face buses enter the four-slot K->N landing writer.  The
+    # decoded binary write count makes the slot write conditions exclusive;
+    # face_guard still proves each own-Q hold mux and all four slot flops.
+    # Declare the actual replicated boundary rather than adding a face stage.
+    (kd / "land_slots.json").write_text(json.dumps({
+        "schema": "opentallas.land_slots.v1",
+        "buses": {b: {"D": 4, "form": "hold_mux"}
+                  for b in ("k_lo_v", "k_lo_d", "k_li_r", "k_rxv")},
+    }, indent=1) + "\n")
     inter = fix_interior(kd, *json.loads((kd / "freeze.json").read_text())["outline_um"])
     print(json.dumps(dict(kit=str(kd), clk=clk, interior=inter, srams=nm)))
 
