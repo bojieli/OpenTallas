@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.hbm.spb0_contract.v1",
+ "lk_instance": "u_lk_S0",
+ "ep_instance": "u_ep_S0",
+ "lk_module": "ot_pdie_serdes",
+ "ep_module": "hfd_ep_static",
+ "lk_clock_port": "clk",
+ "ep_clock_port": "clk",
+ "lk_reset_port": "rst_n",
+ "ep_reset_port": "rst_n",
+ "clock_expression": "clk",
+ "reset_expression": "rst_n",
+ "rx_depth": 4,
+ "tx_depth": 4,
+ "prior_station_realization": "NONE",
+ "partitions": [
+  "NW_spb0",
+  "NE_spb0"
+ ],
+ "plan_sha256": "5956f04b1e9dcb1ff9694aece3011c16a538e333da1ae08c0fd1682ad06f0ee5",
+ "placement_file": "placement.json"
+}

@@ -1,0 +1,60 @@
+ot-run: localhost      admits   697 GB (avail 847, reserve 0, fresh 46.1, peak 39.7, headroom 0, waiters 0/0 GB) load 60/112 running 29 disk 1277 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2444486-1793259718 after 1 s
+{
+ "schema": "opentallas.hbm.spb0_native.v1",
+ "source_bound_sha256": "889088a3da9e0f143c8d3982525b254b5ce8947da8d60b7e29488264f13c19f3",
+ "actual_graph_sha256": "5695daa4b655782abe0da10fbaa4e6e25b106393d5422d44dfb4de74d2b3e060",
+ "contract_sha256": "7bbd77ab50178a9b51511eb53f5f49c6a4804fdb7cfa69bf6b62ee521a7887f1",
+ "source_has_no_prior_realization": true,
+ "nets": [
+  {
+   "source": "u_lk_S0.rx/st",
+   "sink": "u_ep_S0.sd_rx/sd_st",
+   "width": 514,
+   "actual_source_depth": 0,
+   "actual_rtl_added_cycles": 4,
+   "old_planned_depth": 2,
+   "new_depth": 4,
+   "model_added_cycles": 2
+  },
+  {
+   "source": "u_ep_S0.sd_tx",
+   "sink": "u_lk_S0.tx",
+   "width": 512,
+   "actual_source_depth": 0,
+   "actual_rtl_added_cycles": 4,
+   "old_planned_depth": 4,
+   "new_depth": 4,
+   "model_added_cycles": 0
+  }
+ ],
+ "station_modules": [
+  {
+   "module": "ot_hbm_spb0_regs",
+   "instance": "u_hbm_spb0_rx",
+   "W": 514,
+   "N": 4,
+   "CW": 2
+  },
+  {
+   "module": "ot_hbm_spb0_regs",
+   "instance": "u_hbm_spb0_tx",
+   "W": 512,
+   "N": 4,
+   "CW": 0
+  }
+ ],
+ "placement_file": "placement.json",
+ "placement_sha256": "a566c12f04cacdcdcd98b2e12223ccebb1d6bd2d46b3b8e8b578f4d49653a611",
+ "actual_new_ff_per_partition": 4104,
+ "model_extra_ff_per_partition": 1028,
+ "warning": "candidate requires plan/site receipt, shifted lockstep, source binding and routed signoff; no P&R approval"
+}
+SPB_NATIVE   PASS mut=0 checks=11962 diffs=0 ACTUAL_RTL_ADDED_RX_ST=4 ACTUAL_RTL_ADDED_TX=4 MODEL_ADDED_RX_ST=2 MODEL_ADDED_TX=0
+tb.sv:32: $finish called at 120006 (1s)
+SPB_NATIVE CAUGHT mut=1 checks=11962 diffs=11962 ACTUAL_RTL_ADDED_RX_ST=4 ACTUAL_RTL_ADDED_TX=4 MODEL_ADDED_RX_ST=2 MODEL_ADDED_TX=0
+tb.sv:32: $finish called at 120006 (1s)
+SPB_NATIVE CAUGHT mut=2 checks=11962 diffs=11962 ACTUAL_RTL_ADDED_RX_ST=4 ACTUAL_RTL_ADDED_TX=4 MODEL_ADDED_RX_ST=2 MODEL_ADDED_TX=0
+tb.sv:32: $finish called at 120006 (1s)
+ot-run: RAN on localhost (unit oth-ubuntu-2444486-1793259718): exit 0

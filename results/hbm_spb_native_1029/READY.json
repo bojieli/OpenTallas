@@ -1,0 +1,29 @@
+{
+ "scope": "OPT-IN candidate source/geometry, no shared frontdoor edit",
+ "adapter": "spb0_native.run(bound,graph,contract,out)",
+ "manifest_field_proposal": "hbm_spb0_native",
+ "module": "ot_hbm_spb0_regs",
+ "module_sha256": "b6ca6b49e668bc0f7611ab03478a82a3429d25b46b7ba32f87744c53559f39bd",
+ "new_ff_per_partition": 4104,
+ "actual_rtl_added_cycles": {
+  "rx_st": 4,
+  "tx": 4
+ },
+ "model_added_cycles": {
+  "rx_st": 2,
+  "tx": 0
+ },
+ "proof": {
+  "checks": 11962,
+  "positive_diffs": 0,
+  "controls_caught": 2,
+  "log": "results/hbm_spb_native_1029/bench.log"
+ },
+ "pending": [
+  "real source boundfile/clock/reset contract",
+  "shared FLOW kit frontdoor opt-in",
+  "model/compiler source and latency receipt",
+  "realFFrow/master checks",
+  "PG/G2/clock/TTFFsignoff"
+ ]
+}
