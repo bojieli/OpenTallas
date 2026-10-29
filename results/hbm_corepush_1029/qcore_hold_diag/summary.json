@@ -1,0 +1,37 @@
+{
+  "scope": "read-only existing 4CTS placement RC FF; not new GRT residual",
+  "classes": {
+    "io": {
+      "negative_endpoints": 983,
+      "worst_ps": -153.110336,
+      "families": {
+        "slice_t": 267,
+        "rr_wd": 256,
+        "slice_x": 128,
+        "rf_wd": 128,
+        "red_cmd": 74,
+        "rf_rd_cmd": 54,
+        "rf_wa": 32,
+        "sfu_x": 32,
+        "rr_wa": 5,
+        "rf_wv": 4,
+        "rf_drain_cmd": 2,
+        "rr_wv": 1
+      }
+    },
+    "r2r": {
+      "negative_endpoints": 423,
+      "worst_ps": -65.719955,
+      "families": {}
+    },
+    "reset": {
+      "negative_endpoints": 0,
+      "worst_ps": 0,
+      "families": {}
+    }
+  },
+  "pinreg_mean_ps": 228.04,
+  "contract_bound_ps": 202.5,
+  "contract_deviation_ps": 25.54,
+  "next": "Do not blind-pad: worst IO needs5HB4 beyond canonical4 cap; current source/clock placement successor required. CUTS11 addresses TT separately."
+}
