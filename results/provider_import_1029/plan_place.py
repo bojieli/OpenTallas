@@ -21,6 +21,8 @@ def main():
  sb={s['stage']:s for s in budget['stages']};assert set(sb)==set(bystage),'missing/extra stage budget'
  for st,cc in bystage.items():
   assert len(cc)<=sb[st]['max_cells'] and sum(c['area_um2'] for c in cc)<=sb[st]['max_area_um2']+1e-8,'all-cell stage budget exceeded: '+st
+  for fw in sb[st].get('ff_windows_um',[]):
+   assert any(contained(fw,w) for w in sb[st]['windows_um']),'FF compaction outside explicit all-cell budget: '+st
  hard=[r[1:] for r in g['hard_forbidden']]+[r[2:] for r in g['existing_cells']]+[r[2:] for r in g['actual_lower_PG']];ht=STRtree([box(*r) for r in hard]);soft=[r[2:] for r in g['actual_lower_OBS']];stree=STRtree([box(*r) for r in soft]);new=collections.defaultdict(list);B=8000
  grid=budget['row_grid_um'];assert grid['orient']=='R0';ox,oy=[round(v*D) for v in grid['origin']];dx=round(grid['site_pitch']*D);dy=round(grid['row_pitch']*D);assert dx>0 and dy>0
  def buckets(r):
@@ -31,7 +33,7 @@ def main():
   if lo>hi:return None
   k=max(lo,min(round((target-ox)/dx),hi));return ox+k*dx
  def take(c,s,preferred):
-  w,h=g['masters'][c['master']]['wh_dbu'];ff=[round(v*D) for v in s['legacy_ff_rect_um']];node=[round(v*D) for v in s['node_xy_um']];wins=[ff] if preferred else [[round(v*D) for v in r] for r in s['windows_um']];best=[]
+  w,h=g['masters'][c['master']]['wh_dbu'];ff=[round(v*D) for v in s['legacy_ff_rect_um']];node=[round(v*D) for v in s['node_xy_um']];wins=([[round(v*D) for v in r] for r in s['ff_windows_um']] if c['sequential'] and s.get('ff_windows_um') else ([ff] if preferred else [[round(v*D) for v in r] for r in s['windows_um']]));best=[]
   for win in wins:
    # Budget bounds and die bounds apply to the WHOLE cell body.
    x0,y0,x1,y1=max(win[0],g['die_dbu'][0]),max(win[1],g['die_dbu'][1]),min(win[2],g['die_dbu'][2]),min(win[3],g['die_dbu'][3]);qr=box(x0,y0,x1,y1)
@@ -65,7 +67,7 @@ def main():
    if best:break
   return min(best,key=lambda z:(z[0],z[1]))[1:] if best else None
  output_launch={q.get('launch_inst') for q in inv.get('outputs',[])};placed=[];failed=[];soft_hits=0
- for j,(stage,cc) in enumerate(bystage.items()):
+ for j,(stage,cc) in enumerate(sorted(bystage.items(),key=lambda kv:(not bool(sb[kv[0]].get('ff_windows_um')),list(bystage).index(kv[0])))):
   s=sb[stage];cc.sort(key=lambda c:(c.get('role',c.get('cell_role','origin'))!='origin',not c['sequential'],c['inst'] not in output_launch,not bool(c.get('state_aliases')),c['inst']))
   for c in cc:
    got=take(c,s,True) if c['sequential'] and c.get('role',c.get('cell_role','origin'))=='origin' else None;legacy=got is not None

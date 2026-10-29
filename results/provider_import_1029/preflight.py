@@ -17,6 +17,7 @@ def main():
  if place['inventory_sha256']!=filehash(a.inventory):issue('stale_inventory','placement inventory differs')
  if place['source_constraints_sha256']!=filehash(a.proposal_constraints):issue('proposal_source_mismatch','constraints hash differs')
  if sorted(old['existing_cells'])!=sorted(fresh['existing_cells']):issue('frozen_clock_cells_changed','existing clock/standard-cell geometry differs')
+ if not fresh.get('partition_macros'):issue('actual_partition_macros_missing','clock-only base cannot qualify native reset/START boundaries')
  if not fresh.get('source_odb_sha256'):issue('actual_source_hash_missing','fresh export must pin the actual source ODB')
  if not bindings.get('source_odb_sha256') or bindings.get('source_odb_sha256')!=fresh.get('source_odb_sha256'):issue('boundary_source_mismatch','bindings must reference exact fresh ODB')
  want={c['inst']:c for c in inv['cells']};actual={n:c for n,c in mapped['cells'].items() if c['type']!='$scopeinfo'}
@@ -37,6 +38,7 @@ def main():
   q=pb[n]
   if len(t['bits'])!=1 or not isinstance(t['bits'][0],int):issue('non_scalar_or_constant_boundary',n);continue
   if not q.get('net') or not q.get('role'):issue('incomplete_boundary_binding',n);continue
+  if q['role']!='clock' and not q.get('native_endpoints'):issue('native_boundary_endpoint_missing',n)
   bitnets[t['bits'][0]].add(q['net'])
   if n=='rst_raw_n':issue('global_raw_reset_star_forbidden',n)
  for bit,nets in bitnets.items():

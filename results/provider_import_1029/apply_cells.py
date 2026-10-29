@@ -3,29 +3,38 @@
 Requires a clean fresh-source preflight. Existing cells, pin positions, wires and
 native ITerm connections stay immutable; only provider loads/cells/nets append.
 """
-import argparse,collections,hashlib,json,sys
+import argparse,collections,hashlib,json,sys,struct
 from pathlib import Path
 import odb
 
 def fhash(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def digest(x):return hashlib.sha256(json.dumps(x,separators=(',',':'),sort_keys=True).encode()).hexdigest()
-def native_snapshot(b,names):
+def native_route_digest(n):
+ h=hashlib.sha256();records=0;wire=n.getWire()
+ if wire:
+  for k in range(wire.length()):h.update(struct.pack('<2q',wire.getOpcode(k),wire.getData(k)));records+=1
+ for sw in n.getSWires():
+  h.update(str((sw.getId(),str(sw.getWireType()))).encode())
+  for shape in sw.getWires():
+   if shape.isVia():
+    via=shape.getTechVia();kind=1
+    if not via:via=shape.getBlockVia();kind=2
+    x,y=shape.getViaXY();r=(via.getId(),x,y,0,0)
+   else:kind=0;r=(shape.getTechLayer().getId(),shape.xMin(),shape.yMin(),shape.xMax(),shape.yMax())
+   h.update(struct.pack('<B5q',kind,*r));records+=1
+ pins=sorted([bt.getName(),str(bt.getIoType()),[[z.getTechLayer().getName(),z.xMin(),z.yMin(),z.xMax(),z.yMax()] for bp in bt.getBPins() for z in bp.getBoxes()]] for bt in n.getBTerms());h.update(json.dumps(pins,separators=(',',':')).encode())
+ return dict(sigtype=str(n.getSigType()),records=records,sha256=h.hexdigest())
+def native_snapshot(b,names,original_nets=None):
  cells=[];bindings=[]
  for name in sorted(names):
   i=b.findInst(name);cells.append([name,i.getMaster().getName(),list(i.getOrigin()),str(i.getOrient()),str(i.getPlacementStatus())])
   bindings.extend([name,it.getMTerm().getName(),it.getNet().getName() if it.getNet() else None] for it in i.getITerms())
- nets=[]
+ nets={}
  for n in b.getNets():
-  w=n.getWire();regular=[(w.getOpcode(k),w.getData(k)) for k in range(w.length())] if w else [];special=[]
-  for sw in n.getSWires():
-   rr=[]
-   for s in sw.getWires():
-    if s.isVia():v=s.getTechVia() or s.getBlockVia();rr.append(['via',v.getName(),*s.getViaXY()])
-    else:rr.append(['wire',s.getTechLayer().getName(),s.xMin(),s.yMin(),s.xMax(),s.yMax()])
-   special.append([sw.getId(),rr])
-  pins=sorted([bt.getName(),str(bt.getIoType()),[[z.getTechLayer().getName(),z.xMin(),z.yMin(),z.xMax(),z.yMax()] for bp in bt.getBPins() for z in bp.getBoxes()]] for bt in n.getBTerms())
-  nets.append([n.getName(),str(n.getSigType()),regular,special,pins])
- return dict(cells=digest(cells),native_connections=digest(sorted(bindings)),wires={r[0]:r[1:] for r in nets})
+  if original_nets is not None and n.getName() not in original_nets:continue
+  nets[n.getName()]=native_route_digest(n)
+ if original_nets is not None and set(nets)!=set(original_nets):raise ValueError('an original native net disappeared')
+ return dict(cells=digest(cells),native_connections=digest(sorted(bindings)),wires=nets)
 def transform(i,s):
  sx,sy={'R0':(1,1),'MX':(1,-1),'MY':(-1,1),'R180':(-1,-1)}[str(i.getOrient())];x,y=i.getOrigin();xx=sorted([x+sx*s.xMin(),x+sx*s.xMax()]);yy=sorted([y+sy*s.yMin(),y+sy*s.yMax()]);return[xx[0],yy[0],xx[1],yy[1]]
 def main():
@@ -33,7 +42,9 @@ def main():
  for key,path in [('inventory',a.inventory),('mapped',a.mapped),('placements',a.placements),('bindings',a.bindings)]:assert proof[key+'_sha256']==fhash(path),'stale import input '+key
  inv=json.load(open(a.inventory));pl=json.load(open(a.placements));bd=json.load(open(a.bindings));mapped=json.load(open(a.mapped))['modules'][a.top];assert len(pl['cells'])==len(inv['cells']) and not pl['failed'];out=Path(a.out);out.mkdir(parents=True,exist_ok=True);assert (out/'provider.odb').resolve()!=Path(a.source).resolve(),'input ODB is immutable';d=odb.dbDatabase.create();odb.read_db(d,a.source);b=d.getChip().getBlock();assert b.getDbUnitsPerMicron()==pl['dbu'];names={i.getName() for i in b.getInsts()};before=native_snapshot(b,names);places={c['inst']:c for c in pl['cells']};bits=collections.defaultdict(set)
  for n,q in mapped['ports'].items():
-  binding=bd['ports'][n];net=b.findNet(binding['net'])
+  binding=bd['ports'][n]
+  if binding['role']!='clock' and not binding.get('native_endpoints'):raise ValueError('actual native boundary endpoint required '+n)
+  net=b.findNet(binding['net'])
   if not net:raise ValueError('missing actual native boundary net '+n+' '+binding['net'])
   if q['direction']=='input':
    drivers=[it for it in net.getITerms() if str(it.getMTerm().getIoType())=='OUTPUT'];drivers+= [t for t in net.getBTerms() if str(t.getIoType())=='INPUT']
@@ -91,7 +102,7 @@ def main():
      if ly and ly.getRoutingLevel()>0:rr.append([ly.getName(),*transform(i,z)])
    if st in ['POWER','GROUND']:pg.append(dict(inst=i.getName(),pin=pin,net=it.getNet().getName(),shapes_dbu=rr))
    if c['sequential'] and pin=='CLK':clocks.append(dict(inst=i.getName(),stage=c['stage'],net=it.getNet().getName(),master=c['master'],shapes_dbu=rr))
- after=native_snapshot(b,names);assert before['cells']==after['cells'],'native cell/master/placement moved';assert before['native_connections']==after['native_connections'],'existing native ITerm connection changed';assert all(after['wires'].get(n)==r for n,r in before['wires'].items()),'existing native routes/pins changed';odb.write_db(d,str(out/'provider.odb'))
+ after=native_snapshot(b,names,original_nets=before['wires']);assert before['cells']==after['cells'],'native cell/master/placement moved';assert before['native_connections']==after['native_connections'],'existing native ITerm connection changed';assert all(after['wires'].get(n)==r for n,r in before['wires'].items()),'existing native routes/pins changed';odb.write_db(d,str(out/'provider.odb'))
  for name,data in [('all_cells.json',dict(dbu=pl['dbu'],cells=actual)),('provider_pg_terms.json',dict(dbu=pl['dbu'],terms=pg)),('clock_loads.json',dict(dbu=pl['dbu'],loads=clocks)),('bit_nets.json',bitnet)]:json.dump(data,open(out/name,'w'),separators=(',',':'))
  receipt=dict(verdict='ALL_MAPPED_CELLS_IMPORTED',cells=len(actual),flops=len(clocks),comb=len(actual)-len(clocks),new_pg_terms=len(pg),native_cells_preserved=len(names),native_cells_sha=before['cells'],native_connections_sha=before['native_connections'],existing_net_routes_preserved=len(before['wires']),inventory_sha256=fhash(a.inventory),placements_sha256=fhash(a.placements),scope='Physical all-cell source import only; full PG access, routed clock load timing, native seam/reset phase and token gates still required');(out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt,indent=2))
 if __name__=='__main__':main()

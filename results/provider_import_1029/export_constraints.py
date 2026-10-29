@@ -20,10 +20,11 @@ for name in sorted({c['master'] for c in inv['cells']}):
     if l and l.getRoutingLevel()>0:rects.append([l.getName(),s.xMin(),s.yMin(),s.xMax(),s.yMax()])
   pins[mt.getName()]=dict(direction=str(mt.getIoType()),sigtype=str(mt.getSigType()),rects_dbu=rects)
  masters[name]=dict(wh_dbu=[m.getWidth(),m.getHeight()],pins=pins)
-existing=[];soft=[];hard=[];pg=[];rows=[]
+existing=[];soft=[];hard=[];pg=[];rows=[];partition_macros=[]
 for i in b.getInsts():
  m=i.getMaster();bb=i.getBBox();r=[bb.xMin(),bb.yMin(),bb.xMax(),bb.yMax()]
  if str(m.getType()) not in ['BLOCK','BLOCK_BLACKBOX']:existing.append([i.getName(),m.getName(),*r]);continue
+ partition_macros.append(dict(inst=i.getName(),master=m.getName(),bbox_dbu=r,orient=str(i.getOrient())))
  for s in m.getObstructions():
   l=s.getTechLayer()
   if l and 1<=l.getRoutingLevel()<=3:soft.append([i.getName(),l.getName(),*tr(i,s)])
@@ -44,5 +45,5 @@ for n in b.getNets():
     if l and 1<=l.getRoutingLevel()<=3:pg.append([n.getName(),l.getName(),z.xMin(),z.yMin(),z.xMax(),z.yMax()])
 for r in b.getRows():
  bb=r.getBBox();rows.append(dict(name=r.getName(),orient=str(r.getOrient()),site=r.getSite().getName(),origin=list(r.getOrigin()),spacing=r.getSpacing(),sites=r.getSiteCount(),bbox=[bb.xMin(),bb.yMin(),bb.xMax(),bb.yMax()]))
-out=dict(schema='ot_provider_source_constraints/1',source=a.source,source_odb_sha256=hashlib.sha256(Path(a.source).read_bytes()).hexdigest(),die_plan=a.die_plan,dbu=D,die_dbu=[0,0,round(P.W*D),round(P.H*D)],masters=masters,existing_cells=existing,hard_forbidden=hard,actual_lower_OBS=soft,actual_lower_PG=pg,rows=rows,policy='Proposal may request soft-partition islands; apply MUST check fresh actual OBS. Never cut hard cores or move existing cells.')
+out=dict(schema='ot_provider_source_constraints/1',source=a.source,source_odb_sha256=hashlib.sha256(Path(a.source).read_bytes()).hexdigest(),die_plan=a.die_plan,dbu=D,die_dbu=[0,0,round(P.W*D),round(P.H*D)],masters=masters,partition_macros=partition_macros,existing_cells=existing,hard_forbidden=hard,actual_lower_OBS=soft,actual_lower_PG=pg,rows=rows,policy='Proposal may request soft-partition islands; apply MUST check fresh actual OBS. Never cut hard cores or move existing cells.')
 o=Path(a.out);o.mkdir(parents=True,exist_ok=True);json.dump(out,open(o/'constraints.json','w'),separators=(',',':'));print(json.dumps(dict(actual_masters=len(masters),existing_cells=len(existing),hard_rectangles=len(hard),lower_OBS=len(soft),lower_PG=len(pg),actual_rows=len(rows),die_um=[P.W,P.H]),indent=2))
