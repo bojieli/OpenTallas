@@ -2062,6 +2062,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *([f"export SYNTH_MEMORY_MAX_BITS = {rom_bits}"] if rom_bits > 4096 else []),
            # DIE-S81-26 10-29: declared clock-landing rings -> flip-flops per module (ot_keep_regs.tcl OT_LANDING_FF)
            *(["export OT_LANDING_FF = 1"] if landing_ff else []),
+           # DIE-KV-34 10-29 opt-in plan budgets.cland_fit_reserve: landing_placement fits each CLAND cell on its whole
+           # reserved footprint, so timing-driven GPL upsizing a FIRM ring cell in place cannot grow over a tapcell
+           # (KV io_ft kits_gen5 3_5 DPL-0033: INVx1 -> INVx3 over TAPCELL). Absent key = unchanged kit.
+           *(["export OT_CLAND_FIT_RESERVE = 1"] if P.budgets.get("cland_fit_reserve") else []),
            "export LEC_CHECK = 0",
            # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
            # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell

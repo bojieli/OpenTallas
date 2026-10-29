@@ -902,7 +902,10 @@ SCHEMA = {
             {k: ({"type": "integer", "minimum": 1} if k == "face_pin_layers" else _pos) for k in DEFAULT_BUDGETS},
             # S81 10-24 (coordinator ruling (a)): R3 reach inside hardened types with declared core connectivity
             # (core_conns.json); no default: unset = those types keep ft_station_max_um (check.py R3-INTERNAL)
-            core_internal_reach_um=_pos)},
+            core_internal_reach_um=_pos,
+            # DIE-KV-34 10-29 opt-in: gen phys exports OT_CLAND_FIT_RESERVE=1 (landing_placement fits CLAND cells on
+            # their reserved footprint); unset = unchanged kits
+            cland_fit_reserve={"type": "boolean"})},
     },
 }
 
