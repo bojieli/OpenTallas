@@ -37,3 +37,14 @@ intel1 qc-fix-2-1029/kits/qfd_dv_s8x_btab_f3b, unit 1217062 exit 0, btab/f3b_sig
 TT setup +306.07, FF hold +7.22 (F2 was -1.68: fixed), pair skew TT/FF 33.9/35.3 (limit 80), DRC 5 (4 M4 Short at SRAM
 g_btb[1].u_m x~253.4 y 25-29 and g_btb[3].u_m x~160 y 95.2, 1 VDD/net4045 M4 spacing), DRV slew TT 46 / FF 24 (u_twpd tw-data class,
 F2 was 88/45), PIN_AUDIT extra 5 = ck + ft_* ports absent from plan pins. F3r still routing (DRT iter ~44, 14 violations at 09:3x).
+
+## A0 native selected-source proof (NK) — controls by DIE-QC-33 (unit oth-ubuntu-186213, exit 0)
+mut0 PASS (0/12000 qualified errors, n_valid 63), mut7 CAUGHT (4165), mut3 CAUGHT (5342: t_out 4487 + n_y 856), mut8 SURVIVED.
+So on the actual selected source: mutant 3 is closed on NK (its n path is driven) but open on NL (n_valid 0); mutant 8
+(ROM-only) survives on both -> the bench needs a ROM-first-read stimulus before mut8 can be called caught. No PASS claim beyond these.
+
+## BTAB F3b DRC diagnosis (own odb probe, CHECKED against 6_final.odb)
+All 4 M4 shorts sit inside the SRAM macro edge strip: g_btb[1].u_m bbox x 159.84-254.664 -> shorts x 253.38-254.59 (east edge,
+y 25-29, nets of place4047/_5463_, u_twpd q[272] D); g_btb[3].u_m -> short x 159.91-161.03 (west edge, y 95.2, wire10840->_4335_).
+Std-cell signal M4 wires clip the ~1.3 um M4 edge strip of the macro (the macro-edge halo/keep-off does not cover M4 at the
+E/W edges). Structural fix = macro-edge M4 routing blockage/halo in the kit macro placement (existing kit mechanism), not an ECO.
