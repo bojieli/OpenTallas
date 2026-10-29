@@ -75,6 +75,9 @@ def extend(nets, ports, endpoints, inventory, bindings, via12=(9,11)):
         seen.add(name)
         if actual not in known:
             raise ValueError(f'provider clock has no selected tap binding: {actual}')
+        stage_port=f"t_st_{load['stage']}__clk"
+        if stage_port not in clock_bind or clock_bind[stage_port]['net']!=actual:
+            raise ValueError(f'provider CLK differs from selected stage tap: {stage_port} -> {actual}')
         raw = actual if actual in bynet else actual[3:] if actual.startswith('ck_') else actual
         if raw not in bynet:
             raise ValueError(f'provider clock is absent from the unchanged tree: {actual}')
