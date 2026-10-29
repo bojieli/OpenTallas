@@ -1,0 +1,36 @@
+{
+ "scope": "Pre-build structural sizing only, no timing closure or silicon adoption",
+ "define": "OT_S81ENG_HASH_PREFIX_ADD",
+ "default": "OFF",
+ "default_preprocessed_source_byte_identical": {
+  "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32.sv": true,
+  "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32_layer.sv": true
+ },
+ "widths": [
+  64,
+  28
+ ],
+ "prefix_logic_levels": {
+  "64": 6,
+  "28": 5
+ },
+ "max_estimated_logic_levels_including_generate_and_sum": {
+  "64": 14,
+  "28": 12
+ },
+ "clock_cycles_added": 0,
+ "registers_added": 0,
+ "ports_changed": 0,
+ "hash_L0_calls": {
+  "64": 8,
+  "28": 360
+ },
+ "conservative_boolean_gate_upper_bound_per_call": {
+  "64": 1155,
+  "28": 411
+ },
+ "conservative_all_prefix_boolean_gate_upper_bound": 157200,
+ "routing": "Same current164.16x267.84H0lot, no macros, <=M5 and existing physical pin/PG contracts. New48target512leaf clock rather than256; actual place review before CTS/GRT.",
+ "observed_failure": "Actual H0 TT-33.64, FF+5.01; pa2 to roll_s observed logic787.52ps, so clock-only correction still predicts-16.48ps. Prefix removes the serial byte-carry-select spine.",
+ "next": "Fresh candidate synth/LEC/place and actual geometry; then one normal CTS/GRT. SIGNOFF timing/pair clock unchanged; no model or clock relaxation."
+}

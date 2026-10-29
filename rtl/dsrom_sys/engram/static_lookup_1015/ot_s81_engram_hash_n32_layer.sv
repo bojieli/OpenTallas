@@ -8,6 +8,22 @@ module ot_s81_engram_hash_n32_l0 (
     input  wire [67:0]   in_w,
     output wire [575:0]  out_res
 );
+`ifdef OT_S81ENG_HASH_PREFIX_ADD
+    function automatic [63:0] add64cs(input [63:0] a, input [63:0] b);
+        reg [63:0] p [0:6];
+        reg [63:0] g [0:6];
+        integer k;
+        begin
+            p[0] = a ^ b;
+            g[0] = a & b;
+            for (k = 0; k < 6; k = k + 1) begin
+                g[k+1] = g[k] | (p[k] & (g[k] << (32'd1 << k)));
+                p[k+1] = p[k] & (p[k] << (32'd1 << k));
+            end
+            add64cs = p[0] ^ {g[6][62:0], 1'b0};
+        end
+    endfunction
+`else
     function automatic [63:0] add64cs(input [63:0] a, input [63:0] b);
         reg [8:0] z0, o0;
         reg [8:0] z1, o1;
@@ -54,6 +70,23 @@ module ot_s81_engram_hash_n32_l0 (
             add64cs[63:56] = c[7] ? o7[7:0] : z7[7:0];
         end
     endfunction
+`endif
+`ifdef OT_S81ENG_HASH_PREFIX_ADD
+    function automatic [27:0] csa28(input [27:0] a, input [27:0] b);
+        reg [27:0] p [0:5];
+        reg [27:0] g [0:5];
+        integer k;
+        begin
+            p[0] = a ^ b;
+            g[0] = a & b;
+            for (k = 0; k < 5; k = k + 1) begin
+                g[k+1] = g[k] | (p[k] & (g[k] << (32'd1 << k)));
+                p[k+1] = p[k] & (p[k] << (32'd1 << k));
+            end
+            csa28 = p[0] ^ {g[5][26:0], 1'b0};
+        end
+    endfunction
+`else
     function automatic [27:0] csa28(input [27:0] a, input [27:0] b);
         reg [8:0] z0, o0;
         reg [8:0] z1, o1;
@@ -80,6 +113,7 @@ module ot_s81_engram_hash_n32_l0 (
             csa28[27:24] = c[3] ? o3[3:0] : z3[3:0];
         end
     endfunction
+`endif
     // ---- product 0 (layer 0, order 0): in_w[0 +: 17], 16 kept window copies (one per 4-bit output slice)
     wire [63:0] ep0_0, ep1_0, ep2_0;
     wire [16:0] w_0_0;
@@ -9258,6 +9292,22 @@ module ot_s81_engram_hash_n32_l1 (
     input  wire [67:0]   in_w,
     output wire [575:0]  out_res
 );
+`ifdef OT_S81ENG_HASH_PREFIX_ADD
+    function automatic [63:0] add64cs(input [63:0] a, input [63:0] b);
+        reg [63:0] p [0:6];
+        reg [63:0] g [0:6];
+        integer k;
+        begin
+            p[0] = a ^ b;
+            g[0] = a & b;
+            for (k = 0; k < 6; k = k + 1) begin
+                g[k+1] = g[k] | (p[k] & (g[k] << (32'd1 << k)));
+                p[k+1] = p[k] & (p[k] << (32'd1 << k));
+            end
+            add64cs = p[0] ^ {g[6][62:0], 1'b0};
+        end
+    endfunction
+`else
     function automatic [63:0] add64cs(input [63:0] a, input [63:0] b);
         reg [8:0] z0, o0;
         reg [8:0] z1, o1;
@@ -9304,6 +9354,23 @@ module ot_s81_engram_hash_n32_l1 (
             add64cs[63:56] = c[7] ? o7[7:0] : z7[7:0];
         end
     endfunction
+`endif
+`ifdef OT_S81ENG_HASH_PREFIX_ADD
+    function automatic [27:0] csa28(input [27:0] a, input [27:0] b);
+        reg [27:0] p [0:5];
+        reg [27:0] g [0:5];
+        integer k;
+        begin
+            p[0] = a ^ b;
+            g[0] = a & b;
+            for (k = 0; k < 5; k = k + 1) begin
+                g[k+1] = g[k] | (p[k] & (g[k] << (32'd1 << k)));
+                p[k+1] = p[k] & (p[k] << (32'd1 << k));
+            end
+            csa28 = p[0] ^ {g[5][26:0], 1'b0};
+        end
+    endfunction
+`else
     function automatic [27:0] csa28(input [27:0] a, input [27:0] b);
         reg [8:0] z0, o0;
         reg [8:0] z1, o1;
@@ -9330,6 +9397,7 @@ module ot_s81_engram_hash_n32_l1 (
             csa28[27:24] = c[3] ? o3[3:0] : z3[3:0];
         end
     endfunction
+`endif
     // ---- product 4 (layer 1, order 0): in_w[0 +: 17], 16 kept window copies (one per 4-bit output slice)
     wire [63:0] ep0_4, ep1_4, ep2_4;
     wire [16:0] w_4_0;

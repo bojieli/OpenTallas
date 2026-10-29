@@ -1,0 +1,510 @@
+
+-- Running command `read_verilog -sv /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv; prep -top hash_add_miter; flatten; memory_map; opt; sat -prove mut_equal28 1 -show-inputs' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv' to AST representation.
+Generating RTLIL representation for module `\hash_add_miter'.
+Warning: Replacing memory \mut28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:136$20.g with list of registers. See /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128, /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:126
+Warning: Replacing memory \mut28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:136$20.p with list of registers. See /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128, /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:125
+Warning: Replacing memory \fast28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$18.g with list of registers. See /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114, /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:112
+Warning: Replacing memory \fast28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$18.p with list of registers. See /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114, /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:111
+Warning: Replacing memory \mut64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:79$16.g with list of registers. See /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:71, /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:69
+Warning: Replacing memory \mut64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:79$16.p with list of registers. See /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:71, /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:68
+Warning: Replacing memory \fast64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$14.g with list of registers. See /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57, /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:55
+Warning: Replacing memory \fast64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$14.p with list of registers. See /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57, /srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:54
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \hash_add_miter
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \hash_add_miter
+Removed 0 unused modules.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 186 assignments to connections.
+
+2.2.4. Executing PROC_INIT pass (extract init attributes).
+
+2.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+2.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:136$362'.
+Creating decoders for process `\hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:136$330'.
+Creating decoders for process `\hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$284'.
+Creating decoders for process `\hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$252'.
+Creating decoders for process `\hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:79$198'.
+Creating decoders for process `\hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:79$138'.
+Creating decoders for process `\hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$85'.
+Creating decoders for process `\hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$25'.
+
+2.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\hash_add_miter.\mut28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:136$12.$result' from process `\hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:136$362'.
+No latch inferred for signal `\hash_add_miter.\gold28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:136$11.$result' from process `\hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:136$330'.
+No latch inferred for signal `\hash_add_miter.\fast28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$10.$result' from process `\hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$284'.
+No latch inferred for signal `\hash_add_miter.\gold28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$9.$result' from process `\hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$252'.
+No latch inferred for signal `\hash_add_miter.\mut64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:79$8.$result' from process `\hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:79$198'.
+No latch inferred for signal `\hash_add_miter.\gold64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:79$7.$result' from process `\hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:79$138'.
+No latch inferred for signal `\hash_add_miter.\fast64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$6.$result' from process `\hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$85'.
+No latch inferred for signal `\hash_add_miter.\gold64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$5.$result' from process `\hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$25'.
+
+2.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+2.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+2.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:136$362'.
+Removing empty process `hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:136$330'.
+Removing empty process `hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$284'.
+Removing empty process `hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$252'.
+Removing empty process `hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:79$198'.
+Removing empty process `hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:79$138'.
+Removing empty process `hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$85'.
+Removing empty process `hash_add_miter.$proc$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$25'.
+Cleaned up 0 empty switches.
+
+2.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hash_add_miter.
+<suppressed ~44 debug messages>
+
+2.3. Executing FUTURE pass.
+
+2.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hash_add_miter.
+
+2.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hash_add_miter..
+Removed 16 unused cells and 252 unused wires.
+<suppressed ~17 debug messages>
+
+2.6. Executing CHECK pass (checking for obvious problems).
+Checking module hash_add_miter...
+Found and reported 0 problems.
+
+2.7. Executing OPT pass (performing simple optimizations).
+
+2.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hash_add_miter.
+
+2.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hash_add_miter'.
+Computing hashes of 180 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 144 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 130 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 126 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 122 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 118 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 115 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 113 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 111 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 109 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 107 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 105 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 103 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 102 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 101 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+<suppressed ~237 debug messages>
+Removed a total of 79 cells.
+
+2.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hash_add_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~72 debug messages>
+
+2.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hash_add_miter.
+Performed a total of 0 changes.
+
+2.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hash_add_miter'.
+Computing hashes of 101 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 97 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 93 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 90 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 88 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 86 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 84 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Computing hashes of 83 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+<suppressed ~54 debug messages>
+Removed a total of 18 cells.
+
+2.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hash_add_miter..
+Removed 0 unused cells and 81 unused wires.
+<suppressed ~1 debug messages>
+
+2.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hash_add_miter.
+
+2.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hash_add_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~36 debug messages>
+
+2.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hash_add_miter.
+Performed a total of 0 changes.
+
+2.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hash_add_miter'.
+Computing hashes of 83 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Removed a total of 0 cells.
+
+2.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hash_add_miter..
+
+2.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hash_add_miter.
+
+2.7.14. Finished fast OPT passes. (There is nothing left to do.)
+
+2.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 1 bits (of 9) from port A of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:15$160 ($add).
+Removed top 1 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:15$160 ($add).
+Removed top 1 bits (of 9) from port A of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:20$164 ($add).
+Removed top 1 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:20$164 ($add).
+Removed top 8 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:20$165 ($add).
+Removed top 1 bits (of 9) from port A of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:24$169 ($add).
+Removed top 1 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:24$169 ($add).
+Removed top 8 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:24$170 ($add).
+Removed top 1 bits (of 9) from port A of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:28$174 ($add).
+Removed top 1 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:28$174 ($add).
+Removed top 8 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:28$175 ($add).
+Removed top 1 bits (of 9) from port A of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:32$179 ($add).
+Removed top 1 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:32$179 ($add).
+Removed top 8 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:32$180 ($add).
+Removed top 1 bits (of 9) from port A of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:36$184 ($add).
+Removed top 1 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:36$184 ($add).
+Removed top 8 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:36$185 ($add).
+Removed top 1 bits (of 9) from port A of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:40$189 ($add).
+Removed top 1 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:40$189 ($add).
+Removed top 8 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:40$190 ($add).
+Removed top 1 bits (of 9) from port A of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:44$194 ($add).
+Removed top 1 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:44$194 ($add).
+Removed top 8 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:44$195 ($add).
+Removed top 1 bits (of 9) from port Y of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:44$195 ($add).
+Removed top 1 bits (of 9) from port A of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:44$195 ($add).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:71$247 ($or).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:71$247 ($or).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:71$247 ($or).
+Removed top 1 bits (of 9) from port A of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:88$266 ($add).
+Removed top 1 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:88$266 ($add).
+Removed top 1 bits (of 9) from port A of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:93$270 ($add).
+Removed top 1 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:93$270 ($add).
+Removed top 1 bits (of 9) from port A of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:97$275 ($add).
+Removed top 1 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:97$275 ($add).
+Removed top 4 bits (of 5) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:101$281 ($add).
+Removed top 1 bits (of 5) from port Y of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:101$281 ($add).
+Removed top 1 bits (of 5) from port A of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:101$281 ($add).
+Removed top 8 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:93$349 ($add).
+Removed top 8 bits (of 9) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:97$354 ($add).
+Removed top 1 bits (of 5) from port A of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:101$358 ($add).
+Removed top 1 bits (of 5) from port B of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:101$358 ($add).
+Removed top 1 bits (of 5) from port Y of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:101$358 ($add).
+Removed top 1 bits (of 28) from port Y of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$404 ($or).
+Removed top 1 bits (of 28) from port A of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$404 ($or).
+Removed top 1 bits (of 28) from port B of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$404 ($or).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$129 ($or).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$129 ($or).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$129 ($or).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$133 ($and).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$133 ($and).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$133 ($and).
+Removed top 1 bits (of 9) from port Y of cell hash_add_miter.$add$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:44$194 ($add).
+Removed top 1 bits (of 28) from port Y of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$321 ($or).
+Removed top 1 bits (of 28) from port A of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$321 ($or).
+Removed top 1 bits (of 28) from port B of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$321 ($or).
+Removed top 1 bits (of 28) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$403 ($and).
+Removed top 1 bits (of 28) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$403 ($and).
+Removed top 1 bits (of 28) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$403 ($and).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$124 ($or).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$124 ($or).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$124 ($or).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$128 ($and).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$128 ($and).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$128 ($and).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:58$131 ($and).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:58$131 ($and).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:58$131 ($and).
+Removed top 1 bits (of 28) from port Y of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$316 ($or).
+Removed top 1 bits (of 28) from port A of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$316 ($or).
+Removed top 1 bits (of 28) from port B of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$316 ($or).
+Removed top 1 bits (of 28) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$398 ($and).
+Removed top 1 bits (of 28) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$398 ($and).
+Removed top 1 bits (of 28) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$398 ($and).
+Removed top 1 bits (of 28) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:129$401 ($and).
+Removed top 1 bits (of 28) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:129$401 ($and).
+Removed top 1 bits (of 28) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:129$401 ($and).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$119 ($or).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$119 ($or).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$119 ($or).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$123 ($and).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$123 ($and).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$123 ($and).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:58$126 ($and).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:58$126 ($and).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:58$126 ($and).
+Removed top 1 bits (of 28) from port Y of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$311 ($or).
+Removed top 1 bits (of 28) from port A of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$311 ($or).
+Removed top 1 bits (of 28) from port B of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$311 ($or).
+Removed top 1 bits (of 28) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$393 ($and).
+Removed top 1 bits (of 28) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$393 ($and).
+Removed top 1 bits (of 28) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$393 ($and).
+Removed top 1 bits (of 28) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:129$396 ($and).
+Removed top 1 bits (of 28) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:129$396 ($and).
+Removed top 1 bits (of 28) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:129$396 ($and).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$114 ($or).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$114 ($or).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$114 ($or).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$118 ($and).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$118 ($and).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$118 ($and).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:72$234 ($and).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:72$234 ($and).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:72$234 ($and).
+Removed top 1 bits (of 28) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$310 ($and).
+Removed top 1 bits (of 28) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$310 ($and).
+Removed top 1 bits (of 28) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$310 ($and).
+Removed top 1 bits (of 28) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:115$313 ($and).
+Removed top 1 bits (of 28) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:115$313 ($and).
+Removed top 1 bits (of 28) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:115$313 ($and).
+Removed top 1 bits (of 28) from port Y of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$384 ($or).
+Removed top 1 bits (of 28) from port A of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$384 ($or).
+Removed top 1 bits (of 28) from port B of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$384 ($or).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:71$222 ($or).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:71$222 ($or).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$or$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:71$222 ($or).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:71$226 ($and).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:71$226 ($and).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:71$226 ($and).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:72$229 ($and).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:72$229 ($and).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:72$229 ($and).
+Removed top 1 bits (of 28) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:112$303 ($and).
+Removed top 1 bits (of 28) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:112$303 ($and).
+Removed top 1 bits (of 28) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:112$303 ($and).
+Removed top 1 bits (of 28) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:115$308 ($and).
+Removed top 1 bits (of 28) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:115$308 ($and).
+Removed top 1 bits (of 28) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:115$308 ($and).
+Removed top 1 bits (of 28) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$383 ($and).
+Removed top 1 bits (of 28) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$383 ($and).
+Removed top 1 bits (of 28) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:128$383 ($and).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:69$219 ($and).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:69$219 ($and).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:69$219 ($and).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:71$221 ($and).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:71$221 ($and).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:71$221 ($and).
+Removed top 1 bits (of 64) from port Y of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:72$224 ($and).
+Removed top 1 bits (of 64) from port A of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:72$224 ($and).
+Removed top 1 bits (of 64) from port B of cell hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:72$224 ($and).
+Removed top 1 bits (of 5) from wire hash_add_miter.$0\gold28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$17.c[4:0]$265.
+Removed top 1 bits (of 28) from wire hash_add_miter.$0\fast28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$18.p[1][27:0]$291.
+Removed top 1 bits (of 64) from wire hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$113_Y.
+Removed top 1 bits (of 64) from wire hash_add_miter.$0\fast64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$14.p[4][63:0]$95.
+Removed top 1 bits (of 64) from wire hash_add_miter.$0\fast64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$14.p[3][63:0]$94.
+Removed top 1 bits (of 64) from wire hash_add_miter.$0\fast64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$14.p[2][63:0]$93.
+Removed top 1 bits (of 64) from wire hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$118_Y.
+Removed top 1 bits (of 64) from wire hash_add_miter.$0\fast64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$14.p[1][63:0]$92.
+Removed top 1 bits (of 28) from wire hash_add_miter.$0\fast28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$18.g[0][27:0]$296.
+Removed top 1 bits (of 28) from wire hash_add_miter.$0\fast28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$18.g[1][27:0]$297.
+Removed top 1 bits (of 64) from wire hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$123_Y.
+Removed top 1 bits (of 28) from wire hash_add_miter.$0\fast28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$18.g[2][27:0]$298.
+Removed top 1 bits (of 28) from wire hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$310_Y.
+Removed top 1 bits (of 64) from wire hash_add_miter.$0\fast64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$14.g[2][63:0]$100.
+Removed top 1 bits (of 64) from wire hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$128_Y.
+Removed top 1 bits (of 64) from wire hash_add_miter.$0\fast64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$14.g[3][63:0]$101.
+Removed top 1 bits (of 28) from wire hash_add_miter.$0\fast28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$18.g[3][27:0]$299.
+Removed top 1 bits (of 9) from wire hash_add_miter.$0\gold64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$13.c[8:0]$46.
+Removed top 1 bits (of 9) from wire hash_add_miter.$0\gold64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$13.o7[8:0]$45.
+Removed top 1 bits (of 9) from wire hash_add_miter.$0\gold64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$13.z7[8:0]$44.
+Removed top 1 bits (of 64) from wire hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$133_Y.
+Removed top 1 bits (of 28) from wire hash_add_miter.$0\fast28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$18.g[4][27:0]$300.
+Removed top 1 bits (of 28) from wire hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$315_Y.
+Removed top 1 bits (of 28) from wire hash_add_miter.$0\fast28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$18.g[5][27:0]$301.
+Removed top 1 bits (of 64) from wire hash_add_miter.$0\fast64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$14.g[4][63:0]$102.
+Removed top 1 bits (of 28) from wire hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$325_Y.
+Removed top 1 bits (of 5) from wire hash_add_miter.$0\gold28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$17.z3[4:0]$263.
+Removed top 1 bits (of 64) from wire hash_add_miter.$0\fast64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$14.g[5][63:0]$103.
+Removed top 1 bits (of 64) from wire hash_add_miter.$0\fast64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$14.g[6][63:0]$104.
+Removed top 1 bits (of 5) from wire hash_add_miter.$0\gold28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$17.o3[4:0]$264.
+Removed top 1 bits (of 28) from wire hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$320_Y.
+Removed top 1 bits (of 64) from wire hash_add_miter.$0\fast64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$14.g[0][63:0]$98.
+Removed top 1 bits (of 28) from wire hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:114$305_Y.
+Removed top 1 bits (of 64) from wire hash_add_miter.$0\fast64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$14.g[1][63:0]$99.
+Removed top 1 bits (of 28) from wire hash_add_miter.$0\fast28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$18.p[4][27:0]$294.
+Removed top 1 bits (of 64) from wire hash_add_miter.$and$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:57$108_Y.
+Removed top 1 bits (of 28) from wire hash_add_miter.$0\fast28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$18.p[3][27:0]$293.
+Removed top 1 bits (of 64) from wire hash_add_miter.$0\fast64$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:78$14.p[5][63:0]$96.
+Removed top 1 bits (of 28) from wire hash_add_miter.$0\fast28$func$/srv/opentallas-scratch2/claude/codex-s81-cores-resume1029/hash_proof/hash_add_miter.sv:135$18.p[2][27:0]$292.
+
+2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hash_add_miter..
+Removed 0 unused cells and 39 unused wires.
+<suppressed ~1 debug messages>
+
+2.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.11. Executing OPT pass (performing simple optimizations).
+
+2.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hash_add_miter.
+
+2.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hash_add_miter'.
+Computing hashes of 83 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Removed a total of 0 cells.
+
+2.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hash_add_miter..
+
+2.11.4. Finished fast OPT passes.
+
+2.12. Executing SORT pass.
+
+2.13. Printing statistics.
+
+=== hash_add_miter ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      195 wires
+     6047 wire bits
+      138 public wires
+     4236 public wire bits
+        8 ports
+      188 port bits
+       83 cells
+       22   $add
+       22   $and
+        4   $eq
+       18   $mux
+       11   $or
+        6   $xor
+
+2.14. Executing CHECK pass (checking for obvious problems).
+Checking module hash_add_miter...
+Found and reported 0 problems.
+
+3. Executing FLATTEN pass (flatten design).
+
+4. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+5. Executing OPT pass (performing simple optimizations).
+
+5.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hash_add_miter.
+
+5.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hash_add_miter'.
+Computing hashes of 83 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Removed a total of 0 cells.
+
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hash_add_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~36 debug messages>
+
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hash_add_miter.
+Performed a total of 0 changes.
+
+5.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hash_add_miter'.
+Computing hashes of 83 cells of `\hash_add_miter'.
+Finding duplicate cells in `\hash_add_miter'.
+Removed a total of 0 cells.
+
+5.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hash_add_miter..
+
+5.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hash_add_miter.
+
+5.9. Finished fast OPT passes. (There is nothing left to do.)
+
+6. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 83 cells to SAT database.
+Import proof-constraint: \mut_equal28 = 1'1
+Final proof equation: \mut_equal28 = 1'1
+Import show expression: \a28
+Import show expression: \a64
+Import show expression: \b28
+Import show expression: \b64
+
+Solving problem with 11621 variables and 30487 clauses..
+SAT proof finished - model found: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Signal Name             Dec       Hex                                                                 Bin
+  --------------- ----------- --------- -------------------------------------------------------------------
+  \a28               85111056   512b110                                        0101000100101011000100010000
+  \a64                     --        --    0001000011111101100100000000011111111110010011000010000000000001
+  \b28               92862382   588f7ae                                        0101100010001111011110101110
+  \b64                     --        --    1000000000000010001111000001010101000001001011000001101000001110

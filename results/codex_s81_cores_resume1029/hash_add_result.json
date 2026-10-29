@@ -1,0 +1,8 @@
+{
+ "lockstep": "HASH_ADD_LOCKSTEP PASS edges=20000 widths=64,28 mismatches=0 mutants=3132,3132 added_cycles=0",
+ "formal": "PASS all 128+56 input bits symbolic, both widths",
+ "wrong_carry_mutants": "CAUGHT 64 and28 by formal counterexamples",
+ "added_cycles": 0,
+ "vehicle_sha256": "5444e85841d78f6b6d835aaf8f53ff2ff6382f719fe86a884ed1caf64242c590",
+ "scope": "Primitive64/28bit actual emitted integer functions: exact symbolic inputs plus clocked lockstep. No whole-H0 or G5 claim."
+}
