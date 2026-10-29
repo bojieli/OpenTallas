@@ -43,3 +43,20 @@ Owner of plan_access/die_trial decides how band-share capacity OBS interact with
 clock-cell rails the way partition M7 PG is cut, or exclude die band-share OBS from the PG-access blocker set and keep them for
 GRT only), same question for the M8 0.40-um segments; then re-plan, apply_access, render, launch grt.
 No IR, DRC, route, timing, sign-off or freeze claim. 0 cycles added.
+
+## 4. Default follow-up (DIE-KV-31 parent, COORD-absent default), 2026-10-29 11:09 PDT
+- M8 0.40-um die BLOCK OBS (7,977, CHECKED count = 20,496 obs.tcl M8 - 12,519 die-wide PG reservations): produced by
+  die_trial.reserve_rects (kit build, `reserve = reserve_rects(segs, leaf_legs, P)` -> grt_tcl obs): the planned die clock tree
+  M8 legs, NDR_TRACKS x M8 pitch = 0.40 um (M9 legs likewise). Owner = die clock plan (clock_kit). Pre-route RESERVATIONS for
+  real clock metal (12.1b, shielded), NOT a capacity model -> kept hard; no soft-M8 variant run.
+- M7 band-share OBS (3,908) = die_trial.band_share_obs capacity model (only M7 source in obs.tcl). Variant `scripts/plan_access_soft.py`
+  (copy of codex plan_access.py patched by patch_soft.py; original untouched): `--soft-block-layer M7` = not hard, PG metal
+  charged per stripe per 10.8-um gcell; `--y-reach` M8 landing half-range.
+  - A (y-reach 1.4 um, original): ok 35,970 groups / 60,453 contacts, FAILED 9,220 (VDD 4,433 / VSS 4,787); stripe charge max 0.107
+    (9/84 tracks), 0 stripe-gcells > 0.6, 10,718 charged. Rejections obstacle_M8 197,204.
+  - B (y-reach 5.4 um): ok 36,427 / 61,268, FAILED 8,763 (VDD 4,238 / VSS 4,525); max 0.107, 0 > 0.6.
+  - Residual failures (A): 4,908 within 1.4 um of a clock M8 reservation, 418 within 1.4-10.8 um, 3,894 with none within
+    10.8 um (blocked by M8 opposite-net PG / other M8 BLOCK, not attributed further - UNCHECKED).
+- Not clean -> apply_access, render and GRT NOT run. Next: planner must land on M8 away from clock legs (e.g. same-net M9 via an
+  M8 jog outside the NDR strip, or VIA78 directly on the nearest same-net M8 die stripe), and the 3,894 non-clock M8 failures
+  need attribution; then re-plan -> apply_access -> render -> run_grt.sh.
