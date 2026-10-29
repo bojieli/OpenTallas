@@ -161,3 +161,6 @@ SUCCESSOR (QC-A0-KITS-12):
  b. NL fresh-gate LEC: refresh/reprove the 57 transferred KV-address-prep correspondences (intel1 codex-qc-nl-lec-1029/reset_newgate{,_target}; 49 g_off[2].r_part, 4 g_off[3], c_p/q_p[2][11]). Full native proof before any route.
  c. GEOM classification of the NL flags (aspect/partial_face/channel_v 1.50/col_v 1.82) on nl_reset6_place.png; then parent_hook PLAN_ONLY local CTS -> DME planned TT/FF IO reference (not 250/202.5 for the deep parent) -> render/review -> trunk.
  d. NK recipe (720 taps): node-collar + reset path planning; all 3 child views are committed.
+
+## CODEX notes 2026-10-29 02:55 PDT — fresh NL LEC takeover
+CODEX took over fresh mapped NL proof on own codex/qc-lec-0251@211db7690. Inherited inputs cloned to intel1:/srv/opentallas-scratch2/claude/codex-qc-nl-lec-0251, predecessor dirs untouched. First diagnostic confirms all57 transferred KV-address relations refuted; after dropping exactly57, joint12513/12513 PROVED but fullcompare31580/31685 (105 address-prep differences), FAIL retained. Fresh actual-AIG correspondence generation live through ot-run16GB/4T intel1 unit oth-ubuntu-1934993-1793267664, output fresh/. This rebuilds the proof profile; no RTL/constraints/latency change or route authorization.
