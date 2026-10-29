@@ -69,6 +69,13 @@ def test_ot_clk_duty_entrypoint(tmp_path):
     assert json.loads(out.read_text())["corners"]["FF"]["clock_cell"] == "inv2"
 
 
+def test_proof_wrong_corner_is_rejected(tmp_path):
+    p = tmp_path / "proof.json"
+    p.write_text(json.dumps(dict(corner="TT", taps=[])))
+    with pytest.raises(ValueError, match="corner differs"):
+        C.report(p, "FF", "mixed")
+
+
 def test_mixed_uses_shared_component_local_parity(tmp_path):
     from clock_components import scaled
     keys = ("late_ps", "early_ps", "fall_late_ps", "fall_early_ps")
