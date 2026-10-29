@@ -1,0 +1,22 @@
+{
+ "status": "PASS_GEOMETRY",
+ "physical_route": false,
+ "clock_width_um": 0.08,
+ "tree_spacing_um": 0.32,
+ "m6_width_um": 0.032,
+ "max_jog_um": 1.5,
+ "riser_max_um": 2.5,
+ "variant": "R3",
+ "r2_margin_um": null,
+ "window_census": {
+  "router_track_in_window": 84267,
+  "tracks_5+": 89180,
+  "router_track_outside": 4913
+ },
+ "column_splits": 71,
+ "riser_island": "off",
+ "note": "DIE-QC-37: range windows, no M8 witness/pad pre-reserve; prebuild with --backbone-plan is the check",
+ "records": 89180,
+ "unresolved": 0,
+ "sample_fail": []
+}
