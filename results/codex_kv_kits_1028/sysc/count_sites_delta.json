@@ -1,0 +1,765 @@
+{
+ "type": "kv3_sys_c",
+ "count_straps": [
+  {
+   "name": "strap_ca_efall",
+   "width": 1,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     12.024,
+     514.152
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_ft1_i",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     12.024,
+     491.256
+    ],
+    [
+     12.024,
+     492.12
+    ],
+    [
+     12.024,
+     492.984
+    ],
+    [
+     12.024,
+     493.848
+    ],
+    [
+     12.024,
+     494.712
+    ],
+    [
+     12.024,
+     495.576
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_host_boot_go",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     12.024,
+     390.552
+    ],
+    [
+     12.024,
+     391.416
+    ],
+    [
+     12.024,
+     392.28
+    ],
+    [
+     12.024,
+     393.144
+    ],
+    [
+     12.024,
+     394.008
+    ],
+    [
+     12.024,
+     394.872
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_host_die_rst_n",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     12.024,
+     419.352
+    ],
+    [
+     12.024,
+     420.216
+    ],
+    [
+     12.024,
+     421.08
+    ],
+    [
+     12.024,
+     421.944
+    ],
+    [
+     12.024,
+     422.808
+    ],
+    [
+     12.024,
+     423.672
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_host_host_drained_local",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     12.024,
+     562.92
+    ],
+    [
+     12.024,
+     563.784
+    ],
+    [
+     12.024,
+     564.648
+    ],
+    [
+     12.024,
+     565.512
+    ],
+    [
+     12.024,
+     566.376
+    ],
+    [
+     12.024,
+     567.24
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_host_link_rst_n",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     12.024,
+     591.0
+    ],
+    [
+     12.024,
+     591.864
+    ],
+    [
+     12.024,
+     592.728
+    ],
+    [
+     12.024,
+     593.592
+    ],
+    [
+     12.024,
+     594.456
+    ],
+    [
+     12.024,
+     595.32
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_host_lrc",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     12.024,
+     619.56
+    ],
+    [
+     12.024,
+     620.424
+    ],
+    [
+     12.024,
+     621.288
+    ],
+    [
+     12.024,
+     622.152
+    ],
+    [
+     12.024,
+     623.016
+    ],
+    [
+     12.024,
+     623.88
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_host_program_begin_v",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     12.024,
+     648.36
+    ],
+    [
+     12.024,
+     649.224
+    ],
+    [
+     12.024,
+     650.088
+    ],
+    [
+     12.024,
+     650.952
+    ],
+    [
+     12.024,
+     651.816
+    ],
+    [
+     12.024,
+     652.68
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_host_rec_tx",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     12.024,
+     722.328
+    ],
+    [
+     12.024,
+     723.192
+    ],
+    [
+     12.024,
+     724.056
+    ],
+    [
+     12.024,
+     724.92
+    ],
+    [
+     12.024,
+     725.784
+    ],
+    [
+     12.024,
+     726.648
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_host_token_epoch",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     12.024,
+     797.544
+    ],
+    [
+     12.024,
+     798.408
+    ],
+    [
+     12.024,
+     799.272
+    ],
+    [
+     12.024,
+     800.136
+    ],
+    [
+     12.024,
+     801.0
+    ],
+    [
+     12.024,
+     801.864
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_kvs_attn_attn__tx_payload",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     2148.024,
+     700.776
+    ],
+    [
+     2148.024,
+     701.64
+    ],
+    [
+     2148.024,
+     702.504
+    ],
+    [
+     2148.024,
+     703.368
+    ],
+    [
+     2148.024,
+     704.232
+    ],
+    [
+     2148.024,
+     705.096
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_kvs_attn_attn__tx_valid",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     2148.024,
+     770.712
+    ],
+    [
+     2148.024,
+     771.576
+    ],
+    [
+     2148.024,
+     772.44
+    ],
+    [
+     2148.024,
+     773.304
+    ],
+    [
+     2148.024,
+     774.168
+    ],
+    [
+     2148.024,
+     775.032
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_kvs_ctl_boot__link_cfg_addr",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     2148.024,
+     795.384
+    ],
+    [
+     2148.024,
+     796.248
+    ],
+    [
+     2148.024,
+     797.112
+    ],
+    [
+     2148.024,
+     797.976
+    ],
+    [
+     2148.024,
+     798.84
+    ],
+    [
+     2148.024,
+     799.704
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_kvs_ctl_boot__link_cfg_data",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     2148.024,
+     822.552
+    ],
+    [
+     2148.024,
+     823.416
+    ],
+    [
+     2148.024,
+     824.28
+    ],
+    [
+     2148.024,
+     825.144
+    ],
+    [
+     2148.024,
+     826.008
+    ],
+    [
+     2148.024,
+     826.872
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_kvs_ctl_boot__link_cfg_rx_we",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     2148.024,
+     849.768
+    ],
+    [
+     2148.024,
+     850.632
+    ],
+    [
+     2148.024,
+     851.496
+    ],
+    [
+     2148.024,
+     852.36
+    ],
+    [
+     2148.024,
+     853.224
+    ],
+    [
+     2148.024,
+     854.088
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_kvs_ctl_boot__link_cfg_tx_we",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     2148.024,
+     873.96
+    ],
+    [
+     2148.024,
+     874.824
+    ],
+    [
+     2148.024,
+     875.688
+    ],
+    [
+     2148.024,
+     876.552
+    ],
+    [
+     2148.024,
+     877.416
+    ],
+    [
+     2148.024,
+     878.28
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_kvs_ctl_kvi",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     2148.024,
+     903.336
+    ],
+    [
+     2148.024,
+     904.2
+    ],
+    [
+     2148.024,
+     905.064
+    ],
+    [
+     2148.024,
+     905.928
+    ],
+    [
+     2148.024,
+     906.792
+    ],
+    [
+     2148.024,
+     907.656
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_kvs_ctl_oobs__kv_active_local",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     2148.024,
+     932.472
+    ],
+    [
+     2148.024,
+     933.336
+    ],
+    [
+     2148.024,
+     934.2
+    ],
+    [
+     2148.024,
+     935.064
+    ],
+    [
+     2148.024,
+     935.928
+    ],
+    [
+     2148.024,
+     936.792
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_kvs_ctl_oobs__kv_drained_local",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     2148.024,
+     956.904
+    ],
+    [
+     2148.024,
+     957.768
+    ],
+    [
+     2148.024,
+     958.632
+    ],
+    [
+     2148.024,
+     959.496
+    ],
+    [
+     2148.024,
+     960.36
+    ],
+    [
+     2148.024,
+     961.224
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_kvs_ctl_oobs__kv_flush_local",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     2148.024,
+     981.096
+    ],
+    [
+     2148.024,
+     981.96
+    ],
+    [
+     2148.024,
+     982.824
+    ],
+    [
+     2148.024,
+     983.688
+    ],
+    [
+     2148.024,
+     984.552
+    ],
+    [
+     2148.024,
+     985.416
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_kvs_emb_rowtx__emb_tx_payload",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     12.024,
+     873.0
+    ],
+    [
+     12.024,
+     873.864
+    ],
+    [
+     12.024,
+     874.728
+    ],
+    [
+     12.024,
+     875.592
+    ],
+    [
+     12.024,
+     876.456
+    ],
+    [
+     12.024,
+     877.32
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_kvs_emb_rowtx__emb_tx_v",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     12.024,
+     946.536
+    ],
+    [
+     12.024,
+     947.4
+    ],
+    [
+     12.024,
+     948.264
+    ],
+    [
+     12.024,
+     949.128
+    ],
+    [
+     12.024,
+     949.992
+    ],
+    [
+     12.024,
+     950.856
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_serdes_E_tx_up",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     2148.024,
+     1005.288
+    ],
+    [
+     2148.024,
+     1006.152
+    ],
+    [
+     2148.024,
+     1007.016
+    ],
+    [
+     2148.024,
+     1007.88
+    ],
+    [
+     2148.024,
+     1008.744
+    ],
+    [
+     2148.024,
+     1009.608
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_k_i_serdes_W_tx_up",
+   "width": 6,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     12.024,
+     1003.176
+    ],
+    [
+     12.024,
+     1004.04
+    ],
+    [
+     12.024,
+     1004.904
+    ],
+    [
+     12.024,
+     1005.768
+    ],
+    [
+     12.024,
+     1006.632
+    ],
+    [
+     12.024,
+     1007.496
+    ]
+   ]
+  },
+  {
+   "name": "strap_ca_pad",
+   "width": 1,
+   "note": "OWNER 12.15a count strap (tied at the parent)",
+   "layer": "M5",
+   "sites_um": [
+    [
+     12.024,
+     512.184
+    ]
+   ]
+  }
+ ]
+}

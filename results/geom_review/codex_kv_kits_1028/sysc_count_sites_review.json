@@ -1,0 +1,14 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "static declared SYS_C count-strap pin sites only",
+ "viewed": "results/geom_review/codex_kv_kits_1028/sysc_count_sites.png",
+ "observations": [
+  "All140M5strap pin centres lie in clear W/E glue columns, close to their actual CA input clock banks.",
+  "25declaredports and widths match actual bind7 manifest; scalar PAD/EDGE_FALL sites sit near cland_tstart_in.",
+  "Clock pins, macro origins, ABI and cycles unchanged; nativePHY/4SRAM/ROM bodies remainclear.",
+  "PG-free M5tracks and M4cross-tracks checked; 0.864um bitspacing exceeds0.32um pinlength."
+ ],
+ "conditions": [
+  "No P&R authorization until coherent event source and macrogrid/nativePHY view holds resolved."
+ ]
+}
