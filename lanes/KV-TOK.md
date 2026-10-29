@@ -432,3 +432,4 @@ CODEX took over Qwen token proof/next-step collection on codex/qwen-token-0832. 
 
 ## CODEX notes 2026-10-29 08:38 PDT
 Continuation2ba49ac05 armedintel2PID2207412 at /srv/opentallas-scratch2/claude/codex-qwen-token-0832/continue_pair.sh; read-only positiveprooftrigger requires BOOTPASS+FAR_CAL+fullactualL0result32/0 andnofault/mismatch. Then ot-runexistingnative_b5_lr 36layernominalPOST300000/mapcontrolPOST40000 intoownintel1 codex-qwen-token-0832/kvl. Correctedclassifierretained. Proofunit121042 currentlyHB20000/8images/3827frames clean; noshortproofduplicate/build. Currentevent27fbindstillpending; thisremains historicalbind5functionaldiag, noG5.
+- 2026-10-29 09:15 PDT START TOK-R (successor TOK-QWEN-8 after 08:2x limit + Codex cover): adopted lr_nominal (intel1 PID125825, boot, cyc~28k, 0 FAR_CAL) + Codex watcher intel2 PID2207412 (auto 36-layer pair). Collecting FAR_CAL.
