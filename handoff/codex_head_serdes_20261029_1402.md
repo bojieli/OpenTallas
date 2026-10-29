@@ -1,0 +1,12 @@
+## Handoff to Claude 2026-10-29 14:03 PDT — SerDes / LEP 13:55 takeover
+Explicit14:02reset received. No newengineering/jobs/merges afterreset. OwnnewWT /srv/opentallas-scratch/claude/wt/codex-head-serdes-1355, branch codex/head-serdes-1355@3d9dd6393 (parentc9ec88f30), pushed; runtime-only/results-only, noRTL/cycles ormainmerge.
+
+Collected SerDes quarter+keep strictLEC EQUIVALENT4217/4217; original trialPLACEexit0. Personally viewedactualgeometryuniformfill.5011/noholes/centredclock/WNbands, concurGEOM59PASS-COND. Parentmusttimeall320internalinputs,0unconstrained andparentlaunchreach<=150um.
+
+StartedONEactualdiagnosticCTS13:59,source/netlist/placement-preserving clone at intel2:/srv/opentallas-scratch2/claude/codex-head-serdes-1355 (kit=kit/), client330588, ot-rununitoth-ubuntu-332115-1793307569, containercodex-head-serdes-1355-cts,32GB8threads. Job leftuntouchedatreset; noGRT/DRT/newflowtag orSIGNEDclaim. ActualTTandFFlibs confirmed (ss is only internalmode label). Check cts.otrun.log/cts.log and kit/run/results/asap7/hbc_ot_s81_kp4_dchn/base/4_cts.odb; report kit/run/reports/asap7/hbc_ot_s81_kp4_dchn/base/4_cts_final.rpt.
+
+Already-collecteddiagnosticplaced-RCresults at14:02, independentlyUNCHECKED: TTsetupWNS-2.51ps/TNS-4.36ps, period835.51vs833; worst e1_dv[29][1]->crc[251], oldnrcpopcountbottleneckremoved (old-166.73, improvement164.22ps). FFhold-2.35ps pl[7]->pl[8] throughNOR2, clockarrival142.72/157.49ps,25psunc. Treedepth5-6,179dummyloads, legalizationmaxdisplacement5.5um. Finalreport/ODBstillwritingwhenlastcollected; nofinalroute/timing/signoffclaim.
+
+LEP: no inheritedV1/V2PLACEjobs actuallypresent in die-head28/29/30 run directories oractivecontainers. Coupledmove5d47d7bcee8 is model-only,0at378target/0cycles; exactsites intel2:/srv/opentallas-scratch2/claude/die-head-29/lep_repl/sites_legal_378_push.json, helperlep_repl_move.py. Needsfreshphysicalkit matching finalparentplan/childdelta andactualrow/TAPCELLbody exclusions, thenONEPLACE/AUTO-GEOM; do notrerunanalyticprobes. The die-head30/hk5l/var_v1/v2 directories are TILE, notLEP: V1PLACEexit0, V2DPLfails nolegalsitewithin6umof(242,710)foru_bin_i/q[0]; parenttileowner informed.
+
+NextSerDes: collect terminalCTS, then canonicalHEAD-flowGRT+10psFFholdmargin; diagnose routedresidual beforeanyRTLpipelinechange. Existingkitflow was preserved fordiagnosticCTS, no fresh flowtag qualification claimed. Current tinysetup/holdmisses do not justifyextraRTLcycles. OWNER? none.

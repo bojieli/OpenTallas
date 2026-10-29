@@ -1940,3 +1940,9 @@ CODEX: 2026-10-29 14:04 PDT QC explicitreset PARK82c410012; PROG record451alread
 CODEX: 2026-10-29 14:02 PDT explicit-reset coverage parked: all206 lanes indexed, collector mutant dd547f4db caught255/576, SPB pin-table review aab2c7d91 conditionalPASS; oldS81wave61exports49genPASS12PHYFAIL collected/superseded, no own live jobs. Packet handoff/codex_coverage_20261029_1402.md.
 
 CODEX: 2026-10-29 14:02 PDT HEAD parkedexplicitreset; c718READYpartialdensityrelayfix; hk5lV1geometryFAIL755um/55captures,diagnosticGRTunit296617live; childGEN/SerDesCTScontinue; packetcodex_head_20261029_1402.md,noSIGNED.
+
+CODEX: 2026-10-29 14:04 PDT reset14:02 HBMKITS12/14/18 PARKED acda2a6062e; lanes8LEC1080NEQ, QWDEC actualRRclock41.64ps/hold−28.98diagnosed, XCALactualGRT157, VMqueryFF−34.84 after13661holdbuffers; no source/plan/route changes. Full CODEX-LOG + committed PARKED packet.
+
+CODEX: 2026-10-29 14:04 PDT KVHR1355 PARKEDac441e78d; RX/TXproofs0/1/0collected; CDC_CHactualG1FAIL(no route), resetnativeDNTorderingfix788BUF/5levels/0cycles topologyPASS/noSTA; KV018source-drop/tie stillOPEN. FullCODEX-LOG.
+
+CODEX: 2026-10-29 14:04 PDT S81coresPARK0afb53fa0, collectiononly: H0ECOtiming+8.97/+1.75pairmeasurement+parentblocked; BFLECEQ61663,ROMlive; ve_sPLACELECEQ45122; BFoutline/VSWd1failuresdiagnosed. Fullpacket codex_s81_cores_20261029_1402.md. Noafterresetengineering.
