@@ -1,0 +1,72 @@
+{
+ "config": "/srv/opentallas-scratch2/claude/wt/clk-tool-7/tools/clk/configs/hbm_street_body.yaml",
+ "stage_check": "FAIL",
+ "why": [
+  "stack clock_rc=1x but entry inv2_ndr_hbm_trial2b_early was fitted on clock_rc=ndr"
+ ],
+ "pins_rebase": null,
+ "die_trial": {
+  "path": "/srv/opentallas-scratch2/claude/wt/clk-tool-7/tools/die_plan/die_trial.py",
+  "sha256": "e455ec535dba6cf3",
+  "git_rev": "e64066670ba56e97d91fea3c403e27d52dab7893",
+  "dirty": false
+ },
+ "argv": [
+  "kit",
+  "/srv/opentallas-scratch2/claude/codex-hbm-pins-1028/street4/die_plan.json",
+  "--out",
+  "/srv/opentallas-scratch2/claude/clk-tool-7/replay_sb1/kit",
+  "--region-trees",
+  "/srv/opentallas-scratch2/claude/clk-tool-7/replay_sb1/ot_clk_regions_c21_part_region.json",
+  "--feed",
+  "/srv/opentallas-scratch2/claude/die-hbm-9/c21_feed.json",
+  "--tree-form",
+  "link_htree",
+  "--leaf-um",
+  "200",
+  "--rep-um",
+  "180",
+  "--tree-site-legal",
+  "--tree-site-slide",
+  "--clock-body-sites",
+  "--chain-hop-max",
+  "450",
+  "--detour-adaptive",
+  "--clock-rc",
+  "1x",
+  "--clock-cell",
+  "inv2",
+  "--region-dme",
+  "delay",
+  "--region-dme-early",
+  "1",
+  "--region-dme-early-ff",
+  "0.8639019524013111",
+  "--region-dme-early-mode",
+  "merge",
+  "--region-dme-stage-cal",
+  "/srv/opentallas-scratch2/claude/codex-hbm-clock-1028/street_body/stage_cal.json",
+  "--region-dme-workers",
+  "8",
+  "--region-dme-snake",
+  "T002,T003,T004,T007,T009,T012,T013,T015,T016,T017,T019,T028,T029,T040,T042,T043,T046,T048",
+  "--cell-paths"
+ ],
+ "region_fill": {
+  "region_map": "/srv/opentallas-scratch2/claude/die-hbm-9/c21_part_region.json",
+  "sha256": "4876f0b6265d7021",
+  "copy": "/srv/opentallas-scratch2/claude/clk-tool-7/replay_sb1/ot_clk_regions_c21_part_region.json",
+  "rules": [
+   {
+    "prefix": "PHY_N",
+    "from": "PHY_N",
+    "default": "T060"
+   }
+  ],
+  "added": {
+   "PHY_NW": "T060",
+   "PHY_NC": "T060",
+   "PHY_NE": "T060"
+  }
+ }
+}
