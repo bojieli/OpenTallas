@@ -1,0 +1,142 @@
+{
+  "status": "COMPILED_NOT_QUALIFIED",
+  "source_baseline": "b935d1acec3ceba46da026d52b913484f9669127",
+  "QC_stages": "5,5,5,6,4,4",
+  "KV_stages": "90,90,88,88,88,78,78",
+  "QC_status_offset": 45,
+  "service_pad": {
+    "schema": "opentallas.qwen_kv.service_slot_pad.v1",
+    "need": 1775,
+    "worst_T": 7937,
+    "base_service_end": 1684,
+    "pad": 91,
+    "v_rl": 186,
+    "d_rl": 167,
+    "pv_result_extra": 0,
+    "f_dly": 1,
+    "rule": "pad = max(0, max_T (PV_START + R + 48 + F_DLY) - service_end(pad 0)); one pad for every layer",
+    "ages": "/srv/opentallas-scratch2/claude/codex-qwen-token-1028/native7_currentqc/prep/die_ages_bound_padded.json"
+  },
+  "token_period": 293376,
+  "token_period_pad": {
+    "unpadded": 293256,
+    "align": 768,
+    "pad_edges": 120,
+    "why": "core 625 u x 768 = HBM 768 u x 625: a token period that is a multiple of 768 core edges starts every token run at one HBM-beat phase (KV phase launches)"
+  },
+  "layer_floor": 8012,
+  "compiled_token": 290059,
+  "head_descriptor": {
+    "source": "actual CTLM c_emb token/position/user plus HEAD_PREP native epoch/gen and held per-user descriptor",
+    "earliest_safe_slot": 12,
+    "send": 12,
+    "kind": 12,
+    "port": 1,
+    "user0": "actual HOST O61 matched against actual prepare token/position before held record emission",
+    "qualification": "SOURCE_BOUND_SLOT; consumer bus/clock/phase deadline still required"
+  },
+  "head_reservation_verdict": "FAIL_STALE_SLOT12_actual_bound_filler_min20_user0_min21",
+  "context_messages": [
+    {
+      "seg": 1,
+      "src": "K",
+      "cyc": 3,
+      "tx_port": 1,
+      "rx_port": 1,
+      "kind": 12,
+      "beat": 0,
+      "arrive": 19,
+      "rx_out": 21,
+      "wr": 7
+    },
+    {
+      "seg": 1,
+      "src": "K",
+      "cyc": 2,
+      "tx_port": 1,
+      "rx_port": 1,
+      "kind": 12,
+      "beat": 1,
+      "arrive": 18,
+      "rx_out": 20,
+      "wr": 6
+    },
+    {
+      "seg": 1,
+      "src": "C",
+      "cyc": 12,
+      "tx_port": 1,
+      "rx_port": 1,
+      "kind": 12,
+      "beat": 0,
+      "role": "recurring_head_O61",
+      "arrive": 27,
+      "rx_out": 29,
+      "wr": 15
+    }
+  ],
+  "targets": {
+    "target0.hex": {
+      "sha256": "c172c7510d7b02131f911b7b36b7b2ba49166ddae15eaa778d1503afe4ca32e8",
+      "same_as_native7g": true
+    },
+    "target1.hex": {
+      "sha256": "864e6ecde0b21128f447c405ba477429b9091b0b29015b0ad7fdea6ebb9bf647",
+      "same_as_native7g": false
+    },
+    "target10.hex": {
+      "sha256": "ffb2ebfe1f18f81406c1b7c2e47a812827ce1b1bb908cb890baa99c53e8bb2f0",
+      "same_as_native7g": true
+    },
+    "target11.hex": {
+      "sha256": "e8747017357d876c5b3581b07cf4be99e57f0a340750a087e68783457969023c",
+      "same_as_native7g": false
+    },
+    "target12.hex": {
+      "sha256": "eb6f66b7dbb1e37813a43676c6294725e88d27d1c188ef30245dab98a9aa2212",
+      "same_as_native7g": true
+    },
+    "target13.hex": {
+      "sha256": "44f8e2325659721c644e0d659080dbc36d54ba4293d5f9d1a1317a6ac83032f9",
+      "same_as_native7g": true
+    },
+    "target2.hex": {
+      "sha256": "c9372c3a40d428ed3cdf0a4e76d7535b1d6b2a5890ca56be16d89676f59a9578",
+      "same_as_native7g": true
+    },
+    "target3.hex": {
+      "sha256": "29721db28fa1e241aa7edba0cbcd330d790f8a4b004809b2f74976963f39cdf8",
+      "same_as_native7g": false
+    },
+    "target4.hex": {
+      "sha256": "ec433348dded79a196313c970ebb44f7f4c82596c461bd290cc3cb75d53cd23f",
+      "same_as_native7g": true
+    },
+    "target5.hex": {
+      "sha256": "f6a96b5d705f94b74145c2a529c00d0df51913dbea5cc0e196622b78995edb03",
+      "same_as_native7g": true
+    },
+    "target6.hex": {
+      "sha256": "88eae0506eb12133f9fb1435a3257f93d1dbe0ae2f2780ddb5f490f022ecf092",
+      "same_as_native7g": true
+    },
+    "target7.hex": {
+      "sha256": "88eae0506eb12133f9fb1435a3257f93d1dbe0ae2f2780ddb5f490f022ecf092",
+      "same_as_native7g": true
+    },
+    "target8.hex": {
+      "sha256": "88eae0506eb12133f9fb1435a3257f93d1dbe0ae2f2780ddb5f490f022ecf092",
+      "same_as_native7g": true
+    },
+    "target9.hex": {
+      "sha256": "88eae0506eb12133f9fb1435a3257f93d1dbe0ae2f2780ddb5f490f022ecf092",
+      "same_as_native7g": true
+    }
+  },
+  "root": "/srv/opentallas-scratch2/claude/codex-qwen-token-1028/native7_currentqc",
+  "qualification_limits": [
+    "Actual regional clock/CA/provider physical phase not qualified",
+    "Actual selected GEN HOST cohort/producer and outgoing face/codec reservation not qualified",
+    "Source-bound HEAD publication proof is local component only; current scalar12 is disproved"
+  ]
+}
