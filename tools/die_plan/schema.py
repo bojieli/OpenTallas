@@ -273,7 +273,16 @@ SCHEMA = {
                 "pg": {"type": "object", "additionalProperties": False, "properties": {
                     "partition_pg_max": _layer,
                     "bumps": {"type": "object", "additionalProperties": False,
-                              "properties": {"pitch_um": _pos, "pad_um": _nonneg, "edge_margin_um": _nonneg}},
+                              "properties": {"pitch_um": _pos, "pad_um": _nonneg, "edge_margin_um": _nonneg,
+                                             # QC-PG-5 (OWNER 10-28): opt-in fine-pitch power-bump fields (die_trial._field_bumps)
+                                             "fields": {"type": "array", "items": {
+                                                 "type": "object", "additionalProperties": False,
+                                                 "required": ["name", "pitch_um", "pad_um", "keep_um", "rects_um"],
+                                                 "properties": {"name": _name, "pitch_um": _pos, "pad_um": _nonneg,
+                                                                "keep_um": _nonneg, "note": {"type": "string"},
+                                                                "rects_um": {"type": "array", "minItems": 1, "items": {
+                                                                    "type": "array", "items": {"type": "number"},
+                                                                    "minItems": 4, "maxItems": 4}}}}}}},
                     "grid": {"type": "array", "items": {
                         "type": "object", "required": ["layer", "width_um", "pitch_um", "offset_um"],
                         "additionalProperties": False,

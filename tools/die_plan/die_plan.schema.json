@@ -512,6 +512,53 @@
         "edge_margin_um": {
          "type": "number",
          "minimum": 0
+        },
+        "fields": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+           "name",
+           "pitch_um",
+           "pad_um",
+           "keep_um",
+           "rects_um"
+          ],
+          "properties": {
+           "name": {
+            "type": "string",
+            "minLength": 1
+           },
+           "pitch_um": {
+            "type": "number",
+            "exclusiveMinimum": 0
+           },
+           "pad_um": {
+            "type": "number",
+            "minimum": 0
+           },
+           "keep_um": {
+            "type": "number",
+            "minimum": 0
+           },
+           "note": {
+            "type": "string"
+           },
+           "rects_um": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+             "type": "array",
+             "items": {
+              "type": "number"
+             },
+             "minItems": 4,
+             "maxItems": 4
+            }
+           }
+          }
+         }
         }
        }
       },
