@@ -1,0 +1,45 @@
+{
+ "plan": "/srv/opentallas-scratch2/claude/die-s81-3/die_plan_r98.json",
+ "plan_sha256": "06301f33d22642f740664f481d2e62e0b3c7b5964ee9df26fea341e382848f40",
+ "clock_tree": {
+  "leaf_um": 200.0,
+  "rep_um": 250.0,
+  "tree_form": "link_htree",
+  "spine_dme": null,
+  "link_feed": {
+   "root": "std_b5_4_0",
+   "regions": 98,
+   "local": "htree",
+   "leaf_um": 200.0,
+   "feed_edges": 97,
+   "feed_wire_um": 365872.8
+  },
+  "region_trees": 98,
+  "buffer": "BUFx24_ASAP7_75t_R",
+  "wire_r_kohm_um": 0.0043358024999999994,
+  "wire_c_ff_um": 0.10824363000000001,
+  "tap_load_ff": 3.0,
+  "nodes": 30230,
+  "leaves": 7509,
+  "repeaters": 8164,
+  "taps": 8127,
+  "wire_um": 6168433.8,
+  "levels": 47,
+  "site_legal": {
+   "mode": "slide",
+   "slide_fallbacks": 92,
+   "cells": 38394,
+   "illegal": {},
+   "forbidden_rects": 19007,
+   "moved_nodes": 16327,
+   "balance": {
+    "nodes": 29943,
+    "moved": 16047,
+    "unbalanced": 512,
+    "worst_imbalance_um": 9319.0
+   },
+   "detoured_legs": 69,
+   "detour_added_um": 4735.0
+  }
+ }
+}

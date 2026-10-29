@@ -1,0 +1,9 @@
+read_verilog -sv  -DSYNTHESIS -DOT_COLL_NATIVE32 -DOT_COLL_NATIVE32_OFF  /k/rtl/ot_dp_cells.sv /k/rtl/ot_reset_sync.sv /k/rtl/ot_s81hd_ctl.sv /k/rtl/ot_link_crc32.sv /k/rtl/ot_rst_relay_tree3.sv /k/rtl/ot_s81ph_ckbuf.sv /k/rtl/ot_sram_oldread_b64.sv /k/rtl/ot_sram_showahead_b64.sv /k/rtl/ot_link_credit_rx_b64.sv /k/rtl/ot_link_credit_tx_rc.sv /k/rtl/ot_s81ph_link_ep_safe4.sv /k/rtl/ot_s81ph_link_gbx_safe3.sv /k/rtl/ot_s81ph_coll_lane_safe4.sv /e/ot_sram_1r1w2c_32x64_m1_bb.v /e/ot_sram_1r1w2c_256x64_m1_bb.v /k/rtl/ot_s81hd_util.sv /k/rtl/ot_s81hd_lsc_parts.sv /k/rtl/ot_s81hd_beat_link.sv /k/rtl/ot_s81hd_best64.sv /k/rtl/ot_s81hd_mesh_ep_core.sv /k/rtl/ot_s81hd_ctl_core.sv /k/rtl/ot_s81hd_ctl_hsf0_static.sv /k/rtl/ot_s81hd_static_issue.sv /k/rtl/ot_s81hd_host276.sv /k/rtl/dsfd_mtp_tops.sv /k/rtl/ot_dsrom_mtp_link_pair.sv /k/rtl/ot_dsrom_mtp_seq.sv /e/ot_sram_1r1w_64x512_m1_r2c2_bb.v /k/rtl/ot_dp_clk_landing.sv /k/rtl/ot_dp_clk_landing_ca.sv /k/rtl/ot_meso_fifo.sv
+hierarchy -check -top ot_s81hd_ctl
+proc
+flatten
+tee -q -o /e/hd_ctl.cells.ot_sram_1r1w2c_64x546_m1.txt select -list t:ot_sram_1r1w2c_64x546_m1
+tee -q -o /e/hd_ctl.cells.ot_sram_1r1w_32x546_m1.txt select -list t:ot_sram_1r1w_32x546_m1
+tee -q -o /e/hd_ctl.cells.ot_sram_1r1w2c_32x64_m1.txt select -list t:ot_sram_1r1w2c_32x64_m1
+tee -q -o /e/hd_ctl.cells.ot_sram_1r1w2c_256x64_m1.txt select -list t:ot_sram_1r1w2c_256x64_m1
+tee -q -o /e/hd_ctl.cells.ot_sram_1r1w_64x512_m1_r2c2.txt select -list t:ot_sram_1r1w_64x512_m1_r2c2

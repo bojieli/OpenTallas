@@ -1,0 +1,289 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/die-s81-4
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/die-s81-4
+ot-run: localhost      admits   764 GB (avail 869, reserve 0, fresh 0, peak 40.3, headroom 0, waiters 0/0 GB) load 36/112 running 13 disk 717 GB 
+ot-run: -> localhost
+ot-heavy: request 48G is charged 9G (class 'post.sh' measured peak 0.1G, n=1+0 proved); the cap stays 48G
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3804799-1793170453 after 0 s
+TT taps 8127 missing 0 regions 98 nodes 30328
+FF taps 8127 missing 0 regions 98 nodes 30328
+TT scaled 1.0485 8127
+FF scaled 1.0552 8127
+STA_RC proof 0
+proof TT intra              pairs  165308 setup -2649.37 (neg 920) hold -3202.37 (neg 147053) skew 3117.13
+proof TT seam               pairs  257616 setup -2469.53 (neg 312) hold -3022.53 (neg 244082) skew 2906.30
+proof TT landed             pairs  124313 setup -3317.70 (neg 59982) hold -3870.69 (neg 64860) skew 3296.87 landing {'window_ps': 416.5, 'setup_margin_ps': -2880.37, 'hold_margin_ps': -2880.37, 'damage_max_ps': 3296.87, 'verdict': 'FAIL', 'note': 'plan-defined landed/forwarded hop: region-to-region 
+proof TT seam_nearest_INFO  pairs    1793 setup   162.98 (neg 0) hold  -359.98 (neg 1695) skew  349.37
+proof TT landed_nearest_INFO pairs    1305 setup -2941.87 (neg 653) hold -3483.55 (neg 648) skew 3248.95 landing {'window_ps': 416.5, 'setup_margin_ps': -2832.45, 'hold_margin_ps': -2820.65, 'damage_max_ps': 3248.95, 'verdict': 'FAIL', 'note': 'plan-defined landed/forwarded hop: region-to-region clo
+proof FF intra              pairs  165308 setup -2160.90 (neg 537) hold -2787.66 (neg 140827) skew 2716.03 kit-contract hold -2716.03 (W 0, need 2716.03, neg 112157)
+proof FF seam               pairs  257616 setup -2008.45 (neg 191) hold -2635.20 (neg 240436) skew 2535.80 kit-contract hold -2495.80 (W 40, need 2535.80, neg 70139)
+proof FF landed             pairs  124313 setup -2644.34 (neg 59087) hold -3271.09 (neg 64704) skew 2807.29 landing {'window_ps': 416.5, 'setup_margin_ps': -2390.79, 'hold_margin_ps': -2390.79, 'damage_max_ps': 2807.29, 'verdict': 'FAIL', 'note': 'plan-defined landed/forwarded hop: region-to-region 
+proof FF seam_nearest_INFO  pairs    1793 setup   295.04 (neg 0) hold  -302.49 (neg 1564) skew  301.84 kit-contract hold -234.53 (W 40, need 274.53, neg 263)
+proof FF landed_nearest_INFO pairs    1305 setup -2332.35 (neg 635) hold -2949.74 (neg 646) skew 2764.84 landing {'window_ps': 416.5, 'setup_margin_ps': -2348.34, 'hold_margin_ps': -2338.66, 'damage_max_ps': 2764.84, 'verdict': 'FAIL', 'note': 'plan-defined landed/forwarded hop: region-to-region clo
+SUMMARY {"intra": {"tt_setup_ps": -2649.37, "ff_hold_ps": -2787.66, "verdict": "FAIL", "ff_hold_kit_contract_ps": -2716.03, "kit_contract_window_ps": 0.0, "kit_contract_window_needed_ps": 2716.03, "kit_contract_verdict": "FAIL", "hb4": {"cells": 0, "delay_model": "plan", "tt_setup_ps": -2649.37, "ff
+STA_RC proof_spice 0
+proof_spice TT intra              pairs  165308 setup -2804.86 (neg 991) hold -3357.85 (neg 147082) skew 3268.31
+proof_spice TT seam               pairs  257616 setup -2616.38 (neg 322) hold -3169.38 (neg 244132) skew 3047.25
+proof_spice TT landed             pairs  124313 setup -3505.04 (neg 60149) hold -4058.04 (neg 64854) skew 3456.77 landing {'window_ps': 416.5, 'setup_margin_ps': -3040.27, 'hold_margin_ps': -3040.27, 'damage_max_ps': 3456.77, 'verdict': 'FAIL', 'note': 'plan-defined landed/forwarded hop: region-to-r
+proof_spice TT seam_nearest_INFO  pairs    1793 setup   143.94 (neg 0) hold  -377.55 (neg 1695) skew  366.31
+proof_spice TT landed_nearest_INFO pairs    1305 setup -3111.09 (neg 654) hold -3652.21 (neg 648) skew 3406.52 landing {'window_ps': 416.5, 'setup_margin_ps': -2990.02, 'hold_margin_ps': -2977.65, 'damage_max_ps': 3406.52, 'verdict': 'FAIL', 'note': 'plan-defined landed/forwarded hop: region-to-regi
+proof_spice FF intra              pairs  165308 setup -2315.22 (neg 639) hold -2941.97 (neg 141221) skew 2865.95 kit-contract hold -2865.95 (W 0, need 2865.95, neg 112157)
+proof_spice FF seam               pairs  257616 setup -2154.41 (neg 197) hold -2781.16 (neg 240727) skew 2675.78 kit-contract hold -2635.78 (W 40, need 2675.78, neg 75507)
+proof_spice FF landed             pairs  124313 setup -2824.85 (neg 59167) hold -3451.60 (neg 64704) skew 2962.26 landing {'window_ps': 416.5, 'setup_margin_ps': -2545.76, 'hold_margin_ps': -2545.76, 'damage_max_ps': 2962.26, 'verdict': 'FAIL', 'note': 'plan-defined landed/forwarded hop: region-to-r
+proof_spice FF seam_nearest_INFO  pairs    1793 setup   276.34 (neg 0) hold  -319.57 (neg 1571) skew  318.50 kit-contract hold -249.69 (W 40, need 289.69, neg 289)
+proof_spice FF landed_nearest_INFO pairs    1305 setup -2495.73 (neg 635) hold -3112.59 (neg 646) skew 2917.46 landing {'window_ps': 416.5, 'setup_margin_ps': -2500.96, 'hold_margin_ps': -2490.74, 'damage_max_ps': 2917.46, 'verdict': 'FAIL', 'note': 'plan-defined landed/forwarded hop: region-to-regi
+SUMMARY {"intra": {"tt_setup_ps": -2804.86, "ff_hold_ps": -2941.97, "verdict": "FAIL", "ff_hold_kit_contract_ps": -2865.95, "kit_contract_window_ps": 0.0, "kit_contract_window_needed_ps": 2865.95, "kit_contract_verdict": "FAIL", "hb4": {"cells": 0, "delay_model": "plan", "tt_setup_ps": -2804.86, "ff
+LPO_RC 0
+CA_RC 1.0 0
+{
+ "regions": 398,
+ "regions_reached": 398,
+ "tree_root": "s_5S_L3",
+ "tree_edges": 397,
+ "tree_edges_clean": 329,
+ "edge_pad": {},
+ "tree_edges_fall": 348,
+ "start_skew_limit_clean_min_ps": 81.7,
+ "start_skew_limit_min_ps": 6.6,
+ "max_tree_depth": 22,
+ "min_sync_dist_clean_ps": 108.2,
+ "crossings": 2306,
+ "depth4": 1887,
+ "depth8": 419,
+ "fail": 0,
+ "max_path_ambiguous_cycles": 4,
+ "worst_margin_lo_ps": 106.6,
+ "worst_margin_lo_port": "x_E4_in__4",
+ "worst_margin_hi_ps": 121.8,
+ "worst_margin_hi_port": "xtier__bk_sel__s_4S_C__7",
+ "below_100ps": 0,
+ "lat_hist": {
+  "-1": 7,
+  "0": 12,
+  "1": 123,
+  "2": 1445,
+  "3": 246,
+  "4": 178,
+  "5": 154,
+  "6": 95,
+  "7": 34,
+  "8": 12
+ },
+ "K_hist": {
+  "-13": 20,
+  "-12": 14,
+  "-11": 8,
+  "-10": 5,
+  "-9": 4,
+  "-7": 3,
+  "-6": 10,
+  "-5": 9,
+  "-4": 6,
+  "-3": 4,
+  "-2": 595,
+  "-1": 236,
+  "0": 78,
+  "1": 18,
+  "2": 10,
+  "3": 8,
+  "4": 805,
+  "5": 275,
+  "6": 75,
+  "7": 11,
+  "8": 6,
+  "10": 13,
+  "11": 8,
+  "12": 24,
+  "16": 30,
+  "17": 18,
+  "18": 13
+ },
+ "lat_total_vs_old3": -788,
+ "old_ring_not_cycle_fixed": 531,
+ "old_ring_fail_margin": 961,
+ "corner": "TT_droop-regions_corelat250,FF_droop-regions_corelat202.5",
+ "period_ps": 833.0,
+ "aperture_ps": 104.125,
+ "sync_aperture_ps": 26.5,
+ "wander_frac": 0.05,
+ "pad": 0,
+ "scale": 1.0,
+ "source": "/srv/opentallas-scratch2/claude/die-s81-4/lpo.json",
+ "mc": {
+  "chips": 500,
+  "violations": 0,
+  "worst_lo_to_guard_ps": 120.7,
+  "worst_hi_to_guard_ps": 125.9
+ }
+}
+
+CA_RC 1.0485 1
+{
+ "regions": 398,
+ "regions_reached": 398,
+ "tree_root": "s_2S_C",
+ "tree_edges": 397,
+ "tree_edges_clean": 326,
+ "edge_pad": {},
+ "tree_edges_fall": 330,
+ "start_skew_limit_clean_min_ps": 78.8,
+ "start_skew_limit_min_ps": 7.9,
+ "max_tree_depth": 24,
+ "min_sync_dist_clean_ps": 105.3,
+ "crossings": 2306,
+ "depth4": 1884,
+ "depth8": 412,
+ "fail": 10,
+ "max_path_ambiguous_cycles": 7,
+ "worst_margin_lo_ps": 105.0,
+ "worst_margin_lo_port": "x_E3_in__0",
+ "worst_margin_hi_ps": 114.8,
+ "worst_margin_hi_port": "rt_W2_out_1__0",
+ "below_100ps": 0,
+ "lat_hist": {
+  "0": 39,
+  "1": 120,
+  "2": 1448,
+  "3": 201,
+  "4": 195,
+  "5": 98,
+  "6": 140,
+  "7": 26,
+  "8": 29
+ },
+ "K_hist": {
+  "-19": 7,
+  "-13": 10,
+  "-12": 15,
+  "-11": 4,
+  "-8": 8,
+  "-7": 13,
+  "-6": 4,
+  "-5": 7,
+  "-4": 9,
+  "-2": 606,
+  "-1": 243,
+  "0": 81,
+  "1": 21,
+  "3": 12,
+  "4": 790,
+  "5": 275,
+  "6": 75,
+  "7": 11,
+  "8": 1,
+  "9": 2,
+  "10": 1,
+  "11": 30,
+  "12": 21,
+  "16": 9,
+  "17": 8,
+  "18": 5,
+  "19": 5,
+  "20": 10,
+  "22": 8,
+  "24": 5
+ },
+ "lat_total_vs_old3": -745,
+ "old_ring_not_cycle_fixed": 625,
+ "old_ring_fail_margin": 961,
+ "corner": "TT_droop-regions_corelat250,FF_droop-regions_corelat202.5",
+ "period_ps": 833.0,
+ "aperture_ps": 104.125,
+ "sync_aperture_ps": 26.5,
+ "wander_frac": 0.05,
+ "pad": 0,
+ "scale": 1.0485,
+ "source": "/srv/opentallas-scratch2/claude/die-s81-4/lpo.json",
+ "mc": {
+  "chips": 500,
+  "violations": 0,
+  "worst_lo_to_guard_ps": 105.5,
+  "worst_hi_to_guard_ps": 118.9
+ }
+}
+
+CA_RC 1.0552 1
+{
+ "regions": 398,
+ "regions_reached": 398,
+ "tree_root": "s_1S_x06",
+ "tree_edges": 397,
+ "tree_edges_clean": 328,
+ "edge_pad": {},
+ "tree_edges_fall": 331,
+ "start_skew_limit_clean_min_ps": 77.7,
+ "start_skew_limit_min_ps": 6.1,
+ "max_tree_depth": 22,
+ "min_sync_dist_clean_ps": 104.2,
+ "crossings": 2306,
+ "depth4": 1922,
+ "depth8": 373,
+ "fail": 11,
+ "max_path_ambiguous_cycles": 6,
+ "worst_margin_lo_ps": 104.4,
+ "worst_margin_lo_port": "xring__s_1N_C__s_0N_C__0",
+ "worst_margin_hi_ps": 105.9,
+ "worst_margin_hi_port": "rt_W4_in_2__0",
+ "below_100ps": 0,
+ "lat_hist": {
+  "0": 44,
+  "1": 108,
+  "2": 1471,
+  "3": 181,
+  "4": 227,
+  "5": 90,
+  "6": 131,
+  "7": 17,
+  "8": 26
+ },
+ "K_hist": {
+  "-19": 4,
+  "-13": 3,
+  "-12": 9,
+  "-8": 8,
+  "-7": 20,
+  "-6": 12,
+  "-5": 9,
+  "-4": 3,
+  "-2": 601,
+  "-1": 233,
+  "0": 103,
+  "1": 8,
+  "2": 8,
+  "3": 6,
+  "4": 810,
+  "5": 296,
+  "6": 73,
+  "7": 4,
+  "8": 2,
+  "9": 2,
+  "10": 12,
+  "11": 20,
+  "12": 9,
+  "13": 5,
+  "14": 10,
+  "16": 6,
+  "17": 6,
+  "18": 5,
+  "22": 8
+ },
+ "lat_total_vs_old3": -821,
+ "old_ring_not_cycle_fixed": 628,
+ "old_ring_fail_margin": 961,
+ "corner": "TT_droop-regions_corelat250,FF_droop-regions_corelat202.5",
+ "period_ps": 833.0,
+ "aperture_ps": 104.125,
+ "sync_aperture_ps": 26.5,
+ "wander_frac": 0.05,
+ "pad": 0,
+ "scale": 1.0552,
+ "source": "/srv/opentallas-scratch2/claude/die-s81-4/lpo.json",
+ "mc": {
+  "chips": 500,
+  "violations": 0,
+  "worst_lo_to_guard_ps": 105.1,
+  "worst_hi_to_guard_ps": 106.4
+ }
+}
+
+POST_DONE Tue Oct 27 23:59:06 PDT 2026
+ot-run: RAN on localhost (unit oth-ubuntu-3804799-1793170453): exit 0

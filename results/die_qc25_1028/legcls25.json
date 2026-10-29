@@ -1,0 +1,218 @@
+{
+ "TT": {
+  "legs": 12626,
+  "class_counts": {
+   "straight": 10623,
+   "snake": 1787,
+   "routed": 216
+  },
+  "coef_per_class": {
+   "routed": [
+    10.34429,
+    0.172613,
+    -9e-05,
+    5.942083
+   ],
+   "snake": [
+    14.778443,
+    0.078473,
+    0.000185,
+    15.706025
+   ],
+   "straight": [
+    14.227666,
+    0.092992,
+    0.000216,
+    8.518328
+   ]
+  },
+  "coef_global": [
+   13.934059,
+   0.09766,
+   0.000161,
+   10.457359
+  ],
+  "models": {
+   "built": {
+    "leg_rms": 13.66,
+    "leg_rms_by_class": {
+     "routed": 14.98,
+     "snake": 24.5,
+     "straight": 10.77
+    },
+    "tap_abs_err_p50_p90_p99": [
+     99.7,
+     136.4,
+     157.4
+    ],
+    "region_tap_err_spread_p50_p90_max": [
+     89.4,
+     104.8,
+     120.7
+    ]
+   },
+   "global": {
+    "leg_rms": 7.11,
+    "leg_rms_by_class": {
+     "routed": 8.52,
+     "snake": 10.14,
+     "straight": 6.43
+    },
+    "tap_abs_err_p50_p90_p99": [
+     14.5,
+     42.4,
+     62.8
+    ],
+    "region_tap_err_spread_p50_p90_max": [
+     49.4,
+     67.1,
+     115.6
+    ]
+   },
+   "per_class": {
+    "leg_rms": 6.67,
+    "leg_rms_by_class": {
+     "routed": 7.99,
+     "snake": 8.91,
+     "straight": 6.19
+    },
+    "tap_abs_err_p50_p90_p99": [
+     12.8,
+     42.4,
+     64.5
+    ],
+    "region_tap_err_spread_p50_p90_max": [
+     51.5,
+     73.6,
+     122.5
+    ]
+   },
+   "per_class_2fold": {
+    "leg_rms": 6.72,
+    "leg_rms_by_class": {
+     "routed": 9.33,
+     "snake": 9.01,
+     "straight": 6.19
+    },
+    "tap_abs_err_p50_p90_p99": [
+     12.9,
+     42.5,
+     65.5
+    ],
+    "region_tap_err_spread_p50_p90_max": [
+     51.6,
+     73.0,
+     120.4
+    ]
+   }
+  }
+ },
+ "FF": {
+  "legs": 12626,
+  "class_counts": {
+   "straight": 10623,
+   "snake": 1787,
+   "routed": 216
+  },
+  "coef_per_class": {
+   "routed": [
+    10.143058,
+    0.124023,
+    2.3e-05,
+    4.443925
+   ],
+   "snake": [
+    12.58352,
+    0.067112,
+    0.000175,
+    12.242469
+   ],
+   "straight": [
+    12.051973,
+    0.082392,
+    0.000203,
+    5.943972
+   ]
+  },
+  "coef_global": [
+   11.782508,
+   0.086044,
+   0.00015,
+   7.743809
+  ],
+  "models": {
+   "built": {
+    "leg_rms": 12.31,
+    "leg_rms_by_class": {
+     "routed": 13.9,
+     "snake": 22.64,
+     "straight": 9.48
+    },
+    "tap_abs_err_p50_p90_p99": [
+     86.9,
+     122.0,
+     139.9
+    ],
+    "region_tap_err_spread_p50_p90_max": [
+     79.6,
+     94.5,
+     109.4
+    ]
+   },
+   "global": {
+    "leg_rms": 6.53,
+    "leg_rms_by_class": {
+     "routed": 7.08,
+     "snake": 9.1,
+     "straight": 5.97
+    },
+    "tap_abs_err_p50_p90_p99": [
+     13.1,
+     38.1,
+     57.1
+    ],
+    "region_tap_err_spread_p50_p90_max": [
+     47.0,
+     59.8,
+     106.3
+    ]
+   },
+   "per_class": {
+    "leg_rms": 6.05,
+    "leg_rms_by_class": {
+     "routed": 6.87,
+     "snake": 7.81,
+     "straight": 5.69
+    },
+    "tap_abs_err_p50_p90_p99": [
+     11.9,
+     38.3,
+     58.3
+    ],
+    "region_tap_err_spread_p50_p90_max": [
+     47.6,
+     61.7,
+     111.0
+    ]
+   },
+   "per_class_2fold": {
+    "leg_rms": 6.1,
+    "leg_rms_by_class": {
+     "routed": 8.07,
+     "snake": 7.89,
+     "straight": 5.69
+    },
+    "tap_abs_err_p50_p90_p99": [
+     11.9,
+     39.2,
+     59.1
+    ],
+    "region_tap_err_spread_p50_p90_max": [
+     47.9,
+     63.3,
+     108.9
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,20 @@
+[
+ {
+  "master": "col_h10_l4_lp_asb_x",
+  "production": "BLOCKED",
+  "cause": "GB frame requires its qualified one-edge-early GO/TAG provider: col_h10_l4_lp_asb_x",
+  "explicit_provider_bench_admission": "PASS"
+ },
+ {
+  "master": "col_h9_l4_lp_asb_nx",
+  "production": "BLOCKED",
+  "cause": "GB frame requires its qualified one-edge-early GO/TAG provider: col_h9_l4_lp_asb_nx",
+  "explicit_provider_bench_admission": "PASS"
+ },
+ {
+  "master": "col_h9_l4_lp_asb_x",
+  "production": "BLOCKED",
+  "cause": "GB frame requires its qualified one-edge-early GO/TAG provider: col_h9_l4_lp_asb_x",
+  "explicit_provider_bench_admission": "PASS"
+ }
+]

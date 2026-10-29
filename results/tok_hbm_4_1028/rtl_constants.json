@@ -1,0 +1,14 @@
+{
+ "rr": {
+  "value": 10,
+  "source": "rtl/hbm_next/fused/ot_hnx_fused_tree.sv ot_hnx_fused_hub RR=10"
+ },
+ "reset_release_edges": {
+  "value": 66,
+  "source": "physical/die_plan/hbm/reset_contract.json assert_edges 66 (2+HOLD 64)"
+ },
+ "reset_sync_stages": {
+  "value": 3,
+  "source": "rtl/hbm_next/fused/ot_hnx_fused_tree.sv ot_hnx_fused_delivered_reset pipe[2:0]"
+ }
+}

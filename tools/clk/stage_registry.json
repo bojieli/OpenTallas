@@ -1,0 +1,177 @@
+{
+ "schema": "ot_clk_stage/1",
+ "note": "ot-clk P1 stage-model registry. Key = (cell, polarity, clock_rc, corners, edges). Add entries with `ot_clk.py register` from a fit on ROUTED legs of the stack (tools/die_plan/fit_dme_stage_cal.py); never edit coefficients by hand (coeff_sha).",
+ "entries": [
+  {
+   "id": "builtin_bufx24_1x_ladder",
+   "builtin": true,
+   "key": {
+    "cell": "BUFx24_ASAP7_75t_R",
+    "polarity": "noninv",
+    "clock_rc": "1x",
+    "corners": [
+     "TT"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": "1x M8/M9 ladders, OpenSTA (not routed legs)"
+   },
+   "basis": "die_trial.STAGE_1X_TT = (20.8281, 0.013984, 0.00033554), DIE-QC-3 cal1x, resid <= 4 ps; used by die_trial when --region-dme-stage-cal is absent. Valid ONLY for a BUFx24 tree.",
+   "source": {
+    "file": "tools/die_plan/die_trial.py STAGE_1X_TT"
+   },
+   "leg": [
+    20.8281,
+    0.013984,
+    0.00033554,
+    0.0
+   ],
+   "coeff_sha": "927ba799710fdcb7"
+  },
+  {
+   "id": "inv2_ndr_qc_trial13b",
+   "key": {
+    "cell": "CKINVDCx16_ASAP7_75t_R",
+    "polarity": "pair",
+    "clock_rc": "ndr",
+    "corners": [
+     "TT",
+     "FF"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": "QC trial13b clock-only GRT (2W2S NDR kit)"
+   },
+   "basis": "DIE-QC-21 inv2 (CKINVDCx16, 2W2S NDR) DME stage model fitted (least squares) on QC trial13b routed clock-only GRT legs: 12626 DME legs (plain + snake), N-row node arrivals, TT ps; leg delay = n*d0 + k1*L + k2*sum(Ls^2) + kf*(end-node fanout - 1); tap leg = k1*d + k2*d^2",
+   "source": {
+    "file": "results/die_qc21_1028/inv2_stage_cal_trial13b.json",
+    "sha256": "a40e7ae531ee7b6af33937194fec4a74840dc9b442caf438e0ade6d7c67a3aa3",
+    "trial": "intel2:/srv/opentallas-scratch2/claude/die-qc20-1028/trial13b",
+    "arrivals": "intel2:/srv/opentallas-scratch2/claude/die-qc20-1028/c13b_{TT,FF}/arr_{TT,FF}.txt",
+    "fit": "validate.py (results/die_qc21_1028)"
+   },
+   "leg": [
+    16.771128,
+    0.109674,
+    0.000167,
+    10.948145
+   ],
+   "tap": [
+    0.04204,
+    5e-06
+   ],
+   "leg_FF": [
+    14.292575,
+    0.096293,
+    0.000161,
+    7.97528
+   ],
+   "tap_FF": [
+    0.04195,
+    -5e-06
+   ],
+   "coeff_sha": "8e1b177002ea7044"
+  },
+  {
+   "id": "inv2_ndr_s81_go15",
+   "key": {
+    "cell": "CKINVDCx16_ASAP7_75t_R",
+    "polarity": "pair",
+    "clock_rc": "ndr",
+    "corners": [
+     "TT",
+     "FF"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": "S81 go15 combo GRT"
+   },
+   "basis": "DIE-S81-17 inv2 (CKINVDCx16) DME stage model fitted (least squares) on S81 go15 routed clock GRT legs: 16604 DME legs, N-row EARLY node arrivals; leg delay = n*d0 + k1*L + k2*sum(Ls^2) + kf*(end-node fanout - 1). tap = DIE-QC-21 trial13b fit (S81 go15 tap legs are ~0 um, not refit). For die_trial --region-dme-stage-cal.",
+   "source": {
+    "file": "claude/die-s81-17-1028@9f3d9adcc0:results/die_s81_17_1028/inv2_stage_cal_s81_go15.json (also fit_dme_stage_cal.py output, DIE-S81-18 @9e0f2cfb03)",
+    "sha256": "5898bb3bc3fa8d4fd68f407005d414e814e585cc464ac8087c1d5414ad1cfdb4",
+    "trial": "intel2:/srv/opentallas-scratch2/claude/die-s81-16/go15",
+    "arrivals": "go15/out_{TT,FF}/arr_{TT,FF}.txt",
+    "fit": "results/die_s81_17_1028/scripts/cal_est.py"
+   },
+   "leg": [
+    12.453375,
+    0.161722,
+    0.000233,
+    12.303575
+   ],
+   "tap": [
+    0.04204,
+    5e-06
+   ],
+   "leg_FF": [
+    10.594136,
+    0.144771,
+    0.000229,
+    8.924815
+   ],
+   "tap_FF": [
+    0.04195,
+    -5e-06
+   ],
+   "rms_ps": {
+    "TT": 7.95,
+    "FF": 7.06
+   },
+   "coeff_sha": "27eeffb87607d327"
+  },
+  {
+   "id": "inv2_ndr_qc_trial24",
+   "key": {
+    "cell": "CKINVDCx16_ASAP7_75t_R",
+    "polarity": "pair",
+    "clock_rc": "ndr",
+    "corners": [
+     "TT",
+     "FF"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": "QC trial24 (== trial14) clock-only GRT (2W2S NDR kit)"
+   },
+   "basis": "DIE-QC-25 inv2 (CKINVDCx16, 2W2S NDR) DME stage model refit (tools/die_plan/fit_dme_stage_cal.py) on QC trial24 routed clock-only GRT legs: 12626 legs, TT rms 7.11 ps / FF 6.53 ps (built model 13.66 / 12.31); tap copied from trial13b, not fitted",
+   "source": {
+    "file": "results/die_qc25_1028/inv2_stage_cal_trial24.json",
+    "sha256": "bcc5464de3cea75c672915114e773f08166cf70ebbf637d16a4ee73d93444e5b",
+    "tree": "intel2:/srv/opentallas-scratch2/claude/die-qc24-1028/trial24/clock/tree.json",
+    "arrivals": "intel2:/srv/opentallas-scratch2/claude/die-qc24-1028/c24_{TT,FF}/arr_{TT,FF}.txt (clock-only GRT, = trial14 md5)",
+    "rep_um": 250.0,
+    "even_legs": true,
+    "built_with": "results/die_qc21_1028/inv2_stage_cal_trial13b.json",
+    "tap_from": "results/die_qc21_1028/inv2_stage_cal_trial13b.json",
+    "fitter": "tools/die_plan/fit_dme_stage_cal.py @ claude/die-s81-18-1028 b7a6297642 (DIE-S81-18)",
+    "branch": "claude/die-qc25-1028@2e6c50dc60"
+   },
+   "leg": [
+    13.934059,
+    0.09766,
+    0.000161,
+    10.457359
+   ],
+   "tap": [
+    0.04204,
+    5e-06
+   ],
+   "leg_FF": [
+    11.782508,
+    0.086044,
+    0.00015,
+    7.743809
+   ],
+   "tap_FF": [
+    0.04195,
+    -5e-06
+   ],
+   "coeff_sha": "a7f12421ad1be3f1"
+  }
+ ]
+}

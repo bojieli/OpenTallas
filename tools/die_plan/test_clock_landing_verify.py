@@ -3,11 +3,11 @@ from collections import defaultdict
 from clock_landing_verify import Verification
 
 
-def vehicle(mutant=None):
+def vehicle(mutant=None,reset_tree=None):
     cells=[];counter=iter(range(100,10000));drv=defaultdict(list)
     def cell(path,module,inputs,outs,ytype=None):
         ports={**inputs,**{p:[next(counter) for _ in range(n)] for p,n in outs.items()}}
-        c=N(path=path,module=module,ports=ports,kind='glue' if ytype else 'leaf',ytype=ytype)
+        c=N(path=path,module=module,ports=ports,kind='glue' if ytype else 'leaf',ytype=ytype,params={'K':-1 if path=='b2.u_cland_y2' else -2,'DEPTH':4})
         cells.append(c)
         for p in outs:
             for bit,n in enumerate(ports[p]):drv[n].append((len(cells)-1,p,bit))
@@ -66,11 +66,16 @@ def vehicle(mutant=None):
         table['ports'].append(dict(port='p2',src='a',dst='b2',width=1))
         table['regions'][1]['parts']=['b','b2']
         table['collector']['types']['B2']=dict(mask=dict(active=False),tree=tree,local_sources=[dict(name='y2',tap=0)],children=[])
+        if mutant.startswith('car_inactive'):
+            # TOK-QC-4: the relay partition's type is an inactive landing type (collector tree None, QC slw_hc3)
+            table['collector']['types']['B2']['tree']=None
         ca=table['count_aligned'];ca['ports']['p2']=dict(K=-1,depth=4,sched_lat=3,tree=False)
         ca['regions']['h0']['origin_part']='a';ca['regions']['h1']['origin_part']='b'
         if mutant!='car_no_parts':
             ca['parts']=dict(a=dict(region='h0',role='origin',src=None,stages=0),b=dict(region='h1',role='origin',src=None,stages=0),
                              b2=dict(region='h1',role='relay',src='b',stages=2))
+    if mutant=='ca_wrong_count':ring.params['K']=-1
+    if mutant=='ca_wrong_depth':ring.params['DEPTH']=8
     if mutant=='wrong_child':table['collector']['edges'][0]['src']='a'
     if mutant in ('count_regions','bad_region_count'):
         table['regions'][0].update(parts=2 if mutant=='bad_region_count' else 1,box_um=[0,0,10,10])
@@ -96,7 +101,7 @@ def vehicle(mutant=None):
         if mutant!='epoch_truncated':
             table['ports'][0]['width']=8;raw['ports'][0]['width']=8
         if mutant!='spare_capacity':ring.ports['d']=ring.ports['d'][:-1];ring.ports['q']=ring.ports['q'][:-1]
-    v=Verification(F,G,raw,table,{},live_widths=live)
+    v=Verification(F,G,raw,table,{},live_widths=live,reset_tree=reset_tree)
     for port in obs.ports:v.observer_input(obs,port,0)
     return v.report()
 
@@ -173,3 +178,37 @@ def test_start_tree_start_port_origin_verified():
 def test_start_tree_start_port_mutants_fail():
     assert any('p_start' in e for e in vehicle('cast_pstart')['errors'])
     assert any('p_start' in e for e in vehicle('cast_stage_wrong')['errors'])   # stage parent: pst port only
+
+
+def _plan_tree(tn):
+    return dict(root=[0,0],sync_stages=2,relays=[dict(name='u_rrl_0',q='rst_n_t0',d='rst_root_n',xy=[1,0])])
+
+
+def test_relay_rx_in_inactive_type_uses_plan_reset_tree():
+    """TOK-QC-4: a start relay rx in a type whose collector tree is None is checked on the type's plan reset tree."""
+    assert vehicle('car_inactive',reset_tree=_plan_tree)['errors']==[]
+
+
+def test_relay_rx_in_inactive_type_fails_closed():
+    # no plan tree -> FAIL (not skip, not crash)
+    errs=vehicle('car_inactive',reset_tree=lambda tn:None)['errors']
+    assert any('no planned reset tree for type B2' in e for e in errs),errs
+    def boom(tn):raise KeyError(tn)
+    errs=vehicle('car_inactive',reset_tree=boom)['errors']
+    assert any('plan reset tree unavailable' in e for e in errs) and any('no planned reset tree' in e for e in errs),errs
+    # MUTANT: a plan tree whose rst_n_t0 relay name differs from the bound relay -> the rx raw reset contract fails
+    bad=lambda tn:dict(root=[0,0],sync_stages=2,relays=[dict(name='u_rrl_9',q='rst_n_t0',d='rst_root_n',xy=[1,0])])
+    errs=vehicle('car_inactive',reset_tree=bad)['errors']
+    assert any('b2.u_cland_rstart_rx' in e and 'reset-parent/depth' in e for e in errs),errs
+
+
+def test_count_aligned_actual_count_and_depth_are_checked():
+    assert any(' K differs' in e for e in vehicle('ca_wrong_count')['errors'])
+    assert any('DEPTH differs' in e for e in vehicle('ca_wrong_depth')['errors'])
+
+
+def test_shared_type_depth_is_the_maximum_of_all_used_instances():
+    from clock_landing_verify import planned_ring_depths
+    raw=dict(partitions=[dict(name='a',type='T'),dict(name='b',type='T')],ports=[dict(id='p',dst=dict(bus='x')),dict(id='q',dst=dict(bus='x'))])
+    table=dict(ports=[dict(port='p',dst='a'),dict(port='q',dst='b')],count_aligned=dict(ports={'p':dict(depth=4),'q':dict(depth=8)}))
+    assert planned_ring_depths(raw,table)=={('T','x'):8}

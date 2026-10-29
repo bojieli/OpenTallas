@@ -237,8 +237,16 @@ proc ot_rc_cal_apply {kind} {
   return 1
 }
 proc ot_rc_cal_restore {} {
-  source $::env(PLATFORM_DIR)/setRC.tcl
-  puts "OT_RC_CAL restored platform setRC.tcl"
+  # Restore the kit's selected baseline, which may itself be RCX calibrated.
+  # Falling back to platform RC here changes every subsequent timing report.
+  if {[info exists ::env(LAYER_PARASITICS_FILE)] && $::env(LAYER_PARASITICS_FILE) ne ""} {
+    set baseline $::env(LAYER_PARASITICS_FILE)
+    if {![file isfile $baseline]} {error "OT_RC_CAL missing selected RC baseline $baseline"}
+  } else {
+    set baseline $::env(PLATFORM_DIR)/setRC.tcl
+  }
+  source $baseline
+  puts "OT_RC_CAL restored selected RC baseline $baseline"
 }
 # Run BODY with calibrated hold RC. Numeric FF I/O references must be measured
 # with that same RC, and measured again after restoring platform RC. Unsync FIRST:
@@ -641,6 +649,10 @@ proc ot_repair_hold_guarded {rt_args} {
 # it carries the flow-default macro clock clustering (clock_tree_synthesis wrapper; physical/common_flow/
 # macro_cts_cluster.tcl, which the closure loop ships into older snapshots next to this file).
 if {[info commands ot_mcc_cts_orig] eq ""} {
-  set ot_mcc_file [file join [file dirname [file dirname [file normalize [info script]]]] physical common_flow macro_cts_cluster.tcl]
-  if {[file exists $ot_mcc_file]} { source $ot_mcc_file } else { puts "OT_MACRO_CTS unavailable: $ot_mcc_file missing" }
+  set ot_mcc_dir [file dirname [file normalize [info script]]]
+  set ot_mcc_file [file join $ot_mcc_dir macro_cts_cluster.tcl]
+  if {![file isfile $ot_mcc_file]} {
+    set ot_mcc_file [file join [file dirname $ot_mcc_dir] physical common_flow macro_cts_cluster.tcl]
+  }
+  if {[file isfile $ot_mcc_file]} { source $ot_mcc_file } else { puts "OT_MACRO_CTS unavailable: $ot_mcc_file missing" }
 }

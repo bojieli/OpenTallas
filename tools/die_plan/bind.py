@@ -1544,6 +1544,11 @@ class Binder:
                         row.append(("bus", L["iname"], j, ("r8strap", sp[0], sp[1], sp[2])))
                         inst_vals[("r8pad", sp[0])] = sp[3]
                         continue
+                    sp = getattr(self, "isp", {}).get((ci, pn, i))
+                    if sp is not None:      # INNER strap-pad site: same source, per-instance depth = strap value
+                        row.append(("int", nm(d[1]), d[2], d[3], ("r8strap", sp[0], sp[1], sp[2])))
+                        inst_vals[("r8pad", sp[0])] = sp[3]
+                        continue
                     row.append(self._rel_desc(p, d, inst_vals, (r, pn, i), nm))
                 conns[(r, pn)] = tuple(row)
         obus = sorted((L["oname"], ("plan", L["width"]) if L.get("plan") else tuple((nm(it[1]), it[2], it[3]) if it[0] == "leaf" else
@@ -2431,6 +2436,86 @@ class Binder:
             if sites:
                 self.r8_sites[tn] = sites
 
+    def inner_strap_sites(self, by_type):
+        """asbuilt.land_inner_strap_pads = true (COORD 2026-10-28 21:38 TOK-QC ruling, opt-in; needs land_r8_strap_pads):
+        the OWNER 10-28 strap-count delay bank for INTRA-partition kept stages.  An intra-partition edge (sink
+        leaf.port[bit] <- source leaf.port[bit], both inside the partition) whose kept depth differs per instance of one
+        type (e.g. QC CB16 INNER pads: the count-aligned crossing latencies upstream differ per instance) is NOT a type
+        split when every instance has the same source leaf.port[bit] there: the bits with one per-instance depth pattern
+        are a strap SITE = fixed ot_dp_dly of the smallest depth (base) + one ot_dp_dly_cnt #(DMAX = span) bank whose
+        count (depth - base) is the partition input strap_r8pad_<site>, tied per instance at the parent (same r8pad
+        manifest / G0 tie-value audit / r8_strap_lec as the R8 sites).  The kept depth of every bit is unchanged (the
+        sinks keep their own depth, so bus_groups / bind_timing price the same cycles).  A span above r8.STRAP_PAD_MAX
+        stays an ERROR; nested (OR / AND) intra sinks and edges whose source differs per instance stay type splits.
+        -> self.isp {(ci, port, bit): (site, base, span, count)}; sites recorded in self.r8_sites with kind "inner";
+        self.intra_dly of the type's instances is rebuilt without the stages only strap sites used."""
+        import r8 as R8
+        self.isp = {}
+        for tn, ps in sorted(by_type.items()):
+            if len(ps) < 2:
+                continue
+            dep = defaultdict(dict)         # (rel, port, bit) -> {p: (src rel, src port, src bit, kept depth)}
+            where = defaultdict(dict)       # (rel, port, bit) -> {p: ci}
+            for p in ps:
+                for ci in self.members[p]:
+                    r = self.rel_of(ci)
+                    for pn, bits in self.F.cells[ci].ports.items():
+                        if self.G.dirs[ci].get(pn) != "input":
+                            continue
+                        for i in range(len(bits)):
+                            d = self.sinks[(ci, pn, i)]
+                            if d[0] != "int":
+                                continue
+                            dep[(r, pn, i)][p] = (self.rel_of(d[1]), d[2], d[3], d[4])
+                            where[(r, pn, i)][p] = ci
+            pattern = defaultdict(list)     # (rel, port, src rel, src port, per-instance depths) -> [bits]
+            for k, v in dep.items():
+                if len(v) != len(ps) or len({x[:3] for x in v.values()}) != 1 or len({x[3] for x in v.values()}) < 2:
+                    continue
+                s = v[ps[0]]
+                pattern[(k[0], k[1], s[0], s[1], tuple(v[p][3] for p in ps))].append(k[2])
+            per_port = defaultdict(int)
+            sites = self.r8_sites.get(tn, {})
+            for (r, pn, sr, spn, pv), bits in sorted(pattern.items()):
+                n = per_port[(r, pn)]
+                per_port[(r, pn)] += 1
+                site = short_id(f"strap_r8pad_{r}__{pn}__in" + (f"{n}" if n else ""), 80)
+                base, mx = min(pv), max(pv)
+                if mx - base > R8.STRAP_PAD_MAX:
+                    self.errors.append(f"INNER_STRAP_PAD {tn} {r}.{pn} <- {sr}.{spn}: depth span {mx - base} > strap "
+                                       f"capacity {R8.STRAP_PAD_MAX}")
+                    continue
+                if site in sites:
+                    raise BindError(f"INNER_STRAP_PAD {tn}: site name {site} collides")
+                counts = {p: pv[k] - base for k, p in enumerate(ps)}
+                sites[site] = dict(kind="inner", leaf=r, port=pn, src=f"{sr}.{spn}", bits=sorted(bits),
+                                   width=len(bits), base=base, span=mx - base,
+                                   pads={p: pv[k] for k, p in enumerate(ps)}, counts=counts,
+                                   used=sorted(set(counts.values())))
+                for i in bits:
+                    for p in ps:
+                        self.isp[(where[(r, pn, i)][p], pn, i)] = (site, base, mx - base, counts[p])
+            if sites:
+                self.r8_sites[tn] = sites
+        if not self.isp:
+            return
+        # kept stages now used only by strap-site sinks leave the per-instance ot_dp_dly set
+        parts = {self.cpart[k[0]] for k in self.isp}
+        used = defaultdict(set)
+
+        def walk(p, d):
+            if d and d[0] == "int" and d[4]:
+                used[p].add((d[1], d[2], d[4]))
+            elif d and d[0] in ("or", "and"):
+                for u in d[1]:
+                    walk(p, u)
+        for k, d in self.sinks.items():
+            p = self.cpart.get(k[0])
+            if p in parts and k not in self.isp:
+                walk(p, d)
+        for p in parts:
+            self.intra_dly[p] = used.get(p, set())
+
     def check_types(self):
         self.tsig, self.tvals, self.tparams = {}, {}, {}
         split_more = []
@@ -2440,6 +2525,10 @@ class Binder:
         self.by_type = by_type
         if self.ab.get("land_r8_strap_pads"):
             self.r8_strap_sites(by_type)
+        if self.ab.get("land_inner_strap_pads"):
+            if not hasattr(self, "r8_sites"):
+                self.r8sp, self.r8_sites = {}, {}
+            self.inner_strap_sites(by_type)
         for tn, ps in sorted(by_type.items()):
             sigs = {}
             for p in ps:
@@ -2583,6 +2672,8 @@ class Binder:
                 bad.append(f"{len(self.ft_bus[p])} ft slot hop(s)")
             if self.intra_dly.get(p):
                 bad.append(f"{len(self.intra_dly[p])} kept transport stage(s)")
+            if any(self.cpart.get(k[0]) == p for k in getattr(self, "isp", {})):
+                bad.append("INNER strap-count bank(s)")
             for L in self.out_bus.get(p, []):
                 if L.get("plan") or any(it[0] != "leaf" for it in L["items"]):
                     bad.append(f"out bus {L['oname']} forwards / plan-cell driven")
@@ -3109,6 +3200,27 @@ class Binder:
             nonlocal need_rst
             k = d[0]
             if k == "int":
+                sp = getattr(self, "isp", {}).get((ci, pn, i))
+                if sp is not None:              # INNER strap site (COORD 10-28 21:38): fixed base + strap-count bank
+                    site, base, span, _cnt = sp
+                    if site not in r8banks:
+                        sb = sorted(b for (c2, p2, b), v in self.isp.items() if c2 == ci and p2 == pn and v[0] == site)
+                        W = len(sb)
+                        nb = short_id(f"r8b_{site}", 100)
+                        prev = _concat([f"{drv_w[(self.sinks[(ci, pn, b)][1], self.sinks[(ci, pn, b)][2])]}"
+                                        f"[{self.sinks[(ci, pn, b)][3]}]" for b in sb])
+                        if base:
+                            decl.append(f"    wire [{W - 1}:0] {nb}_f;")
+                            body.append(f"    ot_dp_dly #(.W({W}), .D({base})) u_{nb}_f (.clk(clk), .d({prev}), "
+                                        f".q({nb}_f));  // INNER strap site {site}: fixed common depth {base}")
+                            prev = f"{nb}_f"
+                        decl.append(f"    wire [{W - 1}:0] {nb};")
+                        body.append(f"    ot_dp_dly_cnt #(.W({W}), .DMAX({span})) u_{nb} (.clk(clk), "
+                                    f".strap_cnt({site}), .d({prev}), .q({nb}));  // INNER strap-count bank "
+                                    f"(depth = {base} + {site})")
+                        r8banks[site] = (nb, sb)
+                    nb, sb = r8banks[site]
+                    return f"{nb}[{sb.index(i)}]"
                 w = dly_w[(d[1], d[2], d[4])] if d[4] else drv_w[(d[1], d[2])]
                 return f"{w}[{d[3]}]"
             if k == "x":
@@ -3730,7 +3842,7 @@ def cmd_bind(a):
     except ValueError as exc:
         B.errors.append(f"POSITION_BANK {exc}")
     B.check_types()
-    if getattr(B, "r8sp", None):
+    if getattr(B, "r8sp", None) or getattr(B, "isp", None):
         # OWNER 10-28 R8 strap pads: the strap-count bank master (rtl/common, LEC'd per used constant)
         B.extra_lib.append(str(Path(B.base).resolve() / "rtl/common/ot_dp_dly_cnt.sv"))
     if B.ab.get("land_pad_tree"):
@@ -3928,6 +4040,7 @@ def kit_closure(names, idx, prefer, picks=None, views=None):
     one module dragged in the instantiations of its unrelated siblings, e.g. sle_ctl got ot_v41_attn_eng_ctl_endpoint_phys
     + ot_hdc_fastfp, two different ot_hdc_qadd -> yosys Re-definition of module at the kit preflight).  `picks`
     (optional dict) receives {module: file} for every needed module (kit_strip_dups keeps those definitions)."""
+    E.validate_preferred_files(prefer)
     seen, files, missing, macros = set(), [], set(), {}
     picks = {} if picks is None else picks
     # QC-CORES-4 10-27: a module with a hardened view under MACRO_VIEW_DIRS (`views`, macro_views(base)) is a HARD MACRO
@@ -4245,6 +4358,12 @@ def cmd_kit_rtl(a):
     ports.append(("input  wire arst_n", "die reset"))
     conns, body, spare, narrow, missing = [".clk(clk)", ".arst_n(arst_n)"], [], [], [], []
     seen = {"clk", "arst_n"}
+    for tap in taps:
+        seen.add(tap)  # already declared in the plan wrapper above
+        if tap in bmap:
+            if bmap[tap] != ("input", 1):
+                raise BindError(f"kit-rtl {tn}: planned clock tap {tap} is not a scalar input in {bmod}")
+            conns.append(f".{tap}({tap})")
     for d, n, W, Wd, ep in plan:
         ports.append((f"{d:6} wire [{W - 1}:0] {n}", f"plan bus: {Wd} data" + (f" + epoch [{Wd}]" if ep else "")))
         if n not in bmap:
@@ -4359,9 +4478,10 @@ def cmd_kit_rtl(a):
     base = plan_base(a.plan, raw)
     # The bind's own extra library (the clock-landing cells ot_dp_clk_landing / ot_dp_landing_collect added when a
     # landing table is selected) is a source of the bound leaves too, not only a tie-breaker.
-    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), list(ab0.get("files", [])) + list(rep.get("extra_lib", [])), base)
     prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])] + \
         rep.get("extra_lib", []) + bindf_prefer(out, base)
+    E.validate_preferred_files(prefer)
+    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), list(ab0.get("files", [])) + list(rep.get("extra_lib", [])), base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
                    {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})

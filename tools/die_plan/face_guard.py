@@ -366,7 +366,12 @@ LAND_FORMS = ("icg", "hold_mux")
 
 def land_spec(v):
     """(D, form) of one declared landing bus: an int D = the ICG slot form (S81-CORE-LAT-R21); a dict
-    {"D": n, "form": "hold_mux"} = the enable-mux slot form (COORD 10-28 06:30, DIE-HEAD-8 witness).  ValueError else."""
+    {"D": n, "form": "hold_mux"} = the enable-mux slot form (COORD 10-28 06:30, DIE-HEAD-8 witness); a dict
+    {"form": "ring_start", "ring": R} (DIE-HEAD-21, no D) = the count-aligned ring START input -> (0, "ring_start")
+    (ring_spec gives R).  ValueError else."""
+    if isinstance(v, dict) and v.get("form") == "ring_start":
+        ring_spec(v)
+        return 0, "ring_start"
     if isinstance(v, dict):
         if set(v) - {"D", "form"} or v.get("form", "icg") not in LAND_FORMS:
             raise ValueError(f"land_slots bus spec {v}: want {{D, form in {LAND_FORMS}}}")
@@ -374,14 +379,34 @@ def land_spec(v):
     return int(v), "icg"
 
 
+def ring_spec(v):
+    """declared ring bus names of a {"form": "ring_start", "ring": R | [R, ...]} spec (unique non-empty str);
+    ValueError else."""
+    rg = v.get("ring") if isinstance(v, dict) else None
+    rl = [rg] if isinstance(rg, str) else rg
+    if set(v) != {"form", "ring"} or not isinstance(rl, list) or not rl or len(set(rl)) != len(rl) or \
+            not all(isinstance(x, str) and x for x in rl):
+        raise ValueError(f"land_slots ring_start spec {v}: want exactly {{form: ring_start, ring: <bus> | [<bus>..]}}")
+    return list(rl)
+
+
 # ---- single-output std-cell boolean models (hold_mux slot proof; a cell without a model rejects the slot) --------
 def _cell_base(m):
     return re.sub(r"x(p\d+|\d+).*$", "", m.split("_ASAP7")[0])
 
 
-def cell_fn(m, ins):
+def cell_fn(m, ins, output=None):
     """ins {pin: bool} -> output bool of a single-output ASAP7 combinational cell; KeyError when not modelled."""
     b = _cell_base(m)
+    if b == "HA":
+        # ASAP7 SIMPLE RVT TT liberty: CON = (!A)+(!B), SN = !(A^B).
+        # Both outputs occur in mapped binary-count decode cones.  Unknown
+        # output names still reject the proof instead of guessing a function.
+        if output == "CON":
+            return not (ins["A"] and ins["B"])
+        if output == "SN":
+            return ins["A"] == ins["B"]
+        raise KeyError(f"no boolean model for {m} output {output}")
     if b.startswith(("BUF", "HB")):
         return ins["A"]
     if b.startswith("INV"):
@@ -502,6 +527,18 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     its write condition W holds and to its own state otherwise (own-Q hold, never written -> FAIL), W uses no landing
     bit and no undriven/macro leaf, and the D write conditions are pairwise mutually exclusive.  Each slot flop is that
     bit's face register (two bits on one slot flop -> merged).
+    A bus declared {"form": "ring_start", "ring": R} (DIE-HEAD-21: the count-aligned ring's forwarded START, t_rst_n of
+    ot_meso_ring_ca and p_start of the count origin; it must NOT get a face flop -- that would shift the partition's
+    count frame by one cycle) needs: R (one bus or a list) declared hold_mux in the same land dict and proving its own
+    slots; the START net undriven inside, wired to no other port; and everything reachable forward from each bit
+    through combinational std cells ends at flop D pins ONLY (no port, macro, clock/other flop pin), each either
+    (1) a ring-writer flop: clocked by the clock net of R's slot flops AND in the same parent instance as R's slot
+    flops (ot_meso_ring_ca state: slots, lap, tag, write count, write-valid), or
+    (2) an origin start sampler flop: in ONE parent instance whose last path segment contains "origin" (the emitted
+    u_cland_origin), at most 2 such flops (sf negedge + s0 first synchroniser stage), all on ONE clock net that is a
+    clock input port and not a ring clock, each D cone's leaves only the bit, declared strap ports and Q/QN of flops on
+    that same clock, and some leaf assignment makes D equal to the bit (it samples START).
+    At least one writer flop is required.  Anything else fails class "land_slot".  Matched flops: res["ring_start"].
     exports: declared forwarded clock outputs [(T, S)] (kit SDC create_generated_clock -source [get_ports S] -divide_by 1
     [get_ports T], DIE-HEAD-9 FACE (c)): T is an output port wired from clock port S through single-driver,
     single-load buffers / an even number of inverters only, the T net and every chain net carry nothing else; then T
@@ -582,9 +619,14 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     for x, v in land_raw.items():
         land[x], land_form[x] = land_spec(v)
     for x, dd in land.items():                   # a declared landing bus: an input port, D >= 2
+        if land_form[x] == "ring_start":
+            if T.dirs.get(x) != "input":
+                fail("land_slot", x, f"declared ring_start bus is {T.dirs.get(x)} (want input)")
+            continue
         if T.dirs.get(x) != "input" or int(dd) < 2:
             fail("land_slot", x, f"declared landing bus is {T.dirs.get(x)} with D {dd} (want input, D >= 2)")
-    land_roots = {port_root[b] for x in land if x in T.ports for b in _bits_of(T, x)}
+    # the ring START is a write-enable leaf of its own ring's slots (if (t_rst_n) s_d <= t_d): not a landing data bit
+    land_roots = {port_root[b] for x in land if x in T.ports and land_form[x] != "ring_start" for b in _bits_of(T, x)}
     out_port_roots = {port_root[b] for x in T.ports if T.dirs.get(x) == "output" for b in _bits_of(T, x)}
     lmemo = {}
 
@@ -621,9 +663,9 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             return False
         if net in memo:
             return memo[net]
-        ci = _single_drv(net)[0]
+        ci, output = _single_drv(net)
         m, _, pp = F.cells[ci]
-        memo[net] = cell_fn(m, {k: _ev(F.find(v[0]), asg, memo) for k, (dd_, v) in pp.items() if dd_ == "in" and v})
+        memo[net] = cell_fn(m, {k: _ev(F.find(v[0]), asg, memo) for k, (dd_, v) in pp.items() if dd_ == "in" and v}, output)
         return memo[net]
 
     def _depth(src, dst, memo):
@@ -746,6 +788,118 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             if sum(1 for c, Wk in per if tuple(a[x] for x in c) in Wk) > 1:
                 return f"write conditions not mutually exclusive at {a}", [], []
         return None, ffs, depths
+
+    def _ckpin(ci):
+        ck = [v for k, (dd_, v) in F.cells[ci][2].items() if k in ("CLK", "C", "CK") and len(v) == 1]
+        return F.find(ck[0][0]) if len(ck) == 1 else None
+
+    def _parent(path):
+        return path.rsplit("/", 1)[0] if "/" in path else ""
+
+    ring_memo = {}
+
+    def ring_of(R):
+        """(None, clock net, slot parent instances) of declared hold_mux ring bus R, else (failure text, None, None)."""
+        if R in ring_memo:
+            return ring_memo[R]
+        if land_form.get(R) != "hold_mux" or T.dirs.get(R) != "input":
+            ring_memo[R] = (f"ring {R} is not a declared hold_mux input bus ({land_form.get(R)}, {T.dirs.get(R)})",
+                            None, None)
+            return ring_memo[R]
+        cks, pars = set(), set()
+        for rb in _bits_of(T, R):
+            why, ffs, _ = land_mux(rb, port_root[rb], int(land[R]))
+            if why:
+                ring_memo[R] = (f"ring {R} slots do not prove ({rb}: {why})", None, None)
+                return ring_memo[R]
+            cks |= {_ckpin(ci) for ci in ffs}
+            pars |= {_parent(F.cells[ci][1]) for ci in ffs}
+        ring_memo[R] = (None, cks, pars) if len(cks) == 1 else (f"ring {R} slots on {len(cks)} clocks", None, None)
+        return ring_memo[R]
+
+    clock_port_roots = {port_root[b] for p in T.ports if T.dirs.get(p) == "input" and re.match(skip_re, p)
+                        for b in _bits_of(T, p)}
+    strap_roots = {port_root[b] for p in (straps or ()) if p in T.ports for b in _bits_of(T, p)}
+
+    def ring_start(b, r, rings):
+        """(None, record) = OK, else (failure text, None)."""
+        if drv[r]:
+            return f"ring start net also driven by {F.cells[drv[r][0][0]][1]}", None
+        rck, rdom = set(), set()
+        for R in rings:
+            why, cks, pars = ring_of(R)
+            if why:
+                return why, None
+            rck |= cks
+            rdom |= {(c, q) for c in cks for q in pars}     # (clock net, slot parent instance) of each ring
+        sinks, seen = [], set()
+        for ci, pin in loads[r]:
+            seen.add((ci, pin))
+            m = F.cells[ci][0]
+            if is_ff(m):
+                sinks.append(("ff_D" if pin == "D" else f"ff_{pin}", ci))
+            elif not _std_cell(m):
+                sinks.append(("macro", ci))
+            else:
+                _fwd(ci, seen, sinks)
+        bad = sorted({(k, F.cells[c][1] if k != "port" else str(roots_ports.get(c, [c])[0])) for k, c in sinks
+                      if k != "ff_D"})
+        if bad:
+            return f"ring start reaches {bad[:3]} (want flop D pins only)", None
+        writers, samplers = set(), set()
+        for _, ci in sinks:
+            ck = _ckpin(ci)
+            if (ck, _parent(F.cells[ci][1])) in rdom:
+                writers.add(ci)
+            else:
+                samplers.add(ci)
+        if not writers:
+            return f"ring start reaches no writer flop of ring {rings}", None
+        sp = sorted(F.cells[ci][1] for ci in samplers)
+        if samplers:
+            par = {_parent(p) for p in sp}
+            sck = {_ckpin(ci) for ci in samplers}
+            if len(par) != 1 or "origin" not in next(iter(par)).rsplit("/", 1)[-1]:
+                return f"ring start reaches non-writer flops {sp[:3]} outside one origin instance", None
+            if len(samplers) > 2:
+                return f"ring start reaches {len(samplers)} origin flops {sp[:3]} (want <= 2 sampler flops)", None
+            if len(sck) != 1 or not (sck <= clock_port_roots) or sck & rck:
+                return f"origin sampler flops {sp} on clock(s) {sorted(map(str, sck))} (want one clock port, not the ring clock)", None
+            sc = next(iter(sck))
+            for ci in samplers:
+                m, path, pp = F.cells[ci]
+                dn = [v for k, (dd_, v) in pp.items() if k == "D" and len(v) == 1]
+                dnet = F.find(dn[0][0])
+                L = _leaves(dnet)
+                if r not in L:
+                    return f"origin sampler {path} D cone does not contain the start", None
+                ctl = sorted(x for x in L if x != r and not x.startswith("CONST_"))
+                for x in ctl:
+                    d = _single_drv(x)
+                    if x in roots_ports:
+                        if x not in strap_roots:
+                            return f"origin sampler {path} D cone leaf port {roots_ports[x][0]} (want declared straps only)", None
+                    elif d is None or not is_ff(F.cells[d[0]][0]) or _ckpin(d[0]) != sc:
+                        return f"origin sampler {path} D cone leaf {x} is not a flop on the sampler clock", None
+                if len(ctl) > 12:
+                    return f"origin sampler {path}: {len(ctl)} D cone leaves (too wide to prove)", None
+                samp = False
+                try:
+                    for vals in itertools.product((False, True), repeat=len(ctl)):
+                        a0 = dict(zip(ctl, vals))
+                        if all(_ev(dnet, dict(a0, **{r: bv}), {}) == bv for bv in (False, True)):
+                            samp = True
+                            break
+                except KeyError as e:
+                    return f"origin sampler {path} D cone: {e.args[0]}", None
+                if not samp:
+                    return f"origin sampler {path}: D never equals the start (not a sampler)", None
+        groups = defaultdict(int)
+        for ci in writers:
+            groups[re.sub(r"\[\d+\]", "[N]", F.cells[ci][1])] += 1
+        return None, dict(ring=list(rings), ring_clock=sorted(map(str, rck)), writer_flops=len(writers),
+                          writer_groups=dict(sorted(groups.items())), sampler_flops=sp,
+                          sampler_clock=(str(_ckpin(next(iter(samplers)))) if samplers else None))
 
     def land_slot(b, r, D):
         """None = OK (the D slot flops), else the failure text."""
@@ -885,6 +1039,15 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                         break
                 if not ok:
                     continue
+            elif p in land and land_form[p] == "ring_start":
+                why, rec = ring_start(b, r, ring_spec(land_raw[p]))
+                if why:
+                    fail("land_slot", b, why)
+                    continue
+                res.setdefault("ring_start", {})[b] = rec
+                res["ring_start_bits"] = res.get("ring_start_bits", 0) + 1
+                res["ok"] += 1
+                continue
             elif p in land and land_form[p] == "hold_mux":
                 why, mffs, dep = land_mux(b, r, int(land[p]))
                 if why:
@@ -1023,7 +1186,7 @@ def main(argv=None):
     ap.add_argument("--budget-dir", help="kit dir with budget.json (default: beside --pins): declared bump_ports")
     ap.add_argument("--sdc", help="kit constraint.sdc (default: beside --pins): create_clock ports are clock pins")
     ap.add_argument("--land", help="kit land_slots.json (default: beside --pins): declared landing-ring buses "
-                                   "{bus: D} (ICG form) or {bus: {D, form: hold_mux}}")
+                                   "{bus: D} (ICG form) or {bus: {D, form: hold_mux}} or {bus: {form: ring_start, ring: R}}")
     a = ap.parse_args(argv)
     stf = a.straps or (str(Path(a.pins).parent) if a.pins else None)
     sl = kit_strap_list(Path(stf).parent if stf.endswith(".json") else stf) if stf else []

@@ -26,7 +26,9 @@ module ot_qwen_tp8_pv_wide_pair #(
  parameter integer CTL_RESET_PIN=0,
  parameter integer LEAF_RESET_PIN=0, // opt-in local reset capture; normal command timeline unchanged
  parameter integer FIRST_INPUT_AGE=20,   // pair cycle (after the start cycle) of the q = 0 arrival = 1 + V return latency
- parameter integer MUT=0                 // bench negative control: 1 = level-5 join pairs (b0+b2),(b1+b3) (wrong order)
+ parameter integer MUT=0,                // bench negative control: 1 = level-5 join pairs (b0+b2),(b1+b3) (wrong order)
+ parameter integer LEAF_LC=0,            // DIE-KV-19 opt-in: bank tiles = ot_qwen_tp8_pv_slice_lc_t (per-lane-group red_issue/red_capture copy pins)
+ parameter integer LEAF_MUT_LC=0         // bench negative control for LEAF_LC=1 (ot_qwen_tp8_pv_slice_lc_t MUT_LC)
 )(
  input wire clk,rst_n,start,input wire[32:0] col_clk,input wire[13:0] context_len,input wire[15:0] epoch,
  input wire[7:0] in_valid,input wire[8191:0] in_v,input wire[511:0] in_e,input wire[111:0] in_t,input wire[127:0] in_epoch,
@@ -50,7 +52,7 @@ module ot_qwen_tp8_pv_wide_pair #(
    assign v[128*k+:128]=in_v[1024*k+128*GS+:128];
    assign e[16*k+:16]=in_e[64*k+16*H+:16];
   end
-  ot_qwen_tp8_pv_col #(.MUT(MUT),.RESET_PIN(LEAF_RESET_PIN)) u_col(.clk(col_clk[s]),.rst_n(rst_n),.pv(v),.pe(e),.cmd(cmd),
+  ot_qwen_tp8_pv_col #(.MUT(MUT),.RESET_PIN(LEAF_RESET_PIN),.LC(LEAF_LC),.MUT_LC(LEAF_MUT_LC)) u_col(.clk(col_clk[s]),.rst_n(rst_n),.pv(v),.pe(e),.cmd(cmd),
    .y(out_leaf[512*s+:512]),.y_valid(cv[s]),.fault(cf[s]));
  end endgenerate
  assign fault=ctl_fault;
@@ -63,7 +65,10 @@ endmodule
 // cmd (60 b, from ot_qwen_tp8_pv_wide_ctl): [0] swap, [8:1] take per bank, [9] first_lo, [10] first_hi, [14:11] a,
 //  [15] init, [19:16] init_c, [20] rd_leaf, [24:21] leaf_c, [25] red_issue, [26] red_capture, [27] red_last,
 //  [30:28] red_dst, [31] join_go
-module ot_qwen_tp8_pv_col #(parameter integer MUT=0,RESET_PIN=0)(
+// LC=1 (DIE-KV-19, opt-in; default 0 = unchanged): each bank tile is ot_qwen_tp8_pv_slice_lc_t (G=4) and its copy pins
+// bcx = {3 x red_capture cmd[26], 3 x red_issue cmd[25]} come from the SAME command bits as bc[18]/bc[17] (0 cycles;
+// RTL proof results/die_kv_14_1028/pv_pair/lec_result.txt), so the column function is unchanged.
+module ot_qwen_tp8_pv_col #(parameter integer MUT=0,RESET_PIN=0,LC=0,MUT_LC=0)(
  input wire clk,rst_n,
  input wire[1023:0] pv,input wire[127:0] pe,     // per V port k (0-3: stack PAIR lane k; 4-7: stack PAIR+2 lane k-4)
  input wire[59:0] cmd,
@@ -74,8 +79,14 @@ module ot_qwen_tp8_pv_col #(parameter integer MUT=0,RESET_PIN=0)(
  generate for(l=0;l<8;l=l+1)begin:g_bank
   localparam integer PA=l,PB=l^4;
   wire[22:0] bc={cmd[30:15],cmd[14:11],(l<4)?cmd[9]:cmd[10],cmd[1+l],cmd[0]};
+  if(LC)begin:g_lc
+   ot_qwen_tp8_pv_slice_lc_t #(.RESET_PIN(RESET_PIN),.G(4),.MUT_LC(MUT_LC)) u_bank(.clk(clk),.rst_n(rst_n),
+    .pv2({pv[128*PB+:128],pv[128*PA+:128]}),.pe2({pe[16*PB+:16],pe[16*PA+:16]}),.bc(bc),.bcx({{3{cmd[26]}},{3{cmd[25]}}}),
+    .ts(ts[512*l+:512]),.fault(sf[l]));
+  end else begin:g_t
   ot_qwen_tp8_pv_slice_t #(.RESET_PIN(RESET_PIN)) u_bank(.clk(clk),.rst_n(rst_n),.pv2({pv[128*PB+:128],pv[128*PA+:128]}),
    .pe2({pe[16*PB+:16],pe[16*PA+:16]}),.bc(bc),.ts(ts[512*l+:512]),.fault(sf[l]));
+  end
  end endgenerate
  ot_qwen_tp8_pv_join_t #(.MUT(MUT),.RESET_PIN(RESET_PIN)) u_join(.clk(clk),.rst_n(rst_n),.ts0(ts[1023:0]),.ts1(ts[2047:1024]),.ts2(ts[3071:2048]),
   .ts3(ts[4095:3072]),.join_go(cmd[31]),.sf(sf),

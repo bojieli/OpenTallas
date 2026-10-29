@@ -502,11 +502,17 @@ def emit_tcl(sl, kd=None):
         policy = q.get("band_policy", "gate")
         if policy not in ("gate", "info"):
             raise InfraError(f"unknown model_qualification band_policy {policy!r}")
+        window_policy = q.get("window_policy", "gate")
+        if window_policy not in ("gate", "info") or (window_policy == "info" and policy != "info"):
+            raise InfraError("window_policy info requires band_policy info (12.3a design targets)")
         for corner, low, high in (("TT", 230., 270.), ("FF", 182.5, 222.5)):
             result = q.get("corners", {}).get(corner, {})
-            if not result or result["leaf_window"] > 20 or result["slew_max"] > 80 or (
+            if not result or (window_policy == "gate" and result["leaf_window"] > 20) or result["slew_max"] > 80 or (
                     policy == "gate" and (result["leaf_min"] < low or result["leaf_max"] > high)):
                 raise InfraError(f"unequal-count tree model target FAIL/NOT RUN at {corner}; no physical build")
+            if window_policy == "info":
+                band_info.append(f"# core tap window INFO {corner}: {result['leaf_window']:g} ps (design target 20 ps; "
+                                 "12.3a; actual related-pair STA/setup/hold sign-off unchanged)")
             if policy == "info":
                 inb = low <= result["leaf_min"] and result["leaf_max"] <= high
                 band_info.append(f"# core latency band INFO {corner}: model leaf {result['leaf_min']:g}..{result['leaf_max']:g} "

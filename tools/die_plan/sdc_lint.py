@@ -309,7 +309,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          hold_in_min_ps=None, hold_out_min_ps=None, seam_hold_ps=None, hold_in_min_ports_ps=None,
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
          ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None,
-         landed_clock_inputs=None):
+         landed_clock_inputs=None, edge_clock_latency_ps=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -326,6 +326,9 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     early tap); without it no -early / -late source latency is allowed.
     forwarded_clock_outputs / landed_clock_inputs: the plan clock.landing_contract export (clock out) and receive
     (clock in) ports (see the 'landing' check above); without them the three landing forms stay forbidden.
+    edge_clock_latency_ps {edge clock: (early, late) ps}: the plan clock.edge_clocks[].source_latency_ps TT arrival of a
+    source-forwarded edge clock (gen_phys.edge_clock_latency): exactly those clocks carry set_clock_latency -source
+    -early / -late on [get_clocks X] with those values; without it no real clock carries a source latency.
     -> [errors]"""
     err = []
     u = time_unit_ps
@@ -371,6 +374,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     latency = {}                      # clock -> source latency (ps)
     port_lat = {}                     # clock port -> source latency (ps) (CP2 early core taps)
     port_win = {}                     # clock port -> {"early"|"late": ps} (plan clock.tap_window)
+    clk_win = {}                      # edge clock -> {"early"|"late": ps} (plan edge_clocks[].source_latency_ps)
     tw = float(tap_window_ps or 0.0)
     unc = {}                          # (kind, from, to) -> ps ; from/to None = global
     idly = {p: {} for p in ctx.allp}  # port -> {"max": (clk, ps), "min": ...}
@@ -551,6 +555,13 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                     for x in cl:
                         port_win.setdefault(x, {})[el] = _num(v[0], "latency") * u
                     continue
+                if k == "clocks" and ("-early" in w or "-late" in w):    # forwarded edge clock arrival
+                    if "-early" in w and "-late" in w:
+                        raise SdcLintError(f"set_clock_latency: both -early and -late: {cmd}")
+                    el = "early" if "-early" in w else "late"
+                    for x in cl:
+                        clk_win.setdefault(x, {})[el] = _num(v[0], "latency") * u
+                    continue
                 if k == "ports":         # CP2 early core tap: -source -clock clk <-early> [get_ports tap]
                     for x in cl:
                         port_lat[x] = _num(v[0], "latency") * u
@@ -709,6 +720,17 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
             if abs(d.get("early", 1e9) + tw) > EPS or abs(d.get("late", 1e9)) > EPS:
                 err.append(f"clocks: clock port {p_} window early {d.get('early')} / late {d.get('late')} ps, plan "
                            f"clock.tap_window -{tw:g} / 0")
+    ewant = {n: (float(a), float(b)) for n, (a, b) in (edge_clock_latency_ps or {}).items()}
+    for n, d in clk_win.items():
+        if n not in ewant:
+            err.append(f"clocks: source -early/-late latency on clock {n}, which has no plan edge clock source_latency_ps")
+        elif set(d) != {"early", "late"} or abs(d["early"] - ewant[n][0]) > EPS or abs(d["late"] - ewant[n][1]) > EPS:
+            err.append(f"clocks: edge clock {n} source latency {d} ps, plan early/late {ewant[n][0]:g}/{ewant[n][1]:g}")
+    for n in ewant:
+        if n not in clk_win:
+            err.append(f"clocks: plan edge clock {n} source_latency_ps has no set_clock_latency -source -early/-late")
+        elif clk_src and n not in {clk_src[p_] for p_ in clk_src}:
+            err.append(f"clocks: plan edge clock {n} with source latency is not a port clock")
     for n in latency:
         if n not in virt:
             err.append(f"clocks: source latency on real clock {n} (only the virtual IO clock carries the budget)")
@@ -816,7 +838,14 @@ def kit_context(P, tn):
                 port_period_mult=edge, **_seam_ctx(P, tn), **_io_hold_ctx(P, tn),
                 **({"tap_window_ps": gen_phys.tap_window_ps(P)} if gen_phys.tap_window_ps(P) else {}),
                 **({"root_async_reset": True} if gen_phys.root_async_reset(P, tn) else {}),
-                **({"straps": ids} if ids else {}), **_landing_ctx(P, tn))
+                **({"straps": ids} if ids else {}), **_landing_ctx(P, tn), **_edge_latency_ctx(P, tn))
+
+
+def _edge_latency_ctx(P, tn):
+    """plan clock.edge_clocks[].source_latency_ps TT early/late (none without the field: byte-identical json)."""
+    import gen_phys
+    m = {n: list(v["tt"]) for n, v, _b in gen_phys.edge_clock_latency(P, tn)}
+    return {"edge_clock_latency_ps": m} if m else {}
 
 
 def _landing_ctx(P, tn):

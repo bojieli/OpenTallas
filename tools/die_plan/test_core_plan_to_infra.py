@@ -169,3 +169,24 @@ def test_band_default_gate_unchanged_and_byte_identical():
 def test_band_unknown_policy_refused():
     with pytest.raises(CI.InfraError, match="band_policy"):
         CI.emit_tcl(_oob("off"))
+
+
+def test_cut_rows_use_their_own_origin_width_and_fixed_occupancy():
+    ss=sites(strap=(200,200.12))
+    ss["rows"]=[(4.32,4.32,"R0",20),(20.52,4.32,"R0",40),(4.32,4.59,"MX",600)]
+    ss["row0"].update(nsites=20,nrows=3)
+    ss["fixed"]=[(20.52,4.32,20.628,4.59)]
+    sm=C.SiteMap(ss)
+    assert not sm.free(0,20,1) and sm.free(2,100,20)
+    assert not sm.free(1,0,2) and sm.free(1,3,2)
+    p=sm.place("upper","BUFx8_ASAP7_75t_R",15.0,4.725)
+    assert abs(p["centre_um"][0]-15)<.03 and p["origin_um"][1]==4.59
+    p=sm.place("right","BUFx8_ASAP7_75t_R",21.7,4.455)
+    assert p["origin_um"][0]>=20.628 and p["origin_um"][1]==4.32
+
+
+def test_converter_uses_plan_core_extent_instead_of_cut_row_count():
+    p=plan();p["core"]=[4.32,4.32,36.72,36.72]
+    ss=sites();ss["row0"]["nsites"]=20
+    s=C.convert(p,ss,"tiny_core")
+    assert s["outline_um"]==[41.04,41.04]

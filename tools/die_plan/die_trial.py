@@ -340,6 +340,12 @@ class SiteMap:
                 a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
                 self.forb.append((min(a[0], b[0]) - halo, min(a[1], b[1]) - halo,
                                   max(a[0], b[0]) + halo, max(a[1], b[1]) + halo, "core"))
+        # Declared die channels are top-owned clock/reset placement space.
+        # A strip recut can free the old clock sites outside all new partition
+        # outlines. Keep those sites legal; core and PHY exclusions below still
+        # apply, including wherever a channel rectangle crosses either one.
+        self.parts.extend(tuple(ch["rect_um"]) for ch in P.die.get("channels", []) or []
+                          if ch.get("rect_um"))
         for d in P.die.get("pg", {}).get("domains", []) or []:
             if any("PHY" in str(v) for v in d.get("nets", [])) and d.get("rect_um"):
                 x0, y0, x1, y1 = d["rect_um"]
@@ -639,6 +645,46 @@ def polyline_points(poly, fracs):
         u = t / seg[k] if seg[k] > 0 else 0.0
         res.append((a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u))
     return res, tot
+
+
+# DIE-QC-24 opt-in repeater leg rules (COORD 10-28 21:00; default off = byte-identical netlist/placement).
+# Root cause (trial15, results/die_qc24_1028): a region-DME leg whose L route crosses an A0 hard core (+halo) on a blocked
+# run shorter than route_um (480) is accepted as is; the evenly spaced repeater that lands inside the core is then moved by
+# site.nearest() to the closest core EDGE in ANY direction -- 28 repeaters went 146.8 um sideways (462 x 1162-um core, the
+# short way out is perpendicular to the leg), a 2 x 147-um wire spur the delay model never sees (+73 ps routed leg).
+# REP_ON_LEG (--rep-on-leg): a blocked repeater slides ALONG its own planned leg polyline to the nearest legal point
+# (between its upstream neighbour and the leg end), so the leg wire stays the planned wire; site.nearest only if the leg
+# has no legal point left.  REP_OFF_LEG_MAX_UM (--rep-off-leg-max UM): guard -- the kit FAILS if any leg repeater is
+# placed more than UM off its planned leg (Manhattan distance to the leg polyline / straight-leg bbox).
+REP_ON_LEG = False
+REP_OFF_LEG_MAX_UM = None
+
+
+def poly_slide(site, poly, f, lo, step=0.54):
+    """nearest legal point to arc fraction f ALONG the Manhattan polyline poly, searched on arc (lo, L - step]
+    -> (x, y, arc) or None"""
+    _, L = polyline_points(poly, [])
+    if L <= 0:
+        return None
+    t0 = f * L
+    n = int(L / step) + 1
+    for s in range(0, n + 1):
+        for t in ((t0 + s * step, t0 - s * step) if s else (t0,)):
+            if lo < t <= L - step:
+                q, _ = polyline_points(poly, [t / L])
+                q = (round(q[0][0], 3), round(q[0][1], 3))
+                if site.legal(q):
+                    return q[0], q[1], t
+    return None
+
+
+def off_leg_um(c, poly):
+    """Manhattan distance of point c to the leg polyline (a non-axis segment counts as its bbox: any L route in it)"""
+    def d(a, b):
+        cx = min(max(c[0], min(a[0], b[0])), max(a[0], b[0]))
+        cy = min(max(c[1], min(a[1], b[1])), max(a[1], b[1]))
+        return abs(c[0] - cx) + abs(c[1] - cy)
+    return min(d(a, b) for a, b in zip(poly, poly[1:]))
 
 
 def straight_leg_span(site, p, nd, nrep):
@@ -1145,7 +1191,9 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
         attach(droot, e)
         st[rn] = dict(merges=dst.get("merges"), imbalanced=dst.get("imbalanced"), spread=dst.get("spread_um"),
                       **({"early_taps": dst["early_taps"]} if dst.get("early_taps") else {}),
-                      **({k: dst[k] for k in ("snakes", "snake_wire_um", "snake_buffers")} if sn else {}))
+                      **({k: dst[k] for k in ("snakes", "snake_wire_um", "snake_buffers")} if sn else {}),
+                      **({k: dst[k] for k in ("snake_max_leg_um", "snake_legs_over_cap", "snake_cap_rebuilt") if k in dst}
+                         if sn else {}))
     return st
 
 
@@ -1422,6 +1470,17 @@ def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, 
 
 DME_JOIN_BUDGET = 4096  # DIE-S81-16: join() calls per top-level merge before the bounded monotone join-down takes over
 SNAKE_TOL_PS = 1.0      # DIE-QC-9 --region-dme-snake: a delay-mode merge imbalanced by more than this is elongated
+# DIE-QC-23 opt-in --region-dme-snake-cap UM (COORD 10-28 19:26, structural long-snake fix; default None = byte-identical).
+# In early-mode 'merge' regions with --region-dme-snake, a core tap's declared early is a deep DME sink; the stock build
+# merges it with whatever glue taps the spatial cut puts beside it, so EVERY such low glue subtree gets its own snake
+# (trial14: 1787 snake legs, 179 > 1.2 mm, up to 1.8 mm with 7 buffers; the 9 identical 1.8 mm replicas route -15..+41
+# ps off the calibrated model, residual sd 9.6 ps < 400 um -> 19.0 ps > 1.6 mm).  Those snakes sit on glue-to-glue
+# UNSHARED paths (glue intra hold).  With the cap set, the merge point moves up in every partition whose stock tree has
+# a snake leg longer than the cap: the non-early (glue) taps are built into one tree first and each early core sink is
+# then joined at the glue root (join(): it descends only where the depths meet), so the elongation lands on the glue
+# root leg (shared by every glue tap) once per core; the rebuild is kept only if its longest snake leg is shorter.  The kept
+# tree's snake legs longer than the cap are counted in the stats (snake_legs_over_cap; reported, never hidden).
+DME_SNAKE_CAP_UM = None
 
 
 def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MODES, rep_um=None, delay_rep_um=None,
@@ -1586,10 +1645,41 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
     if late and not byp:
         byp[late[0][0]] = late
         late = []
+    def snake_legs(r_):
+        legs, stack = [], [r_]
+        while stack:
+            d = out[stack.pop()]
+            stack += d["kids"]
+            for k_, pts in (d.get("snakes") or {}).items():
+                ch = [(d["x"], d["y"])] + [tuple(x) for x in pts] + [(out[k_]["x"], out[k_]["y"])]
+                legs.append(sum(_man(a, b) for a, b in zip(ch, ch[1:])))
+        return legs
+
+    def max_snake_leg(r_):
+        return max(snake_legs(r_), default=0.0)
+
+    cap_rebuilt = []
     proots, pick = [], defaultdict(int)
     for pn in sorted(byp):
         tl = sorted(byp[pn], key=lambda t: (t[2], t[3], t[1]))
         tries = [build(tl, lambda t: (t[2], t[3]), leaf, m) for m in modes]
+        ear = ([t for t in tl if float(sink_early.get((t[0], t[1]), 0.0)) > 0.0]
+               if (DME_SNAKE_CAP_UM is not None and snake and sink_early) else [])
+        gl = [t for t in tl if t not in ear]
+        if ear and gl and max(max_snake_leg(r_) for r_ in tries) > DME_SNAKE_CAP_UM + 1e-6:
+            # DIE-QC-23 --region-dme-snake-cap: only a partition whose stock tree has a snake leg over the cap is rebuilt
+            # glue tree first, early core sinks joined at its root; a rebuild is kept only if its longest snake leg is
+            # shorter (trial15: applying it to every partition re-embedded glue trees that had no long snake: c_*_tf_00
+            # routed glue spread 19.5 -> 136 ps)
+            alt = []
+            for m in modes:
+                r_ = build(gl, lambda t: (t[2], t[3]), leaf, m)
+                for t in sorted(ear, key=lambda t: (-float(sink_early[(t[0], t[1])]), t[1])):
+                    r_ = join(r_, leaf(t))
+                alt.append(r_)
+            if max(max_snake_leg(r_) for r_ in alt) < max(max_snake_leg(r_) for r_ in tries):
+                tries = alt
+                cap_rebuilt.append(pn)
         k = min(range(len(tries)), key=lambda j: (round(out[tries[j]]["S"] - out[tries[j]]["Smin"], 1), out[tries[j]]["W"]))
         pick[modes[k]] += 1
         out[tries[k]]["part_root"] = pn
@@ -1681,6 +1771,11 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
                 st["worst_imbalance_um"] = max(st["worst_imbalance_um"], round(d["imb"], 1))
     st["extra_wire_um"] = round(st["extra_wire_um"], 1)
     st["spread_um"] = round(out[root]["S"] - out[root]["Smin"], 1)
+    if snake and DME_SNAKE_CAP_UM is not None:     # DIE-QC-23: kept-tree snake leg lengths vs the cap
+        legs = snake_legs(root)
+        st.update(snake_cap_um=float(DME_SNAKE_CAP_UM), snake_max_leg_um=round(max(legs, default=0.0), 1),
+                  snake_legs_over_cap=sum(1 for x in legs if x > DME_SNAKE_CAP_UM + 1e-6),
+                  snake_cap_rebuilt=len(cap_rebuilt))
     if jfall:       # DIE-S81-16: top-level joins redone by join_mono (only present when it happened)
         st["join_fallbacks"] = len(jfall)
         st["join_fallback_worst_gap_ps"] = max(g for g, _ in jfall)
@@ -1951,6 +2046,7 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
     par_in = {}
     cells, place, wires = [], [], []
     node_buf, parent_of = {}, {}
+    off_leg = []
     k = 0
 
     def net(i):
@@ -2007,6 +2103,9 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
                 raise ValueError(f"inv2: snake leg of node {i} has an odd stage count")
             src = f"{net(nd['parent'])}"
             prev_inst = node_buf[nd["parent"]]
+            on_leg = REP_ON_LEG and poly is not None and not nd.get("snake")
+            Lp = polyline_points(poly, [])[1] if on_leg else 0.0
+            arc = 0.0
             for j in range(nrep):
                 f = (j + 1) / (nrep + 1)
                 x = p["x"] + (nd["x"] - p["x"]) * f
@@ -2015,7 +2114,13 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
                 if poly is not None:
                     x, y = pts[j]
                     if not site.legal((x, y)):
-                        x, y = site.nearest((x, y))
+                        q = poly_slide(site, poly, f, arc) if on_leg else None
+                        if q is not None:
+                            x, y, arc = q
+                        else:
+                            x, y = site.nearest((x, y))
+                    elif on_leg:
+                        arc = max(arc, f * Lp)
                 elif site is not None:
                     x, y = site.nearest((x, y), "x" if abs(nd["x"] - p["x"]) >= abs(nd["y"] - p["y"]) else "y")
                 o = f"rn{i}_{j}"
@@ -2025,6 +2130,11 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
                 parent_of[inst] = prev_inst
                 prev_inst = inst
                 src = o
+                if REP_OFF_LEG_MAX_UM is not None:
+                    leg = poly if poly is not None else [(p["x"], p["y"]), (nd["x"], nd["y"])]
+                    d = off_leg_um((x, y), leg)
+                    if d > REP_OFF_LEG_MAX_UM:
+                        off_leg.append((round(d, 1), inst, nd.get("dme")))
             parent_of[node_buf[i]] = prev_inst
         if clock_cell == "inv":
             pp = (1 if even else 0) if nd["parent"] is None else nodes[nd["parent"]]["inv_parity"]
@@ -2034,6 +2144,10 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
         cells.append(f"  {CELL} {node_buf[i]} (.A({src}), .Y({net(i)}));")
         wires.append(net(i))
         place.append((node_buf[i], nd["x"], nd["y"]))
+    if off_leg:
+        off_leg.sort(reverse=True)
+        raise ValueError(f"--rep-off-leg-max {REP_OFF_LEG_MAX_UM:g}: {len(off_leg)} leg repeaters placed off their planned "
+                         f"leg in {len({r for _, _, r in off_leg})} regions, worst {off_leg[:5]}")
     tap_ports = []
     for i, nd in sorted(nodes.items()):
         for (part, port, x, y) in nd["taps"]:
@@ -2150,7 +2264,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
               slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
               region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
-              cell_paths=False, region_dme_early_merge_only=None):
+              cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None):
     global EVEN_LEGS
     EVEN_LEGS = clock_cell == "inv2"
     out = Path(out)
@@ -2433,6 +2547,15 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             t["driver"] = f"p{t['node']}_{t['port']}_{count - 1}" if count else node_buf[t["node"]]
             t["path"] = cell_path(t["driver"])
             t["stages_from_root"] = len(t["path"])
+    if rep_actual_max is not None:
+        from clock_reach import actual_reach
+        reach = actual_reach(tree, rep_actual_max)
+        # Keep the failed census even though no complete clock tree is published.
+        with open(out / "actual_reach.json", "x") as fh:
+            json.dump(reach, fh, indent=1)
+        if reach["verdict"] != "PASS":
+            raise ValueError(f"OT_CLOCK_ACTUAL_REACH {reach['over_count']} edges over {rep_actual_max} um; "
+                             f"{len(reach['missing_sites'])} missing sites; see {out / 'actual_reach.json'}")
     (out / "tree.json").write_text(json.dumps(tree) + "\n")
     return nodes, segs, leaf_legs, meta
 
@@ -3443,7 +3566,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
               clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
               region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
-              cell_paths=False, region_dme_early_merge_only=None):
+              cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -3517,6 +3640,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                            clock_rc=clock_rc, slice_balance=slice_balance, region_dme=region_dme,
                                            region_dme_only=region_dme_only, region_dme_early=region_dme_early,
                                            region_dme_early_ff=region_dme_early_ff, region_dme_snake=region_dme_snake,
+                                           **({"rep_actual_max": rep_actual_max} if rep_actual_max is not None else {}),
                                            **({"clock_cell": clock_cell} if clock_cell != "buf" else {}),
                                            **({"region_dme_early_mode": region_dme_early_mode}
                                               if region_dme_early_mode != "hang" else {}),
@@ -3792,7 +3916,8 @@ def psm_report(d):
 def cmd_report(a):
     d = Path(a.dir)
     kit = json.loads((d / "kit.json").read_text())
-    P = S.Plan(S.load(kit["plan"] if Path(kit["plan"]).is_file() else a.plan))
+    plan_path = Path(kit["plan"] if Path(kit["plan"]).is_file() else a.plan)
+    P = S.Plan(S.load(plan_path), plan_path)
     res = dict(kit=kit)
     if (d / "grt" / "grt.log").is_file():
         res["grt"] = grt_report(d, P)
@@ -4112,6 +4237,9 @@ def main(argv=None):
                    help="top-spine 1-D bisection leaf (um): nominal top imbalance <= half of it")
     k.add_argument("--slice-rows", help="with --slice-spine: qc_slice_clock_rows/1 reservation (INFRA-FIRST-QC-R35): "
                    "column x and top spine row come from the plan reservation")
+    k.add_argument("--rep-actual-max", type=float, default=None, metavar="UM",
+                   help="opt-in: reject actual cell-to-cell and final-tap Manhattan hops over UM after legal snapping; "
+                        "write actual_reach.json, default off; re-run clock_reach.py after any later clock overlay")
     k.add_argument("--clock-rc", default="ndr", choices=["ndr", "1x"],
                    help="die clock model wire RC: ndr = 2W2S assumption (R/2, Cx1.1; legacy default); 1x = ASAP7 M8/M9 "
                         "setRC as the die clock is routed (no NDR) (DIE-QC-3 opt-in)")
@@ -4164,6 +4292,19 @@ def main(argv=None):
                         "(or 'all') where a merge with no zero-skew legal point elongates the fast kid's leg as a "
                         "hairpin of legal buffer sites, and an over-early hung core tap gets its hang leg elongated. "
                         "Default: no elongation")
+    k.add_argument("--region-dme-snake-cap", type=float, default=None, metavar="UM",
+                   help="DIE-QC-23 opt-in (with --region-dme-snake and early mode 'merge'; COORD 10-28 structural long-snake "
+                        "fix): per partition the glue taps are built into one DME tree first and each early core sink is "
+                        "joined at its root (the merge point moves up, so one elongation on the shared glue root leg "
+                        "replaces a snake on every low glue subtree); stats report snake legs longer than UM. "
+                        "Default: off (byte-identical trees)")
+    k.add_argument("--rep-on-leg", action="store_true",
+                   help="DIE-QC-24 opt-in (COORD 10-28 21:00): a leg repeater whose evenly spaced point on a routed/detour "
+                        "leg is not a legal site slides ALONG that leg to the nearest legal point (no sideways spur; trial15 "
+                        "slid 28 repeaters 146.8 um off-leg to a core edge). Default off: site.nearest (byte-identical)")
+    k.add_argument("--rep-off-leg-max", type=float, default=None, metavar="UM",
+                   help="DIE-QC-24 opt-in guard (COORD 10-28 21:00): the kit FAILS if any leg repeater is placed more than "
+                        "UM off its planned leg (e.g. 50). Default: no check")
     k.add_argument("--clock-cell", choices=("buf", "inv", "inv2"), default="buf",
                    help="DIE-QC-11 opt-in: 'inv' builds the die clock tree from CKINVDCx16 (BUFx24 footprint) so rise/fall "
                         "asymmetry cancels stage by stage (duty), with one parity inverter at odd-parity taps; 'inv2' = even inverter "
@@ -4211,6 +4352,14 @@ def main(argv=None):
     DME_WORKERS = max(1, int(getattr(a, "region_dme_workers", 1) or 1))
     if getattr(a, "region_dme_stage_cal", None):
         load_stage_cal(a.region_dme_stage_cal)
+    global DME_SNAKE_CAP_UM
+    if getattr(a, "region_dme_snake_cap", None) is not None:
+        if not getattr(a, "region_dme_snake", None):
+            raise SystemExit("--region-dme-snake-cap needs --region-dme-snake")
+        DME_SNAKE_CAP_UM = float(a.region_dme_snake_cap)
+    global REP_ON_LEG, REP_OFF_LEG_MAX_UM
+    REP_ON_LEG = bool(getattr(a, "rep_on_leg", False))
+    REP_OFF_LEG_MAX_UM = getattr(a, "rep_off_leg_max", None)
     if a.cmd == "readout":
         print("\n".join(clock_edge_readout(Path(a.ctree_v).read_text(), a.path, a.period, a.cells, a.tap_slew,
                                            a.prefix)))
@@ -4265,6 +4414,7 @@ def main(argv=None):
                       clock_rc=a.clock_rc, slice_balance=a.slice_balance, region_dme=a.region_dme,
                       region_dme_only=[r for r in a.region_dme_only.split(",") if r] if a.region_dme_only else None,
                       region_dme_early=a.region_dme_early, region_dme_early_ff=a.region_dme_early_ff,
+                      **({"rep_actual_max": a.rep_actual_max} if a.rep_actual_max is not None else {}),
                       **({"clock_cell": a.clock_cell} if a.clock_cell != "buf" else {}),
                       **({"region_dme_early_mode": a.region_dme_early_mode} if a.region_dme_early_mode != "hang" else {}),
                       **({"cell_paths": True} if a.cell_paths else {}),
@@ -4280,12 +4430,14 @@ def main(argv=None):
     elif a.cmd == "render":
         d = Path(a.dir)
         kit = json.loads((d / "kit.json").read_text())
-        P = S.Plan(S.load(a.plan or kit["plan"]))
+        plan_path = Path(a.plan or kit["plan"])
+        P = S.Plan(S.load(plan_path), plan_path)
         print(json.dumps(render_all(d, P, a.plan or kit["plan"]), indent=1))
     elif a.cmd == "clock":
         d = Path(a.dir)
         kit = json.loads((d / "kit.json").read_text())
-        P = S.Plan(S.load(a.plan or kit["plan"]))
+        plan_path = Path(a.plan or kit["plan"])
+        P = S.Plan(S.load(plan_path), plan_path)
         print(json.dumps(clock_report(d, P), indent=1)[:6000])
     return 0
 

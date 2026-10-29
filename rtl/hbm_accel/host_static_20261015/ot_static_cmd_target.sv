@@ -142,8 +142,17 @@ module ot_static_cmd_target_core #(
             a_we <= 0; b_we <= 0; run_v <= 0; cmd_v <= 0; configured <= 0; fault_r <= 0; fault <= 0; active <= 0;
             cyc <= 0; cycle <= 0; seq_on <= 0; rd_q <= 0; rd_end <= 0; nxt_v <= 0; head_v <= 0; tw_we <= 0;
             period <= 0; idx <= 0; rem <= 0; lbase <= 0;
+            // HBM-CORES-KITS-5 10-28: tw_sel reset.  Unreset, its constant bits (all of it for NW 1, bit 1 for NW 2) were X
+            // until the first table write, so synthesis folded them to 0 while the RTL kept X: kit LEC NOT EQUIVALENT on
+            // tab_w_ce (wr_q_t_lanes4 / xload_cl2_ctlx _k10).  tab_w_ce is gated by the reset tw_we, which is set together
+            // with tw_sel, so behaviour from reset is unchanged; the constant bits are now true constants.
+            tw_sel <= 2'd0;
         end else begin
             a_we <= 0; b_we <= 0; run_v <= 0; tw_we <= 0;
+            // HBM-CORES-KITS-4 10-28: MODE 1 has no run window; run_base / run_count were never assigned there, so
+            // synthesis left them undriven (kit rtl_lint check -assert FAIL on wr_q_t_lanes4 / xload_cl2_ctlx).  They
+            // are now the defined constant 0 in MODE 1; MODE 0 elaborates exactly as before.
+            if (MODE != 0) begin run_base <= {RBW{1'b0}}; run_count <= {RCW{1'b0}}; end
             cyc <= cyc + 32'd1; cycle <= cyc;
             // ---- configuration writes
             if (cv && hit) begin

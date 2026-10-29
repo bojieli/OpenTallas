@@ -75,11 +75,11 @@ class SiteMap:
         for (a, b, c, d) in sites["fixed"]:
             for k, row in enumerate(self.rows):
                 if row[1] < d - 1e-6 and row[1] + self.sh > b + 1e-6:
-                    for s in range(self._s(a), self._s(c - 1e-6) + 1):
+                    for s in range(self._s(a, k), self._s(c - 1e-6, k) + 1):
                         self.occ[k][s] = "#fixed"
 
-    def _s(self, x):
-        return int(math.floor((x - self.rows[0][0]) / self.sw + 1e-6))
+    def _s(self, x, k=0):
+        return int(math.floor((x - self.rows[k][0]) / self.sw + 1e-6))
 
     def width_sites(self, master):
         if master not in self.masters:
@@ -87,7 +87,7 @@ class SiteMap:
         return int(round(self.masters[master][0] / self.sw))
 
     def free(self, k, s, n):
-        if s < 0 or s + n > self.ns or k < 0 or k >= len(self.rows):
+        if k < 0 or k >= len(self.rows) or s < 0 or s + n > self.rows[k][3]:
             return False
         if any(q in self.occ[k] for q in range(s, s + n)):
             return False
@@ -99,15 +99,17 @@ class SiteMap:
         (distance, |row offset|, site, row) -> deterministic for the same input."""
         n = self.width_sites(master)
         k0 = min(range(len(self.rows)), key=lambda k: abs(self.rows[k][1] + self.sh / 2 - y))
-        s0 = int(round((x - n * self.sw / 2 - self.rows[0][0]) / self.sw))
         R = 0.6
         while R <= max_um + 1e-9:
             dk_max = int(R / self.sh) + 1; ds_max = int(R / self.sw) + 1; cands = []
             for k in range(k0 - dk_max, k0 + dk_max + 1):
-                for s in range(s0 - ds_max, s0 + ds_max + 1):
+                if k < 0 or k >= len(self.rows):
+                    continue
+                row_s0 = int(round((x - n * self.sw / 2 - self.rows[k][0]) / self.sw))
+                for s in range(row_s0 - ds_max, row_s0 + ds_max + 1):
                     if not self.free(k, s, n):
                         continue
-                    cx = self.rows[0][0] + (s + n / 2) * self.sw; cy = self.rows[k][1] + self.sh / 2
+                    cx = self.rows[k][0] + (s + n / 2) * self.sw; cy = self.rows[k][1] + self.sh / 2
                     dist = abs(cx - x) + abs(cy - y)
                     if dist <= R + 1e-9:
                         cands.append((round(dist, 6), abs(k - k0), s, k))
@@ -115,7 +117,7 @@ class SiteMap:
                 _, _, s, k = min(cands)
                 for q in range(s, s + n):
                     self.occ[k][q] = name
-                ox = self.rows[0][0] + s * self.sw; oy = self.rows[k][1]
+                ox = self.rows[k][0] + s * self.sw; oy = self.rows[k][1]
                 w, h = self.masters[master]
                 return dict(origin_um=[round(ox, 4), round(oy, 4)], centre_um=[round(ox + w / 2, 4), round(oy + h / 2, 4)],
                             orient=self.rows[k][2], displacement_um=round(abs(ox + w / 2 - x) + abs(oy + h / 2 - y), 4))
@@ -152,6 +154,11 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
         if rec["frozen_masters"].get(n[0]) != n[3]:
             raise ConvertError(f"{n[0]}: node master {n[3]} differs from the frozen plan master")
     sm = SiteMap(sites)
+    if outline is None and rec.get("core"):
+        # The plan records the symmetric CORE_AREA. Macro-cut subrows cannot
+        # supply an outline through the first row's width or the subrow count.
+        a, b, c, d = rec["core"]
+        outline = [a+c, b+d]
     outline = outline or [sites["rows"][0][0] * 2 + sites["row0"]["nsites"] * sites["row0"]["site_w"],
                           sites["rows"][0][1] * 2 + len(sites["rows"]) * sites["row0"]["site_h"]]
     names = {n[0]: ident(n[0], prefix) for n in nodes}
@@ -171,7 +178,7 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
     for leaf, sinks in sorted(rec["leaf_sinks"].items()):
         if leaf not in names:
             raise ConvertError(f"leaf {leaf} is not a plan node")
-        leaves.append(dict(node=names[leaf], sinks=list(sinks), load_class="register"))
+        leaves.append(dict(node=names[leaf], sinks=list(sinks), load_class="macro" if leaf in rec.get("macro_leaves", []) else "register"))
     allsinks = [s for l in leaves for s in l["sinks"]]
     if len(set(allsinks)) != len(allsinks):
         raise ConvertError("a clock sink is assigned to two leaves")
@@ -216,6 +223,8 @@ def main():
     ap.add_argument("--band", choices=("gate", "info"), default="gate",
                     help="core latency band policy in core_infra (default gate = unchanged); info = 12.3a design target, "
                          "only window <= 20 + slew <= 80 gate (COORD RULING S81-CORE-LAT-R9)")
+    ap.add_argument("--window-policy", choices=("gate", "info"), default="gate",
+                    help="12.3a opt-in: report planned tap window as a design target; requires --band info; routed sign-off unchanged")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
     op = gzip.open if a.plan.endswith(".gz") else open
@@ -232,6 +241,8 @@ def main():
         sl.pop("clock_ndr", None)       # standard-width trunk (S81-CORE-LAT-R9 track b)
     if a.band == "info":
         sl["core_tree"]["model_qualification"]["band_policy"] = "info"   # 12.3a v5.0 (S81-CORE-LAT-R10)
+    if a.window_policy == "info":
+        sl["core_tree"]["model_qualification"]["window_policy"] = "info"
     # compile through core_infra: the same refusals the kit hook applies (fail before any build)
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import core_infra as CI

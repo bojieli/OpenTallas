@@ -114,3 +114,16 @@ def test_planned_tree_cts_hooks(tmp_path):
     assert c == ("# S81-CORE-LAT-R12: plan-built tree -> tap balance + leaf affinity measure/report only\n"
                  "set ::env(OT_TAP_REPORT_ONLY) 1\nset ::env(OT_LEAF_AFF_REPORT_ONLY) 1\n" + post)
     assert cfg == cfg0
+
+
+def test_explicit_slice_interior_clock_exact_rectangle():
+    q=dict(name="clk",layer="M5",x=129.612,y=21.6)
+    shape={"clk":("M5",.048,.48,129.588,21.36,129.636,21.84)}
+    contract=("M5",129.612,21.6,(.048,.48))
+    assert G.planned_pin_geometry(q,shape,259.2,43.2,interior_clock=contract)==(q,.048,.48,0)
+    with pytest.raises(SystemExit,match="explicit on-track"):
+        G.planned_pin_geometry(dict(q,x=129.6),shape,259.2,43.2,interior_clock=contract)
+    with pytest.raises(SystemExit,match="off its declared"):
+        G.planned_pin_geometry(dict(q,name="data"),{},259.2,43.2)
+    with pytest.raises(SystemExit,match="full-sized"):
+        G.planned_pin_geometry(q,{"clk":("M5",.024,.084,129.6,21.558,129.624,21.642)},259.2,43.2,interior_clock=contract)

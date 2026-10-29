@@ -1,0 +1,78 @@
+{
+ "scope": "DIE-QC-25 QC inv2 region-DME stage model refit on trial24 (== trial14) routed legs; fit_dme_stage_cal: region DME stage model fitted on routed legs; leg = n*d0 + k1*sumL + k2*sumL^2 + kf*(end-node fanout - 1); tap copied, not fitted",
+ "source": {
+  "tree": "intel2:/srv/opentallas-scratch2/claude/die-qc24-1028/trial24/clock/tree.json",
+  "arrivals": "intel2:/srv/opentallas-scratch2/claude/die-qc24-1028/c24_{TT,FF}/arr_{TT,FF}.txt (clock-only GRT, = trial14 md5)",
+  "rep_um": 250.0,
+  "even_legs": true,
+  "built_with": "results/die_qc21_1028/inv2_stage_cal_trial13b.json",
+  "tap_from": "results/die_qc21_1028/inv2_stage_cal_trial13b.json",
+  "fitter": "tools/die_plan/fit_dme_stage_cal.py @ claude/die-s81-18-1028 b7a6297642 (DIE-S81-18)"
+ },
+ "fit": {
+  "TT": {
+   "coef": [
+    13.934059,
+    0.09766,
+    0.000161,
+    10.457359
+   ],
+   "legs": 12626,
+   "rms_ps": 7.11,
+   "abs_resid_pctl_ps": {
+    "50": 4.24,
+    "90": 12.02,
+    "99": 20.55
+   },
+   "max_abs_resid_ps": 39.29,
+   "rms_built_ps": 13.66,
+   "median_measured_over_built": 0.865,
+   "rms_ps_by_kind": {
+    "snake": 10.14,
+    "plain": 6.48
+   }
+  },
+  "FF": {
+   "coef": [
+    11.782508,
+    0.086044,
+    0.00015,
+    7.743809
+   ],
+   "legs": 12626,
+   "rms_ps": 6.53,
+   "abs_resid_pctl_ps": {
+    "50": 3.92,
+    "90": 10.74,
+    "99": 19.59
+   },
+   "max_abs_resid_ps": 32.04,
+   "rms_built_ps": 12.31,
+   "median_measured_over_built": 0.862,
+   "rms_ps_by_kind": {
+    "snake": 9.1,
+    "plain": 6.0
+   }
+  }
+ },
+ "leg": [
+  13.934059,
+  0.09766,
+  0.000161,
+  10.457359
+ ],
+ "tap": [
+  0.04204,
+  5e-06
+ ],
+ "leg_FF": [
+  11.782508,
+  0.086044,
+  0.00015,
+  7.743809
+ ],
+ "tap_FF": [
+  0.04195,
+  -5e-06
+ ]
+}

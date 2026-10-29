@@ -28,16 +28,18 @@ module ot_vms_rcl_static #(parameter integer MUT=0) (
             a<=0;b<=0;response<=0;me<=0;select_q<=0;enable_q<=0;
             hq<=0;ri0<=0;ri1<=0;fault<=0;
         end else begin
-            a<=rce0;b<=rce1;response<=hr;me<=sid;
+            // HBM-CORES-KITS-5 10-28: response[272:267] are the reserved upper tag bits. They are this module's own
+            // constant 0 (hq tag = {6'b0,...}) returned through the hub's UNRESET tag store, so the old reserved-bit
+            // check could only ever see the power-up X of a never-written hub slot; synthesis removed that X chain
+            // (vms_glue _k6 kit LEC NOT EQUIVALENT, u_replay.fault).  They are captured as the defined constant 0, as the
+            // synthesised netlist already does.  An emit from an inactive hub slot still faults in the hub (status[0]).
+            a<=rce0;b<=rce1;response<={hr[273],6'b0,hr[266:0]};me<=sid;
             select_q<=rx_source;enable_q<=rx_enable;
             hq<={enable_q && e[287],e[278],addr,e[255:0],mask,tag};
             ri0<={response[273] && !return_port,response[265:264],response[263:260],response[259:258],response[256],response[255:0]};
             ri1<={response[273] && return_port,response[265:264],response[263:260],response[259:258],response[256],response[255:0]};
             if((a[287] && (!enable_q || select_q)) ||
                (b[287] && (!enable_q || !select_q))) fault<=1;
-            // Upper tag bits are reserved. A malformed return cannot be treated
-            // as an uncorrelated response from another compiler transaction.
-            if(response[273] && response[272:267]!=0) fault<=1;
         end
 endmodule
 `default_nettype wire

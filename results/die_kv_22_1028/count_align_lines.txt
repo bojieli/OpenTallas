@@ -1,0 +1,33 @@
+sta_cb_edge COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -136.0 hi 119.9 fail 209 slot_read fail 109 guard fail 0 start-skew fail 69/161 FAIL (INFO, never gates)
+sta_cb_edge COUNT-ALIGN TT crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 143.2 hi 327.1 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/161 <100 0 ocv table max lo/hi 224.5/224.5 PASS
+sta_cb_edge COUNT-ALIGN FF crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 262.6 hi 402.3 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/161 <100 0 ocv table max lo/hi 192.2/192.2 PASS
+sta_f_edge COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -12.6 hi 396.0 fail 369 slot_read fail 77 guard fail 0 start-skew fail 189/189 FAIL (INFO, never gates)
+sta_f_edge COUNT-ALIGN TT crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 235.8 hi 366.4 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/189 <100 0 ocv table max lo/hi 212.1/215.0 PASS
+sta_f_edge COUNT-ALIGN FF crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 256.6 hi 381.3 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/189 <100 0 ocv table max lo/hi 181.3/183.4 PASS
+sta_f_rec_edge COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -148.7 hi -75.2 fail 463 slot_read fail 197 guard fail 39 start-skew fail 102/156 FAIL (INFO, never gates)
+sta_f_rec_edge COUNT-ALIGN TT crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 132.3 hi 174.1 fail 0 slot_read fail 0 guard fail 0 start-skew fail 71/156 <100 0 ocv table max lo/hi 212.1/215.0 FAIL
+sta_f_rec_edge COUNT-ALIGN FF crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 246.0 hi 300.5 fail 0 slot_read fail 0 guard fail 0 start-skew fail 67/156 <100 0 ocv table max lo/hi 181.3/183.4 FAIL
+sta_h_edge COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -12.6 hi 396.0 fail 369 slot_read fail 77 guard fail 0 start-skew fail 189/189 FAIL (INFO, never gates)
+sta_h_edge COUNT-ALIGN TT crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 235.8 hi 366.4 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/189 <100 0 ocv table max lo/hi 212.1/212.1 PASS
+sta_h_edge COUNT-ALIGN FF crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 256.6 hi 381.3 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/189 <100 0 ocv table max lo/hi 181.3/181.3 PASS
+sta_h_rec_edge COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -148.7 hi -75.2 fail 463 slot_read fail 197 guard fail 39 start-skew fail 102/156 FAIL (INFO, never gates)
+sta_h_rec_edge COUNT-ALIGN TT crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 132.3 hi 174.1 fail 0 slot_read fail 0 guard fail 0 start-skew fail 71/156 <100 0 ocv table max lo/hi 212.1/212.1 FAIL
+sta_h_rec_edge COUNT-ALIGN FF crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 246.0 hi 300.5 fail 0 slot_read fail 0 guard fail 0 start-skew fail 67/156 <100 0 ocv table max lo/hi 181.3/181.3 FAIL
+sta_i_edge COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -58.4 hi 211.4 fail 418 slot_read fail 136 guard fail 0 start-skew fail 204/204 FAIL (INFO, never gates)
+sta_i_edge COUNT-ALIGN TT crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 193.6 hi 372.8 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/204 <100 0 ocv table max lo/hi 218.8/218.8 PASS
+sta_i_edge COUNT-ALIGN FF crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 220.8 hi 389.5 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/204 <100 0 ocv table max lo/hi 187.0/187.0 PASS
+sta_i_rec_edge COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -136.2 hi -48.3 fail 463 slot_read fail 159 guard fail 26 start-skew fail 88/156 FAIL (INFO, never gates)
+sta_i_rec_edge COUNT-ALIGN TT crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 129.9 hi 195.3 fail 0 slot_read fail 0 guard fail 0 start-skew fail 62/156 <100 0 ocv table max lo/hi 218.8/218.8 FAIL
+sta_i_rec_edge COUNT-ALIGN FF crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 185.1 hi 294.3 fail 0 slot_read fail 0 guard fail 0 start-skew fail 59/156 <100 0 ocv table max lo/hi 187.0/187.0 FAIL
+sta_cb_spice COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -181.8 hi -131.3 fail 745 slot_read fail 379 guard fail 122 start-skew fail 78/161 FAIL (INFO, never gates)
+sta_cb_spice COUNT-ALIGN TT crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 107.0 hi 129.3 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/161 <100 0 ocv table max lo/hi 220.4/220.4 PASS
+sta_cb_spice COUNT-ALIGN FF crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 116.0 hi 157.6 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/161 <100 0 ocv table max lo/hi 187.6/187.6 PASS
+sta_f_spice COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -160.9 hi 124.8 fail 805 slot_read fail 563 guard fail 0 start-skew fail 189/189 FAIL (INFO, never gates)
+sta_f_spice COUNT-ALIGN TT crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 105.9 hi 152.8 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/189 <100 0 ocv table max lo/hi 208.2/211.1 PASS
+sta_f_spice COUNT-ALIGN FF crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 126.4 hi 154.1 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/189 <100 0 ocv table max lo/hi 176.9/179.1 PASS
+sta_h_spice COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -160.9 hi 124.8 fail 804 slot_read fail 563 guard fail 0 start-skew fail 189/189 FAIL (INFO, never gates)
+sta_h_spice COUNT-ALIGN TT crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 105.9 hi 152.8 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/189 <100 0 ocv table max lo/hi 208.2/208.2 PASS
+sta_h_spice COUNT-ALIGN FF crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 126.4 hi 154.1 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/189 <100 0 ocv table max lo/hi 176.9/176.9 PASS
+sta_i_spice COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -161.6 hi -21.3 fail 794 slot_read fail 590 guard fail 13 start-skew fail 204/204 FAIL (INFO, never gates)
+sta_i_spice COUNT-ALIGN TT crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 104.1 hi 159.9 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/204 <100 0 ocv table max lo/hi 214.8/214.8 PASS
+sta_i_spice COUNT-ALIGN FF crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 112.7 hi 162.8 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/204 <100 0 ocv table max lo/hi 182.5/182.5 PASS

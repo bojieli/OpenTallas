@@ -39,6 +39,7 @@ vs the LP frame must be named by a plan_map entry (plus_one / x / reset); an une
 """
 import argparse
 import collections
+import copy
 import hashlib
 import json
 import os
@@ -414,6 +415,58 @@ def measure(yjs, top):
     return res
 
 
+def selected_station_variants(yjs, top, ab, die_text, hard_params):
+    """Apply the binder's instance-path QX variants to a standalone frame trace.
+
+    Binding substitutes leaves AFTER elaboration. A standalone frame has no
+    u_f_* prefix, so source selection alone cannot see these rules. Require
+    every actual instance of this frame master to select the same endpoint
+    variant; a mixed master needs separate schedules rather than a guessed
+    global GO advance. Endpoint bodies are opaque to this tracer.
+    """
+    rules = [(re.compile(r['inst']), r) for r in ab.get('substitute_inst', [])]
+    frames = sorted(set(re.findall(r'\b' + re.escape(top) +
+        r'\s*(?:#\s*\([^;]*?\)\s*)?([A-Za-z_]\w*)\s*\(', die_text)))
+    if not rules:
+        return yjs, []
+    if not frames:
+        raise ValueError('cannot resolve frame instance substitutions without actual die instances: ' + top)
+    out, rows = copy.deepcopy(yjs), []
+    for cn, cell in out['modules'][top]['cells'].items():
+        old = module_of(cell['type'])
+        if old not in ('ot_v41_rom_elem_q_qxpq_w10', 'ot_v41_rom_elem_q_qxpq_w10_gb'):
+            continue
+        selected = []
+        for frame in frames:
+            full = frame + '.' + cn.lstrip('\\')
+            target = old
+            for rx, rule in rules:
+                if rx.fullmatch(full):
+                    if rule.get('port_bits') or rule.get('port_bit_constants'):
+                        raise ValueError('station variant with bit remapping requires an exact endpoint model: ' + full)
+                    target = rule['module']
+            selected.append(target)
+        if len(set(selected)) != 1:
+            raise ValueError('mixed frame instance station variants: ' + cn + ' ' + str(dict(zip(frames, selected))))
+        target = selected[0]
+        if target == old:
+            continue
+        if (old, target) != ('ot_v41_rom_elem_q_qxpq_w10', 'ot_v41_rom_elem_q_qxpq_w10_gb'):
+            raise ValueError('unmodelled station substitution: ' + old + ' -> ' + target)
+        if hard_params.get(target, {}).get('GO_BOUNDARY') != 1:
+            raise ValueError('GB station trace requires exact GO_BOUNDARY=1 hardened parameters: ' + cn)
+        # This qualified primitive differs only by its captured GO/TAG input
+        # and removal of the unused xs_sv input. Its other interface is kept.
+        if 'xs_sv' not in cell['connections'] or cell['port_directions'].get('xs_sv') != 'input':
+            raise ValueError('GB predecessor lacks its expected xs_sv input: ' + cn)
+        del cell['connections']['xs_sv']
+        del cell['port_directions']['xs_sv']
+        cell['type'] = target
+        rows.append(dict(cell=cn, master=old, variant=target, frames=frames,
+                         removed_input='xs_sv', go_boundary_edges=1))
+    return out, rows
+
+
 # ------------------------------------------------------------------------------------------------ 3. schedule
 def one(labs, what):
     """the single (source, depth) of a pin; several = misaligned / ambiguous -> FAIL"""
@@ -620,14 +673,22 @@ def main():
     js_t, _ = elaborate(lp_top, False, work, a.mem_gb, lp_files)
     js_ab, sha_ab = elaborate(ab_top, True, work, a.mem_gb)
     meas_t = measure(json.loads(js_t.read_text()), lp_top)
-    meas_ab = measure(json.loads(js_ab.read_text()), ab_top)
+    selected_json = json.loads(js_ab.read_text())
+    netlists = ab['netlist'] if isinstance(ab['netlist'], list) else [ab['netlist']]
+    die_text = '\n'.join((ROOT / f).read_text() for f in netlists)
+    selected_json, selected_variants = selected_station_variants(selected_json, ab_top, ab, die_text, HARD_PARAMS())
+    (work / f'{ab_top}.selected.json').write_text(json.dumps(selected_json))
+    meas_ab = measure(selected_json, ab_top)
     assert 'landing_lk' in meas_ab, ('as-built landing lk is not constant', ab_top)
     for nm, me in (('validate_' + lp_top, meas_v), (lp_top, meas_t), (ab_top, meas_ab)):
         (work / f'{nm}.meas.json').write_text(json.dumps(me, indent=1))
     src = dict(sha_ab)
     # Bare hard-leaf parameters and selection precedence are part of the elaborated source contract.
-    for f in [MANIFEST] + ab.get('hard_params', []):
+    for f in [MANIFEST] + ab.get('hard_params', []) + netlists:
         src[f] = sha(f)
+    if selected_variants:
+        variant_source = 'rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10_gb.sv'
+        src[variant_source] = sha(variant_source)
     for f in (LP_SCHED.format(m=m), PLAN_MAP.format(m=m), 'tools/s81_dv/frame_schedule_asb.py',
               'physical/die_plan/s81/die_plan.json'):
         src[f] = sha(f)
@@ -635,6 +696,7 @@ def main():
     # Return links are measured directly; station deltas still require their historic flat-calendar baseline.
     fails = ['VALIDATION ' + f for f in vfails if '.xs_' in f]
     sched, rows, plan, pf = schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, m, v, src)
+    sched['selected_station_variants'] = selected_variants
     fails += pf
     sp = a.out / f'{ab_top}_schedule.json'
     sp.write_text(json.dumps(sched, indent=1) + '\n')
