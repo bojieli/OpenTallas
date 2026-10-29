@@ -1512,3 +1512,24 @@ CODEX: 2026-10-28 23:46 PDT ROOT-MERGE inherited gate315 PASS except known basel
 CODEX: 2026-10-28 23:46 PDT QC landed-806.86 rootcause oldfaultlane+synchronousINFO; actualCA2537PASS105.6/105.1. A0rawleaf nowSIGNED90.23/5.40, nodeFF-19.63 ownedfallback; NLparent+BTABplannedtree+meshDRTprogressing, trial25live.
 
 CODEX: 2026-10-28 23:47 PDT HBM token compiler fbb6ffeb5 READY: safe PRE rowgap reaches emitted nativejob,25testsPASS; current161records price+9720FUSEDcycles; host20edgeplan+16bootcycles. C25cstrict0stillopen, noG5claim.
+CODEX: 2026-10-28 23:49 PDT HBM C25b collected G0FAIL5/G0CFAIL21:4bad n4 leaf references+137provider/FT collisions diagnosed; C25c base repairs underway, actual20edge hostboot chain COORDaccepted. Structuralclock/pins/bind workers active; no extraSUclones, no route yet.
+
+CODEX: 2026-10-28 23:49 PDT HBM C25c pin candidate e8b410898: same-area bdring aspect1.786, qw_dec full-face96.15%;0overlap/76chains<=401.898um/0cycles, viewed; bdring Wdensity conditional on G2 before route.
+CODEX: 2026-10-28 23:55 PDT HBMmacro48b946290 estimate-only READY: VP4501.12x311.04 conservativechannel.5933; progstore C24leaf0/9 SRAMspans649/582 diagnosed, source-local44macro864x734.4 candidate+11guides. Imageviewed/boundshaloPASS; dieownerintegrating,pin/relay/clockreachstillheld,noP&R.
+
+CODEX: 2026-10-28 23:54 PDT ROOT-MERGE main5720719701==origin/main; approved HEADports/HA+HBMcalendar/reset+VQclockpin shared unblockers merged focusedPASS; KV exactflowtag3e7 pushed; heldKVpad/fullsplit/postcts excluded.
+
+CODEX: 2026-10-28 23:54 PDT HBM TOPK353da5b41 READY: same-master bounded tree replaces repeated serial synthOOM;2048records1232cycles0diff+3mutants,resetcarryinduction+constantheaderSAT PASS,0cycles. Historical kitLEC40 retained/diagnosedconstant-X; newkitrequired.
+CODEX: 2026-10-28 23:55 PDT HBM-REBAL C24lp CTSFAIL TT-323.21/3335 FF-64.53/2685 diagnosed wrong old arithmetic profile; same-cycle f12 correction b978f23a53 passes199919lockstep/bitmutant, own successorpreflightPASS0 andONECTStrialintel2launcher1358457. OldC20gr DPLFAIL96classified/no rerun; hnxr13LEClive.
+
+CODEX: 2026-10-28 23:58 PDT shared generator bd86f2e5d fixes HEAD1090declaredpad inventory; mixedclock1628fddd8 adds measured both-edge component calibration31focusedPASS,KVreadoutpending; ICGsiblingfragment twoestimatesLIVEintel1, no geometry bypass.
+
+CODEX: 2026-10-28 23:56 PDT HBM all core failures assigned; same-cycle topk353da5b41 READY, f12 lp trialLIVE; split3 unsafe guessed mapHELD, safe support47504122b+guardcb7e75f22READY14PASS; qcore/ctlx locality rebuilds active, vp4/progstore estimates48b946290 to C25c; no SIGNED claim.
+
+CODEX: 2026-10-28 23:58 PDT DS current s13 strict binderLIVE40d0; found/fixed actual864QX substitute_inst omission in frame extractor0b0/8b1,6controls+93planchecksPASS; productionGBprovider now correctly BLOCKED rather than legacycalendar accepted.
+
+CODEX: 2026-10-28 23:59 PDT Qwen DCALROMomission diagnosed/fixed;boot+3token successorsreusebinariesLIVEintel1. QCstartrelayreset+CAverifier9f0949262 READY55PASS;freshQCbind2LIVEepyc2.
+
+CODEX: 2026-10-28 23:59 PDT KV23bind7strict0+VDH512/2078+Voffset36+imagesame+peer24/24PASS,seammutant8caught; ownb935source,actualCAS/originproofLIVE; mixedgluebudget-58.23diagnosed, e1alreadyreal.
+
+CODEX: 2026-10-29 00:00 PDT maina3d34dd8e1==origin/main; TOPKexacttree+mapguard, HEADperSTART, S81actualvariantcalendar merged; stalecanarytest diagnosed/fixed25PASS; KV4/4 exact3e7 archives versioned via releasedtag/APpromotion.
