@@ -82,6 +82,7 @@ def clock_graph(text, tree):
 @contextlib.contextmanager
 def real_pin_access(access):
     old = dict(CR.PIN_ACCESS)
+    old_bars = dict(C128.PIN_BAR_X)
     original_join = CR._port_join
     def adjacent_join(lines, layer_at, at, pin_layer, pxy, entering):
         if not entering and pin_layer == 'M7':
@@ -111,11 +112,14 @@ def real_pin_access(access):
         return out
     try:
         CR.PIN_ACCESS.update(access)
+        C128.PIN_BAR_X.update({master:{pin:point[0] for pin,point in pins.items()} for master,pins in access.items()})
         CR._port_join = adjacent_join
         yield
     finally:
         CR.PIN_ACCESS.clear()
         CR.PIN_ACCESS.update(old)
+        C128.PIN_BAR_X.clear()
+        C128.PIN_BAR_X.update(old_bars)
         CR._port_join = original_join
 
 
@@ -144,8 +148,21 @@ def access_census(shapes):
 def port_access_shapes(wires,cells,ports,buf):
     shapes=[]; vias=CR.via_rects()
     for wire in wires:
-        net=CR.net_plan(wire,cells,ports,buf)
-        for endpoint,entering in [(net['drv'],True)]+[(p,False) for p in net['loads']]:
+        if wire.get('pin_stack'):
+            tl,bl=('M8','M9') if wire['horiz'] else ('M9','M8')
+            endpoints=[];t0=wire['trunk_tap']
+            if wire['drv'].startswith('port:'):
+                pn=wire['drv'][5:];p=ports[pn]
+                endpoints.append((('port',pn,p['layer'],p['xy'],t0,tl),True))
+            for ld,bx,by in wire['branches']:
+                if ld.startswith('port:'):
+                    pn=ld[5:];p=ports[pn]
+                    on_trunk=abs(by-t0[1])<1e-6 if wire['horiz'] else abs(bx-t0[0])<1e-6
+                    endpoints.append((('port',pn,p['layer'],p['xy'],(bx,by),tl if on_trunk else bl),False))
+        else:
+            net=CR.net_plan(wire,cells,ports,buf)
+            endpoints=[(net['drv'],True)]+[(p,False) for p in net['loads']]
+        for endpoint,entering in endpoints:
             if endpoint[0] != 'port':continue
             _,name,layer,xy,at,top=endpoint[:6]
             pts=CR._port_join([],top,at,layer,xy,entering)
@@ -210,7 +227,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     for key in ('tree', 'netlist', 'lef', 'plan', 'endpoints', 'out'):
         ap.add_argument('--'+key, required=True)
-    ap.add_argument('--max-move', type=float, default=8.64)
+    ap.add_argument('--max-move', type=float, default=C128.STACK_RISER_MAX_UM)
     ap.add_argument('--review-region', default='c_E2_bf_10')
     args = ap.parse_args()
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
@@ -256,7 +273,10 @@ def main():
                    inputs={k:dict(path=getattr(args,k),sha256=hashlib.sha256(Path(getattr(args,k)).read_bytes()).hexdigest())
                            for k in ('tree','netlist','lef','plan','endpoints')})
     try:
-        wires = C128.fixed_wires(M,cells,nets,max(v[0] for v in sizes.values()),.27,router=router,pin_stack=False)
+        with real_pin_access(access):
+            wires = C128.fixed_wires(M,cells,nets,max(v[0] for v in sizes.values()),.27,off=0.,router=router,pin_stack=True,l_drops=True)
+        for wire in wires:
+            wire['enc']='r8'
     except C128.PlanError as error:
         summary.update(status='FAIL', cause='no legal fixed-wire geometry', findings=error.rows)
         (out/'prebuild.json').write_text(json.dumps(summary,indent=1)+'\n')
