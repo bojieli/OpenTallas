@@ -3,7 +3,8 @@
 The generated RTL (DIR/bind.f: leaf interface files + bind_cells.sv + the partition modules + the bound top) is
 elaborated again by Yosys, the partition modules dissolved, and every leaf input bit traced to its logical source with
 the inserted cells as transport (ot_dp_st boundary flops / stations, ot_dp_dly kept stages), ot_dp_or as a reducer and
-ot_reset_sync as the partition reset.  Each as-built leaf input bit (DIR/bind_sinks.json) must see:
+ot_reset_sync as the partition reset (the bind's own synchroniser; an as-built leaf ot_reset_sync the bind kept -- a
+bind_names.json path -- stays a leaf, its outputs are compared as pins: DIE-S81-30 10-29).  Each as-built leaf input bit (DIR/bind_sinks.json) must see:
   * the same driver pin (as-built path.port[bit]) -- intra-partition with the same stage count, crossing with 2;
   * a fault-OR with the same set of source pins;
   * the partition clock of the same domain / the partition's synchronised reset.
@@ -64,6 +65,89 @@ def lint(out, top, files, defines=(), waive=(), incs=()):
                 waived=waived, waivers=list(waive))
 
 
+DEFINE_RE = re.compile(r"^[ \t]*`define\s+\w+(?:\([^)\n]*\))?((?:[^\n]*\\\n)*[^\n]*)", re.M)
+BIND_CELLS = {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate",
+              "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"}
+
+
+class LintSources:
+    """DIE-S81-30 10-29 (COORD ruling S81 bind6 VERIFY FAIL (2): 5,071 lint MODMISSING): the module index the lint
+    closure descends.  The as-built manifest index (rtl_roots + files) alone missed every child defined outside it
+    (E.instantiated keeps only indexed names, so they vanished without a closure_missing entry): modules of multi-module
+    files (ot_meso_ring in ot_meso_fifo.sv, ot_s81sl_ve_qmul/qadd/kand in eng/ot_s81sl_ve_fp.sv), the bind's own
+    generated native glue (OUT/native_glue/*.sv), hard macros reached through a `define (ot_rom_4096x72_m8 in
+    ot_s81sl_xs4.sv) and imported packages.  Index = every module DEFINITION scanned in (precedence, first wins):
+      1. the manifest index (unchanged picks: a die whose old closure was complete gets the same files),
+      2. the bind's extra library + its generated non-partition RTL (native glue),
+      3. hard-macro views (bind.macro_views: black box, else model; never descended),
+      4. the repo rtl/ tree (one non-sim definition, or a preferred one; several -> missing, never a silent pick).
+    Instantiations are read from the needed module bodies AND from the file's `define bodies."""
+
+    def __init__(self, ab0, base, rep, idx, prefer):
+        import bind as B
+        self.base, self.prefer = Path(base), list(prefer)
+        self.idx = {k: list(v) for k, v in idx.items()}
+        own = [f for f in list(rep.get("extra_lib", [])) + list(rep.get("files", []))
+               if Path(f).name != "bind_cells.sv" and not f.endswith("_bound_top.sv")]
+        parts = {f for f in own if f in rep.get("files", []) and "native_glue" not in Path(f).parts}
+        own_idx = E.module_index([], [f for f in own if f not in parts], base)
+        self.added = {}
+        for m, fs in own_idx.items():
+            if m not in self.idx:
+                self.idx[m], self.added[m] = list(fs), "bind"
+        for m, d in B.macro_views(base).items():
+            if m not in self.idx:
+                bb, mdl = Path(d) / f"{m}_bb.v", Path(d) / f"{m}.v"
+                f = bb if bb.is_file() else mdl if mdl.is_file() else None
+                if f is not None:
+                    self.idx[m], self.added[m] = [str(f)], "macro"
+        rtl_all = self.base / "rtl"
+        self.wide = E.module_index([str(rtl_all)], [], base) if rtl_all.is_dir() else {}
+        self.roots = list(ab0.get("rtl_roots", ["rtl"])) or ["rtl"]
+        self.ambiguous = {}
+
+    def _cands(self, n):
+        if n in self.idx:
+            return self.idx[n]
+        c = [f for f in self.wide.get(n, []) if not re.search(r"_sim\.s?v$", f)] or self.wide.get(n, [])
+        if len(c) > 1 and not any(Path(f).resolve() == Path(q).resolve() for f in c for q in self.prefer):
+            self.ambiguous[n] = c
+            return []
+        if c:
+            self.added.setdefault(n, "rtl")
+        return c
+
+    def closure(self, names):
+        """E.closure over this index: -> (files incl. their packages first, missing)."""
+        import bind as B
+        known = set(self.idx) | set(self.wide)
+        seen, files, missing = set(), [], set()
+        todo = list(names)
+        while todo:
+            n = todo.pop()
+            if n in seen:
+                continue
+            seen.add(n)
+            f, _ = E.pick({n: self._cands(n)}, n, self.prefer)
+            if f is None:
+                missing.add(n)
+                continue
+            if self.added.get(n) == "macro":
+                if f not in files:
+                    files.append(f)
+                continue
+            if f not in files:
+                files.append(f)
+                txt = E._strip(Path(f).read_text(errors="replace"))
+                for m in E.MOD_RE.finditer(txt):
+                    todo += sorted(E.instantiated(E.module_body(f, m.group(1)), known))
+                for d in DEFINE_RE.finditer(txt):          # a macro body names its module bare: `define ROM ot_rom_x
+                    todo += sorted({w for w in re.findall(r"[A-Za-z_]\w*", d.group(1)) if w in known})
+            todo += sorted(E.instantiated(E.module_body(f, n), known))
+        pkgs = [str(p) for p in B.kit_packages(files, self.roots, self.base)]
+        return [p for p in pkgs if p not in files] + files, sorted(missing)
+
+
 def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
     """asbuilt.lint_split: a die too large for one Verilator run is linted in pieces that together cover it:
     the bound top + every partition module against leaf INTERFACE stubs, then each partition module with the real
@@ -81,9 +165,8 @@ def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
             continue
         t = Path(f).read_text(errors="replace")
         mods = re.findall(r"^module\s+(\w+)", t, re.M)
-        leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", t, re.M)) - set(mods) -
-                       {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
-        cl, _ = E.closure(leafm, idx, prefer)
+        leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", t, re.M)) - set(mods) - BIND_CELLS)
+        cl, _ = idx.closure(leafm) if isinstance(idx, LintSources) else E.closure(leafm, idx, prefer)
         for m in mods:
             byfile[m] = [f] + cells + [str(rs)] + cl
     runs.update(byfile)
@@ -179,8 +262,10 @@ def cmd_verify(a):
         vr['transport']=vr['transport']+landing_transport_rules()
 
     vr["clocks"], vr["resets"], vr["map"] = [], [], {}
-    G = Graph(F, Rules(vr), errs)
     names = json.loads((out / "bind_names.json").read_text())
+    R = Rules(vr)
+    R.keep_source = set(names)          # as-built leaves the bind emitted are never reset/clock sources
+    G = Graph(F, R, errs)
     sinks = json.loads((out / "bind_sinks.json").read_text())
     if landing_table:
         import clock_landing_verify as CLV
@@ -293,13 +378,16 @@ def cmd_verify(a):
     prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])]
     leafm = sorted({c.module for ci, c in enumerate(F.cells) if G.kind[ci] == "leaf"})
     prefer += rep.get("extra_lib", [])
-    cl, cl_missing = E.closure(leafm, idx, prefer)
+    LS = LintSources(ab0, base, rep, idx, prefer)
+    cl, cl_missing = LS.closure(leafm)
     gen_rtl = [f for f in rep["files"]]
     if not ab0.get("lint_split"):
         lt = lint(out, top, cl + gen_rtl + [str(rs)], ab0.get("defines", []), ab0.get("lint_waive", []))
     else:
-        lt = lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0)
+        lt = lint_split(out, top, F, G, gen_rtl, LS, prefer, rs, lib, ab0)
     lt["closure_files"], lt["closure_missing"] = len(cl), cl_missing
+    lt["closure_added"] = dict(sorted(LS.added.items())[:200])
+    lt["closure_ambiguous"] = {k: v[:4] for k, v in sorted(LS.ambiguous.items())[:50]}
     landing_result=landing_verify.report() if landing_verify else None
     if landing_result:errs.extend('CLOCK_LANDING '+e for e in landing_result['errors'])
     v = dict(clock_landing=landing_result,top=top, cells=len(F.cells), leaves_missing=len(missing), leaves_missing_examples=missing[:20],
