@@ -1,0 +1,140 @@
+{
+  "schema": "opentallas.hbm.su_sfu_fallback_proposal.v1",
+  "rows": [
+    {
+      "source_prefix": "su_NW0",
+      "partition": "NW_su00",
+      "plan_inst": "u_su_Q0",
+      "source_module": "ot_hbm_su_static_pgslice_lg_s",
+      "existing_content_module": "ot_hbm_su_static_pgslice_lg__pv2",
+      "status": "DIAGNOSTIC_FALLBACK_ONLY",
+      "note": "Exact math lane/bank compounds must override fallback before physical adoption; old FULL/SIDE footprint does not imply selected-source capability"
+    },
+    {
+      "source_prefix": "su_NW1",
+      "partition": "NW_su10",
+      "plan_inst": "u_su_Q1",
+      "source_module": "ot_hbm_su_static_pgslice_lg_s",
+      "existing_content_module": "ot_hbm_su_static_pgslice_lg__pv2",
+      "status": "DIAGNOSTIC_FALLBACK_ONLY",
+      "note": "Exact math lane/bank compounds must override fallback before physical adoption; old FULL/SIDE footprint does not imply selected-source capability"
+    },
+    {
+      "source_prefix": "su_NW2",
+      "partition": "NW_su20",
+      "plan_inst": "u_su_Q2",
+      "source_module": "ot_hbm_su_static_pgslice_lg_s",
+      "existing_content_module": "ot_hbm_su_static_pgslice_lg__pv2",
+      "status": "DIAGNOSTIC_FALLBACK_ONLY",
+      "note": "Exact math lane/bank compounds must override fallback before physical adoption; old FULL/SIDE footprint does not imply selected-source capability"
+    },
+    {
+      "source_prefix": "su_NW3",
+      "partition": "NW_su30",
+      "plan_inst": "u_su_Q3",
+      "source_module": "ot_hbm_su_static_pgslice_lg_s",
+      "existing_content_module": "ot_hbm_su_static_pgslice_lg__pv2",
+      "status": "DIAGNOSTIC_FALLBACK_ONLY",
+      "note": "Exact math lane/bank compounds must override fallback before physical adoption; old FULL/SIDE footprint does not imply selected-source capability"
+    },
+    {
+      "source_prefix": "sfucore_NW",
+      "partition": "NW_b113",
+      "plan_inst": "u_sfucore_Q",
+      "source_module": "ot_hgi_sfu_core_split3_sp2",
+      "existing_content_module": "ot_hgi_sfu_core_split3",
+      "status": "DIAGNOSTIC_FALLBACK_ONLY",
+      "note": "16 lane/map pairs + two operand stores and ctl must override fallback before physical adoption"
+    },
+    {
+      "source_prefix": "su_NE0",
+      "partition": "NE_su00",
+      "plan_inst": "u_su_Q0",
+      "source_module": "ot_hbm_su_static_pgslice_lg_s",
+      "existing_content_module": "ot_hbm_su_static_pgslice_lg__pv2",
+      "status": "DIAGNOSTIC_FALLBACK_ONLY",
+      "note": "Exact math lane/bank compounds must override fallback before physical adoption; old FULL/SIDE footprint does not imply selected-source capability"
+    },
+    {
+      "source_prefix": "su_NE1",
+      "partition": "NE_su10",
+      "plan_inst": "u_su_Q1",
+      "source_module": "ot_hbm_su_static_pgslice_lg_s",
+      "existing_content_module": "ot_hbm_su_static_pgslice_lg__pv2",
+      "status": "DIAGNOSTIC_FALLBACK_ONLY",
+      "note": "Exact math lane/bank compounds must override fallback before physical adoption; old FULL/SIDE footprint does not imply selected-source capability"
+    },
+    {
+      "source_prefix": "su_NE2",
+      "partition": "NE_su20",
+      "plan_inst": "u_su_Q2",
+      "source_module": "ot_hbm_su_static_pgslice_lg_s",
+      "existing_content_module": "ot_hbm_su_static_pgslice_lg__pv2",
+      "status": "DIAGNOSTIC_FALLBACK_ONLY",
+      "note": "Exact math lane/bank compounds must override fallback before physical adoption; old FULL/SIDE footprint does not imply selected-source capability"
+    },
+    {
+      "source_prefix": "su_NE3",
+      "partition": "NE_su30",
+      "plan_inst": "u_su_Q3",
+      "source_module": "ot_hbm_su_static_pgslice_lg_s",
+      "existing_content_module": "ot_hbm_su_static_pgslice_lg__pv2",
+      "status": "DIAGNOSTIC_FALLBACK_ONLY",
+      "note": "Exact math lane/bank compounds must override fallback before physical adoption; old FULL/SIDE footprint does not imply selected-source capability"
+    },
+    {
+      "source_prefix": "sfucore_NE",
+      "partition": "NE_b113",
+      "plan_inst": "u_sfucore_Q",
+      "source_module": "ot_hgi_sfu_core_split3_sp2",
+      "existing_content_module": "ot_hgi_sfu_core_split3",
+      "status": "DIAGNOSTIC_FALLBACK_ONLY",
+      "note": "16 lane/map pairs + two operand stores and ctl must override fallback before physical adoption"
+    }
+  ],
+  "map": {
+    "parts": {
+      "su_NW0": [
+        "NW_su00",
+        "u_su_Q0"
+      ],
+      "su_NW1": [
+        "NW_su10",
+        "u_su_Q1"
+      ],
+      "su_NW2": [
+        "NW_su20",
+        "u_su_Q2"
+      ],
+      "su_NW3": [
+        "NW_su30",
+        "u_su_Q3"
+      ],
+      "sfucore_NW": [
+        "NW_b113",
+        "u_sfucore_Q"
+      ],
+      "su_NE0": [
+        "NE_su00",
+        "u_su_Q0"
+      ],
+      "su_NE1": [
+        "NE_su10",
+        "u_su_Q1"
+      ],
+      "su_NE2": [
+        "NE_su20",
+        "u_su_Q2"
+      ],
+      "su_NE3": [
+        "NE_su30",
+        "u_su_Q3"
+      ],
+      "sfucore_NE": [
+        "NE_b113",
+        "u_sfucore_Q"
+      ]
+    }
+  },
+  "note": "No throughput, physical placement or native/extracted-core equivalence claim. Existing content slots only, no new whole core."
+}
