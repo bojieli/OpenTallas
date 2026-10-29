@@ -1,0 +1,473 @@
+{
+ "kind": "ESTIMATE_ONLY_MOVE_THEN_REPLICATE",
+ "R": 405.0,
+ "REFF": 392.0,
+ "baseline_captures": 1892,
+ "baseline_edges": 5207,
+ "legalization": [
+  {
+   "round": 0,
+   "captures": 159,
+   "edges": 269,
+   "max_legal_disp": 31.59
+  },
+  {
+   "round": 1,
+   "captures": 50,
+   "edges": 85,
+   "max_legal_disp": 21.65
+  },
+  {
+   "round": 2,
+   "captures": 39,
+   "edges": 64,
+   "max_legal_disp": 21.65
+  },
+  {
+   "round": 3,
+   "captures": 39,
+   "edges": 64,
+   "max_legal_disp": 21.65
+  },
+  {
+   "round": 4,
+   "captures": 39,
+   "edges": 64,
+   "max_legal_disp": 21.65
+  },
+  {
+   "round": 5,
+   "captures": 39,
+   "edges": 64,
+   "max_legal_disp": 21.65
+  }
+ ],
+ "after_move_captures": 39,
+ "after_move_edges": 64,
+ "moved_regs": 2892,
+ "pushed_regs": 133,
+ "move_disp_um": {
+  "p50": 13.067999999999984,
+  "p90": 36.18000000000001,
+  "max": 62.153999999999996
+ },
+ "replication_added_flops": 0,
+ "replicated_families": {},
+ "after_replication_captures": 39,
+ "not_fixable": {
+  "movable alone (legalization residue): u_land.u_nk.u_w.g_chunk[].u_local/vld[]": 4,
+  "fixed source: u_lane.u.u_ski.u_head.g_bank[].u_m": 6,
+  "movable alone (legalization residue): u_lane.u.u_gb.u_sf.mwd[]": 12,
+  "fixed source: u_land.u_kn.u_w.g_chunk[].u_local/data[][]": 29,
+  "movable alone (legalization residue): u_land.u_nk.u_w.g_chunk[].u_local/data[][]": 2,
+  "movable alone (legalization residue): u_lane.u.u_ep.g_fifo_safe.g_address[].wp_r[]": 1,
+  "movable alone (legalization residue): u_lane.u.u_ski.u_head.mwd[]": 3,
+  "movable alone (legalization residue): u_lane.u.u_gb.u_sf.prevdata[]": 7
+ },
+ "residual_edge_families": [
+  {
+   "n": 29,
+   "src": "u_land.u_kn.u_w.g_chunk[].u_local/data[][]",
+   "cap": "u_land.u_kn.u_r.g_chunk[].u_local/o[]",
+   "src_macro": false,
+   "src_anch": true,
+   "cap_macro": false,
+   "cap_anch": false
+  },
+  {
+   "n": 9,
+   "src": "u_lane.u.u_gb.u_sf.mwd[]",
+   "cap": "u_lane.u.u_gb.beat_tx[]",
+   "src_macro": false,
+   "src_anch": false,
+   "cap_macro": false,
+   "cap_anch": true
+  },
+  {
+   "n": 7,
+   "src": "u_lane.u.u_gb.u_sf.prevdata[]",
+   "cap": "u_lane.u.u_gb.beat_tx[]",
+   "src_macro": false,
+   "src_anch": false,
+   "cap_macro": false,
+   "cap_anch": true
+  },
+  {
+   "n": 6,
+   "src": "u_lane.u.u_ski.u_head.g_bank[].u_m",
+   "cap": "u_lane.u.u_ep.a_in[]",
+   "src_macro": true,
+   "src_anch": false,
+   "cap_macro": false,
+   "cap_anch": false
+  },
+  {
+   "n": 4,
+   "src": "u_land.u_nk.u_w.g_chunk[].u_local/vld[]",
+   "cap": "u_land.u_nk.u_r.g_chunk[].u_local/o[]",
+   "src_macro": false,
+   "src_anch": false,
+   "cap_macro": false,
+   "cap_anch": true
+  },
+  {
+   "n": 3,
+   "src": "u_lane.u.u_ski.u_head.mwd[]",
+   "cap": "u_lane.u.u_ski.u_head.g_bank[].u_m",
+   "src_macro": false,
+   "src_anch": false,
+   "cap_macro": true,
+   "cap_anch": false
+  },
+  {
+   "n": 3,
+   "src": "u_lane.u.u_gb.u_sf.mwd[]",
+   "cap": "u_lane.u.u_gb.u_sf.g_bank[].u_m",
+   "src_macro": false,
+   "src_anch": false,
+   "cap_macro": true,
+   "cap_anch": false
+  },
+  {
+   "n": 2,
+   "src": "u_land.u_nk.u_w.g_chunk[].u_local/data[][]",
+   "cap": "u_land.u_nk.u_r.g_chunk[].u_local/o[]",
+   "src_macro": false,
+   "src_anch": false,
+   "cap_macro": false,
+   "cap_anch": true
+  },
+  {
+   "n": 1,
+   "src": "u_lane.u.u_ep.g_fifo_safe.g_address[].wp_r[]",
+   "cap": "u_lane.u.u_ep.g_fifo_safe.u_m.g_slice[].addr_r[]",
+   "src_macro": false,
+   "src_anch": false,
+   "cap_macro": false,
+   "cap_anch": false
+  }
+ ],
+ "residual_diag": {
+  "u_lane.u.u_ski.u_head.mwd[] -> u_lane.u.u_ski.u_head.g_bank[].u_m": [
+   {
+    "other": "u_lane.u.u_ski.u_head.mwd\\[242\\]$_DFF_P_",
+    "d": 408.4,
+    "joint_region_gap_um": -34.8,
+    "far": [
+     [
+      "u_lane.u.u_ski.u_head.g_bank\\[3\\].u_m",
+      [
+       34.6,
+       112.3
+      ],
+      408.4
+     ],
+     [
+      "u_lane.u.u_ski.u_head.prevdata\\[242\\]$_DFF_P_",
+      [
+       563.4,
+       322.9
+      ],
+      332.0
+     ],
+     [
+      "u_lane.u.u_ski.d_q\\[242\\]$_DFF_P_",
+      [
+       448.8,
+       284.9
+      ],
+      179.3
+     ]
+    ]
+   },
+   {
+    "other": "u_lane.u.u_ski.u_head.mwd\\[248\\]$_DFF_P_",
+    "d": 406.0,
+    "joint_region_gap_um": -40.2,
+    "far": [
+     [
+      "u_lane.u.u_ski.u_head.g_bank\\[3\\].u_m",
+      [
+       34.6,
+       112.3
+      ],
+      406.0
+     ],
+     [
+      "u_lane.u.u_ski.u_head.prevdata\\[248\\]$_DFF_P_",
+      [
+       561.8,
+       313.7
+      ],
+      323.6
+     ],
+     [
+      "u_lane.u.u_ski.d_q\\[248\\]$_DFF_P_",
+      [
+       509.2,
+       278.9
+      ],
+      236.2
+     ]
+    ]
+   },
+   {
+    "other": "u_lane.u.u_ski.u_head.mwd\\[249\\]$_DFF_P_",
+    "d": 409.5,
+    "joint_region_gap_um": -39.5,
+    "far": [
+     [
+      "u_lane.u.u_ski.u_head.g_bank\\[3\\].u_m",
+      [
+       34.6,
+       112.3
+      ],
+      409.5
+     ],
+     [
+      "u_lane.u.u_ski.u_head.prevdata\\[249\\]$_DFF_P_",
+      [
+       563.4,
+       313.5
+      ],
+      321.5
+     ],
+     [
+      "u_lane.u.u_ski.d_q\\[249\\]$_DFF_P_",
+      [
+       479.8,
+       271.6
+      ],
+      196.0
+     ]
+    ]
+   }
+  ],
+  "u_lane.u.u_gb.u_sf.mwd[] -> u_lane.u.u_gb.u_sf.g_bank[].u_m": [
+   {
+    "other": "u_lane.u.u_gb.u_sf.mwd\\[384\\]$_DFF_P_",
+    "d": 406.3,
+    "joint_region_gap_um": -79.1,
+    "far": [
+     [
+      "u_lane.u.u_gb.u_sf.g_bank\\[6\\].u_m",
+      [
+       82.1,
+       177.1
+      ],
+      406.3
+     ],
+     [
+      "u_lane.u.u_gb.beat_tx\\[441\\]$_DFF_P_",
+      [
+       4.3,
+       401.0
+      ],
+      406.1
+     ],
+     [
+      "u_lane.u.u_gb.rem\\[209\\]$_DFF_P_",
+      [
+       106.2,
+       405.0
+      ],
+      308.3
+     ]
+    ]
+   },
+   {
+    "other": "u_lane.u.u_gb.u_sf.mwd\\[385\\]$_DFF_P_",
+    "d": 406.8,
+    "joint_region_gap_um": -76.8,
+    "far": [
+     [
+      "u_lane.u.u_gb.u_sf.g_bank\\[6\\].u_m",
+      [
+       82.1,
+       177.1
+      ],
+      406.8
+     ],
+     [
+      "u_lane.u.u_gb.beat_tx\\[442\\]$_DFF_P_",
+      [
+       4.3,
+       402.0
+      ],
+      406.7
+     ],
+     [
+      "u_lane.u.u_gb.rem\\[210\\]$_DFF_P_",
+      [
+       115.2,
+       409.9
+      ],
+      303.6
+     ]
+    ]
+   },
+   {
+    "other": "u_lane.u.u_gb.u_sf.mwd\\[386\\]$_DFF_P_",
+    "d": 407.1,
+    "joint_region_gap_um": -78.2,
+    "far": [
+     [
+      "u_lane.u.u_gb.beat_tx\\[443\\]$_DFF_P_",
+      [
+       4.3,
+       402.8
+      ],
+      407.2
+     ],
+     [
+      "u_lane.u.u_gb.u_sf.g_bank\\[6\\].u_m",
+      [
+       82.1,
+       177.1
+      ],
+      407.1
+     ],
+     [
+      "u_lane.u.u_gb.rem\\[211\\]$_DFF_P_",
+      [
+       116.5,
+       409.6
+      ],
+      301.8
+     ]
+    ]
+   }
+  ],
+  "u_lane.u.u_ski.u_head.g_bank[].u_m -> u_lane.u.u_ep.a_in[]": [
+   {
+    "other": "u_lane.u.u_ep.a_in\\[25\\]$_DFF_P_",
+    "d": 406.3,
+    "joint_region_gap_um": -83.9,
+    "far": [
+     [
+      "u_lane.u.u_ski.u_head.g_bank\\[0\\].u_m",
+      [
+       34.6,
+       21.6
+      ],
+      406.3
+     ],
+     [
+      "u_lane.u.u_ski.u_head.g_slice\\[1\\].prev_q$_DFF_PN0_",
+      [
+       350.9,
+       346.4
+      ],
+      236.0
+     ],
+     [
+      "u_lane.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[0\\].g_256.u_m",
+      [
+       172.8,
+       73.4
+      ],
+      216.2
+     ]
+    ]
+   },
+   {
+    "other": "u_lane.u.u_ep.a_in\\[16\\]$_DFF_P_",
+    "d": 407.9,
+    "joint_region_gap_um": -83.9,
+    "far": [
+     [
+      "u_lane.u.u_ski.u_head.g_bank\\[0\\].u_m",
+      [
+       34.6,
+       21.6
+      ],
+      407.9
+     ],
+     [
+      "u_lane.u.u_ski.u_head.g_slice\\[1\\].prev_q$_DFF_PN0_",
+      [
+       350.9,
+       346.4
+      ],
+      234.4
+     ],
+     [
+      "u_lane.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[0\\].g_256.u_m",
+      [
+       172.8,
+       73.4
+      ],
+      217.8
+     ]
+    ]
+   },
+   {
+    "other": "u_lane.u.u_ep.a_in\\[30\\]$_DFF_P_",
+    "d": 406.0,
+    "joint_region_gap_um": -83.9,
+    "far": [
+     [
+      "u_lane.u.u_ski.u_head.g_bank\\[0\\].u_m",
+      [
+       34.6,
+       21.6
+      ],
+      406.0
+     ],
+     [
+      "u_lane.u.u_ski.u_head.g_slice\\[1\\].prev_q$_DFF_PN0_",
+      [
+       350.9,
+       346.4
+      ],
+      236.3
+     ],
+     [
+      "u_lane.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[0\\].g_256.u_m",
+      [
+       172.8,
+       73.4
+      ],
+      215.9
+     ]
+    ]
+   },
+   {
+    "other": "u_lane.u.u_ep.a_in\\[232\\]$_DFF_P_",
+    "d": 405.7,
+    "joint_region_gap_um": -13.0,
+    "far": [
+     [
+      "u_lane.u.u_ski.u_head.g_bank\\[3\\].u_m",
+      [
+       34.6,
+       112.3
+      ],
+      405.7
+     ],
+     [
+      "u_lane.u.u_ski.u_head.prevdata\\[232\\]$_DFF_P_",
+      [
+       523.3,
+       406.6
+      ],
+      378.3
+     ],
+     [
+      "u_lane.u.u_ski.u_head.g_slice\\[14\\].prev_q$_DFF_PN0_",
+      [
+       472.9,
+       366.7
+      ],
+      288.1
+     ]
+    ]
+   }
+  ]
+ },
+ "residual_diag_counts": {
+  "u_lane.u.u_ski.u_head.mwd[] -> u_lane.u.u_ski.u_head.g_bank[].u_m": 3,
+  "u_lane.u.u_gb.u_sf.mwd[] -> u_lane.u.u_gb.u_sf.g_bank[].u_m": 3,
+  "u_lane.u.u_ski.u_head.g_bank[].u_m -> u_lane.u.u_ep.a_in[]": 6
+ }
+}

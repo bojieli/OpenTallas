@@ -1,0 +1,79 @@
+{
+ "kind": "ESTIMATE_ONLY_MOVE_THEN_REPLICATE",
+ "R": 405.0,
+ "REFF": 385.0,
+ "baseline_captures": 1892,
+ "baseline_edges": 5207,
+ "legalization": [
+  {
+   "round": 0,
+   "captures": 42,
+   "edges": 64,
+   "max_legal_disp": 32.67
+  },
+  {
+   "round": 1,
+   "captures": 7,
+   "edges": 20,
+   "max_legal_disp": 22.52
+  },
+  {
+   "round": 2,
+   "captures": 1,
+   "edges": 4,
+   "max_legal_disp": 22.52
+  },
+  {
+   "round": 3,
+   "captures": 1,
+   "edges": 4,
+   "max_legal_disp": 22.52
+  },
+  {
+   "round": 4,
+   "captures": 1,
+   "edges": 4,
+   "max_legal_disp": 22.52
+  },
+  {
+   "round": 5,
+   "captures": 1,
+   "edges": 4,
+   "max_legal_disp": 22.52
+  }
+ ],
+ "after_move_captures": 1,
+ "after_move_edges": 4,
+ "moved_regs": 2899,
+ "pushed_regs": 144,
+ "move_disp_um": {
+  "p50": 20.08800000000008,
+  "p90": 44.33400000000006,
+  "max": 69.17399999999998
+ },
+ "replication_added_flops": 0,
+ "replicated_families": {},
+ "after_replication_captures": 1,
+ "not_fixable": {
+  "fixed source: u_land.u_kn.u_w.g_chunk[].u_local/data[][]": 4
+ },
+ "residual_edge_families": [
+  {
+   "n": 4,
+   "src": "u_land.u_kn.u_w.g_chunk[].u_local/data[][]",
+   "cap": "u_land.u_kn.u_r.g_chunk[].u_local/o[]",
+   "src_macro": false,
+   "src_anch": true,
+   "cap_macro": false,
+   "cap_anch": false
+  }
+ ],
+ "residual_diag": {},
+ "residual_diag_counts": {},
+ "model_census_legalized": {
+  "r2r_captures_gt405": 1,
+  "r2r_max": 407.54,
+  "r2r_captures": 27699,
+  "r2r_worst": "u_land.u_kn.u_w.g_chunk\\[8\\].u_local/data\\[0\\]\\[7\\]$_DFFE_PP_ -> u_land.u_kn.u_r.g_chunk\\[8\\].u_local/o\\[7\\]$_SDFF_PN0_"
+ }
+}
