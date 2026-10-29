@@ -1,0 +1,141 @@
+{
+ "transfer": {
+  "given": 8614,
+  "kept": 8614,
+  "swapped": [
+   {
+    "old": [
+     "gold",
+     "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.c_p[2][11]",
+     [
+      "eq",
+      "gold",
+      "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.c_p[1][11]",
+      0
+     ]
+    ],
+    "new": [
+     "gold",
+     "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.c_p[1][11]",
+     [
+      "eq",
+      "gold",
+      "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.c_p[2][11]",
+      0
+     ]
+    ]
+   },
+   {
+    "old": [
+     "gold",
+     "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[3].r_part[150]",
+     [
+      "eq",
+      "gold",
+      "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[0].r_part[150]",
+      0
+     ]
+    ],
+    "new": [
+     "gold",
+     "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[0].r_part[150]",
+     [
+      "eq",
+      "gold",
+      "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[3].r_part[150]",
+      0
+     ]
+    ]
+   },
+   {
+    "old": [
+     "gold",
+     "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[3].r_part[54]",
+     [
+      "eq",
+      "gold",
+      "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[0].r_part[54]",
+      0
+     ]
+    ],
+    "new": [
+     "gold",
+     "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[0].r_part[54]",
+     [
+      "eq",
+      "gold",
+      "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[3].r_part[54]",
+      0
+     ]
+    ]
+   },
+   {
+    "old": [
+     "gold",
+     "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[3].r_part[96]",
+     [
+      "eq",
+      "gold",
+      "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[1].r_part[96]",
+      0
+     ]
+    ],
+    "new": [
+     "gold",
+     "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[1].r_part[96]",
+     [
+      "eq",
+      "gold",
+      "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[3].r_part[96]",
+      0
+     ]
+    ]
+   },
+   {
+    "old": [
+     "gold",
+     "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.q_p[2][11]",
+     [
+      "eq",
+      "gold",
+      "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.q_p[0][11]",
+      0
+     ]
+    ],
+    "new": [
+     "gold",
+     "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.q_p[0][11]",
+     [
+      "eq",
+      "gold",
+      "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.q_p[2][11]",
+      0
+     ]
+    ]
+   }
+  ],
+  "resided": [],
+  "reanchored": [],
+  "ambiguous": [],
+  "dropped": []
+ },
+ "joint": {
+  "proved": 12570
+ },
+ "joint_dropped": [],
+ "compare": {
+  "proved": 31742
+ },
+ "control": {
+  "relation": [
+   "gold",
+   "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.c_p[1][11]"
+  ],
+  "counts": {
+   "proved": 12542,
+   "differs": 28
+  },
+  "failing": 28
+ },
+ "seconds": 13.59669017791748
+}

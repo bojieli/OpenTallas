@@ -1,0 +1,69 @@
+{
+ "scope": "fit_dme_stage_cal: region DME stage model fitted on routed legs; leg = n*d0 + k1*sumL + k2*sumL^2 + kf*(end-node fanout - 1); tap copied, not fitted",
+ "source": {
+  "tree": "/srv/opentallas-scratch2/claude/die-head-26/clk/kit_i150/kit/clock/tree.json",
+  "arrivals": "/srv/opentallas-scratch2/claude/die-head-26/clk/out_i150",
+  "rep_um": 150.0,
+  "even_legs": false,
+  "built_with": "/srv/opentallas-scratch2/claude/die-head-26/clk/inv_stage_cal_head26_i150.built_with.json",
+  "tap_from": "/srv/opentallas-scratch2/claude/die-head-26/clk/kit_i150/kit/ot_clk_stage_cal.json"
+ },
+ "fit": {
+  "TT": {
+   "coef": [
+    8.790281,
+    0.240444,
+    -0.000156,
+    9.998051
+   ],
+   "legs": 1143,
+   "rms_ps": 6.35,
+   "abs_resid_pctl_ps": {
+    "50": 4.01,
+    "90": 9.85,
+    "99": 17.77
+   },
+   "max_abs_resid_ps": 36.69,
+   "rms_built_ps": 8.2,
+   "median_measured_over_built": 1.09
+  },
+  "FF": {
+   "coef": [
+    9.914931,
+    0.167985,
+    8.7e-05,
+    6.788846
+   ],
+   "legs": 1143,
+   "rms_ps": 5.7,
+   "abs_resid_pctl_ps": {
+    "50": 3.43,
+    "90": 9.3,
+    "99": 16.35
+   },
+   "max_abs_resid_ps": 30.09,
+   "rms_built_ps": 8.47,
+   "median_measured_over_built": 1.091
+  }
+ },
+ "leg": [
+  8.790281,
+  0.240444,
+  -0.000156,
+  9.998051
+ ],
+ "tap": [
+  0.146559,
+  0.000484
+ ],
+ "leg_FF": [
+  9.914931,
+  0.167985,
+  8.7e-05,
+  6.788846
+ ],
+ "tap_FF": [
+  0.146559,
+  0.000484
+ ]
+}

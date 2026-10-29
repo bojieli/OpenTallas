@@ -262,6 +262,255 @@
     0.000484
    ],
    "coeff_sha": "7624685c7eb89597"
+  },
+  {
+   "id": "inv2_ndr_hbm_trial2b_early",
+   "key": {
+    "cell": "CKINVDCx16_ASAP7_75t_R",
+    "polarity": "pair",
+    "clock_rc": "ndr",
+    "corners": [
+     "TT"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": "HBM DIE-HBM-10 trial2b routed die clock (die_trial clock_rc ndr build, inv2)"
+   },
+   "basis": "Codex CLK-MODEL-SWEEP-1 LSQ on HBM trial2b routed TT early legs; tap fit TT routed 3274 legs RMS 1.89 ps (inline cal of results/codex_hbm_clock_1028/build_street_body.py, TT only)",
+   "source": {
+    "file": "results/clk_tool_7_1029/stage_cal_hbm_trial2b_early.json",
+    "sha256": "a1a15dad675f0dc395533a602e84e3bfdcd1d5ea939997ea4326c95711371f57"
+   },
+   "leg": [
+    11.034201,
+    0.169972,
+    5.8e-05,
+    7.001714
+   ],
+   "tap": [
+    0.03644737,
+    0.00013425
+   ],
+   "coeff_sha": "68e3a21a24d2fd33"
+  },
+  {
+   "id": "inv_ndr_head26_i150",
+   "key": {
+    "cell": "CKINVDCx16_ASAP7_75t_R",
+    "polarity": "inv",
+    "clock_rc": "ndr",
+    "corners": [
+     "TT",
+     "FF"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": "HEAD hk4 DIE-HEAD-26 tree i150 combo GRT (M8/M9 NDR) routed DME legs, 327 regions"
+   },
+   "basis": "ot_clk refit (head hk4_rx_tx_inv150) of stack inv/ndr on routed legs /srv/opentallas-scratch2/claude/die-head-26/clk/out_i150_<C>; TT 1143 legs rms 6.35 ps (old model 8.2), FF 1143 legs rms 5.7 ps (old model 8.47)",
+   "source": {
+    "file": "results/die_head_26_1029/inv_stage_cal_head26_i150.json",
+    "sha256": "bd4e95cab63965916d9bdfeca8c469d748361619d651bc51877f17cb1946bae1",
+    "tree": "/srv/opentallas-scratch2/claude/die-head-26/clk/kit_i150/kit/clock/tree.json",
+    "arrivals": "/srv/opentallas-scratch2/claude/die-head-26/clk/out_i150",
+    "rep_um": 150.0,
+    "even_legs": false,
+    "built_with": "/srv/opentallas-scratch2/claude/die-head-26/clk/inv_stage_cal_head26_i150.built_with.json",
+    "tap_from": "/srv/opentallas-scratch2/claude/die-head-26/clk/kit_i150/kit/ot_clk_stage_cal.json"
+   },
+   "leg": [
+    8.790281,
+    0.240444,
+    -0.000156,
+    9.998051
+   ],
+   "tap": [
+    0.146559,
+    0.000484
+   ],
+   "leg_FF": [
+    9.914931,
+    0.167985,
+    8.7e-05,
+    6.788846
+   ],
+   "tap_FF": [
+    0.146559,
+    0.000484
+   ],
+   "coeff_sha": "4e5534dee986e182",
+   "fit": {
+    "TT": {
+     "legs": 1143,
+     "rms_ps": 6.35,
+     "rms_built_ps": 8.2
+    },
+    "FF": {
+     "legs": 1143,
+     "rms_ps": 5.7,
+     "rms_built_ps": 8.47
+    }
+   }
+  },
+  {
+   "id": "inv2_ndr_s81_g03b_refit",
+   "key": {
+    "cell": "CKINVDCx16_ASAP7_75t_R",
+    "polarity": "pair",
+    "clock_rc": "ndr",
+    "corners": [
+     "TT",
+     "FF"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": "S81 g03b routed 2W2S NDR M8/M9 (epyc2 die-s81-23/g03route/run_b)"
+   },
+   "basis": "ot_clk refit (s81 g03b) of stack inv2/ndr on routed legs run_b/out_<C>; TT 16604 legs rms 7.95 ps (old model 20.06), FF 16604 legs rms 7.16 ps (old model 20.11)",
+   "source": {
+    "file": "results/die_s81_23_1029/cal_g03b_refit.json",
+    "sha256": "a23d9ff85ff9fed5f229988c8b40e7feba8b0750ebc6534c6d451dce0ca7ec01",
+    "tree": "epyc2:/srv/opentallas-scratch2/claude/die-s81-23/g03route/run_b/kit/clock/tree.json",
+    "arrivals": "epyc2:/srv/opentallas-scratch2/claude/die-s81-23/g03route/run_b/out_<C>",
+    "rep_um": 250.0,
+    "even_legs": true,
+    "built_with": "epyc2:/srv/opentallas-scratch2/claude/die-s81-23/g03route/cal_g03b_refit.built_with.json",
+    "tap_from": "results/die_s81_23_1029/bk_stage_cal_2w2s_late.json"
+   },
+   "leg": [
+    12.653713,
+    0.159163,
+    0.000232,
+    11.144621
+   ],
+   "tap": [
+    0.028407301153837154,
+    0.0
+   ],
+   "leg_FF": [
+    10.706683,
+    0.142556,
+    0.000228,
+    8.186148
+   ],
+   "tap_FF": [
+    0.02839839954669633,
+    0.0
+   ],
+   "coeff_sha": "c6bf8463507c9d0f",
+   "fit": {
+    "TT": {
+     "legs": 16604,
+     "rms_ps": 7.95,
+     "rms_built_ps": 20.06
+    },
+    "FF": {
+     "legs": 16604,
+     "rms_ps": 7.16,
+     "rms_built_ps": 20.11
+    }
+   }
+  },
+  {
+   "id": "inv2_1x_hbm_native_sm3_early",
+   "key": {
+    "cell": "CKINVDCx16_ASAP7_75t_R",
+    "polarity": "pair",
+    "clock_rc": "1x",
+    "corners": [
+     "TT",
+     "FF"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": "HBM NW_sm3 native 386-cell body/PG clock-only GRT, M8/M9 1x"
+   },
+   "basis": "ot_clk refit (hbm street_body) of stack inv2/1x on routed legs results/codex_hbm_clock_1x_fit_1029/actual_<C>; TT 66 legs rms 11.53 ps (old model 24.93), FF 66 legs rms 10.21 ps (old model 16.95)",
+   "source": {
+    "file": "results/codex_hbm_clock_1x_fit_1029/stage_cal_actual_1x.json",
+    "sha256": "7f2102cc6809b5f8eb787fd3c65b7cae9c97767b716c4747f19b2754966dfc66",
+    "tree": "results/codex_hbm_clock_1x_fit_1029/raw/tree_frozen.json",
+    "arrivals": "results/codex_hbm_clock_1x_fit_1029/actual",
+    "rep_um": 180.0,
+    "even_legs": false,
+    "built_with": "die_trial STAGE_1X_TT (BUFx24 1x ladder, uncalibrated), fanout 0",
+    "tap_from": "results/codex_hbm_clock_1x_fit_1029/tap_actual.json",
+    "placed_stages": true,
+    "raw_node_columns": "N name maxrise maxfall minrise minfall slewA slewY; normalized early=column minrise (token4), not maxfall",
+    "physical_chain": "retained tree.parent_of / tree.sites between logical node_buf endpoints; 386 actual cells / 67 logical nodes / 66 legs / 34 taps"
+   },
+   "leg": [
+    20.747928,
+    0.002075,
+    0.000509,
+    9.333208
+   ],
+   "tap": [
+    -0.16872392164000646,
+    0.0007625548462490601
+   ],
+   "leg_FF": [
+    17.891057,
+    -0.007178,
+    0.000492,
+    7.170137
+   ],
+   "tap_FF": [
+    -0.16345633729496192,
+    0.0007405243396790624
+   ],
+   "coeff_sha": "c2979e51b49e29f2",
+   "fit": {
+    "TT": {
+     "legs": 66,
+     "rms_ps": 11.53,
+     "rms_built_ps": 24.93
+    },
+    "FF": {
+     "legs": 66,
+     "rms_ps": 10.21,
+     "rms_built_ps": 16.95
+    }
+   },
+   "fit_scope": {
+    "stage_length_um": [
+     2.1599999999998545,
+     298.08000000000084
+    ],
+    "stages_per_leg": [
+     2,
+     18
+    ],
+    "nodes": 67,
+    "physical_cells": 386,
+    "taps": 34,
+    "edge": "source rise early",
+    "residuals": {
+     "TT": {
+      "rms_ps": 11.53,
+      "abs_resid_pctl_ps": {
+       "50": 7.84,
+       "90": 18.79,
+       "99": 25.68
+      },
+      "max_abs_resid_ps": 26.61
+     },
+     "FF": {
+      "rms_ps": 10.21,
+      "abs_resid_pctl_ps": {
+       "50": 6.99,
+       "90": 16.74,
+       "99": 22.43
+      },
+      "max_abs_resid_ps": 22.89
+     }
+    },
+    "qualification": "actual 1x NW_sm3 GRT coupon only; fit interpolation is an estimate, full-die GRT+real-view STA required; negative FF linear term is regression covariance, not a negative physical delay claim"
+   }
   }
  ]
 }

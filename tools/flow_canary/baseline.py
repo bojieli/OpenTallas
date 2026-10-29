@@ -49,6 +49,8 @@ TOL = {"ins_ps": 5.0, "wns_ps": 10.0, "hold_ep_frac": 0.05, "overflow": 0, "drv"
 FLOW_STAGES = ("lint", "sdc_lint", "selrange", "synth", "lec", "face_guard", "face_cover", "reg_fanout", "rc_file",
                "cts", "tcl_errors")
 STRUCT_RE = re.compile(r"^OT_HOLD_STRUCTURAL stage=(\w+): FF hold ws (-?[0-9.]+) ps, (\d+) true failing endpoints", re.M)
+MEASURED_BAND_RE = re.compile(r"OT_VCLK_MEASURED_HOLD: FF pin-register mean (-?[0-9.]+) outside bound (-?[0-9.]+) \+- ([0-9.]+) "
+                              r"\(sign-off band FAIL")
 HOLD_RE = re.compile(r"^OT_HOLD_GATE\s+(PASS|FAIL)\s+FF\s+wns_ps\s+(-?[0-9.]+)\s+endpoints\s+(\d+)", re.M)
 GATE_RE = re.compile(r"^OT_POSTCTS_GATE\s+(TT|FF)\b.*?\bmean\s+(-?[0-9.]+)\s+bound\s+(-?[0-9.]+).*?\b(PASS|FAIL)\s*$",
                      re.M)
@@ -163,6 +165,11 @@ def design_stop(kit):
     st = STRUCT_RE.findall(read(log)) if log else []
     if st:
         why.append("structural FF hold gate at %s (ws %s ps, %s endpoints)" % st[-1])
+    # FLOW-HOLD-2 2026-10-29: the measured-frame hold step stops a kit whose FF pin-register mean is outside the sign-off
+    # insertion band (the FAIL_POSTCTS band, judged earlier inside GRT) -- the same flow-own design gate.
+    mb = MEASURED_BAND_RE.findall(read(log)) if log else []
+    if mb:
+        why.append("insertion band at measured-frame hold (FF pin-register mean %s vs %s +- %s)" % mb[-1])
     return "; ".join(why)
 
 

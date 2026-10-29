@@ -1,0 +1,21 @@
+{
+ "fresh_source": "/srv/opentallas-scratch2/claude/qc-import-1/mechanics/clock_grafted.odb",
+ "source_odb_sha256": "cd4060c57e5ecf509efc0d32c7b0371a487e0d81c1fa872257b574c174ed08ac",
+ "target_kit": {
+  "plan_sha256": "d0b301f8738717f3f225690e9540ecfd5005961c85a1ce2937d84123702dffed",
+  "island_windows": {
+   "types": 119,
+   "windows": 31302,
+   "sites": 92849
+  },
+  "landing_infra": {
+   "edges": 6184,
+   "nets": 6184,
+   "provisional": 313
+  },
+  "reset_infra": true,
+  "source_clock": "/srv/opentallas-scratch2/claude/codex-qc-1029/baseline26/target119_h800/clock",
+  "source_clock_tree_sha256": "e8f1f63e655a2f2d119f9ead461c36e44c52ae7400deb84fe60a3d5c6606d11c"
+ },
+ "graft": "QC_CLOCK_TARGETS CONNECTED_UNROUTED 7889 taps (graft_clock_targets6, unit oth-ubuntu-542175-1793283736 exit 0)"
+}

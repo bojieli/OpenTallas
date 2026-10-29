@@ -1,0 +1,71 @@
+{
+ "schema": "opentallas.hbm.six_chain_price.v1",
+ "status": "CONDITIONAL: per-record exposure only; actual bound signal calendar still required",
+ "note": "Six physical +1 chains, not six additive serial stages. No SOURCE timing adoption.",
+ "workloads": {
+  "ds": {
+   "base_cycles": 576702.4178468838,
+   "cases": {
+    "NW_rr1_all_DMA_upper_once": {
+     "model": "S2 schedule, fixed cycles added to every record of the op",
+     "base_cycles": 576702.4,
+     "cycles": 576752.4,
+     "added_cycles": 50.0,
+     "program_records": 420,
+     "added_cycles_per_record": 1,
+     "e2e_loss_pct": 0.009
+    },
+    "NE_each_VM_dependent_record_once": {
+     "model": "S2 schedule, fixed cycles added to every record of the op",
+     "base_cycles": 576702.4,
+     "cycles": 578762.4,
+     "added_cycles": 2060.0,
+     "program_records": 3923,
+     "added_cycles_per_record": 1,
+     "e2e_loss_pct": 0.356
+    },
+    "pessimistic_six_serial_returns_each_record": {
+     "model": "S2 schedule, fixed cycles added to every record of the op",
+     "base_cycles": 576702.4,
+     "cycles": 589501.4,
+     "added_cycles": 12799.0,
+     "program_records": 4120,
+     "added_cycles_per_record": 6,
+     "e2e_loss_pct": 2.171
+    }
+   }
+  },
+  "qwen": {
+   "base_cycles": 1269120.1126093396,
+   "cases": {
+    "NW_rr1_all_DMA_upper_once": {
+     "model": "S2 schedule, fixed cycles added to every record of the op",
+     "base_cycles": 1269120.1,
+     "cycles": 1269229.1,
+     "added_cycles": 109.0,
+     "program_records": 12,
+     "added_cycles_per_record": 1,
+     "e2e_loss_pct": 0.009
+    },
+    "NE_each_VM_dependent_record_once": {
+     "model": "S2 schedule, fixed cycles added to every record of the op",
+     "base_cycles": 1269120.1,
+     "cycles": 1270133.1,
+     "added_cycles": 1013.0,
+     "program_records": 43,
+     "added_cycles_per_record": 1,
+     "e2e_loss_pct": 0.08
+    },
+    "pessimistic_six_serial_returns_each_record": {
+     "model": "S2 schedule, fixed cycles added to every record of the op",
+     "base_cycles": 1269120.1,
+     "cycles": 1275204.1,
+     "added_cycles": 6084.0,
+     "program_records": 46,
+     "added_cycles_per_record": 6,
+     "e2e_loss_pct": 0.477
+    }
+   }
+  }
+ }
+}

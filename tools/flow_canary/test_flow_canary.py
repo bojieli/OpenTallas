@@ -308,3 +308,29 @@ def test_runtime_structural_hold_reports_gate_failure_not_tcl_crash(tmp_path):
 def test_unavailable_ff_scene_is_a_runtime_error():
     text = "Error: global_route.tcl, 175 OT_HOLD_STRUCTURAL: synchronized FF scene BC unavailable"
     assert not C.GATE_ERR_RE.search(text)
+
+
+def test_measured_hold_band_stop_is_design_gate_not_tcl_crash(tmp_path):
+    """FLOW-HOLD-2: vclk_measured_hold.tcl refuses hold repair when the FF pin-register mean is outside the
+    sign-off band; that is the insertion design stop (grt_gate FAIL, NOT REACHED later), not a Tcl crash."""
+    import baseline as B
+    kit = tmp_path / "kit"
+    logs = kit / "run/logs/asap7/d/base"
+    logs.mkdir(parents=True)
+    (kit / "config.mk").write_text("export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl\n")
+    (tmp_path / "canary_meta.json").write_text(json.dumps(dict(
+        kit=str(kit), spec=dict(die="hbm_sram", item="calendar", grt_gate=False))))
+    band = ("OT_VCLK_MEASURED_HOLD: FF pin-register mean 247.621 outside bound 202.500000 +- 40.000000 "
+            "(sign-off band FAIL; fix the clock, not the hold)")
+    log = logs / "5_1_grt.log"
+    log.write_text("Error: global_route.tcl, 175 " + band + "\n")
+    result = C.check_run(tmp_path)
+    assert result["stages"]["grt_gate"]["verdict"] == "FAIL"
+    assert "247.621" in result["stages"]["grt_gate"]["why"]
+    assert result["stages"]["tcl_errors"]["verdict"] == "PASS"
+    assert "insertion band" in B.design_stop(kit)
+    # the other measured-hold errors stay crashes
+    log.write_text("Error: global_route.tcl, 175 OT_VCLK_MEASURED_HOLD: pin-register mean unavailable (samples 0 missing 3 clocks 1)"
+                   " -- sign-off would be NOT RUN\n")
+    assert C.check_run(tmp_path)["stages"]["tcl_errors"]["verdict"] == "FAIL"
+    assert B.design_stop(kit) == ""

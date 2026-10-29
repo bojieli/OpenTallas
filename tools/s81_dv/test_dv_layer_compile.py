@@ -121,23 +121,30 @@ def test_compile_l0():
     out = Path(tempfile.mkdtemp(prefix='dvlc_'))
     r = C.compile_layer('L0', out, tree, 's_0S')
     cal = json.loads((out / 'prog/calendar.json').read_text())
-    rows = cal['rows']
-    assert 0 < len(rows) <= C.NOPS
-    kit = [x for x in rows if x['engine'] == 14]
-    end = [x for x in rows if x['engine'] == 15]
-    cmds = [x for x in rows if x['engine'] < 14]
-    assert len(kit) == 1 and len(end) == 1 and cmds
-    assert all(x['done'] > x['issue'] for x in cmds)
-    assert all(end[0]['issue'] >= x['done'] for x in cmds)
-    assert len({(x['engine'], x['issue']) for x in cmds}) == len(cmds)
-    assert all(x['engine'] in (0, 1, 2, 4) for x in cmds)            # ENG_PRESENT 5'b10111
     tm = json.loads((out / 'prog/ctl_templates.json').read_text())
-    assert tm['n'] <= C.NOPS
-    assert all((x['arg'] & 0x7F) < tm['n'] for x in cmds if x['engine'] in (0, 1))
-    j0 = cal['job'][0]
-    hs = (out / ('prog/host_boot.memh' if cal['jobs'] == 1 else 'prog/job0/host_boot.memh')).read_text().split()
     ngu = len(json.loads((out / 'prog/gunit_rows.json').read_text())['rows'])
-    assert len(hs) == j0['host_words'] == 2 + 3 * j0['nops'] + 1 + len(j0.get('templates') or range(tm['n'])) + ngu
+    issued = []
+    for j in cal['job']:
+        rows = j['rows']
+        assert 0 < len(rows) == j['nops'] <= C.NOPS
+        kit = [x for x in rows if x['engine'] == 14]
+        end = [x for x in rows if x['engine'] == 15]
+        cmds = [x for x in rows if x['engine'] < 14]
+        assert len(kit) == 1 and len(end) == 1 and cmds
+        assert all(x['done'] > x['issue'] for x in cmds)
+        assert all(end[0]['issue'] >= x['done'] for x in cmds)
+        assert len({(x['engine'], x['issue']) for x in cmds}) == len(cmds)
+        assert all(x['engine'] in (0, 1, 2, 4) for x in cmds)
+        # CTL indices are job-local; the compiler's virtual table may exceed 128.
+        assert len(j['templates']) <= C.NOPS
+        assert all(0 <= i < tm['n'] for i in j['templates'])
+        assert all((x['arg'] & 0x7F) < len(j['templates']) for x in cmds if x['engine'] in (0, 1))
+        issued += [(x['engine'], x['issue'] + j['layer_issue0']) for x in cmds]
+        boot = 'prog/host_boot.memh' if cal['jobs'] == 1 else f"prog/job{j['job']}/host_boot.memh"
+        hs = (out / boot).read_text().split()
+        assert len(hs) == j['host_words'] == (2 + 3 * j['nops'] + 1 + len(j['templates'])
+                                            + (ngu if j['job'] == 0 else 0))
+    assert len(issued) == len(set(issued)), 'cross-job layer issue collision'
     # every V command's CTL template targets ONE slice: the smoke slice, or (vpx collective legs) its end slice
     sl = C.Die(tree).slices()
     sid = sl['u_s_0S']['sid']
@@ -152,8 +159,15 @@ def test_compile_l0():
     # op schedule = the committed p4l price
     sch = json.loads((out / 'schedule.json').read_text())
     lp = json.loads((ROOT / 'results/rtl/s81_layer_tput_1018/layer_price_p4l.json').read_text())['workloads']['ar']['layers']['L0']
-    assert len(sch['ops']) == lp['nodes'] and abs(sch['price']['crit'] - lp['dv_crit']) < 0.5, (sch['price'], lp)
-    assert all(e['inst'] in C.Die(tree).inst for e in sch['events'] if not e.get('plan_only') and e['dir'] != 'internal')
+    # The historical p4l snapshot predates adopted VSW LR=1. Charge the explicit
+    # model term once per critical SWIGLU; retain the snapshot's rounding tolerance.
+    import re
+    lr = sch['price']['vsw_lr_extra_edges'] * sum(
+        o['critical'] and bool(re.fullmatch(r'ffn\.(?:shared_)?swiglu(?:\.r\d+)?', o['op']))
+        for o in sch['ops'])
+    assert len(sch['ops']) == lp['nodes'] and abs(sch['price']['crit'] - lp['dv_crit'] - lr) < 0.5, (sch['price'], lp, lr)
+    die_insts = C.Die(tree).inst
+    assert all(e['inst'] in die_insts for e in sch['events'] if not e.get('plan_only') and e['dir'] != 'internal')
     man = json.loads((out / 'manifest.json').read_text())
     for f, h in man['files'].items():
         assert hashlib.sha256((out / f).read_bytes()).hexdigest() == h, f

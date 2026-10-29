@@ -68,6 +68,41 @@ CLK_INV = "CKINVDCx16_ASAP7_75t_R"
 # --clock-cell inv2 (DIE-QC-11): every leg has an EVEN number of inverter stages (priced in leg_ps / snake chains), plus a
 # 2-stage root, so every node and tap has true polarity by construction (no tap parity inverters, no parity skew)
 EVEN_LEGS = False
+# CLK-TOOL-8 opt-in --clock-edge-alt (inv2 only; DIE-HEAD-26 duty): with even legs every branch-node driver (the heavy,
+# fanout >= 2 stage) has the same output polarity, so its rise/fall asymmetry adds up once per tree level and never
+# cancels (HEAD hk4 inv2: ~3 ps TT / ~6 ps FF per level, 49.5 / 98.7 ps fall-rise at 15 levels, 88 / 226 taps outside
+# duty 45-55; routed both-edge fit rms 2.2 ps).  With EDGE_ALT the region DME labels every node with a polarity P
+# (0 = true): P = 0 at a leaf / tap node, else (height above the leaves) % 2, region roots forced 0, and every leg's
+# inverter count is rounded up to the parity P_parent xor P_child instead of to even (priced in the same DME delay
+# calls), so consecutive branch drivers alternate polarity and their asymmetries cancel pairwise.  Taps and every node
+# above the region DME stay true polarity: no tap parity inverters.  Default False = byte-identical.
+EDGE_ALT = False
+# per-stage asymmetry (fall - rise at an inverted output, unitless) of a light (one-leg) and a heavy (branch) stage used
+# to choose node polarities: routed fits on CKINVDCx16 trees give light ~ +, heavy ~ - of similar size (HEAD hk4 FF
+# +2.8 / -3.3 ps), so the structural default is (+1, -1)
+EDGE_B = (1.0, -1.0)
+_LEG_PAR = 0                         # required inverter-count parity of the leg being priced (EVEN_LEGS; 0 = even)
+
+
+class leg_parity:
+    """context: price / place the legs inside with inverter-count parity par (EDGE_ALT); par 0 = the inv2 even rule"""
+    def __init__(self, par):
+        self.par = int(par) & 1
+
+    def __enter__(self):
+        global _LEG_PAR
+        self.old, _LEG_PAR = _LEG_PAR, self.par
+        return self
+
+    def __exit__(self, *exc):
+        global _LEG_PAR
+        _LEG_PAR = self.old
+        return False
+
+
+def node_pol(nd):
+    """EDGE_ALT polarity label of a tree node (absent = 0 = true polarity)"""
+    return int(nd.get("pol", 0))
 FLOP = "DFFHQNx1_ASAP7_75t_R"
 NDR_TRACKS = 5                       # clock wire 2W2S + a shield each side (hbm_arch clock_htree.py)
 TAP_LOAD_FF = 3.0                    # partition tap buffer input (ASSUMED: BUFx24 A ~ 2-3 fF)
@@ -155,7 +190,10 @@ def load_island_sites(paths):
         elif d.get("schema") == "ot_clock_sites/1":
             for s in d.get("sites", []):
                 if s.get("kind", "partition") == "partition":
-                    out.append((tuple(s["xy_um"]), f"{tag}:{s.get('name')}"))
+                    # QC-IMPORT-1 opt-in: a site may carry its actual body size cell_um (provider all-cell
+                    # islands); absent -> the planned clock body ISLAND_CELL_UM (unchanged)
+                    out.append((tuple(s["xy_um"]), f"{tag}:{s.get('name')}") +
+                               ((tuple(s["cell_um"]),) if s.get("cell_um") else ()))
         elif isinstance(d.get("meta"), dict) and "derived_trunk_sites" in d["meta"]:
             for s in d["meta"]["derived_trunk_sites"]:
                 out.append((tuple(s["xy_um"]), f"{tag}:trunk:{s.get('cell')}"))
@@ -171,11 +209,13 @@ def _snap_out(v, g, up):
 
 def island_windows(P, sites, cell=ISLAND_CELL_UM, snap=ISLAND_SNAP_UM, margin=ISLAND_MARGIN_UM, grid=ISLAND_GRID_UM):
     """{type: [type-frame rect]} (union over instances, deduplicated) + per-site record list"""
-    hx = cell[0] / 2 + snap + margin
-    hy = cell[1] + snap + margin          # the cell row may lie above or below the site's row line
     rects = {n: P.rect(n) for n in P.parts}
     by_type, recs = defaultdict(set), []
-    for (x, y), src in sites:
+    for site in sites:
+        (x, y), src = site[0], site[1]
+        c = site[2] if len(site) > 2 else cell      # per-site body size (opt-in), else the planned clock body
+        hx = c[0] / 2 + snap + margin
+        hy = c[1] + snap + margin          # the cell row may lie above or below the site's row line
         w = (x - hx, y - hy, x + hx, y + hy)
         hit = []
         for n, r in rects.items():
@@ -447,12 +487,29 @@ class SiteMap:
         return None
 
 
+# CLK-TOOL-7 opt-ins migrated from the HBM street_body clock build (Codex codex/hbm-clock-0300 build_street_body.py
+# monkeypatch adapters body_sites.py + adaptive_detour_v2.py; OWNER 12.17(2): ot_clk is the only die clock path).
+# Default off = byte-identical trees.
+# CLOCK_BODY_SITES (--clock-body-sites): clock_site() offsets every partition / keep-out rectangle by the native clock
+#   cell body ISLAND_CELL_UM (1.62 x 0.27 um) so a placed cell origin keeps its whole body legal (body_sites.py), also
+#   without --region-dme-actual-max.
+# CHAIN_HOP_MAX_UM (--chain-hop-max UM): chain_ps prices a candidate chain with any hop > UM as infinite, so DME
+#   elongation / snake candidates that would need a repeater span beyond the reach rule are never chosen (body_sites.py).
+# DETOUR_ADAPTIVE (--detour-adaptive): legal_detour retries a failed A* with the search box widened to the connected
+#   blocking macro wall (abutting hard cores whose halos touch), first at the default grid then at 2.16 um
+#   (adaptive_detour_v2.py: the 600-um box clipped the route around the 1635-um HBM VM core).
+CLOCK_BODY_SITES = False
+CHAIN_HOP_MAX_UM = None
+DETOUR_ADAPTIVE = False
+DETOUR_STATS = []
+
+
 def clock_site(P):
     """Physical DME uses native 1.62x0.27 cell origins, not zero-area points.
     This is the body-site adapter measured on HBM, shared without a runtime monkeypatch.
     """
     site = SiteMap(P)
-    if DME_ACTUAL_MAX_UM is None:
+    if DME_ACTUAL_MAX_UM is None and not CLOCK_BODY_SITES:
         return site
     w, h = ISLAND_CELL_UM
     site.parts = [(a,b,c-w,d-h) for a,b,c,d in site.parts]
@@ -600,6 +657,69 @@ def leg_blocked_run(site, a, b, step=1.08):
 
 
 def legal_detour(site, a, b, step=5.4, margin=600.0, turn_um=20.0):
+    """legal_detour_astar; with DETOUR_ADAPTIVE a failed search is retried around the connected blocking macro wall"""
+    route = legal_detour_astar(site, a, b, step=step, margin=margin, turn_um=turn_um)
+    if route is not None or not DETOUR_ADAPTIVE:
+        return route
+    return _detour_wall(site, a, b, step, margin, turn_um)
+
+
+def _wall_components(site):
+    """connected components of the site's keep-out rectangles (touching/overlapping), cached on the site object:
+    [(rect index set, bbox)]"""
+    cc = getattr(site, "_wall_cc", None)
+    if cc is None:
+        rects = list(site.forb)
+        pending = set(range(len(rects)))
+        cc = []
+        while pending:
+            first = pending.pop()
+            ids, todo = [first], [first]
+            while todo:
+                u = rects[todo.pop()]
+                hit = [i for i in pending if u[0] <= rects[i][2] and rects[i][0] <= u[2] and u[1] <= rects[i][3]
+                       and rects[i][1] <= u[3]]
+                for i in hit:
+                    pending.remove(i)
+                    ids.append(i)
+                    todo.append(i)
+            cc.append((set(ids), (min(rects[i][0] for i in ids), min(rects[i][1] for i in ids),
+                                  max(rects[i][2] for i in ids), max(rects[i][3] for i in ids))))
+        site._wall_cc = cc = (rects, cc)
+    return cc
+
+
+def _detour_wall(site, a, b, step, margin, turn_um):
+    """DETOUR_ADAPTIVE retry: widen the A* box to the outward faces of the connected walls the direct box crosses"""
+    x0, x1 = sorted((a[0], b[0]))
+    y0, y1 = sorted((a[1], b[1]))
+    blockers = [r for r in site.forb if r[0] < x1 + step and r[2] > x0 - step and r[1] < y1 + step and r[3] > y0 - step]
+    if not blockers:
+        return None
+    rects, cc = _wall_components(site)
+    seed = {i for i, r in enumerate(rects) if r in blockers}
+    blockers = [box for ids, box in cc if ids & seed]
+    escape = []
+    for r in blockers:      # a wall crossing the direct box is bypassed above/below or left/right: nearest outward face
+        choices = [max(0., y0 - r[1]), max(0., r[3] - y1), max(0., x0 - r[0]), max(0., r[2] - x1)]
+        positive = [v for v in choices if v > step]
+        if positive:
+            escape.append(min(positive) + 2 * step)
+    needed = max([margin] + escape)
+    extent = max(max(r[2] - r[0], r[3] - r[1]) for r in blockers) + 2 * step
+    margins = sorted({round(max(needed, margin + step), 3), round(max(extent, needed), 3)})
+    for grid in sorted({step, min(step, 2.16)}, reverse=True):
+        for m in margins:
+            route = legal_detour_astar(site, a, b, step=grid, margin=m, turn_um=turn_um)
+            if route is not None:
+                DETOUR_STATS.append(dict(a=list(a), b=list(b), old_margin_um=margin, new_margin_um=m, grid_um=grid,
+                                         blockers=len(blockers)))
+                return route
+    DETOUR_STATS.append(dict(a=list(a), b=list(b), old_margin_um=margin, failed=True, blockers=len(blockers)))
+    return None
+
+
+def legal_detour_astar(site, a, b, step=5.4, margin=600.0, turn_um=20.0):
     """shortest Manhattan polyline a -> b whose grid points are legal sites (A*, bend penalty turn_um); None if none in
     the leg bbox + margin.  The endpoints themselves may be illegal (slide-fallback nodes)."""
     import heapq
@@ -779,7 +899,7 @@ def reach_place(site, poly, reach, nmin=0, even=False, step=0.54):
     if g is None:
         return None
     need = max(len(g), nmin)
-    if even and (need + 1) % 2:
+    if even and (need + 1) % 2 != _LEG_PAR:
         need += 1
     lo, hi, best = L / (need + 1), reach, g
     for _ in range(40):
@@ -968,10 +1088,12 @@ def reach_balance(nodes, site, rep_um, even):
                 nd, p = nodes[i], nodes[nodes[i]["parent"]]
                 r = None
                 cost = cur.get(i, 0.) + add.get(i, 0.)
+                lp = leg_parity(node_pol(nd) ^ node_pol(p) if even else 0)
+                lp.__enter__()          # CLK-TOOL-8 EDGE_ALT: this leg's parity (0 = even: unchanged)
                 if i in cur:
                     pa, q = (p["x"], p["y"]), (nd["x"], nd["y"])
                     r = snake_leg(site, pa, q, cost + owe, rep_um, plain_ps=cost)
-                    if r is not None and (even and (len(r[0]) + 1) % 2 or
+                    if r is not None and (even and (len(r[0]) + 1) % 2 != _LEG_PAR or
                             max(chain_spans([pa]+list(r[0])+[q])) > REP_REACH_MAX_UM + 1e-6):
                         r = None
                 if r is not None:
@@ -981,6 +1103,8 @@ def reach_balance(nodes, site, rep_um, even):
                         # same cells; a snake key alone would silently do nothing.
                         pl = physical_leg(site,pa,q,rep_um,[pa]+list(r[0])+[q])
                         nd["physical_leg"] = pl
+                lp.__exit__()
+                if r is not None:
                     nd["snake"] = [list(x) for x in r[0]]
                     wire_delta = sum(chain_spans([pa]+list(r[0])+[q])) - cur_wire[i]
                     nd["reach_pad"] = dict(pad_ps=round(owe, 3), got_ps=round(r[1] - cost, 3),
@@ -1396,6 +1520,8 @@ def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_
         b = box[rn]
         xc, yc = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
         if region_dme:             # DIE-QC-3 opt-in: legal-site DME region tree, fed straight from the spine entry
+            if EDGE_ALT:
+                raise ValueError("--clock-edge-alt: the slice-spine region DME is not supported (use link_htree)")
             dn, droot, dst = dme_region_tree(site, rt[rn], rep_um=dme_rep_um, delay_rep_um=dme_delay_rep_um)
             ids = {}
 
@@ -1444,6 +1570,51 @@ def _dme_pool_job(k):
     return dme_region_tree(site, tl, **kw)
 
 
+def feed_edge_pol(nodes, extra_load=None):
+    """CLK-TOOL-8 EDGE_ALT, the region FEED (link_fishbone/link_htree feed=True nodes; unbalanced by design, its phase
+    offsets are absorbed by the count-aligned ring, so a +-1 stage parity change on a feed leg needs no rebalancing):
+    top-down, every feed node below the root takes the polarity P that brings the running edge sum E (EDGE_B model:
+    +b at an inverted stage output, -b at a true one; one uncancelled light stage per even leg) closest to 0.  Non-feed
+    nodes stay true polarity (balanced region trees keep equal legs).  extra_load {node: loads attached later (the
+    region DME root)}.  Sets nd['pol'] on inverted feed nodes; -> report dict"""
+    bl, bh = EDGE_B
+    kids = defaultdict(list)
+    for i, nd in nodes.items():
+        if nd["parent"] is not None:
+            kids[nd["parent"]].append(i)
+
+    def b(i):
+        fo = len(kids[i]) + len(nodes[i]["taps"]) + int((extra_load or {}).get(i, 0))
+        return bh if fo >= 2 else bl
+    root = next(i for i, nd in nodes.items() if nd["parent"] is None)
+    E = {root: bl - b(root)}                 # 2-stage inv2 root: inverted first stage, true root driver
+    E0 = dict(E)
+    order = [root]
+    flipped = 0
+    for i in order:
+        for k in sorted(kids[i]):
+            order.append(k)
+            pp = node_pol(nodes[i])
+            even0 = bl * (1.0 if not pp else -1.0)      # even leg: its one uncancelled light stage (output 1 - pp)
+            E0[k] = E0[i] + bl - b(k)                    # inv2 reference (every node true, every leg even)
+            if not nodes[k].get("feed"):
+                E[k] = E[i] + (even0 if pp == 0 else 0.0) - b(k)     # true node: leg parity = pp
+                continue
+            c = {}
+            for P in (0, 1):
+                sg = 1.0 if P else -1.0
+                c[P] = E[i] + (even0 if P == pp else 0.0) + sg * b(k)
+            P = min((0, 1), key=lambda q: (round(abs(c[q]), 9), q))
+            if P:
+                nodes[k]["pol"] = 1
+                flipped += 1
+            E[k] = c[P]
+    feed = [i for i in order if nodes[i].get("feed")]
+    return dict(feed_nodes=len(feed), inverted=flipped, model=list(EDGE_B),
+                feed_edge_max_inv2=round(max((abs(E0[i]) for i in feed), default=0.0), 3),
+                feed_edge_max=round(max((abs(E[i]) for i in feed), default=0.0), 3))
+
+
 def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None, route_um=480.0, only=None, early=None,
                       snake=None, early_mode="hang", merge_only=None):
     """DIE-QC-3 opt-in (--tree-form link_htree --region-dme): hang one legal-site DME tree (dme_region_tree) under every
@@ -1454,6 +1625,12 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
         rt[regions[t[0]]].append(t)
     st = {}
     jobs = []
+    if EDGE_ALT and any(nd.get("feed") for nd in nodes.values()):
+        # CLK-TOOL-8: feed polarities first (the DME root leg below a feed end is laid with its parity)
+        dme_ends = {e: 1 for e, nd in nodes.items() if nd.get("region_root") is not None and rt.get(nd["region_root"])
+                    and (only is None or nd["region_root"] in only)}
+        root0 = next(i for i, nd in nodes.items() if nd["parent"] is None)
+        nodes[root0]["edge_alt_feed"] = feed_edge_pol(nodes, dme_ends)
     for e in [i for i, nd in list(nodes.items()) if nd.get("region_root") is not None]:
         rn = nodes[e]["region_root"]
         if not rt.get(rn) or (only is not None and rn not in only):   # DIE-QC-4 --region-dme-only: listed regions only
@@ -1486,13 +1663,15 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
             i = len(nodes)
             nodes[i] = dict(id=i, x=round(d["x"], 3), y=round(d["y"], 3), parent=parent, level=nodes[parent]["level"] + 1,
                             kids=[], taps=list(d["taps"]), region=list(nodes[e].get("region_box", nodes[e]["region"])),
-                            dme=rn, **({"part_root": d["part_root"]} if d.get("part_root") else {}))
+                            dme=rn, **({"part_root": d["part_root"]} if d.get("part_root") else {}),
+                            **({"pol": int(d["P"])} if EDGE_ALT else {}))
             nodes[i]["req_xy"] = [nodes[i]["x"], nodes[i]["y"]]
             nodes[parent]["kids"].append(i)
             pa, q = (nodes[parent]["x"], nodes[parent]["y"]), (nodes[i]["x"], nodes[i]["y"])
             if DME_ACTUAL_MAX_UM is not None and delay_rep_um:
-                pl = physical_leg(site, pa, q, delay_rep_um,
-                                  [pa] + list(snake_pts) + [q] if snake_pts is not None else None)
+                with leg_parity(node_pol(nodes[i]) ^ node_pol(nodes[parent])):
+                    pl = physical_leg(site, pa, q, delay_rep_um,
+                                      [pa] + list(snake_pts) + [q] if snake_pts is not None else None)
                 nodes[i]["physical_leg"] = pl
             if snake_pts:       # DIE-QC-9: elongated leg = explicit legal buffer chain (tree_netlist places it as is)
                 nodes[i]["snake"] = [list(x) for x in snake_pts]
@@ -1657,7 +1836,7 @@ def leg_ps(L, rep_um):
     """delay of a buffered leg of length L (um): n = ceil(L / rep_um) equal stages (n - 1 repeaters + the child node
     buffer), as tree_netlist places them"""
     n = max(1, int(math.ceil(L / rep_um - 1e-9)))
-    if EVEN_LEGS and n % 2:
+    if EVEN_LEGS and n % 2 != _LEG_PAR:
         n += 1
     d0, k1, k2 = STAGE_1X_TT
     return n * d0 + k1 * L + k2 * L * L / n
@@ -1677,6 +1856,8 @@ def tap_wire_ps(d_um):
 def chain_ps(pts):
     """delay (model ps) of a leg whose buffers sit at pts[1:] (pts[0] = driver): one STAGE_1X_TT stage per consecutive
     pair, stage length = Manhattan between the two buffers (what the router connects).  leg_ps is the even-split case."""
+    if CHAIN_HOP_MAX_UM is not None and any(_man(a, b) > CHAIN_HOP_MAX_UM + 1e-6 for a, b in zip(pts, pts[1:])):
+        return float("inf")
     d0, k1, k2 = STAGE_1X_TT
     s = 0.0
     for a, b in zip(pts, pts[1:]):
@@ -1697,7 +1878,7 @@ def physical_leg(site, a, b, rep_um, points=None):
     bound = float(DME_ACTUAL_MAX_UM)
     if not math.isfinite(bound) or bound <= 0:
         raise ValueError("DME actual reach bound must be finite and positive")
-    key = (a, b, float(rep_um), bool(EVEN_LEGS), bound, tuple(STAGE_1X_TT),
+    key = (a, b, float(rep_um), bool(EVEN_LEGS) if not _LEG_PAR else ("par", 1), bound, tuple(STAGE_1X_TT),
            tuple(tuple(q) for q in points) if points is not None else None)
     cache = getattr(site, "_physical_leg_cache", None)
     if cache is None:
@@ -1707,7 +1888,7 @@ def physical_leg(site, a, b, rep_um, points=None):
     if points is None:
         L = _man(a, b)
         n = max(1, int(math.ceil(L / rep_um - 1e-9)))
-        if EVEN_LEGS and n % 2:
+        if EVEN_LEGS and n % 2 != _LEG_PAR:
             n += 1
         axis = "x" if abs(a[0]-b[0]) >= abs(a[1]-b[1]) else "y"
         pts = [a] + [round_legal(site, site.nearest((a[0]+(b[0]-a[0])*j/n,
@@ -1757,7 +1938,7 @@ def physical_leg(site, a, b, rep_um, points=None):
             raise ValueError("no reachable legal clock chain on channel detour")
         repairs.append(dict(old_um=_man(aa,bb), added=len(solution), poly=tuple(poly)))
         chain += solution + [bb]
-    if EVEN_LEGS and (len(chain)-1) % 2:
+    if EVEN_LEGS and (len(chain)-1) % 2 != _LEG_PAR:
         raise ValueError("physical clock chain has odd inverter parity")
     if any(not site.legal(q) for q in chain):
         raise ValueError("physical clock chain contains illegal site")
@@ -1864,8 +2045,8 @@ def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08, plain_ps=
                     snap += _man(x, y)
                     pts.append(y)
                 pts.append(q)
-                if EVEN_LEGS and (len(pts) - 1) % 2:
-                    continue            # inv2: odd stage count would flip polarity
+                if EVEN_LEGS and (len(pts) - 1) % 2 != _LEG_PAR:
+                    continue            # inv2: odd stage count would flip polarity (EDGE_ALT: the leg's parity)
                 if DME_ACTUAL_MAX_UM is not None:
                     try:
                         placed = physical_leg(site, pa, q, rep_um, pts)
@@ -1882,7 +2063,13 @@ def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08, plain_ps=
     return best[1], best[2], best[3]
 
 
-def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, extra_ps_um=0.03):
+def _par_leg_ps(site, a, b, rep_um, par):
+    """placed_leg_ps of a leg with inverter-count parity par (CLK-TOOL-8 EDGE_ALT; par 0 = the default rule)"""
+    with leg_parity(par):
+        return placed_leg_ps(site, a, b, rep_um)
+
+
+def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, extra_ps_um=0.03, par1=0, par2=0):
     """delay-aware DME merge (opt-in --region-dme delay): s1/s2 are subtree delays (ps); candidates = the length-locus
     pool of merge_point (depths converted at the repeated-line ps/um) + every legal point on the kids' shortest L path;
     the legal point with the least |leg_ps(L1) + s1 - leg_ps(L2) - s2| + extra_ps_um x added wire wins (stage counts
@@ -1908,7 +2095,7 @@ def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, 
 
     def cost(q):
         try:
-            return (abs(placed_leg_ps(site, q, c1, rep_um) + s1 - placed_leg_ps(site, q, c2, rep_um) - s2)
+            return (abs(_par_leg_ps(site, q, c1, rep_um, par1) + s1 - _par_leg_ps(site, q, c2, rep_um, par2) - s2)
                     + extra_ps_um * (md(q, c1) + md(q, c2) - D_))
         except ValueError:
             if DME_ACTUAL_MAX_UM is None:
@@ -1917,7 +2104,8 @@ def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, 
     q = min(pool, key=cost)
     if not math.isfinite(cost(q)):
         raise ValueError("no reachable physical DME merge candidate")
-    return q, abs(placed_leg_ps(site, q, c1, rep_um) + s1 - placed_leg_ps(site, q, c2, rep_um) - s2), md(q, c1) + md(q, c2) - D_
+    return (q, abs(_par_leg_ps(site, q, c1, rep_um, par1) + s1 - _par_leg_ps(site, q, c2, rep_um, par2) - s2),
+            md(q, c1) + md(q, c2) - D_)
 
 
 DME_JOIN_BUDGET = 4096  # DIE-S81-16: join() calls per top-level merge before the bounded monotone join-down takes over
@@ -1961,27 +2149,50 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
         sd = tap_wire_ps(d) if delay_rep_um and (snake or DME_ACTUAL_MAX_UM is not None) else d
         if sink_early:      # DIE-S81-14 --region-dme-early-mode merge: declared early = DME sink delay (zero-skew merge)
             sd += float(sink_early.get((t[0], t[1]), 0.0))
-        out.append(dict(x=q[0], y=q[1], kids=[], taps=[t], S=sd, Smin=sd, W=d))
+        out.append(dict(x=q[0], y=q[1], kids=[], taps=[t], S=sd, Smin=sd, W=d,
+                        **({"P": 0, "H": 0, "F": (-EDGE_B[0], -EDGE_B[0])} if EDGE_ALT else {})))
         return len(out) - 1
 
-    def merge(a, b):
+    def merge(a, b, force_P=None):
         A, B = out[a], out[b]
         rad = min(max(radius_um, _man((A["x"], A["y"]), (B["x"], B["y"])) / 2), 4000.0)
+        alt = {}
+        pa_ = pb_ = 0
+        if EDGE_ALT:            # CLK-TOOL-8: node polarity P chosen to centre the subtree edge sum F, legs priced P^P_kid
+            H = 1 + max(A["H"], B["H"])
+
+            def span(P):
+                # F = sum of sigma * b from this node's driver down to every tap (sigma +1 at an inverted output):
+                # this (heavy, 2-leg) driver + per kid leg the one uncancelled light stage of an even leg + the kid's F
+                sg = 1.0 if P else -1.0
+                v = []
+                for K in (A, B):
+                    add = sg * EDGE_B[1] + (-sg * EDGE_B[0] if P == K["P"] else 0.0)
+                    v += [K["F"][0] + add, K["F"][1] + add]
+                return min(v), max(v)
+            P = (min((0, 1), key=lambda c: (round(max(map(abs, span(c))), 9), c != H % 2)) if force_P is None
+                 else int(force_P))
+            alt = {"P": P, "H": H, "F": span(P)}
+            pa_, pb_ = P ^ A["P"], P ^ B["P"]
         if delay_rep_um:        # delay-aware: S / Smin are ps, legs priced by leg_ps (stage counts included)
-            q, imb, ex = merge_point_delay(site, (A["x"], A["y"]), A["S"], (B["x"], B["y"]), B["S"], delay_rep_um, rad)
+            q, imb, ex = merge_point_delay(site, (A["x"], A["y"]), A["S"], (B["x"], B["y"]), B["S"], delay_rep_um, rad,
+                                           **({"par1": pa_, "par2": pb_} if EDGE_ALT else {}))
             q = round_legal(site, q)
             la, lb = _man(q, (A["x"], A["y"])), _man(q, (B["x"], B["y"]))
-            da = placed_leg_ps(site, q, (A["x"], A["y"]), delay_rep_um)
-            db = placed_leg_ps(site, q, (B["x"], B["y"]), delay_rep_um)
+            da = _par_leg_ps(site, q, (A["x"], A["y"]), delay_rep_um, pa_)
+            db = _par_leg_ps(site, q, (B["x"], B["y"]), delay_rep_um, pb_)
             if DME_ACTUAL_MAX_UM is not None:
-                la = physical_leg(site,q,(A["x"],A["y"]),delay_rep_um)["wire_um"]
-                lb = physical_leg(site,q,(B["x"],B["y"]),delay_rep_um)["wire_um"]
+                with leg_parity(pa_):
+                    la = physical_leg(site,q,(A["x"],A["y"]),delay_rep_um)["wire_um"]
+                with leg_parity(pb_):
+                    lb = physical_leg(site,q,(B["x"],B["y"]),delay_rep_um)["wire_um"]
             snakes, sw = {}, 0.0
             if snake and abs(da + A["S"] - db - B["S"]) > SNAKE_TOL_PS:
                 # DIE-QC-9 opt-in: no zero-skew legal point -> elongate the fast kid's leg (plan-computed hairpin of
                 # legal buffer sites, priced on the placed chain); the merge point itself is unchanged
                 fast, Fx, slow_t = (a, A, db + B["S"]) if da + A["S"] < db + B["S"] else (b, B, da + A["S"])
-                r = snake_leg(site, q, (Fx["x"], Fx["y"]), slow_t - Fx["S"], delay_rep_um)
+                with leg_parity(pa_ if fast == a else pb_):
+                    r = snake_leg(site, q, (Fx["x"], Fx["y"]), slow_t - Fx["S"], delay_rep_um)
                 if r is not None:
                     pts, ps, sw = r
                     snakes[fast] = [list(x) for x in pts]
@@ -1993,8 +2204,10 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
             fo = DME_FANOUT_PS      # DIE-QC-21 --region-dme-stage-cal: this node's cell drives two legs (one extra fanout)
             out.append(dict(x=q[0], y=q[1], kids=[a, b], taps=[], S=max(da + A["S"], db + B["S"]) + fo,
                             Smin=min(da + A["Smin"], db + B["Smin"]) + fo, W=la + lb + A["W"] + B["W"], imb=imb, ex=ex,
-                            **({"snakes": snakes, "snake_um": sw} if snakes else {})))
+                            **({"snakes": snakes, "snake_um": sw} if snakes else {}), **alt))
             return len(out) - 1
+        if EDGE_ALT:
+            raise ValueError("--clock-edge-alt needs the delay-priced region DME (--region-dme delay)")
         q, imb, ex, da, db = merge_point_routed(site, (A["x"], A["y"]), A["S"], (B["x"], B["y"]), B["S"], rad, 1.08,
                                                 extra_wire_w, rep_um=rep_um)
         q2 = round_legal(site, q)
@@ -2141,6 +2354,12 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
         out[tries[k]]["part_root"] = pn
         proots.append(tries[k])
     root = build(proots, lambda i: (out[i]["x"], out[i]["y"]), lambda i: i, "gap")
+    if EDGE_ALT and out[root]["P"]:
+        # CLK-TOOL-8: the region root feeds the true-polarity tree above -> its merge is redone with P forced 0 (same
+        # kids, its two legs re-priced with the kid parities)
+        root = merge(*out[root]["kids"], force_P=0)
+    if EDGE_ALT and late:
+        raise ValueError("--clock-edge-alt: hang-mode early taps (--region-dme-early, early_mode hang) are not supported")
     early_rows = []
     if late:
         # DIE-QC-8 opt-in (12.3 v5.0 macro insertion-delay balancing): a core tap with declared early e (model ps) is
@@ -2497,6 +2716,12 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
 
 
 def _leg_layout(i, nd, p, site, rep_um, even):
+    """_leg_layout0 with the leg's inverter-count parity (CLK-TOOL-8 EDGE_ALT: pol(parent) xor pol(node); 0 = even)"""
+    with leg_parity(node_pol(nd) ^ node_pol(p) if even else 0):
+        return _leg_layout0(i, nd, p, site, rep_um, even)
+
+
+def _leg_layout0(i, nd, p, site, rep_um, even):
     """repeater layout of the leg parent p -> node nd as tree_netlist places it (moved verbatim out of tree_netlist,
     CLK-TOOL-4): -> (L, nrep, poly, pts, fix_pts, dry_chain); dry_chain (only with REP_REACH_MAX_UM) = the default
     snapped chain p..nd, fix_pts = reach-fixed repeater points or None.  Sets nd detour/reach_fix keys as before."""
@@ -2541,11 +2766,11 @@ def _leg_layout(i, nd, p, site, rep_um, even):
             pts, _ = polyline_points(poly, [(j + 1) / (nrep + 1) for j in range(nrep)])
             nd["detour"] = [[round(a, 3), round(b, 3)] for a, b in poly]
             nd["detour_um"] = round(Ld - L, 1)
-    if even and (nrep + 1) % 2 and not nd.get("snake"):
+    if even and (nrep + 1) % 2 != _LEG_PAR and not nd.get("snake"):
         nrep += 1
         if poly is not None:
             pts, _ = polyline_points(poly, [(j + 1) / (nrep + 1) for j in range(nrep)])
-    if even and nd.get("snake") and (nrep + 1) % 2:
+    if even and nd.get("snake") and (nrep + 1) % 2 != _LEG_PAR:
         raise ValueError(f"inv2: snake leg of node {i} has an odd stage count")
     fix_pts = None
     if REP_REACH_MAX_UM is not None and site is not None and not nd.get("snake"):
@@ -2669,8 +2894,10 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
         if clock_cell == "inv":
             pp = (1 if even else 0) if nd["parent"] is None else nodes[nd["parent"]]["inv_parity"]
             nd["inv_parity"] = (pp + (nrep if nd["parent"] is not None else 0) + 1) % 2
-            if even and nd["inv_parity"]:
+            if even and nd["inv_parity"] != node_pol(nd):
                 raise ValueError(f"inv2: node {i} odd polarity (even legs violated)")
+            if even and nd["inv_parity"] and nd["taps"]:
+                raise ValueError(f"inv2 edge-alt: node {i} carries taps at inverted polarity")
         cells.append(f"  {CELL} {node_buf[i]} (.A({src}), .Y({net(i)}));")
         wires.append(net(i))
         place.append((node_buf[i], nd["x"], nd["y"]))
@@ -3002,6 +3229,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         if unknown:
             raise ValueError(f"--tap-pad: not a tap port of this tree: {unknown[:5]}")
     (out / "ctree.v").write_text(v)
+    if DETOUR_ADAPTIVE:     # CLK-TOOL-7: widened-search retries of this process (DME fork workers keep their own)
+        (out / "detour_adaptive.json").write_text(json.dumps(DETOUR_STATS, indent=1) + "\n")
     segs = []
     for i, nd in nodes.items():
         if nd["parent"] is not None:
@@ -3054,7 +3283,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 **({"tree_form": tree_form, "spine_dme": nodes[0].get("spine_dme"),
                     **({"link_feed": nodes[0]["link_feed"]} if "link_feed" in nodes[0] else {})}
                    if tree_form != "htree" else {}),
-                **({"region_trees": len({n.get("region_root") for n in nodes.values()} - {None})} if regions else {}), buffer=BUF, clock_cell=clock_cell, wire_r_kohm_um=wire_r, wire_c_ff_um=wire_c,
+                **({"region_trees": len({n.get("region_root") for n in nodes.values()} - {None})} if regions else {}), buffer=BUF, clock_cell=clock_cell, **({"edge_alt": True} if EDGE_ALT else {}), wire_r_kohm_um=wire_r, wire_c_ff_um=wire_c,
                 **({"clock_rc": clock_rc} if clock_rc != "ndr" else {}),
                 tap_load_ff=TAP_LOAD_FF, nodes=len(nodes), leaves=sum(1 for n in nodes.values() if n["taps"]),
                 repeaters=sum(1 for i, *_ in place if i.startswith("r")), taps=len(tap_ports),
@@ -4961,6 +5190,22 @@ def main(argv=None):
     k.add_argument("--rep-off-leg-max", type=float, default=None, metavar="UM",
                    help="DIE-QC-24 opt-in guard (COORD 10-28 21:00): the kit FAILS if any leg repeater is placed more than "
                         "UM off its planned leg (e.g. 50). Default: no check")
+    k.add_argument("--clock-body-sites", action="store_true",
+                   help="CLK-TOOL-7 opt-in: clock cell sites keep the whole native cell body (ISLAND_CELL_UM) legal, "
+                        "not only its origin (HBM street_body body_sites). Default off (byte-identical)")
+    k.add_argument("--chain-hop-max", type=float, default=None, metavar="UM",
+                   help="CLK-TOOL-7 opt-in: the DME chain model rejects (prices as infinite) any candidate chain with a "
+                        "repeater hop > UM (HBM street_body: 450). Default: no limit")
+    k.add_argument("--detour-adaptive", action="store_true",
+                   help="CLK-TOOL-7 opt-in: a legal_detour A* that fails in its 600-um box is retried with the box "
+                        "widened to the connected blocking macro wall (HBM adaptive_detour_v2); retries listed in "
+                        "clock/detour_adaptive.json. Default off (byte-identical)")
+    k.add_argument("--clock-edge-alt", action="store_true",
+                   help="CLK-TOOL-8 opt-in (needs --clock-cell inv2 and the delay region DME): per-stage edge balance -- "
+                        "region DME branch nodes alternate polarity by height (legs rounded to the parity of their two "
+                        "ends instead of to even, priced in the DME), so the heavy branch-driver rise/fall asymmetry "
+                        "cancels level by level instead of adding up (duty on deep taps); taps and the tree above the "
+                        "regions stay true polarity. Default off (byte-identical)")
     k.add_argument("--clock-cell", choices=("buf", "inv", "inv2"), default="buf",
                    help="DIE-QC-11 opt-in: 'inv' builds the die clock tree from CKINVDCx16 (BUFx24 footprint) so rise/fall "
                         "asymmetry cancels stage by stage (duty), with one parity inverter at odd-parity taps; 'inv2' = even inverter "
@@ -5029,6 +5274,16 @@ def main(argv=None):
     REP_REACH_MAX_UM = getattr(a, "rep_reach_max", None)
     global REP_REACH_BALANCE
     REP_REACH_BALANCE = not getattr(a, "rep_reach_no_balance", False)
+    global CLOCK_BODY_SITES, CHAIN_HOP_MAX_UM, DETOUR_ADAPTIVE
+    CLOCK_BODY_SITES = bool(getattr(a, "clock_body_sites", False))
+    CHAIN_HOP_MAX_UM = getattr(a, "chain_hop_max", None)
+    if CHAIN_HOP_MAX_UM is not None and not (math.isfinite(CHAIN_HOP_MAX_UM) and CHAIN_HOP_MAX_UM > 0):
+        raise SystemExit("--chain-hop-max must be finite and positive")
+    DETOUR_ADAPTIVE = bool(getattr(a, "detour_adaptive", False))
+    global EDGE_ALT
+    EDGE_ALT = bool(getattr(a, "clock_edge_alt", False))
+    if EDGE_ALT and getattr(a, "clock_cell", "buf") != "inv2":
+        raise SystemExit("--clock-edge-alt needs --clock-cell inv2")
     if REP_REACH_MAX_UM is not None and not (math.isfinite(REP_REACH_MAX_UM) and REP_REACH_MAX_UM > 0):
         raise SystemExit("--rep-reach-max must be finite and positive")
     if a.cmd == "readout":

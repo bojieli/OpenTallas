@@ -1,0 +1,19 @@
+fail=False plan==built=True cap_clock_from=A halfstep_odd=0 : 166
+fail=False plan==built=True cap_clock_from=A halfstep_odd=1 : 232
+fail=False plan==built=True cap_clock_from=Y halfstep_odd=0 : 213
+fail=False plan==built=True cap_clock_from=Y halfstep_odd=1 : 231
+fail=True plan==built=True cap_clock_from=A halfstep_odd=1 : 5
+fail=True plan==built=True cap_clock_from=Y halfstep_odd=1 : 508
+{"cap": "r346_1", "launch": "r346_0", "s": -56.244564, "h": 629.773987, "k": 1, "plan_edge": "fall", "built": "fall", "clock_from": "Y", "launch_clock_from": "A", "interval": [9.1, 117.2], "sync": 299.3, "off": 3, "parent": "st:h\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100", "launch_region": true}
+{"cap": "r350_1", "launch": "r350_0", "s": -74.523056, "h": 652.625488, "k": 1, "plan_edge": "fall", "built": "fall", "clock_from": "Y", "launch_clock_from": "A", "interval": [-7.5, 99.5], "sync": 317.0, "off": 3, "parent": "st:h\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0103\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100", "launch_region": true}
+{"cap": "b191", "launch": "b127", "s": -177.688751, "h": 718.045837, "k": 1, "plan_edge": "fall", "built": "fall", "clock_from": "Y", "launch_clock_from": "Y", "interval": [15.4, 129.7], "sync": 286.8, "off": 3, "parent": "st:h\u0101\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0101\u0100\u0100\u0100", "launch_region": true}
+{"cap": "r354_1", "launch": "r354_0", "s": -101.892937, "h": 666.954041, "k": 1, "plan_edge": "fall", "built": "fall", "clock_from": "Y", "launch_clock_from": "A", "interval": [-2.6, 104.6], "sync": 311.9, "off": 3, "parent": "st:h\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100", "launch_region": true}
+Counter({(False, 'A', 'Y'): 349, (False, 'Y', 'Y'): 322, (True, 'Y', 'Y'): 276, (True, 'Y', 'A'): 232, (False, 'Y', 'A'): 122, (False, 'A', 'A'): 49, (True, 'A', 'Y'): 5})
+fail, plan parent edge, built launch edge, capture edge
+(False, 'fall', 'fall', 'fall') 810
+(False, 'fall', 'fall', 'rise') 16
+(False, 'rise', 'rise', 'fall') 12
+(False, 'root', 'rise', 'fall') 4
+(True, 'fall', 'fall', 'fall') 399
+(True, 'fall', 'fall', 'rise') 113
+(True, 'root', 'rise', 'fall') 1

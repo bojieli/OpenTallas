@@ -1,0 +1,5 @@
+test_bk_shard PASS
+test_previous_pre_source PASS
+SKIP test_events_g8 (no L0 fixtures / G8 bind)
+test_events_g8 None
+TEST_DV_LAYER_COMPILE PASS {"layer": "L0", "ops": 65, "status": {"PARTIAL": 31, "LOWERED": 16, "GAP": 18}, "rows": 925, "templates": 925}

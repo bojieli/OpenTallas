@@ -1,0 +1,2 @@
+# HBM-CORES-KITS-12 (2026-10-29)
+Scope K1 HUB-VMS + K4 IDX on plan c25c_d16 (6ba9f877d23f). Waves: k3 = d15 census scope (65 cores, table k3_d15_table.tsv); k4/k5 = d16 K1/K4 (preflight/, preflight/k5). mp/ = plan core_macros.json KNOWN rects converted by scripts/cm2mp.py (u_fcore prefix stripped; xcal _v = y re-spread so both channels >= 10.8). recipes_b2.json += hcol h0/h1 exact alias recipes from codex/hbm-hcol-1027@2885e965b6 results/hbm_hcol_codex/recipes_patch.json (unchanged content). Data intel1:/srv/opentallas-scratch2/claude/hbm-cores-kits-12.

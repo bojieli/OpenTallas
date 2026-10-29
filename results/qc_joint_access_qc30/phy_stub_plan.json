@@ -1,0 +1,257 @@
+{
+ "status": "PASS_GEOMETRY",
+ "census_in": {
+  "landed": 7885,
+  "failed": 4
+ },
+ "stubs": [
+  {
+   "port": "t_io_serdes__clk",
+   "inst": "io_serdes",
+   "pin": "clk",
+   "net": "ck_n1511",
+   "rect_um": [
+    777.616,
+    15171.384,
+    777.648,
+    15172.152
+   ],
+   "entry_xy_um": [
+    777.632,
+    15171.24
+   ],
+   "access_kind": "parent M7 stub + VIA78",
+   "m7_stub_um": [
+    777.616,
+    15171.213,
+    777.648,
+    15172.152
+   ],
+   "stub_len_beyond_pin_um": 0.171,
+   "M8_patch_um": [
+    0.192,
+    0.08
+   ],
+   "spacing_um": 0.32,
+   "rows_tried": [
+    {
+     "row": 15171.4,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 15172.2,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 15171.32,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 15172.28,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 15171.24,
+     "m8": "clear",
+     "m7": 0
+    }
+   ]
+  },
+  {
+   "port": "t_io_serdes_1__clk",
+   "inst": "io_serdes_1",
+   "pin": "clk",
+   "net": "ck_n1518",
+   "rect_um": [
+    777.616,
+    3481.568,
+    777.648,
+    3482.336
+   ],
+   "entry_xy_um": [
+    777.632,
+    3482.52
+   ],
+   "access_kind": "parent M7 stub + VIA78",
+   "m7_stub_um": [
+    777.616,
+    3481.568,
+    777.648,
+    3482.547
+   ],
+   "stub_len_beyond_pin_um": 0.211,
+   "M8_patch_um": [
+    0.192,
+    0.08
+   ],
+   "spacing_um": 0.32,
+   "rows_tried": [
+    {
+     "row": 3481.56,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 3482.36,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 3481.48,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 3482.44,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 3481.4,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 3482.52,
+     "m8": "clear",
+     "m7": 0
+    }
+   ]
+  },
+  {
+   "port": "t_ucie_kv__clk",
+   "inst": "ucie_kv",
+   "pin": "clk",
+   "net": "ck_n1574",
+   "rect_um": [
+    388.752,
+    9633.184,
+    388.784,
+    9633.952
+   ],
+   "entry_xy_um": [
+    388.768,
+    9633.0
+   ],
+   "access_kind": "parent M7 stub + VIA78",
+   "m7_stub_um": [
+    388.752,
+    9632.973,
+    388.784,
+    9633.952
+   ],
+   "stub_len_beyond_pin_um": 0.211,
+   "M8_patch_um": [
+    0.192,
+    0.08
+   ],
+   "spacing_um": 0.32,
+   "rows_tried": [
+    {
+     "row": 9633.96,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 9633.16,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 9634.04,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 9633.08,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 9634.12,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 9633.0,
+     "m8": "clear",
+     "m7": 0
+    }
+   ]
+  },
+  {
+   "port": "t_io_serdes_2__clk",
+   "inst": "io_serdes_2",
+   "pin": "clk",
+   "net": "ck_n19431",
+   "rect_um": [
+    777.616,
+    1157.408,
+    777.648,
+    1158.176
+   ],
+   "entry_xy_um": [
+    777.632,
+    1157.16
+   ],
+   "access_kind": "parent M7 stub + VIA78",
+   "m7_stub_um": [
+    777.616,
+    1157.133,
+    777.648,
+    1158.176
+   ],
+   "stub_len_beyond_pin_um": 0.275,
+   "M8_patch_um": [
+    0.192,
+    0.08
+   ],
+   "spacing_um": 0.32,
+   "rows_tried": [
+    {
+     "row": 1157.4,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 1158.2,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 1157.32,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 1158.28,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 1157.24,
+     "m8": "spacing vs ('M8', 'VSS', 'pg')",
+     "m7": null
+    },
+    {
+     "row": 1158.36,
+     "m8": "short vs ('M8', 'ck_rn19431_6', 'clock_access')",
+     "m7": null
+    },
+    {
+     "row": 1157.16,
+     "m8": "clear",
+     "m7": 0
+    }
+   ]
+  }
+ ],
+ "failures": [],
+ "total_landed": 7889,
+ "total_pins": 7889,
+ "physical_route": false
+}

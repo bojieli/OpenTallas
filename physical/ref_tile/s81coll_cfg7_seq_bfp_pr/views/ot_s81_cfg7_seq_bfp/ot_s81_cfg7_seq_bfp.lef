@@ -595,10 +595,10 @@ MACRO ot_s81_cfg7_seq_bfp
   END cfg[9]
   PIN clk[0]
     DIRECTION INPUT ;
-    USE SIGNAL ;
+    USE CLOCK ;
     PORT
-      LAYER M4 ;
-        RECT  0 20.112 0.084 20.136 ;
+      LAYER M5 ;
+        RECT  15.108 30 15.156 30.48 ;
     END
   END clk[0]
   PIN f_prog[0]

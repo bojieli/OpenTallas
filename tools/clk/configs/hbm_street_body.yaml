@@ -1,0 +1,56 @@
+# ot-clk config: HBM current die clock = Codex street_body (codex/hbm-clock-0300 results/codex_hbm_clock_1028/
+# build_street_body.py, intel2 codex-hbm-clock-1028/street_body, run 10-29 00:21 on plan codex-hbm-pins-1028/street4)
+# re-expressed as an ot-clk config (OWNER 12.17(2): ot_clk.py is the only die clock path; COORD 10-29 06:19 street_body
+# is the HBM clock of record).  The script's three monkeypatch adapters are die_trial opt-ins now:
+#   body_sites.py          -> top.body_sites (native 1.62x0.27 body sites) + top.chain_hop_max 450 (chain reach guard)
+#   adaptive_detour_v2.py  -> top.detour: adaptive (A* retry around the connected macro wall)
+#   fast_tap_clear.py      -> none: main schema.tap_clear is the same exact search, already vectorised (bitmask);
+#                             equality tested in tools/clk/test_ot_clk.py
+# Its in-script region fix (split PHY_N* parts inherit the PHY_N region) -> inputs.region_fill.
+# Its zero-skew (snake) regions = the 'corrected' build's region_dme spread > 120 ps plus T003/T019, listed explicitly.
+# Stage model: native NW_sm3 386-cell 1x routed coupon, shared ot_clk refit --placed-stages.
+# Actual retained stage chains (66 legs) + 34 tap wires; TT/FF early-rise RMS11.53/10.21ps.
+# Historical NDR stage model remains in the registry and legacy_cal preserves the old replay.
+# This qualifies the stack model for a new build; full-die routed clock/timing gates remain open.
+schema: ot_clk_config/1
+die: hbm
+event:
+  name: street_body
+  host: intel2
+  source: results/codex_hbm_clock_1028/build_street_body.py (codex/hbm-clock-0300@608e4fa9f; main die_trial reproduces it byte-identical)
+  reference_clock_dir: /srv/opentallas-scratch2/claude/codex-hbm-clock-1028/street_body/clock
+  compare: [tree.json, ctree.v, ctree.tcl, leg_spans.json]
+inputs:
+  plan: /srv/opentallas-scratch2/claude/codex-hbm-pins-1028/street4/die_plan.json
+  region_map: /srv/opentallas-scratch2/claude/die-hbm-9/c21_part_region.json
+  region_fill:
+    - {prefix: PHY_N, from: PHY_N, default: T060}
+  feed: /srv/opentallas-scratch2/claude/die-hbm-9/c21_feed.json
+stack:
+  cell: inv2
+  clock_rc: 1x
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 180
+  site_legal: true
+  site_slide: true
+  body_sites: true
+  chain_hop_max: 450
+  detour: adaptive
+region:
+  form: dme
+  workers: 8
+  dme_mode: delay
+  early:
+    tt: 1.0
+    ff: 0.8639019524013111
+    mode: merge
+stage_model:
+  entry: inv2_1x_hbm_native_sm3_early
+  corners: [TT, FF]
+  edge: rise
+  legacy_cal: /srv/opentallas-scratch2/claude/codex-hbm-clock-1028/street_body/stage_cal.json
+residual:
+  snake: [T002, T003, T004, T007, T009, T012, T013, T015, T016, T017, T019, T028, T029, T040, T042, T043, T046, T048]
+  cell_paths: true

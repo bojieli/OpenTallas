@@ -1,0 +1,8 @@
+== leaf->sink (3_place)
+leaf_turntree.txt leaves 138 sink dist med 3.2 p99 44.1 max 137.7 leaves w/ max>30um: 16 btcap max 137.7 worst [('mp_ck_Tpqsw', 78.6, 1), ('mp_ck_Tppsw', 79.6, 1), ('mp_ck_Tpqqw', 95.4, 9), ('mp_ck_Tqpqs', 137.7, 31)]
+leaf_f1.txt leaves 125 sink dist med 3.0 p99 40.8 max 143.3 leaves w/ max>30um: 2 btcap max 143.3 worst [('mp_ck_Tqqpt', 24.6, 31), ('mp_ck_Tqqqu', 25.7, 30), ('mp_ck_Tppsw', 98.5, 30), ('mp_ck_Tppsx', 143.3, 26)]
+leaf_f2.txt leaves 123 sink dist med 2.6 p99 19.5 max 33.3 leaves w/ max>30um: 2 btcap max 20.2 worst [('mp_ck_Tpqrs', 24.7, 31), ('mp_ck_Tpqpv', 27.5, 30), ('mp_ck_Tppsp', 30.3, 31), ('mp_ck_Tppsq', 33.3, 31)]
+== btcap->rd_out turntree
+btcap_place.txt g_btb\[0\] n256 med 155.0 max 165.8; g_btb\[1\] n256 med 14.5 max 62.1; g_btb\[2\] n256 med 151.4 max 159.7; g_btb\[3\] n256 med 17.7 max 43.1
+btcap_f2a.txt g_btb\[0\] n256 med 9.8 max 11.2; g_btb\[1\] n256 med 9.7 max 11.6; g_btb\[2\] n256 med 9.8 max 11.6; g_btb\[3\] n256 med 9.6 max 11.7
+btcap_f2.txt g_btb\[0\] n256 med 10.2 max 16.4; g_btb\[1\] n256 med 9.8 max 11.4; g_btb\[2\] n256 med 9.7 max 11.4; g_btb\[3\] n256 med 9.7 max 11.5

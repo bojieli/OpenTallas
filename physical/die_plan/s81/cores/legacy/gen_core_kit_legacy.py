@@ -950,7 +950,7 @@ def main():
     ap.add_argument("--legacy-flow", action="store_true",
                     help="old kit (opt-out): stock setRC, one fixed plan-insertion vclk for TT and FF, MCMM CTS hold repair, "
                          "no rtl_lint / reg_fanout / FF-only GRT hold step")
-    ap.add_argument("--hold-ff-margin", type=float, default=None, help="FF-only GRT hold margin ps (recipe hold_ff_margin, 5)")
+    ap.add_argument("--hold-ff-margin", type=float, default=None, help="FF-only GRT hold margin ps (recipe hold_ff_margin, else core_flow.HOLD_FF_MARGIN_DEFAULT = 10, FLOW-HOLD-1)")
     ap.add_argument("--regional-taps", default=None, help="NXxNY: override / add the recipe regional_taps grid")
     ap.add_argument("--suffix", default=None, help="kit suffix (variant), default recipe suffix or c")
     MS = _ms()
@@ -1190,6 +1190,9 @@ def main():
     half_min, half_max = half_cycle_input_bounds(rec.get("half_cycle_inputs"), names, dirs,
                                                    [n for n in names if base(n) in set(clks)], rsts, base, per, tol)
     in_min_ports = dict(in_min_ports, **half_min)
+    if rec.get('io_hold') == 'sender_min' and in_min_ports:
+        from io_hold_qualification import core_kit_budget
+        (kd / 'budget.json').write_text(json.dumps(core_kit_budget(plan, mod, ptype), indent=1) + '\n')
     _sdc = sdc(per, ins, tol, [ckb], rsts, mod, in_min_ports, half_max)
     (kd / "constraint.sdc").write_text(multi_root_sdc(_sdc, mr, per) if mr else _sdc)
     if in_min_ports:
@@ -1381,7 +1384,7 @@ def main():
     if modern:
         # core_flow: rtl_lint.py, vclk_corner.tcl, grt_pre/post.tcl, setRC_rcx.tcl, clock_binding.json; the kit's own GRT
         # hooks (drv.tcl fanout cap / post_grt_drv.tcl DRV + hold pass) chained into grt_*_core.tcl
-        hm = a.hold_ff_margin if a.hold_ff_margin is not None else float(rec.get("hold_ff_margin", 5.0))
+        hm = a.hold_ff_margin if a.hold_ff_margin is not None else float(rec.get("hold_ff_margin", core_flow.HOLD_FF_MARGIN_DEFAULT))
         flow_cfg = core_flow.apply(kd, ib, mod, time_unit_ps=TIME_UNIT_PS, rc_cal=True, hold_ff_margin=hm,
                                    grt_pre_extra=["/work/drv.tcl"], grt_post_extra=["/work/post_grt_drv.tcl"])
     if mplace:

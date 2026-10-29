@@ -1,0 +1,16 @@
+ERROR [core_faces] type q_spb0 core u_ep_S0 port sd_tx: 512 pins on face W face away from its partner(s) u_lk_S0: mean cos -0.11, 512 pins on the far side (re-pin to face S)
+ERROR [core_faces] type q_hub_nw core u_vmb_Q0 port dq: 281 pins on face S face away from its partner(s) u_vmdel_Q0: mean cos -0.98, 281 pins on the far side (re-pin to face N)
+ERROR [core_faces] type q_hub_nw core u_vmb_Q0 port rr0: 257 pins on face E face away from its partner(s) face N (L102_o), face N (L110_o), face N (L134_i) ...: mean cos -0.40, 257 pins on the far side (re-pin to face N)
+ERROR [core_faces] type q_hub_nw core u_vmb_Q1 port rr0: 257 pins on face E face away from its partner(s) face N (L102_o), face N (L110_o), face N (L134_i) ...: mean cos -0.54, 257 pins on the far side (re-pin to face W)
+ERROR [core_faces] type q_hub_nw core u_vmb_Q2 port dq: 281 pins on face S face away from its partner(s) u_vmdel_Q2: mean cos -0.93, 281 pins on the far side (re-pin to face N)
+ERROR [core_faces] type q_hub_nw core u_vmb_Q4 port dq: 281 pins on face S face away from its partner(s) u_vmdel_Q4: mean cos -0.96, 281 pins on the far side (re-pin to face N)
+ERROR [core_faces] type q_hub_nw: 75 core ports face away from their partners (70 more not listed)
+ERROR [core_faces] type q_hub_ne core u_vmb_Q0 port dq_done: 1 pins on face S face away from its partner(s) u_obs_Q: mean cos -0.46, 1 pins on the far side (re-pin to face W)
+ERROR [core_faces] type q_hub_ne core u_vmb_Q0 port kq: 281 pins on face S face away from its partner(s) u_hcollks_Q_p0: mean cos -0.27, 281 pins on the far side (re-pin to face E)
+ERROR [core_faces] type q_hub_ne core u_vmb_Q0 port kq_done: 1 pins on face S face away from its partner(s) u_obs_Q: mean cos -0.46, 1 pins on the far side (re-pin to face W)
+ERROR [core_faces] type q_hub_ne core u_vmb_Q0 port rr0: 257 pins on face E face away from its partner(s) face N (L102_o), face N (L110_o), face N (L134_i) ...: mean cos -0.40, 257 pins on the far side (re-pin to face N)
+ERROR [core_faces] type q_hub_ne core u_vmb_Q0 port rr2: 257 pins on face S face away from its partner(s) u_xl_Q_ctl: mean cos -0.27, 257 pins on the far side (re-pin to face E)
+ERROR [core_faces] type q_hub_ne: 92 core ports face away from their partners (87 more not listed)
+ERROR [core_faces] type q_spb0__physical_v1 core u_ep_S0 port sd_tx: 512 pins on face W face away from its partner(s) u_lk_S0: mean cos -0.11, 512 pins on the far side (re-pin to face S)
+G0C per type: 69/81 types clean (G3-eligible: 69); die-level {}; ERRORs
+G0C FAIL: 14 errors, 132 pending-view, 744 warnings; 81 types / 90 partitions (62 in near-duplicate groups); worst cut {'ratio': 0.1653, 'at': 'horizontal@6000'}, worst partition segment {'ratio': 0.5995, 'at': 'horizontal@5250:NW_b101'}; report g0c_ref/g0_report.json

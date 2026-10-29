@@ -42,6 +42,13 @@ already guarantees, so the die only has to deliver its tap arrivals inside the d
          full W, same-tap pairs keep CRPR), else 0 (every tap on ONE ideal clock guarantees nothing).
          --intra-window-ps = labelled WHAT-IF override.
   The bound is exact for a kit pair signed with zero slack and conservative otherwise; it never uses kit numbers.
+  DIAGNOSTIC ONLY since OWNER 12.19 (FLOW-HOLD-1): the die hold gate is judged on real signed views (below).
+HOLD ON REAL VIEWS ONLY (OWNER 12.19, FLOW-HOLD-1): every pair class carries 'hold_measured': a pair is MEASURED only
+  when both endpoint blocks have a signed real view (partition --kit, or the --core-view of an early core tap); a pair
+  through a declared register / missing core view / unsigned view is UNMEASURED (reason: missing view <block>), not a
+  hold failure.  Summary per class: ff_hold_margin_ps (measured pairs only), hold_pairs_measured/unmeasured,
+  missing_views, hold_status PASS (0 unmeasured, all measured >= 0) / BLOCKED(kits) / FAIL; the all-pair number is
+  ff_hold_all_pairs_diag_ps (DIAGNOSTIC).  Setup unchanged.
 Landed hops are timed as the plan defines them (die_clock_mesh report): the region-to-region clock damage against the
 landing window (--landing-window-ps, default T/2) -> margin = window - damage; their single-cycle slacks are INFO.
 
@@ -233,7 +240,7 @@ def arr4(A, B, node):
 
 
 def count_align_ss_info(landed, taps, bind, period, reg=None, scale=1.27, need_ps=100.0, start_wire=None, cppr_range=None,
-                        key="part", ocv=None, ocv_label=None):
+                        key="part", ocv=None, ocv_label=None, start_data_delay=None):
     """MESO-RECONCILE (COORD 22:31 HEAD (3)): SS corner row of the count-aligned crossings, INFORMATION ONLY (AGENTS.md /
     METHODOLOGY 6.1: SS never gates).  No die clock proof carries SS tap arrivals, so the TT taps (and the pin-register
     clk->Q) are scaled by the SS/TT delay ratio `scale` (default 1.27 = ASAP7 logic SS/TT derate used by uarch_model;
@@ -247,7 +254,8 @@ def count_align_ss_info(landed, taps, bind, period, reg=None, scale=1.27, need_p
     r = count_align_landed(landed, st, bind, period, rg, need_ps, start_wire,
                            None if cppr_range is None else {k: float(v) * scale for k, v in cppr_range.items()},
                            key=key, ocv=None if ocv is None else (lambda x, y, c: scale * ocv(x, y, c)),
-                           ocv_label=ocv_label and f"{ocv_label} x {scale}")
+                           ocv_label=ocv_label and f"{ocv_label} x {scale}",
+                           **({"start_data_delay": start_data_delay} if start_data_delay is not None else {}))
     r.update(info_only=True, ss_scale=scale, basis="TT taps x SS/TT scale (no SS clock proof)", gates=False)
     return r
 
@@ -363,6 +371,8 @@ SPICE_CLOCK_CAL_BUF_EDGE = {"TT": dict(rise_late=1.0485, rise_early=1.0524, fall
 # early = min over S (stage-wise bound: sum f_i d_i lies in [min f, max f] x sum d_i).  Masters per tap: tap key
 # 'clock_masters', else meta 'clock_masters' (the die's clock-path master census), else the die clock cell's master;
 # a master without a factor fails closed.  Default stays spice / spice_edge until NUMBER-CHECK confirms.
+# BTAB-F3 (10-29): BUFx10/12/12f/16f from measured 2/60-um chain references;
+# see results/buf_master_cal_1029. Existing factors and default modes remain unchanged.
 SPICE_CLOCK_CAL_CELL = {
     "BUFx24_ASAP7_75t_R": {
         "TT": dict(rise_late=1.0473, rise_early=1.0222, fall_late=1.0227, fall_early=1.0206),
@@ -376,9 +386,29 @@ SPICE_CLOCK_CAL_CELL = {
         "TT": dict(rise_late=1.0243, rise_early=1.0463, fall_late=1.0218, fall_early=1.0417),
         "FF": dict(rise_late=1.0101, rise_early=1.0301, fall_late=1.0056, fall_early=1.025),
     },
+    "BUFx8_ASAP7_75t_R": {
+        "TT": dict(rise_late=1.0408, rise_early=1.0528, fall_late=1.0332, fall_early=1.0437),
+        "FF": dict(rise_late=1.0236, rise_early=1.0347, fall_late=1.0189, fall_early=1.0305),
+    },
     "CKINVDCx16_ASAP7_75t_R": {
         "TT": dict(rise_late=0.9483, rise_early=1.0269, fall_late=0.9528, fall_early=1.0274),
         "FF": dict(rise_late=0.9611, rise_early=1.0515, fall_late=0.9623, fall_early=1.052),
+    },
+    "BUFx10_ASAP7_75t_R": {
+        "TT": dict(rise_late=1.0399, rise_early=1.0139, fall_late=1.0295, fall_early=1.0018),
+        "FF": dict(rise_late=1.0241, rise_early=1.0003, fall_late=1.019, fall_early=0.9975),
+    },
+    "BUFx12_ASAP7_75t_R": {
+        "TT": dict(rise_late=1.0425, rise_early=1.0196, fall_late=1.0328, fall_early=1.0126),
+        "FF": dict(rise_late=1.0278, rise_early=1.0074, fall_late=1.0218, fall_early=1.0074),
+    },
+    "BUFx12f_ASAP7_75t_R": {
+        "TT": dict(rise_late=1.0246, rise_early=1.0366, fall_late=1.0227, fall_early=1.0297),
+        "FF": dict(rise_late=1.0112, rise_early=1.0178, fall_late=1.0065, fall_early=1.0112),
+    },
+    "BUFx16f_ASAP7_75t_R": {
+        "TT": dict(rise_late=1.0275, rise_early=1.0088, fall_late=1.0259, fall_early=1.0024),
+        "FF": dict(rise_late=1.0112, rise_early=0.9983, fall_late=1.0094, fall_early=0.9955),
     },
 }
 CLOCK_CALS = ("none", "spice", "spice_edge", "spice_buf_edge", "spice_cell")
@@ -964,12 +994,17 @@ def virtual_tap(meta, taps, path, leg, fleg=None):
     return k
 
 
-def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None, sync_ap=26.5, clkq=(0.0, 0.0)):
+def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None, sync_ap=26.5, clkq=(0.0, 0.0),
+                            data_delay=None):
     """START-TREE-1 (METHODOLOGY 12.16b(iv)/(d)): reset release is a crossing.  Every dedicated start port of a
     '--start-tree clock' bind is re-timed on THIS proof's arrivals with the same interval model (count_align_d_intervals
     on its launch -> capture tap pair, CPPR at the last common node, the same ocv callable).  PASS iff the plan's
     sample edge is clean on the STA interval shifted by the start skew (clk->Q range; distance >= sync aperture) and the
-    plan marked it clean (sync_values 1); a missing tap fails closed."""
+    plan marked it clean (sync_values 1); a missing tap fails closed.
+    data_delay (HEAD-START-4 V1, opt-in --count-align-start-data-delay, count_align_plan.load_start_data_delay doc):
+    {port: [lo, hi]} MEASURED launch CLK -> capture D per start port; it REPLACES the clk->Q skew of that port (it
+    contains the launch clk->Q), so the sync samples d - dd; a port with no measured row fails closed.  None (default):
+    unchanged."""
     leg = fleg = None
     rows = []
     reg = bind.get("regions", {})
@@ -985,9 +1020,19 @@ def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None,
                 virtual_tap(meta, taps, k[6:], leg, fleg)
             ends.append(k if k in taps else None)
         r = reg.get(c["dst"], {})
+        sk = clkq
+        if data_delay is not None:
+            sk = data_delay.get(pid)
         row = dict(port=pid, region=c["dst"], edge="fall" if r.get("edge_fall") else "rise",
-                   sync_values=int(r.get("sync_values", 1)), skew_lo_ps=round(clkq[0], 1), skew_hi_ps=round(clkq[1], 1),
+                   sync_values=int(r.get("sync_values", 1)), skew_lo_ps=round(sk[0], 1) if sk else None,
+                   skew_hi_ps=round(sk[1], 1) if sk else None,
                    limit_ps=r.get("start_skew_limit_ps"), source="start-port", launch=c["launch"], capture=c["capture"])
+        if data_delay is not None:
+            row["skew_source"] = "measured-data-delay"
+            if sk is None:
+                row.update(ok=False, reason="no measured START data delay (fail closed)")
+                rows.append(row)
+                continue
         if None in ends:
             row.update(ok=False, reason="no taps")
             rows.append(row)
@@ -1000,7 +1045,7 @@ def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None,
             rows.append(row)
             continue
         off = period / 2 if row["edge"] == "fall" else 0.0
-        elo, ehi = iv[0] - clkq[1], iv[1] - clkq[0]
+        elo, ehi = iv[0] - float(sk[1]), iv[1] - float(sk[0])
         k = math.floor((elo - off) / period)
         dist = min(elo - (off + k * period), off + (k + 1) * period - ehi) if math.floor((ehi - off) / period) == k \
             else -1.0
@@ -1013,7 +1058,7 @@ def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None,
 
 
 def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, start_wire=None, cppr_range=None,
-                       key="part", ocv=None, ocv_label=None, meta=None, ring=None):
+                       key="part", ocv=None, ocv_label=None, meta=None, ring=None, start_data_delay=None):
     """MESO-INTEG-1 / MESO-RECONCILE-1 (opt-in --count-align BIND.json, count_align_bind.py v2): the count-aligned ring
     (ot_dp_clk_landing_ca) replaces the +-T/2 placement window by a write->read lag window per crossing.  Bind L_lo/L_hi
     are the plan's TRUE derated lag bounds (wander included, no aperture); d = capture-region clock - launch-region clock.
@@ -1156,7 +1201,8 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
             srows.append(s)
     if bind.get("start_ports"):
         # START-TREE-1: dedicated start ports (--start-tree clock) are checked as crossings on this proof
-        srows += count_align_start_ports(bind, taps, meta, period, cppr_range, ocv, sap, (cq_min, cq_max))
+        srows += count_align_start_ports(bind, taps, meta, period, cppr_range, ocv, sap, (cq_min, cq_max),
+                                         **({"data_delay": start_data_delay} if start_data_delay is not None else {}))
     nfail = sum(1 for r in rows if not r["lag_ok"])
     sfail = sum(1 for s in srows if not s["ok"])
     rfail = sum(1 for r in rows if not r["slot_read_ok"])
@@ -1194,7 +1240,9 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
                 start_skew=dict(tree_ports=len(srows), fail=sfail,
                                 clkq_ps=[round(cq_min, 1), round(cq_max, 1)],
                                 worst=min(srows, key=lambda s: (s["limit_ps"] if s["limit_ps"] is not None else -1e9)
-                                          - max(abs(s["skew_lo_ps"]), abs(s["skew_hi_ps"]))) if srows else None,
+                                          - max(abs(s["skew_lo_ps"] or 0.0), abs(s["skew_hi_ps"] or 0.0)))
+                                if srows else None,
+                                **({"data_delay_ports": len(start_data_delay)} if start_data_delay is not None else {}),
                                 rows=srows),
                 verdict="PASS" if ok else "FAIL", rows=rows)
 
@@ -1296,7 +1344,7 @@ def endpoint_slacks(A, B, la, ea, lc, ec, cr, period, unc_s, unc_h, models_a, mo
 
 
 def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=False, window=None, hold_window=None,
-               ocv=None, views=None, rec=None, dd=None, kit_offset=None):
+               ocv=None, views=None, rec=None, dd=None, kit_offset=None, missing=None):
     """ocv: optional callable (a_port, b_port, check) -> clock OCV pessimism ps on the non-common clock (CLK-AOCV,
     opt-in --clock-ocv); None = unchanged (no clock derate in this gate).
     views: optional {port: [endpoint models]} (REAL VIEWS, opt-in); None = the declared register on every tap.
@@ -1305,7 +1353,9 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
     None = unchanged (no data droop term).
     kit_offset: optional {port: ps} (FLOW-ONEMODEL-3): the kit SDC source latency of an early core tap is -early
     (gen_phys core_tap_rows), so the kit contract measures each tap's arrival + its declared earliness: a core tap
-    delivered as planned is damage-free, a LATE core tap (not early enough) is charged.  None = unchanged."""
+    delivered as planned is damage-free, a LATE core tap (not early enough) is charged.  None = unchanged.
+    missing: optional {port: [labels]} (FLOW-HOLD-1, OWNER 12.19, missing_views): adds 'hold_measured' = hold over the
+    pairs whose both endpoints carry signed real views only, + measured/unmeasured counts + the missing views."""
     ws, wh, sk, rows = None, None, 0.0, []
     sk_raw, trows = 0.0, []
     rv = dict(pairs=0, ws=None, wh=None, nneg_s=0, nneg_h=0, both=0, bs=None, bh=None, bneg_s=0, bneg_h=0,
@@ -1316,6 +1366,7 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
     dd_reg = DD.model_late_ps(dict(clkq_max=reg["clkq_max_wire_ps"]), dict(name="budget", setup=reg["setup_ps"]), dd) \
         if dd is not None else 0.0
     dd_max = 0.0
+    hm = dict(n=0, u=0, wh=None, neg=0, miss=defaultdict(int)) if missing is not None else None
     for a, b, tag in pairs:
         A, B = taps[a], taps[b]
         node = pair_node(A, B)
@@ -1372,6 +1423,17 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                     rec[(a, b, tag, c_[3], c_[4])] = (c_[0] - po_s, c_[1] - po_h, c_[2], c_[5])
         nneg_s += s < 0
         nneg_h += h < 0
+        if hm is not None:
+            lab = set(missing.get(a) or ()) | set(missing.get(b) or ())
+            if lab:
+                hm["u"] += 1
+                for x in lab:
+                    hm["miss"][x] += 1
+            else:
+                hm["n"] += 1
+                hm["neg"] += h < 0
+                if hm["wh"] is None or h < hm["wh"][0]:
+                    hm["wh"] = (h, a, b, tag, dmg_h, cr)
         sk_raw = max(sk_raw, dmg_s, dmg_h)
         # DIE-S81-18 (COORD 10-28 21:33 rule 2): skew = arrival minus PLANNED target.  A planned early core tap is
         # delivered kit_offset (= its declared earliness) before the plain taps on purpose; its target-relative arrival
@@ -1403,6 +1465,16 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                sens_core_tol=dict(tol_ps=lat_tol, worst_setup_slack_ps=round(ws[0] - 2 * lat_tol, 2),
                                   worst_hold_slack_ps=round(wh[0] - 2 * lat_tol, 2)),
                worst_skew=[[round(v, 2), a, b] for v, a, b in sorted(trows, reverse=True)[:5]])
+    if hm is not None:
+        out["hold_measured"] = dict(
+            rule="OWNER 12.19 (FLOW-HOLD-1): hold judged on pairs whose BOTH endpoint blocks have a signed real view; "
+                 "others UNMEASURED (not tap-window failures); PASS needs 0 unmeasured and every measured >= 0",
+            pairs_measured=hm["n"], pairs_unmeasured=hm["u"],
+            hold_margin_ps=round(hm["wh"][0], 2) if hm["wh"] else None, neg_pairs=int(hm["neg"]),
+            worst=dict(launch=hm["wh"][1], capture=hm["wh"][2], where=hm["wh"][3], clock_damage_ps=round(hm["wh"][4], 2),
+                       cppr_ps=round(hm["wh"][5], 2)) if hm["wh"] else None,
+            missing_views=dict(sorted(hm["miss"].items())))
+        out["hold_measured"]["status"] = hold_status(out["hold_measured"])
     if rv is not None:
         out["real_view"] = dict(pairs_with_real_endpoint=rv["pairs"], pairs_both_real=int(rv["both"]),
                                 pairs_total=len(pairs), setup_neg_pairs=int(rv["nneg_s"]), hold_neg_pairs=int(rv["nneg_h"]))
@@ -2214,15 +2286,62 @@ def core_tap_views(views, ecm, corner, reg, cmodels, mode="view", match_pins=Fal
 
 
 def core_insertion_verdict(verdict, recs):
-    """gate verdict after the early-core-tap insertion source: any missing view -> FAIL (closed); any declared
+    """gate verdict after the early-core-tap insertion source: any missing view -> BLOCKED(kits) (OWNER 12.19; a
+    FAIL stays FAIL, never a PASS); any declared
     insertion -> 'DECLARED' (a planning estimate, not a gate PASS); otherwise unchanged."""
     if not recs:
         return verdict
     if any(r["source"]["missing"] for r in recs):
-        return "FAIL"
+        return "FAIL" if verdict == "FAIL" else HOLD_BLOCKED   # OWNER 12.19: a missing view is BLOCKED(kits), never PASS
     if any(r["source"]["declared"] for r in recs):
         return "DECLARED" if verdict == "PASS" else verdict
     return verdict
+
+
+# FLOW-HOLD-1 (OWNER 12.19, COORD 10-29 05:52): die hold is judged on REAL SIGNED VIEWS only.  An endpoint whose
+# block has no signed real view (a 'budget' declared register = the partition type has no --kit; a 'declared:' or
+# kept-budget early core tap = the core has no --core-view; a core view whose provenance verdict is present and not
+# SIGNED) makes every pair through it UNMEASURED (reason: missing view <block>), never a hold failure from the
+# tap-window / declared-register model.  The gate is NOT loosened: hold PASS needs 0 unmeasured pairs AND every
+# measured pair >= 0; with unmeasured pairs the hold status is BLOCKED(kits).  Setup reporting is unchanged.
+HOLD_BLOCKED = "BLOCKED(kits)"
+
+
+def _unsigned(m):
+    v = (m.get("meta") or {}).get("verdict")
+    return v is not None and not str(v).startswith("SIGNED")
+
+
+def missing_views(views, taps, plan, ecm=None):
+    """{port: sorted labels of the blocks without a signed real view} (empty list = fully measured endpoint).
+    views None = the declared register on every tap (no real view at all)."""
+    ptype = {x["name"]: x["type"] for x in plan.get("partitions", [])}
+    out = {}
+    for p, r in taps.items():
+        lab = set()
+        part_lab = f"type:{ptype.get(r.get('part'), r.get('part'))}"
+        ms = views[p] if views is not None else [dict(name="budget", real=False)]
+        if ecm and p in ecm:
+            have = {m["name"] for m in ms if m.get("real") and not _unsigned(m)}
+            for cm in ecm[p]:
+                if f"core:{cm['module']}" not in have:
+                    lab.add(f"core:{cm['module']}")
+        for m in ms:
+            if not m.get("real"):
+                if not (ecm and p in ecm):
+                    lab.add(part_lab)
+            elif _unsigned(m):
+                lab.add(f"{m['name']} (view not SIGNED)")
+        out[p] = sorted(lab)
+    return out
+
+
+def hold_status(hm):
+    """OWNER 12.19 hold status of one hold_measured record: FAIL (a measured pair < 0), BLOCKED(kits) (unmeasured
+    pairs, none failing), PASS (all pairs measured and >= 0)."""
+    if hm["neg_pairs"]:
+        return "FAIL"
+    return HOLD_BLOCKED if hm["pairs_unmeasured"] else "PASS"
 
 
 def kit_windows(pc, intra_override=None):
@@ -2291,6 +2410,10 @@ def main(argv=None):
     ap.add_argument("--count-align-start-wire", metavar="JSON",
                     help="routed start-wire minus fclk-wire delay per tree port {port: [lo_ps, hi_ps]} (default: "
                          "co-routed model, mismatch 0)")
+    ap.add_argument("--count-align-start-data-delay", metavar="JSON",
+                    help="HEAD-START-4 V1 (opt-in): MEASURED launch CLK -> capture D per dedicated start port "
+                         "{ports: {port: [lo_ps, hi_ps]}} (count_align_plan --start-data-delay file); replaces the clk->Q "
+                         "skew of each start port, a port without a row fails closed; default = unchanged")
     ap.add_argument("--intra-window-ps", type=float,
                     help="WHAT-IF override of the intra-partition kit window (default: the plan's clock.tap_window."
                          "window_ps, else 0 = the one-ideal-clock kit SDC)")
@@ -2511,18 +2634,24 @@ def main(argv=None):
             if ocv is None:
                 print("WARNING --count-align: no clock variation model (--clock-ocv none): the CA interval carries no "
                       "AOCV/droop term (12.14a margin after OCV + droop not met by this run)")
+            # HEAD-START-4 V1 (opt-in): measured START data delay per start port (None = unchanged)
+            sdd = ({p: tuple(float(x) for x in v) for p, v in
+                    json.loads(Path(a.count_align_start_data_delay).read_text())["ports"].items()}
+                   if a.count_align_start_data_delay else None)
             ca = count_align_landed(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,
                                     start_wire=json.loads(Path(a.count_align_start_wire).read_text())
                                     if a.count_align_start_wire else None, cppr_range=rng, key=a.count_align_key,
                                     ocv=ocv, ocv_label=ca_lab, meta=meta,
-                                    ring=ca_ring_fn(a.ca_ring, plan, c) if a.ca_ring else None)
+                                    ring=ca_ring_fn(a.ca_ring, plan, c) if a.ca_ring else None,
+                                    **({"start_data_delay": sdd} if sdd is not None else {}))
             res.setdefault("count_aligned", {})[c] = ca
             if c == "TT" and a.count_align_ss_scale > 0 and "SS" not in corners:
                 ss = count_align_ss_info(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,
                                          a.count_align_ss_scale,
                                          start_wire=json.loads(Path(a.count_align_start_wire).read_text())
                                          if a.count_align_start_wire else None, cppr_range=rng,
-                                         key=a.count_align_key, ocv=ocv, ocv_label=ca_lab)
+                                         key=a.count_align_key, ocv=ocv, ocv_label=ca_lab,
+                                         **({"start_data_delay": sdd} if sdd is not None else {}))
                 res.setdefault("count_aligned_info", {})["SS"] = ss
                 print(f"COUNT-ALIGN SS-INFO (TT x {a.count_align_ss_scale}) worst lo "
                       f"{ss['worst_lo'] and ss['worst_lo']['margin_lo_ps']} hi {ss['worst_hi'] and ss['worst_hi']['margin_hi_ps']} "
@@ -2539,12 +2668,13 @@ def main(argv=None):
                 print(f"COUNT-ALIGN {c} RING built {rr['built_ports']} (worst lo {rr['worst_lo_built']} hi "
                       f"{rr['worst_hi_built']}) declared {rr['declared_ports']} (worst lo {rr['worst_lo_declared']} hi "
                       f"{rr['worst_hi_declared']})")
+        vmiss = missing_views(views, taps, plan, ecm)
         for k, pl in pairs.items():
             hrec = hbrec.setdefault(c, {}).setdefault(k, {}) if a.hold_buffers != "none" else None
             cr["classes"][k] = time_class(pl, taps, rng, reg, a.core_tol_ps, period, UNC_SETUP_PS, UNC_HOLD_PS,
                                           landed=k.startswith("landed"), window=window,
                                           hold_window=hwin.get(k) if c == "FF" else None, ocv=ocv, views=views,
-                                          rec=hrec, dd=dd, kit_offset=kit_off)
+                                          rec=hrec, dd=dd, kit_offset=kit_off, missing=vmiss)
             cr["classes"][k]["label"] = ("real-view+budget" if real else "declared-budget") + (
                 f" + core-tap insertion {ci['mode']} (view {ci['source']['view']} / declared {ci['source']['declared']}"
                 f" / missing {ci['source']['missing']})" if ecm else "") + (
@@ -2561,9 +2691,16 @@ def main(argv=None):
     for k in ("intra", "seam"):
         s = res["corners"].get("TT", {}).get("classes", {}).get(k, {})
         h = res["corners"].get("FF", {}).get("classes", {}).get(k, {})
-        gate[k] = dict(tt_setup_ps=s.get("worst_setup_slack_ps"), ff_hold_ps=h.get("worst_hold_slack_ps"),
-                       verdict="PASS" if (s.get("worst_setup_slack_ps", -1) >= 0 and h.get("worst_hold_slack_ps", -1) >= 0)
-                       else "FAIL")
+        # FLOW-HOLD-1 (OWNER 12.19): FF hold = measured pairs only (both endpoint blocks signed real views); unmeasured
+        # pairs -> BLOCKED(kits), never PASS.  The all-pair declared/tap-window numbers stay as DIAGNOSTIC fields.
+        hm = h.get("hold_measured") or {}
+        hst = hm.get("status") if h.get("pairs") else ("PASS" if s.get("worst_setup_slack_ps", -1) >= 0 else "FAIL")
+        setup_ok = s.get("worst_setup_slack_ps", -1) >= 0
+        gate[k] = dict(tt_setup_ps=s.get("worst_setup_slack_ps"), ff_hold_margin_ps=hm.get("hold_margin_ps"),
+                       hold_pairs_measured=hm.get("pairs_measured"), hold_pairs_unmeasured=hm.get("pairs_unmeasured"),
+                       missing_views=sorted(hm.get("missing_views") or {}), hold_status=hst,
+                       ff_hold_all_pairs_diag_ps=h.get("worst_hold_slack_ps"),
+                       verdict="FAIL" if (not setup_ok or hst in (None, "FAIL")) else hst)
     for k in ("intra", "seam"):
         kc = res["corners"].get("FF", {}).get("classes", {}).get(k, {}).get("kit_contract_hold")
         if kc:
@@ -2571,6 +2708,7 @@ def main(argv=None):
             gate[k]["kit_contract_window_ps"] = kc["window_ps"]
             gate[k]["kit_contract_window_needed_ps"] = kc["window_needed_ps"]
             gate[k]["kit_contract_verdict"] = kc["verdict"]
+            gate[k]["kit_contract_role"] = "DIAGNOSTIC only (OWNER 12.19: die hold is judged on real signed views)"
     if ci_recs:
         # FLOW-ONEMODEL-3: missing signed view -> FAIL CLOSED; declared insertion -> 'DECLARED', never a gate PASS
         for k in ("intra", "seam"):
@@ -2578,7 +2716,7 @@ def main(argv=None):
         gate["core_insertion"] = dict(mode=a.core_insertion, early_core_taps=ci_recs[0]["early_core_taps"],
                                       source={c: r["source"] for c, r in zip(corners, ci_recs)},
                                       verdict=core_insertion_verdict("PASS", ci_recs),
-                                      note="FAIL = early core taps without a signed core view (fail closed); DECLARED "
+                                      note="BLOCKED(kits) = early core taps without a signed core view (OWNER 12.19, never PASS); DECLARED "
                                            "= planning estimate on plan per-tap insertion, not a gate pass")
     gate["landed"] = landed_gate(res["corners"])
     if a.count_align:
@@ -2634,6 +2772,10 @@ def main(argv=None):
                       f"skew {v['skew_diag_max_ps']:7.2f}" + (f" kit-contract hold {v['kit_contract_hold']['worst_hold_bound_ps']:.2f}"
                       f" (W {v['kit_contract_hold']['window_ps']:g}, need {v['kit_contract_hold']['window_needed_ps']:.2f},"
                       f" neg {v['kit_contract_hold']['neg_pairs']})" if "kit_contract_hold" in v else "") + (f" landing {v['plan_landing']}" if "plan_landing" in v else "")
+                      + (f" | MEASURED-HOLD {v['hold_measured']['pairs_measured']} measured / "
+                         f"{v['hold_measured']['pairs_unmeasured']} unmeasured margin "
+                         f"{v['hold_measured']['hold_margin_ps']} {v['hold_measured']['status']}"
+                         if c == "FF" and "hold_measured" in v else "")
                       + (f" | REAL {v['real_view']['pairs_with_real_endpoint']} pairs setup "
                          f"{v['real_view'].get('worst_setup_slack_ps')} (neg {v['real_view']['setup_neg_pairs']}) hold "
                          f"{v['real_view'].get('worst_hold_slack_ps')} (neg {v['real_view']['hold_neg_pairs']})"

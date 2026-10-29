@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.macro_placement.v1",
+ "design": "ot_hbm_idx_qctl_static",
+ "outline_um": [
+  194.832,
+  82.08
+ ],
+ "macro_placement": [
+  {
+   "k": "calendar.store",
+   "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+   "origin_um": [
+    11.016,
+    4.32
+   ],
+   "orient": "R0"
+  }
+ ],
+ "note": "from plan core_macros.json status KNOWN basis None"
+}

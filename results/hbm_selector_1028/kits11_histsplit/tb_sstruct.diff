@@ -1,0 +1,8 @@
+11c11
+< module tb_hbm_idx_selector_sel_eq #(parameter integer SMUT=0, parameter integer NRUN=3, parameter integer SEED=7, parameter integer TIE_ONLY=0);
+---
+> module tb_hbm_idx_selector_sel_eq #(parameter integer SMUT=0, parameter integer NRUN=3, parameter integer SEED=7, parameter integer TIE_ONLY=0, parameter integer SSTRUCT=1);
+18c18
+<  ot_hbm_idx_selector_static_sel #(.MUT(SMUT),.STRUCT(1)) new_u(.clk_ctl(clk),.clk_q({4{clk}}),.clk_mem({12{clk}}),.rst_n(rst_n),
+---
+>  ot_hbm_idx_selector_static_sel #(.MUT(SMUT),.STRUCT(SSTRUCT)) new_u(.clk_ctl(clk),.clk_q({4{clk}}),.clk_mem({12{clk}}),.rst_n(rst_n),

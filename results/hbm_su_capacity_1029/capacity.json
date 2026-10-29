@@ -1,0 +1,4220 @@
+{
+  "candidate_caps": [
+    5,
+    9,
+    5,
+    3,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "candidate_classes": [
+    "L",
+    "L",
+    "L",
+    "S",
+    "S",
+    "S",
+    "S",
+    "S",
+    "S",
+    "S"
+  ],
+  "candidate_instantiations": "ot_hbm_su_programme_pslice_c5 #(.SB(2470),.NC(10),.DICT_CAP({32'd1,32'd1,32'd1,32'd1,32'd1,32'd3,32'd3,32'd5,32'd9,32'd5})) pgp_NW/pgp_NE",
+  "schema": "opentallas.su_programme.capacity.v1",
+  "parts": 2,
+  "slice_bits": 2470,
+  "resident_edges": 7111,
+  "actual_default_caps": [
+    3,
+    10,
+    9,
+    13,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "profiles": {
+    "su_finish/alternate5_4_1": {
+      "records": 10,
+      "max_edges": 1091,
+      "max_caps": [
+        5,
+        9,
+        5,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "default_fits": false
+    },
+    "su_finish/minimal4_4_0": {
+      "records": 10,
+      "max_edges": 1090,
+      "max_caps": [
+        5,
+        9,
+        5,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "default_fits": false
+    },
+    "su_matrix/alternate5_4_1": {
+      "records": 47,
+      "max_edges": 849,
+      "max_caps": [
+        4,
+        5,
+        5,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "default_fits": false
+    },
+    "su_matrix/minimal4_4_0": {
+      "records": 47,
+      "max_edges": 844,
+      "max_caps": [
+        4,
+        5,
+        5,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "default_fits": false
+    }
+  },
+  "records": [
+    {
+      "image": "su_finish/alternate5_4_1/qw_bf16_p/native_prog.mem",
+      "edges": 1091,
+      "needed_caps": [
+        [
+          5,
+          9,
+          5,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          5,
+          9,
+          5,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [
+        {
+          "part": 0,
+          "column": 0,
+          "needed": 5,
+          "available": 3
+        },
+        {
+          "part": 0,
+          "column": 4,
+          "needed": 3,
+          "available": 2
+        },
+        {
+          "part": 1,
+          "column": 0,
+          "needed": 5,
+          "available": 3
+        },
+        {
+          "part": 1,
+          "column": 4,
+          "needed": 3,
+          "available": 2
+        }
+      ],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [
+        {
+          "part": 0,
+          "column": 0,
+          "needed": 5,
+          "available": 3
+        },
+        {
+          "part": 1,
+          "column": 0,
+          "needed": 5,
+          "available": 3
+        }
+      ],
+      "installable_default": false
+    },
+    {
+      "image": "su_finish/alternate5_4_1/qw_softmax_exp_sum_r2/row0_rows1_qpr2/native_prog.mem",
+      "edges": 733,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/alternate5_4_1/qw_softmax_exp_sum_r2/row1_rows1_qpr2/native_prog.mem",
+      "edges": 733,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/alternate5_4_1/qw_softmax_exp_sum_r3/row0_rows1_qpr2/native_prog.mem",
+      "edges": 733,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/alternate5_4_1/qw_softmax_exp_sum_r3/row1_rows1_qpr2/native_prog.mem",
+      "edges": 733,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/alternate5_4_1/qw_softmax_exp_sum_r3/row2_rows1_qpr2/native_prog.mem",
+      "edges": 733,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/alternate5_4_1/qw_softmax_exp_sum_r4/row0_rows1_qpr2/native_prog.mem",
+      "edges": 733,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/alternate5_4_1/qw_softmax_exp_sum_r4/row1_rows1_qpr2/native_prog.mem",
+      "edges": 733,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/alternate5_4_1/qw_softmax_exp_sum_r4/row2_rows1_qpr2/native_prog.mem",
+      "edges": 733,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/alternate5_4_1/qw_softmax_exp_sum_r4/row3_rows1_qpr2/native_prog.mem",
+      "edges": 733,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/minimal4_4_0/qw_bf16_p/native_prog.mem",
+      "edges": 1090,
+      "needed_caps": [
+        [
+          5,
+          9,
+          5,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          5,
+          9,
+          5,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [
+        {
+          "part": 0,
+          "column": 0,
+          "needed": 5,
+          "available": 3
+        },
+        {
+          "part": 0,
+          "column": 4,
+          "needed": 3,
+          "available": 2
+        },
+        {
+          "part": 1,
+          "column": 0,
+          "needed": 5,
+          "available": 3
+        },
+        {
+          "part": 1,
+          "column": 4,
+          "needed": 3,
+          "available": 2
+        }
+      ],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [
+        {
+          "part": 0,
+          "column": 0,
+          "needed": 5,
+          "available": 3
+        },
+        {
+          "part": 1,
+          "column": 0,
+          "needed": 5,
+          "available": 3
+        }
+      ],
+      "installable_default": false
+    },
+    {
+      "image": "su_finish/minimal4_4_0/qw_softmax_exp_sum_r2/row0_rows1_qpr2/native_prog.mem",
+      "edges": 729,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/minimal4_4_0/qw_softmax_exp_sum_r2/row1_rows1_qpr2/native_prog.mem",
+      "edges": 729,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/minimal4_4_0/qw_softmax_exp_sum_r3/row0_rows1_qpr2/native_prog.mem",
+      "edges": 729,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/minimal4_4_0/qw_softmax_exp_sum_r3/row1_rows1_qpr2/native_prog.mem",
+      "edges": 729,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/minimal4_4_0/qw_softmax_exp_sum_r3/row2_rows1_qpr2/native_prog.mem",
+      "edges": 729,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/minimal4_4_0/qw_softmax_exp_sum_r4/row0_rows1_qpr2/native_prog.mem",
+      "edges": 729,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/minimal4_4_0/qw_softmax_exp_sum_r4/row1_rows1_qpr2/native_prog.mem",
+      "edges": 729,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/minimal4_4_0/qw_softmax_exp_sum_r4/row2_rows1_qpr2/native_prog.mem",
+      "edges": 729,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_finish/minimal4_4_0/qw_softmax_exp_sum_r4/row3_rows1_qpr2/native_prog.mem",
+      "edges": 729,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_attend_den/q2_r1/native_prog.mem",
+      "edges": 181,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_attend_exp_sum128/q2_r1/native_prog.mem",
+      "edges": 455,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_attend_exp_sum128/q2_r2/native_prog.mem",
+      "edges": 511,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_attend_exp_sum640/q2_r1/native_prog.mem",
+      "edges": 491,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_attend_exp_sum640/q2_r2/native_prog.mem",
+      "edges": 548,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_attend_max128/q2_r1/native_prog.mem",
+      "edges": 232,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_attend_max128/q2_r2/native_prog.mem",
+      "edges": 298,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_attend_max640/q2_r1/native_prog.mem",
+      "edges": 264,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_attend_max640/q2_r2/native_prog.mem",
+      "edges": 321,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_attend_norm/q2_r1/native_prog.mem",
+      "edges": 261,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_bf16_p128/q2_r1/native_prog.mem",
+      "edges": 110,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_bf16_p640/q2_r1/native_prog.mem",
+      "edges": 114,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_engram_gate/q2_r1/native_prog.mem",
+      "edges": 109,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_kv_norm_ss/q2_r1/native_prog.mem",
+      "edges": 254,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_kv_norm_ss/q2_r2/native_prog.mem",
+      "edges": 309,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_kv_norm_y/q2_r1/native_prog.mem",
+      "edges": 248,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_moe_sum0/q2_r1/native_prog.mem",
+      "edges": 109,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_moe_sum2/q2_r1/native_prog.mem",
+      "edges": 110,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_q_norm_ss/q2_r1/native_prog.mem",
+      "edges": 278,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_q_norm_ss/q2_r2/native_prog.mem",
+      "edges": 335,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_q_norm_y/q2_r1/native_prog.mem",
+      "edges": 260,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_res_copy/q2_r1/native_prog.mem",
+      "edges": 387,
+      "needed_caps": [
+        [
+          2,
+          3,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          3,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_route_total/q2_r1/native_prog.mem",
+      "edges": 231,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_route_weights/q2_r1/native_prog.mem",
+      "edges": 254,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_rs/q2_r1/native_prog.mem",
+      "edges": 180,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_scores_bias/q2_r1/native_prog.mem",
+      "edges": 116,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_spsqrt4/q2_r1/native_prog.mem",
+      "edges": 489,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_swiglu/q2_r1/native_prog.mem",
+      "edges": 401,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/ds_w_scale/q2_r1/native_prog.mem",
+      "edges": 108,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw8_bf16_p/q2_r1/native_prog.mem",
+      "edges": 579,
+      "needed_caps": [
+        [
+          3,
+          5,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          5,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw8_pv_normalize/q2_r1/native_prog.mem",
+      "edges": 291,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw8_round_q/q2_r1/native_prog.mem",
+      "edges": 112,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw8_row_scale_qkv/q2_r1/native_prog.mem",
+      "edges": 120,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw8_softmax_max/q2_r1/native_prog.mem",
+      "edges": 542,
+      "needed_caps": [
+        [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw8_softmax_max/q2_r2/native_prog.mem",
+      "edges": 593,
+      "needed_caps": [
+        [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw_pv_normalize/q2_r1/native_prog.mem",
+      "edges": 339,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw_round_q/q2_r1/native_prog.mem",
+      "edges": 116,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw_row_scale_gu/q2_r1/native_prog.mem",
+      "edges": 211,
+      "needed_caps": [
+        [
+          1,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw_row_scale_qkv/q2_r1/native_prog.mem",
+      "edges": 132,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw_row_scale_res/q2_r1/native_prog.mem",
+      "edges": 204,
+      "needed_caps": [
+        [
+          1,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw_softmax_exp_sum_r1/q2_r2/native_prog.mem",
+      "edges": 733,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw_softmax_max/q2_r1/native_prog.mem",
+      "edges": 798,
+      "needed_caps": [
+        [
+          4,
+          5,
+          5,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          4,
+          5,
+          5,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [
+        {
+          "part": 0,
+          "column": 0,
+          "needed": 4,
+          "available": 3
+        },
+        {
+          "part": 0,
+          "column": 4,
+          "needed": 3,
+          "available": 2
+        },
+        {
+          "part": 1,
+          "column": 0,
+          "needed": 4,
+          "available": 3
+        },
+        {
+          "part": 1,
+          "column": 4,
+          "needed": 3,
+          "available": 2
+        }
+      ],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [
+        {
+          "part": 0,
+          "column": 0,
+          "needed": 4,
+          "available": 3
+        },
+        {
+          "part": 1,
+          "column": 0,
+          "needed": 4,
+          "available": 3
+        }
+      ],
+      "installable_default": false
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw_softmax_max/q2_r2/native_prog.mem",
+      "edges": 849,
+      "needed_caps": [
+        [
+          4,
+          5,
+          5,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          4,
+          5,
+          5,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [
+        {
+          "part": 0,
+          "column": 0,
+          "needed": 4,
+          "available": 3
+        },
+        {
+          "part": 0,
+          "column": 4,
+          "needed": 3,
+          "available": 2
+        },
+        {
+          "part": 1,
+          "column": 0,
+          "needed": 4,
+          "available": 3
+        },
+        {
+          "part": 1,
+          "column": 4,
+          "needed": 3,
+          "available": 2
+        }
+      ],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [
+        {
+          "part": 0,
+          "column": 0,
+          "needed": 4,
+          "available": 3
+        },
+        {
+          "part": 1,
+          "column": 0,
+          "needed": 4,
+          "available": 3
+        }
+      ],
+      "installable_default": false
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw_softmax_max_r1/q2_r1/native_prog.mem",
+      "edges": 414,
+      "needed_caps": [
+        [
+          1,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw_softmax_max_r1/q2_r2/native_prog.mem",
+      "edges": 401,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw_softmax_max_r4/q2_r1/native_prog.mem",
+      "edges": 542,
+      "needed_caps": [
+        [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/alternate5_4_1/qw_softmax_max_r4/q2_r2/native_prog.mem",
+      "edges": 593,
+      "needed_caps": [
+        [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_attend_den/q2_r1/native_prog.mem",
+      "edges": 168,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_attend_exp_sum128/q2_r1/native_prog.mem",
+      "edges": 439,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_attend_exp_sum128/q2_r2/native_prog.mem",
+      "edges": 495,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_attend_exp_sum640/q2_r1/native_prog.mem",
+      "edges": 475,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_attend_exp_sum640/q2_r2/native_prog.mem",
+      "edges": 532,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_attend_max128/q2_r1/native_prog.mem",
+      "edges": 227,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_attend_max128/q2_r2/native_prog.mem",
+      "edges": 293,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_attend_max640/q2_r1/native_prog.mem",
+      "edges": 259,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_attend_max640/q2_r2/native_prog.mem",
+      "edges": 316,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_attend_norm/q2_r1/native_prog.mem",
+      "edges": 252,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_bf16_p128/q2_r1/native_prog.mem",
+      "edges": 104,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_bf16_p640/q2_r1/native_prog.mem",
+      "edges": 108,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_engram_gate/q2_r1/native_prog.mem",
+      "edges": 103,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_kv_norm_ss/q2_r1/native_prog.mem",
+      "edges": 249,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_kv_norm_ss/q2_r2/native_prog.mem",
+      "edges": 304,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_kv_norm_y/q2_r1/native_prog.mem",
+      "edges": 238,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_moe_sum0/q2_r1/native_prog.mem",
+      "edges": 103,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_moe_sum2/q2_r1/native_prog.mem",
+      "edges": 104,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_q_norm_ss/q2_r1/native_prog.mem",
+      "edges": 273,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_q_norm_ss/q2_r2/native_prog.mem",
+      "edges": 330,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_q_norm_y/q2_r1/native_prog.mem",
+      "edges": 250,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_res_copy/q2_r1/native_prog.mem",
+      "edges": 386,
+      "needed_caps": [
+        [
+          2,
+          3,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          3,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_route_total/q2_r1/native_prog.mem",
+      "edges": 226,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_route_weights/q2_r1/native_prog.mem",
+      "edges": 245,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_rs/q2_r1/native_prog.mem",
+      "edges": 166,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_scores_bias/q2_r1/native_prog.mem",
+      "edges": 110,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_spsqrt4/q2_r1/native_prog.mem",
+      "edges": 411,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_swiglu/q2_r1/native_prog.mem",
+      "edges": 384,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/ds_w_scale/q2_r1/native_prog.mem",
+      "edges": 102,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw8_bf16_p/q2_r1/native_prog.mem",
+      "edges": 578,
+      "needed_caps": [
+        [
+          3,
+          5,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          5,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw8_pv_normalize/q2_r1/native_prog.mem",
+      "edges": 282,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw8_round_q/q2_r1/native_prog.mem",
+      "edges": 106,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw8_row_scale_qkv/q2_r1/native_prog.mem",
+      "edges": 114,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw8_softmax_max/q2_r1/native_prog.mem",
+      "edges": 537,
+      "needed_caps": [
+        [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw8_softmax_max/q2_r2/native_prog.mem",
+      "edges": 588,
+      "needed_caps": [
+        [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw_pv_normalize/q2_r1/native_prog.mem",
+      "edges": 330,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw_round_q/q2_r1/native_prog.mem",
+      "edges": 110,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw_row_scale_gu/q2_r1/native_prog.mem",
+      "edges": 210,
+      "needed_caps": [
+        [
+          1,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw_row_scale_qkv/q2_r1/native_prog.mem",
+      "edges": 126,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw_row_scale_res/q2_r1/native_prog.mem",
+      "edges": 198,
+      "needed_caps": [
+        [
+          1,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw_softmax_exp_sum_r1/q2_r2/native_prog.mem",
+      "edges": 729,
+      "needed_caps": [
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw_softmax_max/q2_r1/native_prog.mem",
+      "edges": 793,
+      "needed_caps": [
+        [
+          4,
+          5,
+          5,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          4,
+          5,
+          5,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [
+        {
+          "part": 0,
+          "column": 0,
+          "needed": 4,
+          "available": 3
+        },
+        {
+          "part": 0,
+          "column": 4,
+          "needed": 3,
+          "available": 2
+        },
+        {
+          "part": 1,
+          "column": 0,
+          "needed": 4,
+          "available": 3
+        },
+        {
+          "part": 1,
+          "column": 4,
+          "needed": 3,
+          "available": 2
+        }
+      ],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [
+        {
+          "part": 0,
+          "column": 0,
+          "needed": 4,
+          "available": 3
+        },
+        {
+          "part": 1,
+          "column": 0,
+          "needed": 4,
+          "available": 3
+        }
+      ],
+      "installable_default": false
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw_softmax_max/q2_r2/native_prog.mem",
+      "edges": 844,
+      "needed_caps": [
+        [
+          4,
+          5,
+          5,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          4,
+          5,
+          5,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [
+        {
+          "part": 0,
+          "column": 0,
+          "needed": 4,
+          "available": 3
+        },
+        {
+          "part": 0,
+          "column": 4,
+          "needed": 3,
+          "available": 2
+        },
+        {
+          "part": 1,
+          "column": 0,
+          "needed": 4,
+          "available": 3
+        },
+        {
+          "part": 1,
+          "column": 4,
+          "needed": 3,
+          "available": 2
+        }
+      ],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [
+        {
+          "part": 0,
+          "column": 0,
+          "needed": 4,
+          "available": 3
+        },
+        {
+          "part": 1,
+          "column": 0,
+          "needed": 4,
+          "available": 3
+        }
+      ],
+      "installable_default": false
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw_softmax_max_r1/q2_r1/native_prog.mem",
+      "edges": 409,
+      "needed_caps": [
+        [
+          1,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw_softmax_max_r1/q2_r2/native_prog.mem",
+      "edges": 396,
+      "needed_caps": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw_softmax_max_r4/q2_r1/native_prog.mem",
+      "edges": 537,
+      "needed_caps": [
+        [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    },
+    {
+      "image": "su_matrix/minimal4_4_0/qw_softmax_max_r4/q2_r2/native_prog.mem",
+      "edges": 588,
+      "needed_caps": [
+        [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "default_declared_capacity_excess": [],
+      "lowering": "PASS",
+      "default_physical_capacity_excess": [],
+      "installable_default": true
+    }
+  ],
+  "physical_adoption": false
+}

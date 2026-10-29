@@ -1,0 +1,13 @@
+read_liberty -lib -ignore_miss_func /work/macros/ot_sram_1r1w_256x256_m2_r2c2_tt.lib
+read_liberty -lib -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -lib -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+verilog_defines -DSYNTHESIS
+read_verilog -defer -sv -noautowire -I/work/rtl /work/rtl/ot_hbm_idx_selector_static_sel.sv
+read_verilog -defer -sv -noautowire -I/work/rtl /work/rtl/ot_hbm_idx_selector_compact.sv
+read_verilog -defer -sv -noautowire -I/work/rtl /work/rtl/ot_hbm_idx_compact_tree.sv
+read_verilog -defer -sv -noautowire -I/work/rtl /work/rtl/ot_hbm_idx_selector_static_sel__fshell.sv
+read_verilog -defer -sv -noautowire -I/work/rtl /work/rtl/ot_hbm_face_reg.sv
+hierarchy -check -top ot_hbm_idx_selector_static_sel
+proc
+opt_clean
+check -assert

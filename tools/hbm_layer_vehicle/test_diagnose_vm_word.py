@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from diagnose_vm_word import collect, make
+from hbm_layer_vehicle.diagnose_vm_word import collect, make
 
 
 class WordProbeTest(unittest.TestCase):

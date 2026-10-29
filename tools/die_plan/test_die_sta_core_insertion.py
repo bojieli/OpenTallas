@@ -74,10 +74,12 @@ def test_early_tap_view_model_and_missing_view_fail_closed():
     r = _intra(views=v)
     assert r["worst_hold_slack_ps"] == round(810 + 490 - (1000 + 250) - 22.2 - 25 + 10, 2) > 0
     assert R.core_insertion_verdict("PASS", [rec]) == "PASS"
-    # no view for the core: the tap keeps the common latency, listed missing, verdict FAIL (closed)
+    # no view for the core: the tap keeps the common latency, listed missing, verdict BLOCKED(kits) (OWNER 12.19;
+    # never PASS, a FAIL stays FAIL)
     v2, rec2 = R.core_tap_views(dict(base), ecm, "TT", REG, {}, "view")
     assert v2[CORE] == base[CORE] and rec2["source"]["missing"] == 1 and rec2["missing_taps"] == [CORE]
-    assert R.core_insertion_verdict("PASS", [rec2]) == "FAIL"
+    assert R.core_insertion_verdict("PASS", [rec2]) == "BLOCKED(kits)"
+    assert R.core_insertion_verdict("FAIL", [rec2]) == "FAIL"
     # declared mode never hides a missing declared insertion (0 ps = not declared)
     ecm0 = {CORE: [dict(ecm[CORE][0], ins_ps=dict(TT=0.0, FF=0.0))]}
     assert R.core_tap_views(dict(base), ecm0, "TT", REG, {}, "declared")[1]["source"]["missing"] == 1
@@ -132,12 +134,15 @@ def _run(tmp_path, monkeypatch, plan, *extra, core_view_model=None):
 def test_main_fail_closed_declared_and_view(tmp_path, monkeypatch):
     r = _run(tmp_path, monkeypatch, _plan())                               # gate default: view, none given
     g = r["summary"]
-    assert g["core_insertion"]["verdict"] == "FAIL" and g["intra"]["verdict"] == "FAIL"
+    assert g["core_insertion"]["verdict"] == "BLOCKED(kits)" and g["intra"]["verdict"] == "BLOCKED(kits)"
+    assert g["intra"]["hold_status"] == "BLOCKED(kits)" and "core:cmod" in g["intra"]["missing_views"]
     assert g["core_insertion"]["source"]["FF"] == dict(view=0, declared=0, missing=1)
     assert "missing 1" in r["corners"]["FF"]["classes"]["intra"]["label"]
     d = _run(tmp_path, monkeypatch, _plan(), "--core-insertion", "declared")
     assert d["summary"]["core_insertion"]["verdict"] == "DECLARED"
-    assert d["summary"]["intra"]["verdict"] == "DECLARED"                   # a declared pass is not a gate PASS
+    # a declared pass is not a gate PASS; with no signed view at all the hold is BLOCKED(kits) (OWNER 12.19)
+    assert d["summary"]["intra"]["verdict"] == "BLOCKED(kits)"
+    assert d["summary"]["intra"]["hold_pairs_measured"] == 0
     assert d["corners"]["FF"]["classes"]["intra"]["worst_hold_slack_ps"] > 0
     assert d["corners"]["FF"]["classes"]["intra"]["kit_contract_hold"]["verdict"] == "PASS"
     assert "declared 1" in d["corners"]["TT"]["classes"]["intra"]["label"]

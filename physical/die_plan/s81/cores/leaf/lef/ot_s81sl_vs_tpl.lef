@@ -10,7 +10,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 85.1520 0.0000 85.1760 0.0840 ;
+        RECT 85.1400 0.0000 85.1880 0.4800 ;
     END
   END clk
   PIN e_c[0]

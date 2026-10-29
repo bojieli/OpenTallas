@@ -388,3 +388,193 @@ def test_duty_clock_cal_follows_the_cell_coord_1029():
     assert CD.gate_clock_cal("inv2", "spice") == "spice"     # explicit choice kept
     with pytest.raises(ValueError):
         CD.gate_clock_cal("buf", "spice_buf_edge")
+
+
+# ------------------------------------------------------------------------------- CLK-TOOL-7: HBM street_body adapters
+def test_street_keys_map_to_die_trial_flags_and_default_off():
+    c = cfg("hbm")
+    base = O.kit_argv(c, "OUT")
+    assert not {"--clock-body-sites", "--chain-hop-max", "--detour-adaptive"} & set(base)
+    c["top"].update(body_sites=True, chain_hop_max=450.0, detour="adaptive")
+    f = flags(O.kit_argv(c, "OUT"))
+    assert f["--clock-body-sites"] is True and f["--chain-hop-max"] == "450" and f["--detour-adaptive"] is True
+    c["top"]["detour"] = "astar"
+    assert "--detour-adaptive" not in O.kit_argv(c, "OUT")
+    c["top"]["detour"] = "maze"
+    with pytest.raises(O.ConfigError):
+        O.kit_argv(c, "OUT")
+
+
+def test_street_body_config_renders_the_codex_clock_kit_call(tmp_path):
+    """build_street_body.py: clock_kit(P, out, 200, 180, site_legal, site_slide, regions(+PHY_N fill), link_htree, feed,
+    clock_rc 1x, region_dme delay, snake set, early 1.0 / ff 0.8639019524013111 merge, inv2, cell_paths), DME_WORKERS 8"""
+    c = cfg("hbm_street_body")
+    ok, _, why = O.stage_check(c, reg())
+    assert not ok and "clock_rc=1x" in why[0]          # ndr-route fit on a 1x stack: fail closed, legacy replay only
+    c["inputs"]["region_fill"] = None                  # (the fill reads the plan; covered below)
+    f = flags(O.kit_argv(c, "OUT", c["stage_model"]["legacy_cal"]))
+    assert f["--leaf-um"] == "200" and f["--rep-um"] == "180" and f["--clock-rc"] == "1x" and f["--clock-cell"] == "inv2"
+    assert f["--region-dme"] == "delay" and f["--region-dme-early"] == "1"
+    assert float(f["--region-dme-early-ff"]) == 0.8639019524013111 and f["--region-dme-early-mode"] == "merge"
+    assert f["--region-dme-workers"] == "8" and f["--cell-paths"] is True and "--region-dme-only" not in f
+    assert set(f["--region-dme-snake"].split(",")) == {"T002", "T003", "T004", "T007", "T009", "T012", "T013", "T015",
+                                                       "T016", "T017", "T019", "T028", "T029", "T040", "T042", "T043",
+                                                       "T046", "T048"}
+    assert f["--clock-body-sites"] is True and f["--chain-hop-max"] == "450" and f["--detour-adaptive"] is True
+
+
+def test_region_fill_appends_split_parts_in_plan_order(tmp_path):
+    m = tmp_path / "map.json"
+    m.write_text(json.dumps({"part_region": {"A": "T1", "PHY": "T7"}}))
+    p = tmp_path / "plan.json"
+    p.write_text(json.dumps({"partitions": [{"name": n} for n in ("PHY_W", "A", "PHY", "PHY_E", "Q_0")]}))
+    c = {"inputs": {"plan": str(p), "region_map": str(m),
+                    "region_fill": [{"prefix": "PHY_", "from": "PHY", "default": "T0"}, {"prefix": "Q_", "default": "T9"}]}}
+    path, prov = O.fill_region_map(c, tmp_path / "o")
+    got = json.loads(Path(path).read_text())["part_region"]
+    assert list(got.items()) == [("A", "T1"), ("PHY", "T7"), ("PHY_W", "T7"), ("PHY_E", "T7"), ("Q_0", "T9")]
+    assert prov["added"] == {"PHY_W": "T7", "PHY_E": "T7", "Q_0": "T9"}
+    c["inputs"]["region_fill"] = [{"prefix": "Z", "bogus": 1}]
+    with pytest.raises(O.ConfigError):
+        O.fill_region_map(c, tmp_path / "o2")
+    c["inputs"]["region_fill"] = None
+    assert O.fill_region_map(c, tmp_path / "o3") == (str(m), None)
+
+
+def _die_trial():
+    sys.path.insert(0, str(O.REPO / "tools" / "die_plan"))
+    import die_trial
+    return die_trial
+
+
+class _Site:
+    """minimal SiteMap: W x H die, keep-out rectangles forb (x0, y0, x1, y1, kind)"""
+    def __init__(self, W, H, forb):
+        self.W, self.H, self.forb = W, H, forb
+
+    def legal(self, q):
+        return 0 <= q[0] <= self.W and 0 <= q[1] <= self.H and not any(
+            r[0] < q[0] < r[2] and r[1] < q[1] < r[3] for r in self.forb)
+
+
+def test_detour_adaptive_routes_around_a_wall_the_default_box_clips():
+    D = _die_trial()
+    # two abutting hard cores form a 1900-um wall across the direct leg; the default 600-um box cannot pass its ends
+    wall = [(900.0, 200.0, 1000.0, 1100.0, "core"), (900.0, 1095.0, 1000.0, 2100.0, "core")]
+    site, a, b = _Site(3000.0, 2400.0, wall), (700.0, 1100.0), (1200.0, 1100.0)
+    old = (D.DETOUR_ADAPTIVE, list(D.DETOUR_STATS))
+    try:
+        D.DETOUR_ADAPTIVE = False
+        assert D.legal_detour(site, a, b, step=10.0) is None            # default off: shared A* unchanged
+        D.DETOUR_ADAPTIVE = True
+        D.DETOUR_STATS.clear()
+        r = D.legal_detour(site, a, b, step=10.0)
+        assert r is not None and r[0] == a and r[-1] == b
+        assert all(site.legal(q) for q in r[1:-1])
+        assert D.DETOUR_STATS[-1]["new_margin_um"] > 600 and not D.DETOUR_STATS[-1].get("failed")
+        assert D.legal_detour(site, (100.0, 50.0), (150.0, 50.0), step=10.0) is not None   # free leg: plain A*
+    finally:
+        D.DETOUR_ADAPTIVE = old[0]
+        D.DETOUR_STATS[:] = old[1]
+
+
+def test_chain_hop_max_rejects_long_hops_and_default_is_unchanged():
+    D = _die_trial()
+    pts = [(0.0, 0.0), (300.0, 0.0), (300.0, 200.0)]          # hops 300 + 200
+    old = D.CHAIN_HOP_MAX_UM
+    try:
+        D.CHAIN_HOP_MAX_UM = None
+        base = D.chain_ps(pts)
+        D.CHAIN_HOP_MAX_UM = 450.0
+        assert D.chain_ps(pts) == base
+        D.CHAIN_HOP_MAX_UM = 250.0
+        assert D.chain_ps(pts) == float("inf")
+    finally:
+        D.CHAIN_HOP_MAX_UM = old
+
+
+def _tap_clear_numpy(S, t, x, y, taken=(), clear=None, strict=False):
+    """reference: Codex results/codex_hbm_clock_1028/fast_tap_clear.py (codex/hbm-clock-0300@608e4fa9f), the vectorised
+    tap search build_street_body.py installed over schema.tap_clear"""
+    import math
+    np = pytest.importorskip("numpy")
+    clear = S.TAP_CLEAR_UM if clear is None else clear
+    w, h = t['outline_um']
+    boxes = list(S.placed_macro_boxes(t, halo=clear).values())
+    boxes.extend((a - clear, b - clear, c + clear, d + clear) for a, b, c, d in t.get('clock', {}).get('keepouts_um', []))
+
+    def free(px, py):
+        return (clear <= px <= w - clear and clear <= py <= h - clear and
+                not any(abs(px - a) < clear and abs(py - b) < clear for a, b in taken) and
+                not any(x0 < px < x1 and y0 < py < y1 for x0, y0, x1, y1 in boxes))
+    if (not boxes and not strict) or free(x, y):
+        return x, y
+
+    def candidates(origin, extent, edges):
+        values = {origin}
+        for edge in [clear, extent - clear] + list(edges):
+            q = (edge - origin) / S.TAP_STEP_UM
+            for k in (math.floor(q), math.ceil(q)):
+                v = round(origin + k * S.TAP_STEP_UM, 8)
+                if clear - 1e-7 <= v <= extent - clear + 1e-7:
+                    values.add(v)
+        return values
+    obs = boxes + [(a - clear, b - clear, a + clear, b + clear) for a, b in taken]
+    xs = list(candidates(x, w, [v for a, b, c, d in obs for v in (a, c)]))
+    ys = list(candidates(y, h, [v for a, b, c, d in obs for v in (b, d)]))
+    X, Y = np.asarray(xs)[:, None], np.asarray(ys)[None, :]
+    ok = (X >= clear) & (X <= w - clear) & (Y >= clear) & (Y <= h - clear)
+    for a, b in taken:
+        ok &= ~((np.abs(X - a) < clear) & (np.abs(Y - b) < clear))
+    for a, b, c, d in boxes:
+        ok &= ~((a < X) & (X < c) & (b < Y) & (Y < d))
+    ii, jj = np.nonzero(ok)
+    if len(ii):
+        px, py = min(((xs[i], ys[j]) for i, j in zip(ii, jj)),
+                     key=lambda p: (round(max(abs(p[0] - x), abs(p[1] - y)), 7), (p[0] - x) ** 2 + (p[1] - y) ** 2, p))
+        return round(px, 4), round(py, 4)
+    return None
+
+
+def test_shared_tap_clear_equals_the_street_body_fast_tap_clear():
+    """fast_tap_clear.py needs no migration: main schema.tap_clear gives the same site on random macro/keep-out/taken
+    layouts (incl. strict density taps), so the street_body replay runs main tap_clear (CLK-TOOL-7)."""
+    import random
+    _die_trial()
+    import schema as S
+    rng = random.Random(7)
+    n = 0
+    for _ in range(300):
+        w, h = rng.choice([86.4, 172.8, 259.2]), rng.choice([86.4, 129.6, 216.0])
+        keep = []
+        for _ in range(rng.randint(0, 5)):
+            x0, y0 = rng.uniform(0, w * 0.8), rng.uniform(0, h * 0.8)
+            keep.append([round(x0, 3), round(y0, 3), round(x0 + rng.uniform(3, w / 2), 3),
+                         round(y0 + rng.uniform(3, h / 2), 3)])
+        t = {"outline_um": [w, h], "hard_cores": [], "clock": {"keepouts_um": keep}}
+        taken = [(round(rng.uniform(0, w), 3), round(rng.uniform(0, h), 3)) for _ in range(rng.randint(0, 6))]
+        x, y, strict = round(rng.uniform(0, w), 3), round(rng.uniform(0, h), 3), rng.random() < 0.3
+        ref = _tap_clear_numpy(S, t, x, y, taken, strict=strict)
+        try:
+            got = S.tap_clear(t, x, y, taken, strict=strict)
+        except ValueError:
+            got = None
+        assert got == ref, (t, x, y, taken, strict)
+        n += ref is not None and ref != (x, y)
+    assert n > 50          # most cases actually move the tap
+
+
+# ------------------------------------------------------------------------------- CLK-TOOL-8: per-stage edge balance
+def test_edge_balance_key_maps_to_die_trial_flag_default_off():
+    c = cfg("hbm")
+    assert "--clock-edge-alt" not in O.kit_argv(c, "OUT")
+    c["stack"]["edge_balance"] = "none"
+    assert "--clock-edge-alt" not in O.kit_argv(c, "OUT")
+    c["stack"].update(cell="inv2", edge_balance="dme_alt")
+    assert flags(O.kit_argv(c, "OUT"))["--clock-edge-alt"] is True
+    c["stack"]["cell"] = "inv"
+    with pytest.raises(O.ConfigError):
+        O.kit_argv(c, "OUT")
+    c["stack"].update(cell="inv2", edge_balance="tree")
+    with pytest.raises(O.ConfigError):
+        O.kit_argv(c, "OUT")

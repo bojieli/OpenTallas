@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.s81.issuer_booking_result.v1",
+ "source_commit": "8378df10e",
+ "verdict": "PASS_SOURCE_COMPILER",
+ "scope": "L0 compiler smoke and smallest VPX booking mechanism; no token/physical qualification",
+ "focused_controls": 7,
+ "lost_reservation_control": "duplicate engine/edge reproduced",
+ "payload_equivalence": "same CTL template bodies and relative per-leg outward event sequence",
+ "smoke": {
+  "host": "intel1",
+  "unit": "oth-ubuntu-1579218-1793288187",
+  "exit": 0,
+  "ops": 65,
+  "rows": 925,
+  "templates": 925,
+  "jobs": 8,
+  "price_crit": 15476.1,
+  "price_span": 15476.0,
+  "vsw_lr_extra_edges": 1
+ },
+ "emission_cost": {
+  "new_substage_hop0_extra_edges": 1,
+  "existing_extra_edges": "four other shared-engine leg offsets of1 retained",
+  "model_ledger": "schedule.json reservation_delays; producer lifetimes remain PARTIAL, no composed token-rate claim"
+ },
+ "skips": [
+  "G8 archived event packing optional fixture absent"
+ ],
+ "full_token": false,
+ "physical": false
+}

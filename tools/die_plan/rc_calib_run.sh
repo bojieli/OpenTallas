@@ -8,7 +8,10 @@ extra=$(echo "$cmd" | grep -o -- '-v [^ ]*' | grep -v ':/out$' | grep -v ':/base
 img=$(echo "$cmd" | grep -oP 'openroad/orfs:\S+')
 OR=/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
 nm=flowrc_$(basename $OUT)
-for c in tt ff; do grep -E '^foreach l|^read_liberty' $SO/$c/session.tcl > $OUT/libs_$c.tcl; done
+for c in tt ff; do
+  python3 "$T/rc_calib.py" libs --session "$SO/$c/session.tcl" --out "$OUT/libs_$c.tcl" \
+    --receipt "/w/libraries_$c.json" || exit $?
+done
 pids=""
 for m in $MODES; do
   case $m in
@@ -23,5 +26,10 @@ for m in $MODES; do
         $img $OR -no_init -exit /w/rc_calib_probe.tcl > $OUT/$m.log 2>&1 & pids="$pids $!" ;;
   esac
 done
-wait $pids
-grep -h "RC_PROBE_DONE\|WIRE_DUMP_DONE\|stored_routes" $OUT/*.log
+status=0
+for pid in $pids; do wait "$pid" || status=$?; done
+for mode in $MODES; do
+  test "$mode" = wd && log=wd || log=$mode
+  grep -h "RC_PROBE_DONE\|WIRE_DUMP_DONE\|stored_routes" "$OUT/$log.log" || status=1
+done
+exit "$status"

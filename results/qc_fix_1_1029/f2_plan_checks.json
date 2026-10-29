@@ -1,0 +1,42 @@
+{
+ "legs": {
+  "n": 286,
+  "over_1p10": 0,
+  "worst_ratio": 1.0
+ },
+ "leaf_spread": {
+  "max": 29.44,
+  "n_gt_40": 0
+ },
+ "sinks": {
+  "census": 3446,
+  "planned": 3446,
+  "missing": 0,
+  "dup": 0,
+  "extra": 0
+ },
+ "stages": [
+  9
+ ],
+ "TT": {
+  "mean": 270.49,
+  "window": 21.22,
+  "leaf_out_slew_max": 30.7,
+  "band_info": "OUT"
+ },
+ "FF": {
+  "mean": 212.19,
+  "window": 21.19,
+  "leaf_out_slew_max": 23.5,
+  "band_info": "IN"
+ },
+ "macro_clock_pins": 4,
+ "macro_leaves": 4,
+ "verdict": "FAIL",
+ "fails": [
+  "TT window 21.2 > 20",
+  "FF window 21.2 > 20",
+  "converter rc 1: ile \"/srv/opentallas-scratch2/claude/wt/qc-fix-1-1029/tools/die_plan/core_infra.py\", line 580, in emit_tcl\n    raise InfraError(f\"unequal-count tree model target FAIL/NOT RUN at {corner}; no physical build\")\ncore_infra.InfraError: unequal-count tree model target FAIL/NOT RUN at TT; no physical build"
+ ],
+ "scope": "automated geometry gates on the PLAN (GEOM-REVIEW-10 form); latency numbers PLAN MODEL, UNCHECKED"
+}

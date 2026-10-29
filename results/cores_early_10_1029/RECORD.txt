@@ -1,0 +1,10 @@
+CORES-EARLY-10 (2026-10-29 07:15 PDT) -- receipts
+cfg7_route/: AP 1a88c7de80fc kit intel2:/srv/opentallas-scratch2/claude/ce10-cfg-route-1029/kit = ce9-cfg-route kit copy (no run/)
+  + plan_pins.json (= codex/s81-cores-1029-resume@a2529927e physical/die_plan/s81/inputs/core_pins/ot_s81_cfg7_seq_bfp.json, sha 068d2be5 == freeze pins_sha256)
+  + core_infra_impl.tcl = origin/main tools/die_plan/core_infra.tcl (diff vs ce9 copy: fixed-body occupancy index + unused ot_ci_tree_preserve_hard proc only)
+  main kit_preflight PASS 0 (and --contract PASS 0). signoff.log/json: LOCAL_PASS_NEEDS_PARENT TT +57.64 FF hold +0.48 DRC 0 ant 0.
+  lec_routed_6_final.log: lec.py on 6_final.v (07:04) EQUIVALENT 1161/1161, run 07:1x after the route.
+bf_g2_icg_tap/: probe.tcl on BF G2 trial 3_5_place_dp.odb (ce9-bf-ena-1029): ICG CLK has no clock-to-Q edge; old tap walk 2091 sinks (1252 ICG),
+  ICG-through walk 53852 == all_registers -clock_pins (0 ICG); ot_cf_wire OK on 2000/2000. Fix = claude/cores-early-10-icgtap-1029@5225df6a1 (tools/die_plan/tap_balance.tcl).
+  Trial V1 kit intel1:/srv/opentallas-scratch2/claude/ce10-bfg2/kit_v1 (ce9 kit + that patch, resumes at CTS): OT_TAP_RC clk=298(248-322,53852) placement RC.
+slice_station/: gen phys (main tools, plan_s13r2 e4a0d4d83e54 from DIE-S81-23) t8 t23 t31 t43 t44 t49 t52, preflight PASS 0 each, enqueued AUTO.

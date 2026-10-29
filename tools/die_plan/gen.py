@@ -156,6 +156,9 @@ def main(argv=None):
     a3.add_argument("--out", required=True)
     a3.add_argument("--rtl-root")
     a3.add_argument("--types")
+    a3.add_argument("--hard-wrappers", default="", metavar="TYPES",
+                    help="opt-in hard types containing bound wrapper glue; comma list, requires explicit --types, "
+                         "--kit-rtl and a placed macro with timing views (default: skip all hard types)")
     a3.add_argument("--util", type=float, default=0.5)
     a3.add_argument("--proof", action="store_true", help="proof kit: SKIP_INCREMENTAL_REPAIR (CP1 seam proofs)")
     a3.add_argument("--hold-mcmm", action="store_true",
@@ -164,7 +167,7 @@ def main(argv=None):
     a3.add_argument("--stock-rc", action="store_true",
                     help="platform setRC.tcl for placement/CTS/GRT estimates (default since FLOW 10-25: the "
                          "RCX-calibrated tools/die_plan/setRC_rcx_asap7.tcl)")
-    a3.add_argument("--hold-ff-margin", type=float, default=5.0, metavar="PS",
+    a3.add_argument("--hold-ff-margin", type=float, default=10.0, metavar="PS",   # FLOW-HOLD-1 (OWNER 12.19): 5 -> 10
                     help="repair hold at the FF sign-off corner only (CTS-stage combined repair skipped; post-GRT "
                          "repair with CORNERS=bc and this hold margin); TT setup is judged by signoff.py")
     a3.add_argument("--slew-margin", type=float, default=None, metavar="PCT",
@@ -227,7 +230,8 @@ def main(argv=None):
                                            plan_path=Path(a.plan).resolve(), rc_cal=not a.stock_rc,
                                            master_slice=a.master_slice, trial=a.trial,
                                            gpl_plain=[x for x in a.gpl_plain.split(",") if x],
-                                           landing=load_json(a.clock_landing) if a.clock_landing else None)
+                                           landing=load_json(a.clock_landing) if a.clock_landing else None,
+                                           hard_wrappers=[x for x in a.hard_wrappers.split(",") if x])
             else:
                 kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views, plan_path=Path(a.plan).resolve(),
                                                 pg_map=json.loads(Path(a.pg_map).read_text()) if a.pg_map else None)]

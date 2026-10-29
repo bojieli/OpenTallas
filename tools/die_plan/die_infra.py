@@ -1051,6 +1051,22 @@ def related_sta_state(path, pre, post_clock=None):
             st, ht = tt.get("plan_landing", {}), ff.get("plan_landing", {})
             setup, hold = st.get("setup_margin_ps"), ht.get("hold_margin_ps")
             passed = st.get("verdict") == ht.get("verdict") == "PASS"
+        elif ff.get("hold_measured"):
+            # FLOW-HOLD-1 (OWNER 12.19): FF hold on pairs with signed real views on both endpoints only; unmeasured
+            # pairs -> BLOCKED(kits) (never PASS), a measured pair < 0 -> FAIL.  Setup unchanged.
+            hm = ff["hold_measured"]
+            setup, hold = tt.get("worst_setup_slack_ps"), hm.get("hold_margin_ps")
+            if not (isinstance(setup, (int, float)) and not isinstance(setup, bool) and math.isfinite(setup)):
+                return stop("NOT RUN", f"{name}: actual TT setup result missing")
+            st = "FAIL" if (tt.get("setup_neg_pairs") != 0 or setup < 0 or hm.get("neg_pairs")) else \
+                "BLOCKED(kits)" if hm.get("pairs_unmeasured") else "PASS"
+            if st == "PASS" and not (isinstance(hold, (int, float)) and math.isfinite(hold) and hold >= 0):
+                return stop("NOT RUN", f"{name}: measured FF hold result missing")
+            out["checks"][name] = dict(pairs=count, tt_setup_ps=setup, ff_hold_margin_ps=hold,
+                                       hold_pairs_measured=hm.get("pairs_measured"),
+                                       hold_pairs_unmeasured=hm.get("pairs_unmeasured"),
+                                       missing_views=sorted(hm.get("missing_views") or {}), verdict=st)
+            continue
         else:
             setup, hold = tt.get("worst_setup_slack_ps"), ff.get("worst_hold_slack_ps")
             passed = tt.get("setup_neg_pairs") == ff.get("hold_neg_pairs") == 0
@@ -1063,7 +1079,9 @@ def related_sta_state(path, pre, post_clock=None):
         return stop("NOT RUN", "related STA contains no timed related pairs")
     out["block_model"] = rec.get("block_model", {})
     out["timed_dir"] = rec.get("timed_dir")
-    out["verdict"] = "PASS" if all(x["verdict"] == "PASS" for x in out["checks"].values()) else "FAIL"
+    vs = [x["verdict"] for x in out["checks"].values()]
+    out["verdict"] = "PASS" if all(v == "PASS" for v in vs) else "FAIL" if any(v != "PASS" and v != "BLOCKED(kits)"
+                                                                             for v in vs) else "BLOCKED(kits)"
     return out
 
 
@@ -1137,7 +1155,8 @@ def cmd_report(a):
         rep["infrastructure_freeze"] = "PASS"
     rep["freeze_gate"] = dict(rule="METHODOLOGY 12.4a/d/e", clock_alone=clk_ok, clock_post_signal=post_ok,
         clock_skew_role="DIAGNOSTIC target only", signal_grt0=grt_ok, connected_preroutes=connected_ok,
-        related_pair_sta=sta["verdict"], verdict="PASS" if ready else "FAIL" if known_fail else "NOT RUN")
+        related_pair_sta=sta["verdict"], verdict="PASS" if ready else "FAIL" if known_fail else
+        "BLOCKED(kits)" if sta["verdict"] == "BLOCKED(kits)" else "NOT RUN")
     if not connected_ok:
         rep["freeze_gate"]["reasons"] = [
             "capacity reservations do not import fixed wires/vias/terminals into the signal design"]

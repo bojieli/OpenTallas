@@ -1183,7 +1183,9 @@ UNC_SPLIT = 0.5
 RC_CAL_FILE, RC_CAL_KIT = "setRC_rcx_asap7.tcl", "setRC_rcx.tcl"
 # FLOW 10-25: default FF-only GRT hold repair margin (run_kit.sh grt CORNERS=bc with the FF-bound vclk); = the
 # kit HOLD_SLACK_MARGIN (owner 00:46: repair only 0..5 ps above the SDC).  gen.py phys --hold-mcmm = old MCMM GRT.
-HOLD_FF_MARGIN_DEFAULT = 5.0
+# FLOW-HOLD-1 (OWNER 12.19): 5 -> 10 ps for NEW kits (the shared core_flow.HOLD_FF_MARGIN_DEFAULT; 15 where a measured
+# GRT->final RC hold loss > 10 ps is documented); signed views stay valid.
+HOLD_FF_MARGIN_DEFAULT = 10.0
 # HOLD-REPAIR 10-26 (plan_demand kits only): repair_timing buffer cap and the HB4 hold-pad hook
 HOLD_REPAIR_MAX_BUFFER_PERCENT = 100.0
 HOLD_PAD_HB4 = Path(__file__).resolve().parents[2] / "physical" / "common_flow" / "hold_pad_hb4.tcl"
@@ -2453,7 +2455,7 @@ exit $rc
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
-               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None):
+               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=()):
     """gpl_plain: types whose kit places on plain-wirelength GPL (pure-FT corridors, --gpl-plain)."""
     """landing (opt-in, DIE-HEAD-4b, gen phys --clock-landing): the clock_landing_plan sidecar of a composed landed plan.
     The kit wrapper is the SAME landed wrapper gen rtl --clock-landing emits (clock_landings.type_rtl: rings, ring
@@ -2468,9 +2470,20 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         raise SystemExit(MS.REFUSE)
     # plan-relative declarations (hard-core pins_file for the reset wavefront) resolve against the plan file
     P = S.Plan(raw, plan_path)
+    # KV-KITS-23: hard PHY partitions may contain ordinary mapped boundary glue.
+    # Explicit bound RTL is mandatory: a plan-only hard macro must never become
+    # a synthesized shell merely because this switch is present.
+    wrappers = set(hard_wrappers or ())
+    for tn in sorted(wrappers):
+        if tn not in P.types or not P.types[tn].get("hard"):
+            raise gen_rtl.GenError(f"hard wrapper {tn}: must name an existing hard type")
+        if not types or tn not in types or not kit_rtl or tn not in kit_rtl:
+            raise gen_rtl.GenError(f"hard wrapper {tn}: requires explicit --types and --kit-rtl")
+        if not type_macros(P, tn):
+            raise gen_rtl.GenError(f"hard wrapper {tn}: requires a placed macro with LEF and TT/FF views")
     if master_slice:                                            # 12.7c: every slice checked before any kit is written
         for tn, t in sorted(P.types.items()):
-            if not t.get("hard") and (not types or tn in types):
+            if (not t.get("hard") or tn in wrappers) and (not types or tn in types):
                 MS.resolve(master_slice, tn, t["outline_um"], raw, trial, kind="partition")
     out = Path(out)
     rtl_dir = out / "_rtl"
@@ -2491,7 +2504,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
     rs = root / "rtl" / "lib" / "ot_reset_sync.sv"
     kits = []
     for tn, t in sorted(P.types.items()):
-        if t.get("hard") or (types and tn not in types):
+        if (t.get("hard") and tn not in wrappers) or (types and tn not in types):
             continue
         if kit_rtl and tn in kit_rtl:
             fl = [Path(x) for x in Path(kit_rtl[tn]).read_text().split() if x and not x.startswith(("+", "-"))]
