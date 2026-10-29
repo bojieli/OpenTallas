@@ -30,10 +30,12 @@ def prove(parent_text, band_text):
     return mapped
 
 
-def emit_bound_aliases(parent_text,band_text,frame,band_instance,report,images):
+def emit_bound_aliases(parent_text,band_text,frame,band_instance,report,images,active_names=None):
     if not re.fullmatch(r'[A-Za-z_]\w*',frame) or not re.fullmatch(r'u_r\d+',band_instance):
         raise ValueError('unsafe frame/band identity')
     mapping=prove(parent_text,band_text)
+    if active_names is not None:
+        mapping={name:suffix for name,suffix in mapping.items() if name in active_names}
     audit={}
     for row in report.get('instance_path_params',[]):
         if row['inst'] in audit:raise ValueError('duplicate bound image selector')
