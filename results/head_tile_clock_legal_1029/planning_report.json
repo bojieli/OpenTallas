@@ -1,0 +1,53 @@
+{
+  "sinks": 25749,
+  "taps": 45,
+  "max_radius_um": 97.22499999999994,
+  "max_sinks": 2601,
+  "min_sinks": 1,
+  "pads": 333,
+  "model": {
+    "TT": {
+      "prefix_scale": 1.0,
+      "local_coefficients": [
+        60.56906206512964,
+        0.25451207611290677,
+        6.92233521358357,
+        0.16778013000056355
+      ],
+      "calibration_max_residual_ps": 25.83727884780194,
+      "stage_ps": 22.27042857142857,
+      "target_ps": 525.0
+    },
+    "FF": {
+      "prefix_scale": 0.81,
+      "local_coefficients": [
+        61.266893942367545,
+        0.20066059713466639,
+        4.851345817550246,
+        0.12168360230656558
+      ],
+      "calibration_max_residual_ps": 20.70743272022537,
+      "stage_ps": 16.29285714285714,
+      "target_ps": 425.25
+    }
+  },
+  "predicted_ranges": {
+    "TT": [
+      512.97,
+      544.76
+    ],
+    "FF": [
+      406.66,
+      432.04
+    ]
+  },
+  "assumptions": [
+    "Matched physical h17 BUFx24 trunk prefixes; changed tap loads only modeled by new local group fit.",
+    "FF prefix scales TT by0.81: planning approximation, actual dualcorner measurement required.",
+    "NNLS local-tree delay vs stub/log2sinkcount/radius calibrated to h17 after subtracting old pad physical stage delay.",
+    "BUFx4 rise-stage slope from qualified model_corr golden SPICE, bothcorners; no BUFx24factor applied to BUFx4.",
+    "HR0 inherited illegal ideal site660,690 moved to legal uppercrossbar660,717; prefix wirelength difference modeled, actual legalclocksites required.",
+    "Existing macro early-tap paths unchanged, stagesA6/B4 retained; actual corepin insertion must be remeasured.",
+    "Plan only; no timing closure or signoff claim."
+  ]
+}
