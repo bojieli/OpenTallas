@@ -1,0 +1,25 @@
+{
+  "source_plan_sha256": "cfdf344d0b30f4f08f02e28f826b81d4b8d3deb5474f6ad3595d8ef10000f3ad",
+  "source_sidecar_sha256": "e9a7f38861e7a9008538b3ec22e36ad44bab9fe88b543d713bce1f237f85833a",
+  "retained_export_copy": true,
+  "raw_reset_exports": 15,
+  "added_status_flops": 8,
+  "added_cycles": 0,
+  "clock_source_budget_ps": {
+    "TT": 525.0,
+    "FF": 425.25
+  },
+  "corridor": {
+    "targeted_flops": 2440,
+    "existing_relay_flops": 2439,
+    "parallel_state_copies": 1,
+    "added_cycles": 0,
+    "source_hook": "face_flops.tcl: after face/landing placements, before GPL-only ring-bank reservation",
+    "postresize_hook": "face_flops_release.tcl: current-master repack before DPL",
+    "fresh_reg_spine_assignment_required": true,
+    "postplacement_fullgraph_and_geometry_required": true,
+    "route_qualified": false
+  },
+  "physical_clock_assignment": "NOT RUN: actual new sinks required before CTS",
+  "route_qualified": false
+}
