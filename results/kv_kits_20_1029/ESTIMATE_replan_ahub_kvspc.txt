@@ -1,0 +1,38 @@
+KV-KITS-20 2026-10-29 ESTIMATE BEFORE BUILD (12.14) for the two COORD-concurred GEOM FAIL re-plans (KV-007 qkd_ahub, KV-008 qkd_kvs_pc).
+Inputs: autopilot AUTO-GEOM a35cae45b0df (kvs_pc 3_place, kv-kits-16-1028) and c85a9f8e87fe (ahub kits_ck3c 3_place); event26 plan
+(intel1 codex-kv-25-1029/event26/plan.json). Renders auto_geom.png of both personally VIEWED. Per-capture r2r recomputed with the
+identical geom_rules.r2r_metrics propagation (r2r_groups.py here; reproduces 1896 > 405 exactly) and grouped by launch/capture.
+
+== qkd_kvs_pc (outline 397.44x362.88 = the event26 slot for all 4 kvpc instances; so "outline from slot" is already true) ==
+192,135 cells / 43,752 FF, fill 0.184, empty 0.559 (>0.5 FAIL). 1896 captures > 405; 1879 of them (99.1 %) come from FOUR launch flops:
+  L1 u_ctrl.u_sched.hr_q  (35.6,36.6 SW)   -> 617 caps po/po_i at NE (x260-392,y288-358; 311 N-face)  476..679 um  RESET broadcast (hr_q <= hrst -> h_rst_n)
+  L2 u_chain.c[F_V]       (6.5,357 W face) -> 575 caps les_i/land_es at SE S face (x266-337,y4-12)    608..681 um  DATA: W-face input capture -> S-face output, 1 edge
+  L3 u_esm.own            (phase reg)      -> 399 caps her/h_v/hcw (x64-154,y5-55)                     405..500 um  phase broadcast (own <= !emb_boot_ready)
+  L4 u_ctrl.u_obs.hr_q    (160.4,37.7)     -> 288 caps po_q at NE (x296-358,y324-346)                  426..493 um  RESET broadcast
+  rest: 17 (pc_sr[0..4], u_port.hr_q, u_chain.rs_q, fi_q) incl. relay_collapse 6 (pc_sr -> pc_core_meta 2 hops 585).
+Root causes (structural, not placement noise):
+  (a) L2 is a PIN-PLAN conflict: the chain input face flops (W face, top) and its land/les output face flops (S face, right) are both
+      fixed at the faces, so the one-edge path is >= 608 um whatever the placer does. Fix = plan pin delta: put the chain land_es/les
+      output pins on the W face next to the chain input (or the input on the S face next to the outputs). 0 cycles. Plan owner.
+  (b) L1/L4 are RESET broadcasts whose sync flop sits next to its hrst source in the SW while the po output group sits in the NE.
+      Fix = route h_rst_n to the po cluster through the existing reset relay (ot_rst_relay) under the KV die reset contract
+      (same contract DIE-KV-26 writes for ASTK, ASK-B; release edges, 0 data cycles). Kit/RTL-wrapper owner.
+  (c) L3 phase broadcast: replicate own per consumer cluster (keep), 0 cycles, LEC proves the replica merge (register merges
+      are already handled inductively by lec.py). Kit owner.
+  (d) Outline: logic 25.3k um2; at the 0.40-0.60 METHODOLOGY 1.14 target a 233x233 outline fits cells, but 4133 face pins on 3 faces
+      need >= ~690 um of face at <= 6/um -> ~233 um sides. A shrink cures empty (0.56) and roughly halves r2r spans but does NOT
+      cure (a); it is a plan change for 4 kvpc instances in pc partitions -> only if DIE-KV-26 wants the area. Not needed for gates.
+Two parallel variants (12.17(3)) after the plan delta: V1 = (a)+(b)+(c) at current outline; V2 = V1 + shrink (if plan agrees).
+Expected after V1: r2r residual = the 17 small items (pc_sr relay pair 585 um = relay_collapse, needs relay anchors) -> PASS-COND.
+
+== qkd_ahub (604.8x440.64, 5 SRAM-like macros, fill 0.0165) ==
+Data reach already fixed by Codex anchors (391.61 um/0 bad, kit ahub_anchor_trial2). Open = clock_reach 533.84 from ONE entry ck[0]
+at (302,242) to 3557 sinks that lie in the S band (x 0-605, y 0-45), the E column (x 590-605, y 0-440) and a centre cluster (~190,230).
+Codex: full-wall native single-entry H estimate 20 stages/601 buf -> TT 536.33 / window 78.07 = FAIL vs 250+-20 (12.3).
+Multi-entry estimate (reach to nearest entry <= 200-220 um, 12.8b): 5 entries = ck[0] centre (keeps centre cluster, 124 um) + S-W
+(150,0) + S-E (450,0) + E-S (604.8,110) + E-N (604.8,330): S band +-150 x + 45 y = 195; E column +-110 y + 15 x = 125 -> all <= 200.
+In-core latency then = local tree only (~3-4 stages, ~120-150 ps TT by the R7 stage model, UNCHECKED) -> the parent supplies the rest
+to hit 250 TT common latency; entries must be leveled by the parent (partition hub_C local tree, ruling A tree c, no early core taps).
+ck1/ck2 (zh macro clocks) and the recip hard clock root stay as they are (Codex f07 preserved_hard_clocks API).
+This is a PLAN change (4 new core clock ports + hub_C tree taps) -> DIE-KV-26 / ot_clk (12.17(2)); the kit is regenerated after it.
+Numbers: geometry CHECKED (own recompute from geom.tsv / renders viewed); latency numbers MODEL, UNCHECKED.
