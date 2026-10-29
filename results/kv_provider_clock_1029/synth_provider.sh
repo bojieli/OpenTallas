@@ -29,7 +29,9 @@ hierarchy -check -top ot_die_start_stages
 synth -top ot_die_start_stages -noabc
 dfflibmap -liberty stdcells.lib
 abc -liberty stdcells.lib
+select *
 setattr -mod -unset keep_hierarchy
+setattr -unset keep_hierarchy
 flatten
 clean
 check -assert

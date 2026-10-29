@@ -1,0 +1,28 @@
+{
+ "source": "7147152fc",
+ "vehicle": "native6 real root hub_C",
+ "declared_flops": 10530,
+ "root_stage_count": 0,
+ "reset_wave": "bounded_synchronous_parent_relays",
+ "local_reset_exports": 87,
+ "actual": {
+  "stages": 1528,
+  "cells": 22671,
+  "metadata_cells_skipped": 3056,
+  "state_named_flops": 6029,
+  "flops": 10530,
+  "comb": 12141,
+  "mapped_area_um2": 3670.8503400008617,
+  "outputs": 157
+ },
+ "ff_roles": {
+  "reset": 4501,
+  "origin": 6029
+ },
+ "all_cell_stage_width_um": {
+  "min": 6.804,
+  "max": 9.018
+ },
+ "physical_qualified": false,
+ "remaining": "actual boundary joins/origin-FF clock frame/fullcell sourceDB/PG+clock-load measurement"
+}

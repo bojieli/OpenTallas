@@ -1,0 +1,29 @@
+{
+ "positive_counts": {
+  "stages": 1528,
+  "cells": 22671,
+  "metadata_cells_skipped": 3056,
+  "state_named_flops": 6029,
+  "flops": 10530,
+  "comb": 12141,
+  "mapped_area_um2": 3670.8503400008617,
+  "outputs": 157
+ },
+ "controls": {
+  "wrong_stage": {
+   "caught": true,
+   "reason": "provider output has non-inverter or cross-stage launch cone: {'port': 'start:st:h00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001001001->hgi_EN_0', 'dst_region': 'hgi_EN_0', 'dst_part': 'hgi_EN_0', 'net': 'pst_hgi_EN_0', 'stage': 'b0_r5bb1ffac768a0632'}"
+  },
+  "unknown_cell": {
+   "caught": true,
+   "reason": "mapped cell lacks unique stage hierarchy: unowned.$flatten\\u_rst_b0_r5bb1ffac768a0632.$abc$357$auto$blifparse.cc:397:parse_blif$358"
+  },
+  "missing_declared_ff": {
+   "caught": true,
+   "reason": "provider FF census mismatch b0_r5bb1ffac768a0632: actual 6/reset 2, declared 7/reset 3"
+  }
+ },
+ "output_inv_counts": {
+  "1": 157
+ }
+}

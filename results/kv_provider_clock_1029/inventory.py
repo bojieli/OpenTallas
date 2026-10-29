@@ -16,12 +16,12 @@ def inventory(mapped,stages,lef):
   if c['type']=='$scopeinfo':
    metadata_cells+=1
    continue
-  h=re.match(r'^(?:\$flatten\\+)?u_st_([^.]+)\.',name)
-  matches=[h[1]] if h and h[1] in ss else []
+  h=re.match(r'^(?:\$flatten\\+)?u_(st|rst)_([^.]+)\.',name)
+  matches=[h[2]] if h and h[2] in ss else []
   if len(matches)!=1:raise ValueError(f'mapped cell lacks unique stage hierarchy: {name}')
   sid=matches[0];master=c['type']
   if master not in sizes:raise ValueError(f'mapped cell master lacks actual LEF footprint: {master}')
-  row=dict(inst=name,stage=sid,master=master,wh_um=sizes[master],area_um2=sizes[master][0]*sizes[master][1],
+  row=dict(inst=name,stage=sid,role='reset' if h[1]=='rst' else 'origin',master=master,wh_um=sizes[master],area_um2=sizes[master][0]*sizes[master][1],
            sequential=master.startswith('DFF'),connections=c['connections'],directions=c['port_directions'])
   rows.append(row);groups[sid].append(row)
   for port,direction in c['port_directions'].items():
@@ -48,13 +48,13 @@ def inventory(mapped,stages,lef):
  # aliases remain unknown, never reconstructed from cell ordering or placement.
  byname={r['inst']:r for r in rows}
  for n,v in m.get('netnames',{}).items():
-  a=re.fullmatch(r'u_st_([^.]+)\.(s[012]|g_fall.sf|g_pad.pd|n|start)',n)
-  if not a or a[1] not in ss:continue
+  a=re.fullmatch(r'u_(st|rst)_([^.]+)\.(s[012]|g_fall.sf|g_pad.pd|n|start|r[01]|g_fall.rf)',n)
+  if not a or a[2] not in ss:continue
   for k,bit in enumerate(v['bits']):
    path=[];seen=set()
    while len(drivers[bit])==1:
     inst,pin=drivers[bit][0];c=byname[inst]
-    if c['stage']!=a[1]:raise ValueError('cross-stage state alias '+n)
+    if c['stage']!=a[2]:raise ValueError('cross-stage state alias '+n)
     if c['sequential']:
      c.setdefault('state_aliases',[]).append(dict(net=n,bit_index=k,launch_pin=pin,
        inverters=path,inversion_parity=len(path)%2))
@@ -67,6 +67,11 @@ def inventory(mapped,stages,lef):
  perstage=[]
  for sid,s in ss.items():
   rs=groups[sid]
+  actual_ff=sum(r['sequential'] for r in rs)
+  actual_reset_ff=sum(r['sequential'] and r['role']=='reset' for r in rs)
+  declared_ff=s.get('flops');declared_reset=s.get('reset_flops',0)
+  if not isinstance(declared_ff,int) or actual_ff!=declared_ff or actual_reset_ff!=declared_reset:
+   raise ValueError(f'provider FF census mismatch {sid}: actual {actual_ff}/reset {actual_reset_ff}, declared {declared_ff}/reset {declared_reset}')
   perstage.append(dict(stage=sid,clock_net=s['clock_net'],clock_port=s['clock_port'],node_cell=s['node_cell'],
     node_xy_um=s['node_xy_um'],provisional_ff_rect_um=s['rect_um'],cells=len(rs),flops=sum(r['sequential'] for r in rs),
     comb=sum(not r['sequential'] for r in rs),mapped_area_um2=sum(r['area_um2'] for r in rs)))
