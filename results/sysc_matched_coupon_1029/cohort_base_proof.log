@@ -1,0 +1,23 @@
+==== cohort_base4_gold
+======== ABC command line "&r cohort_base4_gold.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w cohort_base4_gold_swept.aig"
+[1;37mcohort_base4_gold[0m : i/o =     45/     18  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.00 MB
+[1;37mcohort_base4_gold[0m : i/o =     45/     18  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.00 MB
+SAT solver statistics:
+CO =       18  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37mcohort_base4_gold[0m : i/o =     45/     18  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.00 MB
+
+==== cohort_base4_gate
+======== ABC command line "&r cohort_base4_gate.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w cohort_base4_gate_swept.aig"
+[1;37mcohort_base4_gate[0m : i/o =     45/     18  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.00 MB
+[1;37mcohort_base4_gate[0m : i/o =     45/     18  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.00 MB
+SAT solver statistics:
+CO =       18  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37mcohort_base4_gate[0m : i/o =     45/     18  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.00 MB
