@@ -2805,16 +2805,16 @@ class Binder:
             f.write_text(txt)
             import native_istations
             native_istations.materialize(self, tn, f)
-            import hbm_spb_native
-            try:
-                files.extend(hbm_spb_native.materialize(self, tn, f))
-            except (ValueError, KeyError, OSError) as exc:
-                raise BindError(f"HBM SPB native {tn}: {exc}") from exc
             import bound_groups
             try:
                 files.extend(bound_groups.materialize(self, tn, f))
             except (bound_groups.BoundGroupError, ValueError) as exc:
                 raise BindError(str(exc)) from exc
+            import hbm_spb_native
+            try:
+                files.extend(hbm_spb_native.materialize(self, tn, f))
+            except (ValueError, KeyError, OSError) as exc:
+                raise BindError(f"HBM SPB native {tn}: {exc}") from exc
             files.append(f)
         if self._native_glue is not None:
             files.extend(self._native_glue.files)
