@@ -1,0 +1,5 @@
+`verilator_config
+// QC-PG-2: trace only the SU8 hard core sources (qfd_dv_s5_su8_rst3 + its kff/kffr/add/stride children)
+tracing_off -file "*"
+tracing_on -file "*/qfd_dv_s5_su8_rst3.sv"
+tracing_on -file "*/qfd_dv_s5_su8.sv"
