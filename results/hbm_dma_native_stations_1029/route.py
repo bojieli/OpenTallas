@@ -114,7 +114,7 @@ def main():
                                request_padding_bits=17*max(0, 80-7-q-r),
                                response_padding_bits=257*max(0, 80-7-q-r),
                                request_option='moves bank read sample date; compiler write/version window proof required',
-                               response_option='preserves bank read sample date; >2kb storage requires priced SRAM design')))
+                               response_option='preserves bank read sample date; >2kb storage requires priced SRAM design'))
     summary = dict(schema='hbm.native_dma.station_count_prep.v1', reach_um=REACH, halo_um=HR.HALO,
                    groups=len(rows), failures=sum(r['verdict'] != 'PASS' for r in rows),
                    physical_cores=len(RECTS), budget=budget,
