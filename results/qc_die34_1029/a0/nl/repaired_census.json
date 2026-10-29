@@ -1,0 +1,113 @@
+{
+ "RT": 395.0,
+ "edges": 48380,
+ "nodes": 14361,
+ "fixed_face": 1040,
+ "movable": 13321,
+ "r2r_max": 395.0,
+ "r2r_gt405": 0,
+ "r2r_captures": 10216,
+ "r2r_worst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs\\[410\\]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_me.mq_wrom\\[410\\]$_DFF_P_",
+ "relay": {
+  "relay_chains": 1194,
+  "relay_collapsed": 0,
+  "relay_balance_max": 9.32,
+  "relay_worst": "u_g.u_tile.u_tile.u_logic.u_me.e_split\\[2\\]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[5\\].g_hd.g_tx.g_r\\[1\\].u_tx/q\\[386\\]$_DFF_P_ 13 hops span 543 max hop 389"
+ },
+ "pin_reg_max": 143.73,
+ "pin_reg_p90": 8.95,
+ "pin_reg_worst": [
+  "143.7 t_out[512]",
+  "52.3 rst_n",
+  "31.1 t_out[26]",
+  "30.8 t_out[0]",
+  "30.8 t_out[16]"
+ ],
+ "graph_legs_gt405": 0,
+ "graph_legs_gt405_by_kind": {},
+ "graph_leg_max": 395.85,
+ "graph_worst": [
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[977]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[742]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[741]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[732]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[730]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[727]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[721]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[1023]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[1012]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[561]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[528]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[521]$_DFF_P_"
+  ]
+ ],
+ "icg_enable_leg_max": 364.77,
+ "rst_n_asr_direct": 75,
+ "rst_n_asr_dist_max": 313.1,
+ "rst_n_asr_gt150": 66,
+ "rst_n_asr_gt405": 0,
+ "moved_cells": 748,
+ "move_p90": 0.0,
+ "move_max": 348.8,
+ "moved_by_family": [
+  [
+   "gs[]$_DFF_P_",
+   30
+  ],
+  [
+   "rq_ad_s[][]$_DFF_P_",
+   12
+  ],
+  [
+   "gn[]$_DFF_P_",
+   1
+  ]
+ ]
+}
