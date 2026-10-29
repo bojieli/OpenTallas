@@ -115,8 +115,8 @@ def compile_recipe(plan, offsets, source_defaults, programme=None):
     result = {'kind': 'HEAD_PRODUCTION_BOOT_SOURCE_RECIPE', 'status': 'BLOCKED',
               'host_part': hp['name'], 'ctl_part': cp['name'], 'host_params': params,
               'explicit_host_params': hc.get('params', {}), 'routes': routes,
-              'host_reset_release': offsets['parts'][hp['name']]['release'],
-              'ctl_reset_release': offsets['parts'][cp['name']]['release'],
+              'host_reset_release': symbolic['parts'][hp['name']]['reset_release'],
+              'ctl_reset_release': symbolic['parts'][cp['name']]['reset_release'],
               'symbolic_contract': dict(parts={n: symbolic['parts'][n] for n in (hp['name'], cp['name'])},
                                         partition_count=len(symbolic['parts']), element_GO=symbolic['element_GO'],
                                         die_START_edge_status=symbolic['die_START_edge_status']),
@@ -137,7 +137,7 @@ def compile_recipe(plan, offsets, source_defaults, programme=None):
         start = programme['start']; producer = start['producer']; S = number(start['die_edge'])
         if programme.get('expected_host_binding', params) != params:
             raise ValueError('compiled source HOST binding differs from selected actual plan')
-        if programme.get('expected_ctl_start_offset', offsets['parts'][cp['name']]['release']) != offsets['parts'][cp['name']]['release']:
+        if programme.get('expected_ctl_start_offset', symbolic['parts'][cp['name']]['start_offset']) != symbolic['parts'][cp['name']]['start_offset']:
             raise ValueError('compiled CTL START offset differs from published selected-plan offset')
         if not producer or 'job_active' in producer.lower() or producer.upper().startswith('TEST'):
             raise ValueError('START requires its actual producer; CTL job_active is downstream of START, not a producer')
@@ -191,7 +191,7 @@ def compile_recipe(plan, offsets, source_defaults, programme=None):
                 raise ValueError('actual MTP RESULT/DHRES mtag must fit CSR5')
         elif mode!='ar' or cfg['glen']!=0:
             raise ValueError('AR entry needs glen0; MTP requires explicit CSR5 RESULT/DHRES tag')
-        seen = S + offsets['parts'][cp['name']]['release']
+        seen = S + symbolic['parts'][cp['name']]['start_offset']
         context = zero + params['BOOT_COMMIT_EDGE'] + tr['hbc_commit_to_context_valid']
         apply_dates = {address: number(programme['csr_apply_edges'][str(address)]) for address in values}
         if apply_dates[8] <= max(value for address, value in apply_dates.items() if address != 8):

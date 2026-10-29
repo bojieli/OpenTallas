@@ -67,6 +67,20 @@ class HeadBootRecipe(unittest.TestCase):
         self.assertEqual(p['partition_types']['s']['reset']['start_role'],'mission')
         p['partition_types']['s']['reset']['bootstrap_buses'].remove('hu_o')
         self.assertEqual(compile_recipe(p,o,PARAMS,a)['status'],'BLOCKED')
+    def test_distinct_raw_reset_and_start_offsets(self):
+        p,o,a=fixture()
+        for name,part in o['parts'].items():
+            part['reset_release']=part.pop('release')
+            if name=='ctl':part['start_offset']=31
+            else:part['start_offset']=part['reset_release']+7
+        a['expected_ctl_start_offset']=31
+        r=compile_recipe(p,o,PARAMS,a)
+        self.assertEqual(r['status'],'TEST_RECIPE',r['blockers'])
+        self.assertEqual(r['ctl_reset_release'],12)
+        self.assertEqual(r['first_issue_global_edge'],251)
+        del o['parts']['ctl']['start_offset']
+        with self.assertRaises(KeyError):compile_recipe(p,o,PARAMS,a)
+
     def test_source_authority_and_configuration_mutants(self):
         for change in ('producer','start','run','header','old_offsets'):
             with self.subTest(change=change):

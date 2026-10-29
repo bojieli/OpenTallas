@@ -25,12 +25,19 @@ def compile_contract(plan, offsets):
         if tn != instances[name]['type']:
             raise ValueError(f'{name}: published type differs from selected plan')
         role=types[tn].get('reset',{}).get('start_role','mission')
-        release=part['release']
         hard=bool(types[tn].get('hard'))
+        explicit='reset_release' in part or 'start_offset' in part
+        release=part['reset_release'] if explicit else part['release']
+        start=None if hard else (part['start_offset'] if explicit else part['release'])
+        for label,value in (('reset_release',release),('start_offset',start)):
+            if value is not None and (type(value) is not int or value<0):
+                raise ValueError(f'{name}: invalid {label}')
+        if not hard and start is None:
+            raise ValueError(f'{name}: missing actual START offset')
         rows[name]=dict(type=tn,role='raw_hard_reset' if hard else role,reset_release=release,
-            mission_release=f'max({release}, S+{release})' if not hard else None,
-            control_release=release if hard or role=='bootstrap' else f'max({release}, S+{release})',
-            start_offset=None if hard else release)
+            mission_release=f'max({release}, S+{start})' if not hard else None,
+            control_release=release if hard or role=='bootstrap' else f'max({release}, S+{start})',
+            start_offset=start)
     return dict(kind='HEAD8_SYMBOLIC_SOURCE_CONTRACT',parts=rows,die_START_edge=None,
         die_START_edge_status='UNRESOLVED: actual selected controller/host boot completion must drive S',
         required_BOOT_roles='No role inferred from a type name; bootstrap needs a real mission-admission input',
