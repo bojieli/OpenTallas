@@ -164,4 +164,4 @@ Fresh native strict bind/PVcalendar PASS5c7c40d860, then portbind terminal FAIL 
 - q0 native clock: BLOCKED by KV-014 (kit codex-kv-1028/ectl/fp/kits/qkd_ectlk_q0 synth only, LEC KEEP FAIL 272 differs; Codex coupon7 2 fault/fault_i diffs, API unqualified). No place exists to put a native clock on; run_kit_kv stops on LEC NEQ.
 - pv_join AP b249750e06f3/e6fe0ff4fc43 LIVE (started 05:53, ~3-4 h). Rebuild with FLOW-HOLD-1 (12.19) once it lands if FF hold residual recurs.
 - Codex pv_phy packet live jobs read (none killed): e0 coupled GRT TERMINAL FAIL 05:25 (EST-0104 inconsistent parasitics; FF hold -61.24 after repair); PVJ coupled R0 GRT exit 2 (superseded by OUTPUT_LOAD_LOCAL kits); PHY delay DRT (boring_jepsen, intel2) at iteration 6 still 48,869 violations = not converging (Codex said leave running; recommend stop at iteration ~10 if still >40k); old AP e0 758254a4c092 still running (plateau -38.91). e0 next build = FLOW-HOLD-1 measured-hold + margin (12.19).
-- Worktree intel2 wt/kv-kits-20-1029 kept? removed after push.
+- Worktree intel2 wt/kv-kits-20-1029 removed after push.
