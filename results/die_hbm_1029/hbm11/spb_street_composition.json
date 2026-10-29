@@ -1,0 +1,280 @@
+{
+ "schema": "hbm-spb-street.v2",
+ "source_sha256": "76844898f9b8f50c9d8f10a4cba6a51021f2aae0a07e7245557ccd0c54e17975",
+ "delta_um": 103.68,
+ "types": {
+  "q_spb0": {
+   "endpoints_followed": [
+    {
+     "conn": "u_lk_S0.rx|u_ep_S0",
+     "endpoint": "from_um",
+     "old": [
+      151.864,
+      635.021
+     ],
+     "new": [
+      255.544,
+      635.021
+     ]
+    },
+    {
+     "conn": "u_lk_S0.st|u_ep_S0",
+     "endpoint": "from_um",
+     "old": [
+      2.592,
+      635.021
+     ],
+     "new": [
+      106.272,
+      635.021
+     ]
+    },
+    {
+     "conn": "u_lk_S0.tx|u_ep_S0",
+     "endpoint": "from_um",
+     "old": [
+      449.462,
+      635.021
+     ],
+     "new": [
+      553.142,
+      635.021
+     ]
+    },
+    {
+     "conn": "u_ep_S0.sd_rx|u_lk_S0",
+     "endpoint": "to_um",
+     "old": [
+      248.61,
+      635.04
+     ],
+     "new": [
+      352.29,
+      635.04
+     ]
+    },
+    {
+     "conn": "u_ep_S0.sd_st|u_lk_S0",
+     "endpoint": "to_um",
+     "old": [
+      186.408,
+      635.04
+     ],
+     "new": [
+      290.088,
+      635.04
+     ]
+    },
+    {
+     "conn": "u_ep_S0.sd_tx|u_lk_S0",
+     "endpoint": "to_um",
+     "old": [
+      366.444,
+      635.04
+     ],
+     "new": [
+      470.124,
+      635.04
+     ]
+    }
+   ],
+   "legacy_station_pg_intersections": [
+    {
+     "index": 2,
+     "conn": "u_lk_S0.tx|u_ep_S0",
+     "stage": 0,
+     "xy": [
+      97.128,
+      639.36
+     ]
+    },
+    {
+     "index": 2,
+     "conn": "u_lk_S0.tx|u_ep_S0",
+     "stage": 3,
+     "xy": [
+      177.12,
+      1110.24
+     ]
+    },
+    {
+     "index": 7,
+     "conn": "u_ep_S0.sd_rx|u_lk_S0",
+     "stage": 0,
+     "xy": [
+      367.2,
+      1084.32
+     ]
+    },
+    {
+     "index": 7,
+     "conn": "u_ep_S0.sd_rx|u_lk_S0",
+     "stage": 1,
+     "xy": [
+      246.24,
+      920.16
+     ]
+    },
+    {
+     "index": 9,
+     "conn": "u_ep_S0.sd_tx|u_lk_S0",
+     "stage": 0,
+     "xy": [
+      177.12,
+      1110.24
+     ]
+    },
+    {
+     "index": 9,
+     "conn": "u_ep_S0.sd_tx|u_lk_S0",
+     "stage": 3,
+     "xy": [
+      97.128,
+      639.36
+     ]
+    }
+   ],
+   "native_bank_replacement_required": true
+  },
+  "q_spb0__physical_v1": {
+   "endpoints_followed": [
+    {
+     "conn": "u_lk_S0.rx|u_ep_S0",
+     "endpoint": "from_um",
+     "old": [
+      151.864,
+      635.021
+     ],
+     "new": [
+      255.544,
+      635.021
+     ]
+    },
+    {
+     "conn": "u_lk_S0.st|u_ep_S0",
+     "endpoint": "from_um",
+     "old": [
+      2.592,
+      635.021
+     ],
+     "new": [
+      106.272,
+      635.021
+     ]
+    },
+    {
+     "conn": "u_lk_S0.tx|u_ep_S0",
+     "endpoint": "from_um",
+     "old": [
+      449.462,
+      635.021
+     ],
+     "new": [
+      553.142,
+      635.021
+     ]
+    },
+    {
+     "conn": "u_ep_S0.sd_rx|u_lk_S0",
+     "endpoint": "to_um",
+     "old": [
+      248.61,
+      635.04
+     ],
+     "new": [
+      352.29,
+      635.04
+     ]
+    },
+    {
+     "conn": "u_ep_S0.sd_st|u_lk_S0",
+     "endpoint": "to_um",
+     "old": [
+      186.408,
+      635.04
+     ],
+     "new": [
+      290.088,
+      635.04
+     ]
+    },
+    {
+     "conn": "u_ep_S0.sd_tx|u_lk_S0",
+     "endpoint": "to_um",
+     "old": [
+      366.444,
+      635.04
+     ],
+     "new": [
+      470.124,
+      635.04
+     ]
+    }
+   ],
+   "legacy_station_pg_intersections": [
+    {
+     "index": 2,
+     "conn": "u_lk_S0.tx|u_ep_S0",
+     "stage": 0,
+     "xy": [
+      97.128,
+      639.36
+     ]
+    },
+    {
+     "index": 2,
+     "conn": "u_lk_S0.tx|u_ep_S0",
+     "stage": 3,
+     "xy": [
+      177.12,
+      1110.24
+     ]
+    },
+    {
+     "index": 7,
+     "conn": "u_ep_S0.sd_rx|u_lk_S0",
+     "stage": 0,
+     "xy": [
+      367.2,
+      1084.32
+     ]
+    },
+    {
+     "index": 7,
+     "conn": "u_ep_S0.sd_rx|u_lk_S0",
+     "stage": 1,
+     "xy": [
+      246.24,
+      920.16
+     ]
+    },
+    {
+     "index": 9,
+     "conn": "u_ep_S0.sd_tx|u_lk_S0",
+     "stage": 0,
+     "xy": [
+      177.12,
+      1110.24
+     ]
+    },
+    {
+     "index": 9,
+     "conn": "u_ep_S0.sd_tx|u_lk_S0",
+     "stage": 3,
+     "xy": [
+      97.128,
+      639.36
+     ]
+    }
+   ],
+   "native_bank_replacement_required": true
+  }
+ },
+ "data_cycle_delta": 0,
+ "requires": [
+  "native SPB bank/clock/reset source composition",
+  "full PG solve",
+  "full image review and actual pin access"
+ ],
+ "plan_sha256": "4d53747fd73d5309096d825c013a4c41c464c036f747155bd910af604b9ba817"
+}
