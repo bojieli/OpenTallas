@@ -7,7 +7,7 @@ sites and reports every actual lane latency delta. A failure is never a PASS.
 """
 import argparse,collections,copy,hashlib,heapq,json,math,sys
 from pathlib import Path
-ap=argparse.ArgumentParser();ap.add_argument('plan');ap.add_argument('census');ap.add_argument('out');ap.add_argument('--tools',required=True);ap.add_argument('--allocate',action='store_true');a=ap.parse_args()
+ap=argparse.ArgumentParser();ap.add_argument('plan');ap.add_argument('census');ap.add_argument('out');ap.add_argument('--tools',required=True);a=ap.parse_args()
 sys.path.insert(0,a.tools);sys.path.insert(0,str(Path(a.tools).parents[1]));import schema as S
 out=Path(a.out);out.mkdir(parents=True,exist_ok=False)
 P=json.loads(Path(a.plan).read_text());C=json.loads(Path(a.census).read_text());actual_schema=C.get('schema')=='opentallas.hbm.source_transport_census.v1'
@@ -140,7 +140,7 @@ try:
    aa=mid(sl['in_face'],sl['in_window_um']);bb=mid(sl['out_face'],sl['out_window_um']);prior=int(sl['stations']);sl['stations']=max(prior,math.ceil((abs(aa[0]-bb[0])+abs(aa[1]-bb[1]))/360.))
    for k in ('bit_sites_um','bit_site_cell_um','regs_um'):sl.pop(k,None)
   t['note']=t.get('note','')+' | deterministic actual-source transport candidate; changed FT sites require fresh allocation'
-  report['changed_types'][part]=dict(old=original_types[part],temporary=parts[part]['type'],buses=sorted(changed_buses[part]))
+  report['changed_types'][part]=dict(old=original_types[part],temporary=parts[part]['type'],buses=sorted(changed_buses[part]),old_wrapper_transport_ff=sum(b['width']+1 for b in old.ptype(part).get('buses',[]))+sum((s['width']+1)*s['stations'] for s in old.ptype(part).get('ft_slots',[])))
  P['note']=P.get('note','')+' | source-demand transport candidate; not adopted'
  model=S.Plan(P)
  for l in P['lanes']:

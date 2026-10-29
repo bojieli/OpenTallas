@@ -4,12 +4,12 @@ No physical route/STA. Every new site is a complete 1.404x.27um legal footprint.
 """
 import argparse,collections,copy,hashlib,json,math,sys
 from pathlib import Path
-ap=argparse.ArgumentParser();ap.add_argument('geometry');ap.add_argument('out');ap.add_argument('--tools',required=True);ap.add_argument('--max-extra-stations',type=int,default=8);a=ap.parse_args();sys.path.insert(0,a.tools);sys.path.insert(0,str(Path(a.tools).parents[1]))
+ap=argparse.ArgumentParser();ap.add_argument('geometry');ap.add_argument('out');ap.add_argument('--tools',required=True);ap.add_argument('--parts',help='comma-separated independent instance subset');ap.add_argument('--max-extra-stations',type=int,default=8);a=ap.parse_args();sys.path.insert(0,a.tools);sys.path.insert(0,str(Path(a.tools).parents[1]))
 import schema as S
 import ft_corridor as F
 import hub_repack as HR
 from tools.die_trial.legal_sites import RowAllocator
-src=Path(a.geometry);out=Path(a.out);out.mkdir(parents=True,exist_ok=False);P=json.loads((src/'die_plan.json').read_text());report=json.loads((src/'report.json').read_text());report['status']='ALLOCATING';report['allocation_failures']=[];report['clock_ff_load']={};model=S.Plan(P);parts=model.parts
+src=Path(a.geometry);out=Path(a.out);out.mkdir(parents=True,exist_ok=False);P=json.loads((src/'die_plan.json').read_text());report=json.loads((src/'report.json').read_text());report['status']='ALLOCATING';report['allocation_failures']=[];report['clock_ff_load']={};model=S.Plan(P);parts=model.parts;selected=set(a.parts.split(',')) if a.parts else set(report['changed_types']);report['completed_parts']=[];report['wrapper_transport_ff']={}
 # All PHY supply domains are physical keepouts, including digital-core side strips.
 extra=collections.defaultdict(list)
 for dom in P['die'].get('pg',{}).get('domains',[]):
@@ -35,6 +35,7 @@ def sameface(fin,fout,ca,cb,w,h,jog=None):
 F.build_path=sameface
 try:
  for pn,info in sorted(report['changed_types'].items()):
+  if pn not in selected:continue
   tn=parts[pn]['type'];t=P['partition_types'][tn];W,H=t['outline_um'];fixed=[]
   # Moving a face window moves an existing core/face chain endpoint. Retain all
   # original registers when a legal same-depth chain exists; price every increase.
@@ -77,11 +78,15 @@ try:
     bad['stations']+=1
   if not completed:raise RuntimeError(f'{pn}: actual-site allocation failed; see allocation_failures')
   report['clock_ff_load'][pn]=sum((s['width']+1)*max(0,s['stations']-1) for s in slots)
+  report['completed_parts'].append(pn)
+  report['wrapper_transport_ff'][pn]=dict(old=info.get('old_wrapper_transport_ff'),new=sum(b['width']+1 for b in t.get('buses',[]))+sum((s['width']+1)*s['stations'] for s in slots))
+  (out/'progress.json').write_text(json.dumps({'completed_parts':report['completed_parts'],'ft':report['ft'],'internal':report['internal'],'clock_ff_load':report['clock_ff_load']},indent=1)+'\n')
   print('PART_COMPLETE',pn,len(ledger),report['clock_ff_load'][pn],flush=True)
  # New module/view identity follows the full physical interface. Existing source
  # and core-conns templates are identified explicitly for the parent's overlay.
  rename={}
  for pn,info in report['changed_types'].items():
+  if pn not in selected:continue
   tmp=parts[pn]['type'];t=P['partition_types'][tmp];identity=copy.deepcopy(t);identity.pop('module',None);identity.pop('note',None);digest=hashlib.sha256(json.dumps(identity,sort_keys=True,separators=(',',':')).encode()).hexdigest()[:10];nn=info['old']+'__tr_'+digest;t['module']='hbm_arch_'+nn
   if nn in P['partition_types'] and P['partition_types'][nn]!=t:raise RuntimeError('physical interface hash collision')
   P['partition_types'][nn]=t;parts[pn]['type']=nn;rename[tmp]=nn;info['new']=nn
@@ -90,7 +95,7 @@ try:
  for l in P['lanes']:
   lid=l['id'];oldrow=P['latency']['lanes'].get(lid,{});row=mm.lane_latency(lid);row['param']=oldrow.get('param','LAT_'+lid.upper());P['latency']['lanes'][lid]=row
   if row['cycles']!=oldrow.get('cycles'):report['latency'].append(dict(lane=lid,old=oldrow.get('cycles'),new=row['cycles'],added=row['cycles']-oldrow.get('cycles',0),reason='actual FT row-site allocation'))
- report['status']='ACTUAL_FT_SITES_ALLOCATED_PENDING_CURRENT_SOURCE_BITMAP_AND_G0_G1'
+ report['status']='ACTUAL_FT_SITES_ALLOCATED_PENDING_G0_G1' if selected==set(report['changed_types']) else 'PARTIAL_FT_SITES_ALLOCATED' 
  (out/'die_plan.json').write_text(json.dumps(P,separators=(',',':'))+'\n')
 except Exception as err:
  report['status']='FAIL';report['failures'].append(f'{type(err).__name__}: {err}');raise

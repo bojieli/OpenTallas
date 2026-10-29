@@ -49,3 +49,11 @@ The parent C25c owner applies the transform to the atomic ring/street/native-ban
 composition, reconciles type-keyed core connections and compiler timing, and
 obtains G0/G1 before any physical route. The current allocation input uses the
 stable a4b0cb3d geometry and therefore remains a composition diagnostic.
+
+Future atomic-plan runs can allocate independent partitions in parallel:
+`allocate.py GEOMETRY SHARD --parts NW_hub,root --tools tools/die_plan`.
+`compose.py GEOMETRY OUT SHARD... --tools tools/die_plan` rejects missing/duplicate
+partitions and source mismatches, then merges their independent physical types
+and recalculates all lane latencies. This does not replace or restart the live
+serial diagnostic; it is supplied for the parent's subsequent composed input.
+The subset/compose interface has syntax checks only until a real shard run.
