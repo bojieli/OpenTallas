@@ -1,0 +1,9 @@
+GQ SRC OUT candidate, 2026-10-29
+
+Actual retained mapped kit has M5 clock centre116.664,116.64 w.048 h.48. Current plan had stale west clock metadata; candidate corrects metadata only, no actual clock-tree change. pin_compare.json records4031old/new data pins exact before output repair. Eight staged SV byte-identical to fully proved gold source; retained mappedDB can be reused after physical/interface adoption. No resynthesis or place/STA/route launched here.
+
+Personally viewed gq_plan_pg.png shows original E ra_lp_data256 compressed into24.48um (10.3%face), peak10.5pins/um. This is a real geometry failure, not pass. spread_gq_output.py changes only these256 output ycoordinates, preserving ascending bitorder and all3776other pins exactly relative clock-corrected input. New span219.6um=92.424%face, peak10um1.2/um, M4 legal .024+n*.048 coordinates. Personally viewed gq_srcout_spread.png confirms full-face spread. Clock and all4031data except those256 preserved. Zero cycle change.
+
+Actual graph gq_ra_source_packet.json: hcollgi_NE/NW q1 outputs ra_lp_data[k] directly to hb_coll_NE/NW input k. There is NO native q0 producer, so q0 physical slots UNREALIZED. Global bind emission failed, leaving ZERO bound last-station per-bit sites. Planned station sidecars are not physical source binding. No qualified station reach delta or source-to-station PASS can be claimed. No P&R until downstream exact composite port mapping and actual paired endpoint geometry are reviewed. Dieclock tap binding also NOT CHECKED.
+
+Replay: adopt_gq_clock.py BASE_C25c_DIR CLOCK_OUT_DIR; spread_gq_output.py CLOCK_OUT_DIR SRCOUT_DIR. Generated full candidate plan remains local /srv/opentallas-scratch/claude/hbm-gq-stage-1029/spread; owner integrates only requested delta, preserving concurrent plan changes. Current base plan SHA805f376e157b50047d5b6ea7a015481055e663843f1c76968673e6327f0be13d. No physical adoption/SIGNED claim.

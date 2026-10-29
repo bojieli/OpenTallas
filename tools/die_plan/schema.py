@@ -97,6 +97,8 @@ _xy = {"type": "array", "items": _num, "minItems": 2, "maxItems": 2}
 _wh = {"type": "array", "items": _pos, "minItems": 2, "maxItems": 2}
 _rect = {"type": "array", "items": _num, "minItems": 4, "maxItems": 4}
 _name = {"type": "string", "minLength": 1}
+_early_late = {"type": "object", "required": ["early", "late"], "additionalProperties": False,
+               "properties": {"early": {"type": "number", "minimum": 0}, "late": {"type": "number", "minimum": 0}}}
 _layer = {"type": "string", "pattern": "^M[1-9]$"}
 _win = {"type": "array", "items": _num, "minItems": 2, "maxItems": 2}
 _lays = {"type": "array", "items": _layer, "minItems": 1, "maxItems": 3}   # 3 only on a face_layers face (G0 faces)
@@ -135,7 +137,12 @@ _parent_id_straps = {"type": "object", "additionalProperties": False, "propertie
                                    else {"type": "integer", "minimum": 1}),
                           "value": {"type": "integer", "minimum": 0,
                                     **({"maximum": (1 << _physical_id_widths[name])-1} if name in _physical_id_widths else {})}}}
-    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", "sidx", *_physical_id_widths)}}
+    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", "sidx", "strap_lane_id", *_physical_id_widths)}}
+
+_position_id_contract = {"type": "object", "required": ["kind", "pbase", "lane"],
+                         "additionalProperties": False, "properties": {
+    "kind": {"const": "KEYBUF_LANE_ID"}, "pbase": {"enum": [0, 4]},
+    "lane": {"type": "integer", "minimum": 0, "maximum": 3}}}
 
 # Exact identity ports only. G0's semantic validator enforces each port's width;
 # allOf gives full JSON-Schema consumers the same cross-field restriction.
@@ -432,6 +439,8 @@ SCHEMA = {
                                        "note": {"type": "string"}}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
+                        "tap_pin_heights_um": {"type": "object", "additionalProperties": {
+                            "type": "number", "minimum": 0.768}},
                         # FLOW 10-25 (ruling 9.7 / decision 5e): this type's bound pin-register insertion per corner
                         # (insertion_ps = TT, insertion_ff_ps = FF) = the signed view's routed RCX pin-register mean,
                         # or the parent budget before the first sign-off; insertion_basis says which
@@ -473,7 +482,18 @@ SCHEMA = {
                             "type": "object", "required": ["port", "tap_um"], "additionalProperties": False,
                             "properties": {"port": _name, "tap_um": _xy,
                                            "period_mult": {"type": "integer", "minimum": 1},
-                                           "source": {"type": "string"}, "note": {"type": "string"}}}},
+                                           "source": {"type": "string"}, "note": {"type": "string"},
+                                           # DIE-HEAD-21 (opt-in): measured arrival of the sender's forwarded clock
+                                           # AT this port (sender export + wire; the receiver's own tree is
+                                           # propagated by the tool), per corner, as an early/late range.  Emitted
+                                           # as set_clock_latency -source -early/-late on the edge clock: TT in
+                                           # constraint.sdc, FF in the core_taps_ff.sdc corner overlay.  Early (min)
+                                           # times the capture of setup checks, late (max) the capture of holds.
+                                           "source_latency_ps": {
+                                               "type": "object", "required": ["tt", "ff", "basis"],
+                                               "additionalProperties": False, "properties": {
+                                                   "tt": _early_late, "ff": _early_late,
+                                                   "basis": {"type": "string", "minLength": 1}}}}}},
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
                         "tap_target_sinks": {"type": "integer", "minimum": 1},
                         "tap_min_sinks": {"type": "integer", "minimum": 1},
@@ -552,6 +572,7 @@ SCHEMA = {
                         "properties": {"inst": _name, "module": _name, "origin_um": _xy, "outline_um": _xy,
                                        "straps": _core_id_straps,
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
+                                       "position_id_contract": _position_id_contract,
                                        "bump_ports": _bump_ports,
                                        "orient": {"enum": list(ORIENTS)},
                                        "track_offset_um": _xy,      # added to origin_um (lattice) at placement
@@ -602,6 +623,7 @@ SCHEMA = {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
+                                       "position_id_contract": _position_id_contract,
                                        "bump_ports": _bump_ports,
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
                                        "origin_um": _xy, "outline_um": _wh, "note": {"type": "string"},
@@ -885,6 +907,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # Liberty arcs (island ft clock pass-through, e.g. ft_ck0_i) to its outputs instead of measuring it as a clock sink.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_passthrough"] = {
     "type": "boolean"}
+# HEAD START-export fanout: retained copies of existing data states, zero added cycles.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_origin_export_copy"] = {"type": "boolean"}
 # clock-landing cohort types (clock_landing_plan.compose) name the base plan type they were split from.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_base_type"] = {"type": "string"}
 # CLOCK-KV-R22: declared die-top data landing islands (landing_islands.py; hold cells for hard->hard seams)

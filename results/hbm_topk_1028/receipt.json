@@ -1,0 +1,24 @@
+{
+  "source_base": "ac2ad01a82a6ed2841435bb93c3e33f274eafd0a",
+  "source_sha256": "dfd00861419bed7068085831b3120dc1cd80ef1cd77b85b21dd50717ec2630d6",
+  "run": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/exact_header",
+  "unit": "oth-ubuntu-281197-1793256731",
+  "verdict": "FUNCTIONAL_AND_STRUCTURAL_PROOFS_PASS",
+  "lockstep": {
+    "frames": 4,
+    "records": 2048,
+    "flits": 256,
+    "cycle_samples": 1232,
+    "errors": 0
+  },
+  "mutant_errors": [
+    2112,
+    320,
+    2669
+  ],
+  "carry": "induction from reset PASS; dropped-mask mutant caught",
+  "header": "no-assumption SAT PASS; wrong-low-bit mutant caught",
+  "added_cycles": 0,
+  "physical": "NOT RUN on this source; historical kit LEC NOT EQUIVALENT40 preserved",
+  "initial_bmc": "20-step 32-bit-index carry proof stopped own solver to replace with bounded-width inductive invariant; no verdict or source change inferred"
+}

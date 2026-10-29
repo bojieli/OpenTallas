@@ -17,6 +17,10 @@ ap.add_argument("plan"); ap.add_argument("views"); ap.add_argument("sdir"); ap.a
 ap.add_argument("mods"); ap.add_argument("--tag", default="_c20"); ap.add_argument("--islands-only", action="store_true")
 ap.add_argument("--core-reach-um", type=float, default=200.0)
 ap.add_argument("--gen-args", default="", help="extra gen_core_kit_hbm.py args (shlex), e.g. \"--hold-margin 5\"")
+ap.add_argument("--avoid-macros", default=None,
+                help="HBM-CORES-KITS-4 (opt-in): macro_placement.v1 JSON (sizes + halo from the sibling .est.json of mp_rule_c); "
+                     "a 12.8b tree-leaf island that falls on a halo-grown macro box moves to the nearest free 4.32-lattice "
+                     "site (clear of every grown macro, the entry island and the other leaves); without it: unchanged")
 ap.add_argument("--ft-pin-dx-um", type=float, default=None,
                 help="HBM-CORES-REBAL-2: island ft pin x offset (1.08 clears the core M5 VSS/VDD pair; default = master_plan legacy 2.16)")
 a = ap.parse_args()
@@ -25,6 +29,60 @@ plan, views, sdir, kdir, wt = [os.path.abspath(x) for x in (a.plan, a.views, a.s
 sys.path.insert(0, f"{wt}/tools/die_plan")
 import master_plan as MP  # noqa: E402  (shared tool: pushdown_island, restructure_islands, entry_island)
 mods = a.mods.split(",")
+
+
+def avoid_macros(leaves, mpf, W, H, entry_rect):
+    """HBM-CORES-KITS-4 10-28 (measured: calendar_f20 _k9 global_place OT_CORE_INFRA_PLANNED_OVERLAP mp_isl1 on the
+    SRAM; 7 of 11 macro kits had a leaf island under a macro): clock leaf drivers sit in placeable area, so a leaf
+    island on a MACRO_PLACE_HALO-grown macro box moves to the nearest (Manhattan) 4.32-lattice centre whose 8.64 rect
+    is inside the core (>= 4.32 from the outline) and clear of every grown macro box, the entry island and the leaves
+    already kept.  Returns (leaves, [(index, old centre, shift um)])."""
+    mp = json.load(open(mpf))
+    est = json.load(open(str(mpf)[:-5] + ".est.json"))
+    halo = float(est.get("halo_um", 4.32))
+    sizes = {m: (float(v["w"]), float(v["h"])) for m, v in est["masters"].items()}
+    boxes = []
+    for q in mp["macro_placement"]:
+        w, h = sizes[q["macro"]]
+        x, y = q["origin_um"]
+        if q.get("orient", "R0") not in ("R0", "MX", "MY", "R180"):
+            w, h = h, w
+        boxes.append((x - halo, y - halo, x + w + halo, y + h + halo))
+
+    def clear(r, kept):
+        for b in boxes + [tuple(entry_rect)] + [tuple(k["rect_um"]) for k in kept]:
+            if r[0] < b[2] - 1e-6 and b[0] < r[2] - 1e-6 and r[1] < b[3] - 1e-6 and b[1] < r[3] - 1e-6:
+                return False
+        return MP.LAT - 1e-6 <= r[0] and r[2] <= W - MP.LAT + 1e-6 and MP.LAT - 1e-6 <= r[1] and r[3] <= H - MP.LAT + 1e-6
+    L = MP.LAT
+    kept, moved = [], []
+    order = sorted(range(len(leaves)), key=lambda i: 0 if clear(leaves[i]["rect_um"], []) else 1)
+    out = [None] * len(leaves)
+    for i in order:
+        q = leaves[i]
+        if clear(q["rect_um"], kept):
+            out[i] = q; kept.append(q); continue
+        cx, cy = q["centre_um"]
+        best = None
+        R = int(max(W, H) / L) + 1
+        for d in range(1, 2 * R):
+            for dx in range(-d, d + 1):
+                for sy in ((1, -1) if abs(dx) != d else (1,)):
+                    dy = sy * (d - abs(dx))
+                    c = (MP.snap(cx + dx * L), MP.snap(cy + dy * L))
+                    r = MP.entry_island(c)
+                    if clear(r, kept):
+                        best = (c, r, MP.r3(abs(c[0] - cx) + abs(c[1] - cy)))
+                        break
+                if best:
+                    break
+            if best:
+                break
+        if best is None:
+            raise SystemExit(f"avoid_macros: no free leaf island site for leaf {i} at {q['centre_um']}")
+        nq = dict(centre_um=[MP.r3(best[0][0]), MP.r3(best[0][1])], rect_um=best[1])
+        out[i] = nq; kept.append(nq); moved.append((i, q["centre_um"], best[2]))
+    return out, moved
 VL = json.load(open(views))["view_list"]
 CE = json.load(open(f"{plan}/clock_entries.json"))
 Path(sdir).mkdir(parents=True, exist_ok=True); Path(kdir).mkdir(parents=True, exist_ok=True)
@@ -47,6 +105,11 @@ for m in mods:
         far = max(abs(cx - xy[0]) + abs(cy - xy[1]) for cx in (0, W) for cy in (0, H))
         sub = MP.restructure_islands(W, H, a.core_reach_um) if far > a.core_reach_um else {}
         leaves = sub.get("islands", [])
+        moved = []
+        if a.avoid_macros and leaves:
+            leaves, moved = avoid_macros(leaves, a.avoid_macros, W, H, isl)
+            if moved:
+                sub["leaf_reach_um"] = MP.r3(sub.get("leaf_reach_um", 0.0) + max(d for _, _, d in moved))
         # entry on the core edge (IP_DECLARED native pin, e.g. serdes y=0.019): the +-2.16 ft ports would leave the
         # outline -> island drivers/ports at the plan island rect centre (same plan island); clock pin unchanged
         fits = isl[0] <= xy[0] - 2.16 and xy[0] + 2.16 <= isl[2] and isl[1] <= xy[1] - 2.16 and xy[1] + 2.16 <= isl[3]
@@ -74,6 +137,8 @@ for m in mods:
                                islands=pd),
               "in_core_islands": dict(grid=sub.get("grid"), leaf_reach_um=sub.get("leaf_reach_um"),
                                       farthest_corner_um=MP.r3(far), core_reach_um=a.core_reach_um,
+                                      **({"leaves_moved_off_macros": [dict(leaf=i, from_centre_um=f, shift_um=d) for i, f, d in moved]}
+                                         if moved else {}),
                                       source="tools/die_plan/master_plan.restructure_islands (12.8b grid)"),
               "note": f"DIE-HBM/KITS mk_c20 slice: {os.path.basename(plan)} clock_entries.json ({len(ents)} inst identical); "
                       f"merged ports {list(merged)}; 12.2a1 pushdown {len(pd)} islands"}

@@ -1,0 +1,114 @@
+{
+ "TT": {
+  "slope_ps_per_um": [
+   0.0572,
+   0.0806
+  ],
+  "forms": {
+   "2 roots (x cut, S81-18)": {
+    "subbox_um": [
+     2054,
+     1048
+    ],
+    "taps_per_tree": 25.5,
+    "path_um": 1784,
+    "resid_ps": [
+     102.0,
+     143.8
+    ]
+   },
+   "4 local trees 4x1": {
+    "subbox_um": [
+     1027,
+     1048
+    ],
+    "taps_per_tree": 12.8,
+    "path_um": 1193,
+    "resid_ps": [
+     68.3,
+     96.2
+    ]
+   },
+   "8 local trees 4x2": {
+    "subbox_um": [
+     1027,
+     524
+    ],
+    "taps_per_tree": 6.4,
+    "path_um": 892,
+    "resid_ps": [
+     51.0,
+     71.9
+    ]
+   },
+   "12 local trees 6x2": {
+    "subbox_um": [
+     685,
+     524
+    ],
+    "taps_per_tree": 4.2,
+    "path_um": 695,
+    "resid_ps": [
+     39.8,
+     56.0
+    ]
+   }
+  }
+ },
+ "FF": {
+  "slope_ps_per_um": [
+   0.0528,
+   0.0723
+  ],
+  "forms": {
+   "2 roots (x cut, S81-18)": {
+    "subbox_um": [
+     2054,
+     1048
+    ],
+    "taps_per_tree": 25.5,
+    "path_um": 1784,
+    "resid_ps": [
+     94.1,
+     129.0
+    ]
+   },
+   "4 local trees 4x1": {
+    "subbox_um": [
+     1027,
+     1048
+    ],
+    "taps_per_tree": 12.8,
+    "path_um": 1193,
+    "resid_ps": [
+     62.9,
+     86.3
+    ]
+   },
+   "8 local trees 4x2": {
+    "subbox_um": [
+     1027,
+     524
+    ],
+    "taps_per_tree": 6.4,
+    "path_um": 892,
+    "resid_ps": [
+     47.1,
+     64.5
+    ]
+   },
+   "12 local trees 6x2": {
+    "subbox_um": [
+     685,
+     524
+    ],
+    "taps_per_tree": 4.2,
+    "path_um": 695,
+    "resid_ps": [
+     36.7,
+     50.3
+    ]
+   }
+  }
+ }
+}

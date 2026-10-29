@@ -1,0 +1,53 @@
+{
+  "verdict": "SOURCE_EXACT_MECHANISM_AND_FULL_SHAPE_PASS",
+  "source_commit": "23c203b01",
+  "helper_dependency": "353da5b41",
+  "added_cycles": 0,
+  "new_state_bits": 0,
+  "new_clock_load": 0,
+  "production_lockstep": {
+    "cycles": 8079,
+    "selected_beats": 1018,
+    "mismatches": 0,
+    "reset_payload_warmup_edges": 3,
+    "valid_and_fault_compared_during_warmup": true,
+    "payload_compared_including_invalid_mission_beats": true
+  },
+  "tie_boundary_lockstep": {
+    "cycles": 1367,
+    "selected_beats": 171,
+    "mismatches": 0,
+    "k": 64,
+    "all_keys": "3c00"
+  },
+  "controls": {
+    "formal_threshold_mutant": "CAUGHT",
+    "full_shape_tie_threshold_mutant": "CAUGHT 311 mismatches",
+    "full_shape_op8_fault_mutant": "CAUGHT",
+    "random_program_threshold_mutant": "SURVIVED; insufficient oversubscribed-tie stimulus; original receipt preserved"
+  },
+  "formal": {
+    "compact_normal_N4_EW37": "PASS arbitrary raw,threshold,ties,fill,stale-buffer",
+    "compact_existing_MUT1_semantics": "PASS",
+    "hist_popcount_16_inputs": "PASS all binary patterns"
+  },
+  "retained_failures": {
+    "sim/": "FAIL3 early invalid-payload X/0 differences; valid=0,fault=0; startup triad diagnosed old/defaultX vs optimized0 until reset/pin pipeline filled",
+    "sim_failed_missing_iverilog/": "FAIL127 ORFS image lacksiverilog; corrected installedhosttool viaot-run",
+    "gen_failures/sparse_bundle.json": "GEN_FAIL missing clock_family.tcl in own sparse worktree; directory restored",
+    "gen_failures/sparse_macro.json": "GEN_FAIL missing v2 SRAM LEF in own sparse worktree; directory restored"
+  },
+  "physical": "NO PNR; old-source STRUCT1 GEN cached retry live; no process-split GEN yet",
+  "process_split": {
+    "prior_struct_source": "3a56d4eea",
+    "live_profile": "ProcDffPass::execute, 96.64% sampled CPU; not AST parsing",
+    "histogram_bits": 3584,
+    "production_lockstep": "PASS 8079 cycles /1018 beats /0 differences",
+    "tie_lockstep": "PASS 1367 cycles /171 beats /0 differences",
+    "threshold_mutant": "CAUGHT 311 mismatches",
+    "op8_mutant": "CAUGHT",
+    "arbitrary_16hit_transition": "PASS",
+    "clear_priority_mutant": "CAUGHT simultaneous op3+op4 read-return",
+    "measured_frontend_speedup": null
+  }
+}

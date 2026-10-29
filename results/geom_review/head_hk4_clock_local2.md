@@ -1,0 +1,5 @@
+# HEAD HK4 local-column clock fork — CODEX review
+
+VIEWED clock_tree.png personally on2026-10-29 before P&R. PASS-COND initial raw clock/signal GRT50 TT/FF. Same351part data geometry and735tap locations as reviewed local1. Local balanced branches remain. Changed feed makes each outward tile feed its adjacent return tile, avoiding clock travel around the full data U-turn. Adjacent spine chain rootsp3 remains; independent N3 transit/turn regions retained. Feed graph asserts every edge belongs to existing physical-neighbor/data graph, connected327regions, no cycles. No die-wide Htree, no data cycle changes, no trims/pads.
+
+Physical10850inv2cells;0illegal sites,0geometric branch imbalance; actual10848cell/735tap edges max339.72um,0over405,0missing. Whole floorplan unchanged from local1 viewed image. Renderer title/SS colorbar remain stale unmeasured labels; actual inv2/local link_htree/NDR source applies, TT/FF only. Need measured local2 arrivals, fresh CA/START and actual landed+START reroute before release.

@@ -375,3 +375,90 @@ def test_grt_tcl_inc_loads_routes_first():
     blk = s[i:s.index("global_route -end_incremental", i)]
     assert blk.index("estimate_parasitics -global_routing") < blk.index("global_route -start_incremental") < \
         blk.index("source $::env(ECO)")
+
+
+# ---------------------------------------------------------------- QC-A0-KITS-9: --ungated-split (ICG inside the tree)
+def _split_plan(tmp, extra=(), flag=True, regs=False):
+    """far-singleton tile with the two N-edge-ish clusters flagged as the UNGATED input-face branch"""
+    g, c, G = _far_singleton(tmp, regs)
+    for cl in G["clusters"]:
+        if cl["name"] in ("c3", "c7"):
+            cl["ungated"] = True
+    g.write_text(json.dumps(G))
+    out = tmp / ("sp_%s.json" % ("_".join(x.strip("-") for x in extra) or "greedy"))
+    PT.main(["plan", str(g), str(c), str(out), "--entry", "220,300", "--child-ins", "mod_n=150/120"]
+            + (["--ungated-split"] if flag else []) + list(extra))
+    return json.loads(out.read_text()), G, out
+
+
+def _walk(nd, path=()):
+    if nd["kind"] in ("cluster", "child"):
+        yield nd, path
+        return
+    for k in nd["kids"]:
+        yield from _walk(k, path + (nd["kind"],))
+
+
+@pytest.mark.parametrize("topo", [(), ("--topology", "bipart")])
+def test_ungated_split_structure(tmp_path, topo):
+    P, G, out = _split_plan(tmp_path, topo)
+    s = P["summary"]; u = s["ungated_split"]
+    assert s["odd_parity_sinks"] == [] and sorted(u["ungated_sinks"]) == ["c3", "c7"]
+    # ICG is a node below the root merge: every gated sink sits below it, no ungated sink does
+    assert P["tree"]["kind"] == "merge"
+    for nd, path in _walk(P["tree"]):
+        assert ("icg" in path) == (not nd.get("ungated")), nd["name"]
+    # the root leg starts at the tile entry on the clock port net; the ICG input is a planned trunk net
+    assert P["root_leg"][0] == [220.0, 300.0] and u["root_net"] == "a0t_ckin"
+    nets_out = {i["out_net"] for i in P["insts"]}
+    assert u["icg_in"] in nets_out
+    ins_in = {i["in_net"] for i in P["insts"]}
+    assert "a0t_gclk" in ins_in or any(x["net"] == "a0t_gclk" for x in P["sinks"])
+    # the ICG delay is charged to the gated branch only: gated vs ungated plan arrivals balanced by the root merge
+    arr = P["arrival_plan"]
+    g = [arr[n]["tt"] for n in arr if n not in ("c3", "c7")]; ug = [arr["c3"]["tt"], arr["c7"]["tt"]]
+    assert max(g + ug) - min(g + ug) == pytest.approx(s["plan_tt"]["spread"], abs=0.11)
+    assert abs(sum(g) / len(g) - sum(ug) / len(ug)) < 15.0
+    for i in P["insts"]:
+        x, y = i["p"]
+        assert not any(m[0] - 1 < x < m[2] + 1 and m[1] - 1 < y < m[3] + 1 for m in G["macros"]), i
+    # tcl carries ROOT_NET / ICG_IN only for split plans
+    t = tmp_path / "sp.tcl"; PT.main(["tcl", str(out), str(t)])
+    txt = t.read_text()
+    assert "set ROOT_NET a0t_ckin\n" in txt and ("set ICG_IN %s\n" % u["icg_in"]) in txt
+
+
+def test_ungated_split_fail_closed(tmp_path):
+    with pytest.raises(ValueError, match="--ungated-split"):
+        _split_plan(tmp_path, flag=False)
+    with pytest.raises(ValueError, match="needs >= 1 ungated"):
+        _fs_plan(tmp_path, ["--ungated-split"])
+
+
+def test_ungated_split_default_untouched(tmp_path):
+    """plans without the flag carry no split keys and their tcl no ROOT_NET (default bytes unchanged)"""
+    P, _, out = _fs_plan(tmp_path)
+    assert "ungated_split" not in P["summary"] and all("ungated" not in s for s in P["sinks"])
+    t = tmp_path / "d.tcl"; PT.main(["tcl", str(out), str(t)])
+    assert "ROOT_NET" not in t.read_text()
+
+
+def test_ungated_split_ocv_corr_and_eco_refused(tmp_path):
+    P, G, out = _split_plan(tmp_path, ("--topology", "bipart"), regs=True)
+    fT, fF = _arr_corner(P, tmp_path, "TT", 0), _arr_corner(P, tmp_path, "FF", 1)
+    o = tmp_path / "ocv.json"
+    PT.main(["ocv", str(out), str(fT), str(fF), str(o)])
+    oc = json.loads(o.read_text())
+    for C in ("TT", "FF"):
+        assert oc[C]["ocv_inclusive_spread"] == pytest.approx(P["summary"]["plan_ocv"][C]["ocv_inclusive_spread"], abs=0.2)
+    PT.main(["corr", str(out), str(fT), str(tmp_path / "c1.json")])
+    C1 = json.loads((tmp_path / "c1.json").read_text())
+    assert C1["summary"]["iteration"] == 1 and C1["summary"]["odd_parity_sinks"] == []
+    assert C1["summary"]["ungated_split"]["root_net"] == "a0t_ckin"
+    with pytest.raises(ValueError, match="ungated-split"):
+        PT.main(["eco", str(out), str(tmp_path / "c1.json"), str(tmp_path / "e.tcl"), str(tmp_path / "eb.json")])
+
+
+def test_insert_tcl_ungated_split_and_icg_reuse():
+    t = (HERE / "parent_trunk_insert.tcl").read_text()
+    assert "ROOT_NET" in t and "ICG_IN" in t and "ICG_INST" in t and "OT_PT_NO_IO" in t

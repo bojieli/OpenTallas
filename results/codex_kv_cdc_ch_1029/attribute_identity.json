@@ -1,0 +1,13 @@
+{
+ "source": "/srv/opentallas-scratch2/claude/kv-host-regen-1/kits/qkd_hr_cdc_ch__319.68x319.68/rtl/qkd_hr_cdc_ch.v",
+ "source_sha256": "3c955775ccc2305aa19ac76f35900958482b7203d5da877723bcb3ff63fa1140",
+ "output_sha256": "517e0dcc27ab9d08805221780e0f29575f0e4addf34269d27bf19b260fd3e132",
+ "changes": [
+  "keep internal duplicate \\u_done.g_sf.u_sf.swv",
+  "drop dead alias keep \\u_done.g_ops2.ovp",
+  "keep internal duplicate \\u_ing.g_sf.u_sf.swv",
+  "drop dead alias keep \\u_ing.g_ops2.ovp"
+ ],
+ "attribute_stripped_byte_identity": true,
+ "cycles_added": 0
+}

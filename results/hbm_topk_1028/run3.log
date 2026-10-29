@@ -1,0 +1,11 @@
+TREE_MITER cycle6
+TREE_MITER cycle7
+TREE_MITER cycle8
+TREE_MITER cycle9
+IDX_LINK_TREE frame0 MUT3 records512 flits64 errors757 fault1
+IDX_LINK_TREE frame1 MUT3 records512 flits64 errors1550 fault1
+IDX_LINK_TREE frame2 MUT3 records512 flits64 errors1859 fault1
+IDX_LINK_TREE frame3 MUT3 records512 flits64 errors2669 fault1
+IDX_LINK_TREE_TOTAL MUT3 records2048 miter1232 errors2669
+FATAL: /srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/tb_idx_link_tree.sv:54: dense compaction exact/miter/timeline mismatch
+       Time: 12360000  Scope: tb_idx_link_tree

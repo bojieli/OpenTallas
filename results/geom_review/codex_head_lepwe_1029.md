@@ -1,0 +1,5 @@
+# HEAD lep_pair decoded writer: pre-build geometry review
+
+Image viewed: results/head_kits_3_1028/lep_pair/lep_pair_place.png (predecessor actual placement, same 388.8x432 outline, 55 SRAM coordinates and pin map). New source a91bb99340 changes only the writer slot-enable logic, 0 data/reset cycles, unchanged interfaces and macro geometry.
+
+PASS-COND for new placement trial: SRAM grid has open vertical and horizontal channels (~13-15 um) and clear centre clock/reset entry; no macro wall or sliver. Wide collective buses enter W, K-side buses S, with visible face-flop populations on those faces; baseline p90 pin-register6.1um. Clock entry (194.52,216) is in clear central corridor. Overall baseline fill19% leaves logic and PDN channels; all dimensions fit <=405um registered reach except full-height432um, which contains distributed logic and requires actual new r2r reach/clock checks. No new route authorized on the strength of this inherited placement: view new placement and review actual pair reach, clock tree and PDN before route/STA. New detailed layout has NOT RUN.

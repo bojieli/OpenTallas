@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Same-outline macro relocation, placement trial only",
+  "picture": "results/hbm_qcore_1028/candidate.png",
+  "original_picture": "/srv/opentallas-scratch/claude/codex-qcore-1028/original.png",
+  "findings": [
+    "Original upper-west SRAM stack produces congested lower/inner-corner detours; GRT50 overflow 1141.",
+    "Candidate distributes SRAMs north/south and opens 56.16/56.40 um side corridors plus 49.644 um middle corridor after halos.",
+    "All three fixed clock/reset islands and their ports stay clear of SRAM halos; external pins and clock entry unchanged.",
+    "Analytic side escape upper bound 0.4005 and middle 945-net bound 0.5221 are below 0.6.",
+    "Pin faces, source logic and latency unchanged; re-placement must demonstrate actual reach and signal flow."
+  ],
+  "conditions": [
+    "Trial make place only; no CTS, STA or detailed route authorized by this review.",
+    "Review placed image and measure GRT50 before progressing.",
+    "Parent plan owner adopts macro positions before any sign-off kit."
+  ]
+}

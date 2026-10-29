@@ -1,0 +1,394 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /w/qc/a0sink.lef, created 4 library cells
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[INFO IFP-0001] Added 9598 rows of 22262 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 1202.184 2591.520 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 1202.148 2591.460 ) um
+[INFO IFP-0102] Core area:                      3115318.456 um^2
+[INFO IFP-0103] Total instances area:           2120654.002 um^2
+[INFO IFP-0104] Effective utilization:                0.681
+[INFO IFP-0105] Number of instances:                     32
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx12f_ASAP7_75t_R
+                    BUFx16f_ASAP7_75t_R
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "clk".
+[INFO CTS-0011]  Clock net "clk" for macros has 4 sinks.
+[INFO CTS-0011]  Clock net "clk_regs" for registers has 28 sinks.
+[INFO CTS-0008] TritonCTS found 2 clock nets.
+[INFO CTS-0097] Characterization used 3 buffer(s) types.
+[INFO CTS-0201] 4 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 4.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0021]  Distance between buffers: 92 units (250 um).
+[INFO CTS-0022]  Branch length for Vertex Buffer: 46 units (125 um).
+[INFO CTS-0023]  Original sink region: [(527188, 550176), (675068, 1863456)].
+[INFO CTS-0024]  Normalized sink region: [(390.51, 407.538), (500.05, 1380.34)].
+[INFO CTS-0025]     Width:  109.5407.
+[INFO CTS-0026]     Height: 972.8000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 2
+    Sub-region size: 109.5407 X 486.4000
+[INFO CTS-0034]     Segment length (rounded): 244.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (183.934 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 4.
+[INFO CTS-0201] 4 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk_regs.
+[INFO CTS-0028]  Total number of sinks: 28.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0021]  Distance between buffers: 92 units (250 um).
+[INFO CTS-0022]  Branch length for Vertex Buffer: 46 units (125 um).
+[INFO CTS-0023]  Original sink region: [(60145, 169965), (1142305, 2413665)].
+[INFO CTS-0024]  Normalized sink region: [(44.5519, 125.9), (846.152, 1787.9)].
+[INFO CTS-0025]     Width:  801.6000.
+[INFO CTS-0026]     Height: 1662.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 14
+    Sub-region size: 801.6000 X 831.0000
+[INFO CTS-0034]     Segment length (rounded): 416.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 7
+    Sub-region size: 400.8000 X 831.0000
+[INFO CTS-0034]     Segment length (rounded): 200.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 4
+    Sub-region size: 400.8000 X 415.5000
+[INFO CTS-0034]     Segment length (rounded): 208.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 2
+    Sub-region size: 200.4000 X 415.5000
+[INFO CTS-0034]     Segment length (rounded): 100.
+ Level 5
+    Direction: Vertical
+    Sinks per sub-region: 1
+    Sub-region size: 200.4000 X 207.7500
+[INFO CTS-0034]     Segment length (rounded): 104.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (183.934 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 28.
+[INFO CTS-0018]     Created 7 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 4.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 4.
+[INFO CTS-0015]     Created 7 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 2:2..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 91 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 11.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 11.
+[INFO CTS-0015]     Created 91 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:28..
+[INFO CTS-0017]     Max level of the clock tree: 5.
+[WARNING ODB-0047] instance u_t02 has no output pin
+[WARNING ODB-0047] instance u_t12 has no output pin
+[WARNING ODB-0047] instance u_t03 has no output pin
+[WARNING ODB-0047] instance u_t13 has no output pin
+[INFO CTS-0098] Clock net "clk"
+[INFO CTS-0099]  Sinks 4
+[INFO CTS-0100]  Leaf buffers 0
+[INFO CTS-0101]  Average sink wire length 800.42 um
+[INFO CTS-0102]  Path depth 4 - 4
+[INFO CTS-0207]  Dummy loads inserted 0
+[INFO CTS-0098] Clock net "clk_regs"
+[INFO CTS-0099]  Sinks 28
+[INFO CTS-0100]  Leaf buffers 0
+[INFO CTS-0101]  Average sink wire length 1809.61 um
+[INFO CTS-0102]  Path depth 11 - 11
+[INFO CTS-0207]  Dummy loads inserted 0
+[INFO RSZ-0047] Found 30 long wires.
+[INFO RSZ-0048] Inserted 74 buffers in 30 nets.
+[INFO CTS-0033] Balancing latency for clock clk
+[INFO CTS-0036]  inserted 2 delay buffers
+[INFO CTS-0037] Total number of delay buffers: 2
+[INFO CTS-0500] Runtime: 5.79s
+OT_CTS_MS 5787
+[INFO DPL-0006] Core area: 3115318.46 um^2
+[INFO DPL-0007] Movable instances area: 57.33 um^2
+[INFO DPL-0008] Fixed instances area within core: 2120654.00 um^2
+[INFO DPL-0009] Utilization: 68.1%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 203 cells
+[INFO DPL-0393]   height 4288 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        957 |        37 |       460
+        1 |        957 |        37 |       460
+        2 |        957 |        37 |       460
+        3 |        957 |        37 |       460
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 957 for 3 consecutive iterations.
+Using old diamond search for 37 remaining illegal cells.
+diamond recovery: recovered 0/37 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |        957 |        37 |       460
+      403 |        957 |        37 |       460
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 957 for 3 consecutive iterations. Using diamond search for 37 remaining illegal cells.
+diamond recovery: recovered 0/37 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 37
+[INFO DPL-0500] Runtime: 41.45s
+Placement Analysis
+---------------------------------
+total displacement         92.7 u
+average displacement        0.4 u
+max displacement            1.9 u
+original HPWL           22709.8 u
+legalized HPWL          22706.7 u
+delta HPWL                    0 %
+
+[WARNING DPL-0005] Overlap check failed (37).
+ wire27 (BUFx12f_ASAP7_75t_R) overlaps u_t03 (A0SINK_u_t03)
+ wire28 (BUFx6f_ASAP7_75t_R) overlaps u_t03 (A0SINK_u_t03)
+ wire29 (BUFx6f_ASAP7_75t_R) overlaps u_t03 (A0SINK_u_t03)
+ wire30 (BUFx12f_ASAP7_75t_R) overlaps u_t03 (A0SINK_u_t03)
+ wire31 (BUFx6f_ASAP7_75t_R) overlaps u_t03 (A0SINK_u_t03)
+ wire32 (BUFx6f_ASAP7_75t_R) overlaps u_t03 (A0SINK_u_t03)
+ wire37 (BUFx12f_ASAP7_75t_R) overlaps u_t03 (A0SINK_u_t03)
+ wire38 (BUFx6f_ASAP7_75t_R) overlaps u_t03 (A0SINK_u_t03)
+ wire43 (BUFx12_ASAP7_75t_R) overlaps u_t13 (A0SINK_u_t13)
+ wire44 (BUFx6f_ASAP7_75t_R) overlaps u_t13 (A0SINK_u_t13)
+ wire45 (BUFx6f_ASAP7_75t_R) overlaps u_t13 (A0SINK_u_t13)
+ wire46 (BUFx6f_ASAP7_75t_R) overlaps u_t13 (A0SINK_u_t13)
+ wire47 (BUFx4f_ASAP7_75t_R) overlaps u_t13 (A0SINK_u_t13)
+ wire48 (BUFx12_ASAP7_75t_R) overlaps u_t13 (A0SINK_u_t13)
+ wire49 (BUFx6f_ASAP7_75t_R) overlaps u_t13 (A0SINK_u_t13)
+ wire50 (BUFx6f_ASAP7_75t_R) overlaps u_t13 (A0SINK_u_t13)
+ wire51 (BUFx6f_ASAP7_75t_R) overlaps u_t13 (A0SINK_u_t13)
+ wire52 (BUFx12_ASAP7_75t_R) overlaps u_t13 (A0SINK_u_t13)
+ wire53 (BUFx6f_ASAP7_75t_R) overlaps u_t13 (A0SINK_u_t13)
+ wire54 (BUFx6f_ASAP7_75t_R) overlaps u_t13 (A0SINK_u_t13)
+ wire55 (BUFx6f_ASAP7_75t_R) overlaps u_t13 (A0SINK_u_t13)
+ wire58 (BUFx12f_ASAP7_75t_R) overlaps u_t02 (A0SINK_u_t02)
+ wire59 (BUFx6f_ASAP7_75t_R) overlaps u_t02 (A0SINK_u_t02)
+ wire60 (BUFx6f_ASAP7_75t_R) overlaps u_t02 (A0SINK_u_t02)
+ wire61 (BUFx12f_ASAP7_75t_R) overlaps u_t02 (A0SINK_u_t02)
+ wire62 (BUFx6f_ASAP7_75t_R) overlaps u_t02 (A0SINK_u_t02)
+ wire63 (BUFx12f_ASAP7_75t_R) overlaps u_t02 (A0SINK_u_t02)
+ wire64 (BUFx6f_ASAP7_75t_R) overlaps u_t02 (A0SINK_u_t02)
+ wire65 (BUFx12f_ASAP7_75t_R) overlaps u_t02 (A0SINK_u_t02)
+ wire66 (BUFx12_ASAP7_75t_R) overlaps u_t12 (A0SINK_u_t12)
+ wire67 (BUFx6f_ASAP7_75t_R) overlaps u_t12 (A0SINK_u_t12)
+ wire68 (BUFx6f_ASAP7_75t_R) overlaps u_t12 (A0SINK_u_t12)
+ wire69 (BUFx12_ASAP7_75t_R) overlaps u_t12 (A0SINK_u_t12)
+ wire70 (BUFx6f_ASAP7_75t_R) overlaps u_t12 (A0SINK_u_t12)
+ wire71 (BUFx12_ASAP7_75t_R) overlaps u_t12 (A0SINK_u_t12)
+ wire72 (BUFx6f_ASAP7_75t_R) overlaps u_t12 (A0SINK_u_t12)
+ wire73 (BUFx6f_ASAP7_75t_R) overlaps u_t12 (A0SINK_u_t12)
+[WARNING DPL-0011] Padding check failed (37).
+ wire27
+ wire28
+ wire29
+ wire30
+ wire31
+ wire32
+ wire37
+ wire38
+ wire43
+ wire44
+ wire45
+ wire46
+ wire47
+ wire48
+ wire49
+ wire50
+ wire51
+ wire52
+ wire53
+ wire54
+ wire55
+ wire58
+ wire59
+ wire60
+ wire61
+ wire62
+ wire63
+ wire64
+ wire65
+ wire66
+ wire67
+ wire68
+ wire69
+ wire70
+ wire71
+ wire72
+ wire73
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+OT_CHECK_PLACEMENT_FAIL DPL-0033
+[WARNING ODB-1003] (M1) layer's width from (CK2W2S) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M2) layer's width from (CK2W2S) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M3) layer's width from (CK2W2S) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M4) layer's width from (CK2W2S) NDR is not defined. Using the default value 0.024
+[WARNING ODB-1003] (M5) layer's width from (CK2W2S) NDR is not defined. Using the default value 0.024
+[WARNING ODB-1003] (M6) layer's width from (CK2W2S) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (M7) layer's width from (CK2W2S) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (Pad) layer's width from (CK2W2S) NDR is not defined. Using the default value 0.04
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M9
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M8      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0088] Layer M9      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0003] Macros: 4
+[INFO GRT-0004] Blockages: 104
+[INFO GRT-0019] Found 176 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 3
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal     125381        125381          0.00%
+M3         Vertical       124824        124824          0.00%
+M4         Horizontal    1872964       1872964          0.00%
+M5         Vertical      1832650       1832650          0.00%
+M6         Horizontal    1404668       1404668          0.00%
+M7         Vertical      2946904       2946908          -0.00%
+M8         Horizontal    3563340       3563340          0.00%
+M9         Vertical      3576426       3576426          0.00%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 2789
+[INFO GRT-0198] Via related Steiner nodes: 1
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 4070
+[INFO GRT-0112] Final usage 3D: 29375
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2              125381            63            0.05%             0 /  0 /  0
+M3              124824           114            0.09%             0 /  0 /  0
+M4             1872964             0            0.00%             0 /  0 /  0
+M5             1832650             4            0.00%             0 /  0 /  0
+M6             1404668             1            0.00%             0 /  0 /  0
+M7             2946908            36            0.00%             0 /  0 /  0
+M8             3563340          5913            0.17%             0 /  0 /  0
+M9             3576426         11034            0.31%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total         15447161         17165            0.11%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 26136 um
+[INFO GRT-0014] Routed nets: 176
+[INFO GRT-0303] Global routing runtime = 00:00:00
+OT_NO_LAYER_WL Wrong number of arguments :grt::report_layer_wire_lengths global_route detailed_route  argument 1
+[INFO GRT-0278] Global route wire length by layer:
+Layer    Wire length  Percentage
+--------------------------------
+M2        680.40um     2%
+M3       1231.20um     5%
+M5         43.20um     0%
+M6         10.80um     0%
+M7        388.80um     1%
+M8       7095.60um    31%
+M9      13240.80um    58%
+--------------------------------
+OT_NBUF 175
+Clock clk
+No launch/capture paths found.
+
+Clock clk
+rise -> rise
+    min     max
+   0.00    0.00 source latency
+ 587.06         network latency g13/CLK
+         868.10 network latency g9/CLK
+---------------
+ 587.06  868.10 latency
+         281.04 skew
+
+fall -> fall
+    min     max
+   0.00    0.00 source latency
+ 621.42         network latency g13/CLK
+         905.66 network latency g9/CLK
+---------------
+ 621.42  905.66 latency
+         284.24 skew
+
+
+Group                  Internal  Switching    Leakage      Total
+                          Power      Power      Power      Power (Watts)
+----------------------------------------------------------------
+Sequential             4.02e-05   0.00e+00   6.43e-09   4.02e-05   1.2%
+Combinational          0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+Clock                  1.53e-03   1.79e-03   9.16e-08   3.33e-03  98.8%
+Macro                  0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+Pad                    0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+----------------------------------------------------------------
+Total                  1.57e-03   1.79e-03   9.80e-08   3.37e-03 100.0%
+                          46.7%      53.3%       0.0%
+OT_TOTAL_MS 57084
+OT_DONE
+	Command being timed: "openroad -no_init -threads 4 -exit /w/cts.tcl"
+	User time (seconds): 49.50
+	System time (seconds): 9.43
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:58.93
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 11097124
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 4203787
+	Voluntary context switches: 947
+	Involuntary context switches: 219
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 7424
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+EXIT 0

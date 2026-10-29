@@ -1,0 +1,272 @@
+{
+ "schema": "opentallas.tok_hbm.strict_blockers.v1",
+ "source": "/srv/opentallas-scratch2/claude/die-hbm-10/bindfull/c25b_after/bind_report.json (DIE-HBM-10 c25b_after 23:19, plan 6b3a80cd)",
+ "bind_report_sha256": "a8e3da909672e08ec5d178ac0b37a575df1468c131f7c12890db04e9d2c0c210",
+ "n_errors": 463,
+ "by_kind": {
+  "UNMAPPED": 201,
+  "TIED": 200,
+  "UNPLANNED": 30,
+  "EMPTY_PARTITION": 2,
+  "TYPE_SPLIT": 28,
+  "EMIT": 1,
+  "TIED_TOTAL": 1
+ },
+ "unmapped_cells": 32810,
+ "unmapped_top_instances": [
+  "hb_idx__s_NE",
+  "hb_idx__s_NW",
+  "hb_idx__s_SE",
+  "hb_idx__s_SW"
+ ],
+ "unmapped_note": "ot_hnx_idxn_quarter_with_keybuf (scorer + keybuf) has no plan core: plan carries hb_idx op/q/qctl per half, no scorer",
+ "tied_bits_by_module_port": [
+  {
+   "module": "ot_hbm_sm_attn_tile",
+   "port": "gin",
+   "bits": 6400,
+   "instances": [
+    "sm_NW0",
+    "sm_NW1",
+    "sm_NW2",
+    "sm_NW3",
+    "sm_NW4",
+    "sm_NW5",
+    "sm_NW6",
+    "sm_NW7"
+   ]
+  },
+  {
+   "module": "ot_hbm_sm_attn_be",
+   "port": "qin",
+   "bits": 2208,
+   "instances": [
+    "sm_NW0",
+    "sm_NW1",
+    "sm_NW2",
+    "sm_NW3",
+    "sm_NW4",
+    "sm_NW5",
+    "sm_NW6",
+    "sm_NW7"
+   ]
+  },
+  {
+   "module": "ot_hbm_idx_selector_static_sel",
+   "port": "in_line",
+   "bits": 1184,
+   "instances": [
+    "hb_idx__selector"
+   ]
+  },
+  {
+   "module": "$mux",
+   "port": "B",
+   "bits": 520,
+   "instances": [
+    "sm_NW0",
+    "sm_NW1",
+    "sm_NW2",
+    "sm_NW3",
+    "sm_NW4",
+    "sm_NW5",
+    "sm_NW6",
+    "sm_NW7"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_stree_leaf",
+   "port": "dn_i",
+   "bits": 164,
+   "instances": [
+    "stl_NE",
+    "stl_NW"
+   ]
+  },
+  {
+   "module": "ot_hbm_hc_root_static_s",
+   "port": "gathered_mix_data",
+   "bits": 64,
+   "instances": [
+    "hc_eng"
+   ]
+  },
+  {
+   "module": "ot_hbm_hc_root_static_s",
+   "port": "qps",
+   "bits": 64,
+   "instances": [
+    "hc_eng"
+   ]
+  },
+  {
+   "module": "ot_hbm_hc_root_static_s",
+   "port": "gathered_mix_row",
+   "bits": 10,
+   "instances": [
+    "hc_eng"
+   ]
+  },
+  {
+   "module": "ot_hbm_sm_attn_front_static",
+   "port": "command",
+   "bits": 8,
+   "instances": [
+    "sm_NW0",
+    "sm_NW1",
+    "sm_NW2",
+    "sm_NW3",
+    "sm_NW4",
+    "sm_NW5",
+    "sm_NW6",
+    "sm_NW7"
+   ]
+  },
+  {
+   "module": "ot_hbm_hc_root_static_s",
+   "port": "gathered_mix_pos",
+   "bits": 6,
+   "instances": [
+    "hc_eng"
+   ]
+  },
+  {
+   "module": "ot_hbm_hc_bankq_ft_static",
+   "port": "fa_wv",
+   "bits": 4,
+   "instances": [
+    "hcb_NE2",
+    "hcb_NE6",
+    "hcb_NW2",
+    "hcb_NW6"
+   ]
+  },
+  {
+   "module": "ot_hbm_hc_bankq_ft_static",
+   "port": "fb_wv",
+   "bits": 4,
+   "instances": [
+    "hcb_NE2",
+    "hcb_NE6",
+    "hcb_NW2",
+    "hcb_NW6"
+   ]
+  },
+  {
+   "module": "ot_hbm_hc_bankq_ft_static",
+   "port": "wv",
+   "bits": 4,
+   "instances": [
+    "hcb_NE2",
+    "hcb_NE6",
+    "hcb_NW2",
+    "hcb_NW6"
+   ]
+  },
+  {
+   "module": "ot_hbm_hc_root_static_s",
+   "port": "gathered_mix_v",
+   "bits": 2,
+   "instances": [
+    "hc_eng"
+   ]
+  },
+  {
+   "module": "ot_hbm_hc_root_static_s",
+   "port": "q_fault",
+   "bits": 2,
+   "instances": [
+    "hc_eng"
+   ]
+  },
+  {
+   "module": "ot_hbm_hc_root_static_s",
+   "port": "qps_f",
+   "bits": 2,
+   "instances": [
+    "hc_eng"
+   ]
+  },
+  {
+   "module": "ot_hbm_hc_root_static_s",
+   "port": "qps_v",
+   "bits": 2,
+   "instances": [
+    "hc_eng"
+   ]
+  },
+  {
+   "module": "ot_hbm_hc_bankq0_static",
+   "port": "s_i",
+   "bits": 2,
+   "instances": [
+    "hcb_NE0",
+    "hcb_NW0"
+   ]
+  },
+  {
+   "module": "ot_hbm_hc_bankq0_static",
+   "port": "wv",
+   "bits": 2,
+   "instances": [
+    "hcb_NE0",
+    "hcb_NW0"
+   ]
+  },
+  {
+   "module": "ot_hbm_hc_bankq_static",
+   "port": "wv",
+   "bits": 2,
+   "instances": [
+    "hcb_NE4",
+    "hcb_NW4"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_programme_root_h5",
+   "port": "p_fault",
+   "bits": 2,
+   "instances": [
+    "su_prog"
+   ]
+  }
+ ],
+ "unplanned": [
+  "UNPLANNED NE_hub -> NE_spb0: 632 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_hub -> NW_hub: 2775 as-built crossing bits with no plan lane path (2838 b planned on direct lanes)",
+  "UNPLANNED NE_hub -> root: 263 as-built crossing bits with no plan lane path (551 b planned on direct lanes)",
+  "UNPLANNED NE_sm0 -> NE_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)",
+  "UNPLANNED NE_sm1 -> NE_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)",
+  "UNPLANNED NE_sm2 -> NE_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)",
+  "UNPLANNED NE_sm3 -> NE_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)",
+  "UNPLANNED NE_spb0 -> NE_hub: 615 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_spb2 -> NW_hub: 2 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_spt0 -> NW_hub: 2 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_spt0 -> root: 9 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_su00 -> NE_su11: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_su11 -> NE_su20: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_su20 -> NE_su31: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_hub -> NE_hub: 2730 as-built crossing bits with no plan lane path (2838 b planned on direct lanes)",
+  "UNPLANNED NW_hub -> NW_spb0: 632 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_hub -> root: 2385 as-built crossing bits with no plan lane path (4184 b planned on direct lanes)",
+  "UNPLANNED NW_sm0 -> NW_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)",
+  "UNPLANNED NW_sm1 -> NW_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)",
+  "UNPLANNED NW_sm2 -> NW_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)",
+  "UNPLANNED NW_sm3 -> NW_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)",
+  "UNPLANNED NW_spb0 -> NW_hub: 615 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_spt0 -> root: 9 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_su00 -> NW_su11: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_su11 -> NW_su20: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_su20 -> NW_su31: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED root -> NE_hub: 846 as-built crossing bits with no plan lane path (3499 b planned on direct lanes)",
+  "UNPLANNED root -> NW_hub: 2233 as-built crossing bits with no plan lane path (6121 b planned on direct lanes)",
+  "UNPLANNED root -> vsN0: 632 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED vsN0 -> root: 615 as-built crossing bits with no plan lane path (13 b planned on direct lanes)"
+ ],
+ "other": [
+  "EMPTY_PARTITION NW_mca: no as-built cell maps to it and no lane passes through it",
+  "EMPTY_PARTITION NE_mca: no as-built cell maps to it and no lane passes through it",
+  "EMIT wavefront reset carriers lack bound partitions: ['NE_mca', 'NW_mca']",
+  "TIED_TOTAL 10656 tied bits on 638 leaf pins in 21 (type.port <- source) classes (TIED lines capped at 200; full list bind_tied.json)"
+ ]
+}

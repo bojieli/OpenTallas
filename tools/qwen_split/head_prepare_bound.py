@@ -177,15 +177,20 @@ def measure(bound, root, receipt):
     if 'SVC_RECV=0' not in native_text or '.RECV_INPUTS(SVC_RECV)' not in native_text:
         raise ValueError('actual native default RECV_INPUTS0 capture path required')
     total = local + prep + 3 + desc + wrapper['input_capture_edges'] + 1
+    from head_record_timing import emitted
+    protocol_paths = emitted(bound, paths_only=True)
     return dict(schema='opentallas.qwen.bound_head_prepare_age.v1',
                 status='BOUND_COMPONENT_AGE_NOT_PROGRAMME_QUALIFIED',
                 selected_masters=dict(tt=tt, native=native, face=face),
                 tt_source=witness, landed_fields=dict(prepare=prep_fields, descriptor=desc_fields, host=host_fields),
+                internal_protocol_edges=protocol_paths,
                 edges=dict(tt_local=local, tt_to_native=prep, native_prepare_descriptor=3,
                            native_to_face=desc, host_to_native=host, native_host_capture=1, face_input=wrapper['input_capture_edges'], face_held_bank=1),
                 filler_head_prepare_edges=total, user0_prepare_only_min_edges=total+1,
                 head_prepare_edges=None, calendar_installable=False,
-                programme_blockers=['actual core-published HOST cohort interval/identity', 'selected current programme and producer reservation'],
+                programme_blockers=['actual core-published HOST cohort interval/identity',
+                                    'shared programme-record producer capture age and callback alignment',
+                                    'selected current programme and producer reservation'],
                 scope='Calendar sample to held bank only; HOST cohort availability, selected programme and outgoing face capture remain separate')
 
 

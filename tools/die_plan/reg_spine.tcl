@@ -23,11 +23,16 @@ foreach it [[$rsp_bt getNet] getITerms] {
 close $fh
 puts [exec python3 /work/reg_spine.py /work/reg_spine.json /work/reg_spine_sinks.txt /work]
 source /work/reg_spine_plan.tcl
+set rsp_status PLACED
+if {[dict exists $rsp_cfg placement_status]} {
+  set rsp_status [dict get $rsp_cfg placement_status]
+}
+if {$rsp_status ni {PLACED FIRM}} { error "REG_SPINE: invalid placement_status $rsp_status" }
 lassign [dict get $rsp_cfg site_um] rsp_sw rsp_sh
 lassign [dict get $rsp_cfg core_origin_um] rsp_ox rsp_oy
 set rsp_pitch [dict get $rsp_cfg pad_pitch_um]
 proc rsp_inst {name master x y} {
-  global rsp_blk rsp_db rsp_dbu rsp_sw rsp_sh rsp_ox rsp_oy
+  global rsp_blk rsp_db rsp_dbu rsp_sw rsp_sh rsp_ox rsp_oy rsp_status
   set m [$rsp_db findMaster $master]
   if {$m eq "NULL"} { error "REG_SPINE: no master $master" }
   set i [odb::dbInst_create $rsp_blk $m $name]
@@ -35,7 +40,7 @@ proc rsp_inst {name master x y} {
   set sy [expr {$rsp_oy + round(($y - $rsp_oy) / $rsp_sh) * $rsp_sh}]
   $i setLocation [expr {round($sx * $rsp_dbu)}] [expr {round($sy * $rsp_dbu)}]
   if {(round(($sy - $rsp_oy) / $rsp_sh) % 2) == 1} { $i setOrient MX } else { $i setOrient R0 }
-  $i setPlacementStatus PLACED
+  $i setPlacementStatus $rsp_status
   return $i
 }
 proc rsp_net {name} { global rsp_blk; set n [odb::dbNet_create $rsp_blk $name]; $n setSigType CLOCK; return $n }
@@ -81,10 +86,12 @@ foreach t $rsp_trunk {
 }
 set rsp_tapnets {}; array set rsp_tapnet {}; set rsp_padtot 0
 foreach t $rsp_taps {
-  lassign $t id x y node pad
+  lassign $t id x y node pad padxy
   set src $rsp_netof($node)
   for {set s 0} {$s < $pad} {incr s} {
-    set b [rsp_inst rsp_t${id}_d$s [dict get $rsp_cfg pad_cell] [expr {$x - ($pad - $s) * $rsp_pitch - 0.3}] $y]; set n [rsp_net rsp_t${id}_dn$s]
+    # optional 6th field: folded pad chain coordinates from reg_spine.py tap_footprint (same pads, same order)
+    if {[llength $padxy] == $pad} { lassign [lindex $padxy $s] px py } else { set px [expr {$x - ($pad - $s) * $rsp_pitch - 0.3}]; set py $y }
+    set b [rsp_inst rsp_t${id}_d$s [dict get $rsp_cfg pad_cell] $px $py]; set n [rsp_net rsp_t${id}_dn$s]
     rsp_conn $b A $src; rsp_conn $b Y $n; set src $n; incr rsp_padtot
   }
   set b [rsp_inst rsp_t${id}_drv [dict get $rsp_cfg tap_cell] $x $y]; set n [rsp_net rsp_t$id]

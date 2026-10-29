@@ -40,6 +40,9 @@ module ot_hbm_su_static_pgslice_s #(
  // PIN_REG (owner rule 10-15 19:50): every lane is the pin-registered leaf ot_hbm_su_static_lane_pinreg: its store /
  // RF-stream requests leave +2 edges and its writes / reducer operands +4 edges later (su_top_compile --pin-reg)
  parameter integer PIN_REG=1,
+ // WCOPY (HBM-CORES-REBAL-9, opt-in, default 0 = unchanged): the pinned banks per-column registered write copy
+ // (ot_hbm_su_static_pinned_bank WCOPY): every bank write (fill / delivery / lane) commits one edge later (fill n+SRD+4)
+ parameter integer WCOPY=0,
  // COLLPORT (H-NETLIST/suport 2026-10-16, default 0 = unchanged): the quarter's COLL joins through ot_hbm_su_static_cxport.
  //   INJECT  inj_rd/inj_addr (stream, from COLL, captured at A in a stream pin slot); serial edge n = ceil((3A+3)/4)
  //           (A mod 4 in {0,1,3}) drives bank READ PORT 5 (shared with DRAIN by the compiler calendar) of the store groups
@@ -52,6 +55,9 @@ module ot_hbm_su_static_pgslice_s #(
  //   Checks (FAULT): inject and drain on one group in one edge; two sectors on one group with different rows.
  //   MUT (bench): 8 inject slot map off by one phase; 9 B39 no-op ignored; 10 delivery word order reversed.
  parameter integer COLLPORT=0,
+ // FULL_SIDE decouples arithmetic capability from the unchanged VM address QID.
+ // The default reproduces the original selection; explicit enablement needs a new bind/model/kit.
+ parameter integer FULL_SIDE=(QID==0),
  parameter integer B39_NOOP=(QID==0),
  // RF_LOCAL (H-SU 2026-10-16, d4c 2 mm locality rule; default 0 = unchanged): the quarter core's RF broadcast
  //   (rf_bword 128 + rf_bcmd 36 + rf_dsec 256) is registered ONCE more here, beside this bank group (clk_ctl), so the
@@ -132,7 +138,7 @@ module ot_hbm_su_static_pgslice_s #(
  end
  for(genvar n=0;n<32;n=n+1)begin:g_lane
   localparam integer L=lid(n);
-  localparam integer KIND=(QID==0&&L==0)?2:(L<32)?1:0;
+  localparam integer KIND=(FULL_SIDE!=0&&L==0)?2:(L<32)?1:0;
   wire [0:0] c_ld,c_ld_bank,c_emit,c_bank,c_cpair,c_cx_arnd,c_cx_arelu,c_cx_amin,c_cx_cclip,c_co_rnd;
   wire [1199:0] c_ld_c;
   wire [23:0] c_o_v,c_i_v,c_no,c_ni,c_krow,c_obase,c_aibase;
@@ -182,7 +188,7 @@ module ot_hbm_su_static_pgslice_s #(
    .side_v(sv),.side_x(sx),.side_y(side_y));
   end
  end
- if(QID==0&&G==0)begin:g_side_pipe
+ if(FULL_SIDE!=0&&G==0)begin:g_side_pipe
   ot_hbm_su_static_side_s #(.SMUT(SMUT)) u_side(.clk(clk_side),.rst_n(rst_n),.v(side_v),.fn(side_fn),.x(side_x),.fn_out(side_fn_out),
    .y(side_y),.fault(side_fault));
  end else begin:g_no_side
@@ -309,7 +315,7 @@ module ot_hbm_su_static_pgslice_s #(
    for(p2=0;p2<4;p2=p2+1)if(rv[p2]&&(rd_addr[(n*4+p2)*24+:7]!=7'(L)||rd_addr[(n*4+p2)*24+14+:2]!=2'(QID)))idf=1;
   end
   assign st_id_fault[n]=idf;
-  ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9)) u_bank(.clk(clk_bank[n]),.clk_rd(clk_bank[n]),.clk_ws(clk_bank[n]),.clk_macro(clk_bank_macro[n*6+:6]),.rst_n(rst_n),.read_v(rv),.read_addr(ra),
+  ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9),.WCOPY(WCOPY)) u_bank(.clk(clk_bank[n]),.clk_rd(clk_bank[n]),.clk_ws(clk_bank[n]),.clk_macro(clk_bank_macro[n*6+:6]),.rst_n(rst_n),.read_v(rv),.read_addr(ra),
    .read_data(q),.read_return(),.write_v(lw|fw|dwn),.write_addr(fw?fr_row[H]:dwn?dwr:{la[17:16],la[13:7]}),
    .write_data(fw?fr_dat[H][K*32+:32]:dwn?dwd:ldat));
  end
@@ -317,14 +323,14 @@ module ot_hbm_su_static_pgslice_s #(
  wire [4*32-1:0] rf_bword_u; wire [4*9-1:0] rf_bcmd_u; wire [255:0] rf_dsec_u;   // as used (local copy or pins)
  if(RF_LOCAL)begin:g_rf_local
   // local copy beside the bank group: data words without reset; command valids reset (fault checks stay clean)
-  reg [4*32-1:0] rf_bword_l; reg [255:0] rf_dsec_l; reg [4*8-1:0] rf_badr_l; reg [3:0] rf_bv_l; integer vb;
+  reg [4*32-1:0] rf_bword_l; reg [255:0] rf_dsec_l; reg [4*8-1:0] rf_badr_l; reg [3:0] rf_bv_l; integer vb; integer vb_valid;
   always @(posedge clk_ctl)begin
    rf_bword_l<=rf_bword; rf_dsec_l<=rf_dsec;
    for(vb=0;vb<4;vb=vb+1)rf_badr_l[vb*8+:8]<=rf_bcmd[vb*9+:8];
   end
   always @(posedge clk_ctl or negedge rst_n)
    if(!rst_n)rf_bv_l<=4'd0;
-   else for(vb=0;vb<4;vb=vb+1)rf_bv_l[vb]<=rf_bcmd[vb*9+8];
+   else for(vb_valid=0;vb_valid<4;vb_valid=vb_valid+1)rf_bv_l[vb_valid]<=rf_bcmd[vb_valid*9+8];
   wire [4*9-1:0] rf_bcmd_l={rf_bv_l[3],rf_badr_l[24+:8],rf_bv_l[2],rf_badr_l[16+:8],rf_bv_l[1],rf_badr_l[8+:8],rf_bv_l[0],rf_badr_l[0+:8]};
   assign rf_bword_u=rf_bword_l; assign rf_bcmd_u=rf_bcmd_l; assign rf_dsec_u=rf_dsec_l;
  end else begin:g_rf_direct

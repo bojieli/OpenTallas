@@ -1,0 +1,69 @@
+{
+ "actual_inputs": {
+  "gold.keep": "c1cc80eaeb4c2d5e48f412baa61b96f74cf8e8552cecd9adaf3dc0e59db9ba48",
+  "gate.aig": "6d3dbb6401cbbe4e82f745eeba2e09001c817390e7e70bf570ecf764efac921f",
+  "gold.aliases.json": "1b882e41a01883073d30311c47c8cc77399e7173ae3fbce51ef9bb1ab74db152",
+  "gate.map": "46ccf49a397040c55644f288f3fd750fb0d872be1b44acb6417d708ccddc4b5e",
+  "gold.aig": "22417f84202d88802f22b1c2c10641dbf459da3b0431a8a67538ffbc43a5a506",
+  "gold.map": "ef1c4f7cbfbc6d2b91e6bc67cb4adc915b0e43c26df4fddd202ed493be1efa46"
+ },
+ "kept": {
+  "declared": 9881,
+  "missing": [],
+  "constant": [],
+  "unobservable_removed": []
+ },
+ "joint": {
+  "proved": 12570
+ },
+ "compare": {
+  "proved": 31742
+ },
+ "wrong_representative": {
+  "mutated_relation": [
+   "gold",
+   "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.c_p[1][11]",
+   [
+    "eq",
+    "gold",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.c_p[2][11]",
+    1
+   ]
+  ],
+  "counts": {
+   "proved": 12542,
+   "differs": 28
+  },
+  "failing": [
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.c_p[1][11]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[0].r_part[191]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[1].r_part[191]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[155]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[156]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[157]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[158]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[159]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[160]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[161]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[162]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[163]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[164]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[165]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[166]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[167]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[180]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[181]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[182]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[183]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[184]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[185]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[186]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[187]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[188]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[189]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[2].r_part[190]",
+   "hyp:gold:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_kv_addr_prep.g_off[3].r_part[191]"
+  ]
+ },
+ "verdict": "EQUIVALENT"
+}

@@ -1,0 +1,210 @@
+{
+  "image": "candidate_mtp_N6_a122.hgi1r",
+  "records": 3916,
+  "idx_counts": {
+    "IDX.KVUNION": 80,
+    "IDX.TOPK": 40,
+    "IDX.UNION": 40,
+    "IDX.INDEX": 8
+  },
+  "index_records": [
+    {
+      "record": 295,
+      "offset": 38000,
+      "op": "INDEX",
+      "param": 512,
+      "imm_a": 524288,
+      "imm_b": 2,
+      "rowx": {
+        "n": 6,
+        "slot0": 0,
+        "rgap": 0,
+        "rpl": 0,
+        "rsel": 0,
+        "rtab": 0,
+        "emask": 0,
+        "hsh": 0,
+        "rs": {
+          "A": 4096,
+          "B": 32,
+          "O": 512,
+          "R": 512
+        }
+      }
+    },
+    {
+      "record": 874,
+      "offset": 116192,
+      "op": "INDEX",
+      "param": 512,
+      "imm_a": 524288,
+      "imm_b": 8,
+      "rowx": {
+        "n": 6,
+        "slot0": 0,
+        "rgap": 0,
+        "rpl": 0,
+        "rsel": 0,
+        "rtab": 0,
+        "emask": 0,
+        "hsh": 0,
+        "rs": {
+          "A": 4096,
+          "B": 32,
+          "O": 512,
+          "R": 512
+        }
+      }
+    },
+    {
+      "record": 1525,
+      "offset": 204816,
+      "op": "INDEX",
+      "param": 512,
+      "imm_a": 524288,
+      "imm_b": 14,
+      "rowx": {
+        "n": 6,
+        "slot0": 0,
+        "rgap": 0,
+        "rpl": 0,
+        "rsel": 0,
+        "rtab": 0,
+        "emask": 0,
+        "hsh": 0,
+        "rs": {
+          "A": 4096,
+          "B": 32,
+          "O": 512,
+          "R": 512
+        }
+      }
+    },
+    {
+      "record": 2085,
+      "offset": 281776,
+      "op": "INDEX",
+      "param": 4608,
+      "imm_a": 1048576,
+      "imm_b": 20,
+      "rowx": {
+        "n": 6,
+        "slot0": 0,
+        "rgap": 0,
+        "rpl": 0,
+        "rsel": 0,
+        "rtab": 0,
+        "emask": 0,
+        "hsh": 0,
+        "rs": {
+          "A": 4096,
+          "B": 32,
+          "D": 3416,
+          "O": 512,
+          "R": 512
+        }
+      }
+    },
+    {
+      "record": 2456,
+      "offset": 334080,
+      "op": "INDEX",
+      "param": 8704,
+      "imm_a": 1048576,
+      "imm_b": 24,
+      "rowx": {
+        "n": 6,
+        "slot0": 0,
+        "rgap": 0,
+        "rpl": 0,
+        "rsel": 0,
+        "rtab": 0,
+        "emask": 0,
+        "hsh": 0,
+        "rs": {
+          "A": 4096,
+          "B": 32,
+          "C": 4096,
+          "O": 512,
+          "R": 512
+        }
+      }
+    },
+    {
+      "record": 2825,
+      "offset": 386192,
+      "op": "INDEX",
+      "param": 8704,
+      "imm_a": 1048576,
+      "imm_b": 28,
+      "rowx": {
+        "n": 6,
+        "slot0": 0,
+        "rgap": 0,
+        "rpl": 0,
+        "rsel": 0,
+        "rtab": 0,
+        "emask": 0,
+        "hsh": 0,
+        "rs": {
+          "A": 4096,
+          "B": 32,
+          "C": 4096,
+          "O": 512,
+          "R": 512
+        }
+      }
+    },
+    {
+      "record": 3194,
+      "offset": 438304,
+      "op": "INDEX",
+      "param": 8704,
+      "imm_a": 1048576,
+      "imm_b": 32,
+      "rowx": {
+        "n": 6,
+        "slot0": 0,
+        "rgap": 0,
+        "rpl": 0,
+        "rsel": 0,
+        "rtab": 0,
+        "emask": 0,
+        "hsh": 0,
+        "rs": {
+          "A": 4096,
+          "B": 32,
+          "C": 4096,
+          "O": 512,
+          "R": 512
+        }
+      }
+    },
+    {
+      "record": 3563,
+      "offset": 490416,
+      "op": "INDEX",
+      "param": 8704,
+      "imm_a": 1048576,
+      "imm_b": 36,
+      "rowx": {
+        "n": 6,
+        "slot0": 0,
+        "rgap": 0,
+        "rpl": 0,
+        "rsel": 0,
+        "rtab": 0,
+        "emask": 0,
+        "hsh": 0,
+        "rs": {
+          "A": 4096,
+          "B": 32,
+          "C": 4096,
+          "O": 512,
+          "R": 512
+        }
+      }
+    }
+  ],
+  "conclusion": "INDEX key service is active; no nkeys0 or South key-line absence proof. imm_a is global count; native shard lowering must be explicit."
+}

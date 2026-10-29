@@ -1,0 +1,4 @@
+hd_tile v0 eq copies=252 rep=tE0b0 equivalent=True pass=True 
+hd_tile v0 mutant copies=252 rep=tE0b0 equivalent=False pass=True ERROR: Found 1 unproven $equiv cells in 'equiv_status -assert'.
+hd_tile v1 eq copies=12 rep=tE0b10 equivalent=True pass=True 
+rc=124

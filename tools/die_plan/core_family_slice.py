@@ -356,10 +356,18 @@ def refresh_after_d1(rec0, rec):
 
 def plan(geo, fam, libtt, libff, name, trunk_cal=None):
     sinks = sum(1 for l in open(geo) if l.startswith("SINK"))
+    macro_mode = bool(fam.get("macro_leaves"))
+    if macro_mode:
+        sinks += sum(1 for line in open(geo) if line.startswith("MACRO"))
     sp = splits_for(sinks, fam)
     M7.BUFS = list(ENV)
-    P = H.plan(str(geo), sp, fam.get("smax", 70.0), [list(k) for k in fam.get("keepout_um", [])])
-    rea = reassign_nearest(P, int(fam.get("reassign_cap", 1.5) * max(len(v) for v in P["leafsinks"].values()))) if fam.get("reassign") else None
+    if macro_mode:
+        P = ungated_macro_htree(str(geo), sp[:-1], fam.get("smax", 70.0),
+                                [list(k) for k in fam.get("keepout_um", [])], float(fam.get("leaf_target", 48)))
+        rea = None
+    else:
+        P = H.plan(str(geo), sp, fam.get("smax", 70.0), [list(k) for k in fam.get("keepout_um", [])])
+        rea = reassign_nearest(P, int(fam.get("reassign_cap", 1.5) * max(len(v) for v in P["leafsinks"].values()))) if fam.get("reassign") else None
     split = split_long_leaves(P, fam.get("leaf_limit", 35.0))
     kr, kc = map(float, fam.get("rc", "0.8,0.9").split(","))
     r = 0.5 * (1.80365e-2 + 1.89935e-2) * kr; c = 0.5 * (1.78475e-1 + 1.64264e-1) * kc
@@ -403,6 +411,149 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
                model="R7 NLDM+Elmore chain + 12.8 d1 (core_family_slice); PLAN MODEL, UNCHECKED")
     if fam.get("keepout_um"):
         rec["macro_keepout_um"] = [list(k) for k in fam["keepout_um"]]
+    if macro_mode:
+        rec["macro_clock_model"] = "separate same-stage macro leaves, physical pins and exact TT/FF liberty clock caps"
+        rec["sinks"] = sum(len(v) for v in P["leafsinks"].values())
+        rec["sinkcap"] = P["sinkcap"]
+        rec["macro_leaves"] = sorted(u for u, v in P["leafsinks"].items() if all(q[4].startswith("MACRO:") for q in v))
+    return rec
+
+
+# ------------------------------------------------------------------ symmetric lattice + one master per level (QC-A0-KITS-8)
+class _LatticeMaze:
+    """identity 'maze' for lattice plans: a cell IS its (x, y) coordinate in um (legal sites come from the converter)."""
+    G = 1.0
+
+    def __init__(self, core):
+        self.core = core
+
+    def xy(self, p):
+        return (round(p[0], 3), round(p[1], 3))
+
+
+def lattice_levelkey(n):
+    """level key of a plan node for the one-master-per-level rule: (leaf?, tree level, position in edge)."""
+    if n[4] in ("entry", "trunk"):
+        return ("root",)
+    return (1 if n[4] == "leaf" else 0, M7.lvl_of(n[0]), 0)
+
+
+def lattice_build(sinks, entry, levels, master="BUFx16f_ASAP7_75t_R", root="BUFx24_ASAP7_75t_R", pitch=1.08):
+    """SYMMETRIC plan geometry (balance by geometry, not by size compensation): level l = a stack of len(levels[l])
+    branch buffers at every hub (pitch um apart, centred on the hub), branch i drives ONE straight L leg of
+    |dx_i|+|dy_i| to the tip hub + levels[l][i]; every leg of a level has the SAME Manhattan length (refused otherwise).
+    Last level tips = leaf drivers; every sink goes to the NEAREST leaf (Manhattan, ties by name); a leaf with no sink is
+    removed with its exclusive branch.  Returns P in the core_infra_htree form (land/wires) for M7.model_x."""
+    for li, offs in enumerate(levels):
+        ls = {round(abs(o[0]) + abs(o[1]), 6) for o in offs}
+        if len(ls) != 1:
+            raise SystemExit("lattice level %d: legs differ in length %s (symmetric geometry needs one length per level)" % (li, sorted(ls)))
+    nodes = [("root", None, tuple(entry), root, "entry")]; land = {}; wires = []; hubs = [("", tuple(entry), "root", 0.0)]
+    for li, offs in enumerate(levels):
+        nh = []
+        for dg, hp, drv, seg in hubs:
+            k = len(offs)
+            for i, o in enumerate(offs):
+                nm = "T" + dg + str(i)
+                nodes.append((nm + "_br", drv, (hp[0], hp[1] + (i - (k - 1) / 2.0) * pitch), master, "branch"))
+                nh.append((dg + str(i), (hp[0] + o[0], hp[1] + o[1]), nm + "_br", abs(o[0]) + abs(o[1])))
+            land[drv] = (seg, "H" + (dg or "R")); wires.append(dict(level=li, edge="H" + (dg or "R"), segs=[seg], hub=hp))
+        hubs = nh
+    pts = {}
+    for dg, tp, drv, seg in hubs:
+        nodes.append(("T" + dg, drv, tp, master, "leaf")); pts["T" + dg] = tp
+        land[drv] = (seg, "L" + dg); wires.append(dict(level=len(levels), edge="L" + dg, segs=[seg], hub=tp))
+    names = sorted(pts); leafsinks = {u: [] for u in names}
+    for s in sinks:
+        u = min(names, key=lambda u: (abs(s[0] - pts[u][0]) + abs(s[1] - pts[u][1]), u)); leafsinks[u].append(s)
+    empty = {u for u in names if not leafsinks[u]}
+    if empty:
+        brs = {n[1] for n in nodes if n[0] in empty}
+        nodes = [n for n in nodes if n[0] not in empty and n[0] not in brs]
+        for b in brs:
+            land.pop(b, None)
+        wires = [w for w in wires if not (w["edge"].startswith("L") and "T" + w["edge"][1:] in empty)]
+        leafsinks = {u: v for u, v in leafsinks.items() if u not in empty}
+    for w in wires:
+        w["cells"] = [[w["hub"]]]
+    return dict(mz=None, nodes=nodes, land=land, wires=wires, leafsinks=leafsinks, empty=sorted(empty))
+
+
+def lattice_masters(P, libs, r, c, slew_max=60.0, passes=3):
+    """ONE master per level (12.8 d1 by intent, COORD 21:07 QC-A0-KITS-7 ruling): deterministic coordinate descent over
+    the BUFx8..x24 envelope, one level key at a time, minimising TT window + FF window under TT leaf slew <= slew_max;
+    plan model only (no measurement).  Returns {level key: master}."""
+    keys = sorted({lattice_levelkey(n) for n in P["nodes"]}, key=str)
+    cur = {k: "BUFx16f_ASAP7_75t_R" for k in keys}
+
+    def score(m):
+        P["nodes"] = [(n[0], n[1], n[2], m[lattice_levelkey(n)], n[4]) for n in P["nodes"]]
+        res, _ = M7.model_x(P, libs, r, c, {})
+        bad = res["TT"]["leaf_out_slew_max"] > slew_max or res["TT"]["leaf_slew_in_max"] > GATES["slew_ps"]
+        return res["TT"]["window"] + res["FF"]["window"] + (1e3 if bad else 0.0)
+    best = score(cur)
+    for _ in range(passes):
+        for k in keys:
+            for m in ENV:
+                t = dict(cur); t[k] = m; v = score(t)
+                if v < best - 1e-6:
+                    best, cur = v, t
+    score(cur)
+    return cur
+
+
+def plan_lattice(geo, fam, libtt, libff, name):
+    """family key 'lattice' (opt-in; absent = plan() unchanged): {"levels": [[[dx, dy], ...], ...]} tip offsets per level
+    from the core clock entry.  Geometry from the plan lattice (equal leg length per level), ONE master per level
+    (lattice_masters), no d1 per-driver sizing, no uf_phys3 descent.  PLAN MODEL, UNCHECKED until routed arrivals."""
+    L = [l.split() for l in open(geo)]
+    sinks = [(float(f[1]), float(f[2]), f[4], f[5]) for f in L if f[:1] == ["SINK"]]
+    ent = next((float(f[2]), float(f[3])) for f in L if f[:2] == ["PIN", "ck"])
+    core = next([float(v) for v in f[1:5]] for f in L if f[:1] == ["CORE"])
+    levels = [[tuple(map(float, o)) for o in lv] for lv in fam["lattice"]["levels"]]
+    P = lattice_build(sinks, ent, levels)
+    P["mz"] = _LatticeMaze(core)
+    cells = sorted(set(ENV + [H.REP, H.BIG]))
+    libs = {"TT": H.lib_cells(libtt, cells), "FF": H.lib_cells(libff, cells)}
+    kr, kc = map(float, fam.get("rc", "0.8,0.9").split(","))
+    r = 0.5 * (1.80365e-2 + 1.89935e-2) * kr; c = 0.5 * (1.78475e-1 + 1.64264e-1) * kc
+    lm = lattice_masters(P, libs, r, c)
+    res, _ = M7.model_x(P, libs, r, c, {})
+    _PLANS[name] = (P, libs, r, c, {})
+    par = {n[0]: n[1] for n in P["nodes"]}; pos = {n[0]: n[2] for n in P["nodes"]}; depths = set()
+    for n in P["nodes"]:
+        if n[4] == "leaf":
+            d = 1; u = n[0]
+            while par[u]: u = par[u]; d += 1
+            depths.add(d)
+    legs = []
+    for n in P["nodes"]:          # one leg per driver -> its landing hub: straight L (x first, then y)
+        if n[0] in P["land"] and n[4] != "entry":
+            seg, hub = P["land"][n[0]]; hp = next(w["hub"] for w in P["wires"] if w["edge"] == hub); a = pos[n[0]]
+            legs.append(dict(level=M7.lvl_of(n[0]), edge=n[0], segs=[round(abs(hp[0] - a[0]) + abs(hp[1] - a[1]), 2)],
+                             paths=[[list(a), [hp[0], a[1]], list(hp)]]))
+    spread = {u: round(max(abs(s[0] - pos[u][0]) + abs(s[1] - pos[u][1]) for s in v), 2) for u, v in P["leafsinks"].items()}
+    cnt = sorted(len(v) for v in P["leafsinks"].values())
+    rec = dict(name=name, family=fam["name"], splits="lattice " + ",".join(str(len(l)) for l in levels), smax=None, wire=fam.get("wire", "std"),
+               sinks=len(sinks), split_leaves=[], reassign=None, entry_trunk=None,
+               level_len_um=[round(abs(l[0][0]) + abs(l[0][1]), 3) for l in levels], repeaters_per_edge=[0] * len(levels),
+               stages=sorted(depths), n_cells=len(P["nodes"]),
+               level_masters={"/".join(map(str, k)): v for k, v in sorted(lm.items(), key=lambda kv: str(kv[0]))},
+               sized_masters={"%s:%s" % k: v for k, v in sorted(collections.Counter((n[4], n[3]) for n in P["nodes"]).items())},
+               frozen_masters={n[0]: n[3] for n in P["nodes"]}, TT=res["TT"], FF=res["FF"],
+               entry=list(ent), islands_xy=[], core=core, maze_g_um=None,
+               nodes_xy=[(n[0], n[1], [round(n[2][0], 3), round(n[2][1], 3)], n[3], n[4]) for n in P["nodes"]],
+               wire_paths=legs, empty_leaves_removed=P["empty"],
+               leaf_members={u: len(v) for u, v in P["leafsinks"].items()},
+               leaf_members_stats=dict(min=cnt[0], median=cnt[len(cnt) // 2], max=cnt[-1]),
+               leaf_sinks={u: ["%s/%s" % (s[2], s[3]) for s in v] for u, v in P["leafsinks"].items()},
+               leaf_spread_um=spread, leaf_mst_um=None,
+               leaf_spread_max=dict(all=max(spread.values()), main=max(spread.values()), strip=0.0,
+                                    n_gt_40=sum(v > GATES["leaf_spread_um"] for v in spread.values()),
+                                    top=sorted(spread.items(), key=lambda kv: -kv[1])[:8]),
+               plan_rule="symmetric lattice (equal leg length per level) + ONE master per level; no d1 per-driver sizing, "
+                         "no uf_phys3 descent (QC-A0-KITS-8, COORD 21:07)",
+               model="R7 NLDM+Elmore chain, lattice geometry, one master per level (core_family_slice lattice); PLAN MODEL, UNCHECKED")
     return rec
 
 
@@ -473,6 +624,7 @@ def replan_structure(geo, fam, libtt, libff, name, cal, jobs=8):
 # ------------------------------------------------------------------ checks
 def checks(rec, slice_, geo):
     out = {}; fails = []
+    macro_mode = bool(rec.get("macro_clock_model"))
     # (1) every leg <= 1.10 x Manhattan of its own endpoints
     worst = 0.0; nover = 0; nleg = 0
     for w in rec["wire_paths"]:
@@ -485,6 +637,8 @@ def checks(rec, slice_, geo):
     sp = rec["leaf_spread_um"]; out["leaf_spread"] = dict(max=max(sp.values()), n_gt_40=sum(v > GATES["leaf_spread_um"] for v in sp.values()))
     if out["leaf_spread"]["n_gt_40"]: fails.append("leaves over 40 um spread: %d" % out["leaf_spread"]["n_gt_40"])
     cen = {"%s/%s" % (l.split()[4], l.split()[5]) for l in open(geo) if l.startswith("SINK")}
+    if macro_mode:
+        cen |= {"%s/%s" % (line.split()[1], line.split()[7]) for line in open(geo) if line.startswith("MACRO")}
     got = collections.Counter(s for v in rec["leaf_sinks"].values() for s in v)
     out["sinks"] = dict(census=len(cen), planned=len(got), missing=len(cen - set(got)), dup=sum(1 for v in got.values() if v > 1),
                         extra=len(set(got) - cen))
@@ -509,7 +663,10 @@ def checks(rec, slice_, geo):
         if out["pg_clearance"] not in (None, "PASS"): fails.append("trunk PG clearance %s" % out["pg_clearance"])
     nmac = sum(1 for l in open(geo) if l.startswith("MACRO"))
     out["macro_clock_pins"] = nmac
-    if nmac: fails.append("%d macro clock pins: family template has no macro (early-tap, v5.0) leaf yet" % nmac)
+    if macro_mode:
+        out["macro_leaves"] = len(rec.get("macro_leaves", []))
+        fails.extend(macro_leaf_errors(rec, geo))
+    elif nmac: fails.append("%d macro clock pins: family template has no macro (early-tap, v5.0) leaf yet" % nmac)
     out["verdict"] = "FAIL" if fails else "PASS"; out["fails"] = fails
     out["scope"] = "automated geometry gates on the PLAN (GEOM-REVIEW-10 form); latency numbers PLAN MODEL, UNCHECKED"
     return out
@@ -613,6 +770,144 @@ def entry_geo(geo, mode):
     return out
 
 
+
+
+MACRO_LIB = REPO / "physical" / "asap7_memory_macros_v2"
+
+
+def macro_clk_cap(master, pin):
+    """{TT, FF} clock pin capacitance (fF) of a hard macro from its repo liberty (fail-closed)."""
+    out = {}
+    for c in ("TT", "FF"):
+        p = MACRO_LIB / master / ("%s_%s.lib" % (master, c.lower()))
+        if not p.is_file():
+            raise SystemExit("macro_clk_cap: no liberty %s" % p)
+        t = p.read_text(); i = t.find("pin (%s)" % pin)
+        if i < 0:
+            raise SystemExit("macro_clk_cap: %s has no pin %s" % (p, pin))
+        out[c] = float(re.search(r"\bcapacitance : ([\d.]+)", t[i:i + 2000]).group(1))
+    return out
+
+
+def read_macro_geo(geo):
+    core = entry = None
+    sinks, macros = [], []
+    for line in open(geo):
+        f = line.split()
+        if f[:1] == ["GATE"] or any(q.startswith("gate=") for q in f):
+            raise SystemExit("macro_leaves does not accept gated sinks; use icg_copies")
+        if f[:1] == ["CORE"]: core = tuple(map(float, f[1:5]))
+        if f[:2] == ["PIN", "ck"]: entry = tuple(map(float, f[2:4]))
+        if f[:1] == ["SINK"]: sinks.append((float(f[1]), float(f[2]), f[4], f[5], f[3]))
+        if f[:1] == ["MACRO"]:
+            macros.append((f[1], tuple(map(float, f[3:7])), tuple(map(float, f[8:10]))))
+            sinks.append((float(f[8]), float(f[9]), f[1], f[7], "MACRO:" + f[2]))
+    if core is None or entry is None: raise SystemExit("macro_leaves requires CORE and PIN ck")
+    return core, entry, sinks, macros
+
+
+def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48):
+    """Same-depth separate macro leaves on actual geometry, sized with actual clock pin loads."""
+    core, entry, sinks, macros = read_macro_geo(geo)
+    mz = H.Maze(core, macros, keepout=keepout); ent = mz.cell(entry, node=False)
+    name = lambda g: "T" + "".join(NAME_POOL[i] for i in g)
+    groups = {(): sinks}
+    for lv, k in enumerate(upper):
+        for key in sorted(g for g in groups if len(g) == lv):
+            pts = groups[key]
+            if lv == 0 and k == 2:
+                srt = sorted(pts, key=lambda p: (p[0], p[1])); h = len(srt) // 2; parts = [srt[:h], srt[h:]]
+            else:
+                parts = H.split(pts, k, axis=(1 if lv == 1 else None))
+            for i, g in enumerate(parts):
+                groups[key + (i,)] = g
+    nu = len(upper)
+    key_of = lambda q: "%s/%s" % (q[2], q[3])
+    for key in sorted(g for g in groups if len(g) == nu):
+        pts = groups[key]
+        mac = [q for q in pts if q[4].startswith("MACRO:")]
+        fl = [q for q in pts if not q[4].startswith("MACRO:")]
+        n = max(1, int(round(len(fl) / float(leaf_target)))) if fl else 0
+        parts = [[q] for q in mac] + ((H.split(fl, n) if n > 1 else [fl]) if fl else [])
+        if len(parts) > len(NAME_POOL): raise SystemExit("macro_leaves exceeds geometric leaf name capacity")
+        for i, part in enumerate(parts): groups[key + (i,)] = part
+    depth = nu + 1
+    leaves = sorted(g for g in groups if len(g) == depth)
+    site = {}
+    for g in leaves:
+        pts = groups[g]; site[g] = mz.cell((sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)))
+    kids = collections.defaultdict(list)
+    for g in groups:
+        if g:
+            kids[g[:-1]].append(g)
+    for lv in range(depth - 1, 0, -1):
+        for g in sorted(x for x in groups if len(x) == lv):
+            ch = [site[c] for c in sorted(kids[g])]
+            cx = round(sum(c[0] for c in ch) / len(ch)); cy = round(sum(c[1] for c in ch) / len(ch))
+            site[g] = H.minimax_site(mz, ch, (cx, cy))
+    site[()] = ent
+    T, K = [], []
+    for lv in range(depth):
+        L = [mz.md(site[g[:-1]], site[g]) for g in groups if len(g) == lv + 1]
+        T.append(max(L)); K.append(max(1, math.ceil(max(L) / smax)))
+    nodes = [("root", None, ent, H.BIG, "entry")]; wires = []; branch_of = {(): "root"}
+    for lv in range(depth):
+        for g in sorted(x for x in groups if len(x) == lv + 1):
+            par = g[:-1]; pc = site[par]; cc = site[g]; sib = sorted(kids[par]); i = sib.index(g)
+            off = mz.cell((mz.xy(pc)[0], mz.xy(pc)[1] + (i - (len(sib) - 1) / 2.0) * 1.08))
+            nodes.append((name(g) + "_br", branch_of[par], off, H.BIG, "branch"))
+            pts = H.exact_points(mz, off, cc, T[lv], K[lv]); prev = name(g) + "_br"; chain = [off] + pts + [cc]
+            for r_, c in enumerate(pts):
+                n = name(g) + "_r%d" % r_; nodes.append((n, prev, c, H.REP, "rep")); prev = n
+            wires.append(dict(level=lv + 1, edge=name(g), segs=[mz.md(chain[q], chain[q + 1]) for q in range(len(chain) - 1)],
+                              cells=[mz.path(chain[q], chain[q + 1]) for q in range(len(chain) - 1)]))
+            nodes.append((name(g), prev, cc, H.BIG, "leaf" if lv == depth - 1 else "node"))
+            branch_of[g] = name(g)
+    fold = {n[0]: n[1] for n in nodes if n[4] == "node"}
+    land = {}
+    for w in wires:
+        if w["edge"] in fold:
+            land[fold[w["edge"]]] = (w["segs"][-1], w["edge"])
+    final = []
+    for n in nodes:
+        if n[0] in fold:
+            continue
+        par = n[1]
+        while par in fold:
+            par = fold[par]
+        final.append((n[0], par, n[2], n[3], n[4]))
+    caps = {}
+    for s in sinks:
+        if s[4].startswith("MACRO:"):
+            c = macro_clk_cap(s[4][6:], s[3])
+            for cn in ("TT", "FF"):
+                caps.setdefault(cn, {})[key_of(s)] = c[cn]
+    return dict(mz=mz, entry=entry, ent=ent, groups=groups, leaves=leaves, site=site, T=T, K=K, nodes=final, wires=wires,
+                land=land, leafsinks={name(g): groups[g] for g in leaves}, macros=[], splits=list(upper) + ["macro_or_flop_leaf"], nm=name, sinkcap=caps)
+
+
+def macro_leaf_errors(rec, geo):
+    """Verify opt-in macro coverage/classification and both actual liberty caps."""
+    errors = []
+    leaves = rec.get("leaf_sinks", {})
+    macro_leaves = set(rec.get("macro_leaves", []))
+    for line in open(geo):
+        fields = line.split()
+        if fields[:1] != ["MACRO"]:
+            continue
+        inst, master, pin = fields[1], fields[2], fields[7]
+        sink = inst + "/" + pin
+        owners = [leaf for leaf, sinks in leaves.items() if sink in sinks]
+        if len(owners) != 1 or owners[0] not in macro_leaves or leaves[owners[0]] != [sink]:
+            errors.append("macro leaf coverage/classification: " + sink)
+        expected = macro_clk_cap(master, pin)
+        for corner, cap in expected.items():
+            actual = rec.get("sinkcap", {}).get(corner, {}).get(sink)
+            if actual is None or abs(actual - cap) > 1e-12:
+                errors.append("macro leaf cap mismatch %s %s" % (corner, sink))
+    return errors
+
+
 # ------------------------------------------------------------------ driver
 def run_core(fams, core, kit, work, a):
     fam = next(f for f in fams["families"] if core in f["members"])
@@ -625,12 +920,18 @@ def run_core(fams, core, kit, work, a):
     rcal = json.loads(Path(a.replan_cal).read_text()).get(core) if getattr(a, "replan_cal", None) else None
     if rcal and cal:
         raise SystemExit("run: --trunk-cal and --replan-cal both name %s (trunk = built LOW, re-plan = built HIGH)" % core)
-    if rcal:
+    if fam.get("lattice"):
+        if rcal or cal:
+            raise SystemExit("run: family %s is a lattice plan (one master per level); --trunk-cal/--replan-cal do not apply" % fam["name"])
+        rec = plan_lattice(geo, fam, a.libtt, a.libff, "%s_lat_%s" % (core, fam["name"]))
+    elif rcal:
         rec, fam = replan_structure(geo, fam, a.libtt, a.libff, "%s_r16_%s_rp" % (core, fam["name"]), rcal)
     else:
         rec = plan(geo, fam, a.libtt, a.libff, "%s_r13_%s%s" % (core, fam["name"], "_tk" if cal else ""), trunk_cal=cal)
     pj = work / "plan.json"; pj.write_text(json.dumps([rec]))
-    if a.fit:
+    if a.fit and fam.get("macro_leaves"):
+        raise SystemExit("macro_leaves uses exact NLDM caps; calibrated d1 macro support is not enabled")
+    if a.fit and not fam.get("lattice"):   # lattice = one master per level: no per-driver d1/uf3 descent
         r = subprocess.run([sys.executable, str(REPO / "results/core_lat_r9_1026/l0r_r9_d1.py"), str(pj), str(geo), a.libdir, a.fit,
                             str(work / "plan_d1.json"), "--steps", str(a.d1_steps)], capture_output=True, text=True)
         (work / "d1.log").write_text(r.stdout + r.stderr)

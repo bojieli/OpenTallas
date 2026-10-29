@@ -1,0 +1,14 @@
+BOOT cyc70 ctl.start_t20=1
+BOOT cyc124 ctl.cland_start=1
+BOOT cyc342 ctl.cland_up_ready=1
+BOOT cyc745 ctl.x_o GO
+BOOT cyc9520 ctl.b_i result
+DIE_SPINE_RESULT pos0 row21946 bits4173a558 flt0 go_to_result8780
+BOOT cyc11102 ctl.x_o GO
+BOOT cyc19877 ctl.b_i result
+DIE_SPINE_RESULT pos1 row21946 bits4173a558 flt0 go_to_result8780
+- /srv/opentallas-scratch2/claude/tok-head-land-1/tb_TT.sv:1091: Verilog $finish
+DIE_SPINE PASS positions2
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 554.003 s; speed 36.105 ns/s
+- Verilator: cpu 553.891 s on 1 threads; allocated 13 MB

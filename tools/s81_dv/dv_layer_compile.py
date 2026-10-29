@@ -428,10 +428,10 @@ GAP_FRAME_PLACE = ('tools/s81_dv/frame_return_plan.py', 'plan_phase(rows = 2 * 1
 GAP_XDIE = ('ot_s81sl_slice_lep* / ot_pdie_serdes', 'cross-die collective lanes',
             'TP4 collective: owned by TOKEN-XDIE-S81 (TOK.DS.XDIE); the slice bench replays the remote partials at '
             'their scheduled cycles at the end-slice lep port')
-GAP_HEAD = ('head die (separate die type)', 'no netlist in the p4l DV bind',
-            'head.* / draft.* / token.return run on the head dies (LM head 129,280 rows, argmax, MTP draft heads); the '
-            'p4l DV die does not contain them, so their programme needs the head-die netlist of record and RTL (not in '
-            'results/fleet_viz/die_sources.json), then this compiler targets it the same way')
+GAP_HEAD = ('head die (separate die type)', 'final-layer publication to HEAD programme is not lowered',
+            'head.* / draft.* / token.return run on the head dies (LM head 129,280 rows, argmax, MTP draft heads). '
+            'Current HEAD RTL and its receiving HOST/CTL/SRAM entry contract exist; this compiler still lacks the '
+            'selected final-layer activation producer, transport/publication dates, and HEAD programme lowering')
 GAP_KV_UNIT = ('p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs',
                'SPEC section 2 slice SU lanes "KV 32" (RMSNorm -> RoPE -> FP8 QDQ, D 512)',
                'TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs '
@@ -995,7 +995,7 @@ def dense_stage_schedule(sched, half):
                 dense_stage=boundary)
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False, entry_engram_inputs=None, svc_timing_profile=None):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False, entry_engram_inputs=None, svc_timing_profile=None, bound_data=None):
     if entry_norm and not fixtures:
         raise ValueError('--entry-norm-check needs --fixtures (the layer-entry inputs and the reference model checks)')
     if entry_engram_inputs is not None and not entry_norm:
@@ -1018,6 +1018,14 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
     out = Path(out)
     (out / 'prog' / 'frame_cfg7').mkdir(parents=True, exist_ok=True)
     die = Die(tree)
+    bound_rec = None
+    if bound_data is not None:
+        # TOK-S81-2: data transports re-aged from ONE strict bind (layer_prog/bound_data.py); a link whose bound age is
+        # not established raises on read, and every op that reads one is BLOCKED_BOUND (never the legacy/0 age)
+        from layer_prog import bound_data as BD
+        B = BD.load_bind(bound_data['dir'], bound_data['manifest'], ROOT, diagnostic=bound_data.get('diagnostic', False))
+        bound_rec = BD.rebind_links(die, B, diagnostic=bound_data.get('diagnostic', False))
+        (out / 'bound_data_links.json').write_text(json.dumps(bound_rec, indent=1) + '\n')
     wl = workload or ('mtp' if layer == 'mtp_draft' else 'ar')
     sched = layer_schedule(tree, layer, wl)
     if dense_stage is not None:
@@ -1035,6 +1043,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
     ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None, svc_tag=svc_tag,
                svc_owner_epoch=svc_owner_epoch, svc_timing_profile=svc_timing_profile,
                svc_allq=('OT_SVC_ALLQ' in {d for d in os.environ.get('OT_S81_SELECTED_DEFINES', '').split(',') if d}) if svc_timing_profile is not None else None, line_avoid={k: frozenset(v) for k, v in (line_avoid or {}).items()})
+    if bound_data is not None:
+        ctx['bound_image_selectors'] = B['image_selectors']
     for o in sched['ops']:
         unit, st, gap = op_unit(o['op'])
         rec = dict(id=o['id'], op=o['op'], start=o['start'], end=o['end'], unit=unit, status=st,
@@ -1042,7 +1052,19 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         for fam, m in fams:
             if not any(re.search(rx, o['op']) for rx in m.OPS):
                 continue
-            r = m.lower(die, o, dict(ctx, t_issue=int(math.floor(o['start']))))
+            hits0 = len(getattr(die, 'bound_blocked_hits', ()))
+            try:
+                r = m.lower(die, o, dict(ctx, t_issue=int(math.floor(o['start']))))
+            except Exception as exc:
+                if bound_rec is None or type(exc).__name__ != 'BoundBlocked':
+                    raise
+                r = None
+            hit = sorted(set(getattr(die, 'bound_blocked_hits', [])[hits0:]))
+            if hit:
+                rec.update(status='BLOCKED_BOUND', family=fam, gap=dict(
+                    module='bound die transport (layer_prog/bound_data.py)', port=', '.join(hit),
+                    missing='; '.join(f"{k}: {bound_rec['rows'][k].get('reason')}" for k in hit[:4])))
+                break
             st = r.get('status', 'GAP')
             if st == 'LOWERED':
                 ok, why = bench_ok(r.get('bench'))
@@ -1088,7 +1110,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             raise ValueError(f'line slot reservation does not converge: {clash[:4]}')
         return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures, svc_tag=svc_tag,
                              mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=avoid,
-                             entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs, svc_timing_profile=svc_timing_profile)
+                             entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs, svc_timing_profile=svc_timing_profile, bound_data=bound_data)
     prog.line_avoid = {k: sorted(v) for k, v in (line_avoid or {}).items()}
     if entry_norm:
         # TOK-DS-GAPS 10-24 (opt-in; default byte-identical): layer-entry residency of the smoke slice as pre-layer CTL
@@ -1144,7 +1166,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         if need and need != {svc_tag} and prog.svc:
             return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
                                  svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=line_avoid,
-                                 entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs, svc_timing_profile=svc_timing_profile)
+                                 entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs, svc_timing_profile=svc_timing_profile, bound_data=bound_data)
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
             jd = '' if len(jobs) == 1 else f'job{k}/'
@@ -1209,7 +1231,11 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                die_v_sha256=die.die_sha,
                land_plan_sha256=sha256(tree / 'results/arch/s81_dv_1016/landing/p4l/land_plan.json'),
                plan_sha256=sha256(tree / 'results/arch/s81_dv_1016/p4l/plan.json'),
-               compiler_sha256=sha256(Path(__file__)), files={})
+               compiler_sha256=sha256(Path(__file__)), files={},
+               bound_data=None if bound_rec is None else dict(
+                   verdict=bound_rec['verdict'], bind_dir=bound_rec['bind_dir'], bind_sha256=bound_rec['bind_sha256'],
+                   bind_clean=bound_rec['bind_clean'], bind_errors=bound_rec['bind_errors'], counts=bound_rec['counts'],
+                   scope=bound_rec['scope']))
     for p in sorted(out.rglob('*')):
         if p.is_file() and p.name != 'manifest.json':
             man['files'][str(p.relative_to(out))] = sha256(p)
@@ -1260,6 +1286,12 @@ def main(argv=None):
     ap.add_argument('--mu-cal', default=None, help='MU-S81: a dv_mu_calendar record -> DIR/prog/mu_slots.json')
     ap.add_argument('--mu-ctx', action='store_true', help='MU-S81/TOK: HLOAD carries the user context (context 1)')
     ap.add_argument('--fixtures', default=None, help='the layer fixture dir (dv_layer_fixtures.py output)')
+    ap.add_argument('--bound-data', type=Path, default=None,
+                    help='TOK-S81-2: re-age every die data/control link from this strict bind out/ (bus_groups + '
+                         'bind_latency + bind_names); blocked links fail their ops closed')
+    ap.add_argument('--bound-data-manifest', default=None, help='repo-relative as-built manifest of that bind')
+    ap.add_argument('--bound-data-diagnostic', action='store_true',
+                    help='accept a bind with errors / type splits: output is DIAGNOSTIC, never a programme of record')
     ap.add_argument('--bound-control-only', action='store_true',
                     help='Compile actual current bound control routes; never read a legacy die tree')
     ap.add_argument('--bound', type=Path, help='Current strict bind out/ for native control mode')
@@ -1307,6 +1339,10 @@ def main(argv=None):
             boot=dict(cadence=a.native_boot_cadence,seqhost_receipt=a.native_boot_seqhost_timing,
                       entry_rows=a.native_entry_rows,mux_config=a.native_mux_config,
                       host_booking=a.native_host_booking) if a.compose_native_boot else None))
+    if (a.bound_data is None) != (a.bound_data_manifest is None) or (a.bound_data_diagnostic and a.bound_data is None):
+        ap.error('--bound-data needs --bound-data-manifest (and --bound-data-diagnostic only with --bound-data)')
+    if a.bound_data is not None and (a.mu_cal or a.mu_ctx or a.dense_stage):
+        ap.error('--bound-data: MU/dense schedule tables are not re-aged yet')
     if any((a.bound,a.bound_inventory,a.bound_local_timing,a.bound_source_root,a.bound_asbuilt_manifest,a.native_entry_program,a.retime_native_entry)):
         ap.error('native bound inputs require --bound-control-only; do not mix current and legacy ages')
     if a.dense_stage is not None and (a.mu_cal or a.mu_ctx):
@@ -1324,7 +1360,9 @@ def main(argv=None):
     tree = die_tree(a.die_ref, a.die_src)
     r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx,
                       svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage, entry_norm=a.entry_norm_check,
-                      entry_engram_inputs=a.entry_engram_inputs, svc_timing_profile=a.svc_timing_profile)
+                      entry_engram_inputs=a.entry_engram_inputs, svc_timing_profile=a.svc_timing_profile,
+                      bound_data=None if a.bound_data is None else dict(dir=a.bound_data, manifest=a.bound_data_manifest,
+                                                                          diagnostic=a.bound_data_diagnostic))
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']

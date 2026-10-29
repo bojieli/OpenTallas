@@ -207,3 +207,62 @@ def test_rejects_non_stage_virtual_region_and_missing_node():
         E.emit(_bind(), m, v, t)
     with pytest.raises(E.StageError):
         E.path_id("hx")
+
+
+def test_explicit_die_trial_base36_path_labels():
+    assert E.path_id('h', 'base36') == 'h'
+    assert E.path_id('h0az', 'base36') == 'h_0_10_35'
+    with pytest.raises(E.StageError):
+        E.path_id('h0a')
+    with pytest.raises(E.StageError):
+        E.path_id('hA', 'base36')
+
+
+def test_source_specific_retime_stages_keep_distinct_physical_pins(tmp_path):
+    import copy
+    b = _bind()
+    old = f'st:{P_L}'
+    new = old + '@origin2'
+    b['regions'][new] = dict(b['regions'][old], tree_port=f'start:st:{P_ROOT}->{new}')
+    b['start_ports'][b['regions'][new]['tree_port']] = dict(src=f'st:{P_ROOT}', dst=new,
+                                                           launch_part=None, capture_part=None)
+    v, t = _tree()
+    doc, sv, _, _ = E.emit(b, _meta(), v, t)
+    a, c = [next(x for x in doc['stages'] if x['region'] == n) for n in (old, new)]
+    assert a['node_cell'] == c['node_cell'] and a['clock_net'] == c['clock_net']
+    assert a['id'] != c['id'] and a['clock_port'] != c['clock_port']
+    assert a['rect_um'] != c['rect_um']
+    src = tmp_path/'src'
+    src.mkdir()
+    (src/'tap_arrivals_TT.json').write_text(json.dumps(_meta()))
+    arr = tmp_path/'arr'
+    arr.write_text(''.join(f"T {s['clock_port']} {100+i} {90+i}\nF {s['clock_port']} {110+i} {95+i}\n"
+                           for i,s in enumerate(doc['stages'])))
+    E.proof_with_stages(src, doc, {'TT':str(arr)}, tmp_path/'out')
+    ts = {x['port']:x for x in json.loads((tmp_path/'out/tap_arrivals_TT.json').read_text())['taps']}
+    aa, cc = ts[f'__st__{P_L}'], ts[f'__st__{P_L}@origin2']
+    assert aa['tree_path'] == cc['tree_path'] == P_L
+    assert aa['late_ps'] != cc['late_ps'] and aa['xy_um'] != cc['xy_um']
+def test_real_partition_root_drives_virtual_stages_without_duplicate_counter():
+    b = _bind()
+    root = f"st:{P_ROOT}"
+    b["regions"]["hub_C"] = b["regions"].pop(root)
+    b["regions"]["hub_C"]["virtual"] = False
+    b["root"] = "hub_C"
+    for r in b["regions"].values():
+        if r.get("parent") == root:
+            r["parent"] = "hub_C"
+    for c in b["start_ports"].values():
+        if c["src"] == root:
+            c["src"] = "hub_C"
+    v, t = _tree()
+    doc, sv, _, _ = E.emit(b, _meta(), v, t)
+    assert doc["counts"]["stages"] == 1
+    assert all(not r["root"] for r in doc["stages"])
+    assert "ot_dp_landing_root #" not in sv
+    assert "input  wire rs_hub_C" in sv and ".p_start(rs_hub_C)" in sv
+    assert {r["net"] for r in doc["die_inputs"]} == {"rs_hub_C"}
+    for invalid in ({}, {"virtual": True, "parent": None}, {"virtual": False, "parent": "other"}):
+        b["regions"]["hub_C"] = invalid
+        with pytest.raises(E.StageError):
+            E.emit(b, _meta(), v, t)

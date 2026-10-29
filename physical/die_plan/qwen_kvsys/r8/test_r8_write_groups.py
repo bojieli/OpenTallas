@@ -56,8 +56,22 @@ def test_partial_group_fails_closed():
         raise AssertionError("partial group accepted")
 
 
-def test_bindview_raw_asbuilt_same_landing():
+def test_table_already_raw_asbuilt_bindview_idempotent():
+    # since r8.py ebe645af6 the writer records asbuilt = raw lane depth (+ asbuilt_group): bindview changes nothing
     t = table(WG.prep(bg(), G)[0])
+    by = {m["sink_port"]: m for m in t["members"]}
+    assert by["bcfg_rx_we"]["asbuilt"] == 5 and by["bcfg_rx_we"]["asbuilt_group"] == 6 and by["bcfg_addr"]["asbuilt"] == 6
+    v, n = WG.bindview(t, G)
+    assert n == 0 and v == t
+    assert WG.check(v, G)[0] == []
+
+
+def test_bindview_raw_asbuilt_same_landing():
+    # a pre-ebe645af6 table (asbuilt = group depth, no asbuilt_group) still converts to the raw lane depth
+    t = table(WG.prep(bg(), G)[0])
+    for m in t["members"]:
+        if "asbuilt_group" in m:
+            m["asbuilt"] = m.pop("asbuilt_group")
     v, n = WG.bindview(t, G)
     assert n == 2
     by = {m["sink_port"]: m for m in v["members"]}

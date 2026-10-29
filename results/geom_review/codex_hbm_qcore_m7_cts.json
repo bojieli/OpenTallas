@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "ROOT-approved single M7 G2 trial, actual CTS reviewed before GRT; no DRT or adoption",
+  "picture": "/srv/opentallas-scratch/claude/codex-qcore-1028/m7_cts.png",
+  "findings": [
+    "Original two west SRAMs, all data pins and core clock entry retained. Density0.525, no sliver or macro-wall change.",
+    "Actual maximum register-to-register reach288.41um, zero over405um; pin-registerp909.85um. Own-clock-leaf reach73.76um after native CTS/F4.",
+    "M7 channel proxies0.821/0.614 remain explicitly FAIL in AUTO-GEOM; ROOT approved this one G2 capacity measurement, not a corridor-gate override or release PASS.",
+    "TT setup placement estimate-15.26ps remains FAIL pending actual global-route RC/data repair.",
+    "Post-CTS FF structural hold guard PASS: reg2reg-65.72ps/423 endpoints; IO-153.11ps/983 endpoints requires standard data-only repair.",
+    "Boundary mean282.56TT/228.04FF versus declared250/202.5; old target-band script FAIL receipts preserved. METHODOLOGY12.3a makes this a design target; actual TT setup/FF hold remain required. No measured-frame rebinding or clock padding."
+  ],
+  "conditions": [
+    "Use50-iteration GRT budget and unchanged833ps/60-25ps uncertainty.",
+    "Use existing two-mode TT setup/FF hold data repair with frozen clock; retain all failures.",
+    "No DRT/release until GRT0, real TT/FF STA and composed die M6/M7 FT capacity pass."
+  ]
+}

@@ -199,6 +199,17 @@ module ot_hgi_sm_xload_cl2_ctl #(
     //   a_g  = base + 512 ig                (group origin)
     //   a_gp = base + 512 ig + i_p st       (wave row origin; + st when i_wq wraps, = a_g' at the group wrap)
     //   r_g  = K - 512 ig, r_w = K - 512 ig - 64 i_wq   (remaining elements; signed)
+    // HBM-CORES-KITS-5 10-28: em_off (and lsh / gtp below) are reset.  Unreset, their bits that are constant for every
+    // command (em_off low 3 bits and MSBs, lsh[1] = 1, gtp[1:0] = 0) were X until the first command, so synthesis folded
+    // them to constants while the RTL kept X: kit LEC NOT EQUIVALENT (xload_cl2_ctlx _k10; ew, wb, t_gla8 _k12).  The reset value is the c_p 0
+    // load value, so those bits are true constants; every use is behind em_wait / bi_on, which are reset and set in the
+    // same edge as the load, so behaviour from reset is unchanged.
+    always @(posedge clk or negedge rn)
+        if (!rn) begin em_off <= (MUT == 2) ? 11'(RLM) : 11'(RLM + LAND + 2); ew <= 11'd0; end
+        else if (start) begin
+            em_off <= (MUT == 2) ? 11'(RLM) : 11'({c_p, 3'd0} + RLM + LAND + 2);   // + 1: raw rr pin capture
+            ew <= 11'(((({12'd0, c_p} * 16'd3152) + 16'd2047) >> 11) * 8);   // ew[2:0] = 0, ew[10:9] = 0 for every c_p
+        end
     reg [17:0] a_g, a_gp; reg signed [21:0] r_g, r_w;
     wire i_wrap = iw == ew - 11'd1;
     always @(posedge clk) begin
@@ -207,8 +218,6 @@ module ot_hgi_sm_xload_cl2_ctl #(
             base <= c_base[17:0]; st <= c_stride[17:0]; pp <= c_p; kk <= c_n; xb <= c_xb;
             gn <= 8'(((c_n - 21'd1) >> 9) + 21'd1);
             nb <= 7'((({12'd0, c_p} * 16'd3152) + 16'd2047) >> 11);
-            ew <= 11'(((({12'd0, c_p} * 16'd3152) + 16'd2047) >> 11) * 8);
-            em_off <= (MUT == 2) ? 11'(RLM) : 11'({c_p, 3'd0} + RLM + LAND + 2);   // + 1: raw rr pin capture
             ig <= 8'd0; iw <= 11'd0; tc <= 11'd0; eg <= 8'd0; et <= 3'd0; eb <= 7'd0;
             a_g <= c_base[17:0]; a_gp <= c_base[17:0];
             r_g <= {1'b0, c_n}; r_w <= {1'b0, c_n};
@@ -440,6 +449,12 @@ module ot_hgi_sm_xload_cl2_ctl #(
             if (bi_on && bw == wb - 11'd1 && bk == gtp - 10'd1) bi_on <= 1'b0;
         end
     end
+    always @(posedge clk or negedge rn)   // HBM-CORES-KITS-5 10-28: reset (see em_off)
+        if (!rn) begin lsh <= 2'd2; gtp <= 10'd0; end
+        else if (start_bd) begin
+            lsh <= (c_fmt == 2'd2) ? 2'd3 : 2'd2;
+            gtp <= 10'(((c_fmt == 2'd2) ? (((c_n - 21'd1) >> 11) + 21'd1) : (((c_n - 21'd1) >> 10) + 21'd1)) * 4);
+        end
     wire [6:0] nb_c = 7'((({12'd0, c_p} * 16'd3152) + 16'd2047) >> 11);
     wire [3:0] la_c = (c_fmt == 2'd2) ? 4'd8 : 4'd4;
     wire [7:0] pla_c = {4'd0, c_p} << ((c_fmt == 2'd2) ? 3 : 2);
@@ -452,21 +467,26 @@ module ot_hgi_sm_xload_cl2_ctl #(
     wire tp_wrap = bk[1:0] == 2'd3;
     wire [15:0] t_b0_nx = tp_wrap ? t_gla8 + {9'd0, la, 3'd0} : t_b0 + 16'd2;
     wire [17:0] t_base_nx = tp_wrap ? t_gbase + {6'd0, la, 8'd0} : t_base + 18'd64;
+    // HBM-CORES-KITS-5 10-28: wb (wb[0] = 0, wb[10:8] = 0 for every load) and t_gla8 (multiple of 8) reset, see em_off.
+    always @(posedge clk or negedge rn)
+        if (!rn) begin wb <= 11'd4; t_gla8 <= 16'd0; end
+        else if (start_bd) begin
+            wb <= 11'((({3'd0, pla_c} > {1'b0, nb_c, 1'b0}) ? {3'd0, pla_c} : {3'd0, nb_c, 1'b0}) + 4);
+            t_gla8 <= 16'd0;
+        end else if (bi_on && bw_wrap && tp_wrap) t_gla8 <= t_gla8 + {9'd0, la, 3'd0};
     always @(posedge clk) begin
         if (start_bd) begin
-            la <= la_c; lsh <= (c_fmt == 2'd2) ? 2'd3 : 2'd2; nbk <= c_n[20:5];
+            la <= la_c; nbk <= c_n[20:5];
             gnb <= (c_fmt == 2'd2) ? 8'(((c_n - 21'd1) >> 11) + 21'd1) : 8'(((c_n - 21'd1) >> 10) + 21'd1);
-            gtp <= 10'(((c_fmt == 2'd2) ? (((c_n - 21'd1) >> 11) + 21'd1) : (((c_n - 21'd1) >> 10) + 21'd1)) * 4);
-            wb <= 11'((({3'd0, pla_c} > {1'b0, nb_c, 1'b0}) ? {3'd0, pla_c} : {3'd0, nb_c, 1'b0}) + 4);
             pla <= pla_c;
             bk <= 10'd0; bw <= 11'd0;
-            t_gla8 <= 16'd0; t_b0 <= 16'd0; c_b0 <= 16'd0;
+            t_b0 <= 16'd0; c_b0 <= 16'd0;
             t_gbase <= c_base[17:0]; t_base <= c_base[17:0]; c_pst <= c_base[17:0]; c_word <= c_base[17:0];
         end else begin
             if (bi_on) begin
                 if (bw_wrap) begin
                     bw <= 11'd0; bk <= bk + 10'd1;
-                    if (tp_wrap) begin t_gla8 <= t_gla8 + {9'd0, la, 3'd0}; t_gbase <= t_gbase + {6'd0, la, 8'd0}; end
+                    if (tp_wrap) t_gbase <= t_gbase + {6'd0, la, 8'd0};
                     t_b0 <= t_b0_nx; c_b0 <= t_b0_nx;
                     t_base <= t_base_nx; c_pst <= t_base_nx; c_word <= t_base_nx;
                 end else begin

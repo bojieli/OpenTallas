@@ -271,7 +271,7 @@ def predict_tree(sl, libraries, sink_points, sink_caps_ff, wire_r_kohm_um, wire_
     for sinks in leaves.values():
         for sink in sinks:
             if sink not in sink_points or sink not in sink_caps_ff:raise CI.InfraError(f"predictor missing physical point/cap for {sink}")
-    order=[n["name"] for n in tree["nodes"]]+list(gates)
+    order=[n["name"] for n in tree["nodes"] if n["name"] not in tree.get("under_gate",{})]+list(gates)+[n["name"] for n in tree["nodes"] if n["name"] in tree.get("under_gate",{})]
     answer={}
     for corner,libs in libraries.items():
         arrivals={};slews={};sink_arr={};nets=[];open_arr={}

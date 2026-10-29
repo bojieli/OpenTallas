@@ -34,9 +34,19 @@ fi
 pids=()
 for L in $LAYERS; do
   base=${L%%:*}; mode=${L#*:}; [ "$mode" = "$L" ] && mode=su
-  args=(--layer $base --out $O/prog_${base}_$mode --die-src $T --svc-timing-profile "$PROFILE")
-  [ -d $F/$base ] && args+=(--fixtures $F/$base)
+  layer_arg=$base; fixture_name=$base
+  case "$base" in
+    HEAD|head) layer_arg=head; fixture_name=HEAD ;;
+    MTP|mtp_draft) layer_arg=mtp_draft; fixture_name=MTP ;;
+  esac
+  args=(--layer "$layer_arg" --out $O/prog_${base}_$mode --die-src $T --svc-timing-profile "$PROFILE")
+  [ -d "$F/$fixture_name" ] && args+=(--fixtures "$F/$fixture_name")
   if [ "$mode" = mu ]; then args+=(--mu-cal $O/mu_cal.json --mu-ctx); fi
+  # TOK-S81-2 (opt-in): re-age every die link from one strict bind (dv_layer_compile --bound-data); default unchanged
+  if [ -n "${OT_BOUND_DATA:-}" ]; then
+    args+=(--bound-data "$OT_BOUND_DATA" --bound-data-manifest "${OT_BOUND_DATA_MANIFEST:?OT_BOUND_DATA needs OT_BOUND_DATA_MANIFEST}")
+    [ "${OT_BOUND_DATA_DIAGNOSTIC:-0}" = 1 ] && args+=(--bound-data-diagnostic)
+  fi
   ( /usr/bin/time -v -o $O/cc_${base}_$mode.time python3 tools/s81_dv/dv_layer_compile.py "${args[@]}" > $O/cc_${base}_$mode.log 2> $O/cc_${base}_$mode.err
     status=$?
     echo "CC $L rc $status $(tail -n 2 $O/cc_${base}_$mode.log | head -1 | cut -c1-200)"

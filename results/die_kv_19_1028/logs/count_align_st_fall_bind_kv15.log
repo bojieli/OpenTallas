@@ -1,0 +1,55 @@
+{
+ "verify": {
+  "identity_and_loop_errors": [],
+  "fundamental_cycles": 3595,
+  "samples": 500,
+  "sim_window_violations": 0,
+  "sim_min_margin_low_ps": 105.2,
+  "sim_min_margin_high_ps": 110.5,
+  "sim_worst_ports": {
+   "lo": "L2175_0",
+   "hi": "L595_0"
+  },
+  "sim_below_need": false,
+  "note": "margins to the ring guards 0.5T / (DEPTH-0.5)T (COORD 20:35/20:48 gate >= 100 ps); MESO-INTEG-1 sync physics with metastable resolution both ways"
+ },
+ "sched_lat_hist": {
+  "2": 1354,
+  "3": 1942,
+  "4": 299
+ },
+ "sched_lat_total": 9730,
+ "tree_sched_lat_total": 0,
+ "old_ring_total": 10785,
+ "depth_hist": {
+  "4": 3570,
+  "8": 25,
+  "16": 0
+ },
+ "K_range": [
+  -9,
+  11
+ ],
+ "start_tree_depth": 13,
+ "tree_edges_fall": 27,
+ "max_origin_cycles": 28,
+ "relay": {
+  "landed_regions": 157,
+  "multi_partition_regions": 32,
+  "partitions_per_region_hist": {
+   "1": 125,
+   "2": 32
+  },
+  "relay_partitions": 32,
+  "relay_pins": {
+   "tx_out": 32,
+   "rx_in": 32
+  },
+  "relay_stages": 2,
+  "crossings_with_relayed_receiver": 32,
+  "crossings_with_relayed_sender": 28,
+  "tree_ports_from_relay_sender": 0,
+  "nontree_K_shifted_by_relay": 4
+ },
+ "plan_source": "fb_inv_r150_spice_xing_lpo.json"
+}

@@ -505,3 +505,67 @@ def test_explicit_ff_bound_reaches_die_plan_session(tmp_path, monkeypatch, capsy
                          '--ff-vclk', 'bound-ff', '--ff-bound-ps', '198.4',
                          '--ff-vclk-contract', 'test@sha', '--dry']) == 0
     assert seen == {'tt': 198.4, 'ff': 198.4}
+
+
+# ---- target-relative pair skew (COORD 2026-10-28 21:33 rule 2: arrival minus planned target) ----
+def _with_targets(text, setup, hold, launch="u_eA2", capture="r1"):
+    return text + "\n" + "\n".join([
+        "SO PAIR_TARGETS pins 5 unmatched 0",
+        f"SO PAIR_TGT_max n 2 worst {setup} bounded 0 signed {-setup} launch {launch} capture {capture} crpr 0.0 "
+        "p99_raw 20 searched 3 nopath 0 verify 0.000",
+        f"SO PAIR_TGT_min n 2 worst {hold} bounded 0 signed {hold} launch {capture} capture {launch} crpr 0.0 "
+        "p99_raw 10 searched 3 nopath 0 verify 0.000"])
+
+
+def _record_with_targets(raw, tgt):
+    rec = record(pair_setup=raw, pair_hold=raw)
+    for c, t in session_text(pair_setup=raw, pair_hold=raw).items():
+        r = signoff.corner_result(signoff.parse_session(_with_targets(t, tgt, tgt)))
+        r.update(corner=c, macro_missing=[])
+        rec["corners"][c] = r
+    return rec
+
+
+def test_pair_targets_gate_reads_target_relative():
+    rec = _record_with_targets(raw=309.75, tgt=20.0)
+    ps = rec["corners"]["tt"]["pair_skew"]
+    assert ps["basis"] == "target_relative" and ps["targets"] == {"pins": 5.0, "unmatched": 0.0}
+    assert ps["checks"]["max"]["worst_abs_ps"] == 20.0 and ps["checks_pin_arrival"]["max"]["worst_abs_ps"] == 309.75
+    assert signoff.evaluate(rec)["checks"]["clock"]["verdict"] == "PASS"
+    rec = signoff.evaluate(_record_with_targets(raw=20.0, tgt=90.0))
+    assert rec["checks"]["clock"]["verdict"] == "FAIL"
+    assert any(p.startswith("TT setup related pair skew 90.0") for p in rec["checks"]["clock"]["problems"])
+
+
+def test_pair_without_targets_record_unchanged():
+    ps = record()["corners"]["tt"]["pair_skew"]
+    assert "basis" not in ps and "checks_pin_arrival" not in ps and "targets" not in ps
+
+
+def test_session_pair_targets_opt_in_and_default_unchanged():
+    base = signoff.session_tcl("tt", [], "/base/6_final.spef")
+    assert base == signoff.session_tcl("tt", [], "/base/6_final.spef", pair_targets=False)
+    assert "ot_ps_load_targets /sdc" not in base and "PAIR_TGT" not in base and "@PAIR" not in base
+    assert "unset ::ot_ps_lib_only\not_ps_zero_unc\n" in base
+    t = signoff.session_tcl("tt", [], "/base/6_final.spef", pair_targets=True)
+    assert t.index("ot_ps_load_targets /sdc/pair_targets.txt") < t.index("set so_pm [ot_ps_measure")
+    assert t.index("so PAIR_TGT_$dly") < t.index("so PAIR_DONE 1") and "@PAIR" not in t
+
+
+def test_pair_target_file_only_for_mean_contract_kits(tmp_path):
+    kit = tmp_path / "kit"
+    kit.mkdir()
+    disc = dict(kit=str(kit))
+    head = signoff.PAIR_TARGET_HEADER + " tap (TT; corner/source basis in JSON)\n"
+    (kit / "core_latency.txt").write_text(head + "u_core.u_eA0 ft_mstrap_i 255.24 grid\n")
+    (kit / "core_latency_ff.txt").write_text(head.replace("TT", "FF") + "u_core.u_eA0 ft_mstrap_i 208.27 grid\n")
+    (kit / "config.mk").write_text("export DESIGN_NAME = x\n")
+    assert signoff.pair_target_file(disc, "tt") is None            # no early core taps planned (no OT_CORE_LAT)
+    (kit / "config.mk").write_text("export OT_CORE_LAT = /work/core_latency.txt\n")
+    assert signoff.pair_target_file(disc, "tt") == kit / "core_latency.txt"
+    assert signoff.pair_target_file(disc, "ff") == kit / "core_latency_ff.txt"
+    assert signoff.pair_target_file(disc, "ss") is None
+    assert signoff.pair_target_file(dict(kit=None), "tt") is None
+    (kit / "core_latency.txt").write_text("# inst pin ETM_MAX_BOUND_ps tap (legacy diagnostic, NOT a mean/SIGNED contract)\n"
+                                          "u_core.u_eA0 ft_mstrap_i 300 grid\n")
+    assert signoff.pair_target_file(disc, "tt") is None            # legacy bound is not a planned target
