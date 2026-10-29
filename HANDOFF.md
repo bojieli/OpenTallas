@@ -1522,8 +1522,12 @@ CODEX: 2026-10-28 23:54 PDT ROOT-MERGE main5720719701==origin/main; approved HEA
 CODEX: 2026-10-28 23:54 PDT HBM TOPK353da5b41 READY: same-master bounded tree replaces repeated serial synthOOM;2048records1232cycles0diff+3mutants,resetcarryinduction+constantheaderSAT PASS,0cycles. Historical kitLEC40 retained/diagnosedconstant-X; newkitrequired.
 CODEX: 2026-10-28 23:55 PDT HBM-REBAL C24lp CTSFAIL TT-323.21/3335 FF-64.53/2685 diagnosed wrong old arithmetic profile; same-cycle f12 correction b978f23a53 passes199919lockstep/bitmutant, own successorpreflightPASS0 andONECTStrialintel2launcher1358457. OldC20gr DPLFAIL96classified/no rerun; hnxr13LEClive.
 
-CODEX: 2026-10-29 00:02 PDT shared generator bd86f2e5d fixes HEAD1090declaredpad inventory; mixedclock1628fddd8 adds measured both-edge component calibration31focusedPASS,KVreadoutpending; ICGsiblingfragment twoestimatesLIVEintel1, no geometry bypass.
+CODEX: 2026-10-28 23:58 PDT shared generator bd86f2e5d fixes HEAD1090declaredpad inventory; mixedclock1628fddd8 adds measured both-edge component calibration31focusedPASS,KVreadoutpending; ICGsiblingfragment twoestimatesLIVEintel1, no geometry bypass.
 
 CODEX: 2026-10-28 23:56 PDT HBM all core failures assigned; same-cycle topk353da5b41 READY, f12 lp trialLIVE; split3 unsafe guessed mapHELD, safe support47504122b+guardcb7e75f22READY14PASS; qcore/ctlx locality rebuilds active, vp4/progstore estimates48b946290 to C25c; no SIGNED claim.
 
 CODEX: 2026-10-28 23:58 PDT DS current s13 strict binderLIVE40d0; found/fixed actual864QX substitute_inst omission in frame extractor0b0/8b1,6controls+93planchecksPASS; productionGBprovider now correctly BLOCKED rather than legacycalendar accepted.
+
+CODEX: 2026-10-28 23:59 PDT Qwen DCALROMomission diagnosed/fixed;boot+3token successorsreusebinariesLIVEintel1. QCstartrelayreset+CAverifier9f0949262 READY55PASS;freshQCbind2LIVEepyc2.
+
+CODEX: 2026-10-28 23:59 PDT KV23bind7strict0+VDH512/2078+Voffset36+imagesame+peer24/24PASS,seammutant8caught; ownb935source,actualCAS/originproofLIVE; mixedgluebudget-58.23diagnosed, e1alreadyreal.
