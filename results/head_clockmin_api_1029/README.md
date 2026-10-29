@@ -1,0 +1,9 @@
+HEAD START FF clock minimum API correction
+
+Parentrealcell route output had valid driver/tap minima but0 at every actualsequentialCLK. Cause is OpenSTA Search.cc ArrivalVisitor::seedArrivals: after backend deletes dck to measure the clock network as a virtual-input data path, each unclocked registerCLK gets an artificial zeroarrival path. get_property pin arrival_min_* selects thatzero, while max selects realrootpath. This is a path-selection problem, not physicalzero insertion.
+
+The tested narrowfix iterates each pin vertex path_iterator(edge,min/max), keeps only paths whose start_path.pin is the real rootinput, reads get_property path arrival in the existingtimeunits, and fails if no rootpath. root_arrival.tcl contains the exact tested selection (diagnosticprint removed). Invoke after existingSTAarrival warmup; $pin vertices ensuresgraph before directpinproperty queries. The parent min_probe crash came from Properties::pinArrival using unbuilt graph beforeanyreport.
+
+ActualcachedDB demonstration (intel1 head-start-physical-0251/out2_TT) covers4FFs×rise/fall: rawmin all0; filteredmin allpositive; filteredmax unchanged. Iterator results match explicitly constrained find_timing_paths -fromroot results exactly. ExampleCLK25 earlyrise89.478729/fall85.564987ps;CLK95 earlyrise6261.098633/fall6432.525879ps. Reintroducing propagatedrealck instead shifts maxfall+416.5ps, so it is not a safe drop-in readoutfix without phasehandling.
+
+No reroute, source/geometry/phase change, G4pass or freezeclaim. Cached read_guides warns it cannot restore GRT parasitics, so these numbers testAPI mechanics only. Parent must applyselection in its originalin-processactualroutedRC readout. Jobs2530292-1793270726 and2555730-1793270889, both8GB/2threads ot-run exit0; parentinputs were mountedread-only.

@@ -1,0 +1,65 @@
+{
+  "scope": "CACHED_API_DIAGNOSTIC_ONLY",
+  "corner": "TT",
+  "routed_phase_pass": false,
+  "actual_route_RC_restored": false,
+  "root": "root",
+  "raw_min_is_artificial_zero": true,
+  "cause": "OpenSTA Search::ArrivalVisitor::seedArrivals injects unclocked zeroarrival at registerCLK after actual dck deleted; pin minimum aggregates this with real root data path",
+  "filter": "path.start_path.pin==root; iterator edge/minmax; get_property(path,arrival) preservesdisplaytimeunits",
+  "rows": [
+    {
+      "pin": "start_cell_25/CLK",
+      "edge": "rise",
+      "early_ps": 89.478729,
+      "late_ps": 99.444397
+    },
+    {
+      "pin": "start_cell_25/CLK",
+      "edge": "fall",
+      "early_ps": 85.564987,
+      "late_ps": 95.537704
+    },
+    {
+      "pin": "start_cell_62/CLK",
+      "edge": "rise",
+      "early_ps": 1966.69043,
+      "late_ps": 2179.172119
+    },
+    {
+      "pin": "start_cell_62/CLK",
+      "edge": "fall",
+      "early_ps": 2000.877686,
+      "late_ps": 2217.910156
+    },
+    {
+      "pin": "start_cell_73/CLK",
+      "edge": "rise",
+      "early_ps": 2077.135986,
+      "late_ps": 2301.9646
+    },
+    {
+      "pin": "start_cell_73/CLK",
+      "edge": "fall",
+      "early_ps": 2107.108887,
+      "late_ps": 2336.231934
+    },
+    {
+      "pin": "start_cell_95/CLK",
+      "edge": "rise",
+      "early_ps": 6261.098633,
+      "late_ps": 6982.414062
+    },
+    {
+      "pin": "start_cell_95/CLK",
+      "edge": "fall",
+      "early_ps": 6432.525879,
+      "late_ps": 7171.22998
+    }
+  ],
+  "notes": [
+    "Cached read_guides warns it cannot restoreGRTparasitics; usefixedselection during originalin-processactualRC readout for physicalnumbers.",
+    "Retainingpropagatedrealclock instead fixesmin but changes maxfallby416.5ps; do not silentlychange phasepolicy.",
+    "Parent initial min_probe SIGSEGV diagnosed unbuiltgraph before directpinarrival; pin.vertices ensuresgraph and existingSTAreport warmupmaterializespaths."
+  ]
+}

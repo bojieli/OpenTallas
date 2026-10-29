@@ -1,0 +1,205 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 2 thread(s).
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[WARNING GRT-0008] The read_guides command does not allow parasitics estimation from the guides file.
+Startpoint: root (input port clocked by vclk)
+Endpoint: t_sp3_xw_o_shim__clk_t1 (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock vclk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ input external delay
+   3.88    3.88 ^ root (in)
+   7.70   11.58 v ck_b0_r/Y (CKINVDCx16_ASAP7_75t_R)
+  21.51   33.09 ^ ck_b0/Y (CKINVDCx16_ASAP7_75t_R)
+  57.62   90.71 v ck_r711_0/Y (CKINVDCx16_ASAP7_75t_R)
+  23.67  114.38 ^ ck_b711/Y (CKINVDCx16_ASAP7_75t_R)
+  78.81  193.19 v ck_r2232_0/Y (CKINVDCx16_ASAP7_75t_R)
+  35.57  228.77 ^ ck_r2232_1/Y (CKINVDCx16_ASAP7_75t_R)
+  60.57  289.34 v ck_r2232_2/Y (CKINVDCx16_ASAP7_75t_R)
+  39.39  328.72 ^ ck_b2232/Y (CKINVDCx16_ASAP7_75t_R)
+  98.07  426.79 v ck_r2233_0/Y (CKINVDCx16_ASAP7_75t_R)
+  37.23  464.02 ^ ck_b2233/Y (CKINVDCx16_ASAP7_75t_R)
+  28.73  492.74 v ck_r2234_0/Y (CKINVDCx16_ASAP7_75t_R)
+  30.76  523.50 ^ ck_b2234/Y (CKINVDCx16_ASAP7_75t_R)
+  23.00  546.50 v ck_r2235_0/Y (CKINVDCx16_ASAP7_75t_R)
+  24.23  570.74 ^ ck_b2235/Y (CKINVDCx16_ASAP7_75t_R)
+  19.87  590.60 v ck_r2236_0/Y (CKINVDCx16_ASAP7_75t_R)
+  24.36  614.97 ^ ck_b2236/Y (CKINVDCx16_ASAP7_75t_R)
+  24.02  638.99 v ck_r2241_0/Y (CKINVDCx16_ASAP7_75t_R)
+  19.17  658.16 ^ ck_b2241/Y (CKINVDCx16_ASAP7_75t_R)
+  15.69  673.86 v ck_r2242_0/Y (CKINVDCx16_ASAP7_75t_R)
+  16.70  690.55 ^ ck_b2242/Y (CKINVDCx16_ASAP7_75t_R)
+  14.42  704.97 v ck_r2243_0/Y (CKINVDCx16_ASAP7_75t_R)
+  15.42  720.39 ^ ck_b2243/Y (CKINVDCx16_ASAP7_75t_R)
+  13.83  734.22 v ck_r2244_0/Y (CKINVDCx16_ASAP7_75t_R)
+  13.51  747.73 ^ ck_b2244/Y (CKINVDCx16_ASAP7_75t_R)
+   2.22  749.95 ^ t_sp3_xw_o_shim__clk_t1 (out)
+         749.95   data arrival time
+
+   0.00    0.00   clock vclk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00   clock reconvergence pessimism
+   0.00    0.00   output external delay
+           0.00   data required time
+---------------------------------------------------------
+           0.00   data required time
+        -749.95   data arrival time
+---------------------------------------------------------
+         749.95   slack (MET)
+
+
+PIN_RAW start_cell_25/CLK rise=0.000000/99.444397 fall=0.000000/95.537704
+PATH_COUNT start_cell_25/CLK rise 1
+ROOT_FILTERED start_cell_25/CLK rise 89.478729 from=root to=start_cell_25/CLK
+PATH_COUNT start_cell_25/CLK fall 1
+ROOT_FILTERED start_cell_25/CLK fall 85.564987 from=root to=start_cell_25/CLK
+PIN_RAW start_cell_62/CLK rise=0.000000/2179.172119 fall=0.000000/2217.910156
+PATH_COUNT start_cell_62/CLK rise 1
+ROOT_FILTERED start_cell_62/CLK rise 1966.690430 from=root to=start_cell_62/CLK
+PATH_COUNT start_cell_62/CLK fall 1
+ROOT_FILTERED start_cell_62/CLK fall 2000.877686 from=root to=start_cell_62/CLK
+PIN_RAW start_cell_73/CLK rise=0.000000/2301.964600 fall=0.000000/2336.231934
+PATH_COUNT start_cell_73/CLK rise 1
+ROOT_FILTERED start_cell_73/CLK rise 2077.135986 from=root to=start_cell_73/CLK
+PATH_COUNT start_cell_73/CLK fall 1
+ROOT_FILTERED start_cell_73/CLK fall 2107.108887 from=root to=start_cell_73/CLK
+PIN_RAW start_cell_95/CLK rise=0.000000/6982.414062 fall=0.000000/7171.229980
+PATH_COUNT start_cell_95/CLK rise 1
+ROOT_FILTERED start_cell_95/CLK rise 6261.098633 from=root to=start_cell_95/CLK
+PATH_COUNT start_cell_95/CLK fall 1
+ROOT_FILTERED start_cell_95/CLK fall 6432.525879 from=root to=start_cell_95/CLK
+FILTERED_DONE
+Startpoint: root (input port clocked by vclk)
+Endpoint: start_cell_25/CLK (internal path endpoint)
+Path Group: path delay
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 v input external delay
+   3.74    3.74 v root (in)
+   8.71   12.44 ^ ck_b0_r/Y (CKINVDCx16_ASAP7_75t_R)
+  18.46   30.90 v ck_b0/Y (CKINVDCx16_ASAP7_75t_R)
+  54.66   85.56 v start_cell_25/CLK (DFFHQNx1_ASAP7_75t_R)
+          85.56   data arrival time
+
+   0.00    0.00   min_delay
+   0.00    0.00   output external delay
+           0.00   data required time
+---------------------------------------------------------
+           0.00   data required time
+         -85.56   data arrival time
+---------------------------------------------------------
+          85.56   slack (MET)
+
+
+Startpoint: start_cell_3427 (rising edge-triggered flip-flop clocked by realck)
+Endpoint: start_cell_106 (rising edge-triggered flip-flop clocked by realck)
+Path Group: realck
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock realck (rise edge)
+6908.64 6908.64   clock network delay (propagated)
+   0.00 6908.64 ^ start_cell_3427/CLK (DFFHQNx1_ASAP7_75t_R)
+  62.45 6971.09 ^ start_cell_3427/QN (DFFHQNx1_ASAP7_75t_R)
+  95.82 7066.91 v start_cell_3419/Y (INVx1_ASAP7_75t_R)
+ 172.72 7239.63 v start_cell_102/Y (AND2x2_ASAP7_75t_R)
+   1.10 7240.73 v start_cell_106/D (DFFHQNx1_ASAP7_75t_R)
+        7240.73   data arrival time
+
+   0.00    0.00   clock realck (rise edge)
+8167.86 8167.86   clock network delay (propagated)
+-769.66 7398.20   clock reconvergence pessimism
+        7398.20 ^ start_cell_106/CLK (DFFHQNx1_ASAP7_75t_R)
+  19.80 7418.00   library hold time
+        7418.00   data required time
+---------------------------------------------------------
+        7418.00   data required time
+        -7240.73   data arrival time
+---------------------------------------------------------
+        -177.27   slack (VIOLATED)
+
+
+Startpoint: root (input port clocked by vclk)
+Endpoint: t_sp3_xw_o_shim__clk_t1 (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock vclk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ input external delay
+   3.88    3.88 ^ root (in)
+   7.70   11.58 v ck_b0_r/Y (CKINVDCx16_ASAP7_75t_R)
+  21.51   33.09 ^ ck_b0/Y (CKINVDCx16_ASAP7_75t_R)
+  57.62   90.71 v ck_r711_0/Y (CKINVDCx16_ASAP7_75t_R)
+  23.67  114.38 ^ ck_b711/Y (CKINVDCx16_ASAP7_75t_R)
+  78.81  193.19 v ck_r2232_0/Y (CKINVDCx16_ASAP7_75t_R)
+  35.57  228.77 ^ ck_r2232_1/Y (CKINVDCx16_ASAP7_75t_R)
+  60.57  289.34 v ck_r2232_2/Y (CKINVDCx16_ASAP7_75t_R)
+  39.39  328.72 ^ ck_b2232/Y (CKINVDCx16_ASAP7_75t_R)
+  98.07  426.79 v ck_r2233_0/Y (CKINVDCx16_ASAP7_75t_R)
+  37.23  464.02 ^ ck_b2233/Y (CKINVDCx16_ASAP7_75t_R)
+  28.73  492.74 v ck_r2234_0/Y (CKINVDCx16_ASAP7_75t_R)
+  30.76  523.50 ^ ck_b2234/Y (CKINVDCx16_ASAP7_75t_R)
+  23.00  546.50 v ck_r2235_0/Y (CKINVDCx16_ASAP7_75t_R)
+  24.23  570.74 ^ ck_b2235/Y (CKINVDCx16_ASAP7_75t_R)
+  19.87  590.60 v ck_r2236_0/Y (CKINVDCx16_ASAP7_75t_R)
+  24.36  614.97 ^ ck_b2236/Y (CKINVDCx16_ASAP7_75t_R)
+  24.02  638.99 v ck_r2241_0/Y (CKINVDCx16_ASAP7_75t_R)
+  19.17  658.16 ^ ck_b2241/Y (CKINVDCx16_ASAP7_75t_R)
+  15.69  673.86 v ck_r2242_0/Y (CKINVDCx16_ASAP7_75t_R)
+  16.70  690.55 ^ ck_b2242/Y (CKINVDCx16_ASAP7_75t_R)
+  14.42  704.97 v ck_r2243_0/Y (CKINVDCx16_ASAP7_75t_R)
+  15.42  720.39 ^ ck_b2243/Y (CKINVDCx16_ASAP7_75t_R)
+  13.83  734.22 v ck_r2244_0/Y (CKINVDCx16_ASAP7_75t_R)
+  13.51  747.73 ^ ck_b2244/Y (CKINVDCx16_ASAP7_75t_R)
+   2.22  749.95 ^ t_sp3_xw_o_shim__clk_t1 (out)
+         749.95   data arrival time
+
+   0.00    0.00   clock vclk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00   clock reconvergence pessimism
+   0.00    0.00   output external delay
+           0.00   data required time
+---------------------------------------------------------
+           0.00   data required time
+        -749.95   data arrival time
+---------------------------------------------------------
+         749.95   slack (MET)
+
+
+REAL_CLOCK start_cell_25/CLK rise=89.478729/99.444397 fall=85.564987/512.037720
+REAL_CLOCK start_cell_62/CLK rise=1966.690430/2179.172119 fall=2000.877686/2634.410156
+REAL_CLOCK start_cell_73/CLK rise=2077.135986/2301.964600 fall=2107.108887/2752.731934
+REAL_CLOCK start_cell_95/CLK rise=6261.098633/6982.414062 fall=6432.525879/7587.731445
+MIN_API_PROBE_DONE

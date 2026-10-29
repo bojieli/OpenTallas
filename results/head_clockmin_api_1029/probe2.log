@@ -1,0 +1,105 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 2 thread(s).
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[WARNING GRT-0008] The read_guides command does not allow parasitics estimation from the guides file.
+Startpoint: root (input port clocked by vclk)
+Endpoint: t_sp3_xw_o_shim__clk_t1 (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock vclk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ input external delay
+   3.88    3.88 ^ root (in)
+   7.70   11.58 v ck_b0_r/Y (CKINVDCx16_ASAP7_75t_R)
+  21.51   33.09 ^ ck_b0/Y (CKINVDCx16_ASAP7_75t_R)
+  57.62   90.71 v ck_r711_0/Y (CKINVDCx16_ASAP7_75t_R)
+  23.67  114.38 ^ ck_b711/Y (CKINVDCx16_ASAP7_75t_R)
+  78.81  193.19 v ck_r2232_0/Y (CKINVDCx16_ASAP7_75t_R)
+  35.57  228.77 ^ ck_r2232_1/Y (CKINVDCx16_ASAP7_75t_R)
+  60.57  289.34 v ck_r2232_2/Y (CKINVDCx16_ASAP7_75t_R)
+  39.39  328.72 ^ ck_b2232/Y (CKINVDCx16_ASAP7_75t_R)
+  98.07  426.79 v ck_r2233_0/Y (CKINVDCx16_ASAP7_75t_R)
+  37.23  464.02 ^ ck_b2233/Y (CKINVDCx16_ASAP7_75t_R)
+  28.73  492.74 v ck_r2234_0/Y (CKINVDCx16_ASAP7_75t_R)
+  30.76  523.50 ^ ck_b2234/Y (CKINVDCx16_ASAP7_75t_R)
+  23.00  546.50 v ck_r2235_0/Y (CKINVDCx16_ASAP7_75t_R)
+  24.23  570.74 ^ ck_b2235/Y (CKINVDCx16_ASAP7_75t_R)
+  19.87  590.60 v ck_r2236_0/Y (CKINVDCx16_ASAP7_75t_R)
+  24.36  614.97 ^ ck_b2236/Y (CKINVDCx16_ASAP7_75t_R)
+  24.02  638.99 v ck_r2241_0/Y (CKINVDCx16_ASAP7_75t_R)
+  19.17  658.16 ^ ck_b2241/Y (CKINVDCx16_ASAP7_75t_R)
+  15.69  673.86 v ck_r2242_0/Y (CKINVDCx16_ASAP7_75t_R)
+  16.70  690.55 ^ ck_b2242/Y (CKINVDCx16_ASAP7_75t_R)
+  14.42  704.97 v ck_r2243_0/Y (CKINVDCx16_ASAP7_75t_R)
+  15.42  720.39 ^ ck_b2243/Y (CKINVDCx16_ASAP7_75t_R)
+  13.83  734.22 v ck_r2244_0/Y (CKINVDCx16_ASAP7_75t_R)
+  13.51  747.73 ^ ck_b2244/Y (CKINVDCx16_ASAP7_75t_R)
+   2.22  749.95 ^ t_sp3_xw_o_shim__clk_t1 (out)
+         749.95   data arrival time
+
+   0.00    0.00   clock vclk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00   clock reconvergence pessimism
+   0.00    0.00   output external delay
+           0.00   data required time
+---------------------------------------------------------
+           0.00   data required time
+        -749.95   data arrival time
+---------------------------------------------------------
+         749.95   slack (MET)
+
+
+PIN_RAW start_cell_25/CLK rise=0.000000/99.444397 fall=0.000000/95.537704
+ITER_PATH start_cell_25/CLK rise min start=root arrival=89.478729
+ITER_PATH start_cell_25/CLK rise max start=root arrival=99.444397
+ROOT_ITERATOR start_cell_25/CLK rise 89.478729 99.444397
+ITER_PATH start_cell_25/CLK fall min start=root arrival=85.564987
+ITER_PATH start_cell_25/CLK fall max start=root arrival=95.537704
+ROOT_ITERATOR start_cell_25/CLK fall 85.564987 95.537704
+PIN_RAW start_cell_62/CLK rise=0.000000/2179.172119 fall=0.000000/2217.910156
+ITER_PATH start_cell_62/CLK rise min start=root arrival=1966.690430
+ITER_PATH start_cell_62/CLK rise max start=root arrival=2179.172119
+ROOT_ITERATOR start_cell_62/CLK rise 1966.69043 2179.172119
+ITER_PATH start_cell_62/CLK fall min start=root arrival=2000.877686
+ITER_PATH start_cell_62/CLK fall max start=root arrival=2217.910156
+ROOT_ITERATOR start_cell_62/CLK fall 2000.877686 2217.910156
+PIN_RAW start_cell_73/CLK rise=0.000000/2301.964600 fall=0.000000/2336.231934
+ITER_PATH start_cell_73/CLK rise min start=root arrival=2077.135986
+ITER_PATH start_cell_73/CLK rise max start=root arrival=2301.964600
+ROOT_ITERATOR start_cell_73/CLK rise 2077.135986 2301.9646
+ITER_PATH start_cell_73/CLK fall min start=root arrival=2107.108887
+ITER_PATH start_cell_73/CLK fall max start=root arrival=2336.231934
+ROOT_ITERATOR start_cell_73/CLK fall 2107.108887 2336.231934
+PIN_RAW start_cell_95/CLK rise=0.000000/6982.414062 fall=0.000000/7171.229980
+ITER_PATH start_cell_95/CLK rise min start=root arrival=6261.098633
+ITER_PATH start_cell_95/CLK rise max start=root arrival=6982.414062
+ROOT_ITERATOR start_cell_95/CLK rise 6261.098633 6982.414062
+ITER_PATH start_cell_95/CLK fall min start=root arrival=6432.525879
+ITER_PATH start_cell_95/CLK fall max start=root arrival=7171.229980
+ROOT_ITERATOR start_cell_95/CLK fall 6432.525879 7171.22998
+ITERATOR_DONE
