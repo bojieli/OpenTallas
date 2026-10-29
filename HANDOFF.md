@@ -1644,3 +1644,6 @@ CODEX: 2026-10-29 03:00 PDT S81cores resumed: collectedH0GRT0 TT-33.64/FF+5.01,V
 
 CODEX: 2026-10-29 03:01 PDT independentHBMchannel-sm3G1+BTABactualGRTcontinuation PASS-COND (b35fc2aad), ownersproceedoneclockGRT/CTSGRT; NLprojectiondiagnosed926netscentralstreet, LECholdsroute (edc9f1445).
 CODEX: 2026-10-29 03:02 PDT QC NL fresh actual gate nativeLEC31742/31742+joint12570/12570PASS,kept9881/9881;57stalegoldreplica hints reanchored+allPROVED,wrongmappingcontrol28CAUGHT,0RTL/cyclechange. Packet2d2fac779; parentGEOM/physicalstillopen.
+CODEX: 2026-10-29 03:02 PDT HBM channel clock structural geometry repaired:59.386vs83.9mm,392cells/424edges<=319.766um,0body/PG/row;33e7d04ea independentGEOMPASS-COND clockGRT trial live; no dieclosure.
+
+CODEX: 2026-10-29 03:02 PDT LP naturalchild originalactualGEOMFAIL diagnosedbody+fault; privatebanklocal5SRAM241.92x155.52source e8f27f98b/viewedPLACEONLYcandidate,0RTL/cycles, noCTS/parentadoption.
