@@ -1814,3 +1814,5 @@ CODEX: 2026-10-29 08:31 PDT HBMK13 collected RING V1b physicalSIGNED but KEEPFAI
 CODEX: 2026-10-29 08:31 PDT HEAD SerDes collected half/quarter failures exactly7apply each (0undecided); kept-applyLEC live untouched. ReviewedONEPLACE continuation16a8156c6 watcherPID2042560intel2; LEP explicit resizedchild support710c3bc21 READY, parentgeometrypending.
 
 CODEX: 2026-10-29 08:32 PDT S81 cores: inherited64resetLECs live; BFsetup rootcause shared tag fanout not arithmetic, optin0cycle replication qualified minimum miter; station7 generating from actual strictboundRTL after nativeobserver incompatibility diagnosed.
+
+CODEX: 2026-10-29 08:31 PDT main26a8b2b99 published: scoped real core-parent hold receipts, bound hard-wrapper kits + explicit modeled PHY, opt-in clock duty polarity repair (735-tap diagnostic duty0 both corners, frozen passing plans untouched), QC31 independent arithmetic and HBM VM diagnostic import. Focused11+65+1PASS, no file deletions; HEAD==origin/main.
