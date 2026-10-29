@@ -29,3 +29,16 @@ def test_actual_ports_and_corner_arcs(tmp_path):
 def test_no_impossible_pin_wall(tmp_path):
     with pytest.raises(ValueError,match='cannot fit'):
         P.generate(tmp_path,40,40)
+
+
+def test_explicit_layout_complete_and_no_pin_shorts(tmp_path):
+    sheet=P.generate(tmp_path/'base',432,760.32)
+    layout={'pins':{n:dict(layer=p['layer'],face=p['face'],rects_um=p['access_rects_um']) for n,p in sheet['pins'].items()},'obstruction_layers':[1,2,3]}
+    got=P.generate(tmp_path/'native',432,760.32,layout)
+    assert got['pins'] == sheet['pins']
+    del layout['pins']['rst_n']
+    with pytest.raises(ValueError,match='exactly every'):
+        P.generate(tmp_path/'missing',432,760.32,layout)
+    layout['pins']['rst_n']=layout['pins']['clk']
+    with pytest.raises(ValueError,match='overlapping modeled pins'):
+        P.generate(tmp_path/'shorted',432,760.32,layout)
