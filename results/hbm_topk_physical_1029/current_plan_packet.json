@@ -14,29 +14,21 @@
   ],
   "old_guide_renderer_macro_height_um": 70.992,
   "physical_stage": "GEN/source/PLACE only. Current generator emits MULTIPORT_CTS_HOLD; preserve this until common-domain nine-port clock stage reviewed. +2 SRAM write visibility edges priced.",
-  "guide_structural_repair": {
-    "old_native_rect": [
+  "guide_diagnosis_correction": {
+    "original_native_rect": [
       25.92,
       207.36,
       69.12,
       243.0
     ],
-    "old_S0_bank2_rect": [
+    "actual_S0_bank2_rect": [
       25.92,
-      217.08,
+      116.37,
       64.8,
-      234.36
+      133.65
     ],
-    "old_overlap": "S0 bank2 guide inside native input FF guide, joint upperfill ~84%; original guide estimate not buildable at <=60%",
-    "new_native_rect": [
-      4.32,
-      207.36,
-      25.92,
-      278.64
-    ],
-    "same_area_um2": 1539.648,
-    "new_native_to_S0_corner_bound_um": 185.76,
-    "new_stage0_analytic_ps": 825.0736,
-    "note": "Original explicitly uncalibrated timing assumptions retained; +25.65ps vs799.43 originalestimate, only7.93psheadroom. Actualplacement and STA mandatory; noPNRapproval."
+    "original_native_to_S0_corner_bound_um": 169.83,
+    "stage0_analytic_ps": 799.4263,
+    "correction": "Prior b6119b79c analysis misread bank2S0 y as217.08 and falsely inferred overlap. Render exposed the error before physical use. Unnecessary native-strip shift reverted; original guides are disjoint. No new geometry failure or added source change."
   }
 }

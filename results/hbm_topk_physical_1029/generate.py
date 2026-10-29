@@ -29,8 +29,6 @@ sys.argv=[str(f),'--views',str(a.out/'views.json'),'--view',view,'--out',str(a.o
 # Install the committed, opt-in logical guides before the standard kit hash is sealed.
 original_kit_hash=g.kit_hash
 model=json.load(open(repo/'results/hbm_topk_wpipe_1029/model_and_guides.json'))
-# Prior native guide wholly overlapped the S0 bank2 guide. Same-area native strip now sits immediately to its west.
-model['native_line_r_guide']['rect_um']=[4.32,207.36,25.92,278.64]
 def guided_kit_hash(kd):
  kd=Path(kd)
  if not (kd/'topk_write_guides.tcl').exists():
