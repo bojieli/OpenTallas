@@ -54,6 +54,11 @@ fi
 if [ -f "$KIT/ft_interface.json" ] || [ -f "$KIT/ft_ports.json" ]; then
   GA+=(--ft-interface "$KIT/ft_interface.json" --ft-ports "$KIT/ft_ports.json")
 fi
+# Declared landing ring (COORD 10-29 11:09, GEOM-59): land_slots.json + face_guard.json (PASS) make a ring slot the
+# pin register, judged at the farthest slot; missing/invalid metadata grants no exemption (recorded in land_ring).
+if [ -f "$KIT/land_slots.json" ] || [ -f "$KIT/face_guard.json" ]; then
+  GA+=(--land-slots "$KIT/land_slots.json" --face-guard "$KIT/face_guard.json")
+fi
 python3 -I "$TOOLS/geom_rules.py" "$OUT/geom.tsv" --odb "$ODB" --json "$OUT/auto_geom.json" --max-layer "$GMAX" "${GA[@]}" "${RA[@]}"
 vrc=$?
 PA=(); [ "$GRT" = true ] && PA=(--cong "$OUT/cong.rpt")
