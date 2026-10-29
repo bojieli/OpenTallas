@@ -1,0 +1,177 @@
+{
+ "RT": 395.0,
+ "edges": 49596,
+ "nodes": 15393,
+ "fixed_face": 2582,
+ "movable": 12811,
+ "r2r_max": 395.0,
+ "r2r_gt405": 0,
+ "r2r_captures": 9706,
+ "r2r_worst": "u_g.go$_DFF_P_ -> g_icg.g_hop.u_hop_rp6/g_kn.h\\[0\\]$_DFF_PN1_",
+ "relay": {
+  "relay_chains": 1200,
+  "relay_collapsed": 0,
+  "relay_balance_max": 8.92,
+  "relay_worst": "u_g.u_tile.u_tile.u_logic.u_me.e_split\\[2\\]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[5\\].g_hd.g_tx.g_r\\[1\\].u_tx/q\\[386\\]$_DFF_P_ 13 hops span 575 max hop 395"
+ },
+ "pin_reg_max": 261.76,
+ "pin_reg_p90": 8.41,
+ "pin_reg_worst": [
+  "261.8 rst_n",
+  "33.0 t_out[26]",
+  "32.3 t_out[3]",
+  "32.1 t_out[16]",
+  "32.1 t_out[13]"
+ ],
+ "graph_legs_gt405": 0,
+ "graph_legs_gt405_by_kind": {},
+ "graph_leg_max": 395.85,
+ "graph_worst": [
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[977]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[742]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[741]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[732]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[730]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[727]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[721]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[1023]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[1012]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[561]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[528]$_DFF_P_"
+  ],
+  [
+   395.8,
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[521]$_DFF_P_"
+  ]
+ ],
+ "icg_enable_leg_max": 395.0,
+ "rst_n_asr_direct": 73,
+ "rst_n_asr_dist_max": 357.0,
+ "rst_n_asr_gt150": 72,
+ "rst_n_asr_gt405": 0,
+ "moved_cells": 880,
+ "move_p90": 0.0,
+ "move_max": 354.5,
+ "moved_by_family": [
+  [
+   "u_tx/q[]$_DFF_P_",
+   426
+  ],
+  [
+   "gs[]$_DFF_P_",
+   32
+  ],
+  [
+   "h[]$_DFF_PN1_",
+   19
+  ],
+  [
+   "s2_x[]$_DFF_P_",
+   15
+  ],
+  [
+   "rq_ad_s[][]$_DFF_P_",
+   12
+  ],
+  [
+   "rq$_DFF_PN0_",
+   7
+  ],
+  [
+   "dr[]$_DFFE_PN0P_",
+   6
+  ],
+  [
+   "s2_tag[]$_DFF_P_",
+   2
+  ],
+  [
+   "u_hop_ck/u_icg",
+   1
+  ],
+  [
+   "s2_first$_DFF_P_",
+   1
+  ],
+  [
+   "t_out_reset_q$_DFF_P_",
+   1
+  ],
+  [
+   "fy_q$_SDFF_PN0_",
+   1
+  ],
+  [
+   "rq_ce_s[]$_DFF_PN0_",
+   1
+  ],
+  [
+   "mis_q$_SDFF_PN0_",
+   1
+  ],
+  [
+   "gn[]$_DFF_P_",
+   1
+  ],
+  [
+   "s2_round$_DFF_P_",
+   1
+  ],
+  [
+   "u_tx/q[]$_DFF_PN0_",
+   1
+  ],
+  [
+   "s2_gm[]$_DFF_P_",
+   1
+  ],
+  [
+   "mq_wrom[]$_DFF_P_",
+   1
+  ]
+ ]
+}
