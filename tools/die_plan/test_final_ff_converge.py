@@ -78,7 +78,7 @@ def test_actual_rc_precedes_frame_and_drv_is_rerouted_before_hold(tmp_path):
 
 def test_stagnant_actual_route_fails_and_keeps_checkpoint(tmp_path):
     s=run(tmp_path,converge=False,drv=False)
-    assert 'RESULT 1' in s and 'repeated physical state' in s
+    assert 'RESULT 1' in s and 'no actual FF improvement' in s
     assert 'failed_checkpoint' in s
 
 
