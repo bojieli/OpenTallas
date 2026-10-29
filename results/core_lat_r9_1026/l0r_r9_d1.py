@@ -43,12 +43,22 @@ def main():
     op = gzip.open if rj.endswith(".gz") else open
     rec = json.load(op(rj, "rt"))[0]
     F = json.load(open(fit)); pmax, pmin = dict(F["PMAX"]), dict(F["PMIN"])
+    icg = sorted({n[3] for n in rec["nodes_xy"] if n[3].startswith("ICG")})
     for c in ENV + sorted({n[3] for n in rec["nodes_xy"]}):
-        if c not in U.SIZES: U.SIZES.append(c)
+        if c not in U.SIZES and c not in icg: U.SIZES.append(c)
     L = U.load_libs(libdir)
+    if icg:
+        # form C (CORES-EARLY-6): planned ICG stages are timed by their CLK->GCLK arc and never resized (a copy keeps
+        # its RTL gate's master: core_infra clone_of)
+        if '--seqtt' not in sys.argv or '--seqff' not in sys.argv:
+            raise SystemExit("plan has ICG stages %s: --seqtt/--seqff SEQ liberty required" % icg)
+        sys.path.insert(0, str(HERE.parents[1] / "tools" / "die_plan"))
+        import core_family_slice as CFS
+        for k, flag in (("TT", "--seqtt"), ("FF", "--seqff")):
+            L[k].update(CFS.icg_lib_cells(sys.argv[sys.argv.index(flag) + 1], icg))
     P = A.PlanFromRecord(rec, geo)
     par = {n[0]: n[1] for n in rec["nodes_xy"]}
-    fixed = {"root"}
+    fixed = {"root"} | {n[0] for n in rec["nodes_xy"] if n[3].startswith("ICG")}
     def path(k):
         p = [k]
         while par.get(p[-1]) is not None: p.append(par[p[-1]])

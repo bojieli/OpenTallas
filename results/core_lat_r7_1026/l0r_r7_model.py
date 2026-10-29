@@ -40,6 +40,7 @@ def model_x(P, libs, r, c, wire_cls, ffc=H.FFC):
     res = {}; stage = {}; P['_int'] = {}
     for corner, L in libs.items():
         arr = {'root': 0.0}; slew = {'root': 0.0}; leafarr = {}; cd = {}; drv = {}
+        scap = P.get('sinkcap', {}).get(corner, {})   # form C (CORES-EARLY-6): hard-macro clock pins; absent = FF cap (unchanged)
         stack = ['root']
         while stack:
             u = stack.pop(); kids = ch.get(u, []); lib = L[mst[u]]
@@ -73,7 +74,7 @@ def model_x(P, libs, r, c, wire_cls, ffc=H.FFC):
                     cd[k[0]] = (round(d, 2), round(el, 2), round(so, 1))
             if u in P['leafsinks']:
                 ls = P['leafsinks'][u]; pts = [pos[u]] + [s[:2] for s in ls]
-                par, order = H.mst_edges(pts); sub = [0.0] + [ffc[corner] for _ in ls]; ec = [0.0] * len(pts); er = [0.0] * len(pts)
+                par, order = H.mst_edges(pts); sub = [0.0] + [scap.get('%s/%s' % (s_[2], s_[3]), ffc[corner]) for s_ in ls]; ec = [0.0] * len(pts); er = [0.0] * len(pts)
                 lr, lc = (r * NDR_R, c * NDR_C) if LEAF_NDR else (r, c)
                 for v in order[1:]:
                     e = abs(pts[v][0] - pts[par[v]][0]) + abs(pts[v][1] - pts[par[v]][1]); ec[v] = lc * e; er[v] = lr * e

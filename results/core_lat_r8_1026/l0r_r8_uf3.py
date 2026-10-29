@@ -30,10 +30,13 @@ class PlanFromRecord:
             f = l.split()
             if f and f[0] == "SINK":
                 sxy["%s/%s" % (f[4], f[5])] = (float(f[1]), float(f[2]))
+            elif f and f[0] == "MACRO" and rec.get("macro_leaves"):   # form C: gated hard-macro clock pins (macro leaves)
+                sxy["%s/%s" % (f[1], f[7])] = (float(f[8]), float(f[9]))
         self.nodes, self.kids, self.nets = {}, {}, {}
         par = {}
+        mleaf = set(rec.get("macro_leaves", []))
         for name, p, xy, cell, kind in rec["nodes_xy"]:
-            self.nodes[name] = dict(cell=cell, kind="leaf" if kind == "leaf" else "buf", xy=tuple(xy))
+            self.nodes[name] = dict(cell=cell, kind=("macro" if name in mleaf else "leaf") if kind == "leaf" else "buf", xy=tuple(xy))
             if p is not None:
                 self.kids.setdefault(p, []).append(name); par[name] = p
         for leaf, sinks in rec["leaf_sinks"].items():
