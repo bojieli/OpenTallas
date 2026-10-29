@@ -242,3 +242,41 @@ def test_entry_geo_centre_unchanged_and_centroid(tmp_path):
     g.write_text("CORE 0 0 1 1\nPIN ck 0 0\n")
     with pytest.raises(SystemExit):
         F.entry_geo(g, "sink_centroid")
+
+
+# ------------------------------------------------------------------ CORES-EARLY-4: hard-macro node keep-out (opt-in)
+def _sites(tmp_path):
+    p = tmp_path / "sites.txt"
+    p.write_text("ROW0 4.3200 4.3200 site_w 0.0540 site_h 0.2700 nrows 10 nsites 100 orient0 R0\n"
+                 "ROW 4.3200 4.3200 R0 100\n"
+                 "FIXED TAP_1 TAPCELL_ASAP7_75t_R 4.3200 4.3200 4.4280 4.5900\n"
+                 "FIXED u_rom0 ot_rom_4096x274_m8 25.9200 42.2880 151.2240 105.2400\n"
+                 "MASTER BUFx24_ASAP7_75t_R 1.1340 0.2700\n")
+    return p
+
+
+def test_macro_keepouts_blocks_only_with_halo(tmp_path):
+    k = F.macro_keepouts(_sites(tmp_path))
+    assert k == [[23.72, 40.088, 153.424, 107.44]]   # macro + 2.2 um halo; tap cell (one row) is not a block
+
+
+def test_keepout_mode_default_off_and_member_map():
+    assert F.keepout_mode(dict(name="f"), "a") is False
+    assert F.keepout_mode(dict(name="f", macro_keepout=True), "a") is True
+    fam = dict(name="f", macro_keepout={"a": True})
+    assert F.keepout_mode(fam, "a") is True and F.keepout_mode(fam, "b") is False
+
+
+def test_htree_plan_keeps_every_node_out_of_the_block(tmp_path):
+    """the S81 rom _gb failure: a block not on the clock net was invisible, a branch driver landed inside it."""
+    H = F.H
+    geo = tmp_path / "geo.txt"
+    L = ["DIE 0 0 100 100", "CORE 0 0 100 100", "PIN ck 50 50"]
+    L += ["SINK %d %d DFFHQNx1_ASAP7_75t_R r%d_%d CLK" % (x, y, x, y) for x in (5, 20, 80, 95) for y in (5, 20, 80, 95)]
+    geo.write_text("\n".join(L) + "\n")
+    blk = [10.0, 30.0, 45.0, 70.0]                        # W-side block between the W sink groups
+    P0 = H.plan(str(geo), [2, 2], 70.0, [])
+    P1 = H.plan(str(geo), [2, 2], 70.0, [blk])
+    inside = lambda P: [n[0] for n in P["nodes"] if blk[0] <= P["mz"].xy(n[2])[0] <= blk[2] and blk[1] <= P["mz"].xy(n[2])[1] <= blk[3]]
+    assert inside(P0)                                      # without the keep-out the W hub sits in the block
+    assert not inside(P1)
