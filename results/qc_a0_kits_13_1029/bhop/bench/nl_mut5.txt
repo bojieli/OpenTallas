@@ -1,0 +1,10 @@
+A0ICG_QMISMATCH cyc9557 t_out [513:512] off01 on01 data 167 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc9558 t_out [513:512] off01 on01 data 125 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc9559 t_out [513:512] off01 on01 data 105 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc9560 t_out [513:512] off01 on01 data 119 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc9561 t_out [513:512] off01 on01 data 135 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_COUNTS tile=nl MUT=5 checks=12000 cmds=11 t_valid=4139 t_nonzero=4139 n_valid=0 gated_cycles=6844 (57%) engine_busy=4626 wakeups=9
+A0ICG_STRICT tile=nl MUT=5 strict_mismatch_cycles=8172 (t_out 8172 n_y 0) first=834
+A0ICG_FAIL tile=nl MUT=5 qualified_errors=996 (t_out 996 n_y 0) first_cycle=9557 checks=12000
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:04.12
+	Maximum resident set size (kbytes): 19924

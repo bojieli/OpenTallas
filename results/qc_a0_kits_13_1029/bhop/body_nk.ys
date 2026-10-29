@@ -1,0 +1,8 @@
+read_verilog -sv -DSYNTHESIS -DOT_A0_LOCAL_OUT_RESET -DOT_ROM_CONST0_KV /k/rtl/ot_qw_land4_n32.sv /k/rtl/ot_qw_land4_n32_select.sv /k/rtl/ot_qwen_rom_tile_die.sv /k/rtl/ot_qwen_kv_land_merge.sv /k/rtl/ot_hdc_fpu.sv /k/rtl/ot_hdc_fp32_mul_pipe.sv /k/rtl/ot_hdc_fastfp.sv /k/rtl/ot_hdc_delay.sv /k/rtl/ot_hdc_sfu.sv /k/rtl/ot_hdc_matvec.sv /k/rtl/ot_qwen_me_array_w12.sv /k/rtl/ot_qwen_rom_tile_w12_land32.sv /k/rtl/ot_hdc_fp32_add_lat.sv /k/rtl/ot_hdc_fp32_mul_lat.sv /k/rtl/ot_hdc_prefix.sv /k/rtl/ot_qwen_w12_matvec_land32.sv /k/rtl/ot_qwen_w12_arith.sv /k/rtl/ot_fp32_add_rne_pipe.sv /k/rtl/ot_hdc_fp32_add_lat_nr.sv /k/rtl/ot_qwen_rom_tile_nk.sv /k/rtl/ot_rom_4096x266_m8_bb.v /k/rtl/ot_rom_2048x266_m8_bb.v /k/rtl/ot_sram_1r1w_128x256_m1_r2c2_bb.v /k/rtl/ot_qwen_tile_node_bb.v /k/rtl/qfd_tile_nk_rp2_45.sv  /k/rtl/ot_qwen_tile_romleaf_bb.v /k/rtl/ot_qwen_tile_lsl_rawcut.v
+hierarchy -top qfd_tile_nk_rp2_45 -chparam RPH 3 -chparam REGROOT 3
+proc
+flatten
+opt_clean -purge
+opt_expr
+opt_clean -purge
+write_json /r/body_nk.json
