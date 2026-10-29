@@ -1,0 +1,60 @@
+{
+ "status": "PASS_SOURCE_CANDIDATE",
+ "source_sha256": {
+  "rtl/hbm_accel/generic/vm/static/faces_q0_r2048/ot_vms_bank_q0_faces_core_r2048.sv": "97a7ef62f6e2b9d7758af4084d026a0c759c928894b710ed05c893cc7a746aa8",
+  "rtl/hbm_accel/generic/vm/static/faces_q0_r2048/hfd_vms_bank_native_q0_faces_r2048.sv": "70cc8dbf01e77be4cae6662cb61802d2bc8e1d0145069913af1444f1adf7a618",
+  "rtl/hbm_accel/generic/vm/static/faces_q0_r2048/ot_vms_bank_q0_faces_body_r2048.sv": "cef24ce0c26ed07e6cbfd21494d25acd9e4bab471795119b88e9ec8115a34361",
+  "tools/hbm_static/vm_r2048/golden/ot_vms_bank_q0_faces_body.sv": "a60a2419fdf85e3f684effb0f0a850afe895dd2f8dfddaf9b2cc393ee11c8870",
+  "tools/hbm_static/vm_r2048/golden/ot_vms_bank_q0_faces_core.sv": "c55ad634a94838dc57e4c8111e97dcb8319fb2d7474dfe1e3bce3a115b16e621",
+  "tools/hbm_static/vm_r2048/golden/hfd_vms_bank_native_q0_faces.sv": "2a7d478da253fb741749607d8a803ebb5bb2186dc2825f0aa78055f4dfa1dfc4",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e",
+  "tools/hbm_static/vm_r2048/tb.sv": "de20a9b62b9da62591393cc202d81a8f89657fdca999e07260aa1bfd5aa0a2fb"
+ },
+ "metrics": {
+  "cycles": 2701,
+  "legacy_lockstep": 404,
+  "checks": 2689,
+  "writes": 1282,
+  "reads": 1283,
+  "SRAMs": 4,
+  "regular_rows": 2048,
+  "mirror_rows": 1024,
+  "return_edges": 7,
+  "write_edges": 4,
+  "added_cycles": 0,
+  "SECDED_high": 1,
+  "highmirror_rejected": 1
+ },
+ "high_alias_mutant": "CAUGHT",
+ "mirror_alias_mutant": "CAUGHT",
+ "WIDTH_SELRANGE": "PASS",
+ "default_selected": false,
+ "actual_macro_count": 4,
+ "die_bank_count": 32,
+ "actual_total_macros": 128,
+ "regular_words": 524288,
+ "mirror_words_logical": 65536,
+ "high_mirror": "explicit fault and suppressed write; original1k rows retained",
+ "clock_period_ps": 833,
+ "mutants_are_actual_RTL": true,
+ "latency_model_added_cycles": 0,
+ "scope": "One actual face-wrapper bank, real four SRAMs, retained SECDED. Legacy low/mirror path lockstep against exact selected current source. Full high regular half exercised. No die/clock/PG/token qualification.",
+ "failures_diagnosed": {
+  "r1": "miter reference instance missing whitespace; source unchanged; fixed",
+  "r3": "remote main predates selectedr18bundle; copied exact three selected source files as pinned golden fixture, re-ran r4"
+ },
+ "run": {
+  "host": "intel1",
+  "root": "/srv/opentallas-scratch2/claude/codex-hbm-vm-capacity-1029/proof_r4",
+  "unit": "oth-ubuntu-2396275-1793269953",
+  "exit_code": 0
+ },
+ "physical_holds": [
+  "newtypedmaster and current source pin/lot adoption belongs atomicC25c event",
+  "four macro clock entries+PG+reach+STA/PnR not run",
+  "role-local query/weight publication still required; A18438SID2 andB35456SID0 cannot be read through oneSIDface by relabeling"
+ ],
+ "full_token": false,
+ "SIGNED": false
+}

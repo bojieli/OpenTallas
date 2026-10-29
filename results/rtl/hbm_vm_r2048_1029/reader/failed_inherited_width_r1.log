@@ -1,0 +1,10 @@
+%Error-WIDTHTRUNC: rtl/hbm_next/idx/ot_hnx_idx_vm_query_static_n12_r2048.sv:40:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'WEIGHT_FP32' generates 32 bits.
+                                                                                 : ... note: In instance 'ot_hnx_idx_vm_query_static_n12_r2048.core'
+   40 |  localparam integer WSECT=WEIGHT_FP32?4:2;
+      |                                      ^
+                   ... For error description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+%Error-WIDTHTRUNC: rtl/hbm_next/idx/ot_hnx_idx_vm_query_static_n12_r2048.sv:114:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'WEIGHT_FP32' generates 32 bits.
+                                                                                  : ... note: In instance 'ot_hnx_idx_vm_query_static_n12_r2048.core'
+  114 |  generate if(WEIGHT_FP32)begin:g_fp32_weights
+      |           ^~
+%Error: Exiting due to 2 error(s)

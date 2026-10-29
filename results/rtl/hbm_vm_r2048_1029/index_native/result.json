@@ -1,0 +1,46 @@
+{
+  "status": "COMPONENT_SOURCE_PASS",
+  "source_selected": false,
+  "full_token": false,
+  "SIGNED": false,
+  "collar": {
+    "run": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-vm-capacity-1029/collar_r3",
+    "unit": "oth-ubuntu-3052772-1793273584",
+    "exit": 0,
+    "cases": [
+      "FAN0/FAN1 explicit fourSID F20 publisher, unchanged legacy prm/start/go dates",
+      "missing eighth operand row refused",
+      "wrong role and reserved row bits fault",
+      "single-row actual calendar refuses multirow before launch"
+    ],
+    "actual_source_mutants_caught": [
+      15,
+      12
+    ],
+    "width_select_lint": "PASS"
+  },
+  "share": {
+    "run": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-vm-capacity-1029/share_r2",
+    "unit": "oth-ubuntu-3020631-1793273501",
+    "exit": 0,
+    "BANK_RT": 54,
+    "legacy_lockstep_edges": 250,
+    "cases": [
+      "highregular bit15",
+      "explicitmirror bit16",
+      "response owner and dates unchanged"
+    ],
+    "actual_source_mutants_caught": [
+      6
+    ],
+    "width_select_lint": "PASS"
+  },
+  "extra_configuration_frames": 2,
+  "extra_steady_cycles": 0,
+  "holds": [
+    "real operand publication into four role local VM regions or existing true mirror authority",
+    "actual SW native transport variant from bind owner",
+    "source frontier, native capture, physical adoption",
+    "multirow qctl source event; proposal deliberately single-row only"
+  ]
+}

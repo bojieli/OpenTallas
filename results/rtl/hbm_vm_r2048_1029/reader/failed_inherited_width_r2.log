@@ -1,0 +1,14 @@
+%Error-WIDTHTRUNC: rtl/hbm_next/idx/ot_hnx_idx_vm_query_static_n12_r2048.sv:99:32: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'WEIGHT_FP32' generates 32 bits.
+                                                                                 : ... note: In instance 'ot_hnx_idx_vm_query_static_n12_r2048.core'
+   99 |    if(weight_slot&&(WEIGHT_FP32?(wbase[1:0]!=0):(wbase[2:0]!=0)))bad<=1;
+      |                                ^
+                   ... For error description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+%Error-WIDTHTRUNC: rtl/hbm_next/idx/ot_hnx_idx_vm_query_static_n12_r2048.sv:100:19: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'WEIGHT_FP32' generates 32 bits.
+                                                                                  : ... note: In instance 'ot_hnx_idx_vm_query_static_n12_r2048.core'
+  100 |    if(query_slot&&!WEIGHT_FP32&&qbase[1:0]!=0)bad<=1;
+      |                   ^
+%Error-WIDTHTRUNC: rtl/hbm_next/idx/ot_hnx_idx_vm_query_static_n12_r2048.sv:104:6: Logical operator IF expects 1 bit on the If, but If's VARREF 'WEIGHT_FP32' generates 32 bits.
+                                                                                 : ... note: In instance 'ot_hnx_idx_vm_query_static_n12_r2048.core'
+  104 |      if(WEIGHT_FP32)for(integer j=0;j<8;j=j+1)
+      |      ^~
+%Error: Exiting due to 3 error(s)
