@@ -4436,3 +4436,20 @@ CONDITIONS: (1) The render is from a place-only probe copy. Before finish, the o
 2026-10-28 19:58 PDT GEOM-REVIEW-50: RESULT/PARKED. I watched 17:20-20:00 with tmp/g50/w.sh (g48 w.sh with 46/50 filtered): new non-reviewer lines in lanes/GEOM-REVIEW.md, GEOM REQ lines in lanes/*.md, intel2 auto_geom.tsv (still 32 rows, none new). One REQ: [KV-KITS-15 qkd_hr_core_tx] 164.16x164.16 (line 4432, even) = PASS-COND for route/finish (verdict above). The 4-face pins + centre entry fixed the L-band: r2r 307.8 / 0 >405, reach 158.7, fill .339. Conditions: the kit 3_place must match the probe; post-CTS insertion report; allocated_epoch/token_epoch pins on opposite corners at the next PLAN-DELTA. Open GEOM REQ at park: none. Still expected, with no REQ yet: HBM-CORES-REBAL-10 3_place (ETA was ~19:20), the S81 rom _gb slice (CORES-EARLY-3: plan model FAIL w22.6 > 20, no place yet), the S81 F1 joint4 applied kit, and the HBM lanes__canon / inverter-clock renders. Successor: keep the parity split (EVEN) and run tmp/g50/w.sh 540 in a loop.
 2026-10-28 20:00 PDT GEOM-REVIEW-51: START (successor of GEOM-REVIEW-50; GEOM-REVIEW-46 is the other live reviewer). Parity split kept: GEOM-51 takes EVEN-numbered GEOM REQ lines, GEOM-46 ODD; either takes a line unclaimed for 15 min. Open GEOM REQ at start: none (last REQ 19:55 KV-KITS-15 core_tx answered PASS-COND by GEOM-50). auto_geom.tsv 32 rows (none new since 14:53). Watching lanes/*.md GEOM REQ + intel2 auto_geom.tsv every ~60 s (tmp/g51/w.sh = g50 w.sh with 46/51 filtered).
 2026-10-28 20:18 PDT GEOM-REVIEW-46: CLAIM [AUTO-GEOM 30c598db1e6d] hbm/ot_hbm_su_static_cxport_ij_q (HBM-CORES-KITS-1 C24). The auto_geom dir appeared before the REQ line; GEOM-50 keeps any even-line REQ that comes after.
+2026-10-28 20:18 PDT GEOM-REVIEW-46: VERDICT [AUTO-GEOM 30c598db1e6d] hbm/ot_hbm_su_static_cxport_ij_q (HBM-CORES-KITS-1 C24 kit, place-only) FAIL for route. I viewed 2 renders: the AUTO PNG intel2 auto_geom/30c598db1e6d/auto_geom.png and my own cell-class render tmp/g46/30c598db1e6d/cls.png. Own scripts on its geom.tsv (CHECKED).
+What the renders show:
+- Outline 250.6x449.3 holds 6896 um2 of std cells: fill .061, empty .797.
+- Input register rings run the full height of the W face (inj_q0+inj_q2, 2049 pins) and the E face (inj_q1+inj_q3, 2048 pins). The output rings are on the S face (ob0+ob1, 2115 pins; WARN 9.1/um at x 9-19).
+- The u_fcore gather (8365 cells) is one diagonal cluster at x 95-165, y 0-280, pulled toward the S outputs. Cell centroid (125.9,128.6).
+- Long wires from the upper W/E input registers down to fcore: r2r max 488.2 and 1014 captures >405 (worst u_bin_inj_q1 q[799] -> u_fcore...g_src[1].pq[31]). Placement buffering shows it: 20165 B-class cells (INVx1 8815, BUFx2 6211, BUFx3 4953), more than the 13305 logic cells, mostly strung across the empty E/W halves.
+- col_v FAIL 1.12 at (140,177.5), inside the fcore cluster. GRT 0 overflow.
+- clock_reach 172.5 is ok. The pre-CTS single leaf (sink->leaf max 338) is for TritonCTS to build.
+- pin_unreg 20 = the mp_isl0..3 ck/rst island feed-through area pins. They are 12.2a1-exempt, INFO.
+- pin_reg_max 320.5 = rst_q_n (async), INFO; pin_reg p90 9.2 is ok.
+Root cause: the plan slot and pin table, not the kit.
+- The slot is pin-perimeter sized and tall (aspect 1.79). The two input faces span 449 um, but the consumer is a single central gather.
+- Every inj_q* bit must reach fcore; the upper ~40 % of each input face is >300 um away by Manhattan distance.
+Fix at the HBM PLAN-DELTA (DIE-HBM-10), UNCHECKED estimate:
+- About 6212 pins at <=6/um needs ~1035 um of perimeter, so a near-square outline of ~260x260 instead of 250x449. Put the pins on all 4 faces, interleaving inj_q* and ob* per face so that each input sits next to its gather column. Put the clock entry at the logic centroid.
+- On the new outline the worst Manhattan distance is <=~260, so 0 r2r >405 is reachable.
+- Rebuilt kit gate: r2r 0 >405, col_v <=1.0, then a new GEOM REQ.
