@@ -1,3 +1,34 @@
+CURRENT SOURCE: adec2c6fc speculative-bank form. Earlier partial-predicate
+form bb4cf8b22/e24b3122f below is SUPERSEDED for physical use: its predicate
+logic before496 input face captures caused497 multi-input face paths.
+No failing physical verdict has been replaced.
+
+Current fix keeps raw1024 capture and the original496-bit padding test.
+Queue DATA bank enables come only from registered pending input valid and
+onehot write address. Validation still controls queue pointer/count commit.
+A rejected speculative write cannot become a future valid output because
+padding/full rejection asserts sticky fault on the same edge; simultaneous
+pop sees pre-edge contents, and reset clears valid occupancy and pending
+write enables. No cycle or interface/clock change.
+
+Extended old/new lockstep PASS8766 edges including all496 padding-bit
+positions, rejection during pop, fault/reset and new valid post-reset words.
+MUT1 caught. Logs nominal_spec.log/mutant_spec.log. Original48word legal
+stall/credit/overflow checks also pass. An initial extended bench attempt
+hit its old100us watchdog; changing the bench watchdog to accommodate the
+known added496 directed cases fixed the harness (no RTL change).
+
+hr_face_ports extraction on current source: post rc0, mutant rc1,
+emitted_v rc0, 0 logic/dropped/feedthrough inputs, multi-input1 (in_v).
+Physical synthesis/preflight + fresh sink census/slices are IN PROGRESS.
+Timing estimate: remove late validation gate + fanout tree from2640 queue
+DATA write enables (~380ps predecessor path contribution); validation
+remains on small control cones. Expected to cover TT73.87ps deficit,
+physical timing NOT RUN yet. Extra state10 onehot/pending bits; no added
+queue storage or throughput cost. Added cycles0.
+
+HISTORICAL FIRST CANDIDATE (retained receipts follow):
+
 KV PHY receive pad closure fix
 
 Source bb4cf8b22; baseline main 6132842ff. The previous routed PHY pad

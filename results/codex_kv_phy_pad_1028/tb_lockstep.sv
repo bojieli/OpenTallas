@@ -56,5 +56,5 @@ module tb_qkd_host_rx_pad5;
   end
   $display("LOCKSTEP edges=%0d",checked);$display("PASS RXPAD5 exact48 initial5 downstream4 queued5 longstall paddingbad ghostcredit overflow failclosed");$finish;
  end
- initial begin #100000;$fatal(1,"timeout");end
+ initial begin #200000;$fatal(1,"timeout");end
 endmodule
