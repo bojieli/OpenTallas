@@ -258,10 +258,10 @@ module ot_hbm_static_cfg_collar_idx256r_r2048 #(
     wire [NPR*256-1:0] prm_banked;
     wire [220:0] rec_banked;
     wire [255:0] selected_record;
-    wire [AW-1:0] pw_addr_full = FAN32 ? pw_addr_banked : pw_addr_raw;
+    wire [AW-1:0] pw_addr_full = (FAN32 != 0) ? pw_addr_banked : pw_addr_raw;
     assign pw_addr = pw_addr_full[7:0];   // IDX256 guard: lin<256 on every successful write
-    assign pw_data = FAN32 ? pw_data_banked : pw_data_raw;
-    wire [NPR*256-1:0] prm_full = FAN32 ? prm_banked : prm_raw;
+    assign pw_data = (FAN32 != 0) ? pw_data_banked : pw_data_raw;
+    wire [NPR*256-1:0] prm_full = (FAN32 != 0) ? prm_banked : prm_raw;
     // packed operand face (LH-UNREAD F-P): used operand bits in ascending order
     assign prm = {prm_full[1459:1450], prm_full[1107:766], prm_full[423:51], prm_full[43:0]};
     // Extra operand rows 6/7 publish explicit SW/SE/NW/NE pointers and strides.
@@ -282,7 +282,7 @@ module ot_hbm_static_cfg_collar_idx256r_r2048 #(
         end
         if(MUT == 15) native_bad = 0; // bench: incorrect role publication accepted
     end
-    assign rec = FAN32 ? rec_banked : rec_raw;
+    assign rec = (FAN32 != 0) ? rec_banked : rec_raw;
     wire hit = cv && ct == tg;
     wire dhit = dv && ct == tg;
     wire [AW:0] lin = {1'b0, page[sel], ca[10:0]};
@@ -313,7 +313,7 @@ module ot_hbm_static_cfg_collar_idx256r_r2048 #(
         inst_ok = need_set && (&loaded) && !native_bad;
         for (s = 0; s < NS; s = s + 1) if (hwm[s] < need[s] && MUT != 2) inst_ok = 0;
     end
-    wire recs_done = (NREC == 0) || (rptr >= NREC) || !selected_record[32];
+    wire recs_done = (NREC == 0) || (32'(rptr) >= NREC) || !selected_record[32];
     wire [31:0] cur_off = selected_record[31:0];
     wire [31:0] cmp_cnt = (MUT == 3) ? cnt + 1 : cnt;
     wire launch_ok = lv && armed && inst_ok && !fault && !run && !install_depth_bad && !install_resv_bad;
@@ -379,17 +379,17 @@ module ot_hbm_static_cfg_collar_idx256r_r2048 #(
                         pw_we[sel] <= 1; pw_addr_raw <= 0; pw_data_raw <= cd; hwm[sel] <= 1;
                     end else fault <= 1;
                 end else if (ca[11:10] == 2'b10) begin
-                    if (ca[9:0] >= NPR) fault <= 1;
-                    else begin prm_raw[ca[9:0]*256 +: 256] <= cd; loaded[ca[9:0]] <= 1; end
+                    if (32'(ca[9:0]) >= NPR) fault <= 1;
+                    else begin prm_raw[ca[9:0]*256 +: 256] <= cd; loaded[ca[2:0]] <= 1; end
                 end else if (ca[11:9] == 3'b110) begin
-                    if (ca[8:0] >= NREC) fault <= 1;
+                    if (32'(ca[8:0]) >= NREC) fault <= 1;
                     else begin
-                        r_off[ca[8:0]] <= cd[31:0]; r_val[ca[8:0]] <= cd[32];
-                        r_go[ca[8:0]] <= cd[34:33]; r_pay[ca[8:0]] <= cd[255:35];
+                        r_off[ca[2:0]] <= cd[31:0]; r_val[ca[2:0]] <= cd[32];
+                        r_go[ca[2:0]] <= cd[34:33]; r_pay[ca[2:0]] <= cd[255:35];
                         if (NGO < 2 && cd[34]) fault <= 1;
                     end
                 end else if (ca == 12'hE00) begin
-                    if (cd[7:0] >= NS) fault <= 1;
+                    if (32'(cd[7:0]) >= NS) fault <= 1;
                     else begin sel <= cd[SW-1:0]; page[cd[SW-1:0]] <= cd[8 +: PAGE_W]; end
                 end else if (ca == 12'hE01) begin
                     for (k = 0; k < NS; k = k + 1) need[k] <= cd[k*32 +: AW+1];
@@ -496,17 +496,17 @@ module ot_hbm_static_cfg_collar_idx256r_r2048 #(
                         n_pw_we[sel] = 1; n_pw_addr_raw = 0; n_pw_data_raw = cd; n_hwm[sel] = 1;
                     end else n_fault = 1;
                 end else if (ca[11:10] == 2'b10) begin
-                    if (ca[9:0] >= NPR) n_fault = 1;
-                    else begin n_prm_raw[ca[9:0]*256 +: 256] = cd; n_loaded[ca[9:0]] = 1; end
+                    if (32'(ca[9:0]) >= NPR) n_fault = 1;
+                    else begin n_prm_raw[ca[9:0]*256 +: 256] = cd; n_loaded[ca[2:0]] = 1; end
                 end else if (ca[11:9] == 3'b110) begin
-                    if (ca[8:0] >= NREC) n_fault = 1;
+                    if (32'(ca[8:0]) >= NREC) n_fault = 1;
                     else begin
-                        n_r_off[ca[8:0]] = cd[31:0]; n_r_val[ca[8:0]] = cd[32];
-                        n_r_go[ca[8:0]] = cd[34:33]; n_r_pay[ca[8:0]] = cd[255:35];
+                        n_r_off[ca[2:0]] = cd[31:0]; n_r_val[ca[2:0]] = cd[32];
+                        n_r_go[ca[2:0]] = cd[34:33]; n_r_pay[ca[2:0]] = cd[255:35];
                         if (NGO < 2 && cd[34]) n_fault = 1;
                     end
                 end else if (ca == 12'hE00) begin
-                    if (cd[7:0] >= NS) n_fault = 1;
+                    if (32'(cd[7:0]) >= NS) n_fault = 1;
                     else begin n_sel = cd[SW-1:0]; n_page[cd[SW-1:0]] = cd[8 +: PAGE_W]; end
                 end else if (ca == 12'hE01) begin
                     for (k = 0; k < NS; k = k + 1) n_need[k] = cd[k*32 +: AW+1];
@@ -636,7 +636,7 @@ endmodule
  always @(posedge clk)rd_oh<=(MUT==14 && LO==32)?bad_onehot:onehot_next;
  wire [15:0] rows[0:7];
  wire record_cfg=cv && ct==tg && !run && ca[11:9]==3'b110 && ca[8:0]<8;
- wire operand_cfg=cv && ct==tg && !run && ca[11:10]==2'b10 && ca[9:0]<NPR && !resv_bad;
+ wire operand_cfg=cv && ct==tg && !run && ca[11:10]==2'b10 && 32'(ca[9:0])<NPR && !resv_bad;
  (* keep_hierarchy *) ot_hbm_idx256rn_word u_programme(.clk(clk),.en(programme_accept && cv),.d(cd),.q(pw_data));
  genvar r,b;
  generate for(r=0;r<8;r=r+1)begin:g_record
@@ -659,7 +659,7 @@ endmodule
   integer v;
   always @(posedge clk or negedge rst_c_n)
    if(!rst_c_n)val<=0;
-   else for(v=0;v<8;v=v+1)if(record_cfg && ca[8:0]==v)val[v]<=valid_data;
+   else for(v=0;v<8;v=v+1)if(record_cfg && ca[8:0]==9'(v))val[v]<=valid_data;
   assign selected_record={selected[15:1],|(val&rd_oh)};
  end else assign selected_record=selected;
  for(r=0;r<NPR;r=r+1)begin:g_operand
