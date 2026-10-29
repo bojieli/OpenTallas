@@ -1,9 +1,9 @@
 {
  "status": "OPT_IN_SOURCE_CANDIDATE_NOT_BOUND",
  "source": "rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obsx.sv",
- "source_sha256": "bf34765ca8d4b0f5b36f03b0894860fe1574c614f4e0a91904feaf696b70abfa",
- "rtl_sha256": "bd00638cbfa2d05f576cd5a1c66ff5ce1304d0de7587e9592bc0dcad80d9b3ad",
- "accepted_event": "static_setup_ready && program_ready; program_ready includes programme-installed/replay/commit/validation predicates",
+ "source_sha256": "132420bccdd1160a66e33920ad3f7f68c7aa86540bf06d5113a078116e1a285a",
+ "rtl_sha256": "5e8fd8bea5b3b1803797dca0cfcfc8834c58a559757830b8af1d8beeba329e4b",
+ "accepted_event": "static_setup_ready && program_installed_local (setup, all images replayed, programme = last target, no programme/ingress fault); not program_ready, whose peer witness commit arrives only after this epoch (TOK-QWEN-7 deadlock)",
  "hardware_boot": "Original boot_go and its four HBM bgi sinks are unchanged",
  "clock_domain": {
   "bridge": "ck_ctl",
@@ -20,5 +20,5 @@
   "existing_landed_edges": 35,
   "model": "Boot epoch waits for accepted programme; no data/layer pipeline cycles added; rebind/census/R8 required before adoption"
  },
- "validation": "No descriptor, payload, fault, programme-ready or bootcfg rule changed"
+ "validation": "No descriptor, payload, fault, programme-ready or bootcfg rule changed; program_ready still gates execution"
 }
