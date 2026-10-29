@@ -157,5 +157,15 @@
     "die owner authoritative macro paths/pins/islands/station integration",
     "actual fullgraph reach and density image after authorized trial",
     "clock sink/reach estimate for central island allocation"
-  ]
+  ],
+  "pin_demand_basis": "Exact LEF/source livepin census live_macro_pins.json: landing each W411 (rd256+wd136+addr16+clk/ce3), E120WD; link W297 (rd141+wd141+addr12+clk/ce3), E0; constants/masks/unused371 columns excluded. InwardMY/R0 landingpair822, linkpair594; bound uses larger822.",
+  "topology_minimum_um": {
+    "width": 407.9794,
+    "height": 231.192,
+    "grid_snapped": [
+      414.72,
+      233.28
+    ],
+    "qualification": "Minimum under two-column topology,4.32halo,.6 summed-facing-live-pin bound; not globalfloorplan optimum"
+  }
 }

@@ -5,6 +5,7 @@ if {$j == "NULL"} {error "Missing exact jv data FF"}
 puts "HNX_ANCHOR old=[$j getLocation] status=[$j getPlacementStatus]"
 set states {}
 foreach i [$b getInsts] {lappend states [list $i [$i getPlacementStatus]]; $i setPlacementStatus FIRM}
+$j setPlacementStatus PLACED
 $j setLocation 103032 234900
 $j setPlacementStatus PLACED
 detailed_placement
