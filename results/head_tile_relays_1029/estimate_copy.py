@@ -44,15 +44,24 @@ for c in O.cells.values():
         ax.add_patch(Rectangle((c[2], c[3]), c[4]-c[2], c[5]-c[3],
                                facecolor="#dddddd", edgecolor="#555555", hatch="//"))
 ax.scatter([p[0] for p in targets.values()], [p[1] for p in targets.values()],
-           s=5, c="#0065a8", alpha=.35, label="2391 existing/copied stage targets")
-for p, text in [((368, 440), "S1/raw reset"), ((354, 500), "S0"),
-                ((354, 710), "original S2"), ((700, 372), "export S2 copy"),
-                ((702, 495), "existing START face FF")]:
+           s=5, c="#0065a8", alpha=.35, label=f"{len(targets)} existing/copied stage targets")
+def point(prefix):
+    return next(p for n, p in targets.items() if n.replace("\\", "").startswith(prefix))
+labels = {}
+for prefix, text in [("u_cland_origin/s1$", "S1"), ("u_cland_rst_i/q$", "raw reset"),
+                     ("u_cland_origin/s0$", "S0"), ("u_cland_origin/s2$", "original S2"),
+                     ("u_cland_origin/g_export.g_copy[0].u_copy/q$", "export S2 copy"),
+                     ("u_cland_fstart_o/q$", "existing START face FF")]:
+    labels.setdefault(point(prefix), []).append(text)
+if any(n.replace("\\", "").startswith("u_core.o_row[") for n in targets):
+    labels.setdefault(point("u_core.o_row["), []).append("49-bit held result stage")
+for p, names in labels.items():
     ax.scatter(*p, c="#d14900", s=35)
-    ax.annotate(text, p, xytext=(-110 if p[0]>600 else 10, 15),
+    ax.annotate("/".join(names), p, xytext=(-110 if p[0]>600 else 10, 15),
                 textcoords="offset points", fontsize=8)
-ax.plot([368, 368, 700], [440, 372, 372], color="#d14900", lw=2,
-        label="S1 to export copy follows lower corridor")
+s1, copy = point("u_cland_origin/s1$"), point("u_cland_origin/g_export.g_copy[0].u_copy/q$")
+ax.plot([s1[0], s1[0], copy[0]], [s1[1], copy[1], copy[1]], color="#d14900", lw=2,
+        label="one-bit export path (M6/M7 above M5 cores)")
 ax.set(xlim=(0, 708.48), ylim=(0, 1036.8), xlabel="um", ylabel="um",
        title="HEAD zero-cycle START state copy + existing-stage placement\n"
              f"NEW synthesized graph ESTIMATE: {report['r2r_captures_gt405']} captures >405um")

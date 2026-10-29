@@ -40,3 +40,29 @@ Use targets.tsv only to reproduce the29-failure diagnostic. The separate
  targets_copy_pending.tsv includes the additional existing raw-reset relay and
 repositioned origin states for the new copy, but still needs the fresh synthesized
 export-copy name and complete new-netlist census before any placement trial.
+
+Production-hook integration updates:
+-Helpers execute at global Tcl scope (PRE_GPL may call the hook inside a proc).
+-Pack after the actual ring FFs but BEFORE the GPL-only landing-band reservation.
+ The latter then protects both fixed landing/capture stages and is released
+ normally before DPL; no hard clock/island reservation is removed.
+-`head_tile_prepare.tcl` clears ONLY this source layout's own bank/target FFs
+ before allocation. Actual3412-cell bank+relay hook repeated twice gave EXACT
+ same positions/orientations/statuses,0differences (unit177380).
+-Repack AGAIN after GP/resizer, in face_flops_release.tcl before DPL. Fresh GP
+ resized FIRM DFFx1(width1080DBU)toDFFx2(width1134), causing74overlaps already
+ present in3_4_resized (example pair u_bin138/481 overlaps54DBU); actual-width
+ repacking fixed them, DPL/improve/mirroring/check PASS (unit341736).
+-Fresh full-source placement then has10captures>405,max454.36, ALL result
+ res_bits/res_row to held o_bits/o_row newly placed by GPL nearE/y640. Complete
+ 49-bit held-result stage is now planned at upper crossbar510,717, no pin/cycle
+ changes; newgraph estimate0fails/max401.19. DPL-only successor439324 is running
+ on the completed3_4 checkpoint (no GPL repeat), using targets_copy_result.tsv.
+-Fresh reg_spine assignment AND built START-input timing remain required. Current
+ sample S0/SF moves into the central channel; its actual input wire must be
+ measured before freeze. An offline alternative keeps first samplers and all
+ output FFs at original sites and uses M6/M7 over M5-only macro OBS (confirmed
+ actualA/BLEFs), max395.12 estimate; not built, current job not interrupted.
+
+All failed stage logs/JSON and old10-failure ODB retained under remote history/.
+No route/CTS/STA or sign-off claim has been made.
