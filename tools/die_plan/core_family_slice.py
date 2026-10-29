@@ -356,10 +356,18 @@ def refresh_after_d1(rec0, rec):
 
 def plan(geo, fam, libtt, libff, name, trunk_cal=None):
     sinks = sum(1 for l in open(geo) if l.startswith("SINK"))
+    macro_mode = bool(fam.get("macro_leaves"))
+    if macro_mode:
+        sinks += sum(1 for line in open(geo) if line.startswith("MACRO"))
     sp = splits_for(sinks, fam)
     M7.BUFS = list(ENV)
-    P = H.plan(str(geo), sp, fam.get("smax", 70.0), [list(k) for k in fam.get("keepout_um", [])])
-    rea = reassign_nearest(P, int(fam.get("reassign_cap", 1.5) * max(len(v) for v in P["leafsinks"].values()))) if fam.get("reassign") else None
+    if macro_mode:
+        P = ungated_macro_htree(str(geo), sp[:-1], fam.get("smax", 70.0),
+                                [list(k) for k in fam.get("keepout_um", [])], float(fam.get("leaf_target", 48)))
+        rea = None
+    else:
+        P = H.plan(str(geo), sp, fam.get("smax", 70.0), [list(k) for k in fam.get("keepout_um", [])])
+        rea = reassign_nearest(P, int(fam.get("reassign_cap", 1.5) * max(len(v) for v in P["leafsinks"].values()))) if fam.get("reassign") else None
     split = split_long_leaves(P, fam.get("leaf_limit", 35.0))
     kr, kc = map(float, fam.get("rc", "0.8,0.9").split(","))
     r = 0.5 * (1.80365e-2 + 1.89935e-2) * kr; c = 0.5 * (1.78475e-1 + 1.64264e-1) * kc
@@ -403,6 +411,11 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
                model="R7 NLDM+Elmore chain + 12.8 d1 (core_family_slice); PLAN MODEL, UNCHECKED")
     if fam.get("keepout_um"):
         rec["macro_keepout_um"] = [list(k) for k in fam["keepout_um"]]
+    if macro_mode:
+        rec["macro_clock_model"] = "separate same-stage macro leaves, physical pins and exact TT/FF liberty clock caps"
+        rec["sinks"] = sum(len(v) for v in P["leafsinks"].values())
+        rec["sinkcap"] = P["sinkcap"]
+        rec["macro_leaves"] = sorted(u for u, v in P["leafsinks"].items() if all(q[4].startswith("MACRO:") for q in v))
     return rec
 
 
@@ -611,6 +624,7 @@ def replan_structure(geo, fam, libtt, libff, name, cal, jobs=8):
 # ------------------------------------------------------------------ checks
 def checks(rec, slice_, geo):
     out = {}; fails = []
+    macro_mode = bool(rec.get("macro_clock_model"))
     # (1) every leg <= 1.10 x Manhattan of its own endpoints
     worst = 0.0; nover = 0; nleg = 0
     for w in rec["wire_paths"]:
@@ -623,6 +637,8 @@ def checks(rec, slice_, geo):
     sp = rec["leaf_spread_um"]; out["leaf_spread"] = dict(max=max(sp.values()), n_gt_40=sum(v > GATES["leaf_spread_um"] for v in sp.values()))
     if out["leaf_spread"]["n_gt_40"]: fails.append("leaves over 40 um spread: %d" % out["leaf_spread"]["n_gt_40"])
     cen = {"%s/%s" % (l.split()[4], l.split()[5]) for l in open(geo) if l.startswith("SINK")}
+    if macro_mode:
+        cen |= {"%s/%s" % (line.split()[1], line.split()[7]) for line in open(geo) if line.startswith("MACRO")}
     got = collections.Counter(s for v in rec["leaf_sinks"].values() for s in v)
     out["sinks"] = dict(census=len(cen), planned=len(got), missing=len(cen - set(got)), dup=sum(1 for v in got.values() if v > 1),
                         extra=len(set(got) - cen))
@@ -647,7 +663,10 @@ def checks(rec, slice_, geo):
         if out["pg_clearance"] not in (None, "PASS"): fails.append("trunk PG clearance %s" % out["pg_clearance"])
     nmac = sum(1 for l in open(geo) if l.startswith("MACRO"))
     out["macro_clock_pins"] = nmac
-    if nmac: fails.append("%d macro clock pins: family template has no macro (early-tap, v5.0) leaf yet" % nmac)
+    if macro_mode:
+        out["macro_leaves"] = len(rec.get("macro_leaves", []))
+        fails.extend(macro_leaf_errors(rec, geo))
+    elif nmac: fails.append("%d macro clock pins: family template has no macro (early-tap, v5.0) leaf yet" % nmac)
     out["verdict"] = "FAIL" if fails else "PASS"; out["fails"] = fails
     out["scope"] = "automated geometry gates on the PLAN (GEOM-REVIEW-10 form); latency numbers PLAN MODEL, UNCHECKED"
     return out
@@ -751,6 +770,144 @@ def entry_geo(geo, mode):
     return out
 
 
+
+
+MACRO_LIB = REPO / "physical" / "asap7_memory_macros_v2"
+
+
+def macro_clk_cap(master, pin):
+    """{TT, FF} clock pin capacitance (fF) of a hard macro from its repo liberty (fail-closed)."""
+    out = {}
+    for c in ("TT", "FF"):
+        p = MACRO_LIB / master / ("%s_%s.lib" % (master, c.lower()))
+        if not p.is_file():
+            raise SystemExit("macro_clk_cap: no liberty %s" % p)
+        t = p.read_text(); i = t.find("pin (%s)" % pin)
+        if i < 0:
+            raise SystemExit("macro_clk_cap: %s has no pin %s" % (p, pin))
+        out[c] = float(re.search(r"\bcapacitance : ([\d.]+)", t[i:i + 2000]).group(1))
+    return out
+
+
+def read_macro_geo(geo):
+    core = entry = None
+    sinks, macros = [], []
+    for line in open(geo):
+        f = line.split()
+        if f[:1] == ["GATE"] or any(q.startswith("gate=") for q in f):
+            raise SystemExit("macro_leaves does not accept gated sinks; use icg_copies")
+        if f[:1] == ["CORE"]: core = tuple(map(float, f[1:5]))
+        if f[:2] == ["PIN", "ck"]: entry = tuple(map(float, f[2:4]))
+        if f[:1] == ["SINK"]: sinks.append((float(f[1]), float(f[2]), f[4], f[5], f[3]))
+        if f[:1] == ["MACRO"]:
+            macros.append((f[1], tuple(map(float, f[3:7])), tuple(map(float, f[8:10]))))
+            sinks.append((float(f[8]), float(f[9]), f[1], f[7], "MACRO:" + f[2]))
+    if core is None or entry is None: raise SystemExit("macro_leaves requires CORE and PIN ck")
+    return core, entry, sinks, macros
+
+
+def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48):
+    """Same-depth separate macro leaves on actual geometry, sized with actual clock pin loads."""
+    core, entry, sinks, macros = read_macro_geo(geo)
+    mz = H.Maze(core, macros, keepout=keepout); ent = mz.cell(entry, node=False)
+    name = lambda g: "T" + "".join(NAME_POOL[i] for i in g)
+    groups = {(): sinks}
+    for lv, k in enumerate(upper):
+        for key in sorted(g for g in groups if len(g) == lv):
+            pts = groups[key]
+            if lv == 0 and k == 2:
+                srt = sorted(pts, key=lambda p: (p[0], p[1])); h = len(srt) // 2; parts = [srt[:h], srt[h:]]
+            else:
+                parts = H.split(pts, k, axis=(1 if lv == 1 else None))
+            for i, g in enumerate(parts):
+                groups[key + (i,)] = g
+    nu = len(upper)
+    key_of = lambda q: "%s/%s" % (q[2], q[3])
+    for key in sorted(g for g in groups if len(g) == nu):
+        pts = groups[key]
+        mac = [q for q in pts if q[4].startswith("MACRO:")]
+        fl = [q for q in pts if not q[4].startswith("MACRO:")]
+        n = max(1, int(round(len(fl) / float(leaf_target)))) if fl else 0
+        parts = [[q] for q in mac] + ((H.split(fl, n) if n > 1 else [fl]) if fl else [])
+        if len(parts) > len(NAME_POOL): raise SystemExit("macro_leaves exceeds geometric leaf name capacity")
+        for i, part in enumerate(parts): groups[key + (i,)] = part
+    depth = nu + 1
+    leaves = sorted(g for g in groups if len(g) == depth)
+    site = {}
+    for g in leaves:
+        pts = groups[g]; site[g] = mz.cell((sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)))
+    kids = collections.defaultdict(list)
+    for g in groups:
+        if g:
+            kids[g[:-1]].append(g)
+    for lv in range(depth - 1, 0, -1):
+        for g in sorted(x for x in groups if len(x) == lv):
+            ch = [site[c] for c in sorted(kids[g])]
+            cx = round(sum(c[0] for c in ch) / len(ch)); cy = round(sum(c[1] for c in ch) / len(ch))
+            site[g] = H.minimax_site(mz, ch, (cx, cy))
+    site[()] = ent
+    T, K = [], []
+    for lv in range(depth):
+        L = [mz.md(site[g[:-1]], site[g]) for g in groups if len(g) == lv + 1]
+        T.append(max(L)); K.append(max(1, math.ceil(max(L) / smax)))
+    nodes = [("root", None, ent, H.BIG, "entry")]; wires = []; branch_of = {(): "root"}
+    for lv in range(depth):
+        for g in sorted(x for x in groups if len(x) == lv + 1):
+            par = g[:-1]; pc = site[par]; cc = site[g]; sib = sorted(kids[par]); i = sib.index(g)
+            off = mz.cell((mz.xy(pc)[0], mz.xy(pc)[1] + (i - (len(sib) - 1) / 2.0) * 1.08))
+            nodes.append((name(g) + "_br", branch_of[par], off, H.BIG, "branch"))
+            pts = H.exact_points(mz, off, cc, T[lv], K[lv]); prev = name(g) + "_br"; chain = [off] + pts + [cc]
+            for r_, c in enumerate(pts):
+                n = name(g) + "_r%d" % r_; nodes.append((n, prev, c, H.REP, "rep")); prev = n
+            wires.append(dict(level=lv + 1, edge=name(g), segs=[mz.md(chain[q], chain[q + 1]) for q in range(len(chain) - 1)],
+                              cells=[mz.path(chain[q], chain[q + 1]) for q in range(len(chain) - 1)]))
+            nodes.append((name(g), prev, cc, H.BIG, "leaf" if lv == depth - 1 else "node"))
+            branch_of[g] = name(g)
+    fold = {n[0]: n[1] for n in nodes if n[4] == "node"}
+    land = {}
+    for w in wires:
+        if w["edge"] in fold:
+            land[fold[w["edge"]]] = (w["segs"][-1], w["edge"])
+    final = []
+    for n in nodes:
+        if n[0] in fold:
+            continue
+        par = n[1]
+        while par in fold:
+            par = fold[par]
+        final.append((n[0], par, n[2], n[3], n[4]))
+    caps = {}
+    for s in sinks:
+        if s[4].startswith("MACRO:"):
+            c = macro_clk_cap(s[4][6:], s[3])
+            for cn in ("TT", "FF"):
+                caps.setdefault(cn, {})[key_of(s)] = c[cn]
+    return dict(mz=mz, entry=entry, ent=ent, groups=groups, leaves=leaves, site=site, T=T, K=K, nodes=final, wires=wires,
+                land=land, leafsinks={name(g): groups[g] for g in leaves}, macros=[], splits=list(upper) + ["macro_or_flop_leaf"], nm=name, sinkcap=caps)
+
+
+def macro_leaf_errors(rec, geo):
+    """Verify opt-in macro coverage/classification and both actual liberty caps."""
+    errors = []
+    leaves = rec.get("leaf_sinks", {})
+    macro_leaves = set(rec.get("macro_leaves", []))
+    for line in open(geo):
+        fields = line.split()
+        if fields[:1] != ["MACRO"]:
+            continue
+        inst, master, pin = fields[1], fields[2], fields[7]
+        sink = inst + "/" + pin
+        owners = [leaf for leaf, sinks in leaves.items() if sink in sinks]
+        if len(owners) != 1 or owners[0] not in macro_leaves or leaves[owners[0]] != [sink]:
+            errors.append("macro leaf coverage/classification: " + sink)
+        expected = macro_clk_cap(master, pin)
+        for corner, cap in expected.items():
+            actual = rec.get("sinkcap", {}).get(corner, {}).get(sink)
+            if actual is None or abs(actual - cap) > 1e-12:
+                errors.append("macro leaf cap mismatch %s %s" % (corner, sink))
+    return errors
+
+
 # ------------------------------------------------------------------ driver
 def run_core(fams, core, kit, work, a):
     fam = next(f for f in fams["families"] if core in f["members"])
@@ -772,6 +929,8 @@ def run_core(fams, core, kit, work, a):
     else:
         rec = plan(geo, fam, a.libtt, a.libff, "%s_r13_%s%s" % (core, fam["name"], "_tk" if cal else ""), trunk_cal=cal)
     pj = work / "plan.json"; pj.write_text(json.dumps([rec]))
+    if a.fit and fam.get("macro_leaves"):
+        raise SystemExit("macro_leaves uses exact NLDM caps; calibrated d1 macro support is not enabled")
     if a.fit and not fam.get("lattice"):   # lattice = one master per level: no per-driver d1/uf3 descent
         r = subprocess.run([sys.executable, str(REPO / "results/core_lat_r9_1026/l0r_r9_d1.py"), str(pj), str(geo), a.libdir, a.fit,
                             str(work / "plan_d1.json"), "--steps", str(a.d1_steps)], capture_output=True, text=True)
