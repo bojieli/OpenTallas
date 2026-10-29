@@ -1,0 +1,4 @@
+# HEAD-KITS-8 (parallel to HEAD-KITS-7/9; rows HEAD-012/013/015/016/017 of CLOSURE-LIST)
+
+- 2026-10-29 06:34 PDT START [HEAD-KITS-8] plan = hk4 plan_spine_raw_rx_tx (DIE-HEAD-24 06:01). Worktree intel2:/srv/opentallas-scratch2/claude/wt/head-kits-8 (sparse, origin/main 3d859536f, branch claude/head-kits-8-1029), run dir intel2:/srv/opentallas-scratch2/claude/head-kits-8. No jobs adopted except collect-only: Codex LEP canonical hinted LEC (intel2 3193799) is TERMINAL EQUIVALENT 73440/73440 (05:53, lec.json CHECKED; uses Codex lec.py preseed = 2ab39d868 APPROVED 06:24, not yet on main).
+- 2026-10-29 06:34 PDT OWNER HEAD-KITS-8 hd_lep0N ot_s81hd_lep_pair hd_host hd_mesh hd_spn hd_spn_end hd_st_k5 hd_st_m hd_st_n3_transit hd_st_n3_turn hd_st_n4 hd_st_str hd_st_turn hd_turn_a hd_turn_b (hk4 split hd_st_n3 -> n3_transit + n3_turn).
