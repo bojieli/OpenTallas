@@ -1,0 +1,58 @@
+{
+ "schema": "hbm.vm-bank-grown-plan.v1",
+ "status": "UNSIGNED PROPOSAL; NO PNR",
+ "outline_um": [
+  270.0,
+  403.92
+ ],
+ "source_master": "hfd_vms_bank_native_q0_faces_r2048_oneclk",
+ "source_capacity_commit": "4b2165eb2",
+ "macro_count": 4,
+ "macro_total_area_um2": 49269.420288,
+ "core_area_um2": 109058.40000000001,
+ "macro_fraction": 0.45177098039215685,
+ "new_data_stages": 0,
+ "oneclk_added_cycles": 0,
+ "root_pin_um": [
+  133.944,
+  185.76
+ ],
+ "root_island_um": [
+  129.6,
+  181.44,
+  138.24,
+  190.08
+ ],
+ "profiles": {
+  "canonical": {
+   "pins": 3925,
+   "source_literal_port_set": "grown3933 minus8redundantclockports",
+   "peak_pins_per_um_10um": {
+    "W": 5.3,
+    "E": 5.3,
+    "N": 5.3,
+    "S": 6.0
+   },
+   "pins_sha256": "469d4ad5f9b86c0e1ef1c714930b8a0562d2bf9961c2f6ca7832e7eec3a5f69f",
+   "removed_clock_ports": [
+    "clk_e",
+    "clk_macro0",
+    "clk_macro1",
+    "clk_macro2",
+    "clk_macro3",
+    "clk_n",
+    "clk_s",
+    "clk_w"
+   ],
+   "full_endpoint_delta": "pin_delta_canonical.json",
+   "current_macro_inventory": "UNKNOWN in parent; actual source now substantiates4macro count",
+   "existing_raw_grown_B_face_failure": "vec6293 puts2802pins on270umSouthface: average10.38pins/um; replaced with balanced canonical face assignment"
+  }
+ },
+ "holds": [
+  "Actual 3925-source port census + ONECLK proof required, current old profile vec6293 was interface-only and old macro inventory UNKNOWN.",
+  "std-cell area/FF incidence, source-bound actual pin-to-reg/write/read/macroclk reach and clock/PG model before place.",
+  "bid/sid constant/quasi-static contract checked separately; no undeclared tie/por alias.",
+  "Every parent peer bit target/clock/reset/START/CA and caller ABI must regenerate in one event."
+ ]
+}

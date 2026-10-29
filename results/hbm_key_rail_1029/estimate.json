@@ -1,0 +1,541 @@
+{
+ "schema": "hbm.static-key-rail.estimate.v1",
+ "source_plan_sha256": "4d53747fd73d5309096d825c013a4c41c464c036f747155bd910af604b9ba817",
+ "scope": "ESTIMATE ONLY: native source fixed-slot merge; no runtime arbitration or credits; no route/clock/latency qualification",
+ "width_bits": 1112,
+ "producer_order": [
+  "u_svg_Q1",
+  "u_svg_Q3",
+  "u_svg_Q2",
+  "u_svg_Q0"
+ ],
+ "halves": {
+  "q_hub_nw": {
+   "estimated_total_rail_wire_um": 21959.662602,
+   "chosen_order": [
+    "u_svg_Q2",
+    "u_svg_Q0",
+    "u_svg_Q1",
+    "u_svg_Q3"
+   ],
+   "producers": {
+    "u_svg_Q1": [
+     6531.143301,
+     4197.864
+    ],
+    "u_svg_Q3": [
+     6073.320699,
+     26.016
+    ],
+    "u_svg_Q2": [
+     785.640699,
+     1131.936
+    ],
+    "u_svg_Q0": [
+     1234.823301,
+     2461.224
+    ]
+   },
+   "producer_legs": [
+    {
+     "from": "u_svg_Q2",
+     "to": "u_svg_Q0",
+     "from_um": [
+      785.640699,
+      1131.936
+     ],
+     "to_um": [
+      1234.823301,
+      2461.224
+     ],
+     "manhattan_um": 1778.470602,
+     "wire_segments_min": 5,
+     "extra_relay_edges_min": 4,
+     "extra_relay_ff_min": 4448,
+     "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+     "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+    },
+    {
+     "from": "u_svg_Q0",
+     "to": "u_svg_Q1",
+     "from_um": [
+      1234.823301,
+      2461.224
+     ],
+     "to_um": [
+      6531.143301,
+      4197.864
+     ],
+     "manhattan_um": 7032.96,
+     "wire_segments_min": 18,
+     "extra_relay_edges_min": 17,
+     "extra_relay_ff_min": 18904,
+     "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+     "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+    },
+    {
+     "from": "u_svg_Q1",
+     "to": "u_svg_Q3",
+     "from_um": [
+      6531.143301,
+      4197.864
+     ],
+     "to_um": [
+      6073.320699,
+      26.016
+     ],
+     "manhattan_um": 4629.670602,
+     "wire_segments_min": 12,
+     "extra_relay_edges_min": 11,
+     "extra_relay_ff_min": 12232,
+     "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+     "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+    }
+   ],
+   "producer_extra_path_edges_min": {
+    "u_svg_Q3": 0,
+    "u_svg_Q1": 11,
+    "u_svg_Q0": 28,
+    "u_svg_Q2": 32
+   },
+   "producer_wire_um": 13441.101204,
+   "receivers": {
+    "q0": {
+     "order": [
+      "u_mu_keybuf_0_s1__q0",
+      "u_mu_keybuf_0_s0__q0",
+      "u_mu_keybuf_0_s2__q0",
+      "u_mu_keybuf_0_s3__q0"
+     ],
+     "manhattan_um": 4082.064699,
+     "legs": [
+      {
+       "from": "u_svg_Q3",
+       "to": "u_mu_keybuf_0_s1__q0",
+       "from_um": [
+        6073.320699,
+        26.016
+       ],
+       "to_um": [
+        3827.424,
+        479.784
+       ],
+       "manhattan_um": 2699.664699,
+       "wire_segments_min": 7,
+       "extra_relay_edges_min": 6,
+       "extra_relay_ff_min": 6672,
+       "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+       "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+      },
+      {
+       "from": "u_mu_keybuf_0_s1__q0",
+       "to": "u_mu_keybuf_0_s0__q0",
+       "from_um": [
+        3827.424,
+        479.784
+       ],
+       "to_um": [
+        3654.624,
+        168.744
+       ],
+       "manhattan_um": 483.84,
+       "wire_segments_min": 2,
+       "extra_relay_edges_min": 1,
+       "extra_relay_ff_min": 1112,
+       "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+       "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+      },
+      {
+       "from": "u_mu_keybuf_0_s0__q0",
+       "to": "u_mu_keybuf_0_s2__q0",
+       "from_um": [
+        3654.624,
+        168.744
+       ],
+       "to_um": [
+        3404.064,
+        168.744
+       ],
+       "manhattan_um": 250.56,
+       "wire_segments_min": 1,
+       "extra_relay_edges_min": 0,
+       "extra_relay_ff_min": 0,
+       "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+       "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+      },
+      {
+       "from": "u_mu_keybuf_0_s2__q0",
+       "to": "u_mu_keybuf_0_s3__q0",
+       "from_um": [
+        3404.064,
+        168.744
+       ],
+       "to_um": [
+        3136.224,
+        548.904
+       ],
+       "manhattan_um": 648.0,
+       "wire_segments_min": 2,
+       "extra_relay_edges_min": 1,
+       "extra_relay_ff_min": 1112,
+       "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+       "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+      }
+     ],
+     "extra_relay_edges_sum_min": 8
+    },
+    "q1": {
+     "order": [
+      "u_mu_keybuf_0_s0__q1",
+      "u_mu_keybuf_0_s1__q1",
+      "u_mu_keybuf_0_s2__q1",
+      "u_mu_keybuf_0_s3__q1"
+     ],
+     "manhattan_um": 4436.496699,
+     "legs": [
+      {
+       "from": "u_svg_Q3",
+       "to": "u_mu_keybuf_0_s0__q1",
+       "from_um": [
+        6073.320699,
+        26.016
+       ],
+       "to_um": [
+        5322.336,
+        471.144
+       ],
+       "manhattan_um": 1196.112699,
+       "wire_segments_min": 3,
+       "extra_relay_edges_min": 2,
+       "extra_relay_ff_min": 2224,
+       "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+       "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+      },
+      {
+       "from": "u_mu_keybuf_0_s0__q1",
+       "to": "u_mu_keybuf_0_s1__q1",
+       "from_um": [
+        5322.336,
+        471.144
+       ],
+       "to_um": [
+        5546.976,
+        790.824
+       ],
+       "manhattan_um": 544.32,
+       "wire_segments_min": 2,
+       "extra_relay_edges_min": 1,
+       "extra_relay_ff_min": 1112,
+       "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+       "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+      },
+      {
+       "from": "u_mu_keybuf_0_s1__q1",
+       "to": "u_mu_keybuf_0_s2__q1",
+       "from_um": [
+        5546.976,
+        790.824
+       ],
+       "to_um": [
+        4665.504,
+        842.664
+       ],
+       "manhattan_um": 933.312,
+       "wire_segments_min": 3,
+       "extra_relay_edges_min": 2,
+       "extra_relay_ff_min": 2224,
+       "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+       "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+      },
+      {
+       "from": "u_mu_keybuf_0_s2__q1",
+       "to": "u_mu_keybuf_0_s3__q1",
+       "from_um": [
+        4665.504,
+        842.664
+       ],
+       "to_um": [
+        5322.336,
+        1948.584
+       ],
+       "manhattan_um": 1762.752,
+       "wire_segments_min": 5,
+       "extra_relay_edges_min": 4,
+       "extra_relay_ff_min": 4448,
+       "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+       "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+      }
+     ],
+     "extra_relay_edges_sum_min": 9
+    }
+   }
+  },
+  "q_hub_ne": {
+   "estimated_total_rail_wire_um": 31365.211806,
+   "chosen_order": [
+    "u_svg_Q0",
+    "u_svg_Q2",
+    "u_svg_Q3",
+    "u_svg_Q1"
+   ],
+   "producers": {
+    "u_svg_Q1": [
+     6531.143301,
+     4197.864
+    ],
+    "u_svg_Q3": [
+     6073.320699,
+     26.016
+    ],
+    "u_svg_Q2": [
+     785.640699,
+     1131.936
+    ],
+    "u_svg_Q0": [
+     1234.823301,
+     2461.224
+    ]
+   },
+   "producer_legs": [
+    {
+     "from": "u_svg_Q0",
+     "to": "u_svg_Q2",
+     "from_um": [
+      1234.823301,
+      2461.224
+     ],
+     "to_um": [
+      785.640699,
+      1131.936
+     ],
+     "manhattan_um": 1778.470602,
+     "wire_segments_min": 5,
+     "extra_relay_edges_min": 4,
+     "extra_relay_ff_min": 4448,
+     "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+     "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+    },
+    {
+     "from": "u_svg_Q2",
+     "to": "u_svg_Q3",
+     "from_um": [
+      785.640699,
+      1131.936
+     ],
+     "to_um": [
+      6073.320699,
+      26.016
+     ],
+     "manhattan_um": 6393.6,
+     "wire_segments_min": 16,
+     "extra_relay_edges_min": 15,
+     "extra_relay_ff_min": 16680,
+     "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+     "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+    },
+    {
+     "from": "u_svg_Q3",
+     "to": "u_svg_Q1",
+     "from_um": [
+      6073.320699,
+      26.016
+     ],
+     "to_um": [
+      6531.143301,
+      4197.864
+     ],
+     "manhattan_um": 4629.670602,
+     "wire_segments_min": 12,
+     "extra_relay_edges_min": 11,
+     "extra_relay_ff_min": 12232,
+     "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+     "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+    }
+   ],
+   "producer_extra_path_edges_min": {
+    "u_svg_Q1": 0,
+    "u_svg_Q3": 11,
+    "u_svg_Q2": 26,
+    "u_svg_Q0": 30
+   },
+   "producer_wire_um": 12801.741204000002,
+   "receivers": {
+    "q0": {
+     "order": [
+      "u_mu_keybuf_0_s3__q0",
+      "u_mu_keybuf_0_s2__q0",
+      "u_mu_keybuf_0_s0__q0",
+      "u_mu_keybuf_0_s1__q0"
+     ],
+     "manhattan_um": 11139.239301,
+     "legs": [
+      {
+       "from": "u_svg_Q1",
+       "to": "u_mu_keybuf_0_s3__q0",
+       "from_um": [
+        6531.143301,
+        4197.864
+       ],
+       "to_um": [
+        3360.864,
+        3909.864
+       ],
+       "manhattan_um": 3458.279301,
+       "wire_segments_min": 9,
+       "extra_relay_edges_min": 8,
+       "extra_relay_ff_min": 8896,
+       "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+       "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+      },
+      {
+       "from": "u_mu_keybuf_0_s3__q0",
+       "to": "u_mu_keybuf_0_s2__q0",
+       "from_um": [
+        3360.864,
+        3909.864
+       ],
+       "to_um": [
+        3265.824,
+        3296.424
+       ],
+       "manhattan_um": 708.48,
+       "wire_segments_min": 2,
+       "extra_relay_edges_min": 1,
+       "extra_relay_ff_min": 1112,
+       "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+       "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+      },
+      {
+       "from": "u_mu_keybuf_0_s2__q0",
+       "to": "u_mu_keybuf_0_s0__q0",
+       "from_um": [
+        3265.824,
+        3296.424
+       ],
+       "to_um": [
+        3723.744,
+        453.864
+       ],
+       "manhattan_um": 3300.48,
+       "wire_segments_min": 9,
+       "extra_relay_edges_min": 8,
+       "extra_relay_ff_min": 8896,
+       "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+       "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+      },
+      {
+       "from": "u_mu_keybuf_0_s0__q0",
+       "to": "u_mu_keybuf_0_s1__q0",
+       "from_um": [
+        3723.744,
+        453.864
+       ],
+       "to_um": [
+        259.104,
+        246.504
+       ],
+       "manhattan_um": 3672.0,
+       "wire_segments_min": 10,
+       "extra_relay_edges_min": 9,
+       "extra_relay_ff_min": 10008,
+       "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+       "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+      }
+     ],
+     "extra_relay_edges_sum_min": 26
+    },
+    "q1": {
+     "order": [
+      "u_mu_keybuf_0_s3__q1",
+      "u_mu_keybuf_0_s1__q1",
+      "u_mu_keybuf_0_s0__q1",
+      "u_mu_keybuf_0_s2__q1"
+     ],
+     "manhattan_um": 7424.231301,
+     "legs": [
+      {
+       "from": "u_svg_Q1",
+       "to": "u_mu_keybuf_0_s3__q1",
+       "from_um": [
+        6531.143301,
+        4197.864
+       ],
+       "to_um": [
+        5598.816,
+        1939.944
+       ],
+       "manhattan_um": 3190.247301,
+       "wire_segments_min": 8,
+       "extra_relay_edges_min": 7,
+       "extra_relay_ff_min": 7784,
+       "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+       "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+      },
+      {
+       "from": "u_mu_keybuf_0_s3__q1",
+       "to": "u_mu_keybuf_0_s1__q1",
+       "from_um": [
+        5598.816,
+        1939.944
+       ],
+       "to_um": [
+        4751.904,
+        738.984
+       ],
+       "manhattan_um": 2047.872,
+       "wire_segments_min": 6,
+       "extra_relay_edges_min": 5,
+       "extra_relay_ff_min": 5560,
+       "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+       "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+      },
+      {
+       "from": "u_mu_keybuf_0_s1__q1",
+       "to": "u_mu_keybuf_0_s0__q1",
+       "from_um": [
+        4751.904,
+        738.984
+       ],
+       "to_um": [
+        5244.384,
+        721.704
+       ],
+       "manhattan_um": 509.76,
+       "wire_segments_min": 2,
+       "extra_relay_edges_min": 1,
+       "extra_relay_ff_min": 1112,
+       "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+       "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+      },
+      {
+       "from": "u_mu_keybuf_0_s0__q1",
+       "to": "u_mu_keybuf_0_s2__q1",
+       "from_um": [
+        5244.384,
+        721.704
+       ],
+       "to_um": [
+        6583.776,
+        384.744
+       ],
+       "manhattan_um": 1676.352,
+       "wire_segments_min": 5,
+       "extra_relay_edges_min": 4,
+       "extra_relay_ff_min": 4448,
+       "clock_region": "UNASSIGNED: actual GEN/clock geometry/CA required",
+       "ca_cycles": "NOT PRICED: shared phase/OCV/droop model required"
+      }
+     ],
+     "extra_relay_edges_sum_min": 17
+    }
+   }
+  }
+ },
+ "known_holds": [
+  "Source SVG and keybuf pin6 repairs not yet composed; centroids are existing invalid-density template location estimates.",
+  "Existing SVG internal station metadata is reversed: no source coverage; old North and new South receive paths both need materialization.",
+  "Distances are Manhattan centreline lower bounds; FF bank/clock-driver/PG row sites and wide M6/M7 corridor cuts not solved.",
+  "Every multi-region link needs actual count-aligned margin check and model cycles. No guessed clock regions or K.",
+  "Do not use these lower bounds as production GO offsets. Actual source addresses/controller/VM19 programme remain distinct gates."
+ ]
+}
