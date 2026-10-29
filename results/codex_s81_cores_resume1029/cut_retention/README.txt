@@ -1,0 +1,7 @@
+Native cold-state retention, CODEX 2026-10-29.
+
+Unchanged ot_v41_cut extracted from rtl/v41rom/ot_v41_fadd.sv; six W3 pipeline cuts, x0={v,d,0}. There are 18 source FFs (12 unreset data +6 resetvalid). Ordinary opt removes six constant-lane FFs; default4 LEC fails at final cold state. Native opt -full -keepdc before and after techmap retains these existing stages. Native rename -wire BEFORE dfflibmap preserves exact source-state names through RVT QN+inverter mapping. Actual default4 LEC29/29 EQUIVALENT,22matched/0paired. A wrongstage D mutant final stage <-stage4 rather thanstage5 fails exact source FF (28/29). No reset contract or overrides, hints, functional blackboxes, added state or cycles.
+
+Initial keepdc-only/late-name attempt and equality hints remained UNPROVEN; immutable prior cut_retention_diagnosis.json records that earlier failure. This packet supersedes that conclusion with native early naming. This is a minimal compositional mechanism, NOT full BF/ROM equivalence or routed timing. Preserve required FFs and source names throughout actual synthesis, prove fullshape, account actual cell/clock geometry before adoption. No canonical flow modified.
+
+Reproduce under ot-run with NEW scratch: python3 run.py REPO NEW_SCRATCH. The runner uses installed pinned ORFS image and current lec.py; source RTL and reset4 remain unchanged. result.json summarizes actual collected nominal and mutant receipts.

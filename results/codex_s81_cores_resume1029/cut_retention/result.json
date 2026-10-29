@@ -1,0 +1,91 @@
+{
+  "folded": {
+    "verdict": "NOT EQUIVALENT",
+    "counts": {
+      "compare_points": 20,
+      "proved": 19,
+      "differs": 1,
+      "undecided": 0
+    },
+    "reset_contract": {
+      "default": 4,
+      "requested": null,
+      "contract": null,
+      "used": 4,
+      "debug_overrides": {}
+    },
+    "reason": "1 compare points differ (first: po:q[0]); RTL registers removed by synthesis although not constant: ff:u_dut.g[5].u.g_r.r[0]",
+    "failing": [
+      {
+        "point": "po:q[0]",
+        "status": "differs",
+        "cone_unmatched": [
+          "gold_only"
+        ],
+        "cone_unmatched_keys": [
+          "ff:u_dut.g[5].u.g_r.r[0]"
+        ],
+        "cone_support_count": 1,
+        "cone_state_keys": [
+          "gold_only:ff:u_dut.g[5].u.g_r.r[0]"
+        ]
+      }
+    ],
+    "unproven_points": [],
+    "paired_flops": 12,
+    "matched": 4
+  },
+  "native_named": {
+    "verdict": "EQUIVALENT",
+    "counts": {
+      "compare_points": 29,
+      "proved": 29,
+      "differs": 0,
+      "undecided": 0
+    },
+    "reset_contract": {
+      "default": 4,
+      "requested": null,
+      "contract": null,
+      "used": 4,
+      "debug_overrides": {}
+    },
+    "reason": null,
+    "failing": [],
+    "unproven_points": [],
+    "paired_flops": 0,
+    "matched": 22
+  },
+  "native_wrongstage": {
+    "verdict": "NOT EQUIVALENT",
+    "counts": {
+      "compare_points": 29,
+      "proved": 28,
+      "differs": 1,
+      "undecided": 0
+    },
+    "reset_contract": {
+      "default": 4,
+      "requested": null,
+      "contract": null,
+      "used": 4,
+      "debug_overrides": {}
+    },
+    "reason": "1 compare points differ (first: ff:u_dut.g[5].u.g_r.r[0])",
+    "failing": [
+      {
+        "point": "ff:u_dut.g[5].u.g_r.r[0]",
+        "status": "differs",
+        "cone_unmatched": [],
+        "cone_unmatched_keys": [],
+        "cone_support_count": 1,
+        "cone_state_keys": [
+          "matched:ff:u_dut.g[4].u.g_r.r[0]"
+        ]
+      }
+    ],
+    "unproven_points": [],
+    "paired_flops": 0,
+    "matched": 22
+  }
+}
