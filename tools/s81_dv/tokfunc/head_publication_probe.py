@@ -25,7 +25,25 @@ def delay(name, width, age, src, dst):
             f'(.clk(clk),.rst_n(rst_n),.d({src}),.q({dst}));\n')
 
 
+def publication_closure(network):
+    """NX-only endpoint extraction may omit real middle-column V bodies."""
+    rows = {(r['sid'], r['port']): r for r in network['transport']['nx_boundary']}
+    missing = []
+    for north_sid in range(1, 16, 2):
+        row = rows.get((north_sid, 'vi'), {})
+        if row.get('status') != 'PASS' or row.get('from_sid') != north_sid-1 or row.get('from_port') != 'vo':
+            missing.append(dict(source_sid=north_sid-1, destination_sid=north_sid,
+                destination_port='vi', actual_driver=row.get('driver'),
+                actual_driver_ports=row.get('drv_ports'), last_bound_age_edges=row.get('age_edges'),
+                missing_global_beats=list(range(5*(north_sid-1), 5*(north_sid-1)+5))))
+    return missing
+
+
 def generate(root, network, returns, dates, slots, qdelays):
+    missing = publication_closure(network)
+    if missing:
+        raise ValueError('HEAD80 publication transport is incomplete: actual non-ring-stop V bodies required; '
+                         + json.dumps(missing, sort_keys=True))
     if len(slots) != 5 or sorted(slots) != list(range(5)) or len(qdelays) != 16 or any(not 0 <= v < 256 for v in qdelays):
         raise ValueError('existing five slots and sixteen8bit release delays required')
     for d in (network, returns):

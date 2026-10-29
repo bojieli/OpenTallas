@@ -1,0 +1,71 @@
+{
+ "verdict": "BLOCKED_ACTUAL_V_BODY_CLOSURE",
+ "source": "retained exact bound graph062ef0c41db9",
+ "missing_publication_routes": [
+  {
+   "source_sid": 6,
+   "destination_sid": 7,
+   "destination_port": "vi",
+   "actual_driver": "u_gunit.u_l5",
+   "actual_driver_ports": [
+    "vo_n"
+   ],
+   "last_bound_age_edges": 24,
+   "missing_global_beats": [
+    30,
+    31,
+    32,
+    33,
+    34
+   ]
+  },
+  {
+   "source_sid": 8,
+   "destination_sid": 9,
+   "destination_port": "vi",
+   "actual_driver": "u_seqhost.u_seqhost",
+   "actual_driver_ports": [
+    "vo_n"
+   ],
+   "last_bound_age_edges": 60,
+   "missing_global_beats": [
+    40,
+    41,
+    42,
+    43,
+    44
+   ]
+  },
+  {
+   "source_sid": 12,
+   "destination_sid": 13,
+   "destination_port": "vi",
+   "actual_driver": "u_eng.u_e",
+   "actual_driver_ports": [
+    "vo_n"
+   ],
+   "last_bound_age_edges": 93,
+   "missing_global_beats": [
+    60,
+    61,
+    62,
+    63,
+    64
+   ]
+  }
+ ],
+ "baseline": "currentk:34received30unique543errors stopfaultffff",
+ "candidate20134": "50received42unique456errors stopfault3ffe",
+ "root_cause": "probe ties EDGE_EXTERNAL middle-column V inputs to0, omitting real pass-through units; not evidence that die RTL lacks the route",
+ "max_coupon_head_coverage_without_bodies": 65,
+ "missing_head_beats": 15,
+ "minimal_actual_bodies": {
+  "column3": "u_gunit.u_l3.vi_s ->rn_o ->u_l1.rs_i/rn_o ->u_l2.rs_i/rn_o(ot_dsdv_vstop JREG0) ->u_l0.rs_i/rn_o ->u_l4.rs_i/rn_o ->u_l5.rs_i/vo_n ->s3N.vi; reverse actualrn_i/rs_o chain. dsdv_gunit_pass N2 at each pass leaf; exact interleaf bound stations still needed",
+  "column4": "s4S.vo ->u_bk_sel.vi_s; dsdv_bk_sel u_rs relay ->u_g(dsdv_bk_g/vstop) ->vo_n ->u_seqhost.u_seqhost.vi_s; dsdv_seq_host_mux ->dsdv_seq_host_mu ->dsdv_sh_vc/vstop ->vo_n ->s4N.vi; exact bound station ages required",
+  "column6": "s6S.vo ->u_eng.u_e.vi_s ->ot_s81eng_xq_n32.vi_a ->vo_b ->u_eng.u_e.vo_n ->s6N.vi; actual2-edge pass when no own Engram train, collision fault retained; reverse vi_b->vo_a. Do not substitute guessed relay"
+ },
+ "next_step": "capture these actual inputs/outputs and interleaf bound ages from current selected manifest; include real pass/vstop/xq bodies in a minimal4-fragment276-bit closure coupon, then compose80VQ with real V closure and book source release holds",
+ "guard_check": "PASS actual missing(6->7,8->9,12->13) refused before build",
+ "adoption": false,
+ "full_token": false
+}
