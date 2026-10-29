@@ -1,0 +1,6 @@
+C25c source transforms, no route approval.
+
+1. Run c25c_face_diagnose.py SRC DIAG, then c25c_shared_face_repair.py SRC OUT DIAG/face_diagnosis.json. Guard requires the exact source plan hash. Only shared VMS-glue31 port families and VMbank wq0 are changed; every use of each master was considered. Baseline134 ->48 failing ports across9118 groups, zero new failures. Clock-class pins preserved (see review). Copy unchanged side files/pin files into OUT before standalone checking.
+2. c25c_pins.py SRC OUT --bdring-split offers1024 bq_d pins W and1024 S to address W density and the two bdring face failures (134 ->132 standalone); same centre/area/RTL/cycles. Remaining per-face M5 access must be tested before route.
+3. c25c_sm_street.py SRC OUT --distributed redistributes6 internal gaps to86.4um, preserves final103.68um gap and opens a103.68um right street. Demand check pending at time of commit. The original last-column-only34.56um shift FAILED (4 ->10 reach errors), preserve its result; do not adopt it.
+4. Remaining48 face failures consist of12 contradictory shared VMbank port families and10 directional repairs whose target faces cannot fit at0.096um pitch on the existing M5 outline. They require coordinated core placement/orientation or structural interface redistribution, not local blind repins. Exact constraints and all offending ports are in the JSON files.

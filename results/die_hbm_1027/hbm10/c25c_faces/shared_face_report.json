@@ -1,0 +1,157 @@
+{
+ "cycles_added": 0,
+ "shared_master_changes": [
+  {
+   "module": "hnx_vms_bank_q0_faces__vecd4ae",
+   "source_pins": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon.json",
+   "new_pins": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__c25c_face.json",
+   "ports": {
+    "wq0": "E"
+   },
+   "pins_changed_face": 281,
+   "pins_total": 3919
+  },
+  {
+   "module": "hfd_hgi_vms_glue_nw_t",
+   "source_pins": "cores/hfd_hgi_vms_glue_nw_t__777.6x1529.28__c19__c20f_777.6x1635.55.json",
+   "new_pins": "cores/hfd_hgi_vms_glue_nw_t__777.6x1529.28__c19__c20f_777.6x1635.55__c25c_face.json",
+   "ports": {
+    "b0_flt": "S",
+    "b1_flt": "S",
+    "b2_flt": "S",
+    "b2_status": "S",
+    "b2_xq2_done": "S",
+    "b2_xq_done": "S",
+    "b3_flt": "S",
+    "b3_status": "N",
+    "b3_xq2_done": "N",
+    "b3_xq_done": "N",
+    "b4_flt": "S",
+    "b4_status": "S",
+    "b4_xq2_done": "S",
+    "b4_xq_done": "S",
+    "b5_flt": "S",
+    "b5_xq2_done": "N",
+    "b5_xq_done": "N",
+    "b6_flt": "S",
+    "b7_flt": "S",
+    "bank_client": "S",
+    "bank_enable": "S",
+    "client_seq": "S",
+    "hub_ring_client": "S",
+    "hub_ring_enable": "S",
+    "replay_enable": "S",
+    "replay_source": "S",
+    "response_enable": "S",
+    "response_seq": "S",
+    "ring_fault": "S",
+    "ring_tx_enable": "S",
+    "ring_tx_source": "S"
+   },
+   "pins_changed_face": 98,
+   "pins_total": 20160
+  }
+ ],
+ "station_endpoint_changes": [
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmb_Q0",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmb_Q1",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmb_Q2",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmb_Q3",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmb_Q4",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmb_Q5",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmb_Q6",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmb_Q7",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_vms_Q__q0",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_vms_Q__q1",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q0",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q1",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q2",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q3",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q4",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q5",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q6",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q7",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_vms_Q__q0",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_vms_Q__q1",
+   "exact_pin_endpoints_updated": 0
+  }
+ ]
+}
