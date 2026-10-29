@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/die-qc34/src_pc/tools/clk/fixed_tree_provider.py", line 147, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/srv/opentallas-scratch2/claude/die-qc34/src_pc/tools/clk/fixed_tree_provider.py", line 144, in main
+    try:ns['main']()
+        ^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-qc-mesh5-1029/src/results/qc_clock_physical_1029/fixed_tree.py", line 509, in main
+    print('PREBUILD_STAGE top access reservation', flush=True)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/die-qc34/src_pc/tools/die_plan/die_clock_128.py", line 298, in fixed_wires
+    return _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=port_on_trunk,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/die-qc34/src_pc/tools/die_plan/die_clock_128.py", line 640, in _fixed_wires_stack
+    raise PlanError(errs)
+die_clock_128.PlanError: 39881 plan error(s): no_clock_track 39881

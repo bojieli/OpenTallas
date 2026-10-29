@@ -1,0 +1,17 @@
+WHATIF destack 4078 shifted 0 unresolved
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/die-qc34/dqc35_whatif_destack.py", line 65, in <module>
+    main(argv)
+  File "/srv/opentallas-scratch2/claude/die-qc34/dqc35_whatif_destack.py", line 59, in main
+    return _old(a)
+           ^^^^^^^
+  File "/srv/opentallas-scratch2/claude/die-qc34/src_pc/tools/clk/fixed_tree_provider.py", line 144, in main
+    try:ns['main']()
+        ^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-qc-mesh5-1029/src/results/qc_clock_physical_1029/fixed_tree.py", line 519, in main
+    summary.update(status='FAIL',cause='pin-access shorts',pin_access_census=census)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-qc-mesh5-1029/src/results/qc_clock_physical_1029/fixed_tree.py", line 236, in review_render
+    ax.add_patch(Rectangle((x0,y0),x1-x0,y1-y0,fc='#aaa',alpha=.3,lw=0))
+^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'matplotlib'
