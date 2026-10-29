@@ -1,0 +1,286 @@
+{
+ "before": {
+  "r2r_memory_instances": 0,
+  "r2r_incomplete_macros": [],
+  "r2r_max": 621.38,
+  "r2r_captures_gt405": 203,
+  "r2r_captures": 2868,
+  "comb_loop_cells": 0,
+  "r2r_worst": "u_leaf.zh_err_q\\[11\\]$_DFF_P_ -> u_leaf.u_core.gz\\[2\\]$_DFF_PN0_"
+ },
+ "after": {
+  "r2r_memory_instances": 0,
+  "r2r_incomplete_macros": [],
+  "r2r_max": 601.51,
+  "r2r_captures_gt405": 201,
+  "r2r_captures": 2868,
+  "comb_loop_cells": 0,
+  "r2r_worst": "u_leaf.u_io.start$_DFF_PN0_ -> u_leaf.u_core.z_b\\[1\\]$_DFF_PN0_"
+ },
+ "moves": [
+  {
+   "name": "u_leaf.u_core.gz\\[0\\]$_DFF_PN0_",
+   "old_xy": [
+    288.954,
+    15.12
+   ],
+   "xy_um": [
+    168,
+    234
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.gz\\[1\\]$_DFF_PN0_",
+   "old_xy": [
+    299.646,
+    14.85
+   ],
+   "xy_um": [
+    308,
+    234
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.gz\\[2\\]$_DFF_PN0_",
+   "old_xy": [
+    358.668,
+    109.08
+   ],
+   "xy_um": [
+    168,
+    250
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.gz\\[3\\]$_DFF_PN0_",
+   "old_xy": [
+    360.99,
+    18.63
+   ],
+   "xy_um": [
+    308,
+    250
+   ]
+  },
+  {
+   "name": "u_leaf.zh_err_q\\[0\\]$_DFF_P_",
+   "old_xy": [
+    46.656,
+    66.15
+   ],
+   "xy_um": [
+    160.0,
+    232
+   ]
+  },
+  {
+   "name": "u_leaf.zh_err_q\\[10\\]$_DFF_P_",
+   "old_xy": [
+    46.548,
+    417.15
+   ],
+   "xy_um": [
+    162.6,
+    248
+   ]
+  },
+  {
+   "name": "u_leaf.zh_err_q\\[11\\]$_DFF_P_",
+   "old_xy": [
+    45.252,
+    416.88
+   ],
+   "xy_um": [
+    163.9,
+    248
+   ]
+  },
+  {
+   "name": "u_leaf.zh_err_q\\[12\\]$_DFF_P_",
+   "old_xy": [
+    330.318,
+    416.88
+   ],
+   "xy_um": [
+    300.0,
+    248
+   ]
+  },
+  {
+   "name": "u_leaf.zh_err_q\\[13\\]$_DFF_P_",
+   "old_xy": [
+    329.238,
+    416.88
+   ],
+   "xy_um": [
+    301.3,
+    248
+   ]
+  },
+  {
+   "name": "u_leaf.zh_err_q\\[14\\]$_DFF_P_",
+   "old_xy": [
+    330.156,
+    417.15
+   ],
+   "xy_um": [
+    302.6,
+    248
+   ]
+  },
+  {
+   "name": "u_leaf.zh_err_q\\[15\\]$_DFF_P_",
+   "old_xy": [
+    330.642,
+    417.42
+   ],
+   "xy_um": [
+    303.9,
+    248
+   ]
+  },
+  {
+   "name": "u_leaf.zh_err_q\\[1\\]$_DFF_P_",
+   "old_xy": [
+    46.656,
+    66.42
+   ],
+   "xy_um": [
+    161.3,
+    232
+   ]
+  },
+  {
+   "name": "u_leaf.zh_err_q\\[2\\]$_DFF_P_",
+   "old_xy": [
+    46.602,
+    66.69
+   ],
+   "xy_um": [
+    162.6,
+    232
+   ]
+  },
+  {
+   "name": "u_leaf.zh_err_q\\[3\\]$_DFF_P_",
+   "old_xy": [
+    45.576,
+    66.42
+   ],
+   "xy_um": [
+    163.9,
+    232
+   ]
+  },
+  {
+   "name": "u_leaf.zh_err_q\\[4\\]$_DFF_P_",
+   "old_xy": [
+    328.86,
+    66.15
+   ],
+   "xy_um": [
+    300.0,
+    232
+   ]
+  },
+  {
+   "name": "u_leaf.zh_err_q\\[5\\]$_DFF_P_",
+   "old_xy": [
+    329.292,
+    65.88
+   ],
+   "xy_um": [
+    301.3,
+    232
+   ]
+  },
+  {
+   "name": "u_leaf.zh_err_q\\[6\\]$_DFF_P_",
+   "old_xy": [
+    329.184,
+    66.69
+   ],
+   "xy_um": [
+    302.6,
+    232
+   ]
+  },
+  {
+   "name": "u_leaf.zh_err_q\\[7\\]$_DFF_P_",
+   "old_xy": [
+    329.508,
+    66.42
+   ],
+   "xy_um": [
+    303.9,
+    232
+   ]
+  },
+  {
+   "name": "u_leaf.zh_err_q\\[8\\]$_DFF_P_",
+   "old_xy": [
+    46.332,
+    416.88
+   ],
+   "xy_um": [
+    160.0,
+    248
+   ]
+  },
+  {
+   "name": "u_leaf.zh_err_q\\[9\\]$_DFF_P_",
+   "old_xy": [
+    46.062,
+    417.42
+   ],
+   "xy_um": [
+    161.3,
+    248
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.gz\\[0\\]$_DFF_PN0__236",
+   "old_xy": [
+    289.764,
+    15.39
+   ],
+   "xy_um": [
+    168,
+    234
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.gz\\[1\\]$_DFF_PN0__237",
+   "old_xy": [
+    300.348,
+    15.12
+   ],
+   "xy_um": [
+    308,
+    234
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.gz\\[2\\]$_DFF_PN0__238",
+   "old_xy": [
+    359.532,
+    108.81
+   ],
+   "xy_um": [
+    168,
+    250
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.gz\\[3\\]$_DFF_PN0__239",
+   "old_xy": [
+    361.638,
+    18.9
+   ],
+   "xy_um": [
+    308,
+    250
+   ]
+  }
+ ]
+}

@@ -1,0 +1,7 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "one changed-input DPL-only trial",
+ "image_viewed": "results/codex_kv_kits_1029c/ahub_anchor_overlay.png",
+ "findings": "221 non-face internal register anchors occupy existing South/East bands and sparse central/vertical macro channels. All625boundary registers and five macros stay fixed, macro halo2.16um clear, anchors pack on actual .054/.27um site grid without overlaps. Full24033sequential-pair estimate2868captures maximum390.88um,0>405. Clock reach533.84 unresolved. PostDPL must check all real connectivity/macros/halos/pins before CTS or route.",
+ "independent_review": "/root/geom concurs same actual fullgraph390.88/0bad; no modified boundary625/macrohalo hits"
+}

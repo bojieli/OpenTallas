@@ -1,0 +1,39 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO DPL-0006] Core area: 257541.12 um^2
+[INFO DPL-0007] Movable instances area: 1865.53 um^2
+[INFO DPL-0008] Fixed instances area within core: 138823.31 um^2
+[INFO DPL-0009] Utilization: 54.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 31447 cells
+[INFO DPL-0393]   height 560 row(s): 4 cells
+[INFO DPL-0393]   height 800 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 1.86s
+Placement Analysis
+---------------------------------
+total displacement         38.2 u
+average displacement        0.0 u
+max displacement            1.6 u
+original HPWL          230405.6 u
+legalized HPWL         230442.3 u
+delta HPWL                    0 %
+
+[WARNING DPL-0005] Overlap check failed (1).
+ u_leaf.u_core.RECIP_RETURN_AGE\[5\]$_DFFE_PP_ (DFFHQNx1_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_31_9817 (TAPCELL_ASAP7_75t_R)
+[WARNING DPL-0011] Padding check failed (1).
+ u_leaf.u_core.RECIP_RETURN_AGE\[5\]$_DFFE_PP_
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+Error: anchor_dpl.tcl, 4 DPL-0033
