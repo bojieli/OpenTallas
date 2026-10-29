@@ -60,7 +60,7 @@ module tb_idx_link_wpipe;
     end
     @(negedge clk);
    end
-   ingest_v=0;selected_line=0;flush=1;@(negedge clk);flush=0;repeat(3)@(negedge clk);
+   ingest_v=0;selected_line=0;repeat(3)@(negedge clk);flush=1;@(negedge clk);flush=0;repeat(1)@(negedge clk);
    for(integer g=0;g<16;g=g+1)begin
     emit_v=1;emit_group=4'(g);due[cycle+2]=1;@(negedge clk);emit_v=0;repeat(7)@(negedge clk);
    end
