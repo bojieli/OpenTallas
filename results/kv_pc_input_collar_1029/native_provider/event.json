@@ -1,0 +1,287 @@
+{
+  "schema": "opentallas.kvspc.parent_input_collar.v1",
+  "enabled": true,
+  "input_cycles": 1,
+  "boot_cycles": 1,
+  "throughput_cycles": 0,
+  "default_enabled": false,
+  "source_recipe": "/srv/opentallas-scratch2/claude/wt/codex-kv-25-1029/physical/die_plan/qwen_kvsys/dcal_rom/bind/position2144b19/recipe_kv26b.json",
+  "providers": [
+    {
+      "schema": "opentallas.kvspc.native_input_collar.v1",
+      "module": "qkd_kvs_pc",
+      "parameter": "KVSPC_INPUT_COLLAR",
+      "default": 0,
+      "input_cycles": 1,
+      "boot_cycles": 1,
+      "throughput_cycles": 0,
+      "captures": [
+        {
+          "port": "hrst_n",
+          "native_port": "hrst_n",
+          "span": null,
+          "width": 1
+        },
+        {
+          "port": "i_grp",
+          "native_port": "i_grp",
+          "span": [
+            127,
+            0
+          ],
+          "width": 128
+        },
+        {
+          "port": "pc__cfg_stack",
+          "native_port": "pc__cfg_stack",
+          "span": [
+            1,
+            0
+          ],
+          "width": 2
+        },
+        {
+          "port": "pc__pi",
+          "native_port": "pc__pi",
+          "span": [
+            288,
+            0
+          ],
+          "width": 289
+        },
+        {
+          "port": "x__est__0_1",
+          "native_port": "x__est__0_1",
+          "span": [
+            0,
+            0
+          ],
+          "width": 1
+        },
+        {
+          "port": "pc__hes",
+          "native_port": "pc__hes",
+          "span": [
+            287,
+            0
+          ],
+          "width": 288
+        },
+        {
+          "port": "i_next",
+          "native_port": "i_next",
+          "span": [
+            779,
+            0
+          ],
+          "width": 780
+        },
+        {
+          "port": "pc__land_er",
+          "native_port": "pc__land_er",
+          "span": [
+            0,
+            0
+          ],
+          "width": 1
+        },
+        {
+          "port": "pc__land_er_259",
+          "native_port": "pc__land_er",
+          "span": [
+            260,
+            259
+          ],
+          "width": 2
+        },
+        {
+          "port": "rst_n",
+          "native_port": "rst_n",
+          "span": null,
+          "width": 1
+        },
+        {
+          "port": "pc__pc",
+          "native_port": "pc__pc",
+          "span": [
+            4,
+            0
+          ],
+          "width": 5
+        },
+        {
+          "port": "i_prev",
+          "native_port": "i_prev",
+          "span": [
+            298,
+            0
+          ],
+          "width": 299
+        },
+        {
+          "port": "pc__fi",
+          "native_port": "pc__fi",
+          "span": [
+            0,
+            0
+          ],
+          "width": 1
+        },
+        {
+          "port": "pc__ki",
+          "native_port": "pc__ki",
+          "span": [
+            32,
+            0
+          ],
+          "width": 33
+        }
+      ],
+      "flops": 1831,
+      "source_before": "e38a80024ea26b60f8bdbc2619a202dc689bfd8881f028ca711021d0275c8497",
+      "source_after": "da53930d6187d3410355086ed3a03724347558af841c1011f57c60df78da81ab",
+      "body_change": "input references only; same native leaf arithmetic/control",
+      "clocks_direct": [
+        "ck",
+        "hck"
+      ],
+      "dead_bits": "original direct connection",
+      "original_source": "/srv/opentallas-scratch2/claude/wt/codex-kv-25-1029/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv",
+      "provider": "/srv/opentallas-scratch2/claude/codex-kv-pc-collar-1029/parent_stage1/qkd_kvs_pc_native_provider.sv"
+    },
+    {
+      "schema": "opentallas.kvspc.native_input_collar.v1",
+      "module": "qkd_kvs_pc_h_head_p",
+      "parameter": "KVSPC_INPUT_COLLAR",
+      "default": 0,
+      "input_cycles": 1,
+      "boot_cycles": 1,
+      "throughput_cycles": 0,
+      "captures": [
+        {
+          "port": "hrst_n",
+          "native_port": "hrst_n",
+          "span": null,
+          "width": 1
+        },
+        {
+          "port": "i_grp",
+          "native_port": "i_grp",
+          "span": [
+            127,
+            0
+          ],
+          "width": 128
+        },
+        {
+          "port": "pc__cfg_stack",
+          "native_port": "pc__cfg_stack",
+          "span": [
+            1,
+            0
+          ],
+          "width": 2
+        },
+        {
+          "port": "pc__pi",
+          "native_port": "pc__pi",
+          "span": [
+            288,
+            0
+          ],
+          "width": 289
+        },
+        {
+          "port": "x__est__0_1",
+          "native_port": "x__est__0_1",
+          "span": [
+            0,
+            0
+          ],
+          "width": 1
+        },
+        {
+          "port": "pc__hes",
+          "native_port": "pc__hes",
+          "span": [
+            287,
+            0
+          ],
+          "width": 288
+        },
+        {
+          "port": "i_next",
+          "native_port": "i_next",
+          "span": [
+            779,
+            0
+          ],
+          "width": 780
+        },
+        {
+          "port": "pc__land_er",
+          "native_port": "pc__land_er",
+          "span": [
+            0,
+            0
+          ],
+          "width": 1
+        },
+        {
+          "port": "pc__land_er_259",
+          "native_port": "pc__land_er",
+          "span": [
+            260,
+            259
+          ],
+          "width": 2
+        },
+        {
+          "port": "rst_n",
+          "native_port": "rst_n",
+          "span": null,
+          "width": 1
+        },
+        {
+          "port": "pc__ki",
+          "native_port": "pc__ki",
+          "span": [
+            0,
+            0
+          ],
+          "width": 1
+        },
+        {
+          "port": "pc__ki_15",
+          "native_port": "pc__ki",
+          "span": [
+            20,
+            15
+          ],
+          "width": 6
+        },
+        {
+          "port": "pc__ki_31",
+          "native_port": "pc__ki",
+          "span": [
+            32,
+            31
+          ],
+          "width": 2
+        }
+      ],
+      "flops": 1502,
+      "source_before": "ba00ac889056a2efb7990d523d569b4c8f0b83ab73bb102602fbd041cfa5f8cf",
+      "source_after": "6c3989dd766d7c9999623d23787e4cff4023207e68385dcc5320f641213fa6de",
+      "body_change": "input references only; same native leaf arithmetic/control",
+      "clocks_direct": [
+        "ck",
+        "hck"
+      ],
+      "dead_bits": "original direct connection",
+      "original_source": "/srv/opentallas-scratch2/claude/wt/codex-kv-25-1029/rtl/qwen_sys/kv_plan_leaves_1023/qkd_kvs_pc_h_head_p.sv",
+      "provider": "/srv/opentallas-scratch2/claude/codex-kv-pc-collar-1029/parent_stage1/qkd_kvs_pc_h_head_p_native_provider.sv"
+    }
+  ],
+  "adoption": "candidate only; requires current source/physical qualification and coherent R8/compiler event"
+}

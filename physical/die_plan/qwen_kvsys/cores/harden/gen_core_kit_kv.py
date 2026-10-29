@@ -1412,7 +1412,20 @@ def main():
             and re.search(r"\bmodule\s+" + re.escape(mod) + r"\b", f.read_text(errors="replace"))]
     if len(tops) != 1:
         raise SystemExit(f"{tid}: clock binding check: {len(tops)} kit RTL files define module {mod}")
-    if a.kvspc_input_collar:
+    # An adopted parent provider already owns its one collar. Never add another
+    # physical-wrapper stage around the source that the parent actually runs.
+    from kvspc_native_collar import enabled_in_wrapper, physical_receipt
+    native_collar = mod in ("qkd_kvs_pc", "qkd_kvs_pc_h_head_p") and enabled_in_wrapper(tops[0].read_text())
+    collar_enabled = a.kvspc_input_collar or native_collar
+    if native_collar:
+        if a.kvspc_input_collar:
+            raise SystemExit("native PC provider already has input collar=1; remove outer --kvspc-input-collar")
+        if not a.kvspc_face_ports:
+            raise SystemExit("native PC input collar requires --kvspc-face-ports physical projection")
+        import kvspc_input_collar
+        receipt = physical_receipt(mod)
+        (kd / "input_collar.json").write_text(json.dumps(receipt, indent=1) + "\n")
+    elif a.kvspc_input_collar:
         if mod not in ("qkd_kvs_pc", "qkd_kvs_pc_h_head_p") or not a.kvspc_face_ports:
             raise SystemExit("--kvspc-input-collar requires a PC core with --kvspc-face-ports")
         import sys
@@ -1524,7 +1537,7 @@ def main():
     # data flop's anchor before its own port is visited.
     # The collar makes reset a timed data capture at its declared input pin.
     collar_inner = []
-    if a.kvspc_input_collar:
+    if collar_enabled:
         collar_meta = json.loads((kd / "input_collar.json").read_text())
         collar_inner = kvspc_input_collar.interior_captures(prow, collar_meta["captured"])
         skip_ports = clks + list(dict.fromkeys(p["bus"] for p in collar_inner))
@@ -1548,7 +1561,7 @@ def main():
                     "set ff_unreg [open $::env(RESULTS_DIR)/ot_unreg_pins.txt w]")
     ff = ff.replace("    if {$f eq \"\"} { incr ff_miss; continue }",
                     "    if {$f eq \"\"} { incr ff_miss; puts $ff_unreg \"$pass\\t$nm\"; continue }")
-    if a.kvspc_input_collar and collar_inner:
+    if collar_enabled and collar_inner:
         ff += "\nsource /work/input_collar_sites.tcl\n"
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(tool / "face_flops_release.tcl", kd / "face_flops_release.tcl")

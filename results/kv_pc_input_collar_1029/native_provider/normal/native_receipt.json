@@ -1,0 +1,140 @@
+{
+  "schema": "opentallas.kvspc.native_input_collar.v1",
+  "module": "qkd_kvs_pc",
+  "parameter": "KVSPC_INPUT_COLLAR",
+  "default": 0,
+  "input_cycles": 1,
+  "boot_cycles": 1,
+  "throughput_cycles": 0,
+  "captures": [
+    {
+      "port": "hrst_n",
+      "native_port": "hrst_n",
+      "span": null,
+      "width": 1
+    },
+    {
+      "port": "i_grp",
+      "native_port": "i_grp",
+      "span": [
+        127,
+        0
+      ],
+      "width": 128
+    },
+    {
+      "port": "pc__cfg_stack",
+      "native_port": "pc__cfg_stack",
+      "span": [
+        1,
+        0
+      ],
+      "width": 2
+    },
+    {
+      "port": "pc__pi",
+      "native_port": "pc__pi",
+      "span": [
+        288,
+        0
+      ],
+      "width": 289
+    },
+    {
+      "port": "x__est__0_1",
+      "native_port": "x__est__0_1",
+      "span": [
+        0,
+        0
+      ],
+      "width": 1
+    },
+    {
+      "port": "pc__hes",
+      "native_port": "pc__hes",
+      "span": [
+        287,
+        0
+      ],
+      "width": 288
+    },
+    {
+      "port": "i_next",
+      "native_port": "i_next",
+      "span": [
+        779,
+        0
+      ],
+      "width": 780
+    },
+    {
+      "port": "pc__land_er",
+      "native_port": "pc__land_er",
+      "span": [
+        0,
+        0
+      ],
+      "width": 1
+    },
+    {
+      "port": "pc__land_er_259",
+      "native_port": "pc__land_er",
+      "span": [
+        260,
+        259
+      ],
+      "width": 2
+    },
+    {
+      "port": "rst_n",
+      "native_port": "rst_n",
+      "span": null,
+      "width": 1
+    },
+    {
+      "port": "pc__pc",
+      "native_port": "pc__pc",
+      "span": [
+        4,
+        0
+      ],
+      "width": 5
+    },
+    {
+      "port": "i_prev",
+      "native_port": "i_prev",
+      "span": [
+        298,
+        0
+      ],
+      "width": 299
+    },
+    {
+      "port": "pc__fi",
+      "native_port": "pc__fi",
+      "span": [
+        0,
+        0
+      ],
+      "width": 1
+    },
+    {
+      "port": "pc__ki",
+      "native_port": "pc__ki",
+      "span": [
+        32,
+        0
+      ],
+      "width": 33
+    }
+  ],
+  "flops": 1831,
+  "source_before": "2f3165ee5b862dff899715a58f3ad7975e5cc262d738467a9fcac81e4af0c74c",
+  "source_after": "405799b14bb6d69f765859d595a90436a3ebd63deb715c6fd0db232b0ffe148c",
+  "body_change": "input references only; same native leaf arithmetic/control",
+  "clocks_direct": [
+    "ck",
+    "hck"
+  ],
+  "dead_bits": "original direct connection"
+}
