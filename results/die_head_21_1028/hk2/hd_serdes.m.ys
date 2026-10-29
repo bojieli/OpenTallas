@@ -1,0 +1,9 @@
+read_verilog -sv  -DSYNTHESIS  /k/rtl/ot_dp_cells.sv /k/rtl/ot_reset_sync.sv /k/rtl/ot_s81hd_serdes.sv /k/rtl/ot_s81hd_serdes_link.sv /k/rtl/ot_pdie_serdes.sv /k/rtl/ot_s81_kp4_common.sv /k/rtl/ot_s81_kp4_enc.sv /k/rtl/ot_s81_kp4_dec.sv /k/rtl/ot_s81_kp4_bm.sv /k/rtl/ot_s81_kp4_dchn.sv /k/rtl/ot_s81_kp4_ddly.sv /k/rtl/ot_s81_kp4_dout.sv /k/rtl/ot_s81_kp4_dsyn.sv /e/ot_sram_1r1w2c_64x546_m1_bb.v /e/ot_sram_1r1w_32x546_m1_bb.v /k/rtl/ot_dp_clk_landing.sv /k/rtl/ot_dp_clk_landing_ca.sv /k/rtl/ot_meso_fifo.sv
+hierarchy -check -top ot_s81hd_serdes
+proc
+flatten
+tee -q -o /e/hd_serdes.cells.ot_sram_1r1w2c_64x546_m1.txt select -list t:ot_sram_1r1w2c_64x546_m1
+tee -q -o /e/hd_serdes.cells.ot_sram_1r1w_32x546_m1.txt select -list t:ot_sram_1r1w_32x546_m1
+tee -q -o /e/hd_serdes.cells.ot_sram_1r1w2c_32x64_m1.txt select -list t:ot_sram_1r1w2c_32x64_m1
+tee -q -o /e/hd_serdes.cells.ot_sram_1r1w2c_256x64_m1.txt select -list t:ot_sram_1r1w2c_256x64_m1
+tee -q -o /e/hd_serdes.cells.ot_sram_1r1w_64x512_m1_r2c2.txt select -list t:ot_sram_1r1w_64x512_m1_r2c2
