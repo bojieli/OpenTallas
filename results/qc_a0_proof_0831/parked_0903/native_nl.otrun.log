@@ -1,0 +1,7 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-qc-proof-0831
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-qc-proof-0831
+ot-run: localhost      admits   373 GB (avail 854, reserve 0, fresh 382.9, peak 33.9, headroom 0, waiters 0/0 GB) load 72/112 running 46 disk 1364 GB 
+ot-run: LOAD SPILL not possible (/srv/opentallas-scratch2/claude/codex-qc-a0-0251, /srv/opentallas-scratch2/claude/codex-qc-a0-0830, /srv/opentallas-scratch2/claude/codex-qc-proof-0831, /srv/opentallas-scratch2/claude/wt total 625 GB > OT_RUN_SPILL_MAX_GB 40); running on localhost at 1.36 x cores
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2507986-1793288584 after 1 s
+gen_rom.py: 10 images for tile 48 in /srv/opentallas-scratch2/claude/codex-qc-proof-0831/native_nl/rom
