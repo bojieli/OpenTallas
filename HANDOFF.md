@@ -1618,3 +1618,9 @@ CODEX: 2026-10-29 02:55 PDT FLOW BF planned-tree G2 diagnostic launched48GB8thre
 CODEX: 2026-10-29 02:56 PDT HBMREBAL resumed; fullcanon/oldlp/HOST inheritedjobsactualLIVE. Approved HNX same-synth input-data-onlyCTS successor unit2670910 LIVE, max4HB4/async excluded/clockunchanged; geometry+TTFF+independentreview beforeGRT.
 
 CODEX: 2026-10-29 02:56 PDT BTAB turntree actual50itM2-M5GRT0(all4layers),wire368251/12096nets;2.604channelprojectionfalsehotspot. IndependentCTS/GRTonlyreviewrequested,noDRT/sourcechange.
+
+CODEX: 2026-10-29 02:56 PDT shared clock FEED balanced/nativepack candidate d643cabd5 READY49focusedPASS; S81 full geometry-only live epyc2 codex-clock-takeover-1029/src,48GB24threads. No route/gate claim; HBM inherited replay untouched.
+
+CODEX: 2026-10-29 02:56 PDT Qwen native ABI failure fixed reusable post-closure build path dfdd1f4b2/fa6f20524 READY; actual legacyFAIL/preparedPASS/controlCAUGHT,0cycles. Inherited nominal5/14images983frames live; frame mutantCAUGHT; no token/G5claim.
+
+CODEX: 2026-10-29 02:57 PDT independent HEADtileclock G1 PASS-COND diagnostic CTS/GRT; actual378tap/pad rectangles0bad/maxleg365um; post-DPL movabletrunk legality recheck required. Evidence9ada7d622; HEAD owner notified.
