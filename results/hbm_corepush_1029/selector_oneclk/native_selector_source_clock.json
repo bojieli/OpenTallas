@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.hbm.selector_native_source_clock.v1",
+  "path": "hb_idx__selector",
+  "module": "ot_hbm_idx_selector_static_sel",
+  "clock_ports": {
+    "clk_ctl": {
+      "width": 1,
+      "expression": "hb_ckgen__pll_stream[0:0]",
+      "all_bits_same_scalar": true,
+      "scalar": "hb_ckgen__pll_stream[0:0]"
+    },
+    "clk_q": {
+      "width": 4,
+      "expression": "{hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0]}",
+      "all_bits_same_scalar": true,
+      "scalar": "hb_ckgen__pll_stream[0:0]"
+    },
+    "clk_mem": {
+      "width": 12,
+      "expression": "{hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0]}",
+      "all_bits_same_scalar": true,
+      "scalar": "hb_ckgen__pll_stream[0:0]"
+    }
+  },
+  "reset": {
+    "width": 1,
+    "expression": "hb_ckgen__por_stream[0:0]"
+  },
+  "source_plan_mapping": {
+    "hb_idx__selector": [
+      "root",
+      "u_hb_idx__selector"
+    ]
+  },
+  "note": "Actualselected17sourceclockbitsaliasesonly; physicalroot/window/skewqualificationheld."
+}

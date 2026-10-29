@@ -1,0 +1,220 @@
+{
+ "status": "UNSIGNED_CANDIDATE; atomiccaller/nativeclockmodel prerequisite",
+ "source_plan_sha256": "a4b0cb3df1672afdd3774e54d687fface8080b3f40e98531673346edfc29a59b",
+ "instances": [
+  {
+   "type": "root",
+   "inst": "u_hb_idx__selector",
+   "module": "ot_hbm_idx_selector_static_sel",
+   "origin_um": [
+    699.84,
+    0.0
+   ],
+   "orient": "R0",
+   "outline_um": [
+    600.048,
+    450.36
+   ],
+   "track_offset_um": [
+    0.0,
+    0.0
+   ],
+   "old_pins_file": "cores/ot_hbm_idx_selector_static_sel__600.048x450.36__root_u_hb_idx__selector.json",
+   "old_pins_sha256": "a8b6d07217f0e71dee0de7b83b183525354e8aa812b6dae67954e0a9a316a1ba",
+   "new_pins_file": "selector_oneclk_pins.json",
+   "removed_clock_pins": [
+    {
+     "name": "clk_q[0]",
+     "layer": "M5",
+     "x": 598.92,
+     "y": 0.096,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_q[1]",
+     "layer": "M5",
+     "x": 598.824,
+     "y": 0.096,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_q[2]",
+     "layer": "M5",
+     "x": 598.728,
+     "y": 0.096,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_q[3]",
+     "layer": "M5",
+     "x": 598.632,
+     "y": 0.096,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_mem[0]",
+     "layer": "M5",
+     "x": 598.536,
+     "y": 0.096,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_mem[1]",
+     "layer": "M5",
+     "x": 598.44,
+     "y": 0.096,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_mem[2]",
+     "layer": "M5",
+     "x": 598.344,
+     "y": 0.096,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_mem[3]",
+     "layer": "M5",
+     "x": 599.016,
+     "y": 450.264,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_mem[4]",
+     "layer": "M5",
+     "x": 598.92,
+     "y": 450.264,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_mem[5]",
+     "layer": "M5",
+     "x": 598.824,
+     "y": 450.264,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_mem[6]",
+     "layer": "M5",
+     "x": 598.728,
+     "y": 450.264,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_mem[7]",
+     "layer": "M5",
+     "x": 598.632,
+     "y": 450.264,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_mem[8]",
+     "layer": "M5",
+     "x": 598.536,
+     "y": 450.264,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_mem[9]",
+     "layer": "M5",
+     "x": 598.44,
+     "y": 450.264,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_mem[10]",
+     "layer": "M5",
+     "x": 598.344,
+     "y": 450.264,
+     "w": 0.048,
+     "h": 0.48
+    },
+    {
+     "name": "clk_mem[11]",
+     "layer": "M5",
+     "x": 598.248,
+     "y": 450.264,
+     "w": 0.048,
+     "h": 0.48
+    }
+   ],
+   "preserved_pins": 4767,
+   "new_clock_entry": {
+    "xy_um": [
+     298.08,
+     224.64
+    ],
+    "island_um": [
+     293.76,
+     220.32,
+     302.4,
+     228.96
+    ],
+    "port": "clk_ctl",
+    "merged_clock_ports": [],
+    "tap": "u_hb_idx__selector",
+    "source": "CANDIDATE: native wrapper already uses only clk_ctl; remove16unusedtopclockports; freshlocaltree qualification required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hbm_idx_selector_static_sel"
+   },
+   "new_core_conns": {
+    "addr": [
+     "core:u_hb_idx__ctl"
+    ],
+    "clk_ctl": [
+     "tap:u_hb_idx__selector"
+    ],
+    "fault": [
+     "core:u_hb_idx__ctl"
+    ],
+    "in_line": [
+     "leaf:u_hb_idx__xqr"
+    ],
+    "k": [
+     "core:u_col_idx"
+    ],
+    "op": [
+     "core:u_hb_idx__ctl"
+    ],
+    "pass": [
+     "core:u_hb_idx__ctl"
+    ],
+    "selected_line": [
+     "core:u_hb_idx__link"
+    ],
+    "selected_v": [
+     "core:u_hb_idx__ctl"
+    ]
+   },
+   "removed_clock_connections": {
+    "clk_mem": [
+     "tap:u_hb_idx__selector"
+    ],
+    "clk_q": [
+     "tap:u_hb_idx__selector"
+    ]
+   },
+   "changed_data_control_pins": 0,
+   "added_cycles": 0
+  }
+ ]
+}

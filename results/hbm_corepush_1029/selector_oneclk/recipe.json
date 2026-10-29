@@ -1,0 +1,22 @@
+{
+ "ot_hbm_idx_selector_static_sel__oneclk_profile": {
+  "top": "ot_hbm_idx_selector_static_sel",
+  "files": [
+   "results/hbm_corepush_1029/selector_oneclk/ot_hbm_idx_selector_static_sel_physical.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_selector_compact.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv"
+  ],
+  "defines": [],
+  "params": {
+   "STRUCT": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "Unsigned one physicalclockpin candidate: drop16unusedpublicclockports only; internal core/SRAM clocks already boundclk_ctl in exactnativewrapper; STRUCT1processsplit retained; sourcephase packet and freshnativeclockmodel required beforeP&R.",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_idx_selector_static_sel",
+  "view_kind": "SYNTH",
+  "view_port_bits": 4767
+ }
+}

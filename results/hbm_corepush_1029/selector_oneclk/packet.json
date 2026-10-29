@@ -1,0 +1,14 @@
+{
+ "classification": "unsigned source interface candidate; no PNR/model adoption",
+ "native_sha256": "7f19cee05337fef7d31621d2cf8571195699a16d09e156f20e2a269513ba8b1d",
+ "private_sha256": "f59e55480670bc9bc485d9c5315c22429d34099572e9534bb190a7a349808e3b",
+ "only_change": "Remove unused top clk_q[3:0] and clk_mem[11:0] ports; no core module change",
+ "source_clock_inputs": 17,
+ "physical_clock_inputs": 1,
+ "remaining_port": "clk_ctl",
+ "old_pins": 4783,
+ "new_pins": 4767,
+ "cycles_added": 0,
+ "data_reset_macro_geometry_changes": 0,
+ "required": "Atomic selectedsource caller namedconnection removal plus pin/clockentry/conns event; native current source clock packet; one actual tree/sink-island review before CTS."
+}

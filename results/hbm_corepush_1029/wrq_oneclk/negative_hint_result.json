@@ -1,0 +1,9 @@
+{
+  "control": "wrong polarity on exact ent/q bit0",
+  "target": "hyp:gate:ff:u_dut.u_fcore.u_wrq.g_sm[0].ent[0][0]",
+  "target_result": "differs",
+  "counts": {
+    "proved": 20309,
+    "differs": 4
+  }
+}
