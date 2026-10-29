@@ -1,0 +1,134 @@
+{
+ "module": "ot_s81hd_credit_native",
+ "outline_um": [
+  112.32,
+  207.36
+ ],
+ "macro_placement": [
+  {
+   "inst": "u_ski.u_head.g_bank[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1",
+   "origin_um": [
+    17.28,
+    17.28
+   ],
+   "orient": "MY",
+   "size_um": [
+    31.992,
+    17.304
+   ]
+  },
+  {
+   "inst": "u_ski.u_head.g_bank[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1",
+   "origin_um": [
+    17.28,
+    51.84
+   ],
+   "orient": "MY",
+   "size_um": [
+    31.992,
+    17.304
+   ]
+  },
+  {
+   "inst": "u_ski.u_head.g_bank[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1",
+   "origin_um": [
+    17.28,
+    86.4
+   ],
+   "orient": "MY",
+   "size_um": [
+    31.992,
+    17.304
+   ]
+  },
+  {
+   "inst": "u_ski.u_head.g_bank[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1",
+   "origin_um": [
+    17.28,
+    120.96
+   ],
+   "orient": "MY",
+   "size_um": [
+    31.992,
+    17.304
+   ]
+  },
+  {
+   "inst": "u_ski.u_head.g_bank[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1",
+   "origin_um": [
+    17.28,
+    155.52
+   ],
+   "orient": "MY",
+   "size_um": [
+    31.992,
+    17.304
+   ]
+  },
+  {
+   "inst": "u_ski.u_head.g_bank[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1",
+   "origin_um": [
+    64.80000000000001,
+    17.28
+   ],
+   "orient": "R0",
+   "size_um": [
+    31.992,
+    17.304
+   ]
+  },
+  {
+   "inst": "u_ski.u_head.g_bank[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1",
+   "origin_um": [
+    64.80000000000001,
+    51.84
+   ],
+   "orient": "R0",
+   "size_um": [
+    31.992,
+    17.304
+   ]
+  },
+  {
+   "inst": "u_ski.u_head.g_bank[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1",
+   "origin_um": [
+    64.80000000000001,
+    86.4
+   ],
+   "orient": "R0",
+   "size_um": [
+    31.992,
+    17.304
+   ]
+  },
+  {
+   "inst": "u_ski.u_head.g_bank[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1",
+   "origin_um": [
+    64.80000000000001,
+    120.96
+   ],
+   "orient": "R0",
+   "size_um": [
+    31.992,
+    17.304
+   ]
+  }
+ ],
+ "core_margin_um": 4.32,
+ "macro_halo_um": 4.32,
+ "clock_root_um": [
+  56.16,
+  103.68
+ ],
+ "status": "PREP HOLD: boundary register assignment, channel census, clock taps and parent composition required; no P&R/STA",
+ "whole_outline_reach_bound_um": 302.4
+}
