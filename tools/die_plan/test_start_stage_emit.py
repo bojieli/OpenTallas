@@ -243,3 +243,26 @@ def test_source_specific_retime_stages_keep_distinct_physical_pins(tmp_path):
     aa, cc = ts[f'__st__{P_L}'], ts[f'__st__{P_L}@origin2']
     assert aa['tree_path'] == cc['tree_path'] == P_L
     assert aa['late_ps'] != cc['late_ps'] and aa['xy_um'] != cc['xy_um']
+def test_real_partition_root_drives_virtual_stages_without_duplicate_counter():
+    b = _bind()
+    root = f"st:{P_ROOT}"
+    b["regions"]["hub_C"] = b["regions"].pop(root)
+    b["regions"]["hub_C"]["virtual"] = False
+    b["root"] = "hub_C"
+    for r in b["regions"].values():
+        if r.get("parent") == root:
+            r["parent"] = "hub_C"
+    for c in b["start_ports"].values():
+        if c["src"] == root:
+            c["src"] = "hub_C"
+    v, t = _tree()
+    doc, sv, _, _ = E.emit(b, _meta(), v, t)
+    assert doc["counts"]["stages"] == 1
+    assert all(not r["root"] for r in doc["stages"])
+    assert "ot_dp_landing_root #" not in sv
+    assert "input  wire rs_hub_C" in sv and ".p_start(rs_hub_C)" in sv
+    assert {r["net"] for r in doc["die_inputs"]} == {"rs_hub_C"}
+    for invalid in ({}, {"virtual": True, "parent": None}, {"virtual": False, "parent": "other"}):
+        b["regions"]["hub_C"] = invalid
+        with pytest.raises(E.StageError):
+            E.emit(b, _meta(), v, t)

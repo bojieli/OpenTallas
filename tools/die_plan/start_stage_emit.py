@@ -219,8 +219,13 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
           "// one ot_dp_landing_origin per virtual tree-node stage, clocked by its own die clock-tree tap port.",
           "module ot_die_start_stages ("]
     roots = [s["id"] for s in stages if s["root"]]
-    if len(roots) != 1:
-        raise StageError(f"start tree must have exactly one root stage, found {roots}")
+    real_root = reg.get(bind.get("root"))
+    root_in_partition = (isinstance(real_root, dict) and real_root.get("virtual") is False
+                         and real_root.get("parent") is None)
+    if len(roots) != 1 and not (not roots and root_in_partition):
+        raise StageError(f"start tree must have exactly one root stage or a declared real root partition, found {roots}")
+    # A real root partition already contains ot_dp_landing_root. Its rs_* output
+    # feeds virtual stages through die_inputs; emitting another root changes reset timing.
     pl = ["    input  wire rst_raw_n"]
     pl += [f"    input  wire {s['clock_port']}" for s in stages]
     pl += [f"    input  wire {n}" for n in in_nets]
