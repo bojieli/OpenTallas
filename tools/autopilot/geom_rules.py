@@ -286,6 +286,50 @@ def pin_metrics(D, strap_re):
                 pin_peak_layer_max=max(lpeak.values()) if lpeak else 0.0, face_span=span, pin_table=sorted(table))
 
 
+def clock_feedthrough_pins(D, interface):
+    """Recognise declared die-owned clock arcs only when the checkpoint has
+    exactly a source-to-sink buffer/inverter cone, with no data/logic fanout.
+    Pin spelling alone never grants this classification (12.2a1).
+    """
+    if not isinstance(interface, dict) or interface.get("schema") != "opentallas.ft_interface_model.v1":
+        return frozenset()
+    pins = {p["name"]: p for p in D.pins}
+    accepted = set()
+    for arc in interface.get("arcs", []):
+        if not isinstance(arc, dict) or arc.get("kind") != "clock":
+            continue
+        a, b = pins.get(arc.get("source")), pins.get(arc.get("sink"))
+        if not a or not b or a["io"] != "INPUT" or b["io"] != "OUTPUT":
+            continue
+        start = D.pin_net.get(a["k"])
+        if start is None or D.nets[start][1] != ("p", a["k"], False):
+            continue
+        todo, seen, hit, bad = [start], set(), False, False
+        while todo and not bad:
+            n = todo.pop()
+            if n in seen:              # a loop/reconvergence is not the declared simple pass-through
+                bad = True
+                break
+            seen.add(n)
+            if not D.nets[n][2]:
+                bad = True
+                break
+            for sink in D.nets[n][2]:
+                if sink[0] == "p":
+                    if sink[1] == b["k"]:
+                        hit = True
+                    else:
+                        bad = True
+                elif (D.kind(sink[1]) == "B" and len(D.cell_in[sink[1]]) == 1
+                      and len(D.drives[sink[1]]) <= 1):
+                    todo.extend(D.drives[sink[1]])
+                else:
+                    bad = True
+        if hit and not bad:
+            accepted.update((a["name"], b["name"]))
+    return frozenset(accepted)
+
+
 def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
     """pin -> nearest register through <= PINREG_DEPTH buffers (layout_review.tcl semantics, directional)"""
     dist, unreg, macro, exempt = [], [], 0, 0
@@ -1203,13 +1247,20 @@ def stage_of_odb(name):
     return "placed" if b.startswith("3_place") else "cts" if b.startswith("4_cts") else "other" if b else ""
 
 
-def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None):
+def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None, ft_interface=None):
     D = Design(path)
     sr = re.compile(strap_re)
     m = area_metrics(D)
     m.update(pin_metrics(D, sr))
     ck = clock_metrics(D)
-    m.update(pin_reg_metrics(D, sr, frozenset(ck["tap_sinks"])))
+    ft_pins = frozenset()
+    if ft_interface:
+        try:
+            ft_pins = clock_feedthrough_pins(D, json.loads(Path(ft_interface).read_text()))
+        except (OSError, ValueError, TypeError):
+            pass                      # invalid/missing metadata grants no exemption
+        m["clock_feedthrough_pins"] = sorted(ft_pins)
+    m.update(pin_reg_metrics(D, sr, frozenset(ck["tap_sinks"]) | ft_pins))
     m.update(r2r_metrics(D))
     m.update(ck)
     m.update(macro_metrics(D))
@@ -1247,8 +1298,9 @@ def main(argv=None):
     ap.add_argument("--odb", default="", help="checkpoint file name (stage: 3_place / 4_cts)")
     ap.add_argument("--max-layer", default="M5", help="kit MAX_ROUTING_LAYER (channel / column capacity)")
     ap.add_argument("--grt-log", default=None, help="geom_grt.tcl log (>= 50 congestion iterations)")
+    ap.add_argument("--ft-interface", help="kit ft_interface.json; explicit clock arcs checked against checkpoint connectivity")
     a = ap.parse_args(argv)
-    m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log)
+    m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log, a.ft_interface)
     tmpl = json.load(open(a.template)) if a.template else None
     outline = [float(x) for x in a.outline.lower().split("x")] if a.outline else (m["outline"] if a.outline_self else None)
     rules, verdict = judge(m, tmpl, outline, a.all_kits)
