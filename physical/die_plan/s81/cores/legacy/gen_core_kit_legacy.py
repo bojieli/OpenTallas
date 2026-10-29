@@ -1190,6 +1190,9 @@ def main():
     half_min, half_max = half_cycle_input_bounds(rec.get("half_cycle_inputs"), names, dirs,
                                                    [n for n in names if base(n) in set(clks)], rsts, base, per, tol)
     in_min_ports = dict(in_min_ports, **half_min)
+    if rec.get('io_hold') == 'sender_min' and in_min_ports:
+        from io_hold_qualification import core_kit_budget
+        (kd / 'budget.json').write_text(json.dumps(core_kit_budget(plan, mod, ptype), indent=1) + '\n')
     _sdc = sdc(per, ins, tol, [ckb], rsts, mod, in_min_ports, half_max)
     (kd / "constraint.sdc").write_text(multi_root_sdc(_sdc, mr, per) if mr else _sdc)
     if in_min_ports:
