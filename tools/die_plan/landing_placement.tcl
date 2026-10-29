@@ -141,8 +141,13 @@ foreach spec $cland_optional_groups {
 # (DIE-HEAD-12 probe B, hd_tile): ring FIRM in netlist order 676,805 GRT overflow, flops-only FIRM -97 %.
 set cland_ff_fill 0.90
 set cland_cursor {}
-proc cland_ffkey {nm} {
- if {[regexp {^([^\[]*)\[([0-9]+)\\?\]\\?\[([0-9]+)\\?\](.*)$} $nm -> b s i t]} { return [format {%s|%09d|%09d|%s} [string trimright $b \\] $i $s $t] }
+# DIE-HEAD-32 10-29: rev=1 (tag +ffr, an lsb_high bus) sorts the bit index DESCENDING (slots stay ascending), so the
+# band, filled from its low corner, holds the highest bit where the lsb_high pins put it; rev=0 is byte-identical.
+proc cland_ffkey {nm {rev 0}} {
+ if {[regexp {^([^\[]*)\[([0-9]+)\\?\]\\?\[([0-9]+)\\?\](.*)$} $nm -> b s i t]} {
+  if {$rev} { set i [expr {999999999-$i}] }
+  return [format {%s|%09d|%09d|%s} [string trimright $b \\] $i $s $t]
+ }
  return $nm
 }
 proc cland_place_ff {prefix rect tag} {
@@ -155,7 +160,7 @@ proc cland_place_ff {prefix rect tag} {
   set m [$i getMaster]
   if {[$m isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
   if {![regexp {DFF|DHL|DLL|SDF} [$m getName]]} { incr comb;continue }
-  lappend ffs [list [cland_ffkey $nm] $i]
+  lappend ffs [list [cland_ffkey $nm [string match {ring:*+ffr} $tag]] $i]
   set need [expr {$need+int(ceil(double([$m getWidth])/0.4/$ff_sw))*$ff_sw*double([$m getHeight])}]
  }
  if {![llength $ffs]} { return 0 }
@@ -170,7 +175,7 @@ proc cland_place_ff {prefix rect tag} {
 foreach spec $cland_groups {
  lassign $spec prefix rect tag
  set hit 0
- if {[string match {ring:*+ff} $tag]} {
+ if {[string match {ring:*+ff} $tag] || [string match {ring:*+ffr} $tag]} {
   if {![cland_place_ff $prefix $rect $tag]} { error "OT_CLAND no mapped ring flops found under $prefix" }
   continue
  }
