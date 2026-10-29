@@ -1,0 +1,47 @@
+{
+ "scope": "ESTIMATE, private child only, not physical qualification",
+ "old_outline_um": [
+  475.2,
+  216.0
+ ],
+ "outline_um": [
+  241.92,
+  155.52
+ ],
+ "area_delta_pct": -63.34545454545455,
+ "aspect": 1.5555555555555554,
+ "pins": 2224,
+ "macro_area_pct": 51.74775407848324,
+ "macro_sites_um": [
+  [
+   17.28,
+   8.64
+  ],
+  [
+   129.6,
+   8.64
+  ],
+  [
+   17.28,
+   56.16
+  ],
+  [
+   129.6,
+   56.16
+  ],
+  [
+   17.28,
+   103.68
+  ]
+ ],
+ "clock_entry_um": [
+  120.972,
+  77.76
+ ],
+ "clock_entry_macro_clearance_um": 8.868,
+ "macro_halo_um": 4.32,
+ "zero_rtl_changes": true,
+ "added_cycles": 0,
+ "parent_adoption": "NOT RUN: needs exact source parent slot/partner reach and current plan event",
+ "gates": "Actual place/geometry/LEC/clock/GRT/STA remain required"
+}

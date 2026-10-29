@@ -1,0 +1,41 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "kind": "core",
+ "die": "s81",
+ "type": "dsdv_mu_land",
+ "module": "dsdv_mu_land",
+ "master_plan_sha256": "4433464837f30a763b6d071e7777849783233671043178cc97b086e0b9f85e83",
+ "frozen": false,
+ "outline_um": [
+  241.92,
+  155.52
+ ],
+ "instances": [],
+ "keepouts": [],
+ "bays": [],
+ "entry_pins": [
+  {
+   "name": "core_clock",
+   "pin": "clk",
+   "layer": "M5",
+   "xy_um": [
+    120.972,
+    77.76
+   ]
+  }
+ ],
+ "islands": [],
+ "latency": {
+  "common_clock_latency_ps": {
+   "TT": 250.0,
+   "FF": 202.5
+  },
+  "tol_ps": 40
+ },
+ "core_clock_port": "clk",
+ "gates": {
+  "geometry": "PASS",
+  "tree": "NOT RUN"
+ },
+ "note": "Private PLACE census only. Macro-aware actual clock plan and actual geometry required before CTS."
+}
