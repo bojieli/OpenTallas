@@ -331,7 +331,10 @@ def test_physical_reach_keeps_stages_and_retimes_phase_clean_chain():
     # The additional registered edges enter the existing boot/path price calculation.
     s, _, regs = cap.plan(rows, T, AP, 0.05, start_edges=bounded, start_root=info['root'])
     assert s['start_tree']['start_fail'] == 0
-    assert max(g.get('start_depth', 0) for g in regs) >= 0
+    old, _, _ = cap.plan(rows, T, AP, 0.05, start_edges=default, start_root=info['root'])
+    assert s['max_tree_depth'] > old['max_tree_depth']
+    assert max(g['origin_cycles'] for g in regs) > 3
+    assert all('hop_um' in g['start_from'] for g in regs if g['start_from'])
 
 
 def test_physical_reach_fails_closed_without_intermediate_nodes():
