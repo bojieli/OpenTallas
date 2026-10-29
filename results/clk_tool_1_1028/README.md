@@ -33,7 +33,7 @@ main is default-identical for each die's flag set. Runs: intel2/intel1 `/srv/ope
 | KV | intel1 die-kv-15-1028/kit_fb_inv_r150 | results/die_kv_15_1028/kit2.sh fb_inv_r150 inv 150 | **ctree.v byte-identical; tree.json identical except `meta.clock_cell`** (CHECKED) |
 | HBM | intel2 die-hbm-10/trial2b/kit | results/die_hbm_1027/hbm10/trial2b/chain.sh | RUNNING (container clktool1-hbm, single-thread like the original ~3.5 h kit) -> collect `replay_hbm/replay.json` |
 | QC | intel2 die-qc21-1028/trial14 | results/die_qc21_1028/kit21.sh t13 (stage cal via the registry) | **tree_GENERATED.json + ctree_GENERATED.tcl + ctree.v byte-identical** (non-legacy: stage cal written from registry entry `inv2_ndr_qc_trial13b`; 71 min at host load ~170) (CHECKED). The trial14 `tree.json` itself was later rewritten in place by `clock_body_bays.py` (meta.body_overlay, 36,269 cells moved), so replay compares die_trial's own `*_GENERATED*` copy when present |
-| S81 | intel2 die-s81-16/go15/kit | results/die_s81_16_1028/scripts/go15.sh (`--legacy`: stage check FAIL by design) | RUNNING (clktool1-s81, `--legacy --workers 24`; original serial 3:02 h) -> collect `replay_s81/replay.json` |
+| S81 | intel2 die-s81-16/go15/kit | results/die_s81_16_1028/scripts/go15.sh (`--legacy`: stage check FAIL by design) | **tree_GENERATED.json + ctree_GENERATED.tcl + ctree.v byte-identical** with `--legacy` (stage check FAIL recorded); 70 min with 24 DME workers vs 3:02 h serial (CHECKED) |
 
 `meta.clock_cell` is a provenance key that main die_trial writes and the 1465eff51c-era tool did not; nodes, taps, sites,
 parents and the netlist are identical. Verdict label: `IDENTICAL_EXCEPT_META`.
