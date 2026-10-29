@@ -1,0 +1,530 @@
+{
+ "schema": "opentallas.die_plan_delta_candidate.v0",
+ "base": "physical/die_plan/s81/plan_s13r2.json@origin/main c6e14b798d4",
+ "status": "CANDIDATE ESTIMATE - not composed, not G0-checked; frozen plan untouched",
+ "geometry": {
+  "partitions": [
+   {
+    "name": "lk_WS3",
+    "type": "serdes__t12",
+    "old": {
+     "origin": [
+      8760.96,
+      103.68
+     ],
+     "outline": [
+      1442.88,
+      2453.76
+     ]
+    },
+    "new": {
+     "origin": [
+      8760.96,
+      103.68
+     ],
+     "outline": [
+      2885.76,
+      1226.88
+     ],
+     "orient": "MX"
+    }
+   },
+   {
+    "name": "iqf",
+    "type": "iqf__t1",
+    "old": {
+     "origin": [
+      10203.84,
+      103.68
+     ],
+     "outline": [
+      1442.88,
+      1226.88
+     ]
+    },
+    "new": {
+     "origin": [
+      8760.96,
+      1330.56
+     ],
+     "outline": [
+      1442.88,
+      1226.88
+     ],
+     "orient": "R0"
+    }
+   }
+  ],
+  "io": {
+   "io_lk_WS3_u_phy": {
+    "old": [
+     9841.012,
+     103.68,
+     10203.84,
+     2343.8
+    ],
+    "new": [
+     8824.599999999999,
+     103.68,
+     11070.999999999998,
+     362.88
+    ],
+    "note": "PMA tx+rx 2246.4 x 129.6 each, R90 along the shore, stacked in depth; guard 63.64 -> band 2373.68 x 322.84"
+   }
+  },
+  "pg_domain_phy_lk_WS3": {
+   "old": [
+    9777.372,
+    103.68,
+    10203.84,
+    2407.44
+   ],
+   "new": [
+    8760.96,
+    103.68,
+    11198.279999999999,
+    490.15999999999997
+   ]
+  },
+  "types_touched": [
+   "serdes__t12 (outline, 6 ft slots + 2 buses re-laid)",
+   "iqf__t1 (8 new S->N/N->S coll ft slots; idx/flt/qc/ql windows re-faced)",
+   "svc_lo_dsdv_svc_rs_w__t1 (svc_0: dfi_o0/hbmrd_i0 S->E, ft0 out S->W, ft1/ft2 removed)",
+   "svc_lo_dsdv_svc_rs__t1 (svc_2: +2 ft slots W<->S for svc_0 DFI/hbmrd)",
+   "phy__t1 (dfi_i7/hbmrd_o7 W -> N face under svc_2)",
+   "slice_station__t49 (s_0S_x00: +qc/ql windows on S face)"
+  ],
+  "clock_taps": {
+   "lk_WS3": {
+    "old_die": [
+     9486.72,
+     1330.56
+    ],
+    "new_type": [
+     1442.88,
+     613.44
+    ]
+   },
+   "iqf": {
+    "old_die": [
+     10929.6,
+     716.64
+    ],
+    "new_die": [
+     9486.72,
+     1944.0
+    ]
+   }
+  }
+ },
+ "coll_slots": [
+  {
+   "lane": "coll__lk_WS3__s_0S_LP",
+   "kind": "ws3_own",
+   "ws3_bus": "coll_o0",
+   "ws3_N_window": [
+    9537.6,
+    9645.468
+   ],
+   "iqf_slot_len": 1226.88,
+   "iqf_st": 4,
+   "ws3_st": 0,
+   "old_st": 0,
+   "d_st": 4
+  },
+  {
+   "lane": "coll__s_0S_LP__lk_WS3",
+   "kind": "ws3_own",
+   "ws3_bus": "coll_i0",
+   "ws3_N_window": [
+    9781.248,
+    9889.5
+   ],
+   "iqf_slot_len": 1226.88,
+   "iqf_st": 4,
+   "ws3_st": 0,
+   "old_st": 0,
+   "d_st": 4
+  },
+  {
+   "lane": "coll__lk_WS0__s_0S_LP",
+   "kind": "through",
+   "ws3_slot": "ft4",
+   "ws3_in_y": 1043.15,
+   "seam_x": 8822.43,
+   "s00_x": 8822.57,
+   "ws3_len": 348.9,
+   "ws3_st": 1,
+   "iqf_len": 1227.0,
+   "iqf_st": 4,
+   "old_st": 4,
+   "d_st": 1,
+   "worst_hop": 348.9
+  },
+  {
+   "lane": "coll__lk_WS1__s_0S_LP",
+   "kind": "through",
+   "ws3_slot": "ft3",
+   "ws3_in_y": 1268.56,
+   "seam_x": 8942.81,
+   "s00_x": 8934.89,
+   "ws3_len": 243.9,
+   "ws3_st": 1,
+   "iqf_len": 1234.8,
+   "iqf_st": 4,
+   "old_st": 4,
+   "d_st": 1,
+   "worst_hop": 308.7
+  },
+  {
+   "lane": "coll__lk_WS2__s_0S_LP",
+   "kind": "through",
+   "ws3_slot": "ft5",
+   "ws3_in_y": 817.65,
+   "seam_x": 9296.67,
+   "s00_x": 9479.21,
+   "ws3_len": 1048.6,
+   "ws3_st": 3,
+   "iqf_len": 1409.4,
+   "iqf_st": 4,
+   "old_st": 7,
+   "d_st": 0,
+   "worst_hop": 352.4
+  },
+  {
+   "lane": "coll__s_0S_LP__lk_WS0",
+   "kind": "through",
+   "ws3_slot": "ft0",
+   "ws3_in_y": 932.18,
+   "seam_x": 9055.9,
+   "s00_x": 9048.56,
+   "ws3_len": 693.3,
+   "ws3_st": 2,
+   "iqf_len": 1234.2,
+   "iqf_st": 4,
+   "old_st": 5,
+   "d_st": 1,
+   "worst_hop": 346.7
+  },
+  {
+   "lane": "coll__s_0S_LP__lk_WS1",
+   "kind": "through",
+   "ws3_slot": "ft1",
+   "ws3_in_y": 1156.82,
+   "seam_x": 9176.86,
+   "s00_x": 9161.07,
+   "ws3_len": 589.6,
+   "ws3_st": 2,
+   "iqf_len": 1242.7,
+   "iqf_st": 4,
+   "old_st": 5,
+   "d_st": 1,
+   "worst_hop": 310.7
+  },
+  {
+   "lane": "coll__s_0S_LP__lk_WS2",
+   "kind": "through",
+   "ws3_slot": "ft2",
+   "ws3_in_y": 704.85,
+   "seam_x": 9477.92,
+   "s00_x": 9723.05,
+   "ws3_len": 1342.7,
+   "ws3_st": 4,
+   "iqf_len": 1472.0,
+   "iqf_st": 4,
+   "old_st": 8,
+   "d_st": 0,
+   "worst_hop": 368.0
+  }
+ ],
+ "dfi_via_svc2": [
+  {
+   "lane": "dfi__svc_0__phy_hbm",
+   "svc0_E_window_local": [
+    524.6,
+    822.0
+   ],
+   "svc2_ft": "W->S",
+   "svc2_W_local": [
+    524.6,
+    822.0
+   ],
+   "svc2_S_local": [
+    793.9,
+    1091.3
+   ],
+   "phy_hbm_N_local": [
+    793.9,
+    1091.3
+   ],
+   "len": 1615.9,
+   "st": 4,
+   "old_st": 7,
+   "d_cyc": -3,
+   "worst_hop": 404.0
+  },
+  {
+   "lane": "hbmrd__phy_hbm__svc_0",
+   "svc0_E_window_local": [
+    280,
+    523.4
+   ],
+   "svc2_ft": "S->W",
+   "svc2_W_local": [
+    280,
+    523.4
+   ],
+   "svc2_S_local": [
+    549.3,
+    792.7
+   ],
+   "phy_hbm_N_local": [
+    549.3,
+    792.7
+   ],
+   "len": 1072.7,
+   "st": 3,
+   "old_st": 6,
+   "d_cyc": -3,
+   "worst_hop": 357.6
+  }
+ ],
+ "iqf_lanes": [
+  {
+   "lane": "qc__iqf__s_0N_LP",
+   "change": "iqf N face -> s_0S_x00 S face direct (drops svc_0 ft1)",
+   "d_cyc": -8
+  },
+  {
+   "lane": "ql__s_0N_LP__iqf",
+   "change": "s_0S_x00 S face -> iqf N face direct (drops svc_0 ft2)",
+   "d_cyc": -8
+  },
+  {
+   "lane": "idx__s_3S_C__iqf",
+   "change": "svc_0 ft0 N->S becomes N->W (exit W face local y ~600-710)",
+   "len": 2452.2,
+   "st": 7,
+   "old_st": 12,
+   "d_cyc": -5,
+   "worst_hop": 350.3
+  },
+  {
+   "lane": "idx__iqf__svc_0",
+   "change": "iqf E face <-> svc_0 W face (was iqf N / svc_0 S)",
+   "d_cyc": 0
+  },
+  {
+   "lane": "flt__iqf__svc_0",
+   "change": "iqf E face <-> svc_0 W face",
+   "d_cyc": 0
+  }
+ ],
+ "landing_delta": {
+  "V1": {
+   "coll_in_through": 3,
+   "coll_ws3_own": 3,
+   "qc_ql": 0,
+   "dfi_hbmrd": 0,
+   "idx": 0
+  },
+  "V2": {
+   "coll_in_through": 0,
+   "coll_ws3_own": 0,
+   "qc_ql": 0,
+   "dfi_hbmrd": 0,
+   "idx": 0
+  }
+ },
+ "region_tags": {
+  "V1": {
+   "iqf": "hard_phy_hbm"
+  },
+  "V2": {
+   "iqf": "std_bg_25_0"
+  },
+  "lk_WS3": "std_bg_25_0",
+  "s_0S_x00": "std_bg_32_0",
+  "svc_0": "std_bg_32_0",
+  "svc_2": "hard_phy_hbm",
+  "phy_hbm": "hard_phy_hbm"
+ },
+ "V1": {
+  "lanes": {
+   "coll__lk_WS3__s_0S_LP": {
+    "old": 38,
+    "new": 45,
+    "d": 7
+   },
+   "coll__s_0S_LP__lk_WS3": {
+    "old": 38,
+    "new": 45,
+    "d": 7
+   },
+   "coll__lk_WS0__s_0S_LP": {
+    "old": 42,
+    "new": 46,
+    "d": 4
+   },
+   "coll__lk_WS1__s_0S_LP": {
+    "old": 53,
+    "new": 57,
+    "d": 4
+   },
+   "coll__lk_WS2__s_0S_LP": {
+    "old": 67,
+    "new": 70,
+    "d": 3
+   },
+   "coll__s_0S_LP__lk_WS0": {
+    "old": 43,
+    "new": 47,
+    "d": 4
+   },
+   "coll__s_0S_LP__lk_WS1": {
+    "old": 54,
+    "new": 58,
+    "d": 4
+   },
+   "coll__s_0S_LP__lk_WS2": {
+    "old": 68,
+    "new": 71,
+    "d": 3
+   },
+   "dfi__svc_0__phy_hbm": {
+    "old": 12,
+    "new": 9,
+    "d": -3
+   },
+   "hbmrd__phy_hbm__svc_0": {
+    "old": 11,
+    "new": 8,
+    "d": -3
+   },
+   "qc__iqf__s_0N_LP": {
+    "old": 80,
+    "new": 72,
+    "d": -8
+   },
+   "ql__s_0N_LP__iqf": {
+    "old": 81,
+    "new": 73,
+    "d": -8
+   },
+   "idx__s_3S_C__iqf": {
+    "old": 65,
+    "new": 60,
+    "d": -5
+   },
+   "idx__iqf__svc_0": {
+    "old": 5,
+    "new": 5,
+    "d": 0
+   },
+   "flt__iqf__svc_0": {
+    "old": 5,
+    "new": 5,
+    "d": 0
+   }
+  },
+  "critical": {
+   "coll_in_max": [
+    67,
+    70
+   ],
+   "coll_out_max": [
+    68,
+    71
+   ]
+  }
+ },
+ "V2": {
+  "lanes": {
+   "coll__lk_WS3__s_0S_LP": {
+    "old": 38,
+    "new": 42,
+    "d": 4
+   },
+   "coll__s_0S_LP__lk_WS3": {
+    "old": 38,
+    "new": 42,
+    "d": 4
+   },
+   "coll__lk_WS0__s_0S_LP": {
+    "old": 42,
+    "new": 43,
+    "d": 1
+   },
+   "coll__lk_WS1__s_0S_LP": {
+    "old": 53,
+    "new": 54,
+    "d": 1
+   },
+   "coll__lk_WS2__s_0S_LP": {
+    "old": 67,
+    "new": 67,
+    "d": 0
+   },
+   "coll__s_0S_LP__lk_WS0": {
+    "old": 43,
+    "new": 44,
+    "d": 1
+   },
+   "coll__s_0S_LP__lk_WS1": {
+    "old": 54,
+    "new": 55,
+    "d": 1
+   },
+   "coll__s_0S_LP__lk_WS2": {
+    "old": 68,
+    "new": 68,
+    "d": 0
+   },
+   "dfi__svc_0__phy_hbm": {
+    "old": 12,
+    "new": 9,
+    "d": -3
+   },
+   "hbmrd__phy_hbm__svc_0": {
+    "old": 11,
+    "new": 8,
+    "d": -3
+   },
+   "qc__iqf__s_0N_LP": {
+    "old": 80,
+    "new": 72,
+    "d": -8
+   },
+   "ql__s_0N_LP__iqf": {
+    "old": 81,
+    "new": 73,
+    "d": -8
+   },
+   "idx__s_3S_C__iqf": {
+    "old": 65,
+    "new": 60,
+    "d": -5
+   },
+   "idx__iqf__svc_0": {
+    "old": 5,
+    "new": 5,
+    "d": 0
+   },
+   "flt__iqf__svc_0": {
+    "old": 5,
+    "new": 5,
+    "d": 0
+   }
+  },
+  "critical": {
+   "coll_in_max": [
+    67,
+    67
+   ],
+   "coll_out_max": [
+    68,
+    68
+   ]
+  }
+ }
+}
