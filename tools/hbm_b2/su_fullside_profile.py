@@ -55,16 +55,38 @@ def apply_profile(source, enabled):
     return result, receipt
 
 
+
+def apply_actual_profile(source, enabled):
+    """Materialize the selected split-parent alias before explicit capability.
+
+    The current source manifest already substitutes all eight retained LG
+    parents with LG_s. This makes that exact selection visible in a candidate
+    source; it changes no underlying parent body or address QID.
+    """
+    original_hash = hashlib.sha256(source.encode()).hexdigest()
+    source, count = re.subn(r'(?m)^(  )ot_hbm_su_static_pgslice_lg(?= #)',
+                            r'\1ot_hbm_su_static_pgslice_lg_s', source)
+    if count != 8:
+        raise ValueError('requires exactly eight actual unsplit-parent caller spellings')
+    result, receipt = apply_profile(source, enabled)
+    receipt.update(original_actual_source_sha256=original_hash,
+                   materialized_existing_split_parent_aliases=count)
+    return result, receipt
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('top',type=Path)
     p.add_argument('--enable',action='append',choices=sorted(CAPABLE),default=[])
+    p.add_argument('--materialize-split-parent',action='store_true',
+                   help='explicitly materialize the existing eight LG to LG_s manifest aliases')
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--receipt',type=Path,required=True)
     a=p.parse_args()
     if a.out.exists() or a.receipt.exists():
         p.error('use fresh output paths')
-    result,receipt=apply_profile(a.top.read_text(),a.enable)
+    selector=apply_actual_profile if a.materialize_split_parent else apply_profile
+    result,receipt=selector(a.top.read_text(),a.enable)
     a.out.parent.mkdir(parents=True,exist_ok=True);a.receipt.parent.mkdir(parents=True,exist_ok=True)
     a.out.write_text(result);a.receipt.write_text(json.dumps(receipt,indent=2)+'\n')
     print('FULL/SIDE candidate',a.enable,'added data cycles 0; fresh qualification required')

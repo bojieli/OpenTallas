@@ -1,0 +1,145 @@
+{
+  "schema": "opentallas.hbm.fullside_candidate.v1",
+  "enabled": [
+    "su_NW0"
+  ],
+  "slices": [
+    {
+      "instance": "su_NE0",
+      "vm_qid": 3,
+      "group": 0,
+      "full_side": false,
+      "added_data_cycles": 0,
+      "lane0_kind": 1
+    },
+    {
+      "instance": "su_NE1",
+      "vm_qid": 3,
+      "group": 1,
+      "full_side": false,
+      "added_data_cycles": 0,
+      "lane0_kind": 1
+    },
+    {
+      "instance": "su_NE2",
+      "vm_qid": 3,
+      "group": 2,
+      "full_side": false,
+      "added_data_cycles": 0,
+      "lane0_kind": 0
+    },
+    {
+      "instance": "su_NE3",
+      "vm_qid": 3,
+      "group": 3,
+      "full_side": false,
+      "added_data_cycles": 0,
+      "lane0_kind": 0
+    },
+    {
+      "instance": "su_NW0",
+      "vm_qid": 2,
+      "group": 0,
+      "full_side": true,
+      "added_data_cycles": 0,
+      "lane0_kind": 2
+    },
+    {
+      "instance": "su_NW1",
+      "vm_qid": 2,
+      "group": 1,
+      "full_side": false,
+      "added_data_cycles": 0,
+      "lane0_kind": 1
+    },
+    {
+      "instance": "su_NW2",
+      "vm_qid": 2,
+      "group": 2,
+      "full_side": false,
+      "added_data_cycles": 0,
+      "lane0_kind": 0
+    },
+    {
+      "instance": "su_NW3",
+      "vm_qid": 2,
+      "group": 3,
+      "full_side": false,
+      "added_data_cycles": 0,
+      "lane0_kind": 0
+    }
+  ],
+  "source_sha256": "8b3e8982fccd35fa530e50143859b0cfcbc1ac16e5ce80a2a91118858c720dd0",
+  "candidate_sha256": "ec06ee0546a94eb115bc3d03756474228491e4a77882339e650e6668b6658b66",
+  "added_data_cycles": 0,
+  "clock_pins_per_side": 6,
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "obligations": [
+    "compiler operation target role",
+    "actual source bind",
+    "KIND2 and SIDE arithmetic token qualification",
+    "full/side source cuts and physical masters",
+    "model area/latency"
+  ],
+  "original_actual_source_sha256": "c0eadd4c5f5fb9cdba414d72ac7ba149fbc5700e8017f62e47b52ab173efc4aa",
+  "materialized_existing_split_parent_aliases": 8,
+  "actual_hierarchy": {
+    "slices": [
+      {
+        "path": "su_NW0.u_slice",
+        "lane0_kind": 2,
+        "side_present": true
+      },
+      {
+        "path": "su_NW1.u_slice",
+        "lane0_kind": 1,
+        "side_present": false
+      },
+      {
+        "path": "su_NW2.u_slice",
+        "lane0_kind": 0,
+        "side_present": false
+      },
+      {
+        "path": "su_NW3.u_slice",
+        "lane0_kind": 0,
+        "side_present": false
+      },
+      {
+        "path": "su_NE0.u_slice",
+        "lane0_kind": 1,
+        "side_present": false
+      },
+      {
+        "path": "su_NE1.u_slice",
+        "lane0_kind": 1,
+        "side_present": false
+      },
+      {
+        "path": "su_NE2.u_slice",
+        "lane0_kind": 0,
+        "side_present": false
+      },
+      {
+        "path": "su_NE3.u_slice",
+        "lane0_kind": 0,
+        "side_present": false
+      }
+    ],
+    "adoption": false,
+    "scope": "Actual full selected source frontend; NW0 capability only, physical FULL+SIDE3/3 qualification outstanding"
+  },
+  "source_clock_reset": {
+    "pg_clk": "hb_ckgen__pll_stream[0:0]",
+    "clk_ctl": "hb_ckgen__pll_stream[0:0]",
+    "clk_side": "{hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0]}",
+    "rst_n": "hb_ckgen__por_stream[0:0]",
+    "bridge_rst_n": "hb_ckgen__por_stream[0:0]"
+  },
+  "token_recipe": "252e4b5b5",
+  "frontend_undefined": [],
+  "frontend_ambiguous": {},
+  "unit": "oth-ubuntu-3117683-1793273950",
+  "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-bind-0300/fullside_nw0",
+  "scope": "Source hierarchy only, KIND2 FULL and SIDE3/3 cuts/physical/programme model gates required. Source frontend fullSIDE dissolved parent checker corrected to inspect retained hierarchy as well as leaves; no source change."
+}
