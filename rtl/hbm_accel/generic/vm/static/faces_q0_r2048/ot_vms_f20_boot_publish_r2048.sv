@@ -16,10 +16,12 @@ module ot_vms_f20_boot_publish_r2048 #(parameter integer MUT=0)(
  output reg fault,
  output wire pending
 );
+ wire rst_c;
+ ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rst_c));
  wire take=cfg_v && cfg_target==8'h78 && (cfg_addr==12'hF00 || cfg_addr==12'hF01);
  assign consume_cfg=take;
  reg cv;reg[11:0]ca;reg[255:0]cd;reg active_q;
- always @(posedge clk or negedge rst_n)if(!rst_n)begin cv<=0;active_q<=0;end else begin cv<=take;active_q<=index_active;end
+ always @(posedge clk or negedge rst_c)if(!rst_c)begin cv<=0;active_q<=0;end else begin cv<=take;active_q<=index_active;end
  always @(posedge clk)begin ca<=cfg_addr;cd<=cfg_data;end
  reg[19:0]next_word;reg[16:0]remaining;reg[7:0]mask;
  reg[2:0]drain;
@@ -30,14 +32,14 @@ module ot_vms_f20_boot_publish_r2048 #(parameter integer MUT=0)(
  wire cl=packet_v && legacy_write_valid[destination];
  assign collision=cl && MUT!=3;
  reg delayed_v;
- always @(posedge clk or negedge rst_n)if(!rst_n)delayed_v<=0;else delayed_v<=packet_v;
+ always @(posedge clk or negedge rst_c)if(!rst_c)delayed_v<=0;else delayed_v<=packet_v;
  wire allowed=((MUT==4)?delayed_v:packet_v) && !collision && !index_active;
  wire[16:0]mapped_sector=(MUT==1)?{sector[16],1'b0,sector[14:0]}:
                             (MUT==2)?{1'b1,sector[15:0]}:sector;
  assign native_wq={allowed,mapped_sector,payload,packet_mask};
  assign pending=remaining!=0 || cv || packet_v || drain!=0;
- always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin next_word<=0;remaining<=0;mask<=0;packet_v<=0;fault<=0;drain<=0;end
+ always @(posedge clk or negedge rst_c)begin
+  if(!rst_c)begin next_word<=0;remaining<=0;mask<=0;packet_v<=0;fault<=0;drain<=0;end
   else begin
    packet_v<=0;
    if(allowed)drain<=3'd5;else if(drain!=0)drain<=drain-1'b1;
