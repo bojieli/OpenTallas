@@ -1,0 +1,4 @@
+#!/bin/bash
+set -euo pipefail
+Q=/srv/opentallas-scratch2/claude; R=/srv/opentallas-scratch2/claude/die-qc37; M=$Q/codex-qc-mesh5-1029
+docker run --rm --name dqc37-bb2-$$ --memory=64g --memory-swap=64g --cpus=2 -v "$Q:$Q" -w "$R" python:3.12 bash -c "set -e; trap \"chown -R 1000:1000 $R/bb2\" EXIT; pip -q install shapely numpy pyyaml >/dev/null 2>&1; cd $M/src/results/qc_clock_physical_1029; python $R/dqc37_backbone.py --jog-src $M/src/results/qc_clock_physical_1029 --fixed-wires $Q/die-qc36/prebuild_e1_resite_noaccess/fixed_wires.json --cell-windows $Q/codex-qc-1029/baseline26/islands119_cellmap/cell_windows.json --geometry $M/census119_h800/geometry.json --clock-base-resited $Q/die-qc36/backbone_bb1/clock_base_resite_v2.json --reserved-metal $Q/codex-qc-macropg-1029/bridges_v1/reserved_bridges.json --max-jog 1.5 --out $R/bb2 > $R/bb2.log 2>&1"
