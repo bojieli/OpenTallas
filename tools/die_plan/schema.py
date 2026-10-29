@@ -1686,11 +1686,36 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
     obs = boxes + [(a - clear, b - clear, a + clear, b + clear) for a, b in taken]
     xs = candidates(x, w, [v for a, b, c, d in obs for v in (a, c)])
     ys = candidates(y, h, [v for a, b, c, d in obs for v in (b, d)])
-    ok = [(px, py) for px in xs for py in ys if free(px, py)]
-    if ok:
-        px, py = min(ok, key=lambda p: (round(max(abs(p[0] - x), abs(p[1] - y)), 7),
-                                       (p[0] - x) ** 2 + (p[1] - y) ** 2, p))
-        return round(px, 4), round(py, 4)
+    # Each obstacle blocks the same Y candidates for every X column. Compute
+    # those exact comparisons once, then combine bitmasks per column instead
+    # of scanning every obstacle at every Cartesian candidate. Keep abs() for
+    # taken taps: rewriting it as interval bounds changes floating edge cases.
+    ys = list(ys)
+    inside = sum(1 << i for i, py in enumerate(ys) if clear <= py <= h - clear)
+    blockers = [(x0, x1, sum(1 << i for i, py in enumerate(ys) if y0 < py < y1))
+                for x0, y0, x1, y1 in boxes]
+    neighbours = [(a, sum(1 << i for i, py in enumerate(ys) if abs(py - b) < clear))
+                  for a, b in taken]
+    def legal_candidates():
+        for px in xs:
+            if not clear <= px <= w - clear:
+                continue
+            bits = inside
+            for x0, x1, blocked in blockers:
+                if x0 < px < x1:
+                    bits &= ~blocked
+            for a, blocked in neighbours:
+                if abs(px - a) < clear:
+                    bits &= ~blocked
+            while bits:
+                low = bits & -bits
+                yield px, ys[low.bit_length() - 1]
+                bits ^= low
+    ok = legal_candidates()
+    best = min(ok, key=lambda p: (round(max(abs(p[0] - x), abs(p[1] - y)), 7),
+                                  (p[0] - x) ** 2 + (p[1] - y) ** 2, p), default=None)
+    if best is not None:
+        return round(best[0], 4), round(best[1], 4)
     raise ValueError(f"no legal clock tap site in {t.get('module', 'type')} near ({x}, {y}); "
                      f"clearance {clear} um, {len(boxes)} keepouts")
 
