@@ -1,0 +1,358 @@
+[
+  {
+    "groups": 4,
+    "tag_width": 13,
+    "delay": 8,
+    "added_ff": 39,
+    "clock_sink_delta_pct": 0.07242070860877962,
+    "cycle_delta": 0,
+    "rows": [
+      {
+        "group": 0,
+        "lanes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "accumulator_endpoints": 128,
+        "unconstrained_median_um": [
+          81.53999999999999,
+          30.78
+        ],
+        "candidate_legal_source_um": [
+          81.53999999999999,
+          24.96
+        ],
+        "max_centre_manhattan_um": 115.815
+      },
+      {
+        "group": 1,
+        "lanes": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "accumulator_endpoints": 128,
+        "unconstrained_median_um": [
+          111.294,
+          113.265
+        ],
+        "candidate_legal_source_um": [
+          111.294,
+          173.736
+        ],
+        "max_centre_manhattan_um": 198.387
+      },
+      {
+        "group": 2,
+        "lanes": [
+          8,
+          9,
+          10,
+          11
+        ],
+        "accumulator_endpoints": 128,
+        "unconstrained_median_um": [
+          224.478,
+          137.29500000000002
+        ],
+        "candidate_legal_source_um": [
+          224.478,
+          137.29500000000002
+        ],
+        "max_centre_manhattan_um": 59.34599999999995
+      },
+      {
+        "group": 3,
+        "lanes": [
+          12,
+          13,
+          14,
+          15
+        ],
+        "accumulator_endpoints": 128,
+        "unconstrained_median_um": [
+          276.75,
+          182.79000000000002
+        ],
+        "candidate_legal_source_um": [
+          276.75,
+          182.79000000000002
+        ],
+        "max_centre_manhattan_um": 113.04899999999995
+      }
+    ],
+    "max_centre_manhattan_um": 198.387,
+    "qualification": "ESTIMATE from retained actual cell centres; no clock/STA or full tag-net endpoint claim"
+  },
+  {
+    "groups": 16,
+    "tag_width": 13,
+    "delay": 8,
+    "added_ff": 195,
+    "clock_sink_delta_pct": 0.3621035430438981,
+    "cycle_delta": 0,
+    "rows": [
+      {
+        "group": 0,
+        "lanes": [
+          0
+        ],
+        "accumulator_endpoints": 32,
+        "unconstrained_median_um": [
+          174.528,
+          16.605
+        ],
+        "candidate_legal_source_um": [
+          174.528,
+          16.605
+        ],
+        "max_centre_manhattan_um": 17.76599999999998
+      },
+      {
+        "group": 1,
+        "lanes": [
+          1
+        ],
+        "accumulator_endpoints": 32,
+        "unconstrained_median_um": [
+          139.158,
+          14.175
+        ],
+        "candidate_legal_source_um": [
+          139.158,
+          14.175
+        ],
+        "max_centre_manhattan_um": 19.709999999999976
+      },
+      {
+        "group": 2,
+        "lanes": [
+          2
+        ],
+        "accumulator_endpoints": 32,
+        "unconstrained_median_um": [
+          21.465000000000003,
+          38.34
+        ],
+        "candidate_legal_source_um": [
+          21.465000000000003,
+          38.34
+        ],
+        "max_centre_manhattan_um": 20.789999999999992
+      },
+      {
+        "group": 3,
+        "lanes": [
+          3
+        ],
+        "accumulator_endpoints": 32,
+        "unconstrained_median_um": [
+          22.977,
+          56.7
+        ],
+        "candidate_legal_source_um": [
+          22.977,
+          56.7
+        ],
+        "max_centre_manhattan_um": 18.19799999999999
+      },
+      {
+        "group": 4,
+        "lanes": [
+          4
+        ],
+        "accumulator_endpoints": 32,
+        "unconstrained_median_um": [
+          184.49099999999999,
+          65.61
+        ],
+        "candidate_legal_source_um": [
+          184.49099999999999,
+          65.61
+        ],
+        "max_centre_manhattan_um": 19.60199999999999
+      },
+      {
+        "group": 5,
+        "lanes": [
+          5
+        ],
+        "accumulator_endpoints": 32,
+        "unconstrained_median_um": [
+          194.643,
+          85.86
+        ],
+        "candidate_legal_source_um": [
+          194.643,
+          85.86
+        ],
+        "max_centre_manhattan_um": 15.821999999999989
+      },
+      {
+        "group": 6,
+        "lanes": [
+          6
+        ],
+        "accumulator_endpoints": 32,
+        "unconstrained_median_um": [
+          20.573999999999998,
+          146.61
+        ],
+        "candidate_legal_source_um": [
+          20.573999999999998,
+          146.61
+        ],
+        "max_centre_manhattan_um": 24.758999999999986
+      },
+      {
+        "group": 7,
+        "lanes": [
+          7
+        ],
+        "accumulator_endpoints": 32,
+        "unconstrained_median_um": [
+          38.259,
+          185.35500000000002
+        ],
+        "candidate_legal_source_um": [
+          38.259,
+          185.35500000000002
+        ],
+        "max_centre_manhattan_um": 18.117000000000033
+      },
+      {
+        "group": 8,
+        "lanes": [
+          8
+        ],
+        "accumulator_endpoints": 32,
+        "unconstrained_median_um": [
+          226.125,
+          103.14
+        ],
+        "candidate_legal_source_um": [
+          226.125,
+          103.14
+        ],
+        "max_centre_manhattan_um": 19.87200000000003
+      },
+      {
+        "group": 9,
+        "lanes": [
+          9
+        ],
+        "accumulator_endpoints": 32,
+        "unconstrained_median_um": [
+          217.944,
+          120.82499999999999
+        ],
+        "candidate_legal_source_um": [
+          217.944,
+          120.82499999999999
+        ],
+        "max_centre_manhattan_um": 24.354000000000013
+      },
+      {
+        "group": 10,
+        "lanes": [
+          10
+        ],
+        "accumulator_endpoints": 32,
+        "unconstrained_median_um": [
+          254.637,
+          157.005
+        ],
+        "candidate_legal_source_um": [
+          254.637,
+          157.005
+        ],
+        "max_centre_manhattan_um": 21.411
+      },
+      {
+        "group": 11,
+        "lanes": [
+          11
+        ],
+        "accumulator_endpoints": 32,
+        "unconstrained_median_um": [
+          214.29899999999998,
+          149.175
+        ],
+        "candidate_legal_source_um": [
+          214.29899999999998,
+          149.175
+        ],
+        "max_centre_manhattan_um": 29.40299999999999
+      },
+      {
+        "group": 12,
+        "lanes": [
+          12
+        ],
+        "accumulator_endpoints": 32,
+        "unconstrained_median_um": [
+          202.5,
+          182.385
+        ],
+        "candidate_legal_source_um": [
+          202.5,
+          182.385
+        ],
+        "max_centre_manhattan_um": 18.144000000000005
+      },
+      {
+        "group": 13,
+        "lanes": [
+          13
+        ],
+        "accumulator_endpoints": 32,
+        "unconstrained_median_um": [
+          184.086,
+          183.6
+        ],
+        "candidate_legal_source_um": [
+          184.086,
+          183.6
+        ],
+        "max_centre_manhattan_um": 19.034999999999997
+      },
+      {
+        "group": 14,
+        "lanes": [
+          14
+        ],
+        "accumulator_endpoints": 32,
+        "unconstrained_median_um": [
+          371.62800000000004,
+          180.495
+        ],
+        "candidate_legal_source_um": [
+          371.62800000000004,
+          180.495
+        ],
+        "max_centre_manhattan_um": 21.708000000000027
+      },
+      {
+        "group": 15,
+        "lanes": [
+          15
+        ],
+        "accumulator_endpoints": 32,
+        "unconstrained_median_um": [
+          356.859,
+          184.275
+        ],
+        "candidate_legal_source_um": [
+          356.859,
+          184.275
+        ],
+        "max_centre_manhattan_um": 26.216999999999956
+      }
+    ],
+    "max_centre_manhattan_um": 29.40299999999999,
+    "qualification": "ESTIMATE from retained actual cell centres; no clock/STA or full tag-net endpoint claim"
+  }
+]
