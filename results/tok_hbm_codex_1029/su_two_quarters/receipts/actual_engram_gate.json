@@ -1,0 +1,30 @@
+{
+  "scope": "Exact a122 offset21360 HGI gate arithmetic class; finite component only, no current source FULLSIDE selection or VM publication",
+  "actual_source_imm1": 1013250350,
+  "independent_golden_words": 8192,
+  "mismatches": 0,
+  "controls": {
+    "omit_m2": 8188,
+    "omit_sfu": 8192
+  },
+  "profiles": {
+    "minimal4_4_0": {
+      "edges": 614,
+      "cycles_serial": 602,
+      "issue_to_write": 153,
+      "issues": 24,
+      "emissions": 24,
+      "expected_vm_writes": 24,
+      "native_programme_bits": 4940
+    },
+    "alternate5_4_1": {
+      "edges": 788,
+      "cycles_serial": 776,
+      "issue_to_write": 164,
+      "issues": 24,
+      "emissions": 24,
+      "expected_vm_writes": 24,
+      "native_programme_bits": 4940
+    }
+  }
+}

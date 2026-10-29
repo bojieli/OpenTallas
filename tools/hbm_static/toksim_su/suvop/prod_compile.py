@@ -126,6 +126,11 @@ RECS = {
  'qw8_round_q': ('qwen', 512, 1, dict(A='vm'), dict(co_rnd=1), None, True),
  'qw8_row_scale_qkv': ('qwen', 768, 1, dict(A='vm', B='vm'), dict(cp_m1=1, cm_m1=1), None, True),
 }
+# Exact actual HGI opcode class, separately named from the historical plain-AB
+# timing fixture ds_engram_gate. Six position rows of four independent gates.
+RECS['ds_hgi_engram_gate_n6'] = ('ds_ar', 4, 6, dict(A='vm', B='vm'),
+    dict(cp_m1=1, cm_m1=1, cm_m2=2, cp_imm1=0x3c64f92e,
+         cm_imm1=0x3c64f92e, ci_sfu=7, cs_sfu=7), None, True)
 ROW_OF = dict(A=0, B=1, C=2, D=3, O=4)
 
 
@@ -146,6 +151,10 @@ def golden(mods, a, b, c, d):
     elif m == 5:
         with np.errstate(all='ignore'): x = z(np.asarray(x, F) / imm1)
     elif m == 6: x = np.maximum(x, b).astype(F)
+    m2 = mods.get('cm_m2', 0)
+    if m2 == 1: x = mul(x, c)
+    elif m2 == 2: x = mul(x, f32(mods.get('cm_imm1', mods.get('cp_imm1', 0))))
+    elif m2 != 0: raise ValueError('reserved M2 opcode')
     ad = mods.get('ca_ad', 0)
     if ad == 2: x = add(x, c)
     elif ad == 3: x = add(x, neg(b))
@@ -154,12 +163,22 @@ def golden(mods, a, b, c, d):
     sf = mods.get('ci_sfu', 0)
     if sf == 1: x = exp(x)
     elif sf == 2: x = rsqrt(x)
+    elif sf == 3:
+        import hdc_golden_v41 as G41
+        x = G41.sqrt(x)
+    elif sf == 7:
+        import hdc_golden_v41 as G41
+        magnitude = np.maximum(np.abs(x), f32(0x358637bd)).astype(F)
+        root = G41.sqrt(magnitude)
+        signed = np.where(x < F(0), neg(root), root).astype(F)
+        x = G41.sigmoid(signed)
     elif sf == 6:
         import hdc_golden_v41 as G41
         x = G41.sqrt(G41.softplus(x))
     elif sf in (4, 5):
         den = add(exp(neg(x)), F(1.0))
         with np.errstate(all='ignore'): x = z(np.asarray(x if sf == 5 else np.full_like(x, F(1.0)), F) / np.asarray(den, F))
+    elif sf != 0: raise ValueError('unsupported SFU opcode')
     e1 = mods.get('cs_e1', 0)
     if e1 == 1: x = mul(x, c)
     elif e1 == 2: x = add(x, c)
