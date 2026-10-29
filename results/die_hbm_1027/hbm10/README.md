@@ -187,3 +187,39 @@ are under `results/die_hbm_1027/hbm10/vmx/` on that branch.
   - Grade: UNCHECKED model until the build re-plans on the merged CLK-INV-CAL-1 model.
   - Slices: rc_slice `--pcs 0-9 / 10-21 / 22-31` = 308 / 369 / 308 x 8.64 = 2661.12 / 3188.16 / 2661.12 um (sum 8510.4 <= PHY_N 8804.16).
   - Cost: the hub PHY buses regroup by PC (W path 10 PCs, column 6 PCs per hub). This is a hub face re-pin inside the C23 plan event.
+
+## (7) 2026-10-28 18:15 PDT: plan event C24 = C23q + hnx_lane_x view + REBAL-6 arrays + bank3 write_v pin (plan time, no build)
+Plan intel2:/srv/opentallas-scratch2/claude/die-hbm-10/c24/die_plan.json sha256 3ab76af4 (base C23q 403d45a4). The script is
+`apply_c24.py`; its inputs are the committed REBAL files (claude/hbm-cores-rebal-6-1028@bd8c7c1b54, rebal-10@5a0f726f94). The
+event report, side data, pins file, render, probe and gate logs are in `c24/`.
+- **hnx_lane_x view** (`c24/hnx_lane_x__285.12x302.4__c24.json`, plan cores/ format):
+  - Outline 285.12 x 302.4 (33 x 35 units of 8.64). The estimate of 289 x 320 does not fit the S half: 2 x 320 lanes
+    plus the SRAM top at 373.68 and the channels exceed 1036.8.
+  - 1670 pins (the RTL port list: 1669 signal + clk; the REBAL-5 figure of ~1672 was an estimate).
+  - Faces:
+    - N (M5): shared operands, 552.
+    - S (M5): ixb_p, 532.
+    - W (M4): side store, 531 (the parent W face, or the E face for lane 2).
+    - E (M4): gather out + 4 resets, 54, on the centre channel.
+    - clk: centre M5 interior pin.
+  - Density is at most 1.94 pins/um, 20 per 10-um window (budget 60).
+- **Children per half** (c24_side.json core_views; core frame, inside CORE_AREA):
+  - u_lane0 R0 (8.64, H-311.04); u_lane1 R0 (8.64, H-648); u_lane2 MY (336.96, H-311.04).
+  - The centre channel is 43.2 wide, and lane 1's operand face has a 34.56 gap.
+  - Child-to-SRAM body gap: S 15.12, N 131.76, against a rule of >= 10.8.
+  - The parent clock entry (315.36, 604.8 N / 518.4 S) is in the channel.
+  - 12 of the 33 REBAL-4 islands per half fall inside the children. The parent infra plan must be regenerated with the hard children (REBAL-11).
+  - Render `c24/hnx_c24.png` VIEWED.
+- **REBAL-6 arrays** (core_arrays):
+  - lanes_plain: 24 SRAM, 9 driver_rects, detour <= 19.1.
+  - programme_store: 44 SRAM, 16 driver_rects, detour <= 87.4.
+  - core_macros.json now marks the hnx halves, lanes_plain and programme_store KNOWN (plan-fixed).
+  - Existing G0C clock_entry_macro: 179 -> 319 cores checked, 0 entries over a macro.
+- **bank3 write_v** (COORD relay of REBAL-10): the lanes__canon pin g_bank_k3_u_bank_write_v moves on its S face (M5, free track) from x 13.656 to x 569.976, under bank3.
+  - The model is REBAL-10's own relay_reg_guide_spec on the m5w1gr guides, with the other 11 relay boxes kept.
+  - Hop: pin->relay 574.9 -> 299.9 um, longer hop 579.3 -> 299.9 um (`c24_wv3_probe.py`).
+  - Timing: UNCHECKED estimate, about +280 um of reach.
+- **Gates** (same mainsnap check.py):
+  - G0 PASS: 0 errors, 564 warnings (568 on C23q).
+  - G0C: 16 errors, identical to the C23q baseline (12 core_faces q_hub_nw/ne + 4 street_reach); 0 new; 85 pending-view.
+- Unchanged: the C23q PHY split, the xq_pegress view drop, section 12, all checks.
