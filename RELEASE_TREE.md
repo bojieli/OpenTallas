@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-26 06:21 PDT by CLAUDE coordinator)
 
-Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has die STA on real views · sign-off flat since 10-25 16:23 · flow tag per die (12.9e) being cut · PRIORITY: QC critical path, then S81 / HEAD / KV / HBM on the same template.
+Snapshot: 2026-10-28 17:20 PDT · main bfc232967f · FROZEN: none · gate numbers only on shared die STA with clock_variation=table (CA >=100 ps) · sign-off flat 12 h (KV e2/e6 signed off, ledger pending) · 12.16e local clock form on all 5 dies · KV plan delta (DIE-KV-14), HEAD GRT0 flow (HEAD-14), QC hold glue (QC-20), S81 go15 ~20:30, HBM SU lanes WCOPY re-place (REBAL-10).
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
