@@ -33,13 +33,13 @@ wire[1103:0]ro;wire fault;wire[44:0]unitbus;wire[564:0]stream;wire[63:0]ma,mb,mn
 ot_s81hd_ctl_core ctl(.ck(ck),.rst_n(rn),.start_i(start),.lep_fault_i(1'b0),.lw_i(11'd0),
  .lepk_i0(ri),.lepk_o0(ro),.lepf_o0(fault),.unit_o0(unitbus),.ctrl_i0(tag),.x_o(stream),.b_i(565'd0),
  .h_tx_o(hosttx),.h_rx_i(hostrx),.a_tx_o(ma),.b7_tx_o(mb),.n_tx_o(mn),.a_rx_i(64'd0),.b7_rx_i(64'd0),.n_rx_i(64'd0));
-reg[607:0]setup[0:10];reg[1023:0]data[0:79];
+reg[607:0]setup[0:10];reg[1023:0]data[0:79];reg[47:0]xb_edge[0:79];
 integer c=0,i,index,m=0,sent=0,issues=0,mut=0;
 reg[552:0]fr;reg[255:0]ea,eb;string dir;
 initial begin
  if(!$value$plusargs("DATA=%s",dir))$fatal(1,"DATA required");
  if($value$plusargs("MUT=%d",mut))begin end
- $readmemh({dir,"/setup.memh"},setup);$readmemh({dir,"/xb.memh"},data);
+ $readmemh({dir,"/setup.memh"},setup);$readmemh({dir,"/xb.memh"},data);$readmemh({dir,"/xb_edges.memh"},xb_edge);
 end
 always@(negedge ck)begin
  c++;rn=(c>=8);start=(c>=@START@);pv=0;pd0=0;pd1=0;ri=0;tag=0;
@@ -48,8 +48,7 @@ always@(negedge ck)begin
   if(mut==1&&fr[3:0]==6&&fr[23:16]==2)fr[24]=~fr[24];
   if(setup[i][553])begin pv[1]=1;pd1=fr;end else begin pv[0]=1;pd0=fr;end
  end
- if(c>=@XB_FIRST@&&c<@XB_FIRST@+80)begin
-  index=c-@XB_FIRST@;
+ for(index=0;index<80;index++)if(c==int'(xb_edge[index]))begin
   if(!(mut==2&&index==79))begin
    ri=(1104'(data[index])<<21)|(1104'(index)<<13)|1104'd5;
    tag=32'd@TAG@;sent++;
@@ -83,7 +82,7 @@ endmodule
 
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--activation-records',type=Path)
     a=p.parse_args();out=a.out.resolve();out.mkdir(parents=True,exist_ok=False)
     beats=[sum((0x3000+b*64+k)<<(16*k) for k in range(64)) for b in range(80)]
     job=dict(mode='ar',rank=3,tid=37,user=513,position=17,token=7,epoch=1,programme=9,
@@ -93,17 +92,24 @@ def main():
                 link_ready_edge=256,peer_to_hbc_input=29,peer_frame_period=4,
                 peer_launch_modulus=2,peer_launch_residue=0,peer_to_ctl_settled=37,
                 commit_to_context_valid=1,ctl_start_offset=0,xb_first_edge=400,xb_period=1,xb_pin_to_resident_edges=3)
+    if a.activation_records:
+        del job['activation_beats']
+        job['activation_records']=json.loads(a.activation_records.read_text())
     schedule=compile_entry(dict(stages=81,TP=4,head_dies=4),job,timing)
+    ordered=sorted(schedule['xb_records'],key=lambda r:r['index'])
+    beats=[r['lepk_i0']>>21 for r in ordered]
+
     params=schedule['host_params'];assert 'HBC_VARIABLE_WORDS' not in params and 'HBC_COMMAND_SCOPE' not in params
     values=dict(STAGE=params['LOCAL_STAGE'],RANK=params['LOCAL_RANK'],ID=params['CLOCK_RESET_ID'],
                 HEADER=params['BOOT_HEADER_EDGE'],COMMIT=params['BOOT_COMMIT_EDGE'],START=schedule['authority']['start_global_edge'],
-                ISSUE=schedule['first_issue_global_edge'],XB_FIRST=400,TAG=(1<<31)|(513<<21)|17)
+                ISSUE=schedule['first_issue_global_edge'],TAG=(1<<31)|(513<<21)|17)
     tb=TB
     for key,value in values.items():tb=tb.replace('@'+key+'@',str(value))
     (out/'tb.sv').write_text(tb)
     (out/'schedule.json').write_text(json.dumps(schedule,indent=1)+'\n')
     (out/'setup.memh').write_text(''.join(f"{(f['edge']<<554)|(f['lane']<<553)|f['frame']:0152x}\n" for f in schedule['frames']))
     (out/'xb.memh').write_text(''.join(f'{b:0256x}\n' for b in beats))
+    (out/'xb_edges.memh').write_text(''.join(f'{r["edge"]:012x}\n' for r in ordered))
     files=list(dict.fromkeys(CTL_SOURCES+SOURCES))
     missing=[f for f in files if not (ROOT/f).is_file()]
     if missing:raise SystemExit('missing source closure: '+str(missing))
