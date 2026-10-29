@@ -22,10 +22,23 @@ unchanged and conservative. This is a structural explanation of the survivor,
 not a general formal proof that drain can be removed. The production control
 is kept; existing mutant7 remains the meaningful operational negative control.
 
-Actual REGROOT3 NL/NK operational builds are running in own epyc2 run dirs
-`/srv/opentallas-scratch2/claude/codex-qc-proof-0831/b_{nl,nk}_m3`.
-Admission units2583258/2584210; source staging manifest is stage_files.txt.
-Both are old-source semantics before the A0 owner's declaration-order fix.
-That fix only moves wire declarations for slang connectivity and is validated
-by the physical owner; simulation source equivalence must be checked before
-sharing these receipts with that successor.
+## Selected native continuation
+
+The first REGROOT3 builds inherited the old FP1 substitute from build.sh.
+They were CANCELLED as wrong vehicle (own exact epyc2 scopes2583258/2584210;
+exit143, partial output retained), not used for adoption. Changing REGROOT
+alone does not qualify the actual rawfault-m3 hard child.
+
+prepare_native.py instead copies the actual current physical-owner kits
+`codex-qc-a0-0830/kits/qfd_tile_{nl,nk}_a0c_a0{nl,nk}14icg2r1`, including
+the declaration-order fix, into fresh own proof dirs. It replaces only empty
+hard-macro declarations with their functional bodies: the real 15MB mapped
+rawfault-m3 child (sha256333dbe8342ff74c9126a72b48421c8a534b19fc7831cead0ae2b9f1f8fb7cb0c),
+the corresponding rawcut combinational fault reconstruction, canonical ROMleaf
+and node bodies, functional ROM/SRAM models, and the existing ASAP7 functional
+cell library with the separately tested correct ASR flop model.
+REGROOT_MODE3/ICG2; no OT_QWEN_LSL_FP1 define. Ten ROM masks are nonzero.
+Input sources are read-only; generated manifest records every actual file hash.
+The actual source builds run under ot-run in
+`/srv/opentallas-scratch2/claude/codex-qc-proof-0831/native_{nl,nk}`.
+No physical claim or simulator cycle change.

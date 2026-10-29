@@ -1,0 +1,9 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-qc-proof-0831/src
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-qc-proof-0831/src
+ot-run: localhost      admits   502 GB (avail 863, reserve 0, fresh 268.7, peak 27.4, headroom 0, waiters 0/0 GB) load 59/112 running 37 disk 1379 GB 
+ot-run: LOAD SPILL: localhost would run at 1.31 x cores; moving to epyc2
+ot-run: SPILL: copying /srv/opentallas-scratch2/claude/codex-qc-proof-0831 (0.0 GB) localhost -> epyc2 (no host with --dir admits 32 GB now)
+ot-run: SPILL: copied 71 changed entries in 1 s; running on epyc2; written files go back to localhost after the run
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-2583258-1793288097 after 1 s
+ot-run: RAN on epyc2 (unit oth-ubuntu-2583258-1793288097): exit 143
+ot-run: SPILL: outputs copied back epyc2 -> localhost; RAN on epyc2: exit 143
