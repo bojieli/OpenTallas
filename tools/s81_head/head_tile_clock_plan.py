@@ -20,6 +20,7 @@ def main():
  taps=R.close_projected_radius(taps,sinks,spec['trunk'],spec)
  asg={n:min(range(len(taps)),key=lambda i:(abs(taps[i]['x']-x)+abs(taps[i]['y']-y),i)) for n,x,y in sinks}
  for t in taps:
+  t['node']=min(attach,key=lambda n:(abs(n[1]-t['x'])+abs(n[2]-t['y']),n[0]))[0]
   group=[(x,y) for n,x,y in sinks if asg[n]==t['id']];t['sinks']=len(group);t['radius_um']=max(abs(x-t['x'])+abs(y-t['y']) for x,y in group)
  assert max(t['radius_um'] for t in taps)<=spec['radius_um']
  # Physical prefix calibration is keyed by matched node/coordinates, never tap ID.
@@ -28,23 +29,25 @@ def main():
   f=line.split()
   if f[1].startswith('h16_n_'):prefix[f[1][6:]]=float(f[-1])
  old=json.loads((d/'calibration_plan.json').read_text());trunk={t[0]:t for t in spec['trunk']}
- assert [(t[0],t[1],t[2]) for t in old['trunk']]==[(t[0],t[1],t[2]) for t in spec['trunk']]
+ oldtr={t[0]:t for t in old['trunk']}
+ delta={n:abs(t[1]-trunk[t[3]][1])+abs(t[2]-trunk[t[3]][2])-abs(oldtr[n][1]-oldtr[t[3]][1])-abs(oldtr[n][2]-oldtr[t[3]][2]) for n,t in trunk.items() if t[3] not in ('-', 'CLK')}
+ assert {n for n,t in trunk.items() if t[1:3]!=oldtr[n][1:3]}<= {'HR0'}
  gold=json.loads((ROOT/'tools/die_plan/model_corr_golden.json').read_text())['raw_rows']
  stage={}
  for corner in ('TT','FF'):
   rows=[r for r in gold if r['case']=='bufx4_dly2_d32' and r['corner']==corner and r['src_edge']=='rise'];lo=min(rows,key=lambda r:r['depth']);hi=max(rows,key=lambda r:r['depth']);stage[corner]=(hi['spice_ps']-lo['spice_ps'])/(hi['depth']-lo['depth'])
- def feat(t):
-  n=trunk[t['node']];stub=abs(t['x']-n[1])+abs(t['y']-n[2]);return [1,stub,math.log2(max(1,t['sinks'])),t['radius_um']]
+ def feat(t, tree=None):
+  n=(tree or trunk)[t['node']];stub=abs(t['x']-n[1])+abs(t['y']-n[2]);return [1,stub,math.log2(max(1,t['sinks'])),t['radius_um']]
  model={};pred={}
  for corner,scale,target in [('TT',1.,525.),('FF',.81,425.25)]:
   means={int(m[1]):float(m[2]) for line in (d/f'calibration_{corner}.txt').read_text().splitlines() if (m:=re.search(r'^tap\s+(\d+).* mean\s+([\d.]+)',line))}
-  X=np.array([feat(t) for t in old['taps']]);y=np.array([means[t['id']]-t['pad']*stage[corner]-scale*prefix[t['node']] for t in old['taps']]);coef,res=nnls(X,y)
+  X=np.array([feat(t,oldtr) for t in old['taps']]);y=np.array([means[t['id']]-t['pad']*stage[corner]-scale*prefix[t['node']] for t in old['taps']]);coef,res=nnls(X,y)
   model[corner]=dict(prefix_scale=scale,local_coefficients=coef.tolist(),calibration_max_residual_ps=float(max(abs(X@coef-y))),stage_ps=stage[corner],target_ps=target)
-  pred[corner]=[float(scale*prefix[t['node']]+np.dot(feat(t),coef)) for t in taps]
+  pred[corner]=[float(scale*prefix[t['node']]+coef[1]*delta.get(t['node'],0)+np.dot(feat(t),coef)) for t in taps]
  for i,t in enumerate(taps):
   pad=min(range(33),key=lambda p:sum(((pred[c][i]+p*stage[c]-model[c]['target_ps'])/model[c]['target_ps'])**2 for c in ('TT','FF')));t['pad']=pad;t['predicted_ps']={c:round(pred[c][i]+pad*stage[c],2) for c in ('TT','FF')}
  spec['pads']={str(t['id']):t['pad'] for t in taps};spec['note']='Fresh actual3_place groups; projected-radius refinement; prebuild h17 matched-prefix and qualifiedspice BUFx4 calibration. No postbuild trimming.'
  R.write(str(d),spec['trunk'],taps,asg,spec);(d/'reg_spine.json').write_text(json.dumps(spec,indent=2)+'\n')
- report=dict(sinks=len(sinks),taps=len(taps),max_radius_um=max(t['radius_um'] for t in taps),max_sinks=max(t['sinks'] for t in taps),min_sinks=min(t['sinks'] for t in taps),pads=sum(t['pad'] for t in taps),model=model,predicted_ranges={c:[min(t['predicted_ps'][c] for t in taps),max(t['predicted_ps'][c] for t in taps)] for c in ('TT','FF')},assumptions=['Matched physical h17 BUFx24 trunk prefixes; changed tap loads only modeled by new local group fit.','FF prefix scales TT by0.81: planning approximation, actual dualcorner measurement required.','NNLS local-tree delay vs stub/log2sinkcount/radius calibrated to h17 after subtracting old pad physical stage delay.','BUFx4 rise-stage slope from qualified model_corr golden SPICE, bothcorners; no BUFx24factor applied to BUFx4.','Existing macro early-tap paths unchanged, stagesA6/B4 retained; actual corepin insertion must be remeasured.','Plan only; no timing closure or signoff claim.'])
+ report=dict(sinks=len(sinks),taps=len(taps),max_radius_um=max(t['radius_um'] for t in taps),max_sinks=max(t['sinks'] for t in taps),min_sinks=min(t['sinks'] for t in taps),pads=sum(t['pad'] for t in taps),model=model,predicted_ranges={c:[min(t['predicted_ps'][c] for t in taps),max(t['predicted_ps'][c] for t in taps)] for c in ('TT','FF')},assumptions=['Matched physical h17 BUFx24 trunk prefixes; changed tap loads only modeled by new local group fit.','FF prefix scales TT by0.81: planning approximation, actual dualcorner measurement required.','NNLS local-tree delay vs stub/log2sinkcount/radius calibrated to h17 after subtracting old pad physical stage delay.','BUFx4 rise-stage slope from qualified model_corr golden SPICE, bothcorners; no BUFx24factor applied to BUFx4.','HR0 inherited illegal ideal site660,690 moved to legal uppercrossbar660,717; prefix wirelength difference modeled, actual legalclocksites required.', 'Existing macro early-tap paths unchanged, stagesA6/B4 retained; actual corepin insertion must be remeasured.','Plan only; no timing closure or signoff claim.'])
  (d/'planning_report.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
 if __name__=='__main__':main()
