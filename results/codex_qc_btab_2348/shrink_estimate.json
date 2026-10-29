@@ -1,0 +1,46 @@
+{
+ "label": "PACKING / TRACK ESTIMATE ONLY; macro/data pin replan still required",
+ "outline_um": [
+  259.2,
+  138.24
+ ],
+ "macro_sites_um": [
+  [
+   17.28,
+   17.28
+  ],
+  [
+   142.56,
+   17.28
+  ],
+  [
+   17.28,
+   73.44
+  ],
+  [
+   142.56,
+   73.44
+  ]
+ ],
+ "old_area_um2": 91819.008,
+ "new_area_um2": 35831.808,
+ "area_reduction_fraction": 0.6097560975609757,
+ "macro_fraction": 0.43468113425925925,
+ "central_channel_um": 30.456000000000003,
+ "outer_channel_min_um": 17.28,
+ "row_gap_um": 15.095999999999997,
+ "central_track_ratio": 0.5533179620387395,
+ "outer_track_ratio": 0.4882068282274043,
+ "S_pin_density_per_um": 3.996913580246914,
+ "E_pin_density_per_um": 2.032696759259259,
+ "clock_entry_candidate_um": [
+  127.332,
+  69.12
+ ],
+ "caveats": [
+  "Every per-bit pin and macro data path must be regenerated/reviewed before build.",
+  "Clock entry is a geometric candidate; M5/PG pin/driver placement awaits the actual planned tree.",
+  "Pin-column corner escape strips and logic placement are not yet measured.",
+  "This footprint is a successor plan event only; current ev_qc25 is untouched."
+ ]
+}
