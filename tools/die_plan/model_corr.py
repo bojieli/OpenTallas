@@ -50,6 +50,9 @@ REPORT_TOL = 0.02
 CORNERS = ("TT", "FF")
 PULSE_PS = 2000.0
 SINK_FF = 5.0
+VDD_RAMP_PS = 50.0      # routed deck: supply ramp from 0 (no DC operating point)
+ROUTED_T0_PS = 1000.0   # routed deck: source rise edge (the ramp leaves deep BUFx4 nodes high up to ~0.45 ns)
+T_SETTLE_PS = 950.0     # routed deck: crossings before this are the supply ramp
 SIDE_UM = 100.0
 
 
@@ -280,14 +283,16 @@ def routed(a):
         slew = st[root][4]
         meas = [_node(t.replace("/", ":")) for t in taps]
         L = [f"* MODEL-CORR-1 routed path {ep} {c}", ".control", f"pre_osdi {a.osdi}", "set noaskquit", "run",
-             # SPARSE solver: KLU fails the DC operating point on the routed RC + side-cell deck (singular matrix),
-             # SPARSE converges on the identical netlist
+             # SPARSE solver + supply ramp + uic: KLU fails the DC operating point on the routed RC + side-cell deck
+             # (singular matrix); with a DC op, SPARSE still aborts the BUFx4 transient at t < 0.2 ps (timestep too
+             # small, TT and FF).  Ramping VDD from 0 (all nodes start at 0 = a consistent state, no DC op) converges
+             # in both corners; crossings before T_SETTLE_PS (the supply ramp) are ignored by collect_case.
              f"wrdata arr_{c}.dat " + " ".join(f"v({m})" for m in meas), "quit", ".endc", ".options",
              ".save " + " ".join(f"v({m})" for m in meas), f".temp {CIC.CORNER[c]['temp']}",
-             f".include {a.libdir}/{c}/models.sp", f".include {a.libdir}/{c}/cells.sp", f"Vdd vdd 0 {v}",
-             "Vss vss 0 0",
+             f".include {a.libdir}/{c}/models.sp", f".include {a.libdir}/{c}/cells.sp",
+             f"Vdd vdd 0 PWL(0 0 {VDD_RAMP_PS:.0f}p {v})", "Vss vss 0 0",
              # 10-90 slew s -> 0-100 ramp s/0.8 (the clk_inv_cal convention: 40 ps ramp <-> 32 ps input transition)
-             f"Vin {meas[0]} 0 {CIC.pwl_pulse(v, ramp=slew / 0.8, w=PULSE_PS)}"]
+             f"Vin {meas[0]} 0 {CIC.pwl_pulse(v, ramp=slew / 0.8, t0=ROUTED_T0_PS, w=PULSE_PS)}"]
         side_n = 0
         for n in netlist:
             net = sp[n["name"]]
@@ -309,8 +314,8 @@ def routed(a):
         # the endpoint cell: real cell when a spice model exists, its output loaded like a side load
         L.append(f"Xend vss vdd {_node(taps[-1].replace('/', ':'))} end_y {masters[end_inst]}")
         L.append(f"Cend end_y 0 {a.side_load_ff:.3f}f")
-        tend = 100 + PULSE_PS + 2000
-        L += [f".tran 0.5p {tend:.0f}p", ".end"]
+        tend = ROUTED_T0_PS + PULSE_PS + 1000
+        L += [f".tran 0.5p {tend:.0f}p uic", ".end"]
         (out / f"deck_{c}.sp").write_text("\n".join(L) + "\n")
         # OpenSTA arrivals of the real design (max/min, rise/fall) at every tap; fall columns are source-fall edges
         rows = []
@@ -321,7 +326,8 @@ def routed(a):
     M = dict(case="routed_hd_tile_h16_t33", kind="routed", cell="buf", form="buf_routed", endpoint=ep, root=root,
              taps=taps[1:], depth={t: i for i, t in enumerate(taps)}, parity={t: 0 for t in taps},
              masters={t.split("/")[0]: masters.get(t.split("/")[0]) for t in taps}, side_load_ff=a.side_load_ff,
-             pulse_ps=PULSE_PS, period_ps=a.period, nets=[n["name"] for n in netlist],
+             pulse_ps=PULSE_PS, period_ps=a.period, t_settle_ps=T_SETTLE_PS, vdd_ramp_ps=VDD_RAMP_PS,
+             t0_ps=ROUTED_T0_PS, nets=[n["name"] for n in netlist],
              spef_total_ff={n["name"]: sp[n["name"]]["total_ff"] for n in netlist},
              spef_sha256=_sha_file(a.spef), dump_sha256={c: _sha_file(p) for c, p in zip(CORNERS, a.dump)},
              meas_nodes=[_node(t.replace("/", ":")) for t in taps], tap_names=taps,
@@ -346,6 +352,10 @@ def collect_case(d, c):
     M = json.loads((d / "meas.json").read_text())
     vh = CIC.CORNER[c]["vdd"] / 2
     cr = CIC.crossings_all(d / f"arr_{c}.dat", vh)
+    if M.get("t_settle_ps"):                                  # routed deck: drop the supply-ramp crossings
+        cr = [[x for x in v if x[0] >= M["t_settle_ps"] * 1e-12] for v in cr]
+        if any(v and v[0][1] != 1 for v in cr):
+            raise SystemExit(f"{d} {c}: a node was still high at t_settle (supply ramp not settled)")
     names = [M["root"]] + M["taps"]
     sta = {}
     for ln in (d / f"sta_arr_{c}.txt").read_text().splitlines():
