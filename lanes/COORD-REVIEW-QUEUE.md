@@ -3971,3 +3971,5 @@ FAILED [AUTOPILOT 3cbdb0a382a5] 2026-10-28 19:12:38 PDT AUTOPILOT -> KV-CORES: F
   - the KITS-2 SRAM placements;
   - the family collapse, targeting 15 views (one per RTL master), using HBM-CORES-KITS-3's cost table within the owner limits (<=1 extra cycle/path, G0 cut <=0.6, hops <=405 um).
   - The collapse estimate RESULT (masters before/after, extra cycles, hops, non-collapsible families with reasons) goes up first, once the KITS-3 table is posted.
+- 2026-10-28 20:20 PDT [COORD] DIE-HEAD-18 READY claude/die-head-18-regspine-1028@71b0f83f9d APPROVED -> ROOT-MERGE (replaces @21242e7624; merge AFTER claude/fg2-cts0114-1028@343c8080d0; opt-in reg_spine, default byte-identical, 30/30 tests CHECKED).
+- 2026-10-28 20:20 PDT [COORD] DIE-QC-23 lane ended its turn "waiting for trial16 notification" (no notification reaches an ended lane) -> resumed now with: poll trial16 yourself (until-loop on the run done/exit files), then gate + RESULT. Not a new lane.
