@@ -33,6 +33,11 @@ def main():
         ax.add_patch(Rectangle((x-4.32,y-4.32),mw+8.64,mh+8.64,facecolor='#f5dec0',edgecolor='none'))
         ax.add_patch(Rectangle((x,y),mw,mh,facecolor='#8eaac3',edgecolor='#234766'))
         ax.text(x+mw/2,y+mh/2,f'SRAM {n}\n94.824 x 41.064',ha='center',va='center')
+    pins=json.loads((out.parents[1]/'physical/die_plan/qwen_compute/cores/su/qfd_dv_s8x_btab_pins_compact2x2.json').read_text())['pins']
+    for face,colour in [('S','#168c77'),('E','#1666aa')]:
+        q=[p for p in pins if p['face']==face]
+        ax.scatter([p['x'] for p in q],[p['y'] for p in q],s=2,c=colour)
+    report['clock_entry_candidate_um']=[127.452,69.12]
     ax.scatter(*report['clock_entry_candidate_um'],marker='*',s=180,c='red',label='clock-entry candidate (unadopted)')
     ax.set(xlim=(-5,W+5),ylim=(-5,H+5),xlabel='um',ylabel='um',title='BTAB 2x2 footprint proposal: 259.2 x 138.24 um\nPacking/track estimate only; current outline/data pins unchanged')
     ax.set_aspect('equal');ax.legend(loc='upper center',bbox_to_anchor=(.5,-.13));fig.tight_layout();fig.savefig(out/'shrink_estimate.png',dpi=130)
