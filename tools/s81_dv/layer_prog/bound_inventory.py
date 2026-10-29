@@ -28,7 +28,7 @@ def digest(path):
     return h.hexdigest()
 
 
-def native_control_units(rtl_dir):
+def native_control_units(rtl_dir, *, entry=False):
     """Read exact atomic source paths from the binder's emitted instances.
 
     Slice wrappers have changed hierarchy across plan revisions. Do not guess
@@ -48,6 +48,14 @@ def native_control_units(rtl_dir):
             if len(matches) != 1:
                 raise ValueError(f'{sl}: emitted source needs one exact {atom}, found {matches}')
             units.append(matches[0])
+        if entry:
+            # VP is dissolved by the binder; retain its exact source parent
+            # from emitted descendants. extract() checks the parent exists.
+            vps = sorted({p.split('.u_vp.', 1)[0] + '.u_vp' for p in paths
+                          if p.startswith(sl + '.') and '.u_vp.' in p})
+            if len(vps) != 5:
+                raise ValueError(f'{sl}: emitted source needs five exact VP parents, found {vps}')
+            units.extend(vps)
     return units
 
 
@@ -121,13 +129,15 @@ def main(argv=None):
     ap.add_argument('--units-json', type=Path, help='JSON list of additional exact source instances')
     ap.add_argument('--native-control-units', action='store_true',
                     help='derive seqhost, selector, slices and their exact atomic xg/xr paths from emitted RTL')
+    ap.add_argument('--native-entry-units', action='store_true',
+                    help='also retain the five exact VP source parents per slice for entry transport')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args(argv)
     units = a.unit + (json.loads(a.units_json.read_text()) if a.units_json else [])
-    if a.native_control_units:
+    if a.native_control_units or a.native_entry_units:
         if units:
             ap.error('--native-control-units cannot be combined with explicit units')
-        units = native_control_units(a.bound_top.parent)
+        units = native_control_units(a.bound_top.parent, entry=a.native_entry_units)
     ab_hash, top_hash = digest(a.asbuilt), digest(a.bound_top)
     yjs = json.loads(a.asbuilt.read_text())
     manifest = json.loads(a.manifest.read_text())
