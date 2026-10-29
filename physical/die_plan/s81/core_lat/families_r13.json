@@ -79,6 +79,11 @@
    "kit_name": {
     "ot_v41_rom_elem_q_qxpq_w10": "ot_v41_rom_elem_q_qxpq_w10_gb"
    },
+   "entry": {
+    "ot_v41_bf_col": "sink_centroid",
+    "ot_v41_rom_elem_q_qxpq_w10": "sink_centroid"
+   },
+   "entry_why": "COORD dfd33a253 (12.16e by intent, as the KV core_tx ruling): core clock entry at the placed sink centroid; bf_col sinks hug the E face (centre entry: 168-220 um L1 legs, 58 ps TT window)",
    "leaf_target": 48,
    "smax": 70.0,
    "leaf_limit": 35.0,
