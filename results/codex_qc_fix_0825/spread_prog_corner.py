@@ -15,6 +15,7 @@ db = odb.dbDatabase.create()
 odb.read_db(db, os.environ['ODB'])
 b = db.getChip().getBlock()
 scale = db.getTech().getDbUnitsPerMicron()
+targets = json.loads(Path(os.environ['TARGETS']).read_text()) if os.environ.get('TARGETS') else {}
 
 def rr(obj):
     return [getattr(obj, k)() for k in ('xMin', 'yMin', 'xMax', 'yMax')]
@@ -22,6 +23,11 @@ def rr(obj):
 def selected(i):
     m = i.getMaster().getName()
     r = rr(i.getBBox())
+    if targets:
+        if i.getName() in targets:
+            assert m.startswith(('DFF', 'ASYNC_DFF')), i.getName()
+            return True
+        return False
     # Preserve every register and every clock/buffer/tap cell, even if unmarked.
     if not m.startswith(('INV', 'NAND', 'NOR', 'OA', 'AO', 'AND', 'OR', 'XOR', 'XNOR')):
         return False
@@ -38,8 +44,8 @@ assert owned, 'No combinational cells in the recorded hotspot'
 rows = []
 for row in b.getRows():
     r = rr(row.getBBox())
-    if row.getSpacing() > 0 and r[1] >= 108 * scale and r[3] <= 151.2 * scale:
-        lo, hi = max(r[0], int(285.12 * scale)), min(r[2], int(319.68 * scale))
+    if row.getSpacing() > 0 and (targets or (r[1] >= 108 * scale and r[3] <= 151.2 * scale)):
+        lo, hi = (r[0], r[2]) if targets else (max(r[0], int(285.12 * scale)), min(r[2], int(319.68 * scale)))
         if hi > lo:
             rows.append(dict(y=r[1], ey=r[3], rx=r[0], pitch=row.getSpacing(),
                              orient=row.getOrient(), free=[(lo, hi)]))
@@ -79,19 +85,33 @@ moves = []
 for name, i in sorted(owned.items()):
     old = rr(i.getBBox())
     width, height = i.getMaster().getWidth(), i.getMaster().getHeight()
-    goal = max(old[0] + round(21.6 * scale), round(287.28 * scale))
+    target = targets.get(name)
+    gx, gy = ([round(z * scale) for z in target['origin']] if target else
+              [max(old[0] + round(21.6 * scale), round(287.28 * scale)), old[1]])
+    region = [round(z * scale) for z in target['region']] if target else None
     best = None
     for row in rows:
         if row['ey'] - row['y'] != height:
             continue
+        if region and not (region[1] <= row['y'] and row['ey'] <= region[3]):
+            continue
         for a, z in row['free']:
+            if region:
+                a, z = max(a, region[0]), min(z, region[2])
+            if target and 'pin' in target:
+                px, py = [v * scale for v in target['pin']]
+                spare = target['pin_limit_um'] * scale - abs(row['y'] + height / 2 - py)
+                if spare < 0:
+                    continue
+                a = max(a, int(px - spare - width / 2 + .999))
+                z = min(z, int(px + spare + width / 2))
             pitch, rx = row['pitch'], row['rx']
             lo = rx + ((a - rx + pitch - 1) // pitch) * pitch
             hi = rx + ((z - width - rx) // pitch) * pitch
             if lo > hi:
                 continue
-            x = min(hi, max(lo, rx + round((goal - rx) / pitch) * pitch))
-            score = abs(x - goal) + abs(row['y'] - old[1])
+            x = min(hi, max(lo, rx + round((gx - rx) / pitch) * pitch))
+            score = abs(x - gx) + abs(row['y'] - gy)
             item = (score, row['y'], x, row)
             if best is None or item[:3] < best[:3]:
                 best = item

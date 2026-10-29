@@ -1,0 +1,58 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_GRT_DECK layers M2-M5 adjustment 0.0 iterations 50
+[WARNING GRT-0300] Timing is not available, setting critical nets percentage to 0.
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M5
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0003] Macros: 4
+[INFO GRT-0004] Blockages: 10381
+[INFO GRT-0019] Found 0 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 17
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal    2636080       2636080          0.00%
+M3         Vertical      2948514       2948514          0.00%
+M4         Horizontal    2261309       2264589          -0.15%
+M5         Vertical      2156668       2156668          0.00%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/50
+[INFO GRT-0102] Start extra iteration 2/50
+[INFO GRT-0102] Start extra iteration 3/50
+[INFO GRT-0102] Start extra iteration 4/50
+[INFO GRT-0197] Via related to pin nodes: 50842
+[INFO GRT-0198] Via related Steiner nodes: 59
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 79737
+[INFO GRT-0112] Final usage 3D: 967520
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             2636080        309444           11.74%             0 /  0 /  0
+M3             2948514        257621            8.74%             0 /  0 /  0
+M4             2264589         79575            3.51%             0 /  0 /  0
+M5             2156668         81669            3.79%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total         10005851        728309            7.28%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 434766 um
+[INFO GRT-0014] Routed nets: 15009
+[INFO GRT-0303] Global routing runtime = 00:00:06
+OT_GRT_DONE
