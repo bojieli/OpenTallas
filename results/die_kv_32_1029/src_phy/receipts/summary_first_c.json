@@ -1,0 +1,166 @@
+{
+  "groups": 45190,
+  "attempted": 45190,
+  "connected_groups": 45190,
+  "connected_contacts": 75934,
+  "failed_groups": 0,
+  "routing_rectangles": 1039458,
+  "vias": 316352,
+  "verdict": "GEOMETRY_CANDIDATE",
+  "clock_leg_M8_reservations": 7977,
+  "attribution": {},
+  "attribution_bucket_counts": {},
+  "m8_landing_mode": "first",
+  "m8_reach_dbu": 8800,
+  "m9_select": "cover",
+  "landing": {
+    "M8_stripe": 45168,
+    "M9_bridge": 22
+  },
+  "owned_grid_obstructions": 0,
+  "rejections": {
+    "obstacle_M5": 63,
+    "obstacle_M7": 46,
+    "obstacle_M8": 23,
+    "obstacle_M4": 2
+  },
+  "obstacle_examples": {
+    "M5": {
+      "candidate": [
+        5540820,
+        1520590,
+        5540844,
+        1520686
+      ],
+      "blocking": [
+        5540796.0,
+        1520448.0,
+        5540820.0,
+        1520640.0
+      ]
+    },
+    "M7": {
+      "candidate": [
+        5540944,
+        1520598,
+        5540976,
+        1520678
+      ],
+      "blocking": [
+        5540944.0,
+        1520448.0,
+        5540976.0,
+        1520640.0
+      ]
+    },
+    "M8": {
+      "candidate": [
+        5940344,
+        26136180,
+        5961390,
+        26136220
+      ],
+      "blocking": [
+        5943240.0,
+        26135800.0,
+        6010740.0,
+        26136200.0
+      ]
+    },
+    "M4": {
+      "candidate": [
+        6618416,
+        26667346,
+        6618512,
+        26667370
+      ],
+      "blocking": [
+        6618240.0,
+        26667372.0,
+        6618432.0,
+        26667396.0
+      ]
+    }
+  },
+  "soft_charge": {
+    "layer": "M7",
+    "soft_stripes": 3908,
+    "charged_stripe_gcells": 15293,
+    "max_use": 0.1071,
+    "over_0p6": 0,
+    "tracks_used": 35559,
+    "top": [
+      [
+        3848,
+        1363,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3818,
+        1394,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3729,
+        1504,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3699,
+        1535,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3610,
+        1645,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3580,
+        1676,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3491,
+        1786,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3461,
+        1817,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3372,
+        1926,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3253,
+        2067,
+        9,
+        84,
+        0.1071
+      ]
+    ],
+    "note": "use = distinct PG tracks on the stripe within one 10.8-um gcell / stripe tracks"
+  }
+}
