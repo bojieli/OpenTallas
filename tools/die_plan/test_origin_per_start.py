@@ -55,6 +55,39 @@ def test_graph_verifier_follows_static_selected_sampler_and_legacy_form():
     assert v._origin_path("p") == "p.u_cland_origin"
 
 
+def _forwarded_multistart(wrong_selected_origin=False):
+    """Actual kept-module graph: two independent origins and one forwarded START face flop."""
+    v = Verification.__new__(Verification)
+    v.table = {"count_aligned": {"strap_form": True}}
+    v.parts = {"p": {"type": "B"}}
+    v.region = {"p": "r1"}
+    v._strap = {"types": {"B": {"origin": {"tree_buses": ["a", "b"]}}},
+                "instances": {"p": {"values": {"strap_ca_tsel": 1}}}}
+    cells = [SimpleNamespace(path=f"p.u_cland_origin_t{i}", module="ot_dp_landing_origin_s", kind="opaque",
+                             ports={"clk": [1], "rst_raw_n": [2], "start_d": [4+i], "start": [6+i]})
+             for i in range(2)]
+    cells.append(SimpleNamespace(path="p.u_cland_fstart_x", module="ot_dp_landing_relay",
+                                 ports={"clk": [1], "rst_raw_n": [2],
+                                        "d": [4 if wrong_selected_origin else 5], "q": [8]}))
+    v.F = SimpleNamespace(cells=cells)
+    v.G = SimpleNamespace(drv={4: [(0, "start_d", 0)], 5: [(1, "start_d", 0)], 8: [(2, "q", 0)]},
+                          top_in={1: ("clk_region_r1", 0), 2: ("raw_reset", 0)})
+    v.byname = {c.path: c for c in cells}
+    v.checks = 0
+    v.memo = {}
+    v.errors = []
+    v.expected = set()
+    v._fstart_checked = set()
+    assert v.fstart_net("p", "x") == ("pin", "p.u_cland_fstart_x", "q", 0)
+    return v.errors
+
+
+def test_forwarded_start_verifies_selected_origin_and_catches_wrong_d():
+    assert _forwarded_multistart() == []
+    bad = _forwarded_multistart(wrong_selected_origin=True)
+    assert len(bad) == 1 and "u_cland_fstart_x.d:" in bad[0]
+
+
 def _two_start_net(shared=False):
     net = _rs_net(extra_in="st2", top_extra=["ot_ring u_cland_d2 (.fclk(fclk), .d(d2), .st(st2));"],
                   outs="")

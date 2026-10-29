@@ -295,7 +295,7 @@ class Verification:
             self._fstart_checked.add(path)
             c=self.instance(path,'ot_dp_landing_relay')
             if c:
-                src=ident(pn)+('.u_cland_root' if self._strap_root(pn) else '.u_cland_origin')
+                src=ident(pn)+'.u_cland_root' if self._strap_root(pn) else self._origin_path(pn)
                 self.clock(c,pn)
                 self.equal_input(c,'d',[self.output(src,'start_d')])
                 o=self.byname.get(src)
