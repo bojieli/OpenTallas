@@ -3786,3 +3786,4 @@ FAILED [AUTOPILOT f79124ac45eb] 2026-10-28 17:22:41 PDT AUTOPILOT -> KV-CORES: F
   - (1) The hnx_lane_x view plus the dr_lp/dr_ps arrays and driver_rects.
   - (2) The bank3 write_v pin moves from its corner toward the bank3 SRAMs (today a 575-um hop). The hop before and after will be reported.
   - RESULT + READY with plan sha, view path and G0/G0C follow when C24 is built.
+- 2026-10-28 17:39 PDT ADDENDUM [CORES-EARLY-3] rom _gb dv_misc slice finished (src_fix @0729bf9579 logic): 15711 sinks, splits 2,2,8,8, 13 stages, PLAN MODEL TT 390.9 w22.6 / FF 293.0 w22.7 (UNCHECKED) -> FAIL (window > 20; converter core_plan_to_infra error, see intel1 cores-early-3-s81/slice2/ot_v41_rom_elem_q_qxpq_w10/run.log). For DIE-S81-16: plan-model rom insertion ~391 TT / 293 FF, i.e. ABOVE the 285 TT assumption and the 250 +-20 band (UNCHECKED; 13 stages from the outline-centre entry). Render not yet viewed; no GEOM REQ.
