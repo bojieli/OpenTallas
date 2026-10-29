@@ -1,0 +1,14 @@
+read_verilog -sv -DSYNTHESIS -DOT_SMH_RP4_SRST /l/bb.sv /l/gold.sv
+design -stash g0
+read_verilog -sv -DSYNTHESIS -DOT_SMH_RP4_SRST /l/bb.sv /l/gate.sv
+design -stash g1
+design -copy-from g0 -as lx_gold lx_gold
+design -copy-from g1 -as lx_gate lx_gate
+design -copy-from g0 -as ot_hbm_accel_smh_bdc ot_hbm_accel_smh_bdc
+design -copy-from g0 -as hnx_rp4_tcc hnx_rp4_tcc
+proc; opt_clean
+equiv_make lx_gold lx_gate eqm
+hierarchy -top eqm
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status -assert

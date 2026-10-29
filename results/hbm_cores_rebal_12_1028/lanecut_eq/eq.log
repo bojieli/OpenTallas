@@ -1,0 +1,4102 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/l/eq.ys' --
+
+1. Executing Verilog-2005 frontend: /l/bb.sv
+Parsing SystemVerilog input from `/l/bb.sv' to AST representation.
+Generating RTLIL representation for module `\hnx_xs3'.
+Generating RTLIL representation for module `\ot_hbm_accel_smh_bdc'.
+Generating RTLIL representation for module `\hnx_rp4_tcc'.
+Generating RTLIL representation for module `\hnx_rp4lp4_pub'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /l/gold.sv
+Parsing SystemVerilog input from `/l/gold.sv' to AST representation.
+Generating RTLIL representation for module `\lx_gold'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /l/bb.sv
+Parsing SystemVerilog input from `/l/bb.sv' to AST representation.
+Generating RTLIL representation for module `\hnx_xs3'.
+Generating RTLIL representation for module `\ot_hbm_accel_smh_bdc'.
+Generating RTLIL representation for module `\hnx_rp4_tcc'.
+Generating RTLIL representation for module `\hnx_rp4lp4_pub'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /l/gate.sv
+Parsing SystemVerilog input from `/l/gate.sv' to AST representation.
+Generating RTLIL representation for module `\lx_gate'.
+Successfully finished Verilog frontend.
+Warning: Selection "ot_hbm_accel_smh_bdc" did not match any module.
+Warning: Selection "hnx_rp4_tcc" did not match any module.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/l/gate.sv:53$19 in module lx_gate.
+Marked 1 switch rules as full_case in process $proc$/l/gold.sv:45$6 in module lx_gold.
+Marked 1 switch rules as full_case in process $proc$/l/gold.sv:28$3 in module lx_gold.
+Marked 1 switch rules as full_case in process $proc$/l/gold.sv:27$1 in module lx_gold.
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 6 redundant assignments.
+Promoted 29 assignments to connections.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~4 debug messages>
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\lx_gate.$proc$/l/gate.sv:56$25'.
+Creating decoders for process `\lx_gate.$proc$/l/gate.sv:53$19'.
+     1/2: $0\gf_q[0:0]
+     2/2: $0\gv_q[0:0]
+Creating decoders for process `\lx_gate.$proc$/l/gate.sv:37$18'.
+Creating decoders for process `\lx_gate.$proc$/l/gate.sv:30$15'.
+Creating decoders for process `\lx_gold.$proc$/l/gold.sv:48$12'.
+Creating decoders for process `\lx_gold.$proc$/l/gold.sv:45$6'.
+     1/2: $0\gf_q[0:0]
+     2/2: $0\gv_q[0:0]
+Creating decoders for process `\lx_gold.$proc$/l/gold.sv:29$5'.
+Creating decoders for process `\lx_gold.$proc$/l/gold.sv:28$3'.
+     1/1: $0\xf_v[0:0]
+Creating decoders for process `\lx_gold.$proc$/l/gold.sv:27$1'.
+     1/1: $0\xb_v[0:0]
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\lx_gate.\gy_q' using process `\lx_gate.$proc$/l/gate.sv:56$25'.
+  created $dff cell `$procdff$46' with positive edge clock.
+Creating register for signal `\lx_gate.\gt_q' using process `\lx_gate.$proc$/l/gate.sv:56$25'.
+  created $dff cell `$procdff$47' with positive edge clock.
+Creating register for signal `\lx_gate.\gv_q' using process `\lx_gate.$proc$/l/gate.sv:53$19'.
+  created $dff cell `$procdff$48' with positive edge clock.
+Creating register for signal `\lx_gate.\gf_q' using process `\lx_gate.$proc$/l/gate.sv:53$19'.
+  created $dff cell `$procdff$49' with positive edge clock.
+Creating register for signal `\lx_gate.\xb_first' using process `\lx_gate.$proc$/l/gate.sv:37$18'.
+  created $dff cell `$procdff$50' with positive edge clock.
+Creating register for signal `\lx_gate.\xb_last' using process `\lx_gate.$proc$/l/gate.sv:37$18'.
+  created $dff cell `$procdff$51' with positive edge clock.
+Creating register for signal `\lx_gate.\xb_fp4' using process `\lx_gate.$proc$/l/gate.sv:37$18'.
+  created $dff cell `$procdff$52' with positive edge clock.
+Creating register for signal `\lx_gate.\xf_first' using process `\lx_gate.$proc$/l/gate.sv:37$18'.
+  created $dff cell `$procdff$53' with positive edge clock.
+Creating register for signal `\lx_gate.\xf_last' using process `\lx_gate.$proc$/l/gate.sv:37$18'.
+  created $dff cell `$procdff$54' with positive edge clock.
+Creating register for signal `\lx_gate.\xb_tag' using process `\lx_gate.$proc$/l/gate.sv:37$18'.
+  created $dff cell `$procdff$55' with positive edge clock.
+Creating register for signal `\lx_gate.\xf_tag' using process `\lx_gate.$proc$/l/gate.sv:37$18'.
+  created $dff cell `$procdff$56' with positive edge clock.
+Creating register for signal `\lx_gate.\xb_w' using process `\lx_gate.$proc$/l/gate.sv:37$18'.
+  created $dff cell `$procdff$57' with positive edge clock.
+Creating register for signal `\lx_gate.\xb_x' using process `\lx_gate.$proc$/l/gate.sv:37$18'.
+  created $dff cell `$procdff$58' with positive edge clock.
+Creating register for signal `\lx_gate.\xf_w' using process `\lx_gate.$proc$/l/gate.sv:37$18'.
+  created $dff cell `$procdff$59' with positive edge clock.
+Creating register for signal `\lx_gate.\xf_x' using process `\lx_gate.$proc$/l/gate.sv:37$18'.
+  created $dff cell `$procdff$60' with positive edge clock.
+Creating register for signal `\lx_gate.\xb_vr' using process `\lx_gate.$proc$/l/gate.sv:30$15'.
+  created $dff cell `$procdff$61' with positive edge clock.
+Creating register for signal `\lx_gate.\xf_vr' using process `\lx_gate.$proc$/l/gate.sv:30$15'.
+  created $dff cell `$procdff$62' with positive edge clock.
+Creating register for signal `\lx_gate.\x_rq' using process `\lx_gate.$proc$/l/gate.sv:30$15'.
+  created $dff cell `$procdff$63' with positive edge clock.
+Creating register for signal `\lx_gold.\gy_q' using process `\lx_gold.$proc$/l/gold.sv:48$12'.
+  created $dff cell `$procdff$64' with positive edge clock.
+Creating register for signal `\lx_gold.\gt_q' using process `\lx_gold.$proc$/l/gold.sv:48$12'.
+  created $dff cell `$procdff$65' with positive edge clock.
+Creating register for signal `\lx_gold.\gv_q' using process `\lx_gold.$proc$/l/gold.sv:45$6'.
+  created $dff cell `$procdff$66' with positive edge clock.
+Creating register for signal `\lx_gold.\gf_q' using process `\lx_gold.$proc$/l/gold.sv:45$6'.
+  created $dff cell `$procdff$67' with positive edge clock.
+Creating register for signal `\lx_gold.\xb_first' using process `\lx_gold.$proc$/l/gold.sv:29$5'.
+  created $dff cell `$procdff$68' with positive edge clock.
+Creating register for signal `\lx_gold.\xb_last' using process `\lx_gold.$proc$/l/gold.sv:29$5'.
+  created $dff cell `$procdff$69' with positive edge clock.
+Creating register for signal `\lx_gold.\xb_fp4' using process `\lx_gold.$proc$/l/gold.sv:29$5'.
+  created $dff cell `$procdff$70' with positive edge clock.
+Creating register for signal `\lx_gold.\xf_first' using process `\lx_gold.$proc$/l/gold.sv:29$5'.
+  created $dff cell `$procdff$71' with positive edge clock.
+Creating register for signal `\lx_gold.\xf_last' using process `\lx_gold.$proc$/l/gold.sv:29$5'.
+  created $dff cell `$procdff$72' with positive edge clock.
+Creating register for signal `\lx_gold.\xb_tag' using process `\lx_gold.$proc$/l/gold.sv:29$5'.
+  created $dff cell `$procdff$73' with positive edge clock.
+Creating register for signal `\lx_gold.\xf_tag' using process `\lx_gold.$proc$/l/gold.sv:29$5'.
+  created $dff cell `$procdff$74' with positive edge clock.
+Creating register for signal `\lx_gold.\xb_w' using process `\lx_gold.$proc$/l/gold.sv:29$5'.
+  created $dff cell `$procdff$75' with positive edge clock.
+Creating register for signal `\lx_gold.\xb_x' using process `\lx_gold.$proc$/l/gold.sv:29$5'.
+  created $dff cell `$procdff$76' with positive edge clock.
+Creating register for signal `\lx_gold.\xf_w' using process `\lx_gold.$proc$/l/gold.sv:29$5'.
+  created $dff cell `$procdff$77' with positive edge clock.
+Creating register for signal `\lx_gold.\xf_x' using process `\lx_gold.$proc$/l/gold.sv:29$5'.
+  created $dff cell `$procdff$78' with positive edge clock.
+Creating register for signal `\lx_gold.\xf_v' using process `\lx_gold.$proc$/l/gold.sv:28$3'.
+  created $dff cell `$procdff$79' with positive edge clock.
+Creating register for signal `\lx_gold.\xb_v' using process `\lx_gold.$proc$/l/gold.sv:27$1'.
+  created $dff cell `$procdff$80' with positive edge clock.
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `lx_gate.$proc$/l/gate.sv:56$25'.
+Found and cleaned up 1 empty switch in `\lx_gate.$proc$/l/gate.sv:53$19'.
+Removing empty process `lx_gate.$proc$/l/gate.sv:53$19'.
+Removing empty process `lx_gate.$proc$/l/gate.sv:37$18'.
+Removing empty process `lx_gate.$proc$/l/gate.sv:30$15'.
+Removing empty process `lx_gold.$proc$/l/gold.sv:48$12'.
+Found and cleaned up 1 empty switch in `\lx_gold.$proc$/l/gold.sv:45$6'.
+Removing empty process `lx_gold.$proc$/l/gold.sv:45$6'.
+Removing empty process `lx_gold.$proc$/l/gold.sv:29$5'.
+Found and cleaned up 1 empty switch in `\lx_gold.$proc$/l/gold.sv:28$3'.
+Removing empty process `lx_gold.$proc$/l/gold.sv:28$3'.
+Found and cleaned up 1 empty switch in `\lx_gold.$proc$/l/gold.sv:27$1'.
+Removing empty process `lx_gold.$proc$/l/gold.sv:27$1'.
+Cleaned up 4 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module lx_gate.
+<suppressed ~2 debug messages>
+Optimizing module lx_gold.
+<suppressed ~4 debug messages>
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \lx_gate..
+Finding unused cells or wires in module \lx_gold..
+Removed 4 unused cells and 47 unused wires.
+<suppressed ~6 debug messages>
+
+7. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: gt_gold (\gt_q_gold), gt_gate (\gt_q_gate) -> gt
+Presumably equivalent wires: gy_gold (\gy_q_gold), gy_gate (\gy_q_gate) -> gy
+Presumably equivalent wires: gf_gold (\gf_q_gold), gf_gate (\gf_q_gate) -> gf
+Presumably equivalent wires: gv_gold (\gv_q_gold), gv_gate (\gv_q_gate) -> gv
+Presumably equivalent wires: gt_q_gold (\gt_q_gold), gt_q_gate (\gt_q_gate) -> gt_q
+Presumably equivalent wires: gy_q_gold (\gy_q_gold), gy_q_gate (\gy_q_gate) -> gy_q
+Presumably equivalent wires: gf_q_gold (\gf_q_gold), gf_q_gate (\gf_q_gate) -> gf_q
+Presumably equivalent wires: gv_q_gold (\gv_q_gold), gv_q_gate (\gv_q_gate) -> gv_q
+Presumably equivalent wires: ftag_gold (\ftag_gold), ftag_gate (\ftag_gate) -> ftag
+Presumably equivalent wires: btag_gold (\btag_gold), btag_gate (\btag_gate) -> btag
+Presumably equivalent wires: fy_gold (\fy_gold), fy_gate (\fy_gate) -> fy
+Presumably equivalent wires: by_gold (\by_gold), by_gate (\by_gate) -> by
+Presumably equivalent wires: ffault_gold (\ffault_gold), ffault_gate (\ffault_gate) -> ffault
+Presumably equivalent wires: fov_gold (\fov_gold), fov_gate (\fov_gate) -> fov
+Presumably equivalent wires: bfault_gold (\bfault_gold), bfault_gate (\bfault_gate) -> bfault
+Presumably equivalent wires: bov_gold (\bov_gold), bov_gate (\bov_gate) -> bov
+Presumably equivalent wires: xf_x_gold (\xf_x_gold), xf_x_gate (\xf_x_gate) -> xf_x
+Presumably equivalent wires: xf_w_gold (\xf_w_gold), xf_w_gate (\xf_w_gate) -> xf_w
+Presumably equivalent wires: xb_x_gold (\xb_x_gold), xb_x_gate (\xb_x_gate) -> xb_x
+Presumably equivalent wires: xb_w_gold (\xb_w_gold), xb_w_gate (\xb_w_gate) -> xb_w
+Presumably equivalent wires: xf_tag_gold (\xf_tag_gold), xf_tag_gate (\xf_tag_gate) -> xf_tag
+Presumably equivalent wires: xb_tag_gold (\xb_tag_gold), xb_tag_gate (\xb_tag_gate) -> xb_tag
+Presumably equivalent wires: xf_last_gold (\xf_last_gold), xf_last_gate (\xf_last_gate) -> xf_last
+Presumably equivalent wires: xf_first_gold (\xf_first_gold), xf_first_gate (\xf_first_gate) -> xf_first
+Presumably equivalent wires: xb_fp4_gold (\xb_fp4_gold), xb_fp4_gate (\xb_fp4_gate) -> xb_fp4
+Presumably equivalent wires: xb_last_gold (\xb_last_gold), xb_last_gate (\xb_last_gate) -> xb_last
+Presumably equivalent wires: xb_first_gold (\xb_first_gold), xb_first_gate (\xb_first_gate) -> xb_first
+Presumably equivalent wires: xf_v_gold (\xf_v_gold), xf_v_gate (\xf_v_gate) -> xf_v
+Presumably equivalent wires: xb_v_gold (\xb_v_gold), xb_v_gate (\xb_v_gate) -> xb_v
+Presumably equivalent wires: g_gold ({ \gv_q_gold \gf_q_gold \gy_q_gold \gt_q_gold }), g_gate ({ \gv_q_gate \gf_q_gate \gy_q_gate \gt_q_gate }) -> g
+Presumably equivalent wires: sxf_gold (\sxf_gold), sxf_gate (\sxf_gate) -> sxf
+Presumably equivalent wires: swf_gold (\swf_gold), swf_gate (\swf_gate) -> swf
+Presumably equivalent wires: stag_gold (\stag_gold), stag_gate (\stag_gate) -> stag
+Presumably equivalent wires: slast_gold (\slast_gold), slast_gate (\slast_gate) -> slast
+Presumably equivalent wires: sfirst_gold (\sfirst_gold), sfirst_gate (\sfirst_gate) -> sfirst
+Presumably equivalent wires: sv_f_gold (\sv_f_gold), sv_f_gate (\sv_f_gate) -> sv_f
+Presumably equivalent wires: ixb_p_gold (\ixb_p_gold), ixb_p_gate (\ixb_p_gate) -> ixb_p
+Presumably equivalent wires: iwb_gold (\iwb_gold), iwb_gate (\iwb_gate) -> iwb
+Presumably equivalent wires: itag_gold (\itag_gold), itag_gate (\itag_gate) -> itag
+Presumably equivalent wires: ifp4_gold (\ifp4_gold), ifp4_gate (\ifp4_gate) -> ifp4
+Presumably equivalent wires: ilast_gold (\ilast_gold), ilast_gate (\ilast_gate) -> ilast
+Presumably equivalent wires: ifirst_gold (\ifirst_gold), ifirst_gate (\ifirst_gate) -> ifirst
+Presumably equivalent wires: iv_b_gold (\iv_b_gold), iv_b_gate (\iv_b_gate) -> iv_b
+Presumably equivalent wires: r_x_gold (\r_x_gold), r_x_gate (\r_x_gate) -> r_x
+Presumably equivalent wires: r_g_gold (\r_g_gold), r_g_gate (\r_g_gate) -> r_g
+Presumably equivalent wires: r_tcc_gold (\r_tcc_gold), r_tcc_gate (\r_tcc_gate) -> r_tcc
+Presumably equivalent wires: r_bdc_gold (\r_bdc_gold), r_bdc_gate (\r_bdc_gate) -> r_bdc
+Presumably equivalent wires: clk_gold (\clk_gold), clk_gate (\clk_gate) -> clk
+Changing input S of cell $ternary$/l/gate.sv:56$27_gate ($mux): \bov_gate -> \bov
+Changing input B of cell $ternary$/l/gate.sv:56$27_gate ($mux): \btag_gate -> \btag
+Changing input A of cell $ternary$/l/gate.sv:56$27_gate ($mux): \ftag_gate -> \ftag
+Changing input S of cell $ternary$/l/gate.sv:56$26_gate ($mux): \bov_gate -> \bov
+Changing input B of cell $ternary$/l/gate.sv:56$26_gate ($mux): \by_gate -> \by
+Changing input A of cell $ternary$/l/gate.sv:56$26_gate ($mux): \fy_gate -> \fy
+Changing input B of cell $and$/l/gate.sv:55$23_gate ($and): \fov_gate -> \fov
+Changing input A of cell $and$/l/gate.sv:55$23_gate ($and): \bov_gate -> \bov
+Changing input B of cell $or$/l/gate.sv:55$22_gate ($or): \ffault_gate -> \ffault
+Changing input A of cell $or$/l/gate.sv:55$22_gate ($or): \bfault_gate -> \bfault
+Changing input B of cell $or$/l/gate.sv:55$21_gate ($or): \fov_gate -> \fov
+Changing input A of cell $or$/l/gate.sv:55$21_gate ($or): \bov_gate -> \bov
+Changing input fault of cell u_tcc_gate (hnx_rp4_tcc): \ffault_gate -> \ffault
+Changing input otag of cell u_tcc_gate (hnx_rp4_tcc): \ftag_gate -> \ftag
+Changing input y of cell u_tcc_gate (hnx_rp4_tcc): \fy_gate -> \fy
+Changing input ov of cell u_tcc_gate (hnx_rp4_tcc): \fov_gate -> \fov
+Changing input i_x of cell u_tcc_gate (hnx_rp4_tcc): \xf_x_gate -> \xf_x
+Changing input i_w of cell u_tcc_gate (hnx_rp4_tcc): \xf_w_gate -> \xf_w
+Changing input i_tag of cell u_tcc_gate (hnx_rp4_tcc): \xf_tag_gate -> \xf_tag
+Changing input i_last of cell u_tcc_gate (hnx_rp4_tcc): \xf_last_gate -> \xf_last
+Changing input i_first of cell u_tcc_gate (hnx_rp4_tcc): \xf_first_gate -> \xf_first
+Changing input i_v of cell u_tcc_gate (hnx_rp4_tcc): \xf_v_gate -> \xf_v
+Changing input fault of cell u_bdc_gate (ot_hbm_accel_smh_bdc): \bfault_gate -> \bfault
+Changing input otag of cell u_bdc_gate (ot_hbm_accel_smh_bdc): \btag_gate -> \btag
+Changing input y of cell u_bdc_gate (ot_hbm_accel_smh_bdc): \by_gate -> \by
+Changing input ov of cell u_bdc_gate (ot_hbm_accel_smh_bdc): \bov_gate -> \bov
+Changing input i_x of cell u_bdc_gate (ot_hbm_accel_smh_bdc): \xb_x_gate -> \xb_x
+Changing input i_w of cell u_bdc_gate (ot_hbm_accel_smh_bdc): \xb_w_gate -> \xb_w
+Changing input i_tag of cell u_bdc_gate (ot_hbm_accel_smh_bdc): \xb_tag_gate -> \xb_tag
+Changing input i_fp4 of cell u_bdc_gate (ot_hbm_accel_smh_bdc): \xb_fp4_gate -> \xb_fp4
+Changing input i_last of cell u_bdc_gate (ot_hbm_accel_smh_bdc): \xb_last_gate -> \xb_last
+Changing input i_first of cell u_bdc_gate (ot_hbm_accel_smh_bdc): \xb_first_gate -> \xb_first
+Changing input i_v of cell u_bdc_gate (ot_hbm_accel_smh_bdc): \xb_v_gate -> \xb_v
+Changing input S of cell $ternary$/l/gold.sv:48$14_gold ($mux): \bov_gold -> \bov
+Changing input B of cell $ternary$/l/gold.sv:48$14_gold ($mux): \btag_gold -> \btag
+Changing input A of cell $ternary$/l/gold.sv:48$14_gold ($mux): \ftag_gold -> \ftag
+Changing input S of cell $ternary$/l/gold.sv:48$13_gold ($mux): \bov_gold -> \bov
+Changing input B of cell $ternary$/l/gold.sv:48$13_gold ($mux): \by_gold -> \by
+Changing input A of cell $ternary$/l/gold.sv:48$13_gold ($mux): \fy_gold -> \fy
+Changing input B of cell $and$/l/gold.sv:47$10_gold ($and): \fov_gold -> \fov
+Changing input A of cell $and$/l/gold.sv:47$10_gold ($and): \bov_gold -> \bov
+Changing input B of cell $or$/l/gold.sv:47$9_gold ($or): \ffault_gold -> \ffault
+Changing input A of cell $or$/l/gold.sv:47$9_gold ($or): \bfault_gold -> \bfault
+Changing input B of cell $or$/l/gold.sv:47$8_gold ($or): \fov_gold -> \fov
+Changing input A of cell $or$/l/gold.sv:47$8_gold ($or): \bov_gold -> \bov
+Changing input fault of cell u_tcc_gold (hnx_rp4_tcc): \ffault_gold -> \ffault
+Changing input otag of cell u_tcc_gold (hnx_rp4_tcc): \ftag_gold -> \ftag
+Changing input y of cell u_tcc_gold (hnx_rp4_tcc): \fy_gold -> \fy
+Changing input ov of cell u_tcc_gold (hnx_rp4_tcc): \fov_gold -> \fov
+Changing input i_x of cell u_tcc_gold (hnx_rp4_tcc): \xf_x_gold -> \xf_x
+Changing input i_w of cell u_tcc_gold (hnx_rp4_tcc): \xf_w_gold -> \xf_w
+Changing input i_tag of cell u_tcc_gold (hnx_rp4_tcc): \xf_tag_gold -> \xf_tag
+Changing input i_last of cell u_tcc_gold (hnx_rp4_tcc): \xf_last_gold -> \xf_last
+Changing input i_first of cell u_tcc_gold (hnx_rp4_tcc): \xf_first_gold -> \xf_first
+Changing input i_v of cell u_tcc_gold (hnx_rp4_tcc): \xf_v_gold -> \xf_v
+Changing input fault of cell u_bdc_gold (ot_hbm_accel_smh_bdc): \bfault_gold -> \bfault
+Changing input otag of cell u_bdc_gold (ot_hbm_accel_smh_bdc): \btag_gold -> \btag
+Changing input y of cell u_bdc_gold (ot_hbm_accel_smh_bdc): \by_gold -> \by
+Changing input ov of cell u_bdc_gold (ot_hbm_accel_smh_bdc): \bov_gold -> \bov
+Changing input i_x of cell u_bdc_gold (ot_hbm_accel_smh_bdc): \xb_x_gold -> \xb_x
+Changing input i_w of cell u_bdc_gold (ot_hbm_accel_smh_bdc): \xb_w_gold -> \xb_w
+Changing input i_tag of cell u_bdc_gold (ot_hbm_accel_smh_bdc): \xb_tag_gold -> \xb_tag
+Changing input i_fp4 of cell u_bdc_gold (ot_hbm_accel_smh_bdc): \xb_fp4_gold -> \xb_fp4
+Changing input i_last of cell u_bdc_gold (ot_hbm_accel_smh_bdc): \xb_last_gold -> \xb_last
+Changing input i_first of cell u_bdc_gold (ot_hbm_accel_smh_bdc): \xb_first_gold -> \xb_first
+Changing input i_v of cell u_bdc_gold (ot_hbm_accel_smh_bdc): \xb_v_gold -> \xb_v
+Setting undriven nets to undef: \bov_gold
+Setting undriven nets to undef: \bfault_gold
+Setting undriven nets to undef: \fov_gold
+Setting undriven nets to undef: \ffault_gold
+Setting undriven nets to undef: \by_gold
+Setting undriven nets to undef: \fy_gold
+Setting undriven nets to undef: \btag_gold
+Setting undriven nets to undef: \ftag_gold
+Setting undriven nets to undef: \bov_gate
+Setting undriven nets to undef: \bfault_gate
+Setting undriven nets to undef: \fov_gate
+Setting undriven nets to undef: \ffault_gate
+Setting undriven nets to undef: \by_gate
+Setting undriven nets to undef: \fy_gate
+Setting undriven nets to undef: \btag_gate
+Setting undriven nets to undef: \ftag_gate
+
+8. Executing HIERARCHY pass (managing design hierarchy).
+
+8.1. Analyzing design hierarchy..
+Top module:  \eqm
+
+8.2. Analyzing design hierarchy..
+Top module:  \eqm
+Removing unused module `\lx_gate'.
+Removing unused module `\lx_gold'.
+Removed 2 unused modules.
+
+9. Executing EQUIV_SIMPLE pass.
+Found 1865 unproven $equiv cells (30 groups) in eqm:
+ Grouping SAT models for \g:
+  Trying to prove $equiv for \g [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \g [1]:ezsat
+ success!
+  Trying to prove $equiv for \g [2]:ezsat
+ success!
+  Trying to prove $equiv for \g [3]:ezsat
+ success!
+  Trying to prove $equiv for \g [4]:ezsat
+ success!
+  Trying to prove $equiv for \g [5]:ezsat
+ success!
+  Trying to prove $equiv for \g [6]:ezsat
+ success!
+  Trying to prove $equiv for \g [7]:ezsat
+ success!
+  Trying to prove $equiv for \g [8]:ezsat
+ success!
+  Trying to prove $equiv for \g [9]:ezsat
+ success!
+  Trying to prove $equiv for \g [10]:ezsat
+ success!
+  Trying to prove $equiv for \g [11]:ezsat
+ success!
+  Trying to prove $equiv for \g [12]:ezsat
+ success!
+  Trying to prove $equiv for \g [13]:ezsat
+ success!
+  Trying to prove $equiv for \g [14]:ezsat
+ success!
+  Trying to prove $equiv for \g [15]:ezsat
+ success!
+  Trying to prove $equiv for \g [16]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \g [17]:ezsat
+ success!
+  Trying to prove $equiv for \g [18]:ezsat
+ success!
+  Trying to prove $equiv for \g [19]:ezsat
+ success!
+  Trying to prove $equiv for \g [20]:ezsat
+ success!
+  Trying to prove $equiv for \g [21]:ezsat
+ success!
+  Trying to prove $equiv for \g [22]:ezsat
+ success!
+  Trying to prove $equiv for \g [23]:ezsat
+ success!
+  Trying to prove $equiv for \g [24]:ezsat
+ success!
+  Trying to prove $equiv for \g [25]:ezsat
+ success!
+  Trying to prove $equiv for \g [26]:ezsat
+ success!
+  Trying to prove $equiv for \g [27]:ezsat
+ success!
+  Trying to prove $equiv for \g [28]:ezsat
+ success!
+  Trying to prove $equiv for \g [29]:ezsat
+ success!
+  Trying to prove $equiv for \g [30]:ezsat
+ success!
+  Trying to prove $equiv for \g [31]:ezsat
+ success!
+  Trying to prove $equiv for \g [32]:ezsat
+ success!
+  Trying to prove $equiv for \g [33]:ezsat
+ success!
+  Trying to prove $equiv for \g [34]:ezsat
+ success!
+  Trying to prove $equiv for \g [35]:ezsat
+ success!
+  Trying to prove $equiv for \g [36]:ezsat
+ success!
+  Trying to prove $equiv for \g [37]:ezsat
+ success!
+  Trying to prove $equiv for \g [38]:ezsat
+ success!
+  Trying to prove $equiv for \g [39]:ezsat
+ success!
+  Trying to prove $equiv for \g [40]:ezsat
+ success!
+  Trying to prove $equiv for \g [41]:ezsat
+ success!
+  Trying to prove $equiv for \g [42]:ezsat
+ success!
+  Trying to prove $equiv for \g [43]:ezsat
+ success!
+  Trying to prove $equiv for \g [44]:ezsat
+ success!
+  Trying to prove $equiv for \g [45]:ezsat
+ success!
+  Trying to prove $equiv for \g [46]:ezsat
+ success!
+  Trying to prove $equiv for \g [47]:ezsat
+ success!
+  Trying to prove $equiv for \g [48]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \g [49]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \xb_v:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \xf_v:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \xb_first:ezsat
+ success!
+  Trying to prove $equiv for \xb_last:ezsat
+ success!
+  Trying to prove $equiv for \xb_fp4:ezsat
+ success!
+  Trying to prove $equiv for \xf_first:ezsat
+ success!
+  Trying to prove $equiv for \xf_last:ezsat
+ success!
+ Grouping SAT models for \xb_tag:
+  Trying to prove $equiv for \xb_tag [0]:ezsat
+ success!
+  Trying to prove $equiv for \xb_tag [1]:ezsat
+ success!
+  Trying to prove $equiv for \xb_tag [2]:ezsat
+ success!
+  Trying to prove $equiv for \xb_tag [3]:ezsat
+ success!
+  Trying to prove $equiv for \xb_tag [4]:ezsat
+ success!
+  Trying to prove $equiv for \xb_tag [5]:ezsat
+ success!
+  Trying to prove $equiv for \xb_tag [6]:ezsat
+ success!
+  Trying to prove $equiv for \xb_tag [7]:ezsat
+ success!
+  Trying to prove $equiv for \xb_tag [8]:ezsat
+ success!
+  Trying to prove $equiv for \xb_tag [9]:ezsat
+ success!
+  Trying to prove $equiv for \xb_tag [10]:ezsat
+ success!
+  Trying to prove $equiv for \xb_tag [11]:ezsat
+ success!
+  Trying to prove $equiv for \xb_tag [12]:ezsat
+ success!
+  Trying to prove $equiv for \xb_tag [13]:ezsat
+ success!
+  Trying to prove $equiv for \xb_tag [14]:ezsat
+ success!
+  Trying to prove $equiv for \xb_tag [15]:ezsat
+ success!
+ Grouping SAT models for \xf_tag:
+  Trying to prove $equiv for \xf_tag [0]:ezsat
+ success!
+  Trying to prove $equiv for \xf_tag [1]:ezsat
+ success!
+  Trying to prove $equiv for \xf_tag [2]:ezsat
+ success!
+  Trying to prove $equiv for \xf_tag [3]:ezsat
+ success!
+  Trying to prove $equiv for \xf_tag [4]:ezsat
+ success!
+  Trying to prove $equiv for \xf_tag [5]:ezsat
+ success!
+  Trying to prove $equiv for \xf_tag [6]:ezsat
+ success!
+  Trying to prove $equiv for \xf_tag [7]:ezsat
+ success!
+  Trying to prove $equiv for \xf_tag [8]:ezsat
+ success!
+  Trying to prove $equiv for \xf_tag [9]:ezsat
+ success!
+  Trying to prove $equiv for \xf_tag [10]:ezsat
+ success!
+  Trying to prove $equiv for \xf_tag [11]:ezsat
+ success!
+  Trying to prove $equiv for \xf_tag [12]:ezsat
+ success!
+  Trying to prove $equiv for \xf_tag [13]:ezsat
+ success!
+  Trying to prove $equiv for \xf_tag [14]:ezsat
+ success!
+  Trying to prove $equiv for \xf_tag [15]:ezsat
+ success!
+ Grouping SAT models for \xb_w:
+  Trying to prove $equiv for \xb_w [0]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [1]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [2]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [3]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [4]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [5]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [6]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [7]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [8]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [9]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [10]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [11]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [12]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [13]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [14]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [15]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [16]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [17]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [18]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [19]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [20]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [21]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [22]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [23]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [24]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [25]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [26]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [27]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [28]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [29]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [30]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [31]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [32]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [33]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [34]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [35]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [36]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [37]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [38]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [39]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [40]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [41]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [42]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [43]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [44]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [45]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [46]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [47]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [48]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [49]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [50]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [51]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [52]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [53]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [54]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [55]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [56]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [57]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [58]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [59]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [60]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [61]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [62]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [63]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [64]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [65]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [66]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [67]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [68]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [69]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [70]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [71]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [72]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [73]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [74]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [75]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [76]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [77]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [78]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [79]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [80]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [81]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [82]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [83]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [84]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [85]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [86]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [87]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [88]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [89]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [90]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [91]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [92]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [93]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [94]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [95]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [96]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [97]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [98]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [99]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [100]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [101]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [102]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [103]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [104]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [105]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [106]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [107]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [108]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [109]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [110]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [111]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [112]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [113]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [114]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [115]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [116]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [117]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [118]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [119]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [120]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [121]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [122]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [123]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [124]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [125]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [126]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [127]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [128]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [129]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [130]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [131]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [132]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [133]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [134]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [135]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [136]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [137]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [138]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [139]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [140]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [141]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [142]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [143]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [144]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [145]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [146]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [147]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [148]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [149]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [150]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [151]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [152]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [153]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [154]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [155]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [156]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [157]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [158]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [159]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [160]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [161]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [162]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [163]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [164]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [165]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [166]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [167]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [168]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [169]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [170]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [171]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [172]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [173]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [174]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [175]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [176]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [177]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [178]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [179]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [180]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [181]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [182]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [183]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [184]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [185]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [186]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [187]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [188]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [189]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [190]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [191]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [192]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [193]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [194]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [195]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [196]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [197]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [198]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [199]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [200]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [201]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [202]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [203]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [204]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [205]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [206]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [207]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [208]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [209]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [210]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [211]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [212]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [213]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [214]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [215]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [216]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [217]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [218]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [219]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [220]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [221]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [222]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [223]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [224]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [225]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [226]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [227]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [228]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [229]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [230]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [231]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [232]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [233]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [234]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [235]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [236]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [237]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [238]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [239]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [240]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [241]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [242]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [243]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [244]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [245]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [246]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [247]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [248]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [249]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [250]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [251]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [252]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [253]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [254]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [255]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [256]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [257]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [258]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [259]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [260]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [261]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [262]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [263]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [264]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [265]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [266]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [267]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [268]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [269]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [270]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [271]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [272]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [273]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [274]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [275]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [276]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [277]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [278]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [279]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [280]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [281]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [282]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [283]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [284]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [285]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [286]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [287]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [288]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [289]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [290]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [291]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [292]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [293]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [294]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [295]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [296]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [297]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [298]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [299]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [300]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [301]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [302]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [303]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [304]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [305]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [306]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [307]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [308]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [309]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [310]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [311]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [312]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [313]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [314]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [315]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [316]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [317]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [318]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [319]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [320]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [321]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [322]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [323]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [324]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [325]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [326]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [327]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [328]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [329]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [330]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [331]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [332]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [333]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [334]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [335]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [336]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [337]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [338]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [339]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [340]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [341]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [342]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [343]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [344]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [345]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [346]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [347]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [348]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [349]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [350]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [351]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [352]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [353]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [354]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [355]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [356]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [357]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [358]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [359]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [360]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [361]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [362]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [363]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [364]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [365]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [366]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [367]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [368]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [369]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [370]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [371]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [372]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [373]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [374]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [375]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [376]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [377]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [378]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [379]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [380]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [381]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [382]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [383]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [384]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [385]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [386]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [387]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [388]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [389]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [390]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [391]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [392]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [393]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [394]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [395]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [396]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [397]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [398]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [399]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [400]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [401]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [402]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [403]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [404]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [405]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [406]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [407]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [408]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [409]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [410]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [411]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [412]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [413]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [414]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [415]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [416]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [417]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [418]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [419]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [420]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [421]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [422]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [423]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [424]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [425]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [426]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [427]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [428]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [429]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [430]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [431]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [432]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [433]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [434]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [435]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [436]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [437]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [438]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [439]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [440]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [441]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [442]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [443]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [444]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [445]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [446]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [447]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [448]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [449]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [450]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [451]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [452]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [453]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [454]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [455]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [456]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [457]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [458]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [459]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [460]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [461]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [462]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [463]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [464]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [465]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [466]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [467]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [468]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [469]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [470]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [471]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [472]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [473]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [474]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [475]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [476]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [477]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [478]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [479]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [480]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [481]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [482]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [483]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [484]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [485]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [486]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [487]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [488]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [489]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [490]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [491]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [492]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [493]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [494]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [495]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [496]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [497]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [498]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [499]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [500]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [501]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [502]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [503]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [504]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [505]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [506]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [507]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [508]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [509]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [510]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [511]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [512]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [513]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [514]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [515]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [516]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [517]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [518]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [519]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [520]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [521]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [522]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [523]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [524]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [525]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [526]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [527]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [528]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [529]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [530]:ezsat
+ success!
+  Trying to prove $equiv for \xb_w [531]:ezsat
+ success!
+ Grouping SAT models for \xb_x:
+  Trying to prove $equiv for \xb_x [0]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [1]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [2]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [3]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [4]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [5]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [6]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [7]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [8]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [9]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [10]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [11]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [12]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [13]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [14]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [15]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [16]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [17]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [18]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [19]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [20]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [21]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [22]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [23]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [24]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [25]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [26]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [27]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [28]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [29]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [30]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [31]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [32]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [33]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [34]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [35]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [36]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [37]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [38]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [39]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [40]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [41]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [42]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [43]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [44]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [45]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [46]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [47]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [48]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [49]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [50]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [51]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [52]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [53]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [54]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [55]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [56]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [57]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [58]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [59]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [60]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [61]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [62]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [63]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [64]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [65]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [66]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [67]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [68]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [69]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [70]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [71]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [72]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [73]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [74]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [75]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [76]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [77]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [78]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [79]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [80]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [81]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [82]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [83]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [84]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [85]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [86]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [87]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [88]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [89]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [90]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [91]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [92]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [93]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [94]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [95]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [96]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [97]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [98]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [99]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [100]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [101]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [102]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [103]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [104]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [105]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [106]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [107]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [108]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [109]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [110]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [111]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [112]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [113]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [114]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [115]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [116]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [117]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [118]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [119]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [120]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [121]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [122]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [123]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [124]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [125]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [126]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [127]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [128]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [129]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [130]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [131]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [132]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [133]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [134]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [135]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [136]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [137]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [138]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [139]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [140]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [141]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [142]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [143]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [144]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [145]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [146]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [147]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [148]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [149]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [150]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [151]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [152]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [153]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [154]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [155]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [156]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [157]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [158]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [159]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [160]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [161]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [162]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [163]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [164]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [165]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [166]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [167]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [168]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [169]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [170]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [171]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [172]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [173]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [174]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [175]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [176]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [177]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [178]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [179]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [180]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [181]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [182]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [183]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [184]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [185]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [186]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [187]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [188]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [189]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [190]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [191]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [192]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [193]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [194]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [195]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [196]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [197]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [198]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [199]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [200]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [201]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [202]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [203]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [204]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [205]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [206]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [207]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [208]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [209]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [210]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [211]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [212]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [213]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [214]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [215]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [216]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [217]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [218]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [219]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [220]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [221]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [222]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [223]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [224]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [225]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [226]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [227]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [228]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [229]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [230]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [231]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [232]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [233]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [234]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [235]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [236]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [237]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [238]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [239]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [240]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [241]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [242]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [243]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [244]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [245]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [246]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [247]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [248]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [249]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [250]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [251]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [252]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [253]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [254]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [255]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [256]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [257]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [258]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [259]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [260]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [261]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [262]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [263]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [264]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [265]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [266]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [267]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [268]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [269]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [270]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [271]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [272]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [273]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [274]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [275]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [276]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [277]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [278]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [279]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [280]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [281]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [282]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [283]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [284]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [285]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [286]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [287]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [288]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [289]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [290]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [291]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [292]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [293]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [294]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [295]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [296]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [297]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [298]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [299]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [300]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [301]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [302]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [303]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [304]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [305]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [306]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [307]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [308]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [309]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [310]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [311]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [312]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [313]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [314]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [315]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [316]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [317]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [318]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [319]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [320]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [321]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [322]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [323]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [324]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [325]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [326]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [327]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [328]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [329]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [330]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [331]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [332]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [333]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [334]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [335]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [336]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [337]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [338]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [339]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [340]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [341]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [342]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [343]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [344]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [345]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [346]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [347]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [348]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [349]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [350]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [351]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [352]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [353]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [354]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [355]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [356]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [357]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [358]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [359]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [360]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [361]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [362]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [363]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [364]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [365]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [366]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [367]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [368]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [369]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [370]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [371]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [372]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [373]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [374]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [375]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [376]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [377]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [378]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [379]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [380]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [381]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [382]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [383]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [384]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [385]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [386]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [387]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [388]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [389]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [390]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [391]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [392]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [393]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [394]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [395]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [396]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [397]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [398]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [399]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [400]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [401]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [402]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [403]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [404]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [405]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [406]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [407]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [408]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [409]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [410]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [411]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [412]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [413]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [414]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [415]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [416]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [417]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [418]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [419]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [420]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [421]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [422]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [423]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [424]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [425]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [426]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [427]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [428]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [429]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [430]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [431]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [432]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [433]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [434]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [435]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [436]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [437]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [438]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [439]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [440]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [441]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [442]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [443]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [444]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [445]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [446]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [447]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [448]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [449]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [450]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [451]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [452]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [453]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [454]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [455]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [456]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [457]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [458]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [459]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [460]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [461]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [462]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [463]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [464]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [465]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [466]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [467]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [468]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [469]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [470]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [471]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [472]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [473]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [474]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [475]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [476]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [477]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [478]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [479]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [480]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [481]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [482]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [483]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [484]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [485]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [486]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [487]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [488]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [489]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [490]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [491]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [492]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [493]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [494]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [495]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [496]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [497]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [498]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [499]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [500]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [501]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [502]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [503]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [504]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [505]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [506]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [507]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [508]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [509]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [510]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [511]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [512]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [513]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [514]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [515]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [516]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [517]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [518]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [519]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [520]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [521]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [522]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [523]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [524]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [525]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [526]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [527]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [528]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [529]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [530]:ezsat
+ success!
+  Trying to prove $equiv for \xb_x [531]:ezsat
+ success!
+ Grouping SAT models for \xf_w:
+  Trying to prove $equiv for \xf_w [0]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [1]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [2]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [3]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [4]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [5]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [6]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [7]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [8]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [9]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [10]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [11]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [12]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [13]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [14]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [15]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [16]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [17]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [18]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [19]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [20]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [21]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [22]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [23]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [24]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [25]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [26]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [27]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [28]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [29]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [30]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [31]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [32]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [33]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [34]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [35]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [36]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [37]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [38]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [39]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [40]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [41]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [42]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [43]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [44]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [45]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [46]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [47]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [48]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [49]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [50]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [51]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [52]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [53]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [54]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [55]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [56]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [57]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [58]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [59]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [60]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [61]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [62]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [63]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [64]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [65]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [66]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [67]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [68]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [69]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [70]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [71]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [72]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [73]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [74]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [75]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [76]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [77]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [78]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [79]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [80]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [81]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [82]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [83]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [84]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [85]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [86]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [87]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [88]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [89]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [90]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [91]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [92]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [93]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [94]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [95]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [96]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [97]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [98]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [99]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [100]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [101]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [102]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [103]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [104]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [105]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [106]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [107]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [108]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [109]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [110]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [111]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [112]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [113]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [114]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [115]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [116]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [117]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [118]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [119]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [120]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [121]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [122]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [123]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [124]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [125]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [126]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [127]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [128]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [129]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [130]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [131]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [132]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [133]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [134]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [135]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [136]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [137]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [138]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [139]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [140]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [141]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [142]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [143]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [144]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [145]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [146]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [147]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [148]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [149]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [150]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [151]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [152]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [153]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [154]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [155]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [156]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [157]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [158]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [159]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [160]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [161]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [162]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [163]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [164]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [165]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [166]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [167]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [168]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [169]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [170]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [171]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [172]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [173]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [174]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [175]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [176]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [177]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [178]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [179]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [180]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [181]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [182]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [183]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [184]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [185]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [186]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [187]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [188]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [189]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [190]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [191]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [192]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [193]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [194]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [195]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [196]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [197]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [198]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [199]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [200]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [201]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [202]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [203]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [204]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [205]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [206]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [207]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [208]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [209]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [210]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [211]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [212]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [213]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [214]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [215]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [216]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [217]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [218]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [219]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [220]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [221]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [222]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [223]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [224]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [225]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [226]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [227]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [228]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [229]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [230]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [231]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [232]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [233]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [234]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [235]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [236]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [237]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [238]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [239]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [240]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [241]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [242]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [243]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [244]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [245]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [246]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [247]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [248]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [249]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [250]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [251]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [252]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [253]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [254]:ezsat
+ success!
+  Trying to prove $equiv for \xf_w [255]:ezsat
+ success!
+ Grouping SAT models for \xf_x:
+  Trying to prove $equiv for \xf_x [0]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [1]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [2]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [3]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [4]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [5]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [6]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [7]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [8]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [9]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [10]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [11]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [12]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [13]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [14]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [15]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [16]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [17]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [18]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [19]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [20]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [21]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [22]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [23]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [24]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [25]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [26]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [27]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [28]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [29]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [30]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [31]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [32]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [33]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [34]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [35]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [36]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [37]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [38]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [39]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [40]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [41]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [42]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [43]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [44]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [45]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [46]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [47]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [48]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [49]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [50]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [51]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [52]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [53]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [54]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [55]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [56]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [57]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [58]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [59]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [60]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [61]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [62]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [63]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [64]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [65]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [66]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [67]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [68]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [69]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [70]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [71]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [72]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [73]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [74]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [75]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [76]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [77]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [78]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [79]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [80]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [81]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [82]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [83]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [84]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [85]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [86]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [87]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [88]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [89]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [90]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [91]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [92]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [93]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [94]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [95]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [96]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [97]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [98]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [99]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [100]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [101]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [102]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [103]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [104]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [105]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [106]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [107]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [108]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [109]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [110]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [111]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [112]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [113]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [114]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [115]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [116]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [117]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [118]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [119]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [120]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [121]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [122]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [123]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [124]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [125]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [126]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [127]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [128]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [129]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [130]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [131]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [132]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [133]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [134]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [135]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [136]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [137]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [138]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [139]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [140]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [141]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [142]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [143]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [144]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [145]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [146]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [147]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [148]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [149]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [150]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [151]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [152]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [153]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [154]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [155]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [156]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [157]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [158]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [159]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [160]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [161]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [162]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [163]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [164]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [165]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [166]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [167]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [168]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [169]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [170]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [171]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [172]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [173]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [174]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [175]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [176]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [177]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [178]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [179]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [180]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [181]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [182]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [183]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [184]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [185]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [186]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [187]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [188]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [189]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [190]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [191]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [192]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [193]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [194]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [195]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [196]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [197]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [198]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [199]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [200]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [201]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [202]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [203]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [204]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [205]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [206]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [207]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [208]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [209]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [210]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [211]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [212]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [213]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [214]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [215]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [216]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [217]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [218]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [219]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [220]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [221]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [222]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [223]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [224]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [225]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [226]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [227]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [228]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [229]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [230]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [231]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [232]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [233]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [234]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [235]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [236]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [237]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [238]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [239]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [240]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [241]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [242]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [243]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [244]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [245]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [246]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [247]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [248]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [249]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [250]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [251]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [252]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [253]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [254]:ezsat
+ success!
+  Trying to prove $equiv for \xf_x [255]:ezsat
+ success!
+  Trying to prove $equiv for \bov:ezsat
+ success!
+  Trying to prove $equiv for \bfault:ezsat
+ success!
+  Trying to prove $equiv for \fov:ezsat
+ success!
+  Trying to prove $equiv for \ffault:ezsat
+ success!
+ Grouping SAT models for \by:
+  Trying to prove $equiv for \by [0]:ezsat
+ success!
+  Trying to prove $equiv for \by [1]:ezsat
+ success!
+  Trying to prove $equiv for \by [2]:ezsat
+ success!
+  Trying to prove $equiv for \by [3]:ezsat
+ success!
+  Trying to prove $equiv for \by [4]:ezsat
+ success!
+  Trying to prove $equiv for \by [5]:ezsat
+ success!
+  Trying to prove $equiv for \by [6]:ezsat
+ success!
+  Trying to prove $equiv for \by [7]:ezsat
+ success!
+  Trying to prove $equiv for \by [8]:ezsat
+ success!
+  Trying to prove $equiv for \by [9]:ezsat
+ success!
+  Trying to prove $equiv for \by [10]:ezsat
+ success!
+  Trying to prove $equiv for \by [11]:ezsat
+ success!
+  Trying to prove $equiv for \by [12]:ezsat
+ success!
+  Trying to prove $equiv for \by [13]:ezsat
+ success!
+  Trying to prove $equiv for \by [14]:ezsat
+ success!
+  Trying to prove $equiv for \by [15]:ezsat
+ success!
+  Trying to prove $equiv for \by [16]:ezsat
+ success!
+  Trying to prove $equiv for \by [17]:ezsat
+ success!
+  Trying to prove $equiv for \by [18]:ezsat
+ success!
+  Trying to prove $equiv for \by [19]:ezsat
+ success!
+  Trying to prove $equiv for \by [20]:ezsat
+ success!
+  Trying to prove $equiv for \by [21]:ezsat
+ success!
+  Trying to prove $equiv for \by [22]:ezsat
+ success!
+  Trying to prove $equiv for \by [23]:ezsat
+ success!
+  Trying to prove $equiv for \by [24]:ezsat
+ success!
+  Trying to prove $equiv for \by [25]:ezsat
+ success!
+  Trying to prove $equiv for \by [26]:ezsat
+ success!
+  Trying to prove $equiv for \by [27]:ezsat
+ success!
+  Trying to prove $equiv for \by [28]:ezsat
+ success!
+  Trying to prove $equiv for \by [29]:ezsat
+ success!
+  Trying to prove $equiv for \by [30]:ezsat
+ success!
+  Trying to prove $equiv for \by [31]:ezsat
+ success!
+ Grouping SAT models for \fy:
+  Trying to prove $equiv for \fy [0]:ezsat
+ success!
+  Trying to prove $equiv for \fy [1]:ezsat
+ success!
+  Trying to prove $equiv for \fy [2]:ezsat
+ success!
+  Trying to prove $equiv for \fy [3]:ezsat
+ success!
+  Trying to prove $equiv for \fy [4]:ezsat
+ success!
+  Trying to prove $equiv for \fy [5]:ezsat
+ success!
+  Trying to prove $equiv for \fy [6]:ezsat
+ success!
+  Trying to prove $equiv for \fy [7]:ezsat
+ success!
+  Trying to prove $equiv for \fy [8]:ezsat
+ success!
+  Trying to prove $equiv for \fy [9]:ezsat
+ success!
+  Trying to prove $equiv for \fy [10]:ezsat
+ success!
+  Trying to prove $equiv for \fy [11]:ezsat
+ success!
+  Trying to prove $equiv for \fy [12]:ezsat
+ success!
+  Trying to prove $equiv for \fy [13]:ezsat
+ success!
+  Trying to prove $equiv for \fy [14]:ezsat
+ success!
+  Trying to prove $equiv for \fy [15]:ezsat
+ success!
+  Trying to prove $equiv for \fy [16]:ezsat
+ success!
+  Trying to prove $equiv for \fy [17]:ezsat
+ success!
+  Trying to prove $equiv for \fy [18]:ezsat
+ success!
+  Trying to prove $equiv for \fy [19]:ezsat
+ success!
+  Trying to prove $equiv for \fy [20]:ezsat
+ success!
+  Trying to prove $equiv for \fy [21]:ezsat
+ success!
+  Trying to prove $equiv for \fy [22]:ezsat
+ success!
+  Trying to prove $equiv for \fy [23]:ezsat
+ success!
+  Trying to prove $equiv for \fy [24]:ezsat
+ success!
+  Trying to prove $equiv for \fy [25]:ezsat
+ success!
+  Trying to prove $equiv for \fy [26]:ezsat
+ success!
+  Trying to prove $equiv for \fy [27]:ezsat
+ success!
+  Trying to prove $equiv for \fy [28]:ezsat
+ success!
+  Trying to prove $equiv for \fy [29]:ezsat
+ success!
+  Trying to prove $equiv for \fy [30]:ezsat
+ success!
+  Trying to prove $equiv for \fy [31]:ezsat
+ success!
+ Grouping SAT models for \btag:
+  Trying to prove $equiv for \btag [0]:ezsat
+ success!
+  Trying to prove $equiv for \btag [1]:ezsat
+ success!
+  Trying to prove $equiv for \btag [2]:ezsat
+ success!
+  Trying to prove $equiv for \btag [3]:ezsat
+ success!
+  Trying to prove $equiv for \btag [4]:ezsat
+ success!
+  Trying to prove $equiv for \btag [5]:ezsat
+ success!
+  Trying to prove $equiv for \btag [6]:ezsat
+ success!
+  Trying to prove $equiv for \btag [7]:ezsat
+ success!
+  Trying to prove $equiv for \btag [8]:ezsat
+ success!
+  Trying to prove $equiv for \btag [9]:ezsat
+ success!
+  Trying to prove $equiv for \btag [10]:ezsat
+ success!
+  Trying to prove $equiv for \btag [11]:ezsat
+ success!
+  Trying to prove $equiv for \btag [12]:ezsat
+ success!
+  Trying to prove $equiv for \btag [13]:ezsat
+ success!
+  Trying to prove $equiv for \btag [14]:ezsat
+ success!
+  Trying to prove $equiv for \btag [15]:ezsat
+ success!
+ Grouping SAT models for \ftag:
+  Trying to prove $equiv for \ftag [0]:ezsat
+ success!
+  Trying to prove $equiv for \ftag [1]:ezsat
+ success!
+  Trying to prove $equiv for \ftag [2]:ezsat
+ success!
+  Trying to prove $equiv for \ftag [3]:ezsat
+ success!
+  Trying to prove $equiv for \ftag [4]:ezsat
+ success!
+  Trying to prove $equiv for \ftag [5]:ezsat
+ success!
+  Trying to prove $equiv for \ftag [6]:ezsat
+ success!
+  Trying to prove $equiv for \ftag [7]:ezsat
+ success!
+  Trying to prove $equiv for \ftag [8]:ezsat
+ success!
+  Trying to prove $equiv for \ftag [9]:ezsat
+ success!
+  Trying to prove $equiv for \ftag [10]:ezsat
+ success!
+  Trying to prove $equiv for \ftag [11]:ezsat
+ success!
+  Trying to prove $equiv for \ftag [12]:ezsat
+ success!
+  Trying to prove $equiv for \ftag [13]:ezsat
+ success!
+  Trying to prove $equiv for \ftag [14]:ezsat
+ success!
+  Trying to prove $equiv for \ftag [15]:ezsat
+ success!
+  Trying to prove $equiv for \gv_q:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \gf_q:ezsat
+ezsat
+ success!
+ Grouping SAT models for \gy_q:
+  Trying to prove $equiv for \gy_q [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \gy_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [2]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [3]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [4]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [5]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [6]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [7]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [8]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [9]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [10]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [11]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [12]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [13]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [14]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [15]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [16]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [17]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [18]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [19]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [20]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [21]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [22]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [23]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [24]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [25]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [26]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [27]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [28]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [29]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [30]:ezsat
+ success!
+  Trying to prove $equiv for \gy_q [31]:ezsat
+ success!
+ Grouping SAT models for \gt_q:
+  Trying to prove $equiv for \gt_q [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \gt_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \gt_q [2]:ezsat
+ success!
+  Trying to prove $equiv for \gt_q [3]:ezsat
+ success!
+  Trying to prove $equiv for \gt_q [4]:ezsat
+ success!
+  Trying to prove $equiv for \gt_q [5]:ezsat
+ success!
+  Trying to prove $equiv for \gt_q [6]:ezsat
+ success!
+  Trying to prove $equiv for \gt_q [7]:ezsat
+ success!
+  Trying to prove $equiv for \gt_q [8]:ezsat
+ success!
+  Trying to prove $equiv for \gt_q [9]:ezsat
+ success!
+  Trying to prove $equiv for \gt_q [10]:ezsat
+ success!
+  Trying to prove $equiv for \gt_q [11]:ezsat
+ success!
+  Trying to prove $equiv for \gt_q [12]:ezsat
+ success!
+  Trying to prove $equiv for \gt_q [13]:ezsat
+ success!
+  Trying to prove $equiv for \gt_q [14]:ezsat
+ success!
+  Trying to prove $equiv for \gt_q [15]:ezsat
+ success!
+  Trying to prove $equiv for \gv:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \gf:ezsat
+ezsat
+ success!
+ Grouping SAT models for \gy:
+  Trying to prove $equiv for \gy [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \gy [1]:ezsat
+ success!
+  Trying to prove $equiv for \gy [2]:ezsat
+ success!
+  Trying to prove $equiv for \gy [3]:ezsat
+ success!
+  Trying to prove $equiv for \gy [4]:ezsat
+ success!
+  Trying to prove $equiv for \gy [5]:ezsat
+ success!
+  Trying to prove $equiv for \gy [6]:ezsat
+ success!
+  Trying to prove $equiv for \gy [7]:ezsat
+ success!
+  Trying to prove $equiv for \gy [8]:ezsat
+ success!
+  Trying to prove $equiv for \gy [9]:ezsat
+ success!
+  Trying to prove $equiv for \gy [10]:ezsat
+ success!
+  Trying to prove $equiv for \gy [11]:ezsat
+ success!
+  Trying to prove $equiv for \gy [12]:ezsat
+ success!
+  Trying to prove $equiv for \gy [13]:ezsat
+ success!
+  Trying to prove $equiv for \gy [14]:ezsat
+ success!
+  Trying to prove $equiv for \gy [15]:ezsat
+ success!
+  Trying to prove $equiv for \gy [16]:ezsat
+ success!
+  Trying to prove $equiv for \gy [17]:ezsat
+ success!
+  Trying to prove $equiv for \gy [18]:ezsat
+ success!
+  Trying to prove $equiv for \gy [19]:ezsat
+ success!
+  Trying to prove $equiv for \gy [20]:ezsat
+ success!
+  Trying to prove $equiv for \gy [21]:ezsat
+ success!
+  Trying to prove $equiv for \gy [22]:ezsat
+ success!
+  Trying to prove $equiv for \gy [23]:ezsat
+ success!
+  Trying to prove $equiv for \gy [24]:ezsat
+ success!
+  Trying to prove $equiv for \gy [25]:ezsat
+ success!
+  Trying to prove $equiv for \gy [26]:ezsat
+ success!
+  Trying to prove $equiv for \gy [27]:ezsat
+ success!
+  Trying to prove $equiv for \gy [28]:ezsat
+ success!
+  Trying to prove $equiv for \gy [29]:ezsat
+ success!
+  Trying to prove $equiv for \gy [30]:ezsat
+ success!
+  Trying to prove $equiv for \gy [31]:ezsat
+ success!
+ Grouping SAT models for \gt:
+  Trying to prove $equiv for \gt [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \gt [1]:ezsat
+ success!
+  Trying to prove $equiv for \gt [2]:ezsat
+ success!
+  Trying to prove $equiv for \gt [3]:ezsat
+ success!
+  Trying to prove $equiv for \gt [4]:ezsat
+ success!
+  Trying to prove $equiv for \gt [5]:ezsat
+ success!
+  Trying to prove $equiv for \gt [6]:ezsat
+ success!
+  Trying to prove $equiv for \gt [7]:ezsat
+ success!
+  Trying to prove $equiv for \gt [8]:ezsat
+ success!
+  Trying to prove $equiv for \gt [9]:ezsat
+ success!
+  Trying to prove $equiv for \gt [10]:ezsat
+ success!
+  Trying to prove $equiv for \gt [11]:ezsat
+ success!
+  Trying to prove $equiv for \gt [12]:ezsat
+ success!
+  Trying to prove $equiv for \gt [13]:ezsat
+ success!
+  Trying to prove $equiv for \gt [14]:ezsat
+ success!
+  Trying to prove $equiv for \gt [15]:ezsat
+ success!
+Proved 1865 previously unproven $equiv cells.
+
+10. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in eqm.
+Proved 0 previously unproven $equiv cells.
+
+11. Executing EQUIV_STATUS pass.
+Found 1865 $equiv cells in eqm:
+  Of those cells 1865 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+Warnings: 2 unique messages, 2 total
+End of script. Logfile hash: 7c95403bb6, time: 0.57s, user: 0.61s, system: 0.03s, MEM: 29.53 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 87% 1x equiv_simple (0 sec), 4% 1x opt_clean (0 sec), ...
