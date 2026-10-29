@@ -1,4 +1,4 @@
-# DIE-QC-35 BTAB QC-014 V1d-form POST_GLOBAL_ROUTE (DIE-QC-36 (B): + planned repeaters before repair_design): post-route DRV (slew/cap) + hold repair on the V1c ROUTED parasitics
+# DIE-QC-35 BTAB QC-014 V1d-form POST_GLOBAL_ROUTE (DIE-QC-36 (B); planned repeaters are inserted pre-GRT in pre_b.tcl: try1 inserting them here after read_spef FAILED EST-0104 inconsistent parasitics state): post-route DRV (slew/cap) + hold repair on the V1c ROUTED parasitics
 # (6_final.spef of V1c; same warm-ECO form as PROG ffh10r / KV mk_eco OT_ECO_FROM=route b<N>, main 94d520e42): FF-ONLY
 # frame (CORNERS bc, OT_HOLD_MM 0, OT_VCLK_CORNER=ff -> vclk = OT_VCLK_FF 202.5), clock frozen + asserted.
 # (try1 in the two-mode session FAILED by design: ot_mm_sync re-estimates parasitics on GRT RC, the FIXED clock nets have
@@ -13,8 +13,6 @@ ot_clk_freeze
 puts "ECO_B pre (V1c routed RC) setup [sta::worst_slack_cmd max] hold [sta::worst_slack_cmd min]"
 report_check_types -max_slew -max_capacitance -violators
 global_route -start_incremental
-source /work/planned_rep.tcl
-global_connect
 repair_design -slew_margin 20 -cap_margin 10
 repair_timing -hold -hold_margin 10 -max_buffer_percent 100 -allow_setup_violations
 detailed_placement

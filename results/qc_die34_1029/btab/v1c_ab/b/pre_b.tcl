@@ -26,3 +26,9 @@ foreach n [[ord::get_db_block] getNets] {
 }
 puts "B ripped detailed wire of $v1d_rip signal nets; kept FIXED wire of $v1d_keepw clock nets"
 source /work/b_strip.tcl
+# planned repeaters (planned_rep.tcl) BEFORE GRT so the main global route routes them (try1 inserted them in the ECO
+# after read_spef -> EST-0104); legalize (clock cells LOCKED by clk_freeze) + PG connect.
+source /work/planned_rep.tcl
+global_connect
+detailed_placement
+check_placement -verbose

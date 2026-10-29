@@ -49,3 +49,8 @@ Hold: kit two-mode GRT hold repair (V1c +6.59).
 | (B) | qfd_dv_s8x_btab_f3bv1c_b | V1c 5_2_route.odb as 4_cts.odb (sha 8302ccff), V1d run form | oth-ubuntu-294551-1793306489 | ~/dqc36k/btab_b.otrun.log |
 | (A) | qfd_dv_s8x_btab_f3bv1c_a | V1c kit cut back to 3_2_place_iop (GPL re-run) | oth-ubuntu-294553-1793306489 | ~/dqc36k/btab_a.otrun.log |
 Launched 13:41 PDT. Files: a/, b/, planned_rep.tcl (shared by both), planned_rep_pins.txt.
+- (B) try1 (unit oth-ubuntu-294551) FAILED by construction at do-grt (~8 min): planned repeaters inserted in the ECO
+  after read_spef -> [ERROR EST-0104] inconsistent parasitics state (GRT itself had converged: 0 overflow, all layers;
+  B_STRIP 2 M5 obstructions + M3 0.30 applied; 116 BUFx6f inserted) [CHECKED KIT/failed_try1/run_route.log].
+  try2 (unit oth-ubuntu-331227-1793306720, 13:46 PDT, client ~/dqc36k/btab_b_try2.otrun.log): repeaters moved
+  to pre_b.tcl (pre-GRT, after the rip, + global_connect + DPL), eco_b.tcl = V1d ECO unchanged.
