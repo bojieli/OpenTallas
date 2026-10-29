@@ -7,6 +7,11 @@
 //   request key_slot), PRE (replay-buffer read one edge ahead), row_start (query unit seen-clear per row).
 // The selector / link classes are decoded by the root copy only (its collision checks run here too: same programme).
 // DELIVERED_RESET=1 accepts the already delivered regional reset; no second synchronizer. Default0 retains donor reset behavior.
+// ROW_CLEAR_DELAY (TOK-HBM-7 2026-10-29, opt-in; default 0 = byte-identical): row_start (query seen-clear) leaves D edges
+// later. The compiler shifts every query-tile field by the bound reader round trip (vm_rt), but the clear rides the launch
+// edge, so with the actual reader (vm_rt 171/173 vs donor 2) row r+1's clear lands before row r's last head emit unless the
+// pitch grows (tools/hbm_next/idx_row_pitch_price.py). D = bound vm_rt - 2 puts the clear back on the donor-relative query
+// timeline at the class-limited pitch. One pending clear; a second row_start while one is pending = FAULT.
 // PINS: programme bus, start, length, n_rows, pitch, nkeys, slot land in pin flops (+1 edge); every output leaves a
 // flop (+1 edge): the timeline is +2 edges after the host start, as the d4g quadrant copy. frame_start (record start:
 // operand row bases, key buffer clear) = start + 2; row_start = start + 2 (row 0) or the launch edge + 1 (rows >= 1).
@@ -14,7 +19,7 @@
 // CW=2 (HBM-NEXT-UNITS IDXQ 2026-10-19, default; CW=1 = bypass form, gate 4 cross-clock -15.7 ps): compact windows (shared head rows 0-1 + 3-row ring, no bypass); CW=1 was one shared head row + a 2-row
 // ring per stream: 4,352 instead of 9,216 window flops; same instruction on every edge, tb_hnx_idxn_cw + the quad lockstep);
 // gate hnx_idxq_qctl 04:2x failed the clock rule at 9,290 sinks (pin-flop spread 104 ps > 80 TT).
-module ot_hnx_idxq_qctl #(parameter integer K=8,S=4,CW=2,DELIVERED_RESET=0)(
+module ot_hnx_idxq_qctl #(parameter integer K=8,S=4,CW=2,DELIVERED_RESET=0,ROW_CLEAR_DELAY=0)(
  input wire clk_program,clk_program_mem,input wire rst_n,
  input wire slot,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
@@ -49,12 +54,26 @@ module ot_hnx_idxq_qctl #(parameter integer K=8,S=4,CW=2,DELIVERED_RESET=0)(
   .key_v(kv),.key_index(ki),.key_row(kr),.pre_v(pv),.pre_index(pi),.sel_op(sop),.sel_pass(sps),.sel_addr(sad),
   .lin_clear(lc),.lin_flush(lf),.lin_row(lr),.lout_emit(le),.lout_group(eg),.lout_row(er),.done(done_u),.fault(calendar_fault));
  wire[13:0]base=sl_r?14'd2736:14'd0;
+ wire rcl,rcl_fault;
+ generate if(ROW_CLEAR_DELAY==0)begin:g_rcl0
+  assign rcl=rs;assign rcl_fault=1'b0;
+ end else begin:g_rcl
+  // delayed row clear: rcl fires ROW_CLEAR_DELAY edges after rs (one pending; overlap = fault)
+  localparam integer W=$clog2(ROW_CLEAR_DELAY+1);
+  reg pend,ovl;reg[W-1:0]cnt;
+  always @(posedge clk_program or negedge rst_c)
+   if(!rst_c)begin pend<=0;cnt<=0;ovl<=0;end
+   else if(rs)begin pend<=1;cnt<=W'(ROW_CLEAR_DELAY-1);if(pend&&cnt!=0)ovl<=1;end
+   else if(pend)begin if(cnt==0)pend<=0;else cnt<=cnt-W'(1);end
+  assign rcl=pend&&cnt==0;
+  assign rcl_fault=ovl;
+ end endgenerate
  always @(posedge clk_program or negedge rst_c)
   if(!rst_c)begin weight_slot<=0;query_slot<=0;query_emit<=0;key_slot<=0;key_v<=0;pre_v<=0;frame_start<=0;row_start<=0;fault<=0;end
   else begin
    weight_slot<=ow;query_slot<=oq;query_emit<=qe;key_v<=kv;key_slot<=kv&&kr==5'd0;pre_v<=pv;
-   frame_start<=st_r;row_start<=rs;
-   if(calendar_fault||vf_r||qf_r||sf_r||kf_r)fault<=1;
+   frame_start<=st_r;row_start<=rcl;
+   if(calendar_fault||vf_r||qf_r||sf_r||kf_r||rcl_fault)fault<=1;
   end
  always @(posedge clk_program)begin
   query_index<=oi;query_emit_head<=qh;key_index<=ki;key_row<=kr;pre_index<=pi;
