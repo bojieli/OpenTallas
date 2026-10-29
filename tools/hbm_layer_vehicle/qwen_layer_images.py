@@ -508,8 +508,8 @@ def cmd_snap(a):
     print("QWEN_LAYER_IMAGES", json.dumps(summary))
 
 
-def sm_lower_rank(a, man, rdir):
-    """opt-in (TOK-FUNC2-HBM-SM 10-21, --sm-kv): every SM.MATVEC record of rank 0 lowered onto the slice's real SM chain
+def sm_lower_rank(a, man, rdir, rank):
+    """opt-in (TOK-FUNC2-HBM-SM 10-21, --sm-kv): every SM.MATVEC record of the requested rank lowered onto the slice's real SM chain
     (sm_slice_lower.lower_qwen: INT8 packed svg programme + xl_SW_ctl + smw_SW), one component replay per (layer, tag)
     at rdir/sm_L<L>_<tag>/replay.json, SM count reduced only where the replay exceeds --sm-nev."""
     from hbm_layer_vehicle import sm_slice_lower as SML
@@ -523,8 +523,8 @@ def sm_lower_rank(a, man, rdir):
         if key not in done:
             for nsm in (4, 2, 1):
                 rep_sm, per, summ = SML.lower_comps_refresh(
-                    lambda k: SML.compile_qwen_sm(kv, key[0], k, tags=(key[1],)), nsm, key[0], bnd, design="qwen",
-                    provenance="captured_qwen_sm_operands (qwen_sm_mv_kv, rank 0)")
+                    lambda k: SML.compile_qwen_sm(kv, key[0], k, rank=rank, tags=(key[1],)), nsm, key[0], bnd, design="qwen",
+                    provenance=f"captured_qwen_sm_operands (qwen_sm_mv_kv, rank {rank})")
                 if summ["events"] + 1 <= a.sm_nev:
                     break
             d = rdir / f"sm_L{key[0]}_{key[1]}"
@@ -549,8 +549,8 @@ def cmd_emit(a):
         man, rep = compile_rank(a.stage, r, SparseVM(a.operands, r), a.out / a.stage / f"r{r}",
                                 boundary=a.boundary, variant=a.variant, disp_raw=draw,
                                 safe_calendar=a.safe_calendar)
-        if getattr(a, "sm_kv", None) and r == 0:
-            man = sm_lower_rank(a, man, a.out / a.stage / f"r{r}")
+        if getattr(a, "sm_kv", None):
+            man = sm_lower_rank(a, man, a.out / a.stage / f"r{r}", rank=r)
         out[r] = dict(counts=man["counts"], events=len(rep["events"]),
                       replay_sha256=sha((a.out / a.stage / f"r{r}" / "replay.json").read_bytes()))
     print("QWEN_LAYER_IMAGES", json.dumps(dict(stage=a.stage, ranks_out=out)))
