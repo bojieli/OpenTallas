@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "scope": "strict S81 functional source binding; not physical CA/STA or provider/full-token qualification",
+  "source_commit": "e4ad09a663",
+  "plan_path": "/srv/opentallas-scratch2/claude/codex-tok-s81-1028/plan_s13r2.json",
+  "plan_sha256": "e4a0d4d83e5401f948e8276bfb9848495d363d00b99aca4c442074e613edd41d",
+  "manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll_s13pfunc.json",
+  "sidecar": "physical/die_plan/s81/s13/landed_sidecar_s13.json",
+  "dead_input_proof": "results/token_pass/s81_dead_inputs_2148/proof_closing_s13obs_1029.json",
+  "output_path": "/srv/opentallas-scratch2/claude/codex-tok-s81-1028/bind_s13rfunc_reset/out",
+  "partitions": 398,
+  "types": 204,
+  "crossings": 873,
+  "crossing_bits": 606281,
+  "n_errors": 0,
+  "type_splits": [],
+  "proof": {
+    "unbound": 0,
+    "tied": 0,
+    "undriven": 0,
+    "multiply_bound": 0,
+    "straps": 10352,
+    "plan_driven": 0
+  },
+  "instance_selectors": 8508,
+  "forward_clock_type_optins": 187,
+  "raw_reset_bootstrap_reuses": 155,
+  "raw_reset_affected_types": 115,
+  "added_data_cycles": 0,
+  "added_reset_flops_current_candidate": 0,
+  "prior_failure_logs": [
+    "bind_s13rfunc/bind.log",
+    "bind_s13qfunc/bind.log",
+    "bind_s13pfunc/bind.log"
+  ],
+  "shared_source_fixes": [
+    "ea2b8d7a6b",
+    "5ecf4184cb"
+  ]
+}
