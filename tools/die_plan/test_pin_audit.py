@@ -28,3 +28,10 @@ def test_interior_ports_not_extra():
         assert PA.INTERIOR.match(n), n
     for n in ("ck", "fault", "w16_we", "ft_data_i"):
         assert not PA.INTERIOR.match(n), n
+
+
+def test_face_edge_exact_one_nm_decimal_boundary():
+    # Actual CFG7 N-face geometry: 60.481 - 60.48 rounds above 0.001.
+    p = dict(bus="cfg", bit=32, layer="M3", x=20.493, y=60.4615, face="N")
+    assert PA.box_ok(p, (20.484, 60.443, 20.502, 60.481), 30.24, 60.48)
+    assert not PA.box_ok(p, (20.484, 60.443, 20.502, 60.481001), 30.24, 60.48)
