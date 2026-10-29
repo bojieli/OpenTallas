@@ -5327,3 +5327,9 @@ All nine lanes acknowledged PARK and wrote final packets in coord/handoff/: code
 Latest corrections: KV strict bind has 31 remaining R8/ECTL errors; RT20 K-only COPY +106 crossing cycles passes actual SPICE+CPPR 3595 crossings/127 START and 58-type/160-part composition; new strict bind not launched. Newly terminal HEAD e1/e5 fail FF hold -3.89/-1.78 ps, e5 TT setup -1.78 ps, DRV and two unconstrained paths each. Old 116-strap LEC mutant TIMEOUT was logged pass=True: this is NOT a caught mutant and must be diagnosed. HEAD FACE count is 568 bank bits plus two FSTART ports; LEP census includes 265 SRAM instances. HBM storage candidate elaboration terminal exit0, 144 modules, zero undefined/ambiguous, ten controls pass; uncommitted source preserved. Collq2 remains running, latest repair iteration60 with118 buffers and FF hold -52.371 ps, final hook pending. FLOW joint4 allocator remains running on intel2 unit1373579/PID1373618; uncommitted bounded-search and fresh port-tap reader followups preserved, reader three tests pass but no actual fresh model run. Merge lane confirms main==origin/main 4d4c968ee0e227880d15c0d1622d49e1c3b8463a, no merge pending.
 
 Fleet jobs remain alive. Root and all lanes are parked for Claude.
+
+## Takeover 2026-10-28 23:43 PDT
+All lanes inventoried in lanes/CODEX.md; die owners QC/KV/S81/HEAD/HBM active, HBM cores + three token workers + shared flow + merge active. Canonical intel2 main6132842ffa; existing gate315 completed and being collected, no duplicate gate. Owner questions go below.
+
+OWNER?
+None newly identified.

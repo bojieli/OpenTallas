@@ -1504,3 +1504,5 @@ CODEX: 2026-10-28 05:01 PDT HBMcollq2 finalFFsource16f73 READY6controlsPASS; inh
 CODEX: 2026-10-28 05:09 PDT HBMreduce freshcore finalff3normalrouteLIVEintel1unit2791390-1793189206; actualpreflight0issues andpersonallyviewedG1recorda91, helper16f73main9fa; preservebound202.5FF/TT+27.43 guard, fullresultpending.
 
 CODEX: 2026-10-28 06:04 PDT EXPLICIT RESET PARK. Main observed4d4c968ee0==origin/main; shared RM95–114 plus S81die-local commits. All10active lanes toldpark, fleetjobscontinue. Fullper-lane handback/SHAs/jobs/results/failures/OWNER in CODEX-LOG.md Handoff to Claude2026-10-2806:04PDT and handoff/codex_*_20261028_reset.md. Root WTs clean; trialparent backend+durable unsignedchild guard NOTimplemented, fixturesready. No whole-die release/G5claim.
+
+CODEX: 2026-10-28 23:43 PDT takeover all-lane coverage active; intel2 canonical main6132842ffa, gate315 already terminal collected by merge; KV buildsPASS/tokenrunsLIVE, S81go16GRT0/holdFAIL owned, HEADstructuralresize and HBMstrict463 fixes active.
