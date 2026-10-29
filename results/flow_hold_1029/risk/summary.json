@@ -1,0 +1,152 @@
+[
+ {
+  "clock_arrival": {
+   "n": 5490,
+   "mean": 17.67,
+   "mean_abs": 17.67,
+   "p95_abs": 30.59,
+   "max_abs": 41.4,
+   "std": 6.6,
+   "sign": "routed_rcx_minus_grt_est_ps (FLOW-CLOCK-R2 10-29: mean sign flipped to match README; magnitudes unchanged, NUMBER-CHECKED by FLOW-CLOCK-R from ff_est_current/ff_rcx_rcx.tsv)"
+  },
+  "net_delay": null,
+  "net_delay_rel_mean": null,
+  "hold_wns_est": [
+   -36.958,
+   934
+  ],
+  "hold_wns_rcx": [
+   -25.994,
+   1075
+  ],
+  "setup_wns_est": [
+   263.434,
+   0
+  ],
+  "setup_wns_rcx": [
+   242.804,
+   0
+  ],
+  "die": "kv"
+ },
+ {
+  "clock_arrival": {
+   "n": 3446,
+   "mean": 14.63,
+   "mean_abs": 14.63,
+   "p95_abs": 25.24,
+   "max_abs": 57.14,
+   "std": 5.12,
+   "sign": "routed_rcx_minus_grt_est_ps (FLOW-CLOCK-R2 10-29: mean sign flipped to match README; magnitudes unchanged, NUMBER-CHECKED by FLOW-CLOCK-R from ff_est_current/ff_rcx_rcx.tsv)"
+  },
+  "net_delay": null,
+  "net_delay_rel_mean": null,
+  "hold_wns_est": [
+   -26.849,
+   257
+  ],
+  "hold_wns_rcx": [
+   -18.642,
+   257
+  ],
+  "setup_wns_est": [
+   343.225,
+   0
+  ],
+  "setup_wns_rcx": [
+   289.249,
+   0
+  ],
+  "die": "qc"
+ },
+ {
+  "clock_arrival": {
+   "n": 1002,
+   "mean": 1.16,
+   "mean_abs": 2.09,
+   "p95_abs": 7.76,
+   "max_abs": 10.55,
+   "std": 2.88,
+   "sign": "routed_rcx_minus_grt_est_ps (FLOW-CLOCK-R2 10-29: mean sign flipped to match README; magnitudes unchanged, NUMBER-CHECKED by FLOW-CLOCK-R from ff_est_current/ff_rcx_rcx.tsv)"
+  },
+  "net_delay": null,
+  "net_delay_rel_mean": null,
+  "hold_wns_est": [
+   -37.301,
+   114
+  ],
+  "hold_wns_rcx": [
+   -41.376,
+   114
+  ],
+  "setup_wns_est": [
+   234.317,
+   0
+  ],
+  "setup_wns_rcx": [
+   247.714,
+   0
+  ],
+  "die": "s81"
+ },
+ {
+  "clock_arrival": {
+   "n": 1726,
+   "mean": -2.27,
+   "mean_abs": 3.5,
+   "p95_abs": 6.27,
+   "max_abs": 7.44,
+   "std": 3.23,
+   "sign": "routed_rcx_minus_grt_est_ps (FLOW-CLOCK-R2 10-29: mean sign flipped to match README; magnitudes unchanged, NUMBER-CHECKED by FLOW-CLOCK-R from ff_est_current/ff_rcx_rcx.tsv)"
+  },
+  "net_delay": null,
+  "net_delay_rel_mean": null,
+  "hold_wns_est": [
+   14.966,
+   0
+  ],
+  "hold_wns_rcx": [
+   6.514,
+   0
+  ],
+  "setup_wns_est": [
+   -46.685,
+   566
+  ],
+  "setup_wns_rcx": [
+   -50.548,
+   566
+  ],
+  "die": "head"
+ },
+ {
+  "clock_arrival": {
+   "n": 39375,
+   "mean": -5.6,
+   "mean_abs": 5.7,
+   "p95_abs": 9.76,
+   "max_abs": 14.48,
+   "std": 2.64,
+   "sign": "routed_rcx_minus_grt_est_ps (FLOW-CLOCK-R2 10-29: mean sign flipped to match README; magnitudes unchanged, NUMBER-CHECKED by FLOW-CLOCK-R from ff_est_current/ff_rcx_rcx.tsv)"
+  },
+  "net_delay": null,
+  "net_delay_rel_mean": null,
+  "hold_wns_est": [
+   8.556,
+   0
+  ],
+  "hold_wns_rcx": [
+   -2.154,
+   11
+  ],
+  "setup_wns_est": [
+   228.553,
+   0
+  ],
+  "setup_wns_rcx": [
+   236.507,
+   0
+  ],
+  "die": "hbm"
+ }
+]

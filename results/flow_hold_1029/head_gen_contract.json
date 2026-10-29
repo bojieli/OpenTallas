@@ -1,0 +1,36 @@
+{
+ "old_source": "05f9f5c69",
+ "current_source": "a592c118f",
+ "flow_changed_control_contract": {
+  "old": {
+   "start": false,
+   "rrelay": 7,
+   "rgate": 0,
+   "taps": 3
+  },
+  "current": {
+   "start": true,
+   "rrelay": 20,
+   "rgate": 8,
+   "taps": 8
+  }
+ },
+ "same_inputs": {
+  "clock_binding.json": {
+   "same": true,
+   "sha256": "c5f8bb78d8c730f3dfd502e1f3f9878cb4e9e0e9fdccf8b14118655adce17698"
+  },
+  "budget.json": {
+   "same": true,
+   "sha256": "a383a0b575399cfdfde9db8e3e9a7ae494467852c594a904b164a7856e53df53"
+  },
+  "pins.json": {
+   "same": true,
+   "sha256": "ce035a0c979b668e9c9f88291ed31b67c6607646687332a5d8ff8c83ec435051"
+  },
+  "constraint.sdc": {
+   "same": true,
+   "sha256": "95fd38429f91714ca46ea383a739039ef35282afb35d19e3ea3ca7a35f83b4b6"
+  }
+ }
+}
