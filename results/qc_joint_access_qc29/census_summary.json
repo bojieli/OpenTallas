@@ -1,0 +1,72 @@
+{
+ "census_grow/base": {
+  "status": "FAIL",
+  "landed": 2672,
+  "failed": 5217,
+  "failed_ports": null
+ },
+ "census_grow/base_rep": {
+  "status": "FAIL",
+  "landed": 2672,
+  "failed": 5217,
+  "failed_ports": null
+ },
+ "census_grow/base_rep_nobridge": {
+  "status": "FAIL",
+  "landed": 2672,
+  "failed": 5217,
+  "failed_ports": null
+ },
+ "census_grow/base_rep_pgonly": {
+  "status": "FAIL",
+  "landed": 5420,
+  "failed": 2469,
+  "failed_ports": null
+ },
+ "census_grow/grown": {
+  "status": "FAIL",
+  "landed": 4648,
+  "failed": 3241,
+  "failed_ports": null
+ },
+ "census_grow/grown_pgonly": {
+  "status": "FAIL",
+  "landed": 7885,
+  "failed": 4,
+  "failed_ports": [
+   "t_io_serdes__clk",
+   "t_io_serdes_1__clk",
+   "t_ucie_kv__clk",
+   "t_io_serdes_2__clk"
+  ]
+ },
+ "formA/census_full": {
+  "status": "FAIL",
+  "landed": 7885,
+  "failed": 4,
+  "failed_ports": [
+   "t_io_serdes__clk",
+   "t_io_serdes_1__clk",
+   "t_ucie_kv__clk",
+   "t_io_serdes_2__clk"
+  ]
+ },
+ "g0_base": {
+  "verdict": "FAIL",
+  "errors": 316,
+  "warnings": 184,
+  "by_check": {
+   "hard_pinreg": 3,
+   "clock_landings": 313
+  }
+ },
+ "g0_grow": {
+  "verdict": "FAIL",
+  "errors": 316,
+  "warnings": 184,
+  "by_check": {
+   "hard_pinreg": 3,
+   "clock_landings": 313
+  }
+ }
+}
