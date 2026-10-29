@@ -18,10 +18,11 @@ def qualify(root, previous, xrt_run, seqhost, bk):
     if rec.get('schema') != 'opentallas.s81.bound_control_local.v1' or rec.get('verdict') != 'PASS':
         raise ValueError('previous measured local timing receipt required')
     # Retaining stage2 is allowed only for the byte-identical measured rings.
-    for name in ('ot_s81sl_rstop', 'ot_s81sl_rstopt_xo'):
-        source = f'rtl/dsrom_sys/s81_dv/slice/{name}.sv'
+    ring_sources = ['rtl/lib/ot_rst_relay.sv'] + [
+        f'rtl/dsrom_sys/s81_dv/slice/{name}.sv' for name in ('ot_s81sl_rstop', 'ot_s81sl_rstopt_xo')]
+    for source in ring_sources:
         if hashlib.sha256((root/source).read_bytes()).hexdigest() != rec['source_sha256'][source]:
-            raise ValueError('ring changed: measure its stages again: '+name)
+            raise ValueError('ring changed: measure its stages again: '+source)
     for hb in (0, 1):
         text = (xrt_run/f'run{hb}.log').read_text()
         if not re.search(rf'^XRT_INJECT hb={hb} jobs=192 checks=4224 age=7 errors=0$', text, re.M) or not re.search(r'^PASS$', text, re.M):
