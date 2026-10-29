@@ -238,6 +238,10 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None):
         a.append("--tree-site-slide")
     for k, v in (top.get("opts") or {}).items():
         a += ["--tree-opt", f"{k}={_fmt(v)}"]
+    if top.get("rep_on_leg"):                   # blocked leg repeater slides along its planned leg (opt-in)
+        a.append("--rep-on-leg")
+    if top.get("rep_off_leg_max") is not None:  # kit fails when a repeater lands farther than UM off its leg
+        a += ["--rep-off-leg-max", _fmt(top["rep_off_leg_max"])]
     if st.get("clock_rc", "ndr") != "ndr":
         a += ["--clock-rc", st["clock_rc"]]
     if st["cell"] != "buf":
@@ -348,6 +352,21 @@ def register_entry(cal_path, eid, cell, clock_rc, route=None, basis=None):
     return e
 
 
+def die_trial_rev(path):
+    """provenance of the die_trial.py a build ran: path, file sha256, git commit of its checkout and whether its
+    tools/die_plan is dirty (None outside a git checkout)"""
+    path = Path(path)
+    rev = dict(path=str(path), sha256=hashlib.sha256(path.read_bytes()).hexdigest()[:16] if path.is_file() else None)
+    try:
+        g = lambda *x: subprocess.run(["git", "-C", str(path.parent)] + list(x), capture_output=True, text=True,
+                                      timeout=60).stdout.strip()
+        rev["git_rev"] = g("rev-parse", "@") or None
+        rev["dirty"] = bool(g("status", "--porcelain", "--", ".")) if rev["git_rev"] else None
+    except (OSError, subprocess.SubprocessError):
+        rev["git_rev"] = rev["dirty"] = None
+    return rev
+
+
 def reference_file(ref, f):
     """die runs that post-process the kit (clock_body_bays overlay) keep die_trial's own output as <stem>_GENERATED<ext>;
     compare against that when present"""
@@ -397,6 +416,9 @@ def main(argv=None):
             p.add_argument("--legacy", action="store_true",
                            help="reproduce a historical run: stage check reported, not enforced")
             p.add_argument("--workers", type=int, default=None)
+        if n in ("kit", "replay"):
+            p.add_argument("--die-trial", default=str(DIE_TRIAL),
+                           help="die_trial.py to run (default: this checkout); path + git sha are recorded")
         if n == "replay":
             p.add_argument("--python", default=sys.executable)
     r = sub.add_parser("register")
@@ -426,9 +448,11 @@ def main(argv=None):
     plan, rebase = rebase_plan(cfg, out)
     args = kit_argv(cfg, out / "kit", cal, a.workers, plan)
     out.mkdir(parents=True, exist_ok=True)
+    dt = Path(a.die_trial).resolve()
     (out / "ot_clk_argv.json").write_text(json.dumps(dict(config=str(a.config), stage_check="PASS" if ok else "FAIL",
-                                                          why=why, pins_rebase=rebase, argv=args), indent=1) + "\n")
-    rc = subprocess.call([getattr(a, "python", sys.executable), str(DIE_TRIAL)] + args,
+                                                          why=why, pins_rebase=rebase, die_trial=die_trial_rev(dt),
+                                                          argv=args), indent=1) + "\n")
+    rc = subprocess.call([getattr(a, "python", sys.executable), str(dt)] + args,
                          stdout=open(out / "kit.log", "w"), stderr=subprocess.STDOUT)
     if rc or a.cmd == "kit":
         print(json.dumps(dict(rc=rc, stage_check="PASS" if ok else "FAIL", out=str(out))))
