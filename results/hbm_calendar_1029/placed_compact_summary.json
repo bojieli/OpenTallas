@@ -1,0 +1,26 @@
+{
+ "verdict": "FAIL",
+ "stage": "PLACE",
+ "source": "63841f788",
+ "kit": "12ed73fc1188b26c",
+ "LEC": {
+  "verdict": "EQUIVALENT",
+  "proved": 4037,
+  "differs": 0,
+  "undecided": 0
+ },
+ "aspect": 1.923,
+ "fill": 0.1732,
+ "pin_reg_p90": 7.57,
+ "pin_reg_max": 15.41,
+ "r2r_max": 285.61,
+ "r2r_over405": 0,
+ "channel_h": 0.804,
+ "channel_v": 0.506,
+ "col_v": 0.506,
+ "raw_pin_unreg": 8,
+ "raw_unreg_class": "Dedicated mp_isl clock/reset FT ports; no exemption fabricated",
+ "root_cause": "256 cfg_data inputs on N face force wide control/programme-data bus to SRAM W; old .603 cut became .804 after compact placement",
+ "next": "CFG256 W/M4 + 512 existing target data FF inclusive guide; no RTL/cycle change, parent route cycles pending",
+ "pnr_after_failure": false
+}

@@ -1,0 +1,42 @@
+{
+ "status": "PROPOSAL_NO_PNR",
+ "outline_um": [
+  216,
+  112.32
+ ],
+ "pins": 558,
+ "cfg_data256_face": "W/M4; matched actual SRAM data face",
+ "clock_pins": "unchanged from compact proposal",
+ "cycles_added_core": 0,
+ "parent_route_cycles": "must recompose/price; no zero-total-cycle claim",
+ "peak_pins_per_um_10um": {
+  "N/M5": 1.9,
+  "S/M5": 5.7,
+  "W/M4": 3.5
+ },
+ "guide": {
+  "name": "calendar_cfg_w",
+  "prefixes": [
+   "u_fcore.u_target.data_q[",
+   "u_fcore.u_target.program_cfg_data["
+  ],
+  "rect_um": [
+   4.32,
+   17.28,
+   17.28,
+   91.8
+  ],
+  "expected_cells": 512,
+  "actual_cell_area_um2": 149.2992,
+  "estimated_fill": 0.15458937198067632,
+  "release": "before DPL",
+  "source_changed": false
+ },
+ "source_providers": [
+  "hleaf_SW.a_cfg_data -> NW_hub.u_calendar_Q__q0",
+  "hleaf_SE.a_cfg_data -> NE_hub.u_calendar_Q__q0",
+  "hleaf_NW.a_cfg_data -> NW_hub.u_calendar_Q__q1",
+  "hleaf_NE.a_cfg_data -> NE_hub.u_calendar_Q__q1"
+ ],
+ "bits": "256/256 LSB identity each; no payload reorder"
+}

@@ -1,0 +1,15 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "One PLACE only after parent accepts candidate face delta; no CTS/GRT",
+ "picture": "results/hbm_calendar_1029/cfg_w/proposal.png",
+ "findings": [
+  "256 actual input cfg-data pins move to W aligned to actual SRAM D pins",
+  "558 ports remain; source/edges identical; global parent transport must recompose",
+  "512 actual existing target-data FFs area149.2992 in967um2 guide=15.46%; macro4.32halo clear",
+  "Wpeak3.5/um, Sdense5.7 unchanged; other clocks/outline/macros unchanged",
+  "Guide is GPL-inclusive and released before DPL, not an assumed physical proof"
+ ],
+ "reference_failure": "placed_compact_summary.json channel_h.804",
+ "reviewer": "/root/hbm",
+ "approved_for_release": false
+}
