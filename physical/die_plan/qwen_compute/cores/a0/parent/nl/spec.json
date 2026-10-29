@@ -28,6 +28,7 @@
   "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
   "rtl/physical/ot_qwen_rom_tile_nk.sv",
   "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+  "physical/asap7_memory_macros/ot_rom_2048x266_m8/ot_rom_2048x266_m8_bb.v",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
   "rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_45.sv",
   "rtl/physical/a0_core/qfd_tile_nl_a0c.sv",
@@ -43,5 +44,5 @@
  "route": {
   "pd": 0.45
  },
- "note": "QC-A0-KITS-6 10-28: A0 PARENT (macro-composed) kit spec for gen_core_kit_qc.py recipe hard_children. Sources = physical/ref_tile/qfd_tile_nl_a0ck/spec.json sources with the old lsl_fp1 blackbox replaced by the Codex native LSL fault-cut wrapper (rawleaf ot_qwen_tile_lsl_rawfault_m3 blackboxed; parent synth 64,205 (nk) / 61,550 (nl) cells, QC-CORES CHECKED); params/defines = the Codex parent synth (G4_ROOTS 1, REGROOT_MODE 3, no OT_A0_CK_TAPS: the tap ports have no RTL loads, QC-A0-KITS-3). Children: cores/a0/parent/nl_children.json (recipe hard_children.children_file)."
+ "note": "QC-A0-KITS-6 10-28: A0 PARENT (macro-composed) kit spec for gen_core_kit_qc.py recipe hard_children. Sources = physical/ref_tile/qfd_tile_nl_a0ck/spec.json sources with the old lsl_fp1 blackbox replaced by the Codex native LSL fault-cut wrapper (rawleaf ot_qwen_tile_lsl_rawfault_m3 blackboxed; parent synth 64,205 (nk) / 61,550 (nl) cells, QC-CORES CHECKED); params/defines = the Codex parent synth (G4_ROOTS 1, REGROOT_MODE 3, no OT_A0_CK_TAPS: the tap ports have no RTL loads, QC-A0-KITS-3). Children: cores/a0/parent/nl_children.json (recipe hard_children.children_file). QC-A0-KITS-7: + ot_rom_2048x266_m8_bb.v (KIT_PREFLIGHT module_closure: ot_qwen_rom_tile_w12_land32.sv must stay - it defines ot_qwen_rpair_logic / ot_qwen_rom_tile_logic_w12 used by the parent - and its ot_qwen_rom_tile_w12 names ot_rom_2048x266_m8 in a branch the parent never elaborates: the Codex parent synth 1_2_yosys.v has 0 ot_rom_* / ot_qwen_rom_tile_w12 instances, CHECKED; a stray elaboration would surface as an unplaced blackbox)."
 }

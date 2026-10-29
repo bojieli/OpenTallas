@@ -845,6 +845,25 @@ def git_show(spec):
     return subprocess.run(["git", "-C", str(REPO), "show", spec], capture_output=True, text=True, check=True).stdout
 
 
+def timing_modes_stage(kd):
+    """QC-A0-KITS-7 10-28 (opt-in recipe key "two_mode": true; absent = kit bytes unchanged): stage the kit two-mode with
+    the shared SIGNOFF-MODES checker (tools/die_plan/kit_modes.py stage: CORNERS tc BC, OT_HOLD_MM=1, vclk_ff.sdc +
+    orfs_hold_mm), the gen_core_kit_hbm two_mode form.  Why: the default FF-only GRT step (CORNER=BC CORNERS=bc) loads
+    only the FF liberty, so the post-GRT repair_design (main GRT + post_grt_drv.tcl) never sees TT slews; romleaf a0k5
+    (AP 1662a1bff39e) signed every gate but DRV TT slew 23 / FF 5.  Same kit staged two-mode (docker probe, CHECKED):
+    SIGNED, TT +147.25 / FF hold +4.16, DRV 0, GRT repair found 38 + 65 TT-aware slew nets (FF-only: 25 + 18)."""
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("kit_modes", REPO / "tools/die_plan/kit_modes.py")
+    km = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(km)
+    try:
+        r = km.stage(kd)
+        km.check(kd, "grt", session="tc bc", hold_repair=True)
+    except km.Fail as e:
+        raise SystemExit(f"KIT_MODES FAIL {e}")
+    return dict(mode="two-mode tc setup / BC hold (kit_modes.py stage)", tt=r["tt"], ff=r["ff"])
+
+
 def _ms():
     """METHODOLOGY 12.7c master-plan slice helper (this repo's tools/die_plan/master_slice.py, loaded by path)."""
     import importlib.util
@@ -1280,6 +1299,7 @@ def main():
     # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
     MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
+    tm = timing_modes_stage(kd) if rec.get("two_mode") else None
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True).stdout.strip() or "?"
     fz = dict(schema="opentallas.qc.core_freeze.v1", kit=f"{mod}_{suffix}", module=mod, plan_type=ptype,
@@ -1296,7 +1316,8 @@ def main():
               signoff_sha256=sha(TOOL / "signoff.py"), macros=mplace,
               **({"hard_children": [dict(c, view=str(hcr["views"][c["master"]])) for c in hcb]} if hcb else {}), sram_pincol_halo=[s["rect"] for s in pch_strips],
               rtl_patches=[dict(file=f, why=pt["why"], sha256=hashlib.sha256(json.dumps(pt["edits"]).encode()).hexdigest())
-                           for f, pt in patches.items()], kit_hash=kit_hash(kd))
+                           for f, pt in patches.items()], kit_hash=kit_hash(kd),
+              **({"timing_modes": tm} if tm else {}))
     if ms is not None:
         fz["master_plan"] = ms
     if seam:
