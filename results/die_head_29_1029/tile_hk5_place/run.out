@@ -1,0 +1,4 @@
+OT_GEOM_DUMP /out/geom.tsv
+AP_AUTO_GEOM_GRT rc 0 (M2-M7 adj 0.25, 50 it)
+AP_AUTO_GEOM AUTO-GEOM FAIL hd_tile hk5 trial 3_place (codex-head-0830 gen4) WARN[channel_v 0.604: at (367.0, 371.0, 547.5) (M2-M7, est.); GRT 0 overflow] pin_reg_max=FAIL(154.34) pin_unreg=FAIL(570) r2r=FAIL(695.57) r2r_count=FAIL(54) relay_collapse=FAIL(4) channel_h=FAIL(1.31) clock_reach=FAIL(1003.7) channel_v=WARN(0.604) outline=ok(708.48x1036.8) aspect=ok(1.463) fill_hi=ok(0.0453) pin_reg_p90=ok(6.55) pin_density=ok(1.0) std_band=ok(1.0) cells_on_macros=ok(0) partial_face=ok(0) col_v=ok(0.495) blocked_h=ok(0) blocked_v=ok(0) clock_on_macro=ok(0) grt=ok(0) comb_loops=ok(0) clock_rooted=ok(0) clock_sinks=ok(28080)
+AP_AUTO_GEOM_PNG /srv/opentallas-scratch2/claude/die-head-29/tile_geom/auto_geom.png
