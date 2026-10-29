@@ -1,0 +1,78 @@
+{
+ "trial": "tA3d_fall",
+ "part": "c_E3_bf_11",
+ "stage": "drt",
+ "corners": {
+  "TT": {
+   "mc": {
+    "nominal_skew_ps": 27.82,
+    "mc_worst_skew_ps": 41.2,
+    "per_load_sigma_ps": 3.46,
+    "pair_3sigma_ps": 14.7,
+    "gradient_worst_pair_ps": 1.0,
+    "routed_minus_sim_mean_ps": 0.0,
+    "routed_minus_sim_spread_ps": 0.0,
+    "dieU_bound_ps": 42.2,
+    "dieU_bound_note": "die-wide bound (not a per-pair gate number); routed nominal = sample 0 of this solve (same graph), gap 0 by construction"
+   },
+   "pairs": 378,
+   "pair_U_max_ps": 44.46,
+   "pair_U_p50_ps": 18.37,
+   "worst_pair": [
+    "L_clk",
+    "L_clk_t15"
+   ],
+   "nominal_skew_ps": 27.82,
+   "insertion_root_to_mesh_median_ps": 572.02,
+   "insertion_root_to_mesh_range_ps": [
+    555.4,
+    583.23
+   ],
+   "trial14_glue_spread_ps": 50.87,
+   "trial14_glue_median_minus_core_median_ps": 398.29,
+   "core_tap_early_vs_mesh_ps": {
+    "L_clk_c0": 362.77,
+    "L_clk_c1": 362.81,
+    "L_clk_c2": 362.21,
+    "L_clk_c3": 362.25
+   },
+   "core_early_error_ps": 36.08
+  },
+  "FF": {
+   "mc": {
+    "nominal_skew_ps": 25.45,
+    "mc_worst_skew_ps": 38.76,
+    "per_load_sigma_ps": 3.53,
+    "pair_3sigma_ps": 14.97,
+    "gradient_worst_pair_ps": 0.88,
+    "routed_minus_sim_mean_ps": 0.0,
+    "routed_minus_sim_spread_ps": 0.0,
+    "dieU_bound_ps": 39.65,
+    "dieU_bound_note": "die-wide bound (not a per-pair gate number); routed nominal = sample 0 of this solve (same graph), gap 0 by construction"
+   },
+   "pairs": 378,
+   "pair_U_max_ps": 41.9,
+   "pair_U_p50_ps": 18.54,
+   "worst_pair": [
+    "L_clk",
+    "L_clk_t15"
+   ],
+   "nominal_skew_ps": 25.45,
+   "insertion_root_to_mesh_median_ps": 484.32,
+   "insertion_root_to_mesh_range_ps": [
+    470.16,
+    495.61
+   ],
+   "trial14_glue_spread_ps": 57.08,
+   "trial14_glue_median_minus_core_median_ps": 339.7,
+   "core_tap_early_vs_mesh_ps": {
+    "L_clk_c0": 307.97,
+    "L_clk_c1": 308.01,
+    "L_clk_c2": 307.46,
+    "L_clk_c3": 307.5
+   },
+   "core_early_error_ps": 32.24
+  }
+ },
+ "checked": "UNCHECKED"
+}
