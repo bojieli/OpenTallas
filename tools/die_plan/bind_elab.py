@@ -51,10 +51,16 @@ def module_index(roots, files, base):
         if rp.is_file():
             paths.append(rp)
             continue
-        for p in sorted(list(rp.rglob("*.sv")) + list(rp.rglob("*.v"))):
-            relative_dirs = p.relative_to(rp).parts[:-1]
-            if not SKIP_DIR.search(str(p)) and not AUTO_OUTPUT_DIRS.intersection(relative_dirs):
-                paths.append(p)
+        discovered = []
+        for directory, subdirs, names in os.walk(rp):
+            subdirs[:] = [d for d in subdirs if d not in AUTO_OUTPUT_DIRS]
+            for name in names:
+                p = Path(directory) / name
+                if p.suffix in (".sv", ".v") and not SKIP_DIR.search(str(p)):
+                    discovered.append(p)
+        # Preserve the original deterministic lexical duplicate ordering while
+        # pruning tool outputs before even enumerating their generated files.
+        paths += sorted(discovered)
     paths += [Path(f) if Path(f).is_absolute() else Path(base) / f for f in files]
     for p in paths:
         try:
