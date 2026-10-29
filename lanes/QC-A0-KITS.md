@@ -208,3 +208,6 @@ SUCCESSOR (QC-A0-KITS-13):
 
 ## CODEX notes 2026-10-29 08:26 PDT — A0 ICG2 takeover
 CODEX took over approved ONE NL/NK ICG2 placement and proof-gap diagnosis on codex/qc-a0-0830 (base7946a8448d0), owned sparse intel2 WT. NK uses V1L legal plan6b815fe8812; NL keeps reset6 base, old ICG0 prototype not adopted. Three child views remain nominalSIGNED; node0.665 INFO−18.67 retained. No new signoff or P&R claim. Inherited NK V2 probe collection in progress; no peer jobs killed.
+
+## CODEX notes 2026-10-29 08:39 PDT — A0 proof controls
+Focused proof worker on codex/qc-proof-0831@6f7215b99: miter accepts explicit REGROOT=3 (default9 preserved). Smallest production ot_a0_icg_hop bound vehicle PASS32 wakes at s3/K2; unsafe extra-hop K3 control CAUGHT32/32 (intel2 unit2253454, EXIT0). Original ROM-only mutant8 and NLdrain3 remain SURVIVED; no false caught claim. ROMs may first read later than conservative structural s3. NLengine idle_c covers all valid/result stages and is registered; remaining TOREG+outerfa2 tail has K_FA2=2. Drain64 stays unchanged; no claim it can be removed generally. ActualREGROOT3 NL/NK builds live epyc2 codex-qc-proof-0831/b_{nl,nk}_m3 units2583258/2584210; no P&R. Native slang declaration-order source failure owned A0 physical worker; same functional source bound not a physical waiver.
