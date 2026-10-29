@@ -1,5 +1,5 @@
 {
- "status": "OPT_IN_SOURCE_ONLY",
+ "status": "PASS_COMPONENT_SOURCE_CANDIDATE",
  "baseline": "a1d3c708f",
  "reader": "ot_hnx_idx_vm_query_static_n12_r2048",
  "face": "ot_hnx_idx_vm_static_r2048",
@@ -11,5 +11,6 @@
  "WEIGHT_FP32": "same optional two/four-sector representation and dates",
  "role_publication": "NOT PROVIDED; actual queryA18438SID2/weightB35456SID0 require legitimate prestage/globalmirror producer",
  "physical_adoption": false,
- "full_token": false
+ "full_token": false,
+ "latency_measurement": "RT173, both modes896blocks/2679legacyedges, zeroaddedcycles"
 }
