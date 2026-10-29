@@ -12,6 +12,7 @@ import hashlib
 import importlib.util
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -95,10 +96,18 @@ def main():
     sys.argv = ["gen_core_kit_hbm", "--views", str(vf), "--view", f"{MODULE}@head",
                 "--out", str(out), "--recipe-key", MODULE, "--face-shell", "off",
                 "--core-insertion", "none", "--sigmax", "M5"] + a.rest
-    recipe = dict(top=MODULE, files=FILES, params={}, macros=[],
+    commit = subprocess.check_output(["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True).strip()
+    recipe = dict(top=MODULE, files=FILES, params={}, macros=[], source_commit=commit, read_at_commit=True,
                   synth_memory_max_bits=10240,
                   source="HEAD SerDes existing KP4 Chien/Forney child; no latency change")
-    G.main(recipe_overrides={MODULE: recipe})
+    profile = dict(source_commit=commit, family="HEAD_KP4_DCHN_NATIVE", added_face_cycles=0,
+                   qualification="UNROUTED_CANDIDATE", clock_ports=["clk"], reset_ports=["rst_n"],
+                   endpoint_contract=dict(kind="INTERNAL_CORE", partition_rule="R2_INTERNAL_TIMED_IN_PARTITION",
+                                          parent_partition="hd_serdes", instance="u_phy.u_link.u_dec.u_chn",
+                                          source="rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv"))
+    if not Path(a.plan).resolve().is_relative_to(ROOT):
+        profile["diagnostic_inputs"] = True
+    G.main(recipe_overrides={MODULE: recipe}, source_profile=profile)
     kd = out / re.sub(r"[^A-Za-z0-9_.-]", "_", f"{MODULE}@head")
     # The shared pin auditor supports interior entry ports; its old HBM
     # sibling projects them onto a face. Keep actual plan coordinates.
