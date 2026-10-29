@@ -1,0 +1,11 @@
+library (bbx_lib) {
+  delay_model : table_lookup;
+  time_unit : "1ns"; voltage_unit : "1V"; current_unit : "1mA"; capacitive_load_unit (1,pf); pulling_resistance_unit : "1kohm";
+  type (bus522) { base_type : array; data_type : bit; bit_width : 522; bit_from : 521; bit_to : 0; downto : true; }
+  cell (bbx) {
+    area : 100;
+    pin (clk) { direction : input; clock : true; capacitance : 0.001; }
+    bus (d) { bus_type : bus522; direction : input; capacitance : 0.001; }
+    bus (q) { bus_type : bus522; direction : output; }
+  }
+}
