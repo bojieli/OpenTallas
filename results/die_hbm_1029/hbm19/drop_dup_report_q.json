@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.hbm.drop_dup_copies.v1",
+ "source_plan_sha256": "f20e424277f730062e00c142267e805d0892c71eed497d89be56fff59dd38d35",
+ "families": [
+  "u_sucore_Q"
+ ],
+ "keep": "auto",
+ "hubs": {
+  "q_hub_ne": {
+   "u_sucore_Q": {
+    "kept": "u_sucore_Q__q0",
+    "dropped": "u_sucore_Q__q1",
+    "cost_um": {
+     "0": 12391.93,
+     "1": 75477.049
+    },
+    "stations_moved": 2,
+    "duplicates_removed": 0,
+    "regs_old": 31,
+    "regs_new": 41,
+    "latency_up": 1,
+    "latency_up_hist": {
+     "10": 1
+    },
+    "failed": 0,
+    "length_old_um": 12391.93,
+    "length_new_um": 12915.574,
+    "taps_removed": 1
+   }
+  },
+  "q_hub_nw": {
+   "u_sucore_Q": {
+    "kept": "u_sucore_Q__q0",
+    "dropped": "u_sucore_Q__q1",
+    "cost_um": {
+     "0": 12325.264,
+     "1": 51662.061
+    },
+    "stations_moved": 2,
+    "duplicates_removed": 0,
+    "regs_old": 30,
+    "regs_new": 37,
+    "latency_up": 1,
+    "latency_up_hist": {
+     "7": 1
+    },
+    "failed": 0,
+    "length_old_um": 12325.264,
+    "length_new_um": 12851.734,
+    "taps_removed": 1
+   }
+  }
+ },
+ "plan_sha256": "8820ad6e8da423e40e8f8e99c3ad1f8dcb5088175e2404ebefb3691835f28b0e"
+}
