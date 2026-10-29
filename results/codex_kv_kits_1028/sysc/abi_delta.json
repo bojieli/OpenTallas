@@ -1,0 +1,26 @@
+{
+  "status": "CANDIDATE, no canonical adoption or P&R",
+  "reason": "Current bind7 exports line-side UCIe ports. Sparse source closure omitted the preferred physical/qwen_kv_die_phy header and selected the functional wrapper that depends on a non-staged model. Completing that existing physical source directory restores the native hard macro and ROM closure. No new ABI or PHY functionality is invented.",
+  "source_materialization": {
+    "authoritative_header": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v",
+    "native_pin_bits": 2339,
+    "old_sys_c_view": "7 FDI ports only; lacks existing line-side bump pins",
+    "pg_projection": "existing physical/die_plan/qwen_kvsys/g3/phy_pg_view.py; 2339 signal pin blocks unchanged byte-for-byte; 90 VDD + 90 VSS M5 straps"
+  },
+  "plan_delta": [
+    {
+      "type": "kv3_sys_c",
+      "contents_module": "ot_qkvd_ucie_x64_phy",
+      "lef": "results/codex_kv_kits_1028/sysc/native_phy_pg.lef",
+      "lib": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_tt.lib",
+      "outline_changed": false,
+      "cycles_added": 0
+    }
+  ],
+  "physical_holds": [
+    "Apply the already diagnosed macro-origin track snaps as one coherent KV event before placement.",
+    "Use metadata-backed landing_contract clock geometry handling for the 23 forwarded input roots (shared d160506dc).",
+    "Review full placed density/congestion/reset/clock/r2r before any STA or route."
+  ],
+  "current_trial": "intel1:/srv/opentallas-scratch2/claude/codex-kv-kits-1028/sysc/kits5/kv3_sys_c; ordinary KIT_PREFLIGHT PASS0; synth+current LEC only via intel2 ot-run client2188128, sysc/synth3.otrun.log"
+}
