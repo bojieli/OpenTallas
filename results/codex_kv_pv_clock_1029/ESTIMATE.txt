@@ -1,0 +1,57 @@
+PV-LANE-ATOMIC structural successor; STATIC, not routed or signed.
+
+Measured failure: R0 AP911d4a3e2bc9, GRTFFhold -107.74/1658 endpoints
+(-130.12 after post-repair sync). GRT ODB was deleted by autopilot; no
+claim is made to reconstruct its exact worst endpoint. The retained
+4_cts_final.rpt gives a real FF/BC clk-group path:
+  u_s0.u_slice.g_lane[3].u_prod.s1_bad -> s2_bad
+  launch CK175.12ps via mp_pv_ck_isl1
+  capture CK278.40ps via mp_pv_ck_isl0, differential103.28ps
+  data arrival218.87 => data delay43.75ps
+  hold uncertainty25 + cellhold12.92 =37.92ps
+  slack43.75 -37.92 -103.28 = -97.45ps (report -97.44).
+The connecting data wire is only0.14ps. This is a short adjacent-register
+FP pipeline split between independent CTS roots, not an SRAM or IO path.
+The sampled reset removal is+11.20ps; bcxIO -137.44 is tc/TT hold, not the
+true FF gate. Source4_cts_final.rpt is preserved in the original failed kit.
+
+Cause: build_pv_tree.py uses core_islands.balanced() on INDIVIDUAL flop XY
+costs with exact per-root capacities. It kept counts7443/7442/7442/7443,
+but split28 of32 full FP pipeline lane families between roots (including
+some cross-slice placements). Exact count balance is not clock ownership.
+
+Structural rule: all sequential members under each u_s{0,1}.u_slice.g_lane[n]
+share one existing CTS root. The target is the spatial-majority root from
+the original placement-derived ownership, independent of any measured
+clock delays. This applies uniformly to ALL32 families, not a per-pair
+post-measurement override. Keep non-lane ownership, macro leaves, every
+clock node/coordinate/master/stage, islands, IO budgets, pins and RTL.
+No clock pads, trims, latency tuning, extra clock domain or added cycles.
+
+STATIC CENSUS (29770 FF +8 unchanged SRAMclock pins, both views):
+  all32 families intact; split28 ->0;2004 FF ownership changes;0 missingXY.
+  R0 loads isl0/1/2/3 =6958/8017/6966/7829, peak+7.71%.
+  fMX loads isl0/1/2/3 =8017/6958/7829/6966.
+  Max root->sink Manhattan214.73um R0 /215.22um fMX,0>405.
+  Sum L1 stub cost1.97977M ->1.97369Mum R0,1.97237M ->1.96445Mum fMX.
+  Four roots/branches and their site/PG/macro relationships remain unchanged.
+  Complete sink set is identical; no duplicated or missing clock sink.
+
+Feasibility estimate before build: fixed upstream load/depth unchanged;
+local tree sink-count peak rises7.71%, while the dominant103ps independent-
+root term on the witnessed pair disappears. Ideal shared-leaf margin on
+that pair is+5.8ps. If the local CTS splits it by one/two leaf stages,
+remaining ~20-40ps is a normal data-hold repair scale, well below the
+observed structural100ps clock split. Exact successor CTS/GRT timing,
+SRAM interactions and IO margins still must be measured. This estimate is
+not a promise that every1658 failing endpoint belongs to this class.
+
+Images assignment_R0.png /assignment_fMX.png show actual placed XY,
+unchanged macro outlines/four roots, before/after ownership, every full
+family's new root, and highlighted s0lane3. Lines indicate ownership,
+not routed clock wires. Source/clock-contract review required BEFORE P&R.
+
+Apply only to a fresh owned kit: install pv_tree_lane_atomic_{R0,fMX}.json
+with core_infra; compile/check sink census, render/review, then fresh
+place+CTS/GRT under the same833ps TT/FF60/25 policy. Reuse no old clock
+checkpoint as successor timing evidence. Preserve AP911d4 failure.
