@@ -4386,3 +4386,8 @@ FAILED [AUTOPILOT 18aebd5d4f50] 2026-10-28 23:52:46 PDT AUTOPILOT -> QC-A0-KITS-
 
 2026-10-28 23:57 PDT READY [CODEX-GEOM] codex/geom-1028@d371415402 additive results-only successor0407 adds4KV-PVsecondreviews/concurPASS(-COND); allimagespersonallyVIEWED,noextraGRT/STA.
 FAILED [AUTOPILOT c667edbed652] 2026-10-29 00:13:07 PDT AUTOPILOT -> HBM-CORES: FAILED c667edbed652 hbm/ot_hbm_sm_vm_wr_q_t_lanes4 (STRUCTURAL/hold-structural): OT_HOLD_STRUCTURAL stage=grt: FF hold ws -101.66 ps, 2533 true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair | kit epyc2:/srv/opentallas-scratch2/claude/hbm-cores-kits-5/k12/kits/ot_hbm_sm_vm_wr_q_t_lanes4_4d40d602433f-_k12 src claude/hbm-cores-kits-5-1028@141a2529e30fefbcfa2951b6b266723736b292ec | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+FAILED [AUTOPILOT 4f1fb8c68d90] 2026-10-29 00:32:54 PDT AUTOPILOT -> KV-CORES: FAILED 4f1fb8c68d90 qwen_kvsys/qkd_hr_phy_pad (STRUCTURAL/preflight): KIT_PREFLIGHT FAIL issues 1
+  - pins_canonical: slice kit: plan pin file (freeze pins_file) not reachable -- cannot judge slice-placed pins
+KIT_PREFLIGHT FAIL: autopilot stopped before physical runner
+ot-run: RAN on localhost (unit oth-ubuntu-2110489-1793258655): exit 1
+AP_RC=1 | kit localhost:/srv/opentallas-scratch2/claude/codex-kv-phy-pad-1028/kits/qkd_hr_phy_pad__86.4x95.04 src codex/kv-phy-pad-physical-1028@0fb27d22929decee70a2138623e000b6833df904 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
