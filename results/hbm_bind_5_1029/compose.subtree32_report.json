@@ -1,0 +1,332 @@
+{
+ "cores": [
+  {
+   "inst": "hc_NE.u_cen.ot_hbm_hc_subtree32_0",
+   "members": 93,
+   "leaves": 31,
+   "glue": {
+    "$logic_and": 31,
+    "$reduce_or": 31
+   },
+   "boundary_nets": 1091,
+   "valid_out_boundary": true,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "data": [
+     "input",
+     1024
+    ],
+    "node_fault": [
+     "output",
+     31
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "sum": [
+     "output",
+     32
+    ],
+    "valid_in": [
+     "input",
+     1
+    ],
+    "valid_out": [
+     "output",
+     1
+    ]
+   }
+  },
+  {
+   "inst": "hc_NE.u_cen.ot_hbm_hc_subtree32_1",
+   "members": 93,
+   "leaves": 31,
+   "glue": {
+    "$logic_and": 31,
+    "$reduce_or": 31
+   },
+   "boundary_nets": 1090,
+   "valid_out_boundary": false,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "data": [
+     "input",
+     1024
+    ],
+    "node_fault": [
+     "output",
+     31
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "sum": [
+     "output",
+     32
+    ],
+    "valid_in": [
+     "input",
+     1
+    ],
+    "valid_out": [
+     "output",
+     1
+    ]
+   }
+  },
+  {
+   "inst": "hc_NE.u_cen.ot_hbm_hc_subtree32_2",
+   "members": 93,
+   "leaves": 31,
+   "glue": {
+    "$logic_and": 31,
+    "$reduce_or": 31
+   },
+   "boundary_nets": 1091,
+   "valid_out_boundary": true,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "data": [
+     "input",
+     1024
+    ],
+    "node_fault": [
+     "output",
+     31
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "sum": [
+     "output",
+     32
+    ],
+    "valid_in": [
+     "input",
+     1
+    ],
+    "valid_out": [
+     "output",
+     1
+    ]
+   }
+  },
+  {
+   "inst": "hc_NE.u_cen.ot_hbm_hc_subtree32_3",
+   "members": 93,
+   "leaves": 31,
+   "glue": {
+    "$logic_and": 31,
+    "$reduce_or": 31
+   },
+   "boundary_nets": 1090,
+   "valid_out_boundary": false,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "data": [
+     "input",
+     1024
+    ],
+    "node_fault": [
+     "output",
+     31
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "sum": [
+     "output",
+     32
+    ],
+    "valid_in": [
+     "input",
+     1
+    ],
+    "valid_out": [
+     "output",
+     1
+    ]
+   }
+  },
+  {
+   "inst": "hc_NW.u_cen.ot_hbm_hc_subtree32_0",
+   "members": 93,
+   "leaves": 31,
+   "glue": {
+    "$logic_and": 31,
+    "$reduce_or": 31
+   },
+   "boundary_nets": 1091,
+   "valid_out_boundary": true,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "data": [
+     "input",
+     1024
+    ],
+    "node_fault": [
+     "output",
+     31
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "sum": [
+     "output",
+     32
+    ],
+    "valid_in": [
+     "input",
+     1
+    ],
+    "valid_out": [
+     "output",
+     1
+    ]
+   }
+  },
+  {
+   "inst": "hc_NW.u_cen.ot_hbm_hc_subtree32_1",
+   "members": 93,
+   "leaves": 31,
+   "glue": {
+    "$logic_and": 31,
+    "$reduce_or": 31
+   },
+   "boundary_nets": 1090,
+   "valid_out_boundary": false,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "data": [
+     "input",
+     1024
+    ],
+    "node_fault": [
+     "output",
+     31
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "sum": [
+     "output",
+     32
+    ],
+    "valid_in": [
+     "input",
+     1
+    ],
+    "valid_out": [
+     "output",
+     1
+    ]
+   }
+  },
+  {
+   "inst": "hc_NW.u_cen.ot_hbm_hc_subtree32_2",
+   "members": 93,
+   "leaves": 31,
+   "glue": {
+    "$logic_and": 31,
+    "$reduce_or": 31
+   },
+   "boundary_nets": 1091,
+   "valid_out_boundary": true,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "data": [
+     "input",
+     1024
+    ],
+    "node_fault": [
+     "output",
+     31
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "sum": [
+     "output",
+     32
+    ],
+    "valid_in": [
+     "input",
+     1
+    ],
+    "valid_out": [
+     "output",
+     1
+    ]
+   }
+  },
+  {
+   "inst": "hc_NW.u_cen.ot_hbm_hc_subtree32_3",
+   "members": 93,
+   "leaves": 31,
+   "glue": {
+    "$logic_and": 31,
+    "$reduce_or": 31
+   },
+   "boundary_nets": 1090,
+   "valid_out_boundary": false,
+   "ports": {
+    "clk": [
+     "input",
+     1
+    ],
+    "data": [
+     "input",
+     1024
+    ],
+    "node_fault": [
+     "output",
+     31
+    ],
+    "rst_n": [
+     "input",
+     1
+    ],
+    "sum": [
+     "output",
+     32
+    ],
+    "valid_in": [
+     "input",
+     1
+    ],
+    "valid_out": [
+     "output",
+     1
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,23 @@
+{
+ "schema": "hbm.bind5.splice_qhub.v1",
+ "base": "/srv/opentallas-scratch2/claude/hbm-bind-4-1029/b1/out/asbuilt.json",
+ "donor": "e2/dce.json",
+ "instances": [
+  "hc_NE",
+  "hc_NW"
+ ],
+ "new_type": [
+  "$paramod$b9c68a73ed67f9a7011d304044ce3e245a5dae71\\ot_hbm_hc_qhub_static"
+ ],
+ "copied_modules": [
+  "$paramod$031435e86f8a4c5317f847187de91e0442720a51\\ot_hbm_hc_qcen_static",
+  "$paramod$b9c68a73ed67f9a7011d304044ce3e245a5dae71\\ot_hbm_hc_qhub_static",
+  "ot_hbm_hc_q_static"
+ ],
+ "top_cells_changed": [
+  "hc_NE",
+  "hc_NW"
+ ],
+ "other_top_cells_identical": 407,
+ "other_modules_identical": 294
+}
