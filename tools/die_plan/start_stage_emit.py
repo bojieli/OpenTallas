@@ -46,11 +46,16 @@ class StageError(ValueError):
     pass
 
 
-def path_id(path):
-    """ascii id of a START-TREE-1 tree path ('h' + one U+0100+i char per level) -> 'h_0_0_1'"""
-    if not path or path[0] != "h" or any(ord(c) < 0x100 for c in path[1:]):
-        raise StageError(f"not a START-TREE-1 tree path: {path!r}")
-    return "h" + "".join(f"_{ord(c) - 0x100}" for c in path[1:])
+def path_id(path, encoding="unicode"):
+    """Injective ASCII label of the declared tree-path encoding (legacy unicode or die_trial base36)."""
+    if encoding not in ("unicode", "base36"):
+        raise StageError(f"unknown tree-path encoding {encoding!r}")
+    chars = "0123456789abcdefghijklmnopqrstuvwxyz"
+    valid = (all(c in chars for c in path[1:]) if encoding == "base36" else
+             all(ord(c) >= 0x100 for c in path[1:]))
+    if not path or path[0] != "h" or not valid:
+        raise StageError(f"not a START-TREE-1 {encoding} tree path: {path!r}")
+    return "h" + "".join(f"_{chars.index(c) if encoding == 'base36' else ord(c) - 0x100}" for c in path[1:])
 
 
 def sv_name(x):
@@ -132,7 +137,7 @@ def place_stage(xy, n_flops, rows, site=None, W=None, H=None):
     raise StageError(f"no free legal row segment ({n_flops} flops) within {MAX_ROW_TRIES} rows of {xy}")
 
 
-def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_settle=None):
+def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_settle=None, path_encoding="unicode"):
     """-> (stages json dict, start_stages.sv text, patched ctree.v, patched ctree.tcl)"""
     settle = int(root_settle if root_settle is not None else bind.get("root_settle_cycles", ROOT_SETTLE))
     if settle < 1:
@@ -149,7 +154,7 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
     ncell, nxy = meta.get("node_cell", {}), meta.get("node_xy_um", {})
     ids = {}
     for x, p in st.items():
-        path_id(p)
+        path_id(p, path_encoding)
         inst = ncell.get(p)
         if inst is None:
             raise StageError(f"stage {x}: tree path not in the proof's node_cell")
@@ -183,7 +188,7 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
         if r.get("parent") is not None and tp is None:
             raise StageError(f"stage {x}: has a parent but no start port into it")
         stages.append(dict(
-            id=ids[x], region=x, tree_path_id=path_id(p), node_cell=key, node_xy_um=list(nxy.get(p, cxy[key])),
+            id=ids[x], region=x, tree_path_id=path_id(p, path_encoding), node_cell=key, node_xy_um=list(nxy.get(p, cxy[key])),
             clock_net=net, clock_from="A" if inv else "Y", clock_port=f"t_st_{ids[x]}__clk", clock_pin_xy_um=[rect[0], rect[1]],
             rect_um=rect, flops=nf, pad=int(r.get("pad", 0) or 0), edge_fall=bool(r.get("edge_fall")),
             root=root, module=ROOT_MODULE if root else STAGE_MODULE, settle=settle if root else None, start_port_in=tp, parent=r.get("parent"),
@@ -317,6 +322,8 @@ def main(argv=None):
     e.add_argument("--corner", default="TT")
     e.add_argument("--ctree", required=True, help="die_trial clock dir with ctree.v + ctree.tcl")
     e.add_argument("--plan", help="die plan: stage rows must be legal die_trial SiteMap points")
+    e.add_argument("--path-encoding", choices=("unicode", "base36"), default="unicode",
+                   help="declared tree path alphabet; die_trial/trial_tap_arrivals use base36")
     e.add_argument("--out", required=True)
     e.add_argument("--root-settle", type=int, help="root counter SETTLE cycles (default: bind root_settle_cycles, else 64)")
     p = sub.add_parser("proof")
@@ -336,7 +343,7 @@ def main(argv=None):
             P = S.Plan(S.load(a.plan))
             site, wh = DT.SiteMap(P), (P.W, P.H)
         doc, sv, v, t = emit(bind, meta, (cd / "ctree.v").read_text(), (cd / "ctree.tcl").read_text(), site, wh,
-                            a.root_settle)
+                            a.root_settle, a.path_encoding)
         o = Path(a.out)
         o.mkdir(parents=True, exist_ok=True)
         (o / "start_stages.json").write_text(json.dumps(doc, indent=1))
