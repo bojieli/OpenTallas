@@ -1,0 +1,4 @@
+ACTUAL_CELLS relay_depth=12 expected_release_latency=14 root_known_low=3 sink_known_low=3
+OFFSET_PLUS_SYNC_IS_NOT_ASSERT_WINDOW: depth12 and sync2 yield only 3 low edges
+WARM_RESET root_low=3 sink_low=3
+counterexample.sv:32: $finish called at 60809000 (1fs)

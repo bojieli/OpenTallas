@@ -1,0 +1,1894 @@
+{
+ "type": {
+  "module": "s81p_dsdv_slice_lepw_mus_LP__t2",
+  "outline_um": [
+   1442.88,
+   1226.88
+  ],
+  "hard": false,
+  "buses": [
+   {
+    "name": "lepk_i0",
+    "dir": "in",
+    "width": 1104,
+    "kind": "data",
+    "face": "E",
+    "window_um": [
+     6.144,
+     246.108
+    ],
+    "layers": [
+     "M6",
+     "M4"
+    ],
+    "order": "lsb_low"
+   },
+   {
+    "name": "lepf_i0",
+    "dir": "in",
+    "width": 1,
+    "kind": "data",
+    "face": "E",
+    "window_um": [
+     506.88,
+     522.02
+    ],
+    "layers": [
+     "M6",
+     "M4"
+    ],
+    "order": "lsb_low"
+   },
+   {
+    "name": "coll_i0",
+    "dir": "in",
+    "width": 514,
+    "kind": "data",
+    "face": "S",
+    "window_um": [
+     6.144,
+     117.084
+    ],
+    "layers": [
+     "M7",
+     "M5"
+    ],
+    "order": "lsb_high"
+   },
+   {
+    "name": "coll_i1",
+    "dir": "in",
+    "width": 514,
+    "kind": "data",
+    "face": "S",
+    "window_um": [
+     119.04,
+     228.828
+    ],
+    "layers": [
+     "M7",
+     "M5"
+    ],
+    "order": "lsb_high"
+   },
+   {
+    "name": "coll_i2",
+    "dir": "in",
+    "width": 514,
+    "kind": "data",
+    "face": "S",
+    "window_um": [
+     663.744,
+     772.764
+    ],
+    "layers": [
+     "M7",
+     "M5"
+    ],
+    "order": "lsb_high"
+   },
+   {
+    "name": "coll_i3",
+    "dir": "in",
+    "width": 514,
+    "kind": "data",
+    "face": "S",
+    "window_um": [
+     776.64,
+     884.508
+    ],
+    "layers": [
+     "M7",
+     "M5"
+    ],
+    "order": "lsb_low"
+   },
+   {
+    "name": "unit_i0",
+    "dir": "in",
+    "width": 45,
+    "kind": "data",
+    "face": "S",
+    "window_um": [
+     889.536,
+     906.596
+    ],
+    "layers": [
+     "M7",
+     "M5"
+    ],
+    "order": "lsb_low"
+   },
+   {
+    "name": "lepk_o0",
+    "dir": "out",
+    "width": 1104,
+    "kind": "data",
+    "face": "E",
+    "window_um": [
+     247.296,
+     487.26
+    ],
+    "layers": [
+     "M6",
+     "M4"
+    ],
+    "order": "lsb_low"
+   },
+   {
+    "name": "flt_o0",
+    "dir": "out",
+    "width": 1,
+    "kind": "ctl",
+    "face": "E",
+    "window_um": [
+     488.448,
+     505.508
+    ],
+    "layers": [
+     "M6",
+     "M4"
+    ],
+    "order": "lsb_low"
+   },
+   {
+    "name": "tp_o0",
+    "dir": "out",
+    "width": 276,
+    "kind": "data",
+    "face": "N",
+    "window_um": [
+     6.144,
+     66.012
+    ],
+    "layers": [
+     "M7",
+     "M5"
+    ],
+    "order": "lsb_low"
+   },
+   {
+    "name": "coll_o0",
+    "dir": "out",
+    "width": 512,
+    "kind": "data",
+    "face": "S",
+    "window_um": [
+     231.936,
+     343.26
+    ],
+    "layers": [
+     "M7",
+     "M5"
+    ],
+    "order": "lsb_low"
+   },
+   {
+    "name": "coll_o1",
+    "dir": "out",
+    "width": 512,
+    "kind": "data",
+    "face": "S",
+    "window_um": [
+     344.448,
+     455.772
+    ],
+    "layers": [
+     "M7",
+     "M5"
+    ],
+    "order": "lsb_low"
+   },
+   {
+    "name": "coll_o2",
+    "dir": "out",
+    "width": 512,
+    "kind": "data",
+    "face": "S",
+    "window_um": [
+     907.776,
+     1016.412
+    ],
+    "layers": [
+     "M7",
+     "M5"
+    ],
+    "order": "lsb_low"
+   },
+   {
+    "name": "coll_o3",
+    "dir": "out",
+    "width": 512,
+    "kind": "data",
+    "face": "S",
+    "window_um": [
+     1020.288,
+     1128.54
+    ],
+    "layers": [
+     "M7",
+     "M5"
+    ],
+    "order": "lsb_low"
+   },
+   {
+    "name": "lpc_i0",
+    "dir": "in",
+    "width": 2,
+    "kind": "ctl",
+    "face": "E",
+    "window_um": [
+     523.208,
+     538.348
+    ],
+    "layers": [
+     "M6",
+     "M4"
+    ],
+    "order": "lsb_low"
+   }
+  ],
+  "ft_slots": [
+   {
+    "name": "ft0",
+    "in_face": "N",
+    "out_face": "S",
+    "width": 513,
+    "stations": 4,
+    "in_window_um": [
+     456.96,
+     565.028
+    ],
+    "out_window_um": [
+     456.96,
+     565.028
+    ],
+    "layers": [
+     "M7",
+     "M5"
+    ],
+    "order": "lsb_low"
+   },
+   {
+    "name": "ft1",
+    "in_face": "N",
+    "out_face": "S",
+    "width": 32,
+    "stations": 4,
+    "in_window_um": [
+     645.312,
+     656.228
+    ],
+    "out_window_um": [
+     645.312,
+     656.228
+    ],
+    "layers": [
+     "M7",
+     "M5"
+    ],
+    "order": "lsb_low"
+   },
+   {
+    "name": "ft2",
+    "in_face": "S",
+    "out_face": "N",
+    "width": 258,
+    "stations": 4,
+    "in_window_um": [
+     569.856,
+     624.732
+    ],
+    "out_window_um": [
+     569.856,
+     624.732
+    ],
+    "layers": [
+     "M7",
+     "M5"
+    ],
+    "order": "lsb_low"
+   },
+   {
+    "name": "ft3",
+    "in_face": "S",
+    "out_face": "N",
+    "width": 45,
+    "stations": 4,
+    "in_window_um": [
+     627.072,
+     636.836
+    ],
+    "out_window_um": [
+     627.072,
+     636.836
+    ],
+    "layers": [
+     "M7",
+     "M5"
+    ],
+    "order": "lsb_low"
+   }
+  ],
+  "clock": {
+   "tap_um": [
+    725.76,
+    613.44
+   ],
+   "layer": "M9",
+   "edge_clocks": [
+    {
+     "port": "fclk_in_coll_i0",
+     "tap_um": [
+      61.536,
+      2.656
+     ],
+     "period_mult": 1,
+     "note": "source-forwarded ring write clock; actual source-export/window STA required"
+    },
+    {
+     "port": "fclk_in_coll_i1",
+     "tap_um": [
+      173.856,
+      2.656
+     ],
+     "period_mult": 1,
+     "note": "source-forwarded ring write clock; actual source-export/window STA required"
+    },
+    {
+     "port": "fclk_in_coll_i2",
+     "tap_um": [
+      718.176,
+      2.656
+     ],
+     "period_mult": 1,
+     "note": "source-forwarded ring write clock; actual source-export/window STA required"
+    },
+    {
+     "port": "fclk_in_coll_i3",
+     "tap_um": [
+      830.496,
+      2.656
+     ],
+     "period_mult": 1,
+     "note": "source-forwarded ring write clock; actual source-export/window STA required"
+    },
+    {
+     "port": "fclk_in_ft2_i",
+     "tap_um": [
+      597.216,
+      2.656
+     ],
+     "period_mult": 1,
+     "note": "source-forwarded ring write clock; actual source-export/window STA required"
+    },
+    {
+     "port": "fclk_in_ft3_i",
+     "tap_um": [
+      631.776,
+      2.656
+     ],
+     "period_mult": 1,
+     "note": "source-forwarded ring write clock; actual source-export/window STA required"
+    },
+    {
+     "port": "fclk_in_unit_i0",
+     "tap_um": [
+      897.888,
+      2.656
+     ],
+     "period_mult": 1,
+     "note": "source-forwarded ring write clock; actual source-export/window STA required"
+    },
+    {
+     "port": "fclk_in_cland_dn_0",
+     "tap_um": [
+      182.496,
+      2.656
+     ],
+     "period_mult": 1,
+     "note": "reverse monitor forwarded clock; 2bit landed ring, boot-only cost"
+    }
+   ],
+   "landing_contract": {
+    "pins": [
+     {
+      "name": "fclk_in_coll_i0",
+      "dir": "in",
+      "kind": "clock",
+      "layer": "M7",
+      "xy_um": [
+       61.536,
+       2.656
+      ],
+      "epoch": false
+     },
+     {
+      "name": "fclk_in_coll_i1",
+      "dir": "in",
+      "kind": "clock",
+      "layer": "M7",
+      "xy_um": [
+       173.856,
+       2.656
+      ],
+      "epoch": false
+     },
+     {
+      "name": "fclk_in_coll_i2",
+      "dir": "in",
+      "kind": "clock",
+      "layer": "M7",
+      "xy_um": [
+       718.176,
+       2.656
+      ],
+      "epoch": false
+     },
+     {
+      "name": "fclk_in_coll_i3",
+      "dir": "in",
+      "kind": "clock",
+      "layer": "M7",
+      "xy_um": [
+       830.496,
+       2.656
+      ],
+      "epoch": false
+     },
+     {
+      "name": "fclk_in_ft2_i",
+      "dir": "in",
+      "kind": "clock",
+      "layer": "M7",
+      "xy_um": [
+       597.216,
+       2.656
+      ],
+      "epoch": false
+     },
+     {
+      "name": "fclk_in_ft3_i",
+      "dir": "in",
+      "kind": "clock",
+      "layer": "M7",
+      "xy_um": [
+       631.776,
+       2.656
+      ],
+      "epoch": false
+     },
+     {
+      "name": "fclk_in_unit_i0",
+      "dir": "in",
+      "kind": "clock",
+      "layer": "M7",
+      "xy_um": [
+       897.888,
+       2.656
+      ],
+      "epoch": false
+     },
+     {
+      "name": "fclk_out_coll_o0",
+      "dir": "out",
+      "kind": "clock",
+      "layer": "M7",
+      "xy_um": [
+       287.52,
+       2.656
+      ],
+      "epoch": false,
+      "source_clock_port": "clk"
+     },
+     {
+      "name": "fclk_out_coll_o1",
+      "dir": "out",
+      "kind": "clock",
+      "layer": "M7",
+      "xy_um": [
+       400.224,
+       2.656
+      ],
+      "epoch": false,
+      "source_clock_port": "clk_t1"
+     },
+     {
+      "name": "fclk_out_coll_o2",
+      "dir": "out",
+      "kind": "clock",
+      "layer": "M7",
+      "xy_um": [
+       962.272,
+       2.656
+      ],
+      "epoch": false,
+      "source_clock_port": "clk_t2"
+     },
+     {
+      "name": "fclk_out_coll_o3",
+      "dir": "out",
+      "kind": "clock",
+      "layer": "M7",
+      "xy_um": [
+       1074.592,
+       2.656
+      ],
+      "epoch": false,
+      "source_clock_port": "clk_t2"
+     },
+     {
+      "name": "fclk_out_ft0_o",
+      "dir": "out",
+      "kind": "clock",
+      "layer": "M7",
+      "xy_um": [
+       510.816,
+       2.656
+      ],
+      "epoch": false,
+      "source_clock_port": "clk_t1"
+     },
+     {
+      "name": "fclk_out_ft1_o",
+      "dir": "out",
+      "kind": "clock",
+      "layer": "M7",
+      "xy_um": [
+       650.784,
+       2.656
+      ],
+      "epoch": false,
+      "source_clock_port": "clk_t1"
+     },
+     {
+      "name": "cland_up_ready",
+      "dir": "out",
+      "kind": "ctl",
+      "layer": "M7",
+      "xy_um": [
+       1440.736,
+       770.464
+      ],
+      "epoch": false
+     },
+     {
+      "name": "cland_up_fault",
+      "dir": "out",
+      "kind": "ctl",
+      "layer": "M7",
+      "xy_um": [
+       1440.736,
+       772.64
+      ],
+      "epoch": false
+     },
+     {
+      "name": "cland_dn_ready_0",
+      "dir": "in",
+      "kind": "ctl",
+      "layer": "M7",
+      "xy_um": [
+       184.672,
+       2.656
+      ],
+      "epoch": false
+     },
+     {
+      "name": "cland_dn_fault_0",
+      "dir": "in",
+      "kind": "ctl",
+      "layer": "M7",
+      "xy_um": [
+       186.848,
+       2.656
+      ],
+      "epoch": false
+     },
+     {
+      "name": "fclk_in_cland_dn_0",
+      "dir": "in",
+      "kind": "clock",
+      "layer": "M7",
+      "xy_um": [
+       182.496,
+       2.656
+      ],
+      "epoch": false
+     }
+    ],
+    "bands": {
+     "coll_i0": {
+      "rect_um": [
+       17.28,
+       17.28,
+       128.22,
+       43.2
+      ],
+      "width": 514,
+      "ring_width": 576,
+      "live_data_storage_flops": 2575,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 109.806,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_coll_i0"
+     },
+     "coll_i1": {
+      "rect_um": [
+       119.04,
+       43.2,
+       228.828,
+       69.12
+      ],
+      "width": 514,
+      "ring_width": 576,
+      "live_data_storage_flops": 2575,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 124.014,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_coll_i1"
+     },
+     "coll_i2": {
+      "rect_um": [
+       663.744,
+       17.28,
+       772.764,
+       43.2
+      ],
+      "width": 514,
+      "ring_width": 576,
+      "live_data_storage_flops": 2575,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 97.71,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_coll_i2"
+     },
+     "coll_i3": {
+      "rect_um": [
+       776.64,
+       17.28,
+       884.508,
+       43.2
+      ],
+      "width": 514,
+      "ring_width": 576,
+      "live_data_storage_flops": 2575,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 97.134,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_coll_i3"
+     },
+     "ft2_i": {
+      "rect_um": [
+       569.856,
+       17.28,
+       624.732,
+       45.36
+      ],
+      "width": 258,
+      "ring_width": 320,
+      "live_data_storage_flops": 1295,
+      "padded_data_storage_flops": 1600,
+      "clock_roles": {
+       "forwarded_write_flops": 1280,
+       "local_read_flops": 320
+      },
+      "max_pin_to_band_hop_um": 72.798,
+      "area_reserve_um2": 1516.32,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_ft2_i"
+     },
+     "ft3_i": {
+      "rect_um": [
+       627.072,
+       17.28,
+       636.836,
+       58.32
+      ],
+      "width": 45,
+      "ring_width": 64,
+      "live_data_storage_flops": 230,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 63.202,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_ft3_i"
+     },
+     "unit_i0": {
+      "rect_um": [
+       889.536,
+       17.28,
+       906.596,
+       41.04
+      ],
+      "width": 45,
+      "ring_width": 64,
+      "live_data_storage_flops": 230,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 49.57,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_unit_i0"
+     },
+     "monitor_0": {
+      "rect_um": [
+       180.36,
+       69.12,
+       189.0,
+       116.64
+      ],
+      "width": 2,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 120.96,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_monitor_0"
+     }
+    },
+    "base_type": "dsdv_slice_lepw_mus_LP__t2",
+    "registered_monitor": true,
+    "physical_qualified": false,
+    "collector_tree": {
+     "root": [
+      1434.72,
+      766.304
+     ],
+     "depth": 6,
+     "own_depth": 6,
+     "relays": [
+      {
+       "name": "u_rrl_0",
+       "xy": [
+        1262.52,
+        766.8000000000001
+       ],
+       "d": "rst_root_n",
+       "q": "rst_rl_0",
+       "depth": 1,
+       "tap": 11,
+       "kind": "tap"
+      },
+      {
+       "name": "u_rrl_1",
+       "xy": [
+        1262.52,
+        766.8000000000001
+       ],
+       "d": "rst_rl_0",
+       "q": "rst_rl_1",
+       "depth": 2,
+       "tap": 11,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_2",
+       "xy": [
+        1262.52,
+        766.8000000000001
+       ],
+       "d": "rst_rl_1",
+       "q": "rst_rl_2",
+       "depth": 3,
+       "tap": 11,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_3",
+       "xy": [
+        1262.52,
+        766.8000000000001
+       ],
+       "d": "rst_rl_2",
+       "q": "rst_rl_3",
+       "depth": 4,
+       "tap": 11,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_4",
+       "xy": [
+        1262.52,
+        766.8000000000001
+       ],
+       "d": "rst_rl_3",
+       "q": "rst_rl_4",
+       "depth": 5,
+       "tap": 11,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_5",
+       "xy": [
+        1262.52,
+        766.8000000000001
+       ],
+       "d": "rst_rl_4",
+       "q": "rst_n_t11",
+       "depth": 6,
+       "tap": 11,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_6",
+       "xy": [
+        1262.52,
+        460.08000000000004
+       ],
+       "d": "rst_rl_0",
+       "q": "rst_rl_6",
+       "depth": 2,
+       "tap": 7,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_7",
+       "xy": [
+        1262.52,
+        460.08000000000004
+       ],
+       "d": "rst_rl_6",
+       "q": "rst_rl_7",
+       "depth": 3,
+       "tap": 7,
+       "kind": "tap"
+      },
+      {
+       "name": "u_rrl_8",
+       "xy": [
+        1262.52,
+        460.08000000000004
+       ],
+       "d": "rst_rl_7",
+       "q": "rst_rl_8",
+       "depth": 4,
+       "tap": 7,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_9",
+       "xy": [
+        1262.52,
+        460.08000000000004
+       ],
+       "d": "rst_rl_8",
+       "q": "rst_rl_9",
+       "depth": 5,
+       "tap": 7,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_10",
+       "xy": [
+        1262.52,
+        460.08000000000004
+       ],
+       "d": "rst_rl_9",
+       "q": "rst_n_t7",
+       "depth": 6,
+       "tap": 7,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_11",
+       "xy": [
+        1262.52,
+        153.36
+       ],
+       "d": "rst_rl_7",
+       "q": "rst_rl_11",
+       "depth": 4,
+       "tap": 3,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_12",
+       "xy": [
+        1262.52,
+        153.36
+       ],
+       "d": "rst_rl_11",
+       "q": "rst_rl_12",
+       "depth": 5,
+       "tap": 3,
+       "kind": "tap"
+      },
+      {
+       "name": "u_rrl_13",
+       "xy": [
+        1262.52,
+        153.36
+       ],
+       "d": "rst_rl_12",
+       "q": "rst_n_t3",
+       "depth": 6,
+       "tap": 3,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_14",
+       "xy": [
+        901.8000000000001,
+        153.36
+       ],
+       "d": "rst_rl_12",
+       "q": "rst_n_t2",
+       "depth": 6,
+       "tap": 2,
+       "kind": "tap"
+      },
+      {
+       "name": "u_rrl_15",
+       "xy": [
+        901.8000000000001,
+        460.08000000000004
+       ],
+       "d": "rst_rl_7",
+       "q": "rst_rl_15",
+       "depth": 4,
+       "tap": 6,
+       "kind": "tap"
+      },
+      {
+       "name": "u_rrl_16",
+       "xy": [
+        901.8000000000001,
+        460.08000000000004
+       ],
+       "d": "rst_rl_15",
+       "q": "rst_rl_16",
+       "depth": 5,
+       "tap": 6,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_17",
+       "xy": [
+        901.8000000000001,
+        460.08000000000004
+       ],
+       "d": "rst_rl_16",
+       "q": "rst_n_t6",
+       "depth": 6,
+       "tap": 6,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_18",
+       "xy": [
+        541.08,
+        460.08000000000004
+       ],
+       "d": "rst_rl_15",
+       "q": "rst_rl_18",
+       "depth": 5,
+       "tap": 5,
+       "kind": "tap"
+      },
+      {
+       "name": "u_rrl_19",
+       "xy": [
+        541.08,
+        460.08000000000004
+       ],
+       "d": "rst_rl_18",
+       "q": "rst_n_t5",
+       "depth": 6,
+       "tap": 5,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_20",
+       "xy": [
+        180.36,
+        460.08000000000004
+       ],
+       "d": "rst_rl_18",
+       "q": "rst_n_t4",
+       "depth": 6,
+       "tap": 4,
+       "kind": "tap"
+      },
+      {
+       "name": "u_rrl_21",
+       "xy": [
+        901.8000000000001,
+        766.8000000000001
+       ],
+       "d": "rst_rl_0",
+       "q": "rst_rl_21",
+       "depth": 2,
+       "tap": 10,
+       "kind": "tap"
+      },
+      {
+       "name": "u_rrl_22",
+       "xy": [
+        901.8000000000001,
+        766.8000000000001
+       ],
+       "d": "rst_rl_21",
+       "q": "rst_rl_22",
+       "depth": 3,
+       "tap": 10,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_23",
+       "xy": [
+        901.8000000000001,
+        766.8000000000001
+       ],
+       "d": "rst_rl_22",
+       "q": "rst_rl_23",
+       "depth": 4,
+       "tap": 10,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_24",
+       "xy": [
+        901.8000000000001,
+        766.8000000000001
+       ],
+       "d": "rst_rl_23",
+       "q": "rst_rl_24",
+       "depth": 5,
+       "tap": 10,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_25",
+       "xy": [
+        901.8000000000001,
+        766.8000000000001
+       ],
+       "d": "rst_rl_24",
+       "q": "rst_n_t10",
+       "depth": 6,
+       "tap": 10,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_26",
+       "xy": [
+        541.08,
+        766.8000000000001
+       ],
+       "d": "rst_rl_21",
+       "q": "rst_rl_26",
+       "depth": 3,
+       "tap": 9,
+       "kind": "tap"
+      },
+      {
+       "name": "u_rrl_27",
+       "xy": [
+        541.08,
+        766.8000000000001
+       ],
+       "d": "rst_rl_26",
+       "q": "rst_rl_27",
+       "depth": 4,
+       "tap": 9,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_28",
+       "xy": [
+        541.08,
+        766.8000000000001
+       ],
+       "d": "rst_rl_27",
+       "q": "rst_rl_28",
+       "depth": 5,
+       "tap": 9,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_29",
+       "xy": [
+        541.08,
+        766.8000000000001
+       ],
+       "d": "rst_rl_28",
+       "q": "rst_n_t9",
+       "depth": 6,
+       "tap": 9,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_30",
+       "xy": [
+        180.36,
+        766.8000000000001
+       ],
+       "d": "rst_rl_26",
+       "q": "rst_rl_30",
+       "depth": 4,
+       "tap": 8,
+       "kind": "tap"
+      },
+      {
+       "name": "u_rrl_31",
+       "xy": [
+        180.36,
+        766.8000000000001
+       ],
+       "d": "rst_rl_30",
+       "q": "rst_rl_31",
+       "depth": 5,
+       "tap": 8,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_32",
+       "xy": [
+        180.36,
+        766.8000000000001
+       ],
+       "d": "rst_rl_31",
+       "q": "rst_n_t8",
+       "depth": 6,
+       "tap": 8,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_33",
+       "xy": [
+        180.384,
+        387.716
+       ],
+       "d": "rst_rl_30",
+       "q": "rst_rl_33",
+       "depth": 5,
+       "tap": null,
+       "kind": "wire"
+      },
+      {
+       "name": "u_rrl_34",
+       "xy": [
+        180.384,
+        8.608
+       ],
+       "d": "rst_rl_33",
+       "q": "rst_n_t16",
+       "depth": 6,
+       "tap": 16,
+       "kind": "tap"
+      },
+      {
+       "name": "u_rrl_35",
+       "xy": [
+        1262.52,
+        1073.52
+       ],
+       "d": "rst_rl_0",
+       "q": "rst_rl_35",
+       "depth": 2,
+       "tap": 15,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_36",
+       "xy": [
+        1262.52,
+        1073.52
+       ],
+       "d": "rst_rl_35",
+       "q": "rst_rl_36",
+       "depth": 3,
+       "tap": 15,
+       "kind": "tap"
+      },
+      {
+       "name": "u_rrl_37",
+       "xy": [
+        1262.52,
+        1073.52
+       ],
+       "d": "rst_rl_36",
+       "q": "rst_rl_37",
+       "depth": 4,
+       "tap": 15,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_38",
+       "xy": [
+        1262.52,
+        1073.52
+       ],
+       "d": "rst_rl_37",
+       "q": "rst_rl_38",
+       "depth": 5,
+       "tap": 15,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_39",
+       "xy": [
+        1262.52,
+        1073.52
+       ],
+       "d": "rst_rl_38",
+       "q": "rst_n_t15",
+       "depth": 6,
+       "tap": 15,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_40",
+       "xy": [
+        901.8000000000001,
+        1073.52
+       ],
+       "d": "rst_rl_36",
+       "q": "rst_rl_40",
+       "depth": 4,
+       "tap": 14,
+       "kind": "tap"
+      },
+      {
+       "name": "u_rrl_41",
+       "xy": [
+        901.8000000000001,
+        1073.52
+       ],
+       "d": "rst_rl_40",
+       "q": "rst_rl_41",
+       "depth": 5,
+       "tap": 14,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_42",
+       "xy": [
+        901.8000000000001,
+        1073.52
+       ],
+       "d": "rst_rl_41",
+       "q": "rst_n_t14",
+       "depth": 6,
+       "tap": 14,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_43",
+       "xy": [
+        541.08,
+        1073.52
+       ],
+       "d": "rst_rl_40",
+       "q": "rst_rl_43",
+       "depth": 5,
+       "tap": 13,
+       "kind": "tap"
+      },
+      {
+       "name": "u_rrl_44",
+       "xy": [
+        541.08,
+        1073.52
+       ],
+       "d": "rst_rl_43",
+       "q": "rst_n_t13",
+       "depth": 6,
+       "tap": 13,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_45",
+       "xy": [
+        180.36,
+        1073.52
+       ],
+       "d": "rst_rl_43",
+       "q": "rst_n_t12",
+       "depth": 6,
+       "tap": 12,
+       "kind": "tap"
+      },
+      {
+       "name": "u_rrl_46",
+       "xy": [
+        1058.074,
+        766.304
+       ],
+       "d": "rst_root_n",
+       "q": "rst_rl_46",
+       "depth": 1,
+       "tap": null,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_47",
+       "xy": [
+        1058.074,
+        766.304
+       ],
+       "d": "rst_rl_46",
+       "q": "rst_rl_47",
+       "depth": 2,
+       "tap": null,
+       "kind": "wire"
+      },
+      {
+       "name": "u_rrl_48",
+       "xy": [
+        681.4280000000001,
+        766.304
+       ],
+       "d": "rst_rl_47",
+       "q": "rst_rl_48",
+       "depth": 3,
+       "tap": null,
+       "kind": "wire"
+      },
+      {
+       "name": "u_rrl_49",
+       "xy": [
+        541.08,
+        530.0060000000001
+       ],
+       "d": "rst_rl_48",
+       "q": "rst_rl_49",
+       "depth": 4,
+       "tap": null,
+       "kind": "wire"
+      },
+      {
+       "name": "u_rrl_50",
+       "xy": [
+        541.08,
+        153.36
+       ],
+       "d": "rst_rl_49",
+       "q": "rst_rl_50",
+       "depth": 5,
+       "tap": 1,
+       "kind": "tap"
+      },
+      {
+       "name": "u_rrl_51",
+       "xy": [
+        541.08,
+        153.36
+       ],
+       "d": "rst_rl_50",
+       "q": "rst_n_t1",
+       "depth": 6,
+       "tap": 1,
+       "kind": "pad"
+      },
+      {
+       "name": "u_rrl_52",
+       "xy": [
+        180.36,
+        153.36
+       ],
+       "d": "rst_rl_50",
+       "q": "rst_n_t0",
+       "depth": 6,
+       "tap": 0,
+       "kind": "tap"
+      }
+     ],
+     "max_hop_um": 379.1,
+     "tap_depth": {
+      "0": 5,
+      "1": 4,
+      "2": 4,
+      "3": 3,
+      "4": 5,
+      "5": 4,
+      "6": 3,
+      "7": 2,
+      "8": 4,
+      "9": 3,
+      "10": 2,
+      "11": 1,
+      "12": 5,
+      "13": 4,
+      "14": 3,
+      "15": 2,
+      "16": 6
+     },
+     "n_tree": 21,
+     "n_pad": 32,
+     "reach_um": 405.0,
+     "plan_reach_um": 380.0,
+     "topology": "taps",
+     "taps": [
+      "clk",
+      "clk_t1",
+      "clk_t2",
+      "clk_t3",
+      "clk_t4",
+      "clk_t5",
+      "clk_t6",
+      "clk_t7",
+      "clk_t8",
+      "clk_t9",
+      "clk_t10",
+      "clk_t11",
+      "clk_t12",
+      "clk_t13",
+      "clk_t14",
+      "clk_t15",
+      "o0"
+     ],
+     "tap_offset_um": 0.0,
+     "n_clock_taps": 16,
+     "n_reset_consumers": 16,
+     "local_reset_taps": false,
+     "outs": [
+      [
+       180.384,
+       8.608
+      ]
+     ],
+     "core_resets": [],
+     "entry": "relayed",
+     "sync_stages": 2,
+     "type": "dsdv_slice_lepw_mus_LP__t2",
+     "start": false,
+     "relay_driver": false
+    },
+    "collector_root_node": "rst_root_n",
+    "collector_local_sources": [
+     {
+      "name": "coll_i0",
+      "ready": "landing_ready_coll_i0",
+      "fault": "landing_fault_coll_i0",
+      "tap": 0,
+      "xy_um": [
+       61.614000000000004,
+       0
+      ],
+      "pin_xy_um": [
+       61.614000000000004,
+       0
+      ],
+      "band": {
+       "rect_um": [
+        17.28,
+        17.28,
+        128.22,
+        43.2
+       ],
+       "width": 514,
+       "ring_width": 576,
+       "live_data_storage_flops": 2575,
+       "padded_data_storage_flops": 2880,
+       "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+       },
+       "max_pin_to_band_hop_um": 109.806,
+       "area_reserve_um2": 2636.064,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "instance": "u_cland_coll_i0"
+      }
+     },
+     {
+      "name": "coll_i1",
+      "ready": "landing_ready_coll_i1",
+      "fault": "landing_fault_coll_i1",
+      "tap": 0,
+      "xy_um": [
+       173.934,
+       0
+      ],
+      "pin_xy_um": [
+       173.934,
+       0
+      ],
+      "band": {
+       "rect_um": [
+        119.04,
+        43.2,
+        228.828,
+        69.12
+       ],
+       "width": 514,
+       "ring_width": 576,
+       "live_data_storage_flops": 2575,
+       "padded_data_storage_flops": 2880,
+       "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+       },
+       "max_pin_to_band_hop_um": 124.014,
+       "area_reserve_um2": 2636.064,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "instance": "u_cland_coll_i1"
+      }
+     },
+     {
+      "name": "coll_i2",
+      "ready": "landing_ready_coll_i2",
+      "fault": "landing_fault_coll_i2",
+      "tap": 1,
+      "xy_um": [
+       718.254,
+       0
+      ],
+      "pin_xy_um": [
+       718.254,
+       0
+      ],
+      "band": {
+       "rect_um": [
+        663.744,
+        17.28,
+        772.764,
+        43.2
+       ],
+       "width": 514,
+       "ring_width": 576,
+       "live_data_storage_flops": 2575,
+       "padded_data_storage_flops": 2880,
+       "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+       },
+       "max_pin_to_band_hop_um": 97.71,
+       "area_reserve_um2": 2636.064,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "instance": "u_cland_coll_i2"
+      }
+     },
+     {
+      "name": "coll_i3",
+      "ready": "landing_ready_coll_i3",
+      "fault": "landing_fault_coll_i3",
+      "tap": 2,
+      "xy_um": [
+       830.5740000000001,
+       0
+      ],
+      "pin_xy_um": [
+       830.5740000000001,
+       0
+      ],
+      "band": {
+       "rect_um": [
+        776.64,
+        17.28,
+        884.508,
+        43.2
+       ],
+       "width": 514,
+       "ring_width": 576,
+       "live_data_storage_flops": 2575,
+       "padded_data_storage_flops": 2880,
+       "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+       },
+       "max_pin_to_band_hop_um": 97.134,
+       "area_reserve_um2": 2636.064,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "instance": "u_cland_coll_i3"
+      }
+     },
+     {
+      "name": "ft2_i",
+      "ready": "landing_ready_ft2_i",
+      "fault": "landing_fault_ft2_i",
+      "tap": 1,
+      "xy_um": [
+       597.294,
+       0
+      ],
+      "pin_xy_um": [
+       597.294,
+       0
+      ],
+      "band": {
+       "rect_um": [
+        569.856,
+        17.28,
+        624.732,
+        45.36
+       ],
+       "width": 258,
+       "ring_width": 320,
+       "live_data_storage_flops": 1295,
+       "padded_data_storage_flops": 1600,
+       "clock_roles": {
+        "forwarded_write_flops": 1280,
+        "local_read_flops": 320
+       },
+       "max_pin_to_band_hop_um": 72.798,
+       "area_reserve_um2": 1516.32,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "instance": "u_cland_ft2_i"
+      }
+     },
+     {
+      "name": "ft3_i",
+      "ready": "landing_ready_ft3_i",
+      "fault": "landing_fault_ft3_i",
+      "tap": 1,
+      "xy_um": [
+       631.954,
+       0
+      ],
+      "pin_xy_um": [
+       631.954,
+       0
+      ],
+      "band": {
+       "rect_um": [
+        627.072,
+        17.28,
+        636.836,
+        58.32
+       ],
+       "width": 45,
+       "ring_width": 64,
+       "live_data_storage_flops": 230,
+       "padded_data_storage_flops": 320,
+       "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+       },
+       "max_pin_to_band_hop_um": 63.202,
+       "area_reserve_um2": 396.576,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "instance": "u_cland_ft3_i"
+      }
+     },
+     {
+      "name": "unit_i0",
+      "ready": "landing_ready_unit_i0",
+      "fault": "landing_fault_unit_i0",
+      "tap": 2,
+      "xy_um": [
+       898.066,
+       0
+      ],
+      "pin_xy_um": [
+       898.066,
+       0
+      ],
+      "band": {
+       "rect_um": [
+        889.536,
+        17.28,
+        906.596,
+        41.04
+       ],
+       "width": 45,
+       "ring_width": 64,
+       "live_data_storage_flops": 230,
+       "padded_data_storage_flops": 320,
+       "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+       },
+       "max_pin_to_band_hop_um": 49.57,
+       "area_reserve_um2": 396.576,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "instance": "u_cland_unit_i0"
+      }
+     }
+    ],
+    "collector_children": [
+     {
+      "part": "fW2_p1_b2",
+      "node": "rst_n_t16",
+      "xy_um": [
+       180.384,
+       8.608
+      ],
+      "seam": true,
+      "index": 0,
+      "ready": "cland_dn_ready_0",
+      "fault": "cland_dn_fault_0"
+     }
+    ]
+   }
+  },
+  "reset": {
+   "sync_stages": 2
+  },
+  "contents": [
+   {
+    "inst": "u_lp",
+    "module": "dsdv_slice_lepw_mus.LP",
+    "status": "rework",
+    "note": "lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"
+   }
+  ],
+  "note": "slice partition; 1 instance(s) (R0)"
+ },
+ "layers": {
+  "M2": {
+   "name": "M2",
+   "dir": "H",
+   "pitch_um": 0.036,
+   "offset_um": 0.045
+  },
+  "M3": {
+   "name": "M3",
+   "dir": "V",
+   "pitch_um": 0.036,
+   "offset_um": 0.009
+  },
+  "M4": {
+   "name": "M4",
+   "dir": "H",
+   "pitch_um": 0.048,
+   "offset_um": 0.024
+  },
+  "M5": {
+   "name": "M5",
+   "dir": "V",
+   "pitch_um": 0.048,
+   "offset_um": 0.024
+  },
+  "M6": {
+   "name": "M6",
+   "dir": "H",
+   "pitch_um": 0.064,
+   "offset_um": 0.032
+  },
+  "M7": {
+   "name": "M7",
+   "dir": "V",
+   "pitch_um": 0.064,
+   "offset_um": 0.032
+  },
+  "M8": {
+   "name": "M8",
+   "dir": "H",
+   "pitch_um": 0.08,
+   "offset_um": 0.04
+  },
+  "M9": {
+   "name": "M9",
+   "dir": "V",
+   "pitch_um": 0.08,
+   "offset_um": 0.04
+  }
+ },
+ "clock_pins": [
+  [
+   "clk",
+   180.384,
+   152.864
+  ],
+  [
+   "clk_t1",
+   541.088,
+   152.864
+  ],
+  [
+   "clk_t2",
+   901.792,
+   152.864
+  ],
+  [
+   "clk_t3",
+   1262.496,
+   152.864
+  ],
+  [
+   "clk_t4",
+   180.384,
+   460.576
+  ],
+  [
+   "clk_t5",
+   541.088,
+   460.576
+  ],
+  [
+   "clk_t6",
+   901.792,
+   460.576
+  ],
+  [
+   "clk_t7",
+   1262.496,
+   460.576
+  ],
+  [
+   "clk_t8",
+   180.384,
+   766.304
+  ],
+  [
+   "clk_t9",
+   541.088,
+   766.304
+  ],
+  [
+   "clk_t10",
+   901.792,
+   766.304
+  ],
+  [
+   "clk_t11",
+   1262.496,
+   766.304
+  ],
+  [
+   "clk_t12",
+   180.384,
+   1074.016
+  ],
+  [
+   "clk_t13",
+   541.088,
+   1074.016
+  ],
+  [
+   "clk_t14",
+   901.792,
+   1074.016
+  ],
+  [
+   "clk_t15",
+   1262.496,
+   1074.016
+  ]
+ ],
+ "grid": 8.64
+}

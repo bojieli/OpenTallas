@@ -1,0 +1,237 @@
+{
+  "scope": "SOURCE_ONLY_NOT_PHYSICAL_QUALIFICATION",
+  "placement_failures": [
+    {
+      "type": "svc_hi_dsdv_svc_rs__t1",
+      "bus": "attnh_i0",
+      "error": "no macro-free clock landing storage band forattnh_i0, required depth21.60um"
+    },
+    {
+      "type": "svc_hi_dsdv_svc_rs__t2",
+      "bus": "attnh_i0",
+      "error": "no macro-free clock landing storage band forattnh_i0, required depth36.72um"
+    },
+    {
+      "type": "svc_hi_dsdv_svc_pvso_entry__t1",
+      "bus": "attnh_i0",
+      "error": "no macro-free clock landing storage band forattnh_i0, required depth36.72um"
+    },
+    {
+      "type": "svc_hi_dsdv_svc_rs__t3",
+      "bus": "attn_i1",
+      "error": "no macro-free clock landing storage band forattn_i1, required depth25.92um"
+    },
+    {
+      "type": "svc_hi_dsdv_svc_rs__t3",
+      "bus": "attn_i2",
+      "error": "no macro-free clock landing storage band forattn_i2, required depth21.60um"
+    },
+    {
+      "type": "svc_hi_dsdv_svc_rs__t3",
+      "bus": "attnh_i0",
+      "error": "no macro-free clock landing storage band forattnh_i0, required depth36.72um"
+    },
+    {
+      "type": "svc_hi_dsdv_svc_rs__t4",
+      "bus": "attn_i1",
+      "error": "no macro-free clock landing storage band forattn_i1, required depth19.44um"
+    },
+    {
+      "type": "svc_hi_dsdv_svc_rs__t4",
+      "bus": "attn_i2",
+      "error": "no macro-free clock landing storage band forattn_i2, required depth21.60um"
+    },
+    {
+      "type": "svc_hi_dsdv_svc_pvso_entry__t2",
+      "bus": "attnh_i0",
+      "error": "no macro-free clock landing storage band forattnh_i0, required depth19.44um"
+    },
+    {
+      "type": "svc_hi_dsdv_svc_rs__t5",
+      "bus": "attn_i2",
+      "error": "no macro-free clock landing storage band forattn_i2, required depth21.60um"
+    },
+    {
+      "type": "svc_lo_dsdv_svc_rs__t7",
+      "bus": "hbm_i0",
+      "error": "no macro-free clock landing storage band forhbm_i0, required depth28.08um"
+    },
+    {
+      "type": "svc_hi_dsdv_svc_rs__t6",
+      "bus": "attn_i0",
+      "error": "no macro-free clock landing storage band forattn_i0, required depth21.60um"
+    },
+    {
+      "type": "svc_hi_dsdv_svc_rs__t6",
+      "bus": "attnh_i0",
+      "error": "no macro-free clock landing storage band forattnh_i0, required depth38.88um"
+    },
+    {
+      "type": "ot_s81sl_leaf__t8",
+      "bus": "ft0_i",
+      "error": "no macro-free clock landing storage band forft0_i, required depth21.60um"
+    },
+    {
+      "type": "ot_s81sl_leaf__t8",
+      "bus": "ft1_i",
+      "error": "no macro-free clock landing storage band forft1_i, required depth21.60um"
+    },
+    {
+      "type": "dsdv_slice_c1x_C__t5",
+      "bus": "ret_i2",
+      "error": "no macro-free clock landing storage band forret_i2, required depth41.04um"
+    },
+    {
+      "type": "ot_s81sl_leaf__t72",
+      "bus": "ft0_i",
+      "error": "no macro-free clock landing storage band forft0_i, required depth21.60um"
+    },
+    {
+      "type": "ot_s81sl_leaf__t72",
+      "bus": "ft1_i",
+      "error": "no macro-free clock landing storage band forft1_i, required depth21.60um"
+    }
+  ],
+  "max_die_hop_um": 378.0480000000025,
+  "boot_ready": 500,
+  "ft_reservations": [
+    {
+      "type": "ot_s81sl_leaf__t17",
+      "instances": [
+        "s_1N_L0"
+      ],
+      "rectangles": 2233
+    },
+    {
+      "type": "ot_s81sl_leaf__t2",
+      "instances": [
+        "s_0S_L0"
+      ],
+      "rectangles": 3152
+    },
+    {
+      "type": "ot_s81sl_leaf__t22",
+      "instances": [
+        "s_2S_L0"
+      ],
+      "rectangles": 2804
+    },
+    {
+      "type": "ot_s81sl_leaf__t28",
+      "instances": [
+        "s_2N_L1"
+      ],
+      "rectangles": 2769
+    },
+    {
+      "type": "ot_s81sl_leaf__t32",
+      "instances": [
+        "s_3S_L0"
+      ],
+      "rectangles": 2994
+    },
+    {
+      "type": "ot_s81sl_leaf__t33",
+      "instances": [
+        "s_3S_L1"
+      ],
+      "rectangles": 2640
+    },
+    {
+      "type": "ot_s81sl_leaf__t42",
+      "instances": [
+        "s_4N_L0"
+      ],
+      "rectangles": 2246
+    },
+    {
+      "type": "ot_s81sl_leaf__t46",
+      "instances": [
+        "s_5S_L0"
+      ],
+      "rectangles": 3006
+    },
+    {
+      "type": "ot_s81sl_leaf__t47",
+      "instances": [
+        "s_5S_L1"
+      ],
+      "rectangles": 2469
+    },
+    {
+      "type": "ot_s81sl_leaf__t57",
+      "instances": [
+        "s_6S_L0"
+      ],
+      "rectangles": 2789
+    },
+    {
+      "type": "ot_s81sl_leaf__t58",
+      "instances": [
+        "s_6S_L1"
+      ],
+      "rectangles": 2255
+    },
+    {
+      "type": "ot_s81sl_leaf__t61",
+      "instances": [
+        "s_6N_L0"
+      ],
+      "rectangles": 2255
+    },
+    {
+      "type": "ot_s81sl_leaf__t66",
+      "instances": [
+        "s_7S_L0"
+      ],
+      "rectangles": 2794
+    },
+    {
+      "type": "ot_s81sl_leaf__t72",
+      "instances": [
+        "s_7N_L1"
+      ],
+      "rectangles": 2540
+    },
+    {
+      "type": "ot_s81sl_leaf__t73",
+      "instances": [
+        "s_7N_L3"
+      ],
+      "rectangles": 2275
+    },
+    {
+      "type": "ot_s81sl_leaf__t75",
+      "instances": [
+        "s_1N_L1"
+      ],
+      "rectangles": 2794
+    },
+    {
+      "type": "ot_s81sl_leaf__t8",
+      "instances": [
+        "s_0N_L1"
+      ],
+      "rectangles": 2738
+    },
+    {
+      "type": "ot_s81sl_leaf__t9",
+      "instances": [
+        "s_0N_L3"
+      ],
+      "rectangles": 2636
+    },
+    {
+      "type": "serdes__t1_es_shore",
+      "instances": [
+        "lk_ES0"
+      ],
+      "rectangles": 2058
+    }
+  ],
+  "added_cycles": {
+    "coll__s_7S_LP__lk_ES1": 6,
+    "coll__lk_ES1__s_7S_LP": 1
+  },
+  "added_payload_ff": 3586
+}

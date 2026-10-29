@@ -1,0 +1,19 @@
+{
+  "id": "CODEX-S81-PHY-V2-1029",
+  "scope": "Source geometry only; no route or STA authority",
+  "image": "results/codex_s81_phy_1029/phy_shore_v2.png",
+  "viewed": true,
+  "verdict": "PASS-COND",
+  "findings": [
+    "Same large PHY moved toward shoreline with unchanged63.64um guard and footprint. Both long feedthroughs follow four-side digital frame, never cross PHY body.",
+    "Explicit banks fit W43.2/S32.4/E106.8/N142.72 corridors and source all-bit hops404.688/390.054um. Added stages+6/+1 and3586payloadFF priced in source.",
+    "Narrow south/west bays need actual per-layer0.8track reservation and PG/pin access checks; fraction alone is insufficient.",
+    "Clock keepout/domain updated; actual clock/reset/landing must recompose before any build. Upper two sideframe corners and PHY separate-supply bump rows remain detailed-access/IR obligations."
+  ],
+  "conditions": [
+    "Full V2 recomposition including landingbands/reset/clock passes before physical trial",
+    "Complementary partition FT reservation emitted and local logic fits remaining tracks",
+    "Source+compiler/miter adopt+6/+1lane latency together",
+    "Full PHY signal/power abstract and IR remain required"
+  ]
+}

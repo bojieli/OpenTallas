@@ -1,0 +1,65 @@
+diff --git a/tools/die_plan/clock_landing_plan.py b/tools/die_plan/clock_landing_plan.py
+index 94c7204ba..4fa5d0a83 100644
+--- a/tools/die_plan/clock_landing_plan.py
++++ b/tools/die_plan/clock_landing_plan.py
+@@ -166,7 +166,7 @@ def _hard_tree(entry,point,reach=405-2.16):
+                 max_hop_um=round(total/(n+1),3))
+ 
+ 
+-def _grid_scan(w,h,obstacles,margin,px,py,area,depth,length,g=2.16,reach=405-2.16):
++def _grid_scan(w,h,obstacles,margin,px,py,area,depth,length,g=2.16,reach=405-2.16,complete_aspect=False):
+     """FALLBACK-S81-2 10-26: exhaustive macro-free bank search, used ONLY when the face-strip and compact-bank
+     searches above find nothing.  Same legality (outline margin, no obstacle overlap, every corner within reach of the
+     bus pin), same reserved area; any aspect from the face strip (depth x length) to near-square, both orientations,
+@@ -191,6 +191,14 @@ def _grid_scan(w,h,obstacles,margin,px,py,area,depth,length,g=2.16,reach=405-2.1
+     for d in range(4,9):
+         L=int(math.ceil(a_cells/d))
+         if L>=4:shapes.update({(d,L),(L,d)})
++    # Real S81 face corridors can be 36.72-38.88 um wide: neither a
++    # multiple of the nominal depth nor a legacy 4..8-row thin bank fits.
++    # Enumerate every grid aspect up to square, with the same reserve and
++    # every existing outline, obstacle and reach guard still applied.
++    if complete_aspect:
++        for d in range(4,s0+1):
++            L=int(math.ceil(a_cells/d))
++            if L>=4:shapes.update({(d,L),(L,d)})
+     out=[]
+     for bw,bh in sorted(shapes):
+         if bw>nx or bh>ny:continue
+@@ -230,6 +238,7 @@ BAND_SPREAD=1.0
+ # that fills the band, leaving the ring logic to global placement (DIE-HEAD-12 probe B: -97 % GRT overflow on hd_tile vs
+ # the ring FIRM in netlist order). Default "all" keeps every band byte-identical.
+ BAND_RING="all"
++BAND_ASPECT_GRID=False
+ 
+ 
+ def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None):
+@@ -312,7 +321,7 @@ def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None):
+                 if any(min(box[2],o[2])>max(box[0],o[0])+1e-6 and min(box[3],o[3])>max(box[1],o[1])+1e-6 for o in obstacles):continue
+                 candidates.append(box)
+     if not candidates and scale==1.0:
+-        candidates=_grid_scan(w,h,obstacles,margin,px,py,area,depth,length)
++        candidates=_grid_scan(w,h,obstacles,margin,px,py,area,depth,length,complete_aspect=BAND_ASPECT_GRID)
+     if candidates:
+         box=min(candidates,key=lambda b:max(abs(x-px)+abs(y-py) for x in(b[0],b[2]) for y in(b[1],b[3])))
+         if (box[2]-box[0])*(box[3]-box[1])+1e-6<area:
+@@ -652,7 +661,7 @@ def clear_generated_landing_infra(raw):
+ 
+ 
+ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",band_spread=1.0,band_ring="all",
+-            forward_source="tap"):
++            forward_source="tap",band_aspect_grid=False):
+     """band_reserve="live" (opt-in): storage bands reserve the live ring (width+epoch) instead of the 64-bit padded ring.
+     observer: {module, instance_suffix, fault_port, ready_port} of the real
+     one-bit fault/ready inputs gated in observer_part (reset mode default QC_OBSERVER).
+@@ -671,8 +680,9 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
+         raise ValueError(f"band_spread {band_spread} needs band_reserve=ring_ff and 1 < spread <= 4")
+     if band_ring not in ("all","ff") or (band_ring=="ff" and band_reserve!="ring_ff"):
+         raise ValueError(f"band_ring {band_ring} must be all or ff (ff needs band_reserve=ring_ff)")
+-    global BAND_RESERVE,BAND_SPREAD,BAND_RING
++    global BAND_RESERVE,BAND_SPREAD,BAND_RING,BAND_ASPECT_GRID
+     BAND_RESERVE=band_reserve;BAND_SPREAD=float(band_spread);BAND_RING=band_ring
++    BAND_ASPECT_GRID=bool(band_aspect_grid)
+     if observer is not None or monitor=="reset":
+         observer=dict(QC_OBSERVER if observer is None else observer)
+         missing=[k for k in ("module","instance_suffix","fault_port","ready_port") if not observer.get(k)]
