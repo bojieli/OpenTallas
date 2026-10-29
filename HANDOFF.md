@@ -1518,3 +1518,8 @@ CODEX: 2026-10-28 23:49 PDT HBM C25c pin candidate e8b410898: same-area bdring a
 CODEX: 2026-10-28 23:55 PDT HBMmacro48b946290 estimate-only READY: VP4501.12x311.04 conservativechannel.5933; progstore C24leaf0/9 SRAMspans649/582 diagnosed, source-local44macro864x734.4 candidate+11guides. Imageviewed/boundshaloPASS; dieownerintegrating,pin/relay/clockreachstillheld,noP&R.
 
 CODEX: 2026-10-28 23:54 PDT ROOT-MERGE main5720719701==origin/main; approved HEADports/HA+HBMcalendar/reset+VQclockpin shared unblockers merged focusedPASS; KV exactflowtag3e7 pushed; heldKVpad/fullsplit/postcts excluded.
+
+CODEX: 2026-10-28 23:54 PDT HBM TOPK353da5b41 READY: same-master bounded tree replaces repeated serial synthOOM;2048records1232cycles0diff+3mutants,resetcarryinduction+constantheaderSAT PASS,0cycles. Historical kitLEC40 retained/diagnosedconstant-X; newkitrequired.
+CODEX: 2026-10-28 23:55 PDT HBM-REBAL C24lp CTSFAIL TT-323.21/3335 FF-64.53/2685 diagnosed wrong old arithmetic profile; same-cycle f12 correction b978f23a53 passes199919lockstep/bitmutant, own successorpreflightPASS0 andONECTStrialintel2launcher1358457. OldC20gr DPLFAIL96classified/no rerun; hnxr13LEClive.
+
+CODEX: 2026-10-29 00:02 PDT shared generator bd86f2e5d fixes HEAD1090declaredpad inventory; mixedclock1628fddd8 adds measured both-edge component calibration31focusedPASS,KVreadoutpending; ICGsiblingfragment twoestimatesLIVEintel1, no geometry bypass.
