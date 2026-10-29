@@ -1,0 +1,11 @@
+# Actual QC clock-source adapter
+
+`fixed_tree.py` preserves the existing `clkonly.v` A/Y graph and `tree.json` cell sites. It derives inverter access from the real LEF, plans legal fixed M8/M9 wires with the existing PG-aware router, and emits real dbWire encoders attached directly to the native partition clock ITerms. It consumes no GRT guides. Endpoint metadata comes from the QC owner's `graft_clock_targets.py`: original planned positions are checked and actual M7 pin metal is used.
+
+The default access form uses the existing R7/R8 straight pin stacks and the actual inverter M1 bars. Its track search remains inside the 2.5 um pin island and has no artificial track offset. Extra endpoint access is drawn above the macro until the final M7 via. Clock cells, topology and the 833 ps clock remain unchanged.
+
+Public `pg_grid_tcl(pg_rects)` emits the exact canonical top-grid rectangles and VIA89s at every same-net M8/M9 crossing. `--reserved-access FILE` accepts `[net,layer,x0,y0,x1,y1]` physical power conductor/via-enclosure rectangles; power is reserved before clock tracks. It never substitutes for native power connectivity proof. Output `pg_rects.json` is written before planning can fail.
+
+On a passing prebuild, `fixed_pg.tcl` emits PG, `fixed_clock_only.tcl` emits the tied shields and clock on that PG, and `fixed_clock.tcl` combines them. Via sites are deduplicated across PG and shield ties. The native source DB must be the matching grafted pre-wire checkpoint. Output remains a proposal until its render is viewed and its actual materialized geometry/DRC/RC are checked. Physical clock-cell power contacts and reset routes are explicitly separate tasks.
+
+First full prebuild on QC trial25 caught the legacy staircase problem before any physical job: 4,498 pin shorts / 1,490 spacing findings and 75,485 top-access conflicts. R7 then exposed 3,349 pin risers exceeding their 2.5 um window under the legacy generic route offset. Both failed receipts are retained on intel2 at `codex-qc-physical-1029/prebuild25{,_r7}`. The corrected bounded R7 construction is under test. Trial25's separate measured timing regression is rejected; this adapter result does not qualify that clock for release.

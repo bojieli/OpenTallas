@@ -229,6 +229,7 @@ def main():
         ap.add_argument('--'+key, required=True)
     ap.add_argument('--max-move', type=float, default=C128.STACK_RISER_MAX_UM)
     ap.add_argument('--review-region', default='c_E2_bf_10')
+    ap.add_argument('--reserved-access', help='actual power-access conductor/via enclosure rectangles: [net,layer,x0,y0,x1,y1]')
     args = ap.parse_args()
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     tree = json.loads(Path(args.tree).read_text())
@@ -266,12 +267,25 @@ def main():
     ports['root'] = dict(layer='M9',xy=M['meta']['root_um'])
     nd = dict(width=.08, space=.32, rf=.5, cf=1.15)
     pg = DI.pg_rects(P, C128.pg_grid(P))
+    (out/'pg_rects.json').write_text(json.dumps(pg)+'\n')
+    power_access=[]
+    if args.reserved_access:
+        power_access=json.loads(Path(args.reserved_access).read_text())
+        if isinstance(power_access,dict):power_access=power_access['shapes']
+        for row in power_access:
+            if len(row)!=6 or row[0] not in ('VDD','VSS') or row[1] not in CR.LAYERS:
+                raise ValueError(f'invalid physical power-access rectangle: {row}')
+            if not (row[2]<row[4] and row[3]<row[5]):raise ValueError(f'empty physical power access: {row}')
     router = C128.TrackRouter(nd,'VSS',DCM.DEFAULT_TRACKS,args.max_move)
     router.reserve(C128.pg_shapes(pg))
+    router.reserve(C128.pg_shapes(power_access))
     summary = dict(status='PREBUILD', physical_route=False, source_cells=len(cells), source_nets=len(nets),
                    tap_iterms=len(taps), source_masters=sorted(masters), pin_access=access,
                    inputs={k:dict(path=getattr(args,k),sha256=hashlib.sha256(Path(getattr(args,k)).read_bytes()).hexdigest())
                            for k in ('tree','netlist','lef','plan','endpoints')})
+    if args.reserved_access:
+        summary['power_access_reservation']=dict(file=args.reserved_access,rectangles=len(power_access),
+            sha256=hashlib.sha256(Path(args.reserved_access).read_bytes()).hexdigest())
     try:
         with real_pin_access(access):
             wires = C128.fixed_wires(M,cells,nets,max(v[0] for v in sizes.values()),.27,off=0.,router=router,pin_stack=True,l_drops=True)
@@ -286,7 +300,7 @@ def main():
     with real_pin_access(access):
         shapes = CR.stair_shapes(wires,cells,ports,next(iter(masters)))
         shapes += port_access_shapes(wires,cells,ports,next(iter(masters)))
-        census = access_census(shapes)
+        census = access_census(shapes+list(power_access))
         lines, rec = CR.routed_tcl(wires,cells,ports,next(iter(masters)),'QC_CLOCK_NDR')
     top_hits=[]; top_count=0
     for net,layer,x0,y0,x1,y1 in shapes:
