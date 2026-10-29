@@ -71,7 +71,8 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, par
         endcase
     endfunction
 
-    integer i, j, b;
+    // HBM-CORES-KITS-1: loop integers are process-local (rtl_lint check -assert: shared module-scope
+    // integers were multi-driven across clocked processes); behaviour unchanged.
 
     // -- S0 ------------------------------------------------------------------------
     reg          s0_v;
@@ -88,7 +89,8 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, par
     reg [30:0] s1_m [0:7];
     reg [30:0] t8 [0:15];
     reg        nf0;
-    always @(*) begin
+    always @(*) begin : p_lv1
+        integer i;
         nf0 = 1'b0;
         for (i = 0; i < 32; i = i + 1) nf0 = nf0 | (s0_x[32*i + 23 +: 8] == 8'hFF);
         for (i = 0; i < 16; i = i + 1) t8[i] = mx(s0_x[64*i +: 31], s0_x[64*i + 32 +: 31]);
@@ -100,7 +102,8 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, par
         if (!rst_n) s1p_v <= 1'b0;
         else s1p_v <= s0_v;
     end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_lv2
+        integer i;
         s1p_nf <= nf0;
         for (i = 0; i < 16; i = i + 1) t8q[i] <= t8[i];
     end
@@ -108,7 +111,8 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, par
         if (!rst_n) s1_v <= 1'b0;
         else s1_v <= (PIPE != 0) ? s1p_v : s0_v;
     end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_lv3
+        integer i;
         s1_nf <= (PIPE != 0) ? s1p_nf : nf0;
         for (i = 0; i < 8; i = i + 1)
             s1_m[i] <= (PIPE != 0) ? mx(t8q[2*i], t8q[2*i+1]) : mx(t8[2*i], t8[2*i+1]);
@@ -124,7 +128,8 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, par
         if (!rst_n) s2p_v <= 1'b0;
         else s2p_v <= s1_v;
     end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_lv4
+        integer b;
         s2p_nf <= s1_nf;
         for (b = 0; b < 4; b = b + 1) s2p_m[b] <= mx(s1_m[2*b], s1_m[2*b+1]);
     end
@@ -132,7 +137,8 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, par
         if (!rst_n) s2a_v <= 1'b0;
         else s2a_v <= (PIPE != 0) ? s2p_v : s1_v;
     end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_lv5
+        integer b;
         s2a_nf <= (PIPE != 0) ? s2p_nf : s1_nf;
         for (b = 0; b < 2; b = b + 1)
             s2a_m[b] <= (PIPE != 0) ? mx(s2p_m[2*b], s2p_m[2*b+1])
@@ -146,7 +152,8 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, par
         if (!rst_n) s2_v <= 1'b0;
         else s2_v <= s2a_v;
     end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_lv6
+        integer b;
         s2_nf <= s2a_nf;
         for (b = 0; b < 2; b = b + 1) s2_amax[b] <= mx(s2a_m[b], FLOOR);
     end
@@ -162,7 +169,8 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, par
         if (!rst_n) s3_v <= 1'b0;
         else s3_v <= s2_v;
     end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_lv7
+        integer j, b;
         s3_nf <= s2_nf;
         for (b = 0; b < 2; b = b + 1) begin
             ma = {1'b1, s2_amax[b][22:0]};
@@ -213,7 +221,8 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, par
         if (!rst_n) s4_v <= 1'b0;
         else s4_v <= s3_v;
     end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_lv8
+        integer i, j, b;
         s4_nf <= s3_nf;
         for (b = 0; b < 2; b = b + 1) begin
             s4_n[b] <= s3_n[b]; s4_qs[b] <= s3_qs[b];
@@ -262,7 +271,8 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, par
         if (!rst_n) begin s5a_v <= 1'b0; s5_v <= 1'b0; end
         else begin s5a_v <= s4_v; s5_v <= s5a_v; end
     end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_lv9
+        integer i, j, b;
         s5a_nf <= s4_nf;
         for (b = 0; b < 2; b = b + 1) begin s5a_n[b] <= s4_n[b]; s5a_qs[b] <= s4_qs[b]; end
         for (i = 0; i < 32; i = i + 1) begin
@@ -276,7 +286,8 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, par
             s5a_sgn[i] <= x4[32*i + 31] && (xm != 31'd0);
         end
     end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_lv10
+        integer i, b;
         s5_nf <= s5a_nf; s5_sgn <= s5a_sgn;
         for (b = 0; b < 2; b = b + 1) begin s5_n[b] <= s5a_n[b]; s5_qs[b] <= s5a_qs[b]; end
         for (i = 0; i < 32; i = i + 1) begin
@@ -315,7 +326,8 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, par
         if (!rst_n) begin vo <= 1'b0; fault <= 1'b0; end
         else begin vo <= s5_v; fault <= s5_v && s5_nf; end
     end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_lv11
+        integer i, j, b;
         for (i = 0; i < 32; i = i + 1) begin
             b = i / 16;
             r = twov(s5_c[i]) * s5_n[b];               // <= 12 * 16
