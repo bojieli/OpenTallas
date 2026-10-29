@@ -553,3 +553,20 @@ def test_root_and_start_pin_share_one_raw_relay():
     body="ot_dp_rgate u_rrl_4 (.clk(clk), .d(rst_rl_3), .run(run), .q(rst_n_t0));"
     rtl="\n".join(c._origin_rtl('T', {'role':('strap',(START_PIN_IN,),1,64,True)}, {}, body, []))
     assert rtl.count('ot_dp_rrelay u_cland_origin_rst')==1
+
+
+def test_independent_start_count_frames_preserve_physical_clock_groups():
+    p,t=ca_relay_vehicle()
+    ca=t['count_aligned']
+    ca['regions']['r1c']=dict(ca['regions']['r1'],origin_part='c',tree_port='Q')
+    ca['parts']['c']=dict(region='r1c',role='origin',src=None,stages=0)
+    ca['ports']['Q']['tree']=True
+    ca['frame_clock_regions']={'r0':'r0','r1':'r1','r1c':'r1'}
+    c=Landings(p,t,require_geometry=False)
+    assert c.region['b']==c.region['c']=='r1'
+    assert c.ca_part_role['c']['role']=='child'
+    assert not c.ca_type['B']['relay_tx']
+    assert not c.ca_type['C']['relay_tx']
+    ca['frame_clock_regions']['r1c']='r0'
+    with pytest.raises(LandingError,match='count frame clock mismatch'):
+        Landings(p,t,require_geometry=False)
