@@ -38,3 +38,37 @@ GRT0 and view new guide/corner before any DRT. Preserve old47h DRTfailure.
 Four legacy ft aliases were subsequently resolved by owner's existing typed
 declaration to actual two buffer instances (no RTL/ODB/SDC change). No new
 clock, cycle or timing claim. QC owner notified.
+
+## HEAD hk6 update, 2026-10-29 08:43 PDT
+
+Personally viewed /srv/opentallas-scratch/claude/head-kits-codex-0822/hk6_n4.png.
+The cropped hd_st_n4 is 1140.48 x 993.6; four straight E/W banks have ordered
+station columns near x285/570/855 then the output face. No macros or walls;
+reset/START markers at W middle and S x712 have adjacent clock taps. All24
+planned taps and control reach108.672 support the picture. Existing plan
+PASS-COND extends to this changed type under the same parent/source/CA/flow
+conditions. The old hk5 title is cosmetic; pictured outline is the new one.
+
+## KV PHY model clarification
+
+Owner clarified analog and digital layers: analog reserve uses the already
+accepted HBM model's M1-M4 OBS plus M5 body, M6/M7 permeable; the narrow
+digital pin macro has M1-M3 OBS and M4/M6 rim pins. This corrects the earlier
+shorthand, not the verdict or modeling assumption. Refined actual centers:
+clock354.252, host reset354.2919, v1 reset56.532 um, all below405.
+
+## ASTK actual CTS2, 2026-10-29 08:43 PDT
+
+Personally viewed intel1 codex-kv-astk-0828/geom/cts2/auto_geom.png,
+from kit_status2 actual 4_cts.odb. PASS-COND for ONE normal clock-inclusive
+GRT >=50 / repair trial with the owner's existing10ps FF margin; no DRT yet.
+190.08 x181.44 near-square layout has distributed logic quadrants and open
+central clock cross-street, no macros/walls. Fill47.18percent/empty14.25;
+pin p907.95/max12.61, all1692 registered; r2r349.22/zero beyond405. Actual
+998 clock cells, depth9/spread1, all24867 sinks rooted, own leaf reach58.48.
+Root-distance176.31 is information after CTS. Column projection0.802 is the
+only unresolved geometry item; actual GRT must decide it. Owner reports same
+column's pre-CTS data GRT was zero, but current clock-inclusive result is
+still needed. Usual native placement legality0 confirmed. TT placement-RC
+setup -3.55 remains open; no timing/signoff claim. Old all-FIRM placement
+failure is preserved. Owner notified directly.
