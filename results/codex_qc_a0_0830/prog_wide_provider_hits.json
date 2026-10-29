@@ -1,0 +1,3626 @@
+{
+ "sl_W5_su_c": [
+  {
+   "mapped_inst": "$flatten\\u_rst_r844_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "inst": "start_provider/$flatten\\u_rst_r844_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "stage": "r844_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    2467152,
+    11016000,
+    2467314,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    561.6000000000004,
+    281.3939999999998,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r844_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "inst": "start_provider/$flatten\\u_rst_r844_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "stage": "r844_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    2467152,
+    11017080,
+    2467314,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.6800000000003,
+    281.3939999999998,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r844_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "inst": "start_provider/$flatten\\u_rst_r844_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "stage": "r844_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    2466990,
+    11016000,
+    2467152,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    561.6000000000004,
+    281.23199999999997,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r844_2.$auto$ff.cc:337:slice$491",
+   "inst": "start_provider/$flatten\\u_rst_r844_2.$auto$ff.cc:337:slice$491",
+   "stage": "r844_2",
+   "role": "reset",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    2467530,
+    11016000,
+    2468610,
+    11016270
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6100000000001,
+    561.6000000000004,
+    282.69000000000005,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r844_2.$auto$ff.cc:337:slice$492",
+   "inst": "start_provider/$flatten\\u_rst_r844_2.$auto$ff.cc:337:slice$492",
+   "stage": "r844_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    2467530,
+    11017080,
+    2468610,
+    11017350
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6100000000001,
+    562.6800000000003,
+    282.69000000000005,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r844_2.$auto$ff.cc:337:slice$493",
+   "inst": "start_provider/$flatten\\u_rst_r844_2.$auto$ff.cc:337:slice$493",
+   "stage": "r844_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    2467314,
+    11015460,
+    2468394,
+    11015730
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.3939999999998,
+    561.0599999999995,
+    282.4739999999997,
+    561.3299999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r844_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "inst": "start_provider/$flatten\\u_st_r844_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "stage": "r844_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    2467152,
+    11016540,
+    2467314,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.1400000000012,
+    281.3939999999998,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r844_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "inst": "start_provider/$flatten\\u_st_r844_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "stage": "r844_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    2466990,
+    11016540,
+    2467152,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    562.1400000000012,
+    281.23199999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r844_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "inst": "start_provider/$flatten\\u_st_r844_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "stage": "r844_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    2466774,
+    11016540,
+    2466990,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    280.8539999999998,
+    562.1400000000012,
+    281.0699999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r844_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "inst": "start_provider/$flatten\\u_st_r844_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "stage": "r844_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    2467314,
+    11016000,
+    2467530,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.3939999999998,
+    561.6000000000004,
+    281.6100000000001,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r844_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "inst": "start_provider/$flatten\\u_st_r844_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "stage": "r844_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    2467314,
+    11017080,
+    2467530,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.3939999999998,
+    562.6800000000003,
+    281.6100000000001,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r844_2.$auto$ff.cc:337:slice$487",
+   "inst": "start_provider/$flatten\\u_st_r844_2.$auto$ff.cc:337:slice$487",
+   "stage": "r844_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    2468394,
+    11016540,
+    2469474,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    282.4739999999997,
+    562.1400000000012,
+    283.5540000000001,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r844_2.$auto$ff.cc:337:slice$488",
+   "inst": "start_provider/$flatten\\u_st_r844_2.$auto$ff.cc:337:slice$488",
+   "stage": "r844_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    2469474,
+    11016540,
+    2470554,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    283.5540000000001,
+    562.1400000000012,
+    284.634,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r844_2.$auto$ff.cc:337:slice$489",
+   "inst": "start_provider/$flatten\\u_st_r844_2.$auto$ff.cc:337:slice$489",
+   "stage": "r844_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    2467314,
+    11016540,
+    2468394,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.3939999999998,
+    562.1400000000012,
+    282.4739999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r844_2.$auto$ff.cc:337:slice$490",
+   "inst": "start_provider/$flatten\\u_st_r844_2.$auto$ff.cc:337:slice$490",
+   "stage": "r844_2",
+   "role": "origin",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    2470554,
+    11016540,
+    2471634,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    284.634,
+    562.1400000000012,
+    285.71399999999994,
+    562.4099999999999
+   ]
+  }
+ ],
+ "sl_W4_su_c": [
+  {
+   "mapped_inst": "$flatten\\u_rst_r666_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "inst": "start_provider/$flatten\\u_rst_r666_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "stage": "r666_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    4938192,
+    11016000,
+    4938354,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    561.6000000000004,
+    281.39400000000023,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r666_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "inst": "start_provider/$flatten\\u_rst_r666_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "stage": "r666_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    4938192,
+    11017080,
+    4938354,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.6800000000003,
+    281.39400000000023,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r666_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "inst": "start_provider/$flatten\\u_rst_r666_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "stage": "r666_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    4938030,
+    11016000,
+    4938192,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    561.6000000000004,
+    281.23199999999997,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r666_2.$auto$ff.cc:337:slice$491",
+   "inst": "start_provider/$flatten\\u_rst_r666_2.$auto$ff.cc:337:slice$491",
+   "stage": "r666_2",
+   "role": "reset",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    4938570,
+    11016000,
+    4939650,
+    11016270
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6099999999997,
+    561.6000000000004,
+    282.6899999999996,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r666_2.$auto$ff.cc:337:slice$492",
+   "inst": "start_provider/$flatten\\u_rst_r666_2.$auto$ff.cc:337:slice$492",
+   "stage": "r666_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    4938570,
+    11017080,
+    4939650,
+    11017350
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6099999999997,
+    562.6800000000003,
+    282.6899999999996,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r666_2.$auto$ff.cc:337:slice$493",
+   "inst": "start_provider/$flatten\\u_rst_r666_2.$auto$ff.cc:337:slice$493",
+   "stage": "r666_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    4938354,
+    11015460,
+    4939434,
+    11015730
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.39400000000023,
+    561.0599999999995,
+    282.47400000000016,
+    561.3299999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r666_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "inst": "start_provider/$flatten\\u_st_r666_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "stage": "r666_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    4938192,
+    11016540,
+    4938354,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.1400000000012,
+    281.39400000000023,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r666_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "inst": "start_provider/$flatten\\u_st_r666_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "stage": "r666_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    4938030,
+    11016540,
+    4938192,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    562.1400000000012,
+    281.23199999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r666_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "inst": "start_provider/$flatten\\u_st_r666_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "stage": "r666_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    4937814,
+    11016540,
+    4938030,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    280.85400000000027,
+    562.1400000000012,
+    281.0699999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r666_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "inst": "start_provider/$flatten\\u_st_r666_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "stage": "r666_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    4938354,
+    11016000,
+    4938570,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.39400000000023,
+    561.6000000000004,
+    281.6099999999997,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r666_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "inst": "start_provider/$flatten\\u_st_r666_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "stage": "r666_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    4938354,
+    11017080,
+    4938570,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.39400000000023,
+    562.6800000000003,
+    281.6099999999997,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r666_2.$auto$ff.cc:337:slice$487",
+   "inst": "start_provider/$flatten\\u_st_r666_2.$auto$ff.cc:337:slice$487",
+   "stage": "r666_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    4939434,
+    11016540,
+    4940514,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    282.47400000000016,
+    562.1400000000012,
+    283.5540000000001,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r666_2.$auto$ff.cc:337:slice$488",
+   "inst": "start_provider/$flatten\\u_st_r666_2.$auto$ff.cc:337:slice$488",
+   "stage": "r666_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    4940514,
+    11016540,
+    4941594,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    283.5540000000001,
+    562.1400000000012,
+    284.634,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r666_2.$auto$ff.cc:337:slice$489",
+   "inst": "start_provider/$flatten\\u_st_r666_2.$auto$ff.cc:337:slice$489",
+   "stage": "r666_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    4938354,
+    11016540,
+    4939434,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.39400000000023,
+    562.1400000000012,
+    282.47400000000016,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r666_2.$auto$ff.cc:337:slice$490",
+   "inst": "start_provider/$flatten\\u_st_r666_2.$auto$ff.cc:337:slice$490",
+   "stage": "r666_2",
+   "role": "origin",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    4941594,
+    11016540,
+    4942674,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    284.634,
+    562.1400000000012,
+    285.71399999999994,
+    562.4099999999999
+   ]
+  }
+ ],
+ "sl_W3_su_c": [
+  {
+   "mapped_inst": "$flatten\\u_rst_r482_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "inst": "start_provider/$flatten\\u_rst_r482_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "stage": "r482_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    7409232,
+    11016000,
+    7409394,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    561.6000000000004,
+    281.39400000000023,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r482_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "inst": "start_provider/$flatten\\u_rst_r482_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "stage": "r482_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    7409232,
+    11017080,
+    7409394,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.6800000000003,
+    281.39400000000023,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r482_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "inst": "start_provider/$flatten\\u_rst_r482_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "stage": "r482_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    7409070,
+    11016000,
+    7409232,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    561.6000000000004,
+    281.23199999999997,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r482_2.$auto$ff.cc:337:slice$491",
+   "inst": "start_provider/$flatten\\u_rst_r482_2.$auto$ff.cc:337:slice$491",
+   "stage": "r482_2",
+   "role": "reset",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    7409610,
+    11016000,
+    7410690,
+    11016270
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6099999999997,
+    561.6000000000004,
+    282.6899999999996,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r482_2.$auto$ff.cc:337:slice$492",
+   "inst": "start_provider/$flatten\\u_rst_r482_2.$auto$ff.cc:337:slice$492",
+   "stage": "r482_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    7409610,
+    11017080,
+    7410690,
+    11017350
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6099999999997,
+    562.6800000000003,
+    282.6899999999996,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r482_2.$auto$ff.cc:337:slice$493",
+   "inst": "start_provider/$flatten\\u_rst_r482_2.$auto$ff.cc:337:slice$493",
+   "stage": "r482_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    7409394,
+    11015460,
+    7410474,
+    11015730
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.39400000000023,
+    561.0599999999995,
+    282.47400000000016,
+    561.3299999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r482_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "inst": "start_provider/$flatten\\u_st_r482_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "stage": "r482_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    7409232,
+    11016540,
+    7409394,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.1400000000012,
+    281.39400000000023,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r482_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "inst": "start_provider/$flatten\\u_st_r482_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "stage": "r482_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    7409070,
+    11016540,
+    7409232,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    562.1400000000012,
+    281.23199999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r482_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "inst": "start_provider/$flatten\\u_st_r482_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "stage": "r482_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    7408854,
+    11016540,
+    7409070,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    280.85400000000027,
+    562.1400000000012,
+    281.0699999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r482_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "inst": "start_provider/$flatten\\u_st_r482_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "stage": "r482_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    7409394,
+    11016000,
+    7409610,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.39400000000023,
+    561.6000000000004,
+    281.6099999999997,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r482_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "inst": "start_provider/$flatten\\u_st_r482_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "stage": "r482_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    7409394,
+    11017080,
+    7409610,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.39400000000023,
+    562.6800000000003,
+    281.6099999999997,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r482_2.$auto$ff.cc:337:slice$487",
+   "inst": "start_provider/$flatten\\u_st_r482_2.$auto$ff.cc:337:slice$487",
+   "stage": "r482_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    7410474,
+    11016540,
+    7411554,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    282.47400000000016,
+    562.1400000000012,
+    283.5540000000001,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r482_2.$auto$ff.cc:337:slice$488",
+   "inst": "start_provider/$flatten\\u_st_r482_2.$auto$ff.cc:337:slice$488",
+   "stage": "r482_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    7411554,
+    11016540,
+    7412634,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    283.5540000000001,
+    562.1400000000012,
+    284.634,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r482_2.$auto$ff.cc:337:slice$489",
+   "inst": "start_provider/$flatten\\u_st_r482_2.$auto$ff.cc:337:slice$489",
+   "stage": "r482_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    7409394,
+    11016540,
+    7410474,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.39400000000023,
+    562.1400000000012,
+    282.47400000000016,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r482_2.$auto$ff.cc:337:slice$490",
+   "inst": "start_provider/$flatten\\u_st_r482_2.$auto$ff.cc:337:slice$490",
+   "stage": "r482_2",
+   "role": "origin",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    7412634,
+    11016540,
+    7413714,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    284.634,
+    562.1400000000012,
+    285.71399999999994,
+    562.4099999999999
+   ]
+  }
+ ],
+ "sl_W2_su_c": [
+  {
+   "mapped_inst": "$flatten\\u_rst_r304_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "inst": "start_provider/$flatten\\u_rst_r304_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "stage": "r304_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    9880272,
+    11016000,
+    9880434,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    561.6000000000004,
+    281.3939999999984,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r304_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "inst": "start_provider/$flatten\\u_rst_r304_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "stage": "r304_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    9880272,
+    11017080,
+    9880434,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.6800000000003,
+    281.3939999999984,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r304_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "inst": "start_provider/$flatten\\u_rst_r304_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "stage": "r304_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    9880110,
+    11016000,
+    9880272,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    561.6000000000004,
+    281.23199999999997,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r304_2.$auto$ff.cc:337:slice$491",
+   "inst": "start_provider/$flatten\\u_rst_r304_2.$auto$ff.cc:337:slice$491",
+   "stage": "r304_2",
+   "role": "reset",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    9880650,
+    11016000,
+    9881730,
+    11016270
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.60999999999876,
+    561.6000000000004,
+    282.6899999999987,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r304_2.$auto$ff.cc:337:slice$492",
+   "inst": "start_provider/$flatten\\u_rst_r304_2.$auto$ff.cc:337:slice$492",
+   "stage": "r304_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    9880650,
+    11017080,
+    9881730,
+    11017350
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.60999999999876,
+    562.6800000000003,
+    282.6899999999987,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r304_2.$auto$ff.cc:337:slice$493",
+   "inst": "start_provider/$flatten\\u_rst_r304_2.$auto$ff.cc:337:slice$493",
+   "stage": "r304_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    9880434,
+    11015460,
+    9881514,
+    11015730
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.3939999999984,
+    561.0599999999995,
+    282.47399999999834,
+    561.3299999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r304_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "inst": "start_provider/$flatten\\u_st_r304_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "stage": "r304_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    9880272,
+    11016540,
+    9880434,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.1400000000012,
+    281.3939999999984,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r304_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "inst": "start_provider/$flatten\\u_st_r304_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "stage": "r304_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    9880110,
+    11016540,
+    9880272,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    562.1400000000012,
+    281.23199999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r304_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "inst": "start_provider/$flatten\\u_st_r304_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "stage": "r304_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    9879894,
+    11016540,
+    9880110,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    280.85399999999936,
+    562.1400000000012,
+    281.0699999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r304_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "inst": "start_provider/$flatten\\u_st_r304_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "stage": "r304_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    9880434,
+    11016000,
+    9880650,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.3939999999984,
+    561.6000000000004,
+    281.60999999999876,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r304_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "inst": "start_provider/$flatten\\u_st_r304_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "stage": "r304_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    9880434,
+    11017080,
+    9880650,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.3939999999984,
+    562.6800000000003,
+    281.60999999999876,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r304_2.$auto$ff.cc:337:slice$487",
+   "inst": "start_provider/$flatten\\u_st_r304_2.$auto$ff.cc:337:slice$487",
+   "stage": "r304_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    9881514,
+    11016540,
+    9882594,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    282.47399999999834,
+    562.1400000000012,
+    283.55399999999827,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r304_2.$auto$ff.cc:337:slice$488",
+   "inst": "start_provider/$flatten\\u_st_r304_2.$auto$ff.cc:337:slice$488",
+   "stage": "r304_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    9882594,
+    11016540,
+    9883674,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    283.55399999999827,
+    562.1400000000012,
+    284.634,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r304_2.$auto$ff.cc:337:slice$489",
+   "inst": "start_provider/$flatten\\u_st_r304_2.$auto$ff.cc:337:slice$489",
+   "stage": "r304_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    9880434,
+    11016540,
+    9881514,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.3939999999984,
+    562.1400000000012,
+    282.47399999999834,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r304_2.$auto$ff.cc:337:slice$490",
+   "inst": "start_provider/$flatten\\u_st_r304_2.$auto$ff.cc:337:slice$490",
+   "stage": "r304_2",
+   "role": "origin",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    9883674,
+    11016540,
+    9884754,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    284.634,
+    562.1400000000012,
+    285.71399999999994,
+    562.4099999999999
+   ]
+  }
+ ],
+ "sl_W1_su_c": [
+  {
+   "mapped_inst": "$flatten\\u_rst_r152_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "inst": "start_provider/$flatten\\u_rst_r152_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "stage": "r152_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    12351312,
+    11016000,
+    12351474,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    561.6000000000004,
+    281.39400000000023,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r152_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "inst": "start_provider/$flatten\\u_rst_r152_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "stage": "r152_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    12351312,
+    11017080,
+    12351474,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.6800000000003,
+    281.39400000000023,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r152_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "inst": "start_provider/$flatten\\u_rst_r152_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "stage": "r152_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    12351150,
+    11016000,
+    12351312,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    561.6000000000004,
+    281.23199999999997,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r152_2.$auto$ff.cc:337:slice$491",
+   "inst": "start_provider/$flatten\\u_rst_r152_2.$auto$ff.cc:337:slice$491",
+   "stage": "r152_2",
+   "role": "reset",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    12351690,
+    11016000,
+    12352770,
+    11016270
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6100000000006,
+    561.6000000000004,
+    282.6900000000005,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r152_2.$auto$ff.cc:337:slice$492",
+   "inst": "start_provider/$flatten\\u_rst_r152_2.$auto$ff.cc:337:slice$492",
+   "stage": "r152_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    12351690,
+    11017080,
+    12352770,
+    11017350
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6100000000006,
+    562.6800000000003,
+    282.6900000000005,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r152_2.$auto$ff.cc:337:slice$493",
+   "inst": "start_provider/$flatten\\u_rst_r152_2.$auto$ff.cc:337:slice$493",
+   "stage": "r152_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    12351474,
+    11015460,
+    12352554,
+    11015730
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.39400000000023,
+    561.0599999999995,
+    282.47400000000016,
+    561.3299999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r152_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "inst": "start_provider/$flatten\\u_st_r152_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "stage": "r152_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    12351312,
+    11016540,
+    12351474,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.1400000000012,
+    281.39400000000023,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r152_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "inst": "start_provider/$flatten\\u_st_r152_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "stage": "r152_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    12351150,
+    11016540,
+    12351312,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    562.1400000000012,
+    281.23199999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r152_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "inst": "start_provider/$flatten\\u_st_r152_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "stage": "r152_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    12350934,
+    11016540,
+    12351150,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    280.85399999999936,
+    562.1400000000012,
+    281.0699999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r152_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "inst": "start_provider/$flatten\\u_st_r152_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "stage": "r152_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    12351474,
+    11016000,
+    12351690,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.39400000000023,
+    561.6000000000004,
+    281.6100000000006,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r152_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "inst": "start_provider/$flatten\\u_st_r152_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "stage": "r152_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    12351474,
+    11017080,
+    12351690,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.39400000000023,
+    562.6800000000003,
+    281.6100000000006,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r152_2.$auto$ff.cc:337:slice$487",
+   "inst": "start_provider/$flatten\\u_st_r152_2.$auto$ff.cc:337:slice$487",
+   "stage": "r152_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    12352554,
+    11016540,
+    12353634,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    282.47400000000016,
+    562.1400000000012,
+    283.5540000000001,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r152_2.$auto$ff.cc:337:slice$488",
+   "inst": "start_provider/$flatten\\u_st_r152_2.$auto$ff.cc:337:slice$488",
+   "stage": "r152_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    12353634,
+    11016540,
+    12354714,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    283.5540000000001,
+    562.1400000000012,
+    284.634,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r152_2.$auto$ff.cc:337:slice$489",
+   "inst": "start_provider/$flatten\\u_st_r152_2.$auto$ff.cc:337:slice$489",
+   "stage": "r152_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    12351474,
+    11016540,
+    12352554,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.39400000000023,
+    562.1400000000012,
+    282.47400000000016,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r152_2.$auto$ff.cc:337:slice$490",
+   "inst": "start_provider/$flatten\\u_st_r152_2.$auto$ff.cc:337:slice$490",
+   "stage": "r152_2",
+   "role": "origin",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    12354714,
+    11016540,
+    12355794,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    284.634,
+    562.1400000000012,
+    285.71399999999994,
+    562.4099999999999
+   ]
+  }
+ ],
+ "sl_W0_su_c": [
+  {
+   "mapped_inst": "$flatten\\u_rst_r58_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "inst": "start_provider/$flatten\\u_rst_r58_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "stage": "r58_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    14822352,
+    11016000,
+    14822514,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    561.6000000000004,
+    281.3939999999984,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r58_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "inst": "start_provider/$flatten\\u_rst_r58_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "stage": "r58_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    14822352,
+    11017080,
+    14822514,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.6800000000003,
+    281.3939999999984,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r58_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "inst": "start_provider/$flatten\\u_rst_r58_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "stage": "r58_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    14822190,
+    11016000,
+    14822352,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    561.6000000000004,
+    281.23199999999997,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r58_2.$auto$ff.cc:337:slice$491",
+   "inst": "start_provider/$flatten\\u_rst_r58_2.$auto$ff.cc:337:slice$491",
+   "stage": "r58_2",
+   "role": "reset",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    14822730,
+    11016000,
+    14823810,
+    11016270
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.60999999999876,
+    561.6000000000004,
+    282.6899999999987,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r58_2.$auto$ff.cc:337:slice$492",
+   "inst": "start_provider/$flatten\\u_rst_r58_2.$auto$ff.cc:337:slice$492",
+   "stage": "r58_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    14822730,
+    11017080,
+    14823810,
+    11017350
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.60999999999876,
+    562.6800000000003,
+    282.6899999999987,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r58_2.$auto$ff.cc:337:slice$493",
+   "inst": "start_provider/$flatten\\u_rst_r58_2.$auto$ff.cc:337:slice$493",
+   "stage": "r58_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    14822514,
+    11015460,
+    14823594,
+    11015730
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.3939999999984,
+    561.0599999999995,
+    282.47399999999834,
+    561.3299999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r58_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "inst": "start_provider/$flatten\\u_st_r58_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "stage": "r58_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    14822352,
+    11016540,
+    14822514,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.1400000000012,
+    281.3939999999984,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r58_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "inst": "start_provider/$flatten\\u_st_r58_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "stage": "r58_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    14822190,
+    11016540,
+    14822352,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    562.1400000000012,
+    281.23199999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r58_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "inst": "start_provider/$flatten\\u_st_r58_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "stage": "r58_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    14821974,
+    11016540,
+    14822190,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    280.85399999999936,
+    562.1400000000012,
+    281.0699999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r58_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "inst": "start_provider/$flatten\\u_st_r58_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "stage": "r58_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    14822514,
+    11016000,
+    14822730,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.3939999999984,
+    561.6000000000004,
+    281.60999999999876,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r58_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "inst": "start_provider/$flatten\\u_st_r58_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "stage": "r58_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    14822514,
+    11017080,
+    14822730,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.3939999999984,
+    562.6800000000003,
+    281.60999999999876,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r58_2.$auto$ff.cc:337:slice$487",
+   "inst": "start_provider/$flatten\\u_st_r58_2.$auto$ff.cc:337:slice$487",
+   "stage": "r58_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    14823594,
+    11016540,
+    14824674,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    282.47399999999834,
+    562.1400000000012,
+    283.5540000000001,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r58_2.$auto$ff.cc:337:slice$488",
+   "inst": "start_provider/$flatten\\u_st_r58_2.$auto$ff.cc:337:slice$488",
+   "stage": "r58_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    14824674,
+    11016540,
+    14825754,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    283.5540000000001,
+    562.1400000000012,
+    284.634,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r58_2.$auto$ff.cc:337:slice$489",
+   "inst": "start_provider/$flatten\\u_st_r58_2.$auto$ff.cc:337:slice$489",
+   "stage": "r58_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    14822514,
+    11016540,
+    14823594,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.3939999999984,
+    562.1400000000012,
+    282.47399999999834,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r58_2.$auto$ff.cc:337:slice$490",
+   "inst": "start_provider/$flatten\\u_st_r58_2.$auto$ff.cc:337:slice$490",
+   "stage": "r58_2",
+   "role": "origin",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    14825754,
+    11016540,
+    14826834,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    284.634,
+    562.1400000000012,
+    285.71399999999994,
+    562.4099999999999
+   ]
+  }
+ ],
+ "sl_E0_su_c": [
+  {
+   "mapped_inst": "$flatten\\u_rst_r38_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "inst": "start_provider/$flatten\\u_rst_r38_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "stage": "r38_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    17293392,
+    11016000,
+    17293554,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    561.6000000000004,
+    281.39400000000023,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r38_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "inst": "start_provider/$flatten\\u_rst_r38_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "stage": "r38_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    17293392,
+    11017080,
+    17293554,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.6800000000003,
+    281.39400000000023,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r38_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "inst": "start_provider/$flatten\\u_rst_r38_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "stage": "r38_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    17293230,
+    11016000,
+    17293392,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    561.6000000000004,
+    281.23199999999997,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r38_2.$auto$ff.cc:337:slice$491",
+   "inst": "start_provider/$flatten\\u_rst_r38_2.$auto$ff.cc:337:slice$491",
+   "stage": "r38_2",
+   "role": "reset",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    17293770,
+    11016000,
+    17294850,
+    11016270
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6100000000006,
+    561.6000000000004,
+    282.6899999999987,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r38_2.$auto$ff.cc:337:slice$492",
+   "inst": "start_provider/$flatten\\u_rst_r38_2.$auto$ff.cc:337:slice$492",
+   "stage": "r38_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    17293770,
+    11017080,
+    17294850,
+    11017350
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6100000000006,
+    562.6800000000003,
+    282.6899999999987,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r38_2.$auto$ff.cc:337:slice$493",
+   "inst": "start_provider/$flatten\\u_rst_r38_2.$auto$ff.cc:337:slice$493",
+   "stage": "r38_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    17293554,
+    11015460,
+    17294634,
+    11015730
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.39400000000023,
+    561.0599999999995,
+    282.47399999999834,
+    561.3299999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r38_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "inst": "start_provider/$flatten\\u_st_r38_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "stage": "r38_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    17293392,
+    11016540,
+    17293554,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.1400000000012,
+    281.39400000000023,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r38_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "inst": "start_provider/$flatten\\u_st_r38_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "stage": "r38_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    17293230,
+    11016540,
+    17293392,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    562.1400000000012,
+    281.23199999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r38_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "inst": "start_provider/$flatten\\u_st_r38_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "stage": "r38_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    17293014,
+    11016540,
+    17293230,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    280.85399999999936,
+    562.1400000000012,
+    281.0699999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r38_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "inst": "start_provider/$flatten\\u_st_r38_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "stage": "r38_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    17293554,
+    11016000,
+    17293770,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.39400000000023,
+    561.6000000000004,
+    281.6100000000006,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r38_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "inst": "start_provider/$flatten\\u_st_r38_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "stage": "r38_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    17293554,
+    11017080,
+    17293770,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.39400000000023,
+    562.6800000000003,
+    281.6100000000006,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r38_2.$auto$ff.cc:337:slice$487",
+   "inst": "start_provider/$flatten\\u_st_r38_2.$auto$ff.cc:337:slice$487",
+   "stage": "r38_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    17294634,
+    11016540,
+    17295714,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    282.47399999999834,
+    562.1400000000012,
+    283.5540000000001,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r38_2.$auto$ff.cc:337:slice$488",
+   "inst": "start_provider/$flatten\\u_st_r38_2.$auto$ff.cc:337:slice$488",
+   "stage": "r38_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    17295714,
+    11016540,
+    17296794,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    283.5540000000001,
+    562.1400000000012,
+    284.63400000000183,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r38_2.$auto$ff.cc:337:slice$489",
+   "inst": "start_provider/$flatten\\u_st_r38_2.$auto$ff.cc:337:slice$489",
+   "stage": "r38_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    17293554,
+    11016540,
+    17294634,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.39400000000023,
+    562.1400000000012,
+    282.47399999999834,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r38_2.$auto$ff.cc:337:slice$490",
+   "inst": "start_provider/$flatten\\u_st_r38_2.$auto$ff.cc:337:slice$490",
+   "stage": "r38_2",
+   "role": "origin",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    17296794,
+    11016540,
+    17297874,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    284.63400000000183,
+    562.1400000000012,
+    285.71399999999994,
+    562.4099999999999
+   ]
+  }
+ ],
+ "sl_E1_su_c": [
+  {
+   "mapped_inst": "$flatten\\u_rst_r126_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "inst": "start_provider/$flatten\\u_rst_r126_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "stage": "r126_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    19764432,
+    11016000,
+    19764594,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    561.6000000000004,
+    281.39400000000023,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r126_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "inst": "start_provider/$flatten\\u_rst_r126_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "stage": "r126_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    19764432,
+    11017080,
+    19764594,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.6800000000003,
+    281.39400000000023,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r126_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "inst": "start_provider/$flatten\\u_rst_r126_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "stage": "r126_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    19764270,
+    11016000,
+    19764432,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    561.6000000000004,
+    281.23199999999997,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r126_2.$auto$ff.cc:337:slice$491",
+   "inst": "start_provider/$flatten\\u_rst_r126_2.$auto$ff.cc:337:slice$491",
+   "stage": "r126_2",
+   "role": "reset",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    19764810,
+    11016000,
+    19765890,
+    11016270
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6100000000006,
+    561.6000000000004,
+    282.6899999999987,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r126_2.$auto$ff.cc:337:slice$492",
+   "inst": "start_provider/$flatten\\u_rst_r126_2.$auto$ff.cc:337:slice$492",
+   "stage": "r126_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    19764810,
+    11017080,
+    19765890,
+    11017350
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6100000000006,
+    562.6800000000003,
+    282.6899999999987,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r126_2.$auto$ff.cc:337:slice$493",
+   "inst": "start_provider/$flatten\\u_rst_r126_2.$auto$ff.cc:337:slice$493",
+   "stage": "r126_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    19764594,
+    11015460,
+    19765674,
+    11015730
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.39400000000023,
+    561.0599999999995,
+    282.47399999999834,
+    561.3299999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r126_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "inst": "start_provider/$flatten\\u_st_r126_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "stage": "r126_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    19764432,
+    11016540,
+    19764594,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.1400000000012,
+    281.39400000000023,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r126_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "inst": "start_provider/$flatten\\u_st_r126_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "stage": "r126_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    19764270,
+    11016540,
+    19764432,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    562.1400000000012,
+    281.23199999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r126_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "inst": "start_provider/$flatten\\u_st_r126_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "stage": "r126_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    19764054,
+    11016540,
+    19764270,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    280.85399999999936,
+    562.1400000000012,
+    281.0699999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r126_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "inst": "start_provider/$flatten\\u_st_r126_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "stage": "r126_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    19764594,
+    11016000,
+    19764810,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.39400000000023,
+    561.6000000000004,
+    281.6100000000006,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r126_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "inst": "start_provider/$flatten\\u_st_r126_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "stage": "r126_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    19764594,
+    11017080,
+    19764810,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.39400000000023,
+    562.6800000000003,
+    281.6100000000006,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r126_2.$auto$ff.cc:337:slice$487",
+   "inst": "start_provider/$flatten\\u_st_r126_2.$auto$ff.cc:337:slice$487",
+   "stage": "r126_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    19765674,
+    11016540,
+    19766754,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    282.47399999999834,
+    562.1400000000012,
+    283.5540000000001,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r126_2.$auto$ff.cc:337:slice$488",
+   "inst": "start_provider/$flatten\\u_st_r126_2.$auto$ff.cc:337:slice$488",
+   "stage": "r126_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    19766754,
+    11016540,
+    19767834,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    283.5540000000001,
+    562.1400000000012,
+    284.6339999999982,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r126_2.$auto$ff.cc:337:slice$489",
+   "inst": "start_provider/$flatten\\u_st_r126_2.$auto$ff.cc:337:slice$489",
+   "stage": "r126_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    19764594,
+    11016540,
+    19765674,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.39400000000023,
+    562.1400000000012,
+    282.47399999999834,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r126_2.$auto$ff.cc:337:slice$490",
+   "inst": "start_provider/$flatten\\u_st_r126_2.$auto$ff.cc:337:slice$490",
+   "stage": "r126_2",
+   "role": "origin",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    19767834,
+    11016540,
+    19768914,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    284.6339999999982,
+    562.1400000000012,
+    285.71399999999994,
+    562.4099999999999
+   ]
+  }
+ ],
+ "sl_E2_su_c": [
+  {
+   "mapped_inst": "$flatten\\u_rst_r270_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "inst": "start_provider/$flatten\\u_rst_r270_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "stage": "r270_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    22235472,
+    11016000,
+    22235634,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    561.6000000000004,
+    281.3939999999966,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r270_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "inst": "start_provider/$flatten\\u_rst_r270_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "stage": "r270_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    22235472,
+    11017080,
+    22235634,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.6800000000003,
+    281.3939999999966,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r270_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "inst": "start_provider/$flatten\\u_rst_r270_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "stage": "r270_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    22235310,
+    11016000,
+    22235472,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    561.6000000000004,
+    281.23199999999997,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r270_2.$auto$ff.cc:337:slice$491",
+   "inst": "start_provider/$flatten\\u_rst_r270_2.$auto$ff.cc:337:slice$491",
+   "stage": "r270_2",
+   "role": "reset",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    22235850,
+    11016000,
+    22236930,
+    11016270
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.60999999999694,
+    561.6000000000004,
+    282.6899999999987,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r270_2.$auto$ff.cc:337:slice$492",
+   "inst": "start_provider/$flatten\\u_rst_r270_2.$auto$ff.cc:337:slice$492",
+   "stage": "r270_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    22235850,
+    11017080,
+    22236930,
+    11017350
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.60999999999694,
+    562.6800000000003,
+    282.6899999999987,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r270_2.$auto$ff.cc:337:slice$493",
+   "inst": "start_provider/$flatten\\u_rst_r270_2.$auto$ff.cc:337:slice$493",
+   "stage": "r270_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    22235634,
+    11015460,
+    22236714,
+    11015730
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.3939999999966,
+    561.0599999999995,
+    282.47399999999834,
+    561.3299999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r270_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "inst": "start_provider/$flatten\\u_st_r270_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "stage": "r270_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    22235472,
+    11016540,
+    22235634,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.1400000000012,
+    281.3939999999966,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r270_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "inst": "start_provider/$flatten\\u_st_r270_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "stage": "r270_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    22235310,
+    11016540,
+    22235472,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    562.1400000000012,
+    281.23199999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r270_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "inst": "start_provider/$flatten\\u_st_r270_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "stage": "r270_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    22235094,
+    11016540,
+    22235310,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    280.85399999999936,
+    562.1400000000012,
+    281.0699999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r270_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "inst": "start_provider/$flatten\\u_st_r270_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "stage": "r270_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    22235634,
+    11016000,
+    22235850,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.3939999999966,
+    561.6000000000004,
+    281.60999999999694,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r270_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "inst": "start_provider/$flatten\\u_st_r270_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "stage": "r270_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    22235634,
+    11017080,
+    22235850,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.3939999999966,
+    562.6800000000003,
+    281.60999999999694,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r270_2.$auto$ff.cc:337:slice$487",
+   "inst": "start_provider/$flatten\\u_st_r270_2.$auto$ff.cc:337:slice$487",
+   "stage": "r270_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    22236714,
+    11016540,
+    22237794,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    282.47399999999834,
+    562.1400000000012,
+    283.5540000000001,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r270_2.$auto$ff.cc:337:slice$488",
+   "inst": "start_provider/$flatten\\u_st_r270_2.$auto$ff.cc:337:slice$488",
+   "stage": "r270_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    22237794,
+    11016540,
+    22238874,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    283.5540000000001,
+    562.1400000000012,
+    284.6339999999982,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r270_2.$auto$ff.cc:337:slice$489",
+   "inst": "start_provider/$flatten\\u_st_r270_2.$auto$ff.cc:337:slice$489",
+   "stage": "r270_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    22235634,
+    11016540,
+    22236714,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.3939999999966,
+    562.1400000000012,
+    282.47399999999834,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r270_2.$auto$ff.cc:337:slice$490",
+   "inst": "start_provider/$flatten\\u_st_r270_2.$auto$ff.cc:337:slice$490",
+   "stage": "r270_2",
+   "role": "origin",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    22238874,
+    11016540,
+    22239954,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    284.6339999999982,
+    562.1400000000012,
+    285.71399999999994,
+    562.4099999999999
+   ]
+  }
+ ],
+ "sl_E3_su_c": [
+  {
+   "mapped_inst": "$flatten\\u_rst_r446_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "inst": "start_provider/$flatten\\u_rst_r446_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "stage": "r446_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    24706512,
+    11016000,
+    24706674,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    561.6000000000004,
+    281.39400000000023,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r446_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "inst": "start_provider/$flatten\\u_rst_r446_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "stage": "r446_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    24706512,
+    11017080,
+    24706674,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.6800000000003,
+    281.39400000000023,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r446_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "inst": "start_provider/$flatten\\u_rst_r446_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "stage": "r446_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    24706350,
+    11016000,
+    24706512,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    561.6000000000004,
+    281.23199999999997,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r446_2.$auto$ff.cc:337:slice$491",
+   "inst": "start_provider/$flatten\\u_rst_r446_2.$auto$ff.cc:337:slice$491",
+   "stage": "r446_2",
+   "role": "reset",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    24706890,
+    11016000,
+    24707970,
+    11016270
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6100000000006,
+    561.6000000000004,
+    282.6900000000023,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r446_2.$auto$ff.cc:337:slice$492",
+   "inst": "start_provider/$flatten\\u_rst_r446_2.$auto$ff.cc:337:slice$492",
+   "stage": "r446_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    24706890,
+    11017080,
+    24707970,
+    11017350
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6100000000006,
+    562.6800000000003,
+    282.6900000000023,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r446_2.$auto$ff.cc:337:slice$493",
+   "inst": "start_provider/$flatten\\u_rst_r446_2.$auto$ff.cc:337:slice$493",
+   "stage": "r446_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    24706674,
+    11015460,
+    24707754,
+    11015730
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.39400000000023,
+    561.0599999999995,
+    282.474000000002,
+    561.3299999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r446_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "inst": "start_provider/$flatten\\u_st_r446_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "stage": "r446_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    24706512,
+    11016540,
+    24706674,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.1400000000012,
+    281.39400000000023,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r446_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "inst": "start_provider/$flatten\\u_st_r446_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "stage": "r446_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    24706350,
+    11016540,
+    24706512,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    562.1400000000012,
+    281.23199999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r446_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "inst": "start_provider/$flatten\\u_st_r446_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "stage": "r446_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    24706134,
+    11016540,
+    24706350,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    280.85399999999936,
+    562.1400000000012,
+    281.0699999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r446_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "inst": "start_provider/$flatten\\u_st_r446_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "stage": "r446_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    24706674,
+    11016000,
+    24706890,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.39400000000023,
+    561.6000000000004,
+    281.6100000000006,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r446_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "inst": "start_provider/$flatten\\u_st_r446_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "stage": "r446_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    24706674,
+    11017080,
+    24706890,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.39400000000023,
+    562.6800000000003,
+    281.6100000000006,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r446_2.$auto$ff.cc:337:slice$487",
+   "inst": "start_provider/$flatten\\u_st_r446_2.$auto$ff.cc:337:slice$487",
+   "stage": "r446_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    24707754,
+    11016540,
+    24708834,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    282.474000000002,
+    562.1400000000012,
+    283.5540000000001,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r446_2.$auto$ff.cc:337:slice$488",
+   "inst": "start_provider/$flatten\\u_st_r446_2.$auto$ff.cc:337:slice$488",
+   "stage": "r446_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    24708834,
+    11016540,
+    24709914,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    283.5540000000001,
+    562.1400000000012,
+    284.63400000000183,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r446_2.$auto$ff.cc:337:slice$489",
+   "inst": "start_provider/$flatten\\u_st_r446_2.$auto$ff.cc:337:slice$489",
+   "stage": "r446_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    24706674,
+    11016540,
+    24707754,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.39400000000023,
+    562.1400000000012,
+    282.474000000002,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r446_2.$auto$ff.cc:337:slice$490",
+   "inst": "start_provider/$flatten\\u_st_r446_2.$auto$ff.cc:337:slice$490",
+   "stage": "r446_2",
+   "role": "origin",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    24709914,
+    11016540,
+    24710994,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    284.63400000000183,
+    562.1400000000012,
+    285.71399999999994,
+    562.4099999999999
+   ]
+  }
+ ],
+ "sl_E4_su_c": [
+  {
+   "mapped_inst": "$flatten\\u_rst_r630_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "inst": "start_provider/$flatten\\u_rst_r630_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "stage": "r630_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    27177552,
+    11016000,
+    27177714,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    561.6000000000004,
+    281.39400000000023,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r630_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "inst": "start_provider/$flatten\\u_rst_r630_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "stage": "r630_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    27177552,
+    11017080,
+    27177714,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.6800000000003,
+    281.39400000000023,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r630_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "inst": "start_provider/$flatten\\u_rst_r630_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "stage": "r630_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    27177390,
+    11016000,
+    27177552,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    561.6000000000004,
+    281.23199999999997,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r630_2.$auto$ff.cc:337:slice$491",
+   "inst": "start_provider/$flatten\\u_rst_r630_2.$auto$ff.cc:337:slice$491",
+   "stage": "r630_2",
+   "role": "reset",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    27177930,
+    11016000,
+    27179010,
+    11016270
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6100000000006,
+    561.6000000000004,
+    282.6899999999987,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r630_2.$auto$ff.cc:337:slice$492",
+   "inst": "start_provider/$flatten\\u_rst_r630_2.$auto$ff.cc:337:slice$492",
+   "stage": "r630_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    27177930,
+    11017080,
+    27179010,
+    11017350
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6100000000006,
+    562.6800000000003,
+    282.6899999999987,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r630_2.$auto$ff.cc:337:slice$493",
+   "inst": "start_provider/$flatten\\u_rst_r630_2.$auto$ff.cc:337:slice$493",
+   "stage": "r630_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    27177714,
+    11015460,
+    27178794,
+    11015730
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.39400000000023,
+    561.0599999999995,
+    282.474000000002,
+    561.3299999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r630_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "inst": "start_provider/$flatten\\u_st_r630_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "stage": "r630_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    27177552,
+    11016540,
+    27177714,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.1400000000012,
+    281.39400000000023,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r630_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "inst": "start_provider/$flatten\\u_st_r630_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "stage": "r630_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    27177390,
+    11016540,
+    27177552,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    562.1400000000012,
+    281.23199999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r630_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "inst": "start_provider/$flatten\\u_st_r630_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "stage": "r630_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    27177174,
+    11016540,
+    27177390,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    280.85399999999936,
+    562.1400000000012,
+    281.0699999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r630_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "inst": "start_provider/$flatten\\u_st_r630_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "stage": "r630_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    27177714,
+    11016000,
+    27177930,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.39400000000023,
+    561.6000000000004,
+    281.6100000000006,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r630_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "inst": "start_provider/$flatten\\u_st_r630_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "stage": "r630_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    27177714,
+    11017080,
+    27177930,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.39400000000023,
+    562.6800000000003,
+    281.6100000000006,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r630_2.$auto$ff.cc:337:slice$487",
+   "inst": "start_provider/$flatten\\u_st_r630_2.$auto$ff.cc:337:slice$487",
+   "stage": "r630_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    27178794,
+    11016540,
+    27179874,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    282.474000000002,
+    562.1400000000012,
+    283.5540000000001,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r630_2.$auto$ff.cc:337:slice$488",
+   "inst": "start_provider/$flatten\\u_st_r630_2.$auto$ff.cc:337:slice$488",
+   "stage": "r630_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    27179874,
+    11016540,
+    27180954,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    283.5540000000001,
+    562.1400000000012,
+    284.63400000000183,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r630_2.$auto$ff.cc:337:slice$489",
+   "inst": "start_provider/$flatten\\u_st_r630_2.$auto$ff.cc:337:slice$489",
+   "stage": "r630_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    27177714,
+    11016540,
+    27178794,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.39400000000023,
+    562.1400000000012,
+    282.474000000002,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r630_2.$auto$ff.cc:337:slice$490",
+   "inst": "start_provider/$flatten\\u_st_r630_2.$auto$ff.cc:337:slice$490",
+   "stage": "r630_2",
+   "role": "origin",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    27180954,
+    11016540,
+    27182034,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    284.63400000000183,
+    562.1400000000012,
+    285.71399999999994,
+    562.4099999999999
+   ]
+  }
+ ],
+ "sl_E5_su_c": [
+  {
+   "mapped_inst": "$flatten\\u_rst_r808_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "inst": "start_provider/$flatten\\u_rst_r808_2.$abc$582$auto$blifparse.cc:397:parse_blif$583",
+   "stage": "r808_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    29648592,
+    11016000,
+    29648754,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    561.6000000000004,
+    281.39400000000023,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r808_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "inst": "start_provider/$flatten\\u_rst_r808_2.$abc$582$auto$blifparse.cc:397:parse_blif$584",
+   "stage": "r808_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    29648592,
+    11017080,
+    29648754,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.6800000000003,
+    281.39400000000023,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r808_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "inst": "start_provider/$flatten\\u_rst_r808_2.$abc$582$auto$blifparse.cc:397:parse_blif$585",
+   "stage": "r808_2",
+   "role": "reset",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    29648430,
+    11016000,
+    29648592,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    561.6000000000004,
+    281.23199999999997,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r808_2.$auto$ff.cc:337:slice$491",
+   "inst": "start_provider/$flatten\\u_rst_r808_2.$auto$ff.cc:337:slice$491",
+   "stage": "r808_2",
+   "role": "reset",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    29648970,
+    11016000,
+    29650050,
+    11016270
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6100000000006,
+    561.6000000000004,
+    282.6899999999987,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r808_2.$auto$ff.cc:337:slice$492",
+   "inst": "start_provider/$flatten\\u_rst_r808_2.$auto$ff.cc:337:slice$492",
+   "stage": "r808_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    29648970,
+    11017080,
+    29650050,
+    11017350
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.6100000000006,
+    562.6800000000003,
+    282.6899999999987,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_rst_r808_2.$auto$ff.cc:337:slice$493",
+   "inst": "start_provider/$flatten\\u_rst_r808_2.$auto$ff.cc:337:slice$493",
+   "stage": "r808_2",
+   "role": "reset",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    29648754,
+    11015460,
+    29649834,
+    11015730
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.39400000000023,
+    561.0599999999995,
+    282.47399999999834,
+    561.3299999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r808_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "inst": "start_provider/$flatten\\u_st_r808_2.$abc$586$auto$blifparse.cc:397:parse_blif$587",
+   "stage": "r808_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    29648592,
+    11016540,
+    29648754,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.23199999999997,
+    562.1400000000012,
+    281.39400000000023,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r808_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "inst": "start_provider/$flatten\\u_st_r808_2.$abc$586$auto$blifparse.cc:397:parse_blif$588",
+   "stage": "r808_2",
+   "role": "origin",
+   "master": "INVx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    29648430,
+    11016540,
+    29648592,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.0699999999997,
+    562.1400000000012,
+    281.23199999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r808_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "inst": "start_provider/$flatten\\u_st_r808_2.$abc$586$auto$blifparse.cc:397:parse_blif$589",
+   "stage": "r808_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    29648214,
+    11016540,
+    29648430,
+    11016810
+   ],
+   "sequential": false,
+   "local_bbox": [
+    280.85399999999936,
+    562.1400000000012,
+    281.0699999999997,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r808_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "inst": "start_provider/$flatten\\u_st_r808_2.$abc$586$auto$blifparse.cc:397:parse_blif$590",
+   "stage": "r808_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    29648754,
+    11016000,
+    29648970,
+    11016270
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.39400000000023,
+    561.6000000000004,
+    281.6100000000006,
+    561.8700000000008
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r808_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "inst": "start_provider/$flatten\\u_st_r808_2.$abc$586$auto$blifparse.cc:397:parse_blif$591",
+   "stage": "r808_2",
+   "role": "origin",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "bbox_dbu": [
+    29648754,
+    11017080,
+    29648970,
+    11017350
+   ],
+   "sequential": false,
+   "local_bbox": [
+    281.39400000000023,
+    562.6800000000003,
+    281.6100000000006,
+    562.9500000000007
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r808_2.$auto$ff.cc:337:slice$487",
+   "inst": "start_provider/$flatten\\u_st_r808_2.$auto$ff.cc:337:slice$487",
+   "stage": "r808_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    29649834,
+    11016540,
+    29650914,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    282.47399999999834,
+    562.1400000000012,
+    283.5540000000001,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r808_2.$auto$ff.cc:337:slice$488",
+   "inst": "start_provider/$flatten\\u_st_r808_2.$auto$ff.cc:337:slice$488",
+   "stage": "r808_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    29650914,
+    11016540,
+    29651994,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    283.5540000000001,
+    562.1400000000012,
+    284.6339999999982,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r808_2.$auto$ff.cc:337:slice$489",
+   "inst": "start_provider/$flatten\\u_st_r808_2.$auto$ff.cc:337:slice$489",
+   "stage": "r808_2",
+   "role": "origin",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    29648754,
+    11016540,
+    29649834,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    281.39400000000023,
+    562.1400000000012,
+    282.47399999999834,
+    562.4099999999999
+   ]
+  },
+  {
+   "mapped_inst": "$flatten\\u_st_r808_2.$auto$ff.cc:337:slice$490",
+   "inst": "start_provider/$flatten\\u_st_r808_2.$auto$ff.cc:337:slice$490",
+   "stage": "r808_2",
+   "role": "origin",
+   "master": "DFFLQNx1_ASAP7_75t_R",
+   "bbox_dbu": [
+    29651994,
+    11016540,
+    29653074,
+    11016810
+   ],
+   "sequential": true,
+   "local_bbox": [
+    284.6339999999982,
+    562.1400000000012,
+    285.71399999999994,
+    562.4099999999999
+   ]
+  }
+ ]
+}

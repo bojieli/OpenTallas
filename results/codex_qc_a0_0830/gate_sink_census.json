@@ -1,0 +1,496 @@
+{
+ "nl": [
+  {
+   "name": "\\g_icg.g_hop.u_hop_ck/u_icg",
+   "gck": "ck_g",
+   "sinks": 2849,
+   "ff": 2849,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_de/u_icg",
+   "gck": "ck_de",
+   "sinks": 1027,
+   "ff": 1027,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_dw/u_icg",
+   "gck": "ck_dw",
+   "sinks": 1027,
+   "ff": 1027,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_fa2/u_icg",
+   "gck": "ck_fa2",
+   "sinks": 514,
+   "ff": 514,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_lsl0/u_icg",
+   "gck": "ck_lsl0",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_lsl1/u_icg",
+   "gck": "ck_lsl1",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_lsl2/u_icg",
+   "gck": "ck_lsl2",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_lsl3/u_icg",
+   "gck": "ck_lsl3",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_lsl4/u_icg",
+   "gck": "ck_lsl4",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_lsl5/u_icg",
+   "gck": "ck_lsl5",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_lsl6/u_icg",
+   "gck": "ck_lsl6",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_lsl7/u_icg",
+   "gck": "ck_lsl7",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rn/u_icg",
+   "gck": "ck_rn",
+   "sinks": 514,
+   "ff": 514,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rnw/u_icg",
+   "gck": "ck_rnw",
+   "sinks": 514,
+   "ff": 514,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp0/u_icg",
+   "gck": "ck_rp0",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp1/u_icg",
+   "gck": "ck_rp1",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp2/u_icg",
+   "gck": "ck_rp2",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp3/u_icg",
+   "gck": "ck_rp3",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp4/u_icg",
+   "gck": "ck_rp4",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp5/u_icg",
+   "gck": "ck_rp5",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp6/u_icg",
+   "gck": "ck_rp6",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp7/u_icg",
+   "gck": "ck_rp7",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp8/u_icg",
+   "gck": "ck_rp8",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp9/u_icg",
+   "gck": "ck_rp9",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rs/u_icg",
+   "gck": "ck_rs",
+   "sinks": 515,
+   "ff": 515,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rsw/u_icg",
+   "gck": "ck_rsw",
+   "sinks": 515,
+   "ff": 515,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_tx0/u_icg",
+   "gck": "ck_tx0",
+   "sinks": 781,
+   "ff": 781,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_tx1/u_icg",
+   "gck": "ck_tx1",
+   "sinks": 781,
+   "ff": 781,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_tx2/u_icg",
+   "gck": "ck_tx2",
+   "sinks": 781,
+   "ff": 781,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_tx3/u_icg",
+   "gck": "ck_tx3",
+   "sinks": 781,
+   "ff": 781,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_tx4/u_icg",
+   "gck": "ck_tx4",
+   "sinks": 781,
+   "ff": 781,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_tx5/u_icg",
+   "gck": "ck_tx5",
+   "sinks": 781,
+   "ff": 781,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_tx6/u_icg",
+   "gck": "ck_tx6",
+   "sinks": 781,
+   "ff": 781,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_tx7/u_icg",
+   "gck": "ck_tx7",
+   "sinks": 781,
+   "ff": 781,
+   "hard": 0
+  }
+ ],
+ "nk": [
+  {
+   "name": "\\g_icg.g_hop.u_hop_ck/u_icg",
+   "gck": "ck_g",
+   "sinks": 2336,
+   "ff": 2336,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_de/u_icg",
+   "gck": "ck_de",
+   "sinks": 1027,
+   "ff": 1027,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_dw/u_icg",
+   "gck": "ck_dw",
+   "sinks": 1027,
+   "ff": 1027,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_fa2/u_icg",
+   "gck": "ck_fa2",
+   "sinks": 515,
+   "ff": 515,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_fa3/u_icg",
+   "gck": "ck_fa3",
+   "sinks": 516,
+   "ff": 516,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_lsl0/u_icg",
+   "gck": "ck_lsl0",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_lsl1/u_icg",
+   "gck": "ck_lsl1",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_lsl2/u_icg",
+   "gck": "ck_lsl2",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_lsl3/u_icg",
+   "gck": "ck_lsl3",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_lsl4/u_icg",
+   "gck": "ck_lsl4",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_lsl5/u_icg",
+   "gck": "ck_lsl5",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_lsl6/u_icg",
+   "gck": "ck_lsl6",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_lsl7/u_icg",
+   "gck": "ck_lsl7",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_node/u_icg",
+   "gck": "ck_node",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rn/u_icg",
+   "gck": "ck_rn",
+   "sinks": 514,
+   "ff": 514,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rnw/u_icg",
+   "gck": "ck_rnw",
+   "sinks": 514,
+   "ff": 514,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp0/u_icg",
+   "gck": "ck_rp0",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp1/u_icg",
+   "gck": "ck_rp1",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp2/u_icg",
+   "gck": "ck_rp2",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp3/u_icg",
+   "gck": "ck_rp3",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp4/u_icg",
+   "gck": "ck_rp4",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp5/u_icg",
+   "gck": "ck_rp5",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp6/u_icg",
+   "gck": "ck_rp6",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp7/u_icg",
+   "gck": "ck_rp7",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp8/u_icg",
+   "gck": "ck_rp8",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rp9/u_icg",
+   "gck": "ck_rp9",
+   "sinks": 1,
+   "ff": 0,
+   "hard": 1
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rs/u_icg",
+   "gck": "ck_rs",
+   "sinks": 515,
+   "ff": 515,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_rsw/u_icg",
+   "gck": "ck_rsw",
+   "sinks": 515,
+   "ff": 515,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_tx0/u_icg",
+   "gck": "ck_tx0",
+   "sinks": 781,
+   "ff": 781,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_tx1/u_icg",
+   "gck": "ck_tx1",
+   "sinks": 781,
+   "ff": 781,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_tx2/u_icg",
+   "gck": "ck_tx2",
+   "sinks": 781,
+   "ff": 781,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_tx3/u_icg",
+   "gck": "ck_tx3",
+   "sinks": 781,
+   "ff": 781,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_tx4/u_icg",
+   "gck": "ck_tx4",
+   "sinks": 781,
+   "ff": 781,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_tx5/u_icg",
+   "gck": "ck_tx5",
+   "sinks": 781,
+   "ff": 781,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_tx6/u_icg",
+   "gck": "ck_tx6",
+   "sinks": 781,
+   "ff": 781,
+   "hard": 0
+  },
+  {
+   "name": "\\g_icg.g_hop.u_hop_tx7/u_icg",
+   "gck": "ck_tx7",
+   "sinks": 781,
+   "ff": 781,
+   "hard": 0
+  }
+ ]
+}

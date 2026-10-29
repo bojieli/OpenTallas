@@ -1,0 +1,38 @@
+{
+ "nl": {
+  "ICG": 1,
+  "hop_FF": 0,
+  "ROM": 0,
+  "RF": 8,
+  "NODE": 0,
+  "netlist": "/srv/opentallas-scratch2/claude/codex-qc-a0-0830/kits/qfd_tile_nl_a0c_a0nl14icg2/run/results/asap7/kq_qfd_tile_nl_a0c_a0nl14icg2/base/1_synth.v",
+  "warnings_undriven_romrd": 2660
+ },
+ "nlr1": {
+  "ICG": 34,
+  "hop_FF": 66,
+  "ROM": 10,
+  "RF": 8,
+  "NODE": 0,
+  "netlist": "/srv/opentallas-scratch2/claude/codex-qc-a0-0830/kits/qfd_tile_nl_a0c_a0nl14icg2r1/run/results/asap7/kq_qfd_tile_nl_a0c_a0nl14icg2r1/base/1_synth.v",
+  "warnings_undriven_romrd": 2660
+ },
+ "nk": {
+  "ICG": 1,
+  "hop_FF": 0,
+  "ROM": 0,
+  "RF": 8,
+  "NODE": 1,
+  "netlist": "/srv/opentallas-scratch2/claude/codex-qc-a0-0830/kits/qfd_tile_nk_a0c_a0nk14icg2/run/results/asap7/kq_qfd_tile_nk_a0c_a0nk14icg2/base/1_synth.v",
+  "warnings_undriven_romrd": 2660
+ },
+ "nkr1": {
+  "ICG": 36,
+  "hop_FF": 64,
+  "ROM": 10,
+  "RF": 8,
+  "NODE": 1,
+  "netlist": "/srv/opentallas-scratch2/claude/codex-qc-a0-0830/kits/qfd_tile_nk_a0c_a0nk14icg2r1/run/results/asap7/kq_qfd_tile_nk_a0c_a0nk14icg2r1/base/1_synth.v",
+  "warnings_undriven_romrd": 2660
+ }
+}
