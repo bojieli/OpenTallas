@@ -50,8 +50,26 @@ def apply_kit(kit):
                 pos = child.start(1)
                 text = text[:pos] + '.CORE_CLOCK(CORE_CLOCK),' + text[pos:]
         # Actual physical PC/PC-head leaf, including private-port renamed copies.
-        pattern = r'(qkd_static_kv_pc_path_fan_nc_b(?:_head_p)?\s*#\s*\()(?=\.MU\(1\))'
-        text, count = re.subn(pattern, r'\1.CORE_CLOCK(1),', text)
+        pattern = r'(qkd_static_kv_pc_path_fan_nc_b(?:_head_p)?\s*#\s*\()(\s*\.[^;]*?)(\)\s+u_pc\s*\()'
+        count = 0
+        def select_u_pc(match):
+            nonlocal count
+            args = match.group(2)
+            if not re.search(r'\.MU\s*\(\s*1\s*\)', args):
+                return match.group(0)
+            values = list(re.finditer(r'\.CORE_CLOCK\s*\(\s*([^()]*)\s*\)', args))
+            if len(values) > 1:
+                raise ValueError('physical u_pc duplicate CORE_CLOCK assignment')
+            if values:
+                value = values[0].group(1).strip()
+                if value not in ('0', '1'):
+                    raise ValueError('physical u_pc CORE_CLOCK must be literal 0 or 1')
+                args = args[:values[0].start()] + '.CORE_CLOCK(1)' + args[values[0].end():]
+            else:
+                args = '.CORE_CLOCK(1),' + args
+            count += 1
+            return match.group(1) + args + match.group(3)
+        text = re.sub(pattern, select_u_pc, text, flags=re.S)
         if count: records.append(dict(file=p.name, selected_u_pc_instances=count))
         p.write_text(text)
     if not records: raise ValueError('no actual PC u_pc instance selected for CORE_CLOCK=1')

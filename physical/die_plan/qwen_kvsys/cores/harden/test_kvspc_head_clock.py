@@ -5,12 +5,12 @@ import unittest
 spec=importlib.util.spec_from_file_location('clock',pathlib.Path(__file__).with_name('kvspc_core_clock.py'))
 m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 class HeadClock(unittest.TestCase):
- def check(self,already):
+ def check(self,already,u_pc_args=".MU(1)"):
   with tempfile.TemporaryDirectory() as d:
    k=pathlib.Path(d);(k/'rtl').mkdir()
    decl='parameter integer CORE_CLOCK=0,' if already else ''
    forward='.CORE_CLOCK(CORE_CLOCK),' if already else ''
-   (k/'rtl/head.sv').write_text('module qkd_static_kv_pc_path_fan_nc_b_head_p #('+decl+'parameter MU=1)(input ck); qkd_static_kv_pc_path_emb_nc_b #('+forward+'.MU(MU)) u_pce (.ck(ck)); endmodule\nmodule wrapper; qkd_static_kv_pc_path_fan_nc_b #(.MU(1)) u_pc(); endmodule')
+   (k/'rtl/head.sv').write_text('module qkd_static_kv_pc_path_fan_nc_b_head_p #('+decl+'parameter MU=1)(input ck); qkd_static_kv_pc_path_emb_nc_b #('+forward+'.MU(MU)) u_pce (.ck(ck)); endmodule\nmodule wrapper; qkd_static_kv_pc_path_fan_nc_b #('+u_pc_args+') u_pc(); endmodule')
    for n in ('qkd_static_kv_pc_path_nc.sv','qkd_ctrl_pc_nc.sv','ot_qkd_static_ctrl_pc_emb.sv','ot_qkd_static_kv_timing.sv'):(k/'rtl'/n).write_text('// CORE_CLOCK')
    m.apply_kit(k)
    text=(k/'rtl/head.sv').read_text()
@@ -19,4 +19,10 @@ class HeadClock(unittest.TestCase):
    self.assertEqual(text.count('.CORE_CLOCK(1)'),1)
  def test_old_variant(self):self.check(False)
  def test_current_variant(self):self.check(True)
+ def test_current_actual_leaf_parameter_order(self):self.check(True, '.MU(1), .CORE_CLOCK(1)')
+ def test_clock_argument_first(self):self.check(True, '.CORE_CLOCK(1), .MU(1)')
+ def test_explicit_default_clock_selected(self):self.check(True, '.MU(1), .CORE_CLOCK(0)')
+ def test_duplicate_actual_clock_is_rejected(self):
+  with self.assertRaisesRegex(ValueError, 'duplicate CORE_CLOCK'):
+   self.check(True, '.MU(1), .CORE_CLOCK(1), .CORE_CLOCK(1)')
 if __name__=='__main__':unittest.main()
