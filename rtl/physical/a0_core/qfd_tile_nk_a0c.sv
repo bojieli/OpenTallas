@@ -17,9 +17,20 @@ module qfd_tile_nk_a0c #(
     // (ICGx8DC, QC-PG-4) gating every body clock entry except the input faces (ck_fa4 tap/tile_id/reset sample, ck_fa0/ck_fa1 n_a/n_b).
     // Enable from existing signals with a 1-cycle lead (see g_icg).  ICG_GOH = go hold cycles (go face -> engine idle
     // falls), ICG_DRAIN = cycles kept after the last activity (engine drained -> output faces, reset relays).
-    parameter integer ICG = 0,
+    parameter integer ICG = 0,   // 2 = B-hop (per-entry gates, relayed enables), see ICG_K_*
     parameter integer ICG_GOH = 3,
-    parameter integer ICG_DRAIN = 64
+    parameter integer ICG_DRAIN = 64,
+    // QC-A0-KITS-13 B-hop (ICG = 2, COORD ruling d): one ot_a0_icg_hop gate per clock entry; its enable = the tile en
+    // relayed through ICG_K_* ungated hops (bound K <= s - 1, s = measured gated depth of the entry from the ungated
+    // faces: ck 1, rp 3, rsw/rnw/dw/de/rqr 4, tx 5, lsl 7, fa2 5 (NL) / 1 (NK), fa3 1, node 1).
+    parameter integer ICG_K_CK = 0,
+    parameter integer ICG_K_RP = 2,
+    parameter integer ICG_K_RQ = 2,
+    parameter integer ICG_K_TX = 2,
+    parameter integer ICG_K_LSL = 2,
+    parameter integer ICG_K_FA2 = 0,
+    parameter integer ICG_K_FA3 = 0,
+    parameter integer ICG_K_NODE = 0
 `ifndef SYNTHESIS
   , parameter integer ROM_TILE = -1
 `endif
@@ -112,6 +123,41 @@ module qfd_tile_nk_a0c #(
     wire me_idle;   // body port: the matvec engine idle register (QC-PG-5: threaded through the 4 body modules)
     generate if (ICG == 0) begin : g_noicg
         assign ck_g = ck;
+        assign ck_rp0 = ck_g;
+        assign ck_rp1 = ck_g;
+        assign ck_rp2 = ck_g;
+        assign ck_rp3 = ck_g;
+        assign ck_rp4 = ck_g;
+        assign ck_rp5 = ck_g;
+        assign ck_rp6 = ck_g;
+        assign ck_rp7 = ck_g;
+        assign ck_rp8 = ck_g;
+        assign ck_rp9 = ck_g;
+        assign ck_tx0 = ck_g;
+        assign ck_tx1 = ck_g;
+        assign ck_tx2 = ck_g;
+        assign ck_tx3 = ck_g;
+        assign ck_tx4 = ck_g;
+        assign ck_tx5 = ck_g;
+        assign ck_tx6 = ck_g;
+        assign ck_tx7 = ck_g;
+        assign ck_rsw = ck_g;
+        assign ck_rnw = ck_g;
+        assign ck_dw = ck_g;
+        assign ck_de = ck_g;
+        assign ck_rs = ck_g;
+        assign ck_rn = ck_g;
+        assign ck_fa2 = ck_g;
+        assign ck_fa3 = ck_g;
+        assign ck_lsl0 = ck_g;
+        assign ck_lsl1 = ck_g;
+        assign ck_lsl2 = ck_g;
+        assign ck_lsl3 = ck_g;
+        assign ck_lsl4 = ck_g;
+        assign ck_lsl5 = ck_g;
+        assign ck_lsl6 = ck_g;
+        assign ck_lsl7 = ck_g;
+        assign ck_node = ck_g;
     end else begin : g_icg
 `ifdef SYNTHESIS
         localparam integer mut = 0;
@@ -135,56 +181,132 @@ module qfd_tile_nk_a0c #(
             else if (act) dr <= 8'(ICG_DRAIN);
             else if (dr != 8'd0) dr <= dr - 8'd1;
         wire en = act | ((mut == 3) ? 1'b0 : (dr != 8'd0)) | (mut == 9);
+        if (ICG == 1) begin : g_root   // DIE-QC-16: one tile-root gate
 `ifdef SYNTHESIS
-        ICGx8DC_ASAP7_75t_R u_icg (.CLK(ck), .ENA(en), .SE(1'b0), .GCLK(ck_g));
+            ICGx8DC_ASAP7_75t_R u_icg (.CLK(ck), .ENA(en), .SE(1'b0), .GCLK(ck_g));
 `else
-        reg en_l;
-        /* verilator lint_off COMBDLY */
-        always_latch if (!ck) en_l = en;      // ICG cell function: latch transparent while ck is low, AND with ck
-        /* verilator lint_on COMBDLY */
-        assign ck_g = ck & en_l;
+            reg en_l;
+            /* verilator lint_off COMBDLY */
+            always_latch if (!ck) en_l = en;      // ICG cell function: latch transparent while ck is low, AND with ck
+            /* verilator lint_on COMBDLY */
+            assign ck_g = ck & en_l;
 `endif
-        initial if (ICG_GOH < 2 || ICG_DRAIN < 1 || ICG_DRAIN > 255) $fatal(1, "a0c ICG: ICG_GOH >= 2, 1 <= ICG_DRAIN <= 255");
+            assign ck_rp0 = ck_g;
+            assign ck_rp1 = ck_g;
+            assign ck_rp2 = ck_g;
+            assign ck_rp3 = ck_g;
+            assign ck_rp4 = ck_g;
+            assign ck_rp5 = ck_g;
+            assign ck_rp6 = ck_g;
+            assign ck_rp7 = ck_g;
+            assign ck_rp8 = ck_g;
+            assign ck_rp9 = ck_g;
+            assign ck_tx0 = ck_g;
+            assign ck_tx1 = ck_g;
+            assign ck_tx2 = ck_g;
+            assign ck_tx3 = ck_g;
+            assign ck_tx4 = ck_g;
+            assign ck_tx5 = ck_g;
+            assign ck_tx6 = ck_g;
+            assign ck_tx7 = ck_g;
+            assign ck_rsw = ck_g;
+            assign ck_rnw = ck_g;
+            assign ck_dw = ck_g;
+            assign ck_de = ck_g;
+            assign ck_rs = ck_g;
+            assign ck_rn = ck_g;
+            assign ck_fa2 = ck_g;
+            assign ck_fa3 = ck_g;
+            assign ck_lsl0 = ck_g;
+            assign ck_lsl1 = ck_g;
+            assign ck_lsl2 = ck_g;
+            assign ck_lsl3 = ck_g;
+            assign ck_lsl4 = ck_g;
+            assign ck_lsl5 = ck_g;
+            assign ck_lsl6 = ck_g;
+            assign ck_lsl7 = ck_g;
+            assign ck_node = ck_g;
+        end else begin : g_hop         // QC-A0-KITS-13 B-hop: one gate per clock entry, relayed enable
+            wire xk_all = (mut == 7);  // bench mutant: every hop one stage longer (ck K 0 -> 1 > s - 1 = 0)
+            wire xk_rp = (mut == 8);   // bench mutant: ROM-pair hops one stage longer (K 2 -> 3 > s - 1 = 2)
+            ot_a0_icg_hop #(.K(ICG_K_CK)) u_hop_ck (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_g));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp0 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp0));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp1 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp1));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp2 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp2));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp3 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp3));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp4 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp4));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp5 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp5));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp6 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp6));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp7 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp7));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp8 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp8));
+            ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp9 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp9));
+            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx0 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_tx0));
+            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx1 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_tx1));
+            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx2 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_tx2));
+            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx3 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_tx3));
+            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx4 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_tx4));
+            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx5 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_tx5));
+            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx6 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_tx6));
+            ot_a0_icg_hop #(.K(ICG_K_TX)) u_hop_tx7 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_tx7));
+            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_rsw (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_rsw));
+            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_rnw (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_rnw));
+            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_dw (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_dw));
+            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_de (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_de));
+            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_rs (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_rs));
+            ot_a0_icg_hop #(.K(ICG_K_RQ)) u_hop_rn (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_rn));
+            ot_a0_icg_hop #(.K(ICG_K_FA2)) u_hop_fa2 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_fa2));
+            ot_a0_icg_hop #(.K(ICG_K_FA3)) u_hop_fa3 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_fa3));
+            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl0 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_lsl0));
+            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl1 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_lsl1));
+            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl2 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_lsl2));
+            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl3 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_lsl3));
+            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl4 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_lsl4));
+            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl5 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_lsl5));
+            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl6 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_lsl6));
+            ot_a0_icg_hop #(.K(ICG_K_LSL)) u_hop_lsl7 (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_lsl7));
+            ot_a0_icg_hop #(.K(ICG_K_NODE)) u_hop_node (.ck(ck), .rst_n(rst_n), .en(en), .xk(xk_all), .gck(ck_node));
+        end
+        initial if (ICG_GOH < 2 || ICG_DRAIN < 1 || ICG_DRAIN > 255 || ICG > 2) $fatal(1, "a0c ICG: ICG <= 2, ICG_GOH >= 2, 1 <= ICG_DRAIN <= 255");
     end endgenerate
     // former clock entries: one clock domain, CTS balances every sink (macros via clock_tree_path)
-    wire ck_rp0 = ck_g;
-    wire ck_rp1 = ck_g;
-    wire ck_rp2 = ck_g;
-    wire ck_rp3 = ck_g;
-    wire ck_rp4 = ck_g;
-    wire ck_rp5 = ck_g;
-    wire ck_rp6 = ck_g;
-    wire ck_rp7 = ck_g;
-    wire ck_rp8 = ck_g;
-    wire ck_rp9 = ck_g;
-    wire ck_tx0 = ck_g;
-    wire ck_tx1 = ck_g;
-    wire ck_tx2 = ck_g;
-    wire ck_tx3 = ck_g;
-    wire ck_tx4 = ck_g;
-    wire ck_tx5 = ck_g;
-    wire ck_tx6 = ck_g;
-    wire ck_tx7 = ck_g;
-    wire ck_rsw = ck_g;
-    wire ck_rnw = ck_g;
-    wire ck_dw = ck_g;
-    wire ck_de = ck_g;
-    wire ck_rs = ck_g;
-    wire ck_rn = ck_g;
+    wire ck_rp0;
+    wire ck_rp1;
+    wire ck_rp2;
+    wire ck_rp3;
+    wire ck_rp4;
+    wire ck_rp5;
+    wire ck_rp6;
+    wire ck_rp7;
+    wire ck_rp8;
+    wire ck_rp9;
+    wire ck_tx0;
+    wire ck_tx1;
+    wire ck_tx2;
+    wire ck_tx3;
+    wire ck_tx4;
+    wire ck_tx5;
+    wire ck_tx6;
+    wire ck_tx7;
+    wire ck_rsw;
+    wire ck_rnw;
+    wire ck_dw;
+    wire ck_de;
+    wire ck_rs;
+    wire ck_rn;
     wire ck_fa0 = ck;
     wire ck_fa1 = ck;
-    wire ck_fa2 = ck_g;
-    wire ck_fa3 = ck_g;
+    wire ck_fa2;
+    wire ck_fa3;
     wire ck_fa4 = ck;
-    wire ck_lsl0 = ck_g;
-    wire ck_lsl1 = ck_g;
-    wire ck_lsl2 = ck_g;
-    wire ck_lsl3 = ck_g;
-    wire ck_lsl4 = ck_g;
-    wire ck_lsl5 = ck_g;
-    wire ck_lsl6 = ck_g;
-    wire ck_lsl7 = ck_g;
-    wire ck_node = ck_g;
+    wire ck_lsl0;
+    wire ck_lsl1;
+    wire ck_lsl2;
+    wire ck_lsl3;
+    wire ck_lsl4;
+    wire ck_lsl5;
+    wire ck_lsl6;
+    wire ck_lsl7;
+    wire ck_node;
 `ifndef SYNTHESIS
     qfd_tile_nk_rp2_45 #(.ROM_TILE(ROM_TILE),.RPH(3),.REGROOT(REGROOT_MODE)) u_g (
 `else

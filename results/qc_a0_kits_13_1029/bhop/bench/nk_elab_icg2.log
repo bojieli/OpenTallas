@@ -1,0 +1,339 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+
+-- Executing script file `/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/elab_nk.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_45.sv
+Parsing SystemVerilog input from `rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_45.sv' to AST representation.
+Generating RTLIL representation for module `\qfd_tile_nk_rp2_45'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nk/icg_model.v
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nk/icg_model.v' to AST representation.
+Generating RTLIL representation for module `\ICGx8DC_ASAP7_75t_R'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/physical/a0_core/ot_a0_icg_hop.sv
+Parsing SystemVerilog input from `rtl/physical/a0_core/ot_a0_icg_hop.sv' to AST representation.
+Generating RTLIL representation for module `\ot_a0_icg_hop'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/physical/a0_core/qfd_tile_nk_a0c.sv
+Parsing SystemVerilog input from `rtl/physical/a0_core/qfd_tile_nk_a0c.sv' to AST representation.
+Generating RTLIL representation for module `\qfd_tile_nk_a0c'.
+Successfully finished Verilog frontend.
+Parameter \ICG = 2
+
+5. Executing AST frontend in derive mode using pre-parsed AST for module `\qfd_tile_nk_a0c'.
+Parameter \ICG = 2
+Generating RTLIL representation for module `$paramod\qfd_tile_nk_a0c\ICG=s32'00000000000000000000000000000010'.
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1. Analyzing design hierarchy..
+Top module:  \qfd_tile_nk_a0c
+Used module:     \ot_a0_icg_hop
+Used module:         \ICGx8DC_ASAP7_75t_R
+Parameter \K = 0
+
+6.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_a0_icg_hop'.
+Parameter \K = 0
+Generating RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000000'.
+Parameter \K = 2
+
+6.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_a0_icg_hop'.
+Parameter \K = 2
+Generating RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 0
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000000'.
+Parameter \K = 0
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000000'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 2
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010'.
+Parameter \K = 0
+Found cached RTLIL representation for module `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000000'.
+
+6.4. Analyzing design hierarchy..
+Top module:  \qfd_tile_nk_a0c
+Used module:     $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000000
+Used module:         \ICGx8DC_ASAP7_75t_R
+Used module:     $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010
+
+6.5. Analyzing design hierarchy..
+Top module:  \qfd_tile_nk_a0c
+Used module:     $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000000
+Used module:         \ICGx8DC_ASAP7_75t_R
+Used module:     $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010
+Removing unused module `\ot_a0_icg_hop'.
+Removed 1 unused modules.
+
+7. Executing PROC pass (convert processes to netlists).
+
+7.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\qfd_tile_nk_a0c.$proc$rtl/physical/a0_core/qfd_tile_nk_a0c.sv:269$30'.
+Removing empty process `qfd_tile_nk_a0c.$proc$rtl/physical/a0_core/qfd_tile_nk_a0c.sv:269$30'.
+Cleaned up 1 empty switch.
+
+7.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$rtl/physical/a0_core/qfd_tile_nk_a0c.sv:179$13 in module qfd_tile_nk_a0c.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/a0_core/ot_a0_icg_hop.sv:33$31 in module $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010.
+Removed a total of 0 dead cases.
+
+7.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 3 assignments to connections.
+
+7.4. Executing PROC_INIT pass (extract init attributes).
+
+7.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\qfd_tile_nk_a0c.$proc$rtl/physical/a0_core/qfd_tile_nk_a0c.sv:179$13'.
+Found async reset \rst_n in `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010.$proc$rtl/physical/a0_core/ot_a0_icg_hop.sv:33$31'.
+
+7.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~2 debug messages>
+
+7.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\qfd_tile_nk_a0c.$proc$rtl/physical/a0_core/qfd_tile_nk_a0c.sv:173$4'.
+Creating decoders for process `\qfd_tile_nk_a0c.$proc$rtl/physical/a0_core/qfd_tile_nk_a0c.sv:179$13'.
+     1/1: $0\g_icg.dr[7:0]
+Creating decoders for process `\qfd_tile_nk_a0c.$proc$rtl/physical/a0_core/qfd_tile_nk_a0c.sv:170$3'.
+Creating decoders for process `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010.$proc$rtl/physical/a0_core/ot_a0_icg_hop.sv:33$31'.
+     1/1: $0\g_kn.h[1:0]
+
+7.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+7.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\qfd_tile_nk_a0c.\g_icg.nv_f' using process `\qfd_tile_nk_a0c.$proc$rtl/physical/a0_core/qfd_tile_nk_a0c.sv:173$4'.
+  created $dff cell `$procdff$40' with positive edge clock.
+Creating register for signal `\qfd_tile_nk_a0c.\g_icg.dr' using process `\qfd_tile_nk_a0c.$proc$rtl/physical/a0_core/qfd_tile_nk_a0c.sv:179$13'.
+  created $adff cell `$procdff$45' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_tile_nk_a0c.\g_icg.go_f' using process `\qfd_tile_nk_a0c.$proc$rtl/physical/a0_core/qfd_tile_nk_a0c.sv:170$3'.
+  created $dff cell `$procdff$46' with positive edge clock.
+Creating register for signal `\qfd_tile_nk_a0c.\g_icg.go_h' using process `\qfd_tile_nk_a0c.$proc$rtl/physical/a0_core/qfd_tile_nk_a0c.sv:170$3'.
+  created $dff cell `$procdff$47' with positive edge clock.
+Creating register for signal `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010.\g_kn.h' using process `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010.$proc$rtl/physical/a0_core/ot_a0_icg_hop.sv:33$31'.
+  created $adff cell `$procdff$52' with positive edge clock and positive level reset.
+
+7.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+7.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `qfd_tile_nk_a0c.$proc$rtl/physical/a0_core/qfd_tile_nk_a0c.sv:173$4'.
+Found and cleaned up 2 empty switches in `\qfd_tile_nk_a0c.$proc$rtl/physical/a0_core/qfd_tile_nk_a0c.sv:179$13'.
+Removing empty process `qfd_tile_nk_a0c.$proc$rtl/physical/a0_core/qfd_tile_nk_a0c.sv:179$13'.
+Removing empty process `qfd_tile_nk_a0c.$proc$rtl/physical/a0_core/qfd_tile_nk_a0c.sv:170$3'.
+Removing empty process `$paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010.$proc$rtl/physical/a0_core/ot_a0_icg_hop.sv:33$31'.
+Cleaned up 2 empty switches.
+
+7.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000000.
+Optimizing module qfd_tile_nk_a0c.
+<suppressed ~15 debug messages>
+Optimizing module $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010.
+<suppressed ~3 debug messages>
+Optimizing module ICGx8DC_ASAP7_75t_R.
+
+8. Executing FLATTEN pass (flatten design).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_node (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_lsl7 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_lsl6 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_lsl5 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_lsl4 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_lsl3 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_lsl2 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_lsl1 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_lsl0 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_fa3 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_fa2 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_rn (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_rs (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_de (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_dw (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_rnw (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_rsw (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_tx7 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_tx6 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_tx5 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_tx4 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_tx3 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_tx2 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_tx1 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_tx0 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_rp9 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_rp8 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_rp7 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_rp6 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_rp5 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_rp4 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_rp3 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_rp2 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_rp1 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_rp0 (found keep_hierarchy attribute).
+Keeping qfd_tile_nk_a0c.g_icg.g_hop.u_hop_ck (found keep_hierarchy attribute).
+Deleting now unused module ICGx8DC_ASAP7_75t_R.
+<suppressed ~2 debug messages>
+
+9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qfd_tile_nk_a0c..
+Finding unused cells or wires in module $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000000..
+Removed 6 unused cells and 47 unused wires.
+<suppressed ~25 debug messages>
+
+10. Printing statistics.
+
+=== qfd_tile_nk_a0c ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       65 wires
+     2672 wire bits
+       55 public wires
+     2641 public wire bits
+       10 ports
+     2584 port bits
+       19 cells
+        1   $adff
+        3   $dff
+        2   $logic_not
+        2   $mux
+        5   $or
+        2   $reduce_bool
+        2   $reduce_or
+        1   $sub
+        1   qfd_tile_nk_rp2_45
+       36 submodules
+        4   $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000000
+       32   $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010
+
+=== $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        8 wires
+       10 wire bits
+        6 public wires
+        7 public wire bits
+        5 ports
+        5 port bits
+        4 cells
+        1   $adff
+        1   $and
+        2   $or
+
+=== $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+        6 wire bits
+        5 public wires
+        5 public wire bits
+        5 ports
+        5 port bits
+        2 cells
+        1   $and
+        1   $or
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+      155 qfd_tile_nk_a0c
+        2 $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000000
+        4 $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010
+
+        +----------Count including submodules.
+        | 
+      345 wires
+     3016 wire bits
+      267 public wires
+     2885 public wire bits
+      190 ports
+     2764 port bits
+        - memories
+        - memory bits
+        - processes
+      155 cells
+       33   $adff
+       36   $and
+        3   $dff
+        2   $logic_not
+        2   $mux
+       73   $or
+        2   $reduce_bool
+        2   $reduce_or
+        1   $sub
+        1   qfd_tile_nk_rp2_45
+       36 submodules
+        4   $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000000
+       32   $paramod\ot_a0_icg_hop\K=s32'00000000000000000000000000000010
+
+End of script. Logfile hash: 73d749db2a, time: 0.04s, user: 0.04s, system: 0.01s, MEM: 23.30 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+Time spent: 39% 8x read_verilog (0 sec), 20% 1x chparam (0 sec), ...

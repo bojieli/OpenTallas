@@ -4,6 +4,9 @@
 // Stimulus (gen_tb.py A0 equiv pattern + gating phases): x line / n data toggle EVERY cycle (also while idle); 5 commands
 // (all banks) spaced 1200; idle stretches with and without node traffic; n valid every 11 cycles in windows; a reset
 // pulse while idle and one while busy; back-to-back go while busy.  +ICG_MUT=n selects an RTL mutant in the ICG=1 side.
+`ifndef TB_ICG
+`define TB_ICG 1   // QC-A0-KITS-13: 2 = B-hop (per-entry gates, relayed enables); build.sh ICG=2
+`endif
 module tb_a0_icg;
 integer NCYC = 12000;
 initial if ($value$plusargs("NCYC=%d", NCYC)) begin end
@@ -15,12 +18,12 @@ wire [513:0] ot, gt, on_, gn;
 wire ohi, olo, ghi, glo;
 `ifdef TB_NL
 qfd_tile_nl_a0c #(.REGROOT_MODE(9), .ROM_TILE(48), .ICG(0)) u_off (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ohi), .tie_lo(olo), .tap(tap), .t_out(ot));
-qfd_tile_nl_a0c #(.REGROOT_MODE(9), .ROM_TILE(48), .ICG(1)) u_on  (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ghi), .tie_lo(glo), .tap(tap), .t_out(gt));
+qfd_tile_nl_a0c #(.REGROOT_MODE(9), .ROM_TILE(48), .ICG(`TB_ICG)) u_on  (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ghi), .tie_lo(glo), .tap(tap), .t_out(gt));
 assign on_ = 0; assign gn = 0;
 localparam TILE = "nl";
 `else
 qfd_tile_nk_a0c #(.REGROOT_MODE(9), .ROM_TILE(48), .ICG(0)) u_off (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ohi), .tie_lo(olo), .tap(tap), .t_out(ot), .n_a(na), .n_b(nb), .n_y(on_));
-qfd_tile_nk_a0c #(.REGROOT_MODE(9), .ROM_TILE(48), .ICG(1)) u_on  (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ghi), .tie_lo(glo), .tap(tap), .t_out(gt), .n_a(na), .n_b(nb), .n_y(gn));
+qfd_tile_nk_a0c #(.REGROOT_MODE(9), .ROM_TILE(48), .ICG(`TB_ICG)) u_on  (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ghi), .tie_lo(glo), .tap(tap), .t_out(gt), .n_a(na), .n_b(nb), .n_y(gn));
 localparam TILE = "nk";
 `endif
 function automatic [378:0] command(input integer bank);
