@@ -28,6 +28,11 @@ for row in side['ports']:
 sys.path.insert(0,str(R/'tools/die_plan'))
 import count_align_bind as CAB
 side=CAB.annotate_table(side,ca,root_settle_cycles=64,strap_form=True)
+import clock_landing_plan as CLP
+old_straps={k:v.get('count_straps',[]) for k,v in raw['partition_types'].items()}
+CLP._ca_strap_pins(raw,side)
+write('count_strap_delta.json',{k:dict(before=old_straps[k],after=v.get('count_straps',[]))
+ for k,v in raw['partition_types'].items() if old_straps[k]!=v.get('count_straps',[])})
 side['note']='Current native perimeter1 CA table + exact data endpoints, approved coherent source candidate; no physical adoption'
 raw['note']+=' | CODEX functional candidate: native perimeter1 CA data counts and actual native START provider; explicit coherent HEAD/ROPE profile'
 rootrel='results/token_pass/qc_functional_0845'
