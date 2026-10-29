@@ -1,20 +1,27 @@
 #!/usr/bin/env python3
 """One-region DME predictor/export coupon; no P&R or STA."""
-import copy,json,sys,time
+import argparse,copy,json,sys,time
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tools'/'die_plan'))
 import schema as S
 import die_trial as D
 from clock_reach import actual_reach,freeze_sites
+import die_sta_related as STA
 
-plan,calfile,mode,out=sys.argv[1:];out=Path(out);out.mkdir(parents=True,exist_ok=True)
+ap=argparse.ArgumentParser(description=__doc__)
+ap.add_argument('plan');ap.add_argument('calfile');ap.add_argument('mode');ap.add_argument('out')
+ap.add_argument('--clock-cal',choices=('none','spice_edge'),default='none',
+                help='explicit raw-model/physical-target conversion using shared inverter late calibration')
+a=ap.parse_args();plan,calfile,mode,out=a.plan,a.calfile,a.mode,a.out
+out=Path(out);out.mkdir(parents=True,exist_ok=True)
+factor={c:STA.spice_cal_factor(c,'inv') if a.clock_cal=='spice_edge' else 1. for c in ('TT','FF')}
 P=S.Plan(S.load(plan),Path(plan))
 D.load_stage_cal(calfile);D.EVEN_LEGS=True;D.DME_ACTUAL_MAX_UM=405. if mode!='baseline' else None
 site=D.clock_site(P) if mode=='body' else D.SiteMap(P)
 cal=json.load(open(calfile));taps=[t for t in D.clock_taps(P) if t[0]=='bk_sel'];early={};targets={}
 for port,_,_,tp in S.core_taps(P,P.parts['bk_sel']['type']):
  vals={c:S.core_tap_early_ps(P,tp,c) for c in ('TT','FF')};targets[('bk_sel',port)]=vals
- if vals['TT']>0:early[('bk_sel',port)]=(vals['TT']+vals['FF'])/2
+ if vals['TT']>0:early[('bk_sel',port)]=(vals['TT']/factor['TT']+vals['FF']/factor['FF'])/2
 start=time.time();dn,root,stats=D.dme_region_tree(site,taps,delay_rep_um=250.,early=early,snake=True,early_mode='merge')
 print('DME_DONE',mode,len(dn),time.time()-start,flush=True)
 nodes={};original={}
@@ -51,10 +58,13 @@ for p,x,y,part,tp,node in ports:
   for cid in path(driver):
    if cid.startswith('b') and cid[1:].isdigit():delay+=co[3]*max(0,len(nodes[int(cid[1:])]['kids'])-1)
   wire=D._man(chain[-1],(x,y));delay+=tapco[0]*wire+tapco[1]*wire*wire
-  delay+=targets.get((part,tp),{}).get(corner,0.)
+  delay=delay*factor[corner]+targets.get((part,tp),{}).get(corner,0.)
   vals[corner]=delay
  rows.append(dict(port=p,part=part,tap=tp,delay_ps=vals))
 summary=dict(mode=mode,taps=len(taps),dme_nodes=len(dn),elapsed_s=time.time()-start,reach=reach,
+             calibration=dict(mode=a.clock_cal,late_factor=factor,stage_model_file=calfile,
+                              scope=cal.get('scope'),early_target='physical ps / corner factor then corner mean',
+                              report_units='raw path * corner factor + physical early ps'),
              window_ps={c:max(r['delay_ps'][c] for r in rows)-min(r['delay_ps'][c] for r in rows) for c in ('TT','FF')},
              stats=stats,rows=rows)
 (out/'summary.json').write_text(json.dumps(summary,indent=1));print('SUMMARY',mode,summary['window_ps'],reach['over_count'],flush=True)
