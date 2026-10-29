@@ -1,0 +1,85 @@
+{
+ "rule": "R-SRAM-ENTRY (C columns, results/hbm_cores_kits_3/mp_rule_c.py)",
+ "kit": "ot_hbm_idx_topk_link_static_edd756c2ceca-_k1c24",
+ "outline_um": [
+  650.16,
+  500.04
+ ],
+ "core_um": [
+  4.32,
+  4.32,
+  645.84,
+  495.72
+ ],
+ "halo_um": 4.32,
+ "clock_entry_um": [
+  324.0,
+  250.56
+ ],
+ "entry_island_um": [
+  319.68,
+  246.24,
+  328.32,
+  254.88
+ ],
+ "n_macros": 8,
+ "masters": {
+  "ot_sram_1r1w_64x512_m1_r2c2": {
+   "w": 171.288,
+   "h": 77.784,
+   "pins_W": 793,
+   "pins_E": 792
+  }
+ },
+ "tried": [
+  {
+   "C": 1,
+   "issues": [
+    "C=1 column 0: stack y [-95.18,596.30] leaves core y [4.32,495.72] (deficit 200.09 um)"
+   ],
+   "esc_max": 0.565
+  },
+  {
+   "C": 2,
+   "issues": [],
+   "esc_max": 0.963
+  }
+ ],
+ "area_um2": {
+  "core": 315243,
+  "macros_with_halo": 124401,
+  "free": 190842
+ },
+ "verdict": "FEASIBLE",
+ "columns": 2,
+ "channel_um": [
+  77.478,
+  144.072,
+  77.394
+ ],
+ "column_x_um": [
+  81.81,
+  397.17
+ ],
+ "escape": [
+  {
+   "channel": 0,
+   "band_um": 73.158,
+   "pins": 3172,
+   "use": 0.892
+  },
+  {
+   "channel": 1,
+   "band_um": 135.432,
+   "pins": 6340,
+   "use": 0.963
+  },
+  {
+   "channel": 2,
+   "band_um": 73.074,
+   "pins": 3168,
+   "use": 0.892
+  }
+ ],
+ "entry_to_far_corner_manhattan_um": 568.08
+}
