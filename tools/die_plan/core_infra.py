@@ -268,6 +268,21 @@ def compile_slice(sl, kd=None):
             raise InfraError("core_tree requires explicitly assigned sink leaves")
         domains = set()
         cts_levels = {}
+        # DIE-KV-14b opt-in core_tree.stage_basis = "total": a CTS-open leaf counts its planned node depth PLUS its
+        # declared CTS-built stage count (leaf.cts_stages, plan-computed from the census), so a planned macro leaf
+        # chain can sit at the SAME total stage count as the register leaves below a CTS-open node (12.8 d1).
+        # Absent (default "node_depth"): the legacy check below, unchanged.
+        basis = tree.get("stage_basis", "node_depth")
+        if basis not in ("node_depth", "total"):
+            raise InfraError(f"core_tree.stage_basis must be node_depth or total, got {basis!r}")
+
+        def _open_stages(leaf, n):
+            if basis != "total":
+                return _cts_levels(leaf, n), 0
+            k = leaf.get("cts_stages")
+            if not isinstance(k, int) or isinstance(k, bool) or k < 1:
+                raise InfraError(f"{n}: stage_basis total needs an integer cts_stages >= 1 on every CTS-open leaf")
+            return k, k
         for leaf in leaves:
             n = leaf["node"]
             if leaf.get("load_class") == "gated_domain":
@@ -279,14 +294,16 @@ def compile_slice(sl, kd=None):
                 if "clone_of" in gd and leaf.get("domain_sinks") != len(gd["members"]):
                     raise InfraError(f"gated_domain leaf {n}: a gate copy's domain is exactly its {len(gd['members'])} members")
                 domains.add(n)
-                levels.add(depth[n])
-                cts_levels[n] = _cts_levels(leaf, n)
+                cts_levels[n], extra = _open_stages(leaf, n)
+                levels.add(depth[n] + extra)
                 continue
             if n not in nn:
                 raise InfraError(f"unknown leaf driver {n}")
-            levels.add(depth[n])
             if leaf.get("cts_open"):
-                cts_levels[n] = _cts_levels(leaf, n)
+                cts_levels[n], extra = _open_stages(leaf, n)
+                levels.add(depth[n] + extra)
+            else:
+                levels.add(depth[n])
             sinks = leaf.get("sinks", [])
             if not sinks:
                 raise InfraError(f"{n}: empty leaf")
