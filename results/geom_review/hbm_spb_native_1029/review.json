@@ -1,0 +1,24 @@
+{
+ "verdict": "PASS-COND PLAN/FF-BANK DESIGN; NO P&R APPROVAL",
+ "picture": "results/hbm_spb_native_1029/banks.png",
+ "viewed": true,
+ "findings": [
+  "Eight regular FFbanks lie outside fullphysicalPHY1050um andEPenvelopes, and do not overlap. Everybit endpoint and every same-bit stage hop accounted for.",
+  "RX/ST392.622um andTX383.196um are maximum Manhattan hop lengths includingactual pincoordinates and actual allocatedcellcentres. Shared bitordering keeps every lane latency uniform.",
+  "RX514 bundles512payload+2STcontrol; STreset synchronous fromdeliveredreset, payloadresetless. TX512resetless. Allfour stages use the same keptprimitive, no invented epoch.",
+  "ExactFFallocation1.35x0.27um,16columns; Tclfailsonactualmaster/row/site mismatch or missing/duplicatecells.",
+  "Clock/reset feeding andbalancedclocktapsfor eightbanks stillrequired beforebuilding, plusphysicalpinaccessG2, PGsolveafterthe103.68umPHYmove, TTsetup/FFholdsignoff.",
+  "ActualboundRTLdirect->4stages(+4bothdirections); oldunmaterializedmodelRX/ST2->4(+2),TX4->4(0). Compiler/staticlink model must adopt both baselines before production token replay."
+ ],
+ "actual_new_ff_per_partition": 4104,
+ "model_extra_ff_per_partition": 1028,
+ "mechanism_proof": {
+  "valid_edges": 11962,
+  "positive_mismatches": 0,
+  "bit_order_mutant_mismatches": 11962,
+  "phase_mutant_mismatches": 11962,
+  "cold_reset": true,
+  "warm_resets": 2,
+  "scope": "consumerportrewriter andfullwidthtransportonly; SIMendpointmodels do notqualify EP/PHY"
+ }
+}
