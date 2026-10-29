@@ -396,6 +396,8 @@ def test_actual_clock_driver_path_and_root_input_have_no_extra_inv_credit(tmp_pa
     root, a, y = (taps['__st__'+x] for x in ('h', P_L, P_ROOT))
     monkeypatch.setattr(DSR, 'CPPR_LCA', True)
     assert a['tree_path'] == P_ROOT and a['stages_from_root'] == 2
+    assert a['leaf_cell'] == 'b1' and a['placement_cell'] == 'b2'
+    assert root['leaf_cell'] is None
     assert DSR.pair_node(a, y) == P_ROOT
     assert DSR.pair_node(root, a) == '__source__'
     assert meta['node_stages']['__source__'] == 0
