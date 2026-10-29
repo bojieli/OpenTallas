@@ -4,7 +4,7 @@ Source branch starts at current KV source ad3075728c2b86bd08bb75f0bc0e1f144fdfb0
 
 Actual inherited jobs collected without replay:
 - intel2 chain /home/ubuntu/tok-kv-2-chain.sh PID645254. Both actual native b5 probe and v2 builds passed at11:42.
-- Probe intel1 /srv/opentallas-scratch2/claude/tok-kv-2-1029/kvl/boot_probe terminal FAIL. Shell chain reports rc0 because inherited wrapper swallows simulation status; actual log is authoritative.
+- Probe intel1 /srv/opentallas-scratch2/claude/tok-kv-2-1029/kvl/boot_probe terminal FAIL. Shell chain reports rc0 although ot-run output explicitly reports remote unit oth-ubuntu-3481359-1793299350 exit3; run_kvl correctly exits3 and simulation exit file is1. This is an ot-run client return-code propagation issue, not a Qwen classifier failure; shared-flow owner notified. Actual log is authoritative.
 - Probe reload33397 clears both installed-base seen bits; first cal_start38393 then f_early1/dcal_fault1 at38394. This confirms the proposed reload fault cause on actual vehicle.
 - Repaired v2 actual run retains both base seen bits through reload33397 and cal_start38393; dcal_fault remains0. Independent epoch_abort STILL rises38406, FAR_FAULT follows, transport80/link_up10 at38558. BOOT_PASS at40085 qualifies loading only, not native calendar execution. No full layer/result exists and no36layer continuation is authorized by this result.
 - v2 long POST24000 run remains live and unchanged. Partial log is a snapshot at14:00, not terminal evidence. Old watcher2207412 had exited without launching after original fault (lane TOK-R09:45); do not revive it.
