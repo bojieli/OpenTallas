@@ -318,3 +318,6 @@ Actual coherentcandidate native59 entire svc_obs1 producer measured, ef51ab5ef+6
 
 ## CODEX notes 2026-10-29 08:55 PDT
 CurrentQCfunctionalbind nowownedhere(QC-001), codex/qc-functional-0845. Exactd0b301physicalplan lackednativeCAdataupdates:234/2525ports differ(aggregate−168portcycles,notrate); QCownerapprovedONEcoherentsourcecandidate nativeperimeter1CA+3266START+profile3ones+INNERWIT8, physicalunadopted. Freshowncurrent-sourceELABPASS epyc2unit3507624(84modules/10full/39lib) preservesr56lineage. Firstbindfailed40TYPE_SPLIT because rawplannerCA lacksstrap_form; correctedusingcanonicalannotate_table(strap_form=True), bind2LIVEepyc2unit3535401; R8freshnext. NootherWT/jobtouched. Rootproviderinternalresetjoinwillneedvalidatedsl_E0_fw.rst_o_0 net; FLOWaware.
+
+## PARKED CODEX 2026-10-29 09:03 PDT — explicit Claude reset
+Qwen source/producer READYc61781d53/ef51ab5ef/6ed59d9b4; nativeKV proofunit121042+continuationwatcher2207412 untouchedWAIT. HEAD327laneconstants READYd743582a8+1c4746e62 (raw187/currentCA330/latestFTcritical+6). CurrentQCfunctional WIP63d7fd532 parked: freshELABPASS; bind4FAIL242(216stalecachedlandinglatencies,25R8/typesplits,1downstreamEMIT). Exactnext/PARKED.txt and fullCODEX-LOG09:03. No newengineering/jobsafterreset.
