@@ -918,7 +918,7 @@ def reach_balance(nodes, site, rep_um, even):
     for i, nd in nodes.items():
         if nd["parent"] is not None:
             kids[nd["parent"]].append(i)
-    add, cur = {}, {}
+    add, cur, cur_wire, cur_stages = {}, {}, {}, {}
     for i, nd in sorted(nodes.items()):
         if nd["parent"] is None:
             continue
@@ -927,6 +927,9 @@ def reach_balance(nodes, site, rep_um, even):
         if chain is None:
             continue
         cur[i] = chain_ps(chain)
+        actual = [(p["x"],p["y"])] + list(fix) + [(nd["x"],nd["y"])] if fix is not None else chain
+        cur_wire[i] = sum(chain_spans(actual))
+        cur_stages[i] = len(actual)-1
         if fix is not None:
             d = chain_ps([(p["x"], p["y"])] + list(fix) + [(nd["x"], nd["y"])]) - cur[i]
             nd["reach_fix"]["added_ps_model"] = round(d, 3)
@@ -957,18 +960,28 @@ def reach_balance(nodes, site, rep_um, even):
             if i != root and owe > REACH_PAD_TOL_PS:
                 nd, p = nodes[i], nodes[nodes[i]["parent"]]
                 r = None
-                if i not in add and i in cur and not nd.get("physical_leg"):
+                cost = cur.get(i, 0.) + add.get(i, 0.)
+                if i in cur:
                     pa, q = (p["x"], p["y"]), (nd["x"], nd["y"])
-                    r = snake_leg(site, pa, q, cur[i] + owe, rep_um)
-                    if r is not None and even and (len(r[0]) + 1) % 2:
+                    r = snake_leg(site, pa, q, cost + owe, rep_um)
+                    if r is not None and (even and (len(r[0]) + 1) % 2 or
+                            max(chain_spans([pa]+list(r[0])+[q])) > REP_REACH_MAX_UM + 1e-6):
                         r = None
                 if r is not None:
+                    if nd.get("physical_leg") or DME_ACTUAL_MAX_UM is not None:
+                        # physical_leg wins over snake during export. Replace the
+                        # immutable planned chain explicitly, priced on these
+                        # same cells; a snake key alone would silently do nothing.
+                        pl = physical_leg(site,pa,q,rep_um,[pa]+list(r[0])+[q])
+                        nd["physical_leg"] = pl
                     nd["snake"] = [list(x) for x in r[0]]
-                    nd["reach_pad"] = dict(pad_ps=round(owe, 3), got_ps=round(r[1] - cur[i], 3),
-                                           added_wire_um=round(r[2], 3))
+                    wire_delta = sum(chain_spans([pa]+list(r[0])+[q])) - cur_wire[i]
+                    nd["reach_pad"] = dict(pad_ps=round(owe, 3), got_ps=round(r[1] - cost, 3),
+                                           added_wire_um=round(wire_delta, 3),
+                                           added_stages=len(r[0])+1-cur_stages[i])
                     rep["pads"] += 1
-                    rep["pad_wire_um"] = round(rep["pad_wire_um"] + r[2], 3)
-                    owe -= r[1] - cur[i]
+                    rep["pad_wire_um"] = round(rep["pad_wire_um"] + wire_delta, 3)
+                    owe -= r[1] - cost
                     if abs(owe) <= REACH_PAD_TOL_PS:
                         owe = 0.0
                     if owe < 0:          # overshoot: the snake's delay quantum; record, never negative pads below
