@@ -1,0 +1,34 @@
+{
+  "clock_cells_before": 1968,
+  "clock_cells_after": 1968,
+  "clock_geometry_identical": false,
+  "clock_graph_identical": true,
+  "clock_sink_set_identical": true,
+  "clock_sink_geometry_identical": false,
+  "unhandled_driver_before": [],
+  "unhandled_driver_after": [],
+  "changed_clock_geometry": [
+    {
+      "name": "clkbuf_leaf_560_clk",
+      "old": [
+        "BUFx24_ASAP7_75t_R",
+        8.532,
+        258.66,
+        10.152,
+        258.93
+      ],
+      "new": [
+        "BUFx24_ASAP7_75t_R",
+        8.856,
+        257.85,
+        10.476,
+        258.12
+      ]
+    }
+  ],
+  "changed_sink_geometry_count": 30,
+  "geometry_sha_before": "147b7c896a09cb9cab3e159fd683c3d2f0961877448f8e974bfe3f2e5cb17f17",
+  "geometry_sha_after": "0bfd773c22cb7c0a9d36ceddd9e7910703de221923f5fab07d8b709ad58a0396",
+  "graph_sha_before": "a203bb282d9222be8dc89ac4ebfc379fdca816c389943e316cf61e02654fb953",
+  "graph_sha_after": "a203bb282d9222be8dc89ac4ebfc379fdca816c389943e316cf61e02654fb953"
+}

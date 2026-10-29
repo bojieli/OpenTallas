@@ -1,0 +1,12 @@
+{
+  "reviewer": "/root/hbm/rebal",
+  "personally_viewed": true,
+  "image": "results/hbm_rebal_takeover_1029/final_grt/actual_grt.png",
+  "verdict": "FAIL FOR NEXT STAGE",
+  "findings": [
+    "macrofreecompactframe/reach387.75/0>405 retained",
+    "oneclockbufferand30sinkbodiesmoved; clockgraph/masters/sinksidentical",
+    "freshselectedRC TT+18.89/FF\u22120.23",
+    "fixedboundaryinsertionTTdev48.05/FF39.82 exceeds20; no vclkrebind"
+  ]
+}
