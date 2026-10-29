@@ -1,0 +1,246 @@
+
+-- Running command `read_verilog -sv rtl/ot_hdc_delay.sv rtl/ot_v41_kreg.sv tag_helper.sv; chparam -set W 13 -set D 8 -set GROUPS 16 ot_v41_bf_tag_delay; hierarchy -top ot_v41_bf_tag_delay; proc; flatten; opt; write_json /srv/opentallas-scratch2/claude/codex-s81-ce12-tag-1029/tag16.json' --
+
+1. Executing Verilog-2005 frontend: rtl/ot_hdc_delay.sv
+Parsing SystemVerilog input from `rtl/ot_hdc_delay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_delay'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/ot_v41_kreg.sv
+Parsing SystemVerilog input from `rtl/ot_v41_kreg.sv' to AST representation.
+Generating RTLIL representation for module `\ot_v41_kreg'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: tag_helper.sv
+Parsing SystemVerilog input from `tag_helper.sv' to AST representation.
+Generating RTLIL representation for module `\ot_v41_bf_tag_delay'.
+Successfully finished Verilog frontend.
+Parameter \W = 13
+Parameter \D = 8
+Parameter \GROUPS = 16
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_v41_bf_tag_delay'.
+Parameter \W = 13
+Parameter \D = 8
+Parameter \GROUPS = 16
+Generating RTLIL representation for module `$paramod$d2dd4204f3084234f69154a741af1a69e2b81a9d\ot_v41_bf_tag_delay'.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \ot_v41_bf_tag_delay
+Used module:     \ot_hdc_delay
+Used module:     \ot_v41_kreg
+Parameter \W = 13
+Parameter \D = 7
+
+5.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 13
+Parameter \D = 7
+Generating RTLIL representation for module `$paramod$60402fba5dd79093a7c98f43cfabb99b631af536\ot_hdc_delay'.
+Parameter \W = 13
+
+5.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_v41_kreg'.
+Parameter \W = 13
+Generating RTLIL representation for module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Parameter \W = 13
+Found cached RTLIL representation for module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Parameter \W = 13
+Found cached RTLIL representation for module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Parameter \W = 13
+Found cached RTLIL representation for module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Parameter \W = 13
+Found cached RTLIL representation for module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Parameter \W = 13
+Found cached RTLIL representation for module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Parameter \W = 13
+Found cached RTLIL representation for module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Parameter \W = 13
+Found cached RTLIL representation for module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Parameter \W = 13
+Found cached RTLIL representation for module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Parameter \W = 13
+Found cached RTLIL representation for module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Parameter \W = 13
+Found cached RTLIL representation for module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Parameter \W = 13
+Found cached RTLIL representation for module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Parameter \W = 13
+Found cached RTLIL representation for module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Parameter \W = 13
+Found cached RTLIL representation for module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Parameter \W = 13
+Found cached RTLIL representation for module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Parameter \W = 13
+Found cached RTLIL representation for module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+
+5.4. Analyzing design hierarchy..
+Top module:  \ot_v41_bf_tag_delay
+Used module:     $paramod$60402fba5dd79093a7c98f43cfabb99b631af536\ot_hdc_delay
+Used module:     $paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101
+
+5.5. Analyzing design hierarchy..
+Top module:  \ot_v41_bf_tag_delay
+Used module:     $paramod$60402fba5dd79093a7c98f43cfabb99b631af536\ot_hdc_delay
+Used module:     $paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101
+Removing unused module `\ot_v41_kreg'.
+Removing unused module `\ot_hdc_delay'.
+Removed 2 unused modules.
+
+6. Executing PROC pass (convert processes to netlists).
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_v41_bf_tag_delay.$proc$tag_helper.sv:24$4'.
+Removing empty process `ot_v41_bf_tag_delay.$proc$tag_helper.sv:24$4'.
+Cleaned up 1 empty switch.
+
+6.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+6.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 2 assignments to connections.
+
+6.4. Executing PROC_INIT pass (extract init attributes).
+
+6.5. Executing PROC_ARST pass (detect async resets in processes).
+
+6.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+6.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101.$proc$rtl/ot_v41_kreg.sv:28$6'.
+Creating decoders for process `$paramod$60402fba5dd79093a7c98f43cfabb99b631af536\ot_hdc_delay.$proc$rtl/ot_hdc_delay.sv:35$5'.
+
+6.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+6.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101.\q' using process `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101.$proc$rtl/ot_v41_kreg.sv:28$6'.
+  created $dff cell `$procdff$7' with positive edge clock.
+Creating register for signal `$paramod$60402fba5dd79093a7c98f43cfabb99b631af536\ot_hdc_delay.\genblk1.g_line.line' using process `$paramod$60402fba5dd79093a7c98f43cfabb99b631af536\ot_hdc_delay.$proc$rtl/ot_hdc_delay.sv:35$5'.
+  created $dff cell `$procdff$8' with positive edge clock.
+
+6.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+6.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101.$proc$rtl/ot_v41_kreg.sv:28$6'.
+Removing empty process `$paramod$60402fba5dd79093a7c98f43cfabb99b631af536\ot_hdc_delay.$proc$rtl/ot_hdc_delay.sv:35$5'.
+Cleaned up 0 empty switches.
+
+6.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_bf_tag_delay.
+Optimizing module $paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101.
+Optimizing module $paramod$60402fba5dd79093a7c98f43cfabb99b631af536\ot_hdc_delay.
+
+7. Executing FLATTEN pass (flatten design).
+Keeping ot_v41_bf_tag_delay.g_group[15].u_copy (found keep_hierarchy attribute).
+Keeping ot_v41_bf_tag_delay.g_group[14].u_copy (found keep_hierarchy attribute).
+Keeping ot_v41_bf_tag_delay.g_group[13].u_copy (found keep_hierarchy attribute).
+Keeping ot_v41_bf_tag_delay.g_group[12].u_copy (found keep_hierarchy attribute).
+Keeping ot_v41_bf_tag_delay.g_group[11].u_copy (found keep_hierarchy attribute).
+Keeping ot_v41_bf_tag_delay.g_group[10].u_copy (found keep_hierarchy attribute).
+Keeping ot_v41_bf_tag_delay.g_group[9].u_copy (found keep_hierarchy attribute).
+Keeping ot_v41_bf_tag_delay.g_group[8].u_copy (found keep_hierarchy attribute).
+Keeping ot_v41_bf_tag_delay.g_group[7].u_copy (found keep_hierarchy attribute).
+Keeping ot_v41_bf_tag_delay.g_group[6].u_copy (found keep_hierarchy attribute).
+Keeping ot_v41_bf_tag_delay.g_group[5].u_copy (found keep_hierarchy attribute).
+Keeping ot_v41_bf_tag_delay.g_group[4].u_copy (found keep_hierarchy attribute).
+Keeping ot_v41_bf_tag_delay.g_group[3].u_copy (found keep_hierarchy attribute).
+Keeping ot_v41_bf_tag_delay.g_group[2].u_copy (found keep_hierarchy attribute).
+Keeping ot_v41_bf_tag_delay.g_group[1].u_copy (found keep_hierarchy attribute).
+Keeping ot_v41_bf_tag_delay.g_group[0].u_copy (found keep_hierarchy attribute).
+Deleting now unused module $paramod$60402fba5dd79093a7c98f43cfabb99b631af536\ot_hdc_delay.
+<suppressed ~1 debug messages>
+
+8. Executing OPT pass (performing simple optimizations).
+
+8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101.
+Optimizing module ot_v41_bf_tag_delay.
+
+8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Computing hashes of 1 cells of `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Finding duplicate cells in `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Finding identical cells in module `\ot_v41_bf_tag_delay'.
+Computing hashes of 18 cells of `\ot_v41_bf_tag_delay'.
+Finding duplicate cells in `\ot_v41_bf_tag_delay'.
+Removed a total of 0 cells.
+
+8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_v41_bf_tag_delay..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101.
+  Optimizing cells in module \ot_v41_bf_tag_delay.
+Performed a total of 0 changes.
+
+8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Computing hashes of 1 cells of `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Finding duplicate cells in `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Finding identical cells in module `\ot_v41_bf_tag_delay'.
+Computing hashes of 18 cells of `\ot_v41_bf_tag_delay'.
+Finding duplicate cells in `\ot_v41_bf_tag_delay'.
+Removed a total of 0 cells.
+
+8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101..
+Finding unused cells or wires in module \ot_v41_bf_tag_delay..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~2 debug messages>
+
+8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101.
+Optimizing module ot_v41_bf_tag_delay.
+
+8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_v41_bf_tag_delay..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101.
+  Optimizing cells in module \ot_v41_bf_tag_delay.
+Performed a total of 0 changes.
+
+8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Computing hashes of 1 cells of `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Finding duplicate cells in `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101'.
+Finding identical cells in module `\ot_v41_bf_tag_delay'.
+Computing hashes of 18 cells of `\ot_v41_bf_tag_delay'.
+Finding duplicate cells in `\ot_v41_bf_tag_delay'.
+Removed a total of 0 cells.
+
+8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101..
+Finding unused cells or wires in module \ot_v41_bf_tag_delay..
+
+8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_v41_kreg\W=s32'00000000000000000000000000001101.
+Optimizing module ot_v41_bf_tag_delay.
+
+8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+9. Executing JSON backend.
+
+End of script. Logfile hash: a14de89378, time: 0.02s, user: 0.02s, system: 0.00s, MEM: 22.44 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+Time spent: 33% 4x read_verilog (0 sec), 21% 1x chparam (0 sec), ...
