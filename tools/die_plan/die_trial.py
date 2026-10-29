@@ -242,7 +242,7 @@ def _cut_vertical(rect, holes):
     return out
 
 
-def abstract_lef(P, tn, slots_only_pins=False, islands=None, module_name=None, landing_infra=False):
+def abstract_lef(P, tn, slots_only_pins=False, islands=None, module_name=None, landing_infra=False, reset_infra=False):
     """partition abstract (see module doc).  Returns (lef text, stats).  islands (CLOCK-128-R7, opt-in): type-frame
     island windows: no M1-M3 OBS and no ISLAND_PG_CUT PG stripe inside them."""
     t = P.types[tn]
@@ -275,6 +275,13 @@ def abstract_lef(P, tn, slots_only_pins=False, islands=None, module_name=None, l
         half=gen_phys.tap_pin_height(P,tn,name)/2
         L += pin(name, "INPUT", "SIGNAL" if name == "arst_n" else "CLOCK",
                  [(top, x - tw, y - half, x + tw, y + half)])
+    if reset_infra:
+        import reset_route
+        for p in reset_route.scalar_pins(P, tn):
+            x,y = p["xy_um"]
+            half = gen_phys.tap_pin_height(P, tn, p["name"])/2
+            L += pin(p["name"], "OUTPUT", "SIGNAL",
+                     [(p["layer"], x-tw, y-half, x+tw, y+half)])
     if landing_infra:
         import landing_route
         for p in landing_route.scalar_pins(P, tn):
@@ -3272,7 +3279,7 @@ def abutted_pin_check(P, type_pin_xy=None, tol=1e-3):
                 verdict="PASS" if not bad else "FAIL")
 
 
-def route_netlist(P, type_bits, channel_nets=True, landing_infra=False):
+def route_netlist(P, type_bits, channel_nets=True, landing_infra=False, reset_infra=False):
     """die route netlist: every instance's ft slots S_i[b] -> S_o[b] joined (one net per bit), arst_n on the reset
     spine.  type_bits {type: {bus: nbits}} from the plan pins.
     INFRA-FIRST-QC-R21 (NUMBER-CHECK-QC-R20): every partition<->partition port that crosses a planned die channel
@@ -3286,6 +3293,10 @@ def route_netlist(P, type_bits, channel_nets=True, landing_infra=False):
     if landing_infra:
         import landing_route
         landing = landing_route.network(P)
+    reset = None
+    if reset_infra:
+        import reset_route
+        reset = reset_route.network(P)
     provisional = landing['provisional'] if landing else []
     v = [f"module {sv(P.name)}_route ({', '.join(['rst_n']+provisional)});", "  input rst_n;"]
     if landing:
@@ -3294,6 +3305,8 @@ def route_netlist(P, type_bits, channel_nets=True, landing_infra=False):
     if landing:
         v += [f'  wire {name};' for name in landing['wires']]
         v += [f'  assign {name} = {wire};' for name,wire in sorted(landing['boundary_aliases'].items())]
+    if reset:
+        v += [f'  wire {name};' for name in reset['wires']]
     insts, nft = [], 0
     smod = standin_module_names(P)
     width, ftw, slots = {}, {}, {}
@@ -3358,7 +3371,9 @@ def route_netlist(P, type_bits, channel_nets=True, landing_infra=False):
             v.append(f"  wire [{width[w] - 1}:0] {w};")
     for n, p in sorted(P.parts.items()):
         tn = p["type"]
-        conns = [".arst_n(rst_n)"] + [f".{bus}({find(w)})" for (pn, bus), w in sorted(extra.items()) if pn == n]
+        rconns = ([f".{pin}({wire})" for pin,wire in sorted(reset["bindings"][n].items())]
+                  if reset else [".arst_n(rst_n)"])
+        conns = rconns + [f".{bus}({find(w)})" for (pn, bus), w in sorted(extra.items()) if pn == n]
         if landing:
             conns += [f'.{pin}({wire})' for pin,wire in sorted(landing['bindings'].get(n,{}).items())]
         for sname, w, k in slots[n]:
@@ -4145,7 +4160,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
               clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
               region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
-              cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None, landing_infra=False):
+              cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None, landing_infra=False, reset_infra=False):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     landing = None
@@ -4201,7 +4216,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
             (out / "abstracts" / f"{smod[tn]}.lef").write_text(txt)
             ab[tn] = dict(source="closed view", path=str(v))
         else:
-            txt, st = abstract_lef(P, tn, islands=iw.get(tn), module_name=smod[tn], landing_infra=landing_infra)
+            txt, st = abstract_lef(P, tn, islands=iw.get(tn), module_name=smod[tn], landing_infra=landing_infra, reset_infra=reset_infra)
             (out / "abstracts" / f"{smod[tn]}.lef").write_text(txt)
             ab[tn] = dict(source="plan abstract", **st)
         ab[tn]["physical_module"] = smod[tn]
@@ -4239,7 +4254,13 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
     # grt
-    rv, nft = route_netlist(P, type_bits, landing_infra=landing_infra)
+    rv, nft = route_netlist(P, type_bits, landing_infra=landing_infra, reset_infra=reset_infra)
+    if reset_infra:
+        import reset_route
+        reset_net = reset_route.network(P)
+        (out / 'grt/reset_network.json').write_text(json.dumps(reset_net, indent=1))
+        meta['reset_infra'] = {key: reset_net[key] for key in
+                               ('root','max_release_cycles','max_hop_um','raw_loads','scope')}
     if landing_infra:
         meta['landing_infra'] = dict(edges=landing['edges'], wires=len(landing['wires']),
             provisional_start_inputs=len(landing['boundary_inputs']),
@@ -4938,6 +4959,9 @@ def main(argv=None):
                    "mesh.json (derived trunk sites): open plan-computed island windows (no M1-M3 OBS, M7 PG cut) in "
                    "every partition abstract, identical per type; island_windows.json lists them")
     k.add_argument("--island-margin-um", type=float, default=ISLAND_MARGIN_UM)
+    k.add_argument("--reset-infra", action="store_true",
+                   help="Export native registered reset output pins and real neighbor wavefront nets; raw reset "
+                        "connects only to the one existing root partition. No physical timing qualification.")
     k.add_argument("--landing-infra", action="store_true",
                    help="Opt-in scalar landing clock/control pins and real edge connectivity in the route target. "
                         "START boundary inputs remain explicitly provisional until actual infrastructure import.")
@@ -5040,6 +5064,7 @@ def main(argv=None):
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
                       site_slide=a.tree_site_slide, regions=a.region_trees, landing_infra=a.landing_infra,
+                      reset_infra=a.reset_infra,
                       tree_form=a.tree_form,
                       tree_opts={**{k: float(v) for k, v in (o.split("=") for o in a.tree_opt)},
                                  **({"feed": a.feed} if a.tree_form in ("link_fishbone", "link_htree") else {})},
