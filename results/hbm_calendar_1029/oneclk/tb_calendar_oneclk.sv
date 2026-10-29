@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ps/1fs
 `default_nettype none
 // H-NETLIST 0600: folded calendar+target master hfd_hgi_vm_calendar_f20 (strap tgt) == the die's former two-tile
 // composition ot_static_program_target #(TARGET=T) -> hfd_hgi_vm_calendar on EVERY edge (all outputs incl.
@@ -6,7 +6,7 @@
 module tb_vm_calendar_f20_eq;
     parameter integer MUT=0, SEED=7;
     localparam [7:0] T=8'd57;
-    reg clk=0; always #5 clk=~clk;
+    reg clk=0; always #416.5 clk=~clk;
     reg rst_n=0, cfg_v=0, desc_v=0, launch_v=0;
     reg [7:0] cfg_target=0; reg [11:0] cfg_addr=0, desc_base=0; reg [255:0] cfg_data=0; reg [12:0] desc_limit=0; reg [15:0] desc_loops=0;
     // reference two-tile composition
