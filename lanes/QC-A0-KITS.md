@@ -198,3 +198,9 @@ SUCCESSOR (QC-A0-KITS-13):
  b. NL ICG0 placement: if it is still not converged, ask COORD to stop exact unit 582810 (DEFAULT 30 min: stop it). Rerun once with the reset6 GPL settings/snapshot behaviour, and compare 3_3 overflow and HPWL to reset6 first.
  c. NK ICG1 enable: g_icg.dr reach 634 um, same family as the NL ICG_EN -610 ps. The structural fix is ICG enable launch placed and clocked at the ICG (or per-cluster ICG replicas). This needs an estimate first.
  d. Node flow record: per the COORD ruling on the ASK.
+
+## QC-A0-KITS-13 2026-10-29 07:19 PDT — RESULT (claude/qc-a0-kits-13-1029@b95168042, results/qc_a0_kits_13_1029/README.md)
+- (b) Stopped Codex unit oth-ubuntu-582810-1793274530 only. The ONE reset6-settings rerun (8 threads, the only difference) was bit-identical to fail1, so I stopped my own container at it. 5070. Cause: min overflow 0.2043 never reaches reset6's TD-2/divergence-revert point. ASK queued: -overflow 0.21 (DEFAULT run).
+- (c) NK V1/V2 estimate sent to DIE-QC-31 + QC-IMPORT-1. Area is not the limit (7% upper-half utilisation). The node W face (2,051 pins) goes to the tile W pins, so 2,056 bits cross the tile. V1 node->W edge has a legal site (node (20.52, 688.656), rawfault +60.70 um), and H cuts drop to the NL range. V2 opens <= 21 um and keeps the crossing. DEFAULT V1.
+- (d) ICG enable: Form A rejected (moves the -650 ps). Form B with one en fails reach (1,050-1,354 vs ~590 um). B-hop (replica per cluster, enable rides the data hops) recommended. Needs shared RTL -> ASK queued.
+- LIVE: the NK GRT probe (KITS-12) ap-ageom-qca0k12nk-grt-1852076, ~08:40 PDT. Collect intel2 qc-a0-kits-12-1029/nk_geom/{grt.log,cong.rpt,auto_geom.json}, then remove wt/qc-a0-kits-12 (geom_rules runs from it).
