@@ -142,3 +142,27 @@ READY codex/qc-programme-1351@9cb33edd1 (includes5ab863087 and1fba735f2). Actual
 Compiler requires explicit post-edge publication vs pre-edge sampling basis; no guessed HOST origin. GEN head_prepare_age previously printed unsafe filler scalar; now default BLOCKED2, head_prepare_edges=null; --component-only yields filler/min-user0 only. Typed component HOST interval+GEN identity+held reservation positive13 passes; wrong tuple/GEN, ended pulse and early reservation12 rejected; component schedule cannot qualify production.23 focused tests PASS. No RTL cycle change. Actual current HOST/context publication date and selected shared programme remain the precise next blocker; R29 source/plan narrowing owned by Qwen, no re-ELAB launched.
 
 CODEX14:55: ExistingB48frame-mutantterminalCAUGHT839frames/1image/bootfault4037/exit1; originalnominalBOOTPASSbutnativecalendarFAIL27998 preservedcombinedFAIL. FINALCAL184tinyPOST0positive/latePOST5negative+18guardsPASS. Readerc677READYqk_coresreview/foldONEq6, actualbootgrouprawFAIL/qualifiedPASS+8guards, rawphysicalstages/IDs/PVextraspreserved; nofullnative/tokenPASS. q6ONLYsys_creset/STARTrelease95→97(+2), HHP4parallelphase+1/+4FF withREOPENfirstwrite+BOOT_ENDfirstissueguards,0token/data cycles. Allownjobs terminal; sourceprogramme/transactiontrace childcontinues.
+
+## [TOK-QK-PEER-1] 2026-10-28 20:36 PDT RESULT
+- Branch: claude/tok-qk-peer-1-1028@bece5e5da2 (results only: results/token_pass/qc_kv_link_bind5_1028). Runs are in intel1:/srv/opentallas-scratch2/claude/tok-qk-peer-1-1028.
+- Inputs: KV bind5 (DIE-KV-16) + QC fresh_v6 (the latest QC bind; there is no DIE-QC-23/ONEQC bind).
+- regen_constants --peer on QC (v6): PASS 25 OK. On KV bind5: PASS 40 OK / 2 WARN (CHECKED).
+- Seams now 90,90,88,88,88,78,78 (KV TX 170, TXDP_K 030304aa). Versus XD4/B48 68/66/67 (137, 03030489):
+  - KS_RX +22 (C->K), KS_TX* +22, SK_* +11, KV TX lat +33.
+  - The QC side 2,2,2,3,2,2 / 0a010308 is unchanged.
+  - The "+32 each way" estimate was high.
+- Stale copies:
+  - main physical/die_plan/qwen_compute/bind/bound_r8/regen/constants.json (34/32/31, K 03030443). tools/qwen_tokfunc/xdie_bound reads it.
+  - KV boot_v36 image_bound/kv39/kv41 images (03030443).
+  - XD4.
+  - The composer attention roundtrip 1827.
+- xdie on bind5 (pair image regenerated; the B48 control reproduces the XD4 image sha byte-identically): PASS, 24/24 as expected (CHECKED).
+  - C2K cmd 111 (+22), K2C r31 100 (+11), roundtrip 1990 (+33 vs 1957; +163 vs composer 1827), exposed 212/layer.
+  - Period 7056 / L1-35 246960 / L0 6796 UNCHANGED = priced.
+- Mutants, all FAIL as required (CHECKED):
+  - seam KS_RXV +1: sim only; the TXDP gate passes.
+  - seam SK_TXP +1.
+  - stale B48 image on the bind5 seam: gate + sim.
+  - bound-TXDP K = the B48 word 03030489.
+- ovl4u on the bind5 seam: PASS + 8 negatives; 87539.1 cyc/tok aggregate, unchanged (CHECKED; COMPOSER-ONLY class).
+- tp8 not rerun: QC-only, inputs unchanged.
