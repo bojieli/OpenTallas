@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/wt/die-kv-33-leaf/tools/die_plan/strap_lec.py", line 303, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch2/claude/wt/die-kv-33-leaf/tools/die_plan/strap_lec.py", line 286, in main
+    prepared += lec_type(Ls, Lp, tn, t["module"], GR.wrapper(P, tn, ep, a.rtl_root),
+                                                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/wt/die-kv-33-leaf/tools/die_plan/gen_rtl.py", line 487, in wrapper
+    raise GenError(f"type {tn}: bus {b['name']} is not bound to any leaf port (open {'input' if b['dir'] == 'in' else 'output'})")
+gen_rtl.GenError: type kv3_hg_v1: bus o_ectl_Q_N_eN is not bound to any leaf port (open output)

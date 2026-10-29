@@ -1,0 +1,30 @@
+{
+ "basis": "DIE-HBM-20: price the HBM-034 qcore drop cost (pgp(q1).command -> sucore q0: +10 NE / +7 NW stations = cycles)\nwith the SAME ds S2 schedule model as DIE-HBM-10 tok_rerun_c22.py (accepted_cost g25 rank0, NativeCost, T.schedule).\nBOUND form: every SU record pays the worst +10 cycles serially (no overlap) -- the command bus is a per-record SU\nprogramme command path in the worst reading; a per-programme reading would be ~0.  Run at repo root.",
+ "records_per_unit": {
+  "FUSED": 201,
+  "SM": 1095,
+  "COLL": 642,
+  "DMA": 420,
+  "SU": 1356,
+  "CTL": 197,
+  "ATT": 80,
+  "HC": 80,
+  "IDX": 48,
+  "ARGMAX": 1
+ },
+ "base_cycles": 576702.4178468838,
+ "rows": [
+  {
+   "case": "SU +7 (NW)",
+   "cycles": 583459.3998468837,
+   "cost_pct": 1.172,
+   "tok_s_from_1906": 1883.9
+  },
+  {
+   "case": "SU +10 (NE, bound)",
+   "cycles": 586519.3998468836,
+   "cost_pct": 1.702,
+   "tok_s_from_1906": 1874.1
+  }
+ ]
+}

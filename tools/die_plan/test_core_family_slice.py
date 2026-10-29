@@ -320,3 +320,60 @@ def test_lattice_levelkey_one_key_per_level():
     assert F.lattice_levelkey(("root", None, (0, 0), "B", "entry")) == ("root",)
     assert F.lattice_levelkey(("T01_br", "T0_br", (0, 0), "B", "branch")) == (0, 2, 0)
     assert F.lattice_levelkey(("T01", "T01_br", (0, 0), "B", "leaf")) == (1, 2, 0)
+
+
+# ------------------------------------------------------------------ DIE-S81-30: opt-in keepout_stray (macro leaf plans)
+def _stray_plan():
+    """real maze, one macro wall x 10..50 / y 15..25; leaf U (below the wall) hangs on the root branch ABOVE it."""
+    mz = F.H.Maze((0.0, 0.0, 60.0, 40.0), [("m", (10.0, 15.0, 50.0, 25.0), (10.0, 15.0))], G=1.0, halo=0.0)
+    s = lambda x, y, n: (float(x), float(y), "DFF", n, "CLK")
+    nodes = [("root", None, (30, 38), "BIG", "entry"), ("R2_br", "root", (30, 37), "BIG", "branch"),
+             ("R2", "R2_br", (5, 30), "REP", "rep"),
+             ("X_br", "root", (30, 30), "BIG", "branch"), ("X", "X_br", (30, 32), "BIG", "leaf"),
+             ("U_br", "root", (30, 30), "BIG", "branch"), ("U", "U_br", (30, 10), "BIG", "leaf"),
+             ("V_br", "R2", (5, 8), "BIG", "branch"), ("V", "V_br", (28, 8), "BIG", "leaf")]
+    edge = lambda lv, e, a, b: dict(level=lv, edge=e, segs=[mz.md(a, b)], cells=[mz.path(a, b)])
+    wires = [edge(1, "R2", (30, 37), (5, 30)), edge(2, "X", (30, 30), (30, 32)), edge(2, "U", (30, 30), (30, 10)),
+             edge(2, "V", (5, 8), (28, 8))]
+    leafsinks = {"X": [s(30, 33, "x0")], "U": [s(30, 10, "u0"), s(31, 10, "u1")], "V": [s(27, 8, "v0"), s(29, 8, "v1")]}
+    return dict(mz=mz, nodes=nodes, wires=wires, land={}, leafsinks=leafsinks)
+
+
+def _sinks(P):
+    return sorted(x for v in P["leafsinks"].values() for x in v)
+
+
+def test_keepout_stray_merge_joins_reachable_leaf_and_prunes():
+    P = _stray_plan(); before = _sinks(P)
+    r = F.fix_keepout_strays(P, "merge", 35.0, 70.0)
+    assert len(r) == 1 and r[0]["leaf"] == "U" and r[0]["fixed"] == "merge" and r[0]["into"] == "V"
+    assert r[0]["ratio"] > 1.10 and r[0]["pruned"] == ["U", "U_br"]
+    assert _sinks(P) == before and "U" not in P["leafsinks"]              # every sink once, none moved
+    assert {n[0] for n in P["nodes"]} == {"root", "R2_br", "R2", "X_br", "X", "V_br", "V"}
+    assert {w["edge"] for w in P["wires"]} == {"R2", "X", "V"}
+
+
+def test_keepout_stray_reparent_keeps_own_leaf_same_stage_and_topological():
+    P = _stray_plan()
+    r = F.fix_keepout_strays(P, "reparent", 35.0, 70.0)
+    assert r[0]["fixed"] == "reparent" and r[0]["driver"] == "R2"
+    nd = {n[0]: n for n in P["nodes"]}
+    assert nd["U_br"][1] == "R2" and nd["U"][1] == "U_br"                 # same stage count: branch -> leaf
+    w = next(w for w in P["wires"] if w["edge"] == "U")
+    a, b = w["cells"][0][0], w["cells"][0][-1]
+    assert w["segs"][0] <= 1.10 * (abs(a[0] - b[0]) + abs(a[1] - b[1])) and w["segs"][0] <= 70.0
+    seen = set()
+    for n in P["nodes"]:                                                 # parents before children
+        assert n[1] is None or n[1] in seen; seen.add(n[0])
+
+
+def test_keepout_stray_noop_without_bad_legs_and_mode_checked():
+    P = _stray_plan()
+    P["nodes"] = [n for n in P["nodes"] if n[0] not in ("U", "U_br")]; P["wires"] = [w for w in P["wires"] if w["edge"] != "U"]
+    del P["leafsinks"]["U"]
+    import copy
+    ref = copy.deepcopy({k: P[k] for k in ("nodes", "wires", "leafsinks")})
+    assert F.fix_keepout_strays(P, "merge", 35.0, 70.0) == []
+    assert {k: P[k] for k in ("nodes", "wires", "leafsinks")} == ref
+    with pytest.raises(SystemExit):
+        F.fix_keepout_strays(P, "slide", 35.0, 70.0)

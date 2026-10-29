@@ -1,0 +1,36 @@
+{
+ "src": "/srv/opentallas-scratch2/claude/die-kv-33-1029/sd/plan/die_plan_sd33s.json",
+ "src_sha256": "671d387d0c4f1c839f19873cf2e52a27b078f87ee073a51ef907fa61a34ae9f3",
+ "dst": "plan/die_plan_sd35.json",
+ "dst_sha256": "6bbd9509eec14e02d031819559857b9116747e679382d2a124f2bdff905bd5fc",
+ "patch": [
+  {
+   "op": "add",
+   "path": "/partition_types/kv3_sys_SD/clock/edge_clocks/-",
+   "value": {
+    "port": "clk_clk_phy",
+    "tap_um": [
+     1898.656,
+     354.0
+    ],
+    "period_mult": 1,
+    "source": "hub_C pll.pll_phy (asbuilt sources: pll_phy -> domain clk_phy; bound-top spine clk_clk_phy)",
+    "note": "KV-022 COORD 10-29 14:37 (DIE-KV-35): x6 PHY clock -> serdes .clk_phy (u_fdi_cdc phy side 5259 FF + macro clk pin (1866.24,354.0)); E-rim interior M7 pin at the macro clk pin row; kit clock at the die period (PLL model 1043 ps: 833 is tighter, not relaxed), synchronous with clk per schema (QC clk_serdes form)"
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/kv3_sys_SD_v1/clock/edge_clocks/-",
+   "value": {
+    "port": "clk_clk_phy",
+    "tap_um": [
+     1898.656,
+     354.0
+    ],
+    "period_mult": 1,
+    "source": "hub_C pll.pll_phy (asbuilt sources: pll_phy -> domain clk_phy; bound-top spine clk_clk_phy)",
+    "note": "KV-022 COORD 10-29 14:37 (DIE-KV-35): x6 PHY clock -> serdes .clk_phy (u_fdi_cdc phy side 5259 FF + macro clk pin (1866.24,354.0)); E-rim interior M7 pin at the macro clk pin row; kit clock at the die period (PLL model 1043 ps: 833 is tighter, not relaxed), synchronous with clk per schema (QC clk_serdes form)"
+   }
+  }
+ ]
+}

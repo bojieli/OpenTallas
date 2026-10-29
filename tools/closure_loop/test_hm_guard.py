@@ -81,6 +81,7 @@ proc log_cmd {{args}} {{ lappend ::calls [join $args " "] }}
 proc ot_hold_stats {{}} {{ set s [lindex $::stats 0]; if {{[llength $::stats] > 1}} {{ set ::stats [lrange $::stats 1 end] }}; return $s }}
 proc ot_hm_guard {{a}} {{ set i [lsearch -exact $a -hold_margin]; return [lreplace $a [expr {{$i + 1}}] [expr {{$i + 1}}] {guard_hm}] }}
 proc ot_hold_window_report {{why hist}} {{ puts "STALL $why" }}
+proc ot_hold_structural_gate {{}} {{}}
 {env}
 """
     body = stubs + "\n".join(procs) + "\not_repair_timing {-setup_margin 0 -hold_margin 50 -verbose}\n" \

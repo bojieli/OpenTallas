@@ -487,11 +487,18 @@ proc ot_hold_split {} {
 # endpoint is a register DATA pin (async pins excluded) are touched; register-to-register and output paths are left to
 # the gate (they stay structural).  Clock network, constraints, margins and corners unchanged.  Fail closed: a bit
 # needing more than OT_IO_HOLD_PAD_MAX_CELLS (4) cells, or any insert error, stops the stage.  Runs once per process.
+# OT_IO_HOLD_PAD_STAGE (FLOW-CLOCK-R6 10-29, default cts = unchanged): the stage whose FF hold repair the pad precedes.
+# Kits whose CTS step repairs setup only (SKIP_CTS_REPAIR_TIMING=1 + post_cts_setup.tcl: every KV kit, HBM-CORES-R11 form)
+# first time FF hold in the GRT step, so the CTS-only pad never ran there (E0 e0_ff15: 1,300 input-port -> face-register
+# endpoints left to BUF-only GRT repair, flat at -38.91 for 10k iterations).  grt pads in that step on the synchronized FF
+# scene; the GRT step's own post-repair detailed_placement + incremental GRT legalize and route the cells (no DPL here).
 proc ot_io_hold_pad {} {
   if {![info exists ::env(OT_IO_HOLD_PAD)] || $::env(OT_IO_HOLD_PAD) ne "1"} { return }
   if {[info exists ::ot_io_hold_pad_done]} { return }
   set ::ot_io_hold_pad_done 1
-  if {[ot_hold_stage] ne "cts"} { puts "OT_IO_HOLD_PAD skip: stage [ot_hold_stage] (CTS only)"; return }
+  set want [expr {[info exists ::env(OT_IO_HOLD_PAD_STAGE)] && $::env(OT_IO_HOLD_PAD_STAGE) ne "" ? $::env(OT_IO_HOLD_PAD_STAGE) : "cts"}]
+  if {$want ni {cts grt}} { error "OT_IO_HOLD_PAD_STAGE=$want: want cts or grt" }
+  if {[ot_hold_stage] ne $want} { puts "OT_IO_HOLD_PAD skip: stage [ot_hold_stage] (pad stage $want)"; return }
   set hb_ps [ot_env_num OT_IO_HOLD_PAD_HB4_PS 37.0]
   set mg [ot_env_num OT_IO_HOLD_PAD_MARGIN_PS 5.0]
   set maxc [expr {int([ot_env_num OT_IO_HOLD_PAD_MAX_CELLS 4])}]
@@ -532,9 +539,13 @@ proc ot_io_hold_pad {} {
   } msg]
   set_dont_use $cells
   if {$rc} { error "OT_IO_HOLD_PAD: insert failed after $tot cells: $msg" }
-  log_cmd detailed_placement
-  log_cmd check_placement -verbose
-  catch {estimate_parasitics -placement}
+  if {$want eq "cts"} {
+    log_cmd detailed_placement
+    log_cmd check_placement -verbose
+    catch {estimate_parasitics -placement}
+  } else {
+    catch {estimate_parasitics [ot_rc_cal_mode]}
+  }
   puts [format "OT_IO_HOLD_PAD bits %d HB4 %d (hb4 %.1f ps, margin %.1f ps, max %d/bit)" [dict size $plan] $tot $hb_ps $mg $maxc]
 }
 proc ot_hold_structural_gate {} {
@@ -626,11 +637,40 @@ proc ot_repair_hold_guarded {rt_args} {
       return
     }
   }
+  # CHUNK BUFFER BOUND (FLOW-CLOCK-R5 2026-10-29, measured: KV E0 e0_ff15 GRT hold sat at FF ws -38.91 / TNS -30814.6
+  # from it ~1750 to >7780 of ONE "-max_iterations 1000" call, +10.8k buffers with zero TNS gain, so the stall test
+  # below never ran).  -max_iterations does not bound a hold pass; -max_buffer_percent does (RSZ-0060, as OT_HOLD_STOP).
+  # Each chunk is therefore also capped at max(OT_HOLD_CHUNK_BUF_PCT (default 1.0) % of the instance count at guard
+  # start, OT_HOLD_CHUNK_BUF_MIN (default 2000) buffers) -- small blocks keep one effectively unbounded chunk -- never
+  # past the call's own total budget (its -max_buffer_percent, else the OpenROAD default 20 %).  A chunk that hits its
+  # cap continues on the grown design; reaching the TOTAL budget re-raises RSZ-0060 exactly as one uncapped call
+  # did.  OT_HOLD_CHUNK_BUF_PCT=0 restores the unbounded chunk.  Margins, corners, stall/time limits and stats unchanged.
+  set cbp [ot_env_num OT_HOLD_CHUNK_BUF_PCT 1.0]
+  set cbmin [ot_env_num OT_HOLD_CHUNK_BUF_MIN 2000]
+  set inst0 0
+  if {$cbp > 0} { catch { set inst0 [llength [[ord::get_db_block] getInsts]] } }
+  set tot_pct 20.0
+  set j [lsearch -exact $rt_args -max_buffer_percent]; if {$j >= 0} { set tot_pct [lindex $rt_args [expr {$j + 1}]] }
+  set capped 0
   set t0 [clock seconds]; set hist [list [lmap x $prev {format %.1f $x}]]
-  puts "OT_HOLD_GUARD start: hold ws [format %.2f [lindex $prev 0]] tns [format %.1f [lindex $prev 1]] viol [lindex $prev 2] (margin $hm, chunk $chunk it)"
+  puts "OT_HOLD_GUARD start: hold ws [format %.2f [lindex $prev 0]] tns [format %.1f [lindex $prev 1]] viol [lindex $prev 2] (margin $hm, chunk $chunk it[expr {$inst0 > 0 ? [format ", <= %.0f buffers of %d instances" [expr {max($cbp * $inst0 / 100.0, $cbmin)}] $inst0] : ""}])"
   for {set k 1} {1} {incr k} {
     if {[lindex $prev 0] >= $hm} { break }
-    log_cmd repair_timing {*}$rt_args -hold -max_iterations $chunk
+    if {$inst0 > 0} {
+      set inst [llength [[ord::get_db_block] getInsts]]
+      set left [expr {$tot_pct * $inst0 / 100.0 - ($inst - $inst0)}]
+      set nb [expr {min(max($cbp * $inst0 / 100.0, $cbmin), $left)}]
+      set last [expr {$nb >= $left}]
+      if {$nb < 1} { set nb 1 }
+      set pct [format %.6f [expr {100.0 * $nb / $inst}]]
+      if {[catch {log_cmd repair_timing {*}[ot_hold_stop_args $rt_args $pct] -hold -max_iterations $chunk} err opts]} {
+        if {$last || ![regexp {RSZ-0060|Max buffer count} $err]} { return -options $opts $err }
+        set capped 1
+        puts [format "OT_HOLD_GUARD chunk %d: buffer cap %.0f reached (RSZ-0060), continuing" $k $nb]
+      }
+    } else {
+      log_cmd repair_timing {*}$rt_args -hold -max_iterations $chunk
+    }
     set cur [ot_hold_stats]
     lappend hist [lmap x $cur {format %.1f $x}]
     lassign $prev w0 t0n n0; lassign $cur w1 t1n n1
@@ -643,6 +683,8 @@ proc ot_repair_hold_guarded {rt_args} {
     if {[clock seconds] - $t0 > $maxs} { ot_hold_window_report "hold repair over [expr {$maxs / 3600.0}] h" $hist; break }
     set prev $cur
   }
+  # tolerate_flow_errors zeroes the chunk-cap RSZ-0060 errors only when this line follows the last one
+  if {$capped} { puts "OT_HOLD_MM after repair: OT_HOLD_GUARD chunk buffer caps reached (RSZ-0060); continuing" }
 }
 
 # MACRO-CLK (2026-10-10): this helper is sourced in every ORFS stage of every run_abi3_physical / hbm_accel_smh route, so

@@ -1,0 +1,554 @@
+{
+ "lane": "DIE-S81-30/VSW",
+ "date": "2026-10-29",
+ "core": "ot_s81sl_vsw",
+ "label": "PLAN MODEL (uf_phys3 v1 GRT + d1), CHECKED = re-run by this lane; latency UNCHECKED until built",
+ "census": "intel2:/srv/opentallas-scratch2/claude/die-s81-29/vsw/work2/ot_s81sl_vsw geo.txt/sites.txt (kit die-s81-25-cores/kits/ot_s81sl_vsw_d25a 3_place.odb)",
+ "root_cause": [
+  "DIE-S81-29 keepout_hub slid leaves inside ungated_macro_htree, but the two detour legs (Tqqsy 1 flop, Tqquy 4 flops in the SRAM channel) are created LATER by split_long_leaves -> keepout_hub_slid={} always",
+  "same split also left Tqqwq (1 flop) on a 128-um unrepeated leg (leaf slew-in 95 ps) and Tqpuu 73 um",
+  "kit rows stop 4.32 um from the SRAMs; planner node halo 2.2 um -> macro-edge drivers legalised 2.0-2.6 um (> 2 um disp gate), root inside channel halo"
+ ],
+ "variants": {
+  "A_merge_halo2.2_centre": {
+   "work": "intel2:/srv/opentallas-scratch2/claude/die-s81-30-vsw/prev/merge/ot_s81sl_vsw",
+   "verdict": "FAIL",
+   "fails": [
+    "driver displacement 2.62 > 2"
+   ],
+   "TT": {
+    "mean": 250.96,
+    "leaf_mean_min": 238.38,
+    "leaf_mean_max": 257.11,
+    "window": 18.73,
+    "sink_min": 237.97,
+    "sink_max": 257.74,
+    "leaf_slew_in_max": 28.36,
+    "leaf_out_slew_max": 49.16,
+    "analysis": "max_rise",
+    "basis": "GRT",
+    "model": "uf_phys3 v1"
+   },
+   "FF": {
+    "mean": 188.06,
+    "leaf_mean_min": 177.87,
+    "leaf_mean_max": 193.63,
+    "window": 15.76,
+    "sink_min": 177.38,
+    "sink_max": 193.87,
+    "leaf_slew_in_max": 21.53,
+    "leaf_out_slew_max": 36.6,
+    "analysis": "min_rise_fall",
+    "basis": "GRT",
+    "model": "uf_phys3 v1"
+   },
+   "legs": {
+    "n": 366,
+    "over_1p10": 0,
+    "worst_ratio": 1.0
+   },
+   "disp_max_um": 2.619,
+   "sinks": {
+    "census": 13199,
+    "planned": 13199,
+    "missing": 0,
+    "dup": 0,
+    "extra": 0
+   },
+   "keepout_stray": [
+    {
+     "leaf": "Tqpuu",
+     "sinks": 1,
+     "ratio": 1.0,
+     "leg_um": 73.44,
+     "mode": "merge",
+     "fixed": "merge",
+     "into": "Tqppx",
+     "spread_um": 10.25,
+     "pruned": [
+      "Tqpuu",
+      "Tqpuu_br"
+     ]
+    },
+    {
+     "leaf": "Tqqsy",
+     "sinks": 1,
+     "ratio": 1.611,
+     "leg_um": 145.26,
+     "mode": "merge",
+     "fixed": "merge",
+     "into": "Tqqwp",
+     "spread_um": 34.44,
+     "pruned": [
+      "Tqqsy",
+      "Tqqsy_br"
+     ]
+    },
+    {
+     "leaf": "Tqquy",
+     "sinks": 4,
+     "ratio": 1.922,
+     "leg_um": 159.84,
+     "mode": "merge",
+     "fixed": "merge",
+     "into": "Tqqwp",
+     "spread_um": 34.44,
+     "pruned": [
+      "Tqquy",
+      "Tqquy_br"
+     ]
+    },
+    {
+     "leaf": "Tqqwq",
+     "sinks": 1,
+     "ratio": 1.0,
+     "leg_um": 127.98,
+     "mode": "merge",
+     "fixed": "merge",
+     "into": "Tqqpw",
+     "spread_um": 5.98,
+     "pruned": [
+      "Tqqwq",
+      "Tqqwq_br"
+     ]
+    }
+   ]
+  },
+  "A_merge_halo4.32_entry_node_legal": {
+   "work": "intel2:/srv/opentallas-scratch2/claude/die-s81-30-vsw/merge/ot_s81sl_vsw",
+   "verdict": "FAIL",
+   "fails": [
+    "TT window 20.7 > 20",
+    "converter rc 1: le \"/srv/opentallas-scratch2/claude/wt/die-s81-30-vsw/tools/die_plan/core_infra.py\", line 706, in emit_tcl\n    raise InfraError(f\"unequal-count tree model target FAIL/NOT RUN at {corner}; no physical build\")\ncore_infra.InfraError: unequal-count tree model target FAIL/NOT RUN at TT; no physical build"
+   ],
+   "TT": {
+    "mean": 254.97,
+    "leaf_mean_min": 241.64,
+    "leaf_mean_max": 262.39,
+    "window": 20.74,
+    "sink_min": 241.23,
+    "sink_max": 262.64,
+    "leaf_slew_in_max": 28.35,
+    "leaf_out_slew_max": 49.16,
+    "analysis": "max_rise",
+    "basis": "GRT",
+    "model": "uf_phys3 v1"
+   },
+   "FF": {
+    "mean": 191.11,
+    "leaf_mean_min": 180.45,
+    "leaf_mean_max": 198.02,
+    "window": 17.57,
+    "sink_min": 179.97,
+    "sink_max": 198.25,
+    "leaf_slew_in_max": 21.52,
+    "leaf_out_slew_max": 36.6,
+    "analysis": "min_rise_fall",
+    "basis": "GRT",
+    "model": "uf_phys3 v1"
+   },
+   "legs": {
+    "n": 366,
+    "over_1p10": 0,
+    "worst_ratio": 1.0
+   },
+   "disp_max_um": null,
+   "sinks": {
+    "census": 13199,
+    "planned": 13199,
+    "missing": 0,
+    "dup": 0,
+    "extra": 0
+   },
+   "keepout_stray": [
+    {
+     "leaf": "Tqpuu",
+     "sinks": 1,
+     "ratio": 1.0,
+     "leg_um": 73.44,
+     "mode": "merge",
+     "fixed": "merge",
+     "into": "Tqppx",
+     "spread_um": 10.25,
+     "pruned": [
+      "Tqpuu",
+      "Tqpuu_br"
+     ]
+    },
+    {
+     "leaf": "Tqqsy",
+     "sinks": 1,
+     "ratio": 1.611,
+     "leg_um": 145.26,
+     "mode": "merge",
+     "fixed": "merge",
+     "into": "Tqqwp",
+     "spread_um": 34.44,
+     "pruned": [
+      "Tqqsy",
+      "Tqqsy_br"
+     ]
+    },
+    {
+     "leaf": "Tqquy",
+     "sinks": 4,
+     "ratio": 1.922,
+     "leg_um": 159.84,
+     "mode": "merge",
+     "fixed": "merge",
+     "into": "Tqqwp",
+     "spread_um": 34.44,
+     "pruned": [
+      "Tqquy",
+      "Tqquy_br"
+     ]
+    },
+    {
+     "leaf": "Tqqwq",
+     "sinks": 1,
+     "ratio": 1.0,
+     "leg_um": 127.98,
+     "mode": "merge",
+     "fixed": "merge",
+     "into": "Tqqpw",
+     "spread_um": 5.98,
+     "pruned": [
+      "Tqqwq",
+      "Tqqwq_br"
+     ]
+    }
+   ]
+  },
+  "A_merge_halo4.32_sink_centroid": {
+   "work": "intel2:/srv/opentallas-scratch2/claude/die-s81-30-vsw/prev_sc/merge/ot_s81sl_vsw",
+   "verdict": "FAIL",
+   "fails": [
+    "TT window 20.4 > 20",
+    "converter rc 1: le \"/srv/opentallas-scratch2/claude/wt/die-s81-30-vsw/tools/die_plan/core_infra.py\", line 706, in emit_tcl\n    raise InfraError(f\"unequal-count tree model target FAIL/NOT RUN at {corner}; no physical build\")\ncore_infra.InfraError: unequal-count tree model target FAIL/NOT RUN at TT; no physical build"
+   ],
+   "TT": {
+    "mean": 246.93,
+    "leaf_mean_min": 234.36,
+    "leaf_mean_max": 254.71,
+    "window": 20.36,
+    "sink_min": 233.95,
+    "sink_max": 255.34,
+    "leaf_slew_in_max": 28.35,
+    "leaf_out_slew_max": 49.16,
+    "analysis": "max_rise",
+    "basis": "GRT",
+    "model": "uf_phys3 v1"
+   },
+   "FF": {
+    "mean": 185.03,
+    "leaf_mean_min": 174.35,
+    "leaf_mean_max": 193.09,
+    "window": 18.73,
+    "sink_min": 173.87,
+    "sink_max": 193.32,
+    "leaf_slew_in_max": 21.52,
+    "leaf_out_slew_max": 36.6,
+    "analysis": "min_rise_fall",
+    "basis": "GRT",
+    "model": "uf_phys3 v1"
+   },
+   "legs": {
+    "n": 366,
+    "over_1p10": 0,
+    "worst_ratio": 1.0
+   },
+   "disp_max_um": null,
+   "sinks": {
+    "census": 13199,
+    "planned": 13199,
+    "missing": 0,
+    "dup": 0,
+    "extra": 0
+   },
+   "keepout_stray": [
+    {
+     "leaf": "Tqpuu",
+     "sinks": 1,
+     "ratio": 1.0,
+     "leg_um": 73.44,
+     "mode": "merge",
+     "fixed": "merge",
+     "into": "Tqppx",
+     "spread_um": 10.25,
+     "pruned": [
+      "Tqpuu",
+      "Tqpuu_br"
+     ]
+    },
+    {
+     "leaf": "Tqqsy",
+     "sinks": 1,
+     "ratio": 1.611,
+     "leg_um": 145.26,
+     "mode": "merge",
+     "fixed": "merge",
+     "into": "Tqqwp",
+     "spread_um": 34.44,
+     "pruned": [
+      "Tqqsy",
+      "Tqqsy_br"
+     ]
+    },
+    {
+     "leaf": "Tqquy",
+     "sinks": 4,
+     "ratio": 1.922,
+     "leg_um": 159.84,
+     "mode": "merge",
+     "fixed": "merge",
+     "into": "Tqqwp",
+     "spread_um": 34.44,
+     "pruned": [
+      "Tqquy",
+      "Tqquy_br"
+     ]
+    },
+    {
+     "leaf": "Tqqwq",
+     "sinks": 1,
+     "ratio": 1.0,
+     "leg_um": 127.98,
+     "mode": "merge",
+     "fixed": "merge",
+     "into": "Tqqpw",
+     "spread_um": 5.98,
+     "pruned": [
+      "Tqqwq",
+      "Tqqwq_br"
+     ]
+    }
+   ]
+  },
+  "B_reparent_halo4.32_sink_centroid": {
+   "work": "intel2:/srv/opentallas-scratch2/claude/die-s81-30-vsw/prev_sc/reparent/ot_s81sl_vsw",
+   "verdict": "FAIL",
+   "fails": [
+    "TT window 21.0 > 20",
+    "FF window 21.0 > 20",
+    "converter rc 1: le \"/srv/opentallas-scratch2/claude/wt/die-s81-30-vsw/tools/die_plan/core_infra.py\", line 706, in emit_tcl\n    raise InfraError(f\"unequal-count tree model target FAIL/NOT RUN at {corner}; no physical build\")\ncore_infra.InfraError: unequal-count tree model target FAIL/NOT RUN at TT; no physical build"
+   ],
+   "TT": {
+    "mean": 253.13,
+    "leaf_mean_min": 240.1,
+    "leaf_mean_max": 261.14,
+    "window": 21.04,
+    "sink_min": 239.87,
+    "sink_max": 261.62,
+    "leaf_slew_in_max": 31.55,
+    "leaf_out_slew_max": 49.16,
+    "analysis": "max_rise",
+    "basis": "GRT",
+    "model": "uf_phys3 v1"
+   },
+   "FF": {
+    "mean": 189.74,
+    "leaf_mean_min": 178.82,
+    "leaf_mean_max": 199.81,
+    "window": 20.99,
+    "sink_min": 178.57,
+    "sink_max": 200.08,
+    "leaf_slew_in_max": 24.22,
+    "leaf_out_slew_max": 36.6,
+    "analysis": "min_rise_fall",
+    "basis": "GRT",
+    "model": "uf_phys3 v1"
+   },
+   "legs": {
+    "n": 370,
+    "over_1p10": 0,
+    "worst_ratio": 1.0
+   },
+   "disp_max_um": null,
+   "sinks": {
+    "census": 13199,
+    "planned": 13199,
+    "missing": 0,
+    "dup": 0,
+    "extra": 0
+   },
+   "keepout_stray": [
+    {
+     "leaf": "Tqpuu",
+     "sinks": 1,
+     "ratio": 1.0,
+     "leg_um": 25.38,
+     "mode": "reparent",
+     "fixed": "reparent",
+     "driver": "Tqpp_r0",
+     "branch_xy": [
+      97.74,
+      59.4
+     ],
+     "pruned": []
+    },
+    {
+     "leaf": "Tqqsy",
+     "sinks": 1,
+     "ratio": 1.611,
+     "leg_um": 63.18,
+     "mode": "reparent",
+     "fixed": "reparent",
+     "driver": "Tqqq_r0",
+     "branch_xy": [
+      96.66,
+      119.34
+     ],
+     "pruned": []
+    },
+    {
+     "leaf": "Tqquy",
+     "sinks": 4,
+     "ratio": 1.922,
+     "leg_um": 69.66,
+     "mode": "reparent",
+     "fixed": "reparent",
+     "driver": "Tqqq_r0",
+     "branch_xy": [
+      96.66,
+      120.42
+     ],
+     "pruned": []
+    },
+    {
+     "leaf": "Tqqwq",
+     "sinks": 1,
+     "ratio": 1.0,
+     "leg_um": 11.88,
+     "mode": "reparent",
+     "fixed": "reparent",
+     "driver": "Tqqp_r0",
+     "branch_xy": [
+      97.2,
+      166.32
+     ],
+     "pruned": []
+    }
+   ]
+  },
+  "B_reparent_halo4.32_entry_node_legal (WINNER, families_r13.json)": {
+   "work": "intel2:/srv/opentallas-scratch2/claude/die-s81-30-vsw/final/ot_s81sl_vsw",
+   "verdict": "PASS",
+   "fails": [],
+   "TT": {
+    "mean": 256.47,
+    "leaf_mean_min": 243.96,
+    "leaf_mean_max": 263.81,
+    "window": 19.84,
+    "sink_min": 243.89,
+    "sink_max": 264.91,
+    "leaf_slew_in_max": 31.55,
+    "leaf_out_slew_max": 49.16,
+    "analysis": "max_rise",
+    "basis": "GRT",
+    "model": "uf_phys3 v1"
+   },
+   "FF": {
+    "mean": 192.56,
+    "leaf_mean_min": 182.92,
+    "leaf_mean_max": 201.82,
+    "window": 18.9,
+    "sink_min": 182.67,
+    "sink_max": 202.09,
+    "leaf_slew_in_max": 24.22,
+    "leaf_out_slew_max": 36.6,
+    "analysis": "min_rise_fall",
+    "basis": "GRT",
+    "model": "uf_phys3 v1"
+   },
+   "legs": {
+    "n": 370,
+    "over_1p10": 0,
+    "worst_ratio": 1.0
+   },
+   "disp_max_um": 0.621,
+   "sinks": {
+    "census": 13199,
+    "planned": 13199,
+    "missing": 0,
+    "dup": 0,
+    "extra": 0
+   },
+   "keepout_stray": [
+    {
+     "leaf": "Tqpuu",
+     "sinks": 1,
+     "ratio": 1.0,
+     "leg_um": 25.38,
+     "mode": "reparent",
+     "fixed": "reparent",
+     "driver": "Tqpp_r0",
+     "branch_xy": [
+      97.74,
+      59.4
+     ],
+     "pruned": []
+    },
+    {
+     "leaf": "Tqqsy",
+     "sinks": 1,
+     "ratio": 1.611,
+     "leg_um": 63.18,
+     "mode": "reparent",
+     "fixed": "reparent",
+     "driver": "Tqqq_r0",
+     "branch_xy": [
+      96.66,
+      119.34
+     ],
+     "pruned": []
+    },
+    {
+     "leaf": "Tqquy",
+     "sinks": 4,
+     "ratio": 1.922,
+     "leg_um": 69.66,
+     "mode": "reparent",
+     "fixed": "reparent",
+     "driver": "Tqqq_r0",
+     "branch_xy": [
+      96.66,
+      120.42
+     ],
+     "pruned": []
+    },
+    {
+     "leaf": "Tqqwq",
+     "sinks": 1,
+     "ratio": 1.0,
+     "leg_um": 11.88,
+     "mode": "reparent",
+     "fixed": "reparent",
+     "driver": "Tqqp_r0",
+     "branch_xy": [
+      97.2,
+      166.32
+     ],
+     "pruned": []
+    }
+   ]
+  }
+ },
+ "default_unchanged": [
+  "ot_qwen_tile_node old rc 1",
+  "ot_s81sl_vq old rc 1",
+  "ot_qwen_tile_node new rc 1",
+  "ot_qwen_tile_node plan.json IDENTICAL daf29af211eacead",
+  "ot_qwen_tile_node plan_d1.json IDENTICAL 7038bd0a26b89e83",
+  "ot_qwen_tile_node checks.json IDENTICAL e53da3909581f24c",
+  "ot_qwen_tile_node slice/ot_qwen_tile_node.json IDENTICAL 99c8c31593b4a30f",
+  "ot_qwen_tile_node new==recorded plan_d1",
+  "ot_s81sl_vq new rc 1",
+  "ot_s81sl_vq plan.json IDENTICAL 8edf3b61a7e67232",
+  "ot_s81sl_vq plan_d1.json IDENTICAL 9010217ddf4eae9b",
+  "ot_s81sl_vq checks.json IDENTICAL 50b2229ecd2b82fb",
+  "ot_s81sl_vq slice/ot_s81sl_vq.json IDENTICAL 7c53c66ad0b3ef17",
+  "ot_s81sl_vq new==recorded plan_d1",
+  "DONE"
+ ],
+ "default_unchanged_note": "old = origin/main da21832de tool, new = this branch; run_core with census stubbed to the recorded clkport (census untouched); rc 1 = render() only (no matplotlib under python -I), all compared files written before render"
+}

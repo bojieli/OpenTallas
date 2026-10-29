@@ -96,7 +96,7 @@ def predict3(plan, LIBS, corner, alpha=0.0, beta=1.0, kleaf=1.25, s_root=0.0, ed
         Lc = L[v["cell"]]
         if v["kind"] in ("leaf", "macro"):
             P = [v["xy"]] + list(v["sinks"])
-            cpin = U.FFC[corner] if v["kind"] == "leaf" else U.MACRO_CK
+            cpin = v["cpin"][corner] if "cpin" in v else (U.FFC[corner] if v["kind"] == "leaf" else U.MACRO_CK)
             E = [(a, b, U.man(P[a], P[b]) * kleaf) for a, b in U.mst_edges(P)]
             ln = sum(e[2] for e in E)
             r23 = U.R23 * kr

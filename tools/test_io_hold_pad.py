@@ -54,8 +54,14 @@ puts "INSERTS [llength $::inserts] [lsort $::inserts]"
 
 
 class IoHoldPad(unittest.TestCase):
-    def run_case(self, paths, env):
+    def run_case(self, paths, env, stage=None):
         with tempfile.TemporaryDirectory() as d:
+            if stage is not None:  # ot_hold_stage: RESULTS_DIR/4_1_cts.odb present -> grt, else cts
+                res = pathlib.Path(d) / 'res'
+                res.mkdir()
+                if stage == 'grt':
+                    (res / '4_1_cts.odb').write_text('')
+                env = dict(env, RESULTS_DIR='{' + str(res) + '}')
             s = (SCRIPT.replace('@HELPER@', '{' + str(HELPER) + '}').replace('@REPORTS@', '{' + d + '}')
                  .replace('@ENV@', '\n'.join(f'set ::env({k}) {v}' for k, v in env.items()))
                  .replace('@PATHS@', ' '.join('{' + p + '}' for p in paths)))
@@ -76,6 +82,29 @@ class IoHoldPad(unittest.TestCase):
         out = self.run_case(['-160 in r1/D'], {'OT_IO_HOLD_PAD': 1})
         self.assertIn('RESULT 1', out)
         self.assertIn('needs 5 HB4 > 4', out)
+        self.assertIn('INSERTS 0', out)
+
+    # FLOW-CLOCK-R6: OT_IO_HOLD_PAD_STAGE (default cts) for kits whose first FF hold repair is the GRT step
+    def test_default_stage_skips_grt(self):
+        out = self.run_case(['-74 in r1/D'], {'OT_IO_HOLD_PAD': 1}, stage='grt')
+        self.assertIn('INSERTS 0', out)
+        self.assertIn('OT_IO_HOLD_PAD skip: stage grt (pad stage cts)', out)
+
+    def test_grt_stage_pads_at_grt(self):
+        # E0 class: input port -> face register at -53.09 -> ceil(58.09/37) = 2 HB4
+        out = self.run_case(['-53.09 in r1/D', '-12 r1/Q r2/D', '-40 in r2/RN'],
+                            {'OT_IO_HOLD_PAD': 1, 'OT_IO_HOLD_PAD_STAGE': 'grt'}, stage='grt')
+        self.assertIn('RESULT 0', out)
+        self.assertIn('INSERTS 2 r1/D r1/D', out)
+
+    def test_grt_stage_skips_cts(self):
+        out = self.run_case(['-74 in r1/D'], {'OT_IO_HOLD_PAD': 1, 'OT_IO_HOLD_PAD_STAGE': 'grt'}, stage='cts')
+        self.assertIn('INSERTS 0', out)
+
+    def test_bad_stage_fails_closed(self):
+        out = self.run_case(['-74 in r1/D'], {'OT_IO_HOLD_PAD': 1, 'OT_IO_HOLD_PAD_STAGE': 'route'}, stage='grt')
+        self.assertIn('RESULT 1', out)
+        self.assertIn('want cts or grt', out)
         self.assertIn('INSERTS 0', out)
 
 
