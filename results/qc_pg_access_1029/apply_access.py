@@ -29,16 +29,23 @@ def apply_access(block,plan_dir,grid_path,expected_contacts=89180):
  for n,typ in [('VDD','POWER'),('VSS','GROUND')]:
   if str(nets[n].getSigType())!=typ:raise ValueError('Wrong canonical supply type '+n)
  # Require actual host conductors, never logical global_connect or net names.
+ wanted_rects={(n,layer,*[round(v*D) for v in xy]) for n,layer,*xy in rects}
+ wanted_vias={tuple(v) for v in plan['vias_dbu']}
+ grid_required={(r[0],r[1],*[round(v*D) for v in r[2:]]) for r in grid if r[1] in ('M8','M9')}
  actual=set();actual_vias=set()
  for n,net in nets.items():
   for sw in net.getSWires():
    for shape in sw.getWires():
     if shape.isVia():
      via=shape.getTechVia()
-     if via:actual_vias.add((n,via.getName(),*shape.getViaXY()))
+     if via:
+      key=(n,via.getName(),*shape.getViaXY())
+      if key in wanted_vias:actual_vias.add(key)
      continue
     layer=shape.getTechLayer()
-    if layer:actual.add((n,layer.getName(),shape.xMin(),shape.yMin(),shape.xMax(),shape.yMax()))
+    if layer:
+     key=(n,layer.getName(),shape.xMin(),shape.yMin(),shape.xMax(),shape.yMax())
+     if key in wanted_rects or key in grid_required:actual.add(key)
  missing=[r for r in grid if r[1] in ('M8','M9') and (r[0],r[1],*[round(v*D) for v in r[2:]]) not in actual]
  if missing:raise ValueError(f'Actual canonical PG grid missing {len(missing)} rectangles; first {missing[:2]}')
  # Every source clock-cell supply rail must match the source-pinned plan.

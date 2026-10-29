@@ -7,7 +7,7 @@ import argparse,json,collections,math,time
 from pathlib import Path
 from shapely.geometry import box
 from shapely.strtree import STRtree
-p=argparse.ArgumentParser();p.add_argument('--input',required=True);p.add_argument('--out',required=True);p.add_argument('--clock-seed',required=True,help='Actual fixed future clock lower-layer metal rectangles in um');p.add_argument('--limit',type=int,default=0);p.add_argument('--joint-clock-reserved',help='Clock access reservation rectangles [net,layer,x0,y0,x1,y1] in um; M8 shield clearance already included minus normal 40nm PG clearance');a=p.parse_args();src=Path(a.input);out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
+p=argparse.ArgumentParser();p.add_argument('--input',required=True);p.add_argument('--out',required=True);p.add_argument('--clock-seed',required=True,help='Actual fixed future clock lower-layer metal rectangles in um');p.add_argument('--limit',type=int,default=0);p.add_argument('--reserved-power',action='append',default=[],help='Additional immutable same-net power rectangles; opposite supplies remain blocking');p.add_argument('--joint-clock-reserved',help='Clock access reservation rectangles [net,layer,x0,y0,x1,y1] in um; M8 shield clearance already included minus normal 40nm PG clearance');a=p.parse_args();src=Path(a.input);out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
 g=json.load(open(src/'geometry.json'));terms=json.load(open(src/'power_terms.json'))['terms'];ep=json.load(open(src/'endpoints.json'))['endpoints'];pg=json.load(open(src/'pg_rects.json'));tech=json.load(open(src/'probe_census.json'))['tech_vias_dbu'];D=g['dbu'];spacing={f'M{i}':v for i,v in enumerate([0,18,18,18,24,24,32,32,40,40]) if i}
 blocked=collections.defaultdict(list)
 grid_keys={(ly,*[round(v*D) for v in r]) for n,ly,*r in pg if ly in ['M8','M9']}
@@ -25,6 +25,11 @@ trees={ly:STRtree([box(*r) for r in rr]) for ly,rr in blocked.items()}
 supply=collections.defaultdict(list)
 for n,ly,*r in g['existing_supplies']:supply[n,ly].append(r)
 for n,ly,*r in pg:supply[n,ly].append([round(v*D) for v in r])
+reserved_power_rectangles=0
+for file in a.reserved_power:
+ for n,ly,*r in json.load(open(file)):
+  if n not in ('VDD','VSS'):raise ValueError('Noncanonical reserved supply '+n)
+  supply[n,ly].append([round(v*D) for v in r]);reserved_power_rectangles+=1
 for t in terms:
  for ly,*r in t['shapes_dbu']:supply[t['pin'],ly].append(r)
 suptrees={k:STRtree([box(*r) for r in rr]) for k,rr in supply.items()}
@@ -115,5 +120,5 @@ for gi,(n,x0,y0,x1,y1,members) in enumerate(groups):
 json.dump(dict(source=g['source'],paths=paths,vias_dbu=vias,tech_vias_dbu=tech,failed=failed,dbu=D),open(out/'access_plan.json','w'),separators=(',',':'))
 json.dump([[n,ly,*[v/D for v in r]] for n,ly,*r in shapes],open(out/'reserved_access.json','w'),separators=(',',':'))
 s=dict(groups=len(groups),attempted=len(paths)+len(failed),connected_groups=len(paths),connected_contacts=sum(len(q['members']) for q in paths),failed_groups=len(failed),routing_rectangles=len(shapes),vias=len(vias),verdict='GEOMETRY_CANDIDATE' if not failed else 'INCOMPLETE_NO_MATERIALIZATION')
-s['owned_grid_obstructions']=owned_grid_obs;s['rejections']=dict(reasons);s['obstacle_examples']=examples
+s['reserved_power_rectangles']=reserved_power_rectangles;s['owned_grid_obstructions']=owned_grid_obs;s['rejections']=dict(reasons);s['obstacle_examples']=examples
 json.dump(s,open(out/'summary.json','w'),indent=2);print(s,flush=True)
