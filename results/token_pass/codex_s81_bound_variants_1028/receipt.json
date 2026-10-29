@@ -1,0 +1,45 @@
+{
+ "scope": "Exact post-elaboration binder endpoint substitutions; original source elaborations reused only after every non-extractor source hash matches; no RTL/clock/token claim",
+ "frames": [
+  {
+   "master": "col_h9_l4_lp_asb_x",
+   "actual_frames": 36,
+   "stations": 12,
+   "gb_stations": 12,
+   "legacy_reported_gb_stations": 0,
+   "plan_checks": 28,
+   "plan_errors": 0,
+   "native_provider_qualified": false,
+   "original_elaboration": "/srv/opentallas-scratch2/claude/codex-tok-s81-1028/fs_work/col_h9_x",
+   "old_schedule_sha256": "973b36dab76fd3a08ca899631961e1c57afbcc56aeaa85fb49ae819f0a57ab5d",
+   "selected_schedule_sha256": "22d4fa16ae2ab80a1f3bafd786546f6d289d3c34da1ce7e4f385c8e5eab9f7c5"
+  },
+  {
+   "master": "col_h9_l4_lp_asb_nx",
+   "actual_frames": 24,
+   "stations": 12,
+   "gb_stations": 12,
+   "legacy_reported_gb_stations": 0,
+   "plan_checks": 27,
+   "plan_errors": 0,
+   "native_provider_qualified": false,
+   "original_elaboration": "/srv/opentallas-scratch2/claude/codex-tok-s81-1028/fs_work/col_h9_nx",
+   "old_schedule_sha256": "41c300b92bbe6f3080b317e8312adbe5cfda470995e472d833bd61ee2ef932fc",
+   "selected_schedule_sha256": "44c483d76375093777ef13ed90034a44abf7eb5bfa191196e12fceaa4acd2a03"
+  },
+  {
+   "master": "col_h10_l4_lp_asb_x",
+   "actual_frames": 12,
+   "stations": 12,
+   "gb_stations": 12,
+   "legacy_reported_gb_stations": 0,
+   "plan_checks": 38,
+   "plan_errors": 0,
+   "native_provider_qualified": false,
+   "original_elaboration": "/srv/opentallas-scratch2/claude/codex-tok-s81-1028/fs_work/col_h10_x",
+   "old_schedule_sha256": "efd12f62183358e7c5eb06c9c8c6db61460bab6a22b29fd065f41c18107ed95f",
+   "selected_schedule_sha256": "49a48ccc2efc6d657382edee39f776110b6f2f9517861c602a9fb26917065bcc"
+  }
+ ],
+ "total_actual_qx": 864
+}
