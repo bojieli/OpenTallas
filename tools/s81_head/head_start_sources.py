@@ -15,7 +15,7 @@ from head_start_reset_aliases import declare,patch_rtl
 
 
 def complete_top(text,plan,stages):
-    wires={};unused=[]
+    wires={};unused=[];new_wires=[]
     for p in plan['partitions']:
         rows=plan['partition_types'][p['type']].get('reset_start_raw_exports',[])
         if not rows:continue
@@ -25,9 +25,15 @@ def complete_top(text,plan,stages):
         if not m:raise ValueError(f'missing native top instance {pn}')
         con=[]
         for r in rows:
-            key=(pn,r['port']);w='wr_'+C.ident(pn)+'__'+r['port'];wires[key]=w
-            con.append('        .'+r['port']+'('+w+')')
-        body=m[2].rstrip()+',\n'+',\n'.join(con)
+            key=(pn,r['port'])
+            if r.get('existing_port'):
+                connections=re.findall(r'\.'+re.escape(r['existing_port'])+r'\(([^)]+)\)',m[2])
+                if len(connections)!=1 or not re.fullmatch(r'[A-Za-z_]\w*',connections[0]):raise ValueError('existing reset top net is not one named connection')
+                wires[key]=connections[0]
+            else:
+                w='wr_'+C.ident(pn)+'__'+r['port'];wires[key]=w;new_wires.append(w)
+                con.append('        .'+r['port']+'('+w+')')
+        body=m[2].rstrip()+(',\n'+',\n'.join(con) if con else '')
         text=text[:m.start(2)]+body+text[m.end(2):]
     ports=stages['reset_ports'];used={(v['part'],v['port']) for v in ports.values()}
     if not used<=set(wires):raise ValueError('START reset provider has unknown export wire')
@@ -45,7 +51,7 @@ def complete_top(text,plan,stages):
     addition=''.join(',\n    input wire '+n for n in clocks)
     text=text[:h.end()-3]+addition+text[h.end()-3:]
     h=re.search(r'(?m)^module \w+ \(.*?\n\);',text,re.S)
-    decl+=''.join('    wire '+v+';\n' for v in sorted(wires.values()))
+    decl+=''.join('    wire '+v+';\n' for v in sorted(new_wires))
     text=text[:h.end()]+ '\n'+decl+text[h.end():]
     con=['        .'+n+'('+wires[(v['part'],v['port'])]+')' for n,v in sorted(ports.items())]
     con+=['        .'+n+'('+n+')' for n in clocks+sorted(outs)]
@@ -62,17 +68,17 @@ def main():
     plan=declare(plan,exports);P=S.Plan(plan,src/'landed_plan.json');L=C.Landings(plan,side);ep=G.bus_epochs(P)
     observer_text=Path(a.observer_rtl).read_text();L.validate_observer_native(lambda tn:observer_text,G.parse_leaf_ports)
     (out/'ot_dp_cells.sv').write_text(G.CELLS)
-    aliases=0;count=0
+    aliases=0;count=0;reused=0
     for tn,t in sorted(P.types.items()):
         if t.get('hard'):continue
         text=L.type_rtl(tn,G.wrapper(P,tn,ep))
         rows=exports['types'].get(tn,[]);text=patch_rtl(text,rows)
-        (out/(t['module']+'.sv')).write_text(text);aliases+=len(rows);count+=1
+        (out/(t['module']+'.sv')).write_text(text);aliases+=sum(not r.get('existing_port') for r in rows);reused+=sum(bool(r.get('existing_port')) for r in rows);count+=1
     top=L.top_rtl(G.die_top(P,ep),{tn:t['module'] for tn,t in P.types.items()})
     top,spares=complete_top(top,plan,stages);(out/(G.sv_id(P.name)+'_top.sv')).write_text(top)
     (out/'start_stages.sv').write_bytes((provider/'start_stages.sv').read_bytes())
     (out/'source_plan.json').write_text(json.dumps(plan,indent=1)+'\n');(out/'source_sidecar.json').write_text(json.dumps(side,indent=1)+'\n')
-    report=dict(types=count,uniform_raw_exports=aliases,reset_inputs=len(stages['reset_ports']),
+    report=dict(types=count,uniform_raw_exports=aliases,reused_type_raw_outputs=reused,reset_inputs=len(stages['reset_ports']),
         connected_start_outputs=len(stages['die_outputs']),unused_uniform_exports=spares,
         observer=observer,observer_rtl_sha256=hashlib.sha256(observer_text.encode()).hexdigest(),
         stage_clock_ports=len(stages['stages']),physical_clock_groups=len(set(side['count_aligned']['frame_clock_regions'].values())),
