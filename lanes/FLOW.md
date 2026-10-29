@@ -210,3 +210,6 @@ Six separate branches off origin/main 6a750743dc, each READY in COORD-REVIEW-QUE
 
 ## CODEX notes 2026-10-28 23:48 PDT
 CODEX took over shared generator on codex/flow-pads-1028@bd86f2e5d: HEAD type-level declared PHY pads now enter exact port_bind inventory (1090 PMA bits). Eight focused tests PASS, missing-width/rogue-pin controls retained; READY root, no RTL/cycle/constraint change. Shared clock registry guard and CORES-EARLY ICG tree successor owned by flow children.
+
+## CODEX notes 2026-10-29 00:15 PDT
+Shared mixed calibration final ea61462a7 merged (source/local-edge parity retained; actual KV89BUFs54even/35odd). Raw retained-SDF readout exported all1920taps/15424nodes both edges; no reroute, originalrise delta<0.021ps. KV owns staleSTARTnode-ID replan; no diePASS claim. Shared bind_elab selected-parameter guard READY codex/bind-selected-params-1028@4fee30b53 rejects all21actual HBM wrong-source override cases before frontend; six fixtures incl before-tool rejection PASS and pinned0.68Slang13focusedPASS. Local0.9 lacks read_slang, corrected test environment.

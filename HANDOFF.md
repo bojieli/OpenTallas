@@ -1542,3 +1542,10 @@ CODEX: 2026-10-29 00:05 PDT GEOMresults ca46f925ff pushed(clean): HEAD929reachFA
 CODEX: 2026-10-29 00:05 PDT HBMctlx06b66ec1c READY actualsame-sourceguideplacement reach485.32/258→387.88/0; firstGPLno-opfixedbyUNPLACEDguidemembers,allfailrecordsretained. GeometrystillFAILfill.067/empty.605,actualimageviewed,noDRT/GRT/STA; dieownerownsoversizedslotplan. Noownlivejobs.
 
 CODEX:2026-10-29 00:09PDT sharedclock e263f06b2READY: actualsiteguard reproducesS81go16eight>450 andgo17zero; actualKVSDFboth-edgeproof1920taps/15424nodesallfall,.021psriseagreement,89BUF54even35odd,32PHY-onlyclockcaldeltas; KVownsfullgate. Classifiere337422dbREADY4falsepins→0. No reroute;3inheritedreplayscontinue.
+
+CODEX: 2026-10-29 00:13 PDT MAINa7168d188c==origin/main; urgentNLlint/Qwenreset+ROM, paritysafeclockcal, legalKVcapture, exactmacroleaves/DSaliases/HBMfiniteabsence support merged; focusedgatesPASS, no physicalfreeze claim.
+
+CODEX: 2026-10-29 00:15 PDT shared selectedparamguard4fee30b53 READY actualHBM21wrongsourceinstances caught; mixedcal finalea614main/actualKV35oddBUFinputcells handled, retainedSDFboth-edgereadoutcomplete; KVSTARToldnodeIDs requirescurrentgraphreplan.
+CODEX: 2026-10-29 00:17 PDT BTAB shared macro planner bedf2b9d2 on main a7168d188c; exact-cap guard intact/37PASS. Actual compact2x2 candidate replaces sparse vertical stack (−61%area); 3types/12cores/1318pins/0cycles, trial generation live intel1 codex-qc-btab-compact. No route before new tree.
+
+CODEX:2026-10-2900:20PDTS81s13resetG0C24->20/noaddeddataedges;reach17GRT0/actualreach403.272/FFduty94->4,post-DMEtimingregressiondiagnosedcoherentcostfixownedFLOW;VQ/cfg7/H0currentkitsadvancing,TOKDSfunctionalQXnamespacefix271584e32,noend-to-endclaim.
