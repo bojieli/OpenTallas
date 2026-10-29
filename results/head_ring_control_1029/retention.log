@@ -1,0 +1,7 @@
+ot-run: epyc2          admits   776 GB (avail 864, reserve 0, fresh 0, peak 23.8, headroom 0, waiters 0/0 GB) load 26/128 running 14 disk 292 GB 
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-head-ring-control-1029
+ot-run: localhost      skipped: no /srv/opentallas-scratch2/claude/codex-head-ring-control-1029
+ot-run: -> epyc2
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-1823424-1793270897 after 0 s
+STATUS_COPY_RETAINED canonical_keep_hook private_FF=8 distinct_from_guard_FF=8 added_cycles=0
+ot-run: RAN on epyc2 (unit oth-ubuntu-1823424-1793270897): exit 0

@@ -656,6 +656,11 @@ class Landings:
         head, body = text.split(marker, 1)
         extra, logic = [], []
         cat = self.ca_type.get(key) if self.ca else None
+        status_copy = self.types[key].get("landing_control_status_copy", False)
+        if not isinstance(status_copy, bool):
+            raise LandingError(f"{tn}: landing_control_status_copy must be a boolean")
+        if status_copy and not cat:
+            raise LandingError(f"{tn}: landing_control_status_copy needs count-aligned rings")
         if inst is not None:
             # MESO-STRAP-1 LEC reference: the parameter wrapper of ONE copy (ca_variants), ring DEPTH from `depth`
             # (the strap master's per-bus DEPTH) so the two forms differ only in parameters vs tied straps
@@ -790,6 +795,10 @@ class Landings:
                     ring_mod = (f"ot_dp_clk_landing_ca #(.W({{w}}), .DEPTH({cat['rings'][b]['depth']}), "
                                 f".K({cat['rings'][b]['K']}))")
                     ring_rst = f".t_rst_n(cland_fstart_in_{b}), .clk(clk), .rst_n(cland_start)"
+                if status_copy:
+                    ring_mod = ring_mod[:-1] + ", .CONTROL_STATUS_COPY(1))"
+                    self.reset_placements[tn][b].update(control_status_copy=True,
+                        status_copy_flops=2 * int(cat["rings"][b]["depth"]), status_copy_added_cycles=0)
                 self.reset_placements[tn][b].update(ring_rst_n="cland_start", origin_raw_reset=reset)
             else:
                 # per-row ring form (main: ring_module/ring_params/ring_ports sidecar); default = today's ring

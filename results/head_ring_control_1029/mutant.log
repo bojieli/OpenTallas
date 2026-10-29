@@ -1,0 +1,4 @@
+STATUS_COPY_MISMATCH depth=8 phase=125 checks=3 flags=b/a q=8acf13579bde3097/8acf13579bde3097
+[13038000] %Fatal: tb_status_copy.sv:34: Assertion failed in tb_status_copy.depth_cases[1]: status copy lockstep differs
+%Error: /srv/opentallas-scratch2/claude/codex-head-ring-control-1029/rtl/test/meso/status_copy/tb_status_copy.sv:34: Verilog $stop
+Aborting...
