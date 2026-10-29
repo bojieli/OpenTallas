@@ -1,0 +1,23 @@
+{
+ "odb": "/work/run/results/asap7/kq_qfd_dv_s8x_prog_pd40a0/base/6_final.odb",
+ "insts": 204445,
+ "pg_terms": 408890,
+ "open_or_wrong": 0,
+ "by_master": {},
+ "first": [],
+ "pg_nets": {
+  "VDD": {
+   "sig": "POWER",
+   "special": true,
+   "swires": 1,
+   "iterms": 204445
+  },
+  "VSS": {
+   "sig": "GROUND",
+   "special": true,
+   "swires": 1,
+   "iterms": 204445
+  }
+ },
+ "verdict": "PASS"
+}
