@@ -5,7 +5,17 @@ from pathlib import Path
 import numpy as np
 W,H=501.12,311.04;GRID=8.64;HALO=8.64;EPS=1e-5
 P=Path(sys.argv[1]);OUT=Path(sys.argv[2]);OUT.mkdir(parents=True,exist_ok=True)
-d=json.load(open(P/'die_plan.json'));results=[]
+d=json.load(open(P/'die_plan.json'));results=[];excluded=[]
+if len(sys.argv)>3:
+ manifest=json.load(open(sys.argv[3]));parts={p['name']:p['type']for p in d['partitions']}
+ for row in manifest['reserved_unbound']:
+  tn=parts[row['partition']];t=d['partition_types'][tn];name=row['inst'];found=[c for c in t.get('hard_cores',[])if c['inst']==name];assert len(found)==1,(tn,name,found)
+  removed_taps=[p for p in t.get('clock',{}).get('taps',[])if p.get('name','')==name or p.get('name','').startswith(name+'.')]
+  excluded.append(dict(type=tn,inst=name,origin_um=found[0]['origin_um'],outline_um=found[0]['outline_um'],clock_taps=[p['name']for p in removed_taps]))
+  t['hard_cores']=[c for c in t['hard_cores']if c['inst']!=name];t['contents']=[c for c in t.get('contents',[])if c['inst']!=name]
+  t['clock']['taps']=[p for p in t.get('clock',{}).get('taps',[])if p not in removed_taps]
+ assert len(excluded)==16
+
 def overlap(a,b):return min(a[2],b[2])-max(a[0],b[0])>EPS and min(a[3],b[3])-max(a[1],b[1])>EPS
 def rect(o,s):return [o[0],o[1],o[0]+s[0],o[1]+s[1]]
 def expand(r,h):return[r[0]-h,r[1]-h,r[2]+h,r[3]+h]
@@ -71,6 +81,6 @@ for r in results:
   for e in base:
    p=e['old_endpoint_um'];q=[x+max(0,min(1,(p[0]-ox-dx)/ow))*W,y+max(0,min(1,(p[1]-oy-dy)/oh))*H];z=e['adjacent_station_um'];L=abs(q[0]-z[0])+abs(q[1]-z[1]);legs.append(dict(station_index=e['station_index'],conn=e['conn'],side=e['side'],new_endpoint_estimate_um=q,adjacent_station_um=z,new_leg_lower_bound_um=L,additional_hops_min=max(0,math.ceil((L-EPS)/405)-1)))
   a['endpoint_legs']=legs;a['endpoint_legs_over405']=sum(e['new_leg_lower_bound_um']>405+EPS for e in legs);a['new_leg_max_lower_bound_um']=max([e['new_leg_lower_bound_um']for e in legs]or[0]);a['additional_hops_min_total']=sum(e['additional_hops_min']for e in legs)
-report=dict(source_plan_sha256=hashlib.sha256((P/'die_plan.json').read_bytes()).hexdigest(),source_plan=str(P/'die_plan.json'),qualification='ESTIMATE ONLY; no plan mutation/P&R',grid_um=GRID,obstacle_halo_um=HALO,station_footprint_um=[1.404,.27],station_bit_qualification='Hub types have zero ft_slots, so no explicit FT bit cells are published there. Actual internal regs_um site cells included; bus-bit spreading beyond published sites is NOT available and remains a physical-site obligation.',endpoint_qualification='Normalized same-face endpoint geometry only; exact revised pin table, clock island map, corridor path and new stations are not generated. Manhattan is a lower bound, never a routed length.',results=results)
+report=dict(conditional_excluded_source_unbound_rows=excluded,conditional_qualification='Only exactNP4qualified16physicalrows+matchingcontents/taps removed IN MEMORY. Not a plan adoption; source+strictbind and clock/station revision remain required.'if excluded else'Original all-obstacle snapshot',source_plan_sha256=hashlib.sha256((P/'die_plan.json').read_bytes()).hexdigest(),source_plan=str(P/'die_plan.json'),qualification='ESTIMATE ONLY; no plan mutation/P&R',grid_um=GRID,obstacle_halo_um=HALO,station_footprint_um=[1.404,.27],station_bit_qualification='Hub types have zero ft_slots, so no explicit FT bit cells are published there. Actual internal regs_um site cells included; bus-bit spreading beyond published sites is NOT available and remains a physical-site obligation.',endpoint_qualification='Normalized same-face endpoint geometry only; exact revised pin table, clock island map, corridor path and new stations are not generated. Manhattan is a lower bound, never a routed length.',results=results)
 (OUT/'vp4_lot_candidates.json').write_text(json.dumps(report,indent=2)+'\n')
 for r in results:print(r['type'],r['inst'],'legal',r['legal_grid_positions'],'nearest',r['candidates'][0]['origin_um']if r['candidates']else'NONE','disp',r['candidates'][0]['centre_displacement_l1_um']if r['candidates']else'', 'ends>405',r['candidates'][0]['endpoint_legs_over405']if r['candidates']else'', 'minimum_site_hits',r['minimum_station_site_collisions'])

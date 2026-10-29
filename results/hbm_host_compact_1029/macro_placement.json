@@ -1,0 +1,64 @@
+{
+  "schema": "opentallas.macro_placement.v1",
+  "design": "ot_hbm_host_cp_rxs",
+  "outline_um": [
+    414.72,
+    233.28
+  ],
+  "macro_placement": [
+    {
+      "k": "u_land.g_bank[0].u_mem",
+      "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+      "origin_um": [
+        15.12,
+        8.64
+      ],
+      "orient": "MY"
+    },
+    {
+      "k": "u_land.g_bank[1].u_mem",
+      "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+      "origin_um": [
+        226.8,
+        8.64
+      ],
+      "orient": "R0"
+    },
+    {
+      "k": "u_link.g_bank[0].u_store.u_native.u_sram",
+      "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        15.12,
+        144.768
+      ],
+      "orient": "MY"
+    },
+    {
+      "k": "u_link.g_bank[1].u_store.u_native.u_sram",
+      "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        226.8,
+        144.768
+      ],
+      "orient": "R0"
+    },
+    {
+      "k": "u_link.g_bank[2].u_store.u_native.u_sram",
+      "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        15.12,
+        58.344
+      ],
+      "orient": "MY"
+    },
+    {
+      "k": "u_link.g_bank[3].u_store.u_native.u_sram",
+      "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        226.8,
+        58.344
+      ],
+      "orient": "R0"
+    }
+  ]
+}

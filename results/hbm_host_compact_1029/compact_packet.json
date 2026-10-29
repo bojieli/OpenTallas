@@ -1,0 +1,161 @@
+{
+  "status": "ESTIMATE ONLY - no build; exact macro names inherited authoritative placement map",
+  "outline_um": [
+    414.72,
+    233.28
+  ],
+  "core_um": [
+    4.32,
+    4.32,
+    410.4,
+    228.96
+  ],
+  "macro_halo_um": 4.32,
+  "macros": [
+    {
+      "logical_group": "u_landing.g_bank[0].u_store",
+      "origin_um": [
+        15.12,
+        8.64
+      ],
+      "orient": "MY",
+      "size_um": [
+        172.824,
+        41.064
+      ],
+      "k": "u_land.g_bank[0].u_mem",
+      "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+    },
+    {
+      "logical_group": "u_landing.g_bank[1].u_store",
+      "origin_um": [
+        226.8,
+        8.64
+      ],
+      "orient": "R0",
+      "size_um": [
+        172.824,
+        41.064
+      ],
+      "k": "u_land.g_bank[1].u_mem",
+      "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+    },
+    {
+      "logical_group": "u_link.g_bank[0].u_store",
+      "origin_um": [
+        15.12,
+        144.768
+      ],
+      "orient": "MY",
+      "size_um": [
+        171.288,
+        77.784
+      ],
+      "k": "u_link.g_bank[0].u_store.u_native.u_sram",
+      "macro": "ot_sram_1r1w_64x512_m1_r2c2"
+    },
+    {
+      "logical_group": "u_link.g_bank[1].u_store",
+      "origin_um": [
+        226.8,
+        144.768
+      ],
+      "orient": "R0",
+      "size_um": [
+        171.288,
+        77.784
+      ],
+      "k": "u_link.g_bank[1].u_store.u_native.u_sram",
+      "macro": "ot_sram_1r1w_64x512_m1_r2c2"
+    },
+    {
+      "logical_group": "u_link.g_bank[2].u_store",
+      "origin_um": [
+        15.12,
+        58.344
+      ],
+      "orient": "MY",
+      "size_um": [
+        171.288,
+        77.784
+      ],
+      "k": "u_link.g_bank[2].u_store.u_native.u_sram",
+      "macro": "ot_sram_1r1w_64x512_m1_r2c2"
+    },
+    {
+      "logical_group": "u_link.g_bank[3].u_store",
+      "origin_um": [
+        226.8,
+        58.344
+      ],
+      "orient": "R0",
+      "size_um": [
+        171.288,
+        77.784
+      ],
+      "k": "u_link.g_bank[3].u_store.u_native.u_sram",
+      "macro": "ot_sram_1r1w_64x512_m1_r2c2"
+    }
+  ],
+  "clock_entry_um": [
+    207.36,
+    116.64
+  ],
+  "root_clock_island_um": [
+    203.04,
+    112.32,
+    211.68,
+    120.96
+  ],
+  "leaf_clock_centres_um": [
+    [
+      198.72,
+      30.24
+    ],
+    [
+      198.72,
+      90.72
+    ],
+    [
+      198.72,
+      151.2
+    ],
+    [
+      198.72,
+      211.68
+    ],
+    [
+      216,
+      30.24
+    ],
+    [
+      216,
+      90.72
+    ],
+    [
+      216,
+      151.2
+    ],
+    [
+      216,
+      211.68
+    ]
+  ],
+  "std_area_um2": 4454.99186,
+  "macro_area_um2": 67487.55264,
+  "free_area_fill": 0.15226405670981963,
+  "central_channel_um": 38.856,
+  "halo_clear_channel_um": 30.216,
+  "central_tracks_m3_m5": 1468.8333333333335,
+  "central_pessimistic_live_pin_net_demand": 822,
+  "conditional_route_bound": 0.5596278225348916,
+  "pins": "Preserve all exact names/bit order. N functional full-face span with min0.168 pitch; E AXI spread fullface; W reset/session fullface. Recenter clk at207.384,116.64. Die owner must emit authoritative pins and parent endpoint station changes.",
+  "clock_obligation": "Keep9 islands and clock RTL. Proposed central islands clear macrohalos but nearest-driver geometric reach~229um requires owner clock tree estimate/implementation, not closure proof. Prior414.72x241.92 gives only13.56% fill, rejected; reduced height233.28 gives15.226%.",
+  "source": "a7168d188cc4775d4a8081cf86273f6c1aca0f91; synth6961DFF,1366face; LEC running on epyc2 h4",
+  "blockers": [
+    "sourceLEC completion",
+    "die owner authoritative macro paths/pins/islands/station integration",
+    "actual fullgraph reach and density image after authorized trial",
+    "clock sink/reach estimate for central island allocation"
+  ]
+}
