@@ -31,13 +31,19 @@ def dedup_stream(phase, stream):
 def split_intervals(cal):
     """Rows use the original absolute calendar age; intervals rebase time only.
 
-    Phase n interval starts launch_n. The previous interval contains that
-    phase's accept/CFG (launch-62/-52 at cfg_lead52) and ends >=2 edges after
-    its last action. PRIME is20 edges before START. Admission checks the actual
-    events, rather than assuming a shape's gap is wide enough.
+    Phase n interval starts at its own launch ROW, launch_n - q_command_lead
+    (= launch_n except a Q phase under OT_XS_Q_CPR=1, whose launch row alone is
+    issued one edge early; at launch_n that row fell into the previous interval
+    and left no PRIME gap: attn.wq_b end230 / next launch229). The previous
+    interval contains that phase's accept/CFG (launch-62/-52 at cfg_lead52) and
+    ends >=2 edges after its last action. PRIME is20 edges before START.
+    Admission checks the actual events, rather than assuming a shape's gap is
+    wide enough.
     """
+    import xs_calendar as XC
+    lead = XC.q_command_lead(int(cal.get('fam') == 'bf16'))
     raw = [(w >> 75, w & ACTION_MASK) for w in cal['packed'] if not w & END]
-    starts = [0] + [p['launch'] for p in cal['phases'][1:]]
+    starts = [0] + [p['launch'] - lead for p in cal['phases'][1:]]
     assert all(a < b for a,b in zip(starts,starts[1:]))
     chunks = []
     for i,b in enumerate(starts):
