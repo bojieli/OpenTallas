@@ -5,6 +5,7 @@ from pathlib import Path
 ap=argparse.ArgumentParser();ap.add_argument('plan',type=Path);ap.add_argument('out',type=Path);a=ap.parse_args()
 repo=Path(__file__).resolve().parents[2]
 f=repo/'physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py'
+sys.path.insert(0,str(f.parent));sys.path.insert(0,str(repo/'tools/die_plan'))
 sp=importlib.util.spec_from_file_location('hbmkit',f);g=importlib.util.module_from_spec(sp);sp.loader.exec_module(g)
 plan=a.plan.resolve();d=json.load(open(plan/'die_plan.json'));t=d['partition_types']['root'];c=next(q for q in t['hard_cores'] if q['inst']=='u_hb_idx__link')
 pins=plan/c['pins_file'];psha=hashlib.sha256(pins.read_bytes()).hexdigest();view='ot_hbm_idx_topk_link_static@'+psha[:12]
