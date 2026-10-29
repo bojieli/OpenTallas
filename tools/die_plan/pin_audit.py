@@ -10,6 +10,7 @@ lie on the plan (x, y) in BOTH coordinates (+/- 0.001 um) and the box must lie i
 Scalar ports (bit None) are keyed by the bare port name.
 """
 import json
+import math
 import re
 import os
 
@@ -23,15 +24,20 @@ def pin_key(p):
     return p["bus"] if p.get("bit") is None else f"{p['bus']}[{p['bit']}]"
 
 
+def within_tolerance(delta):
+    """Include the declared 1 nm boundary despite binary subtraction roundoff."""
+    return delta <= TOL or math.isclose(delta, TOL, rel_tol=0.0, abs_tol=1e-12)
+
+
 def box_ok(p, box, W, H):
     """one BTerm box (x0, y0, x1, y1 in um) against plan pin p on a W x H die."""
     x0, y0, x1, y1 = box
     cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
     f = p["face"]
     if f not in FACES:                      # interior pin (island clock entry): exact (x, y), inside the die
-        return abs(cx - p["x"]) <= TOL and abs(cy - p["y"]) <= TOL and x0 >= -TOL and y0 >= -TOL and x1 <= W + TOL and y1 <= H + TOL
-    along = abs(cy - p["y"]) <= TOL if f in "EW" else abs(cx - p["x"]) <= TOL
-    edge = {"E": abs(x1 - W) <= TOL, "W": abs(x0) <= TOL, "N": abs(y1 - H) <= TOL, "S": abs(y0) <= TOL}[f]
+        return within_tolerance(abs(cx - p["x"])) and within_tolerance(abs(cy - p["y"])) and x0 >= -TOL and y0 >= -TOL and x1 <= W + TOL and y1 <= H + TOL
+    along = within_tolerance(abs(cy - p["y"])) if f in "EW" else within_tolerance(abs(cx - p["x"]))
+    edge = {"E": within_tolerance(abs(x1 - W)), "W": within_tolerance(abs(x0)), "N": within_tolerance(abs(y1 - H)), "S": within_tolerance(abs(y0))}[f]
     return along and edge
 
 

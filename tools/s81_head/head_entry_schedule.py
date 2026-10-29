@@ -115,19 +115,39 @@ def compile_entry(inventory, job, timing):
     settled = max(f["settled_edge"] for f in frames if f["kind"]=="CSR")
     xb=[]
     activation=job.get('activation_beats')
-    if activation is not None:
+    explicit=job.get('activation_records')
+    if activation is not None and explicit is not None:
+        raise ValueError('choose uniform activation_beats or explicit activation_records')
+    records=[]
+    if explicit is not None:
+        if not isinstance(explicit,list) or len(explicit)!=80:
+            raise ValueError('explicit HEAD activation requires80 records')
+        for r in explicit:
+            if not isinstance(r,dict) or not {'index','edge','payload'}<=set(r):
+                raise ValueError('activation record requires index,edge,payload')
+            records.append(dict(index=uint(r['index'],7,'XB index'),
+                                edge=uint(r['edge'],48,'actual XB source edge'),
+                                payload=uint(r['payload'],1024,'XB payload')))
+        if {r['index'] for r in records}!=set(range(80)):
+            raise ValueError('activation records must contain each index0..79 exactly once')
+        if len({r['edge'] for r in records})!=80:
+            raise ValueError('activation source dates collide on the single XB input')
+        records.sort(key=lambda r:r['edge'])
+    elif activation is not None:
         if len(activation)!=80:
             raise ValueError('real HEAD xstore input is80K_XB beats,1024bits each')
         first_xb=uint(timing['xb_first_edge'],48,'actual XB source first edge')
         xb_period=uint(timing['xb_period'],16,'actual XB source period')
-        to_resident=uint(timing['xb_pin_to_resident_edges'],16,'actual CTL XB pin-to-resident stages')
         if not xb_period:raise ValueError('XB period cannot be zero')
-        for index,value in enumerate(activation):
-            value=uint(value,1024,'XB payload')
-            xb.append(dict(edge=first_xb+index*xb_period,index=index,kind='K_XB',
-                           lepk_i0=(value<<21)|(index<<13)|(2<<1)|1,
+        records=[dict(index=index,edge=uint(first_xb+index*xb_period,48,'actual XB source edge'),
+                      payload=uint(value,1024,'XB payload')) for index,value in enumerate(activation)]
+    if records:
+        to_resident=uint(timing['xb_pin_to_resident_edges'],16,'actual CTL XB pin-to-resident stages')
+        for r in records:
+            xb.append(dict(edge=r['edge'],index=r['index'],kind='K_XB',
+                           lepk_i0=(r['payload']<<21)|(r['index']<<13)|(2<<1)|1,
                            ctrl_i0=(1<<31)|(ctx['user']<<21)|ctx['position']))
-        resident=xb[-1]['edge']+to_resident
+        resident=uint(max(r['edge'] for r in records)+to_resident,48,'last XB resident edge')
         start=max(settled,resident)+period
         issue=start+t['ctl_start_offset']+job['issue_offset']
     else:

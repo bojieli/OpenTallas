@@ -1,0 +1,37 @@
+{
+  "status": "SOURCE_CANDIDATE_PHYSICAL_NOT_RUN",
+  "period_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "corner": "TT_RVT",
+  "source_clock": "ideal synthesized clock",
+  "rc": "NONE",
+  "ORFS_synthesis_areas_um2": {
+    "original": 43.3609,
+    "halves": 44.8481,
+    "quarters": 45.927
+  },
+  "logic_setup_slack_ps": {
+    "original": 119.573,
+    "halves": 174.035,
+    "quarters": 340.85
+  },
+  "actual_original_core_setup_slack_ps": {
+    "CTS": -181.99,
+    "GRT": -166.73
+  },
+  "transferred_actual_penalty_ps": {
+    "CTS": 301.563,
+    "GRT": 286.303
+  },
+  "candidate_estimated_full_core_slack_ps": {
+    "quarters_CTS": 39.287,
+    "quarters_GRT": 54.547
+  },
+  "added_cycles": 0,
+  "added_E2_register_bits": 10,
+  "physical_qualification": "PENDING actual source/native CTS/GRT/related clock/hold",
+  "probe_failures": {
+    "first_OpenROAD_STA": "ORD2010 no technology read; corrected to standalone OpenSTA",
+    "second_STA": "SEQ.lib missing from root-owned map library dir; corrected to lane-owned copied SEQ.lib; originals retained"
+  }
+}

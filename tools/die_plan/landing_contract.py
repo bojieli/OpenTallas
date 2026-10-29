@@ -86,8 +86,9 @@ def check(P,sidecar=None):
 # compose report and die check FAIL on any error).
 START_PIN_IN="cland_tstart_in"     # == clock_landings.START_PIN_IN == count_align_bind.START_PIN_IN
 START_PIN_OUT="cland_tstart_out"   # == clock_landings.START_PIN_OUT
+RAW_RESET_PIN_OUT="cland_raw_reset_out"
 START_FORM="die_start_stages"
-_NET={START_PIN_IN:re.compile(r"^pst_\w+$"),START_PIN_OUT:re.compile(r"^rs_\w+$")}
+_NET={START_PIN_IN:re.compile(r"^pst_\w+$"),START_PIN_OUT:re.compile(r"^rs_\w+$"), RAW_RESET_PIN_OUT:re.compile(r"^rraw_\w+$")}
 
 
 def start_declaration(start_pins,part_types,type_pins,edge_uses):
@@ -100,9 +101,12 @@ def start_declaration(start_pins,part_types,type_pins,edge_uses):
         if u not in uses:uses.append(u)
     for e in start_pins.get("die_outputs",[]):
         uses.append(dict(part=e["dst_part"],pin=START_PIN_IN,net=e["net"]))
+    uses += [dict(part=e["src_part"],pin=RAW_RESET_PIN_OUT,net=e["net"]) for e in start_pins.get("reset_inputs",[])]
     used={(u["part"],u["pin"]) for u in uses}|set(edge_uses)
     opened=[dict(part=pn,pin=START_PIN_OUT) for pn,tn in sorted(part_types.items())
             if type_pins.get(tn,{}).get(START_PIN_OUT)=="out" and (pn,START_PIN_OUT) not in used]
+    opened += [dict(part=pn,pin=RAW_RESET_PIN_OUT) for pn,tn in sorted(part_types.items())
+               if type_pins.get(tn,{}).get(RAW_RESET_PIN_OUT)=="out" and (pn,RAW_RESET_PIN_OUT) not in used]
     return dict(form=START_FORM,pins=dict(input=START_PIN_IN,output=START_PIN_OUT),
                 source="sidecar count_aligned.start_pins (clock_landings.top_rtl wires it)",
                 uses=sorted(uses,key=lambda u:(u["part"],u["pin"],u["net"])),open=opened)
@@ -125,7 +129,7 @@ def _start_tree_check(P,st,pinmap,uses,errors,side):
             for message in proof["errors"]:bad(message)
         except (KeyError,ValueError,TypeError,StopIteration) as ex:
             bad(f"invalid physical provider contract: {ex}")
-    want={START_PIN_IN:"in",START_PIN_OUT:"out"}
+    want={START_PIN_IN:"in",START_PIN_OUT:"out",RAW_RESET_PIN_OUT:"out"}
     edge_used={k for k,v in uses.items() if v}
     seen=set();declared=set();net_parts={};n_ok=0
 

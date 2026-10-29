@@ -64,6 +64,7 @@ def network_lane_cycles(plan):
 
 
 START_PIN_IN = "cland_tstart_in"     # == count_align_bind.START_PIN_IN
+RAW_RESET_PIN_OUT = "cland_raw_reset_out"
 START_PIN_OUT = "cland_tstart_out"   # == count_align_bind.START_PIN_OUT
 
 
@@ -115,7 +116,13 @@ def start_pins(plan, ca):
     for e in die_in:
         if seen.setdefault(e["net"], e["src_part"]) != e["src_part"]:
             raise LandingError(f"start net {e['net']}: two launch partitions")
-    return dict(ports=ports, type_pins={k: dict(v) for k, v in sorted(tp.items())}, plan_ports=plan_ports,
+    resets = []
+    if ca.get("start_reset_wave"):
+        resets = [dict(src_part=e["src_part"],region=e["net"][3:],net="rraw_"+e["net"][3:])
+                  for e in sorted({e["net"]:e for e in die_in}.values(),key=lambda e:e["net"])]
+        for e in resets:tp[parts[e["src_part"]]["type"]][RAW_RESET_PIN_OUT]="out"
+    return dict(**(dict(reset_inputs=resets,reset_wave="bounded_synchronous_parent_relays") if ca.get("start_reset_wave") else {}),
+                ports=ports, type_pins={k: dict(v) for k, v in sorted(tp.items())}, plan_ports=plan_ports,
                 die_inputs=die_in, die_outputs=die_out, die_input_nets=sorted(seen),
                 pins=dict(input=START_PIN_IN, output=START_PIN_OUT))
 
@@ -649,6 +656,11 @@ class Landings:
         head, body = text.split(marker, 1)
         extra, logic = [], []
         cat = self.ca_type.get(key) if self.ca else None
+        status_copy = self.types[key].get("landing_control_status_copy", False)
+        if not isinstance(status_copy, bool):
+            raise LandingError(f"{tn}: landing_control_status_copy must be a boolean")
+        if status_copy and not cat:
+            raise LandingError(f"{tn}: landing_control_status_copy needs count-aligned rings")
         if inst is not None:
             # MESO-STRAP-1 LEC reference: the parameter wrapper of ONE copy (ca_variants), ring DEPTH from `depth`
             # (the strap master's per-bus DEPTH) so the two forms differ only in parameters vs tied straps
@@ -783,6 +795,10 @@ class Landings:
                     ring_mod = (f"ot_dp_clk_landing_ca #(.W({{w}}), .DEPTH({cat['rings'][b]['depth']}), "
                                 f".K({cat['rings'][b]['K']}))")
                     ring_rst = f".t_rst_n(cland_fstart_in_{b}), .clk(clk), .rst_n(cland_start)"
+                if status_copy:
+                    ring_mod = ring_mod[:-1] + ", .CONTROL_STATUS_COPY(1))"
+                    self.reset_placements[tn][b].update(control_status_copy=True,
+                        status_copy_flops=2 * int(cat["rings"][b]["depth"]), status_copy_added_cycles=0)
                 self.reset_placements[tn][b].update(ring_rst_n="cland_start", origin_raw_reset=reset)
             else:
                 # per-row ring form (main: ring_module/ring_params/ring_ports sidecar); default = today's ring
@@ -934,6 +950,11 @@ class Landings:
             extra.append("    output wire cland_rstart_out")
             logic.append(f"    ot_dp_landing_relay u_cland_rstart_tx (.clk(clk), .rst_raw_n({raw}), .d(cland_start), "
                          f".q(cland_rstart_out));")
+        if self.tstart and self.tstart.get("reset_wave") and RAW_RESET_PIN_OUT in self.tstart["type_pins"].get(tn,{}):
+            extra.append(f"    output wire {RAW_RESET_PIN_OUT}")
+            logic += ['    (* keep = "true", face_keep = "true" *) reg cland_raw_reset_q;',
+                      f"    always @(posedge clk) cland_raw_reset_q <= {raw};",
+                      f"    assign {RAW_RESET_PIN_OUT} = cland_raw_reset_q;"]
         return raw_logic + logic
 
     def _origin_strap_rtl(self, tn, role, ca_raw, extra, local_raw):
@@ -1098,7 +1119,7 @@ class Landings:
         # start_stage_emit.py ot_die_start_stages drives pst_<region> and reads rs_<region>)
         ts = self.tstart
         ts_in = sorted({e["net"] for e in ts["die_outputs"]}) if ts else []
-        ts_out = ts["die_input_nets"] if ts else []
+        ts_out = (ts["die_input_nets"] + [e["net"] for e in ts.get("reset_inputs",[])]) if ts else []
         ts_ports = [(f"input  wire {n}", f"    input wire {n};") for n in ts_in] + \
                    [(f"output wire {n}", f"    output wire {n};") for n in ts_out]
         names += ts_in + ts_out
@@ -1131,7 +1152,7 @@ class Landings:
         decl += [f"    wire {w};" for w in sorted(set(fwd.values()))]
         fst = {k: v.replace("clock_landing_fwd_", "clock_landing_start_", 1) for k, v in fwd.items()} if self.ca else {}
         decl += [f"    wire {w};" for w in sorted(set(fst.values()))]
-        tsw, tsi = {}, {}
+        tsw, tsi, trw = {}, {}, {}
         if ts:
             # one start wire per launch partition (its single cland_tstart_out, fanned out here)
             tsw = {e["src_part"]: f"clock_landing_tstart_{ident(e['src_part'])}" for e in ts["plan_ports"] + ts["die_inputs"]}
@@ -1140,6 +1161,11 @@ class Landings:
             tsi.update({e["dst_part"]: e["net"] for e in ts["die_outputs"]})
             decl += [f"    assign {e['net']} = {tsw[e['src_part']]};"
                      for e in sorted({e["net"]: e for e in ts["die_inputs"]}.values(), key=lambda e: e["net"])]
+        if ts and ts.get("reset_wave"):
+            trw = {pn:f"clock_landing_raw_reset_{ident(pn)}" for pn,p in self.parts.items()
+                   if RAW_RESET_PIN_OUT in ts["type_pins"].get(p["type"],{})}
+            decl += [f"    wire {w};" for w in sorted(trw.values())]
+            decl += [f"    assign {e['net']} = {trw[e['src_part']]};" for e in ts.get('reset_inputs',[])]
         rpr = getattr(self, "ca_part_role", {}) if self.ca else {}
         rst = {r["origin"]: f"clock_landing_rstart_{ident(r['origin'])}" for r in rpr.values() if r["role"] == "relay"}
         decl += [f"    wire {w};" for w in sorted(set(rst.values()))]
@@ -1186,6 +1212,8 @@ class Landings:
             conn += [f"        .cland_fstart_out_{b}({fst[(pn,b)]})" for b in sorted(self.outs[pn]) if self.ca]
             if ts:
                 tpins = ts["type_pins"].get(p["type"], {})
+                if RAW_RESET_PIN_OUT in tpins:
+                    conn.append(f"        .{RAW_RESET_PIN_OUT}({trw[pn]})")
                 if START_PIN_OUT in tpins:
                     conn.append(f"        .{START_PIN_OUT}({tsw.get(pn, '')})")
                 if START_PIN_IN in tpins:

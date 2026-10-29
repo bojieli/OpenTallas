@@ -391,6 +391,16 @@ SCHEMA = {
                         "pads": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
                         "core_taps": {"type": "array", "items": {"type": "object",
                                                                  "required": ["inst", "pin", "xy", "stages"]}}}},
+                    # Optional same-cycle private CA status drivers; emitted by clock_landings.
+                    "landing_control_status_copy": {"type": "boolean"},
+                    # HEAD SOURCE7: actual existing registered raw reset Q exports.
+                    # head_start_reset_aliases verifies each source instance/net in emitted RTL.
+                    "reset_start_raw_exports": {"type": "array", "items": {
+                        "type": "object", "additionalProperties": False,
+                        "required": ["port", "instance", "net", "xy_um"],
+                        "properties": {"port": _name, "instance": {"type": "string", "minLength": 1},
+                                       "net": {"type": "string", "minLength": 1}, "xy_um": _xy,
+                                       "existing_port": _name}}},
                     # HEAD-BIND-4 10-27 (OWNER 10-25 option B): per-INSTANCE ID strap input ports of the partition
                     # (strap_* names, exact widths in parent_id_straps.PHYSICAL_ID_WIDTHS).  No pin register, kit SDC
                     # set_false_path -from, each instance ties its own value (partitions[].id_straps) at the die top;
@@ -439,6 +449,8 @@ SCHEMA = {
                                        "note": {"type": "string"}}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
+                        # Native START capture location used by physical source planning.
+                        "start_capture_um": _xy,
                         "tap_pin_heights_um": {"type": "object", "additionalProperties": {
                             "type": "number", "minimum": 0.768}},
                         # FLOW 10-25 (ruling 9.7 / decision 5e): this type's bound pin-register insertion per corner
@@ -1674,11 +1686,36 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
     obs = boxes + [(a - clear, b - clear, a + clear, b + clear) for a, b in taken]
     xs = candidates(x, w, [v for a, b, c, d in obs for v in (a, c)])
     ys = candidates(y, h, [v for a, b, c, d in obs for v in (b, d)])
-    ok = [(px, py) for px in xs for py in ys if free(px, py)]
-    if ok:
-        px, py = min(ok, key=lambda p: (round(max(abs(p[0] - x), abs(p[1] - y)), 7),
-                                       (p[0] - x) ** 2 + (p[1] - y) ** 2, p))
-        return round(px, 4), round(py, 4)
+    # Each obstacle blocks the same Y candidates for every X column. Compute
+    # those exact comparisons once, then combine bitmasks per column instead
+    # of scanning every obstacle at every Cartesian candidate. Keep abs() for
+    # taken taps: rewriting it as interval bounds changes floating edge cases.
+    ys = list(ys)
+    inside = sum(1 << i for i, py in enumerate(ys) if clear <= py <= h - clear)
+    blockers = [(x0, x1, sum(1 << i for i, py in enumerate(ys) if y0 < py < y1))
+                for x0, y0, x1, y1 in boxes]
+    neighbours = [(a, sum(1 << i for i, py in enumerate(ys) if abs(py - b) < clear))
+                  for a, b in taken]
+    def legal_candidates():
+        for px in xs:
+            if not clear <= px <= w - clear:
+                continue
+            bits = inside
+            for x0, x1, blocked in blockers:
+                if x0 < px < x1:
+                    bits &= ~blocked
+            for a, blocked in neighbours:
+                if abs(px - a) < clear:
+                    bits &= ~blocked
+            while bits:
+                low = bits & -bits
+                yield px, ys[low.bit_length() - 1]
+                bits ^= low
+    ok = legal_candidates()
+    best = min(ok, key=lambda p: (round(max(abs(p[0] - x), abs(p[1] - y)), 7),
+                                  (p[0] - x) ** 2 + (p[1] - y) ** 2, p), default=None)
+    if best is not None:
+        return round(best[0], 4), round(best[1], 4)
     raise ValueError(f"no legal clock tap site in {t.get('module', 'type')} near ({x}, {y}); "
                      f"clearance {clear} um, {len(boxes)} keepouts")
 

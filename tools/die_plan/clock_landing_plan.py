@@ -425,7 +425,7 @@ def _ca_start_pins(raw,table):
         xy=_bus_xy(t,ref[0]) if ref else [v/2 for v in t["outline_um"]]
         for pin,d in sorted(pins.items()):
             if pin in names:raise ValueError(f"type {tn}: start pin {pin} already declared")
-            t.setdefault("buses",[]).append(_scalar(t,pin,d,xy,"ctl",shift=2.16*(6 if d=="in" else 7)))
+            t.setdefault("buses",[]).append(_scalar(t,pin,d,xy,"ctl",shift=2.16*(11 if pin==CL.RAW_RESET_PIN_OUT else 6 if d=="in" else 7)))
     for e in doc["plan_ports"]:
         raw["ports"].append(dict(id="cland_tstart__"+CL.ident(e["port"]),src=dict(part=e["src_part"],bus=CL.START_PIN_OUT),
             dst=dict(part=e["dst_part"],bus=CL.START_PIN_IN),width=1,kind="ctl",epoch=False))
@@ -652,7 +652,7 @@ def clear_generated_landing_infra(raw):
 
 
 def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",band_spread=1.0,band_ring="all",
-            forward_source="tap"):
+            forward_source="tap",band_order_by_type=None):
     """band_reserve="live" (opt-in): storage bands reserve the live ring (width+epoch) instead of the 64-bit padded ring.
     observer: {module, instance_suffix, fault_port, ready_port} of the real
     one-bit fault/ready inputs gated in observer_part (reset mode default QC_OBSERVER).
@@ -661,7 +661,12 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
     (multi-partition clock regions); types split once by their landed mask (exact uniform hardware).
     forward_source="clk" (opt-in, DIE-KV-13 / COORD 10-28): a forwarded clock output's landing contract
     source_clock_port is the type's ONE RTL clock input 'clk' (binders that emit a single clk port per partition, KV),
-    the nearest tap name kept as source_clock_tap; default "tap" = the nearest R4 tap-grid port name (unchanged)."""
+    the nearest tap name kept as source_clock_tap; default "tap" = the nearest R4 tap-grid port name (unchanged).
+    band_order_by_type (opt-in): base-type -> "largest_first" reserves wide rings before narrow rings that can
+    otherwise occupy their only legal corridor. The default name order and every area/reach guard are unchanged."""
+    if band_order_by_type is not None and (not isinstance(band_order_by_type,dict) or
+            any(order not in ("name","largest_first") for order in band_order_by_type.values())):
+        raise ValueError("band_order_by_type must map base types to name or largest_first")
     if forward_source not in FORWARD_SOURCES:raise ValueError(f"unknown forward_source {forward_source}")
     global FORWARD_SOURCE
     FORWARD_SOURCE=forward_source
@@ -767,7 +772,12 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
         info=dict(base_type=base_type[pn],mask=sig,tree=tree,local_sources=[],children=[],up_parent=monitor_parent[pn] if pn in active else None,
                   reset_entry_um=W["types"].get(tn,{}).get("in_um"),bands={},bus_geometry=copy.deepcopy(t.get("_cland_geom",{})))
         used=[]
-        for bus,r in sorted(ins[pn].items()):
+        landings=sorted(ins[pn].items())
+        band_order=(band_order_by_type or {}).get(base_type[pn],"name")
+        if band_order=="largest_first":
+            landings.sort(key=lambda row:(-int(row[1]["width"]),row[0]))
+            info["band_order"]=band_order
+        for bus,r in landings:
             point=_bus_xy(t,bus)
             if hard:tap=None
             else:

@@ -1,0 +1,5 @@
+The exact current LN landing's required WIDTH-as-error build fails at `ot_pl_land_local_r`: its three-bit counter is compared with integer `K-1`. Explicitly extend the counter to32bits, preserving the original full-width comparison. Narrowing K instead would wrap out-of-range thresholds and change behavior.
+
+Project Yosys0.68 SAT proves old/new comparison equal for every3-bit rc and every32-bit signed K. The plausible truncation mutant fails the universal proof. Actual admitted unit intel1 oth-ubuntu-2927899-1793273027 returned0. No data/boot/reset cycle, interface, state, or numerical behavior changes. Source width is at most32bits when derived from the positive integer D parameter.
+
+Run the test under `tools/die_plan/test_land_reader_width.py`, or invoke it directly with an empty output directory on a fleet host with the project Yosys. The coordinator's system Yosys0.9 lacks SV size casts; it is skipped by the pytest wrapper rather than counted as a proof. Full current LN clock-alias lockstep build uses Verilator5.050 with WIDTH/SELRANGE as errors; it remains separate from this combinational proof.

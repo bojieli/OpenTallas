@@ -58,6 +58,13 @@ def materialize(raw, stages):
             edges.append(dict(net=e['net'],part=part,pin=pin,
                 **(dict(dst_stage=node['id'],src_rect_um=r,dst_rect_um=node['rect_um']) if side=='die_inputs' else
                    dict(src_stage=node['id'],src_rect_um=node['rect_um'],dst_rect_um=r))))
+    for e in stages.get('reset_inputs',[]):
+        r=pin_rect(P,e['part'] if 'part' in e else e['src_part'],'cland_raw_reset_out')
+        region=e.get('region')
+        for node in stages['stages']:
+            if node['parent'] == region:
+                edges.append(dict(signal='reset',net=e['net'],part=e.get('part',e.get('src_part')),pin='cland_raw_reset_out',
+                    dst_stage=node['id'],src_rect_um=r,dst_rect_um=node['rect_um']))
     for e in edges:
         e.update(max_hop_um=405,source_registered=True,capture_registered=True)
     st['provider']=dict(form='emitted_start_stage_rows',nodes=nodes,edges=edges,
@@ -95,7 +102,7 @@ def check(P, contract):
                 if by[e['dst_stage']]['parent']!=by[e['src_stage']]['region']:raise ValueError('START provider parent edge mismatch')
                 adj[e['src_stage']].append(e['dst_stage'])
             if 'part' in e:
-                if e['pin'] not in ('cland_tstart_in','cland_tstart_out'):raise ValueError('invalid START boundary pin')
+                if e['pin'] not in ('cland_tstart_in','cland_tstart_out','cland_raw_reset_out'):raise ValueError('invalid START boundary pin')
                 r=pin_rect(P,e['part'],e['pin'])
                 if r!=(b if e['pin']=='cland_tstart_in' else a):raise ValueError('boundary pin geometry mismatch')
                 boundary.add((e['part'],e['pin'],e['net']))
@@ -104,7 +111,7 @@ def check(P, contract):
             if e.get('max_hop_um')!=405:raise ValueError('START reach contract must retain405um')
             h=hop(a,b);maximum=max(maximum,h)
             if h>405+1e-6:raise ValueError(f'physical START row envelope hop {h:.3f}um exceeds405')
-            if 'dst_stage' in e:incoming[e['dst_stage']]+=1
+            if 'dst_stage' in e and e.get('signal')!='reset':incoming[e['dst_stage']]+=1
         except (KeyError,ValueError,TypeError,StopIteration) as ex:errors.append(str(ex))
     for n,c in incoming.items():
         if c!=(0 if by[n].get('root') else 1):errors.append(f'START stage {n} incoming edges {c}')

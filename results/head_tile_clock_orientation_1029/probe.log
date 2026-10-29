@@ -1,0 +1,12 @@
+ot-run: epyc2          admits   688 GB (avail 889, reserve 0, fresh 116.2, peak 19.8, headroom 0, waiters 0/0 GB) load 29/128 running 13 disk 297 GB 
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-head-tile-closure-1029
+ot-run: localhost      skipped: no /srv/opentallas-scratch2/claude/codex-head-tile-closure-1029
+ot-run: -> epyc2
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-1729613-1793270092 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+CLOCK_ORIENTATION_PROBE location_first bbox=50000,100440,50378,100710
+CLOCK_ORIENTATION_PROBE orientation_first bbox=50000,100710,50378,100980
+ot-run: RAN on epyc2 (unit oth-ubuntu-1729613-1793270092): exit 0

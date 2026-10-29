@@ -48,3 +48,38 @@ def test_rejects_incompatible_source_phase_and_stage_allocation():
         if kind=='rank':j['rank']=4
         if kind=='period':j['issue_period']=0
         with pytest.raises(ValueError):compile_entry(i,j,t)
+
+
+def test_explicit_nonuniform_activation_dates_and_reordered_indices():
+    i,j,t=fixture();t['xb_pin_to_resident_edges']=3
+    j['activation_records']=[dict(index=79-n,edge=400+n+3*(n//16),payload=79-n) for n in range(80)]
+    r=compile_entry(i,j,t)
+    assert r['activation_resident_edge']==494
+    assert r['authority']['start_global_edge']==498
+    assert [x['index'] for x in r['xb_records']]==list(reversed(range(80)))
+    assert all(x['lepk_i0']>>21==x['index'] for x in r['xb_records'])
+    assert r['source_counts']['activation_BF16_values']==5120
+    assert not r['production_transport_qualified']
+
+
+def test_explicit_dates_preserve_uniform_entry_byte_for_byte():
+    i,j,t=fixture();t.update(xb_first_edge=400,xb_period=1,xb_pin_to_resident_edges=3)
+    j['activation_beats']=list(range(80));uniform=compile_entry(i,j,t)
+    del j['activation_beats'];j['activation_records']=[dict(index=n,edge=400+n,payload=n) for n in range(80)]
+    explicit=compile_entry(i,j,t)
+    # Job metadata identifies its source grammar, all emitted records/dates match.
+    for k in uniform:
+        if k!='job':assert uniform[k]==explicit[k],k
+
+
+@pytest.mark.parametrize('fault',('duplicate_index','missing_record','duplicate_edge','bad_payload','bad_edge','ambiguous'))
+def test_explicit_activation_rejects_real_source_faults(fault):
+    i,j,t=fixture();t['xb_pin_to_resident_edges']=3
+    j['activation_records']=[dict(index=n,edge=400+n,payload=n) for n in range(80)]
+    if fault=='duplicate_index':j['activation_records'][79]['index']=78
+    if fault=='missing_record':j['activation_records'].pop()
+    if fault=='duplicate_edge':j['activation_records'][79]['edge']=478
+    if fault=='bad_payload':j['activation_records'][79]['payload']=1<<1024
+    if fault=='bad_edge':j['activation_records'][79]['edge']=-1
+    if fault=='ambiguous':j['activation_beats']=list(range(80))
+    with pytest.raises(ValueError):compile_entry(i,j,t)
