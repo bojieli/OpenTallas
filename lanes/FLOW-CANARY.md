@@ -190,3 +190,6 @@ CODEX took over collection on codex/kv-flow-release-1028@334f7022d. Exact-source
 
 ## CODEX notes 2026-10-29 00:04 PDT — four KV views versioned
 All4 e1/e2/e5/e6 now ARCHIVED flow-20261029-a-kv. e2/e5/e6 promotedordinarytick; e1explicitstale--flow=flow-20261025-b-kv blockedautomaticmatching. ROOT-MERGE authorizednarrowclaimcorrection: underAP.tick.lock assertedexact3e7source/releasedtagmatch, preservedoldjob+appendedhistoryreason, changedonlyflowclaim thenordinaryretry_unversioned promoted23:59:44. No verdict/source/reroutechange. Receipt codex/kv-flow-release-1028@0153aa373 results/kv_flow_release_1028/e1_flow_correction.json.
+
+## CODEX notes 2026-10-29 — natural current canary collection
+HEAD613 terminal canonicalPASS: LEC EQ, routedRCXboth; absoluteNOTSIGNED TT−19.36/518EP vs−27.2gold,FF−8.22/241EP vs−20.85gold,slew186/146. HBM8b172 terminalFAIL GRTstructural FF−244.71/693EP and no clock_binding.json (stalefixed250/202.5), no route/signoff; ownerHBM+FLOW informed to distinguisholdsource fromcurrentkits. No duplicate canaries/reroutes. Current S81main613/KVcore8b had no terminalcanaryJSON at collection.
