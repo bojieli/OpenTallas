@@ -1,0 +1,10 @@
+BOUND_TXDP qwen_compute u_d2d_rom qfd_d2d_static_ovl_sf7_obs1 ports=[8, 3, 1, 10] param_regen=['0a010308']
+BOUND_TXDP qwen_kvsys u_d2d_kv qkd_d2d_static_sfm ports=[170, 4, 3, 3] param_regen=['030304aa']
+LANES {  "source": "regen_constants.py on QC v7 final bind (bound_sha 7475e702a08a54b7) --peer KV B48 (codex/kv-land-1026@c01a6f445 b48)",  "LX": [   23,   4,   23  ],  "RS": [   11,   11,   11  ],  "TX": [   2,   2,   21  ],  "calendar": {   "LS": 407  },  "bench_args": "--relays 0 11 11 11 --lanes 2 2 21 2 2 21 --lx 23 4 23" }
+STAGED 321 fixture files
+XQ_BOUND_TXDP_C=0a010308
+XQ_BOUND_TXDP_K=030304aa
+XQ_MUT_TXDP_C=0a010309
+XQ_MUT_TXDP_K=03030489
+36da37ec6d171693bd276f43f5152768a664087442604be081ee293cdb0e7354  xdie/fx/img_bound/d2d_cal_image.svh
+ac290539c14e050282bf478a9be175894fd6d068d932dbb35ab72172a1d385c4  xdie/fx/img_ctrl_b48/d2d_cal_image.svh
