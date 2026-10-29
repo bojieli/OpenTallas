@@ -163,6 +163,7 @@ Bench setup:
 - Spice cells: BUFx4 and BUFx6f come from asap7sc7p5t_28 `CDL/xAct3D_extracted/asap7sc7p5t_28_R.sp` @ e5bd25da72. The same transform as the CLK-INV-CAL lib reproduces all 17 lib subckts byte for byte.
 - Deck: VDD ramps 0 -> V with uic. `.options abstol=1e-9 vntol=1e-5` is needed: with the defaults the BUFx4 transient aborts at FF ("timestep too small, vss#branch") and stalls at TT.
 - Cross-check (CHECKED): BUFx6f with default options against these options agrees within 0.003 ps on every crossing.
+- Second cross-check (CHECKED): the BUFx4 loaded deck at FF with default tolerances and the Vss source removed (vss = node 0, which also converges) agrees within 0.056 ps.
 
 Raw spice / OpenSTA (CHECKED):
 
