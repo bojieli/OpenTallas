@@ -9,7 +9,7 @@ file mkdir /work/eco_clock
 # Locks and hashes routed clock wires plus all clock cells/sink flops.
 ot_clk_freeze /work/eco_clock
 set_routing_layers -signal M2-M5 -clock M2-M5
-estimate_parasitics -global_routing
+estimate_parasitics -placement
 global_route -start_incremental
 foreach {name master} {place4396 BUFx12f_ASAP7_75t_R place4267 BUFx6f_ASAP7_75t_R place4258 BUFx6f_ASAP7_75t_R} {
  set c [get_cells -quiet $name]
@@ -17,6 +17,8 @@ foreach {name master} {place4396 BUFx12f_ASAP7_75t_R place4267 BUFx6f_ASAP7_75t_
  puts "HNX_ECO_UPSIZE $name [get_property $c ref_name] -> $master"
  replace_cell $c $master
 }
+# A newly loaded DRT ODB has no live GRT estimator cache; use placement RC during edits, then routed/GRT RC after routing.
+estimate_parasitics -placement
 set data_pins [dict create]
 foreach p [all_registers -data_pins] {dict set data_pins [get_full_name $p] $p}
 set hd 0

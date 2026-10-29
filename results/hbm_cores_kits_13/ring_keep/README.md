@@ -1,0 +1,9 @@
+# RING capture retention repair
+
+The V1b route passes physical signoff, but a new routed LEC correctly reports KEEP FAIL: seven lanes lose three source-declared `cap_tx_tag` flops each. All25,960 functional compare points pass, which alone does not satisfy physical-copy retention. The canonical RTLIL and mapped1_2_yosys.v have all24tag copies; OpenROAD `eliminate_dead_logic` drops21 before1_synth.v. The inherited old LEC text has no corresponding current JSON and is not a retention proof.
+
+`capture_keep.tcl` applies physical dont_touch to the RING source-declared vector capture DFFs only during that cleanup. `capture_release.tcl` releases those cells afterwards so the normal physical flow can buffer and resize data paths. `apply_capture_keep.py KIT` stages both hooks idempotently; it changes no RTL, boundary pin, clock constraint, latency or state. It also handles a cached pre-place ODB by releasing the same cells before GPL. A first trial accidentally kept them protected during GPL and failed RSZ-3006 at carry_write[1]; the failed3_3ODB remains on epyc2 and that failure is retained in lane notes. The corrected release mirrors the existing face_keep/release flow.
+
+Fresh SYNTH has all24cap_tx_tag bits and canonical LEC EQUIVALENT26,002/26,002,0differences/undecided. The updated core adapter passes explicitly declared straps to the canonical checker:2approvedstrap_qid bits are exempt from face registers; all2,224remaining pins pass, zeroport mismatches, SDC lint zeroerrors. Old adapter FAIL2sharedstrap bits is the negative control. Shared adapter fix is58ca31ed5; existing declared-strap policy is unchanged.
+
+Fresh placement is running at epyc2:/srv/opentallas-scratch2/claude/codex-ring-keep-0830/kit. Actual placement/CTS/route/signoff and routed LEC remain required; this source-neutral synthesis repair is not a new SIGNED claim. Original V1b route and failed evidence are untouched.

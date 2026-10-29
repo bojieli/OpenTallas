@@ -1,0 +1,40 @@
+{
+ "top": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+ "checked": 2224,
+ "ok": 2224,
+ "fails": {},
+ "flops": {
+  "ra_add_rhs_acc": "u_bin_ra_add_rhs_acc/q$_DFF_P_",
+  "ra_add_v": "u_bin_ra_add_v/q$_DFF_P_",
+  "ra_lp_we": "u_bin_ra_lp_we/q$_DFF_P_",
+  "ra_rr_local": "u_bin_ra_rr_local/q$_DFF_P_",
+  "ra_state_add_rhs_acc": "u_bin_ra_state_add_rhs_acc/q$_DFF_P_",
+  "ra_state_read_add": "u_bin_ra_state_read_add/q$_DFF_P_",
+  "ra_state_read_rr": "u_bin_ra_state_read_rr/q$_DFF_P_",
+  "ra_state_read_tx": "u_bin_ra_state_read_tx/q$_DFF_P_",
+  "ra_state_tx_acc": "u_bin_ra_state_tx_acc/q$_DFF_P_",
+  "ra_tx_acc": "u_bin_ra_tx_acc/q$_DFF_P_",
+  "ra_tx_gather": "u_bin_ra_tx_gather/q$_DFF_P_",
+  "ra_tx_result": "u_bin_ra_tx_result/q$_DFF_P_",
+  "ra_add_src[1]": "u_bin_ra_add_src/q[1]$_DFF_P_",
+  "ra_add_src[0]": "u_bin_ra_add_src/q[0]$_DFF_P_",
+  "ra_rx_slot[1]": "u_bin_ra_rx_slot/q[1]$_DFF_P_",
+  "ra_rx_slot[0]": "u_bin_ra_rx_slot/q[0]$_DFF_P_",
+  "ra_state_add_src[1]": "u_bin_ra_state_add_src/q[1]$_DFF_P_",
+  "ra_state_add_src[0]": "u_bin_ra_state_add_src/q[0]$_DFF_P_",
+  "ra_tx_dst[1]": "u_bin_ra_tx_dst/q[1]$_DFF_P_",
+  "ra_tx_dst[0]": "u_bin_ra_tx_dst/q[0]$_DFF_P_"
+ },
+ "straps_exempt": [
+  "strap_qid"
+ ],
+ "dead_declared": [],
+ "bumps_exempt": [],
+ "clock_exports": {},
+ "pairs_declared": [],
+ "planned_bits": 2210,
+ "missing_ports": 0,
+ "fail_counts": {},
+ "verdict": "PASS",
+ "skip_re": "^(clk|rst_n)$"
+}
