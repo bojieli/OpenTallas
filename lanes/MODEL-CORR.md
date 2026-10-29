@@ -8,3 +8,9 @@
 
 ## CODEX notes 2026-10-28 23:58 PDT
 CODEX took over KV mixed-master clock calibration on codex/clock-mixed-1028@1628fddd8. Opt-in trial_tap_arrivals --clock-components decomposes actual T/N/F/M stage delays by master (incl every CPPR node), shared planner/gate spice_edge scales inverter portion with inverter calibration and BUF suffix with spice_cell table.31 focused tests PASS; missing measured fall, stale sums, unknown masters fail closed. Existing KV21 readout has no M node falls; actual retained-ODB readout and NUMBER-CHECK remain KV-owned before gate adoption. No RTL/cycles/constraints changed, READY root.
+
+## CODEX notes 2026-10-29 02:59 PDT
+Prior per-master/mixed-component source and actual KV21 readout remain available, no repeated simulation. HBM controlled SigType experiment measured no change (DIE-HBM-11 CLOCKv3 TT/FF exact equality), so classification is excluded as the cause of its retained stage-model residual. S81 actual2W2S51tap coefficient set explicitly qualifies tap stubs .036..4.898um only; global geometry nativefeed continuation records exact chains, then owner needs actual longstub census before routing/adoption. No defaults/calibration factors changed.
+
+## CODEX notes 2026-10-29 08:28 PDT — shared flow/clock takeover
+Shared coverage inventory: handoff/codex_shared_coverage_0822.tsv (32 lanes). CLK-TOOL duty continuation owned child; FLOW hold/canary/CFG receipt owned child. CODEX took over missing BTAB per-master spice_cell calibration on codex/buf-cal-0827 (base main + already-measured BUFx8 9023ef4e1c8). Native extracted BUFx16f has A,VSS,VDD,Y port order; generator now preserves it. Initial epyc2 calibration failed SIGILL because inherited bsimcmg23.osdi requires Intel ISA; failed outputs retained. Corrected job intel2:/srv/opentallas-scratch2/claude/codex-buf-cal-intel-0827 unit oth-ubuntu-2001498-1793287678, 8 cases (BUF10/12/12f/16f x 2um/60um), TT/FF rise/fall, no proxy adopted.

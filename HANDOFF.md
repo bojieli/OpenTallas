@@ -1798,3 +1798,8 @@ CODEX: 2026-10-29 05:09 PDT QC mesh/PG explicit reset PARK; be80ed573/4101eb598 
 CODEX: 2026-10-29 08:26 PDT Qwen token takeover collected old m3 map-control INVALID(all36cal_start−1); c61781d53 fixes falseCAUGHT,7focusedchecksPASS. Native HOST local-install proof intel1unit121042 remainsLIVE; no duplicated build/run, currentQC/KVbind dependenciesowned.
 
 CODEX: 2026-10-29 08:3x PDT KV takeover event27f strictbind live; provider import HOLD331missingboundary+clocksource mismatch diagnosed; ASTK EQ27853 advancingCTS; HR coretx routedFAIL TT-215.25 owned.
+
+CODEX: 2026-10-29 08:28 PDT shared clock/flow takeover; 32lane inventory, inherited KVglueIR terminal3.270mV old-placementdiagnostic collected; actual BTAB missingBUFmaster calibration liveintel2, initialEPYC OSDI SIGILL diagnosed/replaced.
+
+CODEX: 2026-10-29 08:29 PDT FLOW parent-core receipt+scope READY e6d564618,38 focused PASS; S81-029 still waits real parent. q3 V1 live, KVcore canaries live; HEAD regression assigned.
+CODEX:08:33 KV modeledfourPC/hardwrapper capability ff854a23b READY10testsPASS; ASTK EQ27853 reset16 -> reviewedCTS-only intel1 codex-kv-astk-0828 live; AHUB/PC formal ongoing, q0/PVJ/e0 untouched; no PHYgeometry/routeclaim.

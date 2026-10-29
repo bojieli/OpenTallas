@@ -45,3 +45,6 @@ CODEX took over QC production activity on codex/qc-activity-0359-1028 (base42094
 
 ## CODEX notes 2026-10-28 23:48 PDT
 Collected HBM hub activity terminal FAIL145/150 output words across14 records, ALL_DONE rc2 at14:43; no validated power map. TOK-HBM diagnoses historical production-SMH transport source; five DUMPMAX4000 windows end before retirement. KV hroot IR remains LIVE PID743215 intel2 qcpg3-ir-kv_hroot after15h40 CPU99.9% RSS84.7GB, VDD worst1.79mV done, VSS progressing. No kills/duplicates; total PG NOT RUN pending VSS.
+
+## CODEX notes 2026-10-29 08:28 PDT — terminal KV glue IR collected
+Inherited qcpg3-ir-kv_hroot completed 2026-10-28 23:51 rc0 (no duplicate). Actual intel2 qc-pg-3/ir reports: VDD worst1.793mV, VSS1.667mV, co-located worst3.270mV at u_bound.u_bin_i_kvpc_Q_N_o_next/q[161] DFF,154490 cell records,0 macros. This is the old placed kv3_hroot activity0.263 diagnostic basis, not current-die qualification. Previous LIVE note superseded. HBM hub activity remains terminal FAIL145/150 words and TOK-HBM owns source diagnosis; no qualified hub map.
