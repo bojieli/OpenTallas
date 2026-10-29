@@ -25,4 +25,21 @@ r['source_commit']=g.subprocess.check_output(['git','-C',str(repo),'rev-parse','
 sys.argv=[str(f),'--views',str(a.out/'views.json'),'--view',view,'--out',str(a.out/'kits'),'--corner','TC','--hold-margin','0','--tag','_current_wpipe2','--macro-placement',str(a.out/'macros.json'),'--macro-inst-fmt','u_fcore.{k}','--master-slice',str(a.out),'--trial']
 # slice helper find() accepts the module.json filename.
 (a.out/'ot_hbm_idx_topk_link_static.json').write_bytes((a.out/'slice.json').read_bytes())
+# Install the committed, opt-in logical guides before the standard kit hash is sealed.
+original_kit_hash=g.kit_hash
+model=json.load(open(repo/'results/hbm_topk_wpipe_1029/model_and_guides.json'))
+def guided_kit_hash(kd):
+ kd=Path(kd)
+ if not (kd/'topk_write_guides.tcl').exists():
+  boxes={'native_line':model['native_line_r_guide']['rect_um']}
+  for x in model['new_register_guides']:boxes['s%dr%d'%(x['stage'],x['banks'][0]%4)]=x['rect_um']
+  spec=' '.join('{%s} {%s}'%(k,' '.join(map(str,v))) for k,v in boxes.items())
+  body=(Path(__file__).parent/'write_guides.tcl').read_text()
+  (kd/'topk_write_guides.tcl').write_text('set ::topk_write_boxes [dict create '+spec+']\n'+body)
+  for hook,name in [('face_flops.tcl','topk_write_guides.tcl'),('face_flops_release.tcl','macro_reg_guide_release.tcl')]:
+   with (kd/hook).open('a') as fd:fd.write('\nsource /work/'+name+'\n')
+  import shutil
+  shutil.copyfile(repo/'physical/die_plan/hbm_arch_cores/macro_reg_guide_release.tcl',kd/'macro_reg_guide_release.tcl')
+ return original_kit_hash(kd)
+g.kit_hash=guided_kit_hash
 g.main(recipe_overrides={'ot_hbm_idx_topk_link_static__650.16x500.04':r},source_profile=dict(name='topk_wpipe2_current',source_commit=r['source_commit'],parameters=r['params'],added_internal_SRAM_visibility_edges=2))
