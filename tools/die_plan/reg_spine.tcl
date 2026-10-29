@@ -81,10 +81,12 @@ foreach t $rsp_trunk {
 }
 set rsp_tapnets {}; array set rsp_tapnet {}; set rsp_padtot 0
 foreach t $rsp_taps {
-  lassign $t id x y node pad
+  lassign $t id x y node pad padxy
   set src $rsp_netof($node)
   for {set s 0} {$s < $pad} {incr s} {
-    set b [rsp_inst rsp_t${id}_d$s [dict get $rsp_cfg pad_cell] [expr {$x - ($pad - $s) * $rsp_pitch - 0.3}] $y]; set n [rsp_net rsp_t${id}_dn$s]
+    # optional 6th field: folded pad chain coordinates from reg_spine.py tap_footprint (same pads, same order)
+    if {[llength $padxy] == $pad} { lassign [lindex $padxy $s] px py } else { set px [expr {$x - ($pad - $s) * $rsp_pitch - 0.3}]; set py $y }
+    set b [rsp_inst rsp_t${id}_d$s [dict get $rsp_cfg pad_cell] $px $py]; set n [rsp_net rsp_t${id}_dn$s]
     rsp_conn $b A $src; rsp_conn $b Y $n; set src $n; incr rsp_padtot
   }
   set b [rsp_inst rsp_t${id}_drv [dict get $rsp_cfg tap_cell] $x $y]; set n [rsp_net rsp_t$id]
