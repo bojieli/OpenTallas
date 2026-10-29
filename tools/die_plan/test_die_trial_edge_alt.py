@@ -1,6 +1,6 @@
 """CLK-TOOL-8: --clock-edge-alt opt-in (per-stage edge balance, inv2 region DME).  With even legs every branch-node
 driver of an inv2 tree has the same output polarity, so its rise/fall asymmetry adds up once per tree level (HEAD hk4:
-88 TT / 226 FF taps outside duty 45-55 at ~15 levels).  EDGE_ALT labels region-DME nodes with polarity P = height % 2
+88 TT / 226 FF taps outside duty 45-55 at ~15 levels).  EDGE_ALT labels region-DME nodes with a polarity P
 (leaves and region roots 0) and rounds each leg to the parity of its two ends, priced in the DME."""
 import inspect
 import re
@@ -81,7 +81,7 @@ def test_default_off_byte_identical(monkeypatch):
     assert "--clock-edge-alt" in inspect.getsource(D.main)
 
 
-def test_labels_alternate_by_height_roots_true(monkeypatch):
+def test_labels_leaves_and_root_true(monkeypatch):
     monkeypatch.setattr(D, "EDGE_ALT", True)
     site, taps = _c_partition()
     dn, root, st = D.dme_region_tree(site, taps, delay_rep_um=250.0)
@@ -95,8 +95,8 @@ def test_labels_alternate_by_height_roots_true(monkeypatch):
         d = dn[i]
         if not d["kids"]:
             assert d["P"] == 0 and d["H"] == 0
-        elif i != root:
-            assert d["P"] == d["H"] % 2
+        assert d["P"] in (0, 1) and d["F"][0] <= d["F"][1]
+    assert any(dn[i]["P"] for i in seen)
     assert max(dn[i]["H"] for i in seen) >= 4                # deep enough to matter
 
 

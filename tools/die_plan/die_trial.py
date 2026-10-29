@@ -77,6 +77,10 @@ EVEN_LEGS = False
 # calls), so consecutive branch drivers alternate polarity and their asymmetries cancel pairwise.  Taps and every node
 # above the region DME stay true polarity: no tap parity inverters.  Default False = byte-identical.
 EDGE_ALT = False
+# per-stage asymmetry (fall - rise at an inverted output, unitless) of a light (one-leg) and a heavy (branch) stage used
+# to choose node polarities: routed fits on CKINVDCx16 trees give light ~ +, heavy ~ - of similar size (HEAD hk4 FF
+# +2.8 / -3.3 ps), so the structural default is (+1, -1)
+EDGE_B = (1.0, -1.0)
 _LEG_PAR = 0                         # required inverter-count parity of the leg being priced (EVEN_LEGS; 0 = even)
 
 
@@ -2089,7 +2093,8 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
         sd = tap_wire_ps(d) if delay_rep_um and (snake or DME_ACTUAL_MAX_UM is not None) else d
         if sink_early:      # DIE-S81-14 --region-dme-early-mode merge: declared early = DME sink delay (zero-skew merge)
             sd += float(sink_early.get((t[0], t[1]), 0.0))
-        out.append(dict(x=q[0], y=q[1], kids=[], taps=[t], S=sd, Smin=sd, W=d, **({"P": 0, "H": 0} if EDGE_ALT else {})))
+        out.append(dict(x=q[0], y=q[1], kids=[], taps=[t], S=sd, Smin=sd, W=d,
+                        **({"P": 0, "H": 0, "F": (-EDGE_B[0], -EDGE_B[0])} if EDGE_ALT else {})))
         return len(out) - 1
 
     def merge(a, b, force_P=None):
@@ -2097,10 +2102,21 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
         rad = min(max(radius_um, _man((A["x"], A["y"]), (B["x"], B["y"])) / 2), 4000.0)
         alt = {}
         pa_ = pb_ = 0
-        if EDGE_ALT:            # CLK-TOOL-8: polarity label by height, legs priced with parity P xor P_kid
+        if EDGE_ALT:            # CLK-TOOL-8: node polarity P chosen to centre the subtree edge sum F, legs priced P^P_kid
             H = 1 + max(A["H"], B["H"])
-            P = H % 2 if force_P is None else int(force_P)
-            alt = {"P": P, "H": H}
+
+            def span(P):
+                # F = sum of sigma * b from this node's driver down to every tap (sigma +1 at an inverted output):
+                # this (heavy, 2-leg) driver + per kid leg the one uncancelled light stage of an even leg + the kid's F
+                sg = 1.0 if P else -1.0
+                v = []
+                for K in (A, B):
+                    add = sg * EDGE_B[1] + (-sg * EDGE_B[0] if P == K["P"] else 0.0)
+                    v += [K["F"][0] + add, K["F"][1] + add]
+                return min(v), max(v)
+            P = (min((0, 1), key=lambda c: (round(max(map(abs, span(c))), 9), c != H % 2)) if force_P is None
+                 else int(force_P))
+            alt = {"P": P, "H": H, "F": span(P)}
             pa_, pb_ = P ^ A["P"], P ^ B["P"]
         if delay_rep_um:        # delay-aware: S / Smin are ps, legs priced by leg_ps (stage counts included)
             q, imb, ex = merge_point_delay(site, (A["x"], A["y"]), A["S"], (B["x"], B["y"]), B["S"], delay_rep_um, rad,
