@@ -80,8 +80,16 @@ def test_gen_rtl_ports_and_die_wiring():
         for tn, ty in W["types"].items():
             v = (Path(d) / f"{P.types[tn]['module']}.sv").read_text()
             for n, _x, _y in ty["outs"]:
-                assert f"output wire {n}" in v and f"assign {n} = rst_n_t" in v
+                assert f"output wire {n}" in v and _own_out_relay(v, n)
             assert ("ot_dp_rsync_s2 u_rst_root" in v) == (ty["entry"] == "sync")
+
+
+def _own_out_relay(v, n):
+    """DIE-S81-27: rst_o_<k> is driven by its OWN relay (q = the port, no other load), and the tap net rst_n_t<j>
+    by a same-d copy <name>_t (in-type loads)."""
+    m = re.findall(rf"ot_dp_rrelay(?:_drive)? (u_rrl_\d+) \(\.clk\(clk\), \.d\((\w+)\), \.q\({n}\)\);", v)
+    return len(m) == 1 and re.search(rf"ot_dp_rrelay(?:_drive)? {m[0][0]}_t \(\.clk\(clk\), \.d\({m[0][1]}\), "
+                                      rf"\.q\(rst_n_t\d+\)\);", v) is not None
 
 
 def test_tiny_die_wavefront_release_matches_offsets():
@@ -194,7 +202,7 @@ def test_kit_rsync_adds_reset_outs_to_bound_and_wrapper():
             assert kit_rsync.main([str(d / "plan.json"), tn, str(kd)]) == 0
             vb, vw = b.read_text(), w.read_text()
             for n in outs:
-                assert vb.count(f"output wire {n},") == 1 and vb.count(f"assign {n} = rst_n_t") == 1
+                assert vb.count(f"output wire {n},") == 1 and _own_out_relay(vb, n) and f"assign {n} =" not in vb
                 assert vw.count(f"output wire {n},") == 1 and vw.count(f".{n}({n}),") == 1
             man = json.loads((kd / "kit_rtl.json").read_text())
             assert man["kit_rsync"]["reset_outs"] == outs
@@ -395,3 +403,21 @@ puts CORE_RESET_QN_PASS
     out = subprocess.run(["tclsh"], input=script, text=True, capture_output=True)
     assert out.returncode == 0 and not out.stderr, out.stderr
     assert out.stdout.strip() == "CORE_RESET_QN_PASS"
+
+
+def test_rst_o_has_own_relay_and_tap_copy_is_placed():
+    """DIE-S81-27 (COORD 10-29 11:28, FACE_GUARD shared on station rst_o): every non-START rst_o_<k> has its own relay
+    (q = the port), the tap net keeps a same-d copy for in-type loads (landing rings at the out site), both placed at
+    the out site; the release cycle is unchanged (same d)."""
+    T = RT.for_type(schema.Plan(wave(TINY)), "mid")
+    oq = RT.out_relays(T)
+    assert len(oq) == len(T["outs"]) == 2
+    body = "\n".join(RT.rtl_lines(T))
+    tcl = RT.tcl_text(T)
+    for q, k in oq.items():
+        r = next(x for x in T["relays"] if x["q"] == q)
+        assert f"{r['name']} (.clk(clk), .d({r['d']}), .q(rst_o_{k}));" in body
+        assert f"{r['name']}_t (.clk(clk), .d({r['d']}), .q({q}));" in body
+        assert f"assign rst_o_{k}" not in body and body.count(f".q(rst_o_{k}))") == 1
+        assert f"rtr_place {q} {{*{r['name']}[./]*}}" in tcl and f"rtr_place_opt {q}:copy {{*{r['name']}_t[./]*}}" in tcl
+    assert "proc rtr_place_opt" in tcl

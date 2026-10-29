@@ -1722,16 +1722,38 @@ def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i", lock_src=LOCK_SR
         out.append(f"{ind}ot_dp_rrelay u_rst_in (.clk(clk), .d({src}), .q(rst_root_n));  "
                    "// pin register of the SYNCHRONOUS reset input (die reset tree)")
     out += [f"{ind}" + ("(* keep = 1 *) " if T.get("local_reset_taps") else "") + f"wire rst_n_t{i};" for i in taps]
+    nck = consumer_count(T)
+    oq = out_relays(T)
     for r in T["relays"]:
         if not r["q"].startswith("rst_n_t"):
             out.append(f"{ind}wire {r['q']};")
-        out.append(f"{ind}{relay_cell(T, r)} {r['name']} (.clk(clk), .d({r['d']}), .q({r['q']}));  "
-                   f"// {r['kind']} tap {r['tap']} depth {r['depth']} @ ({r['xy'][0]:.1f}, {r['xy'][1]:.1f})")
-    nck = consumer_count(T)
+        where = f"depth {r['depth']} @ ({r['xy'][0]:.1f}, {r['xy'][1]:.1f})"
+        if r["q"] in oq:
+            k = oq[r["q"]]
+            # DIE-S81-27 (COORD 10-29 11:28): the registered reset OUT has its OWN relay (drives only the port); the
+            # tap net rst_n_t<j> gets a same-d copy for in-type loads (landing rings / collectors at the out site),
+            # kept like any relay whose tap has no sinks.  Same d, same depth => same release cycle.
+            out.append(f"{ind}{relay_cell(T, r)} {r['name']} (.clk(clk), .d({r['d']}), .q(rst_o_{k}));  "
+                       f"// registered reset out rst_o_{k} (wavefront, dedicated relay): {r['kind']} tap {r['tap']} {where}")
+            out.append(f"{ind}{relay_cell(T, r)} {r['name']}_t (.clk(clk), .d({r['d']}), .q({r['q']}));  "
+                       f"// tap-net copy of {r['name']} for in-type loads: {where}")
+        else:
+            out.append(f"{ind}{relay_cell(T, r)} {r['name']} (.clk(clk), .d({r['d']}), .q({r['q']}));  "
+                       f"// {r['kind']} tap {r['tap']} {where}")
     for k in range(len(T.get("outs", []))):
-        out.append(f"{ind}assign rst_o_{k} = rst_n_t{nck + k};  // registered reset out (wavefront): the relay at "
-                   f"({T['outs'][k][0]:.1f}, {T['outs'][k][1]:.1f}), released with the taps")
+        if f"rst_n_t{nck + k}" not in oq:
+            out.append(f"{ind}assign rst_o_{k} = rst_n_t{nck + k};  // registered reset out (wavefront): the relay at "
+                       f"({T['outs'][k][0]:.1f}, {T['outs'][k][1]:.1f}), released with the taps")
     return out
+
+
+def out_relays(T):
+    """{tap net rst_n_t<j>: k} for the non-START wavefront outs rst_o_<k> whose tap j has a relay in T['relays']."""
+    if T.get("start"):
+        return {}
+    nck = consumer_count(T)
+    qs = {r["q"] for r in T["relays"]}
+    return {f"rst_n_t{nck + k}": k for k in range(len(T.get("outs", []))) if f"rst_n_t{nck + k}" in qs}
 
 
 def _rtl_lines_start(T, ind, src, start_src, lock_src=LOCK_SRC):
@@ -1826,6 +1848,13 @@ proc rtr_place {key pat x y tag} {
   }
   if {!$hit} { lappend rtr_miss $pat }
 }
+# optional relay copy (out relay tap-net copy): absent when synthesis swept it (no loads) -> not a miss
+proc rtr_place_opt {key pat x y tag} {
+  global rtr_miss
+  set m0 [llength $rtr_miss]
+  rtr_place $key $pat $x $y $tag
+  if {[llength $rtr_miss] == $m0 + 1 && [lindex $rtr_miss end] eq $pat} { set rtr_miss [lrange $rtr_miss 0 end-1] }
+}
 """
 
 
@@ -1889,8 +1918,13 @@ def tcl_text(T):
     if T.get("start"):
         rent = "u_run_root" if T["entry"] == "sync" else "u_run_in"
         t.append(f"rtr_place run_root {{*{rent}[./]*}} {T['start_in'][0]:.3f} {T['start_in'][1]:.3f} sentry")
+    oq = out_relays(T)
     for r in rel:
         t.append(f"rtr_place {r['q']} {{*{r['name']}[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} rrl:{r['kind']}{r['depth']}")
+        if r["q"] in oq:
+            # the out relay's tap-net copy (rtl_lines): placed beside it when synthesis kept it (it has loads)
+            t.append(f"rtr_place_opt {r['q']}:copy {{*{r['name']}_t[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} "
+                     f"rrl:{r['kind']}{r['depth']}c")
     if T.get("core_resets"):
         terminals = " ".join(r["q"] for r in T["relays"] if r["depth"] == T["depth"])
         t += ["set rtr_terminal_qnets {}", f"foreach key {{{terminals}}} {{",
