@@ -1512,3 +1512,9 @@ CODEX: 2026-10-28 23:46 PDT ROOT-MERGE inherited gate315 PASS except known basel
 CODEX: 2026-10-28 23:46 PDT QC landed-806.86 rootcause oldfaultlane+synchronousINFO; actualCA2537PASS105.6/105.1. A0rawleaf nowSIGNED90.23/5.40, nodeFF-19.63 ownedfallback; NLparent+BTABplannedtree+meshDRTprogressing, trial25live.
 
 CODEX: 2026-10-28 23:47 PDT HBM token compiler fbb6ffeb5 READY: safe PRE rowgap reaches emitted nativejob,25testsPASS; current161records price+9720FUSEDcycles; host20edgeplan+16bootcycles. C25cstrict0stillopen, noG5claim.
+CODEX: 2026-10-28 23:49 PDT HBM C25b collected G0FAIL5/G0CFAIL21:4bad n4 leaf references+137provider/FT collisions diagnosed; C25c base repairs underway, actual20edge hostboot chain COORDaccepted. Structuralclock/pins/bind workers active; no extraSUclones, no route yet.
+
+CODEX: 2026-10-28 23:49 PDT HBM C25c pin candidate e8b410898: same-area bdring aspect1.786, qw_dec full-face96.15%;0overlap/76chains<=401.898um/0cycles, viewed; bdring Wdensity conditional on G2 before route.
+CODEX: 2026-10-28 23:55 PDT HBMmacro48b946290 estimate-only READY: VP4501.12x311.04 conservativechannel.5933; progstore C24leaf0/9 SRAMspans649/582 diagnosed, source-local44macro864x734.4 candidate+11guides. Imageviewed/boundshaloPASS; dieownerintegrating,pin/relay/clockreachstillheld,noP&R.
+
+CODEX: 2026-10-28 23:54 PDT ROOT-MERGE main5720719701==origin/main; approved HEADports/HA+HBMcalendar/reset+VQclockpin shared unblockers merged focusedPASS; KV exactflowtag3e7 pushed; heldKVpad/fullsplit/postcts excluded.
