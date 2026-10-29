@@ -302,3 +302,14 @@ def test_builtin_ladder_rejects_ndr_and_accepts_its_measured_wire_stack():
     assert not ok and any("clock_rc=ndr" in x and "clock_rc=1x" in x for x in why)
     c["stack"]["clock_rc"] = "1x"
     assert O.stage_check(c, reg())[0]
+
+
+def test_reach_keys_map_to_die_trial_flags_and_default_off():
+    # CLK-TOOL-4: global FEED reach is a generic config key of every die (no die name in the tool)
+    c = cfg("hbm")
+    base = O.kit_argv(c, "OUT")
+    assert "--rep-reach-max" not in base and "--rep-actual-max" not in base
+    c["top"]["rep_reach_max"] = 450
+    c["top"]["rep_actual_max"] = 450.0
+    f = flags(O.kit_argv(c, "OUT"))
+    assert f["--rep-reach-max"] == "450" and f["--rep-actual-max"] == "450"

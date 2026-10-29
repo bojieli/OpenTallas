@@ -242,6 +242,10 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None):
         a.append("--rep-on-leg")
     if top.get("rep_off_leg_max") is not None:  # kit fails when a repeater lands farther than UM off its leg
         a += ["--rep-off-leg-max", _fmt(top["rep_off_leg_max"])]
+    if top.get("rep_reach_max") is not None:    # CLK-TOOL-4: re-place any non-snake leg (global FEED incl.) whose
+        a += ["--rep-reach-max", _fmt(top["rep_reach_max"])]   # snapped span > UM; priced record meta.reach_fix
+    if top.get("rep_actual_max") is not None:   # post-build guard: every actual cell/tap hop <= UM (actual_reach.json)
+        a += ["--rep-actual-max", _fmt(top["rep_actual_max"])]
     if st.get("clock_rc", "ndr") != "ndr":
         a += ["--clock-rc", st["clock_rc"]]
     if st["cell"] != "buf":
