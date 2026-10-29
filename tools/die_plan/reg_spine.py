@@ -89,6 +89,36 @@ def snap_out(x, y, keepouts):
     return x, y
 
 
+def close_projected_radius(taps, sinks, trunk, spec):
+    """Opt-in radius closure AFTER keepout projection and small-cluster merging.
+
+    Add a legal tap at the actual farthest sink, then reassign. This preserves
+    all existing physical taps; sparse outliers may own a singleton tap.
+    """
+    radius = float(spec["projected_radius_um"])
+    attach = [t for t in trunk if t[3] != "-" and t[0] not in set(spec.get("express", []))]
+    def assign():
+        return {n: min(range(len(taps)), key=lambda i: (_d((taps[i]["x"], taps[i]["y"]), (x, y)), i))
+                for n, x, y in sinks}
+    for _ in range(int(spec.get("max_projected_splits", 1000))):
+        asg = assign()
+        far = max((_d((taps[asg[n]]["x"], taps[asg[n]]["y"]), (x, y)), n, x, y) for n, x, y in sinks)
+        if far[0] <= radius:
+            break
+        _, _, x, y = far
+        x, y = snap_out(x, y, spec.get("keepouts_um", []))
+        node = min(attach, key=lambda t: (_d((t[1], t[2]), (x, y)), t[0]))
+        taps.append(dict(id=len(taps), x=round(x, 2), y=round(y, 2), node=node[0], pad=0))
+    else:
+        raise ValueError("reg_spine projected-radius closure did not converge")
+    occupied = set(asg.values())
+    taps = [t for i, t in enumerate(taps) if i in occupied]
+    pads = {str(k): int(v) for k, v in spec.get("pads", {}).items()}
+    for i, t in enumerate(taps):
+        t.update(id=i, pad=pads.get(str(i), 0))
+    return taps
+
+
 def plan(spec, sinks):
     sinks = sorted(sinks)
     trunk = [tuple(t) for t in spec["trunk"]]
@@ -108,6 +138,8 @@ def plan(spec, sinks):
         tx, ty = snap_out(cx, cy, keep)
         node = min(attach, key=lambda t: (abs(t[1] - tx) + abs(t[2] - ty), t[0]))
         taps.append(dict(id=i, x=round(tx, 2), y=round(ty, 2), node=node[0], pad=pads.get(str(i), 0)))
+    if "projected_radius_um" in spec:
+        taps = close_projected_radius(taps, sinks, trunk, spec)
     assign = {}
     for n, x, y in sinks:
         assign[n] = min(range(len(taps)), key=lambda i: (abs(taps[i]["x"] - x) + abs(taps[i]["y"] - y), i))
