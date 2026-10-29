@@ -1,0 +1,810 @@
+{
+ "status": "SOURCE-PREP ONLY: no physical kit/plan adoption",
+ "source": "actual qc_bind3 selected119 wrappers",
+ "types": 9,
+ "core_declarations": 36,
+ "physical_core_instances": 96,
+ "native_masters": 16,
+ "added_cycles": 0,
+ "frame_ports_unchanged": true,
+ "parameter_changes": false,
+ "blockers": [
+  "Actual selected MEMORY_ALIGNMENT=0 differs from canonical physical-main wrapper3; ONE-QC source/profile resolution required before physical adoption.",
+  "Old P6 generic core pin files expose phantom ctl_o/stm_o/sc_o and truncate actual c_o. Exact master pins/clock/PG slice must replace these atomically.",
+  "Original-capture preservation plus meaningful mutant/current synthesis and native macro models required before any P&R."
+ ],
+ "rows": [
+  {
+   "partition_type": "slw_su_l1__clcc9d0155",
+   "instance": "u_lane4",
+   "module": "qfd_qc_su_lane_w_l4",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    17.28,
+    34.56
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l1_u_lane4_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "d2e1bb36ab277b4fc047147a89d6945a95ffb23b76090206c3d3e0d87cf4b6f1",
+   "master_sha256": "8fa2c8223a6567c3978a8001085cf708fc5a0b7d83a7533fb4d55a63ef4a9c04",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l1__clcc9d0155",
+   "instance": "u_lane5",
+   "module": "qfd_qc_su_lane_w_l5",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    17.28,
+    354.24
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l1_u_lane5_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "d2e1bb36ab277b4fc047147a89d6945a95ffb23b76090206c3d3e0d87cf4b6f1",
+   "master_sha256": "fed7f938b7649c0ead7411e008fa0f50af574d03f28125b6d69c69ed6ace5488",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l1__clcc9d0155",
+   "instance": "u_lane6",
+   "module": "qfd_qc_su_lane_w_l6",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    17.28,
+    725.76
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l1_u_lane6_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "d2e1bb36ab277b4fc047147a89d6945a95ffb23b76090206c3d3e0d87cf4b6f1",
+   "master_sha256": "38edcef08e43bf5bb34b227c7d4870159b93dff3a5361b78b0bf05172175d2e9",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l1__clcc9d0155",
+   "instance": "u_lane7",
+   "module": "qfd_qc_su_lane_w_l7",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    17.28,
+    1045.44
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l1_u_lane7_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "d2e1bb36ab277b4fc047147a89d6945a95ffb23b76090206c3d3e0d87cf4b6f1",
+   "master_sha256": "fed407b399e04dcded4712fafb6154c640245ea464455b6fac02072625975b46",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l1__cla2a78701",
+   "instance": "u_lane4",
+   "module": "qfd_qc_su_lane_w_l4",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    17.28,
+    34.56
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l1_u_lane4_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "3dd642303b23814da6fb122244f4f4137fdf2b6cf781aa76c92574811488cc27",
+   "master_sha256": "8fa2c8223a6567c3978a8001085cf708fc5a0b7d83a7533fb4d55a63ef4a9c04",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l1__cla2a78701",
+   "instance": "u_lane5",
+   "module": "qfd_qc_su_lane_w_l5",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    17.28,
+    354.24
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l1_u_lane5_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "3dd642303b23814da6fb122244f4f4137fdf2b6cf781aa76c92574811488cc27",
+   "master_sha256": "fed7f938b7649c0ead7411e008fa0f50af574d03f28125b6d69c69ed6ace5488",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l1__cla2a78701",
+   "instance": "u_lane6",
+   "module": "qfd_qc_su_lane_w_l6",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    17.28,
+    725.76
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l1_u_lane6_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "3dd642303b23814da6fb122244f4f4137fdf2b6cf781aa76c92574811488cc27",
+   "master_sha256": "38edcef08e43bf5bb34b227c7d4870159b93dff3a5361b78b0bf05172175d2e9",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l1__cla2a78701",
+   "instance": "u_lane7",
+   "module": "qfd_qc_su_lane_w_l7",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    17.28,
+    1045.44
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l1_u_lane7_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "3dd642303b23814da6fb122244f4f4137fdf2b6cf781aa76c92574811488cc27",
+   "master_sha256": "fed407b399e04dcded4712fafb6154c640245ea464455b6fac02072625975b46",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l0__cl76fb247e",
+   "instance": "u_lane0",
+   "module": "qfd_qc_su_lane_w_l0",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    34.56
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane0_pins.json",
+   "input_bits": 760,
+   "output_bits": 302,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "9b53f7890fef115bd32ae2d0e1c59a308020ce084af3f851a7b5219832289e9e",
+   "master_sha256": "2a24477833b5007f56d50d080164a62fcd6a44eaad566ef636cf501e3db0a70c",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l0__cl76fb247e",
+   "instance": "u_lane1",
+   "module": "qfd_qc_su_lane_w_l1",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    354.24
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane1_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "9b53f7890fef115bd32ae2d0e1c59a308020ce084af3f851a7b5219832289e9e",
+   "master_sha256": "dd0cae1731550c09513ac1a730cda7d98ab57bfb8bd517bb5c6d46e37bf73bd7",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l0__cl76fb247e",
+   "instance": "u_lane2",
+   "module": "qfd_qc_su_lane_w_l2",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    725.76
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane2_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "9b53f7890fef115bd32ae2d0e1c59a308020ce084af3f851a7b5219832289e9e",
+   "master_sha256": "28f6b102a2fac539b3422bb78e448b1ff3f1a395ed076a5263ace359e1848f35",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l0__cl76fb247e",
+   "instance": "u_lane3",
+   "module": "qfd_qc_su_lane_w_l3",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    1045.44
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane3_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "9b53f7890fef115bd32ae2d0e1c59a308020ce084af3f851a7b5219832289e9e",
+   "master_sha256": "39ceca2d1148cf3fb7d9de0dd4460653301c27372c829e971e14f5aa46a070a2",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l0__cl1e5219ea",
+   "instance": "u_lane0",
+   "module": "qfd_qc_su_lane_w_l0",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    34.56
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane0_pins.json",
+   "input_bits": 760,
+   "output_bits": 302,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "c56510fae6514e2f3660258323ae6fd79e423a6ba9dcdc63fdb41b74addf629e",
+   "master_sha256": "2a24477833b5007f56d50d080164a62fcd6a44eaad566ef636cf501e3db0a70c",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l0__cl1e5219ea",
+   "instance": "u_lane1",
+   "module": "qfd_qc_su_lane_w_l1",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    354.24
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane1_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "c56510fae6514e2f3660258323ae6fd79e423a6ba9dcdc63fdb41b74addf629e",
+   "master_sha256": "dd0cae1731550c09513ac1a730cda7d98ab57bfb8bd517bb5c6d46e37bf73bd7",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l0__cl1e5219ea",
+   "instance": "u_lane2",
+   "module": "qfd_qc_su_lane_w_l2",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    725.76
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane2_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "c56510fae6514e2f3660258323ae6fd79e423a6ba9dcdc63fdb41b74addf629e",
+   "master_sha256": "28f6b102a2fac539b3422bb78e448b1ff3f1a395ed076a5263ace359e1848f35",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l0__cl1e5219ea",
+   "instance": "u_lane3",
+   "module": "qfd_qc_su_lane_w_l3",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    1045.44
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane3_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "c56510fae6514e2f3660258323ae6fd79e423a6ba9dcdc63fdb41b74addf629e",
+   "master_sha256": "39ceca2d1148cf3fb7d9de0dd4460653301c27372c829e971e14f5aa46a070a2",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l0__cl1a1c1f8f",
+   "instance": "u_lane0",
+   "module": "qfd_qc_su_lane_w_l0",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    34.56
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane0_pins.json",
+   "input_bits": 760,
+   "output_bits": 302,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "3e591d01105dd9999c5a43c5f59e42c497fd87e5b49c425fa39425ba9cac1561",
+   "master_sha256": "2a24477833b5007f56d50d080164a62fcd6a44eaad566ef636cf501e3db0a70c",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l0__cl1a1c1f8f",
+   "instance": "u_lane1",
+   "module": "qfd_qc_su_lane_w_l1",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    354.24
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane1_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "3e591d01105dd9999c5a43c5f59e42c497fd87e5b49c425fa39425ba9cac1561",
+   "master_sha256": "dd0cae1731550c09513ac1a730cda7d98ab57bfb8bd517bb5c6d46e37bf73bd7",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l0__cl1a1c1f8f",
+   "instance": "u_lane2",
+   "module": "qfd_qc_su_lane_w_l2",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    725.76
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane2_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "3e591d01105dd9999c5a43c5f59e42c497fd87e5b49c425fa39425ba9cac1561",
+   "master_sha256": "28f6b102a2fac539b3422bb78e448b1ff3f1a395ed076a5263ace359e1848f35",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "slw_su_l0__cl1a1c1f8f",
+   "instance": "u_lane3",
+   "module": "qfd_qc_su_lane_w_l3",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    1045.44
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane3_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "3e591d01105dd9999c5a43c5f59e42c497fd87e5b49c425fa39425ba9cac1561",
+   "master_sha256": "39ceca2d1148cf3fb7d9de0dd4460653301c27372c829e971e14f5aa46a070a2",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "sle_su_l1__cl5ea486db",
+   "instance": "u_lane4",
+   "module": "qfd_qc_su_lane_e_l4",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    17.28,
+    34.56
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l1_u_lane4_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "d13476ef9dd51f0110e4a870e5f9c1ad386aea5ce41d97596ce607b12b1636d9",
+   "master_sha256": "9f1f507ae69ee262879de0b2973def7415e57ed42526e395b9d890b6b9eaa9b2",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "sle_su_l1__cl5ea486db",
+   "instance": "u_lane5",
+   "module": "qfd_qc_su_lane_e_l5",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    17.28,
+    354.24
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l1_u_lane5_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "d13476ef9dd51f0110e4a870e5f9c1ad386aea5ce41d97596ce607b12b1636d9",
+   "master_sha256": "b994883340e5f5c395a49f663a371e646b35dea312c1a1435849749785c9cbb3",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "sle_su_l1__cl5ea486db",
+   "instance": "u_lane6",
+   "module": "qfd_qc_su_lane_e_l6",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    17.28,
+    725.76
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l1_u_lane6_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "d13476ef9dd51f0110e4a870e5f9c1ad386aea5ce41d97596ce607b12b1636d9",
+   "master_sha256": "4d6f96a8b393e7a8531c70f5d945b25aa429a6f3a96e494b07d4c501ec6b9e45",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "sle_su_l1__cl5ea486db",
+   "instance": "u_lane7",
+   "module": "qfd_qc_su_lane_e_l7",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    17.28,
+    1045.44
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l1_u_lane7_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "d13476ef9dd51f0110e4a870e5f9c1ad386aea5ce41d97596ce607b12b1636d9",
+   "master_sha256": "7ccb629c71e6add902d24d4112eef705f07264ee4c5abeb89c2229c811ea5d50",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "sle_su_l1__clc6d66f5b",
+   "instance": "u_lane4",
+   "module": "qfd_qc_su_lane_e_l4",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    17.28,
+    34.56
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l1_u_lane4_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "9cea035dd520e9edff4dc9805e28cfb9297042bfd10052f38cced440fbeb5d8c",
+   "master_sha256": "9f1f507ae69ee262879de0b2973def7415e57ed42526e395b9d890b6b9eaa9b2",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "sle_su_l1__clc6d66f5b",
+   "instance": "u_lane5",
+   "module": "qfd_qc_su_lane_e_l5",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    17.28,
+    354.24
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l1_u_lane5_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "9cea035dd520e9edff4dc9805e28cfb9297042bfd10052f38cced440fbeb5d8c",
+   "master_sha256": "b994883340e5f5c395a49f663a371e646b35dea312c1a1435849749785c9cbb3",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "sle_su_l1__clc6d66f5b",
+   "instance": "u_lane6",
+   "module": "qfd_qc_su_lane_e_l6",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    17.28,
+    725.76
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l1_u_lane6_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "9cea035dd520e9edff4dc9805e28cfb9297042bfd10052f38cced440fbeb5d8c",
+   "master_sha256": "4d6f96a8b393e7a8531c70f5d945b25aa429a6f3a96e494b07d4c501ec6b9e45",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "sle_su_l1__clc6d66f5b",
+   "instance": "u_lane7",
+   "module": "qfd_qc_su_lane_e_l7",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    17.28,
+    1045.44
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l1_u_lane7_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "9cea035dd520e9edff4dc9805e28cfb9297042bfd10052f38cced440fbeb5d8c",
+   "master_sha256": "7ccb629c71e6add902d24d4112eef705f07264ee4c5abeb89c2229c811ea5d50",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "sle_su_l0__cl7a55c676",
+   "instance": "u_lane0",
+   "module": "qfd_qc_su_lane_e_l0",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    34.56
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane0_pins.json",
+   "input_bits": 760,
+   "output_bits": 302,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "97192fec8ec45bc4380dbc5aba1413bea20062b17c8f421c8093246a48f7a098",
+   "master_sha256": "144ed884450c4e14802c93d753089b11e8c415345e63fd1e4ab51c34238f072e",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "sle_su_l0__cl7a55c676",
+   "instance": "u_lane1",
+   "module": "qfd_qc_su_lane_e_l1",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    354.24
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane1_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "97192fec8ec45bc4380dbc5aba1413bea20062b17c8f421c8093246a48f7a098",
+   "master_sha256": "c1cdb83a9417216a5faa105a23af12c0bc5d06002c4a956827ca7f179eac36f9",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "sle_su_l0__cl7a55c676",
+   "instance": "u_lane2",
+   "module": "qfd_qc_su_lane_e_l2",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    725.76
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane2_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "97192fec8ec45bc4380dbc5aba1413bea20062b17c8f421c8093246a48f7a098",
+   "master_sha256": "c60f12e9fa9103ce1daaffa6d0123a21ce865395883b12fb52547af1642cb1fe",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "sle_su_l0__cl7a55c676",
+   "instance": "u_lane3",
+   "module": "qfd_qc_su_lane_e_l3",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    1045.44
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane3_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "97192fec8ec45bc4380dbc5aba1413bea20062b17c8f421c8093246a48f7a098",
+   "master_sha256": "d9a5deedd315d4dcb4dfc98780d13eca47ab109d2740e5e6da3bbaa2b9bb376d",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "sle_su_l0__cl086d85ba",
+   "instance": "u_lane0",
+   "module": "qfd_qc_su_lane_e_l0",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    34.56
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane0_pins.json",
+   "input_bits": 760,
+   "output_bits": 302,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "04ed348a6af0641f954c9662ab9835f660428793a33c5ebcc4f48bbb1dd4370e",
+   "master_sha256": "144ed884450c4e14802c93d753089b11e8c415345e63fd1e4ab51c34238f072e",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "sle_su_l0__cl086d85ba",
+   "instance": "u_lane1",
+   "module": "qfd_qc_su_lane_e_l1",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    354.24
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane1_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "04ed348a6af0641f954c9662ab9835f660428793a33c5ebcc4f48bbb1dd4370e",
+   "master_sha256": "c1cdb83a9417216a5faa105a23af12c0bc5d06002c4a956827ca7f179eac36f9",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "sle_su_l0__cl086d85ba",
+   "instance": "u_lane2",
+   "module": "qfd_qc_su_lane_e_l2",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    725.76
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane2_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "04ed348a6af0641f954c9662ab9835f660428793a33c5ebcc4f48bbb1dd4370e",
+   "master_sha256": "c60f12e9fa9103ce1daaffa6d0123a21ce865395883b12fb52547af1642cb1fe",
+   "added_cycles": 0
+  },
+  {
+   "partition_type": "sle_su_l0__cl086d85ba",
+   "instance": "u_lane3",
+   "module": "qfd_qc_su_lane_e_l3",
+   "old_module": "qfd_qc_su_lane_w",
+   "origin_um": [
+    190.08,
+    1045.44
+   ],
+   "outline_um": [
+    414.72,
+    267.84
+   ],
+   "old_pins_file": "cores/su/slw_su_l0_u_lane3_pins.json",
+   "input_bits": 760,
+   "output_bits": 248,
+   "memory_alignment": 0,
+   "reset_source": "rst_n",
+   "source_partition_sha256": "04ed348a6af0641f954c9662ab9835f660428793a33c5ebcc4f48bbb1dd4370e",
+   "master_sha256": "d9a5deedd315d4dcb4dfc98780d13eca47ab109d2740e5e6da3bbaa2b9bb376d",
+   "added_cycles": 0
+  }
+ ]
+}
