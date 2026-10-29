@@ -1,0 +1,152 @@
+{
+  "scope": "existing artifact arithmetic only; not die STA or freeze",
+  "rows": [
+    {
+      "variant": "vK",
+      "edge": "rise",
+      "corner": "TT",
+      "pair_count": 378,
+      "independent_pair_U_ps": 43.33038368976865,
+      "recorded_pair_U_ps": 43.33,
+      "worst_pair": [
+        "L_clk",
+        "L_clk_t15"
+      ],
+      "target_80_pass": true,
+      "nominal_spread_ps": 27.051999999999907
+    },
+    {
+      "variant": "vK",
+      "edge": "rise",
+      "corner": "FF",
+      "pair_count": 378,
+      "independent_pair_U_ps": 40.58129055904299,
+      "recorded_pair_U_ps": 40.58,
+      "worst_pair": [
+        "L_clk",
+        "L_clk_t15"
+      ],
+      "target_80_pass": true,
+      "nominal_spread_ps": 24.519000000000005
+    },
+    {
+      "variant": "vK",
+      "edge": "fall",
+      "corner": "TT",
+      "pair_count": 378,
+      "independent_pair_U_ps": 44.463079213319915,
+      "recorded_pair_U_ps": 44.46,
+      "worst_pair": [
+        "L_clk",
+        "L_clk_t15"
+      ],
+      "target_80_pass": true,
+      "nominal_spread_ps": 27.82299999999998
+    },
+    {
+      "variant": "vK",
+      "edge": "fall",
+      "corner": "FF",
+      "pair_count": 378,
+      "independent_pair_U_ps": 41.898760872734606,
+      "recorded_pair_U_ps": 41.9,
+      "worst_pair": [
+        "L_clk",
+        "L_clk_t15"
+      ],
+      "target_80_pass": true,
+      "nominal_spread_ps": 25.454000000000008
+    },
+    {
+      "variant": "vT",
+      "edge": "rise",
+      "corner": "TT",
+      "pair_count": 378,
+      "independent_pair_U_ps": 77.86424324627532,
+      "recorded_pair_U_ps": 77.86,
+      "worst_pair": [
+        "L_clk",
+        "L_clk_t9"
+      ],
+      "target_80_pass": true,
+      "nominal_spread_ps": 59.544000000000096
+    },
+    {
+      "variant": "vT",
+      "edge": "rise",
+      "corner": "FF",
+      "pair_count": 378,
+      "independent_pair_U_ps": 73.21455681635445,
+      "recorded_pair_U_ps": 73.21,
+      "worst_pair": [
+        "L_clk",
+        "L_clk_t9"
+      ],
+      "target_80_pass": true,
+      "nominal_spread_ps": 54.87900000000002
+    },
+    {
+      "variant": "vT",
+      "edge": "fall",
+      "corner": "TT",
+      "pair_count": 378,
+      "independent_pair_U_ps": 83.1265437759654,
+      "recorded_pair_U_ps": 83.13,
+      "worst_pair": [
+        "L_clk",
+        "L_clk_t9"
+      ],
+      "target_80_pass": false,
+      "nominal_spread_ps": 64.40300000000002
+    },
+    {
+      "variant": "vT",
+      "edge": "fall",
+      "corner": "FF",
+      "pair_count": 378,
+      "independent_pair_U_ps": 80.04720141067713,
+      "recorded_pair_U_ps": 80.05,
+      "worst_pair": [
+        "L_clk",
+        "L_clk_t9"
+      ],
+      "target_80_pass": false,
+      "nominal_spread_ps": 61.17199999999997
+    }
+  ],
+  "selected_shape_checks": [
+    {
+      "source": "die-qc31/base/a3/c1/drt.odb",
+      "selected_net_to_mesh_overlap_rectangles": [
+        {
+          "net": "n_P1u",
+          "layer": "M9",
+          "overlap_um": [
+            0.07600000000002183,
+            13.44399999999996
+          ]
+        },
+        {
+          "net": "n_P1u",
+          "layer": "M9",
+          "overlap_um": [
+            0.07600000000002183,
+            150.2360000000001
+          ]
+        },
+        {
+          "net": "n_P1u",
+          "layer": "M9",
+          "overlap_um": [
+            0.0039999999999054126,
+            194.7199999999998
+          ]
+        }
+      ]
+    },
+    {
+      "source": "die-qc31/vK/a3/c1/drt.odb",
+      "selected_net_to_mesh_overlap_rectangles": []
+    }
+  ]
+}

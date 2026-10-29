@@ -308,6 +308,13 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
         a += ["--clock-rc", st["clock_rc"]]
     if st["cell"] != "buf":
         a += ["--clock-cell", st["cell"]]
+    eb = st.get("edge_balance", "none")
+    if eb == "dme_alt":                         # CLK-TOOL-8: region DME branch polarity chosen per node (duty)
+        if st["cell"] != "inv2":
+            raise ConfigError("stack.edge_balance dme_alt needs stack.cell inv2")
+        a.append("--clock-edge-alt")
+    elif eb != "none":
+        raise ConfigError(f"stack.edge_balance {eb!r}: none | dme_alt")
     if reg.get("form", "none") == "dme":
         mode = reg.get("dme_mode", True)
         a += ["--region-dme"] + ([] if mode is True else [str(mode)])
@@ -430,6 +437,8 @@ def refit_entry(cfg, registry, a):
     argv += ["--tap-from", a.tap_from] if a.tap_from else ["--tap"] + [str(x) for x in a.tap]
     if a.even_legs:
         argv.append("--even-legs")
+    if getattr(a, "placed_stages", False):
+        argv.append("--placed-stages")
     ok, cur, _ = stage_check(cfg, registry)
     built = stage_cal_file(cur) if (ok and cur) else None
     if built is not None:
@@ -623,6 +632,8 @@ def main(argv=None):
     g.add_argument("--tap-from")
     g.add_argument("--tap", nargs=2, type=float)
     rf.add_argument("--even-legs", action="store_true")
+    rf.add_argument("--placed-stages", action="store_true",
+                    help="fit retained native parent_of/sites chains, including isolated region coupons")
     rf.add_argument("--route")
     rf.add_argument("-o", required=True)
     rf.add_argument("--write", action="store_true", help="append the entry to --registry (refuses a duplicate id)")

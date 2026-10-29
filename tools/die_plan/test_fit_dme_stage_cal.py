@@ -69,3 +69,25 @@ def test_output_loads_into_die_trial(tmp_path, monkeypatch):
 def test_too_few_legs_fails(tmp_path):
     with pytest.raises(ValueError):
         F.fit([(1, [1, 10.0, 100.0, 0], 20.0, False)] * 3)
+
+
+def test_placed_stages_uses_retained_native_detour_and_count():
+    # Native chain is three stages and 28 um; ideal endpoint geometry is only
+    # 20 um. This difference is the retained HBM coupon's failure mechanism.
+    t = dict(nodes={"0": dict(x=0, y=0, parent=None, kids=[1]),
+                         "1": dict(x=20, y=0, parent=0, kids=[])},
+             node_buf={"0": "b0", "1": "b1"}, taps=[dict(node=1)],
+             parent_of={"b1": "r1", "r1": "r0", "r0": "b0"},
+             sites={"b0": [0, 0], "r0": [0, 4], "r1": [10, 4], "b1": [20, 0]})
+    a = {"b0": 10., "b1": 73.}
+    assert F.leg_rows(t, a) == []  # original dme-labelled mode unchanged
+    row, = F.leg_rows(t, a, placed_stages=True)
+    assert row[:3] == (1, [3, 28, 312, 0], 63.)
+    # A broken native chain must never fall back to the optimistic ideal leg.
+    t["parent_of"]["r0"] = "b1"
+    with pytest.raises(ValueError, match="no connected chain"):
+        F.leg_rows(t, a, placed_stages=True)
+    t["parent_of"]["r0"] = "b0"
+    del t["sites"]["r1"]
+    with pytest.raises(ValueError, match="missing site"):
+        F.leg_rows(t, a, placed_stages=True)

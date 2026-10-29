@@ -90,6 +90,19 @@ def test_hbm_loss_uses_the_schedule_not_the_ratio():
     assert AC.hbm_loss(run, cnt, "X.C", 2.0) is None
 
 
+@pytest.mark.parametrize("model", ["ds", "qwen"])
+@pytest.mark.parametrize("missing", ["hbm.first_access", "SM.drain", "SU.model_check"])
+def test_hbm_acceptance_refuses_incomplete_measured_costs(monkeypatch, model, missing):
+    sys.path.insert(0, str(AC.TOOLS))
+    from hgi_sim import timing
+    keys = {"SM.bf16_lines_per_row_k", "SM.drain", "SM.overhead", "SU.model_check", "hbm.first_access"}
+    monkeypatch.setattr(timing, "MEAS", {k: {"value": 1} for k in keys - {missing}})
+    # Refusal precedes programme/model loading: the sparse inputs which caused
+    # the original 576702 -> 557291 drift must never produce an accepted price.
+    with pytest.raises(AC.LedgerError, match=missing):
+        AC.hbm_schedule(model)
+
+
 def test_accept_within_limits(tmp_path):
     led = AC.empty_ledger()
     AC.propose(led, row(loss=4.9))

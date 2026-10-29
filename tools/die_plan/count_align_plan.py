@@ -522,7 +522,52 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
 # + OCV), so with OCV many start edges are ambiguous, and a crossing between regions that are far apart in that tree
 # sums every ambiguous edge on the path (QC t6: 6-9 cycles on all 94 FAILs, 10-11 start hops).
 START_EDGE_KEYS = ("launch", "capture", "launch_part", "capture_part", "retime", "unshared_a_ps", "unshared_b_ps",
-                   "fork_node", "clean_ok", "hop_um")
+                   "fork_node", "clean_ok", "hop_um", "clock_interval_ps", "data_delay_ps", "data_delay_source")
+
+
+def load_start_data_delay(path):
+    """HEAD-START-4 V1 (COORD 10-29, 12.18a: a model fix inside the existing related-pair gate, not a new check): the
+    START port's DATA path.  The clock-only model samples d = capture clock - launch clock; the start bit itself leaves
+    the launch flop at its clock edge and reaches the capture D after dd (clk->Q + relay chain + wire), so the sync
+    samples d - dd.  JSON {"ports": {"start:<src>-><dst>": [dd_lo_ps, dd_hi_ps]}, "model": {"lo_ps": [a, b],
+    "hi_ps": [a, b]} (optional), "basis": "..."}: per port the MEASURED launch CLK -> capture D range (lo = min over
+    corners, the FF min; hi = max, the TT max); model (optional, planner only) = a + b x hop_um for candidate ports with
+    no measurement (retime / contraction search, new stages), labelled 'model'.  die_sta_related reads only 'ports'."""
+    doc = json.load(open(path))
+    ports = {}
+    for p, v in (doc.get("ports") or {}).items():
+        lo, hi = float(v[0]), float(v[1])
+        if not (math.isfinite(lo) and math.isfinite(hi)) or lo > hi:
+            raise ValueError(f"--start-data-delay {p}: want finite [lo, hi] with lo <= hi, got {v}")
+        ports[p] = (lo, hi)
+    model = doc.get("model")
+    if model is not None:
+        model = {k: (float(model[k][0]), float(model[k][1])) for k in ("lo_ps", "hi_ps")}
+    return dict(ports=ports, model=model, basis=doc.get("basis"))
+
+
+def data_delay_of(dd, port, r):
+    """(lo, hi, source) of a start port: measured, else the hop model, else None (the port is never clean: a candidate
+    is not taken, a final port FAILs the plan; fail closed)"""
+    if port in dd["ports"]:
+        return dd["ports"][port] + ("measured",)
+    m = dd.get("model")
+    if m is None:
+        return None
+    h = float(r["hop_um"])
+    return m["lo_ps"][0] + m["lo_ps"][1] * h, m["hi_ps"][0] + m["hi_ps"][1] * h, "model"
+
+
+def shift_data_delay(r, lo, hi, source):
+    """the port row on the SAMPLED phase d - dd: interval [lo_c - dd_hi, hi_c - dd_lo] (rise and measured fall), nominal
+    d - (dd_lo + dd_hi) / 2; the clock-only interval and dd are kept for the record"""
+    clo, chi = r["d_ps"] - r["p_dn_ps"], r["d_ps"] + r["p_up_ps"]
+    nlo, nhi, nd = clo - hi, chi - lo, r["d_ps"] - 0.5 * (lo + hi)
+    q = dict(r, d_ps=nd, p_dn_ps=nd - nlo, p_up_ps=nhi - nd, clock_interval_ps=[round(clo, 1), round(chi, 1)],
+             data_delay_ps=[round(lo, 1), round(hi, 1)], data_delay_source=source)
+    if r.get("fall_lo") is not None:
+        q["fall_lo"], q["fall_hi"] = r["fall_lo"] - hi, r["fall_hi"] - lo
+    return q
 
 
 def width_robust(r, T, ap, skew_range=0.0):
@@ -616,7 +661,8 @@ def native_start_clocks(rows, ctx):
 
 
 def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew=(0.0, 0.0), skew_clean=False,
-                      retime_max=8, clean_by="phase", retime_up=False, prev=None, max_hop_um=None, capture_taps=None, launch_taps=None, endpoint_xy=None, root_region=None, distinct_stage_clocks=False, leaf_origins=False):
+                      retime_max=8, clean_by="phase", retime_up=False, prev=None, max_hop_um=None, capture_taps=None, launch_taps=None, endpoint_xy=None, root_region=None, distinct_stage_clocks=False, leaf_origins=False,
+                      data_delay=None):
     """START TREE = CLOCK TREE (START-TREE-1).  ctx = clock_contexts() ({corner: meta/taps/ocv/rng}, first = nominal).
     Nodes: every data region at its clock root (longest common tree_path prefix of its taps) and every branch node of
     the clock subtree spanning those roots (virtual 'st:<path>', a retime flop on that tree node).  Each node's start
@@ -646,9 +692,13 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     max_hop_um (opt-in): a clean segment must also fit this Manhattan physical tap-to-tap reach.
     This preserves branch stages and inserts existing clock-node retime stages; a gap with no legal
     intermediate node fails clean_ok. Emitted flop siting and final pin geometry still need GEOM.
+    data_delay (HEAD-START-4 V1, opt-in --start-data-delay, load_start_data_delay): every port (final and candidate) is
+    judged on the sampled phase d - dd (shift_data_delay); None (default): unchanged (clock-only).
     Returns (root, edges, info)."""
     if max_hop_um is not None and (not math.isfinite(max_hop_um) or max_hop_um <= 0):
         raise ValueError("START max hop must be finite and positive")
+    if data_delay is not None and data_delay.get("model") is not None and max_hop_um is None:
+        raise ValueError("--start-data-delay hop model needs --start-max-hop-um (port hop geometry)")
     import die_sta_related as DSR
     cs = list(ctx)
     c0 = ctx[cs[0]]
@@ -779,6 +829,13 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
                     fall_lo=flo if fall_ok else None, fall_hi=fhi if fall_ok else None,
                     unshared_a_ps=float(A["late_ps"]) - float(nl[node]), unshared_b_ps=float(B["late_ps"]) - float(nl[node]))
 
+    def ival(a, b, src, dst):
+        r = interval(a, b)
+        if data_delay is None:
+            return r
+        dd = data_delay_of(data_delay, f"start:{src}->{dst}", r)
+        return dict(r, data_delay_source="missing") if dd is None else shift_data_delay(r, *dd)
+
     smax = max(abs(float(start_skew[0])), abs(float(start_skew[1])))
     prev_mid = {e["dst"] for e in (prev or {}).get("start_edges", []) if e.get("retime")}
     prev_nodes = {e["dst"] for e in (prev or {}).get("start_edges", []) if not e.get("retime")}
@@ -794,7 +851,7 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
             # port's arrivals must always leave one edge clean; without a measured fall arrival there is one edge
             # only, so no port is width-clean (fail closed)
             ok = ok and width_robust(q, T, ap, float(start_skew[1]) - float(start_skew[0]))
-        return ok and (max_hop_um is None or r["hop_um"] <= max_hop_um)
+        return ok and (max_hop_um is None or r["hop_um"] <= max_hop_um) and r.get("data_delay_source") != "missing"
 
     def part(k):
         return c0["taps"][k].get("part")
@@ -839,7 +896,7 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
 
         def direct_ok(c):
             cp = capture_of(c)
-            return clean(interval(launch_of(x, c0["taps"][cp]["tree_path"]), cp))
+            return clean(ival(launch_of(x, c0["taps"][cp]["tree_path"]), cp, x, c))
         if v in prev_nodes:
             kept += 1           # FLOW-GEN-2 --start-prev: the previous plan kept this branch stage; keep it
             continue
@@ -858,7 +915,7 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
         lau = launch_of(x, cpath)
         src, chain = x, []
         while True:
-            r = interval(lau, cap)
+            r = ival(lau, cap, src, y)
             if clean(r) or len(chain) >= retime_max:
                 break
             f = _lcp(c0["taps"][lau]["tree_path"], cpath)
@@ -869,14 +926,14 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
             for n in (range(stop, len(f), -1) if prev_mid else ()):
                 mp = cpath[:n]
                 if f"st:{mp}" in prev_mid:
-                    rm = interval(lau, vtap(cs[0], mp))
+                    rm = ival(lau, vtap(cs[0], mp), src, f"st:{mp}")
                     if clean(rm):
                         best = (mp, rm)
                         kept += 1
                         break
             for n in (range(stop, len(f), -1) if best is None else ()):
                 mp = cpath[:n]
-                rm = interval(lau, vtap(cs[0], mp))
+                rm = ival(lau, vtap(cs[0], mp), src, f"st:{mp}")
                 if clean(rm):
                     best = (mp, rm)
                     break
@@ -888,7 +945,7 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
                     mp = lp[:n]
                     if mp not in nlp:
                         continue
-                    rm = interval(lau, vtap(cs[0], mp))
+                    rm = ival(lau, vtap(cs[0], mp), src, f"st:{mp}@{src if lau.startswith('__st__') else lau}")
                     if clean(rm):
                         best, up = (mp, rm), True
                         break
@@ -929,6 +986,13 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
         info["leaf_origins"] = True
     if max_hop_um is not None:
         info.update(max_hop_um=max_hop_um, reach_fail=sum(e["hop_um"] > max_hop_um for e in edges))
+    if data_delay is not None:
+        used = {e["port"] for e in edges}
+        info["data_delay"] = dict(basis=data_delay.get("basis"), model=data_delay.get("model"),
+                                  measured=sum(e["data_delay_source"] == "measured" for e in edges),
+                                  modelled=sum(e["data_delay_source"] == "model" for e in edges),
+                                  missing=sum(e["data_delay_source"] == "missing" for e in edges),
+                                  measured_unused=len(set(data_delay["ports"]) - used))
     if prev is not None:
         info["prev_kept"] = kept
         info["prev_nodes"] = len(prev_mid) + len(prev_nodes)
@@ -1157,6 +1221,11 @@ def add_start_tree_args(ap):
                     help="--start-tree clock (opt-in, FLOW-GEN-2): deterministic tie-break between passes: keep the "
                          "retime nodes and start EDGE_FALL picks of this previous count_align_plan --out doc wherever "
                          "they are still clean / tie the best edge (default off = byte-identical)")
+    ap.add_argument("--start-data-delay", metavar="JSON",
+                    help="--start-tree clock (opt-in, HEAD-START-4 V1): per start port MEASURED launch CLK -> capture D "
+                         "delay {ports: {port: [lo, hi]}, model: {lo_ps: [a, b], hi_ps: [a, b]} (a + b x hop_um, "
+                         "candidate ports)}; each port is judged on the sampled phase d - dd (load_start_data_delay); "
+                         "default off = byte-identical (clock-only)")
     ap.add_argument("--start-clean", choices=("phase", "width"), default="phase",
                     help="--start-tree clock: 'phase' (default) = the CA rule: the port's derated interval (shared model, "
                          "OCV + droop) keeps >= T/8 from every sampling boundary of the chosen edge; 'width' (stricter) = "
@@ -1179,6 +1248,8 @@ def check_start_tree_args(a, err):
             err("--start-capture-taps needs --start-tree clock")
         if getattr(a, "start_max_hop_um", None) is not None:
             err("--start-max-hop-um needs --start-tree clock")
+        if getattr(a, "start_data_delay", None):
+            err("--start-data-delay needs --start-tree clock")
         return
     if not (a.sta_proof and a.sta_plan):
         err("--start-tree clock needs --sta-proof and --sta-plan (the clock tree)")
@@ -1217,7 +1288,9 @@ def start_tree_from_args(a, rows, err):
                                           captures, launches,
                                           json.load(open(a.start_endpoint_xy)) if getattr(a, "start_endpoint_xy", None) else None,
                                           getattr(a, "start_root_region", None), bool(native),
-                                          getattr(a, "start_leaf_origins", False))
+                                          getattr(a, "start_leaf_origins", False),
+                                          load_start_data_delay(a.start_data_delay)
+                                          if getattr(a, "start_data_delay", None) else None)
     if native is not None:
         info["native_origin_clocks"] = native
     return edges, root, info

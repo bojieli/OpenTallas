@@ -18,18 +18,21 @@ import pytest  # noqa: E402
 
 G = json.loads(MC.GOLDEN.read_text())
 B4, B24, B6, INV = ("BUFx4_ASAP7_75t_R", "BUFx24_ASAP7_75t_R", "BUFx6f_ASAP7_75t_R", "CKINVDCx16_ASAP7_75t_R")
+B8 = "BUFx8_ASAP7_75t_R"      # HEAD-START-4: local clock-entry buffers of the HEAD START vehicle
 KEYS = {"late_ps": "rise_late", "early_ps": "rise_early", "fall_late_ps": "fall_late", "fall_early_ps": "fall_early"}
 
 
 def test_table_is_the_golden_fit():
     """SPICE_CLOCK_CAL_CELL is exactly the bounding fit of the golden rows (no hand-edited factor)."""
     assert MC.fit_cell_factors(G["raw_rows"]) == D.SPICE_CLOCK_CAL_CELL
-    assert {B4, B24, B6, INV} <= set(D.SPICE_CLOCK_CAL_CELL)
+    assert {B4, B24, B6, B8, INV} <= set(D.SPICE_CLOCK_CAL_CELL)
+    assert MC.fit_cell_factors([r for r in G["raw_rows"] if r["case"] == "bufx8_1x60_d20"])[B8] == \
+        D.SPICE_CLOCK_CAL_CELL[B8]                     # the BUFx8 row comes from its own bench only
 
 
 def test_golden_has_per_master_benches_and_routed_masters():
     cases = {r["case"]: r for r in G["raw_rows"]}
-    for n in ("bufx4_dly2_d32", "bufx4_1x30_d20", "bufx6f_1x60_d20"):
+    for n in ("bufx4_dly2_d32", "bufx4_1x30_d20", "bufx6f_1x60_d20", "bufx8_1x60_d20"):
         assert n in cases and n in MC.CASES
     rows = [r for r in G["raw_rows"] if r["case"] == "routed_hd_tile_h16_t33"]
     assert rows and all(r.get("masters") for r in rows)
@@ -44,6 +47,8 @@ def test_every_golden_row_bounded():
     bad = MC.bound_violations(G, D)
     assert not bad, bad[:10]
     assert G["modes"]["spice_cell"]
+    b8 = [k for k in G["modes"]["spice_cell"] if k.startswith("bufx8_1x60_d20|") and not k.endswith("|duty")]
+    assert len(b8) == 8 and all(k in MC.ratios(G["raw_rows"], D)["spice_cell"] for k in b8)   # BUFx8 rows covered
 
 
 def test_mutant_bufx24_factor_on_bufx4_fails(monkeypatch):
