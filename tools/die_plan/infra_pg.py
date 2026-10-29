@@ -117,7 +117,8 @@ def resolved_bumps(P, pg=None, pitch_um=None):
 def pg_bumps(P, io, pitch=None, phy=True):
     """Core C4 power bumps (die_trial.bump_grid) + every PHY window's own PG micro-bump lattice (VDD/VSS by parity).
     The plan uses every 150-um site of a PHY window for signals, so without these a PHY window has no supply at all."""
-    out = list(D.bump_grid(P, io, pitch=pitch))
+    fields = bool(D.bump_contract(P).get("fields"))
+    out = list(D.bump_grid(P, io, pitch=pitch, pads=True) if fields else D.bump_grid(P, io, pitch=pitch))
     if phy:
         for w in io:
             out += _phy_lattice(w["rect_um"], phy_pg_pitch(phy_kind(w.get("iface") or "", w.get("name", ""))))[1]
@@ -640,9 +641,9 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     Pg.die["pg"]["bumps"] = bump_cfg
     bp = bump_cfg["pitch_um"]
     allb = pg_bumps(Pg, io, pitch=bp)
-    retained = [(n, x, y) for n, x, y in allb if x0 < x < x1 and y0 < y < y1]
-    require_typed_phy_pad(retained, io, bump_cfg["pad_um"])
-    bumps = [(n, round(x - x0, 3), round(y - y0, 3)) for n, x, y in retained]
+    retained = [b for b in allb if x0 < b[1] < x1 and y0 < b[2] < y1]
+    require_typed_phy_pad([b[:3] for b in retained], io, bump_cfg["pad_um"])
+    bumps = [(b[0], round(b[1] - x0, 3), round(b[2] - y0, 3)) + tuple(b[3:]) for b in retained]
     Pw = _PG(P, local_grid)
     Pw.die["pg"]["bumps"] = bump_cfg
     out = Path(out)
@@ -725,7 +726,7 @@ def die_kit(P, plan_dir, pg, kit, out):
     Pg.die["pg"]["bumps"] = bump_cfg
     io = _pg_io(P, plan_dir)
     bumps = pg_bumps(Pg, io, pitch=bump_cfg["pitch_um"])
-    require_typed_phy_pad(bumps, io, bump_cfg["pad_um"])
+    require_typed_phy_pad([b[:3] for b in bumps], io, bump_cfg["pad_um"])
     (out / "psm" / "pdn.tcl").write_text(D.psm_pdn_tcl(Pg))
     (out / "psm" / "bumps.tcl").write_text(D.bumps_tcl(Pg, bumps))
     (out / "psm" / "power.tcl").write_text("\n".join(f"set_pdnsim_inst_power -inst {D.sv(n)} -power {w:.6f}"
