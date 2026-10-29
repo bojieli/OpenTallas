@@ -79,3 +79,48 @@ Parent calendar dates, physical capacity, clocks, reset delivery and die
 qualification remain open. The source adapter explicitly rejects requested
 runtime adoption and serial_k2, and checks caller-declared connected widths
 against the actual source before generating any candidate.
+
+## All 16 DMA legs and combined 144-path source
+
+The source-guided DMA geometry worker reconstructed all eight actual
+17-bit request and 257-bit response legs using current D18 pin files.
+Those pin ABIs are already correct: the 137/258/2064 widths and reversed
+rows were stale internal-station metadata. The authoritative North DMA
+core is `u_hb_dbk_Q__q1`, resolved from actual bindings. No epoch was added.
+The geometry/count preparation reports all 2,192 pins, no missing/surplus
+pins, maximum per-bit hop 362.88 um, and no station centre inside any of
+159 core bodies plus 4.32-um halos. Full per-bit FF body packing is still
+required. The independent geometry worker owns its diagram/review and
+plan event; this adapter does not route anything.
+
+Request and return station counts per bank are each
+`[17,20,15,16,5,8,3,6]`, including the two explicit endpoint stations.
+These 16 source paths add 24,660 FF bits, with 180 reset control bits.
+`dma16_contract.json` materializes their actual source slices. The combined
+VMS128 + DMA16 candidate is staged at
+intel1:/srv/opentallas-scratch2/claude/codex-hbm-direct-station-0822/top_vms128_dma16_geometry.sv,
+with combined144_contract.json and combined144_receipt.json alongside.
+All 379 native instances/masters/parameters remain unchanged; 144 paths
+rewrite 102 sink ports and preserve every other port and unselected bit.
+Total source FF cost is 201,458 bits, including 3,254 reset control bits.
+
+The eight unpadded DMA return budgets FAIL their common RR_RT=80 date:
+they require an additional `[39,33,43,41,63,57,67,61]` cycles. The budget
+uses request pin launch to response pin launch, with intrinsic latency 7
+from the actual-bank component measurement and controller RTL contract;
+the consumer captures one edge later. A budget helper publishes both
+options without selecting either: request padding costs 6,868 FF bits
+and changes the bank read sample dates, requiring a compiler memory-version
+calendar; response padding preserves those sample dates but needs
+103,828 buffer bits and each bank exceeds the 2-kb SRAM threshold. The
+current dated calendar has no qualified immutable-read window, so no
+padding or runtime adoption is selected. The combined source remains
+preparation and explicitly reports `qualifies_parent_budget=false`.
+
+Five focused tests pass in 3.92 seconds. Separately, one bounded Yosys
+proc/opt of the exact emitted 128-path station glue (upstream cores are
+arbitrary inputs) retains exactly 173,724 resetless `$dff` bits and 3,074
+synchronous-control `$sdff` bits. This establishes emitted-state retention
+without a full native core elaboration or physical mapping. That job is
+terminal at intel1 codex-hbm-direct-station-0822/station_scope.*; no
+physical source gate or token pass is inferred.

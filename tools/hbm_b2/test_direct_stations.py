@@ -6,7 +6,7 @@ import tempfile
 import sys
 import unittest
 
-from hbm_b2.direct_stations import materialize
+from hbm_b2.direct_stations import dma_return_budget, materialize
 
 
 SOURCE = """module native (clk, drive, other, result, mirror);
@@ -72,6 +72,25 @@ endmodule
 
 
 class DirectStationTest(unittest.TestCase):
+    def test_dma_launch_budget_preserves_memory_date_choices(self):
+        counts = [17, 20, 15, 16, 5, 8, 3, 6]
+        receipt = dict(chains=[dict(name=f"{direction}{bank}", width=width, added_cycles=count)
+                               for bank, count in enumerate(counts)
+                               for direction, width in (("q", 17), ("r", 257))])
+        contract = dict(edge_contract="rq_launch_to_rr_launch", target_cycles=80, intrinsic_cycles=7,
+                        banks=[dict(bank=i, request_chain=f"q{i}", response_chain=f"r{i}") for i in range(8)])
+        result = dma_return_budget(receipt, contract)
+        self.assertEqual([row["extra_cycles_needed"] for row in result["rows"]], [39, 33, 43, 41, 63, 57, 67, 61])
+        self.assertEqual(sum(row["request_option"]["extra_ff_bits"] for row in result["rows"]), 6868)
+        self.assertEqual(sum(row["response_option"]["extra_buffer_bits"] for row in result["rows"]), 103828)
+        self.assertTrue(all(row["response_option"]["requires_sram"] for row in result["rows"]))
+        self.assertFalse(result["qualifies_parent_budget"])
+        self.assertFalse(result["padding_selected"])
+        with self.assertRaisesRegex(ValueError, "all eight"):
+            dma_return_budget(receipt, dict(contract, banks=contract["banks"][:7]))
+        with self.assertRaisesRegex(ValueError, "launch edges"):
+            dma_return_budget(receipt, dict(contract, edge_contract="consumer_capture"))
+
     def test_disabled_cli_preserves_original_bytes(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

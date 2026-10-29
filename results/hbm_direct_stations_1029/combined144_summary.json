@@ -1,0 +1,193 @@
+{
+  "enabled": true,
+  "scope": "SOURCE_PREP_ONLY",
+  "qualifies_physical": false,
+  "qualifies_token": false,
+  "dma_return_budget": {
+    "edge_contract": "rq_launch_to_rr_launch",
+    "intrinsic_cycles": 7,
+    "target_cycles": 80,
+    "rows": [
+      {
+        "bank": 0,
+        "request_stages": 17,
+        "response_stages": 17,
+        "bank_read_sample_edge": 18,
+        "unpadded_return_launch_edge": 41,
+        "unpadded_consumer_capture_edge": 42,
+        "target_return_launch_edge": 80,
+        "extra_cycles_needed": 39,
+        "status": "NEEDS_PADDING",
+        "request_option": {
+          "extra_ff_bits": 663,
+          "read_sample_shift_cycles": 39,
+          "requires_memory_version_calendar": true
+        },
+        "response_option": {
+          "extra_buffer_bits": 10023,
+          "read_sample_shift_cycles": 0,
+          "requires_sram": true
+        }
+      },
+      {
+        "bank": 1,
+        "request_stages": 20,
+        "response_stages": 20,
+        "bank_read_sample_edge": 21,
+        "unpadded_return_launch_edge": 47,
+        "unpadded_consumer_capture_edge": 48,
+        "target_return_launch_edge": 80,
+        "extra_cycles_needed": 33,
+        "status": "NEEDS_PADDING",
+        "request_option": {
+          "extra_ff_bits": 561,
+          "read_sample_shift_cycles": 33,
+          "requires_memory_version_calendar": true
+        },
+        "response_option": {
+          "extra_buffer_bits": 8481,
+          "read_sample_shift_cycles": 0,
+          "requires_sram": true
+        }
+      },
+      {
+        "bank": 2,
+        "request_stages": 15,
+        "response_stages": 15,
+        "bank_read_sample_edge": 16,
+        "unpadded_return_launch_edge": 37,
+        "unpadded_consumer_capture_edge": 38,
+        "target_return_launch_edge": 80,
+        "extra_cycles_needed": 43,
+        "status": "NEEDS_PADDING",
+        "request_option": {
+          "extra_ff_bits": 731,
+          "read_sample_shift_cycles": 43,
+          "requires_memory_version_calendar": true
+        },
+        "response_option": {
+          "extra_buffer_bits": 11051,
+          "read_sample_shift_cycles": 0,
+          "requires_sram": true
+        }
+      },
+      {
+        "bank": 3,
+        "request_stages": 16,
+        "response_stages": 16,
+        "bank_read_sample_edge": 17,
+        "unpadded_return_launch_edge": 39,
+        "unpadded_consumer_capture_edge": 40,
+        "target_return_launch_edge": 80,
+        "extra_cycles_needed": 41,
+        "status": "NEEDS_PADDING",
+        "request_option": {
+          "extra_ff_bits": 697,
+          "read_sample_shift_cycles": 41,
+          "requires_memory_version_calendar": true
+        },
+        "response_option": {
+          "extra_buffer_bits": 10537,
+          "read_sample_shift_cycles": 0,
+          "requires_sram": true
+        }
+      },
+      {
+        "bank": 4,
+        "request_stages": 5,
+        "response_stages": 5,
+        "bank_read_sample_edge": 6,
+        "unpadded_return_launch_edge": 17,
+        "unpadded_consumer_capture_edge": 18,
+        "target_return_launch_edge": 80,
+        "extra_cycles_needed": 63,
+        "status": "NEEDS_PADDING",
+        "request_option": {
+          "extra_ff_bits": 1071,
+          "read_sample_shift_cycles": 63,
+          "requires_memory_version_calendar": true
+        },
+        "response_option": {
+          "extra_buffer_bits": 16191,
+          "read_sample_shift_cycles": 0,
+          "requires_sram": true
+        }
+      },
+      {
+        "bank": 5,
+        "request_stages": 8,
+        "response_stages": 8,
+        "bank_read_sample_edge": 9,
+        "unpadded_return_launch_edge": 23,
+        "unpadded_consumer_capture_edge": 24,
+        "target_return_launch_edge": 80,
+        "extra_cycles_needed": 57,
+        "status": "NEEDS_PADDING",
+        "request_option": {
+          "extra_ff_bits": 969,
+          "read_sample_shift_cycles": 57,
+          "requires_memory_version_calendar": true
+        },
+        "response_option": {
+          "extra_buffer_bits": 14649,
+          "read_sample_shift_cycles": 0,
+          "requires_sram": true
+        }
+      },
+      {
+        "bank": 6,
+        "request_stages": 3,
+        "response_stages": 3,
+        "bank_read_sample_edge": 4,
+        "unpadded_return_launch_edge": 13,
+        "unpadded_consumer_capture_edge": 14,
+        "target_return_launch_edge": 80,
+        "extra_cycles_needed": 67,
+        "status": "NEEDS_PADDING",
+        "request_option": {
+          "extra_ff_bits": 1139,
+          "read_sample_shift_cycles": 67,
+          "requires_memory_version_calendar": true
+        },
+        "response_option": {
+          "extra_buffer_bits": 17219,
+          "read_sample_shift_cycles": 0,
+          "requires_sram": true
+        }
+      },
+      {
+        "bank": 7,
+        "request_stages": 6,
+        "response_stages": 6,
+        "bank_read_sample_edge": 7,
+        "unpadded_return_launch_edge": 19,
+        "unpadded_consumer_capture_edge": 20,
+        "target_return_launch_edge": 80,
+        "extra_cycles_needed": 61,
+        "status": "NEEDS_PADDING",
+        "request_option": {
+          "extra_ff_bits": 1037,
+          "read_sample_shift_cycles": 61,
+          "requires_memory_version_calendar": true
+        },
+        "response_option": {
+          "extra_buffer_bits": 15677,
+          "read_sample_shift_cycles": 0,
+          "requires_sram": true
+        }
+      }
+    ],
+    "padding_selected": false,
+    "qualifies_parent_budget": false,
+    "qualifies_memory_calendar": false
+  },
+  "actual_connection_check": {
+    "native_instances": 379,
+    "chains": 144,
+    "sink_ports_changed": 102,
+    "all_other_ports_unchanged": true,
+    "all_other_sink_bits_unchanged": true
+  },
+  "register_bits": 201458,
+  "control_register_bits": 3254
+}

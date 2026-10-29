@@ -42,6 +42,45 @@ def expression(segments):
     return terms[0] if len(terms) == 1 else "{" + ", ".join(terms) + "}"
 
 
+def dma_return_budget(receipt, contract):
+    """Compose dates/costs without choosing a memory-access-changing padding."""
+    if contract["edge_contract"] != "rq_launch_to_rr_launch":
+        raise ValueError("DMA budget must use pin launch edges, not consumer capture edges")
+    target, intrinsic = contract["target_cycles"], contract["intrinsic_cycles"]
+    if type(target) is not int or type(intrinsic) is not int or target < 1 or intrinsic < 0:
+        raise ValueError("DMA target and intrinsic latency must be integer cycles")
+    chains = {c["name"]: c for c in receipt["chains"]}
+    rows = []
+    if sorted(b["bank"] for b in contract["banks"]) != list(range(8)):
+        raise ValueError("DMA return budget requires exactly all eight banks")
+    references = [bank[key] for bank in contract["banks"] for key in ("request_chain", "response_chain")]
+    if len(set(references)) != 16:
+        raise ValueError("DMA return budget requires sixteen distinct directed paths")
+    for bank in sorted(contract["banks"], key=lambda b: b["bank"]):
+        request, response = chains[bank["request_chain"]], chains[bank["response_chain"]]
+        if request["width"] != 17 or response["width"] != 257:
+            raise ValueError("native DMA bank request/response widths must be 17/257")
+        q, r = request["added_cycles"], response["added_cycles"]
+        launch = q + intrinsic + r
+        padding = target - launch
+        rows.append(dict(bank=bank["bank"], request_stages=q, response_stages=r,
+                         bank_read_sample_edge=q + 1,
+                         unpadded_return_launch_edge=launch,
+                         unpadded_consumer_capture_edge=launch + 1,
+                         target_return_launch_edge=target, extra_cycles_needed=padding,
+                         status="MATCH" if padding == 0 else ("NEEDS_PADDING" if padding > 0 else "EXCEEDS_TARGET"),
+                         request_option=dict(extra_ff_bits=17 * padding if padding >= 0 else None,
+                                             read_sample_shift_cycles=padding,
+                                             requires_memory_version_calendar=True),
+                         response_option=dict(extra_buffer_bits=257 * padding if padding >= 0 else None,
+                                              read_sample_shift_cycles=0,
+                                              requires_sram=(257 * padding > 2048))))
+    return dict(edge_contract=contract["edge_contract"], intrinsic_cycles=intrinsic,
+                target_cycles=target, rows=rows, padding_selected=False,
+                qualifies_parent_budget=all(row["status"] == "MATCH" for row in rows),
+                qualifies_memory_calendar=False)
+
+
 def materialize(text, chains, *, enabled=False):
     if not enabled:
         return text, dict(enabled=False, added_cycles=0, chains=[])
@@ -170,6 +209,8 @@ def materialize(text, chains, *, enabled=False):
                             source_cycles_before=0, source_cycles_after=stages,
                             added_cycles=stages, register_bits=width * stages,
                             register_names=names, clock=source_clock,
+                            source_clock_port=chain.get("source_clock_port", "clk"),
+                            sink_clock_port=chain.get("sink_clock_port", "clk"),
                             reset=reset or "none", control_mask=control_mask,
                             data_reset=False,
                             reset_delivery_qualified=False,
@@ -192,6 +233,8 @@ def main():
     if contract.get("runtime_adopt", False):
         parser.error("source preparation cannot adopt an incomplete parent timing bundle")
     result, receipt = materialize(args.source.read_bytes().decode("utf-8"), contract["chains"], enabled=args.enable)
+    if args.enable and "dma_return_budget" in contract:
+        receipt["dma_return_budget"] = dma_return_budget(receipt, contract["dma_return_budget"])
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_bytes(result.encode("utf-8"))
     args.receipt.parent.mkdir(parents=True, exist_ok=True)
