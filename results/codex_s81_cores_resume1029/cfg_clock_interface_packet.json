@@ -1,0 +1,274 @@
+{
+  "status": "READY source packet; HOLD parent event and fresh physical implementation",
+  "generator_commit": "b76db2f1a",
+  "generator_dependencies": [
+    "af5ba0b27",
+    "562c58ae6"
+  ],
+  "source_commit": "1dfca9901",
+  "pin": "clk[0]",
+  "source_rtl_width": "input wire [0:0] clk; elaborated by rtl_port_dirs during real generation",
+  "clock_entry": {
+    "layer": "M5",
+    "xy_um": [
+      15.132,
+      30.24
+    ],
+    "rect_um": [
+      15.108,
+      30.0,
+      15.156,
+      30.48
+    ]
+  },
+  "rows": [
+    {
+      "inst": "u_r0.u_s1",
+      "origin_um": [
+        328.32,
+        457.92
+      ],
+      "orient": "R0",
+      "outline_um": [
+        30.24,
+        60.48
+      ],
+      "partition_type": "col_h10_r0_p1__t1",
+      "prospective_parent_local_clock_xy_um": [
+        343.452,
+        488.16
+      ]
+    },
+    {
+      "inst": "u_r0.u_s5",
+      "origin_um": [
+        328.32,
+        1131.84
+      ],
+      "orient": "R0",
+      "outline_um": [
+        30.24,
+        60.48
+      ],
+      "partition_type": "col_h10_r0_p1__t1",
+      "prospective_parent_local_clock_xy_um": [
+        343.452,
+        1162.08
+      ]
+    },
+    {
+      "inst": "u_r1.u_s10",
+      "origin_um": [
+        328.32,
+        933.12
+      ],
+      "orient": "R0",
+      "outline_um": [
+        30.24,
+        60.48
+      ],
+      "partition_type": "col_h10_r1__t1",
+      "prospective_parent_local_clock_xy_um": [
+        343.452,
+        963.36
+      ]
+    },
+    {
+      "inst": "u_r2.u_s15",
+      "origin_um": [
+        336.96,
+        907.2
+      ],
+      "orient": "R0",
+      "outline_um": [
+        30.24,
+        60.48
+      ],
+      "partition_type": "col_h10_r2__t1",
+      "prospective_parent_local_clock_xy_um": [
+        352.092,
+        937.44
+      ]
+    },
+    {
+      "inst": "u_r0.u_s4",
+      "origin_um": [
+        328.32,
+        846.72
+      ],
+      "orient": "R0",
+      "outline_um": [
+        30.24,
+        60.48
+      ],
+      "partition_type": "col_h9_r0_p2__t1",
+      "prospective_parent_local_clock_xy_um": [
+        343.452,
+        876.96
+      ]
+    },
+    {
+      "inst": "u_r1.u_s8",
+      "origin_um": [
+        328.32,
+        760.32
+      ],
+      "orient": "R0",
+      "outline_um": [
+        30.24,
+        60.48
+      ],
+      "partition_type": "col_h9_r1__t1",
+      "prospective_parent_local_clock_xy_um": [
+        343.452,
+        790.56
+      ]
+    },
+    {
+      "inst": "u_r2.u_s13",
+      "origin_um": [
+        336.96,
+        760.32
+      ],
+      "orient": "R0",
+      "outline_um": [
+        30.24,
+        60.48
+      ],
+      "partition_type": "col_h9_r2__t1",
+      "prospective_parent_local_clock_xy_um": [
+        352.092,
+        790.56
+      ]
+    },
+    {
+      "inst": "u_r0.u_s4",
+      "origin_um": [
+        328.32,
+        846.72
+      ],
+      "orient": "R0",
+      "outline_um": [
+        30.24,
+        60.48
+      ],
+      "partition_type": "col_h9_r0_p3__t1",
+      "prospective_parent_local_clock_xy_um": [
+        343.452,
+        876.96
+      ]
+    },
+    {
+      "inst": "u_r0.u_s1",
+      "origin_um": [
+        328.32,
+        457.92
+      ],
+      "orient": "R0",
+      "outline_um": [
+        30.24,
+        60.48
+      ],
+      "partition_type": "col_h10_r0_p4__t1",
+      "prospective_parent_local_clock_xy_um": [
+        343.452,
+        488.16
+      ]
+    },
+    {
+      "inst": "u_r0.u_s5",
+      "origin_um": [
+        328.32,
+        1131.84
+      ],
+      "orient": "R0",
+      "outline_um": [
+        30.24,
+        60.48
+      ],
+      "partition_type": "col_h10_r0_p4__t1",
+      "prospective_parent_local_clock_xy_um": [
+        343.452,
+        1162.08
+      ]
+    },
+    {
+      "inst": "u_r0.u_s4",
+      "origin_um": [
+        328.32,
+        846.72
+      ],
+      "orient": "R0",
+      "outline_um": [
+        30.24,
+        60.48
+      ],
+      "partition_type": "col_h9_r0_p5__t1",
+      "prospective_parent_local_clock_xy_um": [
+        343.452,
+        876.96
+      ]
+    },
+    {
+      "inst": "u_r0.u_s4",
+      "origin_um": [
+        328.32,
+        846.72
+      ],
+      "orient": "R0",
+      "outline_um": [
+        30.24,
+        60.48
+      ],
+      "partition_type": "col_h9_r0_p6__t1",
+      "prospective_parent_local_clock_xy_um": [
+        343.452,
+        876.96
+      ]
+    },
+    {
+      "inst": "u_r0.u_s4",
+      "origin_um": [
+        328.32,
+        846.72
+      ],
+      "orient": "R0",
+      "outline_um": [
+        30.24,
+        60.48
+      ],
+      "partition_type": "col_h9_r0_p1__t1",
+      "prospective_parent_local_clock_xy_um": [
+        343.452,
+        876.96
+      ]
+    },
+    {
+      "inst": "u_r0.u_s4",
+      "origin_um": [
+        328.32,
+        846.72
+      ],
+      "orient": "R0",
+      "outline_um": [
+        30.24,
+        60.48
+      ],
+      "partition_type": "col_h9_r0_p4__t1",
+      "prospective_parent_local_clock_xy_um": [
+        343.452,
+        876.96
+      ]
+    }
+  ],
+  "generation": {
+    "verdict": "PASS",
+    "pins": 635,
+    "clock_sdc": [
+      "clk"
+    ],
+    "io_and_pin_record_match": true,
+    "scratch": "intel2:/srv/opentallas-scratch2/claude/codex-s81-cfg-pin1029/kits/ot_s81_cfg7_seq_bfp_explicitpin1029"
+  },
+  "timing": "Originalfailedfinish retained. PreparedBUFx2c_v->st0 hold recipe568a5999f. No physical run of sourceclockchange until coordinated parent event."
+}
