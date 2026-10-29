@@ -533,7 +533,7 @@ def load_start_data_delay(path):
     samples d - dd.  JSON {"ports": {"start:<src>-><dst>": [dd_lo_ps, dd_hi_ps]}, "model": {"lo_ps": [a, b],
     "hi_ps": [a, b]} (optional), "basis": "..."}: per port the MEASURED launch CLK -> capture D range (lo = min over
     corners, the FF min; hi = max, the TT max); model (optional, planner only) = a + b x hop_um for candidate ports with
-    no measurement (retime / contraction search, new stages), labelled 'model'.  die_sta_related reads only 'ports'."""
+    no measurement (retime / contraction search, new stages), labelled 'model'.  Optional 'corners': {corner: {port: [lo, hi]}} keeps data with its own clock corner before union; missing measured corners fail closed. Optional 'corner_models' carries the same [intercept, slope] form per corner for unmeasured planner candidates only. die_sta_related accepts measured rows only."""
     doc = json.load(open(path))
     def checked(rows):
         ports = {}
