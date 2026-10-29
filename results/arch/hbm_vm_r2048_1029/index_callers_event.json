@@ -1,0 +1,153 @@
+{
+  "schema": "ot.idx.native_caller_event.v1",
+  "source_sha256": "c0eadd4c5f5fb9cdba414d72ac7ba149fbc5700e8017f62e47b52ab173efc4aa",
+  "default_off": true,
+  "readers": [
+    {
+      "path": "hb_idx__op_SW",
+      "role": "SW",
+      "sid": 0,
+      "old_parameters": "#(.VM_RT_EXTRA(171))",
+      "frame_start": "hb_idx__qctl_SW__frame_start[0:0]",
+      "native_config_offset": 0
+    },
+    {
+      "path": "hb_idx__op_SE",
+      "role": "SE",
+      "sid": 1,
+      "old_parameters": "#(.VM_RT_EXTRA(171))",
+      "frame_start": "hb_idx__qctl_SE__frame_start[0:0]",
+      "native_config_offset": 68
+    },
+    {
+      "path": "hb_idx__op_NW",
+      "role": "NW",
+      "sid": 2,
+      "old_parameters": "#(.VM_RT_EXTRA(173))",
+      "frame_start": "hb_idx__qctl_NW__frame_start[0:0]",
+      "native_config_offset": 136
+    },
+    {
+      "path": "hb_idx__op_NE",
+      "role": "NE",
+      "sid": 3,
+      "old_parameters": "#(.VM_RT_EXTRA(171))",
+      "frame_start": "hb_idx__qctl_NE__frame_start[0:0]",
+      "native_config_offset": 204
+    }
+  ],
+  "config_bits": 289,
+  "extra_configuration_frames": 2,
+  "extra_steady_cycles": 0,
+  "native_bank_overrides": {
+    "vmb_SW0": {
+      "rq4": "hb_idx__ctl__native_rq[0+:18]"
+    },
+    "vmb_SW1": {
+      "rq4": "hb_idx__ctl__native_rq[18+:18]"
+    },
+    "vmb_SW2": {
+      "rq4": "hb_idx__ctl__native_rq[36+:18]"
+    },
+    "vmb_SW3": {
+      "rq4": "hb_idx__ctl__native_rq[54+:18]"
+    },
+    "vmb_SW4": {
+      "rq4": "hb_idx__ctl__native_rq[72+:18]"
+    },
+    "vmb_SW5": {
+      "rq4": "hb_idx__ctl__native_rq[90+:18]"
+    },
+    "vmb_SW6": {
+      "rq4": "hb_idx__ctl__native_rq[108+:18]"
+    },
+    "vmb_SW7": {
+      "rq4": "hb_idx__ctl__native_rq[126+:18]"
+    },
+    "vmb_SE0": {
+      "rq4": "hb_idx__op_SE__native_rq[0+:18]"
+    },
+    "vmb_SE1": {
+      "rq4": "hb_idx__op_SE__native_rq[18+:18]"
+    },
+    "vmb_SE2": {
+      "rq4": "hb_idx__op_SE__native_rq[36+:18]"
+    },
+    "vmb_SE3": {
+      "rq4": "hb_idx__op_SE__native_rq[54+:18]"
+    },
+    "vmb_SE4": {
+      "rq4": "hb_idx__op_SE__native_rq[72+:18]"
+    },
+    "vmb_SE5": {
+      "rq4": "hb_idx__op_SE__native_rq[90+:18]"
+    },
+    "vmb_SE6": {
+      "rq4": "hb_idx__op_SE__native_rq[108+:18]"
+    },
+    "vmb_SE7": {
+      "rq4": "hb_idx__op_SE__native_rq[126+:18]"
+    },
+    "vmb_NW0": {
+      "rq4": "hb_idx__nwsh__native_rq[0+:18]"
+    },
+    "vmb_NW1": {
+      "rq4": "hb_idx__nwsh__native_rq[18+:18]"
+    },
+    "vmb_NW2": {
+      "rq4": "hb_idx__nwsh__native_rq[36+:18]"
+    },
+    "vmb_NW3": {
+      "rq4": "hb_idx__nwsh__native_rq[54+:18]"
+    },
+    "vmb_NW4": {
+      "rq4": "hb_idx__nwsh__native_rq[72+:18]"
+    },
+    "vmb_NW5": {
+      "rq4": "hb_idx__nwsh__native_rq[90+:18]"
+    },
+    "vmb_NW6": {
+      "rq4": "hb_idx__nwsh__native_rq[108+:18]"
+    },
+    "vmb_NW7": {
+      "rq4": "hb_idx__nwsh__native_rq[126+:18]"
+    },
+    "vmb_NE0": {
+      "rq4": "hb_idx__op_NE__native_rq[0+:18]"
+    },
+    "vmb_NE1": {
+      "rq4": "hb_idx__op_NE__native_rq[18+:18]"
+    },
+    "vmb_NE2": {
+      "rq4": "hb_idx__op_NE__native_rq[36+:18]"
+    },
+    "vmb_NE3": {
+      "rq4": "hb_idx__op_NE__native_rq[54+:18]"
+    },
+    "vmb_NE4": {
+      "rq4": "hb_idx__op_NE__native_rq[72+:18]"
+    },
+    "vmb_NE5": {
+      "rq4": "hb_idx__op_NE__native_rq[90+:18]"
+    },
+    "vmb_NE6": {
+      "rq4": "hb_idx__op_NE__native_rq[108+:18]"
+    },
+    "vmb_NE7": {
+      "rq4": "hb_idx__op_NE__native_rq[126+:18]"
+    }
+  },
+  "sw_transport_master": null,
+  "single_row_calendar_only": true,
+  "missing_sw_transport": true,
+  "vm_data_publication_qualified": false,
+  "actual_capture_dates_qualified": false,
+  "SIGNED": false,
+  "full_token": false,
+  "holds": [
+    "actual source frontier/elaboration and calendar capture required",
+    "actual operand publication/image authority required",
+    "multirow calendar unsupported and faults before launch",
+    "physical source adoption owned by atomic plan"
+  ]
+}
