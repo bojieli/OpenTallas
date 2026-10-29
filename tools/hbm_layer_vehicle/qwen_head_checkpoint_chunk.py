@@ -20,7 +20,7 @@ def extract(snapshot,out,rank=0,first_row=0,rows=512):
     np.savez(out/'source.npz',W=ck.get('lm_head.weight',rows=(lo,lo+rows)),
         embedding=ck.get('model.embed_tokens.weight',rows=(9707,9708)),norm=ck.get('model.norm.weight'))
     (out/'source.json').write_text(json.dumps(dict(snapshot=str(snapshot),checkpoint_rows=[lo,lo+rows],rank=rank,
-        rank_full_rows=rank_rows,K=ck.cfg['hidden_size'],eps=ck.cfg['rms_norm_eps'],
+        rank_full_rows=rank_rows,rank_first_row=first_row,K=ck.cfg['hidden_size'],eps=ck.cfg['rms_norm_eps'],
         activation='qwen_d4g_proof.golden(head): synthetic_x(model,1), row9707 embedding +seed[8191,1,1] then final RMSNorm',
         scope='actual checkpoint chunk only, no fullrank projection'),indent=2)+'\n')
 
@@ -43,6 +43,14 @@ def compile_actual(out):
     (kv/'sm_mv.json').write_text(json.dumps(dict(records=[dict(rank=meta['rank'],L=0,tag='head',
         arrays={k:dict(key=k) for k in ('W','A','O')})])))
     result=compile_chunks(kv,0,meta['rank'],out/'compiled',partitions=1,chunk_rows=len(W),rows=len(W),columns=meta['K'])
+    first=meta.get('rank_first_row',meta['checkpoint_rows'][0]-meta['rank']*meta['rank_full_rows'])
+    for chunk in result['chunks']:
+        local=chunk['global_row_begin']
+        chunk['sample_local_row_begin']=local
+        chunk['sample_local_row_end']=chunk['global_row_end']
+        chunk['global_row_begin']+=first;chunk['global_row_end']+=first
+        chunk['checkpoint_row_begin']=meta['checkpoint_rows'][0]+local
+        chunk['checkpoint_row_end']=chunk['checkpoint_row_begin']+chunk['rows']
     result['checkpoint_source']=meta
     result['scope']='one actual checkpoint row chunk, not fullrank projection or source-bound STREAM/physical qualification'
     (out/'actual_result.json').write_text(json.dumps(result,indent=2)+'\n')
