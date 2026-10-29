@@ -25,7 +25,7 @@ proc all_registers {which} {
 }
 proc get_full_name {x} { return $x }
 proc get_property {obj prop} { if {$prop eq "clocks"} { return clk } ; if {$prop eq "sources"} { return src } ; error $prop }
-proc ot_ps_ckarr {pin clk which} { return [lindex [dict get $::arr $pin] [expr {$which eq "max" ? 0 : 1}]] }
+proc ot_ps_ckarr {pin clk which {rf rise}} { return [lindex [dict get $::arr $pin] [expr {$which eq "max" ? 0 : 1}]] }
 proc get_fanin {args} { return [dict get $::fanin [lindex $args 1]] }
 proc ot_ps_path {l dn dly} {
   set L [dict get $::arr [lindex [dict get $::ot_ps_R $l] 0]]
