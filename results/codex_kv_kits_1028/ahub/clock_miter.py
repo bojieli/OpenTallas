@@ -27,6 +27,7 @@ initial begin
   repeat(4) @(negedge ck);
   rst=0;
   repeat(1000) begin
+    #1; // change data strictly AFTER falling-edge mutation samples it
     data={data[30:0],data[31]^data[21]^data[1]^data[0]};
     @(posedge ck); #1;
     for(integer i=0;i<4;i=i+1) begin
