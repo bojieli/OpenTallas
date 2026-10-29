@@ -57,7 +57,10 @@ def main():
     rel = a.out.relative_to(a.repo)
     d["files"] = [str(rel / Path(f).name) if Path(f).name in ("qkd_ahub.sv", "qkd_ahub_static_dw.sv") else f for f in d["files"]]
     d["port_decl"]["ck"] = ["input", 2, 0]
-    d["pin_bits"].extend(["ck[1]", "ck[2]"])
+    if isinstance(d["pin_bits"], list):
+        d["pin_bits"].extend(["ck[1]", "ck[2]"])
+    else:
+        d["pin_bits"] += 2
     d["classes"]["clk"] = 3
     d["pin_class"].update({"ck[1]": "clk", "ck[2]": "clk"})
     d["boundary_role"] = {"ck": "clk", "rst_n": "reset"}
