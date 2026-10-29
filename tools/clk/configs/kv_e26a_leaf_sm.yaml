@@ -1,0 +1,47 @@
+# ot-clk config: kv_e26a (tree c) + leaf_drivers rule (KV-019): no register sinks on trunk legs; provider import inputs of the
+# KV-006 actual source (codex-kv-0822 inputs, DIE-KV-31 native_bound). Variant: sm.
+schema: ot_clk_config/1
+die: kv
+event:
+  name: event26a_c
+  host: intel1
+  source: results/die_kv_26_1029 (DIE-KV-26 kit.sh e26a = die_trial kit, main 2b90210bd)
+  reference_clock_dir: /srv/opentallas-scratch2/claude/die-kv-26-1029/kit_e26a/clock
+inputs:
+  plan: /srv/opentallas-scratch2/claude/die-kv-26-1029/plan_e26a.json
+  region_map: /srv/opentallas-scratch2/claude/die-kv-2-1027/l128/land128_regions.json
+  feed: /srv/opentallas-scratch2/claude/die-kv-15-1028/feed_fishbone.json
+stack:
+  cell: inv
+  clock_rc: ndr
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 150
+  site_legal: true
+  site_slide: true
+region:
+  form: dme
+  dme_mode: delay
+  only:
+    - pv_S_6
+    - pv_S_7
+stage_model:
+  entry: inv_ndr_kv21_treeb
+  corners: [TT, FF]
+  edge: rise
+residual:
+  tap_pad: /srv/opentallas-scratch2/claude/die-kv-20-1028/pad_kv20_pad.json
+leaf_drivers:
+  inventory: /srv/opentallas-scratch2/claude/codex-kv-0822/provider_cells_kv6.json
+  mapped: /srv/opentallas-scratch2/claude/codex-kv-0822/provider_mapped_kv6.json
+  top: ot_die_start_stages
+  placements: /srv/opentallas-scratch2/claude/codex-kv-0822/proposal_open/placements.json
+  constraints: /srv/opentallas-scratch2/claude/die-kv-31-1029/src_phy/native_bound/constraints/constraints.json
+  bit_nets: /srv/opentallas-scratch2/claude/die-kv-31-1029/src_phy/imported/bit_nets.json
+  lef: /srv/opentallas-scratch2/claude/die-kv-33-1029/leaf/asap7sc7p5t_28_R_1x_220121a.lef
+  odb_prefix: start_provider/
+  inst_prefix: ot_leaf_ck
+  search_um: 40
+  obs_halo_um: 0.1
+  sizing: stage_model
