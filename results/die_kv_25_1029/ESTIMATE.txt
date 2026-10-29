@@ -1,0 +1,5 @@
+DIE-KV-25 ESTIMATE (before build, Thu Oct 29 05:23:25 PDT 2026): event26/plan.json vs hm_r26q15c (tree-c base): partition origins/orients identical (160),
+ports + lanes byte-identical, partition_types outline/buses/ft_slots/face pins identical; only type labels (9 clone types),
+per-type clock/reset/hard_cores/count_straps metadata, die.io and clock.landing_network differ. => die signal GRT demand identical
+to DIE-KV-21 tree c (combo GRT0 TT/FF overflow 0, usage 2.37%); expect overflow 0 again, clock tree ctree.v identical unless taps moved.
+Not covered by this GRT: the 1528 native START/reset provider stages (10530 FF, Codex native6) are not plan objects -> no die nets for them.

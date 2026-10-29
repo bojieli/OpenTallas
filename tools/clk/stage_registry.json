@@ -214,6 +214,54 @@
     0.0
    ],
    "coeff_sha": "b65efad7332cf05c"
+  },
+  {
+   "id": "inv_ndr_kv21_treeb",
+   "key": {
+    "cell": "CKINVDCx16_ASAP7_75t_R",
+    "polarity": "inv",
+    "clock_rc": "ndr",
+    "corners": [
+     "TT",
+     "FF"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": "KV DIE-KV-21 tree b combo GRT (M8/M9 NDR) routed DME legs pv_S_6/7"
+   },
+   "basis": "DIE-KV-21 fit_dme_stage_cal on 94 routed DME legs of tree b (rms TT 6.02/FF 5.88 ps); self-consistent on tree c (refit 6.8 vs built 7.3 TT)",
+   "source": {
+    "file": "results/die_kv_25_1029/inv_stage_cal_kv21_treeb.json",
+    "sha256": "3baa35c28f5dbfd8e883411b5a7bd1bc9bf4e4a2fecf66aa0369d1ddcde001d3",
+    "tree": "kit_b/clock/tree.json",
+    "arrivals": "out_b",
+    "rep_um": 150.0,
+    "even_legs": false,
+    "built_with": "kv_cal_sweep.json",
+    "tap_from": "kv_cal_sweep.json"
+   },
+   "leg": [
+    -1.000384,
+    0.417486,
+    -0.00096,
+    11.973025
+   ],
+   "tap": [
+    0.146559,
+    0.000484
+   ],
+   "leg_FF": [
+    -1.798528,
+    0.402895,
+    -0.00104,
+    8.443107
+   ],
+   "tap_FF": [
+    0.146559,
+    0.000484
+   ],
+   "coeff_sha": "7624685c7eb89597"
   }
  ]
 }

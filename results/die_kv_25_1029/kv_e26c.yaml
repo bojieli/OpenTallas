@@ -1,0 +1,38 @@
+# ot-clk config: KV die clock on the current plan event26 (Codex bind26b strict PASS, 160 parts/56 types, 45 types core_taps early).
+# Tree form = DIE-KV-21 tree c (link_htree + region DME on pv_S_6/pv_S_7, KV inverter stage model fitted on routed tree-b legs).
+# DIE-KV-25 variant c (gate-fix variant for in-region spread; own-leg refit cal of e26b).
+# DIE-KV-25: on event26 the early core taps raise taps 1920 -> 3549; region DME list is the KV gate variant (see results/die_kv_25_1029).
+schema: ot_clk_config/1
+die: kv
+event:
+  name: event26_c_refit
+  host: intel1
+  source: results/die_kv_25_1029 (DIE-KV-25 kit.sh e26 = die_trial kit, main 2b90210bd)
+  reference_clock_dir: /srv/opentallas-scratch2/claude/die-kv-25-1029/kit_e26c/clock
+inputs:
+  plan: /srv/opentallas-scratch2/claude/codex-kv-25-1029/event26/plan.json
+  region_map: /srv/opentallas-scratch2/claude/die-kv-2-1027/l128/land128_regions.json
+  feed: /srv/opentallas-scratch2/claude/die-kv-15-1028/feed_fishbone.json
+stack:
+  cell: inv
+  clock_rc: ndr
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 150
+  site_legal: true
+  site_slide: true
+region:
+  form: dme
+  dme_mode: delay
+  only:
+    - pv_S_5
+    - pv_S_6
+    - pv_S_7
+    - hub_Wi
+stage_model:
+  entry: inv_ndr_kv25_e26b
+  corners: [TT, FF]
+  edge: rise
+residual:
+  tap_pad: /srv/opentallas-scratch2/claude/die-kv-20-1028/pad_kv20_pad.json
