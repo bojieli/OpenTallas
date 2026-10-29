@@ -1,0 +1,33 @@
+PROPOSED canonical nonfunctional-pin removal, NOT APPLIED to event23.
+
+Remove exactly u_tx__o_d[545:528] (18 pins) from
+kv3_hub_Wi.host__qkd_hr_cdc_pc, pins file
+cores/qkd_hr_cdc_pc_pins_r26q9.json. Source core ABI546->528 output bits;
+all528 payload bits, credit/valid/fault/reset/clock, outlines and cycles stay.
+Exact pin coordinates/driver cells are in cdc_pc_constant18.tsv/json.
+Physical pins2165 ->2147. All18 are buffered from TIELO _140366_,
+net _077736_; this is the source of18 of the22 preflight failures. The
+other4 are the same control-state/alias preservation class as CDC_CH.
+
+Source basis: generated qkd_hr_cdc_pc.sv passes exactly18 literal zero
+prefix bits to its546-bit u_tx.i_d; remaining528 are u_tx__i_d[527:0].
+The mapped netlist proves every proposed removed output bit comes from
+TIELO through one BUFx2. This guarantees constant padding on transmitted
+valid words; invalid/uninitialized data is not an interface payload.
+
+Impact extends beyond this producer pin list. Actual elab host_elab.json:
+qkd_host_phy_cdc5.u_tx.o_d[545:528] -> phy_tx_d[545:528] ->
+g_mu.u_adapter (qfd_link_adp512_split).c_d[545:528] ->
+g_slice[4].u_slice.c_d[33:16], physically host__qkd_hr_phy_adp_4.
+That128-bit qkd_hr_phy_adp type is reused8 times and the same bit positions
+carry real payload in other instances. Narrowing the common type globally
+would be wrong. A coherent die-owner adapter/bind delta or explicit
+specialized adapter type is required; deleting only producer pins leaves
+unresolved inputs. No waiver, dead-pin tag or ad-hoc tie class proposed.
+No kept constant-FF workaround was built.
+
+After the coordinator decides the coherent cut: update the source wrapper,
+core_json port_decl/pin_class, exact pin table, parent hard-core binding and
+any affected adapter type together. Regenerate parent bind/portbind and
+changed core kits/clock sink census once. Keep current event23 unchanged
+until then. Proposed added cycles0; no clock/outline change priced.

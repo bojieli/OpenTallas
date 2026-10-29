@@ -1,0 +1,367 @@
+{
+ "status": "PROPOSED_CANONICAL_REMOVAL_NOT_APPLIED",
+ "source_commit": "70c0af856f219c3b8db83d47ca19f631746f108e",
+ "plan_inst": "kv3_hub_Wi.host__qkd_hr_cdc_pc",
+ "pins_file": "cores/qkd_hr_cdc_pc_pins_r26q9.json",
+ "proposed_core_port": [
+  "u_tx__o_d",
+  527,
+  0
+ ],
+ "old_core_port": [
+  "u_tx__o_d",
+  545,
+  0
+ ],
+ "pin_count_before": 2165,
+ "pin_count_after": 2147,
+ "original_gate": {
+  "shared_total": 22,
+  "control_shared": 4,
+  "constant_reserved_shared": 18
+ },
+ "source_constant_proof": {
+  "source": "/srv/opentallas-scratch2/claude/kv-host-regen-1/rtl/qkd_hr_cdc_pc/qkd_hr_cdc_pc.sv",
+  "sha256": "46b7b55c1d0da273daf652267d7e2800cb6afbfde6536c4b9d6877ed4ce5be2e",
+  "tx_leaf_width": 546,
+  "top_input_payload_bits": 528,
+  "prefix_zero_bits": 18,
+  "qualification": "transmitted valid words; initial invalid data is not an interface value"
+ },
+ "physical_proof": {
+  "netlist": "/srv/opentallas-scratch2/claude/kv-host-regen-1/kits/qkd_hr_cdc_pc__319.68x319.68/run/results/asap7/hc_qkd_hr_cdc_pc__319_68x319_68/base/1_2_yosys.v",
+  "sha256": "fa48f67923341805618484fdba31ad51ebb7bc9d72eec021a26ad986a525a0b8",
+  "all_pins_buffered_from_tielo": true
+ },
+ "removed_pins": [
+  {
+   "pin": "u_tx__o_d[528]",
+   "value": 0,
+   "buffer": "_141465_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 528,
+    "layer": "M5",
+    "x": 311.64,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[529]",
+   "value": 0,
+   "buffer": "_141466_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 529,
+    "layer": "M5",
+    "x": 311.928,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[530]",
+   "value": 0,
+   "buffer": "_141467_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 530,
+    "layer": "M5",
+    "x": 312.216,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[531]",
+   "value": 0,
+   "buffer": "_141468_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 531,
+    "layer": "M5",
+    "x": 312.504,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[532]",
+   "value": 0,
+   "buffer": "_141469_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 532,
+    "layer": "M5",
+    "x": 312.792,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[533]",
+   "value": 0,
+   "buffer": "_141470_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 533,
+    "layer": "M5",
+    "x": 313.08,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[534]",
+   "value": 0,
+   "buffer": "_141471_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 534,
+    "layer": "M5",
+    "x": 313.368,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[535]",
+   "value": 0,
+   "buffer": "_141472_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 535,
+    "layer": "M5",
+    "x": 313.656,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[536]",
+   "value": 0,
+   "buffer": "_141473_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 536,
+    "layer": "M5",
+    "x": 313.944,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[537]",
+   "value": 0,
+   "buffer": "_141474_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 537,
+    "layer": "M5",
+    "x": 314.232,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[538]",
+   "value": 0,
+   "buffer": "_141475_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 538,
+    "layer": "M5",
+    "x": 314.52,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[539]",
+   "value": 0,
+   "buffer": "_141476_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 539,
+    "layer": "M5",
+    "x": 314.808,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[540]",
+   "value": 0,
+   "buffer": "_141477_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 540,
+    "layer": "M5",
+    "x": 315.096,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[541]",
+   "value": 0,
+   "buffer": "_141478_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 541,
+    "layer": "M5",
+    "x": 315.384,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[542]",
+   "value": 0,
+   "buffer": "_141479_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 542,
+    "layer": "M5",
+    "x": 315.672,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[543]",
+   "value": 0,
+   "buffer": "_141480_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 543,
+    "layer": "M5",
+    "x": 315.96,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[544]",
+   "value": 0,
+   "buffer": "_141481_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 544,
+    "layer": "M5",
+    "x": 316.248,
+    "y": 0.0,
+    "face": "S"
+   }
+  },
+  {
+   "pin": "u_tx__o_d[545]",
+   "value": 0,
+   "buffer": "_141482_",
+   "buffer_master": "BUFx2_ASAP7_75t_R",
+   "const_net": "_077736_",
+   "tielo": "_140366_",
+   "tielo_master": "TIELOx1_ASAP7_75t_R",
+   "physical": {
+    "bus": "u_tx__o_d",
+    "bit": 545,
+    "layer": "M5",
+    "x": 316.536,
+    "y": 0.0,
+    "face": "S"
+   }
+  }
+ ],
+ "neighbour": {
+  "parent_type": "kv3_hub_Wi",
+  "producer": "host__qkd_hr_cdc_pc.u_tx__o_d",
+  "producer_bits": [
+   528,
+   545
+  ],
+  "signal": "qkd_host_phy_cdc5.phy_tx_d[545:528]",
+  "consumer": "host__qkd_hr_phy_adp_4.c_d[33:16]",
+  "consumer_type": "qkd_hr_phy_adp",
+  "consumer_port_width": 128,
+  "type_instances": 8,
+  "elab_basis": "/srv/opentallas-scratch2/claude/kv-host-regen-1/elab/host_elab.json"
+ },
+ "impact": [
+  "CDC_PC physical pin file/core_json port_decl and pin_class need coherent updates; keep all528 payload bits, valid, credit, fault, resets, clock unchanged.",
+  "Parent hub_Wi core binding must regenerate together with CDC_PC wrapper. Declaring18 pins dead or waiving face_guard is not the proposal.",
+  "Adapter slice4 input c_d[33:16] is reserved zero in this instance, but qkd_hr_phy_adp is reused8 times and those positions carry payload in other instances. Narrowing the common adapter type globally would be wrong.",
+  "A die-owner-approved coherent adapter/bind delta or a distinct specialized adapter type must resolve those18 inputs; deleting only the producer pins would leave open/constant stub inputs. Do not apply an ad-hoc tie class.",
+  "Regenerate pins/kit/clock sink census and parent bind/portbind after approval; do not modify current event23 during this proposal."
+ ],
+ "cycles_added": 0,
+ "clock_or_outline_change_proposed": false
+}
