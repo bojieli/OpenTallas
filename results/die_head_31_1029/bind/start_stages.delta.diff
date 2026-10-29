@@ -1,0 +1,19 @@
+--- /srv/opentallas-scratch2/claude/die-head-30-bind/sr1/source/start_stages.sv	2026-10-29 08:53:02.379085536 -0700
++++ /srv/opentallas-scratch2/claude/die-head-31/bind/source/start_stages.sv	2026-10-29 14:18:46.340098873 -0700
+@@ -2783,6 +2783,7 @@
+     output wire pst_turnE3b
+ );
+     wire st_b0_start;
++    wire st_b0_start_d;
+     wire st_r11_1_start;
+     wire st_r1_1_start;
+     wire st_r4_1_start;
+@@ -4033,7 +4034,7 @@
+     wire st_b2442_start;
+     wire st_b2452_start;
+     wire st_b2453_start;
+-    ot_dp_landing_root #(.SETTLE(74)) u_st_b0 (.clk(t_st_b0__clk), .rst_raw_n(wrst_sp3__rst_start_raw_22), .start(st_b0_start));
++    ot_dp_landing_root #(.SETTLE(74)) u_st_b0 (.clk(t_st_b0__clk), .rst_raw_n(wrst_sp3__rst_start_raw_22), .start(st_b0_start), .start_d(st_b0_start_d));
+     ot_dp_landing_origin #(.PAD(0), .EDGE_FALL(1)) u_st_r11_1 (.clk(t_st_r11_1__clk), .rst_raw_n(wrst_sp3__rst_start_raw_22), .p_start(st_b0_start), .start(st_r11_1_start));
+     ot_dp_landing_origin #(.PAD(0), .EDGE_FALL(1)) u_st_r1_1 (.clk(t_st_r1_1__clk), .rst_raw_n(wrst_sp3__rst_start_raw_44), .p_start(st_b0_start), .start(st_r1_1_start));
+     ot_dp_landing_origin #(.PAD(0), .EDGE_FALL(1)) u_st_r4_1 (.clk(t_st_r4_1__clk), .rst_raw_n(wrst_sp3__rst_start_raw_21), .p_start(st_b0_start), .start(st_r4_1_start));
