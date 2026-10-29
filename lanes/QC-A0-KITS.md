@@ -107,3 +107,13 @@ Scope: (1) BTAB corrective QC canary at codex/qc-prog-halo-0820@8b078ae717 (COOR
   (2) rawleaf a0k7s 53fcde6a6c40: detailed route at 22:2x.
   (3) Parent clock with ICG=1: planner opt-in --ungated-split + insert ICG_INST reuse (estimate + mechanics in the README); a0c recipes ICG=1.
   NEXT: the kit CTS hook in gen_core_kit_qc (PRE_CTS clusters -> cluster CTS -> plan --ungated-split -> insert ICG_INST=u_icg), composition LEC, then parent kits once 3/3 children are SIGNED.
+- 2026-10-28 22:55 PDT [QC-A0-KITS-9] RESULT/PARKED. Branch claude/qc-a0-kits-9-1028@cef01128ae READY ROOT-MERGE (queue line 22:4x).
+  (1) node a0k8 18aebd5d4f50: place on epyc2 exit 0. AUTO-GEOM FAIL (22:54): aspect 9.09 (47.5x432 slot outline), pin_reg_p90 42.05, partial_face 1. The rest is ok: grt 0, fill 0.379, clock_sinks 12,102, clock_reach 9.13 (the nearest-planned-cell metric, GEOM-46 09:31). I viewed the PNG: an even fill along the slot, W-edge pins, clk star at the middle. This is the same failure family as node a0k3 (0a4950716786, PASS-COND by GEOM-44/46 for slot aspect). GEOM-REVIEW-46 CLAIMED it at 22:54; it is the reviewer's verdict to give, and this lane did not hand-run around it. No CTS fallback yet: a TritonCTS fallback cannot change aspect or pin_reg, and no route or hold result exists yet.
+  (2) rawleaf 53fcde6a6c40: RUNNING since 21:13 (5_2 DRT at 22:2x).
+  (3) NL ICG-split estimate (UNCHECKED model, DIE-QC-15 nl inputs, bipart): unsplit TT 694.1-715.7 / FF 606.2-634.2, OCV 52.7/54.4, 189 inv. Split: TT 741.7-763.7 / FF 644.9-681.6, OCV 64.1/74.7 before corr, 205 inv, +1.0 mm elongation. Only 286 face regs, in 3 clusters (a0cl45 has 236), so the face branch is short (171.8 ps vs gated 678.5) and must be padded by wire. NL needs corr on routed arrivals, plus probably a face branch drawn from more of the cluster or a short-tree topology, before the 60 ps acceptance.
+  SUCCESSOR (QC-A0-KITS-10):
+  a. Collect rawleaf 53fcde6a6c40.
+  b. Follow the GEOM-46 verdict on a0k8. On SUBMIT, collect route/sign-off, compare the routed clock-pin spread with the plan's 17/16 ps, and fall back to TritonCTS only if it is not signed off or hold < -25 ps.
+  c. Wire the kit CTS hook (README section 4 steps 1-6, ICG_INST=u_icg).
+  d. Composition LEC.
+  e. Parent kits once 3/3 children are SIGNED. Update OWNERS.tsv: nk_a0c is shown as FIX/CRASH-infra-orphan 14e02be8d1cf (stale), nl_a0c as KIT-PLACED.
