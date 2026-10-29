@@ -198,10 +198,20 @@ def compile_slice(sl, kd=None):
         if not isinstance(cp, str) or cp in seen_ports:
             raise InfraError("core_tree.clock_port must be a separate core clock input")
         depth, nn = {"port:" + cp: 0}, set()
+        # CORES-EARLY-5 form C: a node may hang below a planned-domain gate (gate domain "planned"); such nodes (and
+        # their descendants) are compiled after the gates. Trees without planned gates take the unchanged path.
+        for g in tree.get("gates", []):
+            if g.get("domain", "open") not in ("open", "planned"):
+                raise InfraError(f"gate {g.get('inst')}: domain must be open or planned, got {g.get('domain')!r}")
+        planned_names = {g.get("inst") for g in tree.get("gates", []) if g.get("domain", "open") == "planned"}
+        deferred = []
         for c in tree.get("nodes", []):
             c = dict(c)
             par = c.get("parent")
             if par not in depth:
+                if planned_names and (par in planned_names or par in {d.get("name") for d in deferred}):
+                    deferred.append(c)
+                    continue
                 raise InfraError(f"{c.get('name')}: parent must precede child; missing parent/cycle")
             n = add_cell(c, c.get("island_rect_um"))
             nn.add(n)
@@ -262,6 +272,19 @@ def compile_slice(sl, kd=None):
             gates.append(g)
         gate_names = {g["inst"] for g in gates}
         tree["gates"] = gates
+        planned = {g["inst"] for g in gates if g.get("domain", "open") == "planned"}
+        under_gate = {}
+        if deferred:
+            for c in deferred:
+                par = c.get("parent")
+                if par not in depth or (par not in planned and par not in under_gate):
+                    raise InfraError(f"{c.get('name')}: parent must precede child; missing parent/cycle")
+                n = add_cell(c, c.get("island_rect_um"))
+                nn.add(n)
+                depth[n] = depth[par] + 1
+                under_gate[n] = par if par in planned else under_gate[par]
+        tree["under_gate"] = under_gate
+        planned_sinks = {g: set() for g in planned}
         leaves = tree.get("leaves", [])
         used, counts, levels = set(), {}, set()
         if not leaves:
@@ -286,6 +309,8 @@ def compile_slice(sl, kd=None):
         for leaf in leaves:
             n = leaf["node"]
             if leaf.get("load_class") == "gated_domain":
+                if n in planned:
+                    raise InfraError(f"gated_domain leaf {n}: a planned-domain gate drives planned nodes, not an open domain")
                 if n not in gate_names or n in domains:
                     raise InfraError(f"gated_domain leaf {n}: must name a planned clock gate exactly once")
                 if leaf.get("sinks"):
@@ -307,9 +332,12 @@ def compile_slice(sl, kd=None):
             sinks = leaf.get("sinks", [])
             if not sinks:
                 raise InfraError(f"{n}: empty leaf")
+            pg = under_gate.get(n)
             for s in sinks:
                 word(s)
-                if s in copied:
+                if pg is not None:
+                    planned_sinks[pg].add(s)
+                if s in copied and not (pg is not None and s in set(next(g for g in gates if g["inst"] == pg).get("members", []))):
                     raise InfraError(f"clock sink {s} is a gate-copy member and a direct leaf sink")
                 if s in used:
                     raise InfraError(f"clock sink assigned twice: {s}")
@@ -318,8 +346,15 @@ def compile_slice(sl, kd=None):
             if group not in ("register", "macro"):
                 raise InfraError(f"{n}: unknown load_class {group!r}")
             counts.setdefault(group, []).append(len(sinks))
-        if gate_names - domains:
-            raise InfraError(f"planned clock gates without a gated_domain leaf: {sorted(gate_names - domains)}")
+        if gate_names - planned - domains:
+            raise InfraError(f"planned clock gates without a gated_domain leaf: {sorted(gate_names - planned - domains)}")
+        for g in gates:
+            if g["inst"] not in planned:
+                continue
+            if not planned_sinks[g["inst"]]:
+                raise InfraError(f"planned-domain gate {g['inst']}: no planned leaf below it")
+            if "clone_of" in g and planned_sinks[g["inst"]] != set(g["members"]):
+                raise InfraError(f"planned-domain gate copy {g['inst']}: its leaves must hold exactly its members")
         if len(levels) != 1:
             raise InfraError(f"core tree leaves have unequal stage counts: {sorted(levels)}")
         if cts_levels and len(set(cts_levels.values())) != 1:
@@ -539,7 +574,10 @@ def emit_tcl(sl, kd=None):
     if plan["core_tree"]:
         t = plan["core_tree"]
         lines.append(f"ot_ci_tree_begin {word(t['clock_port'])}")
+        below = t.get("under_gate", {})
         for c in t["nodes"]:
+            if c["name"] in below:
+                continue
             lines.append(f"ot_ci_tree_node {word(c['name'])} {word(c['parent'])}")
         for g in t.get("gates", []):
             if "clone_of" in g:
@@ -558,6 +596,14 @@ def emit_tcl(sl, kd=None):
             mem = " ".join(word(q) for q in g["members"])
             lines.append(f"ot_ci_tree_gate_copy {word(g['inst'])} {g['master']} {word(g['clone_of'])} {word(g['parent'])} "
                          f"{word(g['clk_pin'])} {word(g['out_pin'])} {x:g} {y:g} {{{r}}} {{{pins}}} {{{mem}}}")
+        # form C (CORES-EARLY-5): after every copy took its members, each planned-domain gate's gated sinks become
+        # expected tree sinks (reconnected to planned leaves below it, all must be assigned); then its planned nodes
+        for g in t.get("gates", []):
+            if g.get("domain", "open") == "planned":
+                lines.append(f"ot_ci_tree_gate_planned {word(g['inst'])}")
+        for c in t["nodes"]:
+            if c["name"] in below:
+                lines.append(f"ot_ci_tree_node {word(c['name'])} {word(c['parent'])}")
         for leaf in t["leaves"]:
             if leaf.get("load_class") == "gated_domain":
                 lines.append(f"ot_ci_tree_domain {word(leaf['node'])} {leaf['domain_sinks']}")
