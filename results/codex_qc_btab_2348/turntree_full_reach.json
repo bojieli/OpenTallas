@@ -1,0 +1,24 @@
+{
+ "scope": "Conservative complete registered-hop bbox pin bound; all std sequential +4known synchronous SRAM macros, every combinational data/reset path,clock pins excluded",
+ "source": "/srv/opentallas-scratch2/claude/codex-qc-btab-compact/turntree_review/geom.tsv",
+ "memory_names": [
+  "g_btb\\[0\\].u_m",
+  "g_btb\\[1\\].u_m",
+  "g_btb\\[2\\].u_m",
+  "g_btb\\[3\\].u_m"
+ ],
+ "centroid_macro_inclusive": {
+  "r2r_max": 319.23,
+  "r2r_captures_gt405": 0,
+  "r2r_captures": 2386,
+  "comb_loop_cells": 0,
+  "r2r_worst": "pbs_addr\\[1\\]$_DFF_P_ -> g_btb\\[2\\].u_m"
+ },
+ "conservative_all_pin_bbox": {
+  "r2r_max": 387.85,
+  "r2r_captures_gt405": 0,
+  "r2r_captures": 2386,
+  "comb_loop_cells": 0,
+  "r2r_worst": "pbs_addr\\[1\\]$_DFF_P_ -> g_btb\\[2\\].u_m"
+ }
+}
