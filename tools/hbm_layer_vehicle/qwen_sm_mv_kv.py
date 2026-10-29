@@ -39,22 +39,8 @@ def sha(a):
     return hashlib.sha256(np.ascontiguousarray(a).tobytes()).hexdigest()
 
 
-def main():
-    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--snapshot", required=True, type=Path)
-    ap.add_argument("--cache", required=True, type=Path)
-    ap.add_argument("--stage", default="L0", choices=("L0", "chain"))
-    ap.add_argument("--position", type=int, default=8191)
-    ap.add_argument("--ranks", default="0")
-    ap.add_argument("--out", required=True, type=Path)
-    a = ap.parse_args()
-    ranks = {int(x) for x in a.ranks.split(",")}
-    out = a.out / a.stage
-    out.mkdir(parents=True, exist_ok=True)
-    arrays, rows = {}, []
-    key = ("SM", "MATVEC")
-    orig = MC.UNITS[key]
-
+def capture_sm(orig, ranks, arrays, rows):
+    """Wrap SM execution without consuming a downstream unit's STREAM input."""
     def wrap(M, r, L):
         pre = {}
         if (r.param & 3) == 3 and ((r.param >> 2) & 7) == 0:
@@ -67,7 +53,11 @@ def main():
             if d.rank not in pre:
                 continue
             e = pre[d.rank]
-            e["O"] = np.asarray(M.read(r.desc["O"], d, L), F).reshape(-1).copy()
+            output = r.desc["O"]
+            # STREAM is a wired producer -> consumer FIFO. Observe the just-published
+            # vector without consuming the SU input or reading it as the SM unit.
+            vals = d.stream_seen[output.base] if output.space == "STREAM" else M.read(output, d, L)
+            e["O"] = np.asarray(vals, F).reshape(-1).copy()
             ref = A.sm_int8(e["W"], e["A"])
             if not np.array_equal(np.asarray(ref, F).view(np.uint32), e["O"].view(np.uint32)):
                 raise SystemExit(f"d{d.rank} L{L} {r.tag}: captured operands do not reproduce O")
@@ -83,13 +73,34 @@ def main():
             rows.append(meta)
         return res
 
-    MC.UNITS[key] = wrap
+    return wrap
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--snapshot", required=True, type=Path)
+    ap.add_argument("--cache", required=True, type=Path)
+    ap.add_argument("--stage", default="L0", choices=("L0", "chain", "head"))
+    ap.add_argument("--position", type=int, default=8191)
+    ap.add_argument("--ranks", default="0")
+    ap.add_argument("--out", required=True, type=Path)
+    a = ap.parse_args()
+    ranks = {int(x) for x in a.ranks.split(",")}
+    out = a.out / a.stage
+    out.mkdir(parents=True, exist_ok=True)
+    arrays, rows = {}, []
+    key = ("SM", "MATVEC")
+    orig = MC.UNITS[key]
+
+    MC.UNITS[key] = capture_sm(orig, ranks, arrays, rows)
     t0 = time.time()
-    model = R.QwenR25(a.snapshot, a.cache)
-    cfg = model.ck.cfg
-    gold = QP.golden(model, a.stage, a.position)
-    res = QP.run_stage(model, cfg, a.stage, a.position, gold=gold)
-    MC.UNITS[key] = orig
+    try:
+        model = R.QwenR25(a.snapshot, a.cache)
+        cfg = model.ck.cfg
+        gold = QP.golden(model, a.stage, a.position)
+        res = QP.run_stage(model, cfg, a.stage, a.position, gold=gold)
+    finally:
+        MC.UNITS[key] = orig
     np.savez_compressed(out / "sm_mv.npz", **arrays)
     sched = json.loads((ROOT / "results/rtl/hbm_qwen_layer_tput_1018/static_schedule.json").read_text())
     priced = sched["schedule"]["base"]["d4g8"][a.stage]
