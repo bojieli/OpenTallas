@@ -40,6 +40,7 @@ hc coefficient path (FIXED 10-18 by vp op 7 NORMR + POST row order, S81-SLICE 50
     (a1 = global beat index stays in the template); and POST step 0 reads the post row a0, steps 1..4 comb rows
     a0 + 1..a0 + 4 (L5 order) -> NORMR a0 = R, POST a0 = R + 1, both static templates.
 """
+import math
 import json
 import re
 
@@ -402,7 +403,9 @@ def lower_ar(die, ctx, t0):
         rs.append((src, d, peer, list(range(r0, r0 + 320)), lf, dl, dr - r0, 0))
     last = _emit(die, sl, rs, t0, rows, templates, events, insts, used)
     lf, r0 = ar_quarter(rank)
-    ag = [(src, d, peer, list(range(r0, r0 + 320)), lf, None, 0, last + FOLD_GAP) for src, d, peer in LEGS]
+    # last carries the CTL path age, which can hold half-edge link ages (ctl_path edges, e.g. 11.5): the AG legs
+    # start on the next whole issue edge (ceil = the conservative later edge), never a fractional calendar row
+    ag = [(src, d, peer, list(range(r0, r0 + 320)), lf, None, 0, math.ceil(last) + FOLD_GAP) for src, d, peer in LEGS]
     _emit(die, sl, ag, t0, rows, templates, events, insts, used)
     return dict(status='PARTIAL', unit='RS (3 TP legs, quarter -> owner scratch) + owner fold + AG (3 TP legs) on the '
                 'end-slice endpoint ABI', insts=insts, rows=rows, templates=templates, events=events, bench=BENCH,
