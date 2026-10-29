@@ -5,7 +5,7 @@ from pathlib import Path
 def test_data_capture_never_follows_clock_mterm():
     source=(Path(__file__).with_name("face_flops.tcl")).read_text()
     a=source.index("proc ff_from_in ")
-    b=source.index("# output port:",a)
+    b=source.index("# Output port:",a)
     body=source[a:b]
     fixture=r"""
 proc ff_is_ff {i} {return 1}
@@ -28,7 +28,7 @@ puts "PASS actual ff_from_in data/clock/mixed controls"
     assert r.returncode==0 and not r.stderr and "PASS actual" in r.stdout, r.stdout+r.stderr
 
 
-def test_real_face_walkers_match_four_stage_geometry_contract():
+def test_real_face_walkers_follow_pure_buffers_with_visited_nets():
     """LP fault BUF10->BUF3->INV->FF must be anchored, never cross logic/clock."""
     source=Path(__file__).with_name('face_flops.tcl').read_text()
     walkers=source[source.index('proc ff_is_ff '):source.index('# CP1 r6:')]
@@ -67,13 +67,19 @@ if {[ff_from_out n4 0] ne "c0"} {error "three-stage output missed"}
 if {[ff_chain_out n4 0] ne "c3 c2 c1 c0"} {error "clone chain incomplete"}
 build 4
 if {[ff_from_in n0 0] ne "c4"} {error "four-stage contract missed"}
-build 5
-if {[ff_from_in n0 0] ne ""} {error "five-stage capture incorrectly accepted"}
+build 24
+if {[ff_from_in n0 0] ne "c24"} {error "long pure-buffer capture missed"}
+# Close a pure-buffer cycle and ensure the finite graph walk terminates.
+object m24 [dict create getName INVx1_ASAP7_75t_R]
+object q24 [dict create getInst c24 getMTerm mq24 getSigType SIGNAL getNet n0]
+object n0 [dict create getITerms {d0 q24}]
+if {[ff_from_in n0 0] ne ""} {error "input cycle invented a register"}
+if {[ff_from_out n25 0] ne ""} {error "output cycle invented a register"}
 build 3 logic
 if {[ff_from_in n0 0] ne ""} {error "logic gate mutant crossed"}
 build 3 buf 1
 if {[ff_from_in n0 0] ne ""} {error "clock pin mutant captured"}
-puts "PASS actual four-stage face walkers and logic/clock/depth mutants"
+puts "PASS actual visited-net face walkers and logic/clock/cycle mutants"
 '''
     r=subprocess.run(['tclsh'],input=fixture+walkers+checks,text=True,capture_output=True)
-    assert r.returncode==0 and not r.stderr and 'PASS actual four-stage' in r.stdout,r.stdout+r.stderr
+    assert r.returncode==0 and not r.stderr and 'PASS actual visited-net' in r.stdout,r.stdout+r.stderr
