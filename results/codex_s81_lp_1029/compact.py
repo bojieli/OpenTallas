@@ -12,17 +12,17 @@ def pin(n,L,x,y):pins.append(dict(name=n,layer=L,x=round(x,4),y=round(y,4)))
 for i in range(1104):
  b,k=divmod(i,256)
  if b<2:
-  pin(f'wd[{i}]','M5',8.652+(b*142.32)+k*.24,.24)
-  pin(f'rd[{i}]','M4',.24 if b==0 else W-.24,4.332+k*.192)
+  pin(f'wd[{i}]','M5',8.652+(b*142.32)+k*.24,.042)
+  pin(f'rd[{i}]','M4',.042 if b==0 else W-.042,4.332+k*.192)
  elif b<4:
-  side=.24 if b==2 else W-.24
+  side=.042 if b==2 else W-.042
   pin(f'wd[{i}]','M4',side,54.444+2*k*.192)
   pin(f'rd[{i}]','M4',side,54.444+(2*k+1)*.192)
  else:
-  pin(f'wd[{i}]','M5',8.652+2*k*.24,H-.24)
-  pin(f'rd[{i}]','M5',8.652+(2*k+1)*.24,H-.24)
-for i in range(11):pin(f'rc[{i}]','M5',168.012+i*.24,H-.24)
-for i,n in enumerate(['rst_n','wv','rv','fault']):pin(n,'M5',172.812+i*.24,H-.24)
+  pin(f'wd[{i}]','M5',8.652+2*k*.24,H-.042)
+  pin(f'rd[{i}]','M5',8.652+(2*k+1)*.24,H-.042)
+for i in range(11):pin(f'rc[{i}]','M5',168.012+i*.24,H-.042)
+for i,n in enumerate(['rst_n','wv','rv','fault']):pin(n,'M5',172.812+i*.24,H-.042)
 pin('clk','M5',120.972,77.76)
 assert len(pins)==len(old['pins']) and {p['name'] for p in pins}=={p['name'] for p in old['pins']}
 assert all(0<=p['x']<=W and 0<=p['y']<=H for p in pins)
@@ -34,7 +34,7 @@ import re
 dirs=dict(re.findall(r'PIN (\S+)\s+DIRECTION (INPUT|OUTPUT)',lef))
 ls=['VERSION 5.8 ;','BUSBITCHARS "[]" ;','DIVIDERCHAR "/" ;','MACRO dsdv_mu_land',' CLASS BLOCK ;',' ORIGIN 0 0 ;',f' SIZE {W} BY {H} ;',' SYMMETRY X Y ;']
 for p in pins:
- n,L,x,y=p['name'],p['layer'],p['x'],p['y']; dx,dy=(.024,.24) if n=='clk' else ((.024,.024) if L=='M5' else (.024,.024))
+ n,L,x,y=p['name'],p['layer'],p['x'],p['y']; dx,dy=(.024,.042) if n=='clk' else ((.024,.042) if L=='M5' else (.042,.016))
  ls += [f' PIN {n}',f'  DIRECTION {dirs[n]} ;','  USE CLOCK ;' if n=='clk' else '  USE SIGNAL ;','  PORT',f'   LAYER {L} ;',f'   RECT {x-dx:.4f} {y-dy:.4f} {x+dx:.4f} {y+dy:.4f} ;','  END',f' END {n}']
 ls+=['END dsdv_mu_land','END LIBRARY'];(B/'dsdv_mu_land.lef').write_text('\n'.join(ls)+'\n')
 base=json.load(open(R/'physical/ref_tile/dsdv_mu_land/spec.json'))
