@@ -1,0 +1,5 @@
+PASS ASR_truth_checks=9 bad_reader_model_caught=3
+- /srv/opentallas-scratch2/claude/codex-qc-a0-0251/icg_full/tb_asap7_asr_functional.sv:17: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 45ns; walltime 0.000 s; speed 688.363 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

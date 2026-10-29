@@ -1,0 +1,15 @@
+A0ICG_MISMATCH cyc250 t_out 175 bits ([513:512] off01 on00) n_y 0 bits ([513:512] off00 on00)
+A0ICG_QMISMATCH cyc250 t_out [513:512] off01 on00 data 174 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_MISMATCH cyc251 t_out 156 bits ([513:512] off01 on00) n_y 0 bits ([513:512] off00 on00)
+A0ICG_QMISMATCH cyc251 t_out [513:512] off01 on00 data 155 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc252 t_out [513:512] off01 on00 data 167 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc253 t_out [513:512] off01 on00 data 171 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc254 t_out [513:512] off01 on00 data 169 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_NEXT_ACTIVATION valid_after_wakeup=4147
+A0ICG_COUNTS tile=nl MUT=1 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=10055 (83%) engine_busy=4570 wakeups=11
+A0ICG_STRICT tile=nl MUT=1 strict_mismatch_cycles=11678 (t_out 11678 n_y 0) first=250
+A0ICG_FAIL tile=nl MUT=1 qualified_errors=4164 (t_out 4164 n_y 0) first_cycle=250 checks=12000
+- /srv/opentallas-scratch2/claude/codex-qc-a0-0251/icg_full/tb_a0_icg_current.sv:94: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 10.516 s; speed 1.142 us/s
+- Verilator: cpu 10.515 s on 1 threads; allocated 37 MB
