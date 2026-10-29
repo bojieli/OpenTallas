@@ -4379,3 +4379,5 @@ FAILED [AUTOPILOT b0592d3eb25d] 2026-10-28 23:03:05 PDT AUTOPILOT -> HBM-CORES: 
 - 2026-10-28 23:38 PDT [COORD] NUMBER-CHECK-CELL-1 PASS (independent own SPEF/STA/ngspice on 2 HEAD h15 BUFx4/BUFx6f/BUFx24 paths, TT/FF both edges: 0/72 rows over 2%; BUFx4 early tight 0-0.5 ps). RULING: --clock-cal spice_cell is the gate clock number for any clock path containing BUF delay cells (BUFx4/BUFx6f/BUFx24); spice_buf_edge is withdrawn for paths with BUFx4 (hold-optimistic up to +6%). Inverter-only trees keep spice_edge. KV PHY pad form: DIE-KV-23 implements the node/pad split and asks for a pad-form NUMBER-CHECK before using it.
 
 2026-10-28 23:47 PDT READY [CODEX-GEOM] codex/geom-1028@21206dcc14 results-only independent HEADreachFAIL diagnosis+HBMlanes4PASS-COND newtaglink; images personallyVIEWED,no source/gate changes. HEAD owner implementing exact929pair placement remedy.
+
+2026-10-28 23:54 PDT READY [CODEX-GEOM] codex/geom-1028@0407d2ae5c supersedes21206dcc14; results-only addsHBMctlxFAIL exact258pairremedy andS81actual8physicalleg/dutyrootcause+unitcorrection, personallyVIEWEDimages; implementersHBMmacro_estimate/S81owneractive.
