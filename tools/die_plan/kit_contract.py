@@ -31,6 +31,7 @@ Static only (no synth, no place): each check is one bug class seen on 10-26/10-2
                        (f): KV pv_pair, a pair 18 nm off the M4 grid: 794 off-grid pin warnings, DRT-0255)
 """
 import json
+import math
 import re
 from pathlib import Path
 
@@ -248,6 +249,29 @@ def _partition_clock_pin_geometry(kd, bud):
     clk = bud.get("clock") or {}
     taps = {d["name"]: tuple(map(float, d["xy"])) for d in (clk.get("taps_snapped") or []) if d.get("xy")}
     top = bud.get("signal_max")
+    landing_file = Path(kd) / "landing_contract.json"
+    if landing_file.is_file():
+        try:
+            landing = json.loads(landing_file.read_text())
+            for pin in landing.get("pins", []):
+                if pin.get("kind") != "clock" or pin.get("dir") != "in":
+                    continue
+                name, xy = pin.get("name"), pin.get("xy_um")
+                if (not isinstance(name, str) or not isinstance(xy, list) or len(xy) != 2
+                        or any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v)
+                               for v in xy)):
+                    err.append("landing_contract.json: invalid physical clock pin declaration")
+                    continue
+                if pin.get("layer") != top:
+                    err.append(f"landing_contract.json: clock {name} on {pin.get('layer')}, not {top}")
+                    continue
+                want = tuple(float(v) for v in xy)
+                if name in taps and any(abs(a-b) > TOL for a, b in zip(taps[name], want)):
+                    err.append(f"landing_contract.json: clock {name} conflicts with budget plan tap")
+                    continue
+                taps[name] = want
+        except (OSError, ValueError, TypeError, AttributeError):
+            err.append("landing_contract.json: invalid physical clock pin metadata")
     if not top:
         err.append("budget.json has no signal_max (partition top layer)")
     for f in sorted(Path(kd).glob("*.tcl")):
@@ -279,7 +303,7 @@ def _partition_clock_pin_geometry(kd, bud):
             entries.append((src, n, x, y))
             want = taps.get(n) or taps.get(_base(n))
             if want is None:
-                err.append(f"{src}: partition clock {n} is not a plan tap (budget.json clock.taps_snapped)")
+                err.append(f"{src}: partition clock {n} is not a plan tap (budget.json clock.taps_snapped / landing_contract.json clock pins)")
             elif abs(want[0] - x) > TOL or abs(want[1] - y) > TOL:
                 err.append(f"{src}: partition clock {n} at ({x:g}, {y:g}) != plan tap ({want[0]:g}, {want[1]:g}) (12.8a)")
             if layer == top and layer:
