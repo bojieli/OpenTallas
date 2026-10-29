@@ -1,0 +1,50 @@
+ACTUAL_NATIVE_OVERLAY 75934 13073
+exact_owned_grid_obstructions 0
+groups 45190
+0 ok 1 fail 0
+1000 ok 320 fail 681
+2000 ok 701 fail 1300
+3000 ok 1054 fail 1947
+4000 ok 1417 fail 2584
+5000 ok 1784 fail 3217
+6000 ok 2094 fail 3907
+7000 ok 2442 fail 4559
+8000 ok 2785 fail 5216
+9000 ok 3068 fail 5933
+10000 ok 3432 fail 6569
+11000 ok 3731 fail 7270
+12000 ok 4062 fail 7939
+13000 ok 4396 fail 8605
+14000 ok 4701 fail 9300
+15000 ok 5049 fail 9952
+16000 ok 5375 fail 10626
+17000 ok 5663 fail 11338
+18000 ok 6055 fail 11946
+19000 ok 6361 fail 12640
+20000 ok 6687 fail 13314
+21000 ok 7013 fail 13988
+22000 ok 7344 fail 14657
+23000 ok 7677 fail 15324
+24000 ok 8003 fail 15998
+25000 ok 8360 fail 16641
+26000 ok 8660 fail 17341
+27000 ok 9016 fail 17985
+28000 ok 9401 fail 18600
+29000 ok 9750 fail 19251
+30000 ok 10114 fail 19887
+31000 ok 10405 fail 20596
+32000 ok 10783 fail 21218
+33000 ok 11145 fail 21856
+34000 ok 11477 fail 22524
+35000 ok 11836 fail 23165
+36000 ok 12147 fail 23854
+37000 ok 12502 fail 24499
+38000 ok 12877 fail 25124
+39000 ok 13194 fail 25807
+40000 ok 13539 fail 26462
+41000 ok 13904 fail 27097
+42000 ok 14257 fail 27744
+43000 ok 14636 fail 28365
+44000 ok 14924 fail 29077
+45000 ok 15239 fail 29762
+{'groups': 45190, 'attempted': 45190, 'connected_groups': 15280, 'connected_contacts': 30234, 'failed_groups': 29910, 'routing_rectangles': 412560, 'vias': 122240, 'verdict': 'INCOMPLETE_NO_MATERIALIZATION', 'owned_grid_obstructions': 0, 'rejections': {'obstacle_M7': 361338, 'obstacle_M8': 54300, 'obstacle_M5': 25, 'obstacle_M4': 1}, 'obstacle_examples': {'M7': {'candidate': [1065296, 95538, 1065328, 95618], 'blocking': [1061100.0, 0.0, 1069200.0, 13845600.0]}, 'M8': {'candidate': [9353856, 95140, 9354048, 95180], 'blocking': [9294480.0, 94840.0, 9353880.0, 95240.0]}, 'M5': {'candidate': [5540820, 1520590, 5540844, 1520686], 'blocking': [5540796.0, 1520448.0, 5540820.0, 1520640.0]}, 'M4': {'candidate': [6618352, 26667620, 6618448, 26667644], 'blocking': [6618240.0, 26667660.0, 6618432.0, 26667684.0]}}}

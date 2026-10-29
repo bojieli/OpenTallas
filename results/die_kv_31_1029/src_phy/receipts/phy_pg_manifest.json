@@ -1,0 +1,86 @@
+{
+ "schema": "opentallas.kv_phy_pg_abstracts.v1",
+ "plan": "/srv/opentallas-scratch2/claude/wt/codex-kv-0822/results/die_kv_29_1029/event27f/plan_reserved.json",
+ "plan_sha256": "fc24c08992fa200715bdda856296c9cbc7e8327e235d85ae5d3a3f9a948caa5c",
+ "domains": [
+  {
+   "name": "phy_sys_c_ucie",
+   "nets": [
+    "VDDPHY",
+    "VSS"
+   ],
+   "io": [
+    "io_sys_c_ucie_rom"
+   ],
+   "rect_um": [
+    5140.8,
+    26058.24,
+    5935.68,
+    26853.12
+   ],
+   "grid": [
+    {
+     "layer": "M8",
+     "width_um": 0.48,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ]
+    },
+    {
+     "layer": "M9",
+     "width_um": 0.48,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ]
+    }
+   ],
+   "bumps": {
+    "rect_um": [
+     5149.44,
+     26066.88,
+     5927.04,
+     26844.48
+    ],
+    "pitch_um": 45.0,
+    "use": "power_ground",
+    "note": "Dedicated PHY PG rows; retained 45um academic bump assumption, not vendor escape qualification"
+   },
+   "note": "Ownerdecision7 separate PHY supply; partition kit must expose truthful VDDPHY M7 interface, never relabel coreVDD"
+  }
+ ],
+ "types": 56,
+ "changed": [
+  {
+   "type": "kv3_sys_c",
+   "module": "kv3_sys_c_part",
+   "changed": true,
+   "pg_rects_before": {
+    "VDD": 294,
+    "VSS": 295
+   },
+   "pg_rects_after": {
+    "VDD": 386,
+    "VDDPHY": 92,
+    "VSS": 295
+   },
+   "layers_after": {
+    "VDD": [
+     "M7"
+    ],
+    "VDDPHY": [
+     "M7"
+    ],
+    "VSS": [
+     "M7"
+    ]
+   }
+  }
+ ],
+ "scope": "PLANNED/MODELED PHY PG interface only (pg_regions.prototype_lef); no signed view, no licensed-IP claim"
+}
