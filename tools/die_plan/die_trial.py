@@ -340,6 +340,12 @@ class SiteMap:
                 a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
                 self.forb.append((min(a[0], b[0]) - halo, min(a[1], b[1]) - halo,
                                   max(a[0], b[0]) + halo, max(a[1], b[1]) + halo, "core"))
+        # Declared die channels are top-owned clock/reset placement space.
+        # A strip recut can free the old clock sites outside all new partition
+        # outlines. Keep those sites legal; core and PHY exclusions below still
+        # apply, including wherever a channel rectangle crosses either one.
+        self.parts.extend(tuple(ch["rect_um"]) for ch in P.die.get("channels", []) or []
+                          if ch.get("rect_um"))
         for d in P.die.get("pg", {}).get("domains", []) or []:
             if any("PHY" in str(v) for v in d.get("nets", [])) and d.get("rect_um"):
                 x0, y0, x1, y1 = d["rect_um"]
