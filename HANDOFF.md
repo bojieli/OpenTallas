@@ -1716,3 +1716,7 @@ CODEX: 2026-10-29 03:47 PDT Southkeysource792b3ae9b READYdistributedstaticchain1
 CODEX: 2026-10-29 03:49 PDT HEADactualSTARTTTFFGRT0/74050nets butDRVFAIL diagnosedINVx1longbranchloads; structuraldriverplanlive, CLKmin0APIseeddiagnosed/rootfilterproof. Nonuniform80XBrealreceive81920bitPASS/controlsCAUGHT53165f377+93e8receipts; noG5/absoluteSTARTclaim.
 
 CODEX: 2026-10-29 03:52 PDT HEAD STARTclockmin API diagnosed/READY941cadbae: OpenSTA injectsunclockedCLKzero seed afterdckdeleted; rawpinmin picksartificial0. RootfilteredVertexPathIterator(min/max,rf) matchesexplicitrootfindpaths8/8, preserveslate; declaredpropagatedrealclockinsteadshiftsfallmax416.5ps. ParentinitialprobeSIGSEGV=graphunbuiltbeforedirectpinproperty. Read-onlycachedDB8GBprobesexit0/neverrerouted; read_guidescannotrestoreGRTparas, so APImechanicsonly, finalroutedRCreadoutownedHEADparent. Testedhelper/results/head_clockmin_api_1029; no backendedited. Quarteractual189241cells/21584.2um2,943typedface/bind0PASS, strictLECunit1679639epyc2live; halfunit3101206intel2live.
+
+CODEX: 2026-10-29 03:52 PDT genericproviderallcell833aREADY;QC29167fullplacementDIAGPASS,R2R12852max400.05/0over405,111typeislands0corehit;oldOBS15981+3580boundaryHOLDexplicit. Freshfixedwave48259allcellsplacementLIVE, noPNR.
+
+CODEX: 2026-10-29 03:47 PDT FLOW explicit-control709 actualHBMSPB8taps1026load139.32umPASS; generic7d9/strictFT36 BTAB1317p908.12/12.03+4typedinfraPASS; RTLpool051+aa closescoverage-resetselection. BF G2FAILnativeTAPcensuschanged139rects; structuralrepackpending/noCTS.
