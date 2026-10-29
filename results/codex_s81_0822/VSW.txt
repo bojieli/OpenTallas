@@ -1,3 +1,4 @@
 VSW source template corrects the actual fresh-kit failure: i_d[0] was 0.308 um off its declared N edge rectangle; old native access centres reached 1.7575 um inside. The previously clock-only S81-028 fix did not qualify data pins.
 New pins/LEF: ot_s81sl_vsw_tpl, same module, same outline, 389 pins; core_pin_sites PASS0/1 and all389 actual planned_pin_geometry PASS with projection0. Source plan refs: canonical68 and frozen s13r2 74 rows. Data/logic/cycles unchanged; max geometric move1.7155um, clock0. Old native table/view untouched.
 Review results/geom_review/codex_s81_vsw_template_1029.md and picture personally viewed. Actual fresh placement, parent reach and timing still required.
+Follow-up: M5 VDD/VSS ports preserved byte-identical from original view, OBS ceiling matches hard-core obs_max M5. Actual G0C completeness parent reach on all74affectedtypes (cloned core_conns for clock-only cl variants): old0/new0 internal-station findings, no newly long VSW data legs.

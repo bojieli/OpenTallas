@@ -22,10 +22,12 @@ def apply(plan_paths):
   assert 0<=x-pw/2<x+pw/2<=W and -1e-8<=y-ph/2<y+ph/2<=H+1e-8
   moved.append(dict(name=a['name'],old=[a['layer'],a['x'],a['y']],new=['M5',x,y],move_um=round(abs(x-a['x'])+abs(y-a['y']),6)))
   lines.extend([f'  PIN {a["name"]}',f'    DIRECTION {dirs[a["name"]]} ;','    USE SIGNAL ;','    PORT','      LAYER M5 ;',f'        RECT {x-pw/2:.6f} {y-ph/2:.6f} {x+pw/2:.6f} {y+ph/2:.6f} ;','    END',f'  END {a["name"]}'])
- for name,y in [('VSS',0),('VDD',.216)]:
-  lines.extend([f'  PIN {name}','    DIRECTION INOUT ;',f'    USE {"GROUND" if name=="VSS" else "POWER"} ;','    PORT','      LAYER M1 ;',f'        RECT 0 {y:.3f} {W:.3f} {y+.054:.3f} ;','    END',f'  END {name}'])
+ # Keep the real existing connectable PG ports exactly; no invented supply abstract.
+ for name in ['VDD','VSS']:
+  m=re.search(r'  PIN '+name+r'\n.*?  END '+name+r'\n',source,re.S);assert m,name
+  lines.extend(m.group(0).rstrip().splitlines())
  lines.append('  OBS')
- for i in range(1,8):lines.extend([f'    LAYER M{i} ;',f'      RECT 0 0 {W:.3f} {H:.3f} ;'])
+ for i in range(1,6):lines.extend([f'    LAYER M{i} ;',f'      RECT 0 0 {W:.3f} {H:.3f} ;'])
  lines.extend(['  END','END ot_s81sl_vsw','END LIBRARY'])
  (ROOT/LEF).write_text('\n'.join(lines)+'\n');new['lef']=LEF;new['pinhash']=hashlib.sha256(json.dumps(new['pins'],sort_keys=True).encode()).hexdigest()[:12];new['source']='S81 fresh VSW template 2026-10-29: explicit N/S M5 edge contract; nearest existing x track, preserved faces/order/clock/outline; old routed view and old input table retained. No logic/cycle change.'
  (S/NEW).write_text(json.dumps(new,indent=1)+'\n')
