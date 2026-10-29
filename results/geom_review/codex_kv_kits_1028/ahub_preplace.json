@@ -1,0 +1,6 @@
+{
+  "verdict": "PASS-COND for placement-only trial",
+  "image_viewed": "ahub_current_plan.png",
+  "findings": "Canonical q5 ck0/rst now in the horizontal channel with21.612um clearance to zh rows, ck1/ck2 in the21.624um vertical channel. Five children: four151.2um zh and216um recip have halos and separated channels; no macro wall across outline. Snapped child origins preserve1422on-grid pins. Wide zh-root buses stay in adjacent2x2 bank; reciprocal beside controller band. Clock0 registertree must be constructed from actual placed sink census before CTS; canonicalq4slice has macroclear islands, old7hubcslice is stale. No STA/DRT authorized by this record. Full connected r2r/pindensity/PDNcontinuity reviewed after placement; PG recipe unchanged. Clockvector generated to satisfy existingq5pincontract, not new interface.",
+  "clock_change": "ck0 registers+recip,ck1 southzh0/1,ck2 northzh2/3;co-timedsubstitution restores full originalDWsource byte-for-byte; no addedcycles"
+}
