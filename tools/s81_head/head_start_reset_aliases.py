@@ -32,7 +32,9 @@ def patch_rtl(text,rows):
         if not re.search(r'\b'+re.escape(r['instance'])+r'\s*\([^;]*\.q\(\s*'+re.escape(r['net'])+r'\s*\)',text,re.S):
             raise ValueError(f"raw reset source is not the recorded registered relay: {r['instance']}.{r['net']}")
     ansi=bool(re.search(r'\b(input|output)\b',m[1]))
-    header=m[1].rstrip()+',\n'+',\n'.join('    '+('output wire ' if ansi else '')+r['port'] for r in rows)+'\n'
+    lines=m[1].rstrip().splitlines();code,sep,comment=lines[-1].partition('//')
+    lines[-1]=code.rstrip()+','+(' //'+comment if sep else '')
+    header='\n'.join(lines)+'\n'+',\n'.join('    '+('output wire ' if ansi else '')+r['port'] for r in rows)+'\n'
     text=text[:m.start(1)]+header+text[m.end(1):]
     end=text.rfind('endmodule')
     body=('' if ansi else ''.join('    output wire '+r['port']+';\n' for r in rows))+''.join('    assign '+r['port']+' = '+r['net']+';\n' for r in rows)
