@@ -40,6 +40,14 @@ proc clock_tree_synthesis {args} {
  detailed_placement
  check_placement
  estimate_parasitics -placement
+ # DPL can snap or move cluster roots; the planner must use the built locations.
+ set sf [open /work/parent_cluster_sites.txt w]
+ foreach c $CL {
+  set name [lindex $c 0];set i [$b findInst ${name}_root]
+  lassign [$i getLocation] x y
+  puts $sf "$name [expr {$x/double($dbu)}] [expr {$y/double($dbu)}]"
+ }
+ close $sf
  write_db /work/parent_clusters.odb
  write_sdc /work/parent_clusters.sdc
  foreach {corner var} {TT TC_LIB_FILES FF BC_LIB_FILES} {
