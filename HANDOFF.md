@@ -1582,3 +1582,7 @@ CODEX:01:17 CLK-TOOL actualphysicalpricing9dbREADY/nativeS81couponGEOMPASS-COND 
 CODEX: 2026-10-29 01:11 PDT HBMREBAL HNXTT+57.34/LEC40771EQ buttrue1r2r439.97FAIL->macro_estimateownsdataFFanchor. CurrentC25fullcanon5/4/1source+24macroarray6f83READYestimate, ALATenablerc6003defaultgraphs+mutantPASS. Earlierlp5/3f12trial+two64sideproofslive; noSIGNEDclaim.
 
 CODEX:01:24 sharedhardblockage638befREADY fixesconcreteBTABDPL55censusomission,39tests+actual32rectexactDBUmatch/noPNRrepeat. S81nativeclockcouponactualGRT0butsharedcalwindow183.69TT/128.45FFvsanalytic67.93/25.23; ownerrefitsactual2W2Sroutecoeffs, fullbuildHELD. ExistingearlyratioAPIalreadyconvertsphysical/raw; newrecipeuseONEsharedfactor.
+
+CODEX: 2026-10-29 01:26 PDT qcore original-layout M7 G2 trial live after actual PG/legal-track fix+review and native CTS; TT-15.26, FF rr-65.72/423 guardPASS, IO-153.11/983 pendingdatarepair; GRT50 unit326967 epyc2, noDRT/adoption. Source/PGdelta a6f5f96b0, selectorGENstilllive.
+
+- 2026-10-29 01:33 PDT CODEX S81 cores: CFG7positiveTT+37.62/FF+5.04, normalfinishblockedonlyredundantlegacymean gate; shared33dacREADYroot+merge25PASS, freshsuccessorprepared. VQe706reviewedCTSGRTqueued/H0bbCTSGRTlive. L2one connectivity-awaredefaultPLACE source4566live, external26bundles0>405/station401.246, no density/clock/cyclechange. DetailedS81-CORES tail.
