@@ -3,18 +3,22 @@
   "review": "CODEX existing-state corridor and START-export copy, 2026-10-29",
   "images": [
     "results/head_tile_relays_1029/targets.png",
-    "results/head_tile_relays_1029/copy_estimate.png"
+    "results/head_tile_relays_1029/copy_estimate.png",
+    "results/head_tile_relays_1029/final_place.png"
   ],
   "viewed": true,
   "verdict": "PASS-COND",
-  "scope": "trial global placement only; no route/CTS/STA approval",
+  "scope": "actual fresh DPL visual/data-reach review only; fresh clock assignment and independent review required before route/CTS/STA",
   "findings": [
     "Existing payload/transport stages use legal vertical/horizontal channels around unchanged five hard macros.",
     "One retained START-D data state copy at E lower-channel corner; same D/clock/reset, zero cycles.",
     "Existing forwarded START output FF moves18um toward its unchanged physical pin; all physical pins/outlines unchanged.",
     "New synthesized whole graph placement estimate max401.19um,0captures>405; not a postplacement gate.",
     "Keep existing PG and clock/reset island blockages; first8rowviolations diagnosed and resolved by respectinggetBlockages.",
-    "Fresh whole-graph postlegalization census, independent visual review, and reg_spine sink assignment required before route."
+    "Fresh whole-graph postlegalization census, independent visual review, and reg_spine sink assignment required before route.",
+    "Fresh source-integrated DPL unit439324 completed exit0, no placement violations.",
+    "Actual geometry dump unit478387:0/27665captures>405um,max400.95um,combloops0.",
+    "Final49held result bits placed in upper crossbar near510,717; all2440targets lie in legal macro-free corridors. Actual final image viewed."
   ],
   "pdn": "existing grid/geometry unchanged, no new routed IR claim"
 }
