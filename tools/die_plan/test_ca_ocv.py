@@ -193,3 +193,43 @@ def test_planner_cli_flags_reach_sta_port_intervals(tmp_path, monkeypatch):
         pass
     assert seen == dict(clock_ocv="table", clock_droop="shared", droop_regions_file="dr.json", core_latency_ff=202.5,
                        clock_cell="inv2")
+
+
+def test_measured_local_clock_buffer_has_own_class_cell_net_and_depth():
+    B=dict(cell_share=.8789)
+    tap=dict(tree_path='h01',leaf_cell='start_clock_7',local_clock_branch=dict(schema='ot_clock_local_branch/1',**{'class':'B'},
+             stages=1,parent_node='h01',cell='start_clock_7',cell_late_ps=18.,cell_early_ps=16.,
+             net_late_ps=7.,net_early_ps=5.))
+    a=R.clock_branch_components(125.,8,.6248,100.,B,4,'Ainv',tap,True)
+    assert a['stages']=={'Ainv':7,'B':5}
+    assert a['cell_ps']==pytest.approx(.6248*100+18+.8789*100)
+    assert a['net_ps']==pytest.approx((1-.6248)*100+7+(1-.8789)*100)
+    e=R.clock_branch_components(111.,8,.6248,100.,B,4,'Ainv',tap,False)
+    assert e['cell_ps']==pytest.approx(.6248*90+16+.8789*100)
+    assert a['cell_ps']+a['net_ps']==pytest.approx(225.)
+    # Mutant: charge measured localBUF delay/count as another globalINV.
+    wrong=R.clock_branch_components(125.,8,.6248,100.,B,4,'Ainv',{},True)
+    assert wrong['stages']!=a['stages'] and wrong['cell_ps']!=pytest.approx(a['cell_ps'])
+    for change in ({'class':'Ainv'},{'stages':2},{'parent_node':'other'}, {'net_late_ps':float('nan')},
+                   {'cell_early_ps':19.},{'cell_late_ps':120.}):
+        import copy
+        bad=copy.deepcopy(tap);bad['local_clock_branch'].update(change)
+        with pytest.raises(ValueError,match='local clock branch'):
+            R.clock_branch_components(125.,8,.6248,100.,B,4,'Ainv',bad,True)
+
+
+def test_clock_ocv_prices_measured_local_buffer_below_global_lca(tmp_path,monkeypatch):
+    _,taps,meta,_=_fold_proof(tmp_path)
+    taps['pa'].update(tree_path='h0',leaf_cell='start_clock_7',stages_from_root=13,
+        local_clock_branch=dict(schema='ot_clock_local_branch/1',**{'class':'B'},stages=1,parent_node='h0',
+            cell='start_clock_7',cell_late_ps=18.,cell_early_ps=16.,net_late_ps=7.,net_early_ps=5.))
+    captured=[]
+    monkeypatch.setattr(CA,'branch_pessimism',lambda *a: captured.append(a) or 123.)
+    fn=R.clock_ocv_fn('table','shared',meta,taps,250.,clock_cell='inv')
+    assert fn('pa','pb','setup')==123.
+    table=CA.load(Path(R.__file__).resolve().parent/R.APPROVED_AOCV_TABLE)
+    fc=table['classes']['Ainv']['TT']['cell_share'];B=table['classes']['B']['TT']
+    a=captured[0][2]
+    assert a['stages']['Ainv']==12
+    assert a['stages']['B']==max(1,round(250./B['mu_stage_ps']))+1
+    assert a['cell_ps']==pytest.approx(fc*(1200.-25.)+18.+B['cell_share']*250.)

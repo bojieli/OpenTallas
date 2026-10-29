@@ -1479,6 +1479,49 @@ def landed_gate(corners):
                 verdict="PASS" if lt.get("verdict") == "PASS" and lf.get("verdict") == "PASS" else "FAIL")
 
 
+def clock_branch_components(arr, depth, fc, core_lat, B, nB, ka, tap, late):
+    """Optional measured one-BUFx8 local clock leg after a global tree node.
+
+    The global tree_path/LCA stays unchanged. stages_from_root includes this
+    one local stage; exact measured cell and net delays belong to class B.
+    Old taps retain their original class share and counts byte for byte.
+    """
+    local = tap.get("local_clock_branch")
+    if local is None:
+        return dict(cell_ps=fc * arr + B["cell_share"] * core_lat,
+                    net_ps=(1 - fc) * arr + (1 - B["cell_share"]) * core_lat,
+                    stages={ka: depth, "B": nB})
+    if not isinstance(local, dict) or local.get("schema") != "ot_clock_local_branch/1" or \
+            local.get("class") != "B" or local.get("stages") != 1 or \
+            local.get("parent_node") != tap.get("tree_path") or not isinstance(local.get("cell"), str) or \
+            local["cell"] != tap.get("leaf_cell"):
+        raise ValueError("local clock branch needs one declared class-B stage at its global tree_path")
+    vals = {}
+    for edge in ("late", "early"):
+        for part in ("cell", "net"):
+            key = f"{part}_{edge}_ps"
+            try:
+                v = float(local[key])
+            except (KeyError, TypeError, ValueError):
+                raise ValueError(f"local clock branch lacks measured {key}") from None
+            if not math.isfinite(v) or v < 0:
+                raise ValueError(f"local clock branch invalid measured {key}")
+            vals[key] = v
+    for part in ("cell", "net"):
+        if vals[f"{part}_early_ps"] > vals[f"{part}_late_ps"] + 1e-6:
+            raise ValueError("local clock branch has reversed early/late delay")
+    edge = "late" if late else "early"
+    cell, net = vals[f"cell_{edge}_ps"], vals[f"net_{edge}_ps"]
+    residual = arr - cell - net
+    if depth < 1 or residual < -1e-6:
+        raise ValueError("local clock branch exceeds actual unshared branch delay or stage depth")
+    stages = {ka: depth - 1, "B": nB}
+    stages["B"] += 1
+    return dict(cell_ps=fc * residual + cell + B["cell_share"] * core_lat,
+                net_ps=(1 - fc) * residual + net + (1 - B["cell_share"]) * core_lat,
+                stages=stages)
+
+
 def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_path=None, cell_share=None, region=None,
                  clock_cell="buf"):
     """CLK-AOCV (METHODOLOGY 12.4a b1, DRAFT, opt-in): per pair clock OCV pessimism on the branches below the last
@@ -1513,8 +1556,8 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
         own = (r.get("abs_late_ps", r["late_ps"]) if late else r.get("abs_early_ps", r["early_ps"])) if node == "h" \
             else (r["late_ps"] if late else r["early_ps"])
         arr = own - float(meta["node_late_ps" if late else "node_early_ps"][node])
-        return dict(cell_ps=fc * arr + B["cell_share"] * core_lat, net_ps=(1 - fc) * arr + (1 - B["cell_share"]) * core_lat,
-                    stages={ka: int(r["stages_from_root"]) - int(meta["node_stages"][node]), "B": nB})
+        return clock_branch_components(arr, int(r["stages_from_root"]) - int(meta["node_stages"][node]),
+                                       fc, core_lat, B, nB, ka, r, late)
 
     def fn(a, b, check):
         A_, B_ = taps[a], taps[b]
