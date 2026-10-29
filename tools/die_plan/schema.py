@@ -2078,3 +2078,6 @@ def main(argv):
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
+
+# HEAD START-export fanout: retained copies of existing data states, zero added cycles.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_origin_export_copy"] = {"type": "boolean"}
