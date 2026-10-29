@@ -27,9 +27,17 @@ def complete_top(text,plan,stages):
         for r in rows:
             key=(pn,r['port'])
             if r.get('existing_port'):
-                connections=re.findall(r'\.'+re.escape(r['existing_port'])+r'\(([^)]+)\)',m[2])
-                if len(connections)!=1 or not re.fullmatch(r'[A-Za-z_]\w*',connections[0]):raise ValueError('existing reset top net is not one named connection')
-                wires[key]=connections[0]
+                connections=re.findall(r'\.'+re.escape(r['existing_port'])+r'\(([^)]*)\)',m[2])
+                if len(connections)!=1:raise ValueError('existing reset top output is not one connection')
+                if connections[0]:
+                    if not re.fullmatch(r'[A-Za-z_]\w*',connections[0]):raise ValueError('existing reset top net is not named')
+                    wires[key]=connections[0]
+                else:
+                    w='wr_'+C.ident(pn)+'__'+r['existing_port'];wires[key]=w;new_wires.append(w)
+                    old='.'+r['existing_port']+'()';replacement='.'+r['existing_port']+'('+w+')'
+                    mbody=m[2].replace(old,replacement)
+                    text=text[:m.start(2)]+mbody+text[m.end(2):]
+                    m=pat.search(text)
             else:
                 w='wr_'+C.ident(pn)+'__'+r['port'];wires[key]=w;new_wires.append(w)
                 con.append('        .'+r['port']+'('+w+')')
