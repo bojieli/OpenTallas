@@ -3082,12 +3082,34 @@ def bump_contract(P):
         raise ValueError("PG bump pitch must exceed its nonnegative pad width")
     if "edge_margin_um" in c and c["edge_margin_um"] < c["pad_um"] / 2:
         raise ValueError("PG edge margin must keep the complete pad inside the die")
+    for fd in c.get("fields", []):
+        _check_bump_field(fd, c)
     return c
 
 
-def bump_grid(P, io, pitch=None, size=60.0):
+def _check_bump_field(fd, base):
+    """QC-PG-5 (OWNER 10-28 option c): an opt-in fine-pitch power-bump FIELD over a die region (e.g. the QC A0 array,
+    75-um bumps / 37.5-um pads). rects_um = the field (union of rects); the field lattice is die-centred like the base
+    lattice; every base bump closer than keep_um (Chebyshev) to a field bump is dropped."""
+    for k in ("pitch_um", "pad_um", "keep_um"):
+        v = fd.get(k)
+        if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or v < 0:
+            raise ValueError("invalid PG bump field " + k)
+    if fd["pitch_um"] <= 0 or fd["pad_um"] >= fd["pitch_um"]:
+        raise ValueError("PG bump field pitch must exceed its nonnegative pad width")
+    if fd["keep_um"] < (fd["pad_um"] + base["pad_um"]) / 2:
+        raise ValueError("PG bump field keep_um must separate a field pad from a base pad")
+    rs = fd.get("rects_um")
+    if not isinstance(rs, list) or not rs or any(not isinstance(r, list) or len(r) != 4 or not (r[0] < r[2] and r[1] < r[3])
+                                                 for r in rs):
+        raise ValueError("PG bump field needs nonempty rects_um [x0,y0,x1,y1]")
+
+
+def bump_grid(P, io, pitch=None, size=60.0, pads=False):
     """C4 power bumps: a regular grid at `pitch` (alternating VDD / VSS by row+col parity) inside the die, minus the
-    seal ring / corner keep-out channels and the die IO windows (signal bumps).  -> [(net, x, y)]"""
+    seal ring / corner keep-out channels and the die IO windows (signal bumps).  -> [(net, x, y)]
+    Opt-in die.pg.bumps.fields (QC-PG-5): fine-pitch fields replace the base bumps near them; pads=True returns
+    (net, x, y, pad_um) so bumps_tcl applies each bump's own pad.  No fields -> output byte-identical."""
     # between-only crossing channels (R16 delta: seam ports declared by partition pair) carry no rect of their own
     keep = [c["rect_um"] for c in P.die.get("channels", []) if "rect_um" in c] + [w["rect_um"] for w in io]
     out = []
@@ -3112,7 +3134,41 @@ def bump_grid(P, io, pitch=None, size=60.0):
                    (x+half > r[0] and x-half < r[2] and y+half > r[1] and y-half < r[3]) for r in keep):
                 continue
             out.append(("VDD" if (i + j) % 2 == 0 else "VSS", round(x, 3), round(y, 3)))
-    return out
+    if cfg.get("fields"):
+        out = _field_bumps(P, cfg, out, keep, (x0, y0))
+        return out if pads else [b[:3] for b in out]
+    return [b + (cfg["pad_um"],) for b in out] if pads else out
+
+
+def _field_bumps(P, cfg, base, keep, origin):
+    """Base bumps (pad cfg pad_um) minus those within keep_um (Chebyshev) of a field bump, plus every field's bumps
+    (lattice at the field pitch anchored on the base lattice origin, so a 75-um field lands on every 150-um base site;
+    centre inside a field rect; complete pad inside the die and outside channels / IO windows)."""
+    fine = []
+    for fd in cfg["fields"]:
+        p, half = fd["pitch_um"], fd["pad_um"] / 2
+        x0, y0 = origin[0] % p, origin[1] % p
+        x0, y0 = (x0 + p if x0 < half else x0), (y0 + p if y0 < half else y0)
+        nx, ny = int((P.W - half - x0) // p) + 1, int((P.H - half - y0) // p) + 1
+        for r in fd["rects_um"]:
+            i0, i1 = max(0, math.ceil((r[0] - x0) / p - 1e-9)), min(nx - 1, math.floor((r[2] - x0) / p + 1e-9))
+            j0, j1 = max(0, math.ceil((r[1] - y0) / p - 1e-9)), min(ny - 1, math.floor((r[3] - y0) / p + 1e-9))
+            for i in range(i0, i1 + 1):
+                for j in range(j0, j1 + 1):
+                    x, y = x0 + i * p, y0 + j * p
+                    if any(x+half > k[0] and x-half < k[2] and y+half > k[1] and y-half < k[3] for k in keep):
+                        continue
+                    fine.append(("VDD" if (i + j) % 2 == 0 else "VSS", round(x, 3), round(y, 3), fd["pad_um"], fd["keep_um"]))
+    fine = sorted(set(fine), key=lambda b: (b[1], b[2]))
+    cell = max(b[4] for b in fine) if fine else 1.0
+    hsh = {}
+    for b in fine:
+        hsh.setdefault((int(b[1] // cell), int(b[2] // cell)), []).append(b)
+    def near(x, y):
+        ci, cj = int(x // cell), int(y // cell)
+        return any(max(abs(x - b[1]), abs(y - b[2])) < b[4] for di in (-1, 0, 1) for dj in (-1, 0, 1)
+                   for b in hsh.get((ci + di, cj + dj), ()))
+    return [(n, x, y, cfg["pad_um"]) for n, x, y in base if not near(x, y)] + [b[:4] for b in fine]
 
 
 def bumps_tcl(P, bumps, size=4.0, pad_um=None):
@@ -3126,6 +3182,11 @@ def bumps_tcl(P, bumps, size=4.0, pad_um=None):
     pad_um = bump_contract(P)["pad_um"] if pad_um is None else pad_um
     if isinstance(pad_um, bool) or not math.isfinite(pad_um) or pad_um < 0:
         raise ValueError("PG pad width must be finite and nonnegative")
+    if any(len(b) > 3 for b in bumps):        # per-bump pads (die.pg.bumps.fields, bump_grid(pads=True))
+        bp = [(b[0], b[1], b[2], b[3] if len(b) > 3 else pad_um) for b in bumps]
+        if any(isinstance(b[3], bool) or not math.isfinite(b[3]) or b[3] <= 0 for b in bp):
+            raise ValueError("per-bump PG pads must be finite and positive")
+        return _pad_bumps_tcl([b[:3] for b in bp], pad_um, pads=[b[3] for b in bp])
     if pad_um > 0:
         return _pad_bumps_tcl(bumps, pad_um)
     t = ["set block [ord::get_db_block]",
@@ -3179,7 +3240,7 @@ def bumps_tcl(P, bumps, size=4.0, pad_um=None):
     return "\n".join(t) + "\n"
 
 
-def _pad_bumps_tcl(bumps, pad_um):
+def _pad_bumps_tcl(bumps, pad_um, pads=None):
     """bumps_tcl with real bump pads (see bumps_tcl): one dbBTerm per bump, one dbBPin per pad x same-net M9 overlap."""
     t = ["set block [ord::get_db_block]",
          "foreach ot_auto_name {VDD VSS} { set ot_auto_bt [$block findBTerm $ot_auto_name]; "
@@ -3202,8 +3263,9 @@ def _pad_bumps_tcl(bumps, pad_um):
          "}",
          "set pad_pins 0; set pad_fallback 0; set pad_area 0.0",
          f"set pad_half [expr {{round({pad_um:g}*$bump_dbu/2.0)}}]",
-         "proc ot_pad {net k bx by} {",
+         "proc ot_pad {net k bx by {pum {}}} {",
          "  global block m9 bump_dbu bump_shapes pad_pins pad_fallback pad_area pad_half",
+         "  if {$pum ne {}} { set pad_half [expr {round($pum*$bump_dbu/2.0)}] }",
          "  set bx [expr {round($bx*$bump_dbu)}]; set by [expr {round($by*$bump_dbu)}]",
          "  set px0 [expr {$bx-$pad_half}]; set px1 [expr {$bx+$pad_half}]; set py0 [expr {$by-$pad_half}]; set py1 [expr {$by+$pad_half}]",
          "  set hits {}; set best {}; set bd 1e30",
@@ -3221,9 +3283,14 @@ def _pad_bumps_tcl(bumps, pad_um):
          "  foreach h $hits { set bp [odb::dbBPin_create $bt]; odb::dbBox_create $bp $m9 {*}$h; $bp setPlacementStatus FIRM; incr pad_pins",
          "    lassign $h a b c d; set pad_area [expr {$pad_area + ($c-$a)*($d-$b)/double($bump_dbu*$bump_dbu)}] }",
          "}"]
-    t += [f"ot_pad {net} {k} {x:g} {y:g}" for k, (net, x, y) in enumerate(bumps)]
+    if pads is None:
+        t += [f"ot_pad {net} {k} {x:g} {y:g}" for k, (net, x, y) in enumerate(bumps)]
+    else:
+        t += [f"ot_pad {net} {k} {x:g} {y:g} {p:g}" for k, ((net, x, y), p) in enumerate(zip(bumps, pads))]
     t.append(f'puts "OT_BUMPS pad_um {pad_um:g} bumps {len(bumps)} pad_pins $pad_pins pad_fallback $pad_fallback '
-             f'm9_contact_um2 [format %.1f $pad_area]"')
+             f'm9_contact_um2 [format %.1f $pad_area]"' if pads is None else
+             f'puts "OT_BUMPS mixed pads {" ".join(f"{p:g}:{pads.count(p)}" for p in sorted(set(pads)))} bumps {len(bumps)} '
+             f'pad_pins $pad_pins pad_fallback $pad_fallback m9_contact_um2 [format %.1f $pad_area]"')
     return "\n".join(t) + "\n"
 
 
@@ -3556,7 +3623,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     pv = [f"module {sv(P.name)}_psm ();"] + [f"  {smod[p['type']]} {sv(n)} ();" for n, p in sorted(P.parts.items())] + ["endmodule"]
     (out / "psm" / "psm.v").write_text("\n".join(pv) + "\n")
     (out / "psm" / "pdn.tcl").write_text(psm_pdn_tcl(P))
-    bumps = bump_grid(P, io)
+    bumps = bump_grid(P, io, pads=bool(bump_contract(P).get("fields")))
     (out / "psm" / "bumps.tcl").write_text(bumps_tcl(P, bumps))
     (out / "psm" / "power.tcl").write_text("\n".join(f"set_pdnsim_inst_power -inst {sv(n)} -power {w:.6f}"
                                                      for n, w in sorted(power.items())) + "\n")
