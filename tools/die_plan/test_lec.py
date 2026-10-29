@@ -842,6 +842,26 @@ def test_kept_wire_alias_copies_preserve_distinct_flops(tmp_path):
     assert lec.kept_registers(L,keep)[1]
 
 
+def test_kept_wire_alias_copies_relaid_gate_array(tmp_path):
+    """HEAD-KITS-2 (ot_s81hd_spo): kept copies g_c[c].ctl_q alias output bits o[512]; the gate array o carries bits
+    the gold array lacks, so Lec re-keys it o#t[i].  The alias still names one distinct gate flop per kept copy."""
+    keep=tmp_path/'gold.keep'
+    keep.write_text("lec_top/u_dut.copy0"+chr(10)+"lec_top/u_dut.copy1"+chr(10))
+    alias=keep.with_suffix('.aliases.json')
+    g,gm=_seq(tmp_path,'rgold',['d'],['copy0','copy1','port[2]'],
+              lambda m,x:{'copy0':x['d'],'copy1':x['d'],'port[2]':x['d']})
+    t,tm=_seq(tmp_path,'rgate',['d'],['port[0]','port[1]','port[2]'],
+              lambda m,x:{'port[0]':x['d'],'port[1]':x['d'],'port[2]':x['d']})
+    L=lec.Lec(g,gm,t,tm)
+    assert 'ff:u_dut.port#t[0]' in L.tp and 'ff:u_dut.port[0]' not in L.tp
+    alias.write_text(json.dumps({'modules':{lec.WRAP:{'netnames':{
+        'u_dut.copy0':{'bits':[10]},'u_dut.copy1':{'bits':[11]},'u_dut.port':{'bits':[10,11,12]}}}}}))
+    assert not lec.kept_registers(L,keep)[1]
+    d=json.loads(alias.read_text());d['modules'][lec.WRAP]['netnames']['u_dut.copy1']['bits']=[10]
+    alias.write_text(json.dumps(d))                # both copies on one gate flop: still a merge -> KEEP FAIL
+    assert lec.kept_registers(L,keep)[1]
+
+
 def test_gold_records_kept_wire_aliases():
     s=lec.gold_script({'VERILOG_FILES':'a.v','DESIGN_NAME':'t'},'/k','verilog',[],'s.v','w.v','f.v','/o/gold')
     assert 'write_json /o/gold.aliases.json' in s

@@ -10,5 +10,6 @@ T=hd_turn_a,hd_turn_b,hd_spn,hd_spn_end,hd_serdes,hd_st_turn,hd_st_str,hd_st_n3,
 python3 "$W/tools/die_plan/gen.py" phys "$O/plan_hk1.json" --out "$O/kits" --rtl-root "$W" --types $T \
   --clock-landing "$O/landed_sidecar.json" --trial
 for k in "$O"/kits/hd_*; do python3 "$W/tools/die_plan/kit_preflight.py" "$k" | tail -1 || true; done
-# declared landing-ring buses for face_guard (D = forwarded_write_flops / ring_width, hold_mux slots)
-python3 "$W/tools/s81_head/head_land_slots.py" "$O"/kits/hd_*
+# HEAD-KITS-3: land_slots.json (land_slots/2: ring buses hold_mux + cland_fstart_in ring_start) is written by gen phys
+# --clock-landing (DIE-HEAD-21 landslots 528a7d3edb + ringstart 52a35ca59d); head_land_slots.py would overwrite it
+# without the ring_start entries, so it is no longer run here.
