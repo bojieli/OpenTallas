@@ -649,3 +649,46 @@ def test_land_mux_halfadder_count_decode_and_bad_output_control():
     assert _g(_mux_mod(body))["verdict"] == "PASS"
     bad = [x.replace(".A(hcon)", ".A(hsum)") for x in body]
     assert _g(_mux_mod(bad))["verdict"] == "FAIL"
+
+
+def _rs_status_helper(clock='fclk', module='ot_meso_ca_status_copy'):
+    text = _rs_net()
+    helper = (f'module {module}(clk, st); input clk; input st; '
+              f'DFFHQNx1{_X} status_ff (.CLK(clk), .D(st), .QN(q)); endmodule\n')
+    text = text.replace('module ot_ring(fclk, d, st);',
+                        'module ot_ring(fclk, d, st);')
+    a = text.index('module ot_ring('); b = text.index('endmodule', a)
+    text = text[:b] + f'{module} \\g_control_status_copy.u_guard_status (.clk({clock}), .st(st));\n' + text[b:]
+    return helper + text
+
+
+def test_ring_start_typed_status_helper_and_wrong_clock():
+    r = _rs(_rs_status_helper())
+    assert r['verdict'] == 'PASS', r['fails']
+    assert r['ring_start']['st']['writer_flops'] == 7
+    # The same helper on a different clock is not a ring writer, and the same
+    # instance name with an unrelated module type grants no permission.
+    for text in (_rs_status_helper('d'), _rs_status_helper(module='unrelated_status')):
+        r = _rs(text)
+        assert r['verdict'] == 'FAIL' and 'land_slot' in r['fail_counts'], r['fails']
+
+
+def _origin_only_net():
+    text = _rs_net().replace('ot_origin', 'ot_dp_landing_origin_s')
+    text = text.replace('.d(d), .st(st));', '.d(d), .st(rst_n));')
+    return text
+
+
+def test_explicit_typed_origin_start_and_mutants():
+    spec = dict(RS, st={'form':'origin_start', 'origin':'u_cland_origin'})
+    r = _rs(_origin_only_net(), land=spec)
+    assert r['verdict'] == 'PASS', r['fails']
+    assert r['ring_start']['st']['writer_flops'] == 0
+    assert len(r['ring_start']['st']['sampler_flops']) == 2
+    for text, land in [(_origin_only_net(), RS),
+                       (_origin_only_net().replace('ot_dp_landing_origin_s', 'unrelated_origin'), spec),
+                       (_origin_only_net().replace('sf (.CLK(clk)', 'sf (.CLK(fclk)'), spec),
+                       (_origin_only_net().replace('.rq(rq));', '.rq(d));'), spec),
+                       (_origin_only_net(), dict(RS, st={'form':'origin_start','origin':'wrong_origin'}))]:
+        r = _rs(text, land=land)
+        assert r['verdict'] == 'FAIL' and 'land_slot' in r['fail_counts'], r['fails']

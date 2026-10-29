@@ -14,7 +14,7 @@ from pathlib import Path
 
 
 _RING_PLAN = {}
-LAND_SLOTS_SCHEMA = "land_slots/2"   # face_guard kit land_slots.json (Landings.land_slots); /2 = + ring_start form
+LAND_SLOTS_SCHEMA = "land_slots/3"   # /2 ring_start; /3 explicitly typed origin_start
 
 
 def ring_taps(plan, tn):
@@ -1319,12 +1319,13 @@ class Landings:
         (t_rst_n of the ring writer + p_start of the count origin; no face flop: it would shift the count frame by one
         cycle) is declared {"form": "ring_start", "ring": b}: face_guard proves its fan-out ends only in ring b's writer
         flops and the origin's start sampler flops.  Schema land_slots/2 (/1 had no ring_start entries; face_guard
-        ignores the schema string, an older face_guard copy refuses the ring_start spec: fail-closed).  None (no file):
+        ignores the schema string; older guards refuse unknown forms, fail-closed). The dedicated START input has
+        explicit origin_start metadata naming its emitted origin instance, even when this type has no input ring. None:
         no count-aligned table or no landed input on tn (the default ot_dp_clk_landing ring and non-landed kits stay as
         they are)."""
         cat = self.ca_type.get(tn) if self.ca else None
         ins = (self.by_type.get(tn) or {}).get("inputs") or ()
-        if not cat or not ins:
+        if not cat:
             return None
         buses = {}
         for b in sorted(ins):
@@ -1332,7 +1333,15 @@ class Landings:
             for n in [b] + ([f"cland_dn_ready_{b}", f"cland_dn_fault_{b}"] if self.dataflow else []):
                 buses[n] = dict(d)
             buses[f"cland_fstart_in_{b}"] = {"form": "ring_start", "ring": b}    # emitted with every ca landed input
-        return {"schema": LAND_SLOTS_SCHEMA, "buses": buses}
+        role = cat["role"]
+        origin = None
+        if role[0] == "child" and role[1] == START_PIN_IN:
+            origin = "u_cland_origin"
+        elif role[0] == "strap" and START_PIN_IN in role[1]:
+            origin = (f"u_cland_origin_t{role[1].index(START_PIN_IN)}" if len(role[1]) > 1 else "u_cland_origin")
+        if origin:
+            buses[START_PIN_IN] = {"form": "origin_start", "origin": origin}
+        return {"schema": LAND_SLOTS_SCHEMA, "buses": buses} if buses else None
 
     def manifest(self):
         by_lane = defaultdict(int)
