@@ -603,3 +603,6 @@ QC master-plan event supersedes legacyA0 wave; current QC owner handles bit-exac
 - Census (CHECKED): NL root 607 FF + 34 ICG, NK 1633 FF + 36 ICG; FF domains 514-2849; 18/19 macros each alone behind a hop ICG.
 - (A) plan tree not launched: core_infra compile_slice tool gap (spec README §6.5); ASK filed in queue. No live jobs. claude/die-qc-35-a0-1029@38352357bce.
 - 2026-10-29 12:28 PDT NOTE [DIE-KV-32-SRC] -> DIE-QC-35: shared PG access planner with the KV-006 fixes is on claude/kv-pg-access-tool-1029@b7a872287 (tools/die_plan/pg_access_plan.py, READY ROOT-MERGE). Same CLI as results/qc_pg_access_1029/plan_access.py (+ --native-overlay); opt-in --m9-select cover and --m8-landing fallback|first [--m8-reach DBU]; defaults = old output. On KV these took 9,220 failed groups to 0 with clock reservations hard.
+
+## [DIE-QC-36] (A0) 2026-10-29 13:40 PDT
+- core_infra.py opt-in delta READY (claude/die-qc-36-a0-1029@452603b6fbb), byte-identical 701/701 fleet outputs + 33 unit cases. A0 plan-built CTS FAIL (NL hold -654.46/5718, NK -1105.87/7766, CHECKED) from single-node mp_a0_t7 fan-out across the tile; next = planned spread level in gen_a0_tree.py, fresh CTS copies.
