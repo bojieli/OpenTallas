@@ -41,6 +41,7 @@ def covered(r,holes):
 def main():
     p=argparse.ArgumentParser()
     for a in ('failures','fixed-wires','cell-windows','geometry','power-access','pg','clock-base','out'):p.add_argument('--'+a,required=True)
+    p.add_argument('--joint-clock',action='store_true',help='Choose clock access before rebuilding PG; emit explicit PG reservation')
     a=p.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
     failures=json.loads(Path(a.failures).read_text())['failures'];holes=json.loads(Path(a.cell_windows).read_text())['cells']
     print('JOG_STAGE load actual lower metal',flush=True);g=json.loads(Path(a.geometry).read_text());dbu=g['dbu'];ix=Index()
@@ -61,7 +62,7 @@ def main():
         for s in w['stacks']:
             x,y=s.get('m6_entry_xy',s['xy']);ix.add([w['name'],'M7',x-.016,y-8.667,x+.016,y+8.667])
     del wires,base
-    print('JOG_STAGE reserve physical power',flush=True);power=json.loads(Path(a.power_access).read_text())
+    print('JOG_STAGE reserve physical power',flush=True);power=[] if a.joint_clock else json.loads(Path(a.power_access).read_text())
     for r in power:ix.add(r)
     nd=dict(width=.08,space=.32,rf=.5,cf=1.15);router=F.C128.TrackRouter(nd,'VSS',F.DCM.DEFAULT_TRACKS,8.64)
     router.reserve(F.C128.pg_shapes(json.loads(Path(a.pg).read_text())))
@@ -88,6 +89,7 @@ def main():
                            m6_jog_um=round(abs(bx-x),6),geometry=local+[riser],
                            proof='all metal inside exact119 island union; actual M6/M7 SIGNAL+OBS+PG+future clock bases+power clear; M8 shielded tree .08/.32 witness')
                 for r in local+[riser]:ix.add(r)
+                if a.joint_clock:router.reserve([*F.C128.pg_shapes([[net,'M8',bx-.08,ty-.04,bx+.08,ty+.04]])])
                 break
             if found:break
         if found:records.append(found)
@@ -96,5 +98,12 @@ def main():
     result=dict(status='FAIL' if bad else 'PASS_GEOMETRY',physical_route=False,records=records,failures=bad,
                 clock_width_um=.08,tree_spacing_um=.32,m6_width_um=.032,max_jog_um=.7,
                 note='No physical route; full tree replan and exact access census/render required')
+    if a.joint_clock:
+        reserved=[]
+        for r in records:
+            reserved.extend(r['geometry'])
+            x,y=r['backbone_xy_um'][0],r['m8_witness_y_um']
+            reserved.append([r['net'],'M8',x-.36,y-.32,x+.36,y+.32])
+        (out/'joint_clock_reserved.json').write_text(json.dumps(reserved)+'\n')
     (out/'backbone_plan.json').write_text(json.dumps(result,indent=1)+'\n');print(result['status'],len(records),len(bad),flush=True)
 if __name__=='__main__':main()
