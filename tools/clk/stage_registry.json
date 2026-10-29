@@ -172,6 +172,48 @@
     -5e-06
    ],
    "coeff_sha": "a7f12421ad1be3f1"
+  },
+  {
+   "id": "inv2_ndr_s81_bk2w2s_late",
+   "key": {
+    "cell": "CKINVDCx16_ASAP7_75t_R",
+    "polarity": "pair",
+    "clock_rc": "ndr",
+    "corners": [
+     "TT",
+     "FF"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": "S81 bk_sel native-body 51-tap coupon, actual 2W2S M8/M9 GRT (codex-s81-2340/bk_dme_coupon_TT02)"
+   },
+   "basis": "Codex 10-29 01:34 local positive-coefficient LATE fit on all 100 actual cell chains of the bk_sel native-body coupon, RMS 5.66/5.26 ps TT/FF; tap fit local short stubs 0.036..4.898 um only (no long-tap claim). Used by CLOCK geometry01-03 (codex-clock-takeover-1029/src03) for the whole S81 die: qualify on g03route routed legs (refit) before gate use.",
+   "source": {
+    "file": "results/die_s81_23_1029/bk_stage_cal_2w2s_late.json",
+    "sha256": "18fdec8012e96d70e083302335c8c5b3397a7fe4447477ace1e3ad753dae6062"
+   },
+   "leg": [
+    15.578378252380068,
+    0.10963822853532626,
+    0.0001435455458881213,
+    11.003079599289222
+   ],
+   "tap": [
+    0.028407301153837154,
+    0.0
+   ],
+   "leg_FF": [
+    13.34264972728355,
+    0.09563808217959914,
+    0.0001309540696910333,
+    7.705123568656874
+   ],
+   "tap_FF": [
+    0.02839839954669633,
+    0.0
+   ],
+   "coeff_sha": "b65efad7332cf05c"
   }
  ]
 }
