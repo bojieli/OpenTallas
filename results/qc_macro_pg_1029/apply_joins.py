@@ -63,7 +63,12 @@ def apply_joins(source_odb,direct_plan,bridge_plan,output_odb,seed_grid=None):
   for sw in n.getSWires():
    for s in sw.getWires():
     if s.isVia():
-     key=n.getName(),s.getTechVia().getName();xy=tuple(s.getViaXY())
+     tv=s.getTechVia()
+     # pdngen canonical M8/M9 arrays are block vias. They remain immutable
+     # under the streamed preservation guard; they are not requested native
+     # tech VIA78 contacts or gap VIA89 duplicates.
+     if not tv:continue
+     key=n.getName(),tv.getName();xy=tuple(s.getViaXY())
      if xy in wanted_vias.get(key,()):vias[key].add(xy)
     elif s.getTechLayer().getName() in ['M8','M9']:wires[n.getName(),s.getTechLayer().getName()].append([s.xMin(),s.yMin(),s.xMax(),s.yMax()])
  physical_rects={k:list(v) for k,v in wires.items()}
