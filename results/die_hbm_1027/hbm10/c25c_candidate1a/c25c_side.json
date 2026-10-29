@@ -1,0 +1,145 @@
+{
+ "schema": "opentallas.hbm.c25c_side.v1",
+ "plan": "die_plan.json",
+ "plan_sha256": "e3f35afffb6e3ad8001571a569d0c5e8ee88d5e37372e3da9318738344cf5f57",
+ "plan_sha8": "e3f35aff",
+ "roles": {
+  "NWq0": "SW",
+  "NEq0": "SE",
+  "NWq1": "NW",
+  "NEq1": "NE"
+ },
+ "reset_contract_edges": 64,
+ "reset_legs": {
+  "reset_SW": {
+   "partition": "NW_hub",
+   "half": "q0",
+   "tap_die_um": [
+    9439.2,
+    7534.08
+   ],
+   "sync_stages": 2,
+   "local_release_edges": 3,
+   "release_cycle": 50,
+   "core_release_max": 51,
+   "release_basis": "reset_tree.py offsets (wavefront) on the C25a plan (C25b adds only root cores u_mu_fused_root/program, same root tree: est release 17 + 1 like the other root cores, UNCHECKED until offsets on C25b)"
+  },
+  "reset_NW": {
+   "partition": "NW_hub",
+   "half": "q1",
+   "tap_die_um": [
+    9439.2,
+    7534.08
+   ],
+   "sync_stages": 2,
+   "local_release_edges": 3,
+   "release_cycle": 50,
+   "core_release_max": 51,
+   "release_basis": "reset_tree.py offsets (wavefront) on the C25a plan (C25b adds only root cores u_mu_fused_root/program, same root tree: est release 17 + 1 like the other root cores, UNCHECKED until offsets on C25b)"
+  },
+  "reset_SE": {
+   "partition": "NE_hub",
+   "half": "q0",
+   "tap_die_um": [
+    18809.28,
+    6696.0
+   ],
+   "sync_stages": 2,
+   "local_release_edges": 3,
+   "release_cycle": 50,
+   "core_release_max": 51,
+   "release_basis": "reset_tree.py offsets (wavefront) on the C25a plan (C25b adds only root cores u_mu_fused_root/program, same root tree: est release 17 + 1 like the other root cores, UNCHECKED until offsets on C25b)"
+  },
+  "reset_NE": {
+   "partition": "NE_hub",
+   "half": "q1",
+   "tap_die_um": [
+    18809.28,
+    6696.0
+   ],
+   "sync_stages": 2,
+   "local_release_edges": 3,
+   "release_cycle": 50,
+   "core_release_max": 51,
+   "release_basis": "reset_tree.py offsets (wavefront) on the C25a plan (C25b adds only root cores u_mu_fused_root/program, same root tree: est release 17 + 1 like the other root cores, UNCHECKED until offsets on C25b)"
+  },
+  "reset_root": {
+   "partition": "root",
+   "half": null,
+   "tap_die_um": [
+    14048.64,
+    6994.08
+   ],
+   "sync_stages": 2,
+   "local_release_edges": 6,
+   "release_cycle": 17,
+   "core_release_max": 18,
+   "release_basis": "reset_tree.py offsets (wavefront) on the C25a plan (C25b adds only root cores u_mu_fused_root/program, same root tree: est release 17 + 1 like the other root cores, UNCHECKED until offsets on C25b)"
+  }
+ },
+ "provider_legs": {
+  "host_to_provider": {
+   "src": "NW_hub.u_hleaf_Q (ot_hbm_host_cfg_leaf_nw)",
+   "dst": "root.u_mu_fused_program cfg/desc/launch (S face)",
+   "length_um": 6929.3,
+   "form": "coherent320bit packet,30source FFhops incl2boundary banks; provider LOADcapture31; CAK pending",
+   "repeaters": 15,
+   "status": "SOURCE PIPE PROVED; actual FF bays reserved; CA/reset/boundary bind timing pending",
+   "cycles": 31,
+   "transport_port_cycles": 30,
+   "load_capture_cycles": 31,
+   "source": "rtl/hbm_next/bind/ot_hnx_host_boot_hop.sv + host30_map.json; real RTL30pipe308comparisonsPASS"
+  },
+  "provider_to_root": {
+   "src": "u_mu_fused_program.job*/wsc/pk5/pb5 (N face)",
+   "dst": "u_mu_fused_root S face",
+   "length_um": 34.56,
+   "cycles": 0,
+   "form": "abutted, same partition, core_conns direct",
+   "status": "IN PLAN"
+  },
+  "root_to_provider": {
+   "src": "u_mu_fused_root.done/fault/busy",
+   "dst": "u_mu_fused_program.root_*",
+   "length_um": 34.56,
+   "cycles": 0,
+   "status": "IN PLAN"
+  },
+  "down_NW/NE, up_NW/NE": {
+   "lanes": {
+    "N4U_NW": 13,
+    "N4D_NW": 15,
+    "N4U_NE": 13,
+    "N4D_NE": 15
+   },
+   "status": "IN PLAN (N4U/N4D_NW/NE)"
+  }
+ },
+ "host_write_interval": {
+  "value": 5,
+  "status": "CHECKED source ingress AXI bvalid spacing; no payload-stability multicycle required with coherentpacket pipeline",
+  "payload_interval_info": 40
+ },
+ "svg_S_candidates": {
+  "nets": [
+   "svg_SW0__sm_packet",
+   "svg_SW1__sm_packet",
+   "svg_SW2__sm_packet",
+   "svg_SW3__sm_packet",
+   "svg_SW4__sm_packet",
+   "svg_SW5__sm_packet",
+   "svg_SW6__sm_packet",
+   "svg_SW7__sm_packet"
+  ],
+  "form": "nkeys=0 tie CANDIDATE only if the token pass stays bit-exact (not asserted here)"
+ },
+ "fold_map": "c25b_s_role_fold_map.json (20 MAPPED / 60 UNMAPPED / 8 NO_PROVIDER) SUPERSEDED by the binder q0-half instance map (TOK-HBM-4 ruling)",
+ "pending": [
+  "source_plan_commit (set to immutable archived plan commit)",
+  "regionalCAK and delivered-reset contract on new crossing",
+  "actual source/binder boundary hop identity",
+  "28foldedservice producer source closure; placement is conditional",
+  "current NQ2 HC service +4 vs inherited wrong4quarter price"
+ ],
+ "qualification": "SOURCE-ONLY/PHYSICAL-TRIAL CANDIDATE: no freeze/release; regional CA K and source closure pending"
+}

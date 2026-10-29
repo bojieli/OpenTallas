@@ -1,0 +1,600 @@
+{
+ "source_sha256": "5781f4f7112a00d85c361a1f6f0427246140699fb304a137b5bfebcade4f17a4",
+ "event": "C25c missing physical S-role service leaves",
+ "data_cycles_added": 0,
+ "instances": [
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hcollks_Q_p0__q0",
+   "module": "ot_hgi_coll_kq_share2_leaf",
+   "outline_um": [
+    129.6,
+    129.6
+   ],
+   "origin_um": [
+    3360.96,
+    613.44
+   ],
+   "template": "u_hcollks_Q_p0",
+   "displacement_um": 881.28,
+   "hard_core": false,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hcollks_Q_p1__q0",
+   "module": "ot_hgi_coll_kq_share2_leaf",
+   "outline_um": [
+    129.6,
+    112.32
+   ],
+   "origin_um": [
+    3291.84,
+    2030.4
+   ],
+   "template": "u_hcollks_Q_p1",
+   "displacement_um": 889.92,
+   "hard_core": false,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hcollks_Q_p2__q0",
+   "module": "ot_hgi_coll_kq_share2_leaf",
+   "outline_um": [
+    60.48,
+    60.48
+   ],
+   "origin_um": [
+    2125.44,
+    1252.8
+   ],
+   "template": "u_hcollks_Q_p2",
+   "displacement_um": 86.4,
+   "hard_core": false,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hcollks_Q_p3__q0",
+   "module": "ot_hgi_coll_kq_share2_leaf",
+   "outline_um": [
+    60.48,
+    129.6
+   ],
+   "origin_um": [
+    1555.2,
+    1166.4
+   ],
+   "template": "u_hcollks_Q_p3",
+   "displacement_um": 164.16,
+   "hard_core": false,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hcollrs_Q__q0",
+   "module": "ot_hbm_idx_vm_share2_static_r",
+   "outline_um": [
+    138.24,
+    51.84
+   ],
+   "origin_um": [
+    2168.64,
+    1442.88
+   ],
+   "template": "u_hcollrs_Q",
+   "displacement_um": 259.2,
+   "hard_core": false,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hleaf_Q__q0",
+   "module": "ot_hbm_host_cfg_leaf2",
+   "outline_um": [
+    69.12,
+    69.12
+   ],
+   "origin_um": [
+    4993.92,
+    768.96
+   ],
+   "template": "u_hleaf_Q",
+   "displacement_um": 77.76,
+   "hard_core": false,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_vmdel_Q0__q0",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.55999999999995,
+    108.0
+   ],
+   "origin_um": [
+    2376.0,
+    3136.32
+   ],
+   "template": "u_vmdel_Q0",
+   "displacement_um": 285.12,
+   "hard_core": true,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_vmdel_Q1__q0",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.55999999999995,
+    108.0
+   ],
+   "origin_um": [
+    2799.36,
+    3309.12
+   ],
+   "template": "u_vmdel_Q1",
+   "displacement_um": 302.4,
+   "hard_core": true,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_vmdel_Q2__q0",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.55999999999995,
+    108.0
+   ],
+   "origin_um": [
+    2609.28,
+    3317.76
+   ],
+   "template": "u_vmdel_Q2",
+   "displacement_um": 259.2,
+   "hard_core": true,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_vmdel_Q3__q0",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.55999999999995,
+    108.0
+   ],
+   "origin_um": [
+    3006.72,
+    3144.96
+   ],
+   "template": "u_vmdel_Q3",
+   "displacement_um": 216.0,
+   "hard_core": true,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_vmdel_Q4__q0",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.56,
+    108.0
+   ],
+   "origin_um": [
+    6816.96,
+    3214.08
+   ],
+   "template": "u_vmdel_Q4",
+   "displacement_um": 423.36,
+   "hard_core": true,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_vmdel_Q5__q0",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.56,
+    108.0
+   ],
+   "origin_um": [
+    7335.36,
+    2868.48
+   ],
+   "template": "u_vmdel_Q5",
+   "displacement_um": 190.08,
+   "hard_core": true,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_vmdel_Q6__q0",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.56,
+    108.0
+   ],
+   "origin_um": [
+    6635.52,
+    3205.44
+   ],
+   "template": "u_vmdel_Q6",
+   "displacement_um": 371.52,
+   "hard_core": true,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_vmdel_Q7__q0",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.56,
+    108.0
+   ],
+   "origin_um": [
+    7171.2,
+    3119.04
+   ],
+   "template": "u_vmdel_Q7",
+   "displacement_um": 241.92,
+   "hard_core": true,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hcollks_Q_p0__q0",
+   "module": "ot_hgi_coll_kq_share2_leaf",
+   "outline_um": [
+    129.6,
+    129.6
+   ],
+   "origin_um": [
+    3317.76,
+    1261.44
+   ],
+   "template": "u_hcollks_Q_p0",
+   "displacement_um": 207.36,
+   "hard_core": false,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hcollks_Q_p1__q0",
+   "module": "ot_hgi_coll_kq_share2_leaf",
+   "outline_um": [
+    129.6,
+    112.32
+   ],
+   "origin_um": [
+    2998.08,
+    682.56
+   ],
+   "template": "u_hcollks_Q_p1",
+   "displacement_um": 751.68,
+   "hard_core": false,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hcollks_Q_p2__q0",
+   "module": "ot_hgi_coll_kq_share2_leaf",
+   "outline_um": [
+    60.48,
+    60.48
+   ],
+   "origin_um": [
+    2125.44,
+    1252.8
+   ],
+   "template": "u_hcollks_Q_p2",
+   "displacement_um": 86.4,
+   "hard_core": false,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hcollks_Q_p3__q0",
+   "module": "ot_hgi_coll_kq_share2_leaf",
+   "outline_um": [
+    60.48,
+    129.6
+   ],
+   "origin_um": [
+    1555.2,
+    1252.8
+   ],
+   "template": "u_hcollks_Q_p3",
+   "displacement_um": 77.76,
+   "hard_core": false,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hcollrs_Q__q0",
+   "module": "ot_hbm_idx_vm_share2_static_r",
+   "outline_um": [
+    138.24,
+    51.84
+   ],
+   "origin_um": [
+    2168.64,
+    1442.88
+   ],
+   "template": "u_hcollrs_Q",
+   "displacement_um": 259.2,
+   "hard_core": false,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hleaf_Q__q0",
+   "module": "ot_hbm_host_cfg_leaf2",
+   "outline_um": [
+    69.12,
+    69.12
+   ],
+   "origin_um": [
+    4916.16,
+    855.36
+   ],
+   "template": "u_hleaf_Q",
+   "displacement_um": 86.4,
+   "hard_core": false,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_vmdel_Q0__q0",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.55999999999995,
+    108.0
+   ],
+   "origin_um": [
+    2730.24,
+    3317.76
+   ],
+   "template": "u_vmdel_Q0",
+   "displacement_um": 501.12,
+   "hard_core": true,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_vmdel_Q1__q0",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.55999999999995,
+    108.0
+   ],
+   "origin_um": [
+    3032.64,
+    3119.04
+   ],
+   "template": "u_vmdel_Q1",
+   "displacement_um": 336.96,
+   "hard_core": true,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_vmdel_Q2__q0",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.55999999999995,
+    108.0
+   ],
+   "origin_um": [
+    2168.64,
+    2747.52
+   ],
+   "template": "u_vmdel_Q2",
+   "displacement_um": 743.04,
+   "hard_core": true,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_vmdel_Q3__q0",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.55999999999995,
+    108.0
+   ],
+   "origin_um": [
+    2825.28,
+    3732.48
+   ],
+   "template": "u_vmdel_Q3",
+   "displacement_um": 630.72,
+   "hard_core": true,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_vmdel_Q4__q0",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.56,
+    108.0
+   ],
+   "origin_um": [
+    6894.72,
+    3136.32
+   ],
+   "template": "u_vmdel_Q4",
+   "displacement_um": 267.84,
+   "hard_core": true,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_vmdel_Q5__q0",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.56,
+    108.0
+   ],
+   "origin_um": [
+    7309.44,
+    2903.04
+   ],
+   "template": "u_vmdel_Q5",
+   "displacement_um": 181.44,
+   "hard_core": true,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_vmdel_Q6__q0",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.56,
+    108.0
+   ],
+   "origin_um": [
+    6635.52,
+    3205.44
+   ],
+   "template": "u_vmdel_Q6",
+   "displacement_um": 371.52,
+   "hard_core": true,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_vmdel_Q7__q0",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.56,
+    108.0
+   ],
+   "origin_um": [
+    7171.2,
+    3119.04
+   ],
+   "template": "u_vmdel_Q7",
+   "displacement_um": 241.92,
+   "hard_core": true,
+   "status": "PLACED; connectivity reach and region assignment pending current bind"
+  }
+ ],
+ "mapping": {
+  "hcollks_SW_p0": [
+   "NW_hub",
+   "u_hcollks_Q_p0__q0"
+  ],
+  "hcollks_SW_p1": [
+   "NW_hub",
+   "u_hcollks_Q_p1__q0"
+  ],
+  "hcollks_SW_p2": [
+   "NW_hub",
+   "u_hcollks_Q_p2__q0"
+  ],
+  "hcollks_SW_p3": [
+   "NW_hub",
+   "u_hcollks_Q_p3__q0"
+  ],
+  "hcollrs_SW": [
+   "NW_hub",
+   "u_hcollrs_Q__q0"
+  ],
+  "hleaf_SW": [
+   "NW_hub",
+   "u_hleaf_Q__q0"
+  ],
+  "vmdel_SW0": [
+   "NW_hub",
+   "u_vmdel_Q0__q0"
+  ],
+  "vmdel_SW1": [
+   "NW_hub",
+   "u_vmdel_Q1__q0"
+  ],
+  "vmdel_SW2": [
+   "NW_hub",
+   "u_vmdel_Q2__q0"
+  ],
+  "vmdel_SW3": [
+   "NW_hub",
+   "u_vmdel_Q3__q0"
+  ],
+  "vmdel_SW4": [
+   "NW_hub",
+   "u_vmdel_Q4__q0"
+  ],
+  "vmdel_SW5": [
+   "NW_hub",
+   "u_vmdel_Q5__q0"
+  ],
+  "vmdel_SW6": [
+   "NW_hub",
+   "u_vmdel_Q6__q0"
+  ],
+  "vmdel_SW7": [
+   "NW_hub",
+   "u_vmdel_Q7__q0"
+  ],
+  "hcollks_SE_p0": [
+   "NE_hub",
+   "u_hcollks_Q_p0__q0"
+  ],
+  "hcollks_SE_p1": [
+   "NE_hub",
+   "u_hcollks_Q_p1__q0"
+  ],
+  "hcollks_SE_p2": [
+   "NE_hub",
+   "u_hcollks_Q_p2__q0"
+  ],
+  "hcollks_SE_p3": [
+   "NE_hub",
+   "u_hcollks_Q_p3__q0"
+  ],
+  "hcollrs_SE": [
+   "NE_hub",
+   "u_hcollrs_Q__q0"
+  ],
+  "hleaf_SE": [
+   "NE_hub",
+   "u_hleaf_Q__q0"
+  ],
+  "vmdel_SE0": [
+   "NE_hub",
+   "u_vmdel_Q0__q0"
+  ],
+  "vmdel_SE1": [
+   "NE_hub",
+   "u_vmdel_Q1__q0"
+  ],
+  "vmdel_SE2": [
+   "NE_hub",
+   "u_vmdel_Q2__q0"
+  ],
+  "vmdel_SE3": [
+   "NE_hub",
+   "u_vmdel_Q3__q0"
+  ],
+  "vmdel_SE4": [
+   "NE_hub",
+   "u_vmdel_Q4__q0"
+  ],
+  "vmdel_SE5": [
+   "NE_hub",
+   "u_vmdel_Q5__q0"
+  ],
+  "vmdel_SE6": [
+   "NE_hub",
+   "u_vmdel_Q6__q0"
+  ],
+  "vmdel_SE7": [
+   "NE_hub",
+   "u_vmdel_Q7__q0"
+  ]
+ },
+ "added_lot_area_mm2": 0.3559292927999999,
+ "new_instances": 28,
+ "plan_sha256": "805f376e157b50047d5b6ea7a015481055e663843f1c76968673e6327f0be13d"
+}

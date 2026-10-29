@@ -12,7 +12,7 @@ for tn in ('q_hub_nw','q_hub_ne'):
  t=p['partition_types'][tn]
  c=next(c for c in t['hard_cores'] if c['inst']=='u_mu_fused_n4')
  assert not any(a['inst']==c['inst'] for a in t['contents'])
- t['contents'].append(dict(inst=c['inst'],module=c['module'],origin_um=c['origin_um'],outline_um=c['outline_um'],status='proposed',note='C25c: existing n4 hard core was missing from contents; data buses retain exact .uo/.dn binding'))
+ t['contents'].append(dict(inst=c['inst'],module=c['module'],origin_um=c['origin_um'],outline_um=c['outline_um'],status='new',note='C25c: existing n4 hard core was missing from contents; data buses retain exact .uo/.dn binding'))
  r['changes'].append(dict(type=tn,instance=c['inst'],change='add missing contents for existing hard core',data_cycle_delta=0))
 t=p['partition_types']['root'];c=next(c for c in t['hard_cores'] if c['inst']=='u_mu_fused_program');old=c['origin_um'][:];new=[734.4,5339.52];dy=new[1]-old[1];c['origin_um']=new
 c['note']+=' | C25c: origin y -17.28 clears 137 retained L9x1 actual-bit sites; root/provider gap34.56um, data cycles0'

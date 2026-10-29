@@ -15,7 +15,7 @@ for leg in est['legs']:
  for xy in leg['stations_um']:
   name=f'u_host_boot_hop{ix:02d}';assert not any(c['inst']==name for c in t['contents'])
   origin=[round(z-8.64,4) for z in xy]
-  t['contents'].append(dict(inst=name,module='ot_hnx_host_boot_hop',status='proposed',cells=320,origin_um=origin,outline_um=[17.28,17.28],note=f'C25c native boot-packet source hop{ix}/{N-1};320FF,only3validreset;clock/CA/reset timing pending'))
+  t['contents'].append(dict(inst=name,module='ot_hnx_host_boot_hop',status='new',cells=320,origin_um=origin,outline_um=[17.28,17.28],note=f'C25c native boot-packet source hop{ix}/{N-1};320FF,only3validreset;clock/CA/reset timing pending'))
   t.setdefault('channels',[]).append(dict(rect_um=[*origin,round(origin[0]+17.28,4),round(origin[1]+17.28,4)],reason=f'C25c reserved320FF boot packet bank {name}; FFfill40.6%, clock/reset access retained'))
   t['clock']['taps'].append(dict(name=name+'.clk',kind='glue',xy=xy,insertion_ps=250.,insertion_ff_ps=202.5,budget_owner='C25c boot packet320FF cluster',note='PLANNED local cluster; no signed latency view, forwarded regional clock/reset pending trial'))
   # Exact lower-left320FFs,12columns; actualplan placement hook uses this bank, never nominal point only.
