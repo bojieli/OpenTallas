@@ -20,6 +20,7 @@ Plan (all from the spec + placed sink coordinates, deterministic, no timing meas
 """
 import collections
 import json
+import math
 import sys
 
 
@@ -134,36 +135,63 @@ def legalize_tap_footprints(taps, spec):
     pad count, cell or topology changes.  Fails closed if no legal footprint exists.
     """
     fp = spec["tap_footprint"]
-    pitch = float(spec.get("pad_pitch_um", CFG_DEFAULTS["pad_pitch_um"]))
-    sw, sh = spec.get("site_um", CFG_DEFAULTS["site_um"])
-    tw = float(fp.get("tap_width_um", 1.62))
-    m = float(fp.get("margin_um", 0.054)) + sw / 2
-    step = float(fp.get("step_um", sh))
-    cx0, cy0, cx1, cy1 = fp["core_um"]
-    halo = float(fp.get("keepout_halo_um", 0.0))  # hard-core row cut-back (rows stop this far from a macro)
-    keep = [(a - halo, b - halo, c + halo, d + halo) for a, b, c, d in spec.get("keepouts_um", [])]
-    keep += [tuple(k) for k in fp.get("extra_keepouts_um", [])]
-    reach = int(round(float(fp.get("max_move_um", 30.0)) / step))
-    ring = sorted((abs(i) + abs(j), j, i) for i in range(-reach, reach + 1) for j in range(-reach, reach + 1))
+
+    def finite(value, name, *, positive=False, nonnegative=False):
+        value = float(value)
+        if not math.isfinite(value) or (positive and value <= 0) or (nonnegative and value < 0):
+            raise ValueError(f"reg_spine tap_footprint: invalid {name} ({value})")
+        return value
+
+    pitch = finite(spec.get("pad_pitch_um", CFG_DEFAULTS["pad_pitch_um"]), "pad_pitch_um", positive=True)
+    sw, sh = [finite(v, "site_um", positive=True) for v in spec.get("site_um", CFG_DEFAULTS["site_um"])]
+    tw = finite(fp.get("tap_width_um", 1.62), "tap_width_um", positive=True)
+    m = finite(fp.get("margin_um", 0.054), "margin_um", nonnegative=True) + sw / 2
+    step = finite(fp.get("step_um", sh), "step_um", positive=True)
+    cx0, cy0, cx1, cy1 = [finite(v, "core_um") for v in fp["core_um"]]
+    if cx1 <= cx0 or cy1 <= cy0:
+        raise ValueError("reg_spine tap_footprint: core_um must have positive width and height")
+    halo = finite(fp.get("keepout_halo_um", 0.0), "keepout_halo_um", nonnegative=True)
+    keep = []
+    for box in spec.get("keepouts_um", []):
+        a, b, c, d = [finite(v, "keepouts_um") for v in box]
+        if c <= a or d <= b:
+            raise ValueError("reg_spine tap_footprint: invalid keepouts_um rectangle")
+        keep.append((a - halo, b - halo, c + halo, d + halo))
+    for box in fp.get("extra_keepouts_um", []):
+        a, b, c, d = [finite(v, "extra_keepouts_um") for v in box]
+        if c <= a or d <= b:
+            raise ValueError("reg_spine tap_footprint: invalid extra_keepouts_um rectangle")
+        keep.append((a, b, c, d))
+    max_move = finite(fp.get("max_move_um", 30.0), "max_move_um", nonnegative=True)
+    reach = math.floor(max_move / step + 1e-12)
+    ring = sorted((abs(i) + abs(j), j, i) for i in range(-reach, reach + 1)
+                  for j in range(-reach, reach + 1) if (abs(i) + abs(j)) * step <= max_move + 1e-9)
 
     def rect(x, y, cols, rows, sgn):
         y0, y1 = (y - (rows - 1) * sh, y) if sgn < 0 else (y, y + (rows - 1) * sh)
         return (x - cols * pitch - 0.3 - m, y0 - sh / 2 - m, x + tw + m, y1 + 1.5 * sh + m)
 
     for t in taps:
-        n = int(t["pad"])
+        tx, ty = finite(t["x"], "tap.x"), finite(t["y"], "tap.y")
+        pad = finite(t["pad"], "tap.pad", nonnegative=True)
+        if not pad.is_integer():
+            raise ValueError("reg_spine tap_footprint: tap.pad must be an integer")
+        n = int(pad)
         forms = [(n, 1, -1)] + [(-(-n // r), r, s) for r in range(2, n + 1) for s in (-1, 1)
                                 if -(-n // r) < -(-n // (r - 1))]
         best = None
         for cols, rows, sgn in forms:
             r0 = rect(t["x"], t["y"], cols, rows, sgn)
-            span = reach * step
+            span = reach * step + 0.005  # include the final 0.01um coordinate rounding
             near = [k for k in keep if k[0] < r0[2] + span and r0[0] - span < k[2]
                     and k[1] < r0[3] + span and r0[1] - span < k[3]]
             for dist, j, i in ring:
                 if best is not None and dist > best[0]:
                     break
-                x, y = t["x"] + i * step, t["y"] + j * step
+                # Test the same rounded coordinates written to the physical plan.
+                x, y = round(tx + i * step, 2), round(ty + j * step, 2)
+                if abs(x - tx) + abs(y - ty) > max_move + 1e-9:
+                    continue
                 a = rect(x, y, cols, rows, sgn)
                 if a[0] < cx0 or a[1] < cy0 or a[2] > cx1 or a[3] > cy1:
                     continue
