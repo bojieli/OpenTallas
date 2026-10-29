@@ -1657,3 +1657,5 @@ CODEX: 2026-10-29 03:04 PDT QC native macroPG actualcoupon754/754pathsPASS49f324
 CODEX: 2026-10-29 03:05 PDT HBMactualRT171/1736rowquerynumericPASS192heads/768blocks/3084requests each+persistentclear/stride/returncontrolsCAUGHT,7e89131fcREADY. Southkeyserviceprovider diagnosisQwenhelper;KrequiresfreshC25cGEN.
 
 CODEX: 2026-10-29 03:06 PDT GEOM exactKVdiagnosis8257646a8: AHUB203badinternalcontrolmovable; KVS_PC625facepairs/currentABIspan753.55structurallyrequirespipelineorfaceevent; KVlead+kitownernotified, nostaleroute.
+
+CODEX: 2026-10-29 03:08 PDT SerDes split READY codex/head-popcount-1029@f8bcfcdd7 (sourceb10c1dc29): opt-in E2regional28/27subtotals/E3CSA, +4FF/0cycles; actual732cycle/64frame0diff+MUT2caught64, all2^56count BDDPASS/root17dropCAUGHT, accumulatorSATPASS. InitialreceiptPythonSyntaxErrorFAIL preserved/fixedcollector no rebuild. TrialG1 imageviewed PASS-COND, actualprototypegen LIVE intel2 codex-head-popcount-1029/kits1. Mainadoption heldROOT; originalmappedLECcontinues.
