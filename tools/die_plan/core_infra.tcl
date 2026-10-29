@@ -93,6 +93,7 @@ proc ot_ci_place {i x y rect} {
     $i setOrient [$row getOrient]; $i setLocation $xx $yy
     $i setPlacementStatus FIRM
   }
+  ot_ci_occ_add $i
   foreach j [ot_ci_occ_candidates $xx $yy [expr {$xx+$w}] [expr {$yy+$h}]] {
     if {$i eq $j} continue
     if {![[ $j getMaster] isBlock] && [$j getPlacementStatus] ni {FIRM LOCKED COVER}} continue
@@ -101,7 +102,6 @@ proc ot_ci_place {i x y rect} {
       error "OT_CORE_INFRA_PLANNED_OVERLAP [$i getName] [$j getName]"
     }
   }
-  ot_ci_occ_add $i
 }
 proc ot_ci_cell {name master x y rect} {
   set m [[ord::get_db] findMaster $master]
