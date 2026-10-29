@@ -37,8 +37,16 @@ def split_intervals(cal):
     events, rather than assuming a shape's gap is wide enough.
     """
     raw = [(w >> 75, w & ACTION_MASK) for w in cal['packed'] if not w & END]
-    starts = [0] + [p['launch'] for p in cal['phases'][1:]]
-    assert all(a < b for a,b in zip(starts,starts[1:]))
+    candidates = [0] + [p['launch'] for p in cal['phases'][1:]]
+    assert all(a < b for a,b in zip(candidates,candidates[1:]))
+    starts = [0]
+    for candidate in candidates[1:]:
+        before = [t for t, _a in raw if starts[-1] <= t < candidate]
+        # A phase boundary is only an address-reuse opportunity. Keep the
+        # reader running when real actions leave no fixed PRIME/START gap.
+        # Nothing moves in time; the layer ROM-capacity check still applies.
+        if before and before[-1] + 2 < candidate - 20:
+            starts.append(candidate)
     chunks = []
     for i,b in enumerate(starts):
         hi = starts[i+1] if i+1 < len(starts) else None
