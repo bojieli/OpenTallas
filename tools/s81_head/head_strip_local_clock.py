@@ -20,7 +20,27 @@ def main():
  mapping=json.load(open(d/'spine_regions.json'))['part_region'];D=L.load_plan(p);G=L.region_geom(D,mapping);adj=L.part_adjacency(D);cross=L.crossings(D,mapping,G,adj);E=L.region_graph(D,mapping,adj,cross)
  # Only existing physical neighbour graph edges or declared data crossings;
  # disconnected regions are explicitly recorded by the generic proposer.
- f=L.feed_tree(G,E,cross,1.0,'fish');feed={'root':f['root'],'parent':f['parent'],'tap':{f'{x}->{y}':v for (x,y),v in f['tap'].items()},'joined':f['joined'],'source':'generic maximum-traffic physical neighbour/data graph'}
+ f=L.feed_tree(G,E,cross,1.0,'fish')
+ # Fork at each column: clock must not traverse the full data U-turn before
+ # feeding its physically adjacent return tile. These are real neighbor edges,
+ # without changing data paths or introducing a balanced die clock.
+ assert f['root']=='sp3',f['root']
+ for row in range(6):
+  for side in ('W','E'):
+   for j in range(11):
+    f['parent'][f't{side}{row}o{j}']=f'sp{row}' if j==0 else f't{side}{row}o{j-1}'
+    f['parent'][f't{side}{row}b{j}']=f't{side}{row}o{j}'
+   f['parent'][f'turn{side}{row}a']=f't{side}{row}o10'
+   f['parent'][f'turn{side}{row}b']=f'turn{side}{row}a'
+ for child in f['parent']:
+  seen=set();n=child
+  while f['parent'][n] is not None:
+   assert n not in seen,('feed cycle',child,n)
+   seen.add(n);n=f['parent'][n]
+  assert n==f['root'],('wrong root',child,n)
+ f['tap']={(parent,child):L.xing_point(G[parent]['bbox'],G[child]['bbox']) for child,parent in f['parent'].items() if parent is not None}
+ assert all(tuple(sorted((x,y))) in E for x,y in f['tap']), 'non-neighbor feed edge'
+ feed={'root':f['root'],'parent':f['parent'],'tap':{f'{x}->{y}':v for (x,y),v in f['tap'].items()},'joined':f['joined'],'source':'neighbor graph; spine/column forks prevent serial clock trip around data turns'}
  (out/'feed.json').write_text(json.dumps(feed,indent=1));shutil.copy(d/'spine_regions.json',out/'spine_regions.json')
  (out/'estimate.md').write_text(f'''HEAD HK4 local clock estimate — geometric first trial
 
