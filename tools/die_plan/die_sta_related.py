@@ -1512,7 +1512,7 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
     nB = max(1, round(core_lat / B["mu_stage_ps"]))
 
     def branch(r, node, late):
-        own = (r.get("abs_late_ps", r["late_ps"]) if late else r.get("abs_early_ps", r["early_ps"])) if node == "h" \
+        own = (r.get("abs_late_ps", r["late_ps"]) if late else r.get("abs_early_ps", r["early_ps"])) if node in ("h", "__source__") \
             else (r["late_ps"] if late else r["early_ps"])
         arr = own - float(meta["node_late_ps" if late else "node_early_ps"][node])
         return dict(cell_ps=fc * arr + B["cell_share"] * core_lat, net_ps=(1 - fc) * arr + (1 - B["cell_share"]) * core_lat,
@@ -1521,7 +1521,9 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
     def fn(a, b, check):
         A_, B_ = taps[a], taps[b]
         node = pair_node(A_, B_)
-        same = (A_["cppr_node"] == B_["cppr_node"]) if CPPR_LCA else node != "h"   # droop shared = same region
+        same = (A_["cppr_node"] == B_["cppr_node"]) if CPPR_LCA else node not in ("h", "__source__")   # droop shared = same region
+        if node == "__source__":
+            same = False
         if region is not None:
             ra = region.get(a, A_["cppr_node"] if A_["cppr_node"] != "h" else None)
             rb = region.get(b, B_["cppr_node"] if B_["cppr_node"] != "h" else None)
