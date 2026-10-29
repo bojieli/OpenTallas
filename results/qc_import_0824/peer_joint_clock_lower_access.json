@@ -1,0 +1,23 @@
+{
+  "status": "LOWER_ACCESS_GEOMETRY_PASS",
+  "physical_route": false,
+  "timing_qualified": false,
+  "loads": 22365,
+  "selected": 22365,
+  "failed": 0,
+  "changed_access_points": 22361,
+  "failures": [],
+  "rejections": {
+    "M2:OBS": 18929,
+    "M7:signal": 230,
+    "M5:signal": 473,
+    "M4:planned_PG": 692,
+    "M5:planned_PG": 2303,
+    "M3:planned_PG": 291,
+    "M7:planned_PG": 2727,
+    "M6:planned_PG": 1588,
+    "M4:signal": 121
+  },
+  "elapsed_s": 108.56980204582214,
+  "scope": "Actual M1..M7 lower escape only; no M7 riser/M8 landing/IR/timing qualification."
+}

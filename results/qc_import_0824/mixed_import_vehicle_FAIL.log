@@ -1,0 +1,11 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-qc-import-0824/src/mixed_import_vehicle.py", line 8, in <module>
+    from shapely.geometry import box
+  File "/srv/opentallas-scratch2/claude/codex-qc-import-0824/pydeps/shapely/__init__.py", line 20, in <module>
+    from shapely.lib import GEOSException
+ModuleNotFoundError: No module named 'shapely.lib'
