@@ -132,6 +132,12 @@ def compile_entry(inventory, job, timing):
         issue=start+t['ctl_start_offset']+job['issue_offset']
     else:
         resident=start=issue=None
+    # Addition can exceed48 bits even when every input individually fits.
+    # Never silently truncate emitted dates when materializing RTL parameters.
+    for name,value in dict(header=header,commit=commit,context=context_edge,settled=settled,
+                           **({'START':start,'issue':issue} if start is not None else {})).items():
+        uint(value,48,'compiled '+name+' edge')
+    for record in frames+xb:uint(record['edge'],48,'compiled source launch edge')
     params=dict(LOCAL_STAGE=stage,LOCAL_RANK=rank,PHASE_BOUND=1,CLOCK_RESET_ID=identity,
                 BOOT_HEADER_EDGE=header,BOOT_COMMIT_EDGE=commit)
     return dict(schema="opentallas.head.provider_entry.v1", scope="CURRENT_PROVIDER_ENTRY_ONLY",
