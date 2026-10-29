@@ -18,7 +18,7 @@
 //  6 Floorplan: smaller pin face (die soft SYNTH block, no hard view); outline from synthesis           PASS (re-synth)
 //  7 Clock: one clk_ctl root as canonical (IDX-SMALL)                                                  PASS
 //  8 Schedule: static; no added cycle; compiler unchanged (op 8 never issued)                         PASS
-module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
+module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0,LOCAL_RESET=0)(
  input wire clk_ctl,input wire [3:0] clk_q,input wire [11:0] clk_mem,
  input wire rst_n,input wire [3:0] op,input wire [1:0] pass,
  input wire [7:0] addr,input wire [9:0] k,
@@ -26,6 +26,21 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
  output reg [3:0] selected_v,output reg [2367:0] selected_line,
  output reg fault
 );
+ // LOCAL_RESET is a synchronous, fixed-depth reset distribution candidate.
+ // rst_n is already the shell's delivered, registered reset. All core groups
+ // gain exactly two reset-delivery cycles; functional op/data latency is unchanged.
+ wire rst_ctl_n;
+ wire [3:0] rst_quarter_n;
+ generate if(LOCAL_RESET!=0)begin:local_reset
+  wire west_n,east_n;
+  ot_hbm_idx_selector_reset_local #(.MUT((MUT==4)?32'd1:32'd0)) rst_dist(
+   .clk(clk_ctl),.rst_i_n(rst_n),.rst_w_n(west_n),.rst_e_n(east_n));
+  assign rst_ctl_n=west_n;
+  assign rst_quarter_n={east_n,east_n,west_n,west_n};
+ end else begin:legacy_reset
+  assign rst_ctl_n=rst_n;
+  assign rst_quarter_n={4{rst_n}};
+ end endgenerate
  localparam integer EW=37,W=16,LW=592;
  function automatic [15:0] orderkey(input [15:0] x);
   orderkey=x[15]?~x:(x^16'h8000);
@@ -51,8 +66,8 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
  wire [3:0] shift=(pass==0)?4'd11:((pass==1)?4'd6:4'd0);
  wire [15:0] binmask=(pass==2)?16'd63:16'd31;
  integer allcount,remain;
- always @(posedge clk_ctl or negedge rst_n)begin
-  if(!rst_n)begin threshold<=0;rank_left<=0;found<=0;fault<=0;for(integer q=0;q<4;q=q+1)ties[q]<=0;end
+ always @(posedge clk_ctl or negedge rst_ctl_n)begin
+  if(!rst_ctl_n)begin threshold<=0;rank_left<=0;found<=0;fault<=0;for(integer q=0;q<4;q=q+1)ties[q]<=0;end
   else begin
    if(|qfault)fault<=1;
    if(op==8&&MUT!=3)fault<=1; // emit readback face removed: op8 is illegal on this master
@@ -104,7 +119,7 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
     .w_ce_in(we),.w_addr_in(wa),.wd_in(wide_wd[m*256+:256]),.w_mask_in({256{1'b1}}),
     .rr_en(2'd0),.rr_addr(14'd0),.cr_en(2'd0),.cr_sel(16'd0));
   end
-  if(STRUCT)begin:bounded_pack
+  if(STRUCT!=0)begin:bounded_pack
    ot_hbm_idx_selector_compact #(.N(W),.EW(EW),.MUT(MUT)) pack(
     .compact(compact),.raw(raw[W*EW-1:0]),.threshold(threshold),
     .ties(comp_started?tie_rem:ties[q]),.fill(fill),.buf_q(buf_q),
@@ -124,7 +139,7 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
    end
   end
   end
-  if(STRUCT)begin:bounded_hist
+  if(STRUCT!=0)begin:bounded_hist
    // Keep predicate temporaries combinational and each histogram register's
    // clocked process small. This preserves the original same-edge priority.
    for(genvar b=0;b<64;b=b+1)begin:bin
@@ -138,8 +153,8 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
        (((orderkey(raw[l*EW+1+:16])>>shift)&binmask)==16'(b)))hits[l]=1;
      end
     end
-    always @(posedge clk_q[q] or negedge rst_n)begin
-     if(!rst_n)hist[q][b]<=0;
+    always @(posedge clk_q[q] or negedge rst_quarter_n[q])begin
+     if(!rst_quarter_n[q])hist[q][b]<=0;
      else begin
       if(op==3)hist[q][b]<=0;
       if((rv&&rop==4)||op==2)hist[q][b]<=hist[q][b]+14'(pop16(hits));
@@ -152,8 +167,8 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
    // per-bin processes above are the only drivers of hist (a runtime if(!STRUCT) inside the shared process
    // still elaborated a second, hold-only driver per bit: 3584 double-driven bits at rtl_lint). Same clock,
    // reset and statement order as before, so STRUCT=0 behaviour is unchanged.
-   always @(posedge clk_q[q] or negedge rst_n)begin
-    if(!rst_n)for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
+   always @(posedge clk_q[q] or negedge rst_quarter_n[q])begin
+    if(!rst_quarter_n[q])for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
     else begin
      if(op==3)for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
      if((rv&&rop==4)||op==2)begin
@@ -171,8 +186,8 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
     end
    end
   end
-  always @(posedge clk_q[q] or negedge rst_n)begin
-   if(!rst_n)begin
+  always @(posedge clk_q[q] or negedge rst_quarter_n[q])begin
+   if(!rst_quarter_n[q])begin
     rv<=0;buf_q<=0;fill<=0;wp<=0;tie_rem<=0;comp_started<=0;selected[q]<=0;qfault[q]<=0;selected_v[q]<=0;last_id<=0;
    end else begin
     rv<=re;rop<=op;rpass<=pass;raddr<=addr;selected_v[q]<=compact;
@@ -197,7 +212,7 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
 endmodule
 `default_nettype wire
 `default_nettype none
-module ot_hbm_idx_selector_static_sel #(parameter integer MUT=0,STRUCT=0)(
+module ot_hbm_idx_selector_static_sel #(parameter integer MUT=0,STRUCT=0,LOCAL_RESET=0)(
  input wire clk_ctl,input wire [3:0] clk_q,input wire [11:0] clk_mem,
  input wire rst_n,input wire [3:0] op,input wire [1:0] pass,
  input wire [7:0] addr,input wire [9:0] k,
@@ -208,7 +223,13 @@ module ot_hbm_idx_selector_static_sel #(parameter integer MUT=0,STRUCT=0)(
  // rst_n: async assert, 2-edge release on clk_ctl; the core's resets (async and synchronous uses on every
  // same-PLL phase-0 root) come from this one kept register, so no input port feeds another root's data pins.
  (* keep *) reg [1:0] rst_sync;
- always @(posedge clk_ctl or negedge rst_n) if(!rst_n) rst_sync<=2'b00; else rst_sync<={rst_sync[0],1'b1};
+ generate if(LOCAL_RESET!=0)begin:delivered_reset
+  // A parent-delivered synchronous reset is timed normally; this is not a
+  // second die-level CDC synchronizer and adds no async false path.
+  always @(posedge clk_ctl) if(!rst_n) rst_sync<=2'b00; else rst_sync<={rst_sync[0],1'b1};
+ end else begin:legacy_reset
+  always @(posedge clk_ctl or negedge rst_n) if(!rst_n) rst_sync<=2'b00; else rst_sync<={rst_sync[0],1'b1};
+ end endgenerate
  wire rst_core_n=rst_sync[1];
  (* keep *) reg [3:0] op_r;(* keep *) reg [1:0] pass_r;(* keep *) reg [7:0] addr_r;(* keep *) reg [9:0] k_r;
  (* keep *) reg [2367:0] in_r;
@@ -217,8 +238,30 @@ module ot_hbm_idx_selector_static_sel #(parameter integer MUT=0,STRUCT=0)(
   op_r<=op;pass_r<=pass;addr_r<=addr;k_r<=k;in_r<=in_line;
   selected_v<=c_sel_v;selected_line<=c_sel_line;fault<=c_fault;
  end
- ot_hbm_idx_selector_static_sel_core #(.MUT(MUT),.STRUCT(STRUCT)) core(.clk_ctl(clk_ctl),.clk_q({4{clk_ctl}}),.clk_mem({12{clk_ctl}}),.rst_n(rst_core_n),
+ ot_hbm_idx_selector_static_sel_core #(.MUT(MUT),.STRUCT(STRUCT),.LOCAL_RESET(LOCAL_RESET)) core(.clk_ctl(clk_ctl),.clk_q({4{clk_ctl}}),.clk_mem({12{clk_ctl}}),.rst_n(rst_core_n),
   .op(op_r),.pass(pass_r),.addr(addr_r),.k(k_r),.in_line(in_r),
   .selected_v(c_sel_v),.selected_line(c_sel_line),.fault(c_fault));
+endmodule
+`default_nettype wire
+
+`default_nettype none
+// Three physical relay sites: common near (400,225), W near (150,225),
+// E near (450,225), in the current 600.048 x 450.36 selector slot.
+// RTL topology only: the kit must publish and enforce legal FIRM anchors.
+// Source boundary stage remains at rst_n. No asynchronous reset or init.
+module ot_hbm_idx_selector_reset_local #(parameter integer MUT=0)(
+ input wire clk,input wire rst_i_n,
+ output wire rst_w_n,output wire rst_e_n
+);
+ (* keep, dont_touch *) reg reset_common_n;
+ (* keep, dont_touch *) reg reset_w_n;
+ (* keep, dont_touch *) reg reset_e_n;
+ always @(posedge clk)begin
+  reset_common_n<=rst_i_n;
+  reset_w_n<=reset_common_n;
+  reset_e_n<=(MUT!=0)?1'b0:reset_common_n;
+ end
+ assign rst_w_n=reset_w_n;
+ assign rst_e_n=reset_e_n;
 endmodule
 `default_nettype wire

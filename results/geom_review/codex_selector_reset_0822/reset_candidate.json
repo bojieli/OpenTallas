@@ -1,0 +1,54 @@
+{
+  "grade": "CANDIDATE / no placement or adopted parent contract",
+  "source_base": "6bbd6a0225908e16ee7f38e9a512524e095d6a38",
+  "parameter": {
+    "LOCAL_RESET": 1,
+    "default": 0
+  },
+  "clock": "one clk_ctl; quarter/memory roots remain shell aliases of clk_ctl",
+  "reset_input": "parent-delivered synchronous reset; no new asynchronous synchronizer or false path",
+  "existing_boundary_stages": 2,
+  "added_boot_cycles": 2,
+  "added_runtime_cycles": 0,
+  "added_registers": 3,
+  "assertion_delivery_edges": 3,
+  "release_delivery_edges": 4,
+  "first_functional_edge_after_release": 5,
+  "production_parent_reset_hold_edges": 64,
+  "parent_contract_status": "NOT ADOPTED; HBM die source/bind owner must publish reset release and START offsets",
+  "no_issue_contract": "Do not issue selector ops during reset; wait for all deterministic reset-delivery stages before START. Warm reset miter drains op pipeline before assertion.",
+  "anchors_um": {
+    "core.local_reset.rst_dist.reset_common_n": [
+      400.0,
+      225.0
+    ],
+    "core.local_reset.rst_dist.reset_w_n": [
+      150.0,
+      225.0
+    ],
+    "core.local_reset.rst_dist.reset_e_n": [
+      450.0,
+      225.0
+    ]
+  },
+  "source_anchor_preserved": "existing boundary flop near E/S rst_n pin (599.952,28.44)",
+  "estimated_hops_um": {
+    "old_source_to_common": 380.0,
+    "common_to_west": 250.0,
+    "common_to_east": 50.0,
+    "west_data_captures": 350.349,
+    "east_data_captures": 359.667
+  },
+  "mapping": {
+    "west": "q0/q1 storage, selected data, and controller state",
+    "east": "q2/q3 storage and selected data"
+  },
+  "remaining_physical_work": [
+    "Confirm canonical recipe/physical pin table and parent source contract",
+    "Retain all three relay FFs through actual Yosys and OpenROAD; prove source mapping",
+    "Legal FIRM relay anchors must be published by kit; sites avoid PG/halos",
+    "Old shared selected_v[2] output FF was placed on W edge; new separated reset leaves require this tiny quarter-2 capture to be placed near E group rather than reusing its old point",
+    "Full data/reset r2r and pin reach on actual enabled source placement",
+    "Current clock, routed TT setup/FF hold, source LEC, and token/model adoption gates unchanged"
+  ]
+}
