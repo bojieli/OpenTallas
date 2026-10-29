@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.macro_placement.v1",
+ "design": "ot_hbm_idx_query_static",
+ "outline_um": [
+  170.64,
+  164.16
+ ],
+ "macro_placement": [
+  {
+   "k": "u_fcore.core.gcode[0].mem",
+   "macro": "ot_sram_1r1w_32x128_m1",
+   "origin_um": [
+    16.749,
+    139.068
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_fcore.core.gcode[1].mem",
+   "macro": "ot_sram_1r1w_32x128_m1",
+   "origin_um": [
+    97.632,
+    59.004
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_fcore.core.gcode[2].mem",
+   "macro": "ot_sram_1r1w_32x128_m1",
+   "origin_um": [
+    97.632,
+    38.142
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_fcore.core.gcode[3].mem",
+   "macro": "ot_sram_1r1w_32x128_m1",
+   "origin_um": [
+    76.797,
+    139.068
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_fcore.core.scmem",
+   "macro": "ot_sram_1r1w_32x128_m1",
+   "origin_um": [
+    97.632,
+    17.34
+   ],
+   "orient": "R0"
+  }
+ ],
+ "note": "from plan core_macros.json status KNOWN basis placed"
+}

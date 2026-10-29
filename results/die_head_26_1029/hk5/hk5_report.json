@@ -1,0 +1,439 @@
+{
+ "event": "hk5_ctl",
+ "types": {
+  "hd_ctl": {
+   "old": [
+    1442.88,
+    1226.88
+   ],
+   "core": [
+    587.52,
+    518.4
+   ],
+   "moved": {
+    "n_tx_o": {
+     "strip": "e",
+     "slot": "n_tx_ft",
+     "dir": "out",
+     "L_um": 855.4,
+     "stations": 3
+    },
+    "n_rx_i": {
+     "strip": "e",
+     "slot": "n_rx_ft",
+     "dir": "in",
+     "L_um": 855.4,
+     "stations": 3
+    },
+    "lepf_o0": {
+     "strip": "n",
+     "slot": "lepf_ft",
+     "dir": "out",
+     "L_um": 279.9,
+     "stations": 1
+    },
+    "unit_o0": {
+     "strip": "n",
+     "slot": "unit_ft",
+     "dir": "out",
+     "L_um": 340.0,
+     "stations": 1
+    },
+    "ctrl_i0": {
+     "strip": "n",
+     "slot": "ctrl_ft",
+     "dir": "in",
+     "L_um": 400.1,
+     "stations": 2
+    },
+    "lep_fault_i": {
+     "strip": "n",
+     "slot": "lep_fault_ft",
+     "dir": "in",
+     "L_um": 674.9,
+     "stations": 2
+    },
+    "lw_i": {
+     "strip": "n",
+     "slot": "lw_ft",
+     "dir": "in",
+     "L_um": 735.2,
+     "stations": 3
+    }
+   },
+   "ft_moved": {
+    "w3u": "n",
+    "w3d": "n"
+   },
+   "islands_dropped": [
+    [
+     1288.91,
+     609.12,
+     1297.55,
+     617.76
+    ],
+    [
+     1395.36,
+     609.12,
+     1404.0,
+     617.76
+    ]
+   ],
+   "reset_taps_kept": 4
+  },
+  "hd_host": {
+   "old": [
+    1442.88,
+    1226.88
+   ],
+   "core": [
+    1296.0,
+    570.24
+   ],
+   "moved": {
+    "h_tx_i": {
+     "strip": "n",
+     "slot": "h_tx_ft",
+     "dir": "in",
+     "L_um": 656.6,
+     "stations": 2
+    },
+    "h_rx_o": {
+     "strip": "n",
+     "slot": "h_rx_ft",
+     "dir": "out",
+     "L_um": 656.6,
+     "stations": 2
+    }
+   },
+   "ft_moved": {
+    "au": "n",
+    "ad": "n",
+    "bu": "n",
+    "bd": "n"
+   },
+   "islands_dropped": [],
+   "reset_taps_kept": 11
+  },
+  "hd_mesh": {
+   "old": [
+    1442.88,
+    1226.88
+   ],
+   "core": [
+    604.8,
+    1226.88
+   ],
+   "moved": {
+    "m_tx_i": {
+     "strip": "e",
+     "slot": "m_tx_ft",
+     "dir": "in",
+     "L_um": 838.1,
+     "stations": 3
+    },
+    "m_rx_o": {
+     "strip": "e",
+     "slot": "m_rx_ft",
+     "dir": "out",
+     "L_um": 838.1,
+     "stations": 3
+    }
+   },
+   "ft_moved": {},
+   "islands_dropped": [
+    [
+     799.11,
+     609.12,
+     807.75,
+     617.76
+    ],
+    [
+     799.2,
+     609.12,
+     807.84,
+     617.76
+    ],
+    [
+     799.38,
+     609.12,
+     808.02,
+     617.76
+    ],
+    [
+     875.89,
+     609.12,
+     884.53,
+     617.76
+    ],
+    [
+     876.11,
+     609.12,
+     884.75,
+     617.76
+    ],
+    [
+     1153.37,
+     609.12,
+     1162.01,
+     617.76
+    ],
+    [
+     1153.44,
+     609.12,
+     1162.08,
+     617.76
+    ],
+    [
+     1153.57,
+     609.12,
+     1162.21,
+     617.76
+    ],
+    [
+     1153.7,
+     609.12,
+     1162.34,
+     617.76
+    ],
+    [
+     1306.93,
+     609.12,
+     1315.57,
+     617.76
+    ],
+    [
+     1307.15,
+     609.12,
+     1315.79,
+     617.76
+    ]
+   ],
+   "reset_taps_kept": 11
+  }
+ },
+ "new_parts": [
+  {
+   "name": "ctl_nstrip",
+   "type": "hd_ctl_n",
+   "origin_um": [
+    8760.96,
+    15517.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "ctl_estrip",
+   "type": "hd_ctl_e",
+   "origin_um": [
+    9348.48,
+    15370.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "host_nstrip",
+   "type": "hd_host_n",
+   "origin_um": [
+    8760.96,
+    1900.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "mesh7N_estrip",
+   "type": "hd_mesh_e",
+   "origin_um": [
+    11646.72,
+    15370.56
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "mesh0S_estrip",
+   "type": "hd_mesh_e",
+   "origin_um": [
+    5037.12,
+    2099.52
+   ],
+   "orient": "MX"
+  },
+  {
+   "name": "mesh7S_estrip",
+   "type": "hd_mesh_e",
+   "origin_um": [
+    11646.72,
+    2099.52
+   ],
+   "orient": "R180"
+  }
+ ],
+ "channels": [
+  {
+   "rect_um": [
+    9348.48,
+    14999.04,
+    10203.84,
+    15370.56
+   ],
+   "reason": "DIE-HEAD-26 hk5_ctl freed slot of ctl (hd_ctl crop)"
+  },
+  {
+   "rect_um": [
+    9348.48,
+    15474.24,
+    10203.84,
+    15517.44
+   ],
+   "reason": "DIE-HEAD-26 hk5_ctl freed slot of ctl (hd_ctl crop)"
+  },
+  {
+   "rect_um": [
+    10056.96,
+    15517.44,
+    10203.84,
+    16225.92
+   ],
+   "reason": "DIE-HEAD-26 hk5_ctl freed slot of ctl (hd_ctl crop)"
+  },
+  {
+   "rect_um": [
+    10056.96,
+    1330.56,
+    10203.84,
+    1900.8
+   ],
+   "reason": "DIE-HEAD-26 hk5_ctl freed slot of host (hd_host crop)"
+  },
+  {
+   "rect_um": [
+    11646.72,
+    14999.04,
+    12484.8,
+    15370.56
+   ],
+   "reason": "DIE-HEAD-26 hk5_ctl freed slot of mesh7N (hd_mesh crop)"
+  },
+  {
+   "rect_um": [
+    11646.72,
+    15456.96,
+    12484.8,
+    16225.92
+   ],
+   "reason": "DIE-HEAD-26 hk5_ctl freed slot of mesh7N (hd_mesh crop)"
+  },
+  {
+   "rect_um": [
+    5037.12,
+    2185.92,
+    5875.2,
+    2557.44
+   ],
+   "reason": "DIE-HEAD-26 hk5_ctl freed slot of mesh0S (hd_mesh crop)"
+  },
+  {
+   "rect_um": [
+    5037.12,
+    1330.56,
+    5875.2,
+    2099.52
+   ],
+   "reason": "DIE-HEAD-26 hk5_ctl freed slot of mesh0S (hd_mesh crop)"
+  },
+  {
+   "rect_um": [
+    11646.72,
+    2185.92,
+    12484.8,
+    2557.44
+   ],
+   "reason": "DIE-HEAD-26 hk5_ctl freed slot of mesh7S (hd_mesh crop)"
+  },
+  {
+   "rect_um": [
+    11646.72,
+    1330.56,
+    12484.8,
+    2099.52
+   ],
+   "reason": "DIE-HEAD-26 hk5_ctl freed slot of mesh7S (hd_mesh crop)"
+  }
+ ],
+ "latency_changed": {
+  "host_tx": [
+   38,
+   40
+  ],
+  "host_rx": [
+   38,
+   40
+  ],
+  "m0S_tx": [
+   49,
+   52
+  ],
+  "m0S_rx": [
+   51,
+   54
+  ],
+  "m7S_tx": [
+   46,
+   49
+  ],
+  "m7S_rx": [
+   47,
+   50
+  ],
+  "m7N_tx": [
+   6,
+   12
+  ],
+  "m7N_rx": [
+   7,
+   13
+  ],
+  "lepf": [
+   2,
+   3
+  ],
+  "unit_lep": [
+   2,
+   3
+  ],
+  "ctrl_lep": [
+   2,
+   4
+  ],
+  "head_lep_fault_return": [
+   2,
+   4
+  ],
+  "head_lep_landing": [
+   2,
+   5
+  ]
+ },
+ "core_origin_moved": {
+  "mesh7N": [
+   [
+    11646.72,
+    14999.04
+   ],
+   [
+    12484.8,
+    14999.04
+   ]
+  ],
+  "mesh7S": [
+   [
+    11646.72,
+    1330.56
+   ],
+   [
+    12484.8,
+    1330.56
+   ]
+  ]
+ }
+}

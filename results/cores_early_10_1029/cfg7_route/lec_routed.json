@@ -1,0 +1,570 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-10-29T14:14:16+0000",
+ "verdict": "EQUIVALENT",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": null,
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "top": "ot_s81_cfg7_seq_bfp",
+ "netlist": "/work/run/results/asap7/kl_ot_s81_cfg7_seq_bfp_explicitpin1029/base/6_final.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {},
+ "ports": {
+  "inputs": 521,
+  "outputs": 114
+ },
+ "t_aig_s": 4.4,
+ "kit_reset_ports": [
+  "rst_n"
+ ],
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [
+    "pi:rst_n[0]"
+   ],
+   "gate": [
+    "pi:rst_n[0]"
+   ]
+  },
+  "reset_asserted": {
+   "gold": {
+    "pi:rst_n[0]": 0
+   },
+   "gate": {
+    "pi:rst_n[0]": 0
+   }
+  },
+  "reset_cycles": 4,
+  "release_edges": 8,
+  "n_release": 0,
+  "release": [],
+  "n_universal_raw_D": 2,
+  "universal_raw_D": [
+   {
+    "register": "ff:u_dut.u_prog.f_prog[21]",
+    "side": "both",
+    "value": 0,
+    "edge": 1,
+    "basis": "universal_raw_D"
+   },
+   {
+    "register": "ff:u_dut.u_prog.f_prog[22]",
+    "side": "both",
+    "value": 0,
+    "edge": 1,
+    "basis": "universal_raw_D"
+   }
+  ],
+  "raw_base_steps": 0,
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_kept": 7,
+  "n_reloaded": 0,
+  "n_dropped": 66,
+  "reloaded": [],
+  "dropped": [
+   {
+    "register": "ff:u_dut.u_ld.u.g_il7.nr[0]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_ld.u.g_il7.nr[1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[0]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[10]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[11]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[12]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[13]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[14]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[23]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[24]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[25]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[26]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[27]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[28]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[29]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[30]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[31]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[32]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[33]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[34]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[35]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[36]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[37]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[38]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[39]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[40]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[41]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[42]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[43]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[44]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[45]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[46]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[47]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[48]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[49]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[50]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[51]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[52]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[53]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[54]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[55]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[56]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[57]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[58]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[59]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[60]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[61]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[66]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[67]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[68]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[69]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[70]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[71]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[72]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[73]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[74]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[75]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[7]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[8]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_prog.dq[9]",
+    "side": "both",
+    "value": 0
+   }
+  ],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants; equality/FSM assumptions never establish a constant's base case"
+ },
+ "t_corr_s": 25.5,
+ "keypoints": {
+  "gold": {
+   "inputs": 1426,
+   "flops": 1125,
+   "outputs": 0,
+   "ands": 25324
+  },
+  "gate": {
+   "inputs": 1374,
+   "flops": 2118,
+   "outputs": 0,
+   "ands": 10537
+  },
+  "matched": 1523,
+  "gold_constant_flops": {
+   "n": 7,
+   "first": [
+    "ff:u_dut.u_ld.u.fault",
+    "ff:u_dut.u_ld.u.g_dl.d_pend[0]",
+    "ff:u_dut.u_ld.u.g_dl.d_pend[1]",
+    "ff:u_dut.u_ld.u.g_pin.st_r[1]",
+    "ff:u_dut.u_ld.u.pend",
+    "ff:u_dut.u_prog.f_prog[21]",
+    "ff:u_dut.u_prog.f_prog[22]"
+   ]
+  },
+  "paired_flops": {
+   "n": 20,
+   "first": [
+    "both:ff:u_dut.u_ld.u.g_pin.g_local.ce_l[0]=ff:u_dut.u_ld.u.g_pin.ce_r[0]",
+    "both:ff:u_dut.u_ld.u.g_pin.g_local.ce_l[1]=ff:u_dut.u_ld.u.g_pin.ce_r[1]",
+    "both:ff:u_dut.u_ld.u.g_pin.g_local.ce_l[2]=ff:u_dut.u_ld.u.g_pin.ce_r[2]",
+    "both:ff:u_dut.u_ld.u.g_pin.g_local.ce_l[3]=ff:u_dut.u_ld.u.g_pin.ce_r[3]",
+    "both:ff:u_dut.u_ld.u.g_pin.g_local.ce_l[4]=ff:u_dut.u_ld.u.g_pin.ce_r[4]",
+    "both:ff:u_dut.u_ld.u.g_pin.g_local.ce_l[5]=ff:u_dut.u_ld.u.g_pin.ce_r[5]",
+    "both:ff:u_dut.u_ld.u.g_pin.g_local.ce_l[6]=ff:u_dut.u_ld.u.g_pin.ce_r[6]",
+    "both:ff:u_dut.u_ld.u.g_pin.g_local.cfg_l[0]=ff:u_dut.u_ld.u.g_pin.cfg_r[0]",
+    "both:ff:u_dut.u_ld.u.g_pin.g_local.cfg_l[1]=ff:u_dut.u_ld.u.g_pin.cfg_r[1]",
+    "both:ff:u_dut.u_ld.u.g_pin.g_local.cfg_l[2]=ff:u_dut.u_ld.u.g_pin.cfg_r[2]",
+    "both:ff:u_dut.u_ld.u.g_pin.g_local.cfg_l[3]=ff:u_dut.u_ld.u.g_pin.cfg_r[3]",
+    "both:ff:u_dut.u_ld.u.g_pin.g_local.cfg_l[4]=ff:u_dut.u_ld.u.g_pin.cfg_r[4]",
+    "both:ff:u_dut.u_ld.u.g_pin.g_local.cfg_l[5]=ff:u_dut.u_ld.u.g_pin.cfg_r[53]",
+    "both:ff:u_dut.u_ld.u.g_pin.go_e_r=ff:u_dut.u_ld.u.g_pin.g_local.go_l",
+    "both:ff:u_dut.u_ld.u.g_rst.u_rst.relay_q[0]=ff:u_dut.g_pr.u_rst.relay_q",
+    "both:ff:u_dut.u_ld.u.g_rst.u_rst.relay_q[1]=ff:u_dut.u_ld.u.g_rst.u_rst.relay_q[0]",
+    "gold:ff:u_dut.u_ld.u.g_dl.d_cgo[0]=ff:u_dut.u_ld.u.g_dl.d_st[0]",
+    "gold:ff:u_dut.u_ld.u.g_dl.d_st[1]=ff:u_dut.u_ld.u.g_dl.d_cgo[1]",
+    "gold:ff:u_dut.u_ld.u.g_rst.u_rst.sync_q[0]=ff:u_dut.g_pr.u_rst.sync_q[0]",
+    "gold:ff:u_dut.u_ld.u.g_rst.u_rst.sync_q[1]=ff:u_dut.g_pr.u_rst.sync_q[1]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 0,
+   "first": []
+  },
+  "gold_x_sources": 905,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 853,
+  "gold_only_compare": {
+   "n": 9,
+   "first": [
+    "ff:u_dut.u_ld.u.fault",
+    "ff:u_dut.u_ld.u.g_dl.d_cgo[0]",
+    "ff:u_dut.u_ld.u.g_dl.d_pend[0]",
+    "ff:u_dut.u_ld.u.g_dl.d_pend[1]",
+    "ff:u_dut.u_ld.u.g_dl.d_st[1]",
+    "ff:u_dut.u_ld.u.g_pin.st_r[1]",
+    "ff:u_dut.u_ld.u.g_rst.u_rst.sync_q[0]",
+    "ff:u_dut.u_ld.u.g_rst.u_rst.sync_q[1]",
+    "ff:u_dut.u_ld.u.pend"
+   ]
+  },
+  "gate_only_compare": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "t_prove_s": 0.6,
+ "x_dont_care_points": {
+  "n": 170,
+  "first": [
+   "ff:u_dut.desc[0]",
+   "ff:u_dut.desc[10]",
+   "ff:u_dut.desc[11]",
+   "ff:u_dut.desc[12]",
+   "ff:u_dut.desc[13]",
+   "ff:u_dut.desc[14]",
+   "ff:u_dut.desc[15]",
+   "ff:u_dut.desc[16]",
+   "ff:u_dut.desc[17]",
+   "ff:u_dut.desc[18]",
+   "ff:u_dut.desc[19]",
+   "ff:u_dut.desc[1]",
+   "ff:u_dut.desc[20]",
+   "ff:u_dut.desc[21]",
+   "ff:u_dut.desc[22]",
+   "ff:u_dut.desc[23]",
+   "ff:u_dut.desc[24]",
+   "ff:u_dut.desc[25]",
+   "ff:u_dut.desc[26]",
+   "ff:u_dut.desc[27]",
+   "ff:u_dut.desc[28]",
+   "ff:u_dut.desc[29]",
+   "ff:u_dut.desc[2]",
+   "ff:u_dut.desc[30]",
+   "ff:u_dut.desc[31]",
+   "ff:u_dut.desc[32]",
+   "ff:u_dut.desc[33]",
+   "ff:u_dut.desc[34]",
+   "ff:u_dut.desc[35]",
+   "ff:u_dut.desc[36]",
+   "ff:u_dut.desc[37]",
+   "ff:u_dut.desc[38]",
+   "ff:u_dut.desc[39]",
+   "ff:u_dut.desc[3]",
+   "ff:u_dut.desc[40]",
+   "ff:u_dut.desc[41]",
+   "ff:u_dut.desc[42]",
+   "ff:u_dut.desc[43]",
+   "ff:u_dut.desc[44]",
+   "ff:u_dut.desc[45]"
+  ]
+ },
+ "kept_registers": {
+  "declared": 17,
+  "in_netlist": 17,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "counts": {
+  "compare_points": 1161,
+  "proved": 1161,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "1161 compare points proved; 1523 key points matched by name, 20 register pairs / merges and 7 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 170 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "t_total_s": 30.7,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "kit provenance invalid: FileNotFoundError: [Errno 2] No such file or directory: '/work/PROVENANCE.json'"
+ }
+}

@@ -15,7 +15,7 @@ def convert(src,out,canonical):
  assert s['widths']['tile_tid']==6 and s['dirs']['tile_tid']=='input'
  cs=canonical.read_text();assert 'tile_tid' not in cs and 'always @(posedge tile_clk) tile_clr_o <= tile_clr;' in cs and 'assign tile_conv_o = tile_conv;' in cs
  old=f['module'];new=old+'__strap';core=new+'__fcore'
- shutil.copytree(src,out,ignore=shutil.ignore_patterns('run','views','lec','signoff*','*.log','FAIL_*'))
+ shutil.copytree(src,out,ignore=shutil.ignore_patterns('run','views','lec','signoff','signoff_*','*.log','FAIL_*'))  # result dirs only: 'signoff*' also dropped the kit signoff.py (KITS-13 10-29)
  raw=out/'rtl'/s['core_def_file'];t=raw.read_text().replace(old,new)
  t,n=re.subn(r'(?m)^    input wire \[5:0\] tile_tid,?\n','',t);assert n==1
  t,n=re.subn(r'(?m)^        \.tile_tid\(tile_tid\),?\n','',t);assert n==1

@@ -1,0 +1,12 @@
+S81 die reset contract receipt (DIE-S81-23, 2026-10-29 07:22 PDT, intel2, Icarus Verilog version 12.0 (stable) ())
+bench: iverilog -g2012 -P tb.HOLD=H -o rH tb64.sv cells.sv; vvp -n rH   (cells = ot_dp_rsync_s2 + ot_dp_rrelay as emitted by tools/die_plan/gen_rtl.py)
+6f6414fcb5b503930e2663382508bb820584c1624fcd649351e44a7846e926fa  results/die_s81_23_1029/rst64/tb64.sv
+887b194b718231caf4ff361ff898dca47f37eaf699c4aaba8324f0664fe0f7b0  results/die_s81_23_1029/rst64/cells.sv
+contract: OWNER 10-29 05:3x: boot holds the die rst_n low >= 64 clocks; no extra per-core reset stages
+--- HOLD=64 (contract)
+COLD HOLD=64 depth0..64 min_sink_known_low=66 depth0=66 depth64=66
+WARM HOLD=64 depth0..64 min_sink_known_low=66 depth0=66 depth64=66
+--- HOLD=63
+COLD/WARM min_sink_known_low=65
+--- HOLD=61 (mutant control)
+COLD/WARM min_sink_known_low=63 BELOW64 -> CAUGHT

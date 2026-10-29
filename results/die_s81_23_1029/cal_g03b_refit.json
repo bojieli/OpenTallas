@@ -1,0 +1,77 @@
+{
+ "scope": "fit_dme_stage_cal: region DME stage model fitted on routed legs; leg = n*d0 + k1*sumL + k2*sumL^2 + kf*(end-node fanout - 1); tap copied, not fitted",
+ "source": {
+  "tree": "run_b/kit/clock/tree.json",
+  "arrivals": "run_b/out",
+  "rep_um": 250.0,
+  "even_legs": true,
+  "built_with": "cal_g03b_refit.built_with.json",
+  "tap_from": "bk_stage_cal_2w2s_late.json"
+ },
+ "fit": {
+  "TT": {
+   "coef": [
+    12.653713,
+    0.159163,
+    0.000232,
+    11.144621
+   ],
+   "legs": 16604,
+   "rms_ps": 7.95,
+   "abs_resid_pctl_ps": {
+    "50": 4.75,
+    "90": 12.06,
+    "99": 23.68
+   },
+   "max_abs_resid_ps": 165.06,
+   "rms_built_ps": 20.06,
+   "median_measured_over_built": 1.112,
+   "rms_ps_by_kind": {
+    "snake": 9.41,
+    "plain": 7.59
+   }
+  },
+  "FF": {
+   "coef": [
+    10.706683,
+    0.142556,
+    0.000228,
+    8.186148
+   ],
+   "legs": 16604,
+   "rms_ps": 7.16,
+   "abs_resid_pctl_ps": {
+    "50": 4.25,
+    "90": 10.93,
+    "99": 21.25
+   },
+   "max_abs_resid_ps": 149.1,
+   "rms_built_ps": 20.11,
+   "median_measured_over_built": 1.137,
+   "rms_ps_by_kind": {
+    "snake": 8.53,
+    "plain": 6.83
+   }
+  }
+ },
+ "leg": [
+  12.653713,
+  0.159163,
+  0.000232,
+  11.144621
+ ],
+ "tap": [
+  0.028407301153837154,
+  0.0
+ ],
+ "leg_FF": [
+  10.706683,
+  0.142556,
+  0.000228,
+  8.186148
+ ],
+ "tap_FF": [
+  0.02839839954669633,
+  0.0
+ ]
+}

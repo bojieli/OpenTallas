@@ -1,0 +1,756 @@
+{
+ "moves": [
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "orient": "R0",
+   "port": "rq2",
+   "to_face": "E",
+   "insts": 4,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    1.0,
+    0.87,
+    0.99,
+    0.96
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "orient": "R0",
+   "port": "rr2",
+   "to_face": "E",
+   "insts": 4,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    1.0,
+    0.87,
+    0.99,
+    0.96
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+   "orient": "MX",
+   "port": "dq",
+   "to_face": "S",
+   "insts": 3,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.98,
+    0.93,
+    0.96
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+   "orient": "MY",
+   "port": "rr0",
+   "to_face": "S",
+   "insts": 2,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.96,
+    0.95
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+   "orient": "MY",
+   "port": "wq_done0",
+   "to_face": "S",
+   "insts": 2,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.96,
+    0.96
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+   "orient": "R0",
+   "port": "dq",
+   "to_face": "N",
+   "insts": 9,
+   "fails": [
+    3,
+    0
+   ],
+   "scores_after": [
+    0.66,
+    0.8,
+    0.51,
+    0.98,
+    0.65,
+    0.93,
+    0.79,
+    0.96,
+    0.51
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+   "orient": "R0",
+   "port": "dq_done",
+   "to_face": "W",
+   "insts": 9,
+   "fails": [
+    2,
+    0
+   ],
+   "scores_after": [
+    0.72,
+    0.92,
+    0.98,
+    0.89,
+    0.72,
+    0.98,
+    0.92,
+    1.0,
+    0.98
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+   "orient": "R0",
+   "port": "kq_done",
+   "to_face": "W",
+   "insts": 9,
+   "fails": [
+    2,
+    0
+   ],
+   "scores_after": [
+    0.72,
+    0.92,
+    0.98,
+    0.89,
+    0.72,
+    0.98,
+    0.92,
+    1.0,
+    0.98
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hgi_coll_gq_issue__237.6x237.6__canon__fr15.json",
+   "orient": "R0",
+   "port": "ld_desc",
+   "to_face": "S",
+   "insts": 2,
+   "fails": [
+    2,
+    0
+   ],
+   "scores_after": [
+    0.82,
+    0.82
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hgi_coll_gq_issue__237.6x237.6__canon__fr15.json",
+   "orient": "R0",
+   "port": "ld_ev_k",
+   "to_face": "S",
+   "insts": 2,
+   "fails": [
+    2,
+    0
+   ],
+   "scores_after": [
+    0.82,
+    0.82
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hgi_coll_gq_issue__237.6x237.6__canon__fr15.json",
+   "orient": "R0",
+   "port": "ld_ev_v",
+   "to_face": "S",
+   "insts": 2,
+   "fails": [
+    2,
+    0
+   ],
+   "scores_after": [
+    0.82,
+    0.82
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hgi_coll_gq_issue__237.6x237.6__canon__fr15.json",
+   "orient": "R0",
+   "port": "ld_fire",
+   "to_face": "S",
+   "insts": 2,
+   "fails": [
+    2,
+    0
+   ],
+   "scores_after": [
+    0.82,
+    0.82
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hgi_coll_gq_issue__237.6x237.6__canon__fr15.json",
+   "orient": "R0",
+   "port": "ld_p_d",
+   "to_face": "S",
+   "insts": 2,
+   "fails": [
+    2,
+    0
+   ],
+   "scores_after": [
+    0.82,
+    0.82
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hgi_coll_gq_issue__237.6x237.6__canon__fr15.json",
+   "orient": "R0",
+   "port": "ld_p_v",
+   "to_face": "S",
+   "insts": 2,
+   "fails": [
+    2,
+    0
+   ],
+   "scores_after": [
+    0.82,
+    0.82
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hgi_coll_gq_land__142.56x207.36__canon__fr15.json",
+   "orient": "MX",
+   "port": "fault",
+   "to_face": "E",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.99
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hgi_coll_gq_land__142.56x207.36__canon__fr15.json",
+   "orient": "R0",
+   "port": "ld_desc",
+   "to_face": "N",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.82
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hgi_coll_gq_land__142.56x207.36__canon__fr15.json",
+   "orient": "R0",
+   "port": "ld_ev_k",
+   "to_face": "N",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.82
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hgi_coll_gq_land__142.56x207.36__canon__fr15.json",
+   "orient": "R0",
+   "port": "ld_ev_v",
+   "to_face": "N",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.82
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hgi_coll_gq_land__142.56x207.36__canon__fr15.json",
+   "orient": "R0",
+   "port": "ld_fire",
+   "to_face": "N",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.82
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hgi_coll_gq_land__142.56x207.36__canon__fr15.json",
+   "orient": "R0",
+   "port": "ld_p_d",
+   "to_face": "N",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.82
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hgi_coll_gq_land__142.56x207.36__canon__fr15.json",
+   "orient": "R0",
+   "port": "ld_p_v",
+   "to_face": "N",
+   "insts": 1,
+   "fails": [
+    1,
+    0
+   ],
+   "scores_after": [
+    0.82
+   ]
+  }
+ ],
+ "skipped": [
+  {
+   "pins_file": "cores/hfd_ep_static__241.92x397.44__r15_wesplit.json",
+   "port": "sd_tx",
+   "why": "table used outside --types"
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "orient": "MY",
+   "port": "dq",
+   "why": "no face lowers the FAIL count 4",
+   "insts": [
+    "q_hub_nw/u_vmb_Q0_mu1",
+    "q_hub_nw/u_vmb_Q1_mu1",
+    "q_hub_nw/u_vmb_Q4_mu1",
+    "q_hub_nw/u_vmb_Q5_mu1",
+    "q_hub_nw/u_vmb_Q6_mu1",
+    "q_hub_nw/u_vmb_Q7_mu1",
+    "q_hub_ne/u_vmb_Q0_mu1",
+    "q_hub_ne/u_vmb_Q1_mu1",
+    "q_hub_ne/u_vmb_Q4_mu1",
+    "q_hub_ne/u_vmb_Q5_mu1",
+    "q_hub_ne/u_vmb_Q6_mu1",
+    "q_hub_ne/u_vmb_Q7_mu1"
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "orient": "MY",
+   "port": "rq2",
+   "why": "no face lowers the FAIL count 3",
+   "insts": [
+    "q_hub_nw/u_vmb_Q0_mu1",
+    "q_hub_nw/u_vmb_Q1_mu1",
+    "q_hub_nw/u_vmb_Q4_mu1",
+    "q_hub_nw/u_vmb_Q5_mu1",
+    "q_hub_nw/u_vmb_Q6_mu1",
+    "q_hub_nw/u_vmb_Q7_mu1",
+    "q_hub_ne/u_vmb_Q0_mu1",
+    "q_hub_ne/u_vmb_Q1_mu1",
+    "q_hub_ne/u_vmb_Q4_mu1",
+    "q_hub_ne/u_vmb_Q5_mu1",
+    "q_hub_ne/u_vmb_Q6_mu1",
+    "q_hub_ne/u_vmb_Q7_mu1"
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "orient": "MY",
+   "port": "rr2",
+   "why": "no face lowers the FAIL count 3",
+   "insts": [
+    "q_hub_nw/u_vmb_Q0_mu1",
+    "q_hub_nw/u_vmb_Q1_mu1",
+    "q_hub_nw/u_vmb_Q4_mu1",
+    "q_hub_nw/u_vmb_Q5_mu1",
+    "q_hub_nw/u_vmb_Q6_mu1",
+    "q_hub_nw/u_vmb_Q7_mu1",
+    "q_hub_ne/u_vmb_Q0_mu1",
+    "q_hub_ne/u_vmb_Q1_mu1",
+    "q_hub_ne/u_vmb_Q4_mu1",
+    "q_hub_ne/u_vmb_Q5_mu1",
+    "q_hub_ne/u_vmb_Q6_mu1",
+    "q_hub_ne/u_vmb_Q7_mu1"
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+   "orient": "R0",
+   "port": "kq",
+   "why": "no face lowers the FAIL count 2",
+   "insts": [
+    "q_hub_nw/u_vmb_Q1",
+    "q_hub_nw/u_vmb_Q3",
+    "q_hub_nw/u_vmb_Q5",
+    "q_hub_ne/u_vmb_Q0",
+    "q_hub_ne/u_vmb_Q1",
+    "q_hub_ne/u_vmb_Q2",
+    "q_hub_ne/u_vmb_Q3",
+    "q_hub_ne/u_vmb_Q4",
+    "q_hub_ne/u_vmb_Q5"
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+   "orient": "R0",
+   "port": "rq1",
+   "why": "no face lowers the FAIL count 1",
+   "insts": [
+    "q_hub_nw/u_vmb_Q1",
+    "q_hub_nw/u_vmb_Q3",
+    "q_hub_nw/u_vmb_Q5",
+    "q_hub_ne/u_vmb_Q0",
+    "q_hub_ne/u_vmb_Q1",
+    "q_hub_ne/u_vmb_Q2",
+    "q_hub_ne/u_vmb_Q3",
+    "q_hub_ne/u_vmb_Q4",
+    "q_hub_ne/u_vmb_Q5"
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+   "orient": "R0",
+   "port": "rr0",
+   "why": "no face lowers the FAIL count 1",
+   "insts": [
+    "q_hub_nw/u_vmb_Q1",
+    "q_hub_nw/u_vmb_Q3",
+    "q_hub_nw/u_vmb_Q5",
+    "q_hub_ne/u_vmb_Q0",
+    "q_hub_ne/u_vmb_Q1",
+    "q_hub_ne/u_vmb_Q2",
+    "q_hub_ne/u_vmb_Q3",
+    "q_hub_ne/u_vmb_Q4",
+    "q_hub_ne/u_vmb_Q5"
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+   "orient": "R0",
+   "port": "rr1",
+   "why": "no face lowers the FAIL count 1",
+   "insts": [
+    "q_hub_nw/u_vmb_Q1",
+    "q_hub_nw/u_vmb_Q3",
+    "q_hub_nw/u_vmb_Q5",
+    "q_hub_ne/u_vmb_Q0",
+    "q_hub_ne/u_vmb_Q1",
+    "q_hub_ne/u_vmb_Q2",
+    "q_hub_ne/u_vmb_Q3",
+    "q_hub_ne/u_vmb_Q4",
+    "q_hub_ne/u_vmb_Q5"
+   ]
+  }
+ ],
+ "tables": {
+  "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__o_R0.json": {
+   "old": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "cores": [
+    "q_hub_nw/u_vmb_Q2_mu1",
+    "q_hub_nw/u_vmb_Q3_mu1",
+    "q_hub_ne/u_vmb_Q2_mu1",
+    "q_hub_ne/u_vmb_Q3_mu1"
+   ],
+   "ports": {
+    "rr2": {
+     "pins": 257,
+     "from_faces": {
+      "S": 257
+     },
+     "to_face": "E",
+     "layer": "M4",
+     "track_step": 2,
+     "free_tracks": 3324
+    },
+    "rq2": {
+     "pins": 18,
+     "from_faces": {
+      "S": 18
+     },
+     "to_face": "E",
+     "layer": "M4",
+     "track_step": 2,
+     "free_tracks": 3067
+    }
+   }
+  },
+  "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_MX.json": {
+   "old": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+   "cores": [
+    "q_hub_nw/u_vmb_Q0",
+    "q_hub_nw/u_vmb_Q2",
+    "q_hub_nw/u_vmb_Q4"
+   ],
+   "ports": {
+    "dq": {
+     "pins": 281,
+     "from_faces": {
+      "E": 281
+     },
+     "to_face": "S",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 1093
+    }
+   }
+  },
+  "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_MY.json": {
+   "old": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+   "cores": [
+    "q_hub_nw/u_vmb_Q7",
+    "q_hub_ne/u_vmb_Q7"
+   ],
+   "ports": {
+    "rr0": {
+     "pins": 257,
+     "from_faces": {
+      "W": 257
+     },
+     "to_face": "S",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 1093
+    },
+    "wq_done0": {
+     "pins": 1,
+     "from_faces": {
+      "W": 1
+     },
+     "to_face": "S",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 836
+    }
+   }
+  },
+  "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0.json": {
+   "old": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15.json",
+   "cores": [
+    "q_hub_nw/u_vmb_Q1",
+    "q_hub_nw/u_vmb_Q3",
+    "q_hub_nw/u_vmb_Q5",
+    "q_hub_ne/u_vmb_Q0",
+    "q_hub_ne/u_vmb_Q1",
+    "q_hub_ne/u_vmb_Q2",
+    "q_hub_ne/u_vmb_Q3",
+    "q_hub_ne/u_vmb_Q4",
+    "q_hub_ne/u_vmb_Q5"
+   ],
+   "ports": {
+    "dq": {
+     "pins": 281,
+     "from_faces": {
+      "E": 281
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 2768
+    },
+    "dq_done": {
+     "pins": 1,
+     "from_faces": {
+      "S": 1
+     },
+     "to_face": "W",
+     "layer": "M4",
+     "track_step": 2,
+     "free_tracks": 3905
+    },
+    "kq_done": {
+     "pins": 1,
+     "from_faces": {
+      "S": 1
+     },
+     "to_face": "W",
+     "layer": "M4",
+     "track_step": 2,
+     "free_tracks": 3904
+    }
+   }
+  },
+  "cores/ot_hgi_coll_gq_issue__237.6x237.6__canon__fr15__o_R0.json": {
+   "old": "cores/ot_hgi_coll_gq_issue__237.6x237.6__canon__fr15.json",
+   "cores": [
+    "q_hub_nw/u_hcollgi_Q__q1",
+    "q_hub_ne/u_hcollgi_Q__q1"
+   ],
+   "ports": {
+    "ld_p_d": {
+     "pins": 512,
+     "from_faces": {
+      "N": 512
+     },
+     "to_face": "S",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 1134
+    },
+    "ld_desc": {
+     "pins": 53,
+     "from_faces": {
+      "W": 53
+     },
+     "to_face": "S",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 622
+    },
+    "ld_ev_k": {
+     "pins": 10,
+     "from_faces": {
+      "W": 10
+     },
+     "to_face": "S",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 569
+    },
+    "ld_p_v": {
+     "pins": 2,
+     "from_faces": {
+      "W": 2
+     },
+     "to_face": "S",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 559
+    },
+    "ld_ev_v": {
+     "pins": 1,
+     "from_faces": {
+      "W": 1
+     },
+     "to_face": "S",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 557
+    },
+    "ld_fire": {
+     "pins": 1,
+     "from_faces": {
+      "W": 1
+     },
+     "to_face": "S",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 556
+    }
+   }
+  },
+  "cores/ot_hgi_coll_gq_land__142.56x207.36__canon__fr15__o_MX.json": {
+   "old": "cores/ot_hgi_coll_gq_land__142.56x207.36__canon__fr15.json",
+   "cores": [
+    "q_hub_ne/u_hcollgl_Q__q1"
+   ],
+   "ports": {
+    "fault": {
+     "pins": 1,
+     "from_faces": {
+      "S": 1
+     },
+     "to_face": "E",
+     "layer": "M4",
+     "track_step": 2,
+     "free_tracks": 1460
+    }
+   }
+  },
+  "cores/ot_hgi_coll_gq_land__142.56x207.36__canon__fr15__o_R0.json": {
+   "old": "cores/ot_hgi_coll_gq_land__142.56x207.36__canon__fr15.json",
+   "cores": [
+    "q_hub_nw/u_hcollgl_Q__q1"
+   ],
+   "ports": {
+    "ld_p_d": {
+     "pins": 512,
+     "from_faces": {
+      "S": 512
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 1440
+    },
+    "ld_desc": {
+     "pins": 53,
+     "from_faces": {
+      "S": 53
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 928
+    },
+    "ld_ev_k": {
+     "pins": 10,
+     "from_faces": {
+      "S": 10
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 875
+    },
+    "ld_p_v": {
+     "pins": 2,
+     "from_faces": {
+      "S": 2
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 865
+    },
+    "ld_ev_v": {
+     "pins": 1,
+     "from_faces": {
+      "S": 1
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 863
+    },
+    "ld_fire": {
+     "pins": 1,
+     "from_faces": {
+      "S": 1
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 862
+    }
+   }
+  }
+ }
+}

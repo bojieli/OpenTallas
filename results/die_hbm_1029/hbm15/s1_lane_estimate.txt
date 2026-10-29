@@ -1,0 +1,160 @@
+die reach_um 405.0 budget {'partition_signal_max': 'M7', 'die_layers': ['M8', 'M9'], 'die_use': ['clock_spine', 'pg', 'reset'], 'cut_avail': {'M8': 0.6, 'M9': 0.6}}
+{'adj_fit': 48, 'hop': 110, 'hop_bits': 88707}
+    NE_hub -> NE_b000      4986 b  ADJ FITS   edge/dist   4320 um  free   68304  existing 10446
+    NW_hub -> NW_b000      4986 b  ADJ FITS   edge/dist   4320 um  free   68304  existing 10446
+   NE_b000 -> NE_b010      4512 b  ADJ FITS   edge/dist   4320 um  free   64482  existing 14268
+   NW_b000 -> NW_b010      4512 b  ADJ FITS   edge/dist   4320 um  free   64482  existing 14268
+   NE_su01 -> NE_su00      3728 b  ADJ FITS   edge/dist   1572 um  free   26485  existing 2180
+   NE_su21 -> NE_su20      3728 b  ADJ FITS   edge/dist   1555 um  free   25237  existing 3113
+   NW_su01 -> NW_su00      3728 b  ADJ FITS   edge/dist   1572 um  free   26485  existing 2180
+   NW_su21 -> NW_su20      3728 b  ADJ FITS   edge/dist   1555 um  free   25237  existing 3113
+   NE_b102 -> NE_b103      3367 b  ADJ FITS   edge/dist   1555 um  free   27104  existing 1246
+   NW_b102 -> NW_b103      3367 b  ADJ FITS   edge/dist   1555 um  free   27104  existing 1246
+   NE_su10 -> NE_su11      3356 b  ADJ FITS   edge/dist   1572 um  free   28638  existing 27
+   NE_su30 -> NE_su31      3356 b  HOP        edge/dist   1149 um  free       0  existing 0
+   NW_su10 -> NW_su11      3356 b  ADJ FITS   edge/dist   1572 um  free   28638  existing 27
+   NW_su30 -> NW_su31      3356 b  HOP        edge/dist   1149 um  free       0  existing 0
+   NW_b100 -> NW_b101      3333 b  HOP        edge/dist   2246 um  free       0  existing 0
+   NE_b001 -> NE_b011      3332 b  ADJ FITS   edge/dist   4320 um  free   66847  existing 11903
+   NE_b100 -> NE_b101      3332 b  HOP        edge/dist   2246 um  free       0  existing 0
+   NW_b001 -> NW_b011      3332 b  ADJ FITS   edge/dist   4320 um  free   66847  existing 11903
+    NE_hub -> NE_su00      2846 b  HOP        edge/dist   1175 um  free       0  existing 0
+    NE_hub -> NE_su20      2846 b  HOP        edge/dist    916 um  free       0  existing 0
+    NW_hub -> NW_su00      2846 b  HOP        edge/dist   1175 um  free       0  existing 0
+    NW_hub -> NW_su20      2846 b  HOP        edge/dist    916 um  free       0  existing 0
+   NE_b000 -> NE_b001      2777 b  HOP        edge/dist    829 um  free       0  existing 0
+   NE_b100 -> NE_b102      2777 b  HOP        edge/dist   8942 um  free       0  existing 0
+   NW_b000 -> NW_b001      2777 b  HOP        edge/dist    829 um  free       0  existing 0
+   NW_b100 -> NW_b102      2777 b  HOP        edge/dist   8942 um  free       0  existing 0
+    NE_hub -> NW_hub       2775 b  HOP        edge/dist   1685 um  free       0  existing 0
+    NW_hub -> NE_hub       2730 b  HOP        edge/dist   1685 um  free       0  existing 0
+    NE_hub -> NE_b113      2277 b  HOP        edge/dist   3283 um  free       0  existing 0
+    NW_hub -> NW_b113      2277 b  HOP        edge/dist   3283 um  free       0  existing 0
+      root -> NW_hub       2235 b  ADJ FITS   edge/dist   4320 um  free   60925  existing 17825
+    NE_hub -> NE_su11      2172 b  ADJ FITS   edge/dist   2359 um  free   37901  existing 5097
+    NE_hub -> NE_su31      2172 b  ADJ FITS   edge/dist   1832 um  free   28292  existing 5098
+    NW_hub -> NW_su11      2172 b  ADJ FITS   edge/dist   2359 um  free   37900  existing 5097
+    NW_hub -> NW_su31      2172 b  ADJ FITS   edge/dist   1832 um  free   28292  existing 5098
+    NW_hub -> root         2065 b  ADJ FITS   edge/dist   4320 um  free   60925  existing 17825
+   NE_b010 -> NE_b001      1756 b  ADJ FITS   edge/dist   4320 um  free   65793  existing 12957
+   NW_b010 -> NW_b001      1756 b  ADJ FITS   edge/dist   4320 um  free   65793  existing 12957
+   NE_b011 -> NE_b002      1747 b  ADJ FITS   edge/dist   4320 um  free   67634  existing 11116
+   NW_b011 -> NW_b002      1747 b  ADJ FITS   edge/dist   4320 um  free   67634  existing 11116
+   NE_b113 -> NE_b111      1662 b  HOP        edge/dist   4320 um  free       0  existing 0
+   NE_b113 -> NE_b112      1662 b  HOP        edge/dist  10290 um  free       0  existing 0
+   NW_b113 -> NW_b111      1662 b  HOP        edge/dist   4320 um  free       0  existing 0
+   NW_b113 -> NW_b112      1662 b  HOP        edge/dist  10290 um  free       0  existing 0
+   NE_b113 -> NE_b110      1534 b  HOP        edge/dist  12848 um  free       0  existing 0
+   NW_b113 -> NW_b110      1534 b  HOP        edge/dist  12848 um  free       0  existing 0
+   NE_su11 -> NE_su10      1527 b  ADJ FITS   edge/dist   1572 um  free   28638  existing 27
+   NW_su11 -> NW_su10      1527 b  ADJ FITS   edge/dist   1572 um  free   28638  existing 27
+   NE_su31 -> NE_su30      1399 b  HOP        edge/dist   1149 um  free       0  existing 0
+   NW_su31 -> NW_su30      1399 b  HOP        edge/dist   1149 um  free       0  existing 0
+   NE_su00 -> NE_hub       1207 b  HOP        edge/dist   1175 um  free       0  existing 0
+   NE_su20 -> NE_hub       1207 b  HOP        edge/dist    916 um  free       0  existing 0
+   NW_su00 -> NW_hub       1207 b  HOP        edge/dist   1175 um  free       0  existing 0
+   NW_su20 -> NW_hub       1207 b  HOP        edge/dist    916 um  free       0  existing 0
+   NE_su00 -> NE_su01      1152 b  ADJ FITS   edge/dist   1572 um  free   26485  existing 2180
+   NW_su00 -> NW_su01      1152 b  ADJ FITS   edge/dist   1572 um  free   26485  existing 2180
+   NE_b102 -> NE_b101      1146 b  HOP        edge/dist  11923 um  free       0  existing 0
+   NE_b103 -> NE_b102      1146 b  ADJ FITS   edge/dist   1555 um  free   27104  existing 1246
+   NW_b102 -> NW_b101      1146 b  HOP        edge/dist  11923 um  free       0  existing 0
+   NW_b103 -> NW_b102      1146 b  ADJ FITS   edge/dist   1555 um  free   27104  existing 1246
+   NE_su11 -> NE_hub       1108 b  ADJ FITS   edge/dist   2359 um  free   37901  existing 5097
+   NE_su31 -> NE_hub       1108 b  ADJ FITS   edge/dist   1832 um  free   28292  existing 5098
+   NW_su11 -> NW_hub       1108 b  ADJ FITS   edge/dist   2359 um  free   37900  existing 5097
+   NW_su31 -> NW_hub       1108 b  ADJ FITS   edge/dist   1832 um  free   28292  existing 5098
+   NE_su20 -> NE_su21      1024 b  ADJ FITS   edge/dist   1555 um  free   25237  existing 3113
+   NW_su20 -> NW_su21      1024 b  ADJ FITS   edge/dist   1555 um  free   25237  existing 3113
+   NE_b111 -> NE_b113      1000 b  HOP        edge/dist   4320 um  free       0  existing 0
+   NE_b112 -> NE_b113      1000 b  HOP        edge/dist  10290 um  free       0  existing 0
+   NW_b111 -> NW_b113      1000 b  HOP        edge/dist   4320 um  free       0  existing 0
+   NW_b112 -> NW_b113      1000 b  HOP        edge/dist  10290 um  free       0  existing 0
+      root -> NE_hub        850 b  ADJ FITS   edge/dist   4320 um  free   67779  existing 10971
+   NE_b110 -> NE_b113       800 b  HOP        edge/dist  12848 um  free       0  existing 0
+   NW_b110 -> NW_b113       800 b  HOP        edge/dist  12848 um  free       0  existing 0
+   NE_b113 -> NE_hub        693 b  HOP        edge/dist   3283 um  free       0  existing 0
+   NW_b113 -> NW_hub        693 b  HOP        edge/dist   3283 um  free       0  existing 0
+    NE_hub -> NE_spb0       632 b  HOP        edge/dist   4562 um  free       0  existing 0
+    NW_hub -> NW_spb0       632 b  HOP        edge/dist   4562 um  free       0  existing 0
+      root -> vsN0          632 b  HOP        edge/dist   2834 um  free       0  existing 0
+   NE_spb0 -> NE_hub        615 b  HOP        edge/dist   4562 um  free       0  existing 0
+   NW_spb0 -> NW_hub        615 b  HOP        edge/dist   4562 um  free       0  existing 0
+      vsN0 -> root          615 b  HOP        edge/dist   2834 um  free       0  existing 0
+   NE_b113 -> NE_su11       596 b  HOP        edge/dist   7932 um  free       0  existing 0
+   NE_b113 -> NE_su20       596 b  HOP        edge/dist   4683 um  free       0  existing 0
+   NE_b113 -> NE_su31       596 b  HOP        edge/dist  13262 um  free       0  existing 0
+   NW_b113 -> NW_su11       596 b  HOP        edge/dist   7932 um  free       0  existing 0
+   NW_b113 -> NW_su20       596 b  HOP        edge/dist   4683 um  free       0  existing 0
+   NW_b113 -> NW_su31       596 b  HOP        edge/dist  13262 um  free       0  existing 0
+   NE_b010 -> NE_b002       569 b  HOP        edge/dist   1166 um  free       0  existing 0
+   NE_b101 -> NE_b103       569 b  HOP        edge/dist  11215 um  free       0  existing 0
+   NW_b010 -> NW_b002       569 b  HOP        edge/dist   1166 um  free       0  existing 0
+   NW_b101 -> NW_b103       569 b  HOP        edge/dist  11215 um  free       0  existing 0
+   NE_su11 -> NE_b113       516 b  HOP        edge/dist   7932 um  free       0  existing 0
+   NE_su20 -> NE_b113       516 b  HOP        edge/dist   4683 um  free       0  existing 0
+   NE_su31 -> NE_b113       516 b  HOP        edge/dist  13262 um  free       0  existing 0
+   NW_su11 -> NW_b113       516 b  HOP        edge/dist   7932 um  free       0  existing 0
+   NW_su20 -> NW_b113       516 b  HOP        edge/dist   4683 um  free       0  existing 0
+   NW_su31 -> NW_b113       516 b  HOP        edge/dist  13262 um  free       0  existing 0
+   NE_b111 -> NE_hub        410 b  HOP        edge/dist   2920 um  free       0  existing 0
+   NE_b112 -> NE_hub        410 b  ADJ FITS   edge/dist   1210 um  free   22044  existing 6
+   NW_b111 -> NW_hub        410 b  HOP        edge/dist   2920 um  free       0  existing 0
+   NW_b112 -> NW_hub        410 b  ADJ FITS   edge/dist   1210 um  free   22044  existing 6
+   NE_b002 -> root          297 b  HOP        edge/dist  10670 um  free       0  existing 0
+   NE_b103 -> root          297 b  HOP        edge/dist  11940 um  free       0  existing 0
+   NW_b002 -> root          297 b  HOP        edge/dist  10670 um  free       0  existing 0
+   NW_b103 -> root          297 b  HOP        edge/dist  11940 um  free       0  existing 0
+    NE_hub -> root          264 b  ADJ FITS   edge/dist   4320 um  free   67779  existing 10971
+      root -> NE_b000       180 b  HOP        edge/dist   8217 um  free       0  existing 0
+      root -> NW_b000       180 b  HOP        edge/dist   8217 um  free       0  existing 0
+      root -> NW_b100       180 b  HOP        edge/dist   2972 um  free       0  existing 0
+      root -> NE_b100       178 b  HOP        edge/dist   2972 um  free       0  existing 0
+    NE_hub -> NE_b111       160 b  HOP        edge/dist   2920 um  free       0  existing 0
+    NE_hub -> NE_b112       160 b  ADJ FITS   edge/dist   1210 um  free   22044  existing 6
+    NW_hub -> NW_b111       160 b  HOP        edge/dist   2920 um  free       0  existing 0
+    NW_hub -> NW_b112       160 b  ADJ FITS   edge/dist   1210 um  free   22044  existing 6
+   NE_b001 -> NE_b010        72 b  ADJ FITS   edge/dist   4320 um  free   65793  existing 12957
+   NW_b001 -> NW_b010        72 b  ADJ FITS   edge/dist   4320 um  free   65793  existing 12957
+    NE_sm0 -> NE_hub         37 b  HOP        edge/dist   1572 um  free       0  existing 0
+    NE_sm1 -> NE_hub         37 b  HOP        edge/dist   1572 um  free       0  existing 0
+    NE_sm2 -> NE_hub         37 b  HOP        edge/dist   1555 um  free       0  existing 0
+    NE_sm3 -> NE_hub         37 b  HOP        edge/dist   1555 um  free       0  existing 0
+    NW_sm0 -> NW_hub         37 b  HOP        edge/dist   1572 um  free       0  existing 0
+    NW_sm1 -> NW_hub         37 b  HOP        edge/dist   1572 um  free       0  existing 0
+    NW_sm2 -> NW_hub         37 b  HOP        edge/dist   1555 um  free       0  existing 0
+    NW_sm3 -> NW_hub         37 b  HOP        edge/dist   1555 um  free       0  existing 0
+   NE_b002 -> NE_b011        35 b  ADJ FITS   edge/dist   4320 um  free   67634  existing 11116
+   NE_b010 -> NE_b000        35 b  ADJ FITS   edge/dist   4320 um  free   64482  existing 14268
+   NE_b101 -> NE_b102        35 b  HOP        edge/dist  11923 um  free       0  existing 0
+   NW_b002 -> NW_b011        35 b  ADJ FITS   edge/dist   4320 um  free   67634  existing 11116
+   NW_b010 -> NW_b000        35 b  ADJ FITS   edge/dist   4320 um  free   64482  existing 14268
+   NW_b101 -> NW_b102        35 b  HOP        edge/dist  11923 um  free       0  existing 0
+   NE_spt0 -> root            9 b  HOP        edge/dist   5772 um  free       0  existing 0
+   NW_spt0 -> root            9 b  HOP        edge/dist   5772 um  free       0  existing 0
+   NE_b002 -> NE_hub          4 b  HOP        edge/dist   2454 um  free       0  existing 0
+   NW_b002 -> NW_hub          4 b  HOP        edge/dist   2454 um  free       0  existing 0
+   NE_b011 -> NE_hub          3 b  HOP        edge/dist   2074 um  free       0  existing 0
+   NW_b011 -> NW_hub          3 b  HOP        edge/dist   2074 um  free       0  existing 0
+   NE_b103 -> NE_hub          2 b  HOP        edge/dist   3724 um  free       0  existing 0
+   NE_spb2 -> NW_hub          2 b  HOP        edge/dist   9046 um  free       0  existing 0
+   NE_spt0 -> NW_hub          2 b  HOP        edge/dist   9029 um  free       0  existing 0
+   NW_b103 -> NW_hub          2 b  HOP        edge/dist   3724 um  free       0  existing 0
+   NE_b000 -> NE_b002         1 b  HOP        edge/dist   1996 um  free       0  existing 0
+   NE_b000 -> NE_b011         1 b  HOP        edge/dist   1616 um  free       0  existing 0
+   NE_b003 -> NE_b002         1 b  HOP        edge/dist    553 um  free       0  existing 0
+   NE_b010 -> NE_b011         1 b  HOP        edge/dist    786 um  free       0  existing 0
+   NE_b013 -> NE_hub          1 b  HOP        edge/dist   3940 um  free       0  existing 0
+   NE_b100 -> NE_b103         1 b  HOP        edge/dist   8234 um  free       0  existing 0
+   NE_su00 -> NE_su11         1 b  HOP        edge/dist   5823 um  free       0  existing 0
+   NE_su11 -> NE_su20         1 b  HOP        edge/dist   9884 um  free       0  existing 0
+   NE_su20 -> NE_su31         1 b  HOP        edge/dist   6575 um  free       0  existing 0
+   NW_b000 -> NW_b002         1 b  HOP        edge/dist   1996 um  free       0  existing 0
+   NW_b000 -> NW_b011         1 b  HOP        edge/dist   1616 um  free       0  existing 0
+   NW_b003 -> NW_b002         1 b  HOP        edge/dist    553 um  free       0  existing 0
+   NW_b010 -> NW_b011         1 b  HOP        edge/dist    786 um  free       0  existing 0
+   NW_b013 -> NW_hub          1 b  HOP        edge/dist   3940 um  free       0  existing 0
+   NW_b100 -> NW_b103         1 b  HOP        edge/dist   8234 um  free       0  existing 0
+   NW_su00 -> NW_su11         1 b  HOP        edge/dist   5823 um  free       0  existing 0
+   NW_su11 -> NW_su20         1 b  HOP        edge/dist   9884 um  free       0  existing 0
+   NW_su20 -> NW_su31         1 b  HOP        edge/dist   6575 um  free       0  existing 0

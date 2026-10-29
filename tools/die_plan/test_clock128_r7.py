@@ -193,3 +193,21 @@ def test_aocv_fold_fields_stage_counts_and_node_arrivals(tmp_path):
     assert out["taps"][0]["stages_from_root"] - out["node_stages"][out["taps"][0]["cppr_node"]] == 1
     assert out["spine_late"] == base["spine_late"]                                   # die_sta layout untouched
     assert json.loads((tmp_path / "b.json").read_text())["node_xy_um"]["t0"] == [2.0, 1.0]
+
+
+def test_island_site_with_actual_body_size_opens_a_wider_window(tmp_path):
+    """QC-IMPORT-1 opt-in: an ot_clock_sites/1 site with cell_um (actual provider body) gets a window sized to
+    that body; a site without it keeps the planned clock body (unchanged default)."""
+    import json
+    f = tmp_path / "s.json"
+    f.write_text(json.dumps(dict(schema="ot_clock_sites/1", sites=[
+        dict(name="p", kind="partition", xy_um=[5.0, 5.0], cell_um=[4.32, 0.27]),
+        dict(name="c", kind="partition", xy_um=[35.0, 5.0])])))
+    sites = D.load_island_sites([str(f)])
+    assert sites[0][2] == (4.32, 0.27) and len(sites[1]) == 2
+    win, _ = D.island_windows(_Plan(), sites[:1])
+    (x0, _, x1, _), = win["T"]
+    assert x0 < 5.0 - 4.32 / 2 and x1 > 5.0 + 4.32 / 2
+    old, _ = D.island_windows(_Plan(), sites[1:])
+    (u0, _, u1, _), = old["T"]
+    assert (u1 - u0) < (x1 - x0) and u0 > 5.0 - 4.32 / 2

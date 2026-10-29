@@ -1,0 +1,109 @@
+{
+ "schema": "opentallas.kv.core_freeze.v1",
+ "type": "qkd_kvs_pc__397.44x362.88",
+ "module": "qkd_kvs_pc",
+ "outline_um": [
+  397.44,
+  362.88
+ ],
+ "plan_sha256": "db8fc720ab1675593a97d9def14c28c9fd7f90e48f60a8e4aea0aaf6e2ae8a2d",
+ "pins_file": "event27/qkd_kvs_pc_pins_r27.json",
+ "pins_sha256": "4128d4b721bf6c0cf29be8b05bab6e5995de6b4318cac1ef1e832b4e253171fa",
+ "core_json_sha256": "8979c02ae6bb1edf98ee96600659715009a7499417e5ec09f5b02451b477482d",
+ "pins": 4129,
+ "plan_pins": 4129,
+ "added_pins": 0,
+ "clocks": [
+  "ck"
+ ],
+ "clock_nets": {
+  "clk": "ck"
+ },
+ "resets": [
+  "hrst_n",
+  "rst_n"
+ ],
+ "recipe": {
+  "util": 0.6,
+  "sigmax": "M7",
+  "face_flops": true,
+  "source": "KV-CORES/PV-PC 10-25: 10-24 kvs_pc / pc_h_head_p M5 runs GRT overflow 10284 / 4324 (4396 / 3278 pins, N/S M5 + W M4 faces); M7 inside the core as kv3_pv_pair (M7 GRT 0) and head_eighth"
+ },
+ "sdc_lint": "PASS (gen)",
+ "period_ps": 833.0,
+ "insertion_budget_ps": 250.0,
+ "macros": [],
+ "signal_max": "M7",
+ "flow_basis": "FLOW-1025: rcx-rc + leaf-affinity + fanout24/slew-cap-margin20 + mcmm tc/bc",
+ "head_lane_taps": false,
+ "head_strap_master": false,
+ "head_lane_s3copy": false,
+ "plan_inst": "kv3_pc.kvpc1",
+ "island_ft": [
+  {
+   "source": "ft_ck_i_0",
+   "sink": "ft_ck_o_0",
+   "cells": 2,
+   "master": "BUFx24_ASAP7_75t_R",
+   "rect_um": [
+    123.39,
+    86.4,
+    126.63,
+    86.67
+   ]
+  },
+  {
+   "source": "ft_ck_i_1",
+   "sink": "ft_ck_o_1",
+   "cells": 2,
+   "master": "BUFx24_ASAP7_75t_R",
+   "rect_um": [
+    123.39,
+    276.21,
+    126.63,
+    276.48
+   ]
+  }
+ ],
+ "kit_hash": "9e4bf94101943131",
+ "pins_canon_sha256": "94ce8de64617bdfc977731c542967868b1cbf4ff018117a7b86055a590c0e0f8",
+ "source_commit": "478930de31f11b9291b10be0889b394c0d2372fb",
+ "cts_setup_only": {
+  "previous_post_cts": "/work/leaf_affinity.tcl",
+  "repair": "setup only (vclk OT_VCLK_TT)",
+  "hold": "FF-only GRT step only"
+ },
+ "timing_modes": {
+  "mode": "two-mode tc setup / BC hold",
+  "tt": 250.0,
+  "ff": 202.5
+ },
+ "regen": {
+  "lane": "KV-KITS-21",
+  "base_kit": "/srv/opentallas-scratch2/claude/kv-kits-16-1028/kvspc/kits/qkd_kvs_pc__397.44x362.88",
+  "base_kit_hash": "07c953dd8e4e7886",
+  "base_source_commit": "b2f845532d50e9d059142783de3c6c38e142e99e",
+  "plan": "DIE-KV-28 event27 FINAL plan_e27f (event27 ASK-C pins)",
+  "pins_moved": 1665,
+  "knobs": {
+   "OT_HOLD_FF_MARGIN": [
+    "5",
+    "10"
+   ]
+  },
+  "options": [
+   "--cts-setup-only",
+   "--two-mode-grt"
+  ],
+  "tools_refreshed": [
+   "face_guard.py",
+   "lec.py",
+   "rtl_lint.py",
+   "sdc_lint.py",
+   "straps.py",
+   "vclk_corner.tcl",
+   "run_kit_kv.sh",
+   "signoff bundle"
+  ]
+ }
+}

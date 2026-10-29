@@ -4989,7 +4989,12 @@ def run_gold(env, kit, gold_fe, lib_bbs, out, log, rec):
 
 def run_side(env, script, out, side, log, rec):
     """one side's AIG: one yosys run, or with clock gates phase A -> icg_to_enable -> phase B."""
-    r = run_yosys(script, out / f"{side}.ys", log)
+    try:
+        r = run_yosys(script, out / f"{side}.ys", log)
+    except Unproven as e:
+        if RENAME_ASSERT not in str(e):
+            raise
+        raise Unproven(rename_collision_reason(script, out, side, log, rec, str(e))) from None
     if not split_seq(env):
         return r
     pre = out / f"{side}"
@@ -5000,6 +5005,56 @@ def run_side(env, script, out, side, log, rec):
     for f in (f"{pre}.preicg.json", f"{pre}.icg.json"):
         Path(f).unlink(missing_ok=True)
     return r
+
+
+# `rename -wire` names each private flop after the register bit it drives; two flops driving ONE wire bit get the
+# same name and yosys aborts (rtlil.cc rename assert) instead of reporting it. HEAD-KITS-9 10-29, hd_ctl gold: a
+# static (non-automatic) function `isnan` called from a clocked and a combinational process; read_slang lowers its
+# argument to one module variable `isnan.x` that a register of each call site drives (multi-driven gold).
+RENAME_ASSERT = "count_id(cell->name) == 0"
+MULTI_DRV = re.compile(r"^Warning: multiple conflicting drivers for (\S+?)\.\\?(\S+?)(?: \[(\d+)\])?:\s*$")
+MULTI_DRV_PORT = re.compile(r"^\s+port (\S+) of cell (\S+) \((\S+)\)\s*$")
+
+
+def multi_driven_bits(text):
+    """yosys `check` log -> {wire bit: [(cell, type), ...]} for every bit with several drivers."""
+    out, cur = {}, None
+    for line in text.splitlines():
+        m = MULTI_DRV.match(line)
+        if m:
+            cur = m.group(2) + (f"[{m.group(3)}]" if m.group(3) is not None else "")
+            out[cur] = []
+            continue
+        m = MULTI_DRV_PORT.match(line) if cur is not None else None
+        if m:
+            out[cur].append((m.group(2), m.group(3)))
+        else:
+            cur = None
+    return out
+
+
+def rename_collision_reason(script, out, side, log, rec, err):
+    """re-run the side's script up to the flop rename with `check` (log only) and name the multi-driven register
+    bits that made `rename -wire` collide; the verdict stays UNPROVEN (a multi-driven RTL register has no single
+    reference value: write_aiger would keep an arbitrary driver)."""
+    lines = script.splitlines()
+    cut = next((i for i, l in enumerate(lines) if l.startswith("rename -wire")), None)
+    if cut is None:
+        return err
+    try:
+        run_yosys("\n".join(lines[:cut] + ["check"]) + "\n", out / f"{side}_mdrv.ys", log)
+        bits = multi_driven_bits(Path(str(out / f"{side}_mdrv.ys") + ".log").read_text(errors="replace"))
+    except Unproven as e:
+        return f"{err} (multi-driver diagnosis failed: {str(e)[-200:]})"
+    ff = {b: d for b, d in bits.items() if sum(1 for _, t in d if FF_TYPE.match(t)) >= 2}
+    rec.setdefault("multi_driven_registers", {})[side] = {"n": len(ff), "first": sorted(ff)[:20]}
+    if not ff:
+        return f"{err} (no multi-driven register bit found by check; {len(bits)} multi-driven bits)"
+    scopes = sorted({b.rsplit(".", 1)[0] for b in ff if "." in b})
+    return (f"{side}: {len(ff)} register bits are driven by two or more flops, so `rename -wire` gives them one "
+            f"name (yosys assert {RENAME_ASSERT!r}): {', '.join(sorted(ff)[:6])}; a static function/task variable "
+            f"written from several processes lowers this way (scopes: {', '.join(scopes[:6])}) -> declare the "
+            f"function `automatic` in the RTL")
 
 
 def run_yosys(script, path, log):

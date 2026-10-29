@@ -1,0 +1,17 @@
+KV-KITS-21 2026-10-29: q3 (qkd_ectlk_q3, Codex native-clock trial2 5_1_grt -> own DRT/finish/post, intel1 kv-kits-20-1029/q3_t2).
+DRT: 7699 -> 0 violations (run_drt.log CHECKED), finish + abstract + PIN_AUDIT PASS 1990/1990, DRC 0 / antenna 0, LEC EQ 9742/9742.
+SIGNOFF (signoff/signoff.json 06:21 CHECKED): NOT SIGNED. TT setup +77.83; FF hold -30.32 ps / 952 EP (sdc -25.99 / 1075);
+pair skew TT/FF 38.6/36.6 (<=80); DRV TT slew 57 (cap 0). Core latency TT mean 251.42 (238.4..279.7), FF mean 200.06 (185.5..229.9).
+Worst FF hold: raw input rsp_data[854] -> u_ref.u_leaf.u_a.u_k.rs_d[855] (vclk 202.5 - in_min 40 + 5 hold BUFx2 = 227.17 vs capture CLK 229.88
++ 12.5 + 15.10 hold); async removal u_rpin.rst_n -> u_r0 RESETN -14.30.
+ROOT CAUSE (CHECKED, own STA probe q3probe/s.tcl on the same kit 5_1_grt.odb, kit setRC_rcx.tcl, GRT parasitics, FF libs, same golden SDC):
+  same endpoint at GRT RC: data arrival 226.74 (routed 227.17, equal) but capture clock 188.48 (routed 229.88): +41.4 ps clock-side,
+  all on wire-dominated native-tree legs: Tpq_br 23.12->32.39, Tpqs_br 22.61->29.19, Tpqsw_br 30.69->45.19, leaf 5.35->11.42 (r0/Tp stages ~equal).
+  GRT hold slack +11.79 -> routed -30.32 (loss 42.1); removal +12.00 -> -14.30 (capture branch Tppsv +25 ps). GRT worst min slack +3.61 (Codex +3.57 reproduced).
+  => the GRT RC model under-states the long clock legs of the native q3 tree by 30-47 %/leg; the in-flow GRT hold repair is sized on the early clock.
+  12.19 margin 10/15 ps cannot cover a 42 ps clock-side GRT->RC loss; --measured-hold cancels only a common offset, not this per-branch deviation
+  (pin-register FF arrival range 185.5..229.9, the late branch is the failing one).
+FIX OPTIONS (not run here; FLOW owner): (1) hold repair on routed clock RC (clock pre-routed/extracted before data hold repair, OWNER infra-first);
+(2) clock-leg RC calibration of the GRT model for native trees (rc_calibration per layer for clock NDR legs); (3) per-kit post-route hold ECO
+(final_ff_hold is post-GRT only, still GRT RC -> does not fix this). DRV slew 57: separate, collect from tt/sta.log.
+DRV (signoff/tt/sta.log CHECKED): 57 slew pins, worst 396.89 vs 320 (-76.89) on _08686_/A and u_ref.u_leaf.u_b.u.g_s1b[1].u_r/q[*]/D (s1b data fan-in); post-route DRV repair = same open FLOW class as pv_join (KV-KITS-19).

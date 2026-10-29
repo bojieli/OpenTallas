@@ -1,0 +1,166 @@
+{
+ "rule": "12.15c in-region spread <=150 ps incl. OCV+droop",
+ "method": "DIE-HEAD-26: in-region spread incl. OCV + droop (12.15c \"in-region spread <=150 ps incl. OCV+droop\").\nPer region (spine_regions part_region), every ordered tap pair (a late, b early):\n  skew = f*(arr_a - arr_b) on OpenSTA late arrivals, f = spice factor (inverter tree: SPICE_CLOCK_CAL_INV 0.9324/0.9380\n         = die_sta_related spice for inv; also reported with the x1.0485/1.0552 BUF factor as the pessimistic bound)\n  ocv  = clk_aocv.branch_pessimism (approved table clk_aocv_table_g021, class Ainv, one stage per CKINVDCx16) on the two\n         branches below their last common clock CELL (cell-level LCA from tree.json parent_of), core latency NOT included\n         (die tap spread), distance = bbox diagonal of the 2 taps + LCA cell.  droop: shared rule (same region -> 0) and,\n         as a bound, stated (+one_sided_late_frac on the late branch always).\nusage: spread_ocv.py TAG REGIONS_JSON TOOLS_DIE_PLAN_DIR",
+ "corners": {
+  "TT": {
+   "regions": 50,
+   "worst_shared_droop": 106.95,
+   "worst_stated_droop": 118.87,
+   "worst_bufx105_stated": 129.94,
+   "n_over_150_shared": 0,
+   "n_over_150_stated": 0,
+   "worst5": [
+    {
+     "region": "sp1",
+     "spread_ocv": 107.0,
+     "stated": 118.9,
+     "raw": 95.4,
+     "a": "t_sp1__clk_t6",
+     "b": "t_sp1_bw_i_shim__clk_t1",
+     "ocv_shared": 18.0,
+     "ocv_stated": 30.0,
+     "stages": [
+      10,
+      9
+     ]
+    },
+    {
+     "region": "sp3",
+     "spread_ocv": 91.3,
+     "stated": 102.5,
+     "raw": 79.9,
+     "a": "t_sp3__clk_t6",
+     "b": "t_sp3__clk_t9",
+     "ocv_shared": 16.9,
+     "ocv_stated": 28.1,
+     "stages": [
+      10,
+      9
+     ]
+    },
+    {
+     "region": "sp4",
+     "spread_ocv": 69.6,
+     "stated": 86.3,
+     "raw": 47.6,
+     "a": "t_sp4__clk_t7",
+     "b": "t_sp4_xw_o_shim__clk_t1",
+     "ocv_shared": 25.2,
+     "ocv_stated": 41.9,
+     "stages": [
+      14,
+      13
+     ]
+    },
+    {
+     "region": "sp0",
+     "spread_ocv": 68.3,
+     "stated": 84.7,
+     "raw": 46.6,
+     "a": "t_sp0__clk_t6",
+     "b": "t_sp0__clk_t26",
+     "ocv_shared": 24.9,
+     "ocv_stated": 41.3,
+     "stages": [
+      13,
+      13
+     ]
+    },
+    {
+     "region": "sst10",
+     "spread_ocv": 66.7,
+     "stated": 81.3,
+     "raw": 47.0,
+     "a": "t_sst10__clk_t11",
+     "b": "t_sst10__clk_t8",
+     "ocv_shared": 22.9,
+     "ocv_stated": 37.5,
+     "stages": [
+      11,
+      11
+     ]
+    }
+   ]
+  },
+  "FF": {
+   "regions": 50,
+   "worst_shared_droop": 89.52,
+   "worst_stated_droop": 98.41,
+   "worst_bufx105_stated": 107.55,
+   "n_over_150_shared": 0,
+   "n_over_150_stated": 0,
+   "worst5": [
+    {
+     "region": "sp1",
+     "spread_ocv": 89.5,
+     "stated": 98.4,
+     "raw": 78.0,
+     "a": "t_sp1__clk_t6",
+     "b": "t_sp1_bw_i_shim__clk_t1",
+     "ocv_shared": 16.3,
+     "ocv_stated": 25.2,
+     "stages": [
+      10,
+      9
+     ]
+    },
+    {
+     "region": "sp3",
+     "spread_ocv": 79.4,
+     "stated": 87.7,
+     "raw": 68.3,
+     "a": "t_sp3__clk_t6",
+     "b": "t_sp3__clk_t9",
+     "ocv_shared": 15.3,
+     "ocv_stated": 23.7,
+     "stages": [
+      10,
+      9
+     ]
+    },
+    {
+     "region": "sst10",
+     "spread_ocv": 64.0,
+     "stated": 75.4,
+     "raw": 45.3,
+     "a": "t_sst10__clk_t11",
+     "b": "t_sst10__clk_t8",
+     "ocv_shared": 21.5,
+     "ocv_stated": 32.9,
+     "stages": [
+      11,
+      11
+     ]
+    },
+    {
+     "region": "sp5",
+     "spread_ocv": 62.2,
+     "stated": 74.0,
+     "raw": 42.8,
+     "a": "t_sp5__clk_t24",
+     "b": "t_sp5_be_i_shim__clk",
+     "ocv_shared": 22.0,
+     "ocv_stated": 33.8,
+     "stages": [
+      13,
+      13
+     ]
+    },
+    {
+     "region": "nst10",
+     "spread_ocv": 61.1,
+     "stated": 69.6,
+     "raw": 47.6,
+     "a": "t_nst10__clk_t8",
+     "b": "t_nst10__clk",
+     "ocv_shared": 16.4,
+     "ocv_stated": 24.9,
+     "stages": [
+      9,
+      10
+     ]
+    }
+   ]
+  }
+ }
+}
