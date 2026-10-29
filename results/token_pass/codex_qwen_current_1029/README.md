@@ -1,0 +1,15 @@
+# Current ONE-QC / KV pair and native KV replay continuation
+
+QC input is the ev_qc25 functional bind3 (119 masters, 377 partitions; strict bind and port-bind PASS). Full structural verification is still running split lint. KV input is DIE-KV-23 bind7. Both peer constant regenerations pass (QC 24 OK / 1 warning; KV 40 OK / 2 warnings). These are component results, not whole-die token or physical release results.
+
+Actual current seam: compute `5,5,5,6,4,4`, KV `90,90,88,88,88,78,78`; bound TXDP C `0f01030d`, K `030304aa`. The preceding QC fresh_v6 seam was `2,2,2,3,2,2`.
+
+Two real calendar failures were fixed. First the old STATUS slot 40 collided with Q beat 28 when the actual Q capture latency increased from 8 to 13. Compiler 15fa21816 derives STATUS slot 45 from the selected producer captures; the old seam retains slot 40. Second the production image still issued KV RESULT five edges before its actual programme slot. Existing `--attn-service-pad 5` shifts RESULT/STATUS together, without changing hardware TX_SHIFT=1. The failed no-service-pad image is preserved in failures/.
+
+The corrected image passes all 24 existing cross-die configurations, with 35-layer bit-exact Q/RESULT/KVN exchange and all negative controls as expected. The law compile equals the shared image, and both masters take the actual bound TXDP words. Current link roundtrip is 1995 edges, layer X=13 and layer period=7061 (previous pair: 1990, 8, 7056). The +5/layer adds 180 UNPADDED token edges. Existing 768-edge alignment absorbs all 180 in this component programme: emitted token period remains 258048. The separate native RoPE programme must be regenerated before claiming its exposure. Four-user overlap also passes both codecs and eight negative controls; aggregate frame remains 4026800 edges, 87539.1 cycles/token (composer-only class).
+
+Vehicle grade remains RTL-functional SOURCE ASSEMBLY, pinned assembly 5832e672235d955164c31991b09f3cee96ee4de2 plus the STATUS compiler overlay. The collector's old seam_plan string is historical; constants/ and the actual run config carry the current seam. Physical seam chains and outer unit stimuli remain the documented component stand-ins. No full-QC, full-KV, prefill or G5 claim.
+
+Native bind5 KV replay had a separate functional runtime bug: its DCAL mask ROM was not staged after cd into the run directory, leaving the model's array zero. Exact KV18 p86 content (p0 identical) SHA256 ba4c9519a6c7cf901a86cf0dc41d19bcf27ee26d72d69b90e7686285e88f9840 is now staged at the compiled source's literal path before launch. Corrected boot and nominal / bind5m / K-swap runs reuse the existing binaries; no new large build. Original missing-ROM jobs and initial own preflight failures remain separate artifacts.
+
+Run roots on intel1: /srv/opentallas-scratch2/claude/codex-qwen-token-1028/{peer_link_pad5/xdie,peer_link/ovl4u_rel,boot_n,runs2}. Boot unit304856-1793256857; token units324051-1793256954,324809-1793256956,325451-1793256957. QC bind3 on epyc2 at the same lane root; verifier PID2735730. Full KV replay and QC verification remain running.
