@@ -42,6 +42,18 @@ module tb_qkd_host_rx_pad5;
   rst_n=0;repeat(3)tick;rst_n=1;repeat(3)tick;
   for(integer n=0;n<10;n++)begin in_v=1;in_d={496'd0,word(n)};tick;end
   in_v=0;repeat(5)tick;if(!fault)$fatal(1,"sixth queued word silently accepted");
+  // Speculative bank writes on a rejected frame remain invisible, including
+  // when the rejection coincides with a pop and after the next reset.
+  for(integer bitno=528;bitno<1024;bitno++)begin
+   rst_n=0;in_v=0;out_cr=0;repeat(3)tick;rst_n=1;repeat(2)tick;
+   in_v=1;in_d={496'd0,word(bitno)};tick;
+   in_d={496'd0,word(bitno+1)};in_d[bitno]=1;tick;
+   in_v=0;repeat(5)tick;
+   if(!fault)$fatal(1,"padding bit %0d escaped",bitno);
+   rst_n=0;repeat(3)tick;rst_n=1;repeat(2)tick;
+   in_v=1;in_d={496'd0,word(bitno+2)};tick;in_v=0;
+   repeat(5)tick;if(fault)$fatal(1,"fault leaked after reset");
+  end
   $display("LOCKSTEP edges=%0d",checked);$display("PASS RXPAD5 exact48 initial5 downstream4 queued5 longstall paddingbad ghostcredit overflow failclosed");$finish;
  end
  initial begin #100000;$fatal(1,"timeout");end

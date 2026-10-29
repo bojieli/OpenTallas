@@ -11,13 +11,7 @@ module qkd_host_rx_pad5 #(parameter integer MUT=0)(
  reg vq,crq;reg[1023:0]dq;
  reg[527:0]q[0:4];reg[2:0]wp,rp,count,credits;
  wire pop=!fault&&count!=0&&credits!=0;
- // Capture the padding predicate in parallel with the data, rather than put
- // a 496-bit reduction on the queue write-enable path. No extra data stage.
- reg [30:0] padding_zero_q;
- for(genvar g=0;g<31;g=g+1)begin: g_padding
-  always @(posedge clk)padding_zero_q[g] <= in_d[528+16*g+:16]==0;
- end
- wire padding_ok=&padding_zero_q;
+ wire padding_ok=dq[1023:528]==0;
  // Registered per-bank pending enables predict the write pointer AFTER the
  // current take. This removes binary pointer decode from each 528-bit bank.
  reg [4:0] wp_hot,put_q;
@@ -26,7 +20,10 @@ module qkd_host_rx_pad5 #(parameter integer MUT=0)(
  always @(posedge clk)begin
   dq<=in_d;
   for(integer k=0;k<5;k=k+1)
-   if(put_q[k]&&!fault&&padding_ok&&(count<5||pop))q[k]<=dq[527:0];
+   // A rejected write asserts sticky fault on this same edge. It cannot
+   // advance wp/count or be observed later; a simultaneous pop reads the
+   // pre-edge bank value. Keep validation on CONTROL, off the data enables.
+   if(put_q[k])q[k]<=dq[527:0];
   if(pop)out_d<={18'd0,q[rp]^((MUT==1)?528'd1:528'd0)};
  end
  always @(posedge clk or negedge rst_n)begin
