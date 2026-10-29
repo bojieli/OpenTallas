@@ -331,3 +331,44 @@ endmodule\n'''
         results.append(q)
     assert results[0].returncode==0,results[0].stdout+results[0].stderr
     assert results[1].returncode!=0 and 'mismatch' in results[1].stdout
+
+
+def test_virtual_root_reset_cold_warm_phase_coupon_and_undriven_control(tmp_path):
+    import subprocess,shutil
+    iv=shutil.which('iverilog')
+    if iv is None:pytest.skip('iverilog not installed')
+    v,t=_tree();b=_bind()
+    _,ref,*_=E.emit(b,_meta(),v,t,root_settle=8)
+    doc,wave,*_=E.emit(b,_meta(),v,t,root_settle=8,reset_wave=True)
+    assert 'wire st_b1_rraw = rst_raw_n;' in wave
+    assert next(s for s in doc['stages'] if s['root'])['reset_output']=='st_b1_rraw'
+    ref=ref.replace('module ot_die_start_stages','module reference_stages')
+    common=Path(__file__).resolve().parents[2]/'rtl/common/ot_dp_clk_landing_ca.sv'
+    (tmp_path/'ref.sv').write_text('`default_nettype none\n'+ref)
+    for phase in (0,2,4,7):
+        tb=f'''module tb;
+reg clk=0,child=0,raw=0; wire a,b,ga,gb; integer errors=0,compares=0;
+always #5 clk=~clk;
+initial begin #{phase};forever #5 child=~child;end
+reference_stages ref0(.rst_raw_n(raw),.t_st_b1__clk(clk),.t_st_b2__clk(child),.pst_a(ga),.pst_b(gb));
+ot_die_start_stages dut(.rst_raw_n(raw),.t_st_b1__clk(clk),.t_st_b2__clk(child),.pst_a(a),.pst_b(b));
+always @(posedge child) begin #1;if(raw)begin compares=compares+1;if(a!==ga || b!==gb)errors=errors+1;end end
+initial begin repeat(12)@(negedge clk);raw=1;repeat(60)@(negedge clk);raw=0;
+repeat(12)@(negedge clk);raw=1;repeat(60)@(negedge clk);
+$display("COMPARES %0d ERRORS %0d",compares,errors);if(errors)$fatal(1,"mismatch");$finish;end
+endmodule\n'''
+        (tmp_path/'tb.sv').write_text(tb)
+        for mutant in ('nominal','missing_alias','wrong_parent'):
+            candidate=wave
+            if mutant=='missing_alias':candidate=candidate.replace('wire st_b1_rraw = rst_raw_n;','')
+            if mutant=='wrong_parent':candidate=candidate.replace('.d(st_b1_rraw)', '.d(st_b1_start)')
+            (tmp_path/'dut.sv').write_text('`default_nettype none\n'+candidate)
+            p=subprocess.run([iv,'-g2012','-Wimplicit','-s','tb','-o',str(tmp_path/'sim'),str(common),str(tmp_path/'ref.sv'),str(tmp_path/'dut.sv'),str(tmp_path/'tb.sv')],capture_output=True,text=True)
+            if mutant=='missing_alias':
+                assert p.returncode!=0 and 'st_b1_rraw' in p.stderr
+                continue
+            assert p.returncode==0,p.stderr
+            assert 'implicit' not in p.stderr.lower(),p.stderr
+            q=subprocess.run(['vvp',str(tmp_path/'sim')],capture_output=True,text=True)
+            if mutant=='nominal':assert q.returncode==0,q.stdout+q.stderr
+            else:assert q.returncode!=0 and 'mismatch' in q.stdout
