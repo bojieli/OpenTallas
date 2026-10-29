@@ -36,3 +36,11 @@ and full graph census remain required. No route, timing, freeze, or release clai
 normally, once with `OT_ORIGIN_EXPORT_MUTANT_LATE`, using the real landing RTL.
 The initial kit-generation unit-test missing ROM-declaration file was a sparse
 checkout dependency; adding tools/mem_compiler fixed it without source changes.
+
+Actual full tile source gate, 2026-10-29:
+FWD_COPY1 hd_tile_p synth and face_guard1144/1144(netlist AND ODB)PASS;
+LEC EQUIVALENT33708/33708, differs0,undecided0,127.8s. Fresh lec.json
+mtime00:28:35PDT (the copied old22:36receipt was explicitly ignored).
+Actual new mapped sequential names: exactly1added export FF,0lost old FFs.
+Unit epyc2 oth-ubuntu-3564365-1793258734 completed exit0. No CTS/route/STA
+claim. Actual physical trial uses kit source hooks, not a changed saved ODB.
