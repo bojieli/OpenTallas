@@ -272,8 +272,9 @@ def abstract_lef(P, tn, slots_only_pins=False, islands=None, module_name=None, l
         npins += 1
     tw = gen_phys.LAYER_W.get(top, 0.032) / 2
     for name, x, y in gen_phys.tap_pins(P, tn):
+        half=gen_phys.tap_pin_height(P,tn,name)/2
         L += pin(name, "INPUT", "SIGNAL" if name == "arst_n" else "CLOCK",
-                 [(top, x - tw, y - 2 * gen_phys.PIN_LEN_UM, x + tw, y + 2 * gen_phys.PIN_LEN_UM)])
+                 [(top, x - tw, y - half, x + tw, y + half)])
     if landing_infra:
         import landing_route
         for p in landing_route.scalar_pins(P, tn):
