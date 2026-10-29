@@ -1579,3 +1579,6 @@ CODEX: 2026-10-29 01:03 PDT NP4source/proofREADYf3c8405b9:17packedvs20slicedSRAM
 CODEX: HBM source census TIED0; strict old-C25b bind FAIL280 categorized and parent owns lane/type/reset-carrier fixes. c996a9b98 exact264scorer map+4224bit chain-seed specialization qualified; NP4 active16/reserve16 machine map handed physical owner. New diagnostic selected-source elab intel1 elab_np4 running; no route.
 
 CODEX:01:17 CLK-TOOL actualphysicalpricing9dbREADY/nativeS81couponGEOMPASS-COND actualSTAownedS81; sharedclockaware duty60eccREADY43tests+8501actual0dutyfails. QC25/S81go16replayIDENTICALcollected,HBMreplaystillCPUprogress. No duplicate/reroute; actual1xstagefitvsndrlabeldiagnosed.
+CODEX: 2026-10-29 01:11 PDT HBMREBAL HNXTT+57.34/LEC40771EQ buttrue1r2r439.97FAIL->macro_estimateownsdataFFanchor. CurrentC25fullcanon5/4/1source+24macroarray6f83READYestimate, ALATenablerc6003defaultgraphs+mutantPASS. Earlierlp5/3f12trial+two64sideproofslive; noSIGNEDclaim.
+
+CODEX:01:24 sharedhardblockage638befREADY fixesconcreteBTABDPL55censusomission,39tests+actual32rectexactDBUmatch/noPNRrepeat. S81nativeclockcouponactualGRT0butsharedcalwindow183.69TT/128.45FFvsanalytic67.93/25.23; ownerrefitsactual2W2Sroutecoeffs, fullbuildHELD. ExistingearlyratioAPIalreadyconvertsphysical/raw; newrecipeuseONEsharedfactor.
