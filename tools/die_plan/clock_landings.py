@@ -847,10 +847,13 @@ class Landings:
         -> cland_rstart_out; a relay partition's start is the rx flop u_cland_rstart_rx on cland_rstart_in."""
         role = cat["role"]
         raw_logic = []
+        raw_fallback = None
 
         def local_raw(what):
+            nonlocal raw_fallback
             raw = next(iter(ca_raw.values()), None)
             if raw is None:
+                if raw_fallback is not None:return raw_fallback
                 m = re.search(r"ot_dp_r(gate|relay)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\((rst_n_t0)\)\);", body)
                 raw = m.group(3) if m else ("rst_n" if re.search(r"\bwire rst_n = arst_n;", body) else None)
                 if m and m.group(1) == "gate":
@@ -861,6 +864,7 @@ class Landings:
                         f"    ot_dp_rrelay u_cland_origin_rst (.clk(clk), .d({m.group(2)}), .q({raw}));"])
                 if raw is None:
                     raise LandingError(f"{tn}: {what} needs a timed raw reset relay (rst_n_t0) or delivered rst_n")
+                raw_fallback = raw
             return raw
         if role[0] == "relay":
             raw = local_raw("start relay rx")
