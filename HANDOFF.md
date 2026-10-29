@@ -1818,3 +1818,5 @@ CODEX: 2026-10-29 08:32 PDT S81 cores: inherited64resetLECs live; BFsetup rootca
 CODEX: 2026-10-29 08:31 PDT main26a8b2b99 published: scoped real core-parent hold receipts, bound hard-wrapper kits + explicit modeled PHY, opt-in clock duty polarity repair (735-tap diagnostic duty0 both corners, frozen passing plans untouched), QC31 independent arithmetic and HBM VM diagnostic import. Focused11+65+1PASS, no file deletions; HEAD==origin/main.
 
 CODEX: 2026-10-29 08:33 PDT TOK-HBM exactD17 LAT60export READY08db45f04/e2281512d;54complete/104incomplete pairs preserved, source0stagevsplan3/6+serial2 diagnosed; NWmaterializercoverage/NEactualIIproofassigned, noG5claim.
+
+CODEX:08:3x DS issuer collision fixed candidate8378df10e/7controlsPASS, L0 smoke legal8jobs before final checks; inherited globalnorm8/16rstd FAIL now under same-binary GO diagnosis on intel1unit1526465, no G5.
