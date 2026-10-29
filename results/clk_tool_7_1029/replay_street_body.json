@@ -1,0 +1,43 @@
+{
+ "schema": "ot_clk_replay/1",
+ "die": "hbm",
+ "event": "street_body",
+ "config": "/srv/opentallas-scratch2/claude/wt/clk-tool-7/tools/clk/configs/hbm_street_body.yaml",
+ "reference": "/srv/opentallas-scratch2/claude/codex-hbm-clock-1028/street_body/clock",
+ "stage_check": "FAIL",
+ "stage_why": [
+  "stack clock_rc=1x but entry inv2_ndr_hbm_trial2b_early was fitted on clock_rc=ndr"
+ ],
+ "pins_rebase": null,
+ "files": {
+  "tree.json": {
+   "identical": false,
+   "sha_new": "e8fcbb9334aed237",
+   "sha_ref": "c2df8242f5073da6",
+   "reference_file": "tree.json",
+   "diff_keys": [],
+   "meta_added": []
+  },
+  "ctree.v": {
+   "identical": true,
+   "sha_new": "740fa4279eb0007a",
+   "sha_ref": "740fa4279eb0007a",
+   "reference_file": "ctree.v"
+  },
+  "ctree.tcl": {
+   "identical": true,
+   "sha_new": "5716c9d5ecb34381",
+   "sha_ref": "5716c9d5ecb34381",
+   "reference_file": "ctree.tcl"
+  },
+  "leg_spans.json": {
+   "identical": false,
+   "sha_new": "d3382ed3419ed926",
+   "sha_ref": "6538e7f9a6e48fb2",
+   "reference_file": "leg_spans.json",
+   "diff_keys": [],
+   "meta_added": []
+  }
+ },
+ "replay": "IDENTICAL_EXCEPT_META"
+}
