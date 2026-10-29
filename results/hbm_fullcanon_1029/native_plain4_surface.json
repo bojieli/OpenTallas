@@ -1,0 +1,54 @@
+{
+  "scope": "ANALYTIC_SURFACE_ONLY_NOT_PIN_ASSIGNMENT_OR_GEOMETRY_PASS",
+  "native_source_commit": "14dce2192",
+  "master": "ot_hnx_su_plain4__79bc8ccc00fa",
+  "native_source_profile": {
+    "MLAT": 4,
+    "ALAT": 4,
+    "WCOPY": 0
+  },
+  "packet_sha256": "4994032bd0361241ce560305219a02b1050874bd693819625393bd4fb0cd218d",
+  "actual_pins": 8220,
+  "actual_clock_bits": 76,
+  "per_lane_bundle_pins": 2055,
+  "per_lane_ld_c_bits": 840,
+  "outline_um": [
+    760.32,
+    725.76
+  ],
+  "candidate_bundle_faces": {
+    "W": {
+      "pins": 2055,
+      "pins_per_um": 2.8315145502645502,
+      "legal_tracks": 15030,
+      "planning_capacity_4p5": 3265,
+      "layer": "M4"
+    },
+    "E": {
+      "pins": 2055,
+      "pins_per_um": 2.8315145502645502,
+      "legal_tracks": 15030,
+      "planning_capacity_4p5": 3265,
+      "layer": "M4"
+    },
+    "N": {
+      "pins": 2055,
+      "pins_per_um": 2.7028093434343434,
+      "legal_tracks": 14700,
+      "planning_capacity_4p5": 3421,
+      "layer": "M5"
+    },
+    "S": {
+      "pins": 2055,
+      "pins_per_um": 2.7028093434343434,
+      "legal_tracks": 14700,
+      "planning_capacity_4p5": 3421,
+      "layer": "M5"
+    }
+  },
+  "all_fourway_port_widths_divisible": true,
+  "no_aliasing": true,
+  "added_cycles": 0,
+  "reach_status": "UNASSESSED: native per-pin coordinates and inter-core connections not yet defined; old recipe pin map is incompatible. Internal macro array remains a24-SRAM recipe feasibility candidate only. Actual controls outside cut; bind owner preparing glue-aware cut before source adoption.",
+  "conclusion": "8220 pins do not alone force outline growth: one independent lane+bank bundle per face fits existing4.5pins/um planning limit. Assigning faces must follow actual neighbor endpoints, then repeat exact bus reach/channel review. 76 independent clock terminals cannot be contracted by this estimate."
+}
