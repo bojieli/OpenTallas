@@ -1238,7 +1238,7 @@ def main():
     # FLOW-FIX 10-25 (core_flow): rtl_lint.py, vclk_corner.tcl, grt_pre/post.tcl, setRC_rcx.tcl, clock_binding.json;
     # the kit's own GRT hooks (drv.tcl fanout cap / post_grt_drv.tcl DRV + hold pass) chained into grt_*_core.tcl
     flow_cfg = core_flow.apply(kd, ib, mod, time_unit_ps=TIME_UNIT_PS, rc_cal=not a.stock_rc,
-                               hold_ff_margin=float(rec.get("hold_ff_margin", 5.0)),
+                               hold_ff_margin=float(rec.get("hold_ff_margin", core_flow.HOLD_FF_MARGIN_DEFAULT)),
                                grt_pre_extra=["/work/drv.tcl"] + (["/work/sram_pincol_keepoff.tcl"]
                                                                    if mplace and rec.get("sram_pincol_halo") else []),
                                grt_post_extra=["/work/post_grt_drv.tcl"])

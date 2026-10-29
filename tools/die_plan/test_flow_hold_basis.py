@@ -63,7 +63,7 @@ def test_kit_carries_the_binding_rc_basis_and_hooks():
                      "export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl", "export SET_RC_TCL = /work/setRC_rcx.tcl",
                      "export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl",
                      "export POST_GLOBAL_ROUTE_TCL = /work/grt_post.tcl", "export POST_CTS_TCL = /work/cts_post.tcl",
-                     "export OT_HOLD_FF_MARGIN = 5"):
+                     "export OT_HOLD_FF_MARGIN = 10"):
             assert line in cfg, line
         for f in ("vclk_corner.tcl", "grt_pre.tcl", "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl",
                   "setRC_rcx.tcl", "tap_balance.tcl", "hold_gate.tcl"):
@@ -88,7 +88,7 @@ def test_stock_rc_opt_out_and_mcmm_opt_out():
 def test_gen_cli_defaults_are_the_flow_defaults():
     import gen
     src = Path(gen.__file__).read_text()
-    assert '"--hold-ff-margin", type=float, default=5.0' in src and "--hold-mcmm" in src and "--stock-rc" in src
+    assert '"--hold-ff-margin", type=float, default=10.0' in src and "--hold-mcmm" in src and "--stock-rc" in src
     assert gen_phys.write_phys.__defaults__ is not None
 
 

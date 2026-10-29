@@ -42,6 +42,13 @@ already guarantees, so the die only has to deliver its tap arrivals inside the d
          full W, same-tap pairs keep CRPR), else 0 (every tap on ONE ideal clock guarantees nothing).
          --intra-window-ps = labelled WHAT-IF override.
   The bound is exact for a kit pair signed with zero slack and conservative otherwise; it never uses kit numbers.
+  DIAGNOSTIC ONLY since OWNER 12.19 (FLOW-HOLD-1): the die hold gate is judged on real signed views (below).
+HOLD ON REAL VIEWS ONLY (OWNER 12.19, FLOW-HOLD-1): every pair class carries 'hold_measured': a pair is MEASURED only
+  when both endpoint blocks have a signed real view (partition --kit, or the --core-view of an early core tap); a pair
+  through a declared register / missing core view / unsigned view is UNMEASURED (reason: missing view <block>), not a
+  hold failure.  Summary per class: ff_hold_margin_ps (measured pairs only), hold_pairs_measured/unmeasured,
+  missing_views, hold_status PASS (0 unmeasured, all measured >= 0) / BLOCKED(kits) / FAIL; the all-pair number is
+  ff_hold_all_pairs_diag_ps (DIAGNOSTIC).  Setup unchanged.
 Landed hops are timed as the plan defines them (die_clock_mesh report): the region-to-region clock damage against the
 landing window (--landing-window-ps, default T/2) -> margin = window - damage; their single-cycle slacks are INFO.
 
@@ -1296,7 +1303,7 @@ def endpoint_slacks(A, B, la, ea, lc, ec, cr, period, unc_s, unc_h, models_a, mo
 
 
 def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=False, window=None, hold_window=None,
-               ocv=None, views=None, rec=None, dd=None, kit_offset=None):
+               ocv=None, views=None, rec=None, dd=None, kit_offset=None, missing=None):
     """ocv: optional callable (a_port, b_port, check) -> clock OCV pessimism ps on the non-common clock (CLK-AOCV,
     opt-in --clock-ocv); None = unchanged (no clock derate in this gate).
     views: optional {port: [endpoint models]} (REAL VIEWS, opt-in); None = the declared register on every tap.
@@ -1305,7 +1312,9 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
     None = unchanged (no data droop term).
     kit_offset: optional {port: ps} (FLOW-ONEMODEL-3): the kit SDC source latency of an early core tap is -early
     (gen_phys core_tap_rows), so the kit contract measures each tap's arrival + its declared earliness: a core tap
-    delivered as planned is damage-free, a LATE core tap (not early enough) is charged.  None = unchanged."""
+    delivered as planned is damage-free, a LATE core tap (not early enough) is charged.  None = unchanged.
+    missing: optional {port: [labels]} (FLOW-HOLD-1, OWNER 12.19, missing_views): adds 'hold_measured' = hold over the
+    pairs whose both endpoints carry signed real views only, + measured/unmeasured counts + the missing views."""
     ws, wh, sk, rows = None, None, 0.0, []
     sk_raw, trows = 0.0, []
     rv = dict(pairs=0, ws=None, wh=None, nneg_s=0, nneg_h=0, both=0, bs=None, bh=None, bneg_s=0, bneg_h=0,
@@ -1316,6 +1325,7 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
     dd_reg = DD.model_late_ps(dict(clkq_max=reg["clkq_max_wire_ps"]), dict(name="budget", setup=reg["setup_ps"]), dd) \
         if dd is not None else 0.0
     dd_max = 0.0
+    hm = dict(n=0, u=0, wh=None, neg=0, miss=defaultdict(int)) if missing is not None else None
     for a, b, tag in pairs:
         A, B = taps[a], taps[b]
         node = pair_node(A, B)
@@ -1372,6 +1382,17 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                     rec[(a, b, tag, c_[3], c_[4])] = (c_[0] - po_s, c_[1] - po_h, c_[2], c_[5])
         nneg_s += s < 0
         nneg_h += h < 0
+        if hm is not None:
+            lab = set(missing.get(a) or ()) | set(missing.get(b) or ())
+            if lab:
+                hm["u"] += 1
+                for x in lab:
+                    hm["miss"][x] += 1
+            else:
+                hm["n"] += 1
+                hm["neg"] += h < 0
+                if hm["wh"] is None or h < hm["wh"][0]:
+                    hm["wh"] = (h, a, b, tag, dmg_h, cr)
         sk_raw = max(sk_raw, dmg_s, dmg_h)
         # DIE-S81-18 (COORD 10-28 21:33 rule 2): skew = arrival minus PLANNED target.  A planned early core tap is
         # delivered kit_offset (= its declared earliness) before the plain taps on purpose; its target-relative arrival
@@ -1403,6 +1424,16 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                sens_core_tol=dict(tol_ps=lat_tol, worst_setup_slack_ps=round(ws[0] - 2 * lat_tol, 2),
                                   worst_hold_slack_ps=round(wh[0] - 2 * lat_tol, 2)),
                worst_skew=[[round(v, 2), a, b] for v, a, b in sorted(trows, reverse=True)[:5]])
+    if hm is not None:
+        out["hold_measured"] = dict(
+            rule="OWNER 12.19 (FLOW-HOLD-1): hold judged on pairs whose BOTH endpoint blocks have a signed real view; "
+                 "others UNMEASURED (not tap-window failures); PASS needs 0 unmeasured and every measured >= 0",
+            pairs_measured=hm["n"], pairs_unmeasured=hm["u"],
+            hold_margin_ps=round(hm["wh"][0], 2) if hm["wh"] else None, neg_pairs=int(hm["neg"]),
+            worst=dict(launch=hm["wh"][1], capture=hm["wh"][2], where=hm["wh"][3], clock_damage_ps=round(hm["wh"][4], 2),
+                       cppr_ps=round(hm["wh"][5], 2)) if hm["wh"] else None,
+            missing_views=dict(sorted(hm["miss"].items())))
+        out["hold_measured"]["status"] = hold_status(out["hold_measured"])
     if rv is not None:
         out["real_view"] = dict(pairs_with_real_endpoint=rv["pairs"], pairs_both_real=int(rv["both"]),
                                 pairs_total=len(pairs), setup_neg_pairs=int(rv["nneg_s"]), hold_neg_pairs=int(rv["nneg_h"]))
@@ -2214,15 +2245,62 @@ def core_tap_views(views, ecm, corner, reg, cmodels, mode="view", match_pins=Fal
 
 
 def core_insertion_verdict(verdict, recs):
-    """gate verdict after the early-core-tap insertion source: any missing view -> FAIL (closed); any declared
+    """gate verdict after the early-core-tap insertion source: any missing view -> BLOCKED(kits) (OWNER 12.19; a
+    FAIL stays FAIL, never a PASS); any declared
     insertion -> 'DECLARED' (a planning estimate, not a gate PASS); otherwise unchanged."""
     if not recs:
         return verdict
     if any(r["source"]["missing"] for r in recs):
-        return "FAIL"
+        return "FAIL" if verdict == "FAIL" else HOLD_BLOCKED   # OWNER 12.19: a missing view is BLOCKED(kits), never PASS
     if any(r["source"]["declared"] for r in recs):
         return "DECLARED" if verdict == "PASS" else verdict
     return verdict
+
+
+# FLOW-HOLD-1 (OWNER 12.19, COORD 10-29 05:52): die hold is judged on REAL SIGNED VIEWS only.  An endpoint whose
+# block has no signed real view (a 'budget' declared register = the partition type has no --kit; a 'declared:' or
+# kept-budget early core tap = the core has no --core-view; a core view whose provenance verdict is present and not
+# SIGNED) makes every pair through it UNMEASURED (reason: missing view <block>), never a hold failure from the
+# tap-window / declared-register model.  The gate is NOT loosened: hold PASS needs 0 unmeasured pairs AND every
+# measured pair >= 0; with unmeasured pairs the hold status is BLOCKED(kits).  Setup reporting is unchanged.
+HOLD_BLOCKED = "BLOCKED(kits)"
+
+
+def _unsigned(m):
+    v = (m.get("meta") or {}).get("verdict")
+    return v is not None and not str(v).startswith("SIGNED")
+
+
+def missing_views(views, taps, plan, ecm=None):
+    """{port: sorted labels of the blocks without a signed real view} (empty list = fully measured endpoint).
+    views None = the declared register on every tap (no real view at all)."""
+    ptype = {x["name"]: x["type"] for x in plan.get("partitions", [])}
+    out = {}
+    for p, r in taps.items():
+        lab = set()
+        part_lab = f"type:{ptype.get(r.get('part'), r.get('part'))}"
+        ms = views[p] if views is not None else [dict(name="budget", real=False)]
+        if ecm and p in ecm:
+            have = {m["name"] for m in ms if m.get("real") and not _unsigned(m)}
+            for cm in ecm[p]:
+                if f"core:{cm['module']}" not in have:
+                    lab.add(f"core:{cm['module']}")
+        for m in ms:
+            if not m.get("real"):
+                if not (ecm and p in ecm):
+                    lab.add(part_lab)
+            elif _unsigned(m):
+                lab.add(f"{m['name']} (view not SIGNED)")
+        out[p] = sorted(lab)
+    return out
+
+
+def hold_status(hm):
+    """OWNER 12.19 hold status of one hold_measured record: FAIL (a measured pair < 0), BLOCKED(kits) (unmeasured
+    pairs, none failing), PASS (all pairs measured and >= 0)."""
+    if hm["neg_pairs"]:
+        return "FAIL"
+    return HOLD_BLOCKED if hm["pairs_unmeasured"] else "PASS"
 
 
 def kit_windows(pc, intra_override=None):
@@ -2539,12 +2617,13 @@ def main(argv=None):
                 print(f"COUNT-ALIGN {c} RING built {rr['built_ports']} (worst lo {rr['worst_lo_built']} hi "
                       f"{rr['worst_hi_built']}) declared {rr['declared_ports']} (worst lo {rr['worst_lo_declared']} hi "
                       f"{rr['worst_hi_declared']})")
+        vmiss = missing_views(views, taps, plan, ecm)
         for k, pl in pairs.items():
             hrec = hbrec.setdefault(c, {}).setdefault(k, {}) if a.hold_buffers != "none" else None
             cr["classes"][k] = time_class(pl, taps, rng, reg, a.core_tol_ps, period, UNC_SETUP_PS, UNC_HOLD_PS,
                                           landed=k.startswith("landed"), window=window,
                                           hold_window=hwin.get(k) if c == "FF" else None, ocv=ocv, views=views,
-                                          rec=hrec, dd=dd, kit_offset=kit_off)
+                                          rec=hrec, dd=dd, kit_offset=kit_off, missing=vmiss)
             cr["classes"][k]["label"] = ("real-view+budget" if real else "declared-budget") + (
                 f" + core-tap insertion {ci['mode']} (view {ci['source']['view']} / declared {ci['source']['declared']}"
                 f" / missing {ci['source']['missing']})" if ecm else "") + (
@@ -2561,9 +2640,16 @@ def main(argv=None):
     for k in ("intra", "seam"):
         s = res["corners"].get("TT", {}).get("classes", {}).get(k, {})
         h = res["corners"].get("FF", {}).get("classes", {}).get(k, {})
-        gate[k] = dict(tt_setup_ps=s.get("worst_setup_slack_ps"), ff_hold_ps=h.get("worst_hold_slack_ps"),
-                       verdict="PASS" if (s.get("worst_setup_slack_ps", -1) >= 0 and h.get("worst_hold_slack_ps", -1) >= 0)
-                       else "FAIL")
+        # FLOW-HOLD-1 (OWNER 12.19): FF hold = measured pairs only (both endpoint blocks signed real views); unmeasured
+        # pairs -> BLOCKED(kits), never PASS.  The all-pair declared/tap-window numbers stay as DIAGNOSTIC fields.
+        hm = h.get("hold_measured") or {}
+        hst = hm.get("status") if h.get("pairs") else ("PASS" if s.get("worst_setup_slack_ps", -1) >= 0 else "FAIL")
+        setup_ok = s.get("worst_setup_slack_ps", -1) >= 0
+        gate[k] = dict(tt_setup_ps=s.get("worst_setup_slack_ps"), ff_hold_margin_ps=hm.get("hold_margin_ps"),
+                       hold_pairs_measured=hm.get("pairs_measured"), hold_pairs_unmeasured=hm.get("pairs_unmeasured"),
+                       missing_views=sorted(hm.get("missing_views") or {}), hold_status=hst,
+                       ff_hold_all_pairs_diag_ps=h.get("worst_hold_slack_ps"),
+                       verdict="FAIL" if (not setup_ok or hst in (None, "FAIL")) else hst)
     for k in ("intra", "seam"):
         kc = res["corners"].get("FF", {}).get("classes", {}).get(k, {}).get("kit_contract_hold")
         if kc:
@@ -2571,6 +2657,7 @@ def main(argv=None):
             gate[k]["kit_contract_window_ps"] = kc["window_ps"]
             gate[k]["kit_contract_window_needed_ps"] = kc["window_needed_ps"]
             gate[k]["kit_contract_verdict"] = kc["verdict"]
+            gate[k]["kit_contract_role"] = "DIAGNOSTIC only (OWNER 12.19: die hold is judged on real signed views)"
     if ci_recs:
         # FLOW-ONEMODEL-3: missing signed view -> FAIL CLOSED; declared insertion -> 'DECLARED', never a gate PASS
         for k in ("intra", "seam"):
@@ -2578,7 +2665,7 @@ def main(argv=None):
         gate["core_insertion"] = dict(mode=a.core_insertion, early_core_taps=ci_recs[0]["early_core_taps"],
                                       source={c: r["source"] for c, r in zip(corners, ci_recs)},
                                       verdict=core_insertion_verdict("PASS", ci_recs),
-                                      note="FAIL = early core taps without a signed core view (fail closed); DECLARED "
+                                      note="BLOCKED(kits) = early core taps without a signed core view (OWNER 12.19, never PASS); DECLARED "
                                            "= planning estimate on plan per-tap insertion, not a gate pass")
     gate["landed"] = landed_gate(res["corners"])
     if a.count_align:
@@ -2634,6 +2721,10 @@ def main(argv=None):
                       f"skew {v['skew_diag_max_ps']:7.2f}" + (f" kit-contract hold {v['kit_contract_hold']['worst_hold_bound_ps']:.2f}"
                       f" (W {v['kit_contract_hold']['window_ps']:g}, need {v['kit_contract_hold']['window_needed_ps']:.2f},"
                       f" neg {v['kit_contract_hold']['neg_pairs']})" if "kit_contract_hold" in v else "") + (f" landing {v['plan_landing']}" if "plan_landing" in v else "")
+                      + (f" | MEASURED-HOLD {v['hold_measured']['pairs_measured']} measured / "
+                         f"{v['hold_measured']['pairs_unmeasured']} unmeasured margin "
+                         f"{v['hold_measured']['hold_margin_ps']} {v['hold_measured']['status']}"
+                         if c == "FF" and "hold_measured" in v else "")
                       + (f" | REAL {v['real_view']['pairs_with_real_endpoint']} pairs setup "
                          f"{v['real_view'].get('worst_setup_slack_ps')} (neg {v['real_view']['setup_neg_pairs']}) hold "
                          f"{v['real_view'].get('worst_hold_slack_ps')} (neg {v['real_view']['hold_neg_pairs']})"

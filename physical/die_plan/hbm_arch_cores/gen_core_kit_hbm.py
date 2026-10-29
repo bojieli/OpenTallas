@@ -781,6 +781,15 @@ def post_cts_setup_hook(kd, cfg):
     return dict(previous_post_cts=prev, repair="setup only (scene tc / vclk OT_VCLK_TT)", hold="GRT step only")
 
 
+def hold_ff_margin(a):
+    """FLOW-HOLD-1 (OWNER 12.19): OT_HOLD_FF_MARGIN = --hold-ff-margin, else max(--hold-margin, shared default 10)."""
+    if a.hold_ff_margin is not None:
+        return a.hold_ff_margin
+    sys.path.insert(0, str(TOOL))
+    import core_flow
+    return max(a.hold_margin, core_flow.HOLD_FF_MARGIN_DEFAULT)
+
+
 def timing_modes_stage(kd, two_mode):
     """SIGNOFF-MODES-2 shared checker (tools/die_plan/kit_modes.py, copied into the kit for run_kit_hbm.sh).  two_mode:
     stage the kit (CORNERS tc BC, OT_HOLD_MM=1, vclk_ff.sdc + orfs_hold_mm.{py,tcl}); fails closed on a bad binding."""
@@ -846,6 +855,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # the extra 30 ps flow margin made ORFS GRT hold repair chase every flop->flop shift-register path in the 0..30 ps
     # band (sfu lane14 4_cts FF: 1467 endpoints < 0, 37822 < 30) at ~20 iterations/min -> 57 + 16 non-convergent runs.
     ap.add_argument("--hold-margin", type=float, default=0.0, help="HOLD_SLACK_MARGIN ps at the flow corner (extra over the SDC 25 ps hold uncertainty)")
+    # FLOW-HOLD-1 (OWNER 12.19): the FF GRT hold repair margin (OT_HOLD_FF_MARGIN, run_kit_hbm.sh grt HOLD_SLACK_MARGIN=)
+    # is its own knob now: default max(--hold-margin, tools/die_plan/core_flow.HOLD_FF_MARGIN_DEFAULT = 10); 15 where a
+    # measured GRT->final RC hold loss > 10 ps is documented (ring).  HOLD_SLACK_MARGIN (other steps) stays --hold-margin.
+    ap.add_argument("--hold-ff-margin", type=float, default=None, help="OT_HOLD_FF_MARGIN ps (FF GRT hold repair)")
     ap.add_argument("--tag", default="", help="kit dir suffix (variants)")
     ap.add_argument("--macro-placement", default=None,
                     help="HBM-CORES3 10-25: plan family macro placement JSON (e.g. B2n_inputs/exp_lane.json): "
@@ -1322,7 +1335,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
            "export POST_GLOBAL_ROUTE_TCL = /work/core_grt_post.tcl",
            f"export OT_VCLK_TT = {ins:g}",
            f"export OT_VCLK_FF = {ff_ins:g}",
-           f"export OT_HOLD_FF_MARGIN = {a.hold_margin:g}",
+           f"export OT_HOLD_FF_MARGIN = {hold_ff_margin(a):g}",
            f"export OT_PRE_ROUTE_FF_HOLD = {int(a.pre_route_ff_hold)}",
            f"export OT_TAP_TARGET_PS = {ins:g}",
            f"export OT_TAP_WINDOW_PS = {tol:g}",
