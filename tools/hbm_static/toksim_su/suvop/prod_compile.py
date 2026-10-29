@@ -816,7 +816,7 @@ def compile_rec(a):
                mods={k: v for k, v in mods.items()}, red=red, sfu_lanes=sfu, lanes_per_quarter=L, issues=G,
                emissions=len(emits), issue_to_write=LAT, RR=RR, WR=WR, fill_slack=a.fill_slack, drain_slack=a.drain_slack,
                dispatch_edge=D0, first_emit=first_em, last_emit=last_em, last_lg_write=last_lg, retire_edge=retire,
-               cycles_serial=ser, cycles_stream_833ps=(ser if NQ == 2 else round(ser * 4 / 3, 2)), edges=ne,
+               cycles_serial=ser, cycles_stream_833ps=(ne if NQ == 2 else round(ser * 4 / 3, 2)), edges=ne,
                expected_vm_writes=len(P.expw), expected_scalars=len(P.exps), reduction=rinfo,
                golden=('hdc_golden add/mul/to_bf16/exp + NumPy float32 division (independent of the DUT); reduction = the '
                        'MODEL order (hdc_golden_v41.csum chunk8 / ordered canonical max), asserted on the lowered tree') if PT else
@@ -824,6 +824,7 @@ def compile_rec(a):
                pretree=dict(on=True, qpr=QPR, quarter_run_words=SW, blocks_per_row=NBQ, pt_red=SPL.PT_RED) if PT else None)
     if NQ == 2:
         man.update(quarters=2, actual_qids=list(QIDS), core_clock_ps=833, pin_reg=PIN_REG,
+                   dispatch_service_edges=ser, programme_execution_edges=ne, producer_setup_edges=D0,
                    full_side_candidate=['su_NW0'] if getattr(a, 'full_side', False) else [],
                    native_programme_bits=NQ * (QW + 48),
                    source_profile='explicit candidate, not current-source/physical adoption',
@@ -833,7 +834,7 @@ def compile_rec(a):
         man['lane_build'] = dict(mlat=MLAT, alat=ALAT, leaf=LEAF, wcopy=WCOPY, lin=LIN, source='tools/hbm_static/su_lane_build.py')
     (out / 'programme.json').write_text(json.dumps(man, indent=1) + '\n')
     print(json.dumps({k: man[k] for k in ('record', 'issues', 'emissions', 'cycles_serial', 'cycles_stream_833ps', 'edges', 'expected_vm_writes', 'expected_scalars')}))
-    return ser
+    return ne if NQ == 2 else ser
 
 
 if __name__ == '__main__':
