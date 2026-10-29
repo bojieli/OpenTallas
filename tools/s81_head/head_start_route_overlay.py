@@ -62,7 +62,7 @@ def overlay(base_v, base_tcl, mapped, top, stages, physical):
         pub.append(target)
         if info['direction'] not in ('input', 'output'):
             raise ValueError('inout START boundary is not supported')
-        decl.append(f"{info['direction']} wire {target};")
+        decl.append(f"{info['direction']} {target};")
         row = physical['ports'][p]
         x, y = finite_xy(row['xy_um'])
         layer = row['layer']

@@ -1,0 +1,7 @@
+HEAD START/reset actual-cell prototype review, 2026-10-29.
+
+Personally viewed overview.png, root.png, reset_worst.png. Forest follows the regular row channels and central spine; small registered START bodies lie beside the existing clock nodes, reset branches remain local. Worst reset leg can use an L around its adjacent macro corner; a drawn diagonal is not a routing instruction. No macro wall, cross-die reset star, or unstationed START trunk. Full actual mapped cell rows are clear of clock occupancy and plan exclusions; external raw reset sources are outside every hard core and2.16um halo.
+
+Native0.68 map14680 actualRVT cells/5299FF/1356stage groups. Full mapped-cell-row reach: parent365.175um, resetprovider328.073um,351partitioncapture362.576um, all0>405. Native reset export source locations1288,143uniformtypealiases; no global raw-reset input on provider. RootSETTLE74 is a provisional source model, not phase/boot qualification.
+
+Independent /root/geom viewed the same images/manifests and issued PASS-COND for ONE raw START/reset prototype GRT50: preserve actual clock occupancy/PG and real FFloads; check actual routed L legs around corners and reach after import. No G4/STA/G5/freeze claim. The raw partition signal abstracts remain explicit; partition origin cells and reset export RTL are being integrated by the START owner.
