@@ -415,3 +415,12 @@ def test_node_cell_region_alias_is_not_a_second_clock_path():
     meta['node_cell']['hub_C'] = 'b0'
     doc, *_ = E.emit(_bind(), meta, v, t)
     assert next(s for s in doc['stages'] if s['node_cell'] == 'b2')['clock_source_path'] == P_ROOT
+
+
+def test_current_native_home_converter_ot_place():
+    v, t = _tree()
+    native = re.sub(r'place_inst -name (\S+) -location \{([-\d.]+) ([-\d.]+)\} -status PLACED',
+                    r'ot_place {\1} \2 \3 R0', t)
+    assert E.ctree_cells(v, native) == E.ctree_cells(v, t)
+    doc, *_ = E.emit(_bind(), _meta(), v, native)
+    assert len(doc['stages']) == 2
