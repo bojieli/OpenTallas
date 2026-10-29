@@ -1,0 +1,62 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "ot_s81_mu72_lnland_nst_1ck_flow1029",
+ "module": "ot_s81_mu72_lnland_nst_1ck",
+ "plan_type": "source_lnland_1ck",
+ "outline_um": [
+  112.32,
+  112.32
+ ],
+ "ref_tile": "results/codex_s81_lnland_1029",
+ "spec": "results/codex_s81_lnland_1029/spec.json",
+ "spec_sha256": "232e646b093e408d1e39b822ed61bae42b8812354a52c5ab2099a4c2f336fd09",
+ "pins_file": "results/codex_s81_lnland_1029/pins.json",
+ "pins_sha256": "3eea1dbe54d62ab1b774bfeab161f52839f627d272f44f1e16452a8b3a678a3f",
+ "pins": 2231,
+ "plan_lef": "results/codex_s81_lnland_1029/ot_s81_mu72_lnland_nst_1ck.lef",
+ "pins_canon_sha256": "2d486215b51facf13b304d9d6c2a4b5082f242c691261fbb3048c5a02355d981",
+ "pins_placed_canon_sha256": "2d486215b51facf13b304d9d6c2a4b5082f242c691261fbb3048c5a02355d981",
+ "clocks": [
+  "ck_k"
+ ],
+ "resets": [
+  "rs_k",
+  "rs_n"
+ ],
+ "recipe_sha256": "a50691f2315665e734f592cd1e8877deb497fa6a52b540f3f1541ad09cee664b",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+ "insertion_ff_ps": 202.5,
+ "insertion_basis": {
+  "tt": "plan clock.insertion_ps",
+  "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+ },
+ "rc": "setRC_rcx_asap7.tcl",
+ "gates": [
+  "rtl_lint (pre-synth)",
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "LEC EQUIVALENT (post-synth)",
+  "reg_fanout (post-synth)",
+  "TT/FF insertion (GRT, before route)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "84a5dc65e4",
+ "sdc_lint_sha256": "981179f10a7c3da6a7d4e956d03bc036f50ddf2b7df7db1f828f7dbcf86a91e8",
+ "face_guard_sha256": "5f4dc0958b12fe44a2f5a5db78f12af2bc283132da5a9828f96b6a02ca2c01dd",
+ "signoff_sha256": "89929556eba9a21b4f74b5d9710188d7391535eac95a5698e0a56b12284e86a2",
+ "macros": {},
+ "rtl_patches": [],
+ "kit_hash": "3b00e62f0a3dd4e2",
+ "master_plan": {
+  "slice_sha256": "6441ff85c5d2a381a4c61e3e704126cca99c7b55079ec6fccaff0e5f3e41bb4b",
+  "master_plan_sha256": "15d6327f537bd795bbd833a098f6e94bf9793a06fce1478c2444e92f8e114575",
+  "type": "ot_s81_mu72_lnland_nst_1ck",
+  "frozen": false
+ }
+}

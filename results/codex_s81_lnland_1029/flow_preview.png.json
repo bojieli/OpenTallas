@@ -1,0 +1,93 @@
+{
+ "kit": "ot_s81_mu72_lnland_nst_1ck_flow1029",
+ "kit_hash": "3b00e62f0a3dd4e2",
+ "outline_um": [
+  112.32,
+  112.32
+ ],
+ "pins": 2231,
+ "faces": {
+  "N": {
+   "pins": 556,
+   "max_per_um": 6.5,
+   "mean_per_um": 4.95,
+   "layers": {
+    "M5": 556
+   },
+   "span": [
+    6.2,
+    106.14
+   ],
+   "groups": [
+    "n_li_r",
+    "n_lo_d",
+    "n_lo_v",
+    "n_rxv"
+   ]
+  },
+  "S": {
+   "pins": 560,
+   "max_per_um": 6.5,
+   "mean_per_um": 4.99,
+   "layers": {
+    "M5": 560
+   },
+   "span": [
+    4.33,
+    107.96
+   ],
+   "groups": [
+    "k_flt",
+    "k_li_d",
+    "k_li_v",
+    "k_lo_r",
+    "rs_k",
+    "rs_n"
+   ]
+  },
+  "W": {
+   "pins": 556,
+   "max_per_um": 6.0,
+   "mean_per_um": 4.95,
+   "layers": {
+    "M4": 556
+   },
+   "span": [
+    6.25,
+    106.09
+   ],
+   "groups": [
+    "k_li_r",
+    "k_lo_d",
+    "k_lo_v",
+    "k_rxv"
+   ]
+  },
+  "E": {
+   "pins": 558,
+   "max_per_um": 6.0,
+   "mean_per_um": 4.97,
+   "layers": {
+    "M4": 558
+   },
+   "span": [
+    6.25,
+    106.09
+   ],
+   "groups": [
+    "n_flt",
+    "n_li_d",
+    "n_li_v",
+    "n_lo_r"
+   ]
+  }
+ },
+ "macros": [],
+ "clock_pin": {
+  "name": "ck_k",
+  "x": 56.172,
+  "y": 56.16,
+  "face": "C",
+  "layer": "M5"
+ }
+}

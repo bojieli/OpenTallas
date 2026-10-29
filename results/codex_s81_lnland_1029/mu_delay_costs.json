@@ -1,0 +1,32 @@
+{
+ "u_d2_u_lep_ml_wd": {
+  "flops": 2208,
+  "output_inverters": 2208,
+  "mapped_cells": 4416,
+  "note": "Exact named delay registers plus their actual QN\u2192INV output drivers; excludes unrelated merged logic"
+ },
+ "u_d2_u_lep_ml_wv": {
+  "flops": 2,
+  "output_inverters": 2,
+  "mapped_cells": 4,
+  "note": "Exact named delay registers plus their actual QN\u2192INV output drivers; excludes unrelated merged logic"
+ },
+ "u_d2_u_land_rd": {
+  "flops": 2208,
+  "output_inverters": 2208,
+  "mapped_cells": 4416,
+  "note": "Exact named delay registers plus their actual QN\u2192INV output drivers; excludes unrelated merged logic"
+ },
+ "u_d2_u_land_rv": {
+  "flops": 2,
+  "output_inverters": 2,
+  "mapped_cells": 4,
+  "note": "Exact named delay registers plus their actual QN\u2192INV output drivers; excludes unrelated merged logic"
+ },
+ "u_d2_u_land_fault": {
+  "flops": 2,
+  "output_inverters": 2,
+  "mapped_cells": 4,
+  "note": "Exact named delay registers plus their actual QN\u2192INV output drivers; excludes unrelated merged logic"
+ }
+}
