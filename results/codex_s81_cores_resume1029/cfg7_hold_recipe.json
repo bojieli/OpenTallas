@@ -1,0 +1,11 @@
+{
+  "ot_s81_cfg7_seq_bfp": {
+    "ref_tile": "physical/ref_tile/s81coll_cfg7_seq_bfp_pr",
+    "io_hold": "sender_min",
+    "post_grt_extra": [
+      "# Classified c_v -> st0 final-route short path, 0 RTL cycles.\n",
+      "source /work/cfg7_hold_after_grt.tcl\n"
+    ],
+    "_hold_fix_basis": "Actual corrected-contract finish d614c6820fb1 TT+57.32/FF-2.37ps c_v->st0; one fixed BUFx2 after normal post-GRT legalization. Recipe prepared only; clock pin source contract mismatch remains open."
+  }
+}

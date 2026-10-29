@@ -1,0 +1,17 @@
+{
+  "source": "Actual unchanged ot_v41_cut, six stages, W=3, input {v,d,0}; data r[W-2:0] has no reset, valid has reset",
+  "reset_cycles": 4,
+  "native_opt": {
+    "default_synth_ff_count": 12,
+    "keep_wire_and_process_ff_count": 12,
+    "opt_full_keepdc_before_and_after_techmap_ff_count": 18
+  },
+  "lec_results": {
+    "folded": "NOT EQUIVALENT: 19/20 proved; final constant-lane data differs",
+    "retained": "UNPROVEN: 23/24 proved; gate_only final cold FF versus gold_only final cold FF",
+    "retained_source_stage_eq_hints": "UNPROVEN:35/36; final stage equality dropped, cannot establish independently unknown reset-state equality",
+    "wrong_stage_hints": "UNPROVEN:36/37; no false PASS"
+  },
+  "conclusion": "Native -keepdc retains existing RTL cold state but does not alone provide accepted default4 proof. Not adopted. No reset extension, LEC weakening, or flow recipe change. Full BF/ROM still require typed preserved hierarchy or accepted correspondence that honors four-edge cold/warm behavior.",
+  "scratch": "intel2:/srv/opentallas-scratch2/claude/codex-s81-cut-retention-1029"
+}

@@ -1,0 +1,34 @@
+{
+  "job": "d614c6820fb1",
+  "verdict": "NOT SIGNED",
+  "tt_setup_ps": 57.32,
+  "ff_hold_ps": -2.37,
+  "drc": 0,
+  "antenna": 0,
+  "hold_path": {
+    "from": "u_ld.u.c_v$_DFF_PN0_",
+    "to": "u_ld.u.st[0]$_DFF_PN0_",
+    "data_arrival_ps": 141.35,
+    "data_required_ps": 143.72,
+    "capture_launch_delta_ps": 12.0
+  },
+  "clock_pin_mismatch": {
+    "planned": {
+      "layer": "M4",
+      "xy_um": [
+        0.042,
+        20.124
+      ],
+      "face": "W"
+    },
+    "slice_entry": {
+      "layer": "M5",
+      "xy_um": [
+        15.132,
+        30.24
+      ],
+      "face": "interior"
+    }
+  },
+  "action": "Preserve failed finish; prepare fixed data buffer in normal GRT process. Architectural pin source and parent clock binding must be repaired before adoption; no timing or pin waiver."
+}
