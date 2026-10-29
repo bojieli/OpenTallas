@@ -80,11 +80,28 @@ def clock_graph(text, tree):
 
 
 @contextlib.contextmanager
-def real_pin_access(access,window_um=8.64):
+def real_pin_access(access,window_um=8.64,access_patches=False):
     old = dict(CR.PIN_ACCESS)
     old_bars = dict(C128.PIN_BAR_X)
     old_riser = C128.STACK_RISER_MAX_UM
     original_join = CR._port_join
+    original_steps=CR._emit_steps;original_pad_layers=CR.stack_pad_layers
+    def area_steps(lines,pts,**kwargs):
+        tmp=[];original_steps(tmp,pts,**kwargs)
+        transitions=iter([(a[0],b[0]) for a,b in zip(pts,pts[1:]) if a[0]!=b[0]])
+        for line in tmp:
+            if 'addTechVia' in line:
+                a,b=next(transitions)
+                if (a,b)==('M8','M7'):lines.append('$e addRect -96 -40 96 40')
+                lines.append(line)
+                if (a,b)==('M7','M8'):lines.append('$e addRect -96 -40 96 40')
+            else:lines.append(line)
+    def pad_layers(stack):
+        pads=original_pad_layers(stack)
+        # The explicit VIA78 patch above supplies the M8 area exactly once.
+        for lays in pads.values():lays.discard('M8')
+        return pads
+
     def adjacent_join(lines, layer_at, at, pin_layer, pxy, entering):
         if not entering and pin_layer == 'M7':
             x, y = at; px, py = pxy
@@ -119,6 +136,8 @@ def real_pin_access(access,window_um=8.64):
         # constant describes a different mesh's window, not these plan bays.
         C128.STACK_RISER_MAX_UM=window_um
         CR._port_join = adjacent_join
+        if access_patches:
+            CR._emit_steps=area_steps;CR.stack_pad_layers=pad_layers
         yield
     finally:
         CR.PIN_ACCESS.clear()
@@ -127,6 +146,7 @@ def real_pin_access(access,window_um=8.64):
         C128.PIN_BAR_X.update(old_bars)
         C128.STACK_RISER_MAX_UM=old_riser
         CR._port_join = original_join
+        CR._emit_steps=original_steps;CR.stack_pad_layers=original_pad_layers
 
 
 def access_census(shapes):
@@ -162,7 +182,9 @@ def clock_cell_via_shapes(wires):
             for layer,via,y in [('M1','VIA12',basey),('M7','VIA67',basey),
                                 ('M7','VIA78',topy),('M8','VIA78',topy)]:
                 hx,hy=vr[via][layer]
-                out.append((wire['name'],layer,x-hx,y-hy,x+hx,y+hy))
+                if layer=='M8':hx,hy=.096,.040
+                atx=stack.get('m6_entry_xy',stack['xy'])[0] if layer=='M1' else x
+                out.append((wire['name'],layer,atx-hx,y-hy,atx+hx,y+hy))
     return out
 
 
@@ -190,6 +212,7 @@ def port_access_shapes(wires,cells,ports,buf):
             for a,b in zip(pts,pts[1:]):
                 if a[0] != b[0]:
                     for lay,(hx,hy) in vias[CR.via(a[0],b[0])].items():
+                        if lay=='M8' and CR.via(a[0],b[0])=='VIA78':hx,hy=.096,.040
                         shapes.append((wire['name'],lay,a[1]-hx,a[2]-hy,a[1]+hx,a[2]+hy))
                 elif a[1:] != b[1:]:
                     half=.04 if a[0] in ('M8','M9') else CR.WIDTH[a[0]]/2
@@ -317,10 +340,19 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     for key in ('tree', 'netlist', 'lef', 'plan', 'endpoints', 'out'):
         ap.add_argument('--'+key, required=True)
+    ap.add_argument('--backbone-plan', help='physically checked M6-entry-jog plan with records keyed cell/pin')
+    ap.add_argument('--tech-vias', required=True, help='actual source ODB census JSON: dbu and tech_vias_dbu')
     ap.add_argument('--max-move', type=float, default=8.64)
     ap.add_argument('--review-region', default='c_E2_bf_10')
     ap.add_argument('--reserved-access', help='actual power-access conductor/via enclosure rectangles: [net,layer,x0,y0,x1,y1]')
     args = ap.parse_args()
+    via_facts=json.loads(Path(args.tech_vias).read_text());dbu=via_facts['dbu']
+    actual_vias={}
+    for name,boxes in via_facts['tech_vias_dbu'].items():
+        actual_vias[name]={layer:(max(abs(x0),abs(x1))/dbu,max(abs(y0),abs(y1))/dbu)
+                          for layer,x0,y0,x1,y1 in boxes if layer in CR.LAYERS}
+    if set(actual_vias)!=set(CR.via_rects()):raise ValueError('actual tech-via facts incomplete')
+    CR.via_rects=lambda:actual_vias
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     tree = json.loads(Path(args.tree).read_text())
     raw_endpoints = json.loads(Path(args.endpoints).read_text())
@@ -372,13 +404,13 @@ def main():
     # Native M7 conductor is authoritative; the graft-map centroid is a
     # reference, not a legal M8 track. Enter at a real track with the entire
     # VIA78 M7 enclosure inside actual pin metal, never a fabricated M7 jog.
-    endpoint_access = {}
+    endpoint_access = {}; endpoint_failures=[]
     # This index checks zero-length VIA78 landing enclosures only, using
     # the LEF access minimum; shielded tree planning retains its .32 spacing.
     landing_ix=C128.MetalIndex(CR.SPACE['M8'])
     for shape in C128.pg_shapes(pg)+C128.pg_shapes(power_access):landing_ix.add(shape)
     hx,hy = CR.via_rects()['VIA78']['M7']
-    mx,my = CR.via_rects()['VIA78']['M8']
+    mx,my = .096,.040  # .192x.080 normal clock-width patch, AREA >= .00752
     pitch=DCM.DEFAULT_TRACKS['M8']['pitch_um'];phase=DCM.DEFAULT_TRACKS['M8']['offset_um']
     for tap in taps:
         ep=endpoints[tap['port']];x,refy=ep['xy'];x0,y0,x1,y1=ep['rect_um']
@@ -392,7 +424,10 @@ def main():
             if not landing_ix.hits(landing,first=True):
                 selected=y;landing_ix.add(landing);router.ix.add(landing);break
         if selected is None:
-            raise ValueError(f'no legal reserved VIA78 access inside actual M7 pin: {tap["port"]}')
+            endpoint_failures.append(dict(port=tap['port'],inst=ep['inst'],pin=ep['pin'],
+                rect_um=ep['rect_um'],reference_xy_um=ep['xy'],legal_in_pin_rows_um=candidates,
+                kind='no VIA78 landing clear of real PG/power inside actual M7 conductor'))
+            continue
         tap['xy']=[x,selected];ports[tap['port']]['xy']=[x,selected]
         endpoint_access[tap['port']]=dict(inst=ep['inst'],pin=ep['pin'],net=ep['net'],
             reference_xy_um=ep['xy'],entry_xy_um=tap['xy'],rect_um=ep['rect_um'],
@@ -400,8 +435,25 @@ def main():
             access_kind='zero-length VIA78 landing enclosure',m8_enclosure_half_um=[mx,my],
             landing_min_spacing_um=CR.SPACE['M8'],tree_spacing_um=nd['space'])
     (out/'endpoint_access.json').write_text(json.dumps(endpoint_access)+'\n')
+    if endpoint_failures:
+        (out/'prebuild.json').write_text(json.dumps(dict(status='FAIL',physical_route=False,
+            cause='native M7 clock pin / actual PG access incompatibility',
+            source_cells=len(cells),tap_iterms=len(taps),findings=endpoint_failures),indent=1)+'\n')
+        raise ValueError(f'{len(endpoint_failures)} actual M7 pins have no legal VIA78 landing')
     windows,net_windows,window_report=access_windows(P,cells,nets,access,args.max_move)
     column_report=clock_column_windows(windows,nets)
+    backbone_records={}
+    if args.backbone_plan:
+        planned=json.loads(Path(args.backbone_plan).read_text())
+        if planned['status']!='PASS_GEOMETRY':raise ValueError('M6-entry backbone plan has not passed geometry')
+        for record in planned['records']:
+            key=(record['cell'],record['pin']);actual=windows[key][:2]
+            if max(abs(a-b) for a,b in zip(actual,record['entry_xy_um']))>1e-6:
+                raise ValueError(f'M6 entry plan changed actual pin base: {key}')
+            x,y=record['backbone_xy_um'];lo,hi=record['m7_window_um']
+            if abs(y-actual[1])>1e-6 or not lo<=y<=hi:raise ValueError(f'illegal M6 entry row/window: {key}')
+            windows[key]=(x,y,lo,hi);backbone_records[key]=record
+        router.stack_backbone_xy=lambda cell,pin,actual:backbone_records[(cell,pin)]['backbone_xy_um'] if (cell,pin) in backbone_records else actual
     def endpoint_window(net,what):
         if what in ('trunk','driver jog'):cell,pin=net['drv'],'Y'
         elif what.startswith(('jog ','drop ')):cell,pin=what.split(' ',1)[1],'A'
@@ -417,13 +469,18 @@ def main():
     if args.reserved_access:
         summary['power_access_reservation']=dict(file=args.reserved_access,rectangles=len(power_access),
             sha256=hashlib.sha256(Path(args.reserved_access).read_bytes()).hexdigest())
+    summary['actual_tech_vias']=dict(path=args.tech_vias,sha256=hashlib.sha256(Path(args.tech_vias).read_bytes()).hexdigest(),enclosures_um=actual_vias)
+    summary['access_minarea_patches']=dict(m8_dimensions_um=[.192,.080],m8_area_um2=.01536,short_m7_dimensions_um=[.032,.072],short_m7_area_um2=.002304,tree_width_um=nd['width'],tree_spacing_um=nd['space'])
     summary['physical_m7_windows']=window_report
     summary['clock_column_windows']=column_report
+    if args.backbone_plan:summary['m6_entry_jogs']=dict(path=args.backbone_plan,count=len(backbone_records),sha256=hashlib.sha256(Path(args.backbone_plan).read_bytes()).hexdigest())
     try:
         with real_pin_access(access,args.max_move):
             wires = C128.fixed_wires(M,cells,nets,max(v[0] for v in sizes.values()),.27,off=0.,router=router,pin_stack=True,l_drops=True)
         for wire in wires:
             wire['enc']='r8'
+            for stack in wire.get('stacks',[]):
+                if abs(stack['riser_from'][1]-stack['xy'][1])<.015:stack['short_stack']=True
     except C128.PlanError as error:
         summary.update(status='FAIL', cause='no legal fixed-wire geometry', findings=error.rows)
         (out/'prebuild.json').write_text(json.dumps(summary,indent=1)+'\n')
@@ -441,7 +498,7 @@ def main():
         (out/'prebuild.json').write_text(json.dumps(summary,indent=1)+'\n')
         raise ValueError('M7 clock riser leaves actual legal glue window')
     print('PREBUILD_STAGE access shapes', flush=True)
-    with real_pin_access(access):
+    with real_pin_access(access,access_patches=True):
         shapes = CR.stair_shapes(wires,cells,ports,next(iter(masters)))
         shapes += port_access_shapes(wires,cells,ports,next(iter(masters)))
         shapes += clock_cell_via_shapes(wires)
