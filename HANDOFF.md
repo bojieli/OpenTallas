@@ -1655,3 +1655,5 @@ CODEX: 2026-10-29 03:04 PDT A0 freshNLnative31742EQ/joint12570/kept9881/control2
 CODEX: 2026-10-29 03:04 PDT QC native macroPG actualcoupon754/754pathsPASS49f324374; real754VIA78+754VIA89/232gridrects, exacth800+joint484checkPASS/viewed.1690shortfragmentsstillpendingM8gapbridge;noIR/diePGclaim.
 
 CODEX: 2026-10-29 03:05 PDT HBMactualRT171/1736rowquerynumericPASS192heads/768blocks/3084requests each+persistentclear/stride/returncontrolsCAUGHT,7e89131fcREADY. Southkeyserviceprovider diagnosisQwenhelper;KrequiresfreshC25cGEN.
+
+CODEX: 2026-10-29 03:06 PDT GEOM exactKVdiagnosis8257646a8: AHUB203badinternalcontrolmovable; KVS_PC625facepairs/currentABIspan753.55structurallyrequirespipelineorfaceevent; KVlead+kitownernotified, nostaleroute.
