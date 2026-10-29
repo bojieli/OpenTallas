@@ -3832,3 +3832,4 @@ FAILED [AUTOPILOT 2ce54bb5defe] 2026-10-28 17:32:43 PDT AUTOPILOT -> CORES-EARLY
     - Kit them from C24 sha 3ab76af4.
   - WAIT ON PLAN: the hnx_lane_x child kit and lanes_plain/programme_store (views now in C24 -> REBAL-11).
   - DEFAULT: COORD starts the HBM-CORES kit wave on the 22 ready cores; REBAL-11 takes (1); one type-reduction lane maps (2).
+- 2026-10-28 18:26 PDT [DIE-HBM-10] Correction to my 18:3x blockers RESULT. 22 cores have a plan view (6 LEF + 16 pins), not 19. The 16 pins-file cores are the 12 named, the 3 sfu_core_split3 and 1 pgslice_lg slice. The ready-to-kit list is unchanged.
