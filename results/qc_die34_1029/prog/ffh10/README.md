@@ -24,7 +24,7 @@ Launch (intel2 client log `~/dqc35k/prog_ffh10.otrun.log`):
 (started 11:31 PDT). Try 1 (oth-ubuntu-3944082) exit 9 before any stage: shell quoting of `--session "tc bc"`, fixed.
 
 ## 85.2-ps related pair (not addressed by this route)
-TT pair g_prog[1].g_r.u_hi_wd/q[*] -> SRAM g_prog[1].u_hi: signed -85.16 (capture SRAM clock EARLIER than the write-data
+TT pair g_prog[1].g_r.u_hi_wd/q[*] -> SRAM g_prog[1].u_hi: signed -85.16 (sign convention UNCHECKED: read as capture SRAM clock earlier than the write-data
 launch flops by 85 ps; 12 pairs 85.16-85.58 raw), CRPR 0.42 (CHECKED cand-2 signoff/tt/pair_skew.tsv). The kit tree was
 built with `OT_MSCTS_MACRO_EARLY = 20` (s7 "read-safe 20 ps earlier SRAM clock target"); the SRAM liberty carries no
 internal insertion attribute, only clk-related setup/hold/clk->q arcs. Balancing the u_hi tap against its write-data
@@ -36,4 +36,22 @@ own view arcs + measured wd-group arrival), one CTS+route.
 GRT stage (CHECKED kit_ffh10/run_route.log, GRT RC): measured FF vclk bind 369.88 (1392 pin-flop samples; bound 381.14,
 tol 40); two-mode before repair TT setup +265.29 / FF hold -2.10; ORFS repair at margin 10 inserted **51** hold buffers
 (cand-2 single-mode repair: 2,930) -> FF hold +10.01; ot_final_ff_converge pass 0: TT +265.29 / FF +6.32 / slew 0 / cap 0
--> PASS (clock frozen, geometry diff clean). DRT + routed signoff: see below.
+-> PASS (clock frozen, geometry diff clean). 
+ROUTED (unit oth-ubuntu-3964208-1793298688 exit 1 = signoff verdict, route rc 0, 11:31-11:46 PDT; CHECKED kit_ffh10/
+signoff/signoff.json, copy `signoff.json` here): **NOT SIGNED, one FAIL left**:
+- TT setup **+243.04** PASS | **FF hold -4.12 / 7 endpoints, TNS -13.53** FAIL (sdc frame -93.58 = raw IO, not the gate;
+  FF vclk reference measured pin-flop mean 370.49, 1392 samples)
+- related-pair skew TT/FF **78.41 / 70.86 PASS** (<=80; cand-2 85.16/75.72). Worst TT max-side pair still
+  u_hi_wd/q[164] -> SRAM g_prog[1].u_hi, now 76.16 (signed -76.16); min side pcap[815] -> p_q[303] 78.41
+- DRV slew TT/FF **0/0** PASS (cand-2 TT 3), cap 0, fanout PASS | DRC 0, antenna 0 (DRT 0 violations) | PG PASS |
+  **timing_modes PASS** (cand-2 FAIL) | sdc_lint PASS, face_guard PASS, clock endpoint coverage PASS
+- Worst hold path (signoff/ff/sta.log): u_twd0/q[446] (SE branch leaf, CLK 351.25) -> hold11186 BUFx2 -> _467_ INV ->
+  g_prog[0].g_r.u_hi_wd/q[190] (Elo branch leaf, CLK 377.02): zero-logic-class reg->reg, launch 25.8 ps earlier than
+  capture; arrival 409.68 vs required 413.79 (25 ps uncertainty + 12.10 lib hold).
+- GRT->routed hold loss on this route: converge +6.32 (selected RC) -> routed -4.12 = **10.44 ps** (> the 10-ps margin).
+  The ORFS GRT repair reached +10.01 on its RC, ot_final_ff_converge re-measured +6.32 on the kit RC file and passes at
+  >= 0 (it does not re-impose the margin).
+
+## 85.2-ps pair: now 78.41/70.86, inside the 80-ps gate
+The routed pair is inside 80 ps after this route (no tree change); the early-tap balance item is therefore NOT needed for
+the gate on this DB (information: 76.16 TT on the same u_hi_wd -> u_hi pair, 1.6 ps headroom on the min side 78.41).
