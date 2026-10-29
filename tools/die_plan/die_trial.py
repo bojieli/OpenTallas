@@ -641,6 +641,46 @@ def polyline_points(poly, fracs):
     return res, tot
 
 
+# DIE-QC-24 opt-in repeater leg rules (COORD 10-28 21:00; default off = byte-identical netlist/placement).
+# Root cause (trial15, results/die_qc24_1028): a region-DME leg whose L route crosses an A0 hard core (+halo) on a blocked
+# run shorter than route_um (480) is accepted as is; the evenly spaced repeater that lands inside the core is then moved by
+# site.nearest() to the closest core EDGE in ANY direction -- 28 repeaters went 146.8 um sideways (462 x 1162-um core, the
+# short way out is perpendicular to the leg), a 2 x 147-um wire spur the delay model never sees (+73 ps routed leg).
+# REP_ON_LEG (--rep-on-leg): a blocked repeater slides ALONG its own planned leg polyline to the nearest legal point
+# (between its upstream neighbour and the leg end), so the leg wire stays the planned wire; site.nearest only if the leg
+# has no legal point left.  REP_OFF_LEG_MAX_UM (--rep-off-leg-max UM): guard -- the kit FAILS if any leg repeater is
+# placed more than UM off its planned leg (Manhattan distance to the leg polyline / straight-leg bbox).
+REP_ON_LEG = False
+REP_OFF_LEG_MAX_UM = None
+
+
+def poly_slide(site, poly, f, lo, step=0.54):
+    """nearest legal point to arc fraction f ALONG the Manhattan polyline poly, searched on arc (lo, L - step]
+    -> (x, y, arc) or None"""
+    _, L = polyline_points(poly, [])
+    if L <= 0:
+        return None
+    t0 = f * L
+    n = int(L / step) + 1
+    for s in range(0, n + 1):
+        for t in ((t0 + s * step, t0 - s * step) if s else (t0,)):
+            if lo < t <= L - step:
+                q, _ = polyline_points(poly, [t / L])
+                q = (round(q[0][0], 3), round(q[0][1], 3))
+                if site.legal(q):
+                    return q[0], q[1], t
+    return None
+
+
+def off_leg_um(c, poly):
+    """Manhattan distance of point c to the leg polyline (a non-axis segment counts as its bbox: any L route in it)"""
+    def d(a, b):
+        cx = min(max(c[0], min(a[0], b[0])), max(a[0], b[0]))
+        cy = min(max(c[1], min(a[1], b[1])), max(a[1], b[1]))
+        return abs(c[0] - cx) + abs(c[1] - cy)
+    return min(d(a, b) for a, b in zip(poly, poly[1:]))
+
+
 def straight_leg_span(site, p, nd, nrep):
     """longest unrepeated span (um) of the default straight placement of a leg (repeaters snapped by site.nearest)"""
     ax = "x" if abs(nd["x"] - p["x"]) >= abs(nd["y"] - p["y"]) else "y"
@@ -2000,6 +2040,7 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
     par_in = {}
     cells, place, wires = [], [], []
     node_buf, parent_of = {}, {}
+    off_leg = []
     k = 0
 
     def net(i):
@@ -2056,6 +2097,9 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
                 raise ValueError(f"inv2: snake leg of node {i} has an odd stage count")
             src = f"{net(nd['parent'])}"
             prev_inst = node_buf[nd["parent"]]
+            on_leg = REP_ON_LEG and poly is not None and not nd.get("snake")
+            Lp = polyline_points(poly, [])[1] if on_leg else 0.0
+            arc = 0.0
             for j in range(nrep):
                 f = (j + 1) / (nrep + 1)
                 x = p["x"] + (nd["x"] - p["x"]) * f
@@ -2064,7 +2108,13 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
                 if poly is not None:
                     x, y = pts[j]
                     if not site.legal((x, y)):
-                        x, y = site.nearest((x, y))
+                        q = poly_slide(site, poly, f, arc) if on_leg else None
+                        if q is not None:
+                            x, y, arc = q
+                        else:
+                            x, y = site.nearest((x, y))
+                    elif on_leg:
+                        arc = max(arc, f * Lp)
                 elif site is not None:
                     x, y = site.nearest((x, y), "x" if abs(nd["x"] - p["x"]) >= abs(nd["y"] - p["y"]) else "y")
                 o = f"rn{i}_{j}"
@@ -2074,6 +2124,11 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
                 parent_of[inst] = prev_inst
                 prev_inst = inst
                 src = o
+                if REP_OFF_LEG_MAX_UM is not None:
+                    leg = poly if poly is not None else [(p["x"], p["y"]), (nd["x"], nd["y"])]
+                    d = off_leg_um((x, y), leg)
+                    if d > REP_OFF_LEG_MAX_UM:
+                        off_leg.append((round(d, 1), inst, nd.get("dme")))
             parent_of[node_buf[i]] = prev_inst
         if clock_cell == "inv":
             pp = (1 if even else 0) if nd["parent"] is None else nodes[nd["parent"]]["inv_parity"]
@@ -2083,6 +2138,10 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
         cells.append(f"  {CELL} {node_buf[i]} (.A({src}), .Y({net(i)}));")
         wires.append(net(i))
         place.append((node_buf[i], nd["x"], nd["y"]))
+    if off_leg:
+        off_leg.sort(reverse=True)
+        raise ValueError(f"--rep-off-leg-max {REP_OFF_LEG_MAX_UM:g}: {len(off_leg)} leg repeaters placed off their planned "
+                         f"leg in {len({r for _, _, r in off_leg})} regions, worst {off_leg[:5]}")
     tap_ports = []
     for i, nd in sorted(nodes.items()):
         for (part, port, x, y) in nd["taps"]:
@@ -4219,6 +4278,13 @@ def main(argv=None):
                         "joined at its root (the merge point moves up, so one elongation on the shared glue root leg "
                         "replaces a snake on every low glue subtree); stats report snake legs longer than UM. "
                         "Default: off (byte-identical trees)")
+    k.add_argument("--rep-on-leg", action="store_true",
+                   help="DIE-QC-24 opt-in (COORD 10-28 21:00): a leg repeater whose evenly spaced point on a routed/detour "
+                        "leg is not a legal site slides ALONG that leg to the nearest legal point (no sideways spur; trial15 "
+                        "slid 28 repeaters 146.8 um off-leg to a core edge). Default off: site.nearest (byte-identical)")
+    k.add_argument("--rep-off-leg-max", type=float, default=None, metavar="UM",
+                   help="DIE-QC-24 opt-in guard (COORD 10-28 21:00): the kit FAILS if any leg repeater is placed more than "
+                        "UM off its planned leg (e.g. 50). Default: no check")
     k.add_argument("--clock-cell", choices=("buf", "inv", "inv2"), default="buf",
                    help="DIE-QC-11 opt-in: 'inv' builds the die clock tree from CKINVDCx16 (BUFx24 footprint) so rise/fall "
                         "asymmetry cancels stage by stage (duty), with one parity inverter at odd-parity taps; 'inv2' = even inverter "
@@ -4271,6 +4337,9 @@ def main(argv=None):
         if not getattr(a, "region_dme_snake", None):
             raise SystemExit("--region-dme-snake-cap needs --region-dme-snake")
         DME_SNAKE_CAP_UM = float(a.region_dme_snake_cap)
+    global REP_ON_LEG, REP_OFF_LEG_MAX_UM
+    REP_ON_LEG = bool(getattr(a, "rep_on_leg", False))
+    REP_OFF_LEG_MAX_UM = getattr(a, "rep_off_leg_max", None)
     if a.cmd == "readout":
         print("\n".join(clock_edge_readout(Path(a.ctree_v).read_text(), a.path, a.period, a.cells, a.tap_slew,
                                            a.prefix)))
