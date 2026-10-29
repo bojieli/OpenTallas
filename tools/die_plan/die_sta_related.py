@@ -538,6 +538,9 @@ def apply_clock_cal(meta, taps, corner, clock_cell, clock_cal, proof=None):
         raise SystemExit(f"--clock-cal {clock_cal!r}: one of {CLOCK_CALS}")
     if clock_cal == "none":
         return meta, taps
+    if meta.get("clock_components_basis") and clock_cal in ("spice_edge", "spice_cell"):
+        from clock_components import apply
+        return apply(meta, taps, corner, clock_cal)
     f = spice_cal_factor(corner, clock_cell)
     fe = None
     if clock_cal in ("spice_edge", "spice_buf_edge") and clock_cell == "inv":
