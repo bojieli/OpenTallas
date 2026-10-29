@@ -28,6 +28,10 @@ KV_CODEC=${D2D_KV_CODEC:-$(python3 -c "import sys; sys.path[:0]=['tools/qwen_lay
 MU_ARGS=()
 [ "${D2D_ROPE:-0}" = 1 ] && MU_ARGS+=(--rope)
 [ -n "${D2D_HEAD_PREPARE_EDGES:-}" ] && MU_ARGS+=(--head-prepare-edges "$D2D_HEAD_PREPARE_EDGES")
+# One explicit source/profile value reaches BOTH pair-image generation and the
+# native KV calendar rebuild; unset retains the historical P1 capture law.
+COMPUTE_RECORD_TXD=${D2D_COMPUTE_RECORD_TXD:-${OT_KV_COMPUTE_RECORD_TXD:-}}
+[ -n "$COMPUTE_RECORD_TXD" ] && MU_ARGS+=(--compute-record-txd "$COMPUTE_RECORD_TXD")
 [ "${D2D_MU:-0}" = 1 ] && MU_ARGS+=(--mu)
 # KV-DCAL2 10-19 (KV-EMB2): D2D_CTX_HOST_REQ=<measured HOST RESULT->context edges> moves the token-run CONTEXT slot after
 # RESULT(n) reaches the KV HOST; D2D_EMB_FILL=<fork + 2 + join last + 1> fails closed on a short fill budget
