@@ -770,5 +770,30 @@
   ],
   "source": "HBM-CORES-R8 10-27: NE-hub q2n2 body cut rtl/hbm_accel/cores_split/ot_hfd_coll_q2n2_hard_v8g/ot_hfd_coll_q2n2_body_core.sv @97b0810d61 (rest.sh: rest_extract + rest_wrap of ot_hfd_coll_q2_hard_v8g_s #(NLINK 2, TP 192, AR_ITER 1, ROWS 256, VM_RT 81) -DOT_COLL_ISSUER256_NATIVE32 minus u_ring/u_reduce/u_vmasm/u_writer; flat: 2 modules + 6x 1r1w_256x256, 8x 1r1w_64x512, 5x 1rw_256x64 SRAMs); 80 RTL buses == the planU6b pins except the 6 superset-face input copies (*__E)",
   "source_commit": "97b0810d615ae4f7847fed52d3a4a286456ee2a9"
+ },
+ "ot_hbm_idx_selector_static_sel": {
+  "top": "ot_hbm_idx_selector_static_sel",
+  "files": [
+   "rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_selector_compact.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv"
+  ],
+  "defines": [],
+  "params": {
+   "STRUCT": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "HBM-CORES-KITS-13 10-29: opt-in STRUCT=1 selector recipe = results/hbm_selector_1028/recipe_struct.json (Codex a6c6b641f/75b86a6d9, exact gate results/hbm_selector_1028) with every file pinned at origin/main a4453d4004 (includes 48c71f872 single-driver hist fix, ROOT-MERGE 2e4caf7a9); canonical recipes_other key ot_hbm_idx_selector_static_sel__600.048x450.36 (STRUCT=0) untouched; no pin/edge/12-SRAM change",
+  "source_commit": "a4453d4004d922f0df236e6126c0e78767a4f51a",
+  "view_cell": "ot_hbm_idx_selector_static_sel",
+  "view_kind": "SYNTH",
+  "view_port_bits": 4783,
+  "files_at": {
+   "rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv": "a4453d4004d922f0df236e6126c0e78767a4f51a",
+   "rtl/hbm_accel/index/ot_hbm_idx_selector_compact.sv": "a4453d4004d922f0df236e6126c0e78767a4f51a",
+   "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv": "a4453d4004d922f0df236e6126c0e78767a4f51a"
+  }
  }
 }
