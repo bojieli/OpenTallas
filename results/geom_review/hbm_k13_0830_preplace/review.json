@@ -1,0 +1,26 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "placement only; no CTS/GRT/DRT approval",
+  "image": "preplace_montage.png",
+  "findings": [
+    "Viewed all13 parent-pin andclock/reset island frames. Compact GQ andscalar blocks have no macro walls; wide buses enter abutting plan faces.",
+    "TKM tile/terminal have symmetric5island sites with open internal routing area.",
+    "VP4 has2columns\u00d75SRAMs with preserved central verticalchannel anddistributed islands; preflight measuredchannels>=10.8um. CTLX1SRAM retains logic area atE andbelow.",
+    "Existingclock/data paths andPG continuity mustbe inspected onactualplacement beforeCTS/route; noSTAclaim frompreplacepicture."
+  ],
+  "kits": [
+    "ot_hbm_argmax_static_sw_vm_r2_efae72feb6e7-_k13",
+    "ot_hbm_xp_aq_tree13_fmt_ed62ddb93a97-_k13",
+    "ot_hgi_coll_gq_issue_5c09aa5b506c-_k13_5c09aa",
+    "ot_hgi_coll_gq_issue_c8c240c460d3-_k13_c8c240",
+    "ot_hgi_coll_gq_land_4ff7e1fecda9-_k13_4ff7e1",
+    "ot_hgi_coll_gq_land_859e540fa749-_k13_859e54",
+    "ot_hgi_coll_gq_land_ab9f3b77a0f0-_k13_ab9f3b",
+    "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap_b05ff385dffe-_k13",
+    "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap_a83e190d54f7-_k13",
+    "ot_hgi_dma_back_static_vp4_banks_cp_d0c75d7ab20a-_k13m",
+    "ot_hgi_qw_dec_03c4f6c37aa2-_k13",
+    "ot_hgi_sm_xload_cl2_bdring_0c99d1c898e0-_k13",
+    "ot_hgi_sm_xload_cl2_ctlx_a49447763f6a-_k13m"
+  ]
+}
