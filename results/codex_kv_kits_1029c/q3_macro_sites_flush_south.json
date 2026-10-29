@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.kv.macro_sites.v1",
+ "core": "qkd_ectlk_q3__216x172.8",
+ "note": "Successor for measured q3 GRT-0183 south std-cell pocket; first SRAM lowered to core edge y4.32, no RTL/pin/cycle changes.",
+ "sites": {
+  "ot_sram_1r1w_128x256_m1_r2c2": [
+   [
+    15.552,
+    4.32,
+    "MX"
+   ],
+   [
+    15.552,
+    127.404,
+    "R0"
+   ]
+  ]
+ }
+}

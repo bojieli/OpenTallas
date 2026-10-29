@@ -1,0 +1,7 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "ONE native clock build plus CTS/GRT50 prototype; no DRT",
+ "picture_viewed": "results/codex_kv_kits_1029c/clock/q3_plan4/q3_native_clock_macro_overlay.png",
+ "findings": "Actual5490namedclocktargets(5488FF+2SRAM),410drivers/9stages on original two-SRAM floorplan. Existing447Sfaceflops and every dataFF/pin/macro preserved. Source-aware legaldriver placement freezes every original occupied footprint,2W/2S M4/M5clockwires followexistingchannels. Oneexistingrepeater rerouted to clear macrocorner withoutaddedstages. Alllegs\u22641.10Manhattan, fullsinkcoverage/driverdisplacement\u22642/PGPASS. Sparsecentral/E branches and smallS/W local leaves avoid old50.8ps strip detour; tightperimeter still needsactualGRTclock+signalcheck. ModelTT252.70window11.02 FF191.66window12.81 arepredictions, notactualclosure.",
+ "independent": "/root/clock personallyviewed and concurred same scope; source lane results/geom_review/kv_q3_clock_1029.json"
+}

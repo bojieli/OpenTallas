@@ -1,0 +1,54 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_GRT_DECK layers M2-M5 adjustment 0.25 iterations 50
+[WARNING GRT-0300] Timing is not available, setting critical nets percentage to 0.
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M5
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 77547
+[INFO GRT-0019] Found 0 clock nets.
+[WARNING GRT-0281] Net ck[0] has a large fanout of 24868 terminals.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 40
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal    1378100        984146          28.59%
+M3         Vertical      1603939       1191672          25.70%
+M4         Horizontal    1236046        918986          25.65%
+M5         Vertical      1185704        878419          25.92%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 621880
+[INFO GRT-0198] Via related Steiner nodes: 15241
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 787212
+[INFO GRT-0112] Final usage 3D: 3630314
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2              984146        380011           38.61%             0 /  0 /  0
+M3             1191672        512922           43.04%             0 /  0 /  0
+M4              918986         76914            8.37%             0 /  0 /  0
+M5              878419        298831           34.02%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total          3973223       1268678           31.93%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 878095 um
+[INFO GRT-0014] Routed nets: 122485
+[INFO GRT-0303] Global routing runtime = 00:00:16
+OT_GRT_DONE

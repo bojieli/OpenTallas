@@ -1,0 +1,7 @@
+{
+ "verdict": "PASS-COND_ONE_DPL_AND_DATA_GRT50_NO_CTS_NO_DRT",
+ "picture": "input_buffer_plan.png",
+ "fixed": "all original cells other than352 source-identified input buffers; all FF/pin/clock/RTL/master/net unchanged",
+ "findings": "Data input buffers leave the South ownership fallback and sit beside actual first FFs, eliminating E-face down-and-back bus routing. All exact footprints packed against full actual occupancy inclTAP. Predicted column0.802 remains above0.6 advisory and below1hard; actualdataGRT0 required before continuation.",
+ "r2r_um": 349.22
+}

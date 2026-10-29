@@ -1,0 +1,7 @@
+{
+ "verdict": "PASS-COND_ONE_PLACE_ONLY",
+ "picture": "astk_native_plan.png",
+ "findings": "Four producer zones align with their named boundary pin groups, separate South control band and central clock/reset. No macro walls, wide traffic stays in zone. Need actual placement reach/row audit after first place; no CTS/route admitted.",
+ "source_qualification": "4800matchingedges/0diff,mutant4798caught;1692/1692ports preflight;freshLECpending",
+ "cycles_added_by_this_trial": 0
+}
