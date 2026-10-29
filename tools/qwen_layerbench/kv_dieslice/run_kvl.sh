@@ -15,8 +15,8 @@ I=$(readlink -f ${IMG:?IMG=<boot image dir: frames.hex expect.txt epoch.txt>})
 PM=$(readlink -f ${PHY_MAP:-$(dirname $(readlink -f $B))/../phy_slice_map.json})
 [ -f "$PM" ] || { echo "run_kvl: no generated PHY slice map $PM"; exit 2; }
 mkdir -p $O/$N/vecl; cd $O/$N
-if [ -n "${KV_DCAL_VIAMAP:-}" ]; then
-  python3 -I "$H/runtime_rom.py" --build "$(dirname "$(dirname "$(readlink -f "$B")")")" --runtime . --viamap "$KV_DCAL_VIAMAP" || exit 2
+if [ -f "$(dirname "$(dirname "$(readlink -f "$B")")")/vl.f" ]; then
+  python3 -I "$H/runtime_rom.py" --build "$(dirname "$(dirname "$(readlink -f "$B")")")" --runtime . ${KV_DCAL_VIAMAP:+--viamap "$KV_DCAL_VIAMAP"} || exit 2
 fi
 : > preload.txt; : > preload.log
 for n in $(seq 0 35); do
