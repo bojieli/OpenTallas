@@ -1,0 +1,57 @@
+{
+  "checks": [
+    {
+      "name": "kind0_ln3_exact",
+      "returncode": 1,
+      "accepted": false
+    },
+    {
+      "name": "kind0_ln3_mutant",
+      "returncode": 1,
+      "accepted": true
+    },
+    {
+      "name": "kind0_ln7_exact",
+      "returncode": 1,
+      "accepted": false
+    },
+    {
+      "name": "kind0_ln7_mutant",
+      "returncode": 1,
+      "accepted": true
+    },
+    {
+      "name": "kind1_ln3_exact",
+      "returncode": 1,
+      "accepted": false
+    },
+    {
+      "name": "kind1_ln3_mutant",
+      "returncode": 1,
+      "accepted": true
+    },
+    {
+      "name": "kind1_ln7_exact",
+      "returncode": 1,
+      "accepted": false
+    },
+    {
+      "name": "kind1_ln7_mutant",
+      "returncode": 1,
+      "accepted": true
+    },
+    {
+      "name": "delay_wire_exact",
+      "returncode": 1,
+      "accepted": false
+    },
+    {
+      "name": "delay_wire_mutant",
+      "returncode": 1,
+      "accepted": true
+    }
+  ],
+  "pass_all": false,
+  "added_cycles": 0,
+  "source_requirements": "SIDE=0 at enumerated KIND0/1 paths, D=RESET=0 at enumerated delay paths; full KIND2 is explicitly rejected"
+}

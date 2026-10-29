@@ -1,0 +1,53 @@
+[
+  {
+    "inst": "su_(?:NW|NE)[0-3]\\.u_slice\\.g_lane\\[(?:[0-9]|[12][0-9]|3[01])\\]\\.g_pr\\.u_lane",
+    "module": "ot_hnx_su_pinreg_noside",
+    "reason": "Actual selected eight-SU KIND0/1 constant SIDE boundary only; no FULL capability claim; zero added cycles",
+    "port_bit_constants": {
+      "side_y": {
+        "0": "0",
+        "1": "0",
+        "2": "0",
+        "3": "0",
+        "4": "0",
+        "5": "0",
+        "6": "0",
+        "7": "0",
+        "8": "0",
+        "9": "0",
+        "10": "0",
+        "11": "0",
+        "12": "0",
+        "13": "0",
+        "14": "0",
+        "15": "0",
+        "16": "0",
+        "17": "0",
+        "18": "0",
+        "19": "0",
+        "20": "0",
+        "21": "0",
+        "22": "0",
+        "23": "0",
+        "24": "0",
+        "25": "0",
+        "26": "0",
+        "27": "0",
+        "28": "0",
+        "29": "0",
+        "30": "0",
+        "31": "0"
+      }
+    }
+  },
+  {
+    "inst": "hb_idx__s_(?:NW|NE|SW|SE)\\.scorer\\.ge\\[[01]\\]\\.gc\\[[0-3]\\]\\.leaf\\.core\\.u_qlate",
+    "module": "ot_hnx_delay_wire",
+    "reason": "Actual D0 RESET0 delay is exactly a combinational wire; removes unused clock/reset pins",
+    "port_bit_constants": {
+      "rst_n": {
+        "0": "0"
+      }
+    }
+  }
+]
