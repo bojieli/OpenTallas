@@ -349,3 +349,42 @@ def test_replay_compare_only_does_not_run_die_trial(tmp_path, monkeypatch):
     monkeypatch.setattr(O.subprocess, "call", lambda *a, **k: pytest.fail("die_trial must not run"))
     assert O.main(["replay", str(HERE / "configs" / "qc_trial25.yaml"), "--out", str(tmp_path / "o"),
                    "--compare-only"]) == 2          # no kit/clock dir -> refused, nothing run
+
+
+def test_region_actual_max_maps_to_die_trial_flag_and_default_off():
+    c = cfg("s81_go16")
+    c["region"]["only"] = None
+    assert "--region-dme-actual-max" not in O.kit_argv(c, "OUT")
+    c["region"]["actual_max"] = 405.0
+    assert flags(O.kit_argv(c, "OUT"))["--region-dme-actual-max"] == "405"
+
+
+def test_refit_registers_a_per_stack_entry_the_config_then_accepts(tmp_path):
+    sys.path.insert(0, str(HERE.parent / "die_plan"))
+    import test_fit_dme_stage_cal as TF
+    tp, pre = TF._tree_and_arr(tmp_path)
+    rp = tmp_path / "reg.json"
+    rp.write_text(O.REGISTRY.read_text())
+    argv = ["refit", str(HERE / "configs" / "s81_go16.yaml"), "--registry", str(rp), "--tree", str(tp),
+            "--arr-prefix", str(pre), "--id", "inv2_ndr_refit_test", "--tap", "0.042", "5e-6",
+            "-o", str(tmp_path / "cal.json"), "--write"]
+    assert O.main(argv) == 0
+    e = [x for x in json.loads(rp.read_text())["entries"] if x["id"] == "inv2_ndr_refit_test"][0]
+    assert e["key"]["cell"] == O.CELLS["inv2"] and e["key"]["clock_rc"] == "ndr" and e["key"]["corners"] == ["TT", "FF"]
+    assert e["fit"]["TT"]["legs"] == 40 and e["fit"]["TT"]["rms_built_ps"] is not None
+    assert (tmp_path / "cal.built_with.json").is_file()      # old model of this config priced against the routed legs
+    c = cfg("s81_go16")
+    c["stage_model"]["entry"] = "inv2_ndr_refit_test"
+    assert O.stage_check(c, O.load_registry(rp))[0]
+    with pytest.raises(O.ConfigError):                      # duplicate id refused
+        O.main(argv)
+
+
+def test_duty_clock_cal_follows_the_cell_coord_1029():
+    sys.path.insert(0, str(HERE.parent / "die_plan"))
+    import clock_duty as CD
+    assert CD.gate_clock_cal("inv2") == "spice_edge" and CD.gate_clock_cal("inv") == "spice_edge"
+    assert CD.gate_clock_cal("buf") == "spice_cell" and CD.gate_clock_cal("mixed") == "spice_cell"
+    assert CD.gate_clock_cal("inv2", "spice") == "spice"     # explicit choice kept
+    with pytest.raises(ValueError):
+        CD.gate_clock_cal("buf", "spice_buf_edge")
