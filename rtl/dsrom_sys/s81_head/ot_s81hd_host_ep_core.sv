@@ -4,8 +4,8 @@
 // context_valid and stripped local_ring; this block never invents admission.
 // The physical and HBC fault paths return a STATUS frame to the controller.
 // An overlapping arrival is a schedule fault, never a stall or hidden drop.
-module ot_s81hd_host_frame_mux #(parameter integer MUT=0,HBC_SCOPE=0)(
- input wire ck,rst_n,context_valid,boot_control_slot,
+module ot_s81hd_host_frame_mux #(parameter integer MUT=0)(
+ input wire ck,rst_n,context_valid,
  input wire host0_v,host1_v,input wire[552:0]host0_d,host1_d,
  input wire[1103:0]local_ring,input wire[16:0]source_fault,
  input wire ctl_v,input wire[552:0]ctl_d,
@@ -15,13 +15,8 @@ module ot_s81hd_host_frame_mux #(parameter integer MUT=0,HBC_SCOPE=0)(
  output reg[16:0]fault
 );
  wire hf=host0_v&&host0_d[552]&&host0_d[3:0]==7;
- // Default0 preserves the original shared namespace. Candidate1 uses the
- // existing one-shot HEAD BOOT dates; candidate2 uses reserved header bit528
- // and requires a coordinated wire-contract decision before adoption.
- wire hbc_record=hf&&((HBC_SCOPE==0)?1'b1:(HBC_SCOPE==1)?boot_control_slot:host0_d[528]);
- wire bypass_data=hf&&(HBC_SCOPE!=0)&&!hbc_record;
- assign from_prev={571'd0,host0_d[527:16],8'd0,4'd0,5'd1,3'd6,hbc_record};
- wire fw_record=(local_ring[0]&&local_ring[3:1]==6)||bypass_data;
+ assign from_prev={571'd0,host0_d[527:16],8'd0,4'd0,5'd1,3'd6,hf};
+ wire fw_record=local_ring[0]&&local_ring[3:1]==6;
  wire fw=fw_record&&context_valid;
  wire cs=host1_v&&host1_d[552]&&host1_d[3:0]==6;
  wire cfg=cs&&(context_valid||MUT==1);
@@ -31,8 +26,7 @@ module ot_s81hd_host_frame_mux #(parameter integer MUT=0,HBC_SCOPE=0)(
  reg[1:0]rx_gap;
  wire status_due=(|(fault&~reported))&&rx_gap==0&&!fw&&!cfg;
  wire rx_request=fw||cfg||status_due;
- wire[511:0]forward_payload=bypass_data?host0_d[527:16]:local_ring[532:21];
- wire[552:0]forward_frame={1'b1,24'd0,forward_payload,8'd0,2'd0,2'd0,4'd7} ^ (MUT==3 ? (553'd1<<527) : 553'd0);
+ wire[552:0]forward_frame={1'b1,24'd0,local_ring[532:21],8'd0,2'd0,2'd0,4'd7} ^ (MUT==3 ? (553'd1<<527) : 553'd0);
  wire[552:0]fault_frame={1'b1,519'd0,fault,12'd0,4'd8};
  assign ctl_rx_v=rx_request&&rx_gap==0;
  assign ctl_rx_d=fw?forward_frame:cfg?host1_d:fault_frame;
@@ -58,8 +52,6 @@ endmodule
 module ot_s81hd_host_ep_core #(
  parameter[1:0]CH_B=2'b11,
  parameter integer LOCAL_STAGE=255,LOCAL_RANK=4,PHASE_BOUND=0,
- parameter integer HBC_VARIABLE_WORDS=0,
- parameter integer HBC_COMMAND_SCOPE=0,
  parameter integer MUT=0,
  parameter[63:0]CLOCK_RESET_ID=0,
  parameter[47:0]BOOT_HEADER_EDGE=48'hffffffffffff,
@@ -93,7 +85,7 @@ module ot_s81hd_host_ep_core #(
  wire[514:0]f_host;wire[52:0]ks;wire[2:0]ks_slot;wire[5:0]arm_mask;wire arm_commit;
  wire[47:0]receiver_edge,boot_edge;
  dsdv_hostb_stage_hbc #(.ENABLE(1),.LOCAL_STAGE(LOCAL_STAGE),.LOCAL_RANK(LOCAL_RANK),
-  .PHASE_BOUND(PHASE_BOUND),.VARIABLE_WORDS(HBC_VARIABLE_WORDS),.RETURN_LOCAL(0),.RX_ONLY(1),.HOST_FRAMES(1),.CLOCK_RESET_ID(CLOCK_RESET_ID),
+  .PHASE_BOUND(PHASE_BOUND),.RETURN_LOCAL(0),.RX_ONLY(1),.HOST_FRAMES(1),.CLOCK_RESET_ID(CLOCK_RESET_ID),
   .BOOT_HEADER_EDGE(BOOT_HEADER_EDGE),.BOOT_COMMIT_EDGE(BOOT_COMMIT_EDGE))u_hbc(
   .ck(ck),.rst_n(rst_n),.job_active(job_active_pin),.starter_armed(start_i),
   .from_prev(from_prev),.local_ro(local_ro),.return_ro(local_ro),
@@ -110,13 +102,7 @@ module ot_s81hd_host_ep_core #(
   (|return_fault),(|hbc_stage_fault),(|hbc_fault),crtxf,crxf,
   3'd0,lf1,lf0};
  wire[16:0]host_fault;
- // HEAD is one-shot (ALLOW_RELOAD remains0 in u_hbc). Its fixed LOAD/body/
- // COMMIT dates may delimit the control namespace without changing any layer
- // or warm-reload HBC parent. No readiness signal chooses these dates.
- wire boot_control_slot=(boot_edge==BOOT_HEADER_EDGE)||(boot_edge==BOOT_HEADER_EDGE+48'd4)||
-                        (boot_edge==BOOT_COMMIT_EDGE);
- ot_s81hd_host_frame_mux #(.MUT(MUT),.HBC_SCOPE(HBC_COMMAND_SCOPE))u_mux(.ck(ck),.rst_n(rst_n),.context_valid(ctxv),
-  .boot_control_slot(boot_control_slot),
+ ot_s81hd_host_frame_mux #(.MUT(MUT))u_mux(.ck(ck),.rst_n(rst_n),.context_valid(ctxv),
   .host0_v(lv[0]),.host1_v(lv[1]),.host0_d(ld[552:0]),.host1_d(ld[1105:553]),
   .local_ring(to_local),.source_fault(source_fault),.ctl_v(cv),.ctl_d(cd),
   .from_prev(from_prev),.ctl_rx_v(rxv),.ctl_rx_d(rxframe),

@@ -63,6 +63,8 @@ def compile_entry(inventory, job, timing):
     command_scope=uint(timing.get("hbc_command_scope",0),2,"HBC command scope")
     if command_scope>2:
         raise ValueError("unknown HBC command namespace")
+    if command_scope or words!=417:
+        raise ValueError('variable HOST book and namespace alternatives are unadopted; retain current417 ABI')
     identity = int.from_bytes(hashlib.sha256(json.dumps(dict(timing=timing, stage=stage, rank=rank),
                                                        sort_keys=True).encode()).digest()[:8], "little") or 1
     # The affine book is HBC1's existing context format. HOST_FRAMES1 does
@@ -89,8 +91,6 @@ def compile_entry(inventory, job, timing):
               dict(lane=0, edge=launch+4, frame=frame(body), kind="HBC_BODY"),
               dict(lane=0, edge=zero+commit-t["peer_to_hbc_input"],
                    frame=frame(envelope(1,1,0,commit)), kind="HBC_COMMIT")]
-    if command_scope==2:
-        for record in frames:record['frame'] |= 1<<528
     context_edge = zero + commit + t["commit_to_context_valid"]
     next_csr = slot(context_edge + period)
     values = {0:uint(job["plen"],21,"plen"),1:uint(job["glen"],21,"glen"),2:rank,
@@ -134,8 +134,6 @@ def compile_entry(inventory, job, timing):
         resident=start=issue=None
     params=dict(LOCAL_STAGE=stage,LOCAL_RANK=rank,PHASE_BOUND=1,CLOCK_RESET_ID=identity,
                 BOOT_HEADER_EDGE=header,BOOT_COMMIT_EDGE=commit)
-    if words!=417:params['HBC_VARIABLE_WORDS']=1
-    if command_scope:params['HBC_COMMAND_SCOPE']=command_scope
     return dict(schema="opentallas.head.provider_entry.v1", scope="CURRENT_PROVIDER_ENTRY_ONLY",
                 full_head_token=False, production_transport_qualified=timing.get("scope")=="CURRENT_DIE_TRANSPORT",
                 authority=dict(start_producer="@die.start", start_global_edge=start,
