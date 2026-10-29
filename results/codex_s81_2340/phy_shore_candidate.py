@@ -17,7 +17,7 @@ for part in ('lk_ES0','lk_ES1'):
   for slot in t['ft_slots']:
    e=next(x for x in est['slots'] if x['name']==slot['name']);slot['stations']=e['stations'];slot['bit_site_cell_um']=[1.08,.27]
    slot['bit_sites_um']=[[[round((c[0]+(bit%16-7.5)*1.08)/.054)*.054,round((c[1]+(bit//16-15.5)*.27)/.27)*.27] for bit in range(slot['width']+1)] for c in e['bank_centres_um']]
-  t['die_ft_bands']=[dict(dir='EW',span_um=[0,32.4],layers=['M4','M5','M6','M7'],die_share=.8),dict(dir='NS',span_um=[0,32.4],layers=['M4','M5','M6','M7'],die_share=.8)]
+  t['die_ft_bands']=[dict(dir='EW',span_um=[0,32.4],layers=['M4','M5','M6','M7'],die_share=.8),dict(dir='NS',span_um=[0,est['domain_um'][0]],layers=['M4','M5','M6','M7'],die_share=.8)]
   t['note']+='; FT0+6cycles and FT1+1cycle, explicit bit sites; .8 W/S routing reservation proposed, partition complement not yet generated'
  raw['partition_types'][new]=t
  for p in raw['partitions']:
@@ -28,7 +28,7 @@ P=S.Plan(raw)
 def box(part,r):
  a=P.to_die(part,r[:2]);b=P.to_die(part,r[2:]);return [min(a[0],b[0]),min(a[1],b[1]),max(a[0],b[0]),max(a[1],b[1])]
 for part in ('lk_ES0','lk_ES1'):
- d=next(d for d in raw['die']['pg']['domains'] if d['name']=='phy_'+part);io=next(d for d in raw['die']['io'] if d['part']==part and d['iface']=='serdes');d['rect_um']=box(part,est['domain_um']);d['phy_macro_um']=box(part,est['macro_um']);d['bumps']['rect_um']=d['phy_macro_um'];d['core_strip_um']=[box(part,r) for r in ([0,0,2885.76,32.4],[0,32.4,32.4,1084.16],[2768.16,32.4,2885.76,1084.16],[0,1084.16,2885.76,1226.88])];io['rect_um']=d['phy_macro_um'];io['sites']=IO.count_sites(io['rect_um'],io['pitch_um'],io.get('bump_exclude_um',()))
+ d=next(d for d in raw['die']['pg']['domains'] if d['name']=='phy_'+part);io=next(d for d in raw['die']['io'] if d['part']==part and d['iface']=='serdes');d['rect_um']=box(part,est['domain_um']);d['phy_macro_um']=box(part,est['macro_um']);d['bumps']['rect_um']=d['phy_macro_um'];d['core_strip_um']=[box(part,r) for r in ([0,0,2885.76,est['domain_um'][1]],[0,est['domain_um'][1],est['domain_um'][0],est['domain_um'][3]],[est['domain_um'][2],est['domain_um'][1],2885.76,est['domain_um'][3]],[0,est['domain_um'][3],2885.76,1226.88])];io['rect_um']=d['phy_macro_um'];io['sites']=IO.count_sites(io['rect_um'],io['pitch_um'],io.get('bump_exclude_um',()))
 P=S.Plan(raw)
 # Compare uncomposed predecessor to avoid counting removed landing cycles.
 base,_=m.uncompose(json.load(open(sys.argv[1])));B=S.Plan(base);diff={n:P.lane_natural(n)['cycles']-B.lane_natural(n)['cycles'] for n in P.lanes};diff={n:v for n,v in diff.items() if v}

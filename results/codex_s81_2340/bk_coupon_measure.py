@@ -1,7 +1,7 @@
 import json,sys
 from pathlib import Path
 sys.path.insert(0,'tools/die_plan');import die_sta_related as S
-b=Path(sys.argv[1]);target=json.load(open(b/'clock/targets.json'));result=dict(source=str(b),routing='actual2W2S(.08width/.08spacing) M8/M9GRT50+PGobstructions',source_mismatch='stagefit calibratedold1x;NDRmayrequirefreshfit',corners={})
+b=Path(sys.argv[1]);target=json.load(open(b/'clock/targets.json'));result=dict(source=str(b),routing='actual2W2S(.08width/.08spacing) M8/M9GRT50+PGobstructions',source_mismatch=sys.argv[3] if len(sys.argv)>3 else 'stagefit calibratedold1x;NDRmayrequirefreshfit',corners={})
 for c in ('TT','FF'):
  rows={}
  for l in (b/f'out_{c}'/f'arr_{c}.txt').read_text().splitlines():

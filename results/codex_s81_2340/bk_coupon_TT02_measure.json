@@ -1,0 +1,905 @@
+{
+  "source": "/srv/opentallas-scratch/claude/codex-s81-2340/bk_dme_coupon_TT02",
+  "routing": "actual2W2S(.08width/.08spacing) M8/M9GRT50+PGobstructions",
+  "source_mismatch": "Actual2W2S local late fit; TT-only target basis; remaining analytic error measured, no global qualification",
+  "corners": {
+    "TT": {
+      "taps": 51,
+      "shared_scale": 0.9324,
+      "raw_effective_window_ps": 95.80284699999993,
+      "shared_model_effective_window_ps": 62.17841454279983,
+      "min_raw": {
+        "tap": "clk_c0",
+        "late_raw_ps": 497.690483,
+        "core_early_ps": 401.6,
+        "raw_effective_ps": 899.290483,
+        "shared_model_effective_ps": 865.6466063492,
+        "slew_ps": 6.222795
+      },
+      "max_raw": {
+        "tap": "clk_t6",
+        "late_raw_ps": 995.0933299999999,
+        "core_early_ps": 0,
+        "raw_effective_ps": 995.0933299999999,
+        "shared_model_effective_ps": 927.8250208919999,
+        "slew_ps": 14.182199
+      },
+      "min_shared": {
+        "tap": "clk_c0",
+        "late_raw_ps": 497.690483,
+        "core_early_ps": 401.6,
+        "raw_effective_ps": 899.290483,
+        "shared_model_effective_ps": 865.6466063492,
+        "slew_ps": 6.222795
+      },
+      "max_shared": {
+        "tap": "clk_t6",
+        "late_raw_ps": 995.0933299999999,
+        "core_early_ps": 0,
+        "raw_effective_ps": 995.0933299999999,
+        "shared_model_effective_ps": 927.8250208919999,
+        "slew_ps": 14.182199
+      },
+      "max_slew_ps": 19.579041,
+      "rows": [
+        {
+          "tap": "clk_t16",
+          "late_raw_ps": 936.7124709999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 936.7124709999999,
+          "shared_model_effective_ps": 873.3907079603999,
+          "slew_ps": 19.089685
+        },
+        {
+          "tap": "clk_t10",
+          "late_raw_ps": 984.22036,
+          "core_early_ps": 0,
+          "raw_effective_ps": 984.22036,
+          "shared_model_effective_ps": 917.687063664,
+          "slew_ps": 11.739579
+        },
+        {
+          "tap": "clk_t36",
+          "late_raw_ps": 953.082489,
+          "core_early_ps": 0,
+          "raw_effective_ps": 953.082489,
+          "shared_model_effective_ps": 888.6541127436,
+          "slew_ps": 11.991616
+        },
+        {
+          "tap": "clk_t25",
+          "late_raw_ps": 958.3826899999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 958.3826899999999,
+          "shared_model_effective_ps": 893.5960201559999,
+          "slew_ps": 13.513472
+        },
+        {
+          "tap": "clk_t14",
+          "late_raw_ps": 953.983101,
+          "core_early_ps": 0,
+          "raw_effective_ps": 953.983101,
+          "shared_model_effective_ps": 889.4938433724001,
+          "slew_ps": 18.881714
+        },
+        {
+          "tap": "clk_t37",
+          "late_raw_ps": 958.200393,
+          "core_early_ps": 0,
+          "raw_effective_ps": 958.200393,
+          "shared_model_effective_ps": 893.4260464332,
+          "slew_ps": 12.549243
+        },
+        {
+          "tap": "clk_t26",
+          "late_raw_ps": 963.5433419999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 963.5433419999999,
+          "shared_model_effective_ps": 898.4078120808,
+          "slew_ps": 13.925529
+        },
+        {
+          "tap": "clk_t15",
+          "late_raw_ps": 951.652298,
+          "core_early_ps": 0,
+          "raw_effective_ps": 951.652298,
+          "shared_model_effective_ps": 887.3206026552,
+          "slew_ps": 18.400692
+        },
+        {
+          "tap": "clk_c2",
+          "late_raw_ps": 511.701896,
+          "core_early_ps": 401.6,
+          "raw_effective_ps": 913.3018959999999,
+          "shared_model_effective_ps": 878.7108478304,
+          "slew_ps": 7.416682
+        },
+        {
+          "tap": "clk_t7",
+          "late_raw_ps": 971.0064769999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 971.0064769999999,
+          "shared_model_effective_ps": 905.3664391547999,
+          "slew_ps": 19.324657
+        },
+        {
+          "tap": "clk_t5",
+          "late_raw_ps": 989.630363,
+          "core_early_ps": 0,
+          "raw_effective_ps": 989.630363,
+          "shared_model_effective_ps": 922.7313504612,
+          "slew_ps": 13.103769
+        },
+        {
+          "tap": "clk_t6",
+          "late_raw_ps": 995.0933299999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 995.0933299999999,
+          "shared_model_effective_ps": 927.8250208919999,
+          "slew_ps": 14.182199
+        },
+        {
+          "tap": "clk_t2",
+          "late_raw_ps": 970.518425,
+          "core_early_ps": 0,
+          "raw_effective_ps": 970.518425,
+          "shared_model_effective_ps": 904.91137947,
+          "slew_ps": 19.208918
+        },
+        {
+          "tap": "clk_t3",
+          "late_raw_ps": 992.479759,
+          "core_early_ps": 0,
+          "raw_effective_ps": 992.479759,
+          "shared_model_effective_ps": 925.3881272916,
+          "slew_ps": 13.570174
+        },
+        {
+          "tap": "clk_t4",
+          "late_raw_ps": 992.837578,
+          "core_early_ps": 0,
+          "raw_effective_ps": 992.837578,
+          "shared_model_effective_ps": 925.7217577272,
+          "slew_ps": 13.871326
+        },
+        {
+          "tap": "clk_c3",
+          "late_raw_ps": 508.116356,
+          "core_early_ps": 401.6,
+          "raw_effective_ps": 909.716356,
+          "shared_model_effective_ps": 875.3676903344001,
+          "slew_ps": 13.704103
+        },
+        {
+          "tap": "clk_t35",
+          "late_raw_ps": 942.5237119999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 942.5237119999999,
+          "shared_model_effective_ps": 878.8091090687999,
+          "slew_ps": 11.759212
+        },
+        {
+          "tap": "clk_t24",
+          "late_raw_ps": 947.809814,
+          "core_early_ps": 0,
+          "raw_effective_ps": 947.809814,
+          "shared_model_effective_ps": 883.7378705735999,
+          "slew_ps": 13.34984
+        },
+        {
+          "tap": "clk_t13",
+          "late_raw_ps": 941.989914,
+          "core_early_ps": 0,
+          "raw_effective_ps": 941.989914,
+          "shared_model_effective_ps": 878.3113958136,
+          "slew_ps": 18.571045
+        },
+        {
+          "tap": "clk_t22",
+          "late_raw_ps": 953.632271,
+          "core_early_ps": 0,
+          "raw_effective_ps": 953.632271,
+          "shared_model_effective_ps": 889.1667294803999,
+          "slew_ps": 13.122867
+        },
+        {
+          "tap": "clk_t33",
+          "late_raw_ps": 948.513252,
+          "core_early_ps": 0,
+          "raw_effective_ps": 948.513252,
+          "shared_model_effective_ps": 884.3937561647999,
+          "slew_ps": 11.493441
+        },
+        {
+          "tap": "clk_t34",
+          "late_raw_ps": 961.071213,
+          "core_early_ps": 0,
+          "raw_effective_ps": 961.071213,
+          "shared_model_effective_ps": 896.1027990012,
+          "slew_ps": 12.642035
+        },
+        {
+          "tap": "clk_t23",
+          "late_raw_ps": 966.454353,
+          "core_early_ps": 0,
+          "raw_effective_ps": 966.454353,
+          "shared_model_effective_ps": 901.1220387372,
+          "slew_ps": 14.0291
+        },
+        {
+          "tap": "clk_t12",
+          "late_raw_ps": 956.6483,
+          "core_early_ps": 0,
+          "raw_effective_ps": 956.6483,
+          "shared_model_effective_ps": 891.97887492,
+          "slew_ps": 18.711012
+        },
+        {
+          "tap": "clk_c0",
+          "late_raw_ps": 497.690483,
+          "core_early_ps": 401.6,
+          "raw_effective_ps": 899.290483,
+          "shared_model_effective_ps": 865.6466063492,
+          "slew_ps": 6.222795
+        },
+        {
+          "tap": "clk_t11",
+          "late_raw_ps": 947.953811,
+          "core_early_ps": 0,
+          "raw_effective_ps": 947.953811,
+          "shared_model_effective_ps": 883.8721333764,
+          "slew_ps": 14.149569
+        },
+        {
+          "tap": "clk",
+          "late_raw_ps": 930.1927949999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 930.1927949999999,
+          "shared_model_effective_ps": 867.311762058,
+          "slew_ps": 12.41179
+        },
+        {
+          "tap": "clk_t1",
+          "late_raw_ps": 933.6249389999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 933.6249389999999,
+          "shared_model_effective_ps": 870.5118931236,
+          "slew_ps": 13.271952
+        },
+        {
+          "tap": "clk_c1",
+          "late_raw_ps": 513.82476,
+          "core_early_ps": 401.6,
+          "raw_effective_ps": 915.42476,
+          "shared_model_effective_ps": 880.690206224,
+          "slew_ps": 14.10629
+        },
+        {
+          "tap": "clk_c4",
+          "late_raw_ps": 331.08995799999997,
+          "core_early_ps": 579.1,
+          "raw_effective_ps": 910.1899579999999,
+          "shared_model_effective_ps": 887.8082768392001,
+          "slew_ps": 18.266533
+        },
+        {
+          "tap": "clk_t18",
+          "late_raw_ps": 959.367798,
+          "core_early_ps": 0,
+          "raw_effective_ps": 959.367798,
+          "shared_model_effective_ps": 894.5145348552,
+          "slew_ps": 9.444396
+        },
+        {
+          "tap": "clk_t29",
+          "late_raw_ps": 958.48117,
+          "core_early_ps": 0,
+          "raw_effective_ps": 958.48117,
+          "shared_model_effective_ps": 893.687842908,
+          "slew_ps": 9.354428
+        },
+        {
+          "tap": "clk_t28",
+          "late_raw_ps": 974.575188,
+          "core_early_ps": 0,
+          "raw_effective_ps": 974.575188,
+          "shared_model_effective_ps": 908.6939052912,
+          "slew_ps": 13.229904
+        },
+        {
+          "tap": "clk_t17",
+          "late_raw_ps": 975.432503,
+          "core_early_ps": 0,
+          "raw_effective_ps": 975.432503,
+          "shared_model_effective_ps": 909.4932657972,
+          "slew_ps": 13.294284
+        },
+        {
+          "tap": "clk_t39",
+          "late_raw_ps": 973.255913,
+          "core_early_ps": 0,
+          "raw_effective_ps": 973.255913,
+          "shared_model_effective_ps": 907.4638132811999,
+          "slew_ps": 13.591766
+        },
+        {
+          "tap": "clk_t40",
+          "late_raw_ps": 969.2384569999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 969.2384569999999,
+          "shared_model_effective_ps": 903.7179373068,
+          "slew_ps": 12.59516
+        },
+        {
+          "tap": "clk_t8",
+          "late_raw_ps": 967.518837,
+          "core_early_ps": 0,
+          "raw_effective_ps": 967.518837,
+          "shared_model_effective_ps": 902.1145636187999,
+          "slew_ps": 19.579041
+        },
+        {
+          "tap": "clk_t19",
+          "late_raw_ps": 972.241051,
+          "core_early_ps": 0,
+          "raw_effective_ps": 972.241051,
+          "shared_model_effective_ps": 906.5175559524,
+          "slew_ps": 13.071932
+        },
+        {
+          "tap": "clk_t38",
+          "late_raw_ps": 932.390037,
+          "core_early_ps": 0,
+          "raw_effective_ps": 932.390037,
+          "shared_model_effective_ps": 869.3604704988,
+          "slew_ps": 11.498977
+        },
+        {
+          "tap": "clk_t30",
+          "late_raw_ps": 975.7665629999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 975.7665629999999,
+          "shared_model_effective_ps": 909.8047433411999,
+          "slew_ps": 13.91289
+        },
+        {
+          "tap": "clk_t41",
+          "late_raw_ps": 970.4982219999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 970.4982219999999,
+          "shared_model_effective_ps": 904.8925421928,
+          "slew_ps": 10.570212
+        },
+        {
+          "tap": "clk_c6",
+          "late_raw_ps": 902.329643,
+          "core_early_ps": 79.19999999999999,
+          "raw_effective_ps": 981.5296430000001,
+          "shared_model_effective_ps": 920.5321591331999,
+          "slew_ps": 14.025105
+        },
+        {
+          "tap": "clk_c5",
+          "late_raw_ps": 866.474212,
+          "core_early_ps": 117.19999999999999,
+          "raw_effective_ps": 983.6742119999999,
+          "shared_model_effective_ps": 925.1005552688,
+          "slew_ps": 8.259518
+        },
+        {
+          "tap": "clk_t9",
+          "late_raw_ps": 976.516411,
+          "core_early_ps": 0,
+          "raw_effective_ps": 976.516411,
+          "shared_model_effective_ps": 910.5039016164,
+          "slew_ps": 11.195123
+        },
+        {
+          "tap": "clk_t20",
+          "late_raw_ps": 976.9239729999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 976.9239729999999,
+          "shared_model_effective_ps": 910.8839124251999,
+          "slew_ps": 11.235035
+        },
+        {
+          "tap": "clk_t27",
+          "late_raw_ps": 937.659378,
+          "core_early_ps": 0,
+          "raw_effective_ps": 937.659378,
+          "shared_model_effective_ps": 874.2736040471999,
+          "slew_ps": 13.166233
+        },
+        {
+          "tap": "clk_t31",
+          "late_raw_ps": 983.1753,
+          "core_early_ps": 0,
+          "raw_effective_ps": 983.1753,
+          "shared_model_effective_ps": 916.71264972,
+          "slew_ps": 13.298159
+        },
+        {
+          "tap": "clk_t42",
+          "late_raw_ps": 977.983909,
+          "core_early_ps": 0,
+          "raw_effective_ps": 977.983909,
+          "shared_model_effective_ps": 911.8721967516001,
+          "slew_ps": 11.723109
+        },
+        {
+          "tap": "clk_t43",
+          "late_raw_ps": 969.825645,
+          "core_early_ps": 0,
+          "raw_effective_ps": 969.825645,
+          "shared_model_effective_ps": 904.265431398,
+          "slew_ps": 19.229156
+        },
+        {
+          "tap": "clk_t21",
+          "late_raw_ps": 974.645683,
+          "core_early_ps": 0,
+          "raw_effective_ps": 974.645683,
+          "shared_model_effective_ps": 908.7596348292,
+          "slew_ps": 12.574241
+        },
+        {
+          "tap": "clk_t32",
+          "late_raw_ps": 978.0487439999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 978.0487439999999,
+          "shared_model_effective_ps": 911.9326489056,
+          "slew_ps": 13.384665
+        }
+      ]
+    },
+    "FF": {
+      "taps": 51,
+      "shared_scale": 0.938,
+      "raw_effective_window_ps": 108.30819700000006,
+      "shared_model_effective_window_ps": 81.44308878600009,
+      "min_raw": {
+        "tap": "clk_c0",
+        "late_raw_ps": 417.05745699999994,
+        "core_early_ps": 325.0,
+        "raw_effective_ps": 742.0574569999999,
+        "shared_model_effective_ps": 716.1998946659999,
+        "slew_ps": 4.841739
+      },
+      "max_raw": {
+        "tap": "clk_t6",
+        "late_raw_ps": 850.365654,
+        "core_early_ps": 0,
+        "raw_effective_ps": 850.365654,
+        "shared_model_effective_ps": 797.642983452,
+        "slew_ps": 10.963367
+      },
+      "min_shared": {
+        "tap": "clk_c0",
+        "late_raw_ps": 417.05745699999994,
+        "core_early_ps": 325.0,
+        "raw_effective_ps": 742.0574569999999,
+        "shared_model_effective_ps": 716.1998946659999,
+        "slew_ps": 4.841739
+      },
+      "max_shared": {
+        "tap": "clk_t6",
+        "late_raw_ps": 850.365654,
+        "core_early_ps": 0,
+        "raw_effective_ps": 850.365654,
+        "shared_model_effective_ps": 797.642983452,
+        "slew_ps": 10.963367
+      },
+      "max_slew_ps": 15.96374,
+      "rows": [
+        {
+          "tap": "clk_t16",
+          "late_raw_ps": 801.896257,
+          "core_early_ps": 0,
+          "raw_effective_ps": 801.896257,
+          "shared_model_effective_ps": 752.178689066,
+          "slew_ps": 15.420137
+        },
+        {
+          "tap": "clk_t10",
+          "late_raw_ps": 844.328038,
+          "core_early_ps": 0,
+          "raw_effective_ps": 844.328038,
+          "shared_model_effective_ps": 791.979699644,
+          "slew_ps": 9.132262
+        },
+        {
+          "tap": "clk_t36",
+          "late_raw_ps": 806.998066,
+          "core_early_ps": 0,
+          "raw_effective_ps": 806.998066,
+          "shared_model_effective_ps": 756.964185908,
+          "slew_ps": 9.475493
+        },
+        {
+          "tap": "clk_t25",
+          "late_raw_ps": 812.1827519999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 812.1827519999999,
+          "shared_model_effective_ps": 761.8274213759998,
+          "slew_ps": 10.776315
+        },
+        {
+          "tap": "clk_t14",
+          "late_raw_ps": 812.179865,
+          "core_early_ps": 0,
+          "raw_effective_ps": 812.179865,
+          "shared_model_effective_ps": 761.8247133699999,
+          "slew_ps": 15.309859
+        },
+        {
+          "tap": "clk_t37",
+          "late_raw_ps": 812.105646,
+          "core_early_ps": 0,
+          "raw_effective_ps": 812.105646,
+          "shared_model_effective_ps": 761.755095948,
+          "slew_ps": 9.864124
+        },
+        {
+          "tap": "clk_t26",
+          "late_raw_ps": 817.3613869999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 817.3613869999999,
+          "shared_model_effective_ps": 766.6849810059999,
+          "slew_ps": 11.13131
+        },
+        {
+          "tap": "clk_t15",
+          "late_raw_ps": 810.575149,
+          "core_early_ps": 0,
+          "raw_effective_ps": 810.575149,
+          "shared_model_effective_ps": 760.319489762,
+          "slew_ps": 14.951936
+        },
+        {
+          "tap": "clk_c2",
+          "late_raw_ps": 431.60585799999996,
+          "core_early_ps": 325.0,
+          "raw_effective_ps": 756.6058579999999,
+          "shared_model_effective_ps": 729.8462948039999,
+          "slew_ps": 5.922789
+        },
+        {
+          "tap": "clk_t7",
+          "late_raw_ps": 834.768962,
+          "core_early_ps": 0,
+          "raw_effective_ps": 834.768962,
+          "shared_model_effective_ps": 783.013286356,
+          "slew_ps": 15.583486
+        },
+        {
+          "tap": "clk_t5",
+          "late_raw_ps": 845.434764,
+          "core_early_ps": 0,
+          "raw_effective_ps": 845.434764,
+          "shared_model_effective_ps": 793.017808632,
+          "slew_ps": 10.228392
+        },
+        {
+          "tap": "clk_t6",
+          "late_raw_ps": 850.365654,
+          "core_early_ps": 0,
+          "raw_effective_ps": 850.365654,
+          "shared_model_effective_ps": 797.642983452,
+          "slew_ps": 10.963367
+        },
+        {
+          "tap": "clk_t2",
+          "late_raw_ps": 834.214739,
+          "core_early_ps": 0,
+          "raw_effective_ps": 834.214739,
+          "shared_model_effective_ps": 782.493425182,
+          "slew_ps": 15.51859
+        },
+        {
+          "tap": "clk_t3",
+          "late_raw_ps": 848.253121,
+          "core_early_ps": 0,
+          "raw_effective_ps": 848.253121,
+          "shared_model_effective_ps": 795.661427498,
+          "slew_ps": 10.578176
+        },
+        {
+          "tap": "clk_t4",
+          "late_raw_ps": 848.495039,
+          "core_early_ps": 0,
+          "raw_effective_ps": 848.495039,
+          "shared_model_effective_ps": 795.8883465819999,
+          "slew_ps": 10.761704
+        },
+        {
+          "tap": "clk_c3",
+          "late_raw_ps": 433.060051,
+          "core_early_ps": 325.0,
+          "raw_effective_ps": 758.0600509999999,
+          "shared_model_effective_ps": 731.210327838,
+          "slew_ps": 10.935615
+        },
+        {
+          "tap": "clk_t35",
+          "late_raw_ps": 799.824302,
+          "core_early_ps": 0,
+          "raw_effective_ps": 799.824302,
+          "shared_model_effective_ps": 750.2351952759999,
+          "slew_ps": 9.318807
+        },
+        {
+          "tap": "clk_t24",
+          "late_raw_ps": 804.980902,
+          "core_early_ps": 0,
+          "raw_effective_ps": 804.980902,
+          "shared_model_effective_ps": 755.072086076,
+          "slew_ps": 10.632655
+        },
+        {
+          "tap": "clk_t13",
+          "late_raw_ps": 804.3491839999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 804.3491839999999,
+          "shared_model_effective_ps": 754.4795345919999,
+          "slew_ps": 15.074783
+        },
+        {
+          "tap": "clk_t22",
+          "late_raw_ps": 810.6892789999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 810.6892789999999,
+          "shared_model_effective_ps": 760.4265437019999,
+          "slew_ps": 10.317747
+        },
+        {
+          "tap": "clk_t33",
+          "late_raw_ps": 805.667574,
+          "core_early_ps": 0,
+          "raw_effective_ps": 805.667574,
+          "shared_model_effective_ps": 755.7161844119998,
+          "slew_ps": 8.999818
+        },
+        {
+          "tap": "clk_t34",
+          "late_raw_ps": 814.609922,
+          "core_early_ps": 0,
+          "raw_effective_ps": 814.609922,
+          "shared_model_effective_ps": 764.1041068359999,
+          "slew_ps": 9.965437
+        },
+        {
+          "tap": "clk_t23",
+          "late_raw_ps": 819.885313,
+          "core_early_ps": 0,
+          "raw_effective_ps": 819.885313,
+          "shared_model_effective_ps": 769.052423594,
+          "slew_ps": 11.223762
+        },
+        {
+          "tap": "clk_t12",
+          "late_raw_ps": 814.5439739999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 814.5439739999999,
+          "shared_model_effective_ps": 764.0422476119999,
+          "slew_ps": 15.205857
+        },
+        {
+          "tap": "clk_c0",
+          "late_raw_ps": 417.05745699999994,
+          "core_early_ps": 325.0,
+          "raw_effective_ps": 742.0574569999999,
+          "shared_model_effective_ps": 716.1998946659999,
+          "slew_ps": 4.841739
+        },
+        {
+          "tap": "clk_t11",
+          "late_raw_ps": 810.841102,
+          "core_early_ps": 0,
+          "raw_effective_ps": 810.841102,
+          "shared_model_effective_ps": 760.568953676,
+          "slew_ps": 10.974352
+        },
+        {
+          "tap": "clk",
+          "late_raw_ps": 793.319065,
+          "core_early_ps": 0,
+          "raw_effective_ps": 793.319065,
+          "shared_model_effective_ps": 744.13328297,
+          "slew_ps": 9.573656
+        },
+        {
+          "tap": "clk_t1",
+          "late_raw_ps": 796.764362,
+          "core_early_ps": 0,
+          "raw_effective_ps": 796.764362,
+          "shared_model_effective_ps": 747.364971556,
+          "slew_ps": 10.371531
+        },
+        {
+          "tap": "clk_c1",
+          "late_raw_ps": 438.3796,
+          "core_early_ps": 325.0,
+          "raw_effective_ps": 763.3796,
+          "shared_model_effective_ps": 736.2000648,
+          "slew_ps": 11.322801
+        },
+        {
+          "tap": "clk_c4",
+          "late_raw_ps": 285.110405,
+          "core_early_ps": 462.70000000000005,
+          "raw_effective_ps": 747.8104050000001,
+          "shared_model_effective_ps": 730.13355989,
+          "slew_ps": 15.06835
+        },
+        {
+          "tap": "clk_t18",
+          "late_raw_ps": 819.0201159999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 819.0201159999999,
+          "shared_model_effective_ps": 768.2408688079998,
+          "slew_ps": 7.800358
+        },
+        {
+          "tap": "clk_t29",
+          "late_raw_ps": 818.11806,
+          "core_early_ps": 0,
+          "raw_effective_ps": 818.11806,
+          "shared_model_effective_ps": 767.39474028,
+          "slew_ps": 7.740529
+        },
+        {
+          "tap": "clk_t28",
+          "late_raw_ps": 833.519517,
+          "core_early_ps": 0,
+          "raw_effective_ps": 833.519517,
+          "shared_model_effective_ps": 781.8413069459999,
+          "slew_ps": 10.47273
+        },
+        {
+          "tap": "clk_t17",
+          "late_raw_ps": 834.4819699999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 834.4819699999999,
+          "shared_model_effective_ps": 782.7440878599999,
+          "slew_ps": 10.545156
+        },
+        {
+          "tap": "clk_t39",
+          "late_raw_ps": 834.763078,
+          "core_early_ps": 0,
+          "raw_effective_ps": 834.763078,
+          "shared_model_effective_ps": 783.0077671639999,
+          "slew_ps": 10.544438
+        },
+        {
+          "tap": "clk_t40",
+          "late_raw_ps": 830.784983,
+          "core_early_ps": 0,
+          "raw_effective_ps": 830.784983,
+          "shared_model_effective_ps": 779.276314054,
+          "slew_ps": 9.634871
+        },
+        {
+          "tap": "clk_t8",
+          "late_raw_ps": 833.807898,
+          "core_early_ps": 0,
+          "raw_effective_ps": 833.807898,
+          "shared_model_effective_ps": 782.111808324,
+          "slew_ps": 15.96374
+        },
+        {
+          "tap": "clk_t19",
+          "late_raw_ps": 833.91459,
+          "core_early_ps": 0,
+          "raw_effective_ps": 833.91459,
+          "shared_model_effective_ps": 782.2118854199999,
+          "slew_ps": 10.34881
+        },
+        {
+          "tap": "clk_t38",
+          "late_raw_ps": 793.284534,
+          "core_early_ps": 0,
+          "raw_effective_ps": 793.284534,
+          "shared_model_effective_ps": 744.1008928919999,
+          "slew_ps": 9.141112
+        },
+        {
+          "tap": "clk_t30",
+          "late_raw_ps": 837.3911979999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 837.3911979999999,
+          "shared_model_effective_ps": 785.4729437239998,
+          "slew_ps": 11.115776
+        },
+        {
+          "tap": "clk_t41",
+          "late_raw_ps": 835.5452859999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 835.5452859999999,
+          "shared_model_effective_ps": 783.7414782679999,
+          "slew_ps": 8.307456
+        },
+        {
+          "tap": "clk_c6",
+          "late_raw_ps": 773.450344,
+          "core_early_ps": 66.5,
+          "raw_effective_ps": 839.950344,
+          "shared_model_effective_ps": 791.9964226719999,
+          "slew_ps": 11.094628
+        },
+        {
+          "tap": "clk_c5",
+          "late_raw_ps": 739.646995,
+          "core_early_ps": 99.69999999999999,
+          "raw_effective_ps": 839.3469949999999,
+          "shared_model_effective_ps": 793.4888813099999,
+          "slew_ps": 6.72484
+        },
+        {
+          "tap": "clk_t9",
+          "late_raw_ps": 837.012834,
+          "core_early_ps": 0,
+          "raw_effective_ps": 837.012834,
+          "shared_model_effective_ps": 785.1180382919999,
+          "slew_ps": 8.935542
+        },
+        {
+          "tap": "clk_t20",
+          "late_raw_ps": 837.4274469999999,
+          "core_early_ps": 0,
+          "raw_effective_ps": 837.4274469999999,
+          "shared_model_effective_ps": 785.5069452859999,
+          "slew_ps": 8.959914
+        },
+        {
+          "tap": "clk_t27",
+          "late_raw_ps": 798.409824,
+          "core_early_ps": 0,
+          "raw_effective_ps": 798.409824,
+          "shared_model_effective_ps": 748.9084149119999,
+          "slew_ps": 10.46979
+        },
+        {
+          "tap": "clk_t31",
+          "late_raw_ps": 843.243572,
+          "core_early_ps": 0,
+          "raw_effective_ps": 843.243572,
+          "shared_model_effective_ps": 790.962470536,
+          "slew_ps": 10.520019
+        },
+        {
+          "tap": "clk_t42",
+          "late_raw_ps": 838.139544,
+          "core_early_ps": 0,
+          "raw_effective_ps": 838.139544,
+          "shared_model_effective_ps": 786.174892272,
+          "slew_ps": 9.211361
+        },
+        {
+          "tap": "clk_t43",
+          "late_raw_ps": 832.204125,
+          "core_early_ps": 0,
+          "raw_effective_ps": 832.204125,
+          "shared_model_effective_ps": 780.6074692499999,
+          "slew_ps": 15.700213
+        },
+        {
+          "tap": "clk_t21",
+          "late_raw_ps": 832.139455,
+          "core_early_ps": 0,
+          "raw_effective_ps": 832.139455,
+          "shared_model_effective_ps": 780.54680879,
+          "slew_ps": 9.897116
+        },
+        {
+          "tap": "clk_t32",
+          "late_raw_ps": 835.539013,
+          "core_early_ps": 0,
+          "raw_effective_ps": 835.539013,
+          "shared_model_effective_ps": 783.7355941939999,
+          "slew_ps": 10.654185
+        }
+      ]
+    }
+  }
+}

@@ -4,15 +4,15 @@ import json,sys,math
 from pathlib import Path
 sys.path.insert(0,'tools/die_plan')
 import schema as S,gen_phys as G,die_trial as D
-P=S.Plan(json.load(open(sys.argv[1])));tn=P.parts['lk_ES0']['type'];t=P.types[tn];w,h=t['outline_um'];guard=63.64;strip=32.4
-macro=[strip+guard,strip+guard,strip+guard+2608.48,strip+guard+924.48]
-domain=[strip,strip,macro[2]+guard,macro[3]+guard]
+P=S.Plan(json.load(open(sys.argv[1])));tn=P.parts['lk_ES0']['type'];t=P.types[tn];w,h=t['outline_um'];guard=63.64;strip=32.4;stripx=43.2
+macro=[stripx+guard,strip+guard,stripx+guard+2608.48,strip+guard+924.48]
+domain=[stripx,strip,macro[2]+guard,macro[3]+guard]
 assert P.parts['lk_ES0']['origin_um'][1]+macro[1]<=200
 pins={}
 for bus,bit,layer,x,y,face in G.type_pins(P,tn):pins.setdefault(bus,{})[bit]=(x,y)
-report=dict(label='ESTIMATEONLY_NOBUILD',outline_um=[w,h],macro_um=macro,domain_um=domain,guard_um=guard,shoreline_um=103.68+macro[1],core_frame_um=dict(W=strip,S=strip,E=w-domain[2],N=h-domain[3]),route_limits_um=405,variants_required=['ES0-specific source t1 variant','ES1-specific source t2 variant'],unchanged_instances='WN1/WN2 t1/t2 keep current source; do not shift shared master globally',slots=[])
+report=dict(label='ESTIMATEONLY_NOBUILD',outline_um=[w,h],macro_um=macro,domain_um=domain,guard_um=guard,shoreline_um=103.68+macro[1],core_frame_um=dict(W=stripx,S=strip,E=w-domain[2],N=h-domain[3]),route_limits_um=405,variants_required=['ES0-specific source t1 variant','ES1-specific source t2 variant'],unchanged_instances='WN1/WN2 t1/t2 keep current source; do not shift shared master globally',slots=[])
 for slot in t['ft_slots']:
- name=slot['name'];n=13 if name=='ft0' else 8;Y=(domain[3]+h)/2 if name=='ft0' else strip/2;lx=strip/2;rx=(domain[2]+w)/2
+ name=slot['name'];n=13 if name=='ft0' else 8;Y=(domain[3]+h)/2 if name=='ft0' else strip/2;lx=stripx/2;rx=(domain[2]+w)/2
  # Coherent centreline uses actual endpoint pin-window centres; each bank has real per-bit cell positions.
  A=pins[name+'_i'];B=pins[name+'_o'];ami=[sum(v[k] for v in A.values())/len(A) for k in (0,1)];bmi=[sum(v[k] for v in B.values())/len(B) for k in (0,1)]
  xa=lx if ami[0]<w/2 else rx;xb=lx if bmi[0]<w/2 else rx
