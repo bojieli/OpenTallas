@@ -145,20 +145,54 @@ class Maze:
 def balanced(points, centres, dist, iters=400):
     n = len(points); k = len(centres); tgt = [n // k + (1 if i < n % k else 0) for i in range(k)]
     Dm = [[dist(p, c) for c in centres] for p in points]; w = [0.0] * k
+    # The assignment step is the same independent float64 add + first-min choice for every point. Optional NumPy
+    # removes Python's O(n*k*iters) dispatch overhead; minimal environments keep the identical scalar path.
+    matrix = None
+    finite = all(math.isfinite(value) for row in Dm for value in row)
+    try:
+        import numpy as np
+        candidate = np.asarray(Dm, dtype=np.float64)
+        if finite:
+            matrix = candidate
+    except ImportError:
+        pass
     for it in range(iters):
-        a = [min(range(k), key=lambda c: Dm[i][c] + w[c]) for i in range(n)]; cnt = collections.Counter(a)
+        a = ((matrix + np.asarray(w, dtype=np.float64)).argmin(axis=1).tolist() if matrix is not None else
+             [min(range(k), key=lambda c: Dm[i][c] + w[c]) for i in range(n)])
+        cnt = collections.Counter(a)
         if all(cnt[c] == tgt[c] for c in range(k)): break
         for c in range(k): w[c] += 0.5 * (cnt[c] - tgt[c]) / max(1, n / k) * 20 / (1 + it / 50)
     cnt = collections.Counter(a)
-    while any(cnt[c] > tgt[c] for c in range(k)):
-        best = None
-        for i in range(n):
-            if cnt[a[i]] <= tgt[a[i]]: continue
-            for c in range(k):
-                if cnt[c] < tgt[c]:
-                    cost = Dm[i][c] - Dm[i][a[i]]
-                    if best is None or cost < best[0]: best = (cost, i, c)
-        _, i, c = best; cnt[a[i]] -= 1; cnt[c] += 1; a[i] = c
+    if not finite:
+        # Preserve the scalar scan's comparison order for NaN/Inf as well. Such values are not native physical
+        # geometry, but an external caller must not accidentally get different NaN ordering from a tuple heap.
+        while any(cnt[c] > tgt[c] for c in range(k)):
+            best = None
+            for i in range(n):
+                if cnt[a[i]] <= tgt[a[i]]: continue
+                for c in range(k):
+                    if cnt[c] < tgt[c]:
+                        cost = Dm[i][c] - Dm[i][a[i]]
+                        if best is None or cost < best[0]: best = (cost, i, c)
+            _, i, c = best; cnt[a[i]] -= 1; cnt[c] += 1; a[i] = c
+    else:
+        # Every correction moves from an overfull group into a deficit group. A destination never becomes overfull,
+        # so eligible moves only disappear; no new move can become eligible. The old full scan after each transfer
+        # therefore equals this static heap with lazy invalidation. Tuple order preserves its first-i/first-c tie break.
+        import heapq
+        over = {c for c in range(k) if cnt[c] > tgt[c]}
+        deficit = [c for c in range(k) if cnt[c] < tgt[c]]
+        original = list(a)
+        candidates = [(Dm[i][c] - Dm[i][source], i, c)
+                      for i, source in enumerate(a) if source in over for c in deficit]
+        heapq.heapify(candidates)
+        excess = sum(max(0, cnt[c] - tgt[c]) for c in range(k))
+        while excess:
+            _, i, c = heapq.heappop(candidates)
+            source = original[i]
+            if a[i] != source or cnt[source] <= tgt[source] or cnt[c] >= tgt[c]:
+                continue
+            cnt[source] -= 1; cnt[c] += 1; a[i] = c; excess -= 1
     return [[points[i] for i in range(n) if a[i] == c] for c in range(k)]
 
 
