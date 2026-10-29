@@ -62,3 +62,6 @@ CODEX 2026-10-27 10:14 PDT PARKED on explicit root reset. LEC proof jobs continu
 
 ## CODEX notes 2026-10-27 14:13 PDT
 Currenttool/FPREGcoverage packet handoff/codex_lec_current_20261027_1415.md. Releasefd417 reviewed10tests; universale6READY190PASS2skip; L1width237source exactmiter+mutantREADY/main1e964. Currentactualhcoreuniversalproof+NNfdroutedproofLIVE; Q2b/cstillprogress5GB noverdict. OldSYS_C0d1same4561FAIL/Hempty; HRCH/PCboth64GBcgroupOOM137 atinduct, noverdict/currentoldsourceNOTretried. HBMsource-specificcasesHBMowned; concatDONE. Noresetduration/Xwaiveradopted.
+
+## CODEX notes 2026-10-29 00:04 PDT — SYS_C current-engine diagnosis
+Oldsys_c_directed4561FAIL is pre-monotone0d1 tool:5496hypotheses/6counterfailures then globalclearall atbudget. Currentorigin/main ALREADYhas LEC-FPREG3 monotonefinish/rawsupport cascade; no duplicateenginefixneeded. ActualoldfrozenAIG diagnostic3.17s (ot-run16GB, noRTL/synth/prooffullrerun):3failedcounterseeds remove32dependentconstantcandidates locally,29unrelatedcountercandidatesremain. No hypotheses accepted/noequivalenceclaim. Resultsource codex/sysc-proof-1028@2e3ad057a, results/codex_sysc_diagnosis_1029. KVowneragrees oldq3notcurrentreleasekit; KV-KITS usescurrentlec.py whenregeneratedsys_ckitready. Firstdiagnosticot-run --hostsintel2 NOTRUN SSHalias; corrected--hostslocalhost terminalexit0, nojobduplicated.
