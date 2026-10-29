@@ -1,0 +1,56 @@
+{
+  "verdict": "SOURCE_COMPONENT_PASS",
+  "job": "intel1 oth-ubuntu-2354029-1793269715",
+  "payload_bit_comparisons": 3006864,
+  "rows": 171,
+  "lanes": 4,
+  "lane_bases": [
+    0,
+    4
+  ],
+  "period_ps": 833,
+  "SRAM": "actual",
+  "mutants_caught": [
+    "tag",
+    "missing lane",
+    "wrong slot",
+    "read before loaded",
+    "payload",
+    "unexpected off-slot packet"
+  ],
+  "boundary": {
+    "bits": 1112,
+    "registered_capture_edges": 1,
+    "FF_bits_perhub": 1112,
+    "layout": {
+      "valid": [
+        1111,
+        1111
+      ],
+      "cohort": [
+        1110,
+        1110
+      ],
+      "row": [
+        1109,
+        1102
+      ],
+      "physical_lane": [
+        1101,
+        1099
+      ],
+      "canonical_keyline": [
+        1098,
+        0
+      ]
+    },
+    "assembly_FF": 0
+  },
+  "required_integration": "clear both role buffers once perINDEX, prefill both complete171rowcohorts before first query, use PRE/REPLAY for row0 and all subsequent N6 rows",
+  "claims": {
+    "native": false,
+    "physical": false,
+    "token": false,
+    "SIGNED": false
+  }
+}
