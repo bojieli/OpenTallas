@@ -33,7 +33,13 @@ def pin_entry(load, dbu, via12):
         candidates.append((-(y1-y0), -(x1-x0), x, y, shape))
     if not candidates:
         raise ValueError(f"actual M1 CLK metal cannot enclose VIA12: {load['inst']}")
-    _, _, x, y, shape = min(candidates)
+    if load.get('entry_xy_dbu') is not None:
+        x,y=map(float,load['entry_xy_dbu'])
+        legal=[r for r in candidates if r[4][1]+hx <= x <= r[4][3]-hx and r[4][2]+hy <= y <= r[4][4]-hy]
+        if not legal:raise ValueError(f"selected CLK access is outside actual M1 metal: {load['inst']}")
+        shape=min(legal)[4]
+    else:
+        _, _, x, y, shape = min(candidates)
     return dict(layer='M1', xy=[x/dbu,y/dbu], rect_um=[v/dbu for v in shape[1:]],
                 inst=load['inst'], pin='CLK', net=load['net'],
                 via12_enclosure_um=[hx/dbu,hy/dbu], actual_m1=True)

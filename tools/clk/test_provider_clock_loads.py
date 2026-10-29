@@ -43,3 +43,10 @@ def test_native_prefixed_net_is_preserved():
     g,i,b=fixture();g[0][0]['name']='ck_n1'
     nets,_,_,report=P.extend(*g,i,b)
     assert nets[0]['name']=='ck_n1' and report['rows'][0]['raw_net']=='ck_n1'
+
+
+def test_selected_access_must_remain_on_the_actual_m1_pin():
+    g,i,b=fixture();i['loads'][0]['entry_xy_dbu']=[109,220]
+    _,_,e,_=P.extend(*g,i,b);assert e['provider_clk_00000']['xy']==[.109,.220]
+    i['loads'][0]['entry_xy_dbu']=[1000,1000]
+    with pytest.raises(ValueError,match='outside actual M1'):P.extend(*g,i,b)
