@@ -144,3 +144,42 @@ def test_cli_needs_clock_tree(tmp_path):
     d.write_text(json.dumps(dict(ports={})))
     with pytest.raises(SystemExit):
         cap.main([str(f), "--corner", "TT_x", "--start-data-delay", str(d)])
+
+
+def test_same_corner_subtraction_excludes_impossible_combinations():
+    r = dict(d_ps=300., p_dn_ps=200., p_up_ps=200., fall_lo=200., fall_hi=600.)
+    corners = dict(TT=(400., 500., 500., 600.), FF=(100., 200., 200., 300.))
+    dd = dict(TT=(300., 350.), FF=(0., 50.))
+    q = cap.shift_corner_data_delay(r, corners, dd)
+    assert q["d_ps"]-q["p_dn_ps"] == pytest.approx(50.)
+    assert q["d_ps"]+q["p_up_ps"] == pytest.approx(200.)
+    assert (q["fall_lo"], q["fall_hi"]) == (150., 300.)
+    # The old cross-corner hull would invent [-250,500] and lose clean edges.
+    mutant = cap.shift_data_delay(r, 0., 350., "measured")
+    assert mutant["d_ps"]-mutant["p_dn_ps"] == -250.
+    assert mutant["d_ps"]+mutant["p_up_ps"] == 500.
+
+
+def test_corner_document_validation_and_missing_corner_fail_closed(tmp_path):
+    f = tmp_path / "dd.json"
+    f.write_text(json.dumps(dict(ports={"x": [1., 10.]}, corners={"TT": {"x": [4., 10.]}})))
+    doc = cap.load_start_data_delay(f)
+    assert cap.start_data_delay_for_corner(doc, "TT") == {"x": (4., 10.)}
+    assert cap.start_data_delay_for_corner(doc, "FF") == {}
+    assert cap.start_data_delay_for_corner(dict(ports={"x": (1., 10.)}), "FF") == {"x": (1., 10.)}
+    f.write_text(json.dumps(dict(corners={"TT": {"x": [10., 4.]}})))
+    with pytest.raises(ValueError):
+        cap.load_start_data_delay(f)
+
+
+def test_clock_start_plan_missing_one_corner_fails_closed():
+    _, _, _, e0, _, _, _, _ = plan_with(None)
+    ports = {e["port"]: (0., 0.) for e in e0}
+    rows = ST.chain_rows()
+    ctx = ST.ctx_chain()
+    # The only context corner is TT; a document measured at FF cannot reuse its
+    # union interval or candidate model for already-measured ports.
+    _, edges, info = cap.clock_start_edges(rows, ctx, max_hop_um=HOP,
+        data_delay=dict(ports=ports, model=None, corners=dict(FF=ports)))
+    assert info["data_delay"]["missing"] > 0
+    assert not any(e["clean_ok"] for e in edges)
