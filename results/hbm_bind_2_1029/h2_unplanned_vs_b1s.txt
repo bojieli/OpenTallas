@@ -1,0 +1,85 @@
+['schema', 'die', 'top', 'cells', 'dissolved', 'partitions', 'types', 'load_bits', 'crossings', 'crossing_bits', 'lanes', 'unmapped', 'open_outputs', 'open_output_examples', 'proof', 'errors', 'n_errors', 'warnings', 'internal_primitive_literals', 'files', 'findings', 'extra_lib', 'parent_variants', 'variants', 'type_splits', 'bound_groups', 'type_canon_merged', 'tied_by_port', 'bus_groups']
+pairs 170 bits 182059
+base pairs 106 bits 94141 | new 64 57153 | changed 18 | gone 0 []
+ NEW ('NE_hub', 'NE_b000', 4986, 304)
+ NEW ('NW_hub', 'NW_b000', 4986, 304)
+ NEW ('NW_b100', 'NW_b101', 3333, 0)
+ NEW ('NE_b001', 'NE_b011', 3332, 0)
+ NEW ('NE_b100', 'NE_b101', 3332, 0)
+ NEW ('NW_b001', 'NW_b011', 3332, 0)
+ NEW ('NE_b000', 'NE_b001', 2777, 4127)
+ NEW ('NE_b100', 'NE_b102', 2777, 0)
+ NEW ('NW_b000', 'NW_b001', 2777, 4127)
+ NEW ('NW_b100', 'NW_b102', 2777, 0)
+ NEW ('NE_b102', 'NE_b101', 1146, 0)
+ NEW ('NE_b103', 'NE_b102', 1146, 0)
+ NEW ('NW_b102', 'NW_b101', 1146, 0)
+ NEW ('NW_b103', 'NW_b102', 1146, 0)
+ NEW ('NE_b110', 'NE_b111', 1022, 0)
+ NEW ('NE_b110', 'NE_b112', 1022, 0)
+ NEW ('NW_b110', 'NW_b111', 1022, 0)
+ NEW ('NW_b110', 'NW_b112', 1022, 0)
+ NEW ('NE_b110', 'NE_su00', 596, 0)
+ NEW ('NE_b110', 'NE_su11', 596, 0)
+ NEW ('NE_b110', 'NE_su20', 596, 0)
+ NEW ('NE_b110', 'NE_su31', 596, 0)
+ NEW ('NW_b110', 'NW_su00', 596, 0)
+ NEW ('NW_b110', 'NW_su11', 596, 0)
+ NEW ('NW_b110', 'NW_su20', 596, 0)
+ NEW ('NW_b110', 'NW_su31', 596, 0)
+ NEW ('NE_b010', 'NE_b002', 569, 0)
+ NEW ('NE_b101', 'NE_b103', 569, 0)
+ NEW ('NW_b010', 'NW_b002', 569, 0)
+ NEW ('NW_b101', 'NW_b103', 569, 0)
+ NEW ('NE_su00', 'NE_b110', 516, 0)
+ NEW ('NE_su11', 'NE_b110', 516, 0)
+ NEW ('NE_su20', 'NE_b110', 516, 0)
+ NEW ('NE_su31', 'NE_b110', 516, 0)
+ NEW ('NW_su00', 'NW_b110', 516, 0)
+ NEW ('NW_su11', 'NW_b110', 516, 0)
+ NEW ('NW_su20', 'NW_b110', 516, 0)
+ NEW ('NW_su31', 'NW_b110', 516, 0)
+ NEW ('NE_b002', 'root', 297, 0)
+ NEW ('NE_b103', 'root', 297, 0)
+ NEW ('NW_b002', 'root', 297, 0)
+ NEW ('NW_b103', 'root', 297, 0)
+ NEW ('root', 'NE_b000', 180, 0)
+ NEW ('root', 'NW_b000', 180, 0)
+ NEW ('root', 'NW_b100', 180, 0)
+ NEW ('root', 'NE_b100', 178, 0)
+ NEW ('NE_b111', 'NE_b110', 175, 0)
+ NEW ('NE_b112', 'NE_b110', 175, 0)
+ NEW ('NW_b111', 'NW_b110', 175, 0)
+ NEW ('NW_b112', 'NW_b110', 175, 0)
+ NEW ('NE_b001', 'NE_b010', 72, 0)
+ NEW ('NW_b001', 'NW_b010', 72, 0)
+ NEW ('NE_b002', 'NE_b011', 35, 0)
+ NEW ('NE_b010', 'NE_b000', 35, 4097)
+ NEW ('NW_b002', 'NW_b011', 35, 0)
+ NEW ('NW_b010', 'NW_b000', 35, 4097)
+ NEW ('NE_b103', 'NE_hub', 2, 0)
+ NEW ('NW_b103', 'NW_hub', 2, 0)
+ NEW ('NE_b000', 'NE_b002', 1, 0)
+ NEW ('NE_b000', 'NE_b011', 1, 0)
+ NEW ('NE_b100', 'NE_b103', 1, 0)
+ NEW ('NW_b000', 'NW_b002', 1, 0)
+ NEW ('NW_b000', 'NW_b011', 1, 0)
+ NEW ('NW_b100', 'NW_b103', 1, 0)
+ CHG ('NE_b000', 'NE_b010', 4512, 0) was 33
+ CHG ('NE_b002', 'NE_hub', 4, 0) was 3
+ CHG ('NE_b010', 'NE_b001', 1756, 0) was 33
+ CHG ('NE_b011', 'NE_b002', 1747, 0) was 33
+ CHG ('NE_b101', 'NE_b102', 35, 0) was 33
+ CHG ('NE_b102', 'NE_b103', 3367, 0) was 33
+ CHG ('NE_b110', 'NE_b113', 4203, 0) was 660
+ CHG ('NE_b113', 'NE_b110', 1097, 0) was 512
+ CHG ('NE_hub', 'root', 264, 551) was 263
+ CHG ('NW_b000', 'NW_b010', 4512, 0) was 33
+ CHG ('NW_b002', 'NW_hub', 4, 0) was 3
+ CHG ('NW_b010', 'NW_b001', 1756, 0) was 33
+ CHG ('NW_b011', 'NW_b002', 1747, 0) was 33
+ CHG ('NW_b101', 'NW_b102', 35, 0) was 33
+ CHG ('NW_b102', 'NW_b103', 3367, 0) was 33
+ CHG ('NW_b110', 'NW_b113', 4203, 0) was 660
+ CHG ('NW_b113', 'NW_b110', 1097, 0) was 512
+ CHG ('root', 'NE_hub', 850, 3499) was 848
