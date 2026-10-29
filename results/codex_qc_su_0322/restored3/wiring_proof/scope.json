@@ -1,0 +1,30 @@
+{
+ "actual_native_modules": [
+  "qfd_qc_su_lane_e_l0",
+  "qfd_qc_su_lane_w_l0",
+  "qfd_qc_su_lane_e_l1",
+  "qfd_qc_su_lane_e_l2",
+  "qfd_qc_su_lane_e_l3",
+  "qfd_qc_su_lane_e_l4",
+  "qfd_qc_su_lane_e_l5",
+  "qfd_qc_su_lane_e_l6",
+  "qfd_qc_su_lane_e_l7",
+  "qfd_qc_su_lane_w_l1",
+  "qfd_qc_su_lane_w_l2",
+  "qfd_qc_su_lane_w_l3",
+  "qfd_qc_su_lane_w_l4",
+  "qfd_qc_su_lane_w_l5",
+  "qfd_qc_su_lane_w_l6",
+  "qfd_qc_su_lane_w_l7"
+ ],
+ "canonical_masters": [
+  "qfd_qc_su_native_l0",
+  "qfd_qc_su_native_lx"
+ ],
+ "leaf_input_obligation_bits_per_case": 2031,
+ "leaf_output_symbol_bits": 1566,
+ "real_output_bits_checked": 4076,
+ "clock_reset_inputs_checked": true,
+ "registers_cycles_added": 0,
+ "mutation": "swap two delivered output bits in canonical lane0 candidate"
+}

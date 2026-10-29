@@ -1,0 +1,53 @@
+{
+ "status": "CANDIDATE ONLY; boundary miter/current profile and physical gates required",
+ "canonical_masters": [
+  {
+   "module": "qfd_qc_su_native_l0",
+   "inputs": 760,
+   "outputs": 302,
+   "graph_sha256": "abc6dddc68370d0071af62e071ae9e37e0f75402e38cb5e12ee3886030abca08",
+   "actual_native_masters": [
+    "qfd_qc_su_lane_e_l0",
+    "qfd_qc_su_lane_w_l0"
+   ],
+   "unchanged_leaf_params": {
+    "exp": "",
+    "head": "#(.MEMORY_ALIGNMENT(3),.MEMORY_READ_EXTRA(0))",
+    "lrly": "",
+    "rcp": "",
+    "rsq": ""
+   },
+   "added_cycles": 0
+  },
+  {
+   "module": "qfd_qc_su_native_lx",
+   "inputs": 760,
+   "outputs": 248,
+   "graph_sha256": "0f91dd39f5497c6ac7aff840e3c9c31e8d902115b991be2c192e877c380ec6c0",
+   "actual_native_masters": [
+    "qfd_qc_su_lane_e_l1",
+    "qfd_qc_su_lane_e_l2",
+    "qfd_qc_su_lane_e_l3",
+    "qfd_qc_su_lane_e_l4",
+    "qfd_qc_su_lane_e_l5",
+    "qfd_qc_su_lane_e_l6",
+    "qfd_qc_su_lane_e_l7",
+    "qfd_qc_su_lane_w_l1",
+    "qfd_qc_su_lane_w_l2",
+    "qfd_qc_su_lane_w_l3",
+    "qfd_qc_su_lane_w_l4",
+    "qfd_qc_su_lane_w_l5",
+    "qfd_qc_su_lane_w_l6",
+    "qfd_qc_su_lane_w_l7"
+   ],
+   "unchanged_leaf_params": {
+    "exp": "",
+    "head": "#(.MEMORY_ALIGNMENT(3),.MEMORY_READ_EXTRA(0))",
+    "lrly": "",
+    "rcp": "",
+    "rsq": ""
+   },
+   "added_cycles": 0
+  }
+ ]
+}
