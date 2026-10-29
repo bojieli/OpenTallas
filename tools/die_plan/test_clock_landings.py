@@ -549,7 +549,7 @@ def test_start_relay_without_landed_input_reuses_an_ungated_tap():
 
 def test_root_and_start_pin_share_one_raw_relay():
     from clock_landings import START_PIN_IN
-    c=Landings.__new__(Landings);c.reset_placements={}
+    c=Landings.__new__(Landings);c.reset_placements={};c.tstart=None
     body="ot_dp_rgate u_rrl_4 (.clk(clk), .d(rst_rl_3), .run(run), .q(rst_n_t0));"
     rtl="\n".join(c._origin_rtl('T', {'role':('strap',(START_PIN_IN,),1,64,True)}, {}, body, []))
     assert rtl.count('ot_dp_rrelay u_cland_origin_rst')==1
