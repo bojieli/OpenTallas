@@ -1,0 +1,90 @@
+{
+  "source": "/srv/opentallas-scratch/claude/codex-s81-2340/reach17",
+  "clock_cell": "inv",
+  "calibration": "die_sta_related.spice_cal_factor(corner,inv); both measured source-edge LATE arrivals",
+  "period_ps": 833.0,
+  "corners": {
+    "TT": {
+      "taps": 8501,
+      "shared_scale": 0.9324,
+      "min_duty": 0.4639760107495797,
+      "max_duty": 0.5191515441310931,
+      "outside_45_55": 0,
+      "bad": [],
+      "min_pulse_ps": 386.4920169543999,
+      "worst": [
+        {
+          "port": "t_fE1_p5_b2__clk_t6",
+          "duty": 0.4639760107495797,
+          "high_ps": 386.4920169543999,
+          "low_ps": 446.5079830456001
+        },
+        {
+          "port": "t_fE1_p5_b2__clk_c5",
+          "duty": 0.46499149508907517,
+          "high_ps": 387.33791540919964,
+          "low_ps": 445.66208459080036
+        },
+        {
+          "port": "t_fE1_p5_b2__clk_t15",
+          "duty": 0.46623106212437,
+          "high_ps": 388.3704747496002,
+          "low_ps": 444.6295252503998
+        },
+        {
+          "port": "t_fE1_p5_b2__clk_t11",
+          "duty": 0.4663491176201668,
+          "high_ps": 388.4688149775989,
+          "low_ps": 444.5311850224011
+        },
+        {
+          "port": "t_fE1_p5_b2__clk_t3",
+          "duty": 0.46651745331764655,
+          "high_ps": 388.6090386135996,
+          "low_ps": 444.3909613864004
+        }
+      ]
+    },
+    "FF": {
+      "taps": 8501,
+      "shared_scale": 0.938,
+      "min_duty": 0.4640719537815126,
+      "max_duty": 0.5456550758151261,
+      "outside_45_55": 0,
+      "bad": [],
+      "min_pulse_ps": 378.46932184599996,
+      "worst": [
+        {
+          "port": "t_fW3_p6_b0__clk_c3",
+          "duty": 0.5456550758151261,
+          "high_ps": 454.53067815400004,
+          "low_ps": 378.46932184599996
+        },
+        {
+          "port": "t_fW3_p5_b0__clk_c3",
+          "duty": 0.5453103332268907,
+          "high_ps": 454.24350757799994,
+          "low_ps": 378.75649242200006
+        },
+        {
+          "port": "t_fW3_p4_b0__clk_c3",
+          "duty": 0.5452262105042012,
+          "high_ps": 454.1734333499996,
+          "low_ps": 378.8265666500004
+        },
+        {
+          "port": "t_s_0N_L2__clk_t5",
+          "duty": 0.5451673777478991,
+          "high_ps": 454.12442566399994,
+          "low_ps": 378.87557433600006
+        },
+        {
+          "port": "t_s_0N_L2__clk_t9",
+          "duty": 0.5443398849579836,
+          "high_ps": 453.4351241700003,
+          "low_ps": 379.5648758299997
+        }
+      ]
+    }
+  }
+}
