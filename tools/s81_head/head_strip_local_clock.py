@@ -18,7 +18,15 @@ def main():
   if q['type'] in ('hd_spn','hd_spn_end'):
    p['die'].setdefault('channels',[]).extend(spine_channels(q['name'],q['origin_um'][0]-X0,q['origin_um'][1]))
  p,aliases=split(p);(inp/'type_aliases.json').write_text(json.dumps(aliases,indent=1))
- (inp/'plan.json').write_text(json.dumps(p,indent=1));shutil.copytree(d/'core_pins',inp/'core_pins')
+ shutil.copytree(d/'core_pins',inp/'core_pins')
+ for t in p['partition_types'].values():
+  for core in t.get('hard_cores',[]):
+   if core.get('pins_file'):
+    src=(d/core['pins_file']).resolve();dst=inp/'core_pins'/src.name
+    if dst.exists():assert dst.read_bytes()==src.read_bytes(),('pin basename collision',src,dst)
+    else:shutil.copy(src,dst)
+    core['pins_file']='core_pins/'+src.name
+ (inp/'plan.json').write_text(json.dumps(p,indent=1))
  mapping=json.load(open(d/'spine_regions.json'))['part_region'];D=L.load_plan(p);G=L.region_geom(D,mapping);adj=L.part_adjacency(D);cross=L.crossings(D,mapping,G,adj);E=L.region_graph(D,mapping,adj,cross)
  # Only existing physical neighbour graph edges or declared data crossings;
  # disconnected regions are explicitly recorded by the generic proposer.
