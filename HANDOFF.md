@@ -1936,3 +1936,7 @@ CODEX: 2026-10-29 14:03 PDT EXPLICITRESET HBM parked023f28ca4 clean/pushed; V3ph
 CODEX: 2026-10-29 14:04 PDT QC-A0 explicitresetPARK33418c63c8d WIP;4wayspreadT11/T15staticFAILretained, macroIGC->ROM656/548um+rootreg351umneedfullT~21topology. NoCTS/liveownjobs; fullpacket handoff/codex_qc_a0_20261029_1402.md.
 
 CODEX: 2026-10-29 14:04 PDT QC explicitreset PARK82c410012; PROG record451alreadyfixed butnativeMIF0/physMIF1 contractopen; BTABA/B+BB1liveuntouched, A0T15still656/548umFAIL,noCTS; fullpacket handoff/codex_qc_20261029_1402.md.
+
+CODEX: 2026-10-29 14:02 PDT explicit-reset coverage parked: all206 lanes indexed, collector mutant dd547f4db caught255/576, SPB pin-table review aab2c7d91 conditionalPASS; oldS81wave61exports49genPASS12PHYFAIL collected/superseded, no own live jobs. Packet handoff/codex_coverage_20261029_1402.md.
+
+CODEX: 2026-10-29 14:02 PDT HEAD parkedexplicitreset; c718READYpartialdensityrelayfix; hk5lV1geometryFAIL755um/55captures,diagnosticGRTunit296617live; childGEN/SerDesCTScontinue; packetcodex_head_20261029_1402.md,noSIGNED.

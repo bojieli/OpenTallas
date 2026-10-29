@@ -6435,3 +6435,42 @@ OWNER?: none introduced. MIF1 physical-vs-MIF0 native binding mismatch goes to c
 
 ## Handoff to Claude 2026-10-29 14:02 PDT — tokens coordinator
 Explicitreset: stoppedengineering/launches/merges; notifiedDS/Qwen/HBMchildren. Packet handoff/codex_tokens_20261029_1402.md containsallcurrentbranches/results/failures/next/livejobs. Ownclean/pushed1f53d29d9; READYUNMERGED d13dd5555/a892be4a8/eedbe28aa/1f53d29d9. Noownheavyjobs. HEAD21trial→25source guardedgeometrydelta0datacycles; DS80probe missing15Sbeats due6omittedactualtransportbodies; KVdcalfixworksbutindependentepochabortremains/chainrc0misleading; HBMsplitBneeds1.966MB/12DMAplusactualproducerpublication. NoG5/SIGNEDclaim. OWNER?none newlyraised; QC MIFprofile decision heldbydieowner.
+
+## Handoff to Claude 2026-10-29 14:03 PDT — HBM aggregate
+Explicit14:02reset received; all3helperspark notified/livejobsuntouched. Own clean+pushed codex/hbm-1355@023f28ca4 prepareswinningSPBV3physicalpinview only, noadoption/route. IndependentV3nativeODBreviewaab2c7d91PASSCONDpinview; source/FF/PG/clockholdsexplicit. Lateststrict104=103UNPLANNED84076b+COLL_EMIT035; exactCOLLsourceprobeLIVEintel1unit481793 VM_RT3actual, oldrecipe81notused. Ring/bdringactualRCmodelgap andqwdec/querytreehold diagnosed. Fullpacket handoff/codex_hbm_20261029_1402.md. OWNER?none new; noafterresetengineering/jobs.
+
+## Handoff to Claude 2026-10-29 14:04 PDT
+QC A0 13:55takeoverPARKED atEXPLICIT14:02reset. WIP codex/qc-a0-1355@33418c63c8d pushed (baseexact452603b6fbb); detailed handoff/codex_qc_a0_20261029_1402.md + committedresults/codex_qc_a0_1355/PARKED.md. OwnWTintel2 /srv/opentallas-scratch2/claude/wt/codex-qc-a0-1355 kept, runroot /srv/opentallas-scratch2/claude/codex-qc-a0-1355. NOownheavy/livejobs/CTS/P&R/STA thisslice; only4staticgeneratorruns terminal, inheritedA0CTSallterminalFAIL. Peerjobs untouched. Noengineeringafterreset.
+InheritedcurrentA0 GEOMPASSplacesNLrr2/NKrr1 andproofcontractgapsclosed; doNOTredo0830placements. LatestplannedCTSFAILNLFF−654.46/5718 NK−1105.87/7766 causedsinglemp_a0_t7tilewidefanout. WIP gen_a0_tree.py adds opt-inshared4wayspread +--stages, defaultunchanged. T11NL/NK failclosed10ROMgatesatdepth1cannotfanout<=4. T15candidatesmaxparentfanout4butGEOMFAILremainingrootreglegsNL175.59/NK351.028um; macro-lastlegnotfixed. ActualmacroICG->ROMdistanceNL656.499/NK547.713um, so t7-onlyfix insufficient. NoCTSlaunched onfailedmodel.
+NEXTfulltopologyTabout21 planningONLY discussed/approvedparent: keepICGhomes/enablebounds, addclockrepeatersAFTERmacroICGs inlegalcorridors andsharedspreadforrootFFleafparents, accountviewk8/7+CTS3equalTOTALdepth andeveryactualleafleg, thenanalyticinsertion+render/view/reviewbeforefreshCTS. NewintrinsicmustjoinactualparentIO/dieevent; period833/60-25unchanged. T21NOTIMPLEMENTED atreset. CurrentSPREAD_GEOMETRYcensus omitsleaf->macro/FFsegments; doNOTcallitPASS. Sharedcore_infra452603 remainsOFFproductionA0. OWNER? None new. NoSIGNED/freeze/PASSclaim.
+
+## Handoff to Claude 2026-10-29 14:04 PDT
+QC explicit14:02reset PARKED. Owncodex/qc-fix-1355@82c410012 pushed; fullpacket handoff/codex_qc_20261029_1402.md. PROGfreeze record4513968c1 was alreadyfixed; actualnativeMIF0vsphysSIGNEDMIF1 mismatch confirmed and plainOWNER? logged, typedview retained. InheritedBTAB A294553 hold/B331227 DRT anddieQCBB12823927 remainliveuntouched. A0staticT15 stillmacrolegFAIL656/548um,noCTS; T21notimplemented. Importownquotingrunnerfix/residualbackboneproposal prepared, nopeeredit/duplicatejob. Children notifiedpark; no furtherengineering afterreset.
+
+## Handoff to Claude 2026-10-29 14:04 PDT — GQ stale-recipe regen helper
+
+Explicit reset received from parent at14:02. Parked immediately. No GEN, synthesis, LEC, P&R or STA jobs were launched; no RTL/tool/recipe changes were made and no main merge occurred.
+
+Prepared own clean sparse worktrees:
+- localhost:/srv/opentallas-scratch/claude/wt/codex-hbm-gq-regen-1355
+- epyc2:/srv/opentallas-scratch2/claude/wt/codex-hbm-gq-regen-1355
+Both are codex/hbm-gq-regen-1355@fb1fc79593ba9a9e4d968b80f2cd75dc44f1a056. Branch pushed to GitHub and intel2 hub. Remote checkout completed successfully before parking; mk_c20.py is present. No long-running process or ot-run unit owned here.
+
+Collected source diagnosis (not a new proof): PATH-HBM11:04 and13:42 identify old K13 tree13 SHA3dae1fc99a13 as pre-f437090e0. The1056 fmt and1024 gq_issue differences are stale-recipe failures, not a f437 arithmetic bug. Fix40235e1f116 is already merged in this exact main: fmt recipes_b2 and gq_issue harden/recipes_other pin tree13 to f437090e018c13d87f7854d83b40be0578f80b2a. The die owner previously checked fresh fmt synthesis+LEC16081/16081PASS. Those are inherited results, not rerun here.
+
+Exact pending three views, all from old current catalog intel1:/srv/opentallas-scratch2/claude/hbm-cores-kits-13/k23/views.json:
+- ot_hgi_coll_gq_issue@5c09aa5b506c,237.6x237.6,4032pins, q1 R0 table.
+- ot_hgi_coll_gq_issue@c8c240c460d3,237.6x237.6,4032pins, q0 base table.
+- ot_hbm_xp_aq_tree13_fmt@ed62ddb93a97,183.6x108,1807pins.
+Plan snapshot intel1:/srv/opentallas-scratch2/claude/hbm-cores-kits-13/c25c_d16 contains275files, including clock_entries.json and canonical pin tables. No copy or regeneration was performed after reset.
+
+Next authorized work after resumption: copy the applicable plan snapshot into own scratch (or use die owner's newer plan with these unchanged interfaces), run current views_b2r2 then mk_c20 for the two modules (three views), with ft-pin-dx1.08 and current hold defaults, all heavy GEN/SYNTH/LEC through ot-run. Verify generated tree13 reads the corrected recipe pin; fresh synthesis and canonical LEC are required. No cached old AIG proof and no blind copy-over. Render/view/record the current plan/pins before any P&R/STA. Parent cores_a owns remaining coordination.
+
+OWNER? None. No failed verdict overwritten. The remote-source setup initially failed because epyc2 origin hub:OpenTallas sees hub local branches, while git fetch on intel2 only created a remote-tracking ref. Resolved by pushing the own branch into the hub local ref, then fetching on epyc2. Setup session41384 completed exit0.
+
+
+## Handoff to Claude 2026-10-29 14:02 PDT — coverage
+Explicit reset received; both helpers parked, no new work after reset. All206 work lanes indexed in lanes/CODEX-COVERAGE-1355.md, linked CODEX.md. Current collector mutant dd547f4db (576 checks/255 mutant errors caught), SPB pin-table-only review aab2c7d91 PASS-COND; both clean/pushed, root finalizing results merge. All coverage jobs terminal. Old S81 waves61exports/49GENPASS/12actualPHYFAIL collected; superseded kits not promoted. Current AP healthy; old HBM hold clock385.194ps root-caused/assignedFLOW, no parserfix. Central KV source-clock test3PASS; thin sparse diagnostic had missing helper only, no source edit. Full concise packet handoff/codex_coverage_20261029_1402.md contains branches, host/path/units/checks, open failures/next steps. OWNER? None new. Stopping after packet.
+
+## Handoff to Claude 2026-10-29 14:02 PDT — HEAD aggregate
+Explicit reset received; helpers stopped, jobs untouched. Fullpacket handoff/codex_head_20261029_1402.md. Owncodex/head-1355@c718cd1a134 READYunreviewed/unmerged(partialdensitykeepoutfix,actualTclnewPASS/oldFAIL), cleanpushed. Actualhk5lV1PLACEPASSbutgeometryFAILr2r755.19/55worstu_cland_rst_i→statusfault,channelH1.783; GRT50diagnosticLIVEintel2codex-head-1355/hk5l_v1 unit296617-1793307488/client295716. START6d1f416a217results-onlyallownjobsterminal; missing453split102virtual+351nativeleaves,64capdisproven. Kits48f5a189bGENonlyliveunit342468/client341563; SerDesCTSunit332115/client330588 live−2.51TT/−2.35FF notSIGNED; noLEPPLACEexisted. TOK1f53extracts54fieldhk5lfixwithoutoverwriting25typerelease source. OWNERnone; noafterresetengineering.
