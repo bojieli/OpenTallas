@@ -4358,6 +4358,12 @@ def cmd_kit_rtl(a):
     ports.append(("input  wire arst_n", "die reset"))
     conns, body, spare, narrow, missing = [".clk(clk)", ".arst_n(arst_n)"], [], [], [], []
     seen = {"clk", "arst_n"}
+    for tap in taps:
+        seen.add(tap)  # already declared in the plan wrapper above
+        if tap in bmap:
+            if bmap[tap] != ("input", 1):
+                raise BindError(f"kit-rtl {tn}: planned clock tap {tap} is not a scalar input in {bmod}")
+            conns.append(f".{tap}({tap})")
     for d, n, W, Wd, ep in plan:
         ports.append((f"{d:6} wire [{W - 1}:0] {n}", f"plan bus: {Wd} data" + (f" + epoch [{Wd}]" if ep else "")))
         if n not in bmap:
