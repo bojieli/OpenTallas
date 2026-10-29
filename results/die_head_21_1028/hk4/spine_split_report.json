@@ -1,0 +1,335 @@
+{
+ "status": "RAW_RECOMPOSE_REQUIRED",
+ "data_cycles_added": 0,
+ "types": {
+  "hd_spn": {
+   "old_outline_um": [
+    1382.4,
+    2073.6
+   ],
+   "core_outline_um": [
+    583.2,
+    2073.6
+   ],
+   "paths": {
+    "xw_o": {
+     "old_internal": 3,
+     "root_internal": 1,
+     "shim_stations": 2,
+     "boundary_flops": 1,
+     "new_total": 4,
+     "old_total": 4
+    },
+    "xe_o": {
+     "old_internal": 3,
+     "root_internal": 2,
+     "shim_stations": 1,
+     "boundary_flops": 1,
+     "new_total": 4,
+     "old_total": 4
+    },
+    "bw_i": {
+     "old_internal": 7,
+     "root_internal": 5,
+     "shim_stations": 2,
+     "boundary_flops": 1,
+     "new_total": 8,
+     "old_total": 8
+    },
+    "be_i": {
+     "old_internal": 5,
+     "root_internal": 4,
+     "shim_stations": 1,
+     "boundary_flops": 1,
+     "new_total": 6,
+     "old_total": 6
+    },
+    "x_o": {
+     "old_internal": 6,
+     "root_internal": 6,
+     "shim_stations": 0,
+     "boundary_flops": 1,
+     "new_total": 7,
+     "old_total": 7
+    },
+    "b_i": {
+     "old_internal": 6,
+     "root_internal": 6,
+     "shim_stations": 0,
+     "boundary_flops": 1,
+     "new_total": 7,
+     "old_total": 7
+    }
+   }
+  },
+  "hd_spn_end": {
+   "old_outline_um": [
+    1382.4,
+    2073.6
+   ],
+   "core_outline_um": [
+    583.2,
+    2073.6
+   ],
+   "paths": {
+    "xw_o": {
+     "old_internal": 3,
+     "root_internal": 1,
+     "shim_stations": 2,
+     "boundary_flops": 1,
+     "new_total": 4,
+     "old_total": 4
+    },
+    "xe_o": {
+     "old_internal": 3,
+     "root_internal": 2,
+     "shim_stations": 1,
+     "boundary_flops": 1,
+     "new_total": 4,
+     "old_total": 4
+    },
+    "bw_i": {
+     "old_internal": 7,
+     "root_internal": 5,
+     "shim_stations": 2,
+     "boundary_flops": 1,
+     "new_total": 8,
+     "old_total": 8
+    },
+    "be_i": {
+     "old_internal": 5,
+     "root_internal": 4,
+     "shim_stations": 1,
+     "boundary_flops": 1,
+     "new_total": 6,
+     "old_total": 6
+    }
+   }
+  }
+ },
+ "parts": [
+  {
+   "name": "sp0_xw_o_shim",
+   "clock_region": "sp0",
+   "origin_um": [
+    8069.76,
+    14299.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "sp0_bw_i_shim",
+   "clock_region": "sp0",
+   "origin_um": [
+    8069.76,
+    13262.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "sp0_xe_o_shim",
+   "clock_region": "sp0",
+   "origin_um": [
+    9352.8,
+    14299.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "sp0_be_i_shim",
+   "clock_region": "sp0",
+   "origin_um": [
+    9352.8,
+    13262.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "sp1_xw_o_shim",
+   "clock_region": "sp1",
+   "origin_um": [
+    8069.76,
+    12225.6
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "sp1_bw_i_shim",
+   "clock_region": "sp1",
+   "origin_um": [
+    8069.76,
+    11188.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "sp1_xe_o_shim",
+   "clock_region": "sp1",
+   "origin_um": [
+    9352.8,
+    12225.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "sp1_be_i_shim",
+   "clock_region": "sp1",
+   "origin_um": [
+    9352.8,
+    11188.8
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "sp2_xw_o_shim",
+   "clock_region": "sp2",
+   "origin_um": [
+    8069.76,
+    10152.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "sp2_bw_i_shim",
+   "clock_region": "sp2",
+   "origin_um": [
+    8069.76,
+    9115.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "sp2_xe_o_shim",
+   "clock_region": "sp2",
+   "origin_um": [
+    9352.8,
+    10152.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "sp2_be_i_shim",
+   "clock_region": "sp2",
+   "origin_um": [
+    9352.8,
+    9115.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "sp3_xw_o_shim",
+   "clock_region": "sp3",
+   "origin_um": [
+    8069.76,
+    8078.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "sp3_bw_i_shim",
+   "clock_region": "sp3",
+   "origin_um": [
+    8069.76,
+    7041.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "sp3_xe_o_shim",
+   "clock_region": "sp3",
+   "origin_um": [
+    9352.8,
+    8078.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "sp3_be_i_shim",
+   "clock_region": "sp3",
+   "origin_um": [
+    9352.8,
+    7041.6
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "sp4_xw_o_shim",
+   "clock_region": "sp4",
+   "origin_um": [
+    8069.76,
+    6004.8
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "sp4_bw_i_shim",
+   "clock_region": "sp4",
+   "origin_um": [
+    8069.76,
+    4968.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "sp4_xe_o_shim",
+   "clock_region": "sp4",
+   "origin_um": [
+    9352.8,
+    6004.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "sp4_be_i_shim",
+   "clock_region": "sp4",
+   "origin_um": [
+    9352.8,
+    4968.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "sp5_xw_o_shim",
+   "clock_region": "sp5",
+   "origin_um": [
+    8069.76,
+    3931.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "sp5_bw_i_shim",
+   "clock_region": "sp5",
+   "origin_um": [
+    8069.76,
+    2894.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "sp5_xe_o_shim",
+   "clock_region": "sp5",
+   "origin_um": [
+    9352.8,
+    3931.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "sp5_be_i_shim",
+   "clock_region": "sp5",
+   "origin_um": [
+    9352.8,
+    2894.4
+   ],
+   "orient": "MY"
+  }
+ ],
+ "parts_added": 24,
+ "required": [
+  "same-region shims per part_region map",
+  "CA compose on new endpoint map",
+  "reset/START release offsets",
+  "die clock provider and GRT/STA"
+ ]
+}
