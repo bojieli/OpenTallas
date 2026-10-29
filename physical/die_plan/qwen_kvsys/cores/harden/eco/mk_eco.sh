@@ -34,11 +34,12 @@ rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2
 cp $HERE/eco_route.tcl $OUT/
 # FLOW-CLKFREEZE 2026-10-27: clock lock sourced by eco_route.tcl + blocking clock-net geometry check (run_eco.sh)
 ROOT=$(cd "$HERE/../../../../../.." && pwd)
-for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh; do cp "$ROOT/tools/die_plan/$f" $OUT/; done
+for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh kit_modes_eco.tcl; do cp "$ROOT/tools/die_plan/$f" $OUT/; done
 # FLOW-TAG 10-26: current kits set 'override export POST_GLOBAL_ROUTE_TCL = grt_post_core.tcl' (core_flow.py), which beat
 # the plain export below, so the ECO hook never ran (route-only re-route). eco_post.tcl = the ECO, then the kit's own
 # post-GRT hook (grt_post.tcl: IO vclk back to TT) when the kit has one; the FF-only variant runs in the FF vclk frame.
-{ echo 'source /work/eco_route.tcl'; test -f $OUT/grt_post_core.tcl && echo 'source /work/grt_post_core.tcl'; } > $OUT/eco_post.tcl
+{ echo 'source /work/kit_modes_eco.tcl'; echo 'source /work/eco_route.tcl'; echo 'kit_modes_eco_done';
+  test -f $OUT/grt_post_core.tcl && echo 'source /work/grt_post_core.tcl'; } > $OUT/eco_post.tcl
 cp $HERE/../run_kit_kv.sh $HERE/../corners.tcl $HERE/../pin_audit_core.py $OUT/
 # the whole signoff.py tool bundle (signoff.SIGNOFF_BUNDLE; io_hold_qualification.py missing -> signoff refuses)
 python3 -I "$SO/tools/die_plan/signoff.py" bundle "$OUT" || exit 1
@@ -56,6 +57,16 @@ override export PWR_NETS_VOLTAGES =
 override export GND_NETS_VOLTAGES =
 CFG
 HM=${V:1}; [[ "$HM" =~ ^[0-9]+$ ]] || { echo "mk_eco: variant $V: want b<hold margin ps> or m<hold margin ps>"; exit 2; }
+if [[ ${V:0:1} = b ]]; then
+  # A copied native kit can contain make override assignments from kit_modes.
+  # Command-line CORNERS=bc does not beat those: leaving them in place loads TT
+  # and BC into one ordinary mode with the FF virtual-clock latency.  This ECO
+  # is explicitly FF-only; final signoff still evaluates TT setup separately.
+  cat >> "$OUT/config.mk" <<'CFG'
+override export OT_HOLD_MM = 0
+override export CORNERS = bc
+CFG
+fi
 case ${V:0:1} in
   b) printf "OT_MAX_FANOUT=24\nOT_SLEW_MARGIN=20\nOT_SETUP_MARGIN=\nOT_HOLD_MARGIN=$HM\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORNERS='CORNER=BC CORNERS=bc'\n" ;;
   m) printf "OT_MAX_FANOUT=24\nOT_SLEW_MARGIN=20\nOT_SETUP_MARGIN=10\nOT_HOLD_MARGIN=$HM\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORNERS='CORNER=TC CORNERS=\"tc bc\"'\n" ;;
