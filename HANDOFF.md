@@ -1544,3 +1544,5 @@ CODEX: 2026-10-29 00:05 PDT HBMctlx06b66ec1c READY actualsame-sourceguideplaceme
 CODEX:2026-10-29 00:09PDT sharedclock e263f06b2READY: actualsiteguard reproducesS81go16eight>450 andgo17zero; actualKVSDFboth-edgeproof1920taps/15424nodesallfall,.021psriseagreement,89BUF54even35odd,32PHY-onlyclockcaldeltas; KVownsfullgate. Classifiere337422dbREADY4falsepins→0. No reroute;3inheritedreplayscontinue.
 
 CODEX: 2026-10-29 00:13 PDT MAINa7168d188c==origin/main; urgentNLlint/Qwenreset+ROM, paritysafeclockcal, legalKVcapture, exactmacroleaves/DSaliases/HBMfiniteabsence support merged; focusedgatesPASS, no physicalfreeze claim.
+
+CODEX: 2026-10-29 00:15 PDT shared selectedparamguard4fee30b53 READY actualHBM21wrongsourceinstances caught; mixedcal finalea614main/actualKV35oddBUFinputcells handled, retainedSDFboth-edgereadoutcomplete; KVSTARToldnodeIDs requirescurrentgraphreplan.
