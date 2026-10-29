@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.macro_placement.v1",
+ "design": "hfd_hgi_vm_calendar_f20",
+ "outline_um": [
+  241.92,
+  116.64
+ ],
+ "macro_placement": [
+  {
+   "k": "u_fcore.u_calendar.u_programme.u_program",
+   "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "origin_um": [
+    21.6,
+    17.34
+   ],
+   "orient": "R0"
+  }
+ ],
+ "note": "HBM-CORES-KITS-1: from C24 core_macros.json (sha of plan 3ab76af4) KNOWN/placed; source /srv/opentallas-scratch2/claude/hbm-cores-r7/kits/hfd_hgi_vm_calendar_f20_3649f48c0839-_k2/placed.csv"
+}
