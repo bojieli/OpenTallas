@@ -3,7 +3,7 @@
 // and constant bank destinations replace serial wide variable part writes.
 // The only retained carry is its seven live records. Eight actual SRAM banks,
 // 512 records/frame, fixed 171 ingest slots and fixed emit calendar are unchanged.
-module ot_hbm_idx_topk_link_static_core #(parameter integer MUT=0)(
+module ot_hbm_idx_topk_link_static_core #(parameter integer MUT=0, WRITE_PIPE_STAGES=0)(
  input wire clk,input wire[7:0]clk_mem,input wire rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
@@ -57,11 +57,36 @@ module ot_hbm_idx_topk_link_static_core #(parameter integer MUT=0)(
     we[b]=1;wa[b*6+:6]=6'((int'(flits)+j)/8);wd[b*512+:512]=write_flit[j];
    end
  end
+ // Optional closure profile. Existing carry/flits/count/fault dates stay
+ // unchanged; only coherent SRAM WE/ADDR/DATA visibility moves by two edges.
+ // The fixed production calendar drains the writer before ordered emission.
+ wire[7:0]mem_we;wire[47:0]mem_wa;wire[4095:0]mem_wd;
+ generate if(WRITE_PIPE_STAGES==0)begin:g_write_direct
+  assign mem_we=we;assign mem_wa=wa;assign mem_wd=wd;
+ end else if(WRITE_PIPE_STAGES==2)begin:g_write_pipe
+  (* keep *) reg[7:0]we0,we1;
+  (* keep *) reg[47:0]wa0,wa1;
+  (* keep *) reg[4095:0]wd0,wd1;
+  // Valid/control state resets; payload and addresses do not.
+  always @(posedge clk or negedge rst_n)begin
+   if(!rst_n)begin we0<=0;we1<=0;end
+   else if(clear)begin we0<=0;we1<=0;end
+   else begin we0<=we;we1<=we0;end
+  end
+  always @(posedge clk)begin wa0<=wa;wa1<=wa0;wd0<=wd;wd1<=wd0;end
+  // Existing MUT parameter includes causal pipeline-only negative controls.
+  assign mem_we=(MUT==4)?we0:we1;
+  assign mem_wa=(MUT==5)?(wa1^48'd1):wa1;
+  assign mem_wd=(MUT==6)?(wd1^(4096'd1<<16)):wd1;
+ end else begin:g_write_bad_depth
+  initial $fatal(1,"WRITE_PIPE_STAGES must be 0 or 2");
+  assign mem_we=0;assign mem_wa=0;assign mem_wd=0;
+ end endgenerate
  wire[4095:0]rd;
  for(genvar b=0;b<8;b=b+1)begin:gm
   wire re=emit_v&&(b/4==int'(emit_group[0]));
   ot_sram_1r1w_64x512_m1_r2c2 mem(.clk(clk_mem[b]),.r_ce_in(re),.r_addr_in({3'd0,emit_group[3:1]}),.rd_out(rd[b*512+:512]),
-   .w_ce_in(we[b]),.w_addr_in(wa[b*6+:6]),.wd_in(wd[b*512+:512]),.w_mask_in({512{1'b1}}),
+   .w_ce_in(mem_we[b]),.w_addr_in(mem_wa[b*6+:6]),.wd_in(mem_wd[b*512+:512]),.w_mask_in({512{1'b1}}),
    .rr_en(2'd0),.rr_addr(12'd0),.cr_en(2'd0),.cr_sel(18'd0));
  end
  reg read_v;reg[3:0]read_group;reg[7:0]read_rank,read_gbase;
@@ -103,7 +128,7 @@ endmodule
 // ot_hbm_idx_topk_link_static_core. Latency: +1 edge on every input, +1 edge on every output; the IDX
 // calendar compiler (tools/hbm_idx_static_calendar.py, PIN table) schedules them.
 // Pin flops have no reset (as physical/common_flow/ot_pin_regs.tcl); the core is reset.
-module ot_hbm_idx_topk_link_static #(parameter integer MUT=0)(
+module ot_hbm_idx_topk_link_static #(parameter integer MUT=0, WRITE_PIPE_STAGES=0)(
  input wire clk,input wire[7:0]clk_mem,input wire rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
@@ -121,7 +146,7 @@ module ot_hbm_idx_topk_link_static #(parameter integer MUT=0)(
   clear_r<=clear;ingest_r<=ingest_v;line_r<=selected_line;flush_r<=flush;emit_r<=emit_v;group_r<=emit_group;rank_r<=rank;gbase_r<=gbase;
   tx_v<=c_tx_v;tx<=c_tx;fault<=c_fault;selected_count<=c_count;
  end
- ot_hbm_idx_topk_link_static_core #(.MUT(MUT)) core(.clk(clk),.clk_mem(clk_mem),.rst_n(rst_core_n),.clear(clear_r),.ingest_v(ingest_r),
+ ot_hbm_idx_topk_link_static_core #(.MUT(MUT),.WRITE_PIPE_STAGES(WRITE_PIPE_STAGES)) core(.clk(clk),.clk_mem(clk_mem),.rst_n(rst_core_n),.clear(clear_r),.ingest_v(ingest_r),
   .selected_line(line_r),.flush(flush_r),.emit_v(emit_r),.emit_group(group_r),.rank(rank_r),.gbase(gbase_r),
   .tx_v(c_tx_v),.tx(c_tx),.fault(c_fault),.selected_count(c_count));
 endmodule
