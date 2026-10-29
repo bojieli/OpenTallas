@@ -409,8 +409,11 @@ def test_street_body_config_renders_the_codex_clock_kit_call(tmp_path):
     """build_street_body.py: clock_kit(P, out, 200, 180, site_legal, site_slide, regions(+PHY_N fill), link_htree, feed,
     clock_rc 1x, region_dme delay, snake set, early 1.0 / ff 0.8639019524013111 merge, inv2, cell_paths), DME_WORKERS 8"""
     c = cfg("hbm_street_body")
-    ok, _, why = O.stage_check(c, reg())
-    assert not ok and "clock_rc=1x" in why[0]          # ndr-route fit on a 1x stack: fail closed, legacy replay only
+    ok, e, why = O.stage_check(c, reg())
+    assert ok and c["stage_model"]["entry"] == "inv2_1x_hbm_native_sm3_early", why   # 1x routed-leg refit (2b042adc5)
+    old = dict(c, stage_model=dict(c["stage_model"], entry="inv2_ndr_hbm_trial2b_early"))
+    ok, _, why = O.stage_check(old, reg())
+    assert not ok and "clock_rc=1x" in why[0]          # the old ndr-route fit on this 1x stack still fails closed
     c["inputs"]["region_fill"] = None                  # (the fill reads the plan; covered below)
     f = flags(O.kit_argv(c, "OUT", c["stage_model"]["legacy_cal"]))
     assert f["--leaf-um"] == "200" and f["--rep-um"] == "180" and f["--clock-rc"] == "1x" and f["--clock-cell"] == "inv2"

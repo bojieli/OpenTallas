@@ -1088,22 +1088,21 @@ def reach_balance(nodes, site, rep_um, even):
                 nd, p = nodes[i], nodes[nodes[i]["parent"]]
                 r = None
                 cost = cur.get(i, 0.) + add.get(i, 0.)
-                lp = leg_parity(node_pol(nd) ^ node_pol(p) if even else 0)
-                lp.__enter__()          # CLK-TOOL-8 EDGE_ALT: this leg's parity (0 = even: unchanged)
-                if i in cur:
-                    pa, q = (p["x"], p["y"]), (nd["x"], nd["y"])
-                    r = snake_leg(site, pa, q, cost + owe, rep_um, plain_ps=cost)
-                    if r is not None and (even and (len(r[0]) + 1) % 2 != _LEG_PAR or
-                            max(chain_spans([pa]+list(r[0])+[q])) > REP_REACH_MAX_UM + 1e-6):
-                        r = None
-                if r is not None:
-                    if nd.get("physical_leg") or DME_ACTUAL_MAX_UM is not None:
-                        # physical_leg wins over snake during export. Replace the
-                        # immutable planned chain explicitly, priced on these
-                        # same cells; a snake key alone would silently do nothing.
-                        pl = physical_leg(site,pa,q,rep_um,[pa]+list(r[0])+[q])
-                        nd["physical_leg"] = pl
-                lp.__exit__()
+                # CLK-TOOL-8 EDGE_ALT: this leg's parity (0 = even: unchanged); restored even if a leg builder raises
+                with leg_parity(node_pol(nd) ^ node_pol(p) if even else 0):
+                    if i in cur:
+                        pa, q = (p["x"], p["y"]), (nd["x"], nd["y"])
+                        r = snake_leg(site, pa, q, cost + owe, rep_um, plain_ps=cost)
+                        if r is not None and (even and (len(r[0]) + 1) % 2 != _LEG_PAR or
+                                max(chain_spans([pa]+list(r[0])+[q])) > REP_REACH_MAX_UM + 1e-6):
+                            r = None
+                    if r is not None:
+                        if nd.get("physical_leg") or DME_ACTUAL_MAX_UM is not None:
+                            # physical_leg wins over snake during export. Replace the
+                            # immutable planned chain explicitly, priced on these
+                            # same cells; a snake key alone would silently do nothing.
+                            pl = physical_leg(site,pa,q,rep_um,[pa]+list(r[0])+[q])
+                            nd["physical_leg"] = pl
                 if r is not None:
                     nd["snake"] = [list(x) for x in r[0]]
                     wire_delta = sum(chain_spans([pa]+list(r[0])+[q])) - cur_wire[i]
