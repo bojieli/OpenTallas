@@ -15,7 +15,7 @@ foreach cw_i [[ord::get_db_block] getInsts] {
  }
 }
 if {$cw_n != 512} {error "CALENDAR_CFG_W expected512 existing FF cells, got $cw_n"}
-set ot_mrg_spec {calendar_cfg_w {%s} %s}
+set ::ot_mrg_spec {calendar_cfg_w {%s} %s}
 source /work/macro_reg_guide.tcl
 '''%(prefixes,prefixes,rect)
 (kit/'calendar_cfg_w.tcl').write_text(script)
