@@ -1,0 +1,10 @@
+{
+ "original_top_sha256": "9e4e60326d3e9c7be30ae746ba44fd2a7943f126a4c54e6e37ac56f7a92f72a7",
+ "new_top_sha256": "1e11d3361d9debbafd03395e4014d33e78642f7c9a1966e857f82b1e3d7e0272",
+ "module": "hfd_hgi_vm_calendar_f20_oneclk",
+ "change": "Delete redundant public clk_cap/clk_mem/clk_tgt; connect unchanged child port names to common clk",
+ "cycles_added": 0,
+ "child_definitions": "UNCHANGED",
+ "actual_clock_source": "All16 calendar clock inputs from hb_ckgen__pll_stream[0:0]",
+ "reset": "rst_n preserved; native_required calendar role reset delivery is NOT claimed"
+}
