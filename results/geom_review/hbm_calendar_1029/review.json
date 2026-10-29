@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "PLAN_PROPOSAL_ONLY",
+ "picture": "results/hbm_calendar_1029/proposal.png",
+ "findings": [
+  "Current one-SRAM full4.32halo clear",
+  "Two islands north4.32 clear halo",
+  "Dense South pins retained5.7/um",
+  "Actual placement/source binding/parent endpoint clock PG composition remains required"
+ ],
+ "pnr_launched": false
+}
