@@ -50,7 +50,18 @@ if {$::env(OT_SETUP_MARGIN) ne ""} {
 set args [list -hold -hold_margin $::env(OT_HOLD_MARGIN) -max_buffer_percent $::env(OT_HOLD_MAXBUF)]
 if {$::env(OT_HOLD_ALLOW_SETUP) == 1} { lappend args -allow_setup_violations }
 puts "KVCORES_ECO repair_timing $args"
+# OT_PAD_NEW_HOLD=SITES (DIE-KV-32 10-29, COORD KV-010 variant C ruling 11:12): the hold buffers THIS repair inserts get
+# placement padding (left = right = SITES) before the ECO legalization, so they spread next to their capture FFs instead
+# of packing a dense pin-face band (KV-010 B: 461 BUFx2 into the E-face hold-buffer band -> DRT oscillating 139..861).
+set pad_new_hold [expr {[info exists ::env(OT_PAD_NEW_HOLD)] ? $::env(OT_PAD_NEW_HOLD) : 0}]
+if {$pad_new_hold > 0} { set _pre_insts [dict create]; foreach i [[ord::get_db_block] getInsts] { dict set _pre_insts [$i getName] 1 } }
 repair_timing {*}$args
+if {$pad_new_hold > 0} {
+  set _new_hold {}
+  foreach i [[ord::get_db_block] getInsts] { if {![dict exists $_pre_insts [$i getName]]} { lappend _new_hold [$i getName] } }
+  puts "KVCORES_ECO pad_new_hold [llength $_new_hold] instances -left $pad_new_hold -right $pad_new_hold"
+  if {[llength $_new_hold] > 0} { set_placement_padding -instances [get_cells $_new_hold] -left $pad_new_hold -right $pad_new_hold }
+}
 if {$drv_last} {
   estimate_parasitics -placement
   kvc_drv

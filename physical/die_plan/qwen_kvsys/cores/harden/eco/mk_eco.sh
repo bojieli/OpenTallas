@@ -10,6 +10,7 @@
 #   ECO's do-route runs ONE detailed route on a DB without detailed wires (no re-route of a routed DB: DRT-1231 on the
 #   47ce KV canary repeats on any re-DRT of the routed DB, FLOW-SHARED-9 probes).  Default route = the post-route form.
 # env OT_PAD_MASTERS='FAx1_ASAP7_75t_R:1': placement padding before the ECO legalization (DRT pin access)
+# env OT_PAD_NEW_HOLD=SITES: padding on the hold buffers this ECO inserts (spread next to capture FFs)
 # env OT_DRV_PLACE=1: DRV-first on placement parasitics, then incremental GRT, then timing repair on GRT parasitics
 # env OT_DRV_LAST=1: hold/setup repair before the fanout/slew repair (eco_route.tcl; avoids RSZ-0074)
 # VARIANT: b<N> FF-only (CORNER=BC), max_fanout 24, slew margin 20, hold margin N ps, setup may break at FF (TT gated)
@@ -77,6 +78,7 @@ esac > $OUT/variant.env
 [ -n "${OT_RETIME_LAST:-}" ] && echo "OT_RETIME_LAST=$OT_RETIME_LAST" >> $OUT/variant.env
 [ ${V:0:1} = b ] && [ -f $OUT/vclk_corner.tcl ] && echo "OT_VCLK_CORNER=ff" >> $OUT/variant.env
 [ -n "${OT_PAD_MASTERS:-}" ] && echo "OT_PAD_MASTERS='$OT_PAD_MASTERS'" >> $OUT/variant.env
+[ -n "${OT_PAD_NEW_HOLD:-}" ] && echo "OT_PAD_NEW_HOLD=$OT_PAD_NEW_HOLD" >> $OUT/variant.env
 echo "OT_ECO_FROM=$FROM" >> $OUT/variant.env
 printf '{"variant": "%s", "source_kit": "%s:%s", "source_route": "%s/%s", "eco_from": "%s", "parasitics": "%s/6_final.spef", "signoff_tools": "%s"}\n' \
   $V "$(hostname)" $KIT $RS $SRC $FROM $RS "$SO" > $OUT/ECO.json
