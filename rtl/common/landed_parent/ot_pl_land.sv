@@ -227,7 +227,7 @@ module ot_pl_land_local_r #(
             for (s=0;s<D;s=s+1) read_oh[s] <= (s == ((D-K) % D));
         end else begin
             rc <= rc + 1'b1;
-            if (rc == K-1) warm <= 1;
+            if (32'(rc) == K-1) warm <= 1;
             read_oh <= {read_oh[D-2:0], read_oh[D-1]};
         end
     always @(posedge ck) o <= (warm && selected_valid) ? selected : {W{1'b0}};
