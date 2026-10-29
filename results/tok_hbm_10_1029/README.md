@@ -165,7 +165,7 @@ clean main package. It remains default-off/unselected and does not qualify the c
   relocated high storage needs its real17-bit native packet/address path, including mutable writes; widening banks
   plus legacy lifts alone does not execute a122.
 - INDEX native reader/collar/share candidates: rtl/hbm_next/idx/ot_hnx_idx_vm*_r2048.sv,
-  rtl/hbm_accel/generic/adapters/ot_hbm_static_cfg_collar_idx256r_r2048.sv and the corresponding static_r2048
+  rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256r_r2048.sv and the corresponding static_r2048
   share source (exact paths in d0b824's file list). `index_packet.py`/`native_idx_config.py` produce four role-local
   fields (weight/query sector and row strides),289 configbits/+2F20frames,144-bit request bundles,2056 response bits.
   Their current source proposal explicitly selects SINGLE_ROW_ONLY=1. Actual a122 has active N6 INDEX records, so
