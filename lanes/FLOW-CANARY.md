@@ -200,3 +200,6 @@ CODEX took over shared flow on codex/flow-0255-1029. KVcore8b terminal REGRESSIO
 
 ## CODEX notes 2026-10-29 03:10 PDT
 Release dashboard summaryhang diagnosed: --summary synchronously invoked stale planrefresh (fleetfind+5G0Cs). Cache-only summary now returns immediatelywithstale/missingwarning, explicit--refresh-plan/backgroundnormalrenderstillrefresh. Removedretiredepyc1 fromSIGNEDscanhosts. Own3targetedchecksPASS; actualsummaryreturned<1s,countsmarkedcached. Node exactflowprovenancerelease committedmain4075211775; no APjob/archive invented.
+
+## CODEX notes 2026-10-29 03:29 PDT — canonical regression collection/correction
+407521177 QC+HBMSRAM terminalNO-REGRESSION;309KVtype+069S81terminalNO-REGRESSION(absoluteNOTSIGNED/preDRTstopsretained). HEADeC590 canonicalstagePASS butREGRESSION: holdEP74→241,FFmean175.72→192.75,DRV185→332;TT−19.36/FF−8.22 actualNOTSIGNED. Correctiontoinheritednote: HEAD613alsohasEXACTsameregressionrows/numbers, soearlier"canonicalPASS/NOregression"conflatedstageverdictwithregressionverdict; noHEADflowreleaseauthorized. Both pin05f9baseline. Oldbaselinekitobjectsabsentatcanonicalrunpath; no ungroundedbisect/rebaseline orduplicateroute. KVcore309/HBMec590stilllive. Latestnormaltrigger03:06alreadyqueued407QC/HBMSRAMandretained5liveperdiejobs, timerhealthy15min. Rootnotified.
