@@ -1,0 +1,45 @@
+{
+ "qfd_tile_nk_a0c": {
+  "ref_tile": "physical/die_plan/qwen_compute/cores/a0/parent/nk",
+  "pins_file": "cores/a0/parent/a0_nk_pins_dir.json",
+  "plan_pins_contract": true,
+  "hard_children": {
+   "views": {
+    "ot_qwen_tile_romleaf": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf",
+    "ot_qwen_tile_lsl_rawfault_m3": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3",
+    "ot_qwen_tile_node": "results/codex_qc_a0_2340/views/ot_qwen_tile_node"
+   },
+   "children_file": "physical/die_plan/qwen_compute/cores/a0/parent/nk_children.json"
+  },
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": "12.3 common core latency 250 TT / 202.5 FF kit frame (KIT_PREFLIGHT ff_binding); the die taps the A0 centre entry EARLY by (routed trunk insertion - frame): DIE-QC-17 routed trunk 716/623 TT/FF (nk t5), COORD 14:21",
+  "insertion_balance": false,
+  "max_routing_layer": "M7",
+  "util": 0.45,
+  "suffix": "a0nk12prep",
+  "slang": true,
+  "params": {
+   "ICG": 1
+  },
+  "_why": "NK initial source/synthesis preparation: actual signed rawleaf/romleaf/node children; canonical NK control/reset kept. No NL reset-output cleanup or globalKV zero changes transferred. Existing inactive-branch width-safe patch only; exact native proof required. No placement/CTS/route authorized. Common250/202.5 remains trial IO frame until real parent plan declares per-corner insertion.",
+  "_why_icg": "QC-A0-KITS-9 10-28: ICG=1 (OWNER option c, QC-PG-5-ICG on main 07f037d9b): one ICGx8DC u_icg at the tile root, RTL enable (go face | ~me_idle | node valid | reset | drain); the clock-gating setup/hold on u_icg ENA is the liberty ICG check (OpenSTA infers it, reported at sign-off). Parent CTS = parent_trunk_dme --ungated-split (face branch + gated branch behind u_icg, ICG_INST reuse) once the kit CTS hook is wired.",
+  "two_mode": true,
+  "orfs_vars": {
+   "OT_RTL_LINT_FLATTEN": 1
+  },
+  "rtl_patches": [
+   {
+    "file": "rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv",
+    "why": "Inactive REGROOT>=8 arm must have in-bounds twin index when REGROOT3 NSPC27. Select offset0 in inactive arm, same expression when REGROOT>=8; active fallback unchanged. Actual expression lockstep20000 + active-twin mutant caught; zero cycles.",
+    "edits": [
+     [
+      "spc[4*(14+gq+SPB) +: 4]",
+      "spc[4*(14+gq+((REGROOT >= 8) ? SPB : 0)) +: 4]",
+      1
+     ]
+    ]
+   }
+  ]
+ }
+}

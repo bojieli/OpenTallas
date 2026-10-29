@@ -1,0 +1,1 @@
+QC A0 continuation. NK recipe consumes all three actual signed child views. Source/synthesis preparation only; unchanged canonical NK reset/node collar logic. NL-specific reset removal is excluded. Physical/clock/LEC gates remain open.
