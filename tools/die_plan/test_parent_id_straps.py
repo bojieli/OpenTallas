@@ -66,5 +66,6 @@ def test_exact_keybuf_lane_identity(base,lane):
     for key,value in [('width',4),('value',(base+lane+1)%8)]:
         bad = copy.deepcopy(d); bad['parent_id_straps']['strap_lane_id'][key]=value
         with pytest.raises(ValueError): validate_parent_id_straps(bad)
+    with pytest.raises(ValueError): validate_parent_id_straps(d, {'strap_lane_id':3}, actual_module='ot_other')
     with pytest.raises(ValueError): validate_parent_id_straps(d, {})
     with pytest.raises(ValueError): validate_parent_id_straps(d, {'strap_lane_id':3}, ['strap_lane_id[0]'])
