@@ -90,6 +90,10 @@ def main():
     ap.add_argument('--token-path', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--link-handoff', type=Path, required=True)
+    ap.add_argument('--head-timeline', type=Path,
+                    help='actual selected MU prepare/HOST dates and outgoing reservation path')
+    ap.add_argument('--bound-head-component', type=Path,
+                    help='actual bound tuple ages for --head-timeline')
     ap.add_argument('--status-observers', action='store_true',
                     help='require final coherent STATUS/KVN GEN ages and paths; no extra calendar frames')
     a = ap.parse_args()
@@ -121,7 +125,13 @@ def main():
         raise SystemExit('actual selected TT source/GI qualification receipt required')
     if tt.get('status') != 'QUALIFIED_SOURCE_LOCAL_EDGES':
         raise SystemExit('selected TT source-local edges are missing or unqualified')
-    for key in ('master', 'receipt_sha256', 'rtl_sha256', 'lp_record_sha256'):
+    # Native core publishers have a typed source record and component receipt,
+    # rather than the retired LP compiler record. Do not require an invented LP
+    # record to compile the actual selected cpub39 source.
+    source_hashes = (('source_record_sha256', 'bench_receipt_sha256')
+                     if tt.get('schema') == 'opentallas.qwen.tt_source_local.v1'
+                     else ('lp_record_sha256',))
+    for key in ('master', 'receipt_sha256', 'rtl_sha256', *source_hashes):
         value = tt.get(key)
         if not isinstance(value, str) or not value.strip():
             raise SystemExit(f'unknown actual selected TT source identity: {key}')
@@ -135,13 +145,34 @@ def main():
             or tt['calendar_sample_edges'] + tt['source_to_output_edges'] != intrinsic['ct_lm_sample']):
         raise SystemExit('TT intrinsic age disagrees with qualified producer-relative LP source ledger')
     expected_head = sum(intrinsic[k] for k in names) + receipt['tt_to_native_edges'] + receipt['native_to_sysface_edges']
-    if receipt['head_prepare_edges'] != expected_head:
+    head_reservation = None
+    if a.head_timeline is not None or a.bound_head_component is not None:
+        if a.head_timeline is None or a.bound_head_component is None:
+            raise SystemExit('--head-timeline and --bound-head-component are required together')
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'qwen_split'))
+        from head_prepare_schedule import reserve
+        component = json.loads(a.bound_head_component.read_text())
+        timeline = json.loads(a.head_timeline.read_text())
+        if (component['tt_source'] != tt or
+                component['edges']['tt_local'] != intrinsic['ct_lm_sample'] or
+                component['edges']['tt_to_native'] != receipt['tt_to_native_edges'] or
+                component['edges']['native_to_face'] != receipt['native_to_sysface_edges']):
+            raise SystemExit('HEAD timeline component differs from actual selected source/transport')
+        try:
+            head_reservation = reserve(component, timeline, receipt['compute_gen_sha256'])
+        except (ValueError, KeyError) as e:
+            raise SystemExit('HEAD timeline cannot reserve outgoing slot: ' + str(e))
+        if receipt['head_prepare_edges'] != head_reservation['head_prepare_edges']:
+            raise SystemExit('head_prepare_edges differs from compiled MU/HOST reservation')
+    elif receipt['head_prepare_edges'] != expected_head:
         raise SystemExit('head_prepare_edges disagrees with actual source-intrinsic/GEN transport ledger')
     if receipt['emb_window'] < 1627 or receipt['kv_codec'] not in (1, 2):
         raise SystemExit('invalid 73-record RoPE programme shape')
     # A new directory retains earlier failed generations and immutable receipts.
     out.mkdir(parents=True, exist_ok=False)
     (out / 'actual_gen_inputs.json').write_text(json.dumps(receipt, indent=2) + '\n')
+    if head_reservation is not None:
+        (out / 'head_reservation.json').write_text(json.dumps(head_reservation, indent=2) + '\n')
 
     def run(args, log):
         with (out / log).open('w') as f:
@@ -166,6 +197,20 @@ def main():
             if m['seg'] == 1 and m['src'] == 'C' and m['kind'] == 12]
     if len(head) != 1:
         raise SystemExit('sole calendar lacks unique actual recurring Ckind12 descriptor')
+    if head_reservation is not None and head[0]['cyc'] != head_reservation['head_prepare_edges']:
+        # The calendar also excludes its witness/config records. If that moves
+        # HEAD, recompile the actual owner-bank lifetimes and deadlines at the
+        # resulting slot; a collision fix must not silently consume a late bank.
+        timeline = dict(timeline)
+        timeline['forbidden_send_slots'] = list(timeline['forbidden_send_slots']) + list(
+            range(head_reservation['head_prepare_edges'], head[0]['cyc']))
+        try:
+            head_reservation = reserve(component, timeline, receipt['compute_gen_sha256'])
+        except (ValueError, KeyError) as e:
+            raise SystemExit('calendar HEAD collision moves beyond source reservation: ' + str(e))
+        if head_reservation['head_prepare_edges'] != head[0]['cyc']:
+            raise SystemExit('calendar and actual MU HEAD reservation disagree')
+        (out / 'head_reservation.json').write_text(json.dumps(head_reservation, indent=2) + '\n')
     ready = head[0]['rx_out'] + receipt['kv_descriptor_to_header_edges']
     if ready > calendar['program']['emb_header_send']:
         raise SystemExit(f'actual descriptor/header deadline fails: ready {ready} > '
