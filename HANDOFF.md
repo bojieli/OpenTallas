@@ -1695,3 +1695,5 @@ CODEX: 2026-10-29 03:24 PDT S81L2 sourcegeometryprogress10203b566:prospectivesof
 CODEX: 2026-10-29 03:24 PDT HEAD SerDes quarter counter READY7db8a43e8: mode2 E2(14/14/14/13)/E3CSA,0cycles,+10FFbits; all2^56BDD+root17drop control,732actualDCHNcycles/64frames0diff+MUT2caught64,2CSAidentitySAT PASS. ActualORFS-mapped TTlogic-only slack old119.573/half174.035/quarter340.85ps; transferred oldactualCTS/GRT penalty predictsquarter+39.287/+54.547ps (estimate,notclosure). Half190053cells/21579.6um2 synth,943/943typedface+portbind0/0 PASS; strictLEC live unit3101206, nohalfPNR. Quarter ownpinnedWT/gen preparing, noactivejobchanged; mainadoptionROOTreviewheld.
 
 CODEX: 2026-10-29 03:26 PDT PC collar source e2509627a (+1input/boot,1831FF) qualified actualchain4096/0diff+2mutants; synth-only epyc2unit1618796 live. Independent GEOM followups8ae2d2bb0 allow scoped BTABDRT/HEADFIRMCTS/NLnativeCTS, keep failed predecessors.
+
+CODEX: 2026-10-29 03:27 PDT LPcompactactualDPL/macrocutFAILdiagnosed; currentstrictparentSYNTHexposesrealforwarded-clockportcommabug. Sharedfix62c2ae900/36PASS+Icarus2controlsREADYROOT, fullparentcensusnext/noP&R.
