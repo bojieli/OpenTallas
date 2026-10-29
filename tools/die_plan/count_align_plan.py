@@ -522,7 +522,7 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
 # + OCV), so with OCV many start edges are ambiguous, and a crossing between regions that are far apart in that tree
 # sums every ambiguous edge on the path (QC t6: 6-9 cycles on all 94 FAILs, 10-11 start hops).
 START_EDGE_KEYS = ("launch", "capture", "launch_part", "capture_part", "retime", "unshared_a_ps", "unshared_b_ps",
-                   "fork_node", "clean_ok")
+                   "fork_node", "clean_ok", "hop_um")
 
 
 def width_robust(r, T, ap, skew_range=0.0):
@@ -608,6 +608,9 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     CLEAN under the same rule; only otherwise the default choice (deepest clean node) applies.  So re-planning from
     the measured build of a plan keeps its stage set (fixed point) unless a kept stage is no longer clean.
     None (default): unchanged.
+    max_hop_um (opt-in): a clean segment must also fit this Manhattan physical tap-to-tap reach.
+    This preserves branch stages and inserts existing clock-node retime stages; a gap with no legal
+    intermediate node fails clean_ok. Emitted flop siting and final pin geometry still need GEOM.
     Returns (root, edges, info)."""
     if max_hop_um is not None and (not math.isfinite(max_hop_um) or max_hop_um <= 0):
         raise ValueError("START max hop must be finite and positive")
@@ -1071,6 +1074,8 @@ def check_start_tree_args(a, err):
     if a.start_tree != "clock":
         if getattr(a, "start_prev", None):
             err("--start-prev needs --start-tree clock")
+        if getattr(a, "start_max_hop_um", None) is not None:
+            err("--start-max-hop-um needs --start-tree clock")
         return
     if not (a.sta_proof and a.sta_plan):
         err("--start-tree clock needs --sta-proof and --sta-plan (the clock tree)")
