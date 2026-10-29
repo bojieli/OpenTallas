@@ -391,3 +391,33 @@ def test_gated_htree_at_leaf_one_branch_per_copy(tmp_path):
     rows = F.icg_copy_table(P)
     assert len(rows) == sum(1 for u, ss in P["leafsinks"].items() if P["gate_of"]["%s/%s" % (ss[0][2], ss[0][3])])
     assert any(r["members"] == ["rom/clk"] for r in rows)                          # gated macro pin = own leaf + copy
+
+
+def test_gate_fragments_preserve_domains_and_sibling_locality():
+    sink = lambda n, x: (x, 1., n, "CLK", "DFF")
+    small = [sink("a", 1.)]; big = [sink("b%d" % i, 4.) for i in range(8)]
+    foreign = [sink("foreign", 1.)]; other_parent = [sink("d%d" % i, 2.) for i in range(10)]
+    macro = (1., 1., "rom", "clk", "MACRO:rom")
+    groups = {(): small + big + foreign + other_parent + [macro],
+              (0, 0): small + foreign + [macro], (0, 1): big, (1, 0): other_parent}
+    gate_of = {"%s/%s" % (s[2], s[3]): ("other" if s[2] == "foreign" else "g")
+               for ss in groups.values() for s in ss}
+    before = sorted(s for k, ss in groups.items() if len(k) == 2 for s in ss)
+    moved = F.merge_gate_fragments(groups, 2, gate_of, 4)
+    assert moved == [dict(source=[0, 0], destination=[0, 1], gate="g", sinks=1)]
+    assert sorted(s for k, ss in groups.items() if len(k) == 2 for s in ss) == before
+    assert groups[(0, 0)] == foreign + [macro]
+    assert groups[(1, 0)] == other_parent
+
+
+def test_gated_quantile_and_fragment_optins_preserve_members(tmp_path):
+    geo = _gated_geo(tmp_path)
+    baseline = F.gated_htree(str(geo), [2, 2], 70., [], 400, 4, at_leaf=True)
+    revised = F.gated_htree(str(geo), [2, 2], 70., [], 400, 4, at_leaf=True,
+                            merge_fragment_fraction=.25, padding_quantile=.95)
+    members = lambda p: sorted(s for ss in p["leafsinks"].values() for s in ss)
+    assert members(revised) == members(baseline)
+    for ss in revised["leafsinks"].values():
+        assert len({revised["gate_of"]["%s/%s" % (s[2], s[3])] for s in ss}) == 1
+    assert revised["T"][-1] <= baseline["T"][-1]
+    assert len({len(w["segs"]) for w in revised["wires"] if w["level"] == 3}) == 1
