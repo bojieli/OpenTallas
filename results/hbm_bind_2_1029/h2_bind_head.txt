@@ -1,0 +1,7 @@
+{"partitions": 90, "types": 81, "crossings": 2607, "crossing_bits": 393149, "errors": 372, "unbound": 182059, "tied": 2080, "undriven": 0, "multiply_bound": 0, "straps": 11325, "plan_driven": 0}
+n_errors 372 unmapped 0 tied_by_port 11
+170 UNPLANNED | UNPLANNED NE_b000 -> NE_b001: 2777 as-built crossing bits with no plan lane path (4127 b planned on direct lanes)
+168 TIED ra | TIED sfucore_NE.u_core.u_engine.u_memory.u_store.u_output.ra[0] = 0 (literal)
+32 TIED rst_n | TIED hb_idx__s_NE.scorer.ge[0].gc[0].leaf.core.u_qlate.rst_n[0] = 1 (literal)
+1 EMIT | EMIT wavefront core reset q_b000/u_hcb_Q0.ot_hbm_hc_bank128_pair0.rst_n: expected one bound leaf, found 0 (partition NE_b000 root ; e.g. )
+1 TIED_TOTAL | TIED_TOTAL 2080 tied bits on 52 leaf pins in 11 (type.port <- source) classes (TIED lines capped at 200; full list bind_tied.json)

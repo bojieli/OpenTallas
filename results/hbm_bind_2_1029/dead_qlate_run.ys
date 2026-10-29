@@ -1,0 +1,6 @@
+read_verilog -sv input.sv
+chparam -set W 569 -set D 0 -set RESET 0 ot_hdc_delay
+hierarchy -top ot_hdc_delay
+proc
+opt
+write_json opt.json

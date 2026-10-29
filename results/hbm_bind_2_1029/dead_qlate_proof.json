@@ -1,0 +1,354 @@
+{
+ "schema": "opentallas.dead_inputs.v1",
+ "verdict": "PASS",
+ "defines": [
+  "OT_SMH_FC_HIER",
+  "OT_SMH_HIER",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SM_QSPLIT"
+ ],
+ "dependency_modules": [],
+ "source_commit": "9e1fb425c3a2153de9143092f7d0c08c4034b1c0",
+ "note": "HBM-BIND-2 10-29: scorer leaf core u_qlate = ot_hdc_delay W=569 D=0 (wire); rst_n literal 1 at the parent has no fanout in the optimized module (no child cells). Per-type declarations only; no port removed, no new type.",
+ "declarations": [
+  {
+   "partition_type": "q_b000",
+   "module": "ot_hdc_delay",
+   "parameters": {
+    "W": "569",
+    "D": "0",
+    "RESET": "0"
+   },
+   "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "module_sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f",
+   "method": "yosys.proc.opt.no_fanout",
+   "remaining_loads": 0,
+   "ports": {
+    "rst_n": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "partition_type": "q_b000__physical_v1",
+   "module": "ot_hdc_delay",
+   "parameters": {
+    "W": "569",
+    "D": "0",
+    "RESET": "0"
+   },
+   "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "module_sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f",
+   "method": "yosys.proc.opt.no_fanout",
+   "remaining_loads": 0,
+   "ports": {
+    "rst_n": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "partition_type": "q_b001",
+   "module": "ot_hdc_delay",
+   "parameters": {
+    "W": "569",
+    "D": "0",
+    "RESET": "0"
+   },
+   "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "module_sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f",
+   "method": "yosys.proc.opt.no_fanout",
+   "remaining_loads": 0,
+   "ports": {
+    "rst_n": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "partition_type": "q_b001__physical_v1",
+   "module": "ot_hdc_delay",
+   "parameters": {
+    "W": "569",
+    "D": "0",
+    "RESET": "0"
+   },
+   "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "module_sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f",
+   "method": "yosys.proc.opt.no_fanout",
+   "remaining_loads": 0,
+   "ports": {
+    "rst_n": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "partition_type": "q_b010",
+   "module": "ot_hdc_delay",
+   "parameters": {
+    "W": "569",
+    "D": "0",
+    "RESET": "0"
+   },
+   "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "module_sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f",
+   "method": "yosys.proc.opt.no_fanout",
+   "remaining_loads": 0,
+   "ports": {
+    "rst_n": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "partition_type": "q_b010__physical_v1",
+   "module": "ot_hdc_delay",
+   "parameters": {
+    "W": "569",
+    "D": "0",
+    "RESET": "0"
+   },
+   "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "module_sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f",
+   "method": "yosys.proc.opt.no_fanout",
+   "remaining_loads": 0,
+   "ports": {
+    "rst_n": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "partition_type": "q_b011",
+   "module": "ot_hdc_delay",
+   "parameters": {
+    "W": "569",
+    "D": "0",
+    "RESET": "0"
+   },
+   "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "module_sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f",
+   "method": "yosys.proc.opt.no_fanout",
+   "remaining_loads": 0,
+   "ports": {
+    "rst_n": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "partition_type": "q_b011__physical_v1",
+   "module": "ot_hdc_delay",
+   "parameters": {
+    "W": "569",
+    "D": "0",
+    "RESET": "0"
+   },
+   "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "module_sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f",
+   "method": "yosys.proc.opt.no_fanout",
+   "remaining_loads": 0,
+   "ports": {
+    "rst_n": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "partition_type": "q_b100",
+   "module": "ot_hdc_delay",
+   "parameters": {
+    "W": "569",
+    "D": "0",
+    "RESET": "0"
+   },
+   "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "module_sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f",
+   "method": "yosys.proc.opt.no_fanout",
+   "remaining_loads": 0,
+   "ports": {
+    "rst_n": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "partition_type": "q_b100__physical_v1",
+   "module": "ot_hdc_delay",
+   "parameters": {
+    "W": "569",
+    "D": "0",
+    "RESET": "0"
+   },
+   "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "module_sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f",
+   "method": "yosys.proc.opt.no_fanout",
+   "remaining_loads": 0,
+   "ports": {
+    "rst_n": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "partition_type": "q_b101",
+   "module": "ot_hdc_delay",
+   "parameters": {
+    "W": "569",
+    "D": "0",
+    "RESET": "0"
+   },
+   "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "module_sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f",
+   "method": "yosys.proc.opt.no_fanout",
+   "remaining_loads": 0,
+   "ports": {
+    "rst_n": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "partition_type": "q_b101_nw",
+   "module": "ot_hdc_delay",
+   "parameters": {
+    "W": "569",
+    "D": "0",
+    "RESET": "0"
+   },
+   "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "module_sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f",
+   "method": "yosys.proc.opt.no_fanout",
+   "remaining_loads": 0,
+   "ports": {
+    "rst_n": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "partition_type": "q_b102",
+   "module": "ot_hdc_delay",
+   "parameters": {
+    "W": "569",
+    "D": "0",
+    "RESET": "0"
+   },
+   "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "module_sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f",
+   "method": "yosys.proc.opt.no_fanout",
+   "remaining_loads": 0,
+   "ports": {
+    "rst_n": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "partition_type": "q_b102__physical_v1",
+   "module": "ot_hdc_delay",
+   "parameters": {
+    "W": "569",
+    "D": "0",
+    "RESET": "0"
+   },
+   "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "module_sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f",
+   "method": "yosys.proc.opt.no_fanout",
+   "remaining_loads": 0,
+   "ports": {
+    "rst_n": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "partition_type": "q_b103",
+   "module": "ot_hdc_delay",
+   "parameters": {
+    "W": "569",
+    "D": "0",
+    "RESET": "0"
+   },
+   "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "module_sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f",
+   "method": "yosys.proc.opt.no_fanout",
+   "remaining_loads": 0,
+   "ports": {
+    "rst_n": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "partition_type": "q_b103__physical_v1",
+   "module": "ot_hdc_delay",
+   "parameters": {
+    "W": "569",
+    "D": "0",
+    "RESET": "0"
+   },
+   "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "module_sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f",
+   "method": "yosys.proc.opt.no_fanout",
+   "remaining_loads": 0,
+   "ports": {
+    "rst_n": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  }
+ ]
+}
