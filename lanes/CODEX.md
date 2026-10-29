@@ -4450,3 +4450,9 @@ All lanes covered by active teams; per-file inventory in CODEX-COVERAGE-0822.md.
 
 ## Coverage takeover 2026-10-29 13:55 PDT
 All inherited and newly added lane files are indexed in [CODEX-COVERAGE-1355.md](CODEX-COVERAGE-1355.md), with owner/current source state/job pointers/next/failure. Die owners own their current tasks; coverage/support and coverage/review handle auxiliary collection and live reviews. Historical job pointers are not treated as live jobs.
+
+## Shared FLOW/clock takeover 2026-10-29 14:01 PDT
+- FLOW-HOLD: oldq3V1/V1b stopped13:35 FAILfloorplan; currentq3w16nunit406102 FAILpreGPL clockbody/endcap overlap; legalactualbodyrehome belongsKV/FLOWnext, no reroute. E0hub2828389 LIVEplateauGRT−38.910/TNS−30814.58, sharedholdguard cannotinspectinsideunboundedrepaircall; no bypass.
+- PAIR_SKEW: recoveredpausedeb315, READYcodex/flow-1355@12e5221e2,9testsPASS; actualH0TTFFverify14.746/7.792→0/0 withoutnewSTA. H0ownerappliesaftermergedsourceandcurrentSTAterminal.
+- CLK-TOOL: localentryduplicateportfixed15598alreadycurrentmain; no duplicatepatch. Duty/RMS/couponhistoryterminal, optionaldutyexperimentsdeferredbyowners. HCP412retainedcorrespondenceopen; helpercheckingcurrentHBMownershipbeforeactualrekeyproof.
+- INFRA/STA/PDNhistoricalsharedlanes: no independentcurrentstandalonefailure/job beyondcurrent5dieowners; no archivalreroute. Currentrootmainfb1 usedexplicitSHAfornewWT.
