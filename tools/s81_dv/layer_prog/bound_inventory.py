@@ -131,7 +131,12 @@ def extract(yjs, manifest, units, *, asbuilt_sha256, top_sha256, native_entry=Fa
                     inputs[str(b)].append(endpoint)
                 if direction not in ('input', 'output', 'inout'):
                     raise ValueError(f'actual endpoint {endpoint} lacks a direction')
-        if touched:
+        # Native return paths can traverse an intermediate exact source $buf
+        # whose nets do not touch a retained parent port. Retain its interface
+        # so BufferSinks can stitch A[i] to Y[i] with checked widths and ages.
+        # Net/driver selection remains unchanged; no arbitrary cell is made
+        # transparent and the default inventory scope stays unchanged.
+        if touched or (native_entry and c.module == '$buf' and c.kind == 'glue'):
             interfaces[c.path] = dict(module=c.module, kind=c.kind,
                 ports={pn: dict(dir=c.dirs.get(pn, 'unknown'), width=len(bits)) for pn, bits in c.ports.items()})
     for pn, (direction, bits) in F.top_ports.items():
