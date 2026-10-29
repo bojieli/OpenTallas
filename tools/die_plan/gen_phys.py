@@ -1806,27 +1806,15 @@ def declared_rom_bits(rtl_dir):
             best = max(best, int(t["words"]) * int(t["width"]))
     return best
 
-_LANDING_MOD = re.compile(r"^\s*module\s+ot_dp_clk_landing\b(.*?)^\s*endmodule\b", re.M | re.S)
-_LANDING_INST = re.compile(r"\bot_dp_clk_landing\s*#\s*\(\s*\.W\s*\(\s*(\d+)\s*\)")
-_RING_DEPTH = re.compile(r"\bot_meso_ring\s*#\s*\([^;]*?\.DEPTH\s*\(\s*(\d+)\s*\)", re.S)
+_LANDING_MOD = re.compile(r"^\s*module\s+ot_dp_clk_landing\b", re.M)
 
 
-def declared_landing_ring_bits(rtl_dir):
-    """DIE-S81-26 10-29 (COORD 10:41 ruling (a)): largest declared clock-landing ring (ot_dp_clk_landing, whose
-    ot_meso_ring data slots are DEPTH x RW bits, RW = W rounded up to 64) instantiated in the kit RTL; 0 if the kit
-    RTL does not define ot_dp_clk_landing or no instance has a literal W.  S81 stations carry 4 x 1105-bit rings
-    (4420 > the ORFS 4096 default: synth stopped at the memory check).  Like the D-ROM-2 tables, the limit is raised
-    only to exactly this size; the ring then goes through the flow's normal memory_map to flip-flops (the slots are
-    flops by design, no SRAM), and any other inferred memory above that size still fails."""
-    text = "\n".join(f.read_text(errors="replace") for f in sorted(Path(rtl_dir).glob("*.sv")))
-    m = _LANDING_MOD.search(text)
-    if not m:
-        return 0
-    d = _RING_DEPTH.search(m.group(1))
-    if not d:
-        return 0
-    depth = int(d.group(1))
-    return max((depth * ((int(w) + 63) // 64) * 64 for w in _LANDING_INST.findall(text)), default=0)
+def defines_landing_ring(rtl_dir):
+    """DIE-S81-26 10-29 (COORD 10:41 ruling (a) + follow-up): True when the kit RTL defines ot_dp_clk_landing.  gen phys
+    then exports OT_LANDING_FF=1: physical/common_flow/ot_keep_regs.tcl maps ONLY the landing modules' ring memories to
+    flip-flops before synth's memory check (S81 stations: 4 x 1105-bit rings > the 4096 SYNTH_MEMORY_MAX_BITS default).
+    SYNTH_MEMORY_MAX_BITS is not raised, so any other memory above it in the same kit still FAILs."""
+    return any(_LANDING_MOD.search(f.read_text(errors="replace")) for f in sorted(Path(rtl_dir).glob("*.sv")))
 
 
 def stage_includes(rtl_files, rtl_dir):
@@ -1906,7 +1894,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             shutil.copyfile(f, dst)
         srcs.append(f"/work/rtl/{Path(f).name}")
     stage_includes(rtl_files, kd / "rtl")
-    rom_bits = max(declared_rom_bits(kd / "rtl"), declared_landing_ring_bits(kd / "rtl"))
+    rom_bits = declared_rom_bits(kd / "rtl")
+    landing_ff = defines_landing_ring(kd / "rtl")
     pins = type_pins(P, tn)
     bump_sites = bump_pin_sites(P, tn, bump_ports, macros, Path(root) if root else Path(__file__).resolve().parent.parent.parent) \
         if bump_ports else []
@@ -2028,8 +2017,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # e.g. the KP4 GF(1024) inverse 1024x10 in every serdes FEC lane) are synthesised logic by decision; the ORFS
            # default SYNTH_MEMORY_MAX_BITS 4096 failed hd_serdes synth on them.  The limit is raised only to the largest
            # declared table defined in this kit's RTL, so any other inferred memory above that size still fails.
-           # DIE-S81-26 10-29: same for the largest declared clock-landing ring (declared_landing_ring_bits; flops).
            *([f"export SYNTH_MEMORY_MAX_BITS = {rom_bits}"] if rom_bits > 4096 else []),
+           # DIE-S81-26 10-29: declared clock-landing rings -> flip-flops per module (ot_keep_regs.tcl OT_LANDING_FF)
+           *(["export OT_LANDING_FF = 1"] if landing_ff else []),
            "export LEC_CHECK = 0",
            # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
            # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell
