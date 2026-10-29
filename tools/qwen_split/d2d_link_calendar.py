@@ -332,6 +332,20 @@ def txdp_svh(txd, note):
             f"localparam [31:0] QKD_D2D_TXDP = 32'h{txdp_word(txd['K']):08x};   // KV {txd['K']}\n")
 
 
+def compute_status_offset(txd_c, minimum=40):
+    """Earliest STATUS slot after the 32-word Q capture, avoiding KVN captures.
+
+    Counts are producer-to-master capture latencies, including pin flops. This
+    derives the slot from the selected seam instead of assuming the old C0=8.
+    """
+    q_end = 32 + txd_c[0]
+    kvn = {33 + i + txd_c[3] for i in range(4)}
+    capture = max(minimum + txd_c[2], q_end + 1)
+    while capture in kvn:
+        capture += 1
+    return capture - txd_c[2]
+
+
 def compile_cal(msgs, txl, phy, ofs, txd):
     """txd: {'C': [..], 'K': [..]} per-end producer codec latency; txl = slot-to-pin latency at codec latency 1."""
     segs = sorted({m.get("seg", 0) for m in msgs})
@@ -460,7 +474,7 @@ def main():
         msgs = json.load(open(a.spec))
     elif a.profile == "program":
         msgs, layout = program_profile(txl_p, phy_p, a.token_path, host_stages=a.host_stages,
-                                        st_ofs=40 if a.pinreg else 38, handoff=a.link_handoff, mu=a.mu,
+                                        st_ofs=compute_status_offset(txd["C"],40 if a.pinreg else 38), handoff=a.link_handoff, mu=a.mu,
                                         host_req=a.ctx_host_req, emb_fill=a.emb_fill_edges, emb_window=a.emb_window,
                                         status_delay=a.status_delay,
                                         attn_tx_shift=a.attn_tx_shift, attn_service_pad=a.attn_service_pad, rope=a.rope, layer_period_min=a.layer_period_min,head_prepare_edges=a.head_prepare_edges)   # STATUS capture after the (+2) KVN captures
