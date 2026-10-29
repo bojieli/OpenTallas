@@ -28,7 +28,7 @@ t+='write_db /work/pin_access_before.odb\npin_access\nwrite_db /work/pin_access_
 (out/'run.sh').write_text('''#!/bin/bash
 set -uo pipefail
 cd "$(dirname "$0")"
-docker run --rm --name codex-spb-access-$$ --cpus=2 --memory=8g --memory-swap=8g -v "$PWD":/work -w /work openroad/orfs:asap7lock bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null2>&1; openroad -no_init -exit /work/probe.tcl > /work/access.log2>&1'
+docker run --rm --name codex-spb-access-$$ --cpus=2 --memory=32g --memory-swap=32g -v "$PWD":/work -w /work openroad/orfs:asap7lock bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null2>&1; openroad -no_init -exit /work/probe.tcl > /work/access.log2>&1'
 rc=$?
 echo "$rc" >access.exit
 exit "$rc"
