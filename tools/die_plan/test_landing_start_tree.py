@@ -161,3 +161,17 @@ def test_compose_fails_closed_on_any_error(tmp_path, monkeypatch, errs, status, 
     rep = json.loads((tmp_path / "o" / "compose_report.json").read_text())["compose"]
     assert rep["status"] == status and rep["landing_contract"]["errors"] == len(errs)
     assert ("injected" in rep.get("error", "")) == bool(errs)
+
+
+def test_registered_launch_fans_out_to_direct_child_and_stage():
+    d = _decl()
+    e = dict(id="e_direct", src=dict(part="lnc", bus=OUT), dst=dict(part="direct", bus=IN),
+             width=1, epoch=False, kind="ctl", source_registered=True, capture_registered=True, max_hop_um=405)
+    p = _plan(d, edges=[e])
+    p.types["t_direct"] = dict(outline_um=[10., 10.],
+                              clock=dict(landing_contract=dict(pins=[_pin(IN, "in")])))
+    p.parts["direct"] = dict(type="t_direct")
+    assert LC.check(p, sidecar=SIDE)["errors"] == []
+    # Opening that actively driven launch is still invalid.
+    p.clock["landing_network"]["start_tree"]["open"].append(dict(part="lnc", pin=OUT))
+    assert any("also used by a landing_network edge" in x for x in LC.check(p)["errors"])

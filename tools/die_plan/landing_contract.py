@@ -130,7 +130,10 @@ def _start_tree_check(P,st,pinmap,uses,errors,side):
             bad(f"{what} {pn}.{pin}: type {P.parts[pn]['type']} has no such landing-contract pin");return False
         if p.get("dir")!=want[pin] or p.get("kind")!="ctl":
             bad(f"{what} {pn}.{pin}: dir/kind {p.get('dir')}/{p.get('kind')} (want {want[pin]}/ctl)");return False
-        if (pn,pin) in edge_used:
+        # A real registered launch may fan out to a direct real child and
+        # to virtual START stages. A capture input still has exactly one source;
+        # an open output cannot simultaneously drive any edge.
+        if (pn,pin) in edge_used and not (what == "use" and pin == START_PIN_OUT):
             bad(f"{what} {pn}.{pin}: also used by a landing_network edge");return False
         return True
     for u in st.get("uses") or []:
