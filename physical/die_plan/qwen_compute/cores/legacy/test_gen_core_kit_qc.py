@@ -267,5 +267,59 @@ class TwoMode(unittest.TestCase):
             self.assertNotIn("timing_modes", json.loads((kd / "freeze.json").read_text()))
 
 
+class ParentTrunk(unittest.TestCase):
+    """QC-A0-KITS-10 10-28: opt-in recipe key parent_trunk stages the A0 parent CTS hook (parent_cts.tcl PRE_CTS:
+    cluster CTS + planned --ungated-split trunk behind the RTL ICG); absent = kit unchanged; refusals fail closed."""
+    REC = {"insertion_balance": False, "hard_children": {"views": {"ot_qwen_tile_node": "v/n",
+                                                                  "ot_qwen_tile_romleaf": "v/r"}},
+           "parent_trunk": {"icg_inst": "u_icg", "plan_opts": ["--sp", "110"]}}
+
+    def stage(self, rec, clks=("ck",), cfg=None):
+        t = tempfile.TemporaryDirectory(); self.addCleanup(t.cleanup)
+        kd = Path(t.name); cfg = list(cfg or ["export CTS_ARGS = -sink_clustering_enable"])
+        return kd, cfg, G.parent_trunk_stage(kd, rec, list(clks), cfg)
+
+    def test_stage_files_and_hook(self):
+        kd, cfg, r = self.stage(self.REC)
+        self.assertEqual(cfg[-1], "export PRE_CTS_TCL = /work/parent_cts.tcl")
+        for f in ("parent_cts.tcl", "parent_cts.py", "parent_trunk_dme.py", "parent_trunk_insert.tcl",
+                  "parent_trunk_stage_table_ckinvdcx16.json", "clk_aocv_table_g021.json", "clk_aocv.py"):
+            self.assertTrue((kd / f).is_file(), f)
+        t = (kd / "parent_cts.tcl").read_text()
+        for s in ("set ::pt_clk_port {ck}", "set ::pt_icg_inst {u_icg}",
+                  "set ::pt_children [list {ot_qwen_tile_node} {ot_qwen_tile_romleaf}]", "set ::pt_entry [list ]",
+                  "set ::pt_plan_opts [list --sp 110]", "rename ::clock_tree_synthesis ::ot_pt_tritoncts",
+                  "--ungated-split"):
+            self.assertIn(s, t)
+        self.assertEqual(t.count("{"), t.count("}"))
+        self.assertEqual((r["clock_port"], r["topology"], r["children"]), ("ck", "bipart", ["ot_qwen_tile_node", "ot_qwen_tile_romleaf"]))
+
+    def test_refusals(self):
+        bad = [dict(self.REC, insertion_balance=True), {k: v for k, v in self.REC.items() if k != "hard_children"},
+               dict(self.REC, parent_trunk={"bogus": 1}), dict(self.REC, parent_trunk={"plan_opts": ["--ungated-split"]}),
+               dict(self.REC, parent_trunk={"plan_opts": ["a;b"]}), dict(self.REC, parent_trunk={"entry": [1]}),
+               dict(self.REC, parent_trunk={"topology": "x"})]
+        for rec in bad:
+            with self.assertRaises(SystemExit, msg=str(rec)):
+                self.stage(rec)
+        with self.assertRaises(SystemExit):
+            self.stage(self.REC, clks=("ck", "ck2"))
+        with self.assertRaises(SystemExit):
+            self.stage(self.REC, cfg=["export PRE_CTS_TCL = /work/hold_budget.tcl"])
+
+    def test_a0c_recipes_carry_the_key_and_default_kit_unchanged(self):
+        rec = json.loads((HERE.parent / "a0/recipes_a0.json").read_text())
+        for m in ("qfd_tile_nk_a0c", "qfd_tile_nl_a0c"):
+            self.assertIn("parent_trunk", rec[m]); self.assertFalse(rec[m]["insertion_balance"])
+        with tempfile.TemporaryDirectory() as t:
+            r = subprocess.run([sys.executable, str(HERE / "gen_core_kit_qc.py"), "--module", MODULE, "--out", t],
+                               capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stderr[-2000:])
+            kd = Path(json.loads(r.stdout.strip().splitlines()[-1])["kit"])
+            self.assertFalse((kd / "parent_cts.tcl").exists())
+            self.assertNotIn("parent_cts", (kd / "config.mk").read_text())
+            self.assertNotIn("parent_trunk", json.loads((kd / "freeze.json").read_text()))
+
+
 if __name__ == "__main__":
     unittest.main()

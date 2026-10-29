@@ -92,7 +92,12 @@
    "ICG": 1
   },
   "_why": "QC-A0-KITS-6 10-28: A0 PARENT kit (glue + SIGNED hard children). Children views must be SIGNED (export_view layout) at the listed dirs; today none is (generator refuses, all named). Clock = the slice centre entry; the plan trunk (tools/die_plan/parent_trunk_dme.py) is NOT yet wired as the kit CTS hook (insertion_balance off; next step). M7 = parent routes over children (OBS <= M5), as the QC-A0-KITS-3 parent trial.",
-  "_why_icg": "QC-A0-KITS-9 10-28: ICG=1 (OWNER option c, QC-PG-5-ICG on main 07f037d9b): one ICGx8DC u_icg at the tile root, RTL enable (go face | ~me_idle | node valid | reset | drain); the clock-gating setup/hold on u_icg ENA is the liberty ICG check (OpenSTA infers it, reported at sign-off). Parent CTS = parent_trunk_dme --ungated-split (face branch + gated branch behind u_icg, ICG_INST reuse) once the kit CTS hook is wired."
+  "_why_icg": "QC-A0-KITS-9 10-28: ICG=1 (OWNER option c, QC-PG-5-ICG on main 07f037d9b): one ICGx8DC u_icg at the tile root, RTL enable (go face | ~me_idle | node valid | reset | drain); the clock-gating setup/hold on u_icg ENA is the liberty ICG check (OpenSTA infers it, reported at sign-off). Parent CTS = parent_trunk_dme --ungated-split (face branch + gated branch behind u_icg, ICG_INST reuse) once the kit CTS hook is wired.",
+  "parent_trunk": {
+   "icg_inst": "u_icg",
+   "topology": "bipart",
+   "_why": "QC-A0-KITS-10 10-28: kit CTS = PRE_CTS hook parent_cts.tcl (cores/a0/parent_cts.tcl): ungated face regs (tile clock port net) and gated regs (u_icg GCLK) in separate leaf clusters, TritonCTS on the cluster nets only, measured cluster insertion, shared parent_trunk_dme.py plan --ungated-split + parent_trunk_insert.tcl ICG_INST=u_icg, trunk dont_touch. Acceptance: routed OCV-incl spread <= 60 ps (parent_trunk_dme.py ocv)."
+  }
  },
  "qfd_tile_nl_a0c": {
   "ref_tile": "physical/die_plan/qwen_compute/cores/a0/parent/nl",
@@ -117,7 +122,12 @@
    "ICG": 1
   },
   "_why": "QC-A0-KITS-6 10-28: A0 PARENT kit (glue + SIGNED hard children). Children views must be SIGNED (export_view layout) at the listed dirs; today none is (generator refuses, all named). Clock = the slice centre entry; the plan trunk (tools/die_plan/parent_trunk_dme.py) is NOT yet wired as the kit CTS hook (insertion_balance off; next step). M7 = parent routes over children (OBS <= M5), as the QC-A0-KITS-3 parent trial.",
-  "_why_icg": "QC-A0-KITS-9 10-28: ICG=1 (OWNER option c, QC-PG-5-ICG on main 07f037d9b): one ICGx8DC u_icg at the tile root, RTL enable (go face | ~me_idle | node valid | reset | drain); the clock-gating setup/hold on u_icg ENA is the liberty ICG check (OpenSTA infers it, reported at sign-off). Parent CTS = parent_trunk_dme --ungated-split (face branch + gated branch behind u_icg, ICG_INST reuse) once the kit CTS hook is wired."
+  "_why_icg": "QC-A0-KITS-9 10-28: ICG=1 (OWNER option c, QC-PG-5-ICG on main 07f037d9b): one ICGx8DC u_icg at the tile root, RTL enable (go face | ~me_idle | node valid | reset | drain); the clock-gating setup/hold on u_icg ENA is the liberty ICG check (OpenSTA infers it, reported at sign-off). Parent CTS = parent_trunk_dme --ungated-split (face branch + gated branch behind u_icg, ICG_INST reuse) once the kit CTS hook is wired.",
+  "parent_trunk": {
+   "icg_inst": "u_icg",
+   "topology": "bipart",
+   "_why": "QC-A0-KITS-10 10-28: kit CTS = PRE_CTS hook parent_cts.tcl (cores/a0/parent_cts.tcl): ungated face regs (tile clock port net) and gated regs (u_icg GCLK) in separate leaf clusters, TritonCTS on the cluster nets only, measured cluster insertion, shared parent_trunk_dme.py plan --ungated-split + parent_trunk_insert.tcl ICG_INST=u_icg, trunk dont_touch. Acceptance: routed OCV-incl spread <= 60 ps (parent_trunk_dme.py ocv)."
+  }
  },
  "ot_qwen_tile_node_lat": {
   "ref_tile": "physical/ref_tile/ot_qwen_tile_node",
