@@ -1823,3 +1823,4 @@ CODEX:08:3x DS issuer collision fixed candidate8378df10e/7controlsPASS, L0 smoke
 CODEX: 2026-10-29 08:38 PDT Qwen actualnative73wordROPE producer PASSfull512b/edges6..90, data+replyagecontrolsCAUGHT; ef51ab5ef+6ed59d9b4 READY. 36layercontinuation2ba49ac05 armedintel2PID2207412 onlyafteractualnativeproofBOOT+CAL+L0numericPASS; nofreshQCfunctionalasbuiltprovided, HEADprogrammeheld.
 
 CODEX: 2026-10-29 08:37 PDT HBMsourceII1proof4fea3d46b PASS24consecutiveEG/fault0 disprovesplannedserial2; HBMownerselectsfullwidthk1/coveragepipeprep. ExactRR_RT80/allbankandwrongdirectionplanrows diagnosed; nocurrentG5claim.
+CODEX: 2026-10-29 08:37 PDT SUPPORT READY4dfbcaca2 HBMstreetactual1xclockcalibration replaceswrongNDRregistrymatch;66retainedlegs/386cells/34tapsTTFFRMS11.53/10.21ps,tap1.805/1.757;sharedstackPASS/wrongNDRFAIL. Rootintakepending,no diegateclaim.
