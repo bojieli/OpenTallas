@@ -117,6 +117,7 @@ def export_tcl(P,tn):
     physical gate. No fictional wire latency is added to STA.
     """
     pins=P.types[tn].get("clock",{}).get("landing_contract",{}).get("pins",[])
+    if export_form(P,tn)=="fwd_buffer":return export_tcl_fwd(P,tn)
     out=["set cland_block [ord::get_db_block]"]
     for p in pins:
         if p["kind"]!="clock" or p["dir"]!="out":continue
@@ -127,4 +128,70 @@ def export_tcl(P,tn):
                 'if {$cland_net eq "NULL"} { error "clock landing source tap has no physical net" }',
                 "$cland_dst disconnect", "$cland_dst connect $cland_net", "$cland_net setSigType CLOCK",
                 f"puts {{OT_CLAND_EXPORT {p['name']} <- {p['source_clock_port']}}}"]
+    return "\n".join(out)+"\n"
+
+
+FWD_BUFFER_MASTER="BUFx24_ASAP7_75t_R"
+
+
+def export_form(P,tn):
+    """clock.landing_export_form: "tie" (default, legacy: the forwarded output BTerm joins the source tap net) or
+    "fwd_buffer" (FLOW-GEN-2 CTS-0114, opt-in)."""
+    form=P.types[tn].get("clock",{}).get("landing_export_form","tie")
+    if form not in ("tie","fwd_buffer"):raise ValueError(f"{tn}: clock.landing_export_form {form!r}")
+    return form
+
+
+def export_tcl_fwd(P,tn):
+    """FLOW-GEN-2 CTS-0114 (opt-in clock.landing_export_form = "fwd_buffer").
+
+    The legacy form ties the forwarded output BTerm onto the source tap net. TritonCTS then sees the port's divide_by 1
+    generated clock on the clk root net (CTS-0114 "overlaps a previous clock"), and the root net stretches to the far
+    export pin: repair buffers it as a wire and tree roots / sinks along it (DIE-HEAD-15: 8 reset relay flops at
+    290 ps, DIE-HEAD-17: the eB core branch root) end up outside the balanced tree. Here the output gets its OWN net,
+    driven by one buffer placed at the source tap (clamped into the core; CTS DPL legalises it). Its input is a
+    non-register load of the source net, which TritonCTS keeps at the root, so the source net stays local. The
+    synthesized forward driver (assign fclk_out = clk -> BUF, ORFS output buffer) that drives nothing after the move is
+    removed; a non-buffer driver fails closed. The SDC generated clock on the port is unchanged."""
+    pins=P.types[tn].get("clock",{}).get("landing_contract",{}).get("pins",[])
+    out=["set cland_block [ord::get_db_block]",
+         "proc ot_cland_drop_orphan {net} {",
+         "  while {$net ne \"NULL\" && ![llength [$net getBTerms]]} {",
+         "    set loads 0; set drv {}",
+         "    foreach it [$net getITerms] { if {[$it isOutputSignal]} {lappend drv $it} elseif {[$it isInputSignal]} {incr loads} }",
+         "    if {$loads || [llength $drv] != 1} return",
+         "    set inst [[lindex $drv 0] getInst]",
+         "    if {![string match \"BUF*\" [[$inst getMaster] getName]]} { error \"OT_CLAND_EXPORT forwarded driver [$inst getName] is not a buffer\" }",
+         "    set up \"NULL\"; foreach it [$inst getITerms] { if {[$it isInputSignal]} {set up [$it getNet]} }",
+         "    puts \"OT_CLAND_EXPORT drop orphan forward driver [$inst getName] ([[$inst getMaster] getName])\"",
+         "    odb::dbInst_destroy $inst; odb::dbNet_destroy $net",
+         "    set net $up",
+         "  }",
+         "}",
+         f"set cland_m [[ord::get_db] findMaster {{{FWD_BUFFER_MASTER}}}]",
+         'if {$cland_m eq "NULL"} { error "OT_CLAND_EXPORT forward buffer master missing" }',
+         "set cland_ca [$cland_block getCoreArea]"]
+    for p in pins:
+        if p["kind"]!="clock" or p["dir"]!="out":continue
+        n,s=p["name"],p["source_clock_port"];fw="cland_fwd_"+n
+        out += [f"set cland_dst [$cland_block findBTerm {{{n}}}]",
+                f"set cland_src [$cland_block findBTerm {{{s}}}]",
+                'if {$cland_dst eq "NULL" || $cland_src eq "NULL"} { error "clock landing export endpoint missing" }',
+                "set cland_net [$cland_src getNet]",
+                'if {$cland_net eq "NULL"} { error "clock landing source tap has no physical net" }',
+                f'if {{[$cland_block findInst {{{fw}}}] ne "NULL"}} {{ error "OT_CLAND_EXPORT {fw} exists" }}',
+                "set cland_old [$cland_dst getNet]",
+                "$cland_dst disconnect",
+                'if {$cland_old ne "NULL" && $cland_old ne $cland_net} { ot_cland_drop_orphan $cland_old }',
+                f"set cland_i [odb::dbInst_create $cland_block $cland_m {{{fw}}}]",
+                "set cland_bb [$cland_src getBBox]",
+                "set cland_x [expr {min(max(([$cland_bb xMin] + [$cland_bb xMax]) / 2, [$cland_ca xMin]), [$cland_ca xMax] - [$cland_m getWidth])}]",
+                "set cland_y [expr {min(max(([$cland_bb yMin] + [$cland_bb yMax]) / 2, [$cland_ca yMin]), [$cland_ca yMax] - [$cland_m getHeight])}]",
+                "$cland_i setLocation $cland_x $cland_y; $cland_i setPlacementStatus PLACED",
+                "[$cland_i findITerm A] connect $cland_net",
+                f"set cland_fn [odb::dbNet_create $cland_block {{{fw}}}]",
+                "[$cland_i findITerm Y] connect $cland_fn",
+                "$cland_dst connect $cland_fn",
+                "$cland_net setSigType CLOCK; $cland_fn setSigType CLOCK",
+                f"puts {{OT_CLAND_EXPORT {n} <- {s} via {fw} ({FWD_BUFFER_MASTER} at the source)}}"]
     return "\n".join(out)+"\n"
