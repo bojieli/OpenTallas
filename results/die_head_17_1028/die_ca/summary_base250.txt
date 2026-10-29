@@ -1,0 +1,11 @@
+START Wed Oct 28 18:39:28 PDT 2026 code 8e38d8187f G=/srv/opentallas-scratch2/claude/die-head-17/clk17_base250 LAT TT=250 FF=202.5
+PLAN_RC 0
+PLAN {'regions': 496, 'tree_edges': 495, 'tree_edges_clean': 495, 'tree_edges_fall': 414, 'crossings': 427, 'depth4': 427, 'depth8': 0, 'depth16': 0, 'fail': 0, 'below_100ps': 0, 'worst_margin_lo_ps': 161.5, 'worst_margin_hi_ps': 599.1}
+START {'virtual_nodes': 170, 'retime_nodes': 15, 'start_edges': 495, 'start_clean': 495, 'start_fail': 0, 'start_min_sync_dist_ps': 116.4, 'fall_measured': 495}
+MC {'chips': 2000, 'violations': 0, 'worst_lo_to_guard_ps': 161.5, 'worst_hi_to_guard_ps': 599.3} STA_INTERVAL rows_without_fall 0
+BIND_RC 0
+STA_MAIN_RC 0
+COUNT-ALIGN SS-INFO (TT x 1.27) worst lo 106.0 hi 457.9 fail 0 slot_read fail 0 guard fail 0 start-skew fail 2/495 FAIL (INFO, never gates)
+COUNT-ALIGN TT crossings 427 (sta 427, tree 0, no taps 0, key region unbound 0) worst lo 161.3 hi 600.3 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/495 <100 0 ocv table max lo/hi 175.7/175.7 PASS
+COUNT-ALIGN FF crossings 427 (sta 427, tree 0, no taps 0, key region unbound 0) worst lo 182.9 hi 645.6 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/495 <100 0 ocv table max lo/hi 151.2/151.2 PASS
+END Wed Oct 28 18:39:49 PDT 2026
