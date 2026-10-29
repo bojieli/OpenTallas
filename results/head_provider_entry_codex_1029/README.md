@@ -29,3 +29,13 @@ FAIL on an arbitrary ordinary HFWD carrier. Whether that carrier belongs to
 the selected production K_HOST grammar is still unproved. This entry sends
 no ordinary HFWD, and adopts neither a new wire tag nor a variable160-word
 HOST book. Candidate namespace alternatives remain on a separate held branch.
+
+Current production integration gap confirmed by TOK_DS: dv_layer_compile lowers
+per-layer reference-user programmes under the p4l contract; it has no HEAD-die
+netlist/programme lowering and emits no global HEAD identity or final-layer
+80-XB publication events. L0 output cannot serve as that producer by inference.
+The implementation above is the actual HEAD receiving/source entry mechanism,
+not the missing final-layer-to-HEAD producer. The new CA lane also distinguishes
+raw reset release from delivered START; actual START delivery remains unmeasured.
+The source audit accepts separate reset_release/start_offset and blocks an
+explicit missing START offset rather than reusing the old reset wavefront.
