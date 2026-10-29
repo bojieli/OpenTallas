@@ -1,0 +1,30 @@
+{
+ "150": {
+  "start_clean": 2546,
+  "start_fail": 504,
+  "reach_fail": 143,
+  "start_width_ps": {
+   "median": 193.3,
+   "max": 319.0
+  },
+  "virtual_nodes": 2694,
+  "retime_nodes": 2136,
+  "max_hop_um": 150.0,
+  "native_leaf_fail": 357,
+  "virtual_width_only_fail": 4
+ },
+ "200": {
+  "start_clean": 2501,
+  "start_fail": 500,
+  "reach_fail": 139,
+  "start_width_ps": {
+   "median": 193.4,
+   "max": 319.0
+  },
+  "virtual_nodes": 2645,
+  "retime_nodes": 2087,
+  "max_hop_um": 200.0,
+  "native_leaf_fail": 357,
+  "virtual_width_only_fail": 4
+ }
+}
