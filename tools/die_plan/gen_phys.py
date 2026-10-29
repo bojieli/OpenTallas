@@ -1769,6 +1769,19 @@ KEEP_REGS_HOOK = ("ot_keep_regs.tcl", "ot_pin_regs.tcl", "pin_reg_split.tcl", "o
 _INCLUDE = re.compile(r'^[ \t]*`include[ \t]+"([^"]+)"', re.M)
 
 
+
+def declared_rom_bits(rtl_dir):
+    """Largest words*width of an OWNER D-ROM-2 declared-logic table (tools/mem_compiler/rom_declared_logic.json) whose
+    module is defined in the kit RTL (0 if none); gen phys raises SYNTH_MEMORY_MAX_BITS to exactly that size."""
+    decl = Path(__file__).resolve().parent.parent / "mem_compiler" / "rom_declared_logic.json"
+    tables = json.loads(decl.read_text())["tables"]
+    text = "\n".join(f.read_text(errors="replace") for f in sorted(Path(rtl_dir).glob("*.sv")))
+    best = 0
+    for t in tables:
+        if re.search(r"^\s*module\s+" + re.escape(t["module"]) + r"\b", text, re.M):
+            best = max(best, int(t["words"]) * int(t["width"]))
+    return best
+
 def stage_includes(rtl_files, rtl_dir):
     """DIE-HEAD-7 / RISK-SWEEP-2 10-28: copy every `include "x" a staged source names (transitively) from the source's
     own directory into the kit rtl/ (yosys resolves includes next to the including file); the HEAD hd_serdes kit
@@ -1846,6 +1859,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             shutil.copyfile(f, dst)
         srcs.append(f"/work/rtl/{Path(f).name}")
     stage_includes(rtl_files, kd / "rtl")
+    rom_bits = declared_rom_bits(kd / "rtl")
     pins = type_pins(P, tn)
     bump_sites = bump_pin_sites(P, tn, bump_ports, macros, Path(root) if root else Path(__file__).resolve().parent.parent.parent) \
         if bump_ports else []
@@ -1958,6 +1972,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export PLACE_DENSITY = {util:g}",
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_REPEATABLE_BUILD = 1",
+           # HEAD-KITS-3 10-28: OWNER D-ROM-2 declared-logic math tables (tools/mem_compiler/rom_declared_logic.json,
+           # e.g. the KP4 GF(1024) inverse 1024x10 in every serdes FEC lane) are synthesised logic by decision; the ORFS
+           # default SYNTH_MEMORY_MAX_BITS 4096 failed hd_serdes synth on them.  The limit is raised only to the largest
+           # declared table defined in this kit's RTL, so any other inferred memory above that size still fails.
+           *([f"export SYNTH_MEMORY_MAX_BITS = {rom_bits}"] if rom_bits > 4096 else []),
            "export LEC_CHECK = 0",
            # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
            # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell
