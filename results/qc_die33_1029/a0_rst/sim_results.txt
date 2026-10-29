@@ -1,0 +1,3 @@
+A0RRST_PASS MUT=0 K_REL=3 checks=400 reset_low_cycles=18 hop_pins=36 dr_ok
+A0RRST_FAIL MUT=10 K_REL=3 hop_reset_errors=6 dr_errors=0 first=8 checks=400
+A0RRST_FAIL MUT=11 K_REL=3 hop_reset_errors=3 dr_errors=192 first=9 checks=400
