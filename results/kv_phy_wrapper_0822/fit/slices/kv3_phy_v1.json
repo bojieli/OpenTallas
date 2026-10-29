@@ -1,0 +1,1497 @@
+{
+  "schema": "opentallas.master_plan_slice.v1",
+  "kind": "partition",
+  "die": "qwen_kvsys",
+  "type": "kv3_phy_v1",
+  "module": "kv3_phy_v1_part",
+  "master_plan_sha256": "33b4cd5a7e2eeff205ef49d6e7e8c2fc6190cc2dc80b3b3115bf5a45f28b9add",
+  "frozen": false,
+  "outline_um": [
+    864.0,
+    1520.64
+  ],
+  "instances": [
+    "phy_EN_1",
+    "phy_EN_2",
+    "phy_EN_3",
+    "phy_EN_4",
+    "phy_EN_5",
+    "phy_EN_6",
+    "phy_EN_7",
+    "phy_ES_1",
+    "phy_ES_2",
+    "phy_ES_3",
+    "phy_ES_4",
+    "phy_ES_5",
+    "phy_ES_6",
+    "phy_ES_7",
+    "phy_WN_1",
+    "phy_WN_2",
+    "phy_WN_3",
+    "phy_WN_4",
+    "phy_WN_5",
+    "phy_WN_6",
+    "phy_WN_7",
+    "phy_WS_1",
+    "phy_WS_2",
+    "phy_WS_3",
+    "phy_WS_4",
+    "phy_WS_5",
+    "phy_WS_6",
+    "phy_WS_7"
+  ],
+  "keepouts": [
+    {
+      "name": "phy_analog_0",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        4.32,
+        4.32,
+        323.19,
+        1516.32
+      ]
+    },
+    {
+      "name": "phy_analog_1",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        335.34,
+        4.32,
+        423.32,
+        1516.32
+      ]
+    },
+    {
+      "name": "phy_analog_2",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        423.3201,
+        4.32,
+        427.32,
+        1121.747
+      ]
+    },
+    {
+      "name": "phy_analog_3",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        423.3201,
+        1139.027,
+        427.32,
+        1473.12
+      ]
+    },
+    {
+      "name": "phy_analog_4",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        423.3201,
+        1507.68,
+        427.32,
+        1516.32
+      ]
+    },
+    {
+      "name": "phy_analog_5",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        436.64,
+        4.32,
+        443.507,
+        755.46
+      ]
+    },
+    {
+      "name": "phy_analog_6",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        460.787,
+        4.32,
+        576.018,
+        755.46
+      ]
+    },
+    {
+      "name": "phy_analog_7",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        443.507,
+        4.32,
+        460.787,
+        751.68
+      ]
+    },
+    {
+      "name": "phy_analog_8",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        440.6001,
+        765.18,
+        443.507,
+        1485.54
+      ]
+    },
+    {
+      "name": "phy_analog_9",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        460.787,
+        765.18,
+        576.018,
+        1485.54
+      ]
+    },
+    {
+      "name": "phy_analog_10",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        443.507,
+        768.96,
+        460.787,
+        1485.54
+      ]
+    },
+    {
+      "name": "phy_analog_11",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        436.64,
+        765.18,
+        440.6,
+        1121.747
+      ]
+    },
+    {
+      "name": "phy_analog_12",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        436.64,
+        1139.027,
+        440.6,
+        1473.12
+      ]
+    },
+    {
+      "name": "phy_analog_13",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        440.6001,
+        1495.26,
+        576.018,
+        1516.32
+      ]
+    },
+    {
+      "name": "phy_analog_14",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        436.64,
+        1507.68,
+        440.6001,
+        1516.32
+      ]
+    },
+    {
+      "name": "phy_analog_15",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        588.978,
+        4.32,
+        736.668,
+        755.46
+      ]
+    },
+    {
+      "name": "phy_analog_16",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        588.978,
+        765.18,
+        736.668,
+        1485.54
+      ]
+    },
+    {
+      "name": "phy_analog_17",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        588.978,
+        1495.26,
+        736.668,
+        1516.32
+      ]
+    },
+    {
+      "name": "phy_analog_18",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        748.008,
+        4.32,
+        781.92,
+        755.46
+      ]
+    },
+    {
+      "name": "phy_analog_19",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        748.008,
+        765.18,
+        781.92,
+        1485.54
+      ]
+    },
+    {
+      "name": "phy_analog_20",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        748.008,
+        1495.26,
+        781.92,
+        1516.32
+      ]
+    },
+    {
+      "name": "phy_analog_21",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        736.668,
+        4.32,
+        748.008,
+        185.22
+      ]
+    },
+    {
+      "name": "phy_analog_22",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        736.668,
+        194.94,
+        748.008,
+        375.3
+      ]
+    },
+    {
+      "name": "phy_analog_23",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        736.668,
+        385.02,
+        748.008,
+        565.38
+      ]
+    },
+    {
+      "name": "phy_analog_24",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        736.668,
+        575.1,
+        748.008,
+        755.46
+      ]
+    },
+    {
+      "name": "phy_analog_25",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        736.668,
+        765.18,
+        748.008,
+        945.54
+      ]
+    },
+    {
+      "name": "phy_analog_26",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        736.668,
+        955.26,
+        748.008,
+        1135.62
+      ]
+    },
+    {
+      "name": "phy_analog_27",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        736.668,
+        1145.34,
+        748.008,
+        1325.7
+      ]
+    },
+    {
+      "name": "phy_analog_28",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        736.668,
+        1335.15,
+        748.008,
+        1485.54
+      ]
+    },
+    {
+      "name": "phy_analog_29",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        736.668,
+        1495.26,
+        748.008,
+        1516.32
+      ]
+    },
+    {
+      "name": "phy_analog_30",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        588.168,
+        4.32,
+        588.978,
+        90.18
+      ]
+    },
+    {
+      "name": "phy_analog_31",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        588.168,
+        99.9,
+        588.978,
+        280.26
+      ]
+    },
+    {
+      "name": "phy_analog_32",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        588.168,
+        289.98,
+        588.978,
+        470.34
+      ]
+    },
+    {
+      "name": "phy_analog_33",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        588.168,
+        479.79,
+        588.978,
+        660.42
+      ]
+    },
+    {
+      "name": "phy_analog_34",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        588.168,
+        669.87,
+        588.978,
+        755.46
+      ]
+    },
+    {
+      "name": "phy_analog_35",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        588.168,
+        765.18,
+        588.978,
+        850.5
+      ]
+    },
+    {
+      "name": "phy_analog_36",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        588.168,
+        860.22,
+        588.978,
+        1040.58
+      ]
+    },
+    {
+      "name": "phy_analog_37",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        588.168,
+        1050.3,
+        588.978,
+        1230.66
+      ]
+    },
+    {
+      "name": "phy_analog_38",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        588.168,
+        1240.38,
+        588.978,
+        1420.74
+      ]
+    },
+    {
+      "name": "phy_analog_39",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        588.168,
+        1430.19,
+        588.978,
+        1485.54
+      ]
+    },
+    {
+      "name": "phy_analog_40",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        588.168,
+        1495.26,
+        588.978,
+        1516.32
+      ]
+    },
+    {
+      "name": "phy_analog_41",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        587.358,
+        4.32,
+        588.168,
+        88.02
+      ]
+    },
+    {
+      "name": "phy_analog_42",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        587.358,
+        101.79,
+        588.168,
+        280.26
+      ]
+    },
+    {
+      "name": "phy_analog_43",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        587.358,
+        289.98,
+        588.168,
+        470.34
+      ]
+    },
+    {
+      "name": "phy_analog_44",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        587.358,
+        479.79,
+        588.168,
+        660.42
+      ]
+    },
+    {
+      "name": "phy_analog_45",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        587.358,
+        669.87,
+        588.168,
+        755.46
+      ]
+    },
+    {
+      "name": "phy_analog_46",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        587.358,
+        765.18,
+        588.168,
+        850.5
+      ]
+    },
+    {
+      "name": "phy_analog_47",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        587.358,
+        860.22,
+        588.168,
+        1040.58
+      ]
+    },
+    {
+      "name": "phy_analog_48",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        587.358,
+        1050.3,
+        588.168,
+        1230.66
+      ]
+    },
+    {
+      "name": "phy_analog_49",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        587.358,
+        1240.38,
+        588.168,
+        1420.74
+      ]
+    },
+    {
+      "name": "phy_analog_50",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        587.358,
+        1430.19,
+        588.168,
+        1485.54
+      ]
+    },
+    {
+      "name": "phy_analog_51",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        587.358,
+        1495.26,
+        588.168,
+        1516.32
+      ]
+    },
+    {
+      "name": "phy_analog_52",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        576.018,
+        4.32,
+        576.828,
+        90.18
+      ]
+    },
+    {
+      "name": "phy_analog_53",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        576.828,
+        4.32,
+        587.358,
+        88.02
+      ]
+    },
+    {
+      "name": "phy_analog_54",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        576.018,
+        99.9,
+        576.828,
+        280.26
+      ]
+    },
+    {
+      "name": "phy_analog_55",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        586.926,
+        101.79,
+        587.358,
+        280.26
+      ]
+    },
+    {
+      "name": "phy_analog_56",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        576.828,
+        101.79,
+        586.926,
+        280.26
+      ]
+    },
+    {
+      "name": "phy_analog_57",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        576.018,
+        289.98,
+        587.358,
+        470.34
+      ]
+    },
+    {
+      "name": "phy_analog_58",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        576.018,
+        479.79,
+        587.358,
+        660.42
+      ]
+    },
+    {
+      "name": "phy_analog_59",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        576.018,
+        669.87,
+        576.828,
+        755.46
+      ]
+    },
+    {
+      "name": "phy_analog_60",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        576.018,
+        765.18,
+        576.828,
+        850.5
+      ]
+    },
+    {
+      "name": "phy_analog_61",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        586.926,
+        669.87,
+        587.358,
+        755.46
+      ]
+    },
+    {
+      "name": "phy_analog_62",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        586.926,
+        765.18,
+        587.358,
+        850.5
+      ]
+    },
+    {
+      "name": "phy_analog_63",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        576.828,
+        669.87,
+        586.926,
+        755.46
+      ]
+    },
+    {
+      "name": "phy_analog_64",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        576.828,
+        765.18,
+        586.926,
+        850.5
+      ]
+    },
+    {
+      "name": "phy_analog_65",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        576.018,
+        860.22,
+        587.358,
+        1040.58
+      ]
+    },
+    {
+      "name": "phy_analog_66",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        576.018,
+        1050.3,
+        587.358,
+        1230.66
+      ]
+    },
+    {
+      "name": "phy_analog_67",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        576.018,
+        1240.38,
+        587.358,
+        1420.74
+      ]
+    },
+    {
+      "name": "phy_analog_68",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        576.018,
+        1430.19,
+        587.358,
+        1485.54
+      ]
+    },
+    {
+      "name": "phy_analog_69",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        576.018,
+        1495.26,
+        587.358,
+        1516.32
+      ]
+    },
+    {
+      "name": "phy_analog_70",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        323.19,
+        4.32,
+        335.34,
+        88.02
+      ]
+    },
+    {
+      "name": "phy_analog_71",
+      "kind": "hard_core",
+      "use": [
+        "placement"
+      ],
+      "layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rect_um": [
+        323.19,
+        97.47,
+        335.34,
+        1516.32
+      ]
+    }
+  ],
+  "islands": [],
+  "bays": [],
+  "entry_pins": [],
+  "hard_cores": [],
+  "latency": {
+    "common_clock_latency_ps": {
+      "TT": 250,
+      "FF": 202.5
+    },
+    "tol_ps": 40
+  },
+  "note": "MODELED analog reserve, not free area; native utility holes retained; full parent PHY window cost unchanged."
+}
