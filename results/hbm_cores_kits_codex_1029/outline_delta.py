@@ -2,10 +2,11 @@
 """Two opt-in HBM outline fixes from measured congestion/pin/macro failures.
 Never routes. Resite stations and rebuild die/clock before adoption.
 """
-import copy,json,math,os,shutil,sys
+import copy,json,math,os,re,shutil,sys
 from pathlib import Path
 base,out=map(Path,sys.argv[1:3]);variant=int(sys.argv[3]);out.mkdir(parents=True,exist_ok=False)
 d=json.load(open(base/'die_plan.json'));cm=json.load(open(base/'core_macros.json'));ce=json.load(open(base/'clock_entries.json'))
+old_cores={tn:{c['inst']:copy.deepcopy(c) for c in t.get('hard_cores',[])} for tn,t in d['partition_types'].items()}
 variants={
 'ot_hbm_su_static_qcore_r13':[[293.76,207.36],[224.64,276.48]],
 'ot_hbm_su_static_cxport_ij_q':[[362.88,388.8],[380.16,362.88]],
@@ -73,6 +74,31 @@ for m,ss in variants.items():
    q['rect_um']=[round(x,4),round(y,4),round(x+94.824,4),round(y+41.064,4)];q['orient']='R0'
   cm['cores'][m]['basis']='explicit 21.6um clock/logic corridors with 4.32um halo; root in horizontal street'
  report.append({'module':m,'variant':variant,'instances':rows,'added_cycles':0})
+# Endpoint coordinates are stored explicitly in the plan; follow the changed
+# core pin frame BEFORE solving FF homes. A body-clear-only re-site is insufficient.
+endpoint_changes=[]
+for tn,t in d['partition_types'].items():
+ current={c['inst']:c for c in t.get('hard_cores',[])}
+ for idx,st in enumerate(t.get('internal_stations',[])):
+  for field,tag in [('from_um','launch'),('to_um','capture')]:
+   p0=st.get(field)
+   if not p0:continue
+   cand=[];label=st.get(tag,'')
+   for inst,c in old_cores[tn].items():
+    x,y=c['origin_um'];w,h=c['outline_um'];dist=max(0,x-p0[0],p0[0]-x-w)+max(0,y-p0[1],p0[1]-y-h)
+    if dist<=8.641:
+     alias=re.sub(r'__q[0-9]+$','',inst);match=alias in label if label else False
+     cand.append((not match,dist,inst,c))
+   if not cand:continue
+   _,_,inst,oldc=min(cand,key=lambda x:(x[0],x[1],x[2]));newc=current[inst]
+   if newc['origin_um']==oldc['origin_um'] and newc['outline_um']==oldc['outline_um']:continue
+   x,y=oldc['origin_um'];w,h=oldc['outline_um'];nx,ny=newc['origin_um'];nw,nh=newc['outline_um'];lx=p0[0]-x;ly=p0[1]-y
+   def axis(q,old,new):
+    if q<.5:return q
+    if q>old-.5:return q+new-old
+    return q/old*new
+   p1=[round(nx+axis(lx,w,nw),4),round(ny+axis(ly,h,nh),4)]
+   st[field]=p1;endpoint_changes.append({'type':tn,'station':idx,'conn':st.get('conn'),'field':field,'core':inst,'old':p0,'new':p1})
 for f in base.rglob('*'):
  r=f.relative_to(base);p=out/r
  if p.exists() or r.name in ['die_plan.json','core_macros.json','clock_entries.json']:continue
@@ -84,5 +110,5 @@ for f in base.rglob('*'):
 for f,x in newpins.items():p=out/f;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(x,indent=1))
 d['die']['label']=f'CODEX outline fix variant{variant} PREP | '+d['die']['label']
 for f,x in [('die_plan.json',d),('clock_entries.json',ce),('core_macros.json',cm)]: (out/f).write_text(json.dumps(x,indent=1))
-(out/'outline_delta_report.json').write_text(json.dumps({'schema':'opentallas.hbm.outline_delta.v1','variant':variant,'fixes':report,'die_rebuild_required':True,'station_resite_required':True,'release_claim':False},indent=1))
+(out/'outline_delta_report.json').write_text(json.dumps({'schema':'opentallas.hbm.outline_delta.v1','variant':variant,'fixes':report,'die_rebuild_required':True,'station_resite_required':True,'release_claim':False,'endpoint_changes':endpoint_changes},indent=1))
 print('variant',variant,[(x['module'],len(x['instances'])) for x in report])
