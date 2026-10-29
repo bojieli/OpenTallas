@@ -17,9 +17,9 @@ deleted kv-g3 / kv-cores-r2 trees), so this is the regen_pv.sh form: carried kit
   (3) SDC: bcx joins the regular input port list (IO delay / driving cell, like bc); sdc_lint.json inputs / io_floor
       += bcx; sdc_lint.lint must PASS;
   (4) plan tree: the 12 new pin registers u_sK.cx_r[b] ($_DFF_P_, the c_r naming of the same synth) join the CTS-open
-      leaf that already holds u_sK.c_r[17] (same face corner, bcx pins sit next to bc[17]/bc[18]); core_infra
-      re-installed from pv_tree_slice.json with main core_infra.install. PREDICTED names: the run's synth netlist must
-      be checked against the plan sinks before place reaches PRE_GLOBAL_PLACE (core_infra fails closed otherwise);
+      register leaves, 3 per leaf (core_infra requires equal leaf counts), by lane-group affinity (clock follows data);
+      core_infra re-installed with main core_infra.install. PREDICTED names: the run's synth netlist must be checked
+      against the plan sinks before place reaches PRE_GLOBAL_PLACE (core_infra fails closed otherwise);
   (5) --two-mode-grt (gen_core_kit_kv.timing_modes_stage), main tool copies, signoff bundle, freeze/PROVENANCE.
 usage (intel2, CLEAN checkout of this branch): regen_pvlc.py PLAN_DIR OUTDIR
   PLAN_DIR = dir with plan.json (DIE-KV-19 event plan) + cores/kv3_pv_pair_pins{,_fMX}_r26c_lc.json
@@ -171,21 +171,45 @@ def regen(plan_dir, out, tid, pins_rel):
     if lerr:
         raise SystemExit(f"{tid}: sdc_lint FAIL {lerr[:5]}")
 
-    # (4) plan tree: cx_r pin registers join the c_r[17] leaf of their slice
+    # (4) plan tree: the 12 cx_r pin registers join CTS-open leaves (core_infra demands EQUAL register-leaf counts, so
+    # 3 per island): clock follows data -- copy u_sK.cx_r[b] serves lane group g (issue b = g-1, capture b = G-2+g,
+    # lanes 4g..4g+3 of slice K); the balanced assignment maximises the number of that group's lane sinks already on
+    # the chosen leaf (exact DP over the 4 x 3 slots).
     sl = json.loads((kd / "pv_tree_slice.json").read_text())
-    added = {}
+    reg = [l for l in sl["core_tree"]["leaves"] if l.get("cts_open") and not l.get("load_class")]
+    cnt = {len(l["sinks"]) for l in reg}
+    if len(cnt) != 1 or (2 * NB) % len(reg):
+        raise SystemExit(f"{tid}: register leaves {len(reg)} counts {sorted(cnt)}")
+    cap = 2 * NB // len(reg)
+    items = []
     for s in (0, 1):
-        ref = f"u_s{s}.c_r\\[17\\]$_DFF_P_/CLK"
-        lf = [l for l in sl["core_tree"]["leaves"] if ref in l["sinks"]]
-        if len(lf) != 1:
-            raise SystemExit(f"{tid}: {ref} in {len(lf)} leaves")
-        new = [f"u_s{s}.cx_r\\[{b}\\]$_DFF_P_/CLK" for b in range(NB)]
-        assert not set(new) & set(lf[0]["sinks"])
-        lf[0]["sinks"] = lf[0]["sinks"] + new
-        if "domain_sinks" in lf[0]:
-            lf[0]["domain_sinks"] = len(lf[0]["sinks"])
-        added[lf[0]["node"]] = added.get(lf[0]["node"], 0) + len(new)
-    sl["plan"] += " | KV-KITS-16 pvlc: + LC pin registers u_sK.cx_r[0..5] on the c_r[17] leaf (PREDICTED synth names)"
+        for b in range(NB):
+            g = b + 1 if b < G - 1 else b - (G - 1) + 1
+            lanes = range(16 * g // G, 16 * (g + 1) // G)
+            pre = [f"u_s{s}.u_slice.g_lane\\[{l}\\]." for l in lanes]
+            aff = [sum(1 for x in lf["sinks"] if x.startswith(tuple(pre))) for lf in reg]
+            items.append((f"u_s{s}.cx_r\\[{b}\\]$_DFF_P_/CLK", g, aff))
+    best = {tuple([0] * len(reg)): (0, [])}
+    for name, g, aff in items:
+        nxt = {}
+        for st, (sc, asg) in best.items():
+            for j in range(len(reg)):
+                if st[j] < cap:
+                    s2 = list(st); s2[j] += 1; s2 = tuple(s2)
+                    v = (sc + aff[j], asg + [j])
+                    if s2 not in nxt or v[0] > nxt[s2][0]:
+                        nxt[s2] = v
+        best = nxt
+    score, asg = best[tuple([cap] * len(reg))]
+    added = {}
+    for (name, g, aff), j in zip(items, asg):
+        assert all(name not in l["sinks"] for l in sl["core_tree"]["leaves"])
+        reg[j]["sinks"].append(name)
+        added.setdefault(reg[j]["node"], []).append(f"{name.split('/')[0]} g{g} aff {aff[j]}/{max(aff)}")
+    for l in reg:
+        if "domain_sinks" in l:
+            l["domain_sinks"] = len(l["sinks"])
+    sl["plan"] += " | KV-KITS-16 pvlc: + 12 LC pin registers u_sK.cx_r[0..5], 3 per register leaf by lane-group affinity (PREDICTED synth names)"
     CI.install(kd, sl)
     (kd / "pv_tree_slice.json").write_text(json.dumps(sl, indent=1) + "\n")
 
