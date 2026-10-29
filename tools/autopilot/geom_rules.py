@@ -19,7 +19,9 @@ Rules (id: limit -- source):
               pre-route gate, TILE-REVIEW 10-23); METHODOLOGY 1.14 (target 40-60 %); GEOM-REVIEW qkd_ahub 12 % FAIL
   empty     : share of macro-free density bins below 5 % density <= 50 % -- layout_review.py EMPTY_FLAG/EMPTY_BIN_DENSITY;
               GEOM-REVIEW qkd_ahub "W/N thirds empty" FAIL
-  pin_reg   : every signal pin registered (first flop through pure BUF/INV, or a hard-macro pin) and pin->register p90
+  pin_reg   : every signal pin registered (first flop through pure BUF/INV, a hard-macro pin, or -- COORD 10-29 11:09 /
+              GEOM-59 -- a declared landing-ring input: land_slots.json + face_guard.json PASS + exactly D slot flops in the
+              pin's comb cone, judged at the farthest slot) and pin->register p90
               <= 30 um -- METHODOLOGY 1.9 (R2 face flops, "pin-to-reg p90 <= 30 um"); layout_review.py PIN_REG_P90_FAIL
               150 um is the hard backstop; clock ports and declared strap_* pins are exempt (METHODOLOGY 1.8 R7 note)
   r2r       : max register->register Manhattan distance (flop centre to flop centre through combinational logic and
@@ -385,8 +387,86 @@ def declared_infra_arcs(D, interface, declaration):
     return result
 
 
-def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
-    """pin -> first directional register through pure BUF/INV; visited nets bound cycles, not buffer count."""
+LAND_CONE_DEPTH = 6      # comb cells pin -> landing slot D pin: face_guard land_mux_depth <= 2 plus placement buffers
+
+
+def _bus_of(name):
+    return name.split("[", 1)[0] if re.fullmatch(r"[^\[\]]+(\[\d+\])?", name) else None
+
+
+def land_ring_captures(D, land, guard):
+    """Declared landing ring = registered capture (COORD 2026-10-29 11:09, GEOM-59; config of the pin_reg rule).
+    land: kit land_slots.json, guard: kit face_guard.json.  Only with face_guard verdict PASS (it proves on the
+    netlist that every bit of a declared slot bus loads exactly D slot-flop D pins through the write mux), and only
+    per pin where the CHECKPOINT agrees: the input pin's forward combinational cone (<= LAND_CONE_DEPTH B/L cells)
+    reaches exactly D sequential data pins and nothing else (no output pin, macro, clock pin or clock cell), and the
+    face_guard-named capture flop of that bit, when it names one, is among them.  The pin is then judged at the
+    distance to its FARTHEST slot flop (GEOM-59), so pin_reg_p90/max still judge the placement.  ring_start /
+    origin_start inputs and undeclared buses get nothing.  face_guard clock_exports (sdc create_generated_clock
+    -divide_by 1 forwarded clock outputs) are returned as kit-declared clock pins.  Missing / invalid metadata grants
+    no exemption and is recorded in errors."""
+    res = dict(caps={}, clock_exports=[], errors=[], rejected=[], buses=[])
+    if not isinstance(land, dict) or not str(land.get("schema", "")).startswith("land_slots/") \
+            or not isinstance(land.get("buses"), dict):
+        res["errors"].append("land_slots: want {schema: land_slots/N, buses: {...}}")
+        return res
+    if not isinstance(guard, dict) or guard.get("verdict") != "PASS" or not isinstance(guard.get("flops", {}), dict):
+        res["errors"].append(f"face_guard verdict {guard.get('verdict') if isinstance(guard, dict) else None} (want PASS)")
+        return res
+    buses = {}
+    for b, v in land["buses"].items():
+        d = v.get("D") if isinstance(v, dict) and v.get("form") not in ("ring_start", "origin_start") else v
+        if isinstance(d, int) and not isinstance(d, bool) and d >= 2:
+            buses[b] = d
+        elif not (isinstance(v, dict) and v.get("form") in ("ring_start", "origin_start")):
+            res["errors"].append(f"land_slots bus {b}: spec {v} has no D >= 2")
+    res["buses"] = sorted(buses)
+    named = {k: v.replace("\\", "") for k, v in guard.get("flops", {}).items() if isinstance(v, str)}
+    for p in D.pins:
+        b = _bus_of(p["name"])
+        if p["io"] != "INPUT" or b not in buses:
+            continue
+        n = D.pin_net.get(p["k"])
+        flops, leak, front, seen, depth = set(), None, [n], {n}, 0
+        while front and leak is None and n is not None:
+            nf = []
+            for nn in front:
+                for s in D.nets[nn][2]:
+                    k = D.kind(s[1]) if s[0] == "i" else "P"
+                    if s[0] != "i" or s[2] or k in ("M", "K", None):
+                        leak = f"reaches {k or 'unknown'}{' clock pin' if s[0] == 'i' and s[2] else ''}"
+                    elif k == "S":
+                        flops.add(s[1])
+                    elif depth >= LAND_CONE_DEPTH:
+                        leak = f"cone deeper than {LAND_CONE_DEPTH} cells"
+                    else:
+                        for on in D.drives.get(s[1], []):
+                            if on not in seen:
+                                seen.add(on)
+                                nf.append(on)
+            front, depth = nf, depth + 1
+        names = {D.cells[c][6].replace("\\", "") for c in flops}
+        if n is None:
+            leak = "no net"
+        elif leak is None and len(flops) != buses[b]:
+            leak = f"{len(flops)} slot flops (declared D {buses[b]})"
+        elif leak is None and p["name"] in named and named[p["name"]] not in names:
+            leak = f"face_guard flop {named[p['name']]} not in cone"
+        if leak:
+            res["rejected"].append(f"{p['name']}: {leak}")
+        else:
+            res["caps"][p["name"]] = sorted(flops)
+    ex = guard.get("clock_exports", {})
+    if isinstance(ex, dict):
+        outs = {p["name"] for p in D.pins if p["io"] == "OUTPUT"}
+        res["clock_exports"] = sorted(t for t in ex if t in outs)
+    return res
+
+
+def pin_reg_metrics(D, strap_re, clock_pins=frozenset(), land=None):
+    """pin -> first directional register through pure BUF/INV; visited nets bound cycles, not buffer count.
+    land: {input pin: [slot flop ids]} of land_ring_captures (declared ring; judged at the farthest slot)."""
+    land = land or {}
     dist, unreg, macro, exempt = [], [], 0, 0
     worst = []
     for p in D.pins:
@@ -401,7 +481,9 @@ def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
             unreg.append(p["name"] + "(no net)")
             continue
         best, hit_m = INF, False
-        if p["io"] == "OUTPUT":
+        if p["io"] == "INPUT" and p["name"] in land:
+            best = max(abs(x - p["x"]) + abs(y - p["y"]) for x, y in (ctr(D.cells[c]) for c in land[p["name"]]))
+        elif p["io"] == "OUTPUT":
             cur, seen = n, set()
             while cur not in seen:
                 seen.add(cur)
@@ -451,6 +533,7 @@ def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
             unreg.append(p["name"])
     worst.sort(reverse=True)
     return dict(pins_registered=len(dist), pins_to_macro=macro, pins_exempt=exempt, pins_unregistered=len(unreg),
+                pins_land_ring=sum(1 for p in D.pins if p["io"] == "INPUT" and p["name"] in land),
                 unregistered_sample=unreg[:8], pin_reg_p50=None if not dist else round(q(dist, .5), 2),
                 pin_reg_p90=None if not dist else round(q(dist, .9), 2),
                 pin_reg_max=None if not dist else round(max(dist), 2), pin_reg_worst=[f"{d:.1f} {n}" for d, n in worst[:5]])
@@ -1322,7 +1405,8 @@ def stage_of_odb(name):
     return "placed" if b.startswith("3_place") else "cts" if b.startswith("4_cts") else "other" if b else ""
 
 
-def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None, memory_libs=(), memory_reach=False, ft_interface=None, ft_ports=None):
+def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None, memory_libs=(), memory_reach=False, ft_interface=None, ft_ports=None,
+            land_slots=None, face_guard=None):
     D = Design(path, memory_libs, memory_reach)
     sr = re.compile(strap_re)
     m = area_metrics(D)
@@ -1336,7 +1420,16 @@ def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=Non
             infra = dict(owner="die",width=1,arcs=[],pins=[],errors=[str(e)])
         m["die_owned_infra"] = infra
         infra_pins = frozenset(infra["pins"])
-    m.update(pin_reg_metrics(D, sr, frozenset(ck["tap_sinks"]) | infra_pins))
+    caps, ring_clocks = {}, frozenset()
+    if land_slots or face_guard:
+        try:
+            lr = land_ring_captures(D, json.loads(Path(land_slots).read_text()), json.loads(Path(face_guard).read_text()))
+        except (OSError, TypeError, ValueError, AttributeError) as e:
+            lr = dict(caps={}, clock_exports=[], errors=[str(e)], rejected=[], buses=[])
+        caps, ring_clocks = lr["caps"], frozenset(lr["clock_exports"])
+        m["land_ring"] = dict(buses=lr["buses"], pins=len(caps), clock_exports=lr["clock_exports"], errors=lr["errors"],
+                              rejected=len(lr["rejected"]), rejected_sample=lr["rejected"][:8])
+    m.update(pin_reg_metrics(D, sr, frozenset(ck["tap_sinks"]) | infra_pins | ring_clocks, caps))
     m.update(r2r_metrics(D))
     m.update(ck)
     m.update(macro_metrics(D))
@@ -1378,8 +1471,11 @@ def main(argv=None):
     ap.add_argument("--grt-log", default=None, help="geom_grt.tcl log (>= 50 congestion iterations)")
     ap.add_argument("--ft-interface", help="typed die-owned clock/reset interface model")
     ap.add_argument("--ft-ports", help="matching hash-checked scalar FT declaration")
+    ap.add_argument("--land-slots", help="kit land_slots.json: declared landing ring (with --face-guard PASS) = registered capture")
+    ap.add_argument("--face-guard", help="kit face_guard.json (verdict PASS) matching --land-slots")
     a = ap.parse_args(argv)
-    m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log, a.memory_lib, a.memory_reach, a.ft_interface, a.ft_ports)
+    m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log, a.memory_lib, a.memory_reach, a.ft_interface, a.ft_ports,
+                a.land_slots, a.face_guard)
     tmpl = json.load(open(a.template)) if a.template else None
     outline = [float(x) for x in a.outline.lower().split("x")] if a.outline else (m["outline"] if a.outline_self else None)
     rules, verdict = judge(m, tmpl, outline, a.all_kits)
