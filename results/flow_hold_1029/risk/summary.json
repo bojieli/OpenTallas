@@ -114,5 +114,34 @@
    566
   ],
   "die": "head"
+ },
+ {
+  "clock_arrival": {
+   "n": 39375,
+   "mean": 5.6,
+   "mean_abs": 5.7,
+   "p95_abs": 9.76,
+   "max_abs": 14.48,
+   "std": 2.64
+  },
+  "net_delay": null,
+  "net_delay_rel_mean": null,
+  "hold_wns_est": [
+   8.556,
+   0
+  ],
+  "hold_wns_rcx": [
+   -2.154,
+   11
+  ],
+  "setup_wns_est": [
+   228.553,
+   0
+  ],
+  "setup_wns_rcx": [
+   236.507,
+   0
+  ],
+  "die": "hbm"
  }
 ]
