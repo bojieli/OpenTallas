@@ -1,0 +1,1 @@
+PASS: entry inv2_1x_hbm_native_sm3_early matches {'cell': 'CKINVDCx16_ASAP7_75t_R', 'polarity': 'pair', 'clock_rc': '1x'} (ot_clk refit (hbm street_body) of stack inv2/1x on routed legs results/codex_hbm_clock_1x_fit_1029/actual_<C>; TT 66 legs rms 11.53 ps (old model 24.93), FF 66 legs rms 10.21 ps (old model 16.95))
