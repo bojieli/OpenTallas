@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-hcp-0848/prove2.py", line 29, in <module>
+    assert all(e is not None for e in base.values()),base
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'gold:ff:u_dut.u_fcore.u_core.u_core.nout_r[1]': None, 'gate:ff:u_dut.u_fcore.u_core.u_core.nout_r[1]': None, 'gold:ff:u_dut.u_fcore.u_core.u_core.d0[6]': 1, 'gold:ff:u_dut.u_fcore.u_core.u_core.d0[7]': 1, 'gold:ff:u_dut.u_fcore.u_core.u_core.d0[8]': 1, 'gold:ff:u_dut.u_fcore.u_core.u_core.d0[9]': 1, 'gold:ff:u_dut.u_fcore.u_core.u_core.d0[10]': 1, 'gold:ff:u_dut.u_fcore.u_core.u_core.d0[11]': 1, 'gold:ff:u_dut.u_fcore.u_core.u_core.d0[12]': 1, 'gold:ff:u_dut.u_fcore.u_core.u_core.d0[13]': 1}

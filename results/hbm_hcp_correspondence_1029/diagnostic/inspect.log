@@ -1,0 +1,60 @@
+alias array: gate r_rem#t (313 b) -> gold r_rem (649 b, Q-net alias evidence 649); source memory layout (25, 27, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate r_e#t (297 b) -> gold r_e (297 b, Q-net alias evidence 297); source memory layout (11, 27, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate r_bad#t (27 b) -> gold r_bad (27 b, Q-net alias evidence 27); source memory layout (1, 27, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate r_sign#t (27 b) -> gold r_sign (27 b, Q-net alias evidence 27); source memory layout (1, 27, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate r_zero#t (27 b) -> gold r_zero (27 b, Q-net alias evidence 27); source memory layout (1, 27, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_sm.s2_prod (48 b) mismatching compare points 993 -> 1025, own 48 -> 48
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_om.s2_prod (48 b) mismatching compare points 993 -> 1026, own 47 -> 48
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.g_tail[0].slot (32 b) mismatching compare points 993 -> 1084, own 32 -> 32
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.ma (32 b) mismatching compare points 993 -> 1229, own 32 -> 32
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.mb (32 b) mismatching compare points 993 -> 1230, own 32 -> 32
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.ob (32 b) mismatching compare points 993 -> 1230, own 32 -> 32
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.rs_y (32 b) mismatching compare points 993 -> 993, own 32 -> 32
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.g_tail[0].u_a.s2_val (27 b) mismatching compare points 993 -> 1015, own 27 -> 27
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.g_tail[1].u_a.s2_val (27 b) mismatching compare points 993 -> 1015, own 27 -> 27
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.g_tail[2].u_a.s2_val (27 b) mismatching compare points 993 -> 1015, own 27 -> 27
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.g_tail[3].u_a.s2_val (27 b) mismatching compare points 993 -> 1015, own 27 -> 27
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_sa.s2_val (27 b) mismatching compare points 993 -> 1015, own 27 -> 27
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_tree.g_rec.u_a.s2_val (27 b) mismatching compare points 993 -> 1015, own 27 -> 27
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_tree.g_rec.u_l.g_two.u_a.s2_val (27 b) mismatching compare points 993 -> 1015, own 27 -> 27
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_tree.g_rec.u_r.g_two.u_a.s2_val (27 b) mismatching compare points 993 -> 1015, own 27 -> 27
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.ab (32 b) mismatching compare points 993 -> 1082, own 23 -> 32
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.rv (256 b) mismatching compare points 993 -> 990, own 17 -> 14
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.aa (32 b) mismatching compare points 993 -> 1104, own 15 -> 32
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.rs_h (32 b) mismatching compare points 993 -> 1003, own 15 -> 26
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.da (32 b) mismatching compare points 993 -> 1035, own 13 -> 32
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_div.d_e (11 b) mismatching compare points 993 -> 1003, own 11 -> 11
+relayout trial: ff:u_dut.u_bout_u_core_sd_nv.q (9 b) mismatching compare points 993 -> 994, own 8 -> 9
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.g_tail[1].u_a.s2_exp (8 b) mismatching compare points 993 -> 1001, own 8 -> 8
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.g_tail[2].u_a.s2_exp (8 b) mismatching compare points 993 -> 1002, own 7 -> 8
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_tree.g_rec.u_a.s2_exp (8 b) mismatching compare points 993 -> 1002, own 7 -> 8
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.g_tail[0].u_a.s2_exp (8 b) mismatching compare points 993 -> 1003, own 6 -> 8
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.g_tail[3].u_a.s2_exp (8 b) mismatching compare points 993 -> 1003, own 6 -> 8
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_sa.s2_exp (8 b) mismatching compare points 993 -> 1004, own 5 -> 8
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_tree.g_rec.u_l.g_two.u_a.s2_exp (8 b) mismatching compare points 993 -> 1004, own 5 -> 8
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_tree.g_rec.u_r.g_two.u_a.s2_exp (8 b) mismatching compare points 993 -> 1004, own 5 -> 8
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.st (3 b) mismatching compare points 993 -> 1035, own 3 -> 3
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.it (2 b) mismatching compare points 993 -> 1016, own 2 -> 2
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.rs_pos (3 b) mismatching compare points 993 -> 994, own 2 -> 3
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.g_tail[0].u_a.err (2 b) mismatching compare points 993 -> 994, own 1 -> 2
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.g_tail[1].u_a.err (2 b) mismatching compare points 993 -> 994, own 1 -> 2
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.g_tail[2].u_a.err (2 b) mismatching compare points 993 -> 994, own 1 -> 2
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.g_tail[3].u_a.err (2 b) mismatching compare points 993 -> 994, own 1 -> 2
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.r_ok (8 b) mismatching compare points 993 -> 993, own 1 -> 1
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_div.g_rec[10].src_q (10 b) mismatching compare points 993 -> 1012, own 1 -> 10
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_div.g_rec[11].src_q (11 b) mismatching compare points 993 -> 1012, own 1 -> 10
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_div.g_rec[12].src_q (12 b) mismatching compare points 993 -> 1016, own 1 -> 12
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_div.g_rec[13].src_q (13 b) mismatching compare points 993 -> 1016, own 1 -> 12
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_div.g_rec[14].src_q (14 b) mismatching compare points 993 -> 1020, own 1 -> 14
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_div.g_rec[15].src_q (15 b) mismatching compare points 993 -> 1020, own 1 -> 14
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_div.g_rec[16].src_q (16 b) mismatching compare points 993 -> 1024, own 1 -> 16
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_div.g_rec[17].src_q (17 b) mismatching compare points 993 -> 1024, own 1 -> 16
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_div.g_rec[18].src_q (18 b) mismatching compare points 993 -> 1028, own 1 -> 18
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_div.g_rec[19].src_q (19 b) mismatching compare points 993 -> 1028, own 1 -> 18
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_div.g_rec[20].src_q (20 b) mismatching compare points 993 -> 1032, own 1 -> 20
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_div.g_rec[21].src_q (21 b) mismatching compare points 993 -> 1032, own 1 -> 20
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_div.g_rec[22].src_q (22 b) mismatching compare points 993 -> 1036, own 1 -> 22
+relayout trial: ff:u_dut.u_fcore.u_core.u_core.u_div.g_rec[23].src_q (23 b) mismatching compare points 993 -> 1036, own 1 -> 22
+replica proposal: 962 generated-register relations (gold input support modulo copy indices)
+merged proposal: 504 of 1417 gold-only registers share a matched register's next-state support (60 re-chosen among same-support candidates by bound-state simulation)
+register aliases: 0 same-name / register-output relations proposed

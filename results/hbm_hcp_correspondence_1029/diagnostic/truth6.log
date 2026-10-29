@@ -1,0 +1,10 @@
+INPUTS [('matched', 'ff:u_dut.u_bin_u_core_cmd_valid.q'), ('matched', 'ff:u_dut.u_fcore.u_core.u_core.nout_r[1]'), ('matched', 'pi:u_core_rst_n[0]')]
+ROW [0, 0, 0] GOLD 0 GATE 0
+ROW [1, 0, 0] GOLD 0 GATE 0
+ROW [0, 1, 0] GOLD 0 GATE 0
+ROW [1, 1, 0] GOLD 0 GATE 0
+ROW [0, 0, 1] GOLD 0 GATE 0
+ROW [1, 0, 1] GOLD 0 GATE 1
+ROW [0, 1, 1] GOLD 1 GATE 1
+ROW [1, 1, 1] GOLD 0 GATE 1
+ORIGINAL_FAILURE_KINDS Counter({('gold_only',): 351, ('gold_x',): 45, ('gold_only', 'gold_x'): 12, (): 4})

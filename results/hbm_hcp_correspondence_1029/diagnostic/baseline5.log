@@ -1,0 +1,5 @@
+BASELINE 9658 Counter({'proved': 9246, 'differs': 412})
+SAME_FAILED True EXTRA [] MISSING []
+D_SUPPORT gold [('matched', 'pi:u_core_rst_n[0]'), ('matched', 'ff:u_dut.u_fcore.u_core.u_core.nout_r[1]'), ('matched', 'ff:u_dut.u_bin_u_core_cmd_valid.q')] X 0
+D_SUPPORT gate [('matched', 'pi:u_core_rst_n[0]'), ('matched', 'ff:u_dut.u_fcore.u_core.u_core.nout_r[1]'), ('matched', 'ff:u_dut.u_bin_u_core_cmd_valid.q')] X 0
+BASELINE_DONE

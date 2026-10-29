@@ -1,0 +1,45 @@
+KEYS 9238 1426 0 HYP 474 DROPPED 0
+ff:u_dut.u_fcore.u_core.u_core.nlast_r[8] inGonly True hyp ('eq', 'gold', 'ff:u_dut.u_fcore.u_core.u_core.nf_r[21]', 0) rst (0, 1) q 4722 d 33717
+ff:u_dut.u_fcore.u_core.u_core.nlast_r[7] inGonly True hyp ('eq', 'gold', 'ff:u_dut.u_fcore.u_core.u_core.nout_r[1]', 0) rst (0, 1) q 4724 d 33735
+ff:u_dut.u_fcore.u_core.u_core.nlast_r[6] inGonly True hyp ('eq', 'gold', 'ff:u_dut.u_fcore.u_core.u_core.nout_r[1]', 0) rst (0, 1) q 4726 d 33753
+ff:u_dut.u_fcore.u_core.u_core.nlast_r[5] inGonly True hyp ('eq', 'gold', 'ff:u_dut.u_fcore.u_core.u_core.nout_r[1]', 0) rst (0, 1) q 4728 d 33771
+ff:u_dut.u_fcore.u_core.u_core.nlast_r[4] inGonly True hyp ('eq', 'gold', 'ff:u_dut.u_fcore.u_core.u_core.nout_r[1]', 0) rst (0, 1) q 4730 d 33789
+ff:u_dut.u_fcore.u_core.u_core.nlast_r[3] inGonly True hyp ('eq', 'gold', 'ff:u_dut.u_fcore.u_core.u_core.nout_r[1]', 0) rst (0, 1) q 4732 d 33807
+ff:u_dut.u_fcore.u_core.u_core.nlast_r[2] inGonly True hyp ('eq', 'gold', 'ff:u_dut.u_fcore.u_core.u_core.nout_r[1]', 0) rst (0, 1) q 4734 d 33825
+ff:u_dut.u_fcore.u_core.u_core.nlast_r[1] inGonly True hyp ('eq', 'gold', 'ff:u_dut.u_fcore.u_core.u_core.nout_r[1]', 0) rst (0, 1) q 4736 d 33843
+ff:u_dut.u_fcore.u_core.u_core.nlast_r[0] inGonly True hyp ('eq', 'gold', 'ff:u_dut.u_fcore.u_core.u_core.nout_r[1]', 0) rst (0, 1) q 4738 d 33861
+ff:u_dut.u_fcore.u_core.u_core.d0[13] inGonly True hyp None rst (0, 1) q 11036 d 164281
+ff:u_dut.u_fcore.u_core.u_core.d0[12] inGonly True hyp None rst (0, 1) q 11050 d 164601
+ff:u_dut.u_fcore.u_core.u_core.d0[11] inGonly True hyp None rst (0, 1) q 11064 d 164641
+ff:u_dut.u_fcore.u_core.u_core.d0[10] inGonly True hyp None rst (0, 1) q 11084 d 164647
+ff:u_dut.u_fcore.u_core.u_core.d0[9] inGonly True hyp None rst (0, 1) q 11100 d 164653
+ff:u_dut.u_fcore.u_core.u_core.d0[8] inGonly True hyp None rst (0, 1) q 11114 d 164677
+ff:u_dut.u_fcore.u_core.u_core.d0[7] inGonly True hyp None rst (0, 1) q 11136 d 164779
+ff:u_dut.u_fcore.u_core.u_core.d0[6] inGonly True hyp None rst (0, 1) q 11144 d 164797
+ff:u_dut.u_fcore.u_core.u_core.active inGonly False hyp None rst (0, 1) q 12182 d 269135
+ff:u_dut.u_fcore.u_core.u_core.busy inGonly False hyp None rst (0, 1) q 12218 d 269807
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-hcp-0848/prove.py", line 21, in <module>
+    assert k in L.gonly,k
+AssertionError: ff:u_dut.u_fcore.u_core.u_core.nout_r[1]
+Error in sys.excepthook:
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/apport_python_hook.py", line 238, in partial_apport_excepthook
+    return apport_excepthook(binary, exc_type, exc_obj, exc_tb)
+  File "/usr/lib/python3/dist-packages/apport_python_hook.py", line 70, in apport_excepthook
+    import traceback
+  File "/usr/lib/python3.14/traceback.py", line 12, in <module>
+    import _colorize
+  File "/usr/lib/python3.14/_colorize.py", line 157, in <module>
+    @dataclass(frozen=True, kw_only=True)
+  File "/usr/lib/python3.14/dataclasses.py", line 1432, in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+  File "/usr/lib/python3.14/dataclasses.py", line 1222, in _process_class
+    text_sig = str(inspect.signature(
+AttributeError: module 'inspect' has no attribute 'signature' (consider renaming '/srv/opentallas-scratch2/claude/codex-hcp-0848/inspect.py' since it has the same name as the standard library module named 'inspect' and prevents importing that standard library module)
+
+Original exception was:
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-hcp-0848/prove.py", line 21, in <module>
+    assert k in L.gonly,k
+AssertionError: ff:u_dut.u_fcore.u_core.u_core.nout_r[1]

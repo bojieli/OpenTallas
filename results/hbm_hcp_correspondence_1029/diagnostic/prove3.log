@@ -1,0 +1,7 @@
+HCP_CANDIDATES 9 RESET_BASE {'both:ff:u_dut.u_fcore.u_core.u_core.nout_r[1]': 1, 'gold:ff:u_dut.u_fcore.u_core.u_core.d0[6]': 1, 'gold:ff:u_dut.u_fcore.u_core.u_core.d0[7]': 1, 'gold:ff:u_dut.u_fcore.u_core.u_core.d0[8]': 1, 'gold:ff:u_dut.u_fcore.u_core.u_core.d0[9]': 1, 'gold:ff:u_dut.u_fcore.u_core.u_core.d0[10]': 1, 'gold:ff:u_dut.u_fcore.u_core.u_core.d0[11]': 1, 'gold:ff:u_dut.u_fcore.u_core.u_core.d0[12]': 1, 'gold:ff:u_dut.u_fcore.u_core.u_core.d0[13]': 1} CONS 0
+JOINT 528 Counter({'proved': 527, 'differs': 1})
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-hcp-0848/prove3.py", line 38, in <module>
+    assert all(v=='proved' for v in st.values()),'joint induction failed'
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: joint induction failed
