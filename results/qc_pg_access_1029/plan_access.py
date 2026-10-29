@@ -7,7 +7,7 @@ import argparse,json,collections,math,time
 from pathlib import Path
 from shapely.geometry import box
 from shapely.strtree import STRtree
-p=argparse.ArgumentParser();p.add_argument('--input',required=True);p.add_argument('--out',required=True);p.add_argument('--limit',type=int,default=0);a=p.parse_args();src=Path(a.input);out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
+p=argparse.ArgumentParser();p.add_argument('--input',required=True);p.add_argument('--out',required=True);p.add_argument('--clock-seed',required=True,help='Actual fixed future clock lower-layer metal rectangles in um');p.add_argument('--limit',type=int,default=0);a=p.parse_args();src=Path(a.input);out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
 g=json.load(open(src/'geometry.json'));terms=json.load(open(src/'power_terms.json'))['terms'];ep=json.load(open(src/'endpoints.json'))['endpoints'];pg=json.load(open(src/'pg_rects.json'));tech=json.load(open(src/'probe_census.json'))['tech_vias_dbu'];D=g['dbu'];spacing={f'M{i}':v for i,v in enumerate([0,18,18,18,24,24,32,32,40,40]) if i}
 blocked=collections.defaultdict(list)
 grid_keys={(ly,*[round(v*D) for v in r]) for n,ly,*r in pg if ly in ['M8','M9']}
@@ -18,7 +18,7 @@ for owner,ly,*r in g['obstructions']:
 print('exact_owned_grid_obstructions',owned_grid_obs,flush=True)
 for _,_,ly,*r in g['signal_shapes']:blocked[ly].append(r)
 for e in ep.values():blocked[e['layer']].append([round(v*D) for v in e['rect_um']])
-for n,ly,*r in json.load(open(src/'clock_base_access26.json')):blocked[ly].append([round(v*D) for v in r])
+for n,ly,*r in json.load(open(a.clock_seed)):blocked[ly].append([round(v*D) for v in r])
 trees={ly:STRtree([box(*r) for r in rr]) for ly,rr in blocked.items()}
 supply=collections.defaultdict(list)
 for n,ly,*r in g['existing_supplies']:supply[n,ly].append(r)
@@ -84,7 +84,7 @@ for gi,(n,x0,y0,x1,y1,members) in enumerate(groups):
   dst=sorted(stripes[n],key=lambda r:max(r[0]+20-x,0,x-r[2]+20))
   for yy in ys:
    stem=('M7',x-16,min(y-40,yy-40),x+16,max(y+40,yy+40))
-   land=('M8',x-40,yy-20,x+40,yy+20)
+   land=('M8',x-96,yy-20,x+96,yy+20) # 7680 DBU^2 >= actual M8 minimum AREA7520
    if not clear(n,stem[0],list(stem[1:])) or not clear(n,land[0],list(land[1:])):continue
    for sx0,sy0,sx1,sy1 in dst[:3]:
     if not sy0+20<=yy<=sy1-20:continue

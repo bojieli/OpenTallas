@@ -26,7 +26,12 @@ for i in b.getInsts():
    if lay and 1<=lay.getRoutingLevel()<=9:obs.append([i.getName(),lay.getName(),*transformed_rect(i,sh)])
   for it in i.getITerms():
    mt=it.getMTerm();st=str(mt.getSigType())
-   if st not in ['POWER','GROUND']:continue
+   if st not in ['POWER','GROUND']:
+    for mp in mt.getMPins():
+     for sh in mp.getGeometry():
+      lay=sh.getTechLayer()
+      if lay and 1<=lay.getRoutingLevel()<=9:sig.append([i.getName(),mt.getName(),lay.getName(),*transformed_rect(i,sh)])
+    continue
    net='VDD' if st=='POWER' else 'VSS'
    for mp in mt.getMPins():
     for sh in mp.getGeometry():
