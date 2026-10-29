@@ -1,8 +1,8 @@
 """Emit real START source with explicit perimeter stage rows and unchanged clock cells."""
 import json,sys
 from pathlib import Path
-R=Path('/srv/opentallas-scratch2/claude/codex-qc-start-native-0251');O=R/'reset_wave2';O.mkdir(exist_ok=True);Q=Path('/srv/opentallas-scratch2/claude/codex-qc-1029')
-sys.path.insert(0,str(R/'src750/tools/die_plan'))
+R=Path('/srv/opentallas-scratch2/claude/codex-qc-start-native-0251');O=R/'reset_wave3';O.mkdir(exist_ok=True);Q=Path('/srv/opentallas-scratch2/claude/codex-qc-1029')
+sys.path.insert(0,str(R/'srcf4/tools/die_plan'))
 import start_stage_emit as E,schema as S,die_trial as D
 bind=json.load(open(R/'perimeter1/bind.json'));meta=json.load(open('/srv/opentallas-scratch2/claude/codex-qc-start-provider-1029/actual26/proof/tap_arrivals_TT.json'))
 site=D.SiteMap(S.Plan(S.load(Q/'physical_event/plan_start_native_h800.json')))
