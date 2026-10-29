@@ -1,0 +1,38 @@
+{
+  "selected_actual_master": "ot_hbm_idx_rootctl_static_am",
+  "actual_instance": "hb_idx__ctl",
+  "actual_parameters": {
+    "VM_RT": 75,
+    "CR_RT": 36,
+    "SEL_LAT": 40,
+    "RSTL": 1,
+    "FAN32": 1
+  },
+  "source": {
+    "quad_1017/ot_hbm_idx_rootctl_static_am.sv": "05f5acd8bbc7953a0ce8ba02dd3d697489d5c327bee7bb09bd8def049f2a4c1e",
+    "ot_hbm_idx_vm_share_static_amr.sv": "997f6bc419343beb0c81b673b2b44aaccf982e375a73b3bbdf04c2015c0c266c"
+  },
+  "index_request": {
+    "old_width": 136,
+    "new_width": 144,
+    "lane": "valid17 mirror16 regularhigh15 SID14:13 row12:3 bank2:0"
+  },
+  "legacy_lift": "{oldvalid16,oldmirror15,1'b0,old14:0}",
+  "response_width": 2056,
+  "added_cycles": 0,
+  "production_selected": false,
+  "scope": "Caller parameter latency and reset unchanged; INDEX/native transport only; legacy TOPK/argmax17 retain field-preserving lift.",
+  "proof_units": [
+    "oth-ubuntu-3043546-1793273546",
+    "oth-ubuntu-3058052-1793273598"
+  ],
+  "source_frontend_actual_parameters": {
+    "AMMUT": "0",
+    "CR_RT": "36",
+    "FAN32": "1",
+    "RSTL": "1",
+    "SEL_LAT": "40",
+    "VM_RT": "75"
+  },
+  "golden_actual_body_normalized_equal": true
+}

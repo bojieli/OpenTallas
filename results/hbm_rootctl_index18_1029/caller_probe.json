@@ -1,0 +1,229 @@
+{
+  "actual_parameters": {
+    "AMMUT": "0",
+    "CR_RT": "36",
+    "FAN32": "1",
+    "RSTL": "1",
+    "SEL_LAT": "40",
+    "VM_RT": "75"
+  },
+  "actual_ports": {
+    "clk": {
+      "direction": "input",
+      "width": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "width": 1
+    },
+    "program_we": {
+      "direction": "input",
+      "width": 1
+    },
+    "program_addr": {
+      "direction": "input",
+      "width": 8
+    },
+    "program_data": {
+      "direction": "input",
+      "width": 256
+    },
+    "start": {
+      "direction": "input",
+      "width": 1
+    },
+    "length": {
+      "direction": "input",
+      "width": 12
+    },
+    "sel_op": {
+      "direction": "output",
+      "width": 4
+    },
+    "sel_pass": {
+      "direction": "output",
+      "width": 2
+    },
+    "sel_addr": {
+      "direction": "output",
+      "width": 8
+    },
+    "link_flush": {
+      "direction": "output",
+      "width": 1
+    },
+    "link_emit": {
+      "direction": "output",
+      "width": 1
+    },
+    "link_group": {
+      "direction": "output",
+      "width": 4
+    },
+    "link_clear": {
+      "direction": "output",
+      "width": 1
+    },
+    "selected_v": {
+      "direction": "input",
+      "width": 4
+    },
+    "ingest_v": {
+      "direction": "output",
+      "width": 1
+    },
+    "tree_ev": {
+      "direction": "input",
+      "width": 4
+    },
+    "qfault": {
+      "direction": "input",
+      "width": 4
+    },
+    "sf": {
+      "direction": "input",
+      "width": 1
+    },
+    "lf": {
+      "direction": "input",
+      "width": 1
+    },
+    "done": {
+      "direction": "output",
+      "width": 1
+    },
+    "fault": {
+      "direction": "output",
+      "width": 1
+    },
+    "topk_go": {
+      "direction": "input",
+      "width": 1
+    },
+    "topk_k": {
+      "direction": "input",
+      "width": 4
+    },
+    "topk_order": {
+      "direction": "input",
+      "width": 1
+    },
+    "topk_n": {
+      "direction": "input",
+      "width": 20
+    },
+    "topk_m": {
+      "direction": "input",
+      "width": 20
+    },
+    "topk_a_mirror": {
+      "direction": "input",
+      "width": 1
+    },
+    "topk_a_base": {
+      "direction": "input",
+      "width": 18
+    },
+    "topk_a_str": {
+      "direction": "input",
+      "width": 18
+    },
+    "topk_o_mirror": {
+      "direction": "input",
+      "width": 1
+    },
+    "topk_o_base": {
+      "direction": "input",
+      "width": 18
+    },
+    "topk_o_str": {
+      "direction": "input",
+      "width": 18
+    },
+    "topk_has_r": {
+      "direction": "input",
+      "width": 1
+    },
+    "topk_r_base": {
+      "direction": "input",
+      "width": 18
+    },
+    "topk_r_str": {
+      "direction": "input",
+      "width": 18
+    },
+    "cq": {
+      "direction": "output",
+      "width": 338
+    },
+    "cq_seq": {
+      "direction": "output",
+      "width": 2
+    },
+    "cr": {
+      "direction": "input",
+      "width": 274
+    },
+    "topk_busy": {
+      "direction": "output",
+      "width": 1
+    },
+    "topk_done": {
+      "direction": "output",
+      "width": 1
+    },
+    "topk_fault": {
+      "direction": "output",
+      "width": 1
+    },
+    "index_rq": {
+      "direction": "input",
+      "width": 144
+    },
+    "index_rr": {
+      "direction": "output",
+      "width": 2056
+    },
+    "argmax_rq": {
+      "direction": "input",
+      "width": 136
+    },
+    "argmax_m": {
+      "direction": "output",
+      "width": 264
+    },
+    "vm_rq": {
+      "direction": "output",
+      "width": 144
+    },
+    "vm_rr": {
+      "direction": "input",
+      "width": 2056
+    },
+    "share_fault": {
+      "direction": "output",
+      "width": 1
+    }
+  },
+  "actual_share_leaves": 0,
+  "cells": {
+    "$not": 406,
+    "$mux": 141,
+    "$eq": 26,
+    "$logic_and": 91,
+    "$logic_not": 10,
+    "$ne": 2,
+    "$or": 6,
+    "$adff": 396,
+    "$dff": 39,
+    "$reduce_or": 2,
+    "ot_hbm_idx_calendar_static_f32": 1,
+    "ot_hbm_idx_kreg": 141,
+    "ot_hbm_idx_topk_static_f32": 1,
+    "$add": 16,
+    "$and": 64,
+    "$gt": 8,
+    "ot_hbm_idx_vm_share_amtree": 1
+  },
+  "status": "SOURCE_CALLER_HIERARCHY_ONLY_NO_PRODUCTION_ADOPTION"
+}

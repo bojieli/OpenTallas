@@ -1,0 +1,26 @@
+{
+  "results": [
+    {
+      "label": "positive",
+      "exit": 0,
+      "output": "PASS checks=700 high=90 mirror=204\n/srv/opentallas-scratch2/claude/codex-hbm-rootctl-native-0435/tb_share_index18.sv:30: $finish called at 7006000 (1ps)",
+      "caught": false
+    },
+    {
+      "label": "regularhigh_mutant",
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch2/claude/codex-hbm-rootctl-native-0435/tb_share_index18.sv:25: request field mismatch n=11\n       Time: 126000  Scope: tb.$ivl_for_loop8",
+      "caught": true
+    },
+    {
+      "label": "mirror_mutant",
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch2/claude/codex-hbm-rootctl-native-0435/tb_share_index18.sv:25: request field mismatch n=3\n       Time: 46000  Scope: tb.$ivl_for_loop8",
+      "caught": true
+    }
+  ],
+  "VM_RT": 75,
+  "F32": 1,
+  "added_cycles": 0,
+  "scope": "Smallest actual shareleaf source vehicle, random native highregular/mirror and legacy responses/fault/reset lockstep; no whole rootctl numeric or physical adoption"
+}
