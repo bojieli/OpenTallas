@@ -62,19 +62,29 @@ def network(P):
             bindings[part][pin] = name
     provisional = []
     boundary_inputs,boundary_outputs = [],[]
+    boundary_aliases = {}
     for use in net.get('start_tree', {}).get('uses', []):
         part,pin,name = use['part'],use['pin'],use['net']
         if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_$]*',name):
             raise ValueError('invalid explicit START boundary net: '+name)
         if (part,pin) not in pins or pins[part,pin]['dir'] not in ('in','out'):
             raise ValueError('invalid START boundary endpoint: '+str((part,pin)))
-        if pin in bindings[part] or name in wires:
+        if name in wires:
             raise ValueError('START boundary conflicts with existing physical net: '+name)
-        bindings[part][pin] = name
+        if pin in bindings[part]:
+            if pins[part,pin]['dir'] != 'out':
+                raise ValueError('START boundary conflicts with existing physical net: '+name)
+            # One real launch can feed a real child and virtual START stages.
+            # Export its existing electrical wire; never bind the output pin
+            # twice or turn this real launch into an external input driver.
+            boundary_aliases[name] = bindings[part][pin]
+        else:
+            bindings[part][pin] = name
         provisional.append(name)
         (boundary_inputs if pins[part,pin]['dir']=='in' else boundary_outputs).append(name)
     if len(set(provisional)) != len(provisional):
         raise ValueError('duplicate START provisional boundary net')
     return dict(wires=wires, bindings=dict(bindings), provisional=provisional,
                 boundary_inputs=boundary_inputs,boundary_outputs=boundary_outputs,
+                boundary_aliases=boundary_aliases,
                 edges=len(edges), boundary_provider='actual infra import required')
