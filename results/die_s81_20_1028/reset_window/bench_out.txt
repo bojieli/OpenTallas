@@ -1,0 +1,23 @@
+CELLS_MATCH gen_rtl.py
+--- pos2 (-Ptb_s81_rst_window.CONTRACT=2)
+S81RST_PASS windows=81 min_edges=2 max_edges=5 contract=2 E=6 mut=0 prop_hold=0
+FATAL lines: 0
+--- tight3 (-Ptb_s81_rst_window.CONTRACT=3)
+S81RST_FAIL fails=35 windows=81 min_edges=2 contract=3 mut=0 prop_hold=0
+FATAL lines: 35
+FATAL: window 2 edges < contract 3 (event 1, t=8000)
+--- need8 (-Ptb_s81_rst_window.CONTRACT=8)
+S81RST_FAIL fails=81 windows=81 min_edges=2 contract=8 mut=0 prop_hold=0
+FATAL lines: 81
+FATAL: window 2 edges < contract 8 (event 1, t=8000)
+--- mut1 (-Ptb_s81_rst_window.CONTRACT=2 -Ptb_s81_rst_window.MUT=1)
+S81RST_FAIL fails=35 windows=81 min_edges=1 contract=2 mut=1 prop_hold=0
+FATAL lines: 35
+FATAL: window 1 edges < contract 2 (event 1, t=7000)
+--- prop16 (-Ptb_s81_rst_window.CONTRACT=16 -Ptb_s81_rst_window.PROP=16)
+S81RST_PASS windows=81 min_edges=18 max_edges=21 contract=16 E=6 mut=0 prop_hold=16
+FATAL lines: 0
+--- prop8m (-Ptb_s81_rst_window.CONTRACT=16 -Ptb_s81_rst_window.PROP=8)
+S81RST_FAIL fails=81 windows=81 min_edges=10 contract=16 mut=0 prop_hold=8
+FATAL lines: 81
+FATAL: window 10 edges < contract 16 (event 1, t=15000)

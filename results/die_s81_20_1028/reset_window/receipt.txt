@@ -1,0 +1,34 @@
+S81 die reset window receipt (DIE-S81-20 sub-lane, 2026-10-28 23:38 PDT, intel2, Icarus Verilog version 12.0 (stable) ())
+repo base origin/main 6132842ffa; verdict: S81 generator proves a 2-edge window at the core rst_n pin (NO reset_contract.json written: 2 < LEC default 4 < needed ~8)
+f2327ed526297d28212d0e0e9a3549e3e4bbbcf7b1ddf090f519742678e0a237  s81_reset_cells.v
+ac54a1f6d4c9e5b823e143f2ef39d867a9ac070aa6c68d9b66f1e247fa81ce5c  tb_s81_rst_window.sv
+e600708b11b685ec7759de673778cad91efae5ee7e344c835f0f7dbe01b745c1  bench_s81_rst_window.sh
+11ebca33f297793a2553b2fade0dc9f6a2aade5060224c920e6bffeed475c5dc  first_edges.py
+52445c8a235cffc67223fb3123a559d179bc2e8c110eeb05b9e8e2cd6a027944  reg_reset_state.py
+4f15cd3f74a9a4f5a803436fd13c503f73f839c750abee6816793c994905d2ed  needed_edges.json
+dbed80fd57fef910790e255cb3d88fb0186f8b7307c3ca0b2635bdb66c0875f1  bench_out.txt
+a865034c0b6fdaa3ea8c79a0565f1f9bb7bf9f4c9368ed1b0eaf6b4d1f2f8f35  tools/die_plan/gen_rtl.py (CELLS source)
+--- bench_out.txt
+CELLS_MATCH gen_rtl.py
+--- pos2 (-Ptb_s81_rst_window.CONTRACT=2)
+S81RST_PASS windows=81 min_edges=2 max_edges=5 contract=2 E=6 mut=0 prop_hold=0
+FATAL lines: 0
+--- tight3 (-Ptb_s81_rst_window.CONTRACT=3)
+S81RST_FAIL fails=35 windows=81 min_edges=2 contract=3 mut=0 prop_hold=0
+FATAL lines: 35
+FATAL: window 2 edges < contract 3 (event 1, t=8000)
+--- need8 (-Ptb_s81_rst_window.CONTRACT=8)
+S81RST_FAIL fails=81 windows=81 min_edges=2 contract=8 mut=0 prop_hold=0
+FATAL lines: 81
+FATAL: window 2 edges < contract 8 (event 1, t=8000)
+--- mut1 (-Ptb_s81_rst_window.CONTRACT=2 -Ptb_s81_rst_window.MUT=1)
+S81RST_FAIL fails=35 windows=81 min_edges=1 contract=2 mut=1 prop_hold=0
+FATAL lines: 35
+FATAL: window 1 edges < contract 2 (event 1, t=7000)
+--- prop16 (-Ptb_s81_rst_window.CONTRACT=16 -Ptb_s81_rst_window.PROP=16)
+S81RST_PASS windows=81 min_edges=18 max_edges=21 contract=16 E=6 mut=0 prop_hold=16
+FATAL lines: 0
+--- prop8m (-Ptb_s81_rst_window.CONTRACT=16 -Ptb_s81_rst_window.PROP=8)
+S81RST_FAIL fails=81 windows=81 min_edges=10 contract=16 mut=0 prop_hold=8
+FATAL lines: 81
+FATAL: window 10 edges < contract 16 (event 1, t=15000)
