@@ -1,0 +1,58 @@
+{
+ "positive_real_RT": [
+  {
+   "part": "pa",
+   "type": "src",
+   "source_cells": 0,
+   "payload_bits": 0,
+   "reset_relays": 17,
+   "entry": "relayed",
+   "depth": 3,
+   "wavefront": {
+    "type": "src",
+    "parent": "pm1",
+    "entry_stages": 1,
+    "depth_K": 3,
+    "release": 14,
+    "core_release": {},
+    "source": "pm1.rst_o_1",
+    "hop_um": 305.3
+   },
+   "rtl": "existing reset_tree.rtl_lines, no alternate implementation"
+  }
+ ],
+ "negative_controls": [
+  {
+   "case": "no_wavefront",
+   "caught": "reset carriers require existing wavefront reset implementation"
+  },
+  {
+   "case": "macro",
+   "caught": "reset carrier has payload hardware: pa"
+  },
+  {
+   "case": "payload_bus",
+   "caught": "reset carrier has payload hardware: pa"
+  },
+  {
+   "case": "ft_slot",
+   "caught": "reset carrier has payload hardware: pa"
+  },
+  {
+   "case": "source_cell",
+   "caught": "reset carrier contains nonzero/unknown source logic: pa"
+  },
+  {
+   "case": "internal_station",
+   "caught": "reset carrier has payload hardware: pa"
+  },
+  {
+   "case": "duplicate",
+   "caught": "reset_carrier_parts must be unique exact partition names"
+  },
+  {
+   "case": "mapped_cell",
+   "caught": "reset carrier already contains source cells or transport: pa"
+  }
+ ]
+}
