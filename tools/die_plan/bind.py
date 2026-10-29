@@ -1509,6 +1509,11 @@ class Binder:
                 self.members[L["src"]] = []
             if L["dst"] not in self.members:
                 self.members[L["dst"]] = []
+        import reset_carriers
+        try:
+            reset_carriers.register(self)
+        except (ValueError, KeyError) as exc:
+            self.errors.append(f"RESET_CARRIER {exc}")
         for p in self.parts:
             if p not in self.members:
                 self.errors.append(f"EMPTY_PARTITION {p}: no as-built cell maps to it and no lane passes through it")
@@ -3882,6 +3887,8 @@ def cmd_bind(a):
         except (CL.LandingError, ValueError) as exc:
             raise BindError(f"clock landing: {exc}") from exc
     B.build_buses()
+    if getattr(B, 'reset_carriers', None):
+        (out / "bind_reset_carriers.json").write_text(json.dumps(B.reset_carriers, indent=1) + "\n")
     B.align_landings()
     B.uniform_inner()
     B.regen_params()
