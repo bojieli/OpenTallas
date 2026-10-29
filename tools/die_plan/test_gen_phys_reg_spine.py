@@ -168,3 +168,16 @@ def test_tap_footprint_fails_closed_without_room():
                 tap_footprint=dict(core_um=[0.0, 0.0, 300.0, 300.0], max_move_um=2.0))
     with pytest.raises(ValueError):
         reg_spine.legalize_tap_footprints([dict(id=0, x=150.0, y=150.0, node="A", pad=3)], spec)
+
+
+def test_source_fixed_clock_homes_are_explicit_and_validated():
+    import pytest
+    trunk, taps, assign = reg_spine.plan(SPEC, _sinks())
+    with tempfile.TemporaryDirectory() as d:
+        reg_spine.write(d, trunk, taps, assign, SPEC)
+        default = (Path(d) / 'reg_spine_plan.tcl').read_text()
+        assert 'placement_status' not in default
+        reg_spine.write(d, trunk, taps, assign, dict(SPEC, placement_status='FIRM'))
+        assert (Path(d) / 'reg_spine_plan.tcl').read_text().replace('  placement_status FIRM\n', '') == default
+        with pytest.raises(ValueError, match='placement_status'):
+            reg_spine.write(d, trunk, taps, assign, dict(SPEC, placement_status='LOCKED'))
