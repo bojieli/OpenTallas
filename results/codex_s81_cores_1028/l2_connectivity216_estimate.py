@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """L2 pin-only proposal: align actual registered bit links within all external405um constraints."""
-import copy,json,sys
+import copy,json,sys,subprocess
 from pathlib import Path
 import numpy as np
 from scipy.optimize import linear_sum_assignment
@@ -9,7 +9,7 @@ r=Path(sys.argv[1]);o=Path(sys.argv[2]);o.mkdir(parents=True,exist_ok=True)
 ns={'__name__':'l2_source_census'};saved=sys.argv;sys.argv=['census',str(r),str(o)]
 exec((r/'results/codex_s81_cores_1028/l2_outline_estimate.py').read_text().split('old=cores')[0],ns);sys.argv=saved
 cs=copy.deepcopy(ns['cores']);ps=copy.deepcopy(ns['pins']);cs['u_l2'].update(outline_um=[216,43.2],origin_um=[1149.12,613.44])
-p=json.load(open(r/'physical/die_plan/s81/inputs/core_pins/dsdv_gunit_l2_compact_1028.json'));q=copy.deepcopy(p);d={x['name']:x for x in q['pins']};point=ns['point']
+p=json.loads(subprocess.check_output(['git','-C',str(r),'show','4566d317b8:physical/die_plan/s81/inputs/core_pins/dsdv_gunit_l2_compact_1028.json']));q=copy.deepcopy(p);d={x['name']:x for x in q['pins']};point=ns['point']
 
 for n,v in d.items():
  if n=='clk':v['x']=108.012
