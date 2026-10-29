@@ -1,0 +1,8831 @@
+{
+ "pads": {},
+ "instances": {
+  "lk_WN2": {
+   "master": "ot_s81hd_serdes",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "lk_WN1": {
+   "master": "ot_s81hd_serdes",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "lk_WN0": {
+   "master": "ot_s81hd_serdes",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "lk_WN3": {
+   "master": "ot_s81hd_serdes",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "lk_EN0": {
+   "master": "ot_s81hd_serdes",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "lk_EN1": {
+   "master": "ot_s81hd_serdes",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "lk_WS1": {
+   "master": "ot_s81hd_serdes",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "lk_HOST0": {
+   "master": "ot_s81hd_serdes",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "lk_HOST1": {
+   "master": "ot_s81hd_serdes",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "lk_ES1": {
+   "master": "ot_s81hd_serdes",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "nst1": {
+   "master": "ot_s81hd_st_turn",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "nst2": {
+   "master": "ot_s81hd_st_str",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "nst7": {
+   "master": "ot_s81hd_st_m",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "mesh7N": {
+   "master": "ot_s81hd_mesh_ep",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "nst9": {
+   "master": "ot_s81hd_st_str",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "nst10": {
+   "master": "ot_s81hd_st_turn",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "sst2": {
+   "master": "ot_s81hd_st_str",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "sst9": {
+   "master": "ot_s81hd_st_str",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "sp0": {
+   "master": "ot_s81hd_spn",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "turnW0a": {
+   "master": "ot_s81hd_turn_a",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "turnW0b": {
+   "master": "ot_s81hd_turn_b",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "turnE0a": {
+   "master": "ot_s81hd_turn_a",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "turnE0b": {
+   "master": "ot_s81hd_turn_b",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0o0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0b0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0o0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0b0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0o1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0b1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0o1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0b1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0o2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0b2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0o2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0b2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0o3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0b3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0o3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0b3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0o4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0b4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0o4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0b4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0o5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0b5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0o5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0b5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0o6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0b6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0o6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0b6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0o7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0b7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0o7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0b7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0o8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0b8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0o8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0b8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0o9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0b9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0o9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0b9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0o10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE0b10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0o10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW0b10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "turnW1b": {
+   "master": "ot_s81hd_turn_b",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "turnE1b": {
+   "master": "ot_s81hd_turn_b",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1o0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1b0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1o0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1b0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1o1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1b1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1o1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1b1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1o2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1b2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1o2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1b2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1o3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1b3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1o3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1b3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1o4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1b4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1o4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1b4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1o5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1b5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1o5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1b5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1o6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1b6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1o6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1b6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1o7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1b7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1o7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1b7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1o8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1b8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1o8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1b8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1o9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1b9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1o9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1b9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1o10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE1b10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1o10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW1b10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "turnW2b": {
+   "master": "ot_s81hd_turn_b",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "turnE2b": {
+   "master": "ot_s81hd_turn_b",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2o0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2b0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2o0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2b0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2o1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2b1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2o1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2b1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2o2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2b2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2o2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2b2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2o3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2b3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2o3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2b3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2o4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2b4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2o4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2b4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2o5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2b5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2o5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2b5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2o6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2b6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2o6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2b6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2o7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2b7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2o7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2b7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2o8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2b8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2o8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2b8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2o9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2b9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2o9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2b9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2o10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE2b10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2o10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW2b10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3o0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3b0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3o0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3b0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3o1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3b1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3o1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3b1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3o2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3b2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3o2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3b2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3o3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3b3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3o3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3b3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3o4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3b4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3o4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3b4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3o5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3b5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3o5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3b5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3o6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3b6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3o6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3b6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3o7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3b7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3o7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3b7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3o8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3b8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3o8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3b8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3o9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3b9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3o9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3b9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3o10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE3b10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3o10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW3b10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "turnW4b": {
+   "master": "ot_s81hd_turn_b",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "turnE4b": {
+   "master": "ot_s81hd_turn_b",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4o0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4b0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4o0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4b0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4o1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4b1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4o1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4b1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4o2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4b2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4o2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4b2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4o3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4b3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4o3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4b3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4o4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4b4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4o4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4b4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4o5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4b5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4o5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4b5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4o6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4b6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4o6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4b6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4o7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4b7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4o7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4b7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4o8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4b8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4o8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4b8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4o9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4b9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4o9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4b9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4o10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE4b10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4o10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW4b10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "turnW5b": {
+   "master": "ot_s81hd_turn_b",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "turnE5b": {
+   "master": "ot_s81hd_turn_b",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5o0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5b0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5o0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5b0": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5o1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5b1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5o1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5b1": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5o2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5b2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5o2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5b2": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5o3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5b3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5o3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5b3": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5o4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5b4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5o4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5b4": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5o5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5b5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5o5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5b5": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5o6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5b6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5o6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5b6": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5o7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5b7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5o7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5b7": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5o8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5b8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5o8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5b8": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5o9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5b9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5o9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5b9": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5o10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tE5b10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5o10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rst_o_2": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_0": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_2": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "tW5b10": {
+   "master": "ot_s81hd_tile_p",
+   "reason": "reset/START wavefront out with no child at this instance (reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)",
+   "ports": {
+    "rst_o_1": [
+     [
+      0,
+      0
+     ]
+    ],
+    "start_o_1": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  }
+ }
+}
