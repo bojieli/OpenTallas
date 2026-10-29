@@ -1,0 +1,38 @@
+# ot-clk config: HEAD die clock on the CURRENT plan hk4 RX/TX raw event (results/die_head_21_1028/hk4/plan_spine_raw_rx_tx.json.gz,
+# 21 types / 351 parts / 327 regions; DIE-HEAD-24 06:01 plan statement).  DIE-HEAD-25 2026-10-29: local form (12.13b/12.16e) =
+# region clocks forwarded along the Codex neighbour feed graph (hk4/clock_local2/feed.json, root sp3, 326 edges) with a balanced
+# H-tree per region (link_htree) + DME delay regions, replacing the HEAD-only head_strip_local_clock.py build (12.17(2)).
+# Stage model: borrowed QC inv2/NDR entry (same stack key); a HEAD refit (ot_clk.py refit on the routed legs) is the follow-up.
+schema: ot_clk_config/1
+die: head
+event:
+  name: hk4_rx_tx_l1
+  host: intel2
+  source: DIE-HEAD-25 (die_trial kit via ot_clk on main e256f6799); inputs are copies of main results/die_head_21_1028/hk4
+  reference_clock_dir: /srv/opentallas-scratch2/claude/die-head-25/clk/kit_l1/clock
+inputs:
+  # plan = gunzip of main hk4/plan_spine_raw_rx_tx.json.gz (sha256 769bcac5...), placed in hk4/ for its relative core pin paths
+  plan: /srv/opentallas-scratch2/claude/wt/die-head-25/results/die_head_21_1028/hk4/plan_hk4_rx_tx.json
+  region_map: /srv/opentallas-scratch2/claude/die-head-25/clk/in/spine_regions.json
+  feed: /srv/opentallas-scratch2/claude/die-head-25/clk/in/feed.json
+stack:
+  cell: inv2
+  clock_rc: ndr
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 250
+  site_legal: true
+  site_slide: true
+  opts:
+    dme_feed_centroid: 1
+region:
+  form: dme
+  workers: 24
+  dme_mode: delay
+  only:
+    all_from_map: true
+stage_model:
+  entry: inv2_ndr_qc_trial24
+  corners: [TT, FF]
+  edge: rise
