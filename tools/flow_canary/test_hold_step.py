@@ -135,3 +135,23 @@ def test_hold_step_default_form_is_pre_drt(tmp_path):
     assert r.returncode == 0, r.stdout + r.stderr
     assert (Path(str(kit) + "_holdeco") / "eco_from").read_text().strip() == "grt"
     assert json.loads((kit / "hold_step.json").read_text())["form"] == "pre_drt"
+
+
+def test_ff_eco_overrides_copied_two_mode_make_assignments(tmp_path):
+    kit, _ = _routed_kit(tmp_path)
+    with (kit/'config.mk').open('a') as f:
+        f.write('override export OT_HOLD_MM = 1\noverride export CORNERS = tc BC\n')
+    out = tmp_path/'eco_ff'
+    r = subprocess.run(['bash', str(ECO/'mk_eco.sh'), str(kit), str(out), 'b15', str(ROOT)],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout + r.stderr
+    # Evaluate make's actual precedence: CORNERS=bc on the command line alone
+    # loses to the old native-kit override (the production failure).
+    target = '\n.PHONY: show\nshow:\n\t@echo FRAME=$(OT_HOLD_MM):$(CORNERS)\n'
+    (out/'check.mk').write_text((out/'config.mk').read_text() + target)
+    actual = subprocess.check_output(['make', '-s', '-f', str(out/'check.mk'), 'show', 'CORNERS=tc BC'], text=True)
+    assert actual.strip() == 'FRAME=0:bc'
+    hook = (out/'eco_post.tcl').read_text()
+    assert hook.index('source /work/kit_modes_eco.tcl') < hook.index('source /work/eco_route.tcl')
+    assert 'kit_modes_eco_done' in hook
+    assert (out/'kit_modes_eco.tcl').is_file()
