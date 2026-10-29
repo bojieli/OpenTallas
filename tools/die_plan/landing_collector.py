@@ -17,6 +17,32 @@ def raw(n):
     return re.sub(r"^rst_n_t(\d+)$", r"rr_t\1", n)
 
 
+def raw_reset(tree, node, body):
+    """Resolve a pre-START consumer using its exact existing reset-tree edge."""
+    reset = raw(node)
+    declared = lambda n: re.search(r"\bwire\b[^;]*\b"+re.escape(n)+r"\b", body)
+    if node == "rst_root_n" or declared(reset):
+        return reset, [], []
+    boot = re.search(r"ot_dp_rrelay(?:_drive)?\s+\w+\s*\([^;]*\.q\("+re.escape(node)+r"\)\);", body)
+    if boot:
+        return node, [], []
+    reset = "cland_reset_" + safe(node)
+    if declared(reset):
+        return reset, [], []
+    relays = {r["q"]: r for r in tree["relays"]}
+    if node not in relays:
+        raise ValueError(f"collector {node}: reset-tree relay absent")
+    edge = relays[node]
+    parent = raw(edge["d"])
+    if edge["d"] != "rst_root_n" and not declared(parent):
+        raise ValueError(f"collector {node}: raw reset parent {parent} absent")
+    lines = [f"    wire {reset};",
+             f"    ot_dp_rrelay u_{reset} (.clk(clk), .d({parent}), .q({reset}));"]
+    inst = dict(name="u_"+reset, module="ot_dp_rrelay", xy_um=edge["xy"],
+                flops=1, role="raw pre-START reset copy")
+    return reset, lines, [inst]
+
+
 def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n"):
     reset_root="rst_root_n";root=root_node
     relays = {r["q"]: r for r in tree["relays"]}
@@ -82,23 +108,9 @@ def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n"):
             hops.append(dict(src=ch, dst=node, hop_um=distance))
         if not ready:
             raise ValueError(f"collector {node}: empty active branch")
-        reset = raw(node)
-        # A raw copy of a terminal mission tap is not always needed by the old
-        # reset tree. Materialize that existing parent->tap edge locally.
-        if node != reset_root and not re.search(r"\bwire\b[^;]*\b"+re.escape(reset)+r"\b", body):
-            # A bootstrap tap already carries raw reset under its original name.
-            boot = re.search(r"ot_dp_rrelay\s+\w+\s*\([^;]*\.q\("+re.escape(node)+r"\)\);", body)
-            if boot:
-                reset = node
-            else:
-                reset = "cland_reset_" + safe(node)
-                rp = raw(reset_parent[node])
-                if reset_parent[node] != reset_root and not re.search(r"\bwire\b[^;]*\b"+re.escape(rp)+r"\b", body):
-                    raise ValueError(f"collector {node}: raw reset parent {rp} absent")
-                lines += [f"    wire {reset};",
-                          f"    ot_dp_rrelay u_{reset} (.clk(clk), .d({rp}), .q({reset}));"]
-                insts.append(dict(name="u_"+reset, module="ot_dp_rrelay", xy_um=xy[node], flops=1,
-                                  role="raw pre-START reset copy"))
+        reset, added, copies = raw_reset(tree, node, body+"\n"+"\n".join(lines))
+        lines.extend(added)
+        insts.extend(copies)
         rn, fn = nets(node)
         if node != root:
             lines += [f"    wire {rn}, {fn};"]

@@ -40,3 +40,18 @@ def test_real_two_inputs_remain_two_inputs():
     r=build_local(tree(),s,"wire rr_t0;")
     assert any(i.get("active_inputs")==2 for i in r["instances"])
     assert any("{ra, rb}" in line for line in r["rtl"])
+
+
+def test_raw_reset_requires_exact_relay_and_raw_parent():
+    import pytest
+    from landing_collector import raw_reset
+    tree=dict(relays=[dict(q="rst_n_t2", d="rst_n_t1", xy=[20,30])])
+    with pytest.raises(ValueError,match="relay absent"):
+        raw_reset(tree,"rst_n_t99","wire rst_root_n;")
+    with pytest.raises(ValueError,match="raw reset parent rr_t1 absent"):
+        raw_reset(tree,"rst_n_t2","wire rst_root_n;")
+    name,rtl,inst=raw_reset(tree,"rst_n_t2","wire rr_t1;")
+    assert name=="cland_reset_rst_n_t2"
+    assert ".d(rr_t1)" in rtl[-1]
+    assert inst[0]["xy_um"]==[20,30]
+    assert raw_reset(tree,"rst_n_t2","wire rr_t1;\n"+"\n".join(rtl))==(name,[],[])

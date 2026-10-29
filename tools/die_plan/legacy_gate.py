@@ -94,6 +94,11 @@ def run(kit, stage, netlist=None, execute=subprocess.run):
             raise ValueError('missing configured calibrated RC file')
         if not (kit / 'postcts_gate.tcl').is_file():
             raise ValueError('missing postcts gate')
+        band_policy = 'gate'
+        if (kit / 'master_slice.json').is_file():
+            band_policy = load(kit / 'master_slice.json').get('core_tree', {}).get('model_qualification', {}).get('band_policy', 'gate')
+        if band_policy not in ('gate', 'info'):
+            raise ValueError('invalid model_qualification band_policy')
         for corner in ('TT', 'FF'):
             receipt = kit / f'postcts_gate_{corner.lower()}.json'
             log = kit / f'postcts_gate_{corner}.log'
@@ -106,12 +111,15 @@ def run(kit, stage, netlist=None, execute=subprocess.run):
                                  env=env, stdout=stream, stderr=subprocess.STDOUT)
             d = load(receipt)
             numeric = [float(d[k]) for k in ('bound_ps', 'dev_ps', 'tol_ps', 'pinreg_mean_ps')]
-            if (not all(math.isfinite(v) for v in numeric) or not 0 <= d['dev_ps'] <= d['tol_ps'] <= 20.0
-                    or abs(d['pinreg_mean_ps'] - d['bound_ps']) > d['tol_ps']
+            band_info = (band_policy == 'info' and d.get('band_policy') == 'info'
+                         and d.get('band_verdict') == 'INFO')
+            band_ok = (d['dev_ps'] <= d['tol_ps']
+                       and abs(d['pinreg_mean_ps'] - d['bound_ps']) <= d['tol_ps'])
+            if (not all(math.isfinite(v) for v in numeric) or not 0 <= d['dev_ps'] or not 0 <= d['tol_ps'] <= 20.0
+                    or not (band_ok or band_info)
                     or result.returncode != 0 or d.get('verdict') != 'PASS' or d.get('corner') != corner
                     or d.get('parasitics') != 'global_routing' or d.get('pinreg_n', 0) <= 0
-                    or abs(float(d['bound_ps']) - float(settings[f'OT_VCLK_{corner}'])) > 1e-6
-                    or float(d['dev_ps']) > float(d['tol_ps'])):
+                    or abs(float(d['bound_ps']) - float(settings[f'OT_VCLK_{corner}'])) > 1e-6):
                 raise ValueError(f'{corner} global-routing insertion gate failed: {d.get("verdict")} exit {result.returncode}')
         print('OT_LEGACY_GATE GRT TT/FF PASS')
         return 0

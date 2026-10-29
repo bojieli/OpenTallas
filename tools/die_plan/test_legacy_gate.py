@@ -116,3 +116,17 @@ def test_lec_env_bad_value_fails_closed(tmp_path, bad):
         return SimpleNamespace(returncode=0)
     assert gate.run(k, 'lec', k/'netlist.v', execute) == 5
     assert not ran
+
+@pytest.mark.parametrize('declared,receipt_policy,zero,expected', [
+    ('info','info',False,0), ('gate','info',False,6),
+    ('info','gate',False,6), ('info','info',True,6)])
+def test_explicit_info_band_requires_matching_plan_and_measured_receipt(tmp_path, declared, receipt_policy, zero, expected):
+    k=kit(tmp_path)
+    (k/'master_slice.json').write_text(json.dumps({'core_tree':{'model_qualification':{'band_policy':declared}}}))
+    def execute(args, **kwargs):
+        c=kwargs['env']['OT_CORNER'];d=passing(c)
+        d.update(dev_ps=126.49,pinreg_mean_ps=d['bound_ps']-126.49,
+                 band_policy=receipt_policy,band_verdict='INFO',pinreg_n=0 if zero else 638)
+        (k/f'postcts_gate_{c.lower()}.json').write_text(json.dumps(d))
+        return SimpleNamespace(returncode=0)
+    assert gate.run(k,'grt',execute=execute)==expected

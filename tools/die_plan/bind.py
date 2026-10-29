@@ -321,6 +321,41 @@ class Graph:
     def pin(self, ci, pn):
         return f"{self.F.cells[ci].path}.{pn}"
 
+    def _constant_glue(self, cell, bit, depth):
+        """Exact combinational constants only; runtime/X inputs keep their source."""
+        def constant(net):
+            up = self.source(net, depth + 1)
+            return int(up[1]) if up[0] == "const" and up[1] in ("0", "1") else None
+        if cell.ytype == "$mux":
+            select = cell.ports.get("S", [])
+            if len(select) != 1:
+                return None
+            value = constant(select[0])
+            if value is None:
+                return None
+            branch = cell.ports.get("B" if value else "A", [])
+            return constant(branch[bit]) if bit < len(branch) else None
+        if cell.ytype == "$add":
+            values = []
+            signed = all(str(cell.yparams.get(k, "0")).strip("0") == "1"
+                         for k in ("A_SIGNED", "B_SIGNED"))
+            for port in ("A", "B"):
+                bits = cell.ports.get(port, [])
+                digits = []
+                for net in bits:
+                    digit = constant(net)
+                    if digit is None:
+                        return None
+                    digits.append(digit)
+                if not digits:
+                    return None
+                value = sum(d << i for i, d in enumerate(digits))
+                if signed and digits[-1]:
+                    value -= 1 << len(digits)
+                values.append(value)
+            return ((values[0] + values[1]) >> bit) & 1
+        return None
+
     def source(self, net, depth=0):
         """logical source of a net: ('pin', ci, port, bit, stages) | ('const', v, where) | ('top', port, bit, 0) |
         ('clock', domain) | ('reset', polarity, stages) | ('or', [sources], stages) | ('undriven',) | ('multi', n)"""
@@ -409,6 +444,10 @@ class Graph:
                     res = ("const", v, f"{c.ytype}({up[2]})")
                 else:
                     res = ("pin", ci, pn, bit, 0)
+            elif k == "glue" and c.ytype in ("$mux", "$add") and pn == "Y":
+                value = self._constant_glue(c, bit, depth)
+                res = (("const", str(value), f"{c.ytype}({c.path})") if value is not None
+                       else ("pin", ci, pn, bit, 0))
             else:
                 pin = self.pin(ci, pn)
                 ck = self.R.clock_of(pin)
@@ -2894,7 +2933,10 @@ class Binder:
                 actual_inputs = {name: len(bits) for name, bits in F.cells[ci].ports.items()
                                  if G.dirs[ci].get(name) == "input"}
                 try:
-                    validate_parent_id_straps({"parent_id_straps": id_decls[r]}, actual_inputs)
+                    descriptor = next(d for d in t.get("contents", []) + t.get("hard_cores", [])
+                                      if d.get("parent_id_leaf", d.get("inst")) == r
+                                      and (d.get("parent_id_straps") or d.get("straps")))
+                    validate_parent_id_straps(descriptor, actual_inputs, actual_module=F.cells[ci].module)
                 except ValueError as e:
                     raise BindError(f"parent ID {tn}.{r}: {e}") from e
                 expected = id_decls[r][pn]["value"]
