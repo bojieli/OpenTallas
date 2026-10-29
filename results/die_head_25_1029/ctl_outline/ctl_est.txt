@@ -1,0 +1,9 @@
+face bits {'W': 3324, 'S': 1939, 'E': 128, 'N': 1026} windows {'W': 9, 'S': 8, 'E': 2, 'N': 2} std 17214 macro 53294
+slot (current)                     1442.88 x 1226.88  area  1770241  fill_total 0.040  std_free_fill 0.010  macro% 3.0  
+CTLX 216x233.28 (HBM number)        216.00 x  233.28  area    50388  fill_total 1.399  std_free_fill -5.925  macro% 105.8  INFEASIBLE: area < 4 SRAM
+-- 6 pins/um x 2 layers: W needs 648.0 (no w3 ft 457.9), S 406.1, N 171.0
+B1 keep ft, 2L                      406.08 x  648.00  area   263140  fill_total 0.268  std_free_fill 0.082  macro% 20.3  
+B2 ft+n_tx moved off ctl, 2L        406.08 x  457.92  area   185952  fill_total 0.379  std_free_fill 0.130  macro% 28.7  
+-- 6 pins/um x 4 layers: W needs 371.5 (no w3 ft 267.8), S 241.9, N 85.5
+B1 keep ft, 4L                      362.88 x  371.52  area   134817  fill_total 0.523  std_free_fill 0.211  macro% 39.5  
+B2 ft+n_tx moved off ctl, 4L        362.88 x  267.84  area    97194  fill_total 0.725  std_free_fill 0.392  macro% 54.8  
