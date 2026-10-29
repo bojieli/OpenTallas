@@ -432,6 +432,8 @@ SCHEMA = {
                                        "note": {"type": "string"}}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
+                        "tap_pin_heights_um": {"type": "object", "additionalProperties": {
+                            "type": "number", "minimum": 0.768}},
                         # FLOW 10-25 (ruling 9.7 / decision 5e): this type's bound pin-register insertion per corner
                         # (insertion_ps = TT, insertion_ff_ps = FF) = the signed view's routed RCX pin-register mean,
                         # or the parent budget before the first sign-off; insertion_basis says which

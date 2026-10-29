@@ -200,7 +200,7 @@ def io_tcl(P, tn, pins):
     top = P.layer_budget["partition_signal_max"]
     for name, x, y in tap_pins(P, tn):
         lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
-                     f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: die spine tap")
+                     f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {tap_pin_height(P, tn, name):.4f}}}   ;# interior: die spine tap")
     for name, x, y in reset_out_pins(P, tn):
         lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
                      f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: reset wavefront out")
@@ -337,6 +337,14 @@ def edge_clock_pins(P, tn):
             for e in P.types[tn].get("clock", {}).get("edge_clocks", [])]
 
 
+def tap_pin_height(P, tn, name):
+    """Optional actual clock-pin metal height; centres and default geometry stay fixed."""
+    value = P.types[tn].get('clock',{}).get('tap_pin_heights_um',{}).get(name,4*PIN_LEN_UM)
+    if not math.isfinite(value) or value < 4*PIN_LEN_UM:
+        raise ValueError(f'{tn}.{name}: clock pin height must be finite and >= {4*PIN_LEN_UM}')
+    return value
+
+
 def tap_pins(P, tn):
     """[(port, x, y)]: every clock tap (+ early core taps) + the reset tap (+ PHY-edge clock pins)."""
     import reset_tree as RT
@@ -345,7 +353,20 @@ def tap_pins(P, tn):
     else:
         rs = tuple(tap_points(P, tn)[1])
     st = [("start_i",) + tuple(RT.start_in_pin(P, tn))] if RT.start_broadcast(P) and not P.types[tn].get("hard") else []
-    return clock_pins(P, tn) + core_tap_pins(P, tn) + [("arst_n",) + rs] + st + [e[:3] for e in edge_clock_pins(P, tn)]
+    base_clocks = clock_pins(P, tn) + core_tap_pins(P, tn)
+    edge_clocks = [e[:3] for e in edge_clock_pins(P, tn)]
+    clocks = base_clocks + edge_clocks
+    heights = P.types[tn].get('clock',{}).get('tap_pin_heights_um',{})
+    known = {name for name,_,_ in clocks}
+    if set(heights)-known:
+        raise ValueError(f'{tn}: unknown clock pin height overrides {sorted(set(heights)-known)}')
+    w,h=P.types[tn]['outline_um']
+    for name,x,y in clocks:
+        if name in heights:
+            half=tap_pin_height(P,tn,name)/2
+            if y-half < -1e-6 or y+half > h+1e-6:
+                raise ValueError(f'{tn}.{name}: extended clock pin metal leaves type outline')
+    return base_clocks + [("arst_n",) + rs] + st + edge_clocks
 
 
 def core_reset_sdc(rsts, per):
@@ -2812,8 +2833,9 @@ def mock_lef(P, tn):
         L += pin(f"{bus}[{bit}]", dirs.get(bus, "INPUT"), "SIGNAL", [(ln, *r)])
     tw = LAYER_W.get(top, 0.032) / 2
     for name, x, y in tap_pins(P, tn):
+        half=tap_pin_height(P,tn,name)/2
         L += pin(name, "INPUT", "SIGNAL" if name in ("arst_n", "start_i") else "CLOCK",
-                 [(top, x - tw, y - 2 * PIN_LEN_UM, x + tw, y + 2 * PIN_LEN_UM)])
+                 [(top, x - tw, y - half, x + tw, y + half)])
     for name, x, y in reset_out_pins(P, tn):
         L += pin(name, "OUTPUT", "SIGNAL", [(top, x - tw, y - 2 * PIN_LEN_UM, x + tw, y + 2 * PIN_LEN_UM)])
     # PG: the kit's M5 / M6 / M7 stripes (gen_phys.PDN; VSS one width + spacing after VDD)
