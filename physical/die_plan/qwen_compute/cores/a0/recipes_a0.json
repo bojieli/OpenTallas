@@ -88,7 +88,11 @@
   "util": 0.45,
   "suffix": "a0p1",
   "slang": true,
-  "_why": "QC-A0-KITS-6 10-28: A0 PARENT kit (glue + SIGNED hard children). Children views must be SIGNED (export_view layout) at the listed dirs; today none is (generator refuses, all named). Clock = the slice centre entry; the plan trunk (tools/die_plan/parent_trunk_dme.py) is NOT yet wired as the kit CTS hook (insertion_balance off; next step). M7 = parent routes over children (OBS <= M5), as the QC-A0-KITS-3 parent trial."
+  "params": {
+   "ICG": 1
+  },
+  "_why": "QC-A0-KITS-6 10-28: A0 PARENT kit (glue + SIGNED hard children). Children views must be SIGNED (export_view layout) at the listed dirs; today none is (generator refuses, all named). Clock = the slice centre entry; the plan trunk (tools/die_plan/parent_trunk_dme.py) is NOT yet wired as the kit CTS hook (insertion_balance off; next step). M7 = parent routes over children (OBS <= M5), as the QC-A0-KITS-3 parent trial.",
+  "_why_icg": "QC-A0-KITS-9 10-28: ICG=1 (OWNER option c, QC-PG-5-ICG on main 07f037d9b): one ICGx8DC u_icg at the tile root, RTL enable (go face | ~me_idle | node valid | reset | drain); the clock-gating setup/hold on u_icg ENA is the liberty ICG check (OpenSTA infers it, reported at sign-off). Parent CTS = parent_trunk_dme --ungated-split (face branch + gated branch behind u_icg, ICG_INST reuse) once the kit CTS hook is wired."
  },
  "qfd_tile_nl_a0c": {
   "ref_tile": "physical/die_plan/qwen_compute/cores/a0/parent/nl",
@@ -109,7 +113,11 @@
   "util": 0.45,
   "suffix": "a0p1",
   "slang": true,
-  "_why": "QC-A0-KITS-6 10-28: A0 PARENT kit (glue + SIGNED hard children). Children views must be SIGNED (export_view layout) at the listed dirs; today none is (generator refuses, all named). Clock = the slice centre entry; the plan trunk (tools/die_plan/parent_trunk_dme.py) is NOT yet wired as the kit CTS hook (insertion_balance off; next step). M7 = parent routes over children (OBS <= M5), as the QC-A0-KITS-3 parent trial."
+  "params": {
+   "ICG": 1
+  },
+  "_why": "QC-A0-KITS-6 10-28: A0 PARENT kit (glue + SIGNED hard children). Children views must be SIGNED (export_view layout) at the listed dirs; today none is (generator refuses, all named). Clock = the slice centre entry; the plan trunk (tools/die_plan/parent_trunk_dme.py) is NOT yet wired as the kit CTS hook (insertion_balance off; next step). M7 = parent routes over children (OBS <= M5), as the QC-A0-KITS-3 parent trial.",
+  "_why_icg": "QC-A0-KITS-9 10-28: ICG=1 (OWNER option c, QC-PG-5-ICG on main 07f037d9b): one ICGx8DC u_icg at the tile root, RTL enable (go face | ~me_idle | node valid | reset | drain); the clock-gating setup/hold on u_icg ENA is the liberty ICG check (OpenSTA infers it, reported at sign-off). Parent CTS = parent_trunk_dme --ungated-split (face branch + gated branch behind u_icg, ICG_INST reuse) once the kit CTS hook is wired."
  },
  "ot_qwen_tile_node_lat": {
   "ref_tile": "physical/ref_tile/ot_qwen_tile_node",
