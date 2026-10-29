@@ -337,6 +337,46 @@ def edge_clock_pins(P, tn):
             for e in P.types[tn].get("clock", {}).get("edge_clocks", [])]
 
 
+# DIE-HEAD-21 (opt-in plan clock.edge_clocks[].source_latency_ps): a source-forwarded edge clock (count-aligned ring
+# write clock) reaches its port at the SENDER's export arrival + wire, not at 0 while its data inputs are timed on the
+# vclk insertion (DH19: 2272 ring writers -130.6 ps at source latency 0).  The measured range is a source latency on
+# the edge clock: -early = min arrival (OpenSTA/PT use the early source latency for the CAPTURE clock of setup checks
+# and the launch of holds), -late = max arrival (capture of holds, launch of setups), so one SDC is pessimistic for
+# both checks within a corner.  The corner itself cannot share one SDC (same reason as the vclk, ruling 9.7): TT goes
+# into constraint.sdc, FF into the core_taps_ff.sdc corner overlay (OT_CORE_TAP_CORNER_FILE, read by vclk_corner.tcl
+# ff / postcts FF gate / sign-off FF; vclk_corner.tcl tt re-applies the constraint.sdc lines).  Absent: no line.
+def edge_clock_latency(P, tn):
+    """[(port, {"tt": (early, late), "ff": (early, late)}, basis)] for the type's edge clocks with source_latency_ps."""
+    out = []
+    for e in P.types[tn].get("clock", {}).get("edge_clocks", []):
+        sl = e.get("source_latency_ps")
+        if sl is None:
+            continue
+        if tap_window_ps(P):      # the window's port-level -early/-late lines would override the clock-level arrival
+            raise ValueError(f"type {tn}: edge clock {e['port']} source_latency_ps with a plan clock.tap_window")
+        v = {}
+        for c in ("tt", "ff"):
+            a, b = float(sl[c]["early"]), float(sl[c]["late"])
+            if not 0 <= a <= b:
+                raise ValueError(f"type {tn}: edge clock {e['port']} {c} source latency early {a:g} / late {b:g} ps "
+                                 "needs 0 <= early <= late")
+            v[c] = (a, b)
+        out.append((e["port"], v, sl["basis"]))
+    return out
+
+
+def edge_clock_latency_tcl(P, tn, corner):
+    """the -early / -late source latency lines of the type's edge clocks at corner 'tt' | 'ff' ('' without any)."""
+    out = ""
+    for n, v, basis in edge_clock_latency(P, tn):
+        a, b = v[corner]
+        out += (f"# forwarded edge clock {n} {corner.upper()} arrival at the port {a:g}..{b:g} ps ({basis}): early = "
+                "setup capture, late = hold capture\n"
+                f"set_clock_latency -source -early {t_lib(a):.4f} [get_clocks {n}]\n"
+                f"set_clock_latency -source -late {t_lib(b):.4f} [get_clocks {n}]\n")
+    return out
+
+
 def tap_pins(P, tn):
     """[(port, x, y)]: every clock tap (+ early core taps) + the reset tap (+ PHY-edge clock pins)."""
     import reset_tree as RT
@@ -1189,7 +1229,7 @@ def sdc(P, tn, pins):
            f"the FF-only flow steps; ruling 9.7 / decision 5e): virtual IO clock\n"
            + "".join(f"# PHY-edge clock (plan clock.edge_clocks): synchronous with clk, period {m} x T\n"
                      f"create_clock -name {n} -period {m * per:.4f} [get_ports {n}]\n"
-                     for n, _x, _y, m in edge_clock_pins(P, tn)) +
+                     for n, _x, _y, m in edge_clock_pins(P, tn)) + edge_clock_latency_tcl(P, tn, "tt") +
            f"create_clock -name vclk -period {per:.4f}\n"
            f"set_clock_latency -source {lat:.4f} [get_clocks vclk]\n"
            + (f"# plan clock.tap_window (COORD 11:24): die tap-to-tap arrival window {tap_window_ps(P):g} ps on every "
@@ -1206,7 +1246,7 @@ def sdc(P, tn, pins):
            f"set_input_delay -max {io + t_lib(tw_in):.4f} -clock vclk $non_clk_in\n"
            f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n")
     source_ports = set()
-    if core_tap_rows(P, tn):
+    if core_tap_rows(P, tn) or edge_clock_latency(P, tn):
         out += "# OT_CORE_TAP_CORNER_FILE core_taps_ff.sdc\n"
     for n, inst, pin, early, ins in core_tap_rows(P, tn):
         if n in source_ports:
@@ -1856,8 +1896,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         (kd / "pg_island_cut.tcl").write_text(pg_island_cut_tcl(pg_cuts))
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
-    if core_tap_rows(P, tn):
-        (kd / "core_taps_ff.sdc").write_text(core_tap_ff_sdc(P, tn))
+    if core_tap_rows(P, tn) or edge_clock_latency(P, tn):
+        (kd / "core_taps_ff.sdc").write_text(core_tap_ff_sdc(P, tn) + edge_clock_latency_tcl(P, tn, "ff"))
     ioh = io_hold_tcl(P, tn)            # IO-HOLD option A: per-port min input delays for the hold_gate / sign-off overlays
     if ioh:
         (kd / "io_hold.tcl").write_text(ioh)
