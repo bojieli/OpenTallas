@@ -31,7 +31,7 @@ Snapshot: 2026-10-28 17:20 PDT · main bfc232967f · FROZEN: none · gate number
 
 ## DIE s81_head · S81 head die · rev UNFROZEN d7b8d1eb · after QC
 - [ ] HEAD.INFRA Infra-first plan event (+ HEAD8 batch 187b63494b if approved) · INFRA-FIRST-HEAD-1 · RUNNING (started 01:5x, parallel to QC) · PENDING-DELTA D-INFRA-FIRST-HEAD holds all 16 type routes → IF.TOOL
-- [ ] HEAD.LAND Landed regions (12.11, main path) · LAND-HEAD-1 · RUNNING · token window check (9,282 vs 10,357 + landed cycles) -> equal-length region trees -> GRT -> STA
+- [ ] HEAD.LAND Landed regions (12.11, main path) · TOK-HEAD-LAND-2 · RUNNING · FIRST whole-die token pass on a landed bind PASS (bit-exact 2/2, GO->result 8,780 cyc TT/FF = value of record, mutants caught; ~9,313 cyc/token vs 10,357 window UNCHECKED) on main 410e940f4f; re-run on main after RM271 start_d
 - [ ] HEAD.CLK Clock 12.16 local tree + real hd_tile ring clocks (--ca-ring, on main 21:1x) · DIE-HEAD-20 · RUNNING · hd_tile gate CA min 136 TT/163.8 FF PASS on 240 measured crossings; 187 crossings still on ASSUMED clocks (14 types unkitted) -> no freeze claim; hd_tile diagnostic run in GRT
 - [ ] HEAD.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · old d7b8d1eb signal GRT0 no longer counts → HEAD.INFRA
 - [ ] HEAD.BIND Whole-head as-built bind · CODEX / PATH-S81 · WAITS · contract DRAFT ASKed (host N3@276, mesh64 2-beat, head_row_map; head-core-r13@148ff6a840); gaps: ROW0/TEN straps, hd_serdes u_phy open pins → next HEAD PLAN-DELTA
