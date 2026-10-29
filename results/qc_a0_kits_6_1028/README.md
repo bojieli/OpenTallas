@@ -76,6 +76,8 @@ The first run used frame 716/623 and FAILED ff_binding; the frame is now 250 / 2
   * The structural fix is to shift the MY rawleaf sites by +-0.024 um (half an M5 pitch) so mirrored pins land on track. This is a plan site fix (children_file), not an ECO.
 * **pins_canonical.** The placed pin set differs from plan_pins.json + slice. The cause is still open: either the pins_dir table vs the plan file, or the slice-moved ck. The next lane traces it before any real parent kit.
 
+* **module_closure** (NK rerun with frame 250/202.5: ff_binding now passes, FAIL 6 issues). ot_qwen_rom_tile_w12_land32.sv sits in the parent sources and instantiates ot_rom_2048x266_m8, which has no definition, _bb or macro lib. The parent spec must drop the ROM tile source (romleaf is the hard child) or blackbox it.
+
 ## 4. Child re-kit under the seam_hold contract (COORD ruling, DIE-QC-23 ask)
 
 * **rawleaf.** Kit `ot_qwen_tile_lsl_rawfault_m3_a0k7s` = the a0k3 inputs unchanged (rawleaf_keep.v cmp-identical, the same recipe plus plan_module/suffix) + `--seam-hold 25,25` (die-qc22 3a4492f246 form, merged into this branch).
