@@ -29,3 +29,6 @@ CODEX reset1012: parked. Fullsource/jobs/failures/next packet handoff/codex_s81_
 
 ## CODEX notes 2026-10-29 08:41 PDT
 CODEX took over core-FREE current s13 kit source export/gen on codex/support-s81-0840 (own intel2WTsamebasename,source3ad9fd700ad).61types excluding7stations ownedCORES-EARLYhelper. Existingstrict0error die-s81-24-bind/codex_out copiedown130MB;onlydeadabsolute bind.f/extra_lib paths relocated,368/368sourcefilesexist. Supported bind.py kit-rtl withasbuilt_b178_coll_s13pfunc, then gen.py phys --kit-rtl, no redundant --clock-landing.4ot-run24GB2t batches LIVE intel2:/srv/opentallas-scratch2/claude/codex-support-s81-0840, wave0..3.otrun.log;clients2392623..26,units2395928/2395975/2395980/2395971-1793288382. NoP&R/STA;collectsourcegen/preflightfailures, render/review beforephysical.
+
+## CODEX notes 2026-10-29 14:01 PDT — inherited support wave terminal
+Collected all four own 08:40 waves:61/61 exports PASS,49genPASS/12genFAIL, all4ot-run units exit0. Exact source3ad9fd700ad in intel2:/srv/opentallas-scratch2/claude/codex-support-s81-0840/logs/*.json. All12FAIL are SerDes reservation u_phy with no real macro view; no fake LEF/model. This s13 source is superseded by current DIE-S81-29 bind6/CST/landing-band work;49generated kits are source evidence, not permission to route obsolete source. No inherited livejobs remain.
