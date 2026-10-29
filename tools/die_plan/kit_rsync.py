@@ -39,7 +39,7 @@ TAPSYNC = re.compile(r"^\s*(?:(?:\(\* keep = 1 \*\) )?wire rst_n_t\d+;|ot_dp_rsy
 # an earlier reset_tree conversion (re-running kit_rsync re-plans the tree)
 TREE = re.compile(r"^\s*(?://\s*OWNER RESET RULE 10-24 (?:\+ DECISION 13c )?\(tools/die_plan/reset_tree\.py\).*|"
                   r"wire rst_root_n(?:, run_root)?;|wire (?:rn_)?(?:rst_rl_\d+|rr_t\d+);|"
-                  r"ot_dp_rsync_s(\d)\s+u_(?:rst|run)_root\s*\(.*|ot_dp_r(?:relay|gate)(?:_drive)?\s+u_(?:rst_in|run_in|[rs]rl_\d+(?:_[rg])?)\s*\(.*|"
+                  r"ot_dp_rsync_s(\d)\s+u_(?:rst|run)_root\s*\(.*|ot_dp_r(?:relay|gate)(?:_drive)?\s+u_(?:rst_in|run_in|[rs]rl_\d+(?:_[rgt])?)\s*\(.*|"
                   r"assign (?:rst|start)_o_\d+ = (?:rst_n_t|rr_t|rn_rr_t)\d+;.*)\s*$")
 # reset wavefront outs (OWNER DECISION 13): port declarations / wrapper connections of an earlier conversion
 ROUT = re.compile(r"^\s*(?:output\s+wire\s+(?:rst|start)_o_\d+\s*,.*|\.(?:rst|start)_o_\d+\((?:rst|start)_o_\d+\)\s*,.*|"
