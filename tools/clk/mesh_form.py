@@ -193,6 +193,31 @@ def build(plan, tree_json, part, out, m):
     return dict(part=part, cells=len(cells), drivers=len(drivers), nets=len(nets), cols=cols, rows=rows, root=geom["root"])
 
 
+def strap_keepout(g, m):
+    """opt-in region.mesh.strap_keepout_um (COORD 10-29 mesh keep-out form; absent or 0 = no blockage, old bytes): a
+    routing blockage band of that width on the strap layer along both sides of every mesh strap (vertical straps on the
+    v layer over y_span, horizontal straps on the h layer over x_span).  The straps are the special net ck_mesh; the band
+    keeps every routed net (tree legs and any die signal) >= the band from the strap even when GRT demotes a clock NDR
+    to the default rule under congestion (GRT-0273 soft NDR; 10-29 routed-clip failure: a leg shorted onto a strap)."""
+    k = float(m.get("strap_keepout_um") or 0)
+    if k < 0:
+        raise MeshConfigError("region.mesh.strap_keepout_um must be >= 0")
+    if not k:
+        return []
+    u = lambda v: int(round(v * m["dbu"]))
+    hl, vl = m["strap_layers"]["h"], m["strap_layers"]["v"]
+    h = float(m["strap_w"]) / 2
+    (y0, y1), (x0, x1) = g["y_span"], g["x_span"]
+    out = []
+    for x in g["vx"]:
+        for a, b in ((x - h - k, x - h), (x + h, x + h + k)):
+            out.append(f"- LAYER {vl} RECT ( {u(a)} {u(y0)} ) ( {u(b)} {u(y1)} ) ;")
+    for y in g["hy"]:
+        for a, b in ((y - h - k, y - h), (y + h, y + h + k)):
+            out.append(f"- LAYER {hl} RECT ( {u(x0)} {u(a)} ) ( {u(x1)} {u(b)} ) ;")
+    return out
+
+
 def write_def(o, g, cells, nets, m):
     W, H = g["W"], g["H"]
     DBU, RH, SW, PG = m["dbu"], m["row_h"], m["site_w"], float(m["pg_pitch"])
@@ -235,6 +260,7 @@ def write_def(o, g, cells, nets, m):
         for xa, xb in free:
             for lay in m["window_layers"]:
                 blk.append(f"- LAYER {lay} RECT ( {xa} {ya} ) ( {xb} {yb} ) ;")
+    blk += strap_keepout(g, m)
     L += [f"BLOCKAGES {len(blk)} ;"] + blk + ["END BLOCKAGES"]
     pg = {"VDD": [], "VSS": []}       # special nets: PG stripes on the strap layers (alternate VDD/VSS) + mesh
     k = 0
