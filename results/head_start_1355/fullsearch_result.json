@@ -1,0 +1,15 @@
+{
+ "start_clean": 2501,
+ "start_fail": 500,
+ "reach_fail": 139,
+ "virtual_nodes": 2645,
+ "retime_nodes": 2087,
+ "retime_search_bound": 209,
+ "search_bound_basis": "max measured node path length +1",
+ "earlier_bound_64_same_outcome": true,
+ "new_virtual_fail": 143,
+ "native_leaf_fail": 357,
+ "diagnosis": "No width-clean intermediate candidate under broad DATA envelopes; retime search cap is not the cause. Native leaves require actual native firstcapture FF measurements.",
+ "unit": "oth-ubuntu-355290-1793307611",
+ "verdict": "FAIL"
+}
