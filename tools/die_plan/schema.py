@@ -137,7 +137,12 @@ _parent_id_straps = {"type": "object", "additionalProperties": False, "propertie
                                    else {"type": "integer", "minimum": 1}),
                           "value": {"type": "integer", "minimum": 0,
                                     **({"maximum": (1 << _physical_id_widths[name])-1} if name in _physical_id_widths else {})}}}
-    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", "sidx", *_physical_id_widths)}}
+    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", "sidx", "strap_lane_id", *_physical_id_widths)}}
+
+_position_id_contract = {"type": "object", "required": ["kind", "pbase", "lane"],
+                         "additionalProperties": False, "properties": {
+    "kind": {"const": "KEYBUF_LANE_ID"}, "pbase": {"enum": [0, 4]},
+    "lane": {"type": "integer", "minimum": 0, "maximum": 3}}}
 
 # Exact identity ports only. G0's semantic validator enforces each port's width;
 # allOf gives full JSON-Schema consumers the same cross-field restriction.
@@ -565,6 +570,7 @@ SCHEMA = {
                         "properties": {"inst": _name, "module": _name, "origin_um": _xy, "outline_um": _xy,
                                        "straps": _core_id_straps,
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
+                                       "position_id_contract": _position_id_contract,
                                        "bump_ports": _bump_ports,
                                        "orient": {"enum": list(ORIENTS)},
                                        "track_offset_um": _xy,      # added to origin_um (lattice) at placement
@@ -615,6 +621,7 @@ SCHEMA = {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
+                                       "position_id_contract": _position_id_contract,
                                        "bump_ports": _bump_ports,
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
                                        "origin_um": _xy, "outline_um": _wh, "note": {"type": "string"},

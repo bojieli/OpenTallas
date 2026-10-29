@@ -2894,7 +2894,10 @@ class Binder:
                 actual_inputs = {name: len(bits) for name, bits in F.cells[ci].ports.items()
                                  if G.dirs[ci].get(name) == "input"}
                 try:
-                    validate_parent_id_straps({"parent_id_straps": id_decls[r]}, actual_inputs)
+                    descriptor = next(d for d in t.get("contents", []) + t.get("hard_cores", [])
+                                      if d.get("parent_id_leaf", d.get("inst")) == r
+                                      and (d.get("parent_id_straps") or d.get("straps")))
+                    validate_parent_id_straps(descriptor, actual_inputs)
                 except ValueError as e:
                     raise BindError(f"parent ID {tn}.{r}: {e}") from e
                 expected = id_decls[r][pn]["value"]
