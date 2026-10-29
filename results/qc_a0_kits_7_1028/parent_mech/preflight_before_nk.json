@@ -1,0 +1,260 @@
+{
+ "schema": "opentallas.kit_preflight.v2",
+ "kit": "/srv/opentallas-scratch2/claude/qc-a0-kits-7-1028/mech/cur/kits/qfd_tile_nk_a0c_a0p1",
+ "contract": [
+  "corner_modes",
+  "ff_binding",
+  "clock_pin_geometry",
+  "rc_calibration",
+  "duplicate_modules",
+  "keep_hook",
+  "pins_canonical",
+  "mesh_vias",
+  "macro_channels",
+  "clock_entry_clear",
+  "island_macro_clear",
+  "macro_pin_grid"
+ ],
+ "contract_binding": true,
+ "contract_advisory": {},
+ "verdict": "FAIL",
+ "checks": {
+  "staged_tools": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "staged_inputs": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "sdc_and_ff_binding": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "yosys_cast_forms": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "module_closure": {
+   "verdict": "FAIL",
+   "errors": [
+    "module ot_rom_2048x266_m8 instantiated in ot_qwen_rom_tile_w12_land32.sv has no definition in VERILOG_FILES, no *_bb blackbox and no macros/ liberty cell"
+   ]
+  },
+  "master_slice": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "corner_modes": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "corners": [
+     "tc",
+     "bc"
+    ],
+    "per_mode": false,
+    "hooks": [
+     "constraint.sdc",
+     "core_face_post_synth.tcl",
+     "core_infra_impl.tcl",
+     "drv.tcl",
+     "face_flops.tcl",
+     "face_flops_release.tcl",
+     "grt_post.tcl",
+     "grt_post_core.tcl",
+     "grt_pre.tcl",
+     "grt_pre_core.tcl",
+     "keepout_phys.tcl",
+     "macro_place.tcl",
+     "master_core_infra.tcl",
+     "master_slice.tcl",
+     "native_pg_binding.tcl",
+     "ot_keep_regs.tcl",
+     "pdn.tcl",
+     "pg_connect.tcl",
+     "pin_reg_split.tcl",
+     "post_grt_drv.tcl",
+     "setRC_rcx.tcl",
+     "vclk_corner.tcl"
+    ]
+   }
+  },
+  "ff_binding": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "values": {
+     "OT_VCLK_TT": 250.0,
+     "OT_VCLK_FF": 202.5,
+     "sdc_lint_insertion_ps": 250.0,
+     "sdc_lint_insertion_ff_ps": 202.5,
+     "clock_binding_tt": 250.0,
+     "clock_binding_ff": 202.5,
+     "freeze_insertion_ff_ps": 202.5
+    }
+   }
+  },
+  "clock_pin_geometry": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "clock_ports": [
+     "ck"
+    ],
+    "placements": {
+     "ck": 2
+    },
+    "entries": [
+     [
+      "io.tcl",
+      "ck",
+      228.972,
+      578.88
+     ],
+     [
+      "master_core_infra.tcl->ot_ci_clock_entry",
+      "ck",
+      228.972,
+      578.88
+     ]
+    ],
+    "pins_json_warnings": []
+   }
+  },
+  "rc_calibration": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "files": [
+     "setRC_rcx.tcl"
+    ],
+    "records": {
+     "setRC_rcx.tcl": {
+      "signal": "set_wire_rc -signal = RCX unit R/C fit on SIGNAL nets >= 5 um, 4 designs (FLOW-RC-1 2026-10-27); GRT basis shares the per-layer table",
+      "clock": "set_layer_rc per layer = clock-sink arrival fit (FLOW 2026-10-25, rc_calib.json); set_wire_rc -clock unchanged"
+     }
+    }
+   }
+  },
+  "duplicate_modules": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "modules": 82,
+    "files": 27
+   }
+  },
+  "keep_hook": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "keep_attrs": 113,
+    "named_keep_modules": [],
+    "paramod_renamed": []
+   }
+  },
+  "pins_canonical": {
+   "verdict": "FAIL",
+   "errors": [
+    "kit placed pins canonical sha 50cce0fd0ce2 != plan pin file plan_pins.json + master slice 24ab97ee3b5c"
+   ],
+   "n_errors": 1,
+   "info": {
+    "applies": true,
+    "kit_canon": "50cce0fd0ce2b1caefb4eb3bd20c2ec9746b68828032fb0d4b84846ee786410b",
+    "recorded": "647ebc5e1e1a51043417cea8a2ff92e2075b17eeabae03273a45e5449c286e38",
+    "plan_file": "/srv/opentallas-scratch2/claude/qc-a0-kits-7-1028/mech/cur/kits/qfd_tile_nk_a0c_a0p1/plan_pins.json",
+    "plan_canon": "647ebc5e1e1a51043417cea8a2ff92e2075b17eeabae03273a45e5449c286e38",
+    "slice": true,
+    "plan_place_canon": "dc84094e2a25bc711a4f1092ec3a36b38d81835de070361dd8c211d858bf7fec",
+    "plan_slice_canon": "24ab97ee3b5c05e90a769d788d057767f1ec705709b9d9c2debf4fc85f33dd1d"
+   }
+  },
+  "mesh_vias": {
+   "verdict": "NA",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": false,
+    "reason": "no clock-mesh inputs in the kit"
+   }
+  },
+  "macro_channels": {
+   "verdict": "FAIL",
+   "errors": [
+    "macro column 0 x[15.984,257.472]: E vertical channel 5.184 um < 10.8",
+    "macro column 1 x[262.656,441.936]: W vertical channel 5.184 um < 10.8"
+   ],
+   "n_errors": 2,
+   "info": {
+    "applies": true,
+    "macros": 19,
+    "columns": 2,
+    "min_channel_um": 10.8,
+    "min_channel_note": "10.8 um = 2x4.32 halo + 8 rows, HBM-MU-QUAD-6 ASK pending COORD ruling"
+   }
+  },
+  "clock_entry_clear": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "entries": 3,
+    "macros": 19
+   }
+  },
+  "island_macro_clear": {
+   "verdict": "NA",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": false,
+    "reason": "no island_ft rects"
+   }
+  },
+  "macro_pin_grid": {
+   "verdict": "FAIL",
+   "errors": [
+    "macro ot_qwen_tile_lsl_rawfault_m3#14 at (142.128, 834.432) MY: 51 signal pin(s) off the make_tracks.tcl track grid (clk M5 centre 199.812 is 24.0 nm off the track)",
+    "macro ot_qwen_tile_lsl_rawfault_m3#15 at (142.128, 994.944) MY: 51 signal pin(s) off the make_tracks.tcl track grid (clk M5 centre 199.812 is 24.0 nm off the track)"
+   ],
+   "n_errors": 2,
+   "info": {
+    "applies": true,
+    "macros": 19,
+    "pins": 11895,
+    "tracks": "make_tracks.tcl",
+    "worst_off_nm": 24.0
+   }
+  }
+ },
+ "issues": [
+  "module_closure: module ot_rom_2048x266_m8 instantiated in ot_qwen_rom_tile_w12_land32.sv has no definition in VERILOG_FILES, no *_bb blackbox and no macros/ liberty cell",
+  "pins_canonical: kit placed pins canonical sha 50cce0fd0ce2 != plan pin file plan_pins.json + master slice 24ab97ee3b5c",
+  "macro_channels: macro column 0 x[15.984,257.472]: E vertical channel 5.184 um < 10.8",
+  "macro_channels: macro column 1 x[262.656,441.936]: W vertical channel 5.184 um < 10.8",
+  "macro_pin_grid: macro ot_qwen_tile_lsl_rawfault_m3#14 at (142.128, 834.432) MY: 51 signal pin(s) off the make_tracks.tcl track grid (clk M5 centre 199.812 is 24.0 nm off the track)",
+  "macro_pin_grid: macro ot_qwen_tile_lsl_rawfault_m3#15 at (142.128, 994.944) MY: 51 signal pin(s) off the make_tracks.tcl track grid (clk M5 centre 199.812 is 24.0 nm off the track)"
+ ],
+ "deferred": [
+  "RTL elaboration/SELRANGE",
+  "synthesis face/fanout/port binding/LEC",
+  "placed and routed PG",
+  "TT setup / FF hold",
+  "routed LEC"
+ ]
+}

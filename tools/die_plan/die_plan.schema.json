@@ -1088,6 +1088,48 @@
      "pg_island_cut": {
       "type": "boolean"
      },
+     "reg_spine": {
+      "type": "object",
+      "required": [
+       "trunk"
+      ],
+      "properties": {
+       "trunk": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "array",
+         "minItems": 4,
+         "maxItems": 4
+        }
+       },
+       "express": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "pads": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "integer",
+         "minimum": 0
+        }
+       },
+       "core_taps": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "required": [
+          "inst",
+          "pin",
+          "xy",
+          "stages"
+         ]
+        }
+       }
+      }
+     },
      "id_straps": {
       "type": "array",
       "items": {
@@ -1843,6 +1885,15 @@
        },
        "landing_contract": {
         "type": "object"
+       },
+       "landing_export_form": {
+        "enum": [
+         "tie",
+         "fwd_buffer"
+        ]
+       },
+       "tap_passthrough": {
+        "type": "boolean"
        },
        "out_hold_check_ps": {
         "minimum": 0,

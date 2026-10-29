@@ -244,17 +244,20 @@ def attn_r16():
                 status_delay=KSD.ATTN_R16_PARAMS['STATUS_DELAY'])
 
 
-def link_calendar(workdir, status_delay=0, attn_tx_shift=None):
-    """attn_tx_shift None = the bound attention tile's TX shift (KV-BIND4 r16: +1 on the K RESULT burst / STATUS)"""
+def link_calendar(workdir, status_delay=0, attn_tx_shift=None, attn_service_pad=None):
+    """attn_tx_shift None = the bound attention tile's TX shift (KV-BIND4 r16: +1 on the K RESULT burst / STATUS);
+    attn_service_pad None = OT_KV_ATTN_SERVICE_PAD (default 0), an int = that pad (service_slot_pad's base slot)"""
     import gzip
     if attn_tx_shift is None:
         attn_tx_shift = attn_r16()['tx_shift']
+    if attn_service_pad is None:
+        attn_service_pad = int(os.environ.get('OT_KV_ATTN_SERVICE_PAD', '0'))
     out = Path(workdir) / 'cal'
     tp = Path(workdir) / 'token_path_compiled.json'
     tp.write_bytes(gzip.decompress((ROOT / LINK_TOKEN_PATH).read_bytes()))
     p = subprocess.run([sys.executable, str(ROOT / 'tools/qwen_split/d2d_link_calendar.py'), '--out', str(out)] + LINK_ARGS
                        + ['--token-path', str(tp), '--status-delay', str(status_delay)]
-                       + (['--attn-service-pad', os.environ['OT_KV_ATTN_SERVICE_PAD']] if int(os.environ.get('OT_KV_ATTN_SERVICE_PAD', '0')) else [])
+                       + (['--attn-service-pad', str(attn_service_pad)] if attn_service_pad else [])
                        + (['--attn-tx-shift', str(attn_tx_shift)] if attn_tx_shift else []),
                        cwd=ROOT, capture_output=True, text=True)
     if p.returncode:
@@ -631,13 +634,41 @@ def attention_calendar(T, pr, service_end=None):
 def service_end_of(pr, workdir=None):
     """the attention service end the link's fixed RESULT slot leaves (= compile_all's service_end for this profile)"""
     with tempfile.TemporaryDirectory(dir=workdir) as td:
-        cal = link_calendar(td)
+        cal = link_calendar(td, attn_service_pad=pr.get('attn_service_pad'))
     seg0 = [m for m in cal['messages'] if m.get('seg', 0) == 0]
     cmd = [m for m in seg0 if m['src'] == 'C' and m['rx_port'] == 0 and m['kind'] == 1]
     res = sorted((m for m in seg0 if m['src'] == 'K' and m['tx_port'] == 0 and m['kind'] == 3), key=lambda m: m['beat'])
     run_ev = cmd[0]['rx_out'] + LR.D2D_OUT + pr['rx'] - LR.RX_CMD
     tx_first = res[0]['cyc'] + LR.D2D_OUT - run_ev
     return tx_first - LR.RX_CMD - 2 + 31 - attn_r16()['tx_shift']   # KV-BIND4: r16 TX_SHIFT keeps SERVICE_END 1777
+
+
+# ---- DIE-KV-18 10-28: the RESULT slot follows the service need (one law for every layer and context) -------------------
+# The link's RESULT slot is static, so it must hold the LONGEST attention service over every context T in 1..T_MAX at the
+# die's own ages (seam depths -> PV word latency RL -> pair outputs P0/P1, result-trunk extra, QK age).  The service need
+# of context T is PV_START + R + 48 + F_DLY with R unstretched (attention_calendar(T, pr, None)); the slot pad is the
+# excess of the worst need over the slot the link calendar gives at pad 0.  The pad is one static edge count added to
+# every layer's attention window (d2d_link_calendar --attn-service-pad; TX_SHIFT unchanged).  A die whose need fits the
+# unpadded slot gets pad 0, i.e. byte-identical images.
+def service_need(pr, Ts=None):
+    """worst attention service (edges from the run base) over contexts Ts (default 1..T_MAX) -> dict(need, T)"""
+    worst = None
+    for T in (Ts if Ts is not None else range(1, T_MAX + 1)):
+        c = attention_calendar(T, pr, None)
+        n = c['PV_START'] + max(c['P0'], c['P1'], c['R']) + 48 + pr.get('f_dly', 1)
+        if worst is None or n > worst[0]:
+            worst = (n, T)
+    return dict(need=worst[0], T=worst[1])
+
+
+def service_slot_pad(pr, Ts=None, workdir=None):
+    """the static attention-service pad this profile's ages require: max(0, max_T need(T) - service_end at pad 0)"""
+    base = service_end_of(dict(pr, attn_service_pad=0), workdir)
+    n = service_need(pr, Ts)
+    return dict(schema='opentallas.qwen_kv.service_slot_pad.v1', need=n['need'], worst_T=n['T'], base_service_end=base,
+                pad=max(0, n['need'] - base), v_rl=pr.get('v_rl'), d_rl=pr.get('d_rl'),
+                pv_result_extra=pr.get('pv_result_extra', 0), f_dly=pr.get('f_dly', 1),
+                rule='pad = max(0, max_T (PV_START + R + 48 + F_DLY) - service_end(pad 0)); one pad for every layer')
 
 
 def attention_checks(pr, service_end, fr_ofs=None, pvfin_skew=PVFIN_SKEW, pair_delta=0, Ts=range(1, 8193)):
