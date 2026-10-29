@@ -580,3 +580,22 @@ module ot_meso_ca_status_copy #(parameter int DEPTH=4) (
 `endif
     end
 endmodule
+
+// HEAD raw-reset output: preserve the original wavefront state and provide a
+// dedicated same-cycle output register. The pin copy samples the SAME D and
+// clock; adding a flop after q would add an unpriced reset-release cycle.
+(* keep_hierarchy, keep *)
+module ot_dp_head_raw_export_pair (
+    input wire clk, d,
+    (* keep *) output reg q,
+    (* keep *) output reg export_q
+);
+    always @(posedge clk) begin
+        q <= d;
+`ifdef OT_HEAD_RAW_EXPORT_MUTANT_LATE
+        export_q <= q;
+`else
+        export_q <= d;
+`endif
+    end
+endmodule
