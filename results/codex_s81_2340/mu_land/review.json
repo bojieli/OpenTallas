@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS-COND PLACE census only",
+  "image": "results/codex_s81_2340/mu_land/plan_north.png",
+  "reviewer": "Codex S81",
+  "findings": [
+    "Five staggered SRAMs preserve 4.32um halos and broad inter-row/side channels; no macro wall.",
+    "2223 signal/reset pins on S face at5/um; existing narrow memory dataflow contract retained.",
+    "Clock moved from tiny corner M3 to full .048x.48 M5 at N center[237.612,215.76], on track.",
+    "One PLACE census only; no CTS/STA until actual register/macro census produces reviewed macro-aware family tree.",
+    "Standalone natural-child candidate only; no die hard-core adoption or cell-cap waiver."
+  ],
+  "unchanged": "RTL/parameters and zero added cycles",
+  "preflight": "PASS0"
+}
