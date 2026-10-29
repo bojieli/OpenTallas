@@ -13,14 +13,17 @@ clock, raw reset and bus START connections; older generated binds remain readabl
 
 Minimal gates (direct tool results, not independently NUMBER-CHECKed):
 
-- Focused generator, face_guard, straps, START and graph-verifier tests: 46 PASS.
+- Focused generator, face_guard, straps, START and graph-verifier tests: 47 PASS.
 - Real source `rtl/common/ot_dp_clk_landing_ca.sv`, Verilator 5.050 lockstep:
   10,112 comparisons across 64 static selector/PAD/edge/root combinations,
-  including different raw-reset dates and reassertions. Zero mismatches and zero
+  including different raw-reset dates and reassertions. Current-main API also checks
+  `start_d` (D-side forwarded START face flop) and the selected raw reset. Zero mismatches and zero
   added cycles. Run intel2 `/srv/opentallas-scratch2/claude/codex-head-spn-1028`,
-  ot-run unit `oth-ubuntu-1189509-1793256485`; retained `miter.log`.
-- Wrong input on the first origin: mismatch at cycle 24, caught by the same
-  miter (unit `oth-ubuntu-1218661-1793256560`; retained `mutant.log`).
+  ot-run unit `oth-ubuntu-1319647-1793256795`; retained `miter_current.log`
+  (earlier pre-merge API receipt also retained as `miter.log`).
+- Wrong input on the first origin: mismatch at cycle 23, caught by the same
+  miter (unit `oth-ubuntu-1370014-1793256854`; retained `mutant_current.log`
+  (earlier pre-merge receipt retained as `mutant.log`)).
 - Two-ring gate-netlist face_guard fixture: separate origins PASS; shared-origin
   mutant FAILS. No face_guard rule was relaxed.
 
@@ -34,4 +37,14 @@ Scope: shared-tool source repair only. No physical plan, pin, latency, clock
 arrival, geometry or SIGNED claim changes. HEAD owner must regenerate the resized
 spine kit, collect actual synthesized face_guard/LEC and visually review it before
 routing. Static selection trades duplicated inactive sampler state for independent
-START cones (PADW=2 miter: 6 flops per added origin); no additional external pin.
+START cones (PADW=2 miter: 7 flops per added origin); no additional external pin.
+
+Current-main integration: fetched origin/main `6b03fc6b2`, manually resolved the
+start_d generator hunk preserving both meanings, and repeated the exact miter.
+Own branch merge `f97867594`. No main checkout was edited.
+
+Actual hk3 hd_spn mechanism synthesis is running in the same remote lane under
+`actual/`, unit `oth-ubuntu-1366313-1793256850` (`run_kit.sh ... synth 32 8`).
+This is synthesis/face_guard/LEC only, no P&R/STA on the obsolete hk3 outline.
+`actual_hd_spn_origin.patch` is its generated source change. Original face_guard
+FAIL is preserved under remote `original/face_guard.json`.
