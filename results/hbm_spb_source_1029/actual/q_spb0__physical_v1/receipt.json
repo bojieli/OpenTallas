@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.hbm.spb0_native.v1",
+ "source_bound_sha256": "6b2b2c108f7c9c29566fe2794c9766c3bed2cf15aaa2759019782c7a5aa7c306",
+ "actual_graph_sha256": "f810f46bb4915192e5d1ef0fd2ff69f77a976b039b16a2ea00d8fc16f418d274",
+ "contract_sha256": "3402d943ebf653219c71fc16043217bc83d51f2e0c1b30e4e792fb6a3d563442",
+ "source_has_no_prior_realization": true,
+ "clock_reset_contract": {
+  "clock": "clk",
+  "rx_control_reset": "rst_n_t20",
+  "reset_policy": "RX_CAPTURE_EP_CONTROL_ONLY",
+  "endpoint_resets_preserved": true
+ },
+ "nets": [
+  {
+   "source": "u_lk_S0.rx/st",
+   "sink": "u_ep_S0.sd_rx/sd_st",
+   "width": 514,
+   "actual_source_depth": 0,
+   "actual_rtl_added_cycles": 4,
+   "old_planned_depth": 2,
+   "new_depth": 4,
+   "model_added_cycles": 2
+  },
+  {
+   "source": "u_ep_S0.sd_tx",
+   "sink": "u_lk_S0.tx",
+   "width": 512,
+   "actual_source_depth": 0,
+   "actual_rtl_added_cycles": 4,
+   "old_planned_depth": 4,
+   "new_depth": 4,
+   "model_added_cycles": 0
+  }
+ ],
+ "station_modules": [
+  {
+   "module": "ot_hbm_spb0_regs",
+   "instance": "u_hbm_spb0_rx",
+   "W": 514,
+   "N": 4,
+   "CW": 2
+  },
+  {
+   "module": "ot_hbm_spb0_regs",
+   "instance": "u_hbm_spb0_tx",
+   "W": 512,
+   "N": 4,
+   "CW": 0
+  }
+ ],
+ "placement_file": "placement.json",
+ "placement_sha256": "df898667ca61b18cef8cabf569aec18501f1134867fc24d017a5aefa730680be",
+ "actual_new_ff_per_partition": 4104,
+ "model_extra_ff_per_partition": 1028,
+ "warning": "candidate requires plan/site receipt, shifted lockstep, source binding and routed signoff; no P&R approval"
+}

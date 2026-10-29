@@ -1,0 +1,35 @@
+{
+ "status": "ACTUAL_SCOPED_FRONTDOOR_AND_KIT_SIDECARS_PASS_NOT_FULL_BIND",
+ "results": {
+  "q_spb0": {
+   "rtl": "/srv/opentallas-scratch/claude/codex-hbm-spb-source-1029/bridge_actual/hbm_spb0_native/q_spb0/ot_hbm_spb0_regs.sv",
+   "stations": 8,
+   "flops": 4104,
+   "tcl": "istations.tcl",
+   "receipt": "spb_native_receipt.json",
+   "rtl_cycles_changed": {
+    "rx_st": 4,
+    "tx": 4
+   },
+   "model_cycles_changed": {
+    "rx_st": 2,
+    "tx": 0
+   }
+  },
+  "q_spb0__physical_v1": {
+   "rtl": "/srv/opentallas-scratch/claude/codex-hbm-spb-source-1029/bridge_actual/hbm_spb0_native/q_spb0__physical_v1/ot_hbm_spb0_regs.sv",
+   "stations": 8,
+   "flops": 4104,
+   "tcl": "istations.tcl",
+   "receipt": "spb_native_receipt.json",
+   "rtl_cycles_changed": {
+    "rx_st": 4,
+    "tx": 4
+   },
+   "model_cycles_changed": {
+    "rx_st": 2,
+    "tx": 0
+   }
+  }
+ }
+}

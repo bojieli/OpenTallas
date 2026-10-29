@@ -1,0 +1,68 @@
+ot-run: intel1         admits   636 GB (avail 871, reserve 0, fresh 94.4, peak 75.8, headroom 0, waiters 0/0 GB) load 43/112 running 25 disk 1391 GB 
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-2920660-1793272990 after 0 s
+{
+ "schema": "opentallas.hbm.spb0_native.v1",
+ "source_bound_sha256": "7603106059cc3133daf008828814249fa2730d37487640f8738ae335c1debad7",
+ "actual_graph_sha256": "f810f46bb4915192e5d1ef0fd2ff69f77a976b039b16a2ea00d8fc16f418d274",
+ "contract_sha256": "3402d943ebf653219c71fc16043217bc83d51f2e0c1b30e4e792fb6a3d563442",
+ "source_has_no_prior_realization": true,
+ "clock_reset_contract": {
+  "clock": "clk",
+  "rx_control_reset": "rst_n_t20",
+  "reset_policy": "RX_CAPTURE_EP_CONTROL_ONLY",
+  "endpoint_resets_preserved": true
+ },
+ "nets": [
+  {
+   "source": "u_lk_S0.rx/st",
+   "sink": "u_ep_S0.sd_rx/sd_st",
+   "width": 514,
+   "actual_source_depth": 0,
+   "actual_rtl_added_cycles": 4,
+   "old_planned_depth": 2,
+   "new_depth": 4,
+   "model_added_cycles": 2
+  },
+  {
+   "source": "u_ep_S0.sd_tx",
+   "sink": "u_lk_S0.tx",
+   "width": 512,
+   "actual_source_depth": 0,
+   "actual_rtl_added_cycles": 4,
+   "old_planned_depth": 4,
+   "new_depth": 4,
+   "model_added_cycles": 0
+  }
+ ],
+ "station_modules": [
+  {
+   "module": "ot_hbm_spb0_regs",
+   "instance": "u_hbm_spb0_rx",
+   "W": 514,
+   "N": 4,
+   "CW": 2
+  },
+  {
+   "module": "ot_hbm_spb0_regs",
+   "instance": "u_hbm_spb0_tx",
+   "W": 512,
+   "N": 4,
+   "CW": 0
+  }
+ ],
+ "placement_file": "placement.json",
+ "placement_sha256": "df898667ca61b18cef8cabf569aec18501f1134867fc24d017a5aefa730680be",
+ "actual_new_ff_per_partition": 4104,
+ "model_extra_ff_per_partition": 1028,
+ "warning": "candidate requires plan/site receipt, shifted lockstep, source binding and routed signoff; no P&R approval"
+}
+SPB_RESET   PASS mut=0 checks=11995 different_reset_edges=32 diffs=0 period833ps actualRTL+4/+4 model+2/+0
+source/results/hbm_spb_source_1029/tb_reset.sv:32: $finish called at 9996417500 (1fs)
+SPB_RESET CAUGHT mut=1 checks=11995 different_reset_edges=32 diffs=11995 period833ps actualRTL+4/+4 model+2/+0
+source/results/hbm_spb_source_1029/tb_reset.sv:32: $finish called at 9996417500 (1fs)
+SPB_RESET CAUGHT mut=2 checks=11995 different_reset_edges=32 diffs=11995 period833ps actualRTL+4/+4 model+2/+0
+source/results/hbm_spb_source_1029/tb_reset.sv:32: $finish called at 9996417500 (1fs)
+SPB_RESET CAUGHT mut=3 checks=11995 different_reset_edges=32 diffs=32 period833ps actualRTL+4/+4 model+2/+0
+source/results/hbm_spb_source_1029/tb_reset.sv:32: $finish called at 9996417500 (1fs)
+ot-run: RAN on intel1 (unit oth-ubuntu-2920660-1793272990): exit 0

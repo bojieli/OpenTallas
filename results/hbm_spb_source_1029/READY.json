@@ -1,0 +1,47 @@
+{
+ "status": "READY_DEFAULT_OFF_SCOPED_SOURCE_NOT_ATOMIC_ADOPTION",
+ "source_change": "e344c98dd",
+ "actual_source": [
+  "current150 R2 selected wrappers",
+  "freshspb_sources packet"
+ ],
+ "actual_parts": 2,
+ "actual_native_ff_per_part": 4104,
+ "source_clock": "both actual clk scalar stream",
+ "reset_policy": "EP rst_n_t20 resets RX control2bits perstage; PHY rst_n preserved; all data resetless",
+ "proof": {
+  "edges": 11995,
+  "diffs": 0,
+  "staggered_reset_edges": 32,
+  "mutants": {
+   "half_swap": 11995,
+   "wrong_phase": 11995,
+   "wrong_reset": 32
+  },
+  "period_ps": 833
+ },
+ "frontend_controls": [
+  "reverse_bus rejected",
+  "wrong_delivered_reset rejected",
+  "legacyv1 source transform accepted"
+ ],
+ "source_cycles": {
+  "rx_st": 4,
+  "tx": 4
+ },
+ "model_cycles": {
+  "rx_st": 2,
+  "tx": 0
+ },
+ "remaining": [
+  "final composed C25c source optin and full bind",
+  "actual GEN/RT taps and reset/START assignments",
+  "physical geometry review and native bank PG/access",
+  "TT/FF timing + model/TOK reset/boot pricing"
+ ],
+ "diagnosed_failures": [
+  "old source adapter instance names differ from actual Binder u_u_ names",
+  "old commonreset assumption fails actual EP rst_n_t20 vsPHYrst_n",
+  "actual bareproducer vsfullwidthconsumer syntax normalized only after exactwirewidth proof"
+ ]
+}

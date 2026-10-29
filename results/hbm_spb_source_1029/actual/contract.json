@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.hbm.spb0_contract.v2",
+ "partitions": [
+  "NW_spb0",
+  "NE_spb0"
+ ],
+ "plan_sha256": "4d53747fd73d5309096d825c013a4c41c464c036f747155bd910af604b9ba817",
+ "placement_file": "placement.json",
+ "prior_station_realization": "NONE",
+ "rx_depth": 4,
+ "tx_depth": 4,
+ "lk_instance": "u_lk_S0",
+ "ep_instance": "u_ep_S0",
+ "lk_bound_instance": "u_u_lk_S0",
+ "ep_bound_instance": "u_u_ep_S0",
+ "lk_module": "ot_pdie_serdes",
+ "ep_module": "hfd_ep_static",
+ "lk_clock_port": "clk",
+ "ep_clock_port": "clk",
+ "lk_reset_port": "rst",
+ "ep_reset_port": "rst_n",
+ "clock_expression": "clk",
+ "reset_expression": "rst_n_t20",
+ "lk_reset_expression": "rst_n",
+ "ep_reset_expression": "rst_n_t20",
+ "reset_policy": "RX_CAPTURE_EP_CONTROL_ONLY",
+ "actual_bound_contract_sha256": "fa5ee67707d098ca834467b9c9c98e4c218afc29a814900e2b71e047d82e0c04"
+}
