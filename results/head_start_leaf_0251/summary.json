@@ -1,0 +1,97 @@
+{
+ "source_branch": "codex/head-start-0251",
+ "physical_clock_groups": 327,
+ "count_origins": 351,
+ "virtual_START_stages": 1356,
+ "flops": 5299,
+ "raw_reset_ports": 1288,
+ "raw_reset_type_aliases": 143,
+ "raw_reset_max_hop_um": 321.323,
+ "start_tree": {
+  "form": "clock",
+  "data_regions": 351,
+  "virtual_nodes": 1356,
+  "retime_nodes": 985,
+  "start_edges": 1706,
+  "start_clean": 1706,
+  "start_fail": 0,
+  "start_fail_edges": [],
+  "start_width_ps": {
+   "median": 112.9,
+   "max": 205.7
+  },
+  "start_min_sync_dist_ps": 144.2,
+  "crossing_start_hops": {
+   "median": 11,
+   "max": 22
+  },
+  "rule": "12.16b(iv): every start (reset-release) port is a crossing; CLEAN iff its interval (same shared model, clock_variation table) +- aperture holds no sampling boundary; an unclean port FAILs the plan",
+  "clean_by": "width",
+  "clean_by_width": 1706,
+  "fall_measured": 1706,
+  "root": "st:h",
+  "root_path": "h",
+  "leg_ps": {
+   "TT": [
+    17.2901468123996,
+    16.231834457299783,
+    1
+   ],
+   "FF": [
+    15.416198840000106,
+    14.713291412300123,
+    1
+   ]
+  },
+  "regions": 351,
+  "branch_nodes": 195,
+  "branch_nodes_contracted": 175,
+  "leaf_origins": true,
+  "max_hop_um": 360.0,
+  "reach_fail": 0
+ },
+ "crossings": 427,
+ "margin_lo_ps": 113.0,
+ "compose": {
+  "status": "OK",
+  "types_before": 21,
+  "types_after": 21,
+  "new_ports": 0,
+  "infra_edges": 1732,
+  "placement_failures": 0,
+  "placement_failures_by_type": {},
+  "boot_ready_max_cycles": 329,
+  "monitor_max_die_hop_um": 0,
+  "landing_contract": {
+   "errors": 0,
+   "first_errors": [],
+   "pins": 569,
+   "edges": 1732,
+   "max_hop_um": 22.592,
+   "start_tree": {
+    "uses": 351,
+    "open": 0,
+    "stage_nets": 351
+   }
+  },
+  "network_lane_cycles": {
+   "lanes": 327,
+   "total": 1014
+  },
+  "observer": {
+   "part": "ctl",
+   "module": "ot_s81hd_ctl",
+   "instance_suffix": "OPEN",
+   "fault_port": "OPEN",
+   "ready_port": "OPEN"
+  }
+ },
+ "guard": {
+  "raw_relative_span": 70,
+  "guard_cycles": 4,
+  "prototype_minimum": 74,
+  "added_boot_cycles": 10,
+  "added_steady_cycles": 0
+ },
+ "scope": "PROTOTYPE: physical START route/clock fixed point/reset phase/native source bind/token NOT QUALIFIED"
+}

@@ -1,0 +1,13 @@
+# HEAD physical START leaf successor
+
+This is a candidate source/geometry repair on `codex/head-start-0251`. It retains 327 physical clock groups and 427 external data crossings. The 24 native spine links stay unlanded. Each of the 351 physical partitions has a count origin at one type-uniform measured capture tap; the old thirty long partition relay-star paths are removed.
+
+The final planner has 1356 virtual stages and 1706 width-clean START edges, zero planned reach violations at 360 um and minimum sync distance 144.2 ps. All 427 crossing intervals use the complete TT/FF physical hull; minimum guard remains 113 ps. The independent binder has zero identity/loop errors over 427 fundamental cycles and zero startup violations in 2000 draws. The plan stays at 21 types, with 33 strap variants and zero residual type splits.
+
+The emitted provider contains 5299 flops, 351 partition outputs and 1288 distinct local reset inputs. Every reset input is the recorded Q of an existing registered raw wavefront relay; 143 type-uniform aliases are sufficient. All 1356 planned raw-reset hops are at most 321.323 um. The root's source releases at raw cycle 20; the latest source releases 70 cycles later. Prototype SETTLE=74 reserves three synchronization clocks plus one guard beyond this span, adding ten boot cycles and zero steady-state data cycles. This guard is a prototype hypothesis; built reset phase and timing must qualify it.
+
+`summary.json` and compressed exact planner/bind/provider/reset exports are the result records. `compose_report.json` records the actual complete 21-type compose: 351 START uses, no open START outputs, no landing-contract errors and no landing placement failures. Its historical observer remains explicitly OPEN; the subsequent source generator restores the existing concrete controller observer and checks its actual one-bit inputs before emission. Failed initial duplicate-retime, CLI and asset-root invocations remain in the run logs rather than overwriting their verdicts.
+
+Run directory: intel2 `/srv/opentallas-scratch2/claude/codex-head-start-0251`. Source compose: `/srv/opentallas-scratch2/claude/wt/codex-head-start-0251/run/head_start_0251/compose4c`. Parent owns the actual mapped-cell START/clock/signal prototype and its GRT. The planned forest image was personally reviewed in `results/geom_review/head_start_leaf_1356.md`; actual full-cell packing needs its own review before route.
+
+This record does not qualify physical START/reset timing, the loaded-clock fixed point, real partition views, production boot authority, actual absolute START offsets, G4 or G5. The emitted numerical count frames are planning frames; they do not replace the 351 presently unqualified production START offsets.
