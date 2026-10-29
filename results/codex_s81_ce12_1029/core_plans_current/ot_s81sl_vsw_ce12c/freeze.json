@@ -1,0 +1,74 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "ot_s81sl_vsw_ce12c",
+ "module": "ot_s81sl_vsw",
+ "plan_type": "ot_s81sl_leaf__t1",
+ "outline_um": [
+  224.64,
+  224.64
+ ],
+ "ref_tile": "physical/ref_tile/s81sl_vsw",
+ "spec": "physical/ref_tile/s81sl_vsw/spec.json",
+ "spec_sha256": "a1157b0f3e25113998e643f14a9303dd7f3137499718b00665e93b8c25993dcb",
+ "pins_file": "inputs/core_pins/ot_s81sl_vsw_tpl.json",
+ "pins_sha256": "c7bf854b8d427ae35235c512d0ff7bfc4c15f7178de5206b61b3e45bf4b56645",
+ "pins": 389,
+ "plan_lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vsw_tpl.lef",
+ "pins_canon_sha256": "77e12461992cf51efa74acfde20c43ec798082a0ba0b951458937c119e551141",
+ "pins_placed_canon_sha256": "77e12461992cf51efa74acfde20c43ec798082a0ba0b951458937c119e551141",
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "77656e70b8a02e4558ad53cf9e173ed63d08632a183bbf525d45907e42a7b373",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+ "insertion_ff_ps": 202.5,
+ "insertion_basis": {
+  "tt": "plan clock.insertion_ps",
+  "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+ },
+ "rc": "setRC_rcx_asap7.tcl",
+ "gates": [
+  "rtl_lint (pre-synth)",
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "LEC EQUIVALENT (post-synth)",
+  "reg_fanout (post-synth)",
+  "TT/FF insertion (GRT, before route)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "551e18d52d4",
+ "sdc_lint_sha256": "981179f10a7c3da6a7d4e956d03bc036f50ddf2b7df7db1f828f7dbcf86a91e8",
+ "face_guard_sha256": "901640ef6615b07fa16e811b394d5cf766f828e02389d7a64d71598ded81d975",
+ "signoff_sha256": "89929556eba9a21b4f74b5d9710188d7391535eac95a5698e0a56b12284e86a2",
+ "macros": {
+  "ot_sram_1r1w_128x256_m1_r2c2": [
+   [
+    107.568,
+    71.28,
+    "R0"
+   ],
+   [
+    107.568,
+    112.368,
+    "R0"
+   ]
+  ]
+ },
+ "rtl_patches": [],
+ "kit_hash": "2c30b21b637777cc",
+ "reset_contract": {
+  "edges": 64,
+  "module": "ot_s81sl_vsw",
+  "contract_sha256": "c46fd87332e1a6ab24498887b1c9a7cd61ee8dc74844c492c2aa1aba4d0769ca",
+  "receipt_sha256": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8"
+ }
+}

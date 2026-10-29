@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "dsfd_su_t_rxsf_ce12b",
+ "module": "dsfd_su_t_rxsf",
+ "plan_type": "ot_s81sl_leaf__t1",
+ "outline_um": [
+  140.4,
+  140.4
+ ],
+ "ref_tile": "physical/ref_tile/s81su_rxsf_ref",
+ "spec": "physical/ref_tile/s81su_rxsf_ref/spec.json",
+ "spec_sha256": "7a40b55e6d4dfcb91dc1336474bedd75b6402c39026177f16f682c3deab79213",
+ "pins_file": "inputs/core_pins/dsfd_su_t_rxsf.json",
+ "pins_sha256": "9b132551fe115549c8681be754f4029a348e46c05a6783e6860ae169d346bf0c",
+ "pins": 131,
+ "plan_lef": "physical/die_plan/s81/cores/rx/lef/dsfd_su_t_rxsf.lef",
+ "pins_canon_sha256": "7f26bb2ea50e209d1b87ec9ec2d937f5c66de0edf40668ad8dc5092b3e4683e7",
+ "pins_placed_canon_sha256": "7f26bb2ea50e209d1b87ec9ec2d937f5c66de0edf40668ad8dc5092b3e4683e7",
+ "clocks": [
+  "ck"
+ ],
+ "resets": [
+  "rst"
+ ],
+ "recipe_sha256": "9e644bd90d6f21c7a48b8ca01ae54d46f0213cde9b4a43728cf0804848e77933",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+ "insertion_ff_ps": 202.5,
+ "insertion_basis": {
+  "tt": "plan clock.insertion_ps",
+  "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+ },
+ "rc": "setRC_rcx_asap7.tcl",
+ "gates": [
+  "rtl_lint (pre-synth)",
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "LEC EQUIVALENT (post-synth)",
+  "reg_fanout (post-synth)",
+  "TT/FF insertion (GRT, before route)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "eca214711a4",
+ "sdc_lint_sha256": "981179f10a7c3da6a7d4e956d03bc036f50ddf2b7df7db1f828f7dbcf86a91e8",
+ "face_guard_sha256": "901640ef6615b07fa16e811b394d5cf766f828e02389d7a64d71598ded81d975",
+ "signoff_sha256": "89929556eba9a21b4f74b5d9710188d7391535eac95a5698e0a56b12284e86a2",
+ "macros": {},
+ "rtl_patches": [],
+ "kit_hash": "8b6e432bea2c8f57"
+}
