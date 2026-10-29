@@ -8,8 +8,9 @@ import die_trial as D
 from clock_reach import actual_reach
 
 plan,calfile,mode,out=sys.argv[1:];out=Path(out);out.mkdir(parents=True,exist_ok=True)
-P=S.Plan(S.load(plan),Path(plan));site=D.SiteMap(P)
-D.load_stage_cal(calfile);D.EVEN_LEGS=True;D.DME_ACTUAL_MAX_UM=405. if mode=='physical' else None
+P=S.Plan(S.load(plan),Path(plan))
+D.load_stage_cal(calfile);D.EVEN_LEGS=True;D.DME_ACTUAL_MAX_UM=405. if mode!='baseline' else None
+site=D.clock_site(P) if mode=='body' else D.SiteMap(P)
 cal=json.load(open(calfile));taps=[t for t in D.clock_taps(P) if t[0]=='bk_sel'];early={};targets={}
 for port,_,_,tp in S.core_taps(P,P.parts['bk_sel']['type']):
  vals={c:S.core_tap_early_ps(P,tp,c) for c in ('TT','FF')};targets[('bk_sel',port)]=vals
@@ -23,7 +24,7 @@ def add(j,parent=None,snake=None):
  original[i]=j
  if parent is not None:
   nodes[parent]['kids'].append(i);pa=(nodes[parent]['x'],nodes[parent]['y'])
-  if mode=='physical':nodes[i]['physical_leg']=D.physical_leg(site,pa,q,250.,[pa]+list(snake)+[q] if snake is not None else None)
+  if mode!='baseline':nodes[i]['physical_leg']=D.physical_leg(site,pa,q,250.,[pa]+list(snake)+[q] if snake is not None else None)
   if snake:nodes[i]['snake']=[list(p) for p in snake]
  for k in d['kids']:add(k,i,(d.get('snakes') or {}).get(k))
 add(root)
