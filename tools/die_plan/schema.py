@@ -97,6 +97,8 @@ _xy = {"type": "array", "items": _num, "minItems": 2, "maxItems": 2}
 _wh = {"type": "array", "items": _pos, "minItems": 2, "maxItems": 2}
 _rect = {"type": "array", "items": _num, "minItems": 4, "maxItems": 4}
 _name = {"type": "string", "minLength": 1}
+_early_late = {"type": "object", "required": ["early", "late"], "additionalProperties": False,
+               "properties": {"early": {"type": "number", "minimum": 0}, "late": {"type": "number", "minimum": 0}}}
 _layer = {"type": "string", "pattern": "^M[1-9]$"}
 _win = {"type": "array", "items": _num, "minItems": 2, "maxItems": 2}
 _lays = {"type": "array", "items": _layer, "minItems": 1, "maxItems": 3}   # 3 only on a face_layers face (G0 faces)
@@ -473,7 +475,18 @@ SCHEMA = {
                             "type": "object", "required": ["port", "tap_um"], "additionalProperties": False,
                             "properties": {"port": _name, "tap_um": _xy,
                                            "period_mult": {"type": "integer", "minimum": 1},
-                                           "source": {"type": "string"}, "note": {"type": "string"}}}},
+                                           "source": {"type": "string"}, "note": {"type": "string"},
+                                           # DIE-HEAD-21 (opt-in): measured arrival of the sender's forwarded clock
+                                           # AT this port (sender export + wire; the receiver's own tree is
+                                           # propagated by the tool), per corner, as an early/late range.  Emitted
+                                           # as set_clock_latency -source -early/-late on the edge clock: TT in
+                                           # constraint.sdc, FF in the core_taps_ff.sdc corner overlay.  Early (min)
+                                           # times the capture of setup checks, late (max) the capture of holds.
+                                           "source_latency_ps": {
+                                               "type": "object", "required": ["tt", "ff", "basis"],
+                                               "additionalProperties": False, "properties": {
+                                                   "tt": _early_late, "ff": _early_late,
+                                                   "basis": {"type": "string", "minLength": 1}}}}}},
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
                         "tap_target_sinks": {"type": "integer", "minimum": 1},
                         "tap_min_sinks": {"type": "integer", "minimum": 1},
