@@ -1,0 +1,14 @@
+read_verilog -sv start_stages.sv ot_dp_clk_landing_ca.sv
+hierarchy -check -top ot_die_start_stages
+synth -top ot_die_start_stages -noabc
+dfflibmap -liberty seq.lib
+abc -liberty cells.lib -dont_use *xp* -dont_use *x1p* -dont_use SDF* -dont_use ICG*
+setattr -mod -unset keep_hierarchy
+flatten
+opt_clean
+delete t:$scopeinfo
+read_liberty -lib cells.lib
+check -assert
+stat -liberty cells.lib
+write_json mapped.json
+write_verilog -noattr mapped.v

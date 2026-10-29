@@ -37,7 +37,7 @@ def overlay(base_v, base_tcl, mapped, top, stages, physical):
         raise ValueError('physical START placement does not cover exact mapped cells')
     if physical.get('reset_form') != 'local_wavefront':
         raise ValueError('physical START provider requires local wavefront reset delivery')
-    if any(p.startswith('rst') and physical['ports'][p].get('source_kind') != 'registered_wavefront'
+    if any(p.startswith(('rst','wrst_')) and physical['ports'][p].get('source_kind') != 'registered_wavefront'
            for p in expected if ports[p]['direction'] == 'input'):
         raise ValueError('START raw reset boundary is not a registered wavefront source')
     mh = re.search(r'module\s+die_combo\s*\(([^)]*)\);', base_v)
@@ -85,6 +85,8 @@ def overlay(base_v, base_tcl, mapped, top, stages, physical):
         else:
             extra.append(f'assign start_{word(p)} = {b};')
     names = {}
+    clock_bits = {ports[n]["bits"][0]: n for n in clocks}
+    clock_pins = {n: [] for n in clocks}
     ff_count = 0
     for i, (name, cell) in enumerate(sorted(cells.items())):
         typ = cell['type']
@@ -103,7 +105,13 @@ def overlay(base_v, base_tcl, mapped, top, stages, physical):
             raise ValueError('placement cell master/stage mismatch')
         place.append(f'place_inst -name {inst} -location {{{x:.3f} {y:.3f}}} -orientation {row.get("orient", "R0")} -status FIRM')
         names[name] = inst
-        ff_count += typ.startswith(('DFF', 'SDFF'))
+        is_ff = typ.startswith(('DFF', 'SDFF'))
+        ff_count += is_ff
+        if is_ff:
+            ck = cell['connections'].get('CLK')
+            if not ck or len(ck) != 1 or ck[0] not in clock_bits:
+                raise ValueError('actual START FF clock is not a declared stage clock input')
+            clock_pins[clock_bits[ck[0]]].append(inst+'/CLK')
     if ff_count != stages['counts']['flops']:
         raise ValueError(f'actual mapped START flop count {ff_count} differs from manifest {stages["counts"]["flops"]}')
     body = base_v[mh.end():base_v.rindex('endmodule')]
@@ -120,9 +128,29 @@ def overlay(base_v, base_tcl, mapped, top, stages, physical):
     if t.count(marker) != 1:
         raise ValueError('expected one reviewed GRT50 route command')
     t = t.replace(marker, '\n'.join(place) + '\n' + marker, 1)
+    if any(not q for q in clock_pins.values()):
+        raise ValueError('a declared stage clock has no actual mapped FF load')
+    readout=['set sh [open /out/arr_$::env(CORNER).txt a]']
+    for clk, pins in sorted(clock_pins.items()):
+        readout += ['set st_late_rise -1e30; set st_early_rise 1e30; set st_late_fall -1e30; set st_early_fall 1e30',
+                    'foreach name {'+' '.join(pins)+'} {',
+                    '  set p [get_pins $name]; if {[llength $p] != 1} {error "missing actual START FF clock pin $name"}',
+                    '  foreach edge {rise fall} {',
+                    '    set late [get_property $p arrival_max_$edge]; set early [get_property $p arrival_min_$edge]',
+                    '    if {![string is double -strict $late] || ![string is double -strict $early] || [regexp -nocase {inf|nan} "$late $early"]} {error "untimed actual START FF clock pin $name"}',
+                    '    set st_late_$edge [expr {max([set st_late_$edge],$late)}]',
+                    '    set st_early_$edge [expr {min([set st_early_$edge],$early)}]',
+                    '  }', '}',
+                    f'puts $sh "T {clk} $st_late_rise $st_early_rise"',
+                    f'puts $sh "F {clk} $st_late_fall $st_early_fall"']
+    readout.append('close $sh')
+    timing_marker='report_check_types -max_slew'
+    if t.count(timing_marker)!=1:
+        raise ValueError('expected one post-GRT timing readout insertion point')
+    t=t.replace(timing_marker,'\n'.join(readout)+'\n'+timing_marker,1)
     receipt = dict(scope='actual mapped START cells and clock loads, raw partition signal abstracts; NOT G4',
                    cells=len(cells), flops=ff_count, internal_stage_clocks=len(clocks),
-                   boundary_ports=len(expected), cell_names=names, reset_form=physical['reset_form'],
+                   boundary_ports=len(expected), cell_names=names, stage_clock_pins=clock_pins, reset_form=physical['reset_form'],
                    physical_timing='NOT RUN', logical_cycles_added=0)
     return v, t, receipt
 
@@ -141,7 +169,7 @@ def main():
     (out/'combo.v').write_text(v)
     (out/'combo.tcl').write_text(t)
     (out/'start_overlay.json').write_text(json.dumps(r, indent=1))
-    print(json.dumps({k:v for k,v in r.items() if k != 'cell_names'}))
+    print(json.dumps({k:v for k,v in r.items() if k not in ('cell_names','stage_clock_pins')}))
 
 
 if __name__ == '__main__':
