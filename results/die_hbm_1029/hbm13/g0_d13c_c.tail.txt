@@ -1,0 +1,3 @@
+G0C per type: 69/81 types clean (G3-eligible: 69); die-level {}; ERRORs
+G0C FAIL: 16 errors, 132 pending-view, 745 warnings; 81 types / 90 partitions (62 in near-duplicate groups); worst cut {'ratio': 0.1653, 'at': 'horizontal@6000'}, worst partition segment {'ratio': 0.5995, 'at': 'horizontal@5250:NW_b101'}; report /srv/opentallas-scratch/claude/die-hbm-13/g0_d13c_c/g0_report.json
+exit 1
