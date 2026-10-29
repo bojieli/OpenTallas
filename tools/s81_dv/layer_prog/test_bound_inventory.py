@@ -64,6 +64,7 @@ class InventoryTests(unittest.TestCase):
 
     def test_native_entry_keeps_only_exact_intermediate_buffer_metadata(self):
         y = design()
+        y['modules']['$paramodP']['netnames']['hidden_nets'] = {'bits':[20,21]}
         y['modules']['$paramodP']['cells']['hidden'] = dict(type='$buf', parameters={},
             connections={'A': [20], 'Y': [21]}, port_directions={'A':'input','Y':'output'})
         plain = I.extract(y, {'top':'top'}, ['u_s_0S'], asbuilt_sha256='a'*64, top_sha256='b'*64)
