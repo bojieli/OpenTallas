@@ -1,0 +1,13 @@
+{
+  "reviewer": "CODEX macro-estimate",
+  "picture": "results/hbm_macro_1028/macro_candidates.png",
+  "verdict": "PASS-COND ESTIMATE ONLY; P&R HELD",
+  "findings": [
+    "Viewed rendered image: programme store 11 compact 2x2 SRAM leaf neighborhoods match source row topology; empty middle cell reserves the head; broad local spines and row channels, no wall of adjoining macros.",
+    "VP4 ten macros fit two R0 columns with wide vertical escape channels and horizontal centre clock-entry channel. All coordinates snapped to macro site grid; centre on 4.32 lattice.",
+    "Programme-store current C24 leaf0/leaf9 page spans649.026/581.754um violate locality intent; candidate restores local macro origin span<=239.868um.",
+    "These are macro-fit/channel estimates only. No pins, actual standard cells, PDN or clock tree are drawn. Existing16clockislands need relocation and every source relay/output path needs reach405 census before build.",
+    "Guide each programme leaf's standard cells to its own zone. S-band output registers, pr/cr/sp/si row relays and head require explicit safe placement; external output-pin face lengths can still block this outline.",
+    "Neither candidate is a die-plan adoption or route approval; no RTL or cycle change."
+  ]
+}

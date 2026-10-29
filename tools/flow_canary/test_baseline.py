@@ -203,10 +203,12 @@ def test_autopilot_gate_releases_on_no_regression_and_holds_regression(tmp_path)
     assert ok and "NO-REGRESSION" in why and "/r1/" in why
     mkrun(root, "r2", hold=(-120.0, 900, "PASS"), mtime=10**9 + 3)
     ok, why = G.assess(row, root, repo, git)
-    assert not ok and "REGRESSION" in why and "--canary-fix" in why
+    assert not ok and "matching reference canary REGRESSION" in why
     row["canary_fix"] = "x@" + str(root / "r2/canary.json")
     ok, why = G.assess(row, root, repo, git)
-    assert ok and "REGRESSION" in why
+    # METHODOLOGY12.14f: naming a corrective reference cannot override an
+    # actual measured regression of this exact kit flow.
+    assert not ok and "matching reference canary REGRESSION" in why
 
 
 def test_face_cover_kit_declared_subblock_clock_and_reset_ports(tmp_path):

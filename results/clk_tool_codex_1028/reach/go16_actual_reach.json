@@ -1,0 +1,61 @@
+{
+ "schema": "ot_clk_actual_reach/1",
+ "max_um": 450.0,
+ "verdict": "FAIL",
+ "cell_edges": 42328,
+ "tap_edges": 8501,
+ "worst_um": 653.4,
+ "over_count": 8,
+ "over": [
+  {
+   "kind": "cell",
+   "child": "r11963_1",
+   "parent": "r11963_0",
+   "length_um": 653.4
+  },
+  {
+   "kind": "cell",
+   "child": "r1035_2",
+   "parent": "r1035_1",
+   "length_um": 457.38
+  },
+  {
+   "kind": "cell",
+   "child": "r121_2",
+   "parent": "r121_1",
+   "length_um": 457.38
+  },
+  {
+   "kind": "cell",
+   "child": "r1403_2",
+   "parent": "r1403_1",
+   "length_um": 457.38
+  },
+  {
+   "kind": "cell",
+   "child": "r197_2",
+   "parent": "r197_1",
+   "length_um": 457.38
+  },
+  {
+   "kind": "cell",
+   "child": "r231_2",
+   "parent": "r231_1",
+   "length_um": 457.38
+  },
+  {
+   "kind": "cell",
+   "child": "r245_2",
+   "parent": "r245_1",
+   "length_um": 457.38
+  },
+  {
+   "kind": "cell",
+   "child": "r503_2",
+   "parent": "r503_1",
+   "length_um": 457.38
+  }
+ ],
+ "missing_sites": [],
+ "tree": "/srv/opentallas-scratch/claude/codex-s81-2340/go16/tree.json"
+}

@@ -70,7 +70,7 @@ def lowered_hook(ev, lw, base):
     end = _orig_lowered(ev, lw, base)
     STATE['lw'], STATE['base'] = lw, base
     plan = STATE['plan'](lw, base)
-    for t, w in plan['hr']:
+    for t, w in X.hr_rows(plan['hr']):
         ev.at(t, P_HR, w)
     STATE['hr_plan'] = plan
     return max(end, plan['end'])

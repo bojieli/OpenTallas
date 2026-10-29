@@ -171,9 +171,10 @@
   "source_commit": "d34578d6f",
   "read_at_commit": true,
   "files_at": {
-   "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": "c2d323d5b0"
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv": "b5b883084d",
+   "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": "8e7f8a9f05"
   },
-  "files_at_note": "HBM-CORES-KITS-4 10-28: ot_static_cmd_target MODE 1 run_base/run_count constant (kit rtl_lint FAIL on the d34578d6f copy); all other files at source_commit",
+  "files_at_note": "HBM-CORES-KITS-4 10-28: ot_static_cmd_target MODE 1 run_base/run_count constant (kit rtl_lint FAIL on the d34578d6f copy); HBM-CORES-KITS-5 8e7f8a9f05: + tw_sel reset (and xload ctl em_off/lsh/gtp reset for ctlx), kit LEC NOT EQUIVALENT _k10; all other files at source_commit",
   "asbuilt_inst": "xl_NW_ctl",
   "lec_hints_basis": "lane_en quartet bits have identical enabled next-state expressions; every relation is proved by lec.py, never assumed",
   "lec_hints": [
@@ -261,9 +262,9 @@
   "source_commit": "d34578d6f",
   "read_at_commit": true,
   "files_at": {
-   "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": "c2d323d5b0"
+   "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": "8e7f8a9f05"
   },
-  "files_at_note": "HBM-CORES-KITS-4 10-28: ot_static_cmd_target MODE 1 run_base/run_count constant (kit rtl_lint FAIL on the d34578d6f copy); all other files at source_commit",
+  "files_at_note": "HBM-CORES-KITS-4 10-28: ot_static_cmd_target MODE 1 run_base/run_count constant (kit rtl_lint FAIL on the d34578d6f copy); HBM-CORES-KITS-5 8e7f8a9f05: + tw_sel reset (and xload ctl em_off/lsh/gtp reset for ctlx), kit LEC NOT EQUIVALENT _k10; all other files at source_commit",
   "asbuilt_inst": "smw_NW"
  },
  "ot_hbm_su_programme_pslice_c5": {
@@ -370,6 +371,10 @@
   "source": "d4g as-built die_r18h5.v instance hb_vms_NW (module hfd_hgi_vms_glue_nw_t); files = closure of hfd_hgi_vms_glue_nw_t at d34578d6f",
   "source_commit": "d34578d6f",
   "read_at_commit": true,
+  "files_at": {
+   "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "c2223a91d3"
+  },
+  "files_at_note": "HBM-CORES-KITS-5 10-28: rcl reserved tag bits response[272:267] captured as constant 0 (vms_glue _k6 kit LEC NEQ 1, u_replay.fault, on the d34578d6f copy); all other files byte-identical at d34578d6f",
   "asbuilt_inst": "hb_vms_NW",
   "lec_hints_basis": "Source expected[0][i] Q bits map Slang expected[9-3*i], versus gate expected#t[i][0]; each source-geometry candidate is independently proved by lec.py",
   "lec_hints": [

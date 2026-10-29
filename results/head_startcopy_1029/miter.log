@@ -1,0 +1,5 @@
+PASS ORIGIN_LOCKSTEP comparisons=10112 variants=64 added_cycles=0
+- miter.sv:69: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ns; walltime 0.001 s; speed 3.125 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

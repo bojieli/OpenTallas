@@ -61,6 +61,7 @@ class NativeTiming:
     # per-column write copy: every bank write commits one edge later (write-port pins unchanged).
     mlat: object = None
     wcopy: int = 0
+    alat: object = None  # explicit physical candidate; None preserves as-built ALAT3
 
     def __post_init__(self):
         if (type(self.read_return) is not int or type(self.write_return) is not int
@@ -72,6 +73,9 @@ class NativeTiming:
             raise ValueError("native xread LX must be an integer 1..64")
         if self.mlat not in (None, 4, 5) or self.wcopy not in (0, 1):
             raise ValueError("native lane build: MLAT 4 or 5, WCOPY 0 or 1")
+
+        if self.alat not in (None, 3, 4):
+            raise ValueError("native lane build: ALAT 3 or 4")
 
     @staticmethod
     def serial_return(stream_return):
@@ -92,8 +96,14 @@ class NativeTiming:
     def lane_mlat(self):
         return 4 if self.mlat is None else self.mlat
 
+    @property
+    def lane_alat(self):
+        return 3 if self.alat is None else self.alat
+
     def as_dict(self):
         d = asdict(self)
+        if self.alat is None:
+            d.pop("alat")
         if self.xread_lx is None:
             d.pop("xread_lx")              # DIE-HBM-10: default views byte-identical
         if self.mlat is None and self.wcopy == 0:      # as built: the record stays byte-identical

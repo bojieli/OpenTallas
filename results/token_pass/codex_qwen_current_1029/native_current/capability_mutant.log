@@ -1,0 +1,5 @@
+PASS real_HOST_loader_typed_record_mutant_rejected 6
+- /srv/opentallas-scratch2/claude/codex-qwen-token-1028/host_publish/tb_actual_n32.sv:153: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.027 s; speed 155.220 us/s
+- Verilator: cpu 0.027 s on 1 threads; allocated 7 MB

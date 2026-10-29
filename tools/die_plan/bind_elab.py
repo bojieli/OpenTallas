@@ -76,8 +76,21 @@ def instantiated(body, idx):
     return {m.group(1) for m in INST_RE.finditer(body) if m.group(1) in idx}
 
 
+def validate_preferred_files(prefer):
+    """An explicitly preferred HDL file must exist; missing optional search directories keep their old semantics.
+
+    Otherwise a sparse checkout can silently select another same-named module with a different hardware ABI.
+    """
+    missing = [str(p) for p in prefer if Path(p).suffix.lower() in (".v", ".sv", ".vh", ".svh")
+               and not Path(p).is_file()]
+    if missing:
+        raise ElabError("preferred HDL source missing: " + ", ".join(missing)
+                        + "; restore the source checkout or correct the explicit preference")
+
+
 def closure(names, idx, prefer):
     """every file needed to elaborate `names` fully (their own definitions and everything below them)."""
+    validate_preferred_files(prefer)
     seen, files, missing = set(), [], set()
     todo = list(names)
     while todo:
@@ -228,9 +241,10 @@ def plan_sources(ab, base, idx=None, shim_dir=None):
     roots = ab.get("rtl_roots", ["rtl"])
     files = list(ab.get("files", []))
     tops = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab["netlist"]]
+    prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab.get("prefer", [])]
+    validate_preferred_files(prefer)
     if idx is None:
         idx = module_index(roots, files, base)
-    prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab.get("prefer", [])]
     subst = ab.get("substitute", {})
     pvar = [r["module"] for r in ab.get("substitute_parent", [])]
     dissolve = set(ab.get("dissolve", [])) | set(pvar)
@@ -440,6 +454,65 @@ def _match(t, k):
     raise ElabError("unbalanced parentheses")
 
 
+def validate_selected_parameters(tops, full, lib, defines=()):
+    """Reject overrides absent from the actual selected master before opaque elaboration.
+
+    Slang blackboxed modules can silently discard unknown overrides. Inspect the
+    same selected source order given to the frontend, including aliased tops and
+    staged interfaces, rather than finding another definition that happens to
+    declare the requested parameter. Values remain the frontend's responsibility.
+    """
+    import sys
+    tool_path = str(Path(__file__).resolve().parents[1])
+    if tool_path not in sys.path:
+        sys.path.insert(0, tool_path)
+    import die_port_bind as D
+    macro = dict(d.split("=", 1) if "=" in d else (d, "1") for d in defines)
+    selected, sources = {}, {}
+    for f in dict.fromkeys(list(lib) + list(full) + list(tops)):
+        text = D.preprocess(_strip(Path(f).read_text()), dict(macro))
+        sources[str(f)] = text
+        for mod in D.parse_modules(text, str(f)):
+            selected[mod.name] = mod
+    rows, errors = [], []
+    ident = r"[A-Za-z_][A-Za-z0-9_$]*"
+    for f in dict.fromkeys(list(full) + list(tops)):
+        text = sources[str(f)]
+        for match in re.finditer(r"\b(" + ident + r")\s*#\s*\(", text):
+            master = match.group(1)
+            mod = selected.get(master)
+            if mod is None:
+                continue   # Undefined transport cells retain their existing gate.
+            start = text.index("(", match.start())
+            end = D._closing_paren(text, start)
+            instance = re.match(r"\s*(\\\S+|" + ident + r")(?:\s*\[[^\]]+\])*\s*\(", text[end+1:])
+            if instance is None:
+                continue   # The module's own parameter header, not an instance.
+            params = D._split_commas(text[start+1:end])
+            if len(params) == 1 and not params[0].strip():
+                continue
+            known = set(mod.params) - set(getattr(mod, "localparams", ()))
+            requested = []
+            for value in params:
+                named = re.match(r"\s*\.\s*(" + ident + r")\s*\(", value)
+                if named:
+                    requested.append(named.group(1))
+            if requested:
+                missing = sorted(set(requested) - known)
+            else:
+                missing = [f"positional[{i}]" for i in range(len(known), len(params))]
+            record = dict(master=master, instance=instance.group(1), source=f,
+                          selected_source=mod.path, requested=requested or [f"positional[{i}]" for i in range(len(params))],
+                          declared=sorted(known))
+            rows.append(record)
+            if missing:
+                errors.append(f"{master} {instance.group(1)}: parameter(s) {', '.join(missing)} not declared by "
+                              f"selected master {mod.path} (instance source {f})")
+    if errors:
+        raise ElabError("selected parameter overrides: " + "; ".join(errors))
+    return rows
+
+
 def yosys_script(ab, tops, full, lib, out_json, check=False, inc_files=()):
     dflags = " ".join(f"-D{d}" for d in ab.get("defines", []))
     incs = sorted({str(Path(f).parent) for f in list(tops) + list(full) + list(lib) + list(inc_files)})
@@ -638,6 +711,8 @@ def elab(ab, base, out_dir, mem_gb=32, idx=None):
             raise ElabError(str(e)) from e
         parse_tops, parse_full, parse_lib = staged[:nt], staged[nt:nt+nf], staged[nt+nf:]
         rec["parameterized_interfaces"] = records
+    rec["selected_parameter_overrides"] = validate_selected_parameters(parse_tops, parse_full, parse_lib,
+                                                                       ab.get("defines", []))
     sc.write_text(yosys_script(ab, parse_tops, parse_full, parse_lib, js, inc_files=lib + tops + full))
     mounts = [out, Path(base).resolve(), REPO] + [Path(f).parent for f in tops + full + lib]
     roots = sorted({str(Path(m).resolve()) for m in mounts}, key=len)

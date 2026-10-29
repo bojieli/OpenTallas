@@ -101,6 +101,7 @@ def load_bind(bound, manifest=None, root=None, *, diagnostic=False):
     names = json.loads((bound / 'bind_names.json').read_text())
     return dict(bound=bound, clean=clean, n_errors=errs, type_splits=len(rep.get('type_splits') or []),
                 provenance=prov, netlist_sha256=netlist_sha, landing=groups['landing'], internal=groups.get('internal', []),
+                image_selectors=rep.get('instance_path_params', []),
                 lane_bound={b['lane']: b['bound_stages'] for b in lat['buses']}, names=names,
                 sha256={f: file_sha(bound / f) for f in ('bind_report.json', 'bus_groups.json', 'bind_latency.json',
                                                          'bind_names.json', 'provenance_bind.json')})

@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS-COND",
+  "reviewer": "codex qcore, independent nonimplementer",
+  "scope": "Unchanged standard two-mode GRT data-hold trial; no DRT/adoption",
+  "picture": "/srv/opentallas-scratch/claude/wt/codex-hbm-macro-1028/results/hbm_hnx_1029/actual_cts.png",
+  "source_record": "macro_estimate commit3790ed8c4 results/hbm_hnx_1029/cts_summary.json and incident.json",
+  "findings": [
+    "Actual image viewed; single jv data-FF anchor at origin103.032/234.900 agrees with existing dump, all six incident pairs reviewed.",
+    "Full census37757 captures, max387.75um, zero over405um. Former x_rq->jv long leg is shortened while outgoing local legs remain short.",
+    "Existing dump confirms five infrastructure islands, exactly20 mp_isl clock/reset FT ports, and r_g in declared reset metadata alongside r_bdc/r_tcc/r_x. These roles do not create an unregistered functional-data finding.",
+    "No macros or macro wall/sliver. Fill0.290, empty0.2785, room for standard data hold repair; no source or clock change.",
+    "TT setup+57.34ps; FF structural hold admission-24.44ps/1457 endpoints passes the existing guard, ports-108.75ps/1619 still need repair. Admission is not hold closure."
+  ],
+  "conditions": [
+    "Use existing two-mode TT/FF data repair and preserve clock/constraints.",
+    "Review actual post-GRT geometry and require GRT0 plus TT setup/FF hold closure before DRT."
+  ],
+  "checks_added": "None; existing image, metadata and full-census receipts read only. No new STA or probe."
+}

@@ -223,7 +223,7 @@ def macro_libs(kit, corner):
 
 
 SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
-                  "kit_modes.py", "data_droop.py")
+                  "kit_modes.py", "data_droop.py", "core_io_reference.py")
 
 
 def signoff_bundle_sources(source=HERE):
@@ -244,6 +244,8 @@ def require_signoff_bundle():
 # Dependencies of standalone kit hooks.  Existing custom hooks stay byte-identical;
 # their missing shared helpers are shipped by the same bundle as the sign-off tool.
 KIT_TOOL_DEPENDENCIES = {
+    "orfs_hold_mm.tcl": ("macro_cts_cluster.tcl",),
+    "die_sta_related.py": ("clock_components.py", "data_droop.py"),
     "kit_preflight.py": ("sdc_lint.py", "rtl_lint.py", "master_slice.py", "core_infra.py", "core_infra.tcl", "ft_ports.py",
                          "kit_contract.py", "die_sta_related.py", "data_droop.py"),
     "postcts_gate.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
@@ -255,6 +257,7 @@ KIT_TOOL_DEPENDENCIES = {
     "hold_gate.tcl": ("vclk_corner.tcl",),
     "face_guard_core.py": ("face_guard.py",),
     "core_preflight.py": ("signoff.py", "face_guard.py"),
+    "kit_contract.py": ("core_io_reference.py",),
 }
 
 
@@ -276,8 +279,8 @@ def copy_signoff_bundle(destination, source=HERE, extra=()):
         # the canonical sign-off family are copied from the requested tool source.
         if name not in paths and (name in requested or not (destination / name).is_file()):
             path = source / name
-            if name == "clock_family.tcl" and not path.is_file():
-                path = source.parents[1] / "physical/common_flow/clock_family.tcl"
+            if name in ("clock_family.tcl", "macro_cts_cluster.tcl") and not path.is_file():
+                path = source.parents[1] / "physical/common_flow" / name
             paths[name] = path
         pending.extend(KIT_TOOL_DEPENDENCIES.get(name, ()))
     missing = [name for name, path in paths.items() if not path.is_file()]
@@ -1229,6 +1232,12 @@ def hard_core_latency_contract(disc):
     cc = json.loads(source.read_text()).get("clock_contract")
     if not isinstance(cc, dict) or cc.get("kind") != "hard_core_latency":
         return None
+    if cc.get("io_reference_ps") is not None:
+        import core_io_reference as CIR
+        reference = CIR.load(disc["kit"])
+        errors = CIR.binding_errors(disc["kit"], reference)
+        if errors:
+            raise ValueError("inconsistent typed core IO reference: " + "; ".join(errors))
     return cc
 
 
@@ -1607,6 +1616,9 @@ def cmd_run(a):
     disc["library_config"] = str(Path(a.library_config).resolve()) if getattr(a, "library_config", None) else None
     out = Path(a.out).resolve()
     core_contract = hard_core_latency_contract(disc)
+    if core_contract and core_contract.get("io_reference_ps") is not None:
+        import core_io_reference as CIR
+        CIR.validate_ff_override(core_contract["io_reference_ps"], getattr(a, "ff_bound_ps", None))
     # An explicit source-pinned FF reference applies to every kit family.  Keep
     # it outside the hard-core branch: die-plan kits otherwise reach the FF
     # session with bound-ff selected but no value, despite a valid CLI request.

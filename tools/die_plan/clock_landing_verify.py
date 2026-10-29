@@ -20,12 +20,30 @@ def boolean(op,terms):
     return (op,*sorted(items,key=repr))
 
 
+def planned_ring_depths(raw,table):
+    """A hardened type uses the largest DEPTH required by any of its copies (12.15a)."""
+    ca=table.get('count_aligned') or {};parts={p['name']:p for p in raw['partitions']}
+    ports={p['id']:p for p in raw['ports']};depths={}
+    for r in table['ports']:
+        cfg=ca.get('ports',{}).get(r['port'])
+        if cfg is None:continue
+        key=(parts[r['dst']]['type'],ports[r['port']]['dst']['bus'])
+        depths[key]=max(depths.get(key,0),int(cfg['depth']))
+    return depths
+
+
 class Verification:
-    def __init__(self,F,G,raw,table,names,live_widths=None):
+    def __init__(self,F,G,raw,table,names,live_widths=None,plan_path=None,reset_tree=None):
         self.F,self.G,self.raw,self.table,self.names=F,G,raw,table,names
+        # TOK-QC-4: inactive landing types carry collector tree None, but may still host count-aligned infrastructure
+        # (an intra-region start relay rx).  Their raw reset is the type's ordinary plan reset tree, the one the bind
+        # emits (RT.for_type); reset_tree(tn) may be injected (tests).  No tree -> FAIL, never skip.
+        self.plan_path,self._reset_tree_fn,self._plan_trees=plan_path,reset_tree,{}
         self.observer_seen=set();self.errors=[];self.byname={c.path:c for c in F.cells};self.expected=set();self.memo={};self._fstart_checked=set()
         self.parts={p['name']:p for p in raw['partitions']};self.collector=table['collector']
         self.live_widths=live_widths
+        self.ring_depths=planned_ring_depths(raw,table)
+        self.transport_stages={}
         self.region={pn:r['tag'] for r in table['regions']
                      if isinstance(r.get('parts'),list) for pn in r['parts']}
         for r in table['regions']:
@@ -94,7 +112,9 @@ class Verification:
     def check_reset(self,c,part,node,extra=None,port='rst_n'):
         bits=c.ports.get(port,[])
         if len(bits)!=1:self.fail(c.path+': exact one-bit raw reset required');return
-        tree=self.collector['types'][self.parts[part]['type']]['tree']
+        tree=self.reset_tree(self.parts[part]['type'])
+        if tree is None:
+            self.fail(c.path+': no planned reset tree for type '+self.parts[part]['type']+' (inactive landing type)');return
         rows={r['q']:r for r in tree['relays']};prefix=ident(part)+'.'
         if tree.get('hard'):
             # Hard wrapper: every landing/collector stage uses the delivered
@@ -123,6 +143,25 @@ class Verification:
             return len(ib)==1 and walk(ib[0],row['d'],seen|{n})
         if not walk(bits[0],node,set()):
             self.fail(c.path+': raw reset is not the exact original local reset-parent/depth contract at '+node)
+
+    def reset_tree(self,tn):
+        """The reset tree a landing stage of type tn walks: the collector tree (active types), else the type's plan reset
+        tree as the bind emits it (RT.for_type on the plan); None (-> FAIL at the caller) if neither exists."""
+        tree=self.collector['types'][tn]['tree']
+        if tree is not None:return tree
+        if tn not in self._plan_trees:
+            try:
+                if self._reset_tree_fn is not None:t=self._reset_tree_fn(tn)
+                else:
+                    import schema as S,reset_tree as RT
+                    if not hasattr(self,'_P'):self._P=S.Plan(self.raw,self.plan_path)
+                    t=RT.for_type(self._P,tn)
+            except Exception as e:
+                self.fail(f'type {tn}: plan reset tree unavailable ({type(e).__name__}: {e})');t=None
+            if t is not None and (t.get('hard') or not isinstance(t.get('relays'),list)):
+                self.fail(f'type {tn}: plan reset tree has no relay list');t=None
+            self._plan_trees[tn]=t
+        return self._plan_trees[tn]
 
     def hard_reset(self,part):
         if not hasattr(self,'_hard_reset'):self._hard_reset={}
@@ -161,6 +200,21 @@ class Verification:
                 info=self.collector['types'][self.parts[r['dst']]['type']]
                 local=next(x for x in info['local_sources'] if x['name']==bus)
                 if ca:
+                    cfg=ca['ports'][r['port']]
+                    params=getattr(c,'params',{})
+                    depth=self.ring_depths[(self.parts[r['dst']]['type'],bus)]
+                    if int(params.get('DEPTH',4))!=depth:
+                        self.fail(path+': actual count-aligned DEPTH differs from the bound contract')
+                    if ca.get('strap_form'):
+                        kb=c.ports.get('strap_k',[])
+                        kw=depth.bit_length()-1+4
+                        expected=list(reversed(format(int(cfg['K']) & ((1<<kw)-1),f'0{kw}b')))
+                        if kb!=expected:self.fail(path+': actual strap_k differs from the bound count')
+                    elif (int(params.get('K',2)) & 0xffffffff)!=(int(cfg['K']) & 0xffffffff):
+                        self.fail(path+': actual count-aligned K differs from the bound contract')
+                    # K is a modular counter offset, not transport cycles. The
+                    # fixed latency includes the proven sender/receiver origins.
+                    self.transport_stages[path]=int(cfg['sched_lat'])
                     # count-aligned (MESO-INTEG-1): read count from the receiver's origin, write count from the
                     # sender's origin forwarded beside the bus; the origins themselves are checked below
                     self.equal_input(c,'rst_n',[self.start_net(r['dst'])])
@@ -232,7 +286,20 @@ class Verification:
         parts=self.table['count_aligned'].get('parts') or {}
         if parts.get(pn,{}).get('role')=='relay':return self.output(ident(pn)+'.u_cland_rstart_rx','q')
         if self._strap_root(pn):return self.output(ident(pn)+'.u_cland_root','start')
-        return self.output(ident(pn)+'.u_cland_origin','start')
+        return self.output(self._origin_path(pn),'start')
+
+    def _origin_path(self,pn):
+        """Select the sampler by the declared static tie; older single-sampler source stays readable."""
+        ca=self.table.get('count_aligned') or {}
+        if ca.get('strap_form'):
+            self._strap_root(pn)
+            st=self._strap['types'].get(self.parts[pn]['type'],{}).get('origin',{})
+            buses=st.get('tree_buses') or []
+            prefix=ident(pn)+'.u_cland_origin_t'
+            if len(buses)>1 and any(c.path.startswith(prefix) for c in self.F.cells):
+                i=min(int(self._strap['instances'][pn]['values'].get('strap_ca_tsel',0)),len(buses)-1)
+                return prefix+str(i)
+        return ident(pn)+'.u_cland_origin'
 
     def fstart_net(self,pn,bus):
         """the start a sender forwards on cland_fstart_out_<bus> (receiver ring t_rst_n, child origin p_start).  Strap
@@ -246,7 +313,7 @@ class Verification:
             self._fstart_checked.add(path)
             c=self.instance(path,'ot_dp_landing_relay')
             if c:
-                src=ident(pn)+('.u_cland_root' if self._strap_root(pn) else '.u_cland_origin')
+                src=ident(pn)+'.u_cland_root' if self._strap_root(pn) else self._origin_path(pn)
                 self.clock(c,pn)
                 self.equal_input(c,'d',[self.output(src,'start_d')])
                 o=self.byname.get(src)
@@ -266,7 +333,7 @@ class Verification:
 
     def _raw_node(self,pn,ins,info):
         b=sorted(ins[pn])[0] if ins[pn] else None
-        return (self.ring_reset_node(pn,b,info) if b else 'rst_n_t0'),('u_cland_rst_'+b if b else None)
+        return (self.ring_reset_node(pn,b,info) if b else 'rst_n_t0'),('u_cland_rst_'+b if b else 'u_cland_origin_rst')
 
     def _check_origins(self,rows,ports):
         """Start tree: one origin per region; root = ot_dp_landing_root on a raw reset, child = ot_dp_landing_origin on
@@ -290,13 +357,29 @@ class Verification:
                 roles={q:(cparts.get(q) or {}).get('role') for q in ps}
                 if pn not in ps or roles[pn]!='origin' or sorted(q for q,v in roles.items() if v=='origin')!=[pn] or None in roles.values():
                     self.fail(f'count-aligned region {tag}: bind roles {roles} need exactly one origin {pn}');continue
-            path=ident(pn)+'.u_cland_origin'
+            path=self._origin_path(pn)
             info=self.collector['types'][self.parts[pn]['type']]
             if ca.get('strap_form'):
                 self._strap_root(pn)
                 st=self._strap['types'].get(self.parts[pn]['type'],{}).get('origin',{})
-                if st.get('root'):   # both origins exist in every copy of a root+child strap type; the strap selects one
-                    self.expected|={ident(pn)+'.u_cland_root',ident(pn)+'.u_cland_origin'}
+                buses=st.get('tree_buses') or []
+                if path!=ident(pn)+'.u_cland_origin':
+                    # Every per-input sampler remains declared infrastructure. Check its local clock and its
+                    # bus-specific raw reset/START, including samplers not selected in this copy.
+                    for i,b in enumerate(buses):
+                        oc=self.instance(ident(pn)+'.u_cland_origin_t'+str(i),'ot_dp_landing_origin_s')
+                        if not oc:continue
+                        self.clock(oc,pn)
+                        import clock_landings as CL
+                        if b==CL.START_PIN_IN:
+                            node,relay=self._raw_node(pn,ins,info)
+                        else:
+                            node,relay=self.ring_reset_node(pn,b,info),'u_cland_rst_'+b
+                            ring=self.byname.get(ident(pn)+'.u_cland_'+ident(b))
+                            if ring:self.equal_input(oc,'p_start',[self.term(x) for x in ring.ports.get('t_rst_n',[])])
+                        self.check_reset(oc,pn,node,relay,port='rst_raw_n')
+                if st.get('root'):   # root and child origins exist; the static root strap selects one
+                    self.expected|={ident(pn)+'.u_cland_root',path}
             if rg['parent'] is None:
                 c=self.instance(ident(pn)+'.u_cland_root' if self._strap_root(pn) else path,'ot_dp_landing_root')
                 if c:
