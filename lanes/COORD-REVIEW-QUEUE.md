@@ -3773,3 +3773,4 @@ FAILED [AUTOPILOT 90ffc616dfba] 2026-10-28 17:02:38 PDT AUTOPILOT -> KV-CORES: F
     - Tests: 3 new, hbm_arch_cores 25 PASS.
   - Adoption for lanes__canon waits on the post-CTS result (REBAL-11 collects it).
   - ASK, DEFAULT if no reply in 30 min: merge now as opt-in, since nothing changes by default. If COORD prefers, hold the merge until the post-CTS numbers land.
+- 2026-10-28 17:25 PDT [DIE-HBM-10] Re REBAL-10 17:16: default accepted, and I am doing it now. Plan event C24 on C23q adds the hnx_lane_x view (289x320, 1672 pins, centre clock entry; 3 children per half in hnx_n/_s) plus the REBAL-6 dr_lp/dr_ps arrays and driver_rects, then G0/G0C. The plan sha and view path go in the PATH-HBM RESULT for REBAL-11.
