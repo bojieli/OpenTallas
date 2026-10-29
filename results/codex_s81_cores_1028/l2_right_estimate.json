@@ -1,0 +1,819 @@
+{
+  "scope": "ESTIMATE ONLY: exact core orientations respected; direct-net endpoints, no relay/cycle or G0 claim",
+  "old_outline": [
+    345.6,
+    43.2
+  ],
+  "new_outline": [
+    259.2,
+    43.2
+  ],
+  "old_origin": [
+    1019.52,
+    613.44
+  ],
+  "new_origin": [
+    1105.92,
+    613.44
+  ],
+  "old_fill": 0.1164,
+  "new_fill": 0.1552,
+  "face_density_per_um": {
+    "E": 0.16203703703703703,
+    "N": 5.4128086419753085,
+    "S": 6.689814814814815
+  },
+  "baseline": {
+    "d21": {
+      "ports": [
+        [
+          "u_l1",
+          "rn_i"
+        ],
+        [
+          "u_l2",
+          "rs_o"
+        ]
+      ],
+      "bits": 276,
+      "maximum_um": 282.54,
+      "over405": 0
+    },
+    "u12": {
+      "ports": [
+        [
+          "u_l1",
+          "rn_o"
+        ],
+        [
+          "u_l2",
+          "rs_i"
+        ]
+      ],
+      "bits": 276,
+      "maximum_um": 284.172,
+      "over405": 0
+    },
+    "dl_av": {
+      "ports": [
+        [
+          "u_l1",
+          "dl_av"
+        ],
+        [
+          "u_l2",
+          "dl_av"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 271.116,
+      "over405": 0
+    },
+    "dl_a": {
+      "ports": [
+        [
+          "u_l1",
+          "dl_a"
+        ],
+        [
+          "u_l2",
+          "dl_a"
+        ]
+      ],
+      "bits": 237,
+      "maximum_um": 271.02,
+      "over405": 0
+    },
+    "dl_bv": {
+      "ports": [
+        [
+          "u_l1",
+          "dl_bv"
+        ],
+        [
+          "u_l2",
+          "dl_bv"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 216.108,
+      "over405": 0
+    },
+    "dl_b": {
+      "ports": [
+        [
+          "u_l1",
+          "dl_b"
+        ],
+        [
+          "u_l2",
+          "dl_b"
+        ]
+      ],
+      "bits": 237,
+      "maximum_um": 278.796,
+      "over405": 0
+    },
+    "c21_v": {
+      "ports": [
+        [
+          "u_l1",
+          "cw_v"
+        ],
+        [
+          "u_l2",
+          "cws_v"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 264.588,
+      "over405": 0
+    },
+    "c21_a": {
+      "ports": [
+        [
+          "u_l1",
+          "cw_a"
+        ],
+        [
+          "u_l2",
+          "cws_a"
+        ]
+      ],
+      "bits": 8,
+      "maximum_um": 249.9,
+      "over405": 0
+    },
+    "c21_d": {
+      "ports": [
+        [
+          "u_l1",
+          "cw_d"
+        ],
+        [
+          "u_l2",
+          "cws_d"
+        ]
+      ],
+      "bits": 256,
+      "maximum_um": 265.356,
+      "over405": 0
+    },
+    "s21": {
+      "ports": [
+        [
+          "u_l1",
+          "sid_i"
+        ],
+        [
+          "u_l2",
+          "sids"
+        ]
+      ],
+      "bits": 4,
+      "maximum_um": 284.556,
+      "over405": 0
+    },
+    "r_v": {
+      "ports": [
+        [
+          "u_l1",
+          "ct_v"
+        ],
+        [
+          "u_l2",
+          "rct_v"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 248.748,
+      "over405": 0
+    },
+    "r_b": {
+      "ports": [
+        [
+          "u_l1",
+          "ct_b"
+        ],
+        [
+          "u_l2",
+          "rct_b"
+        ]
+      ],
+      "bits": 170,
+      "maximum_um": 259.404,
+      "over405": 0
+    },
+    "f1": {
+      "ports": [
+        [
+          "u_l1",
+          "fault"
+        ],
+        [
+          "u_l2",
+          "rf"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 216.204,
+      "over405": 0
+    },
+    "u20": {
+      "ports": [
+        [
+          "u_l0",
+          "rs_i"
+        ],
+        [
+          "u_l2",
+          "rn_o"
+        ]
+      ],
+      "bits": 276,
+      "maximum_um": 348.48,
+      "over405": 0
+    },
+    "d02": {
+      "ports": [
+        [
+          "u_l0",
+          "rs_o"
+        ],
+        [
+          "u_l2",
+          "rn_i"
+        ]
+      ],
+      "bits": 276,
+      "maximum_um": 335.616,
+      "over405": 0
+    },
+    "hp_av": {
+      "ports": [
+        [
+          "u_l0",
+          "hp_av"
+        ],
+        [
+          "u_l2",
+          "hp_av"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 332.887,
+      "over405": 0
+    },
+    "hp_a": {
+      "ports": [
+        [
+          "u_l0",
+          "hp_a"
+        ],
+        [
+          "u_l2",
+          "hp_a"
+        ]
+      ],
+      "bits": 204,
+      "maximum_um": 321.984,
+      "over405": 0
+    },
+    "hp_bv": {
+      "ports": [
+        [
+          "u_l0",
+          "hp_bv"
+        ],
+        [
+          "u_l2",
+          "hp_bv"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 306.72,
+      "over405": 0
+    },
+    "hp_b": {
+      "ports": [
+        [
+          "u_l0",
+          "hp_b"
+        ],
+        [
+          "u_l2",
+          "hp_b"
+        ]
+      ],
+      "bits": 204,
+      "maximum_um": 327.936,
+      "over405": 0
+    },
+    "c20_v": {
+      "ports": [
+        [
+          "u_l0",
+          "cw_v"
+        ],
+        [
+          "u_l2",
+          "cwn_v"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 287.136,
+      "over405": 0
+    },
+    "c20_a": {
+      "ports": [
+        [
+          "u_l0",
+          "cw_a"
+        ],
+        [
+          "u_l2",
+          "cwn_a"
+        ]
+      ],
+      "bits": 8,
+      "maximum_um": 311.136,
+      "over405": 0
+    },
+    "c20_d": {
+      "ports": [
+        [
+          "u_l0",
+          "cw_d"
+        ],
+        [
+          "u_l2",
+          "cwn_d"
+        ]
+      ],
+      "bits": 256,
+      "maximum_um": 317.76,
+      "over405": 0
+    },
+    "s20": {
+      "ports": [
+        [
+          "u_l0",
+          "sid_i"
+        ],
+        [
+          "u_l2",
+          "sidn"
+        ]
+      ],
+      "bits": 4,
+      "maximum_um": 331.488,
+      "over405": 0
+    },
+    "h0_v": {
+      "ports": [
+        [
+          "u_l0",
+          "hct_v"
+        ],
+        [
+          "u_l2",
+          "hct_v"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 305.76,
+      "over405": 0
+    },
+    "h0_b": {
+      "ports": [
+        [
+          "u_l0",
+          "hct_b"
+        ],
+        [
+          "u_l2",
+          "hct_b"
+        ]
+      ],
+      "bits": 170,
+      "maximum_um": 335.904,
+      "over405": 0
+    },
+    "f0": {
+      "ports": [
+        [
+          "u_l0",
+          "fault"
+        ],
+        [
+          "u_l2",
+          "hf"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 287.232,
+      "over405": 0
+    }
+  },
+  "candidate": {
+    "d21": {
+      "ports": [
+        [
+          "u_l1",
+          "rn_i"
+        ],
+        [
+          "u_l2",
+          "rs_o"
+        ]
+      ],
+      "bits": 276,
+      "maximum_um": 334.764,
+      "over405": 0
+    },
+    "u12": {
+      "ports": [
+        [
+          "u_l1",
+          "rn_o"
+        ],
+        [
+          "u_l2",
+          "rs_i"
+        ]
+      ],
+      "bits": 276,
+      "maximum_um": 343.212,
+      "over405": 0
+    },
+    "dl_av": {
+      "ports": [
+        [
+          "u_l1",
+          "dl_av"
+        ],
+        [
+          "u_l2",
+          "dl_av"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 317.244,
+      "over405": 0
+    },
+    "dl_a": {
+      "ports": [
+        [
+          "u_l1",
+          "dl_a"
+        ],
+        [
+          "u_l2",
+          "dl_a"
+        ]
+      ],
+      "bits": 237,
+      "maximum_um": 317.196,
+      "over405": 0
+    },
+    "dl_bv": {
+      "ports": [
+        [
+          "u_l1",
+          "dl_bv"
+        ],
+        [
+          "u_l2",
+          "dl_bv"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 238.284,
+      "over405": 0
+    },
+    "dl_b": {
+      "ports": [
+        [
+          "u_l1",
+          "dl_b"
+        ],
+        [
+          "u_l2",
+          "dl_b"
+        ]
+      ],
+      "bits": 237,
+      "maximum_um": 324.636,
+      "over405": 0
+    },
+    "c21_v": {
+      "ports": [
+        [
+          "u_l1",
+          "cw_v"
+        ],
+        [
+          "u_l2",
+          "cws_v"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 294.012,
+      "over405": 0
+    },
+    "c21_a": {
+      "ports": [
+        [
+          "u_l1",
+          "cw_a"
+        ],
+        [
+          "u_l2",
+          "cws_a"
+        ]
+      ],
+      "bits": 8,
+      "maximum_um": 302.988,
+      "over405": 0
+    },
+    "c21_d": {
+      "ports": [
+        [
+          "u_l1",
+          "cw_d"
+        ],
+        [
+          "u_l2",
+          "cws_d"
+        ]
+      ],
+      "bits": 256,
+      "maximum_um": 303.036,
+      "over405": 0
+    },
+    "s21": {
+      "ports": [
+        [
+          "u_l1",
+          "sid_i"
+        ],
+        [
+          "u_l2",
+          "sids"
+        ]
+      ],
+      "bits": 4,
+      "maximum_um": 343.404,
+      "over405": 0
+    },
+    "r_v": {
+      "ports": [
+        [
+          "u_l1",
+          "ct_v"
+        ],
+        [
+          "u_l2",
+          "rct_v"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 302.22,
+      "over405": 0
+    },
+    "r_b": {
+      "ports": [
+        [
+          "u_l1",
+          "ct_b"
+        ],
+        [
+          "u_l2",
+          "rct_b"
+        ]
+      ],
+      "bits": 170,
+      "maximum_um": 298.332,
+      "over405": 0
+    },
+    "f1": {
+      "ports": [
+        [
+          "u_l1",
+          "fault"
+        ],
+        [
+          "u_l2",
+          "rf"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 238.332,
+      "over405": 0
+    },
+    "u20": {
+      "ports": [
+        [
+          "u_l0",
+          "rs_i"
+        ],
+        [
+          "u_l2",
+          "rn_o"
+        ]
+      ],
+      "bits": 276,
+      "maximum_um": 295.44,
+      "over405": 0
+    },
+    "d02": {
+      "ports": [
+        [
+          "u_l0",
+          "rs_o"
+        ],
+        [
+          "u_l2",
+          "rn_i"
+        ]
+      ],
+      "bits": 276,
+      "maximum_um": 298.128,
+      "over405": 0
+    },
+    "hp_av": {
+      "ports": [
+        [
+          "u_l0",
+          "hp_av"
+        ],
+        [
+          "u_l2",
+          "hp_av"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 290.839,
+      "over405": 0
+    },
+    "hp_a": {
+      "ports": [
+        [
+          "u_l0",
+          "hp_a"
+        ],
+        [
+          "u_l2",
+          "hp_a"
+        ]
+      ],
+      "bits": 204,
+      "maximum_um": 280.224,
+      "over405": 0
+    },
+    "hp_bv": {
+      "ports": [
+        [
+          "u_l0",
+          "hp_bv"
+        ],
+        [
+          "u_l2",
+          "hp_bv"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 232.944,
+      "over405": 0
+    },
+    "hp_b": {
+      "ports": [
+        [
+          "u_l0",
+          "hp_b"
+        ],
+        [
+          "u_l2",
+          "hp_b"
+        ]
+      ],
+      "bits": 204,
+      "maximum_um": 285.984,
+      "over405": 0
+    },
+    "c20_v": {
+      "ports": [
+        [
+          "u_l0",
+          "cw_v"
+        ],
+        [
+          "u_l2",
+          "cwn_v"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 242.256,
+      "over405": 0
+    },
+    "c20_a": {
+      "ports": [
+        [
+          "u_l0",
+          "cw_a"
+        ],
+        [
+          "u_l2",
+          "cwn_a"
+        ]
+      ],
+      "bits": 8,
+      "maximum_um": 250.56,
+      "over405": 0
+    },
+    "c20_d": {
+      "ports": [
+        [
+          "u_l0",
+          "cw_d"
+        ],
+        [
+          "u_l2",
+          "cwn_d"
+        ]
+      ],
+      "bits": 256,
+      "maximum_um": 250.752,
+      "over405": 0
+    },
+    "s20": {
+      "ports": [
+        [
+          "u_l0",
+          "sid_i"
+        ],
+        [
+          "u_l2",
+          "sidn"
+        ]
+      ],
+      "bits": 4,
+      "maximum_um": 298.176,
+      "over405": 0
+    },
+    "h0_v": {
+      "ports": [
+        [
+          "u_l0",
+          "hct_v"
+        ],
+        [
+          "u_l2",
+          "hct_v"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 269.76,
+      "over405": 0
+    },
+    "h0_b": {
+      "ports": [
+        [
+          "u_l0",
+          "hct_b"
+        ],
+        [
+          "u_l2",
+          "hct_b"
+        ]
+      ],
+      "bits": 170,
+      "maximum_um": 269.76,
+      "over405": 0
+    },
+    "f0": {
+      "ports": [
+        [
+          "u_l0",
+          "fault"
+        ],
+        [
+          "u_l2",
+          "hf"
+        ]
+      ],
+      "bits": 1,
+      "maximum_um": 242.256,
+      "over405": 0
+    }
+  },
+  "unit_i0_existing_station_capture": {
+    "station_um": [
+      1440.08,
+      328.32
+    ],
+    "bits": 265,
+    "maximum_um": 401.246,
+    "over405": 0
+  }
+}

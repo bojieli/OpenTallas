@@ -32,7 +32,7 @@ def census(cs,ps):
   vals=[abs(a[0]-kb[b][0])+abs(a[1]-kb[b][1]) for b,a in ka.items() if b in kb]
   if vals:results[net]=dict(ports=e,bits=len(vals),maximum_um=round(max(vals),3),over405=sum(v>405 for v in vals))
  return results
-old=cores['u_l2'];new=copy.deepcopy(old);new['outline_um']=[259.2,43.2];new['origin_um'][0]+=43.2
+old=cores['u_l2'];new=copy.deepcopy(old);new['outline_um']=[259.2,43.2];new['origin_um'][0]+=86.4
 np=copy.deepcopy(pins['u_l2']);faces=collections.defaultdict(list)
 for p in np:
  x,y=p['x'],p['y'];f=min(dict(W=x,E=345.6-x,S=y,N=43.2-y),key=dict(W=x,E=345.6-x,S=y,N=43.2-y).get);faces[f].append(p)
@@ -45,6 +45,10 @@ for face,rows in faces.items():
   elif face=='E':p['x']=round(259.2-(345.6-p['x']),6)
 cs=copy.deepcopy(cores);ps=copy.deepcopy(pins);cs['u_l2']=new;ps['u_l2']=np
 report=dict(scope='ESTIMATE ONLY: exact core orientations respected; direct-net endpoints, no relay/cycle or G0 claim',old_outline=old['outline_um'],new_outline=new['outline_um'],old_origin=old['origin_um'],new_origin=new['origin_um'],old_fill=0.1164,new_fill=0.1164*345.6/259.2,face_density_per_um={f:len(v)/(259.2 if f in ('N','S') else 43.2) for f,v in faces.items()},baseline=census(cores,pins),candidate=census(cs,ps))
+station=next(x for x in type_['internal_stations'] if x.get('conn')=='bus:unit_i0')
+reg=station['regs_um'][0]
+legs=[abs(new['origin_um'][0]+p['x']-reg[0])+abs(new['origin_um'][1]+p['y']-reg[1]) for p in np if re.match(r'^cw_(?:d|a|v)(?:\[|$)',p['name'])]
+report['unit_i0_existing_station_capture']=dict(station_um=reg,bits=len(legs),maximum_um=round(max(legs),3),over405=sum(v>405 for v in legs))
 json.dump(report,open(out/'l2_estimate.json','w'),indent=2);json.dump(dict(core=new,pins=np),open(out/'l2_candidate.json','w'),indent=2)
 print(json.dumps({k:v for k,v in report.items() if k not in ('baseline','candidate')},indent=2))
 for net,b in report['baseline'].items():

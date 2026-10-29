@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.master_plan_slice.v1",
+  "kind": "core",
+  "die": "s81",
+  "type": "dsdv_gunit_l2",
+  "module": "dsdv_gunit_l2",
+  "master_plan_sha256": "7ea07745aa46fff409317b3ab8a0d19c0db96875b789ae957b2d55463d7c8528",
+  "frozen": false,
+  "outline_um": [
+    259.2,
+    43.2
+  ],
+  "instances": [],
+  "keepouts": [],
+  "bays": [],
+  "entry_pins": [
+    {
+      "name": "core_clock",
+      "pin": "clk",
+      "layer": "M5",
+      "xy_um": [
+        129.612,
+        21.6
+      ]
+    }
+  ],
+  "islands": [],
+  "latency": {
+    "common_clock_latency_ps": {
+      "TT": 250.0,
+      "FF": 202.5
+    },
+    "tol_ps": 40
+  },
+  "core_clock_port": "clk",
+  "gates": {
+    "geometry": "PASS",
+    "tree": "NOT RUN"
+  },
+  "note": "Placement census only; new lot and full-face pins. No old clock tree/timing view. Shared family planner regenerates structure from current sink census before CTS."
+}
