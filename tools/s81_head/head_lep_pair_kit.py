@@ -152,7 +152,11 @@ def build_inputs(plan_f, work):
                                for c in srams])
     mf = work / "lep_pair_macros.json"
     mf.write_text(json.dumps(mp, indent=1) + "\n")
-    rec = {MODULE: dict(top=MODULE, files=FILES, defines=list(DEFINES), params=dict(CHB="1'b1"),
+    # CHB = 1'b1 is the RTL default (the plan delta's params); no top-param override: the LEC gold frontend (slang)
+    # refuses the sized-literal override "CHB=1'b1" (first lep_pair diag run: LEC UNPROVEN, elaboration failed)
+    if not re.search(r"parameter\s*\[0:0\]\s*CHB\s*=\s*1'b1", (ROOT / SV).read_text()):
+        raise SystemExit("ot_s81hd_lep_pair CHB default is no longer 1'b1: set the parameter explicitly")
+    rec = {MODULE: dict(top=MODULE, files=FILES, defines=list(DEFINES), params={},
                         macros=sorted({c["module"] for c in srams}),
                         source="HEAD-KITS-3 head_lep_pair_kit.py: ot_s81hd_lep_pair (DIE-HEAD-9 LEP split child)")}
     return vf, mf, rec, clk, len(srams)
