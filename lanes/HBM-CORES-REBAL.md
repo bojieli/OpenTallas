@@ -86,3 +86,11 @@
   - Fix (opt-in): RTL (* keep *) on g_wcopy regs (yosys+ORFS hook: 270 = 6x(3+42) DFF vs 60; WCOPY=0 RTLIL identical modulo src line names, CHECKED). gen_core_kit_hbm.py --macro-reg-guide g_wcopy (GPL guide per SRAM = bbox+15 um, disjoint by mid-gap cuts) + --relay-reg-guide FILE (relay box at the plan point minimising the longer hop); macro_reg_guide(_release).tcl = PATH-KV-ASTK2 zone_fence form, released before DPL, fail-closed capacity. Flag off = kit byte-identical to REBAL-9 _m5w1g except the RTL copy (diff -r, CHECKED). Tests 3 new + hbm_arch_cores 25 PASS.
   - Estimate (UNCHECKED, 1.0-1.15 ps/um + 151 ps hop overhead): copy->own SRAM <=~140 um (>= +300 ps); relay->copies 370-538 um (+63..+310; bank2 538 = sink minimax bound); bank3 write_v pin (SW corner) -> w_pin 575 um (+21..+107, thinnest; pin plan item). Without relays (REBAL-9 form) 791-911 um: negative.
   - Builds RUNNING intel2 ot-run (GOAL cts, --mem 32): _c20ek2m_m5w1gr (keep+copy+relay guides, candidate) and _c20ek2m_m5w1gk (keep+copy guides, A/B arm), both KIT_PREFLIGHT PASS 0. Chains chain_r10.sh collect 3_place (ideal TT STA + render) and 4_cts (propagated TT STA + render). COLLECT intel2:/srv/opentallas-scratch2/claude/hbm-cores-rebal-10/post_{gr,gk}/{status,sta_3_place.log,sta_4_cts.log,3_place.png,4_cts.png}. ETA 3_place ~19:20 (synth + 66-min LEC first), 4_cts ~20:30.
+- 2026-10-28 17:25 PDT PARKED [HBM-CORES-REBAL-10] claude/hbm-cores-rebal-10-1028@5a0f726f94. Synth CHECKED on both kits: 1008 copy flops, 42 under each of the 24 columns (REBAL-9 had 168). Runs are in LEC (~66 min), then place and CTS. ETA 3_place ~19:20, 4_cts ~20:30. They outlast this lane, so I park here.
+  - SUCCESSOR (REBAL-11) steps, also in results/hbm_cores_rebal_10_1028/README.md §5:
+    1. Read intel2:/srv/opentallas-scratch2/claude/hbm-cores-rebal-10/post_gr/status and VIEW 3_place.png / 4_cts.png.
+    2. Post a GEOM REQ.
+    3. Compare sta_4_cts.log HOP/CLS with gk and with REBAL-9 (-124.3/903).
+    4. Enqueue the finish with enqueue.py --goal finish --mode trial, after the hand run ends.
+    5. Sign off with signoff.py + routed LEC, then run export_view.py.
+  - Chains chain_r10.sh run nohup on intel2 and stop on their own when the ot-run pid exits: gk ot-run pid 1678896, gr ot-run pid 1833999.
