@@ -23,3 +23,15 @@ LEP    head_lep_hk5_kit.py: first hd_lep0N kit (365,496 cells) on the hk5 HEAD-S
        gen rc 0, 44 strap pins, 7 private raw exports; V1/V2 PLACE stop at KIT_PREFLIGHT module_closure:
        ot_s81hd_lep_pair (5 hard instances) has NO view (CLOSURE HEAD-013 'core kit missing').  Parent placement needs
        the lep_pair child view first.
+
+RESULT Thu Oct 29 04:22:53 PM PDT 2026 (AUTO-GEOM geom_check.sh on V1 3_place, render viewed):
+  V1 (density .35): r2r 755.2/55 -> 530.0/2 (the 2 left = core-internal g_sk[6] line chain in the eA2/eA3-eB channel;
+     class A and class B status captures all gone), pin_reg_max 376.5 -> 301.6, clock_reach 849.8 -> 850.1 (unchanged,
+     needs the 12-16 pre-placed entries), channel_h 1.336 -> 1.38, GRT ov 0; NEW FAIL pin_reg_p90 79.5 -> 238.2 and
+     relay_collapse 8 (u_cland_i ring dsel -> core ad1).  ROOT CAUSE (CHECKED in the kit): landing_placement.tcl
+     places the ring FIRM slots bit-major from the band corner and ignores the bus order, so with lsb_high the W i
+     pins are mirrored but their ring slots are not (worst i[565] pin y 709 vs its slot at the band top: 301.6).
+     Fix = ring slot fill follows the bus order (shared gen_phys landing placement, opt-in by order, byte-identical
+     for lsb_low) -> next lane.  (CHECKED numbers from auto_geom_v1.json.)
+  V2 (40 % channel blockage): DPL-0033 'Placed in rows check failed (4485)' (xo_q bank cells; same class as the
+     die-head-30 V2 DPL FAIL) -> no 3_place.odb; run data deleted.
