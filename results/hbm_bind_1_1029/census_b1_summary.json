@@ -1,0 +1,163 @@
+{
+ "total": 5572,
+ "groups": {
+  "sfucore_NE.u_core": {
+   "cells": 1204,
+   "seq": 36,
+   "qbits": 11374,
+   "mods": {
+    "$logic_and": 416,
+    "$mux": 293,
+    "$logic_not": 137,
+    "$reduce_or": 83,
+    "$logic_or": 72,
+    "$ne": 70,
+    "$reduce_bool": 66,
+    "$dff": 21
+   }
+  },
+  "sfucore_NW.u_core": {
+   "cells": 1204,
+   "seq": 36,
+   "qbits": 11374,
+   "mods": {
+    "$logic_and": 416,
+    "$mux": 293,
+    "$logic_not": 137,
+    "$reduce_or": 83,
+    "$logic_or": 72,
+    "$ne": 70,
+    "$reduce_bool": 66,
+    "$dff": 21
+   }
+  },
+  "hb_idx__s_NE.scorer": {
+   "cells": 785,
+   "seq": 389,
+   "qbits": 83510,
+   "mods": {
+    "$dff": 349,
+    "$add": 104,
+    "$mux": 59,
+    "$not": 37,
+    "$adff": 37,
+    "$logic_not": 35,
+    "$logic_and": 26,
+    "$eq": 24
+   }
+  },
+  "hb_idx__s_NW.scorer": {
+   "cells": 785,
+   "seq": 389,
+   "qbits": 83510,
+   "mods": {
+    "$dff": 349,
+    "$add": 104,
+    "$mux": 59,
+    "$not": 37,
+    "$adff": 37,
+    "$logic_not": 35,
+    "$logic_and": 26,
+    "$eq": 24
+   }
+  },
+  "hb_idx__s_SE.scorer": {
+   "cells": 785,
+   "seq": 389,
+   "qbits": 83510,
+   "mods": {
+    "$dff": 349,
+    "$add": 104,
+    "$mux": 59,
+    "$not": 37,
+    "$adff": 37,
+    "$logic_not": 35,
+    "$logic_and": 26,
+    "$eq": 24
+   }
+  },
+  "hb_idx__s_SW.scorer": {
+   "cells": 785,
+   "seq": 389,
+   "qbits": 83510,
+   "mods": {
+    "$dff": 349,
+    "$add": 104,
+    "$mux": 59,
+    "$not": 37,
+    "$adff": 37,
+    "$logic_not": 35,
+    "$logic_and": 26,
+    "$eq": 24
+   }
+  },
+  "hb_idx__s_NE.keybuf": {
+   "cells": 5,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "$add": 4,
+    "$reduce_or": 1
+   }
+  },
+  "hb_idx__s_NW.keybuf": {
+   "cells": 5,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "$add": 4,
+    "$reduce_or": 1
+   }
+  },
+  "hb_idx__s_SE.keybuf": {
+   "cells": 5,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "$add": 4,
+    "$reduce_or": 1
+   }
+  },
+  "hb_idx__s_SW.keybuf": {
+   "cells": 5,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "$add": 4,
+    "$reduce_or": 1
+   }
+  },
+  "hb_idx__s_NE.$or$ot_hnx_idxn_quarter_with_keybuf_sliced": {
+   "cells": 1,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "$or": 1
+   }
+  },
+  "hb_idx__s_NW.$or$ot_hnx_idxn_quarter_with_keybuf_sliced": {
+   "cells": 1,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "$or": 1
+   }
+  },
+  "hb_idx__s_SE.$or$ot_hnx_idxn_quarter_with_keybuf_sliced": {
+   "cells": 1,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "$or": 1
+   }
+  },
+  "hb_idx__s_SW.$or$ot_hnx_idxn_quarter_with_keybuf_sliced": {
+   "cells": 1,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "$or": 1
+   }
+  }
+ }
+}

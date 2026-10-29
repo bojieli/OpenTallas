@@ -1,0 +1,7 @@
+n_errors 372 unmapped 0 tied_by_port 27
+170 UNPLANNED | UNPLANNED NE_b000 -> NE_b010: 4474 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+120 TIED ra | TIED sfucore_NE.u_core.u_engine.u_memory.u_store.u_output.ra[0] = 0 (literal)
+48 TIED strap_lane_id | TIED hb_idx__s_NE.keybuf.gp[0].u_line.strap_lane_id[0] = 0 ($add(hb_idx__s_NE.keybuf.$add$ot_hnx_idxn_keybuf_sliced_np4.sv:25$5075))
+32 TIED rst_n | TIED hb_idx__s_NE.scorer.ge[0].gc[0].leaf.core.u_qlate.rst_n[0] = 1 (literal)
+1 EMIT | EMIT wavefront core reset q_b000/u_hcb_Q0.ot_hbm_hc_bank128_pair0.rst_n: expected one bound leaf, found 0 (partition NE_b000 root ; e.g. )
+1 TIED_TOTAL | TIED_TOTAL 2128 tied bits on 68 leaf pins in 27 (type.port <- source) classes (TIED lines capped at 200; full list bind_tied.json)
