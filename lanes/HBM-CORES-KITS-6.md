@@ -96,3 +96,6 @@ CODEX 2026-10-29 02:12 PDT reset park: GQ SRCOUT/results codex/hbm-gq-stage-1029
 
 ## 2026-10-29 02:17 PDT HBM-CORES-KITS-7 START
 Adopted 4 live Codex jobs (qcore M7 GRT epyc2 326967, ring GRT epyc2 527454, selector GEN intel2 1020446, TOPK LEC64 intel1 836779). Lane file = this file (successor section).
+
+## 2026-10-29 05:17 PDT HBM-CORES-KITS-9 (+REBAL-15) START
+- 2026-10-29 05:17 PDT START [HBM-CORES-KITS-9 +REBAL-15] adopted (no kills/no duplicates): selector procsplit SYNTH+LEC intel2 unit409934 (still RTL_LINT yosys 36 min 99.9% CPU 1.35 GB, run_synth.log empty); TOPK intel1 PLACE 2431858 + ONECLK SYNTH/LEC 2807792 (both synth PASS, LEC correspondence active) + old LEC64 836779 (5 h); RING post 2936780 TERMINAL exit1 (TT -24.125/2, FF -8.506/16, slew 1752) -> root cause/data fix is mine; qcore M7 GRT TERMINAL GRT-0116 (Codex collected). REBAL: HNX restore35 unit666544 TERMINAL DONE (TT +18.89 / FF +0.0015, CLK_GEOM_DIFF 1979 nets changed 0, PG open 0) -> I am checking final clock vs clock_pre + reach; native HN pair proof intel1 MUT=0 PASS 12796 compares, MUT=1 verilating (live).
