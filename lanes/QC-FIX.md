@@ -12,3 +12,6 @@
 
 ## CODEX notes 2026-10-29 08:27 PDT
 CODEX took over BTAB F3b/F3r collection and follow-through on codex/qc-fix-0825 (base claude/qc-fix-2-1029 c45ab5e297; announced qc-fix-3 ref is unpublished). Both inherited intel1 ot-run units1217062/1270172 remain live in GRT, no duplicate physical runs. F2 retained NOT SIGNED FF-1.68/1, DRC1, slew88/45; actual causes write/SRAM split clock and long south-input-to-anchored-write-data nets. F3r read-only anchors address the data geometry; collect both before next structural repair. Flow agent owns missing spice_cell masters.
+
+## PARKED 2026-10-29 09:05 PDT
+Explicit Claude reset: codex/qc-fix-0825@3ee1f7f9d pushed, no further engineering. Inherited intel1 F3b1217062/F3r1270172 routes remain live; collect run_route.log/final current signoff and routedLEC. Full packet handoff/codex_qc_20261029_0903.md.
