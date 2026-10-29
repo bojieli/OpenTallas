@@ -105,6 +105,64 @@ class LintSources:
         self.wide = E.module_index([str(rtl_all)], [], base) if rtl_all.is_dir() else {}
         self.roots = list(ab0.get("rtl_roots", ["rtl"])) or ["rtl"]
         self.ambiguous = {}
+        # caches (one closure per partition module: ~360 on S81): stripped text, module bodies, prefer-file definitions
+        self._txt, self._body, self._pdefs, self._uses, self._pdir = {}, {}, {}, {}, {}
+        for q in self.prefer:
+            if Path(q).is_file():
+                self._pdefs[q] = {m.group(1) for m in E.MOD_RE.finditer(self.text(q))}
+
+    def text(self, f):
+        if f not in self._txt:
+            self._txt[f] = E._strip(Path(f).read_text(errors="replace"))
+        return self._txt[f]
+
+    def body(self, f, n):
+        """E.module_body on the cached stripped text"""
+        k = (f, n)
+        if k not in self._body:
+            m = re.search(r"^\s*(?:\(\*[^\n]*?\*\)\s*)?module\s+" + re.escape(n) + r"\b(.*?)\bendmodule\b", self.text(f),
+                          re.S | re.M)
+            self._body[k] = m.group(1) if m else ""
+        return self._body[k]
+
+    def _prefer_for(self, n):
+        """the prefer entries E.pick can use for n (same order): directories, and files that define n"""
+        return [q for q in self.prefer if q not in self._pdefs and not Path(q).is_file() or n in self._pdefs.get(q, ())]
+
+    def packages(self, files):
+        """bind.kit_packages with cached reads: the packages the files reference (pkg::), transitively, users last;
+        a package beside its users first, else the RTL roots."""
+        import bind as B
+
+        def uses(f):
+            if f not in self._uses:
+                self._uses[f] = sorted(set(B.PKG_USE.findall(self.text(f))))
+            return self._uses[f]
+
+        def pdir(d):
+            if d not in self._pdir:
+                self._pdir[d] = B._pkg_index([d], self.base, recurse=False)
+            return self._pdir[d]
+        pidx = {}
+        for d in sorted({str(Path(f).resolve().parent) for f in files}, reverse=True):
+            pidx.update(pdir(d))
+        want = {u for f in files for u in uses(f) if "pkg" in u.lower()}
+        if want - set(pidx):
+            key = (tuple(self.roots), str(self.base))
+            if key not in B._PKG_CACHE:
+                B._PKG_CACHE[key] = B._pkg_index(self.roots, self.base)
+            pidx = {**B._PKG_CACHE[key], **pidx}
+        order, seen = [], set()
+
+        def need(f):
+            for u in uses(f):
+                if u in pidx and u not in seen:
+                    seen.add(u)
+                    need(pidx[u])
+                    order.append(str(Path(pidx[u])))
+        for f in files:
+            need(f)
+        return order
 
     def _cands(self, n):
         if n in self.idx:
@@ -119,7 +177,6 @@ class LintSources:
 
     def closure(self, names):
         """E.closure over this index: -> (files incl. their packages first, missing)."""
-        import bind as B
         known = set(self.idx) | set(self.wide)
         seen, files, missing = set(), [], set()
         todo = list(names)
@@ -128,7 +185,7 @@ class LintSources:
             if n in seen:
                 continue
             seen.add(n)
-            f, _ = E.pick({n: self._cands(n)}, n, self.prefer)
+            f, _ = E.pick({n: self._cands(n)}, n, self._prefer_for(n))
             if f is None:
                 missing.add(n)
                 continue
@@ -138,13 +195,13 @@ class LintSources:
                 continue
             if f not in files:
                 files.append(f)
-                txt = E._strip(Path(f).read_text(errors="replace"))
+                txt = self.text(f)
                 for m in E.MOD_RE.finditer(txt):
-                    todo += sorted(E.instantiated(E.module_body(f, m.group(1)), known))
+                    todo += sorted(E.instantiated(self.body(f, m.group(1)), known))
                 for d in DEFINE_RE.finditer(txt):          # a macro body names its module bare: `define ROM ot_rom_x
                     todo += sorted({w for w in re.findall(r"[A-Za-z_]\w*", d.group(1)) if w in known})
-            todo += sorted(E.instantiated(E.module_body(f, n), known))
-        pkgs = [str(p) for p in B.kit_packages(files, self.roots, self.base)]
+            todo += sorted(E.instantiated(self.body(f, n), known))
+        pkgs = self.packages(files)
         return [p for p in pkgs if p not in files] + files, sorted(missing)
 
 
