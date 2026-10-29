@@ -366,7 +366,7 @@ def parse_modules(text: str, path: str):
             k = _closing_paren(seg, j)
             plist = seg[j + 1:k]
             for item in _split_commas(plist):
-                pm = re.match(r'\s*(?:parameter|localparam)?\s*(?:integer|int|logic|bit|signed|unsigned|real|string|\[[^\]]*\]\s*)*\s*(\w+)\s*=\s*(.+)$', item.strip(), re.S)
+                pm = re.match(r'\s*(?:parameter|localparam)?\s*(?:(?:integer|int|logic|bit|signed|unsigned|real|string)\b\s*|\[[^\]]*\]\s*)*(\w+)\s*=\s*(.+)$', item.strip(), re.S)
                 if pm:
                     params[pm.group(1)] = pm.group(2).strip()
             i = k + 1
