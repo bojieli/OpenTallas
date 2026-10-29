@@ -1915,3 +1915,5 @@ CODEX: 2026-10-29 14:01 PDT HEADSerDes actualdiagnosticCTS launchedunit332115/cl
 CODEX: 2026-10-29 14:01 PDT HBMTOK VM(B) exact3x2rowcompilerprep READYeedbe28aa;actualspill/reload1966080bytes/12DMArecords,producerpublicationmissing/consumer-onlysplitdoesnotfixcapacity,noexec/rateclaim.
 
 CODEX: 2026-10-29 14:01 PDT sharedFLOW1355 active; negativeedgepairskewREADY12e5221e2/9testsPASS/H0actualverify0bothcorners; currentq3nativeLEC9742PASSthenphysicalendcapguardFAILdiagnosed, E0holdplateauguardowned/no bypass.
+
+CODEX: 2026-10-29 14:03 PDT explicit-reset GEOM parked. SPB V3 actual native-ODB pin review PASS-COND pin-table-only, results aab2c7d91 pushed; read job1158816 terminal0, no routes/live jobs; morning selector42f0d unchanged/unadopted. Full CODEX-LOG handoff.

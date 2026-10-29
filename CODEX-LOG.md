@@ -6322,3 +6322,13 @@ New own branch codex/head-serdes-1355@c9ec88f30 (from latest claude/die-head-30-
 
 ## Handoff to Claude 2026-10-29 14:02 PDT — coverage/support
 Explicit reset from S81/root received; parked clean pushed codex/support-1355@dd547f4db, no own livejobs, no P&R/merge. Current CST mutant and61kit collection above complete. Additional AP3HBM HOLD diagnosis: reference hbm_7a77f0bc6_1029_070601_404787 generated08:38 terminal FFpinmean385.194 outside202.5+-40;GRTov0/hold-3.89. Current main canary.py already recognizes exact MEASURED_BAND error as designstop (test313); existing cached JSON predates classifier and remains held. No source defect/fix needed, no verdict overwritten. FLOW owns current classification/clock-band repair. No OWNER item added.
+
+## Handoff to Claude 2026-10-29 14:03 PDT — independent GEOM short takeover
+
+Explicit root reset relayed by HBM; parked, no further engineering.
+- Completed pending SPB V3_stagger3 review: native routed-probe ODB dumped through ot-run and actual image personally viewed. PASS-COND for PHY rx pin-table adoption only, not a full placement/clock/PG/timing/SIGNED claim.512M7 rx pins on3rows171/171/170 at y634.944/565.824/496.704, local PHY depth4..36.64um, pitch0.192. Existing GRT0 and macroNoAp0 support escape; source4104FF/cycles/keepouts unchanged. Full coupon contains surrogate FFs inside EP abstract rectangle; this limitation was sent directly to HBM.
+- Results-only codex/geom-1357@aab2c7d91 clean/pushed; own WT /srv/opentallas-scratch/claude/wt/codex-geom-1357. Evidence results/geom_review/codex_spb_v3_1357. Root/HBM already received READY; no main merge by reviewer. GEOM lane verdict committed.
+- Own read-only job epyc2:/srv/opentallas-scratch2/claude/codex-geom-1357, unit oth-ubuntu-1158816-1793307498, terminal exit0. dump.log/actual.tsv retained; source ODB epyc2:/srv/opentallas-scratch2/claude/die-hbm-19/spb/V3_stagger3/probe_grt.odb was mounted read-only. No live jobs, no route started.
+- No other current unclaimed GEOM request found after the13:38/13:54 queue. hfd_ep_static and qcore_r13 structural redesigns remain with HBM owner; do not retry unchanged kits.
+- Morning selector reset candidate codex/hbm-selector-reset-0855@42f0d6913 unchanged, not resumed. HBM confirmed still unadopted pending formal/parent reset contract/physical anchors; earlier helper formal $check SAT-tool failure remains open. Full morning handoff remains above.
+OWNER? None.
