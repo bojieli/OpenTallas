@@ -12,7 +12,7 @@ import re, math, hashlib
 ROOT=Path(__file__).resolve().parents[2]
 D=ROOT/'rtl/qwen_sys/d2d_static_20261015'
 
-FROZEN_PRIMITIVES = {'qkd_d2d_cal_seq_bootcfg.sv': '9c43fc17792f780f3b53d635437ed9a6da37737480e480a2ce95b122c4960ae4', 'ot_qwen_d2d_cal_seq.sv': '5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688', 'ot_qwen_d2d_cal_seq_dies_mu.sv': '5ed298078d7e2592628e0d70b64129254731664a3601b13efb6a8af2d0bd68a1', 'd2d_cal_image_mu.svh': 'e7d4d2d0f111661d72c5fd96864a18cbba580f5f9b103233f505d7f298dcb3ae'}
+FROZEN_PRIMITIVES = {'qkd_d2d_cal_seq_bootcfg.sv': 'cd8613ecfb0327fe1537c819bfcfcc3c867e235901ab4fd0f3609640c69a2310', 'ot_qwen_d2d_cal_seq.sv': '5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688', 'ot_qwen_d2d_cal_seq_dies_mu.sv': '5ed298078d7e2592628e0d70b64129254731664a3601b13efb6a8af2d0bd68a1', 'd2d_cal_image_mu.svh': 'e7d4d2d0f111661d72c5fd96864a18cbba580f5f9b103233f505d7f298dcb3ae'}
 for name,expected in FROZEN_PRIMITIVES.items():
     actual=hashlib.sha256((D/name).read_bytes()).hexdigest()
     if actual != expected:

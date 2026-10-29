@@ -6,7 +6,8 @@
 #   layout as kv_static_programme.link_cfg_words on the MU calendar compile (KV-LINKCFG-MU makes target 11 compile it);
 #   with CAL=<calendar dir> the script also requires link_cfg_words(CAL) == these words.
 #   MUT 0 must PASS (DCALBC_PASS); 1 sequencer writes dropped, 2 stale image, 3 collision, 4 boot write while running,
-#   5 boot RX base masked: must FAIL (DCALBC_FAIL).  Verilator 5.050 (the closure daemon's), VERILATOR overrides.
+#   5 boot RX base masked: must FAIL (DCALBC_FAIL).  RELOAD=1 (env): a reload between target 11 and target 0 (the die's
+#   boot order, TOK-KV-2 10-29); same expectations.  Verilator 5.050 (the closure daemon's), VERILATOR overrides.
 set -uo pipefail
 O=$(realpath -m "$1"); MUT=${2:-0}; mkdir -p "$O"
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
@@ -35,7 +36,7 @@ sha256sum $D/qkd_d2d_cal_seq_bootcfg.sv $D/qkd_d2d_cal_seq_pin.sv $D/ot_qwen_d2d
   $D/d2d_cal_image_mu.svh $D/d2d_cal_image.svh $D/ot_qwen_d2d_static.sv $S/qkd_static_kv_boot_dispatch.sv \
   rtl/test/qwen_static_kv/tb_kv_dcal_bootcfg.sv > "$O/source.sha256"
 "$VL" --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-VARHIDDEN \
-  -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-BLKSEQ -Wno-INITIALDLY -j 4 -I$D --top-module tb_kv_dcal_bootcfg -GMUT=$MUT \
+  -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-BLKSEQ -Wno-INITIALDLY -j 4 -I$D --top-module tb_kv_dcal_bootcfg -GMUT=$MUT -GRELOAD=${RELOAD:-0} \
   --Mdir "$O/obj" $S/qkd_static_kv_boot_dispatch.sv $D/ot_qwen_d2d_cal_seq.sv $D/ot_qwen_d2d_cal_seq_dies_mu.sv \
   $D/qkd_d2d_cal_seq_pin.sv $D/qkd_d2d_cal_seq_bootcfg.sv $D/ot_qwen_d2d_static.sv rtl/test/qwen_static_kv/tb_kv_dcal_bootcfg.sv \
   > "$O/build.log" 2>&1 || { tail -30 "$O/build.log"; echo "DCALBC_FAIL build"; exit 1; }

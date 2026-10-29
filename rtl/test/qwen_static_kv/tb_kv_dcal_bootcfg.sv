@@ -12,7 +12,10 @@
 // 2 boot image = the production (non-MU) image (stale SEG2 8 vs the tile's 9), 3 a boot write on the sequencer's epoch-2
 // base-restore edge (collision), 4 a boot write during the token programme, 5 the boot RX base word masked (admission
 // before the boot RX base).
-module tb_kv_dcal_bootcfg #(parameter integer MUT = 0);
+// RELOAD 1 (TOK-KV-2 10-29): the die's boot order -- a reload (the HOST program_begin_v = BEGIN of the ISA target 0) after
+// target 11, before target 0 -- on both tiles; MUT 0 must still PASS (the reload keeps the boot base-word record; it
+// never rewrites the link tables), MUT 5 must still FAIL (EARLY: the RX base never arrived since reset).
+module tb_kv_dcal_bootcfg #(parameter integer MUT = 0, parameter integer RELOAD = 0);
  `include "d2d_cal_image_mu.svh"
  reg ck = 0; always #5 ck = ~ck;
  reg rst_n = 0;
@@ -37,14 +40,14 @@ module tb_kv_dcal_bootcfg #(parameter integer MUT = 0);
  wire btx = ltx || inj, brx = lrx && !(MUT == 5 && laddr == 6'b100000);
  wire [5:0] baddr = inj ? 6'b100000 : laddr;
  wire [31:0] bdata = inj ? D2D_CAL_K_TX_SEG2 : ldata;
- reg epoch_go = 0;
+ reg epoch_go = 0, rld = 0;
  wire dtx, drx, d_cs, d_seg, d_rdy, d_run, d_adm, d_tok, d_fault; wire [5:0] daddr, d_layer; wire [31:0] ddata;
- qkd_d2d_cal_seq_pin_bc #(.EP_SKEW(3), .MUT(MUT == 1 ? 1 : 0)) dut (.ck(ck), .rst_n(rst_n), .reload(1'b0),
+ qkd_d2d_cal_seq_pin_bc #(.EP_SKEW(3), .MUT(MUT == 1 ? 1 : 0)) dut (.ck(ck), .rst_n(rst_n), .reload(rld),
   .epoch_go(epoch_go), .halt(1'b0), .bcfg_tx_we(btx), .bcfg_rx_we(brx), .bcfg_addr(baddr), .bcfg_data(bdata),
   .cfg_tx_we(dtx), .cfg_rx_we(drx), .cfg_addr(daddr), .cfg_data(ddata), .cal_start(d_cs), .cal_seg(d_seg),
   .cal_ready(d_rdy), .running(d_run), .layer(d_layer), .adm_done(d_adm), .tok_start(d_tok), .fault(d_fault));
  wire rtx, rrx, r_cs, r_seg, r_rdy, r_run, r_adm, r_tok, r_fault; wire [5:0] raddr, r_layer; wire [31:0] rdata;
- qkd_d2d_cal_seq_pin #(.EP_SKEW(3)) ref_seq (.ck(ck), .rst_n(rst_n), .reload(1'b0), .epoch_go(epoch_go), .halt(1'b0),
+ qkd_d2d_cal_seq_pin #(.EP_SKEW(3)) ref_seq (.ck(ck), .rst_n(rst_n), .reload(rld), .epoch_go(epoch_go), .halt(1'b0),
   .cfg_tx_we(rtx), .cfg_rx_we(rrx), .cfg_addr(raddr), .cfg_data(rdata), .cal_start(r_cs), .cal_seg(r_seg),
   .cal_ready(r_rdy), .running(r_run), .layer(r_layer), .adm_done(r_adm), .tok_start(r_tok), .fault(r_fault));
  // ---- two real calendar pairs: A = DUT, B = reference
@@ -116,6 +119,7 @@ module tb_kv_dcal_bootcfg #(parameter integer MUT = 0);
   end
   for (a = 0; a < 66; a = a + 1) word(11, a, img[a]);
   image_done(11);
+  if (RELOAD != 0) begin rld = 1; tick(); rld = 0; repeat (120) tick(); end
   target = 0; tick(); ready = 1; digest = 64'h0fedcba987654321; configured = 7; applied = {160{1'b1}}; tick(); tick(); tick();
   if (!setup || dfault) begin $display("BAD dispatcher setup_ready %0d fault %0d code %h", setup, dfault, code); errors = errors + 1; end
   if (ndw != 66) begin $display("BAD tile forwarded %0d boot writes (66 expected)", ndw); errors = errors + 1; end
@@ -155,8 +159,8 @@ module tb_kv_dcal_bootcfg #(parameter integer MUT = 0);
    errors = errors + 1;
   end
   if (errors) begin $display("FAIL kv_dcal_bootcfg mut%0d errors%0d", MUT, errors); $fatal(1); end
-  $display("PASS kv_dcal_bootcfg mut%0d bootwrites66 admissions%0d tokens%0d layers%0d events%0d adm_ev%0d tok_ev%0d runtime_writes%0d",
-   MUT, nadm, ntok, nlay, evs, evadm, evtok, nsw);
+  $display("PASS kv_dcal_bootcfg mut%0d reload%0d bootwrites66 admissions%0d tokens%0d layers%0d events%0d adm_ev%0d tok_ev%0d runtime_writes%0d",
+   MUT, RELOAD, nadm, ntok, nlay, evs, evadm, evtok, nsw);
   $finish;
  end
 endmodule

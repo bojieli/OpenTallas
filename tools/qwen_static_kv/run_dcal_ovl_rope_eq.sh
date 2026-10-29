@@ -9,6 +9,21 @@ OLD=015489b01
 mkdir -p "$OUT"
 git show "$OLD:$D/qkd_d2d_cal_seq_ovl_rope.sv" | sed -n '/^module qkd_d2d_cal_seq_ovl_rope_bc_core/,/^endmodule/p' \
   | sed 's/^module qkd_d2d_cal_seq_ovl_rope_bc_core /module qkd_d2d_cal_seq_ovl_rope_bc_core_old /' > "$OUT/old_core.sv"
+# TOK-KV-DCAL-1 10-29: the reference takes the same intended change as the rope core (a reload keeps the boot base-word
+# record btx/brx_seen; only reset clears it).  OLD_RELOAD_CLEAR=1 keeps the 015489b01 clear: the lockstep must then FAIL
+# (f_early differs after a reload between the base words and a cal_start), which shows the bench sees the change.
+if [ "${OLD_RELOAD_CLEAR:-0}" != 1 ]; then
+python3 - "$OUT/old_core.sv" <<'PY'
+import sys
+from pathlib import Path
+p = Path(sys.argv[1]); s = p.read_text()
+old = ("            if (reload_q) begin btx_seen <= 1'b0; brx_seen <= 1'b0; end\n            else begin\n"
+       "                if (b_base && b_tx_q) btx_seen <= 1'b1;\n                if (b_base && b_rx_q) brx_seen <= 1'b1;\n"
+       "            end\n")
+assert s.count(old) == 1, 'old core: reload clear of btx/brx_seen not found exactly once'
+p.write_text(s.replace(old, "            if (b_base && b_tx_q) btx_seen <= 1'b1;\n            if (b_base && b_rx_q) brx_seen <= 1'b1;\n"))
+PY
+fi
 git show "$OLD:$D/ot_qwen_d2d_ovl_seq.sv" > "$OUT/old_ovl_seq.sv"
 git show "$OLD:$D/ot_qwen_d2d_cal_seq.sv" > "$OUT/old_cal_seq.sv"
 OBJ="$OUT/obj_m${MUT}_h${HMUT}"
