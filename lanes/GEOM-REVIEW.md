@@ -4481,3 +4481,4 @@ The fill/empty FAIL is real, as I said at 09:31: the macro is 40.3 % < the 50 % 
 Conditions carried:
 (1) Optional --write-face PLAN-DELTA (rd_out on the W/S faces) to remove the E cluster and its ~140-um ROM-crossing wires.
 (2) Slot shrink at the next QC PLAN-DELTA.
+2026-10-28 21:20 PDT COORD spot-check (viewed 2 renders): (1) AUTO-GEOM f6f8b3444406 QC romleaf a0k7s - CONCUR PASS-COND with GEOM-46: ROM macro dominates (auto fill FAIL is the macro-area artefact), logic L-shaped W/S of the macro, centre-west clk; watch the small E cluster (farthest sink 167.9 um) at CTS. (2) AUTO-GEOM 53fcde6a6c40 QC rawleaf a0k7s - CONCUR PASS with GEOM-51: fill 46%, uniform cover, centre clk, farthest sink 117.4 um.
