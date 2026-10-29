@@ -725,6 +725,121 @@ def lef_contract(path, module):
         pins.append(dict(name=n, layer=L, x=x, y=y))
     return [w, h], pins
 
+# QC-A0-KITS-6 10-28 (opt-in recipe key "hard_children"; absent = kit bytes unchanged): a macro-COMPOSED core.  The A0
+# hard core is 677.7k cells flat (> the 400k OpenROAD cap), so its kit is the parent glue (~64k) with its hardened
+# children (10 romleaf + 8 rawleaf + 1 node on NK) as hard macros.  The existing rule stays: a child must be SIGNED
+# first.  A child view is the export_view.py / autopilot view layout (<m>.lef, <m>_tt.lib, <m>_ff.lib,
+# provenance.json views_status 'signoff' + verdict SIGNED..., gates.json view_complete true).  Every unsigned child is
+# named in ONE refusal (fail closed, no trial bypass).  Children are blackboxed by their *_bb.v / (* blackbox *) module
+# in the kit sources (checked) and placed FIRM at the planned site by exact hierarchical instance name (gen_core_kit_kv
+# --hard-children form; a Yosys genblkN. scope between name segments is tolerated).  PDN = the KV hard-children form:
+# M6 partition straps over the core, children's M5 PG pins connect M5 -> M6.
+#   recipe "hard_children": {"views": {master: view_dir}, "children_file": json ({"children": [{inst, module, at,
+#   orient}]}; default = spec children[] with master = view basename)}
+CHILD_VIEW_FILES = ("{m}.lef", "{m}_tt.lib", "{m}_ff.lib", "provenance.json", "gates.json")
+PDN_HARD_CHILDREN = """add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {4.32} -offset {1.968}
+add_pdn_connect -grid {top} -layers {M5 M6}
+define_pdn_grid -macro -default -name {macro} -voltage_domains {CORE} -halo {2.0 2.0} -grid_over_boundary
+add_pdn_connect -grid {macro} -layers {M5 M6}
+"""
+
+
+def child_view_problems(vdir, master):
+    """[] when vdir is a SIGNED, complete view of master (export_view.py layout); else the reasons"""
+    vdir = Path(vdir)
+    probs = [f"missing {f.format(m=master)}" for f in CHILD_VIEW_FILES if not (vdir / f.format(m=master)).is_file()]
+    if probs:
+        return probs
+    try:
+        prov = json.loads((vdir / "provenance.json").read_text())
+        gates = json.loads((vdir / "gates.json").read_text())
+    except (OSError, ValueError) as e:
+        return [f"unreadable provenance/gates: {e}"]
+    if prov.get("views_status") != "signoff":
+        probs.append(f"views_status {prov.get('views_status')!r} (not 'signoff')")
+    if not str(prov.get("verdict") or "").upper().startswith("SIGNED"):
+        probs.append(f"verdict {str(prov.get('verdict'))[:60]!r} (not SIGNED)")
+    if gates.get("view_complete") is not True:
+        probs.append(f"gates view_complete {gates.get('view_complete')!r}")
+    lef = (vdir / f"{master}.lef").read_text(errors="replace")
+    if not re.search(rf"^MACRO\s+{re.escape(master)}\s*$", lef, re.M):
+        probs.append(f"{master}.lef defines no MACRO {master}")
+    return probs
+
+
+def hard_children_list(hcr, spec, repo=None):
+    """[{inst, master, at, orient}] of the composed core: recipe children_file, else spec children[]"""
+    repo = Path(repo or REPO)
+    if hcr.get("children_file"):
+        doc = json.loads((repo / hcr["children_file"]).read_text())
+        rows = doc["children"] if isinstance(doc, dict) else doc
+        return [dict(inst=c["inst"], master=c["module"], at=[float(v) for v in c["at"]], orient=c.get("orient", "R0"))
+                for c in rows]
+    out = []
+    for c in spec.get("children", []):
+        for _ in range(int(c.get("count") or 1)):
+            out.append(dict(inst=c["inst"], master=Path(c["view"]).name, at=[float(v) for v in c["at"]],
+                            orient=c.get("orient", "R0")))
+    return out
+
+
+def lef_size(text):
+    m = re.search(r"SIZE\s+([\d.]+)\s+BY\s+([\d.]+)", text)
+    return float(m.group(1)), float(m.group(2))
+
+
+def hard_children_check(children, views, sizes, outline, margin=0.0):
+    """refusal lines for the composed core plan: unique instances, a view per master, R0/MY/MX/R180 only, inside the
+    core area, no two children overlapping.  [] = OK."""
+    w, h = outline
+    err, rects = [], []
+    if len({c["inst"] for c in children}) != len(children):
+        err.append("duplicate child instance names")
+    for c in children:
+        if c["master"] not in views:
+            err.append(f"{c['inst']}: no view for master {c['master']}")
+            continue
+        if c["orient"] not in ("R0", "MY", "MX", "R180"):
+            err.append(f"{c['inst']}: orient {c['orient']} not R0/MY/MX/R180")
+        cw, ch = sizes[c["master"]]
+        x, y = c["at"]
+        if not (x >= margin - 1e-6 and y >= margin - 1e-6 and x + cw <= w - margin + 1e-6 and y + ch <= h - margin + 1e-6):
+            err.append(f"{c['inst']}: site {x},{y} ({cw}x{ch}) outside the core area of {w}x{h}")
+        rects.append((x, y, x + cw, y + ch, c["inst"]))
+    for i, a in enumerate(rects):
+        for b in rects[i + 1:]:
+            if a[0] < b[2] - 1e-6 and b[0] < a[2] - 1e-6 and a[1] < b[3] - 1e-6 and b[1] < a[3] - 1e-6:
+                err.append(f"children overlap: {a[4]} / {b[4]}")
+    return err
+
+
+def child_inst_regex(inst):
+    """ODB flat-name regex of a planned hierarchical instance: segments joined by '.', escaped brackets tolerated, an
+    optional Yosys genblkN. scope between segments (A0 node: g_ndh.u_node elaborates as genblk5.g_ndh.u_node)"""
+    segs = [re.escape(s).replace(r"\[", r"\\?\[").replace(r"\]", r"\\?\]") for s in inst.split(".")]
+    return "(^|[./])" + r"\.(genblk[0-9]+\.)?".join(segs) + "$"
+
+
+def hard_children_tcl(children):
+    mp = ["# GENERATED by gen_core_kit_qc.py (recipe hard_children): FIRM sites of the SIGNED hard children (plan),",
+          "# lower-left of the placed bbox at the planned site; exactly one instance per planned name.",
+          "set blk [ord::get_db_block]", "set dbu [$blk getDbUnitsPerMicron]"]
+    for c in children:
+        mp += ["set hit {}",
+               f"foreach i [$blk getInsts] {{ if {{[[$i getMaster] getName] eq \"{c['master']}\" && "
+               f"[regexp {{{child_inst_regex(c['inst'])}}} [$i getName]]}} {{ lappend hit $i }} }}",
+               f"if {{[llength $hit] != 1}} {{ error \"hard child {c['inst']}: [llength $hit] matches\" }}",
+               "set i [lindex $hit 0]",
+               f"$i setOrient {c['orient']}",
+               "$i setLocation 0 0",
+               "set bb [$i getBBox]",
+               f"$i setLocation [expr {{round({c['at'][0]} * $dbu) - [$bb xMin]}}] "
+               f"[expr {{round({c['at'][1]} * $dbu) - [$bb yMin]}}]",
+               "$i setPlacementStatus FIRM",
+               f"puts \"hard child {c['inst']} -> [$i getName] {c['orient']} at {c['at'][0]} {c['at'][1]}\""]
+    mp.append(f"puts \"OT_HARD_CHILDREN placed {len(children)}\"")
+    return "\n".join(mp) + "\n"
+
 
 def git_show(spec):
     return subprocess.run(["git", "-C", str(REPO), "show", spec], capture_output=True, text=True, check=True).stdout
@@ -787,12 +902,13 @@ def main():
         ptype, hc = plan_core(plan, rec.get("plan_module", a.module))
     if rec.get("pins_file"):             # revised plan pin table (S81/LEAFPLAN repin.py) ahead of the plan rewire
         hc = {k: v for k, v in hc.items() if k != "pins"}
-        hc.update(pins_file=rec["pins_file"], lef=rec["lef"])
+        hc.update(pins_file=rec["pins_file"], lef=rec.get("lef"))
     spec_src = rec.get("spec_git")       # "<rev>:<path>" for a kit spec that is only in history (sources from the tree)
     spec = json.loads(git_show(spec_src)) if spec_src else json.load(open(REPO / rec["ref_tile"] / "spec.json"))
     mod = spec["top"]
     assert mod == hc["module"], (mod, hc["module"])
-    if spec.get("children"):
+    hcr = rec.get("hard_children")
+    if spec.get("children") and not hcr:
         raise SystemExit(f"{mod}: hard children {[c['view'] for c in spec['children']]} must be signed first (refused)")
     w, h = hc["outline_um"]
     per = float(plan["die"]["period_ps"])
@@ -882,6 +998,30 @@ def main():
             if not (x >= m_ and y >= m_ and x + mw <= w - m_ and y + mh <= h - m_):
                 raise SystemExit(f"{master}: site {x},{y} ({mw}x{mh}) outside the core area of {w}x{h}")
             mplace[master].append((x, y, o))
+    hcb = []
+    if hcr:   # QC-A0-KITS-6: macro-composed core, every child a SIGNED hard view (refused otherwise, all named)
+        hviews = {m: (Path(v) if Path(v).is_absolute() else REPO / v) for m, v in hcr["views"].items()}
+        hcb = hard_children_list(hcr, spec)
+        unsigned = {m: child_view_problems(v, m) for m, v in hviews.items() if m in {c["master"] for c in hcb}}
+        unsigned = {m: p for m, p in unsigned.items() if p}
+        if unsigned:
+            raise SystemExit(f"{mod}: {sum(c['master'] in unsigned for c in hcb)} of {len(hcb)} hard children are not "
+                             "SIGNED views (refused): " + "; ".join(
+                                 f"{m} x{sum(c['master'] == m for c in hcb)} [{hviews[m]}]: {', '.join(p)}"
+                                 for m, p in sorted(unsigned.items())))
+        sizes = {m: lef_size((v / f"{m}.lef").read_text()) for m, v in hviews.items()}
+        herr = hard_children_check(hcb, hviews, sizes, (w, h), rec.get("core_margin", CORE_MARGIN_UM))
+        if herr:
+            raise SystemExit(f"{mod}: hard children plan ({len(herr)}): " + "; ".join(herr[:6]))
+        ktxt = "".join(f.read_text(errors="replace") for f in sorted((kd / "rtl").iterdir()) if f.suffix in (".v", ".sv"))
+        for m in sorted({c["master"] for c in hcb}):
+            if not re.search(rf"\(\*\s*blackbox\s*\*\)\s*module\s+{re.escape(m)}\b", ktxt):
+                raise SystemExit(f"{mod}: hard child {m} has no (* blackbox *) module in the kit sources")
+            (kd / "macros").mkdir(exist_ok=True)
+            for f in (f"{m}.lef", f"{m}_tt.lib", f"{m}_ff.lib"):
+                shutil.copyfile(hviews[m] / f, kd / "macros" / f)
+            lefs.append(f"/work/macros/{m}.lef")
+            libs.append(f"/work/macros/{m}_tt.lib")
     # pins: exact plan centres + plan shapes, on the kit tracks
     bad = []
     for q in pins:
@@ -1021,7 +1161,7 @@ def main():
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(S81 / "cores/svc/pin_audit_core.py", kd / "pin_audit.py")
     shutil.copyfile(S81 / "cores/svc/dump_placed.py", kd / "dump_placed.py")
-    (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if mplace else ""))
+    (kd / "pdn.tcl").write_text(PDN + (PDN_HARD_CHILDREN if hcb else PDN_MACRO if mplace else ""))
     (kd / "make_tracks.tcl").write_text(TRACKS)
     (kd / "corners.tcl").write_text(CORNERS_TCL)
     (kd / "drv.tcl").write_text("# GENERATED by gen_core_kit_qc.py: fanout cap for repair_design (resize + GRT stages)\n"
@@ -1041,6 +1181,9 @@ def main():
     if mplace:
         (kd / "macro_place.tcl").write_text(MACRO_TCL % " ".join(
             f"{ms} {{{' '.join('{%g %g %s}' % s for s in v)}}}" for ms, v in mplace.items()))
+    if hcb:
+        with open(kd / "macro_place.tcl", "a") as f_:
+            f_.write(hard_children_tcl(hcb))
     pch = rec.get("sram_pincol_halo")
     pch_strips, pch_depth = [], None
     if mplace and pch:
@@ -1090,7 +1233,7 @@ def main():
            "export PDN_TCL = /work/pdn.tcl",
            "override export MAKE_TRACKS = /work/make_tracks.tcl",
            "export MIN_ROUTING_LAYER = M2",
-           "export MAX_ROUTING_LAYER = M5",
+           f"export MAX_ROUTING_LAYER = {rec.get('max_routing_layer', 'M5')}",
            f"export PLACE_DENSITY = {util:g}",
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_REPEATABLE_BUILD = 1",
@@ -1119,7 +1262,7 @@ def main():
               "export MACRO_PLACE_HALO = 4.32 4.32", "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl",
               f"export MACRO_ROWS_HALO_X = {rec.get('macro_rows_halo', 4.32):g}",
               f"export MACRO_ROWS_HALO_Y = {rec.get('macro_rows_halo', 4.32):g}"]
-             if mplace else []),
+             if mplace or hcb else []),
            # legacy closures used the default Yosys frontend (it keeps 1-bit [0:0] buses: plan pins ck[0], fo[0])
            *(["export SYNTH_HDL_FRONTEND = slang"] if rec.get("slang") else []),
            # QC-SU-SRAMHALO: macro-pin flops anchor beyond the pin-escape strip
@@ -1150,7 +1293,8 @@ def main():
               gates=["rtl_lint (pre-synth)", "sdc_lint (pre-synth)", "selrange (synth)", "face_guard (post-synth)",
                      "lec (post-synth)", "pin_audit", "signoff.py tt,ff"], repo_rev=rev,
               sdc_lint_sha256=sha(TOOL / "sdc_lint.py"), face_guard_sha256=sha(TOOL / "face_guard.py"),
-              signoff_sha256=sha(TOOL / "signoff.py"), macros=mplace, sram_pincol_halo=[s["rect"] for s in pch_strips],
+              signoff_sha256=sha(TOOL / "signoff.py"), macros=mplace,
+              **({"hard_children": [dict(c, view=str(hcr["views"][c["master"]])) for c in hcb]} if hcb else {}), sram_pincol_halo=[s["rect"] for s in pch_strips],
               rtl_patches=[dict(file=f, why=pt["why"], sha256=hashlib.sha256(json.dumps(pt["edits"]).encode()).hexdigest())
                            for f, pt in patches.items()], kit_hash=kit_hash(kd))
     if ms is not None:
@@ -1181,7 +1325,8 @@ def main():
                   pins_placed_canon_sha256=kit_contract._canon(kit_contract.placed_pins(kd), [w, h]))
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=rsts, ins=len(buses_in),
-                          outs=len(buses_out), macros=sum(len(v) for v in mplace.values()), kit_hash=fz["kit_hash"])))
+                          outs=len(buses_out), macros=sum(len(v) for v in mplace.values()),
+                          **({"hard_children": len(hcb)} if hcb else {}), kit_hash=fz["kit_hash"])))
 
 
 if __name__ == "__main__":

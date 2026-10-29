@@ -67,5 +67,48 @@
   "pins_file": "node_pins_ilv.json",
   "lef": "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node.lef",
   "pins_note": "DIE-QC-18-PINILV 10-28 (COORD 13:45 approved, opt-in): identical to ot_qwen_tile_node (a0k3) except the W-face pin plan: a/b/y re-planned PER ADDER (node_pins_ilv.json; group p = a[32p+:32] | b[32p+:32] | y[32p+:32]) so the A1 compare of each pair adder sees local inputs (a0k3 worst path u_w.q[828] -> g_add[9] x_swap joined a/b from 174/73 um, TT -221.66). RTL unchanged, 0 cycles; LEF stays the pin-direction/shape source."
+ },
+ "qfd_tile_nk_a0c": {
+  "ref_tile": "physical/die_plan/qwen_compute/cores/a0/parent/nk",
+  "pins_file": "cores/a0/parent/a0_nk_pins_dir.json",
+  "plan_pins_contract": true,
+  "hard_children": {
+   "views": {
+    "ot_qwen_tile_romleaf": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+    "ot_qwen_tile_lsl_rawfault_m3": "physical/ref_tile/ot_qwen_tile_lsl_rawfault_m3/views/ot_qwen_tile_lsl_rawfault_m3",
+    "ot_qwen_tile_node": "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node"
+   },
+   "children_file": "physical/die_plan/qwen_compute/cores/a0/parent/nk_children.json"
+  },
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": "12.3 common core latency 250 TT / 202.5 FF kit frame (KIT_PREFLIGHT ff_binding); the die taps the A0 centre entry EARLY by (routed trunk insertion - frame): DIE-QC-17 routed trunk 716/623 TT/FF (nk t5), COORD 14:21",
+  "insertion_balance": false,
+  "max_routing_layer": "M7",
+  "util": 0.45,
+  "suffix": "a0p1",
+  "slang": true,
+  "_why": "QC-A0-KITS-6 10-28: A0 PARENT kit (glue + SIGNED hard children). Children views must be SIGNED (export_view layout) at the listed dirs; today none is (generator refuses, all named). Clock = the slice centre entry; the plan trunk (tools/die_plan/parent_trunk_dme.py) is NOT yet wired as the kit CTS hook (insertion_balance off; next step). M7 = parent routes over children (OBS <= M5), as the QC-A0-KITS-3 parent trial."
+ },
+ "qfd_tile_nl_a0c": {
+  "ref_tile": "physical/die_plan/qwen_compute/cores/a0/parent/nl",
+  "pins_file": "cores/a0/parent/a0_nl_pins_dir.json",
+  "plan_pins_contract": true,
+  "hard_children": {
+   "views": {
+    "ot_qwen_tile_romleaf": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+    "ot_qwen_tile_lsl_rawfault_m3": "physical/ref_tile/ot_qwen_tile_lsl_rawfault_m3/views/ot_qwen_tile_lsl_rawfault_m3"
+   },
+   "children_file": "physical/die_plan/qwen_compute/cores/a0/parent/nl_children.json"
+  },
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": "12.3 common core latency 250 TT / 202.5 FF kit frame (KIT_PREFLIGHT ff_binding); the die taps the A0 centre entry EARLY by (routed trunk insertion - frame): DIE-QC-17 routed trunk 711/622 (nl b5), COORD 14:21",
+  "insertion_balance": false,
+  "max_routing_layer": "M7",
+  "util": 0.45,
+  "suffix": "a0p1",
+  "slang": true,
+  "_why": "QC-A0-KITS-6 10-28: A0 PARENT kit (glue + SIGNED hard children). Children views must be SIGNED (export_view layout) at the listed dirs; today none is (generator refuses, all named). Clock = the slice centre entry; the plan trunk (tools/die_plan/parent_trunk_dme.py) is NOT yet wired as the kit CTS hook (insertion_balance off; next step). M7 = parent routes over children (OBS <= M5), as the QC-A0-KITS-3 parent trial."
  }
 }

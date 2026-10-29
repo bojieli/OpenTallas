@@ -1,0 +1,47 @@
+{
+ "name": "qfd_tile_nl_a0c_parent",
+ "top": "qfd_tile_nl_a0c",
+ "kind": "core",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "sources": [
+  "rtl/physical/a0_rc14_selected_2000/ot_qw_land4_n32.sv",
+  "rtl/physical/a0_rc14_selected_2000/ot_qw_land4_n32_select.sv",
+  "rtl/physical/ot_qwen_rom_tile_die.sv",
+  "rtl/hdc/kv/ot_qwen_kv_land_merge.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_matvec.sv",
+  "rtl/physical/a0_rc14_selected_2000/ot_qwen_me_array_w12.sv",
+  "rtl/physical/a0_rc15_selected_2000/ot_qwen_rom_tile_w12_land32.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "rtl/physical/ot_qwen_rom_tile_nk.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_45.sv",
+  "rtl/physical/a0_core/qfd_tile_nl_a0c.sv",
+  "rtl/physical/bb/ot_qwen_tile_romleaf_bb.v",
+  "physical/die_plan/qwen_compute/cores/a0/parent/rtl/ot_qwen_tile_lsl_rawcut.v"
+ ],
+ "defines": [],
+ "params": {
+  "G4_ROOTS": 1,
+  "REGROOT_MODE": 3
+ },
+ "macros": [],
+ "route": {
+  "pd": 0.45
+ },
+ "note": "QC-A0-KITS-6 10-28: A0 PARENT (macro-composed) kit spec for gen_core_kit_qc.py recipe hard_children. Sources = physical/ref_tile/qfd_tile_nl_a0ck/spec.json sources with the old lsl_fp1 blackbox replaced by the Codex native LSL fault-cut wrapper (rawleaf ot_qwen_tile_lsl_rawfault_m3 blackboxed; parent synth 64,205 (nk) / 61,550 (nl) cells, QC-CORES CHECKED); params/defines = the Codex parent synth (G4_ROOTS 1, REGROOT_MODE 3, no OT_A0_CK_TAPS: the tap ports have no RTL loads, QC-A0-KITS-3). Children: cores/a0/parent/nl_children.json (recipe hard_children.children_file)."
+}
