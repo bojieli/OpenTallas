@@ -1,0 +1,6302 @@
+{
+ "qualification": "PLAN terminals; actual sourceDB macro/FF receipts still required",
+ "ports": [
+  {
+   "role": "start_source",
+   "net": "rs_hg_EN_0",
+   "instance": "hg_EN_0",
+   "master": "kv3_hg_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    25681.59
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_EN_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_EN_1",
+   "instance": "hg_EN_1",
+   "master": "kv3_hg_v1_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    24160.95
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_EN_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_EN_2",
+   "instance": "hg_EN_2",
+   "master": "kv3_hg_v1p2",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    22640.31
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_EN_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_EN_3",
+   "instance": "hg_EN_3",
+   "master": "kv3_hg_v1p3",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    21119.670000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_EN_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_EN_4",
+   "instance": "hg_EN_4",
+   "master": "kv3_hg_v1p4",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    19599.030000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_EN_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_EN_5",
+   "instance": "hg_EN_5",
+   "master": "kv3_hg_v1p5",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    18078.390000000003
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_EN_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_EN_6",
+   "instance": "hg_EN_6",
+   "master": "kv3_hg_v1p6",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    16557.75
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_EN_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_EN_7",
+   "instance": "hg_EN_7",
+   "master": "kv3_hg_v3_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    15037.11
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_EN_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_ES_0",
+   "instance": "hg_ES_0",
+   "master": "kv3_hg_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    324.81
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_ES_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_ES_1",
+   "instance": "hg_ES_1",
+   "master": "kv3_hg_v1_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    1845.45
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_ES_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_ES_2",
+   "instance": "hg_ES_2",
+   "master": "kv3_hg_v1p2",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    3366.09
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_ES_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_ES_3",
+   "instance": "hg_ES_3",
+   "master": "kv3_hg_v1p3",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    4886.7300000000005
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_ES_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_ES_4",
+   "instance": "hg_ES_4",
+   "master": "kv3_hg_v1p4",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    6407.370000000001
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_ES_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_ES_5",
+   "instance": "hg_ES_5",
+   "master": "kv3_hg_v1p5",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    7928.01
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_ES_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_ES_6",
+   "instance": "hg_ES_6",
+   "master": "kv3_hg_v1p6",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    9448.65
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_ES_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_ES_7",
+   "instance": "hg_ES_7",
+   "master": "kv3_hg_v3_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    10969.289999999999
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_ES_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_WN_0",
+   "instance": "hg_WN_0",
+   "master": "kv3_hg_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    25681.59
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_WN_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_WN_1",
+   "instance": "hg_WN_1",
+   "master": "kv3_hg_v1_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    24160.95
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_WN_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_WN_2",
+   "instance": "hg_WN_2",
+   "master": "kv3_hg_v1p2",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    22640.31
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_WN_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_WN_3",
+   "instance": "hg_WN_3",
+   "master": "kv3_hg_v1p3",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    21119.670000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_WN_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_WN_4",
+   "instance": "hg_WN_4",
+   "master": "kv3_hg_v1p4",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    19599.030000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_WN_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_WN_5",
+   "instance": "hg_WN_5",
+   "master": "kv3_hg_v1p5",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    18078.390000000003
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_WN_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_WN_6",
+   "instance": "hg_WN_6",
+   "master": "kv3_hg_v1p6",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    16557.75
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_WN_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_WN_7",
+   "instance": "hg_WN_7",
+   "master": "kv3_hg_v3_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    15037.11
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_WN_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_WS_0",
+   "instance": "hg_WS_0",
+   "master": "kv3_hg_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    324.81
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_WS_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_WS_1",
+   "instance": "hg_WS_1",
+   "master": "kv3_hg_v1_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    1845.45
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_WS_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_WS_2",
+   "instance": "hg_WS_2",
+   "master": "kv3_hg_v1p2",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    3366.09
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_WS_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_WS_3",
+   "instance": "hg_WS_3",
+   "master": "kv3_hg_v1p3",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    4886.7300000000005
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_WS_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_WS_4",
+   "instance": "hg_WS_4",
+   "master": "kv3_hg_v1p4",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    6407.370000000001
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_WS_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_WS_5",
+   "instance": "hg_WS_5",
+   "master": "kv3_hg_v1p5",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    7928.01
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_WS_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_WS_6",
+   "instance": "hg_WS_6",
+   "master": "kv3_hg_v1p6",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    9448.65
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_WS_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hg_WS_7",
+   "instance": "hg_WS_7",
+   "master": "kv3_hg_v3_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    10969.289999999999
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hg_WS_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_EN_0",
+   "instance": "hgi_EN_0",
+   "master": "kv3_hgi_v3_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    25681.59
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_EN_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_EN_1",
+   "instance": "hgi_EN_1",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    24160.95
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_EN_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_EN_2",
+   "instance": "hgi_EN_2",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    22640.31
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_EN_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_EN_3",
+   "instance": "hgi_EN_3",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    21119.670000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_EN_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_EN_4",
+   "instance": "hgi_EN_4",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    19599.030000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_EN_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_EN_5",
+   "instance": "hgi_EN_5",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    18078.390000000003
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_EN_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_EN_6",
+   "instance": "hgi_EN_6",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    16557.75
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_EN_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_EN_7",
+   "instance": "hgi_EN_7",
+   "master": "kv3_hgi_v5_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    15037.11
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_EN_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_ES_0",
+   "instance": "hgi_ES_0",
+   "master": "kv3_hgi_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    324.81
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_ES_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_ES_1",
+   "instance": "hgi_ES_1",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    1845.45
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_ES_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_ES_2",
+   "instance": "hgi_ES_2",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    3366.09
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_ES_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_ES_3",
+   "instance": "hgi_ES_3",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    4886.7300000000005
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_ES_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_ES_4",
+   "instance": "hgi_ES_4",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    6407.370000000001
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_ES_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_ES_5",
+   "instance": "hgi_ES_5",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    7928.01
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_ES_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_ES_6",
+   "instance": "hgi_ES_6",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    9448.65
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_ES_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_ES_7",
+   "instance": "hgi_ES_7",
+   "master": "kv3_hgi_v2__cl2862d491",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    10969.289999999999
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_ES_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_WN_0",
+   "instance": "hgi_WN_0",
+   "master": "kv3_hgi_v6_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    25681.59
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_WN_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_WN_1",
+   "instance": "hgi_WN_1",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    24160.95
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_WN_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_WN_2",
+   "instance": "hgi_WN_2",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    22640.31
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_WN_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_WN_3",
+   "instance": "hgi_WN_3",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    21119.670000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_WN_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_WN_4",
+   "instance": "hgi_WN_4",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    19599.030000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_WN_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_WN_5",
+   "instance": "hgi_WN_5",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    18078.390000000003
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_WN_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_WN_6",
+   "instance": "hgi_WN_6",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    16557.75
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_WN_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_WN_7",
+   "instance": "hgi_WN_7",
+   "master": "kv3_hgi_v8_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    15037.11
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_WN_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_WS_0",
+   "instance": "hgi_WS_0",
+   "master": "kv3_hgi_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    324.81
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_WS_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_WS_1",
+   "instance": "hgi_WS_1",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    1845.45
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_WS_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_WS_2",
+   "instance": "hgi_WS_2",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    3366.09
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_WS_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_WS_3",
+   "instance": "hgi_WS_3",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    4886.7300000000005
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_WS_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_WS_4",
+   "instance": "hgi_WS_4",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    6407.370000000001
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_WS_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_WS_5",
+   "instance": "hgi_WS_5",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    7928.01
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_WS_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_WS_6",
+   "instance": "hgi_WS_6",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    9448.65
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_WS_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hgi_WS_7",
+   "instance": "hgi_WS_7",
+   "master": "kv3_hgi_v2__cle0015330",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    10969.289999999999
+   ],
+   "local_xy_um": [
+    159.328,
+    324.81
+   ],
+   "native_entry_clock": "t_hgi_WS_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hub_C",
+   "instance": "hub_C",
+   "master": "kv3_hub_C_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    4638.24,
+    12185.910000000002
+   ],
+   "local_xy_um": [
+    180.0,
+    20.79
+   ],
+   "native_entry_clock": "t_hub_C__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hub_Ei",
+   "instance": "hub_Ei",
+   "master": "kv3_hub_Ei_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    6777.568,
+    12185.910000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    20.79
+   ],
+   "native_entry_clock": "t_hub_Ei__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hub_Eo",
+   "instance": "hub_Eo",
+   "master": "kv3_hub_Eo_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    8056.2880000000005,
+    12185.910000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    20.79
+   ],
+   "native_entry_clock": "t_hub_Eo__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hub_Wi",
+   "instance": "hub_Wi",
+   "master": "kv3_hub_Wi_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    12185.910000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    20.79
+   ],
+   "native_entry_clock": "t_hub_Wi__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_hub_Wo",
+   "instance": "hub_Wo",
+   "master": "kv3_hub_Wo_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    12181.59
+   ],
+   "local_xy_um": [
+    159.328,
+    16.47
+   ],
+   "native_entry_clock": "t_hub_Wo__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_io_E5",
+   "instance": "io_E5",
+   "master": "kv3_io_cor_v1_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    7737.632,
+    26027.190000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    20.79
+   ],
+   "native_entry_clock": "t_io_E5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_io_E6",
+   "instance": "io_E6",
+   "master": "kv3_io_ft_v1_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    9016.352,
+    26027.190000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    20.79
+   ],
+   "native_entry_clock": "t_io_E6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_io_W2",
+   "instance": "io_W2",
+   "master": "kv3_io_ft_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    2060.128,
+    26027.190000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    20.79
+   ],
+   "native_entry_clock": "t_io_W2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_io_W3",
+   "instance": "io_W3",
+   "master": "kv3_io_cor_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    3338.848,
+    26027.190000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    20.79
+   ],
+   "native_entry_clock": "t_io_W3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_pv_N_0",
+   "instance": "pv_N_0",
+   "master": "kv3_pv_v8_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    4638.24,
+    25681.59
+   ],
+   "local_xy_um": [
+    180.0,
+    324.81
+   ],
+   "native_entry_clock": "t_pv_N_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_pv_N_1",
+   "instance": "pv_N_1",
+   "master": "kv3_pv_v1n",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    4638.24,
+    24160.95
+   ],
+   "local_xy_um": [
+    180.0,
+    324.81
+   ],
+   "native_entry_clock": "t_pv_N_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_pv_N_2",
+   "instance": "pv_N_2",
+   "master": "kv3_pv_v2n",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    4638.24,
+    22640.31
+   ],
+   "local_xy_um": [
+    180.0,
+    324.81
+   ],
+   "native_entry_clock": "t_pv_N_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_pv_N_3",
+   "instance": "pv_N_3",
+   "master": "kv3_pv_v3n",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    4638.24,
+    21119.670000000002
+   ],
+   "local_xy_um": [
+    180.0,
+    324.81
+   ],
+   "native_entry_clock": "t_pv_N_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_pv_N_4",
+   "instance": "pv_N_4",
+   "master": "kv3_pv_v4n",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    4638.24,
+    19599.030000000002
+   ],
+   "local_xy_um": [
+    180.0,
+    324.81
+   ],
+   "native_entry_clock": "t_pv_N_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_pv_N_5",
+   "instance": "pv_N_5",
+   "master": "kv3_pv_v5n",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    4638.24,
+    18078.390000000003
+   ],
+   "local_xy_um": [
+    180.0,
+    324.81
+   ],
+   "native_entry_clock": "t_pv_N_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_pv_N_6",
+   "instance": "pv_N_6",
+   "master": "kv3_pv_v6n",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    4638.24,
+    16557.75
+   ],
+   "local_xy_um": [
+    180.0,
+    324.81
+   ],
+   "native_entry_clock": "t_pv_N_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_pv_N_7",
+   "instance": "pv_N_7",
+   "master": "kv3_pv_v12_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    4638.24,
+    15037.11
+   ],
+   "local_xy_um": [
+    180.0,
+    324.81
+   ],
+   "native_entry_clock": "t_pv_N_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_pv_S_0",
+   "instance": "pv_S_0",
+   "master": "kv3_pv_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    4638.24,
+    324.81
+   ],
+   "local_xy_um": [
+    180.0,
+    324.81
+   ],
+   "native_entry_clock": "t_pv_S_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_pv_S_1",
+   "instance": "pv_S_1",
+   "master": "kv3_pv_v1_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    4638.24,
+    1845.45
+   ],
+   "local_xy_um": [
+    180.0,
+    324.81
+   ],
+   "native_entry_clock": "t_pv_S_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_pv_S_2",
+   "instance": "pv_S_2",
+   "master": "kv3_pv_v2_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    4638.24,
+    3366.09
+   ],
+   "local_xy_um": [
+    180.0,
+    324.81
+   ],
+   "native_entry_clock": "t_pv_S_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_pv_S_3",
+   "instance": "pv_S_3",
+   "master": "kv3_pv_v3_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    4638.24,
+    4886.7300000000005
+   ],
+   "local_xy_um": [
+    180.0,
+    324.81
+   ],
+   "native_entry_clock": "t_pv_S_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_pv_S_4",
+   "instance": "pv_S_4",
+   "master": "kv3_pv_v4_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    4638.24,
+    6407.370000000001
+   ],
+   "local_xy_um": [
+    180.0,
+    324.81
+   ],
+   "native_entry_clock": "t_pv_S_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_source",
+   "net": "rs_pv_S_5",
+   "instance": "pv_S_5",
+   "master": "kv3_pv_v5_part",
+   "pin": "cland_tstart_out",
+   "xy_um": [
+    4638.24,
+    7928.01
+   ],
+   "local_xy_um": [
+    180.0,
+    324.81
+   ],
+   "native_entry_clock": "t_pv_S_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_EN_0",
+   "instance": "hgi_EN_0",
+   "master": "kv3_hgi_v3_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    7737.632,
+    25682.399999999998
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_EN_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_EN_0",
+   "instance": "pc_EN_0",
+   "master": "kv3_pc__cl5a95b461",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10039.2,
+    25820.64
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_EN_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_EN_0",
+   "instance": "phy_EN_0",
+   "master": "kv3_phy_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10644.448,
+    25247.699999999997
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_EN_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_EN_0",
+   "instance": "hg_EN_0",
+   "master": "kv3_hg_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    25682.399999999998
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_EN_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_sys_SE",
+   "instance": "sys_SE",
+   "master": "kv3_sys_SD_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10885.92,
+    26026.38
+   ],
+   "local_xy_um": [
+    190.56,
+    19.98
+   ],
+   "native_entry_clock": "t_sys_SE__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_io_E6",
+   "instance": "io_E6",
+   "master": "kv3_io_ft_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    26026.38
+   ],
+   "local_xy_um": [
+    159.328,
+    19.98
+   ],
+   "native_entry_clock": "t_io_E6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_sys_c",
+   "instance": "sys_c",
+   "master": "kv3_sys_c_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    26026.38
+   ],
+   "local_xy_um": [
+    180.0,
+    19.98
+   ],
+   "native_entry_clock": "t_sys_c__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_sys_SW",
+   "instance": "sys_SW",
+   "master": "kv3_sys_SD_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    190.56,
+    26026.38
+   ],
+   "local_xy_um": [
+    190.56,
+    19.98
+   ],
+   "native_entry_clock": "t_sys_SW__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_io_W2",
+   "instance": "io_W2",
+   "master": "kv3_io_ft_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    26026.38
+   ],
+   "local_xy_um": [
+    159.328,
+    19.98
+   ],
+   "native_entry_clock": "t_io_W2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_WN_0",
+   "instance": "hgi_WN_0",
+   "master": "kv3_hgi_v6_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    25682.399999999998
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_WN_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_WN_0",
+   "instance": "hg_WN_0",
+   "master": "kv3_hg_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    25682.399999999998
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_WN_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_WN_0",
+   "instance": "phy_WN_0",
+   "master": "kv3_phy_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    432.032,
+    25247.699999999997
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_WN_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_WN_0",
+   "instance": "pc_WN_0",
+   "master": "kv3_pc__cl5a95b461",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    1037.28,
+    25820.64
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_WN_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pv_N_0",
+   "instance": "pv_N_0",
+   "master": "kv3_pv_v8_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    25682.399999999998
+   ],
+   "local_xy_um": [
+    180.0,
+    324.0
+   ],
+   "native_entry_clock": "t_pv_N_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_EN_1",
+   "instance": "hgi_EN_1",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    7737.632,
+    24161.76
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_EN_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_EN_1",
+   "instance": "pc_EN_1",
+   "master": "kv3_pc_v1__cl23f6a148",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10039.2,
+    24300.0
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_EN_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_EN_1",
+   "instance": "phy_EN_1",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10644.448,
+    23727.059999999998
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_EN_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_EN_1",
+   "instance": "hg_EN_1",
+   "master": "kv3_hg_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    24161.76
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_EN_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_WN_1",
+   "instance": "hg_WN_1",
+   "master": "kv3_hg_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    24161.76
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_WN_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_WN_1",
+   "instance": "phy_WN_1",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    432.032,
+    23727.059999999998
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_WN_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_WN_1",
+   "instance": "pc_WN_1",
+   "master": "kv3_pc_v1__cl23f6a148",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    1037.28,
+    24300.0
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_WN_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_WN_1",
+   "instance": "hgi_WN_1",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    24161.76
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_WN_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pv_N_1",
+   "instance": "pv_N_1",
+   "master": "kv3_pv_v1n",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    24161.76
+   ],
+   "local_xy_um": [
+    180.0,
+    324.0
+   ],
+   "native_entry_clock": "t_pv_N_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_EN_2",
+   "instance": "hgi_EN_2",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    7737.632,
+    22641.12
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_EN_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_EN_2",
+   "instance": "pc_EN_2",
+   "master": "kv3_pc_v1__cl7f648944",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10039.2,
+    22779.36
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_EN_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_EN_2",
+   "instance": "phy_EN_2",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10644.448,
+    22206.42
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_EN_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_EN_2",
+   "instance": "hg_EN_2",
+   "master": "kv3_hg_v1p2",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    22641.12
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_EN_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_WN_2",
+   "instance": "hg_WN_2",
+   "master": "kv3_hg_v1p2",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    22641.12
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_WN_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_WN_2",
+   "instance": "phy_WN_2",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    432.032,
+    22206.42
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_WN_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_WN_2",
+   "instance": "pc_WN_2",
+   "master": "kv3_pc_v1__cl7f648944",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    1037.28,
+    22779.36
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_WN_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_WN_2",
+   "instance": "hgi_WN_2",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    22641.12
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_WN_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pv_N_2",
+   "instance": "pv_N_2",
+   "master": "kv3_pv_v2n",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    22641.12
+   ],
+   "local_xy_um": [
+    180.0,
+    324.0
+   ],
+   "native_entry_clock": "t_pv_N_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_EN_3",
+   "instance": "pc_EN_3",
+   "master": "kv3_pc_v1__cl7f648944",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10039.2,
+    21258.72
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_EN_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_EN_3",
+   "instance": "phy_EN_3",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10644.448,
+    20685.78
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_EN_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_EN_3",
+   "instance": "hg_EN_3",
+   "master": "kv3_hg_v1p3",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    21120.48
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_EN_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_EN_3",
+   "instance": "hgi_EN_3",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    7737.632,
+    21120.48
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_EN_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_WN_3",
+   "instance": "hg_WN_3",
+   "master": "kv3_hg_v1p3",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    21120.48
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_WN_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_WN_3",
+   "instance": "phy_WN_3",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    432.032,
+    20685.78
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_WN_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_WN_3",
+   "instance": "pc_WN_3",
+   "master": "kv3_pc_v1__cl7f648944",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    1037.28,
+    21258.72
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_WN_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_WN_3",
+   "instance": "hgi_WN_3",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    21120.48
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_WN_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pv_N_3",
+   "instance": "pv_N_3",
+   "master": "kv3_pv_v3n",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    21120.48
+   ],
+   "local_xy_um": [
+    180.0,
+    324.0
+   ],
+   "native_entry_clock": "t_pv_N_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_EN_4",
+   "instance": "pc_EN_4",
+   "master": "kv3_pc_v1__cl7f648944",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10039.2,
+    19738.08
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_EN_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_EN_4",
+   "instance": "phy_EN_4",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10644.448,
+    19165.14
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_EN_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_EN_4",
+   "instance": "hg_EN_4",
+   "master": "kv3_hg_v1p4",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    19599.84
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_EN_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_EN_4",
+   "instance": "hgi_EN_4",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    7737.632,
+    19599.84
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_EN_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_WN_4",
+   "instance": "hg_WN_4",
+   "master": "kv3_hg_v1p4",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    19599.84
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_WN_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_WN_4",
+   "instance": "phy_WN_4",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    432.032,
+    19165.14
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_WN_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_WN_4",
+   "instance": "pc_WN_4",
+   "master": "kv3_pc_v1__cl7f648944",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    1037.28,
+    19738.08
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_WN_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_WN_4",
+   "instance": "hgi_WN_4",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    19599.84
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_WN_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pv_N_4",
+   "instance": "pv_N_4",
+   "master": "kv3_pv_v4n",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    19599.84
+   ],
+   "local_xy_um": [
+    180.0,
+    324.0
+   ],
+   "native_entry_clock": "t_pv_N_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pv_N_5",
+   "instance": "pv_N_5",
+   "master": "kv3_pv_v5n",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    18079.2
+   ],
+   "local_xy_um": [
+    180.0,
+    324.0
+   ],
+   "native_entry_clock": "t_pv_N_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_EN_5",
+   "instance": "pc_EN_5",
+   "master": "kv3_pc_v1__cl4ea58a5c",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10039.2,
+    18217.440000000002
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_EN_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_EN_5",
+   "instance": "phy_EN_5",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10644.448,
+    17644.5
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_EN_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_EN_5",
+   "instance": "hg_EN_5",
+   "master": "kv3_hg_v1p5",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    18079.2
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_EN_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_EN_5",
+   "instance": "hgi_EN_5",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    7737.632,
+    18079.2
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_EN_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_WN_5",
+   "instance": "hg_WN_5",
+   "master": "kv3_hg_v1p5",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    18079.2
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_WN_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_WN_5",
+   "instance": "phy_WN_5",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    432.032,
+    17644.5
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_WN_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_WN_5",
+   "instance": "pc_WN_5",
+   "master": "kv3_pc_v1__cl4ea58a5c",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    1037.28,
+    18217.440000000002
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_WN_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_WN_5",
+   "instance": "hgi_WN_5",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    18079.2
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_WN_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_EN_6",
+   "instance": "hgi_EN_6",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    7737.632,
+    16558.56
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_EN_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_EN_6",
+   "instance": "pc_EN_6",
+   "master": "kv3_pc_v1__cl4ea58a5c",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10039.2,
+    16696.8
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_EN_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_EN_6",
+   "instance": "phy_EN_6",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10644.448,
+    16123.86
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_EN_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_EN_6",
+   "instance": "hg_EN_6",
+   "master": "kv3_hg_v1p6",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    16558.56
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_EN_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_WN_6",
+   "instance": "hgi_WN_6",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    16558.56
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_WN_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_WN_6",
+   "instance": "phy_WN_6",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    432.032,
+    16123.86
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_WN_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_WN_6",
+   "instance": "pc_WN_6",
+   "master": "kv3_pc_v1__cl4ea58a5c",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    1037.28,
+    16696.8
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_WN_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_WN_6",
+   "instance": "hg_WN_6",
+   "master": "kv3_hg_v1p6",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    16558.56
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_WN_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pv_N_6",
+   "instance": "pv_N_6",
+   "master": "kv3_pv_v6n",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    16558.56
+   ],
+   "local_xy_um": [
+    180.0,
+    324.0
+   ],
+   "native_entry_clock": "t_pv_N_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_EN_7",
+   "instance": "hgi_EN_7",
+   "master": "kv3_hgi_v5_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    7737.632,
+    15037.92
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_EN_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_EN_7",
+   "instance": "pc_EN_7",
+   "master": "kv3_pc_v3_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10039.2,
+    15176.16
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_EN_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_EN_7",
+   "instance": "phy_EN_7",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10644.448,
+    14603.220000000001
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_EN_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_EN_7",
+   "instance": "hg_EN_7",
+   "master": "kv3_hg_v3_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    15037.92
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_EN_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_WN_7",
+   "instance": "hgi_WN_7",
+   "master": "kv3_hgi_v8_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    15037.92
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_WN_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_WN_7",
+   "instance": "hg_WN_7",
+   "master": "kv3_hg_v3_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    15037.92
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_WN_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_WN_7",
+   "instance": "phy_WN_7",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    432.032,
+    14603.220000000001
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_WN_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_WN_7",
+   "instance": "pc_WN_7",
+   "master": "kv3_pc_v3_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    1037.28,
+    15176.16
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_WN_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pv_N_7",
+   "instance": "pv_N_7",
+   "master": "kv3_pv_v12_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    15037.92
+   ],
+   "local_xy_um": [
+    180.0,
+    324.0
+   ],
+   "native_entry_clock": "t_pv_N_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_ES_0",
+   "instance": "hgi_ES_0",
+   "master": "kv3_hgi_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    7737.632,
+    324.0
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_ES_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_ES_0",
+   "instance": "pc_ES_0",
+   "master": "kv3_pc__cl254f2e73",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10039.2,
+    185.76
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_ES_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_ES_0",
+   "instance": "phy_ES_0",
+   "master": "kv3_phy_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10644.448,
+    758.7
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_ES_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_ES_0",
+   "instance": "hg_ES_0",
+   "master": "kv3_hg_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    324.0
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_ES_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_WS_0",
+   "instance": "hgi_WS_0",
+   "master": "kv3_hgi_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    324.0
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_WS_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_WS_0",
+   "instance": "hg_WS_0",
+   "master": "kv3_hg_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    324.0
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_WS_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_WS_0",
+   "instance": "phy_WS_0",
+   "master": "kv3_phy_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    432.032,
+    758.7
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_WS_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_WS_0",
+   "instance": "pc_WS_0",
+   "master": "kv3_pc__cl254f2e73",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    1037.28,
+    185.76
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_WS_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pv_S_0",
+   "instance": "pv_S_0",
+   "master": "kv3_pv_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    324.0
+   ],
+   "local_xy_um": [
+    180.0,
+    324.0
+   ],
+   "native_entry_clock": "t_pv_S_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_ES_1",
+   "instance": "hgi_ES_1",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    7737.632,
+    1844.64
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_ES_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_ES_1",
+   "instance": "pc_ES_1",
+   "master": "kv3_pc_v1__cl23f6a148",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10039.2,
+    1706.4
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_ES_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_ES_1",
+   "instance": "phy_ES_1",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10644.448,
+    2279.34
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_ES_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_ES_1",
+   "instance": "hg_ES_1",
+   "master": "kv3_hg_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    1844.64
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_ES_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_WS_1",
+   "instance": "hg_WS_1",
+   "master": "kv3_hg_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    1844.64
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_WS_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_WS_1",
+   "instance": "phy_WS_1",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    432.032,
+    2279.34
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_WS_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_WS_1",
+   "instance": "pc_WS_1",
+   "master": "kv3_pc_v1__cl23f6a148",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    1037.28,
+    1706.4
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_WS_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_WS_1",
+   "instance": "hgi_WS_1",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    1844.64
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_WS_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pv_S_1",
+   "instance": "pv_S_1",
+   "master": "kv3_pv_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    1844.64
+   ],
+   "local_xy_um": [
+    180.0,
+    324.0
+   ],
+   "native_entry_clock": "t_pv_S_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_ES_2",
+   "instance": "hgi_ES_2",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    7737.632,
+    3365.28
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_ES_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_ES_2",
+   "instance": "hg_ES_2",
+   "master": "kv3_hg_v1p2",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    3365.28
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_ES_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_ES_2",
+   "instance": "pc_ES_2",
+   "master": "kv3_pc_v1__cl7f648944",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10039.2,
+    3227.04
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_ES_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_ES_2",
+   "instance": "phy_ES_2",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10644.448,
+    3799.9800000000005
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_ES_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_WS_2",
+   "instance": "hg_WS_2",
+   "master": "kv3_hg_v1p2",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    3365.28
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_WS_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_WS_2",
+   "instance": "phy_WS_2",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    432.032,
+    3799.9800000000005
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_WS_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_WS_2",
+   "instance": "pc_WS_2",
+   "master": "kv3_pc_v1__cl7f648944",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    1037.28,
+    3227.04
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_WS_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_WS_2",
+   "instance": "hgi_WS_2",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    3365.28
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_WS_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pv_S_2",
+   "instance": "pv_S_2",
+   "master": "kv3_pv_v2_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    3365.28
+   ],
+   "local_xy_um": [
+    180.0,
+    324.0
+   ],
+   "native_entry_clock": "t_pv_S_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_ES_3",
+   "instance": "hg_ES_3",
+   "master": "kv3_hg_v1p3",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    4885.92
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_ES_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_ES_3",
+   "instance": "pc_ES_3",
+   "master": "kv3_pc_v1__cl7f648944",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10039.2,
+    4747.68
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_ES_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_ES_3",
+   "instance": "phy_ES_3",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10644.448,
+    5320.62
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_ES_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_ES_3",
+   "instance": "hgi_ES_3",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    7737.632,
+    4885.92
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_ES_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_WS_3",
+   "instance": "hg_WS_3",
+   "master": "kv3_hg_v1p3",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    4885.92
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_WS_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_WS_3",
+   "instance": "phy_WS_3",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    432.032,
+    5320.62
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_WS_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_WS_3",
+   "instance": "pc_WS_3",
+   "master": "kv3_pc_v1__cl7f648944",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    1037.28,
+    4747.68
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_WS_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_WS_3",
+   "instance": "hgi_WS_3",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    4885.92
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_WS_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pv_S_3",
+   "instance": "pv_S_3",
+   "master": "kv3_pv_v3_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    4885.92
+   ],
+   "local_xy_um": [
+    180.0,
+    324.0
+   ],
+   "native_entry_clock": "t_pv_S_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_ES_4",
+   "instance": "hg_ES_4",
+   "master": "kv3_hg_v1p4",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    6406.56
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_ES_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_ES_4",
+   "instance": "pc_ES_4",
+   "master": "kv3_pc_v1__cl7f648944",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10039.2,
+    6268.320000000001
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_ES_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_ES_4",
+   "instance": "phy_ES_4",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10644.448,
+    6841.26
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_ES_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_ES_4",
+   "instance": "hgi_ES_4",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    7737.632,
+    6406.56
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_ES_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_WS_4",
+   "instance": "hg_WS_4",
+   "master": "kv3_hg_v1p4",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    6406.56
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_WS_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_WS_4",
+   "instance": "pc_WS_4",
+   "master": "kv3_pc_v1__cl7f648944",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    1037.28,
+    6268.320000000001
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_WS_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_WS_4",
+   "instance": "phy_WS_4",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    432.032,
+    6841.26
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_WS_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_WS_4",
+   "instance": "hgi_WS_4",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    6406.56
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_WS_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pv_S_4",
+   "instance": "pv_S_4",
+   "master": "kv3_pv_v4_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    6406.56
+   ],
+   "local_xy_um": [
+    180.0,
+    324.0
+   ],
+   "native_entry_clock": "t_pv_S_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_ES_5",
+   "instance": "hg_ES_5",
+   "master": "kv3_hg_v1p5",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    7927.2
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_ES_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_ES_5",
+   "instance": "pc_ES_5",
+   "master": "kv3_pc_v1__cl4ea58a5c",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10039.2,
+    7788.96
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_ES_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_ES_5",
+   "instance": "phy_ES_5",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10644.448,
+    8361.9
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_ES_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_ES_5",
+   "instance": "hgi_ES_5",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    7737.632,
+    7927.2
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_ES_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_WS_5",
+   "instance": "phy_WS_5",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    432.032,
+    8361.9
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_WS_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_WS_5",
+   "instance": "pc_WS_5",
+   "master": "kv3_pc_v1__cl4ea58a5c",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    1037.28,
+    7788.96
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_WS_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_WS_5",
+   "instance": "hg_WS_5",
+   "master": "kv3_hg_v1p5",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    7927.2
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_WS_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_WS_5",
+   "instance": "hgi_WS_5",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    7927.2
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_WS_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pv_S_5",
+   "instance": "pv_S_5",
+   "master": "kv3_pv_v5_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    7927.2
+   ],
+   "local_xy_um": [
+    180.0,
+    324.0
+   ],
+   "native_entry_clock": "t_pv_S_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pv_S_6",
+   "instance": "pv_S_6",
+   "master": "kv3_pv_v6_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    9447.84
+   ],
+   "local_xy_um": [
+    180.0,
+    324.0
+   ],
+   "native_entry_clock": "t_pv_S_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_ES_6",
+   "instance": "hg_ES_6",
+   "master": "kv3_hg_v1p6",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    9447.84
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_ES_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_ES_6",
+   "instance": "pc_ES_6",
+   "master": "kv3_pc_v1__cl4ea58a5c",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10039.2,
+    9309.6
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_ES_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_ES_6",
+   "instance": "phy_ES_6",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10644.448,
+    9882.54
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_ES_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_ES_6",
+   "instance": "hgi_ES_6",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    7737.632,
+    9447.84
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_ES_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_WS_6",
+   "instance": "phy_WS_6",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    432.032,
+    9882.54
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_WS_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_WS_6",
+   "instance": "pc_WS_6",
+   "master": "kv3_pc_v1__cl4ea58a5c",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    1037.28,
+    9309.6
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_WS_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_WS_6",
+   "instance": "hg_WS_6",
+   "master": "kv3_hg_v1p6",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    9447.84
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_WS_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_WS_6",
+   "instance": "hgi_WS_6",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    9447.84
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_WS_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pv_S_7",
+   "instance": "pv_S_7",
+   "master": "kv3_pv_v7_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    4638.24,
+    10968.48
+   ],
+   "local_xy_um": [
+    180.0,
+    324.0
+   ],
+   "native_entry_clock": "t_pv_S_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_ES_7",
+   "instance": "hgi_ES_7",
+   "master": "kv3_hgi_v2__cl2862d491",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    7737.632,
+    10968.48
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_ES_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_ES_7",
+   "instance": "pc_ES_7",
+   "master": "kv3_pc_v3_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10039.2,
+    10830.24
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_ES_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_ES_7",
+   "instance": "phy_ES_7",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10644.448,
+    11403.18
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_ES_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_ES_7",
+   "instance": "hg_ES_7",
+   "master": "kv3_hg_v3_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    9016.352,
+    10968.48
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_ES_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hgi_WS_7",
+   "instance": "hgi_WS_7",
+   "master": "kv3_hgi_v2__cle0015330",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    10968.48
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hgi_WS_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_phy_WS_7",
+   "instance": "phy_WS_7",
+   "master": "kv3_phy_v1_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    432.032,
+    11403.18
+   ],
+   "local_xy_um": [
+    432.032,
+    758.7
+   ],
+   "native_entry_clock": "t_phy_WS_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_pc_WS_7",
+   "instance": "pc_WS_7",
+   "master": "kv3_pc_v3_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    1037.28,
+    10830.24
+   ],
+   "local_xy_um": [
+    173.28,
+    185.76
+   ],
+   "native_entry_clock": "t_pc_WS_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hg_WS_7",
+   "instance": "hg_WS_7",
+   "master": "kv3_hg_v3_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    10968.48
+   ],
+   "local_xy_um": [
+    159.328,
+    324.0
+   ],
+   "native_entry_clock": "t_hg_WS_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hroot_EN",
+   "instance": "hroot_EN",
+   "master": "kv3_hroot_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10885.92,
+    13821.300000000001
+   ],
+   "local_xy_um": [
+    190.56,
+    19.98
+   ],
+   "native_entry_clock": "t_hroot_EN__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hroot_ES",
+   "instance": "hroot_ES",
+   "master": "kv3_hroot_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    10885.92,
+    12185.1
+   ],
+   "local_xy_um": [
+    190.56,
+    19.98
+   ],
+   "native_entry_clock": "t_hroot_ES__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hub_Eo",
+   "instance": "hub_Eo",
+   "master": "kv3_hub_Eo_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    8056.2880000000005,
+    12185.1
+   ],
+   "local_xy_um": [
+    159.328,
+    19.98
+   ],
+   "native_entry_clock": "t_hub_Eo__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hub_Ei",
+   "instance": "hub_Ei",
+   "master": "kv3_hub_Ei_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    6777.568,
+    12185.1
+   ],
+   "local_xy_um": [
+    159.328,
+    19.98
+   ],
+   "native_entry_clock": "t_hub_Ei__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hroot_WN",
+   "instance": "hroot_WN",
+   "master": "kv3_hroot_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    190.56,
+    13821.300000000001
+   ],
+   "local_xy_um": [
+    190.56,
+    19.98
+   ],
+   "native_entry_clock": "t_hroot_WN__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hroot_WS",
+   "instance": "hroot_WS",
+   "master": "kv3_hroot_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    190.56,
+    12185.1
+   ],
+   "local_xy_um": [
+    190.56,
+    19.98
+   ],
+   "native_entry_clock": "t_hroot_WS__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hub_Wo",
+   "instance": "hub_Wo",
+   "master": "kv3_hub_Wo_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    2060.128,
+    12180.78
+   ],
+   "local_xy_um": [
+    159.328,
+    15.66
+   ],
+   "native_entry_clock": "t_hub_Wo__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "start_capture",
+   "net": "pst_hub_Wi",
+   "instance": "hub_Wi",
+   "master": "kv3_hub_Wi_part",
+   "pin": "cland_tstart_in",
+   "xy_um": [
+    3338.848,
+    12185.1
+   ],
+   "local_xy_um": [
+    159.328,
+    19.98
+   ],
+   "native_entry_clock": "t_hub_Wi__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_EN_0",
+   "instance": "hg_EN_0",
+   "master": "kv3_hg_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    25679.969999999998
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_EN_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_EN_1",
+   "instance": "hg_EN_1",
+   "master": "kv3_hg_v1_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    24159.329999999998
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_EN_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_EN_2",
+   "instance": "hg_EN_2",
+   "master": "kv3_hg_v1p2",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    22638.69
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_EN_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_EN_3",
+   "instance": "hg_EN_3",
+   "master": "kv3_hg_v1p3",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    21118.05
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_EN_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_EN_4",
+   "instance": "hg_EN_4",
+   "master": "kv3_hg_v1p4",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    19597.41
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_EN_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_EN_5",
+   "instance": "hg_EN_5",
+   "master": "kv3_hg_v1p5",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    18076.77
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_EN_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_EN_6",
+   "instance": "hg_EN_6",
+   "master": "kv3_hg_v1p6",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    16556.13
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_EN_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_EN_7",
+   "instance": "hg_EN_7",
+   "master": "kv3_hg_v3_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    15035.490000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_EN_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_ES_0",
+   "instance": "hg_ES_0",
+   "master": "kv3_hg_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    326.43
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_ES_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_ES_1",
+   "instance": "hg_ES_1",
+   "master": "kv3_hg_v1_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    1847.0700000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_ES_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_ES_2",
+   "instance": "hg_ES_2",
+   "master": "kv3_hg_v1p2",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    3367.71
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_ES_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_ES_3",
+   "instance": "hg_ES_3",
+   "master": "kv3_hg_v1p3",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    4888.35
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_ES_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_ES_4",
+   "instance": "hg_ES_4",
+   "master": "kv3_hg_v1p4",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    6408.990000000001
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_ES_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_ES_5",
+   "instance": "hg_ES_5",
+   "master": "kv3_hg_v1p5",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    7929.63
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_ES_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_ES_6",
+   "instance": "hg_ES_6",
+   "master": "kv3_hg_v1p6",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    9450.27
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_ES_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_ES_7",
+   "instance": "hg_ES_7",
+   "master": "kv3_hg_v3_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    10970.91
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_ES_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_WN_0",
+   "instance": "hg_WN_0",
+   "master": "kv3_hg_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    25679.969999999998
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_WN_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_WN_1",
+   "instance": "hg_WN_1",
+   "master": "kv3_hg_v1_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    24159.329999999998
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_WN_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_WN_2",
+   "instance": "hg_WN_2",
+   "master": "kv3_hg_v1p2",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    22638.69
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_WN_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_WN_3",
+   "instance": "hg_WN_3",
+   "master": "kv3_hg_v1p3",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    21118.05
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_WN_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_WN_4",
+   "instance": "hg_WN_4",
+   "master": "kv3_hg_v1p4",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    19597.41
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_WN_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_WN_5",
+   "instance": "hg_WN_5",
+   "master": "kv3_hg_v1p5",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    18076.77
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_WN_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_WN_6",
+   "instance": "hg_WN_6",
+   "master": "kv3_hg_v1p6",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    16556.13
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_WN_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_WN_7",
+   "instance": "hg_WN_7",
+   "master": "kv3_hg_v3_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    15035.490000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_WN_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_WS_0",
+   "instance": "hg_WS_0",
+   "master": "kv3_hg_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    326.43
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_WS_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_WS_1",
+   "instance": "hg_WS_1",
+   "master": "kv3_hg_v1_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    1847.0700000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_WS_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_WS_2",
+   "instance": "hg_WS_2",
+   "master": "kv3_hg_v1p2",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    3367.71
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_WS_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_WS_3",
+   "instance": "hg_WS_3",
+   "master": "kv3_hg_v1p3",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    4888.35
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_WS_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_WS_4",
+   "instance": "hg_WS_4",
+   "master": "kv3_hg_v1p4",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    6408.990000000001
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_WS_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_WS_5",
+   "instance": "hg_WS_5",
+   "master": "kv3_hg_v1p5",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    7929.63
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_WS_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_WS_6",
+   "instance": "hg_WS_6",
+   "master": "kv3_hg_v1p6",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    9450.27
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_WS_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hg_WS_7",
+   "instance": "hg_WS_7",
+   "master": "kv3_hg_v3_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    10970.91
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hg_WS_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_EN_0",
+   "instance": "hgi_EN_0",
+   "master": "kv3_hgi_v3_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    25679.969999999998
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_EN_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_EN_1",
+   "instance": "hgi_EN_1",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    24159.329999999998
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_EN_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_EN_2",
+   "instance": "hgi_EN_2",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    22638.69
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_EN_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_EN_3",
+   "instance": "hgi_EN_3",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    21118.05
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_EN_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_EN_4",
+   "instance": "hgi_EN_4",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    19597.41
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_EN_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_EN_5",
+   "instance": "hgi_EN_5",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    18076.77
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_EN_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_EN_6",
+   "instance": "hgi_EN_6",
+   "master": "kv3_hgi_v4_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    16556.13
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_EN_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_EN_7",
+   "instance": "hgi_EN_7",
+   "master": "kv3_hgi_v5_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    15035.490000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_EN_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_ES_0",
+   "instance": "hgi_ES_0",
+   "master": "kv3_hgi_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    326.43
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_ES_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_ES_1",
+   "instance": "hgi_ES_1",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    1847.0700000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_ES_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_ES_2",
+   "instance": "hgi_ES_2",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    3367.71
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_ES_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_ES_3",
+   "instance": "hgi_ES_3",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    4888.35
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_ES_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_ES_4",
+   "instance": "hgi_ES_4",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    6408.990000000001
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_ES_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_ES_5",
+   "instance": "hgi_ES_5",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    7929.63
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_ES_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_ES_6",
+   "instance": "hgi_ES_6",
+   "master": "kv3_hgi_v1__cl42bc8b12",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    9450.27
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_ES_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_ES_7",
+   "instance": "hgi_ES_7",
+   "master": "kv3_hgi_v2__cl2862d491",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    10970.91
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_ES_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_WN_0",
+   "instance": "hgi_WN_0",
+   "master": "kv3_hgi_v6_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    25679.969999999998
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_WN_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_WN_1",
+   "instance": "hgi_WN_1",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    24159.329999999998
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_WN_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_WN_2",
+   "instance": "hgi_WN_2",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    22638.69
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_WN_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_WN_3",
+   "instance": "hgi_WN_3",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    21118.05
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_WN_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_WN_4",
+   "instance": "hgi_WN_4",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    19597.41
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_WN_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_WN_5",
+   "instance": "hgi_WN_5",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    18076.77
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_WN_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_WN_6",
+   "instance": "hgi_WN_6",
+   "master": "kv3_hgi_v7_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    16556.13
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_WN_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_WN_7",
+   "instance": "hgi_WN_7",
+   "master": "kv3_hgi_v8_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    15035.490000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_WN_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_WS_0",
+   "instance": "hgi_WS_0",
+   "master": "kv3_hgi_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    326.43
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_WS_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_WS_1",
+   "instance": "hgi_WS_1",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    1847.0700000000002
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_WS_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_WS_2",
+   "instance": "hgi_WS_2",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    3367.71
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_WS_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_WS_3",
+   "instance": "hgi_WS_3",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    4888.35
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_WS_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_WS_4",
+   "instance": "hgi_WS_4",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    6408.990000000001
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_WS_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_WS_5",
+   "instance": "hgi_WS_5",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    7929.63
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_WS_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_WS_6",
+   "instance": "hgi_WS_6",
+   "master": "kv3_hgi_v1__cl141fc26e",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    9450.27
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_WS_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hgi_WS_7",
+   "instance": "hgi_WS_7",
+   "master": "kv3_hgi_v2__cle0015330",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    10970.91
+   ],
+   "local_xy_um": [
+    159.328,
+    326.43
+   ],
+   "native_entry_clock": "t_hgi_WS_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hub_C",
+   "instance": "hub_C",
+   "master": "kv3_hub_C_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    4638.24,
+    12187.53
+   ],
+   "local_xy_um": [
+    180.0,
+    22.41
+   ],
+   "native_entry_clock": "t_hub_C__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hub_Ei",
+   "instance": "hub_Ei",
+   "master": "kv3_hub_Ei_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    6777.568,
+    12187.53
+   ],
+   "local_xy_um": [
+    159.328,
+    22.41
+   ],
+   "native_entry_clock": "t_hub_Ei__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hub_Eo",
+   "instance": "hub_Eo",
+   "master": "kv3_hub_Eo_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    8056.2880000000005,
+    12187.53
+   ],
+   "local_xy_um": [
+    159.328,
+    22.41
+   ],
+   "native_entry_clock": "t_hub_Eo__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hub_Wi",
+   "instance": "hub_Wi",
+   "master": "kv3_hub_Wi_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    12187.53
+   ],
+   "local_xy_um": [
+    159.328,
+    22.41
+   ],
+   "native_entry_clock": "t_hub_Wi__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_hub_Wo",
+   "instance": "hub_Wo",
+   "master": "kv3_hub_Wo_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    12183.210000000001
+   ],
+   "local_xy_um": [
+    159.328,
+    18.09
+   ],
+   "native_entry_clock": "t_hub_Wo__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_io_E5",
+   "instance": "io_E5",
+   "master": "kv3_io_cor_v1_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    7737.632,
+    26028.81
+   ],
+   "local_xy_um": [
+    159.328,
+    22.41
+   ],
+   "native_entry_clock": "t_io_E5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_io_E6",
+   "instance": "io_E6",
+   "master": "kv3_io_ft_v1_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    9016.352,
+    26028.81
+   ],
+   "local_xy_um": [
+    159.328,
+    22.41
+   ],
+   "native_entry_clock": "t_io_E6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_io_W2",
+   "instance": "io_W2",
+   "master": "kv3_io_ft_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    2060.128,
+    26028.81
+   ],
+   "local_xy_um": [
+    159.328,
+    22.41
+   ],
+   "native_entry_clock": "t_io_W2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_io_W3",
+   "instance": "io_W3",
+   "master": "kv3_io_cor_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    3338.848,
+    26028.81
+   ],
+   "local_xy_um": [
+    159.328,
+    22.41
+   ],
+   "native_entry_clock": "t_io_W3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_pv_N_0",
+   "instance": "pv_N_0",
+   "master": "kv3_pv_v8_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    4638.24,
+    25679.969999999998
+   ],
+   "local_xy_um": [
+    180.0,
+    326.43
+   ],
+   "native_entry_clock": "t_pv_N_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_pv_N_1",
+   "instance": "pv_N_1",
+   "master": "kv3_pv_v1n",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    4638.24,
+    24159.329999999998
+   ],
+   "local_xy_um": [
+    180.0,
+    326.43
+   ],
+   "native_entry_clock": "t_pv_N_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_pv_N_2",
+   "instance": "pv_N_2",
+   "master": "kv3_pv_v2n",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    4638.24,
+    22638.69
+   ],
+   "local_xy_um": [
+    180.0,
+    326.43
+   ],
+   "native_entry_clock": "t_pv_N_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_pv_N_3",
+   "instance": "pv_N_3",
+   "master": "kv3_pv_v3n",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    4638.24,
+    21118.05
+   ],
+   "local_xy_um": [
+    180.0,
+    326.43
+   ],
+   "native_entry_clock": "t_pv_N_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_pv_N_4",
+   "instance": "pv_N_4",
+   "master": "kv3_pv_v4n",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    4638.24,
+    19597.41
+   ],
+   "local_xy_um": [
+    180.0,
+    326.43
+   ],
+   "native_entry_clock": "t_pv_N_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_pv_N_5",
+   "instance": "pv_N_5",
+   "master": "kv3_pv_v5n",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    4638.24,
+    18076.77
+   ],
+   "local_xy_um": [
+    180.0,
+    326.43
+   ],
+   "native_entry_clock": "t_pv_N_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_pv_N_6",
+   "instance": "pv_N_6",
+   "master": "kv3_pv_v6n",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    4638.24,
+    16556.13
+   ],
+   "local_xy_um": [
+    180.0,
+    326.43
+   ],
+   "native_entry_clock": "t_pv_N_6__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_pv_N_7",
+   "instance": "pv_N_7",
+   "master": "kv3_pv_v12_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    4638.24,
+    15035.490000000002
+   ],
+   "local_xy_um": [
+    180.0,
+    326.43
+   ],
+   "native_entry_clock": "t_pv_N_7__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_pv_S_0",
+   "instance": "pv_S_0",
+   "master": "kv3_pv_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    4638.24,
+    326.43
+   ],
+   "local_xy_um": [
+    180.0,
+    326.43
+   ],
+   "native_entry_clock": "t_pv_S_0__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_pv_S_1",
+   "instance": "pv_S_1",
+   "master": "kv3_pv_v1_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    4638.24,
+    1847.0700000000002
+   ],
+   "local_xy_um": [
+    180.0,
+    326.43
+   ],
+   "native_entry_clock": "t_pv_S_1__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_pv_S_2",
+   "instance": "pv_S_2",
+   "master": "kv3_pv_v2_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    4638.24,
+    3367.71
+   ],
+   "local_xy_um": [
+    180.0,
+    326.43
+   ],
+   "native_entry_clock": "t_pv_S_2__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_pv_S_3",
+   "instance": "pv_S_3",
+   "master": "kv3_pv_v3_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    4638.24,
+    4888.35
+   ],
+   "local_xy_um": [
+    180.0,
+    326.43
+   ],
+   "native_entry_clock": "t_pv_S_3__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_pv_S_4",
+   "instance": "pv_S_4",
+   "master": "kv3_pv_v4_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    4638.24,
+    6408.990000000001
+   ],
+   "local_xy_um": [
+    180.0,
+    326.43
+   ],
+   "native_entry_clock": "t_pv_S_4__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  },
+  {
+   "role": "reset_source",
+   "net": "rraw_pv_S_5",
+   "instance": "pv_S_5",
+   "master": "kv3_pv_v5_part",
+   "pin": "cland_raw_reset_out",
+   "xy_um": [
+    4638.24,
+    7929.63
+   ],
+   "local_xy_um": [
+    180.0,
+    326.43
+   ],
+   "native_entry_clock": "t_pv_S_5__clk",
+   "origin_ck_receipt": "NOT RUN: physical origin/reset-export FF CK required; entry clock alone is insufficient"
+  }
+ ],
+ "type_pins": {
+  "kv3_hg": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hg_v3": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hgi": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hgi_v3": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hgi_v4": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hgi_v5": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hgi_v6": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hgi_v7": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hgi_v8": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hroot": {
+   "cland_tstart_in": [
+    190.56,
+    19.98
+   ]
+  },
+  "kv3_hub_C": {
+   "cland_raw_reset_out": [
+    180.0,
+    22.41
+   ],
+   "cland_tstart_out": [
+    180.0,
+    20.79
+   ]
+  },
+  "kv3_hub_Ei": {
+   "cland_raw_reset_out": [
+    159.328,
+    22.41
+   ],
+   "cland_tstart_in": [
+    159.328,
+    19.98
+   ],
+   "cland_tstart_out": [
+    159.328,
+    20.79
+   ]
+  },
+  "kv3_hub_Eo": {
+   "cland_raw_reset_out": [
+    159.328,
+    22.41
+   ],
+   "cland_tstart_in": [
+    159.328,
+    19.98
+   ],
+   "cland_tstart_out": [
+    159.328,
+    20.79
+   ]
+  },
+  "kv3_hub_Wi": {
+   "cland_raw_reset_out": [
+    159.328,
+    22.41
+   ],
+   "cland_tstart_in": [
+    159.328,
+    19.98
+   ],
+   "cland_tstart_out": [
+    159.328,
+    20.79
+   ]
+  },
+  "kv3_hub_Wo": {
+   "cland_raw_reset_out": [
+    159.328,
+    18.09
+   ],
+   "cland_tstart_in": [
+    159.328,
+    15.66
+   ],
+   "cland_tstart_out": [
+    159.328,
+    16.47
+   ]
+  },
+  "kv3_io_cor": {
+   "cland_raw_reset_out": [
+    159.328,
+    22.41
+   ],
+   "cland_tstart_in": [
+    159.328,
+    19.98
+   ],
+   "cland_tstart_out": [
+    159.328,
+    20.79
+   ]
+  },
+  "kv3_io_cor_v1": {
+   "cland_raw_reset_out": [
+    159.328,
+    22.41
+   ],
+   "cland_tstart_in": [
+    159.328,
+    19.98
+   ],
+   "cland_tstart_out": [
+    159.328,
+    20.79
+   ]
+  },
+  "kv3_io_ft": {
+   "cland_raw_reset_out": [
+    159.328,
+    22.41
+   ],
+   "cland_tstart_in": [
+    159.328,
+    19.98
+   ],
+   "cland_tstart_out": [
+    159.328,
+    20.79
+   ]
+  },
+  "kv3_io_ft_v1": {
+   "cland_raw_reset_out": [
+    159.328,
+    22.41
+   ],
+   "cland_tstart_in": [
+    159.328,
+    19.98
+   ],
+   "cland_tstart_out": [
+    159.328,
+    20.79
+   ]
+  },
+  "kv3_pc_v3": {
+   "cland_tstart_in": [
+    173.28,
+    185.76
+   ]
+  },
+  "kv3_phy": {
+   "cland_tstart_in": [
+    432.032,
+    758.7
+   ]
+  },
+  "kv3_phy_v1": {
+   "cland_tstart_in": [
+    432.032,
+    758.7
+   ]
+  },
+  "kv3_pv": {
+   "cland_raw_reset_out": [
+    180.0,
+    326.43
+   ],
+   "cland_tstart_in": [
+    180.0,
+    324.0
+   ],
+   "cland_tstart_out": [
+    180.0,
+    324.81
+   ]
+  },
+  "kv3_pv_v2": {
+   "cland_raw_reset_out": [
+    180.0,
+    326.43
+   ],
+   "cland_tstart_in": [
+    180.0,
+    324.0
+   ],
+   "cland_tstart_out": [
+    180.0,
+    324.81
+   ]
+  },
+  "kv3_pv_v4": {
+   "cland_raw_reset_out": [
+    180.0,
+    326.43
+   ],
+   "cland_tstart_in": [
+    180.0,
+    324.0
+   ],
+   "cland_tstart_out": [
+    180.0,
+    324.81
+   ]
+  },
+  "kv3_pv_v6": {
+   "cland_tstart_in": [
+    180.0,
+    324.0
+   ]
+  },
+  "kv3_pv_v7": {
+   "cland_tstart_in": [
+    180.0,
+    324.0
+   ]
+  },
+  "kv3_pv_v8": {
+   "cland_raw_reset_out": [
+    180.0,
+    326.43
+   ],
+   "cland_tstart_in": [
+    180.0,
+    324.0
+   ],
+   "cland_tstart_out": [
+    180.0,
+    324.81
+   ]
+  },
+  "kv3_pv_v12": {
+   "cland_raw_reset_out": [
+    180.0,
+    326.43
+   ],
+   "cland_tstart_in": [
+    180.0,
+    324.0
+   ],
+   "cland_tstart_out": [
+    180.0,
+    324.81
+   ]
+  },
+  "kv3_sys_SD": {
+   "cland_tstart_in": [
+    190.56,
+    19.98
+   ]
+  },
+  "kv3_sys_SD_v1": {
+   "cland_tstart_in": [
+    190.56,
+    19.98
+   ]
+  },
+  "kv3_sys_c": {
+   "cland_tstart_in": [
+    180.0,
+    19.98
+   ]
+  },
+  "kv3_hg_v1": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_pv_v1": {
+   "cland_raw_reset_out": [
+    180.0,
+    326.43
+   ],
+   "cland_tstart_in": [
+    180.0,
+    324.0
+   ],
+   "cland_tstart_out": [
+    180.0,
+    324.81
+   ]
+  },
+  "kv3_pv_v3": {
+   "cland_raw_reset_out": [
+    180.0,
+    326.43
+   ],
+   "cland_tstart_in": [
+    180.0,
+    324.0
+   ],
+   "cland_tstart_out": [
+    180.0,
+    324.81
+   ]
+  },
+  "kv3_pv_v5": {
+   "cland_raw_reset_out": [
+    180.0,
+    326.43
+   ],
+   "cland_tstart_in": [
+    180.0,
+    324.0
+   ],
+   "cland_tstart_out": [
+    180.0,
+    324.81
+   ]
+  },
+  "kv3_pv_v1n": {
+   "cland_raw_reset_out": [
+    180.0,
+    326.43
+   ],
+   "cland_tstart_in": [
+    180.0,
+    324.0
+   ],
+   "cland_tstart_out": [
+    180.0,
+    324.81
+   ]
+  },
+  "kv3_pv_v2n": {
+   "cland_raw_reset_out": [
+    180.0,
+    326.43
+   ],
+   "cland_tstart_in": [
+    180.0,
+    324.0
+   ],
+   "cland_tstart_out": [
+    180.0,
+    324.81
+   ]
+  },
+  "kv3_pv_v3n": {
+   "cland_raw_reset_out": [
+    180.0,
+    326.43
+   ],
+   "cland_tstart_in": [
+    180.0,
+    324.0
+   ],
+   "cland_tstart_out": [
+    180.0,
+    324.81
+   ]
+  },
+  "kv3_pv_v4n": {
+   "cland_raw_reset_out": [
+    180.0,
+    326.43
+   ],
+   "cland_tstart_in": [
+    180.0,
+    324.0
+   ],
+   "cland_tstart_out": [
+    180.0,
+    324.81
+   ]
+  },
+  "kv3_pv_v5n": {
+   "cland_raw_reset_out": [
+    180.0,
+    326.43
+   ],
+   "cland_tstart_in": [
+    180.0,
+    324.0
+   ],
+   "cland_tstart_out": [
+    180.0,
+    324.81
+   ]
+  },
+  "kv3_pv_v6n": {
+   "cland_raw_reset_out": [
+    180.0,
+    326.43
+   ],
+   "cland_tstart_in": [
+    180.0,
+    324.0
+   ],
+   "cland_tstart_out": [
+    180.0,
+    324.81
+   ]
+  },
+  "kv3_hg_v1p2": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hg_v1p3": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hg_v1p4": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hg_v1p5": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hg_v1p6": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hgi_v1__cl42bc8b12": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hgi_v1__cl141fc26e": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hgi_v2__cl2862d491": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_hgi_v2__cle0015330": {
+   "cland_raw_reset_out": [
+    159.328,
+    326.43
+   ],
+   "cland_tstart_in": [
+    159.328,
+    324.0
+   ],
+   "cland_tstart_out": [
+    159.328,
+    324.81
+   ]
+  },
+  "kv3_pc__cl5a95b461": {
+   "cland_tstart_in": [
+    173.28,
+    185.76
+   ]
+  },
+  "kv3_pc__cl254f2e73": {
+   "cland_tstart_in": [
+    173.28,
+    185.76
+   ]
+  },
+  "kv3_pc_v1__cl23f6a148": {
+   "cland_tstart_in": [
+    173.28,
+    185.76
+   ]
+  },
+  "kv3_pc_v1__cl7f648944": {
+   "cland_tstart_in": [
+    173.28,
+    185.76
+   ]
+  },
+  "kv3_pc_v1__cl4ea58a5c": {
+   "cland_tstart_in": [
+    173.28,
+    185.76
+   ]
+  }
+ }
+}
