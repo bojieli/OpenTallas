@@ -1,0 +1,7 @@
+- 2026-10-29 13:35 PDT START [HBM-CORES-KITS-19] fresh successor of HBM-CORES-KITS-18 (76afa97ecb0). Order: (1) sign-off vs route-stage slew model mismatch (RING/bdring), (2) qwdec_v1 post-CTS hold root cause, (3) xcal_v1 GRT map, (4) intel1 hcol_h0/lanes8_11 collect, (5) plan-level kits wait for DIE-HBM-19.
+
+## CODEX GQ helper PARKED 2026-10-29 14:04 PDT on explicit reset
+Own clean codex/hbm-gq-regen-1355@fb1fc7959 sparse WT prepared locally+epyc2 and pushed to GitHub/hub; no GEN/SYNTH/LEC/P&R/STA job launched, no source change. Old fmt/GQ NEQ remains stale-pin class already fixed in main40235e1f116; fresh3view regeneration remains next. Packet handoff/codex_hbm_gq_regen_reset_20261029_1403.md +CODEX-LOG. OWNER?none.
+
+## CODEX PARKED 2026-10-29 14:05 PDT — explicit reset14:02
+Own codex/hbm-k19-1355@9c6260c19 clean/pushed, exactbasefb1fc7959; noafterresetengineering/jobs/merges. Results-only currentmatchedGRT/SPEFdiagnosis andread-onlygeometrydump: RING1473vs0GRT/median1.386/160violnets, bdring7370vs0/median1.632/770nets. Native dump epyc2codex-hbm-rcfix-1355 unit1185111-1793307771 exit0. No newPNR/STAorECO. ChildGQfresh-mainWTpreparedbutnoGEN/SYNTHlaunched. Fullpacket handoff/codex_hbm_cores_a_reset_20261029_1402.md +childhandoffcodex_hbm_gq_regen_reset_20261029_1403.md. Next renderactualnets→review→actualSPEFafterMMsyncdata-onlyECO; freshfmt/GQregenfromcorrect40235recipe. Core_bownsqwdec/xcal/macros. OWNER?none.
