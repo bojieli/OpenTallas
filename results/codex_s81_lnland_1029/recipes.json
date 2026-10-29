@@ -2,17 +2,10 @@
  "ot_s81_mu72_lnland_nst_1ck": {
   "ref_tile": "results/codex_s81_lnland_1029",
   "io_hold": "sender_min",
-  "rtl_patches": [
-   {
-    "file": "rtl/common/landed_parent/ot_pl_land.sv",
-    "why": "c5f63a4c8 strict WIDTH comparison preserves full K semantics",
-    "edits": [
-     [
-      "if (rc == K-1)",
-      "if (32'(rc) == K-1)"
-     ]
-    ]
-   }
+  "requires_source_commits": [
+   "c5f63a4c8",
+   "af5ba0b27",
+   "562c58ae6"
   ]
  }
 }
