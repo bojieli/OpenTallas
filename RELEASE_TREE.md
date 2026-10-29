@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-26 06:21 PDT by CLAUDE coordinator)
 
-Snapshot 2026-10-29 12:20 PDT: signed types S81 4/171 HEAD 0/16 QC 0/68 KV 0/40 HBM 0/49; hard cores 15/52, 2/3, 4/9(+1), 4/31, 0/210. 0 new sign-offs 13 h. FROZEN: KV (event26a), HEAD (hk5), S81 (plan_s13r2 + s81_g03c2). Next gates: KV die GRT0 incl clock live; QC clock prebuild M8 (2 variants); S81 fresh strict bind; HEAD hd_tile replan; HBM d16k + owner ASK defaults (b, B). CLOSURE-LIST 121 rows, 18 closed + 2 WONTFIX.
+Snapshot 2026-10-29 13:22 PDT: signed types S81 4/171 HEAD 0/16 QC 0/68 KV 0/40 HBM 0/49; hard cores 15/52, 2/3, 4/9(+1, +PROG pending record fix), 4/31, 0/210. FROZEN: KV (event26a), HEAD (hk5), S81 (plan_s13r2 + s81_g03c2, WS3 V2 fix). KV die GRT0 incl clock PASS 0 ov -> clock check + die STA real views. QC prebuild: tracks fit, pin-stack vs PG access next. S81 fresh strict bind ~13:45. HBM bind re-pointed to d16k; SPB stagger variants. S81 29/8, QC 20/1, KV 21/1+2W, HBM 34/3, HEAD 19/6, TOTAL 123 rows 19 closed.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
