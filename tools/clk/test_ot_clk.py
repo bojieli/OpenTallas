@@ -290,3 +290,15 @@ def test_kit_runs_the_named_die_trial_and_records_it(tmp_path, monkeypatch):
     assert seen[0][1] == str(dt.resolve())
     rec = json.loads((tmp_path / "o" / "ot_clk_argv.json").read_text())["die_trial"]
     assert rec["path"] == str(dt.resolve()) and len(rec["sha256"]) == 16
+
+
+def test_builtin_ladder_rejects_ndr_and_accepts_its_measured_wire_stack():
+    # The built-in coefficients were fitted on 1x wires. A BUFx24 NDR
+    # request used to pass because the registry accidentally labelled them NDR.
+    c = cfg("s81")
+    c["stack"]["cell"] = "buf"
+    c["stage_model"] = {"entry": "builtin_bufx24_1x_ladder"}
+    ok, _, why = O.stage_check(c, reg())
+    assert not ok and any("clock_rc=ndr" in x and "clock_rc=1x" in x for x in why)
+    c["stack"]["clock_rc"] = "1x"
+    assert O.stage_check(c, reg())[0]
