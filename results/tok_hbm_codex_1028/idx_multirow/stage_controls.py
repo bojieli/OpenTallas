@@ -8,10 +8,11 @@ out.mkdir(parents=True, exist_ok=True)
 files = list((root/'physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index').rglob('*.sv'))
 files += [root/p for p in ('rtl/hbm_next/idxn/ot_hnx_idxn_calendar.sv',
     'rtl/hbm_next/idxq/ot_hnx_idxq_qctl.sv',
-    'rtl/hbm_next/idxq/ot_hnx_idxq_rootctl_static_am.sv', 'rtl/lib/ot_rst_relay.sv')]
+    'rtl/hbm_next/idxq/ot_hnx_idxq_rootctl_static_am.sv',
+    'rtl/hbm_next/idx/ot_hnx_idx_vm_query_static_n12.sv', 'rtl/lib/ot_rst_relay.sv')]
 for pattern in ('*256x256_m2_r2c2*/*.v', '*128x256_m1_r2c2*/*.v', '*32x64_m1*/*.v'):
     files += list((root/'physical/asap7_memory_macros_v2').glob(pattern))
-for name in ('tb_idxqroot_service.sv', 'tb_idxq_delivered_reset.sv', 'run_root_service.sh', 'run_qctl_reset.sh'):
+for name in ('tb_idxqroot_service.sv', 'tb_idxq_delivered_reset.sv', 'run_root_service.sh', 'run_qctl_reset.sh', 'tb_idxqreader_n12.sv', 'run_reader.sh'):
     files.append(Path(__file__).parent/name)
 seen = set()
 for source in files:
