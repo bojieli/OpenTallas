@@ -1,0 +1,122 @@
+{
+ "verdict": "FAIL",
+ "errors": 20,
+ "error_findings": [
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type dsdv_slice_lepw_mus_LP__t2: 403161 cells (by_part cells_est.json + landing rings 37672) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_lepw_mus_LP__t2",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type ot_s81sl_kv_leaf__t2: 400659 cells (by_part cells_est.json + landing rings 42236) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_kv_leaf__t2",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "cuts",
+   "msg": "vertical cut at 13500: s_2N_L1 segment carries 4169 bits on 6626 tracks = 0.63 > 0.6",
+   "part": "s_2N_L1"
+  },
+  {
+   "level": "ERROR",
+   "check": "cuts",
+   "msg": "horizontal cut at 5000: svc_1 segment carries 3142 bits on 3071 tracks = 1.02 > 0.6",
+   "part": "svc_1"
+  },
+  {
+   "level": "ERROR",
+   "check": "cuts",
+   "msg": "horizontal cut at 8500: s_3S_L2 segment carries 2408 bits on 3468 tracks = 0.69 > 0.6",
+   "part": "s_3S_L2"
+  },
+  {
+   "level": "ERROR",
+   "check": "cuts",
+   "msg": "horizontal cut at 9500: s_0S_L0 segment carries 4464 bits on 5965 tracks = 0.75 > 0.6",
+   "part": "s_0S_L0"
+  },
+  {
+   "level": "ERROR",
+   "check": "cuts",
+   "msg": "horizontal cut at 9750: s_5S_L0 segment carries 4406 bits on 6235 tracks = 0.71 > 0.6",
+   "part": "s_5S_L0"
+  },
+  {
+   "level": "ERROR",
+   "check": "cuts",
+   "msg": "horizontal cut at 11250: s_5S_L1 segment carries 3082 bits on 3468 tracks = 0.89 > 0.6",
+   "part": "s_5S_L1"
+  },
+  {
+   "level": "ERROR",
+   "check": "cuts",
+   "msg": "horizontal cut at 11500: s_6S_L1 segment carries 3683 bits on 5639 tracks = 0.65 > 0.6",
+   "part": "s_6S_L1"
+  },
+  {
+   "level": "ERROR",
+   "check": "cuts",
+   "msg": "horizontal cut at 17000: s_1N_L0 segment carries 3263 bits on 4064 tracks = 0.80 > 0.6",
+   "part": "s_1N_L0"
+  },
+  {
+   "level": "ERROR",
+   "check": "cuts",
+   "msg": "horizontal cut at 18750: s_0N_L1 segment carries 5158 bits on 5639 tracks = 0.91 > 0.6",
+   "part": "s_0N_L1"
+  },
+  {
+   "level": "ERROR",
+   "check": "cuts",
+   "msg": "horizontal cut at 19000: s_7N_L1 segment carries 5158 bits on 7639 tracks = 0.68 > 0.6",
+   "part": "s_7N_L1"
+  },
+  {
+   "level": "ERROR",
+   "check": "cuts",
+   "msg": "horizontal cut at 20000: s_0N_L3 segment carries 3893 bits on 5639 tracks = 0.69 > 0.6",
+   "part": "s_0N_L3"
+  },
+  {
+   "level": "ERROR",
+   "check": "cuts",
+   "msg": "horizontal cut at 20250: s_0N_L3 segment carries 3893 bits on 5965 tracks = 0.65 > 0.6",
+   "part": "s_0N_L3"
+  },
+  {
+   "level": "ERROR",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_ES0: rect [23339.76, 342.44, 26075.52, 1330.56] does not cover io window io_lk_ES0_u_phy [23189.76, 103.68, 26075.52, 1330.56]"
+  },
+  {
+   "level": "ERROR",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_ES0: bump rect outside the domain rect"
+  },
+  {
+   "level": "ERROR",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_ES1: rect [26225.52, 342.44, 28961.28, 1330.56] does not cover io window io_lk_ES1_u_phy [26289.16, 103.68, 28897.64, 1028.16]"
+  },
+  {
+   "level": "ERROR",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_ES1: bump rect outside the domain rect"
+  },
+  {
+   "level": "ERROR",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_ES1: phy_macro_um [26289.16, 103.68, 28897.64, 1028.16] outside the domain rect [26225.52, 342.44, 28961.28, 1330.56]"
+  },
+  {
+   "level": "ERROR",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_ES1: core strip [26075.52, 1091.8, 28961.28, 1330.56] overlaps the domain rect"
+  }
+ ]
+}
