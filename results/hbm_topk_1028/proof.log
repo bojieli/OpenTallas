@@ -1,0 +1,330 @@
+
+-- Running command `read_verilog -sv /srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv /srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv; hierarchy -check -top proof; proc; flatten; opt; sat -verify -prove bad 0 -show-inputs' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_idx_compact_tree'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv' to AST representation.
+Generating RTLIL representation for module `\proof'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \proof
+Used module:     \ot_hbm_idx_compact_tree
+Parameter \N = 32
+Parameter \W = 64
+
+3.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_idx_compact_tree'.
+Parameter \N = 32
+Parameter \W = 64
+Generating RTLIL representation for module `$paramod$0ced870f5205145d1d7cac87f94d50db6270823c\ot_hbm_idx_compact_tree'.
+Parameter \N = 32
+Parameter \W = 64
+Found cached RTLIL representation for module `$paramod$0ced870f5205145d1d7cac87f94d50db6270823c\ot_hbm_idx_compact_tree'.
+Parameter \N = 8
+Parameter \W = 8
+
+3.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_idx_compact_tree'.
+Parameter \N = 8
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod$761761bb2bc3c1c4856d15fa7ad0e9dd7844dcfd\ot_hbm_idx_compact_tree'.
+
+3.4. Analyzing design hierarchy..
+Top module:  \proof
+Used module:     $paramod$761761bb2bc3c1c4856d15fa7ad0e9dd7844dcfd\ot_hbm_idx_compact_tree
+Used module:         \ot_hbm_idx_compact_tree
+Used module:             $paramod$0ced870f5205145d1d7cac87f94d50db6270823c\ot_hbm_idx_compact_tree
+Parameter \N = 16
+Parameter \W = 64
+
+3.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_idx_compact_tree'.
+Parameter \N = 16
+Parameter \W = 64
+Generating RTLIL representation for module `$paramod$28065a178104372174f8b6d9b1ddc71b755bed46\ot_hbm_idx_compact_tree'.
+Parameter \N = 16
+Parameter \W = 64
+Found cached RTLIL representation for module `$paramod$28065a178104372174f8b6d9b1ddc71b755bed46\ot_hbm_idx_compact_tree'.
+Parameter \N = 4
+Parameter \W = 8
+
+3.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_idx_compact_tree'.
+Parameter \N = 4
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod$e43e3d4825c5a6c4c1c3911a794cf3a38c9839ba\ot_hbm_idx_compact_tree'.
+Parameter \N = 4
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod$e43e3d4825c5a6c4c1c3911a794cf3a38c9839ba\ot_hbm_idx_compact_tree'.
+
+3.7. Analyzing design hierarchy..
+Top module:  \proof
+Used module:     $paramod$761761bb2bc3c1c4856d15fa7ad0e9dd7844dcfd\ot_hbm_idx_compact_tree
+Used module:         $paramod$e43e3d4825c5a6c4c1c3911a794cf3a38c9839ba\ot_hbm_idx_compact_tree
+Used module:             \ot_hbm_idx_compact_tree
+Used module:                 $paramod$0ced870f5205145d1d7cac87f94d50db6270823c\ot_hbm_idx_compact_tree
+Used module:                     $paramod$28065a178104372174f8b6d9b1ddc71b755bed46\ot_hbm_idx_compact_tree
+Parameter \N = 8
+Parameter \W = 64
+
+3.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_idx_compact_tree'.
+Parameter \N = 8
+Parameter \W = 64
+Generating RTLIL representation for module `$paramod$9ab12e6428057506c6fb93c8ecc401ed57ee4c58\ot_hbm_idx_compact_tree'.
+Parameter \N = 8
+Parameter \W = 64
+Found cached RTLIL representation for module `$paramod$9ab12e6428057506c6fb93c8ecc401ed57ee4c58\ot_hbm_idx_compact_tree'.
+Parameter \N = 2
+Parameter \W = 8
+
+3.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_idx_compact_tree'.
+Parameter \N = 2
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod$b1bba913dbf8393197b6458897c7be8bdbe9b285\ot_hbm_idx_compact_tree'.
+Parameter \N = 2
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod$b1bba913dbf8393197b6458897c7be8bdbe9b285\ot_hbm_idx_compact_tree'.
+
+3.10. Analyzing design hierarchy..
+Top module:  \proof
+Used module:     $paramod$761761bb2bc3c1c4856d15fa7ad0e9dd7844dcfd\ot_hbm_idx_compact_tree
+Used module:         $paramod$e43e3d4825c5a6c4c1c3911a794cf3a38c9839ba\ot_hbm_idx_compact_tree
+Used module:             $paramod$b1bba913dbf8393197b6458897c7be8bdbe9b285\ot_hbm_idx_compact_tree
+Used module:                 \ot_hbm_idx_compact_tree
+Used module:                     $paramod$0ced870f5205145d1d7cac87f94d50db6270823c\ot_hbm_idx_compact_tree
+Used module:                         $paramod$28065a178104372174f8b6d9b1ddc71b755bed46\ot_hbm_idx_compact_tree
+Used module:                             $paramod$9ab12e6428057506c6fb93c8ecc401ed57ee4c58\ot_hbm_idx_compact_tree
+Parameter \N = 4
+Parameter \W = 64
+
+3.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_idx_compact_tree'.
+Parameter \N = 4
+Parameter \W = 64
+Generating RTLIL representation for module `$paramod$af5b3c41a2e29afeee5abf79076c83353e8b36ff\ot_hbm_idx_compact_tree'.
+Parameter \N = 4
+Parameter \W = 64
+Found cached RTLIL representation for module `$paramod$af5b3c41a2e29afeee5abf79076c83353e8b36ff\ot_hbm_idx_compact_tree'.
+Parameter \N = 1
+Parameter \W = 8
+
+3.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_idx_compact_tree'.
+Parameter \N = 1
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod$28baf076c8b906f183c4a5311b71aaf8ce31b1c4\ot_hbm_idx_compact_tree'.
+Parameter \N = 1
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod$28baf076c8b906f183c4a5311b71aaf8ce31b1c4\ot_hbm_idx_compact_tree'.
+
+3.13. Analyzing design hierarchy..
+Top module:  \proof
+Used module:     $paramod$761761bb2bc3c1c4856d15fa7ad0e9dd7844dcfd\ot_hbm_idx_compact_tree
+Used module:         $paramod$e43e3d4825c5a6c4c1c3911a794cf3a38c9839ba\ot_hbm_idx_compact_tree
+Used module:             $paramod$b1bba913dbf8393197b6458897c7be8bdbe9b285\ot_hbm_idx_compact_tree
+Used module:                 $paramod$28baf076c8b906f183c4a5311b71aaf8ce31b1c4\ot_hbm_idx_compact_tree
+
+3.14. Analyzing design hierarchy..
+Top module:  \proof
+Used module:     $paramod$761761bb2bc3c1c4856d15fa7ad0e9dd7844dcfd\ot_hbm_idx_compact_tree
+Used module:         $paramod$e43e3d4825c5a6c4c1c3911a794cf3a38c9839ba\ot_hbm_idx_compact_tree
+Used module:             $paramod$b1bba913dbf8393197b6458897c7be8bdbe9b285\ot_hbm_idx_compact_tree
+Used module:                 $paramod$28baf076c8b906f183c4a5311b71aaf8ce31b1c4\ot_hbm_idx_compact_tree
+Removing unused module `$paramod$af5b3c41a2e29afeee5abf79076c83353e8b36ff\ot_hbm_idx_compact_tree'.
+Removing unused module `$paramod$9ab12e6428057506c6fb93c8ecc401ed57ee4c58\ot_hbm_idx_compact_tree'.
+Removing unused module `$paramod$28065a178104372174f8b6d9b1ddc71b755bed46\ot_hbm_idx_compact_tree'.
+Removing unused module `$paramod$0ced870f5205145d1d7cac87f94d50db6270823c\ot_hbm_idx_compact_tree'.
+Removing unused module `\ot_hbm_idx_compact_tree'.
+Removed 5 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 8 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv:5$15 in module proof.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 11 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~8 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\proof.$proc$/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv:5$15'.
+     1/24: $8\n[31:0]
+     2/24: $8\ref_words[63:0]
+     3/24: $1$bitselwrite$pos$/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv:7$14[31:0]$102
+     4/24: $7\n[31:0]
+     5/24: $7\ref_words[63:0]
+     6/24: $1$bitselwrite$pos$/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv:7$13[31:0]$91
+     7/24: $6\n[31:0]
+     8/24: $6\ref_words[63:0]
+     9/24: $1$bitselwrite$pos$/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv:7$12[31:0]$80
+    10/24: $5\n[31:0]
+    11/24: $5\ref_words[63:0]
+    12/24: $1$bitselwrite$pos$/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv:7$11[31:0]$69
+    13/24: $4\n[31:0]
+    14/24: $4\ref_words[63:0]
+    15/24: $1$bitselwrite$pos$/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv:7$10[31:0]$58
+    16/24: $3\n[31:0]
+    17/24: $3\ref_words[63:0]
+    18/24: $1$bitselwrite$pos$/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv:7$9[31:0]$47
+    19/24: $2\n[31:0]
+    20/24: $2\ref_words[63:0]
+    21/24: $1$bitselwrite$pos$/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv:7$8[31:0]$36
+    22/24: $1\n[31:0]
+    23/24: $1\ref_words[63:0]
+    24/24: $1$bitselwrite$pos$/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv:7$7[31:0]$25
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\proof.\ref_words' from process `\proof.$proc$/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv:5$15'.
+No latch inferred for signal `\proof.\n' from process `\proof.$proc$/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv:5$15'.
+No latch inferred for signal `\proof.$fordecl_block$5.j' from process `\proof.$proc$/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv:5$15'.
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 8 empty switches in `\proof.$proc$/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv:5$15'.
+Removing empty process `proof.$proc$/srv/opentallas-scratch2/claude/codex-hbm-topk-1028/src/tools/hbm_b2/topk_tree/proof.sv:5$15'.
+Cleaned up 8 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$b1bba913dbf8393197b6458897c7be8bdbe9b285\ot_hbm_idx_compact_tree.
+Optimizing module $paramod$761761bb2bc3c1c4856d15fa7ad0e9dd7844dcfd\ot_hbm_idx_compact_tree.
+Optimizing module $paramod$28baf076c8b906f183c4a5311b71aaf8ce31b1c4\ot_hbm_idx_compact_tree.
+Optimizing module proof.
+<suppressed ~10 debug messages>
+Optimizing module $paramod$e43e3d4825c5a6c4c1c3911a794cf3a38c9839ba\ot_hbm_idx_compact_tree.
+
+5. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$b1bba913dbf8393197b6458897c7be8bdbe9b285\ot_hbm_idx_compact_tree.
+Deleting now unused module $paramod$761761bb2bc3c1c4856d15fa7ad0e9dd7844dcfd\ot_hbm_idx_compact_tree.
+Deleting now unused module $paramod$28baf076c8b906f183c4a5311b71aaf8ce31b1c4\ot_hbm_idx_compact_tree.
+Deleting now unused module $paramod$e43e3d4825c5a6c4c1c3911a794cf3a38c9839ba\ot_hbm_idx_compact_tree.
+<suppressed ~7 debug messages>
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+<suppressed ~35 debug messages>
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 134 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 127 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+<suppressed ~21 debug messages>
+Removed a total of 7 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$179.
+    dead port 2/2 on $mux $procmux$179.
+    dead port 1/2 on $mux $procmux$170.
+    dead port 2/2 on $mux $procmux$170.
+    dead port 1/2 on $mux $procmux$161.
+    dead port 2/2 on $mux $procmux$161.
+    dead port 1/2 on $mux $procmux$152.
+    dead port 2/2 on $mux $procmux$152.
+    dead port 1/2 on $mux $procmux$197.
+    dead port 2/2 on $mux $procmux$197.
+    dead port 1/2 on $mux $procmux$188.
+    dead port 2/2 on $mux $procmux$188.
+    dead port 1/2 on $mux $procmux$206.
+    dead port 2/2 on $mux $procmux$206.
+    dead port 1/2 on $mux $procmux$215.
+    dead port 2/2 on $mux $procmux$215.
+Removed 16 multiplexer ports.
+<suppressed ~48 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 119 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+Removed 0 unused cells and 139 unused wires.
+<suppressed ~8 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~48 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 112 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+6.16. Finished fast OPT passes. (There is nothing left to do.)
+
+7. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 112 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+Import show expression: \words
+Import show expression: \mask
+
+Solving problem with 31871 variables and 87595 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
