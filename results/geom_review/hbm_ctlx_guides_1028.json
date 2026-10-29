@@ -1,0 +1,11 @@
+{
+ "picture":"results/hbm_ctlx_1028/guide_estimate.png",
+ "reviewer":"CODEX macro-estimate",
+ "verdict":"PASS-COND PLACE TRIAL ONLY; no route or STA",
+ "findings":[
+  "Viewed same391.392x416.448 outline with one fixed SRAM and nine clock/reset islands.165 internal source/consumer FFs move toward their communicating face registers; existing fixed pins/face FFs/macros/clock cells remain.",
+  "Exact full sequential graph model covers all incident launchers, including alternate addr_q8/9 hidden by worst-per-capture receipt.8215 incident pairs constrained, canonical fullgraph16749 captures: max385um/0over405/0loops at guide centres.",
+  "Each guide8.64square allows up to17.28um extra distance between two guided endpoints, leaving~2.72um geometric margin to405 before legalization. Macro+4.32halo and all nine islands clear guide boxes.",
+  "Only placement trial allowed. Inclusive guides release before DPL; temporarily preserve other sequential positions during GPL then release. Actual post-DPL census and congestion decide; no clock change or new latency."
+ ]
+}
