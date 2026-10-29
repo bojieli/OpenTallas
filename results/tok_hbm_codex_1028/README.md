@@ -7,3 +7,15 @@ Focused tests: `python3 -m pytest -q tools/hbm_next/test_four_role_calendar.py t
 Actual 161-record f0b93231 receipt, current C25b 4180334c dry-run legs: station RT98, r return267, minimum rgap24. Exactly81 PRE records change by120 service cycles each, total9720 cycles per FUSED MTP pass (8.10us at1.2GHz). This is a schedule price, not a full token rate. The die owner now plans a20-edge host-provider chain over6929um to obey405um reach; that shifts preload/commit/START by16 boot cycles relative to the earlier4-edge declaration, with no per-job service change.
 
 No executable current programme is emitted here: C25c committed plan/side and strict0 are still required. Current whole-die numerical/token pass remains open. Historical gin/qin undeclared seed ties are being classified by the binding owner; a proper attention-input mutant must alter an interior producer link rather than the intentional first/last-stage zero seeds.
+
+## Eight-SU source and four-role memory client0 absence
+
+`source_local_su_census.py` checks the actual canonical top: exactly eight SU slices (NW/NE0..3), fixed QID2/3, a PARTS2 programme root and sixteen SW/SE bank client0 sockets whose named SU producers do not exist. This is source ownership evidence only. A direct north/south alias would duplicate requests and violate the native QID/address check; no time-fold mapping has been claimed.
+
+The existing VM calendar compiler now accepts an explicit `local_su_present:false` schedule field only for SW/SE, with a required `build_mode` of SU, MTP or MU. It refuses every configured word that grants read/write group0 or emits any local LG request. Other client groups, addresses, valid bits and programme words remain unchanged. It publishes an absence receipt only for that finite calendar/mode. Sixteen focused tests preserve other-client words and catch forbidden grant/request controls in all three declared modes. No actual current production VM calendar has been supplied, so this does not prove all-mode absence or authorize a current plan adoption.
+
+A separate explicit no-local-SU bank master is under minimal real-SRAM lockstep by the bank_absence worker; it preserves all other clients and registers and must report a forbidden client0 grant. Source specialization and physical view adoption remain separate from the calendar compiler guard.
+
+## Native lane boundary at the actual C25b return distance
+
+Reused the already compiled TOK-HBM-2 native one-lane + one-tnode binary through ot-run (intel2/tolerant-swine unit oth-ubuntu-1542756-1793257104), without rebuilding. `+N=6 +RD=267 +RGAP=24`: fin1011 afterGO,120chunk sums,120writes,6returns,fault0. The same binary at rgap23 latches fault atGO+477 (although it later finishes); it is a required failure, not an exit-status pass. This measures the newly scheduled24-edge boundary directly in native RTL at833ps. The fixed VM returns are zero-data; this proves retained-row occupancy/service behavior, not full-tree numeric correctness or whole-die token passage. The inherited source/bench is the TOK-HBM-2 lane_service vehicle.
