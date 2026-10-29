@@ -18,7 +18,7 @@ TD, FD = 54, 58
 DCMD = [7, 6, 3, 0, -1, -5, -8, -10]          # landed - as-built per trunk station (bind5 pvw_0 s0..s7)
 
 
-def landing():
+def landing(lc=False):
     groups = []
     for k, side_off in ((0, 0), (1, 1)):
         pvw = f"pvw_{k}"
@@ -35,7 +35,8 @@ def landing():
                                members=[mk("join_go", [0, 0], f"{pvw}__u_ctl.cmd", [31, 31], ca, cl)]))
             for b in range(2):
                 groups.append(dict(sink=f"{pvw}__u_s{c}_b{b}", sink_part=f"pv_{k}_{st}", src_part="hub_C",
-                                   members=[mk("bc", [0, 22], f"{pvw}__u_ctl.cmd", [8, 30], ca, cl)]))
+                                   members=[mk("bc", [0, 22], f"{pvw}__u_ctl.cmd", [8, 30], ca, cl)]
+                                   + ([mk("bcx", [0, 5], f"{pvw}__u_ctl.cmd", [25, 26], ca, cl)] if lc else [])))
             flags += [mk("col_valid", [c, c], f"{pvw}__u_s{c}_j.y_valid", [0, 0], fa, fl),
                       mk("col_fault", [c, c], f"{pvw}__u_s{c}_j.fault", [0, 0], fa, fl)]
         groups.append(dict(sink=f"{pvw}__u_ctl", sink_part="hub_C", src_part="pv", members=flags))
@@ -103,6 +104,20 @@ def test_pads_make_law_exact_and_hook_agrees():
         # re-running the generator on the padded bind owes nothing
         again = P.pads(Path(t) / "b1", r8_table(g2))
         assert again["summary"]["pad_flops"] == 0 and again["summary"]["FLAG_D"] == s["FLAG_D"]
+
+
+def test_lc_bcx_takes_the_bc_pad():
+    """DIE-KV-19 (b2): the lc bank tile's copy pins bcx come from the same command word -> same pad as bc, law unchanged."""
+    with tempfile.TemporaryDirectory() as t:
+        g0, g1 = landing(), landing(lc=True)
+        write_bind(Path(t) / "t", g0)
+        write_bind(Path(t) / "lc", g1)
+        t0, t1 = P.pads(Path(t) / "t", r8_table(g0)), P.pads(Path(t) / "lc", r8_table(g1))
+        assert t0["law"] == t1["law"]
+        bc = {m["sink"]: m["pad"] for m in t1["members"] if m["sink_port"] == "bc"}
+        bcx = {m["sink"]: m["pad"] for m in t1["members"] if m["sink_port"] == "bcx"}
+        assert bcx and bcx == bc
+        assert t1["summary"]["pad_flops_cmd"] - t0["summary"]["pad_flops_cmd"] == 6 * sum(bcx.values())
 
 
 def _ctx(groups):

@@ -95,6 +95,22 @@ def test_kit_contract_charges_late_core_tap_not_planned_earliness():
     assert late["window_needed_ps"] == 180.0 and late["verdict"] == "FAIL"
 
 
+
+def test_skew_diag_is_arrival_minus_planned_target():
+    """DIE-S81-18 (COORD 10-28 rule 2): the skew report subtracts the planned target (early core tap earliness);
+    the raw tap-arrival number stays as skew_raw_max_ps.  Without early core taps both are identical."""
+    off = {CORE: 180.0}
+    raw = _intra()
+    assert raw["skew_raw_max_ps"] == raw["skew_diag_max_ps"]              # no offsets: raw == target-relative
+    assert raw["skew_diag_max_ps"] >= 180.0                               # planned earliness counted as skew
+    planned = _intra(kit_offset=off)
+    assert planned["skew_raw_max_ps"] == raw["skew_raw_max_ps"]
+    assert planned["skew_diag_max_ps"] == round(raw["skew_diag_max_ps"] - 180.0, 2)   # only the late/early spread
+    assert planned["skew_diag_over_80"] == 0 and "planned target" in planned["skew_diag_basis"]
+    late = _intra(kit_offset=off, core_early=60.0)                       # delivered 120 ps less early than planned
+    assert late["skew_diag_max_ps"] == round(planned["skew_diag_max_ps"] + 120.0, 2)
+    assert late["worst_skew"][0][0] == late["skew_diag_max_ps"]
+
 def _run(tmp_path, monkeypatch, plan, *extra, core_view_model=None):
     monkeypatch.setattr(R, "characterise", lambda *a, **k: dict(REG))
     if core_view_model is not None:

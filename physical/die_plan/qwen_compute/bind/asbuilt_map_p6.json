@@ -132,6 +132,10 @@
    "sl_\\1_ctl"
   ],
   [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_suvm\\..*",
+   "sl_\\1_su_c"
+  ],
+  [
    "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_suvm",
    "sl_\\1_su_c"
   ],
@@ -204,5 +208,5 @@
    "coll_core"
   ]
  ],
- "note": " | ELEMQK-BIND 10-24 (P6 main plan 4b7b2b3e64): u_tap -> sl_*_ctl (QC-P6-R8 1f5b9bee38), io_ucie + io_collective u_shared/g_six_five -> coll_ucie (census/coll_map.json)"
+ "note": "DIE-QC-25 10-28 (map owner, COORD 22:32 SU form (a)): + u_suvm descendants -> sl_*_su_c (qfd_dv_s8_suvm_rp1 / vm8q_rp1 dissolved: SU hard cores va/vb/vc/pg/cl/ch/bt/su8 and their relay glue all sit in the su_c partition; no-op while u_suvm stays one leaf) |  | ELEMQK-BIND 10-24 (P6 main plan 4b7b2b3e64): u_tap -> sl_*_ctl (QC-P6-R8 1f5b9bee38), io_ucie + io_collective u_shared/g_six_five -> coll_ucie (census/coll_map.json)"
 }

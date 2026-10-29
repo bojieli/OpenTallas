@@ -245,3 +245,20 @@ def test_annotate_table_writes_partition_roles():
     table["ports"][0]["dst"] = "zz"
     with pytest.raises(CB.BindError, match="bind partitions"):
         CB.annotate_table(table, b)
+
+
+def test_ocv_parts_partition_level_rows_fall_back_to_src_dst():
+    # DIE-S81-17: S81 landed_phase_ocv rows are partition-level (no src_part/dst_part); --parts ocv must bind them with
+    # the partition = src/dst (count_align_plan.row_ports identity), and named rows keep their src_part/dst_part
+    rows = [row("ab", "a", "b", 0.8 * T, 30, 30), row("bc", "b", "c", 100), row("ca", "c", "a", -60, 200, 200)]
+    parts = CB.ocv_parts(rows)
+    assert parts == {"ab": ("a", "b"), "bc": ("b", "c"), "ca": ("c", "a")}
+    _, pr = CAP.row_ports(rows)
+    assert all((pr[s], pr[d]) == (s, d) for s, d in parts.values())
+    b = CB.bind(plan(rows), parts=parts)
+    v = CB.verify(b, 400)
+    assert not v["identity_and_loop_errors"] and v["sim_window_violations"] == 0, v
+    br = CB.bind(plan(rows))
+    assert {p: c["K"] for p, c in b["ports"].items()} == {p: c["K"] for p, c in br["ports"].items()}
+    named = [dict(r, src_part="a1", dst_part="b1") if r["port"] == "ab" else r for r in rows]
+    assert CB.ocv_parts(named)["ab"] == ("a1", "b1") and CB.ocv_parts(named)["bc"] == ("b", "c")

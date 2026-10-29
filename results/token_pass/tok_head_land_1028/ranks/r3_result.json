@@ -1,0 +1,70 @@
+{
+ "verdict": "PASS_ALL_ACTIVE_TILES",
+ "rank": 3,
+ "active_tiles": 252,
+ "failed_tiles": [],
+ "n_failed": 0,
+ "rows_checked_via_argmax": 32256,
+ "go_to_result_cycles": [
+  8429
+ ],
+ "lockstep_checks_total": 2268756,
+ "ft_scalar_checks_total": 45465840,
+ "rtl_rank_argmax": {
+  "tile": "tW1o8",
+  "local_row": 6750,
+  "global_row": 103774,
+  "bits": "414142e8"
+ },
+ "golden_rank_argmax": {
+  "tile": "tW1o8",
+  "global_row": 103774,
+  "bits": "414142e8"
+ },
+ "controls": {
+  "wrongrom": true,
+  "mutrow": true,
+  "mutft": true
+ },
+ "control_detail": [
+  {
+   "tile": "tE0b0",
+   "tag": "wrongrom",
+   "exit": 1,
+   "row": null,
+   "bits": null,
+   "go_to_result": null,
+   "checks": null,
+   "ft_checks": null,
+   "pass_line": false,
+   "fatal": "HEAD_PARTITION released-checkpoint golden mismatch"
+  },
+  {
+   "tile": "tW1o8",
+   "tag": "mutrow",
+   "exit": 1,
+   "row": null,
+   "bits": null,
+   "go_to_result": null,
+   "checks": null,
+   "ft_checks": null,
+   "pass_line": false,
+   "fatal": "HEAD_PARTITION lockstep mismatch at509 result_v0 ref_v0 mutant1"
+  },
+  {
+   "tile": "tW1o8",
+   "tag": "mutft",
+   "exit": 1,
+   "row": null,
+   "bits": null,
+   "go_to_result": null,
+   "checks": null,
+   "ft_checks": null,
+   "pass_line": false,
+   "fatal": "HEAD_NATIVE_FT mismatch"
+  }
+ ],
+ "exe": "/srv/opentallas-scratch2/claude/tok14-head-fw/build/obj/Vtb_head_partition_token",
+ "exe_sha256": "d71b14393a1506726cfb6e54b2ced85583886d89619047b670b4324453eb49f7",
+ "rank_argmax_match": true
+}

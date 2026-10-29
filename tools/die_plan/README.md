@@ -497,3 +497,12 @@ OCV-INCLUSIVE spread (approved clock AOCV table `--aocv-table`, hold convention,
 whole variant table is recorded in the plan summary. `ocv PLAN ARR_TT ARR_FF` gives the same OCV-inclusive spread on
 measured (routed) arrivals, the trunk acceptance number (<= 60, ROUTED + OCV). `--topology greedy` stays the default
 and is byte-identical (A0 nl q0 cmp CHECKED).
+OPT-IN (QC-A0-KITS-9) `plan --ungated-split`: geometry clusters flagged `"ungated": true` (input-face registers, enable
+state, reset landing) form the UNGATED face branch; every other cluster and every hard child form the GATED branch behind
+ONE ICG (QC-PG-4 tile-root structure, OWNER option c). Each branch is planned as before (greedy or bipart), the ICG is a
+node at the gated root (+ `--icg-offset`, its delay charged to that branch only) and the ROOT merge balances face vs gated
+latency by wire length. The root leg starts at the tile entry on the clock port net (tcl `ROOT_NET`/`ICG_IN`);
+`parent_trunk_insert.tcl` maps ROOT_NET to CLK_NET and, with `ICG_INST`, reuses the RTL ICG (its GCLK net = gated root,
+RTL ENA/SE kept) instead of creating a tied one; `OT_PT_NO_IO=1` skips read_db/write_db for an in-flow caller. ocv and
+corr walk the ICG node; eco refuses split plans (fail closed). Without the flag nothing changes (DIE-QC-18 nk s0 regenerated
+byte-identical, CHECKED); a geometry with ungated clusters and no flag fails closed.

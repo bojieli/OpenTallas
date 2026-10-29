@@ -1,0 +1,542 @@
+{
+ "dn_03_01": {
+  "lanes": [
+   "attn__svc_3__svc_1",
+   "vid_svc_3__svc_1"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_03"
+  ],
+  "dst": [
+   "u_rsv_01"
+  ]
+ },
+ "dn_05_03": {
+  "lanes": [
+   "attn__svc_5__svc_3",
+   "vid_svc_5__svc_3"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_05"
+  ],
+  "dst": [
+   "u_rsv_03"
+  ]
+ },
+ "dn_11_13": {
+  "lanes": [
+   "attn__svc_11__svc_13"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_11"
+  ],
+  "dst": [
+   "u_rsv_13"
+  ]
+ },
+ "pr_01_03": {
+  "lanes": [
+   "attn__svc_1__svc_3"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_01"
+  ],
+  "dst": [
+   "u_rsv_03"
+  ]
+ },
+ "pr_03_05": {
+  "lanes": [
+   "attn__svc_3__svc_5"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_03"
+  ],
+  "dst": [
+   "u_rsv_05"
+  ]
+ },
+ "pr_09_07": {
+  "lanes": [
+   "attn__svc_9__svc_7",
+   "vid_svc_9__svc_7"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_09"
+  ],
+  "dst": [
+   "u_rsv_07"
+  ]
+ },
+ "pr_13_11": {
+  "lanes": [
+   "attn__svc_13__svc_11",
+   "vid_svc_13__svc_11"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_13"
+  ],
+  "dst": [
+   "u_rsv_11"
+  ]
+ },
+ "sg_01_03": {
+  "lanes": [
+   "attn__svc_1__svc_3"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_01"
+  ],
+  "dst": [
+   "u_rsv_03"
+  ]
+ },
+ "sg_03_05": {
+  "lanes": [
+   "attn__svc_3__svc_5"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_03"
+  ],
+  "dst": [
+   "u_rsv_05"
+  ]
+ },
+ "sg_04_06": {
+  "lanes": [
+   "attn__svc_4__svc_6",
+   "idx__svc_4__svc_6",
+   "unit__svc_4__svc_6",
+   "vid_svc_4__svc_6"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_04"
+  ],
+  "dst": [
+   "u_rsv_06"
+  ]
+ },
+ "sg_06_04": {
+  "lanes": [
+   "attn__svc_6__svc_4",
+   "unit__svc_6__svc_4"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_06"
+  ],
+  "dst": [
+   "u_rsv_04"
+  ]
+ },
+ "sg_07_09": {
+  "lanes": [
+   "attn__svc_7__svc_9"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_07"
+  ],
+  "dst": [
+   "u_rsv_09"
+  ]
+ },
+ "sg_08_10": {
+  "lanes": [
+   "attn__svc_8__svc_10",
+   "idx__svc_8__svc_10",
+   "unit__svc_8__svc_10",
+   "vid_svc_8__svc_10"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_08"
+  ],
+  "dst": [
+   "u_rsv_10"
+  ]
+ },
+ "sg_10_12": {
+  "lanes": [
+   "attn__svc_10__svc_12",
+   "idx__svc_10__svc_12",
+   "unit__svc_10__svc_12",
+   "vid_svc_10__svc_12"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_10"
+  ],
+  "dst": [
+   "u_rsv_12"
+  ]
+ },
+ "sg_11_13": {
+  "lanes": [
+   "attn__svc_11__svc_13"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_11"
+  ],
+  "dst": [
+   "u_rsv_13"
+  ]
+ },
+ "sg_12_10": {
+  "lanes": [
+   "attn__svc_12__svc_10",
+   "unit__svc_12__svc_10"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_12"
+  ],
+  "dst": [
+   "u_rsv_10"
+  ]
+ },
+ "sg_13_11": {
+  "lanes": [
+   "attn__svc_13__svc_11",
+   "vid_svc_13__svc_11"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_13"
+  ],
+  "dst": [
+   "u_rsv_11"
+  ]
+ },
+ "ss_03_01": {
+  "lanes": [
+   "attn__svc_3__svc_1",
+   "vid_svc_3__svc_1"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_03"
+  ],
+  "dst": [
+   "u_rsv_01"
+  ]
+ },
+ "ss_04_06": {
+  "lanes": [
+   "attn__svc_4__svc_6",
+   "idx__svc_4__svc_6",
+   "unit__svc_4__svc_6",
+   "vid_svc_4__svc_6"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_04"
+  ],
+  "dst": [
+   "u_rsv_06"
+  ]
+ },
+ "ss_05_03": {
+  "lanes": [
+   "attn__svc_5__svc_3",
+   "vid_svc_5__svc_3"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_05"
+  ],
+  "dst": [
+   "u_rsv_03"
+  ]
+ },
+ "ss_06_04": {
+  "lanes": [
+   "attn__svc_6__svc_4",
+   "unit__svc_6__svc_4"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_06"
+  ],
+  "dst": [
+   "u_rsv_04"
+  ]
+ },
+ "ss_09_07": {
+  "lanes": [
+   "attn__svc_9__svc_7",
+   "vid_svc_9__svc_7"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_09"
+  ],
+  "dst": [
+   "u_rsv_07"
+  ]
+ },
+ "ss_10_08": {
+  "lanes": [
+   "attn__svc_10__svc_8",
+   "unit__svc_10__svc_8"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_10"
+  ],
+  "dst": [
+   "u_rsv_08"
+  ]
+ },
+ "ss_10_12": {
+  "lanes": [
+   "attn__svc_10__svc_12",
+   "idx__svc_10__svc_12",
+   "unit__svc_10__svc_12",
+   "vid_svc_10__svc_12"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_10"
+  ],
+  "dst": [
+   "u_rsv_12"
+  ]
+ },
+ "ss_11_13": {
+  "lanes": [
+   "attn__svc_11__svc_13"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_11"
+  ],
+  "dst": [
+   "u_rsv_13"
+  ]
+ },
+ "ss_12_10": {
+  "lanes": [
+   "attn__svc_12__svc_10",
+   "unit__svc_12__svc_10"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_12"
+  ],
+  "dst": [
+   "u_rsv_10"
+  ]
+ },
+ "ss_13_11": {
+  "lanes": [
+   "attn__svc_13__svc_11",
+   "vid_svc_13__svc_11"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_13"
+  ],
+  "dst": [
+   "u_rsv_11"
+  ]
+ },
+ "up_01_03": {
+  "lanes": [
+   "attn__svc_1__svc_3"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_01"
+  ],
+  "dst": [
+   "u_rsv_03"
+  ]
+ },
+ "up_03_05": {
+  "lanes": [
+   "attn__svc_3__svc_5"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_03"
+  ],
+  "dst": [
+   "u_rsv_05"
+  ]
+ },
+ "up_13_11": {
+  "lanes": [
+   "attn__svc_13__svc_11",
+   "vid_svc_13__svc_11"
+  ],
+  "asbuilt_stages": [
+   3
+  ],
+  "bound_depth": [
+   2
+  ],
+  "src": [
+   "u_rsv_13"
+  ],
+  "dst": [
+   "u_rsv_11"
+  ]
+ }
+}

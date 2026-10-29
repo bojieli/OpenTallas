@@ -337,6 +337,46 @@ def edge_clock_pins(P, tn):
             for e in P.types[tn].get("clock", {}).get("edge_clocks", [])]
 
 
+# DIE-HEAD-21 (opt-in plan clock.edge_clocks[].source_latency_ps): a source-forwarded edge clock (count-aligned ring
+# write clock) reaches its port at the SENDER's export arrival + wire, not at 0 while its data inputs are timed on the
+# vclk insertion (DH19: 2272 ring writers -130.6 ps at source latency 0).  The measured range is a source latency on
+# the edge clock: -early = min arrival (OpenSTA/PT use the early source latency for the CAPTURE clock of setup checks
+# and the launch of holds), -late = max arrival (capture of holds, launch of setups), so one SDC is pessimistic for
+# both checks within a corner.  The corner itself cannot share one SDC (same reason as the vclk, ruling 9.7): TT goes
+# into constraint.sdc, FF into the core_taps_ff.sdc corner overlay (OT_CORE_TAP_CORNER_FILE, read by vclk_corner.tcl
+# ff / postcts FF gate / sign-off FF; vclk_corner.tcl tt re-applies the constraint.sdc lines).  Absent: no line.
+def edge_clock_latency(P, tn):
+    """[(port, {"tt": (early, late), "ff": (early, late)}, basis)] for the type's edge clocks with source_latency_ps."""
+    out = []
+    for e in P.types[tn].get("clock", {}).get("edge_clocks", []):
+        sl = e.get("source_latency_ps")
+        if sl is None:
+            continue
+        if tap_window_ps(P):      # the window's port-level -early/-late lines would override the clock-level arrival
+            raise ValueError(f"type {tn}: edge clock {e['port']} source_latency_ps with a plan clock.tap_window")
+        v = {}
+        for c in ("tt", "ff"):
+            a, b = float(sl[c]["early"]), float(sl[c]["late"])
+            if not 0 <= a <= b:
+                raise ValueError(f"type {tn}: edge clock {e['port']} {c} source latency early {a:g} / late {b:g} ps "
+                                 "needs 0 <= early <= late")
+            v[c] = (a, b)
+        out.append((e["port"], v, sl["basis"]))
+    return out
+
+
+def edge_clock_latency_tcl(P, tn, corner):
+    """the -early / -late source latency lines of the type's edge clocks at corner 'tt' | 'ff' ('' without any)."""
+    out = ""
+    for n, v, basis in edge_clock_latency(P, tn):
+        a, b = v[corner]
+        out += (f"# forwarded edge clock {n} {corner.upper()} arrival at the port {a:g}..{b:g} ps ({basis}): early = "
+                "setup capture, late = hold capture\n"
+                f"set_clock_latency -source -early {t_lib(a):.4f} [get_clocks {n}]\n"
+                f"set_clock_latency -source -late {t_lib(b):.4f} [get_clocks {n}]\n")
+    return out
+
+
 def tap_pins(P, tn):
     """[(port, x, y)]: every clock tap (+ early core taps) + the reset tap (+ PHY-edge clock pins)."""
     import reset_tree as RT
@@ -1189,7 +1229,7 @@ def sdc(P, tn, pins):
            f"the FF-only flow steps; ruling 9.7 / decision 5e): virtual IO clock\n"
            + "".join(f"# PHY-edge clock (plan clock.edge_clocks): synchronous with clk, period {m} x T\n"
                      f"create_clock -name {n} -period {m * per:.4f} [get_ports {n}]\n"
-                     for n, _x, _y, m in edge_clock_pins(P, tn)) +
+                     for n, _x, _y, m in edge_clock_pins(P, tn)) + edge_clock_latency_tcl(P, tn, "tt") +
            f"create_clock -name vclk -period {per:.4f}\n"
            f"set_clock_latency -source {lat:.4f} [get_clocks vclk]\n"
            + (f"# plan clock.tap_window (COORD 11:24): die tap-to-tap arrival window {tap_window_ps(P):g} ps on every "
@@ -1206,7 +1246,7 @@ def sdc(P, tn, pins):
            f"set_input_delay -max {io + t_lib(tw_in):.4f} -clock vclk $non_clk_in\n"
            f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n")
     source_ports = set()
-    if core_tap_rows(P, tn):
+    if core_tap_rows(P, tn) or edge_clock_latency(P, tn):
         out += "# OT_CORE_TAP_CORNER_FILE core_taps_ff.sdc\n"
     for n, inst, pin, early, ins in core_tap_rows(P, tn):
         if n in source_ports:
@@ -1729,6 +1769,19 @@ KEEP_REGS_HOOK = ("ot_keep_regs.tcl", "ot_pin_regs.tcl", "pin_reg_split.tcl", "o
 _INCLUDE = re.compile(r'^[ \t]*`include[ \t]+"([^"]+)"', re.M)
 
 
+
+def declared_rom_bits(rtl_dir):
+    """Largest words*width of an OWNER D-ROM-2 declared-logic table (tools/mem_compiler/rom_declared_logic.json) whose
+    module is defined in the kit RTL (0 if none); gen phys raises SYNTH_MEMORY_MAX_BITS to exactly that size."""
+    decl = Path(__file__).resolve().parent.parent / "mem_compiler" / "rom_declared_logic.json"
+    tables = json.loads(decl.read_text())["tables"]
+    text = "\n".join(f.read_text(errors="replace") for f in sorted(Path(rtl_dir).glob("*.sv")))
+    best = 0
+    for t in tables:
+        if re.search(r"^\s*module\s+" + re.escape(t["module"]) + r"\b", text, re.M):
+            best = max(best, int(t["words"]) * int(t["width"]))
+    return best
+
 def stage_includes(rtl_files, rtl_dir):
     """DIE-HEAD-7 / RISK-SWEEP-2 10-28: copy every `include "x" a staged source names (transitively) from the source's
     own directory into the kit rtl/ (yosys resolves includes next to the including file); the HEAD hd_serdes kit
@@ -1750,7 +1803,9 @@ def stage_includes(rtl_files, rtl_dir):
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
-                   bump_ports=None, gpl_plain=False):
+                   bump_ports=None, gpl_plain=False, land_slots=None):
+    """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
+    kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
     if gpl_plain and not t.get("ft_slots"):
         raise ValueError(f"type {tn}: --gpl-plain is for pure-FT corridor kits; the type has no ft_slots")
@@ -1804,6 +1859,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             shutil.copyfile(f, dst)
         srcs.append(f"/work/rtl/{Path(f).name}")
     stage_includes(rtl_files, kd / "rtl")
+    rom_bits = declared_rom_bits(kd / "rtl")
     pins = type_pins(P, tn)
     bump_sites = bump_pin_sites(P, tn, bump_ports, macros, Path(root) if root else Path(__file__).resolve().parent.parent.parent) \
         if bump_ports else []
@@ -1856,8 +1912,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         (kd / "pg_island_cut.tcl").write_text(pg_island_cut_tcl(pg_cuts))
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
-    if core_tap_rows(P, tn):
-        (kd / "core_taps_ff.sdc").write_text(core_tap_ff_sdc(P, tn))
+    if core_tap_rows(P, tn) or edge_clock_latency(P, tn):
+        (kd / "core_taps_ff.sdc").write_text(core_tap_ff_sdc(P, tn) + edge_clock_latency_tcl(P, tn, "ff"))
     ioh = io_hold_tcl(P, tn)            # IO-HOLD option A: per-port min input delays for the hold_gate / sign-off overlays
     if ioh:
         (kd / "io_hold.tcl").write_text(ioh)
@@ -1916,6 +1972,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export PLACE_DENSITY = {util:g}",
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_REPEATABLE_BUILD = 1",
+           # HEAD-KITS-3 10-28: OWNER D-ROM-2 declared-logic math tables (tools/mem_compiler/rom_declared_logic.json,
+           # e.g. the KP4 GF(1024) inverse 1024x10 in every serdes FEC lane) are synthesised logic by decision; the ORFS
+           # default SYNTH_MEMORY_MAX_BITS 4096 failed hd_serdes synth on them.  The limit is raised only to the largest
+           # declared table defined in this kit's RTL, so any other inferred memory above that size still fails.
+           *([f"export SYNTH_MEMORY_MAX_BITS = {rom_bits}"] if rom_bits > 4096 else []),
            "export LEC_CHECK = 0",
            # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
            # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell
@@ -2241,6 +2302,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("partition_ir.py"), kd / "partition_ir.py")
     (kd / "pins.json").write_text(json.dumps([dict(bus=b, bit=i, layer=l, x=x, y=y, face=f)
                                               for b, i, l, x, y, f in pins]) + "\n")
+    if land_slots is not None:                  # face_guard reads it beside pins.json (count-aligned landing rings)
+        (kd / "land_slots.json").write_text(json.dumps(land_slots, indent=1) + "\n")
     port_pins = port_bind_pin_records(P, tn, pins, bump_ports)
     sps = strap_pin_sites(P, tn)
     (kd / "port_bind_pins.json").write_text(json.dumps(port_pins, indent=1) + "\n")
@@ -2392,6 +2455,10 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             raise gen_rtl.GenError("clock landing: --kit-rtl kits take the bound RTL; landing kits use the landed wrapper")
         gtypes = None          # the landed emitter checks every copy of every type
     files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path, landing=landing)
+    lands = None
+    if landing is not None:    # DIE-HEAD-21: the same Landings write_rtl just validated -> per-type land_slots.json
+        import clock_landings as CL
+        lands = CL.Landings(raw, landing)
     cells = rtl_dir / "ot_dp_cells.sv"
     root = Path(rtl_root) if rtl_root else Path(__file__).resolve().parent.parent.parent
     rs = root / "rtl" / "lib" / "ot_reset_sync.sv"
@@ -2420,7 +2487,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         bumps = kit_bump_ports(P, tn, kit_rtl[tn]) if kit_rtl and tn in kit_rtl else None
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
                                    skip_ir, max_wire_um, rc_cal, master_slice, trial, bump_ports=bumps,
-                                   gpl_plain=tn in (gpl_plain or ())))
+                                   gpl_plain=tn in (gpl_plain or ()),
+                                   land_slots=lands.land_slots(tn) if lands is not None else None))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits

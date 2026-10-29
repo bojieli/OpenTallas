@@ -144,6 +144,10 @@ module ot_static_cmd_target_core #(
             period <= 0; idx <= 0; rem <= 0; lbase <= 0;
         end else begin
             a_we <= 0; b_we <= 0; run_v <= 0; tw_we <= 0;
+            // HBM-CORES-KITS-4 10-28: MODE 1 has no run window; run_base / run_count were never assigned there, so
+            // synthesis left them undriven (kit rtl_lint check -assert FAIL on wr_q_t_lanes4 / xload_cl2_ctlx).  They
+            // are now the defined constant 0 in MODE 1; MODE 0 elaborates exactly as before.
+            if (MODE != 0) begin run_base <= {RBW{1'b0}}; run_count <= {RCW{1'b0}}; end
             cyc <= cyc + 32'd1; cycle <= cyc;
             // ---- configuration writes
             if (cv && hit) begin

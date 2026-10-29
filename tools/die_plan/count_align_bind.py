@@ -624,6 +624,15 @@ def report(b, v):
                 max_origin_cycles=max(r["n_nominal"] for r in b["regions"].values()))
 
 
+def ocv_parts(rows):
+    """--parts ocv: {port: (src partition, dst partition)} from the OCV rows.  A row without src_part/dst_part is a
+    partition-level row (its src/dst ARE partitions, e.g. tools/s81_head/landed_phase_ocv.py), so the partition is the
+    row's src/dst -- the same identity fallback count_align_plan.row_ports() uses for the plan and the STA intervals
+    (DIE-S81-17: the bind raised KeyError 'src_part' on every S81 --parts ocv run, go12..go15)."""
+    return {r["port"]: (r.get("src_part") if r.get("src_part") is not None else r["src"],
+                        r.get("dst_part") if r.get("dst_part") is not None else r["dst"]) for r in rows}
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("plan_json", help="count_align_plan.py --out document (or an OCV json with --from-ocv)")
@@ -644,7 +653,8 @@ def main(argv=None):
                     help="count_align_plan.py --tree-parent (with --from-ocv)")
     ap.add_argument("--sta-proof", metavar="DIR", help="count_align_plan.py --sta-proof (with --from-ocv)")
     ap.add_argument("--sta-plan", help="count_align_plan.py --sta-plan (with --from-ocv)")
-    ap.add_argument("--sta-clock-cal", choices=("none", "spice", "spice_edge"), default="spice")
+    ap.add_argument("--sta-clock-cal", choices=("none", "spice", "spice_edge", "spice_buf_edge", "spice_cell"),
+                    default="spice")
     ap.add_argument("--sta-cppr-lca", action="store_true")
     CAP.add_sta_ocv_args(ap)
     CAP.add_start_tree_args(ap)
@@ -695,7 +705,7 @@ def main(argv=None):
     if mode == "ocv" and not a.from_ocv:
         raise SystemExit("--parts ocv needs --from-ocv")
     parts = (table_parts(table) if mode == "table" else
-             {r["port"]: (r["src_part"], r["dst_part"]) for r in rows} if mode == "ocv" else None)
+             ocv_parts(rows) if mode == "ocv" else None)
     b = bind(plan, parts=parts)
     v = verify(b, a.samples)
     rep = report(b, v)

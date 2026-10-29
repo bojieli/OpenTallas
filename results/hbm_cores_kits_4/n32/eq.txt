@@ -1,0 +1,27 @@
+LAT 3 DRST 0: equiv_induct (by-name state) PASS
+LAT 3 DRST 0: synth netlists differ (text)
+LAT 3 DRST 0: miter tempinduct PASS
+LAT 3 DRST 1: equiv_induct (by-name state) PASS
+LAT 3 DRST 1: synth netlists differ (text)
+LAT 3 DRST 1: miter tempinduct PASS
+LAT 4 DRST 0: equiv_induct (by-name state) PASS
+LAT 4 DRST 0: synth netlists differ (text)
+LAT 4 DRST 0: miter tempinduct PASS
+LAT 4 DRST 1: equiv_induct (by-name state) PASS
+LAT 4 DRST 1: synth netlists differ (text)
+LAT 4 DRST 1: miter tempinduct PASS
+LAT 5 DRST 0: equiv_induct (by-name state) PASS
+LAT 5 DRST 0: synth netlists differ (text)
+LAT 5 DRST 0: miter tempinduct PASS
+LAT 5 DRST 1: equiv_induct (by-name state) PASS
+LAT 5 DRST 1: synth netlists differ (text)
+LAT 5 DRST 1: miter tempinduct PASS
+LAT 6 DRST 0: equiv_induct (by-name state) PASS
+LAT 6 DRST 0: synth netlists differ (text)
+LAT 6 DRST 0: miter tempinduct PASS
+LAT 6 DRST 1: equiv_induct (by-name state) PASS
+LAT 6 DRST 1: synth netlists differ (text)
+LAT 6 DRST 1: miter tempinduct PASS
+NEG LAT 6 DRST 0: miter tempinduct FAIL as expected
+NEG LAT 6 DRST 1: miter tempinduct FAIL as expected
+EQ_DONE

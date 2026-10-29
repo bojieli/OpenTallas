@@ -1,0 +1,5 @@
+{"schema": "opentallas.s81_core_families.r13", "rule": "QC-A0-KITS-8 10-28 (COORD 21:07 ruling on QC-A0-KITS-7 a0k6s root cause): A0 node in-core tree as a SYMMETRIC lattice (equal leg length per level, legs from the centre entry: y +-108/+-54/+-27, H (+-11.88,+-13.5), H (+-5.94,+-6.75), y +-3.375 -> 256 leaves of 11.88 x 6.75 um on the 47.52 x 432 outline) with ONE master per level; no d1 per-driver sizing, no uf_phys3 descent. Same entry, wire class and census as families_a0.json a0node.",
+ "families": [{"name": "a0node_lat", "critical": "QC A0 NK node child (47.52 x 432, centre entry), 12.8b in-core tree, symmetric lattice", "members": ["ot_qwen_tile_node"], "wire": "std",
+   "lattice": {"levels": [[[0, -108], [0, 108]], [[0, -54], [0, 54]], [[0, -27], [0, 27]],
+                          [[-11.88, -13.5], [11.88, -13.5], [-11.88, 13.5], [11.88, 13.5]],
+                          [[-5.94, -6.75], [5.94, -6.75], [-5.94, 6.75], [5.94, 6.75]], [[0, -3.375], [0, 3.375]]]}}]}
