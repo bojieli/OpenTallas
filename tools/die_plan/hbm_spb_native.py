@@ -33,8 +33,12 @@ def materialize(binder, typ, bound):
     cfg = binder.ab.get('hbm_spb0_native')
     if cfg is None:
         return []
-    if not isinstance(cfg, dict) or set(cfg) != {'types', 'graph', 'contract'} or cfg['types'] != ['q_spb0']:
-        raise ValueError('HBM SPB native requires exact q_spb0 types/graph/contract opt-in')
+    allowed = {'q_spb0', 'q_spb0__physical_v1'}
+    if (not isinstance(cfg, dict) or set(cfg) != {'types', 'graph', 'contract'} or
+            not isinstance(cfg['types'], list) or not cfg['types'] or
+            not all(isinstance(t, str) for t in cfg['types']) or
+            len(set(cfg['types'])) != len(cfg['types']) or not set(cfg['types']) <= allowed):
+        raise ValueError('HBM SPB native requires exact reviewed SPB types/graph/contract opt-in')
     if typ not in cfg['types']:
         return []
     graph = repo_file(binder.base, cfg['graph'])
@@ -51,7 +55,7 @@ def materialize(binder, typ, bound):
     plan = getattr(binder, 'source_plan', None)
     if plan is None or digest(plan) != c.get('plan_sha256'):
         raise ValueError('SPB native contract does not match actual source plan file')
-    expected_parts = sorted(p for p, d in binder.parts.items() if d['type'] == typ)
+    expected_parts = sorted(p for p, d in binder.parts.items() if d['type'] in cfg['types'])
     if sorted(c['partitions']) != expected_parts:
         raise ValueError('SPB native graph contract must cover exact physical replicas')
     text = Path(bound).read_text()
