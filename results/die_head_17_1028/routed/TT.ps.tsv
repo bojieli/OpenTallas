@@ -1,0 +1,32 @@
+H	corner	TT
+H	regs	28050
+H	no_clock_arrival	0
+H	method	tag
+H	data_pins	29535
+H	pairs	57410
+H	inter_clock	2316
+H	crpr	1 same_pin
+H	max_n	57410
+H	max_worst	291.83
+H	max_bounded	0
+H	max_signed	-291.83
+H	max_launch	u_core.u_b.g_a[0].g_ais.u_ad1/q[227]$_DFF_P_
+H	max_capture	u_core.u_b.g_cv.u_eA0
+H	max_crpr	0.0
+H	max_p99_raw	271.47
+H	max_searched	1
+H	max_nopath	0
+H	max_verify	0.000
+P	max	u_core.u_b.g_a[0].g_ais.u_ad1/q[227]$_DFF_P_	u_core.u_b.g_cv.u_eA0	-291.83	0.00	291.83
+H	min_n	57410
+H	min_worst	290.46
+H	min_bounded	0
+H	min_signed	290.46
+H	min_launch	u_core.u_b.g_cv.u_eA0
+H	min_capture	u_core.u_b.pk_done[0]$_DFF_PN0_
+H	min_crpr	-0.0
+H	min_p99_raw	31.44
+H	min_searched	1
+H	min_nopath	0
+H	min_verify	0.000
+P	min	u_core.u_b.g_cv.u_eA0	u_core.u_b.pk_done[0]$_DFF_PN0_	290.46	-0.00	290.46
