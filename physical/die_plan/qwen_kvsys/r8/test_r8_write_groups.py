@@ -54,3 +54,20 @@ def test_partial_group_fails_closed():
         assert "ports" in str(e)
     else:
         raise AssertionError("partial group accepted")
+
+
+def test_bindview_raw_asbuilt_same_landing():
+    t = table(WG.prep(bg(), G)[0])
+    v, n = WG.bindview(t, G)
+    assert n == 2
+    by = {m["sink_port"]: m for m in v["members"]}
+    assert by["bcfg_rx_we"]["asbuilt"] == 5 and by["bcfg_rx_we"]["asbuilt_group"] == 6 and by["bcfg_addr"]["asbuilt"] == 6
+    assert {p: m["landed"] for p, m in by.items()} == {p: m["landed"] for p, m in ((m["sink_port"], m) for m in t["members"])}
+    assert WG.check(v, G)[0] == []
+
+
+if __name__ == "__main__":
+    for k, f in list(globals().items()):
+        if k.startswith("test_"):
+            f()
+            print("PASS", k)

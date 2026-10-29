@@ -156,3 +156,16 @@ def test_strap_pad_over_capacity_is_error(tmp_path):
     p, _ = r8.write_pads(RAW, bg, tmp_path)
     msgs, st = r8.check(bg, RAW, r8.load_landing(p)[0], strap_pads=True)
     assert st["types_conflicting"] == 1 and any("strap capacity" in m for s, m in msgs if s == "ERROR")
+
+
+def test_table_asbuilt_is_raw_lane_depth(tmp_path):
+    """DIE-KV-13 (COORD 10-28): the landing table `asbuilt` is the raw lane depth the binder sees (bind.py R8_STALE);
+    a bundle / write-group reference depth is `asbuilt_group`; members without one are unchanged (no asbuilt_group)."""
+    b = dict(landing=[dict(sink="s.u", sink_part="s_x", src_part="tap", members=[
+        dict(mem("d", [[0, 3]], "u_tap.d", 6, 55), asbuilt_lane_stages=5),
+        mem("a", [[0, 3]], "u_tap.a", 6, 56)])], replica=[])
+    mem_, _ = r8.solve(b, RAW, replica="type", bus="leaf")
+    by = {m["sink_port"]: m for m in mem_}
+    assert by["d"]["asbuilt"] == 5 and by["d"]["asbuilt_group"] == 6 and by["d"]["asbuilt_lane"] == 5
+    assert by["a"]["asbuilt"] == 6 and "asbuilt_group" not in by["a"]
+    assert by["d"]["landed"] == by["a"]["landed"] == 56

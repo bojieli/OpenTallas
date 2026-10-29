@@ -13,7 +13,7 @@ import count_align_bind as CB
 R12 = Path("/srv/opentallas-scratch2/claude/die-kv-12-1028"); O = Path(sys.argv[1]); O.mkdir(parents=True, exist_ok=True)
 P = R12 / "proof_inv_r150"; PL = "/srv/opentallas-scratch2/claude/die-kv-4-1027/pd9c/hm_r26q9c.json"
 argv = [str(R12 / "ca_inv_r150/inv_r150_spice_xing_lpo.json"), "--from-ocv", "--parts", "ocv", "--sta-proof", str(P),
-        "--sta-plan", PL, "--sta-clock-cal", "spice", "--sta-cppr-lca", "--sta-clock-ocv", "table", "--sta-clock-droop", "shared",
+        "--sta-plan", PL, "--sta-clock-cal", "spice", "--sta-cppr-lca", "--sta-clock-ocv", "table", "--sta-clock-droop", "shared", "--sta-clock-cell", "inv",
         "--sta-droop-regions", str(P / "droop_regions.json"), "--sta-core-latency-ff", "202.5", "--start-tree", "clock",
         "--start-clean", "phase", "--samples", "500", "--out", str(O / "repro_bind.json")]
 cap = {}
@@ -84,7 +84,7 @@ table = CB.annotate_table(json.load(open(I / "l128_table.json")), b, strap_form=
 (E / "regions_ca.json").write_text(json.dumps(table, indent=1) + "\n")
 observer = dict(module="qkd_seq_core_static_s", instance_suffix="u_seq_u_core", fault_port="hf", ready_port="lp_run")
 plan, side = LP.compose(raw, table, plan_path=I / "hm_r26q9d.json", observer_part="hub_C", observer=observer, monitor="reset",
-                        band_reserve="live")
+                        band_reserve="live", forward_source="clk")
 for typ in plan["partition_types"].values():
     for h in typ.get("hard_cores", []):
         if h.get("pins_file") and not Path(h["pins_file"]).is_absolute():

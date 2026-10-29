@@ -635,13 +635,24 @@ def _split_by_landed_mask(raw,plan_path,ins,outs):
                 if p["name"] in names:p["type"]=name
 
 
-def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",band_spread=1.0,band_ring="all"):
+FORWARD_SOURCES=("tap","clk")
+FORWARD_SOURCE="tap"
+
+
+def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",band_spread=1.0,band_ring="all",
+            forward_source="tap"):
     """band_reserve="live" (opt-in): storage bands reserve the live ring (width+epoch) instead of the 64-bit padded ring.
     observer: {module, instance_suffix, fault_port, ready_port} of the real
     one-bit fault/ready inputs gated in observer_part (reset mode default QC_OBSERVER).
     monitor="dataflow" (opt-in, FALLBACK-HEAD): observer None stays OPEN (fails closed at bind).
     monitor="region" (opt-in, DIE-HEAD-2): dataflow monitor whose observer walk also follows same-region links
-    (multi-partition clock regions); types split once by their landed mask (exact uniform hardware)."""
+    (multi-partition clock regions); types split once by their landed mask (exact uniform hardware).
+    forward_source="clk" (opt-in, DIE-KV-13 / COORD 10-28): a forwarded clock output's landing contract
+    source_clock_port is the type's ONE RTL clock input 'clk' (binders that emit a single clk port per partition, KV),
+    the nearest tap name kept as source_clock_tap; default "tap" = the nearest R4 tap-grid port name (unchanged)."""
+    if forward_source not in FORWARD_SOURCES:raise ValueError(f"unknown forward_source {forward_source}")
+    global FORWARD_SOURCE
+    FORWARD_SOURCE=forward_source
     if monitor not in ("reset","dataflow","region"):raise ValueError(f"unknown monitor mode {monitor}")
     if band_reserve not in BAND_MODES:raise ValueError(f"unknown band_reserve {band_reserve}")
     if band_spread!=1.0 and (band_reserve!="ring_ff" or not 1.0<band_spread<=4.0):
@@ -887,7 +898,11 @@ def _finish(raw,P,bytype,pports,side):
             if pin["kind"]=="clock" and pin["dir"]=="out":
                 roots=GP.clock_pins(P,tn)
                 if not roots:raise ValueError(f"{tn}: no normal clock tap to forward")
-                pin["source_clock_port"]=min(roots,key=lambda r:abs(r[1]-point[0])+abs(r[2]-point[1]))[0]
+                tap=min(roots,key=lambda r:abs(r[1]-point[0])+abs(r[2]-point[1]))[0]
+                if FORWARD_SOURCE=="clk":
+                    pin["source_clock_port"]="clk";pin["source_clock_tap"]=tap
+                else:
+                    pin["source_clock_port"]=tap
             pins.append(pin)
         if pins:
             t["clock"]["landing_contract"]=dict(pins=pins,bands=bytype[tn]["bands"],

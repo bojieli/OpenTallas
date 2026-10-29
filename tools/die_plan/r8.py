@@ -206,8 +206,13 @@ def solve(bg, raw, replica="all", bus="part"):
         pad = cmax[uf.find(i)] - off[i]
         mem.append(dict(id=mkey(g, m), sink=g["sink"], sink_part=g["sink_part"], src_part=g["src_part"],
                         sink_port=m["sink_port"], sink_bits=m["sink_bits"], source=m["source"],
-                        asbuilt=m["asbuilt_stages"], bound=m["bound_stages"], pad=pad,
+                        # `asbuilt` = the RAW lane depth the binder sees on this bit (bind.py R8_STALE compares it);
+                        # a landed bundle / write group's common reference depth is kept as `asbuilt_group` (DIE-KV-13,
+                        # COORD 10-28: a strict bind of a table with bundles failed R8_STALE on the group depth)
+                        asbuilt=m.get("asbuilt_lane_stages", m["asbuilt_stages"]), bound=m["bound_stages"], pad=pad,
                         **({"asbuilt_lane": m["asbuilt_lane_stages"]} if "asbuilt_lane_stages" in m else {}),
+                        **({"asbuilt_group": m["asbuilt_stages"]}
+                           if m.get("asbuilt_lane_stages", m["asbuilt_stages"]) != m["asbuilt_stages"] else {}),
                         landed=m["bound_stages"] + pad, cls=uf.find(i), lane=m.get("lane")))
     return mem, used
 
@@ -222,8 +227,8 @@ def summary(bg, mem, used):
                 max_pad=max((m["pad"] for m in mem), default=0),
                 max_depth_before=max((m["bound"] for m in mem), default=0),
                 max_depth_after=max((m["landed"] for m in mem), default=0),
-                max_offset_before=max((m["bound"] - m["asbuilt"] for m in mem), default=0),
-                max_offset_after=max((m["landed"] - m["asbuilt"] for m in mem), default=0),
+                max_offset_before=max((m["bound"] - m.get("asbuilt_group", m["asbuilt"]) for m in mem), default=0),
+                max_offset_after=max((m["landed"] - m.get("asbuilt_group", m["asbuilt"]) for m in mem), default=0),
                 binder_landed_max=max((m["landed_stages"] for g in bg["landing"] for m in g["members"]), default=0))
 
 

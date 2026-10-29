@@ -1,0 +1,612 @@
+{
+ "file": "physical/die_plan/qwen_kvsys/bind/kvbind1025/regen_kv_2350.py",
+ "changed": [
+  {
+   "inst": "ectl_EN_0",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_EN_0",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_EN_1",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_EN_1",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_EN_2",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_EN_2",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_EN_3",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_EN_3",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_EN_4",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_EN_4",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_EN_5",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_EN_5",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_EN_6",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_EN_6",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_EN_7",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_EN_7",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_ES_0",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_ES_0",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_ES_1",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_ES_1",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_ES_2",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_ES_2",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_ES_3",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_ES_3",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_ES_4",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_ES_4",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_ES_5",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_ES_5",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_ES_6",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_ES_6",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_ES_7",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_ES_7",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_WN_0",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_WN_0",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_WN_1",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_WN_1",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_WN_2",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_WN_2",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_WN_3",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_WN_3",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_WN_4",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_WN_4",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_WN_5",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_WN_5",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_WN_6",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_WN_6",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_WN_7",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_WN_7",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_WS_0",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_WS_0",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_WS_1",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_WS_1",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_WS_2",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_WS_2",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_WS_3",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_WS_3",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_WS_4",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_WS_4",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_WS_5",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_WS_5",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_WS_6",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_WS_6",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ectl_WS_7",
+   "param": "RESPONSE_LAT",
+   "asbuilt": "80",
+   "bound": 20
+  },
+  {
+   "inst": "ectl_WS_7",
+   "param": "QK_ISSUE_AGE",
+   "asbuilt": "91",
+   "bound": 34
+  },
+  {
+   "inst": "ahub",
+   "param": "AP_OFS",
+   "asbuilt": "64'b1111111111011101111111111101111011111111110111001111111111011100",
+   "bound": "64'hffdbffdaffdfffdf"
+  },
+  {
+   "inst": "pvw_0__u_ctl",
+   "param": "FIRST_INPUT_AGE",
+   "asbuilt": "127",
+   "bound": 255
+  },
+  {
+   "inst": "pvw_1__u_ctl",
+   "param": "FIRST_INPUT_AGE",
+   "asbuilt": "127",
+   "bound": 255
+  },
+  {
+   "inst": "vport_EN_0",
+   "param": "RT",
+   "asbuilt": "31",
+   "bound": 63
+  },
+  {
+   "inst": "vport_EN_1",
+   "param": "RT",
+   "asbuilt": "31",
+   "bound": 63
+  },
+  {
+   "inst": "vport_EN_2",
+   "param": "RT",
+   "asbuilt": "31",
+   "bound": 63
+  },
+  {
+   "inst": "vport_EN_3",
+   "param": "RT",
+   "asbuilt": "31",
+   "bound": 63
+  },
+  {
+   "inst": "vport_ES_0",
+   "param": "RT",
+   "asbuilt": "31",
+   "bound": 63
+  },
+  {
+   "inst": "vport_ES_1",
+   "param": "RT",
+   "asbuilt": "31",
+   "bound": 63
+  },
+  {
+   "inst": "vport_ES_2",
+   "param": "RT",
+   "asbuilt": "31",
+   "bound": 63
+  },
+  {
+   "inst": "vport_ES_3",
+   "param": "RT",
+   "asbuilt": "31",
+   "bound": 63
+  },
+  {
+   "inst": "vport_WN_0",
+   "param": "RT",
+   "asbuilt": "31",
+   "bound": 63
+  },
+  {
+   "inst": "vport_WN_1",
+   "param": "RT",
+   "asbuilt": "31",
+   "bound": 63
+  },
+  {
+   "inst": "vport_WN_2",
+   "param": "RT",
+   "asbuilt": "31",
+   "bound": 63
+  },
+  {
+   "inst": "vport_WN_3",
+   "param": "RT",
+   "asbuilt": "31",
+   "bound": 63
+  },
+  {
+   "inst": "vport_WS_0",
+   "param": "RT",
+   "asbuilt": "31",
+   "bound": 63
+  },
+  {
+   "inst": "vport_WS_1",
+   "param": "RT",
+   "asbuilt": "31",
+   "bound": 63
+  },
+  {
+   "inst": "vport_WS_2",
+   "param": "RT",
+   "asbuilt": "31",
+   "bound": 63
+  },
+  {
+   "inst": "vport_WS_3",
+   "param": "RT",
+   "asbuilt": "31",
+   "bound": 63
+  },
+  {
+   "inst": "d2d_kv",
+   "param": "TXDP",
+   "asbuilt": "50529302",
+   "bound": "32'h030304a9"
+  },
+  {
+   "inst": "seq__u_core",
+   "param": "KVN_A0",
+   "asbuilt": "32",
+   "bound": 28
+  }
+ ],
+ "record": {
+  "kv_regen": {
+   "ectl": {
+    "rule": "RESPONSE_LAT = 8 + krq + krs; QK_ISSUE_AGE = max(34, RESPONSE_LAT + 11)",
+    "frames": 32,
+    "RESPONSE_LAT": 20,
+    "QK_ISSUE_AGE": 34,
+    "krq": [
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "krs": [
+     4,
+     5,
+     6,
+     7,
+     8,
+     9
+    ]
+   },
+   "ahub": {
+    "rule": "AP_OFS_s += dD(ap_s) - dD(ks_ahs); FR_OFS += dD(ks_pvfst) - dPV_LEAD - dD(ks_ahfr) - dD(ks_ahs)",
+    "stacks": [
+     "WS",
+     "WN",
+     "ES",
+     "EN"
+    ],
+    "AP_OFS_asbuilt": [
+     -36,
+     -36,
+     -34,
+     -35
+    ],
+    "AP_OFS": [
+     -33,
+     -33,
+     -38,
+     -37
+    ],
+    "FR_OFS_asbuilt": -7,
+    "FR_OFS": -7,
+    "dD": {
+     "ap": [
+      3,
+      3,
+      -4,
+      -2
+     ],
+     "ks_ahs": 0,
+     "ks_pvfst": 0,
+     "ks_ahfr": 0,
+     "PV_LEAD": 0
+    }
+   },
+   "open": [
+    "PV ctl ot_qwen_tp8_pv_wide_ctl_tbf FIRST_INPUT_AGE/TRUNK_D/FLAG_D: 4 + W + DQ + RT_die + 1 needs the boot vport RT/DQ (per-port bound round trips differ) -> KV-P5 rule + boot image",
+    "vport RT/DQ: boot-programmable, boot image must carry the bound round trip",
+    "ahub am lag (EXP_START), d2d sys_c<->hub_C, kvs_ctl<->hroot: compiler schedule terms (bind_latency.json)"
+   ]
+  },
+  "agebounds": {
+   "counts": {
+    "FIRST_INPUT_AGE": 2,
+    "RT": 16
+   },
+   "added_schedule_cycles": 0,
+   "source": "PATH-KV decision 2026-10-25 21:21; RTL source 453dda0da433"
+  },
+  "txdp": {
+   "inst": "d2d_kv",
+   "TXDP": [
+    169,
+    4,
+    3,
+    3
+   ],
+   "word": "32'h030304a9",
+   "source": {
+    "kv": "claude/die-kv-13c-1028 step-5 bind4 (inverter event, recipe_kv13_s5wb)",
+    "qc": "codex/qc-bind-1027 fresh_v3 (QC peer unchanged)"
+   },
+   "commit": null
+  },
+  "kvn_a0": {
+   "inst": "seq__u_core",
+   "asbuilt": 32,
+   "dD_kvn": 74,
+   "dD_att_rx": 78,
+   "KVN_A0": 28
+  },
+  "hook": "physical/die_plan/qwen_kvsys/bind/kvbind1025/regen_kv_2350.py"
+ }
+}
