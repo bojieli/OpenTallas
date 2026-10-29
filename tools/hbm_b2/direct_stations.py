@@ -191,9 +191,9 @@ def main():
     contract = json.loads(args.contract.read_text())
     if contract.get("runtime_adopt", False):
         parser.error("source preparation cannot adopt an incomplete parent timing bundle")
-    result, receipt = materialize(args.source.read_text(), contract["chains"], enabled=args.enable)
+    result, receipt = materialize(args.source.read_bytes().decode("utf-8"), contract["chains"], enabled=args.enable)
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(result)
+    args.output.write_bytes(result.encode("utf-8"))
     args.receipt.parent.mkdir(parents=True, exist_ok=True)
     args.receipt.write_text(json.dumps(receipt, indent=2) + "\n")
 

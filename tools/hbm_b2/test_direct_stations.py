@@ -1,8 +1,9 @@
-import copy
+import json
 import random
 from pathlib import Path
 import subprocess
 import tempfile
+import sys
 import unittest
 
 from hbm_b2.direct_stations import materialize
@@ -71,6 +72,17 @@ endmodule
 
 
 class DirectStationTest(unittest.TestCase):
+    def test_disabled_cli_preserves_original_bytes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source, contract, out, receipt = [root / name for name in ("top.sv", "contract.json", "out.sv", "receipt.json")]
+            original = SOURCE.replace("\n", "\r\n").encode()
+            source.write_bytes(original)
+            contract.write_text(json.dumps(dict(chains=[CHAIN])))
+            subprocess.run([sys.executable, str(Path(__file__).with_name("direct_stations.py")),
+                            str(source), str(contract), str(out), "--receipt", str(receipt)], check=True)
+            self.assertEqual(out.read_bytes(), original)
+
     def test_disabled_identity_and_direct_mapping_refusals(self):
         self.assertEqual(materialize(SOURCE, [CHAIN])[0], SOURCE)
         for key, value, error in (("sink_lsb", 1, "exact direct"),
