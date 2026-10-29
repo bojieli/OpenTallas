@@ -1,0 +1,20 @@
+[
+ {
+  "candidate": 0,
+  "root": "g_mu.did_q",
+  "lut_count": 5680,
+  "root_to_tk8_max_lut_levels": 11,
+  "bit639_lut_levels": 10,
+  "connected_endpoints": 744,
+  "flipflops": 5114
+ },
+ {
+  "candidate": 1,
+  "root": "g_mu.role_onehot_q",
+  "lut_count": 5435,
+  "root_to_tk8_max_lut_levels": 8,
+  "bit639_lut_levels": 8,
+  "connected_endpoints": 744,
+  "flipflops": 5122
+ }
+]
