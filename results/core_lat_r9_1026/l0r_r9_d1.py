@@ -5,7 +5,11 @@ gating envelope), no wire, no position, no measurement input.  Objective = max(T
 per-leaf mean arrivals (guard window <= 14); tie-break = fewer stages changed, then lower mean.  Each step (candidates evaluated in parallel, fork pool): take the
 earliest and the latest leaf, try every envelope master on each driver of its root path that is NOT shared with the
 other extreme leaf, keep the single change that lowers the objective most; stop when no change helps.
-usage: l0r_r9_d1.py PLAN.json GEO LIBDIR FIT OUT.json [--steps N] [--slew 60]   PLAN MODEL, UNCHECKED."""
+Slew guard (DIE-S81-27 10-29, ve_s: three leaf downsizes BUFx24->BUFx10 pushed TT leaf out slew 60.0 -> 81.5 > the 80-ps
+slice gate and the converter refused the tree): a change is kept only if the calibrated leaf out/in slew at TT and FF stays
+<= --slew (default 80 = core_family_slice GATES slew_ps; a plan already above it may not get worse); the next-best change
+is tried instead.  Plans whose descent never crossed the limit are unchanged.
+usage: l0r_r9_d1.py PLAN.json GEO LIBDIR FIT OUT.json [--steps N] [--slew 80]   PLAN MODEL, UNCHECKED."""
 import gzip, json, sys, time, multiprocessing as MP
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
@@ -40,6 +44,7 @@ def _try(um):
 def main():
     rj, geo, libdir, fit, out = sys.argv[1:6]
     steps = int(sys.argv[sys.argv.index('--steps') + 1]) if '--steps' in sys.argv else 300
+    slew_lim = float(sys.argv[sys.argv.index('--slew') + 1]) if '--slew' in sys.argv else 80.0
     op = gzip.open if rj.endswith(".gz") else open
     rec = json.load(op(rj, "rt"))[0]
     F = json.load(open(fit)); pmax, pmin = dict(F["PMAX"]), dict(F["PMIN"])
@@ -54,6 +59,10 @@ def main():
         while par.get(p[-1]) is not None: p.append(par[p[-1]])
         return [x for x in p if x not in fixed]
     tt, ff = evalp(P, L, pmax, pmin); o0 = obj(tt, ff); cur = o0; log = []
+    def slew_max():
+        q = A.calibrated_summary(P, L, pmax, pmin)
+        return max(q[c][k] for c in ("TT", "FF") for k in ("leaf_out_slew_max", "leaf_slew_in_max"))
+    cap = max(slew_lim, slew_max()); rejected = 0
     t0 = time.time(); tried = set()
     for s in range(steps):
         best = None
@@ -66,9 +75,13 @@ def main():
         G.update(P=P, L=L, pmax=pmax, pmin=pmin)
         with MP.get_context("fork").Pool(min(48, len(jobs))) as pool:
             res = pool.map(_try, jobs)
-        for (u, m), o in res:
-            if o[0] < cur[0] - 0.05 and (best is None or (o[0], o[1] + o[2]) < (best[0][0], best[0][1] + best[0][2])):
-                best = (o, u, m)
+        good = sorted(((o, u, m) for (u, m), o in res if o[0] < cur[0] - 0.05), key=lambda b: (b[0][0], b[0][1] + b[0][2], b[1], b[2]))
+        for o, u, m in good:
+            keep = P.nodes[u]["cell"]; P.nodes[u]["cell"] = m
+            sl = slew_max(); P.nodes[u]["cell"] = keep
+            if sl <= cap:
+                best = (o, u, m); break
+            rejected += 1
         if best is not None:
             P.nodes[best[1]]["cell"], keep = best[2], P.nodes[best[1]]["cell"]
             t2, f2 = evalp(P, L, pmax, pmin); P.nodes[best[1]]["cell"] = keep
@@ -82,6 +95,8 @@ def main():
     rec["nodes_xy"] = [[n[0], n[1], n[2], P.nodes[n[0]]["cell"], n[4]] for n in rec["nodes_xy"]]
     rec["frozen_masters"] = {n[0]: n[3] for n in rec["nodes_xy"]}
     rec["d1_uf3"] = dict(rule="12.8 d1 plan-computed sizing under uf_phys3 v1 (pre-build, no measurement)", start=dict(obj=round(o0[0], 2), TTw=round(o0[1], 2), FFw=round(o0[2], 2)), changes=log)
+    if rejected:
+        rec["d1_uf3"]["slew_guard"] = dict(limit_ps=cap, rejected_changes=rejected)
     rec["d1_uf3"]["prediction"] = A.calibrated_summary(P, L, pmax, pmin)
     rec["d1_uf3"]["fit_name"] = F["name"]
     rec["name"] = rec["name"] + "_uf3d1"
