@@ -1,0 +1,15 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/wt/die-head-30-bind
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/wt/die-head-30-bind
+ot-run: localhost      admits   607 GB (avail 843, reserve 0, fresh 143.5, peak 28.4, headroom 0, waiters 0/0 GB) load 69/112 running 26 disk 1249 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-759702-1793299616 after 0 s
+HEAD_MODULE_CHECK PASS missing 0 [] unresolved []
+TIE_AUDIT PASS accepted=1669 rejected=0 COUNT_AUDIT PASS pads=321 inst/2953 ports
+MANIFEST 112 entries, landing closure ['rtl/common/ot_dp_clk_landing.sv', 'rtl/common/ot_dp_clk_landing_ca.sv', 'rtl/common/ot_meso_fifo.sv'] 
+DIE_PORT_BIND PASS masters=26 instances=358 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=119 pad_bits=0 spare_out_bits=2953 unresolved_children=0 ambiguous_children=0 variant_children=0 manifest_missing=0
+ 
+PORT_BIND_NESTED FAIL {"verdict": "FAIL", "instances": 4335, "unbound": 1, "unknown": 0, "width_mismatch": 0, "unresolved": 0, "no_master": 0}
+ 
+HEAD_DIE_PORTBIND_SOURCE FAIL module_check=PASS missing=0 tie_audit=PASS count_audit=PASS manifest_rc=0 port_bind_rc=0 nested=FAIL
+ot-run: RAN on localhost (unit oth-ubuntu-759702-1793299616): exit 1
+rc=1
