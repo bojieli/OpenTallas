@@ -1724,3 +1724,4 @@ CODEX: 2026-10-29 03:47 PDT FLOW explicit-control709 actualHBMSPB8taps1026load13
 CODEX: 2026-10-29 03:53 PDT FEED03geometry+vieweede3040aPASS-COND0over405/w389.988/modelresidual6.289; noS81route. KVnative6f4d88aa43 actual22671cells/10530FF+12141comb/perstagecensus+3controls; DIAGclockODB2580919readyQCplacer, real↔virtualoriginCKframependingowner.
 
 CODEX: 2026-10-29 03:58 PDT HEADtileactual435FIRMhomes/halo0/data0of27665 afterOpenDBorientationfix495e; oldTT-70.85/FFtrue-42.35 diagnosed. OFFdefaultstatuscopybedf32,822lockstep+mutant/8retainedFF/43gentestsREADY; canonicalSOURCE7regen next/noSIGNED.
+CODEX: 2026-10-29 03:59 PDT HBM clock raw122.96/107.00 improved but canonical214.04/173.32FAIL; adaptive4candidate+source/soft-coverage gaps diagnosed9bffaa24e. SPB driver bays+actual8tap/fullcontrolbudgetPASS; moving to actual source bridge, no freeze.
