@@ -42,7 +42,7 @@ for row in keybuf['reserved_unbound']:
  # Source census proves these exact slots absent. Station inventory was separately checked;
  # fail closed if the current candidate has acquired any station referencing them.
  assert inst not in json.dumps(t.get('internal_stations',[])),inst
- t['hard_cores']=[c for c in t['hard_cores'] if c['inst']!=inst];t['contents']=[c for c in t['contents'] if c['inst']!=inst];t['clock']['taps']=[c for c in t['clock'].get('taps',[]) if not c['name'].startswith(inst+'.')];removed.append(dict(type=tn,inst=inst))
+ t['hard_cores']=[c for c in t['hard_cores'] if c['inst']!=inst];t['contents']=[c for c in t['contents'] if c['inst']!=inst];t['clock']['taps']=[c for c in t['clock'].get('taps',[]) if c['name']!=inst and not c['name'].startswith(inst+'.')];removed.append(dict(type=tn,inst=inst))
 assert len(removed)==16
 # Remove/rename only exact stale interface keys; this is not regeneration of source graph.
 for fn in ('clock_entries.json','core_conns.json'):
