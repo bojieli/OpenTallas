@@ -306,11 +306,13 @@ class Builder:
         return out
 
     def macro_hits(self, part, regs_die):
-        boxes = S.placed_macro_boxes(self.P.ptype(part))
+        import station_resite as SR
+        boxes = S.placed_macro_boxes(self.P.ptype(part), halo=SR.HALO)
         n = 0
         for r in regs_die:
             x, y = self.P.to_type(part, r)
-            n += any(x0 + EPS < x < x1 - EPS and y0 + EPS < y < y1 - EPS for (x0, y0, x1, y1) in boxes.values())
+            n += any(x0 - EPS <= x <= x1 + EPS and y0 - EPS <= y <= y1 + EPS
+                     for (x0, y0, x1, y1) in boxes.values())
         return n
 
     # ---------------------------------------------------------------- templates
@@ -400,6 +402,10 @@ class Builder:
                         r1 = self.build_one(a, b, w, chain, kind, tl, record=False, part=len(got))
                         if r1:
                             break
+                    if r1 is not None and got and r1["cycles"] != got[0]["cycles"]:
+                        self._why = (f"split cycles {r1['cycles']} != {got[0]['cycles']} "
+                                     "for one bus; candidate windows changed station/landing latency")
+                        r1 = None
                     if r1 is None:
                         break
                     got.append(r1)
@@ -416,6 +422,7 @@ class Builder:
 
     def build_one(self, a, b, bits, chain, kind, tl, record=True, part=0):
         P = self.P
+        split_index = part                 # partition loops below must not overwrite the mirror split key
         # template hop windows / slots (die frame) to stay close to the existing lane
         tw, tslots = {}, {}
         if tl:
@@ -502,14 +509,17 @@ class Builder:
         if hits and self.reject_macro_hits:
             return rollback(f"{hits} station points inside macros")
         st = sum(x[8] for x in slots)
-        cyc = 2 + st
         pair_cyc = sorted({int(self.raw["latency"]["lanes"].get(l2, {}).get("cycles", -1))
                            for l2 in self.orig_lanes
                            if P.ports[P.lanes[l2]["ports"][0]]["src"]["part"] == a
                            and P.ports[P.lanes[l2]["ports"][-1]]["dst"]["part"] == b})
-        if self.require_cycle_match and pair_cyc and cyc not in pair_cyc:
-            return rollback(f"cycles {cyc} not in the pair's existing lane cycles {pair_cyc}")
-        lid = self.new_id(a, b, part)
+        # The canonical natural latency includes physical clock landings.  Compute
+        # it on the complete candidate before accepting it; the station-only sum
+        # is not an exact latency contract.  Retain the pre-write state so a
+        # rejected candidate cannot consume buses, slots, IDs, or edge capacity.
+        before_write = copy.deepcopy(self.raw)
+        before_ids, before_next = dict(self.ids), self.next_id
+        lid = self.new_id(a, b, split_index)
         ports, xs = [], []
         for i, (u, v, (df, win, layers)) in enumerate(hops):
             ob = f"{lid}_o" if i == 0 else f"{lid}x{i}_o"
@@ -529,6 +539,13 @@ class Builder:
         self.P = S.Plan(self.raw)
         P = self.P
         nat = P.lane_natural(lid)
+        if self.require_cycle_match and pair_cyc and nat["cycles"] not in pair_cyc:
+            self.raw.clear()
+            self.raw.update(before_write)
+            self.P = S.Plan(self.raw)
+            self.ids, self.next_id = before_ids, before_next
+            return rollback(f"cycles {nat['cycles']} (including clock landings) not in the pair's "
+                            f"existing lane cycles {pair_cyc}")
         ent = dict(nat, natural=nat["cycles"], pad=0, param="LAT_" + lid.upper())
         self.raw.setdefault("latency", {}).setdefault("lanes", {})[lid] = ent
         return dict(lane=lid, src=a, dst=b, bits=bits, kind=kind, template=tl, chain=chain,
