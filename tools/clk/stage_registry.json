@@ -262,6 +262,37 @@
     0.000484
    ],
    "coeff_sha": "7624685c7eb89597"
+  },
+  {
+   "id": "inv2_ndr_hbm_trial2b_early",
+   "key": {
+    "cell": "CKINVDCx16_ASAP7_75t_R",
+    "polarity": "pair",
+    "clock_rc": "ndr",
+    "corners": [
+     "TT"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": "HBM DIE-HBM-10 trial2b routed die clock (die_trial clock_rc ndr build, inv2)"
+   },
+   "basis": "Codex CLK-MODEL-SWEEP-1 LSQ on HBM trial2b routed TT early legs; tap fit TT routed 3274 legs RMS 1.89 ps (inline cal of results/codex_hbm_clock_1028/build_street_body.py, TT only)",
+   "source": {
+    "file": "results/clk_tool_7_1029/stage_cal_hbm_trial2b_early.json",
+    "sha256": "a1a15dad675f0dc395533a602e84e3bfdcd1d5ea939997ea4326c95711371f57"
+   },
+   "leg": [
+    11.034201,
+    0.169972,
+    5.8e-05,
+    7.001714
+   ],
+   "tap": [
+    0.03644737,
+    0.00013425
+   ],
+   "coeff_sha": "68e3a21a24d2fd33"
   }
  ]
 }
