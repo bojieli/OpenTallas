@@ -38,8 +38,11 @@ proc rsp_inst {name master x y} {
   set i [odb::dbInst_create $rsp_blk $m $name]
   set sx [expr {$rsp_ox + round(($x - $rsp_ox) / $rsp_sw) * $rsp_sw}]
   set sy [expr {$rsp_oy + round(($y - $rsp_oy) / $rsp_sh) * $rsp_sh}]
-  $i setLocation [expr {round($sx * $rsp_dbu)}] [expr {round($sy * $rsp_dbu)}]
+  # setOrient transforms the existing origin/bbox. Set the orientation FIRST,
+  # then ask OpenDB for the planned lower-left location; reversing these calls
+  # shifts every MX body down one row and overlaps adjacent folded pad rows.
   if {(round(($sy - $rsp_oy) / $rsp_sh) % 2) == 1} { $i setOrient MX } else { $i setOrient R0 }
+  $i setLocation [expr {round($sx * $rsp_dbu)}] [expr {round($sy * $rsp_dbu)}]
   $i setPlacementStatus $rsp_status
   return $i
 }
