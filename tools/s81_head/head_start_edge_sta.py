@@ -46,7 +46,7 @@ def emit(roles,overlay,corner,odb,spef=None,guides=None,out='/audit/edges.tsv'):
           '  if {$qa eq "NA" || $da eq "NA"} {error "missing exact path point $dst"}',
           '  set ca [get_property [get_pins $sck($dst)] arrival_${mode}_rise]; if {$ca eq ""} {error "missing source clock arrival"}',
           '  set cap NA; if {$cck($dst) ne "NA"} {set cap [get_property [get_pins $cck($dst)] arrival_${mode}_$cedge($dst)]; if {$cap eq ""} {error "missing capture clock arrival"}; if {$cedge($dst) eq "fall"} {set cap [expr {$cap-416.5}]}}',
-          '  puts $out "$mode\\t$eid($dst)\\t$first\\t$dst\\t$qa\\t$da\\t[expr {$da-$qa}]\\t$ca\\t[expr {$qa-$ca}]\\t$cap\\t[ep_crpr $p]\\t[get_property $p slack]"',
+          '  puts $out "$mode\t$eid($dst)\t$first\t$dst\t$qa\t$da\t[expr {$da-$qa}]\t$ca\t[expr {$qa-$ca}]\t$cap\t[ep_crpr $p]\t[get_property $p slack]"',
           ' }',f' if {{[array size seen]!={n}}} {{error "START endpoint coverage [array size seen] != {n}"}}',
           '}', 'close $out','puts HEAD_START_EDGE_DATA_DONE']
     return '\n'.join(L)+'\n'
