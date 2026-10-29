@@ -848,7 +848,14 @@ class Landings:
             if self.tstart and self.tstart["type_pins"].get(key, {}).get(START_PIN_OUT):
                 # START-TREE: the region start leaves on ONE dedicated pin (fanned out at the die top / to a stage)
                 extra.append(f"    output wire {START_PIN_OUT}")
-                logic.append(f"    assign {START_PIN_OUT} = cland_start;")
+                if face_start:
+                    # DIE-KV-32 10-29 face_guard 'shared': cland_start drives the internal ring/landing loads (44-678
+                    # on KV io_cor/io_ft/hub_Ei), so the pin takes its OWN face flop u_cland_tstart_o, the same form
+                    # as u_cland_fstart_<b> (d = start's D-side, start's raw reset): equal to cland_start every cycle.
+                    logic.append(f"    ot_dp_landing_relay u_cland_tstart_o (.clk(clk), .rst_raw_n(cland_start_raw), "
+                                 f".d(cland_start_d), .q({START_PIN_OUT}));")
+                else:
+                    logic.append(f"    assign {START_PIN_OUT} = cland_start;")
         if self.dataflow:
             body = self._dataflow_monitor(tn, key, mask, collector_info, extra, logic, body)
         elif active_collector:
@@ -963,9 +970,9 @@ class Landings:
                          f".q(cland_rstart_out));")
         if self.tstart and self.tstart.get("reset_wave") and RAW_RESET_PIN_OUT in self.tstart["type_pins"].get(type_key or tn,{}):
             extra.append(f"    output wire {RAW_RESET_PIN_OUT}")
-            logic += ['    (* keep = "true", face_keep = "true" *) reg cland_raw_reset_q;',
-                      f"    always @(posedge clk) cland_raw_reset_q <= {raw};",
-                      f"    assign {RAW_RESET_PIN_OUT} = cland_raw_reset_q;"]
+            # DIE-KV-32 10-29: the face flop is an ot_dp_rrelay instance driving the port alone (a kept reg aliased
+            # to the port left a BUF onto the kept wire = 1 extra load, face_guard 'shared'); same flop, same D.
+            logic.append(f"    ot_dp_rrelay u_cland_raw_reset_o (.clk(clk), .d({raw}), .q({RAW_RESET_PIN_OUT}));")
         return raw_logic + logic
 
     def _origin_strap_rtl(self, tn, role, ca_raw, extra, local_raw):

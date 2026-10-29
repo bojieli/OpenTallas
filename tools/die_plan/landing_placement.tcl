@@ -86,6 +86,20 @@ proc cland_drivers {n} {
 foreach spec $cland_status {
  lassign $spec net x y
  set n [$ff_blk findNet $net]
+ if {$n eq "NULL"} {
+  # DIE-KV-32 10-29 (KV hroot 3_3_place_gp): a --kit-rtl kit flattens the bound wrapper, so the status net carries
+  # its instance prefix (u_bound.landing_ready_ft0_i), as the ring groups above already allow ((^|[/.])prefix).
+  # Exactly one hierarchical match is taken; none or several stay errors (fail closed).
+  set cland_cand {}; set cland_l [string length $net]
+  foreach cland_x [$ff_blk getNets] {
+   set cland_nm [$cland_x getName]
+   if {[string length $cland_nm] > $cland_l && [string range $cland_nm end-[expr {$cland_l-1}] end] eq $net
+       && [string index $cland_nm end-$cland_l] in {. /}} { lappend cland_cand $cland_x }
+  }
+  if {[llength $cland_cand] == 1} { set n [lindex $cland_cand 0] } elseif {[llength $cland_cand] > 1} {
+   error "OT_CLAND ambiguous status net $net: [llength $cland_cand] hierarchical matches"
+  }
+ }
  if {$n eq "NULL"} { error "OT_CLAND missing actual status net $net" }
  set drivers [cland_drivers $n]
  # FLOW-GEN-1 10-28 (DIE-HEAD-9 bug 4): ASAP7 maps the status FF as DFFHQN + INV (no Q flop): follow exactly one

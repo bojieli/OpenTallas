@@ -55,3 +55,20 @@ def test_raw_reset_requires_exact_relay_and_raw_parent():
     assert ".d(rr_t1)" in rtl[-1]
     assert inst[0]["xy_um"]==[20,30]
     assert raw_reset(tree,"rst_n_t2","wire rr_t1;\n"+"\n".join(rtl))==(name,[],[])
+
+
+def test_raw_reset_never_reuses_a_registered_reset_out_face_flop():
+    """DIE-KV-32 10-29 face_guard 'shared' (KV hub_Ei rst_o_0 = rr_t21 with 5 monitor/collector loads): a raw tap
+    that is the wrapper's registered reset OUT (reset_tree `assign rst_o_k = rr_tN`) stays that port's face flop; a
+    pre-START consumer gets its own copy at the same parent/xy (cycle-equal), reused by later consumers."""
+    from landing_collector import raw_reset
+    t = dict(root=[0, 0], relays=[dict(q="rst_n_t0", d="rst_root_n", xy=[100, 0]),
+                                  dict(q="rst_n_t1", d="rst_rl_5", xy=[200, 0])])
+    plain = "wire rst_root_n;\nwire rst_rl_5;\nwire rr_t1;\n"
+    assert raw_reset(t, "rst_n_t1", plain) == ("rr_t1", [], [])            # not a face: reuse unchanged
+    face = plain + "assign rst_o_0 = rr_t1;  // registered reset out (wavefront)\n"
+    name, rtl, inst = raw_reset(t, "rst_n_t1", face)
+    assert name == "cland_reset_rst_n_t1" and inst[0]["xy_um"] == [200, 0]
+    assert rtl == ["    wire cland_reset_rst_n_t1;",
+                   "    ot_dp_rrelay u_cland_reset_rst_n_t1 (.clk(clk), .d(rst_rl_5), .q(cland_reset_rst_n_t1));"]
+    assert raw_reset(t, "rst_n_t1", face + "\n".join(rtl)) == (name, [], [])  # second consumer shares the copy

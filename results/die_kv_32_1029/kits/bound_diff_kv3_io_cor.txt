@@ -1,0 +1,8 @@
+347,350c347,348
+<     (* keep = "true", face_keep = "true" *) reg cland_raw_reset_q;
+<     always @(posedge clk) cland_raw_reset_q <= rst_n_t0;
+<     assign cland_raw_reset_out = cland_raw_reset_q;
+<     assign cland_tstart_out = cland_start;
+---
+>     ot_dp_rrelay u_cland_raw_reset_o (.clk(clk), .d(rst_n_t0), .q(cland_raw_reset_out));
+>     ot_dp_landing_relay u_cland_tstart_o (.clk(clk), .rst_raw_n(cland_start_raw), .d(cland_start_d), .q(cland_tstart_out));
