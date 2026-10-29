@@ -10,6 +10,8 @@ Anything else (missing log, missing verdict line, nonzero exit, any FAIL, missin
 --expect fail marks a negative control (mutant): CAUGHT requires a printed boot/layer FAIL;
 infrastructure errors (missing output, killed/OOM run) remain FAIL; a mutant that PASSes is
 reported as MUTANT_MISSED.  Writes RUNDIR/verdict ("PASS|FAIL|CAUGHT|MUTANT_MISSED <reason>"); exit 0 only for PASS or CAUGHT.
+With --layers, the boot must pass and a failing layer must actually start its calendar.
+An epoch deadlock prints layer FAIL summaries too, but cannot exercise a token mutant.
 """
 import argparse, re, sys
 from pathlib import Path
@@ -64,13 +66,22 @@ def main(argv=None):
             completed_rc = int((a.rundir / 'exit').read_text().split()[0])
         except (OSError, ValueError, IndexError):
             completed_rc = None
-        observed = completed_rc in (0, 1, 134) and bool(re.search(r'^KVSLICE_BOOT FAIL\b|^FAR_LAYER_SUMMARY layer \d+ .* FAIL\s*$', txt, re.M))
+        if a.layers:
+            boot = re.findall(r'^KVSLICE_BOOT (PASS|FAIL)\b', txt, re.M)
+            failures = re.finditer(
+                r'^FAR_LAYER_SUMMARY layer (\d+) .* cal_start (-?\d+) .* FAIL\s*$', txt, re.M)
+            functional_failure = bool(boot and boot[0] == 'PASS' and any(
+                0 <= int(m.group(1)) < a.layers and int(m.group(2)) >= 0
+                for m in failures))
+        else:
+            functional_failure = bool(re.search(r'^KVSLICE_BOOT FAIL\b', txt, re.M))
+        observed = completed_rc in (0, 1, 134) and functional_failure
         if v == 'PASS':
             v = 'MUTANT_MISSED'
         elif observed:
             v = 'CAUGHT'
         else:
-            why = 'negative control has no functional FAIL verdict; ' + why
+            why = 'negative control has no exercised functional FAIL verdict; ' + why
     line = f'{v} {why}'
     try:
         (a.rundir / 'verdict').write_text(line + '\n')
