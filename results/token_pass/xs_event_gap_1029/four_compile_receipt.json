@@ -1,0 +1,207 @@
+{
+ "source": "codex/ds-calendar-0251@63de9f0eca",
+ "job": "intel1:oth-ubuntu-2339010-1793269601",
+ "scope": "current S13 strict bound-data depths and source frame calendars on the compiler logical tree; programme compile only",
+ "full_token": false,
+ "current_native_RTL_replay": false,
+ "GB_provider_under_test": true,
+ "previous_failures": {
+  "initial": "phase-launch PRIME gap end230 versus nextlaunch229",
+  "phase_coalescing_rows": {
+   "L0": 8503,
+   "L2": 9263,
+   "L14": 9263,
+   "L20": 9263
+  }
+ },
+ "unchanged_constraints": {
+  "calendar_rows": 4096,
+  "PRIME_lead_edges": 20,
+  "period_ps": 833
+ },
+ "added_rtl_cycles": 0,
+ "layers": [
+  {
+   "layer": "L0",
+   "returncode": 0,
+   "ops": 65,
+   "status_counts": {
+    "PARTIAL": 65
+   },
+   "rows": 955,
+   "templates": 954,
+   "field": {
+    "slice": "u_s_0S",
+    "rows": 1365,
+    "segments": 154,
+    "unique_intervals": 21,
+    "action_edges_preserved": true
+   },
+   "gap_ops": [],
+   "legacy_die_gap_count": 1,
+   "die_v_sha256": "a5778b981be90b3b95e1ad6179f5cee40f956f861382d6f711d55ef22e23056e",
+   "compiler_sha256": "1d3e442fea972c976d633f9bd381d90a02ec443439728db14d6b300e49debfbe",
+   "artifacts": {
+    "manifest.json": "eef51c0f905d52ca71005a465c118873a8f28db3427f30bde0e96888bcbb52de",
+    "lowering.json": "439a89e6a86f387a20a1dec9b6e8d32563d0adedd44f7490d17d5af581cf4b3e",
+    "prog/xs/layer_calendar/manifest.json": "1f067a2808c4c6d909a0ae6c86267e2d0b066fe44789dab70bf932156b4cb23f"
+   }
+  },
+  {
+   "layer": "L2",
+   "returncode": 0,
+   "ops": 83,
+   "status_counts": {
+    "PARTIAL": 81,
+    "GAP": 2
+   },
+   "rows": 1277,
+   "templates": 956,
+   "field": {
+    "slice": "u_s_0S",
+    "rows": 1436,
+    "segments": 165,
+    "unique_intervals": 22,
+    "action_edges_preserved": true
+   },
+   "gap_ops": [
+    {
+     "op": "attn.idx.topk_merge",
+     "gap": {
+      "module": "877 IDXNET (S81/IDXNET 10-25, die_b178.v:3555/3559/3627/3631/3699)",
+      "port": "bk_sel 276-b IDX beats on tp_i / tp_o / tm / ca (lep IDX_TP / IDX_MRG, every TP beat on pair A lane 2)",
+      "missing": "UNIT + NETS PRESENT on 877 (TOK-DS-CMP2 10-26 netlist audit; the old \"no path carries the bk_sel IDX words to an end slice\" text was the legacy die).  Missing: lower_bk emits no TP4 peer-merge programme for the IDXNET lep (compiled TP beat slots, RL relay count, tm / ca collision-free windows) and no bench runs the 4-rank merge through the bound leps; price LEG 729 is the legacy S81-SCAND leg"
+     }
+    },
+    {
+     "op": "attn.rows_allgather",
+     "gap": {
+      "module": "ROWX production integration",
+      "port": "service entry q / packed XB links",
+      "missing": "compressed selected rows still require an enabled ROWX profile, native bridge/controller, and an accepted owner-to-system-circuit mapping; separate ROWX3b/codec component passes do not qualify that production path"
+     }
+    }
+   ],
+   "legacy_die_gap_count": 1,
+   "die_v_sha256": "a5778b981be90b3b95e1ad6179f5cee40f956f861382d6f711d55ef22e23056e",
+   "compiler_sha256": "1d3e442fea972c976d633f9bd381d90a02ec443439728db14d6b300e49debfbe",
+   "artifacts": {
+    "manifest.json": "7619974b474330ce018f56fe69ad3f3ce48e1d7cd3bfc7ac4b6ee18a307796ca",
+    "lowering.json": "9ad071841be6771a43e18ca5d8f47e3031d173222ab727b254c858775cbd9010",
+    "prog/xs/layer_calendar/manifest.json": "0b3010d208b878b0a9b8288620f28cdc7ec6c306684f75188de2211aa588bae1"
+   }
+  },
+  {
+   "layer": "L14",
+   "returncode": 0,
+   "ops": 92,
+   "status_counts": {
+    "PARTIAL": 87,
+    "GAP": 5
+   },
+   "rows": 961,
+   "templates": 960,
+   "field": {
+    "slice": "u_s_0S",
+    "rows": 1436,
+    "segments": 165,
+    "unique_intervals": 22,
+    "action_edges_preserved": true
+   },
+   "gap_ops": [
+    {
+     "op": "eng.rows_allgather",
+     "gap": {
+      "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+      "port": "a_proj capture rows -> end slices",
+      "missing": "same endpoint ABI as attn.a_allgather (bench_vpx); the production rows of this op are not placed"
+     }
+    },
+    {
+     "op": "eng.knorm",
+     "gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "op": "eng.gate",
+     "gap": {
+      "module": "ot_s81sl_vs",
+      "port": "op 14 REDUCE / ADD words (tb_s81sl_slice_eng)",
+      "missing": "encoder exists only inside the slice bench; HBM Engram rows via svc not lowered"
+     }
+    },
+    {
+     "op": "attn.idx.topk_merge",
+     "gap": {
+      "module": "877 IDXNET (S81/IDXNET 10-25, die_b178.v:3555/3559/3627/3631/3699)",
+      "port": "bk_sel 276-b IDX beats on tp_i / tp_o / tm / ca (lep IDX_TP / IDX_MRG, every TP beat on pair A lane 2)",
+      "missing": "UNIT + NETS PRESENT on 877 (TOK-DS-CMP2 10-26 netlist audit; the old \"no path carries the bk_sel IDX words to an end slice\" text was the legacy die).  Missing: lower_bk emits no TP4 peer-merge programme for the IDXNET lep (compiled TP beat slots, RL relay count, tm / ca collision-free windows) and no bench runs the 4-rank merge through the bound leps; price LEG 729 is the legacy S81-SCAND leg"
+     }
+    },
+    {
+     "op": "attn.rows_allgather",
+     "gap": {
+      "module": "ROWX production integration",
+      "port": "service entry q / packed XB links",
+      "missing": "compressed selected rows still require an enabled ROWX profile, native bridge/controller, and an accepted owner-to-system-circuit mapping; separate ROWX3b/codec component passes do not qualify that production path"
+     }
+    }
+   ],
+   "legacy_die_gap_count": 1,
+   "die_v_sha256": "a5778b981be90b3b95e1ad6179f5cee40f956f861382d6f711d55ef22e23056e",
+   "compiler_sha256": "1d3e442fea972c976d633f9bd381d90a02ec443439728db14d6b300e49debfbe",
+   "artifacts": {
+    "manifest.json": "420d3816645c4f757e894e1da8501c88933990f86e962913470bb0a6369b20bf",
+    "lowering.json": "84a9d876fe2fc53e3ccf3c16a680d6c808adbdea905eabb8990de38e17d4cf0c",
+    "prog/xs/layer_calendar/manifest.json": "0ed47d4c15850490e6ca156e53527a75e162484829222eb5acb598ecda877ec6"
+   }
+  },
+  {
+   "layer": "L20",
+   "returncode": 0,
+   "ops": 84,
+   "status_counts": {
+    "PARTIAL": 82,
+    "GAP": 2
+   },
+   "rows": 957,
+   "templates": 956,
+   "field": {
+    "slice": "u_s_0S",
+    "rows": 1436,
+    "segments": 165,
+    "unique_intervals": 22,
+    "action_edges_preserved": true
+   },
+   "gap_ops": [
+    {
+     "op": "attn.idx.topk_merge",
+     "gap": {
+      "module": "877 IDXNET (S81/IDXNET 10-25, die_b178.v:3555/3559/3627/3631/3699)",
+      "port": "bk_sel 276-b IDX beats on tp_i / tp_o / tm / ca (lep IDX_TP / IDX_MRG, every TP beat on pair A lane 2)",
+      "missing": "UNIT + NETS PRESENT on 877 (TOK-DS-CMP2 10-26 netlist audit; the old \"no path carries the bk_sel IDX words to an end slice\" text was the legacy die).  Missing: lower_bk emits no TP4 peer-merge programme for the IDXNET lep (compiled TP beat slots, RL relay count, tm / ca collision-free windows) and no bench runs the 4-rank merge through the bound leps; price LEG 729 is the legacy S81-SCAND leg"
+     }
+    },
+    {
+     "op": "attn.rows_allgather",
+     "gap": {
+      "module": "ROWX production integration",
+      "port": "service entry q / packed XB links",
+      "missing": "compressed selected rows still require an enabled ROWX profile, native bridge/controller, and an accepted owner-to-system-circuit mapping; separate ROWX3b/codec component passes do not qualify that production path"
+     }
+    }
+   ],
+   "legacy_die_gap_count": 1,
+   "die_v_sha256": "a5778b981be90b3b95e1ad6179f5cee40f956f861382d6f711d55ef22e23056e",
+   "compiler_sha256": "1d3e442fea972c976d633f9bd381d90a02ec443439728db14d6b300e49debfbe",
+   "artifacts": {
+    "manifest.json": "bd2906ad0293aa2bedd8392bf34a235af8cd9983f689d714addf3bcc40ef7ddf",
+    "lowering.json": "94210c84041e7196bec3ff89439c0acb305469f2ed75a3b6339d8819af79d8f8",
+    "prog/xs/layer_calendar/manifest.json": "00518ca6cb3e8e7e47124d5f893f08a14465a76fa9692fc1b924145ab21835da"
+   }
+  }
+ ]
+}
