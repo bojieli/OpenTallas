@@ -1797,6 +1797,15 @@
        "landing_contract": {
         "type": "object"
        },
+       "landing_export_form": {
+        "enum": [
+         "tie",
+         "fwd_buffer"
+        ]
+       },
+       "tap_passthrough": {
+        "type": "boolean"
+       },
        "out_hold_check_ps": {
         "minimum": 0,
         "type": "number"

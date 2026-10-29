@@ -63,6 +63,35 @@ proc tb_is_buf {inst} {
   set m [[$inst getMaster] getName]
   return [expr {[string match "BUF*" $m] || [string match "INV*" $m] || [string match "CKINV*" $m] || [string match "HB*" $m]}]
 }
+# FLOW-GEN-2 (DIE-HEAD-14, opt-in OT_TAP_PASSTHRU=1 = plan clock.tap_passthrough): a hard-core (BLOCK) input whose
+# Liberty arcs FROM it are all combinational (island ft clock pass-through, e.g. ft_ck0_i -> ft_ck0_o) is not a clock
+# sink: the tree is followed to the outputs it drives (sinks behind them stay sinks).  A pin with any check / clock-to-Q
+# arc, or with no arc at all, stays a sink exactly as before (fail closed in clock_family).  Unset: unchanged.
+proc tb_passthru {it todo_var} {
+  if {![info exists ::env(OT_TAP_PASSTHRU)] || $::env(OT_TAP_PASSTHRU) ne "1"} { return 0 }
+  set i [$it getInst]
+  if {![[$i getMaster] isBlock]} { return 0 }
+  set p "[$i getName]/[[$it getMTerm] getName]"
+  sta::redirect_string_begin
+  set failed [catch {report_edges -from [get_pins $p]}]
+  set rep [sta::redirect_string_end]
+  if {$failed} { return 0 }
+  set outs {}
+  foreach line [split $rep "\n"] {
+    if {![regexp {^(\S+) -> (\S+) (.+)$} $line -> from to kind]} continue
+    if {[string trim $kind] ne "combinational"} { return 0 }
+    lappend outs $to
+  }
+  if {![llength $outs]} { return 0 }
+  upvar 1 $todo_var todo
+  set nets {}
+  foreach o [lsort -unique $outs] {
+    set ot [$i findITerm $o]
+    if {$ot ne "NULL" && [$ot getNet] ne "NULL"} { lappend todo [$ot getNet]; lappend nets [[$ot getNet] getName] }
+  }
+  puts "OT_TAP_PASSTHRU $p -> [lsort -unique $outs] (followed nets: [llength $nets])"
+  return 1
+}
 # sink clock pins of the tree under a net (through buffers / inverters)
 proc tb_sinks {net} {
   set out {}; set todo [list $net]; set seen {}
@@ -75,6 +104,8 @@ proc tb_sinks {net} {
       set i [$it getInst]
       if {[tb_is_buf $i]} {
         foreach o [$i getITerms] { if {[[$o getMTerm] getIoType] eq "OUTPUT" && [$o getNet] ne "NULL"} { lappend todo [$o getNet] } }
+      } elseif {[tb_passthru $it todo]} {
+        continue
       } else { lappend out "[$i getName]/[[$it getMTerm] getName]" }
     }
   }

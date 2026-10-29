@@ -859,6 +859,14 @@ SCHEMA = {
 # status hops are checked by landing_contract.py; default plans are unchanged.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
 SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
+# FLOW-GEN-2 CTS-0114 (DIE-HEAD-14/15, opt-in): a forwarded clock output leaves through ONE dedicated buffer at its
+# source tap (landing_contract.export_tcl "fwd_buffer"), not tied onto the clk root net; default "tie" = legacy text.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_export_form"] = {
+    "enum": ["tie", "fwd_buffer"]}
+# FLOW-GEN-2 (DIE-HEAD-14 OT_CLOCK_FAMILY, opt-in): tap_balance.tcl follows a hard-core input with only combinational
+# Liberty arcs (island ft clock pass-through, e.g. ft_ck0_i) to its outputs instead of measuring it as a clock sink.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_passthrough"] = {
+    "type": "boolean"}
 # clock-landing cohort types (clock_landing_plan.compose) name the base plan type they were split from.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_base_type"] = {"type": "string"}
 # CLOCK-KV-R22: declared die-top data landing islands (landing_islands.py; hold cells for hard->hard seams)
