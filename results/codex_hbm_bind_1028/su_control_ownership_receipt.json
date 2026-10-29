@@ -476,7 +476,14 @@
     "remaining_unmapped": 5572,
     "status": "SOURCE_MAP_AND_EXACT_BIT_FRACTURE_VALIDATED_ONLY_NO_TYPE_OR_PHYSICAL_ADOPTION"
   },
-  "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-bind-0300/su_ownership_r2",
+  "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-bind-0300/su_ownership_r3",
   "validation_unit": "oth-ubuntu-3320840-1793275099",
-  "initial_validation_failure": "Helper packaging omitted sibling tools/die_port_bind.py; exact main d3b helper restored, source unchanged."
+  "initial_validation_failure": "Helper packaging omitted sibling tools/die_port_bind.py; exact main d3b helper restored, source unchanged.",
+  "namespace": "Original source-relative auto-cell spelling retained ($...) so existing type_canon may prove correspondence; role-specific hashes removed.",
+  "namespace_validation": {
+    "part_ownership_equal": true,
+    "local_names_unique": true,
+    "paths": 25366,
+    "source_bit_fracture_validation": "unchanged r2 source ownership and exact original primitive_splits"
+  }
 }

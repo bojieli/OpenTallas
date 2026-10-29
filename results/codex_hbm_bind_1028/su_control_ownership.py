@@ -100,11 +100,11 @@ composition['primitive_splits']=oldspec
 (out/'compose_proposal.json').write_text(json.dumps(composition,separators=(',',':'))+'\n')
 maprows={}
 for rec in records:
- for path,z in rec['whole_cell_owners'].items():maprows[path]=[z,'u_su_controller.'+hashlib.sha256(path.encode()).hexdigest()[:16]]
+ for path,z in rec['whole_cell_owners'].items():maprows[path]=[z,'u_su_controller.'+path.split('.',1)[1]]
  for ff in rec['ff_bit_owners']:
   for z,ks in ff['owner_bits'].items():
    path=ff['path'] if len(ff['owner_bits'])==1 else ff['path']+'.__controller_'+z
-   maprows[path]=[z,'u_su_controller.'+hashlib.sha256(path.encode()).hexdigest()[:16]]
+   maprows[path]=[z,'u_su_controller.'+path.split('.',1)[1]]
 # Source crossing demand on nets incident to these residual cells. No wire delay
 # or zero-cycle physical implementation is inferred.
 def owners(i,pn,k,counterfactual=False):
