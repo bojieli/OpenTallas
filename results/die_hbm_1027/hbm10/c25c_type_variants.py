@@ -15,7 +15,7 @@ for row in R['type_splits']:
   new=old+'__physical_v'+str(i)
   assert new not in P['partition_types'],new
   t=copy.deepcopy(P['partition_types'][old]);t['module']+='__physical_v'+str(i)
-  t['split_of']=old;t['note']=t.get('note','')+' | Explicit actual bound-content variant; same leaf masters/geometry, independent wrapper G3.'
+  t['note']=t.get('note','')+' | Explicit actual bound-content variant; same leaf masters/geometry, independent wrapper G3.'
   # No wrapper views are valid under the new module identity.
   for k in ('lef','lib','libs','gds','def','netlist','sdc','signed','signoff'):t.pop(k,None)
   P['partition_types'][new]=t;clones[new]=old
