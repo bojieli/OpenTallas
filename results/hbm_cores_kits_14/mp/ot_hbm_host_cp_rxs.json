@@ -1,0 +1,65 @@
+{
+ "schema": "opentallas.macro_placement.v1",
+ "design": "ot_hbm_host_cp_rxs",
+ "outline_um": [
+  434.808,
+  480.0
+ ],
+ "macro_placement": [
+  {
+   "k": "u_land.g_bank[1].u_mem",
+   "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+   "origin_um": [
+    131.058,
+    166.248
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_land.g_bank[0].u_mem",
+   "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+   "origin_um": [
+    131.058,
+    116.544
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_link.g_bank[3].u_store.u_native.u_sram",
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    131.058,
+    30.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_link.g_bank[2].u_store.u_native.u_sram",
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    131.058,
+    224.688
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_link.g_bank[1].u_store.u_native.u_sram",
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    131.058,
+    311.112
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_link.g_bank[0].u_store.u_native.u_sram",
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    131.058,
+    397.536
+   ],
+   "orient": "R0"
+  }
+ ],
+ "note": "HBM-CORES-KITS-3 rule R-SRAM-ENTRY, C columns (mp_rule_c.py): equal 10.8+ um channels, array centred on the entry x, every column split at the entry island + halo; k below the face shell"
+}

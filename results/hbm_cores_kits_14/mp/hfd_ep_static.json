@@ -1,0 +1,47 @@
+{
+ "schema": "opentallas.macro_placement.v1",
+ "design": "hfd_ep_static",
+ "outline_um": [
+  241.92,
+  397.44
+ ],
+ "macro_placement": [
+  {
+   "k": "u_rxb.g_block[1].u_block.g_mem[0].u_mem.u_sram",
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    35.316,
+    112.248
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_rxb.g_block[1].u_block.g_mem[1].u_mem.u_sram",
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    35.316,
+    25.824
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_rxb.g_block[0].u_block.g_mem[0].u_mem.u_sram",
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    35.316,
+    207.408
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_rxb.g_block[0].u_block.g_mem[1].u_mem.u_sram",
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    35.316,
+    293.832
+   ],
+   "orient": "R0"
+  }
+ ],
+ "note": "HBM-CORES-KITS-3 rule R-SRAM-ENTRY, C columns (mp_rule_c.py): equal 10.8+ um channels, array centred on the entry x, every column split at the entry island + halo; k below the face shell"
+}
