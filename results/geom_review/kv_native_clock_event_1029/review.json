@@ -1,0 +1,10 @@
+{
+ "scope": "KV ONE native clock body event, same topology/cycles; planned and imported geometry only",
+ "images_viewed": ["results/kv_native_clock_event_1029/packed_clock_pg_model.png", "results/kv_native_clock_event_1029/packed_clock_hardbodies.png"],
+ "verdict": "PASS-COND",
+ "native_import": "15296 exact R0/FIRM homes, zero native mismatch and zero body overlap",
+ "reach": "15295 cell edges plus 1920 real tap edges; max304.452um, zero above405",
+ "conditional": ["Actual top-grid metal/via enclosure check pending", "Macro M7-to-M8 connections absent in top-grid prototype", "Full mapped provider cells, real boundary CK and loaded TT/FF phase not integrated"],
+ "route_authorized": false,
+ "next": "Actual upper-PG body check then regenerate source-aware provider graph from new actual clock; no timing or release qualification"
+}

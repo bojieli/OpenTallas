@@ -1,0 +1,18 @@
+{
+ "scope": "KV ECTL q3 native clock successor ONE CTS/GRT prototype",
+ "viewed": true,
+ "image": "/srv/opentallas-scratch/claude/wt/codex-kv-kits-1029c/results/codex_kv_kits_1029c/clock/q3_plan4/q3_native_clock_macro_overlay.png",
+ "verdict": "PASS-COND",
+ "findings": [
+  "Local branches serve the S/W face banks along the SRAM perimeter, with intermediate drivers instead of the previous long corner feed.",
+  "Both SRAM outlines and 447 fixed S face flops remain clear; the moved corner repeater occupies the channel outside the macro.",
+  "Root remains centered, with balanced E/W branches and shorter branches into the dense face banks.",
+  "Dense S/W wiring still needs actual PG/access and GRT confirmation. The diagram alone does not establish CTS/GRT/timing success."
+ ],
+ "conditions": [
+  "ONE native clock build plus CTS/GRT only, no detailed route",
+  "Actual named5490sink census and all driver body/halo checks",
+  "PG plus GRT>=50 and both-corner actual clock/timing reports"
+ ],
+ "actual_timing_ran": false
+}

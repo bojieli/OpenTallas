@@ -1,0 +1,36 @@
+{
+ "attempts": [
+  {
+   "strict_M9_body_gap": true,
+   "max_move_um": 8.64,
+   "verdict": "FAIL",
+   "cause": "no native PG-aware clock home within 8.64 um of (5353.992, 12651.66); strict_M9=True"
+  },
+  {
+   "strict_M9_body_gap": true,
+   "max_move_um": 17.28,
+   "verdict": "PASS"
+  }
+ ],
+ "cells": 15296,
+ "moved": 15183,
+ "max_move_um": 14.952000000001135,
+ "actual_reach": {
+  "schema": "ot_clk_actual_reach/1",
+  "max_um": 405.0,
+  "verdict": "PASS",
+  "cell_edges": 15295,
+  "tap_edges": 1920,
+  "worst_um": 304.452,
+  "over_count": 0,
+  "over": [],
+  "missing_sites": [],
+  "frozen_home_match": true
+ },
+ "body_overlap": 0,
+ "native_row_site": true,
+ "model_M8_PG_clear": true,
+ "model_M9_body_gap": true,
+ "actual_PG_checked": false,
+ "topology_cycles_delta": 0
+}
