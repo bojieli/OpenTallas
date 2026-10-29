@@ -13,3 +13,6 @@ CODEX took over HR cores on codex/kv-hr-1029 (main descendant; Claude branch not
 
 ## PARKED 2026-10-29 09:04 PDT — CODEX explicit Claude reset
 Clean/pushed codex/kv-hr-1029@8f93a49e1; READY source-only b162a79ed, no physical adoption. CDCch/pc currentplan PLACE live intel2 units2196916/2195934; currentRX post17769/17769PASS+mutcaught/emittedlive2681294; currentTX faceproofLIVEepyc2unit3525726. Native reset-tree prep diagnosticLIVEintel2unit2977470/noSTA; inheritedPHY boring_jepsen untouchedit10~48080. Full paths/checks/results/remainingfailures in CODEX-LOG HandoffKVHR2026-10-29 09:04 PDT. No engineering after explicitreset.
+
+## CODEX PARKED explicit Claude reset 2026-10-29 14:04 PDT — 13:55 takeover
+Owncodex/kv-hr-1355-1029@ac441e78d clean/pushed. CollectedRX/TX0/1/0. CurrentCDC_CH placedVIEWED FAIL fill6.2%/resetpin321/clock310, r2r397.22/0>405 -> no route; compact198.72sq estimate only. ResetnativeDNTorderingFAIL139 fixed; owncloneunit320124 PASS788BUF24/5levels/18leafmax/199.314ummaxhop/0cycles, noSTA/GRT/adoption. KV01818constantoutdrop/parenttie stillunimplemented. Allown1355jobscomplete; inheriteduntouched. FullCODEX-LOG handoff2026-10-29 14:04 PDT.
