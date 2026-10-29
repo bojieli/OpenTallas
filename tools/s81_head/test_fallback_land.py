@@ -44,7 +44,20 @@ def test_variant_one_entry_and_htree_full_depth(tmp_path):
     out = tmp_path / "fb1.json"
     F.cmd_variant(types.SimpleNamespace(plan=str(PLAN), out=str(out)))
     P = S.Plan(S.load(str(out)))
-    assert all(len(S.tap_grid(P, tn)) == 1 and not S.core_taps(P, tn) for tn in P.types)
+    assert all(len(S.tap_grid(P, tn)) == 1 for tn in P.types)                        # one entry per partition
+    # DIE-HEAD-5: hd_tile keeps its 5 EARLY core taps (one per hard core clock pin ft_mstrap_i) at the signed
+    # capsules' measured mean insertion (12.3 v5.0); every other type has none.  Grid/sink taps still collapse.
+    import head_plan_coretaps_signed as HS
+    cap = ROOT / "results" / "head_core_clockfreeze_release"
+    signed = {mod: HS.means(cap, name) for mod, name in HS.MOD.items()}
+    mods = {c["inst"]: c["module"] for c in P.types["hd_tile"]["hard_cores"]}
+    assert {tn for tn in P.types if S.core_taps(P, tn)} == {"hd_tile"}
+    ct = S.core_taps(P, "hd_tile")
+    assert len(ct) == 5 and sorted(tp["name"].rsplit(".", 1)[0] for *_, tp in ct) == sorted(mods)
+    for port, x, y, tp in ct:
+        assert tp["kind"] == "core" and tp["name"].endswith(".ft_mstrap_i")
+        assert (tp["insertion_ps"], tp["insertion_ff_ps"]) == signed[mods[tp["name"].rsplit(".", 1)[0]]]
+    assert [tp for tp in P.types["hd_tile"]["clock"]["taps"] if tp.get("kind") != "core"] == []
     taps = DT.clock_taps(P)
     assert DT.build_htree(P, taps, 300.0) == DT.build_htree(P, taps, 300.0, False)   # default unchanged
     nd = DT.build_htree(P, taps, 300.0, True)
