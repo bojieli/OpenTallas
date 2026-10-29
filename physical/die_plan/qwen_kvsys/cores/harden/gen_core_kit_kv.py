@@ -1413,8 +1413,8 @@ def main():
     if len(tops) != 1:
         raise SystemExit(f"{tid}: clock binding check: {len(tops)} kit RTL files define module {mod}")
     if a.kvspc_input_collar:
-        if mod != "qkd_kvs_pc" or not a.kvspc_face_ports:
-            raise SystemExit("--kvspc-input-collar requires qkd_kvs_pc with --kvspc-face-ports")
+        if mod not in ("qkd_kvs_pc", "qkd_kvs_pc_h_head_p") or not a.kvspc_face_ports:
+            raise SystemExit("--kvspc-input-collar requires a PC core with --kvspc-face-ports")
         import kvspc_input_collar
         text, receipt = kvspc_input_collar.transform_wrapper(
             tops[0].read_text(), enabled=True, declared_straps=kit_id_straps(hc, cj))

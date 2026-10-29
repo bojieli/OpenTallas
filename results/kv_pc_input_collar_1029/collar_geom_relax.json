@@ -1,0 +1,19 @@
+{
+  "scope": "Relaxed coincidence feasibility only; zero cell-overlap/row legality claim",
+  "output_face_flops": 2297,
+  "input_capture_flops": 1847,
+  "shared_input_output": 1,
+  "old_sequential_graph": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 370.58,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 41928,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_port.u_port.wd\\[282\\]$_SDFFE_PP0P_ -> u_leaf.u_pc.u_pce.u_path.u_ctrl.u_sched.po\\[322\\]$_DFF_PN0_"
+  },
+  "new_input_to_old_capture_max": [
+    377.784,
+    "x__est__0_1[0]"
+  ]
+}
