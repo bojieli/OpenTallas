@@ -23,7 +23,7 @@ sl['instances']=['root.u_hb_idx__link'];sl['frozen']=False
 (a.out/'slice.json').write_text(json.dumps(sl,indent=2)+'\n')
 r=copy.deepcopy(g.load_recipes()['ot_hbm_idx_topk_link_static__650.16x500.04']);r['params']={'WRITE_PIPE_STAGES':2};r['source']='ROOT-approved default-off WPIPE2 coherent SRAM writer: +2 internal write visibility edges; current-plan trial only.'
 r['source_commit']=g.subprocess.check_output(['git','-C',str(repo),'rev-parse','HEAD'],text=True).strip();r['read_at_commit']=False
-sys.argv=[str(f),'--views',str(a.out/'views.json'),'--view',view,'--out',str(a.out/'kits'),'--corner','TC','--hold-margin','0','--tag','_current_wpipe2','--macro-placement',str(a.out/'macros.json'),'--macro-inst-fmt','u_fcore.{k}','--master-slice',str(a.out),'--trial']
+sys.argv=[str(f),'--views',str(a.out/'views.json'),'--view',view,'--out',str(a.out/'kits'),'--corner','TC','--hold-margin','0','--tag','_current_wpipe2','--macro-placement',str(a.out/'macros.json'),'--macro-inst-fmt','{k}','--master-slice',str(a.out),'--clock-taps','density','--trial']
 # slice helper find() accepts the module.json filename.
 (a.out/'ot_hbm_idx_topk_link_static.json').write_bytes((a.out/'slice.json').read_bytes())
 # Install the committed, opt-in logical guides before the standard kit hash is sealed.
@@ -41,6 +41,9 @@ def guided_kit_hash(kd):
    with (kd/hook).open('a') as fd:fd.write('\nsource /work/'+name+'\n')
   import shutil
   shutil.copyfile(repo/'physical/die_plan/hbm_arch_cores/macro_reg_guide_release.tcl',kd/'macro_reg_guide_release.tcl')
+ (kd/'candidate_profile.json').write_text(json.dumps(dict(WRITE_PIPE_STAGES=2,source_commit=r['source_commit'],native_caller=json.load(open(Path(__file__).parent/'current_native_caller.json')),added_internal_SRAM_visibility_edges=2,added_outer_IO_edges=0,production_enable='HELD',clock_stage='HOLD_CTS: reviewed common-domain multi-port stage required'),indent=2)+'\n')
  return original_kit_hash(kd)
 g.kit_hash=guided_kit_hash
-g.main(recipe_overrides={'ot_hbm_idx_topk_link_static__650.16x500.04':r},source_profile=dict(name='topk_wpipe2_current',source_commit=r['source_commit'],parameters=r['params'],added_internal_SRAM_visibility_edges=2,diagnostic_inputs=True))
+# The ordinary recipe parameter path is sufficient: this profile changes no ABI.
+# --clock-taps=density retains the standard explicit multiport PRE_CTS hold.
+g.main(recipe_overrides={'ot_hbm_idx_topk_link_static__650.16x500.04':r})
