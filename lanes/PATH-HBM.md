@@ -1357,3 +1357,4 @@ All HBM plan/streets/locality/clock/crossing/core/native boot+token/PG aliases c
   - run_bind.sh now chains elab -> strict -> bind_verify, with logs; bind_verify runs only after a strict pass.
   - Assumption: the netlist hbm_current_native_top.sv is not on main; a die-hbm-7 copy (50d55436) was used.
   - Branch claude/die-hbm-10-bindfull-1028@6cddd9f4b3; results/die_hbm_1027/hbm10/bindfull/.
+- 2026-10-28 21:45 PDT [CLK-MODEL-SWEEP-1 -> DIE-HBM] trial2b link_htree geometric; fit 34.1->19.0 ps/leg (k1 0.170 ~S81); est. region worst 1422->693 TT, p50 196->128 (hubs gain, SM not model-limited); 461 legs unbalanced after slide; 38 early-tap types not deliverable by link_htree; PHY_N W/C/E no routed data. claude/clk-model-sweep-1-1028@46a74d86d9 results/clk_model_sweep_1_1028/README.md
