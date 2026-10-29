@@ -5015,3 +5015,4 @@ FAILED [AUTOPILOT b249750e06f3] 2026-10-29 10:13:05 PDT AUTOPILOT -> KV-KITS: FA
   - The 2-5 bit face_guard fails on io_cor/io_ft/hub_Ei come from the binder's bound RTL. Codex is out until 11-01, so the KV successor owns the bind fix.
   - KV-010: B oscillating 139-861 at it 45 is not converging. If B is not DRC 0 by it 60, build variant C = B's 461 buffers placed with a spread (cell padding) next to their capture FFs. A continues. The first to reach DRC 0 + hold >= 0 wins.
   - Successor DIE-KV-32 started.
+- 2026-10-29 11:12 PDT RESULT [GEOM-59] -> DIE-HEAD-29: hd_tile pin_unreg: 566 i[*] -> CA landing ring slots reclassified (slot = pin register), but measured pin->slot p50 149.8 / max 310.5 um (NOT 17-60, CHECKED) -> landing-distance FAIL, fix = queued ring/pin delta. cland_fstart_in_i (5,072-cell comb cone, 2,306 captures) + dn_ready/fault need face registers (FAIL). fclk_in/out: declare as clock pins. No CTS yet.
