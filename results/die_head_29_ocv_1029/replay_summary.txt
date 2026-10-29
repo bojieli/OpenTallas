@@ -1,0 +1,12 @@
+## qcsta (logs identical: yes)
+rest_identical_without_start_skew True
+{"TT": {"rows": 538, "ok_old": 538, "ok_new": 538, "ok_flips": 0, "reason_changes": 0, "min_dist_old": 79.5, "min_dist_new": 99.5, "below100_old": 14, "below100_new": 1, "st_launch_capture": [538, 225]}, "FF": {"rows": 538, "ok_old": 538, "ok_new": 538, "ok_flips": 0, "reason_changes": 0, "min_dist_old": 63.8, "min_dist_new": 84.3, "below100_old": 10, "below100_new": 3, "st_launch_capture": [538, 225]}}
+## s81 (logs identical: yes)
+rest_identical_without_start_skew True
+{"TT": {"rows": 1139, "ok_old": 1139, "ok_new": 1139, "ok_flips": 0, "reason_changes": 0, "min_dist_old": 80.3, "min_dist_new": 101.0, "below100_old": 11, "below100_new": 0, "st_launch_capture": [1139, 741]}, "FF": {"rows": 1139, "ok_old": 1139, "ok_new": 1139, "ok_flips": 0, "reason_changes": 0, "min_dist_old": 82.3, "min_dist_new": 97.8, "below100_old": 10, "below100_new": 3, "st_launch_capture": [1139, 741]}}
+## kv (DIE-KV-28 sta_E_edge inputs; base == DIE-KV-28 original: yes; logs identical: yes)
+rest_identical_without_start_skew True
+{"TT": {"rows": 1687, "ok_old": 1687, "ok_new": 1687, "ok_flips": 0, "reason_changes": 0, "min_dist_old": 115.2, "min_dist_new": 124.4, "below100_old": 0, "below100_new": 0, "st_launch_capture": [1598, 1528]}, "FF": {"rows": 1687, "ok_old": 1687, "ok_new": 1687, "ok_flips": 0, "reason_changes": 0, "min_dist_old": 150.9, "min_dist_new": 166.3, "below100_old": 0, "below100_new": 0, "st_launch_capture": [1598, 1528]}}
+## head planner (plan5 spice_edge form, proof_r1; base == HEAD-START-4 head_old: yes)
+base {'tree_edges': 1706, 'clean': 1706, 'fail': 0, 'start_skew_limit_min_ps': 97.4, 'min_sync_dist_clean_ps': 123.9, 'interval_width_median_ps': 113.4, 'interval_width_max_ps': 202.3}
+new {'tree_edges': 1706, 'clean': 1706, 'fail': 0, 'start_skew_limit_min_ps': 123.7, 'min_sync_dist_clean_ps': 150.2, 'interval_width_median_ps': 28.5, 'interval_width_max_ps': 163.6}

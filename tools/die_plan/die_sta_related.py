@@ -1553,6 +1553,13 @@ def landed_gate(corners):
                 verdict="PASS" if lt.get("verdict") == "PASS" and lf.get("verdict") == "PASS" else "FAIL")
 
 
+def is_start_virtual_tap(r):
+    """DIE-HEAD-29: a virtual START tap = a die-level start retime / start stage flop clock pin, outside every hard core:
+    part None AND port '__st__<path>' (virtual_tap, start_stage_emit).  Every other tap (partition / hard-core taps, and
+    any part-None tap without the '__st__' name) is not one, so its clock OCV branch is unchanged."""
+    return r.get("part") is None and str(r.get("port", "")).startswith("__st__")
+
+
 def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_path=None, cell_share=None, region=None,
                  clock_cell="buf"):
     """CLK-AOCV (METHODOLOGY 12.4a b1, DRAFT, opt-in): per pair clock OCV pessimism on the branches below the last
@@ -1560,7 +1567,10 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
     node arrivals 'node_late_ps' / 'node_early_ps' in tap_arrivals_<C>.json (CLOCK-128-R7 --aocv-fold export names;
     CLOCK-128-R8); refuses when they are missing.
     Branch = tap arrival - node arrival (+ declared core latency, class-B stages), cell share from the table (class A
-    die stage) unless cell_share is given.  mode 'flat' = die_ci_margins.json cell/net derates, 'table' = clk_aocv.
+    die stage) unless cell_share is given.  DIE-HEAD-29 (COORD RULING 10-29 10:01): a virtual START tap
+    (is_start_virtual_tap: part None, '__st__' port) carries no core latency / class-B stages; every other tap keeps them
+    (per tap: a virtual -> core pair charges the core latency on the core side only).
+    mode 'flat' = die_ci_margins.json cell/net derates, 'table' = clk_aocv.
     droop 'stated' = +5.1 % late on the late branch always; 'shared' = 0 when both taps share a droop region, else
     +5.1 %.  region: {port: mesh/PDN region} (CLOCK-KV-R17 default --droop-region mesh); a tap missing from it (or
     region None = --droop-region tree, the pre-R17 rule) uses its tree region (cppr_node != 'h').
@@ -1587,6 +1597,11 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
         own = (r.get("abs_late_ps", r["late_ps"]) if late else r.get("abs_early_ps", r["early_ps"])) if node in ("h", "__source__") \
             else (r["late_ps"] if late else r["early_ps"])
         arr = own - float(meta["node_late_ps" if late else "node_early_ps"][node])
+        if is_start_virtual_tap(r):
+            # DIE-HEAD-29 (COORD RULING 10-29 10:01): a virtual START tap is a die-level flop clock pin outside every
+            # hard core: its branch is the die tree only, no hard-core class-B latency (core_lat, nB).
+            return dict(cell_ps=fc * arr, net_ps=(1 - fc) * arr,
+                        stages={ka: int(r["stages_from_root"]) - int(meta["node_stages"][node]), "B": 0})
         return dict(cell_ps=fc * arr + B["cell_share"] * core_lat, net_ps=(1 - fc) * arr + (1 - B["cell_share"]) * core_lat,
                     stages={ka: int(r["stages_from_root"]) - int(meta["node_stages"][node]), "B": nB})
 
