@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.macro_placement.v1",
+ "design": "ot_hbm_svc_vmdel_lane_n",
+ "outline_um": [
+  142.56,
+  108.0
+ ],
+ "macro_placement": [
+  {
+   "k": "pc[0].u_payload",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    30.24,
+    17.28
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "pc[1].u_payload",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    30.24,
+    58.59
+   ],
+   "orient": "R0"
+  }
+ ],
+ "note": "from plan core_macros.json status KNOWN basis None"
+}

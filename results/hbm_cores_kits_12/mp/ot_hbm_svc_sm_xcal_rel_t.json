@@ -1,0 +1,47 @@
+{
+ "schema": "opentallas.macro_placement.v1",
+ "design": "ot_hbm_svc_sm_xcal_rel_t",
+ "outline_um": [
+  241.92,
+  224.64
+ ],
+ "macro_placement": [
+  {
+   "k": "u_xcal.u_cal.g_m2.u_program_hi",
+   "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "origin_um": [
+    33.588,
+    10.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_xcal.u_cal.g_m2.u_program_lo",
+   "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "origin_um": [
+    33.588,
+    143.1
+   ],
+   "orient": "MX"
+  },
+  {
+   "k": "u_xcal.g_t2.u_tab_lo",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    15.12,
+    91.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_xcal.g_t2.u_tab_hi",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    131.976,
+    91.8
+   ],
+   "orient": "MY"
+  }
+ ],
+ "note": "from plan core_macros.json status KNOWN basis explicit"
+}
