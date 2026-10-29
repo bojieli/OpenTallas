@@ -8,7 +8,9 @@ root=Path(__file__).resolve().parents[2];sys.path.insert(0,str(root/'tools/die_p
 import schema as S,gen_phys as G,taps
 path=Path(sys.argv[1]);P=S.Plan(S.load(path),path);out=Path(sys.argv[2]);out.parent.mkdir(parents=True,exist_ok=True)
 T=['hd_st_k5','hd_st_m','hd_st_n3_transit','hd_st_n3_turn','hd_st_n4','hd_st_str','hd_st_turn','hd_turn_a','hd_turn_b']
-fig,axs=plt.subplots(3,3,figsize=(18,12));report={}
+if len(sys.argv)>3:T=sys.argv[3].split(',')
+fig,axs=plt.subplots(3,3,figsize=(18,12)) if len(T)>3 else plt.subplots(1,len(T),figsize=(8*len(T),6),squeeze=False)
+report={}
 for ax,tn in zip(axs.flat,T):
  t=P.types[tn];w,h=t['outline_um'];pin={(b,i):(x,y) for b,i,l,x,y,f in G.type_pins(P,tn)}
  ax.plot([0,w,w,0,0],[0,0,h,h,0],c='black',lw=1)
