@@ -9,10 +9,15 @@ a,out,mapfile,netlist=sys.argv[1:5]
 d=json.loads(Path(a).read_text());d['base']=str(root);d['netlist']=[netlist];d['map_file']=mapfile
 rel='rtl/hbm_next/bind/ot_hnx_sm_seed_heads.sv'
 stree='rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv'
+current=[stree,rel,
+ 'rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv',
+ 'rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv',
+ 'rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_term_static.sv',
+ 'rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_root_h5.sv']
 # Existing arithmetic glue literals are not a blanket leaf-pin permission.
 d['internal_primitive_constants']=True
 for k in ('files','prefer'):
- d[k]=[stree,rel]+[x for x in d.get(k,[]) if x not in (stree,rel)]
+ d[k]=[x for x in d.get(k,[]) if x not in current]+current
 d['substitute_inst']=d.get('substitute_inst',[])+json.loads((here/'seed_substitute_inst.json').read_text())
-d['note']=d.get('note','')+' | CODEX C25c: preserve current NLEG stree; exact chain seed variants; internal Yosys primitive literals only'
+d['note']=d.get('note','')+' | CODEX C25c: preserve current NLEG/W/PARTS master interfaces; exact chain seed variants; internal Yosys primitive literals only'
 Path(out).write_text(json.dumps(d,indent=1)+'\n')

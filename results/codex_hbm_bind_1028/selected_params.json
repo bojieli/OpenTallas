@@ -1,0 +1,215 @@
+{
+  "schema": "opentallas.hbm.selected_params.v1",
+  "failures": [
+    {
+      "inst": "hc_NE",
+      "original_master": "ot_hbm_hc_qhub_static",
+      "selected_master": "ot_hbm_hc_qhub_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+      "requested_params": ".DRLY(2), .CHX(11), .RD_CAPTURE(51), .GATHER_PHASE(51), .DONE_LAT(47), .W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hc_NW",
+      "original_master": "ot_hbm_hc_qhub_static",
+      "selected_master": "ot_hbm_hc_qhub_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+      "requested_params": ".DRLY(2), .CHX(11), .RD_CAPTURE(51), .GATHER_PHASE(51), .DONE_LAT(47), .W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hcb_NE0",
+      "original_master": "ot_hbm_hc_bankq0_static",
+      "selected_master": "ot_hbm_hc_bankq0_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/scoped_d4g/hcb0.sv",
+      "requested_params": ".DRLY(2), .CPO(1), .W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hcb_NE1",
+      "original_master": "ot_hbm_hc_bankq_static",
+      "selected_master": "ot_hbm_hc_bankq_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/scoped_d4g/hcb.sv",
+      "requested_params": ".CPI(1), .CPO(1), .W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hcb_NE2",
+      "original_master": "ot_hbm_hc_bankq_ft_static",
+      "selected_master": "ot_hbm_hc_bankq_ft_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv",
+      "requested_params": ".W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hcb_NE3",
+      "original_master": "ot_hbm_hc_bankq_static",
+      "selected_master": "ot_hbm_hc_bankq_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/scoped_d4g/hcb.sv",
+      "requested_params": ".CPI(1), .CPO(1), .W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hcb_NE4",
+      "original_master": "ot_hbm_hc_bankq_static",
+      "selected_master": "ot_hbm_hc_bankq_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/scoped_d4g/hcb.sv",
+      "requested_params": ".CPI(1), .CPO(1), .W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hcb_NE5",
+      "original_master": "ot_hbm_hc_bankq_static",
+      "selected_master": "ot_hbm_hc_bankq_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/scoped_d4g/hcb.sv",
+      "requested_params": ".CPI(1), .CPO(1), .W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hcb_NE6",
+      "original_master": "ot_hbm_hc_bankq_ft_static",
+      "selected_master": "ot_hbm_hc_bankq_ft_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv",
+      "requested_params": ".W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hcb_NE7",
+      "original_master": "ot_hbm_hc_bankq_term_static",
+      "selected_master": "ot_hbm_hc_bankq_term_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/scoped_d4g/hcbt.sv",
+      "requested_params": ".CPI(1), .CPO(1), .W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hcb_NW0",
+      "original_master": "ot_hbm_hc_bankq0_static",
+      "selected_master": "ot_hbm_hc_bankq0_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/scoped_d4g/hcb0.sv",
+      "requested_params": ".DRLY(2), .CPO(1), .W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hcb_NW1",
+      "original_master": "ot_hbm_hc_bankq_static",
+      "selected_master": "ot_hbm_hc_bankq_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/scoped_d4g/hcb.sv",
+      "requested_params": ".CPI(1), .CPO(1), .W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hcb_NW2",
+      "original_master": "ot_hbm_hc_bankq_ft_static",
+      "selected_master": "ot_hbm_hc_bankq_ft_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv",
+      "requested_params": ".W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hcb_NW3",
+      "original_master": "ot_hbm_hc_bankq_static",
+      "selected_master": "ot_hbm_hc_bankq_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/scoped_d4g/hcb.sv",
+      "requested_params": ".CPI(1), .CPO(1), .W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hcb_NW4",
+      "original_master": "ot_hbm_hc_bankq_static",
+      "selected_master": "ot_hbm_hc_bankq_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/scoped_d4g/hcb.sv",
+      "requested_params": ".CPI(1), .CPO(1), .W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hcb_NW5",
+      "original_master": "ot_hbm_hc_bankq_static",
+      "selected_master": "ot_hbm_hc_bankq_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/scoped_d4g/hcb.sv",
+      "requested_params": ".CPI(1), .CPO(1), .W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hcb_NW6",
+      "original_master": "ot_hbm_hc_bankq_ft_static",
+      "selected_master": "ot_hbm_hc_bankq_ft_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv",
+      "requested_params": ".W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "hcb_NW7",
+      "original_master": "ot_hbm_hc_bankq_term_static",
+      "selected_master": "ot_hbm_hc_bankq_term_static",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/scoped_d4g/hcbt.sv",
+      "requested_params": ".CPI(1), .CPO(1), .W(128)",
+      "missing": [
+        "W"
+      ]
+    },
+    {
+      "inst": "stl_NE",
+      "original_master": "ot_hbm_su_stree_leaf",
+      "selected_master": "ot_hbm_su_stree_leaf",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv",
+      "requested_params": ".MUT(0), .NLEG(2)",
+      "missing": [
+        "NLEG"
+      ]
+    },
+    {
+      "inst": "stl_NW",
+      "original_master": "ot_hbm_su_stree_leaf",
+      "selected_master": "ot_hbm_su_stree_leaf",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv",
+      "requested_params": ".MUT(0), .NLEG(2)",
+      "missing": [
+        "NLEG"
+      ]
+    },
+    {
+      "inst": "su_prog",
+      "original_master": "ot_hbm_su_programme_root_h5",
+      "selected_master": "ot_hbm_su_programme_root_h5",
+      "source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_root_h5.sv",
+      "requested_params": ".PARTS(2)",
+      "missing": [
+        "PARTS"
+      ]
+    }
+  ]
+}
