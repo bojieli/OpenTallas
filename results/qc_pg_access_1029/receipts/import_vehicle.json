@@ -1,0 +1,41 @@
+{
+  "verdict": "PASS_MECHANISM_ONLY",
+  "instance": "ck_r15691_0",
+  "contacts": 2,
+  "first": {
+    "verdict": "IMPORTED_NO_SIGNOFF",
+    "contacts": 2,
+    "groups": 2,
+    "planned_wire_rectangles": 54,
+    "planned_technology_vias": 16,
+    "added_wire_rectangles": 48,
+    "added_technology_vias": 16,
+    "non_pg_before_sha256": "09c35ea35ff80f9da8540089f352880f9fb78601e29d61d7c1452334fb75aa1e",
+    "non_pg_after_sha256": "09c35ea35ff80f9da8540089f352880f9fb78601e29d61d7c1452334fb75aa1e",
+    "actual_grid_rectangles": 13304,
+    "freeze_qualified": false,
+    "DRC": "NOT RUN",
+    "IR": "NOT RUN"
+  },
+  "reapply": {
+    "verdict": "IMPORTED_NO_SIGNOFF",
+    "contacts": 2,
+    "groups": 2,
+    "planned_wire_rectangles": 54,
+    "planned_technology_vias": 16,
+    "added_wire_rectangles": 0,
+    "added_technology_vias": 0,
+    "non_pg_before_sha256": "09c35ea35ff80f9da8540089f352880f9fb78601e29d61d7c1452334fb75aa1e",
+    "non_pg_after_sha256": "09c35ea35ff80f9da8540089f352880f9fb78601e29d61d7c1452334fb75aa1e",
+    "actual_grid_rectangles": 13304,
+    "freeze_qualified": false,
+    "DRC": "NOT RUN",
+    "IR": "NOT RUN"
+  },
+  "wrong_native_rail_control": "Planned rail has uncovered gap",
+  "source_odb": "/q/baseline26/mechanics119_h800/clock_grafted.odb",
+  "release_qualified": false,
+  "whole_grid_connectivity": "NOT RUN",
+  "DRC": "NOT RUN",
+  "IR": "NOT RUN"
+}
