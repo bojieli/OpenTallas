@@ -58,6 +58,15 @@ def endpoint_taps(P, pr, side, candidates):
         return candidates
     geom = P._type_geom(part,bus)
     if geom is None:
+        # Legacy FT slots declare their face/window in the type while route
+        # layers live on the concrete die link. Use those actual link layers.
+        for slot in P.ptype(part).get('ft_slots',[]):
+            for suffix,stem in (('_i','in'),('_o','out')):
+                if bus == slot['name']+suffix and stem+'_window_um' in slot:
+                    layers=slot.get(stem+'_layers',slot.get('layers',pr.get('layers')))
+                    if layers:
+                        geom=(slot[stem+'_face'],slot[stem+'_window_um'],layers,slot.get(stem+'_order',slot.get('order','lsb_low')))
+    if geom is None:
         raise ValueError(f"{pr['id']} {side} {part}.{bus}: no declared endpoint geometry for tap selection")
     face,window,layers,order = geom
     pinport = dict(pr,face=face,window_um=window,layers=layers,order=order)
