@@ -204,7 +204,11 @@ def lower_columns(source, out, line_bits=2422, leaf_caps=(3,13), col_bits=32, mu
         m=lower(d/'source.mem',d,line_bits=256,param_prefix=f'COL{c}',index_pack=16)
         db=m['dictionary_banks'][0]; image_ib=m['index_banks']
         ib=(resident_edges+2047)//2048 if resident_edges is not None else image_ib
-        leaf=min(x for x in leaf_caps if x>=db)
+        candidates=[x for x in leaf_caps if x>=db]
+        if not candidates:
+            raise ValueError(f"column {c}: {db} dictionary banks required, largest available leaf {max(leaf_caps)}; "
+                             f"split the programme or qualify a larger leaf (image edges={len(rows)})")
+        leaf=min(candidates)
         assert ib+leaf<col_bits-1, 'local bank id 31 is the reject code'
         own=[(int(l[:4],16),int(l[4:6],16),l[6:]) for l in (d/'config.mem').read_text().split()]
         # Dictionary bases belong to the instantiated producer, not the current
