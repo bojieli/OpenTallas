@@ -38,7 +38,7 @@ def gate(census):
  counts={};issues=[]
  for r in census['sm_att_records']:
   status,reasons=classify(r);key=r['op']+':'+status;counts[key]=counts.get(key,0)+1
-  issues.append(dict(offset=r['offset'],op=r['op'],param=r['param'],rows=r['rows'],status=status,reasons=reasons))
+  issues.append(dict(offset=r.get('offset'),source_record_index=r.get('source_record_index'),op=r['op'],param=r['param'],rows=r['rows'],status=status,reasons=reasons))
  return dict(profile=PROFILE,input_sha256=census['sha256'],input_records=census['records'],target_counts=counts,
  target_records=len(issues),issues=issues,programme_emission_allowed=False,
  verdict='REFUSED: matrix-only candidate lacks required production frontend/attention/format composition')

@@ -1,0 +1,1563 @@
+{
+  "L0": {
+    "census": {
+      "path": "results/rtl/hbm_qwen_layer_tput_1018/fixtures/program/L0.hgi1",
+      "sha256": "b271dc1bf41883d5e71e99f31e32f566d65da343d72b5e7f7598615103c0ffaf",
+      "manifest_sha256": "b271dc1bf41883d5e71e99f31e32f566d65da343d72b5e7f7598615103c0ffaf",
+      "bytes": 3792,
+      "records": 35,
+      "counts": {
+        "DMA.LOAD": 7,
+        "FUSED.ROW_NORM": 4,
+        "SM.MATVEC": 4,
+        "SU.VOP": 10,
+        "DMA.STORE": 2,
+        "DMA.FENCE": 1,
+        "ATT.QK": 1,
+        "ATT.PV": 1,
+        "COLL.ALL_REDUCE_SUM": 1,
+        "SFU.GLU": 1,
+        "COLL.ALL_GATHER": 1,
+        "COLL.GROUP_REDUCE_MCAST": 1,
+        "CTL.END": 1
+      },
+      "SM_ATT": [
+        {
+          "index": 4,
+          "unit": "SM",
+          "op": "MATVEC",
+          "param": 3,
+          "param_fields": {
+            "format": "INT8",
+            "positions": 1
+          },
+          "imm_a": 0,
+          "imm_b": 0,
+          "operands": {
+            "A": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 4096,
+              "n": 4096,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "B": {
+              "space": "HBM",
+              "fmt": "INT8",
+              "base": 17179869184,
+              "n": 4096,
+              "m": 768,
+              "stride": 4096,
+              "istride": 0,
+              "lstride": 24158208,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "O": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 8192,
+              "n": 768,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            }
+          }
+        },
+        {
+          "index": 14,
+          "unit": "ATT",
+          "op": "QK",
+          "param": 20,
+          "param_fields": {
+            "head_lanes": 4,
+            "slices_64": 2,
+            "ring": 0
+          },
+          "imm_a": 0,
+          "imm_b": 0,
+          "operands": {
+            "A": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 11264,
+              "n": 128,
+              "m": 4,
+              "stride": 128,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "B": {
+              "space": "HBM",
+              "fmt": "FP8E4M3",
+              "base": 25769803776,
+              "n": 1,
+              "m": 1,
+              "stride": 128,
+              "istride": 0,
+              "lstride": 2097152,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 2,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "O": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 11776,
+              "n": 1,
+              "m": 4,
+              "stride": 8192,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 2,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            }
+          }
+        },
+        {
+          "index": 18,
+          "unit": "ATT",
+          "op": "PV",
+          "param": 20,
+          "param_fields": {
+            "head_lanes": 4,
+            "slices_64": 2,
+            "ring": 0
+          },
+          "imm_a": 0,
+          "imm_b": 0,
+          "operands": {
+            "A": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 44544,
+              "n": 1,
+              "m": 4,
+              "stride": 8192,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 2,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "B": {
+              "space": "HBM",
+              "fmt": "FP8E4M3",
+              "base": 25770852352,
+              "n": 1,
+              "m": 1,
+              "stride": 128,
+              "istride": 0,
+              "lstride": 2097152,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 2,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "O": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 77568,
+              "n": 128,
+              "m": 4,
+              "stride": 128,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            }
+          }
+        },
+        {
+          "index": 20,
+          "unit": "SM",
+          "op": "MATVEC",
+          "param": 3,
+          "param_fields": {
+            "format": "INT8",
+            "positions": 1
+          },
+          "imm_a": 0,
+          "imm_b": 0,
+          "operands": {
+            "A": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 78080,
+              "n": 512,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "B": {
+              "space": "HBM",
+              "fmt": "INT8",
+              "base": 17183016448,
+              "n": 512,
+              "m": 4096,
+              "stride": 512,
+              "istride": 0,
+              "lstride": 24158208,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "O": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 78592,
+              "n": 4096,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            }
+          }
+        },
+        {
+          "index": 25,
+          "unit": "SM",
+          "op": "MATVEC",
+          "param": 3,
+          "param_fields": {
+            "format": "INT8",
+            "positions": 1
+          },
+          "imm_a": 0,
+          "imm_b": 0,
+          "operands": {
+            "A": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 4096,
+              "n": 4096,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "B": {
+              "space": "HBM",
+              "fmt": "INT8",
+              "base": 17185121792,
+              "n": 4096,
+              "m": 3072,
+              "stride": 4096,
+              "istride": 0,
+              "lstride": 24158208,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "O": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 90880,
+              "n": 3072,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            }
+          }
+        },
+        {
+          "index": 30,
+          "unit": "SM",
+          "op": "MATVEC",
+          "param": 3,
+          "param_fields": {
+            "format": "INT8",
+            "positions": 1
+          },
+          "imm_a": 0,
+          "imm_b": 0,
+          "operands": {
+            "A": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 107136,
+              "n": 1536,
+              "m": 2,
+              "stride": 6144,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 1536,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 1
+            },
+            "B": {
+              "space": "HBM",
+              "fmt": "INT8",
+              "base": 17197710848,
+              "n": 3072,
+              "m": 2048,
+              "stride": 3072,
+              "istride": 0,
+              "lstride": 24158208,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "O": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 98560,
+              "n": 2048,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "I": {
+              "space": "VM",
+              "fmt": "U32",
+              "base": 119424,
+              "n": 1,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            }
+          }
+        }
+      ],
+      "expanded_schedule_counts": {
+        "DMA.LOAD": 7,
+        "FUSED.ROW_NORM": 4,
+        "SM.MATVEC": 4,
+        "SU.VOP": 10,
+        "DMA.STORE": 2,
+        "DMA.FENCE": 1,
+        "ATT.QK": 1,
+        "ATT.PV": 1,
+        "COLL.ALL_REDUCE_SUM": 1,
+        "SFU.GLU": 1,
+        "COLL.ALL_GATHER": 1,
+        "COLL.GROUP_REDUCE_MCAST": 1,
+        "CTL.END": 1
+      },
+      "expanded_SM_ATT": [
+        {
+          "i": 4,
+          "rec": 4,
+          "L": 0,
+          "unit": "SM",
+          "op": "MATVEC",
+          "orig_op": "SM.MATVEC",
+          "tag": "qkv",
+          "cls": "W1",
+          "wait": 16,
+          "disp": 367.2,
+          "start": 379.2,
+          "end": 3799.8,
+          "cost": 3420.6,
+          "base_cost": 3420.6
+        },
+        {
+          "i": 14,
+          "rec": 14,
+          "L": 0,
+          "unit": "ATT",
+          "op": "QK",
+          "orig_op": "ATT.QK",
+          "tag": "attention_qk.kv0",
+          "cls": "W2",
+          "wait": 256,
+          "disp": 4460.9,
+          "start": 4472.9,
+          "end": 5455.8,
+          "cost": 982.8,
+          "base_cost": 982.8
+        },
+        {
+          "i": 18,
+          "rec": 18,
+          "L": 0,
+          "unit": "ATT",
+          "op": "PV",
+          "orig_op": "ATT.PV",
+          "tag": "attention_pv.kv0",
+          "cls": "W2",
+          "wait": 4,
+          "disp": 6274.2,
+          "start": 6286.2,
+          "end": 7269.0,
+          "cost": 982.8,
+          "base_cost": 982.8
+        },
+        {
+          "i": 20,
+          "rec": 20,
+          "L": 0,
+          "unit": "SM",
+          "op": "MATVEC",
+          "orig_op": "SM.MATVEC",
+          "tag": "o",
+          "cls": "W1",
+          "wait": 4,
+          "disp": 7370.2,
+          "start": 7382.2,
+          "end": 9778.8,
+          "cost": 2396.6,
+          "base_cost": 2396.6
+        },
+        {
+          "i": 25,
+          "rec": 25,
+          "L": 0,
+          "unit": "SM",
+          "op": "MATVEC",
+          "orig_op": "SM.MATVEC",
+          "tag": "gu",
+          "cls": "W1",
+          "wait": 16,
+          "disp": 11472.8,
+          "start": 11484.8,
+          "end": 24121.4,
+          "cost": 12636.6,
+          "base_cost": 12636.6
+        },
+        {
+          "i": 30,
+          "rec": 30,
+          "L": 0,
+          "unit": "SM",
+          "op": "MATVEC",
+          "orig_op": "SM.MATVEC",
+          "tag": "down",
+          "cls": "W1",
+          "wait": 64,
+          "disp": 25185.4,
+          "start": 25197.4,
+          "end": 31690.0,
+          "cost": 6492.6,
+          "base_cost": 6492.6
+        }
+      ]
+    },
+    "support_gate": {
+      "profile": {
+        "identity": "hn_p3_pair16_matrix_candidate_v1",
+        "status": "candidate_only",
+        "backend": {
+          "pinned_source": "4d6",
+          "pairs": 16,
+          "columns": 8,
+          "tiles_per_column": 2,
+          "row_left_bits": 3272,
+          "row_right_bits": 3272,
+          "beat_left_bits": 4138,
+          "beat_right_bits": 4138,
+          "xs_bits": 832,
+          "gout_bits": 1600
+        },
+        "formats": [
+          "BF16",
+          "FP8E4M3",
+          "FP4E2M1"
+        ],
+        "absent_frontends": [
+          "command192",
+          "kv_desc64",
+          "packet1099",
+          "ATT.QK",
+          "ATT.PV",
+          "INT8"
+        ],
+        "required_gates": [
+          "actual HGI command/operand frontend",
+          "normative P3 reduction and operand mapping",
+          "exact source publication/gather/reset dates",
+          "actual VM IO and row publication"
+        ],
+        "whole_programme_supported": false
+      },
+      "input_sha256": "b271dc1bf41883d5e71e99f31e32f566d65da343d72b5e7f7598615103c0ffaf",
+      "input_records": 35,
+      "target_counts": {
+        "SM.MATVEC:unsupported": 4,
+        "ATT.QK:unsupported": 1,
+        "ATT.PV:unsupported": 1
+      },
+      "target_records": 6,
+      "issues": [
+        {
+          "offset": null,
+          "source_record_index": 4,
+          "op": "SM.MATVEC",
+          "param": 3,
+          "rows": 1,
+          "status": "unsupported",
+          "reasons": [
+            "unsupported matrix weight format INT8"
+          ]
+        },
+        {
+          "offset": null,
+          "source_record_index": 14,
+          "op": "ATT.QK",
+          "param": 20,
+          "rows": 1,
+          "status": "unsupported",
+          "reasons": [
+            "attention QK/PV frontend/backend absent"
+          ]
+        },
+        {
+          "offset": null,
+          "source_record_index": 18,
+          "op": "ATT.PV",
+          "param": 20,
+          "rows": 1,
+          "status": "unsupported",
+          "reasons": [
+            "attention QK/PV frontend/backend absent"
+          ]
+        },
+        {
+          "offset": null,
+          "source_record_index": 20,
+          "op": "SM.MATVEC",
+          "param": 3,
+          "rows": 1,
+          "status": "unsupported",
+          "reasons": [
+            "unsupported matrix weight format INT8"
+          ]
+        },
+        {
+          "offset": null,
+          "source_record_index": 25,
+          "op": "SM.MATVEC",
+          "param": 3,
+          "rows": 1,
+          "status": "unsupported",
+          "reasons": [
+            "unsupported matrix weight format INT8"
+          ]
+        },
+        {
+          "offset": null,
+          "source_record_index": 30,
+          "op": "SM.MATVEC",
+          "param": 3,
+          "rows": 1,
+          "status": "unsupported",
+          "reasons": [
+            "unsupported matrix weight format INT8",
+            "mixed/index operand semantics not mapped",
+            "indexed/broadcast operand semantics not mapped"
+          ]
+        }
+      ],
+      "programme_emission_allowed": false,
+      "verdict": "REFUSED: matrix-only candidate lacks required production frontend/attention/format composition"
+    }
+  },
+  "chain": {
+    "census": {
+      "path": "results/rtl/hbm_qwen_layer_tput_1018/fixtures/program/chain.hgi1",
+      "sha256": "923df64d3cadd060464c91afb1d2437ff90e3e66080b25fbe26082caa560551f",
+      "manifest_sha256": "923df64d3cadd060464c91afb1d2437ff90e3e66080b25fbe26082caa560551f",
+      "bytes": 3824,
+      "records": 37,
+      "counts": {
+        "DMA.LOAD": 7,
+        "CTL.LOOP": 1,
+        "FUSED.ROW_NORM": 4,
+        "SM.MATVEC": 4,
+        "SU.VOP": 10,
+        "DMA.STORE": 2,
+        "DMA.FENCE": 1,
+        "ATT.QK": 1,
+        "ATT.PV": 1,
+        "COLL.ALL_REDUCE_SUM": 1,
+        "SFU.GLU": 1,
+        "COLL.ALL_GATHER": 1,
+        "COLL.GROUP_REDUCE_MCAST": 1,
+        "CTL.ENDLOOP": 1,
+        "CTL.END": 1
+      },
+      "SM_ATT": [
+        {
+          "index": 5,
+          "unit": "SM",
+          "op": "MATVEC",
+          "param": 3,
+          "param_fields": {
+            "format": "INT8",
+            "positions": 1
+          },
+          "imm_a": 0,
+          "imm_b": 0,
+          "operands": {
+            "A": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 4096,
+              "n": 4096,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "B": {
+              "space": "HBM",
+              "fmt": "INT8",
+              "base": 17179869184,
+              "n": 4096,
+              "m": 768,
+              "stride": 4096,
+              "istride": 0,
+              "lstride": 24158208,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "O": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 8192,
+              "n": 768,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            }
+          }
+        },
+        {
+          "index": 15,
+          "unit": "ATT",
+          "op": "QK",
+          "param": 20,
+          "param_fields": {
+            "head_lanes": 4,
+            "slices_64": 2,
+            "ring": 0
+          },
+          "imm_a": 0,
+          "imm_b": 0,
+          "operands": {
+            "A": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 11264,
+              "n": 128,
+              "m": 4,
+              "stride": 128,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "B": {
+              "space": "HBM",
+              "fmt": "FP8E4M3",
+              "base": 25769803776,
+              "n": 1,
+              "m": 1,
+              "stride": 128,
+              "istride": 0,
+              "lstride": 2097152,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 2,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "O": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 11776,
+              "n": 1,
+              "m": 4,
+              "stride": 8192,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 2,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            }
+          }
+        },
+        {
+          "index": 19,
+          "unit": "ATT",
+          "op": "PV",
+          "param": 20,
+          "param_fields": {
+            "head_lanes": 4,
+            "slices_64": 2,
+            "ring": 0
+          },
+          "imm_a": 0,
+          "imm_b": 0,
+          "operands": {
+            "A": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 44544,
+              "n": 1,
+              "m": 4,
+              "stride": 8192,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 2,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "B": {
+              "space": "HBM",
+              "fmt": "FP8E4M3",
+              "base": 25770852352,
+              "n": 1,
+              "m": 1,
+              "stride": 128,
+              "istride": 0,
+              "lstride": 2097152,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 2,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "O": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 77568,
+              "n": 128,
+              "m": 4,
+              "stride": 128,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            }
+          }
+        },
+        {
+          "index": 21,
+          "unit": "SM",
+          "op": "MATVEC",
+          "param": 3,
+          "param_fields": {
+            "format": "INT8",
+            "positions": 1
+          },
+          "imm_a": 0,
+          "imm_b": 0,
+          "operands": {
+            "A": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 78080,
+              "n": 512,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "B": {
+              "space": "HBM",
+              "fmt": "INT8",
+              "base": 17183016448,
+              "n": 512,
+              "m": 4096,
+              "stride": 512,
+              "istride": 0,
+              "lstride": 24158208,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "O": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 78592,
+              "n": 4096,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            }
+          }
+        },
+        {
+          "index": 26,
+          "unit": "SM",
+          "op": "MATVEC",
+          "param": 3,
+          "param_fields": {
+            "format": "INT8",
+            "positions": 1
+          },
+          "imm_a": 0,
+          "imm_b": 0,
+          "operands": {
+            "A": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 4096,
+              "n": 4096,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "B": {
+              "space": "HBM",
+              "fmt": "INT8",
+              "base": 17185121792,
+              "n": 4096,
+              "m": 3072,
+              "stride": 4096,
+              "istride": 0,
+              "lstride": 24158208,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "O": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 90880,
+              "n": 3072,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            }
+          }
+        },
+        {
+          "index": 31,
+          "unit": "SM",
+          "op": "MATVEC",
+          "param": 3,
+          "param_fields": {
+            "format": "INT8",
+            "positions": 1
+          },
+          "imm_a": 0,
+          "imm_b": 0,
+          "operands": {
+            "A": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 107136,
+              "n": 1536,
+              "m": 2,
+              "stride": 6144,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 1536,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 1
+            },
+            "B": {
+              "space": "HBM",
+              "fmt": "INT8",
+              "base": 17197710848,
+              "n": 3072,
+              "m": 2048,
+              "stride": 3072,
+              "istride": 0,
+              "lstride": 24158208,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "O": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 98560,
+              "n": 2048,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "I": {
+              "space": "VM",
+              "fmt": "U32",
+              "base": 119424,
+              "n": 1,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            }
+          }
+        }
+      ],
+      "expanded_schedule_counts": {
+        "DMA.LOAD": 11,
+        "FUSED.ROW_NORM": 8,
+        "SM.MATVEC": 8,
+        "SU.VOP": 20,
+        "DMA.STORE": 4,
+        "DMA.FENCE": 2,
+        "ATT.QK": 2,
+        "ATT.PV": 2,
+        "COLL.ALL_REDUCE_SUM": 2,
+        "SFU.GLU": 2,
+        "COLL.ALL_GATHER": 2,
+        "COLL.GROUP_REDUCE_MCAST": 2,
+        "CTL.END": 1
+      },
+      "expanded_SM_ATT": [
+        {
+          "i": 4,
+          "rec": 5,
+          "L": 0,
+          "unit": "SM",
+          "op": "MATVEC",
+          "orig_op": "SM.MATVEC",
+          "tag": "qkv",
+          "cls": "W1",
+          "wait": 16,
+          "disp": 367.2,
+          "start": 379.2,
+          "end": 3799.8,
+          "cost": 3420.6,
+          "base_cost": 3420.6
+        },
+        {
+          "i": 14,
+          "rec": 15,
+          "L": 0,
+          "unit": "ATT",
+          "op": "QK",
+          "orig_op": "ATT.QK",
+          "tag": "attention_qk.kv0",
+          "cls": "W2",
+          "wait": 256,
+          "disp": 4460.9,
+          "start": 4472.9,
+          "end": 5455.8,
+          "cost": 982.8,
+          "base_cost": 982.8
+        },
+        {
+          "i": 18,
+          "rec": 19,
+          "L": 0,
+          "unit": "ATT",
+          "op": "PV",
+          "orig_op": "ATT.PV",
+          "tag": "attention_pv.kv0",
+          "cls": "W2",
+          "wait": 4,
+          "disp": 6274.2,
+          "start": 6286.2,
+          "end": 7269.0,
+          "cost": 982.8,
+          "base_cost": 982.8
+        },
+        {
+          "i": 20,
+          "rec": 21,
+          "L": 0,
+          "unit": "SM",
+          "op": "MATVEC",
+          "orig_op": "SM.MATVEC",
+          "tag": "o",
+          "cls": "W1",
+          "wait": 4,
+          "disp": 7370.2,
+          "start": 7382.2,
+          "end": 9778.8,
+          "cost": 2396.6,
+          "base_cost": 2396.6
+        },
+        {
+          "i": 25,
+          "rec": 26,
+          "L": 0,
+          "unit": "SM",
+          "op": "MATVEC",
+          "orig_op": "SM.MATVEC",
+          "tag": "gu",
+          "cls": "W1",
+          "wait": 16,
+          "disp": 11472.8,
+          "start": 11484.8,
+          "end": 24121.4,
+          "cost": 12636.6,
+          "base_cost": 12636.6
+        },
+        {
+          "i": 30,
+          "rec": 31,
+          "L": 0,
+          "unit": "SM",
+          "op": "MATVEC",
+          "orig_op": "SM.MATVEC",
+          "tag": "down",
+          "cls": "W1",
+          "wait": 64,
+          "disp": 25185.4,
+          "start": 25197.4,
+          "end": 31690.0,
+          "cost": 6492.6,
+          "base_cost": 6492.6
+        },
+        {
+          "i": 35,
+          "rec": 5,
+          "L": 1,
+          "unit": "SM",
+          "op": "MATVEC",
+          "orig_op": "SM.MATVEC",
+          "tag": "qkv",
+          "cls": "W1",
+          "wait": 16,
+          "disp": 33342.0,
+          "start": 33354.0,
+          "end": 36774.6,
+          "cost": 3420.6,
+          "base_cost": 3420.6
+        },
+        {
+          "i": 45,
+          "rec": 15,
+          "L": 1,
+          "unit": "ATT",
+          "op": "QK",
+          "orig_op": "ATT.QK",
+          "tag": "attention_qk.kv0",
+          "cls": "W2",
+          "wait": 256,
+          "disp": 37435.7,
+          "start": 37447.7,
+          "end": 38430.6,
+          "cost": 982.8,
+          "base_cost": 982.8
+        },
+        {
+          "i": 49,
+          "rec": 19,
+          "L": 1,
+          "unit": "ATT",
+          "op": "PV",
+          "orig_op": "ATT.PV",
+          "tag": "attention_pv.kv0",
+          "cls": "W2",
+          "wait": 4,
+          "disp": 39248.9,
+          "start": 39260.9,
+          "end": 40243.8,
+          "cost": 982.8,
+          "base_cost": 982.8
+        },
+        {
+          "i": 51,
+          "rec": 21,
+          "L": 1,
+          "unit": "SM",
+          "op": "MATVEC",
+          "orig_op": "SM.MATVEC",
+          "tag": "o",
+          "cls": "W1",
+          "wait": 4,
+          "disp": 40345.0,
+          "start": 40357.0,
+          "end": 42753.6,
+          "cost": 2396.6,
+          "base_cost": 2396.6
+        },
+        {
+          "i": 56,
+          "rec": 26,
+          "L": 1,
+          "unit": "SM",
+          "op": "MATVEC",
+          "orig_op": "SM.MATVEC",
+          "tag": "gu",
+          "cls": "W1",
+          "wait": 16,
+          "disp": 44447.5,
+          "start": 44459.5,
+          "end": 57096.2,
+          "cost": 12636.6,
+          "base_cost": 12636.6
+        },
+        {
+          "i": 61,
+          "rec": 31,
+          "L": 1,
+          "unit": "SM",
+          "op": "MATVEC",
+          "orig_op": "SM.MATVEC",
+          "tag": "down",
+          "cls": "W1",
+          "wait": 64,
+          "disp": 58160.2,
+          "start": 58172.2,
+          "end": 64664.8,
+          "cost": 6492.6,
+          "base_cost": 6492.6
+        }
+      ]
+    },
+    "support_gate": {
+      "profile": {
+        "identity": "hn_p3_pair16_matrix_candidate_v1",
+        "status": "candidate_only",
+        "backend": {
+          "pinned_source": "4d6",
+          "pairs": 16,
+          "columns": 8,
+          "tiles_per_column": 2,
+          "row_left_bits": 3272,
+          "row_right_bits": 3272,
+          "beat_left_bits": 4138,
+          "beat_right_bits": 4138,
+          "xs_bits": 832,
+          "gout_bits": 1600
+        },
+        "formats": [
+          "BF16",
+          "FP8E4M3",
+          "FP4E2M1"
+        ],
+        "absent_frontends": [
+          "command192",
+          "kv_desc64",
+          "packet1099",
+          "ATT.QK",
+          "ATT.PV",
+          "INT8"
+        ],
+        "required_gates": [
+          "actual HGI command/operand frontend",
+          "normative P3 reduction and operand mapping",
+          "exact source publication/gather/reset dates",
+          "actual VM IO and row publication"
+        ],
+        "whole_programme_supported": false
+      },
+      "input_sha256": "923df64d3cadd060464c91afb1d2437ff90e3e66080b25fbe26082caa560551f",
+      "input_records": 37,
+      "target_counts": {
+        "SM.MATVEC:unsupported": 4,
+        "ATT.QK:unsupported": 1,
+        "ATT.PV:unsupported": 1
+      },
+      "target_records": 6,
+      "issues": [
+        {
+          "offset": null,
+          "source_record_index": 5,
+          "op": "SM.MATVEC",
+          "param": 3,
+          "rows": 1,
+          "status": "unsupported",
+          "reasons": [
+            "unsupported matrix weight format INT8"
+          ]
+        },
+        {
+          "offset": null,
+          "source_record_index": 15,
+          "op": "ATT.QK",
+          "param": 20,
+          "rows": 1,
+          "status": "unsupported",
+          "reasons": [
+            "attention QK/PV frontend/backend absent"
+          ]
+        },
+        {
+          "offset": null,
+          "source_record_index": 19,
+          "op": "ATT.PV",
+          "param": 20,
+          "rows": 1,
+          "status": "unsupported",
+          "reasons": [
+            "attention QK/PV frontend/backend absent"
+          ]
+        },
+        {
+          "offset": null,
+          "source_record_index": 21,
+          "op": "SM.MATVEC",
+          "param": 3,
+          "rows": 1,
+          "status": "unsupported",
+          "reasons": [
+            "unsupported matrix weight format INT8"
+          ]
+        },
+        {
+          "offset": null,
+          "source_record_index": 26,
+          "op": "SM.MATVEC",
+          "param": 3,
+          "rows": 1,
+          "status": "unsupported",
+          "reasons": [
+            "unsupported matrix weight format INT8"
+          ]
+        },
+        {
+          "offset": null,
+          "source_record_index": 31,
+          "op": "SM.MATVEC",
+          "param": 3,
+          "rows": 1,
+          "status": "unsupported",
+          "reasons": [
+            "unsupported matrix weight format INT8",
+            "mixed/index operand semantics not mapped",
+            "indexed/broadcast operand semantics not mapped"
+          ]
+        }
+      ],
+      "programme_emission_allowed": false,
+      "verdict": "REFUSED: matrix-only candidate lacks required production frontend/attention/format composition"
+    }
+  },
+  "head": {
+    "census": {
+      "path": "results/rtl/hbm_qwen_layer_tput_1018/fixtures/program/head.hgi1",
+      "sha256": "a0ce1c154cc2e8b8fed96c4e056315b9a7add357a3c0134528dee62877a4d5d8",
+      "manifest_sha256": "a0ce1c154cc2e8b8fed96c4e056315b9a7add357a3c0134528dee62877a4d5d8",
+      "bytes": 656,
+      "records": 7,
+      "counts": {
+        "FUSED.ROW_NORM": 1,
+        "DMA.LOAD": 1,
+        "SM.MATVEC": 1,
+        "SU.VOP": 1,
+        "ARGMAX.LOCAL": 1,
+        "COLL.ARGMAX_MERGE": 1,
+        "CTL.END": 1
+      },
+      "SM_ATT": [
+        {
+          "index": 2,
+          "unit": "SM",
+          "op": "MATVEC",
+          "param": 3,
+          "param_fields": {
+            "format": "INT8",
+            "positions": 1
+          },
+          "imm_a": 0,
+          "imm_b": 0,
+          "operands": {
+            "A": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 4096,
+              "n": 4096,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "B": {
+              "space": "HBM",
+              "fmt": "INT8",
+              "base": 12884901888,
+              "n": 4096,
+              "m": 18992,
+              "stride": 4096,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "O": {
+              "space": "STREAM",
+              "fmt": "FP32",
+              "base": 0,
+              "n": 18992,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            }
+          }
+        }
+      ],
+      "expanded_schedule_counts": {
+        "FUSED.ROW_NORM": 1,
+        "DMA.LOAD": 1,
+        "SM.MATVEC": 1,
+        "SU.VOP": 1,
+        "ARGMAX.LOCAL": 1,
+        "COLL.ARGMAX_MERGE": 1,
+        "CTL.END": 1
+      },
+      "expanded_SM_ATT": [
+        {
+          "i": 2,
+          "rec": 2,
+          "L": 0,
+          "unit": "SM",
+          "op": "MATVEC",
+          "orig_op": "SM.MATVEC",
+          "tag": "head",
+          "cls": "W1",
+          "wait": 16,
+          "disp": 358.2,
+          "start": 370.2,
+          "end": 76686.8,
+          "cost": 76316.6,
+          "base_cost": 76316.6
+        }
+      ]
+    },
+    "support_gate": {
+      "profile": {
+        "identity": "hn_p3_pair16_matrix_candidate_v1",
+        "status": "candidate_only",
+        "backend": {
+          "pinned_source": "4d6",
+          "pairs": 16,
+          "columns": 8,
+          "tiles_per_column": 2,
+          "row_left_bits": 3272,
+          "row_right_bits": 3272,
+          "beat_left_bits": 4138,
+          "beat_right_bits": 4138,
+          "xs_bits": 832,
+          "gout_bits": 1600
+        },
+        "formats": [
+          "BF16",
+          "FP8E4M3",
+          "FP4E2M1"
+        ],
+        "absent_frontends": [
+          "command192",
+          "kv_desc64",
+          "packet1099",
+          "ATT.QK",
+          "ATT.PV",
+          "INT8"
+        ],
+        "required_gates": [
+          "actual HGI command/operand frontend",
+          "normative P3 reduction and operand mapping",
+          "exact source publication/gather/reset dates",
+          "actual VM IO and row publication"
+        ],
+        "whole_programme_supported": false
+      },
+      "input_sha256": "a0ce1c154cc2e8b8fed96c4e056315b9a7add357a3c0134528dee62877a4d5d8",
+      "input_records": 7,
+      "target_counts": {
+        "SM.MATVEC:unsupported": 1
+      },
+      "target_records": 1,
+      "issues": [
+        {
+          "offset": null,
+          "source_record_index": 2,
+          "op": "SM.MATVEC",
+          "param": 3,
+          "rows": 1,
+          "status": "unsupported",
+          "reasons": [
+            "unsupported matrix weight format INT8",
+            "output destination/format not mapped"
+          ]
+        }
+      ],
+      "programme_emission_allowed": false,
+      "verdict": "REFUSED: matrix-only candidate lacks required production frontend/attention/format composition"
+    }
+  }
+}
