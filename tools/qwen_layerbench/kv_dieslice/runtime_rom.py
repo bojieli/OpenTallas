@@ -6,8 +6,8 @@ import re
 from pathlib import Path
 
 
-def stage(build, runtime, viamap):
-    build, runtime, viamap = map(Path, (build, runtime, viamap))
+def stage(build, runtime, viamap=None):
+    build, runtime = map(Path, (build, runtime))
     source_files = [Path(p) for p in (build / "vl.f").read_text().splitlines() if p.endswith((".sv", ".v"))]
     matches = []
     for p in source_files:
@@ -23,6 +23,9 @@ def stage(build, runtime, viamap):
     rel = Path(name)
     if rel.is_absolute() or ".." in rel.parts:
         raise ValueError("DCAL VIAMAP must be a safe relative runtime path")
+    viamap = Path(viamap) if viamap else runtime / rel
+    if not viamap.is_file():
+        raise ValueError(f"missing functional DCAL ROM {viamap}; set KV_DCAL_VIAMAP to the selected bind image")
     data = viamap.read_bytes()
     lines = data.decode().splitlines()
     if len(lines) != 32 or any(not re.fullmatch(r"[0-9a-fA-F]{16}", s.strip()) for s in lines):
@@ -44,6 +47,6 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--build", required=True)
     p.add_argument("--runtime", required=True)
-    p.add_argument("--viamap", required=True)
+    p.add_argument("--viamap")
     a = p.parse_args()
     print(json.dumps(stage(a.build, a.runtime, a.viamap)))
