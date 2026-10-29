@@ -854,9 +854,11 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     start_tree_check(root, edges)
     info = dict(clean_by=clean_by, clean_by_width=sum(1 for e in edges if width_robust(e, T, ap)),
                 fall_measured=sum(1 for e in edges if e.get("fall_lo") is not None),
-                leaf_origins=leaf_origins, root=root, root_path=path_of[root], leg_ps={c: list(v) for c, v in leg.items()},
+                root=root, root_path=path_of[root], leg_ps={c: list(v) for c, v in leg.items()},
                 regions=len(regions), branch_nodes=sum(1 for p in allp if not at.get(p)), branch_nodes_contracted=contracted,
                 retime_nodes=sum(1 for e in edges if e["retime"]))
+    if leaf_origins:
+        info["leaf_origins"] = True
     if max_hop_um is not None:
         info.update(max_hop_um=max_hop_um, reach_fail=sum(e["hop_um"] > max_hop_um for e in edges))
     if prev is not None:
