@@ -41,6 +41,7 @@ def covered(r,holes):
 def main():
     p=argparse.ArgumentParser()
     for a in ('failures','fixed-wires','cell-windows','geometry','power-access','pg','clock-base','out'):p.add_argument('--'+a,required=True)
+    p.add_argument('--all-bases',action='store_true',help='Plan all actual clock-cell pin bases from fixed wires, including zero-jog direct access')
     p.add_argument('--joint-clock',action='store_true',help='Choose clock access before rebuilding PG; emit explicit PG reservation')
     a=p.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
     failures=json.loads(Path(a.failures).read_text())['failures'];holes=json.loads(Path(a.cell_windows).read_text())['cells']
@@ -58,6 +59,16 @@ def main():
     # Protect every future straight bar-column path, even before its top track
     # is chosen. New columns must stay clear of these original columns.
     wires=json.loads(Path(a.fixed_wires).read_text())
+    if a.all_bases:
+        unique={}
+        for w in wires:
+            for s in w['stacks']:
+                if s['cell'].startswith('port:'):continue
+                key=s['cell'],s['pin']
+                if key in unique:raise ValueError('duplicate actual base '+str(key))
+                unique[key]=dict(cell=key[0],pin=key[1],net=w['name'],base_xy_um=s['xy'])
+        failures=list(unique.values())
+        print('ALL_ACTUAL_BASES',len(failures),flush=True)
     for w in wires:
         for s in w['stacks']:
             x,y=s.get('m6_entry_xy',s['xy']);ix.add([w['name'],'M7',x-.016,y-8.667,x+.016,y+8.667])
@@ -74,7 +85,7 @@ def main():
         hs=[q['rect_die_um'] for q in parts];columns=sorted({round(phase+k*pitch,6) for k in range(math.ceil((x-.7-phase)/pitch),math.floor((x+.7-phase)/pitch)+1)},key=lambda q:abs(q-x))
         ys=sorted({round(.04+k*.08,6) for k in range(math.ceil((min(h[1] for h in hs)+.027-.04)/.08),math.floor((max(h[3] for h in hs)-.027-.04)/.08)+1)},key=lambda q:abs(q-y));found=None
         for bx in columns:
-            if abs(bx-x)<.064:continue
+            if abs(bx-x)<.064 and not a.all_bases:continue
             local=[[net,'M6',min(x,bx)-.016,y-.016,max(x,bx)+.016,y+.016],
                    [net,'M6',bx-.035,y-.016,bx+.035,y+.016],
                    [net,'M7',bx-.016,y-.036,bx+.016,y+.036]]
@@ -82,14 +93,14 @@ def main():
             for ty in ys:
                 riser=[net,'M7',bx-.016,min(y,ty)-.027,bx+.016,max(y,ty)+.027]
                 if not covered(riser,hs) or ix.hits(riser):continue
-                chosen,mode,ext=router.place('M8',ty,bx-.08,bx+.08,net,keep=(ty,ty),dry=True)
+                chosen,mode,ext=router.place('M8',ty,bx-.096,bx+.096,net,keep=(ty,ty),dry=True)
                 if chosen is None:continue
                 found=dict(cell=cell,pin=pin,net=net,entry_xy_um=[x,y],backbone_xy_um=[bx,y],
                            m7_window_um=[min(y,ty),max(y,ty)],m8_witness_y_um=ty,
                            m6_jog_um=round(abs(bx-x),6),geometry=local+[riser],
                            proof='all metal inside exact119 island union; actual M6/M7 SIGNAL+OBS+PG+future clock bases+power clear; M8 shielded tree .08/.32 witness')
                 for r in local+[riser]:ix.add(r)
-                if a.joint_clock:router.reserve([*F.C128.pg_shapes([[net,'M8',bx-.08,ty-.04,bx+.08,ty+.04]])])
+                if a.joint_clock:router.reserve([*F.C128.pg_shapes([[net,'M8',bx-.096,ty-.04,bx+.096,ty+.04]])])
                 break
             if found:break
         if found:records.append(found)
@@ -103,7 +114,7 @@ def main():
         for r in records:
             reserved.extend(r['geometry'])
             x,y=r['backbone_xy_um'][0],r['m8_witness_y_um']
-            reserved.append([r['net'],'M8',x-.36,y-.32,x+.36,y+.32])
+            reserved.append([r['net'],'M8',x-.376,y-.32,x+.376,y+.32])
         (out/'joint_clock_reserved.json').write_text(json.dumps(reserved)+'\n')
     (out/'backbone_plan.json').write_text(json.dumps(result,indent=1)+'\n');print(result['status'],len(records),len(bad),flush=True)
 if __name__=='__main__':main()
