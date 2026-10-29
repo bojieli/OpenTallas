@@ -1,0 +1,9 @@
+HEAD hd_tile prebuild FIRM clock-source successor, candidate only.
+
+Actual previous normalCTS moved2 RSPdrivers into macro pin halos. Fullbody planning also exposed17fixed collisions missed by the earlier floor-before-round rowbucket audit. This successor uses exact row buckets, all40141actualfixedstdcells, realrows/macro2.16halos/islands, and mutualclockbodies. All435plannedcells0violations (independent brute-forceG1 by /root/geom), 45taps,332pads, radius97.225um. Nine whole-sourcegroupmoves<=7.83um are geometry-only, before timing; original NNLS estimate refit givesTT512.97..544.76/FF406.67..432.04. Topology/celltypes/datapath/cycles unchanged. Shared placement_statusFIRM opt-in d8e471b20 retains these legal homes during CTS. Default remainsPLACED.
+
+clock_overview.png personallyVIEWED and independentlyreviewed; PASS-COND forONEprivateCTS only. BeforeGRT: exactactual435RSPbodies sourcehomesFIRM/halo0 and complete data reach0 required; then rootTT/FFreview. Prior data reach0/27665 max400.95 remains valid. No release/signoff.
+
+Prior raw no-repairGRT exit0 afterGRT50 but clock-awareG0notclaimed: explicitoverflowreportnotcollected. TTsourceprobeFAILringr_lap_ok-70.85/r_v-18.53, ordinaryclkmacroinput-7.33; FFholdarst_n-81.09/start_i-80.62 andactualshiftline-42.35. These oldfailures retained asraw_measure receipts, NOT overwritten by newplan. Fullclock25749of25749coverage/missing0 rawrange482.78..614.17TT,376.60..497.11FF; worsttaplocalspan55.12/26.05. Clockprefix/loadmodelunderprediction is diagnosed and needsactualsourcefixedmeasurement. A separateOFFdefaultstatuscopyRTLcandidate addressesringcontrolfanout.
+
+Sourceledger: fresh_unpadded_spec.json +footprint.json (allfixedfromblk.tsv.gz) consumed by tools/s81_head/head_tile_clock_plan.py. Exactsourcelegalizer tools/s81_head/head_tile_clock_legalize.py,2focusedtestsPASS inclthedecimalvsbinaryrowbucketfailure andsourceidempotence. SharedFIRM11testsPASS.
