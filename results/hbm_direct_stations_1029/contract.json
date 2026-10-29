@@ -1,0 +1,87 @@
+{
+  "chains": [
+    {
+      "name": "vmb_NE7_eg",
+      "source_instance": "vmb_NE7",
+      "source_port": "eg",
+      "sink_instance": "hb_vms_NE",
+      "sink_port": "bk_eg",
+      "sink_lsb": 1932,
+      "stages": 6,
+      "control_mask": 60708402882054033466233184588234965832575213720379360039119137804340758912662765568,
+      "source_reset_port": "rst_n",
+      "reset_kind": "caller_sync_active_low",
+      "transport": "fullwidth_k1",
+      "sink_clock_port": "clk_hub"
+    },
+    {
+      "name": "vmb_NE7_pr",
+      "source_instance": "vmb_NE7",
+      "source_port": "pr",
+      "sink_instance": "hb_vms_NE",
+      "sink_port": "bk_pr",
+      "sink_lsb": 1862,
+      "stages": 6,
+      "control_mask": 59285549689505892056868344324448208820874232148807968788202283012051522375647232,
+      "source_reset_port": "rst_n",
+      "reset_kind": "caller_sync_active_low",
+      "transport": "fullwidth_k1",
+      "sink_clock_port": "clk_hub"
+    },
+    {
+      "name": "vmb_NE7_status",
+      "source_instance": "vmb_NE7",
+      "source_port": "status",
+      "sink_instance": "hb_vms_NE",
+      "sink_port": "bank_status",
+      "sink_lsb": 126,
+      "stages": 6,
+      "control_mask": 262143,
+      "source_reset_port": "rst_n",
+      "reset_kind": "caller_sync_active_low",
+      "transport": "fullwidth_k1",
+      "sink_clock_port": "clk_hub"
+    },
+    {
+      "name": "vmb_NE7_xq2_done",
+      "source_instance": "vmb_NE7",
+      "source_port": "xq2_done",
+      "sink_instance": "hb_vms_NE",
+      "sink_port": "bk_xq2_done",
+      "sink_lsb": 7,
+      "stages": 6,
+      "control_mask": 1,
+      "source_reset_port": "rst_n",
+      "reset_kind": "caller_sync_active_low",
+      "transport": "fullwidth_k1",
+      "sink_clock_port": "clk_hub"
+    },
+    {
+      "name": "vmb_NE7_xq_done",
+      "source_instance": "vmb_NE7",
+      "source_port": "xq_done",
+      "sink_instance": "hb_vms_NE",
+      "sink_port": "bk_xq_done",
+      "sink_lsb": 7,
+      "stages": 6,
+      "control_mask": 1,
+      "source_reset_port": "rst_n",
+      "reset_kind": "caller_sync_active_low",
+      "transport": "fullwidth_k1",
+      "sink_clock_port": "clk_hub"
+    },
+    {
+      "name": "vmb_NW4_rr1",
+      "source_instance": "vmb_NW4",
+      "source_port": "rr1",
+      "sink_instance": "hb_dbk_NW",
+      "sink_port": "rr",
+      "sink_lsb": 1028,
+      "stages": 3,
+      "control_mask": 115792089237316195423570985008687907853269984665640564039457584007913129639936,
+      "source_reset_port": "rst_n",
+      "reset_kind": "caller_sync_active_low",
+      "transport": "fullwidth_k1"
+    }
+  ]
+}
