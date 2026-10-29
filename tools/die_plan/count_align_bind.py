@@ -628,9 +628,19 @@ def ocv_parts(rows):
     """--parts ocv: {port: (src partition, dst partition)} from the OCV rows.  A row without src_part/dst_part is a
     partition-level row (its src/dst ARE partitions, e.g. tools/s81_head/landed_phase_ocv.py), so the partition is the
     row's src/dst -- the same identity fallback count_align_plan.row_ports() uses for the plan and the STA intervals
-    (DIE-S81-17: the bind raised KeyError 'src_part' on every S81 --parts ocv run, go12..go15)."""
-    return {r["port"]: (r.get("src_part") if r.get("src_part") is not None else r["src"],
-                        r.get("dst_part") if r.get("dst_part") is not None else r["dst"]) for r in rows}
+    (DIE-S81-17: the bind raised KeyError 'src_part' on every S81 --parts ocv run, go12..go15).
+    FAIL-CLOSED (S81-LP-1): a row with no partition identity at all (neither src_part/dst_part nor src/dst), or a port
+    whose rows (one per corner) disagree on its partition pair, raises BindError naming the port -- never a bare
+    KeyError and never a silent last-row-wins pick."""
+    out = {}
+    for r in rows:
+        pid = r.get("port")
+        ends = tuple(r.get(k + "_part") if r.get(k + "_part") is not None else r.get(k) for k in ("src", "dst"))
+        if pid is None or any(e is None or e == "" for e in ends):
+            raise BindError(f"--parts ocv: row {pid!r} has no src/dst partition (needs src_part/dst_part or src/dst)")
+        if out.setdefault(pid, ends) != ends:
+            raise BindError(f"--parts ocv: port {pid} rows disagree on partitions {out[pid]} vs {ends}")
+    return out
 
 
 def main(argv=None):

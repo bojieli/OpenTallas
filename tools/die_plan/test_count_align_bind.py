@@ -262,3 +262,16 @@ def test_ocv_parts_partition_level_rows_fall_back_to_src_dst():
     assert {p: c["K"] for p, c in b["ports"].items()} == {p: c["K"] for p, c in br["ports"].items()}
     named = [dict(r, src_part="a1", dst_part="b1") if r["port"] == "ab" else r for r in rows]
     assert CB.ocv_parts(named)["ab"] == ("a1", "b1") and CB.ocv_parts(named)["bc"] == ("b", "c")
+
+
+def test_ocv_parts_fail_closed_on_missing_or_conflicting_endpoints():
+    # S81-LP-1: the go16 KeyError recurrence came from a stale tool snapshot; the main tool now refuses rows it cannot
+    # place with a named BindError instead of a bare KeyError, and refuses corner rows that disagree on a port's pair
+    rows = [row("ab", "a", "b", 0.8 * T, 30, 30), row("bc", "b", "c", 100)]
+    bad = [dict(rows[0]), rows[1]]
+    del bad[0]["src"]
+    with pytest.raises(CB.BindError, match="row 'ab' has no src/dst partition"):
+        CB.ocv_parts(bad)
+    with pytest.raises(CB.BindError, match="port ab rows disagree"):
+        CB.ocv_parts(rows + [dict(rows[0], src_part="a2")])
+    assert CB.ocv_parts(rows + [dict(rows[0])]) == {"ab": ("a", "b"), "bc": ("b", "c")}   # same pair per corner: OK
