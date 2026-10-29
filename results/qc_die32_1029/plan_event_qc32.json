@@ -1,0 +1,26 @@
+{
+ "event": "DIE-QC-32 QC plan event delta on top of plan_event_qc31.json (claude/die-qc31-1029@d21b1402c9e)",
+ "date": "2026-10-29",
+ "nk_a0_floorplan": {
+  "choice": "V1L = the GEOM-56 legal form of V1 (node to the W edge), replaces 'V1 as drawn'",
+  "source": "GEOM-56 REPLY 07:54 PDT lanes/GEOM-REVIEW.md (DIRECTION PASS V1 > V2; V1 AS DRAWN = FAIL on KIT_PREFLIGHT macro_channels MIN_CHANNEL 10.8: street 7.56, E channel 9.26, node E face 8.64 = zero std rows before 515 t_d pins)",
+  "change": "qfd_tile_nk_a0c: NODE R0 x 15.12 (W channel 10.8; was 20.52 in V1), y 688.656 unchanged; 8 upper-half rawfault macro columns x 73.44 / 199.80 / 325.94 (V1 76.68/202.82/328.97); romleaf col0 x 22.488 -> 16.20 (romleaf col1 unchanged); tile outline 457.9 x 1157.8 and lower half unchanged",
+  "channels_um": {"W": 10.8, "node_to_rf0": 10.8, "rf0_to_rf1": 11.02, "rf1_to_rf2": 10.8, "street": 10.8, "E": 12.32, "interior_h_gaps": 20.88},
+  "clusters_um": [[15.12, 189.00], [199.80, 441.28]],
+  "numbers": "CHECKED by GEOM-56 with tools/die_plan/kit_contract.py macro_channels clustering on the REQ boxes; W-strip util ~23% UNCHECKED",
+  "cost": "W pin-register strip 11.9 -> 6.48 um usable for 1,028 n_a_q/n_b_q FFs; romleaf0 pin column moves -6.29 um (re-check pin grid snap)",
+  "build": "placement only (no CTS) per GEOM-56 DEFAULT; owner QC-A0-KITS-14 (with the one ICG=2 NK place COORD 08:05 asked for); placed AUTO-GEOM + GRT50 back to GEOM; watch W-strip / M7-over-node vertical demand, u_me s2 -> u_tx r2r <= 405, t_d reach",
+  "die_plan": "parent slot/pins of qfd_tile_nk_a0c unchanged (outline unchanged): die plan of record (QC-IMPORT-2) not touched",
+  "status": "CHOSEN_PENDING_PLACED_GEOM"
+ },
+ "btab_f2_clock_pin": {
+  "status": "PENDING (not adopted)",
+  "why": "no QC-FIX routed sign-off PASS yet: F2 NOT SIGNED (FF hold -1.68/1, slew TT 88, DRC 1); F3b / F3r await GEOM verdicts before one M5 route each; pin taken from the signed kit's plan_pins.json when one passes, then tap landing + PG re-census"
+ },
+ "a3_mesh_keepout": {
+  "status": "ADOPTED (COORD 07:55) and carried to the die mesh build",
+  "form": "ck_mesh straps = special net (obstruction, never a regular-net FIXED dbWire that DRT also routes) + strap-layer routing blockage band 0.32 um along both sides of every strap, so GRT soft-NDR demotion (GRT-0273) cannot put any net within the clock spacing of a strap; DRT keeps the nets' own NDR",
+  "tool": "tools/clk/mesh_form.py opt-in region.mesh.strap_keepout_um (claude/die-qc-32-1029@1513eb7514e, absent = unchanged bytes, test); QC die config sets strap_keepout_um: 0.32",
+  "owner": "QC-IMPORT-2 step 5 (ot_clk mesh + die GRT0)"
+ }
+}

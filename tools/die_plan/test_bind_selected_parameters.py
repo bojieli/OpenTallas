@@ -16,6 +16,19 @@ def test_selected_valid_values_keep_frontend_responsibility(tmp_path):
     assert rows[0]["requested"]==["W","NQ"] and rows[0]["declared"]==["NQ","W"]
 
 
+def test_packed_typed_face_masks_are_declared(tmp_path):
+    # Production S81 dsdv_svc_rs_c / sx / rs_up use a packed first mask,
+    # followed by inherited-type comma declarations.  Missing the first mask
+    # incorrectly rejects their valid overrides before Slang can elaborate.
+    t,l=files(tmp_path,decl="parameter logic [39:0] FM={40{1'b1}}, FM_GI=4'hf, parameter bit signed [3:0] FM_UI=4'hf",
+              override=".FM(40'h123456789a), .FM_GI(4'h3), .FM_UI(4'h2)")
+    rows=E.validate_selected_parameters([t],[],[l])
+    assert rows[0]["declared"]==["FM","FM_GI","FM_UI"]
+    t.write_text(t.read_text().replace(".FM_UI(4'h2)",".FM_BAD(4'h2)"))
+    with pytest.raises(E.ElabError,match="FM_BAD not declared"):
+        E.validate_selected_parameters([t],[],[l])
+
+
 def test_actual_fixed_width_wrong_source_fails(tmp_path):
     t,l=files(tmp_path)
     l.write_text("module core(input a,output y); endmodule\n")

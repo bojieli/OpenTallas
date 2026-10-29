@@ -12,6 +12,8 @@
   "bufx4_dly2_d32/TT": "6e0e8c875e4769896235926764502dcbf423363bf09f6ad355868f0993c16de0",
   "bufx6f_1x60_d20/FF": "4aac6b64c29625458f903df670ea72f859f2ff3e571be98530632965dd1aa959",
   "bufx6f_1x60_d20/TT": "c95aae54675d1d79df68724a6c58c7cbda8ca62ce28aee154598b906438517dc",
+  "bufx8_1x60_d20/FF": "3c2f6cccb2774ad7c9281ae08224e297a60eb4b4d1033b19fe57f9527003bbb3",
+  "bufx8_1x60_d20/TT": "3e22c30ffe3018438b378d8d9971f14cb7130512c43ff13036512dc9a039680d",
   "inv2_ndr200_d50/FF": "ee23c21440004ddd30aefabbe086c85746f64f945f45a00248f8ae1bbca682df",
   "inv2_ndr200_d50/TT": "1d41f1630f3433db0d0f9e1a9da670fe50dc1c96d18f633bb78f7696c75c299b",
   "inv_1x250_d20/FF": "ded14c90e217db843cae4c10adc01fd29bbb7723d599fe40168ca6a9a7844c01",
@@ -29,23 +31,43 @@
  "mode_source": {
   "none": {
    "die_sta_related_sha256": "218875d1599ef3f059a3624f98302f6d39a4c13427235945cf841ea91028ebf2",
-   "path": "tools/die_plan/die_sta_related.py @ origin/main 410e940f4f"
+   "path": "tools/die_plan/die_sta_related.py @ origin/main 410e940f4f",
+   "refreshed_for_bufx8": {
+    "die_sta_related_sha256": "57f40d35c623bd4f1ef7f1de94e80b1bc82d8a25d12f43edface6ea1d02fecd9",
+    "path": "tools/die_plan/die_sta_related.py (claude/head-start-4-bufx8-1029)"
+   }
   },
   "spice": {
    "die_sta_related_sha256": "218875d1599ef3f059a3624f98302f6d39a4c13427235945cf841ea91028ebf2",
-   "path": "tools/die_plan/die_sta_related.py @ origin/main 410e940f4f"
+   "path": "tools/die_plan/die_sta_related.py @ origin/main 410e940f4f",
+   "refreshed_for_bufx8": {
+    "die_sta_related_sha256": "57f40d35c623bd4f1ef7f1de94e80b1bc82d8a25d12f43edface6ea1d02fecd9",
+    "path": "tools/die_plan/die_sta_related.py (claude/head-start-4-bufx8-1029)"
+   }
   },
   "spice_buf_edge": {
    "die_sta_related_sha256": "786e3f55056339dbb365afd9e84ddbd8c2f5b1ef1b70de0552314e891c96859a",
-   "path": "tools/die_plan/die_sta_related.py (claude/model-refit-buf-1028)"
+   "path": "tools/die_plan/die_sta_related.py (claude/model-refit-buf-1028)",
+   "refreshed_for_bufx8": {
+    "die_sta_related_sha256": "57f40d35c623bd4f1ef7f1de94e80b1bc82d8a25d12f43edface6ea1d02fecd9",
+    "path": "tools/die_plan/die_sta_related.py (claude/head-start-4-bufx8-1029)"
+   }
   },
   "spice_cell": {
    "die_sta_related_sha256": "5613531b18c273e5c4b35c0e99fcfef0e21c974b1447f308d3f3a5cc3357d953",
-   "path": "tools/die_plan/die_sta_related.py (claude/model-refit2-1028)"
+   "path": "tools/die_plan/die_sta_related.py (claude/model-refit2-1028)",
+   "refreshed_for_bufx8": {
+    "die_sta_related_sha256": "57f40d35c623bd4f1ef7f1de94e80b1bc82d8a25d12f43edface6ea1d02fecd9",
+    "path": "tools/die_plan/die_sta_related.py (claude/head-start-4-bufx8-1029)"
+   }
   },
   "spice_edge": {
    "die_sta_related_sha256": "6cdeca9eb4329f3f5239cfd2a2dd08da965d07a9d97bb222af48204ba7998561",
-   "path": "tools/die_plan/die_sta_related.py @ claude/clk-inv-cal-2-1028 5202cd13fb (READY, not on main yet)"
+   "path": "tools/die_plan/die_sta_related.py @ claude/clk-inv-cal-2-1028 5202cd13fb (READY, not on main yet)",
+   "refreshed_for_bufx8": {
+    "die_sta_related_sha256": "57f40d35c623bd4f1ef7f1de94e80b1bc82d8a25d12f43edface6ea1d02fecd9",
+    "path": "tools/die_plan/die_sta_related.py (claude/head-start-4-bufx8-1029)"
+   }
   }
  },
  "modes": {
@@ -689,6 +711,86 @@
     "late": 0.97628,
     "late_ps": 113.966,
     "spice_ps": 116.735
+   },
+   "bufx8_1x60_d20|FF|t20|duty": {
+    "err_ps": 1.822,
+    "model_ps": 15.051,
+    "ref_ps": 442.112,
+    "spice_ps": 13.229
+   },
+   "bufx8_1x60_d20|FF|t20|fall": {
+    "early": 0.97022,
+    "early_ps": 441.781,
+    "late": 0.98169,
+    "late_ps": 447.002,
+    "spice_ps": 455.341
+   },
+   "bufx8_1x60_d20|FF|t20|rise": {
+    "early": 0.96542,
+    "early_ps": 426.823,
+    "late": 0.97702,
+    "late_ps": 431.951,
+    "spice_ps": 442.112
+   },
+   "bufx8_1x60_d20|FF|t5|duty": {
+    "err_ps": 0.334,
+    "model_ps": 3.8,
+    "ref_ps": 108.889,
+    "spice_ps": 3.466
+   },
+   "bufx8_1x60_d20|FF|t5|fall": {
+    "early": 0.97035,
+    "early_ps": 109.024,
+    "late": 0.98154,
+    "late_ps": 110.281,
+    "spice_ps": 112.355
+   },
+   "bufx8_1x60_d20|FF|t5|rise": {
+    "early": 0.96644,
+    "early_ps": 105.235,
+    "late": 0.97789,
+    "late_ps": 106.481,
+    "spice_ps": 108.889
+   },
+   "bufx8_1x60_d20|TT|t20|duty": {
+    "err_ps": 3.178,
+    "model_ps": 41.116,
+    "ref_ps": 597.262,
+    "spice_ps": 37.938
+   },
+   "bufx8_1x60_d20|TT|t20|fall": {
+    "early": 0.95812,
+    "early_ps": 608.599,
+    "late": 0.96821,
+    "late_ps": 615.005,
+    "spice_ps": 635.2
+   },
+   "bufx8_1x60_d20|TT|t20|rise": {
+    "early": 0.94913,
+    "early_ps": 566.879,
+    "late": 0.96087,
+    "late_ps": 573.889,
+    "spice_ps": 597.262
+   },
+   "bufx8_1x60_d20|TT|t5|duty": {
+    "err_ps": 0.657,
+    "model_ps": 10.551,
+    "ref_ps": 147.017,
+    "spice_ps": 9.894
+   },
+   "bufx8_1x60_d20|TT|t5|fall": {
+    "early": 0.95799,
+    "early_ps": 150.319,
+    "late": 0.96788,
+    "late_ps": 151.871,
+    "spice_ps": 156.911
+   },
+   "bufx8_1x60_d20|TT|t5|rise": {
+    "early": 0.94982,
+    "early_ps": 139.64,
+    "late": 0.96125,
+    "late_ps": 141.32,
+    "spice_ps": 147.017
    },
    "inv2_ndr200_d50|FF|t20|duty": {
     "err_ps": -0.778,
@@ -2692,6 +2794,86 @@
     "late_ps": 119.493,
     "spice_ps": 116.735
    },
+   "bufx8_1x60_d20|FF|t20|duty": {
+    "err_ps": 2.653,
+    "model_ps": 15.882,
+    "ref_ps": 442.112,
+    "spice_ps": 13.229
+   },
+   "bufx8_1x60_d20|FF|t20|fall": {
+    "early": 1.02378,
+    "early_ps": 466.167,
+    "late": 1.03588,
+    "late_ps": 471.677,
+    "spice_ps": 455.341
+   },
+   "bufx8_1x60_d20|FF|t20|rise": {
+    "early": 1.01871,
+    "early_ps": 450.384,
+    "late": 1.03095,
+    "late_ps": 455.795,
+    "spice_ps": 442.112
+   },
+   "bufx8_1x60_d20|FF|t5|duty": {
+    "err_ps": 0.544,
+    "model_ps": 4.01,
+    "ref_ps": 108.889,
+    "spice_ps": 3.466
+   },
+   "bufx8_1x60_d20|FF|t5|fall": {
+    "early": 1.02392,
+    "early_ps": 115.042,
+    "late": 1.03572,
+    "late_ps": 116.369,
+    "spice_ps": 112.355
+   },
+   "bufx8_1x60_d20|FF|t5|rise": {
+    "early": 1.01979,
+    "early_ps": 111.044,
+    "late": 1.03187,
+    "late_ps": 112.359,
+    "spice_ps": 108.889
+   },
+   "bufx8_1x60_d20|TT|t20|duty": {
+    "err_ps": 5.172,
+    "model_ps": 43.11,
+    "ref_ps": 597.262,
+    "spice_ps": 37.938
+   },
+   "bufx8_1x60_d20|TT|t20|fall": {
+    "early": 1.00459,
+    "early_ps": 638.116,
+    "late": 1.01516,
+    "late_ps": 644.833,
+    "spice_ps": 635.2
+   },
+   "bufx8_1x60_d20|TT|t20|rise": {
+    "early": 0.99516,
+    "early_ps": 594.373,
+    "late": 1.00747,
+    "late_ps": 601.723,
+    "spice_ps": 597.262
+   },
+   "bufx8_1x60_d20|TT|t5|duty": {
+    "err_ps": 1.169,
+    "model_ps": 11.063,
+    "ref_ps": 147.017,
+    "spice_ps": 9.894
+   },
+   "bufx8_1x60_d20|TT|t5|fall": {
+    "early": 1.00445,
+    "early_ps": 157.609,
+    "late": 1.01482,
+    "late_ps": 159.237,
+    "spice_ps": 156.911
+   },
+   "bufx8_1x60_d20|TT|t5|rise": {
+    "early": 0.99589,
+    "early_ps": 146.413,
+    "late": 1.00787,
+    "late_ps": 148.174,
+    "spice_ps": 147.017
+   },
    "inv2_ndr200_d50|FF|t20|duty": {
     "err_ps": -0.64,
     "model_ps": -2.093,
@@ -4693,6 +4875,86 @@
     "late": 1.02363,
     "late_ps": 119.493,
     "spice_ps": 116.735
+   },
+   "bufx8_1x60_d20|FF|t20|duty": {
+    "err_ps": -10.578,
+    "model_ps": 2.651,
+    "ref_ps": 442.112,
+    "spice_ps": 13.229
+   },
+   "bufx8_1x60_d20|FF|t20|fall": {
+    "early": 0.99904,
+    "early_ps": 454.902,
+    "late": 1.00682,
+    "late_ps": 458.445,
+    "spice_ps": 455.341
+   },
+   "bufx8_1x60_d20|FF|t20|rise": {
+    "early": 1.02267,
+    "early_ps": 452.134,
+    "late": 1.03095,
+    "late_ps": 455.795,
+    "spice_ps": 442.112
+   },
+   "bufx8_1x60_d20|FF|t5|duty": {
+    "err_ps": -2.721,
+    "model_ps": 0.745,
+    "ref_ps": 108.889,
+    "spice_ps": 3.466
+   },
+   "bufx8_1x60_d20|FF|t5|fall": {
+    "early": 0.99917,
+    "early_ps": 112.262,
+    "late": 1.00667,
+    "late_ps": 113.104,
+    "spice_ps": 112.355
+   },
+   "bufx8_1x60_d20|FF|t5|rise": {
+    "early": 1.02375,
+    "early_ps": 111.475,
+    "late": 1.03187,
+    "late_ps": 112.359,
+    "spice_ps": 108.889
+   },
+   "bufx8_1x60_d20|TT|t20|duty": {
+    "err_ps": -10.757,
+    "model_ps": 27.181,
+    "ref_ps": 597.262,
+    "spice_ps": 37.938
+   },
+   "bufx8_1x60_d20|TT|t20|fall": {
+    "early": 0.97958,
+    "early_ps": 622.232,
+    "late": 0.99009,
+    "late_ps": 628.904,
+    "spice_ps": 635.2
+   },
+   "bufx8_1x60_d20|TT|t20|rise": {
+    "early": 0.99886,
+    "early_ps": 596.583,
+    "late": 1.00747,
+    "late_ps": 601.723,
+    "spice_ps": 597.262
+   },
+   "bufx8_1x60_d20|TT|t5|duty": {
+    "err_ps": -2.765,
+    "model_ps": 7.129,
+    "ref_ps": 147.017,
+    "spice_ps": 9.894
+   },
+   "bufx8_1x60_d20|TT|t5|fall": {
+    "early": 0.97945,
+    "early_ps": 153.686,
+    "late": 0.98975,
+    "late_ps": 155.303,
+    "spice_ps": 156.911
+   },
+   "bufx8_1x60_d20|TT|t5|rise": {
+    "early": 0.99959,
+    "early_ps": 146.957,
+    "late": 1.00787,
+    "late_ps": 148.174,
+    "spice_ps": 147.017
    },
    "inv2_ndr200_d50|FF|t20|duty": {
     "err_ps": -0.64,
@@ -6696,6 +6958,86 @@
     "late_ps": 116.735,
     "spice_ps": 116.735
    },
+   "bufx8_1x60_d20|FF|t20|duty": {
+    "err_ps": 0.076,
+    "model_ps": 13.305,
+    "ref_ps": 442.112,
+    "spice_ps": 13.229
+   },
+   "bufx8_1x60_d20|FF|t20|fall": {
+    "early": 0.99981,
+    "early_ps": 455.255,
+    "late": 1.00024,
+    "late_ps": 455.45,
+    "spice_ps": 455.341
+   },
+   "bufx8_1x60_d20|FF|t20|rise": {
+    "early": 0.99892,
+    "early_ps": 441.634,
+    "late": 1.00007,
+    "late_ps": 442.145,
+    "spice_ps": 442.112
+   },
+   "bufx8_1x60_d20|FF|t5|duty": {
+    "err_ps": -0.095,
+    "model_ps": 3.371,
+    "ref_ps": 108.889,
+    "spice_ps": 3.466
+   },
+   "bufx8_1x60_d20|FF|t5|fall": {
+    "early": 0.99995,
+    "early_ps": 112.349,
+    "late": 1.00009,
+    "late_ps": 112.365,
+    "spice_ps": 112.355
+   },
+   "bufx8_1x60_d20|FF|t5|rise": {
+    "early": 0.99998,
+    "early_ps": 108.887,
+    "late": 1.00096,
+    "late_ps": 108.994,
+    "spice_ps": 108.889
+   },
+   "bufx8_1x60_d20|TT|t20|duty": {
+    "err_ps": 0.181,
+    "model_ps": 38.119,
+    "ref_ps": 597.262,
+    "spice_ps": 37.938
+   },
+   "bufx8_1x60_d20|TT|t20|fall": {
+    "early": 0.99999,
+    "early_ps": 635.195,
+    "late": 1.00035,
+    "late_ps": 635.423,
+    "spice_ps": 635.2
+   },
+   "bufx8_1x60_d20|TT|t20|rise": {
+    "early": 0.99924,
+    "early_ps": 596.81,
+    "late": 1.00007,
+    "late_ps": 597.304,
+    "spice_ps": 597.262
+   },
+   "bufx8_1x60_d20|TT|t5|duty": {
+    "err_ps": -0.067,
+    "model_ps": 9.827,
+    "ref_ps": 147.017,
+    "spice_ps": 9.894
+   },
+   "bufx8_1x60_d20|TT|t5|fall": {
+    "early": 0.99985,
+    "early_ps": 156.888,
+    "late": 1.00001,
+    "late_ps": 156.913,
+    "spice_ps": 156.911
+   },
+   "bufx8_1x60_d20|TT|t5|rise": {
+    "early": 0.99997,
+    "early_ps": 147.013,
+    "late": 1.00047,
+    "late_ps": 147.086,
+    "spice_ps": 147.017
+   },
    "inv2_ndr200_d50|FF|t20|duty": {
     "err_ps": 0.009,
     "model_ps": -1.444,
@@ -8698,6 +9040,86 @@
     "late_ps": 119.493,
     "spice_ps": 116.735
    },
+   "bufx8_1x60_d20|FF|t20|duty": {
+    "err_ps": 2.653,
+    "model_ps": 15.882,
+    "ref_ps": 442.112,
+    "spice_ps": 13.229
+   },
+   "bufx8_1x60_d20|FF|t20|fall": {
+    "early": 1.02378,
+    "early_ps": 466.167,
+    "late": 1.03588,
+    "late_ps": 471.677,
+    "spice_ps": 455.341
+   },
+   "bufx8_1x60_d20|FF|t20|rise": {
+    "early": 1.01871,
+    "early_ps": 450.384,
+    "late": 1.03095,
+    "late_ps": 455.795,
+    "spice_ps": 442.112
+   },
+   "bufx8_1x60_d20|FF|t5|duty": {
+    "err_ps": 0.544,
+    "model_ps": 4.01,
+    "ref_ps": 108.889,
+    "spice_ps": 3.466
+   },
+   "bufx8_1x60_d20|FF|t5|fall": {
+    "early": 1.02392,
+    "early_ps": 115.042,
+    "late": 1.03572,
+    "late_ps": 116.369,
+    "spice_ps": 112.355
+   },
+   "bufx8_1x60_d20|FF|t5|rise": {
+    "early": 1.01979,
+    "early_ps": 111.044,
+    "late": 1.03187,
+    "late_ps": 112.359,
+    "spice_ps": 108.889
+   },
+   "bufx8_1x60_d20|TT|t20|duty": {
+    "err_ps": 5.172,
+    "model_ps": 43.11,
+    "ref_ps": 597.262,
+    "spice_ps": 37.938
+   },
+   "bufx8_1x60_d20|TT|t20|fall": {
+    "early": 1.00459,
+    "early_ps": 638.116,
+    "late": 1.01516,
+    "late_ps": 644.833,
+    "spice_ps": 635.2
+   },
+   "bufx8_1x60_d20|TT|t20|rise": {
+    "early": 0.99516,
+    "early_ps": 594.373,
+    "late": 1.00747,
+    "late_ps": 601.723,
+    "spice_ps": 597.262
+   },
+   "bufx8_1x60_d20|TT|t5|duty": {
+    "err_ps": 1.169,
+    "model_ps": 11.063,
+    "ref_ps": 147.017,
+    "spice_ps": 9.894
+   },
+   "bufx8_1x60_d20|TT|t5|fall": {
+    "early": 1.00445,
+    "early_ps": 157.609,
+    "late": 1.01482,
+    "late_ps": 159.237,
+    "spice_ps": 156.911
+   },
+   "bufx8_1x60_d20|TT|t5|rise": {
+    "early": 0.99589,
+    "early_ps": 146.413,
+    "late": 1.00787,
+    "late_ps": 148.174,
+    "spice_ps": 147.017
+   },
    "inv2_ndr200_d50|FF|t20|duty": {
     "err_ps": -0.64,
     "model_ps": -2.093,
@@ -10066,6 +10488,13 @@
    "TT": "0.70 V 25 C"
   },
   "data": "intel1:/srv/opentallas-scratch2/claude/model-corr-1-1028/ref",
+  "head_start_4": {
+   "case": "bufx8_1x60_d20 (BUFx8 on 60 um 1x legs, taps 5/20, ramp deck; same form as bufx6f_1x60_d20)",
+   "cells": "BUFx8 subckt already in the MODEL-REFIT-2 lib (cells.sp md5 fb2de1d8b1d1bdfb9a5024ba7fa89053, copied unchanged)",
+   "data": "intel2:/srv/opentallas-scratch2/claude/head-start-4-bufx8-1029/ref (run_ref.sh = model-refit2-1028 run_ref.sh with M changed)",
+   "lane": "HEAD-START-4 2026-10-29 (COORD MODEL-CORR ruling)",
+   "spice": "same as refit2: ngspice r3 ramp deck, VDD 0->V in 50 ps + uic, source edge at 1000 ps, .options abstol=1e-9 vntol=1e-5"
+  },
   "lane": "MODEL-CORR-1 2026-10-28",
   "reference": "arrivals referred to the root cell input t0 (= the clock source of each reference path); src_edge rise/fall = source edge; spice = 50 % crossings",
   "refit2": {
@@ -13064,8 +13493,136 @@
    "sta_late_ps": 352.966,
    "tap": "t20",
    "tap_edge": "fall"
+  },
+  {
+   "case": "bufx8_1x60_d20",
+   "cell": "buf",
+   "corner": "TT",
+   "depth": 5,
+   "form": "buf",
+   "masters": [
+    "BUFx8_ASAP7_75t_R"
+   ],
+   "spice_ps": 147.017,
+   "src_edge": "rise",
+   "sta_early_ps": 139.64,
+   "sta_late_ps": 141.32,
+   "tap": "t5",
+   "tap_edge": "rise"
+  },
+  {
+   "case": "bufx8_1x60_d20",
+   "cell": "buf",
+   "corner": "TT",
+   "depth": 5,
+   "form": "buf",
+   "masters": [
+    "BUFx8_ASAP7_75t_R"
+   ],
+   "spice_ps": 156.911,
+   "src_edge": "fall",
+   "sta_early_ps": 150.319,
+   "sta_late_ps": 151.871,
+   "tap": "t5",
+   "tap_edge": "fall"
+  },
+  {
+   "case": "bufx8_1x60_d20",
+   "cell": "buf",
+   "corner": "TT",
+   "depth": 20,
+   "form": "buf",
+   "masters": [
+    "BUFx8_ASAP7_75t_R"
+   ],
+   "spice_ps": 597.262,
+   "src_edge": "rise",
+   "sta_early_ps": 566.879,
+   "sta_late_ps": 573.889,
+   "tap": "t20",
+   "tap_edge": "rise"
+  },
+  {
+   "case": "bufx8_1x60_d20",
+   "cell": "buf",
+   "corner": "TT",
+   "depth": 20,
+   "form": "buf",
+   "masters": [
+    "BUFx8_ASAP7_75t_R"
+   ],
+   "spice_ps": 635.2,
+   "src_edge": "fall",
+   "sta_early_ps": 608.599,
+   "sta_late_ps": 615.005,
+   "tap": "t20",
+   "tap_edge": "fall"
+  },
+  {
+   "case": "bufx8_1x60_d20",
+   "cell": "buf",
+   "corner": "FF",
+   "depth": 5,
+   "form": "buf",
+   "masters": [
+    "BUFx8_ASAP7_75t_R"
+   ],
+   "spice_ps": 108.889,
+   "src_edge": "rise",
+   "sta_early_ps": 105.235,
+   "sta_late_ps": 106.481,
+   "tap": "t5",
+   "tap_edge": "rise"
+  },
+  {
+   "case": "bufx8_1x60_d20",
+   "cell": "buf",
+   "corner": "FF",
+   "depth": 5,
+   "form": "buf",
+   "masters": [
+    "BUFx8_ASAP7_75t_R"
+   ],
+   "spice_ps": 112.355,
+   "src_edge": "fall",
+   "sta_early_ps": 109.024,
+   "sta_late_ps": 110.281,
+   "tap": "t5",
+   "tap_edge": "fall"
+  },
+  {
+   "case": "bufx8_1x60_d20",
+   "cell": "buf",
+   "corner": "FF",
+   "depth": 20,
+   "form": "buf",
+   "masters": [
+    "BUFx8_ASAP7_75t_R"
+   ],
+   "spice_ps": 442.112,
+   "src_edge": "rise",
+   "sta_early_ps": 426.823,
+   "sta_late_ps": 431.951,
+   "tap": "t20",
+   "tap_edge": "rise"
+  },
+  {
+   "case": "bufx8_1x60_d20",
+   "cell": "buf",
+   "corner": "FF",
+   "depth": 20,
+   "form": "buf",
+   "masters": [
+    "BUFx8_ASAP7_75t_R"
+   ],
+   "spice_ps": 455.341,
+   "src_edge": "fall",
+   "sta_early_ps": 441.781,
+   "sta_late_ps": 447.002,
+   "tap": "t20",
+   "tap_edge": "fall"
   }
  ],
- "raw_sha256": "f95af5d3e8888eb3c14c78b3985bbf9b73cfbda026fe3f1441ddb9e5e213b14c",
+ "raw_sha256": "2a7ec1e266c0df04db5540b9f4aad6e2c28b06ab5a0bd2b0bec8fae92a11f245",
  "version": 1
 }
