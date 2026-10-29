@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.nk_local_output_reset_trial.v1",
+ "adoption": "SOURCE_CANDIDATE_ONLY",
+ "module": "qfd_tile_nk_a0c",
+ "old_local_output_reset_depth": 1,
+ "new_local_output_reset_depth": 2,
+ "added_boot_edges": 1,
+ "period_ps": 833,
+ "first_boot_latency_delta_ps": 833,
+ "steady_payload_cycle_delta": 0,
+ "START": "Explicit start after all local reset release offsets including this +1 edge; before START boot pins may differ under registered reset wavefront.",
+ "placement_estimate_um": {
+  "root": [
+   407,
+   670
+  ],
+  "local_output_reset_relay": [
+   208,
+   820
+  ],
+  "W_output_capture": [
+   20,
+   990
+  ]
+ },
+ "max_estimated_hop_um": 358,
+ "root_pin": "rst_n E457.878,669.996",
+ "rtl_default": "OT_A0_LOCAL_OUT_RESET absent retains original clamp and logic",
+ "gate": "Minimum timed reset/START miter + mutants; fresh current-source RTL/gate LEC and actual placement405 census before CTS.",
+ "model_note": "0.833ns initial boot increment per activation of reset. No per-token arithmetic or payload latency change. QC/TOK plan compiler must consume new local release depth before adoption."
+}
