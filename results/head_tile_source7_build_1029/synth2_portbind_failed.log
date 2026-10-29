@@ -1,0 +1,13 @@
+ot-run: epyc2          admits   729 GB (avail 868, reserve 0, fresh 43.9, peak 30, headroom 0, waiters 0/0 GB) load 25/128 running 17 disk 283 GB 
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-head-tile-source7-1029
+ot-run: localhost      skipped: no /srv/opentallas-scratch2/claude/codex-head-tile-source7-1029
+ot-run: -> epyc2
+ot-heavy: request 32G is charged 11G (class 'synth.sh' measured peak 2.6G, n=1+0 proved); the cap stays 32G
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-2710855-1793272833 after 0 s
+KIT_PREFLIGHT PASS issues 0
+1_synth                   .sdc                             bdd3ce624fe66e277b4a
+DONT_USE_CHECK PASS 1_2_yosys.v: no DONT_USE cell (*x1p*_ASAP7* *xp*_ASAP7* SDF* ICG*)
+SELRANGE PASS top=ot_s81hd_tile_p files=16 unwaived=0 waived=0
+PORT_BIND FAIL {"bad_straps": [], "extra": 8, "extra_examples": ["strap_ca_efall", "strap_ca_k_i[0]", "strap_ca_k_i[1]", "strap_ca_k_i[2]", "strap_ca_k_i[3]", "strap_ca_k_i[4]", "strap_ca_k_i[5]", "strap_ca_pad[0]"], "missing": 0, "missing_examples": [], "netlist_bits": 1190, "plan_bits": 1182, "straps": ["strap_row0", "strap_ten"], "top": "ot_s81hd_tile_p", "verdict": "FAIL"}
+FAIL_PREFLOOR port_bind
+ot-run: RAN on epyc2 (unit oth-ubuntu-2710855-1793272833): exit 1
