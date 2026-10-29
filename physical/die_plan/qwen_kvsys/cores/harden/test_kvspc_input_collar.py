@@ -53,4 +53,4 @@ def test_interior_reset_is_local_without_relocating_edge_ports():
     assert inner==pins[:1]
     text=interior_tcl(inner)
     assert "{rst_n[0]}" in text and "199.128" in text and "181.44" in text
-    assert "ff_put_near" in text and "hrst_n" not in text
+    assert "ci_put_near" in text and "getBlockages" in text and "isFixed" in text and "hrst_n" not in text

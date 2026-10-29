@@ -1,0 +1,30 @@
+[
+  {
+    "verdict": "FAIL",
+    "stage": "initial area packing",
+    "cause": "row-grid loop covered only half the declared diamond height",
+    "fix": "use full +-114row range"
+  },
+  {
+    "verdict": "FAIL",
+    "stage": "1857approx old-input-only placement estimate",
+    "r2r_max_um": 653.21,
+    "bad_captures": 750,
+    "cause": "derived chain spc control, embedding return slot, ECC fault remained on original distant sites",
+    "fix": "include9derived internal control FFs; no logic/cycle change"
+  },
+  {
+    "verdict": "PASS_ESTIMATE",
+    "stage": "1856data source homes",
+    "r2r_max_um": 397.66,
+    "bad_captures": 0,
+    "scope": "old complete graph only; prior committed centre_plan"
+  },
+  {
+    "verdict": "PASS_ESTIMATE",
+    "stage": "1856data source homes with actual island exclusions",
+    "r2r_max_um": 394.74,
+    "bad_captures": 0,
+    "scope": "old complete graph only; current placement construction input"
+  }
+]
