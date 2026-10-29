@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.hbm.hn-backend-candidate.v1",
+  "status": "DEFAULT_OFF_NO_PRODUCTION_ABI",
+  "clock_ps": 833,
+  "pairs": 16,
+  "columns": 8,
+  "pairs_per_column": 2,
+  "halves": 32,
+  "lanes_per_half": 3,
+  "total_lanes": 96,
+  "sram_128x256": 384,
+  "external_bits_per_edge": {
+    "row_left": 3272,
+    "row_right": 3272,
+    "beat_left": 4138,
+    "beat_right": 4138,
+    "configuration": 832,
+    "gather_output": 1600
+  },
+  "native_pair_calendar": {
+    "row_offset": 0,
+    "beat_offset": 0,
+    "gather_offset": 3,
+    "reset_release_edges": 2
+  },
+  "added_wrapper_state_bits": 0,
+  "added_wrapper_cycles": 0,
+  "source_authority": "4d6f5439dcee43b97baffaa731aae826fdcb6a66",
+  "unsupported": [
+    "B1 command192 bridge",
+    "ATT.QK",
+    "ATT.PV",
+    "INT8",
+    "production front/BE reduction order"
+  ],
+  "latency_single_user": "UNQUALIFIED: P3 rows/epochs and front/BE integration required",
+  "routing_tracks": "UNQUALIFIED: full 818/2069 row/beat relay placement and channel capacity required",
+  "area_slot_fit": "UNQUALIFIED: actual32 half source views and soft transport must compose",
+  "throughput": "UNQUALIFIED: source lane count is not a production throughput claim",
+  "memory_bytes_per_edge": "XS3 12 native128x256 SRAM perhalf; exact port activity needs P3 schedule",
+  "replication_cost": "16 pair instances; one wire-only broadcast of bin to both halves; no new mux/demux; XS inputs explicit, no unproved straps",
+  "physical_gate": "No P&R until source composition and model throughput/reduction/geometry gates"
+}

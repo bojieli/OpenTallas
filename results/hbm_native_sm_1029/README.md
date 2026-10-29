@@ -1,0 +1,13 @@
+# Native HN matrix backend candidate
+
+Default off: no production caller or manifest selects this module. The old B1 attention/INT8 source is retained. This is a new backend ABI and cannot be substituted for the old 15-port/3734-bit ABI.
+
+`ot_hbm_hn_matrix_backend_candidate` composes 16 real P3 HN pairs in 8 columns with 2 pairs per column. The existing central-front row/beat outward topology is retained; all XS configuration fields are genuine inputs. Each pair explicitly fans the same bin/reset edge to its N/S halves; both clocks alias the single 833 ps input. No new wrapper FF or cycle. Hierarchy is `g_c[c].g_p[p].u_pair.u_hn/u_hs`; internal native transport remains soft under the source child policy, not a new hard macro alias. The mathematical zero gather seed is identical to the old column source.
+
+Model entry: `tools.uarch_model.hbm_hn_matrix_backend_candidate_model()`. Read `model.json` before building. Counts do not authorize a rate claim: front/BE reductions, P3 issue/epoch schedule, numerical order, sustained production throughput, channel capacity, area fit, and physical timing are open gates. Per pair native calendar: row/beat +0, gather +3, reset release +2 versus pinned flat P3. New frontend/compiler must price the actual chain, not inherit old B1/4Q calendar.
+
+Source authority is `tools/hbm_b2/sm_native_kit.py`: body 4d6f5439dcee43b97baffaa731aae826fdcb6a66; reset macro header 4673cf757e ends byte-for-byte in the original leaf body. The pinned serial arithmetic uses LAT7 public GPU wrappers; canonical f12 selection must explicitly preserve those dates and prove exactness before production activation. It is not silently selected here.
+
+Smallest proof stages the pinned one-pair flat-vs-halves miter at exactly 833 ps with one early-read mutant. This qualifies seam/transport only; it is not a production attention/INT8 arithmetic or new full backend equivalence proof. `proof_stage.py` reproduces source staging and keeps incremental objects and immutable failures. No P&R is launched.
+
+Compiler support is fail-closed in token commit 26523e298, tools/hbm_static/hn_matrix_support.py. Actual DS image has 495 MATVEC, 80 QK and 80 PV; matrix-only arithmetic still needs a frontend/P3 mapping and cannot emit. Qwen requires INT8 and ATT. Integration must preserve these capabilities through explicit supported engines; no feature may be silently dropped. Source-bound clock inventory is valid only after the new source is selected and elaborated. Actual old B1 state is not a substitute.
