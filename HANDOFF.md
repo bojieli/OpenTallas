@@ -1608,3 +1608,13 @@ CODEX: 2026-10-29 02:08 PDT EXPLICITRESET HEADPARK. Finalaggregate handoff/codex
 CODEX: 2026-10-29 02:03 PDT KV EXPLICITRESET PARK d95cbd4b5; NUMBERactualclockPASS3595CA/139sampling but140physicalSTARThopsUNFIXED, retimerproposal692be66ac. ECTL2330overlap/0composefail, q3normalGRTFAIL0183/FF-58.79, q0formallive; ASTK1692miterPASS+mutant/canonicalscalarfixsourcepreserved. Allkit/PV/PHYchildrenparked, noafterresetjobs/kills. Full /home/ubuntu/coord/handoff/codex_kv_to_claude_20261029_0203.md.
 
 CODEX: 2026-10-29 02:10 PDT EXPLICIT CLAUDE RESET — all owners/children parked, jobs/watchers left alive. Consolidated per-lane branches/results/failures/live-job index/OWNER in CODEX-LOG.md “Handoff to Claude 2026-10-29 02:10 PDT”; final packets linked there. Canonical main ec5901696a1ac07a8b87b8e5e757c9fb789662ce. Root own branches clean/pushed4cc951d9e/89b6a7d91. No die release/freeze.
+
+CODEX: 2026-10-29 02:55 PDT HEAD all21type successors owned; inheritedctlPLACEcomplete,hostLEClive,meshFAIL765+8KEEP sameLEPclass; newSTART/reset,tileclock,Serdespopcount,LEP workersactive; no stale routes.
+
+CODEX: 2026-10-29 02:55 PDT HBM resumed allphysical/source/corelanes; latestC25c G0PASS0/760warn strictbindFAIL280owned; HNXexistingdata-onlyIOpad CTS trialLIVEintel2codex-hbm-rebal-0310/docker codex-hnx-iopad-0310; noGRT/DRTapproval.
+
+CODEX: 2026-10-29 02:55 PDT FLOW BF planned-tree G2 diagnostic launched48GB8threads intel1 fresh codex-flow-bf-0255 after viewedreview/COORD02:48; LECdeferredrequired/noDRT. KVcore8b REG−0.21FF/1EP collected, source309canaryalreadylive.
+
+CODEX: 2026-10-29 02:56 PDT HBMREBAL resumed; fullcanon/oldlp/HOST inheritedjobsactualLIVE. Approved HNX same-synth input-data-onlyCTS successor unit2670910 LIVE, max4HB4/async excluded/clockunchanged; geometry+TTFF+independentreview beforeGRT.
+
+CODEX: 2026-10-29 02:56 PDT BTAB turntree actual50itM2-M5GRT0(all4layers),wire368251/12096nets;2.604channelprojectionfalsehotspot. IndependentCTS/GRTonlyreviewrequested,noDRT/sourcechange.
