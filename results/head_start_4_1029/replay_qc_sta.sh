@@ -1,0 +1,7 @@
+#!/bin/bash
+# HEAD-START-4 V1 byte-identity replay: DIE-QC-25 gate25.sh (g25) count_align_plan --start-tree clock width + die_sta_related sta_gate with start ports, old/new tools
+set -u; V=$1; H=/srv/opentallas-scratch2/claude/head-start-4; MT=$H/$V/tools/die_plan; G=/srv/opentallas-scratch2/claude/die-qc25-1028/g25; O=$H/qc_$V; mkdir -p $O
+PLAN=/srv/opentallas-scratch2/claude/die-qc25-1028/plan/ev_qc25.json; PR=$G/proof
+F="--sta-proof $PR --sta-plan $PLAN --sta-clock-cal spice_edge --sta-cppr-lca --sta-clock-ocv table --sta-clock-droop shared --sta-droop-regions $PR/droop_regions.json --sta-core-latency-ff 202.5"
+: plan done above
+python3 $MT/die_sta_related.py $PR --plan $PLAN --out $O/sta_gate --corner TT --corner FF --clock-ocv table --clock-droop shared --droop-regions $PR/droop_regions.json --core-latency-ff 202.5 --hold-buffers none --cppr-lca --clock-cal spice_edge --count-align $G/bind_clock.json --count-align-key region --clock-cell inv2 --core-view qfd_dv_s8x_crh=/srv/opentallas-scratch2/claude/die-qc22-1028/views/qfd_dv_s8x_crh --core-view qfd_dv_s8_crh_rp1=/srv/opentallas-scratch2/claude/die-qc22-1028/views/qfd_dv_s8_crh_rp1 --core-view qfd_dv_s8x_vmr=/srv/opentallas-scratch2/claude/die-qc22-1028/views/qfd_dv_s8x_vmr --core-view qfd_dv_s8x_prog=/srv/opentallas-scratch2/claude/die-qc22-1028/views/qfd_dv_s8x_prog --core-insertion view > $O/sta_gate.log 2>&1; echo sta rc $? $(date)

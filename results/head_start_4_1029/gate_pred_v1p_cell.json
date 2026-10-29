@@ -1,0 +1,26 @@
+{
+ "TT": {
+  "ports": 1643,
+  "measured": 1190,
+  "measured_fail": 0,
+  "unmeasured_fail_closed": 453,
+  "min_sync_dist_measured": 83.2,
+  "below_100": 125,
+  "reasons": {
+   "ok": 1190,
+   "no measured START data delay (fail closed)": 453
+  }
+ },
+ "FF": {
+  "ports": 1643,
+  "measured": 1190,
+  "measured_fail": 0,
+  "unmeasured_fail_closed": 453,
+  "min_sync_dist_measured": 100.0,
+  "below_100": 0,
+  "reasons": {
+   "ok": 1190,
+   "no measured START data delay (fail closed)": 453
+  }
+ }
+}

@@ -1,0 +1,54 @@
+{
+ "TT": {
+  "as_is": {
+   "ports": 1643,
+   "measured": 1190,
+   "measured_fail": 0,
+   "unmeasured_fail_closed": 453,
+   "min_sync_dist": 83.2,
+   "below_100": 125,
+   "ocv_setup_plus_hold_ps_max": 144.4,
+   "ocv_setup_plus_hold_ps_median": 110.6
+  },
+  "corelat0_virtual": {
+   "ports": 1643,
+   "measured": 1190,
+   "measured_fail": 0,
+   "unmeasured_fail_closed": 453,
+   "min_sync_dist": 129.8,
+   "below_100": 0,
+   "ocv_setup_plus_hold_ps_max": 118.7,
+   "ocv_setup_plus_hold_ps_median": 22.3
+  },
+  "tap_kinds_(launch_virtual,capture_virtual)": {
+   "(True, True)": 1292,
+   "(True, False)": 351
+  }
+ },
+ "FF": {
+  "as_is": {
+   "ports": 1643,
+   "measured": 1190,
+   "measured_fail": 0,
+   "unmeasured_fail_closed": 453,
+   "min_sync_dist": 100.0,
+   "below_100": 0,
+   "ocv_setup_plus_hold_ps_max": 114.7,
+   "ocv_setup_plus_hold_ps_median": 85.9
+  },
+  "corelat0_virtual": {
+   "ports": 1643,
+   "measured": 1190,
+   "measured_fail": 0,
+   "unmeasured_fail_closed": 453,
+   "min_sync_dist": 135.5,
+   "below_100": 0,
+   "ocv_setup_plus_hold_ps_max": 96.5,
+   "ocv_setup_plus_hold_ps_median": 16.8
+  },
+  "tap_kinds_(launch_virtual,capture_virtual)": {
+   "(True, True)": 1292,
+   "(True, False)": 351
+  }
+ }
+}
