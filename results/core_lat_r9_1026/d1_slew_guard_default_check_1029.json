@@ -1,0 +1,8 @@
+{
+ "scope": "DIE-S81-28 10-29: default-unchanged regression for the l0r_r9_d1 --slew guard (7ae55bd3fda). Old = main 49d8a0c889b l0r_r9_d1.py, new = 7ae55bd3fda; same plan.json/geo.txt/libs (invbuf_tt/ff.lib)/fit results/model_refit3_1026/uf_phys3_v1.json, --steps 60. Plans whose descent never crossed 80 ps leaf slew -> byte-identical plan_d1.json. CHECKED (sha256 of both outputs). ve_s (the crossing case) differs by design: slew_guard limit 80.0, 1 rejected change.",
+ "runs": "intel2 /srv/opentallas-scratch2/claude/die-s81-28/d1cmp (run.sh, ot-run unit oth-ubuntu-3043281-1793304942 exit 0)",
+ "cases": [
+  {"die": "QC", "core": "ot_qwen_tile_node", "plan": "qc-a0-kits-3-1028/node/fam/ot_qwen_tile_node/plan.json", "old_sha256": "7af0651cef52a6445bccb5d2cc681ce2eaeab8b4ece43ef0e487aed7b522f875", "new_sha256": "7af0651cef52a6445bccb5d2cc681ce2eaeab8b4ece43ef0e487aed7b522f875", "d1": "3 changes, window TT 15.13 FF 12.10", "verdict": "IDENTICAL"},
+  {"die": "S81", "core": "ot_s81sl_vq", "plan": "codex-s81-cores-1028/vq_family2/ot_s81sl_vq/plan.json", "old_sha256": "a10e02a2e9bc521708618de39a84250eabe923bc5c5c000a4c8f68882b6c1ba0", "new_sha256": "a10e02a2e9bc521708618de39a84250eabe923bc5c5c000a4c8f68882b6c1ba0", "d1": "4 changes, window TT 14.98 FF 14.24", "verdict": "IDENTICAL"}
+ ]
+}
