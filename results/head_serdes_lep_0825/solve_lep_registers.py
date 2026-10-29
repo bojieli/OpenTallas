@@ -104,20 +104,34 @@ for it in range(30):
   elif c[0]=='M':lo=(c[2]+c[3],c[2]-c[5]);hi=(c[4]+c[5],c[4]-c[3])
   else:continue
   for ax in (0,1):seedlo[ax][i]=-hi[ax];seedhi[ax][i]=lo[ax]
+ tracebuf=[]
  def envelope(seeds):
-  ds={i:float('inf') for i in nodes};q=[]
+  ds={i:float('inf') for i in nodes};q=[];parents={i:None for i in nodes};orig={i:i for i in seeds}
   for i,v in seeds.items():ds[i]=v;heapq.heappush(q,(v,i))
   while q:
    v,i=heapq.heappop(q)
    if v!=ds[i]:continue
    for j in graph[i]:
     nv=v+380
-    if nv<ds[j]:ds[j]=nv;heapq.heappush(q,(nv,j))
+    if nv<ds[j]:ds[j]=nv;heapq.heappush(q,(nv,j));parents[j]=i;orig[j]=orig[i]
+  tracebuf.append((parents,orig))
   return ds
  lower=[];upper=[]
  for ax in (0,1):lower.append({i:-v for i,v in envelope(seedlo[ax]).items()});upper.append(envelope(seedhi[ax]))
  impossible=[dict(name=D.cells[i][6],u=[lower[0][i],upper[0][i]],v=[lower[1][i],upper[1][i]]) for i in ff if any(lower[ax][i]>upper[ax][i]+.001 for ax in (0,1))]
  if impossible:
+  witnesses=[]
+  byname={D.cells[i][6]:i for i in ff}
+  for info in impossible[:5]:
+   i=byname[info['name']]
+   for ax in (0,1):
+    if lower[ax][i]<=upper[ax][i]:continue
+    for bound,ti in [('lower',2*ax),('upper',2*ax+1)]:
+     parents,orig=tracebuf[ti];chain=[];j=i
+     while j is not None:
+      chain.append(dict(name=D.cells[j][6],box=list(D.cells[j][2:6]),fixed=j in anchor or j not in ff));j=parents[j]
+     witnesses.append(dict(target=info['name'],axis=ax,bound=bound,chain=chain))
+  a.out.mkdir(parents=True,exist_ok=True);(a.out/'witness.json').write_text(json.dumps(witnesses,indent=1)+'\n')
   a.out.mkdir(parents=True,exist_ok=True);(a.out/'infeasible.json').write_text(json.dumps(dict(margin_um=380,impossible=impossible,edges=len(known_edges)),indent=1)+'\n')
   print('STRUCTURAL REACH INFEASIBLE',len(impossible),impossible[:4],flush=True);break
  uv={i:[(lower[ax][i]+upper[ax][i])/2 if math.isfinite(lower[ax][i]+upper[ax][i]) else (sum(preferred[i]) if ax==0 else preferred[i][0]-preferred[i][1]) for ax in (0,1)] for i in ff}

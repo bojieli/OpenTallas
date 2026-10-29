@@ -1,0 +1,33 @@
+{
+ "status": "PLANNED_NOT_ROUTED",
+ "outline_um": [
+  777.6,
+  492.48
+ ],
+ "macros": 55,
+ "pins": 2141,
+ "k_pin_band_um": [
+  2.0,
+  395.44
+ ],
+ "coll_pin_band_um": [
+  2.0,
+  464.56
+ ],
+ "minimum_macro_gap_um": 12.936,
+ "centre_clock_reset_clear": true,
+ "added_cycles": 0,
+ "prior_trial7": {
+  "outline_um": [
+   388.8,
+   432.0
+  ],
+  "channel_h": 1.022,
+  "channel_v": 1.595
+ },
+ "width_height_capacity_estimate": {
+  "channel_h": 0.896,
+  "channel_v": 0.797
+ },
+ "limits": "Capacity estimate only; no inherited GRT or reach PASS. Full placed reach and per-bank/control fanout must pass before route."
+}

@@ -1,0 +1,159 @@
+"""Connected register placement proposal for the resized LEP child; no route claim.
+
+Starts from the actual canonical netlist geometry. New pins and the exact macro
+plan are fixed; first boundary registers are placed at their actual pins. Other
+registers are projected into the 405-um endpoint reach envelope and legal sites.
+Combinational placement remains the global placer's job.
+"""
+import argparse,inspect,json,math,sys
+from collections import deque
+from pathlib import Path
+
+ap=argparse.ArgumentParser();ap.add_argument('--repo',type=Path,required=True);ap.add_argument('--dump',type=Path,required=True)
+ap.add_argument('--child',type=Path,required=True);ap.add_argument('--pins',type=Path,required=True);ap.add_argument('--out',type=Path,required=True)
+a=ap.parse_args();sys.path.insert(0,str(a.repo/'tools/autopilot'));import geom_rules as G
+D=G.Design(a.dump);oldframe=D.die;child=json.loads(a.child.read_text())['child_type'];W,H=child['outline_um'];D.die=(0.,0.,W,H)
+newpins={p['name']:p for p in json.loads(a.pins.read_text())['pins']}
+newpins['clk']=dict(x=W/2+.096,y=H/2)
+for p in D.pins:
+ if p['name'] in newpins:p.update({q:newpins[p['name']][q] for q in ('x','y')})
+macros={p['inst']:p for p in child['contents']};macrocount=0
+for i,c in list(D.cells.items()):
+ if c[0]!='M':continue
+ m=macros[c[6].replace('\\','')];x,y=m['origin_um'];D.cells[i]=c[:2]+(x,y,x+c[4]-c[2],y+c[5]-c[3])+c[6:];macrocount+=1
+assert macrocount==55
+ff={i:c for i,c in D.cells.items() if c[0]=='S'}
+desired={i:((c[2]+c[4])/2*W/oldframe[2],(c[3]+c[5])/2*H/oldframe[3]) for i,c in ff.items()}
+anchor={}
+def capture(n):
+ q=deque([n]);seen=set();out=set()
+ while q:
+  n=q.popleft()
+  if n in seen:continue
+  seen.add(n)
+  for r in D.nets[n][2]:
+   if r[0]!='i' or r[2]:continue
+   i=r[1];k=D.kind(i)
+   if k=='S':out.add(i)
+   elif k in 'BLK':q.extend(D.drives.get(i,[]))
+ return out
+for p in D.pins:
+ if p['sig']=='CLOCK':continue
+ n=D.pin_net.get(p['k'])
+ if n is None:continue
+ if p['io']=='INPUT': targets=capture(n)
+ else:
+  targets=set();q=deque([n]);seen=set()
+  while q:
+   n=q.popleft()
+   if n in seen:continue
+   seen.add(n);r=D.nets[n][1]
+   if not r or r[0]!='i':continue
+   i=r[1];k=D.kind(i)
+   if k=='S':targets.add(i)
+   elif k in 'BLK':q.extend(nn for nn,ck in D.cell_in.get(i,[]) if not ck)
+ for i in targets:anchor.setdefault(i,[]).append((p['x'],p['y']))
+for i,pts in anchor.items():desired[i]=(sum(x for x,y in pts)/len(pts),sum(y for x,y in pts)/len(pts))
+src=inspect.getsource(G.r2r_metrics)
+# Expose endpoint violations from the existing exact combinational traversal.
+# Including the complete physical memory box is a conservative planning bound,
+# not a replacement for the typed-memory gate or its actual pin inventory.
+src=src.replace('memories=set(); unknown=[]','memories={i for i,c in D.cells.items() if c[0]=="M"}; unknown=[]')
+src=src.replace('st = {}','st = {}; bad = []; edges = set()').replace('n_gt += 1','n_gt += 1; bad.append((mx,src,cap))')
+src=src.replace('                if val > mx:', '                edges.add((s,cap))\n                if val > mx:')
+src=src.replace('return dict(r2r_memory_instances=', 'return dict(bad=bad,edges=sorted(edges),r2r_memory_instances=')
+ns=dict(G.__dict__);exec(src,ns);census=ns['r2r_metrics']
+X0,Y0,X1,Y1=4.32,4.32,W-4.32,H-4.32;SX,SY=.054,.27
+NX=int(round((X1-X0)/SX));NY=int(round((Y1-Y0)/SY));base=[bytearray(NX) for _ in range(NY)]
+boxes=[(c[2]-4.32,c[3]-4.32,c[4]+4.32,c[5]+4.32) for c in D.cells.values() if c[0]=='M']
+boxes.append((W/2-3,H/2-3,W/2+3,H/2+3))
+for x0,y0,x1,y1 in boxes:
+ lo=max(0,int(math.floor((x0-X0)/SX)));hi=min(NX,int(math.ceil((x1-X0)/SX)))
+ for j in range(max(0,int(math.floor((y0-Y0)/SY))),min(NY,int(math.ceil((y1-Y0)/SY)))):base[j][lo:hi]=b'\1'*(hi-lo)
+order=sorted(ff,key=lambda i:(i not in anchor,i))
+def pack():
+ occ=[bytearray(x) for x in base];assigned={}
+ for i in order:
+  c=ff[i];w=int(math.ceil((c[4]-c[2]+.54-.00001)/SX));tx,ty=desired[i]
+  ix=max(0,min(NX-w,int(round((tx-(c[4]-c[2])/2-X0)/SX))));iy=max(0,min(NY-1,int(round((ty-.135-Y0)/SY))));z=b'\0'*w;best=None
+  for radius in (0,8,40,160,NY):
+   for j in range(max(0,iy-radius),min(NY,iy+radius+1)):
+    if best is not None and abs((j-iy)*SY)>best[0]:continue
+    for k in (occ[j].rfind(z,0,min(NX,ix+w)),occ[j].find(z,ix,NX)):
+     if k<0:continue
+     v=(abs((j-iy)*SY)+abs((k-ix)*SX),j,k)
+     if best is None or v<best:best=v
+   if best is not None and radius*SY>=best[0]:break
+  if best is None:raise RuntimeError(('no row sites',i))
+  _,j,k=best;occ[j][k:k+w]=b'\1'*w;x=X0+k*SX;y=Y0+j*SY;assigned[i]=(x,y)
+  D.cells[i]=c[:2]+(x,y,x+c[4]-c[2],y+c[5]-c[3])+c[6:]
+ return assigned
+hist=[];known_edges=set();assigned=pack();preferred=dict(desired)
+import heapq
+for it in range(30):
+ r=census(D); known_edges.update((s,c) for s,c in r['edges'] if s!=c)
+ mark=(r['r2r_captures_gt405'],r['r2r_max']);hist.append(dict(iteration=it,violations=mark[0],max_um=mark[1],edges=len(known_edges)));print(hist[-1],flush=True)
+ if not r['bad']:break
+ nodes=set(ff)|{i for i,c in D.cells.items() if c[0]=='M'}; graph={i:[] for i in nodes}
+ for s,c in known_edges:graph[s].append(c);graph[c].append(s)
+ seedlo=[{},{}];seedhi=[{},{}]
+ for i in nodes:
+  c=D.cells[i]
+  if i in anchor:
+   x,y=G.ctr(c);lo=hi=(x+y,x-y)
+  elif c[0]=='M':lo=(c[2]+c[3],c[2]-c[5]);hi=(c[4]+c[5],c[4]-c[3])
+  else:continue
+  for ax in (0,1):seedlo[ax][i]=-hi[ax];seedhi[ax][i]=lo[ax]
+ tracebuf=[]
+ def envelope(seeds):
+  ds={i:float('inf') for i in nodes};q=[];parents={i:None for i in nodes};orig={i:i for i in seeds}
+  for i,v in seeds.items():ds[i]=v;heapq.heappush(q,(v,i))
+  while q:
+   v,i=heapq.heappop(q)
+   if v!=ds[i]:continue
+   for j in graph[i]:
+    nv=v+405
+    if nv<ds[j]:ds[j]=nv;heapq.heappush(q,(nv,j));parents[j]=i;orig[j]=orig[i]
+  tracebuf.append((parents,orig))
+  return ds
+ lower=[];upper=[]
+ for ax in (0,1):lower.append({i:-v for i,v in envelope(seedlo[ax]).items()});upper.append(envelope(seedhi[ax]))
+ impossible=[dict(name=D.cells[i][6],u=[lower[0][i],upper[0][i]],v=[lower[1][i],upper[1][i]]) for i in ff if any(lower[ax][i]>upper[ax][i]+.001 for ax in (0,1))]
+ if impossible:
+  witnesses=[]
+  byname={D.cells[i][6]:i for i in ff}
+  for info in impossible[:5]:
+   i=byname[info['name']]
+   for ax in (0,1):
+    if lower[ax][i]<=upper[ax][i]:continue
+    for bound,ti in [('lower',2*ax),('upper',2*ax+1)]:
+     parents,orig=tracebuf[ti];chain=[];j=i
+     while j is not None:
+      chain.append(dict(name=D.cells[j][6],box=list(D.cells[j][2:6]),fixed=j in anchor or j not in ff));j=parents[j]
+     witnesses.append(dict(target=info['name'],axis=ax,bound=bound,chain=chain))
+  a.out.mkdir(parents=True,exist_ok=True);(a.out/'witness.json').write_text(json.dumps(witnesses,indent=1)+'\n')
+  a.out.mkdir(parents=True,exist_ok=True);(a.out/'infeasible.json').write_text(json.dumps(dict(margin_um=405,impossible=impossible,edges=len(known_edges)),indent=1)+'\n')
+  print('STRUCTURAL REACH INFEASIBLE',len(impossible),impossible[:4],flush=True);break
+ uv={i:[(lower[ax][i]+upper[ax][i])/2 if math.isfinite(lower[ax][i]+upper[ax][i]) else (sum(preferred[i]) if ax==0 else preferred[i][0]-preferred[i][1]) for ax in (0,1)] for i in ff}
+ # Coordinate descent preserves every discovered absolute-difference constraint.
+ for sweep in range(6):
+  for i in sorted(ff):
+   if i in anchor:continue
+   for ax in (0,1):
+    lo,hi=lower[ax][i],upper[ax][i]
+    for j in graph[i]:
+     if j in ff:aa=bb=uv[j][ax]
+     else:
+      c=D.cells[j];aa=(c[2]+c[3] if ax==0 else c[2]-c[5]);bb=(c[4]+c[5] if ax==0 else c[4]-c[3])
+     lo=max(lo,bb-405);hi=min(hi,aa+405)
+    if lo<=hi:
+     tx,ty=preferred[i];target=tx+ty if ax==0 else tx-ty;uv[i][ax]=min(hi,max(lo,target))
+ for i in ff:
+  if i not in anchor:desired[i]=((uv[i][0]+uv[i][1])/2,(uv[i][0]-uv[i][1])/2)
+ assigned=pack()
+r=census(D);a.out.mkdir(parents=True,exist_ok=True)
+rep=dict(kind='ANALYTIC_REGISTER_PLAN',outline_um=[W,H],macros=55,registers=len(ff),boundary_anchored=len(anchor),history=hist,
+ final={k:v for k,v in r.items() if k not in ('bad','edges')},remaining=[dict(distance=d,source=D.cells[s][6],capture=D.cells[c][6],source_fixed=s in anchor or s not in ff,capture_fixed=c in anchor or c not in ff) for d,s,c in r['bad']],
+ sites=[dict(name=D.cells[i][6],master=D.cells[i][1],xy=list(assigned[i])) for i in ff])
+(a.out/'register_plan.json').write_text(json.dumps(rep,indent=1)+'\n')
+print(json.dumps({k:v for k,v in rep.items() if k not in ('sites','remaining')}),flush=True)
