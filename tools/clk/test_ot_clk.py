@@ -313,3 +313,39 @@ def test_reach_keys_map_to_die_trial_flags_and_default_off():
     c["top"]["rep_actual_max"] = 450.0
     f = flags(O.kit_argv(c, "OUT"))
     assert f["--rep-reach-max"] == "450" and f["--rep-actual-max"] == "450"
+
+
+def _replay_dirs(tmp_path, new_meta, ref_meta, cell="CKINVDCx16_ASAP7_75t_R", ref_cell=None):
+    out, ref = tmp_path / "o", tmp_path / "ref"
+    (out / "kit" / "clock").mkdir(parents=True)
+    ref.mkdir()
+    for d, meta, c in ((out / "kit" / "clock", new_meta, cell), (ref, ref_meta, ref_cell or cell)):
+        (d / "tree.json").write_text(json.dumps({"meta": meta, "nodes": [1, 2]}))
+        (d / "ctree.v").write_text(f"module ctree (root);\n  {c} n0 (.A(root), .Y(t0));\nendmodule\n")
+    c = {"die": "x", "event": {"name": "e", "reference_clock_dir": str(ref)}}
+    return c, out
+
+
+def test_replay_schema_added_clock_cell_is_meta_only_when_ctree_agrees(tmp_path):
+    c, out = _replay_dirs(tmp_path, {"v": 1, "clock_cell": "inv2"}, {"v": 1})
+    v = O.compare_replay(c, "cfg", out, True, [], None)
+    assert v["replay"] == "IDENTICAL_EXCEPT_META"
+    t = v["files"]["tree.json"]
+    assert t["meta_added"] == ["meta.clock_cell"] and t["clock_cell_check"]["consistent"]
+
+
+def test_replay_mutant_clock_cell_contradicting_ctree_is_different(tmp_path):
+    c, out = _replay_dirs(tmp_path, {"v": 1, "clock_cell": "buf"}, {"v": 1})     # ctree has CKINV, meta says buf
+    assert O.compare_replay(c, "cfg", out, True, [], None)["replay"] == "DIFFERENT"
+
+
+def test_replay_changed_ctree_is_different_even_if_meta_only_in_tree(tmp_path):
+    c, out = _replay_dirs(tmp_path, {"v": 1, "clock_cell": "buf"}, {"v": 1}, cell="BUFx24_ASAP7_75t_R",
+                          ref_cell="CKINVDCx16_ASAP7_75t_R")
+    assert O.compare_replay(c, "cfg", out, True, [], None)["replay"] == "DIFFERENT"
+
+
+def test_replay_compare_only_does_not_run_die_trial(tmp_path, monkeypatch):
+    monkeypatch.setattr(O.subprocess, "call", lambda *a, **k: pytest.fail("die_trial must not run"))
+    assert O.main(["replay", str(HERE / "configs" / "qc_trial25.yaml"), "--out", str(tmp_path / "o"),
+                   "--compare-only"]) == 2          # no kit/clock dir -> refused, nothing run
