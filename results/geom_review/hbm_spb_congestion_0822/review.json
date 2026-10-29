@@ -1,0 +1,19 @@
+{
+ "schema": "geom_review.v1",
+ "date": "2026-10-29T09:00:49.178636",
+ "image": "results/geom_review/hbm_spb_congestion_0822/variants.png",
+ "verdict": "PASS-COND ONE signal-only G2 per variant",
+ "findings": [
+  "A clusters unchanged PHY data pins in two 98.112um M7 windows facing their source/sink FF banks; M7 pitch0.192um (3 tracks), width512 each. Macro/PG/bank homes unchanged. This is modeled PHY pin escape under existing owner assumption, not vendor qualification.",
+  "B keeps pins but repacks only RX first and TX last banks tall in existing left/right macro-free strips, spreading M6 access rows. 1026 same FFs move; 4104 total. No body/PG/site conflicts in conservative2.16um-wide body check.",
+  "Every shown FF is outside full PHY PG and EP body. No macro wall or new bus crossing. Source/pins/FF count/nets/cycles unchanged except A physical pin xy and B FF xy. No clock or timing signoff in this signal probe.",
+  "Origin-based worst hop A395.28/B404.518um; actual OpenROAD pin-to-pin reach must be <=405 before GRT, then >=50it overflow0 and pinaccess0.",
+  "Both retain failed M67 overflow195; neither is adopted into C25c plan."
+ ],
+ "conditions": [
+  "Exact pin-coordinate reach <=405 before GRT",
+  "GRT >=50 iterations overflow0",
+  "Pin access zero unreachable",
+  "Parent integration must rebuild actual clock/reset/PG homes and native FF source sidecar for winning variant"
+ ]
+}
