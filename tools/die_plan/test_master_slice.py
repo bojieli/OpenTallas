@@ -437,3 +437,17 @@ def test_multi_root_kit_apply_refusals(tmp_path, monkeypatch):
     (sd / "one_core.json").write_text(json.dumps(one))
     with pytest.raises(MS.SliceError, match="needs a slice with clock_entries"):
         MS.kit_apply(kd, "one_core", [200.0, 69.12], sd, None, kind="core", clock_ports=["cr", "xk[0]"])
+
+
+def test_pushdown_cells_judged_in_driver_rect():
+    """HBM-CORES-REBAL-11: an island with driver_rect_um (REBAL-5 opt-in) is judged at its driver site; others unchanged."""
+    isl = {"name": "isl1", "rect_um": [103.68, 51.84, 112.32, 60.48]}
+    cells = [{"name": "mp_isl1_ck0", "xy_um": [117.558, 56.7]}, {"name": "mp_isl1_rst0", "xy_um": [117.558, 55.62]}]
+    iss = MS.pushdown_cell_issues([isl], cells)
+    assert len(iss) == 2 and iss[0] == "mp_isl1_ck0 at [117.558, 56.7] outside island isl1 [103.68, 51.84, 112.32, 60.48]"
+    dr = dict(isl, driver_rect_um=[116.478, 55.08, 118.638, 57.24])
+    assert MS.pushdown_cell_issues([dr], cells) == []
+    far = [{"name": "mp_isl1_ck0", "xy_um": [108.0, 56.16]}]
+    assert "driver_rect" in MS.pushdown_cell_issues([dr], far)[0]
+    assert MS.pushdown_cell_issues([isl], far) == []
+    assert MS.pushdown_cell_issues([isl], []) == ["pushdown island isl1: no fixed cells"]

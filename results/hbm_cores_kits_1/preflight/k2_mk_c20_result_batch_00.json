@@ -1,0 +1,36 @@
+{
+ "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": [
+  {
+   "view": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@dd7000587876",
+   "rc": 0,
+   "cls": "OK",
+   "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k2/kits/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_dd7000587876-_k2c24",
+   "entry": [
+    90.72,
+    90.72
+   ],
+   "port": "clk",
+   "merged": [],
+   "islands": 1,
+   "log": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k2/kits/gen_ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_k2c24.log",
+   "msg": "{\"kit\": \"/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k2/kits/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_dd7000587876-_k2c24\", \"pins\": 1229, \"clocks\": [\"clk\"], \"resets\": 1, \"design\": \"ot_hbm_svc_pc_ctrl_leaf_cfg_h9b\", \"top\": \"ot_hbm_svc_pc_ctrl_leaf_cfg_h9b\", \"wrapper\": false, \"face_shell\": {\"core\": \"ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__fcore\", \"in_cycles\": 1, \"out_cycles\": 1, \"face_flops\": 1227, \"dropped\": "
+  }
+ ],
+ "ot_hgi_sm_xload_cl2_bdring": [
+  {
+   "view": "ot_hgi_sm_xload_cl2_bdring@932cee08284a",
+   "rc": 0,
+   "cls": "OK",
+   "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k2/kits/ot_hgi_sm_xload_cl2_bdring_932cee08284a-_k2c24",
+   "entry": [
+    43.2,
+    151.2
+   ],
+   "port": "clk",
+   "merged": [],
+   "islands": 1,
+   "log": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k2/kits/gen_ot_hgi_sm_xload_cl2_bdring_k2c24.log",
+   "msg": "{\"kit\": \"/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k2/kits/ot_hgi_sm_xload_cl2_bdring_932cee08284a-_k2c24\", \"pins\": 2688, \"clocks\": [\"clk\"], \"resets\": 0, \"design\": \"ot_hgi_sm_xload_cl2_bdring\", \"top\": \"ot_hgi_sm_xload_cl2_bdring__core\", \"wrapper\": true, \"face_shell\": {\"core\": \"ot_hgi_sm_xload_cl2_bdring__fcore\", \"in_cycles\": 1, \"out_cycles\": 1, \"face_flops\": 2687, \"dropped\": 1, \"unread_kept"
+  }
+ ]
+}

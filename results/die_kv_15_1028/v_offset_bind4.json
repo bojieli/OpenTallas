@@ -1,0 +1,405 @@
+{
+ "summary": {
+  "banks_with_cmd": 512,
+  "sources": 36,
+  "sources_not_single_offset": 35,
+  "worst_spread": {
+   "pe2": 11,
+   "pv2": 48
+  },
+  "verdict": "FAIL"
+ },
+ "sources": {
+  "pe2:astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data": {
+   "members": 256,
+   "no_cmd": 0,
+   "d_hist": {
+    "-23": 16,
+    "-22": 16,
+    "-21": 32,
+    "-20": 32,
+    "-19": 32,
+    "-18": 48,
+    "-17": 16,
+    "-16": 16,
+    "-15": 32,
+    "-14": 16
+   },
+   "spread": 9
+  },
+  "pe2:astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data": {
+   "members": 256,
+   "no_cmd": 0,
+   "d_hist": {
+    "-24": 16,
+    "-23": 16,
+    "-22": 32,
+    "-21": 32,
+    "-20": 16,
+    "-19": 32,
+    "-18": 16,
+    "-17": 16,
+    "-16": 16,
+    "-15": 16,
+    "-14": 32,
+    "-13": 16
+   },
+   "spread": 11
+  },
+  "pe2:astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data": {
+   "members": 256,
+   "no_cmd": 0,
+   "d_hist": {
+    "-22": 16,
+    "-21": 48,
+    "-20": 64,
+    "-19": 48,
+    "-18": 32,
+    "-17": 32,
+    "-16": 16
+   },
+   "spread": 6
+  },
+  "pe2:astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data": {
+   "members": 262,
+   "no_cmd": 0,
+   "d_hist": {
+    "-24": 8,
+    "-23": 24,
+    "-22": 56,
+    "-21": 66,
+    "-20": 48,
+    "-19": 34,
+    "-18": 8,
+    "-17": 10,
+    "-16": 8
+   },
+   "spread": 8
+  },
+  "pv2:vport_EN_0.out_v_hi": {
+   "members": 32,
+   "no_cmd": 0,
+   "d_hist": {
+    "-66": 8,
+    "-50": 8,
+    "-30": 8,
+    "-19": 8
+   },
+   "spread": 47
+  },
+  "pv2:vport_EN_0.out_v_lo": {
+   "members": 24,
+   "no_cmd": 0,
+   "d_hist": {
+    "-79": 8,
+    "-72": 8,
+    "-71": 8
+   },
+   "spread": 8
+  },
+  "pv2:vport_EN_1.out_v_hi": {
+   "members": 24,
+   "no_cmd": 0,
+   "d_hist": {
+    "-71": 8,
+    "-62": 8,
+    "-48": 8
+   },
+   "spread": 23
+  },
+  "pv2:vport_EN_1.out_v_lo": {
+   "members": 32,
+   "no_cmd": 0,
+   "d_hist": {
+    "-76": 8,
+    "-75": 8,
+    "-73": 16
+   },
+   "spread": 3
+  },
+  "pv2:vport_EN_2.out_v_hi": {
+   "members": 32,
+   "no_cmd": 0,
+   "d_hist": {
+    "-45": 8,
+    "-23": 8,
+    "-13": 8,
+    "3": 8
+   },
+   "spread": 48
+  },
+  "pv2:vport_EN_2.out_v_lo": {
+   "members": 24,
+   "no_cmd": 0,
+   "d_hist": {
+    "-80": 8,
+    "-71": 8,
+    "-56": 8
+   },
+   "spread": 24
+  },
+  "pv2:vport_EN_3.out_v_hi": {
+   "members": 24,
+   "no_cmd": 0,
+   "d_hist": {
+    "-67": 8,
+    "-66": 16
+   },
+   "spread": 1
+  },
+  "pv2:vport_EN_3.out_v_lo": {
+   "members": 32,
+   "no_cmd": 0,
+   "d_hist": {
+    "-68": 8,
+    "-64": 16,
+    "-63": 8
+   },
+   "spread": 5
+  },
+  "pv2:vport_ES_0.out_v_hi": {
+   "members": 32,
+   "no_cmd": 0,
+   "d_hist": {
+    "-76": 8,
+    "-60": 8,
+    "-40": 8,
+    "-29": 8
+   },
+   "spread": 47
+  },
+  "pv2:vport_ES_0.out_v_lo": {
+   "members": 24,
+   "no_cmd": 0,
+   "d_hist": {
+    "-83": 8,
+    "-82": 16
+   },
+   "spread": 1
+  },
+  "pv2:vport_ES_1.out_v_hi": {
+   "members": 24,
+   "no_cmd": 0,
+   "d_hist": {
+    "-63": 8,
+    "-53": 8,
+    "-39": 8
+   },
+   "spread": 24
+  },
+  "pv2:vport_ES_1.out_v_lo": {
+   "members": 32,
+   "no_cmd": 0,
+   "d_hist": {
+    "-67": 8,
+    "-66": 8,
+    "-64": 16
+   },
+   "spread": 3
+  },
+  "pv2:vport_ES_2.out_v_hi": {
+   "members": 32,
+   "no_cmd": 0,
+   "d_hist": {
+    "-68": 8,
+    "-46": 8,
+    "-36": 8,
+    "-20": 8
+   },
+   "spread": 48
+  },
+  "pv2:vport_ES_2.out_v_lo": {
+   "members": 24,
+   "no_cmd": 0,
+   "d_hist": {
+    "-104": 8,
+    "-94": 8,
+    "-79": 8
+   },
+   "spread": 25
+  },
+  "pv2:vport_ES_3.out_v_hi": {
+   "members": 24,
+   "no_cmd": 0,
+   "d_hist": {
+    "-49": 8,
+    "-44": 8,
+    "-43": 8
+   },
+   "spread": 6
+  },
+  "pv2:vport_ES_3.out_v_lo": {
+   "members": 32,
+   "no_cmd": 0,
+   "d_hist": {
+    "-47": 8,
+    "-46": 16,
+    "-43": 8
+   },
+   "spread": 4
+  },
+  "pv2:vport_WN_0.out_v_hi": {
+   "members": 40,
+   "no_cmd": 0,
+   "d_hist": {
+    "-60": 8,
+    "-39": 8,
+    "-24": 8,
+    "-13": 16
+   },
+   "spread": 47
+  },
+  "pv2:vport_WN_0.out_v_lo": {
+   "members": 24,
+   "no_cmd": 0,
+   "d_hist": {
+    "-73": 8,
+    "-66": 8,
+    "-63": 8
+   },
+   "spread": 10
+  },
+  "pv2:vport_WN_1.out_v_hi": {
+   "members": 32,
+   "no_cmd": 0,
+   "d_hist": {
+    "-64": 8,
+    "-55": 8,
+    "-41": 16
+   },
+   "spread": 23
+  },
+  "pv2:vport_WN_1.out_v_lo": {
+   "members": 32,
+   "no_cmd": 0,
+   "d_hist": {
+    "-70": 8,
+    "-69": 8,
+    "-68": 8,
+    "-65": 8
+   },
+   "spread": 5
+  },
+  "pv2:vport_WN_2.out_v_hi": {
+   "members": 40,
+   "no_cmd": 0,
+   "d_hist": {
+    "-35": 8,
+    "-18": 8,
+    "-13": 8,
+    "13": 16
+   },
+   "spread": 48
+  },
+  "pv2:vport_WN_2.out_v_lo": {
+   "members": 32,
+   "no_cmd": 0,
+   "d_hist": {
+    "-75": 16,
+    "-66": 8,
+    "-51": 8
+   },
+   "spread": 24
+  },
+  "pv2:vport_WN_3.out_v_hi": {
+   "members": 32,
+   "no_cmd": 0,
+   "d_hist": {
+    "-68": 16,
+    "-66": 8,
+    "-65": 8
+   },
+   "spread": 3
+  },
+  "pv2:vport_WN_3.out_v_lo": {
+   "members": 72,
+   "no_cmd": 0,
+   "d_hist": {
+    "-66": 48,
+    "-62": 16,
+    "-60": 8
+   },
+   "spread": 6
+  },
+  "pv2:vport_WS_0.out_v_hi": {
+   "members": 40,
+   "no_cmd": 0,
+   "d_hist": {
+    "-70": 8,
+    "-49": 8,
+    "-34": 8,
+    "-23": 16
+   },
+   "spread": 47
+  },
+  "pv2:vport_WS_0.out_v_lo": {
+   "members": 24,
+   "no_cmd": 0,
+   "d_hist": {
+    "-76": 24
+   },
+   "spread": 0
+  },
+  "pv2:vport_WS_1.out_v_hi": {
+   "members": 32,
+   "no_cmd": 0,
+   "d_hist": {
+    "-56": 8,
+    "-46": 8,
+    "-32": 16
+   },
+   "spread": 24
+  },
+  "pv2:vport_WS_1.out_v_lo": {
+   "members": 32,
+   "no_cmd": 0,
+   "d_hist": {
+    "-61": 8,
+    "-60": 8,
+    "-59": 8,
+    "-56": 8
+   },
+   "spread": 5
+  },
+  "pv2:vport_WS_2.out_v_hi": {
+   "members": 40,
+   "no_cmd": 0,
+   "d_hist": {
+    "-61": 8,
+    "-44": 8,
+    "-39": 8,
+    "-13": 16
+   },
+   "spread": 48
+  },
+  "pv2:vport_WS_2.out_v_lo": {
+   "members": 24,
+   "no_cmd": 0,
+   "d_hist": {
+    "-102": 8,
+    "-92": 8,
+    "-77": 8
+   },
+   "spread": 25
+  },
+  "pv2:vport_WS_3.out_v_hi": {
+   "members": 32,
+   "no_cmd": 0,
+   "d_hist": {
+    "-44": 8,
+    "-43": 16,
+    "-38": 8
+   },
+   "spread": 6
+  },
+  "pv2:vport_WS_3.out_v_lo": {
+   "members": 72,
+   "no_cmd": 0,
+   "d_hist": {
+    "-41": 56,
+    "-37": 16
+   },
+   "spread": 4
+  }
+ }
+}

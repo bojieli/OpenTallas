@@ -1,0 +1,24 @@
+core	inst	kit	gen	preflight	state	row	note
+ot_hbm_su_static_cxport_ij_q	4	ot_hbm_su_static_cxport_ij_q_8e1ff2cf7a3b-_k1c24 (kit_hash 285211c7cdce6ff9)	OK	PASS	PLACED (LEC EQUIVALENT) -> AUTO-GEOM	30c598db1e6d	est 46.1k generic cells; synth area 6145 um2 in 112.6k um2 outline (5.5% fill, pin-driven outline: AUTO-GEOM low-fill risk)
+ot_hgi_coll_gq_issue	4	ot_hgi_coll_gq_issue_e49873327b17-_k1c24	OK	PASS	PLACE running oth-ubuntu-1645721-1793240161	5acb84a01ea9	rtl_lint PASS now (C20e FAIL_PREFLOOR gone on main); est 139.8k
+ot_hgi_qw_dec	4	ot_hgi_qw_dec_3b6333ac608b-_k3fp4	OK	PASS	PLACE running oth-ubuntu-1872835-1793240640	b0592d3eb25d	src fp4 branch a77f247ffe (fp4qdq loop-scope fix READY); est 113.4k
+ot_hbm_su_static_qcore_r13	2	ot_hbm_su_static_qcore_r13_6fb4f29f7814-_k3mp5	OK	PASS	PLACE running oth-ubuntu-1971606-1793240883	2701c4f3be5f	kit-local macro placement v5 (W column)
+ot_hgi_sm_xload_cl2_bdring	4	ot_hgi_sm_xload_cl2_bdring_932cee08284a-_k2c24	OK	PASS	PLACE running oth-ubuntu-1733241-1793240363	74cb762faeb6	typemap ref; est 89.4k (row note says 113.4k: copy error)
+hfd_hgi_vm_calendar_f20	2	_k1c24	OK	FAIL	BLOCKED	-	no MACRO_PLACEMENT (core_macros KNOWN placed: convertible) + clock_pin_geometry clk_tgt/clk_cap/clk_mem M4 small pins
+ot_hbm_sm_vm_wr_q_t_lanes4	2	_k1c24	OK	FAIL	BLOCKED	-	macro (KNOWN) + clock pins clk_cal/clk_l0..3 on M4
+ot_hgi_sm_xload_cl2_ctlx	2	_k1c24	OK	FAIL	BLOCKED	-	macro (KNOWN) + clock pin clk_cal on M4
+ot_hbm_idx_selector_static_sel	1	_k1c24	OK	FAIL	BLOCKED	-	macro UNKNOWN + clock pins clk_q[*]/clk_mem[*] on M4
+ot_hbm_idx_topk_link_static	1	_k1c24	OK	FAIL	BLOCKED	-	macro UNKNOWN + clk_mem[*] pin size
+ot_hbm_svc_wb_kport_q	2	_k1c24	OK	FAIL	BLOCKED	-	macro UNKNOWN + stream_clk/stream_fifo_clk on M4
+ot_hgi_dma_back_static_vp4_banks_cp	2	_k1c24	OK	FAIL	BLOCKED	-	macro UNKNOWN + clk_cp/clk_rst/clk_bank on M4
+ot_hbm_host_cp_rxs	1	_k1c24	OK	FAIL	BLOCKED	-	macro UNKNOWN (2 masters)
+ot_pdie_serdes	5	_k1c24	OK	FAIL	BLOCKED	-	macro UNKNOWN (2 masters)
+ot_hgi_sfu_core_split3__opstore_b	2	_k1c24	OK	FAIL	BLOCKED	-	macro UNKNOWN (3 masters)
+ot_hbm_su_programme_pslice_c5	2	_k1c24	OK	FAIL	BLOCKED	-	macro KNOWN explicit 100 macros master width (malformed entry)
+hfd_hgi_vms_glue_nw_t	2	_k1c24	OK	FAIL	BLOCKED	-	master_slice outline 1635.55 (pins-file name) != slice 1635.552 (rounding)
+hnx_rp3lp3h_n/_s	128+128	_k1c24	OK	FAIL	WAIT REBAL-11	-	3 hnx_lane_x hard children + SRAMs (C24 KNOWN); needs hnx_lane_x child kit; OVER_400K before split
+ot_hgi_sfu_programme_store_r10	2	_k1c24	OK	FAIL	-> REBAL-11	-	belongs to REBAL-11 (COORD 18:44)
+ot_hgi_sfu_core_split3__ctl/__opstore_a	2+2	-	MAP_AMBIGUOUS	-	BLOCKED	-	plan bus ro_v_e / g_operand_0_u_group_sw_mask not in the cut map
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	32	_k2c24	OK	FAIL	BLOCKED	-	typemap ref; 2 SRAMs, macro UNKNOWN; centre clock entry (90.72,90.72) leaves no legal 2-SRAM stack (estimate): needs plan entry move or design
+ot_hbm_svc_sm_group_rel_id	8	_k2c24	OK	FAIL	BLOCKED	-	typemap ref; macro UNKNOWN (3) + hbm_fifo_clk/hbm_pc_clk/stream_bank_clk pin size
+hnx_vms_bank_q0_faces__vec6293/__vecd4ae	16+16	-	NO_RECIPE	-	BLOCKED	-	typemap ref

@@ -1,0 +1,7 @@
+{"lane": "HBM-TYPEMAP-1", "date": "2026-10-28 18:52 PDT", "plan_commit": "d543581cfea29f619c09ff7cfa6124db792ad25a",
+ "plan": "physical/die_plan/hbm_arch/B2n/die_plan.json (C24, plan sha 3ab76af4; byte-identical on origin/main 995599b63)",
+ "canonical_split": "physical/die_plan/hbm/cores/harden/canonical_ports_split.json",
+ "owners": "~/coord/autopilot/OWNERS.tsv tick 2026-10-28 18:42 PDT",
+ "design_key": "tools/autopilot/ownership.py plan_items (RTL master, outline, pin-table sha)",
+ "rtl_equivalence": "same module name with no per-instance params (plan hard_cores carry none) or canonical split port_check PASS: no LEC needed, RTL identical by construction",
+ "collapse_rule": "variant is COLLAPSE-CAND when every pin is within 405 um (10-27 type-reduction hop limit) of the kit reference's pin, perimeter distance, best of R0/MX/MY/R180; ESTIMATE, UNCHECKED against real lane hop lengths / G0 cut"}
