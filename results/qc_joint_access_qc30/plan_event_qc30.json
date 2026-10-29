@@ -35,7 +35,8 @@
   "strict bind (QC-001)",
   "die GRT0 incl clock (QC-002)",
   "clock check (QC-005)",
-  "nk_a0_floorplan V1/V2 estimate (QC-A0-KITS-13) -> plan event amendment"
+  "nk_a0_floorplan V1/V2 estimate (QC-A0-KITS-13) -> plan event amendment",
+  "btab_f2_clock_pin: adopt after QC-FIX-2 routed PASS, then landing/PG re-census"
  ],
  "nk_a0_floorplan": {
   "source": "QC-A0-KITS-12 claude/qc-a0-kits-12-1029@2d0edc11e2: NK ONE placement GEOM FAIL r2r 634.61 um / 124 captures >405, channel_h 1.174 / channel_v 1.845 (CHECKED by that lane); root cause = NODE occupies the 65-um east column where NL keeps ~3000 ME FFs (65x440 um)",
@@ -47,5 +48,12 @@
   "why": "keeps NL/NK one floorplan (template commonality, NL anchors project 1:1), no macro pitch or outline/slot change, clock-follows-data unchanged for the ~3000 east FFs; V2 changes every macro column and risks the parent slot fit",
   "flip_condition": "QC-A0-KITS-13 estimate shows no legal NODE site inside the NK outline with all NODE pin legs <=405 um, or V1 r2r estimate >405 -> take V2",
   "status": "PENDING_ESTIMATE (QC-A0-KITS-13); GEOM plan review before any re-place; must be in the plan before the QC freeze"
+ },
+ "btab_f2_clock_pin": {
+  "source": "QC-FIX-1 BTAB F2 kit intel1:/srv/opentallas-scratch2/claude/qc-fix-1-1029/kits/qfd_dv_s8x_btab_f2 (GEOM-54/55 PASS-COND), route live (ot-run oth-ubuntu-4041114), collected by QC-FIX-2",
+  "change": "qfd_dv_s8x_btab core clock pin x 167.916 -> 158.22 um; parent tap x 833.196 -> 823.5 um (dx -9.696 um, y unchanged)",
+  "adopt_condition": "QC-FIX-2 routed gate PASS on F2: TT insertion 230-270 / FF 182.5-222.5 (spice_cell), related pair <=80 ps, measured-frame FF hold >=0, DRV/DRC 0; else the event keeps the old tap",
+  "replan": "after PASS: move the parent tap in the QC plan, re-run the tap landing census (native_landing_plan + phy_stub_plan, 0.32) and the landing-first PG access replan for the moved pin(s) on the same inputs",
+  "status": "PENDING_ROUTE (QC-FIX-2)"
  }
 }

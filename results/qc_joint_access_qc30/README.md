@@ -44,3 +44,8 @@ QC-A0-KITS-12 NK GEOM FAIL (r2r 634.61 / 124 > 405; NODE in the 65-um east FF co
 event (`nk_a0_floorplan`). Die-owner DEFAULT = V1 (move the NODE off the east column; NK keeps the NL east FF column, no macro
 pitch/outline change); flip to V2 (re-pitch macro columns) only if the QC-A0-KITS-13 estimate finds no legal NODE site with legs <=405 um.
 Status PENDING_ESTIMATE; GEOM plan review before any re-place.
+
+## BTAB F2 clock pin move (COORD 06:4x, pre-freeze)
+Same plan event (btab_f2_clock_pin): qfd_dv_s8x_btab core clock pin x 167.916 -> 158.22, parent tap x 833.196 -> 823.5 (dx -9.696 um).
+Adopted only on the QC-FIX-2 routed F2 PASS (TT 230-270 / FF 182.5-222.5, pair <=80, measured-frame FF hold, DRV/DRC 0); then re-run the
+landing census + landing-first PG replan for the moved tap(s). Status PENDING_ROUTE.
