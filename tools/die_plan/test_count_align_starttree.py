@@ -319,3 +319,13 @@ def test_start_tree_check_fails_closed():
         cap.start_tree_check("R", e)
     with pytest.raises(ValueError, match="not reached"):
         cap.start_tree_check("R", [dict(src="R", dst="A"), dict(src="Q", dst="B")])
+
+
+def test_physical_start_span_retains_clean_clock_node_relays():
+    rows=chain_rows(6,wide=1.0)
+    _,old,_=cap.clock_start_edges(rows,ctx_chain(6,ocv_frac=0.001),clean_by="width")
+    _,edges,info=cap.clock_start_edges(rows,ctx_chain(6,ocv_frac=0.001),clean_by="width",max_hop_um=150)
+    assert info["max_hop_um"]==150 and info["over_hop"]==0
+    assert all(e["wire_manhattan_um"]<=150 and e["clean_ok"] for e in edges)
+    assert len(edges)>len(old)
+    assert all("wire_manhattan_um" not in e for e in old)
