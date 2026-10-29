@@ -232,7 +232,20 @@ class Verification:
         parts=self.table['count_aligned'].get('parts') or {}
         if parts.get(pn,{}).get('role')=='relay':return self.output(ident(pn)+'.u_cland_rstart_rx','q')
         if self._strap_root(pn):return self.output(ident(pn)+'.u_cland_root','start')
-        return self.output(ident(pn)+'.u_cland_origin','start')
+        return self.output(self._origin_path(pn),'start')
+
+    def _origin_path(self,pn):
+        """Select the sampler by the declared static tie; older single-sampler source stays readable."""
+        ca=self.table.get('count_aligned') or {}
+        if ca.get('strap_form'):
+            self._strap_root(pn)
+            st=self._strap['types'].get(self.parts[pn]['type'],{}).get('origin',{})
+            buses=st.get('tree_buses') or []
+            prefix=ident(pn)+'.u_cland_origin_t'
+            if len(buses)>1 and any(c.path.startswith(prefix) for c in self.F.cells):
+                i=min(int(self._strap['instances'][pn]['values'].get('strap_ca_tsel',0)),len(buses)-1)
+                return prefix+str(i)
+        return ident(pn)+'.u_cland_origin'
 
     def fstart_net(self,pn,bus):
         """the start a sender forwards on cland_fstart_out_<bus> (receiver ring t_rst_n, child origin p_start).  Strap
@@ -290,13 +303,29 @@ class Verification:
                 roles={q:(cparts.get(q) or {}).get('role') for q in ps}
                 if pn not in ps or roles[pn]!='origin' or sorted(q for q,v in roles.items() if v=='origin')!=[pn] or None in roles.values():
                     self.fail(f'count-aligned region {tag}: bind roles {roles} need exactly one origin {pn}');continue
-            path=ident(pn)+'.u_cland_origin'
+            path=self._origin_path(pn)
             info=self.collector['types'][self.parts[pn]['type']]
             if ca.get('strap_form'):
                 self._strap_root(pn)
                 st=self._strap['types'].get(self.parts[pn]['type'],{}).get('origin',{})
-                if st.get('root'):   # both origins exist in every copy of a root+child strap type; the strap selects one
-                    self.expected|={ident(pn)+'.u_cland_root',ident(pn)+'.u_cland_origin'}
+                buses=st.get('tree_buses') or []
+                if path!=ident(pn)+'.u_cland_origin':
+                    # Every per-input sampler remains declared infrastructure. Check its local clock and its
+                    # bus-specific raw reset/START, including samplers not selected in this copy.
+                    for i,b in enumerate(buses):
+                        oc=self.instance(ident(pn)+'.u_cland_origin_t'+str(i),'ot_dp_landing_origin_s')
+                        if not oc:continue
+                        self.clock(oc,pn)
+                        import clock_landings as CL
+                        if b==CL.START_PIN_IN:
+                            node,relay=self._raw_node(pn,ins,info)
+                        else:
+                            node,relay=self.ring_reset_node(pn,b,info),'u_cland_rst_'+b
+                            ring=self.byname.get(ident(pn)+'.u_cland_'+ident(b))
+                            if ring:self.equal_input(oc,'p_start',[self.term(x) for x in ring.ports.get('t_rst_n',[])])
+                        self.check_reset(oc,pn,node,relay,port='rst_raw_n')
+                if st.get('root'):   # root and child origins exist; the static root strap selects one
+                    self.expected|={ident(pn)+'.u_cland_root',path}
             if rg['parent'] is None:
                 c=self.instance(ident(pn)+'.u_cland_root' if self._strap_root(pn) else path,'ot_dp_landing_root')
                 if c:

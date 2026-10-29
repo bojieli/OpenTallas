@@ -906,8 +906,9 @@ class Landings:
 
     def _origin_strap_rtl(self, tn, role, ca_raw, extra, local_raw):
         """MESO-STRAP-1 strap origin: ot_dp_landing_origin_s (strap_ca_pad / strap_ca_efall), the parent's forwarded
-        start and the child raw reset chosen by strap_ca_tsel among the copies' tree buses (static select before the
-        first synchroniser; out-of-range values take the last bus), optional root counter chosen by strap_ca_root.  The
+        start and the child raw reset chosen by strap_ca_tsel among the copies' tree buses. Each tree bus has its own
+        origin sampler; static selection follows those samplers (out-of-range values take the last bus). An optional
+        root counter is chosen by strap_ca_root. The
         raw reset of each choice is exactly the parameter form's (child: the tree bus's timed relay; root: local_raw)."""
         _, tbs, padw, settle, root = role
         ca_raw = dict(ca_raw)
@@ -924,7 +925,8 @@ class Landings:
         extra.append(f"    input wire [{padw-1}:0] strap_ca_pad")
         extra.append("    input wire strap_ca_efall")   # SCALAR_STRAPS
         logic = []
-        if len(tbs) > 1:
+        multi = len(tbs) > 1
+        if multi:
             tsw = (len(tbs) - 1).bit_length()
             extra.append(f"    input wire [{tsw-1}:0] strap_ca_tsel")
             def sel(names):
@@ -932,9 +934,8 @@ class Landings:
                 for i in range(len(names) - 2, -1, -1):
                     e = f"(strap_ca_tsel == {tsw}'d{i}) ? {names[i]} : {e}"
                 return e
-            p_start, raw = "cland_pstart", "cland_oraw"
-            logic += [f"    wire cland_pstart = {sel([pin(b) for b in tbs])};",
-                      f"    wire cland_oraw = {sel([ca_raw[b] for b in tbs])};"]
+            raw = "cland_oraw"
+            logic += [f"    wire cland_oraw = {sel([ca_raw[b] for b in tbs])};"]
         else:
             p_start, raw = pin(tbs[0]), ca_raw[tbs[0]]
         start = "cland_start"
@@ -954,11 +955,24 @@ class Landings:
         else:
             raw_used, start_d = raw, "cland_start_d"
             logic.append(f"    assign cland_start_raw = {raw};")
-        logic += [f"    ot_dp_landing_origin_s #(.PADW({padw})) u_cland_origin (",
-                  f"        .clk(clk), .rst_raw_n({raw}), .p_start({p_start}), .strap_efall(strap_ca_efall), "
-                  f".strap_pad(strap_ca_pad), .start({start}), .start_d({start_d}));"]
+        if multi:
+            # Each START owns its sampler. Static selection follows both registered and D-side taps,
+            # preserving the dedicated forwarded START face flop's existing zero-cycle contract.
+            starts = [f"cland_start_t{i}" for i in range(len(tbs))]
+            starts_d = [f"cland_start_t{i}_d" for i in range(len(tbs))]
+            logic.append(f"    wire {', '.join(starts + starts_d)};")
+            for i, b in enumerate(tbs):
+                logic += [f"    ot_dp_landing_origin_s #(.PADW({padw})) u_cland_origin_t{i} (",
+                          f"        .clk(clk), .rst_raw_n({ca_raw[b]}), .p_start({pin(b)}), .strap_efall(strap_ca_efall), "
+                          f".strap_pad(strap_ca_pad), .start({starts[i]}), .start_d({starts_d[i]}));"]
+            logic += [f"    assign {start} = {sel(starts)};", f"    assign {start_d} = {sel(starts_d)};"]
+        else:
+            logic += [f"    ot_dp_landing_origin_s #(.PADW({padw})) u_cland_origin (",
+                      f"        .clk(clk), .rst_raw_n({raw}), .p_start({p_start}), .strap_efall(strap_ca_efall), "
+                      f".strap_pad(strap_ca_pad), .start({start}), .start_d({start_d}));"]
         self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="strap", tree_buses=list(tbs), padw=padw,
-                                                                     root=bool(root), raw_reset=raw_used)
+                                                                     root=bool(root), raw_reset=raw_used,
+                                                                     **({"per_bus_origins": [f"u_cland_origin_t{i}" for i in range(len(tbs))]} if multi else {}))
         return logic, raw_used
 
     def _dataflow_monitor(self, tn, key, mask, info, extra, logic, body):
