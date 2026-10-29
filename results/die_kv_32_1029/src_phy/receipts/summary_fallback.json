@@ -1,0 +1,184 @@
+{
+  "groups": 45190,
+  "attempted": 45190,
+  "connected_groups": 45154,
+  "connected_contacts": 75892,
+  "failed_groups": 36,
+  "routing_rectangles": 1182422,
+  "vias": 352048,
+  "verdict": "INCOMPLETE_NO_MATERIALIZATION",
+  "clock_leg_M8_reservations": 7977,
+  "attribution": {
+    "clock_M8_reserve_within_1.4um": {
+      "m9_path:m9_yrange": {
+        "M9_stripe_y_range": 26
+      },
+      "m8_stripe:m8s_none": {
+        "no_same_net_M8_stripe_covering_x": 26
+      }
+    },
+    "no_clock_M8_reserve_within_10.8um": {
+      "m9_path:m9_yrange": {
+        "M9_stripe_y_range": 10
+      },
+      "m8_stripe:m8s_none": {
+        "no_same_net_M8_stripe_covering_x": 10
+      }
+    }
+  },
+  "attribution_bucket_counts": {
+    "clock_M8_reserve_within_1.4um": 26,
+    "no_clock_M8_reserve_within_10.8um": 10
+  },
+  "m8_landing_mode": "fallback",
+  "landing": {
+    "M9_bridge": 35970,
+    "M8_stripe": 9184
+  },
+  "owned_grid_obstructions": 0,
+  "rejections": {
+    "obstacle_M8": 197204,
+    "obstacle_M5": 63,
+    "obstacle_M7": 205,
+    "obstacle_M4": 2
+  },
+  "obstacle_examples": {
+    "M8": {
+      "candidate": [
+        1065216,
+        95140,
+        1065408,
+        95180
+      ],
+      "blocking": [
+        1009800.0,
+        94840.0,
+        1069200.0,
+        95240.0
+      ]
+    },
+    "M5": {
+      "candidate": [
+        5540820,
+        1520590,
+        5540844,
+        1520686
+      ],
+      "blocking": [
+        5540796.0,
+        1520448.0,
+        5540820.0,
+        1520640.0
+      ]
+    },
+    "M7": {
+      "candidate": [
+        5540944,
+        1520598,
+        5540976,
+        1520678
+      ],
+      "blocking": [
+        5540944.0,
+        1520448.0,
+        5540976.0,
+        1520640.0
+      ]
+    },
+    "M4": {
+      "candidate": [
+        6618416,
+        26667346,
+        6618512,
+        26667370
+      ],
+      "blocking": [
+        6618240.0,
+        26667372.0,
+        6618432.0,
+        26667396.0
+      ]
+    }
+  },
+  "soft_charge": {
+    "layer": "M7",
+    "soft_stripes": 3908,
+    "charged_stripe_gcells": 12016,
+    "max_use": 0.1071,
+    "over_0p6": 0,
+    "tracks_used": 29784,
+    "top": [
+      [
+        3848,
+        1363,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3818,
+        1394,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3729,
+        1504,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3699,
+        1535,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3610,
+        1645,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3580,
+        1676,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3491,
+        1786,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3461,
+        1817,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3253,
+        2067,
+        9,
+        84,
+        0.1071
+      ],
+      [
+        3223,
+        2098,
+        9,
+        84,
+        0.1071
+      ]
+    ],
+    "note": "use = distinct PG tracks on the stripe within one 10.8-um gcell / stripe tracks"
+  }
+}

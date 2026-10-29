@@ -1,0 +1,153 @@
+{
+ "clock_M8_reserve_within_1.4um": {
+  "groups": 4908,
+  "stage_present": {
+   "m9_yrange": 4908,
+   "land": 4908,
+   "stack": 4908,
+   "stem": 4908,
+   "bridge": 4908,
+   "m9end": 4908,
+   "m8s_land": 4908,
+   "m8s_stem": 4908,
+   "m8s_none": 4908
+  },
+  "top_tags": {
+   "m9_yrange": {
+    "M9_stripe_y_range": 2791905
+   },
+   "land": {
+    "M8:clock_leg_M8": 190810,
+    "M8:opp_native_supply": 49834,
+    "M8:opp_grid_M8": 33927
+   },
+   "stem": {
+    "M7:opp_native_supply": 5830,
+    "M7:macro_signal_pin": 171
+   }
+  },
+  "m9_geometry": {
+   "3_nearest_M9_segments_in_1_columns": 4651,
+   "covering_M9_segment_not_in_3_nearest": 4904,
+   "3_nearest_M9_segments_in_2_columns": 222,
+   "3_nearest_M9_segments_in_3_columns": 35,
+   "no_same_net_M9_segment_covers_rail_y": 4
+  },
+  "nearest_covering_m9_dx_um": {
+   "p50": 17.57,
+   "max": 66.008
+  }
+ },
+ "clock_M8_reserve_within_10.8um": {
+  "groups": 217,
+  "stage_present": {
+   "m9_yrange": 217,
+   "land": 217,
+   "stack": 217,
+   "stem": 217,
+   "bridge": 217,
+   "m9end": 217,
+   "m8s_land": 217,
+   "m8s_stem": 217,
+   "m8s_none": 217
+  },
+  "top_tags": {
+   "m9_yrange": {
+    "M9_stripe_y_range": 113091
+   },
+   "land": {
+    "M8:opp_native_supply": 4832,
+    "M8:opp_grid_M8": 2904
+   },
+   "stem": {
+    "M7:opp_native_supply": 608
+   }
+  },
+  "m9_geometry": {
+   "3_nearest_M9_segments_in_2_columns": 12,
+   "covering_M9_segment_not_in_3_nearest": 217,
+   "3_nearest_M9_segments_in_1_columns": 205
+  },
+  "nearest_covering_m9_dx_um": {
+   "p50": 6.068,
+   "max": 40.952
+  }
+ },
+ "clock_M8_reserve_within_5.4um": {
+  "groups": 201,
+  "stage_present": {
+   "m9_yrange": 201,
+   "land": 201,
+   "stack": 201,
+   "stem": 201,
+   "bridge": 201,
+   "m9end": 201,
+   "m8s_land": 201,
+   "m8s_stem": 201,
+   "m8s_none": 201
+  },
+  "top_tags": {
+   "m9_yrange": {
+    "M9_stripe_y_range": 105492
+   },
+   "land": {
+    "M8:opp_native_supply": 4132,
+    "M8:opp_grid_M8": 3218,
+    "M8:clock_leg_M8": 305
+   },
+   "stem": {
+    "M7:opp_native_supply": 234
+   }
+  },
+  "m9_geometry": {
+   "3_nearest_M9_segments_in_1_columns": 197,
+   "covering_M9_segment_not_in_3_nearest": 197,
+   "3_nearest_M9_segments_in_2_columns": 4,
+   "no_same_net_M9_segment_covers_rail_y": 4
+  },
+  "nearest_covering_m9_dx_um": {
+   "p50": 6.068,
+   "max": 40.952
+  }
+ },
+ "no_clock_M8_reserve_within_10.8um": {
+  "groups": 3894,
+  "stage_present": {
+   "m9_yrange": 3894,
+   "land": 3894,
+   "stack": 3894,
+   "stem": 3894,
+   "bridge": 3894,
+   "m9end": 3894,
+   "m8s_land": 3894,
+   "m8s_stem": 3894,
+   "m8s_none": 3894
+  },
+  "top_tags": {
+   "m9_yrange": {
+    "M9_stripe_y_range": 2316084
+   },
+   "land": {
+    "M8:opp_native_supply": 77793,
+    "M8:opp_grid_M8": 56537
+   },
+   "stem": {
+    "M7:opp_native_supply": 6273
+   },
+   "stack": {
+    "M4:macro_signal_pin": 1
+   }
+  },
+  "m9_geometry": {
+   "3_nearest_M9_segments_in_1_columns": 3716,
+   "covering_M9_segment_not_in_3_nearest": 3893,
+   "3_nearest_M9_segments_in_3_columns": 95,
+   "3_nearest_M9_segments_in_2_columns": 83,
+   "no_same_net_M9_segment_covers_rail_y": 1
+  },
+  "nearest_covering_m9_dx_um": {
+   "p50": 23.348,
+   "max": 64.982
+  }
+ }
+}
