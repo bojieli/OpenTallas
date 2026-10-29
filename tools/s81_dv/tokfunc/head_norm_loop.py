@@ -23,7 +23,8 @@ def replace_once(s, old, new):
 
 
 def generate_tb(source):
-    s = replace_once(source, 'always #0.5 clk = ~clk;', 'always #0.4165 clk = ~clk;')
+    s = replace_once(source, '`timescale 1ns/1ps', '`timescale 1ns/100fs')
+    s = replace_once(s, 'always #0.5 clk = ~clk;', 'always #0.4165 clk = ~clk;')
     s = replace_once(s, "        c_v <= 1'b0; sw_v <= 1'b0; rb_v <= 1'b0;", "        c_v <= 1'b0; sw_v <= 1'b0;")
     s = replace_once(s, "        if (t_p >= 0 && cyc == t_p + RB_GAP) begin rb_v <= 1'b1; rb_d <= rstd[1 * blk + 0]; t_rb = cyc; t_y0 = -1; end",
                      "        if (rb_v) begin t_rb = cyc; t_y0 = -1; end")
