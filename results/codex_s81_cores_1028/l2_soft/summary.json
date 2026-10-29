@@ -1,0 +1,205 @@
+{
+  "scope": "READ ONLY PROPOSAL, no plan/RTL adoption, no parent synthesis/clock/placement proof. Exact kit instance prefixes are candidate parent bindings; source aliases are labeled. No LEC rerun.",
+  "source": "codex/s81-cores-1028@654415ba4",
+  "checkpoint": "intel2:/srv/opentallas-scratch2/claude/codex-s81-cores-1028/kits/dsdv_gunit_l2_compact_links216/run/results/asap7/kl_dsdv_gunit_l2_compact_links216/base/3_place.odb",
+  "parent_origin_um": [
+    1149.12,
+    613.44
+  ],
+  "parent_prefix": "u_gunit.u_l2",
+  "ff_count": 3567,
+  "orientations": {
+    "R0": 1284,
+    "MY": 505,
+    "MX": 1242,
+    "R180": 536
+  },
+  "row_site_failures": [],
+  "external_bits": 3143,
+  "unresolved_ports": [],
+  "clock_sinks": 3567,
+  "clock_contract": "all source sequential blocks use posedge clk; receipt records actual CLK/CK iterms. Parent must regenerate full soft-sink clock tree; no old tree.",
+  "waveform_contract": {
+    "added_cycles": 0,
+    "condition": "Only remove hard binding, retain exact RTL and every state transition; parent integration still requires exact binding and normal gates.",
+    "rung": "vi_s/vi_n -> is_/in_ first edge; classified forward/deliver outputs second edge. Injector CTL pin capture then JREG0 direct registered injection; unchanged.",
+    "cw": "cw input -> u_cwi N1 first edge; cwn/cws output copies second edge.",
+    "sid": "sid_q first edge; sn_q/ss_q second edge.",
+    "hp": "rung input capture, hc kind7 copy, hp output copy; valid pipeline unchanged.",
+    "reset": "same ot_rst_relay REGIONS3/SYNC_STAGES2/TREE_STAGES1; no reset or clock alteration"
+  },
+  "existing_lec": {
+    "verdict": "EQUIVALENT",
+    "generated": "2026-10-29T08:46:02+0000",
+    "top": "dsdv_gunit_l2",
+    "ports": {
+      "inputs": 1167,
+      "outputs": 1977
+    },
+    "source_unchanged": true
+  },
+  "geometry": {
+    "actual_verdict": "FAIL: aspect5 and empty.575; not a hardened view",
+    "fill": 0.1762,
+    "r2r_max_um": 221.35,
+    "external_max_um": 404.988,
+    "unit_i0_station_max_um": 401.246
+  },
+  "actual_soft_endpoint_reach": {
+    "scope": "Soft candidate actual FF home to unchanged hard partner physical pin or unchanged unit_i0 station; all mapped first registered endpoints, no pin center surrogate",
+    "direct_bits": 2872,
+    "direct_max_um": 418.413,
+    "direct_over405": 206,
+    "station_bits": 265,
+    "station_max_um": 409.571,
+    "station_over405": 19,
+    "worst_direct": [
+      {
+        "net": "d21",
+        "l2_port": "rs_o[237]",
+        "ff_id": 8315,
+        "partner": "u_l1.rn_i[237]",
+        "um": 418.413
+      },
+      {
+        "net": "d21",
+        "l2_port": "rs_o[239]",
+        "ff_id": 8317,
+        "partner": "u_l1.rn_i[239]",
+        "um": 417.447
+      },
+      {
+        "net": "d21",
+        "l2_port": "rs_o[210]",
+        "ff_id": 8286,
+        "partner": "u_l1.rn_i[210]",
+        "um": 417.045
+      },
+      {
+        "net": "d21",
+        "l2_port": "rs_o[57]",
+        "ff_id": 8391,
+        "partner": "u_l1.rn_i[57]",
+        "um": 416.685
+      },
+      {
+        "net": "d21",
+        "l2_port": "rs_o[199]",
+        "ff_id": 8272,
+        "partner": "u_l1.rn_i[199]",
+        "um": 416.553
+      },
+      {
+        "net": "d21",
+        "l2_port": "rs_o[234]",
+        "ff_id": 8312,
+        "partner": "u_l1.rn_i[234]",
+        "um": 416.433
+      },
+      {
+        "net": "d21",
+        "l2_port": "rs_o[216]",
+        "ff_id": 8292,
+        "partner": "u_l1.rn_i[216]",
+        "um": 416.379
+      },
+      {
+        "net": "d21",
+        "l2_port": "rs_o[225]",
+        "ff_id": 8302,
+        "partner": "u_l1.rn_i[225]",
+        "um": 416.325
+      },
+      {
+        "net": "d21",
+        "l2_port": "rs_o[207]",
+        "ff_id": 8282,
+        "partner": "u_l1.rn_i[207]",
+        "um": 416.199
+      },
+      {
+        "net": "d21",
+        "l2_port": "rs_o[222]",
+        "ff_id": 8299,
+        "partner": "u_l1.rn_i[222]",
+        "um": 415.695
+      },
+      {
+        "net": "c21_a",
+        "l2_port": "cws_a[6]",
+        "ff_id": 5144,
+        "partner": "u_l1.cw_a[6]",
+        "um": 415.485
+      },
+      {
+        "net": "d21",
+        "l2_port": "rs_o[64]",
+        "ff_id": 8399,
+        "partner": "u_l1.rn_i[64]",
+        "um": 415.437
+      }
+    ],
+    "worst_station": [
+      {
+        "port": "cw_d[6]",
+        "ff_id": 6643,
+        "um": 409.571
+      },
+      {
+        "port": "cw_v",
+        "ff_id": 6842,
+        "um": 409.355
+      },
+      {
+        "port": "cw_d[2]",
+        "ff_id": 6599,
+        "um": 408.653
+      },
+      {
+        "port": "cw_d[0]",
+        "ff_id": 6841,
+        "um": 408.113
+      },
+      {
+        "port": "cw_d[1]",
+        "ff_id": 6588,
+        "um": 407.735
+      },
+      {
+        "port": "cw_d[4]",
+        "ff_id": 6621,
+        "um": 407.519
+      },
+      {
+        "port": "cw_a[5]",
+        "ff_id": 6808,
+        "um": 407.033
+      },
+      {
+        "port": "cw_a[2]",
+        "ff_id": 6775,
+        "um": 406.925
+      },
+      {
+        "port": "cw_d[7]",
+        "ff_id": 6654,
+        "um": 406.925
+      },
+      {
+        "port": "cw_d[5]",
+        "ff_id": 6632,
+        "um": 406.655
+      },
+      {
+        "port": "cw_d[3]",
+        "ff_id": 6610,
+        "um": 406.385
+      },
+      {
+        "port": "cw_d[8]",
+        "ff_id": 6665,
+        "um": 406.385
+      }
+    ]
+  }
+}
