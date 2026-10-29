@@ -1,0 +1,67 @@
+{
+ "status": "PASS_COMPONENT_SOURCE_CANDIDATE",
+ "baseline": "a1d3c708f renamed exact reader/face copies",
+ "source_sha256": {
+  "rtl/hbm_next/idx/ot_hnx_idx_vm_query_static_n12_r2048.sv": "203a85cab5803cfb0d11cec5c7e98b9add6f82b790a509c73e19acd352b21a7a",
+  "rtl/hbm_next/idx/ot_hnx_idx_vm_static_r2048.sv": "d558781a0b661fcd58b4da3ef97f71c92999da4a7283c543b006a3679106058c",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "tools/hbm_static/vm_r2048/tb_reader.sv": "6042f385b49c287ef8ee007887201ccb70f9840eff74ffdf496cfff04a4ebf2b",
+  "tools/hbm_static/vm_r2048/reader_golden/face_ref.sv": "3823f1a9f2fe53506daad078f4e7e145fbf0c802be00b9d33df967821dd933ca",
+  "tools/hbm_static/vm_r2048/reader_golden/n12_ref.sv": "a7f68ec2ed79f55ce259472db64b91966ae0a0878a64eb4a5d387642888f7da3"
+ },
+ "native_sector_bits": 17,
+ "native_vm_rq_bits": 144,
+ "metrics": {
+  "packed": {
+   "rt": 173,
+   "WFP32": 0,
+   "blocks": 896,
+   "legacy_edges": 2679,
+   "cycles": 4775,
+   "added_cycles": 0
+  },
+  "fp32": {
+   "rt": 173,
+   "WFP32": 1,
+   "blocks": 896,
+   "legacy_edges": 2679,
+   "cycles": 4775,
+   "added_cycles": 0
+  }
+ },
+ "source_high_regular_bit_mutant": "CAUGHT",
+ "WIDTH_SELRANGE": "PASS both WEIGHT_FP32 modes",
+ "cases": [
+  "low regular against originalreader every valid block/weight/request/date",
+  "high regular bit15 retained with correct query/read tags",
+  "explicit mirror16 retained",
+  "bank7 wrap plus two rows",
+  "unused nextrow domain carry does not fault",
+  "used regular-to-mirror arithmetic carry suppresses all requests and faults",
+  "remote regularSID/highmirror suppress requests and fault"
+ ],
+ "added_pipeline_cycles": 0,
+ "bounds": "newexplicitcarry flags; source domain never silently wraps",
+ "VM_responses": "request-derived deterministic transport model, not real SRAM in this reader coupon",
+ "bank_source_separately_qualified": "../result.json (real four SRAMs and ECC)",
+ "publication_contract": {
+  "current_image_query_A_sector": 18438,
+  "current_image_query_A_sid": 2,
+  "current_image_weight_B_sector": 35456,
+  "current_image_weight_B_sid": 0,
+  "actual_role_local_producer": false,
+  "actual_global_mirror_producer": false,
+  "rule": "Different regularSID operands require real producer staging/publication, never address relabeling or a single global source-memory model"
+ },
+ "run": {
+  "host": "intel1",
+  "root": "/srv/opentallas-scratch2/claude/codex-hbm-vm-capacity-1029/reader_r3",
+  "unit": "oth-ubuntu-2542266-1793270799",
+  "exit_code": 0
+ },
+ "default_selected": false,
+ "physical_adoption": false,
+ "full_token": false,
+ "SIGNED": false,
+ "failures": "inherited 32-bit integer mode conditions rejected by WIDTH lint; all conditions made explicit1-bit comparisons, data/cycles unchanged, failedlogs retained"
+}

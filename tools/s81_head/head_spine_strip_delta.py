@@ -13,6 +13,13 @@ X0,X1=699.84,1287.36
 PAD=17.28
 
 
+def spine_channels(root,ox,oy):
+ return [dict(name=f'hk4_free_{root}_{side}_{band}',
+              rect_um=[r3(ox+x0),r3(oy+y0),r3(ox+x1),r3(oy+y1)],
+              reason='HEAD spine strip freed whitespace: PG/filler/decap and top-owned die clock cells; no signal standard cells (12.1d,12.2a)')
+         for side,x0,x1 in [('w',0,X0),('e',X1,1382.4)]
+         for band,y0,y1 in [('mid',682.56,1036.8),('north',1719.36,2073.6)]]
+
 def run(raw):
  p=copy.deepcopy(raw);types=p['partition_types'];report={'status':'RAW_RECOMPOSE_REQUIRED','data_cycles_added':0,'types':{},'parts':[]}
  regions={q['name']:q['name'] for q in p['partitions']}
@@ -61,6 +68,9 @@ def run(raw):
   if q['type'] not in ('hd_spn','hd_spn_end'):continue
   assert q.get('orient','R0')=='R0','current HEAD spines are R0; no silent mirror assumptions'
   ox,oy=q['origin_um'];q['origin_um']=[r3(ox+X0),oy];root=q['name']
+  # The four spaces between the input/output ribbons are top-owned clock/PG
+  # channels. Strip/ribbon outlines retain their exact data interfaces.
+  p['die'].setdefault('channels',[]).extend(spine_channels(root,ox,oy))
   for bus,side,direction in [('xw_o','w','out'),('bw_i','w','in'),('xe_o','e','out'),('be_i','e','in')]:
    name=root+'_'+bus+'_shim';x=ox if side=='w' else ox+X1
    y=oy+(1036.8 if direction=='out' else 0.0)  # extend S for measured reset reach; data windows unchanged

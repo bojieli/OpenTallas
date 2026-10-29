@@ -38,7 +38,10 @@ def integrate(top_text, top, provider_text, stages, reset_port):
         raise ProviderError('duplicate physical stage clock ports')
     ins = sorted({e['net'] for e in stages['die_inputs']})
     outs = sorted({e['net'] for e in stages['die_outputs']})
-    expected = {'rst_raw_n': 'input', **dict.fromkeys(clock_ports + ins, 'input'), **dict.fromkeys(outs, 'output')}
+    reset_inputs=[e['net'] for e in stages.get('reset_inputs',[])]
+    virtual_root=any(s.get('root') for s in stages['stages'])
+    global_reset=not stages.get('reset_wave') or virtual_root
+    expected = {**({'rst_raw_n':'input'} if global_reset else {}), **dict.fromkeys(clock_ports+ins+reset_inputs,'input'), **dict.fromkeys(outs,'output')}
     if set(provider.ports) != set(expected):
         raise ProviderError('provider source header differs from physical stage manifest')
     for name, direction in expected.items():
@@ -54,7 +57,7 @@ def integrate(top_text, top, provider_text, stages, reset_port):
     for name in outs:
         if original.ports[name] != ('input', []):
             raise ProviderError(f'provider target is not a scalar bound input: {name}')
-    for name in ins:
+    for name in ins+reset_inputs:
         if original.ports.get(name) != ('output', []):
             raise ProviderError(f'provider parent START source is not a bound output: {name}')
     if set(clock_ports) & set(original.ports):
@@ -75,7 +78,7 @@ def integrate(top_text, top, provider_text, stages, reset_port):
         lines.append(f'    {dr} wire {width} {name};')
     lines += [f'    wire {name};' for name in outs]
     lines.append(f'    {private} u_bound (' + ', '.join(f'.{n}({n})' for n in original.order) + ');')
-    binds = {'rst_raw_n': reset_port, **{n:n for n in clock_ports+ins+outs}}
+    binds = {**({'rst_raw_n':reset_port} if global_reset else {}), **{n:n for n in clock_ports+ins+outs+reset_inputs}}
     lines.append('    ot_die_start_stages u_start_provider (' + ', '.join(f'.{n}({binds[n]})' for n in provider.order) + ');')
     lines.append('endmodule')
     receipt = dict(form='physical_start_provider_join', top=top, private_top=private,

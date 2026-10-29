@@ -1,8 +1,8 @@
 """Contents-only calendar reuse for the existing immutable XS ROM pair.
 
 No new action, reader state or port. Equal stream programmes share an address.
-Each pipelined phase uses a short reader interval. ACCEPT/CFG of the next phase
-stay in the preceding interval; all original functional action edges are exact.
+Reader intervals end only at real idle gaps. All original functional action
+edges, including zero-action ACCEPT stamps, are exact.
 PRIME/START use an existing idle gap, independent of completion or ready.
 """
 from __future__ import annotations
@@ -31,14 +31,17 @@ def dedup_stream(phase, stream):
 def split_intervals(cal):
     """Rows use the original absolute calendar age; intervals rebase time only.
 
-    Phase n interval starts launch_n. The previous interval contains that
-    phase's accept/CFG (launch-62/-52 at cfg_lead52) and ends >=2 edges after
-    its last action. PRIME is20 edges before START. Admission checks the actual
-    events, rather than assuming a shape's gap is wide enough.
+    The previous interval ends two edges after its last action. PRIME is20
+    edges before START, so a split requires a real gap exceeding22 edges.
+    Splits need not coincide with phase launches or completion events.
     """
     raw = [(w >> 75, w & ACTION_MASK) for w in cal['packed'] if not w & END]
-    starts = [0] + [p['launch'] for p in cal['phases'][1:]]
-    assert all(a < b for a,b in zip(starts,starts[1:]))
+    # A reader interval is a ROM-address reuse unit, not a phase. A phase's
+    # launch may be adjacent to the previous stream tail, while a different
+    # point in the same phase has a real idle gap. Split at actual action gaps
+    # so repeated programmes remain shareable without shifting any event.
+    starts = [0] + [t for (prev, _), (t, _) in zip(raw, raw[1:])
+                    if prev + 2 < t - 20]
     chunks = []
     for i,b in enumerate(starts):
         hi = starts[i+1] if i+1 < len(starts) else None

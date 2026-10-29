@@ -26,6 +26,7 @@ then the rows above / below), clear of every die clock cell of the tree and of t
 die_trial SiteMap point when --plan is given.  No timing value is used.  Default flows are unchanged (new file).
 """
 import argparse
+import hashlib
 import json
 import re
 import shutil
@@ -76,7 +77,7 @@ def stages_of(bind):
         if r.get("virtual"):
             if not x.startswith("st:"):
                 raise StageError(f"virtual region {x!r} is not an 'st:<tree_path>' stage")
-            out[x] = x[3:]
+            out[x] = x[3:].split("@", 1)[0]
     return out
 
 
@@ -137,7 +138,7 @@ def place_stage(xy, n_flops, rows, site=None, W=None, H=None):
     raise StageError(f"no free legal row segment ({n_flops} flops) within {MAX_ROW_TRIES} rows of {xy}")
 
 
-def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_settle=None, path_encoding="unicode"):
+def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_settle=None, path_encoding="unicode", reset_wave=False):
     """-> (stages json dict, start_stages.sv text, patched ctree.v, patched ctree.tcl)"""
     settle = int(root_settle if root_settle is not None else bind.get("root_settle_cycles", ROOT_SETTLE))
     if settle < 1:
@@ -152,6 +153,23 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
     for inst, (x, y) in cxy.items():
         rows.add(x, x + CLK_CELL_W_UM, y)
     ncell, nxy = meta.get("node_cell", {}), meta.get("node_xy_um", {})
+    # Resolve clock source from the actual A/Y connectivity, independently of placement identity.
+    path_by_cell = {}
+    for path, inst in ncell.items():
+        try:
+            path_id(path, path_encoding)
+        except StageError:
+            continue  # region-name aliases in proof.node_cell are not clock-tree paths
+        key = inst if inst in cells else f"ck_{inst}" if f"ck_{inst}" in cells else None
+        if key is None or key in path_by_cell:
+            raise StageError(f"node_cell is missing or ambiguous for {path}: {inst}")
+        path_by_cell[key] = path
+    driver = {}
+    for key, (_, _, net) in cells.items():
+        if net in driver:
+            raise StageError(f"clock net {net} has multiple drivers")
+        driver[net] = key
+    root_inputs = set(re.findall(r"\binput\s+(?:wire\s+)?([A-Za-z_][A-Za-z0-9_$]*)\s*;", ctree_v))
     ids = {}
     for x, p in st.items():
         path_id(p, path_encoding)
@@ -159,6 +177,8 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
         if inst is None:
             raise StageError(f"stage {x}: tree path not in the proof's node_cell")
         i = sv_name(inst[3:] if inst.startswith("ck_") else inst)    # one stage per tree node = its node cell
+        if "@" in x:
+            i += "_r" + hashlib.sha256(x.encode()).hexdigest()[:16]
         if i in ids.values():
             raise StageError(f"two stages on one node cell {inst}")
         ids[x] = i
@@ -178,17 +198,32 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
             raise StageError(f"stage {x}: node cell {inst} not in the clock tree netlist / placement")
         root = r.get("parent") is None
         nf = stage_flops(r, settle if root else None)
+        reset_ff = (2 + int(bool(r.get("edge_fall")))) if reset_wave and not root else 0
+        nf += reset_ff
         rect = place_stage(cxy[key], nf, rows, site, *die_wh)
         inv = polarity(cells, key) % 2
         # an inverting tree (die_trial --clock-cell inv/inv2): a node cell with inverted output -> the stage takes the
         # cell's INPUT net (true polarity, one cell earlier); the measured proof (subcommand proof) times it as built
         net = cells[key][1] if inv else cells[key][2]
+        source = driver.get(net)
+        source_root = source is None
+        if source_root:
+            if net not in root_inputs:
+                raise StageError(f"stage {x}: clock net {net} has no driver or declared root input")
+            source_path, source_stages = "__source__", 0
+        else:
+            if source not in path_by_cell:
+                raise StageError(f"stage {x}: clock driver {source} absent from node_cell")
+            source_path = path_by_cell[source]
+            source_stages = int(meta["node_stages"][source_path])
         rows.add(rect[0], rect[2], rect[1])
         tp = into.get(x)
         if r.get("parent") is not None and tp is None:
             raise StageError(f"stage {x}: has a parent but no start port into it")
         stages.append(dict(
             id=ids[x], region=x, tree_path_id=path_id(p, path_encoding), node_cell=key, node_xy_um=list(nxy.get(p, cxy[key])),
+            clock_source_path=source_path, clock_source_cell=source, clock_source_root=source_root,
+            clock_source_stages=source_stages,
             clock_net=net, clock_from="A" if inv else "Y", clock_port=f"t_st_{ids[x]}__clk", clock_pin_xy_um=[rect[0], rect[1]],
             rect_um=rect, flops=nf, pad=int(r.get("pad", 0) or 0), edge_fall=bool(r.get("edge_fall")),
             root=root, module=ROOT_MODULE if root else STAGE_MODULE, settle=settle if root else None, start_port_in=tp, parent=r.get("parent"),
@@ -216,9 +251,22 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
           "// one ot_dp_landing_origin per virtual tree-node stage, clocked by its own die clock-tree tap port.",
           "module ot_die_start_stages ("]
     roots = [s["id"] for s in stages if s["root"]]
-    if len(roots) != 1:
-        raise StageError(f"start tree must have exactly one root stage, found {roots}")
-    pl = ["    input  wire rst_raw_n"]
+    real_root = reg.get(bind.get("root"))
+    root_in_partition = (isinstance(real_root, dict) and real_root.get("virtual") is False
+                         and real_root.get("parent") is None)
+    if len(roots) != 1 and not (not roots and root_in_partition):
+        raise StageError(f"start tree must have exactly one root stage or a declared real root partition, found {roots}")
+    # A real root partition already contains ot_dp_landing_root. Its rs_* output
+    # feeds virtual stages through die_inputs; emitting another root changes reset timing.
+    reset_inputs = []
+    if reset_wave:
+        if not (len(roots) == 1 or root_in_partition):
+            raise StageError("bounded reset wave needs one virtual root or the declared real root partition")
+        reset_parts = {e['src_region']: e['src_part'] for e in ins}
+        if any(not p for p in reset_parts.values()):
+            raise StageError("bounded reset wave needs physical real-parent reset outputs")
+        reset_inputs = [dict(region=n, part=p, net='rraw_' + sv_name(n)) for n,p in sorted(reset_parts.items())]
+    pl = ((["    input  wire rst_raw_n"] if roots else []) + [f"    input  wire {e['net']}" for e in reset_inputs]) if reset_wave else ["    input  wire rst_raw_n"]
     pl += [f"    input  wire {s['clock_port']}" for s in stages]
     pl += [f"    input  wire {n}" for n in in_nets]
     pl += [f"    output wire {o['net']}" for o in outs]
@@ -227,7 +275,26 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
     for s in stages:
         sv.append(f"    wire st_{s['id']}_start;")
     for s in stages:
+        local_reset = "rst_raw_n"
+        if reset_wave and not s["root"]:
+            parent_reset = (f"st_{by_region[s['parent']]['id']}_rraw" if s['parent'] in by_region
+                            else 'rraw_' + sv_name(s['parent']))
+            name, clk = s['id'], s['clock_port']
+            local_reset = f"st_{name}_rraw"
+            sv += [f"    wire {local_reset};",
+                   f"    ot_die_start_reset_relay #(.EDGE_FALL({int(s['edge_fall'])})) u_rst_{name} "
+                   f"(.clk({clk}), .d({parent_reset}), .q({local_reset}));"]
+            s['reset_parent'] = parent_reset
+            s['reset_output'] = local_reset
+            s['reset_flops'] = 2 + int(s['edge_fall'])
         if s["root"]:
+            if reset_wave:
+                # The single timed local root reset feeds the root counter and
+                # starts the bounded relay stream; it never fans out globally.
+                sv.append(f"    wire st_{s['id']}_rraw = rst_raw_n;")
+                s['reset_parent'] = 'rst_raw_n'
+                s['reset_output'] = f"st_{s['id']}_rraw"
+                s['reset_flops'] = 0
             # the start-tree root stage IS the die's root counter (DIE-HEAD-11): SETTLE cycles after the raw release on
             # its own tree tap, the same ot_dp_landing_root a root partition uses; no die-top root start input
             sv.append(f"    {ROOT_MODULE} #(.SETTLE({s['settle']})) u_st_{s['id']} "
@@ -235,10 +302,19 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
             continue
         ps = start_net(s["parent"])
         sv.append(f"    {STAGE_MODULE} #(.PAD({s['pad']}), .EDGE_FALL({int(s['edge_fall'])})) u_st_{s['id']} "
-                  f"(.clk({s['clock_port']}), .rst_raw_n(rst_raw_n), .p_start({ps}), .start(st_{s['id']}_start));")
+                  f"(.clk({s['clock_port']}), .rst_raw_n({local_reset}), .p_start({ps}), .start(st_{s['id']}_start));")
     for o in outs:
         sv.append(f"    assign {o['net']} = st_{o['stage']}_start;")
     sv.append("endmodule")
+    if reset_wave:
+        sv += ["(* keep_hierarchy *) module ot_die_start_reset_relay #(parameter bit EDGE_FALL=0) (",
+               "    input wire clk, input wire d, output wire q);",
+               '    (* keep = "true" *) reg r0, r1;', "    wire x;",
+               "    if (EDGE_FALL) begin: g_fall",
+               '        (* keep = "true" *) reg rf;', "        always @(negedge clk) rf <= d;",
+               "        assign x=rf;", "    end else begin: g_rise assign x=d; end",
+               "    always @(posedge clk) begin r0<=x; r1<=r0; end",
+               "    assign q=r1;", "endmodule"]
     # die clock tree: one tap port per stage on its node cell's output net, pin at the stage's clock pin site
     mh = re.search(r"module\s+(\w+)\s*\(([^)]*)\);", ctree_v)
     if mh is None:
@@ -262,6 +338,8 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
     doc = dict(schema=SCHEMA, stage_module=STAGE_MODULE, root_module=ROOT_MODULE, root_settle=settle,
                flop_w_um=FLOP_W_UM, stages=stages,
                die_inputs=ins, die_outputs=outs, direct_ports=direct,
+               **(dict(reset_wave="bounded_synchronous_parent_relays", reset_inputs=reset_inputs,
+                       reset_rule="ordinary timed relay flops, no async controls or false paths; cold/warm flush + START lead proven separately") if reset_wave else {}),
                counts=dict(stages=len(stages), flops=sum(s["flops"] for s in stages), die_inputs=len(ins),
                            die_outputs=len(outs), direct_ports=len(direct),
                            max_cell_to_stage_um=max(abs(s["rect_um"][0] - cxy[s["node_cell"]][0]) +
@@ -295,15 +373,31 @@ def proof_with_stages(proof, stages_doc, arrs, out):
         meta = d
         have = {t["port"] for t in d["taps"]}
         for s in st:
-            path = s["region"][3:]
-            k = f"__st__{path}"
+            identity = s["region"][3:]
+            placement_path = identity.split("@", 1)[0]
+            if "clock_source_path" not in s and s.get("clock_from") == "A":
+                raise StageError("A-driven legacy stage manifest lacks actual clock source; re-emit")
+            path = s.get("clock_source_path", placement_path)
+            source_root = bool(s.get("clock_source_root"))
+            if source_root:
+                if path != "__source__" or s.get("clock_source_stages") != 0:
+                    raise StageError("invalid root-input clock source metadata")
+                for field in ("node_late_ps", "node_early_ps", "node_fall_late_ps", "node_fall_early_ps",
+                              "node_stages", "cppr_node_range_ps"):
+                    meta.setdefault(field, {})["__source__"] = 0
+                meta["cppr_node_range_ps"]["__source__@fall"] = 0
+                meta.setdefault("node_xy_um", {})["__source__"] = None
+            elif path not in meta["node_stages"]:
+                raise StageError(f"clock source path {path} absent from measured proof")
+            k = f"__st__{identity}"
             if k in have:
                 raise StageError(f"proof {pf} already has {k}")
             if s["clock_port"] not in T:
                 raise StageError(f"{f}: no arrival for {s['clock_port']}")
             v = T[s["clock_port"]]
             d["taps"].append(dict(port=k, part=None, late_ps=float(v[0]), early_ps=float(v[1]),
-                                  **({"slew_ps": float(v[2])} if len(v) > 2 else {}), cppr_node="h", tree_path=path,
+                                  **({"slew_ps": float(v[2])} if len(v) > 2 else {}), cppr_node="__source__" if source_root else "h", tree_path=path,
+                                  clock_source_root=source_root, placement_tree_path=placement_path,
                                   stages_from_root=int(meta["node_stages"][path]), xy_um=list(s["clock_pin_xy_um"]),
                                   leaf_cell=s["node_cell"], start_stage=s["id"],
                                   **({"fall_late_ps": float(F[s["clock_port"]][0]),
@@ -322,6 +416,7 @@ def main(argv=None):
     e.add_argument("--corner", default="TT")
     e.add_argument("--ctree", required=True, help="die_trial clock dir with ctree.v + ctree.tcl")
     e.add_argument("--plan", help="die plan: stage rows must be legal die_trial SiteMap points")
+    e.add_argument("--reset-wave", action="store_true", help="bounded ordinary synchronous reset relay stream along START graph; real root/local reset inputs required")
     e.add_argument("--path-encoding", choices=("unicode", "base36"), default="unicode",
                    help="declared tree path alphabet; die_trial/trial_tap_arrivals use base36")
     e.add_argument("--out", required=True)
@@ -343,7 +438,7 @@ def main(argv=None):
             P = S.Plan(S.load(a.plan))
             site, wh = DT.SiteMap(P), (P.W, P.H)
         doc, sv, v, t = emit(bind, meta, (cd / "ctree.v").read_text(), (cd / "ctree.tcl").read_text(), site, wh,
-                            a.root_settle, a.path_encoding)
+                            a.root_settle, a.path_encoding, a.reset_wave)
         o = Path(a.out)
         o.mkdir(parents=True, exist_ok=True)
         (o / "start_stages.json").write_text(json.dumps(doc, indent=1))

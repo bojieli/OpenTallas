@@ -19,7 +19,7 @@ Rules (id: limit -- source):
               pre-route gate, TILE-REVIEW 10-23); METHODOLOGY 1.14 (target 40-60 %); GEOM-REVIEW qkd_ahub 12 % FAIL
   empty     : share of macro-free density bins below 5 % density <= 50 % -- layout_review.py EMPTY_FLAG/EMPTY_BIN_DENSITY;
               GEOM-REVIEW qkd_ahub "W/N thirds empty" FAIL
-  pin_reg   : every signal pin registered (flop within <= 4 buffers, or a hard-macro pin) and pin->register p90
+  pin_reg   : every signal pin registered (first flop through pure BUF/INV, or a hard-macro pin) and pin->register p90
               <= 30 um -- METHODOLOGY 1.9 (R2 face flops, "pin-to-reg p90 <= 30 um"); layout_review.py PIN_REG_P90_FAIL
               150 um is the hard backstop; clock ports and declared strap_* pins are exempt (METHODOLOGY 1.8 R7 note)
   r2r       : max register->register Manhattan distance (flop centre to flop centre through combinational logic and
@@ -50,6 +50,7 @@ import argparse
 import importlib.util
 from pathlib import Path
 import json
+import hashlib
 import math
 import re
 import sys
@@ -297,8 +298,95 @@ def pin_metrics(D, strap_re):
                 pin_peak_layer_max=max(lpeak.values()) if lpeak else 0.0, face_span=span, pin_table=sorted(table))
 
 
+def declared_infra_arcs(D, interface, declaration):
+    """12.2a1 die-owned scalar clock/reset pass-throughs, never a name exemption.
+
+    ft_ports.v1 and ft_interface_model.v1 define DIE ownership and scalar ports.
+    Verify their shared digest, explicit roles/directions/endpoints, and the
+    checkpoint's pure-buffer connectivity and non-inverting truth table. Keep
+    all accepted/rejected arc records; characterization and die STA stay required.
+    """
+    result = dict(owner="die", width=1, arcs=[], pins=[], errors=[])
+    try:
+        if declaration.get("schema") != "opentallas.ft_ports.v1" or interface.get("schema") != "opentallas.ft_interface_model.v1":
+            raise ValueError("missing typed declaration/interface schema")
+        if declaration.get("owner", "die") != "die" or interface.get("owner", "die") != "die":
+            raise ValueError("feedthrough owner must be die")
+        ports, arcs = declaration["ports"], declaration["arcs"]
+        body = dict(ports=sorted(ports,key=lambda p:p["name"]),arcs=sorted(arcs,key=lambda a:(a["source"],a["sink"])))
+        digest = hashlib.sha256(json.dumps(body,sort_keys=True,separators=(",",":")).encode()).hexdigest()
+        if declaration.get("sha256") != digest or interface.get("ft_sha256") != digest:
+            raise ValueError("declaration/interface digest mismatch")
+        declared = {p["name"]:p for p in ports}
+        if len(declared) != len(ports) or not arcs:
+            raise ValueError("duplicate ports or empty arcs")
+        for n,p in declared.items():
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", n) or type(p.get("width",1)) is not int or p.get("width",1) != 1:
+                raise ValueError("only explicitly scalar canonical FT ports supported")
+        ends = [a[k] for a in arcs for k in ("source","sink")]
+        if len(set(ends)) != len(ends) or set(ends) != set(declared):
+            raise ValueError("arc endpoints are not one-to-one declared port pairs")
+        model = interface["arcs"]
+        identity = lambda a:(a["source"],a["sink"],a["kind"])
+        if len(model) != len(arcs) or set(map(identity,model)) != set(map(identity,arcs)):
+            raise ValueError("interface/declaration arc inventory mismatch")
+        for a in arcs+model:
+            if (a["kind"] not in ("clock","reset") or a.get("owner","die") != "die"
+                or type(a.get("width",1)) is not int or a.get("width",1) != 1):
+                raise ValueError("invalid explicit infrastructure role/owner/width")
+    except (KeyError,TypeError,ValueError,AttributeError) as e:
+        result["errors"].append(str(e)); return result
+    actual = {p["name"]:p for p in D.pins}
+    accepted = set()
+    for a in arcs:
+        timed = next(x for x in model if identity(x) == identity(a))
+        rec = dict(source=a["source"],sink=a["sink"],role=a["kind"],owner="die",width=1,status="FAIL",
+                   timing_status=interface.get("status"),tt_ps=timed.get("tt_ps"),ff_ps=timed.get("ff_ps"))
+        try:
+            src,dst = actual[a["source"]],actual[a["sink"]]
+            if (declared[a["source"]]["direction"] != "INPUT" or declared[a["sink"]]["direction"] != "OUTPUT"
+                or src["io"] != "INPUT" or dst["io"] != "OUTPUT"):
+                raise ValueError("endpoint direction mismatch")
+            start = D.pin_net.get(src["k"])
+            if start is None or D.nets[start][1] != ("p",src["k"],False):
+                raise ValueError("source is not the actual input driver")
+            todo, seen, hits, buffers = [(start,0)], {}, [], set()
+            while todo:
+                net,parity = todo.pop()
+                if net in seen:
+                    # A pure single-input BUF/INV network cannot reconverge to
+                    # itself without a cycle; never bless an ambiguous graph.
+                    raise ValueError("cycle/repeated net in infrastructure cone")
+                seen[net] = parity
+                sinks = D.nets[net][2]
+                if not sinks: raise ValueError("disconnected infrastructure cone")
+                for s in sinks:
+                    if s[0] == "p":
+                        if s[1] != dst["k"]: raise ValueError("extra endpoint fanout")
+                        hits.append(parity)
+                    elif D.kind(s[1]) == "B":
+                        cid = s[1]; inputs = D.cell_in[cid]; outputs = D.drives[cid]
+                        if len(inputs) != 1 or len(outputs) != 1:
+                            raise ValueError("ambiguous buffer input/output")
+                        master = D.cells[cid][1]
+                        if not master.startswith(("BUF","INV","HB")):
+                            raise ValueError("untyped buffer function")
+                        buffers.add(cid)
+                        todo.append((outputs[0],parity ^ int(master.startswith("INV"))))
+                    else:
+                        raise ValueError("ordinary data/sequential/logic fanout")
+            if not hits or any(hits): raise ValueError("endpoint is not non-inverting pass-through equivalent")
+            rec.update(status="PASS",buffers=len(buffers),nets=len(seen),equivalence="y=x for both binary inputs")
+            accepted.update((a["source"],a["sink"]))
+        except (KeyError,TypeError,ValueError) as e:
+            rec["why"] = str(e)
+        result["arcs"].append(rec)
+    result["pins"] = sorted(accepted)
+    return result
+
+
 def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
-    """pin -> nearest register through <= PINREG_DEPTH buffers (layout_review.tcl semantics, directional)"""
+    """pin -> first directional register through pure BUF/INV; visited nets bound cycles, not buffer count."""
     dist, unreg, macro, exempt = [], [], 0, 0
     worst = []
     for p in D.pins:
@@ -314,8 +402,9 @@ def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
             continue
         best, hit_m = INF, False
         if p["io"] == "OUTPUT":
-            cur, depth = n, 0
-            while depth <= PINREG_DEPTH:
+            cur, seen = n, set()
+            while cur not in seen:
+                seen.add(cur)
                 dr = D.nets[cur][1]
                 if not dr or dr[0] != "i":
                     break
@@ -329,11 +418,13 @@ def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
                     break
                 if k != "B" or not D.cell_in.get(dr[1]):
                     break
-                cur = D.cell_in[dr[1]][0][0]
-                depth += 1
+                inputs = [nn for nn, clock in D.cell_in[dr[1]] if not clock]
+                if len(inputs) != 1:
+                    break
+                cur = inputs[0]
         else:
-            front, seen, depth = [n], {n}, 0
-            while front and depth <= PINREG_DEPTH and best == INF and not hit_m:
+            front, seen = [n], {n}
+            while front and best == INF and not hit_m:
                 nf = []
                 for nn in front:
                     for s in D.nets[nn][2]:
@@ -351,7 +442,6 @@ def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
                                     seen.add(on)
                                     nf.append(on)
                 front = nf
-                depth += 1
         if best < INF:
             dist.append(best)
             worst.append((best, p["name"]))
@@ -1232,13 +1322,21 @@ def stage_of_odb(name):
     return "placed" if b.startswith("3_place") else "cts" if b.startswith("4_cts") else "other" if b else ""
 
 
-def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None, memory_libs=(), memory_reach=False):
+def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None, memory_libs=(), memory_reach=False, ft_interface=None, ft_ports=None):
     D = Design(path, memory_libs, memory_reach)
     sr = re.compile(strap_re)
     m = area_metrics(D)
     m.update(pin_metrics(D, sr))
     ck = clock_metrics(D)
-    m.update(pin_reg_metrics(D, sr, frozenset(ck["tap_sinks"])))
+    infra_pins = frozenset()
+    if ft_interface or ft_ports:
+        try:
+            infra = declared_infra_arcs(D, json.loads(Path(ft_interface).read_text()), json.loads(Path(ft_ports).read_text()))
+        except (OSError,TypeError,ValueError) as e:
+            infra = dict(owner="die",width=1,arcs=[],pins=[],errors=[str(e)])
+        m["die_owned_infra"] = infra
+        infra_pins = frozenset(infra["pins"])
+    m.update(pin_reg_metrics(D, sr, frozenset(ck["tap_sinks"]) | infra_pins))
     m.update(r2r_metrics(D))
     m.update(ck)
     m.update(macro_metrics(D))
@@ -1278,8 +1376,10 @@ def main(argv=None):
     ap.add_argument("--odb", default="", help="checkpoint file name (stage: 3_place / 4_cts)")
     ap.add_argument("--max-layer", default="M5", help="kit MAX_ROUTING_LAYER (channel / column capacity)")
     ap.add_argument("--grt-log", default=None, help="geom_grt.tcl log (>= 50 congestion iterations)")
+    ap.add_argument("--ft-interface", help="typed die-owned clock/reset interface model")
+    ap.add_argument("--ft-ports", help="matching hash-checked scalar FT declaration")
     a = ap.parse_args(argv)
-    m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log, a.memory_lib, a.memory_reach)
+    m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log, a.memory_lib, a.memory_reach, a.ft_interface, a.ft_ports)
     tmpl = json.load(open(a.template)) if a.template else None
     outline = [float(x) for x in a.outline.lower().split("x")] if a.outline else (m["outline"] if a.outline_self else None)
     rules, verdict = judge(m, tmpl, outline, a.all_kits)

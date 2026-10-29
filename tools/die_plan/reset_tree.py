@@ -742,6 +742,11 @@ def _plan_taps(P, tn):
     because those sinks are the very pins sited here; otherwise = _taps."""
     t = P.types[tn]
     ck = t.get("clock", {})
+    if ck.get("tap_mode") == "explicit" and ck.get("control_sinks") and not t.get("hard"):
+        import taps as T
+        # Endpoint geometry is frozen. The full explicit_taps budget also asks
+        # for these control pins and must run only after their siting is known.
+        return T.explicit_tap_sites(P, tn)
     if ck.get("tap_mode") == "density" and ck.get("control_sinks") and not t.get("hard"):
         import taps as T
         return [(n, x, y) for n, x, y, _, _ in T.density_taps(P, tn, control=False)]

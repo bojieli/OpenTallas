@@ -45,7 +45,8 @@ module ot_dp_clk_landing_ca #(
     // count later, armed ARM counts after that: armed by count max(K,0) + ARM + 2.  The default adds 2*DEPTH + 6 counts
     // of slack, so it never fires in the window (proven, fv_ca2 A_ALL); a lag below the window (no valid word is ever
     // consumed: never ready, previously no fault) now raises fault (fv_ca2 A_TMO).
-    parameter integer TIMEOUT  = (K > 0 ? K : 0) + ARM + 2 * DEPTH + 8
+    parameter integer TIMEOUT  = (K > 0 ? K : 0) + ARM + 2 * DEPTH + 8,
+    parameter bit CONTROL_STATUS_COPY = 0 // optional private status bank; same cycles
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -94,7 +95,8 @@ module ot_dp_clk_landing_ca #(
     localparam integer KTW = AW + 1 + 3;      // ring count width (LAPX = 3)
     localparam integer KNT = 1 << KTW;
     localparam integer KM  = ((K % KNT) + KNT) % KNT;
-    ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI)) u_ring (
+    ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY)) u_ring (
         .tclk(fclk), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .k_s(KTW'(KM)),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
@@ -130,7 +132,8 @@ module ot_dp_clk_landing_cas #(
     // of slack, so it never fires in the window (proven, fv_ca2 A_ALL); a lag below the window (no valid word is ever
     // consumed: never ready, previously no fault) now raises fault (fv_ca2 A_TMO).
     // strap form: K is any value of strap_k, so the timeout covers the largest, 2^KW - 1 (D4 91, D8 171 cycles)
-    parameter integer TIMEOUT  = (1 << ($clog2(DEPTH) + 4)) - 1 + ARM + 2 * DEPTH + 8
+    parameter integer TIMEOUT  = (1 << ($clog2(DEPTH) + 4)) - 1 + ARM + 2 * DEPTH + 8,
+    parameter bit CONTROL_STATUS_COPY = 0 // appended to preserve positional parameters
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -177,7 +180,8 @@ module ot_dp_clk_landing_cas #(
             fault_state <= fault_next;
         end
     end
-    ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI)) u_ring (
+    ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY)) u_ring (
         .tclk(fclk), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .k_s(strap_k),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
@@ -204,8 +208,9 @@ module ot_meso_ring_ca #(
     parameter int DEPTH    = 4,
     parameter int GUARD_LO = 0,
     parameter int GUARD_HI = 4,
-    parameter int LAPX     = 3      // extra lap-tag bits per slot: a consumed word from the wrong lap is caught for
+    parameter int LAPX     = 3,     // extra lap-tag bits per slot: a consumed word from the wrong lap is caught for
                                     // origin errors up to 2^(AW+1+LAPX) counts (the 1-bit lap aliases every 2*DEPTH)
+    parameter bit CONTROL_STATUS_COPY = 0
 ) (
     input  logic         tclk,
     input  logic         t_rst_n,
@@ -244,12 +249,38 @@ module ot_meso_ring_ca #(
     always_ff @(posedge tclk) begin
 `ifdef OT_MESO_CA_MUTANT_FREERUN
         tc <= tc + 1'b1;                                // MUTANT: old free-running writer (no count origin)
-        if (!t_rst_n) s_w <= '0; else s_w[tc[AW-1:0]] <= 1'b1;
+        if (!CONTROL_STATUS_COPY) begin
+            if (!t_rst_n) s_w <= '0; else s_w[tc[AW-1:0]] <= 1'b1;
+        end
 `else
-        if (!t_rst_n) begin tc <= '0; s_w <= '0; end
-        else begin tc <= tc + 1'b1; s_w[tc[AW-1:0]] <= 1'b1; end
+        if (!t_rst_n) begin tc <= '0; if (!CONTROL_STATUS_COPY) s_w <= '0; end
+        else begin tc <= tc + 1'b1; if (!CONTROL_STATUS_COPY) s_w[tc[AW-1:0]] <= 1'b1; end
 `endif
-        if (t_rst_n) begin s_lap[tc[AW-1:0]] <= tc[AW]; s_d[tc[AW-1:0]] <= t_d; end
+        if (t_rst_n) begin
+            if (!CONTROL_STATUS_COPY) s_lap[tc[AW-1:0]] <= tc[AW];
+            s_d[tc[AW-1:0]] <= t_d;
+        end
+    end
+
+    // Private valid/lap status drivers separate their control decode from the
+    // falling-edge guard bank. Same D/clock/reset as the original slot flags;
+    // no extra crossing or data cycle. Off by default pending physical proof.
+    wire [DEPTH-1:0] ctl_w, ctl_lap;
+    if (CONTROL_STATUS_COPY) begin : g_control_status_copy
+        // Both native banks expose directly kept register outputs. A kept
+        // alias through a frontend connection is insufficient for the canonical
+        // hook's one-cell driver selection; it allowed the lap banks to merge.
+        ot_meso_ca_status_copy #(.DEPTH(DEPTH)) u_guard_status (
+            .tclk(tclk), .t_rst_n(t_rst_n), .slot(tc[AW-1:0]),
+            .lap(tc[AW]), .written(s_w), .lap_q(s_lap)
+        );
+        ot_meso_ca_status_copy #(.DEPTH(DEPTH)) u_status (
+            .tclk(tclk), .t_rst_n(t_rst_n), .slot(tc[AW-1:0]),
+            .lap(tc[AW]), .written(ctl_w), .lap_q(ctl_lap)
+        );
+    end else begin : g_control_status_original
+        assign ctl_w = s_w;
+        assign ctl_lap = s_lap;
     end
 
     // ---------------- receive (rclk): rp = receiver count - K ----------------
@@ -259,8 +290,8 @@ module ot_meso_ring_ca #(
         if (!r_rst_n) begin rp <= RP0T; oh <= NS'(1) << RP0; end
         else begin rp <= rp + 1'b1; oh <= {oh[NS-2:0], oh[NS-1]}; end
     end
-    wire [NS-1:0] pos_v   = {s_w & s_lap, s_w & ~s_lap};
-    wire [NS-1:0] pos_lap = {s_lap, ~s_lap} | {~s_w, ~s_w};   // not yet written since start: no lap verdict
+    wire [NS-1:0] pos_v   = {ctl_w & ctl_lap, ctl_w & ~ctl_lap};
+    wire [NS-1:0] pos_lap = {ctl_lap, ~ctl_lap} | {~ctl_w, ~ctl_w};   // not yet written since start: no lap verdict
     function automatic logic [NS-1:0] rot(input logic [NS-1:0] x, input int k);
         for (int j = 0; j < NS; j++) rot[j] = x[(j - k + 2 * NS) % NS];
     endfunction
@@ -286,7 +317,7 @@ module ot_meso_ring_ca #(
         logic [LAPX-1:0] tag_c; logic w_c;
         always_comb begin
             tag_c = '0; w_c = 1'b0;
-            for (int i = 0; i < DEPTH; i++) if (oh[i] || oh[i + DEPTH]) begin tag_c = tag_c | s_tag[i]; w_c = w_c | s_w[i]; end
+            for (int i = 0; i < DEPTH; i++) if (oh[i] || oh[i + DEPTH]) begin tag_c = tag_c | s_tag[i]; w_c = w_c | ctl_w[i]; end
         end
 `ifdef OT_MESO_CA_MUTANT_NO_TAG
         assign r_lap_c = r_lap1_c;                                       // MUTANT: extended tag ignored
@@ -527,5 +558,25 @@ module ot_dp_landing_relay (
     always @(posedge clk) begin
         if (!rst_raw_n) q <= 1'b0;
         else q <= d;
+    end
+endmodule
+
+// Dedicated same-state slot status bank. The canonical keep-register hook
+// preserves these drivers and the explicitly kept original guard bank.
+(* keep_hierarchy, keep *)
+module ot_meso_ca_status_copy #(parameter int DEPTH=4) (
+    input logic tclk, t_rst_n,
+    input logic [$clog2(DEPTH)-1:0] slot,
+    input logic lap,
+    (* keep *) output logic [DEPTH-1:0] written,
+    (* keep *) output logic [DEPTH-1:0] lap_q
+);
+    always_ff @(posedge tclk) begin
+        if (!t_rst_n) written <= '0;
+        else written[slot] <= 1'b1;
+        if (t_rst_n) lap_q[slot] <= lap;
+`ifdef OT_MESO_CA_MUTANT_STATUS_COPY
+        written[0] <= 1'b0; // control: omit one slot's written status
+`endif
     end
 endmodule

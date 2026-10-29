@@ -24,6 +24,9 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 SKIP_DIR = re.compile(r"/(test|tests|tb|bench)/|/tb_[^/]*$|_tb\.s?v$")
+# Automatic recursive production discovery must not consume tool output pools.
+# Explicit file arguments or a root naming such a pool remain intentional inputs.
+AUTO_OUTPUT_DIRS = frozenset({"build", "obj_dir", ".cache", "coverage_probe", "merged_annotated"})
 MOD_RE = re.compile(r"^\s*(?:\(\*[^\n]*?\*\)\s*)?module\s+([A-Za-z_][A-Za-z0-9_$]*)", re.M)
 INST_RE = re.compile(r"(?<![.\w$`])([A-Za-z_][A-Za-z0-9_$]*)(?![A-Za-z0-9_$])(?=\s*(?:#\s*\(|[A-Za-z_\\`]))")  # filtered by the index
 YOSYS_IMAGE = os.environ.get("OT_BIND_YOSYS_IMAGE", "openroad/orfs:asap7lock")
@@ -48,9 +51,16 @@ def module_index(roots, files, base):
         if rp.is_file():
             paths.append(rp)
             continue
-        for p in sorted(list(rp.rglob("*.sv")) + list(rp.rglob("*.v"))):
-            if not SKIP_DIR.search(str(p)):
-                paths.append(p)
+        discovered = []
+        for directory, subdirs, names in os.walk(rp):
+            subdirs[:] = [d for d in subdirs if d not in AUTO_OUTPUT_DIRS]
+            for name in names:
+                p = Path(directory) / name
+                if p.suffix in (".sv", ".v") and not SKIP_DIR.search(str(p)):
+                    discovered.append(p)
+        # Preserve the original deterministic lexical duplicate ordering while
+        # pruning tool outputs before even enumerating their generated files.
+        paths += sorted(discovered)
     paths += [Path(f) if Path(f).is_absolute() else Path(base) / f for f in files]
     for p in paths:
         try:
@@ -114,7 +124,15 @@ def closure(names, idx, prefer):
 def pick(idx, name, prefer):
     """the one file whose definition of `name` is used: a `prefer` file wins (the later entry), else the only one;
     several candidates with no preference -> the first path that is not a black box (_bb.v), recorded as ambiguous."""
-    c = idx.get(name, [])
+    c = list(idx.get(name, []))
+    # A preferred concrete file is an explicit source, even when its parent is
+    # intentionally excluded from automatic production discovery. It must really
+    # define this module; arbitrary same-named generated duplicates never win.
+    existing = {Path(f).resolve() for f in c}
+    for p in prefer:
+        p = Path(p)
+        if p.is_file() and p.resolve() not in existing and module_body(p, name):
+            c.append(str(p)); existing.add(p.resolve())
     if not c:
         return None, False
     pr = [f for f in c if any(Path(f).resolve() == Path(p).resolve() for p in prefer)]

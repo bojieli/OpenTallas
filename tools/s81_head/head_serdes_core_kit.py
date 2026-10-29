@@ -91,6 +91,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--plan", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--root-count-split", type=int, nargs="?", const=1, default=0, choices=(0,1,2),
+                    help="0=original,1=halves,2=quarters; opt-in retiming requires its own physical qualification")
     ap.add_argument("rest", nargs="*")
     a = ap.parse_args()
     out = Path(a.out).resolve()
@@ -104,11 +106,11 @@ def main():
                 "--out", str(out), "--recipe-key", MODULE, "--face-shell", "off",
                 "--core-insertion", "none", "--sigmax", "M5"] + a.rest
     commit = subprocess.check_output(["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True).strip()
-    recipe = dict(top=MODULE, files=FILES, params={}, macros=[], source_commit=commit, read_at_commit=True,
+    recipe = dict(top=MODULE, files=FILES, params=({"ROOT_COUNT_SPLIT": a.root_count_split} if a.root_count_split else {}), macros=[], source_commit=commit, read_at_commit=True,
                   synth_memory_max_bits=10240,
                   source="HEAD SerDes existing KP4 Chien/Forney child; no latency change")
     profile = dict(source_commit=commit, family="HEAD_KP4_DCHN_NATIVE", added_face_cycles=0,
-                   qualification="UNROUTED_CANDIDATE", clock_ports=["clk"], reset_ports=["rst_n"],
+                   qualification="UNROUTED_CANDIDATE", root_count_split=a.root_count_split, clock_ports=["clk"], reset_ports=["rst_n"],
                    endpoint_contract=dict(kind="INTERNAL_CORE", partition_rule="R2_INTERNAL_TIMED_IN_PARTITION",
                                           parent_partition="hd_serdes", instance="u_phy.u_link.u_dec.u_chn",
                                           source="rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv"))

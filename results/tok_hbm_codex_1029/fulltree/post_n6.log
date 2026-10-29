@@ -1,0 +1,11 @@
+HNX_TREE q0 links pair 1 g1g0 7 g2g3 9 g0g3 12 hub 12 | pads n1 a2 n2L a14 n2R b18 n3 b20
+HNX_TREE q1 links pair 1 g1g0 9 g2g3 7 g0g3 12 hub 12 | pads n1 a2 n2L a18 n2R b14 n3 b28
+HNX_TREE q2 links pair 1 g1g0 7 g2g3 9 g0g3 12 hub 13 | pads n1 a2 n2L a14 n2R b18 n3 b20
+HNX_TREE q3 links pair 1 g1g0 7 g2g3 9 g0g3 11 hub 12 | pads n1 a2 n2L a14 n2R b18 n3 b18
+HNX_TREE E=2 hub pads t4a 4 t4b 4 t5 2 | scalar round trip 113 (wsc 115), chunk 138, MUT=0
+HNX_FUSED_CYCLES op=post N=6 rgap=24 KX=4 MUT=0 cycles=1016 done=1 fault=0 reads=19218 writes=15360
+HNX_FUSED PASS op=post N=6 words=122880
+- rtl/hbm_next/fused/tb/tb_hnx_fused_tree.sv:80: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 927ns; walltime 14.632 s; speed 63.334 ns/s
+- Verilator: cpu 14.631 s on 1 threads; allocated 222 MB

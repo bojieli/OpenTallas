@@ -683,3 +683,22 @@ def test_start_stage_taps_form_no_intra_pairs():
     assert cov["start_stage_taps_no_pairs"] == 3 and cov["partitions_with_taps"] == 1
     _, cov0 = R.build_pairs({"ports": []}, {k: v for k, v in taps.items() if v["part"]})
     assert "start_stage_taps_no_pairs" not in cov0
+
+
+def test_source_root_is_not_an_implicit_droop_region(monkeypatch):
+    taps, meta = _ocv_taps()
+    for tap in taps.values():
+        tap.update(cppr_node='__source__', tree_path='__source__', clock_source_root=True)
+    for field in ('node_stages', 'node_late_ps', 'node_early_ps'):
+        meta[field]['__source__'] = 0
+    meta['node_xy_um']['__source__'] = None
+    monkeypatch.setattr(R, 'CPPR_LCA', True)
+    base = R.clock_ocv_fn('table', 'shared', meta, taps, 250.0)
+    empty = R.clock_ocv_fn('table', 'shared', meta, taps, 250.0, region={})
+    partial = R.clock_ocv_fn('table', 'shared', meta, taps, 250.0, region={'a': 'mesh:0'})
+    explicit = R.clock_ocv_fn('table', 'shared', meta, taps, 250.0,
+                            region={'a': 'mesh:0', 'b': 'mesh:0'})
+    assert empty('a', 'b', 'hold') == base('a', 'b', 'hold')
+    assert partial('a', 'b', 'hold') == base('a', 'b', 'hold')
+    # A separately provided physical PDN-region binding may legitimately establish shared droop.
+    assert explicit('a', 'b', 'hold') < base('a', 'b', 'hold')

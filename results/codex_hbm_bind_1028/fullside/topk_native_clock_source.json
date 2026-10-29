@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.hbm.native_clock_source.v1",
+  "source": "/srv/opentallas-scratch/claude/codex-hbm-bind-1028/hbm_top_host30_cfg_np4.sv",
+  "sha256": "c0eadd4c5f5fb9cdba414d72ac7ba149fbc5700e8017f62e47b52ab173efc4aa",
+  "instance": "hb_idx__link",
+  "module": "ot_hbm_idx_topk_link_static",
+  "connections": {
+    "clk": "hb_ckgen__pll_stream[0:0]",
+    "clk_mem": "{hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0], hb_ckgen__pll_stream[0:0]}",
+    "rst_n": "hb_ckgen__por_stream[0:0]",
+    "clear": "hb_idx__ctl__link_clear[0:0]",
+    "ingest_v": "hb_idx__ctl__ingest_v[0:0]",
+    "selected_line": "hb_idx__selector__selected_line[2367:0]",
+    "flush": "hb_idx__ctl__link_flush[0:0]",
+    "emit_v": "hb_idx__ctl__link_emit[0:0]",
+    "emit_group": "hb_idx__ctl__link_group[3:0]",
+    "rank": "col_idx__prm[74:67]",
+    "gbase": "col_idx__prm[51:44]",
+    "tx_v": "hb_idx__link__tx_v[3:0]",
+    "tx": "hb_idx__link__tx[2179:0]",
+    "fault": "hb_idx__link__fault[0:0]",
+    "selected_count": "hb_idx__link__selected_count[9:0]"
+  },
+  "clock_equality": true,
+  "clock_mem_bits": 8,
+  "note": "Direct native source equality only; current emitted bind/clock tree not qualified here"
+}

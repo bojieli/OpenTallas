@@ -210,6 +210,8 @@ def pair_node(A, B):
     --cppr-lca (opt-in, PATH-S81-PD6): taps carry 'tree_path' (root 'h' + one child-index char per tree level, so a
     prefix is an ancestor); the node is the longest common prefix = the true last common tree node (12.4b), which for
     cross-region pairs is the H-tree node above both region roots instead of the die root."""
+    if A.get("clock_source_root") or B.get("clock_source_root"):
+        return "__source__"  # actual tree input precedes the root output cell: no common cell credit
     if A["cppr_node"] == "m" and B["cppr_node"] == "m":
         return "m"     # both taps re-referenced to the signed mesh (--mesh-signoff)
     if CPPR_LCA and "tree_path" in A and "tree_path" in B:
@@ -949,6 +951,7 @@ def virtual_tap(meta, taps, path, leg, fleg=None):
     FLOW-ONEMODEL-1: fall arrival = measured node fall arrival + fall leg (tap_leg_fall) when the proof has both,
     else none (a fall sample on that flop then fails closed)."""
     k = f"__st__{path}"
+    path = path.split("@", 1)[0]  # source-specific retime flops share a node, not a physical clock pin
     if k not in taps:
         taps[k] = dict(port=k, part=None, cppr_node="h", tree_path=path,
                        late_ps=float(meta["node_late_ps"][path]) + leg[0],
@@ -975,7 +978,7 @@ def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None,
     for pid, c in sorted(bind.get("start_ports", {}).items()):
         ends = []
         for k in (c["launch"], c["capture"]):
-            if k and k.startswith("__st__") and meta is not None and k[6:] in meta.get("node_late_ps", {}):
+            if k and k.startswith("__st__") and meta is not None and k[6:].split("@", 1)[0] in meta.get("node_late_ps", {}):
                 if leg is None:
                     real = {q: t for q, t in taps.items() if not q.startswith("__st__")}
                     leg, fleg = tap_leg(meta, real), tap_leg_fall(meta, real)
@@ -1509,7 +1512,7 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
     nB = max(1, round(core_lat / B["mu_stage_ps"]))
 
     def branch(r, node, late):
-        own = (r.get("abs_late_ps", r["late_ps"]) if late else r.get("abs_early_ps", r["early_ps"])) if node == "h" \
+        own = (r.get("abs_late_ps", r["late_ps"]) if late else r.get("abs_early_ps", r["early_ps"])) if node in ("h", "__source__") \
             else (r["late_ps"] if late else r["early_ps"])
         arr = own - float(meta["node_late_ps" if late else "node_early_ps"][node])
         return dict(cell_ps=fc * arr + B["cell_share"] * core_lat, net_ps=(1 - fc) * arr + (1 - B["cell_share"]) * core_lat,
@@ -1518,10 +1521,12 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
     def fn(a, b, check):
         A_, B_ = taps[a], taps[b]
         node = pair_node(A_, B_)
-        same = (A_["cppr_node"] == B_["cppr_node"]) if CPPR_LCA else node != "h"   # droop shared = same region
+        same = (A_["cppr_node"] == B_["cppr_node"]) if CPPR_LCA else node not in ("h", "__source__")   # droop shared = same region
+        if node == "__source__":
+            same = False
         if region is not None:
-            ra = region.get(a, A_["cppr_node"] if A_["cppr_node"] != "h" else None)
-            rb = region.get(b, B_["cppr_node"] if B_["cppr_node"] != "h" else None)
+            ra = region.get(a, A_["cppr_node"] if A_["cppr_node"] not in ("h", "__source__") else None)
+            rb = region.get(b, B_["cppr_node"] if B_["cppr_node"] not in ("h", "__source__") else None)
             same = ra is not None and ra == rb
         nxy = meta["node_xy_um"][node]
         pts = [A_["xy_um"], B_["xy_um"]] + ([nxy] if nxy is not None else [])

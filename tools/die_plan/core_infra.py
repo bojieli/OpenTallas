@@ -346,6 +346,39 @@ def compile_slice(sl, kd=None):
             if group not in ("register", "macro"):
                 raise InfraError(f"{n}: unknown load_class {group!r}")
             counts.setdefault(group, []).append(len(sinks))
+        # A signed hard core can already contain its complete clock tree. Its
+        # explicitly declared early feed stays on the original root while the
+        # surrounding standard-cell tree is rebuilt. It remains in the runtime
+        # source-sink census and final STA; it is not a same-depth FF leaf.
+        preserved = []
+        for item in tree.get("preserved_hard_clocks", []):
+            if not isinstance(item, dict):
+                raise InfraError("preserved hard clock must be an explicit object")
+            pin, master = item.get("pin"), item.get("master")
+            if not isinstance(pin, str) or "/" not in pin or not all(pin.rsplit("/", 1)):
+                raise InfraError("preserved hard clock needs an explicit instance/pin")
+            word(pin)
+            if not isinstance(master, str) or not master:
+                raise InfraError(f"preserved hard clock {pin}: explicit master required")
+            word(master)
+            if pin in used:
+                raise InfraError(f"clock sink assigned twice: {pin}")
+            used.add(pin)
+            latency = item.get("signed_latency_ps", {})
+            if not isinstance(latency, dict) or set(latency) != {"TT", "FF"}:
+                raise InfraError(f"preserved hard clock {pin}: signed TT/FF latency required")
+            for corner, span in latency.items():
+                if not isinstance(span, dict) or set(span) != {"min", "max"}:
+                    raise InfraError(f"preserved hard clock {pin}: {corner} needs min/max latency")
+                values = [span[k] for k in ("min", "max")]
+                if any(not isinstance(v, (int, float)) or isinstance(v, bool) or
+                       not math.isfinite(v) or v <= 0 for v in values) or values[0] > values[1]:
+                    raise InfraError(f"preserved hard clock {pin}: invalid signed {corner} latency")
+            if not isinstance(item.get("signed_view"), str) or not item["signed_view"].strip():
+                raise InfraError(f"preserved hard clock {pin}: signed view receipt required")
+            preserved.append(dict(item))
+        if preserved:
+            tree["preserved_hard_clocks"] = preserved
         if gate_names - planned - domains:
             raise InfraError(f"planned clock gates without a gated_domain leaf: {sorted(gate_names - planned - domains)}")
         for g in gates:
@@ -612,6 +645,8 @@ def emit_tcl(sl, kd=None):
                 lines.append(f"ot_ci_tree_sink {word(leaf['node'])} {word(s)}")
             if leaf.get("cts_open"):
                 lines.append(f"ot_ci_tree_open {word(leaf['node'])}")
+        for hard in t.get("preserved_hard_clocks", []):
+            lines.append(f"ot_ci_tree_preserve_hard {word(t['clock_port'])} {word(hard['pin'])} {word(hard['master'])}")
         lines.append("ot_ci_tree_finish")
         if any("clone_of" in g for g in t.get("gates", [])):
             # the copies exist only after this hook: the kit LEC must run on this netlist (lec.py --netlist)

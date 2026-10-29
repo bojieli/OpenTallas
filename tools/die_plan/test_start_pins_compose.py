@@ -144,3 +144,20 @@ def test_strap_root_copy_start_pin_takes_its_own_launch_wire_not_a_literal():
                instances={q: {sp: dict(width=w, value=v, kind="count_strap") for sp, (w, v) in ps.items()}
                           for q, ps in c.strap_expected().items()})
     assert STR.audit_top_ties(tt, man, {"b_mod": "B"})["verdict"] == "PASS"
+
+
+def test_reset_wave_exports_registered_local_parent_reset():
+    p,t=start_vehicle(stage=True)
+    t['count_aligned']['start_reset_wave']=True
+    p['partition_types']['A']['buses'].append(pin('cland_raw_reset_out','out'))
+    d=start_pins(p,t['count_aligned'])
+    assert d['reset_inputs']==[dict(src_part='a',region='r0',net='rraw_r0')]
+    c=Landings(p,t)
+    aa=c.type_rtl('A',A_BODY);c.type_rtl('B',B_BODY)
+    assert 'output wire cland_raw_reset_out' in aa
+    assert 'always @(posedge clk) cland_raw_reset_q <=' in aa
+    tt=c.top_rtl(TOP)
+    assert 'output wire rraw_r0;' in tt and 'assign rraw_r0 = clock_landing_raw_reset_a;' in tt
+    assert '.cland_raw_reset_out(clock_landing_raw_reset_a)' in tt
+    p,t=start_vehicle(stage=True)
+    assert 'reset_inputs' not in start_pins(p,t['count_aligned'])  # default untouched

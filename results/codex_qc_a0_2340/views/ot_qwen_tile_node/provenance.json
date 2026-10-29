@@ -82,7 +82,7 @@
  "views_status": "signoff",
  "src": "/srv/opentallas-scratch2/claude/codex-qc-a0-2340/node_finalff",
  "src_commit": "d9716851c",
- "flow_tag": null,
+ "flow_tag": "flow-20261029-c-qc",
  "autopilot_id": null,
  "export": {
   "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
@@ -103,5 +103,12 @@
    "ot_qwen_tile_node_tt.lib": "ebfd470cb11555215eec8d694252d332f6ed3285cdd30a682c36311e9d08871b",
    "pins.json": "206607ab5a9394ed850869e35bf186440589d0ab5bdc8464e388e65fe755f4a4"
   }
+ },
+ "flow_release": {
+  "tag_source": "d9716851c667eb0a09ea34b440a61aee4e4caae6",
+  "basis": "Exact-source qwen_compute_d9716851c_1029_023141_904597 canonical regression NO-REGRESSION (absolute design failure retained); FLOW-CANARY-1 02:43",
+  "signoff_unchanged": true,
+  "routed_lec_unchanged": true,
+  "physical_rebuild": false
  }
 }

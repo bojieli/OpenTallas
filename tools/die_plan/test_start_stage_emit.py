@@ -216,3 +216,202 @@ def test_explicit_die_trial_base36_path_labels():
         E.path_id('h0a')
     with pytest.raises(E.StageError):
         E.path_id('hA', 'base36')
+
+
+def test_source_specific_retime_stages_keep_distinct_physical_pins(tmp_path):
+    import copy
+    b = _bind()
+    old = f'st:{P_L}'
+    new = old + '@origin2'
+    b['regions'][new] = dict(b['regions'][old], tree_port=f'start:st:{P_ROOT}->{new}')
+    b['start_ports'][b['regions'][new]['tree_port']] = dict(src=f'st:{P_ROOT}', dst=new,
+                                                           launch_part=None, capture_part=None)
+    v, t = _tree()
+    doc, sv, _, _ = E.emit(b, _meta(), v, t)
+    a, c = [next(x for x in doc['stages'] if x['region'] == n) for n in (old, new)]
+    assert a['node_cell'] == c['node_cell'] and a['clock_net'] == c['clock_net']
+    assert a['id'] != c['id'] and a['clock_port'] != c['clock_port']
+    assert a['rect_um'] != c['rect_um']
+    src = tmp_path/'src'
+    src.mkdir()
+    (src/'tap_arrivals_TT.json').write_text(json.dumps(_meta()))
+    arr = tmp_path/'arr'
+    arr.write_text(''.join(f"T {s['clock_port']} {100+i} {90+i}\nF {s['clock_port']} {110+i} {95+i}\n"
+                           for i,s in enumerate(doc['stages'])))
+    E.proof_with_stages(src, doc, {'TT':str(arr)}, tmp_path/'out')
+    ts = {x['port']:x for x in json.loads((tmp_path/'out/tap_arrivals_TT.json').read_text())['taps']}
+    aa, cc = ts[f'__st__{P_L}'], ts[f'__st__{P_L}@origin2']
+    assert aa['tree_path'] == cc['tree_path'] == P_L
+    assert aa['late_ps'] != cc['late_ps'] and aa['xy_um'] != cc['xy_um']
+def test_real_partition_root_drives_virtual_stages_without_duplicate_counter():
+    b = _bind()
+    root = f"st:{P_ROOT}"
+    b["regions"]["hub_C"] = b["regions"].pop(root)
+    b["regions"]["hub_C"]["virtual"] = False
+    b["root"] = "hub_C"
+    for r in b["regions"].values():
+        if r.get("parent") == root:
+            r["parent"] = "hub_C"
+    for c in b["start_ports"].values():
+        if c["src"] == root:
+            c["src"] = "hub_C"
+    v, t = _tree()
+    doc, sv, _, _ = E.emit(b, _meta(), v, t)
+    assert doc["counts"]["stages"] == 1
+    assert all(not r["root"] for r in doc["stages"])
+    assert "ot_dp_landing_root #" not in sv
+    assert "input  wire rs_hub_C" in sv and ".p_start(rs_hub_C)" in sv
+    assert {r["net"] for r in doc["die_inputs"]} == {"rs_hub_C"}
+    for invalid in ({}, {"virtual": True, "parent": None}, {"virtual": False, "parent": "other"}):
+        b["regions"]["hub_C"] = invalid
+        with pytest.raises(E.StageError):
+            E.emit(b, _meta(), v, t)
+
+
+def _real_root_bind():
+    b = _bind()
+    root = f'st:{P_ROOT}'
+    b['root'] = 'hub_C'
+    b['regions']['hub_C'] = dict(b['regions'].pop(root), virtual=False)
+    for r in b['regions'].values():
+        if r.get('parent') == root:r['parent'] = 'hub_C'
+    for e in b['start_ports'].values():
+        if e['src'] == root:e.update(src='hub_C', launch_part='hub_C')
+    return b
+
+
+def test_bounded_reset_removes_global_star_and_counts_ordinary_relays():
+    v,t = _tree()
+    d,sv,*_ = E.emit(_real_root_bind(), _meta(),v,t,reset_wave=True)
+    assert 'input  wire rst_raw_n' not in sv
+    assert 'input  wire rraw_hub_C' in sv and '.rst_raw_n(st_b2_rraw)' in sv
+    assert d['counts']['flops'] == 9  # original 3+PAD2+fall1, reset2+fall1
+    assert d['stages'][0]['reset_flops'] == 3
+    assert 'async_reg' not in sv and 'negedge rst' not in sv
+    assert d['reset_inputs'] == [dict(region='hub_C',part='hub_C',net='rraw_hub_C')]
+    d,sv,*_ = E.emit(_bind(),_meta(),v,t,reset_wave=True)
+    assert sv.count('.rst_raw_n(rst_raw_n)') == 1  # virtual root only, no global reset star
+    assert '.rst_raw_n(st_b2_rraw)' in sv
+
+
+def test_bounded_reset_cold_warm_protocol_and_bad_parent_control(tmp_path):
+    import subprocess,shutil
+    iv=shutil.which('iverilog')
+    if iv is None:pytest.skip('iverilog not installed')
+    v,t=_tree();b=_real_root_bind()
+    _,ref,*_=E.emit(b,_meta(),v,t)
+    _,wave,*_=E.emit(b,_meta(),v,t,reset_wave=True)
+    ref=ref.replace('module ot_die_start_stages','module reference_stages')
+    # Root uses its delivered synchronous reset, START settle 8 edges. Assert is
+    # held 12 edges for cold and warm reset: longer than the 3-edge relay+PAD flush.
+    tb='''module tb;
+reg clk=0, raw=0;reg parent_raw=0;wire parent_start,a,g;
+integer compares=0,errors=0;
+always #5 clk=~clk;
+always @(posedge clk) parent_raw<=raw;
+ot_dp_landing_root #(.SETTLE(8)) root(.clk(clk),.rst_raw_n(parent_raw),.start(parent_start));
+reference_stages ref0(.rst_raw_n(parent_raw),.t_st_b2__clk(clk),.rs_hub_C(parent_start),.pst_a(g));
+ot_die_start_stages dut(.rraw_hub_C(parent_raw),.t_st_b2__clk(clk),.rs_hub_C(parent_start),.pst_a(a));
+always @(posedge clk) begin #1;if(raw)begin compares=compares+1;if(a!==g)errors=errors+1;end end
+initial begin repeat(12)@(negedge clk);raw=1;repeat(60)@(negedge clk);raw=0;
+repeat(12)@(negedge clk);raw=1;repeat(60)@(negedge clk);
+$display("COMPARES %0d ERRORS %0d",compares,errors);if(errors)$fatal(1,"mismatch");$finish;end
+endmodule\n'''
+    common=Path(__file__).resolve().parents[2]/'rtl/common/ot_dp_clk_landing_ca.sv'
+    (tmp_path/'ref.sv').write_text(ref);(tmp_path/'tb.sv').write_text(tb)
+    results=[]
+    for mutant in (False,True):
+        # A wrong parent contract feeds START in place of delivered reset. It
+        # releases the local reset late and changes the first valid start edge.
+        candidate=wave.replace('.d(rraw_hub_C)', '.d(rs_hub_C)') if mutant else wave
+        (tmp_path/'dut.sv').write_text(candidate)
+        p=subprocess.run([iv,'-g2012','-s','tb','-o',str(tmp_path/'sim'),str(common),str(tmp_path/'ref.sv'),str(tmp_path/'dut.sv'),str(tmp_path/'tb.sv')],capture_output=True,text=True)
+        assert p.returncode==0,p.stderr
+        q=subprocess.run(['vvp',str(tmp_path/'sim')],capture_output=True,text=True)
+        results.append(q)
+    assert results[0].returncode==0,results[0].stdout+results[0].stderr
+    assert results[1].returncode!=0 and 'mismatch' in results[1].stdout
+
+
+def test_virtual_root_reset_cold_warm_phase_coupon_and_undriven_control(tmp_path):
+    import subprocess,shutil
+    iv=shutil.which('iverilog')
+    if iv is None:pytest.skip('iverilog not installed')
+    v,t=_tree();b=_bind()
+    _,ref,*_=E.emit(b,_meta(),v,t,root_settle=8)
+    doc,wave,*_=E.emit(b,_meta(),v,t,root_settle=8,reset_wave=True)
+    assert 'wire st_b1_rraw = rst_raw_n;' in wave
+    assert next(s for s in doc['stages'] if s['root'])['reset_output']=='st_b1_rraw'
+    ref=ref.replace('module ot_die_start_stages','module reference_stages')
+    common=Path(__file__).resolve().parents[2]/'rtl/common/ot_dp_clk_landing_ca.sv'
+    (tmp_path/'ref.sv').write_text('`default_nettype none\n'+ref)
+    for phase in (0,2,4,7):
+        tb=f'''module tb;
+reg clk=0,child=0,raw=0; wire a,b,ga,gb; integer errors=0,compares=0;
+always #5 clk=~clk;
+initial begin #{phase};forever #5 child=~child;end
+reference_stages ref0(.rst_raw_n(raw),.t_st_b1__clk(clk),.t_st_b2__clk(child),.pst_a(ga),.pst_b(gb));
+ot_die_start_stages dut(.rst_raw_n(raw),.t_st_b1__clk(clk),.t_st_b2__clk(child),.pst_a(a),.pst_b(b));
+always @(posedge child) begin #1;if(raw)begin compares=compares+1;if(a!==ga || b!==gb)errors=errors+1;end end
+initial begin repeat(12)@(negedge clk);raw=1;repeat(60)@(negedge clk);raw=0;
+repeat(12)@(negedge clk);raw=1;repeat(60)@(negedge clk);
+$display("COMPARES %0d ERRORS %0d",compares,errors);if(errors)$fatal(1,"mismatch");$finish;end
+endmodule\n'''
+        (tmp_path/'tb.sv').write_text(tb)
+        for mutant in ('nominal','missing_alias','wrong_parent'):
+            candidate=wave
+            if mutant=='missing_alias':candidate=candidate.replace('wire st_b1_rraw = rst_raw_n;','')
+            if mutant=='wrong_parent':candidate=candidate.replace('.d(st_b1_rraw)', '.d(st_b1_start)')
+            (tmp_path/'dut.sv').write_text('`default_nettype none\n'+candidate)
+            p=subprocess.run([iv,'-g2012','-Wimplicit','-s','tb','-o',str(tmp_path/'sim'),str(common),str(tmp_path/'ref.sv'),str(tmp_path/'dut.sv'),str(tmp_path/'tb.sv')],capture_output=True,text=True)
+            if mutant=='missing_alias':
+                assert p.returncode!=0 and 'st_b1_rraw' in p.stderr
+                continue
+            assert p.returncode==0,p.stderr
+            assert 'implicit' not in p.stderr.lower(),p.stderr
+            q=subprocess.run(['vvp',str(tmp_path/'sim')],capture_output=True,text=True)
+            if mutant=='nominal':assert q.returncode==0,q.stdout+q.stderr
+            else:assert q.returncode!=0 and 'mismatch' in q.stdout
+
+
+def test_actual_clock_driver_path_and_root_input_have_no_extra_inv_credit(tmp_path, monkeypatch):
+    v, t = _tree('INVx1_ASAP7_75t_R')
+    b = _bind()
+    b['regions']['st:h'] = dict(parent=None, virtual=True, pad=0, edge_fall=False)
+    # Keep a single virtual root; make the old root its child.
+    b['regions'][f'st:{P_ROOT}']['parent'] = 'st:h'
+    b['start_ports']['root_to_child'] = dict(src='st:h', dst=f'st:{P_ROOT}')
+    doc, *_ = E.emit(b, _meta(), v, t)
+    stages = {s['region']: s for s in doc['stages']}
+    assert stages['st:h']['clock_source_path'] == '__source__'
+    assert stages['st:h']['clock_source_stages'] == 0
+    assert stages[f'st:{P_ROOT}']['clock_source_path'] == P_ROOT  # two inversions: Y
+    assert stages[f'st:{P_L}']['clock_source_path'] == P_ROOT  # three inversions: A, driven by b1
+    assert stages[f'st:{P_L}']['node_cell'] == 'b2'  # physical identity stays at b2
+    pr = tmp_path/'p'; pr.mkdir()
+    (pr/'tap_arrivals_TT.json').write_text(json.dumps(_meta()))
+    arr = tmp_path/'arr'
+    arr.write_text(''.join(f"T {s['clock_port']} 60 50\n" for s in doc['stages']))
+    meta, taps = DSR.load_taps(E.proof_with_stages(pr, doc, {'TT': arr}, tmp_path/'out'), 'TT')
+    root, a, y = (taps['__st__'+x] for x in ('h', P_L, P_ROOT))
+    monkeypatch.setattr(DSR, 'CPPR_LCA', True)
+    assert a['tree_path'] == P_ROOT and a['stages_from_root'] == 2
+    assert DSR.pair_node(a, y) == P_ROOT
+    assert DSR.pair_node(root, a) == '__source__'
+    assert meta['node_stages']['__source__'] == 0
+    assert meta['cppr_node_range_ps']['__source__'] == 0
+    # Mutant source path would improperly credit b2 and an extra clock stage.
+    assert a['tree_path'] != P_L and a['stages_from_root'] != 3
+    legacy = json.loads(json.dumps(doc))
+    for s in legacy['stages']:
+        s.pop('clock_source_path')
+    with pytest.raises(E.StageError, match='re-emit'):
+        E.proof_with_stages(pr, legacy, {'TT': arr}, tmp_path/'legacy')
+
+
+def test_node_cell_region_alias_is_not_a_second_clock_path():
+    v, t = _tree('INVx1_ASAP7_75t_R')
+    meta = _meta()
+    meta['node_cell']['hub_C'] = 'b0'
+    doc, *_ = E.emit(_bind(), meta, v, t)
+    assert next(s for s in doc['stages'] if s['node_cell'] == 'b2')['clock_source_path'] == P_ROOT

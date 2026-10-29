@@ -742,6 +742,14 @@ def _ms():
     return m
 
 
+def plan_pin_sites(pins, outline, spec):
+    """Only explicitly declared clock pins may use an interior clock entry."""
+    sys.path.insert(0, str(REPO / "tools/die_plan"))
+    import core_pin_sites_gate
+    declared = tuple(dict.fromkeys([spec["clock_port"]] + list(spec.get("clock_ports") or [])))
+    return core_pin_sites_gate.check_pins(pins, *outline, interior_ok=declared)
+
+
 def clock_roots(spec):
     """clock-root port BASES of a kit spec (clock_port + clock_ports[], bus bits folded: xk[0..3] -> xk), clock_port
     first.  S81-CORE-LAT-R14 10-27: the face_guard skip set must name EVERY clock root, not only clock_port (the
@@ -1034,9 +1042,8 @@ def main():
     pins = hc["pins"] if "pins" in hc else json.load(open(S81 / hc["pins_file"]))["pins"]
     # S81-CORE-LAT-R6 10-26 (COORD RULING 15:12): the plan pin table must have no stacked / duplicate pin sites (l0r r3rt22
     # GRT-0080 abort on 255 stacked W-face pins) -- refuse the kit, fix the PLAN pin assignment.
-    sys.path.insert(0, str(REPO / "tools/die_plan"))
-    import core_pin_sites_gate
-    _pg = core_pin_sites_gate.check_pins(pins, *hc["outline_um"])
+    _pg = plan_pin_sites(pins, hc["outline_um"], spec)
+    import core_pin_sites_gate  # also used by the explicit slice-entry geometry check below
     if _pg["verdict"] != "PASS":
         raise SystemExit(pin_gate_refusal(a.module, _pg))
     dirs = lef_dirs(REPO / hc["lef"])
@@ -1292,7 +1299,17 @@ def main():
                                         + "".join(f"pair {i_} {o_}\n" for i_, o_ in pairs))
     # typed boundary roles (signoff.py boundary_controls): the clock / reset buses only, never a data pin
     roles = {**{b: "clk" for b in rootb}, **{r: "reset" for r in rsb}}
-    (kd / "core.json").write_text(json.dumps(dict(module=mod, plan_type=ptype, boundary_role=roles), indent=1) + "\n")
+    # These kits harden natural cores. Their measured insertion is published to the
+    # parent; the 250-ps partition-tap target is not an intrinsic core target.
+    # Omitting this established contract makes signoff rebind the FF IO clock to
+    # the core mean although hold repair used the declared FF reference.
+    clock_contract = dict(
+        kind="hard_core_latency", ruling="COORD 10-24",
+        target_applies_at="parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+        measured_in="KIT/signoff/signoff.json core_latency; views <module>.core.json")
+    (kd / "core.json").write_text(json.dumps(dict(
+        module=mod, plan_type=ptype, boundary_role=roles,
+        clock_contract=clock_contract), indent=1) + "\n")
     (kd / "boundary_guard_context.json").write_text(json.dumps(dict(
         schema="opentallas.core_boundary_guard_context.v1", source_core_json="core.json", clock_ports=list(rootb),
         unused_clock_ports=[], reset_ports=rsb, data_pin_exemptions=[]), indent=1) + "\n")
