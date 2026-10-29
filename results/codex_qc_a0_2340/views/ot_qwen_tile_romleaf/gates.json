@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.autopilot.gates.v1",
+ "id": "f6f8b3444406",
+ "die": "qwen_compute",
+ "type": "ot_qwen_tile_romleaf",
+ "src": "claude/qc-a0-kits-7-1028@02a7e51649",
+ "geom": "PASS-COND GEOM-REVIEW [AUTO-GEOM f6f8b3444406] 10-28 21:06",
+ "preflight": "PASS (kit_preflight before runner)",
+ "signoff": "SIGNED",
+ "signoff_record": "/srv/opentallas-scratch2/claude/qc-a0-kits-7-1028/romleaf/kits/ot_qwen_tile_romleaf_a0k7s/signoff/signoff.json",
+ "tt_wns_ps": 147.74,
+ "ff_wns_ps": 3.8,
+ "gates": {
+  "setup_tt": "PASS",
+  "hold_ff": "PASS",
+  "drv": "PASS",
+  "clock": "PASS",
+  "drc": "PASS",
+  "antenna": "PASS",
+  "pg": "PASS",
+  "routed_lec": "PASS"
+ },
+ "routed_lec": "EQUIVALENT",
+ "routed_lec_all_shown": true,
+ "routed_lec_record": "/srv/opentallas-scratch2/claude/qc-a0-kits-7-1028/romleaf/kits/ot_qwen_tile_romleaf_a0k7s/lec_routed_autopilot_1793247886534761721/lec.json",
+ "lec_tool": "/srv/opentallas-scratch2/claude/autopilot/admission_tools/dd4776cbf26fef381db0/die_plan/lec.py",
+ "admission_tools_sha256": "dd4776cbf26fef381db07e5501a96caef5b1493d1e637fb5deba08892a38e367",
+ "view_complete": true,
+ "view_problems": []
+}

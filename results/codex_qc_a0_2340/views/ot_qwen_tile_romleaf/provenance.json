@@ -1,0 +1,91 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "ot_qwen_tile_romleaf_a0k7s",
+  "module": "ot_qwen_tile_romleaf",
+  "plan_type": "a0_child:qfd_tile_nk_a0c+qfd_tile_nl_a0c",
+  "outline_um": [
+   172.8,
+   110.16
+  ],
+  "ref_tile": "physical/ref_tile/ot_qwen_tile_romleaf",
+  "spec": "physical/ref_tile/ot_qwen_tile_romleaf/spec.json",
+  "spec_sha256": "440b50c31d6cdbd815d1eba1af033ec6ea235294df70fa851b6ffddd2efd3119",
+  "pins_file": "plan_pins.json",
+  "pins_sha256": "0fb32a97fc294b383b35779b70f955a1c3a7e3df436c9785e247d8da6e7242e6",
+  "pins": 528,
+  "plan_lef": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf.lef",
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "ba9c43fd1f37e98937d0b9eb070029e9f01bc468ad2e7fb1963039367c80ad04",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "12.3 common core latency 250 TT / 202.5 FF kit frame (preflight corner_modes/ff_binding); parent A0 early tap absorbs the centre-entry trunk (QC-A0-KITS-2 est, UNCHECKED)",
+   "ff": "12.3 common core latency 250 TT / 202.5 FF kit frame (preflight corner_modes/ff_binding); parent A0 early tap absorbs the centre-entry trunk (QC-A0-KITS-2 est, UNCHECKED)"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 60.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "6906046c2c",
+  "sdc_lint_sha256": "aaf0002b018df3a74214410026cc649523f31ce641e8c93914931de763ec9150",
+  "face_guard_sha256": "e48fa41c7deec78347ca137716d8576b39fe184aae0844354d2252d99c1a192c",
+  "signoff_sha256": "e72cc7c120bbddf384d79f8ab20ff3bb15abbf55bba5a5dc66c9d80880ecdfd0",
+  "macros": {
+   "ot_rom_4096x266_m8": [
+    [
+     25.488,
+     23.76,
+     "R0"
+    ]
+   ]
+  },
+  "sram_pincol_halo": [],
+  "rtl_patches": [],
+  "kit_hash": "3fa0e62e4b30a2c5",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5
+  },
+  "master_plan": {
+   "slice_sha256": "b2b3ccdeb4dc527fe04b904dcb43d9c44c52f4504443e5b29dde226b905219bd",
+   "master_plan_sha256": "54a1aeb5065d061a14e15a838e491b5f24975530a655e1c3eafb99f22ace4e9f",
+   "type": "ot_qwen_tile_romleaf",
+   "frozen": false
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 25.0,
+   "in_min_ps": 0.0,
+   "out_min_ps": -25.0,
+   "basis": "shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold"
+  },
+  "pins_contract_lef": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf.lef",
+  "pins_contract_lef_sha256": "f6da1ea46433d2f1f7ae52cf76a1098ecc366070d5f93c3a5a886d5750fe4e37",
+  "pins_canon_sha256": "2f4bafc90bf2523a87dfb1b62cdc7a61701888462a296661fd38c761f410e4b6",
+  "pins_placed_canon_sha256": "4f770d961613ad89adaf315c7de7910eb3849d2e9679917a41d1456a8e322edd",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (autopilot: signoff.py + routed LEC EQUIVALENT all_shown)",
+ "views_status": "signoff",
+ "src": "claude/qc-a0-kits-7-1028@02a7e51649",
+ "src_commit": "02a7e516497a838ca34f3266dd34711548104b20",
+ "flow_tag": "",
+ "autopilot_id": "f6f8b3444406"
+}

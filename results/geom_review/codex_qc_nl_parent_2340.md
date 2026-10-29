@@ -1,0 +1,5 @@
+# A0 NL parent: trial placement review
+
+Viewed results/codex_qc_a0_2340/nl_parent_plan.png. Ten ROM leaves make a mirrored two-column lower array and eight rawleaf children make the upper array, with a clear central clock-entry channel at (228.972,578.88). Children use the shared A0 child-site rule: >=10.8um channels and M5 mirror track alignment; current KIT_PREFLIGHT PASS0 using real SIGNED romleaf/rawleaf views. Upper-array central gap preserves the local glue corridor. Local face/glue flops will be clustered by placed locations and separated by actual gated/ungated clock-net membership. No die-owned cells inside a child outline; parent trunk cells remain outside macro walls. Child PG pins connect through M6 partition straps over M5 pins.
+
+Verdict PASS-COND for PLACEMENT TRIAL. The parent tree is planned only after real glue placement/cluster insertion; inspect that tree's geometry and predicted clock/OCV before route. No detailed route authorized by this record. Source has ICG=1, one actual RTL ICG whose ENA/SE connectivity is preserved. The parent uses the existing signed-child early insertion contract. No RTL body or cycle change.

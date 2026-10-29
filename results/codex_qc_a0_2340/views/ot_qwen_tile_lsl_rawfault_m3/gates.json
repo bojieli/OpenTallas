@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.autopilot.gates.v1",
+ "id": "53fcde6a6c40",
+ "die": "qwen_compute",
+ "type": "ot_qwen_tile_lsl_rawfault_m3",
+ "src": "claude/qc-a0-kits-6-1028@9a80f1465b",
+ "geom": "PASS GEOM-REVIEW [AUTO-GEOM 53fcde6a6c40] AUTO PASS 10-28 21:03",
+ "preflight": "PASS (kit_preflight before runner)",
+ "signoff": "SIGNED",
+ "signoff_record": "/srv/opentallas-scratch2/claude/qc-a0-kits-6-1028/rawleaf/kits/ot_qwen_tile_lsl_rawfault_m3_a0k7s/signoff/signoff.json",
+ "tt_wns_ps": 90.23,
+ "ff_wns_ps": 5.4,
+ "gates": {
+  "setup_tt": "PASS",
+  "hold_ff": "PASS",
+  "drv": "PASS",
+  "clock": "PASS",
+  "drc": "PASS",
+  "antenna": "PASS",
+  "pg": "PASS",
+  "routed_lec": "PASS"
+ },
+ "routed_lec": "EQUIVALENT",
+ "routed_lec_all_shown": true,
+ "routed_lec_record": "/srv/opentallas-scratch2/claude/qc-a0-kits-6-1028/rawleaf/kits/ot_qwen_tile_lsl_rawfault_m3_a0k7s/lec_routed_autopilot_1793252464790267458/lec.json",
+ "lec_tool": "/srv/opentallas-scratch2/claude/autopilot/admission_tools/dd4776cbf26fef381db0/die_plan/lec.py",
+ "admission_tools_sha256": "dd4776cbf26fef381db07e5501a96caef5b1493d1e637fb5deba08892a38e367",
+ "view_complete": true,
+ "view_problems": []
+}

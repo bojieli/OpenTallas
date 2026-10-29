@@ -1,0 +1,78 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "ot_qwen_tile_lsl_rawfault_m3_a0k7s",
+  "module": "ot_qwen_tile_lsl_rawfault_m3",
+  "plan_type": "a0_rawleaf",
+  "outline_um": [
+   115.344,
+   140.4
+  ],
+  "ref_tile": "results/qc_a0_kits_1027/rawleaf",
+  "spec": "results/qc_a0_kits_1027/rawleaf/spec.json",
+  "spec_sha256": "ce24d8ffc3916b65ccd1c168312ee52013b20defd11760379aa67c7c1a2d2768",
+  "pins_file": "plan_pins.json",
+  "pins_sha256": "cecce696fcc805400f9db5f3ddb8a78586a16ca4954f2a791a12e2ad3132d351",
+  "pins": 506,
+  "plan_lef": "results/qc_a0_kits_1027/rawleaf/rawleaf_contract.lef",
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "0a46d0f8dd05b8921f61961cb087ebbf1c136d4d226f5f552be961449966a5e1",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "12.3 common core latency 250 TT / 202.5 FF kit frame (QC-A0-KITS-3 10-28, preflight corner_modes/ff_binding); parent A0 early tap absorbs the centre-entry trunk (QC-A0-KITS-2 est, UNCHECKED)",
+   "ff": "12.3 common core latency 250 TT / 202.5 FF kit frame (QC-A0-KITS-3 10-28, preflight corner_modes/ff_binding); parent A0 early tap absorbs the centre-entry trunk (QC-A0-KITS-2 est, UNCHECKED)"
+  },
+  "insertion_tol_ps": 20.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 60.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "0d87a8f433",
+  "sdc_lint_sha256": "aaf0002b018df3a74214410026cc649523f31ce641e8c93914931de763ec9150",
+  "face_guard_sha256": "e48fa41c7deec78347ca137716d8576b39fe184aae0844354d2252d99c1a192c",
+  "signoff_sha256": "e72cc7c120bbddf384d79f8ab20ff3bb15abbf55bba5a5dc66c9d80880ecdfd0",
+  "macros": {},
+  "sram_pincol_halo": [],
+  "rtl_patches": [],
+  "kit_hash": "c23dabd189739e76",
+  "master_plan": {
+   "slice_sha256": "15004c5b9e653a41fe5b1a032fea674e57390ca5ca4ecd41812c168318a2925a",
+   "master_plan_sha256": "qc-a0-r3b-child-contract-unfrozen",
+   "type": "ot_qwen_tile_lsl_rawfault_m3",
+   "frozen": false
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 25.0,
+   "in_min_ps": 0.0,
+   "out_min_ps": -25.0,
+   "basis": "shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold"
+  },
+  "pins_contract_lef": "results/qc_a0_kits_1027/rawleaf/rawleaf_contract.lef",
+  "pins_contract_lef_sha256": "079bcb79f6dbe7321eae1297155c61ce5641aacc3c0ed3b96bdc8178c4447041",
+  "pins_canon_sha256": "9048226ee26d7bc97848e640ea5bbd399f136864a118725f33699d5b6e80194c",
+  "pins_placed_canon_sha256": "bf4dceef160b7baa89b60c5d2846e5dbcee47eb79d04d536409a41d6504c9eac",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (autopilot: signoff.py + routed LEC EQUIVALENT all_shown)",
+ "views_status": "signoff",
+ "src": "claude/qc-a0-kits-6-1028@9a80f1465b",
+ "src_commit": "9a80f1465b44384c4dc0a7fc72c7336e45616062",
+ "flow_tag": "",
+ "autopilot_id": "53fcde6a6c40"
+}
