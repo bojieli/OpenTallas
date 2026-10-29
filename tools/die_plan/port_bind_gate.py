@@ -65,17 +65,106 @@ def _module_params(text, module):
     return out
 
 
+def _clog2(v):
+    v = int(v)
+    return 0 if v <= 1 else (v - 1).bit_length()
+
+
 def _eval(expr, env):
+    """integer constant expression under env; $clog2 is supported (DIE-HEAD-29: strap_k [$clog2(DEPTH)+3:0] was
+    UNRESOLVED on every ot_dp_clk_landing_cas).  Anything else raises (-> UNRESOLVED, closed)."""
     e = expr
     for _ in range(4):
-        e2 = re.sub(r"\b([A-Za-z_]\w*)\b", lambda m: f"({env[m.group(1)]})" if m.group(1) in env else m.group(1), e)
+        e2 = re.sub(r"(?<![$\w])([A-Za-z_]\w*)\b", lambda m: f"({env[m.group(1)]})" if m.group(1) in env else m.group(1), e)
         if e2 == e:
             break
         e = e2
     e = re.sub(r"(\d+)'[sS]?[dD](\d+)", r"\2", e)
-    if not re.fullmatch(r"[\d\s+\-*/()%<>]*", e):
+    e = e.replace("$clog2", "C")
+    if not re.fullmatch(r"[\dC\s+\-*/()%<>]*", e) or re.search(r"C(?!\s*\()", e):
         raise ValueError(expr)
-    return int(eval(e.replace("/", "//"), {"__builtins__": {}}))
+    return int(eval(e.replace("/", "//"), {"__builtins__": {}}, {"C": _clog2}))
+
+
+_DIRECTIVE = re.compile(r"^[ \t]*`(ifdef|ifndef|elsif|else|endif)\b[ \t]*(\w*)")
+
+
+def preprocess(text, defines=("SYNTHESIS",)):
+    """DIE-HEAD-29 (nested leaf-pin FAIL 136/67/452 on HEAD SOURCE7): resolve `ifdef/`ifndef/`elsif/`else/`endif the
+    way synthesis reads the source (default: SYNTHESIS defined, nothing else, so the OT_MESO_CA_FV formal-only ports
+    are absent).  Dropped lines are blanked (line count kept).  Unbalanced directives raise (closed)."""
+    out, stack = [], []   # frames [branch_active, any_branch_taken]
+    for ln in text.split("\n"):
+        m = _DIRECTIVE.match(ln)
+        if not m:
+            out.append(ln if all(f[0] for f in stack) else "")
+            continue
+        k, name = m.group(1), m.group(2)
+        if k in ("ifdef", "ifndef"):
+            c = (name in defines) == (k == "ifdef")
+            stack.append([c, c])
+        elif not stack:
+            raise ValueError(f"unbalanced `{k}")
+        elif k == "elsif":
+            f = stack[-1]
+            c = not f[1] and name in defines
+            f[0], f[1] = c, f[1] or c
+        elif k == "else":
+            f = stack[-1]
+            f[0], f[1] = not f[1], True
+        else:
+            stack.pop()
+        out.append("")
+    if stack:
+        raise ValueError("unbalanced `ifdef")
+    return "\n".join(out)
+
+
+_CONN = re.compile(r"\.(\w+)\s*\(")
+
+
+def _conns(body):
+    """{port: expr} of named connections .p(expr) with balanced parentheses (DIE-HEAD-29: .start_i(((a) & b)) was
+    read as unbound by the old [^()]* form)."""
+    out, i = {}, 0
+    while True:
+        m = _CONN.search(body, i)
+        if not m:
+            return out
+        depth, k = 1, m.end()
+        while k < len(body) and depth:
+            depth += {"(": 1, ")": -1}.get(body[k], 0)
+            k += 1
+        if depth:
+            raise ValueError(f"unbalanced connection .{m.group(1)}")
+        out[m.group(1)] = body[m.end():k - 1].strip()
+        i = k
+
+
+def _balanced(e):
+    d = 0
+    for c in e:
+        d += {"(": 1, "{": 1, "[": 1, ")": -1, "}": -1, "]": -1}.get(c, 0)
+        if d < 0:
+            return False
+    return d == 0
+
+
+def _split_top(e, seps):
+    """split e at top-level (outside () {} []) single-char separators in seps; || and && are never split."""
+    parts, depth, cur = [], 0, ""
+    for i, c in enumerate(e):
+        if c in "({[":
+            depth += 1
+        elif c in ")}]":
+            depth -= 1
+        if depth == 0 and c in seps and not (c in "|&" and (e[i + 1:i + 2] == c or e[i - 1:i] == c)):
+            parts.append(cur)
+            cur = ""
+        else:
+            cur += c
+    parts.append(cur)
+    return parts
 
 
 def _width(rng, env):
@@ -87,7 +176,31 @@ def _width(rng, env):
 
 
 def _expr_width(expr, decl):
+    """width of a connection expression.  DIE-HEAD-29 adds, on top of the atoms below: outer parentheses,
+    concatenation {x, y, ...} (sum), unary ~ and bitwise | & ^ (max of the operands, the Verilog context width).
+    Any operand it cannot size -> None (UNRESOLVED, closed); replication, arithmetic, logical, shift and ternary
+    expressions stay None."""
     e = expr.strip()
+    while e.startswith("(") and e.endswith(")") and _balanced(e[1:-1]):
+        e = e[1:-1].strip()
+    if e.startswith("{") and e.endswith("}") and _balanced(e[1:-1]):
+        inner = e[1:-1].strip()
+        if re.match(r"[^,{]*\{", inner):   # replication {N{x}}
+            return None
+        ws = [_expr_width(x, decl) for x in _split_top(inner, ",")]
+        return None if any(w is None for w in ws) else sum(ws)
+    ops = _split_top(e, "|&^")
+    if len(ops) > 1:
+        if any(not x.strip() for x in ops):   # reduction / xnor forms
+            return None
+        ws = [_expr_width(x, decl) for x in ops]
+        return None if any(w is None for w in ws) else max(ws)
+    if e.startswith("~") and e[1:2] not in "^&|":
+        return _expr_width(e[1:], decl)
+    return _expr_width_atom(e, decl)
+
+
+def _expr_width_atom(e, decl):
     m = re.fullmatch(r"(\d+)\s*'\s*[bBdDhH][0-9a-fA-F_xXzZ]+", e)
     if m:
         return int(m.group(1))
@@ -99,7 +212,7 @@ def _expr_width(expr, decl):
     return 1 if m.group(3) is None else abs(int(m.group(2)) - int(m.group(3))) + 1
 
 
-def nested_check(wrapper_texts, source_texts, max_list=40):
+def nested_check(wrapper_texts, source_texts, max_list=40, defines=("SYNTHESIS",)):
     """HEAD-BIND-4 10-27 (COORD ruling on HEAD-CORE-R13 ASK4 gap d): the die-top port-bind (tools/die_port_bind.py) checks
     the partition instances of the die top only; a generated wrapper whose LEAF instance leaves ports open (hd_serdes
     u_phy: only .rx/.tx bound, clk/rst/st/pma_* open, 514-b coll_o0_d into a 512-b rx) passed it silently.  This walks
@@ -111,6 +224,8 @@ def nested_check(wrapper_texts, source_texts, max_list=40):
     import sys as _sys
     _sys.path.insert(0, str(Path(__file__).resolve().parent))
     import gen_rtl
+    source_texts = [preprocess(t, defines) for t in source_texts]
+    wrapper_texts = {k: preprocess(t, defines) for k, t in wrapper_texts.items()}
     lib = "\n".join(list(source_texts) + list(wrapper_texts.values()))
     hdr_cache, rec = {}, dict(instances=0, unbound=[], unknown=[], width_mismatch=[], unresolved=[], no_master=[])
     for wn, text in sorted(wrapper_texts.items()):
@@ -140,9 +255,7 @@ def nested_check(wrapper_texts, source_texts, max_list=40):
                 env = dict(pdef)
                 for pm in re.finditer(r"\.(\w+)\s*\(([^()]*(?:\([^()]*\)[^()]*)*)\)", im.group("par") or ""):
                     env[pm.group(1)] = pm.group(2)
-                conns = {}
-                for cm in re.finditer(r"\.(\w+)\s*\(([^()]*)\)", im.group("body")):
-                    conns[cm.group(1)] = cm.group(2).strip()
+                conns = _conns(im.group("body"))
                 for pn in sorted(ports):
                     if not conns.get(pn):
                         rec["unbound"].append(f"{where}.{pn}")
