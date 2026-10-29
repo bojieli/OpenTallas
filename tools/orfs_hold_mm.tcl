@@ -626,11 +626,40 @@ proc ot_repair_hold_guarded {rt_args} {
       return
     }
   }
+  # CHUNK BUFFER BOUND (FLOW-CLOCK-R5 2026-10-29, measured: KV E0 e0_ff15 GRT hold sat at FF ws -38.91 / TNS -30814.6
+  # from it ~1750 to >7780 of ONE "-max_iterations 1000" call, +10.8k buffers with zero TNS gain, so the stall test
+  # below never ran).  -max_iterations does not bound a hold pass; -max_buffer_percent does (RSZ-0060, as OT_HOLD_STOP).
+  # Each chunk is therefore also capped at max(OT_HOLD_CHUNK_BUF_PCT (default 1.0) % of the instance count at guard
+  # start, OT_HOLD_CHUNK_BUF_MIN (default 2000) buffers) -- small blocks keep one effectively unbounded chunk -- never
+  # past the call's own total budget (its -max_buffer_percent, else the OpenROAD default 20 %).  A chunk that hits its
+  # cap continues on the grown design; reaching the TOTAL budget re-raises RSZ-0060 exactly as one uncapped call
+  # did.  OT_HOLD_CHUNK_BUF_PCT=0 restores the unbounded chunk.  Margins, corners, stall/time limits and stats unchanged.
+  set cbp [ot_env_num OT_HOLD_CHUNK_BUF_PCT 1.0]
+  set cbmin [ot_env_num OT_HOLD_CHUNK_BUF_MIN 2000]
+  set inst0 0
+  if {$cbp > 0} { catch { set inst0 [llength [[ord::get_db_block] getInsts]] } }
+  set tot_pct 20.0
+  set j [lsearch -exact $rt_args -max_buffer_percent]; if {$j >= 0} { set tot_pct [lindex $rt_args [expr {$j + 1}]] }
+  set capped 0
   set t0 [clock seconds]; set hist [list [lmap x $prev {format %.1f $x}]]
-  puts "OT_HOLD_GUARD start: hold ws [format %.2f [lindex $prev 0]] tns [format %.1f [lindex $prev 1]] viol [lindex $prev 2] (margin $hm, chunk $chunk it)"
+  puts "OT_HOLD_GUARD start: hold ws [format %.2f [lindex $prev 0]] tns [format %.1f [lindex $prev 1]] viol [lindex $prev 2] (margin $hm, chunk $chunk it[expr {$inst0 > 0 ? [format ", <= %.0f buffers of %d instances" [expr {max($cbp * $inst0 / 100.0, $cbmin)}] $inst0] : ""}])"
   for {set k 1} {1} {incr k} {
     if {[lindex $prev 0] >= $hm} { break }
-    log_cmd repair_timing {*}$rt_args -hold -max_iterations $chunk
+    if {$inst0 > 0} {
+      set inst [llength [[ord::get_db_block] getInsts]]
+      set left [expr {$tot_pct * $inst0 / 100.0 - ($inst - $inst0)}]
+      set nb [expr {min(max($cbp * $inst0 / 100.0, $cbmin), $left)}]
+      set last [expr {$nb >= $left}]
+      if {$nb < 1} { set nb 1 }
+      set pct [format %.6f [expr {100.0 * $nb / $inst}]]
+      if {[catch {log_cmd repair_timing {*}[ot_hold_stop_args $rt_args $pct] -hold -max_iterations $chunk} err opts]} {
+        if {$last || ![regexp {RSZ-0060|Max buffer count} $err]} { return -options $opts $err }
+        set capped 1
+        puts [format "OT_HOLD_GUARD chunk %d: buffer cap %.0f reached (RSZ-0060), continuing" $k $nb]
+      }
+    } else {
+      log_cmd repair_timing {*}$rt_args -hold -max_iterations $chunk
+    }
     set cur [ot_hold_stats]
     lappend hist [lmap x $cur {format %.1f $x}]
     lassign $prev w0 t0n n0; lassign $cur w1 t1n n1
@@ -643,6 +672,8 @@ proc ot_repair_hold_guarded {rt_args} {
     if {[clock seconds] - $t0 > $maxs} { ot_hold_window_report "hold repair over [expr {$maxs / 3600.0}] h" $hist; break }
     set prev $cur
   }
+  # tolerate_flow_errors zeroes the chunk-cap RSZ-0060 errors only when this line follows the last one
+  if {$capped} { puts "OT_HOLD_MM after repair: OT_HOLD_GUARD chunk buffer caps reached (RSZ-0060); continuing" }
 }
 
 # MACRO-CLK (2026-10-10): this helper is sourced in every ORFS stage of every run_abi3_physical / hbm_accel_smh route, so
