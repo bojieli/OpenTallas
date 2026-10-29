@@ -49,8 +49,14 @@ if [ "${OT_GEOM_MEMORY_REACH:-0}" = 1 ]; then
   GA+=(--memory-reach)
   while IFS= read -r -d '' ml; do GA+=(--memory-lib "$ml"); done < <(find "$KIT/macros" -type f \( -name '*.lib' -o -name '*.lib.gz' \) -print0 2>/dev/null)
 fi
+# Typed 12.2a1 die-owned arcs need BOTH matching metadata files and actual
+# checkpoint connectivity; missing/invalid metadata grants no exemption.
+if [ -f "$KIT/ft_interface.json" ] || [ -f "$KIT/ft_ports.json" ]; then
+  GA+=(--ft-interface "$KIT/ft_interface.json" --ft-ports "$KIT/ft_ports.json")
+fi
 python3 -I "$TOOLS/geom_rules.py" "$OUT/geom.tsv" --odb "$ODB" --json "$OUT/auto_geom.json" --max-layer "$GMAX" "${GA[@]}" "${RA[@]}"
 vrc=$?
-python3 -E "$TOOLS/geom_png.py" "$OUT/geom.tsv" "$OUT/auto_geom.json" "$OUT/auto_geom.png" ${GA:+--cong "$OUT/cong.rpt"} \
+PA=(); [ "$GRT" = true ] && PA=(--cong "$OUT/cong.rpt")
+python3 -E "$TOOLS/geom_png.py" "$OUT/geom.tsv" "$OUT/auto_geom.json" "$OUT/auto_geom.png" "${PA[@]}" \
   >/dev/null 2>&1 && echo "AP_AUTO_GEOM_PNG $OUT/auto_geom.png" || echo "AP_AUTO_GEOM_PNG_ERROR"
 exit $vrc
