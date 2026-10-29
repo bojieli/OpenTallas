@@ -824,7 +824,7 @@ class Landings:
                       f"        .fclk(fclk_in_{b}), {ring_rst}, .d({b}), .q({landed}),",
                       f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));"]
         if cat:
-            logic += self._origin_rtl(tn, cat, ca_raw, body, extra)
+            logic += self._origin_rtl(tn, cat, ca_raw, body, extra, type_key=key)
             if self.tstart and self.tstart["type_pins"].get(key, {}).get(START_PIN_OUT):
                 # START-TREE: the region start leaves on ONE dedicated pin (fanned out at the die top / to a stage)
                 extra.append(f"    output wire {START_PIN_OUT}")
@@ -879,7 +879,7 @@ class Landings:
         self.emitted_types.add(tn)
         return head + marker + "\n".join(logic) + "\n" + body
 
-    def _origin_rtl(self, tn, cat, ca_raw, body, extra):
+    def _origin_rtl(self, tn, cat, ca_raw, body, extra, type_key=None):
         """The region's count origin: root = ot_dp_landing_root (fixed settle count), child = ot_dp_landing_origin on
         the start-tree port (3-FF sync of the parent's forwarded start, edge/PAD from the bind).  Its raw reset is the
         timed local raw-reset relay of the tree bus (child) / of a landed input or tap 0 (root), never START-gated.
@@ -941,7 +941,7 @@ class Landings:
             extra.append("    output wire cland_rstart_out")
             logic.append(f"    ot_dp_landing_relay u_cland_rstart_tx (.clk(clk), .rst_raw_n({raw}), .d(cland_start), "
                          f".q(cland_rstart_out));")
-        if self.tstart and self.tstart.get("reset_wave") and RAW_RESET_PIN_OUT in self.tstart["type_pins"].get(tn,{}):
+        if self.tstart and self.tstart.get("reset_wave") and RAW_RESET_PIN_OUT in self.tstart["type_pins"].get(type_key or tn,{}):
             extra.append(f"    output wire {RAW_RESET_PIN_OUT}")
             logic += ['    (* keep = "true", face_keep = "true" *) reg cland_raw_reset_q;',
                       f"    always @(posedge clk) cland_raw_reset_q <= {raw};",

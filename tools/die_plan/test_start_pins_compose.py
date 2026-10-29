@@ -159,5 +159,7 @@ def test_reset_wave_exports_registered_local_parent_reset():
     tt=c.top_rtl(TOP)
     assert 'output wire rraw_r0;' in tt and 'assign rraw_r0 = clock_landing_raw_reset_a;' in tt
     assert '.cland_raw_reset_out(clock_landing_raw_reset_a)' in tt
+    variant=c.type_rtl('A_variant',A_BODY.replace('module A ', 'module A_variant '),base='A')
+    assert 'output wire cland_raw_reset_out' in variant
     p,t=start_vehicle(stage=True)
     assert 'reset_inputs' not in start_pins(p,t['count_aligned'])  # default untouched
