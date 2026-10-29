@@ -1,0 +1,7 @@
+MISMATCH t=9163000 v 0/0 act 0/0 conf 0/0 tf 1/0
+MISMATCH t=9996000 v 0/0 act 0/0 conf 0/0 tf 1/0
+MISMATCH t=10829000 v 0/0 act 0/0 conf 0/0 tf 1/0
+MISMATCH t=11662000 v 0/0 act 0/0 conf 0/0 tf 1/0
+CAL_F20_EQ FAIL errors=828 checks=848 active_edges=181
+FATAL: /srv/opentallas-scratch2/claude/wt/codex-hbm-calendar-0320/results/hbm_calendar_1029/oneclk/tb_calendar_oneclk.sv:61: eq
+       Time: 711799500  Scope: tb_vm_calendar_f20_eq

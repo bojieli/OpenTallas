@@ -1,0 +1,35 @@
+{
+ "verdict": "PASS_COMPONENT_ONLY",
+ "source_commit": "0f0c51e62",
+ "unit": "epyc2:oth-ubuntu-2590048-1793271882",
+ "clock_ps": 833,
+ "checks": 848,
+ "active_payload_edges": 181,
+ "programmes": 6,
+ "cold_reset": true,
+ "warm_reset": true,
+ "neighbour_id_traffic": true,
+ "compared": "All calendar payload/status/ordinal/configured/fault outputs every checked edge vs unchanged real two-tile composition",
+ "mutants": {
+  "wrong_target": {
+   "mismatches": 828,
+   "caught": true
+  },
+  "wrong_target_clock": {
+   "mismatches": 193,
+   "caught": true
+  }
+ },
+ "pins_before": 558,
+ "pins_after": 555,
+ "removed_clock_inputs": [
+  "clk_cap",
+  "clk_mem",
+  "clk_tgt"
+ ],
+ "cycles_added": 0,
+ "child_definitions": "UNCHANGED",
+ "macro_hierarchy_paths": "UNCHANGED u_fcore.u_calendar.u_programme.u_program",
+ "physical_status": "Oneclk WCFG555 GEN and guided PLACE owned codex/hbm-calendar-clock-1029; no CTS/GRT yet",
+ "reset_delivery_status": "NOT QUALIFIED native_required per-role reset input remains pending actual plan wavefront graft"
+}
