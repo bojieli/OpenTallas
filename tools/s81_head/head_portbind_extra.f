@@ -8,3 +8,5 @@ physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x25
 rtl/hdc/ot_hdc_prefix.sv                                        # ot_hdc_inc_k, ot_hdc_ksadd_k: ot_hdc_fp32_add_f12 (header: "Needs rtl/hdc/ot_hdc_prefix.sv")
 rtl/hdc/ot_hdc_fastfp.sv                                        # ot_hdc_lzc32: ot_hdc_fp32_add_f12 (header: "Needs rtl/hdc/ot_hdc_fastfp.sv")
 physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v   # macro model: ot_s81ph_mem1r1w SRAM=1
+rtl/lib/ot_reset_sync.sv                                        # ot_reset_sync: dsdv_hbc1_affine_book/loader, dsdv_hbc_boot12/ctx_copy/owner, dsdv_hostb_return (hk4 bind DIE-HEAD-24)
+rtl/dsrom_sys/s81_head/ot_s81hd_lep_pair.sv                     # ot_s81hd_lep_pair: ot_s81hd_lep0N_core (hk4 bind DIE-HEAD-24)
