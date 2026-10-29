@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-26 06:21 PDT by CLAUDE coordinator)
 
-Snapshot: 2026-10-28 23:4x PDT · main b6fd7043d2 · FROZEN: none · closest KV (GRT0 done; FF hold -57.92 only on 5 budget ends, BOTH-REAL +46.08) · gate numbers only on shared die STA, --clock-cal spice_edge for inv trees (NUMBER-CHECK-INV-1 PASS); BUFx4/BUFx6f delay cells not yet covered (MODEL-REFIT-2) · sign-off: S81 4/171 15/52, HEAD 0/16 2/3, QC 0/68 4/9, KV 0/40 5/31, HBM 0/49 0/210 · generic die clock tool tools/clk (CLK-TOOL-1 approved, CLK-TOOL-2 running)
+Snapshot 2026-10-29 02:28 PDT: no die frozen; 0 signed delta since 21:20; Codex handback 02:12 -> 21 fresh lanes; QC node ff3ce6428 SIGNED-UNVERSIONED (tag pending); HEAD SerDes codeword owner Q open.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).

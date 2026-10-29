@@ -4661,3 +4661,5 @@ CONDITION (timing, not geometry): the finish must report ROUTED TT/FF insertion 
 - WARN channel_h .629 at the macro NW corner (44-54, y 57). GRT 0 overflow, M2 40 %, so the WARN is harmless.
 - CTS sink insertion 131..154 ps (skew 23, placement RC).
 CONDITION: same as H0. Routed TT/FF insertion goes against the 12.3 band, plus the SRAM clock-pin latency from its signed view (v5.0 early-tap rule).
+2026-10-29 02:28 PDT COORD SPOT-CHECK: viewed bb02b52c746a dsdv_eng_rr_h0 auto_geom.png (164x268, fill 0.40, GRT ov 0, 645 M5 pins N face, dense uniform logic, small empty SW notch, farthest sink 138 um from own driver): CONCUR GEOM-52 PASS-COND.
+2026-10-29 02:28 PDT COORD SPOT-CHECK: viewed HBM NW_sm3 frozen clock coupon geometry.png (34 taps/548 cells in streets, maxhop 403.38 um vs 405): CONCUR construction PASS-COND; margin 1.6 um is thin -> routed-leg check required before any adoption (placement RC is not routed, see trunk-balance rule).
