@@ -37,7 +37,7 @@ module ot_hnx_idx_vm_query_static_n12_r2048_core #(parameter integer VM_RT_EXTRA
  reg[143:0]slots;
  reg[127:0]tags;
  wire[2055:0]rr;wire[127:0]rtag;wire face_fault;
- localparam integer WSECT=WEIGHT_FP32?4:2;
+ localparam integer WSECT=(WEIGHT_FP32!=0)?4:2;
  reg[511:0]weights;reg[WSECT-1:0]weight_seen;reg bad;
  reg[16:0]wsec[0:WSECT-1];reg[16:0]qsec[0:3];
  // ROW BASES (HGI-1R): loaded at the record start, stepped after each row's last query slot
@@ -111,7 +111,7 @@ module ot_hnx_idx_vm_query_static_n12_r2048_core #(parameter integer VM_RT_EXTRA
   end
  end
  // Operand data: reset-free, written only under reset valid bits.
- generate if(WEIGHT_FP32)begin:g_fp32_weights
+ generate if(WEIGHT_FP32!=0)begin:g_fp32_weights
   always @(posedge clk)for(integer b=0;b<8;b=b+1)if(rr[b*257+256]&&rtag[b*16+15])
    for(integer w=0;w<4;w=w+1)if(rtag[b*16+:2]==2'(w))
     for(integer j=0;j<8;j=j+1)weights[w*128+j*16+:16]<=rr[b*257+j*32+16+:16];
