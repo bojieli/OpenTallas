@@ -52,7 +52,7 @@ def read_arr(arr):
     return A, N, F, M
 
 
-def export(tree, arr, corner):
+def export(tree, arr, corner, components=False):
     T = json.loads(Path(tree).read_text())
     nodes = {int(k): v for k, v in T["nodes"].items()}
     buf = {int(k): v for k, v in T["node_buf"].items()}
@@ -99,6 +99,8 @@ def export(tree, arr, corner):
         if cell not in N:
             raise ValueError(f"{arr}: missing N arrival for physical clock cell {cell}; export b*/r*/p*")
         la, ea = N[cell]
+        if components:
+            meta.setdefault("node_cell", {})[key] = cell
         meta["node_late_ps"][key] = la
         meta["node_early_ps"][key] = ea
         meta["node_stages"][key] = stages(cell)
@@ -162,14 +164,20 @@ def export(tree, arr, corner):
                                      taps_with_fall=sum(1 for x in taps if "fall_late_ps" in x), taps=len(taps),
                                      nodes_with_fall=len(meta.get("node_fall_late_ps", {})),
                                      nodes=len(meta["node_late_ps"]))
-    return dict(meta, taps=taps, regions=len(regions)), miss
+    result = dict(meta, taps=taps, regions=len(regions))
+    if components:
+        from clock_components import annotate
+        result = annotate(result, Path(tree).parent / "ctree.v", arr)
+    return result, miss
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("tree"); ap.add_argument("arr"); ap.add_argument("corner"); ap.add_argument("out")
+    ap.add_argument("--clock-components", action="store_true",
+                    help="export measured per-master clock delay components (requires both-edge T/N/F/M readout)")
     a = ap.parse_args()
-    result, missing = export(a.tree, a.arr, a.corner)
+    result, missing = export(a.tree, a.arr, a.corner, components=a.clock_components)
     Path(a.out).write_text(json.dumps(result))
     print(a.corner, "taps", len(result["taps"]), "missing", missing, "regions", result["regions"],
           "nodes", len(result["node_late_ps"]), "fall taps", sum(1 for x in result["taps"] if "fall_late_ps" in x),
