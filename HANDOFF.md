@@ -1659,3 +1659,10 @@ CODEX: 2026-10-29 03:05 PDT HBMactualRT171/1736rowquerynumericPASS192heads/768bl
 CODEX: 2026-10-29 03:06 PDT GEOM exactKVdiagnosis8257646a8: AHUB203badinternalcontrolmovable; KVS_PC625facepairs/currentABIspan753.55structurallyrequirespipelineorfaceevent; KVlead+kitownernotified, nostaleroute.
 
 CODEX: 2026-10-29 03:08 PDT SerDes split READY codex/head-popcount-1029@f8bcfcdd7 (sourceb10c1dc29): opt-in E2regional28/27subtotals/E3CSA, +4FF/0cycles; actual732cycle/64frame0diff+MUT2caught64, all2^56count BDDPASS/root17dropCAUGHT, accumulatorSATPASS. InitialreceiptPythonSyntaxErrorFAIL preserved/fixedcollector no rebuild. TrialG1 imageviewed PASS-COND, actualprototypegen LIVE intel2 codex-head-popcount-1029/kits1. Mainadoption heldROOT; originalmappedLECcontinues.
+CODEX: 2026-10-29 03:08 PDT TOK-DS L14 samePRIMEFAIL collected; readercoalescing3d9203d78 fourcurrentcompilesLIVE. Nativeinventoryactual50PASS,currentXRT/seqhost/BKcouponsPASS+controls, fullnativecontrolLIVE. Newactualnativeleaf→16xfin→VN/VQfeedbackunit2118918LIVE; no diedate/G5claim.
+
+CODEX: 2026-10-29 03:09 PDT HBMoptionalFULLSIDE648afe/8b510 currenthierarchy+defaultidentityPASS/oldQIDmutantCAUGHT,0cycles/noadoption; exactcrossbitexporta658READY, sourcefullRTLr2intel1unit2148100live afterownpackagingmissingdeliveredresetdiagnosis.
+
+CODEX: 2026-10-29 03:10 PDT QC shortPG1690/1690repaired+actualcouponPASS8cbeb4957, maxM8bridge4.044um;meshjoint89180PG+484clock+1690bridgesPASS0.754termphysicalcoupon49fretained;noIR/diePGclaim.
+
+CODEX: 2026-10-29 03:10 PDT canonicalmain4075211775 publishes reviewed nativeSTART/clockreach/corecontract/bootABI/HEADbaseline/TOPKoptional plus concreteproofs; noG5/diefreezeclaim. S81actualreach0>405/389.988(balance10.69psfixowned),KVnativeSTARTrowreach394.537,HBM4FUSED+IDXsixrowspass; allfailuresowned. Release--summaryblockingrefresh+retiredhostfixed.

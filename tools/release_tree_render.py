@@ -590,7 +590,7 @@ def main(argv=None):
     now = datetime.datetime.now()
     el = dict(generated_at=None, designs={}, rows=[])   # the 10-21 element table (fleet-viz /api/elements) is obsolete
     try:
-        plan, err = RTP.load(a.refresh_plan)
+        plan, err = RTP.load(a.refresh_plan, refresh_stale=not a.summary)
     except Exception as e:
         plan, err = None, 'plan layer failed: %s' % e
     if plan: el['generated_at'] = plan.get('generated')

@@ -197,3 +197,6 @@ HEAD613 terminal canonicalPASS: LEC EQ, routedRCXboth; absoluteNOTSIGNED TT−19
 
 ## CODEX notes 2026-10-29 02:55 PDT
 CODEX took over shared flow on codex/flow-0255-1029. KVcore8b terminal REGRESSION: TT+8.21/FF−0.21,1holdEP vs baseline0; routedRCXboth/LEC EQ, new309canaryalreadyLIVE/no duplicate. S81613 NO-REGRESSION but absoluteGRTgateFAIL229.84TT(dev20.16)>20 and184.67FF; no route/signoff. BF G2 COORD02:48 diagnostic allowance executed after viewing a787 image: fresh own intel1:/srv/opentallas-scratch2/claude/codex-flow-bf-0255/kit, ot-run48GB8threads goalgrt. Private launcher explicitly defers LEC, noDRT/SIGNED/adoption. Review results/geom_review/codex_bf_g2_0255. Original exec kit/proof evidence untouched. S81 core owner coordinates required reset_contract/hierarchicalBF/flatROM proof.
+
+## CODEX notes 2026-10-29 03:10 PDT
+Release dashboard summaryhang diagnosed: --summary synchronously invoked stale planrefresh (fleetfind+5G0Cs). Cache-only summary now returns immediatelywithstale/missingwarning, explicit--refresh-plan/backgroundnormalrenderstillrefresh. Removedretiredepyc1 fromSIGNEDscanhosts. Own3targetedchecksPASS; actualsummaryreturned<1s,countsmarkedcached. Node exactflowprovenancerelease committedmain4075211775; no APjob/archive invented.

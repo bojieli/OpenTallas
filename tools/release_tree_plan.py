@@ -31,7 +31,7 @@ REFRESH_S = 50 * 60
 # release-tree die key -> plan dir under physical/die_plan (five dies; HBM = current B2n lineage on main; epyc3 retired 10-25)
 PLANS = [('s81', 's81'), ('s81_head', 's81_head'), ('qwen_compute', 'qwen_compute'), ('qwen_kvsys', 'qwen_kvsys'),
          ('hbm', 'hbm_arch/B2n')]
-HOSTS = ['local', 'epyc1', 'epyc2', 'intel1', 'intel2']
+HOSTS = ['local', 'epyc2', 'intel1', 'intel2']
 SCAN_ROOTS = '/srv/opentallas-scratch /srv/opentallas-scratch2'
 # RETIRED sign-offs (HEAD-CORE-R13 2026-10-27): a SIGNED record of a superseded build (older RTL / flow) that must not
 # count for the current design. One line per record: '<scan_host>:<path>\t<date>\t<lane>\t<reason>' ('#' = comment).
@@ -277,13 +277,15 @@ def merge_with_cache(new, old):
     return new
 
 
-def load(force=False, log=lambda *a: None):
+def load(force=False, log=lambda *a: None, refresh_stale=True):
     """returns (cache dict or None, error string or None); refreshes when the cache is older than REFRESH_S."""
     old = None
     try: old = json.loads(CACHE.read_text())
     except Exception: pass
     if not force and old and time.time() - old.get('generated', 0) < REFRESH_S:
         return old, None
+    if not force and not refresh_stale:
+        return old, ('plan layer cache stale; scheduled refresh pending' if old else 'plan layer not cached; run with --refresh-plan')
     try:
         new = merge_with_cache(refresh(log), old)
         CACHE.parent.mkdir(parents=True, exist_ok=True)
