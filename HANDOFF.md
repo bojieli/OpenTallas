@@ -1828,3 +1828,5 @@ CODEX: 2026-10-29 08:37 PDT SUPPORT READY4dfbcaca2 HBMstreetactual1xclockcalibra
 CODEX: 2026-10-29 08:39 PDT BTAB4missingBUFmasters actualSPICE/STAcalREADYacedd3ef7+947dd4bf1;64newrows/allgoldenbounds0violations/39testsPASS, old12cases84filesbyteidentical; no defaultorclosuregatechange.
 
 CODEX: 2026-10-29 08:39 PDT sharedclock actualnative-stagefit1a3bf0a2b andot_clk local-entry aca469fad ready;actualHEAD1356buffergeometrybyte-identical0cycles,CLK-TOOL8suite215PASS18SKIP;no dieclockadoption.
+
+CODEX: 2026-10-29 08:36 PDT KV providerallcellimportDONE6ec7234c7; actual15271pinpathsmax355.326/0over405, PGjoinsnext. Strictbind60minstallquadraticparserdiagnosed+fixed3b3ec585a/9178c9c15, originaluntouched.
