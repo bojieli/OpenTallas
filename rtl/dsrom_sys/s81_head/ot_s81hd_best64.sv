@@ -9,7 +9,7 @@
 // edges, using the existing beat-link convention. No backpressure/credits.
 // New module only: integrating it into hd_ctl/hd_mesh belongs to the head
 // plan event and must price the extra serialization edge in the static model.
-module ot_s81hd_best64_tx #(parameter integer MUT_IDENTITY=0)(
+module ot_s81hd_best64_tx #(parameter integer MUT_IDENTITY=0,parameter integer IDLE_ZERO=0)(
  input wire ck,rn,v,input wire [552:0] frame,
  output wire [63:0] lane,output wire fault
 );
@@ -20,7 +20,7 @@ module ot_s81hd_best64_tx #(parameter integer MUT_IDENTITY=0)(
   else if(v&&!canonical) format_fault<=1'b1;
  wire [96:0] body=frame[96:0] ^ (MUT_IDENTITY ? (97'd1<<96) : 97'd0);
  wire tx_fault;
- ot_s81hd_beat_tx #(.W(97),.N(2),.P(62)) u_tx(
+ ot_s81hd_beat_tx #(.W(97),.N(2),.P(62),.IDLE_ZERO(IDLE_ZERO)) u_tx(
   .ck(ck),.rn(rn),.v(v&&canonical),.d(body),.o(lane),.fault(tx_fault));
  assign fault=format_fault|tx_fault;
 endmodule

@@ -20,7 +20,7 @@ module ot_s81hd_ctl_core #(parameter integer SK=11,parameter integer MUT_DRAFT_E
  wire[63:0]mo[0:2];assign a_tx_o=mo[0];assign b7_tx_o=mo[1];assign n_tx_o=mo[2];
  genvar k;
  generate for(k=0;k<3;k=k+1)begin:g_mesh
-  ot_s81hd_best64_tx u_tx(.ck(ck),.rn(rst_n),.v(mtv[2*k]),.frame(mtd[2*k*553+:553]),.lane(mo[k]),.fault(txf[k]));
+  ot_s81hd_best64_tx #(.IDLE_ZERO(1)) u_tx(.ck(ck),.rn(rst_n),.v(mtv[2*k]),.frame(mtd[2*k*553+:553]),.lane(mo[k]),.fault(txf[k]));
   wire[552:0]f;
   ot_s81hd_mesh64_rx u_rx(.ck(ck),.rn(rst_n),.lane(ml[k]),.va(mrv[2*k]),.vb(mrv[2*k+1]),.frame(f),.ep_fault(epf[k*12+:12]),.fault(rxf[k]));
   assign mrd[k*1106+:1106]={f,f};
@@ -38,7 +38,7 @@ module ot_s81hd_ctl_core #(parameter integer SK=11,parameter integer MUT_DRAFT_E
    if(htv[1])begin sp<=1;sq<=htd[1105:553];end
   end
  wire[275:0]hlane;wire job;
- ot_s81hd_host276_tx u_ht(.ck(ck),.rn(rst_n),.v(send),.frame(send_frame),.lane(hlane),.fault(host_tf));
+ ot_s81hd_host276_tx #(.IDLE_ZERO(1)) u_ht(.ck(ck),.rn(rst_n),.v(send),.frame(send_frame),.lane(hlane),.fault(host_tf));
  assign h_tx_o={job,hlane};
  wire[1103:0]core_ro;wire[33:0]muc;wire[10:0]murc;wire[564:0]unused_duplicate;
  wire dv;wire[552:0]dd;wire[0:0]unused_dv;wire[552:0]unused_dd;

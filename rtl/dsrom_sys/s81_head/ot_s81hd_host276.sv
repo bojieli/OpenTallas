@@ -8,12 +8,12 @@
 // plus relay count (N+1+S under beat_link's cycle-label convention).
 // This transport is independent of HBC schedule/context/job-active authority.
 // No canonical plan or compiled host dates are changed by these new modules.
-module ot_s81hd_host276_tx #(parameter integer MUT_HIGH=0)(
+module ot_s81hd_host276_tx #(parameter integer MUT_HIGH=0,parameter integer IDLE_ZERO=0)(
  input wire ck,rn,v,input wire[552:0] frame,
  output wire[275:0] lane,output wire fault
 );
  wire[552:0] body=frame ^ (MUT_HIGH ? (553'd1<<552) : 553'd0);
- ot_s81hd_beat_tx #(.W(553),.N(3),.P(273)) u_tx(
+ ot_s81hd_beat_tx #(.W(553),.N(3),.P(273),.IDLE_ZERO(IDLE_ZERO)) u_tx(
   .ck(ck),.rn(rn),.v(v),.d(body),.o(lane),.fault(fault));
 endmodule
 module ot_s81hd_host276_rx(

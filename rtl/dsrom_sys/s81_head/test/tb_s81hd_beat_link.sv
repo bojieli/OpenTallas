@@ -8,7 +8,7 @@
 // A mutant run (MUT 1/2/3) must print FAIL (caught): phase A (MUT 1/2) or phase B (MUT 3) sees a mismatch, a missing
 // word or an RX fault.
 module tb_s81hd_beat_link;
-    parameter integer W = 553, N = 2, S = 2, MUT = 0, NREC = 1200;
+    parameter integer W = 553, N = 2, S = 2, MUT = 0, NREC = 1200, IDLE_ZERO = 0;
     localparam integer P = (W + N - 1) / N, BW = (N > 1) ? $clog2(N) : 1, PW = P + BW + 1;
     localparam integer LAT = N + 1 + S;
     reg ck = 0, rn = 0;
@@ -19,7 +19,7 @@ module tb_s81hd_beat_link;
     reg  inj; reg [PW-1:0] inj_w;
     wire [PW-1:0] ri = inj ? inj_w : st[S];
     wire rv; wire [W-1:0] rd; wire rf;
-    ot_s81hd_beat_tx #(.W(W), .N(N), .MUT(MUT)) u_tx (.ck(ck), .rn(rn), .v(tv), .d(td), .o(to), .fault(tf));
+    ot_s81hd_beat_tx #(.W(W), .N(N), .MUT(MUT), .IDLE_ZERO(IDLE_ZERO)) u_tx (.ck(ck), .rn(rn), .v(tv), .d(td), .o(to), .fault(tf));
     assign st[0] = to;
     genvar g;
     generate for (g = 1; g <= S; g = g + 1) begin : g_st   // plan relay stations (plain registers, no reset)
@@ -37,6 +37,11 @@ module tb_s81hd_beat_link;
     // a word presented (tv) before rising edge e is sampled by the TX at e; it must be the RX output word sampled at e + LAT
     reg dbg = 0;
     always @(posedge ck) if (dbg && cyc < 24) $display("DBG cyc %0d tv %b td0 %b to_v %b to_b %b ri_v %b rv %b rd0 %b rf %b", cyc, tv, td[0], to[P], to[P+1], ri[P], rv, rd[0], rf);
+    // IDLE_ZERO (DIE-HEAD-31): no X and all-zero payload on every idle TX pin-register cycle
+    // checked from the first edge after reset release, i.e. also BEFORE the first word (where the no-reset hold is X)
+    reg rn_q = 0; always @(posedge ck) rn_q <= rn;
+    always @(posedge ck) if (IDLE_ZERO != 0 && rn_q && !to[P] && to[P-1:0] !== {P{1'b0}}) begin
+        errs = errs + 1; if (errs < 5) $display("ERR idle payload not zero at %0d", cyc); end
     always @(posedge ck) begin
         if (rn && chk_on && rv) begin
             if (qh == qtl) begin errs = errs + 1; if (errs < 5) $display("ERR unexpected word at %0d", cyc); end
@@ -107,8 +112,8 @@ module tb_s81hd_beat_link;
             if (N > 1 && rxf[2:0] != 3'b111) begin errs = errs + 1; $display("ERR RX injection faults %b", rxf); end
             if ((N * P > W) && !rxf[3]) begin errs = errs + 1; $display("ERR RX pad fault missing"); end
         end
-        $display("BEAT_LINK W=%0d N=%0d P=%0d S=%0d LAT=%0d MUT=%0d seed=%0d sent=%0d got=%0d txf=%b rxinj=%b errors=%0d %s",
-                 W, N, P, S, LAT, MUT, seed, sent, got, tf, rxf, errs, errs == 0 ? "PASS" : "FAIL");
+        $display("BEAT_LINK W=%0d N=%0d P=%0d S=%0d LAT=%0d MUT=%0d IZ=%0d seed=%0d sent=%0d got=%0d txf=%b rxinj=%b errors=%0d %s",
+                 W, N, P, S, LAT, MUT, IDLE_ZERO, seed, sent, got, tf, rxf, errs, errs == 0 ? "PASS" : "FAIL");
         $finish;
     end
 endmodule
