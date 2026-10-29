@@ -1,3 +1,12 @@
 # TOK-HBM-7 (HBM token pass, successor TOK-HBM-6 / Codex packet codex_tokens_hbm_to_claude_20261029_0204)
 
 ## 2026-10-29 02:17 PDT START: adopted epyc2 fulltree component regression ot-run unit oth-ubuntu-201658-1793260539 (C++ class2 compiling, make -j1; component only, not die vehicle). Base codex/tokens-hbm-1028@6be5c0287. Open: donor-reader 169/171 price + IDX row/query drain, South key provider, FULLSIDE/op lowering, regional K (DIE-HBM-11).
+
+## 2026-10-29 02:39 PDT RESULT + PARKED (claude/tok-hbm-7b-1029@990d833eb7, on origin/main 2d4e68361f; 14 files, opt-in only)
+- IDX multirow 169/171 price SETTLED [CHECKED own tool + RTL]: row r+1 query seen-clear rides the launch edge, so with the actual reader (vm_rt 171/173) it lands 54 edges before row r last head emit at class pitch 328. Paying it in pitch: 328->383 (vm_period 1) / 346->512 (vp2) = +2,200 / +6,640 edges a pass (8 N6 INDEX records x 5 boundaries); ~-0.35 % / -1.0 % tok/s (UNCHECKED base ~629,600 cyc/token). Structural fix: ot_hnx_idxq_qctl ROW_CLEAR_DELAY = vm_rt-2 (default 0 unchanged, 1 counter + pend, overlap = fault) -> pitch back to 328/346, cost 0. Donor rt2 drain never binds.
+- RTL: Verilator 833 ps, actual compiled frame rt173 vp1 (1568 words) N6 pitch 328, D0 vs D171 lockstep 3,444 edges, 192 emits, 1,026 keys, 0 faults; delayed clears after prev last emit and before first block bound; clear-at-launch violates on 5/5 rows. Controls: D-1 caught edge 172; pitch 327 calendar collision fault (328 = RTL minimum). intel2 unit oth-ubuntu-2263228-1793266569.
+- NOTE: the token model prices an extra IDX.INDEX row at II c1*152/658.9; the IDXN hardware class pitch is 328/346 edges — check that model II vs this pitch next (UNCHECKED, may be a tok/s item).
+- Process slip: I amended + force-pushed my own 1-min-old branch claude/tok-hbm-7-1029 (382496e0f); use the 7b branch only.
+- Fulltree (Codex unit oth-ubuntu-201658-1793260539, epyc2) still compiling C++ class3 at 02:39 (make -j1), then 4 slow objects + 4 cases. COLLECT: /srv/opentallas-scratch2/claude/codex-hbm-token-1028/fulltree/{pre_n1,pre_n6,post_n1,post_n6}/run.log + pre_n1/mutant_job_a.log; classify HNX_FUSED PASS/FAIL + counters, not exit code.
+- Still open, owned elsewhere: South key provider + FULLSIDE/op lowering (bind/root), regional K (DIE-HBM-11), query-core numeric multirow composition (reader+query+scorer) with D.
+- SUCCESSOR TOK-HBM-8: collect fulltree; compare token-model IDX.INDEX row II with pitch 328/346; then multirow numeric composition with ROW_CLEAR_DELAY once C25c/K land.
