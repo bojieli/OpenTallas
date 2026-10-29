@@ -1,0 +1,89 @@
+{
+ "dsfd_coll_lane_w_safe8_ntf__AC": {
+  "ref_tile": "results/s81_lp_3_1029/lane/AC",
+  "plan": "results/s81_lp_3_1029/lane/AC/kit_plan.json",
+  "plan_module": "dsfd_coll_lane_w_safe8_ntf",
+  "io_hold": "sender_min",
+  "suffix": "lp3ac",
+  "rtl_patches": [
+   {
+    "file": "rtl/common/ot_link_credit_rx_b64.sv",
+    "why": "S81-LP-2: drop (* keep *) on the 1-bit link output reg; Yosys otherwise leaves an unloaded BUFx2 to the kept alias on the port net (RAW face_guard shared FAIL). Zero logic change; the reg drives the port.",
+    "edits": [
+     [
+      "(* keep *) output reg l_credit,",
+      "output reg l_credit,"
+     ]
+    ]
+   },
+   {
+    "file": "rtl/common/ot_link_credit_tx_rc.sv",
+    "why": "S81-LP-2: drop (* keep *) on the 1-bit link output reg; Yosys otherwise leaves an unloaded BUFx2 to the kept alias on the port net (RAW face_guard shared FAIL). Zero logic change; the reg drives the port.",
+    "edits": [
+     [
+      "(* keep *) output reg l_valid,",
+      "output reg l_valid,"
+     ]
+    ]
+   }
+  ]
+ },
+ "dsfd_coll_lane_w_safe8_ntf__BC": {
+  "ref_tile": "results/s81_lp_3_1029/lane/BC",
+  "plan": "results/s81_lp_3_1029/lane/BC/kit_plan.json",
+  "plan_module": "dsfd_coll_lane_w_safe8_ntf",
+  "io_hold": "sender_min",
+  "suffix": "lp3bc",
+  "rtl_patches": [
+   {
+    "file": "rtl/common/ot_link_credit_rx_b64.sv",
+    "why": "S81-LP-2: drop (* keep *) on the 1-bit link output reg; Yosys otherwise leaves an unloaded BUFx2 to the kept alias on the port net (RAW face_guard shared FAIL). Zero logic change; the reg drives the port.",
+    "edits": [
+     [
+      "(* keep *) output reg l_credit,",
+      "output reg l_credit,"
+     ]
+    ]
+   },
+   {
+    "file": "rtl/common/ot_link_credit_tx_rc.sv",
+    "why": "S81-LP-2: drop (* keep *) on the 1-bit link output reg; Yosys otherwise leaves an unloaded BUFx2 to the kept alias on the port net (RAW face_guard shared FAIL). Zero logic change; the reg drives the port.",
+    "edits": [
+     [
+      "(* keep *) output reg l_valid,",
+      "output reg l_valid,"
+     ]
+    ]
+   }
+  ]
+ },
+ "dsfd_coll_lane_e_safe8_ntf__BC": {
+  "ref_tile": "results/s81_lp_3_1029/lane/EBC",
+  "plan": "results/s81_lp_3_1029/lane/EBC/kit_plan.json",
+  "plan_module": "dsfd_coll_lane_e_safe8_ntf",
+  "io_hold": "sender_min",
+  "suffix": "lp3ebc",
+  "rtl_patches": [
+   {
+    "file": "rtl/common/ot_link_credit_rx_b64.sv",
+    "why": "S81-LP-2: drop (* keep *) on the 1-bit link output reg; Yosys otherwise leaves an unloaded BUFx2 to the kept alias on the port net (RAW face_guard shared FAIL). Zero logic change; the reg drives the port.",
+    "edits": [
+     [
+      "(* keep *) output reg l_credit,",
+      "output reg l_credit,"
+     ]
+    ]
+   },
+   {
+    "file": "rtl/common/ot_link_credit_tx_rc.sv",
+    "why": "S81-LP-2: drop (* keep *) on the 1-bit link output reg; Yosys otherwise leaves an unloaded BUFx2 to the kept alias on the port net (RAW face_guard shared FAIL). Zero logic change; the reg drives the port.",
+    "edits": [
+     [
+      "(* keep *) output reg l_valid,",
+      "output reg l_valid,"
+     ]
+    ]
+   }
+  ]
+ }
+}
