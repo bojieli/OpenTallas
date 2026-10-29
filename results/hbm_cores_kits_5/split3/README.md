@@ -11,3 +11,5 @@ coverage result is not a compositional equivalence verdict. Those candidates rem
 cut connectivity or a composition miter proves them. No P&R, timing, token or SIGNED claim is made.
 
 Focused tests exercise both slice directions, regrouping, coverage failures, and byte-identical whole-bus output.
+
+The mapper now labels NARROW/BY_ELIMINATION candidates UNPROVEN and refuses to create or change an installable sidecar for them. Missing RTL input coverage reports FAIL. Fourteen focused tests pass, including both rejected heuristics, preservation of existing sidecars, and unchanged whole-bus behavior.
