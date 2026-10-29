@@ -48,3 +48,11 @@ All 4 M4 shorts sit inside the SRAM macro edge strip: g_btb[1].u_m bbox x 159.84
 y 25-29, nets of place4047/_5463_, u_twpd q[272] D); g_btb[3].u_m -> short x 159.91-161.03 (west edge, y 95.2, wire10840->_4335_).
 Std-cell signal M4 wires clip the ~1.3 um M4 edge strip of the macro (the macro-edge halo/keep-off does not cover M4 at the
 E/W edges). Structural fix = macro-edge M4 routing blockage/halo in the kit macro placement (existing kit mechanism), not an ECO.
+
+## BTAB F3r routed (unit 1270172 exit 0, btab/f3r_signoff.json): NOT SIGNED
+TT +302.27, FF hold -3.50 / 25 endpoints, pair skew 71.3/68.2, slew TT 52 / FF 17, DRC 4 = the SAME macro-edge M4 short class
+(twp_d[257..259] at g_btb[1].u_m east edge x 253.3-254.6; twp_d[937] at g_btb[3].u_m west edge x 159.9-161.0).
+F3b vs F3r: F3b is better on every gate (hold +7.22 vs -3.50, pair 33.9 vs 71.3, DRC 5 vs 4 same class). Owner choice: F3b form
+goes forward; next BTAB step = macro-edge M4 keep-off at the E/W edges of g_btb[*].u_m (existing kit halo/blockage mechanism) +
+the tw-data landing slew class (GEOM-57 residual g_btb wd_in long nets), then ONE route. No ECO. Tap/pin move into the die plan
+only after a routed PASS.
