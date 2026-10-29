@@ -487,11 +487,18 @@ proc ot_hold_split {} {
 # endpoint is a register DATA pin (async pins excluded) are touched; register-to-register and output paths are left to
 # the gate (they stay structural).  Clock network, constraints, margins and corners unchanged.  Fail closed: a bit
 # needing more than OT_IO_HOLD_PAD_MAX_CELLS (4) cells, or any insert error, stops the stage.  Runs once per process.
+# OT_IO_HOLD_PAD_STAGE (FLOW-CLOCK-R6 10-29, default cts = unchanged): the stage whose FF hold repair the pad precedes.
+# Kits whose CTS step repairs setup only (SKIP_CTS_REPAIR_TIMING=1 + post_cts_setup.tcl: every KV kit, HBM-CORES-R11 form)
+# first time FF hold in the GRT step, so the CTS-only pad never ran there (E0 e0_ff15: 1,300 input-port -> face-register
+# endpoints left to BUF-only GRT repair, flat at -38.91 for 10k iterations).  grt pads in that step on the synchronized FF
+# scene; the GRT step's own post-repair detailed_placement + incremental GRT legalize and route the cells (no DPL here).
 proc ot_io_hold_pad {} {
   if {![info exists ::env(OT_IO_HOLD_PAD)] || $::env(OT_IO_HOLD_PAD) ne "1"} { return }
   if {[info exists ::ot_io_hold_pad_done]} { return }
   set ::ot_io_hold_pad_done 1
-  if {[ot_hold_stage] ne "cts"} { puts "OT_IO_HOLD_PAD skip: stage [ot_hold_stage] (CTS only)"; return }
+  set want [expr {[info exists ::env(OT_IO_HOLD_PAD_STAGE)] && $::env(OT_IO_HOLD_PAD_STAGE) ne "" ? $::env(OT_IO_HOLD_PAD_STAGE) : "cts"}]
+  if {$want ni {cts grt}} { error "OT_IO_HOLD_PAD_STAGE=$want: want cts or grt" }
+  if {[ot_hold_stage] ne $want} { puts "OT_IO_HOLD_PAD skip: stage [ot_hold_stage] (pad stage $want)"; return }
   set hb_ps [ot_env_num OT_IO_HOLD_PAD_HB4_PS 37.0]
   set mg [ot_env_num OT_IO_HOLD_PAD_MARGIN_PS 5.0]
   set maxc [expr {int([ot_env_num OT_IO_HOLD_PAD_MAX_CELLS 4])}]
@@ -532,9 +539,13 @@ proc ot_io_hold_pad {} {
   } msg]
   set_dont_use $cells
   if {$rc} { error "OT_IO_HOLD_PAD: insert failed after $tot cells: $msg" }
-  log_cmd detailed_placement
-  log_cmd check_placement -verbose
-  catch {estimate_parasitics -placement}
+  if {$want eq "cts"} {
+    log_cmd detailed_placement
+    log_cmd check_placement -verbose
+    catch {estimate_parasitics -placement}
+  } else {
+    catch {estimate_parasitics [ot_rc_cal_mode]}
+  }
   puts [format "OT_IO_HOLD_PAD bits %d HB4 %d (hb4 %.1f ps, margin %.1f ps, max %d/bit)" [dict size $plan] $tot $hb_ps $mg $maxc]
 }
 proc ot_hold_structural_gate {} {
