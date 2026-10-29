@@ -1842,3 +1842,5 @@ CODEX: 2026-10-29 08:49 PDT QC native import: fixed2resetreceiveFFreach failures
 CODEX: 2026-10-29 08:49 PDT HBMnativeVMS actualplanprune+128piperecipes READY73a128163/aa06f3c6b;coverageactualsource128materialized/379instpreserved,27mutantscaught;128Southgeometryexplicitmissing,parentHBMcut/sourcecalendarcontinues.
 
 CODEX: 2026-10-29 08:49 PDT HEAD actualhk5 tile LEC33806EQ/face1159PASS; reviewedtrialPLACEintel2unit2374806live. Spn omittedIS +stale rawresetprovider diagnosed; fullhk5 source regenerating. LEP/FT structural fixes remain candidate, no release claim.
+
+CODEX: 2026-10-29 08:50 PDT FLOW realKV ECOcornerbug READY6be8c010c/20PASS; correctedq3FF-onlypostroute LIVEintel1unit1787016, ownwrongmodejobstoppedonly, inheritedV1untouched. Coreparentmetadata e6d+RCexactlibs65bb ready/merged; KVPHY usesexistingreservehook.
