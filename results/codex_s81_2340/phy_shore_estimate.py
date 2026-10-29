@@ -28,10 +28,10 @@ for slot in t['ft_slots']:
   off=[(bit%16-7.5)*1.08,(bit//16-15.5)*.27]
   q=[A[bit]]+[[round((c[0]+off[0])/.054)*.054,round((c[1]+off[1])/.27)*.27] for c in centres]+[B[bit]]
   mh=max(D._man(a,b) for a,b in zip(q,q[1:]));maxhop=max(maxhop,mh);bad+=mh>405
- report['slots'].append(dict(name=name,width=slot['width'],before_stations=slot['stations'],stations=n,added_cycles=n-slot['stations'],centreline_um=poly,length_um=L,bank_centres_um=centres,bank_rects_um=banks,all_bit_max_hop_um=maxhop,over405_bits=bad))
+ report['slots'].append(dict(name=name,width=slot['width'],before_stations=slot['stations'],internal_stations=n,stations=n+1,added_cycles=n+1-slot['stations'],centreline_um=poly,length_um=L,bank_centres_um=centres,bank_rects_um=banks,all_bit_max_hop_um=maxhop,over405_bits=bad))
 # Explicit narrow-band reservation is required: ordinary .25 default does not suffice in32.4umW/S bands.
 hden=sum(1/P.layers[L]['pitch_um'] for L in ['M4','M6']);vden=sum(1/P.layers[L]['pitch_um'] for L in ['M5','M7'])
 report['track_allocation_estimate']=dict(narrow_W_S_share=.8,narrow_tracks_H=strip*hden*.8,narrow_tracks_V=strip*vden*.8,narrow_max_ratio=514/min(strip*hden*.8,strip*vden*.8),limit=.6,north_default_share=.25,north_tracks=(h-domain[3])*hden*.25,north_ratio=512/((h-domain[3])*hden*.25))
-report['added_payload_flops']=sum(s['width']*s['added_cycles'] for s in report['slots']);report['added_lane_cycles']={'coll__s_7S_LP__lk_ES1':5}
+report['added_payload_flops']=sum(s['width']*s['added_cycles'] for s in report['slots']);report['added_lane_cycles']={'coll__s_7S_LP__lk_ES1':6,'coll__lk_ES1__s_7S_LP':1}
 report['open_before_build']=['Actual per-layer track reservation must be emitted/enforced in partition kit; no rawfraction-only adoption.','Recomposeclock/reset/monitor andlandingbands in four-sideframe; actualclockmodel/crossing gatesstillrequired.','Generate physical-typevariants for ES0/ES1 only; preserveactualsource/timing ofWN1/WN2.','Binder mustmaterialize5extraFTstages andmodel/compilerpricechangedlane; smallestwidth+mutant exactness gate.','PHYsignal/powerbumpsmustregenerateontypedmacro+guard; actualIRnotrun.','ES1coll/provider parallelPHYinterface pinsneedactualabstractsource beforephysicalclosure.']
 json.dump(report,open(sys.argv[2],'w'),indent=2);print(json.dumps({k:v for k,v in report.items() if k not in ['slots','open_before_build']},indent=1));print('SLOTS',[(s['name'],s['stations'],s['all_bit_max_hop_um'],s['over405_bits']) for s in report['slots']])
