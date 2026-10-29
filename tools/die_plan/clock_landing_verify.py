@@ -21,8 +21,12 @@ def boolean(op,terms):
 
 
 class Verification:
-    def __init__(self,F,G,raw,table,names,live_widths=None):
+    def __init__(self,F,G,raw,table,names,live_widths=None,plan_path=None,reset_tree=None):
         self.F,self.G,self.raw,self.table,self.names=F,G,raw,table,names
+        # TOK-QC-4: inactive landing types carry collector tree None, but may still host count-aligned infrastructure
+        # (an intra-region start relay rx).  Their raw reset is the type's ordinary plan reset tree, the one the bind
+        # emits (RT.for_type); reset_tree(tn) may be injected (tests).  No tree -> FAIL, never skip.
+        self.plan_path,self._reset_tree_fn,self._plan_trees=plan_path,reset_tree,{}
         self.observer_seen=set();self.errors=[];self.byname={c.path:c for c in F.cells};self.expected=set();self.memo={}
         self.parts={p['name']:p for p in raw['partitions']};self.collector=table['collector']
         self.live_widths=live_widths
@@ -94,7 +98,9 @@ class Verification:
     def check_reset(self,c,part,node,extra=None,port='rst_n'):
         bits=c.ports.get(port,[])
         if len(bits)!=1:self.fail(c.path+': exact one-bit raw reset required');return
-        tree=self.collector['types'][self.parts[part]['type']]['tree']
+        tree=self.reset_tree(self.parts[part]['type'])
+        if tree is None:
+            self.fail(c.path+': no planned reset tree for type '+self.parts[part]['type']+' (inactive landing type)');return
         rows={r['q']:r for r in tree['relays']};prefix=ident(part)+'.'
         if tree.get('hard'):
             # Hard wrapper: every landing/collector stage uses the delivered
@@ -123,6 +129,25 @@ class Verification:
             return len(ib)==1 and walk(ib[0],row['d'],seen|{n})
         if not walk(bits[0],node,set()):
             self.fail(c.path+': raw reset is not the exact original local reset-parent/depth contract at '+node)
+
+    def reset_tree(self,tn):
+        """The reset tree a landing stage of type tn walks: the collector tree (active types), else the type's plan reset
+        tree as the bind emits it (RT.for_type on the plan); None (-> FAIL at the caller) if neither exists."""
+        tree=self.collector['types'][tn]['tree']
+        if tree is not None:return tree
+        if tn not in self._plan_trees:
+            try:
+                if self._reset_tree_fn is not None:t=self._reset_tree_fn(tn)
+                else:
+                    import schema as S,reset_tree as RT
+                    if not hasattr(self,'_P'):self._P=S.Plan(self.raw,self.plan_path)
+                    t=RT.for_type(self._P,tn)
+            except Exception as e:
+                self.fail(f'type {tn}: plan reset tree unavailable ({type(e).__name__}: {e})');t=None
+            if t is not None and (t.get('hard') or not isinstance(t.get('relays'),list)):
+                self.fail(f'type {tn}: plan reset tree has no relay list');t=None
+            self._plan_trees[tn]=t
+        return self._plan_trees[tn]
 
     def hard_reset(self,part):
         if not hasattr(self,'_hard_reset'):self._hard_reset={}
@@ -161,6 +186,17 @@ class Verification:
                 info=self.collector['types'][self.parts[r['dst']]['type']]
                 local=next(x for x in info['local_sources'] if x['name']==bus)
                 if ca:
+                    cfg=ca['ports'][r['port']]
+                    params=getattr(c,'params',{})
+                    if int(params.get('DEPTH',4))!=int(cfg['depth']):
+                        self.fail(path+': actual count-aligned DEPTH differs from the bound contract')
+                    if ca.get('strap_form'):
+                        kb=c.ports.get('strap_k',[])
+                        kw=int(cfg['depth']).bit_length()-1+4
+                        expected=list(reversed(format(int(cfg['K']) & ((1<<kw)-1),f'0{kw}b')))
+                        if kb!=expected:self.fail(path+': actual strap_k differs from the bound count')
+                    elif (int(params.get('K',2)) & 0xffffffff)!=(int(cfg['K']) & 0xffffffff):
+                        self.fail(path+': actual count-aligned K differs from the bound contract')
                     # count-aligned (MESO-INTEG-1): read count from the receiver's origin, write count from the
                     # sender's origin forwarded beside the bus; the origins themselves are checked below
                     self.equal_input(c,'rst_n',[self.start_net(r['dst'])])
@@ -247,7 +283,7 @@ class Verification:
 
     def _raw_node(self,pn,ins,info):
         b=sorted(ins[pn])[0] if ins[pn] else None
-        return (self.ring_reset_node(pn,b,info) if b else 'rst_n_t0'),('u_cland_rst_'+b if b else None)
+        return (self.ring_reset_node(pn,b,info) if b else 'rst_n_t0'),('u_cland_rst_'+b if b else 'u_cland_origin_rst')
 
     def _check_origins(self,rows,ports):
         """Start tree: one origin per region; root = ot_dp_landing_root on a raw reset, child = ot_dp_landing_origin on

@@ -846,12 +846,19 @@ class Landings:
         Intra-region relay (ASK 3): the origin partition of a multi-partition region adds the tx flop u_cland_rstart_tx
         -> cland_rstart_out; a relay partition's start is the rx flop u_cland_rstart_rx on cland_rstart_in."""
         role = cat["role"]
+        raw_logic = []
 
         def local_raw(what):
             raw = next(iter(ca_raw.values()), None)
             if raw is None:
-                m = re.search(r"ot_dp_r(?:gate|relay)\s+\w+\s*\([^;]*?\.q\((rst_n_t0)\)\);", body)
-                raw = m.group(1) if m else ("rst_n" if re.search(r"\bwire rst_n = arst_n;", body) else None)
+                m = re.search(r"ot_dp_r(gate|relay)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\((rst_n_t0)\)\);", body)
+                raw = m.group(3) if m else ("rst_n" if re.search(r"\bwire rst_n = arst_n;", body) else None)
+                if m and m.group(1) == "gate":
+                    # The count origin/relay must release before START.  Match the
+                    # tap's parent and depth without inheriting its START gate.
+                    raw = "cland_origin_reset"
+                    raw_logic.extend(["    wire " + raw + ";",
+                        f"    ot_dp_rrelay u_cland_origin_rst (.clk(clk), .d({m.group(2)}), .q({raw}));"])
                 if raw is None:
                     raise LandingError(f"{tn}: {what} needs a timed raw reset relay (rst_n_t0) or delivered rst_n")
             return raw
@@ -859,7 +866,7 @@ class Landings:
             raw = local_raw("start relay rx")
             self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="relay", raw_reset=raw, stages=role[-1])
             extra.append("    input wire cland_rstart_in")
-            return [f"    ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n({raw}), .d(cland_rstart_in), "
+            return raw_logic + [f"    ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n({raw}), .d(cland_rstart_in), "
                     f".q(cland_start));"]
         if role[0] == "strap":
             logic, raw = self._origin_strap_rtl(tn, role, ca_raw, extra, local_raw)
@@ -886,7 +893,7 @@ class Landings:
             extra.append("    output wire cland_rstart_out")
             logic.append(f"    ot_dp_landing_relay u_cland_rstart_tx (.clk(clk), .rst_raw_n({raw}), .d(cland_start), "
                          f".q(cland_rstart_out));")
-        return logic
+        return raw_logic + logic
 
     def _origin_strap_rtl(self, tn, role, ca_raw, extra, local_raw):
         """MESO-STRAP-1 strap origin: ot_dp_landing_origin_s (strap_ca_pad / strap_ca_efall), the parent's forwarded
