@@ -1,0 +1,88 @@
+{
+  "schema": "opentallas.kvspc.input_collar.v1",
+  "enabled": true,
+  "input_cycles": 1,
+  "boot_cycles": 1,
+  "throughput_cycles": 0,
+  "flops": 1831,
+  "captured": [
+    {
+      "port": "i_next",
+      "width": 780,
+      "register": "pcin_i_next"
+    },
+    {
+      "port": "hrst_n",
+      "width": 1,
+      "register": "pcin_hrst_n"
+    },
+    {
+      "port": "i_grp",
+      "width": 128,
+      "register": "pcin_i_grp"
+    },
+    {
+      "port": "pc__cfg_stack",
+      "width": 2,
+      "register": "pcin_pc__cfg_stack"
+    },
+    {
+      "port": "pc__hes",
+      "width": 288,
+      "register": "pcin_pc__hes"
+    },
+    {
+      "port": "pc__land_er",
+      "width": 1,
+      "register": "pcin_pc__land_er"
+    },
+    {
+      "port": "pc__land_er_259",
+      "width": 2,
+      "register": "pcin_pc__land_er_259"
+    },
+    {
+      "port": "pc__pc",
+      "width": 5,
+      "register": "pcin_pc__pc"
+    },
+    {
+      "port": "pc__pi",
+      "width": 289,
+      "register": "pcin_pc__pi"
+    },
+    {
+      "port": "rst_n",
+      "width": 1,
+      "register": "pcin_rst_n"
+    },
+    {
+      "port": "i_prev",
+      "width": 299,
+      "register": "pcin_i_prev"
+    },
+    {
+      "port": "pc__fi",
+      "width": 1,
+      "register": "pcin_pc__fi"
+    },
+    {
+      "port": "pc__ki",
+      "width": 33,
+      "register": "pcin_pc__ki"
+    },
+    {
+      "port": "x__est__0_1",
+      "width": 1,
+      "register": "pcin_x__est__0_1"
+    }
+  ],
+  "clocks": [
+    "ck",
+    "ft_ck_i_0",
+    "ft_ck_i_1"
+  ],
+  "strap_passthrough": [],
+  "leaf_logic_changed": false,
+  "default_enabled": false
+}
