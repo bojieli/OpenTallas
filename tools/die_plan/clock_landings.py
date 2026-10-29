@@ -506,9 +506,20 @@ class Landings:
         cland_rstart_in = its start (count_align_bind RELAY_STAGES = 2 = tx + rx)."""
         ca = self.ca
         regs = defaultdict(list)
+        frames = ca.get("frame_clock_regions")
+        if frames is not None:
+            # Optional independent count origins on one physical clock group.
+            # Physical clocks, masks and same-region data/status links continue
+            # to use self.region; only START origin/count-frame grouping changes.
+            if not ca.get("parts"):
+                raise LandingError("count frame clock map requires explicit partition roles")
+            for pn, pi in ca["parts"].items():
+                if pn in self.parts and frames.get(pi["region"]) != self.region[pn]:
+                    raise LandingError(f"count frame clock mismatch for {pn}")
         for pn in self.parts:
             if self.ins[pn] or self.outs[pn]:
-                regs[self.region[pn]].append(pn)
+                frame = ca["parts"][pn]["region"] if frames is not None else self.region[pn]
+                regs[frame].append(pn)
         cparts = ca.get("parts")
         multi = {r: ps for r, ps in regs.items() if len(ps) > 1}
         if multi and cparts is None:
