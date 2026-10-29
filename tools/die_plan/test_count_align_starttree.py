@@ -319,3 +319,28 @@ def test_start_tree_check_fails_closed():
         cap.start_tree_check("R", e)
     with pytest.raises(ValueError, match="not reached"):
         cap.start_tree_check("R", [dict(src="R", dst="A"), dict(src="Q", dst="B")])
+
+
+def test_physical_reach_keeps_stages_and_retimes_phase_clean_chain():
+    rows = chain_rows(12)
+    _, default, _ = cap.clock_start_edges(rows, ctx_chain(12, seg=5))
+    _, bounded, info = cap.clock_start_edges(rows, ctx_chain(12, seg=5), max_hop_um=150, retime_max=32)
+    assert len(bounded) > len(default)
+    assert info['reach_fail'] == 0 and info['retime_nodes'] > 0
+    assert all(e['hop_um'] <= 150 and e['clean_ok'] for e in bounded)
+    # The additional registered edges enter the existing boot/path price calculation.
+    s, _, regs = cap.plan(rows, T, AP, 0.05, start_edges=bounded, start_root=info['root'])
+    assert s['start_tree']['start_fail'] == 0
+    assert max(g.get('start_depth', 0) for g in regs) >= 0
+
+
+def test_physical_reach_fails_closed_without_intermediate_nodes():
+    _, edges, info = cap.clock_start_edges(chain_rows(), ctx_chain(), max_hop_um=50)
+    assert info['reach_fail'] > 0
+    assert any(e['hop_um'] > 50 and not e['clean_ok'] for e in edges)
+    c = ctx_chain()
+    del c['TT']['meta']['node_xy_um']
+    with pytest.raises(ValueError, match='coordinates'):
+        cap.clock_start_edges(chain_rows(), c, max_hop_um=405)
+    with pytest.raises(ValueError, match='finite and positive'):
+        cap.clock_start_edges(chain_rows(), ctx_chain(), max_hop_um=float('nan'))
