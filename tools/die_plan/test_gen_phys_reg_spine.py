@@ -123,10 +123,20 @@ def test_projected_radius_closes_sparse_outliers_and_keeps_pad_ids():
     initial = [dict(id=0, x=38.0, y=50.0, node="A", pad=2)]
     taps = reg_spine.close_projected_radius(initial, sinks, spec["trunk"], spec)
     assert len(taps) == 2
-    assert [t["pad"] for t in taps] == [2, 3]
+    # tap 0 (pad 2) is pruned; created taps 1 (pad 3) and 2 (no pad) survive as ids 0/1 WITH their own pads
+    assert [t["pad"] for t in taps] == [3, 0]
     assert all(min(abs(t["x"]-x)+abs(t["y"]-y) for t in taps) <= 20 for _, x, y in sinks)
     assert not any(40 <= t["x"] <= 60 and 40 <= t["y"] <= 60 for t in taps)
 
+
+def test_projected_radius_prune_keeps_each_surviving_pad():
+    # ROOT-MERGE probe: an earlier tap is pruned (no sink); the survivor must keep ITS pad, not read pads by new id
+    spec = copy.deepcopy(SPEC)
+    spec.update(projected_radius_um=20.0, pads={"0": 2, "1": 5, "2": 7})
+    sinks = [("a", 0.0, 50.0), ("b", 5.0, 50.0)]
+    initial = [dict(id=0, x=200.0, y=200.0, node="A", pad=2), dict(id=1, x=2.0, y=50.0, node="A", pad=5)]
+    taps = reg_spine.close_projected_radius(initial, sinks, spec["trunk"], spec)
+    assert [(t["id"], t["x"], t["pad"]) for t in taps] == [(0, 2.0, 5)]
 
 def test_projected_radius_rejects_impossible_keepout_sink():
     import pytest
