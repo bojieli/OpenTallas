@@ -1,0 +1,10 @@
+{
+  "reviewer": "Codex KV-KITS takeover",
+  "verdict": "PASS-COND",
+  "images_viewed": [
+    "pvlc_R0.png",
+    "pvlc_fMX.png"
+  ],
+  "findings": "Both LC pair placements viewed: eight separated SRAMs in left middle and right north/south banks, open central/cross corridors, no macro wall or stdcell body overlap. Center clock entry with local macro leaf islands. GRT0 on both, fill29.51%, per-edge peak4.5 pins/um, full connected r2r330.64/325.08um with0 captures over405, pin-register max12.37/12.86um. Clock leaf reach214.87/215.08um. Perimeter pins remain ordered. PG recipe unchanged from placed kit. Continue through CTS/route; SRAM-vs-register skew is measured after CTS.",
+  "automated_failure_diagnosis": "AUTO-GEOM FAIL pin_unreg4 retained unchanged. Exactly ft_ck_i_0,ft_ck_i_1,ft_ck_o_0,ft_ck_o_1; ft_interface.json explicitly declares two kind=clock pass-through arcs, and island_ft.tcl implements BUFx24 clock chains at fixed island sites. They are clock infrastructure under METHODOLOGY12.2a1, not data pins requiring capture flops. CLOCK_PIN_RE currently misses this naming form. No data pin exemption or gate threshold change. This independent manual review recognizes the existing clock contract; original automated FAIL is preserved."
+}
