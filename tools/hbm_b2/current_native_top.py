@@ -25,7 +25,7 @@ def expr(segments):
     return terms[0] if len(terms) == 1 else '{' + ', '.join(terms) + '}'
 
 
-def compose(original, base, config, out, preserve_history=False, fused_target=None, target_audit=None):
+def compose(original, base, config, out, preserve_history=False, fused_target=None, target_audit=None, fused_lower_tree=False):
     source = Die(original, config['transport'])
     vehicle = Die(base, config['transport'])
     selected = {name for name in source.insts if name.startswith('hb_idx__') or name == 'hb_argmax' or name in {f'hb_vms_{q}' for q in ('SW', 'SE', 'NW', 'NE')}}
@@ -110,11 +110,17 @@ def compose(original, base, config, out, preserve_history=False, fused_target=No
         ports['up_' + side] = inp([('n', f'{name}__uo', 0, 270)])
         original_reset_provenance[name] = reset
         node = dict(clk=inp(clock), rst_n=required(name, 'rst_n', 1, 'Current die-delivered reset endpoint/offset is not bound; original POR is provenance only'), dn=inp([('n', f'{root}__down_{side}', 0, 172)]))
+        lower, n4_in = {}, {}
+        if fused_lower_tree:
+            # HBM-BIND-6 opt-in: the actual lower FUSED tree (16 lanes + 14 tnodes) under this n4 (fused_lower_tree.py)
+            from fused_lower_tree import compose_side
+            lower, n4_in = compose_side(side, clock, required, output)
         for port, width in dict(pad_k=6, pad_b=1, ua=271, ub=271).items():
-            node[port] = required(name, port, width, 'Actual native lower-tree/pad calendar interface remains unbound')
+            node[port] = n4_in[port] if port in n4_in else required(name, port, width, 'Actual native lower-tree/pad calendar interface remains unbound')
         for port, width in dict(uo=271, da=173, db=173).items():
             node[port] = output(name, port, width)
         instances[name] = dict(master='ot_hnx_fused_tnode', params='.LA(6), .UW(271), .DW(173), .DELIVERED_RESET(1)', ports=node, origin='native_FUSED_contract')
+        instances.update(lower)
     instances[root] = dict(master='ot_hnx_fused_hub_n4ext', params='.DELIVERED_RESET(1)', ports=ports, origin='native_FUSED_contract')
     bootstrap = None
     if fused_target is not None:
@@ -173,6 +179,7 @@ def compose(original, base, config, out, preserve_history=False, fused_target=No
         retained_transport_instances=sorted(transport_cone),
         original_parameters_provenance={name: source.insts[name]['params'] for name in sorted(selected)},
         native_bootstrap_binding=bootstrap, obligations=obligations, original_reset_provenance=original_reset_provenance, unconsumed_native_outputs=sorted(exposed_outputs),
+        **(dict(fused_lower_tree='HBM-BIND-6 opt-in: 2 x (16 ot_hnx_fused_lane + 14 ot_hnx_fused_tnode) under the n4 nodes, wired as ot_hnx_fused_tree_top N4EXT=1') if fused_lower_tree else {}),
         scope='Source candidate only. Existing non-IDX/VMS B1 leaves remain historical scaffold pending current full-native review. No geometry, boot, LEC, P&R or timing qualification.')
     (out / 'composition.json').write_text(json.dumps(report, indent=2) + '\n')
     (out / 'resolved_source_paths.json').write_text(json.dumps(stages) + '\n')
@@ -196,8 +203,9 @@ def main():
     ap.add_argument('--preserve-history', action='store_true', help='retain exact original transport RTL cone for selected imported inputs; still no current-plan/calendar qualification')
     ap.add_argument('--fused-target', type=lambda value: int(value,0), help='explicit reviewed target byte; omitted means bootstrap remains unbound')
     ap.add_argument('--target-audit', type=Path, help='exact namespace review required with --fused-target')
+    ap.add_argument('--fused-lower-tree', action='store_true', help='opt-in (HBM-BIND-6): compose the actual lower FUSED tree (lanes + lower tnodes) under the two n4 nodes; default output unchanged')
     a = ap.parse_args()
-    report = compose(a.original, a.base, json.loads(a.asbuilt.read_text()), a.out, a.preserve_history, a.fused_target, a.target_audit)
+    report = compose(a.original, a.base, json.loads(a.asbuilt.read_text()), a.out, a.preserve_history, a.fused_target, a.target_audit, a.fused_lower_tree)
     print(json.dumps({k: report[k] for k in ('status', 'instances', 'quarter_count', 'quarter_sram_count', 'fused_packet_bits')}))
     print('EXPLICIT_BOUNDARY_PORTS', len(report['unresolved_boundary']))
 

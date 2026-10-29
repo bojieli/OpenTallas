@@ -1,0 +1,213 @@
+{
+ "schema": "hbm.bind6.fused_lower_tree_proof.v1",
+ "instances": 63,
+ "checked_bits": 27688,
+ "mismatches": 1776,
+ "examples": [
+  [
+   "u_mu_fused_2_nw",
+   "dn_d",
+   0,
+   [
+    "u_mu_fused_n1_q0_1_nw",
+    "da",
+    33
+   ],
+   [
+    "u_mu_fused_n1_q0_2_nw",
+    "da",
+    33
+   ]
+  ],
+  [
+   "u_mu_fused_2_nw",
+   "dn_d",
+   1,
+   [
+    "u_mu_fused_n1_q0_1_nw",
+    "da",
+    34
+   ],
+   [
+    "u_mu_fused_n1_q0_2_nw",
+    "da",
+    34
+   ]
+  ],
+  [
+   "u_mu_fused_2_nw",
+   "dn_d",
+   2,
+   [
+    "u_mu_fused_n1_q0_1_nw",
+    "da",
+    35
+   ],
+   [
+    "u_mu_fused_n1_q0_2_nw",
+    "da",
+    35
+   ]
+  ],
+  [
+   "u_mu_fused_2_nw",
+   "dn_d",
+   3,
+   [
+    "u_mu_fused_n1_q0_1_nw",
+    "da",
+    36
+   ],
+   [
+    "u_mu_fused_n1_q0_2_nw",
+    "da",
+    36
+   ]
+  ],
+  [
+   "u_mu_fused_2_nw",
+   "dn_d",
+   4,
+   [
+    "u_mu_fused_n1_q0_1_nw",
+    "da",
+    37
+   ],
+   [
+    "u_mu_fused_n1_q0_2_nw",
+    "da",
+    37
+   ]
+  ],
+  [
+   "u_mu_fused_2_nw",
+   "dn_d",
+   5,
+   [
+    "u_mu_fused_n1_q0_1_nw",
+    "da",
+    38
+   ],
+   [
+    "u_mu_fused_n1_q0_2_nw",
+    "da",
+    38
+   ]
+  ],
+  [
+   "u_mu_fused_2_nw",
+   "dn_d",
+   6,
+   [
+    "u_mu_fused_n1_q0_1_nw",
+    "da",
+    39
+   ],
+   [
+    "u_mu_fused_n1_q0_2_nw",
+    "da",
+    39
+   ]
+  ],
+  [
+   "u_mu_fused_2_nw",
+   "dn_d",
+   7,
+   [
+    "u_mu_fused_n1_q0_1_nw",
+    "da",
+    40
+   ],
+   [
+    "u_mu_fused_n1_q0_2_nw",
+    "da",
+    40
+   ]
+  ],
+  [
+   "u_mu_fused_2_nw",
+   "dn_d",
+   8,
+   [
+    "u_mu_fused_n1_q0_1_nw",
+    "da",
+    41
+   ],
+   [
+    "u_mu_fused_n1_q0_2_nw",
+    "da",
+    41
+   ]
+  ],
+  [
+   "u_mu_fused_2_nw",
+   "dn_d",
+   9,
+   [
+    "u_mu_fused_n1_q0_1_nw",
+    "da",
+    42
+   ],
+   [
+    "u_mu_fused_n1_q0_2_nw",
+    "da",
+    42
+   ]
+  ],
+  [
+   "u_mu_fused_2_nw",
+   "dn_d",
+   10,
+   [
+    "u_mu_fused_n1_q0_1_nw",
+    "da",
+    43
+   ],
+   [
+    "u_mu_fused_n1_q0_2_nw",
+    "da",
+    43
+   ]
+  ],
+  [
+   "u_mu_fused_2_nw",
+   "dn_d",
+   11,
+   [
+    "u_mu_fused_n1_q0_1_nw",
+    "da",
+    44
+   ],
+   [
+    "u_mu_fused_n1_q0_2_nw",
+    "da",
+    44
+   ]
+  ]
+ ],
+ "excluded_bits": {
+  "clk": 62,
+  "rr_d": 8192,
+  "rr_v": 32,
+  "rst_n": 62,
+  "pad_b": 30,
+  "pad_k": 180,
+  "hub_clk": 1,
+  "hub_job": 217,
+  "hub_job_v": 1,
+  "hub_pb4a": 1,
+  "hub_pb4b": 1,
+  "hub_pb5": 1,
+  "hub_pk4a": 6,
+  "hub_pk4b": 6,
+  "hub_pk5": 6,
+  "hub_rst_n": 1,
+  "hub_uq1": 271,
+  "hub_uq3": 271,
+  "hub_wsc": 8
+ },
+ "verdict": "FAIL",
+ "ref": "ref/ref_n4ext1.json",
+ "spliced": "c3/out/asbuilt.json",
+ "mutant": "swap_2_4"
+}
