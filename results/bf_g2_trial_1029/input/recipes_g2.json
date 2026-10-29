@@ -1,0 +1,23 @@
+{
+ "ot_v41_bf_col": {
+  "ref_tile": "physical/die_plan/s81/cores/legacy/specs/ot_v41_bf_col",
+  "util": 0.6,
+  "macro_sites": {
+   "ot_rom_4096x274_m8": [
+    [
+     42.12,
+     30.96,
+     "R180"
+    ],
+    [
+     42.12,
+     104.784,
+     "MY"
+    ]
+   ]
+  },
+  "suffix": "r4",
+  "_why": "BF G2 trial only: restore the exact approved native 10.872um ROM gap; all5558 planned clock cells remain unchanged.",
+  "_lat": "Clock: centre entry + ICG-aware internal tree come from the master-plan slice (--master-slice, core_infra core_tree.gates for the 40 RCG ICGs, physical/die_plan/s81/core_lat/bf_col_gates.json); without a slice this recipe only gives the macro/pin/RTL frame (plan N-face clk pin) for synth+place / GEOM."
+ }
+}

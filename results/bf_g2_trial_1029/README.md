@@ -1,3 +1,31 @@
+BF G2 actual native-gap repair (CODEX 2026-10-29)
+
+The original generated kit used the shared recipe gap8.664um while the approved
+G2 plan/site census used10.872um. Native first trial stopped before GPL on
+mp_ck_T00432_r0 versus a fresh TAP body. No CTS/GRT/DRT occurred.
+This candidate explicitly carries the approved macro coordinates in
+input/recipes_g2.json: lower ROM30.960/R180, upper104.784/MY.
+Use --recipes results/bf_g2_trial_1029/input/recipes_g2.json when regenerating.
+Shared recipes and RTL remain unchanged.
+
+Actual restored-gap floorplan unit2819609 completed. Native export3063045
+exactly matches EVERY original FIXED6913/ROW1236/PG204/MASTER16 record,
+no blockages. Repack3072819 produces all5558clock placements unchanged,
+max raw displacement3.591um, original modeled TT39.25/FF33.21 unchanged.
+The exact original layout is restored, rather than moving clocks around the
+wrong macro gap. Native evidence is retained at intel1 codex-flow-bf-gap-0255
+and codex-ci-index-0255; native_gap_receipt.json records the census comparison.
+
+Fresh rendered review was viewed: restored two-ROM gap and all5558 clock
+placements match the approved geometry; buffers/gates occupy surrounding rows,
+centroid M5 entry273.228/95.58 unchanged. PLACE/CTS/GRT diagnostic may resume. Trial remains
+DIAGNOSTIC ONLY, ROOT/COORD02:48 defers RAW/postclone LEC pending signoff;
+no DRT or SIGNED. Shared occupancy source03c0925ae+35f5fa123 is independently
+qualified against actual failed IOP checkpoint and preserves its exact TAP
+collision; refresh core_infra_impl.tcl from those sources before continuation.
+
+Previous candidate packet follows:
+
 BF planned ICG G2 candidate (ROOT approved design-target INFO trial)
 
 Frozen previous actual plan:53852 sinks;4306 buffers+1252 ICG stages (40 originals,
