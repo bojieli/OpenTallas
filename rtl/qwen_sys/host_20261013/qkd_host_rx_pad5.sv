@@ -11,12 +11,27 @@ module qkd_host_rx_pad5 #(parameter integer MUT=0)(
  reg vq,crq;reg[1023:0]dq;
  reg[527:0]q[0:4];reg[2:0]wp,rp,count,credits;
  wire pop=!fault&&count!=0&&credits!=0;
- wire padding_ok=dq[1023:528]==0;
+ // Capture the padding predicate in parallel with the data, rather than put
+ // a 496-bit reduction on the queue write-enable path. No extra data stage.
+ reg [30:0] padding_zero_q;
+ for(genvar g=0;g<31;g=g+1)begin: g_padding
+  always @(posedge clk)padding_zero_q[g] <= in_d[528+16*g+:16]==0;
+ end
+ wire padding_ok=&padding_zero_q;
+ // Registered per-bank pending enables predict the write pointer AFTER the
+ // current take. This removes binary pointer decode from each 528-bit bank.
+ reg [4:0] wp_hot,put_q;
+ wire [4:0] wp_hot_next=take?{wp_hot[3:0],wp_hot[4]}:wp_hot;
  wire take=vq&&!fault&&padding_ok&&(count<5||pop);
  always @(posedge clk)begin
   dq<=in_d;
-  if(take)q[wp]<=dq[527:0];
+  for(integer k=0;k<5;k=k+1)
+   if(put_q[k]&&!fault&&padding_ok&&(count<5||pop))q[k]<=dq[527:0];
   if(pop)out_d<={18'd0,q[rp]^((MUT==1)?528'd1:528'd0)};
+ end
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin wp_hot<=5'b00001;put_q<=0;end
+  else begin wp_hot<=wp_hot_next;put_q<={5{in_v}}&wp_hot_next;end
  end
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin vq<=0;crq<=0;wp<=0;rp<=0;count<=0;credits<=4;in_cr<=0;out_v<=0;fault<=0;end
