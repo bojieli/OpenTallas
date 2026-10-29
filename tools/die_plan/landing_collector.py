@@ -21,7 +21,11 @@ def raw_reset(tree, node, body):
     """Resolve a pre-START consumer using its exact existing reset-tree edge."""
     reset = raw(node)
     declared = lambda n: re.search(r"\bwire\b[^;]*\b"+re.escape(n)+r"\b", body)
-    if node == "rst_root_n" or declared(reset):
+    # DIE-KV-32 10-29 (face_guard 'shared' hub_Ei rst_o_0): a raw tap that is the registered reset OUT of the
+    # wrapper (reset_tree `assign rst_o_k = rr_tN`) is that port's face flop; a pre-START consumer takes its own
+    # copy at the same parent/depth below (cycle-equal), never the face flop's Q.
+    face = re.search(r"\bassign\s+rst_o_\d+\s*=\s*" + re.escape(reset) + r"\s*;", body)
+    if node == "rst_root_n" or (declared(reset) and not face):
         return reset, [], []
     boot = re.search(r"ot_dp_rrelay(?:_drive)?\s+\w+\s*\([^;]*\.q\("+re.escape(node)+r"\)\);", body)
     if boot:

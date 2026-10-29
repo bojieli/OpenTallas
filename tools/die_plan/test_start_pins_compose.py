@@ -49,7 +49,10 @@ def test_origin_reads_the_start_pin_and_parent_drives_one_out_pin():
     aa = c.type_rtl("A", A_BODY)
     assert "input wire cland_tstart_in" in bb and ".p_start(cland_tstart_in)" in bb
     assert "ot_dp_landing_origin_s #(.PADW(1)) u_cland_origin (" in bb
-    assert "output wire cland_tstart_out" in aa and "assign cland_tstart_out = cland_start;" in aa
+    # DIE-KV-32 10-29: the strap-form launch pin is its OWN face flop (d = start's D-side, start's raw reset)
+    assert "output wire cland_tstart_out" in aa and "assign cland_tstart_out" not in aa
+    assert ("ot_dp_landing_relay u_cland_tstart_o (.clk(clk), .rst_raw_n(cland_start_raw), .d(cland_start_d), "
+            ".q(cland_tstart_out));") in aa
     assert "cland_tstart_in" not in aa and "cland_tstart_out" not in bb
     tt = c.top_rtl(TOP)
     assert tt.count(".cland_tstart_out(clock_landing_tstart_a)") == 1
@@ -155,7 +158,9 @@ def test_reset_wave_exports_registered_local_parent_reset():
     c=Landings(p,t)
     aa=c.type_rtl('A',A_BODY);c.type_rtl('B',B_BODY)
     assert 'output wire cland_raw_reset_out' in aa
-    assert 'always @(posedge clk) cland_raw_reset_q <=' in aa
+    # DIE-KV-32 10-29: one ot_dp_rrelay face flop drives the port alone (no kept reg aliased to the port)
+    assert 'ot_dp_rrelay u_cland_raw_reset_o (.clk(clk), .d(' in aa and '.q(cland_raw_reset_out));' in aa
+    assert 'cland_raw_reset_q' not in aa and 'assign cland_raw_reset_out' not in aa
     tt=c.top_rtl(TOP)
     assert 'output wire rraw_r0;' in tt and 'assign rraw_r0 = clock_landing_raw_reset_a;' in tt
     assert '.cland_raw_reset_out(clock_landing_raw_reset_a)' in tt
