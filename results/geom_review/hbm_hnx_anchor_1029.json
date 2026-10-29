@@ -1,5 +1,5 @@
 {
-  "status": "PASS placement successor for CTS only; no route/signoff claim",
+  "status": "PASS-COND actual CTS geometry for TT/FF diagnostics; no route/signoff claim",
   "reviewer": "codex macro_estimate",
   "viewed": "results/hbm_hnx_1029/estimate.png",
   "finding": "Exact6 fullgraph incident pairs; candidate104,235 max387.446um; sourcegraph no SRAM macros. Preserve actual5 clockislands/RTL/pins; same-synth preplace anchor trial authorized parent. Candidate near oldFF, dataFF only. Legal rows checked by own DPL trial; old failures retained.",
@@ -10,5 +10,17 @@
     "captures": 37757
   },
   "actual_legality": "DPL/check_placementPASS; allothersFIRM duringtrial restored, displacement0.0um; exactjv origin103.032,234.900",
-  "preserved": "same source/synth/pins5islands/clock constraints; oldfail retained"
+  "preserved": "same source/synth/pins5islands/clock constraints; oldfail retained",
+  "actual_cts_viewed": "results/hbm_hnx_1029/actual_cts.png",
+  "actual_cts_r2r": {
+    "max_um": 387.75,
+    "captures_gt405": 0,
+    "captures": 37757
+  },
+  "actual_cts_area": {
+    "fill": 0.29,
+    "empty": 0.2785,
+    "aspect": 1.061
+  },
+  "infrastructure": "Role-aware existing classification:20mp_isl clock/resetFT ports + declaredr_g reset informational. No functional unregistered source failure. Parent/GEOM independent finalreview before route."
 }
