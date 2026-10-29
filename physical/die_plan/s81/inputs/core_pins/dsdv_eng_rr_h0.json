@@ -2,7 +2,7 @@
 "module": "dsdv_eng_rr_h0",
 "lef": "physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_h0.lef",
 "pinhash": "a3f59bc9f38c",
-"source": "CORE-S81-ENG 10-23 planned pins (gen_eng_cores.py): M5 N/S, M4 E/W, core-frame tracks 0.012 + k 0.048 (die tracks under track_offset [0.108, 0.012])",
+"source": "CORE-S81-ENG 10-23 planned pins (gen_eng_cores.py): M5 N/S, M4 E/W, core-frame tracks 0.012 + k 0.048 (die tracks under track_offset [0.108, 0.012]); S81 source-pin event DIE-S81-28 2026-10-29 (delta_h0_ck_m5_1029.py): ck M4 W face (0.096,133.932) -> M5 interior slice entry (82.092,133.92) 0.048x0.48 = routed view",
 "pins": [
 {
 "name": "out_res[0]",
@@ -3870,9 +3870,9 @@
 },
 {
 "name": "ck",
-"layer": "M4",
-"x": 0.096,
-"y": 133.932
+"layer": "M5",
+"x": 82.092,
+"y": 133.92
 }
 ]
 }

@@ -45,6 +45,11 @@ def main():
         for _, x0, y0, x1, y1 in lay:
             cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
             f = p["face"]
+            if f == "C":
+                # declared interior clock entry (gen_core_kit_legacy face C, METHODOLOGY 12.8a): the box centre must be
+                # the plan point in BOTH coordinates (there is no face to touch)
+                good |= abs(cx - p["x"]) <= TOL and abs(cy - p["y"]) <= TOL
+                continue
             along = abs(cy - p["y"]) <= TOL if f in "EW" else abs(cx - p["x"]) <= TOL
             edge = {"E": abs(x1 - W) <= TOL, "W": abs(x0) <= TOL, "N": abs(y1 - H) <= TOL, "S": abs(y0) <= TOL}[f]
             good |= along and edge
