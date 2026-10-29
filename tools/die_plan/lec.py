@@ -4192,6 +4192,9 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     replica_proposals(L, log)
     merged_proposals(L, log)
     register_alias_proposals(L, log)
+    if getattr(L, "fsm_hints", None):
+        seed = apply_hints(L, L.fsm_hints, work, conflicts, log, propose_only=True)
+        log.append(f"fsm: explicit untrusted hints seeded before discovery: {seed['applied']} applied")
     fsm_proposals(L, log)
     traces = None                      # sequential traces (seq_traces), computed on first need
     tried = collections.Counter()      # failed attempts per candidate (a pair may fail while a neighbour is wrong)
@@ -4646,7 +4649,7 @@ def cascade_drop(L, sup, gone):
     return out
 
 
-def apply_hints(L, hints, work, conflicts, log, rounds=40):
+def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
     """Untrusted correspondence hints (the commercial 'user match' / 'add mapped points'; PATH-KV-PC4 10-25):
     [[side, key, ['eq', oside, okey, inv] | ['const', c]], ...] for registers the signature search cannot pair
     (rare-event twins such as an opcode bit that only a refresh sets, which random simulation never excites;
@@ -4782,6 +4785,10 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40):
             sd, k, h = "gold", h[2], ("eq", "gold", k, h[3])     # a gold-only twin points at the matched register
         L.hyp[(sd, k)] = h
         rec["applied"] += 1
+    if propose_only:
+        # Seed explicit state metadata before discovery, exactly like fsm_proposals.
+        # correspond() still proves/drops every cube and state constraint below.
+        return rec
     anon = []
     for side in ("gold", "gate"):
         points, compare, only = (L.gp, L.gc, L.gonly) if side == "gold" else (L.tp, L.tc, L.tonly)
@@ -5130,8 +5137,13 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                 read_aig(out / "gate.aig"), read_map(out / "gate.map"), port_map)
         L.kit_reset_ports = kit_reset_ports(kit)
         rec["kit_reset_ports"] = L.kit_reset_ports
-        correspond(L, out, conflicts, log)
         hf = Path(hints) if hints else Path(kit) / "lec_hints.json"
+        if hf.is_file():
+            supplied = json.loads(hf.read_text())
+            L.fsm_hints = [e for e in supplied if isinstance(e, (list, tuple)) and e and
+                           (e[0] == "cons" or (len(e) == 3 and isinstance(e[2], (list, tuple)) and
+                                               e[2] and e[2][0] == "cube"))]
+        correspond(L, out, conflicts, log)
         if hf.is_file():
             import hashlib
             rec["hints"] = dict(file=str(hf), sha256=hashlib.sha256(hf.read_bytes()).hexdigest())
