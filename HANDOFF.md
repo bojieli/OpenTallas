@@ -1838,3 +1838,5 @@ CODEX: 2026-10-29 08:46 PDT HBMK13filledidleEPYC2with13reviewedplace-onlykits; R
 CODEX: 2026-10-29 08:46 PDT QC-A0 native B-hop clock-scope repair68204ac61dc restores34/36ICGs+10ROMs; fixedsynthPASS; approvedONE NL/NK V1LplacementsLIVEintel2 2306050/2355573, actualREGROOT3 mappedleafproofownedqc_proof; noCTS/signoff.
 
 CODEX: 2026-10-29 08:49 PDT QC native import: fixed2resetreceiveFFreach failures483.618/469.233->fullactual32514arc max403.698/0over405/0undriven via2FF -79.92um y,0cycles/RTLchange; source ddab9669, ownnumbersUNCHECKED. 185694/185698PGcontacts candidate,4b190VSScontacts underlocaljogdiagnosis; realFFCLKbranchhelperlive. Results3c28601388a+2f83a96087f pushed.
+
+CODEX: 2026-10-29 08:49 PDT HBMnativeVMS actualplanprune+128piperecipes READY73a128163/aa06f3c6b;coverageactualsource128materialized/379instpreserved,27mutantscaught;128Southgeometryexplicitmissing,parentHBMcut/sourcecalendarcontinues.
