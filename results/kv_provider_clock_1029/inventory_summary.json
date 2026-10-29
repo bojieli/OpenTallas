@@ -1,0 +1,25 @@
+{
+ "counts": {
+  "stages": 1139,
+  "cells": 10159,
+  "metadata_cells_skipped": 1139,
+  "flops": 4464,
+  "comb": 5695,
+  "mapped_area_um2": 1603.3042800001767,
+  "outputs": 157
+ },
+ "stage_width_um": {
+  "min": 4.32,
+  "max": 5.292
+ },
+ "provisional_ff_row_width_um": {
+  "min": 3.2399999999997817,
+  "max": 4.320000000001528
+ },
+ "stages_exceed_provisional_row": 1139,
+ "output_inv_counts": {
+  "1": 157
+ },
+ "physical_qualified": false,
+ "blocker": "global rst_raw_n star; current row allocation counts only FF; all-body placement/clockload pending"
+}
