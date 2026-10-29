@@ -1689,3 +1689,7 @@ CODEX: 2026-10-29 03:21 PDT BTABactualGRT0/TT267.725/FF11.123/pair46.61,41.08/fu
 
 CODEX: 2026-10-29 03:22 PDT HBM corepush WRQ1clockcandidate100564edgePASS/3controlclassesCAUGHT0cycles, current78module/80viewinventory+CTLX4lottransform58e6f4a8d. QcoreM7GRTFAILcapacitydiagnosticowned; oldselectorGENsparseFAIL/newprocsplitGENlive; ringcausal2BUF+57.58ps, finalMMrepairownedchild/noDRT.
 CODEX:2026-10-29 03:24 PDT HBMtransport db9c23e89 implementsactual15329bit/50pairmapper+realPGtrackcapacity+HOST_BOOTidentityguard; current50seam87edgesfit, old40capacityFAILretained. ActualFTsitesLIVEepyc2unit1556510, allcyclechangespricedledgerpendingTOK/atomiccompose; noP&R.
+
+CODEX: 2026-10-29 03:24 PDT S81L2 sourcegeometryprogress10203b566:prospectivesoft285homefix/0overlap/3137knownlegmax399.999/0cycles,parentintegrationopen;H0clockmodelandVQnormalposthooknext,CFGhardcoremetadatafix1ec38READYROOT.
+
+CODEX: 2026-10-29 03:24 PDT HEAD SerDes quarter counter READY7db8a43e8: mode2 E2(14/14/14/13)/E3CSA,0cycles,+10FFbits; all2^56BDD+root17drop control,732actualDCHNcycles/64frames0diff+MUT2caught64,2CSAidentitySAT PASS. ActualORFS-mapped TTlogic-only slack old119.573/half174.035/quarter340.85ps; transferred oldactualCTS/GRT penalty predictsquarter+39.287/+54.547ps (estimate,notclosure). Half190053cells/21579.6um2 synth,943/943typedface+portbind0/0 PASS; strictLEC live unit3101206, nohalfPNR. Quarter ownpinnedWT/gen preparing, noactivejobchanged; mainadoptionROOTreviewheld.
