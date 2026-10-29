@@ -361,6 +361,32 @@ def kit_land(path):
     return {str(k): (dict(v) if isinstance(v, dict) else int(v)) for k, v in (d.get("buses") or {}).items()}
 
 
+START_RE = r"^cland_fstart_in_[A-Za-z0-9_]+$"
+
+
+def kit_starts(path):
+    """declared landing START inputs of a kit land_slots.json {"starts": {port: {"insts": [..], "max_loads": n}}}
+    (COORD 10-28 21:38 HEAD-KITS-1 ASK1).  ValueError on a malformed entry."""
+    d = json.loads(Path(path).read_text())
+    out = {}
+    for k, v in (d.get("starts") or {}).items():
+        out[str(k)] = start_spec(str(k), v)
+    return out
+
+
+def start_spec(port, v):
+    """(insts, max_loads) of one declared START input; only cland_fstart_in_* ports, >= 1 instance, max_loads >= 1."""
+    if not re.match(START_RE, port):
+        raise ValueError(f"land_slots start {port}: only cland_fstart_in_* ports can be declared START pins")
+    if not isinstance(v, dict) or set(v) - {"insts", "max_loads"}:
+        raise ValueError(f"land_slots start {port} spec {v}: want {{insts, max_loads}}")
+    insts = [str(x) for x in (v.get("insts") or [])]
+    ml = int(v.get("max_loads", 0))
+    if not insts or ml < 1 or any(not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", x) for x in insts):
+        raise ValueError(f"land_slots start {port} spec {v}: want >= 1 top-level instance name and max_loads >= 1")
+    return tuple(insts), ml
+
+
 LAND_FORMS = ("icg", "hold_mux")
 
 
@@ -483,7 +509,7 @@ def sdc_clock_exports(text):
 
 
 def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=(),
-          exports=()):
+          exports=(), starts=None):
     """straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
     parent need no pin register -> exempt (recorded in the result); any other name is refused (ValueError).
     bumps: declared hard-IP line-side ports [(port, dir, width)] (plan bump_ports, KV-KITS-4 10-27): the bump IS the
@@ -506,6 +532,13 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     [get_ports T], DIE-HEAD-9 FACE (c)): T is an output port wired from clock port S through single-driver,
     single-load buffers / an even number of inverters only, the T net and every chain net carry nothing else; then T
     is a clock role (recorded in clock_exports), not face data.  Anything else fails class "clock_export".
+    starts: declared landing START inputs {port: {"insts": [I..], "max_loads": n}} (land_slots.json "starts", COORD
+    10-28 21:38): a count-aligned sender start forwarded with fclk (cland_fstart_in_<b>) that feeds the receiver ring's
+    write reset t_rst_n and/or a child origin's p_start.  It is a declared START pin, not a face register, and is still
+    proved on the netlist: a 1-bit cland_fstart_in_* input, its net undriven and on no other port, 1..max_loads direct
+    cell loads, and everything reachable forward through combinational std cells is a flop D pin of a cell inside one
+    of the declared top-level instances I (no port, macro, clock/reset/other pin, no flop outside I); every declared
+    instance is reached.  Anything else fails class "start"; an undeclared start port keeps the normal face checks.
     dead: declared proven-dead input bits (kit dead_inputs.json, dead_input_list): each must be an input port bit
     whose net has NO load and no driver in the netlist -- then it is recorded (dead_declared), not a face register;
     a declared bit that is not an input port bit, or that still loads anything, fails class "dead"."""
@@ -584,6 +617,12 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     for x, dd in land.items():                   # a declared landing bus: an input port, D >= 2
         if T.dirs.get(x) != "input" or int(dd) < 2:
             fail("land_slot", x, f"declared landing bus is {T.dirs.get(x)} with D {dd} (want input, D >= 2)")
+    starts = {str(k): (v if isinstance(v, tuple) else start_spec(str(k), v)) for k, v in (starts or {}).items()}
+    for x in starts:                             # a declared START pin: a 1-bit input port, not a landing bus
+        if T.dirs.get(x) != "input" or len(_bits_of(T, x)) != 1 or x in land:
+            fail("start", x, f"declared START pin is {T.dirs.get(x)} width {len(_bits_of(T, x)) if x in T.ports else 0}"
+                             f"{' and a landing bus' if x in land else ''} (want a 1-bit input)")
+    res["start_pins"] = {}
     land_roots = {port_root[b] for x in land if x in T.ports for b in _bits_of(T, x)}
     out_port_roots = {port_root[b] for x in T.ports if T.dirs.get(x) == "output" for b in _bits_of(T, x)}
     lmemo = {}
@@ -747,6 +786,41 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 return f"write conditions not mutually exclusive at {a}", [], []
         return None, ffs, depths
 
+    def start_pin(b, r, insts, max_loads):
+        """None = OK (record), else the failure text."""
+        ld = loads[r]
+        if drv[r]:
+            return f"START net also driven by {F.cells[drv[r][0][0]][1]}"
+        if not 1 <= len(ld) <= max_loads:
+            return f"{len(ld)} direct loads on {r} (declared 1..{max_loads})"
+        sinks, seen = [], set()
+        for ci, pin in ld:
+            m, path, pp = F.cells[ci]
+            if is_ff(m):
+                sinks.append(("ff_D" if pin == "D" else f"ff_{pin}", ci))
+            elif not _std_cell(m):
+                sinks.append(("macro", ci))
+            elif (ci, pin) not in seen:
+                seen.add((ci, pin))
+                _fwd(ci, seen, sinks)
+        bad = sorted({k for k, _ in sinks if k != "ff_D"})
+        if bad:
+            return f"START cone reaches {bad} (want flop D pins only)"
+        hit, outside = set(), []
+        for _, ci in sinks:
+            path = F.cells[ci][1]
+            top_i = re.split(r"[/.]", path, maxsplit=1)[0]
+            if top_i in insts:
+                hit.add(top_i)
+            else:
+                outside.append(path)
+        if outside:
+            return f"START cone reaches flop(s) outside {list(insts)}: {sorted(set(outside))[:3]}"
+        if hit != set(insts):
+            return f"declared instance(s) {sorted(set(insts) - hit)} not reached"
+        res["start_pins"][b] = dict(loads=len(ld), flops=len({c for _, c in sinks}), insts=sorted(hit))
+        return None
+
     def land_slot(b, r, D):
         """None = OK (the D slot flops), else the failure text."""
         ld = loads[r]
@@ -885,6 +959,13 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                         break
                 if not ok:
                     continue
+            elif p in starts:
+                why = start_pin(b, r, *starts[p])
+                if why:
+                    fail("start", b, why)
+                else:
+                    res["ok"] += 1
+                continue
             elif p in land and land_form[p] == "hold_mux":
                 why, mffs, dep = land_mux(b, r, int(land[p]))
                 if why:
@@ -1023,7 +1104,8 @@ def main(argv=None):
     ap.add_argument("--budget-dir", help="kit dir with budget.json (default: beside --pins): declared bump_ports")
     ap.add_argument("--sdc", help="kit constraint.sdc (default: beside --pins): create_clock ports are clock pins")
     ap.add_argument("--land", help="kit land_slots.json (default: beside --pins): declared landing-ring buses "
-                                   "{bus: D} (ICG form) or {bus: {D, form: hold_mux}}")
+                                   "{bus: D} (ICG form) or {bus: {D, form: hold_mux}}; "
+                                   "and declared START inputs {starts: {cland_fstart_in_<b>: {insts, max_loads}}}")
     a = ap.parse_args(argv)
     stf = a.straps or (str(Path(a.pins).parent) if a.pins else None)
     sl = kit_strap_list(Path(stf).parent if stf.endswith(".json") else stf) if stf else []
@@ -1037,8 +1119,10 @@ def main(argv=None):
     ex = sdc_clock_exports(Path(sdc).read_text()) if sdc and Path(sdc).exists() else []
     lf = a.land or (str(Path(a.pins).with_name("land_slots.json")) if a.pins else None)
     land = kit_land(lf) if lf and Path(lf).exists() else None
+    st = kit_starts(lf) if lf and Path(lf).exists() else None
     dl = kit_dead_list(Path(a.pins).parent) if a.pins else []
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex)
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex,
+              starts=st)
     r["netlist"] = a.netlist
     if a.out:
         Path(a.out).write_text(json.dumps(r, indent=1) + "\n")

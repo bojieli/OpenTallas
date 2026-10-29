@@ -549,3 +549,80 @@ def test_clock_export_contract(body, exports, ok):
         assert r["clock_exports"] == {"fclk_out_o": "clk_t3"}
     elif exports:
         assert "clock_export" in r["fail_counts"], r["fails"]
+
+
+# ---- declared landing START inputs (COORD 10-28 21:38 HEAD-KITS-1 ASK1): cland_fstart_in_<b> feeds the receiver
+# ring's write reset t_rst_n / a child origin's p_start; declared in land_slots.json "starts", still proved.
+def _start_net(extra_top="", ring_extra="", ports=""):
+    ring = (f"module ring(fclk, t_rst_n, d, q);\n input fclk; input t_rst_n; input d; output q;\n"
+            f" AND2x2{_X} g0 (.A(t_rst_n), .B(tq), .Y(n0)); DFFHQNx1{_X} tc (.CLK(fclk), .D(n0), .QN(tqn));"
+            f" INVx1{_X} it (.A(tqn), .Y(tq));\n"
+            f" NOR2x1{_X} g1 (.A(t_rst_n), .B(tq), .Y(n1)); DFFHQNx1{_X} sw (.CLK(fclk), .D(n1), .QN(swn));\n"
+            f" AO22x1{_X} g2 (.A1(t_rst_n), .A2(d), .B1(swn), .B2(tq), .Y(n2)); DFFHQNx1{_X} sd (.CLK(fclk), .D(n2), .QN(q));\n"
+            + ring_extra + "\nendmodule\n")
+    hdr = ", ".join(["clk", "fclk", "d", "cland_fstart_in_x_i", "o"] + [p.strip() for p in ports.split(",") if p.strip()])
+    outs = "".join(f" output {p.strip()};\n" for p in ports.split(",") if p.strip())
+    top = (f"module top({hdr});\n input clk; input fclk; input d; input cland_fstart_in_x_i; output o;\n{outs}"
+           f" DFFHQNx1{_X} fd (.CLK(fclk), .D(d), .QN(dq));\n"
+           f" ring u_cland_x_i (.fclk(fclk), .t_rst_n(cland_fstart_in_x_i), .d(dq), .q(rq));\n"
+           f" DFFHQNx1{_X} fo (.CLK(clk), .D(rq), .QN(o));\n" + extra_top + "\nendmodule\n")
+    return ring + top
+
+
+START_X = {"cland_fstart_in_x_i": {"insts": ["u_cland_x_i"], "max_loads": 8}}
+
+
+def _gs(net, starts=START_X):
+    return face_guard.guard(net, "top", clocks=["clk", "fclk"], starts=starts)
+
+
+def test_start_pin_declared_pass_and_undeclared_fails():
+    net = _start_net()
+    r = _gs(net)
+    assert r["verdict"] == "PASS", r["fails"]
+    assert r["start_pins"]["cland_fstart_in_x_i"] == {"loads": 3, "flops": 3, "insts": ["u_cland_x_i"]}
+    r0 = _gs(net, starts=None)                     # undeclared fstart: the normal face check still FAILS
+    assert r0["verdict"] == "FAIL" and "shared" in r0["fail_counts"], r0["fails"]
+
+
+def test_start_pin_child_origin_second_instance():
+    org = (f"module org(clk, p_start, s);\n input clk; input p_start; output s;\n"
+           f" DFFHQNx1{_X} sf (.CLK(clk), .D(p_start), .QN(s));\nendmodule\n")
+    net = org + _start_net(extra_top=" org u_cland_origin (.clk(clk), .p_start(cland_fstart_in_x_i), .s(sx));")
+    two = {"cland_fstart_in_x_i": {"insts": ["u_cland_x_i", "u_cland_origin"], "max_loads": 8}}
+    assert _gs(net, starts=two)["verdict"] == "PASS"
+    r = _gs(net)                                   # origin not declared -> flop outside the declared instances
+    assert r["verdict"] == "FAIL" and "outside" in r["fails"]["start"][0], r["fails"]
+
+
+@pytest.mark.parametrize("name,kw,starts,frag", [
+    ("leak_to_port", dict(extra_top=f" BUFx2{_X} lb (.A(cland_fstart_in_x_i), .Y(z));", ports="z"), START_X, "port"),
+    ("leak_to_outside_flop", dict(extra_top=f" DFFHQNx1{_X} lf (.CLK(clk), .D(cland_fstart_in_x_i), .QN(lq));"),
+     START_X, "outside"),
+    ("reset_pin", dict(ring_extra=f" DFFASRHQNx1{_X} ar (.CLK(fclk), .D(d), .RESETN(t_rst_n), .SETN(d), .QN(aq));"),
+     START_X, "ff_RESETN"),
+    ("clock_pin", dict(ring_extra=f" DFFHQNx1{_X} ck (.CLK(t_rst_n), .D(d), .QN(cq));"), START_X, "ff_CLK"),
+    ("too_many_loads", {}, {"cland_fstart_in_x_i": {"insts": ["u_cland_x_i"], "max_loads": 2}}, "direct loads"),
+    ("instance_not_reached", {}, {"cland_fstart_in_x_i": {"insts": ["u_cland_x_i", "u_cland_y_i"], "max_loads": 8}},
+     "not reached"),
+])
+def test_start_pin_mutants(name, kw, starts, frag):
+    r = _gs(_start_net(**kw), starts=starts)
+    assert r["verdict"] == "FAIL" and "start" in r["fail_counts"] and frag in r["fails"]["start"][0], (name, r["fails"])
+
+
+def test_start_spec_and_kit_file(tmp_path):
+    for port, bad in (("x_i", {"insts": ["u"], "max_loads": 2}), ("cland_fstart_in_x_i", {"insts": [], "max_loads": 2}),
+                      ("cland_fstart_in_x_i", {"insts": ["u"], "max_loads": 0}),
+                      ("cland_fstart_in_x_i", {"insts": ["u"], "max_loads": 2, "why": 1}),
+                      ("cland_fstart_out_x_o", {"insts": ["u"], "max_loads": 2})):
+        with pytest.raises(ValueError):
+            face_guard.start_spec(port, bad)
+    (tmp_path / "net.v").write_text(_start_net())
+    (tmp_path / "pins.json").write_text("[]")
+    (tmp_path / "constraint.sdc").write_text("create_clock -name clk -period 833 [get_ports clk]\n"
+                                             "create_clock -name fclk -period 833 [get_ports fclk]\n")
+    (tmp_path / "land_slots.json").write_text(json.dumps({"buses": {}, "starts": START_X}))
+    assert face_guard.main([str(tmp_path / "net.v"), "--pins", str(tmp_path / "pins.json")]) == 0
+    (tmp_path / "land_slots.json").write_text(json.dumps({"buses": {}}))
+    assert face_guard.main([str(tmp_path / "net.v"), "--pins", str(tmp_path / "pins.json")]) == 1
