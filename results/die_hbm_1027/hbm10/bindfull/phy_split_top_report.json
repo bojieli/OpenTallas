@@ -1,0 +1,35 @@
+{
+ "schema": "opentallas.hbm.phy_split_top.v1",
+ "in": "/srv/opentallas-scratch2/claude/die-hbm-10/bindfull/hbm_current_native_top.sv",
+ "in_sha256": "50d55436db769b55c62a299814017cb27a2fd4b1b0e95a4bdf3e8eadc62cb0c5",
+ "out": "/srv/opentallas-scratch2/claude/die-hbm-10/bindfull/hbm_top_physplit.sv",
+ "out_sha256": "f1ecba6d6c5dad7e4b42734a672b71de82d360f54db49fd6d799148467ffe1d5",
+ "replaced": "phy_NW (ot_hbm3e_phy_rc_e8p5, PCs 0-31)",
+ "slices": [
+  {
+   "inst": "phy_NW_pc0_9",
+   "module": "ot_hbm3e_phy_rc_e8p5_pc0_9",
+   "pcs": [
+    0,
+    9
+   ]
+  },
+  {
+   "inst": "phy_NW_pc10_21",
+   "module": "ot_hbm3e_phy_rc_e8p5_pc10_21",
+   "pcs": [
+    10,
+    21
+   ]
+  },
+  {
+   "inst": "phy_NW_pc22_31",
+   "module": "ot_hbm3e_phy_rc_e8p5_pc22_31",
+   "pcs": [
+    22,
+    31
+   ]
+  }
+ ],
+ "rule": "per-PC nets kept exactly (32-item p31..p00 concatenations); clk/rst_n shared"
+}

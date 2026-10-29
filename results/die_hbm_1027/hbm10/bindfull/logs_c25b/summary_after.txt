@@ -1,0 +1,4 @@
+elab rc=0
+bind --strict rc=1
+verify SKIPPED (strict bind failed closed)
+strict errors 463 {'UNMAPPED': 201, 'TIED': 200, 'UNPLANNED': 30, 'TYPE_SPLIT': 28, 'EMPTY_PARTITION': 2, 'EMIT': 1, 'TIED_TOTAL': 1}
