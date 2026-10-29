@@ -86,6 +86,13 @@ def regen(ctx):
     head_params, head_profile = HP.regen(ctx)
     for path, values in head_params.items():
         params.setdefault(path, {}).update(values)
+    if head_profile is not None:
+        import head_record_timing as HT
+        head_timing = HT.derive(ctx)
+        word = int(txdp.split("'h")[1], 16)
+        txdp = f"32'h{((word & ~0xff00) | (head_timing['port1_txd'] << 8)):08x}"
+        params['d2d_rom']['TXDP'] = txdp
+        head_profile['record_timing'] = head_timing
     for j in range(3):
         params[face(j)] = dict(PHY=cal["PS"] + LX[j], L=LS, R=RS[j], PEER_R=RS[PEER[j]])
     result = dict(params=params,

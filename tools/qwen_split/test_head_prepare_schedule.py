@@ -13,7 +13,7 @@ class HeadReservations(unittest.TestCase):
         self.gen = 'a' * 64  # Deliberately synthetic selection; not an actual GEN receipt.
         self.timeline = dict(schema='opentallas.qwen.head_prepare_timeline.v1',
             compute_gen_sha256=self.gen, forbidden_send_slots=[],
-            outgoing=dict(held_bank_to_send_slot_edges=2,
+            outgoing=dict(send_slot_to_bank_sample_edges=-1, send_slot_to_record_capture_edges=0,
                           path='TEST ONLY: head record producer + wrapper output capture'),
             events=[dict(user=u, token=123+u, position=79,
                          calendar_sample_edge=100*u, run_start_edge=100*u,
@@ -53,6 +53,14 @@ class HeadReservations(unittest.TestCase):
     def test_port_collision_moves_the_shared_slot(self):
         self.timeline['forbidden_send_slots'] = [39, 40]
         self.assertEqual(self.result()['head_prepare_edges'], 41)
+
+    def test_actual_callback_leads_record_capture_and_consumes_bank_later(self):
+        self.timeline['outgoing'].update(send_slot_to_bank_sample_edges=10,
+                                         send_slot_to_record_capture_edges=18)
+        result = self.result()
+        self.assertEqual(result['head_prepare_edges'], 28)
+        row = result['reservations'][0]
+        self.assertEqual((row['reserved_bank_sample_edge'],row['reserved_record_capture_edge']), (38,46))
 
     def test_wrong_cohort_cannot_be_scheduled_later(self):
         self.timeline['events'][0]['host_at_sysface']['tag'] ^= 1 << 19

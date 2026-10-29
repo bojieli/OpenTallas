@@ -186,6 +186,9 @@ def main():
                '--host-stages', str(receipt['host_stages']),
                '--token-path', str(a.token_path.resolve()),
                '--link-handoff', str(a.link_handoff.resolve())]
+    if head_reservation is not None:
+        options += ['--compute-record-txd', str(
+            head_reservation['outgoing']['send_slot_to_record_capture_edges'])]
     for flag, key in (('kv-codec', 'kv_codec'),
                       ('emb-window', 'emb_window'), ('layer-period-min', 'layer_period_min'),
                       ('attn-tx-shift', 'attn_tx_shift'), ('status-delay', 'status_delay'),
