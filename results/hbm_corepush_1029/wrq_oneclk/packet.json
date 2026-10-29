@@ -48,5 +48,17 @@
    "intel2:oth-ubuntu-3027293-1793268613"
   ]
  },
- "physical_next": "New one-root localclocktree, sourceface/body paired sinks cluster beforeCTS; no reusing old independently-rootedclk_l trees"
+ "physical_next": "New one-root localclocktree, sourceface/body paired sinks cluster beforeCTS; no reusing old independently-rootedclk_l trees",
+ "ordinary_lec": {
+  "verdict": "EQUIVALENT",
+  "compare_points": 31119,
+  "differs": 0,
+  "undecided": 0,
+  "fresh_aig": true,
+  "source_provenance": "7572a0a8a clean kit validated",
+  "hint_count": 4288,
+  "hints_dropped": 0,
+  "basis": "Exact same-bit ent wire to source q register alias. All hints proved inductively."
+ },
+ "wrong_hint_control": "Wrongpolarity target rejected as differs; focusedjoint20309P/4D, no comparewaiver"
 }
