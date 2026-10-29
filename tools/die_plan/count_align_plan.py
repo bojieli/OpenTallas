@@ -1187,6 +1187,8 @@ def start_tree_from_args(a, rows, err):
     if a.start_tree != "clock":
         return None, None, None
     check_start_tree_args(a, err)
+    if getattr(a, "start_partition_origins", False):
+        partition_start_origins(rows)
     cs = [c.split("_")[0] for c in a.corner.split(",")]
     cs = list(dict.fromkeys(cs))
     ctx = clock_contexts(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_clock_ocv, a.sta_clock_droop,
@@ -1285,8 +1287,6 @@ def main(argv=None):
     a = ap.parse_args(argv)
     check_start_tree_args(a, ap.error)
     rows = load_rows(a.ocv_json, a.corner, a.scale)
-    if a.start_partition_origins:
-        partition_start_origins(rows)
     sta_info = None
     if a.sta_proof:
         if not a.sta_plan:
