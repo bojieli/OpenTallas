@@ -4898,3 +4898,17 @@ FAILED [AUTOPILOT e6fe0ff4fc43] 2026-10-29 09:53:00 PDT AUTOPILOT -> KV-KITS: FA
   [COORD] APPROVED Codex HEAD START 2fda405c2 (4 commits, reviewed MERGEABLE by DIE-HEAD-28) -> ROOT-MERGE-R.
   NOTE: Codex self-merged 67fcee035 (V1 code) without a COORD line. It is reviewed after the fact as MERGEABLE, so it stays.
   tok/s price: A1 + hk5 crop = 0 drop (upper bound 1.17%, per-token split UNCHECKED), no OWNER ASK; DIE-HEAD-29 records the per-token split as CHECKED.
+- 2026-10-29 10:03 PDT [COORD] APPROVED (all -> ROOT-MERGE-R under intel2 merge.lock):
+  - DIE-HBM-17 claude/die-hbm-17-1029@178dab4f92 (results); d16k = HBM plan of record for kit rebuilds (no freeze until bind + die GRT0).
+  - HBM-BIND-4 claude/hbm-bind-4-1029@226a2a5366 incl. tools/hbm_b2 (3 tools). Deviation accepted: shifts keep the existing native_glue (stock write_verilog; equiv 11/11 + mutant), no techmap.
+  - DIE-S81-25 (a) claude/die-s81-25-1029@bb71c7f3ea8 (bind_verify string-param staging + tests) and (b) claude/die-s81-25-cores-1029@926cf2624 (core_sink_census + VSW macro_sites).
+  - DIE-QC-33 claude/die-qc-33-bind-1029@23ef9f36b1 (results; QC strict bind PASS 0 errors; NUMBER-CHECK REQ stands -> NUMBER-CHECK-QC-1 started).
+  - codex/root-0822 commits (1) lane_add, (2) BF TAG_GROUPS opt-in source, (3) results, (4) direct_stations fail-closed.
+  - codex/support 6391e0ec457 (results only).
+  - KV HR codex/kv-hr-1029@b162a79ed opt-in source (no physical adoption while TT -215/reset recovery -142 FAIL).
+  - kv-kits-22 139dfb6318 (results).
+  - HEAD START 2fda405c2: explicitly approved as a change to the ONE shared die STA model. Legacy docs are byte-identical; any gate number using 'corners' is UNCHECKED until NUMBER-CHECK.
+  CLOSED as superseded: postcts 33bda61117 (main 20e4bbd66), hbm-cores-kits-10 c434f2028 (C25c event, replaced by d16k).
+  FINDING -> DIE-S81-25: tools/s81/gen_bf_hier.py drops RCG + kreg input captures vs main ot_v41_bf_col.sv/bf_front_core.sv. Do not regenerate BF from it until it is fixed (generator fix + diff 0 test).
+  AUTOPILOT FAILED e6fe0ff4fc43 pv_join_t (hold -26.19/1330 EP, skew 84.8, drv) -> DIE-KV-31: structural fix (routed-clock hold V1 + 10 ps margin), then a fresh kit.
+- 2026-10-29 10:03 PDT [COORD] ASK OWNER [DIE-HBM-17] (DMA RR_RT80 + VM a122) relayed to the owner in plain text at 2026-10-29 10:03 PDT. Lane defaults (1)(b) response SRAM FIFO pad and (2)(B) compiler phase split stand unless the owner answers otherwise; the lane may start estimate-only work on both now.
