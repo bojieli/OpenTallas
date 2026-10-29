@@ -1,0 +1,682 @@
+{
+ "schema": "opentallas.signoff.v1",
+ "name": "kl_dsdv_eng_rr_h0_prefix48c_d25",
+ "generated": "2026-10-29T13:56:37-07:00",
+ "host": "tolerant-swine",
+ "inputs": {
+  "base": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/run/results/asap7/kl_dsdv_eng_rr_h0_prefix48c_d25/base",
+  "orfs": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/run",
+  "design": "kl_dsdv_eng_rr_h0_prefix48c_d25",
+  "kit": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10",
+  "odb": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/run/results/asap7/kl_dsdv_eng_rr_h0_prefix48c_d25/base/6_final.odb",
+  "spef": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/run/results/asap7/kl_dsdv_eng_rr_h0_prefix48c_d25/base/6_final.spef",
+  "sdc": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/constraint.sdc",
+  "sdc_source": "kit",
+  "synth": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/run/results/asap7/kl_dsdv_eng_rr_h0_prefix48c_d25/base/1_synth.v",
+  "final_v": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/run/results/asap7/kl_dsdv_eng_rr_h0_prefix48c_d25/base/6_final.v",
+  "metrics": {
+   "5_2_route.json": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/run/logs/asap7/kl_dsdv_eng_rr_h0_prefix48c_d25/base/5_2_route.json",
+   "5_1_grt.json": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/run/logs/asap7/kl_dsdv_eng_rr_h0_prefix48c_d25/base/5_1_grt.json",
+   "6_report.json": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/run/logs/asap7/kl_dsdv_eng_rr_h0_prefix48c_d25/base/6_report.json"
+  },
+  "drc_rpt": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/run/reports/asap7/kl_dsdv_eng_rr_h0_prefix48c_d25/base/5_route_drc.rpt",
+  "pins": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/pins.json",
+  "sdc_lint_ctx": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/sdc_lint.json",
+  "record": null,
+  "library_config": null,
+  "ff_bound_ps": 202.5
+ },
+ "policy": {
+  "period_ps": 833.0,
+  "uncertainty_setup_ps": 60.0,
+  "uncertainty_hold_ps": 25.0,
+  "spread_max_ps": 80.0,
+  "spread_corners": [
+   "tt",
+   "ff"
+  ],
+  "insertion_tol_ps": 40.0,
+  "fanout_max": 64,
+  "ff_vclk": "bound-ff",
+  "ff_vclk_contract": "declared core FF insertion /srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/sdc_lint.json",
+  "insertion_bound": null,
+  "ff_vclk_bound_ps": 202.5,
+  "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+  "derate": "none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); ocv5_* = flat late 1.05 / early 0.95, information only",
+  "engine": "OpenSTA in OpenROAD (openroad/orfs:asap7lock), one process per corner",
+  "libs": "Exact routed-kit ORFS make TC/BC_LIB_FILES including macro views; hashed receipt",
+  "corner_rule": "setup TT / hold FF / 60-25 ps / related pair skew CPPR <= 80 TT+FF; spread INFO; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a)"
+ },
+ "tool_commit": null,
+ "corners": {
+  "tt": {
+   "done": true,
+   "design": "dsdv_eng_rr_h0",
+   "cells": 332710.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "ck"
+   ],
+   "inputs": [
+    "in_w"
+   ],
+   "outputs": [
+    "out_res"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "ff_vclk_reference": null,
+   "sdc_wns_max": 8.97,
+   "sdc_wns_min": 18.5,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": 0.0,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": 8.97,
+   "std_wns_min": 18.5,
+   "std_tns_max": 0.0,
+   "std_tns_min": 0.0,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 0.0,
+   "slew_viol": 0.0,
+   "cap_viol": 0.0,
+   "fanout_max": 52.0,
+   "fanout_worst_net": "mp_ck_TX1_1_7_12_out",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "pg_terms": 665420.0,
+   "pg_open": 0.0,
+   "pg_first_open": null,
+   "insertion_all": {
+    "n": 18529,
+    "min": 203.79,
+    "mean": 232.23,
+    "max": 270.23,
+    "spread": 66.44
+   },
+   "insertion_pinflops": {
+    "n": 644,
+    "min": 235.15,
+    "mean": 246.87,
+    "max": 253.52,
+    "spread": 18.37
+   },
+   "pair_skew": {
+    "done": true,
+    "checks": {
+     "max": {
+      "n": 256465.0,
+      "worst_abs_ps": 62.65,
+      "bounded": false,
+      "worst_signed_ps": -62.65,
+      "worst_launch": "u_hash.s1_17_4[6]$_DFF_P_",
+      "worst_capture": "u_hash.s2_17_2[24]$_DFF_P_",
+      "worst_crpr_ps": 1.61,
+      "p99_raw_ps": 42.66,
+      "searched": 32.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     },
+     "min": {
+      "n": 256465.0,
+      "worst_abs_ps": 54.81,
+      "bounded": false,
+      "worst_signed_ps": 54.81,
+      "worst_launch": "u_hash.s2_10_2[15]$_DFF_P_",
+      "worst_capture": "u_hash.s3_10_1[16]$_DFF_P_",
+      "worst_crpr_ps": 2.23,
+      "p99_raw_ps": 41.18,
+      "searched": 55.0,
+      "nopath": 0.0,
+      "verify_ps": 14.899
+     }
+    },
+    "counts": {
+     "regs": 18529.0,
+     "no_clock_arrival": 0.0,
+     "data_pins": 18529.0,
+     "pairs": 256465.0,
+     "inter_clock": 0.0
+    },
+    "method": "tag",
+    "seconds": 25.0,
+    "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+    "tsv": "pair_skew.tsv"
+   },
+   "clock_endpoint_masters": [
+    "DFFHQNx1_ASAP7_75t_R",
+    "DFFLQNx1_ASAP7_75t_R"
+   ],
+   "clock_endpoint_mapping_errors": 0.0,
+   "ocv5_wns_max": -39.47,
+   "ocv5_wns_min": -1.35,
+   "corner": "tt",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": [],
+   "clock_endpoint_coverage": {
+    "schema": "opentallas.clock_endpoint_coverage.v1",
+    "raw_pair_basis": "visible_clock_pins",
+    "models": [],
+    "instantiated_masters": [
+     "DFFHQNx1_ASAP7_75t_R",
+     "DFFLQNx1_ASAP7_75t_R"
+    ],
+    "status": "NO_UNEXPANDED_CHILD_ETM",
+    "verdict": "PASS",
+    "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+    "library_receipt": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/signoff/tt/libraries.json"
+   }
+  },
+  "ff": {
+   "done": true,
+   "design": "dsdv_eng_rr_h0",
+   "cells": 332710.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "ck"
+   ],
+   "inputs": [
+    "in_w"
+   ],
+   "outputs": [
+    "out_res"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "ff_vclk_reference": "applied mode bound_ff clock vclk latency_ps 202.500000",
+   "sdc_wns_max": 45.45,
+   "sdc_wns_min": 1.75,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": 0.0,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": 92.95,
+   "std_wns_min": 1.75,
+   "std_tns_max": 0.0,
+   "std_tns_min": 0.0,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 0.0,
+   "slew_viol": 0.0,
+   "cap_viol": 0.0,
+   "fanout_max": 52.0,
+   "fanout_worst_net": "mp_ck_TX1_1_7_12_out",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "pg_terms": 665420.0,
+   "pg_open": 0.0,
+   "pg_first_open": null,
+   "insertion_all": {
+    "n": 18529,
+    "min": 160.14,
+    "mean": 189.16,
+    "max": 226.63,
+    "spread": 66.49
+   },
+   "insertion_pinflops": {
+    "n": 644,
+    "min": 189.59,
+    "mean": 197.3,
+    "max": 204.3,
+    "spread": 14.71
+   },
+   "pair_skew": {
+    "done": true,
+    "checks": {
+     "max": {
+      "n": 256465.0,
+      "worst_abs_ps": 62.69,
+      "bounded": false,
+      "worst_signed_ps": -62.69,
+      "worst_launch": "u_hash.s2_10_2[3]$_DFF_P_",
+      "worst_capture": "u_hash.s3_10_1[3]$_DFF_P_",
+      "worst_crpr_ps": 0.47,
+      "p99_raw_ps": 42.84,
+      "searched": 10.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     },
+     "min": {
+      "n": 256465.0,
+      "worst_abs_ps": 56.03,
+      "bounded": false,
+      "worst_signed_ps": 56.03,
+      "worst_launch": "u_hash.u_x_1_1/q[47]$_DFF_P_",
+      "worst_capture": "u_hash.s1_1_5[15]$_DFF_P_",
+      "worst_crpr_ps": 1.84,
+      "p99_raw_ps": 40.58,
+      "searched": 51.0,
+      "nopath": 0.0,
+      "verify_ps": 7.917
+     }
+    },
+    "counts": {
+     "regs": 18529.0,
+     "no_clock_arrival": 0.0,
+     "data_pins": 18529.0,
+     "pairs": 256465.0,
+     "inter_clock": 0.0
+    },
+    "method": "tag",
+    "seconds": 23.0,
+    "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+    "tsv": "pair_skew.tsv"
+   },
+   "clock_endpoint_masters": [
+    "DFFHQNx1_ASAP7_75t_R",
+    "DFFLQNx1_ASAP7_75t_R"
+   ],
+   "clock_endpoint_mapping_errors": 0.0,
+   "ocv5_wns_max": 83.37,
+   "ocv5_wns_min": -13.17,
+   "corner": "ff",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": [],
+   "clock_endpoint_coverage": {
+    "schema": "opentallas.clock_endpoint_coverage.v1",
+    "raw_pair_basis": "visible_clock_pins",
+    "models": [],
+    "instantiated_masters": [
+     "DFFHQNx1_ASAP7_75t_R",
+     "DFFLQNx1_ASAP7_75t_R"
+    ],
+    "status": "NO_UNEXPANDED_CHILD_ETM",
+    "verdict": "PASS",
+    "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+    "library_receipt": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/signoff/ff/libraries.json"
+   }
+  }
+ },
+ "sdc_lint": {
+  "verdict": "PASS",
+  "mode": "kit sdc_lint.json",
+  "errors": [],
+  "n_errors": 0,
+  "sdc": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/constraint.sdc",
+  "sdc_source": "kit"
+ },
+ "face_guard": {
+  "verdict": "PASS",
+  "top": "dsdv_eng_rr_h0",
+  "checked": 644,
+  "ok": 644,
+  "fail_counts": {},
+  "fails": {},
+  "dead_declared": [],
+  "netlist": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/run/results/asap7/kl_dsdv_eng_rr_h0_prefix48c_d25/base/1_synth.v",
+  "pins": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/pins.json",
+  "boundary_context": {
+   "manifest": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/boundary_guard_context.json",
+   "source_core_json": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/core.json",
+   "controls": [
+    "ck"
+   ]
+  },
+  "one_station_ft_slots": []
+ },
+ "route": {
+  "drc": 0,
+  "antenna_nets": 0,
+  "drc_source": "5_2_route.json",
+  "antenna_source": "5_2_route.json"
+ },
+ "checks": {
+  "setup_tt": {
+   "verdict": "PASS",
+   "wns_ps": 8.97,
+   "tns_ps": 0.0,
+   "violators": 0.0
+  },
+  "hold_ff": {
+   "verdict": "PASS",
+   "wns_ps": 1.75,
+   "tns_ps": 0.0,
+   "violators": 0.0,
+   "sdc_wns_ps": 1.75,
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "ff_vclk_reference": "applied mode bound_ff clock vclk latency_ps 202.500000",
+   "reason": null
+  },
+  "drv": {
+   "verdict": "PASS",
+   "by_corner": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "failing": {}
+  },
+  "fanout": {
+   "verdict": "PASS",
+   "limit": 64,
+   "violators": {
+    "tt": 0.0,
+    "ff": 0.0
+   },
+   "max_fanout": 52.0,
+   "worst_net": "mp_ck_TX1_1_7_12_out"
+  },
+  "unconstrained": {
+   "verdict": "PASS",
+   "counts": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   }
+  },
+  "clock": {
+   "verdict": "FAIL",
+   "endpoint_model_coverage": {
+    "tt": {
+     "schema": "opentallas.clock_endpoint_coverage.v1",
+     "raw_pair_basis": "visible_clock_pins",
+     "models": [],
+     "instantiated_masters": [
+      "DFFHQNx1_ASAP7_75t_R",
+      "DFFLQNx1_ASAP7_75t_R"
+     ],
+     "status": "NO_UNEXPANDED_CHILD_ETM",
+     "verdict": "PASS",
+     "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+     "library_receipt": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/signoff/tt/libraries.json"
+    },
+    "ff": {
+     "schema": "opentallas.clock_endpoint_coverage.v1",
+     "raw_pair_basis": "visible_clock_pins",
+     "models": [],
+     "instantiated_masters": [
+      "DFFHQNx1_ASAP7_75t_R",
+      "DFFLQNx1_ASAP7_75t_R"
+     ],
+     "status": "NO_UNEXPANDED_CHILD_ETM",
+     "verdict": "PASS",
+     "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+     "library_receipt": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/signoff/ff/libraries.json"
+    }
+   },
+   "raw_clock_verdict": "FAIL",
+   "raw_pair_basis": "visible_clock_pins",
+   "pair_skew_max_ps": 80.0,
+   "spread_info_only": true,
+   "by_corner": {
+    "tt": {
+     "pinflops": {
+      "n": 644,
+      "min": 235.15,
+      "mean": 246.87,
+      "max": 253.52,
+      "spread": 18.37
+     },
+     "all": {
+      "n": 18529,
+      "min": 203.79,
+      "mean": 232.23,
+      "max": 270.23,
+      "spread": 66.44
+     },
+     "ck_errors": 0.0,
+     "pair_skew": {
+      "done": true,
+      "checks": {
+       "max": {
+        "n": 256465.0,
+        "worst_abs_ps": 62.65,
+        "bounded": false,
+        "worst_signed_ps": -62.65,
+        "worst_launch": "u_hash.s1_17_4[6]$_DFF_P_",
+        "worst_capture": "u_hash.s2_17_2[24]$_DFF_P_",
+        "worst_crpr_ps": 1.61,
+        "p99_raw_ps": 42.66,
+        "searched": 32.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       },
+       "min": {
+        "n": 256465.0,
+        "worst_abs_ps": 54.81,
+        "bounded": false,
+        "worst_signed_ps": 54.81,
+        "worst_launch": "u_hash.s2_10_2[15]$_DFF_P_",
+        "worst_capture": "u_hash.s3_10_1[16]$_DFF_P_",
+        "worst_crpr_ps": 2.23,
+        "p99_raw_ps": 41.18,
+        "searched": 55.0,
+        "nopath": 0.0,
+        "verify_ps": 14.899
+       }
+      },
+      "counts": {
+       "regs": 18529.0,
+       "no_clock_arrival": 0.0,
+       "data_pins": 18529.0,
+       "pairs": 256465.0,
+       "inter_clock": 0.0
+      },
+      "method": "tag",
+      "seconds": 25.0,
+      "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+      "tsv": "pair_skew.tsv"
+     }
+    },
+    "ff": {
+     "pinflops": {
+      "n": 644,
+      "min": 189.59,
+      "mean": 197.3,
+      "max": 204.3,
+      "spread": 14.71
+     },
+     "all": {
+      "n": 18529,
+      "min": 160.14,
+      "mean": 189.16,
+      "max": 226.63,
+      "spread": 66.49
+     },
+     "ck_errors": 0.0,
+     "pair_skew": {
+      "done": true,
+      "checks": {
+       "max": {
+        "n": 256465.0,
+        "worst_abs_ps": 62.69,
+        "bounded": false,
+        "worst_signed_ps": -62.69,
+        "worst_launch": "u_hash.s2_10_2[3]$_DFF_P_",
+        "worst_capture": "u_hash.s3_10_1[3]$_DFF_P_",
+        "worst_crpr_ps": 0.47,
+        "p99_raw_ps": 42.84,
+        "searched": 10.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       },
+       "min": {
+        "n": 256465.0,
+        "worst_abs_ps": 56.03,
+        "bounded": false,
+        "worst_signed_ps": 56.03,
+        "worst_launch": "u_hash.u_x_1_1/q[47]$_DFF_P_",
+        "worst_capture": "u_hash.s1_1_5[15]$_DFF_P_",
+        "worst_crpr_ps": 1.84,
+        "p99_raw_ps": 40.58,
+        "searched": 51.0,
+        "nopath": 0.0,
+        "verify_ps": 7.917
+       }
+      },
+      "counts": {
+       "regs": 18529.0,
+       "no_clock_arrival": 0.0,
+       "data_pins": 18529.0,
+       "pairs": 256465.0,
+       "inter_clock": 0.0
+      },
+      "method": "tag",
+      "seconds": 23.0,
+      "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+      "tsv": "pair_skew.tsv"
+     }
+    }
+   },
+   "problems": [
+    "TT hold: pair skew path/arrival cross-check differs by 14.90 ps > 1 (measurement suspect)",
+    "FF hold: pair skew path/arrival cross-check differs by 7.92 ps > 1 (measurement suspect)"
+   ],
+   "insertion_target_ps": null,
+   "insertion_bound": null,
+   "core_latency_contract": "hard_core_latency"
+  },
+  "sdc_lint": {
+   "verdict": "PASS",
+   "mode": "kit sdc_lint.json",
+   "errors": [],
+   "n_errors": 0,
+   "sdc": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/constraint.sdc",
+   "sdc_source": "kit"
+  },
+  "face_guard": {
+   "verdict": "PASS",
+   "top": "dsdv_eng_rr_h0",
+   "checked": 644,
+   "ok": 644,
+   "fail_counts": {},
+   "fails": {},
+   "dead_declared": [],
+   "netlist": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/run/results/asap7/kl_dsdv_eng_rr_h0_prefix48c_d25/base/1_synth.v",
+   "pins": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/pins.json",
+   "boundary_context": {
+    "manifest": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/boundary_guard_context.json",
+    "source_core_json": "/srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/core.json",
+    "controls": [
+     "ck"
+    ]
+   },
+   "one_station_ft_slots": []
+  },
+  "drc": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "antenna": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "pg": {
+   "verdict": "PASS",
+   "open_terms": 0,
+   "pg_terms": 665420,
+   "first": null
+  },
+  "timing_modes": {
+   "verdict": "PASS",
+   "applicable": true,
+   "step": "signoff",
+   "tt": 250.0,
+   "ff": 202.5,
+   "mm": false
+  },
+  "io_hold_parent": {
+   "verdict": "NOT RUN",
+   "required": true,
+   "problems": [
+    "matching real-parent PASS receipt missing"
+   ]
+  }
+ },
+ "reasons": [
+  "clock: FAIL TT hold: pair skew path/arrival cross-check differs by 14.90 ps > 1 (measurement suspect); FF hold: pair skew path/arrival cross-check differs by 7.92 ps > 1 (measurement suspect)",
+  "io_hold_parent: NEEDS_PARENT; matching real-parent PASS receipt missing"
+ ],
+ "verdict": "NOT SIGNED",
+ "io_hold": {
+  "mode": "sender_min",
+  "die": null,
+  "receiver_type": null,
+  "input_ports": [
+   "in_w"
+  ],
+  "plan_sha256": null,
+  "requirement": "real parent FF hold and TT/FF related-pair CPPR",
+  "provisional_views_allowed": true
+ },
+ "local_verdict": "NOT SIGNED",
+ "parent_qualification": {
+  "status": "NEEDS_PARENT",
+  "problems": [
+   "matching real-parent PASS receipt missing"
+  ],
+  "provisional_views_allowed": true,
+  "release_qualified": false
+ },
+ "release_qualified": false,
+ "core_latency": {
+  "contract": {
+   "kind": "hard_core_latency",
+   "ruling": "COORD 10-24",
+   "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+   "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json"
+  },
+  "measured": {
+   "tt": {
+    "n": 644,
+    "min": 235.15,
+    "mean": 246.87,
+    "max": 253.52,
+    "spread": 18.37
+   },
+   "ff": {
+    "n": 644,
+    "min": 189.59,
+    "mean": 197.3,
+    "max": 204.3,
+    "spread": 14.71
+   }
+  }
+ }
+}
