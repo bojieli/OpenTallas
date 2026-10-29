@@ -1,0 +1,16 @@
+{
+ "scope": "S81 old plan_s13r2 frozen physical clock FEED construction only",
+ "source": "fe1d0cde0",
+ "images": ["results/clk_feed_native_1029/feed_zoom.png", "results/clk_feed_native_1029/clock_global.png"],
+ "viewed": true,
+ "verdict": "PASS-COND",
+ "findings": [
+  "All nine repaired feed chains were inspected against hard-core and PHY exclusion rectangles. Repeaters occupy the open strips between cores; seven paths follow the macro perimeter and two redistribute repeaters on the existing path.",
+  "The repeated array retains a regular local clock structure. The repaired legs retain intermediate stations; measured construction reach is 389.988 um maximum with no cell or tap edge over 405 um and a matching frozen-home digest.",
+  "The global picture does not certify physical wire access. M8/M9 PG/shield compatibility and routed RC remain unmeasured for this candidate.",
+  "Balanced repair retains four declared snake overshoots, maximum 6.289 ps. This is a model residual and must enter the current-plan CA/related-pair calculation; it is not a clock gate PASS.",
+  "The S81 PHY plan is being recomposed. This image qualifies the shared construction experiment only; new PHY placement requires a fresh plan review and clock build before routing."
+ ],
+ "conditions": ["compose the current S81 PHY event", "review actual PG/clock track access", "measure both-edge TT/FF RC and current-plan CA/STA"],
+ "route_authorized": false
+}
