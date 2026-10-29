@@ -2163,6 +2163,24 @@
             }
            }
           },
+          "strap_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
           "strap_corner": {
            "type": "object",
            "required": [
@@ -2243,6 +2261,31 @@
         },
         "parent_id_leaf": {
          "type": "string"
+        },
+        "position_id_contract": {
+         "type": "object",
+         "required": [
+          "kind",
+          "pbase",
+          "lane"
+         ],
+         "additionalProperties": false,
+         "properties": {
+          "kind": {
+           "const": "KEYBUF_LANE_ID"
+          },
+          "pbase": {
+           "enum": [
+            0,
+            4
+           ]
+          },
+          "lane": {
+           "type": "integer",
+           "minimum": 0,
+           "maximum": 3
+          }
+         }
         },
         "bump_ports": {
          "type": "array",
@@ -2643,6 +2686,24 @@
             }
            }
           },
+          "strap_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
           "strap_corner": {
            "type": "object",
            "required": [
@@ -2723,6 +2784,31 @@
         },
         "parent_id_leaf": {
          "type": "string"
+        },
+        "position_id_contract": {
+         "type": "object",
+         "required": [
+          "kind",
+          "pbase",
+          "lane"
+         ],
+         "additionalProperties": false,
+         "properties": {
+          "kind": {
+           "const": "KEYBUF_LANE_ID"
+          },
+          "pbase": {
+           "enum": [
+            0,
+            4
+           ]
+          },
+          "lane": {
+           "type": "integer",
+           "minimum": 0,
+           "maximum": 3
+          }
+         }
         },
         "bump_ports": {
          "type": "array",
