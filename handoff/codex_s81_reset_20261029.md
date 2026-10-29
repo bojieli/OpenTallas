@@ -1,4 +1,4 @@
-# S81 safe handback, explicit reset 2026-10-29 02:0x PDT
+# S81 safe handback, explicit reset 2026-10-29 02:07 PDT
 
 No new jobs after ROOT reset notice. Existing jobs continue; no kills. Own WT /srv/opentallas-scratch/claude/wt/codex-s81-2340, branch codex/s81-2340. Source commits before final handback:8257e40c5 (correct station semantics),9846bd50b (natural memory child),a2116209b (ES-only source variant/helper),8b2b59250 (merge coherent DME6735 with current main). One add/add clock_reach conflict was resolved by preserving existing reach behavior and incoming frozen-home hash additions; no -X choice. Never changed main or a Claude WT.
 
