@@ -1,0 +1,42 @@
+{
+ "tools": "/srv/opentallas-scratch2/claude/wt/die-head-29-ocv/tools/die_plan",
+ "has_rule": true,
+ "TT": {
+  "ocv_pairs": 1190,
+  "ocv_setup_plus_hold_ps_median": 17.5,
+  "ocv_setup_plus_hold_ps_max": 43.3,
+  "pair_kinds": {
+   "(True, True)": 1190
+  },
+  "ports": 1643,
+  "measured": 1190,
+  "measured_fail": 0,
+  "unmeasured_fail_closed": 453,
+  "unmeasured_ok": 0,
+  "min_sync_dist": 151.0,
+  "below_100": 0,
+  "reasons": {
+   "ok": 1190,
+   "no measured START data delay (fail closed)": 453
+  }
+ },
+ "FF": {
+  "ocv_pairs": 1190,
+  "ocv_setup_plus_hold_ps_median": 14.0,
+  "ocv_setup_plus_hold_ps_max": 36.2,
+  "pair_kinds": {
+   "(True, True)": 1190
+  },
+  "ports": 1643,
+  "measured": 1190,
+  "measured_fail": 0,
+  "unmeasured_fail_closed": 453,
+  "unmeasured_ok": 0,
+  "min_sync_dist": 147.2,
+  "below_100": 0,
+  "reasons": {
+   "ok": 1190,
+   "no measured START data delay (fail closed)": 453
+  }
+ }
+}
