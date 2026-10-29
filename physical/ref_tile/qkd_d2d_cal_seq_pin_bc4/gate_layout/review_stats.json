@@ -1,0 +1,60 @@
+{
+ "schema": "opentallas.ref_tile.layout_review.v1",
+ "top": "qkd_d2d_cal_seq_pin_bc4",
+ "placed": true,
+ "outline_um": [
+  25.92,
+  34.56
+ ],
+ "aspect": 1.333,
+ "die_area_um2": 895.8,
+ "macros": 0,
+ "macro_area_pct": 0.0,
+ "std_cells": 2680,
+ "std_area_um2": 351.8,
+ "std_fill_of_free": 0.3927,
+ "ff": 390,
+ "buf_inv": 842,
+ "buf_share": 0.3142,
+ "pins_per_face": {
+  "E": 51,
+  "W": 44,
+  "S": 3
+ },
+ "pins_per_um": {
+  "S": 0.116,
+  "E": 1.476,
+  "W": 1.273
+ },
+ "pin_peak_per_um_10um": {
+  "E": 1.9,
+  "W": 1.9,
+  "S": 0.3
+ },
+ "pin_layers": {
+  "M4": 95,
+  "M5": 3
+ },
+ "pins_registered": 44,
+ "pins_to_macro": 0,
+ "pins_unregistered": 53,
+ "pin_to_reg_median_um": 6.41,
+ "pin_to_reg_p90_um": 8.96,
+ "pin_to_reg_max_um": 9.5,
+ "empty_area": 0.2949,
+ "density_bin_um": 2.0,
+ "macro_obs": {},
+ "macros_pins_facing_away": [],
+ "clock_roots": 1,
+ "flags": [],
+ "png": "/home/ubuntu/wt/die-kv-36-dcal/physical/ref_tile/qkd_d2d_cal_seq_pin_bc4/gate_layout/review.png",
+ "kind": "tile",
+ "verdict_items": [
+  [
+   "INFO",
+   "layout_review",
+   "25.92x34.56 um, fill 39.3% of free, empty 29%, buf/inv 31%, pin->reg p50/p90 6.41/8.96 um, pins/um {'S': 0.116, 'E': 1.476, 'W': 1.273}",
+   ""
+  ]
+ ]
+}
