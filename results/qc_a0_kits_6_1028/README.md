@@ -56,7 +56,7 @@ New A0 parent inputs (die-local QC, built by `build_parent_inputs.py` with sha25
 * `cores/a0/parent/{nk,nl}_children.json` (fixture sites).
 * `cores/a0/parent/a0_{nk,nl}_pins_dir.json`: the plan pin geometry unchanged, with dir taken from the RTL top ports.
 * `cores/a0_slices/qfd_tile_n{k,l}_a0c.json`: the ONE centre clock entry ck M5 (228.972, 578.88) of the DIE-QC-11 contract.
-* recipes_a0.json keys `qfd_tile_nk_a0c` / `qfd_tile_nl_a0c`: the vclk insertion is the DIE-QC-17 routed trunk 716/623 and 711/622, M7, util 0.45.
+* recipes_a0.json keys `qfd_tile_nk_a0c` / `qfd_tile_nl_a0c`: kit frame 250 / 202.5 (the 12.3 common core latency; KIT_PREFLIGHT ff_binding requires it). The die taps the A0 centre entry EARLY by the routed trunk insertion minus the frame (716/623 nk, 711/622 nl). M7, util 0.45.
 
 Command: `gen_core_kit_qc.py --module qfd_tile_nk_a0c --recipes ../a0/recipes_a0.json --master-slice ../a0_slices`.
 
@@ -65,13 +65,31 @@ Command: `gen_core_kit_qc.py --module qfd_tile_nk_a0c --recipes ../a0/recipes_a0
   * NK: 2,584 pins, ck moved to the centre M5 by the slice, 19 children placed by name (the macro_place.tcl `OT_HARD_CHILDREN placed 19`).
   * NL: 1,042 pins, 18 children.
 
-## 4. Tests
+### KIT_PREFLIGHT on the mechanics kits (static admission, CHECKED): parent plan findings to fix before a real parent kit
+
+The first run used frame 716/623 and FAILED ff_binding; the frame is now 250 / 202.5. Three findings remain, in the plan of the children sites:
+
+* **macro_channels.** Rawleaf column x[142.128, 257.472] to romleaf column x 262.656 leaves a 5.184-um vertical channel, below 10.8.
+  * The two columns do not overlap in y: the romleaf is at y 22-653 and the rawleaf at y >= 673.9.
+  * Either the check groups columns by x only, or the sites move. ASK below.
+* **macro_pin_grid.** The MY rawleafs at x 142.128 put 51 pins (clk M5 199.812) 24 nm off the track grid.
+  * The structural fix is to shift the MY rawleaf sites by +-0.024 um (half an M5 pitch) so mirrored pins land on track. This is a plan site fix (children_file), not an ECO.
+* **pins_canonical.** The placed pin set differs from plan_pins.json + slice. The cause is still open: either the pins_dir table vs the plan file, or the slice-moved ck. The next lane traces it before any real parent kit.
+
+## 4. Child re-kit under the seam_hold contract (COORD ruling, DIE-QC-23 ask)
+
+* **rawleaf.** Kit `ot_qwen_tile_lsl_rawfault_m3_a0k7s` = the a0k3 inputs unchanged (rawleaf_keep.v cmp-identical, the same recipe plus plan_module/suffix) + `--seam-hold 25,25` (die-qc22 3a4492f246 form, merged into this branch).
+  * Kit diff vs a0k3: constraint.sdc min input -20 -> 0 and min output 0 -> -25; sdc_lint.json; pins.json (clk out, 566cd22287); tool copies; nickname.
+  * KIT_PREFLIGHT PASS 0. Queued to the autopilot with goal finish; the GEOM verdict is carried from AUTO-GEOM 70e33ab64fa5 PASS (same placement inputs).
+* **romleaf a0k5.** Waits for its TT-slew root cause (23 TT / 5 FF slew violations, ROM rd_out E-edge nets). It is re-kitted with `--seam-hold 25,25` together with that fix (next lane).
+
+## 5. Tests
 
 * test_gen_core_kit_qc_hard_children.py: 10 PASS.
 * test_gen_core_kit_qc.py: 12 PASS.
 * Default byte-identity, CHECKED: main's generator vs this one on every recipes.json module. 5 kits give `diff -r` empty; btab and prog give the same refusal in both.
 
-## 5. Still open before a parent kit can go to the autopilot
+## 6. Still open before a parent kit can go to the autopilot
 
 1. Signed child views (section 1).
 2. The plan trunk (tools/die_plan/parent_trunk_dme.py) is wired as the kit CTS hook. Today the recipe has insertion_balance off and would run default TritonCTS, which is not the accepted form.
