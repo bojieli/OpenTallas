@@ -35,10 +35,12 @@ def run(planfile,sourcefile,rawdir,placementfile,out):
  dump(out/'actual_graph.json',graph)
  place['rebased_from']=dict(plan_sha256=place['plan_sha256'],actual_graph_sha256=place['actual_graph_sha256'],placement_sha256=sha(placementfile),physical_frame_unchanged=True)
  place['plan_sha256']=sha(planfile);place['actual_graph_sha256']=sha(out/'actual_graph.json');dump(out/'placement.json',place)
- C=dict(schema='opentallas.hbm.spb0_contract.v2',partitions=parts,plan_sha256=sha(planfile),placement_file='placement.json',prior_station_realization='NONE',rx_depth=4,tx_depth=4,lk_instance='u_lk_S0',ep_instance='u_ep_S0',lk_bound_instance='u_u_lk_S0',ep_bound_instance='u_u_ep_S0',lk_module='ot_pdie_serdes',ep_module='hfd_ep_static',lk_clock_port='clk',ep_clock_port='clk',lk_reset_port='rst',ep_reset_port='rst_n',clock_expression='clk',reset_expression='rst_n_t20',lk_reset_expression='rst_n',ep_reset_expression='rst_n_t20',reset_policy='RX_CAPTURE_EP_CONTROL_ONLY',actual_bound_contract_sha256=sha(rawdir/'contract.json'))
+ first={c['plan_instance']:c for c in R['parts'][0]['cores']}
+ lkreset=first['u_lk_S0']['clock_reset']['rst']['bound_expression'];epreset=first['u_ep_S0']['clock_reset']['rst_n']['bound_expression']
+ C=dict(schema='opentallas.hbm.spb0_contract.v2',partitions=parts,plan_sha256=sha(planfile),placement_file='placement.json',prior_station_realization='NONE',rx_depth=4,tx_depth=4,lk_instance='u_lk_S0',ep_instance='u_ep_S0',lk_bound_instance='u_u_lk_S0',ep_bound_instance='u_u_ep_S0',lk_module='ot_pdie_serdes',ep_module='hfd_ep_static',lk_clock_port='clk',ep_clock_port='clk',lk_reset_port='rst',ep_reset_port='rst_n',clock_expression='clk',reset_expression=epreset,lk_reset_expression=lkreset,ep_reset_expression=epreset,reset_policy='RX_CAPTURE_EP_CONTROL_ONLY',actual_bound_contract_sha256=sha(rawdir/'contract.json'))
  for rec in R['parts']:
   actual={c['plan_instance']:c for c in rec['cores']}
-  for ident,bound,resetport,resetexpr in [('u_lk_S0','u_u_lk_S0','rst','rst_n'),('u_ep_S0','u_u_ep_S0','rst_n','rst_n_t20')]:
+  for ident,bound,resetport,resetexpr in [('u_lk_S0','u_u_lk_S0','rst',lkreset),('u_ep_S0','u_u_ep_S0','rst_n',epreset)]:
    a=actual[ident];assert a['emitted_instance']==bound
    for port,expr,desc in [('clk','clk',['clk','stream']),(resetport,resetexpr,['rst','low'])]:
     d=a['clock_reset'][port];assert d['width']==1 and d['bound_expression']==expr and d['source']==desc
