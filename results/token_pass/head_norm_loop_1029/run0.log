@@ -1,0 +1,6 @@
+HEAD_NORM_LOOP beat=37 actual_partial=49199516 partials=1 y=8 q=0 xb=1 rb=16 rerr=0 err=0 leaf_fault=0/0/0 xfin_fault=0000 partial_edge=357 first_rstd=671 last_rstd=687 actual_xb_edge=757
+PASS
+- /srv/opentallas-scratch2/claude/codex-ds-head-loop-1029/loop37b/tb.sv:219: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 24.140 s; speed 41.426 ns/s
+- Verilator: cpu 24.138 s on 1 threads; allocated 96 MB

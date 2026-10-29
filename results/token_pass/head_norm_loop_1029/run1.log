@@ -1,0 +1,32 @@
+real xfin rstd mismatch slice3 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice5 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice6 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice9 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice4 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice2 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice1 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice8 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice7 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice13 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice0 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice14 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice15 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice10 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice11 got3c2e6874 want3c2fa28c
+real xfin rstd mismatch slice12 got3c2e6874 want3c2fa28c
+Y MISMATCH blk 0 j 0 lane 0 got 3dc40000 want 3dc60000
+Y MISMATCH blk 0 j 0 lane 1 got bf400000 want bf420000
+Y MISMATCH blk 0 j 0 lane 2 got bed50000 want bed70000
+Y MISMATCH blk 0 j 0 lane 3 got bbd40000 want bbd60000
+Y MISMATCH blk 0 j 0 lane 4 got 3d3c0000 want 3d3d0000
+Y MISMATCH blk 0 j 0 lane 5 got 3dfe0000 want 3e000000
+Y MISMATCH blk 0 j 0 lane 6 got 3e4f0000 want 3e500000
+Y MISMATCH blk 0 j 0 lane 7 got 3f0b0000 want 3f0c0000
+Y MISMATCH blk 0 j 1 lane 0 got be560000 want be580000
+Y MISMATCH blk 0 j 1 lane 1 got 3e330000 want 3e340000
+Y MISMATCH blk 0 j 1 lane 2 got be590000 want be5b0000
+Y MISMATCH blk 0 j 1 lane 3 got bd230000 want bd240000
+HEAD_NORM_LOOP beat=37 actual_partial=49199516 partials=1 y=8 q=0 xb=1 rb=16 rerr=16 err=126 leaf_fault=0/0/0 xfin_fault=0000 partial_edge=357 first_rstd=671 last_rstd=687 actual_xb_edge=757
+[10000000] %Fatal: tb.sv:218: Assertion failed in tb_s81sl_beat: HEAD_NORM_LOOP FAIL
+%Error: /srv/opentallas-scratch2/claude/codex-ds-head-loop-1029/loop37b/tb.sv:218: Verilog $stop
+Aborting...

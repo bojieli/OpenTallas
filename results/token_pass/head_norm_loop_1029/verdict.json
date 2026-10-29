@@ -1,0 +1,23 @@
+{
+ "PASS": true,
+ "scope": "ONE_NATIVE_LEAF_REAL_16_XFIN_FEEDBACK",
+ "actual_native_beats": 1,
+ "oracle_boundary_partials": 79,
+ "reference_link_depths": {
+  "street": 9,
+  "end": 29
+ },
+ "results": {
+  "0": {
+   "PASS": true,
+   "rc": 0
+  },
+  "1": {
+   "PASS": true,
+   "rc": 1
+  }
+ },
+ "current_die_timing": false,
+ "full_token": false,
+ "added_RTL_cycles": 0
+}

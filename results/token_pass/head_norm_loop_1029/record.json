@@ -1,0 +1,42 @@
+{
+ "source": "codex/ds-head-loop-exec-1029@7d029d62f1",
+ "job": "intel1:oth-ubuntu-2157812-1793268595",
+ "scope": "one actual native leaf through real sixteen-slice XFIN feedback;79explicit oracle boundary partials",
+ "full_token": false,
+ "current_die_timing": false,
+ "period_ps": 833,
+ "added_rtl_cycles": 0,
+ "cycles": {
+  "native_normr_command": 240,
+  "native_partial": 357,
+  "native_command_to_partial": 117,
+  "boundary_exchange_first": 400,
+  "boundary_exchange_last": 404,
+  "first_rstd": 671,
+  "last_rstd": 687,
+  "actual_flagged_XB": 757
+ },
+ "source_model_findings": {
+  "legacy_normr_partial": 115,
+  "current_component_normr_partial": 117,
+  "legacy_universal_last_partial_to_rstd": 234,
+  "observed_first": 267,
+  "observed_last": 283,
+  "note": "Reference9/29linkdepths and actual5parallel per-slice boundary-arrival pattern; do not apply globally as a production timing law"
+ },
+ "nominal": {
+  "partials": 1,
+  "y_vectors": 8,
+  "XB": 1,
+  "rstd": 16,
+  "rstd_errors": 0,
+  "data_errors": 0,
+  "faults": 0
+ },
+ "mutant": {
+  "changed": "exponent bit in actual native partial before exchange",
+  "rstd_mismatches": 16,
+  "data_errors": 126,
+  "returncode": 1
+ }
+}
