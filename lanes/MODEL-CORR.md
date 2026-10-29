@@ -14,3 +14,6 @@ Prior per-master/mixed-component source and actual KV21 readout remain available
 
 ## CODEX notes 2026-10-29 08:28 PDT — shared flow/clock takeover
 Shared coverage inventory: handoff/codex_shared_coverage_0822.tsv (32 lanes). CLK-TOOL duty continuation owned child; FLOW hold/canary/CFG receipt owned child. CODEX took over missing BTAB per-master spice_cell calibration on codex/buf-cal-0827 (base main + already-measured BUFx8 9023ef4e1c8). Native extracted BUFx16f has A,VSS,VDD,Y port order; generator now preserves it. Initial epyc2 calibration failed SIGILL because inherited bsimcmg23.osdi requires Intel ISA; failed outputs retained. Corrected job intel2:/srv/opentallas-scratch2/claude/codex-buf-cal-intel-0827 unit oth-ubuntu-2001498-1793287678, 8 cases (BUF10/12/12f/16f x 2um/60um), TT/FF rise/fall, no proxy adopted.
+
+## CODEX notes 2026-10-29 08:36 PDT
+Historical clock-model jobs terminal; no repeated calibration. HBM accepted-cost sparse-input fallback fixed bf5983f3f codex/token-model-0828: require measured HBM/SM/SU records before schedule pricing, same policy as perf.survey;30 focused tests PASS. Two historic ledger fixture failures diagnosed (COLLPIN aggregate .414 vs per-workload .310; stale S81 2.775 expected vs current14.048) retained without repricing. Current BUF8/10/12/12f/16f fit owned shared-clock lane.
