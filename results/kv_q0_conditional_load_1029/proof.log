@@ -1,0 +1,50 @@
+==== rawbase0_gold
+======== ABC command line "&r /srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/rawbase0_gold.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/rawbase0_gold_swept.aig"
+[1;37m/srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/rawbase0_gold[0m : i/o =  70682/   1064  [1;36mand =   60268[0m  [1;35mlev =   84[0m [1;35m(58.97)[0m  mem = 1.79 MB
+[1;37m/srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/rawbase0_gold[0m : i/o =  70682/   1064  [1;36mand =   34277[0m  [1;35mlev =   81[0m [1;35m(43.90)[0m  mem = 1.49 MB
+SAT solver statistics:
+CO =     1064  AND =    34277  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls   1063  (100.00 %)   Ave conf =      0.2   Time =     0.31 sec ( 56.70 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.54 sec
+[1;37m/srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/rawbase0_gold[0m : i/o =  70682/   1064  [1;36mand =   34277[0m  [1;35mlev =   81[0m [1;35m(43.90)[0m  mem = 1.49 MB
+
+universal raw-D bases gold: 1 / 1064 proved with all RTL X and state free
+==== rawbase1_gate
+======== ABC command line "&r /srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/rawbase1_gate.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/rawbase1_gate_swept.aig"
+[1;37m/srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/rawbase1_gate[0m : i/o =  29912/    618  [1;36mand =    5289[0m  [1;35mlev =   45[0m [1;35m(30.58)[0m  mem = 0.53 MB
+[1;37m/srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/rawbase1_gate[0m : i/o =  29912/    618  [1;36mand =    4852[0m  [1;35mlev =   44[0m [1;35m(29.06)[0m  mem = 0.52 MB
+SAT solver statistics:
+CO =      618  AND =     4852  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls    616  (100.00 %)   Ave conf =      0.2   Time =     0.08 sec ( 59.79 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.14 sec
+[1;37m/srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/rawbase1_gate[0m : i/o =  29912/    618  [1;36mand =    4852[0m  [1;35mlev =   44[0m [1;35m(29.06)[0m  mem = 0.52 MB
+
+universal raw-D bases gate: 2 / 618 proved with all RTL X and state free
+==== hint0
+======== ABC command line "&r /srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/hint0.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/hint0_swept.aig"
+[1;37m/srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/hint0[0m : i/o =  71229/  18888  [1;36mand =  254626[0m  [1;35mlev =  159[0m [1;35m(7.54)[0m  mem = 4.29 MB
+[1;37m/srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/hint0[0m : i/o =  71229/  18888  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.38 MB
+SAT solver statistics:
+CO =    18888  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/hint0[0m : i/o =  71229/  18888  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.38 MB
+
+hint refinement round 0: 18888 hypotheses, 0 failed []
+==== miter_load_once
+======== ABC command line "&r /srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/miter_load_once.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/miter_load_once_swept.aig"
+[1;37m/srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/miter_load_once[0m : i/o =  71229/  27436  [1;36mand =  282598[0m  [1;35mlev =  159[0m [1;35m(9.25)[0m  mem = 4.74 MB
+[1;37m/srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/miter_load_once[0m : i/o =  71229/  27436  [1;36mand =     378[0m  [1;35mlev =   19[0m [1;35m(0.00)[0m  mem = 1.51 MB
+SAT solver statistics:
+CO =    27436  AND =      378  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      2  (100.00 %)   Ave conf =      9.5   Time =     0.00 sec ( 12.77 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/srv/opentallas-scratch2/claude/codex-kv-kits-1029c/q0_load_once_coupon7/miter_load_once[0m : i/o =  71229/  27436  [1;36mand =     378[0m  [1;35mlev =   19[0m [1;35m(0.00)[0m  mem = 1.51 MB
