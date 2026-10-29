@@ -163,3 +163,17 @@ def test_declared_literal_matches_only_its_own_value():
     assert not V.declared_constant(["pin", "a.q[0]", 0, False], ["tied", "0"])
     assert not V.declared_constant(None, ["tied", "0"])
     assert not V.declared_constant(["literal", "0"], ["pin", "a.q[0]", 0, False])
+
+
+def test_macro_definer_inside_the_closure_moves_before_its_user(tmp_path):
+    ab0, rep, idx, prefer = _tree(tmp_path)
+    (tmp_path / "rtl/a_user.sv").write_text("module zz_user (input wire [`W-1:0] x);\nendmodule\n")
+    (tmp_path / "rtl/z_def.sv").write_text("`define W 4\nmodule aa_def (input wire clk);\nendmodule\n")
+    (tmp_path / "rtl/top3.sv").write_text("module top3 (input wire clk);\n  aa_def u_z (.clk(clk));\n"
+                                          "  zz_user u_a (.x(4'b0));\nendmodule\n")
+    ab0["files"] += ["rtl/top3.sv", "rtl/a_user.sv", "rtl/z_def.sv"]
+    idx = E.module_index([], ab0["files"], tmp_path)
+    files, missing = V.LintSources(ab0, tmp_path, rep, idx, prefer).closure(["top3"])
+    names = [Path(f).relative_to(tmp_path).as_posix() for f in files]
+    # MUTANT (bind6chk bk_sel): sel_tile.sv was listed after hq_tile.sv -> `SELT_* undefined
+    assert missing == [] and names.index("rtl/z_def.sv") < names.index("rtl/a_user.sv")

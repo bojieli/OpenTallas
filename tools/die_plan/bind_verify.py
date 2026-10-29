@@ -225,8 +225,15 @@ class LintSources:
             prov += new
             # a provider file is read whole: its modules' children are needed too
             files, missing, _ = self._closure(names, prov)
-        pkgs = self.packages(prov + files)
-        return [p for p in pkgs if p not in files and p not in prov] + prov + [f for f in files if f not in prov], missing
+        # a closure file that `defines a macro another closure file uses goes before them (ot_s81ph_sel_tile.sv
+        # `SELT_* used by ot_s81ph_hq_tile.sv): Verilator sees a `define only after it is read
+        body = [f for f in files if f not in prov]
+        defs = {f: {d.group(1) for d in MACRO_DEF.finditer(self.text(f))} for f in body}
+        uses = {f: set(MACRO_USE.findall(self.text(f))) for f in body}
+        early = [f for f in body if any(defs[f] & uses[g] for g in body if g != f)]
+        prov = prov + early
+        pkgs = self.packages(prov + body)
+        return [p for p in pkgs if p not in prov and p not in body] + prov + [f for f in body if f not in prov], missing
 
     def _closure(self, names, extra_files):
         known = set(self.idx) | set(self.wide)
