@@ -902,6 +902,13 @@ def _finish(raw,P,bytype,pports,side):
         for b in special:
             at=sum(b["window_um"])/2;f=b["face"]
             point=([2.16 if f=="W" else w-2.16,at] if f in "EW" else [at,2.16 if f=="S" else h-2.16])
+            # Optional physically sited count-origin input, beside its actual
+            # measured capture tap. The default face-derived pins are unchanged.
+            capture=t.get("clock",{}).get("start_capture_um")
+            if b["name"]==CL.START_PIN_IN and capture is not None:
+                if len(capture)!=2 or not all(math.isfinite(float(v)) for v in capture) or not (0<float(capture[0])<w and 0<float(capture[1])<h):
+                    raise ValueError(f"{tn}: invalid START capture site {capture}")
+                point=list(map(float,capture))
             point=list(GP._snap_tap(P,*point))
             pin=dict(name=b["name"],dir=b["dir"],kind=b["kind"],layer=P.layer_budget["partition_signal_max"],
                      xy_um=point,epoch=False)
