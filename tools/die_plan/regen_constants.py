@@ -676,10 +676,21 @@ def kv_pv_trunk(o):
 def kv_vport(o):
     B = o.B
     rows = {}
-    for a in B.bus(r"vport_\w+\.vq"):
-        vp = re.search(r"(vport_\w+?)\.vq", " ".join(a["leaves"])).group(1)
-        for c in [x for x in B.bus(r"slg_\w+\.rsp", dst="pv") if x["src"] == a["dst"] and x["dst"] == a["src"]]:
-            rows.setdefault(vp, []).append(VPORT_RT_SEG + a["bound_stages"] + c["bound_stages"])
+    # The consumer sees authoritative R8 landing pads as well as plan relays.
+    # A raw bus depth misses a uniform valid/tag landing stage on pc_v1.
+    for request in B.members(source=r"^vport_\w+\.vq[01]_valid$", sink=r"^slg_", port=r"^vreq$"):
+        vp = request["source"].rsplit(".", 1)[0]
+        group = request["sink"]
+        returns = B.members(source=re.escape(group) + r"\.rsp$", sink="^" + re.escape(vp) + "$",
+                            port=r"^in[01]_valid$")
+        for response in returns:
+            rows.setdefault(vp, []).append(VPORT_RT_SEG + request["landed"] + response["landed"])
+    if not rows:  # Historical fixtures/packed interfaces carry complete buses only.
+        for a in B.bus(r"vport_\w+\.vq"):
+            vp = re.search(r"(vport_\w+?)\.vq", " ".join(a["leaves"])).group(1)
+            for c in B.bus(r"slg_\w+\.rsp", dst="pv"):
+                if c["src"] == a["dst"] and c["dst"] == a["src"]:
+                    rows.setdefault(vp, []).append(VPORT_RT_SEG + a["bound_stages"] + c["bound_stages"])
     W = {m["sink"]: m["landed"] for m in B.members(r"pvw_\d__u_ctl\.req_t", sink=r"^vport_", port="pr_t")}
     if not rows:
         o.pending("VPORT_RT", "boot", "no vport vq/rsp crossing on this bind", group="vport")
