@@ -4087,7 +4087,7 @@ def macro_views(base):
     return out
 
 
-def kit_closure(names, idx, prefer, picks=None, views=None):
+def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=None):
     """E.closure for a G3 kit (KV-P6 18:51 hub_Wi): (1) a module with a hardened view (macro dir <m>/<m>.lef) is a
     HARD MACRO: its black box (<m>_bb.v, else the model) goes in the list, its lef/libs in the manifest, no descent;
     (2) a *_sim.sv definition is never picked while a non-sim candidate exists.  -> files, missing, macros
@@ -4098,12 +4098,19 @@ def kit_closure(names, idx, prefer, picks=None, views=None):
     E.validate_preferred_files(prefer)
     seen, files, missing, macros = set(), [], set(), {}
     picks = {} if picks is None else picks
+    # DIE-S81-23 10-29 (S81 LP census lacked VE/CN/FP4QDQ helpers): E.instantiated keeps only names in the SELECTED
+    # index, so a child defined outside the manifest's rtl_roots/files was dropped silently (no missing entry; synthesis
+    # failed much later).  `wide` (optional repo-wide module_index) closes that gap: such a child is taken from `wide`
+    # when it has exactly one non-sim definition (or a preferred one), recorded in `widened` {module: file}; ambiguous
+    # -> a missing entry.  Names in neither index (types, keywords, cells) keep the old behaviour.
+    wide = wide or {}
+    widened = {} if widened is None else widened
     # QC-CORES-4 10-27: a module with a hardened view under MACRO_VIEW_DIRS (`views`, macro_views(base)) is a HARD MACRO
     # even when a same-named successor wrapper exists under rtl/: a kit binds a successor only explicitly (its plan type
     # places that successor master), never by the closure's file pick.  Instantiations are looked up in idx + views, so
     # a macro reached only through a wrapper is a hard macro too (bb + view), never silently dropped.
     views = views or {}
-    known = set(idx) | set(views)
+    known = set(idx) | set(views) | set(wide)
     todo = list(names)
     while todo:
         n = todo.pop()
@@ -4111,6 +4118,9 @@ def kit_closure(names, idx, prefer, picks=None, views=None):
             continue
         seen.add(n)
         cands = idx.get(n, [])
+        outside = False
+        if not cands and n not in views and n in wide:
+            cands, outside = list(wide[n]), True
         hard = [f for f in cands if Path(f).parent.name == n and (Path(f).parent / f"{n}.lef").is_file()]
         if hard or n in views:
             d = Path(hard[0]).parent if hard else Path(views[n])
@@ -4124,13 +4134,20 @@ def kit_closure(names, idx, prefer, picks=None, views=None):
             continue
         nonsim = [f for f in cands if not SIM_FILE.search(f)]
         sub = dict(idx)
-        if nonsim and len(nonsim) < len(cands):
+        if outside:
+            sub[n] = nonsim or cands
+            if len(sub[n]) > 1 and not any(Path(c).resolve() == Path(q).resolve() for c in sub[n] for q in prefer):
+                missing.add(f"{n} (outside the selected index, {len(sub[n])} definitions: add one to the manifest)")
+                continue
+        elif nonsim and len(nonsim) < len(cands):
             sub[n] = nonsim
         f, _ = E.pick(sub, n, prefer)
         if f is None:
             missing.add(n)
             continue
         picks[n] = f
+        if outside:
+            widened[n] = f
         if f not in files:
             files.append(f)
         todo += sorted(E.instantiated(E.module_body(f, n), known))
@@ -4548,7 +4565,13 @@ def cmd_kit_rtl(a):
     if spb_geometry:
         leafm = [name for name in leafm if name != 'ot_hbm_spb0_regs']
     picks = {}
-    cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks, views=macro_views(base))
+    rtl_all = Path(base) / "rtl"
+    wide = E.module_index([str(rtl_all)], [], base) if rtl_all.is_dir() else {}
+    widened = {}
+    cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks, views=macro_views(base), wide=wide, widened=widened)
+    if widened:
+        print(f"kit-rtl {tn}: {len(widened)} child module(s) outside the manifest index taken from rtl/: "
+              + ", ".join(f"{k}={v}" for k, v in sorted(widened.items())[:10]), file=sys.stderr)
     if cl_missing:
         raise BindError(f"kit-rtl {tn}: leaf modules without a source {sorted(cl_missing)[:10]}")
     files = [Path(f).resolve() for f in cl]
@@ -4572,7 +4595,7 @@ def cmd_kit_rtl(a):
                variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, narrow_buses=narrow,
                plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl],
                packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, include_inlined=incl, module_dedup=deduped,
-               hard_macros=dict(sorted(macros.items())), native_station_geometry=native_geometry,
+               hard_macros=dict(sorted(macros.items())), unindexed_sources=dict(sorted(widened.items())), native_station_geometry=native_geometry,
                hbm_spb_native_geometry=spb_geometry,
                hard_macros_note="memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; "
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
