@@ -1107,6 +1107,8 @@ def start_tree_from_args(a, rows, err):
     """(start_edges, start_root, info) for --start-tree clock, else (None, None, None)"""
     if getattr(a, "start_retime_up", False) and a.start_tree != "clock":
         err("--start-retime-up needs --start-tree clock")
+    if getattr(a, "start_leaf_origins", False) and a.start_tree != "clock":
+        err("--start-leaf-origins needs --start-tree clock")
     if a.start_tree != "clock":
         return None, None, None
     check_start_tree_args(a, err)
