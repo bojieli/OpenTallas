@@ -1,0 +1,22 @@
+{
+ "ot_s81sl_vsw": {
+  "ref_tile": "physical/ref_tile/s81sl_vsw",
+  "suffix": "r1",
+  "macro_if_flops": true,
+  "macro_sites": {
+   "ot_sram_1r1w_128x256_m1_r2c2": [
+    [
+     107.568,
+     71.28,
+     "R0"
+    ],
+    [
+     107.568,
+     123.168,
+     "R0"
+    ]
+   ]
+  },
+  "note": "DIE-S81-25 VARIANT B 10-29 (12.17(3) 2nd fix variant): lower SRAM kept at the ref_tile 71.28, upper 112.368 -> 123.168 (+225 M4 tracks, gap 10.824 >= 10.8); x/orient/outline unchanged | DIE-S81-25 10-29: SRAM column split symmetrically about the ref_tile pair centre (y 71.28/112.368 -> 64.80/118.80, both on the 2.16 um row x M4-phase lattice): the 10-17 ref_tile stacked the two 41.064-um SRAMs at a 41.088 pitch (abutted, gap 0.024 um, closed before the 10.8-um macro channel rule); new gap 12.936 >= 10.8, x/orient/west pin face unchanged, same 224.64 outline | S81-CORES-R1 10-27: vsw onto the canonical modern legacy flow (ref_tile spec; plan pins inputs/core_pins/ot_s81sl_vsw.json); F6 macro IF hook | CORES-EARLY-11 10-29: ported unchanged from claude/s81-core-lat-r20-1027 (9af7633ff) onto main; standard kit clock flow (insertion_balance default, no new clock script). Kits generate on main a4453d400 (ve_m/ve_s/vn_a/vn_b) but preflight FAILS clock_pin_geometry GEOM-21 until the plan pin files carry an M5 >=0.048x0.48 clk pin (DIE-S81-24 S81-028); vsw gen FAILS: plan pin file ot_s81sl_vsw.json is the 10-23 interior-LEF M3 contract (i_d[0] 0.308 um off N edge) -> needs a tpl edge contract."
+ }
+}
