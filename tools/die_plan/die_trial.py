@@ -3900,7 +3900,8 @@ def psm_report(d):
 def cmd_report(a):
     d = Path(a.dir)
     kit = json.loads((d / "kit.json").read_text())
-    P = S.Plan(S.load(kit["plan"] if Path(kit["plan"]).is_file() else a.plan))
+    plan_path = Path(kit["plan"] if Path(kit["plan"]).is_file() else a.plan)
+    P = S.Plan(S.load(plan_path), plan_path)
     res = dict(kit=kit)
     if (d / "grt" / "grt.log").is_file():
         res["grt"] = grt_report(d, P)
@@ -4425,12 +4426,14 @@ def main(argv=None):
     elif a.cmd == "render":
         d = Path(a.dir)
         kit = json.loads((d / "kit.json").read_text())
-        P = S.Plan(S.load(a.plan or kit["plan"]))
+        plan_path = Path(a.plan or kit["plan"])
+        P = S.Plan(S.load(plan_path), plan_path)
         print(json.dumps(render_all(d, P, a.plan or kit["plan"]), indent=1))
     elif a.cmd == "clock":
         d = Path(a.dir)
         kit = json.loads((d / "kit.json").read_text())
-        P = S.Plan(S.load(a.plan or kit["plan"]))
+        plan_path = Path(a.plan or kit["plan"])
+        P = S.Plan(S.load(plan_path), plan_path)
         print(json.dumps(clock_report(d, P), indent=1)[:6000])
     return 0
 
