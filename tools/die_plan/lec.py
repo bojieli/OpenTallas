@@ -4854,6 +4854,106 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40):
     return rec
 
 
+SIBLING_IDX = re.compile(r"\[(\d+)\]")
+
+
+def replica_siblings(key, keys):
+    """same-bit copies of a generated register: names equal to `key` except one index that is not the trailing (bit)
+    index -- the copy / group index (g_off[0].r_part[150] vs g_off[3].r_part[150], c_p[1][11] vs c_p[2][11]).
+    Name-only candidate discovery; every pairing it feeds is still proved.  -> sorted keys (key excluded)."""
+    ix = list(SIBLING_IDX.finditer(key))
+    if ix and ix[-1].end() == len(key):
+        ix = ix[:-1]                              # the bit index of a vector register stays fixed
+    out = set()
+    for m in ix:
+        pat = re.compile(re.escape(key[:m.start()]) + r"\[\d+\]" + re.escape(key[m.end():]) + r"$")
+        out |= {k for k in keys if k != key and pat.match(k)}
+    return sorted(out)
+
+
+def transfer_profile(L, profile, log):
+    """Re-derive a correspondence profile (hyp.json [[side, key, hint], ...]) saved by an EARLIER gate on THIS
+    gate's matched / gold-only / gate-only roles (QC NL fresh gate 10-29).  Synthesis keeps an arbitrary copy of a
+    duplicated register; a fresh netlist may keep a different one (gate kept c_p[2][11], the old one c_p[1][11]).
+    The names all still exist, so a name-only restore keeps the old gold-side hint ('gold', c_p[2][11]) == c_p[1][11]
+    on a register that is now MATCHED and leaves the old representative c_p[1][11] gold-only with no hint: a free
+    input, so its relation fails and every hint / compare point reading it fails with it (57 + 105 differences).
+    Here each hint is re-sided on the fresh roles:
+      * key or partner absent                         -> dropped (reported)
+      * gold hint on a now-matched key, eq a now-gold-only partner P
+                                                      -> swapped: P == key (same polarity), P re-anchored
+      * gold const on a now-matched key               -> both-side const
+      * both-side hint on a now gold-/gate-only key   -> that side
+      * any other hint on a key of the wrong role     -> dropped (reported)
+    then every gold eq hint whose partner is gold-only with no hint of its own (an orphan representative) gets that
+    partner re-anchored to a MATCHED same-bit sibling of its replica group (replica_siblings).  Nothing here is
+    assumed: the caller proves the whole set jointly (prove_profile); a failing hint is dropped and reported, so a
+    wrong sibling or polarity only leaves a register free, never a waiver.  Replaces L.hyp.
+    -> dict(given, kept, swapped, resided, reanchored, ambiguous, dropped)."""
+    ms = set(L.matched)
+    side_keys = {"gold": L.gp, "gate": L.tp}
+    role = lambda k: "both" if k in ms else "gold" if k in L.gp else "gate" if k in L.tp else None
+    rec = dict(given=len(profile), kept=0, swapped=[], resided=[], reanchored=[], ambiguous=[], dropped=[])
+    L.hyp.clear()
+    late = []
+    for e in profile:
+        sd, k, h = e[0], e[1], tuple(e[2])
+        r = role(k)
+        partner_ok = h[0] != "eq" or h[2] in side_keys.get(h[1], ())
+        if r is None or not partner_ok:
+            rec["dropped"].append(dict(hint=[sd, k, list(h)], why="key or partner absent in this gate"))
+            continue
+        if sd == r:
+            L.hyp[sd, k] = h
+            continue
+        if sd == "gold" and r == "both" and h[0] == "eq" and h[1] == "gold" and role(h[2]) == "gold":
+            late.append(("swap", e, ("gold", h[2]), ("eq", "gold", k, h[3])))
+        elif sd in ("gold", "gate") and r == "both" and h[0] == "const":
+            late.append(("reside", e, ("both", k), h))
+        elif sd == "both" and r in ("gold", "gate") and h[0] in ("const", "eq") \
+                and (h[0] == "const" or h[1] == "gold" or r == "gate"):
+            late.append(("reside", e, (r, k), h))
+        else:
+            rec["dropped"].append(dict(hint=[sd, k, list(h)], why=f"stale side {sd}: key is {r} in this gate"))
+    for how, e, hk, h in late:                    # a hint native to this gate's roles wins over a re-sided one
+        if hk in L.hyp:
+            rec["dropped"].append(dict(hint=list(e), why=f"{how}: {hk[0]}:{hk[1]} already has a hint"))
+            continue
+        L.hyp[hk] = h
+        rec["swapped" if how == "swap" else "resided"].append(dict(old=list(e), new=[hk[0], hk[1], list(h)]))
+    orphans = sorted({h[2] for (sd, k), h in L.hyp.items() if sd == "gold" and h[0] == "eq" and h[1] == "gold"
+                      and role(h[2]) == "gold" and ("gold", h[2]) not in L.hyp})
+    for p in orphans:
+        cands = replica_siblings(p, ms)
+        if not cands:
+            continue
+        if len(cands) > 1:
+            rec["ambiguous"].append(dict(register=p, candidates=cands))
+        L.hyp["gold", p] = ("eq", "gold", cands[0], 0)
+        rec["reanchored"].append(dict(register=p, to=cands[0]))
+    rec["kept"] = len(L.hyp)
+    log.append(f"profile transfer: {rec['kept']} of {rec['given']} hints; {len(rec['swapped'])} swapped to the "
+               f"surviving replica, {len(rec['resided'])} re-sided, {len(rec['reanchored'])} orphan representatives "
+               f"re-anchored ({len(rec['ambiguous'])} ambiguous), {len(rec['dropped'])} dropped")
+    return rec
+
+
+def prove_profile(L, work, conflicts, log, rounds=32, single_cap=100):
+    """prove every hypothesis jointly (one simultaneous induction); drop each failing one and repeat until the set
+    is inductive.  -> dict(rounds, dropped=[output names], status={output: verdict} of the final round)."""
+    dropped = []
+    for it in range(rounds):
+        m, _ = L.build(with_compare=False, with_hyp=True)
+        st = prove(m, work, conflicts, log, tag=f"profile{it}", single_cap=single_cap)
+        bad = [n for n, s in st.items() if s != "proved"]
+        log.append(f"profile joint round {it}: {len(st)} hypotheses, {len(bad)} failed {bad[:6]}")
+        if not bad:
+            return dict(rounds=it + 1, dropped=dropped, status=st)
+        dropped += bad
+        drop_failed(L, bad)
+    raise LecError("profile joint proof did not converge")
+
+
 # ---------------------------------------------------------------------------------------------- driver
 def run_gold(env, kit, gold_fe, lib_bbs, out, log, rec):
     """gold AIG.  An unpacked array that memory_map cannot convert (write ports on several clocks, e.g. a

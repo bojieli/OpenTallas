@@ -1156,3 +1156,74 @@ def test_gold_register_array_lowering_is_opt_in(monkeypatch,tmp_path,enabled):
     assert ("--no-implicit-memories" in scripts[0]) == enabled
     assert rec.get("gold_no_implicit_memories",False) == enabled
     assert "read_slang" in scripts[0] and "memory_map" in scripts[0]
+
+
+def _replica_flip(tmp_path, name, gold_c1_inv=False):
+    """gold: three copies g_c[0..2].q <= d (g_c[1] inverted when gold_c1_inv), o <= g_c[0].q.  The fresh gate kept
+    only g_c[1].q (o <= it, or <= !it when inverted): the earlier gate had kept g_c[0].q."""
+    g, gm = _seq(tmp_path, name + "_gold", ["d"], ["g_c[0].q", "g_c[1].q", "g_c[2].q", "o"],
+                 lambda m, l: {"g_c[0].q": l["d"], "g_c[1].q": l["d"] ^ int(gold_c1_inv), "g_c[2].q": l["d"],
+                               "o": l["g_c[0].q"]})
+    t, tm = _seq(tmp_path, name + "_gate", ["d"], ["g_c[1].q", "o"],
+                 lambda m, l: {"g_c[1].q": l["d"] ^ int(gold_c1_inv), "o": l["g_c[1].q"] ^ int(gold_c1_inv)})
+    return lec.Lec(g, gm, t, tm)
+
+
+def test_transferred_profile_follows_the_replica_synthesis_kept(tmp_path, monkeypatch):
+    """QC NL fresh gate 10-29: the profile of an earlier gate (which kept g_c[0].q) says g_c[1].q == g_c[0].q and
+    g_c[2].q == g_c[0].q.  The fresh gate kept g_c[1].q.  A name-only restore leaves the stale gold hint on the now
+    matched g_c[1].q and the old representative g_c[0].q free: o differs.  transfer_profile swaps the relation onto
+    the surviving copy and the joint induction proves every hint and compare point.  Controls: the same profile with
+    a wrong polarity, and an orphan re-anchored to a sibling that is not a copy, are refuted (dropped), never kept."""
+    monkeypatch.setattr(lec, "prove", _exact_prove)
+    c = lambda i: f"ff:u_dut.g_c[{i}].q"
+    old = [["gold", c(1), ["eq", "gold", c(0), 0]], ["gold", c(2), ["eq", "gold", c(0), 0]]]
+    L = _replica_flip(tmp_path, "a")
+    assert {c(1), "ff:u_dut.o"} <= set(L.matched) and L.gonly == [c(0), c(2)]
+    for sd, k, h in old:                               # the name-only restore: every name still exists
+        L.hyp[sd, k] = tuple(h)
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    st = _exact_prove(m)
+    assert st["ff:u_dut.o"] == "differs"              # g_c[0].q, which o reads, is a free input
+    rec = lec.transfer_profile(L, old, [])
+    assert rec["swapped"] == [dict(old=old[0], new=["gold", c(0), ["eq", "gold", c(1), 0]])] and not rec["dropped"]
+    assert L.hyp == {("gold", c(0)): ("eq", "gold", c(1), 0), ("gold", c(2)): ("eq", "gold", c(0), 0)}
+    r = lec.prove_profile(L, tmp_path, 100, [])
+    assert not r["dropped"] and set(r["status"].values()) == {"proved"}
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_exact_prove(m).values()) == {"proved"}
+    # polarity control: the swapped relation keeps the (wrong) polarity and is refuted by the same induction
+    L = _replica_flip(tmp_path, "b")
+    lec.transfer_profile(L, [["gold", c(1), ["eq", "gold", c(0), 1]], old[1]], [])
+    assert L.hyp[("gold", c(0))] == ("eq", "gold", c(1), 1)
+    r = lec.prove_profile(L, tmp_path, 100, [])
+    assert f"hyp:gold:{c(0)}" in r["dropped"] and ("gold", c(0)) not in L.hyp
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert _exact_prove(m)["ff:u_dut.o"] == "differs"
+    # orphan re-anchor: no stale hint names the surviving copy; the orphan g_c[0].q is re-anchored to the matched
+    # same-bit sibling g_c[1].q and proved ...
+    L = _replica_flip(tmp_path, "c")
+    rec = lec.transfer_profile(L, [old[1]], [])
+    assert rec["reanchored"] == [dict(register=c(0), to=c(1))]
+    assert not lec.prove_profile(L, tmp_path, 100, [])["dropped"]
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_exact_prove(m).values()) == {"proved"}
+    # ... wrong-sibling control: g_c[1] is the INVERTED copy, so the same re-anchor is false and is caught
+    L = _replica_flip(tmp_path, "d", gold_c1_inv=True)
+    rec = lec.transfer_profile(L, [old[1]], [])
+    assert rec["reanchored"] == [dict(register=c(0), to=c(1))]
+    r = lec.prove_profile(L, tmp_path, 100, [])
+    assert f"hyp:gold:{c(0)}" in r["dropped"]
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert _exact_prove(m)["ff:u_dut.o"] == "differs"
+
+
+def test_transfer_profile_drops_absent_and_resides_matched_constants(tmp_path):
+    c = lambda i: f"ff:u_dut.g_c[{i}].q"
+    L = _replica_flip(tmp_path, "e")
+    rec = lec.transfer_profile(L, [["gold", "ff:u_dut.gone", ["const", 0]], ["gold", c(2), ["eq", "gold", "ff:x", 0]],
+                                   ["gold", c(1), ["const", 1]], ["both", c(2), ["const", 0]]], [])
+    assert len(rec["dropped"]) == 2
+    assert L.hyp == {("both", c(1)): ("const", 1), ("gold", c(2)): ("const", 0)}
+    assert lec.replica_siblings("ff:u.g_off[0].r_part[150]", ["ff:u.g_off[3].r_part[150]", "ff:u.g_off[3].r_part[151]",
+                                                               "ff:u.g_off[0].r_part[151]"]) == ["ff:u.g_off[3].r_part[150]"]
