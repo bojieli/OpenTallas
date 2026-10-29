@@ -1,0 +1,19 @@
+{
+  "original_MM_GRT": {
+    "TT_setup_ps": -17.461,
+    "FF_hold_ps": -12.49,
+    "overflow": 0
+  },
+  "same_fresh_GRT_control": {
+    "TT_setup_ps": -8.25,
+    "FF_hold_ps": -29.14
+  },
+  "same_fresh_GRT_2buffer_ECO": {
+    "TT_setup_ps": 49.33,
+    "FF_hold_ps": -29.14
+  },
+  "causal_setup_improvement_ps": 57.58,
+  "hold_improvement_ps": 0,
+  "root_cause": "Half-adder SN 12loads with 274.77ps slew and244.59psdelay; upstreamCON10loads worsen coupledSN. TwoBUF4fanoutisolation reducesloads, noRTL/clocks/latencychange.",
+  "next": "CurrentMM dataholdrepair from+49setup slack running ownclone. NoDRT/signoffclaim."
+}
