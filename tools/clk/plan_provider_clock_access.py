@@ -101,8 +101,22 @@ def main(argv=None):
         for x,y in candidate_points(load,via12):
             ss=[(ly,(x+q[0],y+q[1],x+q[2],y+q[3])) for ly,q in bounds.items()]
             if all(clear(load['net'],ly,r) for ly,r in ss):selected=(x,y,ss);break
-        if selected is None:failed.append(dict(inst=load['inst'],stage=load['stage'],net=load['net'],pin='CLK',cause='no all-layer-clear straight stack on actual M1 pin'));continue
-        x,y,ss=selected;original=P.pin_entry(load,D,via12)['xy'];changes+=int(original!=[x/D,y/D]);load['entry_xy_dbu']=[x,y];load['access_basis']='actual M1 pin + full lower-stack signal/OBS/PG clearance'
+        if selected is None:
+            # A native partition pin fence may obstruct the upper column even
+            # though the real M1 CLK access itself is clear. Escape at M3,
+            # before any M4/M5/M7 fence, using one bounded physical jog.
+            for x,y in candidate_points(load,via12):
+                for distance in (32,64,96,128,192,256):
+                    for dx,dy in ((0,-distance),(0,distance),(-distance,0),(distance,0)):
+                        trial=dict(net=load['net'],xy=[x/D,y/D],upper_xy=[(x+dx)/D,(y+dy)/D])
+                        ss=[(ly,tuple(round(v*D) for v in r)) for _,ly,*r in P.lower_escape_shapes(dict(rows=[trial]),tech,D)]
+                        if all(clear(load['net'],ly,r) for ly,r in ss):selected=(x,y,ss,dx,dy);break
+                    if selected:break
+                if selected:break
+        if selected is None:failed.append(dict(inst=load['inst'],stage=load['stage'],net=load['net'],pin='CLK',cause='no all-layer-clear stack or bounded M3 jog on actual M1 pin'));continue
+        x,y,ss=selected[:3]
+        if len(selected)>3:load['upper_xy_dbu']=[x+selected[3],y+selected[4]]
+        original=P.pin_entry(load,D,via12)['xy'];changes+=int(original!=[x/D,y/D]);load['entry_xy_dbu']=[x,y];load['access_basis']='actual M1 pin + full lower-stack signal/OBS/PG clearance'
         ep=P.pin_entry(load,D,via12);rows.append(dict(port=f'provider_clk_{index:05d}',stage=load['stage'],**ep))
         for ly,r in ss:
             for key in bins(r):placed[ly][key].append((load['net'],r))

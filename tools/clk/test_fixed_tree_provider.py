@@ -19,3 +19,9 @@ def test_existing_m7_endpoints_are_unmodified():
 
 def test_changed_base_adapter_fails_before_build():
     with pytest.raises(ValueError,match='anchor changed'):F.adapted_source('def main():pass')
+
+
+def test_m3_jog_keeps_native_m1_endpoint_and_upper_column_separate():
+    p=F.provider_join('M8',(10.,20.),'M1',(11.109,20.364),False,original,(11.109,20.236))
+    assert ('M3',11.109,20.364) in p and ('M3',11.109,20.236) in p
+    assert p[-1]==('M1',11.109,20.236)

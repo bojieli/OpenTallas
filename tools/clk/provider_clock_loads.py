@@ -40,9 +40,15 @@ def pin_entry(load, dbu, via12):
         shape=min(legal)[4]
     else:
         _, _, x, y, shape = min(candidates)
-    return dict(layer='M1', xy=[x/dbu,y/dbu], rect_um=[v/dbu for v in shape[1:]],
+    row=dict(layer='M1', xy=[x/dbu,y/dbu], rect_um=[v/dbu for v in shape[1:]],
                 inst=load['inst'], pin='CLK', net=load['net'],
                 via12_enclosure_um=[hx/dbu,hy/dbu], actual_m1=True)
+    if load.get('upper_xy_dbu') is not None:
+        ux,uy=map(float,load['upper_xy_dbu'])
+        if (ux!=x and uy!=y) or abs(ux-x)+abs(uy-y)>405:
+            raise ValueError('CLK access M3 jog must be one bounded straight segment')
+        row.update(upper_xy=[ux/dbu,uy/dbu],jog_layer='M3')
+    return row
 
 
 def extend(nets, ports, endpoints, inventory, bindings, via12=(9,11)):
@@ -78,7 +84,7 @@ def extend(nets, ports, endpoints, inventory, bindings, via12=(9,11)):
         if port in ports or port in endpoints:
             raise ValueError(f'duplicate physical endpoint key: {port}')
         ep = pin_entry(load, dbu, via12)
-        ports[port] = dict(layer=ep['layer'],xy=ep['xy'])
+        ports[port] = dict(layer=ep['layer'],xy=ep.get('upper_xy',ep['xy']))
         endpoints[port] = ep
         bynet[raw]['loads'].append('port:'+port)
         rows.append(dict(port=port,stage=load['stage'],raw_net=raw,**ep))
@@ -91,23 +97,29 @@ def extend(nets, ports, endpoints, inventory, bindings, via12=(9,11)):
 
 
 def lower_escape_shapes(report, tech_vias_dbu, dbu):
-    """Actual M1->M7 access stacks, including real via enclosures and AREA pads.
+    """Real M1->M7 stacks, optional bounded M3 escape jog, VIA enclosures/AREA.
 
-    M7->M8 risers/landings are deliberately absent: they require the joint
-    clock/PG track allocation. These shapes reserve the fixed lower escape
-    before a power planner consumes the same cell-local columns.
+    M7->M8 risers/landings remain the joint clock/PG track allocator's work.
+    Actual pin coordinates never change when the upper access column moves.
     """
     pads={'M2':(.019,.009),'M3':(.009,.020),'M4':(.043,.012),
           'M5':(.012,.043),'M6':(.036,.016),'M7':(.016,.036)}
     out=[]
     for row in report['rows']:
-        x,y=row['xy'];net=row['net']
+        x,y=row['xy'];ux,uy=row.get('upper_xy',row['xy']);net=row['net']
+        if (ux!=x and uy!=y) or abs(ux-x)+abs(uy-y)>.405+1e-9:
+            raise ValueError('invalid physical M3 CLK escape')
         for via in ('VIA12','VIA23','VIA34','VIA45','VIA56','VIA67'):
+            vx,vy=(x,y) if via in ('VIA12','VIA23') else (ux,uy)
             for layer,x0,y0,x1,y1 in tech_vias_dbu[via]:
                 if not layer.startswith('M'):continue
-                out.append([net,layer,x+x0/dbu,y+y0/dbu,x+x1/dbu,y+y1/dbu])
+                out.append([net,layer,vx+x0/dbu,vy+y0/dbu,vx+x1/dbu,vy+y1/dbu])
         for layer,(hx,hy) in pads.items():
-            out.append([net,layer,x-hx,y-hy,x+hx,y+hy])
+            vx,vy=(x,y) if layer in ('M2','M3') else (ux,uy)
+            out.append([net,layer,vx-hx,vy-hy,vx+hx,vy+hy])
+        if (ux,uy)!=(x,y):
+            hx,hy=pads['M3'];out.append([net,'M3',ux-hx,uy-hy,ux+hx,uy+hy])
+            hw=.009;out.append([net,'M3',min(x,ux)-hw,min(y,uy)-hw,max(x,ux)+hw,max(y,uy)+hw])
     return out
 
 
