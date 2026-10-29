@@ -1,0 +1,16 @@
+{
+ "verdict": "PASS-COND PLAN CANDIDATES; NO ROUTE APPROVAL",
+ "pictures": [
+  "results/die_hbm_1027/hbm10/c25c_faces/shared_faces_street.png",
+  "results/die_hbm_1027/hbm10/c25c_faces/bdring_split.png"
+ ],
+ "viewed": true,
+ "clock_pins_unchanged": 9,
+ "findings": [
+  "VMS and VMbank shared pin layouts show full use of existing faces, no outline/macro/clock movement, no per-instance pin variants. Full partner census134->48badports.",
+  "Common VMS31 port families repinned to S/N to face all q0/q1 partners. VMbank only wq0 moved; other12 incompatible signatures remain explicitly open.",
+  "bdring optionalW/S vector split halvesW pin density and faces every bq_d partner in all4 instances; M5 pin access/G2 still required.",
+  "Street image shows the rejected34.56um prototype, whose measured demand/connectivity check FAILS10cores. Distributed103.68um successor needs its own passing check/render before adoption."
+ ],
+ "cycles_added": 0
+}

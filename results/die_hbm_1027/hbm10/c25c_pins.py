@@ -14,7 +14,7 @@ def orient(x,y,w,h,o):
  if o in ('MX','R180'): y=h-y
  return x,y
 
-def main(src,out):
+def main(src,out,bdring_split=False):
  src,out=Path(src),Path(out);out.mkdir(parents=True,exist_ok=True);(out/'cores').mkdir(exist_ok=True)
  raw=(src/'die_plan.json').read_bytes();p=json.loads(raw)
  report={'source_sha256':hashlib.sha256(raw).hexdigest(),'cycles_added':0,'changes':[],'endpoint_reach':[]}
@@ -31,6 +31,13 @@ def main(src,out):
     start=snap((nh-(len(qs)-1)*pitch)/2)
     for i,q in enumerate(qs):q.update(x=.096 if f=='W' else round(nw-.096,4),y=round(start+i*pitch,4))
    for q in groups['I']:q.update(x=round(q['x']+(nw-ow)/2,4),y=round(q['y']+(nh-oh)/2,4))
+   if bdring_split:
+    # Common-master face census proves local S faces every bq_d partner; retain half on W for capacity.
+    bq=sorted(groups['W'],key=lambda q:int(q['name'].split('[')[1].rstrip(']')))
+    assert len(bq)==2048 and all(q['name'].startswith('bq_d[') for q in bq)
+    for i,q in enumerate(bq[:1024]):q.update(layer='M4',x=.096,y=round(snap((nh-1023*.192)/2)+i*.192,4))
+    for i,q in enumerate(bq[1024:]):q.update(layer='M5',x=round(snap((nw-1023*.096)/2)+i*.096,4),y=.096)
+
   else:
    for f in ('S','E'):
     reserved=[q for q in groups[f] if q['name']=='clk'];qs=sorted([q for q in groups[f] if q['name']!='clk'],key=lambda q:(q['x' if f=='S' else 'y'],q['name']))
@@ -113,4 +120,4 @@ def main(src,out):
  report['plan_sha256']=hashlib.sha256((out/'die_plan.json').read_bytes()).hexdigest()
  (out/'c25c_pins_report.json').write_text(json.dumps(report,indent=1)+'\n');print(json.dumps(report,indent=1))
 if __name__=='__main__':
- ap=argparse.ArgumentParser();ap.add_argument('src');ap.add_argument('out');a=ap.parse_args();main(a.src,a.out)
+ ap=argparse.ArgumentParser();ap.add_argument('src');ap.add_argument('out');ap.add_argument('--bdring-split',action='store_true');a=ap.parse_args();main(a.src,a.out,a.bdring_split)
