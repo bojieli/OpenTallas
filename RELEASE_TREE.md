@@ -32,11 +32,11 @@ Snapshot: 2026-10-28 17:20 PDT · main bfc232967f · FROZEN: none · gate number
 ## DIE s81_head · S81 head die · rev UNFROZEN d7b8d1eb · after QC
 - [ ] HEAD.INFRA Infra-first plan event (+ HEAD8 batch 187b63494b if approved) · INFRA-FIRST-HEAD-1 · RUNNING (started 01:5x, parallel to QC) · PENDING-DELTA D-INFRA-FIRST-HEAD holds all 16 type routes → IF.TOOL
 - [ ] HEAD.LAND Landed regions (12.11, main path) · LAND-HEAD-1 · RUNNING · token window check (9,282 vs 10,357 + landed cycles) -> equal-length region trees -> GRT -> STA
-- [ ] HEAD.CLK Clock 12.16 local inverter tree · DIE-HEAD-11 · RUNNING · inv2 rep200 CA width 427/0 FAIL; compose start pins (stpins) + lepfix approved/merging; hd_spn strap LEC split; die-level root counter next
+- [ ] HEAD.CLK Clock 12.16 local tree + real hd_tile ring clocks (--ca-ring, on main 21:1x) · DIE-HEAD-20 · RUNNING · hd_tile gate CA min 136 TT/163.8 FF PASS on 240 measured crossings; 187 crossings still on ASSUMED clocks (14 types unkitted) -> no freeze claim; hd_tile diagnostic run in GRT
 - [ ] HEAD.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · old d7b8d1eb signal GRT0 no longer counts → HEAD.INFRA
 - [ ] HEAD.BIND Whole-head as-built bind · CODEX / PATH-S81 · WAITS · contract DRAFT ASKed (host N3@276, mesh64 2-beat, head_row_map; head-core-r13@148ff6a840); gaps: ROW0/TEN straps, hd_serdes u_phy open pins → next HEAD PLAN-DELTA
 - [ ] HEAD.STA Die STA on real views · DIE-PROTO · WAITS · → HEAD.CLK, → HEAD.TILES
-  - [ ] HEAD.TILES Head tile sign-offs · S81-HEAD / KITS-WAVE-3 · WAITS · types held by D-INFRA-FIRST-HEAD; 1/2 hard cores signed → HEAD.INFRA
+  - [ ] HEAD.TILES Head tile sign-offs · HEAD-KITS-1 (new 21:1x) · RUNNING · 0/16 types, 2/3 hard cores; 14 types no routed kit (5 NEEDS-KIT, 9 FIX) - kit with fwd_buffer + tap_passthrough, hd_spn/hd_spn_end/hd_turn_b first
 
 ## DIE qwen_kvsys · Qwen KV · rev batch claude/path-kv-batch-0115@650841e1ef (rebase 5665cd3386 + FT reserve + D-KV-CLKMESH)
 - [ ] KV.BIND Strict bind of the batch · PATH-KV · RUNNING · B31 a8c24031c strict PASS 160 parts/51 types + R8 0 unequal + full verify 2553368/2553368; final batch (8-region landings, q2 rename, B32 PV) needs one re-bind
@@ -45,7 +45,8 @@ Snapshot: 2026-10-28 17:20 PDT · main bfc232967f · FROZEN: none · gate number
 - [ ] KV.INFRA PG from IR + pre-routed PG/clock/reset via shared tool · PATH-KV · RUNNING · die_infra reset 287 nets max hop 377um PASS; signal GRT50 M4-M9 w/ clock reservation ovf0; PG needs KV power figure (0.15 W/mm2 fallback) → IF.TOOL
 - [ ] KV.GRT GRT0 incl. clock at >=50 it · KV-PLAN-DELTA-5 · RUNNING · stall fixed (crit 0, merged RM79), q5c TT/FF overflow 0 CHECKED; FT hub_Wi seam windows in KV event
 - [ ] KV.STA Die STA on real views · CLOCK-KV-R18 · FAIL (hold) · R17 signed mesh + 0.21 table: TT +161.4 0 neg; FF -242 (leaf-fed band) / both-real +24.7 PASS; 31% inst real (UNCHECKED, NUMBER-CHECK running); R18 = mesh-fed band + HB4 model + slice entries
-  - [ ] KV.TILES Tile sign-offs · PATH-KV / KV-CORES · BLOCKED · KV-CORES-R1 gate 0/24 core types buildable: no 12.8a centre entry + R1-R7 islands in plan hm_r12 96e6d1cb; signed only head e1/e5 → KV.CORE-SLICE
+  - [ ] KV.TILES Tile sign-offs · KV-KITS-16 · RUNNING · 5/31 hard cores (e2 e5 e6 + 2); e1 -1.6 ps re-run, phy_pad + core_tx GEOM PASS-COND queued, pv_pair re-run; two-mode GRT repair root cause
+- [ ] KV.TOK Whole-die token pass on bind5 · TOK-KV-2 · RUNNING · B48 nominal + bind5m builds on intel1 (ETA ~01:10 10-29), then boot ~1.3 h + 1 token; composer 4089.4 COMPOSER-ONLY
   - [ ] KV.CORE-SLICE One KV core slice (centre entries, in-core islands, M7 entry pins; hr recut, q2 rename, phy_pad outline) · KV-CORE-SLICE-1 · RUNNING → KV-CORES-R2 → KV.CLK
 
 ## DIE s81 · S81 (DeepSeek ROM layer die) · rev main · B2 batch
