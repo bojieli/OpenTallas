@@ -1,0 +1,15 @@
+{
+ "pin": "u_leaf.u_recip/clk",
+ "master": "ot_qkh_recip_leaf",
+ "signed_latency_ps": {
+  "TT": {
+   "min": 201.60768,
+   "max": 264.82568
+  },
+  "FF": {
+   "min": 161.38185,
+   "max": 212.23193
+  }
+ },
+ "signed_view": "current AHUB hard-child ot_qkh_recip_leaf TT/FF ETM (read from exact actual kit macros)"
+}

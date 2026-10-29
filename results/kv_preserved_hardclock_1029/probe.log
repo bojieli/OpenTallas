@@ -1,0 +1,8 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+ACTUAL_ORIGINAL_ROOT_SINKS 3557
+OT_CORE_INFRA_PRESERVED_HARD_CLOCK u_leaf.u_recip/clk master=ot_qkh_recip_leaf original_root=ck[0] unchanged
+ACTUAL_PRESERVE_PASS u_leaf.u_recip/clk 3557 sinks, 1 explicitly_preserved, rest_remain_required
+ACTUAL_UNASSIGNED_FF_CONTROL_CAUGHT OT_CORE_INFRA_UNASSIGNED_CLOCK_SINK u_leaf.zh_err_q\[9\]$_DFF_P_/CLK
