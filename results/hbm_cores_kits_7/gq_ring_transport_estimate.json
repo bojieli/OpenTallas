@@ -1,0 +1,263 @@
+{
+ "plan": "/srv/opentallas-scratch/claude/hbm-gq-stage-1029/plan/die_plan.json",
+ "reach_um": 405.0,
+ "hops_rule_um": 360.0,
+ "hubs": {
+  "q_hub_nw": {
+   "codex_best": {
+    "origin_um": [
+     4527.36,
+     2626.56
+    ],
+    "hard_collisions_4p32": [],
+    "ring_legs_plan_points": {
+     "u_hb_coll_Q_body_core": {
+      "bits": 3,
+      "old": 2856.4,
+      "new": 1949.2,
+      "plan_regs": 24,
+      "hops405_old": 8,
+      "hops405_new": 5
+     },
+     "u_hcollgi_Q": {
+      "bits": 495,
+      "old": 1381.1,
+      "new": 249.3,
+      "plan_regs": 18,
+      "hops405_old": 4,
+      "hops405_new": 1
+     },
+     "u_hcollgl_Q": {
+      "bits": 524,
+      "old": 2161.8,
+      "new": 839.9,
+      "plan_regs": 11,
+      "hops405_old": 6,
+      "hops405_new": 3
+     },
+     "u_cij_Q": {
+      "bits": 544,
+      "old": 3465.5,
+      "new": 2558.3,
+      "plan_regs": 13,
+      "hops405_old": 9,
+      "hops405_new": 7
+     }
+    }
+   },
+   "nw_slot": {
+    "origin_um": [
+     4527.36,
+     2626.56
+    ],
+    "hard_collisions_4p32": [],
+    "ring_legs_plan_points": {
+     "u_hb_coll_Q_body_core": {
+      "bits": 3,
+      "old": 2856.4,
+      "new": 1949.2,
+      "plan_regs": 24,
+      "hops405_old": 8,
+      "hops405_new": 5
+     },
+     "u_hcollgi_Q": {
+      "bits": 495,
+      "old": 1381.1,
+      "new": 249.3,
+      "plan_regs": 18,
+      "hops405_old": 4,
+      "hops405_new": 1
+     },
+     "u_hcollgl_Q": {
+      "bits": 524,
+      "old": 2161.8,
+      "new": 839.9,
+      "plan_regs": 11,
+      "hops405_old": 6,
+      "hops405_new": 3
+     },
+     "u_cij_Q": {
+      "bits": 544,
+      "old": 3465.5,
+      "new": 2558.3,
+      "plan_regs": 13,
+      "hops405_old": 9,
+      "hops405_new": 7
+     }
+    }
+   }
+  },
+  "q_hub_ne": {
+   "codex_best": {
+    "origin_um": [
+     4544.64,
+     2540.16
+    ],
+    "hard_collisions_4p32": [],
+    "ring_legs_plan_points": {
+     "u_hb_coll_Q_body_n2": {
+      "bits": 3,
+      "old": 2122.0,
+      "new": 1871.4,
+      "plan_regs": 26,
+      "hops405_old": 6,
+      "hops405_new": 5
+     },
+     "u_hcollgi_Q": {
+      "bits": 495,
+      "old": 1381.1,
+      "new": 180.1,
+      "plan_regs": 18,
+      "hops405_old": 4,
+      "hops405_new": 1
+     },
+     "u_hcollgl_Q": {
+      "bits": 524,
+      "old": 1764.4,
+      "new": 788.1,
+      "plan_regs": 22,
+      "hops405_old": 5,
+      "hops405_new": 2
+     },
+     "u_cij_Q": {
+      "bits": 544,
+      "old": 3465.5,
+      "new": 2489.2,
+      "plan_regs": 13,
+      "hops405_old": 9,
+      "hops405_new": 7
+     }
+    }
+   },
+   "nw_slot": {
+    "origin_um": [
+     4527.36,
+     2626.56
+    ],
+    "hard_collisions_4p32": [
+     "u_ctl_Q_p15"
+    ],
+    "ring_legs_plan_points": {
+     "u_hb_coll_Q_body_n2": {
+      "bits": 3,
+      "old": 2122.0,
+      "new": 1975.1,
+      "plan_regs": 26,
+      "hops405_old": 6,
+      "hops405_new": 5
+     },
+     "u_hcollgi_Q": {
+      "bits": 495,
+      "old": 1381.1,
+      "new": 249.3,
+      "plan_regs": 18,
+      "hops405_old": 4,
+      "hops405_new": 1
+     },
+     "u_hcollgl_Q": {
+      "bits": 524,
+      "old": 1764.4,
+      "new": 857.2,
+      "plan_regs": 22,
+      "hops405_old": 5,
+      "hops405_new": 3
+     },
+     "u_cij_Q": {
+      "bits": 544,
+      "old": 3465.5,
+      "new": 2558.3,
+      "plan_regs": 13,
+      "hops405_old": 9,
+      "hops405_new": 7
+     }
+    }
+   }
+  }
+ },
+ "codex_actual_pin_reach": {
+  "q_hub_ne": {
+   "best": [
+    4544.64,
+    2540.16
+   ],
+   "max_um": 396.72,
+   "station_centres_inside": 54,
+   "bus_stations": [
+    "bus:L103_o",
+    "bus:L114w_i",
+    "bus:L37_o",
+    "bus:L57_i",
+    "bus:L63w_o",
+    "bus:L8_o"
+   ]
+  },
+  "q_hub_nw": {
+   "best": [
+    4527.36,
+    2626.56
+   ],
+   "max_um": 293.04,
+   "station_centres_inside": 10,
+   "bus_stations": [
+    "bus:L103_o",
+    "bus:L37_o"
+   ]
+  }
+ },
+ "pipeline_regs_q1": {
+  "direct_min_um": 1222.752,
+  "direct_max_um": 1614.96,
+  "regs_at_405": 3,
+  "regs_at_360": 4
+ },
+ "pipeline_price_S2_COLL_all": {
+  "ds_N1": {
+   "records": 642,
+   "added_cycles": 473.9,
+   "loss_pct": 0.082,
+   "at_1906": 1904.4
+  },
+  "ds_N3": {
+   "records": 642,
+   "added_cycles": 1431.9,
+   "loss_pct": 0.248,
+   "at_1906": 1901.2
+  },
+  "ds_N4": {
+   "records": 642,
+   "added_cycles": 1910.9,
+   "loss_pct": 0.33,
+   "at_1906": 1899.7
+  },
+  "ds_N8": {
+   "records": 642,
+   "added_cycles": 3830.1,
+   "loss_pct": 0.66,
+   "at_1906": 1893.4
+  },
+  "qwen_N1": {
+   "records": 3,
+   "added_cycles": 73.0,
+   "loss_pct": 0.006,
+   "at_1906": null
+  },
+  "qwen_N3": {
+   "records": 3,
+   "added_cycles": 219.0,
+   "loss_pct": 0.017,
+   "at_1906": null
+  },
+  "qwen_N4": {
+   "records": 3,
+   "added_cycles": 292.0,
+   "loss_pct": 0.023,
+   "at_1906": null
+  },
+  "qwen_N8": {
+   "records": 3,
+   "added_cycles": 584.0,
+   "loss_pct": 0.046,
+   "at_1906": null
+  }
+ }
+}
