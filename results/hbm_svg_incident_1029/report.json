@@ -1,0 +1,5849 @@
+{
+  "status": "FAIL FOR ROUTE; actual source outputs need matching source-bound station paths",
+  "source_graph_sha256": "05dc34c6c608b771e7128d29d301a4c71f9a1200c8e9167b9c01c001bebf81e9",
+  "plan_sha256": "cc5c216307732d8f977fbe8942abeed303be9e27bea064393a9aefd0732533e5",
+  "candidate_pins_sha256": "bb44bdf3ef6027fa639381fed8db8f438e924613bf382f89c2cfd1e9d8dbfe74",
+  "actual_packet_edges": 8,
+  "actual_packet_bits": 8792,
+  "direct_packet_bits_gt405": 8792,
+  "incident_edge_groups": 128,
+  "incident_bit_pairs": 28704,
+  "existing_sm_packet_station_rows": 21,
+  "existing_station_direction_wrong": 21,
+  "packet_edges": [
+    {
+      "src_path": "svg_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "sm_packet",
+      "dst_path": "hb_idx__s_NW.keybuf.gp[0].u_line",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_mu_keybuf_0_s0__q1",
+      "dst_port": "key_in",
+      "width": 1099,
+      "measured_bits": 1099,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 6182.712,
+      "new_max_um": 6240.312,
+      "new_min_um": 5923.032,
+      "new_bits_gt405": 1099,
+      "max_bit_delta_um": 57.6,
+      "min_bit_delta_um": -50.688,
+      "worst_bit": {
+        "src": 0,
+        "dst": 11,
+        "old_src": [
+          1181.352,
+          2461.224
+        ],
+        "old_dst": [
+          5322.335999999999,
+          419.49600000000004
+        ],
+        "new_src": [
+          1123.752,
+          2461.224
+        ],
+        "new_dst": [
+          5322.335999999999,
+          419.49600000000004
+        ]
+      },
+      "minimum_stations_lower_bound": 15
+    },
+    {
+      "src_path": "svg_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "sm_packet",
+      "dst_path": "hb_idx__s_NW.keybuf.gp[1].u_line",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_mu_keybuf_0_s1__q1",
+      "dst_port": "key_in",
+      "width": 1099,
+      "measured_bits": 1099,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 4497.384,
+      "new_max_um": 4548.072,
+      "new_min_um": 4331.784,
+      "new_bits_gt405": 1099,
+      "max_bit_delta_um": 50.688,
+      "min_bit_delta_um": -57.6,
+      "worst_bit": {
+        "src": 1098,
+        "dst": 0,
+        "old_src": [
+          6584.616,
+          4197.864
+        ],
+        "old_dst": [
+          5546.976,
+          738.12
+        ],
+        "new_src": [
+          6635.304,
+          4197.864
+        ],
+        "new_dst": [
+          5546.976,
+          738.12
+        ]
+      },
+      "minimum_stations_lower_bound": 11
+    },
+    {
+      "src_path": "svg_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "sm_packet",
+      "dst_path": "hb_idx__s_NW.keybuf.gp[2].u_line",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_mu_keybuf_0_s2__q1",
+      "dst_port": "key_in",
+      "width": 1099,
+      "measured_bits": 1099,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 4275.312,
+      "new_max_um": 4326.0,
+      "new_min_um": 4109.712,
+      "new_bits_gt405": 1099,
+      "max_bit_delta_um": 50.688,
+      "min_bit_delta_um": -57.6,
+      "worst_bit": {
+        "src": 1098,
+        "dst": 0,
+        "old_src": [
+          732.1679999999999,
+          1131.936
+        ],
+        "old_dst": [
+          4665.504,
+          789.96
+        ],
+        "new_src": [
+          681.4799999999998,
+          1131.936
+        ],
+        "new_dst": [
+          4665.504,
+          789.96
+        ]
+      },
+      "minimum_stations_lower_bound": 10
+    },
+    {
+      "src_path": "svg_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "sm_packet",
+      "dst_path": "hb_idx__s_NW.keybuf.gp[3].u_line",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_mu_keybuf_0_s3__q1",
+      "dst_port": "key_in",
+      "width": 1099,
+      "measured_bits": 1099,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 2675.376,
+      "new_max_um": 2732.976,
+      "new_min_um": 2516.688,
+      "new_bits_gt405": 1099,
+      "max_bit_delta_um": 57.6,
+      "min_bit_delta_um": -50.688,
+      "worst_bit": {
+        "src": 0,
+        "dst": 11,
+        "old_src": [
+          6126.7919999999995,
+          26.016000000000002
+        ],
+        "old_dst": [
+          5322.335999999999,
+          1896.9360000000001
+        ],
+        "new_src": [
+          6184.392,
+          26.016000000000002
+        ],
+        "new_dst": [
+          5322.335999999999,
+          1896.9360000000001
+        ]
+      },
+      "minimum_stations_lower_bound": 6
+    },
+    {
+      "src_path": "svg_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "sm_packet",
+      "dst_path": "hb_idx__s_NE.keybuf.gp[0].u_line",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_mu_keybuf_0_s0__q1",
+      "dst_port": "key_in",
+      "width": 1099,
+      "measured_bits": 1099,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 5854.2,
+      "new_max_um": 5911.8,
+      "new_min_um": 5594.52,
+      "new_bits_gt405": 1099,
+      "max_bit_delta_um": 57.6,
+      "min_bit_delta_um": -50.688,
+      "worst_bit": {
+        "src": 0,
+        "dst": 11,
+        "old_src": [
+          1181.352,
+          2461.224
+        ],
+        "old_dst": [
+          5244.384,
+          670.0559999999999
+        ],
+        "new_src": [
+          1123.752,
+          2461.224
+        ],
+        "new_dst": [
+          5244.384,
+          670.0559999999999
+        ]
+      },
+      "minimum_stations_lower_bound": 14
+    },
+    {
+      "src_path": "svg_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "sm_packet",
+      "dst_path": "hb_idx__s_NE.keybuf.gp[1].u_line",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_mu_keybuf_0_s1__q1",
+      "dst_port": "key_in",
+      "width": 1099,
+      "measured_bits": 1099,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 5344.296,
+      "new_max_um": 5394.984,
+      "new_min_um": 5178.696,
+      "new_bits_gt405": 1099,
+      "max_bit_delta_um": 50.688,
+      "min_bit_delta_um": -57.6,
+      "worst_bit": {
+        "src": 1098,
+        "dst": 0,
+        "old_src": [
+          6584.616,
+          4197.864
+        ],
+        "old_dst": [
+          4751.9039999999995,
+          686.28
+        ],
+        "new_src": [
+          6635.304,
+          4197.864
+        ],
+        "new_dst": [
+          4751.9039999999995,
+          686.28
+        ]
+      },
+      "minimum_stations_lower_bound": 13
+    },
+    {
+      "src_path": "svg_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "sm_packet",
+      "dst_path": "hb_idx__s_NE.keybuf.gp[2].u_line",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_mu_keybuf_0_s2__q1",
+      "dst_port": "key_in",
+      "width": 1099,
+      "measured_bits": 1099,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 6651.504,
+      "new_max_um": 6702.192,
+      "new_min_um": 6485.904,
+      "new_bits_gt405": 1099,
+      "max_bit_delta_um": 50.688,
+      "min_bit_delta_um": -57.6,
+      "worst_bit": {
+        "src": 1098,
+        "dst": 0,
+        "old_src": [
+          732.1679999999999,
+          1131.936
+        ],
+        "old_dst": [
+          6583.776,
+          332.04
+        ],
+        "new_src": [
+          681.4799999999998,
+          1131.936
+        ],
+        "new_dst": [
+          6583.776,
+          332.04
+        ]
+      },
+      "minimum_stations_lower_bound": 16
+    },
+    {
+      "src_path": "svg_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "sm_packet",
+      "dst_path": "hb_idx__s_NE.keybuf.gp[3].u_line",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_mu_keybuf_0_s3__q1",
+      "dst_port": "key_in",
+      "width": 1099,
+      "measured_bits": 1099,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 2390.256,
+      "new_max_um": 2447.856,
+      "new_min_um": 2231.568,
+      "new_bits_gt405": 1099,
+      "max_bit_delta_um": 57.6,
+      "min_bit_delta_um": -50.688,
+      "worst_bit": {
+        "src": 0,
+        "dst": 11,
+        "old_src": [
+          6126.7919999999995,
+          26.016000000000002
+        ],
+        "old_dst": [
+          5598.816,
+          1888.296
+        ],
+        "new_src": [
+          6184.392,
+          26.016000000000002
+        ],
+        "new_dst": [
+          5598.816,
+          1888.296
+        ]
+      },
+      "minimum_stations_lower_bound": 6
+    }
+  ],
+  "all_incident": [
+    {
+      "src_path": "svg_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "k_addr",
+      "dst_path": "vmks_NW0",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q0",
+      "dst_port": "g_k_addr",
+      "width": 120,
+      "measured_bits": 120,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1757.4,
+      "new_max_um": 1757.4,
+      "new_min_um": 1721.496,
+      "new_bits_gt405": 120,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 119,
+        "dst": 119,
+        "old_src": [
+          1622.9279999999999,
+          2091.168
+        ],
+        "old_dst": [
+          1920.36,
+          3551.136
+        ],
+        "new_src": [
+          1622.9279999999999,
+          2091.168
+        ],
+        "new_dst": [
+          1920.36,
+          3551.136
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "k_len",
+      "dst_path": "vmks_NW0",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q0",
+      "dst_port": "g_k_len",
+      "width": 16,
+      "measured_bits": 16,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1734.552,
+      "new_max_um": 1734.552,
+      "new_min_um": 1704.6,
+      "new_bits_gt405": 16,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 15,
+        "dst": 15,
+        "old_src": [
+          1622.9279999999999,
+          2089.392
+        ],
+        "old_dst": [
+          1895.7359999999999,
+          3551.136
+        ],
+        "new_src": [
+          1622.9279999999999,
+          2089.392
+        ],
+        "new_dst": [
+          1895.7359999999999,
+          3551.136
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "k_tag",
+      "dst_path": "vmks_NW0",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q0",
+      "dst_port": "g_k_tag",
+      "width": 68,
+      "measured_bits": 68,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1749.48,
+      "new_max_um": 1749.48,
+      "new_min_um": 1699.752,
+      "new_bits_gt405": 68,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 67,
+        "dst": 67,
+        "old_src": [
+          1622.9279999999999,
+          2082.0480000000002
+        ],
+        "old_dst": [
+          1903.32,
+          3551.136
+        ],
+        "new_src": [
+          1622.9279999999999,
+          2082.0480000000002
+        ],
+        "new_dst": [
+          1903.32,
+          3551.136
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "k_v",
+      "dst_path": "vmks_NW0",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q0",
+      "dst_port": "g_k_v",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1739.016,
+      "new_max_um": 1739.016,
+      "new_min_um": 1694.328,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          1622.9279999999999,
+          2081.664
+        ],
+        "old_dst": [
+          1892.472,
+          3551.136
+        ],
+        "new_src": [
+          1622.9279999999999,
+          2081.664
+        ],
+        "new_dst": [
+          1892.472,
+          3551.136
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "k_wdata",
+      "dst_path": "vmks_NW0",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q0",
+      "dst_port": "g_k_wdata",
+      "width": 1024,
+      "measured_bits": 1024,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1979.4,
+      "new_max_um": 1979.4,
+      "new_min_um": 1626.216,
+      "new_bits_gt405": 1024,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 1023,
+        "dst": 1023,
+        "old_src": [
+          1622.9279999999999,
+          1973.376
+        ],
+        "old_dst": [
+          2024.568,
+          3551.136
+        ],
+        "new_src": [
+          1622.9279999999999,
+          1973.376
+        ],
+        "new_dst": [
+          2024.568,
+          3551.136
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "k_we",
+      "dst_path": "vmks_NW0",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q0",
+      "dst_port": "g_k_we",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1849.272,
+      "new_max_um": 1849.272,
+      "new_min_um": 1587.48,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          1622.9279999999999,
+          1972.848
+        ],
+        "old_dst": [
+          1893.912,
+          3551.136
+        ],
+        "new_src": [
+          1622.9279999999999,
+          1972.848
+        ],
+        "new_dst": [
+          1893.912,
+          3551.136
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "k_wstrb",
+      "dst_path": "vmks_NW0",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q0",
+      "dst_port": "g_k_wstrb",
+      "width": 128,
+      "measured_bits": 128,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1901.16,
+      "new_max_um": 1901.16,
+      "new_min_um": 1600.248,
+      "new_bits_gt405": 128,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 127,
+        "dst": 127,
+        "old_src": [
+          1622.9279999999999,
+          1958.976
+        ],
+        "old_dst": [
+          1931.9279999999999,
+          3551.136
+        ],
+        "new_src": [
+          1622.9279999999999,
+          1958.976
+        ],
+        "new_dst": [
+          1931.9279999999999,
+          3551.136
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "kr_rdy",
+      "dst_path": "vmks_NW0",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q0",
+      "dst_port": "g_kr_rdy",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1973.736,
+      "new_max_um": 1973.736,
+      "new_min_um": 1463.544,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          1622.9279999999999,
+          1848.768
+        ],
+        "old_dst": [
+          1894.296,
+          3551.136
+        ],
+        "new_src": [
+          1622.9279999999999,
+          1848.768
+        ],
+        "new_dst": [
+          1894.296,
+          3551.136
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "run_done",
+      "dst_path": "obs_NW",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_obs_Q",
+      "dst_port": "obs",
+      "width": 1,
+      "status": "MISSING ACTUAL PEER SLOT"
+    },
+    {
+      "src_path": "svg_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "sm_packet",
+      "dst_path": "hb_idx__s_NW.keybuf.gp[0].u_line",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_mu_keybuf_0_s0__q1",
+      "dst_port": "key_in",
+      "width": 1099,
+      "measured_bits": 1099,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 6182.712,
+      "new_max_um": 6240.312,
+      "new_min_um": 5923.032,
+      "new_bits_gt405": 1099,
+      "max_bit_delta_um": 57.6,
+      "min_bit_delta_um": -50.688,
+      "worst_bit": {
+        "src": 0,
+        "dst": 11,
+        "old_src": [
+          1181.352,
+          2461.224
+        ],
+        "old_dst": [
+          5322.335999999999,
+          419.49600000000004
+        ],
+        "new_src": [
+          1123.752,
+          2461.224
+        ],
+        "new_dst": [
+          5322.335999999999,
+          419.49600000000004
+        ]
+      },
+      "minimum_stations_lower_bound": 15
+    },
+    {
+      "src_path": "svg_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "k_addr",
+      "dst_path": "vmks_NW1",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q1",
+      "dst_port": "g_k_addr",
+      "width": 120,
+      "measured_bits": 120,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 559.56,
+      "new_max_um": 559.56,
+      "new_min_um": 504.6,
+      "new_bits_gt405": 120,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 119,
+        "dst": 119,
+        "old_src": [
+          6919.248,
+          3827.808
+        ],
+        "old_dst": [
+          7249.368,
+          4057.248
+        ],
+        "new_src": [
+          6919.248,
+          3827.808
+        ],
+        "new_dst": [
+          7249.368,
+          4057.248
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "svg_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "k_len",
+      "dst_path": "vmks_NW1",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q1",
+      "dst_port": "g_k_len",
+      "width": 16,
+      "measured_bits": 16,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 493.08,
+      "new_max_um": 493.08,
+      "new_min_um": 460.824,
+      "new_bits_gt405": 16,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 15,
+        "dst": 15,
+        "old_src": [
+          6919.248,
+          3826.032
+        ],
+        "old_dst": [
+          7181.112,
+          4057.248
+        ],
+        "new_src": [
+          6919.248,
+          3826.032
+        ],
+        "new_dst": [
+          7181.112,
+          4057.248
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "svg_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "k_tag",
+      "dst_path": "vmks_NW1",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q1",
+      "dst_port": "g_k_tag",
+      "width": 68,
+      "measured_bits": 68,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 521.544,
+      "new_max_um": 521.544,
+      "new_min_um": 460.92,
+      "new_bits_gt405": 68,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 67,
+        "dst": 67,
+        "old_src": [
+          6919.248,
+          3818.688
+        ],
+        "old_dst": [
+          7202.232,
+          4057.248
+        ],
+        "new_src": [
+          6919.248,
+          3818.688
+        ],
+        "new_dst": [
+          7202.232,
+          4057.248
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "svg_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "k_v",
+      "dst_path": "vmks_NW1",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q1",
+      "dst_port": "g_k_v",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 491.88,
+      "new_max_um": 491.88,
+      "new_min_um": 446.76,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          6919.248,
+          3818.304
+        ],
+        "old_dst": [
+          7172.184,
+          4057.248
+        ],
+        "new_src": [
+          6919.248,
+          3818.304
+        ],
+        "new_dst": [
+          7172.184,
+          4057.248
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "svg_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "k_wdata",
+      "dst_path": "vmks_NW1",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q1",
+      "dst_port": "g_k_wdata",
+      "width": 1024,
+      "measured_bits": 1024,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1012.92,
+      "new_max_um": 1012.92,
+      "new_min_um": 449.112,
+      "new_bits_gt405": 1024,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 1023,
+        "dst": 1023,
+        "old_src": [
+          6919.248,
+          3710.016
+        ],
+        "old_dst": [
+          7584.936000000001,
+          4057.248
+        ],
+        "new_src": [
+          6919.248,
+          3710.016
+        ],
+        "new_dst": [
+          7584.936000000001,
+          4057.248
+        ]
+      },
+      "minimum_stations_lower_bound": 2
+    },
+    {
+      "src_path": "svg_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "k_we",
+      "dst_path": "vmks_NW1",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q1",
+      "dst_port": "g_k_we",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 604.728,
+      "new_max_um": 604.728,
+      "new_min_um": 342.264,
+      "new_bits_gt405": 2,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          6919.248,
+          3709.488
+        ],
+        "old_dst": [
+          7176.216,
+          4057.248
+        ],
+        "new_src": [
+          6919.248,
+          3709.488
+        ],
+        "new_dst": [
+          7176.216,
+          4057.248
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "svg_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "k_wstrb",
+      "dst_path": "vmks_NW1",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q1",
+      "dst_port": "g_k_wstrb",
+      "width": 128,
+      "measured_bits": 128,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 723.96,
+      "new_max_um": 723.96,
+      "new_min_um": 402.504,
+      "new_bits_gt405": 122,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 127,
+        "dst": 127,
+        "old_src": [
+          6919.248,
+          3695.616
+        ],
+        "old_dst": [
+          7281.576,
+          4057.248
+        ],
+        "new_src": [
+          6919.248,
+          3695.616
+        ],
+        "new_dst": [
+          7281.576,
+          4057.248
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "svg_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "kr_rdy",
+      "dst_path": "vmks_NW1",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q1",
+      "dst_port": "g_kr_rdy",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 729.72,
+      "new_max_um": 729.72,
+      "new_min_um": 295.176,
+      "new_bits_gt405": 2,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          6919.248,
+          3585.408
+        ],
+        "old_dst": [
+          7177.128000000001,
+          4057.248
+        ],
+        "new_src": [
+          6919.248,
+          3585.408
+        ],
+        "new_dst": [
+          7177.128000000001,
+          4057.248
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "svg_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "run_done",
+      "dst_path": "obs_NW",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_obs_Q",
+      "dst_port": "obs",
+      "width": 1,
+      "status": "MISSING ACTUAL PEER SLOT"
+    },
+    {
+      "src_path": "svg_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "sm_packet",
+      "dst_path": "hb_idx__s_NW.keybuf.gp[1].u_line",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_mu_keybuf_0_s1__q1",
+      "dst_port": "key_in",
+      "width": 1099,
+      "measured_bits": 1099,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 4497.384,
+      "new_max_um": 4548.072,
+      "new_min_um": 4331.784,
+      "new_bits_gt405": 1099,
+      "max_bit_delta_um": 50.688,
+      "min_bit_delta_um": -57.6,
+      "worst_bit": {
+        "src": 1098,
+        "dst": 0,
+        "old_src": [
+          6584.616,
+          4197.864
+        ],
+        "old_dst": [
+          5546.976,
+          738.12
+        ],
+        "new_src": [
+          6635.304,
+          4197.864
+        ],
+        "new_dst": [
+          5546.976,
+          738.12
+        ]
+      },
+      "minimum_stations_lower_bound": 11
+    },
+    {
+      "src_path": "svg_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "k_addr",
+      "dst_path": "vmks_NW2",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q2",
+      "dst_port": "g_k_addr",
+      "width": 120,
+      "measured_bits": 120,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1754.544,
+      "new_max_um": 1754.544,
+      "new_min_um": 1718.64,
+      "new_bits_gt405": 120,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          397.5359999999999,
+          1476.888
+        ],
+        "old_dst": [
+          354.36,
+          3188.256
+        ],
+        "new_src": [
+          397.5359999999999,
+          1476.888
+        ],
+        "new_dst": [
+          354.36,
+          3188.256
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "k_len",
+      "dst_path": "vmks_NW2",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q2",
+      "dst_port": "g_k_len",
+      "width": 16,
+      "measured_bits": 16,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1771.44,
+      "new_max_um": 1771.44,
+      "new_min_um": 1741.488,
+      "new_bits_gt405": 16,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          397.5359999999999,
+          1475.1599999999999
+        ],
+        "old_dst": [
+          339.192,
+          3188.256
+        ],
+        "new_src": [
+          397.5359999999999,
+          1475.1599999999999
+        ],
+        "new_dst": [
+          339.192,
+          3188.256
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "k_tag",
+      "dst_path": "vmks_NW2",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q2",
+      "dst_port": "g_k_tag",
+      "width": 68,
+      "measured_bits": 68,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1776.288,
+      "new_max_um": 1776.288,
+      "new_min_um": 1726.56,
+      "new_bits_gt405": 68,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          397.5359999999999,
+          1467.4319999999998
+        ],
+        "old_dst": [
+          342.072,
+          3188.256
+        ],
+        "new_src": [
+          397.5359999999999,
+          1467.4319999999998
+        ],
+        "new_dst": [
+          342.072,
+          3188.256
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "k_v",
+      "dst_path": "vmks_NW2",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q2",
+      "dst_port": "g_k_v",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1781.712,
+      "new_max_um": 1781.712,
+      "new_min_um": 1737.024,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          397.5359999999999,
+          1467.096
+        ],
+        "old_dst": [
+          336.984,
+          3188.256
+        ],
+        "new_src": [
+          397.5359999999999,
+          1467.096
+        ],
+        "new_dst": [
+          336.984,
+          3188.256
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "k_wdata",
+      "dst_path": "vmks_NW2",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q2",
+      "dst_port": "g_k_wdata",
+      "width": 1024,
+      "measured_bits": 1024,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1849.824,
+      "new_max_um": 1849.824,
+      "new_min_um": 1640.304,
+      "new_bits_gt405": 1024,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          397.5359999999999,
+          1359.144
+        ],
+        "old_dst": [
+          376.824,
+          3188.256
+        ],
+        "new_src": [
+          397.5359999999999,
+          1359.144
+        ],
+        "new_dst": [
+          376.824,
+          3188.256
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "k_we",
+      "dst_path": "vmks_NW2",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q2",
+      "dst_port": "g_k_we",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1888.56,
+      "new_max_um": 1888.56,
+      "new_min_um": 1626.768,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          397.5359999999999,
+          1358.76
+        ],
+        "old_dst": [
+          338.472,
+          3188.256
+        ],
+        "new_src": [
+          397.5359999999999,
+          1358.76
+        ],
+        "new_dst": [
+          338.472,
+          3188.256
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "k_wstrb",
+      "dst_path": "vmks_NW2",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q2",
+      "dst_port": "g_k_wstrb",
+      "width": 128,
+      "measured_bits": 128,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1875.792,
+      "new_max_um": 1875.792,
+      "new_min_um": 1574.88,
+      "new_bits_gt405": 128,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          397.5359999999999,
+          1344.744
+        ],
+        "old_dst": [
+          365.256,
+          3188.256
+        ],
+        "new_src": [
+          397.5359999999999,
+          1344.744
+        ],
+        "new_dst": [
+          365.256,
+          3188.256
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "kr_rdy",
+      "dst_path": "vmks_NW2",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q2",
+      "dst_port": "g_kr_rdy",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 2012.496,
+      "new_max_um": 2012.496,
+      "new_min_um": 1502.304,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          397.5359999999999,
+          1234.4879999999998
+        ],
+        "old_dst": [
+          338.808,
+          3188.256
+        ],
+        "new_src": [
+          397.5359999999999,
+          1234.4879999999998
+        ],
+        "new_dst": [
+          338.808,
+          3188.256
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "run_done",
+      "dst_path": "obs_NW",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_obs_Q",
+      "dst_port": "obs",
+      "width": 1,
+      "status": "MISSING ACTUAL PEER SLOT"
+    },
+    {
+      "src_path": "svg_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "sm_packet",
+      "dst_path": "hb_idx__s_NW.keybuf.gp[2].u_line",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_mu_keybuf_0_s2__q1",
+      "dst_port": "key_in",
+      "width": 1099,
+      "measured_bits": 1099,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 4275.312,
+      "new_max_um": 4326.0,
+      "new_min_um": 4109.712,
+      "new_bits_gt405": 1099,
+      "max_bit_delta_um": 50.688,
+      "min_bit_delta_um": -57.6,
+      "worst_bit": {
+        "src": 1098,
+        "dst": 0,
+        "old_src": [
+          732.1679999999999,
+          1131.936
+        ],
+        "old_dst": [
+          4665.504,
+          789.96
+        ],
+        "new_src": [
+          681.4799999999998,
+          1131.936
+        ],
+        "new_dst": [
+          4665.504,
+          789.96
+        ]
+      },
+      "minimum_stations_lower_bound": 10
+    },
+    {
+      "src_path": "svg_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "k_addr",
+      "dst_path": "vmks_NW3",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q3",
+      "dst_port": "g_k_addr",
+      "width": 120,
+      "measured_bits": 120,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3776.304,
+      "new_max_um": 3776.304,
+      "new_min_um": 3740.4,
+      "new_bits_gt405": 120,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          5685.216,
+          370.968
+        ],
+        "old_dst": [
+          4536.12,
+          2998.176
+        ],
+        "new_src": [
+          5685.216,
+          370.968
+        ],
+        "new_dst": [
+          4536.12,
+          2998.176
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "k_len",
+      "dst_path": "vmks_NW3",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q3",
+      "dst_port": "g_k_len",
+      "width": 16,
+      "measured_bits": 16,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3793.2,
+      "new_max_um": 3793.2,
+      "new_min_um": 3763.248,
+      "new_bits_gt405": 16,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          5685.216,
+          369.24
+        ],
+        "old_dst": [
+          4520.952,
+          2998.176
+        ],
+        "new_src": [
+          5685.216,
+          369.24
+        ],
+        "new_dst": [
+          4520.952,
+          2998.176
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "k_tag",
+      "dst_path": "vmks_NW3",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q3",
+      "dst_port": "g_k_tag",
+      "width": 68,
+      "measured_bits": 68,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3798.048,
+      "new_max_um": 3798.048,
+      "new_min_um": 3748.32,
+      "new_bits_gt405": 68,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          5685.216,
+          361.512
+        ],
+        "old_dst": [
+          4523.832,
+          2998.176
+        ],
+        "new_src": [
+          5685.216,
+          361.512
+        ],
+        "new_dst": [
+          4523.832,
+          2998.176
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "k_v",
+      "dst_path": "vmks_NW3",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q3",
+      "dst_port": "g_k_v",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3803.472,
+      "new_max_um": 3803.472,
+      "new_min_um": 3758.784,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          5685.216,
+          361.176
+        ],
+        "old_dst": [
+          4518.744,
+          2998.176
+        ],
+        "new_src": [
+          5685.216,
+          361.176
+        ],
+        "new_dst": [
+          4518.744,
+          2998.176
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "k_wdata",
+      "dst_path": "vmks_NW3",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q3",
+      "dst_port": "g_k_wdata",
+      "width": 1024,
+      "measured_bits": 1024,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3871.584,
+      "new_max_um": 3871.584,
+      "new_min_um": 3518.4,
+      "new_bits_gt405": 1024,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          5685.216,
+          253.224
+        ],
+        "old_dst": [
+          4558.584,
+          2998.176
+        ],
+        "new_src": [
+          5685.216,
+          253.224
+        ],
+        "new_dst": [
+          4558.584,
+          2998.176
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "k_we",
+      "dst_path": "vmks_NW3",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q3",
+      "dst_port": "g_k_we",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3910.32,
+      "new_max_um": 3910.32,
+      "new_min_um": 3648.528,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          5685.216,
+          252.83999999999997
+        ],
+        "old_dst": [
+          4520.232,
+          2998.176
+        ],
+        "new_src": [
+          5685.216,
+          252.83999999999997
+        ],
+        "new_dst": [
+          4520.232,
+          2998.176
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "k_wstrb",
+      "dst_path": "vmks_NW3",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q3",
+      "dst_port": "g_k_wstrb",
+      "width": 128,
+      "measured_bits": 128,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3897.552,
+      "new_max_um": 3897.552,
+      "new_min_um": 3596.64,
+      "new_bits_gt405": 128,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          5685.216,
+          238.824
+        ],
+        "old_dst": [
+          4547.016,
+          2998.176
+        ],
+        "new_src": [
+          5685.216,
+          238.824
+        ],
+        "new_dst": [
+          4547.016,
+          2998.176
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "kr_rdy",
+      "dst_path": "vmks_NW3",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_vmks_Q3",
+      "dst_port": "g_kr_rdy",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 4034.256,
+      "new_max_um": 4034.256,
+      "new_min_um": 3524.064,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          5685.216,
+          128.56799999999998
+        ],
+        "old_dst": [
+          4520.568,
+          2998.176
+        ],
+        "new_src": [
+          5685.216,
+          128.56799999999998
+        ],
+        "new_dst": [
+          4520.568,
+          2998.176
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "run_done",
+      "dst_path": "obs_NW",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_obs_Q",
+      "dst_port": "obs",
+      "width": 1,
+      "status": "MISSING ACTUAL PEER SLOT"
+    },
+    {
+      "src_path": "svg_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "sm_packet",
+      "dst_path": "hb_idx__s_NW.keybuf.gp[3].u_line",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_mu_keybuf_0_s3__q1",
+      "dst_port": "key_in",
+      "width": 1099,
+      "measured_bits": 1099,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 2675.376,
+      "new_max_um": 2732.976,
+      "new_min_um": 2516.688,
+      "new_bits_gt405": 1099,
+      "max_bit_delta_um": 57.6,
+      "min_bit_delta_um": -50.688,
+      "worst_bit": {
+        "src": 0,
+        "dst": 11,
+        "old_src": [
+          6126.7919999999995,
+          26.016000000000002
+        ],
+        "old_dst": [
+          5322.335999999999,
+          1896.9360000000001
+        ],
+        "new_src": [
+          6184.392,
+          26.016000000000002
+        ],
+        "new_dst": [
+          5322.335999999999,
+          1896.9360000000001
+        ]
+      },
+      "minimum_stations_lower_bound": 6
+    },
+    {
+      "src_path": "svg_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "k_addr",
+      "dst_path": "vmks_NW4",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q0",
+      "dst_port": "g_k_addr",
+      "width": 120,
+      "measured_bits": 120,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3636.36,
+      "new_max_um": 3636.36,
+      "new_min_um": 3622.056,
+      "new_bits_gt405": 120,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 119,
+        "dst": 119,
+        "old_src": [
+          1622.9279999999999,
+          2091.168
+        ],
+        "old_dst": [
+          4283.16,
+          3067.296
+        ],
+        "new_src": [
+          1622.9279999999999,
+          2091.168
+        ],
+        "new_dst": [
+          4283.16,
+          3067.296
+        ]
+      },
+      "minimum_stations_lower_bound": 8
+    },
+    {
+      "src_path": "svg_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "k_len",
+      "dst_path": "vmks_NW4",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q0",
+      "dst_port": "g_k_len",
+      "width": 16,
+      "measured_bits": 16,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3662.76,
+      "new_max_um": 3662.76,
+      "new_min_um": 3635.496,
+      "new_bits_gt405": 16,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 15,
+        "dst": 15,
+        "old_src": [
+          1622.9279999999999,
+          2089.392
+        ],
+        "old_dst": [
+          4307.784000000001,
+          3067.296
+        ],
+        "new_src": [
+          1622.9279999999999,
+          2089.392
+        ],
+        "new_dst": [
+          4307.784000000001,
+          3067.296
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "k_tag",
+      "dst_path": "vmks_NW4",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q0",
+      "dst_port": "g_k_tag",
+      "width": 68,
+      "measured_bits": 68,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3662.52,
+      "new_max_um": 3662.52,
+      "new_min_um": 3624.888,
+      "new_bits_gt405": 68,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 67,
+        "dst": 67,
+        "old_src": [
+          1622.9279999999999,
+          2082.0480000000002
+        ],
+        "old_dst": [
+          4300.2,
+          3067.296
+        ],
+        "new_src": [
+          1622.9279999999999,
+          2082.0480000000002
+        ],
+        "new_dst": [
+          4300.2,
+          3067.296
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "k_v",
+      "dst_path": "vmks_NW4",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q0",
+      "dst_port": "g_k_v",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3673.752,
+      "new_max_um": 3673.752,
+      "new_min_um": 3629.64,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          1622.9279999999999,
+          2081.664
+        ],
+        "old_dst": [
+          4311.048000000001,
+          3067.296
+        ],
+        "new_src": [
+          1622.9279999999999,
+          2081.664
+        ],
+        "new_dst": [
+          4311.048000000001,
+          3067.296
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "k_wdata",
+      "dst_path": "vmks_NW4",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q0",
+      "dst_port": "g_k_wdata",
+      "width": 1024,
+      "measured_bits": 1024,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3649.944,
+      "new_max_um": 3649.944,
+      "new_min_um": 3481.848,
+      "new_bits_gt405": 1024,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 1023,
+        "dst": 1023,
+        "old_src": [
+          1622.9279999999999,
+          1973.376
+        ],
+        "old_dst": [
+          4178.952,
+          3067.296
+        ],
+        "new_src": [
+          1622.9279999999999,
+          1973.376
+        ],
+        "new_dst": [
+          4178.952,
+          3067.296
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "k_we",
+      "dst_path": "vmks_NW4",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q0",
+      "dst_port": "g_k_we",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3781.128,
+      "new_max_um": 3781.128,
+      "new_min_um": 3519.816,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          1622.9279999999999,
+          1972.848
+        ],
+        "old_dst": [
+          4309.608,
+          3067.296
+        ],
+        "new_src": [
+          1622.9279999999999,
+          1972.848
+        ],
+        "new_dst": [
+          4309.608,
+          3067.296
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "k_wstrb",
+      "dst_path": "vmks_NW4",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q0",
+      "dst_port": "g_k_wstrb",
+      "width": 128,
+      "measured_bits": 128,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3756.984,
+      "new_max_um": 3756.984,
+      "new_min_um": 3479.016,
+      "new_bits_gt405": 128,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 127,
+        "dst": 127,
+        "old_src": [
+          1622.9279999999999,
+          1958.976
+        ],
+        "old_dst": [
+          4271.592000000001,
+          3067.296
+        ],
+        "new_src": [
+          1622.9279999999999,
+          1958.976
+        ],
+        "new_dst": [
+          4271.592000000001,
+          3067.296
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "kr_rdy",
+      "dst_path": "vmks_NW4",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q0",
+      "dst_port": "g_kr_rdy",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3904.824,
+      "new_max_um": 3904.824,
+      "new_min_um": 3395.208,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          1622.9279999999999,
+          1848.768
+        ],
+        "old_dst": [
+          4309.224,
+          3067.296
+        ],
+        "new_src": [
+          1622.9279999999999,
+          1848.768
+        ],
+        "new_dst": [
+          4309.224,
+          3067.296
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "run_done",
+      "dst_path": "obs_NW",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_obs_Q",
+      "dst_port": "obs",
+      "width": 1,
+      "status": "MISSING ACTUAL PEER SLOT"
+    },
+    {
+      "src_path": "svg_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q0",
+      "src_port": "sm_packet",
+      "dst_path": "hb_idx__s_NE.keybuf.gp[0].u_line",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_mu_keybuf_0_s0__q1",
+      "dst_port": "key_in",
+      "width": 1099,
+      "measured_bits": 1099,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 5854.2,
+      "new_max_um": 5911.8,
+      "new_min_um": 5594.52,
+      "new_bits_gt405": 1099,
+      "max_bit_delta_um": 57.6,
+      "min_bit_delta_um": -50.688,
+      "worst_bit": {
+        "src": 0,
+        "dst": 11,
+        "old_src": [
+          1181.352,
+          2461.224
+        ],
+        "old_dst": [
+          5244.384,
+          670.0559999999999
+        ],
+        "new_src": [
+          1123.752,
+          2461.224
+        ],
+        "new_dst": [
+          5244.384,
+          670.0559999999999
+        ]
+      },
+      "minimum_stations_lower_bound": 14
+    },
+    {
+      "src_path": "svg_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "k_addr",
+      "dst_path": "vmks_NW5",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q1",
+      "dst_port": "g_k_addr",
+      "width": 120,
+      "measured_bits": 120,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 559.56,
+      "new_max_um": 559.56,
+      "new_min_um": 504.6,
+      "new_bits_gt405": 120,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 119,
+        "dst": 119,
+        "old_src": [
+          6919.248,
+          3827.808
+        ],
+        "old_dst": [
+          7249.368,
+          4057.248
+        ],
+        "new_src": [
+          6919.248,
+          3827.808
+        ],
+        "new_dst": [
+          7249.368,
+          4057.248
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "svg_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "k_len",
+      "dst_path": "vmks_NW5",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q1",
+      "dst_port": "g_k_len",
+      "width": 16,
+      "measured_bits": 16,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 493.08,
+      "new_max_um": 493.08,
+      "new_min_um": 460.824,
+      "new_bits_gt405": 16,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 15,
+        "dst": 15,
+        "old_src": [
+          6919.248,
+          3826.032
+        ],
+        "old_dst": [
+          7181.112,
+          4057.248
+        ],
+        "new_src": [
+          6919.248,
+          3826.032
+        ],
+        "new_dst": [
+          7181.112,
+          4057.248
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "svg_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "k_tag",
+      "dst_path": "vmks_NW5",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q1",
+      "dst_port": "g_k_tag",
+      "width": 68,
+      "measured_bits": 68,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 521.544,
+      "new_max_um": 521.544,
+      "new_min_um": 460.92,
+      "new_bits_gt405": 68,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 67,
+        "dst": 67,
+        "old_src": [
+          6919.248,
+          3818.688
+        ],
+        "old_dst": [
+          7202.232,
+          4057.248
+        ],
+        "new_src": [
+          6919.248,
+          3818.688
+        ],
+        "new_dst": [
+          7202.232,
+          4057.248
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "svg_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "k_v",
+      "dst_path": "vmks_NW5",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q1",
+      "dst_port": "g_k_v",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 491.88,
+      "new_max_um": 491.88,
+      "new_min_um": 446.76,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          6919.248,
+          3818.304
+        ],
+        "old_dst": [
+          7172.184,
+          4057.248
+        ],
+        "new_src": [
+          6919.248,
+          3818.304
+        ],
+        "new_dst": [
+          7172.184,
+          4057.248
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "svg_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "k_wdata",
+      "dst_path": "vmks_NW5",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q1",
+      "dst_port": "g_k_wdata",
+      "width": 1024,
+      "measured_bits": 1024,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1012.92,
+      "new_max_um": 1012.92,
+      "new_min_um": 449.112,
+      "new_bits_gt405": 1024,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 1023,
+        "dst": 1023,
+        "old_src": [
+          6919.248,
+          3710.016
+        ],
+        "old_dst": [
+          7584.936000000001,
+          4057.248
+        ],
+        "new_src": [
+          6919.248,
+          3710.016
+        ],
+        "new_dst": [
+          7584.936000000001,
+          4057.248
+        ]
+      },
+      "minimum_stations_lower_bound": 2
+    },
+    {
+      "src_path": "svg_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "k_we",
+      "dst_path": "vmks_NW5",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q1",
+      "dst_port": "g_k_we",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 604.728,
+      "new_max_um": 604.728,
+      "new_min_um": 342.264,
+      "new_bits_gt405": 2,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          6919.248,
+          3709.488
+        ],
+        "old_dst": [
+          7176.216,
+          4057.248
+        ],
+        "new_src": [
+          6919.248,
+          3709.488
+        ],
+        "new_dst": [
+          7176.216,
+          4057.248
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "svg_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "k_wstrb",
+      "dst_path": "vmks_NW5",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q1",
+      "dst_port": "g_k_wstrb",
+      "width": 128,
+      "measured_bits": 128,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 723.96,
+      "new_max_um": 723.96,
+      "new_min_um": 402.504,
+      "new_bits_gt405": 122,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 127,
+        "dst": 127,
+        "old_src": [
+          6919.248,
+          3695.616
+        ],
+        "old_dst": [
+          7281.576,
+          4057.248
+        ],
+        "new_src": [
+          6919.248,
+          3695.616
+        ],
+        "new_dst": [
+          7281.576,
+          4057.248
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "svg_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "kr_rdy",
+      "dst_path": "vmks_NW5",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q1",
+      "dst_port": "g_kr_rdy",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 729.72,
+      "new_max_um": 729.72,
+      "new_min_um": 295.176,
+      "new_bits_gt405": 2,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          6919.248,
+          3585.408
+        ],
+        "old_dst": [
+          7177.128000000001,
+          4057.248
+        ],
+        "new_src": [
+          6919.248,
+          3585.408
+        ],
+        "new_dst": [
+          7177.128000000001,
+          4057.248
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "svg_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "run_done",
+      "dst_path": "obs_NW",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_obs_Q",
+      "dst_port": "obs",
+      "width": 1,
+      "status": "MISSING ACTUAL PEER SLOT"
+    },
+    {
+      "src_path": "svg_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q1",
+      "src_port": "sm_packet",
+      "dst_path": "hb_idx__s_NE.keybuf.gp[1].u_line",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_mu_keybuf_0_s1__q1",
+      "dst_port": "key_in",
+      "width": 1099,
+      "measured_bits": 1099,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 5344.296,
+      "new_max_um": 5394.984,
+      "new_min_um": 5178.696,
+      "new_bits_gt405": 1099,
+      "max_bit_delta_um": 50.688,
+      "min_bit_delta_um": -57.6,
+      "worst_bit": {
+        "src": 1098,
+        "dst": 0,
+        "old_src": [
+          6584.616,
+          4197.864
+        ],
+        "old_dst": [
+          4751.9039999999995,
+          686.28
+        ],
+        "new_src": [
+          6635.304,
+          4197.864
+        ],
+        "new_dst": [
+          4751.9039999999995,
+          686.28
+        ]
+      },
+      "minimum_stations_lower_bound": 13
+    },
+    {
+      "src_path": "svg_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "k_addr",
+      "dst_path": "vmks_NW6",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q2",
+      "dst_port": "g_k_addr",
+      "width": 120,
+      "measured_bits": 120,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1754.544,
+      "new_max_um": 1754.544,
+      "new_min_um": 1718.64,
+      "new_bits_gt405": 120,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          397.5359999999999,
+          1476.888
+        ],
+        "old_dst": [
+          354.36,
+          3188.256
+        ],
+        "new_src": [
+          397.5359999999999,
+          1476.888
+        ],
+        "new_dst": [
+          354.36,
+          3188.256
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "k_len",
+      "dst_path": "vmks_NW6",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q2",
+      "dst_port": "g_k_len",
+      "width": 16,
+      "measured_bits": 16,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1771.44,
+      "new_max_um": 1771.44,
+      "new_min_um": 1741.488,
+      "new_bits_gt405": 16,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          397.5359999999999,
+          1475.1599999999999
+        ],
+        "old_dst": [
+          339.192,
+          3188.256
+        ],
+        "new_src": [
+          397.5359999999999,
+          1475.1599999999999
+        ],
+        "new_dst": [
+          339.192,
+          3188.256
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "k_tag",
+      "dst_path": "vmks_NW6",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q2",
+      "dst_port": "g_k_tag",
+      "width": 68,
+      "measured_bits": 68,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1776.288,
+      "new_max_um": 1776.288,
+      "new_min_um": 1726.56,
+      "new_bits_gt405": 68,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          397.5359999999999,
+          1467.4319999999998
+        ],
+        "old_dst": [
+          342.072,
+          3188.256
+        ],
+        "new_src": [
+          397.5359999999999,
+          1467.4319999999998
+        ],
+        "new_dst": [
+          342.072,
+          3188.256
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "k_v",
+      "dst_path": "vmks_NW6",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q2",
+      "dst_port": "g_k_v",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1781.712,
+      "new_max_um": 1781.712,
+      "new_min_um": 1737.024,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          397.5359999999999,
+          1467.096
+        ],
+        "old_dst": [
+          336.984,
+          3188.256
+        ],
+        "new_src": [
+          397.5359999999999,
+          1467.096
+        ],
+        "new_dst": [
+          336.984,
+          3188.256
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "k_wdata",
+      "dst_path": "vmks_NW6",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q2",
+      "dst_port": "g_k_wdata",
+      "width": 1024,
+      "measured_bits": 1024,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1849.824,
+      "new_max_um": 1849.824,
+      "new_min_um": 1640.304,
+      "new_bits_gt405": 1024,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          397.5359999999999,
+          1359.144
+        ],
+        "old_dst": [
+          376.824,
+          3188.256
+        ],
+        "new_src": [
+          397.5359999999999,
+          1359.144
+        ],
+        "new_dst": [
+          376.824,
+          3188.256
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "k_we",
+      "dst_path": "vmks_NW6",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q2",
+      "dst_port": "g_k_we",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1888.56,
+      "new_max_um": 1888.56,
+      "new_min_um": 1626.768,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          397.5359999999999,
+          1358.76
+        ],
+        "old_dst": [
+          338.472,
+          3188.256
+        ],
+        "new_src": [
+          397.5359999999999,
+          1358.76
+        ],
+        "new_dst": [
+          338.472,
+          3188.256
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "k_wstrb",
+      "dst_path": "vmks_NW6",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q2",
+      "dst_port": "g_k_wstrb",
+      "width": 128,
+      "measured_bits": 128,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1875.792,
+      "new_max_um": 1875.792,
+      "new_min_um": 1574.88,
+      "new_bits_gt405": 128,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          397.5359999999999,
+          1344.744
+        ],
+        "old_dst": [
+          365.256,
+          3188.256
+        ],
+        "new_src": [
+          397.5359999999999,
+          1344.744
+        ],
+        "new_dst": [
+          365.256,
+          3188.256
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "kr_rdy",
+      "dst_path": "vmks_NW6",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q2",
+      "dst_port": "g_kr_rdy",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 2012.496,
+      "new_max_um": 2012.496,
+      "new_min_um": 1502.304,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          397.5359999999999,
+          1234.4879999999998
+        ],
+        "old_dst": [
+          338.808,
+          3188.256
+        ],
+        "new_src": [
+          397.5359999999999,
+          1234.4879999999998
+        ],
+        "new_dst": [
+          338.808,
+          3188.256
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "svg_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "run_done",
+      "dst_path": "obs_NW",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_obs_Q",
+      "dst_port": "obs",
+      "width": 1,
+      "status": "MISSING ACTUAL PEER SLOT"
+    },
+    {
+      "src_path": "svg_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q2",
+      "src_port": "sm_packet",
+      "dst_path": "hb_idx__s_NE.keybuf.gp[2].u_line",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_mu_keybuf_0_s2__q1",
+      "dst_port": "key_in",
+      "width": 1099,
+      "measured_bits": 1099,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 6651.504,
+      "new_max_um": 6702.192,
+      "new_min_um": 6485.904,
+      "new_bits_gt405": 1099,
+      "max_bit_delta_um": 50.688,
+      "min_bit_delta_um": -57.6,
+      "worst_bit": {
+        "src": 1098,
+        "dst": 0,
+        "old_src": [
+          732.1679999999999,
+          1131.936
+        ],
+        "old_dst": [
+          6583.776,
+          332.04
+        ],
+        "new_src": [
+          681.4799999999998,
+          1131.936
+        ],
+        "new_dst": [
+          6583.776,
+          332.04
+        ]
+      },
+      "minimum_stations_lower_bound": 16
+    },
+    {
+      "src_path": "svg_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "k_addr",
+      "dst_path": "vmks_NW7",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q3",
+      "dst_port": "g_k_addr",
+      "width": 120,
+      "measured_bits": 120,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3776.304,
+      "new_max_um": 3776.304,
+      "new_min_um": 3740.4,
+      "new_bits_gt405": 120,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          5685.216,
+          370.968
+        ],
+        "old_dst": [
+          4536.12,
+          2998.176
+        ],
+        "new_src": [
+          5685.216,
+          370.968
+        ],
+        "new_dst": [
+          4536.12,
+          2998.176
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "k_len",
+      "dst_path": "vmks_NW7",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q3",
+      "dst_port": "g_k_len",
+      "width": 16,
+      "measured_bits": 16,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3793.2,
+      "new_max_um": 3793.2,
+      "new_min_um": 3763.248,
+      "new_bits_gt405": 16,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          5685.216,
+          369.24
+        ],
+        "old_dst": [
+          4520.952,
+          2998.176
+        ],
+        "new_src": [
+          5685.216,
+          369.24
+        ],
+        "new_dst": [
+          4520.952,
+          2998.176
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "k_tag",
+      "dst_path": "vmks_NW7",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q3",
+      "dst_port": "g_k_tag",
+      "width": 68,
+      "measured_bits": 68,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3798.048,
+      "new_max_um": 3798.048,
+      "new_min_um": 3748.32,
+      "new_bits_gt405": 68,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          5685.216,
+          361.512
+        ],
+        "old_dst": [
+          4523.832,
+          2998.176
+        ],
+        "new_src": [
+          5685.216,
+          361.512
+        ],
+        "new_dst": [
+          4523.832,
+          2998.176
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "k_v",
+      "dst_path": "vmks_NW7",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q3",
+      "dst_port": "g_k_v",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3803.472,
+      "new_max_um": 3803.472,
+      "new_min_um": 3758.784,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          5685.216,
+          361.176
+        ],
+        "old_dst": [
+          4518.744,
+          2998.176
+        ],
+        "new_src": [
+          5685.216,
+          361.176
+        ],
+        "new_dst": [
+          4518.744,
+          2998.176
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "k_wdata",
+      "dst_path": "vmks_NW7",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q3",
+      "dst_port": "g_k_wdata",
+      "width": 1024,
+      "measured_bits": 1024,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3871.584,
+      "new_max_um": 3871.584,
+      "new_min_um": 3518.4,
+      "new_bits_gt405": 1024,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          5685.216,
+          253.224
+        ],
+        "old_dst": [
+          4558.584,
+          2998.176
+        ],
+        "new_src": [
+          5685.216,
+          253.224
+        ],
+        "new_dst": [
+          4558.584,
+          2998.176
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "k_we",
+      "dst_path": "vmks_NW7",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q3",
+      "dst_port": "g_k_we",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3910.32,
+      "new_max_um": 3910.32,
+      "new_min_um": 3648.528,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          5685.216,
+          252.83999999999997
+        ],
+        "old_dst": [
+          4520.232,
+          2998.176
+        ],
+        "new_src": [
+          5685.216,
+          252.83999999999997
+        ],
+        "new_dst": [
+          4520.232,
+          2998.176
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "k_wstrb",
+      "dst_path": "vmks_NW7",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q3",
+      "dst_port": "g_k_wstrb",
+      "width": 128,
+      "measured_bits": 128,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3897.552,
+      "new_max_um": 3897.552,
+      "new_min_um": 3596.64,
+      "new_bits_gt405": 128,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          5685.216,
+          238.824
+        ],
+        "old_dst": [
+          4547.016,
+          2998.176
+        ],
+        "new_src": [
+          5685.216,
+          238.824
+        ],
+        "new_dst": [
+          4547.016,
+          2998.176
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "kr_rdy",
+      "dst_path": "vmks_NW7",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_vmks_Q3",
+      "dst_port": "g_kr_rdy",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 4034.256,
+      "new_max_um": 4034.256,
+      "new_min_um": 3524.064,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          5685.216,
+          128.56799999999998
+        ],
+        "old_dst": [
+          4520.568,
+          2998.176
+        ],
+        "new_src": [
+          5685.216,
+          128.56799999999998
+        ],
+        "new_dst": [
+          4520.568,
+          2998.176
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "svg_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "run_done",
+      "dst_path": "obs_NW",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_obs_Q",
+      "dst_port": "obs",
+      "width": 1,
+      "status": "MISSING ACTUAL PEER SLOT"
+    },
+    {
+      "src_path": "svg_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_svg_Q3",
+      "src_port": "sm_packet",
+      "dst_path": "hb_idx__s_NE.keybuf.gp[3].u_line",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_mu_keybuf_0_s3__q1",
+      "dst_port": "key_in",
+      "width": 1099,
+      "measured_bits": 1099,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 2390.256,
+      "new_max_um": 2447.856,
+      "new_min_um": 2231.568,
+      "new_bits_gt405": 1099,
+      "max_bit_delta_um": 57.6,
+      "min_bit_delta_um": -50.688,
+      "worst_bit": {
+        "src": 0,
+        "dst": 11,
+        "old_src": [
+          6126.7919999999995,
+          26.016000000000002
+        ],
+        "old_dst": [
+          5598.816,
+          1888.296
+        ],
+        "new_src": [
+          6184.392,
+          26.016000000000002
+        ],
+        "new_dst": [
+          5598.816,
+          1888.296
+        ]
+      },
+      "minimum_stations_lower_bound": 6
+    },
+    {
+      "src_path": "vmks_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q0",
+      "src_port": "g_k_rdy",
+      "dst_path": "svg_NW0",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q0",
+      "dst_port": "k_rdy",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1732.008,
+      "new_max_um": 1732.008,
+      "new_min_um": 1702.392,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          1892.856,
+          3551.136
+        ],
+        "old_dst": [
+          1622.9279999999999,
+          2089.056
+        ],
+        "new_src": [
+          1892.856,
+          3551.136
+        ],
+        "new_dst": [
+          1622.9279999999999,
+          2089.056
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "vmks_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q0",
+      "src_port": "g_k_wr_done",
+      "dst_path": "svg_NW0",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q0",
+      "dst_port": "k_wr_done",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1848.888,
+      "new_max_um": 1848.888,
+      "new_min_um": 1586.232,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          1893.192,
+          3551.136
+        ],
+        "old_dst": [
+          1622.9279999999999,
+          1972.5120000000002
+        ],
+        "new_src": [
+          1893.192,
+          3551.136
+        ],
+        "new_dst": [
+          1622.9279999999999,
+          1972.5120000000002
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "vmks_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q0",
+      "src_port": "g_kr_beat",
+      "dst_path": "svg_NW0",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q0",
+      "dst_port": "kr_beat",
+      "width": 16,
+      "measured_bits": 16,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1868.136,
+      "new_max_um": 1868.136,
+      "new_min_um": 1574.04,
+      "new_bits_gt405": 16,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 15,
+        "dst": 15,
+        "old_src": [
+          1897.176,
+          3551.136
+        ],
+        "old_dst": [
+          1622.9279999999999,
+          1957.248
+        ],
+        "new_src": [
+          1897.176,
+          3551.136
+        ],
+        "new_dst": [
+          1622.9279999999999,
+          1957.248
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "vmks_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q0",
+      "src_port": "g_kr_data",
+      "dst_path": "svg_NW0",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q0",
+      "dst_port": "kr_data",
+      "width": 1024,
+      "measured_bits": 1024,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 2196.168,
+      "new_max_um": 2196.168,
+      "new_min_um": 1594.728,
+      "new_bits_gt405": 1024,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 1023,
+        "dst": 1023,
+        "old_src": [
+          2117.256,
+          3551.136
+        ],
+        "old_dst": [
+          1622.9279999999999,
+          1849.296
+        ],
+        "new_src": [
+          2117.256,
+          3551.136
+        ],
+        "new_dst": [
+          1622.9279999999999,
+          1849.296
+        ]
+      },
+      "minimum_stations_lower_bound": 5
+    },
+    {
+      "src_path": "vmks_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q0",
+      "src_port": "g_kr_tag",
+      "dst_path": "svg_NW0",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q0",
+      "dst_port": "kr_tag",
+      "width": 68,
+      "measured_bits": 68,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1996.104,
+      "new_max_um": 1996.104,
+      "new_min_um": 1465.752,
+      "new_bits_gt405": 68,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 67,
+        "dst": 67,
+        "old_src": [
+          1909.464,
+          3551.136
+        ],
+        "old_dst": [
+          1622.9279999999999,
+          1841.5680000000002
+        ],
+        "new_src": [
+          1909.464,
+          3551.136
+        ],
+        "new_dst": [
+          1622.9279999999999,
+          1841.5680000000002
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "vmks_NW0",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q0",
+      "src_port": "g_kr_v",
+      "dst_path": "svg_NW0",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q0",
+      "dst_port": "kr_v",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1980.6,
+      "new_max_um": 1980.6,
+      "new_min_um": 1455.288,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          1893.576,
+          3551.136
+        ],
+        "old_dst": [
+          1622.9279999999999,
+          1841.1840000000002
+        ],
+        "new_src": [
+          1893.576,
+          3551.136
+        ],
+        "new_dst": [
+          1622.9279999999999,
+          1841.1840000000002
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "vmks_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q1",
+      "src_port": "g_k_rdy",
+      "dst_path": "svg_NW1",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q1",
+      "dst_port": "k_rdy",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 485.4,
+      "new_max_um": 485.4,
+      "new_min_um": 455.352,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          7173.0960000000005,
+          4057.248
+        ],
+        "old_dst": [
+          6919.248,
+          3825.696
+        ],
+        "new_src": [
+          7173.0960000000005,
+          4057.248
+        ],
+        "new_dst": [
+          6919.248,
+          3825.696
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "vmks_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q1",
+      "src_port": "g_k_wr_done",
+      "dst_path": "svg_NW1",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q1",
+      "dst_port": "k_wr_done",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 603.048,
+      "new_max_um": 603.048,
+      "new_min_um": 339.72,
+      "new_bits_gt405": 2,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          7174.200000000001,
+          4057.248
+        ],
+        "old_dst": [
+          6919.248,
+          3709.152
+        ],
+        "new_src": [
+          7174.200000000001,
+          4057.248
+        ],
+        "new_dst": [
+          6919.248,
+          3709.152
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "vmks_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q1",
+      "src_port": "g_kr_beat",
+      "dst_path": "svg_NW1",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q1",
+      "dst_port": "kr_beat",
+      "width": 16,
+      "measured_bits": 16,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 629.256,
+      "new_max_um": 629.256,
+      "new_min_um": 332.856,
+      "new_bits_gt405": 8,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 15,
+        "dst": 15,
+        "old_src": [
+          7185.144,
+          4057.248
+        ],
+        "old_dst": [
+          6919.248,
+          3693.888
+        ],
+        "new_src": [
+          7185.144,
+          4057.248
+        ],
+        "new_dst": [
+          6919.248,
+          3693.888
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "vmks_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q1",
+      "src_port": "g_kr_data",
+      "dst_path": "svg_NW1",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q1",
+      "dst_port": "kr_data",
+      "width": 1024,
+      "measured_bits": 1024,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1069.8,
+      "new_max_um": 1069.8,
+      "new_min_um": 243.432,
+      "new_bits_gt405": 431,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 634,
+        "dst": 634,
+        "old_src": [
+          7599.6720000000005,
+          4057.248
+        ],
+        "old_dst": [
+          6919.248,
+          3667.872
+        ],
+        "new_src": [
+          7599.6720000000005,
+          4057.248
+        ],
+        "new_dst": [
+          6919.248,
+          3667.872
+        ]
+      },
+      "minimum_stations_lower_bound": 2
+    },
+    {
+      "src_path": "vmks_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q1",
+      "src_port": "g_kr_tag",
+      "dst_path": "svg_NW1",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q1",
+      "dst_port": "kr_tag",
+      "width": 68,
+      "measured_bits": 68,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 779.112,
+      "new_max_um": 779.112,
+      "new_min_um": 328.392,
+      "new_bits_gt405": 34,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 67,
+        "dst": 67,
+        "old_src": [
+          7219.320000000001,
+          4057.248
+        ],
+        "old_dst": [
+          6919.248,
+          3578.208
+        ],
+        "new_src": [
+          7219.320000000001,
+          4057.248
+        ],
+        "new_dst": [
+          6919.248,
+          3578.208
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "vmks_NW1",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q1",
+      "src_port": "g_kr_v",
+      "dst_path": "svg_NW1",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q1",
+      "dst_port": "kr_v",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 735.288,
+      "new_max_um": 735.288,
+      "new_min_um": 300.744,
+      "new_bits_gt405": 2,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          7175.112,
+          4057.248
+        ],
+        "old_dst": [
+          6919.248,
+          3577.824
+        ],
+        "new_src": [
+          7175.112,
+          4057.248
+        ],
+        "new_dst": [
+          6919.248,
+          3577.824
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "vmks_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q2",
+      "src_port": "g_k_rdy",
+      "dst_path": "svg_NW2",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q2",
+      "dst_port": "k_rdy",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1773.648,
+      "new_max_um": 1773.648,
+      "new_min_um": 1744.032,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          337.368,
+          3188.256
+        ],
+        "old_dst": [
+          397.5359999999999,
+          1474.7759999999998
+        ],
+        "new_src": [
+          337.368,
+          3188.256
+        ],
+        "new_dst": [
+          397.5359999999999,
+          1474.7759999999998
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "vmks_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q2",
+      "src_port": "g_k_wr_done",
+      "dst_path": "svg_NW2",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q2",
+      "dst_port": "k_wr_done",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1889.808,
+      "new_max_um": 1889.808,
+      "new_min_um": 1627.152,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          337.752,
+          3188.256
+        ],
+        "old_dst": [
+          397.5359999999999,
+          1358.232
+        ],
+        "new_src": [
+          337.752,
+          3188.256
+        ],
+        "new_dst": [
+          397.5359999999999,
+          1358.232
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "vmks_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q2",
+      "src_port": "g_kr_beat",
+      "dst_path": "svg_NW2",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q2",
+      "dst_port": "kr_beat",
+      "width": 16,
+      "measured_bits": 16,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1902.0,
+      "new_max_um": 1902.0,
+      "new_min_um": 1607.904,
+      "new_bits_gt405": 16,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          340.632,
+          3188.256
+        ],
+        "old_dst": [
+          397.5359999999999,
+          1343.1599999999999
+        ],
+        "new_src": [
+          340.632,
+          3188.256
+        ],
+        "new_dst": [
+          397.5359999999999,
+          1343.1599999999999
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "vmks_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q2",
+      "src_port": "g_kr_data",
+      "dst_path": "svg_NW2",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q2",
+      "dst_port": "kr_data",
+      "width": 1024,
+      "measured_bits": 1024,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 2025.168,
+      "new_max_um": 2025.168,
+      "new_min_um": 1608.912,
+      "new_bits_gt405": 1024,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          469.464,
+          3188.256
+        ],
+        "old_dst": [
+          397.5359999999999,
+          1235.0159999999998
+        ],
+        "new_src": [
+          469.464,
+          3188.256
+        ],
+        "new_dst": [
+          397.5359999999999,
+          1235.0159999999998
+        ]
+      },
+      "minimum_stations_lower_bound": 5
+    },
+    {
+      "src_path": "vmks_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q2",
+      "src_port": "g_kr_tag",
+      "dst_path": "svg_NW2",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q2",
+      "dst_port": "kr_tag",
+      "width": 68,
+      "measured_bits": 68,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 2010.288,
+      "new_max_um": 2010.288,
+      "new_min_um": 1479.936,
+      "new_bits_gt405": 68,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          348.216,
+          3188.256
+        ],
+        "old_dst": [
+          397.5359999999999,
+          1227.288
+        ],
+        "new_src": [
+          348.216,
+          3188.256
+        ],
+        "new_dst": [
+          397.5359999999999,
+          1227.288
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "vmks_NW2",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q2",
+      "src_port": "g_kr_v",
+      "dst_path": "svg_NW2",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q2",
+      "dst_port": "kr_v",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 2020.752,
+      "new_max_um": 2020.752,
+      "new_min_um": 1495.44,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          338.08799999999997,
+          3188.256
+        ],
+        "old_dst": [
+          397.5359999999999,
+          1226.952
+        ],
+        "new_src": [
+          338.08799999999997,
+          3188.256
+        ],
+        "new_dst": [
+          397.5359999999999,
+          1226.952
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "vmks_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q3",
+      "src_port": "g_k_rdy",
+      "dst_path": "svg_NW3",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q3",
+      "dst_port": "k_rdy",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3795.408,
+      "new_max_um": 3795.408,
+      "new_min_um": 3765.792,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          4519.128,
+          2998.176
+        ],
+        "old_dst": [
+          5685.216,
+          368.856
+        ],
+        "new_src": [
+          4519.128,
+          2998.176
+        ],
+        "new_dst": [
+          5685.216,
+          368.856
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q3",
+      "src_port": "g_k_wr_done",
+      "dst_path": "svg_NW3",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q3",
+      "dst_port": "k_wr_done",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3911.568,
+      "new_max_um": 3911.568,
+      "new_min_um": 3648.912,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          4519.512,
+          2998.176
+        ],
+        "old_dst": [
+          5685.216,
+          252.312
+        ],
+        "new_src": [
+          4519.512,
+          2998.176
+        ],
+        "new_dst": [
+          5685.216,
+          252.312
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q3",
+      "src_port": "g_kr_beat",
+      "dst_path": "svg_NW3",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q3",
+      "dst_port": "kr_beat",
+      "width": 16,
+      "measured_bits": 16,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3923.76,
+      "new_max_um": 3923.76,
+      "new_min_um": 3629.664,
+      "new_bits_gt405": 16,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          4522.392,
+          2998.176
+        ],
+        "old_dst": [
+          5685.216,
+          237.24
+        ],
+        "new_src": [
+          4522.392,
+          2998.176
+        ],
+        "new_dst": [
+          5685.216,
+          237.24
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q3",
+      "src_port": "g_kr_data",
+      "dst_path": "svg_NW3",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q3",
+      "dst_port": "kr_data",
+      "width": 1024,
+      "measured_bits": 1024,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3903.072,
+      "new_max_um": 3903.072,
+      "new_min_um": 3301.632,
+      "new_bits_gt405": 1024,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          4651.224,
+          2998.176
+        ],
+        "old_dst": [
+          5685.216,
+          129.096
+        ],
+        "new_src": [
+          4651.224,
+          2998.176
+        ],
+        "new_dst": [
+          5685.216,
+          129.096
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q3",
+      "src_port": "g_kr_tag",
+      "dst_path": "svg_NW3",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q3",
+      "dst_port": "kr_tag",
+      "width": 68,
+      "measured_bits": 68,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 4032.048,
+      "new_max_um": 4032.048,
+      "new_min_um": 3501.696,
+      "new_bits_gt405": 68,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          4529.976,
+          2998.176
+        ],
+        "old_dst": [
+          5685.216,
+          121.368
+        ],
+        "new_src": [
+          4529.976,
+          2998.176
+        ],
+        "new_dst": [
+          5685.216,
+          121.368
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW3",
+      "src_partition": "NW_hub",
+      "src_plan_instance": "u_vmks_Q3",
+      "src_port": "g_kr_v",
+      "dst_path": "svg_NW3",
+      "dst_partition": "NW_hub",
+      "dst_plan_instance": "u_svg_Q3",
+      "dst_port": "kr_v",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 4042.512,
+      "new_max_um": 4042.512,
+      "new_min_um": 3517.2,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          4519.848,
+          2998.176
+        ],
+        "old_dst": [
+          5685.216,
+          121.032
+        ],
+        "new_src": [
+          4519.848,
+          2998.176
+        ],
+        "new_dst": [
+          5685.216,
+          121.032
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q0",
+      "src_port": "g_k_rdy",
+      "dst_path": "svg_NW4",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q0",
+      "dst_port": "k_rdy",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3665.976,
+      "new_max_um": 3665.976,
+      "new_min_um": 3636.936,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          4310.664000000001,
+          3067.296
+        ],
+        "old_dst": [
+          1622.9279999999999,
+          2089.056
+        ],
+        "new_src": [
+          4310.664000000001,
+          3067.296
+        ],
+        "new_dst": [
+          1622.9279999999999,
+          2089.056
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q0",
+      "src_port": "g_k_wr_done",
+      "dst_path": "svg_NW4",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q0",
+      "dst_port": "k_wr_done",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3782.184,
+      "new_max_um": 3782.184,
+      "new_min_um": 3520.008,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          4310.328,
+          3067.296
+        ],
+        "old_dst": [
+          1622.9279999999999,
+          1972.5120000000002
+        ],
+        "new_src": [
+          4310.328,
+          3067.296
+        ],
+        "new_dst": [
+          1622.9279999999999,
+          1972.5120000000002
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q0",
+      "src_port": "g_kr_beat",
+      "dst_path": "svg_NW4",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q0",
+      "dst_port": "kr_beat",
+      "width": 16,
+      "measured_bits": 16,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3793.464,
+      "new_max_um": 3793.464,
+      "new_min_um": 3502.056,
+      "new_bits_gt405": 16,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 15,
+        "dst": 15,
+        "old_src": [
+          4306.344,
+          3067.296
+        ],
+        "old_dst": [
+          1622.9279999999999,
+          1957.248
+        ],
+        "new_src": [
+          4306.344,
+          3067.296
+        ],
+        "new_dst": [
+          1622.9279999999999,
+          1957.248
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q0",
+      "src_port": "g_kr_data",
+      "dst_path": "svg_NW4",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q0",
+      "dst_port": "kr_data",
+      "width": 1024,
+      "measured_bits": 1024,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3681.336,
+      "new_max_um": 3681.336,
+      "new_min_um": 3265.08,
+      "new_bits_gt405": 1024,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 1023,
+        "dst": 1023,
+        "old_src": [
+          4086.264,
+          3067.296
+        ],
+        "old_dst": [
+          1622.9279999999999,
+          1849.296
+        ],
+        "new_src": [
+          4086.264,
+          3067.296
+        ],
+        "new_dst": [
+          1622.9279999999999,
+          1849.296
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q0",
+      "src_port": "g_kr_tag",
+      "dst_path": "svg_NW4",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q0",
+      "dst_port": "kr_tag",
+      "width": 68,
+      "measured_bits": 68,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3896.856,
+      "new_max_um": 3896.856,
+      "new_min_um": 3378.6,
+      "new_bits_gt405": 68,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 67,
+        "dst": 67,
+        "old_src": [
+          4294.0560000000005,
+          3067.296
+        ],
+        "old_dst": [
+          1622.9279999999999,
+          1841.5680000000002
+        ],
+        "new_src": [
+          4294.0560000000005,
+          3067.296
+        ],
+        "new_dst": [
+          1622.9279999999999,
+          1841.5680000000002
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW4",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q0",
+      "src_port": "g_kr_v",
+      "dst_path": "svg_NW4",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q0",
+      "dst_port": "kr_v",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3913.128,
+      "new_max_um": 3913.128,
+      "new_min_um": 3388.392,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          4309.944,
+          3067.296
+        ],
+        "old_dst": [
+          1622.9279999999999,
+          1841.1840000000002
+        ],
+        "new_src": [
+          4309.944,
+          3067.296
+        ],
+        "new_dst": [
+          1622.9279999999999,
+          1841.1840000000002
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q1",
+      "src_port": "g_k_rdy",
+      "dst_path": "svg_NW5",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q1",
+      "dst_port": "k_rdy",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 485.4,
+      "new_max_um": 485.4,
+      "new_min_um": 455.352,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          7173.0960000000005,
+          4057.248
+        ],
+        "old_dst": [
+          6919.248,
+          3825.696
+        ],
+        "new_src": [
+          7173.0960000000005,
+          4057.248
+        ],
+        "new_dst": [
+          6919.248,
+          3825.696
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "vmks_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q1",
+      "src_port": "g_k_wr_done",
+      "dst_path": "svg_NW5",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q1",
+      "dst_port": "k_wr_done",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 603.048,
+      "new_max_um": 603.048,
+      "new_min_um": 339.72,
+      "new_bits_gt405": 2,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          7174.200000000001,
+          4057.248
+        ],
+        "old_dst": [
+          6919.248,
+          3709.152
+        ],
+        "new_src": [
+          7174.200000000001,
+          4057.248
+        ],
+        "new_dst": [
+          6919.248,
+          3709.152
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "vmks_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q1",
+      "src_port": "g_kr_beat",
+      "dst_path": "svg_NW5",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q1",
+      "dst_port": "kr_beat",
+      "width": 16,
+      "measured_bits": 16,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 629.256,
+      "new_max_um": 629.256,
+      "new_min_um": 332.856,
+      "new_bits_gt405": 8,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 15,
+        "dst": 15,
+        "old_src": [
+          7185.144,
+          4057.248
+        ],
+        "old_dst": [
+          6919.248,
+          3693.888
+        ],
+        "new_src": [
+          7185.144,
+          4057.248
+        ],
+        "new_dst": [
+          6919.248,
+          3693.888
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "vmks_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q1",
+      "src_port": "g_kr_data",
+      "dst_path": "svg_NW5",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q1",
+      "dst_port": "kr_data",
+      "width": 1024,
+      "measured_bits": 1024,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1069.8,
+      "new_max_um": 1069.8,
+      "new_min_um": 243.432,
+      "new_bits_gt405": 431,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 634,
+        "dst": 634,
+        "old_src": [
+          7599.6720000000005,
+          4057.248
+        ],
+        "old_dst": [
+          6919.248,
+          3667.872
+        ],
+        "new_src": [
+          7599.6720000000005,
+          4057.248
+        ],
+        "new_dst": [
+          6919.248,
+          3667.872
+        ]
+      },
+      "minimum_stations_lower_bound": 2
+    },
+    {
+      "src_path": "vmks_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q1",
+      "src_port": "g_kr_tag",
+      "dst_path": "svg_NW5",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q1",
+      "dst_port": "kr_tag",
+      "width": 68,
+      "measured_bits": 68,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 779.112,
+      "new_max_um": 779.112,
+      "new_min_um": 328.392,
+      "new_bits_gt405": 34,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 67,
+        "dst": 67,
+        "old_src": [
+          7219.320000000001,
+          4057.248
+        ],
+        "old_dst": [
+          6919.248,
+          3578.208
+        ],
+        "new_src": [
+          7219.320000000001,
+          4057.248
+        ],
+        "new_dst": [
+          6919.248,
+          3578.208
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "vmks_NW5",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q1",
+      "src_port": "g_kr_v",
+      "dst_path": "svg_NW5",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q1",
+      "dst_port": "kr_v",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 735.288,
+      "new_max_um": 735.288,
+      "new_min_um": 300.744,
+      "new_bits_gt405": 2,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 3,
+        "dst": 3,
+        "old_src": [
+          7175.112,
+          4057.248
+        ],
+        "old_dst": [
+          6919.248,
+          3577.824
+        ],
+        "new_src": [
+          7175.112,
+          4057.248
+        ],
+        "new_dst": [
+          6919.248,
+          3577.824
+        ]
+      },
+      "minimum_stations_lower_bound": 1
+    },
+    {
+      "src_path": "vmks_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q2",
+      "src_port": "g_k_rdy",
+      "dst_path": "svg_NW6",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q2",
+      "dst_port": "k_rdy",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1773.648,
+      "new_max_um": 1773.648,
+      "new_min_um": 1744.032,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          337.368,
+          3188.256
+        ],
+        "old_dst": [
+          397.5359999999999,
+          1474.7759999999998
+        ],
+        "new_src": [
+          337.368,
+          3188.256
+        ],
+        "new_dst": [
+          397.5359999999999,
+          1474.7759999999998
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "vmks_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q2",
+      "src_port": "g_k_wr_done",
+      "dst_path": "svg_NW6",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q2",
+      "dst_port": "k_wr_done",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1889.808,
+      "new_max_um": 1889.808,
+      "new_min_um": 1627.152,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          337.752,
+          3188.256
+        ],
+        "old_dst": [
+          397.5359999999999,
+          1358.232
+        ],
+        "new_src": [
+          337.752,
+          3188.256
+        ],
+        "new_dst": [
+          397.5359999999999,
+          1358.232
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "vmks_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q2",
+      "src_port": "g_kr_beat",
+      "dst_path": "svg_NW6",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q2",
+      "dst_port": "kr_beat",
+      "width": 16,
+      "measured_bits": 16,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 1902.0,
+      "new_max_um": 1902.0,
+      "new_min_um": 1607.904,
+      "new_bits_gt405": 16,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          340.632,
+          3188.256
+        ],
+        "old_dst": [
+          397.5359999999999,
+          1343.1599999999999
+        ],
+        "new_src": [
+          340.632,
+          3188.256
+        ],
+        "new_dst": [
+          397.5359999999999,
+          1343.1599999999999
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "vmks_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q2",
+      "src_port": "g_kr_data",
+      "dst_path": "svg_NW6",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q2",
+      "dst_port": "kr_data",
+      "width": 1024,
+      "measured_bits": 1024,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 2025.168,
+      "new_max_um": 2025.168,
+      "new_min_um": 1608.912,
+      "new_bits_gt405": 1024,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          469.464,
+          3188.256
+        ],
+        "old_dst": [
+          397.5359999999999,
+          1235.0159999999998
+        ],
+        "new_src": [
+          469.464,
+          3188.256
+        ],
+        "new_dst": [
+          397.5359999999999,
+          1235.0159999999998
+        ]
+      },
+      "minimum_stations_lower_bound": 5
+    },
+    {
+      "src_path": "vmks_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q2",
+      "src_port": "g_kr_tag",
+      "dst_path": "svg_NW6",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q2",
+      "dst_port": "kr_tag",
+      "width": 68,
+      "measured_bits": 68,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 2010.288,
+      "new_max_um": 2010.288,
+      "new_min_um": 1479.936,
+      "new_bits_gt405": 68,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          348.216,
+          3188.256
+        ],
+        "old_dst": [
+          397.5359999999999,
+          1227.288
+        ],
+        "new_src": [
+          348.216,
+          3188.256
+        ],
+        "new_dst": [
+          397.5359999999999,
+          1227.288
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "vmks_NW6",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q2",
+      "src_port": "g_kr_v",
+      "dst_path": "svg_NW6",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q2",
+      "dst_port": "kr_v",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 2020.752,
+      "new_max_um": 2020.752,
+      "new_min_um": 1495.44,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          338.08799999999997,
+          3188.256
+        ],
+        "old_dst": [
+          397.5359999999999,
+          1226.952
+        ],
+        "new_src": [
+          338.08799999999997,
+          3188.256
+        ],
+        "new_dst": [
+          397.5359999999999,
+          1226.952
+        ]
+      },
+      "minimum_stations_lower_bound": 4
+    },
+    {
+      "src_path": "vmks_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q3",
+      "src_port": "g_k_rdy",
+      "dst_path": "svg_NW7",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q3",
+      "dst_port": "k_rdy",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3795.408,
+      "new_max_um": 3795.408,
+      "new_min_um": 3765.792,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          4519.128,
+          2998.176
+        ],
+        "old_dst": [
+          5685.216,
+          368.856
+        ],
+        "new_src": [
+          4519.128,
+          2998.176
+        ],
+        "new_dst": [
+          5685.216,
+          368.856
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q3",
+      "src_port": "g_k_wr_done",
+      "dst_path": "svg_NW7",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q3",
+      "dst_port": "k_wr_done",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3911.568,
+      "new_max_um": 3911.568,
+      "new_min_um": 3648.912,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          4519.512,
+          2998.176
+        ],
+        "old_dst": [
+          5685.216,
+          252.312
+        ],
+        "new_src": [
+          4519.512,
+          2998.176
+        ],
+        "new_dst": [
+          5685.216,
+          252.312
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q3",
+      "src_port": "g_kr_beat",
+      "dst_path": "svg_NW7",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q3",
+      "dst_port": "kr_beat",
+      "width": 16,
+      "measured_bits": 16,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3923.76,
+      "new_max_um": 3923.76,
+      "new_min_um": 3629.664,
+      "new_bits_gt405": 16,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          4522.392,
+          2998.176
+        ],
+        "old_dst": [
+          5685.216,
+          237.24
+        ],
+        "new_src": [
+          4522.392,
+          2998.176
+        ],
+        "new_dst": [
+          5685.216,
+          237.24
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q3",
+      "src_port": "g_kr_data",
+      "dst_path": "svg_NW7",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q3",
+      "dst_port": "kr_data",
+      "width": 1024,
+      "measured_bits": 1024,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 3903.072,
+      "new_max_um": 3903.072,
+      "new_min_um": 3301.632,
+      "new_bits_gt405": 1024,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          4651.224,
+          2998.176
+        ],
+        "old_dst": [
+          5685.216,
+          129.096
+        ],
+        "new_src": [
+          4651.224,
+          2998.176
+        ],
+        "new_dst": [
+          5685.216,
+          129.096
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q3",
+      "src_port": "g_kr_tag",
+      "dst_path": "svg_NW7",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q3",
+      "dst_port": "kr_tag",
+      "width": 68,
+      "measured_bits": 68,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 4032.048,
+      "new_max_um": 4032.048,
+      "new_min_um": 3501.696,
+      "new_bits_gt405": 68,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          4529.976,
+          2998.176
+        ],
+        "old_dst": [
+          5685.216,
+          121.368
+        ],
+        "new_src": [
+          4529.976,
+          2998.176
+        ],
+        "new_dst": [
+          5685.216,
+          121.368
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    },
+    {
+      "src_path": "vmks_NW7",
+      "src_partition": "NE_hub",
+      "src_plan_instance": "u_vmks_Q3",
+      "src_port": "g_kr_v",
+      "dst_path": "svg_NW7",
+      "dst_partition": "NE_hub",
+      "dst_plan_instance": "u_svg_Q3",
+      "dst_port": "kr_v",
+      "width": 4,
+      "measured_bits": 4,
+      "missing_pin_bits": 0,
+      "missing_first": [],
+      "status": "PIN-ENDPOINT LOWER BOUND ONLY",
+      "old_max_um": 4042.512,
+      "new_max_um": 4042.512,
+      "new_min_um": 3517.2,
+      "new_bits_gt405": 4,
+      "max_bit_delta_um": 0.0,
+      "min_bit_delta_um": 0.0,
+      "worst_bit": {
+        "src": 0,
+        "dst": 0,
+        "old_src": [
+          4519.848,
+          2998.176
+        ],
+        "old_dst": [
+          5685.216,
+          121.032
+        ],
+        "new_src": [
+          4519.848,
+          2998.176
+        ],
+        "new_dst": [
+          5685.216,
+          121.032
+        ]
+      },
+      "minimum_stations_lower_bound": 9
+    }
+  ],
+  "stale_station_rows": [
+    {
+      "partition": "NW_hub",
+      "type": "q_hub_nw",
+      "index": 2038,
+      "launch": "face bus L100_o",
+      "capture": "u_svg_Q3.sm_packet",
+      "from_um": [
+        4581.351,
+        0.0
+      ],
+      "to_um": [
+        5685.139,
+        349.392
+      ],
+      "station_count": 3,
+      "bits": 22
+    },
+    {
+      "partition": "NW_hub",
+      "type": "q_hub_nw",
+      "index": 2296,
+      "launch": "face bus L30_o",
+      "capture": "u_svg_Q1.sm_packet",
+      "from_um": [
+        6429.873,
+        4320.0
+      ],
+      "to_um": [
+        6919.325,
+        3851.884
+      ],
+      "station_count": 19,
+      "bits": 1099
+    },
+    {
+      "partition": "NW_hub",
+      "type": "q_hub_nw",
+      "index": 2300,
+      "launch": "face bus L31_o",
+      "capture": "u_svg_Q1.sm_packet",
+      "from_um": [
+        6823.873,
+        4320.0
+      ],
+      "to_um": [
+        6919.325,
+        3851.884
+      ],
+      "station_count": 18,
+      "bits": 1099
+    },
+    {
+      "partition": "NW_hub",
+      "type": "q_hub_nw",
+      "index": 2305,
+      "launch": "face bus L33_o",
+      "capture": "u_svg_Q2.sm_packet",
+      "from_um": [
+        1137.496,
+        0.0
+      ],
+      "to_um": [
+        650.199,
+        1778.741
+      ],
+      "station_count": 6,
+      "bits": 1099
+    },
+    {
+      "partition": "NW_hub",
+      "type": "q_hub_nw",
+      "index": 2308,
+      "launch": "face bus L34_o",
+      "capture": "u_svg_Q3.sm_packet",
+      "from_um": [
+        6962.688,
+        0.0
+      ],
+      "to_um": [
+        5685.139,
+        349.392
+      ],
+      "station_count": 5,
+      "bits": 1099
+    },
+    {
+      "partition": "NW_hub",
+      "type": "q_hub_nw",
+      "index": 2312,
+      "launch": "face bus L35_o",
+      "capture": "u_svg_Q3.sm_packet",
+      "from_um": [
+        7211.129,
+        0.0
+      ],
+      "to_um": [
+        5685.139,
+        349.392
+      ],
+      "station_count": 6,
+      "bits": 1099
+    },
+    {
+      "partition": "NW_hub",
+      "type": "q_hub_nw",
+      "index": 2484,
+      "launch": "face bus L6_o",
+      "capture": "u_svg_Q0.sm_packet",
+      "from_um": [
+        3821.241,
+        0.0
+      ],
+      "to_um": [
+        1623.005,
+        2313.762
+      ],
+      "station_count": 12,
+      "bits": 1099
+    },
+    {
+      "partition": "NW_hub",
+      "type": "q_hub_nw",
+      "index": 2485,
+      "launch": "face bus L6_o",
+      "capture": "u_svg_Q3.sm_packet",
+      "from_um": [
+        4425.44,
+        0.0
+      ],
+      "to_um": [
+        5685.139,
+        349.392
+      ],
+      "station_count": 4,
+      "bits": 816
+    },
+    {
+      "partition": "NW_hub",
+      "type": "q_hub_nw",
+      "index": 2568,
+      "launch": "face bus L7_o",
+      "capture": "u_svg_Q0.sm_packet",
+      "from_um": [
+        4544.295,
+        0.0
+      ],
+      "to_um": [
+        1623.005,
+        2313.762
+      ],
+      "station_count": 16,
+      "bits": 89
+    },
+    {
+      "partition": "NW_hub",
+      "type": "q_hub_nw",
+      "index": 2569,
+      "launch": "face bus L7_o",
+      "capture": "u_svg_Q1.sm_packet",
+      "from_um": [
+        4804.847,
+        0.0
+      ],
+      "to_um": [
+        6919.325,
+        3851.884
+      ],
+      "station_count": 15,
+      "bits": 1099
+    },
+    {
+      "partition": "NW_hub",
+      "type": "q_hub_nw",
+      "index": 2570,
+      "launch": "face bus L7_o",
+      "capture": "u_svg_Q3.sm_packet",
+      "from_um": [
+        5088.639,
+        0.0
+      ],
+      "to_um": [
+        5685.139,
+        349.392
+      ],
+      "station_count": 3,
+      "bits": 1099
+    },
+    {
+      "partition": "NE_hub",
+      "type": "q_hub_ne",
+      "index": 2242,
+      "launch": "face bus L30_o",
+      "capture": "u_svg_Q1.sm_packet",
+      "from_um": [
+        6429.873,
+        4320.0
+      ],
+      "to_um": [
+        6919.325,
+        3851.884
+      ],
+      "station_count": 19,
+      "bits": 1099
+    },
+    {
+      "partition": "NE_hub",
+      "type": "q_hub_ne",
+      "index": 2248,
+      "launch": "face bus L31_o",
+      "capture": "u_svg_Q1.sm_packet",
+      "from_um": [
+        6823.873,
+        4320.0
+      ],
+      "to_um": [
+        6919.325,
+        3851.884
+      ],
+      "station_count": 18,
+      "bits": 1099
+    },
+    {
+      "partition": "NE_hub",
+      "type": "q_hub_ne",
+      "index": 2253,
+      "launch": "face bus L33_o",
+      "capture": "u_svg_Q2.sm_packet",
+      "from_um": [
+        1150.652,
+        0.0
+      ],
+      "to_um": [
+        650.199,
+        1778.741
+      ],
+      "station_count": 7,
+      "bits": 1099
+    },
+    {
+      "partition": "NE_hub",
+      "type": "q_hub_ne",
+      "index": 2255,
+      "launch": "face bus L34_o",
+      "capture": "u_svg_Q3.sm_packet",
+      "from_um": [
+        6656.841,
+        0.0
+      ],
+      "to_um": [
+        5685.139,
+        349.392
+      ],
+      "station_count": 6,
+      "bits": 1099
+    },
+    {
+      "partition": "NE_hub",
+      "type": "q_hub_ne",
+      "index": 2261,
+      "launch": "face bus L35_o",
+      "capture": "u_svg_Q3.sm_packet",
+      "from_um": [
+        6905.009,
+        0.0
+      ],
+      "to_um": [
+        5685.139,
+        349.392
+      ],
+      "station_count": 7,
+      "bits": 1099
+    },
+    {
+      "partition": "NE_hub",
+      "type": "q_hub_ne",
+      "index": 2444,
+      "launch": "face bus L6_o",
+      "capture": "u_svg_Q0.sm_packet",
+      "from_um": [
+        3916.222,
+        0.0
+      ],
+      "to_um": [
+        1623.005,
+        2313.762
+      ],
+      "station_count": 14,
+      "bits": 1099
+    },
+    {
+      "partition": "NE_hub",
+      "type": "q_hub_ne",
+      "index": 2445,
+      "launch": "face bus L6_o",
+      "capture": "u_svg_Q3.sm_packet",
+      "from_um": [
+        4419.803,
+        0.0
+      ],
+      "to_um": [
+        5685.139,
+        349.392
+      ],
+      "station_count": 5,
+      "bits": 870
+    },
+    {
+      "partition": "NE_hub",
+      "type": "q_hub_ne",
+      "index": 2547,
+      "launch": "face bus L7_o",
+      "capture": "u_svg_Q0.sm_packet",
+      "from_um": [
+        4544.295,
+        0.0
+      ],
+      "to_um": [
+        1623.005,
+        2313.762
+      ],
+      "station_count": 16,
+      "bits": 89
+    },
+    {
+      "partition": "NE_hub",
+      "type": "q_hub_ne",
+      "index": 2548,
+      "launch": "face bus L7_o",
+      "capture": "u_svg_Q1.sm_packet",
+      "from_um": [
+        4804.847,
+        0.0
+      ],
+      "to_um": [
+        6919.325,
+        3851.884
+      ],
+      "station_count": 15,
+      "bits": 1099
+    },
+    {
+      "partition": "NE_hub",
+      "type": "q_hub_ne",
+      "index": 2549,
+      "launch": "face bus L7_o",
+      "capture": "u_svg_Q3.sm_packet",
+      "from_um": [
+        5088.639,
+        0.0
+      ],
+      "to_um": [
+        5685.139,
+        349.392
+      ],
+      "station_count": 3,
+      "bits": 1099
+    }
+  ],
+  "note": "Exact actual bit mapping and orient-aware planned pin terminals, not routed RC/reach. Only SVG sm_packet pin coordinates changed; source/RTL/cycles/macros/clocks/reset/other6589pins are unchanged. The native source graph has sm_packet OUTPUT; all existing named station rows instead mark it CAPTURE. They cannot qualify these source paths. New South provider connections absent from this selected graph require new actual source census."
+}
