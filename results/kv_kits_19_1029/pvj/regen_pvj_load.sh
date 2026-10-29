@@ -66,7 +66,7 @@ lf = sl["core_tree"]["leaves"][0]
 lf["sinks"], lf["domain_sinks"] = cen["sinks"], len(cen["sinks"])
 CI.install(kd, sl)
 (kd / "pv_trunk_slice.json").write_text(json.dumps(sl, indent=1) + "\n")
-t = (kd / "pv_trunk_install.tcl").read_text().replace(f"sinks{old_n}", f"sinks{len(cen[sinks])}")
+t = (kd / "pv_trunk_install.tcl").read_text().replace(f"sinks{old_n}", "sinks%d" % len(cen["sinks"]))
 (kd / "pv_trunk_install.tcl").write_text(t)
 fz = json.loads((kd / "freeze.json").read_text())
 prov = LEC._repo_provenance(repo)
