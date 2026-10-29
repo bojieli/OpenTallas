@@ -7,7 +7,6 @@ calendar edges are unchanged. Current native proof and physical gates remain.
 """
 import argparse,copy,hashlib,json,re,subprocess,sys
 from pathlib import Path
-from b2_top import Die,parse_expr
 
 SOURCES={
  'rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv':'a95d85e5a5f9822f2e7063b3c34b4c65312810a0a433c5527231da6a56703e97',
@@ -19,6 +18,8 @@ def main():
  p.add_argument('top',type=Path);p.add_argument('manifest',type=Path)
  p.add_argument('--repo',type=Path,default=Path(__file__).resolve().parents[2])
  p.add_argument('--out',type=Path,required=True);a=p.parse_args()
+ sys.path.insert(0,str(a.repo/'tools/hbm_b2'))
+ from b2_top import Die,parse_expr
  if a.out.exists():p.error('use a fresh candidate directory')
  original=Die(a.top,{})
  name='hb_idx__link';obj=original.insts[name]
@@ -50,7 +51,7 @@ def main():
   dst=a.out/'source'/Path(path).name;dst.parent.mkdir(exist_ok=True);dst.write_bytes(payload);pinned.append(str(dst.resolve()))
  manifest['netlist']=[str(newtop.resolve())]
  manifest['files']=list(dict.fromkeys(manifest.get('files',[])+pinned))
- manifest['prefer']=pinned+[s for s in manifest.get('prefer',[]) if s not in pinned]
+ manifest['prefer']=[s for s in manifest.get('prefer',[]) if s not in pinned]+pinned
  mf=a.out/'asbuilt.json';mf.write_text(json.dumps(manifest,indent=1)+'\n')
  receipt=dict(schema='opentallas.hbm.topk_wpipe_native_caller.v1',instance=name,
               source_sha256=hashlib.sha256(source.encode()).hexdigest(),

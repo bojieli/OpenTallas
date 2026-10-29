@@ -2,7 +2,6 @@
 """Prepare a source-pinned native FP candidate with explicit unchanged defaults."""
 import argparse,copy,hashlib,json,re,sys
 from pathlib import Path
-from b2_top import Die
 
 def main():
  p=argparse.ArgumentParser(description=__doc__)
@@ -11,6 +10,8 @@ def main():
  p.add_argument('--closure',type=Path,required=True)
  p.add_argument('--profile',choices=['minimal_4_4_0','candidate_5_4_1'],required=True)
  p.add_argument('--out',type=Path,required=True);a=p.parse_args()
+ sys.path.insert(0,str(a.source_base/'tools/hbm_b2'))
+ from b2_top import Die
  if a.out.exists():p.error('use a fresh output directory')
  closure=json.loads(a.closure.read_text());profile=closure['profiles'][a.profile]
  paths=[]
@@ -38,7 +39,8 @@ def main():
  manifest=copy.deepcopy(json.loads(a.manifest.read_text()));manifest['base']=str(a.source_base.resolve())
  manifest['netlist']=[str(top.resolve())]
  manifest['files']=list(dict.fromkeys(manifest.get('files',[])+paths))
- manifest['prefer']=paths+[s for s in manifest.get('prefer',[]) if s not in paths]
+ # bind_elab.pick deliberately gives the LAST explicit preference priority.
+ manifest['prefer']=[s for s in manifest.get('prefer',[]) if s not in paths]+paths
  manifest['defines']=list(dict.fromkeys(manifest.get('defines',[])+profile['defines']))
  (a.out/'asbuilt.json').write_text(json.dumps(manifest,indent=1)+'\n')
  receipt=dict(schema='opentallas.hbm.native_fp_caller.v1',profile=a.profile,source_slices=rows,
