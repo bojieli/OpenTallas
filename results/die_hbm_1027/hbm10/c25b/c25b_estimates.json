@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.hbm.c25b_estimates.v1",
+ "item3_family_collapse": {
+  "verdict": "no plan-only collapse inside the owner limits on C25a (77 modules / 78 designs); C25b adds +2 masters (n4ext, host_program) -> 79/80",
+  "families": {
+   "bank128 weight_E": "keep 2 masters: the weight_E table fixes 8 core_faces errors; collapse re-opens them or adds +1 edge on 2 of 56 instances (asymmetric latency)",
+   "idx tailx": "max hop 8.9 um but port names differ -> needs binder/RTL port map (not plan-only)",
+   "hc_root tail_rest": "max 383.6 um, 0 hops > 405, 0 extra cycles, but ports swapped -> binder port map (not plan-only)",
+   "vms_bank": "673.6 um > 405, 14 extra ports -> separate",
+   "kshare": "Q3 cannot grow in place (u_hc subtree at 4898.88) -> separate",
+   "bfqg / sm_group_rel_id": "kept separate per directive (no instance under 405)"
+  }
+ },
+ "item4_cxport_ij_q": {
+  "merge_with_ij_s": "REJECTED: ij_s on clk_s, ij_q on clk_q (one root per leaf)",
+  "move_cut_R": "138.24x259.2 with ob1/jb1 on N: fill 0.21 but the s leaf is SE/SW of both q copies -> N-face ob1/jb1 create core_faces ERRORs + 4096 inj bits need new pins/stations",
+  "all_ob_on_S": "fill < 0.15 -> rejected",
+  "recommend": "RTL split of ij_q into two clk_q leaves (inj_q0/q1 -> ob0/jb0, inj_q2/q3 -> ob1/jb1), each ~138.24x129.6, fill ~0.19; NOT plan-only -> PENDING (RTL owner)"
+ },
+ "agent6_programme_store_r10": {
+  "today": "574.56x738.72, 44 x ot_sram_1r1w_512x256_m1_r2c2 (96.552x69.66, 414 W + 413 E M4 pins each, M1-M4 OBS), 5 columns, 4 inner channels 15.39 um; ~9 macros per column -> ~7.4k pins per channel",
+  "track_supply_per_channel": {"M5_vertical_0.048": 320, "plus_M7_ceiling_0.08": 192},
+  "demand_vs_supply": "7.4k pin nets per channel vs 320 M5 tracks (23 pins/track); pin_track_max 0.6 would need a ~590-um channel",
+  "options": {
+   "a_2x_channel_outline_673.92": "640 M5 tracks -> still 11.6 pins/track; parent slot: W growth free for u_sfup_Q__q0 (both hubs) and q1 (NW) but q_hub_ne u_sfup_Q__q1 is blocked on both sides (u_ctl_Q_p00-03, u_mu_fused_n4) -> one module cannot grow uniformly -> NOT APPLIED",
+   "b_split_2_cores": "each 22 macros; column height halves -> ~3.7k pins per channel (11.6/track at 15.39 um) -> no better per channel; needs RTL split + new pins -> NOT plan-only",
+   "c_M6_M7_ceiling_12.1a": "+192 M7 tracks per channel -> 14.5 pins/track -> insufficient alone"
+  },
+  "verdict": "no option fits by estimate; the overflow is pin density at the SRAM edges, not area. Fix belongs to the kit/macro choice: fewer, wider macros (e.g. 1024x256_m2 174.744x70.488 halves the edge count per bit) or a pin-access-friendly macro (M4 pins with M5 access over the macro edge) -> HBM-CORES KITS lane; plan unchanged in C25b"
+ },
+ "agent7_canon_map": {
+  "note": "C23q slices are PCs 0-9 / 10-21 / 22-31 (not 0-7 / 8-23 / 24-31): see PHY_NW/NC/NE contents modules ot_hbm3e_phy_rc_e8p5_pc0_9 / pc10_21 / pc22_31",
+  "replace": {"phy_NW": ["PHY_N", "u_phy_Q"]},
+  "with": {"phy_NW_pc0_9": ["PHY_NW", "u_phy_Q"], "phy_NW_pc10_21": ["PHY_NC", "u_phy_Q"], "phy_NW_pc22_31": ["PHY_NE", "u_phy_Q"]},
+  "precondition": "the as-built top must instantiate the three rc_slice masters (one per PC range, PC-ordered bus slices, own clk/rst_n) instead of the single rc phy_NW; otherwise these entries bind nothing. Not edited on the bindfull branch."
+ }
+}

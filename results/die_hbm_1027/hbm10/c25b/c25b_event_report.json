@@ -1,0 +1,386 @@
+{
+ "event": "C25b (DIE-HBM-10)",
+ "source": "c25a/die_plan.json",
+ "source_sha": "20d73dea",
+ "item1_core_macros": {
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": {
+   "source": "KITS-2 delta",
+   "was": "UNKNOWN",
+   "now": "KNOWN",
+   "macros": 2
+  },
+  "ot_hbm_su_static_qcore_r13": {
+   "source": "KITS-2 delta",
+   "was": "KNOWN",
+   "now": "KNOWN",
+   "macros": 2
+  },
+  "ot_hbm_idx_topk_link_static": {
+   "source": "KITS-3 mp",
+   "was": "UNKNOWN",
+   "now": "KNOWN",
+   "macros": 8,
+   "verdict": "FEASIBLE"
+  },
+  "ot_hbm_svc_sm_group_rel_id": {
+   "source": "KITS-3 mp",
+   "was": "UNKNOWN",
+   "now": "KNOWN",
+   "macros": 17,
+   "verdict": "FEASIBLE"
+  },
+  "ot_pdie_serdes": {
+   "source": "KITS-3 mp",
+   "was": "UNKNOWN",
+   "now": "KNOWN",
+   "macros": 2,
+   "verdict": "FEASIBLE"
+  },
+  "pending": {
+   "ot_hgi_sfu_core_split3__opstore_b / ot_hbm_svc_wb_kport_q": "KITS-3 placements exist but the directive keeps these outlines unchanged; not in the FEASIBLE adopt list (left as in C25a)"
+  }
+ },
+ "item2_outlines": {
+  "ot_hgi_dma_back_static_vp4_banks_cp": {
+   "outline": [
+    [
+     239.976,
+     240.84
+    ],
+    [
+     239.976,
+     275.4
+    ]
+   ],
+   "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x275.4__c25b.json",
+   "n_face_pins_moved": 2425,
+   "verdict": "ESCAPE-RISK",
+   "columns": 2,
+   "channel_um": [
+    13.125,
+    15.444,
+    13.119
+   ],
+   "escape_use": [
+    4.801,
+    12.409,
+    4.789
+   ],
+   "instances": [
+    {
+     "type": "q_hub_nw",
+     "inst": "u_hb_dbk_Q__q0",
+     "origin_y": [
+      846.72,
+      812.16
+     ],
+     "box": [
+      2911.68,
+      812.16,
+      3151.656,
+      1087.56
+     ],
+     "taps_moved": 1,
+     "station_ends_moved": 0,
+     "views_dropped": []
+    },
+    {
+     "type": "q_hub_nw",
+     "inst": "u_hb_dbk_Q__q1",
+     "origin_y": [
+      743.04,
+      708.48
+     ],
+     "box": [
+      7162.536,
+      708.48,
+      7402.512,
+      983.88
+     ],
+     "taps_moved": 1,
+     "station_ends_moved": 0,
+     "views_dropped": []
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_hb_dbk_Q__q0",
+     "origin_y": [
+      846.72,
+      812.16
+     ],
+     "box": [
+      2911.68,
+      812.16,
+      3151.656,
+      1087.56
+     ],
+     "taps_moved": 1,
+     "station_ends_moved": 0,
+     "views_dropped": []
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_hb_dbk_Q__q1",
+     "origin_y": [
+      734.4,
+      699.84
+     ],
+     "box": [
+      7162.536,
+      699.84,
+      7402.512,
+      975.24
+     ],
+     "taps_moved": 1,
+     "station_ends_moved": 0,
+     "views_dropped": []
+    }
+   ]
+  },
+  "ot_hbm_host_cp_rxs": {
+   "outline": [
+    [
+     434.808,
+     432.0
+    ],
+    [
+     434.808,
+     480.0
+    ]
+   ],
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x480__c25b.json",
+   "n_face_pins_moved": 1248,
+   "verdict": "FEASIBLE",
+   "columns": 1,
+   "channel_um": [
+    126.759,
+    126.585
+   ],
+   "escape_use": [
+    0.671,
+    0.671
+   ],
+   "instances": [
+    {
+     "type": "root",
+     "inst": "u_host_cp_rxs",
+     "origin_y": [
+      544.32,
+      501.12
+     ],
+     "box": [
+      34.56,
+      501.12,
+      469.368,
+      981.12
+     ],
+     "taps_moved": 1,
+     "station_ends_moved": 56,
+     "views_dropped": [
+      "lef",
+      "lib"
+     ]
+    }
+   ]
+  }
+ },
+ "item5_fused_root": {
+  "cores": {
+   "u_mu_fused_root": {
+    "module": "ot_hnx_fused_hub_n4ext",
+    "origin": [
+     734.4,
+     5503.68
+    ],
+    "outline": [
+     216.0,
+     207.36
+    ],
+    "pins": 1126
+   },
+   "u_mu_fused_program": {
+    "module": "ot_hnx_fused_host_program",
+    "origin": [
+     734.4,
+     5356.8
+    ],
+    "outline": [
+     207.36,
+     129.6
+    ],
+    "pins": 562
+   }
+  },
+  "lanes": {
+   "N4U_NW": 2,
+   "N4D_NW": 2,
+   "N4U_NE": 2,
+   "N4D_NE": 2
+  },
+  "stations": {
+   "q_hub_nw:bus:n4x_up_o": {
+    "length_um": 3581.9,
+    "regs": 9,
+    "route": [
+     [
+      8216.64,
+      3832.82
+     ],
+     [
+      8121.6,
+      3832.82
+     ],
+     [
+      8121.6,
+      3507.84
+     ],
+     [
+      5039.744,
+      3507.84
+     ],
+     [
+      5039.744,
+      3567.912
+     ],
+     [
+      5019.744,
+      3567.912
+     ]
+    ]
+   },
+   "q_hub_nw:bus:n4x_dn_i": {
+    "length_um": 3950.0,
+    "regs": 11,
+    "route": [
+     [
+      8216.64,
+      3883.74
+     ],
+     [
+      8121.6,
+      3883.74
+     ],
+     [
+      8121.6,
+      3538.08
+     ],
+     [
+      5045.76,
+      3538.08
+     ],
+     [
+      5045.76,
+      3503.52
+     ],
+     [
+      4830.48,
+      3503.52
+     ],
+     [
+      4830.48,
+      3670.464
+     ],
+     [
+      4847.136,
+      3670.464
+     ]
+    ]
+   },
+   "q_hub_ne:bus:n4x_up_o": {
+    "length_um": 3581.9,
+    "regs": 9,
+    "route": [
+     [
+      8216.64,
+      3832.82
+     ],
+     [
+      8121.6,
+      3832.82
+     ],
+     [
+      8121.6,
+      3507.84
+     ],
+     [
+      5039.744,
+      3507.84
+     ],
+     [
+      5039.744,
+      3567.912
+     ],
+     [
+      5019.744,
+      3567.912
+     ]
+    ]
+   },
+   "q_hub_ne:bus:n4x_dn_i": {
+    "length_um": 3950.0,
+    "regs": 11,
+    "route": [
+     [
+      8216.64,
+      3883.74
+     ],
+     [
+      8121.6,
+      3883.74
+     ],
+     [
+      8121.6,
+      3538.08
+     ],
+     [
+      5045.76,
+      3538.08
+     ],
+     [
+      5045.76,
+      3503.52
+     ],
+     [
+      4830.48,
+      3503.52
+     ],
+     [
+      4830.48,
+      3670.464
+     ],
+     [
+      4847.136,
+      3670.464
+     ]
+    ]
+   },
+   "root:bus:n4x_up_nw_i": {
+    "length_um": 734.4,
+    "regs": 2
+   },
+   "root:bus:n4x_dn_nw_o": {
+    "length_um": 734.4,
+    "regs": 2
+   },
+   "root:bus:n4x_up_ne_i": {
+    "length_um": 734.4,
+    "regs": 2
+   },
+   "root:bus:n4x_dn_ne_o": {
+    "length_um": 734.4,
+    "regs": 2
+   }
+  },
+  "windows_die_y": {
+   "up": [
+    9873.0,
+    9923.2
+   ],
+   "down": [
+    9933.0,
+    9965.04
+   ]
+  }
+ },
+ "plan_sha": "6b3a80cd"
+}

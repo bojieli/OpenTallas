@@ -1,0 +1,4653 @@
+{
+ "schema": "opentallas.core_macros.v1",
+ "plan": "/srv/opentallas-scratch2/claude/hbm-mu-quad-6-1027/planU6c",
+ "note": "hard-core macro rectangles in the core frame (R0, origin = core lower-left), from kit evidence whose DIE_AREA equals the plan outline; built by sub_clk/core_macros_build.py (HBM-MU-QUAD-6/CLK) | C24 (DIE-HBM-10): hnx halves + lanes_plain + programme_store plan-fixed (KNOWN)",
+ "halo_um": 0.0,
+ "cores": {
+  "hfd_ep_static": {
+   "status": "PLAN-TRIAL",
+   "outline_um": [
+    241.92,
+    397.44
+   ],
+   "basis": "plan (HBM-MU-QUAD-6/EP re-plan, apply_ep.py)",
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/codex-hbm-plan-0815/sub_ep/apply_ep.py",
+     "sha256": "d04c6ef585438d6f7924f4e66eaaa6efdd00b36eb508a2ddd092a15546dcfa99"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_64x512_m1_r2c2"
+   ],
+   "macros": [],
+   "channels": [],
+   "macro_placement_tcl": "cores/hfd_ep_static__250.56x375.84__macro_placement.tcl",
+   "replaces": {
+    "basis": null,
+    "sources": null,
+    "macros": []
+   },
+   "r15_note": "4 SRAM 2+2 around centre channel y198.72; core owner supplies placement"
+  },
+  "hfd_hgi_vm_calendar_f20": {
+   "status": "KNOWN",
+   "outline_um": [
+    241.92,
+    116.64
+   ],
+   "basis": "placed",
+   "macros": [
+    {
+     "name": "u_fcore.u_calendar.u_programme.u_program",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "rect_um": [
+      21.6,
+      17.34,
+      196.344,
+      87.828
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-r7/kits/hfd_hgi_vm_calendar_f20_3649f48c0839-_k2/placed.csv",
+     "sha256": "31b4e1779feecf857d6c8fb46d31be567291a36e2360df20ab03c2f4b0b6088f"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_1024x256_m2_r2c2"
+   ]
+  },
+  "hfd_hgi_vms_glue_nw_t": {
+   "status": "NONE",
+   "outline_um": [
+    869.832,
+    1334.88
+   ],
+   "basis": "recipe macros []",
+   "macros": []
+  },
+  "hnx_fused_lane": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    345.6,
+    518.4
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": []
+  },
+  "hnx_rp3lp3h_n": {
+   "status": "KNOWN",
+   "outline_um": [
+    630.72,
+    1209.6
+   ],
+   "basis": "plan-fixed (C24): REBAL-4 legal3 SRAMs (kit --macro-placement) + 3 hnx_lane_x hard children",
+   "macros": [
+    {
+     "name": "u_lf0.g_xs3.u_xs.u_leaf.g_ln\\[0\\].g_xm\\[3\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      45.306,
+      136.08,
+      140.13,
+      177.12
+     ]
+    },
+    {
+     "name": "u_lf0.g_xs3.u_xs.u_leaf.g_ln\\[1\\].g_xm\\[1\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      45.306,
+      233.28,
+      140.13,
+      274.32
+     ]
+    },
+    {
+     "name": "u_lf0.g_xs3.u_xs.u_leaf.g_ln\\[0\\].g_xm\\[1\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      45.306,
+      285.12,
+      140.13,
+      326.16
+     ]
+    },
+    {
+     "name": "u_lf0.g_xs3.u_xs.u_leaf.g_ln\\[2\\].g_xm\\[1\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      45.306,
+      388.8,
+      140.13,
+      429.84
+     ]
+    },
+    {
+     "name": "u_lf0.g_xs3.u_xs.u_leaf.g_ln\\[2\\].g_xm\\[0\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      203.904,
+      82.08,
+      298.728,
+      123.12
+     ]
+    },
+    {
+     "name": "u_lf0.g_xs3.u_xs.u_leaf.g_ln\\[0\\].g_xm\\[2\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      203.904,
+      140.67,
+      298.728,
+      181.71
+     ]
+    },
+    {
+     "name": "u_lf0.g_xs3.u_xs.u_leaf.g_ln\\[1\\].g_xm\\[2\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      309.528,
+      140.67,
+      404.352,
+      181.71
+     ]
+    },
+    {
+     "name": "u_lf0.g_xs3.u_xs.u_leaf.g_ln\\[0\\].g_xm\\[0\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      415.152,
+      8.64,
+      509.976,
+      49.68
+     ]
+    },
+    {
+     "name": "u_lf0.g_xs3.u_xs.u_leaf.g_ln\\[2\\].g_xm\\[3\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      415.152,
+      86.67,
+      509.976,
+      127.71
+     ]
+    },
+    {
+     "name": "u_lf0.g_xs3.u_xs.u_leaf.g_ln\\[2\\].g_xm\\[2\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      415.152,
+      222.75,
+      509.976,
+      263.79
+     ]
+    },
+    {
+     "name": "u_lf0.g_xs3.u_xs.u_leaf.g_ln\\[1\\].g_xm\\[3\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      520.776,
+      140.67,
+      615.6,
+      181.71
+     ]
+    },
+    {
+     "name": "u_lf0.g_xs3.u_xs.u_leaf.g_ln\\[1\\].g_xm\\[0\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      520.776,
+      272.7,
+      615.6,
+      313.74
+     ]
+    },
+    {
+     "name": "u_lane0",
+     "master": "hnx_lane_x",
+     "rect_um": [
+      8.64,
+      898.56,
+      293.76,
+      1200.96
+     ]
+    },
+    {
+     "name": "u_lane1",
+     "master": "hnx_lane_x",
+     "rect_um": [
+      8.64,
+      561.6,
+      293.76,
+      864.0
+     ]
+    },
+    {
+     "name": "u_lane2",
+     "master": "hnx_lane_x",
+     "rect_um": [
+      336.96,
+      898.56,
+      622.08,
+      1200.96
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "claude/hbm-cores-rebal-6-1028@bd8c7c1b54:results/hbm_cores_rebal_4_1028/mp3_hnx_n.json",
+     "sha256": "ad5ac7db833eac8a61573b2487157534f0d4a03c1ac170567dce106db26d1c50"
+    }
+   ]
+  },
+  "hnx_rp3lp3h_s": {
+   "status": "KNOWN",
+   "outline_um": [
+    630.72,
+    1036.8
+   ],
+   "basis": "plan-fixed (C24): REBAL-4 legal3 SRAMs (kit --macro-placement) + 3 hnx_lane_x hard children",
+   "macros": [
+    {
+     "name": "u_lf1.g_xs3.u_xs.u_leaf.g_ln\\[2\\].g_xm\\[1\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      15.12,
+      230.58,
+      109.944,
+      271.62
+     ]
+    },
+    {
+     "name": "u_lf1.g_xs3.u_xs.u_leaf.g_ln\\[1\\].g_xm\\[1\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      15.12,
+      332.64,
+      109.944,
+      373.68
+     ]
+    },
+    {
+     "name": "u_lf1.g_xs3.u_xs.u_leaf.g_ln\\[1\\].g_xm\\[2\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      120.744,
+      189.54,
+      215.568,
+      230.58
+     ]
+    },
+    {
+     "name": "u_lf1.g_xs3.u_xs.u_leaf.g_ln\\[0\\].g_xm\\[3\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      304.29,
+      8.64,
+      399.114,
+      49.68
+     ]
+    },
+    {
+     "name": "u_lf1.g_xs3.u_xs.u_leaf.g_ln\\[1\\].g_xm\\[3\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      415.152,
+      8.64,
+      509.976,
+      49.68
+     ]
+    },
+    {
+     "name": "u_lf1.g_xs3.u_xs.u_leaf.g_ln\\[2\\].g_xm\\[0\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      415.152,
+      58.32,
+      509.976,
+      99.36
+     ]
+    },
+    {
+     "name": "u_lf1.g_xs3.u_xs.u_leaf.g_ln\\[2\\].g_xm\\[3\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      415.152,
+      168.75,
+      509.976,
+      209.79
+     ]
+    },
+    {
+     "name": "u_lf1.g_xs3.u_xs.u_leaf.g_ln\\[1\\].g_xm\\[0\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      520.776,
+      8.64,
+      615.6,
+      49.68
+     ]
+    },
+    {
+     "name": "u_lf1.g_xs3.u_xs.u_leaf.g_ln\\[0\\].g_xm\\[1\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      520.776,
+      86.67,
+      615.6,
+      127.71
+     ]
+    },
+    {
+     "name": "u_lf1.g_xs3.u_xs.u_leaf.g_ln\\[0\\].g_xm\\[0\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      520.776,
+      136.35,
+      615.6,
+      177.39
+     ]
+    },
+    {
+     "name": "u_lf1.g_xs3.u_xs.u_leaf.g_ln\\[0\\].g_xm\\[2\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      520.776,
+      222.75,
+      615.6,
+      263.79
+     ]
+    },
+    {
+     "name": "u_lf1.g_xs3.u_xs.u_leaf.g_ln\\[2\\].g_xm\\[2\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      520.776,
+      272.7,
+      615.6,
+      313.74
+     ]
+    },
+    {
+     "name": "u_lane0",
+     "master": "hnx_lane_x",
+     "rect_um": [
+      8.64,
+      725.76,
+      293.76,
+      1028.16
+     ]
+    },
+    {
+     "name": "u_lane1",
+     "master": "hnx_lane_x",
+     "rect_um": [
+      8.64,
+      388.8,
+      293.76,
+      691.2
+     ]
+    },
+    {
+     "name": "u_lane2",
+     "master": "hnx_lane_x",
+     "rect_um": [
+      336.96,
+      725.76,
+      622.08,
+      1028.16
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "claude/hbm-cores-rebal-6-1028@bd8c7c1b54:results/hbm_cores_rebal_4_1028/mp3_hnx_s.json",
+     "sha256": "7a6c056929fe81e4ec6c03882f479f8df7bed016de87ee56e7889ba3e7fb3c0b"
+    }
+   ]
+  },
+  "hnx_vms_bank_q0_faces__vec6293": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": []
+  },
+  "hnx_vms_bank_q0_faces__vecd4ae": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "why": "recipe macros ['ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline",
+   "rejected": [],
+   "native_modules": [
+    "hfd_vms_bank_native_q0_faces"
+   ]
+  },
+  "ot_hbm_argmax_static_sw_vm_r2": {
+   "status": "NONE",
+   "outline_um": [
+    118.8,
+    118.8
+   ],
+   "basis": "placed",
+   "macros": [],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-core-lat-r4-root/kits/ot_hbm_argmax_static_sw_vm_r2__b2o-r4/placed.csv",
+     "sha256": "2d4a73e4520b45f4bdddc7085d0fb4831e2151e4802eca84870e1bd5a89d93b8"
+    }
+   ],
+   "recipe_macros": []
+  },
+  "ot_hbm_hc_bank128_pair_core": {
+   "status": "KNOWN",
+   "outline_um": [
+    250.56,
+    267.84
+   ],
+   "basis": "explicit",
+   "macros": [
+    {
+     "name": "u_fcore.u_c.u_b.g_w[1].u_m",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "R180",
+     "rect_um": [
+      21.6,
+      4.32,
+      196.344,
+      74.808
+     ]
+    },
+    {
+     "name": "u_fcore.u_c.u_b.g_x[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "MY",
+     "rect_um": [
+      21.6,
+      129.6,
+      116.424,
+      170.664
+     ]
+    },
+    {
+     "name": "u_fcore.u_c.u_b.g_w[0].u_m",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "MY",
+     "rect_um": [
+      21.6,
+      179.28,
+      196.344,
+      249.768
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/kits_v2/ot_hbm_hc_bank128_pair_core_ba77076d4cc8/macro_placement.tcl",
+     "sha256": "00b12c93263db214e6e2d50b027600116184546129e3cd0f275fbfe488e76e5e"
+    },
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/kits_v2/ot_hbm_hc_bank128_pair_core_ba77076d4cc8/placed.csv",
+     "sha256": "ba616b5b87bdd8b71c353e30a1a6e715f62c465a6a6d16e8747a56a6bfe158bf"
+    }
+   ],
+   "recipe_macros": null
+  },
+  "ot_hbm_hc_bank128_pair_first_core": {
+   "status": "KNOWN",
+   "outline_um": [
+    250.56,
+    267.84
+   ],
+   "basis": "explicit",
+   "macros": [
+    {
+     "name": "u_fcore.u_c.u_b.g_w[1].u_m",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "R180",
+     "rect_um": [
+      21.6,
+      4.32,
+      196.344,
+      74.808
+     ]
+    },
+    {
+     "name": "u_fcore.u_c.u_b.g_x[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "MY",
+     "rect_um": [
+      21.6,
+      129.6,
+      116.424,
+      170.664
+     ]
+    },
+    {
+     "name": "u_fcore.u_c.u_b.g_w[0].u_m",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "MY",
+     "rect_um": [
+      21.6,
+      179.28,
+      196.344,
+      249.768
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/kits_v2/ot_hbm_hc_bank128_pair_first_core_0c39789d46b1/macro_placement.tcl",
+     "sha256": "00b12c93263db214e6e2d50b027600116184546129e3cd0f275fbfe488e76e5e"
+    },
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/kits_v2/ot_hbm_hc_bank128_pair_first_core_0c39789d46b1/placed.csv",
+     "sha256": "71f7de7295d6e170d1f4aa23babab83ccd912ff52ac41ff32579ad805ece6868"
+    }
+   ],
+   "recipe_macros": null
+  },
+  "ot_hbm_hc_root_static__hcp_sys1": {
+   "status": "NONE",
+   "outline_um": [
+    155.52,
+    172.8
+   ],
+   "basis": "placed",
+   "macros": [],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-core-lat-r3-hcroot/kits_fp/ot_hbm_hc_root_static__hcp_sys1_eeab1883a31b/placed.csv",
+     "sha256": "08e2d638c08e3f2c760df91f9e44b27a82c1bda48bd2dc7b165091d57fc5b7b2"
+    }
+   ],
+   "recipe_macros": []
+  },
+  "ot_hbm_hc_root_static__tailx_rest__v4f4566": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    155.52,
+    172.8
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": [],
+   "native_modules": [
+    "ot_hbm_hc_root_static__tail1_rest"
+   ]
+  },
+  "ot_hbm_hc_root_static__tailx_rest__v6bc7f2": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    155.52,
+    172.8
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": [],
+   "native_modules": [
+    "ot_hbm_hc_root_static__tail0_rest"
+   ]
+  },
+  "ot_hbm_hc_root_static__tailx_sk_steady": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    155.52,
+    198.72
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": [],
+   "native_modules": [
+    "ot_hbm_hc_root_static__tail0_sk_steady",
+    "ot_hbm_hc_root_static__tail1_sk_steady"
+   ]
+  },
+  "ot_hbm_hc_root_static__tailx_sk_step0": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    155.52,
+    241.92
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": [],
+   "native_modules": [
+    "ot_hbm_hc_root_static__tail0_sk_step0",
+    "ot_hbm_hc_root_static__tail1_sk_step0"
+   ]
+  },
+  "ot_hbm_hc_subtree32_core": {
+   "status": "NONE",
+   "outline_um": [
+    220.32,
+    220.32
+   ],
+   "basis": "placed",
+   "macros": [],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/kits/ot_hbm_hc_subtree32_core_3abde8dae72d/placed.csv",
+     "sha256": "f168a97d1e3ab3516c539befaac6f635b44573f3605ee3bdb17868004c1656f7"
+    }
+   ],
+   "recipe_macros": null
+  },
+  "ot_hbm_host_cp_rxs": {
+   "status": "KNOWN",
+   "outline_um": [
+    434.808,
+    480.0
+   ],
+   "basis": "rule",
+   "rule": "R-SRAM-ENTRY (C columns, results/hbm_cores_kits_3/mp_rule_c.py)",
+   "verdict": "FEASIBLE",
+   "macros": [
+    {
+     "name": "u_fcore.u_land.g_bank[1].u_mem",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      131.058,
+      166.248,
+      303.882,
+      207.312
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_land.g_bank[0].u_mem",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      131.058,
+      116.544,
+      303.882,
+      157.608
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_link.g_bank[3].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "rect_um": [
+      131.058,
+      30.12,
+      302.346,
+      107.904
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_link.g_bank[2].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "rect_um": [
+      131.058,
+      224.688,
+      302.346,
+      302.472
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_link.g_bank[1].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "rect_um": [
+      131.058,
+      311.112,
+      302.346,
+      388.896
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_link.g_bank[0].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "rect_um": [
+      131.058,
+      397.536,
+      302.346,
+      475.32
+     ],
+     "orient": "R0"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_256x256_m2_r2c2",
+    "ot_sram_1r1w_64x512_m1_r2c2"
+   ],
+   "sources": [
+    {
+     "file": "c25b_shadow/hcpe_216.0.mp.json",
+     "sha256": "f2f3f1c3a0e91c7b247979ad9ead60856029f09c6ed652252066c7a115ea2317"
+    },
+    {
+     "file": "c25b_shadow/hcpe_216.0.est.json",
+     "sha256": "a85274068b4a10b91682ccfdefcefb7f4594e6b02cbaa24db9ae622147b5d235"
+    }
+   ],
+   "note": "C25b: R-SRAM-ENTRY at the C25b outline 434.808x480 (KITS-3 mp_rule_c.py on a shadow kit hcpe_216.0: DIE/CORE_AREA grown, entry island unchanged); macro names are k below the kit face shell (macro_placement.v1)"
+  },
+  "ot_hbm_idx_qctl_static": {
+   "status": "KNOWN",
+   "outline_um": [
+    194.832,
+    82.08
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.calendar.store",
+     "rect_um": [
+      11.016,
+      4.32,
+      183.84,
+      45.384
+     ]
+    }
+   ]
+  },
+  "ot_hbm_idx_query_static": {
+   "status": "KNOWN",
+   "outline_um": [
+    170.64,
+    164.16
+   ],
+   "basis": "placed",
+   "macros": [
+    {
+     "name": "u_fcore.core.gcode[0].mem",
+     "master": "ot_sram_1r1w_32x128_m1",
+     "rect_um": [
+      16.749,
+      139.068,
+      68.157,
+      159.858
+     ]
+    },
+    {
+     "name": "u_fcore.core.gcode[1].mem",
+     "master": "ot_sram_1r1w_32x128_m1",
+     "rect_um": [
+      97.632,
+      59.004,
+      149.04,
+      79.794
+     ]
+    },
+    {
+     "name": "u_fcore.core.gcode[2].mem",
+     "master": "ot_sram_1r1w_32x128_m1",
+     "rect_um": [
+      97.632,
+      38.142,
+      149.04,
+      58.932
+     ]
+    },
+    {
+     "name": "u_fcore.core.gcode[3].mem",
+     "master": "ot_sram_1r1w_32x128_m1",
+     "rect_um": [
+      76.797,
+      139.068,
+      128.205,
+      159.858
+     ]
+    },
+    {
+     "name": "u_fcore.core.scmem",
+     "master": "ot_sram_1r1w_32x128_m1",
+     "rect_um": [
+      97.632,
+      17.34,
+      149.04,
+      38.13
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-r7/kits/ot_hbm_idx_query_static_a99334578ab6-_k2/placed.csv",
+     "sha256": "9c1e94683e3da2a080b9035262876b6bda1dfb0969035717dce178fd6d68b52c"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_32x128_m1"
+   ]
+  },
+  "ot_hbm_idx_rootctl_static_am": {
+   "status": "KNOWN",
+   "outline_um": [
+    475.2,
+    259.2
+   ],
+   "basis": "placed",
+   "macros": [
+    {
+     "name": "u_fcore.g_cal32.calendar.store",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      23.328,
+      200.844,
+      196.152,
+      241.908
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-kits-1025/batch2/runs/ot_hbm_idx_rootctl_static_am_50d7ca74d09d/placed.csv",
+     "sha256": "f9bae59bca2b01faecb490cb411594a7a1fc435b8fc35d8044b300323bdaaffb"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_256x256_m2_r2c2"
+   ]
+  },
+  "ot_hbm_idx_score_hcol_h0": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    218.592,
+    187.488
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": [],
+   "native_modules": [
+    "ot_hbm_idx_score_quarter_static__r0c0_k0h0",
+    "ot_hbm_idx_score_quarter_static__r0c0_k1h0",
+    "ot_hbm_idx_score_quarter_static__r0c0_k2h0",
+    "ot_hbm_idx_score_quarter_static__r0c0_k3h0",
+    "ot_hbm_idx_score_quarter_static__r0c1_k0h0",
+    "ot_hbm_idx_score_quarter_static__r0c1_k1h0",
+    "ot_hbm_idx_score_quarter_static__r0c1_k2h0",
+    "ot_hbm_idx_score_quarter_static__r0c1_k3h0",
+    "ot_hbm_idx_score_quarter_static__r0c2_k0h0",
+    "ot_hbm_idx_score_quarter_static__r0c2_k1h0",
+    "ot_hbm_idx_score_quarter_static__r0c2_k2h0",
+    "ot_hbm_idx_score_quarter_static__r0c2_k3h0",
+    "ot_hbm_idx_score_quarter_static__r0c3_k0h0",
+    "ot_hbm_idx_score_quarter_static__r0c3_k1h0",
+    "ot_hbm_idx_score_quarter_static__r0c3_k2h0",
+    "ot_hbm_idx_score_quarter_static__r0c3_k3h0",
+    "ot_hbm_idx_score_quarter_static__r1c0_k0h0",
+    "ot_hbm_idx_score_quarter_static__r1c0_k1h0",
+    "ot_hbm_idx_score_quarter_static__r1c0_k2h0",
+    "ot_hbm_idx_score_quarter_static__r1c0_k3h0",
+    "ot_hbm_idx_score_quarter_static__r1c1_k0h0",
+    "ot_hbm_idx_score_quarter_static__r1c1_k1h0",
+    "ot_hbm_idx_score_quarter_static__r1c1_k2h0",
+    "ot_hbm_idx_score_quarter_static__r1c1_k3h0",
+    "ot_hbm_idx_score_quarter_static__r1c2_k0h0",
+    "ot_hbm_idx_score_quarter_static__r1c2_k1h0",
+    "ot_hbm_idx_score_quarter_static__r1c2_k2h0",
+    "ot_hbm_idx_score_quarter_static__r1c2_k3h0",
+    "ot_hbm_idx_score_quarter_static__r1c3_k0h0",
+    "ot_hbm_idx_score_quarter_static__r1c3_k1h0",
+    "ot_hbm_idx_score_quarter_static__r1c3_k2h0",
+    "ot_hbm_idx_score_quarter_static__r1c3_k3h0"
+   ]
+  },
+  "ot_hbm_idx_score_hcol_h1": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    218.592,
+    187.488
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": [],
+   "native_modules": [
+    "ot_hbm_idx_score_quarter_static__r0c0_k0h1",
+    "ot_hbm_idx_score_quarter_static__r0c0_k1h1",
+    "ot_hbm_idx_score_quarter_static__r0c0_k2h1",
+    "ot_hbm_idx_score_quarter_static__r0c0_k3h1",
+    "ot_hbm_idx_score_quarter_static__r0c1_k0h1",
+    "ot_hbm_idx_score_quarter_static__r0c1_k1h1",
+    "ot_hbm_idx_score_quarter_static__r0c1_k2h1",
+    "ot_hbm_idx_score_quarter_static__r0c1_k3h1",
+    "ot_hbm_idx_score_quarter_static__r0c2_k0h1",
+    "ot_hbm_idx_score_quarter_static__r0c2_k1h1",
+    "ot_hbm_idx_score_quarter_static__r0c2_k2h1",
+    "ot_hbm_idx_score_quarter_static__r0c2_k3h1",
+    "ot_hbm_idx_score_quarter_static__r0c3_k0h1",
+    "ot_hbm_idx_score_quarter_static__r0c3_k1h1",
+    "ot_hbm_idx_score_quarter_static__r0c3_k2h1",
+    "ot_hbm_idx_score_quarter_static__r0c3_k3h1",
+    "ot_hbm_idx_score_quarter_static__r1c0_k0h1",
+    "ot_hbm_idx_score_quarter_static__r1c0_k1h1",
+    "ot_hbm_idx_score_quarter_static__r1c0_k2h1",
+    "ot_hbm_idx_score_quarter_static__r1c0_k3h1",
+    "ot_hbm_idx_score_quarter_static__r1c1_k0h1",
+    "ot_hbm_idx_score_quarter_static__r1c1_k1h1",
+    "ot_hbm_idx_score_quarter_static__r1c1_k2h1",
+    "ot_hbm_idx_score_quarter_static__r1c1_k3h1",
+    "ot_hbm_idx_score_quarter_static__r1c2_k0h1",
+    "ot_hbm_idx_score_quarter_static__r1c2_k1h1",
+    "ot_hbm_idx_score_quarter_static__r1c2_k2h1",
+    "ot_hbm_idx_score_quarter_static__r1c2_k3h1",
+    "ot_hbm_idx_score_quarter_static__r1c3_k0h1",
+    "ot_hbm_idx_score_quarter_static__r1c3_k1h1",
+    "ot_hbm_idx_score_quarter_static__r1c3_k2h1",
+    "ot_hbm_idx_score_quarter_static__r1c3_k3h1"
+   ]
+  },
+  "ot_hbm_idx_score_quarter_static__tailx__v36d446": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    218.592,
+    187.488
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": [],
+   "native_modules": [
+    "ot_hbm_idx_score_quarter_static__tail1"
+   ]
+  },
+  "ot_hbm_idx_score_quarter_static__tailx__v3fcb6a": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    218.592,
+    187.488
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": [],
+   "native_modules": [
+    "ot_hbm_idx_score_quarter_static__tail0"
+   ]
+  },
+  "ot_hbm_idx_selector_static_sel": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    600.048,
+    450.36
+   ],
+   "why": "recipe macros ['ot_sram_1r1w_256x256_m2_r2c2'], no placement evidence at the plan outline",
+   "rejected": []
+  },
+  "ot_hbm_idx_topk_link_static": {
+   "status": "KNOWN",
+   "outline_um": [
+    650.16,
+    500.04
+   ],
+   "basis": "rule",
+   "rule": "R-SRAM-ENTRY (C columns, results/hbm_cores_kits_3/mp_rule_c.py)",
+   "verdict": "FEASIBLE",
+   "macros": [
+    {
+     "name": "core.gm[7].mem",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "rect_um": [
+      81.81,
+      164.088,
+      253.098,
+      241.872
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "core.gm[6].mem",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "rect_um": [
+      81.81,
+      77.664,
+      253.098,
+      155.448
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "core.gm[5].mem",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "rect_um": [
+      81.81,
+      259.248,
+      253.098,
+      337.032
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "core.gm[4].mem",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "rect_um": [
+      81.81,
+      345.672,
+      253.098,
+      423.456
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "core.gm[3].mem",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "rect_um": [
+      397.17,
+      164.088,
+      568.458,
+      241.872
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "core.gm[2].mem",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "rect_um": [
+      397.17,
+      77.664,
+      568.458,
+      155.448
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "core.gm[1].mem",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "rect_um": [
+      397.17,
+      259.248,
+      568.458,
+      337.032
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "core.gm[0].mem",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "rect_um": [
+      397.17,
+      345.672,
+      568.458,
+      423.456
+     ],
+     "orient": "R0"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_64x512_m1_r2c2"
+   ],
+   "sources": [
+    {
+     "file": "c25b_in/results/hbm_cores_kits_3/mp/ot_hbm_idx_topk_link_static.json",
+     "sha256": "134ccd5a61f9dbb5fd2b422ec15670afa83c80b77850783901065dd1c25057bb"
+    },
+    {
+     "file": "c25b_in/results/hbm_cores_kits_3/mp/ot_hbm_idx_topk_link_static.est.json",
+     "sha256": "573e085f05fe14400b67997e021afc8e8a9246c6850796dbd687a95a35227c9d"
+    }
+   ],
+   "note": "C25b: HBM-CORES-KITS-3 FEASIBLE R-SRAM-ENTRY placement (claude/hbm-cores-kits-3-1028@b0ae51516f); macro names are k below the kit face shell (macro_placement.v1)"
+  },
+  "ot_hbm_idx_vm_query_static_n12": {
+   "status": "NONE",
+   "outline_um": [
+    216.0,
+    108.0
+   ],
+   "basis": "placed",
+   "macros": [],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-r7/kits/ot_hbm_idx_vm_query_static_n12_2a86020c3999-_k2/placed.csv",
+     "sha256": "a4b597d8c8c2256e81e97bd0ab3e02a80581f9a00c91d4c9b9a831d01ac516ac"
+    }
+   ],
+   "recipe_macros": []
+  },
+  "ot_hbm_sm_vm_wr_q_t_lanes4": {
+   "status": "KNOWN",
+   "outline_um": [
+    142.56,
+    388.8
+   ],
+   "basis": "placed",
+   "macros": [
+    {
+     "name": "u_fcore.u_tab",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      21.6,
+      17.34,
+      116.424,
+      58.404
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-r7/kits/ot_hbm_sm_vm_wr_q_t_lanes4_32936e00f936-_k2/placed.csv",
+     "sha256": "595bf79ee0bfd7b72ba0626c11220018f397a637a4bb730eb996de7a389fb837"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hbm_static_cfg_collar_idx256r": {
+   "status": "NONE",
+   "outline_um": [
+    86.4,
+    86.4
+   ],
+   "basis": "recipe macros []",
+   "macros": []
+  },
+  "ot_hbm_su_programme_pslice_c5": {
+   "status": "KNOWN",
+   "outline_um": [
+    939.6,
+    760.32
+   ],
+   "basis": "explicit",
+   "macros": [
+    {
+     "name": "u_fcore.g_c[0].u_c.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      12.96,
+      12.96,
+      107.784,
+      54.024
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[0].u_c.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      12.96,
+      54.27,
+      107.784,
+      95.334
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[0].u_c.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      12.96,
+      95.58,
+      107.784,
+      136.644
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[0].u_c.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      12.96,
+      136.89,
+      107.784,
+      177.954
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[0].u_c.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      12.96,
+      178.2,
+      107.784,
+      219.264
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[0].u_c.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      12.96,
+      219.51,
+      107.784,
+      260.574
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[0].u_c.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      12.96,
+      260.82,
+      107.784,
+      301.884
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      12.96,
+      302.13,
+      107.784,
+      343.194
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      12.96,
+      343.44,
+      107.784,
+      384.504
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      12.96,
+      384.75,
+      107.784,
+      425.814
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.dt[0].mem.g[3].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      12.96,
+      426.06,
+      107.784,
+      467.124
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.dt[0].mem.g[4].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      12.96,
+      467.37,
+      107.784,
+      508.434
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.dt[0].mem.g[5].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      12.96,
+      508.68,
+      107.784,
+      549.744
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.dt[0].mem.g[6].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      129.6,
+      508.68,
+      224.424,
+      549.744
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.dt[0].mem.g[7].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      129.6,
+      467.37,
+      224.424,
+      508.434
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.dt[0].mem.g[8].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      129.6,
+      426.06,
+      224.424,
+      467.124
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.dt[0].mem.g[9].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      129.6,
+      384.75,
+      224.424,
+      425.814
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.dt[0].mem.g[10].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      129.6,
+      343.44,
+      224.424,
+      384.504
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.dt[0].mem.g[11].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      129.6,
+      302.13,
+      224.424,
+      343.194
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.dt[0].mem.g[12].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      129.6,
+      260.82,
+      224.424,
+      301.884
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      129.6,
+      219.51,
+      224.424,
+      260.574
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      129.6,
+      178.2,
+      224.424,
+      219.264
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      129.6,
+      136.89,
+      224.424,
+      177.954
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[1].u_c.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      129.6,
+      95.58,
+      224.424,
+      136.644
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      129.6,
+      54.27,
+      224.424,
+      95.334
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      129.6,
+      12.96,
+      224.424,
+      54.024
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      246.24,
+      12.96,
+      341.064,
+      54.024
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.dt[0].mem.g[3].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      246.24,
+      54.27,
+      341.064,
+      95.334
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.dt[0].mem.g[4].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      246.24,
+      95.58,
+      341.064,
+      136.644
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.dt[0].mem.g[5].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      246.24,
+      136.89,
+      341.064,
+      177.954
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.dt[0].mem.g[6].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      246.24,
+      178.2,
+      341.064,
+      219.264
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.dt[0].mem.g[7].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      246.24,
+      219.51,
+      341.064,
+      260.574
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.dt[0].mem.g[8].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      246.24,
+      260.82,
+      341.064,
+      301.884
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.dt[0].mem.g[9].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      246.24,
+      302.13,
+      341.064,
+      343.194
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.dt[0].mem.g[10].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      246.24,
+      343.44,
+      341.064,
+      384.504
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.dt[0].mem.g[11].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      246.24,
+      384.75,
+      341.064,
+      425.814
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.dt[0].mem.g[12].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      246.24,
+      426.06,
+      341.064,
+      467.124
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      246.24,
+      467.37,
+      341.064,
+      508.434
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      246.24,
+      508.68,
+      341.064,
+      549.744
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      362.88,
+      508.68,
+      457.704,
+      549.744
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[2].u_c.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      362.88,
+      467.37,
+      457.704,
+      508.434
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      362.88,
+      426.06,
+      457.704,
+      467.124
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      362.88,
+      384.75,
+      457.704,
+      425.814
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      362.88,
+      343.44,
+      457.704,
+      384.504
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.dt[0].mem.g[3].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      362.88,
+      302.13,
+      457.704,
+      343.194
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.dt[0].mem.g[4].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      362.88,
+      260.82,
+      457.704,
+      301.884
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.dt[0].mem.g[5].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      362.88,
+      219.51,
+      457.704,
+      260.574
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.dt[0].mem.g[6].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      362.88,
+      178.2,
+      457.704,
+      219.264
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.dt[0].mem.g[7].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      362.88,
+      136.89,
+      457.704,
+      177.954
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.dt[0].mem.g[8].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      362.88,
+      95.58,
+      457.704,
+      136.644
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.dt[0].mem.g[9].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      362.88,
+      54.27,
+      457.704,
+      95.334
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.dt[0].mem.g[10].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      362.88,
+      12.96,
+      457.704,
+      54.024
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.dt[0].mem.g[11].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      479.52,
+      12.96,
+      574.344,
+      54.024
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.dt[0].mem.g[12].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      479.52,
+      54.27,
+      574.344,
+      95.334
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      479.52,
+      95.58,
+      574.344,
+      136.644
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      479.52,
+      136.89,
+      574.344,
+      177.954
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      479.52,
+      178.2,
+      574.344,
+      219.264
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[3].u_c.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      479.52,
+      219.51,
+      574.344,
+      260.574
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[4].u_c.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      479.52,
+      260.82,
+      574.344,
+      301.884
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[4].u_c.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      479.52,
+      302.13,
+      574.344,
+      343.194
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[4].u_c.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      479.52,
+      343.44,
+      574.344,
+      384.504
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[4].u_c.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      479.52,
+      384.75,
+      574.344,
+      425.814
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[4].u_c.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      479.52,
+      426.06,
+      574.344,
+      467.124
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[4].u_c.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      479.52,
+      467.37,
+      574.344,
+      508.434
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[4].u_c.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      479.52,
+      508.68,
+      574.344,
+      549.744
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[5].u_c.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      596.16,
+      508.68,
+      690.984,
+      549.744
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[5].u_c.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      596.16,
+      467.37,
+      690.984,
+      508.434
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[5].u_c.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      596.16,
+      426.06,
+      690.984,
+      467.124
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[5].u_c.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      596.16,
+      384.75,
+      690.984,
+      425.814
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[5].u_c.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      596.16,
+      343.44,
+      690.984,
+      384.504
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[5].u_c.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      596.16,
+      302.13,
+      690.984,
+      343.194
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[5].u_c.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      596.16,
+      260.82,
+      690.984,
+      301.884
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[6].u_c.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      596.16,
+      219.51,
+      690.984,
+      260.574
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[6].u_c.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      596.16,
+      178.2,
+      690.984,
+      219.264
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[6].u_c.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      596.16,
+      136.89,
+      690.984,
+      177.954
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[6].u_c.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      596.16,
+      95.58,
+      690.984,
+      136.644
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[6].u_c.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      596.16,
+      54.27,
+      690.984,
+      95.334
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[6].u_c.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      596.16,
+      12.96,
+      690.984,
+      54.024
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[6].u_c.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      712.8,
+      12.96,
+      807.624,
+      54.024
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[7].u_c.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      712.8,
+      54.27,
+      807.624,
+      95.334
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[7].u_c.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      712.8,
+      95.58,
+      807.624,
+      136.644
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[7].u_c.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      712.8,
+      136.89,
+      807.624,
+      177.954
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[7].u_c.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      712.8,
+      178.2,
+      807.624,
+      219.264
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[7].u_c.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      712.8,
+      219.51,
+      807.624,
+      260.574
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[7].u_c.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      712.8,
+      260.82,
+      807.624,
+      301.884
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[7].u_c.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      712.8,
+      302.13,
+      807.624,
+      343.194
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[8].u_c.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      712.8,
+      343.44,
+      807.624,
+      384.504
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[8].u_c.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      712.8,
+      384.75,
+      807.624,
+      425.814
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[8].u_c.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      712.8,
+      426.06,
+      807.624,
+      467.124
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[8].u_c.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      712.8,
+      467.37,
+      807.624,
+      508.434
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[8].u_c.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      712.8,
+      508.68,
+      807.624,
+      549.744
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[8].u_c.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      829.44,
+      508.68,
+      924.264,
+      549.744
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[8].u_c.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      829.44,
+      467.37,
+      924.264,
+      508.434
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[9].u_c.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      829.44,
+      426.06,
+      924.264,
+      467.124
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[9].u_c.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      829.44,
+      384.75,
+      924.264,
+      425.814
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[9].u_c.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      829.44,
+      343.44,
+      924.264,
+      384.504
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[9].u_c.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      829.44,
+      302.13,
+      924.264,
+      343.194
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[9].u_c.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      829.44,
+      260.82,
+      924.264,
+      301.884
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[9].u_c.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      829.44,
+      219.51,
+      924.264,
+      260.574
+     ]
+    },
+    {
+     "name": "u_fcore.g_c[9].u_c.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      829.44,
+      178.2,
+      924.264,
+      219.264
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-r7/kits/ot_hbm_su_programme_pslice_c5_45b20875f1bb-_k2mp/macro_placement.tcl",
+     "sha256": "0a51a9f29736956f94a344b6e7cd474ffaaabaa39d4d54559216063f934bc96e"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hbm_su_static_cxport_ij_q": {
+   "status": "NONE",
+   "outline_um": [
+    250.56,
+    449.28
+   ],
+   "basis": "recipe macros []",
+   "macros": []
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp0": {
+   "status": "KNOWN",
+   "outline_um": [
+    440.64,
+    207.36
+   ],
+   "basis": "explicit",
+   "macros": [
+    {
+     "name": "u_fcore.u_core.u_bank.u_data.g_read[0].u_m",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      69.12,
+      57.888,
+      163.944,
+      98.952
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank.u_data.g_read[1].u_m",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      172.8,
+      57.888,
+      267.624,
+      98.952
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank.u_data.g_read[2].u_m",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      276.48,
+      57.888,
+      371.304,
+      98.952
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank.u_data.g_read[3].u_m",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      69.12,
+      108.0,
+      163.944,
+      149.064
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank.u_data.g_read[4].u_m",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      172.8,
+      108.0,
+      267.624,
+      149.064
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank.u_data.g_read[5].u_m",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      276.48,
+      108.0,
+      371.304,
+      149.064
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-1025/exp/runs/ot_hbm_su_static_pgslice_lg__lane_exp0_2dbd1fc9b786_base/macro_placement.tcl",
+     "sha256": "3895184000f6d64f5a5cac4a8282fd0b4b13072c54d765389dd2e489e0fd44ca"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691": {
+   "status": "KNOWN",
+   "outline_um": [
+    440.64,
+    207.36
+   ],
+   "basis": "explicit (native family member ot_hbm_su_static_pgslice_lg__lane_exp1, same outline)",
+   "macros": [
+    {
+     "name": "u_fcore.u_core.u_bank.u_data.g_read[0].u_m",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      69.12,
+      57.888,
+      163.944,
+      98.952
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank.u_data.g_read[1].u_m",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      172.8,
+      57.888,
+      267.624,
+      98.952
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank.u_data.g_read[2].u_m",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      276.48,
+      57.888,
+      371.304,
+      98.952
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank.u_data.g_read[3].u_m",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      69.12,
+      108.0,
+      163.944,
+      149.064
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank.u_data.g_read[4].u_m",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      172.8,
+      108.0,
+      267.624,
+      149.064
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank.u_data.g_read[5].u_m",
+     "master": "width",
+     "orient": "R0",
+     "rect_um": [
+      276.48,
+      108.0,
+      371.304,
+      149.064
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/tr3-hbm/old/ot_hbm_su_static_pgslice_lg__lane_exp1_cc6a70ac5f18/macro_placement.tcl",
+     "sha256": "3895184000f6d64f5a5cac4a8282fd0b4b13072c54d765389dd2e489e0fd44ca"
+    }
+   ],
+   "recipe_macros": null,
+   "native_modules": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp1",
+    "ot_hbm_su_static_pgslice_lg__lane_exp10",
+    "ot_hbm_su_static_pgslice_lg__lane_exp11",
+    "ot_hbm_su_static_pgslice_lg__lane_exp12",
+    "ot_hbm_su_static_pgslice_lg__lane_exp13",
+    "ot_hbm_su_static_pgslice_lg__lane_exp14",
+    "ot_hbm_su_static_pgslice_lg__lane_exp2",
+    "ot_hbm_su_static_pgslice_lg__lane_exp3",
+    "ot_hbm_su_static_pgslice_lg__lane_exp4",
+    "ot_hbm_su_static_pgslice_lg__lane_exp5",
+    "ot_hbm_su_static_pgslice_lg__lane_exp6",
+    "ot_hbm_su_static_pgslice_lg__lane_exp7",
+    "ot_hbm_su_static_pgslice_lg__lane_exp8",
+    "ot_hbm_su_static_pgslice_lg__lane_exp9",
+    "ot_hbm_su_static_pgslice_lg__lane_exp_l"
+   ]
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes8_11": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    760.32,
+    725.76
+   ],
+   "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2'], no placement evidence at the plan outline",
+   "rejected": []
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77": {
+   "status": "KNOWN",
+   "outline_um": [
+    760.32,
+    725.76
+   ],
+   "basis": "placed (native family member ot_hbm_su_static_pgslice_lg__lanes0_3, same outline)",
+   "macros": [
+    {
+     "name": "u_fcore.u_core.u_bank0.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      630.764,
+      111.324,
+      725.588,
+      152.388
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank0.u_data.g_read[1].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      314.408,
+      36.012,
+      409.232,
+      77.076
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank0.u_data.g_read[2].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      107.48,
+      193.596,
+      202.304,
+      234.66
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank0.u_data.g_read[3].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      630.764,
+      193.548,
+      725.588,
+      234.612
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank0.u_data.g_read[4].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      107.48,
+      29.148,
+      202.304,
+      70.212
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank0.u_data.g_read[5].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      630.764,
+      152.412,
+      725.588,
+      193.476
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank1.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      527.3,
+      234.684,
+      622.124,
+      275.748
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank1.u_data.g_read[1].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      527.3,
+      111.372,
+      622.124,
+      152.436
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank1.u_data.g_read[2].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      527.3,
+      193.596,
+      622.124,
+      234.66
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank1.u_data.g_read[3].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      527.3,
+      152.46,
+      622.124,
+      193.524
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank1.u_data.g_read[4].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      527.3,
+      29.148,
+      622.124,
+      70.212
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank1.u_data.g_read[5].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      527.3,
+      70.236,
+      622.124,
+      111.3
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank2.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      210.944,
+      29.148,
+      305.768,
+      70.212
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank2.u_data.g_read[1].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      417.872,
+      70.236,
+      512.696,
+      111.3
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank2.u_data.g_read[2].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      210.944,
+      111.372,
+      305.768,
+      152.436
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank2.u_data.g_read[3].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      210.944,
+      70.236,
+      305.768,
+      111.3
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank2.u_data.g_read[4].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      417.872,
+      29.148,
+      512.696,
+      70.212
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank2.u_data.g_read[5].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      630.764,
+      70.188,
+      725.588,
+      111.252
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank3.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      107.48,
+      152.46,
+      202.304,
+      193.524
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank3.u_data.g_read[1].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      107.48,
+      70.236,
+      202.304,
+      111.3
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank3.u_data.g_read[2].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      107.48,
+      111.372,
+      202.304,
+      152.436
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank3.u_data.g_read[3].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      630.764,
+      234.636,
+      725.588,
+      275.7
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank3.u_data.g_read[4].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      630.764,
+      275.772,
+      725.588,
+      316.836
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank3.u_data.g_read[5].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      630.764,
+      29.1,
+      725.588,
+      70.164
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-core-lat-1026/runs/ot_hbm_su_static_pgslice_lg__lanes0_3_edae47abf4e2-_isl2/placed.csv",
+     "sha256": "54a20aecad985c68bfd290430240c115fe3dad81b24676703672f30e12bb8145"
+    }
+   ],
+   "recipe_macros": null,
+   "native_modules": [
+    "ot_hbm_su_static_pgslice_lg__lanes0_3",
+    "ot_hbm_su_static_pgslice_lg__lanes12_15",
+    "ot_hbm_su_static_pgslice_lg__lanes16_19",
+    "ot_hbm_su_static_pgslice_lg__lanes20_23",
+    "ot_hbm_su_static_pgslice_lg__lanes24_27",
+    "ot_hbm_su_static_pgslice_lg__lanes28_31",
+    "ot_hbm_su_static_pgslice_lg__lanes4_7"
+   ]
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526": {
+   "status": "KNOWN",
+   "outline_um": [
+    440.64,
+    457.92
+   ],
+   "basis": "plan-fixed (C24): REBAL-6 array (kit --macro-placement)",
+   "macros": [
+    {
+     "name": "u_fcore.u_core.u_bank1.u_data.g_read\\[3\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      17.28,
+      32.304,
+      112.104,
+      73.368
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank1.u_data.g_read\\[2\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      17.28,
+      82.008,
+      112.104,
+      123.072
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank1.u_data.g_read\\[4\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      17.28,
+      131.712,
+      112.104,
+      172.776
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank3.u_data.g_read\\[0\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      17.28,
+      181.416,
+      112.104,
+      222.48
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank0.u_data.g_read\\[5\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      17.28,
+      235.44,
+      112.104,
+      276.504
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank2.u_data.g_read\\[1\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      17.28,
+      285.144,
+      112.104,
+      326.208
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank2.u_data.g_read\\[5\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      17.28,
+      334.848,
+      112.104,
+      375.912
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank2.u_data.g_read\\[2\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      17.28,
+      384.552,
+      112.104,
+      425.616
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank0.u_data.g_read\\[1\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      172.908,
+      32.304,
+      267.732,
+      73.368
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank1.u_data.g_read\\[0\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      172.908,
+      82.008,
+      267.732,
+      123.072
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank0.u_data.g_read\\[2\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      172.908,
+      131.712,
+      267.732,
+      172.776
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank3.u_data.g_read\\[1\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      172.908,
+      181.416,
+      267.732,
+      222.48
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank1.u_data.g_read\\[1\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      172.908,
+      235.44,
+      267.732,
+      276.504
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank0.u_data.g_read\\[3\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      172.908,
+      285.144,
+      267.732,
+      326.208
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank3.u_data.g_read\\[4\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      172.908,
+      334.848,
+      267.732,
+      375.912
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank2.u_data.g_read\\[0\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      172.908,
+      384.552,
+      267.732,
+      425.616
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank1.u_data.g_read\\[5\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      328.536,
+      32.304,
+      423.36,
+      73.368
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank3.u_data.g_read\\[5\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      328.536,
+      82.008,
+      423.36,
+      123.072
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank0.u_data.g_read\\[4\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      328.536,
+      131.712,
+      423.36,
+      172.776
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank3.u_data.g_read\\[3\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      328.536,
+      181.416,
+      423.36,
+      222.48
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank3.u_data.g_read\\[2\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      328.536,
+      235.44,
+      423.36,
+      276.504
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank0.u_data.g_read\\[0\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      328.536,
+      285.144,
+      423.36,
+      326.208
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank2.u_data.g_read\\[3\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      328.536,
+      334.848,
+      423.36,
+      375.912
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_bank2.u_data.g_read\\[4\\].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      328.536,
+      384.552,
+      423.36,
+      425.616
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "claude/hbm-cores-rebal-6-1028@bd8c7c1b54:results/hbm_cores_rebal_6_1028/dr_lp.json",
+     "sha256": "f6e8e4bf421918091f83580fcc8cab2f9ec8be2f32f821f9e931f1d76804bf2c"
+    }
+   ]
+  },
+  "ot_hbm_su_static_pgslice_lg__pretree": {
+   "status": "NONE",
+   "outline_um": [
+    164.16,
+    457.92
+   ],
+   "basis": "placed",
+   "macros": [],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-kits-1-1027/kits/ot_hbm_su_static_pgslice_lg__pretree_8805b7bd4ecb-_k1/placed.csv",
+     "sha256": "b7c34f03fbfacb112e274e1c0015c625ae4c934c5385b0c48fdd990c4a616a88"
+    }
+   ],
+   "recipe_macros": []
+  },
+  "ot_hbm_su_static_pgslice_lg__side_rest": {
+   "status": "NONE",
+   "outline_um": [
+    440.64,
+    457.92
+   ],
+   "basis": "recipe macros []",
+   "macros": []
+  },
+  "ot_hbm_su_static_pgslice_lg__side_softplus": {
+   "status": "NONE",
+   "outline_um": [
+    440.64,
+    457.92
+   ],
+   "basis": "recipe macros []",
+   "macros": []
+  },
+  "ot_hbm_su_static_qcore_r13": {
+   "status": "KNOWN",
+   "outline_um": [
+    224.64,
+    207.36
+   ],
+   "basis": "plan rule (kit static placement)",
+   "rule": "KITS-1 v5 W column x15.12 (10.8 channels, interior 10.8), entry (151.176,112.32) 41 um E of the column; replaces the C24 KNOWN stacked placement (gap 0.024 um, macro_channels FAIL)",
+   "macros": [
+    {
+     "name": "u_fcore.u_red.ma",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      15.12,
+      151.164,
+      109.944,
+      192.228
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_red.mb",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      15.12,
+      98.988,
+      109.944,
+      140.052
+     ],
+     "orient": "R0"
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-kits-2/k6/kits/ot_hbm_su_static_qcore_r13_6fb4f29f7814-_k6/macro_placement.tcl",
+     "sha256": "33d6123abe5465bf99a3e9924b7c9a10166d4d1adf6456f0ff7cc24c522f57ca"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ],
+   "note": "C25b: KITS-2 core_macros_delta (origin/claude/hbm-cores-kits-2-1028)"
+  },
+  "ot_hbm_su_static_sfustore_hw": {
+   "status": "KNOWN",
+   "outline_um": [
+    336.96,
+    328.32
+   ],
+   "basis": "placed",
+   "macros": [
+    {
+     "name": "u_fcore.g_bank[0].u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      8.64,
+      20.412,
+      103.464,
+      61.476
+     ]
+    },
+    {
+     "name": "u_fcore.g_bank[10].u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      112.104,
+      159.612,
+      206.928,
+      200.676
+     ]
+    },
+    {
+     "name": "u_fcore.g_bank[11].u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      130.032,
+      17.34,
+      224.856,
+      58.404
+     ]
+    },
+    {
+     "name": "u_fcore.g_bank[12].u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      233.496,
+      17.34,
+      328.32,
+      58.404
+     ]
+    },
+    {
+     "name": "u_fcore.g_bank[13].u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      112.104,
+      241.836,
+      206.928,
+      282.9
+     ]
+    },
+    {
+     "name": "u_fcore.g_bank[14].u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      112.104,
+      200.7,
+      206.928,
+      241.764
+     ]
+    },
+    {
+     "name": "u_fcore.g_bank[15].u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      233.496,
+      58.428,
+      328.32,
+      99.492
+     ]
+    },
+    {
+     "name": "u_fcore.g_bank[1].u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      8.64,
+      200.7,
+      103.464,
+      241.764
+     ]
+    },
+    {
+     "name": "u_fcore.g_bank[2].u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      224.338,
+      159.612,
+      319.162,
+      200.676
+     ]
+    },
+    {
+     "name": "u_fcore.g_bank[3].u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      8.64,
+      241.836,
+      103.464,
+      282.9
+     ]
+    },
+    {
+     "name": "u_fcore.g_bank[4].u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      130.032,
+      58.428,
+      224.856,
+      99.492
+     ]
+    },
+    {
+     "name": "u_fcore.g_bank[5].u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      224.338,
+      241.836,
+      319.162,
+      282.9
+     ]
+    },
+    {
+     "name": "u_fcore.g_bank[6].u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      224.338,
+      282.924,
+      319.162,
+      323.988
+     ]
+    },
+    {
+     "name": "u_fcore.g_bank[7].u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      224.338,
+      200.7,
+      319.162,
+      241.764
+     ]
+    },
+    {
+     "name": "u_fcore.g_bank[8].u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      8.64,
+      282.924,
+      103.464,
+      323.988
+     ]
+    },
+    {
+     "name": "u_fcore.g_bank[9].u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      8.64,
+      159.612,
+      103.464,
+      200.676
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-core-lat-1026/place_b1/kits/ot_hbm_su_static_sfustore_hw_bd010b710b2e-_b1pl/placed.csv",
+     "sha256": "c01f6c0cb260108c04106f588db1ba5193c114bd5fbb5ce2c582437f63c110c2"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": {
+   "status": "KNOWN",
+   "outline_um": [
+    177.984,
+    177.984
+   ],
+   "basis": "plan rule (kit static placement)",
+   "rule": "R-SRAM-ENTRY: one column centred on the clock entry x, stack split at entry island + halo, >=10.8 um channels",
+   "macros": [
+    {
+     "name": "u_fcore.g_wpay.u_write_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      43.308,
+      40.956,
+      138.132,
+      82.02
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_response_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      43.308,
+      99.42,
+      138.132,
+      140.484
+     ],
+     "orient": "R0"
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-kits-2/k6/kits/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_dd7000587876-_k6/macro_placement.tcl",
+     "sha256": "292ac4f62245e3fa8f463587ef8d4920833dfdb943b441949dfb02855e8f577c"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ],
+   "note": "C25b: KITS-2 core_macros_delta (origin/claude/hbm-cores-kits-2-1028)"
+  },
+  "ot_hbm_svc_sm_group_rel_id": {
+   "status": "KNOWN",
+   "outline_um": [
+    776.304,
+    646.92
+   ],
+   "basis": "rule",
+   "rule": "R-SRAM-ENTRY (C columns, results/hbm_cores_kits_3/mp_rule_c.py)",
+   "verdict": "FEASIBLE",
+   "macros": [
+    {
+     "name": "feed.programme_leaf.g_m2.u_program_lo",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "rect_um": [
+      117.396,
+      244.824,
+      292.14,
+      315.312
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "feed.programme_leaf.g_m2.u_program_hi",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "rect_um": [
+      117.396,
+      165.696,
+      292.14,
+      236.184
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "issuer.g_t2.u_desc_hi",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      117.396,
+      115.992,
+      212.22,
+      157.056
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "issuer.g_t2.u_desc_lo",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      117.396,
+      66.288,
+      212.22,
+      107.352
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "feed.rows.g_on.g_cache[0].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      117.396,
+      332.688,
+      212.22,
+      373.752
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "feed.rows.g_on.g_cache[1].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      117.396,
+      382.392,
+      212.22,
+      423.456
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "feed.rows.g_on.g_cache[2].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      117.396,
+      432.096,
+      212.22,
+      473.16
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "feed.rows.g_on.g_cache[3].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      117.396,
+      481.8,
+      212.22,
+      522.864
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "feed.rows.g_on.g_cache[4].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      117.396,
+      531.504,
+      212.22,
+      572.568
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "feed.producer.ordinal_bank[0].u_bank.g_four.u_payload",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      495.774,
+      274.248,
+      668.598,
+      315.312
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "feed.producer.ordinal_bank[1].u_bank.g_four.u_payload",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      495.774,
+      224.544,
+      668.598,
+      265.608
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "feed.producer.ordinal_bank[2].u_bank.g_four.u_payload",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      495.774,
+      174.84,
+      668.598,
+      215.904
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "feed.producer.ordinal_bank[3].u_bank.g_four.u_payload",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      495.774,
+      125.136,
+      668.598,
+      166.2
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "feed.producer.ordinal_bank[4].u_bank.g_four.u_payload",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      495.774,
+      332.688,
+      668.598,
+      373.752
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "feed.producer.ordinal_bank[5].u_bank.g_four.u_payload",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      495.774,
+      382.392,
+      668.598,
+      423.456
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "feed.producer.ordinal_bank[6].u_bank.g_four.u_payload",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      495.774,
+      432.096,
+      668.598,
+      473.16
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "feed.producer.ordinal_bank[7].u_bank.g_four.u_payload",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      495.774,
+      481.8,
+      668.598,
+      522.864
+     ],
+     "orient": "R0"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_1024x256_m2_r2c2",
+    "ot_sram_1r1w_128x256_m1_r2c2",
+    "ot_sram_1r1w_256x256_m2_r2c2"
+   ],
+   "sources": [
+    {
+     "file": "c25b_in/results/hbm_cores_kits_3/mp/ot_hbm_svc_sm_group_rel_id.json",
+     "sha256": "fe794782b1ff03c3e8ad709508e21c160bf3967fb9169464a28831bc4bc2d5a3"
+    },
+    {
+     "file": "c25b_in/results/hbm_cores_kits_3/mp/ot_hbm_svc_sm_group_rel_id.est.json",
+     "sha256": "7e8836162d2caccef84b32a2ec3310ab1b02c726e983378a8747737f4e551b7c"
+    }
+   ],
+   "note": "C25b: HBM-CORES-KITS-3 FEASIBLE R-SRAM-ENTRY placement (claude/hbm-cores-kits-3-1028@b0ae51516f); macro names are k below the kit face shell (macro_placement.v1)"
+  },
+  "ot_hbm_svc_sm_xcal_rel_t": {
+   "status": "KNOWN",
+   "outline_um": [
+    241.92,
+    224.64
+   ],
+   "basis": "explicit",
+   "macros": [
+    {
+     "name": "u_fcore.u_xcal.u_cal.g_m2.u_program_hi",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      33.588,
+      10.8,
+      208.332,
+      81.288
+     ]
+    },
+    {
+     "name": "u_fcore.u_xcal.u_cal.g_m2.u_program_lo",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "MX",
+     "rect_um": [
+      33.588,
+      143.1,
+      208.332,
+      213.588
+     ]
+    },
+    {
+     "name": "u_fcore.u_xcal.g_t2.u_tab_lo",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      15.12,
+      91.8,
+      109.944,
+      132.864
+     ]
+    },
+    {
+     "name": "u_fcore.u_xcal.g_t2.u_tab_hi",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "MY",
+     "rect_um": [
+      131.976,
+      91.8,
+      226.8,
+      132.864
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-core-lat-r4-xcal/kits/ot_hbm_svc_sm_xcal_rel_t_d66b700ee2f0-_r4A/macro_placement.tcl",
+     "sha256": "20ceeb31fab271d61c048ef6980c1cff69a527b7ad619e21963757f7caa2f62a"
+    },
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-core-lat-r4-xcal/kits/ot_hbm_svc_sm_xcal_rel_t_d66b700ee2f0-_r4A/placed.csv",
+     "sha256": "be41e95c524a30fc1466cd5e669bbee8335fc37df22f69f63628548b5e353de5"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_1024x256_m2_r2c2",
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hbm_svc_vm_kshare_splitstrap__v700685": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    354.24,
+    453.6
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": [],
+   "native_modules": [
+    "ot_hbm_svc_vm_kshare_splitstrap"
+   ]
+  },
+  "ot_hbm_svc_vm_kshare_splitstrap__v8e478a": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    354.24,
+    453.6
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": [],
+   "native_modules": [
+    "ot_hbm_svc_vm_kshare_splitstrap"
+   ]
+  },
+  "ot_hbm_svc_vmdel_lane_n": {
+   "status": "KNOWN",
+   "outline_um": [
+    142.56,
+    108.0
+   ],
+   "macros": [
+    {
+     "name": "pc[0].u_payload",
+     "rect_um": [
+      30.24,
+      17.28,
+      125.064,
+      58.344
+     ]
+    },
+    {
+     "name": "pc[1].u_payload",
+     "rect_um": [
+      30.24,
+      58.59,
+      125.064,
+      99.654
+     ]
+    }
+   ]
+  },
+  "ot_hbm_svc_wb_kport_q": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    475.2,
+    475.2
+   ],
+   "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2'], no placement evidence at the plan outline",
+   "rejected": []
+  },
+  "ot_hbm_xp_aq_tree13_fmt": {
+   "status": "NONE",
+   "outline_um": [
+    183.6,
+    108.0
+   ],
+   "basis": "placed",
+   "macros": [],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-r7/kits/ot_hbm_xp_aq_tree13_fmt_99f8f39449e6-_k2/placed.csv",
+     "sha256": "9832029aa7582bdfa337f48e601567bdec4062bc9175df1f2ecc12de753b692d"
+    }
+   ],
+   "recipe_macros": []
+  },
+  "ot_hfd_coll_q2_hard_v8g__reduce": {
+   "status": "NONE",
+   "outline_um": [
+    233.28,
+    233.28
+   ],
+   "basis": "recipe macros []",
+   "macros": []
+  },
+  "ot_hfd_coll_q2_hard_v8g__ring_ag": {
+   "status": "NONE",
+   "outline_um": [
+    233.28,
+    233.28
+   ],
+   "basis": "recipe macros []",
+   "macros": []
+  },
+  "ot_hfd_coll_q2n2_body_core": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    786.24,
+    743.04
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": []
+  },
+  "ot_hfd_coll_q2n2_vm_core": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    924.48,
+    509.76
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": []
+  },
+  "ot_hfd_coll_q3_body_core": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    578.88,
+    1054.08
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": []
+  },
+  "ot_hfd_coll_q3_edge_core": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    216.0,
+    1054.08
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": [],
+   "r15_note": "12x ot_sram_1r1w_64x512_m1_r2c2 column x22.356, 86.4 pitch from y12.96 (k3m column re-centred)"
+  },
+  "ot_hfd_coll_q3_vm_core": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    328.32,
+    717.12
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": []
+  },
+  "ot_hgi_coll_gq_issue": {
+   "status": "NONE",
+   "outline_um": [
+    237.6,
+    237.6
+   ],
+   "basis": "placed",
+   "macros": [],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-kits-1025/batch2/runs/ot_hgi_coll_gq_issue_620157ecc938/placed.csv",
+     "sha256": "d7bc71d3598d74acf5d79f5800d97e0a8d2f91855d9d4d068168dd14099e21cc"
+    }
+   ],
+   "recipe_macros": []
+  },
+  "ot_hgi_coll_gq_land": {
+   "status": "NONE",
+   "outline_um": [
+    142.56,
+    207.36
+   ],
+   "basis": "recipe macros []",
+   "macros": []
+  },
+  "ot_hgi_coll_inj_idx_join_rg": {
+   "status": "NONE",
+   "outline_um": [
+    211.68,
+    315.36
+   ],
+   "basis": "placed",
+   "macros": [],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-r7/kits/ot_hgi_coll_inj_idx_join_rg_4a7e90346f6f-_k2/placed.csv",
+     "sha256": "00e8c044abd1442bb5436f7e48df6c6f63f61f0c4641d8a0480140ec5a7dd580"
+    }
+   ],
+   "recipe_macros": []
+  },
+  "ot_hgi_coll_tkm_m_tp192__root": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    319.68,
+    345.6
+   ],
+   "why": "recipe macros ['ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline",
+   "rejected": []
+  },
+  "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    319.68,
+    345.6
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": []
+  },
+  "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    319.68,
+    345.6
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": []
+  },
+  "ot_hgi_dma_back_static_vp4_banks_cp": {
+   "status": "PLAN-TRIAL",
+   "outline_um": [
+    239.976,
+    275.4
+   ],
+   "basis": "rule",
+   "rule": "R-SRAM-ENTRY (C columns, results/hbm_cores_kits_3/mp_rule_c.py)",
+   "verdict": "ESCAPE-RISK",
+   "macros": [
+    {
+     "name": "u_fcore.u_cp.g_tab[1].u_tab",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      17.442,
+      71.208,
+      112.266,
+      112.272
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_cp.g_tab[0].u_tab",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      17.442,
+      21.504,
+      112.266,
+      62.568
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_dbk.L[7].u_bank.landing",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      17.442,
+      129.648,
+      112.266,
+      170.712
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_dbk.L[6].u_bank.landing",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      17.442,
+      179.352,
+      112.266,
+      220.416
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_dbk.L[5].u_bank.landing",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      17.442,
+      229.056,
+      112.266,
+      270.12
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_dbk.L[4].u_bank.landing",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      127.71,
+      71.208,
+      222.534,
+      112.272
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_dbk.L[3].u_bank.landing",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      127.71,
+      21.504,
+      222.534,
+      62.568
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_dbk.L[2].u_bank.landing",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      127.71,
+      129.648,
+      222.534,
+      170.712
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_dbk.L[1].u_bank.landing",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      127.71,
+      179.352,
+      222.534,
+      220.416
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_fcore.u_dbk.L[0].u_bank.landing",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      127.71,
+      229.056,
+      222.534,
+      270.12
+     ],
+     "orient": "R0"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ],
+   "sources": [
+    {
+     "file": "c25b_shadow/vp4e_120.96.mp.json",
+     "sha256": "882f352d5d6d96fb73f17408d8ed04c9a424e1219e9064f58a4b9e0296a529fa"
+    },
+    {
+     "file": "c25b_shadow/vp4e_120.96.est.json",
+     "sha256": "8cf59a4b37770ee81fa30a0d6bacb65f879663442f643df3644167a24c1c0e8e"
+    }
+   ],
+   "note": "C25b: R-SRAM-ENTRY at the C25b outline 239.976x275.4 (KITS-3 mp_rule_c.py on a shadow kit vp4e_120.96: DIE/CORE_AREA grown, entry island unchanged); macro names are k below the kit face shell (macro_placement.v1)"
+  },
+  "ot_hgi_qw_dec": {
+   "status": "NONE",
+   "outline_um": [
+    260.0,
+    260.0
+   ],
+   "basis": "recipe macros []",
+   "macros": []
+  },
+  "ot_hgi_sfu_core_split3__ctl": {
+   "status": "NONE",
+   "outline_um": [
+    669.6,
+    626.4
+   ],
+   "basis": "recipe macros []",
+   "macros": []
+  },
+  "ot_hgi_sfu_core_split3__opstore_a": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    388.8,
+    345.6
+   ],
+   "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2', 'ot_sram_1r1w_256x256_m2_r2c2', 'ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline",
+   "rejected": []
+  },
+  "ot_hgi_sfu_core_split3__opstore_b": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    760.32,
+    691.2
+   ],
+   "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2', 'ot_sram_1r1w_256x256_m2_r2c2', 'ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline",
+   "rejected": []
+  },
+  "ot_hgi_sfu_programme_store_r10": {
+   "status": "KNOWN",
+   "outline_um": [
+    574.56,
+    738.72
+   ],
+   "basis": "plan-fixed (C24): REBAL-6 array (kit --macro-placement)",
+   "macros": [
+    {
+     "name": "u_fcore.g_leaf\\[1\\].u_leaf.g_page\\[3\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      15.12,
+      25.65,
+      111.672,
+      95.31
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[2\\].u_leaf.g_page\\[2\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      15.12,
+      103.95,
+      111.672,
+      173.61
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[1\\].u_leaf.g_page\\[2\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      15.12,
+      182.25,
+      111.672,
+      251.91
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[0\\].u_leaf.g_page\\[2\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      15.12,
+      260.55,
+      111.672,
+      330.21
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[4\\].u_leaf.g_page\\[1\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      15.12,
+      338.85,
+      111.672,
+      408.51
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[5\\].u_leaf.g_page\\[3\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      15.12,
+      417.15,
+      111.672,
+      486.81
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[4\\].u_leaf.g_page\\[0\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      15.12,
+      495.45,
+      111.672,
+      565.11
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[5\\].u_leaf.g_page\\[2\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      15.12,
+      573.75,
+      111.672,
+      643.41
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[7\\].u_leaf.g_page\\[2\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      15.12,
+      656.37,
+      111.672,
+      726.03
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[1\\].u_leaf.g_page\\[0\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      127.062,
+      25.65,
+      223.614,
+      95.31
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[2\\].u_leaf.g_page\\[0\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      127.062,
+      103.95,
+      223.614,
+      173.61
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[1\\].u_leaf.g_page\\[1\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      127.062,
+      182.25,
+      223.614,
+      251.91
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[0\\].u_leaf.g_page\\[0\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      127.062,
+      260.55,
+      223.614,
+      330.21
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[4\\].u_leaf.g_page\\[2\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      127.062,
+      338.85,
+      223.614,
+      408.51
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[5\\].u_leaf.g_page\\[0\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      127.062,
+      417.15,
+      223.614,
+      486.81
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[4\\].u_leaf.g_page\\[3\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      127.062,
+      495.45,
+      223.614,
+      565.11
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[5\\].u_leaf.g_page\\[1\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      127.062,
+      573.75,
+      223.614,
+      643.41
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[7\\].u_leaf.g_page\\[0\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      127.062,
+      656.37,
+      223.614,
+      726.03
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[2\\].u_leaf.g_page\\[3\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      239.004,
+      25.65,
+      335.556,
+      95.31
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[2\\].u_leaf.g_page\\[1\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      239.004,
+      103.95,
+      335.556,
+      173.61
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[0\\].u_leaf.g_page\\[1\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      239.004,
+      182.25,
+      335.556,
+      251.91
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[10\\].u_leaf.g_page\\[0\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      239.004,
+      260.55,
+      335.556,
+      330.21
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[10\\].u_leaf.g_page\\[3\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      239.004,
+      421.47,
+      335.556,
+      491.13
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[10\\].u_leaf.g_page\\[1\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      239.004,
+      499.77,
+      335.556,
+      569.43
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[10\\].u_leaf.g_page\\[2\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      239.004,
+      578.07,
+      335.556,
+      647.73
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[7\\].u_leaf.g_page\\[1\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      239.004,
+      656.37,
+      335.556,
+      726.03
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[8\\].u_leaf.g_page\\[1\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      350.946,
+      25.65,
+      447.498,
+      95.31
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[8\\].u_leaf.g_page\\[0\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      350.946,
+      103.95,
+      447.498,
+      173.61
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[8\\].u_leaf.g_page\\[2\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      350.946,
+      182.25,
+      447.498,
+      251.91
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[8\\].u_leaf.g_page\\[3\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      350.946,
+      260.55,
+      447.498,
+      330.21
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[9\\].u_leaf.g_page\\[1\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      350.946,
+      338.85,
+      447.498,
+      408.51
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[9\\].u_leaf.g_page\\[0\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      350.946,
+      417.15,
+      447.498,
+      486.81
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[9\\].u_leaf.g_page\\[2\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      350.946,
+      495.45,
+      447.498,
+      565.11
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[0\\].u_leaf.g_page\\[3\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      350.946,
+      573.75,
+      447.498,
+      643.41
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[7\\].u_leaf.g_page\\[3\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      350.946,
+      656.37,
+      447.498,
+      726.03
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[9\\].u_leaf.g_page\\[3\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      462.888,
+      25.65,
+      559.44,
+      95.31
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[3\\].u_leaf.g_page\\[3\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      462.888,
+      103.95,
+      559.44,
+      173.61
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[3\\].u_leaf.g_page\\[1\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      462.888,
+      182.25,
+      559.44,
+      251.91
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[3\\].u_leaf.g_page\\[0\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      462.888,
+      260.55,
+      559.44,
+      330.21
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[3\\].u_leaf.g_page\\[2\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      462.888,
+      338.85,
+      559.44,
+      408.51
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[6\\].u_leaf.g_page\\[1\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      462.888,
+      417.15,
+      559.44,
+      486.81
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[6\\].u_leaf.g_page\\[2\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      462.888,
+      495.45,
+      559.44,
+      565.11
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[6\\].u_leaf.g_page\\[3\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      462.888,
+      573.75,
+      559.44,
+      643.41
+     ]
+    },
+    {
+     "name": "u_fcore.g_leaf\\[6\\].u_leaf.g_page\\[0\\].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "rect_um": [
+      462.888,
+      656.37,
+      559.44,
+      726.03
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "claude/hbm-cores-rebal-6-1028@bd8c7c1b54:results/hbm_cores_rebal_6_1028/dr_ps.json",
+     "sha256": "e5809cc1cfec3ceec0cbb6511bc934fc225fc6530f523c5053c4731e3bfbcfbf"
+    }
+   ]
+  },
+  "ot_hgi_sfu_split3_lane_core__idpin": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    388.8,
+    345.6
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": []
+  },
+  "ot_hgi_sm_xload_cl2_bdring": {
+   "status": "NONE",
+   "outline_um": [
+    86.4,
+    302.4
+   ],
+   "basis": "recipe macros []",
+   "macros": []
+  },
+  "ot_hgi_sm_xload_cl2_bfqg": {
+   "status": "KNOWN",
+   "outline_um": [
+    302.4,
+    298.08
+   ],
+   "basis": "placed",
+   "macros": [
+    {
+     "name": "u_fcore.g_t[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      21.6,
+      170.46,
+      116.424,
+      211.524
+     ]
+    },
+    {
+     "name": "u_fcore.g_t[1].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      21.6,
+      211.596,
+      116.424,
+      252.66
+     ]
+    },
+    {
+     "name": "u_fcore.g_t[2].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      21.6,
+      129.372,
+      116.424,
+      170.436
+     ]
+    },
+    {
+     "name": "u_fcore.g_t[3].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      21.6,
+      252.684,
+      116.424,
+      293.748
+     ]
+    },
+    {
+     "name": "u_fcore.g_t[4].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      125.064,
+      17.34,
+      219.888,
+      58.404
+     ]
+    },
+    {
+     "name": "u_fcore.g_t[5].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      21.6,
+      17.34,
+      116.424,
+      58.404
+     ]
+    },
+    {
+     "name": "u_fcore.g_t[6].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      21.6,
+      58.428,
+      116.424,
+      99.492
+     ]
+    },
+    {
+     "name": "u_fcore.g_t[7].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      125.064,
+      58.428,
+      219.888,
+      99.492
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-core-lat-1026/place_b1/kits/ot_hgi_sm_xload_cl2_bfqg_c13e769a54d7-_b1pl/placed.csv",
+     "sha256": "79b98c97bbff5babe131ee87d14f7e626b95409ca4529e64ff0125c3142c228b"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hgi_sm_xload_cl2_ctlx": {
+   "status": "KNOWN",
+   "outline_um": [
+    388.8,
+    388.8
+   ],
+   "basis": "placed",
+   "macros": [
+    {
+     "name": "u_fcore.u_w.u_tab",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "rect_um": [
+      21.6,
+      17.34,
+      116.424,
+      58.404
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-core-lat-1026/place_b1/kits/ot_hgi_sm_xload_cl2_ctlx_5c4bdf2162af-_b1pl/placed.csv",
+     "sha256": "2154aac3a47ad74456392918740b1e00ab20a4d1cb588c8694860c514826b918"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hgi_sm_xload_xq_pegress": {
+   "status": "NONE",
+   "outline_um": [
+    369.36,
+    369.36
+   ],
+   "basis": "placed",
+   "macros": [],
+   "sources": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/hbm-cores-r7/kits/ot_hgi_sm_xload_xq_pegress_670e8239efe4-_k2/placed.csv",
+     "sha256": "447852098a409ced37c24f370f4bcf2c228181b3909f16bb1b49fd8da6b9757f"
+    }
+   ],
+   "recipe_macros": []
+  },
+  "ot_hnx_fused_tnode": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    172.8,
+    172.8
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": []
+  },
+  "ot_hnx_idxn_keybuf_slice": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    241.92,
+    293.76
+   ],
+   "why": "no recipe and no kit evidence (macro presence unknown)",
+   "rejected": []
+  },
+  "ot_pdie_serdes": {
+   "status": "KNOWN",
+   "outline_um": [
+    600.048,
+    600.48
+   ],
+   "basis": "rule",
+   "rule": "R-SRAM-ENTRY (C columns, results/hbm_cores_kits_3/mp_rule_c.py)",
+   "verdict": "FEASIBLE",
+   "macros": [
+    {
+     "name": "u_dec.u_dly.u_dmem",
+     "master": "ot_sram_1r1w2c_64x546_m1",
+     "rect_um": [
+      210.762,
+      13.008,
+      389.394,
+      94.008
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_dec.u_out.u_cmem",
+     "master": "ot_sram_1r1w_32x546_m1",
+     "rect_um": [
+      210.762,
+      105.078,
+      388.53,
+      186.078
+     ],
+     "orient": "R0"
+    }
+   ],
+   "recipe_macros": [
+    "ot_sram_1r1w2c_64x546_m1",
+    "ot_sram_1r1w_32x546_m1"
+   ],
+   "sources": [
+    {
+     "file": "c25b_in/results/hbm_cores_kits_3/mp/ot_pdie_serdes.json",
+     "sha256": "412929088bc4b1ebb64333278c55d0d2b397df6277bfdfe0f1830611c1e01ef3"
+    },
+    {
+     "file": "c25b_in/results/hbm_cores_kits_3/mp/ot_pdie_serdes.est.json",
+     "sha256": "1c69fb273c4b58eb90456b916cd87b4653979635dd8d6091c612b008dd6b5530"
+    }
+   ],
+   "note": "C25b: HBM-CORES-KITS-3 FEASIBLE R-SRAM-ENTRY placement (claude/hbm-cores-kits-3-1028@b0ae51516f); macro names are k below the kit face shell (macro_placement.v1)"
+  },
+  "ot_hnx_fused_hub_n4ext": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    216.0,
+    207.36
+   ],
+   "why": "C25b new core: no kit yet",
+   "rejected": [],
+   "recipe_macros": [
+    "ot_sram_1r1w2c_32x64_m1",
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hnx_fused_host_program": {
+   "status": "UNKNOWN",
+   "outline_um": [
+    207.36,
+    129.6
+   ],
+   "why": "C25b new core: no kit yet",
+   "rejected": [],
+   "recipe_macros": [
+    "ot_sram_1r1w_256x256_m2_r2c2"
+   ]
+  }
+ },
+ "plan_out": "/srv/opentallas-scratch2/claude/hbm-r15-1027/c16clk"
+}

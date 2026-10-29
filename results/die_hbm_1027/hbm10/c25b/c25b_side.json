@@ -1,0 +1,128 @@
+{
+ "schema": "opentallas.hbm.c25b_side.v1",
+ "plan": "c25b/die_plan.json",
+ "plan_sha256": "6b3a80cd5680ce48fdf3da86cf758c46d6dd0d65844d47977223bdd0e42e3b19",
+ "plan_sha8": "6b3a80cd",
+ "roles": {
+  "NWq0": "SW",
+  "NEq0": "SE",
+  "NWq1": "NW",
+  "NEq1": "NE"
+ },
+ "reset_contract_edges": 64,
+ "reset_legs": {
+  "reset_SW": {
+   "partition": "NW_hub",
+   "half": "q0",
+   "tap_die_um": [
+    9439.2,
+    7534.08
+   ],
+   "sync_stages": 2,
+   "local_release_edges": 3,
+   "release_cycle": null,
+   "release_basis": "reset_tree.py offsets (wavefront) on this plan"
+  },
+  "reset_NW": {
+   "partition": "NW_hub",
+   "half": "q1",
+   "tap_die_um": [
+    9439.2,
+    7534.08
+   ],
+   "sync_stages": 2,
+   "local_release_edges": 3,
+   "release_cycle": null,
+   "release_basis": "reset_tree.py offsets (wavefront) on this plan"
+  },
+  "reset_SE": {
+   "partition": "NE_hub",
+   "half": "q0",
+   "tap_die_um": [
+    18809.28,
+    6696.0
+   ],
+   "sync_stages": 2,
+   "local_release_edges": 3,
+   "release_cycle": null,
+   "release_basis": "reset_tree.py offsets (wavefront) on this plan"
+  },
+  "reset_NE": {
+   "partition": "NE_hub",
+   "half": "q1",
+   "tap_die_um": [
+    18809.28,
+    6696.0
+   ],
+   "sync_stages": 2,
+   "local_release_edges": 3,
+   "release_cycle": null,
+   "release_basis": "reset_tree.py offsets (wavefront) on this plan"
+  },
+  "reset_root": {
+   "partition": "root",
+   "half": null,
+   "tap_die_um": [
+    14048.64,
+    6994.08
+   ],
+   "sync_stages": 2,
+   "local_release_edges": 6,
+   "release_cycle": "root",
+   "release_basis": "reset_tree.py offsets (wavefront) on this plan"
+  }
+ },
+ "provider_legs": {
+  "host_to_provider": {
+   "src": "NW_hub.u_hleaf_Q (ot_hbm_host_cfg_leaf_nw)",
+   "dst": "root.u_mu_fused_program cfg/desc/launch (S face)",
+   "length_um": 6929.3,
+   "form": "repeated lane (combinational repeaters every 450 um, standard repeater rule, no new check), boot only",
+   "repeaters": 15,
+   "status": "SIDE DATA: plan lane + ports to be adopted in C25c (needs the hub->root port window and a G0 run)"
+  },
+  "provider_to_root": {
+   "src": "u_mu_fused_program.job*/wsc/pk5/pb5 (N face)",
+   "dst": "u_mu_fused_root S face",
+   "length_um": 17.28,
+   "cycles": 0,
+   "form": "abutted, same partition, core_conns direct",
+   "status": "IN PLAN"
+  },
+  "root_to_provider": {
+   "src": "u_mu_fused_root.done/fault/busy",
+   "dst": "u_mu_fused_program.root_*",
+   "length_um": 17.28,
+   "cycles": 0,
+   "status": "IN PLAN"
+  },
+  "down_NW/NE, up_NW/NE": {
+   "lanes": {
+    "N4U_NW": 2,
+    "N4D_NW": 2,
+    "N4U_NE": 2,
+    "N4D_NE": 2
+   },
+   "status": "IN PLAN (N4U/N4D_NW/NE)"
+  }
+ },
+ "host_write_interval": {
+  "value": null,
+  "status": "PENDING",
+  "formula": "ceil((t_wire(host_to_provider) + t_ack) / T_stream) + 1 cycles; wire est 6929 um x 0.3659 ps/um = 2.54 ns one way (UNCHECKED shared wire model)"
+ },
+ "svg_S_candidates": {
+  "nets": [
+   "svg_SW0__sm_packet",
+   "svg_SW1__sm_packet",
+   "svg_SW2__sm_packet",
+   "svg_SW3__sm_packet",
+   "svg_SW4__sm_packet",
+   "svg_SW5__sm_packet",
+   "svg_SW6__sm_packet",
+   "svg_SW7__sm_packet"
+  ],
+  "form": "nkeys=0 tie CANDIDATE only if the token pass stays bit-exact (not asserted here)"
+ },
+ "fold_map": "c25b_s_role_fold_map.json (20 MAPPED / 60 UNMAPPED / 8 NO_PROVIDER) SUPERSEDED by the binder q0-half instance map (TOK-HBM-4 ruling)"
+}

@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.macro_placement.v1",
+ "design": "ot_hgi_dma_back_static_vp4_banks_cp",
+ "outline_um": [
+  239.976,
+  275.4
+ ],
+ "macro_placement": [
+  {
+   "k": "u_fcore.u_cp.g_tab[1].u_tab",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    17.442,
+    71.208
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_fcore.u_cp.g_tab[0].u_tab",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    17.442,
+    21.504
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_fcore.u_dbk.L[7].u_bank.landing",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    17.442,
+    129.648
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_fcore.u_dbk.L[6].u_bank.landing",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    17.442,
+    179.352
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_fcore.u_dbk.L[5].u_bank.landing",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    17.442,
+    229.056
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_fcore.u_dbk.L[4].u_bank.landing",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    127.71,
+    71.208
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_fcore.u_dbk.L[3].u_bank.landing",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    127.71,
+    21.504
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_fcore.u_dbk.L[2].u_bank.landing",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    127.71,
+    129.648
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_fcore.u_dbk.L[1].u_bank.landing",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    127.71,
+    179.352
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_fcore.u_dbk.L[0].u_bank.landing",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    127.71,
+    229.056
+   ],
+   "orient": "R0"
+  }
+ ],
+ "note": "HBM-CORES-KITS-3 rule R-SRAM-ENTRY, C columns (mp_rule_c.py): equal 10.8+ um channels, array centred on the entry x, every column split at the entry island + halo; k below the face shell"
+}
