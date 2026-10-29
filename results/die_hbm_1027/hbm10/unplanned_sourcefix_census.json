@@ -1,0 +1,470 @@
+{
+ "status": "Existing selected-source diagnosis; no lane insertion/latency/plan change",
+ "pairs": [
+  {
+   "src": "NE_b002",
+   "dst": "NE_hub",
+   "bits": 3,
+   "drivers": {
+    "hcb_NE2.fa_wfault_o": 1,
+    "hcb_NE2.fb_wfault_o": 1,
+    "hcb_NE2.wfault": 1
+   }
+  },
+  {
+   "src": "NE_b003",
+   "dst": "NE_b002",
+   "bits": 1,
+   "drivers": {
+    "hcb_NE3.wfault": 1
+   }
+  },
+  {
+   "src": "NE_b010",
+   "dst": "NE_b011",
+   "bits": 1,
+   "drivers": {
+    "hcb_NE7.wfault": 1
+   }
+  },
+  {
+   "src": "NE_b011",
+   "dst": "NE_hub",
+   "bits": 3,
+   "drivers": {
+    "hcb_NE6.fa_wfault_o": 1,
+    "hcb_NE6.fb_wfault_o": 1,
+    "hcb_NE6.wfault": 1
+   }
+  },
+  {
+   "src": "NE_b013",
+   "dst": "NE_hub",
+   "bits": 1,
+   "drivers": {
+    "hcb_NE4.wfault": 1
+   }
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_spb0",
+   "bits": 632,
+   "drivers": {
+    "epcal_NE.payload": 19,
+    "hb_coll_NE.tx_pin_flit": 612,
+    "hb_coll_NE.tx_pin_v": 1
+   }
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NW_hub",
+   "bits": 2775,
+   "drivers": {
+    "hb_vms_SE.ccw_out": 2170,
+    "hcollb_NE.ccw_o": 280,
+    "hcollb_NE.cw_o": 280,
+    "obs_NE.r_d": 32,
+    "obs_NE.r_idx": 8,
+    "obs_NE.r_v": 1,
+    "svg_NW4.run_done": 1,
+    "svg_NW5.run_done": 1,
+    "svg_NW6.run_done": 1,
+    "svg_NW7.run_done": 1
+   }
+  },
+  {
+   "src": "NE_hub",
+   "dst": "root",
+   "bits": 263,
+   "drivers": {
+    "hleaf_NE.a_cfg_data": 93,
+    "hleaf_NE.a_cfg_target": 8,
+    "hleaf_NE.a_cfg_v": 1,
+    "hleaf_NE.a_desc_base": 12,
+    "hleaf_NE.a_desc_limit": 13,
+    "hleaf_NE.a_desc_loops": 16,
+    "hleaf_NE.a_desc_v": 1,
+    "hleaf_NE.a_launch_v": 1,
+    "hleaf_NE.s_active": 21,
+    "hleaf_NE.s_fault": 31,
+    "hleaf_NE.s_ready": 21,
+    "pgp_NE.fault": 1,
+    "smw_NE.active": 1,
+    "smw_NE.configured": 1,
+    "smw_NE.fault": 1,
+    "stl_NE.up_o": 41
+   }
+  },
+  {
+   "src": "NE_sm0",
+   "dst": "NE_hub",
+   "bits": 37,
+   "drivers": {
+    "sm_NW4.u_front.request": 37
+   }
+  },
+  {
+   "src": "NE_sm1",
+   "dst": "NE_hub",
+   "bits": 37,
+   "drivers": {
+    "sm_NW5.u_front.request": 37
+   }
+  },
+  {
+   "src": "NE_sm2",
+   "dst": "NE_hub",
+   "bits": 37,
+   "drivers": {
+    "sm_NW6.u_front.request": 37
+   }
+  },
+  {
+   "src": "NE_sm3",
+   "dst": "NE_hub",
+   "bits": 37,
+   "drivers": {
+    "sm_NW7.u_front.request": 37
+   }
+  },
+  {
+   "src": "NE_spb0",
+   "dst": "NE_hub",
+   "bits": 615,
+   "drivers": {
+    "ep_S3.fault": 1,
+    "ep_S3.phy_up": 1,
+    "ep_S3.rx_pin_flit": 612,
+    "ep_S3.rx_pin_v": 1
+   }
+  },
+  {
+   "src": "NE_spb2",
+   "dst": "NW_hub",
+   "bits": 2,
+   "drivers": {
+    "xc_NW6.done": 1,
+    "xc_NW7.done": 1
+   }
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "NW_hub",
+   "bits": 2,
+   "drivers": {
+    "xc_NW4.done": 1,
+    "xc_NW5.done": 1
+   }
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "root",
+   "bits": 9,
+   "drivers": {
+    "cp_svg_NW4.run_arg": 8,
+    "cp_svg_NW4.run_v": 1
+   }
+  },
+  {
+   "src": "NE_su00",
+   "dst": "NE_su11",
+   "bits": 1,
+   "drivers": {
+    "fl_NE0.fault": 1
+   }
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_su20",
+   "bits": 1,
+   "drivers": {
+    "fl_NE1.fault": 1
+   }
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_su31",
+   "bits": 1,
+   "drivers": {
+    "fl_NE2.fault": 1
+   }
+  },
+  {
+   "src": "NW_b002",
+   "dst": "NW_hub",
+   "bits": 3,
+   "drivers": {
+    "hcb_NW2.fa_wfault_o": 1,
+    "hcb_NW2.fb_wfault_o": 1,
+    "hcb_NW2.wfault": 1
+   }
+  },
+  {
+   "src": "NW_b003",
+   "dst": "NW_b002",
+   "bits": 1,
+   "drivers": {
+    "hcb_NW3.wfault": 1
+   }
+  },
+  {
+   "src": "NW_b010",
+   "dst": "NW_b011",
+   "bits": 1,
+   "drivers": {
+    "hcb_NW7.wfault": 1
+   }
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_hub",
+   "bits": 3,
+   "drivers": {
+    "hcb_NW6.fa_wfault_o": 1,
+    "hcb_NW6.fb_wfault_o": 1,
+    "hcb_NW6.wfault": 1
+   }
+  },
+  {
+   "src": "NW_b013",
+   "dst": "NW_hub",
+   "bits": 1,
+   "drivers": {
+    "hcb_NW4.wfault": 1
+   }
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NE_hub",
+   "bits": 2730,
+   "drivers": {
+    "hb_vms_SW.cw_out": 2170,
+    "hcollb_NW.ccw_o": 280,
+    "hcollb_NW.cw_o": 280
+   }
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_spb0",
+   "bits": 632,
+   "drivers": {
+    "epcal_NW.payload": 19,
+    "hb_coll_NW.tx_pin_flit": 612,
+    "hb_coll_NW.tx_pin_v": 1
+   }
+  },
+  {
+   "src": "NW_hub",
+   "dst": "root",
+   "bits": 2385,
+   "drivers": {
+    "hleaf_NW.a_cfg_data": 119,
+    "hleaf_NW.a_cfg_target": 8,
+    "hleaf_NW.a_cfg_v": 1,
+    "hleaf_NW.a_desc_base": 12,
+    "hleaf_NW.a_desc_limit": 13,
+    "hleaf_NW.a_desc_loops": 16,
+    "hleaf_NW.a_desc_v": 1,
+    "hleaf_NW.a_launch_v": 1,
+    "hleaf_NW.s_active": 20,
+    "hleaf_NW.s_fault": 32,
+    "hleaf_NW.s_ready": 20,
+    "obs_NW.r_d": 32,
+    "obs_NW.r_idx": 8,
+    "obs_NW.r_v": 1,
+    "pgp_NW.busy": 1,
+    "pgp_NW.done": 1,
+    "pgp_NW.fault": 1,
+    "pgp_NW.valid": 1,
+    "stl_NW.up_o": 41,
+    "vmb_SW0.rr4": 257,
+    "vmb_SW1.rr4": 257,
+    "vmb_SW2.rr4": 257,
+    "vmb_SW3.rr4": 257,
+    "vmb_SW4.rr4": 257,
+    "vmb_SW5.rr4": 257,
+    "vmb_SW6.rr4": 257,
+    "vmb_SW7.rr4": 257
+   }
+  },
+  {
+   "src": "NW_sm0",
+   "dst": "NW_hub",
+   "bits": 37,
+   "drivers": {
+    "sm_NW0.u_front.request": 37
+   }
+  },
+  {
+   "src": "NW_sm1",
+   "dst": "NW_hub",
+   "bits": 37,
+   "drivers": {
+    "sm_NW1.u_front.request": 37
+   }
+  },
+  {
+   "src": "NW_sm2",
+   "dst": "NW_hub",
+   "bits": 37,
+   "drivers": {
+    "sm_NW2.u_front.request": 37
+   }
+  },
+  {
+   "src": "NW_sm3",
+   "dst": "NW_hub",
+   "bits": 37,
+   "drivers": {
+    "sm_NW3.u_front.request": 37
+   }
+  },
+  {
+   "src": "NW_spb0",
+   "dst": "NW_hub",
+   "bits": 615,
+   "drivers": {
+    "ep_S0.fault": 1,
+    "ep_S0.phy_up": 1,
+    "ep_S0.rx_pin_flit": 612,
+    "ep_S0.rx_pin_v": 1
+   }
+  },
+  {
+   "src": "NW_spt0",
+   "dst": "root",
+   "bits": 9,
+   "drivers": {
+    "cp_svg_NW0.run_arg": 8,
+    "cp_svg_NW0.run_v": 1
+   }
+  },
+  {
+   "src": "NW_su00",
+   "dst": "NW_su11",
+   "bits": 1,
+   "drivers": {
+    "fl_NW0.fault": 1
+   }
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_su20",
+   "bits": 1,
+   "drivers": {
+    "fl_NW1.fault": 1
+   }
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_su31",
+   "bits": 1,
+   "drivers": {
+    "fl_NW2.fault": 1
+   }
+  },
+  {
+   "src": "root",
+   "dst": "NE_hub",
+   "bits": 848,
+   "drivers": {
+    "hc_eng.result": 104,
+    "hc_eng.result_position": 3,
+    "hc_eng.result_v": 1,
+    "host_cp_ingress.cfg_addr": 12,
+    "host_cp_ingress.cfg_data": 256,
+    "host_cp_ingress.cfg_target": 8,
+    "host_cp_ingress.cfg_v": 1,
+    "host_cp_ingress.desc_base": 12,
+    "host_cp_ingress.desc_limit": 13,
+    "host_cp_ingress.desc_loops": 16,
+    "host_cp_ingress.desc_v": 1,
+    "host_cp_ingress.launch_v": 1,
+    "obs_C.r_d": 32,
+    "obs_C.r_idx": 8,
+    "obs_C.r_v": 1,
+    "str_C.dn1_o": 82,
+    "su_prog.r_bank": 16,
+    "su_prog.r_data": 256,
+    "su_prog.r_len": 16,
+    "su_prog.r_row": 7,
+    "su_prog.r_start": 1,
+    "su_prog.r_we": 1
+   }
+  },
+  {
+   "src": "root",
+   "dst": "NW_hub",
+   "bits": 2235,
+   "drivers": {
+    "hb_idx__link.tx": 39,
+    "hb_idx__link.tx_v": 4,
+    "hb_router_ids.ids": 54,
+    "hb_router_ids.ids_cohort": 16,
+    "hb_router_ids.ids_layer": 8,
+    "hb_router_ids.ids_v": 1,
+    "hc_eng.qd_nv": 8,
+    "hc_eng.qd_ss": 1,
+    "hc_eng.qd_v": 1,
+    "hc_eng.qd_wa": 10,
+    "hc_eng.qd_xa": 10,
+    "hc_eng.qi_cnt": 12,
+    "hc_eng.qi_kind": 1,
+    "hc_eng.qi_lo": 5,
+    "hc_eng.qi_slot": 2,
+    "hc_eng.qi_v": 1,
+    "hc_eng.qi_w": 6,
+    "hc_eng.qi_word": 10,
+    "hc_eng.result": 768,
+    "hc_eng.result_position": 3,
+    "hc_eng.result_v": 1,
+    "host_cp_ingress.cfg_addr": 12,
+    "host_cp_ingress.cfg_data": 256,
+    "host_cp_ingress.cfg_target": 8,
+    "host_cp_ingress.cfg_v": 1,
+    "host_cp_ingress.desc_base": 12,
+    "host_cp_ingress.desc_limit": 13,
+    "host_cp_ingress.desc_loops": 16,
+    "host_cp_ingress.desc_v": 1,
+    "host_cp_ingress.launch_v": 1,
+    "str_C.dn0_o": 82,
+    "su_prog.r_bank": 16,
+    "su_prog.r_data": 256,
+    "su_prog.r_len": 16,
+    "su_prog.r_row": 7,
+    "su_prog.r_start": 1,
+    "su_prog.r_we": 1,
+    "tkm_SW.busy": 1,
+    "tkm_SW.done": 1,
+    "tkm_SW.fault": 1,
+    "tkm_SW.w_addr": 40,
+    "tkm_SW.w_data": 512,
+    "tkm_SW.w_mask": 16,
+    "tkm_SW.w_v": 1,
+    "u_mu_fused_programme.active": 1,
+    "u_mu_fused_programme.fault": 1,
+    "u_mu_fused_programme.ready": 1
+   }
+  },
+  {
+   "src": "root",
+   "dst": "vsN0",
+   "bits": 632,
+   "drivers": {
+    "b2_ep1_root.tx_o": 632
+   }
+  },
+  {
+   "src": "vsN0",
+   "dst": "root",
+   "bits": 615,
+   "drivers": {
+    "ep_S1.rx_block_ready": 2,
+    "ep_S1.rx_pin_flit": 612,
+    "ep_S1.rx_pin_v": 1
+   }
+  }
+ ],
+ "total_bits": 15319,
+ "pair_count": 40
+}
