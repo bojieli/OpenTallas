@@ -31,7 +31,7 @@
 // rows 0 AND 1 (512 b) and a 3-row ring per stream (768 b): row f (f >= 2) is fetched while the stream issues row f - 2
 // (one TDM slot in those 8 edges), so it lands no later than the first edge of row f - 1 and the SRAM output only ever
 // feeds ring registers (as CW=0's window); ring slot = row mod 3 (row f - 3 finished). 6,656 instead of 9,216 flops.
-module ot_hnx_idxn_calendar #(parameter integer K=8,S=4,G2MIN=23,CW=0)(
+module ot_hnx_idxn_calendar #(parameter integer K=8,S=4,G2MIN=23,CW=0,PRE_ROW0=0)(
  input wire clk,clk_mem,rst_n,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
  input wire start,input wire[11:0]length,input wire[4:0]n_rows,input wire[11:0]pitch,
@@ -136,7 +136,7 @@ module ot_hnx_idxn_calendar #(parameter integer K=8,S=4,G2MIN=23,CW=0)(
   assign h_opr[k]=sv[k]&&(w[31]||w[30]);
   assign h_qem[k]=sv[k]&&w[29];
   assign h_key[k]=sv[k]&&w[28];
-  assign h_pre[k]=s1v[k]&&w1[28]&&srow[k*5+:5]!=0;
+  assign h_pre[k]=s1v[k]&&w1[28]&&(PRE_ROW0!=0||srow[k*5+:5]!=5'd0);
   assign h_lin[k]=sv[k]&&w[5];
   assign h_out[k]=sv[k]&&w[4]&&!w[5];
  end

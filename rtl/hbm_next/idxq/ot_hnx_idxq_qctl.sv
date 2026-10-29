@@ -19,7 +19,7 @@
 // CW=2 (HBM-NEXT-UNITS IDXQ 2026-10-19, default; CW=1 = bypass form, gate 4 cross-clock -15.7 ps): compact windows (shared head rows 0-1 + 3-row ring, no bypass); CW=1 was one shared head row + a 2-row
 // ring per stream: 4,352 instead of 9,216 window flops; same instruction on every edge, tb_hnx_idxn_cw + the quad lockstep);
 // gate hnx_idxq_qctl 04:2x failed the clock rule at 9,290 sinks (pin-flop spread 104 ps > 80 TT).
-module ot_hnx_idxq_qctl #(parameter integer K=8,S=4,CW=2,DELIVERED_RESET=0,ROW_CLEAR_DELAY=0)(
+module ot_hnx_idxq_qctl #(parameter integer K=8,S=4,CW=2,DELIVERED_RESET=0,ROW_CLEAR_DELAY=0,PRE_ROW0=0)(
  input wire clk_program,clk_program_mem,input wire rst_n,
  input wire slot,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
@@ -48,7 +48,7 @@ module ot_hnx_idxq_qctl #(parameter integer K=8,S=4,CW=2,DELIVERED_RESET=0,ROW_C
  end
  wire calendar_fault,done_u,rs,ow,oq,qe,kv,pv,lc,lf,le;wire[6:0]oi;wire[4:0]qh,kr,lr,er;wire[7:0]ki,pi;wire[3:0]eg;
  wire[4*S-1:0]sop;wire[2*S-1:0]sps;wire[8*S-1:0]sad;
- ot_hnx_idxn_calendar #(.K(K),.S(S),.CW(CW)) calendar(.clk(clk_program),.clk_mem(clk_program_mem),.rst_n(rst_c),
+ ot_hnx_idxn_calendar #(.K(K),.S(S),.CW(CW),.PRE_ROW0(PRE_ROW0)) calendar(.clk(clk_program),.clk_mem(clk_program_mem),.rst_n(rst_c),
   .program_we(pw_r),.program_addr(pa_r),.program_data(pd_r),.start(st_r),.length(ln_r),.n_rows(nr_r),.pitch(pi_r),
   .row_start(rs),.opr_weight(ow),.opr_query(oq),.opr_index(oi),.qem_v(qe),.qem_head(qh),
   .key_v(kv),.key_index(ki),.key_row(kr),.pre_v(pv),.pre_index(pi),.sel_op(sop),.sel_pass(sps),.sel_addr(sad),
