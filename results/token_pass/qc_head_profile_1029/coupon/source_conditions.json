@@ -1,0 +1,22 @@
+{
+  "scope": "Exact source conditions; not full-block equivalence/physical/throughput",
+  "sources": [
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv",
+      "sha256": "69b74338e3eca226a34963cc3953f079538b5dc9fc4b121349a407f2ca188c24"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_native59_svc_obs1.sv",
+      "sha256": "2fbfc36fdb90a852bb4cb603f2d7f8b1b436b956e8ff8aa19fcc1c38749253a5"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_sys_face_lctx3_core.sv",
+      "sha256": "e5ffb716604dbb212cc9bcc80db796a25e5ce7b8538dd78a656bc5810c5c9ff8"
+    }
+  ],
+  "statements": [
+    "    assign prog_head_context_slot = HEAD_CONTEXT != 0 && txs[1] && tk == 4'd12;",
+    " wire emb_read=emb_act&&(emb_k<=7'd64||(ROPE!=0&&emb_k>=7'(ROPE_FIRST)));",
+    "    assign l_context_seg = (L_CONTEXTS != 0) && ev_stage && ta[5:0] >= 6'd2 && ta[5:0] <= 6'd36;"
+  ]
+}

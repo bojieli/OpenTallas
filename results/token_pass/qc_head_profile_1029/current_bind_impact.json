@@ -1,0 +1,58 @@
+{
+  "status": "FAIL_CURRENT_BIND_SOURCE_PROFILE_DEFAULTS",
+  "source_scope": "actual qc_bind3 selected files and emitted source, not main-only inference",
+  "changed": [
+    {
+      "instance": "d2d_rom",
+      "master": "qfd_d2d_static_ovl_sf7_obs1",
+      "param": "HEAD_CONTEXT",
+      "current": 0,
+      "candidate": 1,
+      "selected_source": "/srv/opentallas-scratch2/claude/wt/tok-qc-1-1028/rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv",
+      "current_source_sha256": "69b74338e3eca226a34963cc3953f079538b5dc9fc4b121349a407f2ca188c24",
+      "candidate_source_sha256": "69b74338e3eca226a34963cc3953f079538b5dc9fc4b121349a407f2ca188c24",
+      "emitted_type": "qfd_qc_glue_part.sv",
+      "emitted_instantiation": "qfd_d2d_static_ovl_sf7_obs1 #(.TXDP(32'h0f01030d)) u_d2d_rom ("
+    },
+    {
+      "instance": "native59",
+      "master": "qfd_native59_dv_headprep_obs1",
+      "param": "ROPE",
+      "current": 0,
+      "candidate": 1,
+      "selected_source": "/srv/opentallas-scratch2/claude/wt/tok-qc-1-1028/rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv",
+      "current_source_sha256": "753bffe8888761da5941309bc40dc3efa19cfe782710bf3285324e1704e6d6e8",
+      "candidate_source_sha256": "753bffe8888761da5941309bc40dc3efa19cfe782710bf3285324e1704e6d6e8",
+      "emitted_type": "qfd_qc_native59_part.sv",
+      "emitted_instantiation": "qfd_native59_dv_headprep_obs1 u_core ("
+    },
+    {
+      "instance": "sys_face",
+      "master": "qfd_sys_face_lctx3_wrapped",
+      "param": "L_CONTEXTS",
+      "current": 0,
+      "candidate": 1,
+      "selected_source": "/srv/opentallas-scratch2/claude/wt/tok-qc-1-1028/rtl/qwen_split/qfd_sys_face_lctx3_wrapped.sv",
+      "current_source_sha256": "b25c0bdd8ad7f14fe0f5fac605fb87e441c6ce2bbae793b46d685b3973cf8b40",
+      "candidate_source_sha256": "b25c0bdd8ad7f14fe0f5fac605fb87e441c6ce2bbae793b46d685b3973cf8b40",
+      "emitted_type": "qfd_qc_glue_part.sv",
+      "emitted_instantiation": "qfd_sys_face_lctx3_wrapped u_sys_face ("
+    }
+  ],
+  "affected_types": [
+    "qfd_qc_glue_part",
+    "qfd_qc_native59_part"
+  ],
+  "port_changes": 0,
+  "outline_changes": 0,
+  "new_pipeline_edges": 0,
+  "native_embedding_producer_terminal_index": {
+    "current": 64,
+    "candidate": 84,
+    "extra_iterations": 20,
+    "read_words_added": 8
+  },
+  "cell_area_estimate": "NOT_RUN; requires source candidate synthesis, not inferred from disabled build",
+  "model": "Existing 73-record RoPE/1627 embedding-window/native-current recipe must price the selected producer; no new full-token rate claim",
+  "adoption": "HELD for ONE-QC source/profile event plus current-image/component/physical gates"
+}
