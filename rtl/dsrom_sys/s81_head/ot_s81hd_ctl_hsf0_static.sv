@@ -75,7 +75,7 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
             mod3 = (s3 >= 3'd3) ? 2'(s3 - 3'd3) : s3[1:0];
         end
     endfunction
-    function isnan(input [31:0] x);
+    function automatic isnan(input [31:0] x);
         isnan = (x[30:23] == 8'hFF) && (x[22:0] != 23'd0);
     endfunction
 
