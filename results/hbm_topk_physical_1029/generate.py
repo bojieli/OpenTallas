@@ -29,6 +29,8 @@ sys.argv=[str(f),'--views',str(a.out/'views.json'),'--view',view,'--out',str(a.o
 # Install the committed, opt-in logical guides before the standard kit hash is sealed.
 original_kit_hash=g.kit_hash
 model=json.load(open(repo/'results/hbm_topk_wpipe_1029/model_and_guides.json'))
+# Prior native guide wholly overlapped the S0 bank2 guide. Same-area native strip now sits immediately to its west.
+model['native_line_r_guide']['rect_um']=[4.32,207.36,25.92,278.64]
 def guided_kit_hash(kd):
  kd=Path(kd)
  if not (kd/'topk_write_guides.tcl').exists():
@@ -43,4 +45,4 @@ def guided_kit_hash(kd):
   shutil.copyfile(repo/'physical/die_plan/hbm_arch_cores/macro_reg_guide_release.tcl',kd/'macro_reg_guide_release.tcl')
  return original_kit_hash(kd)
 g.kit_hash=guided_kit_hash
-g.main(recipe_overrides={'ot_hbm_idx_topk_link_static__650.16x500.04':r},source_profile=dict(name='topk_wpipe2_current',source_commit=r['source_commit'],parameters=r['params'],added_internal_SRAM_visibility_edges=2))
+g.main(recipe_overrides={'ot_hbm_idx_topk_link_static__650.16x500.04':r},source_profile=dict(name='topk_wpipe2_current',source_commit=r['source_commit'],parameters=r['params'],added_internal_SRAM_visibility_edges=2,diagnostic_inputs=True))

@@ -1,0 +1,42 @@
+{
+  "plan_sha256": "a4b0cb3df1672afdd3774e54d687fface8080b3f40e98531673346edfc29a59b",
+  "pins_sha256": {
+    "u_hb_idx__link": "b9b8c72b4dc69494820c2e4c4157997e30244522f033ee5d1e22ea5c77da0cd1",
+    "u_hb_idx__selector": "a8b6d07217f0e71dee0de7b83b183525354e8aa812b6dae67954e0a9a316a1ba"
+  },
+  "selected_line_bits": 2368,
+  "selected_line_max_um": 15.312000000000012,
+  "abstract_selected_line_stations": 0,
+  "clock_contract": "Native clk_mem[8]==clk exactbit, current core_conns both same scalar tap; both same root partition. regions_c20 ROOT vs old clockbuilder T010: new composed event must select map. No compiled C25c LCA/STA capacity yet.",
+  "SRAM_LEF_size_um": [
+    171.288,
+    77.784
+  ],
+  "old_guide_renderer_macro_height_um": 70.992,
+  "physical_stage": "GEN/source/PLACE only. Current generator emits MULTIPORT_CTS_HOLD; preserve this until common-domain nine-port clock stage reviewed. +2 SRAM write visibility edges priced.",
+  "guide_structural_repair": {
+    "old_native_rect": [
+      25.92,
+      207.36,
+      69.12,
+      243.0
+    ],
+    "old_S0_bank2_rect": [
+      25.92,
+      217.08,
+      64.8,
+      234.36
+    ],
+    "old_overlap": "S0 bank2 guide inside native input FF guide, joint upperfill ~84%; original guide estimate not buildable at <=60%",
+    "new_native_rect": [
+      4.32,
+      207.36,
+      25.92,
+      278.64
+    ],
+    "same_area_um2": 1539.648,
+    "new_native_to_S0_corner_bound_um": 185.76,
+    "new_stage0_analytic_ps": 825.0736,
+    "note": "Original explicitly uncalibrated timing assumptions retained; +25.65ps vs799.43 originalestimate, only7.93psheadroom. Actualplacement and STA mandatory; noPNRapproval."
+  }
+}
