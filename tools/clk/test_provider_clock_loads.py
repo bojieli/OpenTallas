@@ -37,3 +37,9 @@ def test_encoder_missing_endpoint_and_unsafe_name_fail_closed():
     g,i,b=fixture();_,_,ends,_=P.extend(*g,i,b)
     with pytest.raises(ValueError):P.rewrite_endpoint_tcl('',ends)
     with pytest.raises(ValueError):P.tcl_word('bad}name')
+
+
+def test_native_prefixed_net_is_preserved():
+    g,i,b=fixture();g[0][0]['name']='ck_n1'
+    nets,_,_,report=P.extend(*g,i,b)
+    assert nets[0]['name']=='ck_n1' and report['rows'][0]['raw_net']=='ck_n1'

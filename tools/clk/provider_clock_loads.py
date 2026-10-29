@@ -63,7 +63,7 @@ def extend(nets, ports, endpoints, inventory, bindings, via12=(9,11)):
         seen.add(name)
         if actual not in known:
             raise ValueError(f'provider clock has no selected tap binding: {actual}')
-        raw = actual[3:] if actual.startswith('ck_') else actual
+        raw = actual if actual in bynet else actual[3:] if actual.startswith('ck_') else actual
         if raw not in bynet:
             raise ValueError(f'provider clock is absent from the unchanged tree: {actual}')
         if not load['master'].startswith(('DFF','SDFF')):
