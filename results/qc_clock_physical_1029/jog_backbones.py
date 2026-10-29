@@ -2,10 +2,12 @@
 Reads authoritative source metal/OBS, exact islands and physical power access.
 No body/tree move, no materialization and no routing/signoff qualification.
 """
-import argparse,json,math
+import argparse,json,math,sys
 from collections import defaultdict
 from pathlib import Path
-import fixed_tree as F
+sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tools/die_plan'))
+import die_clock_128 as C128
+import die_clock_mesh as DCM
 
 class Index:
     def __init__(self):self.rows=[];self.bins=defaultdict(list);self.B=.25
@@ -75,9 +77,9 @@ def main():
     del wires,base
     print('JOG_STAGE reserve physical power',flush=True);power=[] if a.joint_clock else json.loads(Path(a.power_access).read_text())
     for r in power:ix.add(r)
-    nd=dict(width=.08,space=.32,rf=.5,cf=1.15);router=F.C128.TrackRouter(nd,'VSS',F.DCM.DEFAULT_TRACKS,8.64)
-    router.reserve(F.C128.pg_shapes(json.loads(Path(a.pg).read_text())))
-    router.reserve(F.C128.pg_shapes(power));del power
+    nd=dict(width=.08,space=.32,rf=.5,cf=1.15);router=C128.TrackRouter(nd,'VSS',DCM.DEFAULT_TRACKS,8.64)
+    router.reserve(C128.pg_shapes(json.loads(Path(a.pg).read_text())))
+    router.reserve(C128.pg_shapes(power));del power
     records=[];bad=[]
     for n,f in enumerate(failures):
         cell,pin,net=f['cell'],f['pin'],f['net'];x,y=f['base_xy_um'];parts=holes[cell.removeprefix('ck_')]
@@ -100,7 +102,7 @@ def main():
                            m6_jog_um=round(abs(bx-x),6),geometry=local+[riser],
                            proof='all metal inside exact119 island union; actual M6/M7 SIGNAL+OBS+PG+future clock bases+power clear; M8 shielded tree .08/.32 witness')
                 for r in local+[riser]:ix.add(r)
-                if a.joint_clock:router.reserve([*F.C128.pg_shapes([[net,'M8',bx-.096,ty-.04,bx+.096,ty+.04]])])
+                if a.joint_clock:router.reserve([*C128.pg_shapes([[net,'M8',bx-.096,ty-.04,bx+.096,ty+.04]])])
                 break
             if found:break
         if found:records.append(found)
