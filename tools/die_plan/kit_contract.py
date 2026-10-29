@@ -31,6 +31,7 @@ Static only (no synth, no place): each check is one bug class seen on 10-26/10-2
                        (f): KV pv_pair, a pair 18 nm off the M4 grid: 794 off-grid pin warnings, DRT-0255)
 """
 import json
+import math
 import re
 from pathlib import Path
 
@@ -122,12 +123,18 @@ def _hook_files(kd, cfg):
 def corner_modes(kd):
     kd = Path(kd)
     cfg, err = _mk(kd), []
+    import core_io_reference as CIR
+    try:
+        reference = CIR.load(kd)
+    except ValueError as ex:
+        return [str(ex)], dict(applies=True)
+    tt_ps, ff_ps = (reference["tt"], reference["ff"]) if reference else (TT_PS, FF_PS)
     sdc = kd / "constraint.sdc"
     if not sdc.is_file():
         return ["constraint.sdc missing"], dict(applies=True)
     tt = [float(m.group(1)) for m in _VCLK_LAT.finditer(sdc.read_text())]
-    if len(tt) != 1 or not _eq(tt[0], TT_PS):
-        err.append(f"constraint.sdc vclk source latency {tt} is not exactly one line = TT {TT_PS:g} (12.3)")
+    if len(tt) != 1 or not _eq(tt[0], tt_ps):
+        err.append(f"constraint.sdc vclk source latency {tt} is not exactly one line = TT {tt_ps:g} (12.3)")
     corners = cfg.get("CORNERS", "").split()
     mm = cfg.get("OT_HOLD_MM", "0") == "1"
     if mm:
@@ -139,8 +146,8 @@ def corner_modes(kd):
             err.append(f"OT_HOLD_MM=1 but OT_MM_FF_SDC {cfg.get('OT_MM_FF_SDC')!r} is not a staged kit file")
         else:
             ff = [float(m.group(1)) for m in _VCLK_LAT.finditer(f.read_text())]
-            if len(ff) != 1 or not _eq(ff[0], FF_PS):
-                err.append(f"{f.name} (FF mode SDC) vclk latency {ff} is not exactly one line = FF {FF_PS:g}")
+            if len(ff) != 1 or not _eq(ff[0], ff_ps):
+                err.append(f"{f.name} (FF mode SDC) vclk latency {ff} is not exactly one line = FF {ff_ps:g}")
     hooks = _hook_files(kd, cfg)
     for f in hooks:
         if f.name == "constraint.sdc" or (mm and f.name == Path(cfg.get("OT_MM_FF_SDC", "")).name):
@@ -153,21 +160,21 @@ def corner_modes(kd):
             if mm:
                 err.append(f"{f.name}: global vclk latency {v:g} in a per-mode (MM) session: binds both modes "
                            "(phantom corner); bind FF through OT_MM_FF_SDC only")
-            elif len(corners) > 1 and not _eq(v, TT_PS):
+            elif len(corners) > 1 and not _eq(v, tt_ps):
                 err.append(f"{f.name}: global vclk latency {v:g} applied to every corner of the single-mode "
-                           f"session CORNERS '{' '.join(corners)}' (TT scene timed at {v:g}, not TT {TT_PS:g})")
+                           f"session CORNERS '{' '.join(corners)}' (TT scene timed at {v:g}, not TT {tt_ps:g})")
     # every literal vclk latency anywhere in the kit's generated Tcl/SDC is one of the two corner values
     for f in sorted(list(kd.glob("*.tcl")) + list(kd.glob("*.sdc"))):
         for line in f.read_text(errors="replace").splitlines():
             if not _strip_tcl_comment(line):
                 continue
             m = _VCLK_LAT.search(line)
-            if m and not (_eq(float(m.group(1)), TT_PS) or _eq(float(m.group(1)), FF_PS)):
-                err.append(f"{f.name}: vclk latency {float(m.group(1)):g} is neither TT {TT_PS:g} nor FF {FF_PS:g}")
+            if m and not (_eq(float(m.group(1)), tt_ps) or _eq(float(m.group(1)), ff_ps)):
+                err.append(f"{f.name}: vclk latency {float(m.group(1)):g} is neither TT {tt_ps:g} nor FF {ff_ps:g}")
     for p in kd.glob("eco_modes*.json"):
         d = json.loads(p.read_text())
-        if not (_eq(d.get("ot_vclk_tt"), TT_PS) and _eq(d.get("ot_vclk_ff"), FF_PS)):
-            err.append(f"{p.name}: ECO modes TT {d.get('ot_vclk_tt')} / FF {d.get('ot_vclk_ff')} != {TT_PS:g}/{FF_PS:g}")
+        if not (_eq(d.get("ot_vclk_tt"), tt_ps) and _eq(d.get("ot_vclk_ff"), ff_ps)):
+            err.append(f"{p.name}: ECO modes TT {d.get('ot_vclk_tt')} / FF {d.get('ot_vclk_ff')} != {tt_ps:g}/{ff_ps:g}")
     return list(dict.fromkeys(err)), dict(applies=True, corners=corners, per_mode=mm, hooks=sorted(f.name for f in hooks))
 
 
@@ -175,6 +182,14 @@ def corner_modes(kd):
 def ff_binding(kd):
     kd = Path(kd)
     cfg, err = _mk(kd), []
+    import core_io_reference as CIR
+    try:
+        reference = CIR.load(kd)
+    except ValueError as ex:
+        return [str(ex)], dict(applies=True)
+    tt_ps, ff_ps = (reference["tt"], reference["ff"]) if reference else (TT_PS, FF_PS)
+    if reference:
+        err += CIR.binding_errors(kd, reference)
     vals = dict(OT_VCLK_TT=_num(cfg.get("OT_VCLK_TT")), OT_VCLK_FF=_num(cfg.get("OT_VCLK_FF")))
     lint = kd / "sdc_lint.json"
     if lint.is_file():
@@ -193,9 +208,9 @@ def ff_binding(kd):
             if k in d:
                 vals["freeze_" + k] = _num(d[k])
     for k, v in vals.items():
-        want = FF_PS if ("FF" in k or k.endswith(("_ff", "_ff_ps", "bound_ps"))) else TT_PS
+        want = ff_ps if ("FF" in k or k.endswith(("_ff", "_ff_ps", "bound_ps"))) else tt_ps
         if not _eq(v, want):
-            err.append(f"{k} = {v} (must be {want:g}: 12.3 TT setup {TT_PS:g} / FF hold {FF_PS:g})")
+            err.append(f"{k} = {v} (must be {want:g}: 12.3 TT setup {tt_ps:g} / FF hold {ff_ps:g})")
     return err, dict(applies=True, values=vals)
 
 
@@ -248,6 +263,29 @@ def _partition_clock_pin_geometry(kd, bud):
     clk = bud.get("clock") or {}
     taps = {d["name"]: tuple(map(float, d["xy"])) for d in (clk.get("taps_snapped") or []) if d.get("xy")}
     top = bud.get("signal_max")
+    landing_file = Path(kd) / "landing_contract.json"
+    if landing_file.is_file():
+        try:
+            landing = json.loads(landing_file.read_text())
+            for pin in landing.get("pins", []):
+                if pin.get("kind") != "clock" or pin.get("dir") != "in":
+                    continue
+                name, xy = pin.get("name"), pin.get("xy_um")
+                if (not isinstance(name, str) or not isinstance(xy, list) or len(xy) != 2
+                        or any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v)
+                               for v in xy)):
+                    err.append("landing_contract.json: invalid physical clock pin declaration")
+                    continue
+                if pin.get("layer") != top:
+                    err.append(f"landing_contract.json: clock {name} on {pin.get('layer')}, not {top}")
+                    continue
+                want = tuple(float(v) for v in xy)
+                if name in taps and any(abs(a-b) > TOL for a, b in zip(taps[name], want)):
+                    err.append(f"landing_contract.json: clock {name} conflicts with budget plan tap")
+                    continue
+                taps[name] = want
+        except (OSError, ValueError, TypeError, AttributeError):
+            err.append("landing_contract.json: invalid physical clock pin metadata")
     if not top:
         err.append("budget.json has no signal_max (partition top layer)")
     for f in sorted(Path(kd).glob("*.tcl")):
@@ -279,7 +317,7 @@ def _partition_clock_pin_geometry(kd, bud):
             entries.append((src, n, x, y))
             want = taps.get(n) or taps.get(_base(n))
             if want is None:
-                err.append(f"{src}: partition clock {n} is not a plan tap (budget.json clock.taps_snapped)")
+                err.append(f"{src}: partition clock {n} is not a plan tap (budget.json clock.taps_snapped / landing_contract.json clock pins)")
             elif abs(want[0] - x) > TOL or abs(want[1] - y) > TOL:
                 err.append(f"{src}: partition clock {n} at ({x:g}, {y:g}) != plan tap ({want[0]:g}, {want[1]:g}) (12.8a)")
             if layer == top and layer:

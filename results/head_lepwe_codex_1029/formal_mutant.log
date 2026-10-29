@@ -1,0 +1,292 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+
+-- Executing script file `eq.ys' --
+
+1. Executing Verilog-2005 frontend: derived.sv
+Parsing SystemVerilog input from `derived.sv' to AST representation.
+Generating RTLIL representation for module `\old_local'.
+Warning: Replacing memory \epoch with list of registers. See derived.sv:29
+Warning: Replacing memory \data with list of registers. See derived.sv:29
+Generating RTLIL representation for module `\new_local'.
+Warning: Replacing memory \epoch with list of registers. See derived.sv:67
+Warning: Replacing memory \data with list of registers. See derived.sv:67
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: miter.sv
+Parsing SystemVerilog input from `miter.sv' to AST representation.
+Generating RTLIL representation for module `\miter'.
+Generating RTLIL representation for module `\inv_only'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     \new_local
+Used module:     \old_local
+Parameter \W = 8
+Parameter \D = 4
+
+3.2. Executing AST frontend in derive mode using pre-parsed AST for module `\new_local'.
+Parameter \W = 8
+Parameter \D = 4
+Generating RTLIL representation for module `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local'.
+Warning: Replacing memory \epoch with list of registers. See derived.sv:67
+Warning: Replacing memory \data with list of registers. See derived.sv:67
+Parameter \W = 8
+Parameter \D = 4
+
+3.3. Executing AST frontend in derive mode using pre-parsed AST for module `\old_local'.
+Parameter \W = 8
+Parameter \D = 4
+Generating RTLIL representation for module `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local'.
+Warning: Replacing memory \epoch with list of registers. See derived.sv:29
+Warning: Replacing memory \data with list of registers. See derived.sv:29
+
+3.4. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     $paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local
+Used module:     $paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local
+
+3.5. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     $paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local
+Used module:     $paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local
+Removing unused module `\inv_only'.
+Removing unused module `\new_local'.
+Removing unused module `\old_local'.
+Removed 3 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$derived.sv:57$59 in module $paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.
+Marked 1 switch rules as full_case in process $proc$derived.sv:20$72 in module $paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 6 redundant assignments.
+Promoted 2 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~10 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$70'.
+     1/2: $0\epoch[3][2:0]
+     2/2: $0\data[3][7:0]
+Creating decoders for process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$68'.
+     1/2: $0\epoch[2][2:0]
+     2/2: $0\data[2][7:0]
+Creating decoders for process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$66'.
+     1/2: $0\epoch[1][2:0]
+     2/2: $0\data[1][7:0]
+Creating decoders for process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$64'.
+     1/2: $0\epoch[0][2:0]
+     2/2: $0\data[0][7:0]
+Creating decoders for process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:57$59'.
+     1/3: $0\valid[3:0]
+     2/3: $0\write_oh[3:0]
+     3/3: $0\wc[2:0]
+Creating decoders for process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:56$58'.
+Creating decoders for process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$79'.
+     1/2: $0\epoch[3][2:0]
+     2/2: $0\data[3][7:0]
+Creating decoders for process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$78'.
+     1/2: $0\epoch[2][2:0]
+     2/2: $0\data[2][7:0]
+Creating decoders for process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$77'.
+     1/2: $0\epoch[1][2:0]
+     2/2: $0\data[1][7:0]
+Creating decoders for process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$76'.
+     1/2: $0\epoch[0][2:0]
+     2/2: $0\data[0][7:0]
+Creating decoders for process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:20$72'.
+     1/3: $0\valid[3:0]
+     2/3: $0\write_oh[3:0]
+     3/3: $0\wc[2:0]
+Creating decoders for process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:19$71'.
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.\data[3]' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$70'.
+  created $dff cell `$procdff$130' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.\epoch[3]' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$70'.
+  created $dff cell `$procdff$131' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.\data[2]' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$68'.
+  created $dff cell `$procdff$132' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.\epoch[2]' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$68'.
+  created $dff cell `$procdff$133' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.\data[1]' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$66'.
+  created $dff cell `$procdff$134' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.\epoch[1]' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$66'.
+  created $dff cell `$procdff$135' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.\data[0]' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$64'.
+  created $dff cell `$procdff$136' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.\epoch[0]' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$64'.
+  created $dff cell `$procdff$137' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.\wc' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:57$59'.
+  created $dff cell `$procdff$138' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.\write_oh' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:57$59'.
+  created $dff cell `$procdff$139' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.\valid' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:57$59'.
+  created $dff cell `$procdff$140' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.\rq' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:56$58'.
+  created $dff cell `$procdff$141' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.\data[3]' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$79'.
+  created $dff cell `$procdff$142' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.\epoch[3]' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$79'.
+  created $dff cell `$procdff$143' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.\data[2]' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$78'.
+  created $dff cell `$procdff$144' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.\epoch[2]' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$78'.
+  created $dff cell `$procdff$145' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.\data[1]' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$77'.
+  created $dff cell `$procdff$146' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.\epoch[1]' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$77'.
+  created $dff cell `$procdff$147' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.\data[0]' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$76'.
+  created $dff cell `$procdff$148' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.\epoch[0]' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$76'.
+  created $dff cell `$procdff$149' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.\wc' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:20$72'.
+  created $dff cell `$procdff$150' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.\write_oh' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:20$72'.
+  created $dff cell `$procdff$151' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.\valid' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:20$72'.
+  created $dff cell `$procdff$152' with positive edge clock.
+Creating register for signal `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.\rq' using process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:19$71'.
+  created $dff cell `$procdff$153' with positive edge clock.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$70'.
+Removing empty process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$70'.
+Found and cleaned up 1 empty switch in `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$68'.
+Removing empty process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$68'.
+Found and cleaned up 1 empty switch in `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$66'.
+Removing empty process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$66'.
+Found and cleaned up 1 empty switch in `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$64'.
+Removing empty process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:67$64'.
+Found and cleaned up 1 empty switch in `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:57$59'.
+Removing empty process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:57$59'.
+Removing empty process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.$proc$derived.sv:56$58'.
+Found and cleaned up 1 empty switch in `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$79'.
+Removing empty process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$79'.
+Found and cleaned up 1 empty switch in `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$78'.
+Removing empty process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$78'.
+Found and cleaned up 1 empty switch in `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$77'.
+Removing empty process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$77'.
+Found and cleaned up 1 empty switch in `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$76'.
+Removing empty process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:29$76'.
+Found and cleaned up 1 empty switch in `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:20$72'.
+Removing empty process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:20$72'.
+Removing empty process `$paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.$proc$derived.sv:19$71'.
+Cleaned up 10 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+Optimizing module $paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.
+<suppressed ~4 debug messages>
+Optimizing module $paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.
+<suppressed ~3 debug messages>
+
+5. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\new_local.
+Deleting now unused module $paramod$c0221b9660a89a47c9bf07cc7d281a6cd6da48c5\old_local.
+<suppressed ~2 debug messages>
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 2 unused cells and 58 unused wires.
+<suppressed ~3 debug messages>
+
+7. Executing ASYNC2SYNC pass.
+
+8. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+9. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 88 cells to SAT database.
+Import proof-constraint: \p = 1'1
+Final proof equation: \p = 1'1
+
+** Trying induction with length 1 **
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 88 cells to SAT database.
+Import proof-constraint: \p = 1'1
+Final proof equation: \p = 1'1
+Import show expression: \i
+Import show expression: \rsi
+Import show expression: \ck
+
+[induction step 1] Solving problem with 3022 variables and 7867 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name               Dec       Hex           Bin
+  ---- ----------------- ----------- --------- -------------
+  init \un.data[0]               128        80      10000000
+  init \un.data[1]               159        9f      10011111
+  init \un.data[2]                 0         0      00000000
+  init \un.data[3]                83        53      01010011
+  init \un.epoch[0]                4         4           100
+  init \un.epoch[1]                0         0           000
+  init \un.epoch[2]                0         0           000
+  init \un.epoch[3]                0         0           000
+  init \un.rq                      1         1             1
+  init \un.valid                   4         4          0100
+  init \un.wc                      7         7           111
+  init \un.write_oh                8         8          1000
+  init \uo.data[0]                 0         0      00000000
+  init \uo.data[1]                 0         0      00000000
+  init \uo.data[2]                 0         0      00000000
+  init \uo.data[3]               160        a0      10100000
+  init \uo.epoch[0]                0         0           000
+  init \uo.epoch[1]                0         0           000
+  init \uo.epoch[2]                0         0           000
+  init \uo.epoch[3]                1         1           001
+  init \uo.rq                      1         1             1
+  init \uo.valid                   4         4          0100
+  init \uo.wc                      7         7           111
+  init \uo.write_oh                8         8          1000
+  ---- ----------------- ----------- --------- -------------
+     1 \ck                         0         0             0
+     1 \i                        174        ae      10101110
+     1 \rsi                        0         0             0
+  ---- ----------------- ----------- --------- -------------
+     2 \ck                         0         0             0
+     2 \i                          0         0      00000000
+     2 \rsi                        0         0             0
+
+Reached maximum number of time steps -> proof failed.
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+ERROR: Called with -verify and proof did fail!
