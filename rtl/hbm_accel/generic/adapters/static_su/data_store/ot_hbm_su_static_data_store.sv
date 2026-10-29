@@ -31,7 +31,10 @@ module ot_hbm_su_static_replicated_bank #(
   wire[255:0]raw;
   wire wv_c;wire[RB-1:0]wa_c;wire[31:0]wd_c;
   if(WCOPY!=0)begin:g_wcopy
-   reg wv_q;reg[RB-1:0]wa_q;reg[31:0]wd_q;
+   // HBM-CORES-REBAL-10: keep every column copy (ORFS ot_keep_regs.tcl keeps the flops driving keep wires); without it
+   // yosys opt_merge folded the READERS identical copies into one flop per bank (lanes__canon m5w1: wd_q only under
+   // g_read[0]/[2]) and the write broadcast came back (post-CTS -124.3 ps at wd_in).
+   (* keep *) reg wv_q;(* keep *) reg[RB-1:0]wa_q;(* keep *) reg[31:0]wd_q;
    // wv_q is cleared by its source: write_v is the reset-gated w_pin of the pinned bank (0 in reset)
    always @(posedge clk)begin wv_q<=write_v;wa_q<=write_addr;wd_q<=write_data;end
    assign wv_c=wv_q;assign wa_c=wa_q;assign wd_c=wd_q;

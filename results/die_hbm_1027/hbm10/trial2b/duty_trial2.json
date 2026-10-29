@@ -1,0 +1,95 @@
+{
+ "rule": "COORD 08:4x: duty 45-55 % at every tap (both edges, spice-scaled), lib MPW on both phases",
+ "corners": {
+  "TT": {
+   "taps": 3294,
+   "duty_min": 0.4522,
+   "duty_med": 0.501,
+   "duty_max": 0.5557,
+   "outside_45_55": 6,
+   "mpw_fail": 0,
+   "worst": [
+    {
+     "port": "t_NE_b011__clk_t7",
+     "duty": 0.5557,
+     "high_ps": 462.9,
+     "low_ps": 370.1,
+     "mpw_ps": 42.2
+    },
+    {
+     "port": "t_NE_b011__clk_t9",
+     "duty": 0.5538,
+     "high_ps": 461.3,
+     "low_ps": 371.7,
+     "mpw_ps": 42.2
+    },
+    {
+     "port": "t_NE_b011__clk_c7",
+     "duty": 0.5522,
+     "high_ps": 460.0,
+     "low_ps": 373.0,
+     "mpw_ps": 44.9
+    },
+    {
+     "port": "t_NE_b011__clk_t10",
+     "duty": 0.5519,
+     "high_ps": 459.7,
+     "low_ps": 373.3,
+     "mpw_ps": 42.2
+    },
+    {
+     "port": "t_NE_b011__clk_t8",
+     "duty": 0.5516,
+     "high_ps": 459.5,
+     "low_ps": 373.5,
+     "mpw_ps": 42.2
+    }
+   ]
+  },
+  "FF": {
+   "taps": 3294,
+   "duty_min": 0.4396,
+   "duty_med": 0.5178,
+   "duty_max": 0.6055,
+   "outside_45_55": 346,
+   "mpw_fail": 0,
+   "worst": [
+    {
+     "port": "t_NE_b011__clk_t7",
+     "duty": 0.6055,
+     "high_ps": 504.4,
+     "low_ps": 328.6,
+     "mpw_ps": 42.2
+    },
+    {
+     "port": "t_NE_b011__clk_c7",
+     "duty": 0.6015,
+     "high_ps": 501.0,
+     "low_ps": 332.0,
+     "mpw_ps": 44.2
+    },
+    {
+     "port": "t_NE_b011__clk_t9",
+     "duty": 0.6003,
+     "high_ps": 500.0,
+     "low_ps": 333.0,
+     "mpw_ps": 42.2
+    },
+    {
+     "port": "t_NE_b011__clk_t8",
+     "duty": 0.5965,
+     "high_ps": 496.8,
+     "low_ps": 336.2,
+     "mpw_ps": 42.2
+    },
+    {
+     "port": "t_NE_b013__clk_t12",
+     "duty": 0.596,
+     "high_ps": 496.5,
+     "low_ps": 336.5,
+     "mpw_ps": 42.2
+    }
+   ]
+  }
+ }
+}

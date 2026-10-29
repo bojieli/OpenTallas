@@ -2,7 +2,7 @@
  "schema": "opentallas.kv.pair_image_txdp.v1",
  "status": "CURRENT_BOUND_TRANSPORT_ONLY_FULL_PAIR_PROGRAMME_PENDING",
  "D2D_TXDP_K": [
-  114,
+  169,
   4,
   3,
   3
@@ -13,12 +13,12 @@
   1,
   10
  ],
- "sv_literal": "32'h03030472",
- "XDIE_SEAM_K": "56,56,54,54,54,56,56",
- "XDIE_DIE_STAGES": "2,2,2,3,2,2/56,56,54,54,54,56,56",
+ "sv_literal": "32'h030304a9",
+ "XDIE_SEAM_K": "89,89,87,87,87,78,78",
+ "XDIE_DIE_STAGES": "2,2,2,3,2,2/89,89,87,87,87,78,78",
  "source": {
-  "kv": "codex/kv-native-bind-1027@5c7c40d860 bind4",
-  "qc": "codex/qc-bind-1027 source7a1172e830 candidatebccc2a0b9c fresh_v3"
+  "kv": "claude/die-kv-13c-1028 step-5 bind4 (inverter event, recipe_kv13_s5wb)",
+  "qc": "codex/qc-bind-1027 fresh_v3 (QC peer unchanged)"
  },
  "formula": "KV byte0 = KS_TXS + codec2 + SK_TXP + pinreg2; other bytes unchanged",
  "note": "Transport constants only. Both dies must bind the same subsequently qualified programme; oldv7/B48 image is not authority."

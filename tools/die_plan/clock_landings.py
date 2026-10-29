@@ -1116,8 +1116,12 @@ class Landings:
                 if START_PIN_IN in tpins:
                     if pn in tsi:
                         conn.append(f"        .{START_PIN_IN}({tsi[pn]})")
+                    elif rpr.get(pn, {}).get("role") == "root" and self.strap and tsw.get(pn):
+                        # strap root copy of a root+child type: strap_ca_root selects the root counter, p_start unread.
+                        # DIE-KV-13 trial: a literal here is not a declared strap_* pin (tie-off audit, OWNER 10-25 B), so
+                        # the unread pin takes the copy's OWN start launch wire (its cland_tstart_out = cland_start)
+                        conn.append(f"        .{START_PIN_IN}({tsw[pn]})")
                     elif rpr.get(pn, {}).get("role") == "root" and self.strap:
-                        # strap root copy of a root+child type: strap_ca_root selects the root counter, p_start unread
                         conn.append(f"        .{START_PIN_IN}(1'b0)")
                     else:
                         raise LandingError(f"clock landing {pn}: type {p['type']} has {START_PIN_IN} but no start "

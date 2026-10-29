@@ -10,6 +10,11 @@ unequal landing).
 
     r8_write_groups.py prep  BUS_GROUPS_IN.json BUS_GROUPS_OUT.json [--groups write_groups.json]
     r8_write_groups.py check R8_LANDING.json [--groups write_groups.json]
+    r8_write_groups.py bindview R8_LANDING.json R8_LANDING_BIND.json [--groups write_groups.json]
+`bindview` (DIE-KV-13 step-5 bind2, R8_STALE on dcal rx_we/tx_we): the strict binder checks each crossing bit against
+the table's as-built depth (bind.py R8_STALE: bind as-built 5, table 6); the bind sees the RAW lane depth.  The bind copy
+of the table therefore carries as-built = the raw lane (`asbuilt_lane`, group event depth kept as `asbuilt_group`),
+bound / pad / landed unchanged, so the group still lands on ONE edge (check passes on both files).
 Run prep after r8_invariant_split.py (and after r8_rebase.py when used), just before r8.py pads / gen.py --fold-r8."""
 import argparse
 import json
@@ -76,9 +81,21 @@ def check(r8, groups):
     return bad, rows
 
 
+def bindview(r8, groups):
+    out = json.loads(json.dumps(r8))
+    n = 0
+    for gr in groups:
+        for m in out["members"]:
+            if m["sink_port"] in gr["ports"] and _match(gr, m["sink"], m.get("src_part", "")) \
+                    and "asbuilt_lane" in m and m["asbuilt_lane"] != m["asbuilt"]:
+                m["asbuilt_group"], m["asbuilt"] = m["asbuilt"], m["asbuilt_lane"]
+                n += 1
+    return out, n
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("mode", choices=["prep", "check"]); ap.add_argument("inp"); ap.add_argument("out", nargs="?")
+    ap.add_argument("mode", choices=["prep", "check", "bindview"]); ap.add_argument("inp"); ap.add_argument("out", nargs="?")
     ap.add_argument("--groups", default=str(HERE / "write_groups.json"))
     a = ap.parse_args(argv)
     groups = load_groups(a.groups)
@@ -86,6 +103,14 @@ def main(argv=None):
         out, rep = prep(json.load(open(a.inp)), groups)
         Path(a.out).write_text(json.dumps(out, indent=0) + "\n")
         print(json.dumps(dict(write_groups=rep)))
+        return 0
+    if a.mode == "bindview":
+        out, n = bindview(json.load(open(a.inp)), groups)
+        bad, _ = check(out, groups)
+        if bad:
+            raise SystemExit(f"bindview: {bad}")
+        Path(a.out).write_text(json.dumps(out, indent=1) + "\n")
+        print(json.dumps(dict(bindview_members=n)))
         return 0
     bad, rows = check(json.load(open(a.inp)), groups)
     print(json.dumps(dict(write_groups=rows, errors=bad)))

@@ -192,3 +192,53 @@ def test_calibrated_summary_matches_d1_kernel_and_keeps_sink_extrema(monkeypatch
     assert q["TT"]["sink_min"] == 10. and q["TT"]["sink_max"] == 30.
     assert q["FF"]["mean"] == round((10+18+30)/3,2)
     assert q["FF"]["leaf_out_slew_max"] == 5.
+
+
+def test_split_repeated_leaf_keeps_stage_count_and_one_wire_per_driver(monkeypatch):
+    """CORES-EARLY-3 10-28: a long leaf whose edge carries a repeater (C_br -> C_r0 -> C) split into siblings: the
+    siblings hang on C_br's driver (not on C_br, which would then drive two wires: shared wire at C_br), and every
+    part keeps the edge's repeater count (equal stage count on every root->sink path)."""
+    P = _plan_with_starved_leaf()
+    s = lambda x, y, n: (float(x), float(y), "DFF", n, "CLK")
+    P["splits"] = [3]
+    P["leafsinks"]["C"] = [s(10 + i, 80, "w%d" % i) for i in range(4)] + [s(90 + i, 80, "e%d" % i) for i in range(4)]
+    mid = lambda mz, a, b, T, k: [((a[0] + b[0]) // 2, (a[1] + b[1]) // 2)] if k == 2 else []
+    monkeypatch.setattr(F.H, "exact_points", mid)
+    out = F.split_long_leaves(P, 35.0)
+    assert [o["leaf"] for o in out] == ["C"] and out[0]["parts"] == 2
+    node = {n[0]: n for n in P["nodes"]}
+    kids = collections.defaultdict(list)
+    for n in P["nodes"]:
+        kids[n[1]].append(n[0])
+    assert all(len(kids[u]) == 1 for u in node if u.endswith("_br") or node[u][4] == "rep")
+    depth = lambda u: 0 if node[u][1] is None else 1 + depth(node[u][1])
+    parts = [u for u in P["leafsinks"] if u not in ("A", "B")]
+    assert len(parts) == 2 and {depth(u) for u in parts} == {depth("A") + 1}
+    for u in parts:
+        assert node[node[node[u][1]][1]][1] == "root" and node[node[u][1]][4] == "rep"
+        w = [w for w in P["wires"] if w["edge"] == u]
+        assert len(w) == 1 and len(w[0]["segs"]) == 2
+    assert sorted(x for u in parts for x in P["leafsinks"][u]) == sorted(
+        [s(10 + i, 80, "w%d" % i) for i in range(4)] + [s(90 + i, 80, "e%d" % i) for i in range(4)])
+
+
+def test_entry_mode_default_centre_and_member_map():
+    assert F.entry_mode({"name": "f"}, "a") == "centre"
+    assert F.entry_mode({"name": "f", "entry": "sink_centroid"}, "a") == "sink_centroid"
+    fam = {"name": "f", "entry": {"a": "sink_centroid"}}
+    assert F.entry_mode(fam, "a") == "sink_centroid" and F.entry_mode(fam, "b") == "centre"
+    with pytest.raises(SystemExit):
+        F.entry_mode({"name": "f", "entry": "middle"}, "a")
+
+
+def test_entry_geo_centre_unchanged_and_centroid(tmp_path):
+    g = tmp_path / "geo.txt"
+    g.write_text("CORE 0 0 100 50\nPIN ck 50.000 25.000\nSINK 90 10 a b c\nSINK 70 30 d e f\nMACRO m x 0 0 1 1 x 0 0\n")
+    assert F.entry_geo(g, "centre") == g
+    e = F.entry_geo(g, "sink_centroid")
+    assert e.name == "geo_entry.txt" and g.read_text().count("PIN ck 50.000 25.000") == 1
+    L = e.read_text().splitlines()
+    assert L[1] == "PIN ck 80.000 20.000" and L[0] == "CORE 0 0 100 50" and L[2:] == g.read_text().splitlines()[2:]
+    g.write_text("CORE 0 0 1 1\nPIN ck 0 0\n")
+    with pytest.raises(SystemExit):
+        F.entry_geo(g, "sink_centroid")

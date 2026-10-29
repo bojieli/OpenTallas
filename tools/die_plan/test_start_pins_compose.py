@@ -103,3 +103,44 @@ def test_annotate_table_carries_start_ports():
     a = CAB.annotate_table(tab, b)["count_aligned"]
     assert a["start_tree"] == "clock" and set(a["start_ports"]) == {"start:r0->r1", "start:r0->r2"}
     assert "d_ps" not in a["start_ports"]["start:r0->r1"] and a["start_ports"]["start:r0->r1"]["dst_part"] == "b"
+
+
+def root_child_vehicle():
+    """DIE-KV-13: start_vehicle with the root partition a ALSO a copy of type B (a root+child type, KV kv3_pc pc_ES_0):
+    every copy lands y and drives x (a -> b -> c -> a), a launches both start ports, strap_ca_root selects the root"""
+    import copy
+    from test_count_straps import cs
+    p, t = start_vehicle()
+    ca = t["count_aligned"]
+    p["partitions"] = [dict(q, type="B") for q in p["partitions"]]
+    b = p["partition_types"]["B"]
+    b["buses"] += [copy.deepcopy(x) for x in p["partition_types"]["A"]["buses"]]
+    b["count_straps"].append(cs("strap_ca_root"))
+    for q, (s, d) in {"P": ("a", "b"), "Q": ("b", "c")}.items():
+        pp = next(x for x in p["ports"] if x["id"] == q)
+        pp["src"]["part"], pp["dst"]["part"] = s, d
+        next(x for x in t["ports"] if x["port"] == q).update(src=s, dst=d)
+    next(x for x in t["ports"] if x["port"] == "Q").update(src_region="r1", dst_region="r2")
+    p["ports"].append(dict(id="R", width=4, kind="data", src=dict(part="c", bus="x"), dst=dict(part="a", bus="y")))
+    t["ports"].append(dict(port="R", width=4, src="c", dst="a", src_region="r2", dst_region="r0", lane="L3"))
+    ca["ports"]["R"] = dict(K=-1, depth=4, sched_lat=2, tree=False)
+    return p, t
+
+
+def test_strap_root_copy_start_pin_takes_its_own_launch_wire_not_a_literal():
+    """DIE-KV-13 bind2 'tie-off audit: pc_ES_0.cland_tstart_in=1'b0 not a declared ID strap': the unread start pin of
+    a strap ROOT copy is driven by the copy's own start launch wire (its cland_tstart_out), so the tie-off audit
+    (literals only on declared strap_* pins, OWNER 10-25 B) passes with the count-strap manifest"""
+    import straps as STR
+    p, t = root_child_vehicle()
+    c = Landings(p, t)
+    body = B_BODY.replace("input wire [4:0] y // whole bundle", "input wire [4:0] y, // whole bundle\n output wire [4:0] x")
+    c.type_rtl("B", body.replace("assign y_q = y;", "assign y_q = y;\n assign x = 0;"))
+    tt = c.top_rtl(TOP.replace("a_mod a", "b_mod a"))
+    assert "1'b0)" not in "".join(l for l in tt.splitlines() if "cland_tstart_in" in l)
+    assert tt.count(".cland_tstart_in(clock_landing_tstart_a)") == 3 and tt.count(".cland_tstart_out(clock_landing_tstart_a)") == 1
+    man = dict(types={tn: {sp: dict(width=w, kind="count_strap") for sp, w in ps.items()}
+                      for tn, ps in c.strap_declarations().items()},
+               instances={q: {sp: dict(width=w, value=v, kind="count_strap") for sp, (w, v) in ps.items()}
+                          for q, ps in c.strap_expected().items()})
+    assert STR.audit_top_ties(tt, man, {"b_mod": "B"})["verdict"] == "PASS"
