@@ -26,3 +26,22 @@ Run root intel2 `/srv/opentallas-scratch2/claude/die-qc36/` (inputs as DIE-QC-35
   window contains the track the shared trunk uses (DIE-QC-35 cause 1). Fallback to the nearest witness only when no column at
   the router track is clear (counted). Old-site M1..M7 clock base stacks are shifted with their cell. Emits backbone_plan.json,
   joint_clock_reserved.json (input of plan_access --joint-clock-reserved) and clock_base_resite.json.
+- bb1 LIVE at park (intel2 unit oth-ubuntu-2823927, `run_bb1.sh`, log `backbone_bb1.log`): at 45,001/89,180 pins 44,853 pass /
+  148 fail; witness = router track 33,104, fallback nearest 11,749 (UNCHECKED partial). Failures keep the default column window
+  (no record) in the E2 diagnostic copy.
+
+## 4. Chained after bb1 (auto-launched by `chain_e2.sh` / `chain_pa.sh` on intel2, die-qc36/)
+- E2 `run_e2_backbone_noaccess.sh`: prebuild with the bb1 backbone, no PG access -> does the pin-access stage now pass on legal
+  sites? (collect `prebuild_e2_backbone_noaccess/{run.log,prebuild.json}`).
+- PG access replan around the re-sited pin stacks + bb1 jogs/risers/M8 pads (COORD 13:2x: d5 showed the OLD access collides with
+  the clock pin stacks, 12,860 shorts / 105,065 spacing / 28,745 top). Input = Codex readback census with the 4,078 moved cells
+  shifted (`dqc36_prep_census.py` -> `readback_resite/`: 4,078 cells, 106,028 ck_ signal shapes, 8,156 power terms shifted),
+  clock seed = `backbone_bb1/clock_base_resite.json`, joint reserved = endpoint landings + bb1 reservation. Two variants (12.17(3)):
+  PA-A Codex import-0824 `plan_access.py` + native bridges reserved (= the fullpg form); PA-B shared `pg_access_plan.py` @b7a872287
+  `--m9-select cover --m8-landing fallback` (no --reserved-power in that tool -> bridges not reserved; diagnostic for landing form).
+  Collect `pa_{A,B}/{run.log,summary.json}`; the variant with 0 unresolved contacts goes to materialize_full + grid_vias +
+  pg_conn_census (die-qc34/src, py3.10 pydeps310) -> prebuild with --reserved-access of its reserved_access.json.
+
+## 5. KV-019 risk sweep (estimate, CHECKED counts from E1 fixed_wires + provider clock_loads_access.json)
+- 22,365 die-level provider FF CLK sinks hang directly on 2,420 tree nets (root ck_n0 8 FF / 309 um); long (>21.6 um) 2,406 nets /
+  22,267 FF. All planned on M8/M9 FIXED metal -> exposure only if those nets reach die GRT unfixed; confirm at GRT0 with probe3.
