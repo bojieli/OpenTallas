@@ -25,6 +25,8 @@ VERIFY_RULES = {
     "transport": [
         {"module": "ot_dp_st", "map": {"q": "d", "eq": "ea"}, "drop_in": ["clk", "rst_n"], "stages": 1},
         {"module": "ot_dp_dly", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1, "stages_param": "D"},
+        {"module": "ot_dp_dly_cnt", "map": {"q": "d"}, "drop_in": ["clk", "strap_cnt"],
+         "stages": 0, "stages_port": "strap_cnt"},
         {"module": "ot_dp_rsync", "map": {"q": "a"}, "drop_in": ["clk"], "stages": 2, "stages_param": "S"},
         {"module": "ot_dp_rrelay", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1},
         # decision 13c consumer-tap relay: reset traced through d; the START (run) leg is checked by the lockstep tests
