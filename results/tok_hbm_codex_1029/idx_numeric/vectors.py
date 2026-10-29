@@ -5,6 +5,7 @@ import numpy as np
 root=Path(sys.argv[1]);sys.path.insert(0,str(root/'tools'))
 import hdc_golden_v41 as g
 out=Path(sys.argv[2]);out.mkdir(parents=True,exist_ok=True)
+qoff=int(sys.argv[3],0) if len(sys.argv)>3 else 2
 rng=np.random.default_rng(102903)
 levels=np.array([0,.5,1,1.5,2,3,4,6.])
 mem=[0]*65536;gold=[]
@@ -20,7 +21,7 @@ for row in range(6):
    nib=[int(np.argmin(abs(levels-abs(t))))+(8 if orig<0 else 0) for t,orig in zip(q,v)]
    codes|=sum(n<<(4*(b*32+i)) for i,n in enumerate(nib));scales|=(e+127)<<(b*8)
    words=v.view(np.uint32)
-   for base in [0x4400,0x6400]:
+   for base in [0x4400,0x6400,0x5000+qoff,0x7000+qoff]:
     for s in range(4):mem[base+row*512+(h*4+b)*4+s]=sum(int(w)<<(i*32) for i,w in enumerate(words[s*8:s*8+8]))
   w=0x3f00+row*32+h;gold.append((w,scales,codes))
   for base in [0x4000,0x6000]:mem[base+row*8+h//16]|=w<<((h%16)*16)

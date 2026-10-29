@@ -1,0 +1,6 @@
+{
+ "basis": "First actual a122 INDEX A147504word = sector18438, low two sector bits2. HGI permits eight-word alignment, whereas packed native reader rejects every base not four-sector aligned.",
+ "mechanism": "In opt-in HGI FP32 mode, four consecutive query sectors still occupy four distinct banks; the existing per-sector p tags restore their 1024bit order. No extra transfer, reorder, cycle or rounding point.",
+ "tests": "Request-derived real-RTL lockstep with original packed reader + independent query golden, six rows at RT171/173, offsets2 and7 (the latter wraps bank7 to bank0).",
+ "limit": "This fixes within-role sector alignment. It does not equate the old bit15 mirror namespace to the 2^19-word regular image. The current whole image still requires the grown native bank/address-map event."
+}
