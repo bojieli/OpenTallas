@@ -176,3 +176,4 @@ OwnsparseWT intel2:/srv/opentallas-scratch2/claude/wt/codex-head-die-1028-0405 b
   * (3) reg_spine kit option (opt-in partition_types.<t>.reg_spine; default byte-identical; 24 tests PASS); generated form reproduces the diagnostic CTS exactly on hd_tile.
   * (4) h14-grt still in post-GRT repair (WNS -472, it 1080+), no 5_1_grt.odb; (5) FLOW-GEN-2 CTS-0114/fclk_out_o fix not READY -> no run_kit gate run.
   * NEXT: when FLOW-GEN-2 lands, regenerate hd_tile with reg_spine (spec results/die_head_17_1028/kit/reg_spine_hd_tile.json) and run the full run_kit gate (hold gate on); NUMBER-CHECK the die STA 136.0/163.8; collect h14-grt render.
+- 2026-10-28 20:09 PDT DIE-HEAD-18 START (Claude). Base fbacd60fa5. FG2 cts0114/ststable not on main yet (main 410e940f4f) -> step 1/3 wait; regspine HOLD fixed -> claude/die-head-18-regspine-1028@71b0f83f9d READY. Working step 2 (writer latency in CA) now.
