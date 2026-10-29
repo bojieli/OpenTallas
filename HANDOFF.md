@@ -1637,3 +1637,9 @@ CODEX: 2026-10-29 02:58 PDT S81 resumed allphysical work via ownbranches; curren
 CODEX: 2026-10-29 02:59 PDT HBM ring exact-count geometry fixes NW L4 draft+2/+1 and NE vmdel+1; all shorterchains restored. Only2NEpr_cw/ccw11->12 remain TOKENpricepending; noPNR, actualbusFFpack/clock/PG owed. Source codex/hbm-plan-1029.
 
 CODEX: 2026-10-29 02:59 PDT HBM inherited fulltree4components numericPASS PRE671/1197 POST376/1016edges; addressmutantCAUGHT5113mismatches. C25c/G5/sourceK stillopen; P3actualrowcomposition next.
+
+CODEX: 2026-10-29 02:59 PDT KV inherited layer chain successorLIVE intel1 units2008822/2008829 with fixedROM+START+ABI/existingbinary;36layernominal+mapcontrol,0newbuild. Runtime continuation565a9d295READY12tests5subtestsPASS.
+
+CODEX: 2026-10-29 03:00 PDT S81cores resumed: collectedH0GRT0 TT-33.64/FF+5.01,VQGRT0 TT+40.39/FF-0.93; CFGfailedFF-75.69 diagnosedmissinghardcorelatencymetadata, generatorfix1ec38c48d READYROOT4PASS; noDRT/signedclaim.
+
+CODEX: 2026-10-29 03:01 PDT independentHBMchannel-sm3G1+BTABactualGRTcontinuation PASS-COND (b35fc2aad), ownersproceedoneclockGRT/CTSGRT; NLprojectiondiagnosed926netscentralstreet, LECholdsroute (edc9f1445).
