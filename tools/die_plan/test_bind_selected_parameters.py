@@ -74,3 +74,24 @@ def test_elab_rejects_unknown_before_frontend_runs(tmp_path, monkeypatch):
     with pytest.raises(E.ElabError,match="not declared"):
         E.elab(ab,tmp_path,tmp_path/"out")
     assert calls==[]
+
+
+def test_repeated_overrides_mask_each_source_once(tmp_path, monkeypatch):
+    import die_port_bind as D
+    top, leaf = files(tmp_path)
+    body = '\n'.join(f'core #(.W("parens ) ( remain text"), .NQ($clog2((1 << 2)))) u_scaling_{i}(.a(a), .y());'
+                     for i in range(32))
+    top.write_text('module top(input a);\n'+body+'\nendmodule\n')
+    mask = D._lexical_mask
+    whole_top_calls = []
+    def counted(text, strings=False):
+        if 'u_scaling_31' in text and text.lstrip().startswith('module top'):
+            whole_top_calls.append(strings)
+        return mask(text, strings=strings)
+    monkeypatch.setattr(D, '_lexical_mask', counted)
+    rows = E.validate_selected_parameters([top], [], [leaf])
+    assert len(rows) == 32
+    assert all(row['requested'] == ['W', 'NQ'] for row in rows)
+    # One parse_modules mask and one reused override-validation mask; scaling
+    # with instance count here formerly re-scanned the complete die text.
+    assert whole_top_calls == [True, True]
