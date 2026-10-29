@@ -1,0 +1,28 @@
+{
+  "view": "71d2c363c67b",
+  "kit": "0086de4263d64ecc",
+  "verdict": "PASS-COND for ONE place+CTS prototype; placed review required before GRT/DRT",
+  "actual_clock": {
+    "layer": "M5",
+    "xy_um": [
+      116.664,
+      116.64
+    ]
+  },
+  "outline_um": [
+    233.28,
+    233.28
+  ],
+  "islands": 3,
+  "macros": 0,
+  "pins": 2228,
+  "pin_peaks_per_um_in_20um_window": {
+    "N": 1.5,
+    "E": 5.2,
+    "W": 3.65
+  },
+  "min_ft_pin_pg_clearance_um": 0.9,
+  "PG_basis": "M5 VERTICAL confirmed from ORFS asap7 tech LEF; stripe width.12 centres2.064/2.256 pitch4.32, native M1/M2 followrails; actual continuity checked at generated PG stage",
+  "source": "All10SVfiles identical to corrected1.08dx prior kit; old failedTT-30.39/6 FF-2.17/10 and slew1819 preserved. Current-flow automatic DATA repair only, no clock/ECO or virtual-clock change.",
+  "next": "Fresh currentflow synth/LEC->place+CTS; view actual placement+density+clock/reach, then continue only on geometry pass."
+}

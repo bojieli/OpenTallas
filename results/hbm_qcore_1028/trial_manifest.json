@@ -1,0 +1,249 @@
+{
+  "scope": "ROOT-approved G2 only; no DRT/release",
+  "RTL": "unchanged original k11",
+  "macro_placement": "unchanged original k11",
+  "clock_cells_and_core_pin": "unchanged",
+  "data_pins": "unchanged",
+  "infra_pin_delta": [
+    {
+      "name": "mp_isl0_ck_i",
+      "old_box_um": [
+        149.0,
+        114.384,
+        149.032,
+        114.576
+      ],
+      "new_box_um": [
+        150.10399999999998,
+        114.384,
+        150.13600000000002,
+        114.576
+      ],
+      "old_x": 149.01600000000002,
+      "new_x": 150.12,
+      "new_pg_clearance_um": 0.907999999999987,
+      "new_on_M5_track": true
+    },
+    {
+      "name": "mp_isl0_ck_o",
+      "old_box_um": [
+        153.32,
+        114.384,
+        153.352,
+        114.576
+      ],
+      "new_box_um": [
+        152.264,
+        114.384,
+        152.296,
+        114.576
+      ],
+      "old_x": 153.336,
+      "new_x": 152.28,
+      "new_pg_clearance_um": 0.9080000000000155,
+      "new_on_M5_track": true
+    },
+    {
+      "name": "mp_isl0_rst_i",
+      "old_box_um": [
+        149.0,
+        110.064,
+        149.032,
+        110.256
+      ],
+      "new_box_um": [
+        150.10399999999998,
+        110.064,
+        150.13600000000002,
+        110.256
+      ],
+      "old_x": 149.01600000000002,
+      "new_x": 150.12,
+      "new_pg_clearance_um": 0.907999999999987,
+      "new_on_M5_track": true
+    },
+    {
+      "name": "mp_isl0_rst_o",
+      "old_box_um": [
+        153.32,
+        110.064,
+        153.352,
+        110.256
+      ],
+      "new_box_um": [
+        152.264,
+        110.064,
+        152.296,
+        110.256
+      ],
+      "old_x": 153.336,
+      "new_x": 152.28,
+      "new_pg_clearance_um": 0.9080000000000155,
+      "new_on_M5_track": true
+    },
+    {
+      "name": "mp_isl1_ck_i",
+      "old_box_um": [
+        53.984,
+        88.464,
+        54.016,
+        88.656
+      ],
+      "new_box_um": [
+        55.064,
+        88.464,
+        55.096,
+        88.656
+      ],
+      "old_x": 54.0,
+      "new_x": 55.08,
+      "new_pg_clearance_um": 0.9080000000000013,
+      "new_on_M5_track": true
+    },
+    {
+      "name": "mp_isl1_ck_o",
+      "old_box_um": [
+        58.304,
+        88.464,
+        58.336,
+        88.656
+      ],
+      "new_box_um": [
+        57.224000000000004,
+        88.464,
+        57.256,
+        88.656
+      ],
+      "old_x": 58.32,
+      "new_x": 57.24,
+      "new_pg_clearance_um": 0.9080000000000013,
+      "new_on_M5_track": true
+    },
+    {
+      "name": "mp_isl1_rst_i",
+      "old_box_um": [
+        53.984,
+        84.144,
+        54.016,
+        84.336
+      ],
+      "new_box_um": [
+        55.064,
+        84.144,
+        55.096,
+        84.336
+      ],
+      "old_x": 54.0,
+      "new_x": 55.08,
+      "new_pg_clearance_um": 0.9080000000000013,
+      "new_on_M5_track": true
+    },
+    {
+      "name": "mp_isl1_rst_o",
+      "old_box_um": [
+        58.304,
+        84.144,
+        58.336,
+        84.336
+      ],
+      "new_box_um": [
+        57.224000000000004,
+        84.144,
+        57.256,
+        84.336
+      ],
+      "old_x": 58.32,
+      "new_x": 57.24,
+      "new_pg_clearance_um": 0.9080000000000013,
+      "new_on_M5_track": true
+    },
+    {
+      "name": "mp_isl2_ck_i",
+      "old_box_um": [
+        166.304,
+        105.744,
+        166.336,
+        105.936
+      ],
+      "new_box_um": [
+        167.38400000000001,
+        105.744,
+        167.416,
+        105.936
+      ],
+      "old_x": 166.32,
+      "new_x": 167.4,
+      "new_pg_clearance_um": 0.9080000000000155,
+      "new_on_M5_track": true
+    },
+    {
+      "name": "mp_isl2_ck_o",
+      "old_box_um": [
+        170.624,
+        105.744,
+        170.656,
+        105.936
+      ],
+      "new_box_um": [
+        169.54399999999998,
+        105.744,
+        169.57600000000002,
+        105.936
+      ],
+      "old_x": 170.64,
+      "new_x": 169.56,
+      "new_pg_clearance_um": 0.907999999999987,
+      "new_on_M5_track": true
+    },
+    {
+      "name": "mp_isl2_rst_i",
+      "old_box_um": [
+        166.304,
+        101.424,
+        166.336,
+        101.616
+      ],
+      "new_box_um": [
+        167.38400000000001,
+        101.424,
+        167.416,
+        101.616
+      ],
+      "old_x": 166.32,
+      "new_x": 167.4,
+      "new_pg_clearance_um": 0.9080000000000155,
+      "new_on_M5_track": true
+    },
+    {
+      "name": "mp_isl2_rst_o",
+      "old_box_um": [
+        170.624,
+        101.424,
+        170.656,
+        101.616
+      ],
+      "new_box_um": [
+        169.54399999999998,
+        101.424,
+        169.57600000000002,
+        101.616
+      ],
+      "old_x": 170.64,
+      "new_x": 169.56,
+      "new_pg_clearance_um": 0.907999999999987,
+      "new_on_M5_track": true
+    }
+  ],
+  "max_routing_layer": "M7",
+  "TT_FF_vclk_ps": [
+    250,
+    202.5
+  ],
+  "clock_ps": 833,
+  "setup_hold_uncertainty_ps": [
+    60,
+    25
+  ],
+  "die_extra_M6_M7_OBS_mm2_per_layer": 0.18632540160000002,
+  "die_capacity_gate": "Requires composed die GRT/FT proof before adoption"
+}

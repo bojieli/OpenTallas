@@ -36,6 +36,11 @@ foreach i [$gd_b getInsts] {
         set tl [$g getTechLayer]; if {$tl ne "NULL"} { lappend ls [$tl getName] } } } }
       set gd_mobs($mn) 1
       puts $gd_o "O\t$mn\t[join [lsort -unique $ls] \t]"
+      set ports {}
+      foreach mt [$m getMTerms] {
+        if {[$mt getSigType] ni {POWER GROUND}} {lappend ports "[$mt getName]:[$mt getIoType]"}
+      }
+      puts $gd_o "I\t$mn\t[join [lsort $ports] \t]"
     }
   } elseif {[regexp {^(TAPCELL|FILLER|FILL|DECAP)} $mn]} { set gd_skip([$i getId]) 1; continue
   } elseif {[regexp {^(ICG|CKINV|CKBUF|CLKBUF)} $mn]} { set k K

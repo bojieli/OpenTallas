@@ -218,3 +218,59 @@ def test_converter_uses_plan_core_extent_instead_of_cut_row_count():
     ss=sites();ss["row0"]["nsites"]=20
     s=C.convert(p,ss,"tiny_core")
     assert s["outline_um"]==[41.04,41.04]
+
+
+def _icg_plan():
+    """root -> hub driver -> 2 ICG parts of RTL gate g (first = the RTL instance, second = clone_of copy) + 1 ungated
+    BUF part, each -> its branch -> one leaf (form C, CORES-EARLY-6)."""
+    nodes = [["root", None, [20.0, 20.0], "BUFx24_ASAP7_75t_R", "entry"],
+             ["T0_g", "root", [12.0, 20.0], "ICGx1_ASAP7_75t_R", "icg"],
+             ["T0_br", "T0_g", [12.0, 21.08], "BUFx12f_ASAP7_75t_R", "branch"],
+             ["T1_g", "root", [20.0, 25.0], "ICGx1_ASAP7_75t_R", "icg"],
+             ["T1_br", "T1_g", [20.0, 26.08], "BUFx12f_ASAP7_75t_R", "branch"],
+             ["T2_g", "root", [28.0, 20.0], "BUFx12f_ASAP7_75t_R", "gbuf"],
+             ["T2_br", "T2_g", [28.0, 21.08], "BUFx12f_ASAP7_75t_R", "branch"],
+             ["T0", "T0_br", [10.0, 12.0], "BUFx8_ASAP7_75t_R", "leaf"],
+             ["T1", "T1_br", [20.0, 30.0], "BUFx8_ASAP7_75t_R", "leaf"],
+             ["T2", "T2_br", [30.0, 12.0], "BUFx8_ASAP7_75t_R", "leaf"]]
+    q = dict(mean=250.0, window=6.0, sink_min=245.0, sink_max=256.0, leaf_out_slew_max=50.0, leaf_slew_in_max=20.0)
+    qf = dict(mean=200.0, window=6.0, sink_min=195.0, sink_max=206.0, leaf_out_slew_max=40.0, leaf_slew_in_max=15.0)
+    return dict(name="t", entry=[20.0, 20.0], nodes_xy=nodes, frozen_masters={n[0]: n[3] for n in nodes},
+                leaf_sinks={"T0": ["a/CLK", "b/CLK"], "T1": ["c/CLK"], "T2": ["d/CLK"]}, TT=q, FF=qf,
+                icg_copies=[dict(edge="T0", node="T0_g", gate="u.cg", master="ICGx1_ASAP7_75t_R", first=True, members=["a/CLK", "b/CLK"]),
+                            dict(edge="T1", node="T1_g", gate="u.cg", master="ICGx1_ASAP7_75t_R", first=False, members=["c/CLK"])])
+
+
+def _icg_sites():
+    s = sites()
+    s["masters"]["ICGx1_ASAP7_75t_R"] = (0.972, SH)
+    return s
+
+
+def test_icg_parts_become_planned_gates_and_copies():
+    sl = C.convert(_icg_plan(), _icg_sites(), "tiny_core", outline=[37.8, 37.8])
+    g = sl["core_tree"]["gates"]
+    assert [x["inst"] for x in g] == ["u.cg", "mp_ck_T1_icg"] and all(x["domain"] == "planned" for x in g)
+    assert g[1]["clone_of"] == "u.cg" and g[1]["members"] == ["c/CLK"] and "members" not in g[0]
+    assert "mp_ck_T0_g" not in sl["cell_placements"] and "mp_ck_T2_g" in sl["cell_placements"]
+    p = CI.compile_slice(sl)
+    t = p["core_tree"]
+    assert t["under_gate"]["mp_ck_T0_br"] == "u.cg" and t["under_gate"]["mp_ck_T1"] == "mp_ck_T1_icg"
+    tcl = CI.emit_tcl(sl)
+    assert "ot_ci_tree_gate {u.cg} ICGx1_ASAP7_75t_R {mp_ck_root}" in tcl
+    assert "ot_ci_tree_gate_copy {mp_ck_T1_icg} ICGx1_ASAP7_75t_R {u.cg} {mp_ck_root}" in tcl and "{{c/CLK}}" in tcl
+    assert tcl.index("ot_ci_tree_gate_planned {u.cg}") < tcl.index("ot_ci_tree_node {mp_ck_T0_br} {u.cg}")
+    assert "ot_ci_lec_netlist /work/core_infra_post.v" in tcl
+
+
+def test_icg_rows_must_match_icg_nodes():
+    r = _icg_plan(); r["icg_copies"] = r["icg_copies"][:1]
+    with pytest.raises(C.ConvertError):
+        C.convert(r, _icg_sites(), "tiny_core", outline=[37.8, 37.8])
+
+
+def test_icg_copy_members_must_equal_its_leaves():
+    r = _icg_plan(); r["icg_copies"][1]["members"] = ["c/CLK", "a/CLK"]
+    sl = C.convert(r, _icg_sites(), "tiny_core", outline=[37.8, 37.8])
+    with pytest.raises(CI.InfraError):
+        CI.compile_slice(sl)

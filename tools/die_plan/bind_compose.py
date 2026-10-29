@@ -21,6 +21,9 @@ def compose(F, rules, spec, Cell):
     bits:[[ {member,port,bit}, ...], ...]}}}]}. Every listed endpoint is exact;
     multi-endpoint bits require identical original nets. Constants are endpoint-local.
     """
+    allow_glue=spec.get('allow_glue',False)
+    if type(allow_glue) is not bool:
+        raise CompositionError('allow_glue must be boolean')
     original = list(F.cells)
     bypath = {c.path:c for c in original}
     if len(bypath) != len(original):
@@ -43,7 +46,8 @@ def compose(F, rules, spec, Cell):
         parts={rules.part_of(c.path) for c in cs}
         if len(parts)!=1 or None in parts or rules.part_of(path) not in parts:
             raise CompositionError(f'{path}: members/replacement must share one mapped partition')
-        if any(c.kind!='leaf' for c in cs): raise CompositionError(f'{path}: only actual leaf members supported')
+        if any(c.kind!='leaf' and not (allow_glue and c.kind=='glue') for c in cs):
+            raise CompositionError(f'{path}: only actual leaf members supported unless allow_glue is explicit')
         endpoints={(c.path,p,i):(b,c.dirs.get(p)) for c in cs for p,bs in c.ports.items() for i,b in enumerate(bs)}
         if any(d not in ('input','output') for _,d in endpoints.values()):
             raise CompositionError(f'{path}: missing/inout terminal direction')
@@ -112,7 +116,7 @@ def compose(F, rules, spec, Cell):
         body += [f'    wire {w};' for w in wire.values()] + assigns
         terminal_record=[]
         for ci,c in enumerate(cs):
-            conns=[]
+            conns=[]; expressions={}
             for pn,bs in sorted(c.ports.items()):
                 expr=[]
                 for i,b in enumerate(bs):
@@ -120,7 +124,17 @@ def compose(F, rules, spec, Cell):
                     e=(mapped[key] if key in mapped and c.dirs[pn]=='input' else f"1'b{b}" if isinstance(b,str) else wire[b])
                     expr.append(e)
                     terminal_record.append([c.path,pn,i,c.dirs[pn],b,e])
-                conns.append(f'.{ident(pn)}({"{"+", ".join(reversed(expr))+"}"})')
+                expression="{"+", ".join(reversed(expr))+"}"
+                expressions[pn]=expression
+                conns.append(f'.{ident(pn)}({expression})')
+            if c.kind=='glue':
+                # Preserve the actual primitive and every clock/reset/polarity.
+                # Use the same emitter as ordinary bound parent glue; unsupported
+                # cells fail closed instead of becoming black-box primitives.
+                from bind import _glue, BindError
+                try: body.append(_glue(c,expressions,'compose_m'+str(ci)))
+                except BindError as exc: raise CompositionError(str(exc)) from exc
+                continue
             ps=', '.join(f'.{ident(k)}({v})' for k,v in sorted(c.params.items()))
             body.append(f'    {ident(c.module)}'+(f' #({ps})' if ps else '')+f' m{ci} ('+', '.join(conns)+');')
         body.append('endmodule\n')
