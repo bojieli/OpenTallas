@@ -12,6 +12,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -25,6 +26,29 @@ def digest(path):
         for b in iter(lambda: f.read(4 << 20), b''):
             h.update(b)
     return h.hexdigest()
+
+
+def native_control_units(rtl_dir):
+    """Read exact atomic source paths from the binder's emitted instances.
+
+    Slice wrappers have changed hierarchy across plan revisions. Do not guess
+    u_lp/u_sl (or any future wrapper): the binder records the original path
+    immediately above each emitted instance, and extract() checks that path
+    against the actual elaborated source before publishing an inventory.
+    """
+    paths = set()
+    for path in sorted(Path(rtl_dir).glob('*.sv')):
+        paths.update(re.findall(r'^\s*// as-built (\S+)\s*$', path.read_text(), re.M))
+    slices = [f'u_s_{col}{tier}' for col in range(8) for tier in ('S', 'N')]
+    units = ['u_seqhost', 'u_bk_sel']
+    for sl in slices:
+        units.append(sl)
+        for atom in ('u_xg', 'u_xr'):
+            matches = sorted(p for p in paths if p.startswith(sl + '.') and p.endswith('.' + atom))
+            if len(matches) != 1:
+                raise ValueError(f'{sl}: emitted source needs one exact {atom}, found {matches}')
+            units.append(matches[0])
+    return units
 
 
 def extract(yjs, manifest, units, *, asbuilt_sha256, top_sha256):
@@ -95,9 +119,15 @@ def main(argv=None):
     ap.add_argument('--bound-top', type=Path, required=True)
     ap.add_argument('--unit', action='append', default=[], help='exact logical source instance; repeat as needed')
     ap.add_argument('--units-json', type=Path, help='JSON list of additional exact source instances')
+    ap.add_argument('--native-control-units', action='store_true',
+                    help='derive seqhost, selector, slices and their exact atomic xg/xr paths from emitted RTL')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args(argv)
     units = a.unit + (json.loads(a.units_json.read_text()) if a.units_json else [])
+    if a.native_control_units:
+        if units:
+            ap.error('--native-control-units cannot be combined with explicit units')
+        units = native_control_units(a.bound_top.parent)
     ab_hash, top_hash = digest(a.asbuilt), digest(a.bound_top)
     yjs = json.loads(a.asbuilt.read_text())
     manifest = json.loads(a.manifest.read_text())
