@@ -28,4 +28,10 @@ for ty,t in d['partition_types'].items():
    for n in clocks[1:]:ports.pop(n,None)
 assert len(report['instances'])==4
 w(a.out/'die_plan.json',d);w(a.out/'clock_entries.json',ce);w(a.out/'core_conns.json',con);w(a.out/newname,ps)
-vl=r(a.views);row=next(copy.deepcopy(q)for q in vl['view_list']if q['module']=='ot_hbm_sm_vm_wr_q_t_lanes4');sha=hashlib.sha256((a.out/newname).read_bytes()).hexdigest();row.update(view='ot_hbm_sm_vm_wr_q_t_lanes4@'+sha[:12],pins_file=newname,pins_sha256=sha,pins=len(ps),recipe_keys=['ot_hbm_sm_vm_wr_q_t_lanes4__oneclk_profile']);vl.update(plan=str(a.out),plan_sha256=hashlib.sha256((a.out/'die_plan.json').read_bytes()).hexdigest(),view_list=[row]);w(a.out/'wrq_views.json',vl);w(a.out/'wrq_oneclk_report.json',report);print(json.dumps({'instances':4,'pins':len(ps),'view':row['view'],'plan':str(a.out)}))
+cm=r(a.out/'core_macros.json');mac=cm['cores']['ot_hbm_sm_vm_wr_q_t_lanes4'];report['old_macro_metadata']=copy.deepcopy(mac)
+# Current k12 actual macro TCL, not the stale R7 plan metadata.
+mac.update(status='PLAN-TRIAL',outline_um=[142.56,216.0],basis='Currentk12preserved macroplacement23.868,116.700; singleclocksourceinterfacecandidate')
+assert len(mac['macros'])==1
+mac['macros'][0]['rect_um']=[23.868,116.7,118.692,157.764]
+w(a.out/'core_macros.json',cm)
+vl=r(a.views);row=next(copy.deepcopy(q)for q in vl['view_list']if q['module']=='ot_hbm_sm_vm_wr_q_t_lanes4');sha=hashlib.sha256((a.out/newname).read_bytes()).hexdigest();row.update(view='ot_hbm_sm_vm_wr_q_t_lanes4@'+sha[:12],pins_file=newname,pins_sha256=sha,pins=len(ps),recipe_keys=['ot_hbm_sm_vm_wr_q_t_lanes4__oneclk_profile']);vl.update(plan=str(a.out/'die_plan.json'),plan_sha256=hashlib.sha256((a.out/'die_plan.json').read_bytes()).hexdigest(),view_list=[row]);w(a.out/'wrq_views.json',vl);w(a.out/'wrq_oneclk_report.json',report);print(json.dumps({'instances':4,'pins':len(ps),'view':row['view'],'plan':str(a.out)}))

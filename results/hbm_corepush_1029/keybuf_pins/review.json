@@ -1,0 +1,12 @@
+{
+ "image": "results/hbm_corepush_1029/keybuf_pins/pin_review.png",
+ "viewed": true,
+ "verdict": "PASS-COND pin-density and track-identity proposals ONLY; no actualmacro/clock/source reach placement qualification",
+ "findings": [
+  "Originalkey_in1099+key_out1099bothW/M4mean7.482pins/um exceeds6 evenfullface: one-layer jointspread impossible",
+  "A separatesWinput/Eoutput onM4, per-layerpeak5.6/5.3, all34fixedotherpins unchanged",
+  "B preservesWfaces andusesM4input/M2output onactualgeneratedM2trackpattern, peaks5.6/4.7; lowerpinviaaccessG2required",
+  "All16origins/orient/outline/clock/reset/strap and2232identitiespreserved, source/data cycles0",
+  "MY reversesglobalfaces; allactualsourceprovider/capturer/stationimpact assignedHBMrebal/planbeforechoice"
+ ]
+}
