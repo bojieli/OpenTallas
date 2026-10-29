@@ -1,0 +1,362 @@
+{
+ "s_0S_LP": {
+  "type": "dsdv_slice_lepw_mus_LP__t2",
+  "outline_um": [
+   1442.88,
+   1226.88
+  ],
+  "link_face": "S",
+  "lane_orient": "R0",
+  "uniform_row_x_um": [
+   4.32,
+   383.76,
+   763.2,
+   1142.64
+  ],
+  "uniform_street_um": 83.52,
+  "link_face_other_windows": [
+   [
+    "ft0",
+    [
+     456.96,
+     565.028
+    ]
+   ],
+   [
+    "ft2",
+    [
+     569.856,
+     624.732
+    ]
+   ],
+   [
+    "ft3",
+    [
+     627.072,
+     636.836
+    ]
+   ],
+   [
+    "ft1",
+    [
+     645.312,
+     656.228
+    ]
+   ],
+   [
+    "unit_i0",
+    [
+     889.536,
+     906.596
+    ]
+   ]
+  ],
+  "uniform_row_covers": [
+   "ft0",
+   "ft2",
+   "ft3",
+   "ft1",
+   "unit_i0"
+  ],
+  "sideways_bit_um_current": 706870,
+  "sideways_mean_um_per_bit": 172.1,
+  "proposed": {
+   "lane_x_um": [
+    4.32,
+    312.865,
+    834.095,
+    1142.64
+   ],
+   "lane_gap_um": 12.63,
+   "street_um": [
+    615.098,
+    827.782
+   ],
+   "street_width_um": 212.68,
+   "moved_coll_windows": {
+    "coll_i0": [
+     10.476,
+     133.836
+    ],
+    "coll_o0": [
+     172.08,
+     294.72
+    ],
+    "coll_i1": [
+     319.021,
+     442.381
+    ],
+    "coll_o1": [
+     480.625,
+     603.265
+    ],
+    "coll_i2": [
+     840.251,
+     963.611
+    ],
+    "coll_o2": [
+     1001.855,
+     1124.495
+    ],
+    "coll_i3": [
+     1148.796,
+     1272.156
+    ],
+    "coll_o3": [
+     1310.4,
+     1433.04
+    ]
+   },
+   "moved_street_windows": {
+    "ft0": [
+     621.098,
+     729.166
+    ],
+    "ft2": [
+     729.166,
+     784.042
+    ],
+    "ft3": [
+     784.042,
+     793.806
+    ],
+    "ft1": [
+     793.806,
+     804.722
+    ],
+    "unit_i0": [
+     804.722,
+     821.782
+    ]
+   },
+   "sideways_bit_um": 0.0
+  },
+  "lane_area_mm2": 0.5599,
+  "parent_area_mm2": 1.7702,
+  "area_left_mm2": 1.2103
+ },
+ "s_0N_LP": {
+  "type": "dsdv_slice_lepw_mu_LP__t2",
+  "outline_um": [
+   1442.88,
+   1226.88
+  ],
+  "link_face": "N",
+  "lane_orient": "MX",
+  "uniform_row_x_um": [
+   4.32,
+   383.76,
+   763.2,
+   1142.64
+  ],
+  "uniform_street_um": 83.52,
+  "link_face_other_windows": [
+   [
+    "ca_o0",
+    [
+     907.968,
+     964.58
+    ]
+   ],
+   [
+    "cb_o0",
+    [
+     969.216,
+     1029.284
+    ]
+   ],
+   [
+    "tl_i0",
+    [
+     1030.464,
+     1090.532
+    ]
+   ]
+  ],
+  "uniform_row_covers": [
+   "ca_o0",
+   "cb_o0",
+   "tl_i0"
+  ],
+  "sideways_bit_um_current": 1393240,
+  "sideways_mean_um_per_bit": 339.2,
+  "proposed": {
+   "lane_x_um": [
+    4.32,
+    320.844,
+    826.116,
+    1142.64
+   ],
+   "lane_gap_um": 20.6,
+   "street_um": [
+    627.066,
+    815.814
+   ],
+   "street_width_um": 188.75,
+   "moved_coll_windows": {
+    "coll_i0": [
+     10.476,
+     133.836
+    ],
+    "coll_o0": [
+     172.08,
+     294.72
+    ],
+    "coll_i1": [
+     327.0,
+     450.36
+    ],
+    "coll_o1": [
+     488.604,
+     611.244
+    ],
+    "coll_i2": [
+     832.272,
+     955.632
+    ],
+    "coll_o2": [
+     993.876,
+     1116.516
+    ],
+    "coll_i3": [
+     1148.796,
+     1272.156
+    ],
+    "coll_o3": [
+     1310.4,
+     1433.04
+    ]
+   },
+   "moved_street_windows": {
+    "ca_o0": [
+     633.066,
+     689.678
+    ],
+    "cb_o0": [
+     689.678,
+     749.746
+    ],
+    "tl_i0": [
+     749.746,
+     809.814
+    ]
+   },
+   "sideways_bit_um": 0.0
+  },
+  "lane_area_mm2": 0.5599,
+  "parent_area_mm2": 1.7702,
+  "area_left_mm2": 1.2103
+ },
+ "s_7N_LP": {
+  "type": "dsdv_slice_lepe_mu_LP__t2",
+  "outline_um": [
+   1442.88,
+   1226.88
+  ],
+  "link_face": "N",
+  "lane_orient": "MX",
+  "uniform_row_x_um": [
+   4.32,
+   383.76,
+   763.2,
+   1142.64
+  ],
+  "uniform_street_um": 83.52,
+  "link_face_other_windows": [
+   [
+    "ft0",
+    [
+     456.96,
+     517.028
+    ]
+   ],
+   [
+    "tp_i0",
+    [
+     744.192,
+     800.036
+    ]
+   ],
+   [
+    "tp_o0",
+    [
+     805.44,
+     865.308
+    ]
+   ]
+  ],
+  "uniform_row_covers": [
+   "ft0",
+   "tp_i0",
+   "tp_o0"
+  ],
+  "sideways_bit_um_current": 895639,
+  "sideways_mean_um_per_bit": 218.0,
+  "proposed": {
+   "lane_x_um": [
+    4.32,
+    321.167,
+    825.793,
+    1142.64
+   ],
+   "lane_gap_um": 20.93,
+   "street_um": [
+    627.55,
+    815.33
+   ],
+   "street_width_um": 187.78,
+   "moved_coll_windows": {
+    "coll_i0": [
+     10.476,
+     133.836
+    ],
+    "coll_o0": [
+     172.08,
+     294.72
+    ],
+    "coll_i1": [
+     327.323,
+     450.683
+    ],
+    "coll_o1": [
+     488.927,
+     611.567
+    ],
+    "coll_i2": [
+     831.949,
+     955.309
+    ],
+    "coll_o2": [
+     993.553,
+     1116.193
+    ],
+    "coll_i3": [
+     1148.796,
+     1272.156
+    ],
+    "coll_o3": [
+     1310.4,
+     1433.04
+    ]
+   },
+   "moved_street_windows": {
+    "ft0": [
+     633.55,
+     693.618
+    ],
+    "tp_i0": [
+     693.618,
+     749.462
+    ],
+    "tp_o0": [
+     749.462,
+     809.33
+    ]
+   },
+   "sideways_bit_um": 0.0
+  },
+  "lane_area_mm2": 0.5599,
+  "parent_area_mm2": 1.7702,
+  "area_left_mm2": 1.2103
+ }
+}

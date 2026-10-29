@@ -5,13 +5,14 @@ kit geometry (variant B 302.4 x 630.72, link pins rx 515 @0.24 from x=6.156, tx 
   * the lane-row fit along the link face with the type's plan windows as they are (ft corridors on the same face);
   * the sideways landing distance |window bit x - lane pin x| summed over the rx/tx bits (current windows);
   * a proposed layout (lanes + one ft street) and the moved windows (coll_iK under lane K rx, coll_oK under lane K tx).
-    python3 parent_estimate.py OUT.json
+    python3 parent_estimate.py OUT.json [LANE_W LANE_H]
 """
 import json, sys
 from pathlib import Path
 R = Path(__file__).resolve().parents[2]
 p = json.load(open(R / 'physical/die_plan/s81/die_plan.json'))
-LW, LH, ST = 302.4, 630.72, 0.24
+LW, LH = (float(sys.argv[2]), float(sys.argv[3])) if len(sys.argv) > 3 else (302.4, 630.72)   # S81-LP-3: T = 295.92 473.04
+ST = 0.24
 RX0, NRX, NTX = 6.156, 515, 512
 TX0 = LW - 4.32 - 1.2 - 511 * ST
 TYPES = {'s_0S_LP': 'dsdv_slice_lepw_mus_LP__t2', 's_0N_LP': 'dsdv_slice_lepw_mu_LP__t2', 's_7N_LP': 'dsdv_slice_lepe_mu_LP__t2'}
