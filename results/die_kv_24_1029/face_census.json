@@ -1,0 +1,232 @@
+{
+  "q1": {
+    "tie_nets": [
+      "_06490_",
+      "_06491_",
+      "_12_",
+      "_1_"
+    ],
+    "macros": [
+      {
+        "instance": "\\u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[0].u_s",
+        "faces": {
+          "W": {
+            "pins": 410,
+            "tied_pins": 137,
+            "active_pins": 273,
+            "active_nets": 273,
+            "tie_nets": 1
+          },
+          "E": {
+            "pins": 409,
+            "tied_pins": 409,
+            "active_pins": 0,
+            "active_nets": 0,
+            "tie_nets": 2
+          }
+        }
+      },
+      {
+        "instance": "\\u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[1].u_s",
+        "faces": {
+          "W": {
+            "pins": 410,
+            "tied_pins": 0,
+            "active_pins": 410,
+            "active_nets": 410,
+            "tie_nets": 0
+          },
+          "E": {
+            "pins": 409,
+            "tied_pins": 290,
+            "active_pins": 119,
+            "active_nets": 119,
+            "tie_nets": 2
+          }
+        }
+      },
+      {
+        "instance": "\\u_ref.u_leaf.u_b.u.g_static_rows.u_rows.g_data.g_macro[0].u_s",
+        "faces": {
+          "W": {
+            "pins": 410,
+            "tied_pins": 0,
+            "active_pins": 410,
+            "active_nets": 410,
+            "tie_nets": 0
+          },
+          "E": {
+            "pins": 409,
+            "tied_pins": 290,
+            "active_pins": 119,
+            "active_nets": 119,
+            "tie_nets": 2
+          }
+        }
+      },
+      {
+        "instance": "\\u_ref.u_leaf.u_b.u.g_static_rows.u_rows.g_data.g_macro[1].u_s",
+        "faces": {
+          "W": {
+            "pins": 410,
+            "tied_pins": 0,
+            "active_pins": 410,
+            "active_nets": 410,
+            "tie_nets": 0
+          },
+          "E": {
+            "pins": 409,
+            "tied_pins": 290,
+            "active_pins": 119,
+            "active_nets": 119,
+            "tie_nets": 2
+          }
+        }
+      }
+    ],
+    "middle_pairs": [
+      {
+        "instances": [
+          "\\u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[0].u_s",
+          "\\u_ref.u_leaf.u_b.u.g_static_rows.u_rows.g_data.g_macro[0].u_s"
+        ],
+        "physical_pins": 819,
+        "active_pins": 410,
+        "unique_active_nets": 410,
+        "unique_tie_nets": 2,
+        "raw_channel_um": 12.744,
+        "raw_M3_M5_tracks": 619.5,
+        "ratio": 0.6618240516545602
+      },
+      {
+        "instances": [
+          "\\u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[1].u_s",
+          "\\u_ref.u_leaf.u_b.u.g_static_rows.u_rows.g_data.g_macro[1].u_s"
+        ],
+        "physical_pins": 819,
+        "active_pins": 529,
+        "unique_active_nets": 529,
+        "unique_tie_nets": 2,
+        "raw_channel_um": 12.744,
+        "raw_M3_M5_tracks": 619.5,
+        "ratio": 0.8539144471347861
+      }
+    ],
+    "assumptions": "M3/M5 raw vertical supply; halo restricts cells, not routing. No congestion/PG/other nets deducted; placement GRT still required."
+  },
+  "q2": {
+    "tie_nets": [
+      "_06195_",
+      "_06196_",
+      "_1_",
+      "_3_"
+    ],
+    "macros": [
+      {
+        "instance": "\\u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[0].u_s",
+        "faces": {
+          "W": {
+            "pins": 410,
+            "tied_pins": 0,
+            "active_pins": 410,
+            "active_nets": 410,
+            "tie_nets": 0
+          },
+          "E": {
+            "pins": 409,
+            "tied_pins": 290,
+            "active_pins": 119,
+            "active_nets": 119,
+            "tie_nets": 2
+          }
+        }
+      },
+      {
+        "instance": "\\u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[1].u_s",
+        "faces": {
+          "W": {
+            "pins": 410,
+            "tied_pins": 0,
+            "active_pins": 410,
+            "active_nets": 410,
+            "tie_nets": 0
+          },
+          "E": {
+            "pins": 409,
+            "tied_pins": 290,
+            "active_pins": 119,
+            "active_nets": 119,
+            "tie_nets": 2
+          }
+        }
+      },
+      {
+        "instance": "\\u_ref.u_leaf.u_b.u.g_static_rows.u_rows.g_data.g_macro[0].u_s",
+        "faces": {
+          "W": {
+            "pins": 410,
+            "tied_pins": 0,
+            "active_pins": 410,
+            "active_nets": 410,
+            "tie_nets": 0
+          },
+          "E": {
+            "pins": 409,
+            "tied_pins": 290,
+            "active_pins": 119,
+            "active_nets": 119,
+            "tie_nets": 2
+          }
+        }
+      },
+      {
+        "instance": "\\u_ref.u_leaf.u_b.u.g_static_rows.u_rows.g_data.g_macro[1].u_s",
+        "faces": {
+          "W": {
+            "pins": 410,
+            "tied_pins": 137,
+            "active_pins": 273,
+            "active_nets": 273,
+            "tie_nets": 1
+          },
+          "E": {
+            "pins": 409,
+            "tied_pins": 409,
+            "active_pins": 0,
+            "active_nets": 0,
+            "tie_nets": 2
+          }
+        }
+      }
+    ],
+    "middle_pairs": [
+      {
+        "instances": [
+          "\\u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[0].u_s",
+          "\\u_ref.u_leaf.u_b.u.g_static_rows.u_rows.g_data.g_macro[0].u_s"
+        ],
+        "physical_pins": 819,
+        "active_pins": 529,
+        "unique_active_nets": 529,
+        "unique_tie_nets": 2,
+        "raw_channel_um": 12.744,
+        "raw_M3_M5_tracks": 619.5,
+        "ratio": 0.8539144471347861
+      },
+      {
+        "instances": [
+          "\\u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[1].u_s",
+          "\\u_ref.u_leaf.u_b.u.g_static_rows.u_rows.g_data.g_macro[1].u_s"
+        ],
+        "physical_pins": 819,
+        "active_pins": 392,
+        "unique_active_nets": 392,
+        "unique_tie_nets": 2,
+        "raw_channel_um": 12.744,
+        "raw_M3_M5_tracks": 619.5,
+        "ratio": 0.632768361581921
+      }
+    ],
+    "assumptions": "M3/M5 raw vertical supply; halo restricts cells, not routing. No congestion/PG/other nets deducted; placement GRT still required."
+  }
+}

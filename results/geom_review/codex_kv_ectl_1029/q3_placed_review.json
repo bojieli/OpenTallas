@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS-COND CTS-only trial; no detailed-route or sign-off claim",
+  "image": "/srv/opentallas-scratch/claude/wt/codex-kv-1028/results/geom_review/codex_kv_ectl_1029/q3_placed.png",
+  "actual_source": "codex/kv-1028@07980c5be",
+  "kit": "intel1:/srv/opentallas-scratch2/claude/codex-kv-1028/ectl/kits/qkd_ectlk_q3__216x172.8",
+  "auto_verdict": "FAIL preserved: stdcell fill0.0713 / empty0.7327, macro area excluded",
+  "findings": [
+    "Personally viewed actual3_place image; exacttwoSRAMmaster94.824x41.064 atplanned2sites, no cells overmacros, clockentry108/86.4clear.",
+    "ActualGRT50iter M2-M5 overflow0, connectedr2rmax176.26um/0violations, pinregisterp90=8.14um/max72.3um/unregistered0, clockreach184.46um, pinden4.3/um.",
+    "Outline height required by northSRAMtop168.468+halo4.32=172.788. ExistingparentpinABI uses569Efacepinsx215.904 and902Sfacepins distributedacross216um; shrinking requiresnewpin/parentgeometryevent.",
+    "TwoSRAMarea7787.71um2+stdcells1922.58um2=26.0%grossfill. Area is retained for fixedpinABI, SRAMchannels, andclockislands underMETH1.14 statedreason.",
+    "Channel_hestimateWARN0.871 atmacroedge125/127 vsactualGRT0; preserveflagandrequireactualCTS/body/clockreviewandFFtiming beforedetailroute.",
+    "Hold CTS untilsharedmacro_cts_clusterpackaging fix available; currentplacement retained."
+  ]
+}

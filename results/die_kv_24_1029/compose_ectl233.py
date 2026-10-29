@@ -4,7 +4,7 @@ import json,sys,os,subprocess
 from pathlib import Path
 W=Path('/srv/opentallas-scratch2/claude/wt/codex-kv-ectl-1028')
 R=Path('/srv/opentallas-scratch2/claude/codex-kv-1028')
-sys.path.insert(0,str(R/'mixed_source/tools/die_plan'))
+sys.path.insert(0,str(W/'tools/die_plan'))
 import count_align_bind as CB, clock_landing_plan as LP,gen
 O=Path(sys.argv[1]);O.mkdir(parents=True,exist_ok=True)
 I=W/'results/die_kv_7_1028/input'

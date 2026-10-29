@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.kv.macro_sites.v1",
+ "core": "qkd_ectlk_q2__233.28x172.8",
+ "note": "ROOT approved actualfour-SRAM coherentECTL233 base: minimum10.8umcoreedgechannels,12.744ummiddle,clock108/86.4unchanged,0cycles; actualM5GRTbeforeDRT.",
+ "sites": {
+  "ot_sram_1r1w_128x256_m1_r2c2": [
+   [
+    15.552,
+    13.26,
+    "MX"
+   ],
+   [
+    15.552,
+    127.404,
+    "R0"
+   ],
+   [
+    123.12,
+    13.26,
+    "MX"
+   ],
+   [
+    123.12,
+    127.404,
+    "R0"
+   ]
+  ]
+ }
+}
