@@ -1,0 +1,3934 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-10-29T15:32:41+0000",
+ "verdict": "EQUIVALENT",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": null,
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "top": "qkd_ectlk_q1",
+ "netlist": "/work/run/results/asap7/hc_qkd_ectlk_q1__233_28x172_8/base/1_2_yosys.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {
+  "ot_sram_1r1w_128x256_m1_r2c2": 12
+ },
+ "ports": {
+  "inputs": 1058,
+  "outputs": 910
+ },
+ "t_aig_s": 13.3,
+ "kit_reset_ports": [
+  "rst_n"
+ ],
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [
+    "pi:rst_n[0]"
+   ],
+   "gate": [
+    "pi:rst_n[0]"
+   ]
+  },
+  "reset_asserted": {
+   "gold": {
+    "pi:rst_n[0]": 0
+   },
+   "gate": {
+    "pi:rst_n[0]": 0
+   }
+  },
+  "reset_cycles": 4,
+  "release_edges": 8,
+  "n_release": 0,
+  "release": [],
+  "n_universal_raw_D": 0,
+  "universal_raw_D": [],
+  "raw_base_steps": 0,
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_kept": 1532,
+  "n_reloaded": 846,
+  "n_dropped": 0,
+  "reloaded": [
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.LPv[0]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.LPv[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.LPv[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[0]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[4]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[5]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[6]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[7]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_gam[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_gam[4]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_j[0]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_j[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_j[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_k[0]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_k[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_k[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_k[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_vph",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.lt_infl[0]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.lt_infl[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.lt_infl[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.lt_infl[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.lt_rho[0]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.lt_rho[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.lt_rho[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_b[0]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_b[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_b[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_b[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_busy",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_wait[0]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_wait[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_wait[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_wait[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.ocred",
+    "side": "gold",
+    "value": 1,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.pend[0]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.pend[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.pend[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.pend[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.pend[4]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.pend[5]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.pend[6]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.pend[7]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[0]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[100]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[101]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[102]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[103]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[104]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[105]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[106]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[107]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[108]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[109]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[10]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[110]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[111]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[112]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[113]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[114]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[115]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[116]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[117]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[118]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[119]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[11]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[120]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[121]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[122]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[123]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[124]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[125]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[126]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[127]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[128]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[129]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[12]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[130]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[131]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[132]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[133]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[134]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[135]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[136]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[137]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[138]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[139]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[13]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[140]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[141]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[142]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[143]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[144]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[145]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[146]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[147]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[148]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[149]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[14]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[150]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[151]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[152]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[153]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[154]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[155]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[156]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[157]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[158]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[159]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[15]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[160]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[161]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[162]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[163]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[164]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[165]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[166]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[167]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[168]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[169]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[16]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[170]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[171]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[172]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[173]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[174]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[175]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[176]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[177]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[178]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[179]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[17]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[180]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[181]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[182]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[183]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[184]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[185]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[186]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[187]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[188]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[189]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[18]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[190]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[191]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[192]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[193]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[194]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[195]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[196]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[197]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[198]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[199]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[19]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[200]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[201]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[202]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[203]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[204]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[205]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[206]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[207]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[208]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[209]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[20]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[210]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[211]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[212]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[213]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[214]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[215]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[216]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[217]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[218]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[219]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[21]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[220]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[221]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[222]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[223]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[224]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[225]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[226]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[227]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[228]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[229]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[22]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[230]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[231]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[232]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[233]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[234]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[235]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[236]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[237]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[238]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[239]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[23]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[240]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[241]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[242]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[243]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[244]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[245]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[246]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[247]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[248]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[249]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[24]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[250]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[251]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[252]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[253]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[254]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[255]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[25]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[26]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[27]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[28]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[29]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[30]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[31]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[32]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[33]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[34]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[35]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[36]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[37]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[38]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[39]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[40]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[41]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[42]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[43]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[44]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[45]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[46]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[47]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[48]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[49]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[4]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[50]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[51]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[52]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[53]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[54]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[55]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[56]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[57]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[58]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[59]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[5]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[60]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[61]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[62]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[63]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[64]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[65]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[66]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[67]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[68]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[69]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[6]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[70]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[71]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[72]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[73]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[74]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[75]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[76]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[77]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[78]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[79]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[7]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[80]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[81]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[82]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[83]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[84]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[85]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[86]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[87]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[88]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[89]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[8]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[90]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[91]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[92]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[93]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[94]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[95]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[96]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[97]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[98]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[99]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd2[9]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[0]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[100]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[101]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[102]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[103]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[104]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[105]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[106]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[107]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[108]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[109]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[10]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[110]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[111]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[112]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[113]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[114]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[115]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[116]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[117]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[118]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[119]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[11]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[120]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[121]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[122]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[123]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[124]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[125]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[126]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[127]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[128]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[129]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[12]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[130]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[131]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[132]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[133]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[134]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[135]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[136]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[137]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[138]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[139]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[13]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[140]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[141]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[142]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[143]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[144]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[145]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[146]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[147]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[148]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[149]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[14]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[150]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[151]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[152]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[153]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[154]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[155]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[156]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[157]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[158]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[159]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[15]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[160]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[161]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[162]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[163]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[164]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[165]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[166]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[167]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[168]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[169]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[16]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[170]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[171]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[172]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[173]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[174]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[175]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[176]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[177]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[178]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[179]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[17]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[180]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[181]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[182]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[183]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[184]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[185]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[186]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[187]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[188]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[189]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[18]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[190]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[191]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[192]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[193]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[194]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[195]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[196]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[197]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[198]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[199]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[19]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[200]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[201]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[202]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[203]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[204]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[205]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[206]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[207]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[208]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[209]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[20]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[210]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[211]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[212]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[213]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[214]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[215]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[216]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[217]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[218]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[219]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[21]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[220]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[221]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[222]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[223]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[224]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[225]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[226]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[227]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[228]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[229]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[22]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[230]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[231]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[232]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[233]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[234]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[235]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[236]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[237]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[238]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[239]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[23]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[240]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[241]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[242]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[243]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[244]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[245]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[246]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[247]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[248]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[249]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[24]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[250]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[251]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[252]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[253]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[254]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[255]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[25]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[26]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[27]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[28]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[29]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[30]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[31]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[32]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[33]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[34]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[35]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[36]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[37]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[38]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[39]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[40]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[41]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[42]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[43]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[44]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[45]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[46]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_ref.u_leaf.u_a.u.u.rd3[47]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   }
+  ],
+  "dropped": [],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants; equality/FSM assumptions never establish a constant's base case"
+ },
+ "t_corr_s": 485.2,
+ "keypoints": {
+  "gold": {
+   "inputs": 2711,
+   "flops": 11390,
+   "outputs": 0,
+   "ands": 34795
+  },
+  "gate": {
+   "inputs": 2428,
+   "flops": 18018,
+   "outputs": 0,
+   "ands": 10914
+  },
+  "matched": 7456,
+  "gold_constant_flops": {
+   "n": 1532,
+   "first": [
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.LPv[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.LPv[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.LPv[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[3]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[4]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[5]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[6]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[7]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_gam[3]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_gam[4]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_j[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_j[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_j[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_k[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_k[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_k[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_k[3]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_vph",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.lt_infl[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.lt_infl[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.lt_infl[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.lt_infl[3]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.lt_rho[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.lt_rho[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.lt_rho[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_b[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_b[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_b[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_b[3]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_busy",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_wait[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_wait[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_wait[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.ob_wait[3]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.ocred",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.pend[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.pend[1]"
+   ]
+  },
+  "paired_flops": {
+   "n": 547,
+   "first": [
+    "both:ff:u_dut.u_ref.u_leaf.u_a.u.u.rg_idx[0]=ff:u_dut.u_ref.u_leaf.u_a.u.u.c_idx[0]",
+    "both:ff:u_dut.u_ref.u_leaf.u_a.u.u.rg_idx[1]=ff:u_dut.u_ref.u_leaf.u_a.u.u.c_idx[1]",
+    "both:ff:u_dut.u_ref.u_leaf.u_a.u.u.rg_idx[2]=ff:u_dut.u_ref.u_leaf.u_a.u.u.c_idx[2]",
+    "both:ff:u_dut.u_ref.u_leaf.u_a.u_k.rn=ff:u_dut.u_ref.u_leaf.u_a.rst_q",
+    "both:ff:u_dut.u_ref.u_leaf.u_b.u.g_s1b[0].u_t.q[1]=ff:u_dut.u_ref.u_leaf.u_b.u.g_s1b[0].u_t.q[0]",
+    "both:ff:u_dut.u_ref.u_leaf.u_b.u.lt1[1]=ff:u_dut.u_ref.u_leaf.u_b.u.lt1[0]",
+    "both:ff:u_dut.u_ref.u_leaf.u_b.u.rg_idx[0]=ff:u_dut.u_ref.u_leaf.u_b.u.c_idx[0]",
+    "both:ff:u_dut.u_ref.u_leaf.u_b.u.rg_idx[1]=ff:u_dut.u_ref.u_leaf.u_b.u.c_idx[1]",
+    "both:ff:u_dut.u_ref.u_leaf.u_b.u.rg_idx[2]=ff:u_dut.u_ref.u_leaf.u_b.u.c_idx[2]",
+    "both:ff:u_dut.u_ref.u_leaf.u_b.u.u_lttag.g_line.line[3]=ff:u_dut.u_ref.u_leaf.u_b.u.g_s1b[0].u_t.q[2]",
+    "both:ff:u_dut.u_ref.u_leaf.u_b.u.u_lttag.g_line.line[4]=ff:u_dut.u_ref.u_leaf.u_b.u.g_s1b[0].u_t.q[3]",
+    "both:ff:u_dut.u_ref.u_leaf.u_b.u.u_lttag.g_line.line[5]=ff:u_dut.u_ref.u_leaf.u_b.u.g_s1b[0].u_t.q[0]",
+    "both:ff:u_dut.u_ref.u_leaf.u_b.u.u_rc.q=ff:u_dut.u_ref.u_leaf.u_b.u.g_rhalf[0].u_l.q",
+    "both:ff:u_dut.u_ref.u_leaf.u_c.u.g_rhalf[0].u_l.q=ff:u_dut.u_ref.u_leaf.u_b.u.g_rhalf[0].u_l.q",
+    "both:ff:u_dut.u_ref.u_leaf.u_c.u.u_r0.q=ff:u_dut.u_ref.u_leaf.u_b.u.u_r0.q",
+    "both:ff:u_dut.u_ref.u_leaf.u_c.u.u_rpin.relay_q=ff:u_dut.u_ref.u_leaf.u_b.u.u_rpin.relay_q",
+    "both:ff:u_dut.u_ref.u_leaf.u_c.u.u_rpin.sync_q[0]=ff:u_dut.u_ref.u_leaf.u_a.rst_q",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[391]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[391]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[392]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[392]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[393]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[393]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[394]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[394]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[395]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[395]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[396]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[396]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[397]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[397]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[398]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[398]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[399]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[399]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[400]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[400]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[401]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[401]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[402]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[402]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[403]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[403]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[404]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[404]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[405]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[405]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[406]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[406]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[407]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[407]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[408]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[408]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[409]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[409]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[410]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[410]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[411]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[411]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[412]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[412]",
+    "gate:ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[413]=ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[413]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 45,
+   "first": [
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.credit_used[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.credit_used[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.credit_used[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.credit_used[3]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.credit_used[4]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.credit_used[5]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.credit_used[6]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.credit_used[7]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.gmax[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.gmax[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.gmax[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.gmax[3]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.gmax[4]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.kdrain[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.kdrain[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.kdrain[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.kdrain[3]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.kdrain[4]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.kdrain[5]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.kdrain[6]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.kdrain[7]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.x1[15]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.x1[16]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.x1[17]",
+    "ff:u_dut.u_ref.u_leaf.u_b.u.credit_used[0]",
+    "ff:u_dut.u_ref.u_leaf.u_b.u.credit_used[1]",
+    "ff:u_dut.u_ref.u_leaf.u_b.u.credit_used[2]",
+    "ff:u_dut.u_ref.u_leaf.u_b.u.credit_used[3]",
+    "ff:u_dut.u_ref.u_leaf.u_b.u.credit_used[4]",
+    "ff:u_dut.u_ref.u_leaf.u_b.u.credit_used[5]",
+    "ff:u_dut.u_ref.u_leaf.u_b.u.credit_used[6]",
+    "ff:u_dut.u_ref.u_leaf.u_b.u.credit_used[7]",
+    "ff:u_dut.u_ref.u_leaf.u_b.u.gmax[0]",
+    "ff:u_dut.u_ref.u_leaf.u_b.u.gmax[1]",
+    "ff:u_dut.u_ref.u_leaf.u_b.u.gmax[2]",
+    "ff:u_dut.u_ref.u_leaf.u_b.u.gmax[3]",
+    "ff:u_dut.u_ref.u_leaf.u_b.u.gmax[4]",
+    "ff:u_dut.u_ref.u_leaf.u_b.u.kdrain[0]",
+    "ff:u_dut.u_ref.u_leaf.u_b.u.kdrain[1]",
+    "ff:u_dut.u_ref.u_leaf.u_b.u.kdrain[2]"
+   ]
+  },
+  "gate_unmatched": {
+   "n": 782,
+   "first": [
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[100]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[101]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[102]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[103]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[104]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[105]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[106]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[107]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[108]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[109]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[10]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[110]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[111]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[112]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[113]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[114]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[115]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[116]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[117]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[118]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[119]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[11]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[120]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[121]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[122]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[123]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[124]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[125]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[126]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[127]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[128]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[129]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[12]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[130]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[131]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[132]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[133]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[134]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[135]"
+   ]
+  },
+  "gold_x_sources": 1653,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 1370,
+  "gold_only_compare": {
+   "n": 1830,
+   "first": [
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.LPv[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.LPv[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.LPv[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[3]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[4]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[5]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[6]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.arm[7]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_gam[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_gam[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_gam[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_gam[3]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_gam[4]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_j[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_j[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_j[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_k[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_k[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_k[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_k[3]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_vph",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.credit_used[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.credit_used[1]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.credit_used[2]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.credit_used[3]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.credit_used[4]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.credit_used[5]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.credit_used[6]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.credit_used[7]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[391]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[392]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[393]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[394]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[395]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[396]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[397]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q[398]"
+   ]
+  },
+  "gate_only_compare": {
+   "n": 1542,
+   "first": [
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[0]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[100]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[101]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[102]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[103]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[104]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[105]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[106]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[107]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[108]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[109]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[10]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[110]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[111]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[112]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[113]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[114]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[115]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[116]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[117]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[118]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[119]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[11]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[120]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[121]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[122]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[123]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[124]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[125]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[126]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[127]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[128]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[129]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[12]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[130]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[131]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[132]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[133]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[134]",
+    "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_s1b[0].u_r.q#t[135]"
+   ]
+  }
+ },
+ "t_prove_s": 0.6,
+ "x_dont_care_points": {
+  "n": 137,
+  "first": [
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_fin",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_idx[0]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_idx[10]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_idx[11]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_idx[1]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_idx[2]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_idx[3]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_idx[4]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_idx[5]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_idx[6]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_idx[7]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_idx[8]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_idx[9]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.rp[0]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.rp[1]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.rp[2]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.rp[3]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.rp[4]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.rp[5]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.rp[6]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.wp[0]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.wp[1]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.wp[2]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.wp[3]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.wp[4]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.wp[5]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.wp[6]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.rg_idx[0]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.rg_idx[10]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.rg_idx[11]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.rg_idx[1]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.rg_idx[2]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.rg_idx[3]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.rg_idx[4]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.rg_idx[5]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.rg_idx[6]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.rg_idx[7]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.rg_idx[8]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.rg_idx[9]",
+   "ff:u_dut.u_ref.u_leaf.u_a.u.u.rg_run"
+  ]
+ },
+ "kept_registers": {
+  "declared": 5,
+  "in_netlist": 5,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "counts": {
+  "compare_points": 10655,
+  "proved": 10655,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "10655 compare points proved; 7456 key points matched by name, 547 register pairs / merges and 1532 constant registers proved inductively; 45 RTL and 782 gate registers unmatched and unobservable (proved as free inputs); 137 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "t_total_s": 500.6,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "kit provenance invalid: ValueError: source, input or running-tool identity mismatch"
+ }
+}

@@ -1,0 +1,35 @@
+{
+ "verdict": "PASS",
+ "top": "qkd_ectlk_q0",
+ "checked": 1474,
+ "ok": 1474,
+ "fail_counts": {},
+ "fails": {},
+ "dead_declared": [],
+ "netlist": "/work/run/results/asap7/hc_qkd_ectlk_q0__216x172_8/base/1_2_yosys.v",
+ "pins": "/work/pins.json",
+ "boundary_context": {
+  "manifest": "/work/boundary_guard_context.json",
+  "source_core_json": "/work/core.json",
+  "controls": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "one_station_ft_slots": [],
+ "port_gate": {
+  "verdict": "PASS",
+  "io_pins": 1478,
+  "netlist_ports": 1478,
+  "io_only": 0,
+  "net_only": 0,
+  "io_only_first": [],
+  "net_only_first": []
+ },
+ "island_ft_gate": {
+  "verdict": "PASS",
+  "arcs": 1,
+  "cells": 1,
+  "bad": []
+ }
+}
