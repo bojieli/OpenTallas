@@ -355,3 +355,17 @@ def test_capture_override_uses_actual_declared_region_tap():
     for bad in [{'R3':'t_R4_0'}, {'R3':'invented'}, {'R99':'t_R3_0'}]:
         with pytest.raises(ValueError, match='measured proof tap'):
             cap.clock_start_edges(chain_rows(), ctx_chain(), capture_taps=bad)
+
+
+def test_data_count_frames_can_be_clock_tree_leaves():
+    # A physical partition can have a clock root above other partitions. START
+    # count origins must not become internal clock forwarding nodes in this form.
+    rows=chain_rows()
+    root,edges,info=cap.clock_start_edges(rows,ctx_chain(),leaf_origins=True)
+    cap.start_tree_check(root,edges)
+    parts={r[k] for r in rows for k in ('src','dst')}
+    assert root.startswith('st:')
+    assert parts <= {e['dst'] for e in edges}
+    assert not parts & {e['src'] for e in edges}
+    assert all(e['clean_ok'] for e in edges)
+    assert info['leaf_origins']

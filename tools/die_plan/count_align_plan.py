@@ -581,7 +581,7 @@ def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="tabl
 
 
 def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew=(0.0, 0.0), skew_clean=False,
-                      retime_max=8, clean_by="phase", retime_up=False, prev=None, max_hop_um=None, capture_taps=None):
+                      retime_max=8, clean_by="phase", retime_up=False, prev=None, max_hop_um=None, capture_taps=None, leaf_origins=False):
     """START TREE = CLOCK TREE (START-TREE-1).  ctx = clock_contexts() ({corner: meta/taps/ocv/rng}, first = nominal).
     Nodes: every data region at its clock root (longest common tree_path prefix of its taps) and every branch node of
     the clock subtree spanning those roots (virtual 'st:<path>', a retime flop on that tree node).  Each node's start
@@ -640,9 +640,12 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
                 raise ValueError(f"START capture override {region}: {tap} is not that region's measured proof tap")
     leg = {c: DSR.tap_leg(k["meta"], k["taps"]) for c, k in ctx.items()}
     fleg = {c: DSR.tap_leg_fall(k["meta"], k["taps"]) for c, k in ctx.items()}
+    # Leaves have one actual measured capture tap. Their clock path is not the
+    # LCP of all taps elsewhere in the physical partition.
+    capture_of_key = {x: (capture_taps or {}).get(x) or min(rtaps[x], key=lambda k: (float(c0["taps"][k]["late_ps"]), k)) for x in regions}
     rootp = {}
     for x in regions:
-        ps = [c0["taps"][k]["tree_path"] for k in rtaps[x]]
+        ps = [c0["taps"][k]["tree_path"] for k in ([capture_of_key[x]] if leaf_origins else rtaps[x])]
         p = ps[0]
         for q in ps[1:]:
             p = _lcp(p, q)
@@ -659,10 +662,10 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
         at[rootp[x]].append(x)
     node_of, path_of = {}, {}
     for p in sorted(allp, key=lambda q: (len(q), q)):
-        prim = at[p][0] if at.get(p) else f"st:{p}"
+        prim = at[p][0] if at.get(p) and not leaf_origins else f"st:{p}"
         node_of[p] = prim
         path_of[prim] = p
-        for x in at.get(p, [])[1:]:
+        for x in (at.get(p, []) if leaf_origins else at.get(p, [])[1:]):
             path_of[x] = p
     root = node_of[min(allp, key=lambda q: (len(q), q))]
 
@@ -672,6 +675,8 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     def capture_of(y):
         if y.startswith("st:"):
             return vtap(cs[0], path_of[y])
+        if leaf_origins:
+            return capture_of_key[y]
         if capture_taps is not None and y in capture_taps:
             return capture_taps[y]
         m = c0["meta"]
@@ -755,7 +760,7 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
         if prim != root:
             pp = max((q for q in allp if len(q) < len(p) and p.startswith(q)), key=len)
             pairs.append((node_of[pp], prim))
-        pairs += [(prim, x) for x in at.get(p, [])[1:]]
+        pairs += [(prim, x) for x in (at.get(p, []) if leaf_origins else at.get(p, [])[1:])]
     # contract virtual branch nodes: a branch node needs its own start stage only if some child cannot take a CLEAN
     # port straight from the branch node's parent (fewer stages, fewer retime flops; every kept port stays clean)
     par_of = {y: x for x, y in pairs}
@@ -849,7 +854,7 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     start_tree_check(root, edges)
     info = dict(clean_by=clean_by, clean_by_width=sum(1 for e in edges if width_robust(e, T, ap)),
                 fall_measured=sum(1 for e in edges if e.get("fall_lo") is not None),
-                root=root, root_path=path_of[root], leg_ps={c: list(v) for c, v in leg.items()},
+                leaf_origins=leaf_origins, root=root, root_path=path_of[root], leg_ps={c: list(v) for c, v in leg.items()},
                 regions=len(regions), branch_nodes=sum(1 for p in allp if not at.get(p)), branch_nodes_contracted=contracted,
                 retime_nodes=sum(1 for e in edges if e["retime"]))
     if max_hop_um is not None:
@@ -1063,6 +1068,7 @@ def add_start_tree_args(ap):
                     help="opt-in {region: measured proof tap port} capture selection; actual type-uniform GLUE pin mapping is supplied by plan owner")
     ap.add_argument("--start-max-hop-um", type=float,
                     help="opt-in physical START reach bound: keep/split clock-tree stages until each Manhattan tap-to-tap hop fits; requires physical proof coordinates; final emitted placement still needs GEOM")
+    ap.add_argument("--start-leaf-origins", action="store_true", help="opt-in: each data START origin is a leaf of the virtual clock-node tree; needed for nested physical clock groups")
     ap.add_argument("--start-retime-max", type=int, default=8, help="max retime flops per clock-tree start edge")
     ap.add_argument("--start-retime-up", action="store_true",
                     help="--start-tree clock (opt-in): allow retime flops on ANCESTOR nodes of the launch tap (climb the "
@@ -1110,7 +1116,8 @@ def start_tree_from_args(a, rows, err):
                                           a.start_skew_clean, a.start_retime_max, a.start_clean,
                                           getattr(a, "start_retime_up", False), start_prev_doc(a),
                                           getattr(a, "start_max_hop_um", None),
-                                          json.load(open(a.start_capture_taps)) if getattr(a, "start_capture_taps", None) else None)
+                                          json.load(open(a.start_capture_taps)) if getattr(a, "start_capture_taps", None) else None,
+                                          getattr(a, "start_leaf_origins", False))
     return edges, root, info
 
 
