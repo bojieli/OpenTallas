@@ -33,8 +33,8 @@ coupon job after collection. Review picture/findings under
 results/geom_review/dme_actual_codex_1029. Both failed point candidates
 stay in their original directories. No P&R/STA has run on the new form.
 
-Focused source checks:19 PASS before frozen-home guard; the6 physical-
+Focused source checks:20 PASS after frozen-home guard; the6 physical-
 leg/body/grid/endpoint/frozen-home controls PASS after it. Default-mode
-DME stage-cal/inverter/join tests pass. Next: independent image review,
-then die owner one isolated clock GRT+actual TT/FF STA, replace model
+DME stage-cal/inverter/join tests pass. Independent GEOM review PASS-COND received. Next: die owner one isolated
+clock GRT+actual TT/FF STA, replace model
 prediction with measured result and regenerate CA before any adoption.

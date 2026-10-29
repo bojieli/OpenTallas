@@ -18,3 +18,10 @@ Verdict: PASS-COND for ONE clock-only coupon GRT/STA trial. The frozen
 homes must remain unchanged; any body overlay move invalidates the model
 and requires replanning/repricing before use. Baseline and first point-
 only candidates retain their12/20 body-overlap FAIL records.
+
+Independent GEOM reviewer /root/geom also personally viewed the image
+and returned PASS-COND one clock-only GRT trial. Explicit planned clock
+construction cost:9 elongated DME legs,2526.6um added wire,25 buffers
+reported by the selected-tree statistics. These are plan-computed before
+measurement; no post-route residual rescue was applied. The actual trial
+must use the shared inverter calibration and report TT/FF/CPPR/CA.
