@@ -1,0 +1,5 @@
+{
+ "line": "AUTO-GEOM FAIL checkpoint=NA(other) aspect=FAIL(2.528) r2r=FAIL(410.02) r2r_count=FAIL(8) partial_face=FAIL(2) channel_h=FAIL(0.822) channel_v=FAIL(1.273) col_v=FAIL(1.334) clock_reach=FAIL(762.25) grt=NA(None) outline=ok(457.92x1157.76) fill_hi=ok(0.0385) pin_reg_p90=ok(8.95) pin_reg_max=ok(143.73) pin_unreg=ok(0) pin_density=ok(5.3) std_band=ok(1.0) cells_on_macros=ok(0) relay_collapse=ok(0) blocked_h=ok(0) blocked_v=ok(0) clock_on_macro=ok(0) comb_loops=ok(0) clock_rooted=ok(0) clock_sinks=ok(14345)",
+ "verdict": "FAIL",
+ "r2r_worst": "u_g.u_tile.u_tile.u_logic.u_me.s2_x\\[13\\]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[7\\].g_hd.g_tx.g_r\\[0\\].u_tx/q\\[13\\]$_DFF_P_"
+}
