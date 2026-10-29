@@ -7,7 +7,7 @@
   "master_plan_sha256": "7ea07745aa46fff409317b3ab8a0d19c0db96875b789ae957b2d55463d7c8528",
   "frozen": false,
   "outline_um": [
-    259.2,
+    216,
     43.2
   ],
   "instances": [],
@@ -19,7 +19,7 @@
       "pin": "clk",
       "layer": "M5",
       "xy_um": [
-        129.612,
+        108.012,
         21.6
       ]
     }
@@ -37,5 +37,5 @@
     "geometry": "PASS",
     "tree": "NOT RUN"
   },
-  "note": "Placement census only; new lot and full-face pins. No old clock tree/timing view. Shared family planner regenerates structure from current sink census before CTS."
+  "note": "Placement census only;216x43.2 rightaligned lot and connectivity aligned fullface pins. Newcenter108.012,21.6/global+21.6um. No old clock tree/timing view. Current sink census regenerates family structure before CTS."
 }
