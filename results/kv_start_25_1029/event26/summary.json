@@ -1,0 +1,37 @@
+{
+ "types": 56,
+ "parts": 160,
+ "core_lc_bank_modules": 512,
+ "ectl_equalisation_extra": {
+  "L462_0": 1,
+  "L398_0": 1,
+  "L482_0": 1,
+  "L386_0": 1,
+  "L450_0": 1,
+  "L382_0": 1,
+  "L446_0": 1,
+  "L470_0": 1,
+  "L418_0": 1,
+  "L366_0": 1,
+  "L430_0": 1,
+  "L438_0": 1,
+  "L434_0": 1,
+  "L442_0": 1
+ },
+ "placements_failed": 0,
+ "straps": {
+  "types": 56,
+  "instances": 160,
+  "lec_variants": 131,
+  "tied_strap_bits": 21888,
+  "residual_split_types": 0,
+  "types_after_straps": 56,
+  "d8_type_buses": 0,
+  "types_with_tsel": 0,
+  "types_with_root_strap": 0
+ },
+ "max_origin_cycles": 524,
+ "data_sched_latency": 9341,
+ "clock_load_proof": "NOT RUN",
+ "provider_synth": "NOT RUN"
+}
