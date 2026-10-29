@@ -1,0 +1,513 @@
+{
+ "top": "kv3_io_cor_part",
+ "checked": 7024,
+ "ok": 7022,
+ "fails": {
+  "shared": [
+   "cland_raw_reset_out[0]: net cland_raw_reset_out[0] has 1 loads besides the port chain",
+   "cland_tstart_out[0]: net u_bound.u_cland_origin/start has 204 loads besides the port chain"
+  ]
+ },
+ "flops": {
+  "o_host_fdi[522]": "u_bound.u_bout_o_host_fdi/eq$_DFF_PN0_",
+  "o_host_fdi[521]": "u_bound.u_bout_o_host_fdi/q[521]$_DFF_P_",
+  "o_host_fdi[520]": "u_bound.u_bout_o_host_fdi/q[520]$_DFF_P_",
+  "o_host_fdi[519]": "u_bound.u_bout_o_host_fdi/q[519]$_DFF_P_",
+  "o_host_fdi[518]": "u_bound.u_bout_o_host_fdi/q[518]$_DFF_P_",
+  "o_host_fdi[517]": "u_bound.u_bout_o_host_fdi/q[517]$_DFF_P_",
+  "o_host_fdi[516]": "u_bound.u_bout_o_host_fdi/q[516]$_DFF_P_",
+  "o_host_fdi[515]": "u_bound.u_bout_o_host_fdi/q[515]$_DFF_P_",
+  "o_host_fdi[514]": "u_bound.u_bout_o_host_fdi/q[514]$_DFF_P_",
+  "o_host_fdi[513]": "u_bound.u_bout_o_host_fdi/q[513]$_DFF_P_",
+  "o_host_fdi[512]": "u_bound.u_bout_o_host_fdi/q[512]$_DFF_P_",
+  "o_host_fdi[511]": "u_bound.u_bout_o_host_fdi/q[511]$_DFF_P_",
+  "o_host_fdi[510]": "u_bound.u_bout_o_host_fdi/q[510]$_DFF_P_",
+  "o_host_fdi[509]": "u_bound.u_bout_o_host_fdi/q[509]$_DFF_P_",
+  "o_host_fdi[508]": "u_bound.u_bout_o_host_fdi/q[508]$_DFF_P_",
+  "o_host_fdi[507]": "u_bound.u_bout_o_host_fdi/q[507]$_DFF_P_",
+  "o_host_fdi[506]": "u_bound.u_bout_o_host_fdi/q[506]$_DFF_P_",
+  "o_host_fdi[505]": "u_bound.u_bout_o_host_fdi/q[505]$_DFF_P_",
+  "o_host_fdi[504]": "u_bound.u_bout_o_host_fdi/q[504]$_DFF_P_",
+  "o_host_fdi[503]": "u_bound.u_bout_o_host_fdi/q[503]$_DFF_P_"
+ },
+ "straps_exempt": [
+  "strap_ca_efall",
+  "strap_ca_k_ft0_i",
+  "strap_ca_k_ft10_i",
+  "strap_ca_k_ft11_i",
+  "strap_ca_k_ft12_i",
+  "strap_ca_k_ft13_i",
+  "strap_ca_k_ft14_i",
+  "strap_ca_k_ft15_i",
+  "strap_ca_k_ft16_i",
+  "strap_ca_k_ft17_i",
+  "strap_ca_k_ft18_i",
+  "strap_ca_k_ft19_i",
+  "strap_ca_k_ft1_i",
+  "strap_ca_k_ft2_i",
+  "strap_ca_k_ft3_i",
+  "strap_ca_k_ft4_i",
+  "strap_ca_k_ft5_i",
+  "strap_ca_k_ft6_i",
+  "strap_ca_k_ft7_i",
+  "strap_ca_k_ft9_i",
+  "strap_ca_k_i_host_fdi",
+  "strap_ca_k_i_host_link_rst_n",
+  "strap_ca_k_i_serdes_W_tx_up",
+  "strap_ca_pad"
+ ],
+ "dead_declared": [],
+ "bumps_exempt": [],
+ "clock_exports": {
+  "fclk_out_ft0_o": "clk",
+  "fclk_out_ft10_o": "clk",
+  "fclk_out_ft11_o": "clk",
+  "fclk_out_ft12_o": "clk",
+  "fclk_out_ft13_o": "clk",
+  "fclk_out_ft14_o": "clk",
+  "fclk_out_ft15_o": "clk",
+  "fclk_out_ft16_o": "clk",
+  "fclk_out_ft17_o": "clk",
+  "fclk_out_ft18_o": "clk",
+  "fclk_out_ft19_o": "clk",
+  "fclk_out_ft1_o": "clk",
+  "fclk_out_ft2_o": "clk",
+  "fclk_out_ft3_o": "clk",
+  "fclk_out_ft4_o": "clk",
+  "fclk_out_ft5_o": "clk",
+  "fclk_out_ft6_o": "clk",
+  "fclk_out_ft7_o": "clk",
+  "fclk_out_ft9_o": "clk",
+  "fclk_out_o_host_fdi": "clk",
+  "fclk_out_o_host_fdi_d1": "clk",
+  "fclk_out_o_host_link_rst_n": "clk",
+  "fclk_out_o_host_link_rst_n_d1": "clk",
+  "fclk_out_o_serdes_W_tx_up": "clk",
+  "fclk_out_o_serdes_W_tx_up_d1": "clk",
+  "fclk_out_cland_up": "clk"
+ },
+ "land_mux_depth": {
+  "2": 13671,
+  "1": 261
+ },
+ "land_slot_bits": 3483,
+ "land_mux_bits": 3483,
+ "ring_start": {
+  "cland_fstart_in_ft0_i[0]": {
+   "ring": [
+    "ft0_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft0_i/fclk"
+   ],
+   "writer_flops": 34,
+   "writer_groups": {
+    "u_bound.u_cland_ft0_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft0_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft0_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft0_i/u_ring.s_d[N][N]$_DFFE_PP_": 8,
+    "u_bound.u_cland_ft0_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft10_i[0]": {
+   "ring": [
+    "ft10_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft10_i/fclk"
+   ],
+   "writer_flops": 34,
+   "writer_groups": {
+    "u_bound.u_cland_ft10_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft10_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft10_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft10_i/u_ring.s_d[N][N]$_DFFE_PP_": 8,
+    "u_bound.u_cland_ft10_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft11_i[0]": {
+   "ring": [
+    "ft11_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft11_i/fclk"
+   ],
+   "writer_flops": 34,
+   "writer_groups": {
+    "u_bound.u_cland_ft11_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft11_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft11_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft11_i/u_ring.s_d[N][N]$_DFFE_PP_": 8,
+    "u_bound.u_cland_ft11_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft12_i[0]": {
+   "ring": [
+    "ft12_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft12_i/fclk"
+   ],
+   "writer_flops": 34,
+   "writer_groups": {
+    "u_bound.u_cland_ft12_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft12_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft12_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft12_i/u_ring.s_d[N][N]$_DFFE_PP_": 8,
+    "u_bound.u_cland_ft12_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft13_i[0]": {
+   "ring": [
+    "ft13_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft13_i/fclk"
+   ],
+   "writer_flops": 38,
+   "writer_groups": {
+    "u_bound.u_cland_ft13_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft13_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft13_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft13_i/u_ring.s_d[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft13_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft14_i[0]": {
+   "ring": [
+    "ft14_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft14_i/fclk"
+   ],
+   "writer_flops": 34,
+   "writer_groups": {
+    "u_bound.u_cland_ft14_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft14_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft14_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft14_i/u_ring.s_d[N][N]$_DFFE_PP_": 8,
+    "u_bound.u_cland_ft14_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft15_i[0]": {
+   "ring": [
+    "ft15_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft15_i/fclk"
+   ],
+   "writer_flops": 2226,
+   "writer_groups": {
+    "u_bound.u_cland_ft15_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft15_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft15_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft15_i/u_ring.s_d[N][N]$_DFFE_PP_": 2200,
+    "u_bound.u_cland_ft15_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft16_i[0]": {
+   "ring": [
+    "ft16_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft16_i/fclk"
+   ],
+   "writer_flops": 94,
+   "writer_groups": {
+    "u_bound.u_cland_ft16_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft16_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft16_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft16_i/u_ring.s_d[N][N]$_DFFE_PP_": 68,
+    "u_bound.u_cland_ft16_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft17_i[0]": {
+   "ring": [
+    "ft17_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft17_i/fclk"
+   ],
+   "writer_flops": 2222,
+   "writer_groups": {
+    "u_bound.u_cland_ft17_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft17_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft17_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft17_i/u_ring.s_d[N][N]$_DFFE_PP_": 2196,
+    "u_bound.u_cland_ft17_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft18_i[0]": {
+   "ring": [
+    "ft18_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft18_i/fclk"
+   ],
+   "writer_flops": 34,
+   "writer_groups": {
+    "u_bound.u_cland_ft18_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft18_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft18_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft18_i/u_ring.s_d[N][N]$_DFFE_PP_": 8,
+    "u_bound.u_cland_ft18_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft19_i[0]": {
+   "ring": [
+    "ft19_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft19_i/fclk"
+   ],
+   "writer_flops": 2122,
+   "writer_groups": {
+    "u_bound.u_cland_ft19_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft19_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft19_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft19_i/u_ring.s_d[N][N]$_DFFE_PP_": 2096,
+    "u_bound.u_cland_ft19_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft1_i[0]": {
+   "ring": [
+    "ft1_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft1_i/fclk"
+   ],
+   "writer_flops": 34,
+   "writer_groups": {
+    "u_bound.u_cland_ft1_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft1_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft1_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft1_i/u_ring.s_d[N][N]$_DFFE_PP_": 8,
+    "u_bound.u_cland_ft1_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft2_i[0]": {
+   "ring": [
+    "ft2_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft2_i/fclk"
+   ],
+   "writer_flops": 38,
+   "writer_groups": {
+    "u_bound.u_cland_ft2_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft2_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft2_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft2_i/u_ring.s_d[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft2_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft3_i[0]": {
+   "ring": [
+    "ft3_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft3_i/fclk"
+   ],
+   "writer_flops": 158,
+   "writer_groups": {
+    "u_bound.u_cland_ft3_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft3_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft3_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft3_i/u_ring.s_d[N][N]$_DFFE_PP_": 132,
+    "u_bound.u_cland_ft3_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft4_i[0]": {
+   "ring": [
+    "ft4_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft4_i/fclk"
+   ],
+   "writer_flops": 2238,
+   "writer_groups": {
+    "u_bound.u_cland_ft4_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft4_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft4_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft4_i/u_ring.s_d[N][N]$_DFFE_PP_": 2212,
+    "u_bound.u_cland_ft4_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft5_i[0]": {
+   "ring": [
+    "ft5_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft5_i/fclk"
+   ],
+   "writer_flops": 726,
+   "writer_groups": {
+    "u_bound.u_cland_ft5_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft5_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft5_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft5_i/u_ring.s_d[N][N]$_DFFE_PP_": 700,
+    "u_bound.u_cland_ft5_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft6_i[0]": {
+   "ring": [
+    "ft6_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft6_i/fclk"
+   ],
+   "writer_flops": 42,
+   "writer_groups": {
+    "u_bound.u_cland_ft6_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft6_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft6_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft6_i/u_ring.s_d[N][N]$_DFFE_PP_": 16,
+    "u_bound.u_cland_ft6_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft7_i[0]": {
+   "ring": [
+    "ft7_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft7_i/fclk"
+   ],
+   "writer_flops": 54,
+   "writer_groups": {
+    "u_bound.u_cland_ft7_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft7_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft7_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft7_i/u_ring.s_d[N][N]$_DFFE_PP_": 28,
+    "u_bound.u_cland_ft7_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft9_i[0]": {
+   "ring": [
+    "ft9_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft9_i/fclk"
+   ],
+   "writer_flops": 34,
+   "writer_groups": {
+    "u_bound.u_cland_ft9_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft9_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft9_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft9_i/u_ring.s_d[N][N]$_DFFE_PP_": 8,
+    "u_bound.u_cland_ft9_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_i_host_fdi[0]": {
+   "ring": [
+    "i_host_fdi"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_i_host_fdi/fclk"
+   ],
+   "writer_flops": 4206,
+   "writer_groups": {
+    "u_bound.u_cland_i_host_fdi/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_i_host_fdi/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_i_host_fdi/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_i_host_fdi/u_ring.s_d[N][N]$_DFFE_PP_": 4180,
+    "u_bound.u_cland_i_host_fdi/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_i_host_link_rst_n[0]": {
+   "ring": [
+    "i_host_link_rst_n"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_i_host_link_rst_n/fclk"
+   ],
+   "writer_flops": 34,
+   "writer_groups": {
+    "u_bound.u_cland_i_host_link_rst_n/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_i_host_link_rst_n/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_i_host_link_rst_n/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_i_host_link_rst_n/u_ring.s_d[N][N]$_DFFE_PP_": 8,
+    "u_bound.u_cland_i_host_link_rst_n/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_i_serdes_W_tx_up[0]": {
+   "ring": [
+    "i_serdes_W_tx_up"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_i_serdes_W_tx_up/fclk"
+   ],
+   "writer_flops": 34,
+   "writer_groups": {
+    "u_bound.u_cland_i_serdes_W_tx_up/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_i_serdes_W_tx_up/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_i_serdes_W_tx_up/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_i_serdes_W_tx_up/u_ring.s_d[N][N]$_DFFE_PP_": 8,
+    "u_bound.u_cland_i_serdes_W_tx_up/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_tstart_in[0]": {
+   "ring": [],
+   "ring_clock": [],
+   "writer_flops": 0,
+   "writer_groups": {},
+   "sampler_flops": [
+    "u_bound.u_cland_origin/s0$_SDFF_PN0_",
+    "u_bound.u_cland_origin/sf$_DFF_N_"
+   ],
+   "sampler_clock": "u_bound.u_srl_9/clk"
+  }
+ },
+ "ring_start_bits": 23,
+ "pairs_declared": [],
+ "planned_bits": 6972,
+ "missing_ports": 0,
+ "fail_counts": {
+  "shared": 2
+ },
+ "verdict": "FAIL",
+ "netlist": "/net/1_2_yosys.v"
+}

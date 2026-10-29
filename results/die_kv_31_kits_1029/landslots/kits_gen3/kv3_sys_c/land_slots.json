@@ -1,0 +1,193 @@
+{
+ "schema": "land_slots/3",
+ "buses": {
+  "ft1_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft1_i": {
+   "form": "ring_start",
+   "ring": "ft1_i"
+  },
+  "i_host_boot_go": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_host_boot_go": {
+   "form": "ring_start",
+   "ring": "i_host_boot_go"
+  },
+  "i_host_die_rst_n": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_host_die_rst_n": {
+   "form": "ring_start",
+   "ring": "i_host_die_rst_n"
+  },
+  "i_host_host_drained_local": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_host_host_drained_local": {
+   "form": "ring_start",
+   "ring": "i_host_host_drained_local"
+  },
+  "i_host_link_rst_n": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_host_link_rst_n": {
+   "form": "ring_start",
+   "ring": "i_host_link_rst_n"
+  },
+  "i_host_lrc": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_host_lrc": {
+   "form": "ring_start",
+   "ring": "i_host_lrc"
+  },
+  "i_host_program_begin_v": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_host_program_begin_v": {
+   "form": "ring_start",
+   "ring": "i_host_program_begin_v"
+  },
+  "i_host_rec_tx": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_host_rec_tx": {
+   "form": "ring_start",
+   "ring": "i_host_rec_tx"
+  },
+  "i_host_token_epoch": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_host_token_epoch": {
+   "form": "ring_start",
+   "ring": "i_host_token_epoch"
+  },
+  "i_kvs_attn_attn__tx_payload": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_kvs_attn_attn__tx_payload": {
+   "form": "ring_start",
+   "ring": "i_kvs_attn_attn__tx_payload"
+  },
+  "i_kvs_attn_attn__tx_valid": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_kvs_attn_attn__tx_valid": {
+   "form": "ring_start",
+   "ring": "i_kvs_attn_attn__tx_valid"
+  },
+  "i_kvs_ctl_boot__link_cfg_addr": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_kvs_ctl_boot__link_cfg_addr": {
+   "form": "ring_start",
+   "ring": "i_kvs_ctl_boot__link_cfg_addr"
+  },
+  "i_kvs_ctl_boot__link_cfg_data": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_kvs_ctl_boot__link_cfg_data": {
+   "form": "ring_start",
+   "ring": "i_kvs_ctl_boot__link_cfg_data"
+  },
+  "i_kvs_ctl_boot__link_cfg_rx_we": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_kvs_ctl_boot__link_cfg_rx_we": {
+   "form": "ring_start",
+   "ring": "i_kvs_ctl_boot__link_cfg_rx_we"
+  },
+  "i_kvs_ctl_boot__link_cfg_tx_we": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_kvs_ctl_boot__link_cfg_tx_we": {
+   "form": "ring_start",
+   "ring": "i_kvs_ctl_boot__link_cfg_tx_we"
+  },
+  "i_kvs_ctl_kvi": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_kvs_ctl_kvi": {
+   "form": "ring_start",
+   "ring": "i_kvs_ctl_kvi"
+  },
+  "i_kvs_ctl_oobs__kv_active_local": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_kvs_ctl_oobs__kv_active_local": {
+   "form": "ring_start",
+   "ring": "i_kvs_ctl_oobs__kv_active_local"
+  },
+  "i_kvs_ctl_oobs__kv_drained_local": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_kvs_ctl_oobs__kv_drained_local": {
+   "form": "ring_start",
+   "ring": "i_kvs_ctl_oobs__kv_drained_local"
+  },
+  "i_kvs_ctl_oobs__kv_flush_local": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_kvs_ctl_oobs__kv_flush_local": {
+   "form": "ring_start",
+   "ring": "i_kvs_ctl_oobs__kv_flush_local"
+  },
+  "i_kvs_emb_rowtx__emb_tx_payload": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_kvs_emb_rowtx__emb_tx_payload": {
+   "form": "ring_start",
+   "ring": "i_kvs_emb_rowtx__emb_tx_payload"
+  },
+  "i_kvs_emb_rowtx__emb_tx_v": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_kvs_emb_rowtx__emb_tx_v": {
+   "form": "ring_start",
+   "ring": "i_kvs_emb_rowtx__emb_tx_v"
+  },
+  "i_serdes_E_tx_up": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_serdes_E_tx_up": {
+   "form": "ring_start",
+   "ring": "i_serdes_E_tx_up"
+  },
+  "i_serdes_W_tx_up": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_serdes_W_tx_up": {
+   "form": "ring_start",
+   "ring": "i_serdes_W_tx_up"
+  },
+  "cland_tstart_in": {
+   "form": "origin_start",
+   "origin": "u_bound.u_cland_origin"
+  }
+ }
+}
