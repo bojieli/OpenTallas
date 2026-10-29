@@ -1507,3 +1507,6 @@ Reviewed f28c64757 opt-in constructor; corrective e86c02839 on codex/lane-add-08
 
 ## PARKED CODEX 2026-10-29 09:04 PDT — explicit Claude reset
 Own codex/hbm-0822@b34ea7cb5 clean/pushed; children parked, livejobs untouched. Packet handoff/codex_hbm_20261029_0903.md contains all source/plan/core failures and nextsteps. SPBbaselineG2FAIL M6overflow195/pinaccess0; two source-identical reviewedvariantsLIVEepyc2units3605746/3605743. D18local60lanes95311b/G0C10inheritedFAIL; sharedcorrectedlane tool e86c02839 must precede adoption. No HBMfreeze/G5/SIGNEDclaim; source144transportpaths remain RR80/date/Srole128missing/legacyVMcapacity held. OWNER? none.
+
+## START DIE-HBM-17 2026-10-29 09:15 PDT
+Successor of DIE-HBM-16 (no push) + Codex hbm park 09:04. Adopted jobs: see COORD-REVIEW-QUEUE START line.
