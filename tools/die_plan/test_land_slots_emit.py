@@ -23,9 +23,12 @@ def test_count_aligned_ring_declares_hold_mux_slots_of_its_depth():
         p, t = ca_vehicle(depth=depth)
         c = Landings(p, t)
         got = c.land_slots("B")
-        assert got == {"schema": LAND_SLOTS_SCHEMA, "buses": {"y": {"D": depth, "form": "hold_mux"}}}
-        # face_guard accepts every emitted spec as the enable-mux slot form
-        assert {b: face_guard.land_spec(v) for b, v in got["buses"].items()} == {"y": (depth, "hold_mux")}
+        assert got == {"schema": LAND_SLOTS_SCHEMA, "buses": {"y": {"D": depth, "form": "hold_mux"},
+                                                             "cland_fstart_in_y": {"form": "ring_start", "ring": "y"}}}
+        # face_guard accepts every emitted spec: the enable-mux slot form + the ring START of that ring
+        assert {b: face_guard.land_spec(v) for b, v in got["buses"].items()} == {"y": (depth, "hold_mux"),
+                                                                                 "cland_fstart_in_y": (0, "ring_start")}
+        assert face_guard.ring_spec(got["buses"]["cland_fstart_in_y"]) == ["y"]
         assert c.land_slots("A") is None          # sender only: no landed input, no file
 
 
@@ -33,8 +36,9 @@ def test_dataflow_status_pins_ride_the_same_slots():
     p, t = ca_vehicle(depth=4)
     c = Landings(p, t)
     c.dataflow = True                             # ring d = {cland_dn_fault_y, cland_dn_ready_y, y}
-    assert c.land_slots("B")["buses"] == {n: {"D": 4, "form": "hold_mux"}
-                                          for n in ("y", "cland_dn_ready_y", "cland_dn_fault_y")}
+    assert c.land_slots("B")["buses"] == {**{n: {"D": 4, "form": "hold_mux"}
+                                             for n in ("y", "cland_dn_ready_y", "cland_dn_fault_y")},
+                                          "cland_fstart_in_y": {"form": "ring_start", "ring": "y"}}
 
 
 def test_default_ring_form_declares_nothing():
