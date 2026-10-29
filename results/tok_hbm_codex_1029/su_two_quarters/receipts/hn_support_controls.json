@@ -1,0 +1,40 @@
+{
+  "controls": [
+    {
+      "control": "INT8",
+      "status": "unsupported",
+      "reasons": [
+        "unsupported matrix weight format INT8"
+      ]
+    },
+    {
+      "control": "wrong_format_param",
+      "status": "unsupported",
+      "reasons": [
+        "matrix format parameter disagrees with B descriptor"
+      ]
+    },
+    {
+      "control": "unmapped_stream",
+      "status": "unsupported",
+      "reasons": [
+        "output destination/format not mapped"
+      ]
+    },
+    {
+      "control": "indirect_expert",
+      "status": "unsupported",
+      "reasons": [
+        "indirect row/expert selection semantics not mapped"
+      ]
+    },
+    {
+      "control": "ATT_PV",
+      "status": "unsupported",
+      "reasons": [
+        "attention QK/PV frontend/backend absent"
+      ]
+    }
+  ],
+  "candidate_still_refuses_emission": true
+}
