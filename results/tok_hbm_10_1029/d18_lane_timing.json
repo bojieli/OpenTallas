@@ -1,0 +1,3006 @@
+{
+ "schema": "opentallas.hbm.added_lane_timing.v1",
+ "status": "COMPILER_PREPARATION_ONLY",
+ "executable": false,
+ "reason": "actual signal-to-lane map and qualified clock/reset/START dates required",
+ "lanes": [
+  {
+   "lane": "L160",
+   "param": "LAT_L160",
+   "src": "NW_hub",
+   "dst": "NW_b000",
+   "bits": 4986,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L161",
+   "param": "LAT_L161",
+   "src": "NW_b000",
+   "dst": "NW_b010",
+   "bits": 4512,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L162",
+   "param": "LAT_L162",
+   "src": "NW_su01",
+   "dst": "NW_su00",
+   "bits": 3728,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L163",
+   "param": "LAT_L163",
+   "src": "NW_su21",
+   "dst": "NW_su20",
+   "bits": 3728,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L164",
+   "param": "LAT_L164",
+   "src": "NW_b102",
+   "dst": "NW_b103",
+   "bits": 3367,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L165",
+   "param": "LAT_L165",
+   "src": "NW_su10",
+   "dst": "NW_su11",
+   "bits": 3356,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L166",
+   "param": "LAT_L166",
+   "src": "NW_b001",
+   "dst": "NW_b011",
+   "bits": 3332,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L167",
+   "param": "LAT_L167",
+   "src": "NW_b000",
+   "dst": "NW_b001",
+   "bits": 1389,
+   "cycles": 8,
+   "components": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L168",
+   "param": "LAT_L168",
+   "src": "NW_b000",
+   "dst": "NW_b001",
+   "bits": 1388,
+   "cycles": 8,
+   "components": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L169",
+   "param": "LAT_L169",
+   "src": "root",
+   "dst": "NW_hub",
+   "bits": 559,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L170",
+   "param": "LAT_L170",
+   "src": "root",
+   "dst": "NW_hub",
+   "bits": 559,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L171",
+   "param": "LAT_L171",
+   "src": "root",
+   "dst": "NW_hub",
+   "bits": 559,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L172",
+   "param": "LAT_L172",
+   "src": "root",
+   "dst": "NW_hub",
+   "bits": 558,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L173",
+   "param": "LAT_L173",
+   "src": "NW_hub",
+   "dst": "NW_su11",
+   "bits": 2172,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L174",
+   "param": "LAT_L174",
+   "src": "NW_hub",
+   "dst": "NW_su31",
+   "bits": 2172,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L175",
+   "param": "LAT_L175",
+   "src": "NW_b010",
+   "dst": "NW_b001",
+   "bits": 1756,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L176",
+   "param": "LAT_L176",
+   "src": "NW_b011",
+   "dst": "NW_b002",
+   "bits": 1747,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L177",
+   "param": "LAT_L177",
+   "src": "NW_su11",
+   "dst": "NW_su10",
+   "bits": 1527,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L178",
+   "param": "LAT_L178",
+   "src": "NW_su00",
+   "dst": "NW_su01",
+   "bits": 1152,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L179",
+   "param": "LAT_L179",
+   "src": "NW_b103",
+   "dst": "NW_b102",
+   "bits": 1146,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L180",
+   "param": "LAT_L180",
+   "src": "NW_su11",
+   "dst": "NW_hub",
+   "bits": 1108,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L181",
+   "param": "LAT_L181",
+   "src": "NW_su31",
+   "dst": "NW_hub",
+   "bits": 1108,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L182",
+   "param": "LAT_L182",
+   "src": "NW_su20",
+   "dst": "NW_su21",
+   "bits": 1024,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L183",
+   "param": "LAT_L183",
+   "src": "NW_b010",
+   "dst": "NW_b002",
+   "bits": 569,
+   "cycles": 7,
+   "components": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L184",
+   "param": "LAT_L184",
+   "src": "NW_b112",
+   "dst": "NW_hub",
+   "bits": 410,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L185",
+   "param": "LAT_L185",
+   "src": "NW_hub",
+   "dst": "NW_b112",
+   "bits": 160,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L186",
+   "param": "LAT_L186",
+   "src": "NW_b001",
+   "dst": "NW_b010",
+   "bits": 72,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L187",
+   "param": "LAT_L187",
+   "src": "NW_b002",
+   "dst": "NW_b011",
+   "bits": 35,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L188",
+   "param": "LAT_L188",
+   "src": "NW_b010",
+   "dst": "NW_b000",
+   "bits": 35,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L189",
+   "param": "LAT_L189",
+   "src": "NW_b003",
+   "dst": "NW_b002",
+   "bits": 1,
+   "cycles": 6,
+   "components": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L190",
+   "param": "LAT_L190",
+   "src": "NW_b010",
+   "dst": "NW_b011",
+   "bits": 1,
+   "cycles": 7,
+   "components": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L160m",
+   "param": "LAT_L160M",
+   "src": "NE_hub",
+   "dst": "NE_b000",
+   "bits": 4986,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L161m",
+   "param": "LAT_L161M",
+   "src": "NE_b000",
+   "dst": "NE_b010",
+   "bits": 4512,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L162m",
+   "param": "LAT_L162M",
+   "src": "NE_su01",
+   "dst": "NE_su00",
+   "bits": 3728,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L163m",
+   "param": "LAT_L163M",
+   "src": "NE_su21",
+   "dst": "NE_su20",
+   "bits": 3728,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L164m",
+   "param": "LAT_L164M",
+   "src": "NE_b102",
+   "dst": "NE_b103",
+   "bits": 3367,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L165m",
+   "param": "LAT_L165M",
+   "src": "NE_su10",
+   "dst": "NE_su11",
+   "bits": 3356,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L166m",
+   "param": "LAT_L166M",
+   "src": "NE_b001",
+   "dst": "NE_b011",
+   "bits": 3332,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L191",
+   "param": "LAT_L191",
+   "src": "NE_b000",
+   "dst": "NE_b001",
+   "bits": 1389,
+   "cycles": 8,
+   "components": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L192",
+   "param": "LAT_L192",
+   "src": "NE_b000",
+   "dst": "NE_b001",
+   "bits": 1388,
+   "cycles": 8,
+   "components": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L173m",
+   "param": "LAT_L173M",
+   "src": "NE_hub",
+   "dst": "NE_su11",
+   "bits": 2172,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L174m",
+   "param": "LAT_L174M",
+   "src": "NE_hub",
+   "dst": "NE_su31",
+   "bits": 2172,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L175m",
+   "param": "LAT_L175M",
+   "src": "NE_b010",
+   "dst": "NE_b001",
+   "bits": 1756,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L176m",
+   "param": "LAT_L176M",
+   "src": "NE_b011",
+   "dst": "NE_b002",
+   "bits": 1747,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L177m",
+   "param": "LAT_L177M",
+   "src": "NE_su11",
+   "dst": "NE_su10",
+   "bits": 1527,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L178m",
+   "param": "LAT_L178M",
+   "src": "NE_su00",
+   "dst": "NE_su01",
+   "bits": 1152,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L179m",
+   "param": "LAT_L179M",
+   "src": "NE_b103",
+   "dst": "NE_b102",
+   "bits": 1146,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L180m",
+   "param": "LAT_L180M",
+   "src": "NE_su11",
+   "dst": "NE_hub",
+   "bits": 1108,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L181m",
+   "param": "LAT_L181M",
+   "src": "NE_su31",
+   "dst": "NE_hub",
+   "bits": 1108,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L182m",
+   "param": "LAT_L182M",
+   "src": "NE_su20",
+   "dst": "NE_su21",
+   "bits": 1024,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L169m",
+   "param": "LAT_L169M",
+   "src": "root",
+   "dst": "NE_hub",
+   "bits": 850,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L193",
+   "param": "LAT_L193",
+   "src": "NE_b010",
+   "dst": "NE_b002",
+   "bits": 569,
+   "cycles": 7,
+   "components": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L184m",
+   "param": "LAT_L184M",
+   "src": "NE_b112",
+   "dst": "NE_hub",
+   "bits": 410,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L194",
+   "param": "LAT_L194",
+   "src": "NE_hub",
+   "dst": "root",
+   "bits": 264,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L185m",
+   "param": "LAT_L185M",
+   "src": "NE_hub",
+   "dst": "NE_b112",
+   "bits": 160,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L186m",
+   "param": "LAT_L186M",
+   "src": "NE_b001",
+   "dst": "NE_b010",
+   "bits": 72,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L187m",
+   "param": "LAT_L187M",
+   "src": "NE_b002",
+   "dst": "NE_b011",
+   "bits": 35,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L188m",
+   "param": "LAT_L188M",
+   "src": "NE_b010",
+   "dst": "NE_b000",
+   "bits": 35,
+   "cycles": 2,
+   "components": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L195",
+   "param": "LAT_L195",
+   "src": "NE_b003",
+   "dst": "NE_b002",
+   "bits": 1,
+   "cycles": 6,
+   "components": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   }
+  },
+  {
+   "lane": "L196",
+   "param": "LAT_L196",
+   "src": "NE_b010",
+   "dst": "NE_b011",
+   "bits": 1,
+   "cycles": 7,
+   "components": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   }
+  }
+ ],
+ "pairs": [
+  {
+   "src": "NE_hub",
+   "dst": "NE_b000",
+   "required_new_bits": 4986,
+   "new_bits": 4986,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L160m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b000",
+   "required_new_bits": 4986,
+   "new_bits": 4986,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L160"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b000",
+   "dst": "NE_b010",
+   "required_new_bits": 4512,
+   "new_bits": 4512,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L161m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b000",
+   "dst": "NW_b010",
+   "required_new_bits": 4512,
+   "new_bits": 4512,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L161"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su01",
+   "dst": "NE_su00",
+   "required_new_bits": 3728,
+   "new_bits": 3728,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L162m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su21",
+   "dst": "NE_su20",
+   "required_new_bits": 3728,
+   "new_bits": 3728,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L163m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su01",
+   "dst": "NW_su00",
+   "required_new_bits": 3728,
+   "new_bits": 3728,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L162"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su21",
+   "dst": "NW_su20",
+   "required_new_bits": 3728,
+   "new_bits": 3728,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L163"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b102",
+   "dst": "NE_b103",
+   "required_new_bits": 3367,
+   "new_bits": 3367,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L164m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b102",
+   "dst": "NW_b103",
+   "required_new_bits": 3367,
+   "new_bits": 3367,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L164"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su10",
+   "dst": "NE_su11",
+   "required_new_bits": 3356,
+   "new_bits": 3356,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L165m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su30",
+   "dst": "NE_su31",
+   "required_new_bits": 3356,
+   "new_bits": 0,
+   "uncovered_bits": 3356,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su10",
+   "dst": "NW_su11",
+   "required_new_bits": 3356,
+   "new_bits": 3356,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L165"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su30",
+   "dst": "NW_su31",
+   "required_new_bits": 3356,
+   "new_bits": 0,
+   "uncovered_bits": 3356,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b100",
+   "dst": "NW_b101",
+   "required_new_bits": 3333,
+   "new_bits": 0,
+   "uncovered_bits": 3333,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b001",
+   "dst": "NE_b011",
+   "required_new_bits": 3332,
+   "new_bits": 3332,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L166m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b100",
+   "dst": "NE_b101",
+   "required_new_bits": 3332,
+   "new_bits": 0,
+   "uncovered_bits": 3332,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b001",
+   "dst": "NW_b011",
+   "required_new_bits": 3332,
+   "new_bits": 3332,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L166"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su00",
+   "required_new_bits": 2846,
+   "new_bits": 0,
+   "uncovered_bits": 2846,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su20",
+   "required_new_bits": 2846,
+   "new_bits": 0,
+   "uncovered_bits": 2846,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su00",
+   "required_new_bits": 2846,
+   "new_bits": 0,
+   "uncovered_bits": 2846,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su20",
+   "required_new_bits": 2846,
+   "new_bits": 0,
+   "uncovered_bits": 2846,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b000",
+   "dst": "NE_b001",
+   "required_new_bits": 2777,
+   "new_bits": 2777,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L191",
+    "L192"
+   ],
+   "cycles": [
+    8
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b100",
+   "dst": "NE_b102",
+   "required_new_bits": 2777,
+   "new_bits": 0,
+   "uncovered_bits": 2777,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b000",
+   "dst": "NW_b001",
+   "required_new_bits": 2777,
+   "new_bits": 2777,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L167",
+    "L168"
+   ],
+   "cycles": [
+    8
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b100",
+   "dst": "NW_b102",
+   "required_new_bits": 2777,
+   "new_bits": 0,
+   "uncovered_bits": 2777,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NW_hub",
+   "required_new_bits": 2775,
+   "new_bits": 0,
+   "uncovered_bits": 2775,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NE_hub",
+   "required_new_bits": 2730,
+   "new_bits": 0,
+   "uncovered_bits": 2730,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b113",
+   "required_new_bits": 2277,
+   "new_bits": 0,
+   "uncovered_bits": 2277,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b113",
+   "required_new_bits": 2277,
+   "new_bits": 0,
+   "uncovered_bits": 2277,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "root",
+   "dst": "NW_hub",
+   "required_new_bits": 2235,
+   "new_bits": 2235,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L169",
+    "L170",
+    "L171",
+    "L172"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su11",
+   "required_new_bits": 2172,
+   "new_bits": 2172,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L173m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su31",
+   "required_new_bits": 2172,
+   "new_bits": 2172,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L174m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su11",
+   "required_new_bits": 2172,
+   "new_bits": 2172,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L173"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su31",
+   "required_new_bits": 2172,
+   "new_bits": 2172,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L174"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "root",
+   "required_new_bits": 2065,
+   "new_bits": 0,
+   "uncovered_bits": 2065,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b010",
+   "dst": "NE_b001",
+   "required_new_bits": 1756,
+   "new_bits": 1756,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L175m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b010",
+   "dst": "NW_b001",
+   "required_new_bits": 1756,
+   "new_bits": 1756,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L175"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b011",
+   "dst": "NE_b002",
+   "required_new_bits": 1747,
+   "new_bits": 1747,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L176m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_b002",
+   "required_new_bits": 1747,
+   "new_bits": 1747,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L176"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_b111",
+   "required_new_bits": 1662,
+   "new_bits": 0,
+   "uncovered_bits": 1662,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_b112",
+   "required_new_bits": 1662,
+   "new_bits": 0,
+   "uncovered_bits": 1662,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_b111",
+   "required_new_bits": 1662,
+   "new_bits": 0,
+   "uncovered_bits": 1662,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_b112",
+   "required_new_bits": 1662,
+   "new_bits": 0,
+   "uncovered_bits": 1662,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_b110",
+   "required_new_bits": 1534,
+   "new_bits": 0,
+   "uncovered_bits": 1534,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_b110",
+   "required_new_bits": 1534,
+   "new_bits": 0,
+   "uncovered_bits": 1534,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_su10",
+   "required_new_bits": 1527,
+   "new_bits": 1527,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L177m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_su10",
+   "required_new_bits": 1527,
+   "new_bits": 1527,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L177"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su31",
+   "dst": "NE_su30",
+   "required_new_bits": 1399,
+   "new_bits": 0,
+   "uncovered_bits": 1399,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su31",
+   "dst": "NW_su30",
+   "required_new_bits": 1399,
+   "new_bits": 0,
+   "uncovered_bits": 1399,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su00",
+   "dst": "NE_hub",
+   "required_new_bits": 1207,
+   "new_bits": 0,
+   "uncovered_bits": 1207,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_hub",
+   "required_new_bits": 1207,
+   "new_bits": 0,
+   "uncovered_bits": 1207,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su00",
+   "dst": "NW_hub",
+   "required_new_bits": 1207,
+   "new_bits": 0,
+   "uncovered_bits": 1207,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_hub",
+   "required_new_bits": 1207,
+   "new_bits": 0,
+   "uncovered_bits": 1207,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su00",
+   "dst": "NE_su01",
+   "required_new_bits": 1152,
+   "new_bits": 1152,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L178m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su00",
+   "dst": "NW_su01",
+   "required_new_bits": 1152,
+   "new_bits": 1152,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L178"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b102",
+   "dst": "NE_b101",
+   "required_new_bits": 1146,
+   "new_bits": 0,
+   "uncovered_bits": 1146,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b103",
+   "dst": "NE_b102",
+   "required_new_bits": 1146,
+   "new_bits": 1146,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L179m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b102",
+   "dst": "NW_b101",
+   "required_new_bits": 1146,
+   "new_bits": 0,
+   "uncovered_bits": 1146,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b103",
+   "dst": "NW_b102",
+   "required_new_bits": 1146,
+   "new_bits": 1146,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L179"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_hub",
+   "required_new_bits": 1108,
+   "new_bits": 1108,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L180m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su31",
+   "dst": "NE_hub",
+   "required_new_bits": 1108,
+   "new_bits": 1108,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L181m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_hub",
+   "required_new_bits": 1108,
+   "new_bits": 1108,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L180"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su31",
+   "dst": "NW_hub",
+   "required_new_bits": 1108,
+   "new_bits": 1108,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L181"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_su21",
+   "required_new_bits": 1024,
+   "new_bits": 1024,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L182m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_su21",
+   "required_new_bits": 1024,
+   "new_bits": 1024,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L182"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b111",
+   "dst": "NE_b113",
+   "required_new_bits": 1000,
+   "new_bits": 0,
+   "uncovered_bits": 1000,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b112",
+   "dst": "NE_b113",
+   "required_new_bits": 1000,
+   "new_bits": 0,
+   "uncovered_bits": 1000,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b111",
+   "dst": "NW_b113",
+   "required_new_bits": 1000,
+   "new_bits": 0,
+   "uncovered_bits": 1000,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b112",
+   "dst": "NW_b113",
+   "required_new_bits": 1000,
+   "new_bits": 0,
+   "uncovered_bits": 1000,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "root",
+   "dst": "NE_hub",
+   "required_new_bits": 850,
+   "new_bits": 850,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L169m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b110",
+   "dst": "NE_b113",
+   "required_new_bits": 800,
+   "new_bits": 0,
+   "uncovered_bits": 800,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b110",
+   "dst": "NW_b113",
+   "required_new_bits": 800,
+   "new_bits": 0,
+   "uncovered_bits": 800,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_hub",
+   "required_new_bits": 693,
+   "new_bits": 0,
+   "uncovered_bits": 693,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_hub",
+   "required_new_bits": 693,
+   "new_bits": 0,
+   "uncovered_bits": 693,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_spb0",
+   "required_new_bits": 632,
+   "new_bits": 0,
+   "uncovered_bits": 632,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_spb0",
+   "required_new_bits": 632,
+   "new_bits": 0,
+   "uncovered_bits": 632,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "root",
+   "dst": "vsN0",
+   "required_new_bits": 632,
+   "new_bits": 0,
+   "uncovered_bits": 632,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_spb0",
+   "dst": "NE_hub",
+   "required_new_bits": 615,
+   "new_bits": 0,
+   "uncovered_bits": 615,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_spb0",
+   "dst": "NW_hub",
+   "required_new_bits": 615,
+   "new_bits": 0,
+   "uncovered_bits": 615,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "vsN0",
+   "dst": "root",
+   "required_new_bits": 615,
+   "new_bits": 0,
+   "uncovered_bits": 615,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_su11",
+   "required_new_bits": 596,
+   "new_bits": 0,
+   "uncovered_bits": 596,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_su20",
+   "required_new_bits": 596,
+   "new_bits": 0,
+   "uncovered_bits": 596,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_su31",
+   "required_new_bits": 596,
+   "new_bits": 0,
+   "uncovered_bits": 596,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_su11",
+   "required_new_bits": 596,
+   "new_bits": 0,
+   "uncovered_bits": 596,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_su20",
+   "required_new_bits": 596,
+   "new_bits": 0,
+   "uncovered_bits": 596,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_su31",
+   "required_new_bits": 596,
+   "new_bits": 0,
+   "uncovered_bits": 596,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b010",
+   "dst": "NE_b002",
+   "required_new_bits": 569,
+   "new_bits": 569,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L193"
+   ],
+   "cycles": [
+    7
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b101",
+   "dst": "NE_b103",
+   "required_new_bits": 569,
+   "new_bits": 0,
+   "uncovered_bits": 569,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b010",
+   "dst": "NW_b002",
+   "required_new_bits": 569,
+   "new_bits": 569,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L183"
+   ],
+   "cycles": [
+    7
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b101",
+   "dst": "NW_b103",
+   "required_new_bits": 569,
+   "new_bits": 0,
+   "uncovered_bits": 569,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_b113",
+   "required_new_bits": 516,
+   "new_bits": 0,
+   "uncovered_bits": 516,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_b113",
+   "required_new_bits": 516,
+   "new_bits": 0,
+   "uncovered_bits": 516,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su31",
+   "dst": "NE_b113",
+   "required_new_bits": 516,
+   "new_bits": 0,
+   "uncovered_bits": 516,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_b113",
+   "required_new_bits": 516,
+   "new_bits": 0,
+   "uncovered_bits": 516,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_b113",
+   "required_new_bits": 516,
+   "new_bits": 0,
+   "uncovered_bits": 516,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su31",
+   "dst": "NW_b113",
+   "required_new_bits": 516,
+   "new_bits": 0,
+   "uncovered_bits": 516,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b111",
+   "dst": "NE_hub",
+   "required_new_bits": 410,
+   "new_bits": 0,
+   "uncovered_bits": 410,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b112",
+   "dst": "NE_hub",
+   "required_new_bits": 410,
+   "new_bits": 410,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L184m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b111",
+   "dst": "NW_hub",
+   "required_new_bits": 410,
+   "new_bits": 0,
+   "uncovered_bits": 410,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b112",
+   "dst": "NW_hub",
+   "required_new_bits": 410,
+   "new_bits": 410,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L184"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b002",
+   "dst": "root",
+   "required_new_bits": 297,
+   "new_bits": 0,
+   "uncovered_bits": 297,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b103",
+   "dst": "root",
+   "required_new_bits": 297,
+   "new_bits": 0,
+   "uncovered_bits": 297,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b002",
+   "dst": "root",
+   "required_new_bits": 297,
+   "new_bits": 0,
+   "uncovered_bits": 297,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b103",
+   "dst": "root",
+   "required_new_bits": 297,
+   "new_bits": 0,
+   "uncovered_bits": 297,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "root",
+   "required_new_bits": 264,
+   "new_bits": 264,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L194"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "root",
+   "dst": "NE_b000",
+   "required_new_bits": 180,
+   "new_bits": 0,
+   "uncovered_bits": 180,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "root",
+   "dst": "NW_b000",
+   "required_new_bits": 180,
+   "new_bits": 0,
+   "uncovered_bits": 180,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "root",
+   "dst": "NW_b100",
+   "required_new_bits": 180,
+   "new_bits": 0,
+   "uncovered_bits": 180,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "root",
+   "dst": "NE_b100",
+   "required_new_bits": 178,
+   "new_bits": 0,
+   "uncovered_bits": 178,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b111",
+   "required_new_bits": 160,
+   "new_bits": 0,
+   "uncovered_bits": 160,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b112",
+   "required_new_bits": 160,
+   "new_bits": 160,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L185m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b111",
+   "required_new_bits": 160,
+   "new_bits": 0,
+   "uncovered_bits": 160,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b112",
+   "required_new_bits": 160,
+   "new_bits": 160,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L185"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b001",
+   "dst": "NE_b010",
+   "required_new_bits": 72,
+   "new_bits": 72,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L186m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b001",
+   "dst": "NW_b010",
+   "required_new_bits": 72,
+   "new_bits": 72,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L186"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_sm0",
+   "dst": "NE_hub",
+   "required_new_bits": 37,
+   "new_bits": 0,
+   "uncovered_bits": 37,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_sm1",
+   "dst": "NE_hub",
+   "required_new_bits": 37,
+   "new_bits": 0,
+   "uncovered_bits": 37,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_sm2",
+   "dst": "NE_hub",
+   "required_new_bits": 37,
+   "new_bits": 0,
+   "uncovered_bits": 37,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_sm3",
+   "dst": "NE_hub",
+   "required_new_bits": 37,
+   "new_bits": 0,
+   "uncovered_bits": 37,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_sm0",
+   "dst": "NW_hub",
+   "required_new_bits": 37,
+   "new_bits": 0,
+   "uncovered_bits": 37,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_sm1",
+   "dst": "NW_hub",
+   "required_new_bits": 37,
+   "new_bits": 0,
+   "uncovered_bits": 37,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_sm2",
+   "dst": "NW_hub",
+   "required_new_bits": 37,
+   "new_bits": 0,
+   "uncovered_bits": 37,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_sm3",
+   "dst": "NW_hub",
+   "required_new_bits": 37,
+   "new_bits": 0,
+   "uncovered_bits": 37,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b002",
+   "dst": "NE_b011",
+   "required_new_bits": 35,
+   "new_bits": 35,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L187m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b010",
+   "dst": "NE_b000",
+   "required_new_bits": 35,
+   "new_bits": 35,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L188m"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b101",
+   "dst": "NE_b102",
+   "required_new_bits": 35,
+   "new_bits": 0,
+   "uncovered_bits": 35,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b002",
+   "dst": "NW_b011",
+   "required_new_bits": 35,
+   "new_bits": 35,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L187"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b010",
+   "dst": "NW_b000",
+   "required_new_bits": 35,
+   "new_bits": 35,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L188"
+   ],
+   "cycles": [
+    2
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b101",
+   "dst": "NW_b102",
+   "required_new_bits": 35,
+   "new_bits": 0,
+   "uncovered_bits": 35,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "root",
+   "required_new_bits": 9,
+   "new_bits": 0,
+   "uncovered_bits": 9,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_spt0",
+   "dst": "root",
+   "required_new_bits": 9,
+   "new_bits": 0,
+   "uncovered_bits": 9,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b002",
+   "dst": "NE_hub",
+   "required_new_bits": 4,
+   "new_bits": 0,
+   "uncovered_bits": 4,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b002",
+   "dst": "NW_hub",
+   "required_new_bits": 4,
+   "new_bits": 0,
+   "uncovered_bits": 4,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b011",
+   "dst": "NE_hub",
+   "required_new_bits": 3,
+   "new_bits": 0,
+   "uncovered_bits": 3,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_hub",
+   "required_new_bits": 3,
+   "new_bits": 0,
+   "uncovered_bits": 3,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b103",
+   "dst": "NE_hub",
+   "required_new_bits": 2,
+   "new_bits": 0,
+   "uncovered_bits": 2,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_spb2",
+   "dst": "NW_hub",
+   "required_new_bits": 2,
+   "new_bits": 0,
+   "uncovered_bits": 2,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "NW_hub",
+   "required_new_bits": 2,
+   "new_bits": 0,
+   "uncovered_bits": 2,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b103",
+   "dst": "NW_hub",
+   "required_new_bits": 2,
+   "new_bits": 0,
+   "uncovered_bits": 2,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b000",
+   "dst": "NE_b002",
+   "required_new_bits": 1,
+   "new_bits": 0,
+   "uncovered_bits": 1,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b000",
+   "dst": "NE_b011",
+   "required_new_bits": 1,
+   "new_bits": 0,
+   "uncovered_bits": 1,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b003",
+   "dst": "NE_b002",
+   "required_new_bits": 1,
+   "new_bits": 1,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L195"
+   ],
+   "cycles": [
+    6
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b010",
+   "dst": "NE_b011",
+   "required_new_bits": 1,
+   "new_bits": 1,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L196"
+   ],
+   "cycles": [
+    7
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b013",
+   "dst": "NE_hub",
+   "required_new_bits": 1,
+   "new_bits": 0,
+   "uncovered_bits": 1,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_b100",
+   "dst": "NE_b103",
+   "required_new_bits": 1,
+   "new_bits": 0,
+   "uncovered_bits": 1,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su00",
+   "dst": "NE_su11",
+   "required_new_bits": 1,
+   "new_bits": 0,
+   "uncovered_bits": 1,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_su20",
+   "required_new_bits": 1,
+   "new_bits": 0,
+   "uncovered_bits": 1,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_su31",
+   "required_new_bits": 1,
+   "new_bits": 0,
+   "uncovered_bits": 1,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b000",
+   "dst": "NW_b002",
+   "required_new_bits": 1,
+   "new_bits": 0,
+   "uncovered_bits": 1,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b000",
+   "dst": "NW_b011",
+   "required_new_bits": 1,
+   "new_bits": 0,
+   "uncovered_bits": 1,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b003",
+   "dst": "NW_b002",
+   "required_new_bits": 1,
+   "new_bits": 1,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L189"
+   ],
+   "cycles": [
+    6
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b010",
+   "dst": "NW_b011",
+   "required_new_bits": 1,
+   "new_bits": 1,
+   "uncovered_bits": 0,
+   "capacity_complete": true,
+   "lanes": [
+    "L190"
+   ],
+   "cycles": [
+    7
+   ],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b013",
+   "dst": "NW_hub",
+   "required_new_bits": 1,
+   "new_bits": 0,
+   "uncovered_bits": 1,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_b100",
+   "dst": "NW_b103",
+   "required_new_bits": 1,
+   "new_bits": 0,
+   "uncovered_bits": 1,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su00",
+   "dst": "NW_su11",
+   "required_new_bits": 1,
+   "new_bits": 0,
+   "uncovered_bits": 1,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_su20",
+   "required_new_bits": 1,
+   "new_bits": 0,
+   "uncovered_bits": 1,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_su31",
+   "required_new_bits": 1,
+   "new_bits": 0,
+   "uncovered_bits": 1,
+   "capacity_complete": false,
+   "lanes": [],
+   "cycles": [],
+   "source_mapping": "REQUIRED: bind assigns actual signal bits to lanes"
+  }
+ ],
+ "totals": {
+  "lanes": 60,
+  "pairs": 158,
+  "capacity_complete": 55,
+  "incomplete": 103,
+  "new_bits": 95311,
+  "uncovered_bits": 84076
+ },
+ "inputs_sha256": {
+  "plan": "92a841730cca05b5afd9ac034a810667bd4281d2acf2b75d2387d02c9b16f6f7",
+  "added": "1c1cf2dbbeec2cb9c8afdae29575f5ef83002426302c6be90365001fc57194a6",
+  "unplanned": "b2c7268fb95ce82dcb94bc6084a43b094c228912bf489a28d5c56bc46b31e407"
+ }
+}

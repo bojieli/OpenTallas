@@ -70,3 +70,36 @@ Proof: intel2 ot-run unit oth-ubuntu-2189907-1793288032, ne_bank_eg_ii1.log, tb_
 Initial elaboration unit2150410 exit2 lacked ot_vms_ce_counter_pipe dependency; adding the exact existing module
 fixed it. The actual bank/SRAM RTL was unchanged. Run with iverilog -g2012 on the bench, body,
 ot_vms_ce_counter_pipe.sv and ot_sram_1r1w_1024x256_m2_r2c2.v, then vvp. No new heavy job remains live.
+
+## Source-directed VMS plan correction
+
+`tools/hbm_b2/native_vms_station_map.py` prepares a narrow VMS/bank plan correction from actual_hub_r2's
+actual port directions and every bit mapping. It preserves all other plan fields and station rows.
+On d17/d18 there are 256 actual links (four source roles, eight banks each, eight ports each).
+The old plan has 120 VMS/bank station rows per hub, all with stale `u_hb_vms_Q` aliases and original
+North bank names, with no South `_mu1` bank station row. The companion source map explicitly retains all
+128 missing South-role links; it does not copy their North geometry or claim the plan is complete.
+
+For the 128 North-role links, select the row with the actual driver direction, drop 112 redundant/reversed
+rows, and replace aliases with the exact `__q1` instance selected by the source bit identity. Five bank-6
+outputs per hub have only the reverse old row, so their path is reversed while preserving its count.
+The optional `--full-width` form uses exactly the source's 276/266/18/1/etc. bits, removes `serial_k`,
+`bits_parallel` and `r11_cc_serial`, and introduces no epoch bit. Every source/destination bit pair is
+preserved in lossless contiguous runs. The source data/control semantics and arithmetic are unchanged.
+
+D17 candidate VMS station wire*stage count (an inventory, not a cut/routing gate): NW 108,458 -> 87,016,
+NE 110,100 -> 89,782. Actual pin coordinates and clock/reset/runtime budgets must be recomposed by the die owner;
+the selected rows are explicitly GEOMETRY_UNQUALIFIED. The full candidate plan remains in scratch:
+`/srv/opentallas-scratch/claude/codex-hbm-token-0830/vms_native_fullwidth_d18.json`.
+The report `vms_native_station_map_d18.json` is the small source/materializer input, not an executable programme.
+
+Controls: exact all-256 bit map reconstruction passes; malformed width and duplicated-bit controls refuse.
+All 128 prepared North links are full-width and select q1; all South links remain MISSING. The candidate
+builder leaves its input plan unchanged. This prepares the source correction; it is not a new die check.
+
+## D18 added lanes
+
+D18 fixes canonical reach and no longer publishes partial failed pairs. Exact compiler ABI regeneration
+retains d17 failed evidence: 60 new lanes / 95,311 bits; 55 strict missing pairs have complete new capacity,
+103 remain incomplete, 84,076 bits still uncovered. All 60 lane cycle values match canonical Plan.lane_latency.
+Both exact packages remain preparation only pending the binder's bit map and clock/reset dates.

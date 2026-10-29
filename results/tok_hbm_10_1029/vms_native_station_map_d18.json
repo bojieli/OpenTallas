@@ -1,0 +1,6583 @@
+{
+ "schema": "opentallas.hbm.native_vms_station_map.v1",
+ "status": "SOURCE_PREPARATION_ONLY",
+ "executable": false,
+ "full_width": true,
+ "totals": {
+  "PREPARED_GEOMETRY_UNQUALIFIED": 128,
+  "MISSING_SOUTH_ROLE_GEOMETRY": 128
+ },
+ "removed": [
+  {
+   "type": "q_hub_nw",
+   "index": 259,
+   "conn": "u_hb_vms_Q.b3_xq_done|u_vmb_Q3",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 282,
+   "conn": "u_hb_vms_Q.b0_pr|u_vmb_Q0",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 283,
+   "conn": "u_hb_vms_Q.b3_status|u_vmb_Q3",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 284,
+   "conn": "u_hb_vms_Q.b3_xq2_done|u_vmb_Q3",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 285,
+   "conn": "u_hb_vms_Q.b2_xq_done|u_vmb_Q2",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 286,
+   "conn": "u_hb_vms_Q.b2_status|u_vmb_Q2",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 287,
+   "conn": "u_hb_vms_Q.b2_xq2_done|u_vmb_Q2",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 288,
+   "conn": "u_hb_vms_Q.b0_status|u_vmb_Q0",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 289,
+   "conn": "u_hb_vms_Q.b0_xq2_done|u_vmb_Q0",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 290,
+   "conn": "u_hb_vms_Q.b0_xq_done|u_vmb_Q0",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 291,
+   "conn": "u_hb_vms_Q.b3_pr|u_vmb_Q3",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 292,
+   "conn": "u_hb_vms_Q.b1_xq_done|u_vmb_Q1",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 293,
+   "conn": "u_hb_vms_Q.b2_pr|u_vmb_Q2",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 294,
+   "conn": "u_hb_vms_Q.b1_status|u_vmb_Q1",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 295,
+   "conn": "u_hb_vms_Q.b1_xq2_done|u_vmb_Q1",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 296,
+   "conn": "u_hb_vms_Q.b1_pr|u_vmb_Q1",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 297,
+   "conn": "u_hb_vms_Q.b5_pr|u_vmb_Q5",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 299,
+   "conn": "u_hb_vms_Q.b7_xq_done|u_vmb_Q7",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 305,
+   "conn": "u_hb_vms_Q.b7_eg|u_vmb_Q7",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 306,
+   "conn": "u_hb_vms_Q.b4_xq_done|u_vmb_Q4",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 314,
+   "conn": "u_hb_vms_Q.b4_pr|u_vmb_Q4",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 315,
+   "conn": "u_hb_vms_Q.b5_eg|u_vmb_Q5",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 316,
+   "conn": "u_hb_vms_Q.b5_status|u_vmb_Q5",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 317,
+   "conn": "u_hb_vms_Q.b5_xq2_done|u_vmb_Q5",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 318,
+   "conn": "u_hb_vms_Q.b4_eg|u_vmb_Q4",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 319,
+   "conn": "u_hb_vms_Q.b4_status|u_vmb_Q4",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 320,
+   "conn": "u_hb_vms_Q.b4_xq2_done|u_vmb_Q4",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 321,
+   "conn": "u_hb_vms_Q.b5_xq_done|u_vmb_Q5",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 322,
+   "conn": "u_hb_vms_Q.b7_pr|u_vmb_Q7",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 323,
+   "conn": "u_hb_vms_Q.b7_status|u_vmb_Q7",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 325,
+   "conn": "u_hb_vms_Q.b7_xq2_done|u_vmb_Q7",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 332,
+   "conn": "u_hb_vms_Q.b3_eg|u_vmb_Q3",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 335,
+   "conn": "u_hb_vms_Q.b1_eg|u_vmb_Q1",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 336,
+   "conn": "u_hb_vms_Q.b0_eg|u_vmb_Q0",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 340,
+   "conn": "u_hb_vms_Q.b2_eg|u_vmb_Q2",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 470,
+   "conn": "u_vmb_Q0.pq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 482,
+   "conn": "u_vmb_Q0.xq2|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 484,
+   "conn": "u_vmb_Q0.xq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 488,
+   "conn": "u_vmb_Q1.pq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 500,
+   "conn": "u_vmb_Q1.xq2|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 502,
+   "conn": "u_vmb_Q1.xq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 506,
+   "conn": "u_vmb_Q2.pq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 515,
+   "conn": "u_vmb_Q2.xq2|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 517,
+   "conn": "u_vmb_Q2.xq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 521,
+   "conn": "u_vmb_Q3.pq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 533,
+   "conn": "u_vmb_Q3.xq2|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 535,
+   "conn": "u_vmb_Q3.xq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 539,
+   "conn": "u_vmb_Q4.pq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 551,
+   "conn": "u_vmb_Q4.xq2|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 553,
+   "conn": "u_vmb_Q4.xq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 557,
+   "conn": "u_vmb_Q5.pq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 567,
+   "conn": "u_vmb_Q5.xq2|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 569,
+   "conn": "u_vmb_Q5.xq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 581,
+   "conn": "u_vmb_Q7.pq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 593,
+   "conn": "u_vmb_Q7.xq2|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_nw",
+   "index": 595,
+   "conn": "u_vmb_Q7.xq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 225,
+   "conn": "u_hb_vms_Q.b3_xq_done|u_vmb_Q3",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 248,
+   "conn": "u_hb_vms_Q.b0_pr|u_vmb_Q0",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 249,
+   "conn": "u_hb_vms_Q.b3_status|u_vmb_Q3",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 250,
+   "conn": "u_hb_vms_Q.b3_xq2_done|u_vmb_Q3",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 251,
+   "conn": "u_hb_vms_Q.b2_xq_done|u_vmb_Q2",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 252,
+   "conn": "u_hb_vms_Q.b2_status|u_vmb_Q2",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 253,
+   "conn": "u_hb_vms_Q.b2_xq2_done|u_vmb_Q2",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 254,
+   "conn": "u_hb_vms_Q.b0_status|u_vmb_Q0",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 255,
+   "conn": "u_hb_vms_Q.b0_xq2_done|u_vmb_Q0",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 256,
+   "conn": "u_hb_vms_Q.b0_xq_done|u_vmb_Q0",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 257,
+   "conn": "u_hb_vms_Q.b3_pr|u_vmb_Q3",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 258,
+   "conn": "u_hb_vms_Q.b1_xq_done|u_vmb_Q1",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 259,
+   "conn": "u_hb_vms_Q.b2_pr|u_vmb_Q2",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 260,
+   "conn": "u_hb_vms_Q.b1_status|u_vmb_Q1",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 261,
+   "conn": "u_hb_vms_Q.b1_xq2_done|u_vmb_Q1",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 262,
+   "conn": "u_hb_vms_Q.b1_pr|u_vmb_Q1",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 263,
+   "conn": "u_hb_vms_Q.b5_pr|u_vmb_Q5",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 265,
+   "conn": "u_hb_vms_Q.b7_xq_done|u_vmb_Q7",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 271,
+   "conn": "u_hb_vms_Q.b7_eg|u_vmb_Q7",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 272,
+   "conn": "u_hb_vms_Q.b4_xq_done|u_vmb_Q4",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 280,
+   "conn": "u_hb_vms_Q.b4_pr|u_vmb_Q4",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 281,
+   "conn": "u_hb_vms_Q.b5_eg|u_vmb_Q5",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 282,
+   "conn": "u_hb_vms_Q.b5_status|u_vmb_Q5",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 283,
+   "conn": "u_hb_vms_Q.b5_xq2_done|u_vmb_Q5",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 284,
+   "conn": "u_hb_vms_Q.b4_eg|u_vmb_Q4",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 285,
+   "conn": "u_hb_vms_Q.b4_status|u_vmb_Q4",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 286,
+   "conn": "u_hb_vms_Q.b4_xq2_done|u_vmb_Q4",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 287,
+   "conn": "u_hb_vms_Q.b5_xq_done|u_vmb_Q5",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 288,
+   "conn": "u_hb_vms_Q.b7_pr|u_vmb_Q7",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 289,
+   "conn": "u_hb_vms_Q.b7_status|u_vmb_Q7",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 291,
+   "conn": "u_hb_vms_Q.b7_xq2_done|u_vmb_Q7",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 298,
+   "conn": "u_hb_vms_Q.b3_eg|u_vmb_Q3",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 301,
+   "conn": "u_hb_vms_Q.b1_eg|u_vmb_Q1",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 302,
+   "conn": "u_hb_vms_Q.b0_eg|u_vmb_Q0",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 306,
+   "conn": "u_hb_vms_Q.b2_eg|u_vmb_Q2",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 436,
+   "conn": "u_vmb_Q0.pq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 448,
+   "conn": "u_vmb_Q0.xq2|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 450,
+   "conn": "u_vmb_Q0.xq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 454,
+   "conn": "u_vmb_Q1.pq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 466,
+   "conn": "u_vmb_Q1.xq2|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 468,
+   "conn": "u_vmb_Q1.xq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 472,
+   "conn": "u_vmb_Q2.pq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 481,
+   "conn": "u_vmb_Q2.xq2|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 483,
+   "conn": "u_vmb_Q2.xq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 487,
+   "conn": "u_vmb_Q3.pq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 499,
+   "conn": "u_vmb_Q3.xq2|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 501,
+   "conn": "u_vmb_Q3.xq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 505,
+   "conn": "u_vmb_Q4.pq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 517,
+   "conn": "u_vmb_Q4.xq2|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 519,
+   "conn": "u_vmb_Q4.xq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 523,
+   "conn": "u_vmb_Q5.pq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 533,
+   "conn": "u_vmb_Q5.xq2|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 535,
+   "conn": "u_vmb_Q5.xq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 547,
+   "conn": "u_vmb_Q7.pq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 559,
+   "conn": "u_vmb_Q7.xq2|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  },
+  {
+   "type": "q_hub_ne",
+   "index": 561,
+   "conn": "u_vmb_Q7.xq|u_hb_vms_Q",
+   "reason": "redundant/reversed old North-role alias; actual directed bit link selected once"
+  }
+ ],
+ "connections": [
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_pq",
+   "destination_path": "vmb_NE0",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q1.bk_pq",
+   "destination": "u_vmb_Q0.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 307,
+   "old_conn": "u_hb_vms_Q.b0_pq|u_vmb_Q0",
+   "reversed_geometry": false,
+   "station_count": 3,
+   "serial_k": 1,
+   "planned_wires": 285,
+   "plan_source_bits": 287
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_pq",
+   "destination_path": "vmb_NE1",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q1.bk_pq",
+   "destination": "u_vmb_Q1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     285,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 264,
+   "old_conn": "u_hb_vms_Q.b1_pq|u_vmb_Q1",
+   "reversed_geometry": false,
+   "station_count": 2,
+   "serial_k": 1,
+   "planned_wires": 285,
+   "plan_source_bits": 287
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_pq",
+   "destination_path": "vmb_NE2",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q1.bk_pq",
+   "destination": "u_vmb_Q2.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     570,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 309,
+   "old_conn": "u_hb_vms_Q.b2_pq|u_vmb_Q2",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 285,
+   "plan_source_bits": 287
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_pq",
+   "destination_path": "vmb_NE3",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q1.bk_pq",
+   "destination": "u_vmb_Q3.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     855,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 269,
+   "old_conn": "u_hb_vms_Q.b3_pq|u_vmb_Q3",
+   "reversed_geometry": false,
+   "station_count": 31,
+   "serial_k": 1,
+   "planned_wires": 285,
+   "plan_source_bits": 287
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_pq",
+   "destination_path": "vmb_NE4",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q1.bk_pq",
+   "destination": "u_vmb_Q4.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     1140,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 295,
+   "old_conn": "u_hb_vms_Q.b4_pq|u_vmb_Q4",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 285,
+   "plan_source_bits": 287
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_pq",
+   "destination_path": "vmb_NE5",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q1.bk_pq",
+   "destination": "u_vmb_Q5.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     1425,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 293,
+   "old_conn": "u_hb_vms_Q.b5_pq|u_vmb_Q5",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 285,
+   "plan_source_bits": 287
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_pq",
+   "destination_path": "vmb_NE6",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q1.bk_pq",
+   "destination": "u_vmb_Q6.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     1710,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 296,
+   "old_conn": "u_hb_vms_Q.b6_pq|u_vmb_Q6",
+   "reversed_geometry": false,
+   "station_count": 6,
+   "serial_k": 1,
+   "planned_wires": 285,
+   "plan_source_bits": 287
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_pq",
+   "destination_path": "vmb_NE7",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q1.bk_pq",
+   "destination": "u_vmb_Q7.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     1995,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 294,
+   "old_conn": "u_hb_vms_Q.b7_pq|u_vmb_Q7",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 285,
+   "plan_source_bits": 287
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_xq",
+   "destination_path": "vmb_NE0",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q1.bk_xq",
+   "destination": "u_vmb_Q0.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 308,
+   "old_conn": "u_hb_vms_Q.b0_xq|u_vmb_Q0",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_xq",
+   "destination_path": "vmb_NE1",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q1.bk_xq",
+   "destination": "u_vmb_Q1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     276,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 303,
+   "old_conn": "u_hb_vms_Q.b1_xq|u_vmb_Q1",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_xq",
+   "destination_path": "vmb_NE2",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q1.bk_xq",
+   "destination": "u_vmb_Q2.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     552,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 304,
+   "old_conn": "u_hb_vms_Q.b2_xq|u_vmb_Q2",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_xq",
+   "destination_path": "vmb_NE3",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q1.bk_xq",
+   "destination": "u_vmb_Q3.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     828,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 275,
+   "old_conn": "u_hb_vms_Q.b3_xq|u_vmb_Q3",
+   "reversed_geometry": false,
+   "station_count": 30,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_xq",
+   "destination_path": "vmb_NE4",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q1.bk_xq",
+   "destination": "u_vmb_Q4.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     1104,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 292,
+   "old_conn": "u_hb_vms_Q.b4_xq|u_vmb_Q4",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_xq",
+   "destination_path": "vmb_NE5",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q1.bk_xq",
+   "destination": "u_vmb_Q5.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     1380,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 267,
+   "old_conn": "u_hb_vms_Q.b5_xq|u_vmb_Q5",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_xq",
+   "destination_path": "vmb_NE6",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q1.bk_xq",
+   "destination": "u_vmb_Q6.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     1656,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 274,
+   "old_conn": "u_hb_vms_Q.b6_xq|u_vmb_Q6",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_xq",
+   "destination_path": "vmb_NE7",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q1.bk_xq",
+   "destination": "u_vmb_Q7.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     1932,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 290,
+   "old_conn": "u_hb_vms_Q.b7_xq|u_vmb_Q7",
+   "reversed_geometry": false,
+   "station_count": 6,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_xq2",
+   "destination_path": "vmb_NE0",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q1.bk_xq2",
+   "destination": "u_vmb_Q0.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 305,
+   "old_conn": "u_hb_vms_Q.b0_xq2|u_vmb_Q0",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_xq2",
+   "destination_path": "vmb_NE1",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q1.bk_xq2",
+   "destination": "u_vmb_Q1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     276,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 297,
+   "old_conn": "u_hb_vms_Q.b1_xq2|u_vmb_Q1",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_xq2",
+   "destination_path": "vmb_NE2",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q1.bk_xq2",
+   "destination": "u_vmb_Q2.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     552,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 310,
+   "old_conn": "u_hb_vms_Q.b2_xq2|u_vmb_Q2",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_xq2",
+   "destination_path": "vmb_NE3",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q1.bk_xq2",
+   "destination": "u_vmb_Q3.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     828,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 300,
+   "old_conn": "u_hb_vms_Q.b3_xq2|u_vmb_Q3",
+   "reversed_geometry": false,
+   "station_count": 31,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_xq2",
+   "destination_path": "vmb_NE4",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q1.bk_xq2",
+   "destination": "u_vmb_Q4.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     1104,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 299,
+   "old_conn": "u_hb_vms_Q.b4_xq2|u_vmb_Q4",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_xq2",
+   "destination_path": "vmb_NE5",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q1.bk_xq2",
+   "destination": "u_vmb_Q5.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     1380,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 279,
+   "old_conn": "u_hb_vms_Q.b5_xq2|u_vmb_Q5",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_xq2",
+   "destination_path": "vmb_NE6",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q1.bk_xq2",
+   "destination": "u_vmb_Q6.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     1656,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 266,
+   "old_conn": "u_hb_vms_Q.b6_xq2|u_vmb_Q6",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_NE",
+   "source_port": "bk_xq2",
+   "destination_path": "vmb_NE7",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q1.bk_xq2",
+   "destination": "u_vmb_Q7.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     1932,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 273,
+   "old_conn": "u_hb_vms_Q.b7_xq2|u_vmb_Q7",
+   "reversed_geometry": false,
+   "station_count": 6,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b0_pq",
+   "destination_path": "vmb_NW0",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q1.b0_pq",
+   "destination": "u_vmb_Q0.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 341,
+   "old_conn": "u_hb_vms_Q.b0_pq|u_vmb_Q0",
+   "reversed_geometry": false,
+   "station_count": 3,
+   "serial_k": 1,
+   "planned_wires": 285,
+   "plan_source_bits": 287
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b0_xq",
+   "destination_path": "vmb_NW0",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q1.b0_xq",
+   "destination": "u_vmb_Q0.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 342,
+   "old_conn": "u_hb_vms_Q.b0_xq|u_vmb_Q0",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b0_xq2",
+   "destination_path": "vmb_NW0",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q1.b0_xq2",
+   "destination": "u_vmb_Q0.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 339,
+   "old_conn": "u_hb_vms_Q.b0_xq2|u_vmb_Q0",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b1_pq",
+   "destination_path": "vmb_NW1",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q1.b1_pq",
+   "destination": "u_vmb_Q1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 298,
+   "old_conn": "u_hb_vms_Q.b1_pq|u_vmb_Q1",
+   "reversed_geometry": false,
+   "station_count": 2,
+   "serial_k": 1,
+   "planned_wires": 285,
+   "plan_source_bits": 287
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b1_xq",
+   "destination_path": "vmb_NW1",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q1.b1_xq",
+   "destination": "u_vmb_Q1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 337,
+   "old_conn": "u_hb_vms_Q.b1_xq|u_vmb_Q1",
+   "reversed_geometry": false,
+   "station_count": 3,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b1_xq2",
+   "destination_path": "vmb_NW1",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q1.b1_xq2",
+   "destination": "u_vmb_Q1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 331,
+   "old_conn": "u_hb_vms_Q.b1_xq2|u_vmb_Q1",
+   "reversed_geometry": false,
+   "station_count": 3,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b2_pq",
+   "destination_path": "vmb_NW2",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q1.b2_pq",
+   "destination": "u_vmb_Q2.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 343,
+   "old_conn": "u_hb_vms_Q.b2_pq|u_vmb_Q2",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 285,
+   "plan_source_bits": 287
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b2_xq",
+   "destination_path": "vmb_NW2",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q1.b2_xq",
+   "destination": "u_vmb_Q2.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 338,
+   "old_conn": "u_hb_vms_Q.b2_xq|u_vmb_Q2",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b2_xq2",
+   "destination_path": "vmb_NW2",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q1.b2_xq2",
+   "destination": "u_vmb_Q2.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 344,
+   "old_conn": "u_hb_vms_Q.b2_xq2|u_vmb_Q2",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b3_pq",
+   "destination_path": "vmb_NW3",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q1.b3_pq",
+   "destination": "u_vmb_Q3.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 303,
+   "old_conn": "u_hb_vms_Q.b3_pq|u_vmb_Q3",
+   "reversed_geometry": false,
+   "station_count": 28,
+   "serial_k": 1,
+   "planned_wires": 285,
+   "plan_source_bits": 287
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b3_xq",
+   "destination_path": "vmb_NW3",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q1.b3_xq",
+   "destination": "u_vmb_Q3.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 309,
+   "old_conn": "u_hb_vms_Q.b3_xq|u_vmb_Q3",
+   "reversed_geometry": false,
+   "station_count": 27,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b3_xq2",
+   "destination_path": "vmb_NW3",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q1.b3_xq2",
+   "destination": "u_vmb_Q3.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 334,
+   "old_conn": "u_hb_vms_Q.b3_xq2|u_vmb_Q3",
+   "reversed_geometry": false,
+   "station_count": 28,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b4_pq",
+   "destination_path": "vmb_NW4",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q1.b4_pq",
+   "destination": "u_vmb_Q4.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 329,
+   "old_conn": "u_hb_vms_Q.b4_pq|u_vmb_Q4",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 285,
+   "plan_source_bits": 287
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b4_xq",
+   "destination_path": "vmb_NW4",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q1.b4_xq",
+   "destination": "u_vmb_Q4.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 326,
+   "old_conn": "u_hb_vms_Q.b4_xq|u_vmb_Q4",
+   "reversed_geometry": false,
+   "station_count": 6,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b4_xq2",
+   "destination_path": "vmb_NW4",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q1.b4_xq2",
+   "destination": "u_vmb_Q4.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 333,
+   "old_conn": "u_hb_vms_Q.b4_xq2|u_vmb_Q4",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b5_pq",
+   "destination_path": "vmb_NW5",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q1.b5_pq",
+   "destination": "u_vmb_Q5.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 327,
+   "old_conn": "u_hb_vms_Q.b5_pq|u_vmb_Q5",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 285,
+   "plan_source_bits": 287
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b5_xq",
+   "destination_path": "vmb_NW5",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q1.b5_xq",
+   "destination": "u_vmb_Q5.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 301,
+   "old_conn": "u_hb_vms_Q.b5_xq|u_vmb_Q5",
+   "reversed_geometry": false,
+   "station_count": 3,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b5_xq2",
+   "destination_path": "vmb_NW5",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q1.b5_xq2",
+   "destination": "u_vmb_Q5.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 313,
+   "old_conn": "u_hb_vms_Q.b5_xq2|u_vmb_Q5",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b6_pq",
+   "destination_path": "vmb_NW6",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q1.b6_pq",
+   "destination": "u_vmb_Q6.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 330,
+   "old_conn": "u_hb_vms_Q.b6_pq|u_vmb_Q6",
+   "reversed_geometry": false,
+   "station_count": 6,
+   "serial_k": 1,
+   "planned_wires": 285,
+   "plan_source_bits": 287
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b6_xq",
+   "destination_path": "vmb_NW6",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q1.b6_xq",
+   "destination": "u_vmb_Q6.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 308,
+   "old_conn": "u_hb_vms_Q.b6_xq|u_vmb_Q6",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b6_xq2",
+   "destination_path": "vmb_NW6",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q1.b6_xq2",
+   "destination": "u_vmb_Q6.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 300,
+   "old_conn": "u_hb_vms_Q.b6_xq2|u_vmb_Q6",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b7_pq",
+   "destination_path": "vmb_NW7",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q1.b7_pq",
+   "destination": "u_vmb_Q7.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 328,
+   "old_conn": "u_hb_vms_Q.b7_pq|u_vmb_Q7",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 285,
+   "plan_source_bits": 287
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b7_xq",
+   "destination_path": "vmb_NW7",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q1.b7_xq",
+   "destination": "u_vmb_Q7.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 324,
+   "old_conn": "u_hb_vms_Q.b7_xq|u_vmb_Q7",
+   "reversed_geometry": false,
+   "station_count": 6,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_NW",
+   "source_port": "b7_xq2",
+   "destination_path": "vmb_NW7",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q1.b7_xq2",
+   "destination": "u_vmb_Q7.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 307,
+   "old_conn": "u_hb_vms_Q.b7_xq2|u_vmb_Q7",
+   "reversed_geometry": false,
+   "station_count": 6,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_pq",
+   "destination_path": "vmb_SE0",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q0.bk_pq",
+   "destination": "u_vmb_Q0_mu1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_pq",
+   "destination_path": "vmb_SE1",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q0.bk_pq",
+   "destination": "u_vmb_Q1_mu1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     285,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_pq",
+   "destination_path": "vmb_SE2",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q0.bk_pq",
+   "destination": "u_vmb_Q2_mu1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     570,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_pq",
+   "destination_path": "vmb_SE3",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q0.bk_pq",
+   "destination": "u_vmb_Q3_mu1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     855,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_pq",
+   "destination_path": "vmb_SE4",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q0.bk_pq",
+   "destination": "u_vmb_Q4_mu1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     1140,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_pq",
+   "destination_path": "vmb_SE5",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q0.bk_pq",
+   "destination": "u_vmb_Q5_mu1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     1425,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_pq",
+   "destination_path": "vmb_SE6",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q0.bk_pq",
+   "destination": "u_vmb_Q6_mu1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     1710,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_pq",
+   "destination_path": "vmb_SE7",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q0.bk_pq",
+   "destination": "u_vmb_Q7_mu1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     1995,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_xq",
+   "destination_path": "vmb_SE0",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q0.bk_xq",
+   "destination": "u_vmb_Q0_mu1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_xq",
+   "destination_path": "vmb_SE1",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q0.bk_xq",
+   "destination": "u_vmb_Q1_mu1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     276,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_xq",
+   "destination_path": "vmb_SE2",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q0.bk_xq",
+   "destination": "u_vmb_Q2_mu1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     552,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_xq",
+   "destination_path": "vmb_SE3",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q0.bk_xq",
+   "destination": "u_vmb_Q3_mu1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     828,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_xq",
+   "destination_path": "vmb_SE4",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q0.bk_xq",
+   "destination": "u_vmb_Q4_mu1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     1104,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_xq",
+   "destination_path": "vmb_SE5",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q0.bk_xq",
+   "destination": "u_vmb_Q5_mu1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     1380,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_xq",
+   "destination_path": "vmb_SE6",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q0.bk_xq",
+   "destination": "u_vmb_Q6_mu1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     1656,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_xq",
+   "destination_path": "vmb_SE7",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q0.bk_xq",
+   "destination": "u_vmb_Q7_mu1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     1932,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_xq2",
+   "destination_path": "vmb_SE0",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q0.bk_xq2",
+   "destination": "u_vmb_Q0_mu1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_xq2",
+   "destination_path": "vmb_SE1",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q0.bk_xq2",
+   "destination": "u_vmb_Q1_mu1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     276,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_xq2",
+   "destination_path": "vmb_SE2",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q0.bk_xq2",
+   "destination": "u_vmb_Q2_mu1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     552,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_xq2",
+   "destination_path": "vmb_SE3",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q0.bk_xq2",
+   "destination": "u_vmb_Q3_mu1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     828,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_xq2",
+   "destination_path": "vmb_SE4",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q0.bk_xq2",
+   "destination": "u_vmb_Q4_mu1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     1104,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_xq2",
+   "destination_path": "vmb_SE5",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q0.bk_xq2",
+   "destination": "u_vmb_Q5_mu1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     1380,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_xq2",
+   "destination_path": "vmb_SE6",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q0.bk_xq2",
+   "destination": "u_vmb_Q6_mu1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     1656,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "hb_vms_SE",
+   "source_port": "bk_xq2",
+   "destination_path": "vmb_SE7",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q0.bk_xq2",
+   "destination": "u_vmb_Q7_mu1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     1932,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b0_pq",
+   "destination_path": "vmb_SW0",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q0.b0_pq",
+   "destination": "u_vmb_Q0_mu1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b0_xq",
+   "destination_path": "vmb_SW0",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q0.b0_xq",
+   "destination": "u_vmb_Q0_mu1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b0_xq2",
+   "destination_path": "vmb_SW0",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q0.b0_xq2",
+   "destination": "u_vmb_Q0_mu1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b1_pq",
+   "destination_path": "vmb_SW1",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q0.b1_pq",
+   "destination": "u_vmb_Q1_mu1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b1_xq",
+   "destination_path": "vmb_SW1",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q0.b1_xq",
+   "destination": "u_vmb_Q1_mu1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b1_xq2",
+   "destination_path": "vmb_SW1",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q0.b1_xq2",
+   "destination": "u_vmb_Q1_mu1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b2_pq",
+   "destination_path": "vmb_SW2",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q0.b2_pq",
+   "destination": "u_vmb_Q2_mu1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b2_xq",
+   "destination_path": "vmb_SW2",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q0.b2_xq",
+   "destination": "u_vmb_Q2_mu1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b2_xq2",
+   "destination_path": "vmb_SW2",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q0.b2_xq2",
+   "destination": "u_vmb_Q2_mu1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b3_pq",
+   "destination_path": "vmb_SW3",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q0.b3_pq",
+   "destination": "u_vmb_Q3_mu1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b3_xq",
+   "destination_path": "vmb_SW3",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q0.b3_xq",
+   "destination": "u_vmb_Q3_mu1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b3_xq2",
+   "destination_path": "vmb_SW3",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q0.b3_xq2",
+   "destination": "u_vmb_Q3_mu1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b4_pq",
+   "destination_path": "vmb_SW4",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q0.b4_pq",
+   "destination": "u_vmb_Q4_mu1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b4_xq",
+   "destination_path": "vmb_SW4",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q0.b4_xq",
+   "destination": "u_vmb_Q4_mu1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b4_xq2",
+   "destination_path": "vmb_SW4",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q0.b4_xq2",
+   "destination": "u_vmb_Q4_mu1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b5_pq",
+   "destination_path": "vmb_SW5",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q0.b5_pq",
+   "destination": "u_vmb_Q5_mu1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b5_xq",
+   "destination_path": "vmb_SW5",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q0.b5_xq",
+   "destination": "u_vmb_Q5_mu1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b5_xq2",
+   "destination_path": "vmb_SW5",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q0.b5_xq2",
+   "destination": "u_vmb_Q5_mu1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b6_pq",
+   "destination_path": "vmb_SW6",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q0.b6_pq",
+   "destination": "u_vmb_Q6_mu1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b6_xq",
+   "destination_path": "vmb_SW6",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q0.b6_xq",
+   "destination": "u_vmb_Q6_mu1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b6_xq2",
+   "destination_path": "vmb_SW6",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q0.b6_xq2",
+   "destination": "u_vmb_Q6_mu1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b7_pq",
+   "destination_path": "vmb_SW7",
+   "destination_port": "pq",
+   "source": "u_hb_vms_Q__q0.b7_pq",
+   "destination": "u_vmb_Q7_mu1.pq",
+   "width": 285,
+   "bit_runs": [
+    [
+     0,
+     0,
+     285
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b7_xq",
+   "destination_path": "vmb_SW7",
+   "destination_port": "xq",
+   "source": "u_hb_vms_Q__q0.b7_xq",
+   "destination": "u_vmb_Q7_mu1.xq",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "hb_vms_SW",
+   "source_port": "b7_xq2",
+   "destination_path": "vmb_SW7",
+   "destination_port": "xq2",
+   "source": "u_hb_vms_Q__q0.b7_xq2",
+   "destination": "u_vmb_Q7_mu1.xq2",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE0",
+   "source_port": "eg",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_eg",
+   "source": "u_vmb_Q0.eg",
+   "destination": "u_hb_vms_Q__q1.bk_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 435,
+   "old_conn": "u_vmb_Q0.eg|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE0",
+   "source_port": "pr",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_pr",
+   "source": "u_vmb_Q0.pr",
+   "destination": "u_hb_vms_Q__q1.bk_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 437,
+   "old_conn": "u_vmb_Q0.pr|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 266,
+   "plan_source_bits": 268
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE0",
+   "source_port": "status",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bank_status",
+   "source": "u_vmb_Q0.status",
+   "destination": "u_hb_vms_Q__q1.bank_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 444,
+   "old_conn": "u_vmb_Q0.status|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 18,
+   "plan_source_bits": 19
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE0",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_xq2_done",
+   "source": "u_vmb_Q0.xq2_done",
+   "destination": "u_hb_vms_Q__q1.bk_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 449,
+   "old_conn": "u_vmb_Q0.xq2_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE0",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_xq_done",
+   "source": "u_vmb_Q0.xq_done",
+   "destination": "u_hb_vms_Q__q1.bk_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 451,
+   "old_conn": "u_vmb_Q0.xq_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE1",
+   "source_port": "eg",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_eg",
+   "source": "u_vmb_Q1.eg",
+   "destination": "u_hb_vms_Q__q1.bk_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     276,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 453,
+   "old_conn": "u_vmb_Q1.eg|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE1",
+   "source_port": "pr",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_pr",
+   "source": "u_vmb_Q1.pr",
+   "destination": "u_hb_vms_Q__q1.bk_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     266,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 455,
+   "old_conn": "u_vmb_Q1.pr|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 266,
+   "plan_source_bits": 268
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE1",
+   "source_port": "status",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bank_status",
+   "source": "u_vmb_Q1.status",
+   "destination": "u_hb_vms_Q__q1.bank_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     18,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 462,
+   "old_conn": "u_vmb_Q1.status|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 3,
+   "serial_k": 1,
+   "planned_wires": 18,
+   "plan_source_bits": 19
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE1",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_xq2_done",
+   "source": "u_vmb_Q1.xq2_done",
+   "destination": "u_hb_vms_Q__q1.bk_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     1,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 467,
+   "old_conn": "u_vmb_Q1.xq2_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 3,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE1",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_xq_done",
+   "source": "u_vmb_Q1.xq_done",
+   "destination": "u_hb_vms_Q__q1.bk_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     1,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 469,
+   "old_conn": "u_vmb_Q1.xq_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 3,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE2",
+   "source_port": "eg",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_eg",
+   "source": "u_vmb_Q2.eg",
+   "destination": "u_hb_vms_Q__q1.bk_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     552,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 471,
+   "old_conn": "u_vmb_Q2.eg|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE2",
+   "source_port": "pr",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_pr",
+   "source": "u_vmb_Q2.pr",
+   "destination": "u_hb_vms_Q__q1.bk_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     532,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 473,
+   "old_conn": "u_vmb_Q2.pr|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 266,
+   "plan_source_bits": 268
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE2",
+   "source_port": "status",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bank_status",
+   "source": "u_vmb_Q2.status",
+   "destination": "u_hb_vms_Q__q1.bank_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     36,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 477,
+   "old_conn": "u_vmb_Q2.status|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 18,
+   "plan_source_bits": 19
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE2",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_xq2_done",
+   "source": "u_vmb_Q2.xq2_done",
+   "destination": "u_hb_vms_Q__q1.bk_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     2,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 482,
+   "old_conn": "u_vmb_Q2.xq2_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE2",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_xq_done",
+   "source": "u_vmb_Q2.xq_done",
+   "destination": "u_hb_vms_Q__q1.bk_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     2,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 484,
+   "old_conn": "u_vmb_Q2.xq_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE3",
+   "source_port": "eg",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_eg",
+   "source": "u_vmb_Q3.eg",
+   "destination": "u_hb_vms_Q__q1.bk_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     828,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 486,
+   "old_conn": "u_vmb_Q3.eg|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 27,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE3",
+   "source_port": "pr",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_pr",
+   "source": "u_vmb_Q3.pr",
+   "destination": "u_hb_vms_Q__q1.bk_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     798,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 488,
+   "old_conn": "u_vmb_Q3.pr|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 27,
+   "serial_k": 1,
+   "planned_wires": 266,
+   "plan_source_bits": 268
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE3",
+   "source_port": "status",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bank_status",
+   "source": "u_vmb_Q3.status",
+   "destination": "u_hb_vms_Q__q1.bank_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     54,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 495,
+   "old_conn": "u_vmb_Q3.status|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 27,
+   "serial_k": 1,
+   "planned_wires": 18,
+   "plan_source_bits": 19
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE3",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_xq2_done",
+   "source": "u_vmb_Q3.xq2_done",
+   "destination": "u_hb_vms_Q__q1.bk_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     3,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 500,
+   "old_conn": "u_vmb_Q3.xq2_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 27,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE3",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_xq_done",
+   "source": "u_vmb_Q3.xq_done",
+   "destination": "u_hb_vms_Q__q1.bk_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     3,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 502,
+   "old_conn": "u_vmb_Q3.xq_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 27,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE4",
+   "source_port": "eg",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_eg",
+   "source": "u_vmb_Q4.eg",
+   "destination": "u_hb_vms_Q__q1.bk_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     1104,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 504,
+   "old_conn": "u_vmb_Q4.eg|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE4",
+   "source_port": "pr",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_pr",
+   "source": "u_vmb_Q4.pr",
+   "destination": "u_hb_vms_Q__q1.bk_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     1064,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 506,
+   "old_conn": "u_vmb_Q4.pr|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 266,
+   "plan_source_bits": 268
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE4",
+   "source_port": "status",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bank_status",
+   "source": "u_vmb_Q4.status",
+   "destination": "u_hb_vms_Q__q1.bank_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     72,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 513,
+   "old_conn": "u_vmb_Q4.status|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 18,
+   "plan_source_bits": 19
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE4",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_xq2_done",
+   "source": "u_vmb_Q4.xq2_done",
+   "destination": "u_hb_vms_Q__q1.bk_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     4,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 518,
+   "old_conn": "u_vmb_Q4.xq2_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE4",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_xq_done",
+   "source": "u_vmb_Q4.xq_done",
+   "destination": "u_hb_vms_Q__q1.bk_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     4,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 520,
+   "old_conn": "u_vmb_Q4.xq_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE5",
+   "source_port": "eg",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_eg",
+   "source": "u_vmb_Q5.eg",
+   "destination": "u_hb_vms_Q__q1.bk_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     1380,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 522,
+   "old_conn": "u_vmb_Q5.eg|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 2,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE5",
+   "source_port": "pr",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_pr",
+   "source": "u_vmb_Q5.pr",
+   "destination": "u_hb_vms_Q__q1.bk_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     1330,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 524,
+   "old_conn": "u_vmb_Q5.pr|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 2,
+   "serial_k": 1,
+   "planned_wires": 266,
+   "plan_source_bits": 268
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE5",
+   "source_port": "status",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bank_status",
+   "source": "u_vmb_Q5.status",
+   "destination": "u_hb_vms_Q__q1.bank_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     90,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 529,
+   "old_conn": "u_vmb_Q5.status|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 2,
+   "serial_k": 1,
+   "planned_wires": 18,
+   "plan_source_bits": 19
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE5",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_xq2_done",
+   "source": "u_vmb_Q5.xq2_done",
+   "destination": "u_hb_vms_Q__q1.bk_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     5,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 534,
+   "old_conn": "u_vmb_Q5.xq2_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 2,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE5",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_xq_done",
+   "source": "u_vmb_Q5.xq_done",
+   "destination": "u_hb_vms_Q__q1.bk_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     5,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 536,
+   "old_conn": "u_vmb_Q5.xq_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 2,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE6",
+   "source_port": "eg",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_eg",
+   "source": "u_vmb_Q6.eg",
+   "destination": "u_hb_vms_Q__q1.bk_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     1656,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 276,
+   "old_conn": "u_hb_vms_Q.b6_eg|u_vmb_Q6",
+   "reversed_geometry": true,
+   "station_count": 6,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE6",
+   "source_port": "pr",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_pr",
+   "source": "u_vmb_Q6.pr",
+   "destination": "u_hb_vms_Q__q1.bk_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     1596,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 270,
+   "old_conn": "u_hb_vms_Q.b6_pr|u_vmb_Q6",
+   "reversed_geometry": true,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 266,
+   "plan_source_bits": 268
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE6",
+   "source_port": "status",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bank_status",
+   "source": "u_vmb_Q6.status",
+   "destination": "u_hb_vms_Q__q1.bank_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     108,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 277,
+   "old_conn": "u_hb_vms_Q.b6_status|u_vmb_Q6",
+   "reversed_geometry": true,
+   "station_count": 8,
+   "serial_k": 1,
+   "planned_wires": 18,
+   "plan_source_bits": 19
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE6",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_xq2_done",
+   "source": "u_vmb_Q6.xq2_done",
+   "destination": "u_hb_vms_Q__q1.bk_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     6,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 278,
+   "old_conn": "u_hb_vms_Q.b6_xq2_done|u_vmb_Q6",
+   "reversed_geometry": true,
+   "station_count": 8,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE6",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_xq_done",
+   "source": "u_vmb_Q6.xq_done",
+   "destination": "u_hb_vms_Q__q1.bk_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     6,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 268,
+   "old_conn": "u_hb_vms_Q.b6_xq_done|u_vmb_Q6",
+   "reversed_geometry": true,
+   "station_count": 8,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE7",
+   "source_port": "eg",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_eg",
+   "source": "u_vmb_Q7.eg",
+   "destination": "u_hb_vms_Q__q1.bk_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     1932,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 546,
+   "old_conn": "u_vmb_Q7.eg|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 6,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE7",
+   "source_port": "pr",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_pr",
+   "source": "u_vmb_Q7.pr",
+   "destination": "u_hb_vms_Q__q1.bk_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     1862,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 548,
+   "old_conn": "u_vmb_Q7.pr|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 6,
+   "serial_k": 1,
+   "planned_wires": 266,
+   "plan_source_bits": 268
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE7",
+   "source_port": "status",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bank_status",
+   "source": "u_vmb_Q7.status",
+   "destination": "u_hb_vms_Q__q1.bank_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     126,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 555,
+   "old_conn": "u_vmb_Q7.status|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 6,
+   "serial_k": 1,
+   "planned_wires": 18,
+   "plan_source_bits": 19
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE7",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_xq2_done",
+   "source": "u_vmb_Q7.xq2_done",
+   "destination": "u_hb_vms_Q__q1.bk_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     7,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 560,
+   "old_conn": "u_vmb_Q7.xq2_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 6,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_NE7",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_NE",
+   "destination_port": "bk_xq_done",
+   "source": "u_vmb_Q7.xq_done",
+   "destination": "u_hb_vms_Q__q1.bk_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     7,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 562,
+   "old_conn": "u_vmb_Q7.xq_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 6,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW0",
+   "source_port": "eg",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b0_eg",
+   "source": "u_vmb_Q0.eg",
+   "destination": "u_hb_vms_Q__q1.b0_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 469,
+   "old_conn": "u_vmb_Q0.eg|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW0",
+   "source_port": "pr",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b0_pr",
+   "source": "u_vmb_Q0.pr",
+   "destination": "u_hb_vms_Q__q1.b0_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 471,
+   "old_conn": "u_vmb_Q0.pr|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 266,
+   "plan_source_bits": 268
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW0",
+   "source_port": "status",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b0_status",
+   "source": "u_vmb_Q0.status",
+   "destination": "u_hb_vms_Q__q1.b0_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 478,
+   "old_conn": "u_vmb_Q0.status|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 18,
+   "plan_source_bits": 19
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW0",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b0_xq2_done",
+   "source": "u_vmb_Q0.xq2_done",
+   "destination": "u_hb_vms_Q__q1.b0_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 483,
+   "old_conn": "u_vmb_Q0.xq2_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW0",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b0_xq_done",
+   "source": "u_vmb_Q0.xq_done",
+   "destination": "u_hb_vms_Q__q1.b0_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 485,
+   "old_conn": "u_vmb_Q0.xq_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW1",
+   "source_port": "eg",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b1_eg",
+   "source": "u_vmb_Q1.eg",
+   "destination": "u_hb_vms_Q__q1.b1_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 487,
+   "old_conn": "u_vmb_Q1.eg|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW1",
+   "source_port": "pr",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b1_pr",
+   "source": "u_vmb_Q1.pr",
+   "destination": "u_hb_vms_Q__q1.b1_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 489,
+   "old_conn": "u_vmb_Q1.pr|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 3,
+   "serial_k": 1,
+   "planned_wires": 266,
+   "plan_source_bits": 268
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW1",
+   "source_port": "status",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b1_status",
+   "source": "u_vmb_Q1.status",
+   "destination": "u_hb_vms_Q__q1.b1_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 496,
+   "old_conn": "u_vmb_Q1.status|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 3,
+   "serial_k": 1,
+   "planned_wires": 18,
+   "plan_source_bits": 19
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW1",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b1_xq2_done",
+   "source": "u_vmb_Q1.xq2_done",
+   "destination": "u_hb_vms_Q__q1.b1_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 501,
+   "old_conn": "u_vmb_Q1.xq2_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 3,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW1",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b1_xq_done",
+   "source": "u_vmb_Q1.xq_done",
+   "destination": "u_hb_vms_Q__q1.b1_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 503,
+   "old_conn": "u_vmb_Q1.xq_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 3,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW2",
+   "source_port": "eg",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b2_eg",
+   "source": "u_vmb_Q2.eg",
+   "destination": "u_hb_vms_Q__q1.b2_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 505,
+   "old_conn": "u_vmb_Q2.eg|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW2",
+   "source_port": "pr",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b2_pr",
+   "source": "u_vmb_Q2.pr",
+   "destination": "u_hb_vms_Q__q1.b2_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 507,
+   "old_conn": "u_vmb_Q2.pr|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 266,
+   "plan_source_bits": 268
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW2",
+   "source_port": "status",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b2_status",
+   "source": "u_vmb_Q2.status",
+   "destination": "u_hb_vms_Q__q1.b2_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 511,
+   "old_conn": "u_vmb_Q2.status|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 18,
+   "plan_source_bits": 19
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW2",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b2_xq2_done",
+   "source": "u_vmb_Q2.xq2_done",
+   "destination": "u_hb_vms_Q__q1.b2_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 516,
+   "old_conn": "u_vmb_Q2.xq2_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW2",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b2_xq_done",
+   "source": "u_vmb_Q2.xq_done",
+   "destination": "u_hb_vms_Q__q1.b2_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 518,
+   "old_conn": "u_vmb_Q2.xq_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW3",
+   "source_port": "eg",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b3_eg",
+   "source": "u_vmb_Q3.eg",
+   "destination": "u_hb_vms_Q__q1.b3_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 520,
+   "old_conn": "u_vmb_Q3.eg|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 25,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW3",
+   "source_port": "pr",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b3_pr",
+   "source": "u_vmb_Q3.pr",
+   "destination": "u_hb_vms_Q__q1.b3_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 522,
+   "old_conn": "u_vmb_Q3.pr|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 25,
+   "serial_k": 1,
+   "planned_wires": 266,
+   "plan_source_bits": 268
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW3",
+   "source_port": "status",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b3_status",
+   "source": "u_vmb_Q3.status",
+   "destination": "u_hb_vms_Q__q1.b3_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 529,
+   "old_conn": "u_vmb_Q3.status|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 25,
+   "serial_k": 1,
+   "planned_wires": 18,
+   "plan_source_bits": 19
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW3",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b3_xq2_done",
+   "source": "u_vmb_Q3.xq2_done",
+   "destination": "u_hb_vms_Q__q1.b3_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 534,
+   "old_conn": "u_vmb_Q3.xq2_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 25,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW3",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b3_xq_done",
+   "source": "u_vmb_Q3.xq_done",
+   "destination": "u_hb_vms_Q__q1.b3_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 536,
+   "old_conn": "u_vmb_Q3.xq_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 25,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW4",
+   "source_port": "eg",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b4_eg",
+   "source": "u_vmb_Q4.eg",
+   "destination": "u_hb_vms_Q__q1.b4_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 538,
+   "old_conn": "u_vmb_Q4.eg|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW4",
+   "source_port": "pr",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b4_pr",
+   "source": "u_vmb_Q4.pr",
+   "destination": "u_hb_vms_Q__q1.b4_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 540,
+   "old_conn": "u_vmb_Q4.pr|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 266,
+   "plan_source_bits": 268
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW4",
+   "source_port": "status",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b4_status",
+   "source": "u_vmb_Q4.status",
+   "destination": "u_hb_vms_Q__q1.b4_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 547,
+   "old_conn": "u_vmb_Q4.status|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 18,
+   "plan_source_bits": 19
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW4",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b4_xq2_done",
+   "source": "u_vmb_Q4.xq2_done",
+   "destination": "u_hb_vms_Q__q1.b4_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 552,
+   "old_conn": "u_vmb_Q4.xq2_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW4",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b4_xq_done",
+   "source": "u_vmb_Q4.xq_done",
+   "destination": "u_hb_vms_Q__q1.b4_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 554,
+   "old_conn": "u_vmb_Q4.xq_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW5",
+   "source_port": "eg",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b5_eg",
+   "source": "u_vmb_Q5.eg",
+   "destination": "u_hb_vms_Q__q1.b5_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 556,
+   "old_conn": "u_vmb_Q5.eg|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW5",
+   "source_port": "pr",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b5_pr",
+   "source": "u_vmb_Q5.pr",
+   "destination": "u_hb_vms_Q__q1.b5_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 558,
+   "old_conn": "u_vmb_Q5.pr|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 266,
+   "plan_source_bits": 268
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW5",
+   "source_port": "status",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b5_status",
+   "source": "u_vmb_Q5.status",
+   "destination": "u_hb_vms_Q__q1.b5_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 563,
+   "old_conn": "u_vmb_Q5.status|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 4,
+   "serial_k": 1,
+   "planned_wires": 18,
+   "plan_source_bits": 19
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW5",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b5_xq2_done",
+   "source": "u_vmb_Q5.xq2_done",
+   "destination": "u_hb_vms_Q__q1.b5_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 568,
+   "old_conn": "u_vmb_Q5.xq2_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW5",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b5_xq_done",
+   "source": "u_vmb_Q5.xq_done",
+   "destination": "u_hb_vms_Q__q1.b5_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 570,
+   "old_conn": "u_vmb_Q5.xq_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW6",
+   "source_port": "eg",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b6_eg",
+   "source": "u_vmb_Q6.eg",
+   "destination": "u_hb_vms_Q__q1.b6_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 310,
+   "old_conn": "u_hb_vms_Q.b6_eg|u_vmb_Q6",
+   "reversed_geometry": true,
+   "station_count": 6,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW6",
+   "source_port": "pr",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b6_pr",
+   "source": "u_vmb_Q6.pr",
+   "destination": "u_hb_vms_Q__q1.b6_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 304,
+   "old_conn": "u_hb_vms_Q.b6_pr|u_vmb_Q6",
+   "reversed_geometry": true,
+   "station_count": 7,
+   "serial_k": 1,
+   "planned_wires": 266,
+   "plan_source_bits": 268
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW6",
+   "source_port": "status",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b6_status",
+   "source": "u_vmb_Q6.status",
+   "destination": "u_hb_vms_Q__q1.b6_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 311,
+   "old_conn": "u_hb_vms_Q.b6_status|u_vmb_Q6",
+   "reversed_geometry": true,
+   "station_count": 8,
+   "serial_k": 1,
+   "planned_wires": 18,
+   "plan_source_bits": 19
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW6",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b6_xq2_done",
+   "source": "u_vmb_Q6.xq2_done",
+   "destination": "u_hb_vms_Q__q1.b6_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 312,
+   "old_conn": "u_hb_vms_Q.b6_xq2_done|u_vmb_Q6",
+   "reversed_geometry": true,
+   "station_count": 8,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW6",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b6_xq_done",
+   "source": "u_vmb_Q6.xq_done",
+   "destination": "u_hb_vms_Q__q1.b6_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 302,
+   "old_conn": "u_hb_vms_Q.b6_xq_done|u_vmb_Q6",
+   "reversed_geometry": true,
+   "station_count": 8,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW7",
+   "source_port": "eg",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b7_eg",
+   "source": "u_vmb_Q7.eg",
+   "destination": "u_hb_vms_Q__q1.b7_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 580,
+   "old_conn": "u_vmb_Q7.eg|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 276,
+   "plan_source_bits": 278
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW7",
+   "source_port": "pr",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b7_pr",
+   "source": "u_vmb_Q7.pr",
+   "destination": "u_hb_vms_Q__q1.b7_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 582,
+   "old_conn": "u_vmb_Q7.pr|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 266,
+   "plan_source_bits": 268
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW7",
+   "source_port": "status",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b7_status",
+   "source": "u_vmb_Q7.status",
+   "destination": "u_hb_vms_Q__q1.b7_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 589,
+   "old_conn": "u_vmb_Q7.status|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 18,
+   "plan_source_bits": 19
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW7",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b7_xq2_done",
+   "source": "u_vmb_Q7.xq2_done",
+   "destination": "u_hb_vms_Q__q1.b7_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 594,
+   "old_conn": "u_vmb_Q7.xq2_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_NW7",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_NW",
+   "destination_port": "b7_xq_done",
+   "source": "u_vmb_Q7.xq_done",
+   "destination": "u_hb_vms_Q__q1.b7_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "PREPARED_GEOMETRY_UNQUALIFIED",
+   "old_index": 596,
+   "old_conn": "u_vmb_Q7.xq_done|u_hb_vms_Q",
+   "reversed_geometry": false,
+   "station_count": 5,
+   "serial_k": 1,
+   "planned_wires": 1,
+   "plan_source_bits": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE0",
+   "source_port": "eg",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_eg",
+   "source": "u_vmb_Q0_mu1.eg",
+   "destination": "u_hb_vms_Q__q0.bk_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE0",
+   "source_port": "pr",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_pr",
+   "source": "u_vmb_Q0_mu1.pr",
+   "destination": "u_hb_vms_Q__q0.bk_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE0",
+   "source_port": "status",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bank_status",
+   "source": "u_vmb_Q0_mu1.status",
+   "destination": "u_hb_vms_Q__q0.bank_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE0",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_xq2_done",
+   "source": "u_vmb_Q0_mu1.xq2_done",
+   "destination": "u_hb_vms_Q__q0.bk_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE0",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_xq_done",
+   "source": "u_vmb_Q0_mu1.xq_done",
+   "destination": "u_hb_vms_Q__q0.bk_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE1",
+   "source_port": "eg",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_eg",
+   "source": "u_vmb_Q1_mu1.eg",
+   "destination": "u_hb_vms_Q__q0.bk_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     276,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE1",
+   "source_port": "pr",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_pr",
+   "source": "u_vmb_Q1_mu1.pr",
+   "destination": "u_hb_vms_Q__q0.bk_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     266,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE1",
+   "source_port": "status",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bank_status",
+   "source": "u_vmb_Q1_mu1.status",
+   "destination": "u_hb_vms_Q__q0.bank_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     18,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE1",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_xq2_done",
+   "source": "u_vmb_Q1_mu1.xq2_done",
+   "destination": "u_hb_vms_Q__q0.bk_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     1,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE1",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_xq_done",
+   "source": "u_vmb_Q1_mu1.xq_done",
+   "destination": "u_hb_vms_Q__q0.bk_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     1,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE2",
+   "source_port": "eg",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_eg",
+   "source": "u_vmb_Q2_mu1.eg",
+   "destination": "u_hb_vms_Q__q0.bk_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     552,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE2",
+   "source_port": "pr",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_pr",
+   "source": "u_vmb_Q2_mu1.pr",
+   "destination": "u_hb_vms_Q__q0.bk_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     532,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE2",
+   "source_port": "status",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bank_status",
+   "source": "u_vmb_Q2_mu1.status",
+   "destination": "u_hb_vms_Q__q0.bank_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     36,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE2",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_xq2_done",
+   "source": "u_vmb_Q2_mu1.xq2_done",
+   "destination": "u_hb_vms_Q__q0.bk_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     2,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE2",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_xq_done",
+   "source": "u_vmb_Q2_mu1.xq_done",
+   "destination": "u_hb_vms_Q__q0.bk_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     2,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE3",
+   "source_port": "eg",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_eg",
+   "source": "u_vmb_Q3_mu1.eg",
+   "destination": "u_hb_vms_Q__q0.bk_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     828,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE3",
+   "source_port": "pr",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_pr",
+   "source": "u_vmb_Q3_mu1.pr",
+   "destination": "u_hb_vms_Q__q0.bk_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     798,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE3",
+   "source_port": "status",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bank_status",
+   "source": "u_vmb_Q3_mu1.status",
+   "destination": "u_hb_vms_Q__q0.bank_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     54,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE3",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_xq2_done",
+   "source": "u_vmb_Q3_mu1.xq2_done",
+   "destination": "u_hb_vms_Q__q0.bk_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     3,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE3",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_xq_done",
+   "source": "u_vmb_Q3_mu1.xq_done",
+   "destination": "u_hb_vms_Q__q0.bk_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     3,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE4",
+   "source_port": "eg",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_eg",
+   "source": "u_vmb_Q4_mu1.eg",
+   "destination": "u_hb_vms_Q__q0.bk_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     1104,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE4",
+   "source_port": "pr",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_pr",
+   "source": "u_vmb_Q4_mu1.pr",
+   "destination": "u_hb_vms_Q__q0.bk_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     1064,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE4",
+   "source_port": "status",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bank_status",
+   "source": "u_vmb_Q4_mu1.status",
+   "destination": "u_hb_vms_Q__q0.bank_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     72,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE4",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_xq2_done",
+   "source": "u_vmb_Q4_mu1.xq2_done",
+   "destination": "u_hb_vms_Q__q0.bk_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     4,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE4",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_xq_done",
+   "source": "u_vmb_Q4_mu1.xq_done",
+   "destination": "u_hb_vms_Q__q0.bk_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     4,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE5",
+   "source_port": "eg",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_eg",
+   "source": "u_vmb_Q5_mu1.eg",
+   "destination": "u_hb_vms_Q__q0.bk_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     1380,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE5",
+   "source_port": "pr",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_pr",
+   "source": "u_vmb_Q5_mu1.pr",
+   "destination": "u_hb_vms_Q__q0.bk_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     1330,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE5",
+   "source_port": "status",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bank_status",
+   "source": "u_vmb_Q5_mu1.status",
+   "destination": "u_hb_vms_Q__q0.bank_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     90,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE5",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_xq2_done",
+   "source": "u_vmb_Q5_mu1.xq2_done",
+   "destination": "u_hb_vms_Q__q0.bk_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     5,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE5",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_xq_done",
+   "source": "u_vmb_Q5_mu1.xq_done",
+   "destination": "u_hb_vms_Q__q0.bk_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     5,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE6",
+   "source_port": "eg",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_eg",
+   "source": "u_vmb_Q6_mu1.eg",
+   "destination": "u_hb_vms_Q__q0.bk_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     1656,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE6",
+   "source_port": "pr",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_pr",
+   "source": "u_vmb_Q6_mu1.pr",
+   "destination": "u_hb_vms_Q__q0.bk_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     1596,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE6",
+   "source_port": "status",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bank_status",
+   "source": "u_vmb_Q6_mu1.status",
+   "destination": "u_hb_vms_Q__q0.bank_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     108,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE6",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_xq2_done",
+   "source": "u_vmb_Q6_mu1.xq2_done",
+   "destination": "u_hb_vms_Q__q0.bk_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     6,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE6",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_xq_done",
+   "source": "u_vmb_Q6_mu1.xq_done",
+   "destination": "u_hb_vms_Q__q0.bk_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     6,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE7",
+   "source_port": "eg",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_eg",
+   "source": "u_vmb_Q7_mu1.eg",
+   "destination": "u_hb_vms_Q__q0.bk_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     1932,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE7",
+   "source_port": "pr",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_pr",
+   "source": "u_vmb_Q7_mu1.pr",
+   "destination": "u_hb_vms_Q__q0.bk_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     1862,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE7",
+   "source_port": "status",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bank_status",
+   "source": "u_vmb_Q7_mu1.status",
+   "destination": "u_hb_vms_Q__q0.bank_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     126,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE7",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_xq2_done",
+   "source": "u_vmb_Q7_mu1.xq2_done",
+   "destination": "u_hb_vms_Q__q0.bk_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     7,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_ne",
+   "source_path": "vmb_SE7",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_SE",
+   "destination_port": "bk_xq_done",
+   "source": "u_vmb_Q7_mu1.xq_done",
+   "destination": "u_hb_vms_Q__q0.bk_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     7,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW0",
+   "source_port": "eg",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b0_eg",
+   "source": "u_vmb_Q0_mu1.eg",
+   "destination": "u_hb_vms_Q__q0.b0_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW0",
+   "source_port": "pr",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b0_pr",
+   "source": "u_vmb_Q0_mu1.pr",
+   "destination": "u_hb_vms_Q__q0.b0_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW0",
+   "source_port": "status",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b0_status",
+   "source": "u_vmb_Q0_mu1.status",
+   "destination": "u_hb_vms_Q__q0.b0_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW0",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b0_xq2_done",
+   "source": "u_vmb_Q0_mu1.xq2_done",
+   "destination": "u_hb_vms_Q__q0.b0_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW0",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b0_xq_done",
+   "source": "u_vmb_Q0_mu1.xq_done",
+   "destination": "u_hb_vms_Q__q0.b0_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW1",
+   "source_port": "eg",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b1_eg",
+   "source": "u_vmb_Q1_mu1.eg",
+   "destination": "u_hb_vms_Q__q0.b1_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW1",
+   "source_port": "pr",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b1_pr",
+   "source": "u_vmb_Q1_mu1.pr",
+   "destination": "u_hb_vms_Q__q0.b1_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW1",
+   "source_port": "status",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b1_status",
+   "source": "u_vmb_Q1_mu1.status",
+   "destination": "u_hb_vms_Q__q0.b1_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW1",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b1_xq2_done",
+   "source": "u_vmb_Q1_mu1.xq2_done",
+   "destination": "u_hb_vms_Q__q0.b1_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW1",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b1_xq_done",
+   "source": "u_vmb_Q1_mu1.xq_done",
+   "destination": "u_hb_vms_Q__q0.b1_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW2",
+   "source_port": "eg",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b2_eg",
+   "source": "u_vmb_Q2_mu1.eg",
+   "destination": "u_hb_vms_Q__q0.b2_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW2",
+   "source_port": "pr",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b2_pr",
+   "source": "u_vmb_Q2_mu1.pr",
+   "destination": "u_hb_vms_Q__q0.b2_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW2",
+   "source_port": "status",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b2_status",
+   "source": "u_vmb_Q2_mu1.status",
+   "destination": "u_hb_vms_Q__q0.b2_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW2",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b2_xq2_done",
+   "source": "u_vmb_Q2_mu1.xq2_done",
+   "destination": "u_hb_vms_Q__q0.b2_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW2",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b2_xq_done",
+   "source": "u_vmb_Q2_mu1.xq_done",
+   "destination": "u_hb_vms_Q__q0.b2_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW3",
+   "source_port": "eg",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b3_eg",
+   "source": "u_vmb_Q3_mu1.eg",
+   "destination": "u_hb_vms_Q__q0.b3_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW3",
+   "source_port": "pr",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b3_pr",
+   "source": "u_vmb_Q3_mu1.pr",
+   "destination": "u_hb_vms_Q__q0.b3_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW3",
+   "source_port": "status",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b3_status",
+   "source": "u_vmb_Q3_mu1.status",
+   "destination": "u_hb_vms_Q__q0.b3_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW3",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b3_xq2_done",
+   "source": "u_vmb_Q3_mu1.xq2_done",
+   "destination": "u_hb_vms_Q__q0.b3_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW3",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b3_xq_done",
+   "source": "u_vmb_Q3_mu1.xq_done",
+   "destination": "u_hb_vms_Q__q0.b3_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW4",
+   "source_port": "eg",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b4_eg",
+   "source": "u_vmb_Q4_mu1.eg",
+   "destination": "u_hb_vms_Q__q0.b4_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW4",
+   "source_port": "pr",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b4_pr",
+   "source": "u_vmb_Q4_mu1.pr",
+   "destination": "u_hb_vms_Q__q0.b4_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW4",
+   "source_port": "status",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b4_status",
+   "source": "u_vmb_Q4_mu1.status",
+   "destination": "u_hb_vms_Q__q0.b4_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW4",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b4_xq2_done",
+   "source": "u_vmb_Q4_mu1.xq2_done",
+   "destination": "u_hb_vms_Q__q0.b4_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW4",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b4_xq_done",
+   "source": "u_vmb_Q4_mu1.xq_done",
+   "destination": "u_hb_vms_Q__q0.b4_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW5",
+   "source_port": "eg",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b5_eg",
+   "source": "u_vmb_Q5_mu1.eg",
+   "destination": "u_hb_vms_Q__q0.b5_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW5",
+   "source_port": "pr",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b5_pr",
+   "source": "u_vmb_Q5_mu1.pr",
+   "destination": "u_hb_vms_Q__q0.b5_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW5",
+   "source_port": "status",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b5_status",
+   "source": "u_vmb_Q5_mu1.status",
+   "destination": "u_hb_vms_Q__q0.b5_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW5",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b5_xq2_done",
+   "source": "u_vmb_Q5_mu1.xq2_done",
+   "destination": "u_hb_vms_Q__q0.b5_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW5",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b5_xq_done",
+   "source": "u_vmb_Q5_mu1.xq_done",
+   "destination": "u_hb_vms_Q__q0.b5_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW6",
+   "source_port": "eg",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b6_eg",
+   "source": "u_vmb_Q6_mu1.eg",
+   "destination": "u_hb_vms_Q__q0.b6_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW6",
+   "source_port": "pr",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b6_pr",
+   "source": "u_vmb_Q6_mu1.pr",
+   "destination": "u_hb_vms_Q__q0.b6_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW6",
+   "source_port": "status",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b6_status",
+   "source": "u_vmb_Q6_mu1.status",
+   "destination": "u_hb_vms_Q__q0.b6_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW6",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b6_xq2_done",
+   "source": "u_vmb_Q6_mu1.xq2_done",
+   "destination": "u_hb_vms_Q__q0.b6_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW6",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b6_xq_done",
+   "source": "u_vmb_Q6_mu1.xq_done",
+   "destination": "u_hb_vms_Q__q0.b6_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW7",
+   "source_port": "eg",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b7_eg",
+   "source": "u_vmb_Q7_mu1.eg",
+   "destination": "u_hb_vms_Q__q0.b7_eg",
+   "width": 276,
+   "bit_runs": [
+    [
+     0,
+     0,
+     276
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW7",
+   "source_port": "pr",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b7_pr",
+   "source": "u_vmb_Q7_mu1.pr",
+   "destination": "u_hb_vms_Q__q0.b7_pr",
+   "width": 266,
+   "bit_runs": [
+    [
+     0,
+     0,
+     266
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW7",
+   "source_port": "status",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b7_status",
+   "source": "u_vmb_Q7_mu1.status",
+   "destination": "u_hb_vms_Q__q0.b7_status",
+   "width": 18,
+   "bit_runs": [
+    [
+     0,
+     0,
+     18
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW7",
+   "source_port": "xq2_done",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b7_xq2_done",
+   "source": "u_vmb_Q7_mu1.xq2_done",
+   "destination": "u_hb_vms_Q__q0.b7_xq2_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  },
+  {
+   "type": "q_hub_nw",
+   "source_path": "vmb_SW7",
+   "source_port": "xq_done",
+   "destination_path": "hb_vms_SW",
+   "destination_port": "b7_xq_done",
+   "source": "u_vmb_Q7_mu1.xq_done",
+   "destination": "u_hb_vms_Q__q0.b7_xq_done",
+   "width": 1,
+   "bit_runs": [
+    [
+     0,
+     0,
+     1
+    ]
+   ],
+   "source_intermediate_stages": 0,
+   "status": "MISSING_SOUTH_ROLE_GEOMETRY",
+   "candidates": []
+  }
+ ],
+ "caveats": [
+  "pin endpoints and all clock/reset/budget dates still need die composition",
+  "South-role station geometry absent; source links remain present in the map",
+  "only VMS/bank connections changed; other inherited internal station rows unchanged"
+ ],
+ "inputs_sha256": {
+  "plan": "92a841730cca05b5afd9ac034a810667bd4281d2acf2b75d2387d02c9b16f6f7",
+  "graph": "05dc34c6c608b771e7128d29d301a4c71f9a1200c8e9167b9c01c001bebf81e9"
+ }
+}
