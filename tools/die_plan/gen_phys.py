@@ -1331,6 +1331,16 @@ def sdc(P, tn, pins):
 
 
 
+def content_physical_identity(c):
+    """Optional kit-only physical specialization; logical bind identity remains unchanged."""
+    inst, master = c.get("physical_inst"), c.get("physical_master")
+    if (inst is None) != (master is None):
+        raise ValueError(f"content {c['inst']}: physical_inst and physical_master must be declared together")
+    if inst is not None and (not inst or not master):
+        raise ValueError(f"content {c['inst']}: empty physical specialization identity")
+    return (inst, master) if inst is not None else (c["inst"], c["module"])
+
+
 def type_macros(P, tn):
     """content macros of a type the kit must place (COORD 10-23): hard_cores[] and contents[] that carry a hardened
     view (lef).  [(inst, module, lef, lib, x, y, orient)], type frame, origin + track offset.  A macro view without a
@@ -1349,7 +1359,8 @@ def type_macros(P, tn):
             continue
         if "origin_um" not in c:
             raise ValueError(f"type {tn}: macro content {c['inst']} ({c['module']}) has a lef but no origin_um")
-        out.append((c["inst"], c["module"], c["lef"], c.get("lib"), c["origin_um"][0], c["origin_um"][1],
+        physical_inst, physical_master = content_physical_identity(c)
+        out.append((physical_inst, physical_master, c["lef"], c.get("lib"), c["origin_um"][0], c["origin_um"][1],
                     c.get("orient", "R0")))
     return out
 
@@ -1392,7 +1403,7 @@ def phy_pg_domains(P, tn):
                     continue
                 if not (box[0] >= rt[0] and box[1] >= rt[1] and box[2] <= rt[2] and box[3] <= rt[3]):
                     raise ValueError(f"type {tn}: macro {c['inst']} straddles PG domain {d['name']} {rt}")
-                mac.append(c["inst"])
+                mac.append(content_physical_identity(c)[0] if "physical_inst" in c or "physical_master" in c else c["inst"])
             if not mac and not t.get("phy_pg_offmodel"):
                 raise ValueError(f"type {tn}: PG domain {d['name']} holds no macro (a PHY domain powers its PHY macro)")
             got.append((d["name"], d["nets"][0], d["nets"][1], rt, sorted(mac)))
