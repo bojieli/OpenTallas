@@ -1,0 +1,57 @@
+{
+ "scope": "Samecut/demand/capacitykernel, onlymacroendpoints useactualODBpinxy; stdcellcentres/toppins unchanged",
+ "raw_macro_projection": {
+  "channel_v_max": 0.573,
+  "channel_v_at": [
+   265.0,
+   275.0,
+   57.5
+  ],
+  "blocked_v": 0,
+  "detour_v": 0,
+  "col_v_max": 0.537,
+  "col_v_at": [
+   260.0,
+   67.5
+  ],
+  "tracks_v_per_um": 36.46,
+  "channel_h_max": 2.498,
+  "channel_h_at": [
+   89.0,
+   90.0,
+   162.5
+  ],
+  "blocked_h": 0,
+  "detour_h": 7999,
+  "tracks_h_per_um": 36.46,
+  "demand_layers": "M2-M5"
+ },
+ "actual_macro_pinxy": {
+  "channel_v_max": 0.573,
+  "channel_v_at": [
+   265.0,
+   275.0,
+   57.5
+  ],
+  "blocked_v": 0,
+  "detour_v": 0,
+  "col_v_max": 0.695,
+  "col_v_at": [
+   250.0,
+   92.5
+  ],
+  "tracks_v_per_um": 36.46,
+  "channel_h_max": 2.604,
+  "channel_h_at": [
+   89.0,
+   90.0,
+   162.5
+  ],
+  "blocked_h": 0,
+  "detour_h": 11932,
+  "tracks_h_per_um": 36.46,
+  "demand_layers": "M2-M5"
+ },
+ "actual_pin_count": 3272,
+ "net_boxes": 12096
+}
