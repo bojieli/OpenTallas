@@ -1,0 +1,31 @@
+{
+  "verdict": "FAIL",
+  "line": "AUTO-GEOM FAIL WARN[pin_density 10.4: S/M5 10.4/um at x 95.26-105.26; N/M5 9.1/um at x 99.48-109.48] pin_unreg=FAIL(12) channel_h=FAIL(1.861) channel_v=FAIL(0.88) col_v=FAIL(0.824) grt=NA(None) pin_table=NA() macros=NA() tap_set=NA() stage=NA() pin_density=WARN(10.4) outline=ok(224.64x207.36) aspect=ok(1.083) fill=ok(0.5077) fill_hi=ok(0.5077) empty=ok(0.0859) pin_reg_p90=ok(9.76) pin_reg_max=ok(119.55) r2r=ok(312.12) r2r_count=ok(0) std_band=ok(1.0) cells_on_macros=ok(0) partial_face=ok(0) relay_collapse=ok(0) blocked_h=ok(0) blocked_v=ok(0) clock_on_macro=ok(0) clock_reach=ok(166.54)",
+  "metrics": {
+    "fill_of_free": 0.5077,
+    "empty_area": 0.0859,
+    "r2r_max": 312.12,
+    "r2r_captures_gt405": 0,
+    "pin_reg_p90": 9.76,
+    "pin_reg_max": 119.55,
+    "channel_h_max": 1.861,
+    "channel_h_at": [
+      30.0,
+      34.0,
+      157.5
+    ],
+    "channel_v_max": 0.88,
+    "channel_v_at": [
+      60.0,
+      64.0,
+      142.5
+    ]
+  },
+  "hotcut_decomposition": {
+    "logic_ratio": 1.8491598871490826,
+    "logic_nets": 698,
+    "macro_ratio": 0.011723333444060275,
+    "macro_nets": 8
+  },
+  "next": "whole-section1/2 locality guides; no GRT/CTS/DRT on failed candidate"
+}
