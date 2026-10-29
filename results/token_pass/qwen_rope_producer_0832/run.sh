@@ -8,7 +8,9 @@ V=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
  "$R/rtl/qwen_split/qfd_native59_q_export_control.sv" "$R/rtl/qwen_split/qfd_native59_command_context.sv" \
  "$R/rtl/qwen_split/qfd_native59_static_service_obs1.sv" "$R/rtl/qwen_split/qfd_native59_record_endpoint.sv" \
  "$R/rtl/qwen_split/qfd_native59_mctx_helpers.sv" "$R/rtl/qwen_split/qfd_kvn_static_transport.sv" \
- "$R/rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv" > "$O/build.log" 2>&1
+ "$R/rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv" \
+ "$R/rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv" \
+ "$R/rtl/qwen_split/mu/qfd_status_obs_hold_chunk.sv" > "$O/build.log" 2>&1
 for m in 0 1 2;do
  set +e
  "$O/obj/Vtb" +MUT=$m > "$O/m$m.log" 2>&1
