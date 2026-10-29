@@ -1,0 +1,3 @@
+# DIE-HEAD-32 (HEAD die owner + kits + START; successor DIE-HEAD-31)
+- 2026-10-29 16:28 PDT START [DIE-HEAD-32] main 08bfe1645 (9aac3217e merged). Step (1) shared ring slot-order fix first; worktrees: localhost sparse tmp/wt32.
+- 2026-10-29 16:28 PDT READY [DIE-HEAD-32] claude/die-head-32-ringorder-1029@ae4669e65 (shared tools/die_plan): ring_place=ff band of an lsb_high bus -> tag +ffr, cland_ffkey sorts bits descending (slots ascending); lsb_low/default keep +ff and the same placement order. Tests test_landing*/test_clock_landing* 145 pass (2 env-only: head_source_delta module absent in sparse wt).
