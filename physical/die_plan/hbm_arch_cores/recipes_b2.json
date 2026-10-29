@@ -371,6 +371,10 @@
   "source": "d4g as-built die_r18h5.v instance hb_vms_NW (module hfd_hgi_vms_glue_nw_t); files = closure of hfd_hgi_vms_glue_nw_t at d34578d6f",
   "source_commit": "d34578d6f",
   "read_at_commit": true,
+  "files_at": {
+   "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "c2223a91d3"
+  },
+  "files_at_note": "HBM-CORES-KITS-5 10-28: rcl reserved tag bits response[272:267] captured as constant 0 (vms_glue _k6 kit LEC NEQ 1, u_replay.fault, on the d34578d6f copy); all other files byte-identical at d34578d6f",
   "asbuilt_inst": "hb_vms_NW",
   "lec_hints_basis": "Source expected[0][i] Q bits map Slang expected[9-3*i], versus gate expected#t[i][0]; each source-geometry candidate is independently proved by lec.py",
   "lec_hints": [
