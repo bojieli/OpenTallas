@@ -272,6 +272,7 @@ class Landings:
         self.rows = []
         self.region = {}
         self.emitted_types = set()
+        self.forwarded_clock_only_inputs = {}
         self.emitted_top = False
         self.reset_placements = {}
         for pn, p in self.parts.items():
@@ -676,7 +677,23 @@ class Landings:
         def _exp(name):
             s_ = exp_src.get(name, "clk")
             if s_ != "clk" and not re.search(r"\binput\s+(?:wire\s+)?" + re.escape(s_) + r"\b", head):
-                raise LandingError(f"{tn}: {name} contract source_clock_port {s_} is not an input port of the type")
+                contract = self.types[key].get("clock", {}).get("landing_contract", {})
+                if contract.get("forwarded_clock_only_inputs") is not True:
+                    raise LandingError(f"{tn}: {name} contract source_clock_port {s_} is not an input port of the type")
+                # The logical leaf may have one clock while its physical
+                # wrapper has several planned tap inputs. Expose ONLY a tap
+                # already in that physical interface, used by an actual clock
+                # export. Do not remap any data or leaf clock.
+                import schema
+                if not hasattr(self, "_physical_clock_plan"):
+                    self._physical_clock_plan = schema.Plan(self.plan)
+                planned = {n for n, _x, _y in schema.tap_grid(self._physical_clock_plan, key)}
+                if s_ not in planned:
+                    raise LandingError(f"{tn}: forwarded clock source {s_} is not a planned physical tap input")
+                needed = self.forwarded_clock_only_inputs.setdefault(tn, [])
+                if s_ not in needed:
+                    needed.append(s_)
+                    extra.append(f"    input wire {s_}  // planned physical tap: forwarded-clock export only")
             return s_
         for b in mask["outputs"]:
             extra.append(f"    output wire fclk_out_{b}")
@@ -816,15 +833,18 @@ class Landings:
                 extra.append("    output wire fclk_out_cland_up")
                 logic.append(f"    assign fclk_out_cland_up = {_exp('fclk_out_cland_up')};")
             sources=list(collector_info["local_sources"])
+            monitor_reset_copies = []
             for ch in collector_info["children"]:
                 i=ch["index"]
                 extra += [f"    input wire {ch['ready']}", f"    input wire {ch['fault']}"]
                 src=dict(ch,name=f"child{i}")
                 if ch["seam"]:
                     extra.append(f"    input wire fclk_in_cland_dn_{i}")
-                    reset=LC.raw(ch.get("node",f"rst_n_t{ch.get('tap',0)}"))
-                    if not re.search(r"\bwire\b[^;]*\b"+reset+r"\b",body):
-                        raise LandingError(f"{tn}: raw monitor receiver reset {reset} missing")
+                    node=ch.get("node",f"rst_n_t{ch.get('tap',0)}")
+                    reset, added, copies = LC.raw_reset(collector_info["tree"], node,
+                                                       body+"\n"+"\n".join(logic))
+                    logic.extend(added)
+                    monitor_reset_copies.extend(copies)
                     logic += [f"    wire [1:0] cland_dn_word_{i};",
                               f"    wire cland_dn_trained_{i}, cland_dn_guard_{i};",
                               f"    ot_dp_clk_landing #(.W(2)) u_cland_monitor_{i} (",
@@ -839,6 +859,7 @@ class Landings:
             else:
                 reduction=LC.build_local(collector_info["tree"],sources,body+"\n"+"\n".join(logic),
                     root_node=collector_info.get("collector_root_node","rst_root_n"))
+            reduction["instances"] = monitor_reset_copies + reduction["instances"]
             logic.extend(reduction["rtl"])
             self.reset_placements.setdefault(tn,{})["collector"]=reduction
             if collector_info["mask"].get("observer"):
@@ -858,20 +879,31 @@ class Landings:
         Intra-region relay (ASK 3): the origin partition of a multi-partition region adds the tx flop u_cland_rstart_tx
         -> cland_rstart_out; a relay partition's start is the rx flop u_cland_rstart_rx on cland_rstart_in."""
         role = cat["role"]
+        raw_logic = []
+        raw_fallback = None
 
         def local_raw(what):
+            nonlocal raw_fallback
             raw = next(iter(ca_raw.values()), None)
             if raw is None:
-                m = re.search(r"ot_dp_r(?:gate|relay)\s+\w+\s*\([^;]*?\.q\((rst_n_t0)\)\);", body)
-                raw = m.group(1) if m else ("rst_n" if re.search(r"\bwire rst_n = arst_n;", body) else None)
+                if raw_fallback is not None:return raw_fallback
+                m = re.search(r"ot_dp_r(gate|relay)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\((rst_n_t0)\)\);", body)
+                raw = m.group(3) if m else ("rst_n" if re.search(r"\bwire rst_n = arst_n;", body) else None)
+                if m and m.group(1) == "gate":
+                    # The count origin/relay must release before START.  Match the
+                    # tap's parent and depth without inheriting its START gate.
+                    raw = "cland_origin_reset"
+                    raw_logic.extend(["    wire " + raw + ";",
+                        f"    ot_dp_rrelay u_cland_origin_rst (.clk(clk), .d({m.group(2)}), .q({raw}));"])
                 if raw is None:
                     raise LandingError(f"{tn}: {what} needs a timed raw reset relay (rst_n_t0) or delivered rst_n")
+                raw_fallback = raw
             return raw
         if role[0] == "relay":
             raw = local_raw("start relay rx")
             self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="relay", raw_reset=raw, stages=role[-1])
             extra.append("    input wire cland_rstart_in")
-            return [f"    ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n({raw}), .d(cland_rstart_in), "
+            return raw_logic + [f"    ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n({raw}), .d(cland_rstart_in), "
                     f".q(cland_start));"]
         if role[0] == "strap":
             logic, raw = self._origin_strap_rtl(tn, role, ca_raw, extra, local_raw)
@@ -902,14 +934,17 @@ class Landings:
             extra.append("    output wire cland_rstart_out")
             logic.append(f"    ot_dp_landing_relay u_cland_rstart_tx (.clk(clk), .rst_raw_n({raw}), .d(cland_start), "
                          f".q(cland_rstart_out));")
-        return logic
+        return raw_logic + logic
 
     def _origin_strap_rtl(self, tn, role, ca_raw, extra, local_raw):
         """MESO-STRAP-1 strap origin: ot_dp_landing_origin_s (strap_ca_pad / strap_ca_efall), the parent's forwarded
-        start and the child raw reset chosen by strap_ca_tsel among the copies' tree buses (static select before the
-        first synchroniser; out-of-range values take the last bus), optional root counter chosen by strap_ca_root.  The
+        start and the child raw reset chosen by strap_ca_tsel among the copies' tree buses. Each tree bus has its own
+        origin sampler; static selection follows those samplers (out-of-range values take the last bus). An optional
+        root counter is chosen by strap_ca_root. The
         raw reset of each choice is exactly the parameter form's (child: the tree bus's timed relay; root: local_raw)."""
         _, tbs, padw, settle, root = role
+        copy_export = getattr(self, "types", {}).get(tn, {}).get("clock", {}).get("landing_origin_export_copy", False)
+        fwd_param = ", .FWD_COPY(1)" if copy_export else ""
         ca_raw = dict(ca_raw)
         if START_PIN_IN in tbs:
             # START-TREE: the dedicated start pin is one of the choices; its raw reset is a local timed relay
@@ -924,7 +959,8 @@ class Landings:
         extra.append(f"    input wire [{padw-1}:0] strap_ca_pad")
         extra.append("    input wire strap_ca_efall")   # SCALAR_STRAPS
         logic = []
-        if len(tbs) > 1:
+        multi = len(tbs) > 1
+        if multi:
             tsw = (len(tbs) - 1).bit_length()
             extra.append(f"    input wire [{tsw-1}:0] strap_ca_tsel")
             def sel(names):
@@ -932,9 +968,8 @@ class Landings:
                 for i in range(len(names) - 2, -1, -1):
                     e = f"(strap_ca_tsel == {tsw}'d{i}) ? {names[i]} : {e}"
                 return e
-            p_start, raw = "cland_pstart", "cland_oraw"
-            logic += [f"    wire cland_pstart = {sel([pin(b) for b in tbs])};",
-                      f"    wire cland_oraw = {sel([ca_raw[b] for b in tbs])};"]
+            raw = "cland_oraw"
+            logic += [f"    wire cland_oraw = {sel([ca_raw[b] for b in tbs])};"]
         else:
             p_start, raw = pin(tbs[0]), ca_raw[tbs[0]]
         start = "cland_start"
@@ -954,11 +989,24 @@ class Landings:
         else:
             raw_used, start_d = raw, "cland_start_d"
             logic.append(f"    assign cland_start_raw = {raw};")
-        logic += [f"    ot_dp_landing_origin_s #(.PADW({padw})) u_cland_origin (",
-                  f"        .clk(clk), .rst_raw_n({raw}), .p_start({p_start}), .strap_efall(strap_ca_efall), "
-                  f".strap_pad(strap_ca_pad), .start({start}), .start_d({start_d}));"]
+        if multi:
+            # Each START owns its sampler. Static selection follows both registered and D-side taps,
+            # preserving the dedicated forwarded START face flop's existing zero-cycle contract.
+            starts = [f"cland_start_t{i}" for i in range(len(tbs))]
+            starts_d = [f"cland_start_t{i}_d" for i in range(len(tbs))]
+            logic.append(f"    wire {', '.join(starts + starts_d)};")
+            for i, b in enumerate(tbs):
+                logic += [f"    ot_dp_landing_origin_s #(.PADW({padw}){fwd_param}) u_cland_origin_t{i} (",
+                          f"        .clk(clk), .rst_raw_n({ca_raw[b]}), .p_start({pin(b)}), .strap_efall(strap_ca_efall), "
+                          f".strap_pad(strap_ca_pad), .start({starts[i]}), .start_d({starts_d[i]}));"]
+            logic += [f"    assign {start} = {sel(starts)};", f"    assign {start_d} = {sel(starts_d)};"]
+        else:
+            logic += [f"    ot_dp_landing_origin_s #(.PADW({padw}){fwd_param}) u_cland_origin (",
+                      f"        .clk(clk), .rst_raw_n({raw}), .p_start({p_start}), .strap_efall(strap_ca_efall), "
+                      f".strap_pad(strap_ca_pad), .start({start}), .start_d({start_d}));"]
         self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="strap", tree_buses=list(tbs), padw=padw,
-                                                                     root=bool(root), raw_reset=raw_used)
+                                                                     root=bool(root), raw_reset=raw_used,
+                                                                     **({"per_bus_origins": [f"u_cland_origin_t{i}" for i in range(len(tbs))]} if multi else {}))
         return logic, raw_used
 
     def _dataflow_monitor(self, tn, key, mask, info, extra, logic, body):
@@ -1129,6 +1177,12 @@ class Landings:
             if count < 1:
                 raise LandingError(f"clock landing: default clock connection not found on {pn}")
             conn = [f"        .fclk_out_{b}({fwd[(pn,b)]})" for b in sorted(self.outs[pn])]
+            # Functional binding uses the region source, as existing grid/core
+            # tap connections do. The physical kit keeps the distinct planned
+            # input pins and the export's source_clock_port contract.
+            for tap in self.forwarded_clock_only_inputs.get(p["type"], []):
+                if not re.search(r"\." + re.escape(tap) + r"\s*\(", body):
+                    conn.append(f"        .{tap}(clk_region_{ident(self.region[pn])})")
             conn += [f"        .cland_fstart_out_{b}({fst[(pn,b)]})" for b in sorted(self.outs[pn]) if self.ca]
             if ts:
                 tpins = ts["type_pins"].get(p["type"], {})
@@ -1256,6 +1310,7 @@ class Landings:
                     types=self.by_type, reset_placements=self.reset_placements,
                     collector=self.collector,
                     observer_source=getattr(self,"observer_source",None),
+                    forwarded_clock_only_inputs=self.forwarded_clock_only_inputs,
                     emitted_modules=getattr(self,"emitted_modules",None),
                     remaining_gates=["placed clock/status pins", "landing ring window STA",
                                      "trained region calendar offsets", "token pass"])

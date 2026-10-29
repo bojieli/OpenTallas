@@ -639,6 +639,18 @@ FORWARD_SOURCES=("tap","clk")
 FORWARD_SOURCE="tap"
 
 
+def clear_generated_landing_infra(raw):
+    """A new compose owns its generated pins/clocks; retain only native infrastructure."""
+    for t in raw.get("partition_types",{}).values():
+        ck=t.get("clock",{})
+        old=ck.pop("landing_contract",None)
+        if not old:continue
+        names={p['name'] for p in old.get('pins',[])}
+        t['buses']=[b for b in t.get('buses',[]) if b['name'] not in names]
+        ck['edge_clocks']=[e for e in ck.get('edge_clocks',[]) if e['port'] not in names]
+    raw.get('clock',{}).pop('landing_network',None)
+
+
 def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",band_spread=1.0,band_ring="all",
             forward_source="tap"):
     """band_reserve="live" (opt-in): storage bands reserve the live ring (width+epoch) instead of the 64-bit padded ring.
@@ -666,6 +678,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
         missing=[k for k in ("module","instance_suffix","fault_port","ready_port") if not observer.get(k)]
         if missing:raise ValueError(f"clock landing observer spec missing {missing}")
     original=copy.deepcopy(plan);raw=copy.deepcopy(plan)
+    clear_generated_landing_infra(raw)
     _fill_ft_windows(raw,plan_path)
     _fill_port_windows(raw,plan_path,table)
     base_type={p["name"]:p["type"] for p in raw["partitions"]}
@@ -925,5 +938,14 @@ def _finish(raw,P,bytype,pports,side):
         data_cycles_per_crossing="count_aligned" if ca else 3,physical_qualified=False,
         **({"count_aligned_cycles":{p:int(c["sched_lat"]) for p,c in ca["ports"].items()},
             "count_aligned_bind":{k:ca[k] for k in ("schema","root","pad","root_settle_cycles")}} if ca else {}))
+    if ca and ca.get("start_pins"):
+        # DIE-HEAD-21 (COORD 10-28 22:37): declare the external START-tree pins (die start stages) in the plan;
+        # landing_contract.check proves the declaration (and, given the sidecar, that it equals this start tree)
+        import landing_contract as LC
+        raw["clock"]["landing_network"]["start_tree"]=LC.start_declaration(ca["start_pins"],
+            {p["name"]:p["type"] for p in raw["partitions"]},
+            {tn:{q["name"]:q["dir"] for q in t.get("clock",{}).get("landing_contract",{}).get("pins",[])}
+             for tn,t in raw["partition_types"].items()},
+            {(e[s]["part"],e[s]["bus"]) for e in infra_edges for s in ("src","dst")})
     for t in raw["partition_types"].values():t.pop("_cland_geom",None)
     return raw,side

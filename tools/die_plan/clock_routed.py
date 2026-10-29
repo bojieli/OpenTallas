@@ -306,6 +306,7 @@ def _tie_units(L, s, pads, split_down):
 def _emit_stack(L, pts, pads, final_junction=False, split_down=False, m8_end_ext=None):
     """_emit_steps + one centred min-area pad (dbWireEncoder addRect) after every via that lands on a pad layer at a
     stack point.  pads: {(x, y): set(layers)}."""
+    start = len(L)
     P = _stack_pad()
     tmp = []
     _emit_steps(tmp, pts, final_junction=final_junction, split_down=split_down, m8_end_ext=m8_end_ext)
@@ -329,7 +330,9 @@ def _emit_stack(L, pts, pads, final_junction=False, split_down=False, m8_end_ext
                 L.append(f"$e addRect {-q(hx)} {-q(hy)} {q(hx)} {q(hy)}")
     # a pad emitted between 'set jv [VIA78]' and its 'newPath $jv' belongs after the new path is opened
     # move pads that were emitted between 'set jv [VIA78]' and its 'newPath $jv' after the newPath
-    i = 0
+    # Previous calls already normalized the prefix. Include two old lines
+    # because a newly appended path can finish a boundary-spanning triple.
+    i = max(0, start - 2)
     while i < len(L) - 2:
         if ((L[i].startswith("set jv [") and L[i + 2].startswith("$e newPath $jv"))
                 or (L[i].startswith("set jd") and L[i + 2].startswith("$e newPath $jd"))) \

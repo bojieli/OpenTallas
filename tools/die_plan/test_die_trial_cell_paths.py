@@ -60,3 +60,16 @@ def test_cli_flag(tmp_path, monkeypatch):
     assert "cell_paths" not in got
     D.main(["kit", "p.json", "--out", str(tmp_path / "k"), "--cell-paths"])
     assert got["cell_paths"] is True
+
+
+def test_node_cell_names_are_metadata_only(tmp_path, monkeypatch):
+    out = kit(tmp_path, monkeypatch, "named", cell_paths=True)
+    arr = tmp_path / 'arr_named.txt'
+    arr.write_text('\n'.join([f'N {c} {10*(i+1)} {9*(i+1)}' for i,c in enumerate(['b0','r1_0','r1_1','b1'])] +
+                             ['T t_part__ck 50 45 20'])+'\n')
+    plain, missing = E.export(out/'tree.json', arr, 'TT')
+    named, named_missing = E.export(out/'tree.json', arr, 'TT', node_cells=True)
+    assert missing == named_missing == 0
+    inventory = named.pop('node_cell')
+    assert named == plain
+    assert inventory == {'h':'b0','h0':'r1_0','h00':'r1_1','h000':'b1','A':'b0'}

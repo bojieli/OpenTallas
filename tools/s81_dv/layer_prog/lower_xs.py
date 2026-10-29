@@ -587,7 +587,12 @@ def lower(die, op, ctx):
             from layer_prog.aproj_native import phase_material
             material = phase_material(field)
             image_prefix = f'prog/xs/native/{op["id"]}/{sl}/frame_images'
-            for name, text in frame_image_material(field, qa, q, bf, p['frame'], p['rows']).items():
+            images = frame_image_material(field, qa, q, bf, p['frame'], p['rows'])
+            if 'bound_image_selectors' in ctx:
+                from frame_bound_images import alias_material
+                images = alias_material(images, p['master'], p['frame'], qa,
+                                        ctx['bound_image_selectors'], ROOT)
+            for name, text in images.items():
                 target = image_prefix + '/' + name
                 if target in frame_image_files:
                     raise ValueError('duplicate production frame image path: ' + target)

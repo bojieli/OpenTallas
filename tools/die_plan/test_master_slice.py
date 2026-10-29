@@ -451,3 +451,18 @@ def test_pushdown_cells_judged_in_driver_rect():
     assert "driver_rect" in MS.pushdown_cell_issues([dr], far)[0]
     assert MS.pushdown_cell_issues([isl], far) == []
     assert MS.pushdown_cell_issues([isl], []) == ["pushdown island isl1: no fixed cells"]
+
+
+def test_bound_core_clock_entry_keeps_io_clock_shape(tmp_path):
+    sl = good_slice(kind="core", outline_um=[172.8, 129.6], islands=[], keepouts=[], bays=[],
+                    core_clock_port="clk", entry_pins=[dict(name="core_clock", pin="clk",
+                    layer="M5", xy_um=[86.4, 64.8])])
+    src=tmp_path/"slices";src.mkdir()
+    (src/(sl["type"]+".json")).write_text(json.dumps(sl))
+    kd=tmp_path/"kit";kd.mkdir()
+    (kd/"io.tcl").write_text("place_pin -pin_name {clk} -layer M5 -location {0 64.8} -pin_size {0.024 0.084}\n")
+    MS.kit_apply(kd,sl["type"],sl["outline_um"],src,clock_ports=["clk"])
+    io=(kd/"io.tcl").read_text()
+    assert "86.4120 64.8000" in io and "0.048 0.48" in io
+    assert "place_pin -pin_name {clk}" not in (kd/"master_slice.tcl").read_text()
+    assert MS.slice_placements(kd,sl,"clk")["clk"] == ("M5",86.412,64.8,(0.048,0.48))

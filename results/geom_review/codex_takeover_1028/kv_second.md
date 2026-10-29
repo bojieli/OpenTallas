@@ -1,0 +1,8 @@
+# KV PV independent second reviews
+
+Source/first-review packet: codex/kv-kits-1028@1794e1a96, `results/geom_review/codex_kv_kits_1028`. Personally viewed all four images copied from intel2 `/srv/opentallas-scratch2/claude/codex-kv-kits-1028/geom/<type>/auto_geom.png`; consumed existing AUTO-GEOM metrics and performed no repeated dump/GRT/STA.
+
+- `kv3_pv_pair__380.16x190.08` and `_fMX`: **PASS-COND for route**, concurring with first review. Eight SRAM macros arranged four in a2x2left block and four in a2x2right block, continuous surrounding logic corridors, central source with short local reach, correct N/S reflection. Fill .2951, empty .2012/.2015; r2r330.64/325.08um, zero>405, GRT0; pin-to-reg p90 8.30/8.23um. Own-clock farthest214.87/215.08um. Sole auto FAIL four `ft_ck_i_0/i_1/o_0/o_1` are declared clock-only feed-throughs, classified through actual buffers by the source owner's metadata fix, not functional missing registers. Condition is that this clock-only declaration/connection remains true; current ordinary TT setup/FF hold signoff still applies. No timing waiver.
+- `ot_qwen_tp8_pv_join_t__172.8x172.8` and `_fR180`: **PASS for route**, concurring with first review. Central/E logic cluster with registered perimeter, correct180-degree reversal, no macros or stranded/sliver logic bands. Fill .3131/.3133, empty .3536/.3606; r2r232.20/240.19um, zero>405, GRT0; own clock163.40/163.35um. E/M4 9.4 vs W/M4 9.5pins/um are warning hotspots, with GRT0. No new gate or physical condition added.
+
+AP requests: PVJ82f5e556ae09/13576235cae1; PVLC911d4a3e2bc9/29f7719e90c0. Kit owner already has source/LEC, route remains governed by its existing recorded review and timing gates.

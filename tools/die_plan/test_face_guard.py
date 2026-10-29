@@ -627,3 +627,25 @@ def test_ring_start_spec():
                 {"form": "ring_start", "ring": ["i", "i"]}, {"form": "ring_start", "ring": 3}):
         with pytest.raises(ValueError):
             face_guard.land_spec(bad)
+def test_halfadder_outputs_follow_asap7_liberty():
+    # SIMPLE RVT TT HAxp5: CON=(!A)+(!B), SN=(A*B)+(!A*!B).
+    for a in (False, True):
+        for b in (False, True):
+            assert face_guard.cell_fn("HAxp5_ASAP7_75t_R", {"A": a, "B": b}, "CON") == (not (a and b))
+            assert face_guard.cell_fn("HAxp5_ASAP7_75t_R", {"A": a, "B": b}, "SN") == (a == b)
+    import pytest
+    with pytest.raises(KeyError):
+        face_guard.cell_fn("HAxp5_ASAP7_75t_R", {"A": True, "B": False}, "Y")
+
+
+def test_land_mux_halfadder_count_decode_and_bad_output_control():
+    # Replace binary-count slot-0 NOR with HA.CON then invert: A&B is
+    # slot-3's enable.  Replacing slot-3 AND preserves exactly the same net.
+    body = _mux_tc() + _mux_slots4()
+    old = f"AND2x2{_X} e3 (.A(t0), .B(t1), .Y(w3));"
+    assert old in body
+    body[body.index(old)] = (f"HAxp5{_X} e3 (.A(t0), .B(t1), .CON(hcon), .SN(hsum));\n"
+                             f"INVx1{_X} hi (.A(hcon), .Y(w3));")
+    assert _g(_mux_mod(body))["verdict"] == "PASS"
+    bad = [x.replace(".A(hcon)", ".A(hsum)") for x in body]
+    assert _g(_mux_mod(bad))["verdict"] == "FAIL"

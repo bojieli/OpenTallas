@@ -321,6 +321,41 @@ class Graph:
     def pin(self, ci, pn):
         return f"{self.F.cells[ci].path}.{pn}"
 
+    def _constant_glue(self, cell, bit, depth):
+        """Exact combinational constants only; runtime/X inputs keep their source."""
+        def constant(net):
+            up = self.source(net, depth + 1)
+            return int(up[1]) if up[0] == "const" and up[1] in ("0", "1") else None
+        if cell.ytype == "$mux":
+            select = cell.ports.get("S", [])
+            if len(select) != 1:
+                return None
+            value = constant(select[0])
+            if value is None:
+                return None
+            branch = cell.ports.get("B" if value else "A", [])
+            return constant(branch[bit]) if bit < len(branch) else None
+        if cell.ytype == "$add":
+            values = []
+            signed = all(str(cell.yparams.get(k, "0")).strip("0") == "1"
+                         for k in ("A_SIGNED", "B_SIGNED"))
+            for port in ("A", "B"):
+                bits = cell.ports.get(port, [])
+                digits = []
+                for net in bits:
+                    digit = constant(net)
+                    if digit is None:
+                        return None
+                    digits.append(digit)
+                if not digits:
+                    return None
+                value = sum(d << i for i, d in enumerate(digits))
+                if signed and digits[-1]:
+                    value -= 1 << len(digits)
+                values.append(value)
+            return ((values[0] + values[1]) >> bit) & 1
+        return None
+
     def source(self, net, depth=0):
         """logical source of a net: ('pin', ci, port, bit, stages) | ('const', v, where) | ('top', port, bit, 0) |
         ('clock', domain) | ('reset', polarity, stages) | ('or', [sources], stages) | ('undriven',) | ('multi', n)"""
@@ -409,6 +444,10 @@ class Graph:
                     res = ("const", v, f"{c.ytype}({up[2]})")
                 else:
                     res = ("pin", ci, pn, bit, 0)
+            elif k == "glue" and c.ytype in ("$mux", "$add") and pn == "Y":
+                value = self._constant_glue(c, bit, depth)
+                res = (("const", str(value), f"{c.ytype}({c.path})") if value is not None
+                       else ("pin", ci, pn, bit, 0))
             else:
                 pin = self.pin(ci, pn)
                 ck = self.R.clock_of(pin)
@@ -2894,7 +2933,10 @@ class Binder:
                 actual_inputs = {name: len(bits) for name, bits in F.cells[ci].ports.items()
                                  if G.dirs[ci].get(name) == "input"}
                 try:
-                    validate_parent_id_straps({"parent_id_straps": id_decls[r]}, actual_inputs)
+                    descriptor = next(d for d in t.get("contents", []) + t.get("hard_cores", [])
+                                      if d.get("parent_id_leaf", d.get("inst")) == r
+                                      and (d.get("parent_id_straps") or d.get("straps")))
+                    validate_parent_id_straps(descriptor, actual_inputs, actual_module=F.cells[ci].module)
                 except ValueError as e:
                     raise BindError(f"parent ID {tn}.{r}: {e}") from e
                 expected = id_decls[r][pn]["value"]
@@ -4040,6 +4082,7 @@ def kit_closure(names, idx, prefer, picks=None, views=None):
     one module dragged in the instantiations of its unrelated siblings, e.g. sle_ctl got ot_v41_attn_eng_ctl_endpoint_phys
     + ot_hdc_fastfp, two different ot_hdc_qadd -> yosys Re-definition of module at the kit preflight).  `picks`
     (optional dict) receives {module: file} for every needed module (kit_strip_dups keeps those definitions)."""
+    E.validate_preferred_files(prefer)
     seen, files, missing, macros = set(), [], set(), {}
     picks = {} if picks is None else picks
     # QC-CORES-4 10-27: a module with a hardened view under MACRO_VIEW_DIRS (`views`, macro_views(base)) is a HARD MACRO
@@ -4357,6 +4400,12 @@ def cmd_kit_rtl(a):
     ports.append(("input  wire arst_n", "die reset"))
     conns, body, spare, narrow, missing = [".clk(clk)", ".arst_n(arst_n)"], [], [], [], []
     seen = {"clk", "arst_n"}
+    for tap in taps:
+        seen.add(tap)  # already declared in the plan wrapper above
+        if tap in bmap:
+            if bmap[tap] != ("input", 1):
+                raise BindError(f"kit-rtl {tn}: planned clock tap {tap} is not a scalar input in {bmod}")
+            conns.append(f".{tap}({tap})")
     for d, n, W, Wd, ep in plan:
         ports.append((f"{d:6} wire [{W - 1}:0] {n}", f"plan bus: {Wd} data" + (f" + epoch [{Wd}]" if ep else "")))
         if n not in bmap:
@@ -4471,9 +4520,10 @@ def cmd_kit_rtl(a):
     base = plan_base(a.plan, raw)
     # The bind's own extra library (the clock-landing cells ot_dp_clk_landing / ot_dp_landing_collect added when a
     # landing table is selected) is a source of the bound leaves too, not only a tie-breaker.
-    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), list(ab0.get("files", [])) + list(rep.get("extra_lib", [])), base)
     prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])] + \
         rep.get("extra_lib", []) + bindf_prefer(out, base)
+    E.validate_preferred_files(prefer)
+    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), list(ab0.get("files", [])) + list(rep.get("extra_lib", [])), base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
                    {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})

@@ -1,0 +1,25 @@
+{
+  "schema": "gq-retained-lec/1",
+  "source_commit": "f437090e0",
+  "source_path": "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+  "source_sha256": "a3abf08c1cb26da4b6d39f441572159fd1f6082df54006ca92dcdb327ce27e94",
+  "inputs": "gq_retained_inputs.tar.gz",
+  "inputs_sha256": "4b254733001d7b438cf6c4e49484f2cbd1798f854ac3206870a177b83c6bd002",
+  "method": "Retain original correspondences as untrusted proposals; add reset-zero format relations; prove every relation jointly, then every compare point.",
+  "original_proposals": 802,
+  "dropped_absent_proposals": 10,
+  "final_relations": 808,
+  "joint": {
+    "proved": 1347,
+    "differs": 0,
+    "undecided": 0
+  },
+  "full_compare": {
+    "proved": 41039,
+    "differs": 0,
+    "undecided": 0
+  },
+  "data_cycle_delta": 0,
+  "physical_signoff": "NOT RUN",
+  "kept_register_check": "Unchanged gate; canonical check not claimed by this proof"
+}

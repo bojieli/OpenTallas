@@ -25,6 +25,8 @@ VERIFY_RULES = {
     "transport": [
         {"module": "ot_dp_st", "map": {"q": "d", "eq": "ea"}, "drop_in": ["clk", "rst_n"], "stages": 1},
         {"module": "ot_dp_dly", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1, "stages_param": "D"},
+        {"module": "ot_dp_dly_cnt", "map": {"q": "d"}, "drop_in": ["clk", "strap_cnt"],
+         "stages": 0, "stages_port": "strap_cnt"},
         {"module": "ot_dp_rsync", "map": {"q": "a"}, "drop_in": ["clk"], "stages": 2, "stages_param": "S"},
         {"module": "ot_dp_rrelay", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1},
         # decision 13c consumer-tap relay: reset traced through d; the START (run) leg is checked by the lockstep tests
@@ -101,6 +103,28 @@ def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
                 waived=[w for r in res.values() for w in r.get("waived", [])][:50], waivers=list(waive))
 
 
+def landing_transport_rules():
+    """Identity transport only; the independent landing verifier checks clock/reset/config."""
+    return [
+        dict(module='ot_dp_clk_landing',map={'q':'d'},
+             drop_in=['clk','fclk','rst_n'],drop_out=['ready','fault'],stages=3),
+        dict(module='ot_dp_clk_landing_ca',map={'q':'d'},
+             drop_in=['clk','fclk','rst_n','t_rst_n'],drop_out=['ready','fault'],stages=0,stages_param='K'),
+        dict(module='ot_dp_clk_landing_cas',map={'q':'d'},
+             drop_in=['clk','fclk','rst_n','t_rst_n','strap_k'],drop_out=['ready','fault'],stages=0,stages_port='strap_k')]
+
+
+def set_count_aligned_transport(graph,stages):
+    """Use verified per-instance fixed CA latency, never unsigned modular strap K."""
+    for ci,c in enumerate(graph.F.cells):
+        if c.path not in stages:continue
+        if c.module not in ('ot_dp_clk_landing_ca','ot_dp_clk_landing_cas'):
+            raise ValueError('count-aligned latency names a non-CA cell '+c.path)
+        spec=dict(graph.spec[ci],stages=int(stages[c.path]))
+        spec.pop('stages_param',None);spec.pop('stages_port',None)
+        graph.spec[ci]=spec
+
+
 def cmd_verify(a):
     import bind as _b
     _b._AB_OVERRIDE["path"] = getattr(a, "asbuilt", None)
@@ -137,15 +161,23 @@ def cmd_verify(a):
     if raw['asbuilt'].get('clock_landing_table'):
         landing_file=(Path(_b.plan_base(a.plan,raw))/raw['asbuilt']['clock_landing_table']).resolve()
         landing_table=json.loads(landing_file.read_text())
-        vr['transport']=vr['transport']+[dict(module='ot_dp_clk_landing',map={'q':'d'},
-            drop_in=['clk','fclk','rst_n'],drop_out=['ready','fault'],stages=3)]
+        vr['transport']=vr['transport']+landing_transport_rules()
+
     vr["clocks"], vr["resets"], vr["map"] = [], [], {}
     G = Graph(F, Rules(vr), errs)
     names = json.loads((out / "bind_names.json").read_text())
     sinks = json.loads((out / "bind_sinks.json").read_text())
     if landing_table:
         import clock_landing_verify as CLV
-        landing_verify=CLV.Verification(F,G,raw,landing_table,names)
+        live_widths={}
+        for bus in json.loads((out/'bind_latency.json').read_text())['buses']:
+            if bus.get('lane'):
+                lane=bus['lane'];width=bus['width']
+                if lane in live_widths and live_widths[lane]!=width:
+                    raise ValueError('landing verify: inconsistent live lane width '+lane)
+                live_widths[lane]=width
+        landing_verify=CLV.Verification(F,G,raw,landing_table,names,live_widths=live_widths,plan_path=Path(a.plan))
+        set_count_aligned_transport(G,landing_verify.transport_stages)
     clk_top = {}
     for pn, (d, bits) in F.top_ports.items():
         if pn.startswith("clk_"):

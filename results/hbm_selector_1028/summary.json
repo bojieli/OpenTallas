@@ -1,0 +1,39 @@
+{
+  "verdict": "SOURCE_EXACT_MECHANISM_AND_FULL_SHAPE_PASS",
+  "source_commit": "3a56d4eea",
+  "helper_dependency": "353da5b41",
+  "added_cycles": 0,
+  "new_state_bits": 0,
+  "new_clock_load": 0,
+  "production_lockstep": {
+    "cycles": 8079,
+    "selected_beats": 1018,
+    "mismatches": 0,
+    "reset_payload_warmup_edges": 3,
+    "valid_and_fault_compared_during_warmup": true,
+    "payload_compared_including_invalid_mission_beats": true
+  },
+  "tie_boundary_lockstep": {
+    "cycles": 1367,
+    "selected_beats": 171,
+    "mismatches": 0,
+    "k": 64,
+    "all_keys": "3c00"
+  },
+  "controls": {
+    "formal_threshold_mutant": "CAUGHT",
+    "full_shape_tie_threshold_mutant": "CAUGHT 311 mismatches",
+    "full_shape_op8_fault_mutant": "CAUGHT",
+    "random_program_threshold_mutant": "SURVIVED; insufficient oversubscribed-tie stimulus; original receipt preserved"
+  },
+  "formal": {
+    "compact_normal_N4_EW37": "PASS arbitrary raw,threshold,ties,fill,stale-buffer",
+    "compact_existing_MUT1_semantics": "PASS",
+    "hist_popcount_16_inputs": "PASS all binary patterns"
+  },
+  "retained_failures": {
+    "sim/": "FAIL3 early invalid-payload X/0 differences; valid=0,fault=0; startup triad diagnosed old/defaultX vs optimized0 until reset/pin pipeline filled",
+    "sim_failed_missing_iverilog/": "FAIL127 ORFS image lacksiverilog; corrected installedhosttool viaot-run"
+  },
+  "physical": "NOT RUN candidate; current old k11 synthesis untouched; recipe only proposed opt-in"
+}

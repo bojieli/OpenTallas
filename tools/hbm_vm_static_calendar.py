@@ -155,6 +155,65 @@ def validate_resources(spec, cycles, loops, lg_pad=None):
                         raise ValueError('last loop would leave an LG request after programme end')
 
 
+def validate_local_su_absence(spec, schedule):
+    """Explicit restricted build mode for SW/SE banks with no local-SU source.
+
+    The eight-slice source owns NW/NE only. This does not infer a production
+    calendar or add a time-fold alias: every configured word must forbid group0
+    and all local LG requests before the no-local-SU master can be selected.
+    """
+    if schedule.get('local_su_present', True) is not False:
+        return None
+    if spec['quadrant'] not in ('SW', 'SE'):
+        raise ValueError('local_su_present=false is defined only for SW/SE source roles')
+    mode = schedule.get('build_mode')
+    if mode not in ('SU', 'MTP', 'MU'):
+        raise ValueError('no-local-SU calendar requires explicit build_mode SU/MTP/MU')
+    for pc, cycle in enumerate(schedule['cycles']):
+        values = {k: int(v, 0) if isinstance(v, str) else v for k, v in cycle.items()}
+        for kind, width in (('r', spec['params']['RB']), ('w', spec['params']['WB'])):
+            valid = values.get(kind + 'slot_v', 0)
+            owners = values.get(kind + 'slot', 0)
+            for bank in range(8):
+                if valid >> bank & 1 and (owners >> (bank * width)) & ((1 << width) - 1) == 0:
+                    raise ValueError(f'absent local SU: {kind} group0 granted at word {pc}, bank {bank}')
+        if values.get('lg_local_read', 0) or values.get('lg_local_write', 0):
+            raise ValueError(f'absent local SU: LG request emitted at word {pc}')
+    return dict(schema='opentallas.hbm.local_su_absence.v1', role=spec['quadrant'],
+                checked_build_mode=mode, configured_words=len(schedule['cycles']),
+                local_read_group=0, local_write_group=0, local_requests=0,
+                scope='Only this finite static calendar; no all-mode or whole-token qualification')
+
+
+def validate_s_role_backing_only(spec, schedule):
+    """Optional finite mode for the source's S-role IDX/ring backing banks.
+
+    Port numbers are the actual RG5/WG2 q0 bank ABI, not a topology guess:
+    read4=IDX, read5=packet; write3=CW, write4=packet, write5=CCW.
+    This never selects a bank master or invents a production programme.
+    """
+    if schedule.get('s_role_backing_only') is not True:
+        return None
+    if schedule.get('local_su_present') is not False or spec['quadrant'] not in ('SW', 'SE'):
+        raise ValueError('S-role backing-only mode requires explicit SW/SE local_su_present=false')
+    if spec['params']['RG'] != 5 or spec['params']['WG'] != 2:
+        raise ValueError('S-role backing-only mode requires actual RG5/WG2 bank ABI')
+    allowed = {'r': (4, 5), 'w': (3, 4, 5)}
+    for pc, cycle in enumerate(schedule['cycles']):
+        values = {k: int(v, 0) if isinstance(v, str) else v for k, v in cycle.items()}
+        for kind, width in (('r', spec['params']['RB']), ('w', spec['params']['WB'])):
+            for bank in range(8):
+                if values.get(kind + 'slot_v', 0) >> bank & 1:
+                    owner = values.get(kind + 'slot', 0) >> (bank * width) & ((1 << width) - 1)
+                    if owner not in allowed[kind]:
+                        raise ValueError(f'absent S-role service: {kind} group{owner} at word {pc}, bank {bank}')
+    return dict(schema='opentallas.hbm.s_role_backing_only.v1', role=spec['quadrant'],
+                checked_build_mode=schedule['build_mode'], configured_words=len(schedule['cycles']),
+                allowed_read_groups=list(allowed['r']), allowed_write_groups=list(allowed['w']),
+                source_abi='ot_vms_bank_q0_faces_body RG5/WG2',
+                scope='Only this finite calendar; actual production modes and source/plan adoption remain unproved')
+
+
 def compile_schedule(spec, schedule):
     base = schedule.get('base', 0)
     loops = schedule.get('loops', 1)
@@ -163,19 +222,26 @@ def compile_schedule(spec, schedule):
         raise ValueError('Programme must occupy a nonempty range of actual 1024-word SRAM')
     if not 1 <= loops <= 65535:
         raise ValueError('Loop count must fit the actual nonzero 16-bit counter')
+    absence = validate_local_su_absence(spec, schedule)
+    backing = validate_s_role_backing_only(spec, schedule)
     validate_resources(spec, cycles, loops, schedule.get('lg_pad'))
     writes = []
     for offset, values in enumerate(cycles):
         pc = base + offset
         word = (0xc7a1 << 240) | (pc << 224) | pack(spec, values)
         writes.append(dict(addr=pc, data=f'{word:064x}'))
-    return dict(schema='opentallas.hbm.native-calendar-programme.v1', layout=spec,
+    result = dict(schema='opentallas.hbm.native-calendar-programme.v1', layout=spec,
                 configuration_writes=writes,
                 start=dict(base=base, limit=base+len(cycles), loops=loops),
                 output_edges=len(cycles)*loops,
                 first_output_after_start=4,
                 configuration='Writes and launch are consumed by real input pin registers; no ready/credit path',
                 limits='Caller must prove these calendars against actual producer requests, transport latency and response identities.')
+    if absence is not None:
+        result['local_su_absence'] = absence
+    if backing is not None:
+        result['s_role_backing_only'] = backing
+    return result
 
 
 def emit_wrappers(abi):

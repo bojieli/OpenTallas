@@ -340,6 +340,12 @@ class SiteMap:
                 a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
                 self.forb.append((min(a[0], b[0]) - halo, min(a[1], b[1]) - halo,
                                   max(a[0], b[0]) + halo, max(a[1], b[1]) + halo, "core"))
+        # Declared die channels are top-owned clock/reset placement space.
+        # A strip recut can free the old clock sites outside all new partition
+        # outlines. Keep those sites legal; core and PHY exclusions below still
+        # apply, including wherever a channel rectangle crosses either one.
+        self.parts.extend(tuple(ch["rect_um"]) for ch in P.die.get("channels", []) or []
+                          if ch.get("rect_um"))
         for d in P.die.get("pg", {}).get("domains", []) or []:
             if any("PHY" in str(v) for v in d.get("nets", [])) and d.get("rect_um"):
                 x0, y0, x1, y1 = d["rect_um"]
@@ -2258,7 +2264,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
               slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
               region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
-              cell_paths=False, region_dme_early_merge_only=None):
+              cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None):
     global EVEN_LEGS
     EVEN_LEGS = clock_cell == "inv2"
     out = Path(out)
@@ -2541,6 +2547,15 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             t["driver"] = f"p{t['node']}_{t['port']}_{count - 1}" if count else node_buf[t["node"]]
             t["path"] = cell_path(t["driver"])
             t["stages_from_root"] = len(t["path"])
+    if rep_actual_max is not None:
+        from clock_reach import actual_reach
+        reach = actual_reach(tree, rep_actual_max)
+        # Keep the failed census even though no complete clock tree is published.
+        with open(out / "actual_reach.json", "x") as fh:
+            json.dump(reach, fh, indent=1)
+        if reach["verdict"] != "PASS":
+            raise ValueError(f"OT_CLOCK_ACTUAL_REACH {reach['over_count']} edges over {rep_actual_max} um; "
+                             f"{len(reach['missing_sites'])} missing sites; see {out / 'actual_reach.json'}")
     (out / "tree.json").write_text(json.dumps(tree) + "\n")
     return nodes, segs, leaf_legs, meta
 
@@ -3551,7 +3566,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
               clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
               region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
-              cell_paths=False, region_dme_early_merge_only=None):
+              cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -3625,6 +3640,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                            clock_rc=clock_rc, slice_balance=slice_balance, region_dme=region_dme,
                                            region_dme_only=region_dme_only, region_dme_early=region_dme_early,
                                            region_dme_early_ff=region_dme_early_ff, region_dme_snake=region_dme_snake,
+                                           **({"rep_actual_max": rep_actual_max} if rep_actual_max is not None else {}),
                                            **({"clock_cell": clock_cell} if clock_cell != "buf" else {}),
                                            **({"region_dme_early_mode": region_dme_early_mode}
                                               if region_dme_early_mode != "hang" else {}),
@@ -3900,7 +3916,8 @@ def psm_report(d):
 def cmd_report(a):
     d = Path(a.dir)
     kit = json.loads((d / "kit.json").read_text())
-    P = S.Plan(S.load(kit["plan"] if Path(kit["plan"]).is_file() else a.plan))
+    plan_path = Path(kit["plan"] if Path(kit["plan"]).is_file() else a.plan)
+    P = S.Plan(S.load(plan_path), plan_path)
     res = dict(kit=kit)
     if (d / "grt" / "grt.log").is_file():
         res["grt"] = grt_report(d, P)
@@ -4220,6 +4237,9 @@ def main(argv=None):
                    help="top-spine 1-D bisection leaf (um): nominal top imbalance <= half of it")
     k.add_argument("--slice-rows", help="with --slice-spine: qc_slice_clock_rows/1 reservation (INFRA-FIRST-QC-R35): "
                    "column x and top spine row come from the plan reservation")
+    k.add_argument("--rep-actual-max", type=float, default=None, metavar="UM",
+                   help="opt-in: reject actual cell-to-cell and final-tap Manhattan hops over UM after legal snapping; "
+                        "write actual_reach.json, default off; re-run clock_reach.py after any later clock overlay")
     k.add_argument("--clock-rc", default="ndr", choices=["ndr", "1x"],
                    help="die clock model wire RC: ndr = 2W2S assumption (R/2, Cx1.1; legacy default); 1x = ASAP7 M8/M9 "
                         "setRC as the die clock is routed (no NDR) (DIE-QC-3 opt-in)")
@@ -4394,6 +4414,7 @@ def main(argv=None):
                       clock_rc=a.clock_rc, slice_balance=a.slice_balance, region_dme=a.region_dme,
                       region_dme_only=[r for r in a.region_dme_only.split(",") if r] if a.region_dme_only else None,
                       region_dme_early=a.region_dme_early, region_dme_early_ff=a.region_dme_early_ff,
+                      **({"rep_actual_max": a.rep_actual_max} if a.rep_actual_max is not None else {}),
                       **({"clock_cell": a.clock_cell} if a.clock_cell != "buf" else {}),
                       **({"region_dme_early_mode": a.region_dme_early_mode} if a.region_dme_early_mode != "hang" else {}),
                       **({"cell_paths": True} if a.cell_paths else {}),
@@ -4409,12 +4430,14 @@ def main(argv=None):
     elif a.cmd == "render":
         d = Path(a.dir)
         kit = json.loads((d / "kit.json").read_text())
-        P = S.Plan(S.load(a.plan or kit["plan"]))
+        plan_path = Path(a.plan or kit["plan"])
+        P = S.Plan(S.load(plan_path), plan_path)
         print(json.dumps(render_all(d, P, a.plan or kit["plan"]), indent=1))
     elif a.cmd == "clock":
         d = Path(a.dir)
         kit = json.loads((d / "kit.json").read_text())
-        P = S.Plan(S.load(a.plan or kit["plan"]))
+        plan_path = Path(a.plan or kit["plan"])
+        P = S.Plan(S.load(plan_path), plan_path)
         print(json.dumps(clock_report(d, P), indent=1)[:6000])
     return 0
 

@@ -1,0 +1,45 @@
+# Bound row-gap scheduling for the current HBM FUSED programme
+
+The existing calendar correctly rejects PRE N6 on C25b at rgap0, but a manually edited jobs receipt does not reach the programme: fused_job217_emit decodes the unchanged source image again. The opt-in `four_role_calendar.py --schedule-rgap` now computes the minimum retained-row spacing from bound station round trip and measured KX return window. It records only PRE N>4 increases, their original job217 bits and the added service cycles. `fused_job217_emit.py --calendar-rgap` accepts those increases explicitly; it preserves every other native field. Omitting either opt-in keeps the previous behavior, and unaccepted, altered-source, decreasing or unpriced overrides fail closed.
+
+Focused tests: `python3 -m pytest -q tools/hbm_next/test_four_role_calendar.py tools/hbm_next/test_bound_from_plan.py`: 25 passed. The six-row PRE round trip reaches the real emitter and executable word: only bits177..184 change; rgap23 still fails the measured x-slot condition; disabled acceptance and four damaged override controls emit no programme. This compiler test uses a synthetic ISA decoder, not a numeric/full-die RTL vehicle. No RTL or numerical algorithm changes.
+
+Actual 161-record f0b93231 receipt, current C25b 4180334c dry-run legs: station RT98, r return267, minimum rgap24. Exactly81 PRE records change by120 service cycles each, total9720 cycles per FUSED MTP pass (8.10us at1.2GHz). This is a schedule price, not a full token rate. The die owner now plans a20-edge host-provider chain over6929um to obey405um reach; that shifts preload/commit/START by16 boot cycles relative to the earlier4-edge declaration, with no per-job service change.
+
+No executable current programme is emitted here: C25c committed plan/side and strict0 are still required. Current whole-die numerical/token pass remains open. Historical gin/qin undeclared seed ties are being classified by the binding owner; a proper attention-input mutant must alter an interior producer link rather than the intentional first/last-stage zero seeds.
+
+## Eight-SU source and four-role memory client0 absence
+
+`source_local_su_census.py` checks the actual canonical top: exactly eight SU slices (NW/NE0..3), fixed QID2/3, a PARTS2 programme root and sixteen SW/SE bank client0 sockets whose named SU producers do not exist. This is source ownership evidence only. A direct north/south alias would duplicate requests and violate the native QID/address check; no time-fold mapping has been claimed.
+
+The existing VM calendar compiler now accepts an explicit `local_su_present:false` schedule field only for SW/SE, with a required `build_mode` of SU, MTP or MU. It refuses every configured word that grants read/write group0 or emits any local LG request. Other client groups, addresses, valid bits and programme words remain unchanged. It publishes an absence receipt only for that finite calendar/mode. Sixteen focused tests preserve other-client words and catch forbidden grant/request controls in all three declared modes. No actual current production VM calendar has been supplied, so this does not prove all-mode absence or authorize a current plan adoption.
+
+A separate explicit no-local-SU bank master is under minimal real-SRAM lockstep by the bank_absence worker; it preserves all other clients and registers and must report a forbidden client0 grant. Source specialization and physical view adoption remain separate from the calendar compiler guard.
+
+## Native lane boundary at the actual C25b return distance
+
+Reused the already compiled TOK-HBM-2 native one-lane + one-tnode binary through ot-run (intel2/tolerant-swine unit oth-ubuntu-1542756-1793257104), without rebuilding. `+N=6 +RD=267 +RGAP=24`: fin1011 afterGO,120chunk sums,120writes,6returns,fault0. The same binary at rgap23 latches fault atGO+477 (although it later finishes); it is a required failure, not an exit-status pass. This measures the newly scheduled24-edge boundary directly in native RTL at833ps. The fixed VM returns are zero-data; this proves retained-row occupancy/service behavior, not full-tree numeric correctness or whole-die token passage. The inherited source/bench is the TOK-HBM-2 lane_service vehicle.
+
+## Actual bound SU profile and explicit physical candidates
+
+Corrected-source Yosys elaboration contains eight pgslice_lg_s parent paramods at MLAT4/ALAT4/LEAF1, QID2/3. The aliases lack WCOPY; this differs from the physical5/3/WCOPY1 candidate. SIDE3/3 is intentional: su_lane_build.side_ii prices its result hold until lane consumption. No SIDE RTL change is needed.
+
+Regenerating pgslice_s restores default0 WCOPY at the pinned-bank instance. The lg wrapper now passes default0 WCOPY through; its _s twin is regenerated too. No arithmetic/default/clock/SIDE behavior changes. Opt-in1 reaches the existing REBAL-gated bank mechanism. Fresh bind/compiler alignment is still required.
+
+The explicit su_build_profile.py --profile m5a3w1|m5a4w1 candidate transform changes only eight source instances, validates QID/G/ownership, preserves other parameters and all body bits, emits per-slice deltas/compiler flags, and refuses missing/extra South slices. There is no default selection/adoption.
+
+Profile5/3/1: linear emit-write32 versus actual29 (+3), bank-commit+1, SIDE II rsqrt19/sqrt1/spsqrt37/egate15. Profile5/4/1: linear33 (+4), bank+1, SIDE II22/1/55/24. Relative5/3 to5/4 adds1 linear adder stage; nonlinear depths grow by actual adder counts, so no global+1 token shortcut. Eleven source-profile/compiler-formula checks pass. Actual default/source-profile structural proof and physical winner selection remain open; prior5/3 component evidence does not qualify a4/4 bound.
+
+## Native FUSED image input restored under a new identity
+
+The original f0b93231 whole image no longer exists at its retired LIVE path. Deterministic emission from e938fd6db (emitter42d0caba4 plus lowerer3842596e3) completes through ot-run:3916records,I1-I7PASS,161FUSED,9600VMcopy words,414720HBMload words. The new image hash is a1228bb5, so exact historical byte recovery FAILED and is not claimed. Running the real preserved ISA front and current native217 emitter on this image yields every one of the161 FUSED jobs exactly equal to the f0 receipt: offsets, fields, packed bits and formats, with0rejections. The FUSED input source is therefore available as an explicit new candidate identity; its future calendar must use a122. No executable programme is emitted without a current plan/calendar. The lost whole image prevents an exact comparison of non-FUSED bytes; this difference remains open and no full-token equivalence is inferred.
+
+## WCOPY default identity and ALAT4 production recipe dates
+
+The actual selected-source elaboration was copied into a separate intel1 runtime and rerun with the two regenerated aliases. Default0 structural graph identity PASSES across every module after normalizing source locations, automatic temporary names and the new default-zero parameter; no net/cell functional connection changes remain. The enabled5/4/WCOPY1 candidate propagates1 to every pinned-bank child, while a real parent-forwarding mutant that passes0 instead is CAUGHT. The first literal-name comparison failed only on generated source-location names; its failed JSON is retained in the runtime. Source graph identity and enabled propagation are in wcopy_profile_proof.json; the existing REBAL actual-bank WCOPY lockstep remains the numeric mechanism qualification.
+
+The production SU recipe compiler had no ALAT option and always used3. It now accepts explicit --alat with default3; default metadata remains unchanged. Actual compiler runs show all six default record files byte-identical to the previous compiler. At MLAT5/WCOPY1, raising ALAT3->4 changes ds_rs135->139 core/programme edges (+4), and ds_spsqrt4 375->448 (+73); independent golden payloads, addresses and inputs remain identical. These are actual per-record schedule prices, not a global+1 approximation. The old cycles_stream_833ps metadata still contains the retired4/3 conversion; this packet uses only raw edge deltas. Legacy NativeTiming/layer_images have no ALAT4 profile, so no whole-layer compiler adoption is claimed.
+
+## Optional S-role backing-only static calendar candidate
+
+The source consumer audit extends beyond absent localSU: S-role dbk/xload/hcollrs/SM-write/vmdel/hcollks producers are also absent. An explicit s_role_backing_only:true finite schedule, together with local_su_present:false and a declared mode, is checked against the actual RG5/WG2 bank ABI. Only readgroups4(IDX)/5(packet) and writegroups3(CW)/4(packet)/5(CCW) remain allowed. The compiler refuses every missing-service group; all retained-client words remain unchanged. This helper selects no source master and proves no unprovided production mode. Broader source-bank specialization and actual calendar/boot integration remain separate decisions/work.

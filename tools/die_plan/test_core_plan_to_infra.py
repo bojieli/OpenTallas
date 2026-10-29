@@ -81,6 +81,34 @@ def test_deterministic():
     assert json.dumps(a, sort_keys=True) == json.dumps(b, sort_keys=True)
 
 
+def test_actual_hard_blockages_are_occupied_without_extra_halo(tmp_path):
+    p = tmp_path / "sites.txt"
+    p.write_text("ROW0 0 0 site_w .054 site_h .27 nrows 1 nsites 100 orient0 R0\n"
+                 "ROW 0 0 R0 100\nMASTER BUFx8_ASAP7_75t_R .648 .27\n"
+                 "BLOCKAGE 7 1.08 0 2.16 .27\n")
+    data = C.read_sites(p)
+    assert data["blockages"] == [(1.08, 0., 2.16, .27)]
+    sm = C.SiteMap(data)
+    # Exact touching remains legal. There is no macro-halo inflation.
+    assert sm.free(0, 8, 12) and sm.free(0, 40, 12)
+    assert not sm.free(0, 9, 12) and not sm.free(0, 39, 12)
+    placed = sm.place("new", "BUFx8_ASAP7_75t_R", 1.62, .135)
+    x = placed["origin_um"][0]
+    assert x+.648 <= 1.08+1e-6 or x >= 2.16-1e-6
+    # Mutant: dropping the record recreates the overlap at the desired site.
+    data["blockages"] = []
+    x0 = C.SiteMap(data).place("new", "BUFx8_ASAP7_75t_R", 1.62, .135)["origin_um"][0]
+    assert x0 < 2.16 and x0+.648 > 1.08
+
+
+@pytest.mark.parametrize("rect", ["0 0 1", "0 nan 1 2", "1 0 0 2"])
+def test_bad_hard_blockage_fails_closed(tmp_path, rect):
+    p = tmp_path / "sites.txt"
+    p.write_text("BLOCKAGE 7 "+rect+"\n")
+    with pytest.raises(C.ConvertError, match="BLOCKAGE"):
+        C.read_sites(p)
+
+
 def test_envelope_refused_unless_calibration():
     with pytest.raises(C.ConvertError, match="envelope"):
         C.convert(plan(leaf_master="BUFx4f_ASAP7_75t_R"), sites(), "tiny_core", outline=[37.8, 37.8])
@@ -169,3 +197,24 @@ def test_band_default_gate_unchanged_and_byte_identical():
 def test_band_unknown_policy_refused():
     with pytest.raises(CI.InfraError, match="band_policy"):
         CI.emit_tcl(_oob("off"))
+
+
+def test_cut_rows_use_their_own_origin_width_and_fixed_occupancy():
+    ss=sites(strap=(200,200.12))
+    ss["rows"]=[(4.32,4.32,"R0",20),(20.52,4.32,"R0",40),(4.32,4.59,"MX",600)]
+    ss["row0"].update(nsites=20,nrows=3)
+    ss["fixed"]=[(20.52,4.32,20.628,4.59)]
+    sm=C.SiteMap(ss)
+    assert not sm.free(0,20,1) and sm.free(2,100,20)
+    assert not sm.free(1,0,2) and sm.free(1,3,2)
+    p=sm.place("upper","BUFx8_ASAP7_75t_R",15.0,4.725)
+    assert abs(p["centre_um"][0]-15)<.03 and p["origin_um"][1]==4.59
+    p=sm.place("right","BUFx8_ASAP7_75t_R",21.7,4.455)
+    assert p["origin_um"][0]>=20.628 and p["origin_um"][1]==4.32
+
+
+def test_converter_uses_plan_core_extent_instead_of_cut_row_count():
+    p=plan();p["core"]=[4.32,4.32,36.72,36.72]
+    ss=sites();ss["row0"]["nsites"]=20
+    s=C.convert(p,ss,"tiny_core")
+    assert s["outline_um"]==[41.04,41.04]

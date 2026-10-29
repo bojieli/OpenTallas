@@ -13,6 +13,13 @@ foreach i [$b getInsts] {
   set s [$i getPlacementStatus]
   if {$s in {FIRM LOCKED COVER}} { set bb [$i getBBox]; puts $f "FIXED [$i getName] [[$i getMaster] getName] [um [$bb xMin]] [um [$bb yMin]] [um [$bb xMax]] [um [$bb yMax]]" }
 }
+# OpenDB hard placement blockages are independent of fixed instances/row cuts.
+# Preserve their exact rectangles: no extra macro halo or routing obstruction.
+foreach k [$b getBlockages] {
+  if {[$k isSoft] || [$k getMaxDensity] > 0} continue
+  set bb [$k getBBox]
+  puts $f "BLOCKAGE [$k getId] [um [$bb xMin]] [um [$bb yMin]] [um [$bb xMax]] [um [$bb yMax]]"
+}
 foreach n {BUFx8_ASAP7_75t_R BUFx10_ASAP7_75t_R BUFx12_ASAP7_75t_R BUFx12f_ASAP7_75t_R BUFx16f_ASAP7_75t_R BUFx24_ASAP7_75t_R BUFx6f_ASAP7_75t_R BUFx5_ASAP7_75t_R BUFx4f_ASAP7_75t_R} {
   set m [[ord::get_db] findMaster $n]; puts $f "MASTER $n [um [$m getWidth]] [um [$m getHeight]]" }
 foreach net [$b getNets] {

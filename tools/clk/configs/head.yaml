@@ -8,10 +8,14 @@ event:
   source: LAND-HEAD 2026-10-28 09:25 DIE-HEAD-11 (die_trial at DIE-QC-11 1465eff51c); argv not scripted, from the lane line
   reference_clock_dir: /srv/opentallas-scratch2/claude/die-head-11/inv/inv2r200/clock
 inputs:
-  # fb1_lat.json (die-head-3/cmp) is NOT replayable: its hard-core pins_file points into the deleted worktree
-  # wt/die-head-3-bind.  g5_r200/plan_rs_fb1.json is the DIE-HEAD-11 copy (pins via wt/die-head-1); g5_r200/clk/tree.json
-  # md5 = inv2r200 tree (c2e24bb5), the base tree of DIE-HEAD-14 clk14.
-  plan: /srv/opentallas-scratch2/claude/die-head-11/inv/g5_r200/plan_rs_fb1.json
+  # The event plan is fb1_lat.json (die-head-3/cmp).  Its hard-core pins_file paths point into the deleted worktree
+  # wt/die-head-3-bind; pins_rebase replays it on the pin tables committed in this repo
+  # (physical/die_plan/s81_head/cores/elem{A,B}_pins.json, CLK-TOOL-2).  CLK-TOOL-1 replayed the DIE-HEAD-11 copy
+  # g5_r200/plan_rs_fb1.json instead (pins via wt/die-head-1, same tree).
+  plan: /srv/opentallas-scratch2/claude/die-head-3/cmp/fb1_lat.json
+  pins_rebase:
+    from: ../../wt/die-head-3-bind/
+    to_repo: ""
 stack:
   cell: inv2
   clock_rc: ndr
